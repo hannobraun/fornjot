@@ -1,4 +1,4 @@
-use winit::window::Window;
+use winit::{dpi::PhysicalSize, window::Window};
 
 pub struct Renderer {
     pub surface: wgpu::Surface,
@@ -50,6 +50,15 @@ impl Renderer {
             swap_chain_desc,
             swap_chain,
         })
+    }
+
+    pub fn handle_resize(&mut self, size: PhysicalSize<u32>) {
+        self.swap_chain_desc.width = size.width;
+        self.swap_chain_desc.height = size.height;
+
+        self.swap_chain = self
+            .device
+            .create_swap_chain(&self.surface, &self.swap_chain_desc);
     }
 }
 

@@ -33,13 +33,7 @@ fn main() {
             event: WindowEvent::Resized(size),
             ..
         } => {
-            renderer.swap_chain_desc.width = size.width;
-            renderer.swap_chain_desc.height = size.height;
-
-            renderer.swap_chain = renderer.device.create_swap_chain(
-                &renderer.surface,
-                &renderer.swap_chain_desc,
-            );
+            renderer.handle_resize(size);
         }
         Event::WindowEvent {
             event:
