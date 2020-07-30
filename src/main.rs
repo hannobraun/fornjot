@@ -1,6 +1,6 @@
 use futures::executor::block_on;
 use winit::{
-    event::{Event, WindowEvent},
+    event::{Event, KeyboardInput, VirtualKeyCode, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
     window::WindowBuilder,
 };
@@ -62,6 +62,20 @@ fn main() {
             swap_chain_desc.height = size.height;
 
             swap_chain = device.create_swap_chain(&surface, &swap_chain_desc);
+        }
+        Event::WindowEvent {
+            event:
+                WindowEvent::KeyboardInput {
+                    input:
+                        KeyboardInput {
+                            virtual_keycode: Some(VirtualKeyCode::Escape),
+                            ..
+                        },
+                    ..
+                },
+            ..
+        } => {
+            *control_flow = ControlFlow::Exit;
         }
         Event::RedrawRequested(_) => {
             let output = swap_chain.get_next_texture().unwrap();
