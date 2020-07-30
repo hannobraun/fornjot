@@ -60,6 +60,27 @@ impl Renderer {
             .device
             .create_swap_chain(&self.surface, &self.swap_chain_desc);
     }
+
+    pub fn draw(&mut self) {
+        let output = self.swap_chain.get_next_texture().unwrap();
+
+        let mut encoder = self.device.create_command_encoder(
+            &wgpu::CommandEncoderDescriptor { label: None },
+        );
+
+        let _ = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+            color_attachments: &[wgpu::RenderPassColorAttachmentDescriptor {
+                attachment: &output.view,
+                resolve_target: None,
+                load_op: wgpu::LoadOp::Clear,
+                store_op: wgpu::StoreOp::Store,
+                clear_color: wgpu::Color::WHITE,
+            }],
+            depth_stencil_attachment: None,
+        });
+
+        self.queue.submit(&[encoder.finish()]);
+    }
 }
 
 #[derive(Debug)]

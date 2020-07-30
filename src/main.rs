@@ -50,26 +50,7 @@ fn main() {
             *control_flow = ControlFlow::Exit;
         }
         Event::RedrawRequested(_) => {
-            let output = renderer.swap_chain.get_next_texture().unwrap();
-
-            let mut encoder = renderer.device.create_command_encoder(
-                &wgpu::CommandEncoderDescriptor { label: None },
-            );
-
-            let _ = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                color_attachments: &[
-                    wgpu::RenderPassColorAttachmentDescriptor {
-                        attachment: &output.view,
-                        resolve_target: None,
-                        load_op: wgpu::LoadOp::Clear,
-                        store_op: wgpu::StoreOp::Store,
-                        clear_color: wgpu::Color::WHITE,
-                    },
-                ],
-                depth_stencil_attachment: None,
-            });
-
-            renderer.queue.submit(&[encoder.finish()]);
+            renderer.draw();
         }
         _ => {}
     })
