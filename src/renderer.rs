@@ -1,4 +1,3 @@
-use futures::executor::block_on;
 use winit::window::Window;
 
 pub struct Renderer {
@@ -10,25 +9,27 @@ pub struct Renderer {
 }
 
 impl Renderer {
-    pub fn new(window: &Window) -> Self {
+    pub async fn new(window: &Window) -> Self {
         let surface = wgpu::Surface::create(window);
 
-        let adapter = block_on(wgpu::Adapter::request(
+        let adapter = wgpu::Adapter::request(
             &wgpu::RequestAdapterOptions {
                 power_preference: wgpu::PowerPreference::Default,
                 compatible_surface: Some(&surface),
             },
             wgpu::BackendBit::VULKAN,
-        ))
+        )
+        .await
         .unwrap();
 
-        let (device, queue) =
-            block_on(adapter.request_device(&wgpu::DeviceDescriptor {
+        let (device, queue) = adapter
+            .request_device(&wgpu::DeviceDescriptor {
                 extensions: wgpu::Extensions {
                     anisotropic_filtering: false,
                 },
                 limits: wgpu::Limits::default(),
-            }));
+            })
+            .await;
 
         let size = window.inner_size();
 

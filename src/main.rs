@@ -1,5 +1,6 @@
 mod renderer;
 
+use futures::executor::block_on;
 use winit::{
     event::{Event, KeyboardInput, VirtualKeyCode, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
@@ -19,7 +20,7 @@ fn main() {
         .build(&event_loop)
         .unwrap();
 
-    let mut renderer = Renderer::new(&window);
+    let mut renderer = block_on(Renderer::new(&window));
 
     event_loop.run(move |event, _, control_flow| match event {
         Event::WindowEvent {
