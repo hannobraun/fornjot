@@ -50,7 +50,7 @@ fn main() {
             *control_flow = ControlFlow::Exit;
         }
         Event::RedrawRequested(_) => {
-            renderer.draw();
+            renderer.draw().unwrap();
         }
         _ => {}
     })

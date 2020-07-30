@@ -61,8 +61,11 @@ impl Renderer {
             .create_swap_chain(&self.surface, &self.swap_chain_desc);
     }
 
-    pub fn draw(&mut self) {
-        let output = self.swap_chain.get_next_texture().unwrap();
+    pub fn draw(&mut self) -> Result<(), DrawError> {
+        let output = self
+            .swap_chain
+            .get_next_texture()
+            .map_err(|err| DrawError(err))?;
 
         let mut encoder = self.device.create_command_encoder(
             &wgpu::CommandEncoderDescriptor { label: None },
@@ -80,8 +83,13 @@ impl Renderer {
         });
 
         self.queue.submit(&[encoder.finish()]);
+
+        Ok(())
     }
 }
 
 #[derive(Debug)]
 pub struct AdapterRequestError;
+
+#[derive(Debug)]
+pub struct DrawError(wgpu::TimeOut);
