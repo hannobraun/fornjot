@@ -3,3 +3,6 @@ name    = "fornjot"
 version = "0.1.0"
 authors = ["Hanno Braun <hb@hannobraun.de>"]
 edition = "2018"
+
+[dependencies]
+winit = "*"
