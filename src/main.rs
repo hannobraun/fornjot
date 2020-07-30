@@ -50,6 +50,9 @@ fn main() {
         } => {
             *control_flow = ControlFlow::Exit;
         }
+        Event::MainEventsCleared => {
+            window.request_redraw();
+        }
         Event::RedrawRequested(_) => {
             renderer.draw().unwrap();
         }
