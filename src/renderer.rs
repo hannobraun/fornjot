@@ -1,11 +1,11 @@
 use winit::{dpi::PhysicalSize, window::Window};
 
 pub struct Renderer {
-    pub surface: wgpu::Surface,
-    pub device: wgpu::Device,
-    pub queue: wgpu::Queue,
-    pub swap_chain_desc: wgpu::SwapChainDescriptor,
-    pub swap_chain: wgpu::SwapChain,
+    surface: wgpu::Surface,
+    device: wgpu::Device,
+    queue: wgpu::Queue,
+    swap_chain_desc: wgpu::SwapChainDescriptor,
+    swap_chain: wgpu::SwapChain,
 }
 
 impl Renderer {
