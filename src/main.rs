@@ -1,7 +1,7 @@
 use futures::executor::block_on;
 use winit::{
     event::{Event, WindowEvent},
-    event_loop::EventLoop,
+    event_loop::{ControlFlow, EventLoop},
     window::WindowBuilder,
 };
 
@@ -47,7 +47,13 @@ fn main() {
 
     let mut swap_chain = device.create_swap_chain(&surface, &swap_chain_desc);
 
-    event_loop.run(move |event, _, _| match event {
+    event_loop.run(move |event, _, control_flow| match event {
+        Event::WindowEvent {
+            event: WindowEvent::CloseRequested,
+            ..
+        } => {
+            *control_flow = ControlFlow::Exit;
+        }
         Event::WindowEvent {
             event: WindowEvent::Resized(size),
             ..
