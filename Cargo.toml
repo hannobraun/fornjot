@@ -5,4 +5,5 @@ authors = ["Hanno Braun <hb@hannobraun.de>"]
 edition = "2018"
 
 [dependencies]
+wgpu  = "*"
 winit = "*"
