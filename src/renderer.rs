@@ -9,7 +9,7 @@ pub struct Renderer {
 }
 
 impl Renderer {
-    pub async fn new(window: &Window) -> Result<Self, AdapterRequestError> {
+    pub async fn new(window: &Window) -> Result<Self, InitError> {
         let surface = wgpu::Surface::create(window);
 
         let adapter = wgpu::Adapter::request(
@@ -20,7 +20,7 @@ impl Renderer {
             wgpu::BackendBit::VULKAN,
         )
         .await
-        .ok_or(AdapterRequestError)?;
+        .ok_or(InitError::AdapterRequest)?;
 
         let (device, queue) = adapter
             .request_device(&wgpu::DeviceDescriptor {
@@ -89,7 +89,9 @@ impl Renderer {
 }
 
 #[derive(Debug)]
-pub struct AdapterRequestError;
+pub enum InitError {
+    AdapterRequest,
+}
 
 #[derive(Debug)]
 pub struct DrawError(wgpu::TimeOut);
