@@ -1,9 +1,13 @@
+mod renderer;
+
 use futures::executor::block_on;
 use winit::{
     event::{Event, KeyboardInput, VirtualKeyCode, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
     window::WindowBuilder,
 };
+
+use self::renderer::Renderer;
 
 fn main() {
     let event_loop = EventLoop::new();
@@ -37,7 +41,7 @@ fn main() {
 
     let size = window.inner_size();
 
-    let mut swap_chain_desc = wgpu::SwapChainDescriptor {
+    let swap_chain_desc = wgpu::SwapChainDescriptor {
         usage: wgpu::TextureUsage::OUTPUT_ATTACHMENT,
         format: wgpu::TextureFormat::Bgra8UnormSrgb,
         width: size.width,
@@ -45,7 +49,15 @@ fn main() {
         present_mode: wgpu::PresentMode::Mailbox,
     };
 
-    let mut swap_chain = device.create_swap_chain(&surface, &swap_chain_desc);
+    let swap_chain = device.create_swap_chain(&surface, &swap_chain_desc);
+
+    let mut renderer = Renderer {
+        surface,
+        device,
+        queue,
+        swap_chain_desc,
+        swap_chain,
+    };
 
     event_loop.run(move |event, _, control_flow| match event {
         Event::WindowEvent {
@@ -58,10 +70,13 @@ fn main() {
             event: WindowEvent::Resized(size),
             ..
         } => {
-            swap_chain_desc.width = size.width;
-            swap_chain_desc.height = size.height;
+            renderer.swap_chain_desc.width = size.width;
+            renderer.swap_chain_desc.height = size.height;
 
-            swap_chain = device.create_swap_chain(&surface, &swap_chain_desc);
+            renderer.swap_chain = renderer.device.create_swap_chain(
+                &renderer.surface,
+                &renderer.swap_chain_desc,
+            );
         }
         Event::WindowEvent {
             event:
@@ -78,9 +93,9 @@ fn main() {
             *control_flow = ControlFlow::Exit;
         }
         Event::RedrawRequested(_) => {
-            let output = swap_chain.get_next_texture().unwrap();
+            let output = renderer.swap_chain.get_next_texture().unwrap();
 
-            let mut encoder = device.create_command_encoder(
+            let mut encoder = renderer.device.create_command_encoder(
                 &wgpu::CommandEncoderDescriptor { label: None },
             );
 
@@ -97,7 +112,7 @@ fn main() {
                 depth_stencil_attachment: None,
             });
 
-            queue.submit(&[encoder.finish()]);
+            renderer.queue.submit(&[encoder.finish()]);
         }
         _ => {}
     })
