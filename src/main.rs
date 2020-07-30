@@ -47,44 +47,38 @@ fn main() {
 
     let mut swap_chain = device.create_swap_chain(&surface, &swap_chain_desc);
 
-    event_loop.run(move |event, _, _| {
-        println!("{:?}", event);
+    event_loop.run(move |event, _, _| match event {
+        Event::WindowEvent {
+            event: WindowEvent::Resized(size),
+            ..
+        } => {
+            swap_chain_desc.width = size.width;
+            swap_chain_desc.height = size.height;
 
-        match event {
-            Event::WindowEvent {
-                event: WindowEvent::Resized(size),
-                ..
-            } => {
-                swap_chain_desc.width = size.width;
-                swap_chain_desc.height = size.height;
-
-                swap_chain =
-                    device.create_swap_chain(&surface, &swap_chain_desc);
-            }
-            Event::RedrawRequested(_) => {
-                let output = swap_chain.get_next_texture().unwrap();
-
-                let mut encoder = device.create_command_encoder(
-                    &wgpu::CommandEncoderDescriptor { label: None },
-                );
-
-                let _ =
-                    encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                        color_attachments: &[
-                            wgpu::RenderPassColorAttachmentDescriptor {
-                                attachment: &output.view,
-                                resolve_target: None,
-                                load_op: wgpu::LoadOp::Clear,
-                                store_op: wgpu::StoreOp::Store,
-                                clear_color: wgpu::Color::WHITE,
-                            },
-                        ],
-                        depth_stencil_attachment: None,
-                    });
-
-                queue.submit(&[encoder.finish()]);
-            }
-            _ => {}
+            swap_chain = device.create_swap_chain(&surface, &swap_chain_desc);
         }
+        Event::RedrawRequested(_) => {
+            let output = swap_chain.get_next_texture().unwrap();
+
+            let mut encoder = device.create_command_encoder(
+                &wgpu::CommandEncoderDescriptor { label: None },
+            );
+
+            let _ = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                color_attachments: &[
+                    wgpu::RenderPassColorAttachmentDescriptor {
+                        attachment: &output.view,
+                        resolve_target: None,
+                        load_op: wgpu::LoadOp::Clear,
+                        store_op: wgpu::StoreOp::Store,
+                        clear_color: wgpu::Color::WHITE,
+                    },
+                ],
+                depth_stencil_attachment: None,
+            });
+
+            queue.submit(&[encoder.finish()]);
+        }
+        _ => {}
     })
 }
