@@ -3,6 +3,8 @@ use std::{io, mem::size_of};
 use wgpu::util::DeviceExt as _;
 use winit::{dpi::PhysicalSize, window::Window};
 
+use crate::transform::Transform;
+
 use super::{
     shaders::{self, Shaders},
     uniforms::Uniforms,
@@ -198,8 +200,10 @@ impl Renderer {
             .create_swap_chain(&self.surface, &self.swap_chain_desc);
     }
 
-    pub fn draw(&mut self) -> Result<(), DrawError> {
-        let uniforms = Uniforms::default();
+    pub fn draw(&mut self, transform: &Transform) -> Result<(), DrawError> {
+        let uniforms = Uniforms {
+            transform: transform.to_native(),
+        };
 
         self.queue.write_buffer(
             &mut self.uniform_buffer,

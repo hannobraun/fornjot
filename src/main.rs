@@ -8,7 +8,7 @@ use winit::{
     window::WindowBuilder,
 };
 
-use self::graphics::Renderer;
+use self::{graphics::Renderer, transform::Transform};
 
 fn main() {
     let event_loop = EventLoop::new();
@@ -54,7 +54,7 @@ fn main() {
             window.request_redraw();
         }
         Event::RedrawRequested(_) => {
-            renderer.draw().unwrap();
+            renderer.draw(&Transform).unwrap();
         }
         _ => {}
     })
