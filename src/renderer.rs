@@ -91,21 +91,23 @@ impl Renderer {
         let shaders =
             Shaders::compile().map_err(|err| InitError::Shaders(err))?;
 
-        let vertex_shader =
-            wgpu::util::make_spirv(shaders.vertex.as_binary_u8());
-        let fragment_shader =
-            wgpu::util::make_spirv(shaders.fragment.as_binary_u8());
+        let vertex_shader = device.create_shader_module(
+            wgpu::util::make_spirv(shaders.vertex.as_binary_u8()),
+        );
+        let fragment_shader = device.create_shader_module(
+            wgpu::util::make_spirv(shaders.fragment.as_binary_u8()),
+        );
 
         let render_pipeline =
             device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
                 label: None,
                 layout: Some(&pipeline_layout),
                 vertex_stage: wgpu::ProgrammableStageDescriptor {
-                    module: &device.create_shader_module(vertex_shader),
+                    module: &vertex_shader,
                     entry_point: "main",
                 },
                 fragment_stage: Some(wgpu::ProgrammableStageDescriptor {
-                    module: &device.create_shader_module(fragment_shader),
+                    module: &fragment_shader,
                     entry_point: "main",
                 }),
                 rasterization_state: Some(
