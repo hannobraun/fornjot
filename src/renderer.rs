@@ -1,5 +1,6 @@
 use std::{io, mem::size_of};
 
+use wgpu::util::DeviceExt as _;
 use winit::{dpi::PhysicalSize, window::Window};
 
 use crate::shaders::{self, Shaders};
@@ -20,26 +21,30 @@ pub struct Renderer {
 
 impl Renderer {
     pub async fn new(window: &Window) -> Result<Self, InitError> {
-        let surface = wgpu::Surface::create(window);
+        let instance = wgpu::Instance::new(wgpu::BackendBit::VULKAN);
 
-        let adapter = wgpu::Adapter::request(
-            &wgpu::RequestAdapterOptions {
+        // This is sound, as `window` is an object to create a surface upon.
+        let surface = unsafe { instance.create_surface(window) };
+
+        let adapter = instance
+            .request_adapter(&wgpu::RequestAdapterOptions {
                 power_preference: wgpu::PowerPreference::Default,
                 compatible_surface: Some(&surface),
-            },
-            wgpu::BackendBit::VULKAN,
-        )
-        .await
-        .ok_or(InitError::AdapterRequest)?;
+            })
+            .await
+            .ok_or(InitError::AdapterRequest)?;
 
         let (device, queue) = adapter
-            .request_device(&wgpu::DeviceDescriptor {
-                extensions: wgpu::Extensions {
-                    anisotropic_filtering: false,
+            .request_device(
+                &wgpu::DeviceDescriptor {
+                    features: wgpu::Features::empty(),
+                    limits: wgpu::Limits::default(),
+                    shader_validation: true,
                 },
-                limits: wgpu::Limits::default(),
-            })
-            .await;
+                None,
+            )
+            .await
+            .map_err(|err| InitError::RequestDevice(err))?;
 
         let size = window.inner_size();
 
@@ -53,56 +58,59 @@ impl Renderer {
 
         let swap_chain = device.create_swap_chain(&surface, &swap_chain_desc);
 
-        let vertex_buffer = device.create_buffer_with_data(
-            bytemuck::cast_slice(VERTICES),
-            wgpu::BufferUsage::VERTEX,
-        );
-        let index_buffer = device.create_buffer_with_data(
-            bytemuck::cast_slice(INDICES),
-            wgpu::BufferUsage::INDEX,
-        );
+        let vertex_buffer =
+            device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+                label: None,
+                contents: bytemuck::cast_slice(VERTICES),
+                usage: wgpu::BufferUsage::VERTEX,
+            });
+        let index_buffer =
+            device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+                label: None,
+                contents: bytemuck::cast_slice(INDICES),
+                usage: wgpu::BufferUsage::INDEX,
+            });
 
         let bind_group_layout =
             device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-                bindings: &[],
+                entries: &[],
                 label: None,
             });
         let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
             layout: &bind_group_layout,
-            bindings: &[],
+            entries: &[],
             label: None,
         });
         let pipeline_layout =
             device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+                label: None,
                 bind_group_layouts: &[&bind_group_layout],
+                push_constant_ranges: &[],
             });
 
         let shaders =
             Shaders::compile().map_err(|err| InitError::Shaders(err))?;
 
         let vertex_shader =
-            wgpu::read_spirv(io::Cursor::new(shaders.vertex.as_binary_u8()))?;
+            wgpu::util::make_spirv(shaders.vertex.as_binary_u8());
         let fragment_shader =
-            wgpu::read_spirv(io::Cursor::new(shaders.fragment.as_binary_u8()))?;
+            wgpu::util::make_spirv(shaders.fragment.as_binary_u8());
 
         let render_pipeline =
             device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
-                layout: &pipeline_layout,
+                label: None,
+                layout: Some(&pipeline_layout),
                 vertex_stage: wgpu::ProgrammableStageDescriptor {
-                    module: &device.create_shader_module(&vertex_shader),
+                    module: &device.create_shader_module(vertex_shader),
                     entry_point: "main",
                 },
                 fragment_stage: Some(wgpu::ProgrammableStageDescriptor {
-                    module: &device.create_shader_module(&fragment_shader),
+                    module: &device.create_shader_module(fragment_shader),
                     entry_point: "main",
                 }),
-                rasterization_state: Some(wgpu::RasterizationStateDescriptor {
-                    front_face: wgpu::FrontFace::Ccw,
-                    cull_mode: wgpu::CullMode::None,
-                    depth_bias: 0,
-                    depth_bias_slope_scale: 0.0,
-                    depth_bias_clamp: 0.0,
-                }),
+                rasterization_state: Some(
+                    wgpu::RasterizationStateDescriptor::default(),
+                ),
                 primitive_topology: wgpu::PrimitiveTopology::TriangleStrip,
                 color_states: &[wgpu::ColorStateDescriptor {
                     format: wgpu::TextureFormat::Bgra8UnormSrgb,
@@ -163,8 +171,9 @@ impl Renderer {
     pub fn draw(&mut self) -> Result<(), DrawError> {
         let output = self
             .swap_chain
-            .get_next_texture()
-            .map_err(|err| DrawError(err))?;
+            .get_current_frame()
+            .map_err(|err| DrawError(err))?
+            .output;
 
         let mut encoder = self.device.create_command_encoder(
             &wgpu::CommandEncoderDescriptor { label: None },
@@ -177,21 +186,22 @@ impl Renderer {
                         wgpu::RenderPassColorAttachmentDescriptor {
                             attachment: &output.view,
                             resolve_target: None,
-                            load_op: wgpu::LoadOp::Clear,
-                            store_op: wgpu::StoreOp::Store,
-                            clear_color: wgpu::Color::WHITE,
+                            ops: wgpu::Operations {
+                                load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
+                                store: true,
+                            },
                         },
                     ],
                     depth_stencil_attachment: None,
                 });
             render_pass.set_pipeline(&self.render_pipeline);
             render_pass.set_bind_group(0, &self.bind_group, &[]);
-            render_pass.set_vertex_buffer(0, &self.vertex_buffer, 0, 0);
-            render_pass.set_index_buffer(&self.index_buffer, 0, 0);
+            render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
+            render_pass.set_index_buffer(self.index_buffer.slice(..));
             render_pass.draw_indexed(0..INDICES.len() as u32, 0, 0..1);
         }
 
-        self.queue.submit(&[encoder.finish()]);
+        self.queue.submit(Some(encoder.finish()));
 
         Ok(())
     }
@@ -201,6 +211,7 @@ impl Renderer {
 pub enum InitError {
     AdapterRequest,
     Io(io::Error),
+    RequestDevice(wgpu::RequestDeviceError),
     Shaders(shaders::Error),
 }
 
@@ -211,7 +222,7 @@ impl From<io::Error> for InitError {
 }
 
 #[derive(Debug)]
-pub struct DrawError(wgpu::TimeOut);
+pub struct DrawError(wgpu::SwapChainError);
 
 const VERTICES: &[Vertex] = &[[-0.5, -0.5], [0.5, -0.5], [0.0, 0.5]];
 const INDICES: &[Index] = &[0, 1, 2];
