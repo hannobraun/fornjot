@@ -1,9 +1,11 @@
+mod shaders;
+
 use std::{io, mem::size_of};
 
 use wgpu::util::DeviceExt as _;
 use winit::{dpi::PhysicalSize, window::Window};
 
-use crate::shaders::{self, Shaders};
+use self::shaders::Shaders;
 
 pub struct Renderer {
     surface: wgpu::Surface,
