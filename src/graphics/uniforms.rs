@@ -1,9 +1,11 @@
 use bytemuck::{Pod, Zeroable};
 use euclid::Transform3D;
 
+use crate::transform::NativeTransform;
+
 #[derive(Clone, Copy)]
 pub struct Uniforms {
-    pub transform: [[f32; 4]; 4],
+    pub transform: NativeTransform,
 }
 
 impl Default for Uniforms {
