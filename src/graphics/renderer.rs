@@ -3,7 +3,10 @@ use std::{io, mem::size_of};
 use wgpu::util::DeviceExt as _;
 use winit::{dpi::PhysicalSize, window::Window};
 
-use super::shaders::{self, Shaders};
+use super::{
+    shaders::{self, Shaders},
+    uniforms::Uniforms,
+};
 
 pub struct Renderer {
     surface: wgpu::Surface,
@@ -58,6 +61,12 @@ impl Renderer {
 
         let swap_chain = device.create_swap_chain(&surface, &swap_chain_desc);
 
+        let uniform_buffer =
+            device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+                label: None,
+                contents: bytemuck::cast_slice(&[Uniforms::default()]),
+                usage: wgpu::BufferUsage::UNIFORM | wgpu::BufferUsage::COPY_DST,
+            });
         let vertex_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
@@ -73,12 +82,29 @@ impl Renderer {
 
         let bind_group_layout =
             device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-                entries: &[],
+                entries: &[wgpu::BindGroupLayoutEntry {
+                    binding: 0,
+                    visibility: wgpu::ShaderStage::VERTEX,
+                    ty: wgpu::BindingType::UniformBuffer {
+                        dynamic: false,
+                        min_binding_size: wgpu::BufferSize::new(size_of::<
+                            Uniforms,
+                        >(
+                        )
+                            as u64),
+                    },
+                    count: None,
+                }],
                 label: None,
             });
         let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
             layout: &bind_group_layout,
-            entries: &[],
+            entries: &[wgpu::BindGroupEntry {
+                binding: 0,
+                resource: wgpu::BindingResource::Buffer(
+                    uniform_buffer.slice(..),
+                ),
+            }],
             label: None,
         });
         let pipeline_layout =
