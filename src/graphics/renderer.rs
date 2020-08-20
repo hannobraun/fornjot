@@ -15,6 +15,7 @@ pub struct Renderer {
     swap_chain_desc: wgpu::SwapChainDescriptor,
     swap_chain: wgpu::SwapChain,
 
+    uniform_buffer: wgpu::Buffer,
     vertex_buffer: wgpu::Buffer,
     index_buffer: wgpu::Buffer,
 
@@ -179,6 +180,7 @@ impl Renderer {
             swap_chain_desc,
             swap_chain,
 
+            uniform_buffer,
             vertex_buffer,
             index_buffer,
 
@@ -197,6 +199,14 @@ impl Renderer {
     }
 
     pub fn draw(&mut self) -> Result<(), DrawError> {
+        let uniforms = Uniforms::default();
+
+        self.queue.write_buffer(
+            &mut self.uniform_buffer,
+            0,
+            bytemuck::cast_slice(&[uniforms]),
+        );
+
         let output = self
             .swap_chain
             .get_current_frame()
