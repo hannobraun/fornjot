@@ -32,7 +32,7 @@ impl Renderer {
                 compatible_surface: Some(&surface),
             })
             .await
-            .ok_or(InitError::AdapterRequest)?;
+            .ok_or(InitError::RequestAdapter)?;
 
         let (device, queue) = adapter
             .request_device(
@@ -209,8 +209,8 @@ impl Renderer {
 
 #[derive(Debug)]
 pub enum InitError {
-    AdapterRequest,
     Io(io::Error),
+    RequestAdapter,
     RequestDevice(wgpu::RequestDeviceError),
     Shaders(shaders::Error),
 }
