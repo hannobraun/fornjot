@@ -1,4 +1,4 @@
-mod renderer;
+mod graphics;
 
 use futures::executor::block_on;
 use winit::{
@@ -7,7 +7,7 @@ use winit::{
     window::WindowBuilder,
 };
 
-use self::renderer::Renderer;
+use self::graphics::Renderer;
 
 fn main() {
     let event_loop = EventLoop::new();
