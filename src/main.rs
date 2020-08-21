@@ -1,14 +1,15 @@
 mod graphics;
+mod input;
 mod transform;
 
 use futures::executor::block_on;
 use winit::{
-    event::{Event, KeyboardInput, VirtualKeyCode, WindowEvent},
+    event::{Event, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
     window::WindowBuilder,
 };
 
-use self::{graphics::Renderer, transform::Transform};
+use self::{graphics::Renderer, input::InputHandler, transform::Transform};
 
 fn main() {
     let event_loop = EventLoop::new();
@@ -21,6 +22,7 @@ fn main() {
         .build(&event_loop)
         .unwrap();
 
+    let mut input_handler = InputHandler::new();
     let transform = Transform::new();
     let mut renderer = block_on(Renderer::new(&window)).unwrap();
 
@@ -38,18 +40,10 @@ fn main() {
             renderer.handle_resize(size);
         }
         Event::WindowEvent {
-            event:
-                WindowEvent::KeyboardInput {
-                    input:
-                        KeyboardInput {
-                            virtual_keycode: Some(VirtualKeyCode::Escape),
-                            ..
-                        },
-                    ..
-                },
+            event: WindowEvent::KeyboardInput { input, .. },
             ..
         } => {
-            *control_flow = ControlFlow::Exit;
+            input_handler.handle_keyboard_input(input, control_flow);
         }
         Event::MainEventsCleared => {
             window.request_redraw();
