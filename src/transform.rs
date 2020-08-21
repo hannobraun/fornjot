@@ -23,9 +23,9 @@ impl Transform {
         //
         // To make the vertices that should be visible actually visible, we just
         // need to negate their z coordinate.
-        let transform = projection.then_scale(1.0, 1.0, -1.0);
+        let projection = projection.then_scale(1.0, 1.0, -1.0);
 
-        transform.to_arrays()
+        projection.to_arrays()
     }
 }
 
