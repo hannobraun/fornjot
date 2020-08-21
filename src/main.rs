@@ -21,6 +21,7 @@ fn main() {
         .build(&event_loop)
         .unwrap();
 
+    let transform = Transform::new();
     let mut renderer = block_on(Renderer::new(&window)).unwrap();
 
     event_loop.run(move |event, _, control_flow| match event {
@@ -54,7 +55,7 @@ fn main() {
             window.request_redraw();
         }
         Event::RedrawRequested(_) => {
-            renderer.draw(&Transform).unwrap();
+            renderer.draw(&transform).unwrap();
         }
         _ => {}
     })

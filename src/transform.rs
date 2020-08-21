@@ -3,6 +3,10 @@ use euclid::{Angle, Transform3D, Vector3D};
 pub struct Transform;
 
 impl Transform {
+    pub fn new() -> Self {
+        Self
+    }
+
     pub fn to_native(&self) -> NativeTransform {
         let view = Transform3D::<f32, (), ()>::identity()
             .then_rotate(1.0, 0.0, 0.0, Angle::degrees(45.0))
