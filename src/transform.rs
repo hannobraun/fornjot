@@ -1,9 +1,9 @@
 use euclid::{Angle, Transform3D, Vector3D};
 
 pub struct Transform {
-    x_angle: Angle<f32>,
-    z_angle: Angle<f32>,
-    distance: f32,
+    pub x_angle: Angle<f32>,
+    pub z_angle: Angle<f32>,
+    pub distance: f32,
 }
 
 impl Transform {
