@@ -12,6 +12,8 @@ impl Transform {
 
         // The `perspective` method sets `m44` to `1.0`. This is a bug, it
         // should be `0.0`.
+        //
+        // See https://github.com/servo/euclid/pull/465
         projection.m44 = 0.0;
 
         // To get a right-handed coordinate system, the camera is looking
