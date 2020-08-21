@@ -23,7 +23,7 @@ fn main() {
         .unwrap();
 
     let mut input_handler = InputHandler::new();
-    let transform = Transform::new();
+    let mut transform = Transform::new();
     let mut renderer = block_on(Renderer::new(&window)).unwrap();
 
     event_loop.run(move |event, _, control_flow| match event {
@@ -44,6 +44,12 @@ fn main() {
             ..
         } => {
             input_handler.handle_keyboard_input(input, control_flow);
+        }
+        Event::WindowEvent {
+            event: WindowEvent::MouseWheel { delta, .. },
+            ..
+        } => {
+            input_handler.handle_mouse_wheel(delta, &mut transform);
         }
         Event::MainEventsCleared => {
             window.request_redraw();
