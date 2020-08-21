@@ -46,6 +46,18 @@ fn main() {
             input_handler.handle_keyboard_input(input, control_flow);
         }
         Event::WindowEvent {
+            event: WindowEvent::CursorMoved { position, .. },
+            ..
+        } => {
+            input_handler.handle_cursor_moved(position, &mut transform);
+        }
+        Event::WindowEvent {
+            event: WindowEvent::MouseInput { state, button, .. },
+            ..
+        } => {
+            input_handler.handle_mouse_input(state, button);
+        }
+        Event::WindowEvent {
             event: WindowEvent::MouseWheel { delta, .. },
             ..
         } => {

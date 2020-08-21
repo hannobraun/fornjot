@@ -1,16 +1,26 @@
+use euclid::Angle;
 use winit::{
-    dpi::LogicalPosition,
-    event::{KeyboardInput, MouseScrollDelta, VirtualKeyCode},
+    dpi::{LogicalPosition, PhysicalPosition},
+    event::{
+        ElementState, KeyboardInput, MouseButton, MouseScrollDelta,
+        VirtualKeyCode,
+    },
     event_loop::ControlFlow,
 };
 
 use crate::transform::Transform;
 
-pub struct InputHandler;
+pub struct InputHandler {
+    camera_rotating: bool,
+    cursor_position: Option<PhysicalPosition<f64>>,
+}
 
 impl InputHandler {
     pub fn new() -> Self {
-        Self
+        Self {
+            camera_rotating: false,
+            cursor_position: None,
+        }
     }
 
     pub fn handle_keyboard_input(
@@ -26,6 +36,55 @@ impl InputHandler {
                 *control_flow = ControlFlow::Exit;
             }
             _ => {}
+        }
+    }
+
+    pub fn handle_cursor_moved(
+        &mut self,
+        position: PhysicalPosition<f64>,
+        transform: &mut Transform,
+    ) {
+        if let Some(previous) = self.cursor_position {
+            let diff_x = position.x - previous.x;
+            let diff_y = position.y - previous.y;
+
+            if self.camera_rotating {
+                let f = 0.005;
+
+                transform.angle_x.radians -= diff_y as f32 * f;
+                transform.angle_z.radians -= diff_x as f32 * f;
+
+                let min = Angle::zero();
+                let max = Angle::pi();
+
+                if transform.angle_x < min {
+                    transform.angle_x = min;
+                }
+                if transform.angle_x > max {
+                    transform.angle_x = max;
+                }
+            }
+        }
+
+        self.cursor_position = Some(position);
+    }
+
+    pub fn handle_mouse_input(
+        &mut self,
+        state: ElementState,
+        button: MouseButton,
+    ) {
+        match state {
+            ElementState::Pressed => {
+                if button == MouseButton::Left {
+                    self.camera_rotating = true;
+                }
+            }
+            ElementState::Released => {
+                if button == MouseButton::Left {
+                    self.camera_rotating = false;
+                }
+            }
         }
     }
 
