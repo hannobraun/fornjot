@@ -1,17 +1,25 @@
 use euclid::{Angle, Transform3D, Vector3D};
 
-pub struct Transform;
+pub struct Transform {
+    x_angle: Angle<f32>,
+    z_angle: Angle<f32>,
+    distance: f32,
+}
 
 impl Transform {
     pub fn new() -> Self {
-        Self
+        Self {
+            x_angle: Angle::degrees(45.0),
+            z_angle: Angle::degrees(45.0),
+            distance: 4.0,
+        }
     }
 
     pub fn to_native(&self) -> NativeTransform {
         let view = Transform3D::<f32, (), ()>::identity()
-            .then_rotate(1.0, 0.0, 0.0, Angle::degrees(45.0))
-            .then_rotate(0.0, 0.0, 1.0, Angle::degrees(45.0))
-            .then_translate(Vector3D::new(0.0, 0.0, -4.0));
+            .then_rotate(1.0, 0.0, 0.0, self.x_angle)
+            .then_rotate(0.0, 0.0, 1.0, self.z_angle)
+            .then_translate(Vector3D::new(0.0, 0.0, -self.distance));
 
         // Create perspective projection, which projects points into a plane
         // coplanar with the x-y plane, that has the given distance from the
