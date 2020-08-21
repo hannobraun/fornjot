@@ -9,8 +9,8 @@ pub struct Transform {
 impl Transform {
     pub fn new() -> Self {
         Self {
-            x_angle: Angle::degrees(45.0),
-            z_angle: Angle::degrees(45.0),
+            x_angle: Angle::frac_pi_4(),
+            z_angle: Angle::frac_pi_4(),
             distance: 4.0,
         }
     }
