@@ -1,9 +1,14 @@
-use euclid::Transform3D;
+use euclid::{Angle, Transform3D, Vector3D};
 
 pub struct Transform;
 
 impl Transform {
     pub fn to_native(&self) -> NativeTransform {
+        let view = Transform3D::<f32, (), ()>::identity()
+            .then_rotate(1.0, 0.0, 0.0, Angle::degrees(45.0))
+            .then_rotate(0.0, 0.0, 1.0, Angle::degrees(45.0))
+            .then_translate(Vector3D::new(0.0, 0.0, -4.0));
+
         // Create perspective projection, which projects points into a plane
         // coplanar with the x-y plane, that has the given distance from the
         // origin (our camera), in negative direction along the z axis.
@@ -25,7 +30,9 @@ impl Transform {
         // need to negate their z coordinate.
         let projection = projection.then_scale(1.0, 1.0, -1.0);
 
-        projection.to_arrays()
+        let transform = view.then(&projection);
+
+        transform.to_arrays()
     }
 }
 
