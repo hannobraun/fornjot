@@ -1,4 +1,3 @@
-use euclid::Angle;
 use winit::{
     dpi::{LogicalPosition, PhysicalPosition},
     event::{
@@ -53,16 +52,6 @@ impl InputHandler {
 
                 transform.angle_x.radians -= diff_y as f32 * f;
                 transform.angle_z.radians -= diff_x as f32 * f;
-
-                let min = Angle::zero();
-                let max = Angle::pi();
-
-                if transform.angle_x < min {
-                    transform.angle_x = min;
-                }
-                if transform.angle_x > max {
-                    transform.angle_x = max;
-                }
             }
         }
 
