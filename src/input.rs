@@ -12,14 +12,14 @@ use crate::transform::Transform;
 
 pub struct InputHandler {
     camera_rotating: bool,
-    cursor_position: Option<PhysicalPosition<f64>>,
+    cursor: Option<PhysicalPosition<f64>>,
 }
 
 impl InputHandler {
     pub fn new() -> Self {
         Self {
             camera_rotating: false,
-            cursor_position: None,
+            cursor: None,
         }
     }
 
@@ -44,7 +44,7 @@ impl InputHandler {
         position: PhysicalPosition<f64>,
         transform: &mut Transform,
     ) {
-        if let Some(previous) = self.cursor_position {
+        if let Some(previous) = self.cursor {
             let diff_x = position.x - previous.x;
             let diff_y = position.y - previous.y;
 
@@ -66,7 +66,7 @@ impl InputHandler {
             }
         }
 
-        self.cursor_position = Some(position);
+        self.cursor = Some(position);
     }
 
     pub fn handle_mouse_input(
