@@ -164,7 +164,7 @@ impl Renderer {
                         stride: size_of::<Vertex>() as u64,
                         step_mode: wgpu::InputStepMode::Vertex,
                         attributes: &[wgpu::VertexAttributeDescriptor {
-                            format: wgpu::VertexFormat::Float2,
+                            format: wgpu::VertexFormat::Float3,
                             offset: 0,
                             shader_location: 0,
                         }],
