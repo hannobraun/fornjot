@@ -11,14 +11,14 @@ use winit::{
 use crate::transform::Transform;
 
 pub struct InputHandler {
-    camera_rotating: bool,
+    rotating: bool,
     cursor: Option<PhysicalPosition<f64>>,
 }
 
 impl InputHandler {
     pub fn new() -> Self {
         Self {
-            camera_rotating: false,
+            rotating: false,
             cursor: None,
         }
     }
@@ -48,7 +48,7 @@ impl InputHandler {
             let diff_x = position.x - previous.x;
             let diff_y = position.y - previous.y;
 
-            if self.camera_rotating {
+            if self.rotating {
                 let f = 0.005;
 
                 transform.angle_x.radians -= diff_y as f32 * f;
@@ -77,12 +77,12 @@ impl InputHandler {
         match state {
             ElementState::Pressed => {
                 if button == MouseButton::Left {
-                    self.camera_rotating = true;
+                    self.rotating = true;
                 }
             }
             ElementState::Released => {
                 if button == MouseButton::Left {
-                    self.camera_rotating = false;
+                    self.rotating = false;
                 }
             }
         }
