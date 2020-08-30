@@ -164,7 +164,10 @@ impl Renderer {
                     vertex_buffers: &[wgpu::VertexBufferDescriptor {
                         stride: size_of::<Vertex>() as u64,
                         step_mode: wgpu::InputStepMode::Vertex,
-                        attributes: &wgpu::vertex_attr_array![0 => Float3],
+                        attributes: &wgpu::vertex_attr_array![
+                            0 => Float3,
+                            1 => Float3
+                        ],
                     }],
                 },
                 sample_count: 1,
