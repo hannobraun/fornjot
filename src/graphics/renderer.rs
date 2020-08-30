@@ -140,9 +140,9 @@ impl Renderer {
                     module: &fragment_shader,
                     entry_point: "main",
                 }),
-                rasterization_state: Some(
-                    wgpu::RasterizationStateDescriptor::default(),
-                ),
+                rasterization_state: Some(wgpu::RasterizationStateDescriptor {
+                    ..wgpu::RasterizationStateDescriptor::default()
+                }),
                 primitive_topology: wgpu::PrimitiveTopology::TriangleList,
                 color_states: &[wgpu::ColorStateDescriptor {
                     format: wgpu::TextureFormat::Bgra8UnormSrgb,
