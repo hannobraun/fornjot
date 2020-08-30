@@ -1,24 +1,21 @@
-use euclid::{Angle, Transform3D, Vector3D};
+use euclid::{Transform3D, Vector3D};
 
 pub struct Transform {
-    pub angle_x: Angle<f32>,
-    pub angle_z: Angle<f32>,
+    pub rotation: Transform3D<f32, (), ()>,
     pub distance: f32,
 }
 
 impl Transform {
     pub fn new() -> Self {
         Self {
-            angle_x: Angle::zero(),
-            angle_z: Angle::zero(),
+            rotation: Transform3D::identity(),
             distance: 4.0,
         }
     }
 
     pub fn to_native(&self, aspect_ratio: f32) -> NativeTransform {
         let view = Transform3D::<f32, (), ()>::identity()
-            .then_rotate(1.0, 0.0, 0.0, self.angle_x)
-            .then_rotate(0.0, 0.0, 1.0, self.angle_z)
+            .then(&self.rotation)
             .then_translate(Vector3D::new(0.0, 0.0, -self.distance));
 
         // Create perspective projection, which projects points into a plane
