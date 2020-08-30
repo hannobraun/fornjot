@@ -1,13 +1,15 @@
+use bytemuck::{Pod, Zeroable};
+
 #[rustfmt::skip]
 pub const VERTICES: &[Vertex] = &[
-    [-0.5, -0.5, -0.5], // 0
-    [-0.5, -0.5,  0.5], // 1
-    [-0.5,  0.5, -0.5], // 2
-    [-0.5,  0.5,  0.5], // 3
-    [ 0.5, -0.5, -0.5], // 4
-    [ 0.5, -0.5,  0.5], // 5
-    [ 0.5,  0.5, -0.5], // 6
-    [ 0.5,  0.5,  0.5], // 7
+    Vertex { position: [-0.5, -0.5, -0.5] }, // 0
+    Vertex { position: [-0.5, -0.5,  0.5] }, // 1
+    Vertex { position: [-0.5,  0.5, -0.5] }, // 2
+    Vertex { position: [-0.5,  0.5,  0.5] }, // 3
+    Vertex { position: [ 0.5, -0.5, -0.5] }, // 4
+    Vertex { position: [ 0.5, -0.5,  0.5] }, // 5
+    Vertex { position: [ 0.5,  0.5, -0.5] }, // 6
+    Vertex { position: [ 0.5,  0.5,  0.5] }, // 7
 ];
 
 #[rustfmt::skip]
@@ -37,5 +39,12 @@ pub const INDICES: &[Index] = &[
     3, 5, 7,
 ];
 
-pub type Vertex = [f32; 3];
+#[derive(Clone, Copy)]
+pub struct Vertex {
+    pub position: [f32; 3],
+}
+
+unsafe impl Zeroable for Vertex {}
+unsafe impl Pod for Vertex {}
+
 pub type Index = u16;
