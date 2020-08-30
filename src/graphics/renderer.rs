@@ -270,8 +270,9 @@ impl From<io::Error> for InitError {
 #[derive(Debug)]
 pub struct DrawError(wgpu::SwapChainError);
 
-const VERTICES: &[Vertex] = &[[-0.5, -0.5], [0.5, -0.5], [0.0, 0.5]];
+const VERTICES: &[Vertex] =
+    &[[-0.5, -0.5, 0.0], [0.5, -0.5, 0.0], [0.0, 0.5, 0.0]];
 const INDICES: &[Index] = &[0, 1, 2];
 
-type Vertex = [f32; 2];
+type Vertex = [f32; 3];
 type Index = u16;
