@@ -15,7 +15,7 @@ impl Transform {
         }
     }
 
-    pub fn to_native(&self) -> NativeTransform {
+    pub fn to_native(&self, aspect_ratio: f32) -> NativeTransform {
         let view = Transform3D::<f32, (), ()>::identity()
             .then_rotate(1.0, 0.0, 0.0, self.angle_x)
             .then_rotate(0.0, 0.0, 1.0, self.angle_z)
@@ -41,6 +41,8 @@ impl Transform {
         // To make the vertices that should be visible actually visible, we just
         // need to negate their z coordinate.
         let projection = projection.then_scale(1.0, 1.0, -1.0);
+
+        let projection = projection.then_scale(1.0 / aspect_ratio, 1.0, 1.0);
 
         let transform = view.then(&projection);
 

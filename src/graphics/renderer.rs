@@ -202,7 +202,7 @@ impl Renderer {
 
     pub fn draw(&mut self, transform: &Transform) -> Result<(), DrawError> {
         let uniforms = Uniforms {
-            transform: transform.to_native(),
+            transform: transform.to_native(self.aspect_ratio()),
         };
 
         self.queue.write_buffer(
@@ -246,6 +246,10 @@ impl Renderer {
         self.queue.submit(Some(encoder.finish()));
 
         Ok(())
+    }
+
+    fn aspect_ratio(&self) -> f32 {
+        self.swap_chain_desc.width as f32 / self.swap_chain_desc.height as f32
     }
 }
 
