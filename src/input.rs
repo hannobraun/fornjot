@@ -51,13 +51,13 @@ impl InputHandler {
             if self.rotating {
                 let f = 0.005;
 
-                let x_angle = Angle::radians(-diff_y as f32 * f);
-                let y_angle = Angle::radians(-diff_x as f32 * f);
+                let x_angle = Angle::radians(diff_y as f32 * f);
+                let y_angle = Angle::radians(diff_x as f32 * f);
 
                 transform.rotation = transform
                     .rotation
                     .then_rotate(1.0, 0.0, 0.0, x_angle)
-                    .then_rotate(0.0, 0.0, 1.0, y_angle);
+                    .then_rotate(0.0, 1.0, 0.0, y_angle);
             }
         }
 
