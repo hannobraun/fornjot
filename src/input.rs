@@ -11,15 +11,15 @@ use winit::{
 use crate::transform::Transform;
 
 pub struct InputHandler {
-    rotating: bool,
     cursor: Option<PhysicalPosition<f64>>,
+    rotating: bool,
 }
 
 impl InputHandler {
     pub fn new() -> Self {
         Self {
-            rotating: false,
             cursor: None,
+            rotating: false,
         }
     }
 
