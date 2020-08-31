@@ -141,6 +141,10 @@ impl Renderer {
                     entry_point: "main",
                 }),
                 rasterization_state: Some(wgpu::RasterizationStateDescriptor {
+                    // Enabled as a temporary workaround until we get depth
+                    // testing working. Without this, the lack of depth testing
+                    // is blocking the implementation of simple shading.
+                    cull_mode: wgpu::CullMode::Back,
                     ..wgpu::RasterizationStateDescriptor::default()
                 }),
                 primitive_topology: wgpu::PrimitiveTopology::TriangleList,
