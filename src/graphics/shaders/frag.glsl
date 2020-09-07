@@ -10,9 +10,9 @@ layout(location = 0) out vec4 color;
 
 
 void main() {
-    vec3 light = vec3(0.0, 0.0, 1.0);
+    vec3 light = vec3(0.0, 0.0, -1.0);
 
-    float angle = acos(dot(-light, normal));
+    float angle = acos(dot(light, normal));
     float f_angle = angle / (PI / 2.0);
 
     float f_normal = max(1.0 - f_angle, 0.0);
