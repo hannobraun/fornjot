@@ -18,7 +18,7 @@ impl Transform {
             .then(&self.rotation)
             .then_translate(Vector3D::new(0.0, 0.0, -self.distance));
 
-        let m11 = 1.0;
+        let m11 = 1.0 / aspect_ratio; // aspect ratio
         let m12 = 0.0;
         let m13 = 0.0;
         let m14 = 0.0;
@@ -51,8 +51,6 @@ impl Transform {
         // To make the vertices that should be visible actually visible, we just
         // need to negate their z coordinate.
         let projection = projection.then_scale(1.0, 1.0, -1.0);
-
-        let projection = projection.then_scale(1.0 / aspect_ratio, 1.0, 1.0);
 
         let transform = view.then(&projection);
 
