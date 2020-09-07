@@ -15,7 +15,7 @@ void main() {
     float angle = acos(dot(-light, normal));
     float f_angle = (angle / (PI / 2.0));
 
-    float f_normal = 1.0 - f_angle;
+    float f_normal = max(1.0 - f_angle, 0.0);
 
     color = vec4(vec3(1.0, 0.0, 0.0) * f_normal, 1.0);
 }
