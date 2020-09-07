@@ -17,6 +17,8 @@ impl Transform {
         let n = 0.1; // distance of near plane
         let f = 100.0; // distance of far plane
 
+        let d = 1.0; // distance to projection plane
+
         let m11 = 1.0 / aspect_ratio; // aspect ratio
         let m12 = 0.0;
         let m13 = 0.0;
@@ -30,7 +32,7 @@ impl Transform {
         let m31 = 0.0;
         let m32 = 0.0;
         let m33 = -(f + n) / (f - n); // normalize z between near/far planes
-        let m34 = -1.0; // project points into plane z = -1.0
+        let m34 = -1.0 / d; // project points into plane z = -d
 
         let m41 = 0.0;
         let m42 = 0.0;
