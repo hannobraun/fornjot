@@ -18,17 +18,7 @@ impl Transform {
             .then(&self.rotation)
             .then_translate(Vector3D::new(0.0, 0.0, -self.distance));
 
-        // Create perspective projection, which projects points into a plane
-        // coplanar with the x-y plane, that has the given distance from the
-        // origin (our camera), in negative direction along the z axis.
-        let distance = 1.0;
-        let mut projection = Transform3D::<f32, (), ()>::perspective(distance);
-
-        // The `perspective` method sets `m44` to `1.0`. This is a bug, it
-        // should be `0.0`.
-        //
-        // See https://github.com/servo/euclid/pull/465
-        projection.m44 = 0.0;
+        let projection = perspective(1.0);
 
         // To get a right-handed coordinate system, the camera is looking
         // towards the negative z axis, meaning visible points have a negative z
@@ -48,3 +38,24 @@ impl Transform {
 }
 
 pub type NativeTransform = [[f32; 4]; 4];
+
+/// Creates a perspective projection matrix
+///
+/// The matrix projects points into a plane defined by `z = -d`.
+///
+/// After points are projected into this plane, any of them that have
+/// coordinates outside the [-1.0, 1.0] range will be clipped by the hardware.
+/// Therefore, the distance of the plane (which is equal to the parameter `d`)
+/// defines a field of view that gets narrower distance gets smaller, or wider
+/// as the distance gets bigger.
+fn perspective(d: f32) -> Transform3D<f32, (), ()> {
+    let mut t = Transform3D::perspective(d);
+
+    // The `perspective` method sets `m44` to `1.0`. I believe this is a bug,
+    // and that the value should be `0.0`.
+    //
+    // See https://github.com/servo/euclid/pull/465
+    t.m44 = 0.0;
+
+    t
+}
