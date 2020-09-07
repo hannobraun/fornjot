@@ -29,7 +29,7 @@ impl Transform {
         let m31 = 0.0;
         let m32 = 0.0;
         let m33 = 1.0;
-        let m34 = -1.0 / 1.0; // project points into plane z = -d
+        let m34 = -1.0; // project points into plane z = -1.0
         let m41 = 0.0;
         let m42 = 0.0;
         let m43 = 0.0;
