@@ -11,6 +11,8 @@ use super::{
     vertices::{Vertex, INDICES, VERTICES},
 };
 
+const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth32Float;
+
 pub struct Renderer {
     surface: wgpu::Surface,
     device: wgpu::Device,
@@ -21,6 +23,9 @@ pub struct Renderer {
     uniform_buffer: wgpu::Buffer,
     vertex_buffer: wgpu::Buffer,
     index_buffer: wgpu::Buffer,
+
+    depth_texture: wgpu::Texture,
+    depth_view: wgpu::TextureView,
 
     bind_group: wgpu::BindGroup,
     render_pipeline: wgpu::RenderPipeline,
@@ -128,6 +133,9 @@ impl Renderer {
             wgpu::util::make_spirv(shaders.fragment.as_binary_u8()),
         );
 
+        let (depth_texture, depth_view) =
+            create_depth_buffer(&device, &swap_chain_desc);
+
         let render_pipeline =
             device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
                 label: None,
@@ -162,7 +170,17 @@ impl Renderer {
                     },
                     write_mask: wgpu::ColorWrite::ALL,
                 }],
-                depth_stencil_state: None,
+                depth_stencil_state: Some(wgpu::DepthStencilStateDescriptor {
+                    format: DEPTH_FORMAT,
+                    depth_write_enabled: true,
+                    depth_compare: wgpu::CompareFunction::Less,
+                    stencil: wgpu::StencilStateDescriptor {
+                        front: wgpu::StencilStateFaceDescriptor::IGNORE,
+                        back: wgpu::StencilStateFaceDescriptor::IGNORE,
+                        read_mask: 0,
+                        write_mask: 0,
+                    },
+                }),
                 vertex_state: wgpu::VertexStateDescriptor {
                     index_format: wgpu::IndexFormat::Uint16,
                     vertex_buffers: &[wgpu::VertexBufferDescriptor {
@@ -190,6 +208,9 @@ impl Renderer {
             vertex_buffer,
             index_buffer,
 
+            depth_texture,
+            depth_view,
+
             bind_group,
             render_pipeline,
         })
@@ -202,6 +223,11 @@ impl Renderer {
         self.swap_chain = self
             .device
             .create_swap_chain(&self.surface, &self.swap_chain_desc);
+
+        let (depth_texture, depth_view) =
+            create_depth_buffer(&self.device, &self.swap_chain_desc);
+        self.depth_texture = depth_texture;
+        self.depth_view = depth_view;
     }
 
     pub fn draw(&mut self, transform: &Transform) -> Result<(), DrawError> {
@@ -239,7 +265,16 @@ impl Renderer {
                             },
                         },
                     ],
-                    depth_stencil_attachment: None,
+                    depth_stencil_attachment: Some(
+                        wgpu::RenderPassDepthStencilAttachmentDescriptor {
+                            attachment: &self.depth_view,
+                            depth_ops: Some(wgpu::Operations {
+                                load: wgpu::LoadOp::Clear(1.0),
+                                store: true,
+                            }),
+                            stencil_ops: None,
+                        },
+                    ),
                 });
             render_pass.set_pipeline(&self.render_pipeline);
             render_pass.set_bind_group(0, &self.bind_group, &[]);
@@ -256,6 +291,29 @@ impl Renderer {
     fn aspect_ratio(&self) -> f32 {
         self.swap_chain_desc.width as f32 / self.swap_chain_desc.height as f32
     }
+}
+
+fn create_depth_buffer(
+    device: &wgpu::Device,
+    swap_chain_desc: &wgpu::SwapChainDescriptor,
+) -> (wgpu::Texture, wgpu::TextureView) {
+    let texture = device.create_texture(&wgpu::TextureDescriptor {
+        label: None,
+        size: wgpu::Extent3d {
+            width: swap_chain_desc.width,
+            height: swap_chain_desc.height,
+            depth: 1,
+        },
+        mip_level_count: 1,
+        sample_count: 1,
+        dimension: wgpu::TextureDimension::D2,
+        format: DEPTH_FORMAT,
+        usage: wgpu::TextureUsage::OUTPUT_ATTACHMENT,
+    });
+
+    let view = texture.create_view(&wgpu::TextureViewDescriptor::default());
+
+    (texture, view)
 }
 
 #[derive(Debug)]
