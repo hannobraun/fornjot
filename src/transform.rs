@@ -21,14 +21,17 @@ impl Transform {
         let m12 = 0.0;
         let m13 = 0.0;
         let m14 = 0.0;
+
         let m21 = 0.0;
         let m22 = 1.0;
         let m23 = 0.0;
         let m24 = 0.0;
+
         let m31 = 0.0;
         let m32 = 0.0;
         let m33 = -(f + n) / (f - n); // normalize z between near/far planes
         let m34 = -1.0; // project points into plane z = -1.0
+
         let m41 = 0.0;
         let m42 = 0.0;
         let m43 = -2.0 * f * n / (f - n); // normalize z between near/far planes
