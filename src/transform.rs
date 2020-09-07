@@ -14,10 +14,6 @@ impl Transform {
     }
 
     pub fn to_native(&self, aspect_ratio: f32) -> NativeTransform {
-        let view = Transform3D::<f32, (), ()>::identity()
-            .then(&self.rotation)
-            .then_translate(Vector3D::new(0.0, 0.0, -self.distance));
-
         let m11 = 1.0 / aspect_ratio; // aspect ratio
         let m12 = 0.0;
         let m13 = 0.0;
@@ -52,9 +48,15 @@ impl Transform {
         // need to negate their z coordinate.
         let projection = projection.then_scale(1.0, 1.0, -1.0);
 
-        let transform = view.then(&projection);
+        let transform = self.view_transform().then(&projection);
 
         transform.to_arrays()
+    }
+
+    fn view_transform(&self) -> Transform3D<f32, (), ()> {
+        Transform3D::identity()
+            .then(&self.rotation)
+            .then_translate(Vector3D::new(0.0, 0.0, -self.distance))
     }
 }
 
