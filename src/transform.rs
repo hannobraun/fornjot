@@ -24,7 +24,7 @@ impl Transform {
         let m24 = 0.0;
         let m31 = 0.0;
         let m32 = 0.0;
-        let m33 = 1.0;
+        let m33 = -1.0; // normalize z coordinate
         let m34 = -1.0; // project points into plane z = -1.0
         let m41 = 0.0;
         let m42 = 0.0;
@@ -38,15 +38,6 @@ impl Transform {
             m31, m32, m33, m34,
             m41, m42, m43, m44,
         );
-
-        // To get a right-handed coordinate system, the camera is looking
-        // towards the negative z axis, meaning visible points have a negative z
-        // coordinate, relative to the camera. But WebGPU only displays vertices
-        // whose z, in normalized device coordinates, is between 0 and 1.
-        //
-        // To make the vertices that should be visible actually visible, we just
-        // need to negate their z coordinate.
-        let projection = projection.then_scale(1.0, 1.0, -1.0);
 
         self.view_transform().then(&projection).to_arrays()
     }
