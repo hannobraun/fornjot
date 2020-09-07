@@ -48,9 +48,7 @@ impl Transform {
         // need to negate their z coordinate.
         let projection = projection.then_scale(1.0, 1.0, -1.0);
 
-        let transform = self.view_transform().then(&projection);
-
-        transform.to_arrays()
+        self.view_transform().then(&projection).to_arrays()
     }
 
     fn view_transform(&self) -> Transform3D<f32, (), ()> {
