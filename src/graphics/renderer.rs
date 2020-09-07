@@ -148,13 +148,9 @@ impl Renderer {
                     module: &fragment_shader,
                     entry_point: "main",
                 }),
-                rasterization_state: Some(wgpu::RasterizationStateDescriptor {
-                    // Enabled as a temporary workaround until we get depth
-                    // testing working. Without this, the lack of depth testing
-                    // is blocking the implementation of simple shading.
-                    cull_mode: wgpu::CullMode::Back,
-                    ..wgpu::RasterizationStateDescriptor::default()
-                }),
+                rasterization_state: Some(
+                    wgpu::RasterizationStateDescriptor::default(),
+                ),
                 primitive_topology: wgpu::PrimitiveTopology::TriangleList,
                 color_states: &[wgpu::ColorStateDescriptor {
                     format: wgpu::TextureFormat::Bgra8UnormSrgb,
