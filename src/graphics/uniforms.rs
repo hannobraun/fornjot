@@ -6,6 +6,7 @@ use crate::transform::NativeTransform;
 #[derive(Clone, Copy)]
 pub struct Uniforms {
     pub transform: NativeTransform,
+    pub transform_normals: NativeTransform,
 }
 
 impl Default for Uniforms {
@@ -14,6 +15,7 @@ impl Default for Uniforms {
 
         Self {
             transform: identity.to_arrays(),
+            transform_normals: identity.to_arrays(),
         }
     }
 }

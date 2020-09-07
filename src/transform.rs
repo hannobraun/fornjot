@@ -42,6 +42,13 @@ impl Transform {
         self.view_transform().then(&projection).to_arrays()
     }
 
+    pub fn to_normals_transform(&self) -> NativeTransform {
+        self.view_transform()
+            .inverse()
+            .expect("view transform was not invertible")
+            .to_arrays_transposed()
+    }
+
     fn view_transform(&self) -> Transform3D<f32, (), ()> {
         Transform3D::identity()
             .then(&self.rotation)

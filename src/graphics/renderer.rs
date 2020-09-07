@@ -207,6 +207,7 @@ impl Renderer {
     pub fn draw(&mut self, transform: &Transform) -> Result<(), DrawError> {
         let uniforms = Uniforms {
             transform: transform.to_native(self.aspect_ratio()),
+            transform_normals: transform.to_normals_transform(),
         };
 
         self.queue.write_buffer(
