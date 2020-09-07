@@ -14,6 +14,9 @@ impl Transform {
     }
 
     pub fn to_native(&self, aspect_ratio: f32) -> NativeTransform {
+        let n = 0.1; // distance of near plane
+        let f = 100.0; // distance of far plane
+
         let m11 = 1.0 / aspect_ratio; // aspect ratio
         let m12 = 0.0;
         let m13 = 0.0;
@@ -24,11 +27,11 @@ impl Transform {
         let m24 = 0.0;
         let m31 = 0.0;
         let m32 = 0.0;
-        let m33 = -1.0; // normalize z coordinate
+        let m33 = -(f + n) / (f - n); // normalize z between near/far planes
         let m34 = -1.0; // project points into plane z = -1.0
         let m41 = 0.0;
         let m42 = 0.0;
-        let m43 = 0.0;
+        let m43 = -2.0 * f * n / (f - n); // normalize z between near/far planes
         let m44 = 0.0;
 
         #[rustfmt::skip]
