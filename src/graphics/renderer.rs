@@ -3,12 +3,15 @@ use std::{io, mem::size_of};
 use wgpu::util::DeviceExt as _;
 use winit::{dpi::PhysicalSize, window::Window};
 
-use crate::transform::Transform;
+use crate::{
+    transform::Transform,
+    vertices::{INDICES, VERTICES},
+};
 
 use super::{
     shaders::{self, Shaders},
     uniforms::Uniforms,
-    vertices::{Vertex, INDICES, VERTICES},
+    vertices::Vertex,
 };
 
 const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth32Float;

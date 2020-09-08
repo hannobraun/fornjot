@@ -1,6 +1,7 @@
 mod graphics;
 mod input;
 mod transform;
+mod vertices;
 
 use futures::executor::block_on;
 use winit::{
