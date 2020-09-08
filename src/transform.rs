@@ -17,13 +17,13 @@ impl Transform {
         let n = 0.1; // distance of near plane
         let f = 100.0; // distance of far plane
 
-        let m11 = 1.0 / aspect_ratio; // aspect ratio
+        let m11 = 1.0 / aspect_ratio / n; // aspect ratio; field of view
         let m12 = 0.0;
         let m13 = 0.0;
         let m14 = 0.0;
 
         let m21 = 0.0;
-        let m22 = 1.0;
+        let m22 = 1.0 / n; // field of view
         let m23 = 0.0;
         let m24 = 0.0;
 
@@ -38,6 +38,7 @@ impl Transform {
         let m44 = 0.0;
 
         // The resulting projection matrix has the following attributes:
+        // - Scales points along x and y to set the field of view to 90°.
         // - Projects points on the plane defined by `z = -n`.
         // - Normalizes z, with `z = -n` becoming 0, `z = -f` becoming 1.
         // - Sets w to -z in preparation of the perspective division. The `-`
