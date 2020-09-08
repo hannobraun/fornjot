@@ -37,6 +37,9 @@ impl Transform {
         let m43 = -f * n / (f - n); // normalize z between near/far planes
         let m44 = 0.0;
 
+        // The resulting projection matrix has the following attributes:
+        // - Projects points on the plane defined by `z = -n`.
+        // - Normalizes z, with `z = -n` becoming 0, `z = -f` becoming 1.
         #[rustfmt::skip]
         let projection = Transform3D::<f32, (), ()>::new(
             m11, m12, m13, m14,
