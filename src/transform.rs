@@ -30,7 +30,7 @@ impl Transform {
         let m31 = 0.0;
         let m32 = 0.0;
         let m33 = -f / (f - n); // normalize z between near/far planes
-        let m34 = -1.0;
+        let m34 = -1.0; // prepare perspective division
 
         let m41 = 0.0;
         let m42 = 0.0;
@@ -40,6 +40,10 @@ impl Transform {
         // The resulting projection matrix has the following attributes:
         // - Projects points on the plane defined by `z = -n`.
         // - Normalizes z, with `z = -n` becoming 0, `z = -f` becoming 1.
+        // - Sets w to -z in preparation of the perspective division. The `-`
+        //   has the effect of converting from our right-handed coordinate
+        //   system to the left-handed coordinate system of homogenous device
+        //   coordinates.
         #[rustfmt::skip]
         let projection = Transform3D::<f32, (), ()>::new(
             m11, m12, m13, m14,
