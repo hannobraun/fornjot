@@ -29,12 +29,12 @@ impl Transform {
 
         let m31 = 0.0;
         let m32 = 0.0;
-        let m33 = -(f + n) / (f - n); // normalize z between near/far planes
+        let m33 = -f / (f - n); // normalize z between near/far planes
         let m34 = -1.0;
 
         let m41 = 0.0;
         let m42 = 0.0;
-        let m43 = -2.0 * f * n / (f - n); // normalize z between near/far planes
+        let m43 = -f * n / (f - n); // normalize z between near/far planes
         let m44 = 0.0;
 
         #[rustfmt::skip]
