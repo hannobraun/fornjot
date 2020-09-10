@@ -27,6 +27,14 @@ fn main() {
     let mut transform = Transform::new();
     let mut renderer = block_on(Renderer::new(&window)).unwrap();
 
+    renderer.update_geometry(|geometry| {
+        geometry.vertices.clear();
+        geometry.indices.clear();
+
+        geometry.vertices.extend_from_slice(vertices::VERTICES);
+        geometry.indices.extend_from_slice(vertices::INDICES);
+    });
+
     event_loop.run(move |event, _, control_flow| match event {
         Event::WindowEvent {
             event: WindowEvent::CloseRequested,

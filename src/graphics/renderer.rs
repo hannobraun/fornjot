@@ -3,18 +3,17 @@ use std::{io, mem::size_of};
 use wgpu::util::DeviceExt as _;
 use winit::{dpi::PhysicalSize, window::Window};
 
-use crate::{
-    transform::Transform,
-    vertices::{INDICES, VERTICES},
-};
+use crate::transform::Transform;
 
 use super::{
+    geometry::Geometry,
     shaders::{self, Shaders},
     uniforms::Uniforms,
     vertices::Vertex,
 };
 
 const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth32Float;
+const BUFFER_SIZE: usize = 256 * 1024;
 
 pub struct Renderer {
     surface: wgpu::Surface,
@@ -32,6 +31,8 @@ pub struct Renderer {
 
     bind_group: wgpu::BindGroup,
     render_pipeline: wgpu::RenderPipeline,
+
+    geometry: Geometry,
 }
 
 impl Renderer {
@@ -82,14 +83,14 @@ impl Renderer {
         let vertex_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
-                contents: bytemuck::cast_slice(VERTICES),
-                usage: wgpu::BufferUsage::VERTEX,
+                contents: &[0; BUFFER_SIZE],
+                usage: wgpu::BufferUsage::VERTEX | wgpu::BufferUsage::COPY_DST,
             });
         let index_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
-                contents: bytemuck::cast_slice(INDICES),
-                usage: wgpu::BufferUsage::INDEX,
+                contents: &[0; BUFFER_SIZE],
+                usage: wgpu::BufferUsage::INDEX | wgpu::BufferUsage::COPY_DST,
             });
 
         let bind_group_layout =
@@ -196,6 +197,8 @@ impl Renderer {
                 alpha_to_coverage_enabled: false,
             });
 
+        let geometry = Geometry::new();
+
         Ok(Self {
             surface,
             device,
@@ -212,6 +215,8 @@ impl Renderer {
 
             bind_group,
             render_pipeline,
+
+            geometry,
         })
     }
 
@@ -227,6 +232,21 @@ impl Renderer {
             create_depth_buffer(&self.device, &self.swap_chain_desc);
         self.depth_texture = depth_texture;
         self.depth_view = depth_view;
+    }
+
+    pub fn update_geometry(&mut self, f: impl FnOnce(&mut Geometry)) {
+        f(&mut self.geometry);
+
+        self.queue.write_buffer(
+            &mut self.vertex_buffer,
+            0,
+            bytemuck::cast_slice(self.geometry.vertices.as_slice()),
+        );
+        self.queue.write_buffer(
+            &mut self.index_buffer,
+            0,
+            bytemuck::cast_slice(self.geometry.indices.as_slice()),
+        );
     }
 
     pub fn draw(&mut self, transform: &Transform) -> Result<(), DrawError> {
@@ -279,7 +299,11 @@ impl Renderer {
             render_pass.set_bind_group(0, &self.bind_group, &[]);
             render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
             render_pass.set_index_buffer(self.index_buffer.slice(..));
-            render_pass.draw_indexed(0..INDICES.len() as u32, 0, 0..1);
+            render_pass.draw_indexed(
+                0..self.geometry.indices.len() as u32,
+                0,
+                0..1,
+            );
         }
 
         self.queue.submit(Some(encoder.finish()));
