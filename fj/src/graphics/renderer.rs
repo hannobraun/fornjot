@@ -86,13 +86,13 @@ impl Renderer {
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
                 contents: bytemuck::cast_slice(geometry.vertices.as_slice()),
-                usage: wgpu::BufferUsage::VERTEX | wgpu::BufferUsage::COPY_DST,
+                usage: wgpu::BufferUsage::VERTEX,
             });
         let index_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
                 contents: bytemuck::cast_slice(geometry.indices.as_slice()),
-                usage: wgpu::BufferUsage::INDEX | wgpu::BufferUsage::COPY_DST,
+                usage: wgpu::BufferUsage::INDEX,
             });
 
         let bind_group_layout =
