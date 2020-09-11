@@ -1,11 +1,11 @@
 use super::{Index, Vertex};
 
-pub struct Geometry {
+pub struct Mesh {
     pub vertices: Vec<Vertex>,
     pub indices: Vec<Index>,
 }
 
-impl Geometry {
+impl Mesh {
     pub fn new() -> Self {
         Self {
             vertices: Vec::new(),

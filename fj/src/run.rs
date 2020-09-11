@@ -6,12 +6,12 @@ use winit::{
 };
 
 use crate::{
-    graphics::{Geometry, Renderer},
+    graphics::{Mesh, Renderer},
     input::InputHandler,
     transform::Transform,
 };
 
-pub fn run(geometry: Geometry) {
+pub fn run(geometry: Mesh) {
     let event_loop = EventLoop::new();
 
     let window = WindowBuilder::new()

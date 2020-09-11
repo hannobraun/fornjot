@@ -4,6 +4,6 @@ mod run;
 mod transform;
 
 pub use self::{
-    graphics::{Geometry, Index, Vertex},
+    graphics::{Index, Mesh, Vertex},
     run::run,
 };

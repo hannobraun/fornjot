@@ -5,7 +5,7 @@ mod uniforms;
 mod vertices;
 
 pub use self::{
-    geometry::Geometry,
+    geometry::Mesh,
     renderer::Renderer,
     vertices::{Index, Vertex},
 };

@@ -6,7 +6,7 @@ use winit::{dpi::PhysicalSize, window::Window};
 use crate::transform::Transform;
 
 use super::{
-    geometry::Geometry,
+    geometry::Mesh,
     shaders::{self, Shaders},
     uniforms::Uniforms,
     vertices::Vertex,
@@ -31,13 +31,13 @@ pub struct Renderer {
     bind_group: wgpu::BindGroup,
     render_pipeline: wgpu::RenderPipeline,
 
-    geometry: Geometry,
+    geometry: Mesh,
 }
 
 impl Renderer {
     pub async fn new(
         window: &Window,
-        geometry: Geometry,
+        geometry: Mesh,
     ) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::BackendBit::VULKAN);
 

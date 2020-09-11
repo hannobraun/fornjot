@@ -1,7 +1,7 @@
 use fj::Vertex;
 
 fn main() {
-    let mut geometry = fj::Geometry::new();
+    let mut geometry = fj::Mesh::new();
     geometry.vertices.extend_from_slice(VERTICES);
     geometry.indices.extend_from_slice(INDICES);
 
