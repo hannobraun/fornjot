@@ -10,9 +10,17 @@ use winit::{
     window::WindowBuilder,
 };
 
-use self::{graphics::Renderer, input::InputHandler, transform::Transform};
+use self::{
+    graphics::{Geometry, Renderer},
+    input::InputHandler,
+    transform::Transform,
+};
 
 fn main() {
+    let mut geometry = Geometry::new();
+    geometry.vertices.extend_from_slice(vertices::VERTICES);
+    geometry.indices.extend_from_slice(vertices::INDICES);
+
     let event_loop = EventLoop::new();
 
     let window = WindowBuilder::new()
@@ -27,12 +35,8 @@ fn main() {
     let mut transform = Transform::new();
     let mut renderer = block_on(Renderer::new(&window)).unwrap();
 
-    renderer.update_geometry(|geometry| {
-        geometry.vertices.clear();
-        geometry.indices.clear();
-
-        geometry.vertices.extend_from_slice(vertices::VERTICES);
-        geometry.indices.extend_from_slice(vertices::INDICES);
+    renderer.update_geometry(|g| {
+        *g = geometry;
     });
 
     event_loop.run(move |event, _, control_flow| match event {
