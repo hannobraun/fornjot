@@ -10,7 +10,7 @@ use winit::{
     window::WindowBuilder,
 };
 
-use self::{
+use crate::{
     graphics::{Geometry, Renderer},
     input::InputHandler,
     transform::Transform,
