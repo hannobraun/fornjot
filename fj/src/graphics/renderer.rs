@@ -31,7 +31,7 @@ pub struct Renderer {
     bind_group: wgpu::BindGroup,
     render_pipeline: wgpu::RenderPipeline,
 
-    mesh: Mesh,
+    num_indices: u32,
 }
 
 impl Renderer {
@@ -213,7 +213,7 @@ impl Renderer {
             bind_group,
             render_pipeline,
 
-            mesh,
+            num_indices: mesh.indices.len() as u32,
         })
     }
 
@@ -281,11 +281,7 @@ impl Renderer {
             render_pass.set_bind_group(0, &self.bind_group, &[]);
             render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
             render_pass.set_index_buffer(self.index_buffer.slice(..));
-            render_pass.draw_indexed(
-                0..self.mesh.indices.len() as u32,
-                0,
-                0..1,
-            );
+            render_pass.draw_indexed(0..self.num_indices, 0, 0..1);
         }
 
         self.queue.submit(Some(encoder.finish()));
