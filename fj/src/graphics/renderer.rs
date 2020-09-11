@@ -35,10 +35,7 @@ pub struct Renderer {
 }
 
 impl Renderer {
-    pub async fn new(
-        window: &Window,
-        geometry: Mesh,
-    ) -> Result<Self, InitError> {
+    pub async fn new(window: &Window, mesh: Mesh) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::BackendBit::VULKAN);
 
         // This is sound, as `window` is an object to create a surface upon.
@@ -85,13 +82,13 @@ impl Renderer {
         let vertex_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
-                contents: bytemuck::cast_slice(geometry.vertices.as_slice()),
+                contents: bytemuck::cast_slice(mesh.vertices.as_slice()),
                 usage: wgpu::BufferUsage::VERTEX,
             });
         let index_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
-                contents: bytemuck::cast_slice(geometry.indices.as_slice()),
+                contents: bytemuck::cast_slice(mesh.indices.as_slice()),
                 usage: wgpu::BufferUsage::INDEX,
             });
 
@@ -216,7 +213,7 @@ impl Renderer {
             bind_group,
             render_pipeline,
 
-            geometry,
+            geometry: mesh,
         })
     }
 
