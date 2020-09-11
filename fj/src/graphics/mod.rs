@@ -1,11 +1,11 @@
-mod geometry;
+mod mesh;
 mod renderer;
 mod shaders;
 mod uniforms;
 mod vertices;
 
 pub use self::{
-    geometry::Mesh,
+    mesh::Mesh,
     renderer::Renderer,
     vertices::{Index, Vertex},
 };

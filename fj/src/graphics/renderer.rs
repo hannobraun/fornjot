@@ -6,7 +6,7 @@ use winit::{dpi::PhysicalSize, window::Window};
 use crate::transform::Transform;
 
 use super::{
-    geometry::Mesh,
+    mesh::Mesh,
     shaders::{self, Shaders},
     uniforms::Uniforms,
     vertices::Vertex,
