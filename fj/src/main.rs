@@ -33,11 +33,7 @@ fn main() {
 
     let mut input_handler = InputHandler::new();
     let mut transform = Transform::new();
-    let mut renderer = block_on(Renderer::new(&window)).unwrap();
-
-    renderer.update_geometry(|g| {
-        *g = geometry;
-    });
+    let mut renderer = block_on(Renderer::new(&window, geometry)).unwrap();
 
     event_loop.run(move |event, _, control_flow| match event {
         Event::WindowEvent {

@@ -13,7 +13,6 @@ use super::{
 };
 
 const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth32Float;
-const BUFFER_SIZE: usize = 256 * 1024;
 
 pub struct Renderer {
     surface: wgpu::Surface,
@@ -36,7 +35,10 @@ pub struct Renderer {
 }
 
 impl Renderer {
-    pub async fn new(window: &Window) -> Result<Self, InitError> {
+    pub async fn new(
+        window: &Window,
+        geometry: Geometry,
+    ) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::BackendBit::VULKAN);
 
         // This is sound, as `window` is an object to create a surface upon.
@@ -83,13 +85,13 @@ impl Renderer {
         let vertex_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
-                contents: &[0; BUFFER_SIZE],
+                contents: bytemuck::cast_slice(geometry.vertices.as_slice()),
                 usage: wgpu::BufferUsage::VERTEX | wgpu::BufferUsage::COPY_DST,
             });
         let index_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
-                contents: &[0; BUFFER_SIZE],
+                contents: bytemuck::cast_slice(geometry.indices.as_slice()),
                 usage: wgpu::BufferUsage::INDEX | wgpu::BufferUsage::COPY_DST,
             });
 
@@ -197,8 +199,6 @@ impl Renderer {
                 alpha_to_coverage_enabled: false,
             });
 
-        let geometry = Geometry::new();
-
         Ok(Self {
             surface,
             device,
@@ -232,21 +232,6 @@ impl Renderer {
             create_depth_buffer(&self.device, &self.swap_chain_desc);
         self.depth_texture = depth_texture;
         self.depth_view = depth_view;
-    }
-
-    pub fn update_geometry(&mut self, f: impl FnOnce(&mut Geometry)) {
-        f(&mut self.geometry);
-
-        self.queue.write_buffer(
-            &mut self.vertex_buffer,
-            0,
-            bytemuck::cast_slice(self.geometry.vertices.as_slice()),
-        );
-        self.queue.write_buffer(
-            &mut self.index_buffer,
-            0,
-            bytemuck::cast_slice(self.geometry.indices.as_slice()),
-        );
     }
 
     pub fn draw(&mut self, transform: &Transform) -> Result<(), DrawError> {
