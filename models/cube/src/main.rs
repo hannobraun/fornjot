@@ -1,19 +1,11 @@
-mod graphics;
-mod input;
-mod run;
-mod transform;
-
-use crate::{
-    graphics::{Geometry, Index, Vertex},
-    run::run,
-};
+use fj::Vertex;
 
 fn main() {
-    let mut geometry = Geometry::new();
+    let mut geometry = fj::Geometry::new();
     geometry.vertices.extend_from_slice(VERTICES);
     geometry.indices.extend_from_slice(INDICES);
 
-    run(geometry);
+    fj::run(geometry);
 }
 
 #[rustfmt::skip]
@@ -56,7 +48,7 @@ pub const VERTICES: &[Vertex] = &[
 ];
 
 #[rustfmt::skip]
-pub const INDICES: &[Index] = &[
+pub const INDICES: &[fj::Index] = &[
     // left
     0, 2, 1,
     1, 2, 3,

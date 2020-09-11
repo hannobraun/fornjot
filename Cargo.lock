@@ -245,6 +245,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "cube"
+version = "0.1.0"
+dependencies = [
+ "fj",
+]
+
+[[package]]
 name = "d3d12"
 version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"

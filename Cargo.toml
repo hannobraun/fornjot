@@ -1,2 +1,5 @@
 [workspace]
-members = ["fj"]
+members = [
+    "fj",
+    "models/cube"
+]
