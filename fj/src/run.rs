@@ -11,7 +11,7 @@ use crate::{
     transform::Transform,
 };
 
-pub fn run(geometry: Mesh) {
+pub fn run(mesh: Mesh) {
     let event_loop = EventLoop::new();
 
     let window = WindowBuilder::new()
@@ -24,7 +24,7 @@ pub fn run(geometry: Mesh) {
 
     let mut input_handler = InputHandler::new();
     let mut transform = Transform::new();
-    let mut renderer = block_on(Renderer::new(&window, geometry)).unwrap();
+    let mut renderer = block_on(Renderer::new(&window, mesh)).unwrap();
 
     event_loop.run(move |event, _, control_flow| match event {
         Event::WindowEvent {
