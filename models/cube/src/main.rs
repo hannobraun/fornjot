@@ -1,11 +1,11 @@
 use fj::Vertex;
 
 fn main() {
-    let mut geometry = fj::Mesh::new();
-    geometry.vertices.extend_from_slice(VERTICES);
-    geometry.indices.extend_from_slice(INDICES);
+    let mut mesh = fj::Mesh::new();
+    mesh.vertices.extend_from_slice(VERTICES);
+    mesh.indices.extend_from_slice(INDICES);
 
-    fj::run(geometry);
+    fj::run(mesh);
 }
 
 #[rustfmt::skip]
