@@ -73,6 +73,9 @@ impl Renderer {
 
         let swap_chain = device.create_swap_chain(&surface, &swap_chain_desc);
 
+        let vertices = mesh.vertices.as_slice();
+        let indices = mesh.indices.as_slice();
+
         let uniform_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
@@ -82,13 +85,13 @@ impl Renderer {
         let vertex_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
-                contents: bytemuck::cast_slice(mesh.vertices.as_slice()),
+                contents: bytemuck::cast_slice(vertices),
                 usage: wgpu::BufferUsage::VERTEX,
             });
         let index_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
-                contents: bytemuck::cast_slice(mesh.indices.as_slice()),
+                contents: bytemuck::cast_slice(indices),
                 usage: wgpu::BufferUsage::INDEX,
             });
 
