@@ -1,7 +1,7 @@
 use bytemuck::{Pod, Zeroable};
 use decorum::R32;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Eq, PartialEq, Hash)]
 pub struct Vertex {
     pub position: [R32; 3],
     pub normal: [R32; 3],
