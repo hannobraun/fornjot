@@ -4,10 +4,10 @@ use euclid::default::Point3D;
 
 use decorum::R32;
 
-use super::vertices::{Index, Vertex};
+use super::vertices::{Array3, Index, Vertex};
 
 pub struct Mesh {
-    positions: Vec<[R32; 3]>,
+    positions: Vec<Array3>,
     indices_by_vertex: HashMap<Vertex, Index>,
 
     vertices: Vec<Vertex>,
@@ -27,11 +27,11 @@ impl Mesh {
 
     pub fn vertex(&mut self, vertex: [f32; 3]) -> I {
         let i = self.positions.len();
-        self.positions.push([
+        self.positions.push(Array3([
             R32::from_inner(vertex[0]),
             R32::from_inner(vertex[1]),
             R32::from_inner(vertex[2]),
-        ]);
+        ]));
         I(i)
     }
 
@@ -40,21 +40,21 @@ impl Mesh {
         let p1 = self.positions[i1.0];
         let p2 = self.positions[i2.0];
 
-        let normal = (Point3D::from(p1) - Point3D::from(p0))
-            .cross(Point3D::from(p2) - Point3D::from(p0))
+        let normal = (Point3D::from(p1.0) - Point3D::from(p0.0))
+            .cross(Point3D::from(p2.0) - Point3D::from(p0.0))
             .to_array();
 
         let v0 = Vertex {
             position: p0,
-            normal,
+            normal: Array3(normal),
         };
         let v1 = Vertex {
             position: p1,
-            normal,
+            normal: Array3(normal),
         };
         let v2 = Vertex {
             position: p2,
-            normal,
+            normal: Array3(normal),
         };
 
         let i0 = self.index_for_vertex(v0);
