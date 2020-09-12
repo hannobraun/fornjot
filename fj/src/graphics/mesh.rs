@@ -25,20 +25,20 @@ impl Mesh {
         }
     }
 
-    pub fn vertex(&mut self, vertex: [f32; 3]) -> usize {
+    pub fn vertex(&mut self, vertex: [f32; 3]) -> I {
         let i = self.positions.len();
         self.positions.push([
             R32::from_inner(vertex[0]),
             R32::from_inner(vertex[1]),
             R32::from_inner(vertex[2]),
         ]);
-        i
+        I(i)
     }
 
-    pub fn triangle(&mut self, i0: usize, i1: usize, i2: usize) {
-        let p0 = self.positions[i0];
-        let p1 = self.positions[i1];
-        let p2 = self.positions[i2];
+    pub fn triangle(&mut self, i0: I, i1: I, i2: I) {
+        let p0 = self.positions[i0.0];
+        let p1 = self.positions[i1.0];
+        let p2 = self.positions[i2.0];
 
         let normal = (Point3D::from(p1) - Point3D::from(p0))
             .cross(Point3D::from(p2) - Point3D::from(p0))
@@ -86,3 +86,6 @@ impl Mesh {
         *index
     }
 }
+
+#[derive(Clone, Copy)]
+pub struct I(usize);
