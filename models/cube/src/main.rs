@@ -3,40 +3,40 @@ fn main() {
     let mut mesh = fj::Mesh::new();
 
     // left
-    let i0  = mesh.vertex([-0.5, -0.5, -0.5], [-1.0,  0.0,  0.0]);
-    let i1  = mesh.vertex([-0.5,  0.5, -0.5], [-1.0,  0.0,  0.0]);
-    let i2  = mesh.vertex([-0.5, -0.5,  0.5], [-1.0,  0.0,  0.0]);
-    let i3  = mesh.vertex([-0.5,  0.5,  0.5], [-1.0,  0.0,  0.0]);
+    let i0  = mesh.vertex([-0.5, -0.5, -0.5]);
+    let i1  = mesh.vertex([-0.5,  0.5, -0.5]);
+    let i2  = mesh.vertex([-0.5, -0.5,  0.5]);
+    let i3  = mesh.vertex([-0.5,  0.5,  0.5]);
 
     // right
-    let i4  = mesh.vertex([ 0.5, -0.5, -0.5], [ 1.0,  0.0,  0.0]);
-    let i5  = mesh.vertex([ 0.5,  0.5, -0.5], [ 1.0,  0.0,  0.0]);
-    let i6  = mesh.vertex([ 0.5, -0.5,  0.5], [ 1.0,  0.0,  0.0]);
-    let i7  = mesh.vertex([ 0.5,  0.5,  0.5], [ 1.0,  0.0,  0.0]);
+    let i4  = mesh.vertex([ 0.5, -0.5, -0.5]);
+    let i5  = mesh.vertex([ 0.5,  0.5, -0.5]);
+    let i6  = mesh.vertex([ 0.5, -0.5,  0.5]);
+    let i7  = mesh.vertex([ 0.5,  0.5,  0.5]);
 
     // front
-    let i8  = mesh.vertex([-0.5, -0.5, -0.5], [ 0.0, -1.0,  0.0]);
-    let i9  = mesh.vertex([ 0.5, -0.5, -0.5], [ 0.0, -1.0,  0.0]);
-    let i10 = mesh.vertex([-0.5, -0.5,  0.5], [ 0.0, -1.0,  0.0]);
-    let i11 = mesh.vertex([ 0.5, -0.5,  0.5], [ 0.0, -1.0,  0.0]);
+    let i8  = mesh.vertex([-0.5, -0.5, -0.5]);
+    let i9  = mesh.vertex([ 0.5, -0.5, -0.5]);
+    let i10 = mesh.vertex([-0.5, -0.5,  0.5]);
+    let i11 = mesh.vertex([ 0.5, -0.5,  0.5]);
 
     // back
-    let i12 = mesh.vertex([-0.5,  0.5, -0.5], [ 0.0,  1.0,  0.0]);
-    let i13 = mesh.vertex([ 0.5,  0.5, -0.5], [ 0.0,  1.0,  0.0]);
-    let i14 = mesh.vertex([-0.5,  0.5,  0.5], [ 0.0,  1.0,  0.0]);
-    let i15 = mesh.vertex([ 0.5,  0.5,  0.5], [ 0.0,  1.0,  0.0]);
+    let i12 = mesh.vertex([-0.5,  0.5, -0.5]);
+    let i13 = mesh.vertex([ 0.5,  0.5, -0.5]);
+    let i14 = mesh.vertex([-0.5,  0.5,  0.5]);
+    let i15 = mesh.vertex([ 0.5,  0.5,  0.5]);
 
     // bottom
-    let i16 = mesh.vertex([-0.5, -0.5, -0.5], [ 0.0,  0.0, -1.0]);
-    let i17 = mesh.vertex([ 0.5, -0.5, -0.5], [ 0.0,  0.0, -1.0]);
-    let i18 = mesh.vertex([-0.5,  0.5, -0.5], [ 0.0,  0.0, -1.0]);
-    let i19 = mesh.vertex([ 0.5,  0.5, -0.5], [ 0.0,  0.0, -1.0]);
+    let i16 = mesh.vertex([-0.5, -0.5, -0.5]);
+    let i17 = mesh.vertex([ 0.5, -0.5, -0.5]);
+    let i18 = mesh.vertex([-0.5,  0.5, -0.5]);
+    let i19 = mesh.vertex([ 0.5,  0.5, -0.5]);
 
     // top
-    let i20 = mesh.vertex([-0.5, -0.5,  0.5], [ 0.0,  0.0,  1.0]);
-    let i21 = mesh.vertex([ 0.5, -0.5,  0.5], [ 0.0,  0.0,  1.0]);
-    let i22 = mesh.vertex([-0.5,  0.5,  0.5], [ 0.0,  0.0,  1.0]);
-    let i23 = mesh.vertex([ 0.5,  0.5,  0.5], [ 0.0,  0.0,  1.0]);
+    let i20 = mesh.vertex([-0.5, -0.5,  0.5]);
+    let i21 = mesh.vertex([ 0.5, -0.5,  0.5]);
+    let i22 = mesh.vertex([-0.5,  0.5,  0.5]);
+    let i23 = mesh.vertex([ 0.5,  0.5,  0.5]);
 
     // left
     mesh.triangle(i0, i2, i1);
