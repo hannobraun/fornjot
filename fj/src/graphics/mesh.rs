@@ -1,5 +1,7 @@
 use std::convert::TryInto;
 
+use decorum::R32;
+
 use super::{Index, Vertex};
 
 pub struct Mesh {
@@ -17,7 +19,18 @@ impl Mesh {
 
     pub fn vertex(&mut self, position: [f32; 3], normal: [f32; 3]) -> Index {
         let i = self.vertices.len();
-        self.vertices.push(Vertex { position, normal });
+        self.vertices.push(Vertex {
+            position: [
+                R32::from_inner(position[0]),
+                R32::from_inner(position[1]),
+                R32::from_inner(position[2]),
+            ],
+            normal: [
+                R32::from_inner(normal[0]),
+                R32::from_inner(normal[1]),
+                R32::from_inner(normal[2]),
+            ],
+        });
         i.try_into().unwrap()
     }
 
