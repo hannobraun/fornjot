@@ -73,8 +73,8 @@ impl Renderer {
 
         let swap_chain = device.create_swap_chain(&surface, &swap_chain_desc);
 
-        let vertices = mesh.vertices.as_slice();
-        let indices = mesh.indices.as_slice();
+        let vertices = mesh.vertices();
+        let indices = mesh.indices();
 
         let uniform_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
@@ -216,7 +216,7 @@ impl Renderer {
             bind_group,
             render_pipeline,
 
-            num_indices: mesh.indices.len() as u32,
+            num_indices: mesh.indices().len() as u32,
         })
     }
 

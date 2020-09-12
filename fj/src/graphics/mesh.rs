@@ -26,4 +26,12 @@ impl Mesh {
         self.indices.push(i1);
         self.indices.push(i2);
     }
+
+    pub fn vertices(&self) -> &[Vertex] {
+        self.vertices.as_slice()
+    }
+
+    pub fn indices(&self) -> &[Index] {
+        self.indices.as_slice()
+    }
 }
