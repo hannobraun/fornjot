@@ -2,8 +2,6 @@ use std::{collections::HashMap, convert::TryInto};
 
 use euclid::default::Point3D;
 
-use decorum::R32;
-
 use super::vertices::{Array3, Index, Vertex};
 
 pub struct Mesh {
@@ -27,11 +25,7 @@ impl Mesh {
 
     pub fn vertex(&mut self, vertex: [f32; 3]) -> I {
         let i = self.positions.len();
-        self.positions.push(Array3([
-            R32::from_inner(vertex[0]),
-            R32::from_inner(vertex[1]),
-            R32::from_inner(vertex[2]),
-        ]));
+        self.positions.push(Array3::new(vertex));
         I(i)
     }
 
