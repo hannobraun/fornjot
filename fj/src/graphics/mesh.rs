@@ -25,12 +25,12 @@ impl Mesh {
         }
     }
 
-    pub fn vertex(&mut self, position: [f32; 3]) -> usize {
+    pub fn vertex(&mut self, vertex: [f32; 3]) -> usize {
         let i = self.positions.len();
         self.positions.push([
-            R32::from_inner(position[0]),
-            R32::from_inner(position[1]),
-            R32::from_inner(position[2]),
+            R32::from_inner(vertex[0]),
+            R32::from_inner(vertex[1]),
+            R32::from_inner(vertex[2]),
         ]);
         i
     }
