@@ -3,7 +3,33 @@ use fj::Vertex;
 fn main() {
     let mut mesh = fj::Mesh::new();
     mesh.vertices.extend_from_slice(VERTICES);
-    mesh.indices.extend_from_slice(INDICES);
+
+    #[rustfmt::skip]
+    mesh.indices.extend_from_slice(&[
+        // left
+        0, 2, 1,
+        1, 2, 3,
+
+        // right
+        4, 5, 6,
+        5, 7, 6,
+
+        // front
+        8, 9, 10,
+        9, 11, 10,
+
+        // back
+        12, 14, 13,
+        13, 14, 15,
+
+        // bottom
+        16, 18, 19,
+        16, 19, 17,
+
+        // top
+        20, 21, 23,
+        20, 23, 22,
+    ]);
 
     fj::run(mesh);
 }
@@ -45,31 +71,4 @@ pub const VERTICES: &[Vertex] = &[
     Vertex { position: [ 0.5, -0.5,  0.5], normal: [ 0.0,  0.0,  1.0] }, // 21
     Vertex { position: [-0.5,  0.5,  0.5], normal: [ 0.0,  0.0,  1.0] }, // 22
     Vertex { position: [ 0.5,  0.5,  0.5], normal: [ 0.0,  0.0,  1.0] }, // 23
-];
-
-#[rustfmt::skip]
-pub const INDICES: &[fj::Index] = &[
-    // left
-    0, 2, 1,
-    1, 2, 3,
-
-    // right
-    4, 5, 6,
-    5, 7, 6,
-
-    // front
-    8, 9, 10,
-    9, 11, 10,
-
-    // back
-    12, 14, 13,
-    13, 14, 15,
-
-    // bottom
-    16, 18, 19,
-    16, 19, 17,
-
-    // top
-    20, 21, 23,
-    20, 23, 22,
 ];
