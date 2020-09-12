@@ -20,4 +20,10 @@ impl Mesh {
         self.vertices.push(Vertex { position, normal });
         i.try_into().unwrap()
     }
+
+    pub fn triangle(&mut self, i0: Index, i1: Index, i2: Index) {
+        self.indices.push(i0);
+        self.indices.push(i1);
+        self.indices.push(i2);
+    }
 }

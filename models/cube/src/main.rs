@@ -38,31 +38,29 @@ fn main() {
     let i22 = mesh.vertex([-0.5,  0.5,  0.5], [ 0.0,  0.0,  1.0]);
     let i23 = mesh.vertex([ 0.5,  0.5,  0.5], [ 0.0,  0.0,  1.0]);
 
-    mesh.indices.extend_from_slice(&[
-        // left
-        i0, i2, i1,
-        i1, i2, i3,
+    // left
+    mesh.triangle(i0, i2, i1);
+    mesh.triangle(i1, i2, i3);
 
-        // right
-        i4, i5, i6,
-        i5, i7, i6,
+    // right
+    mesh.triangle(i4, i5, i6);
+    mesh.triangle(i5, i7, i6);
 
-        // front
-        i8, i9, i10,
-        i9, i11, i10,
+    // front
+    mesh.triangle(i8, i9, i10);
+    mesh.triangle(i9, i11, i10);
 
-        // back
-        i12, i14, i13,
-        i13, i14, i15,
+    // back
+    mesh.triangle(i12, i14, i13);
+    mesh.triangle(i13, i14, i15);
 
-        // bottom
-        i16, i18, i19,
-        i16, i19, i17,
+    // bottom
+    mesh.triangle(i16, i18, i19);
+    mesh.triangle(i16, i19, i17);
 
-        // top
-        i20, i21, i23,
-        i20, i23, i22,
-    ]);
+    // top
+    mesh.triangle(i20, i21, i23);
+    mesh.triangle(i20, i23, i22);
 
     fj::run(mesh);
 }
