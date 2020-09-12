@@ -83,3 +83,48 @@ impl Mesh {
 
 #[derive(Clone, Copy)]
 pub struct I(usize);
+
+#[cfg(test)]
+mod tests {
+    use crate::graphics::vertices::{Array3, Vertex};
+
+    use super::Mesh;
+
+    #[test]
+    fn mesh_should_convert_triangle_into_vertices_and_indices() {
+        let mut mesh = Mesh::new();
+
+        let v0 = [0.0, 0.0, 0.0];
+        let v1 = [1.0, 0.0, 0.0];
+        let v2 = [0.0, 1.0, 0.0];
+
+        let i0 = mesh.vertex(v0);
+        let i1 = mesh.vertex(v1);
+        let i2 = mesh.vertex(v2);
+
+        mesh.triangle(i0, i1, i2);
+
+        let mut vertices = Vec::new();
+        for &i in mesh.indices() {
+            vertices.push(mesh.vertices()[i as usize]);
+        }
+
+        assert_eq!(
+            vertices,
+            vec![
+                Vertex {
+                    position: Array3::new(v0),
+                    normal: Array3::new([0.0, 0.0, 1.0])
+                },
+                Vertex {
+                    position: Array3::new(v1),
+                    normal: Array3::new([0.0, 0.0, 1.0])
+                },
+                Vertex {
+                    position: Array3::new(v2),
+                    normal: Array3::new([0.0, 0.0, 1.0])
+                },
+            ]
+        );
+    }
+}
