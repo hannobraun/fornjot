@@ -4,7 +4,7 @@ use euclid::default::Point3D;
 
 use decorum::R32;
 
-use super::{Index, Vertex};
+use super::vertices::{Index, Vertex};
 
 pub struct Mesh {
     positions: Vec<[R32; 3]>,
