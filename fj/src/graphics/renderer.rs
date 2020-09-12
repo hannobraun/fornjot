@@ -1,4 +1,4 @@
-use std::{io, mem::size_of};
+use std::{convert::TryInto, io, mem::size_of};
 
 use wgpu::util::DeviceExt as _;
 use winit::{dpi::PhysicalSize, window::Window};
@@ -213,7 +213,11 @@ impl Renderer {
             bind_group,
             render_pipeline,
 
-            num_indices: mesh.indices().len() as u32,
+            num_indices: mesh
+                .indices()
+                .len()
+                .try_into()
+                .expect("`usize` couldn't be cast to `u32`"),
         })
     }
 
