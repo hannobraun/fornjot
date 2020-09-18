@@ -6,6 +6,6 @@ mod vertices;
 
 pub use self::{
     mesh::Mesh,
-    renderer::Renderer,
+    renderer::{DrawError, Renderer},
     vertices::{Index, Vertex},
 };
