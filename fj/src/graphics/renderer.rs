@@ -336,4 +336,4 @@ impl From<io::Error> for InitError {
 }
 
 #[derive(Debug)]
-pub struct DrawError(wgpu::SwapChainError);
+pub struct DrawError(pub wgpu::SwapChainError);
