@@ -6,7 +6,7 @@ use winit::{
 };
 
 use crate::{
-    graphics::{Mesh, Renderer},
+    graphics::{DrawError, Mesh, Renderer},
     input::InputHandler,
     transform::Transform,
 };
@@ -67,7 +67,17 @@ pub fn run(mesh: Mesh) {
             window.request_redraw();
         }
         Event::RedrawRequested(_) => {
-            renderer.draw(&transform).unwrap();
+            match renderer.draw(&transform) {
+                Ok(()) => {}
+                err @ Err(DrawError(wgpu::SwapChainError::Outdated)) => {
+                    // I'm getting this from time to time when resizing the
+                    // window. It's not catastrophic.
+                    println!("Draw error: {:?}", err);
+                }
+                Err(err) => {
+                    panic!("Draw error: {:?}", err);
+                }
+            }
         }
         _ => {}
     })
