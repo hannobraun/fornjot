@@ -1,3 +1,5 @@
+pub mod geometry;
+
 mod graphics;
 mod input;
 mod run;
