@@ -21,6 +21,14 @@ impl Array3 {
             R32::from_inner(value[2]),
         ])
     }
+
+    pub fn into_f32_array(&self) -> [f32; 3] {
+        [
+            self.0[0].into_inner(),
+            self.0[1].into_inner(),
+            self.0[2].into_inner(),
+        ]
+    }
 }
 
 pub type Index = u16;

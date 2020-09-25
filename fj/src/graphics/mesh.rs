@@ -1,4 +1,4 @@
-use std::{collections::HashMap, convert::TryInto};
+use std::{collections::HashMap, convert::TryInto, iter};
 
 use euclid::default::Point3D;
 
@@ -68,6 +68,22 @@ impl Mesh {
         self.indices.as_slice()
     }
 
+    pub fn triangles(&self) -> impl Iterator<Item = [[f32; 3]; 3]> + '_ {
+        let mut indices = self.indices().iter();
+
+        iter::from_fn(move || {
+            let &i0 = indices.next()?;
+            let &i1 = indices.next()?;
+            let &i2 = indices.next()?;
+
+            let v0 = self.vertices[i0 as usize].position.into_f32_array();
+            let v1 = self.vertices[i1 as usize].position.into_f32_array();
+            let v2 = self.vertices[i2 as usize].position.into_f32_array();
+
+            Some([v0, v1, v2])
+        })
+    }
+
     fn index_for_vertex(&mut self, vertex: Vertex) -> Index {
         let vertices = &mut self.vertices;
 
@@ -126,5 +142,24 @@ mod tests {
                 },
             ]
         );
+    }
+
+    #[test]
+    fn mesh_should_return_triangles() {
+        let mut mesh = Mesh::new();
+
+        let v0 = [0.0, 0.0, 0.0];
+        let v1 = [1.0, 0.0, 0.0];
+        let v2 = [0.0, 1.0, 0.0];
+
+        let i0 = mesh.vertex(v0);
+        let i1 = mesh.vertex(v1);
+        let i2 = mesh.vertex(v2);
+
+        mesh.triangle(i0, i1, i2);
+        mesh.triangle(i0, i2, i1);
+
+        let triangles: Vec<_> = mesh.triangles().collect();
+        assert_eq!(triangles, vec![[v0, v1, v2], [v0, v2, v1]]);
     }
 }
