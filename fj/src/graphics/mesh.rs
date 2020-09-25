@@ -1,4 +1,4 @@
-use std::{collections::HashMap, convert::TryInto, iter};
+use std::{collections::HashMap, convert::TryInto};
 
 use euclid::default::Point3D;
 
@@ -70,10 +70,10 @@ impl Mesh {
         self.indices.as_slice()
     }
 
-    pub fn triangles(&self) -> impl Iterator<Item = Triangle> + '_ {
+    pub fn triangles(&self) -> Vec<Triangle> {
         let mut indices = self.indices().iter();
 
-        iter::from_fn(move || {
+        let mut next_triangle = || {
             let &i0 = indices.next()?;
             let &i1 = indices.next()?;
             let &i2 = indices.next()?;
@@ -83,7 +83,15 @@ impl Mesh {
             let v2 = self.vertices[i2 as usize].position.into_f32_array();
 
             Some(Triangle::new(v0, v1, v2))
-        })
+        };
+
+        let mut triangles = Vec::new();
+
+        while let Some(triangle) = next_triangle() {
+            triangles.push(triangle);
+        }
+
+        triangles
     }
 
     fn index_for_vertex(&mut self, vertex: Vertex) -> Index {
@@ -164,7 +172,7 @@ mod tests {
         mesh.triangle(i0, i1, i2);
         mesh.triangle(i0, i2, i1);
 
-        let triangles: Vec<_> = mesh.triangles().collect();
+        let triangles = mesh.triangles();
         assert_eq!(
             triangles,
             vec![Triangle::new(v0, v1, v2), Triangle::new(v0, v2, v1)]

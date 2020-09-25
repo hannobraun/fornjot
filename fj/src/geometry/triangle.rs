@@ -35,7 +35,7 @@ mod tests {
             Triangle::new([0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]);
 
         let mesh = triangle.to_mesh();
-        let triangles: Vec<_> = mesh.triangles().collect();
+        let triangles = mesh.triangles();
 
         assert_eq!(triangles, vec![triangle]);
     }
