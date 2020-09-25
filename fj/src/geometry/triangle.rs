@@ -37,6 +37,6 @@ mod tests {
         let mesh = triangle.to_mesh();
         let triangles: Vec<_> = mesh.triangles().collect();
 
-        assert_eq!(triangles, vec![[triangle.a, triangle.b, triangle.c]]);
+        assert_eq!(triangles, vec![triangle]);
     }
 }

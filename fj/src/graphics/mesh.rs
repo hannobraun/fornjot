@@ -2,6 +2,8 @@ use std::{collections::HashMap, convert::TryInto, iter};
 
 use euclid::default::Point3D;
 
+use crate::geometry::Triangle;
+
 use super::vertices::{Array3, Index, Vertex};
 
 pub struct Mesh {
@@ -68,7 +70,7 @@ impl Mesh {
         self.indices.as_slice()
     }
 
-    pub fn triangles(&self) -> impl Iterator<Item = [[f32; 3]; 3]> + '_ {
+    pub fn triangles(&self) -> impl Iterator<Item = Triangle> + '_ {
         let mut indices = self.indices().iter();
 
         iter::from_fn(move || {
@@ -80,7 +82,7 @@ impl Mesh {
             let v1 = self.vertices[i1 as usize].position.into_f32_array();
             let v2 = self.vertices[i2 as usize].position.into_f32_array();
 
-            Some([v0, v1, v2])
+            Some(Triangle::new(v0, v1, v2))
         })
     }
 
@@ -102,7 +104,10 @@ pub struct I(usize);
 
 #[cfg(test)]
 mod tests {
-    use crate::graphics::vertices::{Array3, Vertex};
+    use crate::{
+        geometry::Triangle,
+        graphics::vertices::{Array3, Vertex},
+    };
 
     use super::Mesh;
 
@@ -160,6 +165,9 @@ mod tests {
         mesh.triangle(i0, i2, i1);
 
         let triangles: Vec<_> = mesh.triangles().collect();
-        assert_eq!(triangles, vec![[v0, v1, v2], [v0, v2, v1]]);
+        assert_eq!(
+            triangles,
+            vec![Triangle::new(v0, v1, v2), Triangle::new(v0, v2, v1)]
+        );
     }
 }
