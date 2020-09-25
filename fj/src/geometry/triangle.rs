@@ -1,5 +1,6 @@
 use crate::graphics::Mesh;
 
+#[derive(Debug, PartialEq)]
 pub struct Triangle {
     pub a: [f32; 3],
     pub b: [f32; 3],
