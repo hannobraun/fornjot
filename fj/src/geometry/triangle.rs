@@ -25,6 +25,8 @@ impl Triangle {
     }
 }
 
+pub struct Triangles(pub Vec<Triangle>);
+
 #[cfg(test)]
 mod tests {
     use super::Triangle;
@@ -37,6 +39,6 @@ mod tests {
         let mesh = triangle.to_mesh();
         let triangles = mesh.triangles();
 
-        assert_eq!(triangles, vec![triangle]);
+        assert_eq!(triangles.0, vec![triangle]);
     }
 }

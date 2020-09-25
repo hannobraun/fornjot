@@ -2,7 +2,7 @@ use std::{collections::HashMap, convert::TryInto};
 
 use euclid::default::Point3D;
 
-use crate::geometry::Triangle;
+use crate::geometry::{Triangle, Triangles};
 
 use super::vertices::{Array3, Index, Vertex};
 
@@ -70,7 +70,7 @@ impl Mesh {
         self.indices.as_slice()
     }
 
-    pub fn triangles(&self) -> Vec<Triangle> {
+    pub fn triangles(&self) -> Triangles {
         let mut indices = self.indices().iter();
 
         let mut next_triangle = || {
@@ -91,7 +91,7 @@ impl Mesh {
             triangles.push(triangle);
         }
 
-        triangles
+        Triangles(triangles)
     }
 
     fn index_for_vertex(&mut self, vertex: Vertex) -> Index {
@@ -174,7 +174,7 @@ mod tests {
 
         let triangles = mesh.triangles();
         assert_eq!(
-            triangles,
+            triangles.0,
             vec![Triangle::new(v0, v1, v2), Triangle::new(v0, v2, v1)]
         );
     }
