@@ -2,6 +2,8 @@
     "editor.formatOnSave": true,
     "editor.formatOnPaste": true,
     "cSpell.ignoreWords": [
-        "rustfmt"
+        "bytemuck",
+        "rustfmt",
+        "zeroable"
     ]
 }
