@@ -7,6 +7,10 @@ pub struct Triangle {
 }
 
 impl Triangle {
+    pub fn new(a: [f32; 3], b: [f32; 3], c: [f32; 3]) -> Self {
+        Self { a, b, c }
+    }
+
     pub fn to_mesh(&self) -> Mesh {
         let mut mesh = Mesh::new();
 
@@ -26,11 +30,8 @@ mod tests {
 
     #[test]
     fn test() {
-        let triangle = Triangle {
-            a: [0.0, 0.0, 0.0],
-            b: [1.0, 0.0, 0.0],
-            c: [0.0, 1.0, 0.0],
-        };
+        let triangle =
+            Triangle::new([0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]);
 
         let mesh = triangle.to_mesh();
         let triangles: Vec<_> = mesh.triangles().collect();
