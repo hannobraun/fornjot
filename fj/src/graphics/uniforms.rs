@@ -1,5 +1,5 @@
 use bytemuck::{Pod, Zeroable};
-use euclid::Transform3D;
+use nalgebra::Matrix4;
 
 use crate::transform::NativeTransform;
 
@@ -11,11 +11,17 @@ pub struct Uniforms {
 
 impl Default for Uniforms {
     fn default() -> Self {
-        let identity = Transform3D::<f32, (), ()>::identity();
+        let identity = Matrix4::<f32>::identity();
+
+        let mut transform = [0.0; 16];
+        transform.copy_from_slice(identity.data.as_slice());
+
+        let mut transform_normals = [0.0; 16];
+        transform_normals.copy_from_slice(identity.data.as_slice());
 
         Self {
-            transform: identity.to_array(),
-            transform_normals: identity.to_array(),
+            transform,
+            transform_normals,
         }
     }
 }
