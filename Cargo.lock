@@ -307,21 +307,11 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9ea835d29036a4087793836fa931b08837ad5e957da9e23886b29586fb9b6650"
 
 [[package]]
-name = "euclid"
-version = "0.22.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5337024b8293bdce5265dc9570ef6e608a34bfacbbc87fe1a5dcb5f1dac2f4e2"
-dependencies = [
- "num-traits",
-]
-
-[[package]]
 name = "fj"
 version = "0.1.0"
 dependencies = [
  "bytemuck",
  "decorum",
- "euclid",
  "futures",
  "nalgebra",
  "shaderc",
