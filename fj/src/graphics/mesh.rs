@@ -1,6 +1,7 @@
 use std::{collections::HashMap, convert::TryInto};
 
-use euclid::default::Point3D;
+use decorum::R32;
+use nalgebra::Point3;
 
 use crate::geometry::{Triangle, Triangles};
 
@@ -36,21 +37,23 @@ impl Mesh {
         let p1 = self.positions[i1.0];
         let p2 = self.positions[i2.0];
 
-        let normal = (Point3D::from(p1.0) - Point3D::from(p0.0))
-            .cross(Point3D::from(p2.0) - Point3D::from(p0.0))
-            .to_array();
+        let normal = (Point3::from(p1.0) - Point3::from(p0.0))
+            .cross(&(Point3::from(p2.0) - Point3::from(p0.0)));
+
+        let mut normal_array = [R32::from_inner(0.0); 3];
+        normal_array.copy_from_slice(normal.data.as_slice());
 
         let v0 = Vertex {
             position: p0,
-            normal: Array3(normal),
+            normal: Array3(normal_array),
         };
         let v1 = Vertex {
             position: p1,
-            normal: Array3(normal),
+            normal: Array3(normal_array),
         };
         let v2 = Vertex {
             position: p2,
-            normal: Array3(normal),
+            normal: Array3(normal_array),
         };
 
         let i0 = self.index_for_vertex(v0);
