@@ -1,4 +1,4 @@
-use euclid::Angle;
+use nalgebra::{Rotation3, Unit, Vector3};
 use winit::{
     dpi::{LogicalPosition, PhysicalPosition},
     event::{
@@ -51,13 +51,19 @@ impl InputHandler {
             if self.rotating {
                 let f = 0.005;
 
-                let x_angle = Angle::radians(diff_y as f32 * f);
-                let y_angle = Angle::radians(diff_x as f32 * f);
+                let x_angle = diff_y as f32 * f;
+                let y_angle = diff_x as f32 * f;
 
-                transform.rotation = transform
-                    .rotation
-                    .then_rotate(1.0, 0.0, 0.0, x_angle)
-                    .then_rotate(0.0, 1.0, 0.0, y_angle);
+                let x_rot = Rotation3::from_axis_angle(
+                    &Unit::new_unchecked(Vector3::new(1.0, 0.0, 0.0)),
+                    x_angle,
+                );
+                let y_rot = Rotation3::from_axis_angle(
+                    &Unit::new_unchecked(Vector3::new(0.0, 1.0, 0.0)),
+                    y_angle,
+                );
+
+                transform.rotation = y_rot * x_rot * transform.rotation;
             }
         }
 

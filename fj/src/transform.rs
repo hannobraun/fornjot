@@ -1,72 +1,51 @@
-use euclid::{Transform3D, Vector3D};
+use nalgebra::{
+    Isometry3, Perspective3, RealField as _, Rotation3, Translation3, Vector3,
+};
 
 pub struct Transform {
-    pub rotation: Transform3D<f32, (), ()>,
+    pub rotation: Rotation3<f32>,
     pub distance: f32,
 }
 
 impl Transform {
     pub fn new() -> Self {
         Self {
-            rotation: Transform3D::identity(),
+            rotation: Rotation3::identity(),
             distance: 4.0,
         }
     }
 
     pub fn to_native(&self, aspect_ratio: f32) -> NativeTransform {
-        let n = 0.1; // distance of near plane
-        let f = 100.0; // distance of far plane
-
-        let m11 = 1.0 / aspect_ratio / n; // aspect ratio; field of view
-        let m12 = 0.0;
-        let m13 = 0.0;
-        let m14 = 0.0;
-
-        let m21 = 0.0;
-        let m22 = 1.0 / n; // field of view
-        let m23 = 0.0;
-        let m24 = 0.0;
-
-        let m31 = 0.0;
-        let m32 = 0.0;
-        let m33 = -f / (f - n); // normalize z between near/far planes
-        let m34 = -1.0; // prepare perspective division
-
-        let m41 = 0.0;
-        let m42 = 0.0;
-        let m43 = -f * n / (f - n); // normalize z between near/far planes
-        let m44 = 0.0;
-
-        // The resulting projection matrix has the following attributes:
-        // - Scales points along x and y to set the field of view to 90°.
-        // - Projects points on the plane defined by `z = -n`.
-        // - Normalizes z, with `z = -n` becoming 0, `z = -f` becoming 1.
-        // - Sets w to -z in preparation of the perspective division. The `-`
-        //   has the effect of converting from our right-handed coordinate
-        //   system to the left-handed coordinate system of homogenous device
-        //   coordinates.
-        #[rustfmt::skip]
-        let projection = Transform3D::<f32, (), ()>::new(
-            m11, m12, m13, m14,
-            m21, m22, m23, m24,
-            m31, m32, m33, m34,
-            m41, m42, m43, m44,
+        let projection = Perspective3::new(
+            aspect_ratio,
+            f32::frac_pi_4(), // field of view; 45 degrees
+            0.1,              // near plane
+            100.0,            // far plane
         );
 
-        self.view_transform().then(&projection).to_array()
+        let transform = projection.to_projective() * self.view_transform();
+
+        let mut native = [0.0; 16];
+        native.copy_from_slice(transform.matrix().data.as_slice());
+
+        native
     }
 
     pub fn to_normals_transform(&self) -> NativeTransform {
-        self.view_transform()
-            .inverse()
-            .expect("view transform was not invertible")
-            .to_array_transposed()
+        let transform =
+            self.view_transform().inverse().to_homogeneous().transpose();
+
+        let mut native = [0.0; 16];
+        native.copy_from_slice(transform.data.as_slice());
+
+        native
     }
 
-    fn view_transform(&self) -> Transform3D<f32, (), ()> {
-        Transform3D::identity()
-            .then(&self.rotation)
-            .then_translate(Vector3D::new(0.0, 0.0, -self.distance))
+    fn view_transform(&self) -> Isometry3<f32> {
+        Isometry3::from_parts(
+            Translation3::from(Vector3::new(0.0, 0.0, -self.distance)),
+            self.rotation.into(),
+        )
     }
 }
 
