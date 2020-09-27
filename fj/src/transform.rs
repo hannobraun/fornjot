@@ -53,14 +53,14 @@ impl Transform {
             m41, m42, m43, m44,
         );
 
-        self.view_transform().then(&projection).to_arrays()
+        self.view_transform().then(&projection).to_array()
     }
 
     pub fn to_normals_transform(&self) -> NativeTransform {
         self.view_transform()
             .inverse()
             .expect("view transform was not invertible")
-            .to_arrays_transposed()
+            .to_array_transposed()
     }
 
     fn view_transform(&self) -> Transform3D<f32, (), ()> {
@@ -70,4 +70,4 @@ impl Transform {
     }
 }
 
-pub type NativeTransform = [[f32; 4]; 4];
+pub type NativeTransform = [f32; 16];

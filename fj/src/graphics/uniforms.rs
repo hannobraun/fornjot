@@ -14,8 +14,8 @@ impl Default for Uniforms {
         let identity = Transform3D::<f32, (), ()>::identity();
 
         Self {
-            transform: identity.to_arrays(),
-            transform_normals: identity.to_arrays(),
+            transform: identity.to_array(),
+            transform_normals: identity.to_array(),
         }
     }
 }
