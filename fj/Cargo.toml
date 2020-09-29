@@ -5,6 +5,7 @@ authors = ["Hanno Braun <hb@hannobraun.de>"]
 edition = "2018"
 
 [dependencies]
+approx   = "*"
 bytemuck = "*"
 decorum  = "*"
 futures  = "*"
