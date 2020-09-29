@@ -9,7 +9,7 @@ use crate::{
 };
 
 pub struct Mesh {
-    positions: Vec<graphics::Array3>,
+    positions: Vec<Point3<R32>>,
     indices_by_vertex: HashMap<Vertex, graphics::Index>,
 
     vertices: Vec<Vertex>,
@@ -29,7 +29,11 @@ impl Mesh {
 
     pub fn vertex(&mut self, vertex: [f32; 3]) -> Index {
         let i = self.positions.len();
-        self.positions.push(graphics::Array3::new(vertex));
+        self.positions.push(Point3::new(
+            R32::from_inner(vertex[0]),
+            R32::from_inner(vertex[1]),
+            R32::from_inner(vertex[2]),
+        ));
         Index(i)
     }
 
@@ -38,8 +42,7 @@ impl Mesh {
         let p1 = self.positions[i1.0];
         let p2 = self.positions[i2.0];
 
-        let normal = (Point3::from(p1.0) - Point3::from(p0.0))
-            .cross(&(Point3::from(p2.0) - Point3::from(p0.0)));
+        let normal = (p1 - p0).cross(&(p2 - p0));
 
         let mut normal_array = [R32::from_inner(0.0); 3];
         normal_array.copy_from_slice(normal.data.as_slice());
@@ -79,7 +82,11 @@ impl Mesh {
             .vertices
             .into_iter()
             .map(|vertex| graphics::Vertex {
-                position: vertex.position,
+                position: graphics::Array3([
+                    vertex.position[0],
+                    vertex.position[1],
+                    vertex.position[2],
+                ]),
                 normal: vertex.normal,
             })
             .collect();
@@ -96,11 +103,15 @@ impl Mesh {
             let &i1 = indices.next()?;
             let &i2 = indices.next()?;
 
-            let v0 = self.vertices[i0 as usize].position.into_f32_array();
-            let v1 = self.vertices[i1 as usize].position.into_f32_array();
-            let v2 = self.vertices[i2 as usize].position.into_f32_array();
+            let v0 = self.vertices[i0 as usize].position;
+            let v1 = self.vertices[i1 as usize].position;
+            let v2 = self.vertices[i2 as usize].position;
 
-            Some(Triangle::new(v0, v1, v2))
+            Some(Triangle::new(
+                [v0[0].into_inner(), v0[1].into_inner(), v0[2].into_inner()],
+                [v1[0].into_inner(), v1[1].into_inner(), v1[2].into_inner()],
+                [v2[0].into_inner(), v2[1].into_inner(), v2[2].into_inner()],
+            ))
         };
 
         let mut triangles = Vec::new();
@@ -127,7 +138,7 @@ impl Mesh {
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
 pub struct Vertex {
-    pub position: graphics::Array3,
+    pub position: Point3<R32>,
     pub normal: graphics::Array3,
 }
 #[derive(Clone, Copy)]
@@ -135,6 +146,9 @@ pub struct Index(usize);
 
 #[cfg(test)]
 mod tests {
+    use decorum::R32;
+    use nalgebra::Point3;
+
     use crate::{geometry::Triangle, graphics::Array3};
 
     use super::{Mesh, Vertex};
@@ -162,15 +176,21 @@ mod tests {
             vertices,
             vec![
                 Vertex {
-                    position: Array3::new(v0),
+                    position: Point3::from(
+                        Point3::from(v0).coords.map(|f| R32::from_inner(f))
+                    ),
                     normal: Array3::new([0.0, 0.0, 1.0])
                 },
                 Vertex {
-                    position: Array3::new(v1),
+                    position: Point3::from(
+                        Point3::from(v1).coords.map(|f| R32::from_inner(f))
+                    ),
                     normal: Array3::new([0.0, 0.0, 1.0])
                 },
                 Vertex {
-                    position: Array3::new(v2),
+                    position: Point3::from(
+                        Point3::from(v2).coords.map(|f| R32::from_inner(f))
+                    ),
                     normal: Array3::new([0.0, 0.0, 1.0])
                 },
             ]
