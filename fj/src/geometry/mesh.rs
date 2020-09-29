@@ -5,11 +5,11 @@ use nalgebra::Point3;
 
 use crate::{
     geometry::{Triangle, Triangles},
-    graphics::{self, Array3},
+    graphics,
 };
 
 pub struct Mesh {
-    positions: Vec<Array3>,
+    positions: Vec<graphics::Array3>,
     indices_by_vertex: HashMap<graphics::Vertex, graphics::Index>,
 
     vertices: Vec<graphics::Vertex>,
@@ -29,7 +29,7 @@ impl Mesh {
 
     pub fn vertex(&mut self, vertex: [f32; 3]) -> I {
         let i = self.positions.len();
-        self.positions.push(Array3::new(vertex));
+        self.positions.push(graphics::Array3::new(vertex));
         I(i)
     }
 
@@ -46,15 +46,15 @@ impl Mesh {
 
         let v0 = graphics::Vertex {
             position: p0,
-            normal: Array3(normal_array),
+            normal: graphics::Array3(normal_array),
         };
         let v1 = graphics::Vertex {
             position: p1,
-            normal: Array3(normal_array),
+            normal: graphics::Array3(normal_array),
         };
         let v2 = graphics::Vertex {
             position: p2,
-            normal: Array3(normal_array),
+            normal: graphics::Array3(normal_array),
         };
 
         let i0 = self.index_for_vertex(v0);
