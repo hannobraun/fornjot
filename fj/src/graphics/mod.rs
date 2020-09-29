@@ -7,5 +7,5 @@ mod vertices;
 pub use self::{
     mesh::Mesh,
     renderer::{DrawError, Renderer},
-    vertices::{Index, Vertex},
+    vertices::{Array3, Index, Vertex},
 };
