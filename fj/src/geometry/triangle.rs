@@ -10,7 +10,10 @@ pub struct Triangle {
 }
 
 impl Triangle {
-    pub fn new(a: [f32; 3], b: [f32; 3], c: [f32; 3]) -> Self {
+    pub fn new<P>(a: P, b: P, c: P) -> Self
+    where
+        P: Into<Point3<f32>>,
+    {
         Self {
             a: a.into(),
             b: b.into(),
