@@ -80,14 +80,14 @@ impl Mesh {
             .into_iter()
             .map(|vertex| graphics::Vertex {
                 position: graphics::Array3([
-                    vertex.position[0],
-                    vertex.position[1],
-                    vertex.position[2],
+                    vertex.position[0].into_inner(),
+                    vertex.position[1].into_inner(),
+                    vertex.position[2].into_inner(),
                 ]),
                 normal: graphics::Array3([
-                    vertex.normal[0],
-                    vertex.normal[1],
-                    vertex.normal[2],
+                    vertex.normal[0].into_inner(),
+                    vertex.normal[1].into_inner(),
+                    vertex.normal[2].into_inner(),
                 ]),
             })
             .collect();
