@@ -5,14 +5,14 @@ use nalgebra::Point3;
 
 use crate::{
     geometry::{Triangle, Triangles},
-    graphics::{self, Array3, Index, Vertex},
+    graphics::{self, Array3, Index},
 };
 
 pub struct Mesh {
     positions: Vec<Array3>,
-    indices_by_vertex: HashMap<Vertex, Index>,
+    indices_by_vertex: HashMap<graphics::Vertex, Index>,
 
-    vertices: Vec<Vertex>,
+    vertices: Vec<graphics::Vertex>,
     indices: Vec<Index>,
 }
 
@@ -44,15 +44,15 @@ impl Mesh {
         let mut normal_array = [R32::from_inner(0.0); 3];
         normal_array.copy_from_slice(normal.data.as_slice());
 
-        let v0 = Vertex {
+        let v0 = graphics::Vertex {
             position: p0,
             normal: Array3(normal_array),
         };
-        let v1 = Vertex {
+        let v1 = graphics::Vertex {
             position: p1,
             normal: Array3(normal_array),
         };
-        let v2 = Vertex {
+        let v2 = graphics::Vertex {
             position: p2,
             normal: Array3(normal_array),
         };
@@ -66,7 +66,7 @@ impl Mesh {
         self.indices.push(i2);
     }
 
-    pub fn vertices(&self) -> &[Vertex] {
+    pub fn vertices(&self) -> &[graphics::Vertex] {
         self.vertices.as_slice()
     }
 
@@ -105,7 +105,7 @@ impl Mesh {
         Triangles(triangles)
     }
 
-    fn index_for_vertex(&mut self, vertex: Vertex) -> Index {
+    fn index_for_vertex(&mut self, vertex: graphics::Vertex) -> Index {
         let vertices = &mut self.vertices;
 
         let index = self.indices_by_vertex.entry(vertex).or_insert_with(|| {
