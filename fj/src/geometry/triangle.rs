@@ -31,12 +31,29 @@ impl From<[[f32; 3]; 3]> for Triangle {
     }
 }
 
+impl From<Triangle> for [[f32; 3]; 3] {
+    fn from(triangle: Triangle) -> Self {
+        [triangle.a, triangle.b, triangle.c]
+    }
+}
+
 #[derive(Debug, PartialEq)]
 pub struct Triangles(pub Vec<Triangle>);
 
 #[cfg(test)]
 mod tests {
     use super::Triangle;
+
+    #[test]
+    fn triangle_should_support_conversions_to_and_from_arrays() {
+        let original =
+            Triangle::new([1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]);
+
+        let array: [[f32; 3]; 3] = original.into();
+        let converted: Triangle = array.into();
+
+        assert_eq!(original, converted);
+    }
 
     #[test]
     fn test() {
