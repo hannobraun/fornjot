@@ -1,7 +1,7 @@
 use bytemuck::{Pod, Zeroable};
 use decorum::R32;
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Vertex {
     pub position: Array3,
     pub normal: Array3,
@@ -10,7 +10,7 @@ pub struct Vertex {
 unsafe impl Zeroable for Vertex {}
 unsafe impl Pod for Vertex {}
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Array3(pub [R32; 3]);
 
 impl Array3 {
