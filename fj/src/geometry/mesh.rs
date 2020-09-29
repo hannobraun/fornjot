@@ -79,16 +79,16 @@ impl Mesh {
             .vertices
             .into_iter()
             .map(|vertex| graphics::Vertex {
-                position: graphics::Array3([
+                position: [
                     vertex.position[0].into_inner(),
                     vertex.position[1].into_inner(),
                     vertex.position[2].into_inner(),
-                ]),
-                normal: graphics::Array3([
+                ],
+                normal: [
                     vertex.normal[0].into_inner(),
                     vertex.normal[1].into_inner(),
                     vertex.normal[2].into_inner(),
-                ]),
+                ],
             })
             .collect();
         let indices = self.indices;
