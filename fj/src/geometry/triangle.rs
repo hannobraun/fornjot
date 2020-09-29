@@ -25,6 +25,12 @@ impl Triangle {
     }
 }
 
+impl From<[[f32; 3]; 3]> for Triangle {
+    fn from([a, b, c]: [[f32; 3]; 3]) -> Self {
+        Self::new(a, b, c)
+    }
+}
+
 pub struct Triangles(pub Vec<Triangle>);
 
 #[cfg(test)]
