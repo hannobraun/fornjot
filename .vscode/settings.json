@@ -7,6 +7,9 @@
         "zeroable"
     ],
     "cSpell.words": [
-        "nalgebra"
+        "Fornjot",
+        "nalgebra",
+        "wgpu",
+        "winit"
     ]
 }
