@@ -1,3 +1,7 @@
+pub mod mesh;
 pub mod triangle;
 
-pub use self::triangle::{Triangle, Triangles};
+pub use self::{
+    mesh::Mesh,
+    triangle::{Triangle, Triangles},
+};

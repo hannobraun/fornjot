@@ -6,7 +6,8 @@ use winit::{
 };
 
 use crate::{
-    graphics::{DrawError, Mesh, Renderer},
+    geometry::Mesh,
+    graphics::{DrawError, Renderer},
     input::InputHandler,
     transform::Transform,
 };
@@ -24,7 +25,8 @@ pub fn run(mesh: Mesh) {
 
     let mut input_handler = InputHandler::new();
     let mut transform = Transform::new();
-    let mut renderer = block_on(Renderer::new(&window, mesh)).unwrap();
+    let mut renderer =
+        block_on(Renderer::new(&window, mesh.into_graphics_mesh())).unwrap();
 
     event_loop.run(move |event, _, control_flow| match event {
         Event::WindowEvent {

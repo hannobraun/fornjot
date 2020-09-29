@@ -1,4 +1,4 @@
-use crate::graphics::Mesh;
+use super::Mesh;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Triangle {

@@ -6,6 +6,7 @@ mod run;
 mod transform;
 
 pub use self::{
-    graphics::{Index, Mesh, Vertex},
+    geometry::Mesh,
+    graphics::{Index, Vertex},
     run::run,
 };
