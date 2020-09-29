@@ -10,9 +10,9 @@ use crate::{
 
 pub struct Mesh {
     positions: Vec<graphics::Array3>,
-    indices_by_vertex: HashMap<graphics::Vertex, graphics::Index>,
+    indices_by_vertex: HashMap<Vertex, graphics::Index>,
 
-    vertices: Vec<graphics::Vertex>,
+    vertices: Vec<Vertex>,
     indices: Vec<graphics::Index>,
 }
 
@@ -44,15 +44,15 @@ impl Mesh {
         let mut normal_array = [R32::from_inner(0.0); 3];
         normal_array.copy_from_slice(normal.data.as_slice());
 
-        let v0 = graphics::Vertex {
+        let v0 = Vertex {
             position: p0,
             normal: graphics::Array3(normal_array),
         };
-        let v1 = graphics::Vertex {
+        let v1 = Vertex {
             position: p1,
             normal: graphics::Array3(normal_array),
         };
-        let v2 = graphics::Vertex {
+        let v2 = Vertex {
             position: p2,
             normal: graphics::Array3(normal_array),
         };
@@ -66,7 +66,7 @@ impl Mesh {
         self.indices.push(i2);
     }
 
-    pub fn vertices(&self) -> &[graphics::Vertex] {
+    pub fn vertices(&self) -> &[Vertex] {
         self.vertices.as_slice()
     }
 
@@ -75,7 +75,14 @@ impl Mesh {
     }
 
     pub fn into_graphics_mesh(self) -> graphics::Mesh {
-        let vertices = self.vertices;
+        let vertices = self
+            .vertices
+            .into_iter()
+            .map(|vertex| graphics::Vertex {
+                position: vertex.position,
+                normal: vertex.normal,
+            })
+            .collect();
         let indices = self.indices;
 
         graphics::Mesh { vertices, indices }
@@ -105,10 +112,7 @@ impl Mesh {
         Triangles(triangles)
     }
 
-    fn index_for_vertex(
-        &mut self,
-        vertex: graphics::Vertex,
-    ) -> graphics::Index {
+    fn index_for_vertex(&mut self, vertex: Vertex) -> graphics::Index {
         let vertices = &mut self.vertices;
 
         let index = self.indices_by_vertex.entry(vertex).or_insert_with(|| {
@@ -121,17 +125,19 @@ impl Mesh {
     }
 }
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
+pub struct Vertex {
+    pub position: graphics::Array3,
+    pub normal: graphics::Array3,
+}
 #[derive(Clone, Copy)]
 pub struct Index(usize);
 
 #[cfg(test)]
 mod tests {
-    use crate::{
-        geometry::Triangle,
-        graphics::{Array3, Vertex},
-    };
+    use crate::{geometry::Triangle, graphics::Array3};
 
-    use super::Mesh;
+    use super::{Mesh, Vertex};
 
     #[test]
     fn mesh_should_convert_triangle_into_vertices_and_indices() {
