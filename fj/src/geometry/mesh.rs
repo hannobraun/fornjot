@@ -27,13 +27,13 @@ impl Mesh {
         }
     }
 
-    pub fn vertex(&mut self, vertex: [f32; 3]) -> I {
+    pub fn vertex(&mut self, vertex: [f32; 3]) -> Index {
         let i = self.positions.len();
         self.positions.push(graphics::Array3::new(vertex));
-        I(i)
+        Index(i)
     }
 
-    pub fn triangle(&mut self, i0: I, i1: I, i2: I) {
+    pub fn triangle(&mut self, i0: Index, i1: Index, i2: Index) {
         let p0 = self.positions[i0.0];
         let p1 = self.positions[i1.0];
         let p2 = self.positions[i2.0];
@@ -122,7 +122,7 @@ impl Mesh {
 }
 
 #[derive(Clone, Copy)]
-pub struct I(usize);
+pub struct Index(usize);
 
 #[cfg(test)]
 mod tests {
