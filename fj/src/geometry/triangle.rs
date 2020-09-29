@@ -33,6 +33,12 @@ impl From<Array> for Triangle {
 
 impl From<Triangle> for Array {
     fn from(triangle: Triangle) -> Self {
+        Self::from(&triangle)
+    }
+}
+
+impl From<&Triangle> for Array {
+    fn from(triangle: &Triangle) -> Self {
         [triangle.a, triangle.b, triangle.c]
     }
 }
@@ -53,7 +59,10 @@ mod tests {
 
         let array: Array = original.into();
         let converted: Triangle = array.into();
+        assert_eq!(original, converted);
 
+        let array: Array = (&original).into();
+        let converted: Triangle = array.into();
         assert_eq!(original, converted);
     }
 
