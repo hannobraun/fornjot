@@ -5,5 +5,8 @@
         "bytemuck",
         "rustfmt",
         "zeroable"
+    ],
+    "cSpell.words": [
+        "nalgebra"
     ]
 }
