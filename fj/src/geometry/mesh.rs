@@ -174,6 +174,11 @@ mod tests {
             vertices.push(mesh.vertices()[i as usize]);
         }
 
+        let normal = Vector3::new(
+            R32::from_inner(0.0),
+            R32::from_inner(0.0),
+            R32::from_inner(1.0),
+        );
         assert_eq!(
             vertices,
             vec![
@@ -181,31 +186,19 @@ mod tests {
                     position: Point3::from(
                         Point3::from(v0).coords.map(|f| R32::from_inner(f))
                     ),
-                    normal: Vector3::new(
-                        R32::from_inner(0.0),
-                        R32::from_inner(0.0),
-                        R32::from_inner(1.0)
-                    ),
+                    normal,
                 },
                 Vertex {
                     position: Point3::from(
                         Point3::from(v1).coords.map(|f| R32::from_inner(f))
                     ),
-                    normal: Vector3::new(
-                        R32::from_inner(0.0),
-                        R32::from_inner(0.0),
-                        R32::from_inner(1.0)
-                    ),
+                    normal,
                 },
                 Vertex {
                     position: Point3::from(
                         Point3::from(v2).coords.map(|f| R32::from_inner(f))
                     ),
-                    normal: Vector3::new(
-                        R32::from_inner(0.0),
-                        R32::from_inner(0.0),
-                        R32::from_inner(1.0)
-                    ),
+                    normal,
                 },
             ]
         );
