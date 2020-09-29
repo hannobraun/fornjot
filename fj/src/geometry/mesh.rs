@@ -1,7 +1,7 @@
 use std::{collections::HashMap, convert::TryInto};
 
 use decorum::R32;
-use nalgebra::Point3;
+use nalgebra::{Point3, Vector3};
 
 use crate::{
     geometry::{Triangle, Triangles},
@@ -44,20 +44,17 @@ impl Mesh {
 
         let normal = (p1 - p0).cross(&(p2 - p0));
 
-        let mut normal_array = [R32::from_inner(0.0); 3];
-        normal_array.copy_from_slice(normal.data.as_slice());
-
         let v0 = Vertex {
             position: p0,
-            normal: graphics::Array3(normal_array),
+            normal,
         };
         let v1 = Vertex {
             position: p1,
-            normal: graphics::Array3(normal_array),
+            normal,
         };
         let v2 = Vertex {
             position: p2,
-            normal: graphics::Array3(normal_array),
+            normal,
         };
 
         let i0 = self.index_for_vertex(v0);
@@ -87,7 +84,11 @@ impl Mesh {
                     vertex.position[1],
                     vertex.position[2],
                 ]),
-                normal: vertex.normal,
+                normal: graphics::Array3([
+                    vertex.normal[0],
+                    vertex.normal[1],
+                    vertex.normal[2],
+                ]),
             })
             .collect();
         let indices = self.indices;
@@ -139,17 +140,18 @@ impl Mesh {
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
 pub struct Vertex {
     pub position: Point3<R32>,
-    pub normal: graphics::Array3,
+    pub normal: Vector3<R32>,
 }
+
 #[derive(Clone, Copy)]
 pub struct Index(usize);
 
 #[cfg(test)]
 mod tests {
     use decorum::R32;
-    use nalgebra::Point3;
+    use nalgebra::{Point3, Vector3};
 
-    use crate::{geometry::Triangle, graphics::Array3};
+    use crate::geometry::Triangle;
 
     use super::{Mesh, Vertex};
 
@@ -179,19 +181,31 @@ mod tests {
                     position: Point3::from(
                         Point3::from(v0).coords.map(|f| R32::from_inner(f))
                     ),
-                    normal: Array3::new([0.0, 0.0, 1.0])
+                    normal: Vector3::new(
+                        R32::from_inner(0.0),
+                        R32::from_inner(0.0),
+                        R32::from_inner(1.0)
+                    ),
                 },
                 Vertex {
                     position: Point3::from(
                         Point3::from(v1).coords.map(|f| R32::from_inner(f))
                     ),
-                    normal: Array3::new([0.0, 0.0, 1.0])
+                    normal: Vector3::new(
+                        R32::from_inner(0.0),
+                        R32::from_inner(0.0),
+                        R32::from_inner(1.0)
+                    ),
                 },
                 Vertex {
                     position: Point3::from(
                         Point3::from(v2).coords.map(|f| R32::from_inner(f))
                     ),
-                    normal: Array3::new([0.0, 0.0, 1.0])
+                    normal: Vector3::new(
+                        R32::from_inner(0.0),
+                        R32::from_inner(0.0),
+                        R32::from_inner(1.0)
+                    ),
                 },
             ]
         );
