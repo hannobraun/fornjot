@@ -27,13 +27,16 @@ impl Mesh {
         }
     }
 
-    pub fn vertex(&mut self, vertex: [f32; 3]) -> Index {
+    pub fn vertex(&mut self, vertex: impl Into<Point3<f32>>) -> Index {
+        let vertex = vertex.into();
+
         let i = self.positions.len();
         self.positions.push(Point3::new(
             R32::from_inner(vertex[0]),
             R32::from_inner(vertex[1]),
             R32::from_inner(vertex[2]),
         ));
+
         Index(i)
     }
 
