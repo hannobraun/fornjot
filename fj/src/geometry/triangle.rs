@@ -1,15 +1,21 @@
+use nalgebra::Point3;
+
 use super::Mesh;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Triangle {
-    pub a: [f32; 3],
-    pub b: [f32; 3],
-    pub c: [f32; 3],
+    pub a: Point3<f32>,
+    pub b: Point3<f32>,
+    pub c: Point3<f32>,
 }
 
 impl Triangle {
     pub fn new(a: [f32; 3], b: [f32; 3], c: [f32; 3]) -> Self {
-        Self { a, b, c }
+        Self {
+            a: a.into(),
+            b: b.into(),
+            c: c.into(),
+        }
     }
 
     pub fn to_mesh(&self) -> Mesh {
@@ -39,7 +45,11 @@ impl From<Triangle> for Array {
 
 impl From<&Triangle> for Array {
     fn from(triangle: &Triangle) -> Self {
-        [triangle.a, triangle.b, triangle.c]
+        [
+            [triangle.a[0], triangle.a[1], triangle.a[2]],
+            [triangle.b[0], triangle.b[1], triangle.b[2]],
+            [triangle.c[0], triangle.c[1], triangle.c[2]],
+        ]
     }
 }
 
