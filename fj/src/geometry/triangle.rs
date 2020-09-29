@@ -31,6 +31,7 @@ impl From<[[f32; 3]; 3]> for Triangle {
     }
 }
 
+#[derive(Debug, PartialEq)]
 pub struct Triangles(pub Vec<Triangle>);
 
 #[cfg(test)]
