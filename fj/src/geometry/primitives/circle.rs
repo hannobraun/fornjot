@@ -2,7 +2,7 @@ use std::{collections::VecDeque, f32::consts::PI};
 
 use nalgebra::{Point3, RealField as _};
 
-use crate::geometry::Mesh;
+use crate::geometry::{Mesh, ToMesh};
 
 pub struct Circle {
     radius: f32,
@@ -26,8 +26,10 @@ impl Circle {
     pub fn diameter(&self) -> f32 {
         self.radius * 2.0
     }
+}
 
-    pub fn to_mesh(&self, tolerance: f32) -> Mesh {
+impl ToMesh for Circle {
+    fn to_mesh(&self, tolerance: f32) -> Mesh {
         // To approximate the circle, we use a regular polygon for which the
         // cirle is the circumscribed circle. The `tolerance` parameter is the
         // maximum allowed distance between the polygon and the circle. This is
@@ -94,7 +96,7 @@ impl Circle {
 mod tests {
     use approx::assert_relative_eq;
 
-    use crate::geometry::Triangles;
+    use crate::geometry::{ToMesh as _, Triangles};
 
     use super::Circle;
 
