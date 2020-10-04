@@ -23,6 +23,10 @@ impl Circle {
         self.diameter
     }
 
+    pub fn radius(&self) -> f32 {
+        self.diameter / 2.0
+    }
+
     pub fn to_mesh(&self, n: u16) -> Option<Mesh> {
         let mut mesh = Mesh::new();
 
@@ -74,7 +78,7 @@ mod tests {
     #[test]
     fn circle_should_be_created_from_diameter_and_radius() {
         let circle = Circle::from_diameter(1.0);
-        assert_eq!(circle.diameter(), 1.0);
+        assert_eq!(circle.radius(), 0.5);
 
         let circle = Circle::from_radius(1.0);
         assert_eq!(circle.diameter(), 2.0);
