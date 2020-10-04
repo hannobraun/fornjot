@@ -27,7 +27,7 @@ impl Circle {
         self.radius * 2.0
     }
 
-    pub fn to_mesh(&self, tolerance: f32) -> Option<Mesh> {
+    pub fn to_mesh(&self, tolerance: f32) -> Mesh {
         // To approximate the circle, we use a regular polygon for which the
         // cirle is the circumscribed circle. The `tolerance` parameter is the
         // maximum allowed distance between the polygon and the circle. This is
@@ -86,7 +86,7 @@ impl Circle {
 
         mesh.triangle(center, a, first);
 
-        Some(mesh)
+        mesh
     }
 }
 
@@ -116,7 +116,7 @@ mod tests {
         let tolerance = 0.4;
 
         let circle = Circle::from_radius(1.0);
-        let mesh = circle.to_mesh(tolerance).unwrap();
+        let mesh = circle.to_mesh(tolerance);
 
         let triangles = mesh.triangles();
 
