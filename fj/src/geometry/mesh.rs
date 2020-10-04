@@ -3,10 +3,7 @@ use std::{collections::HashMap, convert::TryInto};
 use decorum::R32;
 use nalgebra::{Point3, Vector3};
 
-use crate::{
-    geometry::{Triangle, Triangles},
-    graphics,
-};
+use crate::{geometry::Triangle, graphics};
 
 pub struct Mesh {
     positions: Vec<Point3<R32>>,
@@ -227,5 +224,37 @@ mod tests {
             triangles.0,
             vec![Triangle::new(v0, v1, v2), Triangle::new(v0, v2, v1)]
         );
+    }
+}
+
+#[derive(Debug, PartialEq)]
+pub struct Triangles(pub Vec<Triangle>);
+
+impl approx::AbsDiffEq for Triangles {
+    type Epsilon = <Triangle as approx::AbsDiffEq>::Epsilon;
+
+    fn default_epsilon() -> Self::Epsilon {
+        Triangle::default_epsilon()
+    }
+
+    fn abs_diff_eq(&self, other: &Triangles, epsilon: Self::Epsilon) -> bool {
+        self.0.as_slice().abs_diff_eq(other.0.as_slice(), epsilon)
+    }
+}
+
+impl approx::RelativeEq for Triangles {
+    fn default_max_relative() -> Self::Epsilon {
+        Triangle::default_max_relative()
+    }
+
+    fn relative_eq(
+        &self,
+        other: &Triangles,
+        epsilon: Self::Epsilon,
+        max_relative: Self::Epsilon,
+    ) -> bool {
+        self.0
+            .as_slice()
+            .relative_eq(other.0.as_slice(), epsilon, max_relative)
     }
 }
