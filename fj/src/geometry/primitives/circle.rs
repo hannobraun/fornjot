@@ -5,26 +5,26 @@ use nalgebra::{Point3, RealField as _};
 use crate::geometry::Mesh;
 
 pub struct Circle {
-    diameter: f32,
+    radius: f32,
 }
 
 impl Circle {
     pub fn from_diameter(diameter: f32) -> Self {
-        Self { diameter }
-    }
-
-    pub fn from_radius(radius: f32) -> Self {
         Self {
-            diameter: radius * 2.0,
+            radius: diameter / 2.0,
         }
     }
 
+    pub fn from_radius(radius: f32) -> Self {
+        Self { radius }
+    }
+
     pub fn diameter(&self) -> f32 {
-        self.diameter
+        self.radius * 2.0
     }
 
     pub fn radius(&self) -> f32 {
-        self.diameter / 2.0
+        self.radius
     }
 
     pub fn to_mesh(&self, n: u16) -> Option<Mesh> {
