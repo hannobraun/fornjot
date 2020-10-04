@@ -1,4 +1,4 @@
-use std::collections::VecDeque;
+use std::{collections::VecDeque, f32::consts::PI};
 
 use nalgebra::{Point3, RealField as _};
 
@@ -27,7 +27,30 @@ impl Circle {
         self.radius * 2.0
     }
 
-    pub fn to_mesh(&self, n: u16) -> Option<Mesh> {
+    pub fn to_mesh(&self, tolerance: f32) -> Option<Mesh> {
+        // To approximate the circle, we use a regular polygon for which the
+        // cirle is the circumscribed circle. The `tolerance` parameter is the
+        // maximum allowed distance between the polygon and the circle. This is
+        // the same as the difference between the circumscribed circle and the
+        // in circle.
+        //
+        // Let's figure which regular polygon we need to use, by just trying out
+        // some of them until we find one whose maximum error is less than or
+        // equal to the tolerance.
+        let mut n = 3;
+        loop {
+            let incircle_radius = self.radius() * (PI / n as f32).cos();
+            let maximum_error = self.radius() - incircle_radius;
+
+            println!("{}, {}", tolerance, maximum_error);
+
+            if maximum_error <= tolerance {
+                break;
+            }
+
+            n += 1;
+        }
+
         let mut mesh = Mesh::new();
 
         let center = mesh.vertex(Point3::new(0.0, 0.0, 0.0));
@@ -85,8 +108,14 @@ mod tests {
 
     #[test]
     fn circle_should_convert_to_mesh() {
+        // If we approximate the circle using a triangle whose points are on the
+        // circle, the maximum error (distance between circle and triangle) is
+        // 0.5. The maximum error for a square is roughly 0.3, so choosing a
+        // tolerance between those two should give us a square.
+        let tolerance = 0.4;
+
         let circle = Circle::from_radius(1.0);
-        let mesh = circle.to_mesh(4).unwrap();
+        let mesh = circle.to_mesh(tolerance).unwrap();
 
         let triangles = mesh.triangles();
 
