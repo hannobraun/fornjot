@@ -1,6 +1,6 @@
 use nalgebra::{Rotation3, Unit, Vector3};
 use winit::{
-    dpi::{LogicalPosition, PhysicalPosition},
+    dpi::PhysicalPosition,
     event::{
         ElementState, KeyboardInput, MouseButton, MouseScrollDelta,
         VirtualKeyCode,
@@ -96,7 +96,7 @@ impl InputHandler {
     ) {
         let delta = match delta {
             MouseScrollDelta::LineDelta(_, y) => y * 0.5,
-            MouseScrollDelta::PixelDelta(LogicalPosition { y, .. }) => {
+            MouseScrollDelta::PixelDelta(PhysicalPosition { y, .. }) => {
                 y as f32 * 0.1
             }
         };
