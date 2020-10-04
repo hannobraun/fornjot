@@ -5,7 +5,7 @@ use nalgebra::{Point3, RealField as _};
 use crate::geometry::Mesh;
 
 pub struct Circle {
-    pub diameter: f32,
+    diameter: f32,
 }
 
 impl Circle {
