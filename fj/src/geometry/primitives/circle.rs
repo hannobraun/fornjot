@@ -68,8 +68,9 @@ impl Circle {
             circumference.push_back(index);
         }
 
-        let mut a = circumference.pop_front()?;
-        let mut b = circumference.pop_front()?;
+        // We know that `n` is at least 3, so the following can't panic.
+        let mut a = circumference.pop_front().unwrap();
+        let mut b = circumference.pop_front().unwrap();
 
         let first = a;
 
