@@ -8,6 +8,12 @@ pub trait ToMesh {
     fn to_mesh(self, tolerance: f32) -> Mesh;
 }
 
+impl ToMesh for Mesh {
+    fn to_mesh(self, _tolerance: f32) -> Mesh {
+        self
+    }
+}
+
 impl ToMesh for &Circle {
     fn to_mesh(self, tolerance: f32) -> Mesh {
         // To approximate the circle, we use a regular polygon for which the
