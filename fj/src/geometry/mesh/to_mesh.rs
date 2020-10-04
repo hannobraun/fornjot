@@ -5,11 +5,11 @@ use nalgebra::{Point3, RealField as _};
 use crate::geometry::{Circle, Mesh, Triangle};
 
 pub trait ToMesh {
-    fn to_mesh(&self, tolerance: f32) -> Mesh;
+    fn to_mesh(self, tolerance: f32) -> Mesh;
 }
 
-impl ToMesh for Circle {
-    fn to_mesh(&self, tolerance: f32) -> Mesh {
+impl ToMesh for &Circle {
+    fn to_mesh(self, tolerance: f32) -> Mesh {
         // To approximate the circle, we use a regular polygon for which the
         // cirle is the circumscribed circle. The `tolerance` parameter is the
         // maximum allowed distance between the polygon and the circle. This is
@@ -72,8 +72,8 @@ impl ToMesh for Circle {
     }
 }
 
-impl ToMesh for Triangle {
-    fn to_mesh(&self, _tolerance: f32) -> Mesh {
+impl ToMesh for &Triangle {
+    fn to_mesh(self, _tolerance: f32) -> Mesh {
         let mut mesh = Mesh::new();
 
         let i0 = mesh.vertex(self.a);
