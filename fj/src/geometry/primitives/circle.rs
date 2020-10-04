@@ -32,15 +32,14 @@ impl Circle {
 
         let center = mesh.vertex(Point3::new(0.0, 0.0, 0.0));
 
-        let radius = self.diameter / 2.0;
         let mut circumference = VecDeque::new();
         for i in 0..n {
             let angle = f32::two_pi() / n as f32 * i as f32;
 
             let (sin, cos) = angle.sin_cos();
 
-            let x = cos * radius;
-            let y = sin * radius;
+            let x = cos * self.radius();
+            let y = sin * self.radius();
 
             let index = mesh.vertex(Point3::new(x, y, 0.0));
             circumference.push_back(index);
