@@ -2,7 +2,7 @@ use std::collections::VecDeque;
 
 use nalgebra::{Point3, RealField as _};
 
-use super::mesh::Mesh;
+use crate::geometry::Mesh;
 
 pub struct Circle {
     pub diameter: f32,

@@ -1,6 +1,6 @@
 use nalgebra::Point3;
 
-use super::Mesh;
+use crate::geometry::Mesh;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Triangle {
