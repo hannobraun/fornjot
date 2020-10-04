@@ -1,6 +1,6 @@
 use nalgebra::Point3;
 
-use crate::geometry::Mesh;
+use crate::geometry::{Mesh, ToMesh};
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Triangle {
@@ -20,8 +20,10 @@ impl Triangle {
             c: c.into(),
         }
     }
+}
 
-    pub fn to_mesh(&self) -> Mesh {
+impl ToMesh for Triangle {
+    fn to_mesh(&self, _tolerance: f32) -> Mesh {
         let mut mesh = Mesh::new();
 
         let i0 = mesh.vertex(self.a);
@@ -68,6 +70,8 @@ impl approx::RelativeEq for Triangle {
 
 #[cfg(test)]
 mod tests {
+    use crate::geometry::ToMesh as _;
+
     use super::Triangle;
 
     #[test]
@@ -75,7 +79,7 @@ mod tests {
         let triangle =
             Triangle::new([0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]);
 
-        let mesh = triangle.to_mesh();
+        let mesh = triangle.to_mesh(0.0);
         let triangles = mesh.triangles();
 
         assert_eq!(triangles.0, vec![triangle]);
