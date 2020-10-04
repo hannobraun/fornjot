@@ -23,10 +23,11 @@ pub fn run(mesh: Mesh) {
         .build(&event_loop)
         .unwrap();
 
+    let mesh = mesh.into_graphics_mesh();
+
     let mut input_handler = InputHandler::new();
     let mut transform = Transform::new();
-    let mut renderer =
-        block_on(Renderer::new(&window, mesh.into_graphics_mesh())).unwrap();
+    let mut renderer = block_on(Renderer::new(&window, mesh)).unwrap();
 
     event_loop.run(move |event, _, control_flow| match event {
         Event::WindowEvent {
