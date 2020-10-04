@@ -34,28 +34,6 @@ impl Triangle {
     }
 }
 
-impl From<Array> for Triangle {
-    fn from([a, b, c]: Array) -> Self {
-        Self::new(a, b, c)
-    }
-}
-
-impl From<Triangle> for Array {
-    fn from(triangle: Triangle) -> Self {
-        Self::from(&triangle)
-    }
-}
-
-impl From<&Triangle> for Array {
-    fn from(triangle: &Triangle) -> Self {
-        [
-            [triangle.a[0], triangle.a[1], triangle.a[2]],
-            [triangle.b[0], triangle.b[1], triangle.b[2]],
-            [triangle.c[0], triangle.c[1], triangle.c[2]],
-        ]
-    }
-}
-
 impl approx::AbsDiffEq for Triangle {
     type Epsilon = <f32 as approx::AbsDiffEq>::Epsilon;
 
@@ -88,25 +66,9 @@ impl approx::RelativeEq for Triangle {
     }
 }
 
-type Array = [[f32; 3]; 3];
-
 #[cfg(test)]
 mod tests {
-    use super::{Array, Triangle};
-
-    #[test]
-    fn triangle_should_support_conversions_to_and_from_arrays() {
-        let original =
-            Triangle::new([1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]);
-
-        let array: Array = original.into();
-        let converted: Triangle = array.into();
-        assert_eq!(original, converted);
-
-        let array: Array = (&original).into();
-        let converted: Triangle = array.into();
-        assert_eq!(original, converted);
-    }
+    use super::Triangle;
 
     #[test]
     fn test() {
