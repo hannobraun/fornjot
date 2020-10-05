@@ -9,7 +9,7 @@ use crate::{
 };
 
 pub struct Mesh {
-    positions: Vec<Point3<R32>>,
+    positions: Vec<Point3<f32>>,
     indices_by_vertex: HashMap<Vertex, graphics::Index>,
 
     vertices: Vec<Vertex>,
@@ -28,10 +28,8 @@ impl Mesh {
     }
 
     pub fn vertex(&mut self, vertex: impl Into<Point3<f32>>) -> Index {
-        let vertex = vertex.into();
-
         let i = self.positions.len();
-        self.positions.push(to_r32_point(vertex));
+        self.positions.push(vertex.into());
 
         Index(i)
     }
@@ -42,17 +40,22 @@ impl Mesh {
         let p2 = self.positions[i2.0];
 
         let normal = (p1 - p0).cross(&(p2 - p0));
+        let normal = Vector3::new(
+            R32::from_inner(normal[0]),
+            R32::from_inner(normal[1]),
+            R32::from_inner(normal[2]),
+        );
 
         let v0 = Vertex {
-            position: p0,
+            position: to_r32_point(p0),
             normal,
         };
         let v1 = Vertex {
-            position: p1,
+            position: to_r32_point(p1),
             normal,
         };
         let v2 = Vertex {
-            position: p2,
+            position: to_r32_point(p2),
             normal,
         };
 
