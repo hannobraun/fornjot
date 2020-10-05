@@ -17,7 +17,7 @@ impl ToMesh for Mesh {
 impl ToMesh for &Circle {
     fn to_mesh(self, tolerance: f32) -> Mesh {
         // To approximate the circle, we use a regular polygon for which the
-        // cirle is the circumscribed circle. The `tolerance` parameter is the
+        // circle is the circumscribed circle. The `tolerance` parameter is the
         // maximum allowed distance between the polygon and the circle. This is
         // the same as the difference between the circumscribed circle and the
         // in circle.
