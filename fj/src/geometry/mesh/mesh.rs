@@ -39,7 +39,7 @@ impl Mesh {
         let p1 = self.positions[i1.0];
         let p2 = self.positions[i2.0];
 
-        let normal = (p1 - p0).cross(&(p2 - p0));
+        let normal = (p1 - p0).cross(&(p2 - p0)).normalize();
         let normal = Vector3::new(
             R32::from_inner(normal[0]),
             R32::from_inner(normal[1]),
@@ -170,8 +170,8 @@ mod tests {
         let mut mesh = Mesh::new();
 
         let v0 = [0.0, 0.0, 0.0];
-        let v1 = [1.0, 0.0, 0.0];
-        let v2 = [0.0, 1.0, 0.0];
+        let v1 = [0.5, 0.0, 0.0];
+        let v2 = [0.0, 0.5, 0.0];
 
         let i0 = mesh.vertex(v0);
         let i1 = mesh.vertex(v1);
