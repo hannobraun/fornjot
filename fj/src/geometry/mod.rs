@@ -1,4 +1,5 @@
 pub mod mesh;
+pub mod operations;
 pub mod primitives;
 
 pub use self::{

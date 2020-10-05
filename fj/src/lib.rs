@@ -1,5 +1,9 @@
 pub mod geometry;
 
+pub mod prelude {
+    pub use super::geometry::operations::difference::MakeDifference as _;
+}
+
 mod graphics;
 mod input;
 mod run;
