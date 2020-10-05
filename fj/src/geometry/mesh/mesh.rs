@@ -31,11 +31,7 @@ impl Mesh {
         let vertex = vertex.into();
 
         let i = self.positions.len();
-        self.positions.push(Point3::new(
-            R32::from_inner(vertex[0]),
-            R32::from_inner(vertex[1]),
-            R32::from_inner(vertex[2]),
-        ));
+        self.positions.push(to_r32_point(vertex));
 
         Index(i)
     }
@@ -138,6 +134,14 @@ impl Mesh {
 
         *index
     }
+}
+
+fn to_r32_point(p: Point3<f32>) -> Point3<R32> {
+    Point3::new(
+        R32::from_inner(p[0]),
+        R32::from_inner(p[1]),
+        R32::from_inner(p[2]),
+    )
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
