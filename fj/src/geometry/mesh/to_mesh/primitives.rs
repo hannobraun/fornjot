@@ -50,11 +50,18 @@ impl ToMesh for &Circle {
         let mut a = circumference.pop_front().unwrap();
         let mut b = circumference.pop_front().unwrap();
 
+        // We need to remember the first point on the circumference. It's going
+        // to be part of the last triangle, once we're all the way around.
         let first = a;
 
         loop {
+            // All triangles are the same: They include the center and two
+            // neighboring points on the circumference, starting with the center
+            // and going counter-clockwise.
             mesh.triangle(center, a, b);
 
+            // Once triangle done. Prepare the points for the next one or, if
+            // there isn't another point, stop.
             a = b;
             b = match circumference.pop_front() {
                 Some(index) => index,
@@ -62,6 +69,8 @@ impl ToMesh for &Circle {
             };
         }
 
+        // We've run out of new points to make triangles, but the last and first
+        // points still need to form the last triangle.
         mesh.triangle(center, a, first);
 
         mesh
