@@ -124,7 +124,7 @@ mod tests {
     }
 
     #[test]
-    fn test() {
+    fn triangle_should_convert_to_mesh() {
         let triangle =
             Triangle::new([0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]);
 
