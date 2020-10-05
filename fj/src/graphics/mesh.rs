@@ -1,5 +1,6 @@
 use super::vertices::{Index, Vertex};
 
+#[derive(Debug)]
 pub struct Mesh {
     pub vertices: Vec<Vertex>,
     pub indices: Vec<Index>,
