@@ -30,8 +30,6 @@ impl ToMesh for &Circle {
             let incircle_radius = self.radius() * (PI / n as f32).cos();
             let maximum_error = self.radius() - incircle_radius;
 
-            println!("{}, {}", tolerance, maximum_error);
-
             if maximum_error <= tolerance {
                 break;
             }
