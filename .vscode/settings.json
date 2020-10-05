@@ -9,8 +9,11 @@
     ],
     "cSpell.words": [
         "Fornjot",
+        "VULKAN",
         "incircle",
         "nalgebra",
+        "rasterization",
+        "spirv",
         "wgpu",
         "winit"
     ]
