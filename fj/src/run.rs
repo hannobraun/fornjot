@@ -23,7 +23,7 @@ pub fn run(mesh: impl ToMesh) {
         .build(&event_loop)
         .unwrap();
 
-    let mesh = mesh.to_mesh(0.1).into_graphics_mesh();
+    let mesh = mesh.to_mesh(0.001).into_graphics_mesh();
 
     let mut input_handler = InputHandler::new();
     let mut transform = Transform::new();
