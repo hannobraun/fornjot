@@ -1,8 +1,8 @@
 use std::{collections::VecDeque, f32::consts::PI};
 
-use nalgebra::{Point3, RealField as _};
+use nalgebra::Point3;
 
-use crate::geometry::{Circle, Mesh, Triangle};
+use crate::geometry::{Boundary as _, Circle, Mesh, Triangle};
 
 use super::ToMesh;
 
@@ -35,14 +35,8 @@ impl ToMesh for &Circle {
 
         let mut circumference = VecDeque::new();
         for i in 0..n {
-            let angle = f32::two_pi() / n as f32 * i as f32;
-
-            let (sin, cos) = angle.sin_cos();
-
-            let x = cos * self.radius();
-            let y = sin * self.radius();
-
-            let index = mesh.vertex(Point3::new(x, y, 0.0));
+            let p = self.boundary(1.0 / n as f32 * i as f32);
+            let index = mesh.vertex(Point3::new(p.x, p.y, 0.0));
             circumference.push_back(index);
         }
 
