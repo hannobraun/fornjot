@@ -5,7 +5,7 @@ pub mod primitives;
 
 pub use self::{
     boundary::Boundary,
-    mesh::{Mesh, ToMesh, Triangles},
+    mesh::{Mesh, ToMesh},
     operations::Difference,
-    primitives::{Circle, Triangle},
+    primitives::{Circle, Triangle, Triangles},
 };
