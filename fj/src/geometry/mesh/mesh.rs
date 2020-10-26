@@ -47,15 +47,15 @@ impl Mesh {
         );
 
         let v0 = Vertex {
-            position: to_r32_point(p0),
+            position: p0.map(|v| R32::from_inner(v)),
             normal,
         };
         let v1 = Vertex {
-            position: to_r32_point(p1),
+            position: p1.map(|v| R32::from_inner(v)),
             normal,
         };
         let v2 = Vertex {
-            position: to_r32_point(p2),
+            position: p2.map(|v| R32::from_inner(v)),
             normal,
         };
 
@@ -137,10 +137,6 @@ impl Mesh {
 
         *index
     }
-}
-
-fn to_r32_point(p: Point3<f32>) -> Point3<R32> {
-    p.map(|v| R32::from_inner(v))
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
