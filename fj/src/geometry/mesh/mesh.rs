@@ -40,11 +40,7 @@ impl Mesh {
         let p2 = self.positions[i2.0];
 
         let normal = (p1 - p0).cross(&(p2 - p0)).normalize();
-        let normal = Vector3::new(
-            R32::from_inner(normal[0]),
-            R32::from_inner(normal[1]),
-            R32::from_inner(normal[2]),
-        );
+        let normal = normal.map(|v| R32::from_inner(v));
 
         let v0 = Vertex {
             position: p0.map(|v| R32::from_inner(v)),
