@@ -140,11 +140,7 @@ impl Mesh {
 }
 
 fn to_r32_point(p: Point3<f32>) -> Point3<R32> {
-    Point3::new(
-        R32::from_inner(p[0]),
-        R32::from_inner(p[1]),
-        R32::from_inner(p[2]),
-    )
+    p.map(|v| R32::from_inner(v))
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
