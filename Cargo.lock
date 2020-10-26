@@ -377,6 +377,7 @@ dependencies = [
  "decorum",
  "futures",
  "nalgebra",
+ "rand",
  "shaderc",
  "wgpu",
  "winit",
