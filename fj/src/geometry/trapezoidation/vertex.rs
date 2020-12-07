@@ -5,21 +5,27 @@ pub struct Vertex(pub Point2<f32>);
 
 impl Vertex {
     pub fn is_higher_than(&self, other: &Vertex) -> bool {
-        if self.0 == other.0 {
-            panic!(
-                "{:?}.is_higher_than({:?}: Both are equal. This is a bug.",
-                self, other
-            );
+        // Higher-ness is primarily determined by y coordinate.
+        if self.0.y > other.0.y {
+            return true;
+        }
+        if self.0.y < other.0.y {
+            return false;
         }
 
-        match (self.0.y, other.0.y) {
-            (a, b) if a > b => true,
-            (a, b) if a < b => false,
-            (a, b) if a == b => self.0.x < other.0.x,
-            (a, b) => {
-                panic!("Invalid y coordinates: {}, {}", a, b);
+        // If y coordinates are equal, the left vertex is higher.
+        if self.0.y == other.0.y {
+            if self.0.x < other.0.x {
+                return true;
+            }
+            if self.0.x > other.0.x {
+                return false;
             }
         }
+
+        // If we land here, the vertices are either equal, or we have NaN's or
+        // some other weirdness.
+        false
     }
 
     pub fn is_lower_than(&self, other: &Vertex) -> bool {
@@ -52,9 +58,10 @@ mod tests {
     }
 
     #[test]
-    #[should_panic]
-    fn vertex_should_neither_be_higher_nor_lower_if_equal() {
+    fn vertex_should_not_be_higher_or_lower_than_equal_vertex() {
         let vertex = Vertex(Point2::new(0.0, 0.0));
-        vertex.is_higher_than(&vertex);
+
+        assert_eq!(vertex.is_higher_than(&vertex), false);
+        assert_eq!(vertex.is_lower_than(&vertex), false);
     }
 }
