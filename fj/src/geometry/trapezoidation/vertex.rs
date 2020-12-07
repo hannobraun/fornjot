@@ -1,6 +1,6 @@
 use nalgebra::Point2;
 
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub struct Vertex(pub Point2<f32>);
 
 impl Vertex {
