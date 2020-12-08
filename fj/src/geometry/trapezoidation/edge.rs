@@ -1,6 +1,6 @@
 use super::Vertex;
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Edge {
     upper: Vertex,
     lower: Vertex,
