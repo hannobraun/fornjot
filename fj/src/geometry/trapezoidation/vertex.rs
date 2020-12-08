@@ -43,20 +43,20 @@ mod tests {
 
     #[test]
     fn vertex_with_high_y_should_be_higher_than_vertex_with_low_y() {
-        let high = Vertex::new(0.0, 1.0);
-        let low = Vertex::new(0.0, 0.0);
+        let upper = Vertex::new(0.0, 1.0);
+        let lower = Vertex::new(0.0, 0.0);
 
-        assert!(high.is_higher_than(&low));
-        assert!(low.is_lower_than(&high));
+        assert!(upper.is_higher_than(&lower));
+        assert!(lower.is_lower_than(&upper));
     }
 
     #[test]
     fn vertex_with_equal_y_but_left_x_should_be_higher_than_right_x() {
-        let high = Vertex::new(0.0, 0.0);
-        let low = Vertex::new(1.0, 0.0);
+        let upper = Vertex::new(0.0, 0.0);
+        let lower = Vertex::new(1.0, 0.0);
 
-        assert!(high.is_higher_than(&low));
-        assert!(low.is_lower_than(&high));
+        assert!(upper.is_higher_than(&lower));
+        assert!(lower.is_lower_than(&upper));
     }
 
     #[test]
