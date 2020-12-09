@@ -153,7 +153,7 @@ dependencies = [
  "block",
  "cocoa-foundation",
  "core-foundation 0.9.1",
- "core-graphics 0.22.1",
+ "core-graphics 0.22.2",
  "foreign-types",
  "libc",
  "objc",
@@ -226,9 +226,9 @@ dependencies = [
 
 [[package]]
 name = "core-graphics"
-version = "0.22.1"
+version = "0.22.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fc239bba52bab96649441699533a68de294a101533b0270b2d65aa402b29a7f9"
+checksum = "269f35f69b542b80e736a20a89a05215c0ce80c2c03c514abb2e318b78379d86"
 dependencies = [
  "bitflags",
  "core-foundation 0.9.1",
@@ -973,9 +973,9 @@ checksum = "c44922cb3dbb1c70b5e5f443d63b64363a898564d739ba5198e3a9138442868d"
 
 [[package]]
 name = "net2"
-version = "0.2.36"
+version = "0.2.37"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d7cf75f38f16cb05ea017784dc6dbfd354f76c223dba37701734c4f5a9337d02"
+checksum = "391630d12b68002ae1e25e8f974306474966550ad82dac6886fb8910c19568ae"
 dependencies = [
  "cfg-if 0.1.10",
  "libc",
@@ -1819,7 +1819,7 @@ dependencies = [
  "bitflags",
  "cocoa",
  "core-foundation 0.9.1",
- "core-graphics 0.22.1",
+ "core-graphics 0.22.2",
  "core-video-sys",
  "dispatch",
  "instant",
