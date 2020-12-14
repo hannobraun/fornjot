@@ -9,7 +9,7 @@ pub struct Tree<Leaf> {
 
 impl<Leaf> Tree<Leaf>
 where
-    Leaf: Copy + Default,
+    Leaf: Default,
 {
     pub fn new() -> Self {
         let mut nodes = HashMap::new();
