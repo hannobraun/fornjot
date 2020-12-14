@@ -1,13 +1,11 @@
 use std::collections::HashMap;
 
-use super::{Edge, Vertex};
-
-pub struct Tree<Leaf> {
-    nodes: HashMap<NodeId, Node<Leaf>>,
+pub struct Tree<Branch, Leaf> {
+    nodes: HashMap<NodeId, Node<Branch, Leaf>>,
     next_id: u32,
 }
 
-impl<Leaf> Tree<Leaf>
+impl<Branch, Leaf> Tree<Branch, Leaf>
 where
     Leaf: Default,
 {
@@ -106,15 +104,15 @@ where
         })
     }
 
-    fn get(&self, id: NodeId) -> &Node<Leaf> {
+    fn get(&self, id: NodeId) -> &Node<Branch, Leaf> {
         self.nodes.get(&id).unwrap()
     }
 
-    fn get_mut(&mut self, id: NodeId) -> &mut Node<Leaf> {
+    fn get_mut(&mut self, id: NodeId) -> &mut Node<Branch, Leaf> {
         self.nodes.get_mut(&id).unwrap()
     }
 
-    fn get_parent(&self, parent_id: NodeId) -> &BranchNode {
+    fn get_parent(&self, parent_id: NodeId) -> &BranchNode<Branch> {
         if let NodeKind::Branch(node) = &self.get(parent_id).kind {
             return node;
         }
@@ -122,7 +120,7 @@ where
         panic!("Parent node ({:?}) is not a branch", parent_id);
     }
 
-    fn get_parent_mut(&mut self, parent_id: NodeId) -> &mut BranchNode {
+    fn get_parent_mut(&mut self, parent_id: NodeId) -> &mut BranchNode<Branch> {
         if let NodeKind::Branch(node) = &mut self.get_mut(parent_id).kind {
             return node;
         }
@@ -150,28 +148,22 @@ impl From<LeafId> for NodeId {
 pub struct LeafId(NodeId);
 
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Node<Leaf> {
+pub struct Node<Branch, Leaf> {
     parent: Option<NodeId>,
-    kind: NodeKind<Leaf>,
+    kind: NodeKind<Branch, Leaf>,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub enum NodeKind<Leaf> {
-    Branch(BranchNode),
+pub enum NodeKind<Branch, Leaf> {
+    Branch(BranchNode<Branch>),
     Leaf(Leaf),
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct BranchNode {
+pub struct BranchNode<T> {
     above: NodeId,
     below: NodeId,
-    branch: Branch,
-}
-
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum Branch {
-    Edge(Edge),
-    Vertex(Vertex),
+    branch: T,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -182,11 +174,9 @@ pub enum Relation {
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::trapezoidation::Vertex;
+    use super::Relation;
 
-    use super::{Branch, Relation};
-
-    type Tree = super::Tree<()>;
+    type Tree = super::Tree<u8, ()>;
 
     #[test]
     fn tree_should_start_with_a_single_root_trapezoid() {
@@ -201,7 +191,7 @@ mod tests {
         let mut tree = Tree::new();
         let (root_id, _) = tree.leafs().next().unwrap();
 
-        let new_node = Branch::Vertex(Vertex::new(0.0, 0.0));
+        let new_node = 0;
         tree.split(root_id, new_node);
 
         let trapezoids: Vec<_> = tree.leafs().collect();
@@ -227,8 +217,7 @@ mod tests {
 
         let (leaf_id, _) = tree.leafs().next().unwrap();
         let (parent_id, _, _) = tree.parent_of(leaf_id).unwrap();
-        let new_branch_id =
-            tree.split(leaf_id, Branch::Vertex(Vertex::new(0.0, 0.0)));
+        let new_branch_id = tree.split(leaf_id, 1);
         let (new_parent_id, _, _) = tree.parent_of(new_branch_id).unwrap();
 
         assert_eq!(parent_id, new_parent_id);
