@@ -72,10 +72,10 @@ where
         new_branch_id
     }
 
-    pub fn leafs(&self) -> impl Iterator<Item = (LeafId, Leaf)> + '_ {
+    pub fn leafs(&self) -> impl Iterator<Item = (LeafId, &Leaf)> + '_ {
         self.nodes
             .iter()
-            .filter_map(|(&id, &node)| match node.kind {
+            .filter_map(|(&id, node)| match &node.kind {
                 NodeKind::Leaf(leaf) => Some((LeafId(id), leaf)),
                 _ => None,
             })
