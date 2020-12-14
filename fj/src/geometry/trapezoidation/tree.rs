@@ -2,19 +2,22 @@ use std::collections::HashMap;
 
 use super::{Edge, Vertex};
 
-pub struct Tree {
-    nodes: HashMap<NodeId, Node>,
+pub struct Tree<Leaf> {
+    nodes: HashMap<NodeId, Node<Leaf>>,
     next_id: u32,
 }
 
-impl Tree {
+impl<Leaf> Tree<Leaf>
+where
+    Leaf: Copy + Default,
+{
     pub fn new() -> Self {
         let mut nodes = HashMap::new();
         nodes.insert(
             NodeId(0),
             Node {
                 parent: None,
-                kind: NodeKind::Leaf(Trapezoid),
+                kind: NodeKind::Leaf(Leaf::default()),
             },
         );
 
@@ -62,14 +65,14 @@ impl Tree {
             new_leaf_id,
             Node {
                 parent: Some(new_branch_id),
-                kind: NodeKind::Leaf(Trapezoid),
+                kind: NodeKind::Leaf(Leaf::default()),
             },
         );
 
         new_branch_id
     }
 
-    pub fn leafs(&self) -> impl Iterator<Item = (LeafId, Trapezoid)> + '_ {
+    pub fn leafs(&self) -> impl Iterator<Item = (LeafId, Leaf)> + '_ {
         self.nodes
             .iter()
             .filter_map(|(&id, &node)| match node.kind {
@@ -103,11 +106,11 @@ impl Tree {
         })
     }
 
-    fn get(&self, id: NodeId) -> &Node {
+    fn get(&self, id: NodeId) -> &Node<Leaf> {
         self.nodes.get(&id).unwrap()
     }
 
-    fn get_mut(&mut self, id: NodeId) -> &mut Node {
+    fn get_mut(&mut self, id: NodeId) -> &mut Node<Leaf> {
         self.nodes.get_mut(&id).unwrap()
     }
 
@@ -147,15 +150,15 @@ impl From<LeafId> for NodeId {
 pub struct LeafId(NodeId);
 
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Node {
+pub struct Node<Leaf> {
     parent: Option<NodeId>,
-    kind: NodeKind,
+    kind: NodeKind<Leaf>,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub enum NodeKind {
+pub enum NodeKind<Leaf> {
     Branch(BranchNode),
-    Leaf(Trapezoid),
+    Leaf(Leaf),
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -177,14 +180,13 @@ pub enum Relation {
     Below,
 }
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub struct Trapezoid;
-
 #[cfg(test)]
 mod tests {
     use crate::geometry::trapezoidation::Vertex;
 
-    use super::{Branch, Relation, Tree};
+    use super::{Branch, Relation};
+
+    type Tree = super::Tree<()>;
 
     #[test]
     fn tree_should_start_with_a_single_root_trapezoid() {
