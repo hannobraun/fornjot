@@ -84,7 +84,7 @@ where
     pub fn parent_of(
         &self,
         id: impl Into<NodeId>,
-    ) -> Option<(NodeId, Branch, Relation)> {
+    ) -> Option<(NodeId, &Branch, Relation)> {
         let id = id.into();
 
         let node = self.get(id);
@@ -102,7 +102,7 @@ where
                 }
             };
 
-            (parent_id, parent.branch, relation)
+            (parent_id, &parent.branch, relation)
         })
     }
 
@@ -213,7 +213,7 @@ mod tests {
         for (id, _) in trapezoids {
             let (_, parent, relation) = tree.parent_of(id).unwrap();
 
-            assert_eq!(parent, new_node);
+            assert_eq!(parent, &new_node);
 
             if id == original_root_id {
                 assert_eq!(relation, Relation::Above);
