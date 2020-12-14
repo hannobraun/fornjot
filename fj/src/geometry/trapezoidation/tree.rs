@@ -73,7 +73,7 @@ impl Tree {
         self.nodes
             .iter()
             .filter_map(|(&id, &node)| match node.kind {
-                NodeKind::Leaf(trapezoid) => Some((LeafId(id), trapezoid)),
+                NodeKind::Leaf(leaf) => Some((LeafId(id), leaf)),
                 _ => None,
             })
     }
