@@ -69,7 +69,7 @@ impl Tree {
         new_branch_id
     }
 
-    pub fn trapezoids(&self) -> impl Iterator<Item = (LeafId, Trapezoid)> + '_ {
+    pub fn leafs(&self) -> impl Iterator<Item = (LeafId, Trapezoid)> + '_ {
         self.nodes
             .iter()
             .filter_map(|(&id, &node)| match node.kind {
@@ -190,19 +190,19 @@ mod tests {
     fn tree_should_start_with_a_single_root_trapezoid() {
         let tree = Tree::new();
 
-        let num_trapezoids = tree.trapezoids().count();
+        let num_trapezoids = tree.leafs().count();
         assert_eq!(num_trapezoids, 1);
     }
 
     #[test]
     fn tree_should_split_trapezoids() {
         let mut tree = Tree::new();
-        let (root_id, _) = tree.trapezoids().next().unwrap();
+        let (root_id, _) = tree.leafs().next().unwrap();
 
         let new_node = Branch::Vertex(Vertex::new(0.0, 0.0));
         tree.split(root_id, new_node);
 
-        let trapezoids: Vec<_> = tree.trapezoids().collect();
+        let trapezoids: Vec<_> = tree.leafs().collect();
         assert_eq!(trapezoids.len(), 2);
 
         // This is no longer the root, so let's update the variable name.
@@ -223,7 +223,7 @@ mod tests {
         // Make sure that the new branch node has the same parent as the
         // previous leaf node.
 
-        let (leaf_id, _) = tree.trapezoids().next().unwrap();
+        let (leaf_id, _) = tree.leafs().next().unwrap();
         let (parent_id, _, _) = tree.parent_of(leaf_id).unwrap();
         let new_branch_id =
             tree.split(leaf_id, Branch::Vertex(Vertex::new(0.0, 0.0)));
