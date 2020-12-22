@@ -194,13 +194,13 @@ mod tests {
         let new_node = 0;
         tree.split(root_id, new_node);
 
-        let trapezoids: Vec<_> = tree.leafs().collect();
-        assert_eq!(trapezoids.len(), 2);
+        let leafs: Vec<_> = tree.leafs().collect();
+        assert_eq!(leafs.len(), 2);
 
         // This is no longer the root, so let's update the variable name.
         let original_root_id = root_id;
 
-        for (id, _) in trapezoids {
+        for (id, _) in leafs {
             let (_, parent, relation) = tree.parent_of(id).unwrap();
 
             assert_eq!(parent, &new_node);
