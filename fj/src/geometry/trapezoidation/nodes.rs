@@ -38,6 +38,13 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
     ) -> &mut Node<Branch, Leaf> {
         self.map.get_mut(&id.into()).unwrap()
     }
+
+    pub fn leafs(&self) -> impl Iterator<Item = (LeafId, &Leaf)> + '_ {
+        self.map.iter().filter_map(|(&id, node)| match &node.kind {
+            NodeKind::Leaf(leaf) => Some((LeafId(id), leaf)),
+            _ => None,
+        })
+    }
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
@@ -101,5 +108,31 @@ mod tests {
         let id_b = nodes.insert_leaf(8);
 
         assert_ne!(id_a, id_b);
+    }
+
+    #[test]
+    fn nodes_should_return_all_leafs() {
+        let mut nodes = Nodes::new();
+
+        let leaf_a = 5;
+        let leaf_b = 8;
+
+        let id_a = nodes.insert_leaf(leaf_a);
+        let id_b = nodes.insert_leaf(leaf_b);
+
+        let mut saw_a = false;
+        let mut saw_b = false;
+
+        for (id, leaf) in nodes.leafs() {
+            if id == id_a && leaf == &leaf_a {
+                saw_a = true;
+            }
+            if id == id_b && leaf == &leaf_b {
+                saw_b = true;
+            }
+        }
+
+        assert!(saw_a);
+        assert!(saw_b);
     }
 }

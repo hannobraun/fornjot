@@ -64,13 +64,7 @@ where
     }
 
     pub fn leafs(&self) -> impl Iterator<Item = (LeafId, &Leaf)> + '_ {
-        self.nodes
-            .map
-            .iter()
-            .filter_map(|(&id, node)| match &node.kind {
-                NodeKind::Leaf(leaf) => Some((LeafId(id), leaf)),
-                _ => None,
-            })
+        self.nodes.leafs()
     }
 
     pub fn parent_of(
