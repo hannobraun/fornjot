@@ -182,8 +182,8 @@ mod tests {
     fn tree_should_start_with_a_single_root_leaf() {
         let tree = Tree::new();
 
-        let num_trapezoids = tree.leafs().count();
-        assert_eq!(num_trapezoids, 1);
+        let num_leafs = tree.leafs().count();
+        assert_eq!(num_leafs, 1);
     }
 
     #[test]
