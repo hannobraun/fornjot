@@ -1,10 +1,7 @@
-use std::collections::HashMap;
-
-use super::nodes::{BranchNode, LeafId, Node, NodeId, NodeKind};
+use super::nodes::{BranchNode, LeafId, Node, NodeId, NodeKind, Nodes};
 
 pub struct Tree<Branch, Leaf> {
-    nodes: HashMap<NodeId, Node<Branch, Leaf>>,
-    next_id: u32,
+    nodes: Nodes<Branch, Leaf>,
 }
 
 impl<Branch, Leaf> Tree<Branch, Leaf>
@@ -12,16 +9,10 @@ where
     Leaf: Default,
 {
     pub fn new() -> Self {
-        let mut nodes = HashMap::new();
-        nodes.insert(
-            NodeId(0),
-            Node {
-                parent: None,
-                kind: NodeKind::Leaf(Leaf::default()),
-            },
-        );
+        let mut nodes = Nodes::new();
+        nodes.insert_leaf(Leaf::default());
 
-        Self { nodes, next_id: 1 }
+        Self { nodes }
     }
 
     pub fn split(&mut self, split_at: LeafId, split_with: Branch) -> NodeId {
@@ -32,7 +23,7 @@ where
 
         // Update the old leaf we're splitting.
         let old_leaf_id = split_at;
-        let old_leaf = self.get_mut(old_leaf_id.0);
+        let old_leaf = self.nodes.get_mut(old_leaf_id.0);
         let old_leaf_parent = old_leaf.parent;
         old_leaf.parent = Some(new_branch_id);
 
@@ -50,7 +41,7 @@ where
         }
 
         // Insert the new nodes.
-        self.nodes.insert(
+        self.nodes.map.insert(
             new_branch_id,
             Node {
                 parent: old_leaf_parent,
@@ -61,7 +52,7 @@ where
                 }),
             },
         );
-        self.nodes.insert(
+        self.nodes.map.insert(
             new_leaf_id,
             Node {
                 parent: Some(new_branch_id),
@@ -74,6 +65,7 @@ where
 
     pub fn leafs(&self) -> impl Iterator<Item = (LeafId, &Leaf)> + '_ {
         self.nodes
+            .map
             .iter()
             .filter_map(|(&id, node)| match &node.kind {
                 NodeKind::Leaf(leaf) => Some((LeafId(id), leaf)),
@@ -87,7 +79,7 @@ where
     ) -> Option<(NodeId, &Branch, Relation)> {
         let id = id.into();
 
-        let node = self.get(id);
+        let node = self.nodes.get(id);
         node.parent.map(|parent_id| {
             let parent = self.get_parent(parent_id);
 
@@ -106,16 +98,8 @@ where
         })
     }
 
-    fn get(&self, id: NodeId) -> &Node<Branch, Leaf> {
-        self.nodes.get(&id).unwrap()
-    }
-
-    fn get_mut(&mut self, id: NodeId) -> &mut Node<Branch, Leaf> {
-        self.nodes.get_mut(&id).unwrap()
-    }
-
     fn get_parent(&self, parent_id: NodeId) -> &BranchNode<Branch> {
-        if let NodeKind::Branch(node) = &self.get(parent_id).kind {
+        if let NodeKind::Branch(node) = &self.nodes.get(parent_id).kind {
             return node;
         }
 
@@ -123,7 +107,8 @@ where
     }
 
     fn get_parent_mut(&mut self, parent_id: NodeId) -> &mut BranchNode<Branch> {
-        if let NodeKind::Branch(node) = &mut self.get_mut(parent_id).kind {
+        if let NodeKind::Branch(node) = &mut self.nodes.get_mut(parent_id).kind
+        {
             return node;
         }
 
@@ -131,8 +116,8 @@ where
     }
 
     fn next_id(&mut self) -> NodeId {
-        let id = NodeId(self.next_id);
-        self.next_id += 1;
+        let id = NodeId(self.nodes.next_id);
+        self.nodes.next_id += 1;
         id
     }
 }
