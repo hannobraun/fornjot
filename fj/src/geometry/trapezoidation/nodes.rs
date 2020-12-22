@@ -47,6 +47,10 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
     }
 }
 
+/// Identifies a node
+///
+/// Since nodes can only be added, never removed, a `NodeId` instance is always
+/// going to be valid.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
 pub struct NodeId(pub u32);
 
@@ -56,6 +60,9 @@ impl From<LeafId> for NodeId {
     }
 }
 
+/// Identifies a leaf node
+///
+/// A more specific version of `NodeId`. Can be converted into a `NodeId`.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
 pub struct LeafId(pub NodeId);
 
