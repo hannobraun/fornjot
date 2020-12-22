@@ -38,6 +38,10 @@ impl Tree {
             let parent = self.get_parent_mut(parent_id);
             match old_leaf_id {
                 id if id.0 == parent.above => parent.above = new_branch_id,
+                // This looks like a bug. I don't want to apply the obvious fix,
+                // as the real bug here is that none of the tests are failing.
+                // If this code still exists after I've finished cleaning up, I
+                // need to handle it properly.
                 id if id.0 == parent.below => parent.above = new_branch_id,
                 id => panic!(
                     "Parent ({:?}) of split leaf ({:?}) doesn't relate to it",
