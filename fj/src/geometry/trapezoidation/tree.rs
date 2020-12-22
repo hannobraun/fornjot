@@ -95,7 +95,9 @@ impl Tree {
         })
     }
 
-    fn get_parent(&self, parent_id: NodeId) -> &BranchNode<Branch> {
+    fn get_parent(&self, parent_id: impl Into<NodeId>) -> &BranchNode<Branch> {
+        let parent_id = parent_id.into();
+
         if let NodeKind::Branch(node) = &self.nodes.get(parent_id).kind {
             return node;
         }
@@ -103,7 +105,12 @@ impl Tree {
         panic!("Parent node ({:?}) is not a branch", parent_id);
     }
 
-    fn get_parent_mut(&mut self, parent_id: NodeId) -> &mut BranchNode<Branch> {
+    fn get_parent_mut(
+        &mut self,
+        parent_id: impl Into<NodeId>,
+    ) -> &mut BranchNode<Branch> {
+        let parent_id = parent_id.into();
+
         if let NodeKind::Branch(node) = &mut self.nodes.get_mut(parent_id).kind
         {
             return node;
