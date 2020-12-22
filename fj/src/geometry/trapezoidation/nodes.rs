@@ -13,7 +13,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         }
     }
 
-    pub fn insert_leaf(&mut self, leaf: Leaf) -> LeafId {
+    pub fn insert_leaf(&mut self, leaf: Leaf) -> Strong<LeafId> {
         let id = NodeId(self.next_id);
         self.next_id += 1;
 
@@ -25,7 +25,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
             },
         );
 
-        LeafId(id)
+        Strong(LeafId(id))
     }
 
     pub fn get(&self, id: impl Into<NodeId>) -> &Node<Branch, Leaf> {
@@ -135,7 +135,7 @@ mod tests {
             kind: NodeKind::Leaf(leaf),
         };
 
-        assert_eq!(nodes.get(id), &expected_node);
+        assert_eq!(nodes.get(id.as_leaf_id()), &expected_node);
         assert_eq!(nodes.get_mut(id), &mut expected_node);
     }
 
@@ -163,10 +163,10 @@ mod tests {
         let mut saw_b = false;
 
         for (id, leaf) in nodes.leafs() {
-            if id == id_a && leaf == &leaf_a {
+            if id == id_a.as_leaf_id() && leaf == &leaf_a {
                 saw_a = true;
             }
-            if id == id_b && leaf == &leaf_b {
+            if id == id_b.as_leaf_id() && leaf == &leaf_b {
                 saw_b = true;
             }
         }
