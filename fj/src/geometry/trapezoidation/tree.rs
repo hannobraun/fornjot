@@ -1,22 +1,22 @@
-use super::nodes::{BranchNode, LeafId, Node, NodeId, NodeKind, Nodes};
+use super::{
+    nodes::{BranchNode, LeafId, Node, NodeId, NodeKind, Nodes},
+    Edge, Vertex,
+};
 
-pub struct Tree<Branch, Leaf> {
-    nodes: Nodes<Branch, Leaf>,
+pub struct Tree {
+    nodes: Nodes<Branch, Trapezoid>,
 }
 
-impl<Branch, Leaf> Tree<Branch, Leaf>
-where
-    Leaf: Default,
-{
+impl Tree {
     pub fn new() -> Self {
         let mut nodes = Nodes::new();
-        nodes.insert_leaf(Leaf::default());
+        nodes.insert_leaf(Trapezoid);
 
         Self { nodes }
     }
 
     pub fn split(&mut self, split_at: LeafId, split_with: Branch) -> NodeId {
-        let new_leaf_id = self.nodes.insert_leaf(Leaf::default());
+        let new_leaf_id = self.nodes.insert_leaf(Trapezoid);
 
         // Generate new ids. We need to do this before we can add the new nodes,
         // as those nodes reference each other.
@@ -58,7 +58,7 @@ where
         new_branch_id
     }
 
-    pub fn leafs(&self) -> impl Iterator<Item = (LeafId, &Leaf)> + '_ {
+    pub fn leafs(&self) -> impl Iterator<Item = (LeafId, &Trapezoid)> + '_ {
         self.nodes.leafs()
     }
 
@@ -111,6 +111,15 @@ where
     }
 }
 
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum Branch {
+    Edge(Edge),
+    Vertex(Vertex),
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct Trapezoid;
+
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Relation {
     Above,
@@ -119,9 +128,9 @@ pub enum Relation {
 
 #[cfg(test)]
 mod tests {
-    use super::Relation;
+    use crate::geometry::trapezoidation::Vertex;
 
-    type Tree = super::Tree<u8, ()>;
+    use super::{Branch, Relation, Tree};
 
     #[test]
     fn tree_should_start_with_a_single_root_leaf() {
@@ -136,7 +145,7 @@ mod tests {
         let mut tree = Tree::new();
         let (root_id, _) = tree.leafs().next().unwrap();
 
-        let new_node = 0;
+        let new_node = Branch::Vertex(Vertex::new(0.0, 0.0));
         tree.split(root_id, new_node);
 
         let leafs: Vec<_> = tree.leafs().collect();
@@ -162,7 +171,8 @@ mod tests {
 
         let (leaf_id, _) = tree.leafs().next().unwrap();
         let (parent_id, _, _) = tree.parent_of(leaf_id).unwrap();
-        let new_branch_id = tree.split(leaf_id, 1);
+        let new_branch_id =
+            tree.split(leaf_id, Branch::Vertex(Vertex::new(1.0, 1.0)));
         let (new_parent_id, _, _) = tree.parent_of(new_branch_id).unwrap();
 
         assert_eq!(parent_id, new_parent_id);
