@@ -98,6 +98,12 @@ impl Strong<LeafId> {
     }
 }
 
+impl From<Strong<LeafId>> for Strong<NodeId> {
+    fn from(leaf_id: Strong<LeafId>) -> Self {
+        Self(leaf_id.0.into())
+    }
+}
+
 #[derive(Debug, PartialEq)]
 pub struct Node<Branch, Leaf> {
     pub parent: Option<NodeId>,
