@@ -15,7 +15,12 @@ impl Tree {
         Self { nodes }
     }
 
+    /// Split an existing trapezoid
+    ///
+    /// The provided branch will take its place in the tree. The branch will
+    /// have two children, the existing trapezoid and a new one.
     pub fn split(&mut self, split_at: LeafId, split_with: Branch) -> NodeId {
+        // This is the new trapezoid.
         let new_leaf_id = self.nodes.insert_leaf(Trapezoid);
 
         // Generate new ids. We need to do this before we can add the new nodes,
