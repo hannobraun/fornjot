@@ -16,10 +16,11 @@ where
     }
 
     pub fn split(&mut self, split_at: LeafId, split_with: Branch) -> NodeId {
+        let new_leaf_id = self.nodes.insert_leaf(Leaf::default());
+
         // Generate new ids. We need to do this before we can add the new nodes,
         // as those nodes reference each other.
         let new_branch_id = self.next_id();
-        let new_leaf_id = self.next_id();
 
         // Update the old leaf we're splitting.
         let old_leaf_id = split_at;
@@ -47,18 +48,12 @@ where
                 parent: old_leaf_parent,
                 kind: NodeKind::Branch(BranchNode {
                     above: old_leaf_id.0,
-                    below: new_leaf_id,
+                    below: new_leaf_id.into(),
                     branch: split_with,
                 }),
             },
         );
-        self.nodes.map.insert(
-            new_leaf_id,
-            Node {
-                parent: Some(new_branch_id),
-                kind: NodeKind::Leaf(Leaf::default()),
-            },
-        );
+        self.nodes.get_mut(new_leaf_id).parent = Some(new_branch_id);
 
         new_branch_id
     }
