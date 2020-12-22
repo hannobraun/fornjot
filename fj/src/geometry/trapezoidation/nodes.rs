@@ -106,7 +106,7 @@ impl From<Strong<LeafId>> for Strong<NodeId> {
 
 #[derive(Debug, PartialEq)]
 pub struct Node<Branch, Leaf> {
-    pub parent: Option<NodeId>,
+    pub parent: Option<Strong<NodeId>>,
     pub kind: NodeKind<Branch, Leaf>,
 }
 
@@ -118,8 +118,8 @@ pub enum NodeKind<Branch, Leaf> {
 
 #[derive(Debug, PartialEq)]
 pub struct BranchNode<T> {
-    pub above: NodeId,
-    pub below: NodeId,
+    pub above: Strong<NodeId>,
+    pub below: Strong<NodeId>,
     pub branch: T,
 }
 
