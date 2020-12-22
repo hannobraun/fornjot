@@ -54,9 +54,21 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
 pub struct NodeId(pub u32);
 
+impl From<Strong<NodeId>> for NodeId {
+    fn from(strong: Strong<NodeId>) -> Self {
+        strong.0
+    }
+}
+
 impl From<LeafId> for NodeId {
     fn from(leaf_id: LeafId) -> Self {
         leaf_id.0
+    }
+}
+
+impl From<Strong<LeafId>> for NodeId {
+    fn from(strong: Strong<LeafId>) -> Self {
+        strong.0.into()
     }
 }
 
@@ -65,6 +77,26 @@ impl From<LeafId> for NodeId {
 /// A more specific version of `NodeId`. Can be converted into a `NodeId`.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
 pub struct LeafId(pub NodeId);
+
+/// A strong version of a handle
+///
+/// Normal handles are `Copy`. `Strong` isn't, an attribute that is used by
+/// `Nodes` to guarantee certain properties of nodes, for example that one node
+/// can only ever be the child of one other node.
+#[derive(Debug, PartialEq)]
+pub struct Strong<T>(pub T);
+
+impl Strong<NodeId> {
+    pub fn as_node_id(&self) -> NodeId {
+        self.0
+    }
+}
+
+impl Strong<LeafId> {
+    pub fn as_leaf_id(&self) -> LeafId {
+        self.0
+    }
+}
 
 #[derive(Debug, PartialEq)]
 pub struct Node<Branch, Leaf> {
