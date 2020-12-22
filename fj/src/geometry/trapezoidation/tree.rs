@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use super::nodes::{BranchNode, LeafId, Node, NodeId, NodeKind};
+
 pub struct Tree<Branch, Leaf> {
     nodes: HashMap<NodeId, Node<Branch, Leaf>>,
     next_id: u32,
@@ -133,37 +135,6 @@ where
         self.next_id += 1;
         id
     }
-}
-
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
-pub struct NodeId(u32);
-
-impl From<LeafId> for NodeId {
-    fn from(leaf_id: LeafId) -> Self {
-        leaf_id.0
-    }
-}
-
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
-pub struct LeafId(NodeId);
-
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Node<Branch, Leaf> {
-    parent: Option<NodeId>,
-    kind: NodeKind<Branch, Leaf>,
-}
-
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum NodeKind<Branch, Leaf> {
-    Branch(BranchNode<Branch>),
-    Leaf(Leaf),
-}
-
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct BranchNode<T> {
-    above: NodeId,
-    below: NodeId,
-    branch: T,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
