@@ -179,7 +179,7 @@ mod tests {
     type Tree = super::Tree<u8, ()>;
 
     #[test]
-    fn tree_should_start_with_a_single_root_trapezoid() {
+    fn tree_should_start_with_a_single_root_leaf() {
         let tree = Tree::new();
 
         let num_trapezoids = tree.leafs().count();
@@ -187,7 +187,7 @@ mod tests {
     }
 
     #[test]
-    fn tree_should_split_trapezoids() {
+    fn tree_should_split_leafs() {
         let mut tree = Tree::new();
         let (root_id, _) = tree.leafs().next().unwrap();
 
