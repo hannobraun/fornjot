@@ -1,7 +1,5 @@
 use super::{
-    nodes::{
-        BranchNode, LeafId, Node, NodeId, NodeKind, Nodes, Relation, Strong,
-    },
+    nodes::{BranchNode, Node, NodeId, NodeKind, Nodes, Relation, Strong},
     Edge, Vertex,
 };
 
@@ -21,7 +19,7 @@ impl Tree {
     ///
     /// The provided branch will take its place in the tree. The branch will
     /// have two children, the existing trapezoid and a new one.
-    pub fn split(&mut self, split_at: LeafId, split_with: Branch) -> NodeId {
+    pub fn split(&mut self, split_at: NodeId, split_with: Branch) -> NodeId {
         // This is the new trapezoid.
         let new_leaf_id = self.nodes.insert_leaf(Trapezoid);
 
@@ -31,24 +29,24 @@ impl Tree {
 
         // Update the old leaf we're splitting.
         let old_leaf_id = split_at;
-        let old_leaf = self.nodes.get_mut(old_leaf_id.0);
+        let old_leaf = self.nodes.get_mut(old_leaf_id);
         let old_leaf_parent =
             old_leaf.parent.take().map(|strong| strong.as_node_id());
-        old_leaf.parent = Some(Strong(new_branch_id.as_leaf_id().into()));
+        old_leaf.parent = Some(Strong(new_branch_id.as_node_id()));
 
         // Update the old leaf's parent, if it has one.
         if let Some(parent_id) = old_leaf_parent {
             let parent = self.get_parent_mut(parent_id);
             match old_leaf_id {
-                id if id.0 == parent.above.as_node_id() => {
-                    parent.above = Strong(new_branch_id.as_leaf_id().into())
+                id if id == parent.above.as_node_id() => {
+                    parent.above = Strong(new_branch_id.as_node_id())
                 }
                 // This looks like a bug. I don't want to apply the obvious fix,
                 // as the real bug here is that none of the tests are failing.
                 // If this code still exists after I've finished cleaning up, I
                 // need to handle it properly.
-                id if id.0 == parent.below.as_node_id() => {
-                    parent.above = Strong(new_branch_id.as_leaf_id().into())
+                id if id == parent.below.as_node_id() => {
+                    parent.above = Strong(new_branch_id.as_node_id())
                 }
                 id => panic!(
                     "Parent ({:?}) of split leaf ({:?}) doesn't relate to it",
@@ -58,14 +56,14 @@ impl Tree {
         }
 
         // Insert the new nodes.
-        let new_leaf_id_tmp = new_leaf_id.as_leaf_id();
-        let new_branch_id: NodeId = new_branch_id.as_leaf_id().into();
+        let new_leaf_id_tmp = new_leaf_id.as_node_id();
+        let new_branch_id: NodeId = new_branch_id.as_node_id();
         self.nodes.map.insert(
             new_branch_id.0,
             Node {
                 parent: old_leaf_parent.map(|id| Strong(id)),
                 kind: NodeKind::Branch(BranchNode {
-                    above: Strong(old_leaf_id.0),
+                    above: Strong(old_leaf_id),
                     below: new_leaf_id.into(),
                     branch: split_with,
                 }),
@@ -79,7 +77,7 @@ impl Tree {
 
     pub fn trapezoids(
         &self,
-    ) -> impl Iterator<Item = (LeafId, &Trapezoid)> + '_ {
+    ) -> impl Iterator<Item = (NodeId, &Trapezoid)> + '_ {
         self.nodes.leafs()
     }
 

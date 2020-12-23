@@ -13,7 +13,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         }
     }
 
-    pub fn insert_leaf(&mut self, leaf: Leaf) -> Strong<LeafId> {
+    pub fn insert_leaf(&mut self, leaf: Leaf) -> Strong<NodeId> {
         let id = self.next_id;
         self.next_id += 1;
 
@@ -25,7 +25,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
             },
         );
 
-        Strong(LeafId(NodeId(id)))
+        Strong(NodeId(id))
     }
 
     /// Return a reference to a node
@@ -47,9 +47,9 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         self.map.get_mut(&id.into().0).unwrap()
     }
 
-    pub fn leafs(&self) -> impl Iterator<Item = (LeafId, &Leaf)> + '_ {
+    pub fn leafs(&self) -> impl Iterator<Item = (NodeId, &Leaf)> + '_ {
         self.map.iter().filter_map(|(&id, node)| match &node.kind {
-            NodeKind::Leaf(leaf) => Some((LeafId(NodeId(id)), leaf)),
+            NodeKind::Leaf(leaf) => Some((NodeId(id), leaf)),
             _ => None,
         })
     }
@@ -68,24 +68,6 @@ impl From<Strong<NodeId>> for NodeId {
     }
 }
 
-impl From<LeafId> for NodeId {
-    fn from(leaf_id: LeafId) -> Self {
-        leaf_id.0
-    }
-}
-
-impl From<Strong<LeafId>> for NodeId {
-    fn from(strong: Strong<LeafId>) -> Self {
-        strong.0.into()
-    }
-}
-
-/// Identifies a leaf node
-///
-/// A more specific version of `NodeId`. Can be converted into a `NodeId`.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
-pub struct LeafId(pub NodeId);
-
 /// A strong version of a handle
 ///
 /// Normal handles are `Copy`. `Strong` isn't, an attribute that is used by
@@ -97,18 +79,6 @@ pub struct Strong<T>(pub T);
 impl Strong<NodeId> {
     pub fn as_node_id(&self) -> NodeId {
         self.0
-    }
-}
-
-impl Strong<LeafId> {
-    pub fn as_leaf_id(&self) -> LeafId {
-        self.0
-    }
-}
-
-impl From<Strong<LeafId>> for Strong<NodeId> {
-    fn from(leaf_id: Strong<LeafId>) -> Self {
-        Self(leaf_id.0.into())
     }
 }
 
@@ -155,8 +125,8 @@ mod tests {
             kind: NodeKind::Leaf(leaf),
         };
 
-        assert_eq!(nodes.get(id.as_leaf_id()), &expected_node);
-        assert_eq!(nodes.get_mut(id), &mut expected_node);
+        assert_eq!(nodes.get(id.as_node_id()), &expected_node);
+        assert_eq!(nodes.get_mut(id.as_node_id()), &mut expected_node);
     }
 
     #[test]
@@ -183,10 +153,10 @@ mod tests {
         let mut saw_b = false;
 
         for (id, leaf) in nodes.leafs() {
-            if id == id_a.as_leaf_id() && leaf == &leaf_a {
+            if id == id_a.as_node_id() && leaf == &leaf_a {
                 saw_a = true;
             }
-            if id == id_b.as_leaf_id() && leaf == &leaf_b {
+            if id == id_b.as_node_id() && leaf == &leaf_b {
                 saw_b = true;
             }
         }
