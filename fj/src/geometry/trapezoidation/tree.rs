@@ -1,5 +1,7 @@
 use super::{
-    nodes::{BranchNode, LeafId, Node, NodeId, NodeKind, Nodes, Strong},
+    nodes::{
+        BranchNode, LeafId, Node, NodeId, NodeKind, Nodes, Relation, Strong,
+    },
     Edge, Vertex,
 };
 
@@ -139,17 +141,11 @@ pub enum Branch {
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct Trapezoid;
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum Relation {
-    Above,
-    Below,
-}
-
 #[cfg(test)]
 mod tests {
-    use crate::geometry::trapezoidation::Vertex;
+    use crate::geometry::trapezoidation::{nodes::Relation, Vertex};
 
-    use super::{Branch, Relation, Tree};
+    use super::{Branch, Tree};
 
     #[test]
     fn tree_should_start_with_a_single_root_leaf() {

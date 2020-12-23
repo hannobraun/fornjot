@@ -123,6 +123,12 @@ pub struct BranchNode<T> {
     pub branch: T,
 }
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum Relation {
+    Above,
+    Below,
+}
+
 #[cfg(test)]
 mod tests {
     use super::{Node, NodeKind};
