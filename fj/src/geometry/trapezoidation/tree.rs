@@ -23,30 +23,30 @@ impl Tree {
         // This is the new trapezoid.
         let new_leaf_id = self.nodes.insert_leaf(Trapezoid);
 
-        // Generate new ids. We need to do this before we can add the new nodes,
-        // as those nodes reference each other.
-        let new_branch_id = self.next_id();
+        // We're creating a leaf here, but we'll extend it into a branch in a
+        // moment.
+        let new_branch_id = self.nodes.insert_leaf(Trapezoid);
 
         // Update the old leaf we're splitting.
         let old_leaf_id = split_at;
         let old_leaf = self.nodes.get_mut(old_leaf_id.0);
         let old_leaf_parent =
             old_leaf.parent.as_ref().map(|strong| strong.as_node_id());
-        old_leaf.parent = Some(Strong(new_branch_id));
+        old_leaf.parent = Some(Strong(new_branch_id.as_leaf_id().into()));
 
         // Update the old leaf's parent, if it has one.
         if let Some(parent_id) = old_leaf_parent {
             let parent = self.get_parent_mut(parent_id);
             match old_leaf_id {
                 id if id.0 == parent.above.as_node_id() => {
-                    parent.above = Strong(new_branch_id)
+                    parent.above = Strong(new_branch_id.as_leaf_id().into())
                 }
                 // This looks like a bug. I don't want to apply the obvious fix,
                 // as the real bug here is that none of the tests are failing.
                 // If this code still exists after I've finished cleaning up, I
                 // need to handle it properly.
                 id if id.0 == parent.below.as_node_id() => {
-                    parent.above = Strong(new_branch_id)
+                    parent.above = Strong(new_branch_id.as_leaf_id().into())
                 }
                 id => panic!(
                     "Parent ({:?}) of split leaf ({:?}) doesn't relate to it",
@@ -58,7 +58,7 @@ impl Tree {
         // Insert the new nodes.
         let new_leaf_id_tmp = new_leaf_id.as_leaf_id();
         self.nodes.map.insert(
-            new_branch_id,
+            new_branch_id.as_leaf_id().into(),
             Node {
                 parent: old_leaf_parent.map(|id| Strong(id)),
                 kind: NodeKind::Branch(BranchNode {
@@ -69,7 +69,7 @@ impl Tree {
             },
         );
         self.nodes.get_mut(new_leaf_id_tmp).parent =
-            Some(Strong(new_branch_id));
+            Some(Strong(new_branch_id.as_leaf_id().into()));
 
         new_branch_id.into()
     }
@@ -127,12 +127,6 @@ impl Tree {
         }
 
         panic!("Parent node ({:?}) is not a branch", parent_id);
-    }
-
-    fn next_id(&mut self) -> NodeId {
-        let id = NodeId(self.nodes.next_id);
-        self.nodes.next_id += 1;
-        id
     }
 }
 
