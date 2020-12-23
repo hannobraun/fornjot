@@ -31,7 +31,7 @@ impl Tree {
         let old_leaf_id = split_at;
         let old_leaf = self.nodes.get_mut(old_leaf_id.0);
         let old_leaf_parent =
-            old_leaf.parent.as_ref().map(|strong| strong.as_node_id());
+            old_leaf.parent.take().map(|strong| strong.as_node_id());
         old_leaf.parent = Some(Strong(new_branch_id.as_leaf_id().into()));
 
         // Update the old leaf's parent, if it has one.
