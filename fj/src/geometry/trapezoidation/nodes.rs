@@ -28,10 +28,18 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         Strong(LeafId(NodeId(id)))
     }
 
+    /// Return a reference to a node
+    ///
+    /// This can never fail, as nodes are never removed, meaning all node ids
+    /// are always valid.
     pub fn get(&self, id: impl Into<NodeId>) -> &Node<Branch, Leaf> {
         self.map.get(&id.into().0).unwrap()
     }
 
+    /// Return a mutable reference to a node
+    ///
+    /// This can never fail, as nodes are never removed, meaning all node ids
+    /// are always valid.
     pub fn get_mut(
         &mut self,
         id: impl Into<NodeId>,
