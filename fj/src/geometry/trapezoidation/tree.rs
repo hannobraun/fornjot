@@ -59,8 +59,9 @@ impl Tree {
 
         // Insert the new nodes.
         let new_leaf_id_tmp = new_leaf_id.as_leaf_id();
+        let new_branch_id: NodeId = new_branch_id.as_leaf_id().into();
         self.nodes.map.insert(
-            new_branch_id.as_leaf_id().into(),
+            new_branch_id.0,
             Node {
                 parent: old_leaf_parent.map(|id| Strong(id)),
                 kind: NodeKind::Branch(BranchNode {
@@ -71,9 +72,9 @@ impl Tree {
             },
         );
         self.nodes.get_mut(new_leaf_id_tmp).parent =
-            Some(Strong(new_branch_id.as_leaf_id().into()));
+            Some(Strong(new_branch_id));
 
-        new_branch_id.into()
+        new_branch_id
     }
 
     pub fn trapezoids(

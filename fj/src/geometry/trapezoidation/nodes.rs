@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 pub struct Nodes<Branch, Leaf> {
-    pub map: HashMap<NodeId, Node<Branch, Leaf>>,
+    pub map: HashMap<u32, Node<Branch, Leaf>>,
     pub next_id: u32,
 }
 
@@ -14,7 +14,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
     }
 
     pub fn insert_leaf(&mut self, leaf: Leaf) -> Strong<LeafId> {
-        let id = NodeId(self.next_id);
+        let id = self.next_id;
         self.next_id += 1;
 
         self.map.insert(
@@ -25,23 +25,23 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
             },
         );
 
-        Strong(LeafId(id))
+        Strong(LeafId(NodeId(id)))
     }
 
     pub fn get(&self, id: impl Into<NodeId>) -> &Node<Branch, Leaf> {
-        self.map.get(&id.into()).unwrap()
+        self.map.get(&id.into().0).unwrap()
     }
 
     pub fn get_mut(
         &mut self,
         id: impl Into<NodeId>,
     ) -> &mut Node<Branch, Leaf> {
-        self.map.get_mut(&id.into()).unwrap()
+        self.map.get_mut(&id.into().0).unwrap()
     }
 
     pub fn leafs(&self) -> impl Iterator<Item = (LeafId, &Leaf)> + '_ {
         self.map.iter().filter_map(|(&id, node)| match &node.kind {
-            NodeKind::Leaf(leaf) => Some((LeafId(id), leaf)),
+            NodeKind::Leaf(leaf) => Some((LeafId(NodeId(id)), leaf)),
             _ => None,
         })
     }
