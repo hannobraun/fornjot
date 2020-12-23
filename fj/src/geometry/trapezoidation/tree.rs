@@ -1,5 +1,5 @@
 use super::{
-    nodes::{BranchNode, Node, NodeId, NodeKind, Nodes, Relation, Strong},
+    nodes::{BranchNode, Node, NodeId, NodeKind, Nodes, Relation},
     Edge, Vertex,
 };
 
@@ -30,24 +30,19 @@ impl Tree {
         // Update the old leaf we're splitting.
         let old_leaf_id = split_at;
         let old_leaf = self.nodes.get_mut(old_leaf_id);
-        let old_leaf_parent =
-            old_leaf.parent.take().map(|strong| strong.as_node_id());
-        old_leaf.parent = Some(Strong(new_branch_id.as_node_id()));
+        let old_leaf_parent = old_leaf.parent.take();
+        old_leaf.parent = Some(new_branch_id);
 
         // Update the old leaf's parent, if it has one.
         if let Some(parent_id) = old_leaf_parent {
             let parent = self.get_parent_mut(parent_id);
             match old_leaf_id {
-                id if id == parent.above.as_node_id() => {
-                    parent.above = Strong(new_branch_id.as_node_id())
-                }
+                id if id == parent.above => parent.above = new_branch_id,
                 // This looks like a bug. I don't want to apply the obvious fix,
                 // as the real bug here is that none of the tests are failing.
                 // If this code still exists after I've finished cleaning up, I
                 // need to handle it properly.
-                id if id == parent.below.as_node_id() => {
-                    parent.above = Strong(new_branch_id.as_node_id())
-                }
+                id if id == parent.below => parent.above = new_branch_id,
                 id => panic!(
                     "Parent ({:?}) of split leaf ({:?}) doesn't relate to it",
                     old_leaf_parent, id
@@ -56,21 +51,20 @@ impl Tree {
         }
 
         // Insert the new nodes.
-        let new_leaf_id_tmp = new_leaf_id.as_node_id();
-        let new_branch_id: NodeId = new_branch_id.as_node_id();
+        let new_leaf_id_tmp = new_leaf_id;
+        let new_branch_id: NodeId = new_branch_id;
         self.nodes.map.insert(
             new_branch_id.0,
             Node {
-                parent: old_leaf_parent.map(|id| Strong(id)),
+                parent: old_leaf_parent,
                 kind: NodeKind::Branch(BranchNode {
-                    above: Strong(old_leaf_id),
+                    above: old_leaf_id,
                     below: new_leaf_id.into(),
                     branch: split_with,
                 }),
             },
         );
-        self.nodes.get_mut(new_leaf_id_tmp).parent =
-            Some(Strong(new_branch_id));
+        self.nodes.get_mut(new_leaf_id_tmp).parent = Some(new_branch_id);
 
         new_branch_id
     }
@@ -88,12 +82,12 @@ impl Tree {
         let id = id.into();
 
         let node = self.nodes.get(id);
-        node.parent.as_ref().map(|parent_id| {
-            let parent = self.get_parent(parent_id.as_node_id());
+        node.parent.map(|parent_id| {
+            let parent = self.get_parent(parent_id);
 
             let relation = match id {
-                id if id == parent.above.as_node_id() => Relation::Above,
-                id if id == parent.below.as_node_id() => Relation::Below,
+                id if id == parent.above => Relation::Above,
+                id if id == parent.below => Relation::Below,
                 id => {
                     panic!(
                         "Parent ({:?}) doesn't relate to child {:?}",
@@ -102,7 +96,7 @@ impl Tree {
                 }
             };
 
-            (parent_id.as_node_id(), &parent.branch, relation)
+            (parent_id, &parent.branch, relation)
         })
     }
 

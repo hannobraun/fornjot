@@ -13,7 +13,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         }
     }
 
-    pub fn insert_leaf(&mut self, leaf: Leaf) -> Strong<NodeId> {
+    pub fn insert_leaf(&mut self, leaf: Leaf) -> NodeId {
         let id = self.next_id;
         self.next_id += 1;
 
@@ -25,7 +25,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
             },
         );
 
-        Strong(NodeId(id))
+        NodeId(id)
     }
 
     /// Return a reference to a node
@@ -62,29 +62,9 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
 pub struct NodeId(pub u32);
 
-impl From<Strong<NodeId>> for NodeId {
-    fn from(strong: Strong<NodeId>) -> Self {
-        strong.0
-    }
-}
-
-/// A strong version of a handle
-///
-/// Normal handles are `Copy`. `Strong` isn't, an attribute that is used by
-/// `Nodes` to guarantee certain properties of nodes, for example that one node
-/// can only ever be the child of one other node.
-#[derive(Debug, PartialEq)]
-pub struct Strong<T>(pub T);
-
-impl Strong<NodeId> {
-    pub fn as_node_id(&self) -> NodeId {
-        self.0
-    }
-}
-
 #[derive(Debug, PartialEq)]
 pub struct Node<Branch, Leaf> {
-    pub parent: Option<Strong<NodeId>>,
+    pub parent: Option<NodeId>,
     pub kind: NodeKind<Branch, Leaf>,
 }
 
@@ -96,8 +76,8 @@ pub enum NodeKind<Branch, Leaf> {
 
 #[derive(Debug, PartialEq)]
 pub struct BranchNode<T> {
-    pub above: Strong<NodeId>,
-    pub below: Strong<NodeId>,
+    pub above: NodeId,
+    pub below: NodeId,
     pub branch: T,
 }
 
@@ -125,8 +105,8 @@ mod tests {
             kind: NodeKind::Leaf(leaf),
         };
 
-        assert_eq!(nodes.get(id.as_node_id()), &expected_node);
-        assert_eq!(nodes.get_mut(id.as_node_id()), &mut expected_node);
+        assert_eq!(nodes.get(id), &expected_node);
+        assert_eq!(nodes.get_mut(id), &mut expected_node);
     }
 
     #[test]
@@ -153,10 +133,10 @@ mod tests {
         let mut saw_b = false;
 
         for (id, leaf) in nodes.leafs() {
-            if id == id_a.as_node_id() && leaf == &leaf_a {
+            if id == id_a && leaf == &leaf_a {
                 saw_a = true;
             }
-            if id == id_b.as_node_id() && leaf == &leaf_b {
+            if id == id_b && leaf == &leaf_b {
                 saw_b = true;
             }
         }
