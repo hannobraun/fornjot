@@ -47,16 +47,17 @@ impl Tree {
         new_branch_id
     }
 
+    pub fn get(&self, id: &impl NodeId) -> &Node<Branch, Trapezoid> {
+        self.nodes.get(id)
+    }
+
     pub fn trapezoids(
         &self,
     ) -> impl Iterator<Item = (GenericId, &Trapezoid)> + '_ {
         self.nodes.leafs()
     }
 
-    pub fn parent_of(
-        &self,
-        id: &impl NodeId,
-    ) -> Option<(GenericId, &Branch, Relation)> {
+    pub fn parent_of(&self, id: &impl NodeId) -> Option<(GenericId, Relation)> {
         let node = self.nodes.get(id);
         node.parent().map(|parent_id| {
             let parent = self.get_parent(&parent_id);
@@ -69,7 +70,7 @@ impl Tree {
                 }
             };
 
-            (GenericId(parent_id), &parent.branch, relation)
+            (GenericId(parent_id), relation)
         })
     }
 
@@ -120,9 +121,10 @@ mod tests {
         let original_root_id = root_id;
 
         for (id, _) in leafs {
-            let (_, parent, relation) = tree.parent_of(&id).unwrap();
+            let (parent_id, relation) = tree.parent_of(&id).unwrap();
+            let parent = tree.get(&parent_id);
 
-            assert_eq!(parent, &new_node);
+            assert_eq!(parent.branch().unwrap(), &new_node);
 
             if id == original_root_id {
                 assert_eq!(relation, Relation::Above);
@@ -135,10 +137,10 @@ mod tests {
         // previous leaf node.
 
         let (leaf_id, _) = tree.trapezoids().next().unwrap();
-        let (parent_id, _, _) = tree.parent_of(&leaf_id).unwrap();
+        let (parent_id, _) = tree.parent_of(&leaf_id).unwrap();
         let new_branch_id =
             tree.split(leaf_id, Branch::Vertex(Vertex::new(1.0, 1.0)));
-        let (new_parent_id, _, _) = tree.parent_of(&new_branch_id).unwrap();
+        let (new_parent_id, _) = tree.parent_of(&new_branch_id).unwrap();
 
         assert_eq!(parent_id, new_parent_id);
     }
