@@ -24,6 +24,35 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         GenericId(id)
     }
 
+    pub fn insert_branch(
+        &mut self,
+        branch: Branch,
+        above: &impl NodeId,
+        below: &impl NodeId,
+    ) -> GenericId {
+        // It would be nicer to verify this statically, through the use of some
+        // kind of root node handle, but for now this will do.
+        assert!(self.get(above).parent().is_none());
+        assert!(self.get(below).parent().is_none());
+
+        let id = self.ids.next();
+        self.map.insert(
+            id,
+            Node::Branch(BranchNode {
+                parent: None,
+                above: above.raw_id(),
+                below: below.raw_id(),
+                branch,
+            }),
+        );
+
+        // Update parents of the new children
+        *self.get_mut(above).parent_mut() = Some(id);
+        *self.get_mut(below).parent_mut() = Some(id);
+
+        GenericId(id)
+    }
+
     pub fn change_leaf_to_branch(
         &mut self,
         id: &impl NodeId,
@@ -79,6 +108,28 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
 
     pub fn parent_of(&self, id: &impl NodeId) -> Option<GenericId> {
         self.get(id).parent().map(|id| GenericId(id))
+    }
+
+    pub fn above_of(&self, id: &impl NodeId) -> GenericId {
+        match self.get(id) {
+            Node::Branch(BranchNode { above, .. }) => GenericId(*above),
+            Node::Leaf(_) => {
+                // It would be nicer to enforce this statically, through the use
+                // of a branch handle, but for now this will do.
+                panic!("Expected branch, got leaf.");
+            }
+        }
+    }
+
+    pub fn below_of(&self, id: &impl NodeId) -> GenericId {
+        match self.get(id) {
+            Node::Branch(BranchNode { below, .. }) => GenericId(*below),
+            Node::Leaf(_) => {
+                // It would be nicer to enforce this statically, through the use
+                // of a branch handle, but for now this will do.
+                panic!("Expected branch, got leaf.");
+            }
+        }
     }
 
     pub fn leafs(&self) -> impl Iterator<Item = (GenericId, &Leaf)> + '_ {
@@ -187,6 +238,26 @@ mod tests {
         assert_eq!(nodes.get_mut(&id).leaf_mut().unwrap(), &mut leaf);
 
         assert_eq!(nodes.parent_of(&id), None);
+    }
+
+    #[test]
+    fn nodes_should_insert_branches() {
+        let mut nodes = Nodes::new();
+
+        let leaf_id_a = nodes.insert_leaf(3);
+        let leaf_id_b = nodes.insert_leaf(5);
+
+        let mut branch = 1;
+        let id = nodes.insert_branch(branch, &leaf_id_a, &leaf_id_b);
+
+        assert_eq!(nodes.get(&id).branch().unwrap(), &branch);
+        assert_eq!(nodes.get_mut(&id).branch_mut().unwrap(), &mut branch);
+
+        assert_eq!(nodes.parent_of(&leaf_id_a), Some(id));
+        assert_eq!(nodes.parent_of(&leaf_id_b), Some(id));
+
+        assert_eq!(nodes.above_of(&id), leaf_id_a);
+        assert_eq!(nodes.below_of(&id), leaf_id_b);
     }
 
     #[test]
