@@ -1,23 +1,22 @@
 use std::collections::HashMap;
 
-use super::id::{NodeId, RawId};
+use super::id::{Ids, NodeId, RawId};
 
 pub struct Nodes<Branch, Leaf> {
     map: HashMap<RawId, Node<Branch, Leaf>>,
-    next_id: RawId,
+    ids: Ids,
 }
 
 impl<Branch, Leaf> Nodes<Branch, Leaf> {
     pub fn new() -> Self {
         Nodes {
             map: HashMap::new(),
-            next_id: 0,
+            ids: Ids::new(),
         }
     }
 
     pub fn insert_leaf(&mut self, leaf: Leaf) -> GenericId {
-        let id = self.next_id;
-        self.next_id += 1;
+        let id = self.ids.next();
 
         self.map
             .insert(id, Node::Leaf(LeafNode { parent: None, leaf }));
