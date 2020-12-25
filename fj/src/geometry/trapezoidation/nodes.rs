@@ -27,8 +27,8 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
     ///
     /// This can never fail, as nodes are never removed, meaning all node ids
     /// are always valid.
-    pub fn get(&self, id: impl Into<GenericId>) -> &Node<Branch, Leaf> {
-        self.map.get(&id.into().0).unwrap()
+    pub fn get(&self, id: impl NodeId) -> &Node<Branch, Leaf> {
+        self.map.get(&id.raw_id()).unwrap()
     }
 
     /// Return a mutable reference to a node
@@ -50,12 +50,22 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
     }
 }
 
+pub trait NodeId {
+    fn raw_id(&self) -> u32;
+}
+
 /// Identifies a node
 ///
 /// Since nodes can only be added, never removed, a `NodeId` instance is always
 /// going to be valid.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
 pub struct GenericId(pub u32);
+
+impl NodeId for GenericId {
+    fn raw_id(&self) -> u32 {
+        self.0
+    }
+}
 
 #[derive(Debug, PartialEq)]
 pub enum Node<Branch, Leaf> {
