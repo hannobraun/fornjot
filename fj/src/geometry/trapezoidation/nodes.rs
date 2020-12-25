@@ -40,10 +40,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
     }
 
     pub fn parent_of(&self, id: &impl NodeId) -> Option<GenericId> {
-        // This implementation is a placeholder, until the test suite has caught
-        // up.
-        assert!(self.get(id).parent().is_none());
-        None
+        self.get(id).parent().map(|id| GenericId(id))
     }
 
     pub fn leafs(&self) -> impl Iterator<Item = (GenericId, &Leaf)> + '_ {
