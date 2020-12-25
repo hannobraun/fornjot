@@ -79,6 +79,20 @@ pub enum Node<Branch, Leaf> {
 }
 
 impl<Branch, Leaf> Node<Branch, Leaf> {
+    pub fn leaf(&self) -> Option<&Leaf> {
+        match self {
+            Self::Branch(_) => None,
+            Self::Leaf(LeafNode { leaf, .. }) => Some(leaf),
+        }
+    }
+
+    pub fn leaf_mut(&mut self) -> Option<&mut Leaf> {
+        match self {
+            Self::Branch(_) => None,
+            Self::Leaf(LeafNode { leaf, .. }) => Some(leaf),
+        }
+    }
+
     pub fn parent(&self) -> &Option<RawId> {
         match self {
             Node::Branch(BranchNode { parent, .. }) => parent,
@@ -116,21 +130,17 @@ pub enum Relation {
 
 #[cfg(test)]
 mod tests {
-    use super::{LeafNode, Node};
-
     type Nodes = super::Nodes<(), u8>;
 
     #[test]
     fn nodes_should_insert_leafs() {
         let mut nodes = Nodes::new();
 
-        let leaf = 5;
+        let mut leaf = 5;
         let id = nodes.insert_leaf(leaf);
 
-        let mut expected_node = Node::Leaf(LeafNode { parent: None, leaf });
-
-        assert_eq!(nodes.get(&id), &expected_node);
-        assert_eq!(nodes.get_mut(&id), &mut expected_node);
+        assert_eq!(nodes.get(&id).leaf().unwrap(), &leaf);
+        assert_eq!(nodes.get_mut(&id).leaf_mut().unwrap(), &mut leaf);
     }
 
     #[test]
