@@ -68,6 +68,16 @@ pub struct Node<Branch, Leaf> {
     pub kind: NodeKind<Branch, Leaf>,
 }
 
+impl<Branch, Leaf> Node<Branch, Leaf> {
+    pub fn parent(&self) -> &Option<NodeId> {
+        &self.parent
+    }
+
+    pub fn parent_mut(&mut self) -> &mut Option<NodeId> {
+        &mut self.parent
+    }
+}
+
 #[derive(Debug, PartialEq)]
 pub enum NodeKind<Branch, Leaf> {
     Branch(BranchNode<Branch>),

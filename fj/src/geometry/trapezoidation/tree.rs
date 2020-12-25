@@ -30,8 +30,8 @@ impl Tree {
         // Update the old leaf we're splitting.
         let old_leaf_id = split_at;
         let old_leaf = self.nodes.get_mut(old_leaf_id);
-        let old_leaf_parent = old_leaf.parent.take();
-        old_leaf.parent = Some(new_branch_id);
+        let old_leaf_parent = old_leaf.parent_mut().take();
+        *old_leaf.parent_mut() = Some(new_branch_id);
 
         // Update the old leaf's parent, if it has one.
         if let Some(parent_id) = old_leaf_parent {
@@ -62,7 +62,7 @@ impl Tree {
                 }),
             },
         );
-        self.nodes.get_mut(new_leaf_id).parent = Some(new_branch_id);
+        *self.nodes.get_mut(new_leaf_id).parent_mut() = Some(new_branch_id);
 
         new_branch_id
     }
@@ -80,7 +80,7 @@ impl Tree {
         let id = id.into();
 
         let node = self.nodes.get(id);
-        node.parent.map(|parent_id| {
+        node.parent().map(|parent_id| {
             let parent = self.get_parent(parent_id);
 
             let relation = match id {
