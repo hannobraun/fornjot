@@ -83,6 +83,20 @@ pub enum Node<Branch, Leaf> {
 }
 
 impl<Branch, Leaf> Node<Branch, Leaf> {
+    pub fn branch(&self) -> Option<&Branch> {
+        match self {
+            Self::Branch(BranchNode { branch, .. }) => Some(branch),
+            Self::Leaf(_) => None,
+        }
+    }
+
+    pub fn branch_mut(&mut self) -> Option<&mut Branch> {
+        match self {
+            Self::Branch(BranchNode { branch, .. }) => Some(branch),
+            Self::Leaf(_) => None,
+        }
+    }
+
     pub fn leaf(&self) -> Option<&Leaf> {
         match self {
             Self::Branch(_) => None,
