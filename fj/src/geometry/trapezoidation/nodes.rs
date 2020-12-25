@@ -96,8 +96,22 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         self.map.get_mut(&id.raw_id()).unwrap()
     }
 
-    pub fn parent_of(&self, id: &impl NodeId) -> Option<GenericId> {
-        self.get(id).parent().map(|id| GenericId(id))
+    pub fn parent_of(&self, id: &impl NodeId) -> Option<(GenericId, Relation)> {
+        self.get(id).parent().map(|parent_id| {
+            let parent = match self.get(&parent_id) {
+                Node::Branch(parent) => parent,
+                Node::Leaf(_) => unreachable!("Parent is not a branch"),
+            };
+
+            let relation = match id {
+                id if id.raw_id() == parent.above.raw_id() => Relation::Above,
+                id if id.raw_id() == parent.below.raw_id() => Relation::Below,
+                _ => {
+                    panic!("Parent doesn't relate to child");
+                }
+            };
+            (GenericId(parent_id), relation)
+        })
     }
 
     pub fn above_of(&self, id: &impl NodeId) -> GenericId {
@@ -247,6 +261,8 @@ pub enum Relation {
 
 #[cfg(test)]
 mod tests {
+    use super::Relation;
+
     type Nodes = super::Nodes<u8, u8>;
 
     #[test]
@@ -275,8 +291,8 @@ mod tests {
         assert_eq!(nodes.get(&id).branch().unwrap(), &branch);
         assert_eq!(nodes.get_mut(&id).branch_mut().unwrap(), &mut branch);
 
-        assert_eq!(nodes.parent_of(&leaf_id_a), Some(id));
-        assert_eq!(nodes.parent_of(&leaf_id_b), Some(id));
+        assert_eq!(nodes.parent_of(&leaf_id_a), Some((id, Relation::Above)));
+        assert_eq!(nodes.parent_of(&leaf_id_b), Some((id, Relation::Below)));
 
         assert_eq!(nodes.above_of(&id), leaf_id_a);
         assert_eq!(nodes.below_of(&id), leaf_id_b);
@@ -343,8 +359,14 @@ mod tests {
         );
 
         assert_eq!(nodes.parent_of(&id_branch), None);
-        assert_eq!(nodes.parent_of(&id_leaf_a), Some(id_branch));
-        assert_eq!(nodes.parent_of(&id_leaf_b), Some(id_branch));
+        assert_eq!(
+            nodes.parent_of(&id_leaf_a),
+            Some((id_branch, Relation::Above))
+        );
+        assert_eq!(
+            nodes.parent_of(&id_leaf_b),
+            Some((id_branch, Relation::Below))
+        );
     }
 
     #[test]
@@ -369,7 +391,10 @@ mod tests {
             &leaf_id_b,
         );
 
-        assert_eq!(nodes.parent_of(&non_root_leaf_id), Some(root_id));
+        assert_eq!(
+            nodes.parent_of(&non_root_leaf_id),
+            Some((root_id, Relation::Above))
+        );
     }
 
     #[test]
@@ -386,11 +411,17 @@ mod tests {
         let below_new_id = nodes.insert_leaf(13);
 
         nodes.replace_child(&above_id, &above_new_id);
-        assert_eq!(nodes.parent_of(&above_new_id), Some(parent_id));
+        assert_eq!(
+            nodes.parent_of(&above_new_id),
+            Some((parent_id, Relation::Above))
+        );
         assert_eq!(nodes.above_of(&parent_id), above_new_id);
 
         nodes.replace_child(&below_id, &below_new_id);
-        assert_eq!(nodes.parent_of(&below_new_id), Some(parent_id));
+        assert_eq!(
+            nodes.parent_of(&below_new_id),
+            Some((parent_id, Relation::Below))
+        );
         assert_eq!(nodes.below_of(&parent_id), below_new_id);
 
         assert!(nodes.parent_of(&above_id).is_none());
