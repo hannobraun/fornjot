@@ -35,6 +35,30 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         GenericId(id)
     }
 
+    pub fn replace_child(
+        &mut self,
+        child: &impl NodeId,
+        new_child: &impl NodeId,
+    ) {
+        let parent = self.get_mut(child).parent_mut().take();
+        assert!(parent.is_some());
+
+        let parent = parent.unwrap();
+
+        *self.get_mut(new_child).parent_mut() = Some(parent);
+
+        match self.get_mut(&parent) {
+            Node::Branch(branch) if child.raw_id() == branch.above => {
+                branch.above = new_child.raw_id();
+            }
+            Node::Branch(branch) if child.raw_id() == branch.below => {
+                branch.below = new_child.raw_id();
+            }
+            Node::Branch(_) => unreachable!("Parent didn't know about child"),
+            Node::Leaf(_) => unreachable!("Parent of a node can't be a leaf"),
+        }
+    }
+
     pub fn change_leaf_to_branch(
         &mut self,
         id: &impl NodeId,
@@ -343,5 +367,30 @@ mod tests {
         );
 
         assert_eq!(nodes.parent_of(&non_root_leaf_id), Some(root_id));
+    }
+
+    #[test]
+    fn nodes_should_replace_children() {
+        let mut nodes = Nodes::new();
+
+        // Create nodes with a parent
+        let above_id = nodes.insert_leaf(3);
+        let below_id = nodes.insert_leaf(5);
+        let parent_id = nodes.insert_branch(1, &above_id, &below_id);
+
+        // Create new nodes that will replace the children
+        let above_new_id = nodes.insert_leaf(8);
+        let below_new_id = nodes.insert_leaf(13);
+
+        nodes.replace_child(&above_id, &above_new_id);
+        assert_eq!(nodes.parent_of(&above_new_id), Some(parent_id));
+        assert_eq!(nodes.above_of(&parent_id), above_new_id);
+
+        nodes.replace_child(&below_id, &below_new_id);
+        assert_eq!(nodes.parent_of(&below_new_id), Some(parent_id));
+        assert_eq!(nodes.below_of(&parent_id), below_new_id);
+
+        assert!(nodes.parent_of(&above_id).is_none());
+        assert!(nodes.parent_of(&below_id).is_none());
     }
 }
