@@ -181,7 +181,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
 /// Since nodes can only be added, never removed, a `NodeId` instance is always
 /// going to be valid.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
-pub struct GenericId(pub RawId);
+pub struct GenericId(RawId);
 
 impl NodeId for GenericId {
     fn raw_id(&self) -> RawId {
@@ -224,14 +224,14 @@ impl<Branch, Leaf> Node<Branch, Leaf> {
         }
     }
 
-    pub fn parent(&self) -> &Option<RawId> {
+    fn parent(&self) -> &Option<RawId> {
         match self {
             Self::Branch(BranchNode { parent, .. }) => parent,
             Self::Leaf(LeafNode { parent, .. }) => parent,
         }
     }
 
-    pub fn parent_mut(&mut self) -> &mut Option<RawId> {
+    fn parent_mut(&mut self) -> &mut Option<RawId> {
         match self {
             Self::Branch(BranchNode { parent, .. }) => parent,
             Self::Leaf(LeafNode { parent, .. }) => parent,
@@ -241,16 +241,16 @@ impl<Branch, Leaf> Node<Branch, Leaf> {
 
 #[derive(Debug, PartialEq)]
 pub struct BranchNode<T> {
-    pub parent: Option<RawId>,
-    pub above: RawId,
-    pub below: RawId,
-    pub branch: T,
+    parent: Option<RawId>,
+    above: RawId,
+    below: RawId,
+    branch: T,
 }
 
 #[derive(Debug, PartialEq)]
 pub struct LeafNode<T> {
     parent: Option<RawId>,
-    pub leaf: T,
+    leaf: T,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
