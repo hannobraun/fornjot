@@ -35,11 +35,8 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
     ///
     /// This can never fail, as nodes are never removed, meaning all node ids
     /// are always valid.
-    pub fn get_mut(
-        &mut self,
-        id: impl Into<GenericId>,
-    ) -> &mut Node<Branch, Leaf> {
-        self.map.get_mut(&id.into().0).unwrap()
+    pub fn get_mut(&mut self, id: impl NodeId) -> &mut Node<Branch, Leaf> {
+        self.map.get_mut(&id.raw_id()).unwrap()
     }
 
     pub fn leafs(&self) -> impl Iterator<Item = (GenericId, &Leaf)> + '_ {
