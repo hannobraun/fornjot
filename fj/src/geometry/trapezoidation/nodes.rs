@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 
 pub struct Nodes<Branch, Leaf> {
-    map: HashMap<u32, Node<Branch, Leaf>>,
-    next_id: u32,
+    map: HashMap<RawId, Node<Branch, Leaf>>,
+    next_id: RawId,
 }
 
 impl<Branch, Leaf> Nodes<Branch, Leaf> {
@@ -50,8 +50,10 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
     }
 }
 
+type RawId = u32;
+
 pub trait NodeId {
-    fn raw_id(&self) -> u32;
+    fn raw_id(&self) -> RawId;
 }
 
 /// Identifies a node
@@ -59,10 +61,10 @@ pub trait NodeId {
 /// Since nodes can only be added, never removed, a `NodeId` instance is always
 /// going to be valid.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
-pub struct GenericId(pub u32);
+pub struct GenericId(pub RawId);
 
 impl NodeId for GenericId {
-    fn raw_id(&self) -> u32 {
+    fn raw_id(&self) -> RawId {
         self.0
     }
 }
