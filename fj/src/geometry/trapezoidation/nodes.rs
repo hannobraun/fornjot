@@ -39,6 +39,13 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         self.map.get_mut(&id.raw_id()).unwrap()
     }
 
+    pub fn parent_of(&self, id: &impl NodeId) -> Option<GenericId> {
+        // This implementation is a placeholder, until the test suite has caught
+        // up.
+        assert!(self.get(id).parent().is_none());
+        None
+    }
+
     pub fn leafs(&self) -> impl Iterator<Item = (GenericId, &Leaf)> + '_ {
         self.map.iter().filter_map(|(&id, node)| match node {
             Node::Leaf(LeafNode { leaf, .. }) => Some((GenericId(id), leaf)),
@@ -141,6 +148,8 @@ mod tests {
 
         assert_eq!(nodes.get(&id).leaf().unwrap(), &leaf);
         assert_eq!(nodes.get_mut(&id).leaf_mut().unwrap(), &mut leaf);
+
+        assert_eq!(nodes.parent_of(&id), None);
     }
 
     #[test]
