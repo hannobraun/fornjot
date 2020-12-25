@@ -1,5 +1,5 @@
 use super::{
-    nodes::{BranchNode, Node, NodeId, Nodes, Relation},
+    nodes::{BranchNode, GenericId, Node, Nodes, Relation},
     Edge, Vertex,
 };
 
@@ -19,7 +19,11 @@ impl Tree {
     ///
     /// The provided branch will take its place in the tree. The branch will
     /// have two children, the existing trapezoid and a new one.
-    pub fn split(&mut self, split_at: NodeId, split_with: Branch) -> NodeId {
+    pub fn split(
+        &mut self,
+        split_at: GenericId,
+        split_with: Branch,
+    ) -> GenericId {
         // This is the new trapezoid.
         let new_leaf_id = self.nodes.insert_leaf(Trapezoid);
 
@@ -64,14 +68,14 @@ impl Tree {
 
     pub fn trapezoids(
         &self,
-    ) -> impl Iterator<Item = (NodeId, &Trapezoid)> + '_ {
+    ) -> impl Iterator<Item = (GenericId, &Trapezoid)> + '_ {
         self.nodes.leafs()
     }
 
     pub fn parent_of(
         &self,
-        id: impl Into<NodeId>,
-    ) -> Option<(NodeId, &Branch, Relation)> {
+        id: impl Into<GenericId>,
+    ) -> Option<(GenericId, &Branch, Relation)> {
         let id = id.into();
 
         let node = self.nodes.get(id);
@@ -93,7 +97,10 @@ impl Tree {
         })
     }
 
-    fn get_parent(&self, parent_id: impl Into<NodeId>) -> &BranchNode<Branch> {
+    fn get_parent(
+        &self,
+        parent_id: impl Into<GenericId>,
+    ) -> &BranchNode<Branch> {
         let parent_id = parent_id.into();
 
         if let Node::Branch(node) = &self.nodes.get(parent_id) {
@@ -105,7 +112,7 @@ impl Tree {
 
     fn get_parent_mut(
         &mut self,
-        parent_id: impl Into<NodeId>,
+        parent_id: impl Into<GenericId>,
     ) -> &mut BranchNode<Branch> {
         let parent_id = parent_id.into();
 

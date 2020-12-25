@@ -13,21 +13,21 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         }
     }
 
-    pub fn insert_leaf(&mut self, leaf: Leaf) -> NodeId {
+    pub fn insert_leaf(&mut self, leaf: Leaf) -> GenericId {
         let id = self.next_id;
         self.next_id += 1;
 
         self.map
             .insert(id, Node::Leaf(LeafNode { parent: None, leaf }));
 
-        NodeId(id)
+        GenericId(id)
     }
 
     /// Return a reference to a node
     ///
     /// This can never fail, as nodes are never removed, meaning all node ids
     /// are always valid.
-    pub fn get(&self, id: impl Into<NodeId>) -> &Node<Branch, Leaf> {
+    pub fn get(&self, id: impl Into<GenericId>) -> &Node<Branch, Leaf> {
         self.map.get(&id.into().0).unwrap()
     }
 
@@ -37,14 +37,14 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
     /// are always valid.
     pub fn get_mut(
         &mut self,
-        id: impl Into<NodeId>,
+        id: impl Into<GenericId>,
     ) -> &mut Node<Branch, Leaf> {
         self.map.get_mut(&id.into().0).unwrap()
     }
 
-    pub fn leafs(&self) -> impl Iterator<Item = (NodeId, &Leaf)> + '_ {
+    pub fn leafs(&self) -> impl Iterator<Item = (GenericId, &Leaf)> + '_ {
         self.map.iter().filter_map(|(&id, node)| match node {
-            Node::Leaf(LeafNode { leaf, .. }) => Some((NodeId(id), leaf)),
+            Node::Leaf(LeafNode { leaf, .. }) => Some((GenericId(id), leaf)),
             _ => None,
         })
     }
@@ -55,7 +55,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
 /// Since nodes can only be added, never removed, a `NodeId` instance is always
 /// going to be valid.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
-pub struct NodeId(pub u32);
+pub struct GenericId(pub u32);
 
 #[derive(Debug, PartialEq)]
 pub enum Node<Branch, Leaf> {
@@ -64,14 +64,14 @@ pub enum Node<Branch, Leaf> {
 }
 
 impl<Branch, Leaf> Node<Branch, Leaf> {
-    pub fn parent(&self) -> &Option<NodeId> {
+    pub fn parent(&self) -> &Option<GenericId> {
         match self {
             Node::Branch(BranchNode { parent, .. }) => parent,
             Node::Leaf(LeafNode { parent, .. }) => parent,
         }
     }
 
-    pub fn parent_mut(&mut self) -> &mut Option<NodeId> {
+    pub fn parent_mut(&mut self) -> &mut Option<GenericId> {
         match self {
             Node::Branch(BranchNode { parent, .. }) => parent,
             Node::Leaf(LeafNode { parent, .. }) => parent,
@@ -81,15 +81,15 @@ impl<Branch, Leaf> Node<Branch, Leaf> {
 
 #[derive(Debug, PartialEq)]
 pub struct BranchNode<T> {
-    pub parent: Option<NodeId>,
-    pub above: NodeId,
-    pub below: NodeId,
+    pub parent: Option<GenericId>,
+    pub above: GenericId,
+    pub below: GenericId,
     pub branch: T,
 }
 
 #[derive(Debug, PartialEq)]
 pub struct LeafNode<T> {
-    parent: Option<NodeId>,
+    parent: Option<GenericId>,
     pub leaf: T,
 }
 
