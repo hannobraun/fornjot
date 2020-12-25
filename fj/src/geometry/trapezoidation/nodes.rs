@@ -47,16 +47,16 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
     }
 }
 
+pub trait NodeId {
+    fn raw_id(&self) -> RawId;
+}
+
 type RawId = u32;
 
 impl NodeId for RawId {
     fn raw_id(&self) -> RawId {
         *self
     }
-}
-
-pub trait NodeId {
-    fn raw_id(&self) -> RawId;
 }
 
 /// Identifies a node
