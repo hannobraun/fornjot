@@ -35,7 +35,7 @@ impl Tree {
         let old_leaf_id = split_at;
         let old_leaf = self.nodes.get_mut(&old_leaf_id);
         let old_leaf_parent = old_leaf.parent_mut().take();
-        *old_leaf.parent_mut() = Some(new_branch_id.0);
+        *self.nodes.get_mut(&new_branch_id).parent_mut() = old_leaf_parent;
 
         // Update the old leaf's parent, if it has one.
         if let Some(parent_id) = old_leaf_parent {
@@ -51,14 +51,12 @@ impl Tree {
             }
         }
 
-        // Change temporary leaf node into branch node.
-        *self.nodes.get_mut(&new_branch_id) = Node::Branch(BranchNode {
-            parent: old_leaf_parent,
-            above: old_leaf_id.0,
-            below: new_leaf_id.0,
-            branch: split_with,
-        });
-        *self.nodes.get_mut(&new_leaf_id).parent_mut() = Some(new_branch_id.0);
+        self.nodes.change_leaf_to_branch(
+            &new_branch_id,
+            split_with,
+            &old_leaf_id,
+            &new_leaf_id,
+        );
 
         new_branch_id
     }
