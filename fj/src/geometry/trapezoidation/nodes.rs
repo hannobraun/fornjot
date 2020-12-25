@@ -30,26 +30,8 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         above: &impl NodeId,
         below: &impl NodeId,
     ) -> GenericId {
-        // It would be nicer to verify this statically, through the use of some
-        // kind of root node handle, but for now this will do.
-        assert!(self.get(above).parent().is_none());
-        assert!(self.get(below).parent().is_none());
-
         let id = self.ids.next();
-        self.map.insert(
-            id,
-            Node::Branch(BranchNode {
-                parent: None,
-                above: above.raw_id(),
-                below: below.raw_id(),
-                branch,
-            }),
-        );
-
-        // Update parents of the new children
-        *self.get_mut(above).parent_mut() = Some(id);
-        *self.get_mut(below).parent_mut() = Some(id);
-
+        self.insert_branch_internal(id, branch, None, above, below);
         GenericId(id)
     }
 
@@ -65,26 +47,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         match self.map.remove(&id).unwrap() {
             Node::Branch(_) => panic!("Expected leaf, found branch"),
             Node::Leaf(LeafNode { parent, leaf }) => {
-                // It would be nicer to verify this statically, through the use
-                // of some kind of root node handle, but for now this will do.
-                assert!(self.get(above).parent().is_none());
-                assert!(self.get(below).parent().is_none());
-
-                // Insert the new branch node
-                self.map.insert(
-                    id,
-                    Node::Branch(BranchNode {
-                        parent,
-                        above: above.raw_id(),
-                        below: below.raw_id(),
-                        branch,
-                    }),
-                );
-
-                // Update parents of the new children
-                *self.get_mut(above).parent_mut() = Some(id);
-                *self.get_mut(below).parent_mut() = Some(id);
-
+                self.insert_branch_internal(id, branch, parent, above, below);
                 leaf
             }
         }
@@ -137,6 +100,38 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
             Node::Leaf(LeafNode { leaf, .. }) => Some((GenericId(id), leaf)),
             _ => None,
         })
+    }
+
+    fn insert_branch_internal(
+        &mut self,
+        id: impl NodeId,
+        branch: Branch,
+        parent: Option<RawId>,
+        above: &impl NodeId,
+        below: &impl NodeId,
+    ) -> GenericId {
+        let id = id.raw_id();
+
+        // It would be nicer to verify this statically, through the use of some
+        // kind of root node handle, but for now this will do.
+        assert!(self.get(above).parent().is_none());
+        assert!(self.get(below).parent().is_none());
+
+        self.map.insert(
+            id.raw_id(),
+            Node::Branch(BranchNode {
+                parent,
+                above: above.raw_id(),
+                below: below.raw_id(),
+                branch,
+            }),
+        );
+
+        // Update parents of the new children
+        *self.get_mut(above).parent_mut() = Some(id);
+        *self.get_mut(below).parent_mut() = Some(id);
+
+        GenericId(id)
     }
 }
 
