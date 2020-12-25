@@ -54,8 +54,8 @@ impl Tree {
         self.nodes.map.insert(
             new_branch_id.0,
             Node {
-                parent: old_leaf_parent,
                 kind: NodeKind::Branch(BranchNode {
+                    parent: old_leaf_parent,
                     above: old_leaf_id,
                     below: new_leaf_id.into(),
                     branch: split_with,

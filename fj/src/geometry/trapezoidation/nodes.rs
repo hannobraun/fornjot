@@ -20,8 +20,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         self.map.insert(
             id,
             Node {
-                parent: None,
-                kind: NodeKind::Leaf(leaf),
+                kind: NodeKind::Leaf(LeafNode { parent: None, leaf }),
             },
         );
 
@@ -49,7 +48,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
 
     pub fn leafs(&self) -> impl Iterator<Item = (NodeId, &Leaf)> + '_ {
         self.map.iter().filter_map(|(&id, node)| match &node.kind {
-            NodeKind::Leaf(leaf) => Some((NodeId(id), leaf)),
+            NodeKind::Leaf(LeafNode { leaf, .. }) => Some((NodeId(id), leaf)),
             _ => None,
         })
     }
@@ -64,31 +63,43 @@ pub struct NodeId(pub u32);
 
 #[derive(Debug, PartialEq)]
 pub struct Node<Branch, Leaf> {
-    pub parent: Option<NodeId>,
     pub kind: NodeKind<Branch, Leaf>,
 }
 
 impl<Branch, Leaf> Node<Branch, Leaf> {
     pub fn parent(&self) -> &Option<NodeId> {
-        &self.parent
+        match &self.kind {
+            NodeKind::Branch(BranchNode { parent, .. }) => parent,
+            NodeKind::Leaf(LeafNode { parent, .. }) => parent,
+        }
     }
 
     pub fn parent_mut(&mut self) -> &mut Option<NodeId> {
-        &mut self.parent
+        match &mut self.kind {
+            NodeKind::Branch(BranchNode { parent, .. }) => parent,
+            NodeKind::Leaf(LeafNode { parent, .. }) => parent,
+        }
     }
 }
 
 #[derive(Debug, PartialEq)]
 pub enum NodeKind<Branch, Leaf> {
     Branch(BranchNode<Branch>),
-    Leaf(Leaf),
+    Leaf(LeafNode<Leaf>),
 }
 
 #[derive(Debug, PartialEq)]
 pub struct BranchNode<T> {
+    pub parent: Option<NodeId>,
     pub above: NodeId,
     pub below: NodeId,
     pub branch: T,
+}
+
+#[derive(Debug, PartialEq)]
+pub struct LeafNode<T> {
+    parent: Option<NodeId>,
+    pub leaf: T,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -99,7 +110,7 @@ pub enum Relation {
 
 #[cfg(test)]
 mod tests {
-    use super::{Node, NodeKind};
+    use super::{LeafNode, Node, NodeKind};
 
     type Nodes = super::Nodes<(), u8>;
 
@@ -111,8 +122,7 @@ mod tests {
         let id = nodes.insert_leaf(leaf);
 
         let mut expected_node = Node {
-            parent: None,
-            kind: NodeKind::Leaf(leaf),
+            kind: NodeKind::Leaf(LeafNode { parent: None, leaf }),
         };
 
         assert_eq!(nodes.get(id), &expected_node);
