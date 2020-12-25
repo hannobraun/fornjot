@@ -50,16 +50,13 @@ impl Tree {
             }
         }
 
-        // Insert the new nodes.
-        self.nodes.map.insert(
-            new_branch_id.0,
-            Node::Branch(BranchNode {
-                parent: old_leaf_parent,
-                above: old_leaf_id,
-                below: new_leaf_id.into(),
-                branch: split_with,
-            }),
-        );
+        // Change temporary leaf node into branch node.
+        *self.nodes.get_mut(new_branch_id) = Node::Branch(BranchNode {
+            parent: old_leaf_parent,
+            above: old_leaf_id,
+            below: new_leaf_id.into(),
+            branch: split_with,
+        });
         *self.nodes.get_mut(new_leaf_id).parent_mut() = Some(new_branch_id);
 
         new_branch_id
