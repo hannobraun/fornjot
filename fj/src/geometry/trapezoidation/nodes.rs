@@ -49,6 +49,12 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
 
 type RawId = u32;
 
+impl NodeId for RawId {
+    fn raw_id(&self) -> RawId {
+        *self
+    }
+}
+
 pub trait NodeId {
     fn raw_id(&self) -> RawId;
 }
@@ -73,14 +79,14 @@ pub enum Node<Branch, Leaf> {
 }
 
 impl<Branch, Leaf> Node<Branch, Leaf> {
-    pub fn parent(&self) -> &Option<GenericId> {
+    pub fn parent(&self) -> &Option<RawId> {
         match self {
             Node::Branch(BranchNode { parent, .. }) => parent,
             Node::Leaf(LeafNode { parent, .. }) => parent,
         }
     }
 
-    pub fn parent_mut(&mut self) -> &mut Option<GenericId> {
+    pub fn parent_mut(&mut self) -> &mut Option<RawId> {
         match self {
             Node::Branch(BranchNode { parent, .. }) => parent,
             Node::Leaf(LeafNode { parent, .. }) => parent,
@@ -90,15 +96,15 @@ impl<Branch, Leaf> Node<Branch, Leaf> {
 
 #[derive(Debug, PartialEq)]
 pub struct BranchNode<T> {
-    pub parent: Option<GenericId>,
-    pub above: GenericId,
-    pub below: GenericId,
+    pub parent: Option<RawId>,
+    pub above: RawId,
+    pub below: RawId,
     pub branch: T,
 }
 
 #[derive(Debug, PartialEq)]
 pub struct LeafNode<T> {
-    parent: Option<GenericId>,
+    parent: Option<RawId>,
     pub leaf: T,
 }
 

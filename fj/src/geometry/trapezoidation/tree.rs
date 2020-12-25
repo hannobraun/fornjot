@@ -35,18 +35,18 @@ impl Tree {
         let old_leaf_id = split_at;
         let old_leaf = self.nodes.get_mut(&old_leaf_id);
         let old_leaf_parent = old_leaf.parent_mut().take();
-        *old_leaf.parent_mut() = Some(new_branch_id);
+        *old_leaf.parent_mut() = Some(new_branch_id.0);
 
         // Update the old leaf's parent, if it has one.
         if let Some(parent_id) = old_leaf_parent {
             let parent = self.get_parent_mut(&parent_id);
             match old_leaf_id {
-                id if id == parent.above => parent.above = new_branch_id,
+                id if id.0 == parent.above => parent.above = new_branch_id.0,
                 // This looks like a bug. I don't want to apply the obvious fix,
                 // as the real bug here is that none of the tests are failing.
                 // If this code still exists after I've finished cleaning up, I
                 // need to handle it properly.
-                id if id == parent.below => parent.above = new_branch_id,
+                id if id.0 == parent.below => parent.above = new_branch_id.0,
                 id => panic!(
                     "Parent ({:?}) of split leaf ({:?}) doesn't relate to it",
                     old_leaf_parent, id
@@ -57,11 +57,11 @@ impl Tree {
         // Change temporary leaf node into branch node.
         *self.nodes.get_mut(&new_branch_id) = Node::Branch(BranchNode {
             parent: old_leaf_parent,
-            above: old_leaf_id,
-            below: new_leaf_id.into(),
+            above: old_leaf_id.0,
+            below: new_leaf_id.0,
             branch: split_with,
         });
-        *self.nodes.get_mut(&new_leaf_id).parent_mut() = Some(new_branch_id);
+        *self.nodes.get_mut(&new_leaf_id).parent_mut() = Some(new_branch_id.0);
 
         new_branch_id
     }
@@ -88,7 +88,7 @@ impl Tree {
                 }
             };
 
-            (parent_id, &parent.branch, relation)
+            (GenericId(parent_id), &parent.branch, relation)
         })
     }
 
