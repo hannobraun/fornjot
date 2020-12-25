@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 
 pub struct Nodes<Branch, Leaf> {
-    pub map: HashMap<u32, Node<Branch, Leaf>>,
-    pub next_id: u32,
+    map: HashMap<u32, Node<Branch, Leaf>>,
+    next_id: u32,
 }
 
 impl<Branch, Leaf> Nodes<Branch, Leaf> {
