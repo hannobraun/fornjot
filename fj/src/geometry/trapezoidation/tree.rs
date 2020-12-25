@@ -1,5 +1,5 @@
 use super::{
-    nodes::{BranchNode, Node, NodeId, NodeKind, Nodes, Relation},
+    nodes::{BranchNode, Node, NodeId, Nodes, Relation},
     Edge, Vertex,
 };
 
@@ -53,14 +53,12 @@ impl Tree {
         // Insert the new nodes.
         self.nodes.map.insert(
             new_branch_id.0,
-            Node {
-                kind: NodeKind::Branch(BranchNode {
-                    parent: old_leaf_parent,
-                    above: old_leaf_id,
-                    below: new_leaf_id.into(),
-                    branch: split_with,
-                }),
-            },
+            Node::Branch(BranchNode {
+                parent: old_leaf_parent,
+                above: old_leaf_id,
+                below: new_leaf_id.into(),
+                branch: split_with,
+            }),
         );
         *self.nodes.get_mut(new_leaf_id).parent_mut() = Some(new_branch_id);
 
@@ -101,7 +99,7 @@ impl Tree {
     fn get_parent(&self, parent_id: impl Into<NodeId>) -> &BranchNode<Branch> {
         let parent_id = parent_id.into();
 
-        if let NodeKind::Branch(node) = &self.nodes.get(parent_id).kind {
+        if let Node::Branch(node) = &self.nodes.get(parent_id) {
             return node;
         }
 
@@ -114,8 +112,7 @@ impl Tree {
     ) -> &mut BranchNode<Branch> {
         let parent_id = parent_id.into();
 
-        if let NodeKind::Branch(node) = &mut self.nodes.get_mut(parent_id).kind
-        {
+        if let Node::Branch(node) = self.nodes.get_mut(parent_id) {
             return node;
         }
 
