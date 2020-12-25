@@ -140,15 +140,15 @@ impl<Branch, Leaf> Node<Branch, Leaf> {
 
     pub fn parent(&self) -> &Option<RawId> {
         match self {
-            Node::Branch(BranchNode { parent, .. }) => parent,
-            Node::Leaf(LeafNode { parent, .. }) => parent,
+            Self::Branch(BranchNode { parent, .. }) => parent,
+            Self::Leaf(LeafNode { parent, .. }) => parent,
         }
     }
 
     pub fn parent_mut(&mut self) -> &mut Option<RawId> {
         match self {
-            Node::Branch(BranchNode { parent, .. }) => parent,
-            Node::Leaf(LeafNode { parent, .. }) => parent,
+            Self::Branch(BranchNode { parent, .. }) => parent,
+            Self::Leaf(LeafNode { parent, .. }) => parent,
         }
     }
 }
