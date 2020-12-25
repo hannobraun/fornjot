@@ -27,7 +27,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
     ///
     /// This can never fail, as nodes are never removed, meaning all node ids
     /// are always valid.
-    pub fn get(&self, id: impl NodeId) -> &Node<Branch, Leaf> {
+    pub fn get(&self, id: &impl NodeId) -> &Node<Branch, Leaf> {
         self.map.get(&id.raw_id()).unwrap()
     }
 
@@ -35,7 +35,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
     ///
     /// This can never fail, as nodes are never removed, meaning all node ids
     /// are always valid.
-    pub fn get_mut(&mut self, id: impl NodeId) -> &mut Node<Branch, Leaf> {
+    pub fn get_mut(&mut self, id: &impl NodeId) -> &mut Node<Branch, Leaf> {
         self.map.get_mut(&id.raw_id()).unwrap()
     }
 
@@ -123,8 +123,8 @@ mod tests {
 
         let mut expected_node = Node::Leaf(LeafNode { parent: None, leaf });
 
-        assert_eq!(nodes.get(id), &expected_node);
-        assert_eq!(nodes.get_mut(id), &mut expected_node);
+        assert_eq!(nodes.get(&id), &expected_node);
+        assert_eq!(nodes.get_mut(&id), &mut expected_node);
     }
 
     #[test]

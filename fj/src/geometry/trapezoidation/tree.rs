@@ -33,7 +33,7 @@ impl Tree {
 
         // Update the old leaf we're splitting.
         let old_leaf_id = split_at;
-        let old_leaf = self.nodes.get_mut(old_leaf_id);
+        let old_leaf = self.nodes.get_mut(&old_leaf_id);
         let old_leaf_parent = old_leaf.parent_mut().take();
         *old_leaf.parent_mut() = Some(new_branch_id);
 
@@ -55,13 +55,13 @@ impl Tree {
         }
 
         // Change temporary leaf node into branch node.
-        *self.nodes.get_mut(new_branch_id) = Node::Branch(BranchNode {
+        *self.nodes.get_mut(&new_branch_id) = Node::Branch(BranchNode {
             parent: old_leaf_parent,
             above: old_leaf_id,
             below: new_leaf_id.into(),
             branch: split_with,
         });
-        *self.nodes.get_mut(new_leaf_id).parent_mut() = Some(new_branch_id);
+        *self.nodes.get_mut(&new_leaf_id).parent_mut() = Some(new_branch_id);
 
         new_branch_id
     }
@@ -78,7 +78,7 @@ impl Tree {
     ) -> Option<(GenericId, &Branch, Relation)> {
         let id = id.into();
 
-        let node = self.nodes.get(id);
+        let node = self.nodes.get(&id);
         node.parent().map(|parent_id| {
             let parent = self.get_parent(parent_id);
 
@@ -100,7 +100,7 @@ impl Tree {
     ) -> &BranchNode<Branch> {
         let parent_id = parent_id.into();
 
-        if let Node::Branch(node) = &self.nodes.get(parent_id) {
+        if let Node::Branch(node) = &self.nodes.get(&parent_id) {
             return node;
         }
 
@@ -113,7 +113,7 @@ impl Tree {
     ) -> &mut BranchNode<Branch> {
         let parent_id = parent_id.into();
 
-        if let Node::Branch(node) = self.nodes.get_mut(parent_id) {
+        if let Node::Branch(node) = self.nodes.get_mut(&parent_id) {
             return node;
         }
 
