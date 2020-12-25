@@ -91,16 +91,15 @@ mod tests {
         let (original_root_id, _) = tree.trapezoids().next().unwrap();
 
         let new_node = Branch::Vertex(Vertex::new(0.0, 0.0));
-        tree.split(original_root_id, new_node);
+        let new_root_id = tree.split(original_root_id, new_node);
 
         let leafs: Vec<_> = tree.trapezoids().collect();
         assert_eq!(leafs.len(), 2);
 
         for (id, _) in leafs {
             let (parent_id, relation) = tree.parent_of(&id).unwrap();
-            let parent = tree.get(&parent_id);
 
-            assert_eq!(parent.branch().unwrap(), &new_node);
+            assert_eq!(parent_id, new_root_id);
 
             if id == original_root_id {
                 assert_eq!(relation, Relation::Above);
