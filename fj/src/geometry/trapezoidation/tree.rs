@@ -1,6 +1,6 @@
 use super::{
     id::NodeId,
-    nodes::{BranchNode, GenericId, Node, Nodes, Relation},
+    nodes::{GenericId, Node, Nodes, Relation},
     Edge, Vertex,
 };
 
@@ -58,28 +58,7 @@ impl Tree {
     }
 
     pub fn parent_of(&self, id: &impl NodeId) -> Option<(GenericId, Relation)> {
-        let node = self.nodes.get(id);
-        node.parent().map(|parent_id| {
-            let parent = self.get_parent(&parent_id);
-
-            let relation = match id {
-                id if id.raw_id() == parent.above.raw_id() => Relation::Above,
-                id if id.raw_id() == parent.below.raw_id() => Relation::Below,
-                _ => {
-                    panic!("Parent doesn't relate to child");
-                }
-            };
-
-            (GenericId(parent_id), relation)
-        })
-    }
-
-    fn get_parent(&self, parent_id: &impl NodeId) -> &BranchNode<Branch> {
-        if let Node::Branch(node) = &self.nodes.get(parent_id) {
-            return node;
-        }
-
-        panic!("Parent node is not a branch");
+        self.nodes.parent_of(id)
     }
 }
 
