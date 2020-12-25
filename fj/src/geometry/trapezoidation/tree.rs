@@ -85,11 +85,8 @@ impl Tree {
             let relation = match id {
                 id if id == parent.above => Relation::Above,
                 id if id == parent.below => Relation::Below,
-                id => {
-                    panic!(
-                        "Parent ({:?}) doesn't relate to child {:?}",
-                        parent_id, id
-                    );
+                _ => {
+                    panic!("Parent doesn't relate to child");
                 }
             };
 
@@ -107,7 +104,7 @@ impl Tree {
             return node;
         }
 
-        panic!("Parent node ({:?}) is not a branch", parent_id);
+        panic!("Parent node is not a branch");
     }
 
     fn get_parent_mut(
@@ -120,7 +117,7 @@ impl Tree {
             return node;
         }
 
-        panic!("Parent node ({:?}) is not a branch", parent_id);
+        panic!("Parent node is not a branch");
     }
 }
 
