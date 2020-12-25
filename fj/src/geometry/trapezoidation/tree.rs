@@ -1,5 +1,5 @@
 use super::{
-    nodes::{BranchNode, GenericId, Node, Nodes, Relation},
+    nodes::{BranchNode, GenericId, Node, NodeId, Nodes, Relation},
     Edge, Vertex,
 };
 
@@ -39,7 +39,7 @@ impl Tree {
 
         // Update the old leaf's parent, if it has one.
         if let Some(parent_id) = old_leaf_parent {
-            let parent = self.get_parent_mut(parent_id);
+            let parent = self.get_parent_mut(&parent_id);
             match old_leaf_id {
                 id if id == parent.above => parent.above = new_branch_id,
                 // This looks like a bug. I don't want to apply the obvious fix,
@@ -74,17 +74,15 @@ impl Tree {
 
     pub fn parent_of(
         &self,
-        id: impl Into<GenericId>,
+        id: &impl NodeId,
     ) -> Option<(GenericId, &Branch, Relation)> {
-        let id = id.into();
-
-        let node = self.nodes.get(&id);
+        let node = self.nodes.get(id);
         node.parent().map(|parent_id| {
-            let parent = self.get_parent(parent_id);
+            let parent = self.get_parent(&parent_id);
 
             let relation = match id {
-                id if id == parent.above => Relation::Above,
-                id if id == parent.below => Relation::Below,
+                id if id.raw_id() == parent.above.raw_id() => Relation::Above,
+                id if id.raw_id() == parent.below.raw_id() => Relation::Below,
                 _ => {
                     panic!("Parent doesn't relate to child");
                 }
@@ -94,13 +92,8 @@ impl Tree {
         })
     }
 
-    fn get_parent(
-        &self,
-        parent_id: impl Into<GenericId>,
-    ) -> &BranchNode<Branch> {
-        let parent_id = parent_id.into();
-
-        if let Node::Branch(node) = &self.nodes.get(&parent_id) {
+    fn get_parent(&self, parent_id: &impl NodeId) -> &BranchNode<Branch> {
+        if let Node::Branch(node) = &self.nodes.get(parent_id) {
             return node;
         }
 
@@ -109,11 +102,9 @@ impl Tree {
 
     fn get_parent_mut(
         &mut self,
-        parent_id: impl Into<GenericId>,
+        parent_id: &impl NodeId,
     ) -> &mut BranchNode<Branch> {
-        let parent_id = parent_id.into();
-
-        if let Node::Branch(node) = self.nodes.get_mut(&parent_id) {
+        if let Node::Branch(node) = self.nodes.get_mut(parent_id) {
             return node;
         }
 
@@ -159,7 +150,7 @@ mod tests {
         let original_root_id = root_id;
 
         for (id, _) in leafs {
-            let (_, parent, relation) = tree.parent_of(id).unwrap();
+            let (_, parent, relation) = tree.parent_of(&id).unwrap();
 
             assert_eq!(parent, &new_node);
 
@@ -174,10 +165,10 @@ mod tests {
         // previous leaf node.
 
         let (leaf_id, _) = tree.trapezoids().next().unwrap();
-        let (parent_id, _, _) = tree.parent_of(leaf_id).unwrap();
+        let (parent_id, _, _) = tree.parent_of(&leaf_id).unwrap();
         let new_branch_id =
             tree.split(leaf_id, Branch::Vertex(Vertex::new(1.0, 1.0)));
-        let (new_parent_id, _, _) = tree.parent_of(new_branch_id).unwrap();
+        let (new_parent_id, _, _) = tree.parent_of(&new_branch_id).unwrap();
 
         assert_eq!(parent_id, new_parent_id);
     }
