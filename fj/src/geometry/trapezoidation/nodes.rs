@@ -23,6 +23,46 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         GenericId(id)
     }
 
+    pub fn change_leaf_to_branch(
+        &mut self,
+        id: &impl NodeId,
+        branch: Branch,
+        above: &impl NodeId,
+        below: &impl NodeId,
+    ) -> Leaf {
+        let id = id.raw_id();
+
+        match self.map.remove(&id).unwrap() {
+            Node::Branch(_) => panic!("Expected leaf, found branch"),
+            Node::Leaf(LeafNode { parent, leaf }) => {
+                // Temporary restriction, to be lifted soon.
+                assert!(parent.is_none());
+
+                // It would be nicer to verify this statically, through the use
+                // of some kind of root node handle, but for now this will do.
+                assert!(self.get(above).parent().is_none());
+                assert!(self.get(below).parent().is_none());
+
+                // Insert the new branch node
+                self.map.insert(
+                    id,
+                    Node::Branch(BranchNode {
+                        parent: None,
+                        above: above.raw_id(),
+                        below: below.raw_id(),
+                        branch,
+                    }),
+                );
+
+                // Update parents of the new children
+                *self.get_mut(above).parent_mut() = Some(id);
+                *self.get_mut(below).parent_mut() = Some(id);
+
+                leaf
+            }
+        }
+    }
+
     /// Return a reference to a node
     ///
     /// This can never fail, as nodes are never removed, meaning all node ids
@@ -148,7 +188,7 @@ pub enum Relation {
 
 #[cfg(test)]
 mod tests {
-    type Nodes = super::Nodes<(), u8>;
+    type Nodes = super::Nodes<u8, u8>;
 
     #[test]
     fn nodes_should_insert_leafs() {
@@ -197,5 +237,34 @@ mod tests {
 
         assert!(saw_a);
         assert!(saw_b);
+    }
+
+    #[test]
+    fn nodes_should_change_root_leaf_to_branch() {
+        let mut nodes = Nodes::new();
+
+        let leaf_tmp = 3;
+        let leaf_a = 5;
+        let leaf_b = 8;
+
+        let id_branch = nodes.insert_leaf(leaf_tmp);
+        let id_leaf_a = nodes.insert_leaf(leaf_a);
+        let id_leaf_b = nodes.insert_leaf(leaf_b);
+
+        let mut branch = 1;
+        let replaced_leaf = nodes
+            .change_leaf_to_branch(&id_branch, branch, &id_leaf_a, &id_leaf_b);
+
+        assert_eq!(replaced_leaf, leaf_tmp);
+
+        assert_eq!(nodes.get(&id_branch).branch().unwrap(), &branch);
+        assert_eq!(
+            nodes.get_mut(&id_branch).branch_mut().unwrap(),
+            &mut branch
+        );
+
+        assert_eq!(nodes.parent_of(&id_branch), None);
+        assert_eq!(nodes.parent_of(&id_leaf_a), Some(id_branch));
+        assert_eq!(nodes.parent_of(&id_leaf_b), Some(id_branch));
     }
 }
