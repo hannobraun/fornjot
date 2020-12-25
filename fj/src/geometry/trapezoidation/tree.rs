@@ -1,5 +1,6 @@
 use super::{
-    nodes::{BranchNode, GenericId, Node, NodeId, Nodes, Relation},
+    id::NodeId,
+    nodes::{BranchNode, GenericId, Node, Nodes, Relation},
     Edge, Vertex,
 };
 

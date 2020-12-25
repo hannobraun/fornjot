@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use super::id::{NodeId, RawId};
+
 pub struct Nodes<Branch, Leaf> {
     map: HashMap<RawId, Node<Branch, Leaf>>,
     next_id: RawId,
@@ -85,18 +87,6 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
             Node::Leaf(LeafNode { leaf, .. }) => Some((GenericId(id), leaf)),
             _ => None,
         })
-    }
-}
-
-pub trait NodeId {
-    fn raw_id(&self) -> RawId;
-}
-
-type RawId = u32;
-
-impl NodeId for RawId {
-    fn raw_id(&self) -> RawId {
-        *self
     }
 }
 
