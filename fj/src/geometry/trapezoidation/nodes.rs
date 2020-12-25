@@ -41,21 +41,24 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         new_child: &impl NodeId,
     ) {
         let parent = self.get_mut(child).parent_mut().take();
-        assert!(parent.is_some());
 
-        let parent = parent.unwrap();
+        *self.get_mut(new_child).parent_mut() = parent;
 
-        *self.get_mut(new_child).parent_mut() = Some(parent);
-
-        match self.get_mut(&parent) {
-            Node::Branch(branch) if child.raw_id() == branch.above => {
-                branch.above = new_child.raw_id();
+        if let Some(parent) = parent {
+            match self.get_mut(&parent) {
+                Node::Branch(branch) if child.raw_id() == branch.above => {
+                    branch.above = new_child.raw_id();
+                }
+                Node::Branch(branch) if child.raw_id() == branch.below => {
+                    branch.below = new_child.raw_id();
+                }
+                Node::Branch(_) => {
+                    unreachable!("Parent didn't know about child")
+                }
+                Node::Leaf(_) => {
+                    unreachable!("Parent of a node can't be a leaf")
+                }
             }
-            Node::Branch(branch) if child.raw_id() == branch.below => {
-                branch.below = new_child.raw_id();
-            }
-            Node::Branch(_) => unreachable!("Parent didn't know about child"),
-            Node::Leaf(_) => unreachable!("Parent of a node can't be a leaf"),
         }
     }
 
