@@ -107,16 +107,5 @@ mod tests {
                 assert_eq!(relation, Relation::Below);
             }
         }
-
-        // Make sure that the new branch node has the same parent as the
-        // previous leaf node.
-
-        let (leaf_id, _) = tree.trapezoids().next().unwrap();
-        let (parent_id, _) = tree.parent_of(&leaf_id).unwrap();
-        let new_branch_id =
-            tree.split(leaf_id, Branch::Vertex(Vertex::new(1.0, 1.0)));
-        let (new_parent_id, _) = tree.parent_of(&new_branch_id).unwrap();
-
-        assert_eq!(parent_id, new_parent_id);
     }
 }
