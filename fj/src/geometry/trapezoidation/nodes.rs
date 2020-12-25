@@ -35,9 +35,6 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         match self.map.remove(&id).unwrap() {
             Node::Branch(_) => panic!("Expected leaf, found branch"),
             Node::Leaf(LeafNode { parent, leaf }) => {
-                // Temporary restriction, to be lifted soon.
-                assert!(parent.is_none());
-
                 // It would be nicer to verify this statically, through the use
                 // of some kind of root node handle, but for now this will do.
                 assert!(self.get(above).parent().is_none());
@@ -47,7 +44,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
                 self.map.insert(
                     id,
                     Node::Branch(BranchNode {
-                        parent: None,
+                        parent,
                         above: above.raw_id(),
                         below: below.raw_id(),
                         branch,
@@ -266,5 +263,30 @@ mod tests {
         assert_eq!(nodes.parent_of(&id_branch), None);
         assert_eq!(nodes.parent_of(&id_leaf_a), Some(id_branch));
         assert_eq!(nodes.parent_of(&id_leaf_b), Some(id_branch));
+    }
+
+    #[test]
+    fn nodes_should_change_non_root_leaf_to_branch() {
+        let mut nodes = Nodes::new();
+
+        // Create non-root leaf nodes.
+        let root_id = nodes.insert_leaf(3);
+        let leaf_id_a = nodes.insert_leaf(5);
+        let leaf_id_b = nodes.insert_leaf(8);
+        nodes.change_leaf_to_branch(&root_id, 1, &leaf_id_a, &leaf_id_b);
+
+        let non_root_leaf_id = leaf_id_a;
+
+        // Change a non-root leaf into a branch
+        let leaf_id_a = nodes.insert_leaf(13);
+        let leaf_id_b = nodes.insert_leaf(21);
+        nodes.change_leaf_to_branch(
+            &non_root_leaf_id,
+            2,
+            &leaf_id_a,
+            &leaf_id_b,
+        );
+
+        assert_eq!(nodes.parent_of(&non_root_leaf_id), Some(root_id));
     }
 }
