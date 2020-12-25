@@ -88,16 +88,13 @@ mod tests {
     #[test]
     fn tree_should_split_leafs() {
         let mut tree = Tree::new();
-        let (root_id, _) = tree.trapezoids().next().unwrap();
+        let (original_root_id, _) = tree.trapezoids().next().unwrap();
 
         let new_node = Branch::Vertex(Vertex::new(0.0, 0.0));
-        tree.split(root_id, new_node);
+        tree.split(original_root_id, new_node);
 
         let leafs: Vec<_> = tree.trapezoids().collect();
         assert_eq!(leafs.len(), 2);
-
-        // This is no longer the root, so let's update the variable name.
-        let original_root_id = root_id;
 
         for (id, _) in leafs {
             let (parent_id, relation) = tree.parent_of(&id).unwrap();
