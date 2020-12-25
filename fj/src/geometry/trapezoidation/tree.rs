@@ -32,25 +32,10 @@ impl Tree {
         // moment.
         let new_branch_id = self.nodes.insert_leaf(Trapezoid);
 
-        // Update the old leaf we're splitting.
+        // Make the new leaf take the place of the one we're about to split,
+        // before transforming it into a branch.
         let old_leaf_id = split_at;
-        let old_leaf = self.nodes.get_mut(&old_leaf_id);
-        let old_leaf_parent = old_leaf.parent_mut().take();
-        *self.nodes.get_mut(&new_branch_id).parent_mut() = old_leaf_parent;
-
-        // Update the old leaf's parent, if it has one.
-        if let Some(parent_id) = old_leaf_parent {
-            let parent = self.get_parent_mut(&parent_id);
-            match old_leaf_id {
-                id if id.0 == parent.above => parent.above = new_branch_id.0,
-                // This looks like a bug. I don't want to apply the obvious fix,
-                // as the real bug here is that none of the tests are failing.
-                // If this code still exists after I've finished cleaning up, I
-                // need to handle it properly.
-                id if id.0 == parent.below => parent.above = new_branch_id.0,
-                _ => panic!("Parent of split leaf doesn't relate to it"),
-            }
-        }
+        self.nodes.replace_child(&old_leaf_id, &new_branch_id);
 
         self.nodes.change_leaf_to_branch(
             &new_branch_id,
@@ -90,17 +75,6 @@ impl Tree {
 
     fn get_parent(&self, parent_id: &impl NodeId) -> &BranchNode<Branch> {
         if let Node::Branch(node) = &self.nodes.get(parent_id) {
-            return node;
-        }
-
-        panic!("Parent node is not a branch");
-    }
-
-    fn get_parent_mut(
-        &mut self,
-        parent_id: &impl NodeId,
-    ) -> &mut BranchNode<Branch> {
-        if let Node::Branch(node) = self.nodes.get_mut(parent_id) {
             return node;
         }
 
