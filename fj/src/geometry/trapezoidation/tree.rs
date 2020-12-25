@@ -51,8 +51,6 @@ impl Tree {
         }
 
         // Insert the new nodes.
-        let new_leaf_id_tmp = new_leaf_id;
-        let new_branch_id: NodeId = new_branch_id;
         self.nodes.map.insert(
             new_branch_id.0,
             Node {
@@ -64,7 +62,7 @@ impl Tree {
                 }),
             },
         );
-        self.nodes.get_mut(new_leaf_id_tmp).parent = Some(new_branch_id);
+        self.nodes.get_mut(new_leaf_id).parent = Some(new_branch_id);
 
         new_branch_id
     }
