@@ -47,10 +47,7 @@ impl Tree {
                 // If this code still exists after I've finished cleaning up, I
                 // need to handle it properly.
                 id if id.0 == parent.below => parent.above = new_branch_id.0,
-                id => panic!(
-                    "Parent ({:?}) of split leaf ({:?}) doesn't relate to it",
-                    old_leaf_parent, id
-                ),
+                _ => panic!("Parent of split leaf doesn't relate to it"),
             }
         }
 
