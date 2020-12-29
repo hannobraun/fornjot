@@ -2,6 +2,11 @@ use std::collections::HashMap;
 
 use super::id::{Ids, RawId};
 
+/// Manages the nodes of the trapezoidation tree
+///
+/// This data structure doesn't know anything about the meaning of the nodes,
+/// but it knows about the structure of the tree, and makes sure that is
+/// correctly maintained at all times.
 pub struct Nodes<Branch, Leaf> {
     map: HashMap<RawId, Node<Branch, Leaf>>,
     ids: Ids,
