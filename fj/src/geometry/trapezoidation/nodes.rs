@@ -31,7 +31,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         below: &impl NodeId,
     ) -> GenericId {
         let id = self.ids.next();
-        self.insert_branch_internal(id, branch, None, above, below);
+        self.insert_branch_internal(&id, branch, None, above, below);
         GenericId(id)
     }
 
@@ -74,7 +74,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         match self.map.remove(&id).unwrap() {
             Node::Branch(_) => panic!("Expected leaf, found branch"),
             Node::Leaf(LeafNode { parent, leaf }) => {
-                self.insert_branch_internal(id, branch, parent, above, below);
+                self.insert_branch_internal(&id, branch, parent, above, below);
                 leaf
             }
         }
@@ -145,7 +145,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
 
     fn insert_branch_internal(
         &mut self,
-        id: impl NodeId,
+        id: &impl NodeId,
         branch: Branch,
         parent: Option<RawId>,
         above: &impl NodeId,
