@@ -15,33 +15,33 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         }
     }
 
-    pub fn insert_leaf(&mut self, leaf: Leaf) -> GenericId {
+    pub fn insert_leaf(&mut self, leaf: Leaf) -> NodeId {
         let id = self.ids.next();
 
         self.map
             .insert(id, Node::Leaf(LeafNode { parent: None, leaf }));
 
-        GenericId(id)
+        NodeId(id)
     }
 
     pub fn insert_branch(
         &mut self,
         branch: Branch,
-        above: &GenericId,
-        below: &GenericId,
-    ) -> GenericId {
-        let id = GenericId(self.ids.next());
+        above: &NodeId,
+        below: &NodeId,
+    ) -> NodeId {
+        let id = NodeId(self.ids.next());
         self.insert_branch_internal(&id, branch, None, above, below);
         id
     }
 
-    pub fn replace_child(&mut self, child: &GenericId, new_child: &GenericId) {
+    pub fn replace_child(&mut self, child: &NodeId, new_child: &NodeId) {
         let parent = self.get_mut(child).parent_mut().take();
 
         *self.get_mut(new_child).parent_mut() = parent;
 
         if let Some(parent) = parent {
-            match self.get_mut(&GenericId(parent)) {
+            match self.get_mut(&NodeId(parent)) {
                 Node::Branch(branch) if child.0 == branch.above => {
                     branch.above = new_child.0;
                 }
@@ -60,10 +60,10 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
 
     pub fn change_leaf_to_branch(
         &mut self,
-        id: &GenericId,
+        id: &NodeId,
         branch: Branch,
-        above: &GenericId,
-        below: &GenericId,
+        above: &NodeId,
+        below: &NodeId,
     ) -> Leaf {
         match self.map.remove(&id.0).unwrap() {
             Node::Branch(_) => panic!("Expected leaf, found branch"),
@@ -78,7 +78,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
     ///
     /// This can never fail, as nodes are never removed, meaning all node ids
     /// are always valid.
-    pub fn get(&self, id: &GenericId) -> &Node<Branch, Leaf> {
+    pub fn get(&self, id: &NodeId) -> &Node<Branch, Leaf> {
         self.map.get(&id.0).unwrap()
     }
 
@@ -86,13 +86,13 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
     ///
     /// This can never fail, as nodes are never removed, meaning all node ids
     /// are always valid.
-    pub fn get_mut(&mut self, id: &GenericId) -> &mut Node<Branch, Leaf> {
+    pub fn get_mut(&mut self, id: &NodeId) -> &mut Node<Branch, Leaf> {
         self.map.get_mut(&id.0).unwrap()
     }
 
-    pub fn parent_of(&self, id: &GenericId) -> Option<(GenericId, Relation)> {
+    pub fn parent_of(&self, id: &NodeId) -> Option<(NodeId, Relation)> {
         self.get(id).parent().map(|parent_id| {
-            let parent = match self.get(&GenericId(parent_id)) {
+            let parent = match self.get(&NodeId(parent_id)) {
                 Node::Branch(parent) => parent,
                 Node::Leaf(_) => unreachable!("Parent is not a branch"),
             };
@@ -104,13 +104,13 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
                     panic!("Parent doesn't relate to child");
                 }
             };
-            (GenericId(parent_id), relation)
+            (NodeId(parent_id), relation)
         })
     }
 
-    pub fn above_of(&self, id: &GenericId) -> GenericId {
+    pub fn above_of(&self, id: &NodeId) -> NodeId {
         match self.get(id) {
-            Node::Branch(BranchNode { above, .. }) => GenericId(*above),
+            Node::Branch(BranchNode { above, .. }) => NodeId(*above),
             Node::Leaf(_) => {
                 // It would be nicer to enforce this statically, through the use
                 // of a branch handle, but for now this will do.
@@ -119,9 +119,9 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         }
     }
 
-    pub fn below_of(&self, id: &GenericId) -> GenericId {
+    pub fn below_of(&self, id: &NodeId) -> NodeId {
         match self.get(id) {
-            Node::Branch(BranchNode { below, .. }) => GenericId(*below),
+            Node::Branch(BranchNode { below, .. }) => NodeId(*below),
             Node::Leaf(_) => {
                 // It would be nicer to enforce this statically, through the use
                 // of a branch handle, but for now this will do.
@@ -130,20 +130,20 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         }
     }
 
-    pub fn leafs(&self) -> impl Iterator<Item = (GenericId, &Leaf)> + '_ {
+    pub fn leafs(&self) -> impl Iterator<Item = (NodeId, &Leaf)> + '_ {
         self.map.iter().filter_map(|(&id, node)| match node {
-            Node::Leaf(LeafNode { leaf, .. }) => Some((GenericId(id), leaf)),
+            Node::Leaf(LeafNode { leaf, .. }) => Some((NodeId(id), leaf)),
             _ => None,
         })
     }
 
     fn insert_branch_internal(
         &mut self,
-        id: &GenericId,
+        id: &NodeId,
         branch: Branch,
         parent: Option<RawId>,
-        above: &GenericId,
-        below: &GenericId,
+        above: &NodeId,
+        below: &NodeId,
     ) {
         // It would be nicer to verify this statically, through the use of some
         // kind of root node handle, but for now this will do.
@@ -171,7 +171,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
 /// Since nodes can only be added, never removed, a `NodeId` instance is always
 /// going to be valid.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
-pub struct GenericId(RawId);
+pub struct NodeId(RawId);
 
 #[derive(Debug, PartialEq)]
 pub enum Node<Branch, Leaf> {

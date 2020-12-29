@@ -1,5 +1,5 @@
 use super::{
-    nodes::{GenericId, Node, Nodes, Relation},
+    nodes::{NodeId, Node, Nodes, Relation},
     Edge, Vertex,
 };
 
@@ -21,9 +21,9 @@ impl Tree {
     /// have two children, the existing trapezoid and a new one.
     pub fn split(
         &mut self,
-        split_at: GenericId,
+        split_at: NodeId,
         split_with: Branch,
-    ) -> GenericId {
+    ) -> NodeId {
         // This is the new trapezoid.
         let new_leaf_id = self.nodes.insert_leaf(Trapezoid);
 
@@ -46,17 +46,17 @@ impl Tree {
         new_branch_id
     }
 
-    pub fn get(&self, id: &GenericId) -> &Node<Branch, Trapezoid> {
+    pub fn get(&self, id: &NodeId) -> &Node<Branch, Trapezoid> {
         self.nodes.get(id)
     }
 
     pub fn trapezoids(
         &self,
-    ) -> impl Iterator<Item = (GenericId, &Trapezoid)> + '_ {
+    ) -> impl Iterator<Item = (NodeId, &Trapezoid)> + '_ {
         self.nodes.leafs()
     }
 
-    pub fn parent_of(&self, id: &GenericId) -> Option<(GenericId, Relation)> {
+    pub fn parent_of(&self, id: &NodeId) -> Option<(NodeId, Relation)> {
         self.nodes.parent_of(id)
     }
 }
