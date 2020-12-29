@@ -1,5 +1,5 @@
 use super::{
-    nodes::{NodeId, Node, Nodes, Relation},
+    nodes::{Node, NodeId, Nodes, Relation},
     Edge, Vertex,
 };
 
@@ -19,11 +19,7 @@ impl Tree {
     ///
     /// The provided branch will take its place in the tree. The branch will
     /// have two children, the existing trapezoid and a new one.
-    pub fn split(
-        &mut self,
-        split_at: NodeId,
-        split_with: Branch,
-    ) -> NodeId {
+    pub fn split(&mut self, split_at: NodeId, split_with: Branch) -> NodeId {
         // This is the new trapezoid.
         let new_leaf_id = self.nodes.insert_leaf(Trapezoid);
 
