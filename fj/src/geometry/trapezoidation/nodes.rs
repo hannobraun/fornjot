@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use super::id::{Ids, NodeId, RawId};
+use super::id::{Ids, RawId};
 
 pub struct Nodes<Branch, Leaf> {
     map: HashMap<RawId, Node<Branch, Leaf>>,
@@ -27,30 +27,26 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
     pub fn insert_branch(
         &mut self,
         branch: Branch,
-        above: &impl NodeId,
-        below: &impl NodeId,
+        above: &GenericId,
+        below: &GenericId,
     ) -> GenericId {
-        let id = self.ids.next();
+        let id = GenericId(self.ids.next());
         self.insert_branch_internal(&id, branch, None, above, below);
-        GenericId(id)
+        id
     }
 
-    pub fn replace_child(
-        &mut self,
-        child: &impl NodeId,
-        new_child: &impl NodeId,
-    ) {
+    pub fn replace_child(&mut self, child: &GenericId, new_child: &GenericId) {
         let parent = self.get_mut(child).parent_mut().take();
 
         *self.get_mut(new_child).parent_mut() = parent;
 
         if let Some(parent) = parent {
-            match self.get_mut(&parent) {
-                Node::Branch(branch) if child.raw_id() == branch.above => {
-                    branch.above = new_child.raw_id();
+            match self.get_mut(&GenericId(parent)) {
+                Node::Branch(branch) if child.0 == branch.above => {
+                    branch.above = new_child.0;
                 }
-                Node::Branch(branch) if child.raw_id() == branch.below => {
-                    branch.below = new_child.raw_id();
+                Node::Branch(branch) if child.0 == branch.below => {
+                    branch.below = new_child.0;
                 }
                 Node::Branch(_) => {
                     unreachable!("Parent didn't know about child")
@@ -64,14 +60,12 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
 
     pub fn change_leaf_to_branch(
         &mut self,
-        id: &impl NodeId,
+        id: &GenericId,
         branch: Branch,
-        above: &impl NodeId,
-        below: &impl NodeId,
+        above: &GenericId,
+        below: &GenericId,
     ) -> Leaf {
-        let id = id.raw_id();
-
-        match self.map.remove(&id).unwrap() {
+        match self.map.remove(&id.0).unwrap() {
             Node::Branch(_) => panic!("Expected leaf, found branch"),
             Node::Leaf(LeafNode { parent, leaf }) => {
                 self.insert_branch_internal(&id, branch, parent, above, below);
@@ -84,28 +78,28 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
     ///
     /// This can never fail, as nodes are never removed, meaning all node ids
     /// are always valid.
-    pub fn get(&self, id: &impl NodeId) -> &Node<Branch, Leaf> {
-        self.map.get(&id.raw_id()).unwrap()
+    pub fn get(&self, id: &GenericId) -> &Node<Branch, Leaf> {
+        self.map.get(&id.0).unwrap()
     }
 
     /// Return a mutable reference to a node
     ///
     /// This can never fail, as nodes are never removed, meaning all node ids
     /// are always valid.
-    pub fn get_mut(&mut self, id: &impl NodeId) -> &mut Node<Branch, Leaf> {
-        self.map.get_mut(&id.raw_id()).unwrap()
+    pub fn get_mut(&mut self, id: &GenericId) -> &mut Node<Branch, Leaf> {
+        self.map.get_mut(&id.0).unwrap()
     }
 
-    pub fn parent_of(&self, id: &impl NodeId) -> Option<(GenericId, Relation)> {
+    pub fn parent_of(&self, id: &GenericId) -> Option<(GenericId, Relation)> {
         self.get(id).parent().map(|parent_id| {
-            let parent = match self.get(&parent_id) {
+            let parent = match self.get(&GenericId(parent_id)) {
                 Node::Branch(parent) => parent,
                 Node::Leaf(_) => unreachable!("Parent is not a branch"),
             };
 
             let relation = match id {
-                id if id.raw_id() == parent.above.raw_id() => Relation::Above,
-                id if id.raw_id() == parent.below.raw_id() => Relation::Below,
+                id if id.0 == parent.above => Relation::Above,
+                id if id.0 == parent.below => Relation::Below,
                 _ => {
                     panic!("Parent doesn't relate to child");
                 }
@@ -114,7 +108,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         })
     }
 
-    pub fn above_of(&self, id: &impl NodeId) -> GenericId {
+    pub fn above_of(&self, id: &GenericId) -> GenericId {
         match self.get(id) {
             Node::Branch(BranchNode { above, .. }) => GenericId(*above),
             Node::Leaf(_) => {
@@ -125,7 +119,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         }
     }
 
-    pub fn below_of(&self, id: &impl NodeId) -> GenericId {
+    pub fn below_of(&self, id: &GenericId) -> GenericId {
         match self.get(id) {
             Node::Branch(BranchNode { below, .. }) => GenericId(*below),
             Node::Leaf(_) => {
@@ -145,34 +139,32 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
 
     fn insert_branch_internal(
         &mut self,
-        id: &impl NodeId,
+        id: &GenericId,
         branch: Branch,
         parent: Option<RawId>,
-        above: &impl NodeId,
-        below: &impl NodeId,
+        above: &GenericId,
+        below: &GenericId,
     ) -> GenericId {
-        let id = id.raw_id();
-
         // It would be nicer to verify this statically, through the use of some
         // kind of root node handle, but for now this will do.
         assert!(self.get(above).parent().is_none());
         assert!(self.get(below).parent().is_none());
 
         self.map.insert(
-            id.raw_id(),
+            id.0,
             Node::Branch(BranchNode {
                 parent,
-                above: above.raw_id(),
-                below: below.raw_id(),
+                above: above.0,
+                below: below.0,
                 branch,
             }),
         );
 
         // Update parents of the new children
-        *self.get_mut(above).parent_mut() = Some(id);
-        *self.get_mut(below).parent_mut() = Some(id);
+        *self.get_mut(above).parent_mut() = Some(id.0);
+        *self.get_mut(below).parent_mut() = Some(id.0);
 
-        GenericId(id)
+        GenericId(id.0)
     }
 }
 
@@ -182,12 +174,6 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
 /// going to be valid.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
 pub struct GenericId(RawId);
-
-impl NodeId for GenericId {
-    fn raw_id(&self) -> RawId {
-        self.0
-    }
-}
 
 #[derive(Debug, PartialEq)]
 pub enum Node<Branch, Leaf> {

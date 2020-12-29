@@ -1,5 +1,4 @@
 use super::{
-    id::NodeId,
     nodes::{GenericId, Node, Nodes, Relation},
     Edge, Vertex,
 };
@@ -47,7 +46,7 @@ impl Tree {
         new_branch_id
     }
 
-    pub fn get(&self, id: &impl NodeId) -> &Node<Branch, Trapezoid> {
+    pub fn get(&self, id: &GenericId) -> &Node<Branch, Trapezoid> {
         self.nodes.get(id)
     }
 
@@ -57,7 +56,7 @@ impl Tree {
         self.nodes.leafs()
     }
 
-    pub fn parent_of(&self, id: &impl NodeId) -> Option<(GenericId, Relation)> {
+    pub fn parent_of(&self, id: &GenericId) -> Option<(GenericId, Relation)> {
         self.nodes.parent_of(id)
     }
 }
