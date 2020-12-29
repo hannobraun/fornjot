@@ -144,7 +144,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         parent: Option<RawId>,
         above: &GenericId,
         below: &GenericId,
-    ) -> GenericId {
+    ) {
         // It would be nicer to verify this statically, through the use of some
         // kind of root node handle, but for now this will do.
         assert!(self.get(above).parent().is_none());
@@ -163,8 +163,6 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         // Update parents of the new children
         *self.get_mut(above).parent_mut() = Some(id.0);
         *self.get_mut(below).parent_mut() = Some(id.0);
-
-        GenericId(id.0)
     }
 }
 
