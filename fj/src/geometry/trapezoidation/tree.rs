@@ -10,7 +10,7 @@ pub struct Tree {
 impl Tree {
     pub fn new() -> Self {
         let mut nodes = Nodes::new();
-        nodes.insert_leaf(Trapezoid);
+        nodes.insert_leaf(Trapezoid::new());
 
         Self { nodes }
     }
@@ -21,11 +21,11 @@ impl Tree {
     /// have two children, the existing trapezoid and a new one.
     pub fn split(&mut self, split_at: NodeId, split_with: Branch) -> NodeId {
         // This is the new trapezoid.
-        let new_leaf_id = self.nodes.insert_leaf(Trapezoid);
+        let new_leaf_id = self.nodes.insert_leaf(Trapezoid::new());
 
         // We're creating a leaf here, but we'll extend it into a branch in a
         // moment.
-        let new_branch_id = self.nodes.insert_leaf(Trapezoid);
+        let new_branch_id = self.nodes.insert_leaf(Trapezoid::new());
 
         // Make the new leaf take the place of the one we're about to split,
         // before transforming it into a branch.
@@ -65,6 +65,12 @@ pub enum Branch {
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct Trapezoid;
+
+impl Trapezoid {
+    pub fn new() -> Self {
+        Self
+    }
+}
 
 #[cfg(test)]
 mod tests {
