@@ -1,6 +1,6 @@
 use super::{
     nodes::{Node, NodeId, Nodes, Relation},
-    Edge, Vertex,
+    Edge, Trapezoid, Vertex,
 };
 
 pub struct Tree {
@@ -61,15 +61,6 @@ impl Tree {
 pub enum Branch {
     Edge(Edge),
     Vertex(Vertex),
-}
-
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub struct Trapezoid;
-
-impl Trapezoid {
-    pub fn new() -> Self {
-        Self
-    }
 }
 
 #[cfg(test)]
