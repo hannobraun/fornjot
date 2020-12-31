@@ -9,7 +9,7 @@ mod id;
 // The trapezoidation tree is implemented in multiple layers. Each layer knows
 // about a specific aspect of the tree's structure and functionality and
 // provides the layer above a solid base to build upon.
-pub mod layer_a_connections;
+mod layer_a_connections;
 
 use layer_a_connections::{Node, NodeId, Nodes, Relation};
 

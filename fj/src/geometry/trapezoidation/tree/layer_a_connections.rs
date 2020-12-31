@@ -29,6 +29,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         NodeId(id)
     }
 
+    #[cfg(test)]
     pub fn insert_branch(
         &mut self,
         branch: Branch,
@@ -113,6 +114,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         })
     }
 
+    #[cfg(test)]
     pub fn above_of(&self, id: &NodeId) -> NodeId {
         match self.get(id) {
             Node::Branch(BranchNode { above, .. }) => NodeId(*above),
@@ -124,6 +126,7 @@ impl<Branch, Leaf> Nodes<Branch, Leaf> {
         }
     }
 
+    #[cfg(test)]
     pub fn below_of(&self, id: &NodeId) -> NodeId {
         match self.get(id) {
             Node::Branch(BranchNode { below, .. }) => NodeId(*below),
