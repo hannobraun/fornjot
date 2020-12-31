@@ -11,18 +11,18 @@ mod id;
 // provides the layer above a solid base to build upon.
 mod layer_a_connections;
 
-use layer_a_connections::{Node, NodeId, Nodes, Relation};
+use layer_a_connections::{Node, NodeId, Relation};
 
 use super::{Edge, Trapezoid, Vertex};
 
 pub struct Tree {
-    nodes: Nodes<Branch, Trapezoid>,
+    nodes: layer_a_connections::Tree<Branch, Trapezoid>,
     root: NodeId,
 }
 
 impl Tree {
     pub fn new() -> Self {
-        let mut nodes = Nodes::new();
+        let mut nodes = layer_a_connections::Tree::new();
         let root = nodes.insert_leaf(Trapezoid::new());
 
         Self { nodes, root }

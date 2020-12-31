@@ -7,14 +7,14 @@ use super::id::{Ids, RawId};
 /// This true doesn't know anything about the meaning of the nodes it contains.
 /// It only know about the structure of the tree, and makes sure that it is
 /// correctly maintained at all times.
-pub struct Nodes<Branch, Leaf> {
+pub struct Tree<Branch, Leaf> {
     map: HashMap<RawId, Node<Branch, Leaf>>,
     ids: Ids,
 }
 
-impl<Branch, Leaf> Nodes<Branch, Leaf> {
+impl<Branch, Leaf> Tree<Branch, Leaf> {
     pub fn new() -> Self {
-        Nodes {
+        Tree {
             map: HashMap::new(),
             ids: Ids::new(),
         }
@@ -255,7 +255,7 @@ pub enum Relation {
 mod tests {
     use super::Relation;
 
-    type Nodes = super::Nodes<u8, u8>;
+    type Nodes = super::Tree<u8, u8>;
 
     #[test]
     fn nodes_should_insert_leafs() {
