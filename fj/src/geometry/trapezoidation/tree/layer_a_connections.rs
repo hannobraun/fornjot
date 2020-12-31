@@ -8,14 +8,14 @@ use super::id::{Ids, RawId};
 /// It only know about the structure of the tree, and makes sure that it is
 /// correctly maintained at all times.
 pub struct Tree<Branch, Leaf> {
-    map: HashMap<RawId, Node<Branch, Leaf>>,
+    nodes: HashMap<RawId, Node<Branch, Leaf>>,
     ids: Ids,
 }
 
 impl<Branch, Leaf> Tree<Branch, Leaf> {
     pub fn new() -> Self {
         Tree {
-            map: HashMap::new(),
+            nodes: HashMap::new(),
             ids: Ids::new(),
         }
     }
@@ -23,7 +23,7 @@ impl<Branch, Leaf> Tree<Branch, Leaf> {
     pub fn insert_leaf(&mut self, leaf: Leaf) -> NodeId {
         let id = self.ids.next();
 
-        self.map
+        self.nodes
             .insert(id, Node::Leaf(LeafNode { parent: None, leaf }));
 
         NodeId(id)
@@ -71,7 +71,7 @@ impl<Branch, Leaf> Tree<Branch, Leaf> {
         above: &NodeId,
         below: &NodeId,
     ) -> Leaf {
-        match self.map.remove(&id.0).unwrap() {
+        match self.nodes.remove(&id.0).unwrap() {
             Node::Branch(_) => panic!("Expected leaf, found branch"),
             Node::Leaf(LeafNode { parent, leaf }) => {
                 self.insert_branch_internal(&id, branch, parent, above, below);
@@ -85,7 +85,7 @@ impl<Branch, Leaf> Tree<Branch, Leaf> {
     /// This can never fail, as nodes are never removed, meaning all node ids
     /// are always valid.
     pub fn get(&self, id: &NodeId) -> &Node<Branch, Leaf> {
-        self.map.get(&id.0).unwrap()
+        self.nodes.get(&id.0).unwrap()
     }
 
     /// Return a mutable reference to a node
@@ -93,7 +93,7 @@ impl<Branch, Leaf> Tree<Branch, Leaf> {
     /// This can never fail, as nodes are never removed, meaning all node ids
     /// are always valid.
     pub fn get_mut(&mut self, id: &NodeId) -> &mut Node<Branch, Leaf> {
-        self.map.get_mut(&id.0).unwrap()
+        self.nodes.get_mut(&id.0).unwrap()
     }
 
     pub fn parent_of(&self, id: &NodeId) -> Option<(NodeId, Relation)> {
@@ -139,7 +139,7 @@ impl<Branch, Leaf> Tree<Branch, Leaf> {
     }
 
     pub fn leafs(&self) -> impl Iterator<Item = (NodeId, &Leaf)> + '_ {
-        self.map.iter().filter_map(|(&id, node)| match node {
+        self.nodes.iter().filter_map(|(&id, node)| match node {
             Node::Leaf(LeafNode { leaf, .. }) => Some((NodeId(id), leaf)),
             _ => None,
         })
@@ -158,7 +158,7 @@ impl<Branch, Leaf> Tree<Branch, Leaf> {
         assert!(self.get(above).parent().is_none());
         assert!(self.get(below).parent().is_none());
 
-        self.map.insert(
+        self.nodes.insert(
             id.0,
             Node::Branch(BranchNode {
                 parent,
