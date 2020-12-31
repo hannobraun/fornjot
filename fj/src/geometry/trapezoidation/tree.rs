@@ -5,14 +5,19 @@ use super::{
 
 pub struct Tree {
     nodes: Nodes<Branch, Trapezoid>,
+    root: NodeId,
 }
 
 impl Tree {
     pub fn new() -> Self {
         let mut nodes = Nodes::new();
-        nodes.insert_leaf(Trapezoid::new());
+        let root = nodes.insert_leaf(Trapezoid::new());
 
-        Self { nodes }
+        Self { nodes, root }
+    }
+
+    pub fn root(&self) -> NodeId {
+        self.root
     }
 
     /// Split an existing trapezoid
@@ -77,8 +82,11 @@ mod tests {
     fn tree_should_start_with_a_single_root_leaf() {
         let tree = Tree::new();
 
-        let num_leafs = tree.trapezoids().count();
-        assert_eq!(num_leafs, 1);
+        let leafs: Vec<_> = tree.trapezoids().collect();
+        assert_eq!(leafs.len(), 1);
+
+        let (root_id, _) = leafs[0];
+        assert_eq!(root_id, tree.root());
     }
 
     #[test]
