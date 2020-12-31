@@ -1,3 +1,5 @@
+pub mod id;
+
 use super::{
     nodes::{Node, NodeId, Nodes, Relation},
     Edge, Trapezoid, Vertex,
