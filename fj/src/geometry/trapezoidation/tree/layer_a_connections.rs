@@ -259,61 +259,61 @@ mod tests {
 
     #[test]
     fn nodes_should_insert_leafs() {
-        let mut nodes = Tree::new();
+        let mut tree = Tree::new();
 
         let mut leaf = 5;
-        let id = nodes.insert_leaf(leaf);
+        let id = tree.insert_leaf(leaf);
 
-        assert_eq!(nodes.get(&id).leaf().unwrap(), &leaf);
-        assert_eq!(nodes.get_mut(&id).leaf_mut().unwrap(), &mut leaf);
+        assert_eq!(tree.get(&id).leaf().unwrap(), &leaf);
+        assert_eq!(tree.get_mut(&id).leaf_mut().unwrap(), &mut leaf);
 
-        assert_eq!(nodes.parent_of(&id), None);
+        assert_eq!(tree.parent_of(&id), None);
     }
 
     #[test]
     fn nodes_should_insert_branches() {
-        let mut nodes = Tree::new();
+        let mut tree = Tree::new();
 
-        let leaf_id_a = nodes.insert_leaf(3);
-        let leaf_id_b = nodes.insert_leaf(5);
+        let leaf_id_a = tree.insert_leaf(3);
+        let leaf_id_b = tree.insert_leaf(5);
 
         let mut branch = 1;
-        let id = nodes.insert_branch(branch, &leaf_id_a, &leaf_id_b);
+        let id = tree.insert_branch(branch, &leaf_id_a, &leaf_id_b);
 
-        assert_eq!(nodes.get(&id).branch().unwrap(), &branch);
-        assert_eq!(nodes.get_mut(&id).branch_mut().unwrap(), &mut branch);
+        assert_eq!(tree.get(&id).branch().unwrap(), &branch);
+        assert_eq!(tree.get_mut(&id).branch_mut().unwrap(), &mut branch);
 
-        assert_eq!(nodes.parent_of(&leaf_id_a), Some((id, Relation::Above)));
-        assert_eq!(nodes.parent_of(&leaf_id_b), Some((id, Relation::Below)));
+        assert_eq!(tree.parent_of(&leaf_id_a), Some((id, Relation::Above)));
+        assert_eq!(tree.parent_of(&leaf_id_b), Some((id, Relation::Below)));
 
-        assert_eq!(nodes.above_of(&id), leaf_id_a);
-        assert_eq!(nodes.below_of(&id), leaf_id_b);
+        assert_eq!(tree.above_of(&id), leaf_id_a);
+        assert_eq!(tree.below_of(&id), leaf_id_b);
     }
 
     #[test]
     fn nodes_should_assign_new_id_when_adding_nodes() {
-        let mut nodes = Tree::new();
+        let mut tree = Tree::new();
 
-        let id_a = nodes.insert_leaf(5);
-        let id_b = nodes.insert_leaf(8);
+        let id_a = tree.insert_leaf(5);
+        let id_b = tree.insert_leaf(8);
 
         assert_ne!(id_a, id_b);
     }
 
     #[test]
     fn nodes_should_return_all_leafs() {
-        let mut nodes = Tree::new();
+        let mut tree = Tree::new();
 
         let leaf_a = 5;
         let leaf_b = 8;
 
-        let id_a = nodes.insert_leaf(leaf_a);
-        let id_b = nodes.insert_leaf(leaf_b);
+        let id_a = tree.insert_leaf(leaf_a);
+        let id_b = tree.insert_leaf(leaf_b);
 
         let mut saw_a = false;
         let mut saw_b = false;
 
-        for (id, leaf) in nodes.leafs() {
+        for (id, leaf) in tree.leafs() {
             if id == id_a && leaf == &leaf_a {
                 saw_a = true;
             }
@@ -328,55 +328,52 @@ mod tests {
 
     #[test]
     fn nodes_should_change_root_leaf_to_branch() {
-        let mut nodes = Tree::new();
+        let mut tree = Tree::new();
 
         let leaf_tmp = 3;
         let leaf_a = 5;
         let leaf_b = 8;
 
-        let id_branch = nodes.insert_leaf(leaf_tmp);
-        let id_leaf_a = nodes.insert_leaf(leaf_a);
-        let id_leaf_b = nodes.insert_leaf(leaf_b);
+        let id_branch = tree.insert_leaf(leaf_tmp);
+        let id_leaf_a = tree.insert_leaf(leaf_a);
+        let id_leaf_b = tree.insert_leaf(leaf_b);
 
         let mut branch = 1;
-        let replaced_leaf = nodes
+        let replaced_leaf = tree
             .change_leaf_to_branch(&id_branch, branch, &id_leaf_a, &id_leaf_b);
 
         assert_eq!(replaced_leaf, leaf_tmp);
 
-        assert_eq!(nodes.get(&id_branch).branch().unwrap(), &branch);
-        assert_eq!(
-            nodes.get_mut(&id_branch).branch_mut().unwrap(),
-            &mut branch
-        );
+        assert_eq!(tree.get(&id_branch).branch().unwrap(), &branch);
+        assert_eq!(tree.get_mut(&id_branch).branch_mut().unwrap(), &mut branch);
 
-        assert_eq!(nodes.parent_of(&id_branch), None);
+        assert_eq!(tree.parent_of(&id_branch), None);
         assert_eq!(
-            nodes.parent_of(&id_leaf_a),
+            tree.parent_of(&id_leaf_a),
             Some((id_branch, Relation::Above))
         );
         assert_eq!(
-            nodes.parent_of(&id_leaf_b),
+            tree.parent_of(&id_leaf_b),
             Some((id_branch, Relation::Below))
         );
     }
 
     #[test]
     fn nodes_should_change_non_root_leaf_to_branch() {
-        let mut nodes = Tree::new();
+        let mut tree = Tree::new();
 
         // Create non-root leaf nodes.
-        let root_id = nodes.insert_leaf(3);
-        let leaf_id_a = nodes.insert_leaf(5);
-        let leaf_id_b = nodes.insert_leaf(8);
-        nodes.change_leaf_to_branch(&root_id, 1, &leaf_id_a, &leaf_id_b);
+        let root_id = tree.insert_leaf(3);
+        let leaf_id_a = tree.insert_leaf(5);
+        let leaf_id_b = tree.insert_leaf(8);
+        tree.change_leaf_to_branch(&root_id, 1, &leaf_id_a, &leaf_id_b);
 
         let non_root_leaf_id = leaf_id_a;
 
         // Change a non-root leaf into a branch
-        let leaf_id_a = nodes.insert_leaf(13);
-        let leaf_id_b = nodes.insert_leaf(21);
-        nodes.change_leaf_to_branch(
+        let leaf_id_a = tree.insert_leaf(13);
+        let leaf_id_b = tree.insert_leaf(21);
+        tree.change_leaf_to_branch(
             &non_root_leaf_id,
             2,
             &leaf_id_a,
@@ -384,39 +381,39 @@ mod tests {
         );
 
         assert_eq!(
-            nodes.parent_of(&non_root_leaf_id),
+            tree.parent_of(&non_root_leaf_id),
             Some((root_id, Relation::Above))
         );
     }
 
     #[test]
     fn nodes_should_replace_children() {
-        let mut nodes = Tree::new();
+        let mut tree = Tree::new();
 
         // Create nodes with a parent
-        let above_id = nodes.insert_leaf(3);
-        let below_id = nodes.insert_leaf(5);
-        let parent_id = nodes.insert_branch(1, &above_id, &below_id);
+        let above_id = tree.insert_leaf(3);
+        let below_id = tree.insert_leaf(5);
+        let parent_id = tree.insert_branch(1, &above_id, &below_id);
 
         // Create new nodes that will replace the children
-        let above_new_id = nodes.insert_leaf(8);
-        let below_new_id = nodes.insert_leaf(13);
+        let above_new_id = tree.insert_leaf(8);
+        let below_new_id = tree.insert_leaf(13);
 
-        nodes.replace_child(&above_id, &above_new_id);
+        tree.replace_child(&above_id, &above_new_id);
         assert_eq!(
-            nodes.parent_of(&above_new_id),
+            tree.parent_of(&above_new_id),
             Some((parent_id, Relation::Above))
         );
-        assert_eq!(nodes.above_of(&parent_id), above_new_id);
+        assert_eq!(tree.above_of(&parent_id), above_new_id);
 
-        nodes.replace_child(&below_id, &below_new_id);
+        tree.replace_child(&below_id, &below_new_id);
         assert_eq!(
-            nodes.parent_of(&below_new_id),
+            tree.parent_of(&below_new_id),
             Some((parent_id, Relation::Below))
         );
-        assert_eq!(nodes.below_of(&parent_id), below_new_id);
+        assert_eq!(tree.below_of(&parent_id), below_new_id);
 
-        assert!(nodes.parent_of(&above_id).is_none());
-        assert!(nodes.parent_of(&below_id).is_none());
+        assert!(tree.parent_of(&above_id).is_none());
+        assert!(tree.parent_of(&below_id).is_none());
     }
 }
