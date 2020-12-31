@@ -258,7 +258,7 @@ mod tests {
     type Tree = super::Tree<u8, u8>;
 
     #[test]
-    fn nodes_should_insert_leafs() {
+    fn tree_should_insert_leafs() {
         let mut tree = Tree::new();
 
         let mut leaf = 5;
@@ -271,7 +271,7 @@ mod tests {
     }
 
     #[test]
-    fn nodes_should_insert_branches() {
+    fn tree_should_insert_branches() {
         let mut tree = Tree::new();
 
         let leaf_id_a = tree.insert_leaf(3);
@@ -291,7 +291,7 @@ mod tests {
     }
 
     #[test]
-    fn nodes_should_assign_new_id_when_adding_nodes() {
+    fn tree_should_assign_new_id_when_adding_nodes() {
         let mut tree = Tree::new();
 
         let id_a = tree.insert_leaf(5);
@@ -301,7 +301,7 @@ mod tests {
     }
 
     #[test]
-    fn nodes_should_return_all_leafs() {
+    fn tree_should_return_all_leafs() {
         let mut tree = Tree::new();
 
         let leaf_a = 5;
@@ -327,7 +327,7 @@ mod tests {
     }
 
     #[test]
-    fn nodes_should_change_root_leaf_to_branch() {
+    fn tree_should_change_root_leaf_to_branch() {
         let mut tree = Tree::new();
 
         let leaf_tmp = 3;
@@ -359,7 +359,7 @@ mod tests {
     }
 
     #[test]
-    fn nodes_should_change_non_root_leaf_to_branch() {
+    fn tree_should_change_non_root_leaf_to_branch() {
         let mut tree = Tree::new();
 
         // Create non-root leaf nodes.
@@ -387,7 +387,7 @@ mod tests {
     }
 
     #[test]
-    fn nodes_should_replace_children() {
+    fn tree_should_replace_children() {
         let mut tree = Tree::new();
 
         // Create nodes with a parent
