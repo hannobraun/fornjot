@@ -255,11 +255,11 @@ pub enum Relation {
 mod tests {
     use super::Relation;
 
-    type Nodes = super::Tree<u8, u8>;
+    type Tree = super::Tree<u8, u8>;
 
     #[test]
     fn nodes_should_insert_leafs() {
-        let mut nodes = Nodes::new();
+        let mut nodes = Tree::new();
 
         let mut leaf = 5;
         let id = nodes.insert_leaf(leaf);
@@ -272,7 +272,7 @@ mod tests {
 
     #[test]
     fn nodes_should_insert_branches() {
-        let mut nodes = Nodes::new();
+        let mut nodes = Tree::new();
 
         let leaf_id_a = nodes.insert_leaf(3);
         let leaf_id_b = nodes.insert_leaf(5);
@@ -292,7 +292,7 @@ mod tests {
 
     #[test]
     fn nodes_should_assign_new_id_when_adding_nodes() {
-        let mut nodes = Nodes::new();
+        let mut nodes = Tree::new();
 
         let id_a = nodes.insert_leaf(5);
         let id_b = nodes.insert_leaf(8);
@@ -302,7 +302,7 @@ mod tests {
 
     #[test]
     fn nodes_should_return_all_leafs() {
-        let mut nodes = Nodes::new();
+        let mut nodes = Tree::new();
 
         let leaf_a = 5;
         let leaf_b = 8;
@@ -328,7 +328,7 @@ mod tests {
 
     #[test]
     fn nodes_should_change_root_leaf_to_branch() {
-        let mut nodes = Nodes::new();
+        let mut nodes = Tree::new();
 
         let leaf_tmp = 3;
         let leaf_a = 5;
@@ -363,7 +363,7 @@ mod tests {
 
     #[test]
     fn nodes_should_change_non_root_leaf_to_branch() {
-        let mut nodes = Nodes::new();
+        let mut nodes = Tree::new();
 
         // Create non-root leaf nodes.
         let root_id = nodes.insert_leaf(3);
@@ -391,7 +391,7 @@ mod tests {
 
     #[test]
     fn nodes_should_replace_children() {
-        let mut nodes = Nodes::new();
+        let mut nodes = Tree::new();
 
         // Create nodes with a parent
         let above_id = nodes.insert_leaf(3);
