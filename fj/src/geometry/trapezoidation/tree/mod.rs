@@ -4,7 +4,7 @@
 //! inserted into the tree. The tree updates the metadata associated with each
 //! trapezoid, allowing for later phases to process the trapezoids further.
 
-pub mod id;
+mod id;
 
 // The trapezoidation tree is implemented in multiple layers. Each layer knows
 // about a specific aspect of the tree's structure and functionality and
