@@ -78,7 +78,7 @@ mod tests {
     }
 
     #[test]
-    fn tree_should_split_leafs() {
+    fn tree_should_split_trapezoids() {
         let mut tree = Tree::new();
         let (original_root_id, _) = tree.trapezoids().next().unwrap();
 
