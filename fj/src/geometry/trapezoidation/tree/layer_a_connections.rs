@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use super::tree::id::{Ids, RawId};
+use super::id::{Ids, RawId};
 
 /// Manages the nodes of the trapezoidation tree
 ///

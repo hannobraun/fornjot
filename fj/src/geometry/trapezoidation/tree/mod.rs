@@ -1,9 +1,9 @@
 pub mod id;
+pub mod layer_a_connections;
 
-use super::{
-    nodes::{Node, NodeId, Nodes, Relation},
-    Edge, Trapezoid, Vertex,
-};
+use layer_a_connections::{Node, NodeId, Nodes, Relation};
+
+use super::{Edge, Trapezoid, Vertex};
 
 pub struct Tree {
     nodes: Nodes<Branch, Trapezoid>,
@@ -76,9 +76,9 @@ pub enum Branch {
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::trapezoidation::{nodes::Relation, Vertex};
+    use crate::geometry::trapezoidation::Vertex;
 
-    use super::{Branch, Tree};
+    use super::{layer_a_connections::Relation, Branch, Tree};
 
     #[test]
     fn tree_should_start_with_a_single_root_leaf() {

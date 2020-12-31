@@ -1,5 +1,4 @@
 pub mod edge;
-pub mod nodes;
 pub mod trapezoid;
 pub mod tree;
 pub mod vertex;
