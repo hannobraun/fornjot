@@ -1,4 +1,14 @@
+//! The trapezoidation tree
+//!
+//! During the trapezoidation process, the edges and vertices of the polygon are
+//! inserted into the tree. The tree updates the metadata associated with each
+//! trapezoid, allowing for later phases to process the trapezoids further.
+
 pub mod id;
+
+// The trapezoidation tree is implemented in multiple layers. Each layer knows
+// about a specific aspect of the tree's structure and functionality and
+// provides the layer above a solid base to build upon.
 pub mod layer_a_connections;
 
 use layer_a_connections::{Node, NodeId, Nodes, Relation};
