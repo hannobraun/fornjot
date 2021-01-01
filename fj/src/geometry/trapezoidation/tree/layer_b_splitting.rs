@@ -27,16 +27,16 @@ impl Tree {
         self.root
     }
 
-    /// Split an existing trapezoid
+    /// Split an existing region
     ///
     /// The provided branch will take its place in the tree. The branch will
-    /// have two children, the existing trapezoid and a new one.
+    /// have two children, the existing region and a new one.
     pub fn split(&mut self, split_at: NodeId, split_with: Branch) -> NodeId {
         if self.get(&split_at).branch().is_some() {
             panic!("You can only split trapezoids, not branches");
         }
 
-        // This is the new trapezoid.
+        // This is the new region.
         let new_leaf_id = self.nodes.insert_leaf(Region::new());
 
         // We're creating a leaf here, but we'll extend it into a branch in a
