@@ -1,7 +1,7 @@
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Trapezoid;
+pub struct Region;
 
-impl Trapezoid {
+impl Region {
     pub fn new() -> Self {
         Self
     }

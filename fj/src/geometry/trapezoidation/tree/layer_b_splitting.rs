@@ -1,4 +1,4 @@
-use crate::geometry::trapezoidation::{Edge, Trapezoid, Vertex};
+use crate::geometry::trapezoidation::{Edge, Region, Vertex};
 
 use super::layer_a_connections::{
     Node, NodeId, Relation, Tree as InternalTree,
@@ -11,14 +11,14 @@ use super::layer_a_connections::{
 /// edge or vertex splits. It encapsulates the lower tree layer, leaving the
 /// splitting of region nodes as the only way to extend the tree.
 pub struct Tree {
-    nodes: InternalTree<Branch, Trapezoid>,
+    nodes: InternalTree<Branch, Region>,
     root: NodeId,
 }
 
 impl Tree {
     pub fn new() -> Self {
         let mut nodes = InternalTree::new();
-        let root = nodes.insert_leaf(Trapezoid::new());
+        let root = nodes.insert_leaf(Region::new());
 
         Self { nodes, root }
     }
@@ -37,11 +37,11 @@ impl Tree {
         }
 
         // This is the new trapezoid.
-        let new_leaf_id = self.nodes.insert_leaf(Trapezoid::new());
+        let new_leaf_id = self.nodes.insert_leaf(Region::new());
 
         // We're creating a leaf here, but we'll extend it into a branch in a
         // moment.
-        let new_branch_id = self.nodes.insert_leaf(Trapezoid::new());
+        let new_branch_id = self.nodes.insert_leaf(Region::new());
 
         // Make the new leaf take the place of the one we're about to split,
         // before transforming it into a branch.
@@ -58,13 +58,11 @@ impl Tree {
         new_branch_id
     }
 
-    pub fn get(&self, id: &NodeId) -> &Node<Branch, Trapezoid> {
+    pub fn get(&self, id: &NodeId) -> &Node<Branch, Region> {
         self.nodes.get(id)
     }
 
-    pub fn trapezoids(
-        &self,
-    ) -> impl Iterator<Item = (NodeId, &Trapezoid)> + '_ {
+    pub fn trapezoids(&self) -> impl Iterator<Item = (NodeId, &Region)> + '_ {
         self.nodes.leafs()
     }
 
