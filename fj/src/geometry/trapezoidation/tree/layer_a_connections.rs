@@ -5,7 +5,7 @@ use super::id::{Ids, RawId};
 /// Tree that guarantees that the connections between tree nodes are valid
 ///
 /// This true doesn't know anything about the meaning of the nodes it contains.
-/// It only know about the structure of the tree, and makes sure that it is
+/// It only knows about the structure of the tree, and makes sure that it is
 /// correctly maintained at all times.
 pub struct Tree<Branch, Leaf> {
     nodes: HashMap<RawId, Node<Branch, Leaf>>,
