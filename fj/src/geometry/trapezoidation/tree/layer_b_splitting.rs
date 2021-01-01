@@ -69,6 +69,14 @@ impl Tree {
     pub fn parent_of(&self, id: &NodeId) -> Option<(NodeId, Relation)> {
         self.nodes.parent_of(id)
     }
+
+    pub fn above_of(&self, id: &NodeId) -> NodeId {
+        self.nodes.above_of(id)
+    }
+
+    pub fn below_of(&self, id: &NodeId) -> NodeId {
+        self.nodes.below_of(id)
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]

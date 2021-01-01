@@ -114,7 +114,6 @@ impl<Branch, Leaf> Tree<Branch, Leaf> {
         })
     }
 
-    #[cfg(test)]
     pub fn above_of(&self, id: &NodeId) -> NodeId {
         match self.get(id) {
             Node::Branch(BranchNode { above, .. }) => NodeId(*above),
@@ -126,7 +125,6 @@ impl<Branch, Leaf> Tree<Branch, Leaf> {
         }
     }
 
-    #[cfg(test)]
     pub fn below_of(&self, id: &NodeId) -> NodeId {
         match self.get(id) {
             Node::Branch(BranchNode { below, .. }) => NodeId(*below),
