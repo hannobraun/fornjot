@@ -102,8 +102,8 @@ mod tests {
     fn tree_should_start_with_a_single_root_leaf() {
         let tree = Tree::new();
 
-        let leafs: Vec<_> = tree.regions().collect();
-        assert_eq!(leafs.len(), 1);
+        let num_regions = tree.regions().count();
+        assert_eq!(num_regions, 1);
     }
 
     #[test]
