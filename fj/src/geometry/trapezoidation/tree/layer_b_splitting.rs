@@ -97,7 +97,7 @@ mod tests {
     }
 
     #[test]
-    fn tree_should_split_trapezoids() {
+    fn tree_should_split_regions() {
         let mut tree = Tree::new();
         let (original_root_id, _) = tree.regions().next().unwrap();
 
