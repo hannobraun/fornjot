@@ -4,6 +4,12 @@ use super::layer_a_connections::{
     Node, NodeId, Relation, Tree as InternalTree,
 };
 
+/// Tree that knows how to split regions
+///
+/// This tree adds an additional layer of functionality and assurance: It
+/// understands how to split regions, and how to find the right region that an
+/// edge or vertex splits. It encapsulates the lower tree layer, leaving the
+/// splitting of region nodes as the only way to extend the tree.
 pub struct Tree {
     nodes: InternalTree<Branch, Trapezoid>,
     root: NodeId,
