@@ -48,6 +48,11 @@ impl Tree {
         let old_leaf_id = split_at;
         self.nodes.replace_child(&old_leaf_id, &new_branch_id);
 
+        // Also make sure to update the root id, if we just replaced the root.
+        if self.root == old_leaf_id {
+            self.root = new_branch_id;
+        }
+
         self.nodes.change_leaf_to_branch(
             &new_branch_id,
             split_with,
@@ -99,9 +104,18 @@ mod tests {
 
         let leafs: Vec<_> = tree.regions().collect();
         assert_eq!(leafs.len(), 1);
+    }
 
-        let (root_id, _) = leafs[0];
+    #[test]
+    fn tree_should_return_the_root_node() {
+        let mut tree = Tree::new();
+
+        let (root_id, _) = tree.regions().next().unwrap();
         assert_eq!(root_id, tree.root());
+
+        let new_root =
+            tree.split(tree.root(), Branch::Vertex(Vertex::new(0.0, 0.0)));
+        assert_eq!(new_root, tree.root());
     }
 
     #[test]
