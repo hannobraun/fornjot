@@ -33,7 +33,7 @@ impl Tree {
     /// have two children, the existing region and a new one.
     pub fn split(&mut self, split_at: NodeId, split_with: Branch) -> NodeId {
         if self.get(&split_at).branch().is_some() {
-            panic!("You can only split trapezoids, not branches");
+            panic!("You can only split leafs, not branches");
         }
 
         // This is the new region.
