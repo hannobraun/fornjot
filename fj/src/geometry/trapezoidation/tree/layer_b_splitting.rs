@@ -62,7 +62,7 @@ impl Tree {
         self.nodes.get(id)
     }
 
-    pub fn trapezoids(&self) -> impl Iterator<Item = (NodeId, &Region)> + '_ {
+    pub fn regions(&self) -> impl Iterator<Item = (NodeId, &Region)> + '_ {
         self.nodes.leafs()
     }
 
@@ -89,7 +89,7 @@ mod tests {
     fn tree_should_start_with_a_single_root_leaf() {
         let tree = Tree::new();
 
-        let leafs: Vec<_> = tree.trapezoids().collect();
+        let leafs: Vec<_> = tree.regions().collect();
         assert_eq!(leafs.len(), 1);
 
         let (root_id, _) = leafs[0];
@@ -99,12 +99,12 @@ mod tests {
     #[test]
     fn tree_should_split_trapezoids() {
         let mut tree = Tree::new();
-        let (original_root_id, _) = tree.trapezoids().next().unwrap();
+        let (original_root_id, _) = tree.regions().next().unwrap();
 
         let new_node = Branch::Vertex(Vertex::new(0.0, 0.0));
         let new_root_id = tree.split(original_root_id, new_node);
 
-        let leafs: Vec<_> = tree.trapezoids().collect();
+        let leafs: Vec<_> = tree.regions().collect();
         assert_eq!(leafs.len(), 2);
 
         for (id, _) in leafs {
