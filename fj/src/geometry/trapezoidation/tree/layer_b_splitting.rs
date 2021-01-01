@@ -32,7 +32,7 @@ impl Tree {
     /// The provided branch will take its place in the tree. The branch will
     /// have two children, the existing region and a new one.
     pub fn split(&mut self, split_at: NodeId, split_with: Branch) -> NodeId {
-        if self.get(&split_at).branch().is_some() {
+        if self.get(&split_at).leaf().is_none() {
             panic!("You can only split leafs, not branches");
         }
 
