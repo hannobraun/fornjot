@@ -9,11 +9,11 @@ pub struct Edge {
 impl Edge {
     pub fn new(a: Vertex, b: Vertex) -> Option<Self> {
         // No clear relation between nodes. Probably because they're equal.
-        if !a.is_upper(&b) && !b.is_upper(&a) {
+        if !a.is_above_or_left_of(&b) && !b.is_above_or_left_of(&a) {
             return None;
         }
 
-        let upper = if a.is_upper(&b) { a } else { b };
+        let upper = if a.is_above_or_left_of(&b) { a } else { b };
         let lower = if a.is_lower(&b) { a } else { b };
 
         Some(Self { upper, lower })

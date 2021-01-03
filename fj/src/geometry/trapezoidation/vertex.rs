@@ -8,7 +8,7 @@ impl Vertex {
         Self(Point2::new(x, y))
     }
 
-    pub fn is_upper(&self, other: &Vertex) -> bool {
+    pub fn is_above_or_left_of(&self, other: &Vertex) -> bool {
         // Higher-ness is primarily determined by y coordinate.
         if self.0.y > other.0.y {
             return true;
@@ -33,7 +33,7 @@ impl Vertex {
     }
 
     pub fn is_lower(&self, other: &Vertex) -> bool {
-        other.is_upper(self)
+        other.is_above_or_left_of(self)
     }
 }
 
@@ -46,7 +46,7 @@ mod tests {
         let upper = Vertex::new(0.0, 1.0);
         let lower = Vertex::new(0.0, 0.0);
 
-        assert!(upper.is_upper(&lower));
+        assert!(upper.is_above_or_left_of(&lower));
         assert!(lower.is_lower(&upper));
     }
 
@@ -55,7 +55,7 @@ mod tests {
         let upper = Vertex::new(0.0, 0.0);
         let lower = Vertex::new(1.0, 0.0);
 
-        assert!(upper.is_upper(&lower));
+        assert!(upper.is_above_or_left_of(&lower));
         assert!(lower.is_lower(&upper));
     }
 
@@ -63,7 +63,7 @@ mod tests {
     fn vertex_should_not_be_higher_or_lower_than_equal_vertex() {
         let vertex = Vertex::new(0.0, 0.0);
 
-        assert_eq!(vertex.is_upper(&vertex), false);
+        assert_eq!(vertex.is_above_or_left_of(&vertex), false);
         assert_eq!(vertex.is_lower(&vertex), false);
     }
 }
