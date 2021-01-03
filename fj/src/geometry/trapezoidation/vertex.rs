@@ -32,7 +32,7 @@ impl Vertex {
         false
     }
 
-    pub fn is_lower(&self, other: &Vertex) -> bool {
+    pub fn is_below_or_right_of(&self, other: &Vertex) -> bool {
         other.is_above_or_left_of(self)
     }
 }
@@ -47,7 +47,7 @@ mod tests {
         let lower = Vertex::new(0.0, 0.0);
 
         assert!(upper.is_above_or_left_of(&lower));
-        assert!(lower.is_lower(&upper));
+        assert!(lower.is_below_or_right_of(&upper));
     }
 
     #[test]
@@ -56,7 +56,7 @@ mod tests {
         let lower = Vertex::new(1.0, 0.0);
 
         assert!(upper.is_above_or_left_of(&lower));
-        assert!(lower.is_lower(&upper));
+        assert!(lower.is_below_or_right_of(&upper));
     }
 
     #[test]
@@ -64,6 +64,6 @@ mod tests {
         let vertex = Vertex::new(0.0, 0.0);
 
         assert_eq!(vertex.is_above_or_left_of(&vertex), false);
-        assert_eq!(vertex.is_lower(&vertex), false);
+        assert_eq!(vertex.is_below_or_right_of(&vertex), false);
     }
 }

@@ -14,7 +14,7 @@ impl Edge {
         }
 
         let upper = if a.is_above_or_left_of(&b) { a } else { b };
-        let lower = if a.is_lower(&b) { a } else { b };
+        let lower = if a.is_below_or_right_of(&b) { a } else { b };
 
         Some(Self { upper, lower })
     }
