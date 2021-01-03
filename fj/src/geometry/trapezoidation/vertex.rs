@@ -9,7 +9,7 @@ impl Vertex {
     }
 
     pub fn is_above_or_left_of(&self, other: &Vertex) -> bool {
-        // Higher-ness is primarily determined by y coordinate.
+        // Whether a vertex is above or below another is the primary criterion.
         if self.0.y > other.0.y {
             return true;
         }
@@ -17,7 +17,7 @@ impl Vertex {
             return false;
         }
 
-        // If y coordinates are equal, the left vertex is higher.
+        // If y coordinates are equal, we look at the left-right relation.
         if self.0.y == other.0.y {
             if self.0.x < other.0.x {
                 return true;
