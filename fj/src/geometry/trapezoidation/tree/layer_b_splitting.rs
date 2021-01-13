@@ -1,8 +1,6 @@
-use crate::geometry::trapezoidation::{Edge, Region, Vertex};
+use crate::geometry::trapezoidation::{Edge, Region, Relation, Vertex};
 
-use super::layer_a_connections::{
-    Node, NodeId, Relation, Tree as InternalTree,
-};
+use super::layer_a_connections::{Node, NodeId, Tree as InternalTree};
 
 /// Tree that knows how to split regions
 ///
@@ -92,9 +90,7 @@ pub enum Branch {
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::trapezoidation::{
-        tree::layer_a_connections::Relation, Vertex,
-    };
+    use crate::geometry::trapezoidation::{Relation, Vertex};
 
     use super::{Branch, Tree};
 

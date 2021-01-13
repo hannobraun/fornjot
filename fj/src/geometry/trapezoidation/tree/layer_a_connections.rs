@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use crate::geometry::trapezoidation::Relation;
+
 use super::id::{Ids, RawId};
 
 /// Tree that guarantees that the connections between tree nodes are valid
@@ -241,12 +243,6 @@ pub struct BranchNode<T> {
 pub struct LeafNode<T> {
     parent: Option<RawId>,
     leaf: T,
-}
-
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum Relation {
-    Above,
-    Below,
 }
 
 #[cfg(test)]
