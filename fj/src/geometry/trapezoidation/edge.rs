@@ -72,7 +72,7 @@ mod tests {
     }
 
     #[test]
-    fn edge_should_return_whether_vertex_is_higher_or_lower() {
+    fn edge_should_compute_relation_to_vertex() {
         let edge =
             Edge::new(Vertex::new(0.0, 2.0), Vertex::new(2.0, 0.0)).unwrap();
 
