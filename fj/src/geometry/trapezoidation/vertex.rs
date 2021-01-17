@@ -35,6 +35,12 @@ impl Vertex {
     }
 }
 
+impl From<Point2<f32>> for Vertex {
+    fn from(point: Point2<f32>) -> Self {
+        Vertex(point)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::geometry::trapezoidation::Relation;
