@@ -33,14 +33,6 @@ impl Vertex {
         // some other weirdness.
         None
     }
-
-    pub fn is_above_or_left_of(&self, other: &Vertex) -> bool {
-        self.relation_to(other) == Some(Relation::AboveOrLeftOf)
-    }
-
-    pub fn is_below_or_right_of(&self, other: &Vertex) -> bool {
-        self.relation_to(other) == Some(Relation::BelowOrRightOf)
-    }
 }
 
 #[cfg(test)]
