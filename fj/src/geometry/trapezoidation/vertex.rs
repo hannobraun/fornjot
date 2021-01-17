@@ -1,5 +1,7 @@
 use nalgebra::Point2;
 
+use super::Relation;
+
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Vertex(pub Point2<f32>);
 
@@ -8,37 +10,43 @@ impl Vertex {
         Self(Point2::new(x, y))
     }
 
-    pub fn is_above_or_left_of(&self, other: &Vertex) -> bool {
+    pub fn relation_to(&self, other: &Vertex) -> Option<Relation> {
         // Whether a vertex is above or below another is the primary criterion.
         if self.0.y > other.0.y {
-            return true;
+            return Some(Relation::AboveOrLeftOf);
         }
         if self.0.y < other.0.y {
-            return false;
+            return Some(Relation::BelowOrRightOf);
         }
 
         // If y coordinates are equal, we look at the left-right relation.
         if self.0.y == other.0.y {
             if self.0.x < other.0.x {
-                return true;
+                return Some(Relation::AboveOrLeftOf);
             }
             if self.0.x > other.0.x {
-                return false;
+                return Some(Relation::BelowOrRightOf);
             }
         }
 
         // If we land here, the vertices are either equal, or we have NaN's or
         // some other weirdness.
-        false
+        None
+    }
+
+    pub fn is_above_or_left_of(&self, other: &Vertex) -> bool {
+        self.relation_to(other) == Some(Relation::AboveOrLeftOf)
     }
 
     pub fn is_below_or_right_of(&self, other: &Vertex) -> bool {
-        other.is_above_or_left_of(self)
+        self.relation_to(other) == Some(Relation::BelowOrRightOf)
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use crate::geometry::trapezoidation::Relation;
+
     use super::Vertex;
 
     #[test]
@@ -46,8 +54,8 @@ mod tests {
         let upper = Vertex::new(0.0, 1.0);
         let lower = Vertex::new(0.0, 0.0);
 
-        assert!(upper.is_above_or_left_of(&lower));
-        assert!(lower.is_below_or_right_of(&upper));
+        assert_eq!(upper.relation_to(&lower), Some(Relation::AboveOrLeftOf));
+        assert_eq!(lower.relation_to(&upper), Some(Relation::BelowOrRightOf));
     }
 
     #[test]
@@ -55,15 +63,14 @@ mod tests {
         let upper = Vertex::new(0.0, 0.0);
         let lower = Vertex::new(1.0, 0.0);
 
-        assert!(upper.is_above_or_left_of(&lower));
-        assert!(lower.is_below_or_right_of(&upper));
+        assert_eq!(upper.relation_to(&lower), Some(Relation::AboveOrLeftOf));
+        assert_eq!(lower.relation_to(&upper), Some(Relation::BelowOrRightOf));
     }
 
     #[test]
     fn vertex_should_not_be_higher_or_lower_than_equal_vertex() {
         let vertex = Vertex::new(0.0, 0.0);
 
-        assert_eq!(vertex.is_above_or_left_of(&vertex), false);
-        assert_eq!(vertex.is_below_or_right_of(&vertex), false);
+        assert_eq!(vertex.relation_to(&vertex), None);
     }
 }
