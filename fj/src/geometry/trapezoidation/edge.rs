@@ -1,4 +1,4 @@
-use super::Vertex;
+use super::{Relation, Vertex};
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Edge {
@@ -8,13 +8,15 @@ pub struct Edge {
 
 impl Edge {
     pub fn new(a: Vertex, b: Vertex) -> Option<Self> {
-        // No clear relation between vertices. Probably because they're equal.
-        if !a.is_above_or_left_of(&b) && !b.is_above_or_left_of(&a) {
-            return None;
-        }
-
-        let upper = if a.is_above_or_left_of(&b) { a } else { b };
-        let lower = if a.is_below_or_right_of(&b) { a } else { b };
+        let (upper, lower) = match a.relation_to(&b) {
+            Some(Relation::AboveOrLeftOf) => (a, b),
+            Some(Relation::BelowOrRightOf) => (b, a),
+            None => {
+                // No clear relation between vertices. Probably because they're
+                // equal.
+                return None;
+            }
+        };
 
         Some(Self { upper, lower })
     }
