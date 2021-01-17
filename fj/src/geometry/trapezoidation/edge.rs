@@ -1,3 +1,5 @@
+use ncollide2d::{math::Isometry, query::PointQuery as _, shape::Segment};
+
 use super::{Relation, Vertex};
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -28,11 +30,21 @@ impl Edge {
     pub fn lower(&self) -> Vertex {
         self.lower
     }
+
+    pub fn relation_to_vertex(&self, vertex: &Vertex) -> Option<Relation> {
+        let this = Segment::new(self.upper().0, self.lower().0);
+        let closest_point_on_edge = this
+            .project_point(&Isometry::identity(), &vertex.0, false)
+            .point;
+
+        Vertex::from(closest_point_on_edge).relation_to(vertex)
+    }
+
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::trapezoidation::Vertex;
+    use crate::geometry::trapezoidation::{Relation, Vertex};
 
     use super::Edge;
 
@@ -57,5 +69,25 @@ mod tests {
         assert_eq!(b.upper(), upper);
         assert_eq!(a.lower(), lower);
         assert_eq!(b.lower(), lower);
+    }
+
+    #[test]
+    fn edge_should_return_whether_vertex_is_higher_or_lower() {
+        let edge =
+            Edge::new(Vertex::new(0.0, 2.0), Vertex::new(2.0, 0.0)).unwrap();
+
+        let vertex_on_edge = Vertex::new(1.0, 1.0);
+        let vertex_above_edge = Vertex::new(1.5, 1.5);
+        let vertex_below_edge = Vertex::new(0.5, 0.5);
+
+        assert_eq!(edge.relation_to_vertex(&vertex_on_edge), None);
+        assert_eq!(
+            edge.relation_to_vertex(&vertex_above_edge),
+            Some(Relation::BelowOrRightOf)
+        );
+        assert_eq!(
+            edge.relation_to_vertex(&vertex_below_edge),
+            Some(Relation::AboveOrLeftOf)
+        );
     }
 }
