@@ -131,7 +131,7 @@ mod tests {
             assert_eq!(parent_id, new_root_id);
 
             if id == original_root_id {
-                assert_eq!(relation, Relation::Above);
+                assert_eq!(relation, Relation::AboveOrLeftOf);
             } else {
                 assert_eq!(relation, Relation::Below);
             }

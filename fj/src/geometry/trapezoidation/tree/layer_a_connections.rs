@@ -106,7 +106,7 @@ impl<Branch, Leaf> Tree<Branch, Leaf> {
             };
 
             let relation = match id {
-                id if id.0 == parent.above => Relation::Above,
+                id if id.0 == parent.above => Relation::AboveOrLeftOf,
                 id if id.0 == parent.below => Relation::Below,
                 _ => {
                     panic!("Parent doesn't relate to child");
@@ -277,7 +277,7 @@ mod tests {
         assert_eq!(tree.get(&id).branch().unwrap(), &branch);
         assert_eq!(tree.get_mut(&id).branch_mut().unwrap(), &mut branch);
 
-        assert_eq!(tree.parent_of(&leaf_id_a), Some((id, Relation::Above)));
+        assert_eq!(tree.parent_of(&leaf_id_a), Some((id, Relation::AboveOrLeftOf)));
         assert_eq!(tree.parent_of(&leaf_id_b), Some((id, Relation::Below)));
 
         assert_eq!(tree.above_of(&id), leaf_id_a);
@@ -344,7 +344,7 @@ mod tests {
         assert_eq!(tree.parent_of(&id_branch), None);
         assert_eq!(
             tree.parent_of(&id_leaf_a),
-            Some((id_branch, Relation::Above))
+            Some((id_branch, Relation::AboveOrLeftOf))
         );
         assert_eq!(
             tree.parent_of(&id_leaf_b),
@@ -376,7 +376,7 @@ mod tests {
 
         assert_eq!(
             tree.parent_of(&non_root_leaf_id),
-            Some((root_id, Relation::Above))
+            Some((root_id, Relation::AboveOrLeftOf))
         );
     }
 
@@ -396,7 +396,7 @@ mod tests {
         tree.replace_child(&above_id, &above_new_id);
         assert_eq!(
             tree.parent_of(&above_new_id),
-            Some((parent_id, Relation::Above))
+            Some((parent_id, Relation::AboveOrLeftOf))
         );
         assert_eq!(tree.above_of(&parent_id), above_new_id);
 
