@@ -8,7 +8,7 @@ pub struct Edge {
 
 impl Edge {
     pub fn new(a: Vertex, b: Vertex) -> Option<Self> {
-        // No clear relation between nodes. Probably because they're equal.
+        // No clear relation between vertices. Probably because they're equal.
         if !a.is_above_or_left_of(&b) && !b.is_above_or_left_of(&a) {
             return None;
         }
