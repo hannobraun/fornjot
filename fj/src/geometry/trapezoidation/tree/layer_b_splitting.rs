@@ -133,7 +133,7 @@ mod tests {
             if id == original_root_id {
                 assert_eq!(relation, Relation::AboveOrLeftOf);
             } else {
-                assert_eq!(relation, Relation::Below);
+                assert_eq!(relation, Relation::BelowOrRightOf);
             }
         }
     }
