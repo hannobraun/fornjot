@@ -51,12 +51,12 @@ mod tests {
         let b = Point2::new(1.0, 0.0);
         let c = Point2::new(0.0, 1.0);
 
-        let mut polygon = VertexChain::new();
-        polygon.insert(a);
-        polygon.insert(b);
-        polygon.insert(c);
+        let mut vertex_chain = VertexChain::new();
+        vertex_chain.insert(a);
+        vertex_chain.insert(b);
+        vertex_chain.insert(c);
 
-        let edges = polygon.edges();
+        let edges = vertex_chain.edges();
 
         assert_eq!(edges, vec![(a, b), (b, c), (c, a)]);
     }
