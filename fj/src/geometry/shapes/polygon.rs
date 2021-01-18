@@ -24,7 +24,7 @@ impl VertexChain {
         self.0.push(vertex);
     }
 
-    pub fn edges(&self) -> Vec<(Point2<f32>, Point2<f32>)> {
+    pub fn segments(&self) -> Vec<(Point2<f32>, Point2<f32>)> {
         let mut edges = Vec::new();
 
         edges.extend(self.0.windows(2).map(|window| (window[0], window[1])));
@@ -54,7 +54,7 @@ mod tests {
         vertex_chain.insert(b);
         vertex_chain.insert(c);
 
-        let edges = vertex_chain.edges();
+        let edges = vertex_chain.segments();
 
         assert_eq!(edges, vec![(a, b), (b, c), (c, a)]);
     }
