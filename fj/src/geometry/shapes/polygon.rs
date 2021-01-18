@@ -54,8 +54,8 @@ mod tests {
         vertex_chain.insert(b);
         vertex_chain.insert(c);
 
-        let edges = vertex_chain.segments();
+        let segments = vertex_chain.segments();
 
-        assert_eq!(edges, vec![(a, b), (b, c), (c, a)]);
+        assert_eq!(segments, vec![(a, b), (b, c), (c, a)]);
     }
 }
