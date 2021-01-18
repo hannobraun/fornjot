@@ -19,9 +19,7 @@ impl VertexChain {
         Self(Vec::new())
     }
 
-    /// Insert new point into polygon
-    ///
-    /// Polygons must not be self-intersecting. This is currently not verified.
+    /// Insert new vertex into the chain
     pub fn insert(&mut self, vertex: Point2<f32>) {
         self.0.push(vertex);
     }
