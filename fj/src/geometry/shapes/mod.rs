@@ -4,5 +4,6 @@ pub mod triangle;
 pub mod triangles;
 
 pub use self::{
-    circle::Circle, polygon::Polygon, triangle::Triangle, triangles::Triangles,
+    circle::Circle, polygon::VertexChain, triangle::Triangle,
+    triangles::Triangles,
 };

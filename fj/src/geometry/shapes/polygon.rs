@@ -12,9 +12,9 @@ use nalgebra::Point2;
 /// Vertex chains are considered "positive", i.e. forming a polygon, if their
 /// vertices are in counter-clockwise order. They are considered "negative",
 /// i.e. holes in another polygon, if their vertices are in clockwise order.
-pub struct Polygon(Vec<Point2<f32>>);
+pub struct VertexChain(Vec<Point2<f32>>);
 
-impl Polygon {
+impl VertexChain {
     pub fn new() -> Self {
         Self(Vec::new())
     }
@@ -43,7 +43,7 @@ impl Polygon {
 mod tests {
     use nalgebra::Point2;
 
-    use super::Polygon;
+    use super::VertexChain;
 
     #[test]
     fn polygon_should_return_its_edges() {
@@ -51,7 +51,7 @@ mod tests {
         let b = Point2::new(1.0, 0.0);
         let c = Point2::new(0.0, 1.0);
 
-        let mut polygon = Polygon::new();
+        let mut polygon = VertexChain::new();
         polygon.insert(a);
         polygon.insert(b);
         polygon.insert(c);
