@@ -38,6 +38,12 @@ impl VertexChain {
     }
 }
 
+impl From<&[Point2<f32>]> for VertexChain {
+    fn from(points: &[Point2<f32>]) -> Self {
+        Self(points.to_owned())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use nalgebra::Point2;
