@@ -46,7 +46,7 @@ mod tests {
     use super::VertexChain;
 
     #[test]
-    fn polygon_should_return_its_edges() {
+    fn vertex_chain_should_return_vertices() {
         let a = Point2::new(0.0, 0.0);
         let b = Point2::new(1.0, 0.0);
         let c = Point2::new(0.0, 1.0);
