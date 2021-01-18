@@ -1,10 +1,17 @@
 use nalgebra::Point2;
 
-/// A polygon is a list of points
+/// A vertex chain
 ///
-/// Points are expected to be ordered counter-clockwise for a normal polygon. A
-/// polygon with its points ordered clockwise is interpreted as a hole in
-/// another polygon.
+/// Quite literally, a chain of vertices. The first and the last vertex in the
+/// chain are considered to be connected.
+///
+/// Vertex chains are the basis of polygons. A polygon often consists of a
+/// single vertex chain, but it might consist of multiple, if the polygon has
+/// holes.
+///
+/// Vertex chains are considered "positive", i.e. forming a polygon, if their
+/// vertices are in counter-clockwise order. They are considered "negative",
+/// i.e. holes in another polygon, if their vertices are in clockwise order.
 pub struct Polygon(Vec<Point2<f32>>);
 
 impl Polygon {
