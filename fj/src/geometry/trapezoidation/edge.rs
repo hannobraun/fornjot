@@ -39,7 +39,6 @@ impl Edge {
 
         Vertex::from(closest_point_on_edge).relation_to(vertex)
     }
-
 }
 
 #[cfg(test)]

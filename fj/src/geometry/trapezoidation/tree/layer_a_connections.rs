@@ -277,8 +277,14 @@ mod tests {
         assert_eq!(tree.get(&id).branch().unwrap(), &branch);
         assert_eq!(tree.get_mut(&id).branch_mut().unwrap(), &mut branch);
 
-        assert_eq!(tree.parent_of(&leaf_id_a), Some((id, Relation::AboveOrLeftOf)));
-        assert_eq!(tree.parent_of(&leaf_id_b), Some((id, Relation::BelowOrRightOf)));
+        assert_eq!(
+            tree.parent_of(&leaf_id_a),
+            Some((id, Relation::AboveOrLeftOf))
+        );
+        assert_eq!(
+            tree.parent_of(&leaf_id_b),
+            Some((id, Relation::BelowOrRightOf))
+        );
 
         assert_eq!(tree.above_of(&id), leaf_id_a);
         assert_eq!(tree.below_of(&id), leaf_id_b);
