@@ -24,6 +24,7 @@ impl VertexChain {
         self.0.push(vertex);
     }
 
+    /// Returns the line segments forming the vertex chain
     pub fn segments(&self) -> Vec<(Point2<f32>, Point2<f32>)> {
         let mut edges = Vec::new();
 
