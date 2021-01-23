@@ -1,4 +1,5 @@
 use nalgebra::Point2;
+use ncollide2d::shape::Segment;
 
 /// A vertex chain
 ///
@@ -25,14 +26,18 @@ impl VertexChain {
     }
 
     /// Returns the line segments forming the vertex chain
-    pub fn segments(&self) -> Vec<(Point2<f32>, Point2<f32>)> {
+    pub fn segments(&self) -> Vec<Segment<f32>> {
         let mut edges = Vec::new();
 
-        edges.extend(self.0.windows(2).map(|window| (window[0], window[1])));
+        edges.extend(
+            self.0
+                .windows(2)
+                .map(|window| Segment::new(window[0], window[1])),
+        );
 
         let first = *self.0.first().unwrap();
         let last = *self.0.last().unwrap();
-        edges.push((last, first));
+        edges.push(Segment::new(last, first));
 
         edges
     }
@@ -47,6 +52,7 @@ impl From<&[Point2<f32>]> for VertexChain {
 #[cfg(test)]
 mod tests {
     use nalgebra::Point2;
+    use ncollide2d::shape::Segment;
 
     use super::VertexChain;
 
@@ -63,6 +69,9 @@ mod tests {
 
         let segments = vertex_chain.segments();
 
-        assert_eq!(segments, vec![(a, b), (b, c), (c, a)]);
+        assert_eq!(
+            segments,
+            vec![Segment::new(a, b), Segment::new(b, c), Segment::new(c, a)]
+        );
     }
 }
