@@ -4,5 +4,6 @@
 //! ear-clipping algorithm.
 
 pub mod point;
+pub mod segment;
 
 // TASK: Implement.
