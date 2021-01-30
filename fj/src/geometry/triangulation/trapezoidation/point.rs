@@ -15,20 +15,20 @@ impl Point {
     /// they are equal or something is NaN). Returns the relation otherwise.
     pub fn relation_to(&self, other: &Point) -> Option<Relation> {
         // Relation is primarily defined by the y-coordinate.
-        if self.0.y > other.0.y {
-            return Some(Relation::Above);
-        }
         if self.0.y < other.0.y {
             return Some(Relation::Below);
+        }
+        if self.0.y > other.0.y {
+            return Some(Relation::Above);
         }
 
         // If y-coordinates are equal, we look at the x-coordinate.
         if self.0.y == other.0.y {
-            if self.0.x > other.0.x {
-                return Some(Relation::Above);
-            }
             if self.0.x < other.0.x {
                 return Some(Relation::Below);
+            }
+            if self.0.x > other.0.x {
+                return Some(Relation::Above);
             }
         }
 
@@ -52,8 +52,8 @@ impl From<Point2<f32>> for Point {
 /// same height, the one with the smaller x-coordinate is considered lower.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Relation {
-    Above,
     Below,
+    Above,
 }
 
 #[cfg(test)]
@@ -62,20 +62,20 @@ mod tests {
 
     #[test]
     fn vertex_with_high_y_should_be_higher_than_vertex_with_low_y() {
-        let upper = Point::new(0.0, 1.0);
         let lower = Point::new(0.0, 0.0);
+        let upper = Point::new(0.0, 1.0);
 
-        assert_eq!(upper.relation_to(&lower), Some(Relation::Above));
         assert_eq!(lower.relation_to(&upper), Some(Relation::Below));
+        assert_eq!(upper.relation_to(&lower), Some(Relation::Above));
     }
 
     #[test]
     fn vertex_with_equal_y_but_larger_x_should_be_higher_than_lower_x() {
-        let upper = Point::new(1.0, 0.0);
         let lower = Point::new(0.0, 0.0);
+        let upper = Point::new(1.0, 0.0);
 
-        assert_eq!(upper.relation_to(&lower), Some(Relation::Above));
         assert_eq!(lower.relation_to(&upper), Some(Relation::Below));
+        assert_eq!(upper.relation_to(&lower), Some(Relation::Above));
     }
 
     #[test]
