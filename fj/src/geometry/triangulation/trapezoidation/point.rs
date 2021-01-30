@@ -10,6 +10,9 @@ impl Point {
     }
 
     /// Determine relation of this point to another
+    ///
+    /// Returns `None`, if the points have no relation to each other (because
+    /// they are equal or something is NaN). Returns the relation otherwise.
     pub fn relation_to(&self, other: &Point) -> Option<Relation> {
         // Relation is primarily defined by the y-coordinate.
         if self.0.y > other.0.y {
