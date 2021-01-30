@@ -10,16 +10,6 @@ impl Point {
     }
 
     /// Determine relation of this point to another
-    ///
-    /// Points in the trapezoidation must have a clear above-below relation to
-    /// each other. If two points are at the same level, the trapezoidation is
-    /// considered "degenerate".
-    ///
-    /// As the paper notes, this doesn't mean a loss of generality, as a
-    /// degenerate trapezoidation can just be rotated by a sufficiently small
-    /// amount to make it non-degenerate. When two points have the same
-    /// y-coordinate, we consider the one with the smaller x-coordinate to be
-    /// "lower".
     pub fn relation_to(&self, other: &Point) -> Option<Relation> {
         // Relation is primarily defined by the y-coordinate.
         if self.0.y > other.0.y {
@@ -51,6 +41,16 @@ impl From<Point2<f32>> for Point {
     }
 }
 
+/// The relation between two points
+///
+/// Points in the trapezoidation must have a clear above-below relation to each
+/// other. If two points are at the same level, the trapezoidation is considered
+/// "degenerate".
+///
+/// As the paper notes, this doesn't mean a loss of generality, as a degenerate
+/// trapezoidation can just be rotated by a sufficiently small amount to make it
+/// non-degenerate. When two points have the same y-coordinate, we consider the
+/// one with the smaller x-coordinate to be "lower".
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Relation {
     Above,
