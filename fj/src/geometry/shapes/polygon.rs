@@ -1,4 +1,4 @@
-use ncollide2d::shape::Segment;
+use parry2d::shape::Segment;
 
 use super::VertexChain;
 
@@ -13,7 +13,7 @@ impl Polygon {
         self.0.push(chain)
     }
 
-    pub fn edges(&self) -> Vec<Segment<f32>> {
+    pub fn edges(&self) -> Vec<Segment> {
         let mut edges = Vec::new();
 
         for chain in &self.0 {
@@ -27,7 +27,7 @@ impl Polygon {
 #[cfg(test)]
 mod tests {
     use nalgebra::Point2;
-    use ncollide2d::shape::Segment;
+    use parry2d::shape::Segment;
 
     use crate::geometry::shapes::VertexChain;
 

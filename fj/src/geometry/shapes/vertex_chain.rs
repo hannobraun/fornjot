@@ -1,5 +1,5 @@
 use nalgebra::Point2;
-use ncollide2d::shape::Segment;
+use parry2d::shape::Segment;
 
 /// A vertex chain
 ///
@@ -26,7 +26,7 @@ impl VertexChain {
     }
 
     /// Returns the line segments forming the vertex chain
-    pub fn segments(&self) -> Vec<Segment<f32>> {
+    pub fn segments(&self) -> Vec<Segment> {
         let mut edges = Vec::new();
 
         edges.extend(
@@ -52,7 +52,7 @@ impl From<&[Point2<f32>]> for VertexChain {
 #[cfg(test)]
 mod tests {
     use nalgebra::Point2;
-    use ncollide2d::shape::Segment;
+    use parry2d::shape::Segment;
 
     use super::VertexChain;
 
