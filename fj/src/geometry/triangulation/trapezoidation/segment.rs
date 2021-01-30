@@ -1,4 +1,4 @@
-use super::point::{Point, Relation};
+use super::point::{self, Point};
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Segment {
@@ -15,8 +15,8 @@ impl Segment {
         let a_to_b = a.relation_to(&b)?;
 
         let (lower, upper) = match a_to_b {
-            Relation::Below => (a, b),
-            Relation::Above => (b, a),
+            point::Relation::Below => (a, b),
+            point::Relation::Above => (b, a),
         };
 
         Some(Self { lower, upper })
