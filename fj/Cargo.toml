@@ -10,8 +10,6 @@ bytemuck   = "*"
 decorum    = "*"
 futures    = "*"
 nalgebra   = "*"
-# TASK: Upgrade to Parry
-ncollide2d = "*"
 parry2d    = "*"
 rand       = "*"
 shaderc    = "*"
