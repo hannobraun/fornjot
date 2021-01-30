@@ -1,4 +1,4 @@
-use ncollide2d::{math::Isometry, query::PointQuery as _, shape::Segment};
+use parry2d::{math::Isometry, query::PointQuery as _, shape::Segment};
 
 use super::{Relation, Vertex};
 
