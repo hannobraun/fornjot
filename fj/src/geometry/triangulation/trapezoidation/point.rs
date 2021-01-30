@@ -47,13 +47,9 @@ impl From<Point2<f32>> for Point {
 /// The relation between two points
 ///
 /// Points in the trapezoidation must have a clear above-below relation to each
-/// other. If two points are at the same level, the trapezoidation is considered
-/// "degenerate".
-///
-/// As the paper notes, this doesn't mean a loss of generality, as a degenerate
-/// trapezoidation can just be rotated by a sufficiently small amount to make it
-/// non-degenerate. When two points have the same y-coordinate, we consider the
-/// one with the smaller x-coordinate to be "lower".
+/// other. Since we can't rely on that with points from real polygons, we use
+/// the lexicographic technique suggested in the paper: If two points are at the
+/// same height, the one with the smaller x-coordinate is considered lower.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Relation {
     Above,
