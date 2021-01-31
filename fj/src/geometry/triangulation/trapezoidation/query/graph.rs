@@ -15,7 +15,7 @@ pub struct Id(u32);
 
 pub enum Node {
     NonSink(NonSink),
-    Sink(Sink),
+    Sink(Region),
 }
 
 pub enum NonSink {
@@ -35,4 +35,4 @@ pub struct Y {
     _above: Id,
 }
 
-pub struct Sink;
+pub struct Region;
