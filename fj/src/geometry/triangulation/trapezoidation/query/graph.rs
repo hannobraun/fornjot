@@ -99,10 +99,10 @@ mod tests {
 
     type Graph = super::Graph<X, Y, Sink>;
 
-    #[derive(Debug, Eq, PartialEq)]
+    #[derive(Copy, Clone, Debug, Eq, PartialEq)]
     struct X(u64);
 
-    #[derive(Debug, Eq, PartialEq)]
+    #[derive(Copy, Clone, Debug, Eq, PartialEq)]
     struct Y(u64);
 
     #[derive(Clone, Copy, Default, Debug, Eq, PartialEq)]
