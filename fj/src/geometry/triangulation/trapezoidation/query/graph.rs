@@ -37,7 +37,7 @@ impl<XNode, YNode, Sink> Graph<XNode, YNode, Sink> {
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
-pub struct Id(u32);
+pub struct Id(u64);
 
 #[derive(Debug, PartialEq)]
 pub enum Node<XNode = X, YNode = Y, Sink = Region> {
