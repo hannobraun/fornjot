@@ -8,7 +8,9 @@ use crate::geometry::triangulation::trapezoidation::{
 
 // TASK: Add single source on construction.
 // TASK: Implement behavior, as required by insertion and query code.
-pub struct Graph(HashMap<Id, Node>);
+pub struct Graph {
+    _nodes: HashMap<Id, Node>,
+}
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
 pub struct Id(u32);
