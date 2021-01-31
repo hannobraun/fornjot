@@ -10,6 +10,7 @@ use crate::geometry::triangulation::trapezoidation::{
 // TASK: Implement behavior, as required by insertion and query code.
 pub struct Graph(HashMap<Id, Node>);
 
+#[derive(Debug, Eq, PartialEq)]
 pub struct Id(u32);
 
 pub enum Node {
