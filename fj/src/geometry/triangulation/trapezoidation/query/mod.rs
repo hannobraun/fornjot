@@ -3,7 +3,7 @@
 pub mod find_region;
 pub mod graph;
 
-// TASK: Insertion:
+// TASK: Implement insertion:
 //       - Unless upper point is already inserted:
 //         - Find trapezoid that point is in
 //         - Add two new sink nodes
