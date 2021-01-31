@@ -9,6 +9,14 @@ impl Point {
         Self(Point2::new(x, y))
     }
 
+    pub fn x(&self) -> f32 {
+        self.0.x
+    }
+
+    pub fn y(&self) -> f32 {
+        self.0.y
+    }
+
     /// Determine relation of this point to another
     ///
     /// Returns `None`, if the points have no relation to each other (because
