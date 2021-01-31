@@ -75,7 +75,7 @@ pub struct Y {
     pub above: Id,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Default, PartialEq)]
 pub struct Region {
     pub left_segment: Option<Id>,
     pub right_segment: Option<Id>,
