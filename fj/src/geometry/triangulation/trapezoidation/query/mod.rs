@@ -1,7 +1,7 @@
 //! The point location query structure of the trapezoidation
 
+pub mod find_region;
 pub mod graph;
-pub mod query;
 
 // TASK: Insertion:
 //       - Unless upper point is already inserted:
