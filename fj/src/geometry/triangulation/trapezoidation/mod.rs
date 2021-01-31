@@ -7,4 +7,4 @@ pub mod point;
 pub mod query;
 pub mod segment;
 
-// TASK: Implement.
+// TASK: Figure out what's missing to complete the implementation, add it.
