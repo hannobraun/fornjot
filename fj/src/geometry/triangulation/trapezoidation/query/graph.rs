@@ -101,13 +101,13 @@ mod tests {
     struct Y;
 
     #[derive(Default, Debug, Eq, PartialEq)]
-    struct Sink;
+    struct Sink(u64);
 
     #[test]
     fn graph_should_be_constructed_with_root_node() {
         let graph = Graph::new();
 
         let root = graph.get(graph.source());
-        assert_eq!(root, &Node::Sink(Sink));
+        assert_eq!(root, &Node::Sink(Sink(0)));
     }
 }
