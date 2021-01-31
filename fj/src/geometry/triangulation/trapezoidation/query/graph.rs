@@ -7,7 +7,7 @@ use crate::geometry::triangulation::trapezoidation::{
 };
 
 // TASK: Implement behavior, as required by insertion and query code.
-pub struct Graph<XNode, YNode, Sink> {
+pub struct Graph<XNode = X, YNode = Y, Sink = Region> {
     nodes: HashMap<Id, Node<XNode, YNode, Sink>>,
 }
 
@@ -40,13 +40,13 @@ impl<XNode, YNode, Sink> Graph<XNode, YNode, Sink> {
 pub struct Id(u32);
 
 #[derive(Debug, PartialEq)]
-pub enum Node<XNode, YNode, Sink> {
+pub enum Node<XNode = X, YNode = Y, Sink = Region> {
     NonSink(NonSink<XNode, YNode>),
     Sink(Sink),
 }
 
 #[derive(Debug, PartialEq)]
-pub enum NonSink<XNode, YNode> {
+pub enum NonSink<XNode = X, YNode = Y> {
     X(XNode),
     Y(YNode),
 }
