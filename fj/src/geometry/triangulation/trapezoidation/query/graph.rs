@@ -6,7 +6,6 @@ use crate::geometry::triangulation::trapezoidation::{
     point::Point, segment::Segment,
 };
 
-// TASK: Implement behavior, as required by insertion and query code.
 pub struct Graph<XNode = X, YNode = Y, Sink = Region> {
     nodes: HashMap<Id, Node<XNode, YNode, Sink>>,
     next_id: u64,
