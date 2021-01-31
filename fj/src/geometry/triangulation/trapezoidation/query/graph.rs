@@ -44,6 +44,10 @@ impl<XNode, YNode, Sink> Graph<XNode, YNode, Sink> {
 
         Id(id)
     }
+
+    pub fn replace(&mut self, id: Id, node: Node<XNode, YNode, Sink>) {
+        self.nodes.insert(id, node);
+    }
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
@@ -128,5 +132,15 @@ mod tests {
 
         assert_eq!(graph.get(id_a), &Node::Sink(a));
         assert_eq!(graph.get(id_b), &Node::Sink(b));
+    }
+
+    #[test]
+    fn graph_should_replace_nodes() {
+        let mut graph = Graph::new();
+
+        let node = Node::X(X(1));
+        graph.replace(graph.source(), node);
+
+        assert_eq!(graph.get(graph.source()), &node);
     }
 }
