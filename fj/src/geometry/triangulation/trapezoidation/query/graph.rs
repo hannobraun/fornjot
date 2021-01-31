@@ -51,14 +51,9 @@ pub struct Id(u64);
 
 #[derive(Debug, PartialEq)]
 pub enum Node<XNode = X, YNode = Y, Sink = Region> {
-    NonSink(NonSink<XNode, YNode>),
-    Sink(Sink),
-}
-
-#[derive(Debug, PartialEq)]
-pub enum NonSink<XNode = X, YNode = Y> {
     X(XNode),
     Y(YNode),
+    Sink(Sink),
 }
 
 #[derive(Debug, PartialEq)]
