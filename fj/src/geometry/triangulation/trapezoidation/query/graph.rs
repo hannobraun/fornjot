@@ -100,7 +100,7 @@ mod tests {
     #[derive(Debug, Eq, PartialEq)]
     struct Y;
 
-    #[derive(Default, Debug, Eq, PartialEq)]
+    #[derive(Clone, Copy, Default, Debug, Eq, PartialEq)]
     struct Sink(u64);
 
     #[test]
