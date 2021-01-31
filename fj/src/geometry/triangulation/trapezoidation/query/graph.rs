@@ -9,6 +9,7 @@ use crate::geometry::triangulation::trapezoidation::{
 // TASK: Implement behavior, as required by insertion and query code.
 pub struct Graph<XNode = X, YNode = Y, Sink = Region> {
     nodes: HashMap<Id, Node<XNode, YNode, Sink>>,
+    next_id: u64,
 }
 
 impl<XNode, YNode, Sink> Graph<XNode, YNode, Sink> {
@@ -22,7 +23,7 @@ impl<XNode, YNode, Sink> Graph<XNode, YNode, Sink> {
         let mut nodes = HashMap::new();
         nodes.insert(Id(0), Node::Sink(Sink::default()));
 
-        Self { nodes }
+        Self { nodes, next_id: 1 }
     }
 
     pub fn source(&self) -> Id {
@@ -33,6 +34,15 @@ impl<XNode, YNode, Sink> Graph<XNode, YNode, Sink> {
         // The graph is append-only, so we know that every id that exists must
         // point to a valid node.
         self.nodes.get(&id).unwrap()
+    }
+
+    pub fn insert_sink(&mut self, sink: Sink) -> Id {
+        let id = self.next_id;
+        self.next_id += 1;
+
+        self.nodes.insert(Id(id), Node::Sink(sink));
+
+        Id(id)
     }
 }
 
@@ -109,5 +119,19 @@ mod tests {
 
         let root = graph.get(graph.source());
         assert_eq!(root, &Node::Sink(Sink(0)));
+    }
+
+    #[test]
+    fn graph_should_insert_sinks() {
+        let mut graph = Graph::new();
+
+        let a = Sink(1);
+        let b = Sink(2);
+
+        let id_a = graph.insert_sink(a);
+        let id_b = graph.insert_sink(b);
+
+        assert_eq!(graph.get(id_a), &Node::Sink(a));
+        assert_eq!(graph.get(id_b), &Node::Sink(b));
     }
 }
