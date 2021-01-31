@@ -35,4 +35,11 @@ pub struct Y {
     _above: Id,
 }
 
-pub struct Region;
+pub struct Region {
+    pub left_segment: Option<Id>,
+    pub right_segment: Option<Id>,
+    pub lower_left_region: Option<Id>,
+    pub lower_right_region: Option<Id>,
+    pub upper_left_region: Option<Id>,
+    pub upper_right_region: Option<Id>,
+}
