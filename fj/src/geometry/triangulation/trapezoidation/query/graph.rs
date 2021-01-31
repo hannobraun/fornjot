@@ -7,17 +7,20 @@ use crate::geometry::triangulation::trapezoidation::{
 };
 
 // TASK: Implement behavior, as required by insertion and query code.
-pub struct Graph {
-    nodes: HashMap<Id, Node>,
+pub struct Graph<XNode, YNode, Sink> {
+    nodes: HashMap<Id, Node<XNode, YNode, Sink>>,
 }
 
-impl Graph {
+impl<XNode, YNode, Sink> Graph<XNode, YNode, Sink> {
     /// Construct a new `Graph` instance
     ///
     /// The graph initially contains single source/sink node.
-    pub fn new() -> Self {
+    pub fn new() -> Self
+    where
+        Sink: Default,
+    {
         let mut nodes = HashMap::new();
-        nodes.insert(Id(0), Node::Sink(Region::new()));
+        nodes.insert(Id(0), Node::Sink(Sink::default()));
 
         Self { nodes }
     }
@@ -26,7 +29,7 @@ impl Graph {
         Id(0)
     }
 
-    pub fn get(&self, id: Id) -> &Node {
+    pub fn get(&self, id: Id) -> &Node<XNode, YNode, Sink> {
         // The graph is append-only, so we know that every id that exists must
         // point to a valid node.
         self.nodes.get(&id).unwrap()
@@ -37,15 +40,15 @@ impl Graph {
 pub struct Id(u32);
 
 #[derive(Debug, PartialEq)]
-pub enum Node {
-    NonSink(NonSink),
-    Sink(Region),
+pub enum Node<XNode, YNode, Sink> {
+    NonSink(NonSink<XNode, YNode>),
+    Sink(Sink),
 }
 
 #[derive(Debug, PartialEq)]
-pub enum NonSink {
-    X(X),
-    Y(Y),
+pub enum NonSink<XNode, YNode> {
+    X(XNode),
+    Y(YNode),
 }
 
 #[derive(Debug, PartialEq)]
@@ -87,13 +90,24 @@ impl Region {
 
 #[cfg(test)]
 mod tests {
-    use super::{Graph, Node, Region};
+    use super::Node;
+
+    type Graph = super::Graph<X, Y, Sink>;
+
+    #[derive(Debug, Eq, PartialEq)]
+    struct X;
+
+    #[derive(Debug, Eq, PartialEq)]
+    struct Y;
+
+    #[derive(Default, Debug, Eq, PartialEq)]
+    struct Sink;
 
     #[test]
     fn graph_should_be_constructed_with_root_node() {
         let graph = Graph::new();
 
         let root = graph.get(graph.source());
-        assert_eq!(root, &Node::Sink(Region::new()));
+        assert_eq!(root, &Node::Sink(Sink));
     }
 }
