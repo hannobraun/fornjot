@@ -24,15 +24,15 @@ pub enum NonSink {
 }
 
 pub struct X {
-    _segment: Segment,
-    _left: Id,
-    _right: Id,
+    pub segment: Segment,
+    pub left: Id,
+    pub right: Id,
 }
 
 pub struct Y {
-    _point: Point,
-    _below: Id,
-    _above: Id,
+    pub point: Point,
+    pub below: Id,
+    pub above: Id,
 }
 
 pub struct Region {
