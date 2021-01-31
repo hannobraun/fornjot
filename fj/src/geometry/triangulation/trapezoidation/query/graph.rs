@@ -43,3 +43,16 @@ pub struct Region {
     pub upper_left_region: Option<Id>,
     pub upper_right_region: Option<Id>,
 }
+
+impl Region {
+    pub fn new() -> Self {
+        Self {
+            left_segment: None,
+            right_segment: None,
+            lower_left_region: None,
+            lower_right_region: None,
+            upper_left_region: None,
+            upper_right_region: None,
+        }
+    }
+}
