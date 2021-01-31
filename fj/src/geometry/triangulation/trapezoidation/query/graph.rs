@@ -6,10 +6,31 @@ use crate::geometry::triangulation::trapezoidation::{
     point::Point, segment::Segment,
 };
 
-// TASK: Add single source on construction.
 // TASK: Implement behavior, as required by insertion and query code.
 pub struct Graph {
-    _nodes: HashMap<Id, Node>,
+    nodes: HashMap<Id, Node>,
+}
+
+impl Graph {
+    /// Construct a new `Graph` instance
+    ///
+    /// The graph initially contains single source/sink node.
+    pub fn new() -> Self {
+        let mut nodes = HashMap::new();
+        nodes.insert(Id(0), Node::Sink(Region::new()));
+
+        Self { nodes }
+    }
+
+    pub fn source(&self) -> Id {
+        Id(0)
+    }
+
+    pub fn get(&self, id: Id) -> &Node {
+        // The graph is append-only, so we know that every id that exists must
+        // point to a valid node.
+        self.nodes.get(&id).unwrap()
+    }
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
@@ -61,5 +82,18 @@ impl Region {
             upper_left_region: None,
             upper_right_region: None,
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{Graph, Node, Region};
+
+    #[test]
+    fn graph_should_be_constructed_with_root_node() {
+        let graph = Graph::new();
+
+        let root = graph.get(graph.source());
+        assert_eq!(root, &Node::Sink(Region::new()));
     }
 }
