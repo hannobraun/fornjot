@@ -66,6 +66,12 @@ impl Segment {
         // `NaN`s or other shenanigans going on.
         panic!("Invalid point ({:?}) or segment ({:?})");
     }
+
+    // TASK: Implement `relation_to_point`.
+    //       Returns `Option<point::Relation>`. Segment is below its upper
+    //       point, above its lower point.
+    // TASK: Implement `relation_to_segment`.
+    //       Returns`Option<segment::Relation>`.
 }
 
 /// The relation between a point and a segment
