@@ -40,11 +40,15 @@ pub fn find_region<Region>(
                 Some(point::Relation::Below) => current_id = *below,
                 Some(point::Relation::Above) => current_id = *above,
                 None => {
-                    // TASK: Figure out, if we need to handle this case. I think
-                    //       it can happen as part of normal operations,
-                    //       whenever we're inserting a point that is already in
-                    //       the tree.
-                    todo!()
+                    if p == point {
+                        // Point already in graph.
+                        return Found::Point(current_id);
+                    }
+
+                    // If we land here, the points have no relation to each
+                    // other, but also aren't equal. Something shady must be
+                    // happening, like NaN.
+                    panic!("Invalid point: {:?}", point);
                 }
             },
             Node::Sink(_) => return Found::Region(current_id),
@@ -55,6 +59,7 @@ pub fn find_region<Region>(
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Found {
     Region(Id),
+    Point(Id),
 }
 
 #[cfg(test)]
@@ -129,5 +134,24 @@ mod tests {
             find_region(&Point::new(0.0, 2.0), &graph),
             Found::Region(above)
         );
+    }
+
+    #[test]
+    fn find_region_should_return_id_of_point_if_already_present() {
+        let mut graph = Graph::new();
+
+        let below = graph.insert_sink(Region(1));
+        let above = graph.insert_sink(Region(2));
+
+        let point = Point::new(0.0, 1.0);
+        let node = Node::Y(Y {
+            point,
+            below,
+            above,
+        });
+
+        graph.replace(graph.source(), node);
+
+        assert_eq!(find_region(&point, &graph), Found::Point(graph.source()));
     }
 }
