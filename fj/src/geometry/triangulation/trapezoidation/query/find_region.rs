@@ -5,7 +5,10 @@ use crate::geometry::triangulation::trapezoidation::{
 
 use super::graph::{Graph, Id, Node, X, Y};
 
-pub fn find_region<Region>(point: &Point, graph: &Graph<X, Y, Region>) -> Id {
+pub fn find_region<Region>(
+    point: &Point,
+    graph: &Graph<X, Y, Region>,
+) -> Found {
     let mut current_id = graph.source();
 
     loop {
@@ -44,9 +47,14 @@ pub fn find_region<Region>(point: &Point, graph: &Graph<X, Y, Region>) -> Id {
                     todo!()
                 }
             },
-            Node::Sink(_) => return current_id,
+            Node::Sink(_) => return Found::Region(current_id),
         }
     }
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum Found {
+    Region(Id),
 }
 
 #[cfg(test)]
@@ -57,7 +65,7 @@ mod tests {
         segment::Segment,
     };
 
-    use super::find_region;
+    use super::{find_region, Found};
 
     type Graph = graph::Graph<X, Y, Region>;
 
@@ -69,7 +77,7 @@ mod tests {
         let graph = Graph::new();
 
         let region = find_region(&Point::new(0.0, 0.0), &graph);
-        assert_eq!(region, graph.source());
+        assert_eq!(region, Found::Region(graph.source()));
     }
 
     #[test]
@@ -88,8 +96,14 @@ mod tests {
 
         graph.replace(graph.source(), node);
 
-        assert_eq!(find_region(&Point::new(0.0, 1.0), &graph), left);
-        assert_eq!(find_region(&Point::new(2.0, 1.0), &graph), right);
+        assert_eq!(
+            find_region(&Point::new(0.0, 1.0), &graph),
+            Found::Region(left)
+        );
+        assert_eq!(
+            find_region(&Point::new(2.0, 1.0), &graph),
+            Found::Region(right)
+        );
     }
 
     #[test]
@@ -107,7 +121,13 @@ mod tests {
 
         graph.replace(graph.source(), node);
 
-        assert_eq!(find_region(&Point::new(0.0, 0.0), &graph), below);
-        assert_eq!(find_region(&Point::new(0.0, 2.0), &graph), above);
+        assert_eq!(
+            find_region(&Point::new(0.0, 0.0), &graph),
+            Found::Region(below)
+        );
+        assert_eq!(
+            find_region(&Point::new(0.0, 2.0), &graph),
+            Found::Region(above)
+        );
     }
 }
