@@ -25,3 +25,6 @@
 //             - But what if the segments don't overlap in y? There obviously
 //               are segments like that, but will we ever have to compare them
 //               when inserting into a valid tree? I don't know.
+//           - At Sink:
+//             Split region into left and right. Update bounding segments.
+//         - Once done, merge all regions that have the same bounding segments.
