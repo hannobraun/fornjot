@@ -84,7 +84,7 @@ mod tests {
     use super::{Point, Relation};
 
     #[test]
-    fn vertex_with_high_y_should_be_higher_than_vertex_with_low_y() {
+    fn point_with_high_y_should_be_higher_than_point_with_low_y() {
         let lower = Point::new(0.0, 0.0);
         let upper = Point::new(0.0, 1.0);
 
@@ -93,7 +93,7 @@ mod tests {
     }
 
     #[test]
-    fn vertex_with_equal_y_but_larger_x_should_be_higher_than_lower_x() {
+    fn point_with_equal_y_but_larger_x_should_be_higher_than_lower_x() {
         let lower = Point::new(0.0, 0.0);
         let upper = Point::new(1.0, 0.0);
 
@@ -102,7 +102,7 @@ mod tests {
     }
 
     #[test]
-    fn vertex_should_not_be_higher_or_lower_than_equal_vertex() {
+    fn point_should_not_be_higher_or_lower_than_equal_point() {
         let point = Point::new(0.0, 0.0);
 
         assert_eq!(point.relation_to(&point), None);
