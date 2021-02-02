@@ -83,11 +83,6 @@ impl Segment {
             .relation_from_point(&self.upper)
             .or(other.relation_from_point(&self.lower))
     }
-
-    pub fn point_is_between_endpoints(&self, point: &Point) -> bool {
-        point.relation_to(&self.upper).is_below()
-            && point.relation_to(&self.lower).is_above()
-    }
 }
 
 /// The relation between a point and a segment
@@ -217,24 +212,5 @@ mod tests {
 
         assert_eq!(left_below.relation_to_segment(&far_above), None);
         assert_eq!(far_above.relation_to_segment(&left_below), None);
-    }
-
-    #[test]
-    fn segment_should_compute_whether_point_is_between_endpoints() {
-        let segment =
-            Segment::new(Point::new(0.0, 1.0), Point::new(0.0, 3.0)).unwrap();
-
-        assert_eq!(
-            segment.point_is_between_endpoints(&Point::new(0.0, 0.5)),
-            false
-        );
-        assert_eq!(
-            segment.point_is_between_endpoints(&Point::new(0.0, 3.5)),
-            false
-        );
-        assert_eq!(
-            segment.point_is_between_endpoints(&Point::new(0.0, 2.0)),
-            true
-        );
     }
 }
