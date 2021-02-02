@@ -83,9 +83,11 @@ pub enum Relation {
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::triangulation::trapezoidation::point::Point;
+    use crate::geometry::triangulation::trapezoidation::{
+        point::Point, segment,
+    };
 
-    use super::{Relation, Segment};
+    use super::Segment;
 
     #[test]
     fn segment_should_require_clear_relation_between_points() {
@@ -128,11 +130,11 @@ mod tests {
 
         assert_eq!(
             segment.relation_from_point(&point_left),
-            Some(Relation::Left)
+            Some(segment::Relation::Left)
         );
         assert_eq!(
             segment.relation_from_point(&point_right),
-            Some(Relation::Right)
+            Some(segment::Relation::Right)
         );
     }
 }
