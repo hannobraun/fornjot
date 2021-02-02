@@ -103,8 +103,8 @@ mod tests {
 
     #[test]
     fn vertex_should_not_be_higher_or_lower_than_equal_vertex() {
-        let vertex = Point::new(0.0, 0.0);
+        let point = Point::new(0.0, 0.0);
 
-        assert_eq!(vertex.relation_to(&vertex), None);
+        assert_eq!(point.relation_to(&point), None);
     }
 }
