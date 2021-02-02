@@ -64,6 +64,21 @@ pub enum Relation {
     Above,
 }
 
+pub trait RelationExt {
+    fn is_below(&self) -> bool;
+    fn is_above(&self) -> bool;
+}
+
+impl RelationExt for Option<Relation> {
+    fn is_below(&self) -> bool {
+        self == &Some(Relation::Below)
+    }
+
+    fn is_above(&self) -> bool {
+        self == &Some(Relation::Above)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::{Point, Relation};
