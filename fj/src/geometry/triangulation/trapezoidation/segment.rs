@@ -1,4 +1,4 @@
-use super::point::{self, Point};
+use super::point::{self, Point, RelationExt as _};
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Segment {
@@ -67,9 +67,17 @@ impl Segment {
         panic!("Invalid point ({:?}) or segment ({:?})");
     }
 
-    // TASK: Implement `relation_to_point`.
-    //       Returns `Option<point::Relation>`. Segment is below its upper
-    //       point, above its lower point.
+    pub fn relation_to_point(&self, point: &Point) -> Option<point::Relation> {
+        if point == &self.lower || self.lower.relation_to(point).is_above() {
+            return Some(point::Relation::Above);
+        }
+        if point == &self.upper || self.upper.relation_to(point).is_below() {
+            return Some(point::Relation::Below);
+        }
+
+        None
+    }
+
     // TASK: Implement `relation_to_segment`.
     //       Returns`Option<segment::Relation>`.
 }
@@ -84,7 +92,8 @@ pub enum Relation {
 #[cfg(test)]
 mod tests {
     use crate::geometry::triangulation::trapezoidation::{
-        point::Point, segment,
+        point::{self, Point},
+        segment,
     };
 
     use super::Segment;
@@ -135,6 +144,36 @@ mod tests {
         assert_eq!(
             segment.relation_from_point(&point_right),
             Some(segment::Relation::Right)
+        );
+    }
+
+    #[test]
+    fn segment_should_compute_its_relation_to_a_point() {
+        let lower = Point::new(0.0, 1.0);
+        let upper = Point::new(0.0, 2.0);
+        let segment = Segment::new(lower, upper).unwrap();
+
+        assert_eq!(
+            segment.relation_to_point(&lower),
+            Some(point::Relation::Above)
+        );
+        assert_eq!(
+            segment.relation_to_point(&upper),
+            Some(point::Relation::Below)
+        );
+
+        let point_on = Point::new(0.0, 1.5);
+        let point_below = Point::new(0.0, 0.5);
+        let point_above = Point::new(0.0, 2.5);
+
+        assert_eq!(segment.relation_to_point(&point_on), None,);
+        assert_eq!(
+            segment.relation_to_point(&point_below),
+            Some(point::Relation::Above)
+        );
+        assert_eq!(
+            segment.relation_to_point(&point_above),
+            Some(point::Relation::Below)
         );
     }
 }
