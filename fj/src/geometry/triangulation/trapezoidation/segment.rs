@@ -78,13 +78,16 @@ impl Segment {
         None
     }
 
+    pub fn relation_to_segment(&self, other: &Self) -> Option<Relation> {
+        other
+            .relation_from_point(&self.upper)
+            .or(other.relation_from_point(&self.lower))
+    }
+
     pub fn point_is_between_endpoints(&self, point: &Point) -> bool {
         point.relation_to(&self.upper).is_below()
             && point.relation_to(&self.lower).is_above()
     }
-
-    // TASK: Implement `relation_to_segment`.
-    //       Returns`Option<segment::Relation>`.
 }
 
 /// The relation between a point and a segment
@@ -180,6 +183,40 @@ mod tests {
             segment.relation_to_point(&point_above),
             Some(point::Relation::Below)
         );
+    }
+
+    #[test]
+    fn segment_should_compute_its_relation_to_another_segment() {
+        let left_below =
+            Segment::new(Point::new(0.0, 0.0), Point::new(0.0, 2.0)).unwrap();
+        let mid_above =
+            Segment::new(Point::new(1.0, 1.0), Point::new(1.0, 3.0)).unwrap();
+        let right_below =
+            Segment::new(Point::new(2.0, 0.0), Point::new(2.0, 2.0)).unwrap();
+
+        let far_above =
+            Segment::new(Point::new(1.0, 3.0), Point::new(1.0, 5.0)).unwrap();
+
+        assert_eq!(
+            left_below.relation_to_segment(&mid_above),
+            Some(segment::Relation::Left)
+        );
+        assert_eq!(
+            mid_above.relation_to_segment(&left_below),
+            Some(segment::Relation::Right)
+        );
+
+        assert_eq!(
+            mid_above.relation_to_segment(&right_below),
+            Some(segment::Relation::Left)
+        );
+        assert_eq!(
+            right_below.relation_to_segment(&mid_above),
+            Some(segment::Relation::Right)
+        );
+
+        assert_eq!(left_below.relation_to_segment(&far_above), None);
+        assert_eq!(far_above.relation_to_segment(&left_below), None);
     }
 
     #[test]
