@@ -60,6 +60,12 @@ pub enum Node<XNode = X, YNode = Y, Sink = Region> {
     Sink(Sink),
 }
 
+impl<XNode, YNode, Sink> Node<XNode, YNode, Sink> {
+    pub fn is_sink(&self) -> bool {
+        matches!(self, &Node::Sink(_))
+    }
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct X {
     pub segment: Segment,
