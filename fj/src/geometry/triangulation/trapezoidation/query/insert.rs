@@ -32,11 +32,8 @@ where
 }
 
 // TASK: Implement:
-//       - Unless upper point is already inserted:
-//         - Find trapezoid that point is in
-//         - Add two new sink nodes
-//         - Replace trapezoid node with Y node that points to the new sinks
-//       - Unless lower point is already inserted, proceed as with upper point
+//       - Insert upper point
+//       - Insert lower point
 //       - Insert segment:
 //         - Compare with each node
 //           - At Y node:
