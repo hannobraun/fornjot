@@ -87,12 +87,15 @@ mod tests {
                 below,
                 above,
             }) => {
+                let below = *below;
+                let above = *above;
+
                 // Point must have been inserted.
                 assert_eq!(point, &point_to_insert);
 
                 // Children should be sinks
-                assert_eq!(graph.get(*below).is_sink(), true);
-                assert_eq!(graph.get(*above).is_sink(), true);
+                assert_eq!(graph.get(below).is_sink(), true);
+                assert_eq!(graph.get(above).is_sink(), true);
 
                 // Children should be distinct
                 assert_ne!(below, above);
