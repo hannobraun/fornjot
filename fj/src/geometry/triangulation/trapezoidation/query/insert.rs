@@ -143,7 +143,6 @@ mod tests {
             below,
             above,
         });
-
         graph.replace(graph.source(), node);
 
         let graph_before = graph.clone();
