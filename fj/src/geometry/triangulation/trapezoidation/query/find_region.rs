@@ -74,7 +74,7 @@ mod tests {
 
     type Graph = graph::Graph<X, Y, Region>;
 
-    #[derive(Default)]
+    #[derive(Debug, Default)]
     struct Region(u64);
 
     #[test]
