@@ -99,6 +99,10 @@ mod tests {
 
                 // Children should be distinct
                 assert_ne!(below, above);
+
+                // Children should be new nodes
+                assert_ne!(graph.source(), below);
+                assert_ne!(graph.source(), above);
             }
             node => panic!("Unexpected node: {:?}", node),
         }
