@@ -12,7 +12,7 @@ use super::{
 //       - Insert lower point
 //       - Insert segment
 // TASK: Decide where to update region when inserting.
-// TASK: Merge all regions that have the same bounding segments.
+// TASK: After insertion, merge regions that have the same bounding segments.
 
 pub fn insert_point<Region>(point: Point, graph: &mut Graph<X, Y, Region>)
 where
