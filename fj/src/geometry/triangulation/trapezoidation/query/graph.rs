@@ -61,6 +61,14 @@ pub enum Node<XNode = X, YNode = Y, Sink = Region> {
 }
 
 impl<XNode, YNode, Sink> Node<XNode, YNode, Sink> {
+    pub fn is_x(&self) -> bool {
+        matches!(self, &Node::X(_))
+    }
+
+    pub fn is_y(&self) -> bool {
+        matches!(self, &Node::Y(_))
+    }
+
     pub fn is_sink(&self) -> bool {
         matches!(self, &Node::Sink(_))
     }
