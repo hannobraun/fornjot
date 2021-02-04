@@ -6,7 +6,7 @@ use crate::geometry::triangulation::trapezoidation::{
     point::Point, segment::Segment,
 };
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Graph<XNode = X, YNode = Y, Sink = Region> {
     nodes: HashMap<Id, Node<XNode, YNode, Sink>>,
     next_id: u64,
@@ -60,14 +60,14 @@ pub enum Node<XNode = X, YNode = Y, Sink = Region> {
     Sink(Sink),
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct X {
     pub segment: Segment,
     pub left: Id,
     pub right: Id,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Y {
     pub point: Point,
     pub below: Id,
