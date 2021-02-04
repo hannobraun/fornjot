@@ -78,26 +78,10 @@ mod tests {
     fn insert_point_should_split_region_that_point_is_in() {
         let mut graph = Graph::new();
 
-        let region_below = Region(1);
-        let below = graph.insert_sink(region_below);
-        let above = graph.insert_sink(Region(2));
-
-        let node = Node::Y(Y {
-            point: Point::new(0.0, 1.0),
-            below,
-            above,
-        });
-
-        graph.replace(graph.source(), node);
-
-        let point_to_insert = Point::new(0.0, 2.0);
+        let point_to_insert = Point::new(0.0, 0.0);
         insert_point(point_to_insert, &mut graph);
 
-        // Region below should be untouched.
-        assert_eq!(graph.get(below), &Node::Sink(region_below));
-
-        // Region above should be replaced.
-        match graph.get(above) {
+        match graph.get(graph.source()) {
             Node::Y(Y {
                 point,
                 below,
@@ -115,6 +99,27 @@ mod tests {
             }
             node => panic!("Unexpected node: {:?}", node),
         }
+    }
+
+    #[test]
+    fn insert_point_should_find_correct_region() {
+        let mut graph = Graph::new();
+
+        let region_below = Region(1);
+        let below = graph.insert_sink(region_below);
+        let above = graph.insert_sink(Region(2));
+
+        let node = Node::Y(Y {
+            point: Point::new(0.0, 1.0),
+            below,
+            above,
+        });
+        graph.replace(graph.source(), node);
+
+        insert_point(Point::new(0.0, 2.0), &mut graph);
+
+        assert_eq!(graph.get(below), &Node::Sink(region_below));
+        assert_eq!(graph.get(above).is_y(), true);
     }
 
     #[test]
