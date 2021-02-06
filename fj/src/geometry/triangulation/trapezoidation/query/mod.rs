@@ -1,6 +1,7 @@
 //! The point location query structure of the trapezoidation
 
 pub mod find_region_for_point;
+pub mod find_regions_for_segment;
 pub mod graph;
 pub mod insert;
 
