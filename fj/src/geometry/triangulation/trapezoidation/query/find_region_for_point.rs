@@ -5,6 +5,7 @@ use crate::geometry::triangulation::trapezoidation::{
 
 use super::graph::{Graph, Id, Node, X, Y};
 
+/// Find the region that the given point is in
 pub fn find_region_for_point<Region>(
     point: &Point,
     graph: &Graph<X, Y, Region>,
