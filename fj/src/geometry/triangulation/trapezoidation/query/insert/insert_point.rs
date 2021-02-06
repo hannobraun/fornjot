@@ -1,7 +1,7 @@
 use crate::geometry::triangulation::trapezoidation::{
     point::Point,
     query::{
-        find_region::{find_region, Found},
+        find_region_for_point::{find_region, Found},
         graph::{Graph, Node, X, Y},
     },
 };
