@@ -12,5 +12,4 @@ pub mod insert_segment;
 //       - Insert segment
 // TASK: Decide where to update region when inserting.
 // TASK: After insertion, merge regions that have the same bounding segments.
-// TASK: Consider merging this module into its parent. If you do this, consider
-//       renaming the module `find_region` to `query`.
+// TASK: Consider merging this module into its parent.
