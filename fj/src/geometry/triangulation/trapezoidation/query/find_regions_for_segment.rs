@@ -9,9 +9,10 @@ pub fn find_regions_for_segment<Region>(
     segment: &Segment,
     graph: &Graph<X, Y, Region>,
 ) -> Vec<Id> {
-    let mut current_node = graph.source();
+    let mut next_nodes = vec![graph.source()];
+    let mut found_regions = Vec::new();
 
-    loop {
+    while let Some(current_node) = next_nodes.pop() {
         match graph.get(current_node) {
             Node::X(X {
                 segment: s,
@@ -20,10 +21,10 @@ pub fn find_regions_for_segment<Region>(
             }) => {
                 match segment.relation_to_segment(s) {
                     Some(segment::Relation::Left) => {
-                        current_node = *left;
+                        next_nodes.push(*left);
                     }
                     Some(segment::Relation::Right) => {
-                        current_node = *right;
+                        next_nodes.push(*right);
                     }
                     None => {
                         // This is a case that can obviously happen between the
@@ -44,10 +45,10 @@ pub fn find_regions_for_segment<Region>(
             }) => {
                 match segment.relation_to_point(point) {
                     Some(point::Relation::Below) => {
-                        current_node = *below;
+                        next_nodes.push(*below);
                     }
                     Some(point::Relation::Above) => {
-                        current_node = *above;
+                        next_nodes.push(*above);
                     }
                     None => {
                         // TASK: Implement
@@ -56,10 +57,12 @@ pub fn find_regions_for_segment<Region>(
                 }
             }
             Node::Sink(_) => {
-                return vec![current_node];
+                found_regions.push(current_node);
             }
         }
     }
+
+    found_regions
 }
 
 #[cfg(test)]
