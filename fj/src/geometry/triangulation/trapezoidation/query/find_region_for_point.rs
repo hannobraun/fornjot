@@ -5,7 +5,7 @@ use crate::geometry::triangulation::trapezoidation::{
 
 use super::graph::{Graph, Id, Node, X, Y};
 
-pub fn find_region<Region>(
+pub fn find_region_for_point<Region>(
     point: &Point,
     graph: &Graph<X, Y, Region>,
 ) -> Found {
@@ -70,7 +70,7 @@ mod tests {
         segment::Segment,
     };
 
-    use super::{find_region, Found};
+    use super::{find_region_for_point, Found};
 
     type Graph = graph::Graph<X, Y, Region>;
 
@@ -81,7 +81,7 @@ mod tests {
     fn find_region_should_find_root_region_if_none_other_exist() {
         let graph = Graph::new();
 
-        let region = find_region(&Point::new(0.0, 0.0), &graph);
+        let region = find_region_for_point(&Point::new(0.0, 0.0), &graph);
         assert_eq!(region, Found::Region(graph.source()));
     }
 
@@ -102,11 +102,11 @@ mod tests {
         graph.replace(graph.source(), node);
 
         assert_eq!(
-            find_region(&Point::new(0.0, 1.0), &graph),
+            find_region_for_point(&Point::new(0.0, 1.0), &graph),
             Found::Region(left)
         );
         assert_eq!(
-            find_region(&Point::new(2.0, 1.0), &graph),
+            find_region_for_point(&Point::new(2.0, 1.0), &graph),
             Found::Region(right)
         );
     }
@@ -127,11 +127,11 @@ mod tests {
         graph.replace(graph.source(), node);
 
         assert_eq!(
-            find_region(&Point::new(0.0, 0.0), &graph),
+            find_region_for_point(&Point::new(0.0, 0.0), &graph),
             Found::Region(below)
         );
         assert_eq!(
-            find_region(&Point::new(0.0, 2.0), &graph),
+            find_region_for_point(&Point::new(0.0, 2.0), &graph),
             Found::Region(above)
         );
     }
@@ -152,6 +152,9 @@ mod tests {
 
         graph.replace(graph.source(), node);
 
-        assert_eq!(find_region(&point, &graph), Found::Point(graph.source()));
+        assert_eq!(
+            find_region_for_point(&point, &graph),
+            Found::Point(graph.source())
+        );
     }
 }

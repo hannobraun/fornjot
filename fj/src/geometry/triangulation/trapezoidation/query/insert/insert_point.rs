@@ -1,7 +1,7 @@
 use crate::geometry::triangulation::trapezoidation::{
     point::Point,
     query::{
-        find_region_for_point::{find_region, Found},
+        find_region_for_point::{find_region_for_point, Found},
         graph::{Graph, Node, X, Y},
     },
 };
@@ -10,7 +10,7 @@ pub fn insert_point<Region>(point: Point, graph: &mut Graph<X, Y, Region>)
 where
     Region: Default,
 {
-    match find_region(&point, graph) {
+    match find_region_for_point(&point, graph) {
         Found::Region(id) => {
             let below = graph.insert_sink(Region::default());
             let above = graph.insert_sink(Region::default());
