@@ -79,7 +79,7 @@ mod tests {
     struct Region(u64);
 
     #[test]
-    fn find_region_should_find_root_region_if_none_other_exist() {
+    fn find_region_for_point_find_root_region_if_none_other_exist() {
         let graph = Graph::new();
 
         let region = find_region_for_point(&Point::new(0.0, 0.0), &graph);
@@ -87,7 +87,7 @@ mod tests {
     }
 
     #[test]
-    fn find_region_should_determine_if_point_is_left_or_right_of_x_node() {
+    fn find_region_for_point_determine_if_point_is_left_or_right_of_x_node() {
         let mut graph = Graph::new();
 
         let left = graph.insert_sink(Region(1));
@@ -113,7 +113,7 @@ mod tests {
     }
 
     #[test]
-    fn find_region_should_determine_if_point_is_below_or_above_a_y_node() {
+    fn find_region_for_point_determine_if_point_is_below_or_above_a_y_node() {
         let mut graph = Graph::new();
 
         let below = graph.insert_sink(Region(1));
@@ -138,7 +138,7 @@ mod tests {
     }
 
     #[test]
-    fn find_region_should_return_id_of_point_if_already_present() {
+    fn find_region_for_point_return_id_of_point_if_already_present() {
         let mut graph = Graph::new();
 
         let below = graph.insert_sink(Region(1));
