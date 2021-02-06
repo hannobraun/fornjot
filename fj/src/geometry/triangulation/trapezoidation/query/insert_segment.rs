@@ -76,7 +76,7 @@ mod tests {
     }
 
     #[test]
-    fn insert_segment_should_follow_right_path_at_x_node() {
+    fn insert_segment_should_find_the_right_regions() {
         let mut graph = Graph::new();
 
         let region_left = Region(1);
