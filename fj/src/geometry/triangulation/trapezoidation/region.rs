@@ -21,6 +21,12 @@ impl Region {
     }
 }
 
+impl RegionExt for Region {
+    fn source() -> Self {
+        Self::new()
+    }
+}
+
 #[derive(Debug, PartialEq)]
 pub struct HorizontalBoundary {
     pub point: Point,
@@ -38,7 +44,19 @@ pub enum BoundingRegions {
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub struct TestRegion(pub u64);
 
-// TASK: Add `RegionExt` trait that defines methods for splitting, and is
-//       implemented for real and test region types.
+#[cfg(test)]
+impl RegionExt for TestRegion {
+    fn source() -> Self {
+        Self(0)
+    }
+}
+
+pub trait RegionExt {
+    fn source() -> Self;
+
+    // TASK: Add `split_x`.
+    // TASK: Add `split_y`.
+}
+
 // TASK: Un-derive `Default` from region types.
 // TASK: Make sure that insert method split regions.
