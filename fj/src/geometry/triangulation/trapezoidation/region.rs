@@ -50,12 +50,24 @@ pub enum BoundingRegions {
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct TestRegion {
     pub id: u64,
+
+    pub split_left: bool,
+    pub split_right: bool,
+    pub split_lower: bool,
+    pub split_upper: bool,
 }
 
 #[cfg(test)]
 impl TestRegion {
     pub fn new(id: u64) -> Self {
-        Self { id }
+        Self {
+            id,
+
+            split_left: false,
+            split_right: false,
+            split_lower: false,
+            split_upper: false,
+        }
     }
 }
 
@@ -69,11 +81,27 @@ impl Source for TestRegion {
 #[cfg(test)]
 impl Split for TestRegion {
     fn split_x(&self) -> (Self, Self) {
-        (Self::new(self.id), Self::new(self.id + 1))
+        let left = Self {
+            split_left: true,
+            ..Self::new(self.id)
+        };
+        let right = Self {
+            split_right: true,
+            ..Self::new(self.id)
+        };
+        (left, right)
     }
 
     fn split_y(&self) -> (Self, Self) {
-        (Self::new(self.id), Self::new(self.id + 1))
+        let lower = Self {
+            split_lower: true,
+            ..Self::new(self.id)
+        };
+        let upper = Self {
+            split_upper: true,
+            ..Self::new(self.id)
+        };
+        (lower, upper)
     }
 }
 
