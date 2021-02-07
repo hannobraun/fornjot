@@ -21,6 +21,18 @@ impl Source for Region {
     }
 }
 
+impl Split for Region {
+    fn split_x(self) -> (Self, Self) {
+        // TASK: Implement
+        todo!()
+    }
+
+    fn split_y(self) -> (Self, Self) {
+        // TASK: Implement
+        todo!()
+    }
+}
+
 #[derive(Debug, PartialEq)]
 pub struct HorizontalBoundary {
     pub point: Point,
