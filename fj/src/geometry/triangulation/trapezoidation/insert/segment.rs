@@ -39,7 +39,7 @@ mod tests {
     struct Region(u64);
 
     #[test]
-    fn insert_segment_should_split_the_region_the_segment_goes_through() {
+    fn insert_should_split_the_region_the_segment_goes_through() {
         let mut graph = Graph::new();
 
         let segment_to_insert =
@@ -74,7 +74,7 @@ mod tests {
     }
 
     #[test]
-    fn insert_segment_should_find_the_right_regions() {
+    fn insert_should_find_the_right_regions() {
         let mut graph = Graph::new();
 
         let region_left = Region(1);
