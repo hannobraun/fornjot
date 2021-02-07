@@ -11,7 +11,7 @@ use super::{
 // TASK: Call update functions.
 pub fn insert<Region>(segment: Segment, graph: &mut Graph<X, Y, Region>)
 where
-    Region: Default + RegionExt,
+    Region: RegionExt,
 {
     point::insert(segment.upper(), graph);
     point::insert(segment.lower(), graph);
