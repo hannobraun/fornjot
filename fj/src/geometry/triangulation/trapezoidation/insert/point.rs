@@ -43,7 +43,7 @@ mod tests {
     struct Region(u64);
 
     #[test]
-    fn insert_point_should_split_region_that_point_is_in() {
+    fn insert_should_split_region_that_point_is_in() {
         let mut graph = Graph::new();
 
         let point_to_insert = Point::new(0.0, 0.0);
@@ -77,7 +77,7 @@ mod tests {
     }
 
     #[test]
-    fn insert_point_should_find_correct_region() {
+    fn insert_should_find_correct_region() {
         let mut graph = Graph::new();
 
         let region_below = Region(1);
@@ -98,7 +98,7 @@ mod tests {
     }
 
     #[test]
-    fn insert_point_should_do_nothing_if_point_already_present() {
+    fn insert_should_do_nothing_if_point_already_present() {
         let mut graph = Graph::new();
 
         let region_below = Region(1);
