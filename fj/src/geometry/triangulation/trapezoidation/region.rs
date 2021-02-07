@@ -56,4 +56,4 @@ pub trait RegionExt {
 }
 
 // TASK: Un-derive `Default` from region types.
-// TASK: Make sure that insert method split regions.
+// TASK: Make sure that insert methods split regions.
