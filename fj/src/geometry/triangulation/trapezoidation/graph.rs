@@ -110,15 +110,15 @@ mod tests {
         let graph = Graph::new();
 
         let root = graph.get(graph.source());
-        assert_eq!(root, &Node::Sink(Sink(0)));
+        assert_eq!(root, &Node::Sink(Sink::new(0)));
     }
 
     #[test]
     fn graph_should_insert_sinks() {
         let mut graph = Graph::new();
 
-        let a = Sink(1);
-        let b = Sink(2);
+        let a = Sink::new(1);
+        let b = Sink::new(2);
 
         let id_a = graph.insert_sink(a);
         let id_b = graph.insert_sink(b);

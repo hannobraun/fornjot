@@ -90,9 +90,9 @@ mod tests {
     fn insert_should_find_correct_region() {
         let mut graph = Graph::new();
 
-        let region_below = Region(1);
+        let region_below = Region::new(1);
         let below = graph.insert_sink(region_below);
-        let above = graph.insert_sink(Region(2));
+        let above = graph.insert_sink(Region::new(2));
 
         let node = Node::Y(Y {
             point: Point::new(0.0, 1.0),
@@ -111,9 +111,9 @@ mod tests {
     fn insert_should_do_nothing_if_point_already_present() {
         let mut graph = Graph::new();
 
-        let region_below = Region(1);
+        let region_below = Region::new(1);
         let below = graph.insert_sink(region_below);
-        let above = graph.insert_sink(Region(2));
+        let above = graph.insert_sink(Region::new(2));
 
         let point = Point::new(0.0, 1.0);
         let node = Node::Y(Y {

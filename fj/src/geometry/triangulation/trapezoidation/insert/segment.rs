@@ -98,9 +98,9 @@ mod tests {
     fn insert_should_find_the_right_regions() {
         let mut graph = Graph::new();
 
-        let region_left = Region(1);
+        let region_left = Region::new(1);
         let left = graph.insert_sink(region_left);
-        let right = graph.insert_sink(Region(2));
+        let right = graph.insert_sink(Region::new(2));
 
         let node = Node::X(X {
             segment: Segment::new(Point::new(0.0, 0.0), Point::new(0.0, 1.0))

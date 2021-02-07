@@ -51,20 +51,27 @@ pub enum BoundingRegions {
 pub struct TestRegion(pub u64);
 
 #[cfg(test)]
+impl TestRegion {
+    pub fn new(id: u64) -> Self {
+        Self(id)
+    }
+}
+
+#[cfg(test)]
 impl Source for TestRegion {
     fn source() -> Self {
-        Self(0)
+        Self::new(0)
     }
 }
 
 #[cfg(test)]
 impl Split for TestRegion {
     fn split_x(self) -> (Self, Self) {
-        (self, Self(self.0 + 1))
+        (self, Self::new(self.0 + 1))
     }
 
     fn split_y(self) -> (Self, Self) {
-        (self, Self(self.0 + 1))
+        (self, Self::new(self.0 + 1))
     }
 }
 

@@ -99,8 +99,8 @@ mod tests {
     fn find_regions_for_segment_should_choose_the_right_path_at_x_node() {
         let mut graph = Graph::new();
 
-        let left = graph.insert_sink(Region(1));
-        let right = graph.insert_sink(Region(2));
+        let left = graph.insert_sink(Region::new(1));
+        let right = graph.insert_sink(Region::new(2));
 
         let node = Node::X(X {
             segment: Segment::new(Point::new(1.0, 0.0), Point::new(1.0, 1.0))
@@ -133,8 +133,8 @@ mod tests {
     fn find_regions_for_segment_should_choose_the_right_path_at_y_node() {
         let mut graph = Graph::new();
 
-        let below = graph.insert_sink(Region(1));
-        let above = graph.insert_sink(Region(2));
+        let below = graph.insert_sink(Region::new(1));
+        let above = graph.insert_sink(Region::new(2));
 
         let node = Node::Y(Y {
             point: Point::new(0.0, 1.0),
@@ -166,8 +166,8 @@ mod tests {
     fn find_regions_for_segment_should_follow_both_paths_at_y_node() {
         let mut graph = Graph::new();
 
-        let below = graph.insert_sink(Region(1));
-        let above = graph.insert_sink(Region(2));
+        let below = graph.insert_sink(Region::new(1));
+        let above = graph.insert_sink(Region::new(2));
 
         let node = Node::Y(Y {
             point: Point::new(0.0, 1.0),
