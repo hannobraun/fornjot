@@ -2,6 +2,7 @@ use crate::geometry::triangulation::trapezoidation::{
     find_region_for_point::find_region_for_point,
     graph::{Graph, Node, X, Y},
     point::Point,
+    region::RegionExt,
 };
 
 pub fn insert<Region>(
@@ -9,11 +10,12 @@ pub fn insert<Region>(
     graph: &mut Graph<X, Y, Region>,
 ) -> Option<Y>
 where
-    Region: Default,
+    Region: RegionExt,
 {
     if let Some(id) = find_region_for_point(&point, graph) {
-        let below = graph.insert_sink(Region::default());
-        let above = graph.insert_sink(Region::default());
+        // TASK: Split existing region instead of creating new ones.
+        let below = graph.insert_sink(Region::source());
+        let above = graph.insert_sink(Region::source());
 
         let node = Y {
             point,

@@ -3,12 +3,15 @@ mod segment;
 
 use crate::geometry::triangulation::trapezoidation::segment::Segment;
 
-use super::graph::{Graph, X, Y};
+use super::{
+    graph::{Graph, X, Y},
+    region::RegionExt,
+};
 
 // TASK: Call update functions.
 pub fn insert<Region>(segment: Segment, graph: &mut Graph<X, Y, Region>)
 where
-    Region: Default,
+    Region: Default + RegionExt,
 {
     point::insert(segment.upper(), graph);
     point::insert(segment.lower(), graph);
