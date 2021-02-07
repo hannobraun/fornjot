@@ -31,5 +31,4 @@ pub mod segment;
 //       - Replace upper boundary of new lower region.
 //       - Update lower neighbors.
 // TASK: Call update functions from `insert`.
-// TASK: Consider merging this module into its parent.
 // TASK: Figure out what's missing to complete the implementation, add it.
