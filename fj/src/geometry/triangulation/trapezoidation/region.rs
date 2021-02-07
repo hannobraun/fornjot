@@ -10,20 +10,14 @@ pub struct Region {
     pub right_segment: Option<Id>,
 }
 
-impl Region {
-    pub fn new() -> Self {
+impl RegionExt for Region {
+    fn source() -> Self {
         Self {
             lower_boundary: None,
             upper_boundary: None,
             left_segment: None,
             right_segment: None,
         }
-    }
-}
-
-impl RegionExt for Region {
-    fn source() -> Self {
-        Self::new()
     }
 }
 
