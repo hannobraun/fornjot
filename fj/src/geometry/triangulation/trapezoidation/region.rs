@@ -48,12 +48,14 @@ pub enum BoundingRegions {
 /// Used by various unit test suites
 #[cfg(test)]
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub struct TestRegion(pub u64);
+pub struct TestRegion {
+    pub id: u64,
+}
 
 #[cfg(test)]
 impl TestRegion {
     pub fn new(id: u64) -> Self {
-        Self(id)
+        Self { id }
     }
 }
 
@@ -67,11 +69,11 @@ impl Source for TestRegion {
 #[cfg(test)]
 impl Split for TestRegion {
     fn split_x(self) -> (Self, Self) {
-        (self, Self::new(self.0 + 1))
+        (self, Self::new(self.id + 1))
     }
 
     fn split_y(self) -> (Self, Self) {
-        (self, Self::new(self.0 + 1))
+        (self, Self::new(self.id + 1))
     }
 }
 
