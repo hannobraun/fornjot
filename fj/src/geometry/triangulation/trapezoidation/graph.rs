@@ -93,6 +93,8 @@ pub struct Y {
 
 #[cfg(test)]
 mod tests {
+    use crate::geometry::triangulation::trapezoidation::region::TestRegion as Sink;
+
     use super::Node;
 
     type Graph = super::Graph<X, Y, Sink>;
@@ -102,9 +104,6 @@ mod tests {
 
     #[derive(Copy, Clone, Debug, Eq, PartialEq)]
     struct Y(u64);
-
-    #[derive(Clone, Copy, Default, Debug, Eq, PartialEq)]
-    struct Sink(u64);
 
     #[test]
     fn graph_should_be_constructed_with_root_node() {
