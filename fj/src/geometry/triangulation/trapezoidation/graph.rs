@@ -77,14 +77,14 @@ impl<XNode, YNode, Sink> Node<XNode, YNode, Sink> {
     }
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct X {
     pub segment: Segment,
     pub left: Id,
     pub right: Id,
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Y {
     pub point: Point,
     pub below: Id,
