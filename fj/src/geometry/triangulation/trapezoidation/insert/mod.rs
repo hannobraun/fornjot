@@ -8,7 +8,8 @@ use super::{
     region::RegionExt,
 };
 
-// TASK: Call update functions.
+// TASK: Update regions after inserting the nodes. The functions to do this
+//       should live in another module and be tested separately.
 pub fn insert<Region>(segment: Segment, graph: &mut Graph<X, Y, Region>)
 where
     Region: RegionExt,
