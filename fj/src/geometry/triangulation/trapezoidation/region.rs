@@ -33,8 +33,11 @@ pub enum BoundingRegions {
     Two { left: Id, right: Id },
 }
 
-// TASK: Consolidate the various test regions into a `TestRegion` that is
-//       `#[cfg(test)]` and lives here.
+/// Used by various unit test suites
+#[cfg(test)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+pub struct TestRegion(pub u64);
+
 // TASK: Add `RegionExt` trait that defines methods for splitting, and is
 //       implemented for real and test region types.
 // TASK: Un-derive `Default` from region types.

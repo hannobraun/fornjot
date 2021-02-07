@@ -68,15 +68,13 @@ mod tests {
     use crate::geometry::triangulation::trapezoidation::{
         graph::{self, Node, X, Y},
         point::Point,
+        region::TestRegion as Region,
         segment::Segment,
     };
 
     use super::find_region_for_point;
 
     type Graph = graph::Graph<X, Y, Region>;
-
-    #[derive(Debug, Default)]
-    struct Region(u64);
 
     #[test]
     fn find_region_for_point_find_root_region_if_none_other_exist() {

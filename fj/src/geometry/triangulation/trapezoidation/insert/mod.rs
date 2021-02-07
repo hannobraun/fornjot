@@ -20,15 +20,13 @@ mod tests {
     use crate::geometry::triangulation::trapezoidation::{
         graph::{self, Node, X, Y},
         point::Point,
+        region::TestRegion as Region,
         segment::Segment,
     };
 
     use super::insert;
 
     type Graph = graph::Graph<X, Y, Region>;
-
-    #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
-    struct Region(u64);
 
     #[test]
     fn insert_should_insert_upper_point_then_lower_point_then_segment() {

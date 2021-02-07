@@ -34,14 +34,12 @@ mod tests {
     use crate::geometry::triangulation::trapezoidation::{
         graph::{self, Node, X, Y},
         point::Point,
+        region::TestRegion as Region,
     };
 
     use super::insert;
 
     type Graph = graph::Graph<X, Y, Region>;
-
-    #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
-    struct Region(u64);
 
     #[test]
     fn insert_should_split_region_that_point_is_in() {
