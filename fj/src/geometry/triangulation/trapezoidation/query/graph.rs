@@ -9,7 +9,7 @@ use crate::geometry::triangulation::trapezoidation::{
 #[derive(Clone, Debug, PartialEq)]
 pub struct Graph<XNode = X, YNode = Y, Sink = Region> {
     nodes: HashMap<Id, Node<XNode, YNode, Sink>>,
-    next_id: u64,
+    ids: Ids,
 }
 
 impl<XNode, YNode, Sink> Graph<XNode, YNode, Sink> {
@@ -20,10 +20,12 @@ impl<XNode, YNode, Sink> Graph<XNode, YNode, Sink> {
     where
         Sink: Default,
     {
-        let mut nodes = HashMap::new();
-        nodes.insert(Id(0), Node::Sink(Sink::default()));
+        let mut ids = Ids::new();
 
-        Self { nodes, next_id: 1 }
+        let mut nodes = HashMap::new();
+        nodes.insert(ids.next(), Node::Sink(Sink::default()));
+
+        Self { nodes, ids }
     }
 
     pub fn source(&self) -> Id {
@@ -37,16 +39,29 @@ impl<XNode, YNode, Sink> Graph<XNode, YNode, Sink> {
     }
 
     pub fn insert_sink(&mut self, sink: Sink) -> Id {
-        let id = Id(self.next_id);
-        self.next_id += 1;
-
+        let id = self.ids.next();
         self.nodes.insert(id, Node::Sink(sink));
-
         id
     }
 
     pub fn replace(&mut self, id: Id, node: Node<XNode, YNode, Sink>) {
         self.nodes.insert(id, node);
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct Ids {
+    next_id: u64,
+}
+
+impl Ids {
+    pub fn new() -> Self {
+        Self { next_id: 0 }
+    }
+    pub fn next(&mut self) -> Id {
+        let id = Id(self.next_id);
+        self.next_id += 1;
+        id
     }
 }
 
