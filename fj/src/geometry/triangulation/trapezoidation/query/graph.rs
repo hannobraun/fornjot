@@ -8,8 +8,8 @@ use crate::geometry::triangulation::trapezoidation::{
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Graph<XNode = X, YNode = Y, Sink = Region> {
-    nodes: HashMap<Id, Node<XNode, YNode, Sink>>,
     ids: Ids,
+    nodes: HashMap<Id, Node<XNode, YNode, Sink>>,
 }
 
 impl<XNode, YNode, Sink> Graph<XNode, YNode, Sink> {
@@ -25,7 +25,7 @@ impl<XNode, YNode, Sink> Graph<XNode, YNode, Sink> {
         let mut nodes = HashMap::new();
         nodes.insert(ids.next(), Node::Sink(Sink::default()));
 
-        Self { nodes, ids }
+        Self { ids, nodes }
     }
 
     pub fn source(&self) -> Id {
