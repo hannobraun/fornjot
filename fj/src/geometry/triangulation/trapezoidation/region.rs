@@ -46,10 +46,11 @@ impl Source for TestRegion {
 }
 
 // TASK: Don't use this trait in insert methods.
-// TASK: Create separate trait, `Split`, with split methods.
 pub trait Source {
     fn source() -> Self;
+}
 
+pub trait Split {
     // TASK: Add `split_x`.
     // TASK: Add `split_y`.
 }
