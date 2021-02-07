@@ -45,6 +45,9 @@ impl RegionExt for TestRegion {
     }
 }
 
+// TASK: Rename to `Source`.
+// TASK: Don't use this trait in insert methods.
+// TASK: Create separate trait, `Split`, with split methods.
 pub trait RegionExt {
     fn source() -> Self;
 
