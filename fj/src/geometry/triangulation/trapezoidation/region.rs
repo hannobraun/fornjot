@@ -57,12 +57,22 @@ impl Source for TestRegion {
     }
 }
 
+#[cfg(test)]
+impl Split for TestRegion {
+    fn split_x(self) -> (Self, Self) {
+        (self, Self(self.0 + 1))
+    }
+
+    fn split_y(self) -> (Self, Self) {
+        (self, Self(self.0 + 1))
+    }
+}
+
 // TASK: Don't use this trait in insert methods.
 pub trait Source {
     fn source() -> Self;
 }
 
-// TASK: Implement for region types.
 pub trait Split: Sized {
     fn split_x(self) -> (Self, Self);
     fn split_y(self) -> (Self, Self);
