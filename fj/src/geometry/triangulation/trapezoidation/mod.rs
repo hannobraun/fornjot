@@ -12,8 +12,6 @@ pub mod point;
 pub mod region;
 pub mod segment;
 
-// TASK: Return inserted node from all insertion functions. This should be
-//       all the information required to update all affected regions afterwards.
 // TASK: Implement function that updates all regions after an x node has been
 //       inserted:
 //       - Replace right segment of new left region.
@@ -28,5 +26,4 @@ pub mod segment;
 //       - Replace lower boundary of new upper region.
 //       - Replace upper boundary of new lower region.
 //       - Update lower neighbors.
-// TASK: Call update functions from `insert`.
 // TASK: Figure out what's missing to complete the implementation, add it.
