@@ -1,8 +1,7 @@
-use crate::geometry::triangulation::trapezoidation::segment::Segment;
-
-use super::{
+use crate::geometry::triangulation::trapezoidation::{
     find_regions_for_segment::find_regions_for_segment,
     graph::{Graph, Node, X, Y},
+    segment::Segment,
 };
 
 pub fn insert_segment<Region>(segment: Segment, graph: &mut Graph<X, Y, Region>)
