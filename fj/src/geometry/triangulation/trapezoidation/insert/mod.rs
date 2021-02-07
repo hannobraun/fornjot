@@ -1,6 +1,8 @@
 mod point;
 mod segment;
 
+use std::fmt::Debug;
+
 use crate::geometry::triangulation::trapezoidation::segment::Segment;
 
 use super::{
@@ -12,7 +14,7 @@ use super::{
 //       should live in another module and be tested separately.
 pub fn insert<Region>(segment: Segment, graph: &mut Graph<X, Y, Region>)
 where
-    Region: region::Source,
+    Region: Copy + Debug + region::Split + region::Source,
 {
     point::insert(segment.upper(), graph);
     point::insert(segment.lower(), graph);

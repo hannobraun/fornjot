@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use crate::geometry::triangulation::trapezoidation::{
     find_region_for_point::find_region_for_point,
     graph::{Graph, Node, X, Y},
@@ -10,12 +12,13 @@ pub fn insert<Region>(
     graph: &mut Graph<X, Y, Region>,
 ) -> Option<Y>
 where
-    Region: region::Source,
+    Region: Copy + Debug + region::Split,
 {
     if let Some(id) = find_region_for_point(&point, graph) {
-        // TASK: Split existing region instead of creating new ones.
-        let below = graph.insert_sink(Region::source());
-        let above = graph.insert_sink(Region::source());
+        let (below, above) = graph.get(id).unwrap_sink().split_y();
+
+        let below = graph.insert_sink(below);
+        let above = graph.insert_sink(above);
 
         let node = Y {
             point,
@@ -62,16 +65,9 @@ mod tests {
                 // Point must have been inserted.
                 assert_eq!(point, &point_to_insert);
 
-                // Children should be sinks
-                graph.get(below).unwrap_sink();
-                graph.get(above).unwrap_sink();
-
-                // Children should be distinct
-                assert_ne!(below, above);
-
-                // Children should be new nodes
-                assert_ne!(graph.source(), below);
-                assert_ne!(graph.source(), above);
+                // Children should be split from original region.
+                assert_eq!(graph.get(below).unwrap_sink().split_lower, true);
+                assert_eq!(graph.get(above).unwrap_sink().split_upper, true);
             }
             node => panic!("Unexpected node: {:?}", node),
         }
