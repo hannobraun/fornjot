@@ -2,7 +2,7 @@ use crate::geometry::triangulation::trapezoidation::point::Point;
 
 use super::ids::Id;
 
-#[derive(Debug, Default, PartialEq)]
+#[derive(Debug, PartialEq)]
 pub struct Region {
     pub upper_boundary: Option<HorizontalBoundary>,
     pub lower_boundary: Option<HorizontalBoundary>,
@@ -35,7 +35,7 @@ pub enum BoundingRegions {
 
 /// Used by various unit test suites
 #[cfg(test)]
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct TestRegion(pub u64);
 
 #[cfg(test)]
