@@ -4,23 +4,30 @@ use crate::geometry::triangulation::trapezoidation::{
     segment::Segment,
 };
 
-pub fn insert<Region>(segment: Segment, graph: &mut Graph<X, Y, Region>)
+pub fn insert<Region>(
+    segment: Segment,
+    graph: &mut Graph<X, Y, Region>,
+) -> Vec<X>
 where
     Region: Default,
 {
+    let mut inserted_nodes = Vec::new();
+
     for region in find_regions_for_segment(&segment, graph) {
         let left = graph.insert_sink(Region::default());
         let right = graph.insert_sink(Region::default());
 
-        graph.replace(
-            region,
-            Node::X(X {
-                segment,
-                left,
-                right,
-            }),
-        );
+        let node = X {
+            segment,
+            left,
+            right,
+        };
+
+        graph.replace(region, Node::X(node));
+        inserted_nodes.push(node);
     }
+
+    inserted_nodes
 }
 
 #[cfg(test)]
@@ -71,6 +78,20 @@ mod tests {
             }
             node => panic!("Unexpected node: {:?}", node),
         }
+    }
+
+    #[test]
+    fn insert_should_return_inserted_node() {
+        let mut graph = Graph::new();
+
+        let nodes = insert(
+            Segment::new(Point::new(0.0, 0.0), Point::new(0.0, 1.0)).unwrap(),
+            &mut graph,
+        );
+        let nodes: Vec<_> =
+            nodes.into_iter().map(|node| Node::X(node)).collect();
+
+        assert_eq!(vec![*graph.get(graph.source())], nodes);
     }
 
     #[test]
