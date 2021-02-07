@@ -67,5 +67,3 @@ pub trait Split: Sized {
     fn split_x(self) -> (Self, Self);
     fn split_y(self) -> (Self, Self);
 }
-
-// TASK: Make sure that insert methods split regions.
