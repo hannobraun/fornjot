@@ -11,7 +11,7 @@ where
 {
     point::insert(segment.upper(), graph);
     point::insert(segment.lower(), graph);
-    segment::insert_segment(segment, graph);
+    segment::insert(segment, graph);
 }
 
 #[cfg(test)]
