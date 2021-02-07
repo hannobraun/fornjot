@@ -1,6 +1,6 @@
 //! Defines the point location query structure
 
-use std::collections::HashMap;
+use std::{collections::HashMap, fmt::Debug};
 
 use crate::geometry::triangulation::trapezoidation::{
     point::Point, segment::Segment,
@@ -63,17 +63,31 @@ pub enum Node<XNode = X, YNode = Y, Sink = Region> {
     Sink(Sink),
 }
 
-impl<XNode, YNode, Sink> Node<XNode, YNode, Sink> {
-    pub fn is_x(&self) -> bool {
-        matches!(self, &Node::X(_))
+impl<XNode, YNode, Sink> Node<XNode, YNode, Sink>
+where
+    XNode: Copy + Debug,
+    YNode: Copy + Debug,
+    Sink: Copy + Debug,
+{
+    pub fn unwrap_x(&self) -> XNode {
+        match self {
+            Node::X(x) => *x,
+            node => panic!("Unexpected node: {:?}", node),
+        }
     }
 
-    pub fn is_y(&self) -> bool {
-        matches!(self, &Node::Y(_))
+    pub fn unwrap_y(&self) -> YNode {
+        match self {
+            Node::Y(y) => *y,
+            node => panic!("Unexpected node: {:?}", node),
+        }
     }
 
-    pub fn is_sink(&self) -> bool {
-        matches!(self, &Node::Sink(_))
+    pub fn unwrap_sink(&self) -> Sink {
+        match self {
+            Node::Sink(sink) => *sink,
+            node => panic!("Unexpected node: {:?}", node),
+        }
     }
 }
 

@@ -63,8 +63,8 @@ mod tests {
                 assert_eq!(point, &point_to_insert);
 
                 // Children should be sinks
-                assert_eq!(graph.get(below).is_sink(), true);
-                assert_eq!(graph.get(above).is_sink(), true);
+                graph.get(below).unwrap_sink();
+                graph.get(above).unwrap_sink();
 
                 // Children should be distinct
                 assert_ne!(below, above);
@@ -104,7 +104,7 @@ mod tests {
         insert(Point::new(0.0, 2.0), &mut graph);
 
         assert_eq!(graph.get(below), &Node::Sink(region_below));
-        assert_eq!(graph.get(above).is_y(), true);
+        graph.get(above).unwrap_y();
     }
 
     #[test]

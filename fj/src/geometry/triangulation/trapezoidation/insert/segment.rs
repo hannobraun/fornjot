@@ -66,8 +66,8 @@ mod tests {
                 assert_eq!(segment, &segment_to_insert);
 
                 // Children should be sinks
-                assert_eq!(graph.get(left).is_sink(), true);
-                assert_eq!(graph.get(right).is_sink(), true);
+                graph.get(left).unwrap_sink();
+                graph.get(right).unwrap_sink();
 
                 // Children should be distinct
                 assert_ne!(left, right);
@@ -116,6 +116,6 @@ mod tests {
         );
 
         assert_eq!(graph.get(left), &Node::Sink(region_left));
-        assert_eq!(graph.get(right).is_x(), true);
+        graph.get(right).unwrap_x();
     }
 }
