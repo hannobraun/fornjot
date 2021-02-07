@@ -8,23 +8,18 @@ pub fn insert<Region>(point: Point, graph: &mut Graph<X, Y, Region>)
 where
     Region: Default,
 {
-    match find_region_for_point(&point, graph) {
-        Some(id) => {
-            let below = graph.insert_sink(Region::default());
-            let above = graph.insert_sink(Region::default());
+    if let Some(id) = find_region_for_point(&point, graph) {
+        let below = graph.insert_sink(Region::default());
+        let above = graph.insert_sink(Region::default());
 
-            graph.replace(
-                id,
-                Node::Y(Y {
-                    point,
-                    below,
-                    above,
-                }),
-            );
-        }
-        None => {
-            // Point is already in the graph. Nothing to do.
-        }
+        graph.replace(
+            id,
+            Node::Y(Y {
+                point,
+                below,
+                above,
+            }),
+        );
     }
 }
 
