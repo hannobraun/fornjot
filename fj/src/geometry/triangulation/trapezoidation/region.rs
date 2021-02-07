@@ -68,5 +68,4 @@ pub trait Split: Sized {
     fn split_y(self) -> (Self, Self);
 }
 
-// TASK: Un-derive `Default` from region types.
 // TASK: Make sure that insert methods split regions.
