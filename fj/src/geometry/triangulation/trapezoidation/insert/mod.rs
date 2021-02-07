@@ -14,7 +14,7 @@ use super::{
 //       should live in another module and be tested separately.
 pub fn insert<Region>(segment: Segment, graph: &mut Graph<X, Y, Region>)
 where
-    Region: Copy + Debug + region::Split + region::Source,
+    Region: Copy + Debug + region::Split,
 {
     point::insert(segment.upper(), graph);
     point::insert(segment.lower(), graph);
