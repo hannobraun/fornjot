@@ -7,6 +7,7 @@ pub mod ids;
 pub mod insert;
 pub mod insert_point;
 pub mod insert_segment;
+pub mod region;
 
 // TASK: Return inserted node from all insertion functions. This should be
 //       all the information required to update all affected regions afterwards.
