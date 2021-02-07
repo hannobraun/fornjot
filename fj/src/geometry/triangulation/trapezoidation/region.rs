@@ -50,9 +50,10 @@ pub trait Source {
     fn source() -> Self;
 }
 
-pub trait Split {
-    // TASK: Add `split_x`.
-    // TASK: Add `split_y`.
+// TASK: Implement for region types.
+pub trait Split: Sized {
+    fn split_x(self) -> (Self, Self);
+    fn split_y(self) -> (Self, Self);
 }
 
 // TASK: Un-derive `Default` from region types.
