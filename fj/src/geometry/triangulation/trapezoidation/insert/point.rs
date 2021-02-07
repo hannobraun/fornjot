@@ -4,7 +4,7 @@ use crate::geometry::triangulation::trapezoidation::{
     point::Point,
 };
 
-pub fn insert_point<Region>(point: Point, graph: &mut Graph<X, Y, Region>)
+pub fn insert<Region>(point: Point, graph: &mut Graph<X, Y, Region>)
 where
     Region: Default,
 {
@@ -35,7 +35,7 @@ mod tests {
         point::Point,
     };
 
-    use super::insert_point;
+    use super::insert;
 
     type Graph = graph::Graph<X, Y, Region>;
 
@@ -47,7 +47,7 @@ mod tests {
         let mut graph = Graph::new();
 
         let point_to_insert = Point::new(0.0, 0.0);
-        insert_point(point_to_insert, &mut graph);
+        insert(point_to_insert, &mut graph);
 
         match graph.get(graph.source()) {
             Node::Y(Y {
@@ -91,7 +91,7 @@ mod tests {
         });
         graph.replace(graph.source(), node);
 
-        insert_point(Point::new(0.0, 2.0), &mut graph);
+        insert(Point::new(0.0, 2.0), &mut graph);
 
         assert_eq!(graph.get(below), &Node::Sink(region_below));
         assert_eq!(graph.get(above).is_y(), true);
@@ -114,7 +114,7 @@ mod tests {
         graph.replace(graph.source(), node);
 
         let graph_before = graph.clone();
-        insert_point(point, &mut graph);
+        insert(point, &mut graph);
 
         assert_eq!(graph_before, graph);
     }

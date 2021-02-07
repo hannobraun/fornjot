@@ -11,8 +11,8 @@ pub fn insert<Region>(segment: Segment, graph: &mut Graph<X, Y, Region>)
 where
     Region: Default,
 {
-    point::insert_point(segment.upper(), graph);
-    point::insert_point(segment.lower(), graph);
+    point::insert(segment.upper(), graph);
+    point::insert(segment.lower(), graph);
     insert_segment(segment, graph);
 }
 
