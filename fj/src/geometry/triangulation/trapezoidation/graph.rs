@@ -8,7 +8,7 @@ use crate::geometry::triangulation::trapezoidation::{
 
 use super::{
     ids::{Id, Ids},
-    region::Region,
+    region::{Region, RegionExt},
 };
 
 #[derive(Clone, Debug, PartialEq)]
@@ -24,13 +24,13 @@ impl<XNode, YNode, Sink> Graph<XNode, YNode, Sink> {
     /// The graph initially contains single source/sink node.
     pub fn new() -> Self
     where
-        Sink: Default,
+        Sink: RegionExt,
     {
         let mut ids = Ids::new();
         let source = ids.next();
 
         let mut nodes = HashMap::new();
-        nodes.insert(source, Node::Sink(Sink::default()));
+        nodes.insert(source, Node::Sink(Sink::source()));
 
         Self { ids, source, nodes }
     }
