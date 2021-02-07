@@ -1,5 +1,5 @@
 use crate::geometry::triangulation::trapezoidation::{
-    find_region_for_point::{find_region_for_point, Found},
+    find_region_for_point::find_region_for_point,
     graph::{Graph, Node, X, Y},
     point::Point,
 };
@@ -9,7 +9,7 @@ where
     Region: Default,
 {
     match find_region_for_point(&point, graph) {
-        Found::Region(id) => {
+        Some(id) => {
             let below = graph.insert_sink(Region::default());
             let above = graph.insert_sink(Region::default());
 
@@ -22,7 +22,7 @@ where
                 }),
             );
         }
-        Found::Point(_) => {
+        None => {
             // Point is already in the graph. Nothing to do.
         }
     }

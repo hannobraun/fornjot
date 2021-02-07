@@ -9,10 +9,13 @@ use super::{
 };
 
 /// Find the region that the given point is in
+///
+/// Returns `None` if a region can't be found because the point is already in
+/// the graph.
 pub fn find_region_for_point<Region>(
     point: &Point,
     graph: &Graph<X, Y, Region>,
-) -> Found {
+) -> Option<Id> {
     let mut current_id = graph.source();
 
     loop {
@@ -46,7 +49,7 @@ pub fn find_region_for_point<Region>(
                 None => {
                     if p == point {
                         // Point already in graph.
-                        return Found::Point(current_id);
+                        return None;
                     }
 
                     // If we land here, the points have no relation to each
@@ -55,15 +58,9 @@ pub fn find_region_for_point<Region>(
                     panic!("Invalid point: {:?}", point);
                 }
             },
-            Node::Sink(_) => return Found::Region(current_id),
+            Node::Sink(_) => return Some(current_id),
         }
     }
-}
-
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum Found {
-    Region(Id),
-    Point(Id),
 }
 
 #[cfg(test)]
@@ -74,7 +71,7 @@ mod tests {
         segment::Segment,
     };
 
-    use super::{find_region_for_point, Found};
+    use super::find_region_for_point;
 
     type Graph = graph::Graph<X, Y, Region>;
 
@@ -86,7 +83,7 @@ mod tests {
         let graph = Graph::new();
 
         let region = find_region_for_point(&Point::new(0.0, 0.0), &graph);
-        assert_eq!(region, Found::Region(graph.source()));
+        assert_eq!(region, Some(graph.source()));
     }
 
     #[test]
@@ -107,11 +104,11 @@ mod tests {
 
         assert_eq!(
             find_region_for_point(&Point::new(0.0, 1.0), &graph),
-            Found::Region(left)
+            Some(left)
         );
         assert_eq!(
             find_region_for_point(&Point::new(2.0, 1.0), &graph),
-            Found::Region(right)
+            Some(right)
         );
     }
 
@@ -132,11 +129,11 @@ mod tests {
 
         assert_eq!(
             find_region_for_point(&Point::new(0.0, 0.0), &graph),
-            Found::Region(below)
+            Some(below)
         );
         assert_eq!(
             find_region_for_point(&Point::new(0.0, 2.0), &graph),
-            Found::Region(above)
+            Some(above)
         );
     }
 
@@ -156,9 +153,6 @@ mod tests {
 
         graph.replace(graph.source(), node);
 
-        assert_eq!(
-            find_region_for_point(&point, &graph),
-            Found::Point(graph.source())
-        );
+        assert_eq!(find_region_for_point(&point, &graph), None);
     }
 }
