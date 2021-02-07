@@ -32,8 +32,8 @@ where
 #[cfg(test)]
 mod tests {
     use crate::geometry::triangulation::trapezoidation::{
+        graph::{self, Node, X, Y},
         point::Point,
-        query::graph::{self, Node, X, Y},
     };
 
     use super::insert_point;

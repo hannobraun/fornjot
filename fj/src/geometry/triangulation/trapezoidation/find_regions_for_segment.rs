@@ -74,8 +74,8 @@ pub fn find_regions_for_segment<Region>(
 #[cfg(test)]
 mod tests {
     use crate::geometry::triangulation::trapezoidation::{
+        graph::{self, Node, X, Y},
         point::Point,
-        query::graph::{self, Node, X, Y},
         segment::Segment,
     };
 
