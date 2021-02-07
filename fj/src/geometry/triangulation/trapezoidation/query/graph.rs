@@ -90,25 +90,33 @@ pub struct Y {
 
 #[derive(Debug, Default, PartialEq)]
 pub struct Region {
+    pub upper_boundary: Option<HorizontalBoundary>,
+    pub lower_boundary: Option<HorizontalBoundary>,
     pub left_segment: Option<Id>,
     pub right_segment: Option<Id>,
-    pub lower_left_region: Option<Id>,
-    pub lower_right_region: Option<Id>,
-    pub upper_left_region: Option<Id>,
-    pub upper_right_region: Option<Id>,
 }
 
 impl Region {
     pub fn new() -> Self {
         Self {
+            lower_boundary: None,
+            upper_boundary: None,
             left_segment: None,
             right_segment: None,
-            lower_left_region: None,
-            lower_right_region: None,
-            upper_left_region: None,
-            upper_right_region: None,
         }
     }
+}
+
+#[derive(Debug, PartialEq)]
+pub struct HorizontalBoundary {
+    pub point: Point,
+    pub regions: BoundingRegions,
+}
+
+#[derive(Debug, PartialEq)]
+pub enum BoundingRegions {
+    One(Id),
+    Two { left: Id, right: Id },
 }
 
 #[cfg(test)]
