@@ -10,7 +10,7 @@ pub struct Region {
     pub right_segment: Option<Id>,
 }
 
-impl RegionExt for Region {
+impl Source for Region {
     fn source() -> Self {
         Self {
             lower_boundary: None,
@@ -39,16 +39,15 @@ pub enum BoundingRegions {
 pub struct TestRegion(pub u64);
 
 #[cfg(test)]
-impl RegionExt for TestRegion {
+impl Source for TestRegion {
     fn source() -> Self {
         Self(0)
     }
 }
 
-// TASK: Rename to `Source`.
 // TASK: Don't use this trait in insert methods.
 // TASK: Create separate trait, `Split`, with split methods.
-pub trait RegionExt {
+pub trait Source {
     fn source() -> Self;
 
     // TASK: Add `split_x`.
