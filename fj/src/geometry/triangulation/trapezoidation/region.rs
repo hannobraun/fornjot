@@ -22,12 +22,12 @@ impl Source for Region {
 }
 
 impl Split for Region {
-    fn split_x(self) -> (Self, Self) {
+    fn split_x(&self) -> (Self, Self) {
         // TASK: Implement
         todo!()
     }
 
-    fn split_y(self) -> (Self, Self) {
+    fn split_y(&self) -> (Self, Self) {
         // TASK: Implement
         todo!()
     }
@@ -68,12 +68,12 @@ impl Source for TestRegion {
 
 #[cfg(test)]
 impl Split for TestRegion {
-    fn split_x(self) -> (Self, Self) {
-        (self, Self::new(self.id + 1))
+    fn split_x(&self) -> (Self, Self) {
+        (Self::new(self.id), Self::new(self.id + 1))
     }
 
-    fn split_y(self) -> (Self, Self) {
-        (self, Self::new(self.id + 1))
+    fn split_y(&self) -> (Self, Self) {
+        (Self::new(self.id), Self::new(self.id + 1))
     }
 }
 
@@ -83,6 +83,6 @@ pub trait Source {
 }
 
 pub trait Split: Sized {
-    fn split_x(self) -> (Self, Self);
-    fn split_y(self) -> (Self, Self);
+    fn split_x(&self) -> (Self, Self);
+    fn split_y(&self) -> (Self, Self);
 }
