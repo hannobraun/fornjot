@@ -1,8 +1,7 @@
-use crate::geometry::triangulation::trapezoidation::point::Point;
-
-use super::{
+use crate::geometry::triangulation::trapezoidation::{
     find_region_for_point::{find_region_for_point, Found},
     graph::{Graph, Node, X, Y},
+    point::Point,
 };
 
 pub fn insert_point<Region>(point: Point, graph: &mut Graph<X, Y, Region>)

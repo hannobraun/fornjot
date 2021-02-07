@@ -1,8 +1,9 @@
+mod point;
+
 use crate::geometry::triangulation::trapezoidation::segment::Segment;
 
 use super::{
     graph::{Graph, X, Y},
-    insert_point::insert_point,
     insert_segment::insert_segment,
 };
 
@@ -10,8 +11,8 @@ pub fn insert<Region>(segment: Segment, graph: &mut Graph<X, Y, Region>)
 where
     Region: Default,
 {
-    insert_point(segment.upper(), graph);
-    insert_point(segment.lower(), graph);
+    point::insert_point(segment.upper(), graph);
+    point::insert_point(segment.lower(), graph);
     insert_segment(segment, graph);
 }
 
