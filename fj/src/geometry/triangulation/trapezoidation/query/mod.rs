@@ -3,6 +3,7 @@
 pub mod find_region_for_point;
 pub mod find_regions_for_segment;
 pub mod graph;
+pub mod ids;
 pub mod insert;
 pub mod insert_point;
 pub mod insert_segment;

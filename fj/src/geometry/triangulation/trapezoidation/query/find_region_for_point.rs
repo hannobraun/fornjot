@@ -3,7 +3,10 @@ use crate::geometry::triangulation::trapezoidation::{
     segment,
 };
 
-use super::graph::{Graph, Id, Node, X, Y};
+use super::{
+    graph::{Graph, Node, X, Y},
+    ids::Id,
+};
 
 /// Find the region that the given point is in
 pub fn find_region_for_point<Region>(

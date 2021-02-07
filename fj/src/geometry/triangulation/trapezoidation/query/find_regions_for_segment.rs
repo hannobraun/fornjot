@@ -1,8 +1,10 @@
 use crate::geometry::triangulation::trapezoidation::{
     point,
-    query::graph::{Graph, Id, Node, X, Y},
+    query::graph::{Graph, Node, X, Y},
     segment::{self, Segment},
 };
+
+use super::ids::Id;
 
 /// Find the regions that are split by the given segment
 pub fn find_regions_for_segment<Region>(
