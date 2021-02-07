@@ -37,12 +37,12 @@ impl<XNode, YNode, Sink> Graph<XNode, YNode, Sink> {
     }
 
     pub fn insert_sink(&mut self, sink: Sink) -> Id {
-        let id = self.next_id;
+        let id = Id(self.next_id);
         self.next_id += 1;
 
-        self.nodes.insert(Id(id), Node::Sink(sink));
+        self.nodes.insert(id, Node::Sink(sink));
 
-        Id(id)
+        id
     }
 
     pub fn replace(&mut self, id: Id, node: Node<XNode, YNode, Sink>) {
