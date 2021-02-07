@@ -105,7 +105,6 @@ impl Split for TestRegion {
     }
 }
 
-// TASK: Don't use this trait in insert methods.
 pub trait Source {
     fn source() -> Self;
 }
