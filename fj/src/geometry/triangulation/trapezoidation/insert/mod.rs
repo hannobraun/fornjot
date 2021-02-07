@@ -5,6 +5,7 @@ use crate::geometry::triangulation::trapezoidation::segment::Segment;
 
 use super::graph::{Graph, X, Y};
 
+// TASK: Call update functions.
 pub fn insert<Region>(segment: Segment, graph: &mut Graph<X, Y, Region>)
 where
     Region: Default,
@@ -62,5 +63,3 @@ mod tests {
         }
     }
 }
-
-// TASK: Call update functions from `insert`.
