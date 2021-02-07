@@ -37,3 +37,5 @@ pub enum BoundingRegions {
 //       `#[cfg(test)]` and lives here.
 // TASK: Add `RegionExt` trait that defines methods for splitting, and is
 //       implemented for real and test region types.
+// TASK: Un-derive `Default` from region types.
+// TASK: Make sure that insert method split regions.
