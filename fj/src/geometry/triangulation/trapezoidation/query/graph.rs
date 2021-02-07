@@ -119,6 +119,13 @@ pub enum BoundingRegions {
     Two { left: Id, right: Id },
 }
 
+// TASK: Consolidate the various test regions into a `TestRegion` that is
+//       `#[cfg(test)]` and lives here.
+// TASK: Add `RegionExt` trait that defines methods for splitting, and is
+//       implemented for real and test region types.
+// TASK: Move region code into separate module. Probably requires moving id code
+//       into separate module first.
+
 #[cfg(test)]
 mod tests {
     use super::Node;
