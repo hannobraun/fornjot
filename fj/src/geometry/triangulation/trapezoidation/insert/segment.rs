@@ -1,7 +1,7 @@
 use crate::geometry::triangulation::trapezoidation::{
     find_regions_for_segment::find_regions_for_segment,
     graph::{Graph, Node, X, Y},
-    region::Source,
+    region,
     segment::Segment,
 };
 
@@ -10,7 +10,7 @@ pub fn insert<Region>(
     graph: &mut Graph<X, Y, Region>,
 ) -> Vec<X>
 where
-    Region: Source,
+    Region: region::Source,
 {
     let mut inserted_nodes = Vec::new();
 
