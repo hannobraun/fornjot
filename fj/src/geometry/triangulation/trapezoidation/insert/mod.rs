@@ -63,6 +63,4 @@ mod tests {
     }
 }
 
-// TASK: Return inserted node from all insertion functions. This should be
-//       all the information required to update all affected regions afterwards.
 // TASK: Call update functions from `insert`.
