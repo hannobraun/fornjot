@@ -17,8 +17,8 @@ where
 {
     let mut inserted_nodes = Vec::new();
 
-    for region in find_regions_for_segment(&segment, graph) {
-        let (left, right) = graph.get(region).unwrap_sink().split_x();
+    for id in find_regions_for_segment(&segment, graph) {
+        let (left, right) = graph.get(id).unwrap_sink().split_x();
 
         let left = graph.insert_sink(left);
         let right = graph.insert_sink(right);
@@ -29,8 +29,8 @@ where
             right,
         };
 
-        graph.replace(region, Node::X(node));
-        inserted_nodes.push(region);
+        graph.replace(id, Node::X(node));
+        inserted_nodes.push(id);
     }
 
     inserted_nodes
