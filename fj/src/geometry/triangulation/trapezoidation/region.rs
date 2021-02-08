@@ -23,14 +23,16 @@ impl Source for Region {
 
 impl Split for Region {
     fn split_x(&self) -> (Self, Self) {
-        // TASK: Implement
-        todo!()
+        (self.clone(), self.clone())
     }
 
     fn split_y(&self) -> (Self, Self) {
-        // TASK: Implement
-        todo!()
+        (self.clone(), self.clone())
     }
+
+    // `split_x` and `split_y` are the same right now, because I decided to keep
+    // all intelligence out of them and instead in the updating logic. Maybe
+    // they need to be merged (or replaced with `clone`).
 }
 
 #[derive(Clone, Debug, PartialEq)]
