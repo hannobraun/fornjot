@@ -23,13 +23,15 @@ where
         let left = graph.insert_sink(left);
         let right = graph.insert_sink(right);
 
-        let node = X {
-            segment,
-            left,
-            right,
-        };
+        graph.replace(
+            id,
+            Node::X(X {
+                segment,
+                left,
+                right,
+            }),
+        );
 
-        graph.replace(id, Node::X(node));
         inserted_nodes.push(id);
     }
 
