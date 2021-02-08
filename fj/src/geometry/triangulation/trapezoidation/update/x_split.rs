@@ -9,4 +9,5 @@ pub fn update_after_x_split(_x: Id, _graph: &mut Graph) {
     //       - Update boundaries of upper and lower neighbors accordingly.
     //       - Merge all regions marked for merging that have the same left/
     //         right segment.
+    todo!()
 }
