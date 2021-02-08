@@ -21,13 +21,14 @@ where
         let below = graph.insert_sink(below);
         let above = graph.insert_sink(above);
 
-        let node = Y {
-            point,
-            below,
-            above,
-        };
-
-        graph.replace(id, Node::Y(node));
+        graph.replace(
+            id,
+            Node::Y(Y {
+                point,
+                below,
+                above,
+            }),
+        );
 
         return Some(id);
     }
