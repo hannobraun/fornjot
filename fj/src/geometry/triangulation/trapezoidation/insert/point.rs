@@ -3,6 +3,7 @@ use std::fmt::Debug;
 use crate::geometry::triangulation::trapezoidation::{
     find_region_for_point::find_region_for_point,
     graph::{Graph, Node, X, Y},
+    ids::Id,
     point::Point,
     region,
 };
@@ -10,7 +11,7 @@ use crate::geometry::triangulation::trapezoidation::{
 pub fn insert<Region>(
     point: Point,
     graph: &mut Graph<X, Y, Region>,
-) -> Option<Y>
+) -> Option<Id>
 where
     Region: Copy + Debug + region::Split,
 {
@@ -28,7 +29,7 @@ where
 
         graph.replace(id, Node::Y(node));
 
-        return Some(node);
+        return Some(id);
     }
 
     None
@@ -74,12 +75,12 @@ mod tests {
     }
 
     #[test]
-    fn insert_should_return_inserted_node() {
+    fn insert_should_return_inserted_node_id() {
         let mut graph = Graph::new();
 
-        let node = insert(Point::new(0.0, 0.0), &mut graph).unwrap();
+        let id = insert(Point::new(0.0, 0.0), &mut graph).unwrap();
 
-        assert_eq!(graph.get(graph.source()), &Node::Y(node));
+        assert_eq!(id, graph.source());
     }
 
     #[test]
