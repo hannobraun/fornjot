@@ -2,7 +2,7 @@ use crate::geometry::triangulation::trapezoidation::point::Point;
 
 use super::ids::Id;
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Region {
     pub upper_boundary: Option<HorizontalBoundary>,
     pub lower_boundary: Option<HorizontalBoundary>,
@@ -35,13 +35,13 @@ impl Split for Region {
     // they need to be merged (or replaced with `clone`).
 }
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct HorizontalBoundary {
     pub point: Point,
     pub regions: BoundingRegions,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum BoundingRegions {
     One(Id),
     Two { left: Id, right: Id },

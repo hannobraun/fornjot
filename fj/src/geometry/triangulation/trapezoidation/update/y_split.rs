@@ -16,8 +16,12 @@ pub fn update(id_y: Id, y: Y, graph: &mut Graph) {
             regions: BoundingRegions::One(y.below),
         });
 
-    if let Some(lower_boundary) =
-        graph.get_mut(y.below).sink_mut().unwrap().lower_boundary
+    if let Some(lower_boundary) = graph
+        .get_mut(y.below)
+        .sink_mut()
+        .unwrap()
+        .lower_boundary
+        .clone()
     {
         for id in lower_boundary.regions.iter() {
             graph
@@ -59,14 +63,26 @@ mod tests {
         update(id_y, y.clone(), &mut graph);
 
         assert_eq!(
-            graph.get(y.below).sink().unwrap().upper_boundary.unwrap(),
+            graph
+                .get(y.below)
+                .sink()
+                .unwrap()
+                .upper_boundary
+                .clone()
+                .unwrap(),
             HorizontalBoundary {
                 point: y.point,
                 regions: BoundingRegions::One(y.above),
             }
         );
         assert_eq!(
-            graph.get(y.above).sink().unwrap().lower_boundary.unwrap(),
+            graph
+                .get(y.above)
+                .sink()
+                .unwrap()
+                .lower_boundary
+                .clone()
+                .unwrap(),
             HorizontalBoundary {
                 point: y.point,
                 regions: BoundingRegions::One(y.below),
@@ -97,6 +113,7 @@ mod tests {
                 .sink()
                 .unwrap()
                 .upper_boundary
+                .clone()
                 .unwrap()
                 .regions,
             BoundingRegions::One(y.below)
