@@ -69,12 +69,7 @@ pub enum Node<XNode = X, YNode = Y, Sink = Region> {
     Sink(Sink),
 }
 
-impl<XNode, YNode, Sink> Node<XNode, YNode, Sink>
-where
-    XNode: Debug,
-    YNode: Debug,
-    Sink: Debug,
-{
+impl<XNode, YNode, Sink> Node<XNode, YNode, Sink> {
     pub fn x(&self) -> Option<&XNode> {
         match self {
             Node::X(x) => Some(x),
