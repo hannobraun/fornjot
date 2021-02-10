@@ -71,9 +71,9 @@ pub enum Node<XNode = X, YNode = Y, Sink = Region> {
 
 impl<XNode, YNode, Sink> Node<XNode, YNode, Sink>
 where
-    XNode: Copy + Debug,
-    YNode: Copy + Debug,
-    Sink: Copy + Debug,
+    XNode: Debug,
+    YNode: Debug,
+    Sink: Debug,
 {
     pub fn unwrap_x(&self) -> &XNode {
         match self {
