@@ -13,7 +13,7 @@ pub fn insert<Region>(
     graph: &mut Graph<X, Y, Region>,
 ) -> Vec<Id>
 where
-    Region: Copy + Debug + region::Split,
+    Region: Debug + region::Split,
 {
     let mut inserted_nodes = Vec::new();
 

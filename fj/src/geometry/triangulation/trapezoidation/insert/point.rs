@@ -13,7 +13,7 @@ pub fn insert<Region>(
     graph: &mut Graph<X, Y, Region>,
 ) -> Option<Id>
 where
-    Region: Copy + Debug + region::Split,
+    Region: Debug + region::Split,
 {
     if let Some(id) = find_region_for_point(&point, graph) {
         let (below, above) = graph.get(id).sink().unwrap().split_y();
