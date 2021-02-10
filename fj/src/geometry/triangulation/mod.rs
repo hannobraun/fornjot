@@ -4,5 +4,6 @@
 //! trapezoidal decompositions and for triangulating polygons", by Raimund
 //! Seidel.
 
+pub mod diagonalization;
 pub mod ear_clipping;
 pub mod trapezoidation;
