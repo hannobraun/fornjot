@@ -16,7 +16,7 @@ where
     Region: Copy + Debug + region::Split,
 {
     if let Some(id) = find_region_for_point(&point, graph) {
-        let (below, above) = graph.get(id).unwrap_sink().split_y();
+        let (below, above) = graph.get(id).sink().unwrap().split_y();
 
         let below = graph.insert_sink(below);
         let above = graph.insert_sink(above);
@@ -68,8 +68,8 @@ mod tests {
                 assert_eq!(point, &point_to_insert);
 
                 // Children should be split from original region.
-                assert_eq!(graph.get(below).unwrap_sink().split_lower, true);
-                assert_eq!(graph.get(above).unwrap_sink().split_upper, true);
+                assert_eq!(graph.get(below).sink().unwrap().split_lower, true);
+                assert_eq!(graph.get(above).sink().unwrap().split_upper, true);
             }
             node => panic!("Unexpected node: {:?}", node),
         }
@@ -102,7 +102,7 @@ mod tests {
         insert(Point::new(0.0, 2.0), &mut graph);
 
         assert_eq!(graph.get(below), &Node::Sink(region_below));
-        graph.get(above).unwrap_y();
+        graph.get(above).y().unwrap();
     }
 
     #[test]

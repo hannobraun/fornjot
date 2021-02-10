@@ -75,24 +75,24 @@ where
     YNode: Debug,
     Sink: Debug,
 {
-    pub fn unwrap_x(&self) -> &XNode {
+    pub fn x(&self) -> Option<&XNode> {
         match self {
-            Node::X(x) => x,
-            node => panic!("Unexpected node: {:?}", node),
+            Node::X(x) => Some(x),
+            _ => None,
         }
     }
 
-    pub fn unwrap_y(&self) -> &YNode {
+    pub fn y(&self) -> Option<&YNode> {
         match self {
-            Node::Y(y) => y,
-            node => panic!("Unexpected node: {:?}", node),
+            Node::Y(y) => Some(y),
+            _ => None,
         }
     }
 
-    pub fn unwrap_sink(&self) -> &Sink {
+    pub fn sink(&self) -> Option<&Sink> {
         match self {
-            Node::Sink(sink) => sink,
-            node => panic!("Unexpected node: {:?}", node),
+            Node::Sink(sink) => Some(sink),
+            _ => None,
         }
     }
 }
