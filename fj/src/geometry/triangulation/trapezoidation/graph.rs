@@ -62,7 +62,7 @@ impl<XNode, YNode, Sink> Graph<XNode, YNode, Sink> {
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum Node<XNode = X, YNode = Y, Sink = Region> {
     X(XNode),
     Y(YNode),
@@ -113,14 +113,14 @@ impl<XNode, YNode, Sink> Node<XNode, YNode, Sink> {
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct X {
     pub segment: Segment,
     pub left: Id,
     pub right: Id,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Y {
     pub point: Point,
     pub below: Id,
@@ -168,7 +168,7 @@ mod tests {
         let mut graph = Graph::new();
 
         let node = Node::X(X(1));
-        graph.replace(graph.source(), node);
+        graph.replace(graph.source(), node.clone());
 
         assert_eq!(graph.get(graph.source()), &node);
     }
