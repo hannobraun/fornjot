@@ -1,5 +1,5 @@
-mod point;
-mod segment;
+pub mod point;
+pub mod segment;
 
 use std::fmt::Debug;
 
