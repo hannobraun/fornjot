@@ -47,6 +47,22 @@ pub enum BoundingRegions {
     Two { left: Id, right: Id },
 }
 
+impl BoundingRegions {
+    pub fn iter(&self) -> Vec<Id> {
+        let mut ids = Vec::new();
+
+        match *self {
+            Self::One(id) => ids.push(id),
+            Self::Two { left, right } => {
+                ids.push(left);
+                ids.push(right);
+            }
+        }
+
+        ids
+    }
+}
+
 /// Used by various unit test suites
 #[cfg(test)]
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
