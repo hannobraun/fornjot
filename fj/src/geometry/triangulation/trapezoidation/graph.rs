@@ -45,6 +45,12 @@ impl<XNode, YNode, Sink> Graph<XNode, YNode, Sink> {
         self.nodes.get(&id).unwrap()
     }
 
+    pub fn get_mut(&mut self, id: Id) -> &mut Node<XNode, YNode, Sink> {
+        // The graph is append-only, so we know that every id that exists must
+        // point to a valid node.
+        self.nodes.get_mut(&id).unwrap()
+    }
+
     pub fn insert_sink(&mut self, sink: Sink) -> Id {
         let id = self.ids.next();
         self.nodes.insert(id, Node::Sink(sink));
