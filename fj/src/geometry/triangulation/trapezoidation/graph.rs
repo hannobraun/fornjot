@@ -77,6 +77,13 @@ impl<XNode, YNode, Sink> Node<XNode, YNode, Sink> {
         }
     }
 
+    pub fn x_mut(&mut self) -> Result<&mut XNode, &mut Self> {
+        match self {
+            Node::X(x) => Ok(x),
+            node => Err(node),
+        }
+    }
+
     pub fn y(&self) -> Result<&YNode, &Self> {
         match self {
             Node::Y(y) => Ok(y),
@@ -84,7 +91,21 @@ impl<XNode, YNode, Sink> Node<XNode, YNode, Sink> {
         }
     }
 
+    pub fn y_mut(&mut self) -> Result<&mut YNode, &mut Self> {
+        match self {
+            Node::Y(y) => Ok(y),
+            node => Err(node),
+        }
+    }
+
     pub fn sink(&self) -> Result<&Sink, &Self> {
+        match self {
+            Node::Sink(sink) => Ok(sink),
+            node => Err(node),
+        }
+    }
+
+    pub fn sink_mut(&mut self) -> Result<&mut Sink, &mut Self> {
         match self {
             Node::Sink(sink) => Ok(sink),
             node => Err(node),
