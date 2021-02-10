@@ -1,9 +1,10 @@
 use crate::geometry::triangulation::trapezoidation::{
     graph::{Graph, Y},
+    ids::Id,
     region::{BoundingRegions, HorizontalBoundary},
 };
 
-pub fn update(y: Y, graph: &mut Graph) {
+pub fn update(_id_y: Id, y: Y, graph: &mut Graph) {
     graph.get_mut(y.below).sink_mut().unwrap().upper_boundary =
         Some(HorizontalBoundary {
             point: y.point,
@@ -38,10 +39,10 @@ mod tests {
     fn update_should_update_new_boundary() {
         let mut graph = Graph::new();
 
-        let y = point::insert(Point::new(0.0, 0.0), &mut graph).unwrap();
-        let y = *graph.get(y).y().unwrap();
+        let id_y = point::insert(Point::new(0.0, 0.0), &mut graph).unwrap();
+        let y = *graph.get(id_y).y().unwrap();
 
-        update(y, &mut graph);
+        update(id_y, y, &mut graph);
 
         assert_eq!(
             graph.get(y.below).sink().unwrap().upper_boundary.unwrap(),

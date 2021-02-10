@@ -1,6 +1,9 @@
-use crate::geometry::triangulation::trapezoidation::graph::{Graph, X};
+use crate::geometry::triangulation::trapezoidation::{
+    graph::{Graph, X},
+    ids::Id,
+};
 
-pub fn update(_x: X, _graph: &mut Graph) {
+pub fn update(_id_x: Id, _x: X, _graph: &mut Graph) {
     // TASK: Implement:
     //       - Replace right segment of new left region.
     //       - Replace left segment of new right region.
