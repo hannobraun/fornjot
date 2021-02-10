@@ -1,20 +1,4 @@
 {
     "editor.formatOnSave": true,
-    "editor.formatOnPaste": true,
-    "cSpell.ignoreWords": [
-        "bytemuck",
-        "consts",
-        "rustfmt",
-        "zeroable"
-    ],
-    "cSpell.words": [
-        "Fornjot",
-        "VULKAN",
-        "incircle",
-        "nalgebra",
-        "rasterization",
-        "spirv",
-        "wgpu",
-        "winit"
-    ]
+    "editor.formatOnPaste": true
 }
