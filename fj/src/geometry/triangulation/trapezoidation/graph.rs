@@ -70,24 +70,24 @@ pub enum Node<XNode = X, YNode = Y, Sink = Region> {
 }
 
 impl<XNode, YNode, Sink> Node<XNode, YNode, Sink> {
-    pub fn x(&self) -> Option<&XNode> {
+    pub fn x(&self) -> Result<&XNode, &Self> {
         match self {
-            Node::X(x) => Some(x),
-            _ => None,
+            Node::X(x) => Ok(x),
+            node => Err(node),
         }
     }
 
-    pub fn y(&self) -> Option<&YNode> {
+    pub fn y(&self) -> Result<&YNode, &Self> {
         match self {
-            Node::Y(y) => Some(y),
-            _ => None,
+            Node::Y(y) => Ok(y),
+            node => Err(node),
         }
     }
 
-    pub fn sink(&self) -> Option<&Sink> {
+    pub fn sink(&self) -> Result<&Sink, &Self> {
         match self {
-            Node::Sink(sink) => Some(sink),
-            _ => None,
+            Node::Sink(sink) => Ok(sink),
+            node => Err(node),
         }
     }
 }
