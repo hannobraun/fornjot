@@ -61,6 +61,24 @@ impl BoundingRegions {
 
         ids
     }
+
+    pub fn replace(&mut self, old: Id, new: Id) {
+        match self {
+            Self::One(id) => {
+                if *id == old {
+                    *id = new;
+                }
+            }
+            Self::Two { left, right } => {
+                if *left == old {
+                    *left = new;
+                }
+                if *right == old {
+                    *right = new;
+                }
+            }
+        }
+    }
 }
 
 /// Used by various unit test suites
