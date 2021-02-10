@@ -21,9 +21,10 @@ pub fn update(y: Y, graph: &mut Graph) {
 #[cfg(test)]
 mod tests {
     use crate::geometry::triangulation::trapezoidation::{
-        graph::{self, Node, Y},
+        graph,
+        insert::point,
         point::Point,
-        region::{BoundingRegions, HorizontalBoundary, Region, Source as _},
+        region::{BoundingRegions, HorizontalBoundary},
     };
 
     use super::update;
@@ -37,32 +38,33 @@ mod tests {
     fn update_should_update_new_boundary() {
         let mut graph = Graph::new();
 
-        let point = Point::new(0.0, 0.0);
-
-        let below = graph.insert_sink(Region::source());
-        let above = graph.insert_sink(Region::source());
-
-        let node = Y {
-            point,
-            below,
-            above,
-        };
-        graph.replace(graph.source(), Node::Y(node));
+        let node = point::insert(Point::new(0.0, 0.0), &mut graph).unwrap();
+        let node = *graph.get(node).y().unwrap();
 
         update(node, &mut graph);
 
         assert_eq!(
-            graph.get(below).sink().unwrap().upper_boundary.unwrap(),
+            graph
+                .get(node.below)
+                .sink()
+                .unwrap()
+                .upper_boundary
+                .unwrap(),
             HorizontalBoundary {
-                point,
-                regions: BoundingRegions::One(above),
+                point: node.point,
+                regions: BoundingRegions::One(node.above),
             }
         );
         assert_eq!(
-            graph.get(above).sink().unwrap().lower_boundary.unwrap(),
+            graph
+                .get(node.above)
+                .sink()
+                .unwrap()
+                .lower_boundary
+                .unwrap(),
             HorizontalBoundary {
-                point,
-                regions: BoundingRegions::One(below),
+                point: node.point,
+                regions: BoundingRegions::One(node.below),
             }
         );
     }
