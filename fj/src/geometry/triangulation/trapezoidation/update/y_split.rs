@@ -38,33 +38,23 @@ mod tests {
     fn update_should_update_new_boundary() {
         let mut graph = Graph::new();
 
-        let node = point::insert(Point::new(0.0, 0.0), &mut graph).unwrap();
-        let node = *graph.get(node).y().unwrap();
+        let y = point::insert(Point::new(0.0, 0.0), &mut graph).unwrap();
+        let y = *graph.get(y).y().unwrap();
 
-        update(node, &mut graph);
+        update(y, &mut graph);
 
         assert_eq!(
-            graph
-                .get(node.below)
-                .sink()
-                .unwrap()
-                .upper_boundary
-                .unwrap(),
+            graph.get(y.below).sink().unwrap().upper_boundary.unwrap(),
             HorizontalBoundary {
-                point: node.point,
-                regions: BoundingRegions::One(node.above),
+                point: y.point,
+                regions: BoundingRegions::One(y.above),
             }
         );
         assert_eq!(
-            graph
-                .get(node.above)
-                .sink()
-                .unwrap()
-                .lower_boundary
-                .unwrap(),
+            graph.get(y.above).sink().unwrap().lower_boundary.unwrap(),
             HorizontalBoundary {
-                point: node.point,
-                regions: BoundingRegions::One(node.below),
+                point: y.point,
+                regions: BoundingRegions::One(y.below),
             }
         );
     }
