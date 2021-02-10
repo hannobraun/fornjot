@@ -7,3 +7,5 @@
 pub mod diagonalization;
 pub mod ear_clipping;
 pub mod trapezoidation;
+
+// TASK: Add top-level function here that puts everything together?
