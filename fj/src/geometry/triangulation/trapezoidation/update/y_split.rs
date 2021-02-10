@@ -4,7 +4,7 @@ use crate::geometry::triangulation::trapezoidation::{
     region::{BoundingRegions, HorizontalBoundary},
 };
 
-pub fn update(_id_y: Id, y: Y, graph: &mut Graph) {
+pub fn update(id_y: Id, y: Y, graph: &mut Graph) {
     graph.get_mut(y.below).sink_mut().unwrap().upper_boundary =
         Some(HorizontalBoundary {
             point: y.point,
@@ -16,7 +16,21 @@ pub fn update(_id_y: Id, y: Y, graph: &mut Graph) {
             regions: BoundingRegions::One(y.below),
         });
 
-    // TASK: Update lower neighbors.
+    if let Some(lower_boundary) =
+        graph.get_mut(y.below).sink_mut().unwrap().lower_boundary
+    {
+        for id in lower_boundary.regions.iter() {
+            graph
+                .get_mut(id)
+                .sink_mut()
+                .unwrap()
+                .upper_boundary
+                .as_mut()
+                .unwrap()
+                .regions
+                .replace(id_y, y.below);
+        }
+    }
 }
 
 #[cfg(test)]
@@ -57,6 +71,35 @@ mod tests {
                 point: y.point,
                 regions: BoundingRegions::One(y.below),
             }
+        );
+    }
+
+    #[test]
+    fn update_should_update_lower_neighbors() {
+        let mut graph = Graph::new();
+
+        // Split original region horizontally.
+        let id_y = point::insert(Point::new(0.0, 0.0), &mut graph).unwrap();
+        let y = *graph.get(id_y).y().unwrap();
+        update(id_y, y, &mut graph);
+
+        let lowest = y.below;
+
+        // Now split the upper of those two regions again.
+        let id_y = point::insert(Point::new(0.0, 1.0), &mut graph).unwrap();
+        let y = *graph.get(id_y).y().unwrap();
+
+        update(id_y, y, &mut graph);
+
+        assert_eq!(
+            graph
+                .get(lowest)
+                .sink()
+                .unwrap()
+                .upper_boundary
+                .unwrap()
+                .regions,
+            BoundingRegions::One(y.below)
         );
     }
 }
