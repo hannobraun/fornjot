@@ -1,13 +1,13 @@
 use crate::geometry::triangulation::trapezoidation::point::Point;
 
-use super::ids::Id;
+use super::{ids::Id, segment::Segment};
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Region {
     pub upper_boundary: Option<HorizontalBoundary>,
     pub lower_boundary: Option<HorizontalBoundary>,
-    pub left_segment: Option<Id>,
-    pub right_segment: Option<Id>,
+    pub left_segment: Option<Segment>,
+    pub right_segment: Option<Segment>,
 }
 
 impl Source for Region {
