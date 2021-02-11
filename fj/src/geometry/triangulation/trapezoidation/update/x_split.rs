@@ -32,7 +32,7 @@ mod tests {
     type Graph = graph::Graph;
 
     #[test]
-    pub fn update_should_update_new_boundary() {
+    fn update_should_update_new_boundary() {
         let mut graph = Graph::new();
 
         let id_x = segment::insert(
