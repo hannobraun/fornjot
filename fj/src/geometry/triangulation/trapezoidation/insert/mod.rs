@@ -16,9 +16,9 @@ pub fn insert<Region>(segment: Segment, graph: &mut Graph<X, Y, Region>)
 where
     Region: Copy + Debug + region::Split,
 {
-    point::insert(segment.upper(), graph);
-    point::insert(segment.lower(), graph);
-    segment::insert(segment, graph);
+    let _y = point::insert(segment.upper(), graph);
+    let _y = point::insert(segment.lower(), graph);
+    let _xs = segment::insert(segment, graph);
 }
 
 #[cfg(test)]
