@@ -4,8 +4,8 @@ use crate::geometry::triangulation::trapezoidation::{
     region::{BoundingRegions, HorizontalBoundary},
 };
 
-pub fn update(id_y: Id, graph: &mut Graph) {
-    let y = graph.get(id_y).y().unwrap().clone();
+pub fn update(id: Id, graph: &mut Graph) {
+    let y = graph.get(id).y().unwrap().clone();
 
     graph.get_mut(y.below).sink_mut().unwrap().upper_boundary =
         Some(HorizontalBoundary {
@@ -34,7 +34,7 @@ pub fn update(id_y: Id, graph: &mut Graph) {
                 .as_mut()
                 .unwrap()
                 .regions
-                .replace(id_y, y.below);
+                .replace(id, y.below);
         }
     }
 }
