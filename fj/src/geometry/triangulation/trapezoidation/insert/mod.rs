@@ -1,19 +1,11 @@
 pub mod point;
 pub mod segment;
 
-use std::fmt::Debug;
-
 use crate::geometry::triangulation::trapezoidation::segment::Segment;
 
-use super::{
-    graph::{Graph, X, Y},
-    region,
-};
+use super::graph::Graph;
 
-pub fn insert<Region>(segment: Segment, graph: &mut Graph<X, Y, Region>)
-where
-    Region: Debug + region::Split,
-{
+pub fn insert(segment: Segment, graph: &mut Graph) {
     let _y = point::insert(segment.upper(), graph);
     // TASK: Pass id to `y_split::update`.
 
