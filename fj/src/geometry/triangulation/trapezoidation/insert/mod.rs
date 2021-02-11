@@ -29,13 +29,15 @@ mod tests {
     use crate::geometry::triangulation::trapezoidation::{
         graph::{self, Node, X, Y},
         point::Point,
-        region::TestRegion as Region,
         segment::Segment,
     };
 
     use super::insert;
 
-    type Graph = graph::Graph<X, Y, Region>;
+    // Looks useless, but actually makes sure that our calls to `Graph::new`
+    // pick up the default type parameters, without us having to add an
+    // additional type hint.
+    type Graph = graph::Graph;
 
     #[test]
     fn insert_should_insert_upper_point_then_lower_point_then_segment() {
