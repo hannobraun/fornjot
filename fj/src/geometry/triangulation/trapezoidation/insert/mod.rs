@@ -12,7 +12,7 @@ use super::{
 
 pub fn insert<Region>(segment: Segment, graph: &mut Graph<X, Y, Region>)
 where
-    Region: Copy + Debug + region::Split,
+    Region: Debug + region::Split,
 {
     let _y = point::insert(segment.upper(), graph);
     // TASK: Pass id to `y_split::update`.
