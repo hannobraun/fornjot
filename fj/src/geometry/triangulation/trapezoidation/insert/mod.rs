@@ -3,17 +3,21 @@ pub mod segment;
 
 use crate::geometry::triangulation::trapezoidation::segment::Segment;
 
-use super::graph::Graph;
+use super::{
+    graph::Graph,
+    update::{x_split, y_split},
+};
 
 pub fn insert(segment: Segment, graph: &mut Graph) {
-    let _y = point::insert(segment.upper(), graph);
-    // TASK: Pass id to `y_split::update`.
+    if let Some(id) = point::insert(segment.upper(), graph) {
+        y_split::update(id, graph);
+    }
+    if let Some(id) = point::insert(segment.lower(), graph) {
+        y_split::update(id, graph);
+    }
 
-    let _y = point::insert(segment.lower(), graph);
-    // TASK: Pass id to `y_split::update`.
-
-    let _xs = segment::insert(segment, graph);
-    // TASK: Pass ids to `x_split::update`.
+    let ids = segment::insert(segment, graph);
+    x_split::update(&ids, graph);
 }
 
 #[cfg(test)]
