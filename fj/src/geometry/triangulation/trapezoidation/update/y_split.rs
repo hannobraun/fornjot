@@ -25,9 +25,9 @@ pub fn update(id_y: Id, graph: &mut Graph) {
         .lower_boundary
         .clone()
     {
-        for id in lower_boundary.regions.iter() {
+        for lower_id in lower_boundary.regions.iter() {
             graph
-                .get_mut(id)
+                .get_mut(lower_id)
                 .sink_mut()
                 .unwrap()
                 .upper_boundary
