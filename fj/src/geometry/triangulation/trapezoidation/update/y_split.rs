@@ -18,12 +18,8 @@ pub fn update(id: Id, graph: &mut Graph) {
             regions: BoundingRegions::One(y.below),
         });
 
-    if let Some(lower_boundary) = graph
-        .get_mut(y.below)
-        .sink_mut()
-        .unwrap()
-        .lower_boundary
-        .clone()
+    if let Some(lower_boundary) =
+        graph.get(y.below).sink().unwrap().lower_boundary.clone()
     {
         for lower_id in lower_boundary.regions.iter() {
             graph
