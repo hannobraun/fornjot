@@ -18,9 +18,7 @@ pub fn update(id: Id, graph: &mut Graph) {
             regions: BoundingRegions::One(y.below),
         });
 
-    if let Some(lower_boundary) =
-        graph.get(y.below).sink().unwrap().lower_boundary.clone()
-    {
+    if let Some(lower_boundary) = lower_boundary(y.below, graph) {
         for lower_id in lower_boundary.regions.iter() {
             graph
                 .get_mut(lower_id)
@@ -33,6 +31,10 @@ pub fn update(id: Id, graph: &mut Graph) {
                 .replace(id, y.below);
         }
     }
+}
+
+pub fn lower_boundary(id: Id, graph: &Graph) -> Option<HorizontalBoundary> {
+    graph.get(id).sink().unwrap().lower_boundary.clone()
 }
 
 #[cfg(test)]
