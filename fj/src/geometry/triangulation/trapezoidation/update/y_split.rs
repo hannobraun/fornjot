@@ -20,21 +20,25 @@ pub fn update(id: Id, graph: &mut Graph) {
 
     if let Some(lower_boundary) = lower_boundary(y.below, graph) {
         for lower_id in lower_boundary.regions.iter() {
-            graph
-                .get_mut(lower_id)
-                .sink_mut()
-                .unwrap()
-                .upper_boundary
-                .as_mut()
-                .unwrap()
-                .regions
-                .replace(id, y.below);
+            replace_in_upper_boundary(lower_id, id, y.below, graph);
         }
     }
 }
 
 pub fn lower_boundary(id: Id, graph: &Graph) -> Option<HorizontalBoundary> {
     graph.get(id).sink().unwrap().lower_boundary.clone()
+}
+
+pub fn replace_in_upper_boundary(id: Id, old: Id, new: Id, graph: &mut Graph) {
+    graph
+        .get_mut(id)
+        .sink_mut()
+        .unwrap()
+        .upper_boundary
+        .as_mut()
+        .unwrap()
+        .regions
+        .replace(old, new);
 }
 
 #[cfg(test)]
