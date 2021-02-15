@@ -64,7 +64,7 @@ impl Segment {
 
         // We shouldn't ever reach this point, but if we do, there are probably
         // `NaN`s or other shenanigans going on.
-        panic!("Invalid point ({:?}) or segment ({:?})");
+        panic!("Invalid point ({:?}) or segment ({:?})", p, self);
     }
 
     pub fn relation_to_point(&self, point: &Point) -> Option<point::Relation> {
