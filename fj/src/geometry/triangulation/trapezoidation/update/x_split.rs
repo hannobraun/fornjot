@@ -4,6 +4,7 @@ pub fn update(ids: &[Id], graph: &mut Graph) {
     for &id in ids {
         let x = graph.get(id).x().unwrap().clone();
 
+        // Update new boundary.
         graph.get_mut(x.left).sink_mut().unwrap().right_segment =
             Some(x.segment);
         graph.get_mut(x.right).sink_mut().unwrap().left_segment =
