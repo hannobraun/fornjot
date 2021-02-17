@@ -24,7 +24,7 @@ pub fn update(ids: &[Id], graph: &mut Graph) {
 
         // Update upper boundary
         if let Some(boundary) = upper_boundary {
-            match boundary.regions.clone() {
+            match boundary.regions {
                 BoundingRegions::One(upper_neighbor) => {
                     let upper_neighbor = Region::get_mut(upper_neighbor, graph);
                     if let Some(boundary) = &mut upper_neighbor.lower_boundary {
@@ -92,7 +92,7 @@ pub fn update(ids: &[Id], graph: &mut Graph) {
 
         // Update lower boundary
         if let Some(boundary) = lower_boundary {
-            match boundary.regions.clone() {
+            match boundary.regions {
                 BoundingRegions::One(lower_neighbor) => {
                     let lower_neighbor = Region::get_mut(lower_neighbor, graph);
                     if let Some(boundary) = &mut lower_neighbor.upper_boundary {
