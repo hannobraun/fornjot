@@ -41,7 +41,7 @@ mod tests {
     use crate::geometry::triangulation::trapezoidation::{
         graph::{self, Node, X, Y},
         point::Point,
-        region::{Get, TestRegion as Region},
+        region::{Get as _, TestRegion as Region},
     };
 
     use super::insert;
