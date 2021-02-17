@@ -65,24 +65,7 @@ pub fn update(ids: &[Id], graph: &mut Graph) {
                     }
                 }
                 BoundingRegions::Two { .. } => {
-                    // TASK: We're looking at the upper boundary of the split
-                    //       region.
-                    //
-                    //       Possibilities:
-                    //       1. New segment shares a point with the segment that
-                    //          splits the neighboring regions. Each new region
-                    //          has exactly one neighbor after this.
-                    //       2. New segment's upper point is above the lower
-                    //          point of the old segment, meaning the new
-                    //          segment splits two regions. The lower one has
-                    //          two upper neighbors, one of which is the one
-                    //          split off by the upper point of the new segment.
-                    //          (The upper one only has one upper neighbor.)
-                    //
-                    //       If the new segment's upper point is below the old
-                    //       segment's lower point, the new regions only have
-                    //       one upper neighbor, which is not the case we're
-                    //       looking at.
+                    // TASK: Implement. See comment above for directions.
                     todo!()
                 }
             }
