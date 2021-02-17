@@ -217,11 +217,11 @@ mod tests {
 
         let x = graph.get(id_x).x().unwrap().clone();
         assert_eq!(
-            Region::from_id(x.left, &graph).right_segment.unwrap(),
+            Region::get(x.left, &graph).right_segment.unwrap(),
             x.segment
         );
         assert_eq!(
-            Region::from_id(x.right, &graph).left_segment.unwrap(),
+            Region::get(x.right, &graph).left_segment.unwrap(),
             x.segment
         );
     }
@@ -247,7 +247,7 @@ mod tests {
 
         let x = graph.get(ids[0].clone()).x().unwrap().clone();
         assert_eq!(
-            Region::from_id(top_region, &graph)
+            Region::get(top_region, &graph)
                 .lower_boundary
                 .clone()
                 .unwrap()
@@ -258,7 +258,7 @@ mod tests {
             }
         );
         assert_eq!(
-            Region::from_id(bottom_region, &graph)
+            Region::get(bottom_region, &graph)
                 .upper_boundary
                 .clone()
                 .unwrap()

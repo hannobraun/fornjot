@@ -26,7 +26,7 @@ pub fn update(id: Id, graph: &mut Graph) {
 }
 
 pub fn lower_boundary(id: Id, graph: &Graph) -> Option<HorizontalBoundary> {
-    Region::from_id(id, graph).lower_boundary.clone()
+    Region::get(id, graph).lower_boundary.clone()
 }
 
 pub fn replace_in_upper_boundary(id: Id, old: Id, new: Id, graph: &mut Graph) {
@@ -66,20 +66,14 @@ mod tests {
 
         let y = graph.get(id_y).y().unwrap();
         assert_eq!(
-            Region::from_id(y.below, &graph)
-                .upper_boundary
-                .clone()
-                .unwrap(),
+            Region::get(y.below, &graph).upper_boundary.clone().unwrap(),
             HorizontalBoundary {
                 point: y.point,
                 regions: BoundingRegions::One(y.above),
             }
         );
         assert_eq!(
-            Region::from_id(y.above, &graph)
-                .lower_boundary
-                .clone()
-                .unwrap(),
+            Region::get(y.above, &graph).lower_boundary.clone().unwrap(),
             HorizontalBoundary {
                 point: y.point,
                 regions: BoundingRegions::One(y.below),
@@ -105,7 +99,7 @@ mod tests {
 
         let y = graph.get(id_y).y().unwrap();
         assert_eq!(
-            Region::from_id(lowest, &graph)
+            Region::get(lowest, &graph)
                 .upper_boundary
                 .clone()
                 .unwrap()

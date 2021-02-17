@@ -149,7 +149,7 @@ impl Split for TestRegion {
 }
 
 pub trait Get: Sized + Debug {
-    fn from_id<X, Y>(id: Id, graph: &Graph<X, Y, Self>) -> &Self
+    fn get<X, Y>(id: Id, graph: &Graph<X, Y, Self>) -> &Self
     where
         X: Debug,
         Y: Debug,

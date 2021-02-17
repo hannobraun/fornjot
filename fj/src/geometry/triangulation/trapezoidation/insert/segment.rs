@@ -18,7 +18,7 @@ where
     let mut inserted_nodes = Vec::new();
 
     for id in find_regions_for_segment(&segment, graph) {
-        let (left, right) = Region::from_id(id, graph).split_x();
+        let (left, right) = Region::get(id, graph).split_x();
 
         let left = graph.insert_sink(left);
         let right = graph.insert_sink(right);
@@ -72,8 +72,8 @@ mod tests {
                 assert_eq!(segment, &segment_to_insert);
 
                 // Children should be split from original region.
-                assert_eq!(Region::from_id(left, &graph).split_left, true);
-                assert_eq!(Region::from_id(right, &graph).split_right, true);
+                assert_eq!(Region::get(left, &graph).split_left, true);
+                assert_eq!(Region::get(right, &graph).split_right, true);
             }
             node => panic!("Unexpected node: {:?}", node),
         }
