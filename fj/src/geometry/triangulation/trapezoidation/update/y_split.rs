@@ -23,8 +23,8 @@ pub fn update(id: Id, graph: &mut Graph) {
     }
 }
 
-pub fn lower_boundary(id: Id, graph: &Graph) -> Option<HorizontalBoundary> {
-    Region::get(id, graph).lower_boundary.clone()
+pub fn lower_boundary(id: Id, graph: &Graph) -> Option<&HorizontalBoundary> {
+    Region::get(id, graph).lower_boundary.as_ref()
 }
 
 pub fn replace_in_upper_boundary(id: Id, old: Id, new: Id, graph: &mut Graph) {
