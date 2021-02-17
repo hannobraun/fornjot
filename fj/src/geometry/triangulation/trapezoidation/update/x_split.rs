@@ -12,8 +12,18 @@ pub fn update(ids: &[Id], graph: &mut Graph) {
         let left = Region::get_mut(x.left, graph);
         left.right_segment = Some(x.segment);
 
+        // Let's store these here and now. We're just reading them, so making a
+        // copy is fine, and we can't keep `left` around forever, as it mutable
+        // borrows `graph`, which we're going to need again soon.
+        //
+        // That we're taking the boundaries from `left` is arbitrary. It could
+        // just as well be `right`, as they both have the same un-updated
+        // horizontal boundaries at this point.
+        let lower = left.lower_boundary.clone();
+        let upper = left.upper_boundary.clone();
+
         // Update upper boundary
-        if let Some(boundary) = upper_boundary(x.left, graph) {
+        if let Some(boundary) = upper {
             match boundary.regions.clone() {
                 BoundingRegions::One(upper_neighbor) => {
                     if let Some(boundary) =
@@ -82,7 +92,7 @@ pub fn update(ids: &[Id], graph: &mut Graph) {
         }
 
         // Update lower boundary
-        if let Some(boundary) = lower_boundary(x.left, graph) {
+        if let Some(boundary) = lower {
             match boundary.regions.clone() {
                 BoundingRegions::One(lower_neighbor) => {
                     if let Some(boundary) =
