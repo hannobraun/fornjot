@@ -12,7 +12,7 @@ pub struct Region {
     pub right_segment: Option<Segment>,
 }
 
-impl FromId for Region {}
+impl Get for Region {}
 
 impl Source for Region {
     fn source() -> Self {
@@ -112,7 +112,7 @@ impl TestRegion {
 }
 
 #[cfg(test)]
-impl FromId for TestRegion {}
+impl Get for TestRegion {}
 
 #[cfg(test)]
 impl Source for TestRegion {
@@ -148,7 +148,7 @@ impl Split for TestRegion {
     }
 }
 
-pub trait FromId: Sized + Debug {
+pub trait Get: Sized + Debug {
     fn from_id<X, Y>(id: Id, graph: &Graph<X, Y, Self>) -> &Self
     where
         X: Debug,

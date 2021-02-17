@@ -13,7 +13,7 @@ pub fn insert<Region>(
     graph: &mut Graph<X, Y, Region>,
 ) -> Option<Id>
 where
-    Region: Debug + region::FromId + region::Split,
+    Region: Debug + region::Get + region::Split,
 {
     if let Some(id) = find_region_for_point(&point, graph) {
         let (below, above) = Region::from_id(id, graph).split_y();
@@ -41,7 +41,7 @@ mod tests {
     use crate::geometry::triangulation::trapezoidation::{
         graph::{self, Node, X, Y},
         point::Point,
-        region::{FromId, TestRegion as Region},
+        region::{Get, TestRegion as Region},
     };
 
     use super::insert;

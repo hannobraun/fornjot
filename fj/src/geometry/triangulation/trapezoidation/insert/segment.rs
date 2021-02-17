@@ -13,7 +13,7 @@ pub fn insert<Region>(
     graph: &mut Graph<X, Y, Region>,
 ) -> Vec<Id>
 where
-    Region: Debug + region::FromId + region::Split,
+    Region: Debug + region::Get + region::Split,
 {
     let mut inserted_nodes = Vec::new();
 
@@ -43,7 +43,7 @@ mod tests {
     use crate::geometry::triangulation::trapezoidation::{
         graph::{self, Node, X, Y},
         point::Point,
-        region::{FromId as _, TestRegion as Region},
+        region::{Get as _, TestRegion as Region},
         segment::Segment,
     };
 

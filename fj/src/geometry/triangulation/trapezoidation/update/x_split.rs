@@ -190,7 +190,7 @@ mod tests {
         graph,
         insert::{point, segment},
         point::Point,
-        region::{BoundingRegions, FromId as _, Region},
+        region::{BoundingRegions, Get as _, Region},
         segment::Segment,
         update::y_split,
     };

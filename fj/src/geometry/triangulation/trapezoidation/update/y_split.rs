@@ -1,7 +1,7 @@
 use crate::geometry::triangulation::trapezoidation::{
     graph::Graph,
     ids::Id,
-    region::{BoundingRegions, FromId as _, HorizontalBoundary, Region},
+    region::{BoundingRegions, Get as _, HorizontalBoundary, Region},
 };
 
 pub fn update(id: Id, graph: &mut Graph) {
@@ -47,7 +47,7 @@ mod tests {
         graph,
         insert::point,
         point::Point,
-        region::{BoundingRegions, FromId as _, HorizontalBoundary, Region},
+        region::{BoundingRegions, Get as _, HorizontalBoundary, Region},
     };
 
     use super::update;
