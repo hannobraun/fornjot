@@ -1,7 +1,7 @@
 use crate::geometry::triangulation::trapezoidation::{
     graph::Graph,
     ids::Id,
-    region::{BoundingRegions, Get as _, HorizontalBoundary, Region},
+    region::{BoundingRegions, Get as _, Region},
 };
 
 pub fn update(ids: &[Id], graph: &mut Graph) {
@@ -26,9 +26,8 @@ pub fn update(ids: &[Id], graph: &mut Graph) {
         if let Some(boundary) = upper {
             match boundary.regions.clone() {
                 BoundingRegions::One(upper_neighbor) => {
-                    if let Some(boundary) =
-                        lower_boundary(upper_neighbor, graph)
-                    {
+                    let upper_neighbor = Region::get_mut(upper_neighbor, graph);
+                    if let Some(boundary) = &mut upper_neighbor.lower_boundary {
                         match boundary.regions.clone() {
                             BoundingRegions::One(_) => {
                                 boundary.regions = BoundingRegions::Two {
@@ -95,9 +94,8 @@ pub fn update(ids: &[Id], graph: &mut Graph) {
         if let Some(boundary) = lower {
             match boundary.regions.clone() {
                 BoundingRegions::One(lower_neighbor) => {
-                    if let Some(boundary) =
-                        upper_boundary(lower_neighbor, graph)
-                    {
+                    let lower_neighbor = Region::get_mut(lower_neighbor, graph);
+                    if let Some(boundary) = &mut lower_neighbor.upper_boundary {
                         match boundary.regions.clone() {
                             BoundingRegions::One(_) => {
                                 boundary.regions = BoundingRegions::Two {
@@ -170,20 +168,6 @@ pub fn update(ids: &[Id], graph: &mut Graph) {
     //         of the new segment. Mark affected regions for merging.
     //       - Merge all regions marked for merging that have the same left/
     //         right segment.
-}
-
-pub fn upper_boundary(
-    id: Id,
-    graph: &mut Graph,
-) -> Option<&mut HorizontalBoundary> {
-    Region::get_mut(id, graph).upper_boundary.as_mut()
-}
-
-pub fn lower_boundary(
-    id: Id,
-    graph: &mut Graph,
-) -> Option<&mut HorizontalBoundary> {
-    Region::get_mut(id, graph).lower_boundary.as_mut()
 }
 
 #[cfg(test)]
