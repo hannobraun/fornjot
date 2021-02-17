@@ -19,7 +19,7 @@ pub fn update(ids: &[Id], graph: &mut Graph) {
         // That we're taking the boundaries from `left` is arbitrary. It could
         // just as well be `right`, as they both have the same un-updated
         // horizontal boundaries at this point.
-        let lower = left.lower_boundary.clone();
+        let lower_boundary = left.lower_boundary.clone();
         let upper = left.upper_boundary.clone();
 
         // Update upper boundary
@@ -91,7 +91,7 @@ pub fn update(ids: &[Id], graph: &mut Graph) {
         }
 
         // Update lower boundary
-        if let Some(boundary) = lower {
+        if let Some(boundary) = lower_boundary {
             match boundary.regions.clone() {
                 BoundingRegions::One(lower_neighbor) => {
                     let lower_neighbor = Region::get_mut(lower_neighbor, graph);
