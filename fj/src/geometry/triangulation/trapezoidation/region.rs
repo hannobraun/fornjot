@@ -12,7 +12,11 @@ pub struct Region {
     pub right_segment: Option<Segment>,
 }
 
-
+impl Region {
+    pub fn upper_boundary_mut(&mut self) -> &mut HorizontalBoundary {
+        self.upper_boundary.as_mut().unwrap()
+    }
+}
 
 impl Get for Region {}
 

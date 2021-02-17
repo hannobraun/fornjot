@@ -28,9 +28,7 @@ pub fn update(id: Id, graph: &mut Graph) {
 
 pub fn replace_in_upper_boundary(id: Id, old: Id, new: Id, graph: &mut Graph) {
     Region::get_mut(id, graph)
-        .upper_boundary
-        .as_mut()
-        .unwrap()
+        .upper_boundary_mut()
         .regions
         .replace(old, new);
 }
