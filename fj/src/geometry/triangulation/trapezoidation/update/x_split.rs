@@ -190,7 +190,7 @@ mod tests {
         graph,
         insert::{point, segment},
         point::Point,
-        region::BoundingRegions,
+        region::{BoundingRegions, FromId as _, Region},
         segment::Segment,
         update::y_split,
     };
@@ -217,11 +217,11 @@ mod tests {
 
         let x = graph.get(id_x).x().unwrap().clone();
         assert_eq!(
-            graph.get(x.left).sink().unwrap().right_segment.unwrap(),
+            Region::from_id(x.left, &graph).right_segment.unwrap(),
             x.segment
         );
         assert_eq!(
-            graph.get(x.right).sink().unwrap().left_segment.unwrap(),
+            Region::from_id(x.right, &graph).left_segment.unwrap(),
             x.segment
         );
     }
@@ -247,10 +247,7 @@ mod tests {
 
         let x = graph.get(ids[0].clone()).x().unwrap().clone();
         assert_eq!(
-            graph
-                .get(top_region)
-                .sink()
-                .unwrap()
+            Region::from_id(top_region, &graph)
                 .lower_boundary
                 .clone()
                 .unwrap()
@@ -261,10 +258,7 @@ mod tests {
             }
         );
         assert_eq!(
-            graph
-                .get(bottom_region)
-                .sink()
-                .unwrap()
+            Region::from_id(bottom_region, &graph)
                 .upper_boundary
                 .clone()
                 .unwrap()

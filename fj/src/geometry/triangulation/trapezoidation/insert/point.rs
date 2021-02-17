@@ -13,10 +13,10 @@ pub fn insert<Region>(
     graph: &mut Graph<X, Y, Region>,
 ) -> Option<Id>
 where
-    Region: Debug + region::Split,
+    Region: Debug + region::FromId + region::Split,
 {
     if let Some(id) = find_region_for_point(&point, graph) {
-        let (below, above) = graph.get(id).sink().unwrap().split_y();
+        let (below, above) = Region::from_id(id, graph).split_y();
 
         let below = graph.insert_sink(below);
         let above = graph.insert_sink(above);
@@ -41,7 +41,7 @@ mod tests {
     use crate::geometry::triangulation::trapezoidation::{
         graph::{self, Node, X, Y},
         point::Point,
-        region::TestRegion as Region,
+        region::{FromId, TestRegion as Region},
     };
 
     use super::insert;
@@ -68,8 +68,8 @@ mod tests {
                 assert_eq!(point, &point_to_insert);
 
                 // Children should be split from original region.
-                assert_eq!(graph.get(below).sink().unwrap().split_lower, true);
-                assert_eq!(graph.get(above).sink().unwrap().split_upper, true);
+                assert_eq!(Region::from_id(below, &graph).split_lower, true);
+                assert_eq!(Region::from_id(above, &graph).split_upper, true);
             }
             node => panic!("Unexpected node: {:?}", node),
         }

@@ -1,6 +1,8 @@
+use std::fmt::Debug;
+
 use crate::geometry::triangulation::trapezoidation::point::Point;
 
-use super::{ids::Id, segment::Segment};
+use super::{graph::Graph, ids::Id, segment::Segment};
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Region {
@@ -9,6 +11,8 @@ pub struct Region {
     pub left_segment: Option<Segment>,
     pub right_segment: Option<Segment>,
 }
+
+impl FromId for Region {}
 
 impl Source for Region {
     fn source() -> Self {
@@ -108,6 +112,9 @@ impl TestRegion {
 }
 
 #[cfg(test)]
+impl FromId for TestRegion {}
+
+#[cfg(test)]
 impl Source for TestRegion {
     fn source() -> Self {
         Self::new(0)
@@ -138,6 +145,16 @@ impl Split for TestRegion {
             ..Self::new(self.id)
         };
         (lower, upper)
+    }
+}
+
+pub trait FromId: Sized + Debug {
+    fn from_id<X, Y>(id: Id, graph: &Graph<X, Y, Self>) -> &Self
+    where
+        X: Debug,
+        Y: Debug,
+    {
+        graph.get(id).sink().as_ref().unwrap()
     }
 }
 

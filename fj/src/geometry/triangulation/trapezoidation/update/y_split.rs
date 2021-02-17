@@ -1,7 +1,7 @@
 use crate::geometry::triangulation::trapezoidation::{
     graph::Graph,
     ids::Id,
-    region::{BoundingRegions, HorizontalBoundary},
+    region::{BoundingRegions, FromId as _, HorizontalBoundary, Region},
 };
 
 pub fn update(id: Id, graph: &mut Graph) {
@@ -26,7 +26,7 @@ pub fn update(id: Id, graph: &mut Graph) {
 }
 
 pub fn lower_boundary(id: Id, graph: &Graph) -> Option<HorizontalBoundary> {
-    graph.get(id).sink().unwrap().lower_boundary.clone()
+    Region::from_id(id, graph).lower_boundary.clone()
 }
 
 pub fn replace_in_upper_boundary(id: Id, old: Id, new: Id, graph: &mut Graph) {
@@ -47,7 +47,7 @@ mod tests {
         graph,
         insert::point,
         point::Point,
-        region::{BoundingRegions, HorizontalBoundary},
+        region::{BoundingRegions, FromId as _, HorizontalBoundary, Region},
     };
 
     use super::update;
@@ -66,10 +66,7 @@ mod tests {
 
         let y = graph.get(id_y).y().unwrap();
         assert_eq!(
-            graph
-                .get(y.below)
-                .sink()
-                .unwrap()
+            Region::from_id(y.below, &graph)
                 .upper_boundary
                 .clone()
                 .unwrap(),
@@ -79,10 +76,7 @@ mod tests {
             }
         );
         assert_eq!(
-            graph
-                .get(y.above)
-                .sink()
-                .unwrap()
+            Region::from_id(y.above, &graph)
                 .lower_boundary
                 .clone()
                 .unwrap(),
@@ -111,10 +105,7 @@ mod tests {
 
         let y = graph.get(id_y).y().unwrap();
         assert_eq!(
-            graph
-                .get(lowest)
-                .sink()
-                .unwrap()
+            Region::from_id(lowest, &graph)
                 .upper_boundary
                 .clone()
                 .unwrap()
