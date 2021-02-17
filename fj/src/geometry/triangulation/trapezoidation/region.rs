@@ -154,7 +154,7 @@ pub trait Get: Sized + Debug {
         X: Debug,
         Y: Debug,
     {
-        graph.get(id).sink().as_ref().unwrap()
+        graph.get(id).sink().unwrap()
     }
 }
 
