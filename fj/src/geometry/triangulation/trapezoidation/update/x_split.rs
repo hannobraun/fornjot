@@ -1,7 +1,7 @@
 use crate::geometry::triangulation::trapezoidation::{
     graph::Graph,
     ids::Id,
-    region::{BoundingRegions, HorizontalBoundary},
+    region::{BoundingRegions, Get as _, HorizontalBoundary, Region},
 };
 
 pub fn update(ids: &[Id], graph: &mut Graph) {
@@ -9,10 +9,8 @@ pub fn update(ids: &[Id], graph: &mut Graph) {
         let x = graph.get(id).x().unwrap().clone();
 
         // Update new boundary.
-        graph.get_mut(x.left).sink_mut().unwrap().right_segment =
-            Some(x.segment);
-        graph.get_mut(x.right).sink_mut().unwrap().left_segment =
-            Some(x.segment);
+        Region::get_mut(x.left, graph).right_segment = Some(x.segment);
+        Region::get_mut(x.right, graph).left_segment = Some(x.segment);
 
         // Update upper neighbor.
         if let Some(boundary) = upper_boundary(x.left, graph) {
@@ -164,24 +162,14 @@ pub fn upper_boundary(
     id: Id,
     graph: &mut Graph,
 ) -> Option<&mut HorizontalBoundary> {
-    graph
-        .get_mut(id)
-        .sink_mut()
-        .unwrap()
-        .upper_boundary
-        .as_mut()
+    Region::get_mut(id, graph).upper_boundary.as_mut()
 }
 
 pub fn lower_boundary(
     id: Id,
     graph: &mut Graph,
 ) -> Option<&mut HorizontalBoundary> {
-    graph
-        .get_mut(id)
-        .sink_mut()
-        .unwrap()
-        .lower_boundary
-        .as_mut()
+    Region::get_mut(id, graph).lower_boundary.as_mut()
 }
 
 #[cfg(test)]

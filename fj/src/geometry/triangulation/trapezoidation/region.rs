@@ -156,6 +156,14 @@ pub trait Get: Sized + Debug {
     {
         graph.get(id).sink().unwrap()
     }
+
+    fn get_mut<X, Y>(id: Id, graph: &mut Graph<X, Y, Self>) -> &mut Self
+    where
+        X: Debug,
+        Y: Debug,
+    {
+        graph.get_mut(id).sink_mut().unwrap()
+    }
 }
 
 pub trait Source {
