@@ -8,11 +8,8 @@ pub fn update(ids: &[Id], graph: &mut Graph) {
     for &id in ids {
         let x = graph.get(id).x().unwrap().clone();
 
-        // Update new boundary.
+        // Update left region
         Region::get_mut(x.left, graph).right_segment = Some(x.segment);
-        Region::get_mut(x.right, graph).left_segment = Some(x.segment);
-
-        // Update upper neighbor.
         if let Some(boundary) = upper_boundary(x.left, graph) {
             match boundary.regions.clone() {
                 BoundingRegions::One(upper_neighbor) => {
@@ -81,7 +78,8 @@ pub fn update(ids: &[Id], graph: &mut Graph) {
             }
         }
 
-        // Update lower neighbor.
+        // Update right region
+        Region::get_mut(x.right, graph).left_segment = Some(x.segment);
         if let Some(boundary) = lower_boundary(x.left, graph) {
             match boundary.regions.clone() {
                 BoundingRegions::One(lower_neighbor) => {
