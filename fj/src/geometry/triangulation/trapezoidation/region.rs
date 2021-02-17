@@ -51,6 +51,38 @@ pub struct HorizontalBoundary {
     pub regions: BoundingRegions,
 }
 
+impl HorizontalBoundary {
+    pub fn update_after_neighbor_split(&mut self, left: Id, right: Id) {
+        match self.regions.clone() {
+            BoundingRegions::One(_) => {
+                self.regions = BoundingRegions::Two { left, right };
+            }
+            region @ BoundingRegions::Two { .. } => {
+                // Due to the non-degeneracy requirement from the paper, this
+                // case is an impossibility. It simply can't happen, unless
+                // something is buggy.
+                //
+                // If the region had two neighbors above or below it, it's
+                // impossible for one of those to be split in x. That would have
+                // required the points of the splitting segment to be inserted,
+                // and since those can't be at the same height as the segment
+                // that splits the existing two regions, one of the following
+                // would have to be true:
+                // - One of the points of the new segment would be closer than
+                //   the closest point of the existing segment, meaning the new
+                //   region created by the resulting y split is our only
+                //   neighbor.
+                // - Both points of the new segment are farther away than the
+                //   closest point of the existing segment, in which case this
+                //   is not a neighbor of the new regions.
+                //
+                // In both cases, we shouldn't have ended up here.
+                panic!("Invalid neighbor: {:?}", region);
+            }
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum BoundingRegions {
     One(Id),
