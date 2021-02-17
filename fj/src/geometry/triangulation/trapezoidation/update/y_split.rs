@@ -7,20 +7,22 @@ use crate::geometry::triangulation::trapezoidation::{
 pub fn update(id: Id, graph: &mut Graph) {
     let y = graph.get(id).y().unwrap().clone();
 
+    // Update lower region
     Region::get_mut(y.below, graph).upper_boundary = Some(HorizontalBoundary {
         point: y.point,
         regions: BoundingRegions::One(y.above),
     });
-    Region::get_mut(y.above, graph).lower_boundary = Some(HorizontalBoundary {
-        point: y.point,
-        regions: BoundingRegions::One(y.below),
-    });
-
     if let Some(lower_boundary) = lower_boundary(y.below, graph) {
         for lower_id in lower_boundary.regions.iter() {
             replace_in_upper_boundary(lower_id, id, y.below, graph);
         }
     }
+
+    // Update upper region
+    Region::get_mut(y.above, graph).lower_boundary = Some(HorizontalBoundary {
+        point: y.point,
+        regions: BoundingRegions::One(y.below),
+    });
 }
 
 pub fn lower_boundary(id: Id, graph: &Graph) -> Option<&HorizontalBoundary> {
