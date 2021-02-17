@@ -15,7 +15,10 @@ pub fn update(id: Id, graph: &mut Graph) {
     });
     if let Some(lower_boundary) = &below.lower_boundary {
         for lower_id in lower_boundary.regions.iter() {
-            replace_in_upper_boundary(lower_id, id, y.below, graph);
+            Region::get_mut(lower_id, graph)
+                .upper_boundary_mut()
+                .regions
+                .replace(id, y.below);
         }
     }
 
@@ -24,13 +27,6 @@ pub fn update(id: Id, graph: &mut Graph) {
         point: y.point,
         regions: BoundingRegions::One(y.below),
     });
-}
-
-pub fn replace_in_upper_boundary(id: Id, old: Id, new: Id, graph: &mut Graph) {
-    Region::get_mut(id, graph)
-        .upper_boundary_mut()
-        .regions
-        .replace(old, new);
 }
 
 #[cfg(test)]
