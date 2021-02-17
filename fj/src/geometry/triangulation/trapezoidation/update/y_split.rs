@@ -8,11 +8,12 @@ pub fn update(id: Id, graph: &mut Graph) {
     let y = graph.get(id).y().unwrap().clone();
 
     // Update lower region
-    Region::get_mut(y.below, graph).upper_boundary = Some(HorizontalBoundary {
+    let below = Region::get_mut(y.below, graph);
+    below.upper_boundary = Some(HorizontalBoundary {
         point: y.point,
         regions: BoundingRegions::One(y.above),
     });
-    if let Some(lower_boundary) = lower_boundary(y.below, graph) {
+    if let Some(lower_boundary) = &below.lower_boundary {
         for lower_id in lower_boundary.regions.iter() {
             replace_in_upper_boundary(lower_id, id, y.below, graph);
         }
@@ -23,10 +24,6 @@ pub fn update(id: Id, graph: &mut Graph) {
         point: y.point,
         regions: BoundingRegions::One(y.below),
     });
-}
-
-pub fn lower_boundary(id: Id, graph: &Graph) -> Option<&HorizontalBoundary> {
-    Region::get(id, graph).lower_boundary.as_ref()
 }
 
 pub fn replace_in_upper_boundary(id: Id, old: Id, new: Id, graph: &mut Graph) {
