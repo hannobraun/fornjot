@@ -13,6 +13,10 @@ pub struct Region {
 }
 
 impl Region {
+    pub fn lower_boundary_mut(&mut self) -> &mut HorizontalBoundary {
+        self.lower_boundary.as_mut().unwrap()
+    }
+
     pub fn upper_boundary_mut(&mut self) -> &mut HorizontalBoundary {
         self.upper_boundary.as_mut().unwrap()
     }
