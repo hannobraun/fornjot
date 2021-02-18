@@ -65,9 +65,7 @@ pub fn update(ids: &[Id], graph: &mut Graph) {
             match boundary.regions {
                 BoundingRegions::One(lower_neighbor) => {
                     Region::get_mut(lower_neighbor, graph)
-                        .upper_boundary
-                        .as_mut()
-                        .unwrap()
+                        .upper_boundary_mut()
                         .update_after_neighbor_split(x.left, x.right);
                 }
                 BoundingRegions::Two { .. } => {
