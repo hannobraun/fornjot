@@ -30,10 +30,11 @@ pub fn update(ids: &[Id], graph: &mut Graph) {
         if let Some(boundary) = upper_boundary {
             match boundary.regions {
                 BoundingRegions::One(upper_neighbor) => {
-                    let upper_neighbor = Region::get_mut(upper_neighbor, graph);
-                    if let Some(boundary) = &mut upper_neighbor.lower_boundary {
-                        boundary.update_after_neighbor_split(x.left, x.right);
-                    }
+                    Region::get_mut(upper_neighbor, graph)
+                        .lower_boundary
+                        .as_mut()
+                        .unwrap()
+                        .update_after_neighbor_split(x.left, x.right);
                 }
                 BoundingRegions::Two { .. } => {
                     // TASK: We're looking at the upper boundary of the split
@@ -63,10 +64,11 @@ pub fn update(ids: &[Id], graph: &mut Graph) {
         if let Some(boundary) = lower_boundary {
             match boundary.regions {
                 BoundingRegions::One(lower_neighbor) => {
-                    let lower_neighbor = Region::get_mut(lower_neighbor, graph);
-                    if let Some(boundary) = &mut lower_neighbor.upper_boundary {
-                        boundary.update_after_neighbor_split(x.left, x.right);
-                    }
+                    Region::get_mut(lower_neighbor, graph)
+                        .upper_boundary
+                        .as_mut()
+                        .unwrap()
+                        .update_after_neighbor_split(x.left, x.right);
                 }
                 BoundingRegions::Two { .. } => {
                     // TASK: Implement. See comment above for directions.
