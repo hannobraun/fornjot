@@ -124,7 +124,7 @@ mod tests {
     }
 
     #[test]
-    fn update_should_update_boundaries_of_vertical_neighbors() {
+    fn update_should_update_boundaries_of_single_vertical_neighbors() {
         let mut graph = Graph::new();
 
         let upper = Point::new(0.0, 1.0);
