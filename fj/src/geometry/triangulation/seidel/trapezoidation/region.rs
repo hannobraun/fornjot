@@ -1,6 +1,6 @@
 use std::fmt::Debug;
 
-use crate::geometry::triangulation::trapezoidation::point::Point;
+use crate::geometry::triangulation::seidel::trapezoidation::point::Point;
 
 use super::{graph::Graph, ids::Id, segment::Segment};
 

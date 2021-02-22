@@ -1,6 +1,6 @@
 use std::fmt::Debug;
 
-use crate::geometry::triangulation::trapezoidation::{
+use crate::geometry::triangulation::seidel::trapezoidation::{
     find_region_for_point::find_region_for_point,
     graph::{Graph, Node, X, Y},
     ids::Id,
@@ -38,7 +38,7 @@ where
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::triangulation::trapezoidation::{
+    use crate::geometry::triangulation::seidel::trapezoidation::{
         graph::{self, Node, X, Y},
         point::Point,
         region::{Get as _, TestRegion as Region},

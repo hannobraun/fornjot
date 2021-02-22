@@ -1,4 +1,4 @@
-use crate::geometry::triangulation::trapezoidation::{
+use crate::geometry::triangulation::seidel::trapezoidation::{
     graph::Graph,
     ids::Id,
     region::{BoundingRegions, Get as _, HorizontalBoundary, Region},
@@ -31,7 +31,7 @@ pub fn update(id: Id, graph: &mut Graph) {
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::triangulation::trapezoidation::{
+    use crate::geometry::triangulation::seidel::trapezoidation::{
         graph,
         insert::point,
         point::Point,

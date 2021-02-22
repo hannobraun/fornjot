@@ -1,7 +1,7 @@
 pub mod point;
 pub mod segment;
 
-use crate::geometry::triangulation::trapezoidation::segment::Segment;
+use crate::geometry::triangulation::seidel::trapezoidation::segment::Segment;
 
 use super::{
     graph::Graph,
@@ -22,7 +22,7 @@ pub fn insert(segment: Segment, graph: &mut Graph) {
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::triangulation::trapezoidation::{
+    use crate::geometry::triangulation::seidel::trapezoidation::{
         graph::{self, Node, X, Y},
         point::Point,
         segment::Segment,

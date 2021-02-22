@@ -1,4 +1,4 @@
-use crate::geometry::triangulation::trapezoidation::{
+use crate::geometry::triangulation::seidel::trapezoidation::{
     point::{self, Point},
     segment,
 };
@@ -65,7 +65,7 @@ pub fn find_region_for_point<Region>(
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::triangulation::trapezoidation::{
+    use crate::geometry::triangulation::seidel::trapezoidation::{
         graph::{self, Node, X, Y},
         point::Point,
         region::TestRegion as Region,

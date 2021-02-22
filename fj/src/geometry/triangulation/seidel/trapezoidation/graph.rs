@@ -2,7 +2,7 @@
 
 use std::{collections::HashMap, fmt::Debug};
 
-use crate::geometry::triangulation::trapezoidation::{
+use crate::geometry::triangulation::seidel::trapezoidation::{
     point::Point, segment::Segment,
 };
 
@@ -129,7 +129,7 @@ pub struct Y {
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::triangulation::trapezoidation::region::TestRegion as Sink;
+    use crate::geometry::triangulation::seidel::trapezoidation::region::TestRegion as Sink;
 
     use super::Node;
 
