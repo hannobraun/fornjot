@@ -8,5 +8,5 @@ pub use self::{
     boundary::Boundary,
     mesh::{Mesh, ToMesh},
     operations::Difference,
-    shapes::{Circle, Triangle, Triangles},
+    shapes::{Circle, Triangle3, Triangles},
 };

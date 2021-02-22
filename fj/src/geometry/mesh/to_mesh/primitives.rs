@@ -2,7 +2,7 @@ use std::{collections::VecDeque, f32::consts::PI};
 
 use nalgebra::Point3;
 
-use crate::geometry::{Boundary as _, Circle, Mesh, Triangle};
+use crate::geometry::{Boundary as _, Circle, Mesh, Triangle3};
 
 use super::ToMesh;
 
@@ -71,7 +71,7 @@ impl ToMesh for &Circle {
     }
 }
 
-impl ToMesh for &Triangle {
+impl ToMesh for &Triangle3 {
     fn to_mesh(self, _tolerance: f32) -> Mesh {
         let mut mesh = Mesh::new();
 
@@ -89,7 +89,7 @@ impl ToMesh for &Triangle {
 mod tests {
     use approx::assert_relative_eq;
 
-    use crate::geometry::{Circle, Triangle, Triangles};
+    use crate::geometry::{Circle, Triangle3, Triangles};
 
     use crate::geometry::ToMesh as _;
 
@@ -106,7 +106,7 @@ mod tests {
 
         let triangles = mesh.triangles();
 
-        use crate::geometry::Triangle as T;
+        use crate::geometry::Triangle3 as T;
         #[rustfmt::skip]
         let expected_triangles = Triangles(vec![
             T::new([0.0, 0.0, 0.0], [ 1.0,  0.0, 0.0], [ 0.0,  1.0, 0.0]),
@@ -120,7 +120,7 @@ mod tests {
     #[test]
     fn triangle_should_convert_to_mesh() {
         let triangle =
-            Triangle::new([0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]);
+            Triangle3::new([0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]);
 
         let mesh = triangle.to_mesh(0.0);
         let triangles = mesh.triangles();

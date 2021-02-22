@@ -1,13 +1,13 @@
-use crate::geometry::Triangle;
+use crate::geometry::Triangle3;
 
 #[derive(Debug, PartialEq)]
-pub struct Triangles(pub Vec<Triangle>);
+pub struct Triangles(pub Vec<Triangle3>);
 
 impl approx::AbsDiffEq for Triangles {
-    type Epsilon = <Triangle as approx::AbsDiffEq>::Epsilon;
+    type Epsilon = <Triangle3 as approx::AbsDiffEq>::Epsilon;
 
     fn default_epsilon() -> Self::Epsilon {
-        Triangle::default_epsilon()
+        Triangle3::default_epsilon()
     }
 
     fn abs_diff_eq(&self, other: &Triangles, epsilon: Self::Epsilon) -> bool {
@@ -17,7 +17,7 @@ impl approx::AbsDiffEq for Triangles {
 
 impl approx::RelativeEq for Triangles {
     fn default_max_relative() -> Self::Epsilon {
-        Triangle::default_max_relative()
+        Triangle3::default_max_relative()
     }
 
     fn relative_eq(

@@ -4,7 +4,7 @@ use decorum::R32;
 use nalgebra::{Point3, Vector3};
 
 use crate::{
-    geometry::{Triangle, Triangles},
+    geometry::{Triangle3, Triangles},
     graphics,
 };
 
@@ -106,7 +106,7 @@ impl Mesh {
             let v1 = self.vertices[i1 as usize].position;
             let v2 = self.vertices[i2 as usize].position;
 
-            Some(Triangle::new(
+            Some(Triangle3::new(
                 [v0[0].into_inner(), v0[1].into_inner(), v0[2].into_inner()],
                 [v1[0].into_inner(), v1[1].into_inner(), v1[2].into_inner()],
                 [v2[0].into_inner(), v2[1].into_inner(), v2[2].into_inner()],
@@ -149,7 +149,7 @@ mod tests {
     use decorum::R32;
     use nalgebra::{Point3, Vector3};
 
-    use crate::geometry::Triangle;
+    use crate::geometry::Triangle3;
 
     use super::{Mesh, Vertex};
 
@@ -220,7 +220,7 @@ mod tests {
         let triangles = mesh.triangles();
         assert_eq!(
             triangles.0,
-            vec![Triangle::new(v0, v1, v2), Triangle::new(v0, v2, v1)]
+            vec![Triangle3::new(v0, v1, v2), Triangle3::new(v0, v2, v1)]
         );
     }
 }

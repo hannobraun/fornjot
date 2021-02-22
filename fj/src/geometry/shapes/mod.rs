@@ -5,6 +5,6 @@ pub mod triangles;
 pub mod vertex_chain;
 
 pub use self::{
-    circle::Circle, polygon::Polygon, triangle::Triangle, triangles::Triangles,
-    vertex_chain::VertexChain,
+    circle::Circle, polygon::Polygon, triangle::Triangle3,
+    triangles::Triangles, vertex_chain::VertexChain,
 };
