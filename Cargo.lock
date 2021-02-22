@@ -1606,6 +1606,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "spacer"
+version = "0.1.0"
+dependencies = [
+ "fj",
+]
+
+[[package]]
 name = "spirv_cross"
 version = "0.23.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
