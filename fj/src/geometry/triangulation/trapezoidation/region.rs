@@ -61,6 +61,10 @@ impl HorizontalBoundary {
             BoundingRegions::One(_) => {
                 self.regions = BoundingRegions::Two { left, right };
             }
+            // TASK: The following comment is wrong. It is possible for a single
+            //       lower neighbor to have two upper neighbors, if it is being
+            //       split by the same segment that is currently splitting the
+            //       upper neighbor.
             region @ BoundingRegions::Two { .. } => {
                 // Due to the non-degeneracy requirement from the paper, this
                 // case is an impossibility. It simply can't happen, unless
