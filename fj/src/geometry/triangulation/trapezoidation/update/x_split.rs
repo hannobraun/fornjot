@@ -12,6 +12,9 @@ pub fn update(ids: &[Id], graph: &mut Graph) {
         let left = Region::get_mut(x.left, graph);
         left.right_segment = Some(x.segment);
 
+        // TASK: Add left region to a list of regions left of the new segment.
+        //       Those are candidates for merging.
+
         // Let's store these here and now. We're just reading them, so making a
         // copy is fine, and we can't keep `left` around forever, as it mutable
         // borrows `graph`, which we're going to need again soon.
@@ -25,6 +28,9 @@ pub fn update(ids: &[Id], graph: &mut Graph) {
         // Update right region
         let right = Region::get_mut(x.right, graph);
         right.left_segment = Some(x.segment);
+
+        // TASK: Add right region to a list of regions right of the new segment.
+        //       Those are candidates for merging.
 
         // Update upper boundary
         if let Some(boundary) = upper_boundary {
