@@ -1,10 +1,11 @@
-use std::{collections::VecDeque, f32::consts::PI};
+use std::f32::consts::PI;
 
 use nalgebra::Point3;
 
 use crate::geometry::{
-    shapes::Polygon, triangulation::basic::triangulate, Boundary as _, Circle,
-    Mesh, Triangle3,
+    shapes::{Polygon, VertexChain},
+    triangulation::basic::triangulate,
+    Boundary as _, Circle, Mesh, Triangle3,
 };
 
 use super::ToMesh;
@@ -32,41 +33,16 @@ impl ToMesh for &Circle {
             n += 1;
         }
 
-        let center = mesh.vertex(Point3::new(0.0, 0.0, 0.0));
-
-        let mut circumference = VecDeque::new();
+        let mut circumference = VertexChain::new();
         for i in 0..n {
             let p = self.boundary(1.0 / n as f32 * i as f32);
-            let index = mesh.vertex(Point3::new(p.x, p.y, 0.0));
-            circumference.push_back(index);
+            circumference.insert(p);
         }
 
-        // We know that `n` is at least 3, so the following can't panic.
-        let mut a = circumference.pop_front().unwrap();
-        let mut b = circumference.pop_front().unwrap();
+        let mut polygon = Polygon::new();
+        polygon.insert_chain(circumference);
 
-        // We need to remember the first point on the circumference. It's going
-        // to be part of the last triangle, once we're all the way around.
-        let first = a;
-
-        loop {
-            // All triangles are the same: They include the center and two
-            // neighboring points on the circumference, starting with the center
-            // and going counter-clockwise.
-            mesh.triangle(center, a, b);
-
-            // Once triangle done. Prepare the points for the next one or, if
-            // there isn't another point, stop.
-            a = b;
-            b = match circumference.pop_front() {
-                Some(index) => index,
-                None => break,
-            };
-        }
-
-        // We've run out of new points to make triangles, but the last and first
-        // points still need to form the last triangle.
-        mesh.triangle(center, a, first);
+        polygon.to_mesh(tolerance, mesh);
     }
 }
 
@@ -96,37 +72,9 @@ impl ToMesh for &Triangle3 {
 
 #[cfg(test)]
 mod tests {
-    use approx::assert_relative_eq;
-
-    use crate::geometry::{Circle, Mesh, Triangle3, Triangles};
+    use crate::geometry::{Mesh, Triangle3};
 
     use crate::geometry::ToMesh as _;
-
-    #[test]
-    fn circle_should_convert_to_mesh() {
-        // If we approximate the circle using a triangle whose points are on the
-        // circle, the maximum error (distance between circle and triangle) is
-        // 0.5. The maximum error for a square is roughly 0.3, so choosing a
-        // tolerance between those two should give us a square.
-        let tolerance = 0.4;
-
-        let circle = Circle::from_radius(1.0);
-
-        let mut mesh = Mesh::new();
-        circle.to_mesh(tolerance, &mut mesh);
-
-        let triangles = mesh.triangles();
-
-        use crate::geometry::Triangle3 as T;
-        #[rustfmt::skip]
-        let expected_triangles = Triangles(vec![
-            T::new([0.0, 0.0, 0.0], [ 1.0,  0.0, 0.0], [ 0.0,  1.0, 0.0]),
-            T::new([0.0, 0.0, 0.0], [ 0.0,  1.0, 0.0], [-1.0,  0.0, 0.0]),
-            T::new([0.0, 0.0, 0.0], [-1.0,  0.0, 0.0], [ 0.0, -1.0, 0.0]),
-            T::new([0.0, 0.0, 0.0], [ 0.0, -1.0, 0.0], [ 1.0,  0.0, 0.0]),
-        ]);
-        assert_relative_eq!(triangles, expected_triangles);
-    }
 
     #[test]
     fn triangle_should_convert_to_mesh() {
