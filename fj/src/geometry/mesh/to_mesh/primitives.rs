@@ -2,7 +2,10 @@ use std::{collections::VecDeque, f32::consts::PI};
 
 use nalgebra::Point3;
 
-use crate::geometry::{Boundary as _, Circle, Mesh, Triangle3};
+use crate::geometry::{
+    shapes::Polygon, triangulation::basic::triangulate, Boundary as _, Circle,
+    Mesh, Triangle3,
+};
 
 use super::ToMesh;
 
@@ -64,6 +67,20 @@ impl ToMesh for &Circle {
         // We've run out of new points to make triangles, but the last and first
         // points still need to form the last triangle.
         mesh.triangle(center, a, first);
+    }
+}
+
+impl ToMesh for &Polygon {
+    fn to_mesh(self, _tolerance: f32, mesh: &mut Mesh) {
+        let triangles = triangulate(&self);
+
+        for triangle in triangles {
+            let a = mesh.vertex(Point3::new(triangle.a.x, triangle.a.y, 0.0));
+            let b = mesh.vertex(Point3::new(triangle.b.x, triangle.b.y, 0.0));
+            let c = mesh.vertex(Point3::new(triangle.c.x, triangle.c.y, 0.0));
+
+            mesh.triangle(a, b, c);
+        }
     }
 }
 
