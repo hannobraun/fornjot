@@ -42,11 +42,21 @@ pub fn triangulate(polygon: &Polygon) -> Vec<Triangle> {
         let b = *neighbors_of_a.next().unwrap();
         let c = *neighbors_of_a.next().unwrap();
 
-        triangles.push(Triangle::new(
-            Point2::new(a.0.into_inner(), a.1.into_inner()),
-            Point2::new(b.0.into_inner(), b.1.into_inner()),
-            Point2::new(c.0.into_inner(), c.1.into_inner()),
-        ));
+        let p_a = Point2::new(a.0.into_inner(), a.1.into_inner());
+        let p_b = Point2::new(b.0.into_inner(), b.1.into_inner());
+        let p_c = Point2::new(c.0.into_inner(), c.1.into_inner());
+
+        // Make sure triangles face the right way.
+        // TASK: Factor this operation into a method on `Segment`, submit to
+        //       Parry.
+        let c_is_left_of_a_b = (p_b.x - p_a.x) * (p_c.y - p_a.y)
+            - (p_b.y - p_a.y) * (p_c.x - p_a.x)
+            > 0.0;
+        if c_is_left_of_a_b {
+            triangles.push(Triangle::new(p_a, p_b, p_c));
+        } else {
+            triangles.push(Triangle::new(p_a, p_c, p_b));
+        }
 
         // Insert the new connection between `b` and `c`.
         neighbors.get_mut(&b).unwrap().insert(c);
