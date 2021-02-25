@@ -6,7 +6,7 @@ use winit::{
 };
 
 use crate::{
-    geometry::ToMesh,
+    geometry::{Mesh, ToMesh},
     graphics::{DrawError, Renderer},
     input::InputHandler,
     transform::Transform,
@@ -23,7 +23,9 @@ pub fn run(mesh: impl ToMesh) {
         .build(&event_loop)
         .unwrap();
 
-    let mesh = mesh.to_mesh(0.001).into_graphics_mesh();
+    let mut mesh_tmp = Mesh::new();
+    mesh.to_mesh(0.001, &mut mesh_tmp);
+    let mesh = mesh_tmp.into_graphics_mesh();
 
     let mut input_handler = InputHandler::new();
     let mut transform = Transform::new();

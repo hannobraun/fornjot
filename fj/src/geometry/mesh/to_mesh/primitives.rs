@@ -7,7 +7,7 @@ use crate::geometry::{Boundary as _, Circle, Mesh, Triangle3};
 use super::ToMesh;
 
 impl ToMesh for &Circle {
-    fn to_mesh(self, tolerance: f32) -> Mesh {
+    fn to_mesh(self, tolerance: f32, mesh: &mut Mesh) {
         // To approximate the circle, we use a regular polygon for which the
         // circle is the circumscribed circle. The `tolerance` parameter is the
         // maximum allowed distance between the polygon and the circle. This is
@@ -28,8 +28,6 @@ impl ToMesh for &Circle {
 
             n += 1;
         }
-
-        let mut mesh = Mesh::new();
 
         let center = mesh.vertex(Point3::new(0.0, 0.0, 0.0));
 
@@ -66,22 +64,16 @@ impl ToMesh for &Circle {
         // We've run out of new points to make triangles, but the last and first
         // points still need to form the last triangle.
         mesh.triangle(center, a, first);
-
-        mesh
     }
 }
 
 impl ToMesh for &Triangle3 {
-    fn to_mesh(self, _tolerance: f32) -> Mesh {
-        let mut mesh = Mesh::new();
-
+    fn to_mesh(self, _tolerance: f32, mesh: &mut Mesh) {
         let i0 = mesh.vertex(self.a);
         let i1 = mesh.vertex(self.b);
         let i2 = mesh.vertex(self.c);
 
         mesh.triangle(i0, i1, i2);
-
-        mesh
     }
 }
 
@@ -89,7 +81,7 @@ impl ToMesh for &Triangle3 {
 mod tests {
     use approx::assert_relative_eq;
 
-    use crate::geometry::{Circle, Triangle3, Triangles};
+    use crate::geometry::{Circle, Mesh, Triangle3, Triangles};
 
     use crate::geometry::ToMesh as _;
 
@@ -102,7 +94,9 @@ mod tests {
         let tolerance = 0.4;
 
         let circle = Circle::from_radius(1.0);
-        let mesh = circle.to_mesh(tolerance);
+
+        let mut mesh = Mesh::new();
+        circle.to_mesh(tolerance, &mut mesh);
 
         let triangles = mesh.triangles();
 
@@ -122,7 +116,9 @@ mod tests {
         let triangle =
             Triangle3::new([0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]);
 
-        let mesh = triangle.to_mesh(0.0);
+        let mut mesh = Mesh::new();
+        triangle.to_mesh(0.0, &mut mesh);
+
         let triangles = mesh.triangles();
 
         assert_eq!(triangles.0, vec![triangle]);
