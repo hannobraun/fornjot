@@ -13,7 +13,7 @@ use parry2d::shape::Triangle;
 use crate::geometry::shapes::Polygon;
 
 pub fn triangulate(polygon: &Polygon) -> Vec<Triangle> {
-    let mut neighbors = BTreeMap::new();
+    let mut neighbors = Neighbors::new();
     for edge in polygon.edges() {
         let a = edge.a.map(|value| R32::from_inner(value));
         let b = edge.b.map(|value| R32::from_inner(value));
@@ -21,11 +21,11 @@ pub fn triangulate(polygon: &Polygon) -> Vec<Triangle> {
         let a = (a.x, a.y);
         let b = (b.x, b.y);
 
-        neighbors.entry(a).or_insert(BTreeSet::new()).insert(b);
-        neighbors.entry(b).or_insert(BTreeSet::new()).insert(a);
+        neighbors.0.entry(a).or_insert(BTreeSet::new()).insert(b);
+        neighbors.0.entry(b).or_insert(BTreeSet::new()).insert(a);
     }
 
-    assert!(neighbors.len() > 1);
+    assert!(neighbors.0.len() > 1);
 
     let mut triangles = Vec::new();
 
@@ -33,11 +33,11 @@ pub fn triangulate(polygon: &Polygon) -> Vec<Triangle> {
         // Get the first point of our candidate triangle. This shouldn't panic,
         // as we wouldn't be here, if there wasn't at least one item in
         // `neighbors`.
-        let a = *neighbors.keys().next().unwrap();
+        let a = *neighbors.0.keys().next().unwrap();
 
         // Get the other two points of the candidate triangle. This shouldn't
         // panic, as every point must have two neighbors.
-        let neighbors_of_a = neighbors.get(&a).unwrap();
+        let neighbors_of_a = neighbors.0.get(&a).unwrap();
         let mut neighbors_of_a = neighbors_of_a.iter();
         let b = *neighbors_of_a.next().unwrap();
         let c = *neighbors_of_a.next().unwrap();
@@ -59,14 +59,14 @@ pub fn triangulate(polygon: &Polygon) -> Vec<Triangle> {
         }
 
         // Insert the new connection between `b` and `c`.
-        neighbors.get_mut(&b).unwrap().insert(c);
-        neighbors.get_mut(&c).unwrap().insert(b);
+        neighbors.0.get_mut(&b).unwrap().insert(c);
+        neighbors.0.get_mut(&c).unwrap().insert(b);
 
         // The connections from `a` to its neighbors are on the outside of the
         // triangle. Remove them.
         // TASK: Factor this operation into a method on a `Neighbors` struct.
-        neighbors.remove(&a);
-        for neighbor_set in neighbors.values_mut() {
+        neighbors.0.remove(&a);
+        for neighbor_set in neighbors.0.values_mut() {
             neighbor_set.remove(&a);
         }
 
@@ -75,15 +75,15 @@ pub fn triangulate(polygon: &Polygon) -> Vec<Triangle> {
         loop {
             let mut to_remove = Vec::new();
 
-            for (point, neighbor_set) in neighbors.iter_mut() {
+            for (point, neighbor_set) in neighbors.0.iter_mut() {
                 if neighbor_set.len() < 2 {
                     to_remove.push(*point);
                 }
             }
 
             for point in &to_remove {
-                neighbors.remove(point);
-                for neighbor_set in neighbors.values_mut() {
+                neighbors.0.remove(point);
+                for neighbor_set in neighbors.0.values_mut() {
                     neighbor_set.remove(point);
                 }
             }
@@ -93,12 +93,20 @@ pub fn triangulate(polygon: &Polygon) -> Vec<Triangle> {
             }
         }
 
-        if neighbors.is_empty() {
+        if neighbors.0.is_empty() {
             break;
         }
     }
 
     triangles
+}
+
+struct Neighbors(BTreeMap<(R32, R32), BTreeSet<(R32, R32)>>);
+
+impl Neighbors {
+    pub fn new() -> Self {
+        Self(BTreeMap::new())
+    }
 }
 
 #[cfg(test)]
