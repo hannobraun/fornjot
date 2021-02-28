@@ -32,13 +32,13 @@ impl VertexChain {
         let mut edges = Vec::new();
 
         edges.extend(self.0.windows(2).map(|window| {
-            let a = window[0].map(|value| value.into_inner());
-            let b = window[1].map(|value| value.into_inner());
+            let a = window[0].into();
+            let b = window[1].into();
             Segment::new(a, b)
         }));
 
-        let first = self.0.first().unwrap().map(|value| value.into_inner());
-        let last = self.0.last().unwrap().map(|value| value.into_inner());
+        let first = self.0.first().unwrap().into();
+        let last = self.0.last().unwrap().into();
         edges.push(Segment::new(last, first));
 
         edges

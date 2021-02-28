@@ -25,3 +25,15 @@ impl From<&Point2<f32>> for Pnt2 {
         Self(point.map(|value| R32::from_inner(value)))
     }
 }
+
+impl From<Pnt2> for Point2<f32> {
+    fn from(point: Pnt2) -> Self {
+        point.map(|value| value.into_inner())
+    }
+}
+
+impl From<&Pnt2> for Point2<f32> {
+    fn from(point: &Pnt2) -> Self {
+        point.map(|value| value.into_inner())
+    }
+}
