@@ -23,7 +23,7 @@ impl VertexChain {
     }
 
     /// Insert new vertex into the chain
-    pub fn insert(&mut self, vertex: Point2<f32>) {
+    pub fn insert(&mut self, vertex: impl Into<Pnt2>) {
         self.0.push(vertex.into());
     }
 
