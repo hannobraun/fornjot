@@ -26,7 +26,7 @@ pub fn triangulate(polygon: &Polygon) -> Vec<Triangle> {
         // Get the first point of our candidate triangle. This shouldn't panic,
         // as we wouldn't be here, if there wasn't at least one item in
         // `neighbors`.
-        let a = *neighbors.0.keys().next().unwrap();
+        let a = neighbors.first();
 
         // Get the other two points of the candidate triangle. This shouldn't
         // panic, as every point must have two neighbors.
@@ -114,6 +114,10 @@ impl Neighbors {
 
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
+    }
+
+    pub fn first(&self) -> (R32, R32) {
+        *self.0.keys().next().unwrap()
     }
 }
 
