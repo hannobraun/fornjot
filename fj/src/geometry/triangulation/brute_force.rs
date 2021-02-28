@@ -130,7 +130,7 @@ mod tests {
         let triangles = triangulate(&polygon);
 
         let expected =
-            vec![Triangle::new(p0, p1, p3), Triangle::new(p1, p2, p3)];
+            vec![Triangle::new(p0, p3, p1), Triangle::new(p1, p2, p3)];
         assert_eq!(triangles, expected);
     }
 }
