@@ -391,6 +391,7 @@ dependencies = [
  "bytemuck",
  "decorum",
  "futures",
+ "indexmap",
  "nalgebra",
  "parry2d",
  "rand 0.8.3",
