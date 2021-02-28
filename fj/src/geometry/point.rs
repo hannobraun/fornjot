@@ -12,3 +12,9 @@ impl Deref for Pnt2 {
         &self.0
     }
 }
+
+impl From<Point2<f32>> for Pnt2 {
+    fn from(point: Point2<f32>) -> Self {
+        Self(point.map(|value| R32::from_inner(value)))
+    }
+}

@@ -25,8 +25,7 @@ impl VertexChain {
 
     /// Insert new vertex into the chain
     pub fn insert(&mut self, vertex: Point2<f32>) {
-        let vertex = Pnt2(vertex.map(|value| R32::from_inner(value)));
-        self.0.push(vertex);
+        self.0.push(vertex.into());
     }
 
     /// Returns the line segments forming the vertex chain
