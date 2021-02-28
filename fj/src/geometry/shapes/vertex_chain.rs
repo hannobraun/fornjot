@@ -1,3 +1,4 @@
+use decorum::R32;
 use nalgebra::Point2;
 use parry2d::shape::Segment;
 
@@ -13,7 +14,7 @@ use parry2d::shape::Segment;
 /// Vertex chains are considered "positive", i.e. forming a polygon, if their
 /// vertices are in counter-clockwise order. They are considered "negative",
 /// i.e. holes in another polygon, if their vertices are in clockwise order.
-pub struct VertexChain(Vec<Point2<f32>>);
+pub struct VertexChain(Vec<Point2<R32>>);
 
 impl VertexChain {
     pub fn new() -> Self {
@@ -22,6 +23,7 @@ impl VertexChain {
 
     /// Insert new vertex into the chain
     pub fn insert(&mut self, vertex: Point2<f32>) {
+        let vertex = vertex.map(|value| R32::from_inner(value));
         self.0.push(vertex);
     }
 
@@ -29,14 +31,14 @@ impl VertexChain {
     pub fn segments(&self) -> Vec<Segment> {
         let mut edges = Vec::new();
 
-        edges.extend(
-            self.0
-                .windows(2)
-                .map(|window| Segment::new(window[0], window[1])),
-        );
+        edges.extend(self.0.windows(2).map(|window| {
+            let a = window[0].map(|value| value.into_inner());
+            let b = window[1].map(|value| value.into_inner());
+            Segment::new(a, b)
+        }));
 
-        let first = *self.0.first().unwrap();
-        let last = *self.0.last().unwrap();
+        let first = self.0.first().unwrap().map(|value| value.into_inner());
+        let last = self.0.last().unwrap().map(|value| value.into_inner());
         edges.push(Segment::new(last, first));
 
         edges
@@ -45,7 +47,11 @@ impl VertexChain {
 
 impl From<&[Point2<f32>]> for VertexChain {
     fn from(points: &[Point2<f32>]) -> Self {
-        Self(points.to_owned())
+        let points: Vec<_> = points
+            .into_iter()
+            .map(|point| point.map(|value| R32::from_inner(value)))
+            .collect();
+        Self(points)
     }
 }
 
