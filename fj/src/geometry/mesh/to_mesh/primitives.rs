@@ -4,7 +4,7 @@ use nalgebra::Point3;
 
 use crate::geometry::{
     shapes::{Polygon, VertexChain},
-    triangulation::basic::triangulate,
+    triangulation::brute_force::triangulate,
     Boundary as _, Circle, Mesh, Triangle3,
 };
 
