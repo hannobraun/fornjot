@@ -1,5 +1,5 @@
 use nalgebra::Point2;
-use parry2d::shape::Triangle;
+use parry2d::shape::{Segment, Triangle};
 
 use crate::geometry::shapes::Polygon;
 
@@ -33,11 +33,9 @@ pub fn triangulate(polygon: &Polygon) -> Vec<Triangle> {
         let p_c: Point2<f32> = c.into();
 
         // Make sure triangles face the right way.
-        // TASK: Factor this operation into a method on `Segment`, submit to
-        //       Parry.
-        let c_is_left_of_a_b = (p_b.x - p_a.x) * (p_c.y - p_a.y)
-            - (p_b.y - p_a.y) * (p_c.x - p_a.x)
-            > 0.0;
+        let a_b = Segment::new(p_a, p_b);
+        let a_c = p_c - p_a;
+        let c_is_left_of_a_b = a_b.scaled_normal().dot(&a_c) < 0.0;
         if c_is_left_of_a_b {
             triangles.push(Triangle::new(p_a, p_b, p_c));
         } else {
