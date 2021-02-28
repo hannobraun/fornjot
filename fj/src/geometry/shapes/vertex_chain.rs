@@ -2,6 +2,8 @@ use decorum::R32;
 use nalgebra::Point2;
 use parry2d::shape::Segment;
 
+use crate::geometry::point::Pnt2;
+
 /// A vertex chain
 ///
 /// Quite literally, a chain of vertices. The first and the last vertex in the
@@ -14,7 +16,7 @@ use parry2d::shape::Segment;
 /// Vertex chains are considered "positive", i.e. forming a polygon, if their
 /// vertices are in counter-clockwise order. They are considered "negative",
 /// i.e. holes in another polygon, if their vertices are in clockwise order.
-pub struct VertexChain(Vec<Point2<R32>>);
+pub struct VertexChain(Vec<Pnt2>);
 
 impl VertexChain {
     pub fn new() -> Self {
@@ -23,7 +25,7 @@ impl VertexChain {
 
     /// Insert new vertex into the chain
     pub fn insert(&mut self, vertex: Point2<f32>) {
-        let vertex = vertex.map(|value| R32::from_inner(value));
+        let vertex = Pnt2(vertex.map(|value| R32::from_inner(value)));
         self.0.push(vertex);
     }
 
@@ -49,7 +51,7 @@ impl From<&[Point2<f32>]> for VertexChain {
     fn from(points: &[Point2<f32>]) -> Self {
         let points: Vec<_> = points
             .into_iter()
-            .map(|point| point.map(|value| R32::from_inner(value)))
+            .map(|point| Pnt2(point.map(|value| R32::from_inner(value))))
             .collect();
         Self(points)
     }
