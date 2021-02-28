@@ -90,9 +90,9 @@ mod tests {
     fn triangulate_should_triangulate_basic_polygon() {
         // A very rough circle.
         let p0 = Point2::new(0.0, 0.0);
-        let p1 = Point2::new(0.0, 1.0);
-        let p2 = Point2::new(1.0, 0.0);
-        let p3 = Point2::new(1.0, 1.0);
+        let p1 = Point2::new(1.0, 0.0);
+        let p2 = Point2::new(1.0, 1.0);
+        let p3 = Point2::new(0.0, 1.0);
 
         let mut chain = VertexChain::new();
         chain.insert(p0);
@@ -106,7 +106,7 @@ mod tests {
         let triangles = triangulate(&polygon);
 
         let expected =
-            vec![Triangle::new(p0, p3, p1), Triangle::new(p1, p2, p3)];
+            vec![Triangle::new(p0, p1, p3), Triangle::new(p3, p1, p2)];
         assert_eq!(triangles, expected);
     }
 }
