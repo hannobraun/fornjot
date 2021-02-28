@@ -30,10 +30,10 @@ pub fn triangulate(polygon: &Polygon) -> Vec<Triangle> {
 
         // Get the other two points of the candidate triangle. This shouldn't
         // panic, as every point must have two neighbors.
-        let neighbors_of_a = neighbors.0.get(&a).unwrap();
-        let mut neighbors_of_a = neighbors_of_a.iter();
-        let b = *neighbors_of_a.next().unwrap();
-        let c = *neighbors_of_a.next().unwrap();
+        let mut neighbors_of_a = neighbors.of(a);
+        let b = neighbors_of_a.next().unwrap();
+        let c = neighbors_of_a.next().unwrap();
+        drop(neighbors_of_a);
 
         let p_a = Point2::new(a.0.into_inner(), a.1.into_inner());
         let p_b = Point2::new(b.0.into_inner(), b.1.into_inner());
@@ -118,6 +118,13 @@ impl Neighbors {
 
     pub fn first(&self) -> (R32, R32) {
         *self.0.keys().next().unwrap()
+    }
+
+    pub fn of(
+        &self,
+        point: (R32, R32),
+    ) -> impl Iterator<Item = (R32, R32)> + '_ {
+        self.0.get(&point).unwrap().iter().map(|&point| point)
     }
 }
 
