@@ -3,7 +3,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use decorum::R32;
 use nalgebra::Point2;
 
-pub struct Neighbors(pub BTreeMap<(R32, R32), BTreeSet<(R32, R32)>>);
+pub struct Neighbors(pub BTreeMap<Point, BTreeSet<Point>>);
 
 impl Neighbors {
     pub fn new() -> Self {
@@ -25,14 +25,13 @@ impl Neighbors {
         self.0.is_empty()
     }
 
-    pub fn first(&self) -> (R32, R32) {
+    pub fn first(&self) -> Point {
         *self.0.keys().next().unwrap()
     }
 
-    pub fn of(
-        &self,
-        point: (R32, R32),
-    ) -> impl Iterator<Item = (R32, R32)> + '_ {
+    pub fn of(&self, point: Point) -> impl Iterator<Item = Point> + '_ {
         self.0.get(&point).unwrap().iter().map(|&point| point)
     }
 }
+
+pub type Point = (R32, R32);
