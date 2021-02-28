@@ -18,6 +18,13 @@ impl Neighbors {
         self.0.entry(b).or_insert(BTreeSet::new()).insert(a);
     }
 
+    pub fn remove(&mut self, p: Point) {
+        self.0.remove(&p);
+        for neighbors in self.0.values_mut() {
+            neighbors.remove(&p);
+        }
+    }
+
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
     }

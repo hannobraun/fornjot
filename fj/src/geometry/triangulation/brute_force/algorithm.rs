@@ -47,11 +47,7 @@ pub fn triangulate(polygon: &Polygon) -> Vec<Triangle> {
 
         // The connections from `a` to its neighbors are on the outside of the
         // triangle. Remove them.
-        // TASK: Factor this operation into a method on a `Neighbors` struct.
-        neighbors.0.remove(&a);
-        for neighbor_set in neighbors.0.values_mut() {
-            neighbor_set.remove(&a);
-        }
+        neighbors.remove(a);
 
         // Remove any points that don't have enough neighbors left. This will
         // only happen on the last triangle.
@@ -64,11 +60,8 @@ pub fn triangulate(polygon: &Polygon) -> Vec<Triangle> {
                 }
             }
 
-            for point in &to_remove {
-                neighbors.0.remove(point);
-                for neighbor_set in neighbors.0.values_mut() {
-                    neighbor_set.remove(point);
-                }
+            for &point in &to_remove {
+                neighbors.remove(point);
             }
 
             if to_remove.is_empty() {
