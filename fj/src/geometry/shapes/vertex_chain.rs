@@ -1,4 +1,3 @@
-use decorum::R32;
 use nalgebra::Point2;
 use parry2d::shape::Segment;
 
@@ -48,10 +47,8 @@ impl VertexChain {
 
 impl From<&[Point2<f32>]> for VertexChain {
     fn from(points: &[Point2<f32>]) -> Self {
-        let points: Vec<_> = points
-            .into_iter()
-            .map(|point| Pnt2(point.map(|value| R32::from_inner(value))))
-            .collect();
+        let points: Vec<_> =
+            points.into_iter().map(|point| point.into()).collect();
         Self(points)
     }
 }
