@@ -18,7 +18,7 @@ pub fn triangulate(polygon: &Polygon) -> Vec<Triangle> {
         neighbors.insert(edge.a, edge.b);
     }
 
-    assert!(neighbors.0.len() > 1);
+    assert!(!neighbors.is_empty());
 
     let mut triangles = Vec::new();
 
@@ -86,7 +86,7 @@ pub fn triangulate(polygon: &Polygon) -> Vec<Triangle> {
             }
         }
 
-        if neighbors.0.is_empty() {
+        if neighbors.is_empty() {
             break;
         }
     }
@@ -110,6 +110,10 @@ impl Neighbors {
 
         self.0.entry(a).or_insert(BTreeSet::new()).insert(b);
         self.0.entry(b).or_insert(BTreeSet::new()).insert(a);
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
     }
 }
 
