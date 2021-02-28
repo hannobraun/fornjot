@@ -40,3 +40,9 @@ impl From<Point2<f32>> for Point {
         Point(p.x, p.y)
     }
 }
+
+impl From<Point> for Point2<f32> {
+    fn from(p: Point) -> Self {
+        Point2::new(p.0.into_inner(), p.1.into_inner())
+    }
+}

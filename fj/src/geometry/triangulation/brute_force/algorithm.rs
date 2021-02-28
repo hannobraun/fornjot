@@ -28,9 +28,9 @@ pub fn triangulate(polygon: &Polygon) -> Vec<Triangle> {
         let c = neighbors_of_a.next().unwrap();
         drop(neighbors_of_a);
 
-        let p_a = Point2::new(a.0.into_inner(), a.1.into_inner());
-        let p_b = Point2::new(b.0.into_inner(), b.1.into_inner());
-        let p_c = Point2::new(c.0.into_inner(), c.1.into_inner());
+        let p_a: Point2<f32> = a.into();
+        let p_b: Point2<f32> = b.into();
+        let p_c: Point2<f32> = c.into();
 
         // Make sure triangles face the right way.
         // TASK: Factor this operation into a method on `Segment`, submit to
