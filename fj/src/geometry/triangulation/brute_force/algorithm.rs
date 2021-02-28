@@ -43,8 +43,7 @@ pub fn triangulate(polygon: &Polygon) -> Vec<Triangle> {
         }
 
         // Insert the new connection between `b` and `c`.
-        neighbors.0.get_mut(&b).unwrap().insert(c);
-        neighbors.0.get_mut(&c).unwrap().insert(b);
+        neighbors.insert(b, c);
 
         // The connections from `a` to its neighbors are on the outside of the
         // triangle. Remove them.
