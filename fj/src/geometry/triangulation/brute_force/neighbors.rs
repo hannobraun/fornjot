@@ -14,8 +14,8 @@ impl Neighbors {
         let a = a.map(|value| R32::from_inner(value));
         let b = b.map(|value| R32::from_inner(value));
 
-        let a = (a.x, a.y);
-        let b = (b.x, b.y);
+        let a = Point(a.x, a.y);
+        let b = Point(b.x, b.y);
 
         self.0.entry(a).or_insert(BTreeSet::new()).insert(b);
         self.0.entry(b).or_insert(BTreeSet::new()).insert(a);
@@ -34,4 +34,5 @@ impl Neighbors {
     }
 }
 
-pub type Point = (R32, R32);
+#[derive(Clone, Copy, Eq, Ord, PartialEq, PartialOrd)]
+pub struct Point(pub R32, pub R32);
