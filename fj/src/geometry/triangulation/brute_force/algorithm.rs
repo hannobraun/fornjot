@@ -87,7 +87,7 @@ mod tests {
     use super::triangulate;
 
     #[test]
-    fn triangulate_should_triangulate_a_circle_like_polygon() {
+    fn triangulate_should_triangulate_basic_polygon() {
         // A very rough circle.
         let p0 = Point2::new(0.0, 0.0);
         let p1 = Point2::new(0.0, 1.0);
