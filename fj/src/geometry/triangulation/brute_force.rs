@@ -15,14 +15,7 @@ use crate::geometry::shapes::Polygon;
 pub fn triangulate(polygon: &Polygon) -> Vec<Triangle> {
     let mut neighbors = Neighbors::new();
     for edge in polygon.edges() {
-        let a = edge.a.map(|value| R32::from_inner(value));
-        let b = edge.b.map(|value| R32::from_inner(value));
-
-        let a = (a.x, a.y);
-        let b = (b.x, b.y);
-
-        neighbors.0.entry(a).or_insert(BTreeSet::new()).insert(b);
-        neighbors.0.entry(b).or_insert(BTreeSet::new()).insert(a);
+        neighbors.insert(edge.a, edge.b);
     }
 
     assert!(neighbors.0.len() > 1);
@@ -106,6 +99,17 @@ struct Neighbors(BTreeMap<(R32, R32), BTreeSet<(R32, R32)>>);
 impl Neighbors {
     pub fn new() -> Self {
         Self(BTreeMap::new())
+    }
+
+    pub fn insert(&mut self, a: Point2<f32>, b: Point2<f32>) {
+        let a = a.map(|value| R32::from_inner(value));
+        let b = b.map(|value| R32::from_inner(value));
+
+        let a = (a.x, a.y);
+        let b = (b.x, b.y);
+
+        self.0.entry(a).or_insert(BTreeSet::new()).insert(b);
+        self.0.entry(b).or_insert(BTreeSet::new()).insert(a);
     }
 }
 
