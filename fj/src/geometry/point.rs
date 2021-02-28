@@ -3,7 +3,7 @@ use std::ops::Deref;
 use decorum::R32;
 use nalgebra::Point2;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Eq, PartialEq, PartialOrd)]
 pub struct Pnt2(pub Point2<R32>);
 
 impl Deref for Pnt2 {
@@ -11,6 +11,16 @@ impl Deref for Pnt2 {
 
     fn deref(&self) -> &Self::Target {
         &self.0
+    }
+}
+
+// TASK: `Point2` doesn't implement `Ord`, even if its type parameter does. This
+//       should be fixed in nalgebra.
+impl Ord for Pnt2 {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        let self_ = (self.0.x, self.0.y);
+        let other = (other.0.x, other.0.y);
+        self_.cmp(&other)
     }
 }
 
