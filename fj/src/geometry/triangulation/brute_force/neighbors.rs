@@ -11,11 +11,8 @@ impl Neighbors {
     }
 
     pub fn insert(&mut self, a: Point2<f32>, b: Point2<f32>) {
-        let a = a.map(|value| R32::from_inner(value));
-        let b = b.map(|value| R32::from_inner(value));
-
-        let a = Point(a.x, a.y);
-        let b = Point(b.x, b.y);
+        let a = a.into();
+        let b = b.into();
 
         self.0.entry(a).or_insert(BTreeSet::new()).insert(b);
         self.0.entry(b).or_insert(BTreeSet::new()).insert(a);
@@ -36,3 +33,10 @@ impl Neighbors {
 
 #[derive(Clone, Copy, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Point(pub R32, pub R32);
+
+impl From<Point2<f32>> for Point {
+    fn from(p: Point2<f32>) -> Self {
+        let p = p.map(|value| R32::from_inner(value));
+        Point(p.x, p.y)
+    }
+}
