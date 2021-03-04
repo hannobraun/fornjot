@@ -5,6 +5,15 @@ use crate::geometry::shapes::Polygon;
 
 use super::neighbors::Neighbors;
 
+/// Brute-force polygon triangulation algorithm
+///
+/// This algorithm handles the polygons that I care about right now, and is fast
+/// enough doing so. It makes no guarantees beyond that (so really, it doesn't
+/// make any guarantees).
+///
+/// The reason for this algorithm's existence is to make some forward progress
+/// without having to finish the implementation of the Seidel trapezoidation
+/// algorithm right now.
 pub fn triangulate(polygon: &Polygon) -> Vec<Triangle> {
     let mut neighbors = Neighbors::new();
     for edge in polygon.edges() {
