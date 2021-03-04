@@ -13,6 +13,16 @@ impl Polygon {
         Self(Vec::new())
     }
 
+    pub fn is_empty(&self) -> bool {
+        for chain in &self.0 {
+            if !chain.is_empty() {
+                return false;
+            }
+        }
+
+        true
+    }
+
     pub fn insert_chain(&mut self, chain: VertexChain) {
         self.0.push(chain)
     }
@@ -67,6 +77,24 @@ mod tests {
     use crate::geometry::shapes::VertexChain;
 
     use super::Polygon;
+
+    #[test]
+    fn polygon_should_tell_whether_it_is_empty() {
+        let mut polygon = Polygon::new();
+        assert!(polygon.is_empty());
+
+        // Empty chain, polygon still empty.
+        polygon.insert_chain(VertexChain::new());
+        assert!(polygon.is_empty());
+
+        let a = Point2::new(0.0, 0.0);
+        let b = Point2::new(1.0, 0.0);
+        let c = Point2::new(1.0, 1.0);
+
+        // Non-empty chain, ergo polygon no longer empty.
+        polygon.insert_chain(VertexChain::from(&[a, b, c][..]));
+        assert!(!polygon.is_empty());
+    }
 
     #[test]
     fn polygon_chain_return_its_edges() {

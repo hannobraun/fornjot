@@ -23,6 +23,10 @@ impl VertexChain {
         Self(IndexSet::new())
     }
 
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
+    }
+
     /// Insert new vertex into the chain
     pub fn insert(&mut self, vertex: impl Into<Pnt2>) {
         self.0.insert(vertex.into());
