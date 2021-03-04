@@ -29,16 +29,18 @@ impl VertexChain {
 
     /// Returns the line segments forming the vertex chain
     pub fn segments(&self) -> Vec<Segment> {
+        let vertices = &self.0;
+
         let mut edges = Vec::new();
 
-        edges.extend(self.0.windows(2).map(|window| {
+        edges.extend(vertices.windows(2).map(|window| {
             let a = window[0].into();
             let b = window[1].into();
             Segment::new(a, b)
         }));
 
-        let first = self.0.first().unwrap().into();
-        let last = self.0.last().unwrap().into();
+        let first = vertices.first().unwrap().into();
+        let last = vertices.last().unwrap().into();
         edges.push(Segment::new(last, first));
 
         edges
