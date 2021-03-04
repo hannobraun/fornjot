@@ -3,7 +3,7 @@ use std::ops::Deref;
 use decorum::R32;
 use nalgebra::Point2;
 
-#[derive(Clone, Copy, Eq, Hash, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, PartialOrd)]
 pub struct Pnt2(pub Point2<R32>);
 
 impl Deref for Pnt2 {
