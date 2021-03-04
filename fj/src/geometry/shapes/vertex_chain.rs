@@ -28,6 +28,10 @@ impl VertexChain {
         self.0.is_empty()
     }
 
+    pub fn len(&self) -> usize {
+        self.0.len()
+    }
+
     /// Insert new vertex into the chain
     pub fn insert(&mut self, vertex: impl Into<Pnt2>) {
         self.0.insert(vertex.into());
