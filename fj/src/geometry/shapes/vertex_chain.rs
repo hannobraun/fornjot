@@ -1,3 +1,4 @@
+use indexmap::IndexSet;
 use nalgebra::Point2;
 use parry2d::shape::Segment;
 
@@ -15,21 +16,25 @@ use crate::geometry::point::Pnt2;
 /// Vertex chains are considered "positive", i.e. forming a polygon, if their
 /// vertices are in counter-clockwise order. They are considered "negative",
 /// i.e. holes in another polygon, if their vertices are in clockwise order.
-pub struct VertexChain(Vec<Pnt2>);
+pub struct VertexChain(IndexSet<Pnt2>);
 
 impl VertexChain {
     pub fn new() -> Self {
-        Self(Vec::new())
+        Self(IndexSet::new())
     }
 
     /// Insert new vertex into the chain
     pub fn insert(&mut self, vertex: impl Into<Pnt2>) {
-        self.0.push(vertex.into());
+        self.0.insert(vertex.into());
     }
 
     /// Returns the line segments forming the vertex chain
     pub fn segments(&self) -> Vec<Segment> {
-        let vertices = &self.0;
+        // This gets us access to the `windows` method. Certainly not the best
+        // way to implement this. It work that way, because the vertices were in
+        // a `Vec` originally, and this was the easiest way to change that over
+        // to an `IndexSet`.
+        let vertices: Vec<_> = self.0.iter().map(|&pnt| pnt).collect();
 
         let mut edges = Vec::new();
 
@@ -49,7 +54,7 @@ impl VertexChain {
 
 impl From<&[Point2<f32>]> for VertexChain {
     fn from(points: &[Point2<f32>]) -> Self {
-        let points: Vec<_> =
+        let points: IndexSet<_> =
             points.into_iter().map(|point| point.into()).collect();
         Self(points)
     }
