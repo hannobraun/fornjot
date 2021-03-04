@@ -6,6 +6,7 @@ use super::VertexChain;
 ///
 /// A polygon expects, but does not enforce, that none of its edges overlap, and
 /// that none of its vertex chains share vertices.
+#[derive(Debug)]
 pub struct Polygon(Vec<VertexChain>);
 
 impl Polygon {
