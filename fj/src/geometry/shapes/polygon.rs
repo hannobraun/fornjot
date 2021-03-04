@@ -42,11 +42,14 @@ impl Polygon {
         &mut self,
         triangle: Triangle,
     ) -> Result<(), TriangleNotPresent> {
+        // Create a structure that gives us each point of the triangle together
+        // with the two other points.
         let triangle = [
             (triangle.a, [triangle.b, triangle.c]),
             (triangle.b, [triangle.a, triangle.c]),
             (triangle.c, [triangle.a, triangle.b]),
         ];
+
         for &(vertex, [a, b]) in &triangle {
             for chain in &mut self.0 {
                 if let Some(neighbors) = chain.neighbors_of(vertex) {
