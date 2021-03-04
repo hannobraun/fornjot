@@ -89,7 +89,6 @@ pub fn triangulate(polygon: &Polygon) -> Vec<Triangle> {
 #[cfg(test)]
 mod tests {
     use nalgebra::Point2;
-    use parry2d::shape::Triangle;
 
     use crate::geometry::shapes::{Polygon, VertexChain};
 
@@ -112,10 +111,24 @@ mod tests {
         let mut polygon = Polygon::new();
         polygon.insert_chain(chain);
 
-        let triangles = triangulate(&polygon);
+        println!("Original polygon: {:#?}", polygon);
 
-        let expected =
-            vec![Triangle::new(p0, p1, p3), Triangle::new(p3, p1, p2)];
-        assert_eq!(triangles, expected);
+        let triangles = triangulate(&polygon);
+        for triangle in triangles {
+            polygon.remove_triangle(triangle).unwrap();
+
+            println!("Removed triangle: {:#?}", triangle);
+            println!("Updated polygon: {:#?}", polygon);
+        }
+
+        println!("Empty polygon: {:#?}", polygon);
+
+        // We removed all the triangles from the polygon, and if we reach that
+        // point, this succeeded. This means, the algorithm didn't generate any
+        // triangles that are not in the polygon.
+        //
+        // If the polygon is now empty, this means the algorithm also generated
+        // all of the triangles that made up the polygon.
+        assert!(polygon.is_empty());
     }
 }
