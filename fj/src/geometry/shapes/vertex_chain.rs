@@ -28,6 +28,11 @@ impl VertexChain {
         self.0.insert(vertex.into());
     }
 
+    /// Remove a vertex from the chain
+    pub fn remove(&mut self, vertex: impl Into<Pnt2>) {
+        self.0.remove(&vertex.into());
+    }
+
     /// Returns the line segments forming the vertex chain
     pub fn segments(&self) -> Vec<Segment> {
         // This gets us access to the `windows` method. Certainly not the best
@@ -66,6 +71,25 @@ mod tests {
     use parry2d::shape::Segment;
 
     use super::VertexChain;
+
+    #[test]
+    fn vertex_chain_should_remove_vertex() {
+        let a = Point2::new(0.0, 0.0);
+        let b = Point2::new(1.0, 0.0);
+        let c = Point2::new(0.0, 1.0);
+
+        let mut vertex_chain = VertexChain::new();
+        vertex_chain.insert(a);
+        vertex_chain.insert(b);
+        vertex_chain.insert(c);
+
+        vertex_chain.remove(b);
+        let segments = vertex_chain.segments();
+
+        // This is a degenerate case, but for the purposes of this test, it
+        // doesn't matter.
+        assert_eq!(segments, vec![Segment::new(a, c), Segment::new(c, a)]);
+    }
 
     #[test]
     fn vertex_chain_should_return_segments() {
