@@ -16,7 +16,7 @@ use crate::geometry::point::Pnt2;
 /// Vertex chains are considered "positive", i.e. forming a polygon, if their
 /// vertices are in counter-clockwise order. They are considered "negative",
 /// i.e. holes in another polygon, if their vertices are in clockwise order.
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct VertexChain(IndexSet<Pnt2>);
 
 impl VertexChain {
