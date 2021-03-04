@@ -68,7 +68,7 @@ mod tests {
     use super::VertexChain;
 
     #[test]
-    fn vertex_chain_should_return_vertices() {
+    fn vertex_chain_should_return_segments() {
         let a = Point2::new(0.0, 0.0);
         let b = Point2::new(1.0, 0.0);
         let c = Point2::new(0.0, 1.0);
