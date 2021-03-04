@@ -50,19 +50,26 @@ impl Polygon {
             (triangle.c, [triangle.a, triangle.b]),
         ];
 
-        for &(vertex, [a, b]) in &triangle {
-            for chain in &mut self.0 {
-                if let Some(neighbors) = chain.neighbors_of(vertex) {
+        for chain in &mut self.0 {
+            // Need to query a copy of the chain, else our removals will falsify
+            // further queries.
+            let chain_copy = chain.clone();
+
+            for &(vertex, [a, b]) in &triangle {
+                if let Some(neighbors) = chain_copy.neighbors_of(vertex) {
                     if neighbors.contains(a) && neighbors.contains(b) {
                         chain.remove(vertex);
-
-                        // Due to the assumptions made by `Polygon` (no edges
-                        // that overlap, and no vertices shared between chains),
-                        // we can assume that we're done and will find nothing
-                        // more.
-                        return Ok(());
                     }
                 }
+            }
+
+            if chain.len() < chain_copy.len() {
+                // We removed vertices from the chain.
+                //
+                // Due to the assumptions made by `Polygon` (no edges that
+                // overlap, and no vertices shared between chains), we can
+                // assume that we're done and will find nothing more.
+                return Ok(());
             }
         }
 
@@ -159,5 +166,18 @@ mod tests {
 
         let triangle = Triangle::new(a, b, Point2::new(0.0, 2.0));
         assert!(polygon.remove_triangle(triangle).is_err());
+    }
+
+    #[test]
+    fn polygon_should_remove_all_vertices_if_necessary() {
+        let mut polygon = Polygon::new();
+
+        let a = Point2::new(0.0, 0.0);
+        let b = Point2::new(1.0, 0.0);
+        let c = Point2::new(1.0, 1.0);
+        polygon.insert_chain(VertexChain::from(&[a, b, c][..]));
+
+        polygon.remove_triangle(Triangle::new(a, b, c)).unwrap();
+        assert!(polygon.is_empty());
     }
 }
