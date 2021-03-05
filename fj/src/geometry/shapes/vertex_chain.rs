@@ -42,6 +42,10 @@ impl VertexChain {
         self.0.remove(&vertex.into());
     }
 
+    pub fn vertices(&self) -> impl Iterator<Item = Pnt2> + '_ {
+        self.0.iter().map(|&vertex| vertex)
+    }
+
     /// Returns the line segments forming the vertex chain
     pub fn segments(&self) -> Vec<Segment> {
         // This gets us access to the `windows` method. Certainly not the best
