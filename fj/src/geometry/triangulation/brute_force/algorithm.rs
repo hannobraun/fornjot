@@ -45,11 +45,13 @@ pub fn triangulate(polygon: &Polygon) -> Vec<Triangle> {
         let a_b = Segment::new(p_a, p_b);
         let a_c = p_c - p_a;
         let c_is_left_of_a_b = a_b.scaled_normal().dot(&a_c) < 0.0;
-        if c_is_left_of_a_b {
-            triangles.push(Triangle::new(p_a, p_b, p_c));
+        let triangle = if c_is_left_of_a_b {
+            Triangle::new(p_a, p_b, p_c)
         } else {
-            triangles.push(Triangle::new(p_a, p_c, p_b));
-        }
+            Triangle::new(p_a, p_c, p_b)
+        };
+
+        triangles.push(triangle);
 
         // Insert the new connection between `b` and `c`.
         neighbors.insert(b, c);
