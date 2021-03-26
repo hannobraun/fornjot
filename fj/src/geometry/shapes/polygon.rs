@@ -15,14 +15,20 @@ pub struct Polygon {
     //       Add alternative fields that store the edges instead of vertex
     //       chains, then remove this one.
     chains: Vec<VertexChain>,
+    edges: Vec<Segment>,
 }
 
 impl Polygon {
     pub fn new() -> Self {
-        Self { chains: Vec::new() }
+        Self {
+            chains: Vec::new(),
+            edges: Vec::new(),
+        }
     }
 
     pub fn is_empty(&self) -> bool {
+        // TASK: Convert to use `self.edges`.
+
         for chain in &self.chains {
             if !chain.is_empty() {
                 return false;
@@ -33,10 +39,13 @@ impl Polygon {
     }
 
     pub fn insert_chain(&mut self, chain: VertexChain) {
-        self.chains.push(chain)
+        self.edges.extend(chain.segments());
+        self.chains.push(chain);
     }
 
     pub fn edges(&self) -> Vec<Segment> {
+        // TASK: Convert to use `self.edges`.
+
         let mut edges = Vec::new();
 
         for chain in &self.chains {
@@ -50,6 +59,8 @@ impl Polygon {
         &mut self,
         triangle: Triangle,
     ) -> Result<(), TriangleNotPresent> {
+        // TASK: Convert to use `self.edges`.
+
         // Create a structure that gives us each point of the triangle together
         // with the two other points.
         let triangle = [
