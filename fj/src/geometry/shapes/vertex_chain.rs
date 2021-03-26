@@ -62,8 +62,12 @@ impl VertexChain {
             Segment::new(a, b)
         }));
 
-        let first = vertices.first().unwrap().into();
-        let last = vertices.last().unwrap().into();
+        // TASK: Handle the case that `first` and `last` are equal (i.e. there
+        //       is only one vertex).
+        let (first, last) = match (vertices.first(), vertices.last()) {
+            (Some(first), Some(last)) => (first.into(), last.into()),
+            _ => return edges,
+        };
         edges.push(Segment::new(last, first));
 
         edges
