@@ -186,4 +186,11 @@ mod tests {
         polygon.remove_triangle(Triangle::new(a, b, c)).unwrap();
         assert!(polygon.is_empty());
     }
+
+    #[test]
+    #[ignore]
+    fn polygon_should_remove_triangle_vertices_from_inner_and_outer_chain() {
+        // TASK: Implement
+        todo!()
+    }
 }
