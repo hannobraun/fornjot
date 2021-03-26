@@ -67,6 +67,8 @@ impl Polygon {
         //       Once this is done correctly, the other methods can be updated
         //       to use `self.edges`, and `self.chains` can be removed.
 
+        // ---
+
         // Create a structure that gives us each point of the triangle together
         // with the two other points.
         let triangle = [
