@@ -103,7 +103,6 @@ mod tests {
         assert!(polygon.is_empty());
 
         // Empty chain, polygon still empty.
-        polygon.insert_chain(VertexChain::new());
         assert!(polygon.is_empty());
 
         let a = Point2::new(0.0, 0.0);
