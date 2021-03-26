@@ -39,6 +39,15 @@ impl From<Seg2> for Segment {
     }
 }
 
+impl From<&Seg2> for Segment {
+    fn from(segment: &Seg2) -> Self {
+        Self {
+            a: segment.a.into(),
+            b: segment.b.into(),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::geometry::point::Pnt2;
