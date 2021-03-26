@@ -6,6 +6,12 @@ use nalgebra::Point2;
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, PartialOrd)]
 pub struct Pnt2(pub Point2<R32>);
 
+impl Pnt2 {
+    pub fn from_f32s(x: f32, y: f32) -> Self {
+        Point2::new(x, y).into()
+    }
+}
+
 impl Deref for Pnt2 {
     type Target = Point2<R32>;
 
