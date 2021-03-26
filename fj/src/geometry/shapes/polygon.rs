@@ -1,5 +1,7 @@
 use parry2d::shape::{Segment, Triangle};
 
+use crate::geometry::segment::Seg2;
+
 use super::VertexChain;
 
 /// A polygon
@@ -15,7 +17,7 @@ pub struct Polygon {
     //       Add alternative fields that store the edges instead of vertex
     //       chains, then remove this one.
     chains: Vec<VertexChain>,
-    edges: Vec<Segment>,
+    edges: Vec<Seg2>,
 }
 
 impl Polygon {
@@ -39,7 +41,9 @@ impl Polygon {
     }
 
     pub fn insert_chain(&mut self, chain: VertexChain) {
-        self.edges.extend(chain.segments());
+        for segment in chain.segments() {
+            self.edges.push(segment.into());
+        }
         self.chains.push(chain);
     }
 
