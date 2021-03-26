@@ -21,6 +21,15 @@ impl Seg2 {
     }
 }
 
+impl From<Segment> for Seg2 {
+    fn from(segment: Segment) -> Self {
+        Self {
+            a: segment.a.into(),
+            b: segment.b.into(),
+        }
+    }
+}
+
 impl From<Seg2> for Segment {
     fn from(segment: Seg2) -> Self {
         Self {
