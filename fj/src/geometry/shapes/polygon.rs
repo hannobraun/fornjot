@@ -9,15 +9,17 @@ use super::VertexChain;
 /// A polygon expects, but does not enforce, that none of its edges overlap, and
 /// that none of its vertex chains share vertices.
 #[derive(Clone, Debug)]
-pub struct Polygon(Vec<VertexChain>);
+pub struct Polygon {
+    chains: Vec<VertexChain>,
+}
 
 impl Polygon {
     pub fn new() -> Self {
-        Self(Vec::new())
+        Self { chains: Vec::new() }
     }
 
     pub fn is_empty(&self) -> bool {
-        for chain in &self.0 {
+        for chain in &self.chains {
             if !chain.is_empty() {
                 return false;
             }
@@ -27,17 +29,17 @@ impl Polygon {
     }
 
     pub fn insert_chain(&mut self, chain: VertexChain) {
-        self.0.push(chain)
+        self.chains.push(chain)
     }
 
     pub fn vertices(&self) -> impl Iterator<Item = Pnt2> + '_ {
-        self.0.iter().map(|chain| chain.vertices()).flatten()
+        self.chains.iter().map(|chain| chain.vertices()).flatten()
     }
 
     pub fn edges(&self) -> Vec<Segment> {
         let mut edges = Vec::new();
 
-        for chain in &self.0 {
+        for chain in &self.chains {
             edges.extend_from_slice(&chain.segments());
         }
 
@@ -56,7 +58,7 @@ impl Polygon {
             (triangle.c, [triangle.a, triangle.b]),
         ];
 
-        for chain in &mut self.0 {
+        for chain in &mut self.chains {
             // Need to query a copy of the chain, else our removals will falsify
             // further queries.
             let chain_copy = chain.clone();
