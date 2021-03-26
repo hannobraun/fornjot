@@ -10,6 +10,12 @@ use super::VertexChain;
 /// that none of its vertex chains share vertices.
 #[derive(Clone, Debug)]
 pub struct Polygon {
+    // TASK: This representation is not flexible enough. It can't handle vertex
+    //       chains sharing vertices, but this is a valid case that can occur
+    //       when removing triangles from the polygon.
+    //
+    //       Add alternative fields that store the edges instead of vertex
+    //       chains, then remove this one.
     chains: Vec<VertexChain>,
 }
 
