@@ -1,7 +1,5 @@
 use parry2d::shape::{Segment, Triangle};
 
-use crate::geometry::point::Pnt2;
-
 use super::VertexChain;
 
 /// A polygon
@@ -36,10 +34,6 @@ impl Polygon {
 
     pub fn insert_chain(&mut self, chain: VertexChain) {
         self.chains.push(chain)
-    }
-
-    pub fn vertices(&self) -> impl Iterator<Item = Pnt2> + '_ {
-        self.chains.iter().map(|chain| chain.vertices()).flatten()
     }
 
     pub fn edges(&self) -> Vec<Segment> {
