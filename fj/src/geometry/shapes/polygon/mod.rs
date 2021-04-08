@@ -1,6 +1,10 @@
-use parry2d::shape::{Segment, Triangle};
+pub mod triangles;
+
+use parry2d::shape::Segment;
 
 use crate::geometry::segment::Seg2;
+
+use self::triangles::Triangles;
 
 use super::VertexChain;
 
@@ -58,48 +62,8 @@ impl Polygon {
         edges
     }
 
-    pub fn remove_triangle(
-        &mut self,
-        triangle: Triangle,
-    ) -> Result<(), TriangleNotPresent> {
-        // TASK: Convert to update `self.edges` in addition to `self.chains`.
-        //       Once this is done correctly, the other methods can be updated
-        //       to use `self.edges`, and `self.chains` can be removed.
-
-        // ---
-
-        // Create a structure that gives us each point of the triangle together
-        // with the two other points.
-        let triangle = [
-            (triangle.a, [triangle.b, triangle.c]),
-            (triangle.b, [triangle.a, triangle.c]),
-            (triangle.c, [triangle.a, triangle.b]),
-        ];
-
-        for chain in &mut self.0.chains {
-            // Need to query a copy of the chain, else our removals will falsify
-            // further queries.
-            let chain_copy = chain.clone();
-
-            for &(vertex, [a, b]) in &triangle {
-                if let Some(neighbors) = chain_copy.neighbors_of(vertex) {
-                    if neighbors.contains(a) && neighbors.contains(b) {
-                        chain.remove(vertex);
-                    }
-                }
-            }
-
-            if chain.len() < chain_copy.len() {
-                // We removed vertices from the chain.
-                //
-                // Due to the assumptions made by `Polygon` (no edges that
-                // overlap, and no vertices shared between chains), we can
-                // assume that we're done and will find nothing more.
-                return Ok(());
-            }
-        }
-
-        Err(TriangleNotPresent)
+    pub fn triangles(&mut self) -> Triangles {
+        Triangles(&mut self.0)
     }
 }
 
@@ -114,9 +78,6 @@ pub struct PolygonInner {
     pub chains: Vec<VertexChain>,
     pub edges: Vec<Seg2>,
 }
-
-#[derive(Debug)]
-pub struct TriangleNotPresent;
 
 #[cfg(test)]
 mod tests {
@@ -185,7 +146,7 @@ mod tests {
         let d = Point2::new(0.0, 1.0);
         polygon.insert_chain(VertexChain::from(&[a, b, c, d][..]));
 
-        polygon.remove_triangle(Triangle::new(b, c, d)).unwrap();
+        polygon.triangles().remove(Triangle::new(b, c, d)).unwrap();
         assert_eq!(
             polygon.edges(),
             vec![Segment::new(a, b), Segment::new(b, d), Segment::new(d, a)]
@@ -202,7 +163,7 @@ mod tests {
         polygon.insert_chain(VertexChain::from(&[a, b, c][..]));
 
         let triangle = Triangle::new(a, b, Point2::new(0.0, 2.0));
-        assert!(polygon.remove_triangle(triangle).is_err());
+        assert!(polygon.triangles().remove(triangle).is_err());
     }
 
     #[test]
@@ -214,7 +175,7 @@ mod tests {
         let c = Point2::new(1.0, 1.0);
         polygon.insert_chain(VertexChain::from(&[a, b, c][..]));
 
-        polygon.remove_triangle(Triangle::new(a, b, c)).unwrap();
+        polygon.triangles().remove(Triangle::new(a, b, c)).unwrap();
         assert!(polygon.is_empty());
     }
 

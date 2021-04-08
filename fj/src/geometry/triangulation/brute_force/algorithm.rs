@@ -117,7 +117,7 @@ mod tests {
 
         let triangles = triangulate(&polygon);
         for triangle in triangles {
-            polygon.remove_triangle(triangle).unwrap();
+            polygon.triangles().remove(triangle).unwrap();
 
             println!("Removed triangle: {:#?}", triangle);
             println!("Updated polygon: {:#?}", polygon);
