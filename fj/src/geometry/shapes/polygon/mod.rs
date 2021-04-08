@@ -8,14 +8,6 @@ use self::triangles::Triangles;
 
 use super::VertexChain;
 
-// TASK: I'd like to add all kinds of functionality to `Polygon`, like querying
-//       the neighbors of vertices, or removing triangles. This will overload
-//       this module, and adding `impl`s over multiple modules doesn't seem like
-//       a good idea.
-//
-//       How about this instead: `Polygon` has methods that return new APIs,
-//       which borrow its innards. E.g. `polygon.triangles().remove(triangle)`.
-
 /// A polygon
 ///
 /// A polygon expects, but does not enforce, that none of its edges overlap, and
