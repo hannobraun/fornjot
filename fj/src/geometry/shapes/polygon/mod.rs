@@ -17,29 +17,20 @@ use super::VertexChain;
 /// A polygon expects, but does not enforce, that none of its edges overlap, and
 /// that none of its vertex chains share vertices.
 #[derive(Clone, Debug)]
-pub struct Polygon {
-    // TASK: This representation is not flexible enough. It can't handle vertex
-    //       chains sharing vertices, but this is a valid case that can occur
-    //       when removing triangles from the polygon.
-    //
-    //       Add alternative fields that store the edges instead of vertex
-    //       chains, then remove this one.
-    chains: Vec<VertexChain>,
-    edges: Vec<Seg2>,
-}
+pub struct Polygon(PolygonInner);
 
 impl Polygon {
     pub fn new() -> Self {
-        Self {
+        Self(PolygonInner {
             chains: Vec::new(),
             edges: Vec::new(),
-        }
+        })
     }
 
     pub fn is_empty(&self) -> bool {
         // TASK: Convert to use `self.edges`.
 
-        for chain in &self.chains {
+        for chain in &self.0.chains {
             if !chain.is_empty() {
                 return false;
             }
@@ -50,9 +41,9 @@ impl Polygon {
 
     pub fn insert_chain(&mut self, chain: VertexChain) {
         for segment in chain.segments() {
-            self.edges.push(segment.into());
+            self.0.edges.push(segment.into());
         }
-        self.chains.push(chain);
+        self.0.chains.push(chain);
     }
 
     pub fn edges(&self) -> Vec<Segment> {
@@ -60,7 +51,7 @@ impl Polygon {
 
         let mut edges = Vec::new();
 
-        for chain in &self.chains {
+        for chain in &self.0.chains {
             edges.extend_from_slice(&chain.segments());
         }
 
@@ -85,7 +76,7 @@ impl Polygon {
             (triangle.c, [triangle.a, triangle.b]),
         ];
 
-        for chain in &mut self.chains {
+        for chain in &mut self.0.chains {
             // Need to query a copy of the chain, else our removals will falsify
             // further queries.
             let chain_copy = chain.clone();
@@ -110,6 +101,18 @@ impl Polygon {
 
         Err(TriangleNotPresent)
     }
+}
+
+#[derive(Clone, Debug)]
+pub struct PolygonInner {
+    // TASK: This representation is not flexible enough. It can't handle vertex
+    //       chains sharing vertices, but this is a valid case that can occur
+    //       when removing triangles from the polygon.
+    //
+    //       Add alternative fields that store the edges instead of vertex
+    //       chains, then remove this one.
+    chains: Vec<VertexChain>,
+    edges: Vec<Seg2>,
 }
 
 #[derive(Debug)]
