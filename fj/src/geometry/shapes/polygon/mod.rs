@@ -82,7 +82,7 @@ pub struct PolygonInner {
 #[cfg(test)]
 mod tests {
     use nalgebra::Point2;
-    use parry2d::shape::{Segment, Triangle};
+    use parry2d::shape::Segment;
 
     use crate::geometry::shapes::VertexChain;
 
@@ -134,55 +134,5 @@ mod tests {
                 Segment::new(r, p)
             ]
         );
-    }
-
-    #[test]
-    fn polygon_should_remove_triangle() {
-        let mut polygon = Polygon::new();
-
-        let a = Point2::new(0.0, 0.0);
-        let b = Point2::new(1.0, 0.0);
-        let c = Point2::new(1.0, 1.0);
-        let d = Point2::new(0.0, 1.0);
-        polygon.insert_chain(VertexChain::from(&[a, b, c, d][..]));
-
-        polygon.triangles().remove(Triangle::new(b, c, d)).unwrap();
-        assert_eq!(
-            polygon.edges(),
-            vec![Segment::new(a, b), Segment::new(b, d), Segment::new(d, a)]
-        );
-    }
-
-    #[test]
-    fn polygon_should_fail_if_triangle_points_are_not_fully_contained() {
-        let mut polygon = Polygon::new();
-
-        let a = Point2::new(0.0, 0.0);
-        let b = Point2::new(1.0, 0.0);
-        let c = Point2::new(0.0, 1.0);
-        polygon.insert_chain(VertexChain::from(&[a, b, c][..]));
-
-        let triangle = Triangle::new(a, b, Point2::new(0.0, 2.0));
-        assert!(polygon.triangles().remove(triangle).is_err());
-    }
-
-    #[test]
-    fn polygon_should_remove_all_vertices_if_necessary() {
-        let mut polygon = Polygon::new();
-
-        let a = Point2::new(0.0, 0.0);
-        let b = Point2::new(1.0, 0.0);
-        let c = Point2::new(1.0, 1.0);
-        polygon.insert_chain(VertexChain::from(&[a, b, c][..]));
-
-        polygon.triangles().remove(Triangle::new(a, b, c)).unwrap();
-        assert!(polygon.is_empty());
-    }
-
-    #[test]
-    #[ignore]
-    fn polygon_should_remove_triangle_vertices_from_inner_and_outer_chain() {
-        // TASK: Implement
-        todo!()
     }
 }
