@@ -1,8 +1,8 @@
 use parry2d::shape::Triangle;
 
-use super::PolygonInner;
+use super::Polygon;
 
-pub struct Triangles<'r>(pub(super) &'r mut PolygonInner);
+pub struct Triangles<'r>(pub(super) &'r mut Polygon);
 
 impl Triangles<'_> {
     pub fn remove(

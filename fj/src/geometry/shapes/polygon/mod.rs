@@ -21,20 +21,29 @@ use super::VertexChain;
 /// A polygon expects, but does not enforce, that none of its edges overlap, and
 /// that none of its vertex chains share vertices.
 #[derive(Clone, Debug)]
-pub struct Polygon(PolygonInner);
+pub struct Polygon {
+    // TASK: This representation is not flexible enough. It can't handle vertex
+    //       chains sharing vertices, but this is a valid case that can occur
+    //       when removing triangles from the polygon.
+    //
+    //       Add alternative fields that store the edges instead of vertex
+    //       chains, then remove this one.
+    pub chains: Vec<VertexChain>,
+    pub edges: Vec<Seg2>,
+}
 
 impl Polygon {
     pub fn new() -> Self {
-        Self(PolygonInner {
+        Self {
             chains: Vec::new(),
             edges: Vec::new(),
-        })
+        }
     }
 
     pub fn is_empty(&self) -> bool {
         // TASK: Convert to use `self.edges`.
 
-        for chain in &self.0.chains {
+        for chain in &self.chains {
             if !chain.is_empty() {
                 return false;
             }
@@ -45,9 +54,9 @@ impl Polygon {
 
     pub fn insert_chain(&mut self, chain: VertexChain) {
         for segment in chain.segments() {
-            self.0.edges.push(segment.into());
+            self.edges.push(segment.into());
         }
-        self.0.chains.push(chain);
+        self.chains.push(chain);
     }
 
     pub fn edges(&self) -> Vec<Segment> {
@@ -55,7 +64,7 @@ impl Polygon {
 
         let mut edges = Vec::new();
 
-        for chain in &self.0.chains {
+        for chain in &self.chains {
             edges.extend_from_slice(&chain.segments());
         }
 
@@ -63,20 +72,8 @@ impl Polygon {
     }
 
     pub fn triangles(&mut self) -> Triangles {
-        Triangles(&mut self.0)
+        Triangles(self)
     }
-}
-
-#[derive(Clone, Debug)]
-pub struct PolygonInner {
-    // TASK: This representation is not flexible enough. It can't handle vertex
-    //       chains sharing vertices, but this is a valid case that can occur
-    //       when removing triangles from the polygon.
-    //
-    //       Add alternative fields that store the edges instead of vertex
-    //       chains, then remove this one.
-    pub chains: Vec<VertexChain>,
-    pub edges: Vec<Seg2>,
 }
 
 #[cfg(test)]
