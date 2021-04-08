@@ -111,8 +111,8 @@ pub struct PolygonInner {
     //
     //       Add alternative fields that store the edges instead of vertex
     //       chains, then remove this one.
-    chains: Vec<VertexChain>,
-    edges: Vec<Seg2>,
+    pub chains: Vec<VertexChain>,
+    pub edges: Vec<Seg2>,
 }
 
 #[derive(Debug)]
