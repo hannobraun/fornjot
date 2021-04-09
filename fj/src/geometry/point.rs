@@ -30,6 +30,12 @@ impl Ord for Pnt2 {
     }
 }
 
+impl From<&Pnt2> for Pnt2 {
+    fn from(point: &Pnt2) -> Self {
+        *point
+    }
+}
+
 impl From<Point2<f32>> for Pnt2 {
     fn from(point: Point2<f32>) -> Self {
         Self(point.map(|value| R32::from_inner(value)))
