@@ -1,5 +1,4 @@
 use indexmap::IndexSet;
-use nalgebra::Point2;
 use parry2d::shape::Segment;
 
 use crate::geometry::point::Pnt2;
@@ -93,8 +92,11 @@ impl VertexChain {
     }
 }
 
-impl From<&[Point2<f32>]> for VertexChain {
-    fn from(points: &[Point2<f32>]) -> Self {
+impl<P> From<&[P]> for VertexChain
+where
+    for<'r> &'r P: Into<Pnt2>,
+{
+    fn from(points: &[P]) -> Self {
         let points: IndexSet<_> =
             points.into_iter().map(|point| point.into()).collect();
         Self(points)
