@@ -73,6 +73,8 @@ impl VertexChain {
     }
 
     /// Returns the neighbors of the given point
+    ///
+    /// Returns `None`, if the vertex is not part of the chain.
     pub fn neighbors_of(&self, vertex: impl Into<Pnt2>) -> Option<Neighbors> {
         let mut neighbors = IndexSet::new();
 
