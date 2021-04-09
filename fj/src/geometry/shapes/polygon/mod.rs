@@ -1,10 +1,11 @@
 pub mod triangles;
+pub mod vertices;
 
 use parry2d::shape::Segment;
 
 use crate::geometry::segment::Seg2;
 
-use self::triangles::Triangles;
+use self::{triangles::Triangles, vertices::Vertices};
 
 use super::VertexChain;
 
@@ -61,6 +62,10 @@ impl Polygon {
         }
 
         edges
+    }
+
+    pub fn vertices(&mut self) -> Vertices {
+        Vertices(self)
     }
 
     pub fn triangles(&mut self) -> Triangles {
