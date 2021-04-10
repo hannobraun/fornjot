@@ -9,6 +9,13 @@ pub struct Seg2 {
 }
 
 impl Seg2 {
+    pub fn new(a: impl Into<Pnt2>, b: impl Into<Pnt2>) -> Self {
+        Self {
+            a: a.into(),
+            b: b.into(),
+        }
+    }
+
     pub fn normalize(&self) -> Self {
         if self.a <= self.b {
             *self
