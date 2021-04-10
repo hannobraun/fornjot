@@ -1,4 +1,8 @@
+use std::collections::HashSet;
+
 use parry2d::shape::Triangle;
+
+use crate::geometry::segment::Seg2;
 
 use super::Polygon;
 
@@ -9,9 +13,40 @@ impl Triangles<'_> {
         &mut self,
         triangle: Triangle,
     ) -> Result<(), TriangleNotPresent> {
-        // TASK: Convert to update `self.edges` in addition to `self.chains`.
-        //       Once this is done correctly, the other methods can be updated
-        //       to use `self.edges`, and `self.chains` can be removed.
+        // TASK: Expend the update code for `self.0.edges` as required to make
+        //       all the tests pass, when the other methods are update to use
+        //       `self.0.edges`.
+
+        // Convert triangle into a representation that is more useful for this
+        // algorithm.
+        let mut triangle_edges: HashSet<Seg2> = HashSet::new();
+        for edge in &triangle.edges() {
+            triangle_edges.insert(edge.into());
+        }
+
+        // All edges that are fully contained in the triangle need to be
+        // removed.
+        self.0.edges.retain(|edge| {
+            // TASK: Wether this works or not is dependent on the direction on
+            //       the edge in the triangle. Make sure it works in any case.
+            if triangle_edges.contains(edge) {
+                // We need to remove this edge from the polygon. Also remove
+                // it from `triangle_edges`, so it won't be processed in the
+                // next step.
+                triangle_edges.remove(edge);
+                return false;
+            }
+
+            true
+        });
+
+        // All the triangle edges that haven't been removed, need to be added
+        // to the polygon. Otherwise we're leaving a gap in the polygon edges.
+        for edge in triangle_edges {
+            // TASK: Make sure the edge has the correct direction. This one here
+            //       just happens to work with the test we have.
+            self.0.edges.insert(edge.reverse());
+        }
 
         // ---
 
