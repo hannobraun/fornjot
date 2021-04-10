@@ -1,9 +1,9 @@
-use std::ops::Deref;
+use std::{fmt, ops::Deref};
 
 use decorum::R32;
 use nalgebra::Point2;
 
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Eq, Hash, PartialEq, PartialOrd)]
 pub struct Pnt2(pub Point2<R32>);
 
 impl Pnt2 {
@@ -27,6 +27,12 @@ impl Ord for Pnt2 {
         let self_ = (self.0.x, self.0.y);
         let other = (other.0.x, other.0.y);
         self_.cmp(&other)
+    }
+}
+
+impl fmt::Debug for Pnt2 {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "({}, {})", self.0.x, self.0.y)
     }
 }
 
