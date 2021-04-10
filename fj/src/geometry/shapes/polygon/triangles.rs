@@ -78,7 +78,7 @@ mod tests {
     }
 
     #[test]
-    fn remove_should_fail_if_triangle_points_are_not_fully_contained() {
+    fn remove_should_fail_if_not_all_vertices_are_in_polygon() {
         let mut polygon = Polygon::new();
 
         let a = Point2::new(0.0, 0.0);
