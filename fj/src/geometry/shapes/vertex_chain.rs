@@ -1,7 +1,6 @@
 use indexmap::IndexSet;
-use parry2d::shape::Segment;
 
-use crate::geometry::point::Pnt2;
+use crate::geometry::{point::Pnt2, segment::Seg2};
 
 /// A vertex chain
 ///
@@ -46,7 +45,7 @@ impl VertexChain {
     }
 
     /// Returns the line segments forming the vertex chain
-    pub fn segments(&self) -> Vec<Segment> {
+    pub fn segments(&self) -> Vec<Seg2> {
         // This gets us access to the `windows` method. Certainly not the best
         // way to implement this. It work that way, because the vertices were in
         // a `Vec` originally, and this was the easiest way to change that over
@@ -56,18 +55,18 @@ impl VertexChain {
         let mut edges = Vec::new();
 
         edges.extend(vertices.windows(2).map(|window| {
-            let a = window[0].into();
-            let b = window[1].into();
-            Segment::new(a, b)
+            let a = window[0];
+            let b = window[1];
+            Seg2::new(a, b)
         }));
 
         // TASK: Handle the case that `first` and `last` are equal (i.e. there
         //       is only one vertex).
         let (first, last) = match (vertices.first(), vertices.last()) {
-            (Some(first), Some(last)) => (first.into(), last.into()),
+            (Some(first), Some(last)) => (first, last),
             _ => return edges,
         };
-        edges.push(Segment::new(last, first));
+        edges.push(Seg2::new(last, first));
 
         edges
     }
@@ -116,7 +115,8 @@ impl Neighbors {
 #[cfg(test)]
 mod tests {
     use nalgebra::Point2;
-    use parry2d::shape::Segment;
+
+    use crate::geometry::segment::Seg2;
 
     use super::VertexChain;
 
@@ -136,7 +136,7 @@ mod tests {
 
         // This is a degenerate case, but for the purposes of this test, it
         // doesn't matter.
-        assert_eq!(segments, vec![Segment::new(a, c), Segment::new(c, a)]);
+        assert_eq!(segments, vec![Seg2::new(a, c), Seg2::new(c, a)]);
     }
 
     #[test]
@@ -154,7 +154,7 @@ mod tests {
 
         assert_eq!(
             segments,
-            vec![Segment::new(a, b), Segment::new(b, c), Segment::new(c, a)]
+            vec![Seg2::new(a, b), Seg2::new(b, c), Seg2::new(c, a)]
         );
     }
 

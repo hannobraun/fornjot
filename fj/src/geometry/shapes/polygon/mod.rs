@@ -1,8 +1,6 @@
 pub mod triangles;
 pub mod vertices;
 
-use parry2d::shape::Segment;
-
 use crate::geometry::segment::Seg2;
 
 use self::{triangles::Triangles, vertices::Vertices};
@@ -52,7 +50,7 @@ impl Polygon {
         self.chains.push(chain);
     }
 
-    pub fn edges(&self) -> Vec<Segment> {
+    pub fn edges(&self) -> Vec<Seg2> {
         // TASK: Convert to use `self.edges`.
 
         let mut edges = Vec::new();
@@ -76,9 +74,8 @@ impl Polygon {
 #[cfg(test)]
 mod tests {
     use nalgebra::Point2;
-    use parry2d::shape::Segment;
 
-    use crate::geometry::shapes::VertexChain;
+    use crate::geometry::{segment::Seg2, shapes::VertexChain};
 
     use super::Polygon;
 
@@ -120,12 +117,12 @@ mod tests {
         assert_eq!(
             polygon.edges(),
             vec![
-                Segment::new(a, b),
-                Segment::new(b, c),
-                Segment::new(c, a),
-                Segment::new(p, q),
-                Segment::new(q, r),
-                Segment::new(r, p)
+                Seg2::new(a, b),
+                Seg2::new(b, c),
+                Seg2::new(c, a),
+                Seg2::new(p, q),
+                Seg2::new(q, r),
+                Seg2::new(r, p)
             ]
         );
     }

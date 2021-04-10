@@ -56,9 +56,12 @@ pub struct TriangleNotPresent;
 #[cfg(test)]
 mod tests {
     use nalgebra::Point2;
-    use parry2d::shape::{Segment, Triangle};
+    use parry2d::shape::Triangle;
 
-    use crate::geometry::shapes::{Polygon, VertexChain};
+    use crate::geometry::{
+        segment::Seg2,
+        shapes::{Polygon, VertexChain},
+    };
 
     #[test]
     fn remove_should_remove_triangle() {
@@ -73,7 +76,7 @@ mod tests {
         polygon.triangles().remove(Triangle::new(b, c, d)).unwrap();
         assert_eq!(
             polygon.edges(),
-            vec![Segment::new(a, b), Segment::new(b, d), Segment::new(d, a)]
+            vec![Seg2::new(a, b), Seg2::new(b, d), Seg2::new(d, a)]
         );
     }
 
