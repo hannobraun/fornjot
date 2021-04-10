@@ -28,6 +28,13 @@ impl Seg2 {
             }
         }
     }
+
+    pub fn reverse(&self) -> Self {
+        Self {
+            a: self.b,
+            b: self.a,
+        }
+    }
 }
 
 impl fmt::Debug for Seg2 {
@@ -88,5 +95,15 @@ mod tests {
 
         assert_eq!(a.normalize(), a);
         assert_eq!(b.normalize(), a);
+    }
+
+    #[test]
+    fn it_should_reverse_a_segment() {
+        let a = Pnt2::from_f32s(0.0, 0.0);
+        let b = Pnt2::from_f32s(1.0, 0.0);
+
+        let segment = Seg2::new(a, b);
+
+        assert_eq!(segment.reverse(), Seg2::new(b, a));
     }
 }
