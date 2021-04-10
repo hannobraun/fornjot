@@ -61,7 +61,7 @@ mod tests {
     use crate::geometry::shapes::{Polygon, VertexChain};
 
     #[test]
-    fn polygon_should_remove_triangle() {
+    fn remove_should_remove_triangle() {
         let mut polygon = Polygon::new();
 
         let a = Point2::new(0.0, 0.0);
@@ -78,7 +78,7 @@ mod tests {
     }
 
     #[test]
-    fn polygon_should_fail_if_triangle_points_are_not_fully_contained() {
+    fn remove_should_fail_if_triangle_points_are_not_fully_contained() {
         let mut polygon = Polygon::new();
 
         let a = Point2::new(0.0, 0.0);
@@ -91,7 +91,7 @@ mod tests {
     }
 
     #[test]
-    fn polygon_should_remove_all_vertices_if_necessary() {
+    fn remove_should_remove_all_vertices_if_necessary() {
         let mut polygon = Polygon::new();
 
         let a = Point2::new(0.0, 0.0);
@@ -105,7 +105,7 @@ mod tests {
 
     #[test]
     #[ignore]
-    fn polygon_should_remove_triangle_vertices_from_inner_and_outer_chain() {
+    fn remove_should_remove_triangle_vertices_from_inner_and_outer_chain() {
         // TASK: Implement
         todo!()
     }
