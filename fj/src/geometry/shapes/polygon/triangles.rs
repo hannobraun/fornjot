@@ -55,6 +55,8 @@ pub struct TriangleNotPresent;
 
 #[cfg(test)]
 mod tests {
+    use std::collections::HashSet;
+
     use nalgebra::Point2;
     use parry2d::shape::Triangle;
 
@@ -73,11 +75,13 @@ mod tests {
         let d = Point2::new(0.0, 1.0);
         polygon.insert_chain(VertexChain::from(&[a, b, c, d][..]));
 
+        let mut expected = HashSet::new();
+        expected.insert(Seg2::new(a, b));
+        expected.insert(Seg2::new(b, d));
+        expected.insert(Seg2::new(d, a));
+
         polygon.triangles().remove(Triangle::new(b, c, d)).unwrap();
-        assert_eq!(
-            polygon.edges(),
-            vec![Seg2::new(a, b), Seg2::new(b, d), Seg2::new(d, a)]
-        );
+        assert_eq!(polygon.edges(), expected);
     }
 
     #[test]

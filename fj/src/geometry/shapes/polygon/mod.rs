@@ -1,6 +1,8 @@
 pub mod triangles;
 pub mod vertices;
 
+use std::collections::HashSet;
+
 use crate::geometry::segment::Seg2;
 
 use self::{triangles::Triangles, vertices::Vertices};
@@ -50,13 +52,15 @@ impl Polygon {
         self.chains.push(chain);
     }
 
-    pub fn edges(&self) -> Vec<Seg2> {
+    pub fn edges(&self) -> HashSet<Seg2> {
         // TASK: Convert to use `self.edges`.
 
-        let mut edges = Vec::new();
+        let mut edges = HashSet::new();
 
         for chain in &self.chains {
-            edges.extend_from_slice(&chain.segments());
+            for edge in chain.segments() {
+                edges.insert(edge);
+            }
         }
 
         edges
@@ -73,6 +77,8 @@ impl Polygon {
 
 #[cfg(test)]
 mod tests {
+    use std::collections::HashSet;
+
     use nalgebra::Point2;
 
     use crate::geometry::{segment::Seg2, shapes::VertexChain};
@@ -114,16 +120,14 @@ mod tests {
         polygon.insert_chain(chain_a);
         polygon.insert_chain(chain_b);
 
-        assert_eq!(
-            polygon.edges(),
-            vec![
-                Seg2::new(a, b),
-                Seg2::new(b, c),
-                Seg2::new(c, a),
-                Seg2::new(p, q),
-                Seg2::new(q, r),
-                Seg2::new(r, p)
-            ]
-        );
+        let mut expected = HashSet::new();
+        expected.insert(Seg2::new(a, b));
+        expected.insert(Seg2::new(b, c));
+        expected.insert(Seg2::new(c, a));
+        expected.insert(Seg2::new(p, q));
+        expected.insert(Seg2::new(q, r));
+        expected.insert(Seg2::new(r, p));
+
+        assert_eq!(polygon.edges(), expected);
     }
 }
