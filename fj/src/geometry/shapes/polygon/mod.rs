@@ -22,14 +22,14 @@ pub struct Polygon {
     //       Add alternative fields that store the edges instead of vertex
     //       chains, then remove this one.
     pub chains: Vec<VertexChain>,
-    pub edges: Vec<Seg2>,
+    pub edges: HashSet<Seg2>,
 }
 
 impl Polygon {
     pub fn new() -> Self {
         Self {
             chains: Vec::new(),
-            edges: Vec::new(),
+            edges: HashSet::new(),
         }
     }
 
@@ -47,7 +47,7 @@ impl Polygon {
 
     pub fn insert_chain(&mut self, chain: VertexChain) {
         for segment in chain.segments() {
-            self.edges.push(segment.into());
+            self.edges.insert(segment.into());
         }
         self.chains.push(chain);
     }
