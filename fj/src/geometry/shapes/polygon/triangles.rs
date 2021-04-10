@@ -48,7 +48,8 @@ impl Triangles<'_> {
             self.0.edges.insert(edge.reverse());
         }
 
-        // ---
+        // TASK: Remove all code below this point, once the other methods are
+        //       updated to use `self.0.edges`.
 
         // Create a structure that gives us each point of the triangle together
         // with the two other points.
