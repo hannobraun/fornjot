@@ -1,8 +1,10 @@
+use std::fmt;
+
 use parry2d::shape::Segment;
 
 use super::point::Pnt2;
 
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Eq, Hash, PartialEq, PartialOrd)]
 pub struct Seg2 {
     pub a: Pnt2,
     pub b: Pnt2,
@@ -25,6 +27,12 @@ impl Seg2 {
                 b: self.a,
             }
         }
+    }
+}
+
+impl fmt::Debug for Seg2 {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?} -> {:?}", self.a, self.b)
     }
 }
 
