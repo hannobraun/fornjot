@@ -105,7 +105,7 @@ mod tests {
 
     #[test]
     #[ignore]
-    fn remove_should_remove_triangle_vertices_from_inner_and_outer_chain() {
+    fn remove_should_remove_vertices_from_inner_and_outer_chain() {
         // TASK: Implement
         todo!()
     }
