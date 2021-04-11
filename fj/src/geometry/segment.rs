@@ -18,6 +18,11 @@ impl Seg2 {
         }
     }
 
+    pub fn contains(&self, point: impl Into<Pnt2>) -> bool {
+        let point = point.into();
+        point == self.a || point == self.b
+    }
+
     pub fn normalize(&self) -> Self {
         if self.a <= self.b {
             *self
@@ -84,6 +89,19 @@ mod tests {
     use crate::geometry::point::Pnt2;
 
     use super::Seg2;
+
+    #[test]
+    fn contains_should_indicate_whether_segment_contains_point() {
+        let a = Pnt2::from_f32s(0.0, 0.0);
+        let b = Pnt2::from_f32s(1.0, 0.0);
+        let c = Pnt2::from_f32s(0.0, 1.0);
+
+        let segment = Seg2::new(a, b);
+
+        assert_eq!(segment.contains(a), true);
+        assert_eq!(segment.contains(b), true);
+        assert_eq!(segment.contains(c), false);
+    }
 
     #[test]
     fn normalize_should_normalize_a_segment() {
