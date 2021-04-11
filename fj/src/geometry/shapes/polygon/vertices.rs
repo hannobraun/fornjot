@@ -1,16 +1,29 @@
-use crate::geometry::{point::Pnt2, shapes::vertex_chain::Neighbors};
+use std::collections::HashSet;
+
+use crate::geometry::point::Pnt2;
 
 use super::Polygon;
 
 pub struct Vertices<'r>(pub(super) &'r mut Polygon);
 
 impl Vertices<'_> {
-    pub fn neighbors_of(&self, vertex: impl Into<Pnt2>) -> Option<Neighbors> {
+    pub fn neighbors_of(
+        &self,
+        vertex: impl Into<Pnt2>,
+    ) -> Option<HashSet<Pnt2>> {
         // TASK: Convert to use `self.edges`.
 
         // TASK: Support zero or multiple vertex chains.
         assert_eq!(self.0.chains.len(), 1);
-        self.0.chains[0].neighbors_of(vertex)
+        self.0.chains[0].neighbors_of(vertex).map(|neighbors| {
+            let mut vertices = HashSet::new();
+
+            for neighbor in neighbors.0 {
+                vertices.insert(neighbor);
+            }
+
+            vertices
+        })
     }
 }
 
@@ -34,13 +47,13 @@ mod tests {
         let neighbors_of_b = polygon.vertices().neighbors_of(b).unwrap();
         let neighbors_of_c = polygon.vertices().neighbors_of(c).unwrap();
 
-        assert!(neighbors_of_a.contains(b));
-        assert!(neighbors_of_a.contains(c));
+        assert!(neighbors_of_a.contains(&b));
+        assert!(neighbors_of_a.contains(&c));
 
-        assert!(neighbors_of_b.contains(a));
-        assert!(neighbors_of_b.contains(c));
+        assert!(neighbors_of_b.contains(&a));
+        assert!(neighbors_of_b.contains(&c));
 
-        assert!(neighbors_of_c.contains(a));
-        assert!(neighbors_of_c.contains(b));
+        assert!(neighbors_of_c.contains(&a));
+        assert!(neighbors_of_c.contains(&b));
     }
 }
