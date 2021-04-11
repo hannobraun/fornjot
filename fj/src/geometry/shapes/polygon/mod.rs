@@ -34,15 +34,7 @@ impl Polygon {
     }
 
     pub fn is_empty(&self) -> bool {
-        // TASK: Convert to use `self.edges`.
-
-        for chain in &self.chains {
-            if !chain.is_empty() {
-                return false;
-            }
-        }
-
-        true
+        self.edges.is_empty()
     }
 
     pub fn insert_chain(&mut self, chain: VertexChain) {
