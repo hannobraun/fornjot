@@ -22,6 +22,7 @@ pub struct Polygon {
     //       Add alternative fields that store the edges instead of vertex
     //       chains, then remove this one.
     pub chains: Vec<VertexChain>,
+
     pub edges: HashSet<Seg2>,
     // TASK: Add field `vertices` that contains all polygon vertices. This is
     //       required to easily and efficiently query whether a vertex is part
