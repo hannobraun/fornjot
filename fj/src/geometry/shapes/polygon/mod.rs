@@ -45,17 +45,7 @@ impl Polygon {
     }
 
     pub fn edges(&self) -> HashSet<Seg2> {
-        // TASK: Convert to use `self.edges`.
-
-        let mut edges = HashSet::new();
-
-        for chain in &self.chains {
-            for edge in chain.segments() {
-                edges.insert(edge);
-            }
-        }
-
-        edges
+        self.edges.clone()
     }
 
     pub fn vertices(&mut self) -> Vertices {
