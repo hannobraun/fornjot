@@ -11,7 +11,7 @@ impl ToMesh for Mesh {
         // TASK: I think just replacing the mesh works for current use cases,
         //       but it doesn't seem right. Unfortunately merging meshes seems
         //       to be somewhat non-trivial, and the whole distinction between
-        //       geometry mesh and graphics mesh is confused anyway.
+        //       geometry mesh and graphics mesh is confusing anyway.
         //
         //       This needs more investigation and probably a thorough clean-up.
         *mesh = self;
