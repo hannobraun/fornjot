@@ -7,23 +7,22 @@ use super::Polygon;
 pub struct Vertices<'r>(pub(super) &'r mut Polygon);
 
 impl Vertices<'_> {
-    pub fn neighbors_of(
-        &self,
-        vertex: impl Into<Pnt2>,
-    ) -> Option<HashSet<Pnt2>> {
+    pub fn neighbors_of(&self, vertex: impl Into<Pnt2>) -> HashSet<Pnt2> {
         // TASK: Convert to use `self.edges`.
 
         // TASK: Support zero or multiple vertex chains.
         assert_eq!(self.0.chains.len(), 1);
-        self.0.chains[0].neighbors_of(vertex).map(|neighbors| {
-            let mut vertices = HashSet::new();
+        let neighbors = self.0.chains[0].neighbors_of(vertex);
 
+        let mut vertices = HashSet::new();
+
+        if let Some(neighbors) = neighbors {
             for neighbor in neighbors.0 {
                 vertices.insert(neighbor);
             }
+        }
 
-            vertices
-        })
+        vertices
     }
 }
 
@@ -43,9 +42,9 @@ mod tests {
         let c = Pnt2::from_f32s(0.0, 1.0);
         polygon.insert_chain(VertexChain::from(&[a, b, c][..]));
 
-        let neighbors_of_a = polygon.vertices().neighbors_of(a).unwrap();
-        let neighbors_of_b = polygon.vertices().neighbors_of(b).unwrap();
-        let neighbors_of_c = polygon.vertices().neighbors_of(c).unwrap();
+        let neighbors_of_a = polygon.vertices().neighbors_of(a);
+        let neighbors_of_b = polygon.vertices().neighbors_of(b);
+        let neighbors_of_c = polygon.vertices().neighbors_of(c);
 
         assert!(neighbors_of_a.contains(&b));
         assert!(neighbors_of_a.contains(&c));
