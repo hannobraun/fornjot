@@ -23,6 +23,19 @@ pub struct Polygon {
     //       chains, then remove this one.
     pub chains: Vec<VertexChain>,
     pub edges: HashSet<Seg2>,
+    // TASK: Add field `vertices` that contains all polygon vertices. This is
+    //       required to easily and efficiently query whether a vertex is part
+    //       of the polygon and will probably be useful for other things too.
+    //
+    //       The problem is, that by just adding a field, all methods would have
+    //       to be very careful to always correctly update them, which would be
+    //       a pain to do and test. Instead, both `edges` and `vertices` should
+    //       be encapsulated in a separately-tested API that can then be used by
+    //       by higher-level code.
+    //
+    //       That API should probably be separate from `Polygon`, as it would
+    //       allow things that would corrupt the polygon, like removing an edge,
+    //       thereby breaking the chain, without fixing the polygon up again.
 }
 
 impl Polygon {
