@@ -98,7 +98,7 @@ mod tests {
     }
 
     #[test]
-    fn it_should_reverse_a_segment() {
+    fn reverse_should_reverse_a_segment() {
         let a = Pnt2::from_f32s(0.0, 0.0);
         let b = Pnt2::from_f32s(1.0, 0.0);
 
