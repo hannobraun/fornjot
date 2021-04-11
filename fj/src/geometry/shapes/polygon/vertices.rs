@@ -8,21 +8,20 @@ pub struct Vertices<'r>(pub(super) &'r mut Polygon);
 
 impl Vertices<'_> {
     pub fn neighbors_of(&self, vertex: impl Into<Pnt2>) -> HashSet<Pnt2> {
-        // TASK: Convert to use `self.edges`.
+        let vertex = vertex.into();
 
-        // TASK: Support zero or multiple vertex chains.
-        assert_eq!(self.0.chains.len(), 1);
-        let neighbors = self.0.chains[0].neighbors_of(vertex);
+        let mut neighbors = HashSet::new();
 
-        let mut vertices = HashSet::new();
-
-        if let Some(neighbors) = neighbors {
-            for neighbor in neighbors.0 {
-                vertices.insert(neighbor);
+        for edge in &self.0.edges {
+            if edge.a == vertex {
+                neighbors.insert(edge.b);
+            }
+            if edge.b == vertex {
+                neighbors.insert(edge.a);
             }
         }
 
-        vertices
+        neighbors
     }
 }
 
