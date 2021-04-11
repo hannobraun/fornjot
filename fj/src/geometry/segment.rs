@@ -86,7 +86,7 @@ mod tests {
     use super::Seg2;
 
     #[test]
-    fn it_should_normalize_a_segment() {
+    fn normalize_should_normalize_a_segment() {
         let a = Seg2 {
             a: Pnt2::from_f32s(0.0, 0.0),
             b: Pnt2::from_f32s(1.0, 1.0),
