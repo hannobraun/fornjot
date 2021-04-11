@@ -104,7 +104,7 @@ where
     }
 }
 
-pub struct Neighbors(IndexSet<Pnt2>);
+pub struct Neighbors(pub IndexSet<Pnt2>);
 
 impl Neighbors {
     pub fn contains(&self, vertex: impl Into<Pnt2>) -> bool {
