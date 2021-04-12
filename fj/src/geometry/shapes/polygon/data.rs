@@ -16,11 +16,11 @@ impl PolygonData {
         self.edges.is_empty()
     }
 
-    pub fn insert_edge(&mut self, edge: Seg2) {
-        self.edges.insert(edge);
-    }
-
     pub fn edges(&self) -> &HashSet<Seg2> {
         &self.edges
+    }
+
+    pub fn insert_edge(&mut self, edge: Seg2) {
+        self.edges.insert(edge);
     }
 }
