@@ -45,7 +45,7 @@ impl Triangles<'_> {
         for edge in triangle_edges {
             // TASK: Make sure the edge has the correct direction. This one here
             //       just happens to work with the test we have.
-            self.0.data.edges.insert(edge.reverse());
+            self.0.data.insert_edge(edge.reverse());
         }
 
         // TASK: Remove all code below this point, once the other methods are
