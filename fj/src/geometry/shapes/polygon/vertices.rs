@@ -39,7 +39,7 @@ mod tests {
         let a = Pnt2::from_f32s(0.0, 0.0);
         let b = Pnt2::from_f32s(1.0, 0.0);
         let c = Pnt2::from_f32s(0.0, 1.0);
-        polygon.insert_chain(VertexChain::from(&[a, b, c][..]));
+        polygon.insert_chain(VertexChain::from(&[a, b, c][..]).segments());
 
         let neighbors_of_a = polygon.vertices().neighbors_of(a);
         let neighbors_of_b = polygon.vertices().neighbors_of(b);

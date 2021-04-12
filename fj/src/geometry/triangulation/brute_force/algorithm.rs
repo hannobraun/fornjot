@@ -111,7 +111,7 @@ mod tests {
         chain.insert(p3);
 
         let mut polygon = Polygon::new();
-        polygon.insert_chain(chain);
+        polygon.insert_chain(chain.segments());
 
         println!("Original polygon: {:#?}", polygon);
 

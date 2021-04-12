@@ -8,8 +8,6 @@ use crate::geometry::segment::Seg2;
 
 use self::{data::PolygonData, triangles::Triangles, vertices::Vertices};
 
-use super::VertexChain;
-
 /// A polygon
 ///
 /// A polygon expects, but does not enforce, that none of its edges overlap, and
@@ -30,8 +28,11 @@ impl Polygon {
         self.data.is_empty()
     }
 
-    pub fn insert_chain(&mut self, chain: VertexChain) {
-        for segment in chain.segments() {
+    pub fn insert_chain(
+        &mut self,
+        chain: impl IntoIterator<Item = impl Into<Seg2>>,
+    ) {
+        for segment in chain {
             self.data.insert_edge(segment.into());
         }
     }
@@ -72,7 +73,7 @@ mod tests {
         let c = Point2::new(1.0, 1.0);
 
         // Non-empty chain, ergo polygon no longer empty.
-        polygon.insert_chain(VertexChain::from(&[a, b, c][..]));
+        polygon.insert_chain(VertexChain::from(&[a, b, c][..]).segments());
         assert!(!polygon.is_empty());
     }
 
@@ -91,8 +92,8 @@ mod tests {
         let chain_a = VertexChain::from(&[a, b, c][..]);
         let chain_b = VertexChain::from(&[p, q, r][..]);
 
-        polygon.insert_chain(chain_a);
-        polygon.insert_chain(chain_b);
+        polygon.insert_chain(chain_a.segments());
+        polygon.insert_chain(chain_b.segments());
 
         let mut expected = HashSet::new();
         expected.insert(Seg2::new(a, b));
