@@ -16,21 +16,12 @@ use super::VertexChain;
 /// that none of its vertex chains share vertices.
 #[derive(Clone, Debug)]
 pub struct Polygon {
-    // TASK: This representation is not flexible enough. It can't handle vertex
-    //       chains sharing vertices, but this is a valid case that can occur
-    //       when removing triangles from the polygon.
-    //
-    //       Add alternative fields that store the edges instead of vertex
-    //       chains, then remove this one.
-    pub chains: Vec<VertexChain>,
-
     pub data: PolygonData,
 }
 
 impl Polygon {
     pub fn new() -> Self {
         Self {
-            chains: Vec::new(),
             data: PolygonData::new(),
         }
     }
@@ -43,7 +34,6 @@ impl Polygon {
         for segment in chain.segments() {
             self.data.insert_edge(segment.into());
         }
-        self.chains.push(chain);
     }
 
     pub fn edges(&self) -> &HashSet<Seg2> {
