@@ -4,9 +4,9 @@ use parry2d::shape::Triangle;
 
 use crate::geometry::segment::Seg2;
 
-use super::Polygon;
+use super::data::PolygonData;
 
-pub struct Triangles<'r>(pub(super) &'r mut Polygon);
+pub struct Triangles<'r>(pub(super) &'r mut PolygonData);
 
 impl Triangles<'_> {
     pub fn remove(
@@ -14,7 +14,7 @@ impl Triangles<'_> {
         triangle: Triangle,
     ) -> Result<(), TriangleNotPresent> {
         for vertex in triangle.vertices() {
-            if !self.0.data.contains_vertex(&vertex.into()) {
+            if !self.0.contains_vertex(&vertex.into()) {
                 return Err(TriangleNotPresent);
             }
         }
@@ -28,7 +28,7 @@ impl Triangles<'_> {
 
         // All edges that are fully contained in the triangle need to be
         // removed.
-        self.0.data.retain_edges(|edge| {
+        self.0.retain_edges(|edge| {
             // TASK: Wether this works or not is dependent on the direction on
             //       the edge in the triangle. Make sure it works in any case.
             if triangle_edges.contains(edge) {
@@ -47,7 +47,7 @@ impl Triangles<'_> {
         for edge in triangle_edges {
             // TASK: Make sure the edge has the correct direction. This one here
             //       just happens to work with the test we have.
-            self.0.data.insert_edge(edge.reverse());
+            self.0.insert_edge(edge.reverse());
         }
 
         Ok(())
