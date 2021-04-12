@@ -48,7 +48,7 @@ impl Polygon {
         self.chains.push(chain);
     }
 
-    pub fn edges(&self) -> HashSet<Seg2> {
+    pub fn edges(&self) -> &HashSet<Seg2> {
         self.data.edges()
     }
 
@@ -114,6 +114,6 @@ mod tests {
         expected.insert(Seg2::new(q, r));
         expected.insert(Seg2::new(r, p));
 
-        assert_eq!(polygon.edges(), expected);
+        assert_eq!(polygon.edges(), &expected);
     }
 }

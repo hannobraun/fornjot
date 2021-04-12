@@ -20,7 +20,7 @@ impl PolygonData {
         self.edges.insert(edge);
     }
 
-    pub fn edges(&self) -> HashSet<Seg2> {
-        self.edges.clone()
+    pub fn edges(&self) -> &HashSet<Seg2> {
+        &self.edges
     }
 }

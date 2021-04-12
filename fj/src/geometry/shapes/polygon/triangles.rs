@@ -117,7 +117,7 @@ mod tests {
         expected.insert(Seg2::new(d, a));
 
         polygon.triangles().remove(Triangle::new(b, c, d)).unwrap();
-        assert_eq!(polygon.edges(), expected);
+        assert_eq!(polygon.edges(), &expected);
     }
 
     #[test]
