@@ -16,7 +16,7 @@ use super::VertexChain;
 /// that none of its vertex chains share vertices.
 #[derive(Clone, Debug)]
 pub struct Polygon {
-    pub data: PolygonData,
+    data: PolygonData,
 }
 
 impl Polygon {
