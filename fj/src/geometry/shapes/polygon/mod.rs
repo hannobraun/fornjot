@@ -49,7 +49,7 @@ impl Polygon {
     }
 
     pub fn edges(&self) -> HashSet<Seg2> {
-        self.data.edges.clone()
+        self.data.edges()
     }
 
     pub fn vertices(&mut self) -> Vertices {
