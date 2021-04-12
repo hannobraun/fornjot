@@ -12,7 +12,7 @@ impl Vertices<'_> {
 
         let mut neighbors = HashSet::new();
 
-        for edge in &self.0.data.edges {
+        for edge in self.0.data.edges() {
             if edge.a == vertex {
                 neighbors.insert(edge.b);
             }
