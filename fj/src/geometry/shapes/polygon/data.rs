@@ -23,4 +23,8 @@ impl PolygonData {
     pub fn insert_edge(&mut self, edge: Seg2) {
         self.edges.insert(edge);
     }
+
+    pub fn retain_edges(&mut self, f: impl FnMut(&Seg2) -> bool) {
+        self.edges.retain(f);
+    }
 }

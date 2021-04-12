@@ -26,7 +26,7 @@ impl Triangles<'_> {
 
         // All edges that are fully contained in the triangle need to be
         // removed.
-        self.0.data.edges.retain(|edge| {
+        self.0.data.retain_edges(|edge| {
             // TASK: Wether this works or not is dependent on the direction on
             //       the edge in the triangle. Make sure it works in any case.
             if triangle_edges.contains(edge) {
