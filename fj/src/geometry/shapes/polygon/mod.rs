@@ -43,7 +43,7 @@ impl Polygon {
 
     pub fn insert_chain(&mut self, chain: VertexChain) {
         for segment in chain.segments() {
-            self.data.edges.insert(segment.into());
+            self.data.insert_edge(segment.into());
         }
         self.chains.push(chain);
     }

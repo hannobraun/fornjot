@@ -15,4 +15,8 @@ impl PolygonData {
     pub fn is_empty(&self) -> bool {
         self.edges.is_empty()
     }
+
+    pub fn insert_edge(&mut self, edge: Seg2) {
+        self.edges.insert(edge);
+    }
 }
