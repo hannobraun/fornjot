@@ -1,3 +1,4 @@
+pub mod data;
 pub mod triangles;
 pub mod vertices;
 
@@ -5,7 +6,7 @@ use std::collections::HashSet;
 
 use crate::geometry::segment::Seg2;
 
-use self::{triangles::Triangles, vertices::Vertices};
+use self::{data::PolygonData, triangles::Triangles, vertices::Vertices};
 
 use super::VertexChain;
 
@@ -23,43 +24,32 @@ pub struct Polygon {
     //       chains, then remove this one.
     pub chains: Vec<VertexChain>,
 
-    pub edges: HashSet<Seg2>,
-    // TASK: Add field `vertices` that contains all polygon vertices. This is
-    //       required to easily and efficiently query whether a vertex is part
-    //       of the polygon and will probably be useful for other things too.
-    //
-    //       The problem is, that by just adding a field, all methods would have
-    //       to be very careful to always correctly update them, which would be
-    //       a pain to do and test. Instead, both `edges` and `vertices` should
-    //       be encapsulated in a separately-tested API that can then be used by
-    //       by higher-level code.
-    //
-    //       That API should probably be separate from `Polygon`, as it would
-    //       allow things that would corrupt the polygon, like removing an edge,
-    //       thereby breaking the chain, without fixing the polygon up again.
+    pub data: PolygonData,
 }
 
 impl Polygon {
     pub fn new() -> Self {
         Self {
             chains: Vec::new(),
-            edges: HashSet::new(),
+            data: PolygonData {
+                edges: HashSet::new(),
+            },
         }
     }
 
     pub fn is_empty(&self) -> bool {
-        self.edges.is_empty()
+        self.data.edges.is_empty()
     }
 
     pub fn insert_chain(&mut self, chain: VertexChain) {
         for segment in chain.segments() {
-            self.edges.insert(segment.into());
+            self.data.edges.insert(segment.into());
         }
         self.chains.push(chain);
     }
 
     pub fn edges(&self) -> HashSet<Seg2> {
-        self.edges.clone()
+        self.data.edges.clone()
     }
 
     pub fn vertices(&mut self) -> Vertices {

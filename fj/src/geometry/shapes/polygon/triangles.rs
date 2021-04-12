@@ -26,7 +26,7 @@ impl Triangles<'_> {
 
         // All edges that are fully contained in the triangle need to be
         // removed.
-        self.0.edges.retain(|edge| {
+        self.0.data.edges.retain(|edge| {
             // TASK: Wether this works or not is dependent on the direction on
             //       the edge in the triangle. Make sure it works in any case.
             if triangle_edges.contains(edge) {
@@ -45,7 +45,7 @@ impl Triangles<'_> {
         for edge in triangle_edges {
             // TASK: Make sure the edge has the correct direction. This one here
             //       just happens to work with the test we have.
-            self.0.edges.insert(edge.reverse());
+            self.0.data.edges.insert(edge.reverse());
         }
 
         // TASK: Remove all code below this point, once the other methods are
