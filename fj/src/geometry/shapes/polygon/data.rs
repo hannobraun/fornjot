@@ -17,12 +17,12 @@ impl PolygonData {
         }
     }
 
-    pub fn is_empty(&self) -> bool {
-        self.edges.is_empty()
-    }
-
     pub fn edges(&self) -> &HashSet<Seg2> {
         &self.edges
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.edges.is_empty()
     }
 
     pub fn insert_edge(&mut self, edge: Seg2) {
