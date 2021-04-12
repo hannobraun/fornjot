@@ -38,7 +38,7 @@ impl Polygon {
     }
 
     pub fn is_empty(&self) -> bool {
-        self.data.edges.is_empty()
+        self.data.is_empty()
     }
 
     pub fn insert_chain(&mut self, chain: VertexChain) {

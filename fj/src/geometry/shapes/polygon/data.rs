@@ -10,3 +10,9 @@ pub struct PolygonData {
     //       required to easily and efficiently query whether a vertex is part
     //       of the polygon and will probably be useful for other things too.
 }
+
+impl PolygonData {
+    pub fn is_empty(&self) -> bool {
+        self.edges.is_empty()
+    }
+}
