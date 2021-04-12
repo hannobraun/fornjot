@@ -1,3 +1,6 @@
+// TASK: Remove. `Polygon` no longer uses it for its internal representation,
+//       and I don't think it's needed anywhere else.
+
 use indexmap::IndexSet;
 
 use crate::geometry::{point::Pnt2, segment::Seg2};
