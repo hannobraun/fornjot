@@ -12,6 +12,12 @@ pub struct PolygonData {
 }
 
 impl PolygonData {
+    pub fn new() -> Self {
+        Self {
+            edges: HashSet::new(),
+        }
+    }
+
     pub fn is_empty(&self) -> bool {
         self.edges.is_empty()
     }

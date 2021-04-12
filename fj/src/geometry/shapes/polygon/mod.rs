@@ -31,9 +31,7 @@ impl Polygon {
     pub fn new() -> Self {
         Self {
             chains: Vec::new(),
-            data: PolygonData {
-                edges: HashSet::new(),
-            },
+            data: PolygonData::new(),
         }
     }
 
