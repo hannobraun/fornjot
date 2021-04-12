@@ -41,7 +41,7 @@ impl Polygon {
     }
 
     pub fn vertices(&mut self) -> Vertices {
-        Vertices(self)
+        Vertices(&mut self.data)
     }
 
     pub fn triangles(&mut self) -> Triangles {

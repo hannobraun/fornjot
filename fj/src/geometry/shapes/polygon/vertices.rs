@@ -2,9 +2,9 @@ use std::collections::HashSet;
 
 use crate::geometry::point::Pnt2;
 
-use super::Polygon;
+use super::data::PolygonData;
 
-pub struct Vertices<'r>(pub(super) &'r mut Polygon);
+pub struct Vertices<'r>(pub(super) &'r mut PolygonData);
 
 impl Vertices<'_> {
     pub fn neighbors_of(&self, vertex: impl Into<Pnt2>) -> HashSet<Pnt2> {
@@ -12,7 +12,7 @@ impl Vertices<'_> {
 
         let mut neighbors = HashSet::new();
 
-        for edge in self.0.data.edges() {
+        for edge in self.0.edges() {
             if edge.a == vertex {
                 neighbors.insert(edge.b);
             }
