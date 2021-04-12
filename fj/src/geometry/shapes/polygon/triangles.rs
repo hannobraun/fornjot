@@ -13,9 +13,11 @@ impl Triangles<'_> {
         &mut self,
         triangle: Triangle,
     ) -> Result<(), TriangleNotPresent> {
-        // TASK: Expend the update code for `self.0.edges` as required to make
-        //       all the tests pass, when the other methods are update to use
-        //       `self.0.edges`.
+        for vertex in triangle.vertices() {
+            if !self.0.data.contains_vertex(&vertex.into()) {
+                return Err(TriangleNotPresent);
+            }
+        }
 
         // Convert triangle into a representation that is more useful for this
         // algorithm.
@@ -48,41 +50,7 @@ impl Triangles<'_> {
             self.0.data.insert_edge(edge.reverse());
         }
 
-        // TASK: Remove all code below this point, once the other methods are
-        //       updated to use `self.0.edges`.
-
-        // Create a structure that gives us each point of the triangle together
-        // with the two other points.
-        let triangle = [
-            (triangle.a, [triangle.b, triangle.c]),
-            (triangle.b, [triangle.a, triangle.c]),
-            (triangle.c, [triangle.a, triangle.b]),
-        ];
-
-        for chain in &mut self.0.chains {
-            // Need to query a copy of the chain, else our removals will falsify
-            // further queries.
-            let chain_copy = chain.clone();
-
-            for &(vertex, [a, b]) in &triangle {
-                if let Some(neighbors) = chain_copy.neighbors_of(vertex) {
-                    if neighbors.contains(a) && neighbors.contains(b) {
-                        chain.remove(vertex);
-                    }
-                }
-            }
-
-            if chain.len() < chain_copy.len() {
-                // We removed vertices from the chain.
-                //
-                // Due to the assumptions made by `Polygon` (no edges that
-                // overlap, and no vertices shared between chains), we can
-                // assume that we're done and will find nothing more.
-                return Ok(());
-            }
-        }
-
-        Err(TriangleNotPresent)
+        Ok(())
     }
 }
 
