@@ -4,7 +4,7 @@ pub mod vertices;
 
 use std::collections::HashSet;
 
-use crate::geometry::segment::Seg2;
+use crate::geometry::{point::Pnt2, segment::Seg2};
 
 use self::{data::PolygonData, triangles::Triangles, vertices::Vertices};
 
@@ -37,6 +37,29 @@ impl Polygon {
     ) {
         for segment in chain {
             self.data.insert_edge(segment.into());
+        }
+    }
+
+    // TASK: Rename to `insert_chain`, replacing the current one.
+    pub fn insert_chain2(
+        &mut self,
+        chain: impl IntoIterator<Item = impl Into<Pnt2>>,
+    ) {
+        // This gets us access to the `windows` method.
+        let chain: Vec<_> =
+            chain.into_iter().map(|vertex| vertex.into()).collect();
+
+        for window in chain.windows(2) {
+            let a = window[0];
+            let b = window[1];
+
+            self.data.insert_edge(Seg2::new(a, b));
+        }
+
+        // TASK: Handle the case that `first` and `last` are equal (i.e. there
+        //       is only one vertex).
+        if let (Some(first), Some(last)) = (chain.first(), chain.last()) {
+            self.data.insert_edge(Seg2::new(last, first));
         }
     }
 
