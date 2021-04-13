@@ -87,7 +87,7 @@ mod tests {
     }
 
     #[test]
-    fn polygon_chain_return_its_edges() {
+    fn polygon_should_return_its_edges() {
         let mut polygon = Polygon::new();
 
         let a = Point2::new(0.0, 0.0);
