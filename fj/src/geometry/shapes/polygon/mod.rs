@@ -12,6 +12,7 @@ use self::{data::PolygonData, triangles::Triangles, vertices::Vertices};
 ///
 /// A polygon expects, but does not enforce, that none of its edges overlap, and
 /// that none of its vertex chains share vertices.
+// TASK: Convert into tuple struct.
 #[derive(Clone, Debug)]
 pub struct Polygon {
     data: PolygonData,
