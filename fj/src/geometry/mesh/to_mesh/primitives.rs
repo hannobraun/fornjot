@@ -39,7 +39,7 @@ impl ToMesh for &Circle {
         }
 
         let mut polygon = Polygon::new();
-        polygon.insert_chain2(circumference);
+        polygon.insert_chain(circumference);
 
         polygon.to_mesh(tolerance, mesh);
     }

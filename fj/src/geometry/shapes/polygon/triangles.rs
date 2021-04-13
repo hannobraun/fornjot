@@ -74,7 +74,7 @@ mod tests {
         let b = Point2::new(1.0, 0.0);
         let c = Point2::new(1.0, 1.0);
         let d = Point2::new(0.0, 1.0);
-        polygon.insert_chain2(&[a, b, c, d]);
+        polygon.insert_chain(&[a, b, c, d]);
 
         let mut expected = HashSet::new();
         expected.insert(Seg2::new(a, b));
@@ -92,7 +92,7 @@ mod tests {
         let a = Point2::new(0.0, 0.0);
         let b = Point2::new(1.0, 0.0);
         let c = Point2::new(0.0, 1.0);
-        polygon.insert_chain2(&[a, b, c]);
+        polygon.insert_chain(&[a, b, c]);
 
         let triangle = Triangle::new(a, b, Point2::new(0.0, 2.0));
         assert!(polygon.triangles().remove(triangle).is_err());
@@ -105,7 +105,7 @@ mod tests {
         let a = Point2::new(0.0, 0.0);
         let b = Point2::new(1.0, 0.0);
         let c = Point2::new(1.0, 1.0);
-        polygon.insert_chain2(&[a, b, c]);
+        polygon.insert_chain(&[a, b, c]);
 
         polygon.triangles().remove(Triangle::new(a, b, c)).unwrap();
         assert!(polygon.is_empty());

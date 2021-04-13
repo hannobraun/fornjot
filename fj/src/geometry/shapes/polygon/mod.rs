@@ -29,8 +29,7 @@ impl Polygon {
         self.data.is_empty()
     }
 
-    // TASK: Rename to `insert_chain`, replacing the current one.
-    pub fn insert_chain2(
+    pub fn insert_chain(
         &mut self,
         chain: impl IntoIterator<Item = impl Into<Pnt2>>,
     ) {
@@ -88,7 +87,7 @@ mod tests {
         let c = Point2::new(1.0, 1.0);
 
         // Non-empty chain, ergo polygon no longer empty.
-        polygon.insert_chain2(&[a, b, c]);
+        polygon.insert_chain(&[a, b, c]);
         assert!(!polygon.is_empty());
     }
 
@@ -104,8 +103,8 @@ mod tests {
         let q = Point2::new(1.0, 1.5);
         let r = Point2::new(1.5, 1.0);
 
-        polygon.insert_chain2(&[a, b, c]);
-        polygon.insert_chain2(&[p, q, r]);
+        polygon.insert_chain(&[a, b, c]);
+        polygon.insert_chain(&[p, q, r]);
 
         let mut expected = HashSet::new();
         expected.insert(Seg2::new(a, b));
