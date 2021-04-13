@@ -83,7 +83,7 @@ mod tests {
 
     use nalgebra::Point2;
 
-    use crate::geometry::{segment::Seg2, shapes::VertexChain};
+    use crate::geometry::segment::Seg2;
 
     use super::Polygon;
 
@@ -100,7 +100,7 @@ mod tests {
         let c = Point2::new(1.0, 1.0);
 
         // Non-empty chain, ergo polygon no longer empty.
-        polygon.insert_chain(VertexChain::from(&[a, b, c][..]).segments());
+        polygon.insert_chain2(&[a, b, c]);
         assert!(!polygon.is_empty());
     }
 
@@ -116,11 +116,8 @@ mod tests {
         let q = Point2::new(1.0, 1.5);
         let r = Point2::new(1.5, 1.0);
 
-        let chain_a = VertexChain::from(&[a, b, c][..]);
-        let chain_b = VertexChain::from(&[p, q, r][..]);
-
-        polygon.insert_chain(chain_a.segments());
-        polygon.insert_chain(chain_b.segments());
+        polygon.insert_chain2(&[a, b, c]);
+        polygon.insert_chain2(&[p, q, r]);
 
         let mut expected = HashSet::new();
         expected.insert(Seg2::new(a, b));
