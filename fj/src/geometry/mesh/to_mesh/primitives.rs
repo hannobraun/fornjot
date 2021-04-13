@@ -3,9 +3,8 @@ use std::f32::consts::PI;
 use nalgebra::Point3;
 
 use crate::geometry::{
-    shapes::{Polygon, VertexChain},
-    triangulation::brute_force::triangulate,
-    Boundary as _, Circle, Mesh, Triangle3,
+    shapes::Polygon, triangulation::brute_force::triangulate, Boundary as _,
+    Circle, Mesh, Triangle3,
 };
 
 use super::ToMesh;
@@ -33,14 +32,14 @@ impl ToMesh for &Circle {
             n += 1;
         }
 
-        let mut circumference = VertexChain::new();
+        let mut circumference = Vec::new();
         for i in 0..n {
             let p = self.boundary(1.0 / n as f32 * i as f32);
-            circumference.insert(p);
+            circumference.push(p);
         }
 
         let mut polygon = Polygon::new();
-        polygon.insert_chain(circumference.segments());
+        polygon.insert_chain2(circumference);
 
         polygon.to_mesh(tolerance, mesh);
     }
