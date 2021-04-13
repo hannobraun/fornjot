@@ -65,7 +65,7 @@ mod tests {
 
     use nalgebra::Point2;
 
-    use crate::geometry::segment::Seg2;
+    use crate::geometry::{point::Pnt2, segment::Seg2};
 
     use super::Polygon;
 
@@ -74,7 +74,10 @@ mod tests {
         let mut polygon = Polygon::new();
         assert!(polygon.is_empty());
 
-        // Empty chain, polygon still empty.
+        let empty_chain: &[Pnt2] = &[];
+        polygon.insert_chain(empty_chain);
+
+        // Empty chain added, polygon still empty.
         assert!(polygon.is_empty());
 
         let a = Point2::new(0.0, 0.0);
