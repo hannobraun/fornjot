@@ -76,12 +76,13 @@ mod tests {
         let d = Point2::new(0.0, 1.0);
         polygon.insert_chain(&[a, b, c, d]);
 
+        polygon.triangles().remove(Triangle::new(b, c, d)).unwrap();
+
         let mut expected = HashSet::new();
         expected.insert(Seg2::new(a, b));
         expected.insert(Seg2::new(b, d));
         expected.insert(Seg2::new(d, a));
 
-        polygon.triangles().remove(Triangle::new(b, c, d)).unwrap();
         assert_eq!(polygon.edges(), &expected);
     }
 
