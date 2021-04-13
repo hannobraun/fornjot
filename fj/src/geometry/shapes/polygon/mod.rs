@@ -12,21 +12,16 @@ use self::{data::PolygonData, triangles::Triangles, vertices::Vertices};
 ///
 /// A polygon expects, but does not enforce, that none of its edges overlap, and
 /// that none of its vertex chains share vertices.
-// TASK: Convert into tuple struct.
 #[derive(Clone, Debug)]
-pub struct Polygon {
-    data: PolygonData,
-}
+pub struct Polygon(PolygonData);
 
 impl Polygon {
     pub fn new() -> Self {
-        Self {
-            data: PolygonData::new(),
-        }
+        Self(PolygonData::new())
     }
 
     pub fn is_empty(&self) -> bool {
-        self.data.is_empty()
+        self.0.is_empty()
     }
 
     pub fn insert_chain(
@@ -41,26 +36,26 @@ impl Polygon {
             let a = window[0];
             let b = window[1];
 
-            self.data.insert_edge(Seg2::new(a, b));
+            self.0.insert_edge(Seg2::new(a, b));
         }
 
         // TASK: Handle the case that `first` and `last` are equal (i.e. there
         //       is only one vertex).
         if let (Some(first), Some(last)) = (chain.first(), chain.last()) {
-            self.data.insert_edge(Seg2::new(last, first));
+            self.0.insert_edge(Seg2::new(last, first));
         }
     }
 
     pub fn edges(&self) -> &HashSet<Seg2> {
-        self.data.edges()
+        self.0.edges()
     }
 
     pub fn vertices(&mut self) -> Vertices {
-        Vertices(&mut self.data)
+        Vertices(&mut self.0)
     }
 
     pub fn triangles(&mut self) -> Triangles {
-        Triangles(&mut self.data)
+        Triangles(&mut self.0)
     }
 }
 
