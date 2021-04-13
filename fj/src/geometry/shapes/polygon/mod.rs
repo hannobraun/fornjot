@@ -29,18 +29,6 @@ impl Polygon {
         self.data.is_empty()
     }
 
-    // TASK: This method no longer guarantees that the polygon is still correct
-    //       after a call to it. It should instead take an iterator over points
-    //       and create the edges from that. Basically, what `VertexChain` does.
-    pub fn insert_chain(
-        &mut self,
-        chain: impl IntoIterator<Item = impl Into<Seg2>>,
-    ) {
-        for segment in chain {
-            self.data.insert_edge(segment.into());
-        }
-    }
-
     // TASK: Rename to `insert_chain`, replacing the current one.
     pub fn insert_chain2(
         &mut self,
