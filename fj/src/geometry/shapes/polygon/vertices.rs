@@ -27,10 +27,7 @@ impl Vertices<'_> {
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::{
-        point::Pnt2,
-        shapes::{Polygon, VertexChain},
-    };
+    use crate::geometry::{point::Pnt2, shapes::Polygon};
 
     #[test]
     fn neighbors_of_should_return_neighbors_of_vertex() {
@@ -39,7 +36,7 @@ mod tests {
         let a = Pnt2::from_f32s(0.0, 0.0);
         let b = Pnt2::from_f32s(1.0, 0.0);
         let c = Pnt2::from_f32s(0.0, 1.0);
-        polygon.insert_chain(VertexChain::from(&[a, b, c][..]).segments());
+        polygon.insert_chain2(&[a, b, c]);
 
         let neighbors_of_a = polygon.vertices().neighbors_of(a);
         let neighbors_of_b = polygon.vertices().neighbors_of(b);
