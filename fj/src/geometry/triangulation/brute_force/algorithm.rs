@@ -92,7 +92,7 @@ pub fn triangulate(polygon: &Polygon) -> Vec<Triangle> {
 mod tests {
     use nalgebra::Point2;
 
-    use crate::geometry::shapes::{Polygon, VertexChain};
+    use crate::geometry::shapes::Polygon;
 
     use super::triangulate;
 
@@ -104,14 +104,14 @@ mod tests {
         let p2 = Point2::new(1.0, 1.0);
         let p3 = Point2::new(0.0, 1.0);
 
-        let mut chain = VertexChain::new();
-        chain.insert(p0);
-        chain.insert(p1);
-        chain.insert(p2);
-        chain.insert(p3);
+        let mut chain = Vec::new();
+        chain.push(p0);
+        chain.push(p1);
+        chain.push(p2);
+        chain.push(p3);
 
         let mut polygon = Polygon::new();
-        polygon.insert_chain(chain.segments());
+        polygon.insert_chain2(chain);
 
         println!("Original polygon: {:#?}", polygon);
 
