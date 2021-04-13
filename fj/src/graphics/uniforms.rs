@@ -1,5 +1,5 @@
 use bytemuck::{Pod, Zeroable};
-use nalgebra::Matrix4;
+use nalgebra::{storage::Storage as _, Matrix4};
 
 use crate::transform::NativeTransform;
 

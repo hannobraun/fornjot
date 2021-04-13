@@ -1,5 +1,6 @@
 use nalgebra::{
-    Isometry3, Perspective3, RealField as _, Rotation3, Translation3, Vector3,
+    storage::Storage as _, Isometry3, Perspective3, RealField as _, Rotation3,
+    Translation3, Vector3,
 };
 
 pub struct Transform {
