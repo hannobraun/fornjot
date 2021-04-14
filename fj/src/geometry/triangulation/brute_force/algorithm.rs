@@ -102,14 +102,8 @@ mod tests {
         let p2 = Pnt2::new(1.0, 1.0);
         let p3 = Pnt2::new(0.0, 1.0);
 
-        let mut chain = Vec::new();
-        chain.push(p0);
-        chain.push(p1);
-        chain.push(p2);
-        chain.push(p3);
-
         let mut polygon = Polygon::new();
-        polygon.insert_chain(chain);
+        polygon.insert_chain(&[p0, p1, p2, p3]);
 
         println!("Original polygon: {:#?}", polygon);
 
