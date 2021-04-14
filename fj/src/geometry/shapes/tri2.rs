@@ -9,6 +9,18 @@ pub struct Tri2 {
 }
 
 impl Tri2 {
+    pub fn new(
+        a: impl Into<Pnt2>,
+        b: impl Into<Pnt2>,
+        c: impl Into<Pnt2>,
+    ) -> Self {
+        Self {
+            a: a.into(),
+            b: b.into(),
+            c: c.into(),
+        }
+    }
+
     pub fn vertices(&self) -> [Pnt2; 3] {
         [self.a, self.b, self.c]
     }
