@@ -63,8 +63,6 @@ impl Polygon {
 mod tests {
     use std::collections::HashSet;
 
-    use nalgebra::Point2;
-
     use crate::geometry::{point::Pnt2, segment::Seg2};
 
     use super::Polygon;
@@ -80,9 +78,9 @@ mod tests {
         // Empty chain added, polygon still empty.
         assert!(polygon.is_empty());
 
-        let a = Point2::new(0.0, 0.0);
-        let b = Point2::new(1.0, 0.0);
-        let c = Point2::new(1.0, 1.0);
+        let a = Pnt2::from_f32s(0.0, 0.0);
+        let b = Pnt2::from_f32s(1.0, 0.0);
+        let c = Pnt2::from_f32s(1.0, 1.0);
 
         // Non-empty chain, ergo polygon no longer empty.
         polygon.insert_chain(&[a, b, c]);
@@ -93,13 +91,13 @@ mod tests {
     fn polygon_should_return_its_edges() {
         let mut polygon = Polygon::new();
 
-        let a = Point2::new(0.0, 0.0);
-        let b = Point2::new(2.0, 0.0);
-        let c = Point2::new(0.0, 2.0);
+        let a = Pnt2::from_f32s(0.0, 0.0);
+        let b = Pnt2::from_f32s(2.0, 0.0);
+        let c = Pnt2::from_f32s(0.0, 2.0);
 
-        let p = Point2::new(1.0, 1.0);
-        let q = Point2::new(1.0, 1.5);
-        let r = Point2::new(1.5, 1.0);
+        let p = Pnt2::from_f32s(1.0, 1.0);
+        let q = Pnt2::from_f32s(1.0, 1.5);
+        let r = Pnt2::from_f32s(1.5, 1.0);
 
         polygon.insert_chain(&[a, b, c]);
         polygon.insert_chain(&[p, q, r]);
