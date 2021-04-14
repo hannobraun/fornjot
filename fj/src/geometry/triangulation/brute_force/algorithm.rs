@@ -1,7 +1,7 @@
 use nalgebra::Point2;
-use parry2d::shape::{Segment, Triangle};
+use parry2d::shape::Segment;
 
-use crate::geometry::shapes::Polygon;
+use crate::geometry::shapes::{Polygon, Tri2};
 
 use super::neighbors::Neighbors;
 
@@ -14,7 +14,7 @@ use super::neighbors::Neighbors;
 /// The reason for this algorithm's existence is to make some forward progress
 /// without having to finish the implementation of the Seidel trapezoidation
 /// algorithm right now.
-pub fn triangulate(polygon: &Polygon) -> Vec<Triangle> {
+pub fn triangulate(polygon: &Polygon) -> Vec<Tri2> {
     let mut neighbors = Neighbors::new();
     for edge in polygon.edges() {
         neighbors.insert(edge.a, edge.b);
@@ -46,9 +46,9 @@ pub fn triangulate(polygon: &Polygon) -> Vec<Triangle> {
         let a_c = p_c - p_a;
         let c_is_left_of_a_b = a_b.scaled_normal().dot(&a_c) < 0.0;
         let triangle = if c_is_left_of_a_b {
-            Triangle::new(p_a, p_b, p_c)
+            Tri2::new(p_a, p_b, p_c)
         } else {
-            Triangle::new(p_a, p_c, p_b)
+            Tri2::new(p_a, p_c, p_b)
         };
 
         triangles.push(triangle);

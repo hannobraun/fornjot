@@ -50,9 +50,16 @@ impl ToMesh for &Polygon {
         let triangles = triangulate(&self);
 
         for triangle in triangles {
-            let a = mesh.vertex(Point3::new(triangle.a.x, triangle.a.y, 0.0));
-            let b = mesh.vertex(Point3::new(triangle.b.x, triangle.b.y, 0.0));
-            let c = mesh.vertex(Point3::new(triangle.c.x, triangle.c.y, 0.0));
+            let a_x: f32 = triangle.a.x.into();
+            let a_y: f32 = triangle.a.y.into();
+            let b_x: f32 = triangle.b.x.into();
+            let b_y: f32 = triangle.b.y.into();
+            let c_x: f32 = triangle.c.x.into();
+            let c_y: f32 = triangle.c.y.into();
+
+            let a = mesh.vertex(Point3::new(a_x, a_y, 0.0));
+            let b = mesh.vertex(Point3::new(b_x, b_y, 0.0));
+            let c = mesh.vertex(Point3::new(c_x, c_y, 0.0));
 
             mesh.triangle(a, b, c);
         }
