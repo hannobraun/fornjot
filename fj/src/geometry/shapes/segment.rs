@@ -86,7 +86,7 @@ impl From<&Seg2> for Segment {
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::point::Pnt2;
+    use crate::geometry::shapes::Pnt2;
 
     use super::Seg2;
 

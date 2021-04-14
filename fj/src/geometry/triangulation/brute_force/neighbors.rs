@@ -1,6 +1,6 @@
 use std::collections::{BTreeMap, BTreeSet};
 
-use crate::geometry::point::Pnt2;
+use crate::geometry::shapes::Pnt2;
 
 pub struct Neighbors(pub BTreeMap<Pnt2, BTreeSet<Pnt2>>);
 

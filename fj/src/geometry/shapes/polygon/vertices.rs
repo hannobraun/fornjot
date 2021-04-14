@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use crate::geometry::point::Pnt2;
+use crate::geometry::shapes::Pnt2;
 
 use super::data::PolygonData;
 
@@ -27,7 +27,7 @@ impl Vertices<'_> {
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::{point::Pnt2, shapes::Polygon};
+    use crate::geometry::shapes::{Pnt2, Polygon};
 
     #[test]
     fn neighbors_of_should_return_neighbors_of_vertex() {

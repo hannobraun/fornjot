@@ -4,7 +4,7 @@ pub mod vertices;
 
 use std::collections::HashSet;
 
-use crate::geometry::{point::Pnt2, segment::Seg2};
+use crate::geometry::shapes::{Pnt2, Seg2};
 
 use self::{data::PolygonData, triangles::Triangles, vertices::Vertices};
 
@@ -63,7 +63,7 @@ impl Polygon {
 mod tests {
     use std::collections::HashSet;
 
-    use crate::geometry::{point::Pnt2, segment::Seg2};
+    use crate::geometry::shapes::{Pnt2, Seg2};
 
     use super::Polygon;
 

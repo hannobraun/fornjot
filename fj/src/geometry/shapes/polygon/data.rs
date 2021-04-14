@@ -1,6 +1,6 @@
 use std::collections::{HashMap, HashSet};
 
-use crate::geometry::{point::Pnt2, segment::Seg2};
+use crate::geometry::shapes::{Pnt2, Seg2};
 
 #[derive(Clone, Debug)]
 pub struct PolygonData {
@@ -74,7 +74,7 @@ impl Vertices {
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::{point::Pnt2, segment::Seg2};
+    use crate::geometry::shapes::{Pnt2, Seg2};
 
     use super::PolygonData;
 

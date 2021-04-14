@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use parry2d::shape::Triangle;
 
-use crate::geometry::segment::Seg2;
+use crate::geometry::shapes::Seg2;
 
 use super::data::PolygonData;
 
@@ -64,7 +64,7 @@ mod tests {
     use nalgebra::Point2;
     use parry2d::shape::Triangle;
 
-    use crate::geometry::{segment::Seg2, shapes::Polygon};
+    use crate::geometry::shapes::{Polygon, Seg2};
 
     #[test]
     fn remove_should_remove_triangle() {
