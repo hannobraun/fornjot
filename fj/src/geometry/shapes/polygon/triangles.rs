@@ -62,9 +62,8 @@ mod tests {
     use std::collections::HashSet;
 
     use nalgebra::Point2;
-    use parry2d::shape::Triangle;
 
-    use crate::geometry::shapes::{Polygon, Seg2};
+    use crate::geometry::shapes::{Polygon, Seg2, Tri2};
 
     #[test]
     fn remove_should_remove_triangle() {
@@ -76,7 +75,7 @@ mod tests {
         let d = Point2::new(0.0, 1.0);
         polygon.insert_chain(&[a, b, c, d]);
 
-        polygon.triangles().remove(Triangle::new(b, c, d)).unwrap();
+        polygon.triangles().remove(Tri2::new(b, c, d)).unwrap();
 
         let mut expected = HashSet::new();
         expected.insert(Seg2::new(a, b));
@@ -95,7 +94,7 @@ mod tests {
         let c = Point2::new(0.0, 1.0);
         polygon.insert_chain(&[a, b, c]);
 
-        let triangle = Triangle::new(a, b, Point2::new(0.0, 2.0));
+        let triangle = Tri2::new(a, b, Point2::new(0.0, 2.0));
         assert!(polygon.triangles().remove(triangle).is_err());
     }
 
@@ -108,7 +107,7 @@ mod tests {
         let c = Point2::new(1.0, 1.0);
         polygon.insert_chain(&[a, b, c]);
 
-        polygon.triangles().remove(Triangle::new(a, b, c)).unwrap();
+        polygon.triangles().remove(Tri2::new(a, b, c)).unwrap();
         assert!(polygon.is_empty());
     }
 
