@@ -90,19 +90,17 @@ pub fn triangulate(polygon: &Polygon) -> Vec<Triangle> {
 
 #[cfg(test)]
 mod tests {
-    use nalgebra::Point2;
-
-    use crate::geometry::shapes::Polygon;
+    use crate::geometry::shapes::{Pnt2, Polygon};
 
     use super::triangulate;
 
     #[test]
     fn triangulate_should_triangulate_basic_polygon() {
         // A very rough circle.
-        let p0 = Point2::new(0.0, 0.0);
-        let p1 = Point2::new(1.0, 0.0);
-        let p2 = Point2::new(1.0, 1.0);
-        let p3 = Point2::new(0.0, 1.0);
+        let p0 = Pnt2::new(0.0, 0.0);
+        let p1 = Pnt2::new(1.0, 0.0);
+        let p2 = Pnt2::new(1.0, 1.0);
+        let p3 = Pnt2::new(0.0, 1.0);
 
         let mut chain = Vec::new();
         chain.push(p0);
