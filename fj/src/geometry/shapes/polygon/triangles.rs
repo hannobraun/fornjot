@@ -1,8 +1,6 @@
 use std::collections::HashSet;
 
-use parry2d::shape::Triangle;
-
-use crate::geometry::shapes::Seg2;
+use crate::geometry::shapes::{Seg2, Tri2};
 
 use super::data::PolygonData;
 
@@ -11,10 +9,12 @@ pub struct Triangles<'r>(pub(super) &'r mut PolygonData);
 impl Triangles<'_> {
     pub fn remove(
         &mut self,
-        triangle: Triangle,
+        triangle: impl Into<Tri2>,
     ) -> Result<(), TriangleNotPresent> {
-        for vertex in triangle.vertices() {
-            if !self.0.contains_vertex(&vertex.into()) {
+        let triangle = triangle.into();
+
+        for vertex in &triangle.vertices() {
+            if !self.0.contains_vertex(vertex) {
                 return Err(TriangleNotPresent);
             }
         }
@@ -22,8 +22,8 @@ impl Triangles<'_> {
         // Convert triangle into a representation that is more useful for this
         // algorithm.
         let mut triangle_edges: HashSet<Seg2> = HashSet::new();
-        for edge in &triangle.edges() {
-            triangle_edges.insert(edge.into());
+        for &edge in &triangle.edges() {
+            triangle_edges.insert(edge);
         }
 
         // All edges that are fully contained in the triangle need to be
