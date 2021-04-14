@@ -32,6 +32,16 @@ impl Tri2 {
             Seg2::new(self.c, self.a),
         ]
     }
+
+    pub fn is_clockwise(&self) -> bool {
+        // Algorithm from: https://algs4.cs.princeton.edu/91primitives/
+
+        let a = self.a;
+        let b = self.b;
+        let c = self.c;
+
+        (b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y) < 0.0
+    }
 }
 
 impl From<Triangle> for Tri2 {
@@ -41,5 +51,25 @@ impl From<Triangle> for Tri2 {
             b: triangle.b.into(),
             c: triangle.c.into(),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::geometry::shapes::Pnt2;
+
+    use super::Tri2;
+
+    #[test]
+    fn is_clockwise_should_tell_whether_triangle_is_clockwise() {
+        let a = Pnt2::new(0.0, 0.0);
+        let b = Pnt2::new(1.0, 0.0);
+        let c = Pnt2::new(0.0, 1.0);
+
+        let ccw = Tri2::new(a, b, c);
+        assert_eq!(ccw.is_clockwise(), false);
+
+        let cw = Tri2::new(a, c, b);
+        assert_eq!(cw.is_clockwise(), true);
     }
 }
