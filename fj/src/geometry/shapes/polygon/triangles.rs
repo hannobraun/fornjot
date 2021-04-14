@@ -19,18 +19,19 @@ impl Triangles<'_> {
             }
         }
 
+        let must_reverse = self.0.is_clockwise() != triangle.is_clockwise();
+
         // Convert triangle into a representation that is more useful for this
         // algorithm.
         let mut triangle_edges: HashSet<Seg2> = HashSet::new();
         for &edge in &triangle.edges() {
+            let edge = if must_reverse { edge.reverse() } else { edge };
             triangle_edges.insert(edge);
         }
 
         // All edges that are fully contained in the triangle need to be
         // removed.
         self.0.retain_edges(|edge| {
-            // TASK: Wether this works or not is dependent on the direction on
-            //       the edge in the triangle. Make sure it works in any case.
             if triangle_edges.contains(edge) {
                 // We need to remove this edge from the polygon. Also remove
                 // it from `triangle_edges`, so it won't be processed in the
@@ -45,8 +46,6 @@ impl Triangles<'_> {
         // All the triangle edges that haven't been removed, need to be added
         // to the polygon. Otherwise we're leaving a gap in the polygon edges.
         for edge in triangle_edges {
-            // TASK: Make sure the edge has the correct direction. This one here
-            //       just happens to work with the test we have.
             self.0.insert_edge(edge.reverse());
         }
 
@@ -79,6 +78,29 @@ mod tests {
         expected.insert(Seg2::new(a, b));
         expected.insert(Seg2::new(b, d));
         expected.insert(Seg2::new(d, a));
+
+        assert_eq!(polygon.edges(), &expected);
+    }
+
+    #[test]
+    fn remove_should_remove_triangle_from_hole_polygon() {
+        let mut polygon = Polygon::new();
+
+        let a = Pnt2::new(0.0, 0.0);
+        let b = Pnt2::new(1.0, 0.0);
+        let c = Pnt2::new(1.0, 1.0);
+        let d = Pnt2::new(0.0, 1.0);
+
+        // Polygon is defined clock-wise, which indicates a hole, not an actual
+        // positive polygon.
+        polygon.insert_chain(&[a, d, c, b]);
+
+        polygon.triangles().remove(Tri2::new(b, c, d)).unwrap();
+
+        let mut expected = HashSet::new();
+        expected.insert(Seg2::new(a, d));
+        expected.insert(Seg2::new(d, b));
+        expected.insert(Seg2::new(b, a));
 
         assert_eq!(polygon.edges(), &expected);
     }
