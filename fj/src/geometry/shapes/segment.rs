@@ -2,7 +2,7 @@ use std::fmt;
 
 use parry2d::shape::Segment;
 
-use super::point::Pnt2;
+use super::Pnt2;
 
 #[derive(Clone, Copy, Eq, Hash, PartialEq, PartialOrd)]
 pub struct Seg2 {
