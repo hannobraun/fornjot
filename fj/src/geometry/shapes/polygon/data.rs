@@ -28,6 +28,20 @@ impl PolygonData {
         self.vertices.0.contains_key(vertex)
     }
 
+    pub fn is_clockwise(&self) -> bool {
+        // Algorithm from Stack Overflow:
+        // https://stackoverflow.com/a/1165943/8369834
+
+        let mut sum = 0.0;
+
+        for edge in self.edges() {
+            let v: f32 = ((edge.b.x - edge.a.x) * (edge.b.y + edge.a.y)).into();
+            sum += v;
+        }
+
+        sum > 0.0
+    }
+
     pub fn insert_edge(&mut self, edge: Seg2) {
         self.edges.insert(edge);
 
