@@ -67,10 +67,10 @@ mod tests {
     fn remove_should_remove_triangle() {
         let mut polygon = Polygon::new();
 
-        let a = Pnt2::from_f32s(0.0, 0.0);
-        let b = Pnt2::from_f32s(1.0, 0.0);
-        let c = Pnt2::from_f32s(1.0, 1.0);
-        let d = Pnt2::from_f32s(0.0, 1.0);
+        let a = Pnt2::new(0.0, 0.0);
+        let b = Pnt2::new(1.0, 0.0);
+        let c = Pnt2::new(1.0, 1.0);
+        let d = Pnt2::new(0.0, 1.0);
         polygon.insert_chain(&[a, b, c, d]);
 
         polygon.triangles().remove(Tri2::new(b, c, d)).unwrap();
@@ -87,12 +87,12 @@ mod tests {
     fn remove_should_fail_if_not_all_vertices_are_in_polygon() {
         let mut polygon = Polygon::new();
 
-        let a = Pnt2::from_f32s(0.0, 0.0);
-        let b = Pnt2::from_f32s(1.0, 0.0);
-        let c = Pnt2::from_f32s(0.0, 1.0);
+        let a = Pnt2::new(0.0, 0.0);
+        let b = Pnt2::new(1.0, 0.0);
+        let c = Pnt2::new(0.0, 1.0);
         polygon.insert_chain(&[a, b, c]);
 
-        let triangle = Tri2::new(a, b, Pnt2::from_f32s(0.0, 2.0));
+        let triangle = Tri2::new(a, b, Pnt2::new(0.0, 2.0));
         assert!(polygon.triangles().remove(triangle).is_err());
     }
 
@@ -100,9 +100,9 @@ mod tests {
     fn remove_should_remove_all_vertices_if_necessary() {
         let mut polygon = Polygon::new();
 
-        let a = Pnt2::from_f32s(0.0, 0.0);
-        let b = Pnt2::from_f32s(1.0, 0.0);
-        let c = Pnt2::from_f32s(1.0, 1.0);
+        let a = Pnt2::new(0.0, 0.0);
+        let b = Pnt2::new(1.0, 0.0);
+        let c = Pnt2::new(1.0, 1.0);
         polygon.insert_chain(&[a, b, c]);
 
         polygon.triangles().remove(Tri2::new(a, b, c)).unwrap();

@@ -82,8 +82,8 @@ mod tests {
     fn insert_edge_should_update_vertices() {
         let mut data = PolygonData::new();
 
-        let a = Pnt2::from_f32s(0.0, 0.0);
-        let b = Pnt2::from_f32s(1.0, 0.0);
+        let a = Pnt2::new(0.0, 0.0);
+        let b = Pnt2::new(1.0, 0.0);
 
         assert_eq!(data.contains_vertex(&a), false);
         assert_eq!(data.contains_vertex(&b), false);
@@ -98,9 +98,9 @@ mod tests {
     fn retain_edges_should_update_vertices() {
         let mut data = PolygonData::new();
 
-        let a = Pnt2::from_f32s(0.0, 0.0);
-        let b = Pnt2::from_f32s(1.0, 0.0);
-        let c = Pnt2::from_f32s(0.0, 1.0);
+        let a = Pnt2::new(0.0, 0.0);
+        let b = Pnt2::new(1.0, 0.0);
+        let c = Pnt2::new(0.0, 1.0);
 
         let ab = Seg2::new(a, b);
         let bc = Seg2::new(b, c);

@@ -7,7 +7,7 @@ use nalgebra::Point2;
 pub struct Pnt2(pub Point2<R32>);
 
 impl Pnt2 {
-    pub fn from_f32s(x: impl Into<R32>, y: impl Into<R32>) -> Self {
+    pub fn new(x: impl Into<R32>, y: impl Into<R32>) -> Self {
         Self(Point2::new(x.into(), y.into()))
     }
 }

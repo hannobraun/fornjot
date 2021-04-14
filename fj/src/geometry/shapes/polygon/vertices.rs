@@ -33,9 +33,9 @@ mod tests {
     fn neighbors_of_should_return_neighbors_of_vertex() {
         let mut polygon = Polygon::new();
 
-        let a = Pnt2::from_f32s(0.0, 0.0);
-        let b = Pnt2::from_f32s(1.0, 0.0);
-        let c = Pnt2::from_f32s(0.0, 1.0);
+        let a = Pnt2::new(0.0, 0.0);
+        let b = Pnt2::new(1.0, 0.0);
+        let c = Pnt2::new(0.0, 1.0);
         polygon.insert_chain(&[a, b, c]);
 
         let neighbors_of_a = polygon.vertices().neighbors_of(a);

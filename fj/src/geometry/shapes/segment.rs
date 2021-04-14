@@ -92,9 +92,9 @@ mod tests {
 
     #[test]
     fn contains_should_indicate_whether_segment_contains_point() {
-        let a = Pnt2::from_f32s(0.0, 0.0);
-        let b = Pnt2::from_f32s(1.0, 0.0);
-        let c = Pnt2::from_f32s(0.0, 1.0);
+        let a = Pnt2::new(0.0, 0.0);
+        let b = Pnt2::new(1.0, 0.0);
+        let c = Pnt2::new(0.0, 1.0);
 
         let segment = Seg2::new(a, b);
 
@@ -106,8 +106,8 @@ mod tests {
     #[test]
     fn normalize_should_normalize_a_segment() {
         let a = Seg2 {
-            a: Pnt2::from_f32s(0.0, 0.0),
-            b: Pnt2::from_f32s(1.0, 1.0),
+            a: Pnt2::new(0.0, 0.0),
+            b: Pnt2::new(1.0, 1.0),
         };
         let b = Seg2 { a: a.b, b: a.a };
 
@@ -117,8 +117,8 @@ mod tests {
 
     #[test]
     fn reverse_should_reverse_a_segment() {
-        let a = Pnt2::from_f32s(0.0, 0.0);
-        let b = Pnt2::from_f32s(1.0, 0.0);
+        let a = Pnt2::new(0.0, 0.0);
+        let b = Pnt2::new(1.0, 0.0);
 
         let segment = Seg2::new(a, b);
 
