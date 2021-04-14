@@ -2,6 +2,7 @@ use parry2d::shape::Triangle;
 
 use super::{Pnt2, Seg2};
 
+#[derive(Debug)]
 pub struct Tri2 {
     pub a: Pnt2,
     pub b: Pnt2,
