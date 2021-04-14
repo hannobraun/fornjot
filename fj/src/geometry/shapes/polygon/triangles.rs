@@ -132,9 +132,36 @@ mod tests {
     }
 
     #[test]
-    #[ignore]
     fn remove_should_remove_vertices_from_inner_and_outer_chain() {
-        // TASK: Implement
-        todo!()
+        let mut polygon = Polygon::new();
+
+        // Outer perimeter
+        let a = Pnt2::new(0.0, 0.0);
+        let b = Pnt2::new(2.0, 0.0);
+        let c = Pnt2::new(2.0, 2.0);
+        let d = Pnt2::new(0.0, 2.0);
+        polygon.insert_chain(&[a, b, c, d]);
+
+        // Inner perimeter (hole)
+        let x = Pnt2::new(0.5, 0.5);
+        let y = Pnt2::new(0.5, 1.5);
+        let z = Pnt2::new(1.5, 1.5);
+        let w = Pnt2::new(1.5, 0.5);
+        polygon.insert_chain(&[x, y, z, w]);
+
+        polygon.triangles().remove(Tri2::new(a, x, d)).unwrap();
+
+        let mut expected = HashSet::new();
+        expected.insert(Seg2::new(a, b));
+        expected.insert(Seg2::new(b, c));
+        expected.insert(Seg2::new(c, d));
+        expected.insert(Seg2::new(d, x));
+        expected.insert(Seg2::new(x, y));
+        expected.insert(Seg2::new(y, z));
+        expected.insert(Seg2::new(z, w));
+        expected.insert(Seg2::new(w, x));
+        expected.insert(Seg2::new(x, a));
+
+        assert_eq!(polygon.edges(), &expected);
     }
 }
