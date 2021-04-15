@@ -4,7 +4,7 @@ use crate::geometry::shapes::{Pnt2, Seg2};
 ///
 /// In contrast to line segment, polygon edges are always undirected, meaning
 /// the same two vertices will always create the same polygon edge.
-#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub struct Edge {
     /// The "lesser" vertex
     a: Pnt2,
