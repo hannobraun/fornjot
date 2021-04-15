@@ -59,6 +59,8 @@ mod tests {
 
     use crate::geometry::shapes::{polygon::Edge, Pnt2, Polygon, Tri2};
 
+    use super::TriangleNotPresent;
+
     #[test]
     fn remove_should_remove_triangle() {
         let mut polygon = Polygon::new();
@@ -160,5 +162,36 @@ mod tests {
         expected.insert(Edge::new(x, a));
 
         assert_eq!(polygon.edges(), &expected);
+    }
+
+    // TASK: Enable test. I don't know how though. I need to recognize that the
+    //       triangle being removed here is "outside" the polygon (in the hole),
+    //       but how do I do that?
+    //
+    //       I think I've backed myself into a corner by making polygon edges
+    //       direction-less. If they still had direction, it should be possible
+    //       to determine whether a triangle is inside or outside by looking at
+    //       the angle of the triangle edges that are also polygon edges.
+    #[test]
+    #[ignore]
+    fn remove_should_recognize_that_triangle_is_in_hole() {
+        let mut polygon = Polygon::new();
+
+        // Outer perimeter
+        let a = Pnt2::new(0.0, 0.0);
+        let b = Pnt2::new(2.0, 0.0);
+        let c = Pnt2::new(2.0, 2.0);
+        let d = Pnt2::new(0.0, 2.0);
+        polygon.insert_chain(&[a, b, c, d]);
+
+        // Inner perimeter (hole)
+        let x = Pnt2::new(0.5, 0.5);
+        let y = Pnt2::new(0.5, 1.5);
+        let z = Pnt2::new(1.5, 1.5);
+        let w = Pnt2::new(1.5, 0.5);
+        polygon.insert_chain(&[x, y, z, w]);
+
+        let result = polygon.triangles().remove(Tri2::new(x, w, y));
+        assert_eq!(result, Err(TriangleNotPresent));
     }
 }
