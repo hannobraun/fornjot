@@ -1,5 +1,4 @@
 pub mod data;
-pub mod edge;
 pub mod triangles;
 pub mod vertices;
 
