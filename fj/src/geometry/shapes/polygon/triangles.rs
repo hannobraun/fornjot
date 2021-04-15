@@ -50,7 +50,21 @@ impl Triangles<'_> {
         // All the triangle edges that haven't been removed, need to be added
         // to the polygon. Otherwise we're leaving a gap in the polygon edges.
         for edge in triangle_edges {
-            self.0.insert_edge(edge.reverse());
+            let a_incoming = self.0.incoming_edges(&edge.a).unwrap();
+            let a_outgoing = self.0.outgoing_edges(&edge.a).unwrap();
+            let b_incoming = self.0.incoming_edges(&edge.b).unwrap();
+            let b_outgoing = self.0.outgoing_edges(&edge.b).unwrap();
+
+            if a_outgoing < a_incoming || b_incoming < b_outgoing {
+                self.0.insert_edge(edge);
+                continue;
+            }
+            if a_outgoing > a_incoming || b_incoming > b_outgoing {
+                self.0.insert_edge(edge.reverse());
+                continue;
+            }
+
+            unreachable!("All vertices are balanced.");
         }
 
         Ok(())
