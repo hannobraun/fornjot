@@ -140,7 +140,9 @@ mod tests {
         polygon.insert_chain(&[a, b, c]);
 
         let triangle = Tri2::new(a, b, Pnt2::new(0.0, 2.0));
-        assert!(polygon.triangles().remove(triangle).is_err());
+        let result = polygon.triangles().remove(triangle);
+
+        assert!(result.unwrap_err().is_unknown_vertex());
     }
 
     #[test]
