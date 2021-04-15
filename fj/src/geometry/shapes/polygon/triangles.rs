@@ -129,7 +129,7 @@ mod tests {
     }
 
     #[test]
-    fn remove_should_remove_vertices_from_inner_and_outer_chain() {
+    fn remove_should_handle_triangle_with_hole() {
         let mut polygon = Polygon::new();
 
         // Outer perimeter
