@@ -25,10 +25,6 @@ impl Polygon {
         self.0.is_empty()
     }
 
-    pub fn is_clockwise(&self) -> bool {
-        self.0.is_clockwise()
-    }
-
     pub fn insert_chain(
         &mut self,
         chain: impl IntoIterator<Item = impl Into<Pnt2>>,
@@ -90,22 +86,6 @@ mod tests {
         // Non-empty chain, ergo polygon no longer empty.
         polygon.insert_chain(&[a, b, c]);
         assert!(!polygon.is_empty());
-    }
-
-    #[test]
-    fn polygon_should_tell_whether_it_is_clockwise() {
-        let a = Pnt2::new(0.0, 0.0);
-        let b = Pnt2::new(1.0, 0.0);
-        let c = Pnt2::new(0.0, 1.0);
-
-        let mut polygon_ccw = Polygon::new();
-        polygon_ccw.insert_chain(&[a, b, c]);
-
-        let mut polygon_cw = Polygon::new();
-        polygon_cw.insert_chain(&[a, c, b]);
-
-        assert_eq!(polygon_ccw.is_clockwise(), false);
-        assert_eq!(polygon_cw.is_clockwise(), true);
     }
 
     #[test]
