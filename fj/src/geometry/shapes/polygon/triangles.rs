@@ -102,9 +102,7 @@ mod tests {
         assert_eq!(polygon.edges(), &expected);
     }
 
-    // TASK: Un-ignore.
     #[test]
-    #[ignore]
     fn remove_should_remove_triangle_from_hole_polygon() {
         let mut polygon = Polygon::new();
 
