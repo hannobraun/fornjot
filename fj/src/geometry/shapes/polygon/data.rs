@@ -6,6 +6,8 @@ use crate::geometry::shapes::{Pnt2, Seg2};
 pub struct PolygonData {
     edges: HashSet<Seg2>,
     vertices: Vertices,
+
+    incoming_edges: HashMap<Pnt2, u32>,
 }
 
 impl PolygonData {
@@ -13,6 +15,8 @@ impl PolygonData {
         Self {
             edges: HashSet::new(),
             vertices: Vertices::new(),
+
+            incoming_edges: HashMap::new(),
         }
     }
 
@@ -28,11 +32,18 @@ impl PolygonData {
         self.vertices.0.contains_key(vertex)
     }
 
+    pub fn incoming_edges(&self, vertex: &Pnt2) -> Option<u32> {
+        self.incoming_edges.get(vertex).copied()
+    }
+
     pub fn insert_edge(&mut self, edge: Seg2) {
         self.edges.insert(edge);
 
         self.vertices.up(edge.a);
         self.vertices.up(edge.b);
+
+        self.incoming_edges.entry(edge.a).or_insert(0);
+        *self.incoming_edges.entry(edge.b).or_insert(0) += 1;
     }
 
     pub fn retain_edges(&mut self, mut f: impl FnMut(&Seg2) -> bool) {
@@ -92,6 +103,24 @@ mod tests {
 
         assert_eq!(data.contains_vertex(&a), true);
         assert_eq!(data.contains_vertex(&b), true);
+    }
+
+    #[test]
+    fn insert_edge_should_update_edge_counts() {
+        let mut data = PolygonData::new();
+
+        let a = Pnt2::new(0.0, 0.0);
+        let b = Pnt2::new(1.0, 0.0);
+
+        data.insert_edge(Seg2::new(a, b));
+
+        assert_eq!(data.incoming_edges(&a).unwrap(), 0);
+        assert_eq!(data.incoming_edges(&b).unwrap(), 1);
+
+        data.insert_edge(Seg2::new(b, a));
+
+        assert_eq!(data.incoming_edges(&a).unwrap(), 1);
+        assert_eq!(data.incoming_edges(&b).unwrap(), 1);
     }
 
     #[test]
