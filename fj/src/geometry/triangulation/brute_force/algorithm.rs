@@ -17,7 +17,7 @@ use super::neighbors::Neighbors;
 pub fn triangulate(polygon: &Polygon) -> Vec<Tri2> {
     let mut neighbors = Neighbors::new();
     for edge in polygon.edges() {
-        neighbors.insert(edge.a(), edge.b());
+        neighbors.insert(edge.a, edge.b);
     }
 
     assert!(!neighbors.is_empty());

@@ -7,9 +7,7 @@ use std::collections::HashSet;
 
 use crate::geometry::shapes::{Pnt2, Seg2};
 
-use self::{
-    data::PolygonData, edge::Edge, triangles::Triangles, vertices::Vertices,
-};
+use self::{data::PolygonData, triangles::Triangles, vertices::Vertices};
 
 /// A polygon
 ///
@@ -49,7 +47,7 @@ impl Polygon {
         }
     }
 
-    pub fn edges(&self) -> &HashSet<Edge> {
+    pub fn edges(&self) -> &HashSet<Seg2> {
         self.0.edges()
     }
 
@@ -66,7 +64,7 @@ impl Polygon {
 mod tests {
     use std::collections::HashSet;
 
-    use crate::geometry::shapes::{polygon::edge::Edge, Pnt2};
+    use crate::geometry::shapes::{Pnt2, Seg2};
 
     use super::Polygon;
 
@@ -106,12 +104,12 @@ mod tests {
         polygon.insert_chain(&[p, q, r]);
 
         let mut expected = HashSet::new();
-        expected.insert(Edge::new(a, b));
-        expected.insert(Edge::new(b, c));
-        expected.insert(Edge::new(c, a));
-        expected.insert(Edge::new(p, q));
-        expected.insert(Edge::new(q, r));
-        expected.insert(Edge::new(r, p));
+        expected.insert(Seg2::new(a, b));
+        expected.insert(Seg2::new(b, c));
+        expected.insert(Seg2::new(c, a));
+        expected.insert(Seg2::new(p, q));
+        expected.insert(Seg2::new(q, r));
+        expected.insert(Seg2::new(r, p));
 
         assert_eq!(polygon.edges(), &expected);
     }
