@@ -36,6 +36,13 @@ impl Triangles<'_> {
                 triangle_edges.remove(edge);
                 return false;
             }
+            if triangle_edges.contains(&edge.reverse()) {
+                // We need to remove this edge from the polygon. Also remove
+                // it from `triangle_edges`, so it won't be processed in the
+                // next step.
+                triangle_edges.remove(&edge.reverse());
+                return false;
+            }
 
             true
         });
