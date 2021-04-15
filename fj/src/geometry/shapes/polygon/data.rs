@@ -7,6 +7,7 @@ pub struct PolygonData {
     edges: HashSet<Seg2>,
     vertices: Vertices,
 
+    outgoing_edges: HashMap<Pnt2, u32>,
     incoming_edges: HashMap<Pnt2, u32>,
 }
 
@@ -16,6 +17,7 @@ impl PolygonData {
             edges: HashSet::new(),
             vertices: Vertices::new(),
 
+            outgoing_edges: HashMap::new(),
             incoming_edges: HashMap::new(),
         }
     }
@@ -32,6 +34,10 @@ impl PolygonData {
         self.vertices.0.contains_key(vertex)
     }
 
+    pub fn outgoing_edges(&self, vertex: &Pnt2) -> Option<u32> {
+        self.outgoing_edges.get(vertex).copied()
+    }
+
     pub fn incoming_edges(&self, vertex: &Pnt2) -> Option<u32> {
         self.incoming_edges.get(vertex).copied()
     }
@@ -43,6 +49,8 @@ impl PolygonData {
         self.vertices.up(edge.b);
 
         self.incoming_edges.entry(edge.a).or_insert(0);
+        self.outgoing_edges.entry(edge.b).or_insert(0);
+        *self.outgoing_edges.entry(edge.a).or_insert(0) += 1;
         *self.incoming_edges.entry(edge.b).or_insert(0) += 1;
     }
 
@@ -114,11 +122,15 @@ mod tests {
 
         data.insert_edge(Seg2::new(a, b));
 
+        assert_eq!(data.outgoing_edges(&a).unwrap(), 1);
+        assert_eq!(data.outgoing_edges(&b).unwrap(), 0);
         assert_eq!(data.incoming_edges(&a).unwrap(), 0);
         assert_eq!(data.incoming_edges(&b).unwrap(), 1);
 
         data.insert_edge(Seg2::new(b, a));
 
+        assert_eq!(data.outgoing_edges(&a).unwrap(), 1);
+        assert_eq!(data.outgoing_edges(&b).unwrap(), 1);
         assert_eq!(data.incoming_edges(&a).unwrap(), 1);
         assert_eq!(data.incoming_edges(&b).unwrap(), 1);
     }
