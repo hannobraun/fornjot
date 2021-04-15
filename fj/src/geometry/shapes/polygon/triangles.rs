@@ -73,13 +73,19 @@ pub enum Error {
     UnknownVertex,
 }
 
+impl Error {
+    pub fn is_unknown_vertex(&self) -> bool {
+        match self {
+            Self::UnknownVertex => true,
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use std::collections::HashSet;
 
     use crate::geometry::shapes::{Pnt2, Polygon, Seg2, Tri2};
-
-    use super::Error;
 
     #[test]
     fn remove_should_remove_triangle() {
@@ -212,6 +218,6 @@ mod tests {
         polygon.insert_chain(&[x, y, z, w]);
 
         let result = polygon.triangles().remove(Tri2::new(x, w, y));
-        assert_eq!(result, Err(Error::UnknownVertex));
+        assert!(result.unwrap_err().is_unknown_vertex());
     }
 }
