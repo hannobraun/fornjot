@@ -10,12 +10,12 @@ impl Triangles<'_> {
     pub fn remove(
         &mut self,
         triangle: impl Into<Tri2>,
-    ) -> Result<(), TriangleNotPresent> {
+    ) -> Result<(), UnknownVertex> {
         let triangle = triangle.into();
 
         for vertex in &triangle.vertices() {
             if !self.0.contains_vertex(vertex) {
-                return Err(TriangleNotPresent);
+                return Err(UnknownVertex);
             }
         }
 
@@ -51,7 +51,7 @@ impl Triangles<'_> {
 }
 
 #[derive(Debug, Eq, PartialEq)]
-pub struct TriangleNotPresent;
+pub struct UnknownVertex;
 
 #[cfg(test)]
 mod tests {
@@ -59,7 +59,7 @@ mod tests {
 
     use crate::geometry::shapes::{polygon::Edge, Pnt2, Polygon, Tri2};
 
-    use super::TriangleNotPresent;
+    use super::UnknownVertex;
 
     #[test]
     fn remove_should_remove_triangle() {
@@ -192,6 +192,6 @@ mod tests {
         polygon.insert_chain(&[x, y, z, w]);
 
         let result = polygon.triangles().remove(Tri2::new(x, w, y));
-        assert_eq!(result, Err(TriangleNotPresent));
+        assert_eq!(result, Err(UnknownVertex));
     }
 }
