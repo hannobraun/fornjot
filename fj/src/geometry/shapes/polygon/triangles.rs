@@ -7,15 +7,12 @@ use super::data::PolygonData;
 pub struct Triangles<'r>(pub(super) &'r mut PolygonData);
 
 impl Triangles<'_> {
-    pub fn remove(
-        &mut self,
-        triangle: impl Into<Tri2>,
-    ) -> Result<(), UnknownVertex> {
+    pub fn remove(&mut self, triangle: impl Into<Tri2>) -> Result<(), Error> {
         let triangle = triangle.into();
 
         for vertex in &triangle.vertices() {
             if !self.0.contains_vertex(vertex) {
-                return Err(UnknownVertex);
+                return Err(Error::UnknownVertex);
             }
         }
 
@@ -72,7 +69,9 @@ impl Triangles<'_> {
 }
 
 #[derive(Debug, Eq, PartialEq)]
-pub struct UnknownVertex;
+pub enum Error {
+    UnknownVertex,
+}
 
 #[cfg(test)]
 mod tests {
@@ -80,7 +79,7 @@ mod tests {
 
     use crate::geometry::shapes::{Pnt2, Polygon, Seg2, Tri2};
 
-    use super::UnknownVertex;
+    use super::Error;
 
     #[test]
     fn remove_should_remove_triangle() {
@@ -213,6 +212,6 @@ mod tests {
         polygon.insert_chain(&[x, y, z, w]);
 
         let result = polygon.triangles().remove(Tri2::new(x, w, y));
-        assert_eq!(result, Err(UnknownVertex));
+        assert_eq!(result, Err(Error::UnknownVertex));
     }
 }
