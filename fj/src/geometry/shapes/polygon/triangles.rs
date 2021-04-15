@@ -19,6 +19,8 @@ impl Triangles<'_> {
             }
         }
 
+        // TASK: This was a brain fart. The polygon itself can't have a defined
+        //       direction, as it might consist of multiple edge chains.
         let must_reverse = self.0.is_clockwise() != triangle.is_clockwise();
 
         // Convert triangle into a representation that is more useful for this
