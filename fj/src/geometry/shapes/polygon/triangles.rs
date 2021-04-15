@@ -229,6 +229,6 @@ mod tests {
         polygon.insert_chain(&[x, y, z, w]);
 
         let result = polygon.triangles().remove(Tri2::new(x, w, y));
-        assert!(result.unwrap_err().is_unknown_vertex());
+        assert!(result.unwrap_err().is_outside_of_polygon());
     }
 }
