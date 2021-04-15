@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use crate::geometry::shapes::{Seg2, Tri2};
+use crate::geometry::shapes::{Pnt2, Seg2, Tri2};
 
 use super::data::PolygonData;
 
@@ -10,9 +10,9 @@ impl Triangles<'_> {
     pub fn remove(&mut self, triangle: impl Into<Tri2>) -> Result<(), Error> {
         let triangle = triangle.into();
 
-        for vertex in &triangle.vertices() {
-            if !self.0.contains_vertex(vertex) {
-                return Err(Error::UnknownVertex);
+        for &vertex in &triangle.vertices() {
+            if !self.0.contains_vertex(&vertex) {
+                return Err(Error::UnknownVertex(vertex));
             }
         }
 
@@ -70,13 +70,13 @@ impl Triangles<'_> {
 
 #[derive(Debug, Eq, PartialEq)]
 pub enum Error {
-    UnknownVertex,
+    UnknownVertex(Pnt2),
 }
 
 impl Error {
     pub fn is_unknown_vertex(&self) -> bool {
         match self {
-            Self::UnknownVertex => true,
+            Self::UnknownVertex(_) => true,
         }
     }
 }
