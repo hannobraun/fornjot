@@ -57,13 +57,27 @@ impl PolygonData {
     pub fn retain_edges(&mut self, mut f: impl FnMut(&Seg2) -> bool) {
         let edges = &mut self.edges;
         let vertices = &mut self.vertices;
+        let outgoing_edges = &mut self.outgoing_edges;
+        let incoming_edges = &mut self.incoming_edges;
 
         edges.retain(|edge| {
             let retain = f(edge);
 
             if !retain {
-                vertices.down(edge.a);
-                vertices.down(edge.b);
+                let removed_a = vertices.down(edge.a);
+                let removed_b = vertices.down(edge.b);
+
+                *outgoing_edges.get_mut(&edge.a).unwrap() -= 1;
+                *incoming_edges.get_mut(&edge.b).unwrap() -= 1;
+
+                if removed_a {
+                    incoming_edges.remove(&edge.a);
+                    outgoing_edges.remove(&edge.a);
+                }
+                if removed_b {
+                    incoming_edges.remove(&edge.b);
+                    outgoing_edges.remove(&edge.b);
+                }
             }
 
             retain
@@ -82,12 +96,15 @@ impl Vertices {
         *self.0.entry(vertex).or_insert(0) += 1;
     }
 
-    pub fn down(&mut self, vertex: Pnt2) {
+    pub fn down(&mut self, vertex: Pnt2) -> bool {
         *self.0.get_mut(&vertex).unwrap() -= 1;
 
         if *self.0.get(&vertex).unwrap() == 0 {
             self.0.remove(&vertex);
+            return true;
         }
+
+        false
     }
 }
 
@@ -154,5 +171,35 @@ mod tests {
         assert_eq!(data.contains_vertex(&a), true);
         assert_eq!(data.contains_vertex(&b), true);
         assert_eq!(data.contains_vertex(&c), false);
+    }
+
+    #[test]
+    fn retain_edges_should_update_edge_counts() {
+        let mut data = PolygonData::new();
+
+        let a = Pnt2::new(0.0, 0.0);
+        let b = Pnt2::new(1.0, 0.0);
+
+        let ab = Seg2::new(a, b);
+        let ba = Seg2::new(b, a);
+
+        data.insert_edge(ab);
+        data.insert_edge(ba);
+
+        // Keep a -> b
+        data.retain_edges(|&edge| edge == ab);
+
+        assert_eq!(data.outgoing_edges(&a).unwrap(), 1);
+        assert_eq!(data.outgoing_edges(&b).unwrap(), 0);
+        assert_eq!(data.incoming_edges(&a).unwrap(), 0);
+        assert_eq!(data.incoming_edges(&b).unwrap(), 1);
+
+        // Remote last remaining edge
+        data.retain_edges(|_| false);
+
+        assert_eq!(data.outgoing_edges(&a), None);
+        assert_eq!(data.outgoing_edges(&b), None);
+        assert_eq!(data.incoming_edges(&a), None);
+        assert_eq!(data.incoming_edges(&b), None);
     }
 }
