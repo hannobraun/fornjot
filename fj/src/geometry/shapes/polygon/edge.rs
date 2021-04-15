@@ -14,6 +14,14 @@ pub struct Edge {
 }
 
 impl Edge {
+    pub fn new(a: Pnt2, b: Pnt2) -> Self {
+        if a < b {
+            Self { a: a, b: b }
+        } else {
+            Self { a: b, b: a }
+        }
+    }
+
     pub fn a(&self) -> Pnt2 {
         self.a
     }
@@ -25,16 +33,6 @@ impl Edge {
 
 impl From<Seg2> for Edge {
     fn from(segment: Seg2) -> Self {
-        if segment.a < segment.b {
-            Self {
-                a: segment.a,
-                b: segment.b,
-            }
-        } else {
-            Self {
-                a: segment.b,
-                b: segment.a,
-            }
-        }
+        Self::new(segment.a, segment.b)
     }
 }
