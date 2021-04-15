@@ -50,7 +50,7 @@ impl Triangles<'_> {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 pub struct TriangleNotPresent;
 
 #[cfg(test)]
