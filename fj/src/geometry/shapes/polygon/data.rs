@@ -1,10 +1,12 @@
 use std::collections::{HashMap, HashSet};
 
-use crate::geometry::shapes::{Pnt2, Seg2};
+use crate::geometry::shapes::Pnt2;
+
+use super::edge::Edge;
 
 #[derive(Clone, Debug)]
 pub struct PolygonData {
-    edges: HashSet<Seg2>,
+    edges: HashSet<Edge>,
     vertices: Vertices,
 }
 
@@ -16,7 +18,7 @@ impl PolygonData {
         }
     }
 
-    pub fn edges(&self) -> &HashSet<Seg2> {
+    pub fn edges(&self) -> &HashSet<Edge> {
         &self.edges
     }
 
@@ -28,14 +30,16 @@ impl PolygonData {
         self.vertices.0.contains_key(vertex)
     }
 
-    pub fn insert_edge(&mut self, edge: Seg2) {
+    pub fn insert_edge(&mut self, edge: impl Into<Edge>) {
+        let edge = edge.into();
+
         self.edges.insert(edge);
 
-        self.vertices.up(edge.a);
-        self.vertices.up(edge.b);
+        self.vertices.up(edge.a());
+        self.vertices.up(edge.b());
     }
 
-    pub fn retain_edges(&mut self, mut f: impl FnMut(&Seg2) -> bool) {
+    pub fn retain_edges(&mut self, mut f: impl FnMut(&Edge) -> bool) {
         let edges = &mut self.edges;
         let vertices = &mut self.vertices;
 
@@ -43,8 +47,8 @@ impl PolygonData {
             let retain = f(edge);
 
             if !retain {
-                vertices.down(edge.a);
-                vertices.down(edge.b);
+                vertices.down(edge.a());
+                vertices.down(edge.b());
             }
 
             retain
@@ -74,7 +78,7 @@ impl Vertices {
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::shapes::{Pnt2, Seg2};
+    use crate::geometry::shapes::{polygon::edge::Edge, Pnt2, Seg2};
 
     use super::PolygonData;
 
@@ -102,8 +106,8 @@ mod tests {
         let b = Pnt2::new(1.0, 0.0);
         let c = Pnt2::new(0.0, 1.0);
 
-        let ab = Seg2::new(a, b);
-        let bc = Seg2::new(b, c);
+        let ab = Edge::new(a, b);
+        let bc = Edge::new(b, c);
 
         data.insert_edge(ab);
         data.insert_edge(bc);

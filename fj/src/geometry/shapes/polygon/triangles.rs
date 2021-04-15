@@ -1,8 +1,8 @@
 use std::collections::HashSet;
 
-use crate::geometry::shapes::{Seg2, Tri2};
+use crate::geometry::shapes::Tri2;
 
-use super::data::PolygonData;
+use super::{data::PolygonData, edge::Edge};
 
 pub struct Triangles<'r>(pub(super) &'r mut PolygonData);
 
@@ -21,9 +21,9 @@ impl Triangles<'_> {
 
         // Convert triangle into a representation that is more useful for this
         // algorithm.
-        let mut triangle_edges: HashSet<Seg2> = HashSet::new();
+        let mut triangle_edges: HashSet<Edge> = HashSet::new();
         for &edge in &triangle.edges() {
-            triangle_edges.insert(edge);
+            triangle_edges.insert(edge.into());
         }
 
         // All edges that are fully contained in the triangle need to be
@@ -43,7 +43,7 @@ impl Triangles<'_> {
         // All the triangle edges that haven't been removed, need to be added
         // to the polygon. Otherwise we're leaving a gap in the polygon edges.
         for edge in triangle_edges {
-            self.0.insert_edge(edge.reverse());
+            self.0.insert_edge(edge);
         }
 
         Ok(())
@@ -57,7 +57,7 @@ pub struct TriangleNotPresent;
 mod tests {
     use std::collections::HashSet;
 
-    use crate::geometry::shapes::{Pnt2, Polygon, Seg2, Tri2};
+    use crate::geometry::shapes::{polygon::Edge, Pnt2, Polygon, Tri2};
 
     #[test]
     fn remove_should_remove_triangle() {
@@ -72,9 +72,9 @@ mod tests {
         polygon.triangles().remove(Tri2::new(b, c, d)).unwrap();
 
         let mut expected = HashSet::new();
-        expected.insert(Seg2::new(a, b));
-        expected.insert(Seg2::new(b, d));
-        expected.insert(Seg2::new(d, a));
+        expected.insert(Edge::new(a, b));
+        expected.insert(Edge::new(b, d));
+        expected.insert(Edge::new(d, a));
 
         assert_eq!(polygon.edges(), &expected);
     }
@@ -97,9 +97,9 @@ mod tests {
         polygon.triangles().remove(Tri2::new(b, c, d)).unwrap();
 
         let mut expected = HashSet::new();
-        expected.insert(Seg2::new(a, d));
-        expected.insert(Seg2::new(d, b));
-        expected.insert(Seg2::new(b, a));
+        expected.insert(Edge::new(a, d));
+        expected.insert(Edge::new(d, b));
+        expected.insert(Edge::new(b, a));
 
         assert_eq!(polygon.edges(), &expected);
     }
@@ -151,15 +151,15 @@ mod tests {
         polygon.triangles().remove(Tri2::new(a, x, d)).unwrap();
 
         let mut expected = HashSet::new();
-        expected.insert(Seg2::new(a, b));
-        expected.insert(Seg2::new(b, c));
-        expected.insert(Seg2::new(c, d));
-        expected.insert(Seg2::new(d, x));
-        expected.insert(Seg2::new(x, y));
-        expected.insert(Seg2::new(y, z));
-        expected.insert(Seg2::new(z, w));
-        expected.insert(Seg2::new(w, x));
-        expected.insert(Seg2::new(x, a));
+        expected.insert(Edge::new(a, b));
+        expected.insert(Edge::new(b, c));
+        expected.insert(Edge::new(c, d));
+        expected.insert(Edge::new(d, x));
+        expected.insert(Edge::new(x, y));
+        expected.insert(Edge::new(y, z));
+        expected.insert(Edge::new(z, w));
+        expected.insert(Edge::new(w, x));
+        expected.insert(Edge::new(x, a));
 
         assert_eq!(polygon.edges(), &expected);
     }
