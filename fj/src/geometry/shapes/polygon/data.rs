@@ -137,7 +137,8 @@ mod tests {
         let a = Pnt2::new(0.0, 0.0);
         let b = Pnt2::new(1.0, 0.0);
 
-        data.insert_edge(Seg2::new(a, b));
+        let ab = Seg2::new(a, b);
+        data.insert_edge(ab);
 
         let a_outgoing = data.outgoing_edges(&a).unwrap();
         let b_outgoing = data.outgoing_edges(&b).unwrap();
@@ -149,7 +150,8 @@ mod tests {
         assert_eq!(a_incoming, 0);
         assert_eq!(b_incoming, 1);
 
-        data.insert_edge(Seg2::new(b, a));
+        let ba = Seg2::new(b, a);
+        data.insert_edge(ba);
 
         let a_outgoing = data.outgoing_edges(&a).unwrap();
         let b_outgoing = data.outgoing_edges(&b).unwrap();
