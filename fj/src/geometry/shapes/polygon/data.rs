@@ -7,8 +7,8 @@ pub struct PolygonData {
     edges: HashSet<Seg2>,
     vertices: Vertices,
 
-    outgoing_edges: HashMap<Pnt2, u32>,
-    incoming_edges: HashMap<Pnt2, u32>,
+    outgoing_edges: HashMap<Pnt2, HashSet<Seg2>>,
+    incoming_edges: HashMap<Pnt2, HashSet<Seg2>>,
 }
 
 impl PolygonData {
@@ -34,12 +34,12 @@ impl PolygonData {
         self.vertices.0.contains_key(vertex)
     }
 
-    pub fn outgoing_edges(&self, vertex: &Pnt2) -> Option<u32> {
-        self.outgoing_edges.get(vertex).copied()
+    pub fn outgoing_edges(&self, vertex: &Pnt2) -> Option<&HashSet<Seg2>> {
+        self.outgoing_edges.get(vertex)
     }
 
-    pub fn incoming_edges(&self, vertex: &Pnt2) -> Option<u32> {
-        self.incoming_edges.get(vertex).copied()
+    pub fn incoming_edges(&self, vertex: &Pnt2) -> Option<&HashSet<Seg2>> {
+        self.incoming_edges.get(vertex)
     }
 
     pub fn insert_edge(&mut self, edge: Seg2) {
@@ -48,10 +48,16 @@ impl PolygonData {
         self.vertices.up(edge.a);
         self.vertices.up(edge.b);
 
-        self.incoming_edges.entry(edge.a).or_insert(0);
-        self.outgoing_edges.entry(edge.b).or_insert(0);
-        *self.outgoing_edges.entry(edge.a).or_insert(0) += 1;
-        *self.incoming_edges.entry(edge.b).or_insert(0) += 1;
+        self.incoming_edges.entry(edge.a).or_insert(HashSet::new());
+        self.outgoing_edges.entry(edge.b).or_insert(HashSet::new());
+        self.outgoing_edges
+            .entry(edge.a)
+            .or_insert(HashSet::new())
+            .insert(edge);
+        self.incoming_edges
+            .entry(edge.b)
+            .or_insert(HashSet::new())
+            .insert(edge);
     }
 
     pub fn retain_edges(&mut self, mut f: impl FnMut(&Seg2) -> bool) {
@@ -67,8 +73,8 @@ impl PolygonData {
                 let removed_a = vertices.down(edge.a);
                 let removed_b = vertices.down(edge.b);
 
-                *outgoing_edges.get_mut(&edge.a).unwrap() -= 1;
-                *incoming_edges.get_mut(&edge.b).unwrap() -= 1;
+                outgoing_edges.get_mut(&edge.a).unwrap().remove(edge);
+                incoming_edges.get_mut(&edge.b).unwrap().remove(edge);
 
                 if removed_a {
                     incoming_edges.remove(&edge.a);
@@ -110,6 +116,8 @@ impl Vertices {
 
 #[cfg(test)]
 mod tests {
+    use std::collections::HashSet;
+
     use crate::geometry::shapes::{Pnt2, Seg2};
 
     use super::PolygonData;
@@ -140,28 +148,38 @@ mod tests {
         let ab = Seg2::new(a, b);
         data.insert_edge(ab);
 
-        let a_outgoing = data.outgoing_edges(&a).unwrap();
-        let b_outgoing = data.outgoing_edges(&b).unwrap();
-        let a_incoming = data.incoming_edges(&a).unwrap();
-        let b_incoming = data.incoming_edges(&b).unwrap();
+        let a_outgoing: &HashSet<_> = data.outgoing_edges(&a).unwrap();
+        assert_eq!(a_outgoing.len(), 1);
+        assert!(a_outgoing.contains(&ab));
 
-        assert_eq!(a_outgoing, 1);
-        assert_eq!(b_outgoing, 0);
-        assert_eq!(a_incoming, 0);
-        assert_eq!(b_incoming, 1);
+        let b_outgoing: &HashSet<_> = data.outgoing_edges(&b).unwrap();
+        assert!(b_outgoing.is_empty());
+
+        let a_incoming: &HashSet<_> = data.incoming_edges(&a).unwrap();
+        assert!(a_incoming.is_empty());
+
+        let b_incoming: &HashSet<_> = data.incoming_edges(&b).unwrap();
+        assert_eq!(b_incoming.len(), 1);
+        assert!(b_incoming.contains(&ab));
 
         let ba = Seg2::new(b, a);
         data.insert_edge(ba);
 
-        let a_outgoing = data.outgoing_edges(&a).unwrap();
-        let b_outgoing = data.outgoing_edges(&b).unwrap();
-        let a_incoming = data.incoming_edges(&a).unwrap();
-        let b_incoming = data.incoming_edges(&b).unwrap();
+        let a_outgoing: &HashSet<_> = data.outgoing_edges(&a).unwrap();
+        assert_eq!(a_outgoing.len(), 1);
+        assert!(a_outgoing.contains(&ab));
 
-        assert_eq!(a_outgoing, 1);
-        assert_eq!(b_outgoing, 1);
-        assert_eq!(a_incoming, 1);
-        assert_eq!(b_incoming, 1);
+        let b_outgoing: &HashSet<_> = data.outgoing_edges(&b).unwrap();
+        assert_eq!(b_outgoing.len(), 1);
+        assert!(b_outgoing.contains(&ba));
+
+        let a_incoming: &HashSet<_> = data.incoming_edges(&a).unwrap();
+        assert_eq!(a_incoming.len(), 1);
+        assert!(a_incoming.contains(&ba));
+
+        let b_incoming: &HashSet<_> = data.incoming_edges(&b).unwrap();
+        assert_eq!(b_incoming.len(), 1);
+        assert!(b_incoming.contains(&ab));
     }
 
     #[test]
@@ -201,15 +219,19 @@ mod tests {
         // Keep a -> b
         data.retain_edges(|&edge| edge == ab);
 
-        let a_outgoing = data.outgoing_edges(&a).unwrap();
-        let b_outgoing = data.outgoing_edges(&b).unwrap();
-        let a_incoming = data.incoming_edges(&a).unwrap();
-        let b_incoming = data.incoming_edges(&b).unwrap();
+        let a_outgoing: &HashSet<_> = data.outgoing_edges(&a).unwrap();
+        assert_eq!(a_outgoing.len(), 1);
+        assert!(a_outgoing.contains(&ab));
 
-        assert_eq!(a_outgoing, 1);
-        assert_eq!(b_outgoing, 0);
-        assert_eq!(a_incoming, 0);
-        assert_eq!(b_incoming, 1);
+        let b_outgoing: &HashSet<_> = data.outgoing_edges(&b).unwrap();
+        assert!(b_outgoing.is_empty());
+
+        let a_incoming: &HashSet<_> = data.incoming_edges(&a).unwrap();
+        assert!(a_incoming.is_empty());
+
+        let b_incoming: &HashSet<_> = data.incoming_edges(&b).unwrap();
+        assert_eq!(b_incoming.len(), 1);
+        assert!(b_incoming.contains(&ab));
 
         // Remove last remaining edge
         data.retain_edges(|_| false);
