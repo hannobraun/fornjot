@@ -236,14 +236,9 @@ mod tests {
         // Remove last remaining edge
         data.retain_edges(|_| false);
 
-        let a_outgoing = data.outgoing_edges(&a);
-        let b_outgoing = data.outgoing_edges(&b);
-        let a_incoming = data.incoming_edges(&a);
-        let b_incoming = data.incoming_edges(&b);
-
-        assert!(a_outgoing.is_none());
-        assert!(b_outgoing.is_none());
-        assert!(a_incoming.is_none());
-        assert!(b_incoming.is_none());
+        assert!(data.outgoing_edges(&a).is_none());
+        assert!(data.outgoing_edges(&b).is_none());
+        assert!(data.incoming_edges(&a).is_none());
+        assert!(data.incoming_edges(&b).is_none());
     }
 }
