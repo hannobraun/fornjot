@@ -211,7 +211,7 @@ mod tests {
         assert_eq!(a_incoming, 0);
         assert_eq!(b_incoming, 1);
 
-        // Remote last remaining edge
+        // Remove last remaining edge
         data.retain_edges(|_| false);
 
         let a_outgoing = data.outgoing_edges(&a);
