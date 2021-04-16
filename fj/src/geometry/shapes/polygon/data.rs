@@ -189,17 +189,27 @@ mod tests {
         // Keep a -> b
         data.retain_edges(|&edge| edge == ab);
 
-        assert_eq!(data.outgoing_edges(&a).unwrap(), 1);
-        assert_eq!(data.outgoing_edges(&b).unwrap(), 0);
-        assert_eq!(data.incoming_edges(&a).unwrap(), 0);
-        assert_eq!(data.incoming_edges(&b).unwrap(), 1);
+        let a_outgoing = data.outgoing_edges(&a).unwrap();
+        let b_outgoing = data.outgoing_edges(&b).unwrap();
+        let a_incoming = data.incoming_edges(&a).unwrap();
+        let b_incoming = data.incoming_edges(&b).unwrap();
+
+        assert_eq!(a_outgoing, 1);
+        assert_eq!(b_outgoing, 0);
+        assert_eq!(a_incoming, 0);
+        assert_eq!(b_incoming, 1);
 
         // Remote last remaining edge
         data.retain_edges(|_| false);
 
-        assert_eq!(data.outgoing_edges(&a), None);
-        assert_eq!(data.outgoing_edges(&b), None);
-        assert_eq!(data.incoming_edges(&a), None);
-        assert_eq!(data.incoming_edges(&b), None);
+        let a_outgoing = data.outgoing_edges(&a);
+        let b_outgoing = data.outgoing_edges(&b);
+        let a_incoming = data.incoming_edges(&a);
+        let b_incoming = data.incoming_edges(&b);
+
+        assert_eq!(a_outgoing, None);
+        assert_eq!(b_outgoing, None);
+        assert_eq!(a_incoming, None);
+        assert_eq!(b_incoming, None);
     }
 }
