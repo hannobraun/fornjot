@@ -219,9 +219,9 @@ mod tests {
         let a_incoming = data.incoming_edges(&a);
         let b_incoming = data.incoming_edges(&b);
 
-        assert_eq!(a_outgoing, None);
-        assert_eq!(b_outgoing, None);
-        assert_eq!(a_incoming, None);
-        assert_eq!(b_incoming, None);
+        assert!(a_outgoing.is_none());
+        assert!(b_outgoing.is_none());
+        assert!(a_incoming.is_none());
+        assert!(b_incoming.is_none());
     }
 }
