@@ -224,10 +224,10 @@ mod tests {
         assert!(a_outgoing.contains(&ab));
 
         let b_outgoing: &HashSet<_> = data.outgoing_edges(&b).unwrap();
-        assert!(b_outgoing.is_empty());
+        assert_eq!(b_outgoing.len(), 0);
 
         let a_incoming: &HashSet<_> = data.incoming_edges(&a).unwrap();
-        assert!(a_incoming.is_empty());
+        assert_eq!(a_incoming.len(), 0);
 
         let b_incoming: &HashSet<_> = data.incoming_edges(&b).unwrap();
         assert_eq!(b_incoming.len(), 1);
