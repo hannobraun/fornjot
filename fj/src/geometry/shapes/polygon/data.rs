@@ -48,24 +48,29 @@ impl PolygonData {
         self.incoming_edges.get(vertex)
     }
 
-    /// Returns true, if edge is known to be inside of polygon
+    /// Checks whether the segment is certainly outside the polygon
     ///
-    /// Returns `Some(true)`, if the edge is known to be within the polygon.
+    /// This method checks one specific case: Does the segment connect two
+    /// vertices that have a common neighbor, and is it outside the polygon.
+    /// This is useful when removing triangles from the polygon.
     ///
-    /// A return value of `Some(false)` doesn't necessarily indicate that the
-    /// edge is outside of the polygon. It just means that its inside-ness
-    /// couldn't be determined.
-    ///
-    /// Returns `None`, if the vertices of the edge are not part of the polygon.
-    pub fn is_inside(&self, edge: &Seg2) -> Option<bool> {
-        if self.edges.contains(edge) || self.edges.contains(&edge.reverse()) {
-            return Some(true);
+    /// Explanation of the return value:
+    /// - Returns `Some(true)`, if the condition (described above) is true.
+    /// - Returns `Some(false)`, if the condition is not true. This does not
+    ///   necessarily mean that the segment is inside of the polygon.
+    /// - Returns `None`, if at least one of the points of the segment is not a
+    ///   vertex of the polygon.
+    pub fn is_certainly_outside(&self, segment: &Seg2) -> Option<bool> {
+        if self.edges.contains(segment)
+            || self.edges.contains(&segment.reverse())
+        {
+            return Some(false);
         }
 
-        let a_outgoing = self.outgoing_edges(&edge.a)?;
-        let a_incoming = self.incoming_edges(&edge.a)?;
-        let b_outgoing = self.outgoing_edges(&edge.b)?;
-        let b_incoming = self.incoming_edges(&edge.b)?;
+        let a_outgoing = self.outgoing_edges(&segment.a)?;
+        let a_incoming = self.incoming_edges(&segment.a)?;
+        let b_outgoing = self.outgoing_edges(&segment.b)?;
+        let b_incoming = self.incoming_edges(&segment.b)?;
 
         let edges = a_outgoing
             .into_iter()
@@ -90,10 +95,10 @@ impl PolygonData {
 
         let dot_product =
             Vector2::new(-incoming_v.y, incoming_v.x).dot(&outgoing_v);
-        if dot_product < 0.0 {
+        if dot_product > 0.0 {
             return Some(true);
         }
-        if dot_product > 0.0 {
+        if dot_product < 0.0 {
             return Some(false);
         }
 
@@ -198,11 +203,11 @@ mod tests {
         data.insert_edge(Seg2::new(c, d));
         data.insert_edge(Seg2::new(d, a));
 
-        assert_eq!(data.is_inside(&Seg2::new(a, b)), Some(true));
-        assert_eq!(data.is_inside(&Seg2::new(b, a)), Some(true));
+        assert_eq!(data.is_certainly_outside(&Seg2::new(a, b)), Some(false));
+        assert_eq!(data.is_certainly_outside(&Seg2::new(b, a)), Some(false));
 
-        assert_eq!(data.is_inside(&Seg2::new(a, c)), Some(false));
-        assert_eq!(data.is_inside(&Seg2::new(b, d)), Some(true));
+        assert_eq!(data.is_certainly_outside(&Seg2::new(a, c)), Some(true));
+        assert_eq!(data.is_certainly_outside(&Seg2::new(b, d)), Some(false));
     }
 
     #[test]
