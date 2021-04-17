@@ -117,29 +117,6 @@ mod tests {
     }
 
     #[test]
-    fn remove_should_remove_triangle_from_hole_polygon() {
-        let mut polygon = Polygon::new();
-
-        let a = Pnt2::new(0.0, 0.0);
-        let b = Pnt2::new(1.0, 0.0);
-        let c = Pnt2::new(1.0, 1.0);
-        let d = Pnt2::new(0.0, 1.0);
-
-        // Polygon is defined clock-wise, which indicates a hole, not an actual
-        // positive polygon.
-        polygon.insert_chain(&[a, d, c, b]);
-
-        polygon.triangles().remove(Tri2::new(b, c, d)).unwrap();
-
-        let mut expected = HashSet::new();
-        expected.insert(Seg2::new(a, d));
-        expected.insert(Seg2::new(d, b));
-        expected.insert(Seg2::new(b, a));
-
-        assert_eq!(polygon.edges(), &expected);
-    }
-
-    #[test]
     fn remove_should_fail_if_not_all_vertices_are_in_polygon() {
         let mut polygon = Polygon::new();
 
