@@ -16,6 +16,13 @@ impl Triangles<'_> {
             }
         }
 
+        // TASK: Enable this test.
+        // for &edge in &triangle.edges() {
+        //     if !self.0.is_inside(&edge).unwrap() {
+        //         return Err(Error::OutsideOfPolygon(edge));
+        //     }
+        // }
+
         // Convert triangle into a representation that is more useful for this
         // algorithm.
         let mut triangle_edges: HashSet<Seg2> = HashSet::new();
