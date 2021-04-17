@@ -1,4 +1,10 @@
-use std::collections::{HashMap, HashSet};
+use std::{
+    collections::{HashMap, HashSet},
+    ops::Deref as _,
+};
+
+use itertools::Itertools as _;
+use nalgebra::Vector2;
 
 use crate::geometry::shapes::{Pnt2, Seg2};
 
@@ -40,6 +46,58 @@ impl PolygonData {
 
     pub fn incoming_edges(&self, vertex: &Pnt2) -> Option<&HashSet<Seg2>> {
         self.incoming_edges.get(vertex)
+    }
+
+    /// Returns true, if edge is known to be inside of polygon
+    ///
+    /// Returns `Some(true)`, if the edge is known to be within the polygon.
+    ///
+    /// A return value of `Some(false)` doesn't necessarily indicate that the
+    /// edge is outside of the polygon. It just means that its inside-ness
+    /// couldn't be determined.
+    ///
+    /// Returns `None`, if the vertices of the edge are not part of the polygon.
+    pub fn is_inside(&self, edge: &Seg2) -> Option<bool> {
+        let a_outgoing = self.outgoing_edges(&edge.a)?;
+        let a_incoming = self.incoming_edges(&edge.a)?;
+        let b_outgoing = self.outgoing_edges(&edge.b)?;
+        let b_incoming = self.incoming_edges(&edge.b)?;
+
+        let edges = a_outgoing
+            .into_iter()
+            .cartesian_product(b_incoming)
+            .chain(b_outgoing.into_iter().cartesian_product(a_incoming))
+            .filter_map(|(outgoing, incoming)| {
+                if outgoing.b == incoming.a {
+                    Some((outgoing, incoming))
+                } else {
+                    None
+                }
+            })
+            .next();
+
+        let (outgoing, incoming) = match edges {
+            Some(edges) => edges,
+            None => return Some(false),
+        };
+
+        let outgoing_v = outgoing.b.deref() - outgoing.a.deref();
+        let incoming_v = incoming.b.deref() - incoming.a.deref();
+
+        let dot_product =
+            Vector2::new(-incoming_v.y, incoming_v.x).dot(&outgoing_v);
+        if dot_product < 0.0 {
+            return Some(true);
+        }
+        if dot_product > 0.0 {
+            return Some(false);
+        }
+
+        panic!(
+            "Invalid polygon. Vertex ({:?}) is on straight line between two \
+            other vertices ({:?}, {:?})",
+            incoming.b, incoming.a, outgoing.b,
+        );
     }
 
     pub fn insert_edge(&mut self, edge: Seg2) {
@@ -121,6 +179,24 @@ mod tests {
     use crate::geometry::shapes::{Pnt2, Seg2};
 
     use super::PolygonData;
+
+    #[test]
+    fn is_inside_should_tell_whether_edge_is_inside() {
+        let mut data = PolygonData::new();
+
+        let a = Pnt2::new(0.0, 0.0);
+        let b = Pnt2::new(1.0, 1.0);
+        let c = Pnt2::new(2.0, 0.0);
+        let d = Pnt2::new(1.0, 2.0);
+
+        data.insert_edge(Seg2::new(a, b));
+        data.insert_edge(Seg2::new(b, c));
+        data.insert_edge(Seg2::new(c, d));
+        data.insert_edge(Seg2::new(d, a));
+
+        assert_eq!(data.is_inside(&Seg2::new(a, c)), Some(false));
+        assert_eq!(data.is_inside(&Seg2::new(b, d)), Some(true));
+    }
 
     #[test]
     fn insert_edge_should_update_vertices() {
