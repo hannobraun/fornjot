@@ -16,12 +16,11 @@ impl Triangles<'_> {
             }
         }
 
-        // TASK: Enable this test.
-        // for &edge in &triangle.edges() {
-        //     if !self.0.is_inside(&edge).unwrap() {
-        //         return Err(Error::OutsideOfPolygon(edge));
-        //     }
-        // }
+        for &edge in &triangle.edges() {
+            if self.0.is_certainly_outside(&edge).unwrap() {
+                return Err(Error::OutsideOfPolygon(edge));
+            }
+        }
 
         // Convert triangle into a representation that is more useful for this
         // algorithm.
@@ -185,11 +184,7 @@ mod tests {
         assert_eq!(polygon.edges(), &expected);
     }
 
-    // TASK: Enable test. This will be easily possible once we can check whether
-    //       a polygon line is outside the polygon. See commented code in
-    //       `Triangles::remove` above.
     #[test]
-    #[ignore]
     fn remove_should_recognize_that_triangle_is_in_hole() {
         let mut polygon = Polygon::new();
 
