@@ -58,6 +58,10 @@ impl PolygonData {
     ///
     /// Returns `None`, if the vertices of the edge are not part of the polygon.
     pub fn is_inside(&self, edge: &Seg2) -> Option<bool> {
+        if self.edges.contains(edge) || self.edges.contains(&edge.reverse()) {
+            return Some(true);
+        }
+
         let a_outgoing = self.outgoing_edges(&edge.a)?;
         let a_incoming = self.incoming_edges(&edge.a)?;
         let b_outgoing = self.outgoing_edges(&edge.b)?;
@@ -193,6 +197,9 @@ mod tests {
         data.insert_edge(Seg2::new(b, c));
         data.insert_edge(Seg2::new(c, d));
         data.insert_edge(Seg2::new(d, a));
+
+        assert_eq!(data.is_inside(&Seg2::new(a, b)), Some(true));
+        assert_eq!(data.is_inside(&Seg2::new(b, a)), Some(true));
 
         assert_eq!(data.is_inside(&Seg2::new(a, c)), Some(false));
         assert_eq!(data.is_inside(&Seg2::new(b, d)), Some(true));
