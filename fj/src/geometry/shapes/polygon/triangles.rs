@@ -70,14 +70,14 @@ impl Triangles<'_> {
 
 #[derive(Debug, Eq, PartialEq)]
 pub enum Error {
-    OutsideOfPolygon,
+    OutsideOfPolygon(Seg2),
     UnknownVertex(Pnt2),
 }
 
 impl Error {
     pub fn is_outside_of_polygon(&self) -> bool {
         match self {
-            Self::OutsideOfPolygon => true,
+            Self::OutsideOfPolygon(_) => true,
             _ => false,
         }
     }
