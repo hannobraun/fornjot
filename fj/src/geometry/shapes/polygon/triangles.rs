@@ -185,14 +185,9 @@ mod tests {
         assert_eq!(polygon.edges(), &expected);
     }
 
-    // TASK: Enable test. I don't know how though. I need to recognize that the
-    //       triangle being removed here is "outside" the polygon (in the hole),
-    //       but how do I do that?
-    //
-    //       I think I've backed myself into a corner by making polygon edges
-    //       direction-less. If they still had direction, it should be possible
-    //       to determine whether a triangle is inside or outside by looking at
-    //       the angle of the triangle edges that are also polygon edges.
+    // TASK: Enable test. This will be easily possible once we can check whether
+    //       a polygon line is outside the polygon. See commented code in
+    //       `Triangles::remove` above.
     #[test]
     #[ignore]
     fn remove_should_recognize_that_triangle_is_in_hole() {
