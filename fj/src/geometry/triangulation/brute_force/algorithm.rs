@@ -15,6 +15,9 @@ use super::neighbors::Neighbors;
 /// without having to finish the implementation of the Seidel trapezoidation
 /// algorithm right now.
 pub fn triangulate(polygon: &Polygon) -> Vec<Tri2> {
+    // TASK: Simplify algorithm using the new capabilities that `Polygon` now
+    //       provides.
+
     let mut neighbors = Neighbors::new();
     for edge in polygon.edges() {
         neighbors.insert(edge.a, edge.b);
