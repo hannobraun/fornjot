@@ -3,8 +3,6 @@ use parry2d::shape::Segment;
 
 use crate::geometry::shapes::{Polygon, Tri2};
 
-use super::neighbors::Neighbors;
-
 /// Brute-force polygon triangulation algorithm
 ///
 /// This algorithm handles the polygons that I care about right now, and is fast
@@ -14,16 +12,11 @@ use super::neighbors::Neighbors;
 /// The reason for this algorithm's existence is to make some forward progress
 /// without having to finish the implementation of the Seidel trapezoidation
 /// algorithm right now.
-pub fn triangulate(polygon: Polygon) -> Vec<Tri2> {
+pub fn triangulate(mut polygon: Polygon) -> Vec<Tri2> {
     // TASK: Simplify algorithm using the new capabilities that `Polygon` now
     //       provides.
 
-    let mut neighbors = Neighbors::new();
-    for edge in polygon.edges() {
-        neighbors.insert(edge.a, edge.b);
-    }
-
-    assert!(!neighbors.is_empty());
+    assert!(!polygon.is_empty());
 
     let mut triangles = Vec::new();
 
@@ -31,11 +24,11 @@ pub fn triangulate(polygon: Polygon) -> Vec<Tri2> {
         // Get the first point of our candidate triangle. This shouldn't panic,
         // as we wouldn't be here, if there wasn't at least one item in
         // `neighbors`.
-        let a = neighbors.first();
+        let a = polygon.first_vertex().unwrap();
 
         // Get the other two points of the candidate triangle. This shouldn't
         // panic, as every point must have two neighbors.
-        let mut neighbors_of_a = neighbors.of(a);
+        let mut neighbors_of_a = polygon.neighbors_of(&a).unwrap().into_iter();
         let b = neighbors_of_a.next().unwrap();
         let c = neighbors_of_a.next().unwrap();
         drop(neighbors_of_a);
@@ -55,35 +48,9 @@ pub fn triangulate(polygon: Polygon) -> Vec<Tri2> {
         };
 
         triangles.push(triangle);
+        polygon.triangles().remove(triangle).unwrap();
 
-        // Insert the new connection between `b` and `c`.
-        neighbors.insert(b, c);
-
-        // The connections from `a` to its neighbors are on the outside of the
-        // triangle. Remove them.
-        neighbors.remove(a);
-
-        // Remove any points that don't have enough neighbors left. This will
-        // only happen on the last triangle.
-        loop {
-            let mut to_remove = Vec::new();
-
-            for (point, neighbor_set) in neighbors.0.iter_mut() {
-                if neighbor_set.len() < 2 {
-                    to_remove.push(*point);
-                }
-            }
-
-            for &point in &to_remove {
-                neighbors.remove(point);
-            }
-
-            if to_remove.is_empty() {
-                break;
-            }
-        }
-
-        if neighbors.is_empty() {
+        if polygon.is_empty() {
             break;
         }
     }
