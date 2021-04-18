@@ -64,9 +64,9 @@ mod tests {
 
         // A very rough circle.
         let p0 = Pnt2::new(0.0, 0.0);
-        let p1 = Pnt2::new(1.0, 0.0);
-        let p2 = Pnt2::new(1.0, 1.0);
-        let p3 = Pnt2::new(0.0, 1.0);
+        let p1 = Pnt2::new(2.0, 0.0);
+        let p2 = Pnt2::new(2.0, 2.0);
+        let p3 = Pnt2::new(0.0, 2.0);
         polygon.insert_chain(&[p0, p1, p2, p3]);
 
         println!("Original polygon: {:#?}", polygon);
