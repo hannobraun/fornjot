@@ -24,6 +24,11 @@ impl Polygon {
         self.0.is_empty()
     }
 
+    /// Returns the first vertex, as defined by `Ord`/`PartialOrd`
+    pub fn first_vertex(&self) -> Option<Pnt2> {
+        self.0.first_vertex()
+    }
+
     pub fn insert_chain(
         &mut self,
         chain: impl IntoIterator<Item = impl Into<Pnt2>>,
