@@ -16,11 +16,9 @@ pub fn triangulate(mut polygon: Polygon) -> Vec<Tri2> {
     // TASK: Simplify algorithm using the new capabilities that `Polygon` now
     //       provides.
 
-    assert!(!polygon.is_empty());
-
     let mut triangles = Vec::new();
 
-    loop {
+    while !polygon.is_empty() {
         // Get the first point of our candidate triangle. This shouldn't panic,
         // as we wouldn't be here, if there wasn't at least one item in
         // `neighbors`.
@@ -49,10 +47,6 @@ pub fn triangulate(mut polygon: Polygon) -> Vec<Tri2> {
 
         triangles.push(triangle);
         polygon.triangles().remove(triangle).unwrap();
-
-        if polygon.is_empty() {
-            break;
-        }
     }
 
     triangles
