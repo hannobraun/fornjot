@@ -13,9 +13,6 @@ use crate::geometry::shapes::{Polygon, Tri2};
 /// without having to finish the implementation of the Seidel trapezoidation
 /// algorithm right now.
 pub fn triangulate(mut polygon: Polygon) -> Vec<Tri2> {
-    // TASK: Simplify algorithm using the new capabilities that `Polygon` now
-    //       provides.
-
     let mut triangles = Vec::new();
 
     while !polygon.is_empty() {
