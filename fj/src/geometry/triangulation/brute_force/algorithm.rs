@@ -14,7 +14,7 @@ use super::neighbors::Neighbors;
 /// The reason for this algorithm's existence is to make some forward progress
 /// without having to finish the implementation of the Seidel trapezoidation
 /// algorithm right now.
-pub fn triangulate(polygon: &Polygon) -> Vec<Tri2> {
+pub fn triangulate(polygon: Polygon) -> Vec<Tri2> {
     // TASK: Simplify algorithm using the new capabilities that `Polygon` now
     //       provides.
 
@@ -110,7 +110,7 @@ mod tests {
 
         println!("Original polygon: {:#?}", polygon);
 
-        let triangles = triangulate(&polygon);
+        let triangles = triangulate(polygon.clone());
         for triangle in triangles {
             polygon.triangles().remove(triangle).unwrap();
 

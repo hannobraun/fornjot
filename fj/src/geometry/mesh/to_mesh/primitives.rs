@@ -45,7 +45,7 @@ impl ToMesh for &Circle {
     }
 }
 
-impl ToMesh for &Polygon {
+impl ToMesh for Polygon {
     fn to_mesh(self, _tolerance: f32, mesh: &mut Mesh) {
         let triangles = triangulate(self);
 
