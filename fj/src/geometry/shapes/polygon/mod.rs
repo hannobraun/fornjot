@@ -29,6 +29,19 @@ impl Polygon {
         self.0.first_vertex()
     }
 
+    pub fn neighbors_of(&self, vertex: &Pnt2) -> Option<HashSet<Pnt2>> {
+        let mut neighbors = HashSet::new();
+
+        for outgoing in self.0.outgoing_edges(vertex)? {
+            neighbors.insert(outgoing.b);
+        }
+        for incoming in self.0.incoming_edges(vertex)? {
+            neighbors.insert(incoming.a);
+        }
+
+        Some(neighbors)
+    }
+
     pub fn insert_chain(
         &mut self,
         chain: impl IntoIterator<Item = impl Into<Pnt2>>,
@@ -116,5 +129,32 @@ mod tests {
         expected.insert(Seg2::new(r, p));
 
         assert_eq!(polygon.edges(), &expected);
+    }
+
+    #[test]
+    fn neighbors_of_should_return_neighbors_of_vertex() {
+        let mut polygon = Polygon::new();
+
+        let a = Pnt2::new(0.0, 0.0);
+        let b = Pnt2::new(2.0, 0.0);
+        let c = Pnt2::new(2.0, 2.0);
+        let d = Pnt2::new(0.0, 2.0);
+
+        let e = Pnt2::new(1.0, 0.5);
+        let f = Pnt2::new(1.0, 1.0);
+        let g = Pnt2::new(0.5, 1.0);
+
+        polygon.insert_chain(&[a, b, c, d]);
+        polygon.insert_chain(&[a, e, f, g]);
+
+        let neighbors_of_a = polygon.neighbors_of(&a).unwrap();
+
+        assert_eq!(neighbors_of_a.contains(&a), false);
+        assert_eq!(neighbors_of_a.contains(&b), true);
+        assert_eq!(neighbors_of_a.contains(&c), false);
+        assert_eq!(neighbors_of_a.contains(&d), true);
+        assert_eq!(neighbors_of_a.contains(&e), true);
+        assert_eq!(neighbors_of_a.contains(&f), false);
+        assert_eq!(neighbors_of_a.contains(&g), true);
     }
 }
