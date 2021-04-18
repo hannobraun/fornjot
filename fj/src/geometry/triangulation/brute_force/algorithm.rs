@@ -60,13 +60,13 @@ mod tests {
 
     #[test]
     fn triangulate_should_triangulate_a_polygon() {
+        let mut polygon = Polygon::new();
+
         // A very rough circle.
         let p0 = Pnt2::new(0.0, 0.0);
         let p1 = Pnt2::new(1.0, 0.0);
         let p2 = Pnt2::new(1.0, 1.0);
         let p3 = Pnt2::new(0.0, 1.0);
-
-        let mut polygon = Polygon::new();
         polygon.insert_chain(&[p0, p1, p2, p3]);
 
         println!("Original polygon: {:#?}", polygon);
