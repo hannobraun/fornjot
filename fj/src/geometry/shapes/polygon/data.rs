@@ -1,5 +1,5 @@
 use std::{
-    collections::{HashMap, HashSet},
+    collections::{BTreeMap, HashMap, HashSet},
     ops::Deref as _,
 };
 
@@ -38,6 +38,10 @@ impl PolygonData {
 
     pub fn contains_vertex(&self, vertex: &Pnt2) -> bool {
         self.vertices.0.contains_key(vertex)
+    }
+
+    pub fn first_vertex(&self) -> Option<Pnt2> {
+        self.vertices.first()
     }
 
     pub fn outgoing_edges(&self, vertex: &Pnt2) -> Option<&HashSet<Seg2>> {
@@ -159,11 +163,15 @@ impl PolygonData {
 }
 
 #[derive(Clone, Debug)]
-struct Vertices(HashMap<Pnt2, u32>);
+struct Vertices(BTreeMap<Pnt2, u32>);
 
 impl Vertices {
     pub fn new() -> Self {
-        Self(HashMap::new())
+        Self(BTreeMap::new())
+    }
+
+    pub fn first(&self) -> Option<Pnt2> {
+        self.0.iter().next().map(|(vertex, _)| *vertex)
     }
 
     pub fn up(&mut self, vertex: Pnt2) {
@@ -189,6 +197,22 @@ mod tests {
     use crate::geometry::shapes::{Pnt2, Seg2};
 
     use super::PolygonData;
+
+    #[test]
+    fn first_vertex_should_return_the_lowest_vertex() {
+        let a = Pnt2::new(1.0, 0.0);
+        let b = Pnt2::new(0.0, 1.0);
+
+        let mut data = PolygonData::new();
+        data.insert_edge(Seg2::new(a, b));
+
+        assert_eq!(data.first_vertex(), Some(b));
+
+        let mut data = PolygonData::new();
+        data.insert_edge(Seg2::new(b, a));
+
+        assert_eq!(data.first_vertex(), Some(b));
+    }
 
     #[test]
     fn is_inside_should_tell_whether_edge_is_inside() {
