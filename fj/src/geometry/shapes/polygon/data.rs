@@ -165,6 +165,7 @@ impl Vertices {
     pub fn new() -> Self {
         Self(HashMap::new())
     }
+
     pub fn up(&mut self, vertex: Pnt2) {
         *self.0.entry(vertex).or_insert(0) += 1;
     }
