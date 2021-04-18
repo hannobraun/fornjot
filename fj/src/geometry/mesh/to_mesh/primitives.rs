@@ -47,7 +47,7 @@ impl ToMesh for &Circle {
 
 impl ToMesh for &Polygon {
     fn to_mesh(self, _tolerance: f32, mesh: &mut Mesh) {
-        let triangles = triangulate(&self);
+        let triangles = triangulate(self);
 
         for triangle in triangles {
             let a_x: f32 = triangle.a.x.into();
