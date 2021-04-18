@@ -5,6 +5,5 @@
 //! more.
 
 pub mod algorithm;
-pub mod neighbors;
 
 pub use self::algorithm::triangulate;
