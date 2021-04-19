@@ -1,6 +1,7 @@
+use nalgebra::Point2;
 use parry2d::{
     query::PointQueryWithLocation as _,
-    shape::{Triangle, TrianglePointLocation},
+    shape::{Segment, Triangle, TrianglePointLocation},
 };
 
 use super::{Pnt2, Seg2};
@@ -22,6 +23,26 @@ impl Tri2 {
             a: a.into(),
             b: b.into(),
             c: c.into(),
+        }
+    }
+
+    pub fn new_ccw(
+        a: impl Into<Pnt2>,
+        b: impl Into<Pnt2>,
+        c: impl Into<Pnt2>,
+    ) -> Self {
+        let a: Point2<f32> = a.into().into();
+        let b: Point2<f32> = b.into().into();
+        let c: Point2<f32> = c.into().into();
+
+        let a_b = Segment::new(a, b);
+        let a_c = c - a;
+        let c_is_left_of_a_b = a_b.scaled_normal().dot(&a_c) < 0.0;
+
+        if c_is_left_of_a_b {
+            Self::new(a, b, c)
+        } else {
+            Self::new(a, c, b)
         }
     }
 

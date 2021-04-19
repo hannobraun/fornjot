@@ -4,9 +4,6 @@
 //! designed to work with exactly the polygons I need it for right now, and not
 //! more.
 
-use nalgebra::Point2;
-use parry2d::shape::{Segment, Triangle};
-
 use crate::geometry::shapes::{Polygon, Tri2};
 
 /// Brute-force polygon triangulation algorithm
@@ -34,19 +31,7 @@ pub fn triangulate(mut polygon: Polygon) -> Vec<Tri2> {
         let c = neighbors_of_a.next().unwrap();
         drop(neighbors_of_a);
 
-        let p_a: Point2<f32> = a.into();
-        let p_b: Point2<f32> = b.into();
-        let p_c: Point2<f32> = c.into();
-
-        // Make sure triangles face the right way.
-        let a_b = Segment::new(p_a, p_b);
-        let a_c = p_c - p_a;
-        let c_is_left_of_a_b = a_b.scaled_normal().dot(&a_c) < 0.0;
-        let triangle = if c_is_left_of_a_b {
-            Tri2::new(a, b, c)
-        } else {
-            Tri2::new(a, c, b)
-        };
+        let triangle = Tri2::new_ccw(a, b, c);
 
         // TASK: Handle `OutOfPolygon`, choose different triangle.
         polygon.triangles().remove(triangle).unwrap();
