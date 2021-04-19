@@ -22,6 +22,12 @@ impl Triangles<'_> {
             }
         }
 
+        for vertex in self.0.vertices() {
+            if triangle.contains(vertex) {
+                return Err(Error::TriangleContainsVertex(vertex));
+            }
+        }
+
         // Convert triangle into a representation that is more useful for this
         // algorithm.
         let mut triangle_edges: HashSet<Seg2> = HashSet::new();
@@ -77,6 +83,7 @@ impl Triangles<'_> {
 #[derive(Debug, Eq, PartialEq)]
 pub enum Error {
     OutsideOfPolygon(Seg2),
+    TriangleContainsVertex(Pnt2),
     UnknownVertex(Pnt2),
 }
 
@@ -84,6 +91,13 @@ impl Error {
     pub fn is_outside_of_polygon(&self) -> bool {
         match self {
             Self::OutsideOfPolygon(_) => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_triangle_contains_vertex(&self) -> bool {
+        match self {
+            Self::TriangleContainsVertex(_) => true,
             _ => false,
         }
     }
@@ -204,5 +218,27 @@ mod tests {
 
         let result = polygon.triangles().remove(Tri2::new(x, w, y));
         assert!(result.unwrap_err().is_outside_of_polygon());
+    }
+
+    #[test]
+    fn remove_should_recognize_that_triangle_contains_other_vertices() {
+        let mut polygon = Polygon::new();
+
+        // Outer perimeter
+        let a = Pnt2::new(0.0, 0.0);
+        let b = Pnt2::new(2.0, 0.0);
+        let c = Pnt2::new(2.0, 2.0);
+        let d = Pnt2::new(0.0, 2.0);
+        polygon.insert_chain(&[a, b, c, d]);
+
+        // Inner perimeter (hole)
+        let x = Pnt2::new(0.5, 0.5);
+        let y = Pnt2::new(0.5, 1.5);
+        let z = Pnt2::new(1.5, 1.5);
+        let w = Pnt2::new(1.5, 0.5);
+        polygon.insert_chain(&[x, y, z, w]);
+
+        let result = polygon.triangles().remove(Tri2::new(a, b, c));
+        assert!(result.unwrap_err().is_triangle_contains_vertex());
     }
 }
