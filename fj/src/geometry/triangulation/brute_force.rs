@@ -48,8 +48,10 @@ pub fn triangulate(mut polygon: Polygon) -> Vec<Tri2> {
             Tri2::new(a, c, b)
         };
 
-        triangles.push(triangle);
+        // TASK: Handle `OutOfPolygon`, choose different triangle.
         polygon.triangles().remove(triangle).unwrap();
+
+        triangles.push(triangle);
     }
 
     triangles
