@@ -47,7 +47,7 @@ impl Tri2 {
 
 impl From<Triangle> for Tri2 {
     fn from(triangle: Triangle) -> Self {
-        Tri2 {
+        Self {
             a: triangle.a.into(),
             b: triangle.b.into(),
             c: triangle.c.into(),
