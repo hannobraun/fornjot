@@ -43,9 +43,9 @@ pub fn triangulate(mut polygon: Polygon) -> Vec<Tri2> {
         let a_c = p_c - p_a;
         let c_is_left_of_a_b = a_b.scaled_normal().dot(&a_c) < 0.0;
         let triangle = if c_is_left_of_a_b {
-            Triangle::new(p_a, p_b, p_c)
+            Tri2::new(a, b, c)
         } else {
-            Triangle::new(p_a, p_c, p_b)
+            Tri2::new(a, c, b)
         };
 
         // TASK: Handle `OutOfPolygon`, choose different triangle.
