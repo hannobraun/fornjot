@@ -1,4 +1,7 @@
-use parry2d::shape::Triangle;
+use parry2d::{
+    query::PointQueryWithLocation as _,
+    shape::{Triangle, TrianglePointLocation},
+};
 
 use super::{Pnt2, Seg2};
 
@@ -42,6 +45,22 @@ impl Tri2 {
         let c = self.c;
 
         (b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y) < 0.0
+    }
+
+    pub fn contains(&self, point: impl Into<Pnt2>) -> bool {
+        let triangle: Triangle = self.into();
+        let point = point.into();
+
+        let (projection, location) =
+            triangle.project_local_point_and_get_location(&point.into(), true);
+
+        let is_inside = match (projection.is_inside, location) {
+            (false, _) => false,
+            (true, TrianglePointLocation::OnVertex(_)) => false,
+            (true, _) => true,
+        };
+
+        is_inside
     }
 }
 
@@ -92,5 +111,22 @@ mod tests {
 
         let cw = Tri2::new(a, c, b);
         assert_eq!(cw.is_clockwise(), true);
+    }
+
+    #[test]
+    fn contains_should_tell_whether_triangle_contains_point() {
+        let a = Pnt2::new(0.0, 0.0);
+        let b = Pnt2::new(1.0, 0.0);
+        let c = Pnt2::new(0.0, 1.0);
+        let triangle = Tri2::new(a, b, c);
+
+        let on_edge = Pnt2::new(0.5, 0.0);
+        let in_triangle = Pnt2::new(0.5, 0.5);
+
+        assert_eq!(triangle.contains(&a), false);
+        assert_eq!(triangle.contains(&b), false);
+        assert_eq!(triangle.contains(&b), false);
+        assert_eq!(triangle.contains(&on_edge), true);
+        assert_eq!(triangle.contains(&in_triangle), true);
     }
 }
