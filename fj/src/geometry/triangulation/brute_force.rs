@@ -28,15 +28,35 @@ pub fn triangulate(mut polygon: Polygon) -> Vec<Tri2> {
         // panic, as every point must have two neighbors.
         let mut neighbors_of_a = polygon.neighbors_of(&a).unwrap().into_iter();
         let b = neighbors_of_a.next().unwrap();
-        let c = neighbors_of_a.next().unwrap();
+        let mut c = neighbors_of_a.next().unwrap();
         drop(neighbors_of_a);
 
-        let triangle = Tri2::new_ccw(a, b, c);
+        loop {
+            let triangle = Tri2::new_ccw(a, b, c);
 
-        // TASK: Handle `OutOfPolygon`, choose different triangle.
-        polygon.triangles().remove(triangle).unwrap();
+            let mut lowest_in_triangle = None;
+            for vertex in polygon.vertices().iter() {
+                if triangle.contains(vertex) {
+                    if lowest_in_triangle.unwrap_or(vertex) >= vertex {
+                        lowest_in_triangle = Some(vertex);
+                    }
+                }
+            }
 
-        triangles.push(triangle.into());
+            // If there are vertices in the triangle, replace the last triangle
+            // point with the lowest of them and try again.
+            if let Some(vertex) = lowest_in_triangle {
+                c = vertex;
+                continue;
+            }
+
+            polygon.triangles().remove(triangle).unwrap();
+            triangles.push(triangle.into());
+
+            // If we reached this point, the triangle has successfully been
+            // removed from the polygon. We can abort the inner loop.
+            break;
+        }
     }
 
     triangles
@@ -57,6 +77,13 @@ mod tests {
         let p1 = Pnt2::new(2.0, 0.0);
         let p2 = Pnt2::new(2.0, 2.0);
         let p3 = Pnt2::new(0.0, 2.0);
+        polygon.insert_chain(&[p0, p1, p2, p3]);
+
+        // A roughly circular hole.
+        let p0 = Pnt2::new(0.5, 0.5);
+        let p1 = Pnt2::new(0.5, 1.0);
+        let p2 = Pnt2::new(1.0, 1.0);
+        let p3 = Pnt2::new(1.0, 0.5);
         polygon.insert_chain(&[p0, p1, p2, p3]);
 
         println!("Original polygon: {:#?}", polygon);

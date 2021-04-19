@@ -7,6 +7,10 @@ use super::data::PolygonData;
 pub struct Vertices<'r>(pub(super) &'r mut PolygonData);
 
 impl Vertices<'_> {
+    pub fn iter(&self) -> impl Iterator<Item = Pnt2> + '_ {
+        self.0.vertices()
+    }
+
     pub fn neighbors_of(&self, vertex: impl Into<Pnt2>) -> HashSet<Pnt2> {
         let vertex = vertex.into();
 
