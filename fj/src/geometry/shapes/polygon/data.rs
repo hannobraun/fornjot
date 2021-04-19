@@ -32,6 +32,10 @@ impl PolygonData {
         &self.edges
     }
 
+    pub fn vertices(&self) -> impl Iterator<Item = Pnt2> + '_ {
+        self.vertices.0.keys().copied()
+    }
+
     pub fn is_empty(&self) -> bool {
         self.edges.is_empty()
     }
