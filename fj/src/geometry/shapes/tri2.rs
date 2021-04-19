@@ -55,6 +55,26 @@ impl From<Triangle> for Tri2 {
     }
 }
 
+impl From<Tri2> for Triangle {
+    fn from(triangle: Tri2) -> Self {
+        Self {
+            a: triangle.a.into(),
+            b: triangle.b.into(),
+            c: triangle.c.into(),
+        }
+    }
+}
+
+impl From<&Tri2> for Triangle {
+    fn from(triangle: &Tri2) -> Self {
+        Self {
+            a: triangle.a.into(),
+            b: triangle.b.into(),
+            c: triangle.c.into(),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::geometry::shapes::Pnt2;
