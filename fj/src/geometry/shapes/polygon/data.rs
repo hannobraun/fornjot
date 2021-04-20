@@ -203,6 +203,34 @@ impl PolygonData {
             })
             .collect();
     }
+
+    pub fn merge(&mut self, other: Self) {
+        for edge in other.edges {
+            self.edges.insert(edge);
+        }
+
+        for (vertex, count) in other.vertices.0 {
+            *self.vertices.0.entry(vertex).or_insert(0) += count;
+        }
+
+        for (vertex, edges) in other.outgoing_edges {
+            let outgoing =
+                self.outgoing_edges.entry(vertex).or_insert(HashSet::new());
+
+            for edge in edges {
+                outgoing.insert(edge);
+            }
+        }
+
+        for (vertex, edges) in other.incoming_edges {
+            let incoming =
+                self.incoming_edges.entry(vertex).or_insert(HashSet::new());
+
+            for edge in edges {
+                incoming.insert(edge);
+            }
+        }
+    }
 }
 
 #[derive(Clone, Debug)]

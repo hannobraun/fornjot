@@ -72,6 +72,10 @@ impl Polygon {
         self.0.reverse()
     }
 
+    pub fn merge(&mut self, other: Self) {
+        self.0.merge(other.0)
+    }
+
     pub fn vertices(&mut self) -> Vertices {
         Vertices(&mut self.0)
     }
