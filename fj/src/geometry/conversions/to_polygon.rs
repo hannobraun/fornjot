@@ -1,7 +1,7 @@
 use std::f32::consts::PI;
 
 use crate::{
-    geometry::{shapes::Polygon, Boundary as _},
+    geometry::{shapes::Polygon, Boundary as _, Difference},
     Circle,
 };
 
@@ -48,5 +48,21 @@ impl ToPolygon for Circle {
         polygon.insert_chain(circumference);
 
         polygon
+    }
+}
+
+impl<A, B> ToPolygon for Difference<A, B>
+where
+    A: ToPolygon,
+    B: ToPolygon,
+{
+    fn to_polygon(self, tolerance: f32) -> Polygon {
+        let mut a = self.a.to_polygon(tolerance);
+        let mut b = self.b.to_polygon(tolerance);
+
+        b.reverse();
+        a.merge(b);
+
+        a
     }
 }
