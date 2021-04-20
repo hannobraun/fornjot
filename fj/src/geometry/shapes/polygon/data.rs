@@ -164,6 +164,45 @@ impl PolygonData {
             retain
         });
     }
+
+    pub fn reverse(&mut self) {
+        self.edges = self
+            .edges
+            .clone()
+            .into_iter()
+            .map(|edge| edge.reverse())
+            .collect();
+
+        let outgoing = self.outgoing_edges.clone();
+        let incoming = self.incoming_edges.clone();
+
+        self.outgoing_edges = incoming
+            .into_iter()
+            .map(|(vertex, edges)| {
+                (
+                    vertex,
+                    edges
+                        .clone()
+                        .into_iter()
+                        .map(|edge| edge.reverse())
+                        .collect(),
+                )
+            })
+            .collect();
+        self.incoming_edges = outgoing
+            .into_iter()
+            .map(|(vertex, edges)| {
+                (
+                    vertex,
+                    edges
+                        .clone()
+                        .into_iter()
+                        .map(|edge| edge.reverse())
+                        .collect(),
+                )
+            })
+            .collect();
+    }
 }
 
 #[derive(Clone, Debug)]

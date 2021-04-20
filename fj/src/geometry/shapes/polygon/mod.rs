@@ -68,6 +68,10 @@ impl Polygon {
         self.0.edges()
     }
 
+    pub fn reverse(&mut self) {
+        self.0.reverse()
+    }
+
     pub fn vertices(&mut self) -> Vertices {
         Vertices(&mut self.0)
     }
@@ -156,5 +160,22 @@ mod tests {
         assert_eq!(neighbors_of_a.contains(&e), true);
         assert_eq!(neighbors_of_a.contains(&f), false);
         assert_eq!(neighbors_of_a.contains(&g), true);
+    }
+
+    #[test]
+    fn reverse_should_reverse_all_edges() {
+        let mut polygon = Polygon::new();
+
+        let a = Pnt2::new(0.0, 0.0);
+        let b = Pnt2::new(1.0, 0.0);
+        let c = Pnt2::new(1.0, 1.0);
+        polygon.insert_chain(&[a, b, c]);
+
+        polygon.reverse();
+
+        let edges = polygon.edges();
+        assert!(edges.contains(&Seg2::new(a, c)));
+        assert!(edges.contains(&Seg2::new(c, b)));
+        assert!(edges.contains(&Seg2::new(b, a)));
     }
 }
