@@ -4,5 +4,5 @@ fn main() {
     // TASK: Subtract inner circle.
     // TASK: Extrude by height
 
-    fj::run(&outer)
+    fj::run(outer)
 }

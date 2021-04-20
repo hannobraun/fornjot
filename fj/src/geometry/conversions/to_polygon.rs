@@ -15,7 +15,7 @@ impl ToPolygon for Polygon {
     }
 }
 
-impl ToPolygon for &Circle {
+impl ToPolygon for Circle {
     fn to_polygon(self, tolerance: f32) -> Polygon {
         // To approximate the circle, we use a regular polygon for which the
         // circle is the circumscribed circle. The `tolerance` parameter is the
