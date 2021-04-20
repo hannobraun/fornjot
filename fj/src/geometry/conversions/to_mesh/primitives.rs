@@ -3,8 +3,9 @@ use std::f32::consts::PI;
 use nalgebra::Point3;
 
 use crate::geometry::{
-    shapes::Polygon, triangulation::brute_force::triangulate, Boundary as _,
-    Circle, Mesh, Triangle3,
+    conversions::ToPolygon, shapes::Polygon,
+    triangulation::brute_force::triangulate, Boundary as _, Circle, Mesh,
+    Triangle3,
 };
 
 use super::ToMesh;
@@ -45,9 +46,13 @@ impl ToMesh for &Circle {
     }
 }
 
-impl ToMesh for Polygon {
-    fn to_mesh(self, _tolerance: f32, mesh: &mut Mesh) {
-        let triangles = triangulate(self);
+impl<T> ToMesh for T
+where
+    T: ToPolygon,
+{
+    fn to_mesh(self, tolerance: f32, mesh: &mut Mesh) {
+        let polygon = self.to_polygon(tolerance);
+        let triangles = triangulate(polygon);
 
         for triangle in triangles {
             let a_x: f32 = triangle.a.x.into();
