@@ -1,50 +1,11 @@
-use std::f32::consts::PI;
-
 use nalgebra::Point3;
 
 use crate::geometry::{
-    conversions::ToPolygon, shapes::Polygon,
-    triangulation::brute_force::triangulate, Boundary as _, Circle, Mesh,
+    conversions::ToPolygon, triangulation::brute_force::triangulate, Mesh,
     Triangle3,
 };
 
 use super::ToMesh;
-
-impl ToMesh for &Circle {
-    fn to_mesh(self, tolerance: f32, mesh: &mut Mesh) {
-        // To approximate the circle, we use a regular polygon for which the
-        // circle is the circumscribed circle. The `tolerance` parameter is the
-        // maximum allowed distance between the polygon and the circle. This is
-        // the same as the difference between the circumscribed circle and the
-        // in circle.
-        //
-        // Let's figure which regular polygon we need to use, by just trying out
-        // some of them until we find one whose maximum error is less than or
-        // equal to the tolerance.
-        let mut n = 3;
-        loop {
-            let incircle_radius = self.radius() * (PI / n as f32).cos();
-            let maximum_error = self.radius() - incircle_radius;
-
-            if maximum_error <= tolerance {
-                break;
-            }
-
-            n += 1;
-        }
-
-        let mut circumference = Vec::new();
-        for i in 0..n {
-            let p = self.boundary(1.0 / n as f32 * i as f32);
-            circumference.push(p);
-        }
-
-        let mut polygon = Polygon::new();
-        polygon.insert_chain(circumference);
-
-        polygon.to_mesh(tolerance, mesh);
-    }
-}
 
 impl<T> ToMesh for T
 where
