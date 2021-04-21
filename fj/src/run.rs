@@ -12,7 +12,10 @@ use crate::{
     transform::Transform,
 };
 
-pub fn run(mesh: impl ToMesh) {
+pub fn run<M>(mesh: M)
+where
+    M: ToMesh,
+{
     let event_loop = EventLoop::new();
 
     let window = WindowBuilder::new()
