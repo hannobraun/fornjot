@@ -2,6 +2,7 @@ pub mod data;
 pub mod triangles;
 pub mod vertices;
 
+use core::fmt;
 use std::collections::HashSet;
 
 use crate::geometry::shapes::{Pnt2, Seg2};
@@ -82,6 +83,18 @@ impl Polygon {
 
     pub fn triangles(&mut self) -> Triangles {
         Triangles(&mut self.0)
+    }
+}
+
+impl fmt::Display for Polygon {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        writeln!(f, "Polygon: ")?;
+
+        for edge in self.edges() {
+            writeln!(f, "\t{}", edge)?;
+        }
+
+        Ok(())
     }
 }
 
