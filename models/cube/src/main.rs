@@ -35,5 +35,5 @@ fn main() {
     mesh.triangle(i1, i5, i7);
     mesh.triangle(i1, i7, i3);
 
-    fj::run(mesh);
+    fj::run(mesh).unwrap();
 }

@@ -14,7 +14,7 @@ use crate::{
     transform::Transform,
 };
 
-pub fn run<M>(mesh: M)
+pub fn run<M>(mesh: M) -> Result<(), M::Error>
 where
     M: ToMesh,
     M::Error: fmt::Debug,
@@ -30,7 +30,7 @@ where
         .unwrap();
 
     let mut mesh_tmp = Mesh::new();
-    mesh.to_mesh(0.001, &mut mesh_tmp).unwrap();
+    mesh.to_mesh(0.001, &mut mesh_tmp)?;
     let mesh = mesh_tmp.into_graphics_mesh();
 
     let mut input_handler = InputHandler::new();

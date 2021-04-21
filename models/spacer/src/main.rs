@@ -7,5 +7,5 @@ fn main() {
     let sketch = (outer, inner).difference();
     // TASK: Extrude by height
 
-    fj::run(sketch)
+    fj::run(sketch).unwrap();
 }
