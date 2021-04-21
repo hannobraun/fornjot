@@ -1,5 +1,7 @@
 use std::collections::HashSet;
 
+use thiserror::Error;
+
 use crate::geometry::shapes::{Pnt2, Seg2, Tri2};
 
 use super::data::PolygonData;
@@ -83,10 +85,15 @@ impl Triangles<'_> {
     }
 }
 
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, Error, PartialEq)]
 pub enum RemoveError {
+    #[error("Triangle edge is outside of polygon")]
     OutsideOfPolygon(Seg2),
+
+    #[error("Triangle contains polygon vertex")]
     TriangleContainsVertex(Pnt2),
+
+    #[error("Triangle vertex is not part of polygon")]
     UnknownVertex(Pnt2),
 }
 
