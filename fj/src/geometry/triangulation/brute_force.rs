@@ -71,10 +71,14 @@ pub fn triangulate(mut polygon: Polygon) -> Result<Vec<Tri2>, InternalError> {
 }
 
 #[derive(Debug, Error)]
-#[error("BUG - Error while removing triangle {triangle}: {cause}\n{polygon}")]
+#[error(
+    "BUG - Error while removing triangle {triangle} from polygon\n{polygon}"
+)]
 pub struct InternalError {
     pub triangle: Tri2,
     pub polygon: Polygon,
+
+    #[source]
     pub cause: polygon::triangles::RemoveError,
 }
 
