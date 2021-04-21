@@ -52,7 +52,12 @@ pub fn triangulate(mut polygon: Polygon) -> Result<Vec<Tri2>, InternalError> {
                 continue;
             }
 
-            polygon.triangles().remove(triangle)?;
+            if let Err(err) = polygon.triangles().remove(triangle) {
+                return Err(InternalError {
+                    polygon,
+                    cause: err,
+                });
+            }
             triangles.push(triangle.into());
 
             // If we reached this point, the triangle has successfully been
@@ -65,9 +70,9 @@ pub fn triangulate(mut polygon: Polygon) -> Result<Vec<Tri2>, InternalError> {
 }
 
 #[derive(Debug, Error)]
-#[error("Error while removing triangle. This is a bug.")]
+#[error("BUG - Error while removing triangle: {cause}\n{polygon}")]
 pub struct InternalError {
-    #[from]
+    pub polygon: Polygon,
     pub cause: polygon::triangles::RemoveError,
 }
 
