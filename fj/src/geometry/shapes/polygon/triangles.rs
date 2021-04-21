@@ -7,24 +7,27 @@ use super::data::PolygonData;
 pub struct Triangles<'r>(pub(super) &'r mut PolygonData);
 
 impl Triangles<'_> {
-    pub fn remove(&mut self, triangle: impl Into<Tri2>) -> Result<(), Error> {
+    pub fn remove(
+        &mut self,
+        triangle: impl Into<Tri2>,
+    ) -> Result<(), RemoveError> {
         let triangle = triangle.into();
 
         for &vertex in &triangle.vertices() {
             if !self.0.contains_vertex(&vertex) {
-                return Err(Error::UnknownVertex(vertex));
+                return Err(RemoveError::UnknownVertex(vertex));
             }
         }
 
         for &edge in &triangle.edges() {
             if self.0.is_certainly_outside(&edge).unwrap() {
-                return Err(Error::OutsideOfPolygon(edge));
+                return Err(RemoveError::OutsideOfPolygon(edge));
             }
         }
 
         for vertex in self.0.vertices() {
             if triangle.contains(vertex) {
-                return Err(Error::TriangleContainsVertex(vertex));
+                return Err(RemoveError::TriangleContainsVertex(vertex));
             }
         }
 
@@ -81,13 +84,13 @@ impl Triangles<'_> {
 }
 
 #[derive(Debug, Eq, PartialEq)]
-pub enum Error {
+pub enum RemoveError {
     OutsideOfPolygon(Seg2),
     TriangleContainsVertex(Pnt2),
     UnknownVertex(Pnt2),
 }
 
-impl Error {
+impl RemoveError {
     pub fn is_outside_of_polygon(&self) -> bool {
         match self {
             Self::OutsideOfPolygon(_) => true,
