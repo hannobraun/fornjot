@@ -40,6 +40,12 @@ impl PartialOrd for Pnt2 {
 
 impl fmt::Debug for Pnt2 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        <Self as fmt::Display>::fmt(self, f)
+    }
+}
+
+impl fmt::Display for Pnt2 {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "({}, {})", self.0.x, self.0.y)
     }
 }
