@@ -3,8 +3,9 @@ use std::convert::Infallible;
 use nalgebra::Point3;
 
 use crate::geometry::{
-    conversions::ToPolygon, triangulation::brute_force::triangulate, Mesh,
-    Triangle3,
+    conversions::ToPolygon,
+    triangulation::brute_force::{self, triangulate},
+    Mesh, Triangle3,
 };
 
 pub trait ToMesh {
@@ -40,7 +41,7 @@ impl<T> ToMesh for T
 where
     T: ToPolygon,
 {
-    type Error = Infallible;
+    type Error = brute_force::InternalError;
 
     fn to_mesh(
         self,
@@ -48,7 +49,7 @@ where
         mesh: &mut Mesh,
     ) -> Result<(), Self::Error> {
         let polygon = self.to_polygon(tolerance);
-        let triangles = triangulate(polygon).unwrap();
+        let triangles = triangulate(polygon)?;
 
         for triangle in triangles {
             let a_x: f32 = triangle.a.x.into();
