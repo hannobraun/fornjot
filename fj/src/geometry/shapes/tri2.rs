@@ -1,3 +1,5 @@
+use std::fmt;
+
 use nalgebra::Point2;
 use parry2d::{
     query::PointQueryWithLocation as _,
@@ -112,6 +114,13 @@ impl From<&Tri2> for Triangle {
             b: triangle.b.into(),
             c: triangle.c.into(),
         }
+    }
+}
+
+impl fmt::Display for Tri2 {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}, {}, {}", self.a, self.b, self.c)?;
+        Ok(())
     }
 }
 
