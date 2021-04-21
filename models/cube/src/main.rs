@@ -1,5 +1,5 @@
 #[rustfmt::skip]
-fn main() {
+fn main() -> anyhow::Result<()> {
     let mut mesh = fj::Mesh::new();
 
     let i0  = mesh.vertex([-0.5, -0.5, -0.5]);
@@ -35,5 +35,6 @@ fn main() {
     mesh.triangle(i1, i5, i7);
     mesh.triangle(i1, i7, i3);
 
-    fj::run(mesh).unwrap();
+    fj::run(mesh)?;
+    Ok(())
 }
