@@ -412,6 +412,7 @@ dependencies = [
  "parry2d",
  "rand",
  "shaderc",
+ "thiserror",
  "wgpu",
  "winit",
 ]
