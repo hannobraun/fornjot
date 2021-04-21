@@ -1,3 +1,5 @@
+use std::fmt;
+
 use futures::executor::block_on;
 use winit::{
     event::{Event, WindowEvent},
@@ -15,6 +17,7 @@ use crate::{
 pub fn run<M>(mesh: M)
 where
     M: ToMesh,
+    M::Error: fmt::Debug,
 {
     let event_loop = EventLoop::new();
 
@@ -27,7 +30,7 @@ where
         .unwrap();
 
     let mut mesh_tmp = Mesh::new();
-    mesh.to_mesh(0.001, &mut mesh_tmp);
+    mesh.to_mesh(0.001, &mut mesh_tmp).unwrap();
     let mesh = mesh_tmp.into_graphics_mesh();
 
     let mut input_handler = InputHandler::new();

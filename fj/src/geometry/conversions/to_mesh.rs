@@ -1,3 +1,5 @@
+use std::convert::Infallible;
+
 use nalgebra::Point3;
 
 use crate::geometry::{
@@ -6,11 +8,23 @@ use crate::geometry::{
 };
 
 pub trait ToMesh {
-    fn to_mesh(self, tolerance: f32, mesh: &mut Mesh);
+    type Error;
+
+    fn to_mesh(
+        self,
+        tolerance: f32,
+        mesh: &mut Mesh,
+    ) -> Result<(), Self::Error>;
 }
 
 impl ToMesh for Mesh {
-    fn to_mesh(self, _tolerance: f32, mesh: &mut Mesh) {
+    type Error = Infallible;
+
+    fn to_mesh(
+        self,
+        _tolerance: f32,
+        mesh: &mut Mesh,
+    ) -> Result<(), Self::Error> {
         // TASK: I think just replacing the mesh works for current use cases,
         //       but it doesn't seem right. Unfortunately merging meshes seems
         //       to be somewhat non-trivial, and the whole distinction between
@@ -18,6 +32,7 @@ impl ToMesh for Mesh {
         //
         //       This needs more investigation and probably a thorough clean-up.
         *mesh = self;
+        Ok(())
     }
 }
 
@@ -25,7 +40,13 @@ impl<T> ToMesh for T
 where
     T: ToPolygon,
 {
-    fn to_mesh(self, tolerance: f32, mesh: &mut Mesh) {
+    type Error = Infallible;
+
+    fn to_mesh(
+        self,
+        tolerance: f32,
+        mesh: &mut Mesh,
+    ) -> Result<(), Self::Error> {
         let polygon = self.to_polygon(tolerance);
         let triangles = triangulate(polygon).unwrap();
 
@@ -43,16 +64,26 @@ where
 
             mesh.triangle(a, b, c);
         }
+
+        Ok(())
     }
 }
 
 impl ToMesh for &Triangle3 {
-    fn to_mesh(self, _tolerance: f32, mesh: &mut Mesh) {
+    type Error = Infallible;
+
+    fn to_mesh(
+        self,
+        _tolerance: f32,
+        mesh: &mut Mesh,
+    ) -> Result<(), Self::Error> {
         let i0 = mesh.vertex(self.a);
         let i1 = mesh.vertex(self.b);
         let i2 = mesh.vertex(self.c);
 
         mesh.triangle(i0, i1, i2);
+
+        Ok(())
     }
 }
 
@@ -68,7 +99,7 @@ mod tests {
             Triangle3::new([0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]);
 
         let mut mesh = Mesh::new();
-        triangle.to_mesh(0.0, &mut mesh);
+        triangle.to_mesh(0.0, &mut mesh).unwrap();
 
         let triangles = mesh.triangles();
 
