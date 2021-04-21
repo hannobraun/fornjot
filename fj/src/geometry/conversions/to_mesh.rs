@@ -27,7 +27,7 @@ where
 {
     fn to_mesh(self, tolerance: f32, mesh: &mut Mesh) {
         let polygon = self.to_polygon(tolerance);
-        let triangles = triangulate(polygon);
+        let triangles = triangulate(polygon).unwrap();
 
         for triangle in triangles {
             let a_x: f32 = triangle.a.x.into();

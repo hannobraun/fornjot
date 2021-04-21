@@ -4,7 +4,9 @@
 //! designed to work with exactly the polygons I need it for right now, and not
 //! more.
 
-use crate::geometry::shapes::{Polygon, Tri2};
+use thiserror::Error;
+
+use crate::geometry::shapes::{polygon, Polygon, Tri2};
 
 /// Brute-force polygon triangulation algorithm
 ///
@@ -15,7 +17,7 @@ use crate::geometry::shapes::{Polygon, Tri2};
 /// The reason for this algorithm's existence is to make some forward progress
 /// without having to finish the implementation of the Seidel trapezoidation
 /// algorithm right now.
-pub fn triangulate(mut polygon: Polygon) -> Vec<Tri2> {
+pub fn triangulate(mut polygon: Polygon) -> Result<Vec<Tri2>, InternalError> {
     let mut triangles = Vec::new();
 
     while !polygon.is_empty() {
@@ -50,7 +52,7 @@ pub fn triangulate(mut polygon: Polygon) -> Vec<Tri2> {
                 continue;
             }
 
-            polygon.triangles().remove(triangle).unwrap();
+            polygon.triangles().remove(triangle)?;
             triangles.push(triangle.into());
 
             // If we reached this point, the triangle has successfully been
@@ -59,8 +61,12 @@ pub fn triangulate(mut polygon: Polygon) -> Vec<Tri2> {
         }
     }
 
-    triangles
+    Ok(triangles)
 }
+
+#[derive(Debug, Error)]
+#[error("Error while removing triangle. This is a bug.")]
+pub struct InternalError(#[from] polygon::triangles::RemoveError);
 
 #[cfg(test)]
 mod tests {
@@ -88,7 +94,7 @@ mod tests {
 
         println!("Original polygon: {:#?}", polygon);
 
-        let triangles = triangulate(polygon.clone());
+        let triangles = triangulate(polygon.clone()).unwrap();
         for triangle in triangles {
             polygon.triangles().remove(triangle).unwrap();
 
