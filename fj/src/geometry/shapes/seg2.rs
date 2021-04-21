@@ -44,6 +44,12 @@ impl Seg2 {
 
 impl fmt::Debug for Seg2 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        <Self as fmt::Display>::fmt(self, f)
+    }
+}
+
+impl fmt::Display for Seg2 {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{:?} -> {:?}", self.a, self.b)
     }
 }
