@@ -26,6 +26,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "anyhow"
+version = "1.0.40"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "28b2cd92db5cbd74e8e5028f7e27dd7aa3090e89e4f2a197cc7c8dfb69c7063b"
+
+[[package]]
 name = "approx"
 version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -284,6 +290,7 @@ dependencies = [
 name = "cube"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "fj",
 ]
 
@@ -1574,6 +1581,7 @@ dependencies = [
 name = "spacer"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "fj",
 ]
 
