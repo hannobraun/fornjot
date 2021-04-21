@@ -87,13 +87,13 @@ impl Triangles<'_> {
 
 #[derive(Debug, Eq, Error, PartialEq)]
 pub enum RemoveError {
-    #[error("Triangle edge is outside of polygon")]
+    #[error("Triangle edge is outside of polygon: {0}")]
     OutsideOfPolygon(Seg2),
 
-    #[error("Triangle contains polygon vertex")]
+    #[error("Triangle contains polygon vertex: {0}")]
     TriangleContainsVertex(Pnt2),
 
-    #[error("Triangle vertex is not part of polygon")]
+    #[error("Triangle vertex is not part of polygon: {0}")]
     UnknownVertex(Pnt2),
 }
 
