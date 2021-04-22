@@ -1,5 +1,5 @@
 use std::{
-    collections::{BTreeMap, HashMap, HashSet},
+    collections::{BTreeMap, BTreeSet, HashMap, HashSet},
     ops::Deref as _,
 };
 
@@ -10,7 +10,7 @@ use crate::geometry::shapes::{Pnt2, Seg2};
 
 #[derive(Clone, Debug)]
 pub struct PolygonData {
-    edges: HashSet<Seg2>,
+    edges: BTreeSet<Seg2>,
     vertices: Vertices,
 
     outgoing_edges: HashMap<Pnt2, HashSet<Seg2>>,
@@ -20,7 +20,7 @@ pub struct PolygonData {
 impl PolygonData {
     pub fn new() -> Self {
         Self {
-            edges: HashSet::new(),
+            edges: BTreeSet::new(),
             vertices: Vertices::new(),
 
             outgoing_edges: HashMap::new(),
@@ -28,7 +28,7 @@ impl PolygonData {
         }
     }
 
-    pub fn edges(&self) -> &HashSet<Seg2> {
+    pub fn edges(&self) -> &BTreeSet<Seg2> {
         &self.edges
     }
 

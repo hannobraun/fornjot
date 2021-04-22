@@ -122,7 +122,7 @@ impl RemoveError {
 
 #[cfg(test)]
 mod tests {
-    use std::collections::HashSet;
+    use std::collections::BTreeSet;
 
     use crate::geometry::shapes::{Pnt2, Polygon, Seg2, Tri2};
 
@@ -138,7 +138,7 @@ mod tests {
 
         polygon.triangles().remove(Tri2::new(b, c, d)).unwrap();
 
-        let mut expected = HashSet::new();
+        let mut expected = BTreeSet::new();
         expected.insert(Seg2::new(a, b));
         expected.insert(Seg2::new(b, d));
         expected.insert(Seg2::new(d, a));
@@ -194,7 +194,7 @@ mod tests {
 
         polygon.triangles().remove(Tri2::new(a, x, d)).unwrap();
 
-        let mut expected = HashSet::new();
+        let mut expected = BTreeSet::new();
         expected.insert(Seg2::new(a, b));
         expected.insert(Seg2::new(b, c));
         expected.insert(Seg2::new(c, d));

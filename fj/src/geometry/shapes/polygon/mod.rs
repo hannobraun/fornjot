@@ -3,7 +3,7 @@ pub mod triangles;
 pub mod vertices;
 
 use core::fmt;
-use std::collections::HashSet;
+use std::collections::{BTreeSet, HashSet};
 
 use crate::geometry::shapes::{Pnt2, Seg2};
 
@@ -65,7 +65,7 @@ impl Polygon {
         }
     }
 
-    pub fn edges(&self) -> &HashSet<Seg2> {
+    pub fn edges(&self) -> &BTreeSet<Seg2> {
         self.0.edges()
     }
 
@@ -100,7 +100,7 @@ impl fmt::Display for Polygon {
 
 #[cfg(test)]
 mod tests {
-    use std::collections::HashSet;
+    use std::collections::BTreeSet;
 
     use crate::geometry::shapes::{Pnt2, Seg2};
 
@@ -141,7 +141,7 @@ mod tests {
         polygon.insert_chain(&[a, b, c]);
         polygon.insert_chain(&[p, q, r]);
 
-        let mut expected = HashSet::new();
+        let mut expected = BTreeSet::new();
         expected.insert(Seg2::new(a, b));
         expected.insert(Seg2::new(b, c));
         expected.insert(Seg2::new(c, a));
