@@ -13,7 +13,7 @@ pub struct PolygonData {
     edges: BTreeSet<Seg2>,
     vertices: Vertices,
 
-    outgoing_edges: HashMap<Pnt2, HashSet<Seg2>>,
+    outgoing_edges: HashMap<Pnt2, BTreeSet<Seg2>>,
     incoming_edges: HashMap<Pnt2, HashSet<Seg2>>,
 }
 
@@ -48,7 +48,7 @@ impl PolygonData {
         self.vertices.first()
     }
 
-    pub fn outgoing_edges(&self, vertex: &Pnt2) -> Option<&HashSet<Seg2>> {
+    pub fn outgoing_edges(&self, vertex: &Pnt2) -> Option<&BTreeSet<Seg2>> {
         self.outgoing_edges.get(vertex)
     }
 
@@ -124,10 +124,10 @@ impl PolygonData {
         self.vertices.up(edge.b);
 
         self.incoming_edges.entry(edge.a).or_insert(HashSet::new());
-        self.outgoing_edges.entry(edge.b).or_insert(HashSet::new());
+        self.outgoing_edges.entry(edge.b).or_insert(BTreeSet::new());
         self.outgoing_edges
             .entry(edge.a)
-            .or_insert(HashSet::new())
+            .or_insert(BTreeSet::new())
             .insert(edge);
         self.incoming_edges
             .entry(edge.b)
@@ -221,7 +221,7 @@ impl PolygonData {
 
         for (vertex, edges) in other.outgoing_edges {
             let outgoing =
-                self.outgoing_edges.entry(vertex).or_insert(HashSet::new());
+                self.outgoing_edges.entry(vertex).or_insert(BTreeSet::new());
 
             for edge in edges {
                 outgoing.insert(edge);
@@ -269,7 +269,7 @@ impl Vertices {
 
 #[cfg(test)]
 mod tests {
-    use std::collections::HashSet;
+    use std::collections::{BTreeSet, HashSet};
 
     use crate::geometry::shapes::{Pnt2, Seg2};
 
@@ -338,11 +338,11 @@ mod tests {
         let ab = Seg2::new(a, b);
         data.insert_edge(ab);
 
-        let a_outgoing: &HashSet<_> = data.outgoing_edges(&a).unwrap();
+        let a_outgoing: &BTreeSet<_> = data.outgoing_edges(&a).unwrap();
         assert_eq!(a_outgoing.len(), 1);
         assert!(a_outgoing.contains(&ab));
 
-        let b_outgoing: &HashSet<_> = data.outgoing_edges(&b).unwrap();
+        let b_outgoing: &BTreeSet<_> = data.outgoing_edges(&b).unwrap();
         assert_eq!(b_outgoing.len(), 0);
 
         let a_incoming: &HashSet<_> = data.incoming_edges(&a).unwrap();
@@ -355,11 +355,11 @@ mod tests {
         let ba = Seg2::new(b, a);
         data.insert_edge(ba);
 
-        let a_outgoing: &HashSet<_> = data.outgoing_edges(&a).unwrap();
+        let a_outgoing: &BTreeSet<_> = data.outgoing_edges(&a).unwrap();
         assert_eq!(a_outgoing.len(), 1);
         assert!(a_outgoing.contains(&ab));
 
-        let b_outgoing: &HashSet<_> = data.outgoing_edges(&b).unwrap();
+        let b_outgoing: &BTreeSet<_> = data.outgoing_edges(&b).unwrap();
         assert_eq!(b_outgoing.len(), 1);
         assert!(b_outgoing.contains(&ba));
 
@@ -409,11 +409,11 @@ mod tests {
         // Keep a -> b
         data.retain_edges(|&edge| edge == ab);
 
-        let a_outgoing: &HashSet<_> = data.outgoing_edges(&a).unwrap();
+        let a_outgoing: &BTreeSet<_> = data.outgoing_edges(&a).unwrap();
         assert_eq!(a_outgoing.len(), 1);
         assert!(a_outgoing.contains(&ab));
 
-        let b_outgoing: &HashSet<_> = data.outgoing_edges(&b).unwrap();
+        let b_outgoing: &BTreeSet<_> = data.outgoing_edges(&b).unwrap();
         assert_eq!(b_outgoing.len(), 0);
 
         let a_incoming: &HashSet<_> = data.incoming_edges(&a).unwrap();
