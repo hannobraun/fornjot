@@ -1,5 +1,5 @@
 use std::{
-    collections::{BTreeMap, BTreeSet, HashMap, HashSet},
+    collections::{BTreeMap, BTreeSet, HashMap},
     ops::Deref as _,
 };
 
@@ -14,7 +14,7 @@ pub struct PolygonData {
     vertices: Vertices,
 
     outgoing_edges: HashMap<Pnt2, BTreeSet<Seg2>>,
-    incoming_edges: HashMap<Pnt2, HashSet<Seg2>>,
+    incoming_edges: HashMap<Pnt2, BTreeSet<Seg2>>,
 }
 
 impl PolygonData {
@@ -52,7 +52,7 @@ impl PolygonData {
         self.outgoing_edges.get(vertex)
     }
 
-    pub fn incoming_edges(&self, vertex: &Pnt2) -> Option<&HashSet<Seg2>> {
+    pub fn incoming_edges(&self, vertex: &Pnt2) -> Option<&BTreeSet<Seg2>> {
         self.incoming_edges.get(vertex)
     }
 
@@ -123,7 +123,7 @@ impl PolygonData {
         self.vertices.up(edge.a);
         self.vertices.up(edge.b);
 
-        self.incoming_edges.entry(edge.a).or_insert(HashSet::new());
+        self.incoming_edges.entry(edge.a).or_insert(BTreeSet::new());
         self.outgoing_edges.entry(edge.b).or_insert(BTreeSet::new());
         self.outgoing_edges
             .entry(edge.a)
@@ -131,7 +131,7 @@ impl PolygonData {
             .insert(edge);
         self.incoming_edges
             .entry(edge.b)
-            .or_insert(HashSet::new())
+            .or_insert(BTreeSet::new())
             .insert(edge);
     }
 
@@ -230,7 +230,7 @@ impl PolygonData {
 
         for (vertex, edges) in other.incoming_edges {
             let incoming =
-                self.incoming_edges.entry(vertex).or_insert(HashSet::new());
+                self.incoming_edges.entry(vertex).or_insert(BTreeSet::new());
 
             for edge in edges {
                 incoming.insert(edge);
@@ -269,7 +269,7 @@ impl Vertices {
 
 #[cfg(test)]
 mod tests {
-    use std::collections::{BTreeSet, HashSet};
+    use std::collections::BTreeSet;
 
     use crate::geometry::shapes::{Pnt2, Seg2};
 
@@ -345,10 +345,10 @@ mod tests {
         let b_outgoing: &BTreeSet<_> = data.outgoing_edges(&b).unwrap();
         assert_eq!(b_outgoing.len(), 0);
 
-        let a_incoming: &HashSet<_> = data.incoming_edges(&a).unwrap();
+        let a_incoming: &BTreeSet<_> = data.incoming_edges(&a).unwrap();
         assert_eq!(a_incoming.len(), 0);
 
-        let b_incoming: &HashSet<_> = data.incoming_edges(&b).unwrap();
+        let b_incoming: &BTreeSet<_> = data.incoming_edges(&b).unwrap();
         assert_eq!(b_incoming.len(), 1);
         assert!(b_incoming.contains(&ab));
 
@@ -363,11 +363,11 @@ mod tests {
         assert_eq!(b_outgoing.len(), 1);
         assert!(b_outgoing.contains(&ba));
 
-        let a_incoming: &HashSet<_> = data.incoming_edges(&a).unwrap();
+        let a_incoming: &BTreeSet<_> = data.incoming_edges(&a).unwrap();
         assert_eq!(a_incoming.len(), 1);
         assert!(a_incoming.contains(&ba));
 
-        let b_incoming: &HashSet<_> = data.incoming_edges(&b).unwrap();
+        let b_incoming: &BTreeSet<_> = data.incoming_edges(&b).unwrap();
         assert_eq!(b_incoming.len(), 1);
         assert!(b_incoming.contains(&ab));
     }
@@ -416,10 +416,10 @@ mod tests {
         let b_outgoing: &BTreeSet<_> = data.outgoing_edges(&b).unwrap();
         assert_eq!(b_outgoing.len(), 0);
 
-        let a_incoming: &HashSet<_> = data.incoming_edges(&a).unwrap();
+        let a_incoming: &BTreeSet<_> = data.incoming_edges(&a).unwrap();
         assert_eq!(a_incoming.len(), 0);
 
-        let b_incoming: &HashSet<_> = data.incoming_edges(&b).unwrap();
+        let b_incoming: &BTreeSet<_> = data.incoming_edges(&b).unwrap();
         assert_eq!(b_incoming.len(), 1);
         assert!(b_incoming.contains(&ab));
 
