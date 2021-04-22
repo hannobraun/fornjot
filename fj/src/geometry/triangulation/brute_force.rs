@@ -31,7 +31,8 @@ pub fn triangulate(mut polygon: Polygon) -> Result<Vec<Tri2>, InternalError> {
 
         // Get the other two points of the candidate triangle. This shouldn't
         // panic, as every point must have two neighbors.
-        let mut neighbors_of_a = polygon.neighbors_of(&a).unwrap().into_iter();
+        let mut neighbors_of_a =
+            polygon.vertices().neighbors_of(&a).into_iter();
         let b = neighbors_of_a.next().unwrap();
         let mut c = neighbors_of_a.next().unwrap();
         drop(neighbors_of_a);
