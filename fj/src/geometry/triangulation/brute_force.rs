@@ -4,6 +4,7 @@
 //! designed to work with exactly the polygons I need it for right now, and not
 //! more.
 
+use rand::{seq::SliceRandom as _, thread_rng};
 use thiserror::Error;
 use tracing::debug;
 
@@ -21,6 +22,8 @@ use crate::geometry::shapes::{polygon, Polygon, Tri2};
 pub fn triangulate(mut polygon: Polygon) -> Result<Vec<Tri2>, InternalError> {
     debug!("Triangulating polygon: {}", polygon);
 
+    let mut rng = thread_rng();
+
     let mut triangles = Vec::new();
 
     while !polygon.is_empty() {
@@ -30,12 +33,12 @@ pub fn triangulate(mut polygon: Polygon) -> Result<Vec<Tri2>, InternalError> {
         let a = polygon.first_vertex().unwrap();
 
         // Get the other two points of the candidate triangle.
-        let neighbors_of_a: Vec<_> =
+        let mut neighbors_of_a: Vec<_> =
             polygon.vertices().neighbors_of(&a).into_iter().collect();
 
         // This shouldn't panic, as every point must have at least two
         // neighbors.
-        let b = neighbors_of_a[0];
+        let mut b = neighbors_of_a[0];
         let mut c = neighbors_of_a[1];
 
         loop {
@@ -65,14 +68,30 @@ pub fn triangulate(mut polygon: Polygon) -> Result<Vec<Tri2>, InternalError> {
                 continue;
             }
 
-            if let Err(err) = polygon.triangles().remove(triangle) {
-                return Err(InternalError {
-                    triangle,
-                    polygon,
-                    cause: err,
-                });
+            match polygon.triangles().remove(triangle) {
+                Ok(()) => {
+                    // We removed a triangle from the polygon.
+                    triangles.push(triangle.into());
+                }
+                Err(polygon::triangles::RemoveError::OutsideOfPolygon(_)) => {
+                    // We selected a triangle that is outside of the polygon.
+                    // Shuffle neighbors, try again.
+                    neighbors_of_a.shuffle(&mut rng);
+                    b = neighbors_of_a[0];
+                    c = neighbors_of_a[1];
+
+                    continue;
+                }
+                Err(err) => {
+                    // Other errors are a bug. Properly report this to the
+                    // caller.
+                    return Err(InternalError {
+                        triangle,
+                        polygon,
+                        cause: err,
+                    });
+                }
             }
-            triangles.push(triangle.into());
 
             debug!("Removed triangle. Updated polygon: {}", polygon);
 
