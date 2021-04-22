@@ -140,6 +140,8 @@ impl PolygonData {
         let outgoing_edges = &mut self.outgoing_edges;
         let incoming_edges = &mut self.incoming_edges;
 
+        // It would be nicer to use `BTreeSet::retain` here, but as of this
+        // writing, it's not stable.
         self.edges = self
             .edges
             .iter()
