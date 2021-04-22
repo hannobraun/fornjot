@@ -35,7 +35,6 @@ pub fn triangulate(mut polygon: Polygon) -> Result<Vec<Tri2>, InternalError> {
             polygon.vertices().neighbors_of(&a).into_iter();
         let b = neighbors_of_a.next().unwrap();
         let mut c = neighbors_of_a.next().unwrap();
-        drop(neighbors_of_a);
 
         loop {
             let triangle = Tri2::new_ccw(a, b, c);
