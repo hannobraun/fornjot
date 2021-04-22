@@ -161,9 +161,7 @@ mod tests {
         assert!(polygon.is_empty());
     }
 
-    // TASK: Fix the bug that this test demonstrates.
     #[test]
-    #[ignore]
     fn triangulate_should_handle_selected_triangle_being_outside_of_polygon() {
         let mut polygon = Polygon::new();
 
