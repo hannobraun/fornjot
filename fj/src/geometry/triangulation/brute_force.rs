@@ -5,6 +5,7 @@
 //! more.
 
 use thiserror::Error;
+use tracing::debug;
 
 use crate::geometry::shapes::{polygon, Polygon, Tri2};
 
@@ -18,6 +19,8 @@ use crate::geometry::shapes::{polygon, Polygon, Tri2};
 /// without having to finish the implementation of the Seidel trapezoidation
 /// algorithm right now.
 pub fn triangulate(mut polygon: Polygon) -> Result<Vec<Tri2>, InternalError> {
+    debug!("Triangulating polygon: {}", polygon);
+
     let mut triangles = Vec::new();
 
     while !polygon.is_empty() {
@@ -36,13 +39,21 @@ pub fn triangulate(mut polygon: Polygon) -> Result<Vec<Tri2>, InternalError> {
         loop {
             let triangle = Tri2::new_ccw(a, b, c);
 
+            debug!("Candidate triangle: {}", triangle);
+
             let mut lowest_in_triangle = None;
             for vertex in polygon.vertices().iter() {
                 if triangle.contains(vertex) {
+                    debug!("Triangle contains vertex: {}", vertex);
+
                     if lowest_in_triangle.unwrap_or(vertex) >= vertex {
                         lowest_in_triangle = Some(vertex);
                     }
                 }
+            }
+
+            if let Some(vertex) = lowest_in_triangle {
+                debug!("Lowest vertex contained in triangle: {}", vertex);
             }
 
             // If there are vertices in the triangle, replace the last triangle
@@ -60,6 +71,8 @@ pub fn triangulate(mut polygon: Polygon) -> Result<Vec<Tri2>, InternalError> {
                 });
             }
             triangles.push(triangle.into());
+
+            debug!("Removed triangle. Updated polygon: {}", polygon);
 
             // If we reached this point, the triangle has successfully been
             // removed from the polygon. We can abort the inner loop.
