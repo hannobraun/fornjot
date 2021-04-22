@@ -103,7 +103,7 @@ mod tests {
     use super::triangulate;
 
     #[test]
-    fn triangulate_should_triangulate_a_polygon() {
+    fn triangulate_should_triangulate_polygon_with_hole() {
         let mut polygon = Polygon::new();
 
         // A very rough circle.
