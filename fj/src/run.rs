@@ -19,6 +19,8 @@ where
     M: ToMesh,
     M::Error: fmt::Debug,
 {
+    tracing_subscriber::fmt::init();
+
     let event_loop = EventLoop::new();
 
     let window = WindowBuilder::new()
