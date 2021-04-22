@@ -140,4 +140,36 @@ mod tests {
         // all of the triangles that made up the polygon.
         assert!(polygon.is_empty());
     }
+
+    // TASK: Fix the bug that this test demonstrates.
+    #[test]
+    #[ignore]
+    fn triangulate_should_handle_selected_triangle_being_outside_of_polygon() {
+        let mut polygon = Polygon::new();
+
+        // Common point
+        let p0 = Pnt2::new(0.0, 0.0);
+
+        // Outer border
+        let p1 = Pnt2::new(2.0, -1.0);
+        let p2 = Pnt2::new(3.0, 0.0);
+        let p3 = Pnt2::new(2.0, 1.0);
+        polygon.insert_chain(&[p0, p1, p2, p3]);
+
+        // Inner border
+        let p1 = Pnt2::new(1.0, 0.5);
+        let p2 = Pnt2::new(2.0, 0.0);
+        let p3 = Pnt2::new(1.0, -0.5);
+        polygon.insert_chain(&[p0, p1, p2, p3]);
+
+        // The three "lowest" points belong to the hole. The triangle that's
+        // selected first thus doesn't belong to the polygon.
+
+        let triangles = triangulate(polygon.clone()).unwrap();
+        for triangle in triangles {
+            polygon.triangles().remove(triangle).unwrap();
+        }
+
+        assert!(polygon.is_empty());
+    }
 }
