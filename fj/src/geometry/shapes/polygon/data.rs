@@ -13,7 +13,7 @@ pub struct PolygonData {
     edges: BTreeSet<Seg2>,
     vertices: Vertices,
 
-    outgoing_edges: HashMap<Pnt2, BTreeSet<Seg2>>,
+    outgoing_edges: BTreeMap<Pnt2, BTreeSet<Seg2>>,
     incoming_edges: HashMap<Pnt2, BTreeSet<Seg2>>,
 }
 
@@ -23,7 +23,7 @@ impl PolygonData {
             edges: BTreeSet::new(),
             vertices: Vertices::new(),
 
-            outgoing_edges: HashMap::new(),
+            outgoing_edges: BTreeMap::new(),
             incoming_edges: HashMap::new(),
         }
     }
