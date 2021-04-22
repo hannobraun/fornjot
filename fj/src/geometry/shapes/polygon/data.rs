@@ -1,5 +1,5 @@
 use std::{
-    collections::{BTreeMap, BTreeSet, HashMap},
+    collections::{BTreeMap, BTreeSet},
     ops::Deref as _,
 };
 
@@ -14,7 +14,7 @@ pub struct PolygonData {
     vertices: Vertices,
 
     outgoing_edges: BTreeMap<Pnt2, BTreeSet<Seg2>>,
-    incoming_edges: HashMap<Pnt2, BTreeSet<Seg2>>,
+    incoming_edges: BTreeMap<Pnt2, BTreeSet<Seg2>>,
 }
 
 impl PolygonData {
@@ -24,7 +24,7 @@ impl PolygonData {
             vertices: Vertices::new(),
 
             outgoing_edges: BTreeMap::new(),
-            incoming_edges: HashMap::new(),
+            incoming_edges: BTreeMap::new(),
         }
     }
 
