@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::BTreeSet;
 
 use thiserror::Error;
 
@@ -35,7 +35,7 @@ impl Triangles<'_> {
 
         // Convert triangle into a representation that is more useful for this
         // algorithm.
-        let mut triangle_edges: HashSet<Seg2> = HashSet::new();
+        let mut triangle_edges: BTreeSet<Seg2> = BTreeSet::new();
         for &edge in &triangle.edges() {
             triangle_edges.insert(edge);
         }
