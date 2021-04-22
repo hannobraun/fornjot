@@ -4,7 +4,7 @@ use parry2d::shape::Segment;
 
 use super::Pnt2;
 
-#[derive(Clone, Copy, Eq, Hash, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Eq, Hash, PartialEq, PartialOrd, Ord)]
 pub struct Seg2 {
     pub a: Pnt2,
     pub b: Pnt2,
