@@ -136,33 +136,37 @@ impl PolygonData {
     }
 
     pub fn retain_edges(&mut self, mut f: impl FnMut(&Seg2) -> bool) {
-        let edges = &mut self.edges;
         let vertices = &mut self.vertices;
         let outgoing_edges = &mut self.outgoing_edges;
         let incoming_edges = &mut self.incoming_edges;
 
-        edges.retain(|edge| {
-            let retain = f(edge);
+        self.edges = self
+            .edges
+            .iter()
+            .filter(|edge| {
+                let retain = f(edge);
 
-            if !retain {
-                let removed_a = vertices.down(edge.a);
-                let removed_b = vertices.down(edge.b);
+                if !retain {
+                    let removed_a = vertices.down(edge.a);
+                    let removed_b = vertices.down(edge.b);
 
-                outgoing_edges.get_mut(&edge.a).unwrap().remove(edge);
-                incoming_edges.get_mut(&edge.b).unwrap().remove(edge);
+                    outgoing_edges.get_mut(&edge.a).unwrap().remove(edge);
+                    incoming_edges.get_mut(&edge.b).unwrap().remove(edge);
 
-                if removed_a {
-                    incoming_edges.remove(&edge.a);
-                    outgoing_edges.remove(&edge.a);
+                    if removed_a {
+                        incoming_edges.remove(&edge.a);
+                        outgoing_edges.remove(&edge.a);
+                    }
+                    if removed_b {
+                        incoming_edges.remove(&edge.b);
+                        outgoing_edges.remove(&edge.b);
+                    }
                 }
-                if removed_b {
-                    incoming_edges.remove(&edge.b);
-                    outgoing_edges.remove(&edge.b);
-                }
-            }
 
-            retain
-        });
+                retain
+            })
+            .copied()
+            .collect();
     }
 
     pub fn reverse(&mut self) {
