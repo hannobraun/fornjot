@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::BTreeSet;
 
 use crate::geometry::shapes::Pnt2;
 
@@ -11,10 +11,10 @@ impl Vertices<'_> {
         self.0.vertices()
     }
 
-    pub fn neighbors_of(&self, vertex: impl Into<Pnt2>) -> HashSet<Pnt2> {
+    pub fn neighbors_of(&self, vertex: impl Into<Pnt2>) -> BTreeSet<Pnt2> {
         let vertex = vertex.into();
 
-        let mut neighbors = HashSet::new();
+        let mut neighbors = BTreeSet::new();
 
         for edge in self.0.edges() {
             if edge.a == vertex {
