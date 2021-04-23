@@ -29,13 +29,14 @@ where
     type Error = brute_force::InternalError;
 
     fn to_mesh(self, tolerance: f32) -> Result<Mesh, Self::Error> {
-        polygon_to_mesh(self, tolerance)
+        polygon_to_mesh(self, tolerance, 0.0)
     }
 }
 
 fn polygon_to_mesh(
     polygon: impl ToPolygon,
     tolerance: f32,
+    z: f32,
 ) -> Result<Mesh, brute_force::InternalError> {
     let mut mesh = Mesh::new();
     let polygon = polygon.to_polygon(tolerance);
@@ -49,9 +50,9 @@ fn polygon_to_mesh(
         let c_x: f32 = triangle.c.x.into();
         let c_y: f32 = triangle.c.y.into();
 
-        let a = mesh.vertex(Point3::new(a_x, a_y, 0.0));
-        let b = mesh.vertex(Point3::new(b_x, b_y, 0.0));
-        let c = mesh.vertex(Point3::new(c_x, c_y, 0.0));
+        let a = mesh.vertex(Point3::new(a_x, a_y, z));
+        let b = mesh.vertex(Point3::new(b_x, b_y, z));
+        let c = mesh.vertex(Point3::new(c_x, c_y, z));
 
         mesh.triangle(a, b, c);
     }
