@@ -4,6 +4,7 @@ use nalgebra::Point3;
 
 use crate::geometry::{
     conversions::ToPolygon,
+    shapes::Polygon,
     triangulation::brute_force::{self, triangulate},
     Mesh,
 };
@@ -29,17 +30,16 @@ where
     type Error = brute_force::InternalError;
 
     fn to_mesh(self, tolerance: f32) -> Result<Mesh, Self::Error> {
-        polygon_to_mesh(self, tolerance, 0.0)
+        let polygon = self.to_polygon(tolerance);
+        polygon_to_mesh(polygon, 0.0)
     }
 }
 
 fn polygon_to_mesh(
-    polygon: impl ToPolygon,
-    tolerance: f32,
+    polygon: Polygon,
     z: f32,
 ) -> Result<Mesh, brute_force::InternalError> {
     let mut mesh = Mesh::new();
-    let polygon = polygon.to_polygon(tolerance);
     let triangles = triangulate(polygon)?;
 
     for triangle in triangles {
