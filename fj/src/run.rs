@@ -8,7 +8,7 @@ use winit::{
 };
 
 use crate::{
-    geometry::{Mesh, ToMesh},
+    geometry::ToMesh,
     graphics::{DrawError, Renderer},
     input::InputHandler,
     transform::Transform,
@@ -31,9 +31,8 @@ where
         .build(&event_loop)
         .unwrap();
 
-    let mut mesh_tmp = Mesh::new();
-    mesh.to_mesh(0.001, &mut mesh_tmp)?;
-    let mesh = mesh_tmp.into_graphics_mesh();
+    let mesh = mesh.to_mesh(0.001)?;
+    let mesh = mesh.into_graphics_mesh();
 
     let mut input_handler = InputHandler::new();
     let mut transform = Transform::new();

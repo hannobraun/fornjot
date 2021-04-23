@@ -11,29 +11,14 @@ use crate::geometry::{
 pub trait ToMesh {
     type Error;
 
-    fn to_mesh(
-        self,
-        tolerance: f32,
-        mesh: &mut Mesh,
-    ) -> Result<(), Self::Error>;
+    fn to_mesh(self, tolerance: f32) -> Result<Mesh, Self::Error>;
 }
 
 impl ToMesh for Mesh {
     type Error = Infallible;
 
-    fn to_mesh(
-        self,
-        _tolerance: f32,
-        mesh: &mut Mesh,
-    ) -> Result<(), Self::Error> {
-        // TASK: I think just replacing the mesh works for current use cases,
-        //       but it doesn't seem right. Unfortunately merging meshes seems
-        //       to be somewhat non-trivial, and the whole distinction between
-        //       geometry mesh and graphics mesh is confusing anyway.
-        //
-        //       This needs more investigation and probably a thorough clean-up.
-        *mesh = self;
-        Ok(())
+    fn to_mesh(self, _tolerance: f32) -> Result<Mesh, Self::Error> {
+        Ok(self)
     }
 }
 
@@ -43,11 +28,9 @@ where
 {
     type Error = brute_force::InternalError;
 
-    fn to_mesh(
-        self,
-        tolerance: f32,
-        mesh: &mut Mesh,
-    ) -> Result<(), Self::Error> {
+    fn to_mesh(self, tolerance: f32) -> Result<Mesh, Self::Error> {
+        let mut mesh = Mesh::new();
+
         let polygon = self.to_polygon(tolerance);
         let triangles = triangulate(polygon)?;
 
@@ -66,6 +49,6 @@ where
             mesh.triangle(a, b, c);
         }
 
-        Ok(())
+        Ok(mesh)
     }
 }
