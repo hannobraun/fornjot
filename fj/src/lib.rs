@@ -1,7 +1,9 @@
 pub mod geometry;
 
 pub mod prelude {
-    pub use super::geometry::operations::difference::MakeDifference as _;
+    pub use super::geometry::operations::{
+        difference::MakeDifference as _, linear_extrude::MakeLinearExtrude as _,
+    };
 }
 
 mod graphics;
