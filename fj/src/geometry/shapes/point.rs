@@ -21,20 +21,18 @@ impl<const D: usize> Deref for Point<D> {
 
 // TASK: `Point` doesn't implement `Ord`, even if its type parameter does. This
 //       should be fixed in nalgebra.
-// TASK: Make generic over dimension.
-impl Ord for Point<2> {
+impl<const D: usize> Ord for Point<D> {
     fn cmp(&self, other: &Self) -> Ordering {
-        let self_ = (self.0.x, self.0.y);
-        let other = (other.0.x, other.0.y);
+        let self_: [R32; D] = self.into();
+        let other: [R32; D] = other.into();
         self_.cmp(&other)
     }
 }
 
-// TASK: Make generic over dimension.
-impl PartialOrd for Point<2> {
+impl<const D: usize> PartialOrd for Point<D> {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        let self_ = (self.0.x, self.0.y);
-        let other = (other.0.x, other.0.y);
+        let self_: [R32; D] = self.into();
+        let other: [R32; D] = other.into();
         self_.partial_cmp(&other)
     }
 }
