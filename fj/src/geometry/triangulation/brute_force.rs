@@ -28,8 +28,7 @@ pub fn triangulate(mut polygon: Polygon) -> Result<Vec<Tri2>, InternalError> {
 
     while !polygon.is_empty() {
         // Get the first point of our candidate triangle. This shouldn't panic,
-        // as we wouldn't be here, if there wasn't at least one item in
-        // `neighbors`.
+        // as we just determined that the polygon isn't empty.
         let a = polygon.vertices().iter().next().unwrap();
 
         // Get the other two points of the candidate triangle.
