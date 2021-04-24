@@ -143,7 +143,7 @@ pub struct Vertex {
     pub normal: Vector3<R32>,
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct Index(usize);
 
 #[cfg(test)]
