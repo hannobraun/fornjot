@@ -40,9 +40,9 @@ mod tests {
     fn neighbors_of_should_return_neighbors_of_vertex() {
         let mut polygon = Polygon::new();
 
-        let a = Point::new(0.0, 0.0);
-        let b = Point::new(1.0, 0.0);
-        let c = Point::new(0.0, 1.0);
+        let a = Point::from_xy(0.0, 0.0);
+        let b = Point::from_xy(1.0, 0.0);
+        let c = Point::from_xy(0.0, 1.0);
         polygon.insert_chain(&[a, b, c]);
 
         let neighbors_of_a = polygon.vertices().neighbors_of(a);

@@ -277,8 +277,8 @@ mod tests {
 
     #[test]
     fn first_vertex_should_return_the_lowest_vertex() {
-        let a = Point::new(1.0, 0.0);
-        let b = Point::new(0.0, 1.0);
+        let a = Point::from_xy(1.0, 0.0);
+        let b = Point::from_xy(0.0, 1.0);
 
         let mut data = PolygonData::new();
         data.insert_edge(Seg2::new(a, b));
@@ -295,10 +295,10 @@ mod tests {
     fn is_inside_should_tell_whether_edge_is_inside() {
         let mut data = PolygonData::new();
 
-        let a = Point::new(0.0, 0.0);
-        let b = Point::new(1.0, 1.0);
-        let c = Point::new(2.0, 0.0);
-        let d = Point::new(1.0, 2.0);
+        let a = Point::from_xy(0.0, 0.0);
+        let b = Point::from_xy(1.0, 1.0);
+        let c = Point::from_xy(2.0, 0.0);
+        let d = Point::from_xy(1.0, 2.0);
 
         data.insert_edge(Seg2::new(a, b));
         data.insert_edge(Seg2::new(b, c));
@@ -316,8 +316,8 @@ mod tests {
     fn insert_edge_should_update_vertices() {
         let mut data = PolygonData::new();
 
-        let a = Point::new(0.0, 0.0);
-        let b = Point::new(1.0, 0.0);
+        let a = Point::from_xy(0.0, 0.0);
+        let b = Point::from_xy(1.0, 0.0);
 
         assert_eq!(data.contains_vertex(&a), false);
         assert_eq!(data.contains_vertex(&b), false);
@@ -332,8 +332,8 @@ mod tests {
     fn insert_edge_should_update_edge_counts() {
         let mut data = PolygonData::new();
 
-        let a = Point::new(0.0, 0.0);
-        let b = Point::new(1.0, 0.0);
+        let a = Point::from_xy(0.0, 0.0);
+        let b = Point::from_xy(1.0, 0.0);
 
         let ab = Seg2::new(a, b);
         data.insert_edge(ab);
@@ -376,9 +376,9 @@ mod tests {
     fn retain_edges_should_update_vertices() {
         let mut data = PolygonData::new();
 
-        let a = Point::new(0.0, 0.0);
-        let b = Point::new(1.0, 0.0);
-        let c = Point::new(0.0, 1.0);
+        let a = Point::from_xy(0.0, 0.0);
+        let b = Point::from_xy(1.0, 0.0);
+        let c = Point::from_xy(0.0, 1.0);
 
         let ab = Seg2::new(a, b);
         let bc = Seg2::new(b, c);
@@ -397,8 +397,8 @@ mod tests {
     fn retain_edges_should_update_edge_counts() {
         let mut data = PolygonData::new();
 
-        let a = Point::new(0.0, 0.0);
-        let b = Point::new(1.0, 0.0);
+        let a = Point::from_xy(0.0, 0.0);
+        let b = Point::from_xy(1.0, 0.0);
 
         let ab = Seg2::new(a, b);
         let ba = Seg2::new(b, a);

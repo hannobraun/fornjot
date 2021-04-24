@@ -132,9 +132,9 @@ mod tests {
 
     #[test]
     fn is_clockwise_should_tell_whether_triangle_is_clockwise() {
-        let a = Point::new(0.0, 0.0);
-        let b = Point::new(1.0, 0.0);
-        let c = Point::new(0.0, 1.0);
+        let a = Point::from_xy(0.0, 0.0);
+        let b = Point::from_xy(1.0, 0.0);
+        let c = Point::from_xy(0.0, 1.0);
 
         let ccw = Tri2::new(a, b, c);
         assert_eq!(ccw.is_clockwise(), false);
@@ -145,13 +145,13 @@ mod tests {
 
     #[test]
     fn contains_should_tell_whether_triangle_contains_point() {
-        let a = Point::new(0.0, 0.0);
-        let b = Point::new(1.0, 0.0);
-        let c = Point::new(0.0, 1.0);
+        let a = Point::from_xy(0.0, 0.0);
+        let b = Point::from_xy(1.0, 0.0);
+        let c = Point::from_xy(0.0, 1.0);
         let triangle = Tri2::new(a, b, c);
 
-        let on_edge = Point::new(0.5, 0.0);
-        let in_triangle = Point::new(0.5, 0.5);
+        let on_edge = Point::from_xy(0.5, 0.0);
+        let in_triangle = Point::from_xy(0.5, 0.5);
 
         assert_eq!(triangle.contains(&a), false);
         assert_eq!(triangle.contains(&b), false);

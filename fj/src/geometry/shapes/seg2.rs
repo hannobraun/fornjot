@@ -98,9 +98,9 @@ mod tests {
 
     #[test]
     fn contains_should_indicate_whether_segment_contains_point() {
-        let a = Point::new(0.0, 0.0);
-        let b = Point::new(1.0, 0.0);
-        let c = Point::new(0.0, 1.0);
+        let a = Point::from_xy(0.0, 0.0);
+        let b = Point::from_xy(1.0, 0.0);
+        let c = Point::from_xy(0.0, 1.0);
 
         let segment = Seg2::new(a, b);
 
@@ -112,8 +112,8 @@ mod tests {
     #[test]
     fn normalize_should_normalize_a_segment() {
         let a = Seg2 {
-            a: Point::new(0.0, 0.0),
-            b: Point::new(1.0, 1.0),
+            a: Point::from_xy(0.0, 0.0),
+            b: Point::from_xy(1.0, 1.0),
         };
         let b = Seg2 { a: a.b, b: a.a };
 
@@ -123,8 +123,8 @@ mod tests {
 
     #[test]
     fn reverse_should_reverse_a_segment() {
-        let a = Point::new(0.0, 0.0);
-        let b = Point::new(1.0, 0.0);
+        let a = Point::from_xy(0.0, 0.0);
+        let b = Point::from_xy(1.0, 0.0);
 
         let segment = Seg2::new(a, b);
 

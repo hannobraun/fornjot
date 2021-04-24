@@ -6,7 +6,7 @@ use decorum::R32;
 pub struct Point<const D: usize>(pub nalgebra::Point<R32, D>);
 
 impl Point<2> {
-    pub fn new(x: impl Into<R32>, y: impl Into<R32>) -> Self {
+    pub fn from_xy(x: impl Into<R32>, y: impl Into<R32>) -> Self {
         Self(nalgebra::Point::<_, 2>::new(x.into(), y.into()))
     }
 }
@@ -114,8 +114,8 @@ mod tests {
 
     #[test]
     fn points_should_have_defined_order() {
-        let a = Point::new(0.0, 1.0);
-        let b = Point::new(1.0, 0.0);
+        let a = Point::from_xy(0.0, 1.0);
+        let b = Point::from_xy(1.0, 0.0);
 
         assert_eq!(a > b, false);
         assert_eq!(a < b, true);

@@ -130,10 +130,10 @@ mod tests {
     fn remove_should_remove_triangle() {
         let mut polygon = Polygon::new();
 
-        let a = Point::new(0.0, 0.0);
-        let b = Point::new(1.0, 0.0);
-        let c = Point::new(1.0, 1.0);
-        let d = Point::new(0.0, 1.0);
+        let a = Point::from_xy(0.0, 0.0);
+        let b = Point::from_xy(1.0, 0.0);
+        let c = Point::from_xy(1.0, 1.0);
+        let d = Point::from_xy(0.0, 1.0);
         polygon.insert_chain(&[a, b, c, d]);
 
         polygon.triangles().remove(Tri2::new(b, c, d)).unwrap();
@@ -150,12 +150,12 @@ mod tests {
     fn remove_should_fail_if_not_all_vertices_are_in_polygon() {
         let mut polygon = Polygon::new();
 
-        let a = Point::new(0.0, 0.0);
-        let b = Point::new(1.0, 0.0);
-        let c = Point::new(0.0, 1.0);
+        let a = Point::from_xy(0.0, 0.0);
+        let b = Point::from_xy(1.0, 0.0);
+        let c = Point::from_xy(0.0, 1.0);
         polygon.insert_chain(&[a, b, c]);
 
-        let triangle = Tri2::new(a, b, Point::new(0.0, 2.0));
+        let triangle = Tri2::new(a, b, Point::from_xy(0.0, 2.0));
         let result = polygon.triangles().remove(triangle);
 
         assert!(result.unwrap_err().is_unknown_vertex());
@@ -165,9 +165,9 @@ mod tests {
     fn remove_should_remove_all_vertices_if_necessary() {
         let mut polygon = Polygon::new();
 
-        let a = Point::new(0.0, 0.0);
-        let b = Point::new(1.0, 0.0);
-        let c = Point::new(1.0, 1.0);
+        let a = Point::from_xy(0.0, 0.0);
+        let b = Point::from_xy(1.0, 0.0);
+        let c = Point::from_xy(1.0, 1.0);
         polygon.insert_chain(&[a, b, c]);
 
         polygon.triangles().remove(Tri2::new(a, b, c)).unwrap();
@@ -179,17 +179,17 @@ mod tests {
         let mut polygon = Polygon::new();
 
         // Outer perimeter
-        let a = Point::new(0.0, 0.0);
-        let b = Point::new(2.0, 0.0);
-        let c = Point::new(2.0, 2.0);
-        let d = Point::new(0.0, 2.0);
+        let a = Point::from_xy(0.0, 0.0);
+        let b = Point::from_xy(2.0, 0.0);
+        let c = Point::from_xy(2.0, 2.0);
+        let d = Point::from_xy(0.0, 2.0);
         polygon.insert_chain(&[a, b, c, d]);
 
         // Inner perimeter (hole)
-        let x = Point::new(0.5, 0.5);
-        let y = Point::new(0.5, 1.5);
-        let z = Point::new(1.5, 1.5);
-        let w = Point::new(1.5, 0.5);
+        let x = Point::from_xy(0.5, 0.5);
+        let y = Point::from_xy(0.5, 1.5);
+        let z = Point::from_xy(1.5, 1.5);
+        let w = Point::from_xy(1.5, 0.5);
         polygon.insert_chain(&[x, y, z, w]);
 
         polygon.triangles().remove(Tri2::new(a, x, d)).unwrap();
@@ -213,17 +213,17 @@ mod tests {
         let mut polygon = Polygon::new();
 
         // Outer perimeter
-        let a = Point::new(0.0, 0.0);
-        let b = Point::new(2.0, 0.0);
-        let c = Point::new(2.0, 2.0);
-        let d = Point::new(0.0, 2.0);
+        let a = Point::from_xy(0.0, 0.0);
+        let b = Point::from_xy(2.0, 0.0);
+        let c = Point::from_xy(2.0, 2.0);
+        let d = Point::from_xy(0.0, 2.0);
         polygon.insert_chain(&[a, b, c, d]);
 
         // Inner perimeter (hole)
-        let x = Point::new(0.5, 0.5);
-        let y = Point::new(0.5, 1.5);
-        let z = Point::new(1.5, 1.5);
-        let w = Point::new(1.5, 0.5);
+        let x = Point::from_xy(0.5, 0.5);
+        let y = Point::from_xy(0.5, 1.5);
+        let z = Point::from_xy(1.5, 1.5);
+        let w = Point::from_xy(1.5, 0.5);
         polygon.insert_chain(&[x, y, z, w]);
 
         let result = polygon.triangles().remove(Tri2::new(x, w, y));
@@ -235,17 +235,17 @@ mod tests {
         let mut polygon = Polygon::new();
 
         // Outer perimeter
-        let a = Point::new(0.0, 0.0);
-        let b = Point::new(2.0, 0.0);
-        let c = Point::new(2.0, 2.0);
-        let d = Point::new(0.0, 2.0);
+        let a = Point::from_xy(0.0, 0.0);
+        let b = Point::from_xy(2.0, 0.0);
+        let c = Point::from_xy(2.0, 2.0);
+        let d = Point::from_xy(0.0, 2.0);
         polygon.insert_chain(&[a, b, c, d]);
 
         // Inner perimeter (hole)
-        let x = Point::new(0.5, 0.5);
-        let y = Point::new(0.5, 1.5);
-        let z = Point::new(1.5, 1.5);
-        let w = Point::new(1.5, 0.5);
+        let x = Point::from_xy(0.5, 0.5);
+        let y = Point::from_xy(0.5, 1.5);
+        let z = Point::from_xy(1.5, 1.5);
+        let w = Point::from_xy(1.5, 0.5);
         polygon.insert_chain(&[x, y, z, w]);
 
         let result = polygon.triangles().remove(Tri2::new(a, b, c));

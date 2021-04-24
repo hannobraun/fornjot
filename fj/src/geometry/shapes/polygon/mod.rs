@@ -99,9 +99,9 @@ mod tests {
         // Empty chain added, polygon still empty.
         assert!(polygon.is_empty());
 
-        let a = Point::new(0.0, 0.0);
-        let b = Point::new(1.0, 0.0);
-        let c = Point::new(1.0, 1.0);
+        let a = Point::from_xy(0.0, 0.0);
+        let b = Point::from_xy(1.0, 0.0);
+        let c = Point::from_xy(1.0, 1.0);
 
         // Non-empty chain, ergo polygon no longer empty.
         polygon.insert_chain(&[a, b, c]);
@@ -112,13 +112,13 @@ mod tests {
     fn polygon_should_return_its_edges() {
         let mut polygon = Polygon::new();
 
-        let a = Point::new(0.0, 0.0);
-        let b = Point::new(2.0, 0.0);
-        let c = Point::new(0.0, 2.0);
+        let a = Point::from_xy(0.0, 0.0);
+        let b = Point::from_xy(2.0, 0.0);
+        let c = Point::from_xy(0.0, 2.0);
 
-        let p = Point::new(1.0, 1.0);
-        let q = Point::new(1.0, 1.5);
-        let r = Point::new(1.5, 1.0);
+        let p = Point::from_xy(1.0, 1.0);
+        let q = Point::from_xy(1.0, 1.5);
+        let r = Point::from_xy(1.5, 1.0);
 
         polygon.insert_chain(&[a, b, c]);
         polygon.insert_chain(&[p, q, r]);
@@ -138,9 +138,9 @@ mod tests {
     fn reverse_should_reverse_all_edges() {
         let mut polygon = Polygon::new();
 
-        let a = Point::new(0.0, 0.0);
-        let b = Point::new(1.0, 0.0);
-        let c = Point::new(1.0, 1.0);
+        let a = Point::from_xy(0.0, 0.0);
+        let b = Point::from_xy(1.0, 0.0);
+        let c = Point::from_xy(1.0, 1.0);
         polygon.insert_chain(&[a, b, c]);
 
         polygon.reverse();
