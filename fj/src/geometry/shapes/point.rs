@@ -19,7 +19,7 @@ impl<const D: usize> Deref for Point<D> {
     }
 }
 
-// TASK: `Point2` doesn't implement `Ord`, even if its type parameter does. This
+// TASK: `Point` doesn't implement `Ord`, even if its type parameter does. This
 //       should be fixed in nalgebra.
 // TASK: Make generic over dimension.
 impl Ord for Point<2> {
