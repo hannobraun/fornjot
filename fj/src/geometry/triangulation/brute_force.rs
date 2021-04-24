@@ -117,7 +117,7 @@ pub struct InternalError {
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::shapes::{Pnt, Polygon};
+    use crate::geometry::shapes::{Point, Polygon};
 
     use super::triangulate;
 
@@ -126,17 +126,17 @@ mod tests {
         let mut polygon = Polygon::new();
 
         // A very rough circle.
-        let p0 = Pnt::new(0.0, 0.0);
-        let p1 = Pnt::new(2.0, 0.0);
-        let p2 = Pnt::new(2.0, 2.0);
-        let p3 = Pnt::new(0.0, 2.0);
+        let p0 = Point::new(0.0, 0.0);
+        let p1 = Point::new(2.0, 0.0);
+        let p2 = Point::new(2.0, 2.0);
+        let p3 = Point::new(0.0, 2.0);
         polygon.insert_chain(&[p0, p1, p2, p3]);
 
         // A roughly circular hole.
-        let p0 = Pnt::new(0.5, 0.5);
-        let p1 = Pnt::new(0.5, 1.0);
-        let p2 = Pnt::new(1.0, 1.0);
-        let p3 = Pnt::new(1.0, 0.5);
+        let p0 = Point::new(0.5, 0.5);
+        let p1 = Point::new(0.5, 1.0);
+        let p2 = Point::new(1.0, 1.0);
+        let p3 = Point::new(1.0, 0.5);
         polygon.insert_chain(&[p0, p1, p2, p3]);
 
         println!("Original polygon: {:#?}", polygon);
@@ -165,18 +165,18 @@ mod tests {
         let mut polygon = Polygon::new();
 
         // Common point
-        let p0 = Pnt::new(0.0, 0.0);
+        let p0 = Point::new(0.0, 0.0);
 
         // Outer border
-        let p1 = Pnt::new(2.0, -2.0);
-        let p2 = Pnt::new(3.0, 0.0);
-        let p3 = Pnt::new(2.0, 2.0);
+        let p1 = Point::new(2.0, -2.0);
+        let p2 = Point::new(3.0, 0.0);
+        let p3 = Point::new(2.0, 2.0);
         polygon.insert_chain(&[p0, p1, p2, p3]);
 
         // Inner border
-        let p1 = Pnt::new(1.0, 0.5);
-        let p2 = Pnt::new(2.0, 0.0);
-        let p3 = Pnt::new(1.0, -0.5);
+        let p1 = Point::new(1.0, 0.5);
+        let p2 = Point::new(2.0, 0.0);
+        let p3 = Point::new(1.0, -0.5);
         polygon.insert_chain(&[p0, p1, p2, p3]);
 
         // The three "lowest" points belong to the hole. The triangle that's

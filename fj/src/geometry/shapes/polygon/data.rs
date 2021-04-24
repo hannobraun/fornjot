@@ -6,15 +6,15 @@ use std::{
 use itertools::Itertools as _;
 use nalgebra::Vector2;
 
-use crate::geometry::shapes::{Pnt, Seg2};
+use crate::geometry::shapes::{Point, Seg2};
 
 #[derive(Clone, Debug)]
 pub struct PolygonData {
     edges: BTreeSet<Seg2>,
     vertices: Vertices,
 
-    outgoing_edges: BTreeMap<Pnt<2>, BTreeSet<Seg2>>,
-    incoming_edges: BTreeMap<Pnt<2>, BTreeSet<Seg2>>,
+    outgoing_edges: BTreeMap<Point<2>, BTreeSet<Seg2>>,
+    incoming_edges: BTreeMap<Point<2>, BTreeSet<Seg2>>,
 }
 
 impl PolygonData {
@@ -32,7 +32,7 @@ impl PolygonData {
         &self.edges
     }
 
-    pub fn vertices(&self) -> impl Iterator<Item = Pnt<2>> + '_ {
+    pub fn vertices(&self) -> impl Iterator<Item = Point<2>> + '_ {
         self.vertices.0.keys().copied()
     }
 
@@ -40,19 +40,19 @@ impl PolygonData {
         self.edges.is_empty()
     }
 
-    pub fn contains_vertex(&self, vertex: &Pnt<2>) -> bool {
+    pub fn contains_vertex(&self, vertex: &Point<2>) -> bool {
         self.vertices.0.contains_key(vertex)
     }
 
-    pub fn first_vertex(&self) -> Option<Pnt<2>> {
+    pub fn first_vertex(&self) -> Option<Point<2>> {
         self.vertices.first()
     }
 
-    pub fn outgoing_edges(&self, vertex: &Pnt<2>) -> Option<&BTreeSet<Seg2>> {
+    pub fn outgoing_edges(&self, vertex: &Point<2>) -> Option<&BTreeSet<Seg2>> {
         self.outgoing_edges.get(vertex)
     }
 
-    pub fn incoming_edges(&self, vertex: &Pnt<2>) -> Option<&BTreeSet<Seg2>> {
+    pub fn incoming_edges(&self, vertex: &Point<2>) -> Option<&BTreeSet<Seg2>> {
         self.incoming_edges.get(vertex)
     }
 
@@ -240,22 +240,22 @@ impl PolygonData {
 }
 
 #[derive(Clone, Debug)]
-struct Vertices(BTreeMap<Pnt<2>, u32>);
+struct Vertices(BTreeMap<Point<2>, u32>);
 
 impl Vertices {
     pub fn new() -> Self {
         Self(BTreeMap::new())
     }
 
-    pub fn first(&self) -> Option<Pnt<2>> {
+    pub fn first(&self) -> Option<Point<2>> {
         self.0.iter().next().map(|(vertex, _)| *vertex)
     }
 
-    pub fn up(&mut self, vertex: Pnt<2>) {
+    pub fn up(&mut self, vertex: Point<2>) {
         *self.0.entry(vertex).or_insert(0) += 1;
     }
 
-    pub fn down(&mut self, vertex: Pnt<2>) -> bool {
+    pub fn down(&mut self, vertex: Point<2>) -> bool {
         *self.0.get_mut(&vertex).unwrap() -= 1;
 
         if *self.0.get(&vertex).unwrap() == 0 {
@@ -271,14 +271,14 @@ impl Vertices {
 mod tests {
     use std::collections::BTreeSet;
 
-    use crate::geometry::shapes::{Pnt, Seg2};
+    use crate::geometry::shapes::{Point, Seg2};
 
     use super::PolygonData;
 
     #[test]
     fn first_vertex_should_return_the_lowest_vertex() {
-        let a = Pnt::new(1.0, 0.0);
-        let b = Pnt::new(0.0, 1.0);
+        let a = Point::new(1.0, 0.0);
+        let b = Point::new(0.0, 1.0);
 
         let mut data = PolygonData::new();
         data.insert_edge(Seg2::new(a, b));
@@ -295,10 +295,10 @@ mod tests {
     fn is_inside_should_tell_whether_edge_is_inside() {
         let mut data = PolygonData::new();
 
-        let a = Pnt::new(0.0, 0.0);
-        let b = Pnt::new(1.0, 1.0);
-        let c = Pnt::new(2.0, 0.0);
-        let d = Pnt::new(1.0, 2.0);
+        let a = Point::new(0.0, 0.0);
+        let b = Point::new(1.0, 1.0);
+        let c = Point::new(2.0, 0.0);
+        let d = Point::new(1.0, 2.0);
 
         data.insert_edge(Seg2::new(a, b));
         data.insert_edge(Seg2::new(b, c));
@@ -316,8 +316,8 @@ mod tests {
     fn insert_edge_should_update_vertices() {
         let mut data = PolygonData::new();
 
-        let a = Pnt::new(0.0, 0.0);
-        let b = Pnt::new(1.0, 0.0);
+        let a = Point::new(0.0, 0.0);
+        let b = Point::new(1.0, 0.0);
 
         assert_eq!(data.contains_vertex(&a), false);
         assert_eq!(data.contains_vertex(&b), false);
@@ -332,8 +332,8 @@ mod tests {
     fn insert_edge_should_update_edge_counts() {
         let mut data = PolygonData::new();
 
-        let a = Pnt::new(0.0, 0.0);
-        let b = Pnt::new(1.0, 0.0);
+        let a = Point::new(0.0, 0.0);
+        let b = Point::new(1.0, 0.0);
 
         let ab = Seg2::new(a, b);
         data.insert_edge(ab);
@@ -376,9 +376,9 @@ mod tests {
     fn retain_edges_should_update_vertices() {
         let mut data = PolygonData::new();
 
-        let a = Pnt::new(0.0, 0.0);
-        let b = Pnt::new(1.0, 0.0);
-        let c = Pnt::new(0.0, 1.0);
+        let a = Point::new(0.0, 0.0);
+        let b = Point::new(1.0, 0.0);
+        let c = Point::new(0.0, 1.0);
 
         let ab = Seg2::new(a, b);
         let bc = Seg2::new(b, c);
@@ -397,8 +397,8 @@ mod tests {
     fn retain_edges_should_update_edge_counts() {
         let mut data = PolygonData::new();
 
-        let a = Pnt::new(0.0, 0.0);
-        let b = Pnt::new(1.0, 0.0);
+        let a = Point::new(0.0, 0.0);
+        let b = Point::new(1.0, 0.0);
 
         let ab = Seg2::new(a, b);
         let ba = Seg2::new(b, a);

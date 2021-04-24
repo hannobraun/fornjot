@@ -6,20 +6,20 @@ use parry2d::{
     shape::{Segment, Triangle, TrianglePointLocation},
 };
 
-use super::{Pnt, Seg2};
+use super::{Point, Seg2};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Tri2 {
-    pub a: Pnt<2>,
-    pub b: Pnt<2>,
-    pub c: Pnt<2>,
+    pub a: Point<2>,
+    pub b: Point<2>,
+    pub c: Point<2>,
 }
 
 impl Tri2 {
     pub fn new(
-        a: impl Into<Pnt<2>>,
-        b: impl Into<Pnt<2>>,
-        c: impl Into<Pnt<2>>,
+        a: impl Into<Point<2>>,
+        b: impl Into<Point<2>>,
+        c: impl Into<Point<2>>,
     ) -> Self {
         Self {
             a: a.into(),
@@ -29,9 +29,9 @@ impl Tri2 {
     }
 
     pub fn new_ccw(
-        a: impl Into<Pnt<2>>,
-        b: impl Into<Pnt<2>>,
-        c: impl Into<Pnt<2>>,
+        a: impl Into<Point<2>>,
+        b: impl Into<Point<2>>,
+        c: impl Into<Point<2>>,
     ) -> Self {
         let a: Point2<f32> = a.into().into();
         let b: Point2<f32> = b.into().into();
@@ -48,7 +48,7 @@ impl Tri2 {
         }
     }
 
-    pub fn vertices(&self) -> [Pnt<2>; 3] {
+    pub fn vertices(&self) -> [Point<2>; 3] {
         [self.a, self.b, self.c]
     }
 
@@ -70,7 +70,7 @@ impl Tri2 {
         (b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y) < 0.0
     }
 
-    pub fn contains(&self, point: impl Into<Pnt<2>>) -> bool {
+    pub fn contains(&self, point: impl Into<Point<2>>) -> bool {
         let triangle: Triangle = self.into();
         let point = point.into();
 
@@ -126,15 +126,15 @@ impl fmt::Display for Tri2 {
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::shapes::Pnt;
+    use crate::geometry::shapes::Point;
 
     use super::Tri2;
 
     #[test]
     fn is_clockwise_should_tell_whether_triangle_is_clockwise() {
-        let a = Pnt::new(0.0, 0.0);
-        let b = Pnt::new(1.0, 0.0);
-        let c = Pnt::new(0.0, 1.0);
+        let a = Point::new(0.0, 0.0);
+        let b = Point::new(1.0, 0.0);
+        let c = Point::new(0.0, 1.0);
 
         let ccw = Tri2::new(a, b, c);
         assert_eq!(ccw.is_clockwise(), false);
@@ -145,13 +145,13 @@ mod tests {
 
     #[test]
     fn contains_should_tell_whether_triangle_contains_point() {
-        let a = Pnt::new(0.0, 0.0);
-        let b = Pnt::new(1.0, 0.0);
-        let c = Pnt::new(0.0, 1.0);
+        let a = Point::new(0.0, 0.0);
+        let b = Point::new(1.0, 0.0);
+        let c = Point::new(0.0, 1.0);
         let triangle = Tri2::new(a, b, c);
 
-        let on_edge = Pnt::new(0.5, 0.0);
-        let in_triangle = Pnt::new(0.5, 0.5);
+        let on_edge = Point::new(0.5, 0.0);
+        let in_triangle = Point::new(0.5, 0.5);
 
         assert_eq!(triangle.contains(&a), false);
         assert_eq!(triangle.contains(&b), false);
