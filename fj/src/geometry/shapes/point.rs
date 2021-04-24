@@ -71,6 +71,24 @@ impl<const D: usize> From<&nalgebra::Point<f32, D>> for Point<D> {
     }
 }
 
+impl<const D: usize> From<Point<D>> for [R32; D] {
+    fn from(point: Point<D>) -> Self {
+        point.into()
+    }
+}
+
+impl<const D: usize> From<&Point<D>> for [R32; D] {
+    fn from(point: &Point<D>) -> Self {
+        let mut array: [R32; D] = [R32::default(); D];
+
+        for (element_a, &element_p) in array.iter_mut().zip(point.0.iter()) {
+            *element_a = element_p;
+        }
+
+        array
+    }
+}
+
 impl<const D: usize> From<Point<D>> for nalgebra::Point<f32, D> {
     fn from(point: Point<D>) -> Self {
         point.map(|value| value.into_inner())
