@@ -1,6 +1,7 @@
 use std::{cmp::Ordering, fmt, ops::Deref};
 
 use decorum::R32;
+use nalgebra::Scalar;
 
 #[derive(Clone, Copy, Eq, Hash, PartialEq)]
 pub struct Point<const D: usize>(pub nalgebra::Point<R32, D>);
@@ -66,14 +67,20 @@ impl<const D: usize> From<&Point<D>> for Point<D> {
     }
 }
 
-impl<const D: usize> From<nalgebra::Point<f32, D>> for Point<D> {
-    fn from(point: nalgebra::Point<f32, D>) -> Self {
+impl<T, const D: usize> From<nalgebra::Point<T, D>> for Point<D>
+where
+    T: Scalar + Into<R32>,
+{
+    fn from(point: nalgebra::Point<T, D>) -> Self {
         Self(point.map(|value| value.into()))
     }
 }
 
-impl<const D: usize> From<&nalgebra::Point<f32, D>> for Point<D> {
-    fn from(point: &nalgebra::Point<f32, D>) -> Self {
+impl<T, const D: usize> From<&nalgebra::Point<T, D>> for Point<D>
+where
+    T: Scalar + Into<R32>,
+{
+    fn from(point: &nalgebra::Point<T, D>) -> Self {
         Self(point.map(|value| value.into()))
     }
 }
