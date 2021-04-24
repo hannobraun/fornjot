@@ -85,18 +85,24 @@ where
     }
 }
 
-impl<const D: usize> From<Point<D>> for [R32; D] {
+impl<T, const D: usize> From<Point<D>> for [T; D]
+where
+    T: Copy + Default + From<R32>,
+{
     fn from(point: Point<D>) -> Self {
-        <&Point<D> as Into<[R32; D]>>::into(&point)
+        <&Point<D> as Into<[T; D]>>::into(&point)
     }
 }
 
-impl<const D: usize> From<&Point<D>> for [R32; D] {
+impl<T, const D: usize> From<&Point<D>> for [T; D]
+where
+    T: Copy + Default + From<R32>,
+{
     fn from(point: &Point<D>) -> Self {
-        let mut array: [R32; D] = [R32::default(); D];
+        let mut array: [T; D] = [T::default(); D];
 
         for (element_a, &element_p) in array.iter_mut().zip(point.0.iter()) {
-            *element_a = element_p;
+            *element_a = element_p.into();
         }
 
         array
