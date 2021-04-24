@@ -30,7 +30,7 @@ pub fn triangulate(mut polygon: Polygon) -> Result<Vec<Tri2>, InternalError> {
         // Get the first point of our candidate triangle. This shouldn't panic,
         // as we wouldn't be here, if there wasn't at least one item in
         // `neighbors`.
-        let a = polygon.first_vertex().unwrap();
+        let a = polygon.vertices().iter().next().unwrap();
 
         // Get the other two points of the candidate triangle.
         let mut neighbors_of_a: Vec<_> =
