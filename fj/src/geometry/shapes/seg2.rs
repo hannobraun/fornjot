@@ -6,19 +6,19 @@ use super::Pnt;
 
 #[derive(Clone, Copy, Eq, Hash, PartialEq, PartialOrd, Ord)]
 pub struct Seg2 {
-    pub a: Pnt,
-    pub b: Pnt,
+    pub a: Pnt<2>,
+    pub b: Pnt<2>,
 }
 
 impl Seg2 {
-    pub fn new(a: impl Into<Pnt>, b: impl Into<Pnt>) -> Self {
+    pub fn new(a: impl Into<Pnt<2>>, b: impl Into<Pnt<2>>) -> Self {
         Self {
             a: a.into(),
             b: b.into(),
         }
     }
 
-    pub fn contains(&self, point: impl Into<Pnt>) -> bool {
+    pub fn contains(&self, point: impl Into<Pnt<2>>) -> bool {
         let point = point.into();
         point == self.a || point == self.b
     }

@@ -27,7 +27,7 @@ impl Polygon {
 
     pub fn insert_chain(
         &mut self,
-        chain: impl IntoIterator<Item = impl Into<Pnt>>,
+        chain: impl IntoIterator<Item = impl Into<Pnt<2>>>,
     ) {
         // This gets us access to the `windows` method.
         let chain: Vec<_> =
@@ -93,7 +93,7 @@ mod tests {
         let mut polygon = Polygon::new();
         assert!(polygon.is_empty());
 
-        let empty_chain: &[Pnt] = &[];
+        let empty_chain: &[Pnt<2>] = &[];
         polygon.insert_chain(empty_chain);
 
         // Empty chain added, polygon still empty.

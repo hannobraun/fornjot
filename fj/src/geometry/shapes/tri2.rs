@@ -10,16 +10,16 @@ use super::{Pnt, Seg2};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Tri2 {
-    pub a: Pnt,
-    pub b: Pnt,
-    pub c: Pnt,
+    pub a: Pnt<2>,
+    pub b: Pnt<2>,
+    pub c: Pnt<2>,
 }
 
 impl Tri2 {
     pub fn new(
-        a: impl Into<Pnt>,
-        b: impl Into<Pnt>,
-        c: impl Into<Pnt>,
+        a: impl Into<Pnt<2>>,
+        b: impl Into<Pnt<2>>,
+        c: impl Into<Pnt<2>>,
     ) -> Self {
         Self {
             a: a.into(),
@@ -29,9 +29,9 @@ impl Tri2 {
     }
 
     pub fn new_ccw(
-        a: impl Into<Pnt>,
-        b: impl Into<Pnt>,
-        c: impl Into<Pnt>,
+        a: impl Into<Pnt<2>>,
+        b: impl Into<Pnt<2>>,
+        c: impl Into<Pnt<2>>,
     ) -> Self {
         let a: Point2<f32> = a.into().into();
         let b: Point2<f32> = b.into().into();
@@ -48,7 +48,7 @@ impl Tri2 {
         }
     }
 
-    pub fn vertices(&self) -> [Pnt; 3] {
+    pub fn vertices(&self) -> [Pnt<2>; 3] {
         [self.a, self.b, self.c]
     }
 
@@ -70,7 +70,7 @@ impl Tri2 {
         (b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y) < 0.0
     }
 
-    pub fn contains(&self, point: impl Into<Pnt>) -> bool {
+    pub fn contains(&self, point: impl Into<Pnt<2>>) -> bool {
         let triangle: Triangle = self.into();
         let point = point.into();
 

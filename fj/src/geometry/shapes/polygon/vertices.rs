@@ -7,11 +7,11 @@ use super::data::PolygonData;
 pub struct Vertices<'r>(pub(super) &'r mut PolygonData);
 
 impl Vertices<'_> {
-    pub fn iter(&self) -> impl Iterator<Item = Pnt> + '_ {
+    pub fn iter(&self) -> impl Iterator<Item = Pnt<2>> + '_ {
         self.0.vertices()
     }
 
-    pub fn neighbors_of(&self, vertex: impl Into<Pnt>) -> BTreeSet<Pnt> {
+    pub fn neighbors_of(&self, vertex: impl Into<Pnt<2>>) -> BTreeSet<Pnt<2>> {
         let vertex = vertex.into();
 
         let mut neighbors = BTreeSet::new();

@@ -13,8 +13,8 @@ pub struct PolygonData {
     edges: BTreeSet<Seg2>,
     vertices: Vertices,
 
-    outgoing_edges: BTreeMap<Pnt, BTreeSet<Seg2>>,
-    incoming_edges: BTreeMap<Pnt, BTreeSet<Seg2>>,
+    outgoing_edges: BTreeMap<Pnt<2>, BTreeSet<Seg2>>,
+    incoming_edges: BTreeMap<Pnt<2>, BTreeSet<Seg2>>,
 }
 
 impl PolygonData {
@@ -32,7 +32,7 @@ impl PolygonData {
         &self.edges
     }
 
-    pub fn vertices(&self) -> impl Iterator<Item = Pnt> + '_ {
+    pub fn vertices(&self) -> impl Iterator<Item = Pnt<2>> + '_ {
         self.vertices.0.keys().copied()
     }
 
@@ -40,19 +40,19 @@ impl PolygonData {
         self.edges.is_empty()
     }
 
-    pub fn contains_vertex(&self, vertex: &Pnt) -> bool {
+    pub fn contains_vertex(&self, vertex: &Pnt<2>) -> bool {
         self.vertices.0.contains_key(vertex)
     }
 
-    pub fn first_vertex(&self) -> Option<Pnt> {
+    pub fn first_vertex(&self) -> Option<Pnt<2>> {
         self.vertices.first()
     }
 
-    pub fn outgoing_edges(&self, vertex: &Pnt) -> Option<&BTreeSet<Seg2>> {
+    pub fn outgoing_edges(&self, vertex: &Pnt<2>) -> Option<&BTreeSet<Seg2>> {
         self.outgoing_edges.get(vertex)
     }
 
-    pub fn incoming_edges(&self, vertex: &Pnt) -> Option<&BTreeSet<Seg2>> {
+    pub fn incoming_edges(&self, vertex: &Pnt<2>) -> Option<&BTreeSet<Seg2>> {
         self.incoming_edges.get(vertex)
     }
 
@@ -240,22 +240,22 @@ impl PolygonData {
 }
 
 #[derive(Clone, Debug)]
-struct Vertices(BTreeMap<Pnt, u32>);
+struct Vertices(BTreeMap<Pnt<2>, u32>);
 
 impl Vertices {
     pub fn new() -> Self {
         Self(BTreeMap::new())
     }
 
-    pub fn first(&self) -> Option<Pnt> {
+    pub fn first(&self) -> Option<Pnt<2>> {
         self.0.iter().next().map(|(vertex, _)| *vertex)
     }
 
-    pub fn up(&mut self, vertex: Pnt) {
+    pub fn up(&mut self, vertex: Pnt<2>) {
         *self.0.entry(vertex).or_insert(0) += 1;
     }
 
-    pub fn down(&mut self, vertex: Pnt) -> bool {
+    pub fn down(&mut self, vertex: Pnt<2>) -> bool {
         *self.0.get_mut(&vertex).unwrap() -= 1;
 
         if *self.0.get(&vertex).unwrap() == 0 {

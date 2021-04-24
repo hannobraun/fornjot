@@ -91,10 +91,10 @@ pub enum RemoveError {
     OutsideOfPolygon(Seg2),
 
     #[error("Triangle contains polygon vertex: {0}")]
-    TriangleContainsVertex(Pnt),
+    TriangleContainsVertex(Pnt<2>),
 
     #[error("Triangle vertex is not part of polygon: {0}")]
-    UnknownVertex(Pnt),
+    UnknownVertex(Pnt<2>),
 }
 
 impl RemoveError {
