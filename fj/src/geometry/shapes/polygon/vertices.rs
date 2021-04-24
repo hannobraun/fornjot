@@ -1,17 +1,17 @@
 use std::collections::BTreeSet;
 
-use crate::geometry::shapes::Pnt2;
+use crate::geometry::shapes::Pnt;
 
 use super::data::PolygonData;
 
 pub struct Vertices<'r>(pub(super) &'r mut PolygonData);
 
 impl Vertices<'_> {
-    pub fn iter(&self) -> impl Iterator<Item = Pnt2> + '_ {
+    pub fn iter(&self) -> impl Iterator<Item = Pnt> + '_ {
         self.0.vertices()
     }
 
-    pub fn neighbors_of(&self, vertex: impl Into<Pnt2>) -> BTreeSet<Pnt2> {
+    pub fn neighbors_of(&self, vertex: impl Into<Pnt>) -> BTreeSet<Pnt> {
         let vertex = vertex.into();
 
         let mut neighbors = BTreeSet::new();
@@ -31,15 +31,15 @@ impl Vertices<'_> {
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::shapes::{Pnt2, Polygon};
+    use crate::geometry::shapes::{Pnt, Polygon};
 
     #[test]
     fn neighbors_of_should_return_neighbors_of_vertex() {
         let mut polygon = Polygon::new();
 
-        let a = Pnt2::new(0.0, 0.0);
-        let b = Pnt2::new(1.0, 0.0);
-        let c = Pnt2::new(0.0, 1.0);
+        let a = Pnt::new(0.0, 0.0);
+        let b = Pnt::new(1.0, 0.0);
+        let c = Pnt::new(0.0, 1.0);
         polygon.insert_chain(&[a, b, c]);
 
         let neighbors_of_a = polygon.vertices().neighbors_of(a);

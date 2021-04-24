@@ -5,7 +5,7 @@ pub mod vertices;
 use core::fmt;
 use std::collections::BTreeSet;
 
-use crate::geometry::shapes::{Pnt2, Seg2};
+use crate::geometry::shapes::{Pnt, Seg2};
 
 use self::{data::PolygonData, triangles::Triangles, vertices::Vertices};
 
@@ -27,7 +27,7 @@ impl Polygon {
 
     pub fn insert_chain(
         &mut self,
-        chain: impl IntoIterator<Item = impl Into<Pnt2>>,
+        chain: impl IntoIterator<Item = impl Into<Pnt>>,
     ) {
         // This gets us access to the `windows` method.
         let chain: Vec<_> =
@@ -84,7 +84,7 @@ impl fmt::Display for Polygon {
 mod tests {
     use std::collections::BTreeSet;
 
-    use crate::geometry::shapes::{Pnt2, Seg2};
+    use crate::geometry::shapes::{Pnt, Seg2};
 
     use super::Polygon;
 
@@ -93,15 +93,15 @@ mod tests {
         let mut polygon = Polygon::new();
         assert!(polygon.is_empty());
 
-        let empty_chain: &[Pnt2] = &[];
+        let empty_chain: &[Pnt] = &[];
         polygon.insert_chain(empty_chain);
 
         // Empty chain added, polygon still empty.
         assert!(polygon.is_empty());
 
-        let a = Pnt2::new(0.0, 0.0);
-        let b = Pnt2::new(1.0, 0.0);
-        let c = Pnt2::new(1.0, 1.0);
+        let a = Pnt::new(0.0, 0.0);
+        let b = Pnt::new(1.0, 0.0);
+        let c = Pnt::new(1.0, 1.0);
 
         // Non-empty chain, ergo polygon no longer empty.
         polygon.insert_chain(&[a, b, c]);
@@ -112,13 +112,13 @@ mod tests {
     fn polygon_should_return_its_edges() {
         let mut polygon = Polygon::new();
 
-        let a = Pnt2::new(0.0, 0.0);
-        let b = Pnt2::new(2.0, 0.0);
-        let c = Pnt2::new(0.0, 2.0);
+        let a = Pnt::new(0.0, 0.0);
+        let b = Pnt::new(2.0, 0.0);
+        let c = Pnt::new(0.0, 2.0);
 
-        let p = Pnt2::new(1.0, 1.0);
-        let q = Pnt2::new(1.0, 1.5);
-        let r = Pnt2::new(1.5, 1.0);
+        let p = Pnt::new(1.0, 1.0);
+        let q = Pnt::new(1.0, 1.5);
+        let r = Pnt::new(1.5, 1.0);
 
         polygon.insert_chain(&[a, b, c]);
         polygon.insert_chain(&[p, q, r]);
@@ -138,9 +138,9 @@ mod tests {
     fn reverse_should_reverse_all_edges() {
         let mut polygon = Polygon::new();
 
-        let a = Pnt2::new(0.0, 0.0);
-        let b = Pnt2::new(1.0, 0.0);
-        let c = Pnt2::new(1.0, 1.0);
+        let a = Pnt::new(0.0, 0.0);
+        let b = Pnt::new(1.0, 0.0);
+        let c = Pnt::new(1.0, 1.0);
         polygon.insert_chain(&[a, b, c]);
 
         polygon.reverse();
