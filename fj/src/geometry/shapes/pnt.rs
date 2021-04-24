@@ -1,19 +1,18 @@
 use std::{cmp::Ordering, fmt, ops::Deref};
 
 use decorum::R32;
-use nalgebra::Point;
 
 #[derive(Clone, Copy, Eq, Hash, PartialEq)]
-pub struct Pnt<const D: usize>(pub Point<R32, D>);
+pub struct Pnt<const D: usize>(pub nalgebra::Point<R32, D>);
 
 impl Pnt<2> {
     pub fn new(x: impl Into<R32>, y: impl Into<R32>) -> Self {
-        Self(Point::<_, 2>::new(x.into(), y.into()))
+        Self(nalgebra::Point::<_, 2>::new(x.into(), y.into()))
     }
 }
 
 impl<const D: usize> Deref for Pnt<D> {
-    type Target = Point<R32, D>;
+    type Target = nalgebra::Point<R32, D>;
 
     fn deref(&self) -> &Self::Target {
         &self.0
@@ -60,25 +59,25 @@ impl<const D: usize> From<&Pnt<D>> for Pnt<D> {
     }
 }
 
-impl<const D: usize> From<Point<f32, D>> for Pnt<D> {
-    fn from(point: Point<f32, D>) -> Self {
+impl<const D: usize> From<nalgebra::Point<f32, D>> for Pnt<D> {
+    fn from(point: nalgebra::Point<f32, D>) -> Self {
         Self(point.map(|value| R32::from_inner(value)))
     }
 }
 
-impl<const D: usize> From<&Point<f32, D>> for Pnt<D> {
-    fn from(point: &Point<f32, D>) -> Self {
+impl<const D: usize> From<&nalgebra::Point<f32, D>> for Pnt<D> {
+    fn from(point: &nalgebra::Point<f32, D>) -> Self {
         Self(point.map(|value| R32::from_inner(value)))
     }
 }
 
-impl<const D: usize> From<Pnt<D>> for Point<f32, D> {
+impl<const D: usize> From<Pnt<D>> for nalgebra::Point<f32, D> {
     fn from(point: Pnt<D>) -> Self {
         point.map(|value| value.into_inner())
     }
 }
 
-impl<const D: usize> From<&Pnt<D>> for Point<f32, D> {
+impl<const D: usize> From<&Pnt<D>> for nalgebra::Point<f32, D> {
     fn from(point: &Pnt<D>) -> Self {
         point.map(|value| value.into_inner())
     }
