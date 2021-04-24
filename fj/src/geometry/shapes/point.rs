@@ -87,7 +87,7 @@ where
 
 impl<const D: usize> From<Point<D>> for [R32; D] {
     fn from(point: Point<D>) -> Self {
-        point.into()
+        <&Point<D> as Into<[R32; D]>>::into(&point)
     }
 }
 
