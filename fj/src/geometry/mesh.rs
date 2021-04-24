@@ -4,7 +4,7 @@ use decorum::R32;
 use nalgebra::{Point3, Vector3};
 
 use crate::{
-    geometry::{Triangle3, Triangles},
+    geometry::{shapes::Point, Triangle3, Triangles},
     graphics,
 };
 
@@ -45,15 +45,15 @@ impl Mesh {
         let normal = normal.map(|v| R32::from_inner(v));
 
         let v0 = Vertex {
-            position: p0.map(|v| R32::from_inner(v)),
+            position: p0.map(|v| R32::from_inner(v)).into(),
             normal,
         };
         let v1 = Vertex {
-            position: p1.map(|v| R32::from_inner(v)),
+            position: p1.map(|v| R32::from_inner(v)).into(),
             normal,
         };
         let v2 = Vertex {
-            position: p2.map(|v| R32::from_inner(v)),
+            position: p2.map(|v| R32::from_inner(v)).into(),
             normal,
         };
 
@@ -139,7 +139,7 @@ impl Mesh {
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
 pub struct Vertex {
-    pub position: Point3<R32>,
+    pub position: Point<3>,
     pub normal: Vector3<R32>,
 }
 
@@ -185,19 +185,22 @@ mod tests {
                 Vertex {
                     position: Point3::from(
                         Point3::from(v0).coords.map(|f| R32::from_inner(f))
-                    ),
+                    )
+                    .into(),
                     normal,
                 },
                 Vertex {
                     position: Point3::from(
                         Point3::from(v1).coords.map(|f| R32::from_inner(f))
-                    ),
+                    )
+                    .into(),
                     normal,
                 },
                 Vertex {
                     position: Point3::from(
                         Point3::from(v2).coords.map(|f| R32::from_inner(f))
-                    ),
+                    )
+                    .into(),
                     normal,
                 },
             ]
