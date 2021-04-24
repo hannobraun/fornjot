@@ -27,6 +27,8 @@ impl Mesh {
         }
     }
 
+    // TASK: Calling `vertex` multiple times with the same vertex should return
+    //       the same index.
     pub fn vertex(&mut self, vertex: impl Into<Point3<f32>>) -> Index {
         let i = self.positions.len();
         self.positions.push(vertex.into());
