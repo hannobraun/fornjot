@@ -68,13 +68,13 @@ impl<const D: usize> From<&Point<D>> for Point<D> {
 
 impl<const D: usize> From<nalgebra::Point<f32, D>> for Point<D> {
     fn from(point: nalgebra::Point<f32, D>) -> Self {
-        Self(point.map(|value| R32::from_inner(value)))
+        Self(point.map(|value| value.into()))
     }
 }
 
 impl<const D: usize> From<&nalgebra::Point<f32, D>> for Point<D> {
     fn from(point: &nalgebra::Point<f32, D>) -> Self {
-        Self(point.map(|value| R32::from_inner(value)))
+        Self(point.map(|value| value.into()))
     }
 }
 
