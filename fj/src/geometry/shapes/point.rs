@@ -37,17 +37,26 @@ impl<const D: usize> PartialOrd for Point<D> {
     }
 }
 
-// TASK: Make generic over dimension.
-impl fmt::Debug for Point<2> {
+impl<const D: usize> fmt::Debug for Point<D> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         <Self as fmt::Display>::fmt(self, f)
     }
 }
 
-// TASK: Make generic over dimension.
-impl fmt::Display for Point<2> {
+impl<const D: usize> fmt::Display for Point<D> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "({}, {})", self.0.x, self.0.y)
+        let self_: [R32; D] = self.into();
+
+        write!(f, "(")?;
+        for (i, v) in self_.iter().enumerate() {
+            write!(f, "{}", v)?;
+            if i < self_.len() - 1 {
+                write!(f, ", ")?;
+            }
+        }
+        write!(f, ")")?;
+
+        Ok(())
     }
 }
 
