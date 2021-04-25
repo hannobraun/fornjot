@@ -67,6 +67,21 @@ impl<const D: usize> From<&Point<D>> for Point<D> {
     }
 }
 
+impl<T, const D: usize> From<[T; D]> for Point<D>
+where
+    T: Copy + Into<R32>,
+{
+    fn from(point: [T; D]) -> Self {
+        let mut self_ = Self(nalgebra::Point::origin());
+
+        for (element_p, &element_a) in self_.0.iter_mut().zip(point.iter()) {
+            *element_p = element_a.into();
+        }
+
+        self_
+    }
+}
+
 impl<T, const D: usize> From<nalgebra::Point<T, D>> for Point<D>
 where
     T: Scalar + Into<R32>,
