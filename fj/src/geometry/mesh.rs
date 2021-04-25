@@ -32,7 +32,8 @@ impl Mesh {
     pub fn vertex(&mut self, vertex: impl Into<Point<3>>) -> Index {
         let position = vertex.into();
 
-        let new_index = Index(self.indices_by_position.len());
+        let new_index =
+            Index(self.indices_by_position.len().try_into().unwrap());
         let index = *self
             .indices_by_position
             .entry(position)
@@ -150,7 +151,7 @@ pub struct Vertex {
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
-pub struct Index(usize);
+pub struct Index(u16);
 
 #[cfg(test)]
 mod tests {
