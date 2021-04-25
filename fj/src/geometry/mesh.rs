@@ -252,4 +252,7 @@ mod tests {
             vec![Triangle3::new(v0, v1, v2), Triangle3::new(v0, v2, v1)]
         );
     }
+
+    // TASK: Add method that inverts triangles of a mesh.
+    // TASK: Add method that merges another mesh into the mesh.
 }
