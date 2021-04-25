@@ -1,7 +1,7 @@
 use std::{collections::HashMap, convert::TryInto};
 
 use decorum::R32;
-use nalgebra::{Point3, Vector3};
+use nalgebra::Vector3;
 
 use crate::{
     geometry::{shapes::Point, Triangle3, Triangles},
@@ -9,7 +9,7 @@ use crate::{
 };
 
 pub struct Mesh {
-    positions: Vec<Point3<f32>>,
+    positions: Vec<Point<3>>,
     indices_by_vertex: HashMap<Vertex, graphics::Index>,
 
     vertices: Vec<Vertex>,
@@ -29,7 +29,7 @@ impl Mesh {
 
     // TASK: Calling `vertex` multiple times with the same vertex should return
     //       the same index.
-    pub fn vertex(&mut self, vertex: impl Into<Point3<f32>>) -> Index {
+    pub fn vertex(&mut self, vertex: impl Into<Point<3>>) -> Index {
         let i = self.positions.len();
         self.positions.push(vertex.into());
 
@@ -37,23 +37,23 @@ impl Mesh {
     }
 
     pub fn triangle(&mut self, i0: Index, i1: Index, i2: Index) {
-        let p0 = self.positions[i0.0];
-        let p1 = self.positions[i1.0];
-        let p2 = self.positions[i2.0];
+        let p0: nalgebra::Point<f32, 3> = self.positions[i0.0].into();
+        let p1: nalgebra::Point<f32, 3> = self.positions[i1.0].into();
+        let p2: nalgebra::Point<f32, 3> = self.positions[i2.0].into();
 
         let normal = (p1 - p0).cross(&(p2 - p0)).normalize();
         let normal = normal.map(|v| R32::from_inner(v));
 
         let v0 = Vertex {
-            position: p0.map(|v| R32::from_inner(v)).into(),
+            position: p0.into(),
             normal,
         };
         let v1 = Vertex {
-            position: p1.map(|v| R32::from_inner(v)).into(),
+            position: p1.into(),
             normal,
         };
         let v2 = Vertex {
-            position: p2.map(|v| R32::from_inner(v)).into(),
+            position: p2.into(),
             normal,
         };
 
