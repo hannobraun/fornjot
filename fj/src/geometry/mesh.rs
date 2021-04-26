@@ -61,8 +61,8 @@ impl Mesh {
         self.vertices.iter().copied()
     }
 
-    pub fn indices(&self) -> &[graphics::Index] {
-        self.indices.as_slice()
+    pub fn indices(&self) -> impl Iterator<Item = graphics::Index> + '_ {
+        self.indices.iter().copied()
     }
 
     pub fn into_graphics_mesh(self) -> graphics::Mesh {
@@ -130,7 +130,7 @@ mod tests {
         vertices.extend(mesh.vertices());
 
         let mut indexed_vertices = Vec::new();
-        for &i in mesh.indices() {
+        for i in mesh.indices() {
             indexed_vertices.push(vertices[i as usize]);
         }
 
