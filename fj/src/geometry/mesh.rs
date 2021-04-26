@@ -3,10 +3,7 @@ use std::{collections::HashMap, convert::TryInto};
 use decorum::R32;
 use nalgebra::Vector3;
 
-use crate::{
-    geometry::{shapes::Point, Triangle3, Triangles},
-    graphics,
-};
+use crate::{geometry::shapes::Point, graphics};
 
 pub struct Mesh {
     indices_by_position: HashMap<Point<3>, Index>,
@@ -103,34 +100,6 @@ impl Mesh {
         graphics::Mesh { vertices, indices }
     }
 
-    pub fn triangles(&self) -> Triangles {
-        let mut indices = self.indices().iter();
-
-        let mut next_triangle = || {
-            let &i0 = indices.next()?;
-            let &i1 = indices.next()?;
-            let &i2 = indices.next()?;
-
-            let v0 = self.vertices[i0 as usize].position;
-            let v1 = self.vertices[i1 as usize].position;
-            let v2 = self.vertices[i2 as usize].position;
-
-            Some(Triangle3::new(
-                [v0[0].into_inner(), v0[1].into_inner(), v0[2].into_inner()],
-                [v1[0].into_inner(), v1[1].into_inner(), v1[2].into_inner()],
-                [v2[0].into_inner(), v2[1].into_inner(), v2[2].into_inner()],
-            ))
-        };
-
-        let mut triangles = Vec::new();
-
-        while let Some(triangle) = next_triangle() {
-            triangles.push(triangle);
-        }
-
-        Triangles(triangles)
-    }
-
     fn index_for_vertex(&mut self, vertex: Vertex) -> graphics::Index {
         let vertices = &mut self.vertices;
 
@@ -157,8 +126,6 @@ pub struct Index(u16);
 mod tests {
     use decorum::R32;
     use nalgebra::{Point3, Vector3};
-
-    use crate::geometry::Triangle3;
 
     use super::{Mesh, Vertex};
 
@@ -228,28 +195,6 @@ mod tests {
                     normal,
                 },
             ]
-        );
-    }
-
-    #[test]
-    fn mesh_should_return_triangles() {
-        let mut mesh = Mesh::new();
-
-        let v0 = [0.0, 0.0, 0.0];
-        let v1 = [1.0, 0.0, 0.0];
-        let v2 = [0.0, 1.0, 0.0];
-
-        let i0 = mesh.vertex(v0);
-        let i1 = mesh.vertex(v1);
-        let i2 = mesh.vertex(v2);
-
-        mesh.triangle(i0, i1, i2);
-        mesh.triangle(i0, i2, i1);
-
-        let triangles = mesh.triangles();
-        assert_eq!(
-            triangles.0,
-            vec![Triangle3::new(v0, v1, v2), Triangle3::new(v0, v2, v1)]
         );
     }
 
