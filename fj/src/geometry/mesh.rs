@@ -24,13 +24,13 @@ impl Mesh {
 
     pub fn triangle(
         &mut self,
-        p0: impl Into<Point<3>>,
-        p1: impl Into<Point<3>>,
-        p2: impl Into<Point<3>>,
+        v0: impl Into<Point<3>>,
+        v1: impl Into<Point<3>>,
+        v2: impl Into<Point<3>>,
     ) {
-        let p0: nalgebra::Point<f32, 3> = p0.into().into();
-        let p1: nalgebra::Point<f32, 3> = p1.into().into();
-        let p2: nalgebra::Point<f32, 3> = p2.into().into();
+        let p0: nalgebra::Point<f32, 3> = v0.into().into();
+        let p1: nalgebra::Point<f32, 3> = v1.into().into();
+        let p2: nalgebra::Point<f32, 3> = v2.into().into();
 
         let normal = (p1 - p0).cross(&(p2 - p0)).normalize();
         let normal = normal.map(|v| R32::from_inner(v));
