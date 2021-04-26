@@ -57,8 +57,8 @@ impl Mesh {
         self.indices.push(i2);
     }
 
-    pub fn vertices(&self) -> &[Vertex] {
-        self.vertices.as_slice()
+    pub fn vertices(&self) -> impl Iterator<Item = Vertex> + '_ {
+        self.vertices.iter().copied()
     }
 
     pub fn indices(&self) -> &[graphics::Index] {
