@@ -126,7 +126,8 @@ mod tests {
 
         mesh.triangle(v0, v1, v2);
 
-        let vertices = mesh.vertices();
+        let mut vertices: Vec<Vertex> = Vec::new();
+        vertices.extend(mesh.vertices());
 
         let mut indexed_vertices = Vec::new();
         for &i in mesh.indices() {
