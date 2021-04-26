@@ -28,23 +28,23 @@ impl Mesh {
         v1: impl Into<Point<3>>,
         v2: impl Into<Point<3>>,
     ) {
-        let p0: nalgebra::Point<f32, 3> = v0.into().into();
-        let p1: nalgebra::Point<f32, 3> = v1.into().into();
-        let p2: nalgebra::Point<f32, 3> = v2.into().into();
+        let v0: nalgebra::Point<f32, 3> = v0.into().into();
+        let v1: nalgebra::Point<f32, 3> = v1.into().into();
+        let v2: nalgebra::Point<f32, 3> = v2.into().into();
 
-        let normal = (p1 - p0).cross(&(p2 - p0)).normalize();
+        let normal = (v1 - v0).cross(&(v2 - v0)).normalize();
         let normal = normal.map(|v| R32::from_inner(v));
 
         let v0 = Vertex {
-            position: p0.into(),
+            position: v0.into(),
             normal,
         };
         let v1 = Vertex {
-            position: p1.into(),
+            position: v1.into(),
             normal,
         };
         let v2 = Vertex {
-            position: p2.into(),
+            position: v2.into(),
             normal,
         };
 
