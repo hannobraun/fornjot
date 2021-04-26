@@ -126,9 +126,9 @@ mod tests {
 
         mesh.triangle(v0, v1, v2);
 
-        let mut vertices = Vec::new();
+        let mut indexed_vertices = Vec::new();
         for &i in mesh.indices() {
-            vertices.push(mesh.vertices()[i as usize]);
+            indexed_vertices.push(mesh.vertices()[i as usize]);
         }
 
         let normal = Vector3::new(
@@ -137,7 +137,7 @@ mod tests {
             R32::from_inner(1.0),
         );
         assert_eq!(
-            vertices,
+            indexed_vertices,
             vec![
                 Vertex {
                     position: Point3::from(
