@@ -126,9 +126,11 @@ mod tests {
 
         mesh.triangle(v0, v1, v2);
 
+        let vertices = mesh.vertices();
+
         let mut indexed_vertices = Vec::new();
         for &i in mesh.indices() {
-            indexed_vertices.push(mesh.vertices()[i as usize]);
+            indexed_vertices.push(vertices[i as usize]);
         }
 
         let normal = Vector3::new(
