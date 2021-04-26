@@ -67,8 +67,7 @@ impl Mesh {
 
     pub fn into_graphics_mesh(self) -> graphics::Mesh {
         let vertices = self
-            .vertices
-            .into_iter()
+            .vertices()
             .map(|vertex| graphics::Vertex {
                 position: [
                     vertex.position[0].into_inner(),
