@@ -2,38 +2,38 @@
 fn main() -> anyhow::Result<()> {
     let mut mesh = fj::Mesh::new();
 
-    let i0  = mesh.vertex([-0.5, -0.5, -0.5]);
-    let i1  = mesh.vertex([-0.5, -0.5,  0.5]);
-    let i2  = mesh.vertex([-0.5,  0.5, -0.5]);
-    let i3  = mesh.vertex([-0.5,  0.5,  0.5]);
-    let i4  = mesh.vertex([ 0.5, -0.5, -0.5]);
-    let i5  = mesh.vertex([ 0.5, -0.5,  0.5]);
-    let i6  = mesh.vertex([ 0.5,  0.5, -0.5]);
-    let i7  = mesh.vertex([ 0.5,  0.5,  0.5]);
+    let v0  = [-0.5, -0.5, -0.5];
+    let v1  = [-0.5, -0.5,  0.5];
+    let v2  = [-0.5,  0.5, -0.5];
+    let v3  = [-0.5,  0.5,  0.5];
+    let v4  = [ 0.5, -0.5, -0.5];
+    let v5  = [ 0.5, -0.5,  0.5];
+    let v6  = [ 0.5,  0.5, -0.5];
+    let v7  = [ 0.5,  0.5,  0.5];
 
     // left
-    mesh.triangle(i0, i1, i2);
-    mesh.triangle(i2, i1, i3);
+    mesh.triangle(v0, v1, v2);
+    mesh.triangle(v2, v1, v3);
 
     // right
-    mesh.triangle(i4, i6, i5);
-    mesh.triangle(i6, i7, i5);
+    mesh.triangle(v4, v6, v5);
+    mesh.triangle(v6, v7, v5);
 
     // front
-    mesh.triangle(i0, i4, i1);
-    mesh.triangle(i4, i5, i1);
+    mesh.triangle(v0, v4, v1);
+    mesh.triangle(v4, v5, v1);
 
     // back
-    mesh.triangle(i2, i3, i6);
-    mesh.triangle(i6, i3, i7);
+    mesh.triangle(v2, v3, v6);
+    mesh.triangle(v6, v3, v7);
 
     // bottom
-    mesh.triangle(i0, i2, i6);
-    mesh.triangle(i0, i6, i4);
+    mesh.triangle(v0, v2, v6);
+    mesh.triangle(v0, v6, v4);
 
     // top
-    mesh.triangle(i1, i5, i7);
-    mesh.triangle(i1, i7, i3);
+    mesh.triangle(v1, v5, v7);
+    mesh.triangle(v1, v7, v3);
 
     fj::run(mesh)?;
     Ok(())

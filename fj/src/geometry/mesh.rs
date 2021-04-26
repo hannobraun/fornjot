@@ -6,8 +6,6 @@ use nalgebra::Vector3;
 use crate::{geometry::shapes::Point, graphics};
 
 pub struct Mesh {
-    indices_by_position: HashMap<Point<3>, Index>,
-    positions_by_index: HashMap<Index, Point<3>>,
     indices_by_vertex: HashMap<Vertex, graphics::Index>,
 
     vertices: Vec<Vertex>,
@@ -17,8 +15,6 @@ pub struct Mesh {
 impl Mesh {
     pub fn new() -> Self {
         Self {
-            indices_by_position: HashMap::new(),
-            positions_by_index: HashMap::new(),
             indices_by_vertex: HashMap::new(),
 
             vertices: Vec::new(),
@@ -26,24 +22,15 @@ impl Mesh {
         }
     }
 
-    pub fn vertex(&mut self, vertex: impl Into<Point<3>>) -> Index {
-        let position = vertex.into();
-
-        let new_index =
-            Index(self.indices_by_position.len().try_into().unwrap());
-        let index = *self
-            .indices_by_position
-            .entry(position)
-            .or_insert(new_index);
-        self.positions_by_index.insert(index, position);
-
-        index
-    }
-
-    pub fn triangle(&mut self, i0: Index, i1: Index, i2: Index) {
-        let p0: nalgebra::Point<f32, 3> = self.positions_by_index[&i0].into();
-        let p1: nalgebra::Point<f32, 3> = self.positions_by_index[&i1].into();
-        let p2: nalgebra::Point<f32, 3> = self.positions_by_index[&i2].into();
+    pub fn triangle(
+        &mut self,
+        p0: impl Into<Point<3>>,
+        p1: impl Into<Point<3>>,
+        p2: impl Into<Point<3>>,
+    ) {
+        let p0: nalgebra::Point<f32, 3> = p0.into().into();
+        let p1: nalgebra::Point<f32, 3> = p1.into().into();
+        let p2: nalgebra::Point<f32, 3> = p2.into().into();
 
         let normal = (p1 - p0).cross(&(p2 - p0)).normalize();
         let normal = normal.map(|v| R32::from_inner(v));
@@ -130,23 +117,6 @@ mod tests {
     use super::{Mesh, Vertex};
 
     #[test]
-    fn vertex_should_return_same_index_for_same_vertex() {
-        let mut mesh = Mesh::new();
-
-        let v0 = [0.0, 0.0, 0.0];
-        let v1 = [0.5, 0.0, 0.0];
-        let v2 = [0.0, 0.5, 0.0];
-
-        let i0 = mesh.vertex(v0);
-        let i1 = mesh.vertex(v1);
-        let i2 = mesh.vertex(v2);
-
-        assert_eq!(i0, mesh.vertex(v0));
-        assert_eq!(i1, mesh.vertex(v1));
-        assert_eq!(i2, mesh.vertex(v2));
-    }
-
-    #[test]
     fn mesh_should_convert_triangle_into_vertices_and_indices() {
         let mut mesh = Mesh::new();
 
@@ -154,11 +124,7 @@ mod tests {
         let v1 = [0.5, 0.0, 0.0];
         let v2 = [0.0, 0.5, 0.0];
 
-        let i0 = mesh.vertex(v0);
-        let i1 = mesh.vertex(v1);
-        let i2 = mesh.vertex(v2);
-
-        mesh.triangle(i0, i1, i2);
+        mesh.triangle(v0, v1, v2);
 
         let mut vertices = Vec::new();
         for &i in mesh.indices() {

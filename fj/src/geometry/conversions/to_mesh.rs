@@ -50,11 +50,11 @@ fn polygon_to_mesh(
         let c_x: f32 = triangle.c.x.into();
         let c_y: f32 = triangle.c.y.into();
 
-        let a = mesh.vertex(Point3::new(a_x, a_y, z));
-        let b = mesh.vertex(Point3::new(b_x, b_y, z));
-        let c = mesh.vertex(Point3::new(c_x, c_y, z));
-
-        mesh.triangle(a, b, c);
+        mesh.triangle(
+            Point3::new(a_x, a_y, z),
+            Point3::new(b_x, b_y, z),
+            Point3::new(c_x, c_y, z),
+        );
     }
 
     Ok(mesh)
