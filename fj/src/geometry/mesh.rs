@@ -9,7 +9,7 @@ pub struct Mesh {
     indices_by_vertex: HashMap<Vertex, graphics::Index>,
 
     vertices: Vec<Vertex>,
-    indices: Vec<graphics::Index>,
+    triangles: Vec<[graphics::Index; 3]>,
 }
 
 impl Mesh {
@@ -18,7 +18,7 @@ impl Mesh {
             indices_by_vertex: HashMap::new(),
 
             vertices: Vec::new(),
-            indices: Vec::new(),
+            triangles: Vec::new(),
         }
     }
 
@@ -52,9 +52,7 @@ impl Mesh {
         let i1 = self.index_for_vertex(v1);
         let i2 = self.index_for_vertex(v2);
 
-        self.indices.push(i0);
-        self.indices.push(i1);
-        self.indices.push(i2);
+        self.triangles.push([i0, i1, i2]);
     }
 
     pub fn vertices(&self) -> impl Iterator<Item = Vertex> + '_ {
@@ -62,7 +60,7 @@ impl Mesh {
     }
 
     pub fn indices(&self) -> impl Iterator<Item = graphics::Index> + '_ {
-        self.indices.iter().copied()
+        self.triangles.iter().flatten().copied()
     }
 
     pub fn into_graphics_mesh(self) -> graphics::Mesh {
