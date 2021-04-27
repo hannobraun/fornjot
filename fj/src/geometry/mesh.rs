@@ -81,7 +81,7 @@ impl Mesh {
                 ],
             })
             .collect();
-        let indices = self.indices;
+        let indices = self.indices().collect();
 
         graphics::Mesh { vertices, indices }
     }
