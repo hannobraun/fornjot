@@ -4,8 +4,9 @@ use nalgebra::Point3;
 
 use crate::geometry::{
     conversions::ToPolygon,
+    operations::linear_extrude::LinearExtrude,
     shapes::Polygon,
-    triangulation::brute_force::{self, triangulate},
+    triangulation::brute_force::{self, triangulate, InternalError},
     Mesh,
 };
 
@@ -32,6 +33,33 @@ where
     fn to_mesh(self, tolerance: f32) -> Result<Mesh, Self::Error> {
         let polygon = self.to_polygon(tolerance);
         polygon_to_mesh(polygon, 0.0)
+    }
+}
+
+impl<Sketch> ToMesh for LinearExtrude<Sketch>
+where
+    Sketch: ToPolygon,
+{
+    type Error = InternalError;
+
+    fn to_mesh(self, tolerance: f32) -> Result<Mesh, Self::Error> {
+        let sketch = self.sketch.to_polygon(tolerance);
+
+        let mut lower = polygon_to_mesh(sketch.clone(), 0.0)?;
+        let upper = polygon_to_mesh(sketch.clone(), self.height)?;
+
+        // TASK: Invert triangles of `lower` so they point down, which is the
+        //       outside direction.
+
+        // Merge meshes.
+        for [a, b, c] in upper.triangles() {
+            lower.triangle(a.position, b.position, c.position);
+        }
+
+        // TASK: Go through polygon vertices, connect them with their
+        //       counterparts to form triangles.
+
+        Ok(lower)
     }
 }
 
