@@ -1083,9 +1083,9 @@ dependencies = [
 
 [[package]]
 name = "nalgebra"
-version = "0.26.1"
+version = "0.26.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e420697df99b528ac4bac53d6b59936219c9f490933b79eab8e7b146152eb9ca"
+checksum = "476d1d59fe02fe54c86356e91650cd892f392782a1cb9fc524ec84f7aa9e1d06"
 dependencies = [
  "approx 0.4.0",
  "matrixmultiply",
@@ -1319,9 +1319,9 @@ dependencies = [
 
 [[package]]
 name = "parry2d"
-version = "0.4.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e5670021b38023037feca0f4b8fb25460151f25d6d2fafa43c0393759caa8303"
+checksum = "12820addc65942020b9af548a16d386f00c031869321c0247b106f8ed348fe90"
 dependencies = [
  "approx 0.4.0",
  "arrayvec 0.6.1",
