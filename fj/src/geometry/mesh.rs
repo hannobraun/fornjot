@@ -63,6 +63,16 @@ impl Mesh {
         self.triangles.iter().flatten().copied()
     }
 
+    pub fn triangles(&self) -> impl Iterator<Item = [&Vertex; 3]> + '_ {
+        self.triangles.iter().map(move |&[i0, i1, i2]| {
+            [
+                &self.vertices[i0 as usize],
+                &self.vertices[i1 as usize],
+                &self.vertices[i2 as usize],
+            ]
+        })
+    }
+
     pub fn into_graphics_mesh(self) -> graphics::Mesh {
         let vertices = self
             .vertices()
