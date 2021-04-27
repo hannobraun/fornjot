@@ -5,7 +5,7 @@ use nalgebra::Point3;
 use crate::geometry::{
     conversions::ToPolygon,
     operations::linear_extrude::LinearExtrude,
-    shapes::Polygon,
+    shapes::{Point, Polygon},
     triangulation::brute_force::{self, triangulate, InternalError},
     Mesh,
 };
@@ -56,8 +56,19 @@ where
             lower.triangle(a.position, b.position, c.position);
         }
 
-        // TASK: Go through polygon vertices, connect them with their
-        //       counterparts to form triangles.
+        // Build walls.
+        for edge in sketch.edges() {
+            lower.triangle(
+                Point::from_xyz(edge.a.x, edge.a.y, 0.0),
+                Point::from_xyz(edge.b.x, edge.b.y, 0.0),
+                Point::from_xyz(edge.a.x, edge.a.y, self.height),
+            );
+            lower.triangle(
+                Point::from_xyz(edge.a.x, edge.a.y, self.height),
+                Point::from_xyz(edge.b.x, edge.b.y, 0.0),
+                Point::from_xyz(edge.b.x, edge.b.y, self.height),
+            );
+        }
 
         Ok(lower)
     }
