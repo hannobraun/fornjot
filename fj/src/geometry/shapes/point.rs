@@ -12,6 +12,16 @@ impl Point<2> {
     }
 }
 
+impl Point<3> {
+    pub fn from_xyz(
+        x: impl Into<R32>,
+        y: impl Into<R32>,
+        z: impl Into<R32>,
+    ) -> Self {
+        Self(nalgebra::Point::<_, 3>::new(x.into(), y.into(), z.into()))
+    }
+}
+
 impl<const D: usize> Deref for Point<D> {
     type Target = nalgebra::Point<R32, D>;
 
