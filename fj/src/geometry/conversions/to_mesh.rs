@@ -48,8 +48,8 @@ where
         let mut lower = polygon_to_mesh(sketch.clone(), 0.0)?;
         let upper = polygon_to_mesh(sketch.clone(), self.height)?;
 
-        // TASK: Invert triangles of `lower` so they point down, which is the
-        //       outside direction.
+        // Triangles need to point down, which is the outside direction.
+        lower.invert_triangles();
 
         // Merge meshes.
         for [a, b, c] in upper.triangles() {

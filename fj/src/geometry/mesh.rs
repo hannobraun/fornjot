@@ -73,6 +73,18 @@ impl Mesh {
         })
     }
 
+    pub fn invert_triangles(&mut self) {
+        for [_, b, c] in &mut self.triangles {
+            let tmp = *b;
+            *b = *c;
+            *c = tmp;
+        }
+
+        for vertex in &mut self.vertices {
+            vertex.normal = -vertex.normal;
+        }
+    }
+
     pub fn into_graphics_mesh(self) -> graphics::Mesh {
         let vertices = self
             .vertices()
