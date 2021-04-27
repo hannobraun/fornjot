@@ -5,7 +5,7 @@ fn main() -> anyhow::Result<()> {
     let inner = fj::Circle::from_radius(0.5);
 
     let sketch = (outer, inner).difference();
-    let spacer = sketch.linear_extrude(1.0);
+    let spacer = sketch.linear_extrude(0.5);
 
     fj::run(spacer)?;
     Ok(())
