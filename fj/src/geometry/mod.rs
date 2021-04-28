@@ -1,4 +1,4 @@
-pub mod boundary;
+pub mod attributes;
 pub mod conversions;
 pub mod mesh;
 pub mod operations;
