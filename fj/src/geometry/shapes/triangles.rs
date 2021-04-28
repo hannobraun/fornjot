@@ -1,4 +1,4 @@
-use crate::geometry::Triangle3;
+use crate::geometry::shapes::Triangle3;
 
 #[derive(Debug, PartialEq)]
 pub struct Triangles(pub Vec<Triangle3>);

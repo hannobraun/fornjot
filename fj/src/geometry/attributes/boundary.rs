@@ -1,6 +1,6 @@
 use nalgebra::{Point2, RealField as _};
 
-use crate::geometry::Circle;
+use crate::geometry::shapes::Circle;
 
 pub trait Boundary {
     fn boundary(&self, s: f32) -> Point2<f32>;
@@ -24,7 +24,7 @@ mod tests {
     use approx::assert_relative_eq;
     use nalgebra::Point2;
 
-    use crate::geometry::{attributes::Boundary as _, Circle};
+    use crate::geometry::{attributes::Boundary as _, shapes::Circle};
 
     #[test]
     fn circle_should_return_boundary_points() {
