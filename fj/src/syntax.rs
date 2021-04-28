@@ -13,11 +13,11 @@ impl<A, B> Difference<A, B> for (A, B) {
     }
 }
 
-pub trait MakeLinearExtrude<Sketch> {
+pub trait LinearExtrude<Sketch> {
     fn linear_extrude(self, height: f32) -> operations::LinearExtrude<Sketch>;
 }
 
-impl<Sketch> MakeLinearExtrude<Sketch> for Sketch {
+impl<Sketch> LinearExtrude<Sketch> for Sketch {
     fn linear_extrude(self, height: f32) -> operations::LinearExtrude<Sketch> {
         operations::LinearExtrude {
             sketch: self,
