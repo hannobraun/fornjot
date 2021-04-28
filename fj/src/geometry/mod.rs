@@ -9,6 +9,5 @@ pub use self::{
     boundary::Boundary,
     conversions::ToMesh,
     mesh::Mesh,
-    operations::Difference,
     shapes::{Circle, Sphere, Triangle3, Triangles},
 };
