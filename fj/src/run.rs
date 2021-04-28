@@ -8,7 +8,7 @@ use winit::{
 };
 
 use crate::{
-    geometry::ToMesh,
+    geometry::conversions::ToMesh,
     graphics::{DrawError, Renderer},
     input::InputHandler,
     transform::Transform,
