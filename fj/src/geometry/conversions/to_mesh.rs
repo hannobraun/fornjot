@@ -5,9 +5,8 @@ use nalgebra::Point3;
 use crate::geometry::{
     conversions::ToPolygon,
     operations::linear_extrude::LinearExtrude,
-    shapes::{Point, Polygon},
+    shapes::{Mesh, Point, Polygon},
     triangulation::brute_force::{self, triangulate, InternalError},
-    Mesh,
 };
 
 pub trait ToMesh {
