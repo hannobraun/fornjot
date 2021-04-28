@@ -1,7 +1,7 @@
 use std::f32::consts::PI;
 
 use crate::{
-    geometry::{shapes::Polygon, Boundary as _, Difference},
+    geometry::{operations::Difference, shapes::Polygon, Boundary as _},
     Circle,
 };
 
