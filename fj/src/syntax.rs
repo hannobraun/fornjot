@@ -1,4 +1,4 @@
-use crate::geometry::{operations::linear_extrude::LinearExtrude, Difference};
+use crate::geometry::operations::{Difference, LinearExtrude};
 
 pub trait MakeDifference<A, B> {
     fn difference(self) -> Difference<A, B>;
