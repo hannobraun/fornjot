@@ -1,12 +1,12 @@
-use crate::geometry::operations::{Difference, LinearExtrude};
+use crate::geometry::operations;
 
 pub trait MakeDifference<A, B> {
-    fn difference(self) -> Difference<A, B>;
+    fn difference(self) -> operations::Difference<A, B>;
 }
 
 impl<A, B> MakeDifference<A, B> for (A, B) {
-    fn difference(self) -> Difference<A, B> {
-        Difference {
+    fn difference(self) -> operations::Difference<A, B> {
+        operations::Difference {
             a: self.0,
             b: self.1,
         }
@@ -14,12 +14,12 @@ impl<A, B> MakeDifference<A, B> for (A, B) {
 }
 
 pub trait MakeLinearExtrude<Sketch> {
-    fn linear_extrude(self, height: f32) -> LinearExtrude<Sketch>;
+    fn linear_extrude(self, height: f32) -> operations::LinearExtrude<Sketch>;
 }
 
 impl<Sketch> MakeLinearExtrude<Sketch> for Sketch {
-    fn linear_extrude(self, height: f32) -> LinearExtrude<Sketch> {
-        LinearExtrude {
+    fn linear_extrude(self, height: f32) -> operations::LinearExtrude<Sketch> {
+        operations::LinearExtrude {
             sketch: self,
             height,
         }
