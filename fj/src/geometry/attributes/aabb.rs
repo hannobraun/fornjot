@@ -1,4 +1,4 @@
-use parry2d::bounding_volume::AABB;
+use parry3d::bounding_volume::AABB;
 
 /// Axis-aligned bounding box
 pub trait Aabb {
