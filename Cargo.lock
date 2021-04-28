@@ -438,6 +438,7 @@ dependencies = [
  "itertools",
  "nalgebra",
  "parry2d",
+ "parry3d",
  "rand",
  "shaderc",
  "thiserror",
@@ -1325,6 +1326,25 @@ checksum = "12820addc65942020b9af548a16d386f00c031869321c0247b106f8ed348fe90"
 dependencies = [
  "approx 0.4.0",
  "arrayvec 0.6.1",
+ "bitflags",
+ "downcast-rs",
+ "either",
+ "nalgebra",
+ "num-derive",
+ "num-traits",
+ "rustc-hash",
+ "simba",
+ "slab",
+ "smallvec",
+]
+
+[[package]]
+name = "parry3d"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8778d45b719c2f2785e43a15fb2b9be5c33721304199e5bb5f5f03d1121460f4"
+dependencies = [
+ "approx 0.4.0",
  "bitflags",
  "downcast-rs",
  "either",
