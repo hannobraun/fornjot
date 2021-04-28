@@ -10,5 +10,5 @@ pub use self::{
     conversions::ToMesh,
     mesh::Mesh,
     operations::Difference,
-    shapes::{Circle, Triangle3, Triangles},
+    shapes::{Circle, Sphere, Triangle3, Triangles},
 };

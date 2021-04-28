@@ -12,7 +12,7 @@ mod run;
 mod transform;
 
 pub use self::{
-    geometry::{Circle, Mesh, Triangle3},
+    geometry::{Circle, Mesh, Sphere, Triangle3},
     graphics::{Index, Vertex},
     run::run,
 };
