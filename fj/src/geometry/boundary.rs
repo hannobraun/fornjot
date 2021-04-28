@@ -24,7 +24,7 @@ mod tests {
     use approx::assert_relative_eq;
     use nalgebra::Point2;
 
-    use crate::geometry::{Boundary as _, Circle};
+    use crate::geometry::{boundary::Boundary as _, Circle};
 
     #[test]
     fn circle_should_return_boundary_points() {
