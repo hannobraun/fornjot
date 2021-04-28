@@ -1,10 +1,10 @@
 use crate::geometry::operations;
 
-pub trait MakeDifference<A, B> {
+pub trait Difference<A, B> {
     fn difference(self) -> operations::Difference<A, B>;
 }
 
-impl<A, B> MakeDifference<A, B> for (A, B) {
+impl<A, B> Difference<A, B> for (A, B) {
     fn difference(self) -> operations::Difference<A, B> {
         operations::Difference {
             a: self.0,

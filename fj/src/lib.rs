@@ -2,7 +2,7 @@ pub mod geometry;
 pub mod syntax;
 
 pub mod prelude {
-    pub use super::syntax::{MakeDifference as _, MakeLinearExtrude as _};
+    pub use super::syntax::{Difference as _, MakeLinearExtrude as _};
 }
 
 mod graphics;
