@@ -114,11 +114,11 @@ impl Renderer {
             layout: &bind_group_layout,
             entries: &[wgpu::BindGroupEntry {
                 binding: 0,
-                resource: wgpu::BindingResource::Buffer {
+                resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding {
                     buffer: &uniform_buffer,
                     offset: 0,
                     size: None,
-                },
+                }),
             }],
             label: None,
         });
@@ -159,8 +159,8 @@ impl Renderer {
                         array_stride: size_of::<Vertex>() as u64,
                         step_mode: wgpu::InputStepMode::Vertex,
                         attributes: &wgpu::vertex_attr_array![
-                            0 => Float3,
-                            1 => Float3
+                            0 => Float32x3,
+                            1 => Float32x3
                         ],
                     }],
                 },
@@ -168,8 +168,10 @@ impl Renderer {
                     topology: wgpu::PrimitiveTopology::TriangleList,
                     strip_index_format: None,
                     front_face: wgpu::FrontFace::Ccw,
-                    cull_mode: wgpu::CullMode::None,
+                    cull_mode: None,
+                    clamp_depth: false,
                     polygon_mode: wgpu::PolygonMode::Fill,
+                    conservative: false,
                 },
                 depth_stencil: Some(wgpu::DepthStencilState {
                     format: DEPTH_FORMAT,
@@ -182,7 +184,6 @@ impl Renderer {
                         write_mask: 0,
                     },
                     bias: wgpu::DepthBiasState::default(),
-                    clamp_depth: false,
                 }),
                 multisample: wgpu::MultisampleState {
                     count: 1,
@@ -194,16 +195,7 @@ impl Renderer {
                     entry_point: "main",
                     targets: &[wgpu::ColorTargetState {
                         format: wgpu::TextureFormat::Bgra8UnormSrgb,
-                        color_blend: wgpu::BlendState {
-                            src_factor: wgpu::BlendFactor::SrcAlpha,
-                            dst_factor: wgpu::BlendFactor::OneMinusSrcAlpha,
-                            operation: wgpu::BlendOperation::Add,
-                        },
-                        alpha_blend: wgpu::BlendState {
-                            src_factor: wgpu::BlendFactor::One,
-                            dst_factor: wgpu::BlendFactor::One,
-                            operation: wgpu::BlendOperation::Add,
-                        },
+                        blend: None,
                         write_mask: wgpu::ColorWrite::ALL,
                     }],
                 }),
@@ -274,19 +266,17 @@ impl Renderer {
             let mut render_pass =
                 encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                     label: None,
-                    color_attachments: &[
-                        wgpu::RenderPassColorAttachmentDescriptor {
-                            attachment: &output.view,
-                            resolve_target: None,
-                            ops: wgpu::Operations {
-                                load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
-                                store: true,
-                            },
+                    color_attachments: &[wgpu::RenderPassColorAttachment {
+                        view: &output.view,
+                        resolve_target: None,
+                        ops: wgpu::Operations {
+                            load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
+                            store: true,
                         },
-                    ],
+                    }],
                     depth_stencil_attachment: Some(
-                        wgpu::RenderPassDepthStencilAttachmentDescriptor {
-                            attachment: &self.depth_view,
+                        wgpu::RenderPassDepthStencilAttachment {
+                            view: &self.depth_view,
                             depth_ops: Some(wgpu::Operations {
                                 load: wgpu::LoadOp::Clear(1.0),
                                 store: true,
@@ -324,7 +314,7 @@ fn create_depth_buffer(
         size: wgpu::Extent3d {
             width: swap_chain_desc.width,
             height: swap_chain_desc.height,
-            depth: 1,
+            depth_or_array_layers: 1,
         },
         mip_level_count: 1,
         sample_count: 1,
