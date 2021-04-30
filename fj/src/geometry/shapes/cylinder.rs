@@ -11,7 +11,7 @@ impl Cylinder {
         }
     }
 
-    pub fn radius(mut self, radius: f32) -> Self {
+    pub fn with_radius(mut self, radius: f32) -> Self {
         self.radius = radius;
         self
     }
