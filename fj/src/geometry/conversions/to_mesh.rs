@@ -44,8 +44,8 @@ where
     fn to_mesh(self, tolerance: f32) -> Result<Mesh, Self::Error> {
         let sketch = self.sketch.to_polygon(tolerance);
 
-        let mut lower = polygon_to_mesh(sketch.clone())?;
-        let upper = polygon_to_mesh(sketch.clone())?;
+        let mut lower = sketch.clone().to_mesh(tolerance)?;
+        let upper = sketch.clone().to_mesh(tolerance)?;
 
         // Triangles need to point down, which is the outside direction.
         lower.invert_triangles();
