@@ -11,7 +11,7 @@ mod run;
 mod transform;
 
 pub use self::{
-    geometry::shapes::{Circle, Mesh, Sphere, Triangle3},
+    geometry::shapes::{Circle, Cylinder, Mesh, Sphere, Triangle3},
     graphics::{Index, Vertex},
     run::run,
 };
