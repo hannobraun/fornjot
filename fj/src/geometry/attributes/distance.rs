@@ -4,11 +4,13 @@ use crate::geometry::shapes::Circle;
 
 /// Provides a signed distance function
 pub trait Distance {
-    fn distance(&self, point: Point<f32, 3>) -> f32;
+    fn distance(&self, point: impl Into<Point<f32, 3>>) -> f32;
 }
 
 impl Distance for Circle {
-    fn distance(&self, point: Point<f32, 3>) -> f32 {
+    fn distance(&self, point: impl Into<Point<f32, 3>>) -> f32 {
+        let point = point.into();
+
         let dist_2d = point.coords.xy().magnitude() - self.radius();
 
         if dist_2d > 0.0 {
