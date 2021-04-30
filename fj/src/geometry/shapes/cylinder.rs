@@ -16,7 +16,7 @@ impl Cylinder {
         self
     }
 
-    pub fn height(mut self, height: f32) -> Self {
+    pub fn with_height(mut self, height: f32) -> Self {
         self.height = height;
         self
     }
