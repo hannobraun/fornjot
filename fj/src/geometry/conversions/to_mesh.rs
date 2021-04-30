@@ -31,7 +31,7 @@ where
 
     fn to_mesh(self, tolerance: f32) -> Result<Mesh, Self::Error> {
         let polygon = self.to_polygon(tolerance);
-        polygon_to_mesh(polygon, 0.0)
+        polygon_to_mesh(polygon)
     }
 }
 
@@ -44,8 +44,8 @@ where
     fn to_mesh(self, tolerance: f32) -> Result<Mesh, Self::Error> {
         let sketch = self.sketch.to_polygon(tolerance);
 
-        let mut lower = polygon_to_mesh(sketch.clone(), 0.0)?;
-        let upper = polygon_to_mesh(sketch.clone(), 0.0)?;
+        let mut lower = polygon_to_mesh(sketch.clone())?;
+        let upper = polygon_to_mesh(sketch.clone())?;
 
         // Triangles need to point down, which is the outside direction.
         lower.invert_triangles();
@@ -79,7 +79,6 @@ where
 
 fn polygon_to_mesh(
     polygon: Polygon,
-    z: f32,
 ) -> Result<Mesh, brute_force::InternalError> {
     let mut mesh = Mesh::new();
     let triangles = triangulate(polygon)?;
@@ -93,9 +92,9 @@ fn polygon_to_mesh(
         let c_y: f32 = triangle.c.y.into();
 
         mesh.triangle(
-            Point3::new(a_x, a_y, z),
-            Point3::new(b_x, b_y, z),
-            Point3::new(c_x, c_y, z),
+            Point3::new(a_x, a_y, 0.0),
+            Point3::new(b_x, b_y, 0.0),
+            Point3::new(c_x, c_y, 0.0),
         );
     }
 
