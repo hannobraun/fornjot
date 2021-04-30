@@ -45,14 +45,18 @@ where
         let sketch = self.sketch.to_polygon(tolerance);
 
         let mut lower = polygon_to_mesh(sketch.clone(), 0.0)?;
-        let upper = polygon_to_mesh(sketch.clone(), self.height)?;
+        let upper = polygon_to_mesh(sketch.clone(), 0.0)?;
 
         // Triangles need to point down, which is the outside direction.
         lower.invert_triangles();
 
         // Merge meshes.
         for [a, b, c] in upper.triangles() {
-            lower.triangle(a.position, b.position, c.position);
+            let a = Point::from_xyz(a.position.x, a.position.y, self.height);
+            let b = Point::from_xyz(b.position.x, b.position.y, self.height);
+            let c = Point::from_xyz(c.position.x, c.position.y, self.height);
+
+            lower.triangle(a, b, c);
         }
 
         // Build walls.
