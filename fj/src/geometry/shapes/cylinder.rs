@@ -1,0 +1,23 @@
+pub struct Cylinder {
+    pub radius: f32,
+    pub height: f32,
+}
+
+impl Cylinder {
+    pub fn new() -> Self {
+        Self {
+            radius: 1.0,
+            height: 1.0,
+        }
+    }
+
+    pub fn radius(mut self, radius: f32) -> Self {
+        self.radius = radius;
+        self
+    }
+
+    pub fn height(mut self, height: f32) -> Self {
+        self.height = height;
+        self
+    }
+}
