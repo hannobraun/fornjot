@@ -1,6 +1,6 @@
 use nalgebra::Point;
 
-use crate::geometry::shapes::Cylinder;
+use crate::geometry::{operations::Difference, shapes::Cylinder};
 
 /// Provides a signed distance function
 pub trait Distance {
@@ -19,6 +19,21 @@ impl Distance for Cylinder {
         } else {
             f32::min(d_xy, d_z)
         }
+    }
+}
+
+impl<A, B> Distance for Difference<A, B>
+where
+    A: Distance,
+    B: Distance,
+{
+    fn distance(&self, point: impl Into<Point<f32, 3>>) -> f32 {
+        let point = point.into();
+
+        let dist_a = self.a.distance(point);
+        let dist_b = self.b.distance(point);
+
+        f32::max(-dist_a, dist_b)
     }
 }
 
