@@ -2,8 +2,8 @@ use parry3d::bounding_volume::AABB;
 
 use crate::geometry::{operations, shapes};
 
-/// Axis-aligned bounding box
 pub trait BoundingVolume {
+    /// Axis-aligned bounding box
     fn aabb(&self) -> AABB;
 }
 
