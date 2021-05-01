@@ -1,13 +1,13 @@
 use nalgebra::Point;
 
-use crate::geometry::{operations::Difference, shapes::Cylinder};
+use crate::geometry::{operations, shapes};
 
 /// Provides a signed distance function
 pub trait Distance {
     fn distance(&self, point: impl Into<Point<f32, 3>>) -> f32;
 }
 
-impl Distance for Cylinder {
+impl Distance for shapes::Cylinder {
     fn distance(&self, point: impl Into<Point<f32, 3>>) -> f32 {
         let point = point.into();
 
@@ -22,7 +22,7 @@ impl Distance for Cylinder {
     }
 }
 
-impl<A, B> Distance for Difference<A, B>
+impl<A, B> Distance for operations::Difference<A, B>
 where
     A: Distance,
     B: Distance,
