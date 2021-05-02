@@ -24,7 +24,7 @@ impl GridDescriptor {
     /// isosurface, or outside of it.
     pub fn points(
         &self,
-    ) -> impl Iterator<Item = (Point<usize, 3>, Point<f32, 3>)> + '_ {
+    ) -> impl Iterator<Item = (GridIndex, Point<f32, 3>)> + '_ {
         let indices_x = indices(self.min.x, self.max.x, self.resolution);
         let indices_y = indices(self.min.y, self.max.y, self.resolution);
         let indices_z = indices(self.min.z, self.max.z, self.resolution);
@@ -50,6 +50,8 @@ impl GridDescriptor {
         points
     }
 }
+
+pub type GridIndex = Point<usize, 3>;
 
 fn indices(min: f32, max: f32, resolution: f32) -> Range<usize> {
     let lower = 0;
