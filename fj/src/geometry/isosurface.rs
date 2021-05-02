@@ -90,7 +90,7 @@ mod tests {
     use super::Grid;
 
     #[test]
-    fn grid_points_should_return_grid_points() {
+    fn points_should_return_grid_points() {
         let grid = Grid {
             min: [0.0, 0.0, 0.5].into(),
             max: [0.5, 1.0, 1.5].into(),
