@@ -1,4 +1,4 @@
-use std::{iter, ops::Range};
+use std::ops::Range;
 
 use itertools::Itertools as _;
 use nalgebra::Point;
@@ -68,9 +68,42 @@ impl GridDescriptor {
     /// method returns an iterator over the center of these cubes.
     pub fn cubes(
         &self,
-    ) -> impl Iterator<Item = (Point<usize, 3>, Point<f32, 3>)> {
-        // TASK: Implement
-        iter::empty()
+    ) -> impl Iterator<Item = (Point<usize, 3>, Point<f32, 3>)> + '_ {
+        let indices_x = cube_indices(self.min.x, self.max.x, self.resolution);
+        let indices_y = cube_indices(self.min.y, self.max.y, self.resolution);
+        let indices_z = cube_indices(self.min.z, self.max.z, self.resolution);
+
+        let indices = indices_x
+            .cartesian_product(indices_y)
+            .cartesian_product(indices_z)
+            .map(|((x, y), z)| [x, y, z]);
+
+        let cubes = indices
+            .map(move |[x, y, z]| {
+                (
+                    [x, y, z],
+                    [
+                        cube_index_to_coordinate(
+                            x,
+                            self.min.x,
+                            self.resolution,
+                        ),
+                        cube_index_to_coordinate(
+                            y,
+                            self.min.y,
+                            self.resolution,
+                        ),
+                        cube_index_to_coordinate(
+                            z,
+                            self.min.z,
+                            self.resolution,
+                        ),
+                    ],
+                )
+            })
+            .map(|(index, point)| (index.into(), point.into()));
+
+        cubes
     }
 }
 
@@ -81,8 +114,19 @@ fn point_indices(min: f32, max: f32, resolution: f32) -> Range<usize> {
     lower..upper
 }
 
+fn cube_indices(min: f32, max: f32, resolution: f32) -> Range<usize> {
+    let lower = 0;
+    let upper = ((max - min) / resolution).ceil() as usize + 1;
+
+    lower..upper
+}
+
 fn point_index_to_coordinate(index: usize, min: f32, resolution: f32) -> f32 {
     index as f32 * resolution + min - resolution / 2.0
+}
+
+fn cube_index_to_coordinate(index: usize, min: f32, resolution: f32) -> f32 {
+    index as f32 * resolution + min
 }
 
 #[cfg(test)]
@@ -129,6 +173,31 @@ mod tests {
                 ([2, 2, 0].into(), [1.5, 1.5, 0.0].into()),
                 ([2, 2, 1].into(), [1.5, 1.5, 1.0].into()),
                 ([2, 2, 2].into(), [1.5, 1.5, 2.0].into()),
+            ]
+        );
+    }
+
+    #[test]
+    fn cubes_should_return_cube_points() {
+        let grid = GridDescriptor {
+            min: [0.0, 0.0, 0.5].into(),
+            max: [0.5, 1.0, 1.5].into(),
+            resolution: 1.0,
+        };
+
+        let cube_points: Vec<_> = grid.cubes().collect();
+
+        assert_eq!(
+            cube_points,
+            vec![
+                ([0, 0, 0].into(), [0.0, 0.0, 0.5].into()),
+                ([0, 0, 1].into(), [0.0, 0.0, 1.5].into()),
+                ([0, 1, 0].into(), [0.0, 1.0, 0.5].into()),
+                ([0, 1, 1].into(), [0.0, 1.0, 1.5].into()),
+                ([1, 0, 0].into(), [1.0, 0.0, 0.5].into()),
+                ([1, 0, 1].into(), [1.0, 0.0, 1.5].into()),
+                ([1, 1, 0].into(), [1.0, 1.0, 0.5].into()),
+                ([1, 1, 1].into(), [1.0, 1.0, 1.5].into()),
             ]
         );
     }
