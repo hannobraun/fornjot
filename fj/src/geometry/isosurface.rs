@@ -75,7 +75,10 @@ impl Grid {
 }
 
 fn grid_indices(min: f32, max: f32, resolution: f32) -> Range<usize> {
-    0..((max - min) / resolution).ceil() as usize + 2
+    let lower = 0;
+    let upper = ((max - min) / resolution).ceil() as usize + 2;
+
+    lower..upper
 }
 
 fn grid_index_to_coordinate(index: usize, min: f32, resolution: f32) -> f32 {
