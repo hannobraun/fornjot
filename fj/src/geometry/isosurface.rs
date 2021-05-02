@@ -22,7 +22,9 @@ impl Grid {
     /// The grid extends beyond the `min` and `max` values given to the
     /// constructor, so that the center of the outermost cubes are on the
     /// isosurface, or outside of it.
-    pub fn grid_points(&self) -> impl Iterator<Item = Point<f32, 3>> + '_ {
+    pub fn grid_points(
+        &self,
+    ) -> impl Iterator<Item = (Point<usize, 3>, Point<f32, 3>)> + '_ {
         let indices_x = grid_indices(self.min.x, self.max.x, self.resolution);
         let indices_y = grid_indices(self.min.y, self.max.y, self.resolution);
         let indices_z = grid_indices(self.min.z, self.max.z, self.resolution);
@@ -34,13 +36,28 @@ impl Grid {
 
         let points = indices
             .map(move |[x, y, z]| {
-                [
-                    grid_index_to_coordinate(x, self.min.x, self.resolution),
-                    grid_index_to_coordinate(y, self.min.y, self.resolution),
-                    grid_index_to_coordinate(z, self.min.z, self.resolution),
-                ]
+                (
+                    [x, y, z],
+                    [
+                        grid_index_to_coordinate(
+                            x,
+                            self.min.x,
+                            self.resolution,
+                        ),
+                        grid_index_to_coordinate(
+                            y,
+                            self.min.y,
+                            self.resolution,
+                        ),
+                        grid_index_to_coordinate(
+                            z,
+                            self.min.z,
+                            self.resolution,
+                        ),
+                    ],
+                )
             })
-            .map(|point| point.into());
+            .map(|(indices, point)| (indices.into(), point.into()));
 
         points
     }
@@ -80,33 +97,33 @@ mod tests {
         assert_eq!(
             grid_points,
             vec![
-                [-0.5, -0.5, 0.0].into(),
-                [-0.5, -0.5, 1.0].into(),
-                [-0.5, -0.5, 2.0].into(),
-                [-0.5, 0.5, 0.0].into(),
-                [-0.5, 0.5, 1.0].into(),
-                [-0.5, 0.5, 2.0].into(),
-                [-0.5, 1.5, 0.0].into(),
-                [-0.5, 1.5, 1.0].into(),
-                [-0.5, 1.5, 2.0].into(),
-                [0.5, -0.5, 0.0].into(),
-                [0.5, -0.5, 1.0].into(),
-                [0.5, -0.5, 2.0].into(),
-                [0.5, 0.5, 0.0].into(),
-                [0.5, 0.5, 1.0].into(),
-                [0.5, 0.5, 2.0].into(),
-                [0.5, 1.5, 0.0].into(),
-                [0.5, 1.5, 1.0].into(),
-                [0.5, 1.5, 2.0].into(),
-                [1.5, -0.5, 0.0].into(),
-                [1.5, -0.5, 1.0].into(),
-                [1.5, -0.5, 2.0].into(),
-                [1.5, 0.5, 0.0].into(),
-                [1.5, 0.5, 1.0].into(),
-                [1.5, 0.5, 2.0].into(),
-                [1.5, 1.5, 0.0].into(),
-                [1.5, 1.5, 1.0].into(),
-                [1.5, 1.5, 2.0].into(),
+                ([0, 0, 0].into(), [-0.5, -0.5, 0.0].into()),
+                ([0, 0, 1].into(), [-0.5, -0.5, 1.0].into()),
+                ([0, 0, 2].into(), [-0.5, -0.5, 2.0].into()),
+                ([0, 1, 0].into(), [-0.5, 0.5, 0.0].into()),
+                ([0, 1, 1].into(), [-0.5, 0.5, 1.0].into()),
+                ([0, 1, 2].into(), [-0.5, 0.5, 2.0].into()),
+                ([0, 2, 0].into(), [-0.5, 1.5, 0.0].into()),
+                ([0, 2, 1].into(), [-0.5, 1.5, 1.0].into()),
+                ([0, 2, 2].into(), [-0.5, 1.5, 2.0].into()),
+                ([1, 0, 0].into(), [0.5, -0.5, 0.0].into()),
+                ([1, 0, 1].into(), [0.5, -0.5, 1.0].into()),
+                ([1, 0, 2].into(), [0.5, -0.5, 2.0].into()),
+                ([1, 1, 0].into(), [0.5, 0.5, 0.0].into()),
+                ([1, 1, 1].into(), [0.5, 0.5, 1.0].into()),
+                ([1, 1, 2].into(), [0.5, 0.5, 2.0].into()),
+                ([1, 2, 0].into(), [0.5, 1.5, 0.0].into()),
+                ([1, 2, 1].into(), [0.5, 1.5, 1.0].into()),
+                ([1, 2, 2].into(), [0.5, 1.5, 2.0].into()),
+                ([2, 0, 0].into(), [1.5, -0.5, 0.0].into()),
+                ([2, 0, 1].into(), [1.5, -0.5, 1.0].into()),
+                ([2, 0, 2].into(), [1.5, -0.5, 2.0].into()),
+                ([2, 1, 0].into(), [1.5, 0.5, 0.0].into()),
+                ([2, 1, 1].into(), [1.5, 0.5, 1.0].into()),
+                ([2, 1, 2].into(), [1.5, 0.5, 2.0].into()),
+                ([2, 2, 0].into(), [1.5, 1.5, 0.0].into()),
+                ([2, 2, 1].into(), [1.5, 1.5, 1.0].into()),
+                ([2, 2, 2].into(), [1.5, 1.5, 2.0].into()),
             ]
         );
     }
