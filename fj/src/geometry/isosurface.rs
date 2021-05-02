@@ -22,7 +22,7 @@ impl Grid {
     /// The grid extends beyond the `min` and `max` values given to the
     /// constructor, so that the center of the outermost cubes are on the
     /// isosurface, or outside of it.
-    pub fn grid_points(
+    pub fn points(
         &self,
     ) -> impl Iterator<Item = (Point<usize, 3>, Point<f32, 3>)> + '_ {
         let indices_x = grid_indices(self.min.x, self.max.x, self.resolution);
@@ -94,7 +94,7 @@ mod tests {
             resolution: 1.0,
         };
 
-        let grid_points: Vec<_> = grid.grid_points().collect();
+        let grid_points: Vec<_> = grid.points().collect();
 
         assert_eq!(
             grid_points,
