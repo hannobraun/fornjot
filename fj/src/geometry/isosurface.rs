@@ -1,5 +1,6 @@
-use std::iter;
+use std::{iter, ops::Range};
 
+use itertools::Itertools as _;
 use nalgebra::Point;
 
 /// A grid for isosurface extraction
@@ -21,9 +22,27 @@ impl Grid {
     /// The grid extends beyond the `min` and `max` values given to the
     /// constructor, so that the center of the outermost cubes are on the
     /// isosurface, or outside of it.
-    pub fn grid_points(&self) -> impl Iterator<Item = Point<f32, 3>> {
-        // TASK: Implement
-        iter::empty()
+    pub fn grid_points(&self) -> impl Iterator<Item = Point<f32, 3>> + '_ {
+        let indices_x = grid_indices(self.min.x, self.max.x, self.resolution);
+        let indices_y = grid_indices(self.min.y, self.max.y, self.resolution);
+        let indices_z = grid_indices(self.min.z, self.max.z, self.resolution);
+
+        let indices = indices_x
+            .cartesian_product(indices_y)
+            .cartesian_product(indices_z)
+            .map(|((x, y), z)| [x, y, z]);
+
+        let points = indices
+            .map(move |[x, y, z]| {
+                [
+                    grid_index_to_coordinate(x, self.min.x, self.resolution),
+                    grid_index_to_coordinate(y, self.min.y, self.resolution),
+                    grid_index_to_coordinate(z, self.min.z, self.resolution),
+                ]
+            })
+            .map(|point| point.into());
+
+        points
     }
 
     /// Returns the centers of all grid cubes
@@ -33,5 +52,62 @@ impl Grid {
     pub fn cube_centers(&self) -> impl Iterator<Item = Point<f32, 3>> {
         // TASK: Implement
         iter::empty()
+    }
+}
+
+fn grid_indices(min: f32, max: f32, resolution: f32) -> Range<usize> {
+    0..((max - min) / resolution).ceil() as usize + 2
+}
+
+fn grid_index_to_coordinate(index: usize, min: f32, resolution: f32) -> f32 {
+    index as f32 * resolution + min - resolution / 2.0
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Grid;
+
+    #[test]
+    fn grid_points_should_return_grid_points() {
+        let grid = Grid {
+            min: [0.0, 0.0, 0.5].into(),
+            max: [0.5, 1.0, 1.5].into(),
+            resolution: 1.0,
+        };
+
+        let grid_points: Vec<_> = grid.grid_points().collect();
+
+        assert_eq!(
+            grid_points,
+            vec![
+                [-0.5, -0.5, 0.0].into(),
+                [-0.5, -0.5, 1.0].into(),
+                [-0.5, -0.5, 2.0].into(),
+                [-0.5, 0.5, 0.0].into(),
+                [-0.5, 0.5, 1.0].into(),
+                [-0.5, 0.5, 2.0].into(),
+                [-0.5, 1.5, 0.0].into(),
+                [-0.5, 1.5, 1.0].into(),
+                [-0.5, 1.5, 2.0].into(),
+                [0.5, -0.5, 0.0].into(),
+                [0.5, -0.5, 1.0].into(),
+                [0.5, -0.5, 2.0].into(),
+                [0.5, 0.5, 0.0].into(),
+                [0.5, 0.5, 1.0].into(),
+                [0.5, 0.5, 2.0].into(),
+                [0.5, 1.5, 0.0].into(),
+                [0.5, 1.5, 1.0].into(),
+                [0.5, 1.5, 2.0].into(),
+                [1.5, -0.5, 0.0].into(),
+                [1.5, -0.5, 1.0].into(),
+                [1.5, -0.5, 2.0].into(),
+                [1.5, 0.5, 0.0].into(),
+                [1.5, 0.5, 1.0].into(),
+                [1.5, 0.5, 2.0].into(),
+                [1.5, 1.5, 0.0].into(),
+                [1.5, 1.5, 1.0].into(),
+                [1.5, 1.5, 2.0].into(),
+            ]
+        );
     }
 }
