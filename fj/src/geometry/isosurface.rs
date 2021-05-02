@@ -39,17 +39,17 @@ impl Grid {
                 (
                     [x, y, z],
                     [
-                        grid_index_to_coordinate(
+                        point_index_to_coordinate(
                             x,
                             self.min.x,
                             self.resolution,
                         ),
-                        grid_index_to_coordinate(
+                        point_index_to_coordinate(
                             y,
                             self.min.y,
                             self.resolution,
                         ),
-                        grid_index_to_coordinate(
+                        point_index_to_coordinate(
                             z,
                             self.min.z,
                             self.resolution,
@@ -81,7 +81,7 @@ fn point_indices(min: f32, max: f32, resolution: f32) -> Range<usize> {
     lower..upper
 }
 
-fn grid_index_to_coordinate(index: usize, min: f32, resolution: f32) -> f32 {
+fn point_index_to_coordinate(index: usize, min: f32, resolution: f32) -> f32 {
     index as f32 * resolution + min - resolution / 2.0
 }
 
