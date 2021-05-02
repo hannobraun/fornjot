@@ -10,13 +10,13 @@ use nalgebra::Point;
 ///
 /// The actual values returned by `Grid`'s methods might be below or above that,
 /// to enable proper extraction of the surface.
-pub struct Grid {
+pub struct GridDescriptor {
     pub min: Point<f32, 3>,
     pub max: Point<f32, 3>,
     pub resolution: f32,
 }
 
-impl Grid {
+impl GridDescriptor {
     /// Returns the grid points themselves
     ///
     /// The grid extends beyond the `min` and `max` values given to the
@@ -87,11 +87,11 @@ fn point_index_to_coordinate(index: usize, min: f32, resolution: f32) -> f32 {
 
 #[cfg(test)]
 mod tests {
-    use super::Grid;
+    use super::GridDescriptor;
 
     #[test]
     fn points_should_return_grid_points() {
-        let grid = Grid {
+        let grid = GridDescriptor {
             min: [0.0, 0.0, 0.5].into(),
             max: [0.5, 1.0, 1.5].into(),
             resolution: 1.0,
