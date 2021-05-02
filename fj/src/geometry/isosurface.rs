@@ -66,7 +66,9 @@ impl Grid {
     ///
     /// The grid is made up of points at regular intervals that form cubes. This
     /// method returns an iterator over the center of these cubes.
-    pub fn cube_centers(&self) -> impl Iterator<Item = Point<f32, 3>> {
+    pub fn cube_centers(
+        &self,
+    ) -> impl Iterator<Item = (Point<usize, 3>, Point<f32, 3>)> {
         // TASK: Implement
         iter::empty()
     }
