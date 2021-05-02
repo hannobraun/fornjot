@@ -57,7 +57,7 @@ impl Grid {
                     ],
                 )
             })
-            .map(|(indices, point)| (indices.into(), point.into()));
+            .map(|(index, point)| (index.into(), point.into()));
 
         points
     }
