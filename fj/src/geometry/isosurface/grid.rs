@@ -43,11 +43,13 @@ impl Grid {
     }
 }
 
+#[derive(Debug)]
 pub struct Edge {
     pub a: Value,
     pub b: Value,
 }
 
+#[derive(Debug)]
 pub struct Value {
     pub index: Point<usize, 3>,
     pub value: f32,
