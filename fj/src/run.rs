@@ -31,7 +31,7 @@ where
         .build(&event_loop)
         .unwrap();
 
-    let mesh = mesh.to_mesh(0.001)?;
+    let mesh = mesh.to_mesh(0.01)?;
     let mesh = mesh.into_graphics_mesh();
 
     let mut input_handler = InputHandler::new();
