@@ -15,7 +15,6 @@ impl Grid {
     pub fn from_descriptor(
         _descriptor: &GridDescriptor,
         _isosurface: impl Distance,
-        _on_progress: impl FnMut(usize, usize),
     ) -> Self {
         // TASK: Implement
         todo!()
