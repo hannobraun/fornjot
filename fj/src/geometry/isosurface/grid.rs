@@ -13,11 +13,17 @@ pub struct Grid {
 impl Grid {
     /// Create the grid from the descriptor and populate it with distance values
     pub fn from_descriptor(
-        _descriptor: &GridDescriptor,
-        _isosurface: impl Distance,
+        descriptor: &GridDescriptor,
+        isosurface: impl Distance,
     ) -> Self {
-        // TASK: Implement
-        todo!()
+        let mut values = HashMap::new();
+
+        for (index, point) in descriptor.points() {
+            let value = isosurface.distance(point);
+            values.insert(index, value);
+        }
+
+        Self { _values: values }
     }
 
     /// Returns iterator over all grid edges
