@@ -10,6 +10,7 @@ use nalgebra::Point;
 ///
 /// The actual values returned by `Grid`'s methods might be below or above that,
 /// to enable proper extraction of the surface.
+#[derive(Debug)]
 pub struct GridDescriptor {
     pub min: Point<f32, 3>,
     pub max: Point<f32, 3>,
