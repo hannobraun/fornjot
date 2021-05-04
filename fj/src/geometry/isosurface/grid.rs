@@ -47,11 +47,14 @@ impl Grid {
     }
 
     /// Returns the 4 neighboring cube centers of a grid edge
+    ///
+    /// Returns `None`, if the edge doesn't have 4 neighbors. This is the case
+    /// for edges at the edge of the grid.
     pub fn neighbors_of_edge(
         &self,
         _a: GridIndex,
         _b: GridIndex,
-    ) -> [Point<f32, 3>; 4] {
+    ) -> Option<[Point<f32, 3>; 4]> {
         // TASK: Implement
         todo!()
     }
