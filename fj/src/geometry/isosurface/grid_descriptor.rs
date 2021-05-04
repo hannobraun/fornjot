@@ -54,7 +54,7 @@ impl GridDescriptor {
                         .to_coordinates(self.min, self.resolution),
                 )
             })
-            .map(|(index, point)| (index.into(), point.into()));
+            .map(|(index, point)| (index.into(), point));
 
         points
     }
