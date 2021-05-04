@@ -61,7 +61,7 @@ impl GridDescriptor {
     }
 }
 
-pub type GridIndex = Point<usize, 3>;
+pub type GridIndex = [usize; 3];
 
 fn indices(min: f32, max: f32, resolution: f32) -> Range<usize> {
     let lower = 0;
