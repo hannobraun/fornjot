@@ -6,6 +6,7 @@ use crate::geometry::attributes::Distance;
 
 use super::{Edge, GridDescriptor, GridIndex, Value};
 
+#[derive(Debug)]
 pub struct Grid {
     descriptor: GridDescriptor,
     values: BTreeMap<GridIndex, f32>,
