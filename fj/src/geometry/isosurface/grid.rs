@@ -51,6 +51,6 @@ pub struct Edge {
 
 #[derive(Debug, PartialEq)]
 pub struct Value {
-    pub index: Point<usize, 3>,
+    pub index: GridIndex,
     pub value: f32,
 }
