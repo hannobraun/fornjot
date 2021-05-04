@@ -1,4 +1,4 @@
-use std::{collections::HashMap, iter};
+use std::{collections::BTreeMap, iter};
 
 use nalgebra::Point;
 
@@ -7,7 +7,7 @@ use crate::geometry::attributes::Distance;
 use super::{GridDescriptor, GridIndex};
 
 pub struct Grid {
-    _values: HashMap<GridIndex, f32>,
+    _values: BTreeMap<GridIndex, f32>,
 }
 
 impl Grid {
@@ -16,7 +16,7 @@ impl Grid {
         descriptor: &GridDescriptor,
         isosurface: impl Distance,
     ) -> Self {
-        let mut values = HashMap::new();
+        let mut values = BTreeMap::new();
 
         for (index, point) in descriptor.points() {
             let value = isosurface.distance(point);
