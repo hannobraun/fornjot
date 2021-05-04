@@ -7,7 +7,7 @@ use crate::geometry::attributes::Distance;
 use super::{Edge, GridDescriptor, GridIndex, Value};
 
 pub struct Grid {
-    _values: BTreeMap<GridIndex, f32>,
+    values: BTreeMap<GridIndex, f32>,
 }
 
 impl Grid {
@@ -23,12 +23,12 @@ impl Grid {
             values.insert(index, value);
         }
 
-        Self { _values: values }
+        Self { values }
     }
 
     /// Returns iterator over all grid edges
     pub fn edges(&self) -> impl Iterator<Item = Edge> + '_ {
-        self._values
+        self.values
             .iter()
             .map(move |(&index, &value)| {
                 let next_z = [index.x(), index.y(), index.z() + 1];
@@ -36,9 +36,9 @@ impl Grid {
                 let next_x = [index.x() + 1, index.y(), index.z()];
 
                 [
-                    edge_to_next(index, value, next_z.into(), &self._values),
-                    edge_to_next(index, value, next_y.into(), &self._values),
-                    edge_to_next(index, value, next_x.into(), &self._values),
+                    edge_to_next(index, value, next_z.into(), &self.values),
+                    edge_to_next(index, value, next_y.into(), &self.values),
+                    edge_to_next(index, value, next_x.into(), &self.values),
                 ]
             })
             .map(|edges| array::IntoIter::new(edges))
