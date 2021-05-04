@@ -36,11 +36,11 @@ mod tests {
     fn at_surface_should_detect_whether_edge_is_at_surface() {
         let inside_surface = Edge {
             a: Value {
-                index: [0, 0, 0],
+                index: [0, 0, 0].into(),
                 value: -0.2,
             },
             b: Value {
-                index: [0, 0, 0],
+                index: [0, 0, 0].into(),
                 value: -0.1,
             },
         };
@@ -49,11 +49,11 @@ mod tests {
 
         let outside_surface = Edge {
             a: Value {
-                index: [0, 0, 0],
+                index: [0, 0, 0].into(),
                 value: 0.1,
             },
             b: Value {
-                index: [0, 0, 0],
+                index: [0, 0, 0].into(),
                 value: 0.2,
             },
         };
@@ -62,11 +62,11 @@ mod tests {
 
         let through_surface = Edge {
             a: Value {
-                index: [0, 0, 0],
+                index: [0, 0, 0].into(),
                 value: -0.1,
             },
             b: Value {
-                index: [0, 0, 0],
+                index: [0, 0, 0].into(),
                 value: 0.1,
             },
         };
@@ -75,11 +75,11 @@ mod tests {
 
         let inside_to_surface = Edge {
             a: Value {
-                index: [0, 0, 0],
+                index: [0, 0, 0].into(),
                 value: -0.1,
             },
             b: Value {
-                index: [0, 0, 0],
+                index: [0, 0, 0].into(),
                 value: 0.0,
             },
         };
@@ -88,11 +88,11 @@ mod tests {
 
         let outside_to_surface = Edge {
             a: Value {
-                index: [0, 0, 0],
+                index: [0, 0, 0].into(),
                 value: 0.0,
             },
             b: Value {
-                index: [0, 0, 0],
+                index: [0, 0, 0].into(),
                 value: 0.1,
             },
         };
