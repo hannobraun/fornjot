@@ -3,6 +3,8 @@ use std::ops::Range;
 use itertools::Itertools as _;
 use nalgebra::Point;
 
+use super::GridIndex;
+
 /// A grid for isosurface extraction
 ///
 /// `min` and `max` define the minimum and maximum points of the isosurface.
@@ -60,8 +62,6 @@ impl GridDescriptor {
         points
     }
 }
-
-pub type GridIndex = [usize; 3];
 
 fn indices(min: f32, max: f32, resolution: f32) -> Range<usize> {
     let lower = 0;
