@@ -9,4 +9,4 @@ pub struct Vertex {
 unsafe impl Zeroable for Vertex {}
 unsafe impl Pod for Vertex {}
 
-pub type Index = u16;
+pub type Index = u32;
