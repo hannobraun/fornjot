@@ -55,7 +55,7 @@ impl GridDescriptor {
                     ],
                 )
             })
-            .map(|(index, point)| (index.into(), point.into()));
+            .map(|(index, point)| (index, point.into()));
 
         points
     }
