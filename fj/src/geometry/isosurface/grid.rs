@@ -4,7 +4,7 @@ use nalgebra::Point;
 
 use crate::geometry::attributes::Distance;
 
-use super::{GridDescriptor, GridIndex};
+use super::{Edge, GridDescriptor, GridIndex, Value};
 
 pub struct Grid {
     _values: BTreeMap<GridIndex, f32>,
@@ -72,18 +72,6 @@ fn edge_to_next(
             value: next_value,
         },
     })
-}
-
-#[derive(Debug, PartialEq)]
-pub struct Edge {
-    pub a: Value,
-    pub b: Value,
-}
-
-#[derive(Debug, PartialEq)]
-pub struct Value {
-    pub index: GridIndex,
-    pub value: f32,
 }
 
 #[cfg(test)]
