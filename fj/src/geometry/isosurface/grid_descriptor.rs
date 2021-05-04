@@ -44,15 +44,11 @@ impl GridDescriptor {
         let indices = indices_x
             .cartesian_product(indices_y)
             .cartesian_product(indices_z)
-            .map(|((x, y), z)| [x, y, z]);
+            .map(|((x, y), z)| GridIndex::from([x, y, z]));
 
         let points = indices
             .map(move |index| {
-                (
-                    index,
-                    GridIndex::from(index)
-                        .to_coordinates(self.min, self.resolution),
-                )
+                (index, index.to_coordinates(self.min, self.resolution))
             })
             .map(|(index, point)| (index.into(), point));
 
