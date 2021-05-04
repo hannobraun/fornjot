@@ -31,9 +31,9 @@ impl Grid {
         self._values
             .iter()
             .map(move |(&index, &value)| {
-                let next_z = [index.0[0], index.0[1], index.0[2] + 1];
-                let next_y = [index.0[0], index.0[1] + 1, index.0[2]];
-                let next_x = [index.0[0] + 1, index.0[1], index.0[2]];
+                let next_z = [index.x(), index.y(), index.z() + 1];
+                let next_y = [index.x(), index.y() + 1, index.z()];
+                let next_x = [index.x() + 1, index.y(), index.z()];
 
                 [
                     edge_to_next(index, value, next_z.into(), &self._values),
