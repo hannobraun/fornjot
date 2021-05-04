@@ -47,10 +47,10 @@ impl GridDescriptor {
             .map(|((x, y), z)| [x, y, z]);
 
         let points = indices
-            .map(move |[x, y, z]| {
+            .map(move |index| {
                 (
-                    [x, y, z],
-                    GridIndex::from([x, y, z])
+                    index,
+                    GridIndex::from(index)
                         .to_coordinates(self.min, self.resolution),
                 )
             })
