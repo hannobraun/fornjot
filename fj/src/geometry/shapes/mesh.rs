@@ -125,9 +125,6 @@ pub struct Vertex {
     pub normal: Vector3<R32>,
 }
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
-pub struct Index(u16);
-
 #[cfg(test)]
 mod tests {
     use decorum::R32;
