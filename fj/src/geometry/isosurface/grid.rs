@@ -13,7 +13,7 @@ pub struct Grid {
 impl Grid {
     /// Create the grid from the descriptor and populate it with distance values
     pub fn from_descriptor(
-        descriptor: &GridDescriptor,
+        descriptor: GridDescriptor,
         isosurface: impl Distance,
     ) -> Self {
         let mut values = BTreeMap::new();
@@ -86,7 +86,7 @@ mod tests {
     #[test]
     fn edges_should_return_edges() {
         let grid = Grid::from_descriptor(
-            &GridDescriptor {
+            GridDescriptor {
                 min: [0.0, 0.0, 0.0].into(),
                 max: [1.0, 1.0, 1.0].into(),
                 resolution: 1.0,
