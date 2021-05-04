@@ -50,11 +50,8 @@ impl GridDescriptor {
             .map(move |[x, y, z]| {
                 (
                     [x, y, z],
-                    [
-                        index_to_coordinate(x, self.min.x, self.resolution),
-                        index_to_coordinate(y, self.min.y, self.resolution),
-                        index_to_coordinate(z, self.min.z, self.resolution),
-                    ],
+                    GridIndex::from([x, y, z])
+                        .to_coordinates(self.min, self.resolution),
                 )
             })
             .map(|(index, point)| (index.into(), point.into()));
@@ -68,10 +65,6 @@ fn indices(min: f32, max: f32, resolution: f32) -> Range<usize> {
     let upper = ((max - min) / resolution).ceil() as usize + 2;
 
     lower..upper
-}
-
-fn index_to_coordinate(index: usize, min: f32, resolution: f32) -> f32 {
-    index as f32 * resolution + min - resolution / 2.0
 }
 
 #[cfg(test)]
