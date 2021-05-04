@@ -1,5 +1,5 @@
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
-pub struct GridIndex(pub [usize; 3]);
+pub struct GridIndex([usize; 3]);
 
 impl GridIndex {
     pub fn x(&self) -> usize {
