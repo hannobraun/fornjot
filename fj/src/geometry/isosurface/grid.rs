@@ -76,24 +76,25 @@ impl Grid {
             .to_coordinates(self.descriptor.min, self.descriptor.resolution);
         let o = self.descriptor.resolution / 2.0;
 
+        #[rustfmt::skip]
         let neighbors = match direction {
             [0, 0, 1] => [
                 start + Point::<_, 3>::from([-o, -o, o]).coords,
-                start + Point::<_, 3>::from([-o, o, o]).coords,
-                start + Point::<_, 3>::from([o, -o, o]).coords,
-                start + Point::<_, 3>::from([o, o, o]).coords,
+                start + Point::<_, 3>::from([-o,  o, o]).coords,
+                start + Point::<_, 3>::from([ o, -o, o]).coords,
+                start + Point::<_, 3>::from([ o,  o, o]).coords,
             ],
             [0, 1, 0] => [
                 start + Point::<_, 3>::from([-o, o, -o]).coords,
-                start + Point::<_, 3>::from([-o, o, o]).coords,
-                start + Point::<_, 3>::from([o, o, -o]).coords,
-                start + Point::<_, 3>::from([o, o, o]).coords,
+                start + Point::<_, 3>::from([-o, o,  o]).coords,
+                start + Point::<_, 3>::from([ o, o, -o]).coords,
+                start + Point::<_, 3>::from([ o, o,  o]).coords,
             ],
             [1, 0, 0] => [
                 start + Point::<_, 3>::from([o, -o, -o]).coords,
-                start + Point::<_, 3>::from([o, -o, o]).coords,
-                start + Point::<_, 3>::from([o, o, -o]).coords,
-                start + Point::<_, 3>::from([o, o, o]).coords,
+                start + Point::<_, 3>::from([o, -o,  o]).coords,
+                start + Point::<_, 3>::from([o,  o, -o]).coords,
+                start + Point::<_, 3>::from([o,  o,  o]).coords,
             ],
             direction => panic!(
                 "Invalid direction ({:?}).\
