@@ -33,7 +33,7 @@ where
         let dist_a = self.a.distance(point);
         let dist_b = self.b.distance(point);
 
-        f32::max(-dist_a, dist_b)
+        f32::max(dist_a, -dist_b)
     }
 }
 
