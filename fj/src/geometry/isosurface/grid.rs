@@ -80,21 +80,21 @@ impl Grid {
         let neighbors = match direction {
             [0, 0, 1] => [
                 start + Point::<_, 3>::from([-o, -o, o]).coords,
-                start + Point::<_, 3>::from([-o,  o, o]).coords,
                 start + Point::<_, 3>::from([ o, -o, o]).coords,
                 start + Point::<_, 3>::from([ o,  o, o]).coords,
+                start + Point::<_, 3>::from([-o,  o, o]).coords,
             ],
             [0, 1, 0] => [
                 start + Point::<_, 3>::from([-o, o, -o]).coords,
-                start + Point::<_, 3>::from([-o, o,  o]).coords,
                 start + Point::<_, 3>::from([ o, o, -o]).coords,
                 start + Point::<_, 3>::from([ o, o,  o]).coords,
+                start + Point::<_, 3>::from([-o, o,  o]).coords,
             ],
             [1, 0, 0] => [
                 start + Point::<_, 3>::from([o, -o, -o]).coords,
-                start + Point::<_, 3>::from([o, -o,  o]).coords,
                 start + Point::<_, 3>::from([o,  o, -o]).coords,
                 start + Point::<_, 3>::from([o,  o,  o]).coords,
+                start + Point::<_, 3>::from([o, -o,  o]).coords,
             ],
             direction => panic!(
                 "Invalid direction ({:?}).\
