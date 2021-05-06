@@ -15,6 +15,34 @@ impl<T> Edge<T> {
     }
 }
 
+impl Edge<GridIndex> {
+    pub fn direction(&self) -> Direction {
+        let direction = [
+            self.b.x() as i32 - self.a.x() as i32,
+            self.b.y() as i32 - self.a.y() as i32,
+            self.b.z() as i32 - self.a.z() as i32,
+        ];
+
+        #[rustfmt::skip]
+        let (axis, sign) = match direction {
+            [ 0,  0, -1] => (Axis::Z, Sign::Neg),
+            [ 0,  0,  1] => (Axis::Z, Sign::Pos),
+            [ 0, -1,  0] => (Axis::Y, Sign::Neg),
+            [ 0,  1,  0] => (Axis::Y, Sign::Pos),
+            [-1,  0,  0] => (Axis::X, Sign::Neg),
+            [ 1,  0,  0] => (Axis::X, Sign::Pos),
+
+            direction => panic!(
+                "Invalid direction ({:?}).\
+                Only axis-aligned directions allowed.",
+                direction
+            ),
+        };
+
+        Direction { axis, sign }
+    }
+}
+
 impl Edge<Value> {
     pub fn at_surface(&self) -> bool {
         let min = f32::min(self.a.value, self.b.value);
@@ -37,6 +65,22 @@ impl From<Edge<Value>> for Edge<GridIndex> {
 pub struct Value {
     pub index: GridIndex,
     pub value: f32,
+}
+
+pub struct Direction {
+    pub axis: Axis,
+    pub sign: Sign,
+}
+
+pub enum Axis {
+    X,
+    Y,
+    Z,
+}
+
+pub enum Sign {
+    Neg,
+    Pos,
 }
 
 #[cfg(test)]

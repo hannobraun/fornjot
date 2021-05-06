@@ -4,7 +4,10 @@ use nalgebra::Point;
 
 use crate::geometry::attributes::Distance;
 
-use super::{Edge, GridDescriptor, GridIndex, Value};
+use super::{
+    edge::{Axis, Sign},
+    Edge, GridDescriptor, GridIndex, Value,
+};
 
 #[derive(Debug)]
 pub struct Grid {
@@ -53,19 +56,9 @@ impl Grid {
         &self,
         edge: Edge<GridIndex>,
     ) -> [Point<f32, 3>; 4] {
-        let mut direction = [
-            edge.b.x() as i32 - edge.a.x() as i32,
-            edge.b.y() as i32 - edge.a.y() as i32,
-            edge.b.z() as i32 - edge.a.z() as i32,
-        ];
+        let direction = edge.direction();
 
-        // Means the direction is left, front, or down. This check assumes that
-        // the direction is valid, which might not be the case at this point. If
-        // it's not, we'll catch it down in the `match` statement.
-        let start = if direction.contains(&-1) {
-            direction[0] = direction[0].abs();
-            direction[1] = direction[1].abs();
-            direction[2] = direction[2].abs();
+        let start = if let Sign::Neg = direction.sign {
             edge.b
         } else {
             edge.a
@@ -76,30 +69,25 @@ impl Grid {
         let o = self.descriptor.resolution / 2.0;
 
         #[rustfmt::skip]
-        let neighbors = match direction {
-            [0, 0, 1] => [
+        let neighbors = match direction.axis {
+            Axis::Z => [
                 start + Point::<_, 3>::from([-o, -o, o]).coords,
                 start + Point::<_, 3>::from([ o, -o, o]).coords,
                 start + Point::<_, 3>::from([ o,  o, o]).coords,
                 start + Point::<_, 3>::from([-o,  o, o]).coords,
             ],
-            [0, 1, 0] => [
+            Axis::Y => [
                 start + Point::<_, 3>::from([-o, o, -o]).coords,
                 start + Point::<_, 3>::from([ o, o, -o]).coords,
                 start + Point::<_, 3>::from([ o, o,  o]).coords,
                 start + Point::<_, 3>::from([-o, o,  o]).coords,
             ],
-            [1, 0, 0] => [
+            Axis::X => [
                 start + Point::<_, 3>::from([o, -o, -o]).coords,
                 start + Point::<_, 3>::from([o,  o, -o]).coords,
                 start + Point::<_, 3>::from([o,  o,  o]).coords,
                 start + Point::<_, 3>::from([o, -o,  o]).coords,
             ],
-            direction => panic!(
-                "Invalid direction ({:?}).\
-                Only axis-aligned directions allowed.",
-                direction
-            ),
         };
 
         neighbors
