@@ -24,6 +24,15 @@ impl Edge<Value> {
     }
 }
 
+impl From<Edge<Value>> for Edge<GridIndex> {
+    fn from(edge: Edge<Value>) -> Self {
+        Self {
+            a: edge.a.index,
+            b: edge.b.index,
+        }
+    }
+}
+
 #[derive(Debug, PartialEq)]
 pub struct Value {
     pub index: GridIndex,
