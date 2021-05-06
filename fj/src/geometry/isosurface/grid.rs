@@ -69,26 +69,33 @@ impl Grid {
         let o = self.descriptor.resolution / 2.0;
 
         #[rustfmt::skip]
-        let neighbors = match direction.axis {
+        let [a, b, c, d] = match direction.axis {
             Axis::Z => [
-                start + Point::<_, 3>::from([-o, -o, o]).coords,
-                start + Point::<_, 3>::from([ o, -o, o]).coords,
-                start + Point::<_, 3>::from([ o,  o, o]).coords,
-                start + Point::<_, 3>::from([-o,  o, o]).coords,
+                [-o, -o, o],
+                [ o, -o, o],
+                [ o,  o, o],
+                [-o,  o, o],
             ],
             Axis::Y => [
-                start + Point::<_, 3>::from([-o, o, -o]).coords,
-                start + Point::<_, 3>::from([ o, o, -o]).coords,
-                start + Point::<_, 3>::from([ o, o,  o]).coords,
-                start + Point::<_, 3>::from([-o, o,  o]).coords,
+                [-o, o, -o],
+                [ o, o, -o],
+                [ o, o,  o],
+                [-o, o,  o],
             ],
             Axis::X => [
-                start + Point::<_, 3>::from([o, -o, -o]).coords,
-                start + Point::<_, 3>::from([o,  o, -o]).coords,
-                start + Point::<_, 3>::from([o,  o,  o]).coords,
-                start + Point::<_, 3>::from([o, -o,  o]).coords,
+                [o, -o, -o],
+                [o,  o, -o],
+                [o,  o,  o],
+                [o, -o,  o],
             ],
         };
+
+        let neighbors = [
+            start + Point::<_, 3>::from(a).coords,
+            start + Point::<_, 3>::from(b).coords,
+            start + Point::<_, 3>::from(c).coords,
+            start + Point::<_, 3>::from(d).coords,
+        ];
 
         neighbors
     }
