@@ -58,10 +58,9 @@ impl Grid {
     ) -> [Point<f32, 3>; 4] {
         let direction = edge.direction();
 
-        let start = if let Sign::Pos = direction.sign {
-            edge.a
-        } else {
-            edge.b
+        let start = match direction.sign {
+            Sign::Neg => edge.b,
+            Sign::Pos => edge.a,
         };
 
         let start = start
