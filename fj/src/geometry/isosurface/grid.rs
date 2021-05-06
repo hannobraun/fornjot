@@ -29,7 +29,7 @@ impl Grid {
     }
 
     /// Returns iterator over all grid edges
-    pub fn edges(&self) -> impl Iterator<Item = Edge> + '_ {
+    pub fn edges(&self) -> impl Iterator<Item = Edge<Value>> + '_ {
         self.values
             .iter()
             .map(move |(&index, &value)| {
@@ -112,7 +112,7 @@ fn edge_to_next(
     value: f32,
     next_index: GridIndex,
     values: &BTreeMap<GridIndex, f32>,
-) -> Option<Edge> {
+) -> Option<Edge<Value>> {
     let &next_value = values.get(&next_index)?;
 
     Some(Edge {

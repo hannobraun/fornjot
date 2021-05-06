@@ -1,19 +1,21 @@
 use super::GridIndex;
 
 #[derive(Debug, PartialEq)]
-pub struct Edge {
-    pub a: Value,
-    pub b: Value,
+pub struct Edge<T> {
+    pub a: T,
+    pub b: T,
 }
 
-impl Edge {
+impl<T> Edge<T> {
     pub fn reverse(self) -> Self {
         Self {
             a: self.b,
             b: self.a,
         }
     }
+}
 
+impl Edge<Value> {
     pub fn at_surface(&self) -> bool {
         let min = f32::min(self.a.value, self.b.value);
         let max = f32::max(self.a.value, self.b.value);
