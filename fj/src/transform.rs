@@ -1,6 +1,6 @@
 use nalgebra::{
     storage::Storage as _, Isometry3, Perspective3, RealField as _, Rotation3,
-    Translation3, Vector3,
+    Translation3,
 };
 
 pub struct Transform {
@@ -44,7 +44,7 @@ impl Transform {
 
     fn view_transform(&self) -> Isometry3<f32> {
         Isometry3::from_parts(
-            Translation3::from(Vector3::new(0.0, 0.0, -self.distance)),
+            Translation3::from([0.0, 0.0, -self.distance]),
             self.rotation.into(),
         )
     }
