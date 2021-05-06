@@ -8,7 +8,6 @@ pub mod prelude {
 mod graphics;
 mod input;
 mod run;
-mod transform;
 
 pub use self::{
     geometry::shapes::{Cylinder, Mesh},

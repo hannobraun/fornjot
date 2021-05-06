@@ -9,9 +9,8 @@ use winit::{
 
 use crate::{
     geometry::conversions::ToMesh,
-    graphics::{DrawError, Renderer},
+    graphics::{DrawError, Renderer, Transform},
     input::InputHandler,
-    transform::Transform,
 };
 
 pub fn run<M>(mesh: M) -> Result<(), M::Error>

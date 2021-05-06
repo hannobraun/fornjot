@@ -1,7 +1,7 @@
 use bytemuck::{Pod, Zeroable};
 use nalgebra::{storage::Storage as _, Matrix4};
 
-use crate::transform::NativeTransform;
+use super::transform::NativeTransform;
 
 #[derive(Clone, Copy)]
 pub struct Uniforms {

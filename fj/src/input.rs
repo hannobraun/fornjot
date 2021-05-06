@@ -8,7 +8,7 @@ use winit::{
     event_loop::ControlFlow,
 };
 
-use crate::transform::Transform;
+use crate::graphics::Transform;
 
 pub struct InputHandler {
     cursor: Option<PhysicalPosition<f64>>,

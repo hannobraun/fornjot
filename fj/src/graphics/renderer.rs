@@ -3,11 +3,10 @@ use std::{convert::TryInto, io, mem::size_of};
 use wgpu::util::DeviceExt as _;
 use winit::{dpi::PhysicalSize, window::Window};
 
-use crate::transform::Transform;
-
 use super::{
     mesh::Mesh,
     shaders::{self, Shaders},
+    transform::Transform,
     uniforms::Uniforms,
     vertices::Vertex,
 };
