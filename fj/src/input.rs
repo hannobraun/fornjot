@@ -1,4 +1,4 @@
-use nalgebra::{Rotation3, Unit, Vector3};
+use nalgebra::{Rotation3, Unit};
 use winit::{
     dpi::PhysicalPosition,
     event::{
@@ -55,11 +55,11 @@ impl InputHandler {
                 let y_angle = diff_x as f32 * f;
 
                 let x_rot = Rotation3::from_axis_angle(
-                    &Unit::new_unchecked(Vector3::new(1.0, 0.0, 0.0)),
+                    &Unit::new_unchecked([1.0, 0.0, 0.0].into()),
                     x_angle,
                 );
                 let y_rot = Rotation3::from_axis_angle(
-                    &Unit::new_unchecked(Vector3::new(0.0, 1.0, 0.0)),
+                    &Unit::new_unchecked([0.0, 1.0, 0.0].into()),
                     y_angle,
                 );
 
