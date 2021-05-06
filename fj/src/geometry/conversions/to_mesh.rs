@@ -39,8 +39,7 @@ where
 
         for edge in grid.edges() {
             if edge.at_surface() {
-                let [a, b, c, d] =
-                    grid.neighbors_of_edge(edge.a.index, edge.b.index);
+                let [a, b, c, d] = grid.neighbors_of_edge(edge.into());
 
                 // TASK: Make sure that triangles face the right direction.
                 mesh.triangle(a, b, d);

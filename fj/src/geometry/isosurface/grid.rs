@@ -51,13 +51,12 @@ impl Grid {
     /// Returns the 4 neighboring cube centers of a grid edge
     pub fn neighbors_of_edge(
         &self,
-        a: GridIndex,
-        b: GridIndex,
+        edge: Edge<GridIndex>,
     ) -> [Point<f32, 3>; 4] {
         let mut direction = [
-            b.x() as i32 - a.x() as i32,
-            b.y() as i32 - a.y() as i32,
-            b.z() as i32 - a.z() as i32,
+            edge.b.x() as i32 - edge.a.x() as i32,
+            edge.b.y() as i32 - edge.a.y() as i32,
+            edge.b.z() as i32 - edge.a.z() as i32,
         ];
 
         // Means the direction is left, front, or down. This check assumes that
@@ -67,9 +66,9 @@ impl Grid {
             direction[0] = direction[0].abs();
             direction[1] = direction[1].abs();
             direction[2] = direction[2].abs();
-            b
+            edge.b
         } else {
-            a
+            edge.a
         };
 
         let start = start
@@ -126,7 +125,10 @@ fn edge_to_next(
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::{attributes::Distance, isosurface::GridDescriptor};
+    use crate::geometry::{
+        attributes::Distance,
+        isosurface::{Edge, GridDescriptor},
+    };
 
     use super::Grid;
 
@@ -238,27 +240,45 @@ mod tests {
         ];
 
         assert_eq!(
-            grid.neighbors_of_edge([1, 1, 1].into(), [2, 1, 1].into()),
+            grid.neighbors_of_edge(Edge {
+                a: [1, 1, 1].into(),
+                b: [2, 1, 1].into()
+            }),
             x_neighbors,
         );
         assert_eq!(
-            grid.neighbors_of_edge([2, 1, 1].into(), [1, 1, 1].into()),
+            grid.neighbors_of_edge(Edge {
+                a: [2, 1, 1].into(),
+                b: [1, 1, 1].into()
+            }),
             x_neighbors,
         );
         assert_eq!(
-            grid.neighbors_of_edge([1, 1, 1].into(), [1, 2, 1].into()),
+            grid.neighbors_of_edge(Edge {
+                a: [1, 1, 1].into(),
+                b: [1, 2, 1].into()
+            }),
             y_neighbors,
         );
         assert_eq!(
-            grid.neighbors_of_edge([1, 2, 1].into(), [1, 1, 1].into()),
+            grid.neighbors_of_edge(Edge {
+                a: [1, 2, 1].into(),
+                b: [1, 1, 1].into()
+            }),
             y_neighbors,
         );
         assert_eq!(
-            grid.neighbors_of_edge([1, 1, 1].into(), [1, 1, 2].into()),
+            grid.neighbors_of_edge(Edge {
+                a: [1, 1, 1].into(),
+                b: [1, 1, 2].into()
+            }),
             z_neighbors,
         );
         assert_eq!(
-            grid.neighbors_of_edge([1, 1, 2].into(), [1, 1, 1].into()),
+            grid.neighbors_of_edge(Edge {
+                a: [1, 1, 2].into(),
+                b: [1, 1, 1].into()
+            }),
             z_neighbors,
         );
     }
