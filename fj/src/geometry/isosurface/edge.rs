@@ -1,6 +1,6 @@
 use super::GridIndex;
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Edge {
     pub a: Value,
     pub b: Value,
