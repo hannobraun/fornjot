@@ -14,6 +14,19 @@ impl Edge {
         }
     }
 
+    pub fn swap_values(self) -> Self {
+        Self {
+            a: Value {
+                index: self.a.index,
+                value: self.b.value,
+            },
+            b: Value {
+                index: self.b.index,
+                value: self.a.value,
+            },
+        }
+    }
+
     pub fn direction(&self) -> Direction {
         let a = self.a.index;
         let b = self.b.index;
