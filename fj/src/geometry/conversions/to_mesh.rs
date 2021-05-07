@@ -15,7 +15,7 @@ pub trait ToMesh {
 impl ToMesh for Mesh {
     type Error = Infallible;
 
-    fn to_mesh(self, _tolerance: f32) -> Result<Mesh, Self::Error> {
+    fn to_mesh(self, _: f32) -> Result<Mesh, Self::Error> {
         Ok(self)
     }
 }
