@@ -36,15 +36,15 @@ impl Mesh {
         let normal = normal.map(|v| R32::from_inner(v));
 
         let v0 = Vertex {
-            position: v0.map(|c| c.into()),
+            position: v0.map(|c| c.into()).into(),
             normal,
         };
         let v1 = Vertex {
-            position: v1.map(|c| c.into()),
+            position: v1.map(|c| c.into()).into(),
             normal,
         };
         let v2 = Vertex {
-            position: v2.map(|c| c.into()),
+            position: v2.map(|c| c.into()).into(),
             normal,
         };
 
@@ -100,7 +100,7 @@ impl Mesh {
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
 pub struct Vertex {
-    pub position: Point<R32, 3>,
+    pub position: [R32; 3],
     pub normal: Vector3<R32>,
 }
 
