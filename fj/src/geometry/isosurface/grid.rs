@@ -55,14 +55,6 @@ impl Grid {
     pub fn neighbors_of_edge(&self, edge: Edge) -> [Point<f32, 3>; 4] {
         let direction = edge.direction();
 
-        let start = match direction.sign {
-            Sign::Neg => edge.b,
-            Sign::Pos => edge.a,
-        };
-
-        let start = start
-            .index
-            .to_coordinates(self.descriptor.min, self.descriptor.resolution);
         let o = self.descriptor.resolution / 2.0;
 
         #[rustfmt::skip]
@@ -86,6 +78,14 @@ impl Grid {
                 [o, -o,  o],
             ],
         };
+
+        let start = match direction.sign {
+            Sign::Neg => edge.b,
+            Sign::Pos => edge.a,
+        };
+        let start = start
+            .index
+            .to_coordinates(self.descriptor.min, self.descriptor.resolution);
 
         let neighbors = [
             start + Point::<_, 3>::from(a).coords,
