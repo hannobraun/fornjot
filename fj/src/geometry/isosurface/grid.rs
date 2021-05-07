@@ -273,31 +273,31 @@ mod tests {
             },
         });
 
-        let neighbors_x_expected = [
+        let [x0, x1, x2, x3] = [
             [1.0, 0.0, 0.0].into(),
             [1.0, 1.0, 0.0].into(),
             [1.0, 1.0, 1.0].into(),
             [1.0, 0.0, 1.0].into(),
         ];
-        let neighbors_y_expected = [
+        let [y0, y1, y2, y3] = [
             [0.0, 1.0, 0.0].into(),
             [1.0, 1.0, 0.0].into(),
             [1.0, 1.0, 1.0].into(),
             [0.0, 1.0, 1.0].into(),
         ];
-        let neighbors_z_expected = [
+        let [z0, z1, z2, z3] = [
             [0.0, 0.0, 1.0].into(),
             [1.0, 0.0, 1.0].into(),
             [1.0, 1.0, 1.0].into(),
             [0.0, 1.0, 1.0].into(),
         ];
 
-        assert_eq!(neighbors_x_pos, neighbors_x_expected);
-        assert_eq!(neighbors_x_neg, neighbors_x_expected);
-        assert_eq!(neighbors_y_pos, neighbors_y_expected);
-        assert_eq!(neighbors_y_neg, neighbors_y_expected);
-        assert_eq!(neighbors_z_pos, neighbors_z_expected);
-        assert_eq!(neighbors_z_neg, neighbors_z_expected);
+        assert_eq!(neighbors_x_pos, [x0, x1, x2, x3]);
+        assert_eq!(neighbors_x_neg, [x0, x1, x2, x3]);
+        assert_eq!(neighbors_y_pos, [y0, y1, y2, y3]);
+        assert_eq!(neighbors_y_neg, [y0, y1, y2, y3]);
+        assert_eq!(neighbors_z_pos, [z0, z1, z2, z3]);
+        assert_eq!(neighbors_z_neg, [z0, z1, z2, z3]);
     }
 
     struct Geometry;
