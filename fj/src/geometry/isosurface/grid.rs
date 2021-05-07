@@ -216,11 +216,8 @@ mod tests {
         let edges = TestEdges::new();
 
         let neighbors_x_pos_to = grid.neighbors_of_edge(edges.x);
-        let neighbors_x_neg_to = grid.neighbors_of_edge(edges.x.reverse());
         let neighbors_y_pos_to = grid.neighbors_of_edge(edges.y);
-        let neighbors_y_neg_to = grid.neighbors_of_edge(edges.y.reverse());
         let neighbors_z_pos_to = grid.neighbors_of_edge(edges.z);
-        let neighbors_z_neg_to = grid.neighbors_of_edge(edges.z.reverse());
 
         let [x0, x1, x2, x3] = [
             [1.0, 0.0, 0.0].into(),
@@ -242,11 +239,35 @@ mod tests {
         ];
 
         assert_eq!(neighbors_x_pos_to, [x0, x1, x2, x3]);
-        assert_eq!(neighbors_x_neg_to, [x0, x1, x2, x3]);
         assert_eq!(neighbors_y_pos_to, [y0, y1, y2, y3]);
-        assert_eq!(neighbors_y_neg_to, [y0, y1, y2, y3]);
         assert_eq!(neighbors_z_pos_to, [z0, z1, z2, z3]);
-        assert_eq!(neighbors_z_neg_to, [z0, z1, z2, z3]);
+    }
+
+    #[test]
+    fn neighbors_of_edge_should_work_regardless_of_direction() {
+        let grid = Grid::from_descriptor(
+            GridDescriptor {
+                min: [0.0, 0.0, 0.0].into(),
+                max: [1.0, 1.0, 1.0].into(),
+                resolution: 1.0,
+            },
+            Geometry,
+        );
+
+        let edges = TestEdges::new();
+
+        assert_eq!(
+            grid.neighbors_of_edge(edges.x),
+            grid.neighbors_of_edge(edges.x.reverse()),
+        );
+        assert_eq!(
+            grid.neighbors_of_edge(edges.y),
+            grid.neighbors_of_edge(edges.y.reverse()),
+        );
+        assert_eq!(
+            grid.neighbors_of_edge(edges.z),
+            grid.neighbors_of_edge(edges.z.reverse()),
+        );
     }
 
     pub struct TestEdges {
