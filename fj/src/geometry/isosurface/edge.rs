@@ -15,12 +15,12 @@ impl<T> Edge<T> {
     }
 }
 
-impl Edge<GridIndex> {
+impl Edge<Value> {
     pub fn direction(&self) -> Direction {
         let direction = [
-            self.b.x() as i32 - self.a.x() as i32,
-            self.b.y() as i32 - self.a.y() as i32,
-            self.b.z() as i32 - self.a.z() as i32,
+            self.b.index.x() as i32 - self.a.index.x() as i32,
+            self.b.index.y() as i32 - self.a.index.y() as i32,
+            self.b.index.z() as i32 - self.a.index.z() as i32,
         ];
 
         #[rustfmt::skip]
@@ -41,9 +41,7 @@ impl Edge<GridIndex> {
 
         Direction { axis, sign }
     }
-}
 
-impl Edge<Value> {
     pub fn at_surface(&self) -> bool {
         let min = f32::min(self.a.value, self.b.value);
         let max = f32::max(self.a.value, self.b.value);

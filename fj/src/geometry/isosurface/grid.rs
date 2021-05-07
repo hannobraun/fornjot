@@ -52,10 +52,7 @@ impl Grid {
     }
 
     /// Returns the 4 neighboring cube centers of a grid edge
-    pub fn neighbors_of_edge(
-        &self,
-        edge: Edge<GridIndex>,
-    ) -> [Point<f32, 3>; 4] {
+    pub fn neighbors_of_edge(&self, edge: Edge<Value>) -> [Point<f32, 3>; 4] {
         let direction = edge.direction();
 
         let start = match direction.sign {
@@ -64,6 +61,7 @@ impl Grid {
         };
 
         let start = start
+            .index
             .to_coordinates(self.descriptor.min, self.descriptor.resolution);
         let o = self.descriptor.resolution / 2.0;
 
@@ -121,7 +119,7 @@ fn edge_to_next(
 mod tests {
     use crate::geometry::{
         attributes::Distance,
-        isosurface::{Edge, GridDescriptor},
+        isosurface::{Edge, GridDescriptor, Value},
     };
 
     use super::Grid;
@@ -215,28 +213,64 @@ mod tests {
         );
 
         let neighbors_x_pos = grid.neighbors_of_edge(Edge {
-            a: [1, 1, 1].into(),
-            b: [2, 1, 1].into(),
+            a: Value {
+                index: [1, 1, 1].into(),
+                value: 1.0,
+            },
+            b: Value {
+                index: [2, 1, 1].into(),
+                value: 0.0,
+            },
         });
         let neighbors_x_neg = grid.neighbors_of_edge(Edge {
-            a: [2, 1, 1].into(),
-            b: [1, 1, 1].into(),
+            a: Value {
+                index: [2, 1, 1].into(),
+                value: 1.0,
+            },
+            b: Value {
+                index: [1, 1, 1].into(),
+                value: 0.0,
+            },
         });
         let neighbors_y_pos = grid.neighbors_of_edge(Edge {
-            a: [1, 1, 1].into(),
-            b: [1, 2, 1].into(),
+            a: Value {
+                index: [1, 1, 1].into(),
+                value: 1.0,
+            },
+            b: Value {
+                index: [1, 2, 1].into(),
+                value: 0.0,
+            },
         });
         let neighbors_y_neg = grid.neighbors_of_edge(Edge {
-            a: [1, 2, 1].into(),
-            b: [1, 1, 1].into(),
+            a: Value {
+                index: [1, 2, 1].into(),
+                value: 1.0,
+            },
+            b: Value {
+                index: [1, 1, 1].into(),
+                value: 0.0,
+            },
         });
         let neighbors_z_pos = grid.neighbors_of_edge(Edge {
-            a: [1, 1, 1].into(),
-            b: [1, 1, 2].into(),
+            a: Value {
+                index: [1, 1, 1].into(),
+                value: 1.0,
+            },
+            b: Value {
+                index: [1, 1, 2].into(),
+                value: 0.0,
+            },
         });
         let neighbors_z_neg = grid.neighbors_of_edge(Edge {
-            a: [1, 1, 2].into(),
-            b: [1, 1, 1].into(),
+            a: Value {
+                index: [1, 1, 2].into(),
+                value: 1.0,
+            },
+            b: Value {
+                index: [1, 1, 1].into(),
+                value: 0.0,
+            },
         });
 
         let neighbors_x_expected = [
