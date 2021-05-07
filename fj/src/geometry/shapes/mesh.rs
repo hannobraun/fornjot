@@ -182,7 +182,4 @@ mod tests {
             ]
         );
     }
-
-    // TASK: Add method that inverts triangles of a mesh.
-    // TASK: Add method that merges another mesh into the mesh.
 }
