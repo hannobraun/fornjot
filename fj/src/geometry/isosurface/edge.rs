@@ -57,17 +57,20 @@ pub struct Value {
     pub value: f32,
 }
 
+#[derive(Debug)]
 pub struct Direction {
     pub axis: Axis,
     pub sign: Sign,
 }
 
+#[derive(Debug)]
 pub enum Axis {
     X,
     Y,
     Z,
 }
 
+#[derive(Debug)]
 pub enum Sign {
     Neg,
     Pos,
