@@ -213,66 +213,14 @@ mod tests {
             Geometry,
         );
 
-        let neighbors_x_pos_to = grid.neighbors_of_edge(Edge {
-            a: Value {
-                index: [1, 1, 1].into(),
-                value: 1.0,
-            },
-            b: Value {
-                index: [2, 1, 1].into(),
-                value: 0.0,
-            },
-        });
-        let neighbors_x_neg_to = grid.neighbors_of_edge(Edge {
-            a: Value {
-                index: [2, 1, 1].into(),
-                value: 0.0,
-            },
-            b: Value {
-                index: [1, 1, 1].into(),
-                value: 1.0,
-            },
-        });
-        let neighbors_y_pos_to = grid.neighbors_of_edge(Edge {
-            a: Value {
-                index: [1, 1, 1].into(),
-                value: 0.0,
-            },
-            b: Value {
-                index: [1, 2, 1].into(),
-                value: 1.0,
-            },
-        });
-        let neighbors_y_neg_to = grid.neighbors_of_edge(Edge {
-            a: Value {
-                index: [1, 2, 1].into(),
-                value: 1.0,
-            },
-            b: Value {
-                index: [1, 1, 1].into(),
-                value: 0.0,
-            },
-        });
-        let neighbors_z_pos_to = grid.neighbors_of_edge(Edge {
-            a: Value {
-                index: [1, 1, 1].into(),
-                value: 0.0,
-            },
-            b: Value {
-                index: [1, 1, 2].into(),
-                value: 1.0,
-            },
-        });
-        let neighbors_z_neg_to = grid.neighbors_of_edge(Edge {
-            a: Value {
-                index: [1, 1, 2].into(),
-                value: 0.0,
-            },
-            b: Value {
-                index: [1, 1, 1].into(),
-                value: 1.0,
-            },
-        });
+        let edges = TestEdges::new();
+
+        let neighbors_x_pos_to = grid.neighbors_of_edge(edges.x);
+        let neighbors_x_neg_to = grid.neighbors_of_edge(edges.x.reverse());
+        let neighbors_y_pos_to = grid.neighbors_of_edge(edges.y);
+        let neighbors_y_neg_to = grid.neighbors_of_edge(edges.y.reverse());
+        let neighbors_z_pos_to = grid.neighbors_of_edge(edges.z);
+        let neighbors_z_neg_to = grid.neighbors_of_edge(edges.z.reverse());
 
         let [x0, x1, x2, x3] = [
             [1.0, 0.0, 0.0].into(),
@@ -299,6 +247,49 @@ mod tests {
         assert_eq!(neighbors_y_neg_to, [y0, y1, y2, y3]);
         assert_eq!(neighbors_z_pos_to, [z0, z1, z2, z3]);
         assert_eq!(neighbors_z_neg_to, [z0, z1, z2, z3]);
+    }
+
+    pub struct TestEdges {
+        pub x: Edge,
+        pub y: Edge,
+        pub z: Edge,
+    }
+
+    impl TestEdges {
+        pub fn new() -> Self {
+            Self {
+                x: Edge {
+                    a: Value {
+                        index: [1, 1, 1].into(),
+                        value: 1.0,
+                    },
+                    b: Value {
+                        index: [2, 1, 1].into(),
+                        value: 0.0,
+                    },
+                },
+                y: Edge {
+                    a: Value {
+                        index: [1, 1, 1].into(),
+                        value: 0.0,
+                    },
+                    b: Value {
+                        index: [1, 2, 1].into(),
+                        value: 1.0,
+                    },
+                },
+                z: Edge {
+                    a: Value {
+                        index: [1, 1, 1].into(),
+                        value: 0.0,
+                    },
+                    b: Value {
+                        index: [1, 1, 2].into(),
+                        value: 1.0,
+                    },
+                },
+            }
+        }
     }
 
     struct Geometry;
