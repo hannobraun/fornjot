@@ -63,7 +63,7 @@ pub struct Direction {
     pub sign: Sign,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 pub enum Axis {
     X,
     Y,
