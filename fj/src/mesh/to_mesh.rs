@@ -1,8 +1,9 @@
 use crate::geometry::{
     attributes::{BoundingVolume, Distance},
     isosurface::{self, Grid},
-    shapes::Mesh,
 };
+
+use super::Mesh;
 
 pub trait ToMesh {
     fn to_mesh(self, resolution: f32) -> Mesh;

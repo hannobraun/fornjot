@@ -6,9 +6,9 @@ use winit::{
 };
 
 use crate::{
-    geometry::conversions::ToMesh,
     graphics::{DrawError, Renderer, Transform},
     input::InputHandler,
+    mesh::ToMesh,
 };
 
 pub fn run<M>(mesh: M)

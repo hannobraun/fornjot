@@ -1,4 +1,5 @@
 pub mod geometry;
+pub mod mesh;
 pub mod syntax;
 
 pub mod prelude {
@@ -10,7 +11,8 @@ mod input;
 mod run;
 
 pub use self::{
-    geometry::shapes::{Cylinder, Mesh},
+    geometry::shapes::Cylinder,
     graphics::{Index, Vertex},
+    mesh::Mesh,
     run::run,
 };
