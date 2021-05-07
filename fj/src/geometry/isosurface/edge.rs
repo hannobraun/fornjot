@@ -15,10 +15,13 @@ impl Edge {
     }
 
     pub fn direction(&self) -> Direction {
+        let a = self.a.index;
+        let b = self.b.index;
+
         let direction = [
-            self.b.index.x() as i32 - self.a.index.x() as i32,
-            self.b.index.y() as i32 - self.a.index.y() as i32,
-            self.b.index.z() as i32 - self.a.index.z() as i32,
+            b.x() as i32 - a.x() as i32,
+            b.y() as i32 - a.y() as i32,
+            b.z() as i32 - a.z() as i32,
         ];
 
         #[rustfmt::skip]
