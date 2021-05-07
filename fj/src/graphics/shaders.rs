@@ -1,5 +1,3 @@
-// TASK: Look into migrating to Naga.
-
 use shaderc::ShaderKind;
 
 pub struct Shaders {
