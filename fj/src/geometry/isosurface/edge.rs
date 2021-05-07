@@ -51,7 +51,7 @@ impl Edge {
     }
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Value {
     pub index: GridIndex,
     pub value: f32,
