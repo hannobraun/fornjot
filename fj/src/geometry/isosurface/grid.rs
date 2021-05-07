@@ -288,21 +288,21 @@ mod tests {
                 y: Edge {
                     a: Value {
                         index: [1, 1, 1].into(),
-                        value: 0.0,
+                        value: 1.0,
                     },
                     b: Value {
                         index: [1, 2, 1].into(),
-                        value: 1.0,
+                        value: 0.0,
                     },
                 },
                 z: Edge {
                     a: Value {
                         index: [1, 1, 1].into(),
-                        value: 0.0,
+                        value: 1.0,
                     },
                     b: Value {
                         index: [1, 1, 2].into(),
-                        value: 1.0,
+                        value: 0.0,
                     },
                 },
             }
