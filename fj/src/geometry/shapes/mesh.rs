@@ -1,9 +1,9 @@
 use std::{collections::HashMap, convert::TryInto};
 
 use decorum::R32;
-use nalgebra::Vector3;
+use nalgebra::{Point, Vector3};
 
-use crate::{geometry::shapes::Point, graphics};
+use crate::graphics;
 
 pub struct Mesh {
     indices_by_vertex: HashMap<Vertex, graphics::Index>,
@@ -24,27 +24,27 @@ impl Mesh {
 
     pub fn triangle(
         &mut self,
-        v0: impl Into<Point<3>>,
-        v1: impl Into<Point<3>>,
-        v2: impl Into<Point<3>>,
+        v0: impl Into<Point<f32, 3>>,
+        v1: impl Into<Point<f32, 3>>,
+        v2: impl Into<Point<f32, 3>>,
     ) {
-        let v0: nalgebra::Point<f32, 3> = v0.into().into();
-        let v1: nalgebra::Point<f32, 3> = v1.into().into();
-        let v2: nalgebra::Point<f32, 3> = v2.into().into();
+        let v0 = v0.into();
+        let v1 = v1.into();
+        let v2 = v2.into();
 
         let normal = (v1 - v0).cross(&(v2 - v0)).normalize();
         let normal = normal.map(|v| R32::from_inner(v));
 
         let v0 = Vertex {
-            position: v0.into(),
+            position: v0.map(|c| c.into()),
             normal,
         };
         let v1 = Vertex {
-            position: v1.into(),
+            position: v1.map(|c| c.into()),
             normal,
         };
         let v2 = Vertex {
-            position: v2.into(),
+            position: v2.map(|c| c.into()),
             normal,
         };
 
@@ -121,7 +121,7 @@ impl Mesh {
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
 pub struct Vertex {
-    pub position: Point<3>,
+    pub position: Point<R32, 3>,
     pub normal: Vector3<R32>,
 }
 
