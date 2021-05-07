@@ -76,22 +76,6 @@ pub enum Sign {
     Pos,
 }
 
-impl Sign {
-    pub fn is_neg(&self) -> bool {
-        match self {
-            Self::Neg => true,
-            _ => false,
-        }
-    }
-
-    pub fn is_pos(&self) -> bool {
-        match self {
-            Self::Pos => true,
-            _ => false,
-        }
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::{Edge, Value};
