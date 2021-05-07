@@ -226,21 +226,21 @@ mod tests {
         let neighbors_x_neg = grid.neighbors_of_edge(Edge {
             a: Value {
                 index: [2, 1, 1].into(),
-                value: 1.0,
+                value: 0.0,
             },
             b: Value {
                 index: [1, 1, 1].into(),
-                value: 0.0,
+                value: 1.0,
             },
         });
         let neighbors_y_pos = grid.neighbors_of_edge(Edge {
             a: Value {
                 index: [1, 1, 1].into(),
-                value: 1.0,
+                value: 0.0,
             },
             b: Value {
                 index: [1, 2, 1].into(),
-                value: 0.0,
+                value: 1.0,
             },
         });
         let neighbors_y_neg = grid.neighbors_of_edge(Edge {
@@ -256,21 +256,21 @@ mod tests {
         let neighbors_z_pos = grid.neighbors_of_edge(Edge {
             a: Value {
                 index: [1, 1, 1].into(),
-                value: 1.0,
+                value: 0.0,
             },
             b: Value {
                 index: [1, 1, 2].into(),
-                value: 0.0,
+                value: 1.0,
             },
         });
         let neighbors_z_neg = grid.neighbors_of_edge(Edge {
             a: Value {
                 index: [1, 1, 2].into(),
-                value: 1.0,
+                value: 0.0,
             },
             b: Value {
                 index: [1, 1, 1].into(),
-                value: 0.0,
+                value: 1.0,
             },
         });
 
