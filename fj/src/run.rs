@@ -28,11 +28,10 @@ where
         .unwrap();
 
     let mesh = mesh.to_mesh(0.01);
-    let mesh = mesh.into_graphics_mesh();
 
     let mut input_handler = InputHandler::new();
     let mut transform = Transform::new();
-    let mut renderer = block_on(Renderer::new(&window, mesh)).unwrap();
+    let mut renderer = block_on(Renderer::new(&window, mesh.into())).unwrap();
 
     event_loop.run(move |event, _, control_flow| match event {
         Event::WindowEvent {

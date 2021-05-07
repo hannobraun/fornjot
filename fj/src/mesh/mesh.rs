@@ -85,27 +85,6 @@ impl Mesh {
         }
     }
 
-    pub fn into_graphics_mesh(self) -> graphics::Mesh {
-        let vertices = self
-            .vertices()
-            .map(|vertex| graphics::Vertex {
-                position: [
-                    vertex.position[0].into_inner(),
-                    vertex.position[1].into_inner(),
-                    vertex.position[2].into_inner(),
-                ],
-                normal: [
-                    vertex.normal[0].into_inner(),
-                    vertex.normal[1].into_inner(),
-                    vertex.normal[2].into_inner(),
-                ],
-            })
-            .collect();
-        let indices = self.indices().collect();
-
-        graphics::Mesh { vertices, indices }
-    }
-
     fn index_for_vertex(&mut self, vertex: Vertex) -> graphics::Index {
         let vertices = &mut self.vertices;
 
