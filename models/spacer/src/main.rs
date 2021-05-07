@@ -8,6 +8,6 @@ fn main() -> anyhow::Result<()> {
 
     let spacer = (outer, inner).difference();
 
-    fj::run(spacer)?;
+    fj::run(spacer);
     Ok(())
 }

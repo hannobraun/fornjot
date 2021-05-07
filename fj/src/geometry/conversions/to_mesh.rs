@@ -1,5 +1,3 @@
-use std::convert::Infallible;
-
 use crate::geometry::{
     attributes::{BoundingVolume, Distance},
     isosurface::{self, Grid},
@@ -7,16 +5,12 @@ use crate::geometry::{
 };
 
 pub trait ToMesh {
-    type Error;
-
-    fn to_mesh(self, resolution: f32) -> Result<Mesh, Self::Error>;
+    fn to_mesh(self, resolution: f32) -> Mesh;
 }
 
 impl ToMesh for Mesh {
-    type Error = Infallible;
-
-    fn to_mesh(self, _: f32) -> Result<Mesh, Self::Error> {
-        Ok(self)
+    fn to_mesh(self, _: f32) -> Mesh {
+        self
     }
 }
 
@@ -24,9 +18,7 @@ impl<T> ToMesh for T
 where
     T: BoundingVolume + Distance,
 {
-    type Error = Infallible;
-
-    fn to_mesh(self, resolution: f32) -> Result<Mesh, Self::Error> {
+    fn to_mesh(self, resolution: f32) -> Mesh {
         let aabb = self.aabb();
         let grid_descriptor = isosurface::GridDescriptor {
             min: aabb.mins,
@@ -46,6 +38,6 @@ where
             }
         }
 
-        Ok(mesh)
+        mesh
     }
 }

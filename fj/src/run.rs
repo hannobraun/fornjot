@@ -1,5 +1,3 @@
-use std::fmt;
-
 use futures::executor::block_on;
 use winit::{
     event::{Event, WindowEvent},
@@ -13,10 +11,9 @@ use crate::{
     input::InputHandler,
 };
 
-pub fn run<M>(mesh: M) -> Result<(), M::Error>
+pub fn run<M>(mesh: M)
 where
     M: ToMesh,
-    M::Error: fmt::Debug,
 {
     tracing_subscriber::fmt::init();
 
@@ -30,7 +27,7 @@ where
         .build(&event_loop)
         .unwrap();
 
-    let mesh = mesh.to_mesh(0.01)?;
+    let mesh = mesh.to_mesh(0.01);
     let mesh = mesh.into_graphics_mesh();
 
     let mut input_handler = InputHandler::new();

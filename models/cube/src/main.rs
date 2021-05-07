@@ -35,6 +35,6 @@ fn main() -> anyhow::Result<()> {
     mesh.triangle(v1, v5, v7);
     mesh.triangle(v1, v7, v3);
 
-    fj::run(mesh)?;
+    fj::run(mesh);
     Ok(())
 }
