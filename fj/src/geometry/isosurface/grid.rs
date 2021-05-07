@@ -88,6 +88,15 @@ impl Grid {
             .index
             .to_coordinates(self.descriptor.min, self.descriptor.resolution);
 
+        let [a, b, c, d] = if direction.sign == Sign::Pos
+            && edge.a.value < edge.b.value
+            || direction.sign == Sign::Neg && edge.b.value < edge.a.value
+        {
+            [b, a, d, c]
+        } else {
+            [a, b, c, d]
+        };
+
         let neighbors = [
             start + Point::<_, 3>::from(a).coords,
             start + Point::<_, 3>::from(b).coords,
@@ -237,6 +246,19 @@ mod tests {
         assert_eq!(grid.neighbors_of_edge(edges.x), [x0, x1, x2, x3]);
         assert_eq!(grid.neighbors_of_edge(edges.y), [y0, y1, y2, y3]);
         assert_eq!(grid.neighbors_of_edge(edges.z), [z0, z1, z2, z3]);
+
+        assert_eq!(
+            grid.neighbors_of_edge(edges.x.swap_values()),
+            [x1, x0, x3, x2],
+        );
+        assert_eq!(
+            grid.neighbors_of_edge(edges.y.swap_values()),
+            [y1, y0, y3, y2],
+        );
+        assert_eq!(
+            grid.neighbors_of_edge(edges.z.swap_values()),
+            [z1, z0, z3, z2],
+        );
     }
 
     #[test]
