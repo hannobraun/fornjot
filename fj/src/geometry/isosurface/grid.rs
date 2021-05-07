@@ -213,7 +213,7 @@ mod tests {
             Geometry,
         );
 
-        let neighbors_x_pos = grid.neighbors_of_edge(Edge {
+        let neighbors_x_pos_to = grid.neighbors_of_edge(Edge {
             a: Value {
                 index: [1, 1, 1].into(),
                 value: 1.0,
@@ -223,7 +223,7 @@ mod tests {
                 value: 0.0,
             },
         });
-        let neighbors_x_neg = grid.neighbors_of_edge(Edge {
+        let neighbors_x_neg_to = grid.neighbors_of_edge(Edge {
             a: Value {
                 index: [2, 1, 1].into(),
                 value: 0.0,
@@ -233,7 +233,7 @@ mod tests {
                 value: 1.0,
             },
         });
-        let neighbors_y_pos = grid.neighbors_of_edge(Edge {
+        let neighbors_y_pos_to = grid.neighbors_of_edge(Edge {
             a: Value {
                 index: [1, 1, 1].into(),
                 value: 0.0,
@@ -243,7 +243,7 @@ mod tests {
                 value: 1.0,
             },
         });
-        let neighbors_y_neg = grid.neighbors_of_edge(Edge {
+        let neighbors_y_neg_to = grid.neighbors_of_edge(Edge {
             a: Value {
                 index: [1, 2, 1].into(),
                 value: 1.0,
@@ -253,7 +253,7 @@ mod tests {
                 value: 0.0,
             },
         });
-        let neighbors_z_pos = grid.neighbors_of_edge(Edge {
+        let neighbors_z_pos_to = grid.neighbors_of_edge(Edge {
             a: Value {
                 index: [1, 1, 1].into(),
                 value: 0.0,
@@ -263,7 +263,7 @@ mod tests {
                 value: 1.0,
             },
         });
-        let neighbors_z_neg = grid.neighbors_of_edge(Edge {
+        let neighbors_z_neg_to = grid.neighbors_of_edge(Edge {
             a: Value {
                 index: [1, 1, 2].into(),
                 value: 0.0,
@@ -293,12 +293,12 @@ mod tests {
             [0.0, 1.0, 1.0].into(),
         ];
 
-        assert_eq!(neighbors_x_pos, [x0, x1, x2, x3]);
-        assert_eq!(neighbors_x_neg, [x0, x1, x2, x3]);
-        assert_eq!(neighbors_y_pos, [y0, y1, y2, y3]);
-        assert_eq!(neighbors_y_neg, [y0, y1, y2, y3]);
-        assert_eq!(neighbors_z_pos, [z0, z1, z2, z3]);
-        assert_eq!(neighbors_z_neg, [z0, z1, z2, z3]);
+        assert_eq!(neighbors_x_pos_to, [x0, x1, x2, x3]);
+        assert_eq!(neighbors_x_neg_to, [x0, x1, x2, x3]);
+        assert_eq!(neighbors_y_pos_to, [y0, y1, y2, y3]);
+        assert_eq!(neighbors_y_neg_to, [y0, y1, y2, y3]);
+        assert_eq!(neighbors_z_pos_to, [z0, z1, z2, z3]);
+        assert_eq!(neighbors_z_neg_to, [z0, z1, z2, z3]);
     }
 
     struct Geometry;
