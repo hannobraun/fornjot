@@ -61,10 +61,10 @@ impl Grid {
         #[rustfmt::skip]
         let [a, b, c, d] = match direction.axis {
             Axis::Z => [
-                [-o, -o, o],
                 [ o, -o, o],
-                [ o,  o, o],
+                [-o, -o, o],
                 [-o,  o, o],
+                [ o,  o, o],
             ],
             Axis::Y => [
                 [-o, o, -o],
@@ -73,10 +73,10 @@ impl Grid {
                 [-o, o,  o],
             ],
             Axis::X => [
-                [o, -o, -o],
                 [o,  o, -o],
-                [o,  o,  o],
+                [o, -o, -o],
                 [o, -o,  o],
+                [o,  o,  o],
             ],
         };
 
@@ -216,10 +216,10 @@ mod tests {
         let edges = TestEdges::new();
 
         let [x0, x1, x2, x3] = [
-            [1.0, 0.0, 0.0].into(),
             [1.0, 1.0, 0.0].into(),
-            [1.0, 1.0, 1.0].into(),
+            [1.0, 0.0, 0.0].into(),
             [1.0, 0.0, 1.0].into(),
+            [1.0, 1.0, 1.0].into(),
         ];
         let [y0, y1, y2, y3] = [
             [0.0, 1.0, 0.0].into(),
@@ -228,10 +228,10 @@ mod tests {
             [0.0, 1.0, 1.0].into(),
         ];
         let [z0, z1, z2, z3] = [
-            [0.0, 0.0, 1.0].into(),
             [1.0, 0.0, 1.0].into(),
-            [1.0, 1.0, 1.0].into(),
+            [0.0, 0.0, 1.0].into(),
             [0.0, 1.0, 1.0].into(),
+            [1.0, 1.0, 1.0].into(),
         ];
 
         assert_eq!(grid.neighbors_of_edge(edges.x), [x0, x1, x2, x3]);
