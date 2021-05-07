@@ -70,7 +70,7 @@ pub enum Axis {
     Z,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 pub enum Sign {
     Neg,
     Pos,
