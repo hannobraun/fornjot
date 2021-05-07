@@ -4,9 +4,5 @@ version = "0.1.0"
 authors = ["Hanno Braun <hanno@braun-odw.eu>"]
 edition = "2018"
 
-
-[dependencies]
-anyhow = "*"
-
 [dependencies.fj]
 path = "../../fj"

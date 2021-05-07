@@ -1,5 +1,5 @@
 #[rustfmt::skip]
-fn main() -> anyhow::Result<()> {
+fn main() {
     let mut mesh = fj::Mesh::new();
 
     let v0  = [-0.5, -0.5, -0.5];
@@ -36,5 +36,4 @@ fn main() -> anyhow::Result<()> {
     mesh.triangle(v1, v7, v3);
 
     fj::run(mesh);
-    Ok(())
 }
