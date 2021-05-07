@@ -215,10 +215,6 @@ mod tests {
 
         let edges = TestEdges::new();
 
-        let neighbors_x_pos_to = grid.neighbors_of_edge(edges.x);
-        let neighbors_y_pos_to = grid.neighbors_of_edge(edges.y);
-        let neighbors_z_pos_to = grid.neighbors_of_edge(edges.z);
-
         let [x0, x1, x2, x3] = [
             [1.0, 0.0, 0.0].into(),
             [1.0, 1.0, 0.0].into(),
@@ -238,9 +234,9 @@ mod tests {
             [0.0, 1.0, 1.0].into(),
         ];
 
-        assert_eq!(neighbors_x_pos_to, [x0, x1, x2, x3]);
-        assert_eq!(neighbors_y_pos_to, [y0, y1, y2, y3]);
-        assert_eq!(neighbors_z_pos_to, [z0, z1, z2, z3]);
+        assert_eq!(grid.neighbors_of_edge(edges.x), [x0, x1, x2, x3]);
+        assert_eq!(grid.neighbors_of_edge(edges.y), [y0, y1, y2, y3]);
+        assert_eq!(grid.neighbors_of_edge(edges.z), [z0, z1, z2, z3]);
     }
 
     #[test]
