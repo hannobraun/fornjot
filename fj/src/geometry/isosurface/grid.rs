@@ -55,6 +55,7 @@ impl Grid {
     pub fn neighbors_of_edge(&self, edge: Edge) -> [Point<f32, 3>; 4] {
         let direction = edge.direction();
 
+        // Offset from edge to cube centers around edge.
         let o = self.descriptor.resolution / 2.0;
 
         #[rustfmt::skip]
