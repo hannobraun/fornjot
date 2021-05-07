@@ -32,7 +32,7 @@ impl Grid {
     }
 
     /// Returns iterator over all grid edges
-    pub fn edges(&self) -> impl Iterator<Item = Edge<Value>> + '_ {
+    pub fn edges(&self) -> impl Iterator<Item = Edge> + '_ {
         self.values
             .iter()
             .map(move |(&index, &value)| {
@@ -52,7 +52,7 @@ impl Grid {
     }
 
     /// Returns the 4 neighboring cube centers of a grid edge
-    pub fn neighbors_of_edge(&self, edge: Edge<Value>) -> [Point<f32, 3>; 4] {
+    pub fn neighbors_of_edge(&self, edge: Edge) -> [Point<f32, 3>; 4] {
         let direction = edge.direction();
 
         let start = match direction.sign {
@@ -103,7 +103,7 @@ fn edge_to_next(
     value: f32,
     next_index: GridIndex,
     values: &BTreeMap<GridIndex, f32>,
-) -> Option<Edge<Value>> {
+) -> Option<Edge> {
     let &next_value = values.get(&next_index)?;
 
     Some(Edge {

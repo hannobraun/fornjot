@@ -1,21 +1,19 @@
 use super::GridIndex;
 
 #[derive(Debug, PartialEq)]
-pub struct Edge<T> {
-    pub a: T,
-    pub b: T,
+pub struct Edge {
+    pub a: Value,
+    pub b: Value,
 }
 
-impl<T> Edge<T> {
+impl Edge {
     pub fn reverse(self) -> Self {
         Self {
             a: self.b,
             b: self.a,
         }
     }
-}
 
-impl Edge<Value> {
     pub fn direction(&self) -> Direction {
         let direction = [
             self.b.index.x() as i32 - self.a.index.x() as i32,
@@ -47,15 +45,6 @@ impl Edge<Value> {
         let max = f32::max(self.a.value, self.b.value);
 
         min <= 0.0 && max > 0.0
-    }
-}
-
-impl From<Edge<Value>> for Edge<GridIndex> {
-    fn from(edge: Edge<Value>) -> Self {
-        Self {
-            a: edge.a.index,
-            b: edge.b.index,
-        }
     }
 }
 
