@@ -9,7 +9,7 @@ use crate::geometry::{
 pub trait ToMesh {
     type Error;
 
-    fn to_mesh(self, tolerance: f32) -> Result<Mesh, Self::Error>;
+    fn to_mesh(self, resolution: f32) -> Result<Mesh, Self::Error>;
 }
 
 impl ToMesh for Mesh {
