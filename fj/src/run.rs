@@ -26,16 +26,6 @@ where
         )
         .init();
 
-    let event_loop = EventLoop::new();
-
-    let window = WindowBuilder::new()
-        .with_title("Fornjot")
-        .with_maximized(true)
-        .with_decorations(true)
-        .with_transparent(false)
-        .build(&event_loop)
-        .unwrap();
-
     info!("Converting geometry to triangle mesh...");
 
     let start_of_conversion = Instant::now();
@@ -47,6 +37,16 @@ where
         conversion_duration.as_secs(),
         conversion_duration.subsec_millis()
     );
+
+    let event_loop = EventLoop::new();
+
+    let window = WindowBuilder::new()
+        .with_title("Fornjot")
+        .with_maximized(true)
+        .with_decorations(true)
+        .with_transparent(false)
+        .build(&event_loop)
+        .unwrap();
 
     let mut input_handler = InputHandler::new();
     let mut transform = Transform::new();
