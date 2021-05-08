@@ -2,6 +2,7 @@ use std::time::Instant;
 
 use futures::executor::block_on;
 use tracing::info;
+use tracing_subscriber::EnvFilter;
 use winit::{
     event::{Event, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
@@ -18,7 +19,12 @@ pub fn run<M>(mesh: M)
 where
     M: ToMesh,
 {
-    tracing_subscriber::fmt().init();
+    tracing_subscriber::fmt()
+        .with_env_filter(
+            EnvFilter::from_default_env()
+                .add_directive("fj=info".parse().unwrap()),
+        )
+        .init();
 
     let event_loop = EventLoop::new();
 
