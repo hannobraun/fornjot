@@ -36,7 +36,11 @@ where
     let mesh = mesh.to_mesh(0.01);
     let conversion_duration = start_of_conversion.elapsed();
 
-    info!("Converted geometry in {:?}", conversion_duration);
+    info!(
+        "Converted geometry in {}.{:03}s",
+        conversion_duration.as_secs(),
+        conversion_duration.subsec_millis()
+    );
 
     let mut input_handler = InputHandler::new();
     let mut transform = Transform::new();
