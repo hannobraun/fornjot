@@ -18,7 +18,7 @@ pub fn run<M>(mesh: M)
 where
     M: ToMesh,
 {
-    tracing_subscriber::fmt::init();
+    tracing_subscriber::fmt().init();
 
     let event_loop = EventLoop::new();
 
