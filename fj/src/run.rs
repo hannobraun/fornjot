@@ -1,4 +1,7 @@
+use std::time::Instant;
+
 use futures::executor::block_on;
+use tracing::info;
 use winit::{
     event::{Event, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
@@ -27,7 +30,13 @@ where
         .build(&event_loop)
         .unwrap();
 
+    info!("Converting geometry to triangle mesh...");
+
+    let start_of_conversion = Instant::now();
     let mesh = mesh.to_mesh(0.01);
+    let conversion_duration = start_of_conversion.elapsed();
+
+    info!("Converted geometry in {:?}", conversion_duration);
 
     let mut input_handler = InputHandler::new();
     let mut transform = Transform::new();
