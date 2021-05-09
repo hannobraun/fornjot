@@ -690,9 +690,9 @@ dependencies = [
 
 [[package]]
 name = "gfx-backend-metal"
-version = "0.8.1"
+version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "96a809b746d8063ade971cfb3f188e2b0d655926979823d80be7590390f4b911"
+checksum = "340895ad544ba46433acb3bdabece0ef16f2dbedc030adbd7c9eaf2839fbed41"
 dependencies = [
  "arrayvec 0.5.2",
  "bitflags",
