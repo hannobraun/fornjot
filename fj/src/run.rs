@@ -22,7 +22,7 @@ where
     tracing_subscriber::fmt()
         .with_env_filter(
             EnvFilter::from_default_env()
-                .add_directive("fj=info".parse().unwrap()),
+                .add_directive("fj=debug".parse().unwrap()),
         )
         .init();
 
