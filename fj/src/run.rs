@@ -1,7 +1,7 @@
 use std::time::Instant;
 
 use futures::executor::block_on;
-use tracing::info;
+use tracing::{debug, info};
 use tracing_subscriber::EnvFilter;
 use winit::{
     event::{Event, WindowEvent},
@@ -38,8 +38,10 @@ where
         conversion_duration.subsec_millis()
     );
 
+    debug!("Initializing event loop...");
     let event_loop = EventLoop::new();
 
+    debug!("Initializing window...");
     let window = WindowBuilder::new()
         .with_title("Fornjot")
         .with_maximized(true)
@@ -48,9 +50,16 @@ where
         .build(&event_loop)
         .unwrap();
 
+    debug!("Initializing event handler...");
     let mut input_handler = InputHandler::new();
+
+    debug!("Initializing transform...");
     let mut transform = Transform::new();
+
+    debug!("Initializing renderer...");
     let mut renderer = block_on(Renderer::new(&window, mesh.into())).unwrap();
+
+    debug!("Finished initialization.");
 
     event_loop.run(move |event, _, control_flow| match event {
         Event::WindowEvent {
