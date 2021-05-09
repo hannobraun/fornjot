@@ -4,3 +4,6 @@ members = [
     "models/cube",
     "models/spacer",
 ]
+
+[profile.dev]
+opt-level = 3
