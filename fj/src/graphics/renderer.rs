@@ -1,5 +1,6 @@
 use std::{convert::TryInto, io, mem::size_of};
 
+use tracing::{instrument, trace};
 use wgpu::util::DeviceExt as _;
 use winit::{dpi::PhysicalSize, window::Window};
 
@@ -240,7 +241,10 @@ impl Renderer {
         self.depth_view = depth_view;
     }
 
+    #[instrument]
     pub fn draw(&mut self, transform: &Transform) -> Result<(), DrawError> {
+        trace!("Drawing...");
+
         let uniforms = Uniforms {
             transform: transform.to_native(self.aspect_ratio()),
             transform_normals: transform.to_normals_transform(),
