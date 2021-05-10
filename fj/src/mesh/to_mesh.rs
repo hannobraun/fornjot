@@ -19,6 +19,7 @@ impl<T> ToMesh for T
 where
     T: BoundingVolume + Distance,
 {
+    // TASK: Extract code into new function in `isosurface`.
     fn to_mesh(self, resolution: f32) -> Mesh {
         let aabb = self.aabb();
         let grid_descriptor = isosurface::GridDescriptor {

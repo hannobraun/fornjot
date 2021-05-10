@@ -1,3 +1,4 @@
+// TASK: Create `Cylinder` using a circle primitive and linear extrusion.
 pub struct Cylinder {
     pub radius: f32,
     pub height: f32,
