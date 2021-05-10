@@ -13,6 +13,7 @@ use super::{
 
 const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth32Float;
 
+#[derive(Debug)]
 pub struct Renderer {
     surface: wgpu::Surface,
     device: wgpu::Device,
