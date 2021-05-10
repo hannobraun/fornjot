@@ -1,7 +1,7 @@
 use std::time::Instant;
 
 use futures::executor::block_on;
-use tracing::{debug, info};
+use tracing::{debug, info, trace};
 use tracing_subscriber::EnvFilter;
 use winit::{
     event::{Event, WindowEvent},
@@ -61,59 +61,63 @@ where
 
     debug!("Finished initialization.");
 
-    event_loop.run(move |event, _, control_flow| match event {
-        Event::WindowEvent {
-            event: WindowEvent::CloseRequested,
-            ..
-        } => {
-            *control_flow = ControlFlow::Exit;
-        }
-        Event::WindowEvent {
-            event: WindowEvent::Resized(size),
-            ..
-        } => {
-            renderer.handle_resize(size);
-        }
-        Event::WindowEvent {
-            event: WindowEvent::KeyboardInput { input, .. },
-            ..
-        } => {
-            input_handler.handle_keyboard_input(input, control_flow);
-        }
-        Event::WindowEvent {
-            event: WindowEvent::CursorMoved { position, .. },
-            ..
-        } => {
-            input_handler.handle_cursor_moved(position, &mut transform);
-        }
-        Event::WindowEvent {
-            event: WindowEvent::MouseInput { state, button, .. },
-            ..
-        } => {
-            input_handler.handle_mouse_input(state, button);
-        }
-        Event::WindowEvent {
-            event: WindowEvent::MouseWheel { delta, .. },
-            ..
-        } => {
-            input_handler.handle_mouse_wheel(delta, &mut transform);
-        }
-        Event::MainEventsCleared => {
-            window.request_redraw();
-        }
-        Event::RedrawRequested(_) => {
-            match renderer.draw(&transform) {
-                Ok(()) => {}
-                err @ Err(DrawError(wgpu::SwapChainError::Outdated)) => {
-                    // I'm getting this from time to time when resizing the
-                    // window. It's not catastrophic.
-                    println!("Draw error: {:?}", err);
-                }
-                Err(err) => {
-                    panic!("Draw error: {:?}", err);
+    event_loop.run(move |event, _, control_flow| {
+        trace!("Handling event: {:?}", event);
+
+        match event {
+            Event::WindowEvent {
+                event: WindowEvent::CloseRequested,
+                ..
+            } => {
+                *control_flow = ControlFlow::Exit;
+            }
+            Event::WindowEvent {
+                event: WindowEvent::Resized(size),
+                ..
+            } => {
+                renderer.handle_resize(size);
+            }
+            Event::WindowEvent {
+                event: WindowEvent::KeyboardInput { input, .. },
+                ..
+            } => {
+                input_handler.handle_keyboard_input(input, control_flow);
+            }
+            Event::WindowEvent {
+                event: WindowEvent::CursorMoved { position, .. },
+                ..
+            } => {
+                input_handler.handle_cursor_moved(position, &mut transform);
+            }
+            Event::WindowEvent {
+                event: WindowEvent::MouseInput { state, button, .. },
+                ..
+            } => {
+                input_handler.handle_mouse_input(state, button);
+            }
+            Event::WindowEvent {
+                event: WindowEvent::MouseWheel { delta, .. },
+                ..
+            } => {
+                input_handler.handle_mouse_wheel(delta, &mut transform);
+            }
+            Event::MainEventsCleared => {
+                window.request_redraw();
+            }
+            Event::RedrawRequested(_) => {
+                match renderer.draw(&transform) {
+                    Ok(()) => {}
+                    err @ Err(DrawError(wgpu::SwapChainError::Outdated)) => {
+                        // I'm getting this from time to time when resizing the
+                        // window. It's not catastrophic.
+                        println!("Draw error: {:?}", err);
+                    }
+                    Err(err) => {
+                        panic!("Draw error: {:?}", err);
+                    }
                 }
             }
+            _ => {}
         }
-        _ => {}
     })
 }
