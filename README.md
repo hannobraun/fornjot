@@ -2,11 +2,16 @@
 
 ## About
 
-Experimental CAD library. CAD models are Rust applications that use the library.
+Experimental CAD system. The CAD system is a library, written in the Rust programming language. CAD models are Rust applications that use the library.
+
+The following models are currently available:
+
+- [Cube](https://github.com/hannobraun/fornjot/blob/main/models/cube)
+- [Spacer](https://github.com/hannobraun/fornjot/blob/main/models/spacer)
 
 ## Status
 
-This is completely experimental. As of now, it doesn't do anything useful.
+Fornjot is still at an experimental stage, where I figure out which approaches work and which don't. It doesn't have enough features to do anything useful.
 
 ## License
 
