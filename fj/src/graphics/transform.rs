@@ -3,6 +3,7 @@ use nalgebra::{
     Translation3,
 };
 
+#[derive(Debug)]
 pub struct Transform {
     pub rotation: Rotation3<f32>,
     pub distance: f32,
