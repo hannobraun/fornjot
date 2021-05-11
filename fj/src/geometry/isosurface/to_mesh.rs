@@ -11,8 +11,8 @@ pub fn to_mesh(
 ) -> Mesh {
     let aabb = isosurface.aabb();
     let grid_descriptor = GridDescriptor {
-        min: aabb.mins,
-        max: aabb.maxs,
+        min: aabb.min,
+        max: aabb.max,
         resolution,
     };
     let grid = Grid::from_descriptor(grid_descriptor, isosurface);
