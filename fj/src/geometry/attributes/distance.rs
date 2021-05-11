@@ -7,6 +7,14 @@ pub trait Distance<const D: usize> {
     fn distance(&self, point: impl Into<Point<f32, D>>) -> f32;
 }
 
+impl Distance<2> for shapes::Circle {
+    fn distance(&self, point: impl Into<Point<f32, 2>>) -> f32 {
+        let point = point.into();
+
+        point.xy().coords.magnitude() - self.radius
+    }
+}
+
 impl Distance<3> for shapes::Cylinder {
     fn distance(&self, point: impl Into<Point<f32, 3>>) -> f32 {
         let point = point.into();
