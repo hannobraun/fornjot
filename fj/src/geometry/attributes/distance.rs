@@ -22,12 +22,12 @@ impl Distance<3> for shapes::Cylinder {
     }
 }
 
-impl<A, B> Distance<3> for operations::Difference<A, B>
+impl<A, B, const D: usize> Distance<D> for operations::Difference<A, B>
 where
-    A: Distance<3>,
-    B: Distance<3>,
+    A: Distance<D>,
+    B: Distance<D>,
 {
-    fn distance(&self, point: impl Into<Point<f32, 3>>) -> f32 {
+    fn distance(&self, point: impl Into<Point<f32, D>>) -> f32 {
         let point = point.into();
 
         let dist_a = self.a.distance(point);
