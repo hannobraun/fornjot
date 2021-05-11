@@ -1,6 +1,6 @@
 use crate::geometry::{
     attributes::{BoundingVolume, Distance},
-    isosurface::sdf_to_mesh,
+    isosurface::to_mesh,
 };
 
 use super::Mesh;
@@ -20,6 +20,6 @@ where
     T: BoundingVolume + Distance,
 {
     fn to_mesh(self, resolution: f32) -> Mesh {
-        sdf_to_mesh(self, resolution)
+        to_mesh(self, resolution)
     }
 }

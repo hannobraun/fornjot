@@ -9,5 +9,5 @@ pub use self::{
     grid::Grid,
     grid_descriptor::GridDescriptor,
     grid_index::GridIndex,
-    to_mesh::sdf_to_mesh,
+    to_mesh::to_mesh,
 };

@@ -5,7 +5,7 @@ use crate::{
 
 use super::{Grid, GridDescriptor};
 
-pub fn sdf_to_mesh<Sdf>(sdf: Sdf, resolution: f32) -> Mesh
+pub fn to_mesh<Sdf>(sdf: Sdf, resolution: f32) -> Mesh
 where
     Sdf: Distance + BoundingVolume,
 {
