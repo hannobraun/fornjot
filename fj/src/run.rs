@@ -29,7 +29,7 @@ where
     info!("Converting geometry to triangle mesh...");
 
     let start_of_conversion = Instant::now();
-    let mesh = mesh.to_mesh(0.01);
+    let mesh = mesh.into_mesh(0.01);
     let conversion_duration = start_of_conversion.elapsed();
 
     info!(
