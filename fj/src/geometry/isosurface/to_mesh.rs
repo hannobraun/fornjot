@@ -5,10 +5,10 @@ use crate::{
 
 use super::{Grid, GridDescriptor};
 
-pub fn to_mesh<Sdf>(isosurface: Sdf, resolution: f32) -> Mesh
-where
-    Sdf: Distance + BoundingVolume,
-{
+pub fn to_mesh(
+    isosurface: impl Distance + BoundingVolume,
+    resolution: f32,
+) -> Mesh {
     let aabb = isosurface.aabb();
     let grid_descriptor = GridDescriptor {
         min: aabb.mins,
