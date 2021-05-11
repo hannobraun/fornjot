@@ -17,7 +17,7 @@ impl IntoMesh for Mesh {
 
 impl<T> IntoMesh for T
 where
-    T: BoundingVolume<3> + Distance,
+    T: BoundingVolume<3> + Distance<3>,
 {
     fn into_mesh(self, resolution: f32) -> Mesh {
         isosurface::to_mesh(&self, resolution)

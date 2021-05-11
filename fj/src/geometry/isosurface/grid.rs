@@ -19,7 +19,7 @@ impl Grid {
     /// Create the grid from the descriptor and populate it with distance values
     pub fn from_descriptor(
         descriptor: GridDescriptor,
-        isosurface: &impl Distance,
+        isosurface: &impl Distance<3>,
     ) -> Self {
         // TASK: Only compute distance for points which are near a surface,
         //       using a spatial data structure.
@@ -340,7 +340,7 @@ mod tests {
 
     struct Geometry;
 
-    impl Distance for Geometry {
+    impl Distance<3> for Geometry {
         fn distance(&self, _point: impl Into<nalgebra::Point<f32, 3>>) -> f32 {
             0.0
         }
