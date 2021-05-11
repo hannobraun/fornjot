@@ -5,17 +5,17 @@ use crate::{
 
 use super::{Grid, GridDescriptor};
 
-pub fn to_mesh<Sdf>(sdf: Sdf, resolution: f32) -> Mesh
+pub fn to_mesh<Sdf>(isosurface: Sdf, resolution: f32) -> Mesh
 where
     Sdf: Distance + BoundingVolume,
 {
-    let aabb = sdf.aabb();
+    let aabb = isosurface.aabb();
     let grid_descriptor = GridDescriptor {
         min: aabb.mins,
         max: aabb.maxs,
         resolution,
     };
-    let grid = Grid::from_descriptor(grid_descriptor, sdf);
+    let grid = Grid::from_descriptor(grid_descriptor, isosurface);
 
     let mut mesh = Mesh::new();
 
