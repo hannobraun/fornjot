@@ -35,3 +35,14 @@ where
         self.a.aabb()
     }
 }
+
+impl<T> BoundingVolume<3> for operations::LinearExtrude<T>
+where
+    T: BoundingVolume<2>,
+{
+    fn aabb(&self) -> Aabb<3> {
+        self.sketch
+            .aabb()
+            .extend(-self.height / 2.0, self.height / 2.0)
+    }
+}
