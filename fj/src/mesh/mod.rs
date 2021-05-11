@@ -1,4 +1,4 @@
+pub mod into_mesh;
 pub mod mesh;
-pub mod to_mesh;
 
-pub use self::{mesh::Mesh, to_mesh::IntoMesh};
+pub use self::{into_mesh::IntoMesh, mesh::Mesh};
