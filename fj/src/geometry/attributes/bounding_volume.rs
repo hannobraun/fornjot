@@ -2,9 +2,9 @@ use nalgebra::Point;
 
 use crate::geometry::{operations, shapes};
 
-pub trait BoundingVolume {
+pub trait BoundingVolume<const D: usize> {
     /// Axis-aligned bounding box
-    fn aabb(&self) -> Aabb<3>;
+    fn aabb(&self) -> Aabb<D>;
 }
 
 pub struct Aabb<const D: usize> {
@@ -12,7 +12,7 @@ pub struct Aabb<const D: usize> {
     pub max: Point<f32, D>,
 }
 
-impl BoundingVolume for shapes::Cylinder {
+impl BoundingVolume<3> for shapes::Cylinder {
     fn aabb(&self) -> Aabb<3> {
         Aabb {
             min: [-self.radius, -self.radius, -self.height / 2.0].into(),
@@ -21,9 +21,9 @@ impl BoundingVolume for shapes::Cylinder {
     }
 }
 
-impl<A, B> BoundingVolume for operations::Difference<A, B>
+impl<A, B> BoundingVolume<3> for operations::Difference<A, B>
 where
-    A: BoundingVolume,
+    A: BoundingVolume<3>,
 {
     fn aabb(&self) -> Aabb<3> {
         // Since `self.b` is subtracted from `self.a`, the bounding volume of
