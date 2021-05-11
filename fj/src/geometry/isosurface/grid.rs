@@ -19,7 +19,7 @@ impl Grid {
     /// Create the grid from the descriptor and populate it with distance values
     pub fn from_descriptor(
         descriptor: GridDescriptor,
-        isosurface: impl Distance,
+        isosurface: &impl Distance,
     ) -> Self {
         // TASK: Only insert the points that are close to a surface.
         let values = descriptor
@@ -141,7 +141,7 @@ mod tests {
                 max: [1.0, 1.0, 1.0].into(),
                 resolution: 1.0,
             },
-            Geometry,
+            &Geometry,
         );
 
         let edges: Vec<_> = grid
@@ -218,7 +218,7 @@ mod tests {
                 max: [1.0, 1.0, 1.0].into(),
                 resolution: 1.0,
             },
-            Geometry,
+            &Geometry,
         );
 
         let edges = TestEdges::new();
@@ -268,7 +268,7 @@ mod tests {
                 max: [1.0, 1.0, 1.0].into(),
                 resolution: 1.0,
             },
-            Geometry,
+            &Geometry,
         );
 
         let edges = TestEdges::new();

@@ -6,7 +6,7 @@ use crate::{
 use super::{Grid, GridDescriptor};
 
 pub fn to_mesh(
-    isosurface: impl Distance + BoundingVolume,
+    isosurface: &(impl Distance + BoundingVolume),
     resolution: f32,
 ) -> Mesh {
     let aabb = isosurface.aabb();

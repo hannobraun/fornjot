@@ -20,6 +20,6 @@ where
     T: BoundingVolume + Distance,
 {
     fn to_mesh(self, resolution: f32) -> Mesh {
-        isosurface::to_mesh(self, resolution)
+        isosurface::to_mesh(&self, resolution)
     }
 }
