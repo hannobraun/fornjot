@@ -15,21 +15,6 @@ impl Distance<2> for shapes::Circle {
     }
 }
 
-impl Distance<3> for shapes::Cylinder {
-    fn distance(&self, point: impl Into<Point<f32, 3>>) -> f32 {
-        let point = point.into();
-
-        let d_xy = point.xy().coords.magnitude() - self.radius;
-        let d_z = point.z.abs() - self.height / 2.0;
-
-        if d_xy < 0.0 || d_z < 0.0 {
-            f32::max(d_xy, d_z)
-        } else {
-            f32::min(d_xy, d_z)
-        }
-    }
-}
-
 impl<A, B, const D: usize> Distance<D> for operations::Difference<A, B>
 where
     A: Distance<D>,

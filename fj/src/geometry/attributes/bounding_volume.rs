@@ -14,15 +14,6 @@ impl BoundingVolume<2> for shapes::Circle {
     }
 }
 
-impl BoundingVolume<3> for shapes::Cylinder {
-    fn aabb(&self) -> Aabb<3> {
-        Aabb {
-            min: [-self.radius, -self.radius, -self.height / 2.0].into(),
-            max: [self.radius, self.radius, self.height / 2.0].into(),
-        }
-    }
-}
-
 impl<A, B, const D: usize> BoundingVolume<D> for operations::Difference<A, B>
 where
     A: BoundingVolume<D>,
