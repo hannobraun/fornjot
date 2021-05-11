@@ -12,6 +12,15 @@ pub struct Aabb<const D: usize> {
     pub max: Point<f32, D>,
 }
 
+impl BoundingVolume<2> for shapes::Circle {
+    fn aabb(&self) -> Aabb<2> {
+        Aabb {
+            min: [-self.radius, -self.radius].into(),
+            max: [self.radius, self.radius].into(),
+        }
+    }
+}
+
 impl BoundingVolume<3> for shapes::Cylinder {
     fn aabb(&self) -> Aabb<3> {
         Aabb {
