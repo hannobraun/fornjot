@@ -1,15 +1,8 @@
-use nalgebra::Point;
-
-use crate::geometry::{operations, shapes};
+use crate::geometry::{aabb::Aabb, operations, shapes};
 
 pub trait BoundingVolume<const D: usize> {
     /// Axis-aligned bounding box
     fn aabb(&self) -> Aabb<D>;
-}
-
-pub struct Aabb<const D: usize> {
-    pub min: Point<f32, D>,
-    pub max: Point<f32, D>,
 }
 
 impl BoundingVolume<2> for shapes::Circle {
