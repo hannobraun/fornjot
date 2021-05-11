@@ -21,13 +21,11 @@ impl Grid {
         descriptor: GridDescriptor,
         isosurface: impl Distance,
     ) -> Self {
-        let mut values = BTreeMap::new();
-
         // TASK: Only insert the points that are close to a surface.
-        for (index, point) in descriptor.points() {
-            let value = isosurface.distance(point);
-            values.insert(index, value);
-        }
+        let values = descriptor
+            .points()
+            .map(|(index, point)| (index, isosurface.distance(point)))
+            .collect();
 
         Self { descriptor, values }
     }
