@@ -36,9 +36,9 @@ where
     }
 }
 
-impl<T> BoundingVolume<3> for operations::LinearExtrude<T>
+impl<Sketch> BoundingVolume<3> for operations::LinearExtrude<Sketch>
 where
-    T: BoundingVolume<2>,
+    Sketch: BoundingVolume<2>,
 {
     fn aabb(&self) -> Aabb<3> {
         self.sketch
