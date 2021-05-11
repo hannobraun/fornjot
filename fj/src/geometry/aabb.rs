@@ -14,3 +14,24 @@ impl Aabb<2> {
         }
     }
 }
+
+impl<const D: usize> Aabb<D> {
+    pub fn center(&self) -> Point<f32, D> {
+        self.min + (self.max - self.min) / 2.0
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Aabb;
+
+    #[test]
+    fn center_should_return_center() {
+        let aabb = Aabb {
+            min: [1.0, 2.0].into(),
+            max: [3.0, 4.0].into(),
+        };
+
+        assert_eq!(aabb.center(), [2.0, 3.0].into());
+    }
+}
