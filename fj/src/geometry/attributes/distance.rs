@@ -11,7 +11,7 @@ impl Distance<2> for shapes::Circle {
     fn distance(&self, point: impl Into<Point<f32, 2>>) -> f32 {
         let point = point.into();
 
-        point.xy().coords.magnitude() - self.radius
+        point.coords.magnitude() - self.radius
     }
 }
 
