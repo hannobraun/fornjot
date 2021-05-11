@@ -28,9 +28,12 @@ impl GridDescriptor {
     pub fn points(
         &self,
     ) -> impl Iterator<Item = (GridIndex, Point<f32, 3>)> + '_ {
-        let indices_x = indices(self.min.x, self.max.x, self.resolution);
-        let indices_y = indices(self.min.y, self.max.y, self.resolution);
-        let indices_z = indices(self.min.z, self.max.z, self.resolution);
+        let min = self.min;
+        let max = self.max;
+
+        let indices_x = indices(min.x, max.x, self.resolution);
+        let indices_y = indices(min.y, max.y, self.resolution);
+        let indices_z = indices(min.z, max.z, self.resolution);
 
         let indices = indices_x
             .cartesian_product(indices_y)
@@ -38,7 +41,7 @@ impl GridDescriptor {
             .map(|((x, y), z)| GridIndex::from([x, y, z]));
 
         let points = indices.map(move |index| {
-            (index, index.to_coordinates(self.min, self.resolution))
+            (index, index.to_coordinates(min, self.resolution))
         });
 
         points
