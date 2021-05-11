@@ -12,12 +12,12 @@ use winit::{
 use crate::{
     graphics::{DrawError, Renderer, Transform},
     input::InputHandler,
-    mesh::ToMesh,
+    mesh::IntoMesh,
 };
 
 pub fn run<M>(mesh: M)
 where
-    M: ToMesh,
+    M: IntoMesh,
 {
     tracing_subscriber::fmt()
         .with_env_filter(

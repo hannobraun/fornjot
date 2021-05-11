@@ -5,17 +5,17 @@ use crate::geometry::{
 
 use super::Mesh;
 
-pub trait ToMesh {
+pub trait IntoMesh {
     fn to_mesh(self, resolution: f32) -> Mesh;
 }
 
-impl ToMesh for Mesh {
+impl IntoMesh for Mesh {
     fn to_mesh(self, _: f32) -> Mesh {
         self
     }
 }
 
-impl<T> ToMesh for T
+impl<T> IntoMesh for T
 where
     T: BoundingVolume + Distance,
 {
