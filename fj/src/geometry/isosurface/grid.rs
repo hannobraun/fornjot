@@ -91,9 +91,10 @@ impl Grid {
             Sign::Neg => edge.b,
             Sign::Pos => edge.a,
         };
-        let start = start
-            .index
-            .to_coordinates(self.descriptor.min, self.descriptor.resolution);
+        let start = start.index.to_coordinates(
+            self.descriptor.aabb.min,
+            self.descriptor.resolution,
+        );
 
         let [a, b, c, d] = if direction.sign == Sign::Pos
             && edge.a.value < edge.b.value
@@ -135,6 +136,7 @@ fn edge_to_next(
 #[cfg(test)]
 mod tests {
     use crate::geometry::{
+        aabb::Aabb,
         attributes::Distance,
         isosurface::{Edge, GridDescriptor, Value},
     };
@@ -145,8 +147,10 @@ mod tests {
     fn edges_should_return_edges() {
         let grid = Grid::from_descriptor(
             GridDescriptor {
-                min: [0.0, 0.0, 0.0].into(),
-                max: [1.0, 1.0, 1.0].into(),
+                aabb: Aabb {
+                    min: [0.0, 0.0, 0.0].into(),
+                    max: [1.0, 1.0, 1.0].into(),
+                },
                 resolution: 1.0,
             },
             &Geometry,
@@ -222,8 +226,10 @@ mod tests {
     fn neighbors_of_edge_should_return_neighboring_grid_centers() {
         let grid = Grid::from_descriptor(
             GridDescriptor {
-                min: [0.0, 0.0, 0.0].into(),
-                max: [1.0, 1.0, 1.0].into(),
+                aabb: Aabb {
+                    min: [0.0, 0.0, 0.0].into(),
+                    max: [1.0, 1.0, 1.0].into(),
+                },
                 resolution: 1.0,
             },
             &Geometry,
@@ -272,8 +278,10 @@ mod tests {
     fn neighbors_of_edge_should_work_regardless_of_direction() {
         let grid = Grid::from_descriptor(
             GridDescriptor {
-                min: [0.0, 0.0, 0.0].into(),
-                max: [1.0, 1.0, 1.0].into(),
+                aabb: Aabb {
+                    min: [0.0, 0.0, 0.0].into(),
+                    max: [1.0, 1.0, 1.0].into(),
+                },
                 resolution: 1.0,
             },
             &Geometry,

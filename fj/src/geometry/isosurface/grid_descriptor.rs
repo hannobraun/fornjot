@@ -3,6 +3,8 @@ use std::ops::Range;
 use itertools::Itertools as _;
 use nalgebra::Point;
 
+use crate::geometry::aabb::Aabb;
+
 use super::GridIndex;
 
 /// A grid for isosurface extraction
@@ -14,8 +16,7 @@ use super::GridIndex;
 /// to enable proper extraction of the surface.
 #[derive(Debug)]
 pub struct GridDescriptor {
-    pub min: Point<f32, 3>,
-    pub max: Point<f32, 3>,
+    pub aabb: Aabb<3>,
     pub resolution: f32,
 }
 
@@ -28,8 +29,8 @@ impl GridDescriptor {
     pub fn points(
         &self,
     ) -> impl Iterator<Item = (GridIndex, Point<f32, 3>)> + '_ {
-        let min = self.min;
-        let max = self.max;
+        let min = self.aabb.min;
+        let max = self.aabb.max;
 
         let indices_x = indices(min.x, max.x, self.resolution);
         let indices_y = indices(min.y, max.y, self.resolution);
@@ -57,13 +58,17 @@ fn indices(min: f32, max: f32, resolution: f32) -> Range<usize> {
 
 #[cfg(test)]
 mod tests {
+    use crate::geometry::aabb::Aabb;
+
     use super::GridDescriptor;
 
     #[test]
     fn points_should_return_grid_points() {
         let grid = GridDescriptor {
-            min: [0.0, 0.0, 0.5].into(),
-            max: [0.5, 1.0, 1.5].into(),
+            aabb: Aabb {
+                min: [0.0, 0.0, 0.5].into(),
+                max: [0.5, 1.0, 1.5].into(),
+            },
             resolution: 1.0,
         };
 
