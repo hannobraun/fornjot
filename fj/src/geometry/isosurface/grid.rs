@@ -21,10 +21,16 @@ impl Grid {
         descriptor: GridDescriptor,
         isosurface: &impl Distance,
     ) -> Self {
-        // TASK: Only insert the points that are close to a surface.
         let values = descriptor
             .points()
-            .map(|(index, point)| (index, isosurface.distance(point)))
+            .filter_map(|(index, point)| {
+                let distance = isosurface.distance(point);
+                if distance <= descriptor.resolution {
+                    Some((index, distance))
+                } else {
+                    None
+                }
+            })
             .collect();
 
         Self { descriptor, values }
