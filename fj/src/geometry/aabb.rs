@@ -1,4 +1,4 @@
-use nalgebra::Point;
+use nalgebra::{Point, SVector};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Aabb<const D: usize> {
@@ -31,6 +31,16 @@ impl Aabb<3> {
 }
 
 impl<const D: usize> Aabb<D> {
+    pub fn from_min_and_size(
+        min: Point<f32, D>,
+        size: SVector<f32, D>,
+    ) -> Self {
+        Self {
+            min,
+            max: min + size,
+        }
+    }
+
     pub fn center(&self) -> Point<f32, D> {
         self.min + (self.max - self.min) / 2.0
     }
