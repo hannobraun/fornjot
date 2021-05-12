@@ -112,4 +112,47 @@ mod tests {
             ]
         )
     }
+
+    #[test]
+    fn partition_should_partition_into_8_parts() {
+        let aabb = Aabb {
+            min: [0.0, 0.0, 0.0].into(),
+            max: [2.0, 2.0, 2.0].into(),
+        };
+
+        let a = Aabb {
+            min: [0.0, 0.0, 0.0].into(),
+            max: [1.0, 1.0, 1.0].into(),
+        };
+        let b = Aabb {
+            min: [0.0, 0.0, 1.0].into(),
+            max: [1.0, 1.0, 2.0].into(),
+        };
+        let c = Aabb {
+            min: [0.0, 1.0, 0.0].into(),
+            max: [1.0, 2.0, 1.0].into(),
+        };
+        let d = Aabb {
+            min: [0.0, 1.0, 1.0].into(),
+            max: [1.0, 2.0, 2.0].into(),
+        };
+        let e = Aabb {
+            min: [1.0, 0.0, 0.0].into(),
+            max: [2.0, 1.0, 1.0].into(),
+        };
+        let f = Aabb {
+            min: [1.0, 0.0, 1.0].into(),
+            max: [2.0, 1.0, 2.0].into(),
+        };
+        let g = Aabb {
+            min: [1.0, 1.0, 0.0].into(),
+            max: [2.0, 2.0, 1.0].into(),
+        };
+        let h = Aabb {
+            min: [1.0, 1.0, 1.0].into(),
+            max: [2.0, 2.0, 2.0].into(),
+        };
+
+        assert_eq!(aabb.partition(), [a, b, c, d, e, f, g, h]);
+    }
 }
