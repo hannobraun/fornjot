@@ -42,15 +42,33 @@ impl Grid {
     pub fn edges(&self) -> impl Iterator<Item = Edge> + '_ {
         self.values
             .iter()
-            .map(move |(&index, &(_, value))| {
+            .map(move |(&index, &(point, value))| {
                 let next_z = [index.x(), index.y(), index.z() + 1];
                 let next_y = [index.x(), index.y() + 1, index.z()];
                 let next_x = [index.x() + 1, index.y(), index.z()];
 
                 [
-                    edge_to_next(index, value, next_z.into(), &self.values),
-                    edge_to_next(index, value, next_y.into(), &self.values),
-                    edge_to_next(index, value, next_x.into(), &self.values),
+                    edge_to_next(
+                        index,
+                        point,
+                        value,
+                        next_z.into(),
+                        &self.values,
+                    ),
+                    edge_to_next(
+                        index,
+                        point,
+                        value,
+                        next_y.into(),
+                        &self.values,
+                    ),
+                    edge_to_next(
+                        index,
+                        point,
+                        value,
+                        next_x.into(),
+                        &self.values,
+                    ),
                 ]
             })
             .map(|edges| array::IntoIter::new(edges))
@@ -118,16 +136,22 @@ impl Grid {
 
 fn edge_to_next(
     index: GridIndex,
+    point: Point<f32, 3>,
     value: f32,
     next_index: GridIndex,
     values: &BTreeMap<GridIndex, (Point<f32, 3>, f32)>,
 ) -> Option<Edge> {
-    let &(_, next_value) = values.get(&next_index)?;
+    let &(next_point, next_value) = values.get(&next_index)?;
 
     Some(Edge {
-        a: Value { index, value },
+        a: Value {
+            index,
+            point,
+            value,
+        },
         b: Value {
             index: next_index,
+            point: next_point,
             value: next_value,
         },
     })
@@ -315,30 +339,36 @@ mod tests {
                 x: Edge {
                     a: Value {
                         index: [1, 1, 1].into(),
+                        point: [1.0, 1.0, 1.0].into(),
                         value: 1.0,
                     },
                     b: Value {
                         index: [2, 1, 1].into(),
+                        point: [2.0, 1.0, 1.0].into(),
                         value: 0.0,
                     },
                 },
                 y: Edge {
                     a: Value {
                         index: [1, 1, 1].into(),
+                        point: [1.0, 1.0, 1.0].into(),
                         value: 1.0,
                     },
                     b: Value {
                         index: [1, 2, 1].into(),
+                        point: [1.0, 2.0, 1.0].into(),
                         value: 0.0,
                     },
                 },
                 z: Edge {
                     a: Value {
                         index: [1, 1, 1].into(),
+                        point: [1.0, 1.0, 1.0].into(),
                         value: 1.0,
                     },
                     b: Value {
                         index: [1, 1, 2].into(),
+                        point: [1.0, 1.0, 2.0].into(),
                         value: 0.0,
                     },
                 },

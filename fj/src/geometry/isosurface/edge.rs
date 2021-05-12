@@ -1,3 +1,5 @@
+use nalgebra::Point;
+
 use super::GridIndex;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -18,10 +20,12 @@ impl Edge {
         Self {
             a: Value {
                 index: self.a.index,
+                point: self.a.point,
                 value: self.b.value,
             },
             b: Value {
                 index: self.b.index,
+                point: self.b.point,
                 value: self.a.value,
             },
         }
@@ -67,6 +71,7 @@ impl Edge {
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Value {
     pub index: GridIndex,
+    pub point: Point<f32, 3>,
     pub value: f32,
 }
 
@@ -98,10 +103,12 @@ mod tests {
         let inside_surface = Edge {
             a: Value {
                 index: [0, 0, 0].into(),
+                point: [0.0, 0.0, 0.0].into(),
                 value: -0.2,
             },
             b: Value {
                 index: [0, 0, 0].into(),
+                point: [0.0, 0.0, 0.0].into(),
                 value: -0.1,
             },
         };
@@ -111,10 +118,12 @@ mod tests {
         let outside_surface = Edge {
             a: Value {
                 index: [0, 0, 0].into(),
+                point: [0.0, 0.0, 0.0].into(),
                 value: 0.1,
             },
             b: Value {
                 index: [0, 0, 0].into(),
+                point: [0.0, 0.0, 0.0].into(),
                 value: 0.2,
             },
         };
@@ -124,10 +133,12 @@ mod tests {
         let through_surface = Edge {
             a: Value {
                 index: [0, 0, 0].into(),
+                point: [0.0, 0.0, 0.0].into(),
                 value: -0.1,
             },
             b: Value {
                 index: [0, 0, 0].into(),
+                point: [0.0, 0.0, 0.0].into(),
                 value: 0.1,
             },
         };
@@ -137,10 +148,12 @@ mod tests {
         let inside_to_surface = Edge {
             a: Value {
                 index: [0, 0, 0].into(),
+                point: [0.0, 0.0, 0.0].into(),
                 value: -0.1,
             },
             b: Value {
                 index: [0, 0, 0].into(),
+                point: [0.0, 0.0, 0.0].into(),
                 value: 0.0,
             },
         };
@@ -150,10 +163,12 @@ mod tests {
         let outside_to_surface = Edge {
             a: Value {
                 index: [0, 0, 0].into(),
+                point: [0.0, 0.0, 0.0].into(),
                 value: 0.0,
             },
             b: Value {
                 index: [0, 0, 0].into(),
+                point: [0.0, 0.0, 0.0].into(),
                 value: 0.1,
             },
         };
