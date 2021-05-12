@@ -12,7 +12,7 @@ use super::{
 #[derive(Debug)]
 pub struct Grid {
     descriptor: GridDescriptor,
-    values: BTreeMap<GridIndex, f32>,
+    values: BTreeMap<GridIndex, (Point<f32, 3>, f32)>,
 }
 
 impl Grid {
@@ -28,7 +28,7 @@ impl Grid {
             .filter_map(|(index, point)| {
                 let distance = isosurface.distance(point);
                 if distance <= descriptor.resolution {
-                    Some((index, distance))
+                    Some((index, (point, distance)))
                 } else {
                     None
                 }
@@ -42,7 +42,7 @@ impl Grid {
     pub fn edges(&self) -> impl Iterator<Item = Edge> + '_ {
         self.values
             .iter()
-            .map(move |(&index, &value)| {
+            .map(move |(&index, &(_, value))| {
                 let next_z = [index.x(), index.y(), index.z() + 1];
                 let next_y = [index.x(), index.y() + 1, index.z()];
                 let next_x = [index.x() + 1, index.y(), index.z()];
@@ -120,9 +120,9 @@ fn edge_to_next(
     index: GridIndex,
     value: f32,
     next_index: GridIndex,
-    values: &BTreeMap<GridIndex, f32>,
+    values: &BTreeMap<GridIndex, (Point<f32, 3>, f32)>,
 ) -> Option<Edge> {
-    let &next_value = values.get(&next_index)?;
+    let &(_, next_value) = values.get(&next_index)?;
 
     Some(Edge {
         a: Value { index, value },
