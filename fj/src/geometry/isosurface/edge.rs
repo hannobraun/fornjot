@@ -31,6 +31,10 @@ impl Edge {
         }
     }
 
+    pub fn length(&self) -> f32 {
+        (self.b.point - self.a.point).magnitude()
+    }
+
     pub fn direction(&self) -> Direction {
         let a = self.a.point;
         let b = self.b.point;
