@@ -15,6 +15,21 @@ impl Aabb<2> {
     }
 }
 
+impl Aabb<3> {
+    pub fn vertices(&self) -> [Point<f32, 3>; 8] {
+        [
+            [self.min.x, self.min.y, self.min.z].into(),
+            [self.min.x, self.min.y, self.max.z].into(),
+            [self.min.x, self.max.y, self.min.z].into(),
+            [self.min.x, self.max.y, self.max.z].into(),
+            [self.max.x, self.min.y, self.min.z].into(),
+            [self.max.x, self.min.y, self.max.z].into(),
+            [self.max.x, self.max.y, self.min.z].into(),
+            [self.max.x, self.max.y, self.max.z].into(),
+        ]
+    }
+}
+
 impl<const D: usize> Aabb<D> {
     pub fn center(&self) -> Point<f32, D> {
         self.min + (self.max - self.min) / 2.0
