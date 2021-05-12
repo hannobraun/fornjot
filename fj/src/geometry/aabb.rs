@@ -6,6 +6,26 @@ pub struct Aabb<const D: usize> {
     pub max: Point<f32, D>,
 }
 
+impl<const D: usize> Aabb<D> {
+    pub fn from_min_and_size(
+        min: Point<f32, D>,
+        size: SVector<f32, D>,
+    ) -> Self {
+        Self {
+            min,
+            max: min + size,
+        }
+    }
+
+    pub fn size(&self) -> SVector<f32, D> {
+        self.max - self.min
+    }
+
+    pub fn center(&self) -> Point<f32, D> {
+        self.min + self.size() / 2.0
+    }
+}
+
 impl Aabb<2> {
     pub fn extend(self, min: f32, max: f32) -> Aabb<3> {
         Aabb {
@@ -51,26 +71,6 @@ impl Aabb<3> {
             Self::from_min_and_size(self.min + g, size),
             Self::from_min_and_size(self.min + h, size),
         ]
-    }
-}
-
-impl<const D: usize> Aabb<D> {
-    pub fn from_min_and_size(
-        min: Point<f32, D>,
-        size: SVector<f32, D>,
-    ) -> Self {
-        Self {
-            min,
-            max: min + size,
-        }
-    }
-
-    pub fn size(&self) -> SVector<f32, D> {
-        self.max - self.min
-    }
-
-    pub fn center(&self) -> Point<f32, D> {
-        self.min + self.size() / 2.0
     }
 }
 
