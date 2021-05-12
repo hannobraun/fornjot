@@ -90,4 +90,26 @@ mod tests {
 
         assert_eq!(aabb.center(), [2.0, 3.0].into());
     }
+
+    #[test]
+    fn vertices_should_return_vertices() {
+        let aabb = Aabb {
+            min: [0.0, 0.0, 0.0].into(),
+            max: [1.0, 1.0, 1.0].into(),
+        };
+
+        assert_eq!(
+            aabb.vertices(),
+            [
+                [0.0, 0.0, 0.0].into(),
+                [0.0, 0.0, 1.0].into(),
+                [0.0, 1.0, 0.0].into(),
+                [0.0, 1.0, 1.0].into(),
+                [1.0, 0.0, 0.0].into(),
+                [1.0, 0.0, 1.0].into(),
+                [1.0, 1.0, 0.0].into(),
+                [1.0, 1.0, 1.0].into(),
+            ]
+        )
+    }
 }
