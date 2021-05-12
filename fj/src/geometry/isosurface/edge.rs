@@ -32,14 +32,11 @@ impl Edge {
     }
 
     pub fn direction(&self) -> Direction {
-        let a = self.a.index;
-        let b = self.b.index;
+        let a = self.a.point;
+        let b = self.b.point;
 
-        let direction = [
-            b.x() as i32 - a.x() as i32,
-            b.y() as i32 - a.y() as i32,
-            b.z() as i32 - a.z() as i32,
-        ];
+        let direction =
+            [signum(b.x - a.x), signum(b.y - a.y), signum(b.z - a.z)];
 
         #[rustfmt::skip]
         let (axis, sign) = match direction {
@@ -65,6 +62,14 @@ impl Edge {
         let max = f32::max(self.a.value, self.b.value);
 
         min <= 0.0 && max > 0.0
+    }
+}
+
+fn signum(v: f32) -> i32 {
+    if v == 0.0 {
+        0
+    } else {
+        v.signum() as i32
     }
 }
 
