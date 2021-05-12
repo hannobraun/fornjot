@@ -11,6 +11,9 @@ impl<const D: usize> Aabb<D> {
         min: Point<f32, D>,
         size: SVector<f32, D>,
     ) -> Self {
+        assert!(size[0] >= 0.0 && size[1] >= 0.0 && size[2] >= 0.0);
+        assert!(size.magnitude_squared() > 0.0);
+
         Self {
             min,
             max: min + size,
