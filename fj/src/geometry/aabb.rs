@@ -56,10 +56,10 @@ impl Aabb<3> {
         let size = self.size() / 2.0;
 
         let a: SVector<f32, 3> = [0.0, 0.0, 0.0].into();
-        let b: SVector<f32, 3> = [size.x, 0.0, 0.0].into();
+        let b: SVector<f32, 3> = [0.0, 0.0, size.z].into();
         let c: SVector<f32, 3> = [0.0, size.y, 0.0].into();
-        let d: SVector<f32, 3> = [0.0, 0.0, size.z].into();
-        let e: SVector<f32, 3> = [0.0, size.y, size.z].into();
+        let d: SVector<f32, 3> = [0.0, size.y, size.z].into();
+        let e: SVector<f32, 3> = [size.x, 0.0, 0.0].into();
         let f: SVector<f32, 3> = [size.x, 0.0, size.z].into();
         let g: SVector<f32, 3> = [size.x, size.y, 0.0].into();
         let h: SVector<f32, 3> = [size.x, size.y, size.z].into();
