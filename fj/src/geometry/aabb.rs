@@ -46,7 +46,7 @@ impl<const D: usize> Aabb<D> {
     }
 
     pub fn center(&self) -> Point<f32, D> {
-        self.min + (self.max - self.min) / 2.0
+        self.min + self.size() / 2.0
     }
 }
 
