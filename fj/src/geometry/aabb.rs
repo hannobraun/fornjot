@@ -55,14 +55,15 @@ impl Aabb<3> {
     pub fn partition(&self) -> [Self; 8] {
         let size = self.size() / 2.0;
 
+        #[rustfmt::skip]
         let [a, b, c, d, e, f, g, h]: [SVector<f32, 3>; 8] = [
-            [0.0, 0.0, 0.0].into(),
-            [0.0, 0.0, size.z].into(),
-            [0.0, size.y, 0.0].into(),
-            [0.0, size.y, size.z].into(),
-            [size.x, 0.0, 0.0].into(),
-            [size.x, 0.0, size.z].into(),
-            [size.x, size.y, 0.0].into(),
+            [   0.0,    0.0,    0.0].into(),
+            [   0.0,    0.0, size.z].into(),
+            [   0.0, size.y,    0.0].into(),
+            [   0.0, size.y, size.z].into(),
+            [size.x,    0.0,    0.0].into(),
+            [size.x,    0.0, size.z].into(),
+            [size.x, size.y,    0.0].into(),
             [size.x, size.y, size.z].into(),
         ];
 
