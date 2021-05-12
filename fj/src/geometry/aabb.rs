@@ -41,6 +41,10 @@ impl<const D: usize> Aabb<D> {
         }
     }
 
+    pub fn size(&self) -> SVector<f32, D> {
+        self.max - self.min
+    }
+
     pub fn center(&self) -> Point<f32, D> {
         self.min + (self.max - self.min) / 2.0
     }
