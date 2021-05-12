@@ -28,6 +28,30 @@ impl Aabb<3> {
             [self.max.x, self.max.y, self.max.z].into(),
         ]
     }
+
+    pub fn partition(&self) -> [Self; 8] {
+        let size = self.size() / 2.0;
+
+        let a: SVector<f32, 3> = [0.0, 0.0, 0.0].into();
+        let b: SVector<f32, 3> = [size.x, 0.0, 0.0].into();
+        let c: SVector<f32, 3> = [0.0, size.y, 0.0].into();
+        let d: SVector<f32, 3> = [0.0, 0.0, size.z].into();
+        let e: SVector<f32, 3> = [0.0, size.y, size.z].into();
+        let f: SVector<f32, 3> = [size.x, 0.0, size.z].into();
+        let g: SVector<f32, 3> = [size.x, size.y, 0.0].into();
+        let h: SVector<f32, 3> = [size.x, size.y, size.z].into();
+
+        [
+            Self::from_min_and_size(self.min + a, size),
+            Self::from_min_and_size(self.min + b, size),
+            Self::from_min_and_size(self.min + c, size),
+            Self::from_min_and_size(self.min + d, size),
+            Self::from_min_and_size(self.min + e, size),
+            Self::from_min_and_size(self.min + f, size),
+            Self::from_min_and_size(self.min + g, size),
+            Self::from_min_and_size(self.min + h, size),
+        ]
+    }
 }
 
 impl<const D: usize> Aabb<D> {
