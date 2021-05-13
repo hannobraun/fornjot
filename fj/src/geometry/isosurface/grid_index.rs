@@ -1,6 +1,6 @@
 use nalgebra::Point;
 
-#[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct GridIndex([usize; 3]);
 
 impl GridIndex {
