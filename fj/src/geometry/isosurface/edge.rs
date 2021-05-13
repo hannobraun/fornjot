@@ -33,7 +33,13 @@ impl Edge {
     }
 
     pub fn length(&self) -> f32 {
-        (self.b.point - self.a.point).magnitude()
+        let a = self.a.point;
+        let b = self.b.point;
+
+        let a: Point<f32, 3> = [a.x.into(), a.y.into(), a.z.into()].into();
+        let b: Point<f32, 3> = [b.x.into(), b.y.into(), b.z.into()].into();
+
+        (b - a).magnitude()
     }
 
     pub fn direction(&self) -> Direction {
@@ -70,7 +76,9 @@ impl Edge {
     }
 }
 
-fn signum(v: f32) -> i32 {
+fn signum(v: impl Into<f32>) -> i32 {
+    let v = v.into();
+
     if v == 0.0 {
         0
     } else {
@@ -81,7 +89,7 @@ fn signum(v: f32) -> i32 {
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Value {
     pub index: GridIndex,
-    pub point: Point<f32, 3>,
+    pub point: Point<R32, 3>,
     pub value: R32,
 }
 
@@ -113,12 +121,12 @@ mod tests {
         let inside_surface = Edge {
             a: Value {
                 index: [0, 0, 0].into(),
-                point: [0.0, 0.0, 0.0].into(),
+                point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
                 value: (-0.2).into(),
             },
             b: Value {
                 index: [0, 0, 0].into(),
-                point: [0.0, 0.0, 0.0].into(),
+                point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
                 value: (-0.1).into(),
             },
         };
@@ -128,12 +136,12 @@ mod tests {
         let outside_surface = Edge {
             a: Value {
                 index: [0, 0, 0].into(),
-                point: [0.0, 0.0, 0.0].into(),
+                point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
                 value: 0.1.into(),
             },
             b: Value {
                 index: [0, 0, 0].into(),
-                point: [0.0, 0.0, 0.0].into(),
+                point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
                 value: 0.2.into(),
             },
         };
@@ -143,12 +151,12 @@ mod tests {
         let through_surface = Edge {
             a: Value {
                 index: [0, 0, 0].into(),
-                point: [0.0, 0.0, 0.0].into(),
+                point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
                 value: (-0.1).into(),
             },
             b: Value {
                 index: [0, 0, 0].into(),
-                point: [0.0, 0.0, 0.0].into(),
+                point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
                 value: 0.1.into(),
             },
         };
@@ -158,12 +166,12 @@ mod tests {
         let inside_to_surface = Edge {
             a: Value {
                 index: [0, 0, 0].into(),
-                point: [0.0, 0.0, 0.0].into(),
+                point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
                 value: (-0.1).into(),
             },
             b: Value {
                 index: [0, 0, 0].into(),
-                point: [0.0, 0.0, 0.0].into(),
+                point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
                 value: 0.0.into(),
             },
         };
@@ -173,12 +181,12 @@ mod tests {
         let outside_to_surface = Edge {
             a: Value {
                 index: [0, 0, 0].into(),
-                point: [0.0, 0.0, 0.0].into(),
+                point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
                 value: 0.0.into(),
             },
             b: Value {
                 index: [0, 0, 0].into(),
-                point: [0.0, 0.0, 0.0].into(),
+                point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
                 value: 0.1.into(),
             },
         };

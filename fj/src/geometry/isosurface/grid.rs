@@ -130,12 +130,17 @@ fn edge_to_next(
     Some(Edge {
         a: Value {
             index,
-            point,
+            point: [point.x.into(), point.y.into(), point.z.into()].into(),
             value: value.into(),
         },
         b: Value {
             index: next_index,
-            point: next_point,
+            point: [
+                next_point.x.into(),
+                next_point.y.into(),
+                next_point.z.into(),
+            ]
+            .into(),
             value: next_value.into(),
         },
     })
@@ -323,36 +328,36 @@ mod tests {
                 x: Edge {
                     a: Value {
                         index: [1, 1, 1].into(),
-                        point: [1.0, 1.0, 1.0].into(),
+                        point: [1.0.into(), 1.0.into(), 1.0.into()].into(),
                         value: 1.0.into(),
                     },
                     b: Value {
                         index: [2, 1, 1].into(),
-                        point: [2.0, 1.0, 1.0].into(),
+                        point: [2.0.into(), 1.0.into(), 1.0.into()].into(),
                         value: 0.0.into(),
                     },
                 },
                 y: Edge {
                     a: Value {
                         index: [1, 1, 1].into(),
-                        point: [1.0, 1.0, 1.0].into(),
+                        point: [1.0.into(), 1.0.into(), 1.0.into()].into(),
                         value: 1.0.into(),
                     },
                     b: Value {
                         index: [1, 2, 1].into(),
-                        point: [1.0, 2.0, 1.0].into(),
+                        point: [1.0.into(), 2.0.into(), 1.0.into()].into(),
                         value: 0.0.into(),
                     },
                 },
                 z: Edge {
                     a: Value {
                         index: [1, 1, 1].into(),
-                        point: [1.0, 1.0, 1.0].into(),
+                        point: [1.0.into(), 1.0.into(), 1.0.into()].into(),
                         value: 1.0.into(),
                     },
                     b: Value {
                         index: [1, 1, 2].into(),
-                        point: [1.0, 1.0, 2.0].into(),
+                        point: [1.0.into(), 1.0.into(), 2.0.into()].into(),
                         value: 0.0.into(),
                     },
                 },
