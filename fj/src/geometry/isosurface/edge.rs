@@ -3,7 +3,7 @@ use nalgebra::Point;
 
 use super::GridIndex;
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub struct Edge {
     pub a: Value,
     pub b: Value,
@@ -86,7 +86,7 @@ fn signum(v: impl Into<f32>) -> i32 {
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub struct Value {
     pub index: GridIndex,
     pub point: Point<R32, 3>,
