@@ -1,3 +1,4 @@
+use decorum::R32;
 use nalgebra::Point;
 
 use super::GridIndex;
@@ -62,8 +63,8 @@ impl Edge {
     }
 
     pub fn at_surface(&self) -> bool {
-        let min = f32::min(self.a.value, self.b.value);
-        let max = f32::max(self.a.value, self.b.value);
+        let min = f32::min(self.a.value.into(), self.b.value.into());
+        let max = f32::max(self.a.value.into(), self.b.value.into());
 
         min <= 0.0 && max > 0.0
     }
@@ -81,7 +82,7 @@ fn signum(v: f32) -> i32 {
 pub struct Value {
     pub index: GridIndex,
     pub point: Point<f32, 3>,
-    pub value: f32,
+    pub value: R32,
 }
 
 #[derive(Debug)]
@@ -113,12 +114,12 @@ mod tests {
             a: Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
-                value: -0.2,
+                value: (-0.2).into(),
             },
             b: Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
-                value: -0.1,
+                value: (-0.1).into(),
             },
         };
         assert_eq!(inside_surface.at_surface(), false);
@@ -128,12 +129,12 @@ mod tests {
             a: Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
-                value: 0.1,
+                value: 0.1.into(),
             },
             b: Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
-                value: 0.2,
+                value: 0.2.into(),
             },
         };
         assert_eq!(outside_surface.at_surface(), false);
@@ -143,12 +144,12 @@ mod tests {
             a: Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
-                value: -0.1,
+                value: (-0.1).into(),
             },
             b: Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
-                value: 0.1,
+                value: 0.1.into(),
             },
         };
         assert_eq!(through_surface.at_surface(), true);
@@ -158,12 +159,12 @@ mod tests {
             a: Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
-                value: -0.1,
+                value: (-0.1).into(),
             },
             b: Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
-                value: 0.0,
+                value: 0.0.into(),
             },
         };
         assert_eq!(inside_to_surface.at_surface(), false);
@@ -173,12 +174,12 @@ mod tests {
             a: Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
-                value: 0.0,
+                value: 0.0.into(),
             },
             b: Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
-                value: 0.1,
+                value: 0.1.into(),
             },
         };
         assert_eq!(outside_to_surface.at_surface(), true);

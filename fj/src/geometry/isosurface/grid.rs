@@ -131,12 +131,12 @@ fn edge_to_next(
         a: Value {
             index,
             point,
-            value,
+            value: value.into(),
         },
         b: Value {
             index: next_index,
             point: next_point,
-            value: next_value,
+            value: next_value.into(),
         },
     })
 }
@@ -324,36 +324,36 @@ mod tests {
                     a: Value {
                         index: [1, 1, 1].into(),
                         point: [1.0, 1.0, 1.0].into(),
-                        value: 1.0,
+                        value: 1.0.into(),
                     },
                     b: Value {
                         index: [2, 1, 1].into(),
                         point: [2.0, 1.0, 1.0].into(),
-                        value: 0.0,
+                        value: 0.0.into(),
                     },
                 },
                 y: Edge {
                     a: Value {
                         index: [1, 1, 1].into(),
                         point: [1.0, 1.0, 1.0].into(),
-                        value: 1.0,
+                        value: 1.0.into(),
                     },
                     b: Value {
                         index: [1, 2, 1].into(),
                         point: [1.0, 2.0, 1.0].into(),
-                        value: 0.0,
+                        value: 0.0.into(),
                     },
                 },
                 z: Edge {
                     a: Value {
                         index: [1, 1, 1].into(),
                         point: [1.0, 1.0, 1.0].into(),
-                        value: 1.0,
+                        value: 1.0.into(),
                     },
                     b: Value {
                         index: [1, 1, 2].into(),
                         point: [1.0, 1.0, 2.0].into(),
-                        value: 0.0,
+                        value: 0.0.into(),
                     },
                 },
             }
