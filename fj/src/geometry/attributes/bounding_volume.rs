@@ -8,8 +8,8 @@ pub trait BoundingVolume<const D: usize> {
 impl BoundingVolume<2> for shapes::Circle {
     fn aabb(&self) -> Aabb<2> {
         Aabb {
-            min: [-self.radius, -self.radius].into(),
-            max: [self.radius, self.radius].into(),
+            min: [-self.radius; 2].into(),
+            max: [self.radius; 2].into(),
         }
     }
 }
