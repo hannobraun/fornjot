@@ -15,6 +15,14 @@ impl Distance<2> for shapes::Circle {
     }
 }
 
+impl Distance<3> for shapes::Sphere {
+    fn distance(&self, point: impl Into<Point<f32, 3>>) -> f32 {
+        let point = point.into();
+
+        point.coords.magnitude() - self.radius
+    }
+}
+
 impl<A, B, const D: usize> Distance<D> for operations::Difference<A, B>
 where
     A: Distance<D>,
