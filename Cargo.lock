@@ -440,6 +440,7 @@ dependencies = [
  "indexmap",
  "itertools",
  "nalgebra",
+ "num-traits",
  "parry2d",
  "parry3d",
  "rand",
