@@ -5,11 +5,11 @@ pub trait BoundingVolume<const D: usize> {
     fn aabb(&self) -> Aabb<D>;
 }
 
-impl BoundingVolume<2> for shapes::Circle {
-    fn aabb(&self) -> Aabb<2> {
+impl<const D: usize> BoundingVolume<D> for shapes::Hypersphere<D> {
+    fn aabb(&self) -> Aabb<D> {
         Aabb {
-            min: [-self.radius; 2].into(),
-            max: [self.radius; 2].into(),
+            min: [-self.radius; D].into(),
+            max: [self.radius; D].into(),
         }
     }
 }
