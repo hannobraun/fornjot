@@ -23,6 +23,14 @@ impl Distance<3> for shapes::Sphere {
     }
 }
 
+impl<const D: usize> Distance<D> for shapes::Hypersphere<D> {
+    fn distance(&self, point: impl Into<Point<f32, D>>) -> f32 {
+        let point = point.into();
+
+        point.coords.magnitude() - self.radius
+    }
+}
+
 impl<A, B, const D: usize> Distance<D> for operations::Difference<A, B>
 where
     A: Distance<D>,
