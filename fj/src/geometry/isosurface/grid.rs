@@ -12,7 +12,7 @@ use super::{
 #[derive(Debug)]
 pub struct Grid {
     descriptor: GridDescriptor,
-    values: Vec<Edge>,
+    edges: Vec<Edge>,
 }
 
 impl Grid {
@@ -52,15 +52,12 @@ impl Grid {
             .filter_map(|edge| edge)
             .collect();
 
-        Self {
-            descriptor,
-            values: edges,
-        }
+        Self { descriptor, edges }
     }
 
     /// Returns iterator over all grid edges
     pub fn edges(&self) -> impl Iterator<Item = Edge> + '_ {
-        self.values.iter().copied()
+        self.edges.iter().copied()
     }
 
     /// Returns the 4 neighboring cube centers of a grid edge
