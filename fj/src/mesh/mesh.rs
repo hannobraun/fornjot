@@ -100,7 +100,7 @@ impl Mesh {
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
 pub struct Vertex {
-    pub position: [R32; 3],
+    pub position: Point<R32, 3>,
     pub normal: Vector3<R32>,
 }
 
