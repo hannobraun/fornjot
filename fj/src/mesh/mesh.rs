@@ -106,7 +106,6 @@ pub struct Vertex {
 
 #[cfg(test)]
 mod tests {
-    use decorum::R32;
     use nalgebra::Point3;
 
     use super::{Mesh, Vertex};
@@ -134,15 +133,15 @@ mod tests {
             indexed_vertices,
             vec![
                 Vertex {
-                    position: Point3::from(v0).map(|f| R32::from_inner(f)),
+                    position: Point3::from(v0).map(|f| f.into()),
                     normal,
                 },
                 Vertex {
-                    position: Point3::from(v1).map(|f| R32::from_inner(f)),
+                    position: Point3::from(v1).map(|f| f.into()),
                     normal,
                 },
                 Vertex {
-                    position: Point3::from(v2).map(|f| R32::from_inner(f)),
+                    position: Point3::from(v2).map(|f| f.into()),
                     normal,
                 },
             ]
