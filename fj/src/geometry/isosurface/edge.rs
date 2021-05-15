@@ -7,7 +7,7 @@ use crate::geometry::util::DebugPoint;
 
 use super::GridIndex;
 
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Copy, Eq, Hash, PartialEq)]
 pub struct Edge {
     pub a: Value,
     pub b: Value,
@@ -77,6 +77,12 @@ impl Edge {
         let max = f32::max(self.a.value.into(), self.b.value.into());
 
         min <= 0.0 && max > 0.0
+    }
+}
+
+impl fmt::Debug for Edge {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?} => {:?}", self.a, self.b)
     }
 }
 
