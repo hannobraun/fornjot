@@ -85,7 +85,7 @@ impl GridDescriptor {
 
             if edge.at_surface() {
                 if edges.insert(edge) {
-                    trace!("insert {:?}", edge);
+                    trace!(?edge, "insert");
                 }
                 continue;
             }
