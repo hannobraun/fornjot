@@ -1,10 +1,13 @@
 use std::fmt;
 
-use nalgebra::Point;
+use nalgebra::{Point, Scalar};
 
-pub struct DebugPoint<const D: usize>(pub Point<f32, D>);
+pub struct DebugPoint<T, const D: usize>(pub Point<T, D>);
 
-impl<const D: usize> fmt::Debug for DebugPoint<D> {
+impl<T, const D: usize> fmt::Debug for DebugPoint<T, D>
+where
+    T: Scalar + fmt::Display,
+{
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "(")?;
 
