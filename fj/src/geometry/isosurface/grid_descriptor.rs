@@ -57,15 +57,13 @@ impl GridDescriptor {
         edges
     }
 
-    #[instrument(skip(self, isosurface))]
+    #[instrument(skip(self, isosurface, edges))]
     fn edges_inner(
         &self,
         isosurface: &impl Distance<3>,
         aabb: Aabb<3>,
         edges: &mut HashSet<Edge>,
     ) {
-        trace!("enter");
-
         let mut must_partition = false;
 
         for &[a, b] in &aabb.edges() {
@@ -86,7 +84,9 @@ impl GridDescriptor {
             let edge_length = edge.length();
 
             if edge.at_surface() {
-                edges.insert(edge);
+                if edges.insert(edge) {
+                    trace!("insert {:?}", edge);
+                }
                 continue;
             }
             if edge.a.value.abs() > edge_length
