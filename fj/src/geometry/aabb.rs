@@ -1,6 +1,10 @@
+use std::fmt;
+
 use nalgebra::{Point, SVector};
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+use crate::geometry::util::DebugPoint;
+
+#[derive(Clone, Copy, PartialEq)]
 pub struct Aabb<const D: usize> {
     pub min: Point<f32, D>,
     pub max: Point<f32, D>,
@@ -96,6 +100,17 @@ impl Aabb<3> {
             Self::from_min_and_size(self.min + g, size),
             Self::from_min_and_size(self.min + h, size),
         ]
+    }
+}
+
+impl<const D: usize> fmt::Debug for Aabb<D> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "AABB: {:?} => {:?}",
+            DebugPoint(self.min),
+            DebugPoint(self.max)
+        )
     }
 }
 
