@@ -1,5 +1,9 @@
+use std::fmt;
+
 use decorum::R32;
 use nalgebra::Point;
+
+use crate::geometry::util::DebugPoint;
 
 use super::GridIndex;
 
@@ -86,11 +90,17 @@ fn signum(v: impl Into<f32>) -> i32 {
     }
 }
 
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Copy, Eq, Hash, PartialEq)]
 pub struct Value {
     pub index: GridIndex,
     pub point: Point<R32, 3>,
     pub value: R32,
+}
+
+impl fmt::Debug for Value {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?} ({:.2})", DebugPoint(self.point), self.value)
+    }
 }
 
 #[derive(Debug)]
