@@ -83,7 +83,7 @@ impl GridDescriptor {
 
             let edge_length = edge.length();
 
-            if edge.at_surface() {
+            if edge.at_surface(self.resolution) {
                 if edges.insert(edge) {
                     trace!(?edge, "insert");
                 }
