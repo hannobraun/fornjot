@@ -107,7 +107,7 @@ impl<const D: usize> fmt::Debug for Aabb<D> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
-            "AABB: {:?} => {:?}",
+            "{:?} => {:?}",
             DebugPoint(self.min),
             DebugPoint(self.max)
         )
