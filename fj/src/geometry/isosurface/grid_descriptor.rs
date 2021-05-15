@@ -57,13 +57,14 @@ impl GridDescriptor {
         edges
     }
 
+    #[instrument(skip(self, isosurface))]
     fn edges_inner(
         &self,
         isosurface: &impl Distance<3>,
         aabb: Aabb<3>,
         edges: &mut HashSet<Edge>,
     ) {
-        trace!("edges_inner: `aabb` = {:?}, `edges = {:?}`", aabb, edges);
+        trace!("enter");
 
         let mut must_partition = false;
 
