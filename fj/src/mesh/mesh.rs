@@ -36,15 +36,15 @@ impl Mesh {
         let normal = normal.map(|v| R32::from_inner(v));
 
         let v0 = Vertex {
-            position: v0.map(|c| c.into()).into(),
+            position: v0.map(|c| c.into()),
             normal,
         };
         let v1 = Vertex {
-            position: v1.map(|c| c.into()).into(),
+            position: v1.map(|c| c.into()),
             normal,
         };
         let v2 = Vertex {
-            position: v2.map(|c| c.into()).into(),
+            position: v2.map(|c| c.into()),
             normal,
         };
 
@@ -134,21 +134,15 @@ mod tests {
             indexed_vertices,
             vec![
                 Vertex {
-                    position: Point3::from(v0)
-                        .map(|f| R32::from_inner(f))
-                        .into(),
+                    position: Point3::from(v0).map(|f| R32::from_inner(f)),
                     normal,
                 },
                 Vertex {
-                    position: Point3::from(v1)
-                        .map(|f| R32::from_inner(f))
-                        .into(),
+                    position: Point3::from(v1).map(|f| R32::from_inner(f)),
                     normal,
                 },
                 Vertex {
-                    position: Point3::from(v2)
-                        .map(|f| R32::from_inner(f))
-                        .into(),
+                    position: Point3::from(v2).map(|f| R32::from_inner(f)),
                     normal,
                 },
             ]
