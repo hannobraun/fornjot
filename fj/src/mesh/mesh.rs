@@ -63,28 +63,6 @@ impl Mesh {
         self.triangles.iter().flatten().copied()
     }
 
-    pub fn triangles(&self) -> impl Iterator<Item = [Vertex; 3]> + '_ {
-        self.triangles.iter().map(move |&[i0, i1, i2]| {
-            [
-                self.vertices[i0 as usize],
-                self.vertices[i1 as usize],
-                self.vertices[i2 as usize],
-            ]
-        })
-    }
-
-    pub fn invert_triangles(&mut self) {
-        for [_, b, c] in &mut self.triangles {
-            let tmp = *b;
-            *b = *c;
-            *c = tmp;
-        }
-
-        for vertex in &mut self.vertices {
-            vertex.normal = -vertex.normal;
-        }
-    }
-
     fn index_for_vertex(&mut self, vertex: Vertex) -> graphics::Index {
         let vertices = &mut self.vertices;
 
