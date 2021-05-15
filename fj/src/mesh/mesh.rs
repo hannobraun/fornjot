@@ -135,21 +135,18 @@ mod tests {
             vec![
                 Vertex {
                     position: Point3::from(v0)
-                        .coords
                         .map(|f| R32::from_inner(f))
                         .into(),
                     normal,
                 },
                 Vertex {
                     position: Point3::from(v1)
-                        .coords
                         .map(|f| R32::from_inner(f))
                         .into(),
                     normal,
                 },
                 Vertex {
                     position: Point3::from(v2)
-                        .coords
                         .map(|f| R32::from_inner(f))
                         .into(),
                     normal,
