@@ -3,7 +3,7 @@ use std::{collections::HashSet, ops::Range};
 use itertools::Itertools as _;
 use nalgebra::Point;
 use num_traits::real::Real as _;
-use tracing::{instrument, trace};
+use tracing::trace;
 
 use crate::geometry::{aabb::Aabb, attributes::Distance, isosurface::Value};
 
@@ -56,14 +56,13 @@ impl GridDescriptor {
         edges
     }
 
-    #[instrument(skip(isosurface))]
     fn edges_inner(
         &self,
         isosurface: &impl Distance<3>,
         aabb: Aabb<3>,
         edges: &mut HashSet<Edge>,
     ) {
-        trace!("Enter");
+        trace!("edges_inner: `aabb` = {:?}, `edges = {:?}`", aabb, edges);
 
         let mut must_partition = false;
 
