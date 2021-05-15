@@ -129,12 +129,7 @@ mod tests {
             indexed_vertices.push(vertices[i as usize]);
         }
 
-        let normal = [
-            R32::from_inner(0.0),
-            R32::from_inner(0.0),
-            R32::from_inner(1.0),
-        ]
-        .into();
+        let normal = [0.0.into(), 0.0.into(), 1.0.into()].into();
         assert_eq!(
             indexed_vertices,
             vec![
