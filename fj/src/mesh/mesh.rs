@@ -36,15 +36,15 @@ impl Mesh {
         let normal = normal.map(|v| R32::from_inner(v));
 
         let v0 = Vertex {
-            position: v0.map(|c| c.into()),
+            position: v0.map(|coord| coord.into()),
             normal,
         };
         let v1 = Vertex {
-            position: v1.map(|c| c.into()),
+            position: v1.map(|coord| coord.into()),
             normal,
         };
         let v2 = Vertex {
-            position: v2.map(|c| c.into()),
+            position: v2.map(|coord| coord.into()),
             normal,
         };
 
