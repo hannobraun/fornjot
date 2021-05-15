@@ -24,6 +24,7 @@ where
             EnvFilter::from_default_env()
                 .add_directive("fj=debug".parse().unwrap()),
         )
+        .pretty()
         .init();
 
     info!("Converting geometry to triangle mesh...");
