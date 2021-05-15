@@ -33,7 +33,7 @@ impl Mesh {
         let v2 = v2.into();
 
         let normal = (v1 - v0).cross(&(v2 - v0)).normalize();
-        let normal = normal.map(|coord| R32::from_inner(coord));
+        let normal = normal.map(|coord| coord.into());
 
         let v0 = Vertex {
             position: v0.map(|coord| coord.into()),
