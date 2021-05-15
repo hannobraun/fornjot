@@ -133,15 +133,15 @@ mod tests {
             indexed_vertices,
             vec![
                 Vertex {
-                    position: Point3::from(v0).map(|f| f.into()),
+                    position: Point3::from(v0).map(|coord| coord.into()),
                     normal,
                 },
                 Vertex {
-                    position: Point3::from(v1).map(|f| f.into()),
+                    position: Point3::from(v1).map(|coord| coord.into()),
                     normal,
                 },
                 Vertex {
-                    position: Point3::from(v2).map(|f| f.into()),
+                    position: Point3::from(v2).map(|coord| coord.into()),
                     normal,
                 },
             ]
