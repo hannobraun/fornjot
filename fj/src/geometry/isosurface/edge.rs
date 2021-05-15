@@ -76,7 +76,7 @@ impl Edge {
         let min = f32::min(self.a.value.into(), self.b.value.into());
         let max = f32::max(self.a.value.into(), self.b.value.into());
 
-        min <= 0.0 && max > 0.0 && max - min <= resolution
+        min <= 0.0 && max > 0.0 && self.length() <= resolution
     }
 }
 
@@ -144,7 +144,7 @@ mod tests {
             },
             b: Value {
                 index: [0, 0, 0].into(),
-                point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
+                point: [0.1.into(), 0.0.into(), 0.0.into()].into(),
                 value: (-0.1).into(),
             },
         };
@@ -158,7 +158,7 @@ mod tests {
                 value: 0.1.into(),
             },
             b: Value {
-                index: [0, 0, 0].into(),
+                index: [0, 1, 0].into(),
                 point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
                 value: 0.2.into(),
             },
@@ -174,7 +174,7 @@ mod tests {
             },
             b: Value {
                 index: [0, 0, 0].into(),
-                point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
+                point: [0.2.into(), 0.0.into(), 0.0.into()].into(),
                 value: 0.1.into(),
             },
         };
@@ -189,7 +189,7 @@ mod tests {
             },
             b: Value {
                 index: [0, 0, 0].into(),
-                point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
+                point: [0.1.into(), 0.0.into(), 0.0.into()].into(),
                 value: 0.0.into(),
             },
         };
@@ -204,7 +204,7 @@ mod tests {
             },
             b: Value {
                 index: [0, 0, 0].into(),
-                point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
+                point: [0.1.into(), 0.0.into(), 0.0.into()].into(),
                 value: 0.1.into(),
             },
         };
@@ -214,7 +214,7 @@ mod tests {
 
     #[test]
     fn at_surface_should_take_resolution_into_account() {
-        let edge = Edge {
+        let good_edge = Edge {
             a: Value {
                 index: [0, 0, 0].into(),
                 point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
@@ -222,11 +222,24 @@ mod tests {
             },
             b: Value {
                 index: [0, 0, 0].into(),
-                point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
+                point: [0.2.into(), 0.0.into(), 0.0.into()].into(),
                 value: 0.1.into(),
             },
         };
-        assert_eq!(edge.at_surface(0.2), true);
-        assert_eq!(edge.at_surface(0.1), false);
+        let bad_edge = Edge {
+            a: Value {
+                index: [0, 0, 0].into(),
+                point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
+                value: (-0.1).into(),
+            },
+            b: Value {
+                index: [0, 0, 0].into(),
+                point: [2.0.into(), 0.0.into(), 0.0.into()].into(),
+                value: 0.1.into(),
+            },
+        };
+
+        assert_eq!(good_edge.at_surface(0.2), true);
+        assert_eq!(bad_edge.at_surface(0.2), false);
     }
 }
