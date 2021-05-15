@@ -107,7 +107,7 @@ pub struct Vertex {
 #[cfg(test)]
 mod tests {
     use decorum::R32;
-    use nalgebra::{Point3, Vector3};
+    use nalgebra::Point3;
 
     use super::{Mesh, Vertex};
 
@@ -129,11 +129,12 @@ mod tests {
             indexed_vertices.push(vertices[i as usize]);
         }
 
-        let normal = Vector3::new(
+        let normal = [
             R32::from_inner(0.0),
             R32::from_inner(0.0),
             R32::from_inner(1.0),
-        );
+        ]
+        .into();
         assert_eq!(
             indexed_vertices,
             vec![
