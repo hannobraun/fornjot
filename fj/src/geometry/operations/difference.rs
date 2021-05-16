@@ -37,3 +37,26 @@ where
         f32::max(dist_a, -dist_b)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::geometry::{attributes::Distance, shapes::Sphere};
+
+    use super::Difference;
+
+    #[test]
+    fn distance() {
+        let difference = Difference {
+            a: Sphere::new().with_radius(1.0),
+            b: Sphere::new().with_radius(0.5),
+        };
+
+        assert_eq!(difference.distance([0.0, 0.0, 0.0]), 0.5);
+        assert_eq!(difference.distance([0.5, 0.0, 0.0]), 0.0);
+        assert_eq!(difference.distance([0.625, 0.0, 0.0]), -0.125);
+        assert_eq!(difference.distance([0.75, 0.0, 0.0]), -0.25);
+        assert_eq!(difference.distance([0.875, 0.0, 0.0]), -0.125);
+        assert_eq!(difference.distance([1.0, 0.0, 0.0]), 0.0);
+        assert_eq!(difference.distance([1.5, 0.0, 0.0]), 0.5);
+    }
+}
