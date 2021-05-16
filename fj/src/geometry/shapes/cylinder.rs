@@ -35,6 +35,5 @@ mod tests {
         assert_eq!(cylinder.distance([0.0, 1.0, 0.0]), 0.5);
         assert_eq!(cylinder.distance([0.0, 0.0, 1.0]), 0.5);
         assert_eq!(cylinder.distance([0.0, 0.0, -1.0]), 0.5);
-        assert_eq!(cylinder.distance([1.0, 0.0, 2.0]), 0.5);
     }
 }

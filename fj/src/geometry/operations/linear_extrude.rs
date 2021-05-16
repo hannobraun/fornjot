@@ -1,4 +1,4 @@
-use nalgebra::Point;
+use nalgebra::{Point, Vector};
 
 use crate::geometry::{
     aabb::Aabb,
@@ -43,10 +43,8 @@ where
         let d_xy = self.sketch.distance(point.xy());
         let d_z = point.z.abs() - self.height / 2.0;
 
-        if d_xy < 0.0 || d_z < 0.0 {
-            f32::max(d_xy, d_z)
-        } else {
-            f32::min(d_xy, d_z)
-        }
+        let w = Vector::from([f32::max(d_xy, 0.0), f32::max(d_z, 0.0)]);
+
+        f32::min(f32::max(d_xy, d_z), 0.0) + w.magnitude()
     }
 }
