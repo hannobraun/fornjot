@@ -25,7 +25,7 @@ mod tests {
     use super::Cylinder;
 
     #[test]
-    fn cylinder_should_return_distance() {
+    fn distance() {
         let cylinder = Cylinder::new().with_radius(0.5).with_height(1.0);
 
         assert_eq!(cylinder.distance([0.0, 0.0, 0.0]), -0.5);
