@@ -1,6 +1,9 @@
 use nalgebra::Point;
 
-use crate::geometry::attributes::Distance;
+use crate::geometry::{
+    aabb::Aabb,
+    attributes::{BoundingVolume, Distance},
+};
 
 pub struct LinearExtrude<Sketch> {
     pub sketch: Sketch,
@@ -16,6 +19,17 @@ impl<Sketch> LinearExtrude<Sketch> {
     pub fn with_height(mut self, height: f32) -> Self {
         self.height = height;
         self
+    }
+}
+
+impl<Sketch> BoundingVolume<3> for LinearExtrude<Sketch>
+where
+    Sketch: BoundingVolume<2>,
+{
+    fn aabb(&self) -> Aabb<3> {
+        self.sketch
+            .aabb()
+            .extend(-self.height / 2.0, self.height / 2.0)
     }
 }
 

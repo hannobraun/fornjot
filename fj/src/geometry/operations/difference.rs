@@ -1,10 +1,26 @@
 use nalgebra::Point;
 
-use crate::geometry::attributes::Distance;
+use crate::geometry::{
+    aabb::Aabb,
+    attributes::{BoundingVolume, Distance},
+};
 
 pub struct Difference<A, B> {
     pub a: A,
     pub b: B,
+}
+
+impl<A, B, const D: usize> BoundingVolume<D> for Difference<A, B>
+where
+    A: BoundingVolume<D>,
+{
+    fn aabb(&self) -> Aabb<D> {
+        // Since `self.b` is subtracted from `self.a`, the bounding volume of
+        // the difference is not going to be bigger than that of `self.a`. Just
+        // taking the bounding volume from `self.a` is certainly not optimal,
+        // but good enough for now.
+        self.a.aabb()
+    }
 }
 
 impl<A, B, const D: usize> Distance<D> for Difference<A, B>

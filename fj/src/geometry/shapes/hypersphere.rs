@@ -1,6 +1,9 @@
 use nalgebra::Point;
 
-use crate::geometry::attributes::Distance;
+use crate::geometry::{
+    aabb::Aabb,
+    attributes::{BoundingVolume, Distance},
+};
 
 pub struct Hypersphere<const D: usize> {
     pub radius: f32,
@@ -14,6 +17,15 @@ impl<const D: usize> Hypersphere<D> {
     pub fn with_radius(mut self, radius: f32) -> Self {
         self.radius = radius;
         self
+    }
+}
+
+impl<const D: usize> BoundingVolume<D> for Hypersphere<D> {
+    fn aabb(&self) -> Aabb<D> {
+        Aabb {
+            min: [-self.radius; D].into(),
+            max: [self.radius; D].into(),
+        }
     }
 }
 
