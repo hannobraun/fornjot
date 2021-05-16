@@ -19,10 +19,7 @@ pub fn to_mesh(
 
     for edge in grid.edges() {
         // TASK: Remove `at_surface` check, once it becomes redundant.
-        // TASK: This check filters out some of the wrong edges. I think the
-        //       problem is floating point precision. Edges whose length should
-        //       be equal to the resolution are in fact slightly longer.
-        if edge.at_surface(resolution) {
+        if edge.at_surface(resolution * 1.05) {
             let [a, b, c, d] = grid.neighbors_of_edge(edge);
 
             mesh.triangle(a, b, d);
