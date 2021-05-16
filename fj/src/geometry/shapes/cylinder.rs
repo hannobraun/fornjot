@@ -20,7 +20,9 @@ impl Cylinder {
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::{attributes::Distance as _, shapes::Cylinder};
+    use crate::geometry::attributes::Distance as _;
+
+    use super::Cylinder;
 
     #[test]
     fn cylinder_should_return_distance() {
