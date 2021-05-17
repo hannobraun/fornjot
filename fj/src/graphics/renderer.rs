@@ -137,13 +137,13 @@ impl Renderer {
             device.create_shader_module(&wgpu::ShaderModuleDescriptor {
                 label: None,
                 source: wgpu::util::make_spirv(shaders.vertex.as_binary_u8()),
-                flags: wgpu::ShaderFlags::VALIDATION,
+                flags: wgpu::ShaderFlags::all(),
             });
         let fragment_shader =
             device.create_shader_module(&wgpu::ShaderModuleDescriptor {
                 label: None,
                 source: wgpu::util::make_spirv(shaders.fragment.as_binary_u8()),
-                flags: wgpu::ShaderFlags::VALIDATION,
+                flags: wgpu::ShaderFlags::all(),
             });
 
         let (depth_texture, depth_view) =
