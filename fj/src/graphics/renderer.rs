@@ -1,15 +1,11 @@
-use std::{convert::TryInto, io, mem::size_of};
+use std::{borrow::Cow, convert::TryInto, io, mem::size_of};
 
 use tracing::{instrument, trace};
 use wgpu::util::DeviceExt as _;
 use winit::{dpi::PhysicalSize, window::Window};
 
 use super::{
-    mesh::Mesh,
-    shaders::{self, Shaders},
-    transform::Transform,
-    uniforms::Uniforms,
-    vertices::Vertex,
+    mesh::Mesh, transform::Transform, uniforms::Uniforms, vertices::Vertex,
 };
 
 const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth32Float;
@@ -130,19 +126,12 @@ impl Renderer {
                 push_constant_ranges: &[],
             });
 
-        let shaders =
-            Shaders::compile().map_err(|err| InitError::Shaders(err))?;
-
-        let vertex_shader =
+        let shader =
             device.create_shader_module(&wgpu::ShaderModuleDescriptor {
                 label: None,
-                source: wgpu::util::make_spirv(shaders.vertex.as_binary_u8()),
-                flags: wgpu::ShaderFlags::all(),
-            });
-        let fragment_shader =
-            device.create_shader_module(&wgpu::ShaderModuleDescriptor {
-                label: None,
-                source: wgpu::util::make_spirv(shaders.fragment.as_binary_u8()),
+                source: wgpu::ShaderSource::Wgsl(Cow::Borrowed(include_str!(
+                    "shader.wgsl"
+                ))),
                 flags: wgpu::ShaderFlags::all(),
             });
 
@@ -154,8 +143,8 @@ impl Renderer {
                 label: None,
                 layout: Some(&pipeline_layout),
                 vertex: wgpu::VertexState {
-                    module: &vertex_shader,
-                    entry_point: "main",
+                    module: &shader,
+                    entry_point: "vertex",
                     buffers: &[wgpu::VertexBufferLayout {
                         array_stride: size_of::<Vertex>() as u64,
                         step_mode: wgpu::InputStepMode::Vertex,
@@ -192,8 +181,8 @@ impl Renderer {
                     alpha_to_coverage_enabled: false,
                 },
                 fragment: Some(wgpu::FragmentState {
-                    module: &fragment_shader,
-                    entry_point: "main",
+                    module: &shader,
+                    entry_point: "fragment",
                     targets: &[wgpu::ColorTargetState {
                         format: wgpu::TextureFormat::Bgra8UnormSrgb,
                         blend: None,
@@ -337,7 +326,6 @@ pub enum InitError {
     Io(io::Error),
     RequestAdapter,
     RequestDevice(wgpu::RequestDeviceError),
-    Shaders(shaders::Error),
 }
 
 impl From<io::Error> for InitError {

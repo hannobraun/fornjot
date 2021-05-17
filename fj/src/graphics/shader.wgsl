@@ -1,0 +1,43 @@
+struct VertexOutput {
+    [[location(0)]] normal: vec3<f32>;
+    [[builtin(position)]] position: vec4<f32>;
+};
+
+[[block]]
+struct Uniforms {
+    transform: mat4x4<f32>;
+    transform_normals: mat4x4<f32>;
+};
+
+[[group(0), binding(0)]]
+var uniforms: Uniforms;
+
+[[stage(vertex)]]
+fn vertex(
+    [[location(0)]] position: vec3<f32>,
+    [[location(1)]] normal: vec3<f32>,
+)
+    -> VertexOutput
+{
+    var out: VertexOutput;
+    out.normal = (uniforms.transform_normals * vec4<f32>(normal, 0.0)).xyz;
+    out.position = uniforms.transform * vec4<f32>(position, 1.0);
+
+    return out;
+}
+
+let pi: f32 = 3.14159265359;
+
+[[stage(fragment)]]
+fn fragment(in: VertexOutput) -> [[location(0)]] vec4<f32> {
+    let light = vec3<f32>(0.0, 0.0, -1.0);
+
+    let angle = acos(dot(light, -in.normal));
+    let f_angle = angle / (pi / 2.0);
+
+    let f_normal = max(1.0 - f_angle, 0.0);
+
+    let color = vec4<f32>(vec3<f32>(1.0, 0.0, 0.0) * f_normal, 1.0);
+
+    return color;
+}

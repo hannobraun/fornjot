@@ -1,6 +1,5 @@
 mod mesh;
 mod renderer;
-mod shaders;
 mod transform;
 mod uniforms;
 mod vertices;
