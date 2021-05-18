@@ -21,8 +21,6 @@ impl Grid {
         descriptor: GridDescriptor,
         isosurface: &impl Distance<3>,
     ) -> Self {
-        // TASK: Only compute distance for points which are near a surface,
-        //       using a spatial data structure.
         let values: BTreeMap<_, _> = descriptor
             .points()
             .filter_map(|(index, point)| {
