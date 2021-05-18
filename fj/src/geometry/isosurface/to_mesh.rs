@@ -18,7 +18,6 @@ pub fn to_mesh(
     let mut mesh = Mesh::new();
 
     for edge in grid.edges() {
-        // TASK: Remove `at_surface` check, once it becomes redundant.
         if edge.at_surface(resolution * 1.05) {
             let [a, b, c, d] = grid.neighbors_of_edge(edge);
 
