@@ -12,7 +12,7 @@ use super::{
 #[derive(Debug)]
 pub struct Grid {
     descriptor: GridDescriptor,
-    edges: Vec<Edge>,
+    values: BTreeMap<GridIndex, (Point<f32, 3>, f32)>,
 }
 
 impl Grid {
@@ -21,7 +21,7 @@ impl Grid {
         descriptor: GridDescriptor,
         isosurface: &impl Distance<3>,
     ) -> Self {
-        let values: BTreeMap<_, _> = descriptor
+        let values = descriptor
             .points()
             .filter_map(|(index, point)| {
                 let distance = isosurface.distance(point);
@@ -32,30 +32,46 @@ impl Grid {
                 }
             })
             .collect();
-        let edges = values
+
+        Self { descriptor, values }
+    }
+
+    /// Returns iterator over all grid edges
+    pub fn edges(&self) -> impl Iterator<Item = Edge> + '_ {
+        self.values
             .iter()
-            .map(|(&index, &(point, value))| {
+            .map(move |(&index, &(point, value))| {
                 let next_z = [index.x(), index.y(), index.z() + 1];
                 let next_y = [index.x(), index.y() + 1, index.z()];
                 let next_x = [index.x() + 1, index.y(), index.z()];
 
                 [
-                    edge_to_next(index, point, value, next_z.into(), &values),
-                    edge_to_next(index, point, value, next_y.into(), &values),
-                    edge_to_next(index, point, value, next_x.into(), &values),
+                    edge_to_next(
+                        index,
+                        point,
+                        value,
+                        next_z.into(),
+                        &self.values,
+                    ),
+                    edge_to_next(
+                        index,
+                        point,
+                        value,
+                        next_y.into(),
+                        &self.values,
+                    ),
+                    edge_to_next(
+                        index,
+                        point,
+                        value,
+                        next_x.into(),
+                        &self.values,
+                    ),
                 ]
             })
             .map(|edges| array::IntoIter::new(edges))
             .flatten()
             .filter_map(|edge| edge)
-            .collect();
-
-        Self { descriptor, edges }
-    }
-
-    /// Returns iterator over all grid edges
-    pub fn edges(&self) -> impl Iterator<Item = Edge> + '_ {
-        self.edges.iter().copied()
     }
 
     /// Returns the 4 neighboring cube centers of a grid edge
