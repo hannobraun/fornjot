@@ -18,7 +18,7 @@ pub fn to_mesh(
     let mut mesh = Mesh::new();
 
     for edge in grid.edges() {
-        if edge.at_surface(resolution * 1.05) {
+        if edge.at_surface() {
             let [a, b, c, d] = grid.neighbors_of_edge(edge);
 
             mesh.triangle(a, b, d);

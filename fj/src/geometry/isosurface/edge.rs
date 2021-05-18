@@ -72,11 +72,11 @@ impl Edge {
         Direction { axis, sign }
     }
 
-    pub fn at_surface(&self, resolution: f32) -> bool {
+    pub fn at_surface(&self) -> bool {
         let min = f32::min(self.a.value.into(), self.b.value.into());
         let max = f32::max(self.a.value.into(), self.b.value.into());
 
-        min <= 0.0 && max > 0.0 && self.length() <= resolution
+        min <= 0.0 && max > 0.0
     }
 }
 
@@ -134,8 +134,6 @@ mod tests {
 
     #[test]
     fn at_surface_should_detect_whether_edge_is_at_surface() {
-        let resolution = 0.2;
-
         let inside_surface = Edge {
             a: Value {
                 index: [0, 0, 0].into(),
@@ -148,8 +146,8 @@ mod tests {
                 value: (-0.1).into(),
             },
         };
-        assert_eq!(inside_surface.at_surface(resolution), false);
-        assert_eq!(inside_surface.reverse().at_surface(resolution), false);
+        assert_eq!(inside_surface.at_surface(), false);
+        assert_eq!(inside_surface.reverse().at_surface(), false);
 
         let outside_surface = Edge {
             a: Value {
@@ -163,8 +161,8 @@ mod tests {
                 value: 0.2.into(),
             },
         };
-        assert_eq!(outside_surface.at_surface(resolution), false);
-        assert_eq!(outside_surface.reverse().at_surface(resolution), false);
+        assert_eq!(outside_surface.at_surface(), false);
+        assert_eq!(outside_surface.reverse().at_surface(), false);
 
         let through_surface = Edge {
             a: Value {
@@ -178,8 +176,8 @@ mod tests {
                 value: 0.1.into(),
             },
         };
-        assert_eq!(through_surface.at_surface(resolution), true);
-        assert_eq!(through_surface.reverse().at_surface(resolution), true);
+        assert_eq!(through_surface.at_surface(), true);
+        assert_eq!(through_surface.reverse().at_surface(), true);
 
         let inside_to_surface = Edge {
             a: Value {
@@ -193,8 +191,8 @@ mod tests {
                 value: 0.0.into(),
             },
         };
-        assert_eq!(inside_to_surface.at_surface(resolution), false);
-        assert_eq!(inside_to_surface.reverse().at_surface(resolution), false);
+        assert_eq!(inside_to_surface.at_surface(), false);
+        assert_eq!(inside_to_surface.reverse().at_surface(), false);
 
         let outside_to_surface = Edge {
             a: Value {
@@ -208,38 +206,7 @@ mod tests {
                 value: 0.1.into(),
             },
         };
-        assert_eq!(outside_to_surface.at_surface(resolution), true);
-        assert_eq!(outside_to_surface.reverse().at_surface(resolution), true);
-    }
-
-    #[test]
-    fn at_surface_should_take_resolution_into_account() {
-        let good_edge = Edge {
-            a: Value {
-                index: [0, 0, 0].into(),
-                point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
-                value: (-0.1).into(),
-            },
-            b: Value {
-                index: [0, 0, 0].into(),
-                point: [0.2.into(), 0.0.into(), 0.0.into()].into(),
-                value: 0.1.into(),
-            },
-        };
-        let bad_edge = Edge {
-            a: Value {
-                index: [0, 0, 0].into(),
-                point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
-                value: (-0.1).into(),
-            },
-            b: Value {
-                index: [0, 0, 0].into(),
-                point: [2.0.into(), 0.0.into(), 0.0.into()].into(),
-                value: 0.1.into(),
-            },
-        };
-
-        assert_eq!(good_edge.at_surface(0.2), true);
-        assert_eq!(bad_edge.at_surface(0.2), false);
+        assert_eq!(outside_to_surface.at_surface(), true);
+        assert_eq!(outside_to_surface.reverse().at_surface(), true);
     }
 }
