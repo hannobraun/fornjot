@@ -1,13 +1,11 @@
-use std::{collections::HashSet, ops::Range};
+use std::ops::Range;
 
 use itertools::Itertools as _;
-use nalgebra::{Point, Vector};
-use num_traits::real::Real as _;
-use tracing::{instrument, trace};
+use nalgebra::Point;
 
-use crate::geometry::{aabb::Aabb, attributes::Distance, isosurface::Value};
+use crate::geometry::aabb::Aabb;
 
-use super::{Edge, GridIndex};
+use super::GridIndex;
 
 /// A grid for isosurface extraction
 ///
@@ -49,79 +47,6 @@ impl GridDescriptor {
 
         points
     }
-
-    #[instrument(skip(isosurface))]
-    pub fn edges(&self, isosurface: &impl Distance<3>) -> HashSet<Edge> {
-        let offset =
-            Vector::from([self.resolution, self.resolution, self.resolution])
-                / 2.0;
-        let aabb = Aabb {
-            min: self.aabb.min - offset,
-            max: self.aabb.max + offset,
-        };
-
-        let mut edges = HashSet::new();
-        self.edges_inner(isosurface, aabb, &mut edges);
-
-        edges
-    }
-
-    #[instrument(skip(self, isosurface, edges))]
-    fn edges_inner(
-        &self,
-        isosurface: &impl Distance<3>,
-        aabb: Aabb<3>,
-        edges: &mut HashSet<Edge>,
-    ) {
-        let mut must_partition = false;
-
-        for &[a, b] in &aabb.edges() {
-            // TASK: Remove `index` from `Edge`, or use a more fitting struct.
-            let edge = Edge {
-                a: Value {
-                    index: [0, 0, 0].into(),
-                    point: [a.x.into(), a.y.into(), a.z.into()].into(),
-                    value: isosurface.distance(a).into(),
-                },
-                b: Value {
-                    index: [0, 0, 0].into(),
-                    point: [b.x.into(), b.y.into(), b.z.into()].into(),
-                    value: isosurface.distance(b).into(),
-                },
-            };
-
-            let edge_length = edge.length();
-
-            if edge.at_surface(self.resolution) {
-                if edges.insert(edge) {
-                    trace!(?edge, "insert");
-                }
-                continue;
-            }
-            if edge.a.value.abs() > edge_length
-                && edge.b.value.abs() > edge_length
-            {
-                continue;
-            }
-            if edge_length > self.resolution {
-                must_partition = true;
-                continue;
-            }
-        }
-
-        if must_partition {
-            let [a, b, c, d, e, f, g, h] = aabb.partition();
-
-            self.edges_inner(isosurface, a, edges);
-            self.edges_inner(isosurface, b, edges);
-            self.edges_inner(isosurface, c, edges);
-            self.edges_inner(isosurface, d, edges);
-            self.edges_inner(isosurface, e, edges);
-            self.edges_inner(isosurface, f, edges);
-            self.edges_inner(isosurface, g, edges);
-            self.edges_inner(isosurface, h, edges);
-        }
-    }
 }
 
 fn indices(min: f32, max: f32, resolution: f32) -> Range<usize> {
@@ -133,11 +58,7 @@ fn indices(min: f32, max: f32, resolution: f32) -> Range<usize> {
 
 #[cfg(test)]
 mod tests {
-    use std::collections::HashSet;
-
-    use decorum::R32;
-
-    use crate::geometry::{aabb::Aabb, shapes::Sphere};
+    use crate::geometry::aabb::Aabb;
 
     use super::GridDescriptor;
 
@@ -185,49 +106,5 @@ mod tests {
                 ([2, 2, 2].into(), [1.5, 1.5, 2.0].into()),
             ]
         );
-    }
-
-    #[test]
-    fn edges_should_return_edges_at_surface() {
-        let grid = GridDescriptor {
-            aabb: Aabb {
-                min: [-0.5, -0.5, -0.5].into(),
-                max: [0.5, 0.5, 0.5].into(),
-            },
-            resolution: 1.0,
-        };
-
-        let edges: HashSet<_> = grid
-            .edges(&Sphere::new().with_radius(0.5))
-            .into_iter()
-            .map(|edge| {
-                let a = edge.a.point;
-                let b = edge.b.point;
-
-                let a: [R32; 3] = [a.x.into(), a.y.into(), a.z.into()];
-                let b: [R32; 3] = [b.x.into(), b.y.into(), b.z.into()];
-
-                [a, b]
-            })
-            .collect();
-
-        #[rustfmt::skip]
-        let expected_edges = [
-            [[ 0.0,  0.0, -1.0], [0.0, 0.0, 0.0]],
-            [[ 0.0, -1.0,  0.0], [0.0, 0.0, 0.0]],
-            [[-1.0,  0.0,  0.0], [0.0, 0.0, 0.0]],
-            [[ 0.0,  0.0,  0.0], [0.0, 0.0, 1.0]],
-            [[ 0.0,  0.0,  0.0], [0.0, 1.0, 0.0]],
-            [[ 0.0,  0.0,  0.0], [1.0, 0.0, 0.0]],
-        ];
-
-        assert_eq!(edges.len(), expected_edges.len());
-        for &[[ax, ay, az], [bx, by, bz]] in &expected_edges {
-            let edge = [
-                [ax.into(), ay.into(), az.into()],
-                [bx.into(), by.into(), bz.into()],
-            ];
-            assert!(edges.contains(&edge));
-        }
     }
 }
