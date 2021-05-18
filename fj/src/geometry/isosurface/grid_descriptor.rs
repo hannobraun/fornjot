@@ -1,7 +1,7 @@
 use std::{collections::HashSet, ops::Range};
 
 use itertools::Itertools as _;
-use nalgebra::Point;
+use nalgebra::{Point, Vector};
 use num_traits::real::Real as _;
 use tracing::{instrument, trace};
 
@@ -52,8 +52,17 @@ impl GridDescriptor {
 
     #[instrument(skip(isosurface))]
     pub fn edges(&self, isosurface: &impl Distance<3>) -> HashSet<Edge> {
+        let offset =
+            Vector::from([self.resolution, self.resolution, self.resolution])
+                / 2.0;
+        let aabb = Aabb {
+            min: self.aabb.min - offset,
+            max: self.aabb.max + offset,
+        };
+
         let mut edges = HashSet::new();
-        self.edges_inner(isosurface, self.aabb, &mut edges);
+        self.edges_inner(isosurface, aabb, &mut edges);
+
         edges
     }
 
@@ -182,8 +191,8 @@ mod tests {
     fn edges_should_return_edges_at_surface() {
         let grid = GridDescriptor {
             aabb: Aabb {
-                min: [-1.0, -1.0, -1.0].into(),
-                max: [1.0, 1.0, 1.0].into(),
+                min: [-0.5, -0.5, -0.5].into(),
+                max: [0.5, 0.5, 0.5].into(),
             },
             resolution: 1.0,
         };
