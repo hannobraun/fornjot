@@ -40,9 +40,6 @@ impl Edge {
         let a = self.a.point;
         let b = self.b.point;
 
-        let a: Point<f32, 3> = [a.x.into(), a.y.into(), a.z.into()].into();
-        let b: Point<f32, 3> = [b.x.into(), b.y.into(), b.z.into()].into();
-
         (b - a).magnitude()
     }
 
