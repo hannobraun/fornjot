@@ -7,7 +7,7 @@ use crate::geometry::util::DebugPoint;
 
 use super::GridIndex;
 
-#[derive(Clone, Copy, Eq, Hash, PartialEq)]
+#[derive(Clone, Copy, Hash, PartialEq)]
 pub struct Edge {
     pub a: Value,
     pub b: Value,
@@ -96,7 +96,7 @@ fn signum(v: impl Into<f32>) -> i32 {
     }
 }
 
-#[derive(Clone, Copy, Eq, Hash, PartialEq)]
+#[derive(Clone, Copy, Hash, PartialEq)]
 pub struct Value {
     pub index: GridIndex,
     pub point: Point<R32, 3>,
