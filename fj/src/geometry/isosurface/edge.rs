@@ -1,6 +1,5 @@
 use std::fmt;
 
-use decorum::R32;
 use nalgebra::Point;
 
 use crate::geometry::util::DebugPoint;
@@ -95,7 +94,7 @@ fn signum(v: f32) -> i32 {
 pub struct Value {
     pub index: GridIndex,
     pub point: Point<f32, 3>,
-    pub value: R32,
+    pub value: f32,
 }
 
 impl fmt::Debug for Value {
