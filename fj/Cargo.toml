@@ -5,6 +5,7 @@ authors = ["Hanno Braun <hanno@braun-odw.eu>"]
 edition = "2018"
 
 description = "Experimental CAD system"
+readme      = "../README.md"
 repository  = "https://github.com/hannobraun/fornjot"
 license     = "0BSD"
 keywords    = ["cad", "programmatic", "constructive", "solid", "geometry"]
