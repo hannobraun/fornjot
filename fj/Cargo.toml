@@ -5,14 +5,11 @@ authors = ["Hanno Braun <hanno@braun-odw.eu>"]
 edition = "2018"
 
 [dependencies]
-approx             = "*"
 bytemuck           = "*"
 decorum            = "*"
 futures            = "*"
 itertools          = "*"
 nalgebra           = "*"
-num-traits         = "*"
-thiserror          = "*"
 tracing            = "*"
 tracing-subscriber = "*"
 wgpu               = "*"

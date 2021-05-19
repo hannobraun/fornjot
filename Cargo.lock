@@ -490,14 +490,11 @@ checksum = "37ab347416e802de484e4d03c7316c48f1ecb56574dfd4a46a80f173ce1de04d"
 name = "fj"
 version = "0.1.0"
 dependencies = [
- "approx 0.4.0",
  "bytemuck",
  "decorum",
  "futures",
  "itertools",
  "nalgebra",
- "num-traits",
- "thiserror",
  "tracing",
  "tracing-subscriber",
  "wgpu",
