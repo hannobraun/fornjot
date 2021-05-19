@@ -134,12 +134,12 @@ mod tests {
         let inside_surface = Edge {
             a: Value {
                 index: [0, 0, 0].into(),
-                point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
+                point: [0.0, 0.0, 0.0].into(),
                 value: (-0.2).into(),
             },
             b: Value {
                 index: [0, 0, 0].into(),
-                point: [0.1.into(), 0.0.into(), 0.0.into()].into(),
+                point: [0.1, 0.0, 0.0].into(),
                 value: (-0.1).into(),
             },
         };
@@ -149,12 +149,12 @@ mod tests {
         let outside_surface = Edge {
             a: Value {
                 index: [0, 0, 0].into(),
-                point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
+                point: [0.0, 0.0, 0.0].into(),
                 value: 0.1.into(),
             },
             b: Value {
                 index: [0, 1, 0].into(),
-                point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
+                point: [0.0, 0.0, 0.0].into(),
                 value: 0.2.into(),
             },
         };
@@ -164,12 +164,12 @@ mod tests {
         let through_surface = Edge {
             a: Value {
                 index: [0, 0, 0].into(),
-                point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
+                point: [0.0, 0.0, 0.0].into(),
                 value: (-0.1).into(),
             },
             b: Value {
                 index: [0, 0, 0].into(),
-                point: [0.2.into(), 0.0.into(), 0.0.into()].into(),
+                point: [0.2, 0.0, 0.0].into(),
                 value: 0.1.into(),
             },
         };
@@ -179,12 +179,12 @@ mod tests {
         let inside_to_surface = Edge {
             a: Value {
                 index: [0, 0, 0].into(),
-                point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
+                point: [0.0, 0.0, 0.0].into(),
                 value: (-0.1).into(),
             },
             b: Value {
                 index: [0, 0, 0].into(),
-                point: [0.1.into(), 0.0.into(), 0.0.into()].into(),
+                point: [0.1, 0.0, 0.0].into(),
                 value: 0.0.into(),
             },
         };
@@ -194,12 +194,12 @@ mod tests {
         let outside_to_surface = Edge {
             a: Value {
                 index: [0, 0, 0].into(),
-                point: [0.0.into(), 0.0.into(), 0.0.into()].into(),
+                point: [0.0, 0.0, 0.0].into(),
                 value: 0.0.into(),
             },
             b: Value {
                 index: [0, 0, 0].into(),
-                point: [0.1.into(), 0.0.into(), 0.0.into()].into(),
+                point: [0.1, 0.0, 0.0].into(),
                 value: 0.1.into(),
             },
         };
