@@ -83,9 +83,7 @@ impl fmt::Debug for Edge {
     }
 }
 
-fn signum(v: impl Into<f32>) -> i32 {
-    let v = v.into();
-
+fn signum(v: f32) -> i32 {
     if v == 0.0 {
         0
     } else {
