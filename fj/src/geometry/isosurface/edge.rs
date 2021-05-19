@@ -132,12 +132,12 @@ mod tests {
             a: Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
-                value: (-0.2).into(),
+                value: -0.2,
             },
             b: Value {
                 index: [0, 0, 0].into(),
                 point: [0.1, 0.0, 0.0].into(),
-                value: (-0.1).into(),
+                value: -0.1,
             },
         };
         assert_eq!(inside_surface.at_surface(), false);
@@ -147,12 +147,12 @@ mod tests {
             a: Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
-                value: 0.1.into(),
+                value: 0.1,
             },
             b: Value {
                 index: [0, 1, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
-                value: 0.2.into(),
+                value: 0.2,
             },
         };
         assert_eq!(outside_surface.at_surface(), false);
@@ -162,12 +162,12 @@ mod tests {
             a: Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
-                value: (-0.1).into(),
+                value: -0.1,
             },
             b: Value {
                 index: [0, 0, 0].into(),
                 point: [0.2, 0.0, 0.0].into(),
-                value: 0.1.into(),
+                value: 0.1,
             },
         };
         assert_eq!(through_surface.at_surface(), true);
@@ -177,12 +177,12 @@ mod tests {
             a: Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
-                value: (-0.1).into(),
+                value: -0.1,
             },
             b: Value {
                 index: [0, 0, 0].into(),
                 point: [0.1, 0.0, 0.0].into(),
-                value: 0.0.into(),
+                value: 0.0,
             },
         };
         assert_eq!(inside_to_surface.at_surface(), false);
@@ -192,12 +192,12 @@ mod tests {
             a: Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
-                value: 0.0.into(),
+                value: 0.0,
             },
             b: Value {
                 index: [0, 0, 0].into(),
                 point: [0.1, 0.0, 0.0].into(),
-                value: 0.1.into(),
+                value: 0.1,
             },
         };
         assert_eq!(outside_to_surface.at_surface(), true);
