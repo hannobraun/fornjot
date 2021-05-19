@@ -69,8 +69,8 @@ impl Edge {
     }
 
     pub fn at_surface(&self) -> bool {
-        let min = f32::min(self.a.value.into(), self.b.value.into());
-        let max = f32::max(self.a.value.into(), self.b.value.into());
+        let min = f32::min(self.a.value, self.b.value);
+        let max = f32::max(self.a.value, self.b.value);
 
         min <= 0.0 && max > 0.0
     }
