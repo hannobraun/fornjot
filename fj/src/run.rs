@@ -15,6 +15,8 @@ use crate::{
     mesh::IntoMesh,
 };
 
+// TASK: Pass command-line arguments. Display or export, based on what is
+//       specified.
 pub fn run<M>(mesh: M)
 where
     M: IntoMesh,
