@@ -1,3 +1,4 @@
+pub mod export_3mf;
 pub mod geometry;
 pub mod mesh;
 pub mod syntax;

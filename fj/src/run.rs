@@ -11,6 +11,7 @@ use winit::{
 
 use crate::{
     args::Args,
+    export_3mf::export_3mf,
     graphics::{DrawError, Renderer, Transform},
     input::InputHandler,
     mesh::IntoMesh,
@@ -43,8 +44,7 @@ where
     );
 
     if let Some(path) = args.export {
-        // TASK: Export model to 3MF file.
-        debug!("--export {} passed", path.display());
+        export_3mf(&mesh, path);
     }
 
     debug!("Initializing event loop...");
