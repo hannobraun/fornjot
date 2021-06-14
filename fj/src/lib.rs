@@ -6,6 +6,7 @@ pub mod prelude {
     pub use super::syntax::{Difference as _, LinearExtrude as _};
 }
 
+mod args;
 mod graphics;
 mod input;
 mod run;

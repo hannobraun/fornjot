@@ -10,13 +10,12 @@ use winit::{
 };
 
 use crate::{
+    args::Args,
     graphics::{DrawError, Renderer, Transform},
     input::InputHandler,
     mesh::IntoMesh,
 };
 
-// TASK: Parse command-line arguments. Display or export, based on what is
-//       specified.
 pub fn run<M>(mesh: M)
 where
     M: IntoMesh,
@@ -28,6 +27,12 @@ where
         )
         .pretty()
         .init();
+
+    let args = Args::parse();
+    if let Some(export) = args.export {
+        // TASK: Export model to 3MF file.
+        debug!("--export {} passed", export.display());
+    }
 
     info!("Converting geometry to triangle mesh...");
 
