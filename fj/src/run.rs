@@ -42,9 +42,9 @@ where
         conversion_duration.subsec_millis()
     );
 
-    if let Some(export) = args.export {
+    if let Some(path) = args.export {
         // TASK: Export model to 3MF file.
-        debug!("--export {} passed", export.display());
+        debug!("--export {} passed", path.display());
     }
 
     debug!("Initializing event loop...");
