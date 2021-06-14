@@ -29,10 +29,6 @@ where
         .init();
 
     let args = Args::parse();
-    if let Some(export) = args.export {
-        // TASK: Export model to 3MF file.
-        debug!("--export {} passed", export.display());
-    }
 
     info!("Converting geometry to triangle mesh...");
 
@@ -45,6 +41,11 @@ where
         conversion_duration.as_secs(),
         conversion_duration.subsec_millis()
     );
+
+    if let Some(export) = args.export {
+        // TASK: Export model to 3MF file.
+        debug!("--export {} passed", export.display());
+    }
 
     debug!("Initializing event loop...");
     let event_loop = EventLoop::new();
