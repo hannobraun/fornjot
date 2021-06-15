@@ -20,7 +20,7 @@ pub fn export_3mf(_mesh: &Mesh, path: PathBuf) -> Result<(), Error> {
 
     info!("Exporting \"{}\" to `{}`", name, path.display(),);
 
-    let _file = File::create(path)?;
+    let _file = File::create(&path)?;
 
     // TASK: Export model to 3MF file.
     todo!()
