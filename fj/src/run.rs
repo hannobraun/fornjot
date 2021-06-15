@@ -17,7 +17,7 @@ use crate::{
     mesh::IntoMesh,
 };
 
-pub fn run<M>(mesh: M)
+pub fn run<M>(mesh: M) -> anyhow::Result<()>
 where
     M: IntoMesh,
 {
