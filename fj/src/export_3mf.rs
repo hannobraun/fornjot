@@ -20,7 +20,7 @@ pub fn export_3mf(_mesh: &Mesh, path: PathBuf) -> Result<(), Error> {
         .ok_or_else(|| Error::NoFileName(path.clone()))?
         .to_string_lossy();
 
-    info!("Exporting \"{}\" to `{}`", name, path.display(),);
+    info!("Exporting \"{}\" to `{}`", name, path.display());
 
     let file = File::create(&path)?;
 
