@@ -2,6 +2,8 @@ use std::{fs::File, io, path::PathBuf};
 
 use thiserror::Error;
 
+use tracing::info;
+
 use crate::Mesh;
 
 /// Export mesh to 3MF file
@@ -11,6 +13,14 @@ use crate::Mesh;
 /// [3MF specification]: https://3mf.io/specification/
 /// [Open Packaging Conventions Fundamentals]: https://docs.microsoft.com/en-us/previous-versions/windows/desktop/opc/open-packaging-conventions-overview
 pub fn export_3mf(_mesh: &Mesh, path: PathBuf) -> Result<(), Error> {
+    info!(
+        "Exporting \"{}\" to `{}`",
+        path.file_stem()
+            .ok_or_else(|| Error::NoFileName(path.clone()))?
+            .to_string_lossy(),
+        path.display(),
+    );
+
     let _file = File::create(path)?;
 
     // TASK: Export model to 3MF file.
@@ -21,4 +31,7 @@ pub fn export_3mf(_mesh: &Mesh, path: PathBuf) -> Result<(), Error> {
 pub enum Error {
     #[error("I/O error")]
     Io(#[from] io::Error),
+
+    #[error("Expected path to file, got `{0}`")]
+    NoFileName(PathBuf),
 }
