@@ -28,9 +28,9 @@ pub fn export_3mf(_mesh: &Mesh, path: PathBuf) -> Result<(), Error> {
 
 #[derive(Debug, Error)]
 pub enum Error {
-    #[error("I/O error")]
-    Io(#[from] io::Error),
-
     #[error("Expected path to file, got `{0}`")]
     NoFileName(PathBuf),
+
+    #[error("I/O error")]
+    Io(#[from] io::Error),
 }
