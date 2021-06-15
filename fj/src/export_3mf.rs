@@ -4,6 +4,8 @@ use thiserror::Error;
 
 use tracing::info;
 
+use zip::{result::ZipError, write::FileOptions, ZipWriter};
+
 use crate::Mesh;
 
 /// Export mesh to 3MF file
@@ -20,7 +22,11 @@ pub fn export_3mf(_mesh: &Mesh, path: PathBuf) -> Result<(), Error> {
 
     info!("Exporting \"{}\" to `{}`", name, path.display(),);
 
-    let _file = File::create(&path)?;
+    let file = File::create(&path)?;
+
+    let mut archive = ZipWriter::new(file);
+    archive.start_file(format!("3D/{}.model", name), FileOptions::default())?;
+    archive.finish()?;
 
     // TASK: Export model to 3MF file.
     todo!()
@@ -33,4 +39,7 @@ pub enum Error {
 
     #[error("I/O error")]
     Io(#[from] io::Error),
+
+    #[error("Zip error")]
+    Zip(#[from] ZipError),
 }
