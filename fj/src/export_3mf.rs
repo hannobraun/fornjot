@@ -13,13 +13,12 @@ use crate::Mesh;
 /// [3MF specification]: https://3mf.io/specification/
 /// [Open Packaging Conventions Fundamentals]: https://docs.microsoft.com/en-us/previous-versions/windows/desktop/opc/open-packaging-conventions-overview
 pub fn export_3mf(_mesh: &Mesh, path: PathBuf) -> Result<(), Error> {
-    info!(
-        "Exporting \"{}\" to `{}`",
-        path.file_stem()
-            .ok_or_else(|| Error::NoFileName(path.clone()))?
-            .to_string_lossy(),
-        path.display(),
-    );
+    let name = path
+        .file_stem()
+        .ok_or_else(|| Error::NoFileName(path.clone()))?
+        .to_string_lossy();
+
+    info!("Exporting \"{}\" to `{}`", name, path.display(),);
 
     let _file = File::create(path)?;
 
