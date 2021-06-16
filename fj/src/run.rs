@@ -11,10 +11,10 @@ use winit::{
 
 use crate::{
     args::Args,
-    threemf::export_3mf,
     graphics::{DrawError, Renderer, Transform},
     input::InputHandler,
     mesh::IntoMesh,
+    threemf,
 };
 
 pub fn run<M>(mesh: M) -> anyhow::Result<()>
@@ -44,7 +44,7 @@ where
     );
 
     if let Some(path) = args.export {
-        export_3mf(&mesh, path)?;
+        threemf::export_3mf(&mesh, path)?;
     }
 
     debug!("Initializing event loop...");
