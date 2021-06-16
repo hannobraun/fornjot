@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+	<Default
+        Extension="model"
+        ContentType="application/vnd.ms-package.3dmanufacturing-3dmodel+xml" />
+	<Default
+        Extension="rels"
+        ContentType="application/vnd.openxmlformats-package.relationships+xml" />
+	<Default
+        Extension="texture"
+        ContentType="application/vnd.ms-package.3dmanufacturing-3dmodeltexture" />
+</Types>

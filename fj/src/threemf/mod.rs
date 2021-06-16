@@ -1,4 +1,8 @@
-use std::{fs::File, io, path::PathBuf};
+use std::{
+    fs::File,
+    io::{self, prelude::*},
+    path::PathBuf,
+};
 
 use thiserror::Error;
 
@@ -25,7 +29,12 @@ pub fn export(_mesh: &Mesh, path: PathBuf) -> Result<(), Error> {
     let file = File::create(&path)?;
 
     let mut archive = ZipWriter::new(file);
+
+    archive.start_file("[Content_Types].xml", FileOptions::default())?;
+    archive.write_all(include_bytes!("[Content_Types].xml"))?;
+
     archive.start_file(format!("3D/{}.model", name), FileOptions::default())?;
+
     archive.finish()?;
 
     // TASK: Export model to 3MF file.
