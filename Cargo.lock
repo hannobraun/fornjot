@@ -577,6 +577,7 @@ dependencies = [
  "clap",
  "decorum",
  "futures",
+ "indexmap",
  "itertools",
  "nalgebra",
  "thiserror",
