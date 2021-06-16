@@ -63,6 +63,10 @@ impl Mesh {
         self.triangles.iter().flatten().copied()
     }
 
+    pub fn triangles(&self) -> impl Iterator<Item = [graphics::Index; 3]> + '_ {
+        self.triangles.iter().copied()
+    }
+
     fn index_for_vertex(&mut self, vertex: Vertex) -> graphics::Index {
         let vertices = &mut self.vertices;
 
