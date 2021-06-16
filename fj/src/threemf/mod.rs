@@ -31,21 +31,8 @@ pub fn export(_mesh: &Mesh, path: PathBuf) -> Result<(), Error> {
     archive.write_all(include_bytes!("rels.xml"))?;
 
     archive.start_file("3D/model.model", FileOptions::default())?;
-    write!(
-        archive,
-        "\
-<?xml version=\"1.0\" encoding=\"utf-8\"?>
-<model
-    xmlns=\"http://schemas.microsoft.com/3dmanufacturing/core/2015/02\"
-    unit=\"millimeter\"
-    xml:lang=\"en-US\">
-
-    <resources>
-    </resources>
-    <build>
-    </build>
-</model>"
-    )?;
+    archive.write_all(include_bytes!("model-header.xml"))?;
+    archive.write_all(include_bytes!("model-footer.xml"))?;
 
     archive.finish()?;
 
