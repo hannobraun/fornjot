@@ -11,7 +11,7 @@ use winit::{
 
 use crate::{
     args::Args,
-    export_3mf::export_3mf,
+    threemf::export_3mf,
     graphics::{DrawError, Renderer, Transform},
     input::InputHandler,
     mesh::IntoMesh,

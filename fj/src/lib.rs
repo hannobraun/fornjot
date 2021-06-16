@@ -1,7 +1,7 @@
-pub mod export_3mf;
 pub mod geometry;
 pub mod mesh;
 pub mod syntax;
+pub mod threemf;
 
 pub mod prelude {
     pub use super::syntax::{Difference as _, LinearExtrude as _};
