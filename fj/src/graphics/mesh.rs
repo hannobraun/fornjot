@@ -28,9 +28,9 @@ impl From<mesh::Mesh> for Mesh {
             .vertices()
             .map(|vertex| {
                 Point::from([
-                    vertex.position[0].into_inner(),
-                    vertex.position[1].into_inner(),
-                    vertex.position[2].into_inner(),
+                    vertex[0].into_inner(),
+                    vertex[1].into_inner(),
+                    vertex[2].into_inner(),
                 ])
             })
             .collect();

@@ -32,15 +32,9 @@ impl Mesh {
         let v1 = v1.into();
         let v2 = v2.into();
 
-        let v0 = Vertex {
-            position: v0.map(|coord| coord.into()),
-        };
-        let v1 = Vertex {
-            position: v1.map(|coord| coord.into()),
-        };
-        let v2 = Vertex {
-            position: v2.map(|coord| coord.into()),
-        };
+        let v0 = v0.map(|coord| coord.into());
+        let v1 = v1.map(|coord| coord.into());
+        let v2 = v2.map(|coord| coord.into());
 
         let i0 = self.index_for_vertex(v0);
         let i1 = self.index_for_vertex(v1);
@@ -74,7 +68,4 @@ impl Mesh {
     }
 }
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
-pub struct Vertex {
-    pub position: Point<R32, 3>,
-}
+type Vertex = Point<R32, 3>;
