@@ -13,7 +13,7 @@ impl Transform {
     pub fn new() -> Self {
         Self {
             rotation: Rotation3::identity(),
-            distance: 4.0,
+            distance: 400.0,
         }
     }
 
@@ -21,8 +21,8 @@ impl Transform {
         let projection = Perspective3::new(
             aspect_ratio,
             f32::frac_pi_4(), // field of view; 45 degrees
-            0.1,              // near plane
-            100.0,            // far plane
+            1.0,              // near plane
+            1000.0,           // far plane
         );
 
         let transform = projection.to_projective() * self.view_transform();
