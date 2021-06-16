@@ -18,7 +18,7 @@ use crate::Mesh;
 ///
 /// [3MF specification]: https://3mf.io/specification/
 /// [Open Packaging Conventions]: https://standards.iso.org/ittf/PubliclyAvailableStandards/c061796_ISO_IEC_29500-2_2012.zip
-pub fn export(_mesh: &Mesh, path: PathBuf) -> Result<(), Error> {
+pub fn export(mesh: &Mesh, path: PathBuf) -> Result<(), Error> {
     info!("Exporting to `{}`", path.display());
 
     let file = File::create(&path)?;
@@ -31,13 +31,19 @@ pub fn export(_mesh: &Mesh, path: PathBuf) -> Result<(), Error> {
     archive.write_all(include_bytes!("rels.xml"))?;
 
     archive.start_file("3D/model.model", FileOptions::default())?;
-    archive.write_all(include_bytes!("model-header.xml"))?;
-    archive.write_all(include_bytes!("model-footer.xml"))?;
+    write_mesh(mesh, &mut archive)?;
 
     archive.finish()?;
 
     // TASK: Export model to 3MF file.
     todo!()
+}
+
+pub fn write_mesh(_mesh: &Mesh, mut sink: impl Write) -> io::Result<()> {
+    sink.write_all(include_bytes!("model-header.xml"))?;
+    sink.write_all(include_bytes!("model-footer.xml"))?;
+
+    Ok(())
 }
 
 #[derive(Debug, Error)]
