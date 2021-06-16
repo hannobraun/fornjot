@@ -22,7 +22,6 @@ pub fn export(_mesh: &Mesh, path: PathBuf) -> Result<(), Error> {
     info!("Exporting to `{}`", path.display());
 
     let file = File::create(&path)?;
-
     let mut archive = ZipWriter::new(file);
 
     archive.start_file("[Content_Types].xml", FileOptions::default())?;
