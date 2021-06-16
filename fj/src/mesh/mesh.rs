@@ -1,7 +1,7 @@
 use std::{collections::HashMap, convert::TryInto};
 
 use decorum::R32;
-use nalgebra::{Point, Vector3};
+use nalgebra::Point;
 
 use crate::graphics;
 
@@ -32,20 +32,14 @@ impl Mesh {
         let v1 = v1.into();
         let v2 = v2.into();
 
-        let normal = (v1 - v0).cross(&(v2 - v0)).normalize();
-        let normal = normal.map(|coord| coord.into());
-
         let v0 = Vertex {
             position: v0.map(|coord| coord.into()),
-            normal,
         };
         let v1 = Vertex {
             position: v1.map(|coord| coord.into()),
-            normal,
         };
         let v2 = Vertex {
             position: v2.map(|coord| coord.into()),
-            normal,
         };
 
         let i0 = self.index_for_vertex(v0);
@@ -83,5 +77,4 @@ impl Mesh {
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
 pub struct Vertex {
     pub position: Point<R32, 3>,
-    pub normal: Vector3<R32>,
 }
