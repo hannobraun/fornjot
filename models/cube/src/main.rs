@@ -2,14 +2,16 @@
 fn main() -> anyhow::Result<()> {
     let mut mesh = fj::Mesh::new();
 
-    let v0  = [-0.5, -0.5, -0.5];
-    let v1  = [-0.5, -0.5,  0.5];
-    let v2  = [-0.5,  0.5, -0.5];
-    let v3  = [-0.5,  0.5,  0.5];
-    let v4  = [ 0.5, -0.5, -0.5];
-    let v5  = [ 0.5, -0.5,  0.5];
-    let v6  = [ 0.5,  0.5, -0.5];
-    let v7  = [ 0.5,  0.5,  0.5];
+    let d = 0.5;
+
+    let v0  = [-d, -d, -d];
+    let v1  = [-d, -d,  d];
+    let v2  = [-d,  d, -d];
+    let v3  = [-d,  d,  d];
+    let v4  = [ d, -d, -d];
+    let v5  = [ d, -d,  d];
+    let v6  = [ d,  d, -d];
+    let v7  = [ d,  d,  d];
 
     // left
     mesh.triangle(v0, v1, v2);
