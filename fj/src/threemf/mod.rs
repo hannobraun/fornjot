@@ -27,6 +27,9 @@ pub fn export(_mesh: &Mesh, path: PathBuf) -> Result<(), Error> {
     archive.start_file("[Content_Types].xml", FileOptions::default())?;
     archive.write_all(include_bytes!("[Content_Types].xml"))?;
 
+    archive.start_file("_rels/.rels", FileOptions::default())?;
+    archive.write_all(include_bytes!("rels.xml"))?;
+
     archive.start_file("3D/model.model", FileOptions::default())?;
 
     archive.finish()?;
