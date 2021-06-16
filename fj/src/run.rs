@@ -44,6 +44,7 @@ where
     );
 
     if let Some(path) = args.export {
+        info!("Exporting to `{}`", path.display());
         threemf::export(&mesh, path)?;
         return Ok(());
     }

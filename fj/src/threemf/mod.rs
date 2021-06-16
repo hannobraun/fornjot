@@ -6,8 +6,6 @@ use std::{
 
 use thiserror::Error;
 
-use tracing::info;
-
 use zip::{result::ZipError, write::FileOptions, ZipWriter};
 
 use crate::Mesh;
@@ -19,8 +17,6 @@ use crate::Mesh;
 /// [3MF specification]: https://3mf.io/specification/
 /// [Open Packaging Conventions]: https://standards.iso.org/ittf/PubliclyAvailableStandards/c061796_ISO_IEC_29500-2_2012.zip
 pub fn export(mesh: &Mesh, path: PathBuf) -> Result<(), Error> {
-    info!("Exporting to `{}`", path.display());
-
     let file = File::create(&path)?;
     let mut archive = ZipWriter::new(file);
 
