@@ -2,7 +2,7 @@
 fn main() -> anyhow::Result<()> {
     let mut mesh = fj::Mesh::new();
 
-    let d = 0.5;
+    let d = 50.0;
 
     let v0  = [-d, -d, -d];
     let v1  = [-d, -d,  d];
