@@ -25,7 +25,7 @@ pub fn export(_mesh: &Mesh, path: PathBuf) -> Result<(), Error> {
     let mut archive = ZipWriter::new(file);
 
     archive.start_file("[Content_Types].xml", FileOptions::default())?;
-    archive.write_all(include_bytes!("[Content_Types].xml"))?;
+    archive.write_all(include_bytes!("content-types.xml"))?;
 
     archive.start_file("_rels/.rels", FileOptions::default())?;
     archive.write_all(include_bytes!("rels.xml"))?;
