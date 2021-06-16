@@ -44,8 +44,7 @@ pub fn export(_mesh: &Mesh, path: PathBuf) -> Result<(), Error> {
     </resources>
     <build>
     </build>
-</model>
-    "
+</model>"
     )?;
 
     archive.finish()?;
