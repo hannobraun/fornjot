@@ -45,6 +45,7 @@ where
 
     if let Some(path) = args.export {
         threemf::export(&mesh, path)?;
+        return Ok(());
     }
 
     debug!("Initializing event loop...");
