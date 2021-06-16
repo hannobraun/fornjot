@@ -44,7 +44,7 @@ where
     );
 
     if let Some(path) = args.export {
-        threemf::export_3mf(&mesh, path)?;
+        threemf::export(&mesh, path)?;
     }
 
     debug!("Initializing event loop...");

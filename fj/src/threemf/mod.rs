@@ -14,7 +14,7 @@ use crate::Mesh;
 ///
 /// [3MF specification]: https://3mf.io/specification/
 /// [Open Packaging Conventions]: https://standards.iso.org/ittf/PubliclyAvailableStandards/c061796_ISO_IEC_29500-2_2012.zip
-pub fn export_3mf(_mesh: &Mesh, path: PathBuf) -> Result<(), Error> {
+pub fn export(_mesh: &Mesh, path: PathBuf) -> Result<(), Error> {
     let name = path
         .file_stem()
         .ok_or_else(|| Error::NoFileName(path.clone()))?
