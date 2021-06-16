@@ -35,12 +35,32 @@ pub fn export(mesh: &Mesh, path: PathBuf) -> Result<(), Error> {
 
     archive.finish()?;
 
-    // TASK: Export model to 3MF file.
-    todo!()
+    Ok(())
 }
 
-pub fn write_mesh(_mesh: &Mesh, mut sink: impl Write) -> io::Result<()> {
+pub fn write_mesh(mesh: &Mesh, mut sink: impl Write) -> io::Result<()> {
     sink.write_all(include_bytes!("model-header.xml"))?;
+
+    writeln!(sink, "\t\t\t\t<vertices>")?;
+    for vertex in mesh.vertices() {
+        writeln!(
+            sink,
+            "\t\t\t\t\t<vertex x=\"{}\" y=\"{}\" z=\"{}\" />",
+            vertex.x, vertex.y, vertex.z,
+        )?;
+    }
+    writeln!(sink, "\t\t\t\t</vertices>")?;
+
+    writeln!(sink, "\t\t\t\t<triangles>")?;
+    for [v1, v2, v3] in mesh.triangles() {
+        writeln!(
+            sink,
+            "\t\t\t\t\t<triangle v1=\"{}\" v2=\"{}\" v3=\"{}\" />",
+            v1, v2, v3,
+        )?;
+    }
+    writeln!(sink, "\t\t\t\t</triangles>")?;
+
     sink.write_all(include_bytes!("model-footer.xml"))?;
 
     Ok(())

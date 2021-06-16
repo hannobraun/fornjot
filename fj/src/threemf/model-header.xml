@@ -7,27 +7,3 @@
     <resources>
         <object id="1">
             <mesh>
-                <vertices>
-                    <vertex x="-0.5" y="-0.5" z="-0.5" />
-                    <vertex x="-0.5" y="-0.5" z="0.5" />
-                    <vertex x="-0.5" y="0.5" z="-0.5" />
-                    <vertex x="-0.5" y="0.5" z="0.5" />
-                    <vertex x="0.5" y="-0.5" z="-0.5" />
-                    <vertex x="0.5" y="-0.5" z="0.5" />
-                    <vertex x="0.5" y="0.5" z="-0.5" />
-                    <vertex x="0.5" y="0.5" z="0.5" />
-                </vertices>
-                <triangles>
-                    <triangle v1="0" v2="1" v3="2" />
-                    <triangle v1="2" v2="1" v3="3" />
-                    <triangle v1="4" v2="6" v3="5" />
-                    <triangle v1="6" v2="7" v3="5" />
-                    <triangle v1="0" v2="4" v3="1" />
-                    <triangle v1="4" v2="5" v3="1" />
-                    <triangle v1="2" v2="3" v3="6" />
-                    <triangle v1="6" v2="3" v3="7" />
-                    <triangle v1="0" v2="2" v3="6" />
-                    <triangle v1="0" v2="6" v3="4" />
-                    <triangle v1="1" v2="5" v3="7" />
-                    <triangle v1="1" v2="7" v3="3" />
-                </triangles>
