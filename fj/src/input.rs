@@ -95,9 +95,9 @@ impl InputHandler {
         transform: &mut Transform,
     ) {
         let delta = match delta {
-            MouseScrollDelta::LineDelta(_, y) => y * 0.5,
+            MouseScrollDelta::LineDelta(_, y) => y * 50.0,
             MouseScrollDelta::PixelDelta(PhysicalPosition { y, .. }) => {
-                y as f32 * 0.1
+                y as f32 * 10.0
             }
         };
 
