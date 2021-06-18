@@ -17,6 +17,12 @@ use crate::{
     threemf,
 };
 
+// TASK: Provide some means to adjust the resolution, maybe by adding a wrapper
+//       type around `impl BoundingVolume<3> + Distance<3>` that implements
+//       `IntoMesh` and is initialized with a specific resolution.
+//
+//       For maximum convenience, a matching trait could be added to `syntax`:
+//       `model.require_resolution(0.01)`
 pub fn run<M>(mesh: M) -> anyhow::Result<()>
 where
     M: IntoMesh,
