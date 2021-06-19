@@ -1,7 +1,7 @@
 mod descriptor;
+mod index;
 
-pub use self::descriptor::Descriptor;
-pub use super::grid_index::GridIndex;
+pub use self::{descriptor::Descriptor, index::GridIndex};
 
 use std::{array, collections::BTreeMap};
 

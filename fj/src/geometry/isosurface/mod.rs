@@ -11,7 +11,6 @@
 
 pub mod edge;
 pub mod grid;
-pub mod grid_index;
 pub mod to_mesh;
 
 pub use self::{
