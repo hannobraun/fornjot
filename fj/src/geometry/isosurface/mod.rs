@@ -17,6 +17,5 @@ pub mod to_mesh;
 pub use self::{
     edge::{Edge, Value},
     grid::Grid,
-    grid_index::GridIndex,
     to_mesh::to_mesh,
 };
