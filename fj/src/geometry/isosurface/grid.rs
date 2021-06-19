@@ -24,12 +24,12 @@ impl Grid {
     ) -> Self {
         let values = descriptor
             .vertices()
-            .filter_map(|(index, point)| {
+            .filter_map(|(index, vertex)| {
                 // Compute distance of this point from the isosurface, and
                 // filter all points that aren't close to the surface.
-                let distance = isosurface.distance(point);
+                let distance = isosurface.distance(vertex);
                 if distance <= descriptor.resolution {
-                    Some((index, (point, distance)))
+                    Some((index, (vertex, distance)))
                 } else {
                     None
                 }
