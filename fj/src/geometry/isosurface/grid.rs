@@ -25,7 +25,7 @@ impl Grid {
         let values = descriptor
             .vertices()
             .filter_map(|(index, vertex)| {
-                // Compute distance of this point from the isosurface, and
+                // Compute distance of this vertex from the isosurface, and
                 // filter all points that aren't close to the surface.
                 let distance = isosurface.distance(vertex);
                 if distance <= descriptor.resolution {
