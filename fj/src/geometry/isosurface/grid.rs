@@ -9,6 +9,7 @@ use super::{
     Edge, GridDescriptor, GridIndex, Value,
 };
 
+/// A uniform grid for isosurface extraction
 #[derive(Debug)]
 pub struct Grid {
     descriptor: GridDescriptor,
