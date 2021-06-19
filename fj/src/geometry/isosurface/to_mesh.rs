@@ -9,7 +9,7 @@ pub fn to_mesh(
     isosurface: &(impl Distance<3> + BoundingVolume<3>),
     resolution: f32,
 ) -> Mesh {
-    let grid_descriptor = grid::GridDescriptor {
+    let grid_descriptor = grid::Descriptor {
         aabb: isosurface.aabb(),
         resolution,
     };

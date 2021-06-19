@@ -11,7 +11,7 @@ use super::GridIndex;
 ///
 /// A grid consists of uniformly laid out vertices that form a number of cubes.
 #[derive(Debug)]
-pub struct GridDescriptor {
+pub struct Descriptor {
     /// The axis-aligned bounding box of the isosurface
     ///
     /// The uniform grid will extend beyond this bounding box, i.e. there will
@@ -23,7 +23,7 @@ pub struct GridDescriptor {
     pub resolution: f32,
 }
 
-impl GridDescriptor {
+impl Descriptor {
     /// Compute the grid vertices
     ///
     /// The grid extends beyond `self.aabb`, so that the center of the outermost
@@ -62,11 +62,11 @@ fn indices(min: f32, max: f32, resolution: f32) -> Range<usize> {
 mod tests {
     use crate::geometry::aabb::Aabb;
 
-    use super::GridDescriptor;
+    use super::Descriptor;
 
     #[test]
     fn points_should_return_grid_points() {
-        let grid = GridDescriptor {
+        let grid = Descriptor {
             aabb: Aabb {
                 min: [0.0, 0.0, 0.5].into(),
                 max: [0.5, 1.0, 1.5].into(),

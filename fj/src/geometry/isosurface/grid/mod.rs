@@ -1,6 +1,6 @@
 pub mod descriptor;
 
-pub use self::descriptor::GridDescriptor;
+pub use self::descriptor::Descriptor;
 
 use std::{array, collections::BTreeMap};
 
@@ -16,14 +16,14 @@ use super::{
 /// A uniform grid for isosurface extraction
 #[derive(Debug)]
 pub struct Grid {
-    descriptor: GridDescriptor,
+    descriptor: Descriptor,
     values: BTreeMap<GridIndex, (Point<f32, 3>, f32)>,
 }
 
 impl Grid {
     /// Create the grid from the descriptor and populate it with distance values
     pub fn from_descriptor(
-        descriptor: GridDescriptor,
+        descriptor: Descriptor,
         isosurface: &impl Distance<3>,
     ) -> Self {
         let values = descriptor
@@ -180,7 +180,7 @@ mod tests {
     #[test]
     fn edges_should_return_edges() {
         let grid = Grid::from_descriptor(
-            grid::GridDescriptor {
+            grid::Descriptor {
                 aabb: Aabb {
                     min: [0.0, 0.0, 0.0].into(),
                     max: [1.0, 1.0, 1.0].into(),
@@ -259,7 +259,7 @@ mod tests {
     #[test]
     fn neighbors_of_edge_should_return_neighboring_grid_centers() {
         let grid = Grid::from_descriptor(
-            grid::GridDescriptor {
+            grid::Descriptor {
                 aabb: Aabb {
                     min: [0.0, 0.0, 0.0].into(),
                     max: [1.0, 1.0, 1.0].into(),
@@ -311,7 +311,7 @@ mod tests {
     #[test]
     fn neighbors_of_edge_should_work_regardless_of_direction() {
         let grid = Grid::from_descriptor(
-            grid::GridDescriptor {
+            grid::Descriptor {
                 aabb: Aabb {
                     min: [0.0, 0.0, 0.0].into(),
                     max: [1.0, 1.0, 1.0].into(),
