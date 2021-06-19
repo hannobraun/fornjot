@@ -1,13 +1,11 @@
 use std::fmt;
 
-use nalgebra::Point;
-
-use crate::geometry::{isosurface::grid, util::DebugPoint};
+use crate::geometry::isosurface::grid;
 
 #[derive(Clone, Copy, PartialEq)]
 pub struct Edge {
-    pub a: Value,
-    pub b: Value,
+    pub a: grid::Value,
+    pub b: grid::Value,
 }
 
 impl Edge {
@@ -20,12 +18,12 @@ impl Edge {
 
     pub fn swap_values(self) -> Self {
         Self {
-            a: Value {
+            a: grid::Value {
                 index: self.a.index,
                 point: self.a.point,
                 value: self.b.value,
             },
-            b: Value {
+            b: grid::Value {
                 index: self.b.index,
                 point: self.b.point,
                 value: self.a.value,
@@ -85,19 +83,6 @@ fn signum(v: f32) -> i32 {
         0
     } else {
         v.signum() as i32
-    }
-}
-
-#[derive(Clone, Copy, PartialEq)]
-pub struct Value {
-    pub index: grid::Index,
-    pub point: Point<f32, 3>,
-    pub value: f32,
-}
-
-impl fmt::Debug for Value {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{:?} ({:.2})", DebugPoint(self.point), self.value)
     }
 }
 
