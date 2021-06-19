@@ -8,18 +8,26 @@ use crate::geometry::aabb::Aabb;
 use super::GridIndex;
 
 /// Describes a uniform grid for isosurface extraction
+///
+/// A grid consists of uniformly laid out vertices that form a number of cubes.
 #[derive(Debug)]
 pub struct GridDescriptor {
+    /// The axis-aligned bounding box of the isosurface
+    ///
+    /// The uniform grid will extend beyond this bounding box, i.e. there will
+    /// be grid vertices outside of the bounding box. See `Self::vertices` for
+    /// details.
     pub aabb: Aabb<3>,
+
+    /// The resolution of the grid, i.e. the distance between grid vertices
     pub resolution: f32,
 }
 
 impl GridDescriptor {
-    /// Returns the grid points themselves
+    /// Compute the grid vertices
     ///
-    /// The grid extends beyond the `min` and `max` values given to the
-    /// constructor, so that the center of the outermost cubes are on the
-    /// isosurface, or outside of it.
+    /// The grid extends beyond `self.aabb`, so that the center of the outermost
+    /// grid cells are outside of, or on, the isosurface.
     pub fn vertices(
         &self,
     ) -> impl Iterator<Item = (GridIndex, Point<f32, 3>)> + '_ {
