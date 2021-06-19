@@ -172,7 +172,7 @@ mod tests {
     use crate::geometry::{
         aabb::Aabb,
         attributes::Distance,
-        isosurface::{Edge, GridDescriptor, Value},
+        isosurface::{grid, Edge, Value},
     };
 
     use super::Grid;
@@ -180,7 +180,7 @@ mod tests {
     #[test]
     fn edges_should_return_edges() {
         let grid = Grid::from_descriptor(
-            GridDescriptor {
+            grid::GridDescriptor {
                 aabb: Aabb {
                     min: [0.0, 0.0, 0.0].into(),
                     max: [1.0, 1.0, 1.0].into(),
@@ -259,7 +259,7 @@ mod tests {
     #[test]
     fn neighbors_of_edge_should_return_neighboring_grid_centers() {
         let grid = Grid::from_descriptor(
-            GridDescriptor {
+            grid::GridDescriptor {
                 aabb: Aabb {
                     min: [0.0, 0.0, 0.0].into(),
                     max: [1.0, 1.0, 1.0].into(),
@@ -311,7 +311,7 @@ mod tests {
     #[test]
     fn neighbors_of_edge_should_work_regardless_of_direction() {
         let grid = Grid::from_descriptor(
-            GridDescriptor {
+            grid::GridDescriptor {
                 aabb: Aabb {
                     min: [0.0, 0.0, 0.0].into(),
                     max: [1.0, 1.0, 1.0].into(),

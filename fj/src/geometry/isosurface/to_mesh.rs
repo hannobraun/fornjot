@@ -3,13 +3,13 @@ use crate::{
     mesh::Mesh,
 };
 
-use super::{Grid, GridDescriptor};
+use super::{grid, Grid};
 
 pub fn to_mesh(
     isosurface: &(impl Distance<3> + BoundingVolume<3>),
     resolution: f32,
 ) -> Mesh {
-    let grid_descriptor = GridDescriptor {
+    let grid_descriptor = grid::GridDescriptor {
         aabb: isosurface.aabb(),
         resolution,
     };
