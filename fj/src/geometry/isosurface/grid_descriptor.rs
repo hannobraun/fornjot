@@ -7,7 +7,7 @@ use crate::geometry::aabb::Aabb;
 
 use super::GridIndex;
 
-/// A grid for isosurface extraction
+/// Describes a uniform grid for isosurface extraction
 #[derive(Debug)]
 pub struct GridDescriptor {
     pub aabb: Aabb<3>,
