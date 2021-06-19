@@ -5,7 +5,7 @@ use nalgebra::Point;
 
 use crate::geometry::aabb::Aabb;
 
-use super::GridIndex;
+use super::Index;
 
 /// Describes a uniform grid for isosurface extraction
 ///
@@ -30,7 +30,7 @@ impl Descriptor {
     /// grid cells are outside of, or on, the isosurface.
     pub fn vertices(
         &self,
-    ) -> impl Iterator<Item = (GridIndex, Point<f32, 3>)> + '_ {
+    ) -> impl Iterator<Item = (Index, Point<f32, 3>)> + '_ {
         let min = self.aabb.min;
         let max = self.aabb.max;
 
@@ -41,7 +41,7 @@ impl Descriptor {
         let indices = indices_x
             .cartesian_product(indices_y)
             .cartesian_product(indices_z)
-            .map(|((x, y), z)| GridIndex::from([x, y, z]));
+            .map(|((x, y), z)| Index::from([x, y, z]));
 
         let points = indices.map(move |index| {
             (index, index.to_coordinates(min, self.resolution))

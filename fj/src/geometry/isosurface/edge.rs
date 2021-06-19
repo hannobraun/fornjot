@@ -92,7 +92,7 @@ fn signum(v: f32) -> i32 {
 
 #[derive(Clone, Copy, PartialEq)]
 pub struct Value {
-    pub index: grid::GridIndex,
+    pub index: grid::Index,
     pub point: Point<f32, 3>,
     pub value: f32,
 }

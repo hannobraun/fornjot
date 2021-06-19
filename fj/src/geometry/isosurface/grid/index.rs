@@ -1,9 +1,9 @@
 use nalgebra::Point;
 
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub struct GridIndex([usize; 3]);
+pub struct Index([usize; 3]);
 
-impl GridIndex {
+impl Index {
     pub fn x(&self) -> usize {
         self.0[0]
     }
@@ -30,7 +30,7 @@ impl GridIndex {
     }
 }
 
-impl From<[usize; 3]> for GridIndex {
+impl From<[usize; 3]> for Index {
     fn from(index: [usize; 3]) -> Self {
         Self(index)
     }

@@ -1,7 +1,7 @@
 mod descriptor;
 mod index;
 
-pub use self::{descriptor::Descriptor, index::GridIndex};
+pub use self::{descriptor::Descriptor, index::Index};
 
 use std::{array, collections::BTreeMap};
 
@@ -18,7 +18,7 @@ use super::{
 #[derive(Debug)]
 pub struct Grid {
     descriptor: Descriptor,
-    values: BTreeMap<GridIndex, (Point<f32, 3>, f32)>,
+    values: BTreeMap<Index, (Point<f32, 3>, f32)>,
 }
 
 impl Grid {
@@ -141,11 +141,11 @@ impl Grid {
 }
 
 fn edge_to_next(
-    index: GridIndex,
+    index: Index,
     point: Point<f32, 3>,
     value: f32,
-    next_index: GridIndex,
-    values: &BTreeMap<GridIndex, (Point<f32, 3>, f32)>,
+    next_index: Index,
+    values: &BTreeMap<Index, (Point<f32, 3>, f32)>,
 ) -> Option<Edge> {
     let &(next_point, next_value) = values.get(&next_index)?;
 
