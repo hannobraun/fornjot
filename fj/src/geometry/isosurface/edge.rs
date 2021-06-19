@@ -4,7 +4,7 @@ use nalgebra::Point;
 
 use crate::geometry::util::DebugPoint;
 
-use super::GridIndex;
+use super::grid;
 
 #[derive(Clone, Copy, PartialEq)]
 pub struct Edge {
@@ -92,7 +92,7 @@ fn signum(v: f32) -> i32 {
 
 #[derive(Clone, Copy, PartialEq)]
 pub struct Value {
-    pub index: GridIndex,
+    pub index: grid::GridIndex,
     pub point: Point<f32, 3>,
     pub value: f32,
 }
