@@ -23,7 +23,7 @@ impl Grid {
         isosurface: &impl Distance<3>,
     ) -> Self {
         let values = descriptor
-            .points()
+            .vertices()
             .filter_map(|(index, point)| {
                 // Compute distance of this point from the isosurface, and
                 // filter all points that aren't close to the surface.

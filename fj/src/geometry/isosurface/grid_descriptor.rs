@@ -20,7 +20,7 @@ impl GridDescriptor {
     /// The grid extends beyond the `min` and `max` values given to the
     /// constructor, so that the center of the outermost cubes are on the
     /// isosurface, or outside of it.
-    pub fn points(
+    pub fn vertices(
         &self,
     ) -> impl Iterator<Item = (GridIndex, Point<f32, 3>)> + '_ {
         let min = self.aabb.min;
@@ -66,7 +66,7 @@ mod tests {
             resolution: 1.0,
         };
 
-        let points: Vec<_> = grid.points().collect();
+        let points: Vec<_> = grid.vertices().collect();
 
         assert_eq!(
             points,
