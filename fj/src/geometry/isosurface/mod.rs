@@ -9,7 +9,6 @@
 //! [Dual Contouring of Hermite Data]: https://www.cse.wustl.edu/~taoju/research/dualContour.pdf
 //! [Manifold Dual Contouring]: https://people.engr.tamu.edu/schaefer/research/dualsimp_tvcg.pdf
 
-pub mod edge;
 pub mod grid;
 pub mod to_mesh;
 
