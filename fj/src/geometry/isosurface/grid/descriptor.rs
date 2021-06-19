@@ -24,6 +24,13 @@ pub struct Descriptor {
 }
 
 impl Descriptor {
+    /// TASK: Add method that returns an iterator over the cubes of the grid. A
+    ///       cube might be best represented by a struct that has methods to
+    ///       return the indices and positions of its vertices.
+    ///
+    ///       This method can then be used by `Grid` to compute all the cubes
+    ///       that feature sign changes, and take it from there.
+
     /// Compute the grid vertices
     ///
     /// The grid extends beyond `self.aabb`, so that the center of the outermost
