@@ -174,7 +174,7 @@ mod tests {
     use crate::geometry::{
         aabb::Aabb,
         attributes::Distance,
-        isosurface::{grid, Edge, Value},
+        isosurface::{grid, Edge},
     };
 
     use super::Grid;
@@ -349,36 +349,36 @@ mod tests {
         pub fn new() -> Self {
             Self {
                 x: Edge {
-                    a: Value {
+                    a: grid::Value {
                         index: [1, 1, 1].into(),
                         point: [1.0.into(), 1.0.into(), 1.0.into()].into(),
                         value: 1.0.into(),
                     },
-                    b: Value {
+                    b: grid::Value {
                         index: [2, 1, 1].into(),
                         point: [2.0.into(), 1.0.into(), 1.0.into()].into(),
                         value: 0.0.into(),
                     },
                 },
                 y: Edge {
-                    a: Value {
+                    a: grid::Value {
                         index: [1, 1, 1].into(),
                         point: [1.0.into(), 1.0.into(), 1.0.into()].into(),
                         value: 1.0.into(),
                     },
-                    b: Value {
+                    b: grid::Value {
                         index: [1, 2, 1].into(),
                         point: [1.0.into(), 2.0.into(), 1.0.into()].into(),
                         value: 0.0.into(),
                     },
                 },
                 z: Edge {
-                    a: Value {
+                    a: grid::Value {
                         index: [1, 1, 1].into(),
                         point: [1.0.into(), 1.0.into(), 1.0.into()].into(),
                         value: 1.0.into(),
                     },
-                    b: Value {
+                    b: grid::Value {
                         index: [1, 1, 2].into(),
                         point: [1.0.into(), 1.0.into(), 2.0.into()].into(),
                         value: 0.0.into(),
