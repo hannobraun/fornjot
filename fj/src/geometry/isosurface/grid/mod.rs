@@ -1,5 +1,7 @@
 pub mod descriptor;
 
+pub use self::descriptor::GridDescriptor;
+
 use std::{array, collections::BTreeMap};
 
 use nalgebra::Point;
@@ -8,7 +10,7 @@ use crate::geometry::attributes::Distance;
 
 use super::{
     edge::{Axis, Sign},
-    Edge, GridDescriptor, GridIndex, Value,
+    Edge, GridIndex, Value,
 };
 
 /// A uniform grid for isosurface extraction
