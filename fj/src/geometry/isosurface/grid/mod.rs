@@ -2,6 +2,7 @@ mod descriptor;
 mod index;
 
 pub use self::{descriptor::Descriptor, index::Index};
+pub use super::edge::Value;
 
 use std::{array, collections::BTreeMap};
 
@@ -11,7 +12,7 @@ use crate::geometry::attributes::Distance;
 
 use super::{
     edge::{Axis, Sign},
-    Edge, Value,
+    Edge,
 };
 
 /// A uniform grid for isosurface extraction
