@@ -169,11 +169,7 @@ fn edge_to_next(
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::{
-        aabb::Aabb,
-        attributes::Distance,
-        isosurface::{grid, Edge},
-    };
+    use crate::geometry::{aabb::Aabb, attributes::Distance, isosurface::grid};
 
     use super::Grid;
 
@@ -338,15 +334,15 @@ mod tests {
     }
 
     pub struct TestEdges {
-        pub x: Edge,
-        pub y: Edge,
-        pub z: Edge,
+        pub x: grid::Edge,
+        pub y: grid::Edge,
+        pub z: grid::Edge,
     }
 
     impl TestEdges {
         pub fn new() -> Self {
             Self {
-                x: Edge {
+                x: grid::Edge {
                     a: grid::Value {
                         index: [1, 1, 1].into(),
                         point: [1.0.into(), 1.0.into(), 1.0.into()].into(),
@@ -358,7 +354,7 @@ mod tests {
                         value: 0.0.into(),
                     },
                 },
-                y: Edge {
+                y: grid::Edge {
                     a: grid::Value {
                         index: [1, 1, 1].into(),
                         point: [1.0.into(), 1.0.into(), 1.0.into()].into(),
@@ -370,7 +366,7 @@ mod tests {
                         value: 0.0.into(),
                     },
                 },
-                z: Edge {
+                z: grid::Edge {
                     a: grid::Value {
                         index: [1, 1, 1].into(),
                         point: [1.0.into(), 1.0.into(), 1.0.into()].into(),
