@@ -2,9 +2,7 @@ use std::fmt;
 
 use nalgebra::Point;
 
-use crate::geometry::util::DebugPoint;
-
-use super::grid;
+use crate::geometry::{isosurface::grid, util::DebugPoint};
 
 #[derive(Clone, Copy, PartialEq)]
 pub struct Edge {
