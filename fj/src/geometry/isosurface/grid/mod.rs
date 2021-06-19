@@ -1,4 +1,4 @@
-pub mod descriptor;
+mod descriptor;
 
 pub use self::descriptor::Descriptor;
 
