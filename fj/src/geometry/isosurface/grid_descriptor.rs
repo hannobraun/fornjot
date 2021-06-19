@@ -8,12 +8,6 @@ use crate::geometry::aabb::Aabb;
 use super::GridIndex;
 
 /// A grid for isosurface extraction
-///
-/// `min` and `max` define the minimum and maximum points of the isosurface.
-/// `resolution` is the distance between points in the grid.
-///
-/// The actual values returned by `Grid`'s methods might be below or above that,
-/// to enable proper extraction of the surface.
 #[derive(Debug)]
 pub struct GridDescriptor {
     pub aabb: Aabb<3>,
