@@ -122,17 +122,19 @@ pub enum Sign {
 
 #[cfg(test)]
 mod tests {
-    use super::{Edge, Value};
+    use crate::geometry::isosurface::grid;
+
+    use super::Edge;
 
     #[test]
     fn at_surface_should_detect_whether_edge_is_at_surface() {
         let inside_surface = Edge {
-            a: Value {
+            a: grid::Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
                 value: -0.2,
             },
-            b: Value {
+            b: grid::Value {
                 index: [0, 0, 0].into(),
                 point: [0.1, 0.0, 0.0].into(),
                 value: -0.1,
@@ -142,12 +144,12 @@ mod tests {
         assert_eq!(inside_surface.reverse().at_surface(), false);
 
         let outside_surface = Edge {
-            a: Value {
+            a: grid::Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
                 value: 0.1,
             },
-            b: Value {
+            b: grid::Value {
                 index: [0, 1, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
                 value: 0.2,
@@ -157,12 +159,12 @@ mod tests {
         assert_eq!(outside_surface.reverse().at_surface(), false);
 
         let through_surface = Edge {
-            a: Value {
+            a: grid::Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
                 value: -0.1,
             },
-            b: Value {
+            b: grid::Value {
                 index: [0, 0, 0].into(),
                 point: [0.2, 0.0, 0.0].into(),
                 value: 0.1,
@@ -172,12 +174,12 @@ mod tests {
         assert_eq!(through_surface.reverse().at_surface(), true);
 
         let inside_to_surface = Edge {
-            a: Value {
+            a: grid::Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
                 value: -0.1,
             },
-            b: Value {
+            b: grid::Value {
                 index: [0, 0, 0].into(),
                 point: [0.1, 0.0, 0.0].into(),
                 value: 0.0,
@@ -187,12 +189,12 @@ mod tests {
         assert_eq!(inside_to_surface.reverse().at_surface(), false);
 
         let outside_to_surface = Edge {
-            a: Value {
+            a: grid::Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
                 value: 0.0,
             },
-            b: Value {
+            b: grid::Value {
                 index: [0, 0, 0].into(),
                 point: [0.1, 0.0, 0.0].into(),
                 value: 0.1,
