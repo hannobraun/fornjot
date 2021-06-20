@@ -5,7 +5,7 @@ use nalgebra::Point;
 
 use crate::geometry::aabb::Aabb;
 
-use super::Index;
+use super::{Cube, Index};
 
 /// Describes a uniform grid for isosurface extraction
 ///
@@ -24,12 +24,31 @@ pub struct Descriptor {
 }
 
 impl Descriptor {
-    // TASK: Add method that returns an iterator over the cubes of the grid. A
-    //       cube might be best represented by a struct that has methods to
-    //       return the indices and positions of its vertices.
-    //
-    //       This method can then be used by `Grid` to compute all the cubes
-    //       that feature sign changes, and take it from there.
+    /// Compute the grid cubes
+    ///
+    /// The grid extends beyond `self.aabb`, so that the center of the outermost
+    /// grid cells are outside of, or on, the isosurface.
+    pub fn cubes(&self) -> impl Iterator<Item = Cube> + '_ {
+        let min = self.aabb.min;
+        let max = self.aabb.max;
+
+        let indices_x = cube_indices(min.x, max.x, self.resolution);
+        let indices_y = cube_indices(min.y, max.y, self.resolution);
+        let indices_z = cube_indices(min.z, max.z, self.resolution);
+
+        let indices = indices_x
+            .cartesian_product(indices_y)
+            .cartesian_product(indices_z)
+            .map(|((x, y), z)| Index::from([x, y, z]));
+
+        let cubes = indices.map(move |index| Cube {
+            min_index: index,
+            min_position: index.to_coordinates(min, self.resolution),
+            resolution: self.resolution,
+        });
+
+        cubes
+    }
 
     /// Compute the grid vertices
     ///
@@ -58,6 +77,13 @@ impl Descriptor {
     }
 }
 
+fn cube_indices(min: f32, max: f32, resolution: f32) -> Range<usize> {
+    let lower = 0;
+    let upper = ((max - min) / resolution).ceil() as usize + 1;
+
+    lower..upper
+}
+
 fn indices(min: f32, max: f32, resolution: f32) -> Range<usize> {
     let lower = 0;
     let upper = ((max - min) / resolution).ceil() as usize + 2;
@@ -67,9 +93,68 @@ fn indices(min: f32, max: f32, resolution: f32) -> Range<usize> {
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::aabb::Aabb;
+    use crate::geometry::{aabb::Aabb, isosurface::grid};
 
     use super::Descriptor;
+
+    #[test]
+    fn cubes_should_return_grid_cubes() {
+        let grid = Descriptor {
+            aabb: Aabb {
+                min: [0.0, 0.0, 0.5].into(),
+                max: [0.5, 1.0, 1.5].into(),
+            },
+            resolution: 1.0,
+        };
+
+        let cubes: Vec<_> = grid.cubes().collect();
+
+        assert_eq!(
+            cubes,
+            vec![
+                grid::Cube {
+                    min_index: [0, 0, 0].into(),
+                    min_position: [-0.5, -0.5, 0.0].into(),
+                    resolution: 1.0,
+                },
+                grid::Cube {
+                    min_index: [0, 0, 1].into(),
+                    min_position: [-0.5, -0.5, 1.0].into(),
+                    resolution: 1.0,
+                },
+                grid::Cube {
+                    min_index: [0, 1, 0].into(),
+                    min_position: [-0.5, 0.5, 0.0].into(),
+                    resolution: 1.0,
+                },
+                grid::Cube {
+                    min_index: [0, 1, 1].into(),
+                    min_position: [-0.5, 0.5, 1.0].into(),
+                    resolution: 1.0,
+                },
+                grid::Cube {
+                    min_index: [1, 0, 0].into(),
+                    min_position: [0.5, -0.5, 0.0].into(),
+                    resolution: 1.0,
+                },
+                grid::Cube {
+                    min_index: [1, 0, 1].into(),
+                    min_position: [0.5, -0.5, 1.0].into(),
+                    resolution: 1.0,
+                },
+                grid::Cube {
+                    min_index: [1, 1, 0].into(),
+                    min_position: [0.5, 0.5, 0.0].into(),
+                    resolution: 1.0,
+                },
+                grid::Cube {
+                    min_index: [1, 1, 1].into(),
+                    min_position: [0.5, 0.5, 1.0].into(),
+                    resolution: 1.0,
+                },
+            ]
+        );
+    }
 
     #[test]
     fn vertices_should_return_grid_vertices() {
