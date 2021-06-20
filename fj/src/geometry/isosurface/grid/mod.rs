@@ -1,11 +1,11 @@
-mod cube;
+mod cell;
 mod descriptor;
 mod edge;
 mod index;
 mod value;
 
 pub use self::{
-    cube::Cube, descriptor::Descriptor, edge::Edge, index::Index, value::Value,
+    cell::Cube, descriptor::Descriptor, edge::Edge, index::Index, value::Value,
 };
 
 use std::{array, collections::BTreeMap};
