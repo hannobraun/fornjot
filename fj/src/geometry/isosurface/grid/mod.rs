@@ -33,6 +33,8 @@ impl Grid {
         let surface_vertices = descriptor
             .cells()
             .map(|cell| {
+                // TASK: Place surface vertex more accurately.
+
                 // We're saving the surface vertices of all grid cells here, but
                 // we actually only need those that feature a sign change.
                 (
