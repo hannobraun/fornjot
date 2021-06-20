@@ -10,9 +10,4 @@ pub struct Cell {
 
     /// The position of the minimum (as defined by index ordering) cell vertex
     pub min_position: Point<f32, 3>,
-
-    /// The resolution of the grid, i.e. the size of the cell
-    ///
-    /// Required to compute the positions of the cell's vertices.
-    pub resolution: f32,
 }

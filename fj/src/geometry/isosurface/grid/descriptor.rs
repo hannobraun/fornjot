@@ -44,7 +44,6 @@ impl Descriptor {
         let cells = indices.map(move |index| Cell {
             min_index: index,
             min_position: index.to_coordinates(min, self.resolution),
-            resolution: self.resolution,
         });
 
         cells
@@ -115,42 +114,34 @@ mod tests {
                 grid::Cell {
                     min_index: [0, 0, 0].into(),
                     min_position: [-0.5, -0.5, 0.0].into(),
-                    resolution: 1.0,
                 },
                 grid::Cell {
                     min_index: [0, 0, 1].into(),
                     min_position: [-0.5, -0.5, 1.0].into(),
-                    resolution: 1.0,
                 },
                 grid::Cell {
                     min_index: [0, 1, 0].into(),
                     min_position: [-0.5, 0.5, 0.0].into(),
-                    resolution: 1.0,
                 },
                 grid::Cell {
                     min_index: [0, 1, 1].into(),
                     min_position: [-0.5, 0.5, 1.0].into(),
-                    resolution: 1.0,
                 },
                 grid::Cell {
                     min_index: [1, 0, 0].into(),
                     min_position: [0.5, -0.5, 0.0].into(),
-                    resolution: 1.0,
                 },
                 grid::Cell {
                     min_index: [1, 0, 1].into(),
                     min_position: [0.5, -0.5, 1.0].into(),
-                    resolution: 1.0,
                 },
                 grid::Cell {
                     min_index: [1, 1, 0].into(),
                     min_position: [0.5, 0.5, 0.0].into(),
-                    resolution: 1.0,
                 },
                 grid::Cell {
                     min_index: [1, 1, 1].into(),
                     min_position: [0.5, 0.5, 1.0].into(),
-                    resolution: 1.0,
                 },
             ]
         );
