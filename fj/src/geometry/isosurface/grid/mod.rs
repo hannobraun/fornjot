@@ -39,9 +39,9 @@ impl Grid {
                     cell.min_index,
                     cell.min_position
                         + Vector::from([
-                            cell.resolution / 2.0,
-                            cell.resolution / 2.0,
-                            cell.resolution / 2.0,
+                            descriptor.resolution / 2.0,
+                            descriptor.resolution / 2.0,
+                            descriptor.resolution / 2.0,
                         ]),
                 )
             })
