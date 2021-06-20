@@ -28,7 +28,7 @@ impl Descriptor {
     ///
     /// The grid extends beyond `self.aabb`, so that the center of the outermost
     /// grid cells are outside of, or on, the isosurface.
-    pub fn cubes(&self) -> impl Iterator<Item = Cell> + '_ {
+    pub fn cells(&self) -> impl Iterator<Item = Cell> + '_ {
         let min = self.aabb.min;
         let max = self.aabb.max;
 
@@ -107,7 +107,7 @@ mod tests {
             resolution: 1.0,
         };
 
-        let cubes: Vec<_> = grid.cubes().collect();
+        let cubes: Vec<_> = grid.cells().collect();
 
         assert_eq!(
             cubes,
