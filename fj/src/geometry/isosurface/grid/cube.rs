@@ -5,6 +5,7 @@ use nalgebra::{Point, Vector};
 use crate::geometry::isosurface::grid;
 
 /// A cube in a uniform grid used for isosurface extraction
+#[derive(Debug, PartialEq)]
 pub struct Cube {
     /// The index of the minimum (as defined by index ordering) cube vertex
     pub min_index: grid::Index,
