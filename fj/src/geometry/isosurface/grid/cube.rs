@@ -1,5 +1,3 @@
-#![cfg(test)]
-
 use std::array;
 
 use nalgebra::{Point, Vector};
