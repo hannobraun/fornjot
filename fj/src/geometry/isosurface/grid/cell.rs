@@ -6,7 +6,7 @@ use crate::geometry::isosurface::grid;
 
 /// A cube in a uniform grid used for isosurface extraction
 #[derive(Debug, PartialEq)]
-pub struct Cube {
+pub struct Cell {
     /// The index of the minimum (as defined by index ordering) cube vertex
     pub min_index: grid::Index,
 
@@ -19,7 +19,7 @@ pub struct Cube {
     pub resolution: f32,
 }
 
-impl Cube {
+impl Cell {
     pub fn vertices(
         &self,
     ) -> impl Iterator<Item = (grid::Index, Point<f32, 3>)> {
@@ -62,11 +62,11 @@ impl Cube {
 
 #[cfg(test)]
 mod tests {
-    use super::Cube;
+    use super::Cell;
 
     #[test]
     fn vertices_should_compute_cube_vertices() {
-        let cube = Cube {
+        let cube = Cell {
             min_index: [0, 0, 0].into(),
             min_position: [0.0, 0.0, 0.0].into(),
             resolution: 1.0,

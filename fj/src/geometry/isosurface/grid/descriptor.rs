@@ -5,7 +5,7 @@ use nalgebra::Point;
 
 use crate::geometry::aabb::Aabb;
 
-use super::{Cube, Index};
+use super::{Cell, Index};
 
 /// Describes a uniform grid for isosurface extraction
 ///
@@ -28,7 +28,7 @@ impl Descriptor {
     ///
     /// The grid extends beyond `self.aabb`, so that the center of the outermost
     /// grid cells are outside of, or on, the isosurface.
-    pub fn cubes(&self) -> impl Iterator<Item = Cube> + '_ {
+    pub fn cubes(&self) -> impl Iterator<Item = Cell> + '_ {
         let min = self.aabb.min;
         let max = self.aabb.max;
 
@@ -41,7 +41,7 @@ impl Descriptor {
             .cartesian_product(indices_z)
             .map(|((x, y), z)| Index::from([x, y, z]));
 
-        let cubes = indices.map(move |index| Cube {
+        let cubes = indices.map(move |index| Cell {
             min_index: index,
             min_position: index.to_coordinates(min, self.resolution),
             resolution: self.resolution,
@@ -112,42 +112,42 @@ mod tests {
         assert_eq!(
             cubes,
             vec![
-                grid::Cube {
+                grid::Cell {
                     min_index: [0, 0, 0].into(),
                     min_position: [-0.5, -0.5, 0.0].into(),
                     resolution: 1.0,
                 },
-                grid::Cube {
+                grid::Cell {
                     min_index: [0, 0, 1].into(),
                     min_position: [-0.5, -0.5, 1.0].into(),
                     resolution: 1.0,
                 },
-                grid::Cube {
+                grid::Cell {
                     min_index: [0, 1, 0].into(),
                     min_position: [-0.5, 0.5, 0.0].into(),
                     resolution: 1.0,
                 },
-                grid::Cube {
+                grid::Cell {
                     min_index: [0, 1, 1].into(),
                     min_position: [-0.5, 0.5, 1.0].into(),
                     resolution: 1.0,
                 },
-                grid::Cube {
+                grid::Cell {
                     min_index: [1, 0, 0].into(),
                     min_position: [0.5, -0.5, 0.0].into(),
                     resolution: 1.0,
                 },
-                grid::Cube {
+                grid::Cell {
                     min_index: [1, 0, 1].into(),
                     min_position: [0.5, -0.5, 1.0].into(),
                     resolution: 1.0,
                 },
-                grid::Cube {
+                grid::Cell {
                     min_index: [1, 1, 0].into(),
                     min_position: [0.5, 0.5, 0.0].into(),
                     resolution: 1.0,
                 },
-                grid::Cube {
+                grid::Cell {
                     min_index: [1, 1, 1].into(),
                     min_position: [0.5, 0.5, 1.0].into(),
                     resolution: 1.0,

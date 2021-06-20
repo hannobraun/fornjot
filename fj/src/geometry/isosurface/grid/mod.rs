@@ -5,7 +5,7 @@ mod index;
 mod value;
 
 pub use self::{
-    cell::Cube, descriptor::Descriptor, edge::Edge, index::Index, value::Value,
+    cell::Cell, descriptor::Descriptor, edge::Edge, index::Index, value::Value,
 };
 
 use std::{array, collections::BTreeMap};
