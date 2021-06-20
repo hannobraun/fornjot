@@ -81,10 +81,10 @@ mod tests {
             resolution: 1.0,
         };
 
-        let points: Vec<_> = grid.vertices().collect();
+        let vertices: Vec<_> = grid.vertices().collect();
 
         assert_eq!(
-            points,
+            vertices,
             vec![
                 ([0, 0, 0].into(), [-0.5, -0.5, 0.0].into()),
                 ([0, 0, 1].into(), [-0.5, -0.5, 1.0].into()),
