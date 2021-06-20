@@ -107,10 +107,10 @@ mod tests {
             resolution: 1.0,
         };
 
-        let cubes: Vec<_> = grid.cells().collect();
+        let cells: Vec<_> = grid.cells().collect();
 
         assert_eq!(
-            cubes,
+            cells,
             vec![
                 grid::Cell {
                     min_index: [0, 0, 0].into(),
