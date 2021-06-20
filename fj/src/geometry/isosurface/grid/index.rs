@@ -1,4 +1,4 @@
-use std::ops::Add;
+use std::{convert::TryInto as _, ops::Add};
 
 use nalgebra::Point;
 
@@ -38,13 +38,13 @@ impl From<[usize; 3]> for Index {
     }
 }
 
-impl Add<[usize; 3]> for Index {
+impl Add<[isize; 3]> for Index {
     type Output = Self;
 
-    fn add(mut self, rhs: [usize; 3]) -> Self::Output {
-        self.0[0] += rhs[0];
-        self.0[1] += rhs[1];
-        self.0[2] += rhs[2];
+    fn add(mut self, rhs: [isize; 3]) -> Self::Output {
+        self.0[0] = (self.0[0] as isize + rhs[0]).try_into().unwrap();
+        self.0[1] = (self.0[1] as isize + rhs[1]).try_into().unwrap();
+        self.0[2] = (self.0[2] as isize + rhs[2]).try_into().unwrap();
 
         self
     }
