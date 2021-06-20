@@ -66,13 +66,13 @@ mod tests {
 
     #[test]
     fn vertices_should_compute_cell_vertices() {
-        let cube = Cell {
+        let cell = Cell {
             min_index: [0, 0, 0].into(),
             min_position: [0.0, 0.0, 0.0].into(),
             resolution: 1.0,
         };
 
-        let vertices: Vec<_> = cube.vertices().collect();
+        let vertices: Vec<_> = cell.vertices().collect();
 
         assert_eq!(
             vertices,
