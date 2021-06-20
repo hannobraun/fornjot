@@ -65,7 +65,7 @@ mod tests {
     use super::Cell;
 
     #[test]
-    fn vertices_should_compute_cube_vertices() {
+    fn vertices_should_compute_cell_vertices() {
         let cube = Cell {
             min_index: [0, 0, 0].into(),
             min_position: [0.0, 0.0, 0.0].into(),
