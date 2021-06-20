@@ -98,7 +98,7 @@ mod tests {
     use super::Descriptor;
 
     #[test]
-    fn cubes_should_return_grid_cubes() {
+    fn cells_should_return_grid_cells() {
         let grid = Descriptor {
             aabb: Aabb {
                 min: [0.0, 0.0, 0.5].into(),
