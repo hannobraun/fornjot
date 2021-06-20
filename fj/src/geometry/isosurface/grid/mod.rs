@@ -87,7 +87,7 @@ impl Grid {
             .filter_map(|edge| edge)
     }
 
-    /// Returns the 4 neighboring cube centers of a grid edge
+    /// Returns the 4 neighboring surface vertices of a grid edge
     pub fn neighbors_of_edge(&self, edge: Edge) -> [Point<f32, 3>; 4] {
         let direction = edge.direction();
 
