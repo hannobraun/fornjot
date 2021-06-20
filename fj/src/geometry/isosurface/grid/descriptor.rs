@@ -41,13 +41,13 @@ impl Descriptor {
             .cartesian_product(indices_z)
             .map(|((x, y), z)| Index::from([x, y, z]));
 
-        let cubes = indices.map(move |index| Cell {
+        let cells = indices.map(move |index| Cell {
             min_index: index,
             min_position: index.to_coordinates(min, self.resolution),
             resolution: self.resolution,
         });
 
-        cubes
+        cells
     }
 
     /// Compute the grid vertices
