@@ -1,3 +1,5 @@
+use std::ops::Add;
+
 use nalgebra::Point;
 
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -33,6 +35,18 @@ impl Index {
 impl From<[usize; 3]> for Index {
     fn from(index: [usize; 3]) -> Self {
         Self(index)
+    }
+}
+
+impl Add<[usize; 3]> for Index {
+    type Output = Self;
+
+    fn add(mut self, rhs: [usize; 3]) -> Self::Output {
+        self.0[0] += rhs[0];
+        self.0[1] += rhs[1];
+        self.0[2] += rhs[2];
+
+        self
     }
 }
 
