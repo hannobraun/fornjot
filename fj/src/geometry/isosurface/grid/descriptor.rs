@@ -72,7 +72,7 @@ mod tests {
     use super::Descriptor;
 
     #[test]
-    fn points_should_return_grid_points() {
+    fn vertices_should_return_grid_vertices() {
         let grid = Descriptor {
             aabb: Aabb {
                 min: [0.0, 0.0, 0.5].into(),
