@@ -20,7 +20,7 @@ use self::edge::{Axis, Sign};
 #[derive(Debug)]
 pub struct Grid {
     descriptor: Descriptor,
-    values: BTreeMap<Index, (Point<f32, 3>, f32)>,
+    grid_vertex_values: BTreeMap<Index, (Point<f32, 3>, f32)>,
 }
 
 impl Grid {
@@ -29,7 +29,7 @@ impl Grid {
         descriptor: Descriptor,
         isosurface: &impl Distance<3>,
     ) -> Self {
-        let values = descriptor
+        let grid_vertex_values = descriptor
             .vertices()
             .filter_map(|(index, vertex)| {
                 // Compute distance of this vertex from the isosurface, and
@@ -43,12 +43,15 @@ impl Grid {
             })
             .collect();
 
-        Self { descriptor, values }
+        Self {
+            descriptor,
+            grid_vertex_values,
+        }
     }
 
     /// Returns iterator over all grid edges
     pub fn edges(&self) -> impl Iterator<Item = Edge> + '_ {
-        self.values
+        self.grid_vertex_values
             .iter()
             .map(move |(&index, &(point, value))| {
                 let next_z = [index.x(), index.y(), index.z() + 1];
@@ -61,21 +64,21 @@ impl Grid {
                         point,
                         value,
                         next_z.into(),
-                        &self.values,
+                        &self.grid_vertex_values,
                     ),
                     edge_to_next(
                         index,
                         point,
                         value,
                         next_y.into(),
-                        &self.values,
+                        &self.grid_vertex_values,
                     ),
                     edge_to_next(
                         index,
                         point,
                         value,
                         next_x.into(),
-                        &self.values,
+                        &self.grid_vertex_values,
                     ),
                 ]
             })
