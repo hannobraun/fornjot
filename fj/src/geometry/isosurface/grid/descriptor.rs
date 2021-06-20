@@ -32,9 +32,9 @@ impl Descriptor {
         let min = self.aabb.min;
         let max = self.aabb.max;
 
-        let indices_x = cube_indices(min.x, max.x, self.resolution);
-        let indices_y = cube_indices(min.y, max.y, self.resolution);
-        let indices_z = cube_indices(min.z, max.z, self.resolution);
+        let indices_x = cell_indices(min.x, max.x, self.resolution);
+        let indices_y = cell_indices(min.y, max.y, self.resolution);
+        let indices_z = cell_indices(min.z, max.z, self.resolution);
 
         let indices = indices_x
             .cartesian_product(indices_y)
@@ -77,7 +77,7 @@ impl Descriptor {
     }
 }
 
-fn cube_indices(min: f32, max: f32, resolution: f32) -> Range<usize> {
+fn cell_indices(min: f32, max: f32, resolution: f32) -> Range<usize> {
     let lower = 0;
     let upper = ((max - min) / resolution).ceil() as usize + 1;
 
