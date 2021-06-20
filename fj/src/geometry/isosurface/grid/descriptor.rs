@@ -9,7 +9,7 @@ use super::{Cell, Index};
 
 /// Describes a uniform grid for isosurface extraction
 ///
-/// A grid consists of uniformly laid out vertices that form a number of cubes.
+/// A grid consists of uniformly laid out vertices that form a number of cells.
 #[derive(Debug)]
 pub struct Descriptor {
     /// The axis-aligned bounding box of the isosurface
@@ -24,7 +24,7 @@ pub struct Descriptor {
 }
 
 impl Descriptor {
-    /// Compute the grid cubes
+    /// Compute the grid cells
     ///
     /// The grid extends beyond `self.aabb`, so that the center of the outermost
     /// grid cells are outside of, or on, the isosurface.
