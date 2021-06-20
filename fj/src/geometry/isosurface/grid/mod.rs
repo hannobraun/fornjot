@@ -10,7 +10,7 @@ pub use self::{
 
 use std::{array, collections::BTreeMap};
 
-use nalgebra::Point;
+use nalgebra::{Point, Vector};
 
 use crate::geometry::attributes::Distance;
 
@@ -21,6 +21,7 @@ use self::edge::{Axis, Sign};
 pub struct Grid {
     descriptor: Descriptor,
     grid_vertex_values: BTreeMap<Index, (Point<f32, 3>, f32)>,
+    surface_vertices: BTreeMap<Index, Point<f32, 3>>,
 }
 
 impl Grid {
@@ -29,6 +30,23 @@ impl Grid {
         descriptor: Descriptor,
         isosurface: &impl Distance<3>,
     ) -> Self {
+        let surface_vertices = descriptor
+            .cells()
+            .map(|cell| {
+                // We're saving the surface vertices of all grid cells here, but
+                // we actually only need those that feature a sign change.
+                (
+                    cell.min_index,
+                    cell.min_position
+                        + Vector::from([
+                            cell.resolution / 2.0,
+                            cell.resolution / 2.0,
+                            cell.resolution / 2.0,
+                        ]),
+                )
+            })
+            .collect();
+
         let grid_vertex_values = descriptor
             .vertices()
             .filter_map(|(index, vertex)| {
@@ -46,6 +64,7 @@ impl Grid {
         Self {
             descriptor,
             grid_vertex_values,
+            surface_vertices,
         }
     }
 
@@ -91,28 +110,25 @@ impl Grid {
     pub fn neighbors_of_edge(&self, edge: Edge) -> [Point<f32, 3>; 4] {
         let direction = edge.direction();
 
-        // Offset from edge to cube centers around edge.
-        let o = self.descriptor.resolution / 2.0;
-
         #[rustfmt::skip]
         let [a, b, c, d] = match direction.axis {
             Axis::Z => [
-                [ o, -o, o],
-                [-o, -o, o],
-                [-o,  o, o],
-                [ o,  o, o],
+                [ 0, -1, 0],
+                [-1, -1, 0],
+                [-1,  0, 0],
+                [ 0,  0, 0],
             ],
             Axis::Y => [
-                [-o, o, -o],
-                [ o, o, -o],
-                [ o, o,  o],
-                [-o, o,  o],
+                [-1, 0, -1],
+                [ 0, 0, -1],
+                [ 0, 0,  0],
+                [-1, 0,  0],
             ],
             Axis::X => [
-                [o,  o, -o],
-                [o, -o, -o],
-                [o, -o,  o],
-                [o,  o,  o],
+                [0,  0, -1],
+                [0, -1, -1],
+                [0, -1,  0],
+                [0,  0,  0],
             ],
         };
 
@@ -120,10 +136,7 @@ impl Grid {
             Sign::Neg => edge.b,
             Sign::Pos => edge.a,
         };
-        let start = start.index.to_coordinates(
-            self.descriptor.aabb.min,
-            self.descriptor.resolution,
-        );
+        let start = start.index;
 
         let [a, b, c, d] = if direction.sign == Sign::Pos
             && edge.a.value < edge.b.value
@@ -135,10 +148,10 @@ impl Grid {
         };
 
         let neighbors = [
-            start + Point::<_, 3>::from(a).coords,
-            start + Point::<_, 3>::from(b).coords,
-            start + Point::<_, 3>::from(c).coords,
-            start + Point::<_, 3>::from(d).coords,
+            self.surface_vertices[&(start + a)],
+            self.surface_vertices[&(start + b)],
+            self.surface_vertices[&(start + c)],
+            self.surface_vertices[&(start + d)],
         ];
 
         neighbors
