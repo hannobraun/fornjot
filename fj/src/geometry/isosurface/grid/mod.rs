@@ -1,3 +1,4 @@
+mod cube;
 mod descriptor;
 mod edge;
 mod index;
