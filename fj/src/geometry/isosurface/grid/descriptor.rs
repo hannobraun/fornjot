@@ -50,11 +50,11 @@ impl Descriptor {
             .cartesian_product(indices_z)
             .map(|((x, y), z)| Index::from([x, y, z]));
 
-        let points = indices.map(move |index| {
+        let vertices = indices.map(move |index| {
             (index, index.to_coordinates(min, self.resolution))
         });
 
-        points
+        vertices
     }
 }
 
