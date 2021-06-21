@@ -70,7 +70,7 @@ impl Grid {
         }
     }
 
-    /// Returns iterator over all grid edges
+    /// Iterate over all grid edges that are near the surface
     pub fn edges(&self) -> impl Iterator<Item = Edge> + '_ {
         self.grid_vertex_values
             .iter()
