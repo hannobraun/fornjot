@@ -33,6 +33,8 @@ impl Grid {
         let surface_vertices = descriptor
             .cells()
             .map(|cell| {
+                // We're saving the surface vertices of all grid cells here, but
+                // we actually only need those that feature a sign change.
                 // TASK: Place surface vertex more accurately.
 
                 let cell_index = cell.min_index;
@@ -43,8 +45,6 @@ impl Grid {
                         descriptor.resolution / 2.0,
                     ]);
 
-                // We're saving the surface vertices of all grid cells here, but
-                // we actually only need those that feature a sign change.
                 (cell_index, surface_vertex)
             })
             .collect();
