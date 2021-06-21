@@ -36,18 +36,16 @@ impl Grid {
                 // TASK: Place surface vertex more accurately.
 
                 let cell_index = cell.min_index;
+                let surface_vertex = cell.min_position
+                    + Vector::from([
+                        descriptor.resolution / 2.0,
+                        descriptor.resolution / 2.0,
+                        descriptor.resolution / 2.0,
+                    ]);
 
                 // We're saving the surface vertices of all grid cells here, but
                 // we actually only need those that feature a sign change.
-                (
-                    cell_index,
-                    cell.min_position
-                        + Vector::from([
-                            descriptor.resolution / 2.0,
-                            descriptor.resolution / 2.0,
-                            descriptor.resolution / 2.0,
-                        ]),
-                )
+                (cell_index, surface_vertex)
             })
             .collect();
 
