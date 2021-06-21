@@ -20,7 +20,7 @@ use self::edge::{Axis, Sign};
 #[derive(Debug)]
 pub struct Grid {
     descriptor: Descriptor,
-    grid_vertex_values: BTreeMap<Index, (Point<f32, 3>, f32)>,
+    grid_vertex_values: GridVertexValues,
     surface_vertices: BTreeMap<Index, Point<f32, 3>>,
 }
 
@@ -164,7 +164,7 @@ fn edge_to_next(
     point: Point<f32, 3>,
     value: f32,
     next_index: Index,
-    values: &BTreeMap<Index, (Point<f32, 3>, f32)>,
+    values: &GridVertexValues,
 ) -> Option<Edge> {
     let &(next_point, next_value) = values.get(&next_index)?;
 
@@ -186,6 +186,8 @@ fn edge_to_next(
         },
     })
 }
+
+type GridVertexValues = BTreeMap<Index, (Point<f32, 3>, f32)>;
 
 #[cfg(test)]
 mod tests {
