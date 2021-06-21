@@ -35,8 +35,8 @@ impl Grid {
             .map(|cell| {
                 // We're saving the surface vertices of all grid cells here, but
                 // we actually only need those that feature a sign change.
-                // TASK: Place surface vertex more accurately.
 
+                // TASK: Place surface vertex more accurately.
                 let surface_vertex = cell.min_position
                     + Vector::from([
                         descriptor.resolution / 2.0,
