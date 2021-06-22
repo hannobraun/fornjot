@@ -32,10 +32,10 @@ where
         let point = point.into();
 
         let point_a = self.a.surface(point);
-        let dist_b = self.b.surface(point);
+        let point_b = self.b.surface(point);
 
         let dist_b = SurfacePoint {
-            distance: -dist_b.distance,
+            distance: -point_b.distance,
         };
 
         if point_a.distance > dist_b.distance {
