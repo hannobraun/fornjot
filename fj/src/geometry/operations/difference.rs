@@ -31,15 +31,15 @@ where
     fn surface(&self, point: impl Into<Point<f32, D>>) -> SurfaceSample {
         let point = point.into();
 
-        let point_a = self.a.surface(point);
+        let sample_a = self.a.surface(point);
         let point_b = self.b.surface(point);
 
         let point_b = SurfaceSample {
             distance: -point_b.distance,
         };
 
-        if point_a.distance > point_b.distance {
-            point_a
+        if sample_a.distance > point_b.distance {
+            sample_a
         } else {
             point_b
         }
