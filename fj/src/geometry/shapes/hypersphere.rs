@@ -2,7 +2,7 @@ use nalgebra::Point;
 
 use crate::geometry::{
     aabb::Aabb,
-    attributes::{BoundingVolume, Surface, SurfacePoint},
+    attributes::{BoundingVolume, Surface, SurfaceSample},
 };
 
 pub struct Hypersphere<const D: usize> {
@@ -30,10 +30,10 @@ impl<const D: usize> BoundingVolume<D> for Hypersphere<D> {
 }
 
 impl<const D: usize> Surface<D> for Hypersphere<D> {
-    fn surface(&self, point: impl Into<Point<f32, D>>) -> SurfacePoint {
+    fn surface(&self, point: impl Into<Point<f32, D>>) -> SurfaceSample {
         let point = point.into();
 
-        SurfacePoint {
+        SurfaceSample {
             distance: point.coords.magnitude() - self.radius,
         }
     }

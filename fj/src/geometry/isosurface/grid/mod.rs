@@ -194,7 +194,7 @@ type GridVertexValues = BTreeMap<Index, (Point<f32, 3>, f32)>;
 mod tests {
     use crate::geometry::{
         aabb::Aabb,
-        attributes::{Surface, SurfacePoint},
+        attributes::{Surface, SurfaceSample},
         isosurface::grid,
     };
 
@@ -415,8 +415,8 @@ mod tests {
         fn surface(
             &self,
             _point: impl Into<nalgebra::Point<f32, 3>>,
-        ) -> SurfacePoint {
-            SurfacePoint { distance: 0.0 }
+        ) -> SurfaceSample {
+            SurfaceSample { distance: 0.0 }
         }
     }
 }

@@ -2,7 +2,7 @@ use nalgebra::Point;
 
 use crate::geometry::{
     aabb::Aabb,
-    attributes::{BoundingVolume, Surface, SurfacePoint},
+    attributes::{BoundingVolume, Surface, SurfaceSample},
 };
 
 pub struct Difference<A, B> {
@@ -28,13 +28,13 @@ where
     A: Surface<D>,
     B: Surface<D>,
 {
-    fn surface(&self, point: impl Into<Point<f32, D>>) -> SurfacePoint {
+    fn surface(&self, point: impl Into<Point<f32, D>>) -> SurfaceSample {
         let point = point.into();
 
         let point_a = self.a.surface(point);
         let point_b = self.b.surface(point);
 
-        let point_b = SurfacePoint {
+        let point_b = SurfaceSample {
             distance: -point_b.distance,
         };
 
