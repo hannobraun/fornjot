@@ -28,11 +28,11 @@ where
     A: Surface<D>,
     B: Surface<D>,
 {
-    fn surface(&self, point: impl Into<Point<f32, D>>) -> SurfaceSample {
+    fn sample(&self, point: impl Into<Point<f32, D>>) -> SurfaceSample {
         let point = point.into();
 
-        let sample_a = self.a.surface(point);
-        let sample_b = self.b.surface(point);
+        let sample_a = self.a.sample(point);
+        let sample_b = self.b.sample(point);
 
         let sample_b = SurfaceSample {
             distance: -sample_b.distance,
@@ -59,12 +59,12 @@ mod tests {
             b: Sphere::new().with_radius(0.5),
         };
 
-        assert_eq!(difference.surface([0.0, 0.0, 0.0]).distance, 0.5);
-        assert_eq!(difference.surface([0.5, 0.0, 0.0]).distance, 0.0);
-        assert_eq!(difference.surface([0.625, 0.0, 0.0]).distance, -0.125);
-        assert_eq!(difference.surface([0.75, 0.0, 0.0]).distance, -0.25);
-        assert_eq!(difference.surface([0.875, 0.0, 0.0]).distance, -0.125);
-        assert_eq!(difference.surface([1.0, 0.0, 0.0]).distance, 0.0);
-        assert_eq!(difference.surface([1.5, 0.0, 0.0]).distance, 0.5);
+        assert_eq!(difference.sample([0.0, 0.0, 0.0]).distance, 0.5);
+        assert_eq!(difference.sample([0.5, 0.0, 0.0]).distance, 0.0);
+        assert_eq!(difference.sample([0.625, 0.0, 0.0]).distance, -0.125);
+        assert_eq!(difference.sample([0.75, 0.0, 0.0]).distance, -0.25);
+        assert_eq!(difference.sample([0.875, 0.0, 0.0]).distance, -0.125);
+        assert_eq!(difference.sample([1.0, 0.0, 0.0]).distance, 0.0);
+        assert_eq!(difference.sample([1.5, 0.0, 0.0]).distance, 0.5);
     }
 }

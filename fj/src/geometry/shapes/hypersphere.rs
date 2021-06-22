@@ -30,7 +30,7 @@ impl<const D: usize> BoundingVolume<D> for Hypersphere<D> {
 }
 
 impl<const D: usize> Surface<D> for Hypersphere<D> {
-    fn surface(&self, point: impl Into<Point<f32, D>>) -> SurfaceSample {
+    fn sample(&self, point: impl Into<Point<f32, D>>) -> SurfaceSample {
         let point = point.into();
 
         SurfaceSample {
