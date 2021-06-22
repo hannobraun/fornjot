@@ -177,12 +177,7 @@ fn edge_to_next(
         },
         b: Value {
             index: next_index,
-            point: [
-                next_sample.point.x.into(),
-                next_sample.point.y.into(),
-                next_sample.point.z.into(),
-            ]
-            .into(),
+            point: next_sample.point,
             value: next_sample.distance.into(),
         },
     })
