@@ -7,6 +7,7 @@ pub trait Surface<const D: usize> {
     fn sample(&self, point: impl Into<Point<f32, D>>) -> SurfaceSample;
 }
 
+#[derive(Debug)]
 pub struct SurfaceSample {
     pub distance: f32,
     // TASK: Add normal.
