@@ -165,9 +165,9 @@ fn edge_to_next(
     point: Point<f32, 3>,
     value: f32,
     next_index: Index,
-    values: &GridVertexSamples,
+    samples: &GridVertexSamples,
 ) -> Option<Edge> {
-    let &(next_point, next_value) = values.get(&next_index)?;
+    let &(next_point, next_value) = samples.get(&next_index)?;
 
     Some(Edge {
         a: Value {
