@@ -36,6 +36,7 @@ where
 
         let sample_b = SurfaceSample {
             distance: -sample_b.distance,
+            ..sample_b
         };
 
         if sample_a.distance > sample_b.distance {
