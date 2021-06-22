@@ -12,7 +12,7 @@ use std::{array, collections::BTreeMap};
 
 use nalgebra::{Point, Vector};
 
-use crate::geometry::attributes::Surface;
+use crate::geometry::attributes::{Surface, SurfaceSample};
 
 use self::edge::{Axis, Sign};
 
@@ -56,7 +56,7 @@ impl Grid {
                 // filter all points that aren't close to the surface.
                 let surface_sample = isosurface.sample(vertex);
                 if surface_sample.distance <= descriptor.resolution {
-                    Some((index, (vertex, surface_sample.distance)))
+                    Some((index, (vertex, surface_sample)))
                 } else {
                     None
                 }
@@ -83,21 +83,21 @@ impl Grid {
                     edge_to_next(
                         index,
                         point,
-                        value,
+                        value.distance,
                         next_z.into(),
                         &self.grid_vertex_samples,
                     ),
                     edge_to_next(
                         index,
                         point,
-                        value,
+                        value.distance,
                         next_y.into(),
                         &self.grid_vertex_samples,
                     ),
                     edge_to_next(
                         index,
                         point,
-                        value,
+                        value.distance,
                         next_x.into(),
                         &self.grid_vertex_samples,
                     ),
@@ -183,12 +183,12 @@ fn edge_to_next(
                 next_point.z.into(),
             ]
             .into(),
-            value: next_value.into(),
+            value: next_value.distance.into(),
         },
     })
 }
 
-type GridVertexSamples = BTreeMap<Index, (Point<f32, 3>, f32)>;
+type GridVertexSamples = BTreeMap<Index, (Point<f32, 3>, SurfaceSample)>;
 
 #[cfg(test)]
 mod tests {
