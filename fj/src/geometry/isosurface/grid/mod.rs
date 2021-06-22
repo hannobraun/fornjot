@@ -56,7 +56,7 @@ impl Grid {
                 // filter all points that aren't close to the surface.
                 let sample = isosurface.sample(vertex);
                 if sample.distance <= descriptor.resolution {
-                    Some((index, (vertex, sample)))
+                    Some((index, sample))
                 } else {
                     None
                 }
@@ -74,7 +74,7 @@ impl Grid {
     pub fn edges(&self) -> impl Iterator<Item = Edge> + '_ {
         self.grid_vertex_samples
             .iter()
-            .map(move |(&index, &(_, sample))| {
+            .map(move |(&index, &sample)| {
                 let next_z = [index.x(), index.y(), index.z() + 1];
                 let next_y = [index.x(), index.y() + 1, index.z()];
                 let next_x = [index.x() + 1, index.y(), index.z()];
@@ -167,7 +167,7 @@ fn edge_to_next(
     next_index: Index,
     samples: &GridVertexSamples,
 ) -> Option<Edge> {
-    let &(_, next_sample) = samples.get(&next_index)?;
+    let next_sample = samples.get(&next_index)?;
 
     Some(Edge {
         a: Value {
@@ -188,7 +188,7 @@ fn edge_to_next(
     })
 }
 
-type GridVertexSamples = BTreeMap<Index, (Point<f32, 3>, SurfaceSample<3>)>;
+type GridVertexSamples = BTreeMap<Index, SurfaceSample<3>>;
 
 #[cfg(test)]
 mod tests {
