@@ -54,9 +54,9 @@ impl Grid {
             .filter_map(|(index, vertex)| {
                 // Compute distance of this vertex from the isosurface, and
                 // filter all points that aren't close to the surface.
-                let surface_point = isosurface.surface(vertex);
-                if surface_point.distance <= descriptor.resolution {
-                    Some((index, (vertex, surface_point.distance)))
+                let surface_sample = isosurface.surface(vertex);
+                if surface_sample.distance <= descriptor.resolution {
+                    Some((index, (vertex, surface_sample.distance)))
                 } else {
                     None
                 }
