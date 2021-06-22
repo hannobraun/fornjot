@@ -173,12 +173,12 @@ fn edge_to_next(
         a: Value {
             index,
             point,
-            value: distance.into(),
+            value: distance,
         },
         b: Value {
             index: next_index,
             point: next_sample.point,
-            value: next_sample.distance.into(),
+            value: next_sample.distance,
         },
     })
 }
