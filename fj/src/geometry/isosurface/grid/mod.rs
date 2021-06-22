@@ -82,22 +82,19 @@ impl Grid {
                 [
                     edge_to_next(
                         index,
-                        sample.point,
-                        sample.distance,
+                        sample,
                         next_z.into(),
                         &self.grid_vertex_samples,
                     ),
                     edge_to_next(
                         index,
-                        sample.point,
-                        sample.distance,
+                        sample,
                         next_y.into(),
                         &self.grid_vertex_samples,
                     ),
                     edge_to_next(
                         index,
-                        sample.point,
-                        sample.distance,
+                        sample,
                         next_x.into(),
                         &self.grid_vertex_samples,
                     ),
@@ -162,8 +159,7 @@ impl Grid {
 
 fn edge_to_next(
     index: Index,
-    point: Point<f32, 3>,
-    distance: f32,
+    sample: SurfaceSample<3>,
     next_index: Index,
     samples: &GridVertexSamples,
 ) -> Option<Edge> {
@@ -172,8 +168,8 @@ fn edge_to_next(
     Some(Edge {
         a: Value {
             index,
-            point,
-            value: distance,
+            point: sample.point,
+            value: sample.distance,
         },
         b: Value {
             index: next_index,
