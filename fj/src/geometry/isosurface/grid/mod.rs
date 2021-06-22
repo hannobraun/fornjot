@@ -167,7 +167,7 @@ fn edge_to_next(
     next_index: Index,
     samples: &GridVertexSamples,
 ) -> Option<Edge> {
-    let &(next_point, next_sample) = samples.get(&next_index)?;
+    let &(_, next_sample) = samples.get(&next_index)?;
 
     Some(Edge {
         a: Value {
@@ -178,9 +178,9 @@ fn edge_to_next(
         b: Value {
             index: next_index,
             point: [
-                next_point.x.into(),
-                next_point.y.into(),
-                next_point.z.into(),
+                next_sample.point.x.into(),
+                next_sample.point.y.into(),
+                next_sample.point.z.into(),
             ]
             .into(),
             value: next_sample.distance.into(),
