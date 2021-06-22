@@ -34,10 +34,12 @@ where
         let dist_a = self.a.surface(point);
         let dist_b = self.b.surface(point);
 
-        if dist_a > -dist_b {
+        let dist_b = -dist_b;
+
+        if dist_a > dist_b {
             dist_a
         } else {
-            -dist_b
+            dist_b
         }
     }
 }
