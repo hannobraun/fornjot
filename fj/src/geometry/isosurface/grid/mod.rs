@@ -74,7 +74,7 @@ impl Grid {
     pub fn edges(&self) -> impl Iterator<Item = Edge> + '_ {
         self.grid_vertex_samples
             .iter()
-            .map(move |(&index, &(point, value))| {
+            .map(move |(&index, &(point, sample))| {
                 let next_z = [index.x(), index.y(), index.z() + 1];
                 let next_y = [index.x(), index.y() + 1, index.z()];
                 let next_x = [index.x() + 1, index.y(), index.z()];
@@ -83,21 +83,21 @@ impl Grid {
                     edge_to_next(
                         index,
                         point,
-                        value.distance,
+                        sample.distance,
                         next_z.into(),
                         &self.grid_vertex_samples,
                     ),
                     edge_to_next(
                         index,
                         point,
-                        value.distance,
+                        sample.distance,
                         next_y.into(),
                         &self.grid_vertex_samples,
                     ),
                     edge_to_next(
                         index,
                         point,
-                        value.distance,
+                        sample.distance,
                         next_x.into(),
                         &self.grid_vertex_samples,
                     ),
