@@ -1,12 +1,12 @@
 use crate::{
-    geometry::attributes::{BoundingVolume, Distance},
+    geometry::attributes::{BoundingVolume, Surface},
     mesh::Mesh,
 };
 
 use super::{grid, Grid};
 
 pub fn to_mesh(
-    isosurface: &(impl Distance<3> + BoundingVolume<3>),
+    isosurface: &(impl Surface<3> + BoundingVolume<3>),
     resolution: f32,
 ) -> Mesh {
     let grid_descriptor = grid::Descriptor {

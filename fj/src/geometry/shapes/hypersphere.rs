@@ -2,7 +2,7 @@ use nalgebra::Point;
 
 use crate::geometry::{
     aabb::Aabb,
-    attributes::{BoundingVolume, Distance},
+    attributes::{BoundingVolume, Surface},
 };
 
 pub struct Hypersphere<const D: usize> {
@@ -29,7 +29,7 @@ impl<const D: usize> BoundingVolume<D> for Hypersphere<D> {
     }
 }
 
-impl<const D: usize> Distance<D> for Hypersphere<D> {
+impl<const D: usize> Surface<D> for Hypersphere<D> {
     fn distance(&self, point: impl Into<Point<f32, D>>) -> f32 {
         let point = point.into();
 

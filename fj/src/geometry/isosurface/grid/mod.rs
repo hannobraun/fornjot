@@ -12,7 +12,7 @@ use std::{array, collections::BTreeMap};
 
 use nalgebra::{Point, Vector};
 
-use crate::geometry::attributes::Distance;
+use crate::geometry::attributes::Surface;
 
 use self::edge::{Axis, Sign};
 
@@ -28,7 +28,7 @@ impl Grid {
     /// Create the grid from the descriptor and populate it with distance values
     pub fn from_descriptor(
         descriptor: Descriptor,
-        isosurface: &impl Distance<3>,
+        isosurface: &impl Surface<3>,
     ) -> Self {
         let surface_vertices = descriptor
             .cells()
@@ -192,7 +192,7 @@ type GridVertexValues = BTreeMap<Index, (Point<f32, 3>, f32)>;
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::{aabb::Aabb, attributes::Distance, isosurface::grid};
+    use crate::geometry::{aabb::Aabb, attributes::Surface, isosurface::grid};
 
     use super::Grid;
 
@@ -407,7 +407,7 @@ mod tests {
 
     struct Geometry;
 
-    impl Distance<3> for Geometry {
+    impl Surface<3> for Geometry {
         fn distance(&self, _point: impl Into<nalgebra::Point<f32, 3>>) -> f32 {
             0.0
         }

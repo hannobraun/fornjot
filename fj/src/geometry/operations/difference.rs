@@ -2,7 +2,7 @@ use nalgebra::Point;
 
 use crate::geometry::{
     aabb::Aabb,
-    attributes::{BoundingVolume, Distance},
+    attributes::{BoundingVolume, Surface},
 };
 
 pub struct Difference<A, B> {
@@ -23,10 +23,10 @@ where
     }
 }
 
-impl<A, B, const D: usize> Distance<D> for Difference<A, B>
+impl<A, B, const D: usize> Surface<D> for Difference<A, B>
 where
-    A: Distance<D>,
-    B: Distance<D>,
+    A: Surface<D>,
+    B: Surface<D>,
 {
     fn distance(&self, point: impl Into<Point<f32, D>>) -> f32 {
         let point = point.into();
@@ -40,7 +40,7 @@ where
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::{attributes::Distance, shapes::Sphere};
+    use crate::geometry::{attributes::Surface, shapes::Sphere};
 
     use super::Difference;
 

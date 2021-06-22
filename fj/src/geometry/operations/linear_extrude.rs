@@ -2,7 +2,7 @@ use nalgebra::{Point, Vector};
 
 use crate::geometry::{
     aabb::Aabb,
-    attributes::{BoundingVolume, Distance},
+    attributes::{BoundingVolume, Surface},
 };
 
 pub struct LinearExtrude<Sketch> {
@@ -33,9 +33,9 @@ where
     }
 }
 
-impl<Sketch> Distance<3> for LinearExtrude<Sketch>
+impl<Sketch> Surface<3> for LinearExtrude<Sketch>
 where
-    Sketch: Distance<2>,
+    Sketch: Surface<2>,
 {
     fn distance(&self, point: impl Into<Point<f32, 3>>) -> f32 {
         let point = point.into();

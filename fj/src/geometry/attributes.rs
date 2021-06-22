@@ -3,7 +3,7 @@ use nalgebra::Point;
 use crate::geometry::aabb::Aabb;
 
 /// Provides a signed distance function
-pub trait Distance<const D: usize> {
+pub trait Surface<const D: usize> {
     // TASK: Return struct that can also include normal.
     fn distance(&self, point: impl Into<Point<f32, D>>) -> f32;
 }
