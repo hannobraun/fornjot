@@ -9,6 +9,7 @@ pub trait Surface<const D: usize> {
 
 pub struct SurfacePoint {
     pub distance: f32,
+    // TASK: Add normal.
 }
 
 pub trait BoundingVolume<const D: usize> {
