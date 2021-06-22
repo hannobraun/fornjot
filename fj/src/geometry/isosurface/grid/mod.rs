@@ -172,7 +172,7 @@ fn edge_to_next(
     Some(Edge {
         a: Value {
             index,
-            point: [point.x.into(), point.y.into(), point.z.into()].into(),
+            point,
             value: distance.into(),
         },
         b: Value {
