@@ -55,8 +55,8 @@ impl Grid {
                 // Compute distance of this vertex from the isosurface, and
                 // filter all points that aren't close to the surface.
                 let distance = isosurface.surface(vertex);
-                if distance <= descriptor.resolution {
-                    Some((index, (vertex, distance)))
+                if distance.distance <= descriptor.resolution {
+                    Some((index, (vertex, distance.distance)))
                 } else {
                     None
                 }
@@ -192,7 +192,11 @@ type GridVertexValues = BTreeMap<Index, (Point<f32, 3>, f32)>;
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::{aabb::Aabb, attributes::Surface, isosurface::grid};
+    use crate::geometry::{
+        aabb::Aabb,
+        attributes::{Surface, SurfacePoint},
+        isosurface::grid,
+    };
 
     use super::Grid;
 
@@ -408,8 +412,11 @@ mod tests {
     struct Geometry;
 
     impl Surface<3> for Geometry {
-        fn surface(&self, _point: impl Into<nalgebra::Point<f32, 3>>) -> f32 {
-            0.0
+        fn surface(
+            &self,
+            _point: impl Into<nalgebra::Point<f32, 3>>,
+        ) -> SurfacePoint {
+            SurfacePoint { distance: 0.0 }
         }
     }
 }

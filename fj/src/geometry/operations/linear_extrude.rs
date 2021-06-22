@@ -2,7 +2,7 @@ use nalgebra::{Point, Vector};
 
 use crate::geometry::{
     aabb::Aabb,
-    attributes::{BoundingVolume, Surface},
+    attributes::{BoundingVolume, Surface, SurfacePoint},
 };
 
 pub struct LinearExtrude<Sketch> {
@@ -37,14 +37,16 @@ impl<Sketch> Surface<3> for LinearExtrude<Sketch>
 where
     Sketch: Surface<2>,
 {
-    fn surface(&self, point: impl Into<Point<f32, 3>>) -> f32 {
+    fn surface(&self, point: impl Into<Point<f32, 3>>) -> SurfacePoint {
         let point = point.into();
 
-        let d_xy = self.sketch.surface(point.xy());
+        let d_xy = self.sketch.surface(point.xy()).distance;
         let d_z = point.z.abs() - self.height / 2.0;
 
         let w = Vector::from([f32::max(d_xy, 0.0), f32::max(d_z, 0.0)]);
 
-        f32::min(f32::max(d_xy, d_z), 0.0) + w.magnitude()
+        SurfacePoint {
+            distance: f32::min(f32::max(d_xy, d_z), 0.0) + w.magnitude(),
+        }
     }
 }

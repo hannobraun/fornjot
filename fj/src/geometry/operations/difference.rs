@@ -2,7 +2,7 @@ use nalgebra::Point;
 
 use crate::geometry::{
     aabb::Aabb,
-    attributes::{BoundingVolume, Surface},
+    attributes::{BoundingVolume, Surface, SurfacePoint},
 };
 
 pub struct Difference<A, B> {
@@ -28,15 +28,17 @@ where
     A: Surface<D>,
     B: Surface<D>,
 {
-    fn surface(&self, point: impl Into<Point<f32, D>>) -> f32 {
+    fn surface(&self, point: impl Into<Point<f32, D>>) -> SurfacePoint {
         let point = point.into();
 
         let dist_a = self.a.surface(point);
         let dist_b = self.b.surface(point);
 
-        let dist_b = -dist_b;
+        let dist_b = SurfacePoint {
+            distance: -dist_b.distance,
+        };
 
-        if dist_a > dist_b {
+        if dist_a.distance > dist_b.distance {
             dist_a
         } else {
             dist_b
@@ -57,12 +59,12 @@ mod tests {
             b: Sphere::new().with_radius(0.5),
         };
 
-        assert_eq!(difference.surface([0.0, 0.0, 0.0]), 0.5);
-        assert_eq!(difference.surface([0.5, 0.0, 0.0]), 0.0);
-        assert_eq!(difference.surface([0.625, 0.0, 0.0]), -0.125);
-        assert_eq!(difference.surface([0.75, 0.0, 0.0]), -0.25);
-        assert_eq!(difference.surface([0.875, 0.0, 0.0]), -0.125);
-        assert_eq!(difference.surface([1.0, 0.0, 0.0]), 0.0);
-        assert_eq!(difference.surface([1.5, 0.0, 0.0]), 0.5);
+        assert_eq!(difference.surface([0.0, 0.0, 0.0]).distance, 0.5);
+        assert_eq!(difference.surface([0.5, 0.0, 0.0]).distance, 0.0);
+        assert_eq!(difference.surface([0.625, 0.0, 0.0]).distance, -0.125);
+        assert_eq!(difference.surface([0.75, 0.0, 0.0]).distance, -0.25);
+        assert_eq!(difference.surface([0.875, 0.0, 0.0]).distance, -0.125);
+        assert_eq!(difference.surface([1.0, 0.0, 0.0]).distance, 0.0);
+        assert_eq!(difference.surface([1.5, 0.0, 0.0]).distance, 0.5);
     }
 }
