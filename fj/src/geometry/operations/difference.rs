@@ -34,14 +34,14 @@ where
         let point_a = self.a.surface(point);
         let point_b = self.b.surface(point);
 
-        let dist_b = SurfacePoint {
+        let point_b = SurfacePoint {
             distance: -point_b.distance,
         };
 
-        if point_a.distance > dist_b.distance {
+        if point_a.distance > point_b.distance {
             point_a
         } else {
-            dist_b
+            point_b
         }
     }
 }
