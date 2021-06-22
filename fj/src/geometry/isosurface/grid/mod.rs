@@ -163,7 +163,7 @@ impl Grid {
 fn edge_to_next(
     index: Index,
     point: Point<f32, 3>,
-    value: f32,
+    distance: f32,
     next_index: Index,
     samples: &GridVertexSamples,
 ) -> Option<Edge> {
@@ -173,7 +173,7 @@ fn edge_to_next(
         a: Value {
             index,
             point: [point.x.into(), point.y.into(), point.z.into()].into(),
-            value: value.into(),
+            value: distance.into(),
         },
         b: Value {
             index: next_index,
