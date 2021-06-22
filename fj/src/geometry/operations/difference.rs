@@ -28,11 +28,11 @@ where
     A: Surface<D>,
     B: Surface<D>,
 {
-    fn distance(&self, point: impl Into<Point<f32, D>>) -> f32 {
+    fn surface(&self, point: impl Into<Point<f32, D>>) -> f32 {
         let point = point.into();
 
-        let dist_a = self.a.distance(point);
-        let dist_b = self.b.distance(point);
+        let dist_a = self.a.surface(point);
+        let dist_b = self.b.surface(point);
 
         f32::max(dist_a, -dist_b)
     }
@@ -51,12 +51,12 @@ mod tests {
             b: Sphere::new().with_radius(0.5),
         };
 
-        assert_eq!(difference.distance([0.0, 0.0, 0.0]), 0.5);
-        assert_eq!(difference.distance([0.5, 0.0, 0.0]), 0.0);
-        assert_eq!(difference.distance([0.625, 0.0, 0.0]), -0.125);
-        assert_eq!(difference.distance([0.75, 0.0, 0.0]), -0.25);
-        assert_eq!(difference.distance([0.875, 0.0, 0.0]), -0.125);
-        assert_eq!(difference.distance([1.0, 0.0, 0.0]), 0.0);
-        assert_eq!(difference.distance([1.5, 0.0, 0.0]), 0.5);
+        assert_eq!(difference.surface([0.0, 0.0, 0.0]), 0.5);
+        assert_eq!(difference.surface([0.5, 0.0, 0.0]), 0.0);
+        assert_eq!(difference.surface([0.625, 0.0, 0.0]), -0.125);
+        assert_eq!(difference.surface([0.75, 0.0, 0.0]), -0.25);
+        assert_eq!(difference.surface([0.875, 0.0, 0.0]), -0.125);
+        assert_eq!(difference.surface([1.0, 0.0, 0.0]), 0.0);
+        assert_eq!(difference.surface([1.5, 0.0, 0.0]), 0.5);
     }
 }

@@ -37,10 +37,10 @@ impl<Sketch> Surface<3> for LinearExtrude<Sketch>
 where
     Sketch: Surface<2>,
 {
-    fn distance(&self, point: impl Into<Point<f32, 3>>) -> f32 {
+    fn surface(&self, point: impl Into<Point<f32, 3>>) -> f32 {
         let point = point.into();
 
-        let d_xy = self.sketch.distance(point.xy());
+        let d_xy = self.sketch.surface(point.xy());
         let d_z = point.z.abs() - self.height / 2.0;
 
         let w = Vector::from([f32::max(d_xy, 0.0), f32::max(d_z, 0.0)]);

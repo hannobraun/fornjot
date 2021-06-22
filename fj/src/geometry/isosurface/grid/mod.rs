@@ -54,7 +54,7 @@ impl Grid {
             .filter_map(|(index, vertex)| {
                 // Compute distance of this vertex from the isosurface, and
                 // filter all points that aren't close to the surface.
-                let distance = isosurface.distance(vertex);
+                let distance = isosurface.surface(vertex);
                 if distance <= descriptor.resolution {
                     Some((index, (vertex, distance)))
                 } else {
@@ -408,7 +408,7 @@ mod tests {
     struct Geometry;
 
     impl Surface<3> for Geometry {
-        fn distance(&self, _point: impl Into<nalgebra::Point<f32, 3>>) -> f32 {
+        fn surface(&self, _point: impl Into<nalgebra::Point<f32, 3>>) -> f32 {
             0.0
         }
     }
