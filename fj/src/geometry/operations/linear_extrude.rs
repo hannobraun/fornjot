@@ -37,7 +37,7 @@ impl<Sketch> Surface<3> for LinearExtrude<Sketch>
 where
     Sketch: Surface<2>,
 {
-    fn sample(&self, point: impl Into<Point<f32, 3>>) -> SurfaceSample {
+    fn sample(&self, point: impl Into<Point<f32, 3>>) -> SurfaceSample<3> {
         let point = point.into();
 
         let d_xy = self.sketch.sample(point.xy()).distance;
@@ -46,6 +46,7 @@ where
         let w = Vector::from([f32::max(d_xy, 0.0), f32::max(d_z, 0.0)]);
 
         SurfaceSample {
+            point,
             distance: f32::min(f32::max(d_xy, d_z), 0.0) + w.magnitude(),
         }
     }

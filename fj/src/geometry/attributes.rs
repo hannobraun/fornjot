@@ -4,11 +4,12 @@ use crate::geometry::aabb::Aabb;
 
 /// Provides a signed distance function
 pub trait Surface<const D: usize> {
-    fn sample(&self, point: impl Into<Point<f32, D>>) -> SurfaceSample;
+    fn sample(&self, point: impl Into<Point<f32, D>>) -> SurfaceSample<D>;
 }
 
 #[derive(Clone, Copy, Debug)]
-pub struct SurfaceSample {
+pub struct SurfaceSample<const D: usize> {
+    pub point: Point<f32, D>,
     pub distance: f32,
     // TASK: Add normal.
 }

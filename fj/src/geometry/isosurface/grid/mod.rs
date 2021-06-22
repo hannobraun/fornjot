@@ -188,7 +188,7 @@ fn edge_to_next(
     })
 }
 
-type GridVertexSamples = BTreeMap<Index, (Point<f32, 3>, SurfaceSample)>;
+type GridVertexSamples = BTreeMap<Index, (Point<f32, 3>, SurfaceSample<3>)>;
 
 #[cfg(test)]
 mod tests {
@@ -414,9 +414,12 @@ mod tests {
     impl Surface<3> for Geometry {
         fn sample(
             &self,
-            _point: impl Into<nalgebra::Point<f32, 3>>,
-        ) -> SurfaceSample {
-            SurfaceSample { distance: 0.0 }
+            point: impl Into<nalgebra::Point<f32, 3>>,
+        ) -> SurfaceSample<3> {
+            SurfaceSample {
+                point: point.into(),
+                distance: 0.0,
+            }
         }
     }
 }

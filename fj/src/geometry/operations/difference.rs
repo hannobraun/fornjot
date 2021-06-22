@@ -28,7 +28,7 @@ where
     A: Surface<D>,
     B: Surface<D>,
 {
-    fn sample(&self, point: impl Into<Point<f32, D>>) -> SurfaceSample {
+    fn sample(&self, point: impl Into<Point<f32, D>>) -> SurfaceSample<D> {
         let point = point.into();
 
         let sample_a = self.a.sample(point);
