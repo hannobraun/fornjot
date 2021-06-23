@@ -40,7 +40,9 @@ where
     fn sample(&self, point: impl Into<Point<f32, 3>>) -> SurfaceSample<3> {
         let point = point.into();
 
-        let d_xy = self.sketch.sample(point.xy()).distance;
+        let sample_xy = self.sketch.sample(point.xy());
+
+        let d_xy = sample_xy.distance;
         let d_z = point.z.abs() - self.height / 2.0;
 
         let w = Vector::from([f32::max(d_xy, 0.0), f32::max(d_z, 0.0)]);
