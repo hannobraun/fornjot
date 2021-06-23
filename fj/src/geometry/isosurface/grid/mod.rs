@@ -407,8 +407,10 @@ mod tests {
             &self,
             point: impl Into<nalgebra::Point<f32, 3>>,
         ) -> SurfaceSample<3> {
+            let point = point.into();
+
             SurfaceSample {
-                point: point.into(),
+                point,
                 distance: 0.0,
             }
         }
