@@ -45,10 +45,9 @@ where
 
         let w = Vector::from([f32::max(d_xy, 0.0), f32::max(d_z, 0.0)]);
 
-        SurfaceSample {
-            point,
-            distance: f32::min(f32::max(d_xy, d_z), 0.0) + w.magnitude(),
-        }
+        let distance = f32::min(f32::max(d_xy, d_z), 0.0) + w.magnitude();
+
+        SurfaceSample { point, distance }
     }
 }
 
