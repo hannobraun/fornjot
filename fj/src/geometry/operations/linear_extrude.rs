@@ -1,4 +1,4 @@
-use nalgebra::{Point, Vector};
+use nalgebra::{vector, Point, Unit, Vector};
 
 use crate::geometry::{
     aabb::Aabb,
@@ -49,7 +49,21 @@ where
 
         let distance = f32::min(f32::max(d_xy, d_z), 0.0) + w.magnitude();
 
-        SurfaceSample { point, distance }
+        let normal_xy = sample_xy.normal;
+        let normal = if d_z < 0.0 {
+            vector![normal_xy.x, normal_xy.y, 0.0]
+        } else if d_xy < 0.0 {
+            vector![0.0, 0.0, point.z]
+        } else {
+            vector![normal_xy.x, normal_xy.y, point.z.signum()]
+        };
+        let normal = Unit::new_normalize(normal);
+
+        SurfaceSample {
+            point,
+            distance,
+            normal,
+        }
     }
 }
 

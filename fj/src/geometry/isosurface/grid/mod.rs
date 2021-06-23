@@ -183,6 +183,8 @@ type GridVertexSamples = BTreeMap<Index, SurfaceSample<3>>;
 
 #[cfg(test)]
 mod tests {
+    use nalgebra::Unit;
+
     use crate::geometry::{
         aabb::Aabb,
         attributes::{Surface, SurfaceSample},
@@ -412,6 +414,7 @@ mod tests {
             SurfaceSample {
                 point,
                 distance: 0.0,
+                normal: Unit::new_normalize(point.coords),
             }
         }
     }

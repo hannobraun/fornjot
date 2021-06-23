@@ -1,4 +1,4 @@
-use nalgebra::Point;
+use nalgebra::{Point, SVector, Unit};
 
 use crate::geometry::aabb::Aabb;
 
@@ -11,7 +11,7 @@ pub trait Surface<const D: usize> {
 pub struct SurfaceSample<const D: usize> {
     pub point: Point<f32, D>,
     pub distance: f32,
-    // TASK: Add normal.
+    pub normal: Unit<SVector<f32, D>>,
 }
 
 pub trait BoundingVolume<const D: usize> {

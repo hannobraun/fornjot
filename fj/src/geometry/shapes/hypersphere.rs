@@ -1,4 +1,4 @@
-use nalgebra::Point;
+use nalgebra::{Point, Unit};
 
 use crate::geometry::{
     aabb::Aabb,
@@ -36,6 +36,7 @@ impl<const D: usize> Surface<D> for Hypersphere<D> {
         SurfaceSample {
             point,
             distance: point.coords.magnitude() - self.radius,
+            normal: Unit::new_normalize(point.coords),
         }
     }
 }
