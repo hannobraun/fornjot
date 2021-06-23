@@ -16,6 +16,9 @@ impl Cylinder {
         self.sketch = self.sketch.with_radius(radius);
         self
     }
+
+    // `with_height` method is not required here, as `LinearExtrude` already has
+    // it.
 }
 
 #[cfg(test)]
