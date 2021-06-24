@@ -35,8 +35,9 @@ impl Grid {
         let surface_vertices = descriptor
             .cells()
             .map(|cell| {
-                // We're saving the surface vertices of all grid cells here, but
-                // we actually only need those that feature a sign change.
+                // We're saving the grid vertex samples and surface vertices of
+                // all grid cells here, but we actually only need those for
+                // cells that feature a sign change.
 
                 let cell_vertices = [
                     [0, 0, 0],
