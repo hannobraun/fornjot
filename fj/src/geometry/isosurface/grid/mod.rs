@@ -49,7 +49,7 @@ impl Grid {
             })
             .collect();
 
-        let grid_vertex_values = descriptor
+        let grid_vertex_samples = descriptor
             .vertices()
             .filter_map(|(index, vertex)| {
                 // Compute distance of this vertex from the isosurface, and
@@ -65,7 +65,7 @@ impl Grid {
 
         Self {
             descriptor,
-            grid_vertex_samples: grid_vertex_values,
+            grid_vertex_samples,
             surface_vertices,
         }
     }
