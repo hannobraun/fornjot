@@ -10,7 +10,7 @@ pub use self::{
 
 use std::{array, collections::BTreeMap};
 
-use nalgebra::{Point, Vector};
+use nalgebra::{Point, SVector, Vector};
 
 use crate::geometry::attributes::{Surface, SurfaceSample};
 
@@ -30,11 +30,34 @@ impl Grid {
         descriptor: Descriptor,
         isosurface: &impl Surface<3>,
     ) -> Self {
+        let mut grid_vertex_samples = GridVertexSamples::new();
+
         let surface_vertices = descriptor
             .cells()
             .map(|cell| {
                 // We're saving the surface vertices of all grid cells here, but
                 // we actually only need those that feature a sign change.
+
+                let cell_vertices = [
+                    [0, 0, 0],
+                    [0, 0, 1],
+                    [0, 1, 0],
+                    [0, 1, 1],
+                    [1, 0, 0],
+                    [1, 0, 1],
+                    [1, 1, 0],
+                    [1, 1, 1],
+                ];
+
+                for cell_vertex in cell_vertices {
+                    let grid_index = cell.min_index + cell_vertex;
+                    let grid_vertex = cell.min_position
+                        + SVector::from(cell_vertex)
+                            .map(|c| c as f32 * descriptor.resolution);
+
+                    let sample = isosurface.sample(grid_vertex);
+                    grid_vertex_samples.insert(grid_index, sample);
+                }
 
                 // TASK: Place surface vertex more accurately by minimizing the
                 //       error function as per the paper, section 2.3.
@@ -46,20 +69,6 @@ impl Grid {
                     ]);
 
                 (cell.min_index, surface_vertex)
-            })
-            .collect();
-
-        let grid_vertex_samples = descriptor
-            .vertices()
-            .filter_map(|(index, vertex)| {
-                // Compute distance of this vertex from the isosurface, and
-                // filter all points that aren't close to the surface.
-                let sample = isosurface.sample(vertex);
-                if sample.distance <= descriptor.resolution {
-                    Some((index, sample))
-                } else {
-                    None
-                }
             })
             .collect();
 
