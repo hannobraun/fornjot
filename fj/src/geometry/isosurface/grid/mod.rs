@@ -10,7 +10,7 @@ pub use self::{
 
 use std::{array, collections::BTreeMap};
 
-use nalgebra::{Point, SVector, Vector};
+use nalgebra::{Point, Vector};
 
 use crate::geometry::attributes::{Surface, SurfaceSample};
 
@@ -39,23 +39,9 @@ impl Grid {
                 // all grid cells here, but we actually only need those for
                 // cells that feature a sign change.
 
-                let cell_vertices = [
-                    [0, 0, 0],
-                    [0, 0, 1],
-                    [0, 1, 0],
-                    [0, 1, 1],
-                    [1, 0, 0],
-                    [1, 0, 1],
-                    [1, 1, 0],
-                    [1, 1, 1],
-                ];
-
-                for cell_vertex in cell_vertices {
-                    let grid_index = cell.min_index + cell_vertex;
-                    let grid_vertex = cell.min_position
-                        + SVector::from(cell_vertex)
-                            .map(|c| c as f32 * descriptor.resolution);
-
+                for (grid_index, grid_vertex) in
+                    cell.vertices(descriptor.resolution)
+                {
                     // Since neighboring cells share vertices, we're duplicating
                     // lots of computations here, overwriting previous results,
                     // if they exist.
