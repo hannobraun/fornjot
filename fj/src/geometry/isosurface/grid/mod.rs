@@ -56,6 +56,13 @@ impl Grid {
                         + SVector::from(cell_vertex)
                             .map(|c| c as f32 * descriptor.resolution);
 
+                    // Since neighboring cells share vertices, we're duplicating
+                    // lots of computations here, overwriting previous results,
+                    // if they exist.
+                    //
+                    // This shouldn't change anything about the result, but it's
+                    // lots of extra work. It would be better to check whether a
+                    // result is already available and use that.
                     let sample = isosurface.sample(grid_vertex);
                     grid_vertex_samples.insert(grid_index, sample);
                 }
