@@ -39,8 +39,7 @@ impl Grid {
                 // all grid cells here, but we actually only need those for
                 // cells that feature a sign change.
 
-                for (grid_index, grid_vertex) in
-                    cell.vertices(descriptor.resolution)
+                for (index, grid_vertex) in cell.vertices(descriptor.resolution)
                 {
                     // Since neighboring cells share vertices, we're duplicating
                     // lots of computations here, overwriting previous results,
@@ -50,7 +49,7 @@ impl Grid {
                     // lots of extra work. It would be better to check whether a
                     // result is already available and use that.
                     let sample = isosurface.sample(grid_vertex);
-                    grid_vertex_samples.insert(grid_index, sample);
+                    grid_vertex_samples.insert(index, sample);
                 }
 
                 // TASK: Place surface vertex more accurately by minimizing the
