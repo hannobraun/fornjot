@@ -21,6 +21,7 @@ use self::edge::{Axis, Sign};
 pub struct Grid {
     descriptor: Descriptor,
     grid_vertex_samples: GridVertexSamples,
+    edges_by_indices: BTreeMap<(Index, Index), Edge>,
     surface_vertices: BTreeMap<Index, Point<f32, 3>>,
 }
 
@@ -64,18 +65,9 @@ impl Grid {
             })
             .collect();
 
-        Self {
-            descriptor,
-            grid_vertex_samples,
-            surface_vertices,
-        }
-    }
-
-    /// Iterate over all grid edges that are near the surface
-    pub fn edges(&self) -> impl Iterator<Item = Edge> + '_ {
-        self.grid_vertex_samples
+        let edges_by_first_index = grid_vertex_samples
             .iter()
-            .map(move |(&index, &sample)| {
+            .map(|(&index, &sample)| {
                 let next_z = [index.x(), index.y(), index.z() + 1];
                 let next_y = [index.x(), index.y() + 1, index.z()];
                 let next_x = [index.x() + 1, index.y(), index.z()];
@@ -85,24 +77,39 @@ impl Grid {
                         index,
                         sample,
                         next_z.into(),
-                        &self.grid_vertex_samples,
+                        &grid_vertex_samples,
                     ),
                     edge_to_next(
                         index,
                         sample,
                         next_y.into(),
-                        &self.grid_vertex_samples,
+                        &grid_vertex_samples,
                     ),
                     edge_to_next(
                         index,
                         sample,
                         next_x.into(),
-                        &self.grid_vertex_samples,
+                        &grid_vertex_samples,
                     ),
                 ]
             })
             .flatten()
-            .filter_map(|edge| edge)
+            .filter_map(|edge| {
+                edge.map(|edge| ((edge.a.index, edge.b.index), edge))
+            })
+            .collect();
+
+        Self {
+            descriptor,
+            grid_vertex_samples,
+            edges_by_indices: edges_by_first_index,
+            surface_vertices,
+        }
+    }
+
+    /// Iterate over all grid edges that are near the surface
+    pub fn edges(&self) -> impl Iterator<Item = Edge> + '_ {
+        self.edges_by_indices.values().copied()
     }
 
     /// Returns the 4 neighboring surface vertices of a grid edge
