@@ -30,7 +30,7 @@ impl Grid {
         descriptor: Descriptor,
         isosurface: &impl Surface<3>,
     ) -> Self {
-        let mut grid_vertex_samples = GridVertexSamples::new();
+        let mut grid_vertex_samples = BTreeMap::new();
 
         let surface_vertices = descriptor
             .cells()
