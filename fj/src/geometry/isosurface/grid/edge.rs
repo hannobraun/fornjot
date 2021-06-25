@@ -1,11 +1,11 @@
 use std::fmt;
 
-use crate::geometry::isosurface::grid;
+use super::Value;
 
 #[derive(Clone, Copy, PartialEq)]
 pub struct Edge {
-    pub a: grid::Value,
-    pub b: grid::Value,
+    pub a: Value,
+    pub b: Value,
 }
 
 impl Edge {
@@ -18,12 +18,12 @@ impl Edge {
 
     pub fn swap_values(self) -> Self {
         Self {
-            a: grid::Value {
+            a: Value {
                 index: self.a.index,
                 point: self.a.point,
                 value: self.b.value,
             },
-            b: grid::Value {
+            b: Value {
                 index: self.b.index,
                 point: self.b.point,
                 value: self.a.value,
