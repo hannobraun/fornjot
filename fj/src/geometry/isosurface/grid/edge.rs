@@ -113,81 +113,49 @@ mod tests {
 
     #[test]
     fn at_surface_should_detect_whether_edge_is_at_surface() {
-        // Dummy values that the code under test doesn't care about.
-        let index = [0, 0, 0].into();
-        let point = [0.0, 0.0, 0.0].into();
+        fn value_at(distance: f32) -> grid::Value {
+            // Dummy values that the code under test doesn't care about.
+            let index = [0, 0, 0].into();
+            let point = [0.0, 0.0, 0.0].into();
+
+            grid::Value {
+                index,
+                point,
+                distance,
+            }
+        }
 
         let inside_surface = Edge {
-            a: grid::Value {
-                index,
-                point,
-                distance: -0.2,
-            },
-            b: grid::Value {
-                index,
-                point,
-                distance: -0.1,
-            },
+            a: value_at(-0.2),
+            b: value_at(-0.1),
         };
         assert_eq!(inside_surface.at_surface(), false);
         assert_eq!(inside_surface.reverse().at_surface(), false);
 
         let outside_surface = Edge {
-            a: grid::Value {
-                index,
-                point,
-                distance: 0.1,
-            },
-            b: grid::Value {
-                index,
-                point,
-                distance: 0.2,
-            },
+            a: value_at(0.1),
+            b: value_at(0.2),
         };
         assert_eq!(outside_surface.at_surface(), false);
         assert_eq!(outside_surface.reverse().at_surface(), false);
 
         let through_surface = Edge {
-            a: grid::Value {
-                index,
-                point,
-                distance: -0.1,
-            },
-            b: grid::Value {
-                index,
-                point,
-                distance: 0.1,
-            },
+            a: value_at(-0.1),
+            b: value_at(0.1),
         };
         assert_eq!(through_surface.at_surface(), true);
         assert_eq!(through_surface.reverse().at_surface(), true);
 
         let inside_to_surface = Edge {
-            a: grid::Value {
-                index,
-                point,
-                distance: -0.1,
-            },
-            b: grid::Value {
-                index,
-                point,
-                distance: 0.0,
-            },
+            a: value_at(-0.1),
+            b: value_at(0.0),
         };
         assert_eq!(inside_to_surface.at_surface(), false);
         assert_eq!(inside_to_surface.reverse().at_surface(), false);
 
         let outside_to_surface = Edge {
-            a: grid::Value {
-                index,
-                point,
-                distance: 0.0,
-            },
-            b: grid::Value {
-                index,
-                point,
-                distance: 0.1,
-            },
+            a: value_at(0.0),
+            b: value_at(0.1),
         };
         assert_eq!(outside_to_surface.at_surface(), true);
         assert_eq!(outside_to_surface.reverse().at_surface(), true);
