@@ -77,6 +77,8 @@ impl Grid {
                         },
                     };
 
+                    // We're storing _all_ edges, but we actually only need
+                    // those that are at a surface.
                     edges.insert((a, b), edge);
                 }
 
