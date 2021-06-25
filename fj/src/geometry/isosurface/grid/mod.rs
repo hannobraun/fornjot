@@ -68,12 +68,12 @@ impl Grid {
                         a: Value {
                             index: a,
                             point: sample_a.point,
-                            value: sample_a.distance,
+                            distance: sample_a.distance,
                         },
                         b: Value {
                             index: b,
                             point: sample_b.point,
-                            value: sample_b.distance,
+                            distance: sample_b.distance,
                         },
                     };
 
@@ -140,8 +140,8 @@ impl Grid {
         let start = start.index;
 
         let [a, b, c, d] = if direction.sign == Sign::Pos
-            && edge.a.value < edge.b.value
-            || direction.sign == Sign::Neg && edge.b.value < edge.a.value
+            && edge.a.distance < edge.b.distance
+            || direction.sign == Sign::Neg && edge.b.distance < edge.a.distance
         {
             [b, a, d, c]
         } else {
@@ -344,36 +344,36 @@ mod tests {
                     a: grid::Value {
                         index: [1, 1, 1].into(),
                         point: [1.0.into(), 1.0.into(), 1.0.into()].into(),
-                        value: 1.0.into(),
+                        distance: 1.0.into(),
                     },
                     b: grid::Value {
                         index: [2, 1, 1].into(),
                         point: [2.0.into(), 1.0.into(), 1.0.into()].into(),
-                        value: 0.0.into(),
+                        distance: 0.0.into(),
                     },
                 },
                 y: grid::Edge {
                     a: grid::Value {
                         index: [1, 1, 1].into(),
                         point: [1.0.into(), 1.0.into(), 1.0.into()].into(),
-                        value: 1.0.into(),
+                        distance: 1.0.into(),
                     },
                     b: grid::Value {
                         index: [1, 2, 1].into(),
                         point: [1.0.into(), 2.0.into(), 1.0.into()].into(),
-                        value: 0.0.into(),
+                        distance: 0.0.into(),
                     },
                 },
                 z: grid::Edge {
                     a: grid::Value {
                         index: [1, 1, 1].into(),
                         point: [1.0.into(), 1.0.into(), 1.0.into()].into(),
-                        value: 1.0.into(),
+                        distance: 1.0.into(),
                     },
                     b: grid::Value {
                         index: [1, 1, 2].into(),
                         point: [1.0.into(), 1.0.into(), 2.0.into()].into(),
-                        value: 0.0.into(),
+                        distance: 0.0.into(),
                     },
                 },
             }

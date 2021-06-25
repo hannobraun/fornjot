@@ -6,5 +6,5 @@ use super::Index;
 pub struct Value {
     pub index: Index,
     pub point: Point<f32, 3>,
-    pub value: f32,
+    pub distance: f32,
 }

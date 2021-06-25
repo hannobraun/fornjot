@@ -21,12 +21,12 @@ impl Edge {
             a: Value {
                 index: self.a.index,
                 point: self.a.point,
-                value: self.b.value,
+                distance: self.b.distance,
             },
             b: Value {
                 index: self.b.index,
                 point: self.b.point,
-                value: self.a.value,
+                distance: self.a.distance,
             },
         }
     }
@@ -65,8 +65,8 @@ impl Edge {
     }
 
     pub fn at_surface(&self) -> bool {
-        let min = f32::min(self.a.value, self.b.value);
-        let max = f32::max(self.a.value, self.b.value);
+        let min = f32::min(self.a.distance, self.b.distance);
+        let max = f32::max(self.a.distance, self.b.distance);
 
         min <= 0.0 && max > 0.0
     }
@@ -117,12 +117,12 @@ mod tests {
             a: grid::Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
-                value: -0.2,
+                distance: -0.2,
             },
             b: grid::Value {
                 index: [0, 0, 0].into(),
                 point: [0.1, 0.0, 0.0].into(),
-                value: -0.1,
+                distance: -0.1,
             },
         };
         assert_eq!(inside_surface.at_surface(), false);
@@ -132,12 +132,12 @@ mod tests {
             a: grid::Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
-                value: 0.1,
+                distance: 0.1,
             },
             b: grid::Value {
                 index: [0, 1, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
-                value: 0.2,
+                distance: 0.2,
             },
         };
         assert_eq!(outside_surface.at_surface(), false);
@@ -147,12 +147,12 @@ mod tests {
             a: grid::Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
-                value: -0.1,
+                distance: -0.1,
             },
             b: grid::Value {
                 index: [0, 0, 0].into(),
                 point: [0.2, 0.0, 0.0].into(),
-                value: 0.1,
+                distance: 0.1,
             },
         };
         assert_eq!(through_surface.at_surface(), true);
@@ -162,12 +162,12 @@ mod tests {
             a: grid::Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
-                value: -0.1,
+                distance: -0.1,
             },
             b: grid::Value {
                 index: [0, 0, 0].into(),
                 point: [0.1, 0.0, 0.0].into(),
-                value: 0.0,
+                distance: 0.0,
             },
         };
         assert_eq!(inside_to_surface.at_surface(), false);
@@ -177,12 +177,12 @@ mod tests {
             a: grid::Value {
                 index: [0, 0, 0].into(),
                 point: [0.0, 0.0, 0.0].into(),
-                value: 0.0,
+                distance: 0.0,
             },
             b: grid::Value {
                 index: [0, 0, 0].into(),
                 point: [0.1, 0.0, 0.0].into(),
-                value: 0.1,
+                distance: 0.1,
             },
         };
         assert_eq!(outside_to_surface.at_surface(), true);
