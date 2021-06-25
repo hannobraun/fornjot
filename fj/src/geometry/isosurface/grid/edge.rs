@@ -113,14 +113,17 @@ mod tests {
 
     #[test]
     fn at_surface_should_detect_whether_edge_is_at_surface() {
+        // Dummy values that the code under test doesn't care about.
+        let index = [0, 0, 0].into();
+
         let inside_surface = Edge {
             a: grid::Value {
-                index: [0, 0, 0].into(),
+                index,
                 point: [0.0, 0.0, 0.0].into(),
                 distance: -0.2,
             },
             b: grid::Value {
-                index: [0, 0, 0].into(),
+                index,
                 point: [0.1, 0.0, 0.0].into(),
                 distance: -0.1,
             },
@@ -130,12 +133,12 @@ mod tests {
 
         let outside_surface = Edge {
             a: grid::Value {
-                index: [0, 0, 0].into(),
+                index,
                 point: [0.0, 0.0, 0.0].into(),
                 distance: 0.1,
             },
             b: grid::Value {
-                index: [0, 1, 0].into(),
+                index,
                 point: [0.0, 0.0, 0.0].into(),
                 distance: 0.2,
             },
@@ -145,12 +148,12 @@ mod tests {
 
         let through_surface = Edge {
             a: grid::Value {
-                index: [0, 0, 0].into(),
+                index,
                 point: [0.0, 0.0, 0.0].into(),
                 distance: -0.1,
             },
             b: grid::Value {
-                index: [0, 0, 0].into(),
+                index,
                 point: [0.2, 0.0, 0.0].into(),
                 distance: 0.1,
             },
@@ -160,12 +163,12 @@ mod tests {
 
         let inside_to_surface = Edge {
             a: grid::Value {
-                index: [0, 0, 0].into(),
+                index,
                 point: [0.0, 0.0, 0.0].into(),
                 distance: -0.1,
             },
             b: grid::Value {
-                index: [0, 0, 0].into(),
+                index,
                 point: [0.1, 0.0, 0.0].into(),
                 distance: 0.0,
             },
@@ -175,12 +178,12 @@ mod tests {
 
         let outside_to_surface = Edge {
             a: grid::Value {
-                index: [0, 0, 0].into(),
+                index,
                 point: [0.0, 0.0, 0.0].into(),
                 distance: 0.0,
             },
             b: grid::Value {
-                index: [0, 0, 0].into(),
+                index,
                 point: [0.1, 0.0, 0.0].into(),
                 distance: 0.1,
             },
