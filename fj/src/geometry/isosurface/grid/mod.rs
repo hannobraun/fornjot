@@ -20,7 +20,6 @@ use self::edge::{Axis, Sign};
 #[derive(Debug)]
 pub struct Grid {
     descriptor: Descriptor,
-    grid_vertex_samples: GridVertexSamples,
     edges_by_indices: BTreeMap<(Index, Index), Edge>,
     surface_vertices: BTreeMap<Index, Point<f32, 3>>,
 }
@@ -101,7 +100,6 @@ impl Grid {
 
         Self {
             descriptor,
-            grid_vertex_samples,
             edges_by_indices: edges_by_first_index,
             surface_vertices,
         }
