@@ -1,3 +1,5 @@
+#![allow(uncommon_codepoints)]
+
 pub mod geometry;
 pub mod mesh;
 pub mod syntax;
