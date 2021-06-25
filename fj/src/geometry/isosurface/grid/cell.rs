@@ -38,4 +38,24 @@ impl Cell {
             (grid_index, grid_vertex)
         })
     }
+
+    pub fn edges(&self) -> impl Iterator<Item = (Index, Index)> + '_ {
+        let edges = [
+            ([0, 0, 0], [0, 0, 1]),
+            ([0, 0, 0], [0, 1, 0]),
+            ([0, 0, 0], [1, 0, 0]),
+            ([0, 0, 1], [0, 1, 1]),
+            ([0, 0, 1], [1, 0, 1]),
+            ([0, 1, 0], [0, 1, 1]),
+            ([0, 1, 0], [1, 1, 0]),
+            ([0, 1, 1], [1, 1, 1]),
+            ([1, 0, 0], [1, 0, 1]),
+            ([1, 0, 0], [1, 1, 0]),
+            ([1, 0, 1], [1, 1, 1]),
+            ([1, 1, 0], [1, 1, 1]),
+        ];
+
+        array::IntoIter::new(edges)
+            .map(move |(a, b)| (self.min_index + a, self.min_index + b))
+    }
 }
