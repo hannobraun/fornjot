@@ -343,37 +343,37 @@ mod tests {
                 x: grid::Edge {
                     a: grid::Value {
                         index: [1, 1, 1].into(),
-                        point: [1.0.into(), 1.0.into(), 1.0.into()].into(),
-                        distance: 1.0.into(),
+                        point: [1.0, 1.0, 1.0].into(),
+                        distance: 1.0,
                     },
                     b: grid::Value {
                         index: [2, 1, 1].into(),
-                        point: [2.0.into(), 1.0.into(), 1.0.into()].into(),
-                        distance: 0.0.into(),
+                        point: [2.0, 1.0, 1.0].into(),
+                        distance: 0.0,
                     },
                 },
                 y: grid::Edge {
                     a: grid::Value {
                         index: [1, 1, 1].into(),
-                        point: [1.0.into(), 1.0.into(), 1.0.into()].into(),
-                        distance: 1.0.into(),
+                        point: [1.0, 1.0, 1.0].into(),
+                        distance: 1.0,
                     },
                     b: grid::Value {
                         index: [1, 2, 1].into(),
-                        point: [1.0.into(), 2.0.into(), 1.0.into()].into(),
-                        distance: 0.0.into(),
+                        point: [1.0, 2.0, 1.0].into(),
+                        distance: 0.0,
                     },
                 },
                 z: grid::Edge {
                     a: grid::Value {
                         index: [1, 1, 1].into(),
-                        point: [1.0.into(), 1.0.into(), 1.0.into()].into(),
-                        distance: 1.0.into(),
+                        point: [1.0, 1.0, 1.0].into(),
+                        distance: 1.0,
                     },
                     b: grid::Value {
                         index: [1, 1, 2].into(),
-                        point: [1.0.into(), 1.0.into(), 2.0.into()].into(),
-                        distance: 0.0.into(),
+                        point: [1.0, 1.0, 2.0].into(),
+                        distance: 0.0,
                     },
                 },
             }
