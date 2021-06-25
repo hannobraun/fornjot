@@ -12,7 +12,7 @@ use std::collections::BTreeMap;
 
 use nalgebra::{Point, Vector};
 
-use crate::geometry::attributes::{Surface, SurfaceSample};
+use crate::geometry::attributes::Surface;
 
 use self::edge::{Axis, Sign};
 
@@ -31,6 +31,7 @@ impl Grid {
         isosurface: &impl Surface<3>,
     ) -> Self {
         let mut grid_vertex_samples = BTreeMap::new();
+        let mut edges = BTreeMap::new();
 
         let surface_vertices = descriptor
             .cells()
@@ -51,6 +52,25 @@ impl Grid {
                     grid_vertex_samples.insert(index, sample);
                 }
 
+                for (a, b) in cell.edges() {
+                    let sample_a = grid_vertex_samples[&a];
+                    let sample_b = grid_vertex_samples[&b];
+
+                    let edge = Edge {
+                        a: Value {
+                            index: a,
+                            point: sample_a.point,
+                            value: sample_a.distance,
+                        },
+                        b: Value {
+                            index: b,
+                            point: sample_b.point,
+                            value: sample_b.distance,
+                        },
+                    };
+                    edges.insert((a, b), edge);
+                }
+
                 // TASK: Place surface vertex more accurately by minimizing the
                 //       error function as per the paper, section 2.3.
                 let surface_vertex = cell.min_position
@@ -61,40 +81,6 @@ impl Grid {
                     ]);
 
                 (cell.min_index, surface_vertex)
-            })
-            .collect();
-
-        let edges = grid_vertex_samples
-            .iter()
-            .map(|(&index, &sample)| {
-                let next_z = [index.x(), index.y(), index.z() + 1];
-                let next_y = [index.x(), index.y() + 1, index.z()];
-                let next_x = [index.x() + 1, index.y(), index.z()];
-
-                [
-                    edge_to_next(
-                        index,
-                        sample,
-                        next_z.into(),
-                        &grid_vertex_samples,
-                    ),
-                    edge_to_next(
-                        index,
-                        sample,
-                        next_y.into(),
-                        &grid_vertex_samples,
-                    ),
-                    edge_to_next(
-                        index,
-                        sample,
-                        next_x.into(),
-                        &grid_vertex_samples,
-                    ),
-                ]
-            })
-            .flatten()
-            .filter_map(|edge| {
-                edge.map(|edge| ((edge.a.index, edge.b.index), edge))
             })
             .collect();
 
@@ -160,28 +146,6 @@ impl Grid {
 
         neighbors
     }
-}
-
-fn edge_to_next(
-    index: Index,
-    sample: SurfaceSample<3>,
-    next_index: Index,
-    samples: &BTreeMap<Index, SurfaceSample<3>>,
-) -> Option<Edge> {
-    let next_sample = samples.get(&next_index)?;
-
-    Some(Edge {
-        a: Value {
-            index,
-            point: sample.point,
-            value: sample.distance,
-        },
-        b: Value {
-            index: next_index,
-            point: next_sample.point,
-            value: next_sample.distance,
-        },
-    })
 }
 
 #[cfg(test)]
