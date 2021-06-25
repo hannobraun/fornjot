@@ -19,7 +19,7 @@ impl Cell {
         &self,
         resolution: f32,
     ) -> impl Iterator<Item = (Index, Point<f32, 3>)> + '_ {
-        let cell_vertices = [
+        let vertices = [
             [0, 0, 0],
             [0, 0, 1],
             [0, 1, 0],
@@ -30,7 +30,7 @@ impl Cell {
             [1, 1, 1],
         ];
 
-        array::IntoIter::new(cell_vertices).map(move |cell_vertex| {
+        array::IntoIter::new(vertices).map(move |cell_vertex| {
             let grid_index = self.min_index + cell_vertex;
             let grid_vertex = self.min_position
                 + SVector::from(cell_vertex).map(|c| c as f32 * resolution);
