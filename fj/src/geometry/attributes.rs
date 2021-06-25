@@ -7,7 +7,7 @@ pub trait Surface<const D: usize> {
     fn sample(&self, point: impl Into<Point<f32, D>>) -> SurfaceSample<D>;
 }
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct SurfaceSample<const D: usize> {
     pub point: Point<f32, D>,
     pub distance: f32,
