@@ -2,11 +2,13 @@ use std::fmt;
 
 use nalgebra::Point;
 
-use crate::geometry::{isosurface::grid, util::DebugPoint};
+use crate::geometry::util::DebugPoint;
+
+use super::Index;
 
 #[derive(Clone, Copy, PartialEq)]
 pub struct Value {
-    pub index: grid::Index,
+    pub index: Index,
     pub point: Point<f32, 3>,
     pub value: f32,
 }
