@@ -56,6 +56,13 @@ impl Grid {
                     let sample_a = grid_vertex_samples[&a];
                     let sample_b = grid_vertex_samples[&b];
 
+                    // Since neighboring cells share edges, we're duplicating
+                    // their creation here, overwriting previous results, should
+                    // they exist.
+                    //
+                    // This shouldn't change anything about the result, but it's
+                    // extra work. It might be better to check whether an edge
+                    // is already available and use that.
                     let edge = Edge {
                         a: Value {
                             index: a,
