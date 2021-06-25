@@ -166,7 +166,7 @@ fn edge_to_next(
     index: Index,
     sample: SurfaceSample<3>,
     next_index: Index,
-    samples: &GridVertexSamples,
+    samples: &BTreeMap<Index, SurfaceSample<3>>,
 ) -> Option<Edge> {
     let next_sample = samples.get(&next_index)?;
 
@@ -183,8 +183,6 @@ fn edge_to_next(
         },
     })
 }
-
-type GridVertexSamples = BTreeMap<Index, SurfaceSample<3>>;
 
 #[cfg(test)]
 mod tests {
