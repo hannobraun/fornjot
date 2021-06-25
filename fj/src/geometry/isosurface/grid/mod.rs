@@ -20,7 +20,7 @@ use self::edge::{Axis, Sign};
 #[derive(Debug)]
 pub struct Grid {
     descriptor: Descriptor,
-    edges_by_indices: BTreeMap<(Index, Index), Edge>,
+    edges: BTreeMap<(Index, Index), Edge>,
     surface_vertices: BTreeMap<Index, Point<f32, 3>>,
 }
 
@@ -64,7 +64,7 @@ impl Grid {
             })
             .collect();
 
-        let edges_by_first_index = grid_vertex_samples
+        let edges = grid_vertex_samples
             .iter()
             .map(|(&index, &sample)| {
                 let next_z = [index.x(), index.y(), index.z() + 1];
@@ -100,14 +100,14 @@ impl Grid {
 
         Self {
             descriptor,
-            edges_by_indices: edges_by_first_index,
+            edges,
             surface_vertices,
         }
     }
 
     /// Iterate over all grid edges that are near the surface
     pub fn edges(&self) -> impl Iterator<Item = Edge> + '_ {
-        self.edges_by_indices.values().copied()
+        self.edges.values().copied()
     }
 
     /// Returns the 4 neighboring surface vertices of a grid edge
