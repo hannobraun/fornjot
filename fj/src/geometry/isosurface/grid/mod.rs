@@ -8,7 +8,7 @@ pub use self::{
     cell::Cell, descriptor::Descriptor, edge::Edge, index::Index, value::Value,
 };
 
-use std::{array, collections::BTreeMap};
+use std::collections::BTreeMap;
 
 use nalgebra::{Point, Vector};
 
@@ -101,7 +101,6 @@ impl Grid {
                     ),
                 ]
             })
-            .map(|edges| array::IntoIter::new(edges))
             .flatten()
             .filter_map(|edge| edge)
     }
