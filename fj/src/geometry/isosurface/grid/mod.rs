@@ -63,6 +63,7 @@ impl Grid {
                     // This shouldn't change anything about the result, but it's
                     // extra work. It might be better to check whether an edge
                     // is already available and use that.
+
                     let edge = Edge {
                         a: Value {
                             index: a,
@@ -75,6 +76,7 @@ impl Grid {
                             value: sample_b.distance,
                         },
                     };
+
                     edges.insert((a, b), edge);
                 }
 
