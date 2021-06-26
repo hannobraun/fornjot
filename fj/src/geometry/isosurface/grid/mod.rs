@@ -250,7 +250,7 @@ mod tests {
     }
 
     #[test]
-    fn neighbors_of_edge_should_return_neighboring_grid_centers() {
+    fn neighbors_of_edge_should_return_neighboring_surface_vertices() {
         let geometry = Sphere::new();
 
         let grid = Grid::from_descriptor(
