@@ -247,6 +247,8 @@ mod tests {
 
     #[test]
     fn neighbors_of_edge_should_return_neighboring_grid_centers() {
+        let geometry = Sphere::new();
+
         let grid = Grid::from_descriptor(
             grid::Descriptor {
                 aabb: Aabb {
@@ -255,7 +257,7 @@ mod tests {
                 },
                 resolution: 1.0,
             },
-            &Sphere::new(),
+            &geometry,
         );
 
         let edges = TestEdges::new();
