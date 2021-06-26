@@ -161,13 +161,8 @@ impl Grid {
 
 #[cfg(test)]
 mod tests {
-    use nalgebra::Unit;
 
-    use crate::geometry::{
-        aabb::Aabb,
-        attributes::{Surface, SurfaceSample},
-        isosurface::grid,
-    };
+    use crate::geometry::{aabb::Aabb, isosurface::grid, shapes::Sphere};
 
     use super::Grid;
 
@@ -181,7 +176,7 @@ mod tests {
                 },
                 resolution: 1.0,
             },
-            &Geometry,
+            &Sphere::new(),
         );
 
         let edges: Vec<_> = grid
@@ -260,7 +255,7 @@ mod tests {
                 },
                 resolution: 1.0,
             },
-            &Geometry,
+            &Sphere::new(),
         );
 
         let edges = TestEdges::new();
@@ -312,7 +307,7 @@ mod tests {
                 },
                 resolution: 1.0,
             },
-            &Geometry,
+            &Sphere::new(),
         );
 
         let edges = TestEdges::new();
@@ -376,23 +371,6 @@ mod tests {
                         distance: 0.0,
                     },
                 },
-            }
-        }
-    }
-
-    struct Geometry;
-
-    impl Surface<3> for Geometry {
-        fn sample(
-            &self,
-            point: impl Into<nalgebra::Point<f32, 3>>,
-        ) -> SurfaceSample<3> {
-            let point = point.into();
-
-            SurfaceSample {
-                point,
-                distance: 0.0,
-                normal: Unit::new_normalize(point.coords),
             }
         }
     }
