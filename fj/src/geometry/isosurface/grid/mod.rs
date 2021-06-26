@@ -2,6 +2,7 @@ mod cell;
 mod descriptor;
 mod edge;
 mod index;
+mod surface_vertices;
 mod value;
 
 pub use self::{
@@ -14,14 +15,17 @@ use nalgebra::{Point, Vector};
 
 use crate::geometry::attributes::Surface;
 
-use self::edge::{Axis, Sign};
+use self::{
+    edge::{Axis, Sign},
+    surface_vertices::SurfaceVertices,
+};
 
 /// A uniform grid for isosurface extraction
 #[derive(Debug)]
 pub struct Grid {
     descriptor: Descriptor,
     edges: BTreeMap<(Index, Index), Edge>,
-    surface_vertices: BTreeMap<Index, Point<f32, 3>>,
+    surface_vertices: SurfaceVertices,
 }
 
 impl Grid {
