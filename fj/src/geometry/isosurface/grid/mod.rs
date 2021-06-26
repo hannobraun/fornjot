@@ -116,7 +116,6 @@ impl Grid {
 
 #[cfg(test)]
 mod tests {
-
     use crate::geometry::{aabb::Aabb, isosurface::grid, shapes::Sphere};
 
     use super::Grid;
