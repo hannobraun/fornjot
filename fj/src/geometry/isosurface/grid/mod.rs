@@ -102,7 +102,7 @@ impl Grid {
         Self {
             descriptor,
             edges,
-            surface_vertices,
+            surface_vertices: SurfaceVertices(surface_vertices),
         }
     }
 
@@ -153,10 +153,10 @@ impl Grid {
         };
 
         let neighbors = [
-            self.surface_vertices[&(start + a)],
-            self.surface_vertices[&(start + b)],
-            self.surface_vertices[&(start + c)],
-            self.surface_vertices[&(start + d)],
+            self.surface_vertices.0[&(start + a)],
+            self.surface_vertices.0[&(start + b)],
+            self.surface_vertices.0[&(start + c)],
+            self.surface_vertices.0[&(start + d)],
         ];
 
         neighbors

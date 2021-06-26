@@ -4,4 +4,5 @@ use nalgebra::Point;
 
 use super::Index;
 
-pub type SurfaceVertices = BTreeMap<Index, Point<f32, 3>>;
+#[derive(Debug)]
+pub struct SurfaceVertices(pub BTreeMap<Index, Point<f32, 3>>);
