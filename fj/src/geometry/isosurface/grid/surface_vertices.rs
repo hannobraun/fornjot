@@ -79,7 +79,6 @@ mod tests {
     #[test]
     fn neighbors_of_edge_should_return_neighboring_surface_vertices() {
         let surface_vertices = SurfaceVertices(test_vertices());
-
         let edges = TestEdges::new();
 
         let [x0, x1, x2, x3] = [
