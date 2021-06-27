@@ -62,7 +62,6 @@ impl SurfaceVertices {
     }
 }
 
-// TASK: Simplify tests by using `SurfaceVertices` directly.
 #[cfg(test)]
 mod tests {
     use std::collections::BTreeMap;
@@ -137,6 +136,7 @@ mod tests {
         );
     }
 
+    // TASK: Simplify test by using `SurfaceVertices` directly.
     #[test]
     fn neighbors_of_edge_should_work_regardless_of_direction() {
         let grid = Grid::from_descriptor(
