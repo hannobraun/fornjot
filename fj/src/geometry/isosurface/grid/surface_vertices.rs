@@ -159,18 +159,18 @@ mod tests {
     }
 
     fn test_vertices() -> BTreeMap<grid::Index, Point<f32, 3>> {
-        let mut surface_vertices = BTreeMap::new();
+        let mut vertices = BTreeMap::new();
 
-        surface_vertices.insert([0, 0, 0].into(), [0.0, 0.0, 0.0].into());
-        surface_vertices.insert([0, 0, 1].into(), [0.0, 0.0, 1.0].into());
-        surface_vertices.insert([0, 1, 0].into(), [0.0, 1.0, 0.0].into());
-        surface_vertices.insert([0, 1, 1].into(), [0.0, 1.0, 1.0].into());
-        surface_vertices.insert([1, 0, 0].into(), [1.0, 0.0, 0.0].into());
-        surface_vertices.insert([1, 0, 1].into(), [1.0, 0.0, 1.0].into());
-        surface_vertices.insert([1, 1, 0].into(), [1.0, 1.0, 0.0].into());
-        surface_vertices.insert([1, 1, 1].into(), [1.0, 1.0, 1.0].into());
+        vertices.insert([0, 0, 0].into(), [0.0, 0.0, 0.0].into());
+        vertices.insert([0, 0, 1].into(), [0.0, 0.0, 1.0].into());
+        vertices.insert([0, 1, 0].into(), [0.0, 1.0, 0.0].into());
+        vertices.insert([0, 1, 1].into(), [0.0, 1.0, 1.0].into());
+        vertices.insert([1, 0, 0].into(), [1.0, 0.0, 0.0].into());
+        vertices.insert([1, 0, 1].into(), [1.0, 0.0, 1.0].into());
+        vertices.insert([1, 1, 0].into(), [1.0, 1.0, 0.0].into());
+        vertices.insert([1, 1, 1].into(), [1.0, 1.0, 1.0].into());
 
-        surface_vertices
+        vertices
     }
 
     pub struct TestEdges {
