@@ -68,11 +68,7 @@ mod tests {
 
     use nalgebra::Point;
 
-    use crate::geometry::{
-        aabb::Aabb,
-        isosurface::{grid, Grid},
-        shapes::Sphere,
-    };
+    use crate::geometry::isosurface::grid;
 
     use super::SurfaceVertices;
 
@@ -127,33 +123,22 @@ mod tests {
         );
     }
 
-    // TASK: Simplify test by using `SurfaceVertices` directly.
     #[test]
     fn neighbors_of_edge_should_work_regardless_of_direction() {
-        let grid = Grid::from_descriptor(
-            grid::Descriptor {
-                aabb: Aabb {
-                    min: [0.0, 0.0, 0.0].into(),
-                    max: [1.0, 1.0, 1.0].into(),
-                },
-                resolution: 1.0,
-            },
-            &Sphere::new(),
-        );
-
+        let surface_vertices = SurfaceVertices(test_vertices());
         let edges = TestEdges::new();
 
         assert_eq!(
-            grid.neighbors_of_edge(edges.x),
-            grid.neighbors_of_edge(edges.x.reverse()),
+            surface_vertices.neighbors_of_edge(edges.x),
+            surface_vertices.neighbors_of_edge(edges.x.reverse()),
         );
         assert_eq!(
-            grid.neighbors_of_edge(edges.y),
-            grid.neighbors_of_edge(edges.y.reverse()),
+            surface_vertices.neighbors_of_edge(edges.y),
+            surface_vertices.neighbors_of_edge(edges.y.reverse()),
         );
         assert_eq!(
-            grid.neighbors_of_edge(edges.z),
-            grid.neighbors_of_edge(edges.z.reverse()),
+            surface_vertices.neighbors_of_edge(edges.z),
+            surface_vertices.neighbors_of_edge(edges.z.reverse()),
         );
     }
 
