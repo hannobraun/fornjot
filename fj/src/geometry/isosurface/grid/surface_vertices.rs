@@ -65,26 +65,29 @@ impl SurfaceVertices {
 // TASK: Simplify tests by using `SurfaceVertices` directly.
 #[cfg(test)]
 mod tests {
+    use std::collections::BTreeMap;
+
     use crate::geometry::{
         aabb::Aabb,
         isosurface::{grid, Grid},
         shapes::Sphere,
     };
 
+    use super::SurfaceVertices;
+
     #[test]
     fn neighbors_of_edge_should_return_neighboring_surface_vertices() {
-        let geometry = Sphere::new();
+        let mut surface_vertices = BTreeMap::new();
+        surface_vertices.insert([0, 0, 0].into(), [0.0, 0.0, 0.0].into());
+        surface_vertices.insert([0, 0, 1].into(), [0.0, 0.0, 1.0].into());
+        surface_vertices.insert([0, 1, 0].into(), [0.0, 1.0, 0.0].into());
+        surface_vertices.insert([0, 1, 1].into(), [0.0, 1.0, 1.0].into());
+        surface_vertices.insert([1, 0, 0].into(), [1.0, 0.0, 0.0].into());
+        surface_vertices.insert([1, 0, 1].into(), [1.0, 0.0, 1.0].into());
+        surface_vertices.insert([1, 1, 0].into(), [1.0, 1.0, 0.0].into());
+        surface_vertices.insert([1, 1, 1].into(), [1.0, 1.0, 1.0].into());
 
-        let grid = Grid::from_descriptor(
-            grid::Descriptor {
-                aabb: Aabb {
-                    min: [0.0, 0.0, 0.0].into(),
-                    max: [1.0, 1.0, 1.0].into(),
-                },
-                resolution: 1.0,
-            },
-            &geometry,
-        );
+        let surface_vertices = SurfaceVertices(surface_vertices);
 
         let edges = TestEdges::new();
 
@@ -107,20 +110,29 @@ mod tests {
             [1.0, 1.0, 1.0].into(),
         ];
 
-        assert_eq!(grid.neighbors_of_edge(edges.x), [x0, x1, x2, x3]);
-        assert_eq!(grid.neighbors_of_edge(edges.y), [y0, y1, y2, y3]);
-        assert_eq!(grid.neighbors_of_edge(edges.z), [z0, z1, z2, z3]);
+        assert_eq!(
+            surface_vertices.neighbors_of_edge(edges.x),
+            [x0, x1, x2, x3]
+        );
+        assert_eq!(
+            surface_vertices.neighbors_of_edge(edges.y),
+            [y0, y1, y2, y3]
+        );
+        assert_eq!(
+            surface_vertices.neighbors_of_edge(edges.z),
+            [z0, z1, z2, z3]
+        );
 
         assert_eq!(
-            grid.neighbors_of_edge(edges.x.swap_values()),
+            surface_vertices.neighbors_of_edge(edges.x.swap_values()),
             [x1, x0, x3, x2],
         );
         assert_eq!(
-            grid.neighbors_of_edge(edges.y.swap_values()),
+            surface_vertices.neighbors_of_edge(edges.y.swap_values()),
             [y1, y0, y3, y2],
         );
         assert_eq!(
-            grid.neighbors_of_edge(edges.z.swap_values()),
+            surface_vertices.neighbors_of_edge(edges.z.swap_values()),
             [z1, z0, z3, z2],
         );
     }
