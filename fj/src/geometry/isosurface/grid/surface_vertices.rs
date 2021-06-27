@@ -66,6 +66,8 @@ impl SurfaceVertices {
 mod tests {
     use std::collections::BTreeMap;
 
+    use nalgebra::Point;
+
     use crate::geometry::{
         aabb::Aabb,
         isosurface::{grid, Grid},
@@ -76,17 +78,7 @@ mod tests {
 
     #[test]
     fn neighbors_of_edge_should_return_neighboring_surface_vertices() {
-        let mut surface_vertices = BTreeMap::new();
-        surface_vertices.insert([0, 0, 0].into(), [0.0, 0.0, 0.0].into());
-        surface_vertices.insert([0, 0, 1].into(), [0.0, 0.0, 1.0].into());
-        surface_vertices.insert([0, 1, 0].into(), [0.0, 1.0, 0.0].into());
-        surface_vertices.insert([0, 1, 1].into(), [0.0, 1.0, 1.0].into());
-        surface_vertices.insert([1, 0, 0].into(), [1.0, 0.0, 0.0].into());
-        surface_vertices.insert([1, 0, 1].into(), [1.0, 0.0, 1.0].into());
-        surface_vertices.insert([1, 1, 0].into(), [1.0, 1.0, 0.0].into());
-        surface_vertices.insert([1, 1, 1].into(), [1.0, 1.0, 1.0].into());
-
-        let surface_vertices = SurfaceVertices(surface_vertices);
+        let surface_vertices = SurfaceVertices(test_vertices());
 
         let edges = TestEdges::new();
 
@@ -164,6 +156,21 @@ mod tests {
             grid.neighbors_of_edge(edges.z),
             grid.neighbors_of_edge(edges.z.reverse()),
         );
+    }
+
+    fn test_vertices() -> BTreeMap<grid::Index, Point<f32, 3>> {
+        let mut surface_vertices = BTreeMap::new();
+
+        surface_vertices.insert([0, 0, 0].into(), [0.0, 0.0, 0.0].into());
+        surface_vertices.insert([0, 0, 1].into(), [0.0, 0.0, 1.0].into());
+        surface_vertices.insert([0, 1, 0].into(), [0.0, 1.0, 0.0].into());
+        surface_vertices.insert([0, 1, 1].into(), [0.0, 1.0, 1.0].into());
+        surface_vertices.insert([1, 0, 0].into(), [1.0, 0.0, 0.0].into());
+        surface_vertices.insert([1, 0, 1].into(), [1.0, 0.0, 1.0].into());
+        surface_vertices.insert([1, 1, 0].into(), [1.0, 1.0, 0.0].into());
+        surface_vertices.insert([1, 1, 1].into(), [1.0, 1.0, 1.0].into());
+
+        surface_vertices
     }
 
     pub struct TestEdges {
