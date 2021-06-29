@@ -240,7 +240,7 @@ impl Renderer {
         };
 
         self.queue.write_buffer(
-            &mut self.uniform_buffer,
+            &self.uniform_buffer,
             0,
             bytemuck::cast_slice(&[uniforms]),
         );
