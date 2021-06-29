@@ -248,7 +248,7 @@ impl Renderer {
         let output = self
             .swap_chain
             .get_current_frame()
-            .map_err(|err| DrawError(err))?
+            .map_err(DrawError)?
             .output;
 
         let mut encoder = self.device.create_command_encoder(
