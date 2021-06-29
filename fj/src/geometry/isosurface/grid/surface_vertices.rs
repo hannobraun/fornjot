@@ -51,14 +51,12 @@ impl SurfaceVertices {
             [a, b, c, d]
         };
 
-        let neighbors = [
+        [
             self.0[&(start + a)],
             self.0[&(start + b)],
             self.0[&(start + c)],
             self.0[&(start + d)],
-        ];
-
-        neighbors
+        ]
     }
 }
 
