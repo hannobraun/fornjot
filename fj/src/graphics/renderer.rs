@@ -56,7 +56,7 @@ impl Renderer {
                 None,
             )
             .await
-            .map_err(|err| InitError::RequestDevice(err))?;
+            .map_err(InitError::RequestDevice)?;
 
         let size = window.inner_size();
 
