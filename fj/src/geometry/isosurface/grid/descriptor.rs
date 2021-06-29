@@ -40,12 +40,10 @@ impl Descriptor {
             .cartesian_product(indices_z)
             .map(|((x, y), z)| Index::from([x, y, z]));
 
-        let cells = indices.map(move |index| Cell {
+        indices.map(move |index| Cell {
             min_index: index,
             min_position: index.to_coordinates(min, self.resolution),
-        });
-
-        cells
+        })
     }
 }
 
