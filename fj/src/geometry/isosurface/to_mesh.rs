@@ -17,7 +17,7 @@ pub fn to_mesh(
 
     let mut mesh = Mesh::new();
 
-    for edge in grid.edges() {
+    for edge in grid.edges_at_surface() {
         if edge.at_surface() {
             let [a, b, c, d] = grid.neighbors_of_edge(edge);
 

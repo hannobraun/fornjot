@@ -111,7 +111,7 @@ impl Grid {
     }
 
     /// Iterate over all grid edges that are near the surface
-    pub fn edges(&self) -> impl Iterator<Item = Edge> + '_ {
+    pub fn edges_at_surface(&self) -> impl Iterator<Item = Edge> + '_ {
         self.edges.values().copied()
     }
 
