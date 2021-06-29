@@ -36,7 +36,7 @@ impl Grid {
 
         let surface_vertices = descriptor
             .cells()
-            .map(|cell| {
+            .filter_map(|cell| {
                 // We're saving the grid vertex samples and surface vertices of
                 // all grid cells here, but we actually only need those for
                 // cells that feature a sign change.
@@ -52,6 +52,8 @@ impl Grid {
                     let sample = isosurface.sample(vertex);
                     grid_vertex_samples.insert(index, sample);
                 }
+
+                let mut num_edges_at_surface = 0;
 
                 for (a, b) in cell.edges() {
                     let sample_a = grid_vertex_samples[&a];
@@ -81,6 +83,14 @@ impl Grid {
                     // We're storing _all_ edges, but we actually only need
                     // those that are at a surface.
                     edges.insert((a, b), edge);
+
+                    if edge.at_surface() {
+                        num_edges_at_surface += 1;
+                    }
+                }
+
+                if num_edges_at_surface == 0 {
+                    return None;
                 }
 
                 // TASK: Place surface vertex more accurately by minimizing the
@@ -92,7 +102,7 @@ impl Grid {
                         descriptor.resolution / 2.0,
                     ]);
 
-                (cell.min_index, surface_vertex)
+                Some((cell.min_index, surface_vertex))
             })
             .collect();
 
