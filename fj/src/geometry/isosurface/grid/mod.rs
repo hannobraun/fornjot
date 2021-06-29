@@ -37,10 +37,6 @@ impl Grid {
         let surface_vertices = descriptor
             .cells()
             .filter_map(|cell| {
-                // We're saving the grid vertex samples of all grid cells here,
-                // but we actually only need those for cells that feature a sign
-                // change.
-
                 for (index, vertex) in cell.vertices(descriptor.resolution) {
                     // Since neighboring cells share vertices, we're duplicating
                     // lots of computations here, overwriting previous results,
