@@ -20,7 +20,6 @@ use self::surface_vertices::SurfaceVertices;
 /// A uniform grid for isosurface extraction
 #[derive(Debug)]
 pub struct Grid {
-    descriptor: Descriptor,
     edges: BTreeMap<(Index, Index), Edge>,
     surface_vertices: SurfaceVertices,
 }
@@ -102,7 +101,6 @@ impl Grid {
             .collect();
 
         Self {
-            descriptor,
             edges,
             surface_vertices: SurfaceVertices(surface_vertices),
         }
