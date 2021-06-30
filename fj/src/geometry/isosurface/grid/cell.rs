@@ -30,10 +30,10 @@ impl Cell {
             [1, 1, 1],
         ];
 
-        array::IntoIter::new(vertices).map(move |cell_vertex| {
-            let grid_index = self.min_index + cell_vertex;
+        array::IntoIter::new(vertices).map(move |cell_index| {
+            let grid_index = self.min_index + cell_index;
             let grid_vertex = self.min_position
-                + SVector::from(cell_vertex).map(|c| c as f32 * resolution);
+                + SVector::from(cell_index).map(|c| c as f32 * resolution);
 
             (grid_index, grid_vertex)
         })
