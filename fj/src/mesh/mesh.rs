@@ -32,6 +32,11 @@ impl Mesh {
         let v1 = v1.into();
         let v2 = v2.into();
 
+        // Make sure this is a real triangle.
+        assert_ne!(v0, v1);
+        assert_ne!(v0, v2);
+        assert_ne!(v1, v2);
+
         let v0 = v0.map(|coord| coord.into());
         let v1 = v1.map(|coord| coord.into());
         let v2 = v2.map(|coord| coord.into());
