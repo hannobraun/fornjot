@@ -11,7 +11,7 @@ pub use self::{
 
 use std::collections::BTreeMap;
 
-use nalgebra::{Point, Vector};
+use nalgebra::Point;
 
 use crate::geometry::attributes::Surface;
 
@@ -49,6 +49,7 @@ impl Grid {
                     grid_vertex_samples.insert(index, sample);
                 }
 
+                let mut surface_vertex = Point::origin();
                 let mut num_edges_at_surface = 0;
 
                 for (a, b) in cell.edges() {
@@ -79,6 +80,17 @@ impl Grid {
                     if edge.at_surface() {
                         edges.insert((a, b), edge);
                         num_edges_at_surface += 1;
+
+                        let f = edge.a.distance.abs()
+                            / (edge.a.distance.abs() + edge.b.distance.abs());
+
+                        assert!(f.is_finite());
+                        assert!(!f.is_nan());
+
+                        let point =
+                            edge.a.point + (edge.b.point - edge.a.point) * f;
+
+                        surface_vertex += point.coords;
                     }
                 }
 
@@ -86,14 +98,10 @@ impl Grid {
                     return None;
                 }
 
-                // TASK: Place surface vertex more accurately by minimizing the
-                //       error function as per the paper, section 2.3.
-                let surface_vertex = cell.min_position
-                    + Vector::from([
-                        descriptor.resolution / 2.0,
-                        descriptor.resolution / 2.0,
-                        descriptor.resolution / 2.0,
-                    ]);
+                // We just average all of the points that intersect the surface,
+                // discarding surface normals. This is simpler than the method
+                // described in "Dual Contouring of Hermite Data".
+                surface_vertex /= num_edges_at_surface as f32;
 
                 Some((cell.min_index, surface_vertex))
             })
