@@ -6,7 +6,9 @@ pub mod syntax;
 pub mod threemf;
 
 pub mod prelude {
-    pub use super::syntax::{Difference as _, LinearExtrude as _};
+    pub use super::syntax::{
+        Difference as _, LinearExtrude as _, Resolution as _,
+    };
 }
 
 mod args;
