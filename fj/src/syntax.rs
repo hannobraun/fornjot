@@ -1,4 +1,4 @@
-use crate::geometry::operations;
+use crate::{geometry::operations, mesh::into_mesh};
 
 pub trait Difference<A, B> {
     fn difference(self) -> operations::Difference<A, B>;
@@ -25,3 +25,14 @@ impl<Sketch> LinearExtrude<Sketch> for Sketch {
         }
     }
 }
+
+pub trait Resolution: Sized {
+    fn resolution(self, resolution: f32) -> into_mesh::WithResolution<Self> {
+        into_mesh::WithResolution {
+            geometry: self,
+            resolution,
+        }
+    }
+}
+
+impl<Geometry> Resolution for Geometry {}
