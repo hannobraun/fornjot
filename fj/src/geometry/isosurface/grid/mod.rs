@@ -39,7 +39,7 @@ impl Grid {
                 for (index, vertex) in cell.vertices(descriptor.resolution) {
                     grid_vertex_samples
                         .entry(index)
-                        .or_insert(isosurface.sample(vertex));
+                        .or_insert_with(|| isosurface.sample(vertex));
                 }
 
                 let mut surface_vertex = Point::origin();
