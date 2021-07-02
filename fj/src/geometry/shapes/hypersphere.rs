@@ -5,6 +5,7 @@ use crate::geometry::{
     attributes::{BoundingVolume, Surface, SurfaceSample},
 };
 
+#[derive(Default)]
 pub struct Hypersphere<const D: usize> {
     pub radius: f32,
 }

@@ -5,6 +5,7 @@ use nalgebra::Point;
 
 use crate::graphics;
 
+#[derive(Default)]
 pub struct Mesh {
     indices_by_vertex: HashMap<Vertex, graphics::Index>,
 

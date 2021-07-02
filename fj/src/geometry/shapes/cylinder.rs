@@ -21,6 +21,12 @@ impl Cylinder {
     // it.
 }
 
+impl Default for Cylinder {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use nalgebra::{vector, Unit};
