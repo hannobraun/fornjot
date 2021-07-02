@@ -28,14 +28,12 @@ impl InputHandler {
         input: KeyboardInput,
         control_flow: &mut ControlFlow,
     ) {
-        match input {
-            KeyboardInput {
-                virtual_keycode: Some(VirtualKeyCode::Escape),
-                ..
-            } => {
-                *control_flow = ControlFlow::Exit;
-            }
-            _ => {}
+        if let KeyboardInput {
+            virtual_keycode: Some(VirtualKeyCode::Escape),
+            ..
+        } = input
+        {
+            *control_flow = ControlFlow::Exit;
         }
     }
 
