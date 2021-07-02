@@ -19,7 +19,7 @@ impl Index {
     }
 
     pub fn to_coordinates(
-        &self,
+        self,
         min: Point<f32, 3>,
         resolution: f32,
     ) -> Point<f32, 3> {
