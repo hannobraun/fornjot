@@ -18,10 +18,10 @@ pub trait LinearExtrude<Sketch> {
 }
 
 impl<Sketch> LinearExtrude<Sketch> for Sketch {
-    fn linear_extrude(self, height: f32) -> operations::Sweep<Sketch> {
+    fn linear_extrude(self, distance: f32) -> operations::Sweep<Sketch> {
         operations::Sweep {
             sketch: self,
-            height,
+            distance,
         }
     }
 }

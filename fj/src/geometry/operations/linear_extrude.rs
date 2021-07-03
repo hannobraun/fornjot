@@ -7,7 +7,7 @@ use crate::geometry::{
 
 pub struct Sweep<Sketch> {
     pub sketch: Sketch,
-    pub height: f32,
+    pub distance: f32,
 }
 
 impl<Sketch> Sweep<Sketch> {
@@ -17,7 +17,7 @@ impl<Sketch> Sweep<Sketch> {
     }
 
     pub fn with_height(mut self, height: f32) -> Self {
-        self.height = height;
+        self.distance = height;
         self
     }
 }
@@ -29,7 +29,7 @@ where
     fn aabb(&self) -> Aabb<3> {
         self.sketch
             .aabb()
-            .extend(-self.height / 2.0, self.height / 2.0)
+            .extend(-self.distance / 2.0, self.distance / 2.0)
     }
 }
 
@@ -43,7 +43,7 @@ where
         let sample_xy = self.sketch.sample(point.xy());
 
         let d_xy = sample_xy.distance;
-        let d_z = point.z.abs() - self.height / 2.0;
+        let d_z = point.z.abs() - self.distance / 2.0;
 
         let w = Vector::from([f32::max(d_xy, 0.0), f32::max(d_z, 0.0)]);
 

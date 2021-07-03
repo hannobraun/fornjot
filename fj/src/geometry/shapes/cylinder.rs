@@ -8,7 +8,7 @@ impl Cylinder {
     pub fn new() -> Self {
         Sweep {
             sketch: Circle::new(),
-            height: 1.0,
+            distance: 1.0,
         }
     }
 
