@@ -13,11 +13,11 @@ impl<A, B> Difference<A, B> for (A, B) {
     }
 }
 
-pub trait LinearExtrude<Sketch> {
+pub trait Sweep<Sketch> {
     fn linear_extrude(self, distance: f32) -> operations::Sweep<Sketch>;
 }
 
-impl<Sketch> LinearExtrude<Sketch> for Sketch {
+impl<Sketch> Sweep<Sketch> for Sketch {
     fn linear_extrude(self, distance: f32) -> operations::Sweep<Sketch> {
         operations::Sweep {
             sketch: self,
