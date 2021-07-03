@@ -1,4 +1,4 @@
 pub mod difference;
-pub mod linear_extrude;
+pub mod sweep;
 
-pub use self::{difference::Difference, linear_extrude::Sweep};
+pub use self::{difference::Difference, sweep::Sweep};
