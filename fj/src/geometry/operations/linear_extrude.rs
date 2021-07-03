@@ -5,12 +5,12 @@ use crate::geometry::{
     attributes::{BoundingVolume, Surface, SurfaceSample},
 };
 
-pub struct LinearExtrude<Sketch> {
+pub struct Sweep<Sketch> {
     pub sketch: Sketch,
     pub height: f32,
 }
 
-impl<Sketch> LinearExtrude<Sketch> {
+impl<Sketch> Sweep<Sketch> {
     pub fn with_sketch(mut self, sketch: Sketch) -> Self {
         self.sketch = sketch;
         self
@@ -22,7 +22,7 @@ impl<Sketch> LinearExtrude<Sketch> {
     }
 }
 
-impl<Sketch> BoundingVolume<3> for LinearExtrude<Sketch>
+impl<Sketch> BoundingVolume<3> for Sweep<Sketch>
 where
     Sketch: BoundingVolume<2>,
 {
@@ -33,7 +33,7 @@ where
     }
 }
 
-impl<Sketch> Surface<3> for LinearExtrude<Sketch>
+impl<Sketch> Surface<3> for Sweep<Sketch>
 where
     Sketch: Surface<2>,
 {

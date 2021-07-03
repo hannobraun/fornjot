@@ -1,12 +1,12 @@
-use crate::geometry::operations::LinearExtrude;
+use crate::geometry::operations::Sweep;
 
 use super::Circle;
 
-pub type Cylinder = LinearExtrude<Circle>;
+pub type Cylinder = Sweep<Circle>;
 
 impl Cylinder {
     pub fn new() -> Self {
-        LinearExtrude {
+        Sweep {
             sketch: Circle::new(),
             height: 1.0,
         }
