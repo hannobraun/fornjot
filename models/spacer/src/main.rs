@@ -1,6 +1,8 @@
 use fj::prelude::*;
 
 fn main() -> anyhow::Result<()> {
+    // TASK: Make it possible to pass those parameters in from the outside, for
+    //       example via command-line arguments.
     let outer = 50.0;
     let inner = 25.0;
     let height = 25.0;
