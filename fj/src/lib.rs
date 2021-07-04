@@ -6,9 +6,7 @@ pub mod syntax;
 pub mod threemf;
 
 pub mod prelude {
-    pub use super::syntax::{
-        Difference as _, Sweep as _, Resolution as _,
-    };
+    pub use super::syntax::{Difference as _, Resolution as _, Sweep as _};
 }
 
 mod args;
