@@ -2,9 +2,15 @@ use crate::geometry::operations::Sweep;
 
 use super::Circle;
 
+/// A cylinder
+///
+/// Defined as a [`Sweep`] of a [`Circle`].
 pub type Cylinder = Sweep<Circle>;
 
 impl Cylinder {
+    /// Create a new `Cylinder`
+    ///
+    /// Sweeps a default [`Circle`] along a distance of `1.0`.
     pub fn new() -> Self {
         Sweep {
             sketch: Circle::new(),
@@ -12,6 +18,7 @@ impl Cylinder {
         }
     }
 
+    /// Update radius
     pub fn with_radius(mut self, radius: f32) -> Self {
         self.sketch = self.sketch.with_radius(radius);
         self
