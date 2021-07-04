@@ -13,7 +13,7 @@ use crate::{
     args::Args,
     graphics::{DrawError, Renderer, Transform},
     input::InputHandler,
-    mesh::IntoMesh,
+    model::IntoMesh,
     threemf,
 };
 

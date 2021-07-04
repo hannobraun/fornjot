@@ -1,4 +1,4 @@
-use crate::{geometry::operations, mesh::into_mesh};
+use crate::{geometry::operations, model};
 
 pub trait Difference<A, B> {
     fn difference(self) -> operations::Difference<A, B>;
@@ -27,8 +27,8 @@ impl<Sketch> Sweep<Sketch> for Sketch {
 }
 
 pub trait Resolution: Sized {
-    fn resolution(self, resolution: f32) -> into_mesh::WithResolution<Self> {
-        into_mesh::WithResolution {
+    fn resolution(self, resolution: f32) -> model::WithResolution<Self> {
+        model::WithResolution {
             geometry: self,
             resolution,
         }

@@ -2,6 +2,7 @@
 
 pub mod geometry;
 pub mod mesh;
+pub mod model;
 pub mod syntax;
 pub mod threemf;
 
