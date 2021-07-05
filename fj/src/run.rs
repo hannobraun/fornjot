@@ -13,15 +13,14 @@ use crate::{
     args::Args,
     graphics::{DrawError, Renderer, Transform},
     input::InputHandler,
-    threemf, Mesh,
+    threemf, Mesh, Model,
 };
 
-pub fn run_model<Model, M>(model: Model) -> anyhow::Result<()>
+pub fn run_model<M>(model: M) -> anyhow::Result<()>
 where
-    Model: FnOnce() -> M,
-    M: Into<Mesh>,
+    M: Model,
 {
-    let mesh = model();
+    let mesh = model.model();
     run_mesh(mesh)?;
     Ok(())
 }
