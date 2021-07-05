@@ -5,6 +5,12 @@ use crate::geometry::{
 
 use super::Mesh;
 
+pub trait Model {
+    type Ty: Into<Mesh>;
+
+    fn model(&self) -> Self::Ty;
+}
+
 impl<T> From<T> for Mesh
 where
     T: BoundingVolume<3> + Surface<3>,
