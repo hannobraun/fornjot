@@ -37,6 +37,8 @@ where
         .pretty()
         .init();
 
+    // TASK: Move argument parsing elsewhere. `run_mesh` needs the result of it,
+    //       to instantiate the model.
     let args = Args::parse();
 
     info!("Converting geometry to triangle mesh...");
@@ -51,6 +53,7 @@ where
         conversion_duration.subsec_millis()
     );
 
+    // TASK: Extract exporting into separate function.
     if let Some(path) = args.export {
         info!("Exporting to `{}`", path.display());
         threemf::export(&mesh, path)?;

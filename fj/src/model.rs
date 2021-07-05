@@ -6,6 +6,7 @@ use crate::geometry::{
 use super::Mesh;
 
 pub trait Model {
+    // TASK: Add `type Params`.
     type Ty: Into<Mesh>;
 
     fn model(&self) -> Self::Ty;
