@@ -17,6 +17,16 @@ use crate::{
     threemf,
 };
 
+pub fn run_model<Model, Mesh>(model: Model) -> anyhow::Result<()>
+where
+    Model: FnOnce() -> Mesh,
+    Mesh: IntoMesh,
+{
+    let mesh = model();
+    run_mesh(mesh)?;
+    Ok(())
+}
+
 pub fn run_mesh<Mesh>(mesh: Mesh) -> anyhow::Result<()>
 where
     Mesh: IntoMesh,
