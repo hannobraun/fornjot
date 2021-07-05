@@ -27,9 +27,9 @@ where
     Ok(())
 }
 
-pub fn run_mesh<Mesh>(mesh: Mesh) -> anyhow::Result<()>
+pub fn run_mesh<M>(mesh: M) -> anyhow::Result<()>
 where
-    Mesh: IntoMesh,
+    M: IntoMesh,
 {
     tracing_subscriber::fmt()
         .with_env_filter(
