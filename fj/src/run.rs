@@ -17,9 +17,9 @@ use crate::{
     threemf,
 };
 
-pub fn run<M>(mesh: M) -> anyhow::Result<()>
+pub fn run<Mesh>(mesh: Mesh) -> anyhow::Result<()>
 where
-    M: IntoMesh,
+    Mesh: IntoMesh,
 {
     tracing_subscriber::fmt()
         .with_env_filter(
