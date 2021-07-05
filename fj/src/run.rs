@@ -17,7 +17,7 @@ use crate::{
     threemf,
 };
 
-pub fn run<Mesh>(mesh: Mesh) -> anyhow::Result<()>
+pub fn run_mesh<Mesh>(mesh: Mesh) -> anyhow::Result<()>
 where
     Mesh: IntoMesh,
 {

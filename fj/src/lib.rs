@@ -19,5 +19,5 @@ pub use self::{
     geometry::shapes::Cylinder,
     graphics::{Index, Vertex},
     mesh::Mesh,
-    run::run,
+    run::run_mesh,
 };
