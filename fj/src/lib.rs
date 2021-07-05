@@ -16,7 +16,10 @@ mod input;
 mod run;
 
 pub use self::{
-    geometry::shapes::Cylinder,
+    geometry::{
+        operations::{Difference, Sweep},
+        shapes::Cylinder,
+    },
     graphics::{Index, Vertex},
     mesh::Mesh,
     run::{run_mesh, run_model},
