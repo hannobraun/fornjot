@@ -13,14 +13,13 @@ use crate::{
     args::Args,
     graphics::{DrawError, Renderer, Transform},
     input::InputHandler,
-    model::IntoMesh,
-    threemf,
+    threemf, Mesh,
 };
 
 pub fn run_model<Model, M>(model: Model) -> anyhow::Result<()>
 where
     Model: FnOnce() -> M,
-    M: IntoMesh,
+    M: Into<Mesh>,
 {
     let mesh = model();
     run_mesh(mesh)?;
@@ -29,7 +28,7 @@ where
 
 pub fn run_mesh<M>(mesh: M) -> anyhow::Result<()>
 where
-    M: IntoMesh,
+    M: Into<Mesh>,
 {
     tracing_subscriber::fmt()
         .with_env_filter(
@@ -44,7 +43,7 @@ where
     info!("Converting geometry to triangle mesh...");
 
     let start_of_conversion = Instant::now();
-    let mesh = mesh.into_mesh();
+    let mesh = mesh.into();
     let conversion_duration = start_of_conversion.elapsed();
 
     info!(
