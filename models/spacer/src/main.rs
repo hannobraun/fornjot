@@ -1,9 +1,7 @@
 use fj::prelude::*;
 
 fn main() -> anyhow::Result<()> {
-    fj::run_model(model)?;
-
-    Ok(())
+    fj::run_model(model)
 }
 
 fn model() -> impl Into<fj::Mesh> {
