@@ -1,6 +1,12 @@
 use fj::prelude::*;
 
 fn main() -> anyhow::Result<()> {
+    fj::run_model(model)?;
+
+    Ok(())
+}
+
+fn model() -> impl Into<fj::Mesh> {
     // TASK: Make it possible to pass those parameters in from the outside, for
     //       example via command-line arguments.
     let outer = 50.0;
@@ -12,7 +18,5 @@ fn main() -> anyhow::Result<()> {
 
     let spacer = (outer, inner).difference();
 
-    fj::run_mesh(spacer)?;
-
-    Ok(())
+    spacer
 }
