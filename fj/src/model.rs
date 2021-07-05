@@ -9,7 +9,7 @@ pub trait Model {
     // TASK: Add `type Params`.
     type Ty: Into<Mesh>;
 
-    fn model(&self) -> Self::Ty;
+    fn instantiate(&self) -> Self::Ty;
 }
 
 impl<T> From<T> for Mesh

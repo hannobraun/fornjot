@@ -9,7 +9,7 @@ struct Spacer;
 impl fj::Model for Spacer {
     type Ty = fj::Difference<fj::Cylinder, fj::Cylinder>;
 
-    fn model(&self) -> Self::Ty {
+    fn instantiate(&self) -> Self::Ty {
         // TASK: Make it possible to pass those parameters in from the outside,
         //       for example via command-line arguments.
         let outer = 50.0;

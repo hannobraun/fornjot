@@ -20,7 +20,7 @@ pub fn run_model<M>(model: M) -> anyhow::Result<()>
 where
     M: Model,
 {
-    let mesh = model.model();
+    let mesh = model.instantiate();
     run_mesh(mesh)?;
     Ok(())
 }
