@@ -22,5 +22,6 @@ pub use self::{
     },
     graphics::{Index, Vertex},
     mesh::Mesh,
+    model::Model,
     run::{run_mesh, run_model},
 };
