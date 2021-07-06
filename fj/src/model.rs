@@ -1,3 +1,5 @@
+use serde::de::DeserializeOwned;
+
 use crate::geometry::{
     attributes::{BoundingVolume, Surface},
     isosurface,
@@ -6,7 +8,7 @@ use crate::geometry::{
 use super::Mesh;
 
 pub trait Model {
-    type Params;
+    type Params: DeserializeOwned;
     type Ty: Into<Mesh>;
 
     fn instantiate(&self) -> Self::Ty;
