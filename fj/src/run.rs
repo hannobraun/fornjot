@@ -20,8 +20,11 @@ pub fn run_model<M>(model: M) -> anyhow::Result<()>
 where
     M: Model,
 {
+    let args = init();
+
     let mesh = model.instantiate();
-    run_mesh(mesh)?;
+    run_inner(mesh, args)?;
+
     Ok(())
 }
 
