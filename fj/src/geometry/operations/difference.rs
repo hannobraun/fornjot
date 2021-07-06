@@ -68,4 +68,6 @@ mod tests {
         assert_eq!(difference.sample([1.0, 0.0, 0.0]).distance, 0.0);
         assert_eq!(difference.sample([1.5, 0.0, 0.0]).distance, 0.5);
     }
+
+    // TASK: Add test for normal. I suspect it is wrong for the subtracted part.
 }
