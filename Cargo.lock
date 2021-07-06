@@ -601,6 +601,7 @@ dependencies = [
  "indexmap",
  "itertools",
  "nalgebra",
+ "serde",
  "thiserror",
  "tracing",
  "tracing-subscriber",
