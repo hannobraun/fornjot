@@ -16,10 +16,7 @@ use crate::{
     threemf, Mesh, Model,
 };
 
-pub fn run_model<M>(model: M) -> anyhow::Result<()>
-where
-    M: Model,
-{
+pub fn run_model(model: impl Model) -> anyhow::Result<()> {
     let args = init();
 
     let mesh = model.instantiate();
