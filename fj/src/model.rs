@@ -11,7 +11,7 @@ pub trait Model {
     type Params: DeserializeOwned;
     type Ty: Into<Mesh>;
 
-    fn instantiate(&self) -> Self::Ty;
+    fn instantiate(&self, params: Self::Params) -> Self::Ty;
 }
 
 impl<T> From<T> for Mesh

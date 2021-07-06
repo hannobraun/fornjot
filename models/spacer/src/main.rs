@@ -11,11 +11,7 @@ impl fj::Model for Spacer {
     type Params = Params;
     type Ty = fj::Difference<fj::Cylinder, fj::Cylinder>;
 
-    fn instantiate(&self) -> Self::Ty {
-        // TASK: Make it possible to pass those parameters in from the outside,
-        //       for example via command-line arguments.
-        let params = Params::default();
-
+    fn instantiate(&self, params: Self::Params) -> Self::Ty {
         let outer = params.outer.unwrap_or(50.0);
         let inner = params.inner.unwrap_or(25.0);
         let height = params.height.unwrap_or(25.0);
