@@ -41,6 +41,10 @@ where
     //       to instantiate the model.
     let args = Args::parse();
 
+    run_inner(mesh, args)
+}
+
+fn run_inner(mesh: impl Into<Mesh>, args: Args) -> anyhow::Result<()> {
     info!("Converting geometry to triangle mesh...");
 
     let start_of_conversion = Instant::now();
