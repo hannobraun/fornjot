@@ -16,12 +16,12 @@ impl fj::Model for Spacer {
         //       for example via command-line arguments.
         let params = Params::default();
 
-        let outer = fj::Cylinder::new()
-            .with_radius(params.outer)
-            .with_height(params.height);
-        let inner = fj::Cylinder::new()
-            .with_radius(params.inner)
-            .with_height(params.height);
+        let outer = params.outer.unwrap_or(50.0);
+        let inner = params.inner.unwrap_or(25.0);
+        let height = params.height.unwrap_or(25.0);
+
+        let outer = fj::Cylinder::new().with_radius(outer).with_height(height);
+        let inner = fj::Cylinder::new().with_radius(inner).with_height(height);
 
         let spacer = (outer, inner).difference();
 
@@ -31,17 +31,17 @@ impl fj::Model for Spacer {
 
 #[derive(Deserialize)]
 struct Params {
-    outer: f32,
-    inner: f32,
-    height: f32,
+    outer: Option<f32>,
+    inner: Option<f32>,
+    height: Option<f32>,
 }
 
 impl Default for Params {
     fn default() -> Self {
         Self {
-            outer: 50.0,
-            inner: 25.0,
-            height: 25.0,
+            outer: None,
+            inner: None,
+            height: None,
         }
     }
 }
