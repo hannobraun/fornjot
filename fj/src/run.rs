@@ -28,10 +28,7 @@ where
     Ok(())
 }
 
-pub fn run_mesh<M>(mesh: M) -> anyhow::Result<()>
-where
-    M: Into<Mesh>,
-{
+pub fn run_mesh(mesh: impl Into<Mesh>) -> anyhow::Result<()> {
     let args = init();
     run_inner(mesh, args)
 }
