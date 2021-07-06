@@ -12,15 +12,27 @@ impl fj::Model for Spacer {
     fn instantiate(&self) -> Self::Ty {
         // TASK: Make it possible to pass those parameters in from the outside,
         //       for example via command-line arguments.
-        let outer = 50.0;
-        let inner = 25.0;
-        let height = 25.0;
+        let params = Params {
+            outer: 50.0,
+            inner: 25.0,
+            height: 25.0,
+        };
 
-        let outer = fj::Cylinder::new().with_radius(outer).with_height(height);
-        let inner = fj::Cylinder::new().with_radius(inner).with_height(height);
+        let outer = fj::Cylinder::new()
+            .with_radius(params.outer)
+            .with_height(params.height);
+        let inner = fj::Cylinder::new()
+            .with_radius(params.inner)
+            .with_height(params.height);
 
         let spacer = (outer, inner).difference();
 
         spacer
     }
+}
+
+struct Params {
+    outer: f32,
+    inner: f32,
+    height: f32,
 }
