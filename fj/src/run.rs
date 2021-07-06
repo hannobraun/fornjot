@@ -29,6 +29,11 @@ pub fn run_mesh<M>(mesh: M) -> anyhow::Result<()>
 where
     M: Into<Mesh>,
 {
+    let args = init();
+    run_inner(mesh, args)
+}
+
+fn init() -> Args {
     tracing_subscriber::fmt()
         .with_env_filter(
             EnvFilter::from_default_env()
@@ -37,11 +42,7 @@ where
         .pretty()
         .init();
 
-    // TASK: Move argument parsing elsewhere. `run_mesh` needs the result of it,
-    //       to instantiate the model.
-    let args = Args::parse();
-
-    run_inner(mesh, args)
+    Args::parse()
 }
 
 fn run_inner(mesh: impl Into<Mesh>, args: Args) -> anyhow::Result<()> {
