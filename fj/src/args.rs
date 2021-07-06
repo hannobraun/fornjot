@@ -7,7 +7,9 @@ pub struct Args {
     /// Export model to this path
     #[clap(short, long)]
     pub export: Option<PathBuf>,
-    // TASK: Add `model_params`.
+
+    #[clap(short, long)]
+    pub model_params: Option<String>,
 }
 
 impl Args {
