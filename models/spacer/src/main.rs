@@ -14,11 +14,7 @@ impl fj::Model for Spacer {
     fn instantiate(&self) -> Self::Ty {
         // TASK: Make it possible to pass those parameters in from the outside,
         //       for example via command-line arguments.
-        let params = Params {
-            outer: 50.0,
-            inner: 25.0,
-            height: 25.0,
-        };
+        let params = Params::default();
 
         let outer = fj::Cylinder::new()
             .with_radius(params.outer)
@@ -38,4 +34,14 @@ struct Params {
     outer: f32,
     inner: f32,
     height: f32,
+}
+
+impl Default for Params {
+    fn default() -> Self {
+        Self {
+            outer: 50.0,
+            inner: 25.0,
+            height: 25.0,
+        }
+    }
 }
