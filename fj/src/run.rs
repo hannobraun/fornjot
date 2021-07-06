@@ -1,4 +1,4 @@
-use std::time::Instant;
+use std::{path::PathBuf, time::Instant};
 
 use futures::executor::block_on;
 use tracing::{debug, info, trace};
@@ -20,14 +20,14 @@ pub fn run_model(model: impl Model) -> anyhow::Result<()> {
     let args = init();
     let mesh = model.instantiate();
 
-    run_inner(mesh, args)?;
+    run_inner(mesh, args.export)?;
 
     Ok(())
 }
 
 pub fn run_mesh(mesh: impl Into<Mesh>) -> anyhow::Result<()> {
     let args = init();
-    run_inner(mesh, args)?;
+    run_inner(mesh, args.export)?;
     Ok(())
 }
 
@@ -43,7 +43,10 @@ fn init() -> Args {
     Args::parse()
 }
 
-fn run_inner(mesh: impl Into<Mesh>, args: Args) -> anyhow::Result<()> {
+fn run_inner(
+    mesh: impl Into<Mesh>,
+    export: Option<PathBuf>,
+) -> anyhow::Result<()> {
     info!("Converting geometry to triangle mesh...");
 
     let start_of_conversion = Instant::now();
@@ -56,7 +59,7 @@ fn run_inner(mesh: impl Into<Mesh>, args: Args) -> anyhow::Result<()> {
         conversion_duration.subsec_millis()
     );
 
-    if let Some(path) = args.export {
+    if let Some(path) = export {
         info!("Exporting to `{}`", path.display());
         threemf::export(&mesh, path)?;
         return Ok(());
