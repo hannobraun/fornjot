@@ -602,6 +602,7 @@ dependencies = [
  "itertools",
  "nalgebra",
  "serde",
+ "serde_json",
  "thiserror",
  "tracing",
  "tracing-subscriber",
