@@ -27,7 +27,8 @@ pub fn run_model(model: impl Model) -> anyhow::Result<()> {
 
 pub fn run_mesh(mesh: impl Into<Mesh>) -> anyhow::Result<()> {
     let args = init();
-    run_inner(mesh, args)
+    run_inner(mesh, args)?;
+    Ok(())
 }
 
 fn init() -> Args {
