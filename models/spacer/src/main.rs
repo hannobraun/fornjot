@@ -1,4 +1,5 @@
 use fj::prelude::*;
+use serde::Deserialize;
 
 fn main() -> anyhow::Result<()> {
     fj::run_model(Spacer)
@@ -32,6 +33,7 @@ impl fj::Model for Spacer {
     }
 }
 
+#[derive(Deserialize)]
 struct Params {
     outer: f32,
     inner: f32,
