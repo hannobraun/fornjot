@@ -31,13 +31,3 @@ struct Params {
     inner: Option<f32>,
     height: Option<f32>,
 }
-
-impl Default for Params {
-    fn default() -> Self {
-        Self {
-            outer: None,
-            inner: None,
-            height: None,
-        }
-    }
-}
