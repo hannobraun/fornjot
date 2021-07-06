@@ -7,6 +7,7 @@ fn main() -> anyhow::Result<()> {
 struct Spacer;
 
 impl fj::Model for Spacer {
+    type Params = Params;
     type Ty = fj::Difference<fj::Cylinder, fj::Cylinder>;
 
     fn instantiate(&self) -> Self::Ty {

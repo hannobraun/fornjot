@@ -6,7 +6,7 @@ use crate::geometry::{
 use super::Mesh;
 
 pub trait Model {
-    // TASK: Add `type Params`.
+    type Params;
     type Ty: Into<Mesh>;
 
     fn instantiate(&self) -> Self::Ty;
