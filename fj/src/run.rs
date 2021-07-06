@@ -18,8 +18,8 @@ use crate::{
 
 pub fn run_model(model: impl Model) -> anyhow::Result<()> {
     let args = init();
-
     let mesh = model.instantiate();
+
     run_inner(mesh, args)?;
 
     Ok(())
