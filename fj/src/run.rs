@@ -58,7 +58,6 @@ fn run_inner(mesh: impl Into<Mesh>, args: Args) -> anyhow::Result<()> {
         conversion_duration.subsec_millis()
     );
 
-    // TASK: Extract exporting into separate function.
     if let Some(path) = args.export {
         info!("Exporting to `{}`", path.display());
         threemf::export(&mesh, path)?;
