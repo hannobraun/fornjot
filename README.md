@@ -2,7 +2,7 @@
 
 ## About
 
-Experimental CAD system. The CAD system is a library, written in the Rust programming language. CAD models are Rust applications that use the library.
+Experimental CAD system. The CAD system is a library, written in the Rust programming language.
 
 The following models are currently available:
 
