@@ -86,6 +86,8 @@ impl Grid {
                 // We just average all of the points that intersect the surface,
                 // discarding surface normals. This is simpler than the method
                 // described in "Dual Contouring of Hermite Data".
+                // TASK: Use surface normals, as per the method described in the
+                //       paper, to improve surface vertex positioning.
                 surface_vertex /= num_edges_at_surface as f32;
 
                 Some((cell.min_index, surface_vertex))
