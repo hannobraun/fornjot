@@ -11,7 +11,9 @@ The following models are currently available:
 
 ## Status
 
-Fornjot is still at an experimental stage, where I figure out which approaches work and which don't. It doesn't have enough features to do anything useful.
+Fornjot is still at an experimental stage, where I figure out which approaches work and which don't. It is capable enough to create very simple models and export those to [3MF] for 3D-printing.
+
+It is very likely that you will run into limits when trying to use Fornjot for anything but the simplest models. If you are missing any functionality, pull requests are very welcome.
 
 ## License
 
@@ -19,5 +21,6 @@ This project is open source software, licensed under the terms of the [Zero Clau
 
 See [LICENSE.md] for full details.
 
+[3MF]: https://en.wikipedia.org/wiki/3D_Manufacturing_Format
 [Zero Clause BSD License]: https://opensource.org/licenses/0BSD
 [LICENSE.md]: https://github.com/hannobraun/fornjot/blob/main/LICENSE.md
