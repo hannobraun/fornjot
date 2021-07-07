@@ -36,6 +36,7 @@ where
 
         let sample_b = SurfaceSample {
             distance: -sample_b.distance,
+            normal: -sample_b.normal,
             ..sample_b
         };
 
