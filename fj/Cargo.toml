@@ -1,6 +1,6 @@
 [package]
 name    = "fj"
-version = "0.1.1"
+version = "0.2.0"
 authors = ["Hanno Braun <hanno@braun-odw.eu>"]
 edition = "2018"
 
