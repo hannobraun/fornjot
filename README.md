@@ -19,7 +19,7 @@ It is very likely that you will run into limits when trying to use Fornjot for a
 
 ## Usage
 
-Fornjot is a regular Rust library, and CAD models are just Rust applications that use the library. To use Fornjot for your own models, create a Rust application using Cargo, include Fornjot as a dependency (see [`fj`] on crates.io), and use the models from this repository (see above) as inspiration.
+Fornjot is a regular Rust library, and CAD models are just Rust applications that use the library. To use Fornjot for your own models, create a Rust application using Cargo, include Fornjot as a dependency (see [`fj`] on crates.io), and use one of the models from this repository (see above) as a template.
 
 To display one of the models from this repository, run:
 
