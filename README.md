@@ -9,11 +9,13 @@ The following models are currently available:
 - [Cube](https://github.com/hannobraun/fornjot/blob/main/models/cube)
 - [Spacer](https://github.com/hannobraun/fornjot/blob/main/models/spacer)
 
+
 ## Status
 
 Fornjot is still at an experimental stage, where I figure out which approaches work and which don't. It is capable enough to create very simple models and export those to [3MF] for 3D-printing.
 
 It is very likely that you will run into limits when trying to use Fornjot for anything but the simplest models. If you are missing any functionality, pull requests are very welcome.
+
 
 ## Usage
 
@@ -42,6 +44,7 @@ cargo run --bin spacer -- --model-params="{\"inner\": 5.0}"
 ```
 
 `model-params` is a JSON object. Check out `spacer`'s source code, to see what else can be overridden.
+
 
 ## License
 
