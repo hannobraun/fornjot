@@ -17,6 +17,10 @@ use crate::geometry::attributes::Surface;
 
 use self::surface_vertices::SurfaceVertices;
 
+// TASK: Don't use uniform grid when sampling geometry. Use an adaptive octree
+//       instead (as described in the paper), to increase performance and reduce
+//       memory use.
+
 /// A uniform grid for isosurface extraction
 #[derive(Debug)]
 pub struct Grid {
