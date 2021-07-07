@@ -50,6 +50,8 @@ where
 
 #[cfg(test)]
 mod tests {
+    use nalgebra::{SVector, Unit};
+
     use crate::geometry::{attributes::Surface, shapes::Sphere};
 
     use super::Difference;
@@ -70,5 +72,28 @@ mod tests {
         assert_eq!(difference.sample([1.5, 0.0, 0.0]).distance, 0.5);
     }
 
-    // TASK: Add test for normal. I suspect it is wrong for the subtracted part.
+    #[test]
+    fn normal() {
+        let difference = Difference {
+            a: Sphere::new().with_radius(1.0),
+            b: Sphere::new().with_radius(0.5),
+        };
+
+        let values = [
+            ([0.25, 0.0, 0.0], [-1.0, 0.0, 0.0]),
+            ([0.5, 0.0, 0.0], [-1.0, 0.0, 0.0]),
+            ([0.625, 0.0, 0.0], [-1.0, 0.0, 0.0]),
+            ([0.875, 0.0, 0.0], [1.0, 0.0, 0.0]),
+            ([1.0, 0.0, 0.0], [1.0, 0.0, 0.0]),
+            ([1.5, 0.0, 0.0], [1.0, 0.0, 0.0]),
+        ];
+
+        for (actual, expected) in values {
+            println!("point: {:?}", actual);
+            assert_eq!(
+                difference.sample(actual).normal,
+                Unit::new_normalize(SVector::<_, 3>::from(expected))
+            );
+        }
+    }
 }
