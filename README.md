@@ -35,7 +35,7 @@ To export one of the models from this repository to 3MF, run:
 cargo run --bin spacer -- --export model.3mf
 ```
 
-Replace `spacer with the name of the model you want to export.
+Replace `spacer` with the name of the model you want to export.
 
 Some models have parameters that can be overridden. For example, you can override the inner radius of the spacer model like this:
 
