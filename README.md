@@ -37,7 +37,7 @@ cargo run --bin spacer -- --export model.3mf
 
 Replace `spacer` with the name of the model you want to export.
 
-Some models have parameters that can be overridden. For example, you can override the inner radius of the spacer model like this:
+Some models have parameters that can be overridden. For example, you can override the inner radius of the `spacer` model like this:
 
 ``` bash
 cargo run --bin spacer -- --model-params="{\"inner\": 5.0}"
