@@ -19,9 +19,7 @@ impl fj::Model for Spacer {
         let outer = fj::Cylinder::new().with_radius(outer).with_height(height);
         let inner = fj::Cylinder::new().with_radius(inner).with_height(height);
 
-        let spacer = (outer, inner).difference();
-
-        spacer
+        (outer, inner).difference()
     }
 }
 
