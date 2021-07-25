@@ -19,8 +19,9 @@ use crate::{
 pub fn run_model(model: impl Model) -> anyhow::Result<()> {
     let args = init();
 
-    let params =
-        serde_json::from_str(&args.model_params.unwrap_or(String::from("{}")))?;
+    let params = serde_json::from_str(
+        &args.model_params.unwrap_or_else(|| String::from("{}")),
+    )?;
     let mesh = model.instantiate(params);
 
     run_inner(mesh, args.export)?;
