@@ -4,13 +4,22 @@ use nalgebra::{Point, SVector};
 
 use crate::geometry::util::DebugPoint;
 
+/// Axis-aligned bounding box
 #[derive(Clone, Copy, PartialEq)]
 pub struct Aabb<const D: usize> {
+    /// Minimum point of the axis-aligned bounding box
     pub min: Point<f32, D>,
+
+    /// Maximum point of the axis-aligned bounding box
     pub max: Point<f32, D>,
 }
 
 impl<const D: usize> Aabb<D> {
+    /// Construct `Aabb` from minimum point and size
+    ///
+    /// # Panics
+    /// Panics, if `size` has at least one negative component, or a magnitude of
+    /// zero.
     pub fn from_min_and_size(
         min: Point<f32, D>,
         size: SVector<f32, D>,
@@ -24,16 +33,19 @@ impl<const D: usize> Aabb<D> {
         }
     }
 
+    /// Size of the axis-aligned bounding box
     pub fn size(&self) -> SVector<f32, D> {
         self.max - self.min
     }
 
+    /// Center point of the axis-aligned bounding box
     pub fn center(&self) -> Point<f32, D> {
         self.min + self.size() / 2.0
     }
 }
 
 impl Aabb<2> {
+    /// Extend 2-dimensional `Aabb` with a third dimension
     pub fn extend(self, min: f32, max: f32) -> Aabb<3> {
         Aabb {
             min: [self.min.x, self.min.y, min].into(),
@@ -43,6 +55,7 @@ impl Aabb<2> {
 }
 
 impl Aabb<3> {
+    /// Vertices of the axis-aligned bounding box
     pub fn vertices(&self) -> [Point<f32, 3>; 8] {
         [
             [self.min.x, self.min.y, self.min.z].into(),
@@ -56,6 +69,7 @@ impl Aabb<3> {
         ]
     }
 
+    /// Edges of the axis-aligned bounding
     pub fn edges(&self) -> [[Point<f32, 3>; 2]; 12] {
         let [a, b, c, d, e, f, g, h] = self.vertices();
 
@@ -75,6 +89,7 @@ impl Aabb<3> {
         ]
     }
 
+    /// Partition the axis-aligned bounding box into 8 smaller boxes
     pub fn partition(&self) -> [Self; 8] {
         let size = self.size() / 2.0;
 
