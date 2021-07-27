@@ -2,7 +2,7 @@ use nalgebra::{Point, Unit};
 
 use crate::geometry::{
     aabb::Aabb,
-    attributes::{BoundingVolume, Geometry, SurfaceSample},
+    attributes::{BoundingVolume, Geometry, Sample},
 };
 
 /// An n-dimensional hypersphere
@@ -42,10 +42,10 @@ impl<const D: usize> BoundingVolume<D> for Hypersphere<D> {
 }
 
 impl<const D: usize> Geometry<D> for Hypersphere<D> {
-    fn sample(&self, point: impl Into<Point<f32, D>>) -> SurfaceSample<D> {
+    fn sample(&self, point: impl Into<Point<f32, D>>) -> Sample<D> {
         let point = point.into();
 
-        SurfaceSample {
+        Sample {
             point,
             distance: point.coords.magnitude() - self.radius,
             normal: Unit::new_normalize(point.coords),

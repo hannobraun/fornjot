@@ -2,7 +2,7 @@ use nalgebra::{vector, Point, Unit, Vector};
 
 use crate::geometry::{
     aabb::Aabb,
-    attributes::{BoundingVolume, Geometry, SurfaceSample},
+    attributes::{BoundingVolume, Geometry, Sample},
 };
 
 pub struct Sweep<Sketch> {
@@ -37,7 +37,7 @@ impl<Sketch> Geometry<3> for Sweep<Sketch>
 where
     Sketch: Geometry<2>,
 {
-    fn sample(&self, point: impl Into<Point<f32, 3>>) -> SurfaceSample<3> {
+    fn sample(&self, point: impl Into<Point<f32, 3>>) -> Sample<3> {
         let point = point.into();
 
         let sample_xy = self.sketch.sample(point.xy());
@@ -59,7 +59,7 @@ where
         };
         let normal = Unit::new_normalize(normal);
 
-        SurfaceSample {
+        Sample {
             point,
             distance,
             normal,
