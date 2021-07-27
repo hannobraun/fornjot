@@ -3,7 +3,7 @@ use nalgebra::{Point, SVector, Unit};
 use crate::geometry::aabb::Aabb;
 
 /// Provides a signed distance function
-pub trait Surface<const D: usize> {
+pub trait Geometry<const D: usize> {
     fn sample(&self, point: impl Into<Point<f32, D>>) -> SurfaceSample<D>;
 }
 

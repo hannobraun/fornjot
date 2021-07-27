@@ -2,7 +2,7 @@ use nalgebra::Point;
 
 use crate::geometry::{
     aabb::Aabb,
-    attributes::{BoundingVolume, Surface, SurfaceSample},
+    attributes::{BoundingVolume, Geometry, SurfaceSample},
 };
 
 pub struct Difference<A, B> {
@@ -23,10 +23,10 @@ where
     }
 }
 
-impl<A, B, const D: usize> Surface<D> for Difference<A, B>
+impl<A, B, const D: usize> Geometry<D> for Difference<A, B>
 where
-    A: Surface<D>,
-    B: Surface<D>,
+    A: Geometry<D>,
+    B: Geometry<D>,
 {
     fn sample(&self, point: impl Into<Point<f32, D>>) -> SurfaceSample<D> {
         let point = point.into();
@@ -52,7 +52,7 @@ where
 mod tests {
     use nalgebra::{SVector, Unit};
 
-    use crate::geometry::{attributes::Surface, shapes::Sphere};
+    use crate::geometry::{attributes::Geometry, shapes::Sphere};
 
     use super::Difference;
 

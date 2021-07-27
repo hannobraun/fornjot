@@ -2,7 +2,7 @@ use nalgebra::{vector, Point, Unit, Vector};
 
 use crate::geometry::{
     aabb::Aabb,
-    attributes::{BoundingVolume, Surface, SurfaceSample},
+    attributes::{BoundingVolume, Geometry, SurfaceSample},
 };
 
 pub struct Sweep<Sketch> {
@@ -33,9 +33,9 @@ where
     }
 }
 
-impl<Sketch> Surface<3> for Sweep<Sketch>
+impl<Sketch> Geometry<3> for Sweep<Sketch>
 where
-    Sketch: Surface<2>,
+    Sketch: Geometry<2>,
 {
     fn sample(&self, point: impl Into<Point<f32, 3>>) -> SurfaceSample<3> {
         let point = point.into();

@@ -1,7 +1,7 @@
 use serde::de::DeserializeOwned;
 
 use crate::geometry::{
-    attributes::{BoundingVolume, Surface},
+    attributes::{BoundingVolume, Geometry},
     isosurface,
 };
 
@@ -16,7 +16,7 @@ pub trait Model {
 
 impl<T> From<T> for Mesh
 where
-    T: BoundingVolume<3> + Surface<3>,
+    T: BoundingVolume<3> + Geometry<3>,
 {
     fn from(value: T) -> Self {
         let resolution = value.aabb().size().max() / 100.0;
@@ -31,7 +31,7 @@ pub struct WithResolution<T> {
 
 impl<T> From<WithResolution<T>> for Mesh
 where
-    T: BoundingVolume<3> + Surface<3>,
+    T: BoundingVolume<3> + Geometry<3>,
 {
     fn from(value: WithResolution<T>) -> Mesh {
         isosurface::to_mesh(&value.geometry, value.resolution)

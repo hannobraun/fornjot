@@ -13,7 +13,7 @@ use std::collections::BTreeMap;
 
 use nalgebra::Point;
 
-use crate::geometry::attributes::Surface;
+use crate::geometry::attributes::Geometry;
 
 use self::surface_vertices::SurfaceVertices;
 
@@ -32,7 +32,7 @@ impl Grid {
     /// Create the grid from the descriptor and populate it with distance values
     pub fn from_descriptor(
         descriptor: Descriptor,
-        isosurface: &impl Surface<3>,
+        isosurface: &impl Geometry<3>,
     ) -> Self {
         let mut grid_vertex_samples = BTreeMap::new();
         let mut edges = BTreeMap::new();
