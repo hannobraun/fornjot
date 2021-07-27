@@ -2,13 +2,20 @@ use std::fmt;
 
 use super::Value;
 
+/// An edge of a grid cell in an isosurface extraction grid
 #[derive(Clone, Copy, PartialEq)]
 pub struct Edge {
+    /// The value at the origin of the edge, i.e. the point the edge points from
     pub a: Value,
+
+    /// The value at the point the edge points to
     pub b: Value,
 }
 
 impl Edge {
+    /// Reverse the edge
+    ///
+    /// Returns an edge that has the `a` and `b` fields swapped.
     pub fn reverse(self) -> Self {
         Self {
             a: self.b,
@@ -16,6 +23,10 @@ impl Edge {
         }
     }
 
+    /// Swap the distance values of the edge points
+    ///
+    /// Returns an edge that has the `distance` field of the two `Value`s
+    /// swapped, leaving the other data as-is.
     pub fn swap_distance_values(self) -> Self {
         Self {
             a: Value {
@@ -31,6 +42,7 @@ impl Edge {
         }
     }
 
+    /// Compute the length of the edge
     pub fn length(&self) -> f32 {
         let a = self.a.point;
         let b = self.b.point;
@@ -38,6 +50,7 @@ impl Edge {
         (b - a).magnitude()
     }
 
+    /// Compute the direction of the edge
     pub fn direction(&self) -> Direction {
         let a = self.a.point;
         let b = self.b.point;
@@ -64,6 +77,10 @@ impl Edge {
         Direction { axis, sign }
     }
 
+    /// Determine whether the edge is at a surface
+    ///
+    /// An edge is at the surface if it crosses the surface, or it touches the
+    /// surface from the outside.
     pub fn at_surface(&self) -> bool {
         let min = f32::min(self.a.distance, self.b.distance);
         let max = f32::max(self.a.distance, self.b.distance);
@@ -86,12 +103,17 @@ fn signum(v: f32) -> i32 {
     }
 }
 
+/// The direction of an edge
 #[derive(Debug)]
 pub struct Direction {
+    /// The axis along which the edge is aligned
     pub axis: Axis,
+
+    /// The alignment of the edge along its axis
     pub sign: Sign,
 }
 
+/// An axis in three-dimensional space
 #[derive(Debug, Eq, PartialEq)]
 pub enum Axis {
     X,
@@ -99,9 +121,13 @@ pub enum Axis {
     Z,
 }
 
+/// The alignment of an edge along an axis
 #[derive(Debug, Eq, PartialEq)]
 pub enum Sign {
+    /// The edge points into the negative direction
     Neg,
+
+    /// The edge points into the positive direction
     Pos,
 }
 
