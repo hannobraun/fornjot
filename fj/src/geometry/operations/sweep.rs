@@ -2,7 +2,7 @@ use nalgebra::{vector, Point, Unit, Vector};
 
 use crate::geometry::{
     aabb::Aabb,
-    attributes::{BoundingVolume, Geometry, Sample},
+    traits::{BoundingVolume, Geometry, Sample},
 };
 
 pub struct Sweep<Sketch> {

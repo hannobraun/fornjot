@@ -37,7 +37,7 @@ impl Default for Cylinder {
 mod tests {
     use nalgebra::{vector, Unit};
 
-    use crate::geometry::attributes::Geometry as _;
+    use crate::geometry::traits::Geometry as _;
 
     use super::Cylinder;
 

@@ -2,7 +2,7 @@ use nalgebra::Point;
 
 use crate::geometry::{
     aabb::Aabb,
-    attributes::{BoundingVolume, Geometry, Sample},
+    traits::{BoundingVolume, Geometry, Sample},
 };
 
 pub struct Difference<A, B> {
@@ -52,7 +52,7 @@ where
 mod tests {
     use nalgebra::{SVector, Unit};
 
-    use crate::geometry::{attributes::Geometry as _, shapes::Sphere};
+    use crate::geometry::{traits::Geometry as _, shapes::Sphere};
 
     use super::Difference;
 

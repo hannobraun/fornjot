@@ -1,7 +1,7 @@
 use serde::de::DeserializeOwned;
 
 use crate::geometry::{
-    attributes::{BoundingVolume, Geometry},
+    traits::{BoundingVolume, Geometry},
     isosurface,
 };
 

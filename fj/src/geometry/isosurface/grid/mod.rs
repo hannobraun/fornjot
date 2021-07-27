@@ -13,7 +13,7 @@ use std::collections::BTreeMap;
 
 use nalgebra::Point;
 
-use crate::geometry::attributes::Geometry;
+use crate::geometry::traits::Geometry;
 
 use self::surface_vertices::SurfaceVertices;
 

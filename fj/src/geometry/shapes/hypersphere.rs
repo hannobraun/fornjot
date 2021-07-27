@@ -2,7 +2,7 @@ use nalgebra::{Point, Unit};
 
 use crate::geometry::{
     aabb::Aabb,
-    attributes::{BoundingVolume, Geometry, Sample},
+    traits::{BoundingVolume, Geometry, Sample},
 };
 
 /// An n-dimensional hypersphere

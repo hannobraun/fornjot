@@ -1,5 +1,5 @@
 use crate::{
-    geometry::attributes::{BoundingVolume, Geometry},
+    geometry::traits::{BoundingVolume, Geometry},
     mesh::Mesh,
 };
 
