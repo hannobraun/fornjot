@@ -2,7 +2,7 @@
 
 ## About
 
-Experimental CAD system, written in the Rust programming language.
+Experimental CAD system, written in the Rust programming language. Uses [function representation](https://en.wikipedia.org/wiki/Function_representation) (also known as *implicit functions* or *signed distance functions*) to define geometry.
 
 The following models are currently available:
 
