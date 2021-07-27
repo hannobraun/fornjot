@@ -42,7 +42,7 @@ impl Descriptor {
 
         indices.map(move |index| Cell {
             min_index: index,
-            min_position: index.to_coordinates(min, self.resolution),
+            min_position: index.to_position(min, self.resolution),
         })
     }
 }

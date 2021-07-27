@@ -18,7 +18,7 @@ impl Index {
         self.0[2]
     }
 
-    pub fn to_coordinates(
+    pub fn to_position(
         self,
         min: Point<f32, 3>,
         resolution: f32,
