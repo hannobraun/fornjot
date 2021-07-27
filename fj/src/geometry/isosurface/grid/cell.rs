@@ -15,6 +15,7 @@ pub struct Cell {
 }
 
 impl Cell {
+    /// Iterate over the vertices of the cell
     pub fn vertices(
         &self,
         resolution: f32,
@@ -39,6 +40,7 @@ impl Cell {
         })
     }
 
+    /// Iterate over the edges of the cell
     pub fn edges(&self) -> impl Iterator<Item = (Index, Index)> + '_ {
         let edges = [
             ([0, 0, 0], [0, 0, 1]),
