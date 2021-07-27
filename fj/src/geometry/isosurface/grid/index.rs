@@ -2,22 +2,31 @@ use std::{convert::TryInto as _, ops::Add};
 
 use nalgebra::Point;
 
+/// The index of a vertex within the isosurface extraction grid
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Index([usize; 3]);
 
 impl Index {
+    /// Return the x component of the index
     pub fn x(&self) -> usize {
         self.0[0]
     }
 
+    /// Return the y component of the index
     pub fn y(&self) -> usize {
         self.0[1]
     }
 
+    /// Return the z component of the index
     pub fn z(&self) -> usize {
         self.0[2]
     }
 
+    /// Convert the index into a position
+    ///
+    /// Compute the position of the vertex within the isosurface extraction grid
+    /// from `min`, the minimum point of the grid, and `resolution`, which
+    /// defines the size of the grid cells.
     pub fn to_position(
         self,
         min: Point<f32, 3>,
