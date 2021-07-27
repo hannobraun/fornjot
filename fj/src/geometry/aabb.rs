@@ -4,7 +4,7 @@ use nalgebra::{Point, SVector};
 
 use crate::geometry::util::DebugPoint;
 
-/// Axis-aligned bounding box
+/// An axis-aligned bounding box
 #[derive(Clone, Copy, PartialEq)]
 pub struct Aabb<const D: usize> {
     /// Minimum point of the axis-aligned bounding box
