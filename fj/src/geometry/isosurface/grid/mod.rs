@@ -32,7 +32,7 @@ impl Grid {
     /// Create the grid from the descriptor and populate it with distance values
     pub fn from_descriptor(
         descriptor: Descriptor,
-        isosurface: &impl Geometry<3>,
+        geometry: &impl Geometry<3>,
     ) -> Self {
         let mut grid_vertex_samples = BTreeMap::new();
         let mut edges = BTreeMap::new();
@@ -43,7 +43,7 @@ impl Grid {
                 for (index, vertex) in cell.vertices(descriptor.resolution) {
                     grid_vertex_samples
                         .entry(index)
-                        .or_insert_with(|| isosurface.sample(vertex));
+                        .or_insert_with(|| geometry.sample(vertex));
                 }
 
                 let mut surface_vertex = Point::origin();
