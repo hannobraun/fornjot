@@ -52,7 +52,7 @@ where
 mod tests {
     use nalgebra::{SVector, Unit};
 
-    use crate::geometry::{traits::Geometry as _, shapes::Sphere};
+    use crate::geometry::{shapes::Sphere, traits::Geometry as _};
 
     use super::Difference;
 

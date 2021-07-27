@@ -1,8 +1,8 @@
 use serde::de::DeserializeOwned;
 
 use crate::geometry::{
-    traits::{BoundingVolume, Geometry},
     isosurface,
+    traits::{BoundingVolume, Geometry},
 };
 
 use super::Mesh;
