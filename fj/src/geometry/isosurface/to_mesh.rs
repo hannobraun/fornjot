@@ -6,14 +6,14 @@ use crate::{
 use super::{grid, Grid};
 
 pub fn to_mesh(
-    isosurface: &(impl Geometry<3> + BoundingVolume<3>),
+    geometry: &(impl Geometry<3> + BoundingVolume<3>),
     resolution: f32,
 ) -> Mesh {
     let grid_descriptor = grid::Descriptor {
-        aabb: isosurface.aabb(),
+        aabb: geometry.aabb(),
         resolution,
     };
-    let grid = Grid::from_descriptor(grid_descriptor, isosurface);
+    let grid = Grid::from_descriptor(grid_descriptor, geometry);
 
     let mut mesh = Mesh::new();
 
