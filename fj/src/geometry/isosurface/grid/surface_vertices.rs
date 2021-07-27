@@ -108,15 +108,15 @@ mod tests {
         );
 
         assert_eq!(
-            surface_vertices.neighbors_of_edge(edges.x.swap_values()),
+            surface_vertices.neighbors_of_edge(edges.x.swap_distance_values()),
             [x1, x0, x3, x2],
         );
         assert_eq!(
-            surface_vertices.neighbors_of_edge(edges.y.swap_values()),
+            surface_vertices.neighbors_of_edge(edges.y.swap_distance_values()),
             [y1, y0, y3, y2],
         );
         assert_eq!(
-            surface_vertices.neighbors_of_edge(edges.z.swap_values()),
+            surface_vertices.neighbors_of_edge(edges.z.swap_distance_values()),
             [z1, z0, z3, z2],
         );
     }

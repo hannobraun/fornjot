@@ -16,7 +16,7 @@ impl Edge {
         }
     }
 
-    pub fn swap_values(self) -> Self {
+    pub fn swap_distance_values(self) -> Self {
         Self {
             a: Value {
                 index: self.a.index,
