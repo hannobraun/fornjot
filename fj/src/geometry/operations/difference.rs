@@ -5,8 +5,12 @@ use crate::geometry::{
     traits::{BoundingVolume, Geometry, Sample},
 };
 
+/// The difference of two bodies
 pub struct Difference<A, B> {
+    /// The body that is being subtracted from
     pub a: A,
+
+    /// The body that is being subtracted
     pub b: B,
 }
 
