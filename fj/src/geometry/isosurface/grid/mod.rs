@@ -3,10 +3,11 @@ mod descriptor;
 mod edge;
 mod index;
 mod surface_vertices;
-mod value;
+mod vertex;
 
 pub use self::{
-    cell::Cell, descriptor::Descriptor, edge::Edge, index::Index, value::Vertex,
+    cell::Cell, descriptor::Descriptor, edge::Edge, index::Index,
+    vertex::Vertex,
 };
 
 use std::collections::BTreeMap;
