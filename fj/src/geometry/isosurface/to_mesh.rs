@@ -5,6 +5,7 @@ use crate::{
 
 use super::{grid, Grid};
 
+/// Convert functionally defined geometry into a triangle mesh
 pub fn to_mesh(
     geometry: &(impl Geometry<3> + BoundingVolume<3>),
     resolution: f32,
