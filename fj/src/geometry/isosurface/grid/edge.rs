@@ -139,7 +139,7 @@ mod tests {
 
     #[test]
     fn at_surface_should_detect_whether_edge_is_at_surface() {
-        fn value_at(distance: f32) -> grid::Vertex {
+        fn vertex_at(distance: f32) -> grid::Vertex {
             // Dummy values that the code under test doesn't care about.
             let index = [0, 0, 0].into();
             let point = [0.0, 0.0, 0.0].into();
@@ -152,36 +152,36 @@ mod tests {
         }
 
         let inside_surface = Edge {
-            a: value_at(-0.2),
-            b: value_at(-0.1),
+            a: vertex_at(-0.2),
+            b: vertex_at(-0.1),
         };
         assert_eq!(inside_surface.at_surface(), false);
         assert_eq!(inside_surface.reverse().at_surface(), false);
 
         let outside_surface = Edge {
-            a: value_at(0.1),
-            b: value_at(0.2),
+            a: vertex_at(0.1),
+            b: vertex_at(0.2),
         };
         assert_eq!(outside_surface.at_surface(), false);
         assert_eq!(outside_surface.reverse().at_surface(), false);
 
         let through_surface = Edge {
-            a: value_at(-0.1),
-            b: value_at(0.1),
+            a: vertex_at(-0.1),
+            b: vertex_at(0.1),
         };
         assert_eq!(through_surface.at_surface(), true);
         assert_eq!(through_surface.reverse().at_surface(), true);
 
         let inside_to_surface = Edge {
-            a: value_at(-0.1),
-            b: value_at(0.0),
+            a: vertex_at(-0.1),
+            b: vertex_at(0.0),
         };
         assert_eq!(inside_to_surface.at_surface(), false);
         assert_eq!(inside_to_surface.reverse().at_surface(), false);
 
         let outside_to_surface = Edge {
-            a: value_at(0.0),
-            b: value_at(0.1),
+            a: vertex_at(0.0),
+            b: vertex_at(0.1),
         };
         assert_eq!(outside_to_surface.at_surface(), true);
         assert_eq!(outside_to_surface.reverse().at_surface(), true);
