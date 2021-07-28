@@ -167,36 +167,36 @@ mod tests {
         pub fn new() -> Self {
             Self {
                 x: grid::Edge {
-                    a: grid::Value {
+                    a: grid::Vertex {
                         index: [1, 1, 1].into(),
                         point: [1.0, 1.0, 1.0].into(),
                         distance: 1.0,
                     },
-                    b: grid::Value {
+                    b: grid::Vertex {
                         index: [2, 1, 1].into(),
                         point: [2.0, 1.0, 1.0].into(),
                         distance: 0.0,
                     },
                 },
                 y: grid::Edge {
-                    a: grid::Value {
+                    a: grid::Vertex {
                         index: [1, 1, 1].into(),
                         point: [1.0, 1.0, 1.0].into(),
                         distance: 1.0,
                     },
-                    b: grid::Value {
+                    b: grid::Vertex {
                         index: [1, 2, 1].into(),
                         point: [1.0, 2.0, 1.0].into(),
                         distance: 0.0,
                     },
                 },
                 z: grid::Edge {
-                    a: grid::Value {
+                    a: grid::Vertex {
                         index: [1, 1, 1].into(),
                         point: [1.0, 1.0, 1.0].into(),
                         distance: 1.0,
                     },
-                    b: grid::Value {
+                    b: grid::Vertex {
                         index: [1, 1, 2].into(),
                         point: [1.0, 1.0, 2.0].into(),
                         distance: 0.0,

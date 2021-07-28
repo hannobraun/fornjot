@@ -1,15 +1,15 @@
 use std::fmt;
 
-use super::Value;
+use super::Vertex;
 
 /// An edge of a grid cell in an isosurface extraction grid
 #[derive(Clone, Copy, PartialEq)]
 pub struct Edge {
     /// The value at the origin of the edge, i.e. the point the edge points from
-    pub a: Value,
+    pub a: Vertex,
 
     /// The value at the point the edge points to
-    pub b: Value,
+    pub b: Vertex,
 }
 
 impl Edge {
@@ -29,12 +29,12 @@ impl Edge {
     /// swapped, leaving the other data as-is.
     pub fn swap_distance_values(self) -> Self {
         Self {
-            a: Value {
+            a: Vertex {
                 index: self.a.index,
                 point: self.a.point,
                 distance: self.b.distance,
             },
-            b: Value {
+            b: Vertex {
                 index: self.b.index,
                 point: self.b.point,
                 distance: self.a.distance,
@@ -139,12 +139,12 @@ mod tests {
 
     #[test]
     fn at_surface_should_detect_whether_edge_is_at_surface() {
-        fn value_at(distance: f32) -> grid::Value {
+        fn value_at(distance: f32) -> grid::Vertex {
             // Dummy values that the code under test doesn't care about.
             let index = [0, 0, 0].into();
             let point = [0.0, 0.0, 0.0].into();
 
-            grid::Value {
+            grid::Vertex {
                 index,
                 point,
                 distance,

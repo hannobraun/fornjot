@@ -6,7 +6,7 @@ mod surface_vertices;
 mod value;
 
 pub use self::{
-    cell::Cell, descriptor::Descriptor, edge::Edge, index::Index, value::Value,
+    cell::Cell, descriptor::Descriptor, edge::Edge, index::Index, value::Vertex,
 };
 
 use std::collections::BTreeMap;
@@ -54,12 +54,12 @@ impl Grid {
                     let sample_b = grid_vertex_samples[&b];
 
                     let edge = Edge {
-                        a: Value {
+                        a: Vertex {
                             index: a,
                             point: sample_a.point,
                             distance: sample_a.distance,
                         },
-                        b: Value {
+                        b: Vertex {
                             index: b,
                             point: sample_b.point,
                             distance: sample_b.distance,
