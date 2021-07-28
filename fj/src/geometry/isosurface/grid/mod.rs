@@ -110,7 +110,7 @@ impl Grid {
         self.edges.values().copied()
     }
 
-    /// Returns the 4 neighboring surface vertices of a grid edge
+    /// Get the 4 neighboring surface vertices of a grid edge
     pub fn neighbors_of_edge(&self, edge: Edge) -> [Point<f32, 3>; 4] {
         self.surface_vertices.neighbors_of_edge(edge)
     }
