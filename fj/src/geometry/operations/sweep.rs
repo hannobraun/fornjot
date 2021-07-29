@@ -77,4 +77,4 @@ where
     }
 }
 
-// `LinearExtrude` is covered by a bunch of unit tests in `cylinder`.
+// `Sweep` is covered by a bunch of unit tests in `cylinder`.
