@@ -5,17 +5,27 @@ use crate::geometry::{
     traits::{BoundingVolume, Geometry, Sample},
 };
 
+/// A 3-dimensional sweep of a 2-dimensional sketch
 pub struct Sweep<Sketch> {
+    /// The sketch being swept
     pub sketch: Sketch,
+
+    /// The distance that the sketch is being swept through space
     pub distance: f32,
 }
 
 impl<Sketch> Sweep<Sketch> {
+    /// Update sketch
+    ///
+    /// Returns a copy of `self` with the sketch replaced with `sketch`.
     pub fn with_sketch(mut self, sketch: Sketch) -> Self {
         self.sketch = sketch;
         self
     }
 
+    /// Update height
+    ///
+    /// Returns a copy of `self` with the height replaced with `height`.
     pub fn with_height(mut self, height: f32) -> Self {
         self.distance = height;
         self
