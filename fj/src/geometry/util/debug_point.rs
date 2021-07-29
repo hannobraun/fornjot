@@ -2,6 +2,7 @@ use std::fmt;
 
 use nalgebra::{Point, Scalar};
 
+/// Wraps an [`nalgebra::Point`], providing a more readable `Debug` impl
 pub struct DebugPoint<
     T: Copy + PartialEq + fmt::Debug + 'static,
     const D: usize,
