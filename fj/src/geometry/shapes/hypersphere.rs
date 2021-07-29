@@ -7,13 +7,14 @@ use crate::geometry::{
 
 /// An n-dimensional hypersphere
 ///
-/// Hypersphere is typically used through one of its type aliases, like
+/// `Hypersphere` is typically used through one of its type aliases, like
 /// [`Circle`] or [`Sphere`].
 ///
 /// [`Circle`]: crate::geometry::shapes::Circle
 /// [`Sphere`]: crate::geometry::shapes::Sphere
 #[derive(Default)]
 pub struct Hypersphere<const D: usize> {
+    /// The radius of the hypersphere
     pub radius: f32,
 }
 
@@ -26,6 +27,8 @@ impl<const D: usize> Hypersphere<D> {
     }
 
     /// Update radius
+    ///
+    /// Returns a copy of `self`, with the radius replaced with `radius`.
     pub fn with_radius(mut self, radius: f32) -> Self {
         self.radius = radius;
         self
