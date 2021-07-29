@@ -19,6 +19,8 @@ impl Cylinder {
     }
 
     /// Update radius
+    ///
+    /// Returns a copy of `self` with the radius replaced with `radius`.
     pub fn with_radius(mut self, radius: f32) -> Self {
         self.sketch = self.sketch.with_radius(radius);
         self
