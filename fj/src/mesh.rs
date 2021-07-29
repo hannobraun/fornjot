@@ -5,6 +5,7 @@ use nalgebra::Point;
 
 use crate::graphics;
 
+/// A triangle mesh
 #[derive(Default)]
 pub struct Mesh {
     indices_by_vertex: HashMap<Vertex, graphics::Index>,
@@ -14,6 +15,7 @@ pub struct Mesh {
 }
 
 impl Mesh {
+    /// Create an empty triangle mesh
     pub fn new() -> Self {
         Self {
             indices_by_vertex: HashMap::new(),
@@ -23,6 +25,12 @@ impl Mesh {
         }
     }
 
+    /// Add a triangle to the mesh
+    ///
+    /// # Panics
+    ///
+    /// Panics, if the three vertices don't form a triangle (i.e. if at least
+    /// two of them are equal).
     pub fn triangle(
         &mut self,
         v0: impl Into<Point<f32, 3>>,
@@ -49,14 +57,17 @@ impl Mesh {
         self.triangles.push([i0, i1, i2]);
     }
 
+    /// Iterate over all vertices
     pub fn vertices(&self) -> impl Iterator<Item = Vertex> + '_ {
         self.vertices.iter().copied()
     }
 
+    /// Iterate over all indices
     pub fn indices(&self) -> impl Iterator<Item = graphics::Index> + '_ {
         self.triangles.iter().flatten().copied()
     }
 
+    /// Iterate over all triangles
     pub fn triangles(&self) -> impl Iterator<Item = [graphics::Index; 3]> + '_ {
         self.triangles.iter().copied()
     }
