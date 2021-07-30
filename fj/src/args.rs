@@ -8,6 +8,7 @@ pub struct Args {
     #[clap(short, long)]
     pub export: Option<PathBuf>,
 
+    /// The model parameters as a JSON object
     #[clap(short, long)]
     pub model_params: Option<String>,
 }
