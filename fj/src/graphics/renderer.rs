@@ -1,6 +1,6 @@
 use std::{borrow::Cow, convert::TryInto, io, mem::size_of};
 
-use tracing::{instrument, trace};
+use tracing::{debug, instrument};
 use wgpu::util::DeviceExt as _;
 use winit::{dpi::PhysicalSize, window::Window};
 
@@ -232,7 +232,7 @@ impl Renderer {
 
     #[instrument]
     pub fn draw(&mut self, transform: &Transform) -> Result<(), DrawError> {
-        trace!("Drawing...");
+        debug!("Drawing...");
 
         let uniforms = Uniforms {
             transform: transform.to_native(self.aspect_ratio()),
