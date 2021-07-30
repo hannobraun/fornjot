@@ -1,7 +1,7 @@
 use std::{path::PathBuf, time::Instant};
 
 use futures::executor::block_on;
-use tracing::{debug, info, trace};
+use tracing::{info, trace};
 use tracing_subscriber::EnvFilter;
 use winit::{
     event::{Event, WindowEvent},
@@ -69,10 +69,10 @@ fn run_inner(
         return Ok(());
     }
 
-    debug!("Initializing event loop...");
+    trace!("Initializing event loop...");
     let event_loop = EventLoop::new();
 
-    debug!("Initializing window...");
+    trace!("Initializing window...");
     let window = WindowBuilder::new()
         .with_title("Fornjot")
         .with_maximized(true)
@@ -81,16 +81,16 @@ fn run_inner(
         .build(&event_loop)
         .unwrap();
 
-    debug!("Initializing event handler...");
+    trace!("Initializing event handler...");
     let mut input_handler = InputHandler::new();
 
-    debug!("Initializing transform...");
+    trace!("Initializing transform...");
     let mut transform = Transform::new();
 
-    debug!("Initializing renderer...");
+    trace!("Initializing renderer...");
     let mut renderer = block_on(Renderer::new(&window, mesh.into())).unwrap();
 
-    debug!("Finished initialization.");
+    trace!("Finished initialization.");
 
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
