@@ -1,6 +1,6 @@
 use std::{borrow::Cow, convert::TryInto, io, mem::size_of};
 
-use tracing::{debug, instrument};
+use tracing::debug;
 use wgpu::util::DeviceExt as _;
 use winit::{dpi::PhysicalSize, window::Window};
 
@@ -230,7 +230,6 @@ impl Renderer {
         self.depth_view = depth_view;
     }
 
-    #[instrument]
     pub fn draw(&mut self, transform: &Transform) -> Result<(), DrawError> {
         debug!("Creating uniforms...");
         let uniforms = Uniforms {
