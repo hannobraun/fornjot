@@ -295,8 +295,11 @@ impl Renderer {
             render_pass.draw_indexed(0..self.num_indices, 0, 0..1);
         }
 
+        debug!("Finishing encoder...");
+        let command_buffer = encoder.finish();
+
         debug!("Submitting queue...");
-        self.queue.submit(Some(encoder.finish()));
+        self.queue.submit(Some(command_buffer));
 
         Ok(())
     }
