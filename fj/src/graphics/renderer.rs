@@ -298,7 +298,7 @@ impl Renderer {
         debug!("Finishing encoder...");
         let command_buffer = encoder.finish();
 
-        debug!("Submitting queue...");
+        debug!("Submitting command buffer...");
         self.queue.submit(Some(command_buffer));
 
         Ok(())
