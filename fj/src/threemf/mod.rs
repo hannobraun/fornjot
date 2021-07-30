@@ -34,7 +34,7 @@ pub fn export(mesh: &Mesh, path: PathBuf) -> Result<(), Error> {
     Ok(())
 }
 
-pub fn write_mesh(mesh: &Mesh, mut sink: impl Write) -> io::Result<()> {
+fn write_mesh(mesh: &Mesh, mut sink: impl Write) -> io::Result<()> {
     sink.write_all(include_bytes!("model-header.xml"))?;
 
     writeln!(sink, "\t\t\t\t<vertices>")?;
