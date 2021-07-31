@@ -231,33 +231,28 @@ impl Renderer {
     }
 
     pub fn draw(&mut self, transform: &Transform) -> Result<(), DrawError> {
-        debug!("Creating uniforms...");
         let uniforms = Uniforms {
             transform: transform.to_native(self.aspect_ratio()),
             transform_normals: transform.to_normals_transform(),
         };
 
-        debug!("Writing to uniform buffer...");
         self.queue.write_buffer(
             &self.uniform_buffer,
             0,
             bytemuck::cast_slice(&[uniforms]),
         );
 
-        debug!("Getting current frame...");
         let output = self
             .swap_chain
             .get_current_frame()
             .map_err(DrawError)?
             .output;
 
-        debug!("Creating command encoder...");
         let mut encoder = self.device.create_command_encoder(
             &wgpu::CommandEncoderDescriptor { label: None },
         );
 
         {
-            debug!("Beginning render pass...");
             let mut render_pass =
                 encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                     label: None,
@@ -281,7 +276,6 @@ impl Renderer {
                     ),
                 });
 
-            debug!("Configuring render pass...");
             render_pass.set_pipeline(&self.render_pipeline);
             render_pass.set_bind_group(0, &self.bind_group, &[]);
             render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
@@ -290,11 +284,9 @@ impl Renderer {
                 wgpu::IndexFormat::Uint32,
             );
 
-            debug!("Drawing...");
             render_pass.draw_indexed(0..self.num_indices, 0, 0..1);
         }
 
-        debug!("Finishing encoder...");
         let command_buffer = encoder.finish();
 
         debug!("Submitting command buffer...");
