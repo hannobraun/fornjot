@@ -137,6 +137,7 @@ fn run_inner(
             }
             Event::RedrawRequested(_) => {
                 debug!("Drawing...");
+
                 match renderer.draw(&transform) {
                     Ok(()) => {}
                     err @ Err(DrawError(wgpu::SwapChainError::Outdated)) => {
