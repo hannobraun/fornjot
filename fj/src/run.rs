@@ -1,7 +1,7 @@
 use std::{path::PathBuf, time::Instant};
 
 use futures::executor::block_on;
-use tracing::{info, trace};
+use tracing::{debug, info, trace};
 use tracing_subscriber::EnvFilter;
 use winit::{
     event::{Event, WindowEvent},
@@ -136,6 +136,7 @@ fn run_inner(
                 window.request_redraw();
             }
             Event::RedrawRequested(_) => {
+                debug!("Drawing...");
                 match renderer.draw(&transform) {
                     Ok(()) => {}
                     err @ Err(DrawError(wgpu::SwapChainError::Outdated)) => {
@@ -147,6 +148,8 @@ fn run_inner(
                         panic!("Draw error: {:?}", err);
                     }
                 }
+
+                debug!("Returned from drawing.");
             }
             _ => {}
         }
