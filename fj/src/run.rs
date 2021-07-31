@@ -150,5 +150,7 @@ fn run_inner(
             }
             _ => {}
         }
+
+        trace!("Event handled: {:?}", event);
     })
 }
