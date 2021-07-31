@@ -299,6 +299,7 @@ impl Renderer {
 
         debug!("Submitting command buffer...");
         self.queue.submit(Some(command_buffer));
+        debug!("Command buffer submitted.");
 
         Ok(())
     }
