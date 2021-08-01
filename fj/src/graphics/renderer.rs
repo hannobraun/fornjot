@@ -290,6 +290,11 @@ impl Renderer {
         let command_buffer = encoder.finish();
         self.queue.submit(Some(command_buffer));
 
+        debug!("Dropping `uniforms`...");
+        drop(uniforms);
+        debug!("Dropping `output`...");
+        drop(output);
+
         debug!("Finished drawing.");
         Ok(())
     }
