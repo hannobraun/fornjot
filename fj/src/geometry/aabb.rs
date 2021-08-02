@@ -70,6 +70,7 @@ impl Aabb<3> {
     }
 
     /// Edges of the axis-aligned bounding
+    #[allow(clippy::many_single_char_names)]
     pub fn edges(&self) -> [[Point<f32, 3>; 2]; 12] {
         let [a, b, c, d, e, f, g, h] = self.vertices();
 
