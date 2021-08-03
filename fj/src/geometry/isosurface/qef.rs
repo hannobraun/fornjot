@@ -21,3 +21,6 @@ pub fn find_best_point(
     // TASK: Implement.
     todo!()
 }
+
+// TASK: Add unit test. It can be `#[ignore]`d while the function is not
+//       implemented yet.
