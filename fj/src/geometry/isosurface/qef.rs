@@ -1,4 +1,4 @@
-use nalgebra::{Matrix4, Point, SVector};
+use nalgebra::{MatrixXx4, Point, SVector};
 
 pub fn find_best_point(
     planes: &[(Point<f32, 3>, SVector<f32, 3>)],
@@ -8,7 +8,7 @@ pub fn find_best_point(
 
     // According to Dual Contouring: "The Secret Sauce", section 2.1, Solving
     // QEFs, we start by initializing a 4x4 matrix to zero.
-    let _m = Matrix4::<f32>::zeros();
+    let _m = MatrixXx4::<f32>::from_element(4, 0.0);
 
     for _plane in planes {
         // TASK: Append plane equation of `plane` to the 4x4 matrix, creating a
