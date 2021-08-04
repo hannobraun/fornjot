@@ -10,10 +10,24 @@ pub fn find_best_point(
     // QEFs, we start by initializing a 4x4 matrix to zero.
     let _m = MatrixXx4::<f32>::from_element(4, 0.0);
 
-    for _plane in planes {
-        // TASK: Append plane equation of `plane` to the 4x4 matrix, creating a
-        //       5x4 matrix. I'm not sure how exactly that's supposed to work
-        //       yet, but that's what the paper says.
+    for plane in planes {
+        let (point, normal) = plane;
+
+        // According to Dual Contouring: "The Secret Sauce", section 2.1, we're
+        // supposed to append the plane equation described by the hermite data
+        // of surface-intersecting edges to the matrix.
+        //
+        // Compute arguments of the plane equation for this plain. This is
+        // decently explained on Wikipedia:
+        // https://en.wikipedia.org/wiki/Plane_(geometry)#Point%E2%80%93normal_form_and_general_form_of_the_equation_of_a_plane
+        // TASK: Figure out that this is what the paper is actually referring
+        //       to.
+        let a = normal.x;
+        let b = normal.y;
+        let c = normal.z;
+        let _d = -(a * point.x + b * point.y + c * point.z);
+
+        // TASK: Append `a`, `b`, `c`, `d` as a row to the matrix.
         // TASK: Perform Givens rotations on the 5x4 matrix to bring it into
         //       upper triangular form. I have no idea how that works.
         // TASK: Figure out what happens to the 5x4 matrix after that. Do we
