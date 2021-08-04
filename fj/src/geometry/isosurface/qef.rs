@@ -3,6 +3,9 @@ use nalgebra::{Matrix4, Point, SVector};
 pub fn find_best_point(
     planes: &[(Point<f32, 3>, SVector<f32, 3>)],
 ) -> Point<f32, 3> {
+    // This algorithm is based on Dual Contouring of Hermite Data, section 2.3,
+    // and Dual Contouring: "The Secret Sauce", section 2.
+
     // According to Dual Contouring: "The Secret Sauce", section 2.1, Solving
     // QEFs, we start by initializing a 4x4 matrix to zero.
     let _m = Matrix4::<f32>::zeros();
