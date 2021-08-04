@@ -41,3 +41,5 @@ pub fn find_best_point(
 
 // TASK: Add unit test. It can be `#[ignore]`d while the function is not
 //       implemented yet.
+// TASK: Check out the Dual Contouring subreddit, it might be helpful:
+//       https://www.reddit.com/r/dualcontouring/
