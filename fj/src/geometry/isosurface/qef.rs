@@ -44,13 +44,20 @@ pub fn find_best_point(
 
 #[cfg(test)]
 mod tests {
+    use nalgebra::{point, vector};
+
+    use super::find_best_point;
+
     // TASK: Un-ignore test.
     #[test]
     #[ignore]
     fn test_perpendicular_planes() {
-        // TASK: Implement. The perpendicular planes should result in a sharp
-        //       edge.
-        todo!()
+        let a = (point![0.5, 0.0, 0.0], vector![1.0, 0.0, 0.0]);
+        let b = (point![0.0, 0.5, 0.0], vector![0.0, 1.0, 0.0]);
+        let c = (point![0.0, 0.0, 0.5], vector![0.0, 0.0, 1.0]);
+
+        let point = find_best_point(&[a, b, c]);
+        assert_eq!(point, point![0.5, 0.5, 0.5]);
     }
 
     // TASK: Un-ignore test.
