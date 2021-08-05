@@ -39,7 +39,12 @@ pub fn find_best_point(
     todo!()
 }
 
-// TASK: Add unit test. It can be `#[ignore]`d while the function is not
-//       implemented yet.
 // TASK: Check out the Dual Contouring subreddit, it might be helpful:
 //       https://www.reddit.com/r/dualcontouring/
+
+#[cfg(test)]
+mod tests {
+    // TASK: Add unit test with orthogonal planes (sharp edge).
+    // TASK: Add unit test for parallel planes (resulting vertex must be within
+    //       cube).
+}
