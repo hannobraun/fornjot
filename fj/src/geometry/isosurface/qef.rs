@@ -8,7 +8,7 @@ pub fn find_best_point(
 
     // According to Dual Contouring: "The Secret Sauce", section 2.1, Solving
     // QEFs, we start by initializing a 4x4 matrix to zero.
-    let _m = MatrixXx4::<f32>::from_element(4, 0.0);
+    let m = MatrixXx4::<f32>::from_element(4, 0.0);
 
     for plane in planes {
         let (point, normal) = plane;
@@ -27,7 +27,10 @@ pub fn find_best_point(
         let c = normal.z;
         let _d = -(a * point.x + b * point.y + c * point.z);
 
+        println!("before: {:?}", m);
         // TASK: Append `a`, `b`, `c`, `d` as a row to the matrix.
+        println!("after: {:?}", m);
+
         // TASK: Perform Givens rotations on the 5x4 matrix to bring it into
         //       upper triangular form. I have no idea how that works.
         // TASK: Figure out what happens to the 5x4 matrix after that. Do we
