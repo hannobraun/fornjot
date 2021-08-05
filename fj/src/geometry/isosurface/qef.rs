@@ -44,7 +44,21 @@ pub fn find_best_point(
 
 #[cfg(test)]
 mod tests {
-    // TASK: Add unit test with orthogonal planes (sharp edge).
-    // TASK: Add unit test for parallel planes (resulting vertex must be within
-    //       cube).
+    // TASK: Un-ignore test.
+    #[test]
+    #[ignore]
+    fn test_perpendicular_planes() {
+        // TASK: Implement. The perpendicular planes should result in a sharp
+        //       edge.
+        todo!()
+    }
+
+    // TASK: Un-ignore test.
+    #[test]
+    #[ignore]
+    fn test_parallel_planes() {
+        // TASK: Implement. The parallel planes should result in a vertex that
+        //       is located within the cube.
+        todo!()
+    }
 }
