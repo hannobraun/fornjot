@@ -8,7 +8,7 @@ pub fn find_best_point(
 
     // According to Dual Contouring: "The Secret Sauce", section 2.1, Solving
     // QEFs, we start by initializing a 4x4 matrix to zero.
-    let m = MatrixXx4::<f32>::from_element(4, 0.0);
+    let m = MatrixXx4::<f32>::zeros(4);
 
     for plane in planes {
         let (point, normal) = plane;
