@@ -1,4 +1,4 @@
-use nalgebra::{MatrixXx4, Point, SVector};
+use nalgebra::{vector, MatrixXx4, Point, SVector};
 
 pub fn find_best_point(
     planes: &[(Point<f32, 3>, SVector<f32, 3>)],
@@ -8,7 +8,7 @@ pub fn find_best_point(
 
     // According to Dual Contouring: "The Secret Sauce", section 2.1, Solving
     // QEFs, we start by initializing a 4x4 matrix to zero.
-    let m = MatrixXx4::<f32>::zeros(4);
+    let mut m = MatrixXx4::<f32>::zeros(4);
 
     for plane in planes {
         let (point, normal) = plane;
@@ -25,10 +25,12 @@ pub fn find_best_point(
         let a = normal.x;
         let b = normal.y;
         let c = normal.z;
-        let _d = -(a * point.x + b * point.y + c * point.z);
+        let d = -(a * point.x + b * point.y + c * point.z);
 
         println!("before: {:?}", m);
-        // TASK: Append `a`, `b`, `c`, `d` as a row to the matrix.
+        let i = m.nrows();
+        m = m.insert_rows(i, 1, 0.0);
+        m.set_row(i, &vector![a, b, c, d].transpose());
         println!("after: {:?}", m);
 
         // TASK: Perform Givens rotations on the 5x4 matrix to bring it into
