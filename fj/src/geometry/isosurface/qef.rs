@@ -27,11 +27,9 @@ pub fn find_best_point(
         let c = normal.z;
         let d = -(a * point.x + b * point.y + c * point.z);
 
-        println!("before: {:?}", m);
         let i = m.nrows();
         m = m.insert_rows(i, 1, 0.0);
         m.set_row(i, &vector![a, b, c, d].transpose());
-        println!("after: {:?}", m);
 
         // TASK: Iterate through all elements of the matrix that are below the
         //       main diagonal and are not zero. Do this column by column, left
