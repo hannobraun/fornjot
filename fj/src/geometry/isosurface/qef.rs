@@ -33,8 +33,13 @@ pub fn find_best_point(
         m.set_row(i, &vector![a, b, c, d].transpose());
         println!("after: {:?}", m);
 
-        // TASK: Perform Givens rotations on the 5x4 matrix to bring it into
-        //       upper triangular form. I have no idea how that works.
+        // TASK: Iterate through all elements of the matrix that are below the
+        //       main diagonal and are not zero. Do this column by column, left
+        //       to right and top to bottom.
+        // TASK: Perform a givens rotation to set that element to zero.
+        //       Wikipedia has a semi-decent explanation for how to do this:
+        //       https://en.wikipedia.org/wiki/Givens_rotation
+
         // TASK: Figure out what happens to the 5x4 matrix after that. Do we
         //       throw away the last row, to make it a 4x4 matrix again, before
         //       the next loop iteration?
