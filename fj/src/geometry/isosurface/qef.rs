@@ -20,7 +20,7 @@ pub fn find_best_point(
         // Compute arguments of the plane equation for this plain. This is
         // decently explained on Wikipedia:
         // https://en.wikipedia.org/wiki/Plane_(geometry)#Point%E2%80%93normal_form_and_general_form_of_the_equation_of_a_plane
-        // TASK: Figure out that this is what the paper is actually referring
+        // TASK: Figure out whether this is what the paper is actually referring
         //       to.
         let a = normal.x;
         let b = normal.y;
