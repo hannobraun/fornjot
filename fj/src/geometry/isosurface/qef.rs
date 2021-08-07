@@ -33,8 +33,8 @@ pub fn find_best_point(
         m.set_row(i, &vector![a, b, c, d].transpose());
 
         // Convert matrix into upper triangular matrix using Givens rotations.
-        for i in 0..m.ncols() {
-            for j in (i + 1)..m.nrows() {
+        for j in 0..m.ncols() {
+            for i in (j + 1)..m.nrows() {
                 let element = m[(i, j)];
                 if element != 0.0 {
                     // TASK: Perform a givens rotation to set that element to
