@@ -40,9 +40,9 @@ pub fn find_best_point(
         //       Wikipedia has a semi-decent explanation for how to do this:
         //       https://en.wikipedia.org/wiki/Givens_rotation
 
-        // TASK: Figure out what happens to the 5x4 matrix after that. Do we
-        //       throw away the last row, to make it a 4x4 matrix again, before
-        //       the next loop iteration?
+        // TASK: Figure out what happens to the 5x4 matrix that is created by
+        //       the first iteration. Do we throw away the last row, to make it
+        //       a 4x4 matrix again, before the next loop iteration?
     }
 
     // TASK: Implement.
