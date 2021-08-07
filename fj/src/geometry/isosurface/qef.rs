@@ -27,6 +27,7 @@ pub fn find_best_point(
         let c = normal.z;
         let d = -(a * point.x + b * point.y + c * point.z);
 
+        // Append a row consisting of the plane equation values to the matrix.
         let i = m.nrows();
         m = m.insert_rows(i, 1, 0.0);
         m.set_row(i, &vector![a, b, c, d].transpose());
