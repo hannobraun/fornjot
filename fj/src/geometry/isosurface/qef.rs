@@ -32,12 +32,17 @@ pub fn find_best_point(
         m = m.insert_rows(i, 1, 0.0);
         m.set_row(i, &vector![a, b, c, d].transpose());
 
-        // TASK: Iterate through all elements of the matrix that are below the
-        //       main diagonal and are not zero. Do this column by column, left
-        //       to right and top to bottom.
-        // TASK: Perform a givens rotation to set that element to zero.
-        //       Wikipedia has a semi-decent explanation for how to do this:
-        //       https://en.wikipedia.org/wiki/Givens_rotation
+        for i in 0..m.ncols() {
+            for j in (i + 1)..m.nrows() {
+                let element = m[(i, j)];
+                if element != 0.0 {
+                    // TASK: Perform a givens rotation to set that element to
+                    //       zero. Wikipedia has a semi-decent explanation for
+                    //       how to do this:
+                    //       https://en.wikipedia.org/wiki/Givens_rotation
+                }
+            }
+        }
 
         // TASK: Figure out what happens to the 5x4 matrix that is created by
         //       the first iteration. Do we throw away the last row, to make it
