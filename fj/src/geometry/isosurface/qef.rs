@@ -42,9 +42,7 @@ pub fn find_best_point(
                     // https://en.wikipedia.org/wiki/Givens_rotation
 
                     // TASK: Perform a givens rotation to set that element to
-                    //       zero. Wikipedia has a semi-decent explanation for
-                    //       how to do this:
-                    //       https://en.wikipedia.org/wiki/Givens_rotation
+                    //       zero.
                 }
             }
         }
