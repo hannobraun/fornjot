@@ -72,21 +72,34 @@ pub fn find_best_point(
 }
 
 fn givens_rotation(
-    _i: usize, _j: usize, aᵢⱼ: f32, aⱼⱼ: f32
+    i: usize, j: usize, aᵢⱼ: f32, aⱼⱼ: f32
 ) -> DMatrix<f32> {
     // This function uses the same parameter names as the Wikipedia page cited
     // above.
 
     let r = (aⱼⱼ * aⱼⱼ + aᵢⱼ * aᵢⱼ).sqrt() * aⱼⱼ.signum();
-    let _c = aⱼⱼ / r;
-    let _s = aᵢⱼ / r;
+    let c = aⱼⱼ / r;
+    let s = aᵢⱼ / r;
 
     #[allow(non_snake_case)]
-    let Gᵢⱼ = DMatrix::from_element(4, 4, 0.0);
+    let mut Gᵢⱼ = DMatrix::from_element(4, 4, 0.0);
 
-    for _k in 0..4 {
-        for _l in 0..4 {
-            // TASK: Construct Givens rotation matrix.
+    for k in 0..4 {
+        for l in 0..4 {
+            if k == i && l == i || k == j && l == j {
+                Gᵢⱼ[(k, l)] = c;
+            }
+            if k == i && l == j {
+                Gᵢⱼ[(k, l)] = s;
+            }
+            if k == j && l == i {
+                Gᵢⱼ[(k, l)] = -s;
+            }
+            if k == l && k != i && k != j {
+                Gᵢⱼ[(k, l)] = 1.0;
+            }
+
+            // In all other cases, the element stays `0.0`.
         }
     }
 
