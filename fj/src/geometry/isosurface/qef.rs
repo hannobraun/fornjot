@@ -35,8 +35,8 @@ pub fn find_best_point(
         // Convert matrix into upper triangular matrix using Givens rotations.
         for j in 0..m.ncols() {
             for i in (j + 1)..m.nrows() {
-                let element = m[(i, j)];
-                if element != 0.0 {
+                let aᵢⱼ = m[(i, j)];
+                if aᵢⱼ != 0.0 {
                     // Zero `element` in `m` using a Givens rotation. See
                     // Wikipedia for more information:
                     // https://en.wikipedia.org/wiki/Givens_rotation
