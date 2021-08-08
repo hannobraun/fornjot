@@ -1,4 +1,4 @@
-use nalgebra::{vector, MatrixXx4, Point, SVector};
+use nalgebra::{vector, DMatrix, MatrixXx4, Point, SVector};
 
 pub fn find_best_point(
     planes: &[(Point<f32, 3>, SVector<f32, 3>)],
@@ -46,8 +46,11 @@ pub fn find_best_point(
                     // more information:
                     // https://en.wikipedia.org/wiki/Givens_rotation
 
-                    // TASK: Create a Givens rotation matrix G(i, j, θ) where θ
-                    //       is tailored to zero element `aᵢⱼ`.
+                    // Create the Givens rotation matrix G(i, j, θ) where θ is
+                    // tailored to zero element `aᵢⱼ`.
+                    #[allow(non_snake_case)]
+                    let _Gᵢⱼ = givens_rotation();
+
                     // TASK: Multiply givens rotation matrix with `A`.
                 }
             }
@@ -58,6 +61,11 @@ pub fn find_best_point(
         //       a 4x4 matrix again, before the next loop iteration?
     }
 
+    // TASK: Implement.
+    todo!()
+}
+
+fn givens_rotation() -> DMatrix<f32> {
     // TASK: Implement.
     todo!()
 }
