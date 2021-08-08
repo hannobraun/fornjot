@@ -42,8 +42,8 @@ pub fn find_best_point(
                 let aᵢⱼ = A[(i, j)];
 
                 if aᵢⱼ != 0.0 {
-                    // Zero `element` in `m` using a Givens rotation. See
-                    // Wikipedia for more information:
+                    // Zero `aᵢⱼ` using a Givens rotation. See Wikipedia for
+                    // more information:
                     // https://en.wikipedia.org/wiki/Givens_rotation
 
                     // TASK: Create a Givens rotation matrix G(i, j, θ) where θ
