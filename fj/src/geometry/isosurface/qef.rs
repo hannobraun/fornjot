@@ -37,6 +37,10 @@ pub fn find_best_point(
             for i in (j + 1)..m.nrows() {
                 let element = m[(i, j)];
                 if element != 0.0 {
+                    // Zero `element` in `m` using a Givens rotation. See
+                    // Wikipedia for more information:
+                    // https://en.wikipedia.org/wiki/Givens_rotation
+
                     // TASK: Perform a givens rotation to set that element to
                     //       zero. Wikipedia has a semi-decent explanation for
                     //       how to do this:
