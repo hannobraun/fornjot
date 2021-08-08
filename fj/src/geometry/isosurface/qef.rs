@@ -47,8 +47,8 @@ pub fn find_best_point(
                     // https://en.wikipedia.org/wiki/Givens_rotation
 
                     // TASK: Create a Givens rotation matrix G(i, j, θ) where θ
-                    //       is tailored to zero element aᵢⱼ.
-                    // TASK: Multiply givens rotation matrix with `m`.
+                    //       is tailored to zero element `aᵢⱼ`.
+                    // TASK: Multiply givens rotation matrix with `A`.
                 }
             }
         }
