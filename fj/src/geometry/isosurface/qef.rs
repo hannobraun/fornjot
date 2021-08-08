@@ -41,8 +41,9 @@ pub fn find_best_point(
                     // Wikipedia for more information:
                     // https://en.wikipedia.org/wiki/Givens_rotation
 
-                    // TASK: Perform a givens rotation to set that element to
-                    //       zero.
+                    // TASK: Create a Givens rotation matrix G(i, j, θ) where θ
+                    //       is tailored to zero element aᵢⱼ.
+                    // TASK: Multiply givens rotation matrix with `m`.
                 }
             }
         }
