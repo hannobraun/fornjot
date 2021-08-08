@@ -40,6 +40,7 @@ pub fn find_best_point(
         for j in 0..A.ncols() {
             for i in (j + 1)..A.nrows() {
                 let aᵢⱼ = A[(i, j)];
+                let aⱼⱼ = A[(j, j)];
 
                 if aᵢⱼ != 0.0 {
                     // Zero `aᵢⱼ` using a Givens rotation. See Wikipedia for
@@ -54,7 +55,7 @@ pub fn find_best_point(
                     // Create the Givens rotation matrix G(i, j, θ) where θ is
                     // tailored to zero element `aᵢⱼ`.
                     #[allow(non_snake_case)]
-                    let _Gᵢⱼ = givens_rotation();
+                    let _Gᵢⱼ = givens_rotation(i, j, aᵢⱼ, aⱼⱼ);
 
                     // TASK: Multiply givens rotation matrix with `A`.
                 }
@@ -70,7 +71,9 @@ pub fn find_best_point(
     todo!()
 }
 
-fn givens_rotation() -> DMatrix<f32> {
+fn givens_rotation(
+    _i: usize, _j: usize, _aᵢⱼ: f32, _aⱼⱼ: f32
+) -> DMatrix<f32> {
     // TASK: Implement.
     todo!()
 }
