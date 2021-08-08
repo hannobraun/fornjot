@@ -8,7 +8,8 @@ pub fn find_best_point(
 
     // According to Dual Contouring: "The Secret Sauce", section 2.1, Solving
     // QEFs, we start by initializing a 4x4 matrix to zero.
-    let mut m = MatrixXx4::<f32>::zeros(4);
+    #[allow(non_snake_case)]
+    let mut A = MatrixXx4::<f32>::zeros(4);
 
     for plane in planes {
         let (point, normal) = plane;
@@ -28,14 +29,14 @@ pub fn find_best_point(
         let d = -(a * point.x + b * point.y + c * point.z);
 
         // Append a row consisting of the plane equation values to the matrix.
-        let i = m.nrows();
-        m = m.insert_rows(i, 1, 0.0);
-        m.set_row(i, &vector![a, b, c, d].transpose());
+        let i = A.nrows();
+        A = A.insert_rows(i, 1, 0.0);
+        A.set_row(i, &vector![a, b, c, d].transpose());
 
         // Convert matrix into upper triangular matrix using Givens rotations.
-        for j in 0..m.ncols() {
-            for i in (j + 1)..m.nrows() {
-                let aᵢⱼ = m[(i, j)];
+        for j in 0..A.ncols() {
+            for i in (j + 1)..A.nrows() {
+                let aᵢⱼ = A[(i, j)];
                 if aᵢⱼ != 0.0 {
                     // Zero `element` in `m` using a Givens rotation. See
                     // Wikipedia for more information:
