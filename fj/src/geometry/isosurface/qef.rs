@@ -72,10 +72,25 @@ pub fn find_best_point(
 }
 
 fn givens_rotation(
-    _i: usize, _j: usize, _aᵢⱼ: f32, _aⱼⱼ: f32
+    _i: usize, _j: usize, aᵢⱼ: f32, aⱼⱼ: f32
 ) -> DMatrix<f32> {
-    // TASK: Implement.
-    todo!()
+    // This function uses the same parameter names as the Wikipedia page cited
+    // above.
+
+    let r = (aⱼⱼ * aⱼⱼ + aᵢⱼ * aᵢⱼ).sqrt() * aⱼⱼ.signum();
+    let _c = aⱼⱼ / r;
+    let _s = aᵢⱼ / r;
+
+    #[allow(non_snake_case)]
+    let Gᵢⱼ = DMatrix::from_element(4, 4, 0.0);
+
+    for _k in 0..4 {
+        for _l in 0..4 {
+            // TASK: Construct Givens rotation matrix.
+        }
+    }
+
+    Gᵢⱼ
 }
 
 // TASK: Check out the Dual Contouring subreddit, it might be helpful:
