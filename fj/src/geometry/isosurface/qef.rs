@@ -40,6 +40,7 @@ pub fn find_best_point(
         for j in 0..A.ncols() {
             for i in (j + 1)..A.nrows() {
                 let aᵢⱼ = A[(i, j)];
+
                 if aᵢⱼ != 0.0 {
                     // Zero `element` in `m` using a Givens rotation. See
                     // Wikipedia for more information:
