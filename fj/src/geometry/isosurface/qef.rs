@@ -45,6 +45,11 @@ pub fn find_best_point(
                     // Zero `aᵢⱼ` using a Givens rotation. See Wikipedia for
                     // more information:
                     // https://en.wikipedia.org/wiki/Givens_rotation
+                    //
+                    // I found that page a bit hard to follow at times, but was
+                    // able to fill in the gaps using the equivalent page from
+                    // the German Wikipedia:
+                    // https://de.wikipedia.org/wiki/Givens-Rotation
 
                     // Create the Givens rotation matrix G(i, j, θ) where θ is
                     // tailored to zero element `aᵢⱼ`.
