@@ -84,8 +84,8 @@ fn givens_rotation(
     #[allow(non_snake_case)]
     let mut Gᵢⱼ = Matrix4::from_element(0.0);
 
-    for k in 0..4 {
-        for l in 0..4 {
+    for k in 0..Gᵢⱼ.ncols() {
+        for l in 0..Gᵢⱼ.nrows() {
             if k == i && l == i || k == j && l == j {
                 Gᵢⱼ[(k, l)] = c;
             }
