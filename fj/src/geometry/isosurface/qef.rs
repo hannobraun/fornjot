@@ -68,6 +68,10 @@ pub fn find_best_point(
         //       a 4x4 matrix again, before the next loop iteration?
     }
 
+    // TASK: Extract `Â`, `B̂`, and `r` from `A`.
+    // TASK: Form `AᵀA` == `ÂᵀÂ`.
+    // TASK: Compute SVD of that matrix.
+
     // TASK: Implement.
     todo!()
 }
