@@ -1,4 +1,4 @@
-use nalgebra::{vector, DMatrix, MatrixXx4, Point, SVector};
+use nalgebra::{vector, Matrix4, MatrixXx4, Point, SVector};
 
 pub fn find_best_point(
     planes: &[(Point<f32, 3>, SVector<f32, 3>)],
@@ -73,7 +73,7 @@ pub fn find_best_point(
 
 fn givens_rotation(
     i: usize, j: usize, aᵢⱼ: f32, aⱼⱼ: f32
-) -> DMatrix<f32> {
+) -> Matrix4<f32> {
     // This function uses the same parameter names as the Wikipedia page cited
     // above.
 
@@ -82,7 +82,7 @@ fn givens_rotation(
     let s = aᵢⱼ / r;
 
     #[allow(non_snake_case)]
-    let mut Gᵢⱼ = DMatrix::from_element(4, 4, 0.0);
+    let mut Gᵢⱼ = Matrix4::from_element(0.0);
 
     for k in 0..4 {
         for l in 0..4 {
