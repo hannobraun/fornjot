@@ -55,9 +55,10 @@ pub fn find_best_point(
                     // Create the Givens rotation matrix G(i, j, θ) where θ is
                     // tailored to zero element `aᵢⱼ`.
                     #[allow(non_snake_case)]
-                    let _Gᵢⱼ = givens_rotation(A.nrows(), i, j, aᵢⱼ, aⱼⱼ);
+                    let Gᵢⱼ = givens_rotation(A.nrows(), i, j, aᵢⱼ, aⱼⱼ);
 
-                    // TASK: Multiply givens rotation matrix with `A`.
+                    // Multiply with Givens rotation matrix to zero aᵢⱼ.
+                    A = Gᵢⱼ * A;
                 }
             }
         }
