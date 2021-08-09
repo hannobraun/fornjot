@@ -1,6 +1,5 @@
 use nalgebra::{
-    storage::ContiguousStorage as _, Isometry3, Perspective3, RealField as _,
-    Rotation3, Translation3,
+    Isometry3, Perspective3, RealField as _, Rotation3, Translation3,
 };
 
 #[derive(Debug)]
