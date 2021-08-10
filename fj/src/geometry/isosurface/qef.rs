@@ -1,4 +1,4 @@
-use nalgebra::{vector, DMatrix, MatrixXx4, Point, SVector};
+use nalgebra::{matrix, vector, DMatrix, MatrixXx4, Point, SVector};
 
 pub fn find_best_point(
     planes: &[(Point<f32, 3>, SVector<f32, 3>)],
@@ -68,7 +68,24 @@ pub fn find_best_point(
         //       a 4x4 matrix again, before the next loop iteration?
     }
 
-    // TASK: Extract `Â`, `B̂`, and `r` from `A`.
+    #[allow(non_snake_case)]
+    let Â = matrix![
+        A[(0, 0)], A[(0, 1)], A[(0, 2)];
+        A[(1, 0)], A[(1, 1)], A[(1, 2)];
+        A[(2, 0)], A[(2, 1)], A[(2, 2)];
+    ];
+    #[allow(non_snake_case)]
+    let B̂ = matrix![
+        A[(0, 3)];
+        A[(1, 3)];
+        A[(2, 3)];
+    ];
+    let r = A[(3, 3)];
+
+    dbg!(Â);
+    dbg!(B̂);
+    dbg!(r);
+
     // TASK: Form `AᵀA` == `ÂᵀÂ`.
     // TASK: Compute SVD of that matrix.
 
