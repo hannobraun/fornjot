@@ -82,11 +82,13 @@ pub fn find_best_point(
     ];
     let r = A[(3, 3)];
 
-    dbg!(Â);
+    #[allow(non_snake_case)]
+    let AᵀA = Â.transpose() * Â;
+
+    dbg!(AᵀA);
     dbg!(B̂);
     dbg!(r);
 
-    // TASK: Form `AᵀA` == `ÂᵀÂ`.
     // TASK: Compute SVD of that matrix.
 
     // TASK: Implement.
