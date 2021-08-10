@@ -89,7 +89,9 @@ pub fn find_best_point(
     dbg!(B̂);
     dbg!(r);
 
-    // TASK: Compute SVD of that matrix.
+    // TASK: Compute SVD of that matrix. There's a method on `nalgebra::Matrix`
+    //       that does that, but the paper talks about some possibly simpler
+    //       method of achieving that for this specific matrix.
 
     // TASK: Implement.
     todo!()
