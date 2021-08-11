@@ -40,7 +40,6 @@ where
 
         let sample_b = Sample {
             distance: -sample_b.distance,
-            normal: -sample_b.normal,
             ..sample_b
         };
 
@@ -54,8 +53,6 @@ where
 
 #[cfg(test)]
 mod tests {
-    use nalgebra::{SVector, Unit};
-
     use crate::geometry::{shapes::Sphere, traits::Geometry as _};
 
     use super::Difference;
@@ -74,30 +71,5 @@ mod tests {
         assert_eq!(difference.sample([0.875, 0.0, 0.0]).distance, -0.125);
         assert_eq!(difference.sample([1.0, 0.0, 0.0]).distance, 0.0);
         assert_eq!(difference.sample([1.5, 0.0, 0.0]).distance, 0.5);
-    }
-
-    #[test]
-    fn normal() {
-        let difference = Difference {
-            a: Sphere::new().with_radius(1.0),
-            b: Sphere::new().with_radius(0.5),
-        };
-
-        let values = [
-            ([0.25, 0.0, 0.0], [-1.0, 0.0, 0.0]),
-            ([0.5, 0.0, 0.0], [-1.0, 0.0, 0.0]),
-            ([0.625, 0.0, 0.0], [-1.0, 0.0, 0.0]),
-            ([0.875, 0.0, 0.0], [1.0, 0.0, 0.0]),
-            ([1.0, 0.0, 0.0], [1.0, 0.0, 0.0]),
-            ([1.5, 0.0, 0.0], [1.0, 0.0, 0.0]),
-        ];
-
-        for (actual, expected) in values {
-            println!("point: {:?}", actual);
-            assert_eq!(
-                difference.sample(actual).normal,
-                Unit::new_normalize(SVector::<_, 3>::from(expected))
-            );
-        }
     }
 }

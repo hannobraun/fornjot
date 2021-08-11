@@ -1,4 +1,4 @@
-use nalgebra::{Point, SVector, Unit};
+use nalgebra::Point;
 
 use crate::geometry::aabb::Aabb;
 
@@ -31,13 +31,6 @@ pub struct Sample<const D: usize> {
     /// negative value indicates that the point is inside. Either way, the
     /// absolute value is equal to the distance of the point to the surface.
     pub distance: f32,
-
-    // TASK: Remove normal from `SurfaceSample`.
-    //
-    //       It can be computed by sampling the signed distance function. This
-    //       would require only one piece of code for all shapes, instead of a
-    //       specific implementation for all implementations of `SurfaceSample`.
-    pub normal: Unit<SVector<f32, D>>,
 }
 
 /// Defines a bounding volume that encloses geometry

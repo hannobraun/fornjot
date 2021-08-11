@@ -37,8 +37,6 @@ impl Default for Cylinder {
 
 #[cfg(test)]
 mod tests {
-    use nalgebra::{vector, Unit};
-
     use crate::geometry::traits::Geometry as _;
 
     use super::Cylinder;
@@ -56,44 +54,5 @@ mod tests {
         assert_eq!(cylinder.sample([0.0, 1.0, 0.0]).distance, 0.5);
         assert_eq!(cylinder.sample([0.0, 0.0, 1.0]).distance, 0.5);
         assert_eq!(cylinder.sample([0.0, 0.0, -1.0]).distance, 0.5);
-    }
-
-    #[test]
-    fn normal() {
-        let cylinder = Cylinder::new().with_radius(0.5).with_height(1.0);
-
-        // The normal at the center is not defined. Just make sure we're not
-        // panicking due to a divide by zero or something.
-        let _ = cylinder.sample([0.0, 0.0, 0.0]);
-
-        // Points that are above, below, or next to the cylinder. The resulting
-        // normal will either come from the circle, or point directly up or
-        // down.
-        assert_eq!(
-            cylinder.sample([2.0, 0.0, 0.0]).normal.into_inner(),
-            vector![1.0, 0.0, 0.0],
-        );
-        assert_eq!(
-            cylinder.sample([0.0, 2.0, 0.0]).normal.into_inner(),
-            vector![0.0, 1.0, 0.0],
-        );
-        assert_eq!(
-            cylinder.sample([0.0, 0.0, 2.0]).normal.into_inner(),
-            vector![0.0, 0.0, 1.0],
-        );
-        assert_eq!(
-            cylinder.sample([0.0, 0.0, -2.0]).normal.into_inner(),
-            vector![0.0, 0.0, -1.0],
-        );
-
-        // Points that don't fulfill the conditions outlined above.
-        assert_eq!(
-            cylinder.sample([1.0, 0.0, 2.0]).normal,
-            Unit::new_normalize(vector![1.0, 0.0, 1.0]),
-        );
-        assert_eq!(
-            cylinder.sample([2.0, 0.0, -1.0]).normal,
-            Unit::new_normalize(vector![1.0, 0.0, -1.0]),
-        );
     }
 }
