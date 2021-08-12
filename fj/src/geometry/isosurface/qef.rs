@@ -92,6 +92,8 @@ pub fn find_best_point(
     // TASK: Find the eigenvalues and eigenvectors of `AᵀA`. According to the
     //       paper, that is enough to find the SVD of the matrix, although I
     //       don't quite understand how that works yet.
+    //       nalgebra's `SymmetricEigen` looks like a good candidate for doing
+    //       this, although I'm not completely sure if that's what we need.
     // TASK: Compute the SVD of `AᵀA` from its eigenvalues and eigenvectors.
 
     // TASK: Implement.
