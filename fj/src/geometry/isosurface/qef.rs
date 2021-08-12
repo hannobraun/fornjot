@@ -89,9 +89,10 @@ pub fn find_best_point(
     dbg!(B̂);
     dbg!(r);
 
-    // TASK: Compute SVD of that matrix. There's a method on `nalgebra::Matrix`
-    //       that does that, but the paper talks about some possibly simpler
-    //       method of achieving that for this specific matrix.
+    // TASK: Find the eigenvalues and eigenvectors of `AᵀA`. According to the
+    //       paper, that is enough to find the SVD of the matrix, although I
+    //       don't quite understand how that works yet.
+    // TASK: Compute the SVD of `AᵀA` from its eigenvalues and eigenvectors.
 
     // TASK: Implement.
     todo!()
