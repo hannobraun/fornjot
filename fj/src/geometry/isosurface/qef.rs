@@ -85,16 +85,17 @@ pub fn find_best_point(
     #[allow(non_snake_case)]
     let AᵀA = Â.transpose() * Â;
 
-    dbg!(AᵀA);
+    // Compute Singular Value Decomposition of AᵀA.
+    // TASK: The paper talks about only the eigenvalues and eigenvectors being
+    //       needed to compute the SVD, and makes that sound self-evident and
+    //       straight-forward. I don't get any of that, so I just hope the
+    //       following is functionally the same, and what the paper refers to is
+    //       just an optimization.
+    let svd = AᵀA.svd(true, true);
+
+    dbg!(svd);
     dbg!(B̂);
     dbg!(r);
-
-    // TASK: Find the eigenvalues and eigenvectors of `AᵀA`. According to the
-    //       paper, that is enough to find the SVD of the matrix, although I
-    //       don't quite understand how that works yet.
-    //       nalgebra's `SymmetricEigen` looks like a good candidate for doing
-    //       this, although I'm not completely sure if that's what we need.
-    // TASK: Compute the SVD of `AᵀA` from its eigenvalues and eigenvectors.
 
     // TASK: Implement.
     todo!()
