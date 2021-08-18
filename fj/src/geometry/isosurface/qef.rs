@@ -92,9 +92,13 @@ pub fn find_best_point(
     //       following is functionally the same, and what the paper refers to is
     //       just an optimization.
     let svd = AᵀA.svd(true, true);
+    // TASK: Figure out what a good epsilon value would be. `0.1` is just a
+    //       randomly guessed placeholder.
+    // TASK: Figure out under which circumstances this could fail, and improve
+    //       the error handling.
+    let x = svd.solve(&B̂, 0.1).unwrap();
 
-    dbg!(svd);
-    dbg!(B̂);
+    dbg!(x);
     dbg!(r);
 
     // TASK: Implement.
