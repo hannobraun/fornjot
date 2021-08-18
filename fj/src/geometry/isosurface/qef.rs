@@ -151,9 +151,7 @@ mod tests {
 
     use super::find_best_point;
 
-    // TASK: Un-ignore test.
     #[test]
-    #[ignore]
     fn test_perpendicular_planes() {
         let a = (point![0.5, 0.0, 0.0], vector![1.0, 0.0, 0.0]);
         let b = (point![0.0, 0.5, 0.0], vector![0.0, 1.0, 0.0]);
