@@ -98,11 +98,9 @@ pub fn find_best_point(
     //       the error handling.
     let x = svd.solve(&B̂, 0.1).unwrap();
 
-    dbg!(x);
     dbg!(r);
 
-    // TASK: Implement.
-    todo!()
+    x.into()
 }
 
 fn givens_rotation(
