@@ -82,6 +82,8 @@ pub fn find_best_point(
     ];
     let r = A[(3, 3)];
 
+    dbg!(r);
+
     #[allow(non_snake_case)]
     let AᵀA = Â.transpose() * Â;
 
@@ -97,8 +99,6 @@ pub fn find_best_point(
     // TASK: Figure out under which circumstances this could fail, and improve
     //       the error handling.
     let x = svd.solve(&B̂, 0.1).unwrap();
-
-    dbg!(r);
 
     x.into()
 }
