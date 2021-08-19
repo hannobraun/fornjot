@@ -15,8 +15,8 @@ pub struct Renderer {
     surface: wgpu::Surface,
     device: wgpu::Device,
     queue: wgpu::Queue,
-    swap_chain_desc: wgpu::SwapChainDescriptor,
-    swap_chain: wgpu::SwapChain,
+
+    surface_config: wgpu::SurfaceConfiguration,
 
     uniform_buffer: wgpu::Buffer,
     vertex_buffer: wgpu::Buffer,
@@ -33,7 +33,7 @@ pub struct Renderer {
 
 impl Renderer {
     pub async fn new(window: &Window, mesh: Mesh) -> Result<Self, InitError> {
-        let instance = wgpu::Instance::new(wgpu::BackendBit::VULKAN);
+        let instance = wgpu::Instance::new(wgpu::Backends::VULKAN);
 
         // This is sound, as `window` is an object to create a surface upon.
         let surface = unsafe { instance.create_surface(window) };
@@ -60,40 +60,40 @@ impl Renderer {
 
         let size = window.inner_size();
 
-        let swap_chain_desc = wgpu::SwapChainDescriptor {
-            usage: wgpu::TextureUsage::RENDER_ATTACHMENT,
+        let surface_config = wgpu::SurfaceConfiguration {
+            usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
             format: wgpu::TextureFormat::Bgra8UnormSrgb,
             width: size.width,
             height: size.height,
             present_mode: wgpu::PresentMode::Fifo,
         };
-
-        let swap_chain = device.create_swap_chain(&surface, &swap_chain_desc);
+        surface.configure(&device, &surface_config);
 
         let uniform_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
                 contents: bytemuck::cast_slice(&[Uniforms::default()]),
-                usage: wgpu::BufferUsage::UNIFORM | wgpu::BufferUsage::COPY_DST,
+                usage: wgpu::BufferUsages::UNIFORM
+                    | wgpu::BufferUsages::COPY_DST,
             });
         let vertex_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
                 contents: bytemuck::cast_slice(mesh.vertices()),
-                usage: wgpu::BufferUsage::VERTEX,
+                usage: wgpu::BufferUsages::VERTEX,
             });
         let index_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
                 contents: bytemuck::cast_slice(mesh.indices()),
-                usage: wgpu::BufferUsage::INDEX,
+                usage: wgpu::BufferUsages::INDEX,
             });
 
         let bind_group_layout =
             device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
                 entries: &[wgpu::BindGroupLayoutEntry {
                     binding: 0,
-                    visibility: wgpu::ShaderStage::VERTEX,
+                    visibility: wgpu::ShaderStages::VERTEX,
                     ty: wgpu::BindingType::Buffer {
                         ty: wgpu::BufferBindingType::Uniform,
                         has_dynamic_offset: false,
@@ -132,11 +132,10 @@ impl Renderer {
                 source: wgpu::ShaderSource::Wgsl(Cow::Borrowed(include_str!(
                     "shader.wgsl"
                 ))),
-                flags: wgpu::ShaderFlags::all(),
             });
 
         let (depth_texture, depth_view) =
-            create_depth_buffer(&device, &swap_chain_desc);
+            create_depth_buffer(&device, &surface_config);
 
         let render_pipeline =
             device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
@@ -147,7 +146,7 @@ impl Renderer {
                     entry_point: "vertex",
                     buffers: &[wgpu::VertexBufferLayout {
                         array_stride: size_of::<Vertex>() as u64,
-                        step_mode: wgpu::InputStepMode::Vertex,
+                        step_mode: wgpu::VertexStepMode::Vertex,
                         attributes: &wgpu::vertex_attr_array![
                             0 => Float32x3,
                             1 => Float32x3
@@ -186,7 +185,7 @@ impl Renderer {
                     targets: &[wgpu::ColorTargetState {
                         format: wgpu::TextureFormat::Bgra8UnormSrgb,
                         blend: None,
-                        write_mask: wgpu::ColorWrite::ALL,
+                        write_mask: wgpu::ColorWrites::ALL,
                     }],
                 }),
             });
@@ -195,8 +194,8 @@ impl Renderer {
             surface,
             device,
             queue,
-            swap_chain_desc,
-            swap_chain,
+
+            surface_config,
 
             uniform_buffer,
             vertex_buffer,
@@ -217,15 +216,13 @@ impl Renderer {
     }
 
     pub fn handle_resize(&mut self, size: PhysicalSize<u32>) {
-        self.swap_chain_desc.width = size.width;
-        self.swap_chain_desc.height = size.height;
+        self.surface_config.width = size.width;
+        self.surface_config.height = size.height;
 
-        self.swap_chain = self
-            .device
-            .create_swap_chain(&self.surface, &self.swap_chain_desc);
+        self.surface.configure(&self.device, &self.surface_config);
 
         let (depth_texture, depth_view) =
-            create_depth_buffer(&self.device, &self.swap_chain_desc);
+            create_depth_buffer(&self.device, &self.surface_config);
         self.depth_texture = depth_texture;
         self.depth_view = depth_view;
     }
@@ -242,11 +239,11 @@ impl Renderer {
             bytemuck::cast_slice(&[uniforms]),
         );
 
-        let output = self
-            .swap_chain
-            .get_current_frame()
-            .map_err(DrawError)?
-            .output;
+        let output =
+            self.surface.get_current_frame().map_err(DrawError)?.output;
+        let view = output
+            .texture
+            .create_view(&wgpu::TextureViewDescriptor::default());
 
         let mut encoder = self.device.create_command_encoder(
             &wgpu::CommandEncoderDescriptor { label: None },
@@ -257,7 +254,7 @@ impl Renderer {
                 encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                     label: None,
                     color_attachments: &[wgpu::RenderPassColorAttachment {
-                        view: &output.view,
+                        view: &view,
                         resolve_target: None,
                         ops: wgpu::Operations {
                             load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
@@ -287,6 +284,10 @@ impl Renderer {
             render_pass.draw_indexed(0..self.num_indices, 0, 0..1);
         }
 
+        // Workaround for wgpu#1797:
+        // https://github.com/gfx-rs/wgpu/issues/1797
+        drop(view);
+
         let command_buffer = encoder.finish();
         self.queue.submit(Some(command_buffer));
 
@@ -298,26 +299,26 @@ impl Renderer {
     }
 
     fn aspect_ratio(&self) -> f32 {
-        self.swap_chain_desc.width as f32 / self.swap_chain_desc.height as f32
+        self.surface_config.width as f32 / self.surface_config.height as f32
     }
 }
 
 fn create_depth_buffer(
     device: &wgpu::Device,
-    swap_chain_desc: &wgpu::SwapChainDescriptor,
+    surface_config: &wgpu::SurfaceConfiguration,
 ) -> (wgpu::Texture, wgpu::TextureView) {
     let texture = device.create_texture(&wgpu::TextureDescriptor {
         label: None,
         size: wgpu::Extent3d {
-            width: swap_chain_desc.width,
-            height: swap_chain_desc.height,
+            width: surface_config.width,
+            height: surface_config.height,
             depth_or_array_layers: 1,
         },
         mip_level_count: 1,
         sample_count: 1,
         dimension: wgpu::TextureDimension::D2,
         format: DEPTH_FORMAT,
-        usage: wgpu::TextureUsage::RENDER_ATTACHMENT,
+        usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
     });
 
     let view = texture.create_view(&wgpu::TextureViewDescriptor::default());
@@ -339,4 +340,4 @@ impl From<io::Error> for InitError {
 }
 
 #[derive(Debug)]
-pub struct DrawError(pub wgpu::SwapChainError);
+pub struct DrawError(pub wgpu::SurfaceError);

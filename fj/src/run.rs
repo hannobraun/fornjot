@@ -140,7 +140,7 @@ fn run_inner(
 
                 match renderer.draw(&transform) {
                     Ok(()) => {}
-                    err @ Err(DrawError(wgpu::SwapChainError::Outdated)) => {
+                    err @ Err(DrawError(wgpu::SurfaceError::Outdated)) => {
                         // I'm getting this from time to time when resizing the
                         // window. It's not catastrophic.
                         println!("Draw error: {:?}", err);
