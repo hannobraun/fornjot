@@ -4,6 +4,7 @@ members = [
     "models/cube",
     "models/spacer",
 ]
+resolver = "2"
 
 [profile.dev]
 opt-level = 3
