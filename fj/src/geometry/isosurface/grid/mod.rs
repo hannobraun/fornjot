@@ -47,8 +47,9 @@ impl Grid {
                         .or_insert_with(|| geometry.sample(vertex));
                 }
 
-                let mut surface_vertex = Point::origin();
-                let mut num_edges_at_surface = 0;
+                // TASK: Move this out of the closure and reset it here instead,
+                //       to reduce allocations.
+                let mut points = Vec::new();
 
                 for (a, b) in cell.edges() {
                     let sample_a = grid_vertex_samples[&a];
@@ -69,7 +70,6 @@ impl Grid {
 
                     if edge.at_surface() {
                         edges.insert((a, b), edge);
-                        num_edges_at_surface += 1;
 
                         let f = edge.a.distance.abs()
                             / (edge.a.distance.abs() + edge.b.distance.abs());
@@ -79,12 +79,11 @@ impl Grid {
 
                         let point =
                             edge.a.point + (edge.b.point - edge.a.point) * f;
-
-                        surface_vertex += point.coords;
+                        points.push(point);
                     }
                 }
 
-                if num_edges_at_surface == 0 {
+                if points.len() == 0 {
                     return None;
                 }
 
@@ -93,7 +92,11 @@ impl Grid {
                 // described in "Dual Contouring of Hermite Data".
                 // TASK: Use surface normals, as per the method described in the
                 //       paper, to improve surface vertex positioning.
-                surface_vertex /= num_edges_at_surface as f32;
+                let mut surface_vertex = Point::origin();
+                for point in &points {
+                    surface_vertex += point.coords;
+                }
+                surface_vertex /= points.len() as f32;
 
                 Some((cell.min_index, surface_vertex))
             })
