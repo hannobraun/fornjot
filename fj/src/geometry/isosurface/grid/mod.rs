@@ -47,8 +47,6 @@ impl Grid {
                         .or_insert_with(|| geometry.sample(vertex));
                 }
 
-                // TASK: Move this out of the closure and reset it here instead,
-                //       to reduce allocations.
                 let mut points = Vec::new();
 
                 for (a, b) in cell.edges() {
