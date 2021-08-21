@@ -1,4 +1,4 @@
-use nalgebra::{Point, SVector};
+use nalgebra::{vector, Point, SVector};
 
 use crate::geometry::aabb::Aabb;
 
@@ -36,11 +36,57 @@ pub trait Normal<const D: usize> {
     fn normal(&self, point: impl Into<Point<f32, D>>) -> SVector<f32, D>;
 }
 
-// TASK: Add blanket implementation of `Normal` for 2D geometry.
+impl<T> Normal<2> for T
+where
+    T: Geometry<2>,
+{
+    fn normal(&self, point: impl Into<Point<f32, 2>>) -> SVector<f32, 2> {
+        const EPSILON: f32 = 0.1;
+
+        let point = point.into();
+
+        let eps_x = vector![EPSILON, 0.0];
+        let eps_y = vector![0.0, EPSILON];
+
+        let dir = vector![
+            self.sample(point + eps_x).distance
+                - self.sample(point - eps_x).distance,
+            self.sample(point + eps_y).distance
+                - self.sample(point - eps_y).distance
+        ];
+
+        dir.normalize()
+    }
+}
+
 // TASK: Add blanket implementation of `Normal` for 3D geometry.
 
 /// Defines a bounding volume that encloses geometry
 pub trait BoundingVolume<const D: usize> {
     /// Return the geometry's axis-aligned bounding box
     fn aabb(&self) -> Aabb<D>;
+}
+
+#[cfg(test)]
+mod tests {
+    use nalgebra::{point, vector};
+
+    use crate::geometry::shapes::Circle;
+
+    use super::Normal as _;
+
+    #[test]
+    fn normal_trait_should_be_implemented_for_2d_geometry() {
+        let expected = [
+            (point![-1.0, 0.0], vector![-1.0, 0.0]),
+            (point![1.0, 0.0], vector![1.0, 0.0]),
+            (point![0.0, -1.0], vector![0.0, -1.0]),
+            (point![0.0, 1.0], vector![0.0, 1.0]),
+        ];
+
+        let circle = Circle::new();
+        for (point, normal) in expected {
+            assert_eq!(circle.normal(point), normal);
+        }
+    }
 }
