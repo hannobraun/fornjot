@@ -2,7 +2,7 @@ use nalgebra::Point;
 
 use crate::geometry::aabb::Aabb;
 
-/// Defines geometry that can be samples
+/// Defines geometry that can be sampled
 ///
 /// The `D` parameter defines the dimensionality of the geometry (typically
 /// geometry would be 2- or 3-dimensional).
