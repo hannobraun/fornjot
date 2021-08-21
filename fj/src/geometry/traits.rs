@@ -12,9 +12,6 @@ pub trait Geometry<const D: usize> {
     /// Returns a `Sample` value which describes, among other attributes, the
     /// distance of the point from the surface.
     fn sample(&self, point: impl Into<Point<f32, D>>) -> Sample<D>;
-
-    // TASK: Add method that calls `sample` multiple times to compute the
-    //       surface normal for a specific point.
 }
 
 /// The result of sampling geometry at a specific point
@@ -32,6 +29,10 @@ pub struct Sample<const D: usize> {
     /// absolute value is equal to the distance of the point to the surface.
     pub distance: f32,
 }
+
+// TASK: Add `Normal` trait that returns surface normal for a point.
+// TASK: Add blanket implementation of `Normal` for 2D geometry.
+// TASK: Add blanket implementation of `Normal` for 3D geometry.
 
 /// Defines a bounding volume that encloses geometry
 pub trait BoundingVolume<const D: usize> {
