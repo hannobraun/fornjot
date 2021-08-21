@@ -1,4 +1,4 @@
-use nalgebra::Point;
+use nalgebra::{Point, SVector};
 
 use crate::geometry::aabb::Aabb;
 
@@ -30,7 +30,12 @@ pub struct Sample<const D: usize> {
     pub distance: f32,
 }
 
-// TASK: Add `Normal` trait that returns surface normal for a point.
+// TASK: Document
+pub trait Normal<const D: usize> {
+    // TASK: Document
+    fn normal(&self, point: impl Into<Point<f32, D>>) -> SVector<f32, D>;
+}
+
 // TASK: Add blanket implementation of `Normal` for 2D geometry.
 // TASK: Add blanket implementation of `Normal` for 3D geometry.
 
