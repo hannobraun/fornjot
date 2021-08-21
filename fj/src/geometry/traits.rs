@@ -101,11 +101,12 @@ mod tests {
 
     #[test]
     fn normal_trait_should_be_implemented_for_2d_geometry() {
+        #[rustfmt::skip]
         let expected = [
-            (point![-1.0, 0.0], vector![-1.0, 0.0]),
-            (point![1.0, 0.0], vector![1.0, 0.0]),
-            (point![0.0, -1.0], vector![0.0, -1.0]),
-            (point![0.0, 1.0], vector![0.0, 1.0]),
+            (point![-1.0,  0.0], vector![-1.0,  0.0]),
+            (point![ 1.0,  0.0], vector![ 1.0,  0.0]),
+            (point![ 0.0, -1.0], vector![ 0.0, -1.0]),
+            (point![ 0.0,  1.0], vector![ 0.0,  1.0]),
         ];
 
         let circle = Circle::new();
