@@ -80,8 +80,6 @@ pub fn find_best_point(
         A[(1, 3)];
         A[(2, 3)];
     ];
-    let r = A[(3, 3)];
-
     // TASK: Figure out what to do with `r`. The paper talks about it as if it's
     //       needed for something. I've reached a point where I found it harder
     //       and harder to follow it though, but managed to come to a seemingly
@@ -89,6 +87,8 @@ pub fn find_best_point(
     //       nalgebra.
     //       Maybe `r` can be used to do things more efficiently, or maybe it's
     //       not needed. I understand very little here.
+    let r = A[(3, 3)];
+
     dbg!(r);
 
     #[allow(non_snake_case)]
