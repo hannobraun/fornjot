@@ -87,9 +87,7 @@ pub fn find_best_point(
     //       nalgebra.
     //       Maybe `r` can be used to do things more efficiently, or maybe it's
     //       not needed. I understand very little here.
-    let r = A[(3, 3)];
-
-    dbg!(r);
+    let _r = A[(3, 3)];
 
     #[allow(non_snake_case)]
     let AᵀA = Â.transpose() * Â;
