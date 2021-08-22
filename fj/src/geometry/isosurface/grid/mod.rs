@@ -77,7 +77,9 @@ impl Grid {
 
                         let point =
                             edge.a.point + (edge.b.point - edge.a.point) * f;
-                        points.push(point);
+                        let normal = geometry.normal(point);
+
+                        points.push((point, normal));
                     }
                 }
 
@@ -91,7 +93,7 @@ impl Grid {
                 // TASK: Use surface normals, as per the method described in the
                 //       paper, to improve surface vertex positioning.
                 let mut surface_vertex = Point::origin();
-                for point in &points {
+                for (point, _) in &points {
                     surface_vertex += point.coords;
                 }
                 surface_vertex /= points.len() as f32;
