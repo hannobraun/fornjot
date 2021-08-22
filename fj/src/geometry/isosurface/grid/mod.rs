@@ -47,7 +47,7 @@ impl Grid {
                         .or_insert_with(|| geometry.sample(vertex));
                 }
 
-                let mut points = Vec::new();
+                let mut points_and_normals = Vec::new();
 
                 for (a, b) in cell.edges() {
                     let sample_a = grid_vertex_samples[&a];
@@ -79,11 +79,11 @@ impl Grid {
                             edge.a.point + (edge.b.point - edge.a.point) * f;
                         let normal = geometry.normal(point);
 
-                        points.push((point, normal));
+                        points_and_normals.push((point, normal));
                     }
                 }
 
-                if points.len() == 0 {
+                if points_and_normals.len() == 0 {
                     return None;
                 }
 
@@ -93,10 +93,10 @@ impl Grid {
                 // TASK: Use surface normals, as per the method described in the
                 //       paper, to improve surface vertex positioning.
                 let mut surface_vertex = Point::origin();
-                for (point, _) in &points {
+                for (point, _) in &points_and_normals {
                     surface_vertex += point.coords;
                 }
-                surface_vertex /= points.len() as f32;
+                surface_vertex /= points_and_normals.len() as f32;
 
                 Some((cell.min_index, surface_vertex))
             })
