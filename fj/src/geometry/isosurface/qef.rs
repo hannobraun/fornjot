@@ -1,5 +1,7 @@
 use nalgebra::{matrix, vector, DMatrix, MatrixXx4, Point, SVector};
 
+// TASK: Check out this article:
+//       https://www.mattkeeter.com/projects/qef/
 pub fn find_best_point(
     planes: &[(Point<f32, 3>, SVector<f32, 3>)],
 ) -> Point<f32, 3> {
