@@ -33,7 +33,7 @@ fn place_at_plane_intersection(
 mod tests {
     use nalgebra::{point, vector};
 
-    use super::place_surface_vertex;
+    use super::place_at_plane_intersection;
 
     #[test]
     fn test_perpendicular_planes() {
@@ -41,7 +41,7 @@ mod tests {
         let b = (point![0.0, 0.5, 0.0], vector![0.0, 1.0, 0.0]);
         let c = (point![0.0, 0.0, 0.5], vector![0.0, 0.0, 1.0]);
 
-        let point = place_surface_vertex(&[a, b, c]);
+        let point = place_at_plane_intersection(&[a, b, c]);
         assert_eq!(point, point![0.5, 0.5, 0.5]);
     }
 
