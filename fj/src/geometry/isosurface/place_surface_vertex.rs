@@ -1,7 +1,13 @@
 use nalgebra::{Matrix3, Matrix3x1, Point, SVector};
 
-#[allow(non_snake_case)]
 pub fn place_surface_vertex(
+    planes: &[(Point<f32, 3>, SVector<f32, 3>)],
+) -> Point<f32, 3> {
+    place_at_plane_intersection(planes)
+}
+
+#[allow(non_snake_case)]
+fn place_at_plane_intersection(
     planes: &[(Point<f32, 3>, SVector<f32, 3>)],
 ) -> Point<f32, 3> {
     // Based on the approach from https://www.mattkeeter.com/projects/qef/.
