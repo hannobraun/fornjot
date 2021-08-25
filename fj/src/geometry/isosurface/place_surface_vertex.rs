@@ -26,6 +26,17 @@ fn place_at_plane_intersection(
     result.into()
 }
 
+pub fn place_at_average(
+    planes: &[(Point<f32, 3>, SVector<f32, 3>)],
+) -> Point<f32, 3> {
+    let mut surface_vertex = Point::origin();
+    for (point, _) in planes {
+        surface_vertex += point.coords;
+    }
+
+    surface_vertex / planes.len() as f32
+}
+
 // TASK: Check out the Dual Contouring subreddit, it might be helpful:
 //       https://www.reddit.com/r/dualcontouring/
 

@@ -18,6 +18,8 @@ use crate::geometry::traits::{Geometry, Normal};
 
 use self::surface_vertices::SurfaceVertices;
 
+use super::place_surface_vertex::place_at_average;
+
 // TASK: Don't use uniform grid when sampling geometry. Use an adaptive octree
 //       instead (as described in the paper), to increase performance and reduce
 //       memory use.
@@ -92,11 +94,7 @@ impl Grid {
                 // described in "Dual Contouring of Hermite Data".
                 // TASK: Use surface normals, as per the method described in the
                 //       paper, to improve surface vertex positioning.
-                let mut surface_vertex = Point::origin();
-                for (point, _) in &points_and_normals {
-                    surface_vertex += point.coords;
-                }
-                surface_vertex /= points_and_normals.len() as f32;
+                let surface_vertex = place_at_average(&points_and_normals);
 
                 Some((cell.min_index, surface_vertex))
             })
