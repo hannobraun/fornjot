@@ -18,7 +18,7 @@ use crate::geometry::traits::{Geometry, Normal};
 
 use self::surface_vertices::SurfaceVertices;
 
-use super::place_surface_vertex::place_at_average;
+use super::place_surface_vertex::place_surface_vertex;
 
 // TASK: Don't use uniform grid when sampling geometry. Use an adaptive octree
 //       instead (as described in the paper), to increase performance and reduce
@@ -89,12 +89,11 @@ impl Grid {
                     return None;
                 }
 
-                // We just average all of the points that intersect the surface,
-                // discarding surface normals. This is simpler than the method
-                // described in "Dual Contouring of Hermite Data".
-                // TASK: Use surface normals, as per the method described in the
-                //       paper, to improve surface vertex positioning.
-                let surface_vertex = place_at_average(&points_and_normals);
+                let surface_vertex = place_surface_vertex(
+                    cell,
+                    descriptor.resolution,
+                    &points_and_normals,
+                );
 
                 Some((cell.min_index, surface_vertex))
             })

@@ -1,9 +1,28 @@
-use nalgebra::{Matrix3, Matrix3x1, Point, SVector};
+use nalgebra::{vector, Matrix3, Matrix3x1, Point, SVector};
+
+use super::grid::Cell;
 
 pub fn place_surface_vertex(
+    cell: Cell,
+    resolution: f32,
     planes: &[(Point<f32, 3>, SVector<f32, 3>)],
 ) -> Point<f32, 3> {
-    place_at_plane_intersection(planes)
+    let cell_min = cell.min_position;
+    let cell_max = cell_min + vector![resolution, resolution, resolution];
+
+    let point = place_at_plane_intersection(planes);
+
+    if cell_min.x < point.x
+        && cell_min.y < point.y
+        && cell_min.z < point.z
+        && cell_max.x > point.x
+        && cell_max.y > point.y
+        && cell_max.z > point.z
+    {
+        point
+    } else {
+        place_at_average(planes)
+    }
 }
 
 #[allow(non_snake_case)]
