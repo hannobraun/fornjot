@@ -1,7 +1,7 @@
 use nalgebra::{Matrix3, Matrix3x1, Point, SVector};
 
 #[allow(non_snake_case)]
-pub fn find_best_point(
+pub fn place_surface_vertex(
     planes: &[(Point<f32, 3>, SVector<f32, 3>)],
 ) -> Point<f32, 3> {
     // Based on the approach from https://www.mattkeeter.com/projects/qef/.
@@ -27,7 +27,7 @@ pub fn find_best_point(
 mod tests {
     use nalgebra::{point, vector};
 
-    use super::find_best_point;
+    use super::place_surface_vertex;
 
     #[test]
     fn test_perpendicular_planes() {
@@ -35,7 +35,7 @@ mod tests {
         let b = (point![0.0, 0.5, 0.0], vector![0.0, 1.0, 0.0]);
         let c = (point![0.0, 0.0, 0.5], vector![0.0, 0.0, 1.0]);
 
-        let point = find_best_point(&[a, b, c]);
+        let point = place_surface_vertex(&[a, b, c]);
         assert_eq!(point, point![0.5, 0.5, 0.5]);
     }
 
