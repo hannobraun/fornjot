@@ -10,7 +10,7 @@
 //! [Manifold Dual Contouring]: https://people.engr.tamu.edu/schaefer/research/dualsimp_tvcg.pdf
 
 pub mod grid;
-pub mod qef;
+pub mod place_surface_vertex;
 pub mod to_mesh;
 
 pub use self::{grid::Grid, to_mesh::to_mesh};
