@@ -5,7 +5,7 @@ use nalgebra::{Point, SVector};
 use super::Index;
 
 /// A cell in a uniform grid used for isosurface extraction
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Cell {
     /// The index of the minimum (as defined by index ordering) cell vertex
     pub min_index: Index,
