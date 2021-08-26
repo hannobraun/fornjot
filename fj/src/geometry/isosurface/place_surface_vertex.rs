@@ -39,6 +39,9 @@ fn place_at_plane_intersection(
         AᵀB += normal * (normal.dot(&point.coords));
     }
 
+    // I don't know under which circumstances this can panic, but so far I
+    // haven't seen it do so. Let's just hope for the best, and fix it if this
+    // ever turns into a problem.
     let result = AᵀA
         .svd(true, true)
         .solve(&AᵀB, 0.1)
