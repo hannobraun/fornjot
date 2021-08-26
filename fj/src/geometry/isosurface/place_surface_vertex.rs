@@ -61,9 +61,6 @@ pub fn place_at_average(
     surface_vertex / planes.len() as f32
 }
 
-// TASK: Check out the Dual Contouring subreddit, it might be helpful:
-//       https://www.reddit.com/r/dualcontouring/
-
 #[cfg(test)]
 mod tests {
     use nalgebra::{point, vector};
