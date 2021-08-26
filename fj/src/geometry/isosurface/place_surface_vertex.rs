@@ -39,8 +39,10 @@ fn place_at_plane_intersection(
         AᵀB += normal * (normal.dot(&point.coords));
     }
 
-    // TASK: Improve error handling.
-    let result = AᵀA.svd(true, true).solve(&AᵀB, 0.1).unwrap();
+    let result = AᵀA
+        .svd(true, true)
+        .solve(&AᵀB, 0.1)
+        .expect("Failed to solve QEF. This is a bug.");
 
     result.into()
 }
