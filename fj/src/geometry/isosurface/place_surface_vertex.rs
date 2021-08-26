@@ -76,13 +76,4 @@ mod tests {
         let point = place_at_plane_intersection(&[a, b, c]);
         assert_eq!(point, point![0.5, 0.5, 0.5]);
     }
-
-    // TASK: Un-ignore test.
-    #[test]
-    #[ignore]
-    fn test_parallel_planes() {
-        // TASK: Implement. The parallel planes should result in a vertex that
-        //       is located within the cube.
-        todo!()
-    }
 }
