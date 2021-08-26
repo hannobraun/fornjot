@@ -14,3 +14,6 @@ pub mod place_surface_vertex;
 pub mod to_mesh;
 
 pub use self::{grid::Grid, to_mesh::to_mesh};
+
+// TASK: Study this page regarding further improvements of the algorithm:
+//       https://github.com/curv3d/curv/blob/master/ideas/v-rep/To_Mesh.rst
