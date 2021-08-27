@@ -30,9 +30,13 @@ pub struct Sample<const D: usize> {
     pub distance: f32,
 }
 
-// TASK: Document
+/// Implemented for geometry that can return surface normals
+///
+/// The `D` parameter defines the dimensionality of the geometry. Blanked
+/// implementations for 2- and 3-dimensional geometry (i.e. implementations of
+/// `Geometry<2>` and `Geometry<3>`) exist.
 pub trait Normal<const D: usize> {
-    // TASK: Document
+    /// Return the surface normal at the given point
     fn normal(&self, point: impl Into<Point<f32, D>>) -> SVector<f32, D>;
 }
 
