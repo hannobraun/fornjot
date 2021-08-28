@@ -28,11 +28,14 @@ impl Handler {
         actions: &mut Actions,
     ) {
         if let KeyboardInput {
-            virtual_keycode: Some(VirtualKeyCode::Escape),
+            virtual_keycode: Some(keycode),
             ..
         } = input
         {
-            actions.exit = true;
+            match keycode {
+                VirtualKeyCode::Escape => actions.exit = true,
+                _ => (),
+            }
         }
     }
 
