@@ -29,11 +29,11 @@ impl Handler {
     ) {
         if let KeyboardInput {
             state: ElementState::Pressed,
-            virtual_keycode: Some(keycode),
+            virtual_keycode: Some(virtual_key_code),
             ..
         } = input
         {
-            match keycode {
+            match virtual_key_code {
                 VirtualKeyCode::Escape => actions.exit = true,
                 VirtualKeyCode::Key1 => actions.toggle_mesh = true,
                 _ => (),
