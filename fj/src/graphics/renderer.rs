@@ -50,7 +50,18 @@ impl Renderer {
             .request_device(
                 &wgpu::DeviceDescriptor {
                     label: None,
-                    features: wgpu::Features::empty(),
+                    // TASK: Be smarter about this. Any feature enabled here
+                    //       might lead to a runtime error.
+                    //
+                    //       It might be best to request a device for every
+                    //       single feature that is desired, log a warning for
+                    //       each that isn't available, then request the final
+                    //       device for those that are.
+                    //
+                    //       In addition, the available features must be stored
+                    //       somewhere, so code that requires any unavailable
+                    //       ones isn't run.
+                    features: wgpu::Features::NON_FILL_POLYGON_MODE,
                     limits: wgpu::Limits::default(),
                 },
                 None,
