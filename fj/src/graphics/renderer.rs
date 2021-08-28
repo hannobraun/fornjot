@@ -130,12 +130,6 @@ impl Renderer {
             }],
             label: None,
         });
-        let pipeline_layout =
-            device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
-                label: None,
-                bind_group_layouts: &[&bind_group_layout],
-                push_constant_ranges: &[],
-            });
 
         let shader =
             device.create_shader_module(&wgpu::ShaderModuleDescriptor {
@@ -148,6 +142,12 @@ impl Renderer {
         let (depth_texture, depth_view) =
             create_depth_buffer(&device, &surface_config);
 
+        let pipeline_layout =
+            device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+                label: None,
+                bind_group_layouts: &[&bind_group_layout],
+                push_constant_ranges: &[],
+            });
         let render_pipeline = create_render_pipeline(
             &device,
             &pipeline_layout,
