@@ -10,12 +10,12 @@ use winit::{
 
 use crate::graphics::Transform;
 
-pub struct InputHandler {
+pub struct Handler {
     cursor: Option<PhysicalPosition<f64>>,
     rotating: bool,
 }
 
-impl InputHandler {
+impl Handler {
     pub fn new() -> Self {
         Self {
             cursor: None,

@@ -81,7 +81,7 @@ fn run_inner(
         .unwrap();
 
     trace!("Initializing event handler...");
-    let mut input_handler = input::InputHandler::new();
+    let mut input_handler = input::Handler::new();
 
     trace!("Initializing transform...");
     let mut transform = Transform::new();
