@@ -94,6 +94,8 @@ fn run_inner(
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
 
+        let mut actions = input::Actions::new();
+
         match event {
             Event::WindowEvent {
                 event: WindowEvent::CloseRequested,
@@ -111,7 +113,7 @@ fn run_inner(
                 event: WindowEvent::KeyboardInput { input, .. },
                 ..
             } => {
-                input_handler.handle_keyboard_input(input, control_flow);
+                input_handler.handle_keyboard_input(input, &mut actions);
             }
             Event::WindowEvent {
                 event: WindowEvent::CursorMoved { position, .. },
@@ -152,6 +154,10 @@ fn run_inner(
                 debug!("Returned from drawing.");
             }
             _ => {}
+        }
+
+        if actions.exit {
+            *control_flow = ControlFlow::Exit;
         }
 
         trace!("Event handled: {:?}", event);

@@ -5,7 +5,6 @@ use winit::{
         ElementState, KeyboardInput, MouseButton, MouseScrollDelta,
         VirtualKeyCode,
     },
-    event_loop::ControlFlow,
 };
 
 use crate::graphics::Transform;
@@ -26,14 +25,14 @@ impl Handler {
     pub fn handle_keyboard_input(
         &mut self,
         input: KeyboardInput,
-        control_flow: &mut ControlFlow,
+        actions: &mut Actions,
     ) {
         if let KeyboardInput {
             virtual_keycode: Some(VirtualKeyCode::Escape),
             ..
         } = input
         {
-            *control_flow = ControlFlow::Exit;
+            actions.exit = true;
         }
     }
 
@@ -100,5 +99,15 @@ impl Handler {
         };
 
         transform.distance += delta;
+    }
+}
+
+pub struct Actions {
+    pub exit: bool,
+}
+
+impl Actions {
+    pub fn new() -> Self {
+        Self { exit: false }
     }
 }
