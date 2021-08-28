@@ -26,6 +26,9 @@ pub struct Renderer {
     depth_view: wgpu::TextureView,
 
     bind_group: wgpu::BindGroup,
+    shader: wgpu::ShaderModule,
+
+    pipeline_layout: wgpu::PipelineLayout,
     render_pipeline: wgpu::RenderPipeline,
 
     num_indices: u32,
@@ -170,6 +173,9 @@ impl Renderer {
             depth_view,
 
             bind_group,
+            shader,
+
+            pipeline_layout,
             render_pipeline,
 
             num_indices: mesh
