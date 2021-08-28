@@ -148,8 +148,12 @@ impl Renderer {
         let (depth_texture, depth_view) =
             create_depth_buffer(&device, &surface_config);
 
-        let render_pipeline =
-            create_render_pipeline(&device, &pipeline_layout, &shader);
+        let render_pipeline = create_render_pipeline(
+            &device,
+            &pipeline_layout,
+            &shader,
+            wgpu::PolygonMode::Fill,
+        );
 
         Ok(Self {
             surface,
@@ -291,6 +295,7 @@ fn create_render_pipeline(
     device: &wgpu::Device,
     pipeline_layout: &wgpu::PipelineLayout,
     shader: &wgpu::ShaderModule,
+    polygon_mode: wgpu::PolygonMode,
 ) -> wgpu::RenderPipeline {
     device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
         label: None,
@@ -313,7 +318,7 @@ fn create_render_pipeline(
             front_face: wgpu::FrontFace::Ccw,
             cull_mode: None,
             clamp_depth: false,
-            polygon_mode: wgpu::PolygonMode::Fill,
+            polygon_mode: polygon_mode,
             conservative: false,
         },
         depth_stencil: Some(wgpu::DepthStencilState {
