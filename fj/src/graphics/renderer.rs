@@ -28,6 +28,7 @@ pub struct Renderer {
     bind_group: wgpu::BindGroup,
     shader: wgpu::ShaderModule,
 
+    polygon_mode: wgpu::PolygonMode,
     pipeline_layout: wgpu::PipelineLayout,
     render_pipeline: wgpu::RenderPipeline,
 
@@ -176,6 +177,7 @@ impl Renderer {
             bind_group,
             shader,
 
+            polygon_mode,
             pipeline_layout,
             render_pipeline,
 
