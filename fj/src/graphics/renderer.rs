@@ -201,6 +201,23 @@ impl Renderer {
         self.depth_view = depth_view;
     }
 
+    // TASK: Instead of switching between drawing the body _or_ the mesh, make
+    //       it so that each can be enabled or disabled on its own.
+    pub fn toggle_mesh(&mut self) {
+        self.polygon_mode = match self.polygon_mode {
+            wgpu::PolygonMode::Fill => wgpu::PolygonMode::Line,
+            wgpu::PolygonMode::Line => wgpu::PolygonMode::Fill,
+            wgpu::PolygonMode::Point => unreachable!("Invalid polygon mode"),
+        };
+
+        self.render_pipeline = create_render_pipeline(
+            &self.device,
+            &self.pipeline_layout,
+            &self.shader,
+            self.polygon_mode,
+        );
+    }
+
     pub fn draw(&mut self, transform: &Transform) -> Result<(), DrawError> {
         let uniforms = Uniforms {
             transform: transform.to_native(self.aspect_ratio()),

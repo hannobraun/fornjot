@@ -107,10 +107,14 @@ impl Handler {
 
 pub struct Actions {
     pub exit: bool,
+    pub toggle_mesh: bool,
 }
 
 impl Actions {
     pub fn new() -> Self {
-        Self { exit: false }
+        Self {
+            exit: false,
+            toggle_mesh: false,
+        }
     }
 }
