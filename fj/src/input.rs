@@ -37,6 +37,9 @@ impl Handler {
                 (ElementState::Pressed, VirtualKeyCode::Escape) => {
                     actions.exit = true
                 }
+                (ElementState::Pressed, VirtualKeyCode::Key1) => {
+                    actions.toggle_mesh = true
+                }
                 _ => (),
             }
         }
