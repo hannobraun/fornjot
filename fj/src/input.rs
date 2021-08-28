@@ -28,18 +28,14 @@ impl Handler {
         actions: &mut Actions,
     ) {
         if let KeyboardInput {
-            state,
+            state: ElementState::Pressed,
             virtual_keycode: Some(keycode),
             ..
         } = input
         {
-            match (state, keycode) {
-                (ElementState::Pressed, VirtualKeyCode::Escape) => {
-                    actions.exit = true
-                }
-                (ElementState::Pressed, VirtualKeyCode::Key1) => {
-                    actions.toggle_mesh = true
-                }
+            match keycode {
+                VirtualKeyCode::Escape => actions.exit = true,
+                VirtualKeyCode::Key1 => actions.toggle_mesh = true,
                 _ => (),
             }
         }
