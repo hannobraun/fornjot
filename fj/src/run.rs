@@ -12,8 +12,7 @@ use winit::{
 use crate::{
     args::Args,
     graphics::{DrawError, Renderer, Transform},
-    input::InputHandler,
-    threemf, Mesh, Model,
+    input, threemf, Mesh, Model,
 };
 
 pub fn run_model(model: impl Model) -> anyhow::Result<()> {
@@ -82,7 +81,7 @@ fn run_inner(
         .unwrap();
 
     trace!("Initializing event handler...");
-    let mut input_handler = InputHandler::new();
+    let mut input_handler = input::InputHandler::new();
 
     trace!("Initializing transform...");
     let mut transform = Transform::new();
