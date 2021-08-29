@@ -255,7 +255,7 @@ impl Renderer {
         &self,
         encoder: &mut wgpu::CommandEncoder,
         view: &wgpu::TextureView,
-        render_pipeline: &wgpu::RenderPipeline,
+        pipeline: &wgpu::RenderPipeline,
     ) {
         let mut render_pass =
             encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
@@ -280,7 +280,7 @@ impl Renderer {
                 ),
             });
 
-        render_pass.set_pipeline(render_pipeline);
+        render_pass.set_pipeline(pipeline);
         render_pass.set_bind_group(0, &self.bind_group, &[]);
         render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
         render_pass.set_index_buffer(
