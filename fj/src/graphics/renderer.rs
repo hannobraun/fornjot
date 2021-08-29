@@ -142,7 +142,7 @@ impl Renderer {
                 ))),
             });
 
-        let (_, depth_view) = create_depth_buffer(&device, &surface_config);
+        let depth_view = create_depth_buffer(&device, &surface_config);
 
         let polygon_mode = wgpu::PolygonMode::Fill;
         let pipeline_layout =
@@ -198,7 +198,7 @@ impl Renderer {
 
         self.surface.configure(&self.device, &self.surface_config);
 
-        let (_, depth_view) =
+        let depth_view =
             create_depth_buffer(&self.device, &self.surface_config);
         self.depth_view = depth_view;
     }
@@ -294,7 +294,7 @@ impl Renderer {
 fn create_depth_buffer(
     device: &wgpu::Device,
     surface_config: &wgpu::SurfaceConfiguration,
-) -> (wgpu::Texture, wgpu::TextureView) {
+) -> wgpu::TextureView {
     let texture = device.create_texture(&wgpu::TextureDescriptor {
         label: None,
         size: wgpu::Extent3d {
@@ -311,7 +311,7 @@ fn create_depth_buffer(
 
     let view = texture.create_view(&wgpu::TextureViewDescriptor::default());
 
-    (texture, view)
+    view
 }
 
 fn create_render_pipeline(
