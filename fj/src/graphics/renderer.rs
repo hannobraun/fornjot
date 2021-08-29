@@ -70,8 +70,7 @@ impl Renderer {
                 },
                 None,
             )
-            .await
-            .map_err(InitError::RequestDevice)?;
+            .await?;
 
         let size = window.inner_size();
 
@@ -383,7 +382,7 @@ pub enum InitError {
     RequestAdapter,
 
     #[error("Error requesting device")]
-    RequestDevice(wgpu::RequestDeviceError),
+    RequestDevice(#[from] wgpu::RequestDeviceError),
 }
 
 #[derive(Debug)]
