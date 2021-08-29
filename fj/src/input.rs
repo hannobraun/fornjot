@@ -35,7 +35,7 @@ impl Handler {
         {
             match virtual_key_code {
                 VirtualKeyCode::Escape => actions.exit = true,
-                VirtualKeyCode::Key1 => actions.toggle_mesh = true,
+                VirtualKeyCode::Key2 => actions.toggle_mesh = true,
                 _ => (),
             }
         }
