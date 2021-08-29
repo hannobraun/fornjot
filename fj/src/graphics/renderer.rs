@@ -22,7 +22,6 @@ pub struct Renderer {
     vertex_buffer: wgpu::Buffer,
     index_buffer: wgpu::Buffer,
 
-    depth_texture: wgpu::Texture,
     depth_view: wgpu::TextureView,
 
     bind_group: wgpu::BindGroup,
@@ -143,8 +142,7 @@ impl Renderer {
                 ))),
             });
 
-        let (depth_texture, depth_view) =
-            create_depth_buffer(&device, &surface_config);
+        let (_, depth_view) = create_depth_buffer(&device, &surface_config);
 
         let polygon_mode = wgpu::PolygonMode::Fill;
         let pipeline_layout =
@@ -177,7 +175,6 @@ impl Renderer {
             vertex_buffer,
             index_buffer,
 
-            depth_texture,
             depth_view,
 
             bind_group,
@@ -201,9 +198,8 @@ impl Renderer {
 
         self.surface.configure(&self.device, &self.surface_config);
 
-        let (depth_texture, depth_view) =
+        let (_, depth_view) =
             create_depth_buffer(&self.device, &self.surface_config);
-        self.depth_texture = depth_texture;
         self.depth_view = depth_view;
     }
 
