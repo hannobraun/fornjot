@@ -1,5 +1,6 @@
 use std::{borrow::Cow, convert::TryInto, io, mem::size_of};
 
+use thiserror::Error;
 use tracing::debug;
 use wgpu::util::DeviceExt as _;
 use winit::{dpi::PhysicalSize, window::Window};
@@ -373,10 +374,15 @@ fn create_render_pipeline(
     })
 }
 
-#[derive(Debug)]
+#[derive(Error, Debug)]
 pub enum InitError {
+    #[error("I/O error")]
     Io(io::Error),
+
+    #[error("Error request adapter")]
     RequestAdapter,
+
+    #[error("Error requesting device")]
     RequestDevice(wgpu::RequestDeviceError),
 }
 
