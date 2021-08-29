@@ -385,5 +385,6 @@ pub enum InitError {
     RequestDevice(#[from] wgpu::RequestDeviceError),
 }
 
-#[derive(Debug)]
+#[derive(Error, Debug)]
+#[error("Draw error")]
 pub struct DrawError(pub wgpu::SurfaceError);
