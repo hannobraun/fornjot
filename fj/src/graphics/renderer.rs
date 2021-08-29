@@ -221,8 +221,7 @@ impl Renderer {
             bytemuck::cast_slice(&[uniforms]),
         );
 
-        let output =
-            self.surface.get_current_frame().map_err(DrawError)?.output;
+        let output = self.surface.get_current_frame()?.output;
         let view = output
             .texture
             .create_view(&wgpu::TextureViewDescriptor::default());
@@ -387,4 +386,4 @@ pub enum InitError {
 
 #[derive(Error, Debug)]
 #[error("Draw error")]
-pub struct DrawError(pub wgpu::SurfaceError);
+pub struct DrawError(#[from] pub wgpu::SurfaceError);
