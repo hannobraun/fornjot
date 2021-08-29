@@ -33,6 +33,8 @@ pub struct Renderer {
     render_pipeline_model: wgpu::RenderPipeline,
     render_pipeline_mesh: wgpu::RenderPipeline,
 
+    draw_mesh: bool,
+
     num_indices: u32,
 }
 
@@ -189,6 +191,8 @@ impl Renderer {
             render_pipeline_model,
             render_pipeline_mesh,
 
+            draw_mesh: false,
+
             num_indices: mesh
                 .indices()
                 .len()
@@ -212,11 +216,7 @@ impl Renderer {
     // TASK: Instead of switching between drawing the body _or_ the mesh, make
     //       it so that each can be enabled or disabled on its own.
     pub fn toggle_mesh(&mut self) {
-        self.polygon_mode = match self.polygon_mode {
-            wgpu::PolygonMode::Fill => wgpu::PolygonMode::Line,
-            wgpu::PolygonMode::Line => wgpu::PolygonMode::Fill,
-            wgpu::PolygonMode::Point => unreachable!("Invalid polygon mode"),
-        };
+        self.draw_mesh = !self.draw_mesh;
     }
 
     pub fn draw(&mut self, transform: &Transform) -> Result<(), DrawError> {
@@ -265,12 +265,10 @@ impl Renderer {
                     ),
                 });
 
-            let render_pipeline = match self.polygon_mode {
-                wgpu::PolygonMode::Fill => &self.render_pipeline_model,
-                wgpu::PolygonMode::Line => &self.render_pipeline_mesh,
-                wgpu::PolygonMode::Point => {
-                    unreachable!("Invalid polygon mode")
-                }
+            let render_pipeline = if self.draw_mesh {
+                &self.render_pipeline_mesh
+            } else {
+                &self.render_pipeline_model
             };
 
             render_pass.set_pipeline(render_pipeline);
