@@ -230,46 +230,7 @@ impl Renderer {
             &wgpu::CommandEncoderDescriptor { label: None },
         );
 
-        {
-            let mut render_pass =
-                encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                    label: None,
-                    color_attachments: &[wgpu::RenderPassColorAttachment {
-                        view: &view,
-                        resolve_target: None,
-                        ops: wgpu::Operations {
-                            load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
-                            store: true,
-                        },
-                    }],
-                    depth_stencil_attachment: Some(
-                        wgpu::RenderPassDepthStencilAttachment {
-                            view: &self.depth_view,
-                            depth_ops: Some(wgpu::Operations {
-                                load: wgpu::LoadOp::Clear(1.0),
-                                store: true,
-                            }),
-                            stencil_ops: None,
-                        },
-                    ),
-                });
-
-            let render_pipeline = if self.draw_mesh {
-                &self.render_pipeline_mesh
-            } else {
-                &self.render_pipeline_model
-            };
-
-            render_pass.set_pipeline(render_pipeline);
-            render_pass.set_bind_group(0, &self.bind_group, &[]);
-            render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
-            render_pass.set_index_buffer(
-                self.index_buffer.slice(..),
-                wgpu::IndexFormat::Uint32,
-            );
-
-            render_pass.draw_indexed(0..self.num_indices, 0, 0..1);
-        }
+        self.do_render_pass(&mut encoder, &view);
 
         // Workaround for gfx-rs/wgpu#1797:
         // https://github.com/gfx-rs/wgpu/issues/1797
@@ -283,6 +244,51 @@ impl Renderer {
 
         debug!("Finished drawing.");
         Ok(())
+    }
+
+    fn do_render_pass(
+        &self,
+        encoder: &mut wgpu::CommandEncoder,
+        view: &wgpu::TextureView,
+    ) {
+        let mut render_pass =
+            encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                label: None,
+                color_attachments: &[wgpu::RenderPassColorAttachment {
+                    view,
+                    resolve_target: None,
+                    ops: wgpu::Operations {
+                        load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
+                        store: true,
+                    },
+                }],
+                depth_stencil_attachment: Some(
+                    wgpu::RenderPassDepthStencilAttachment {
+                        view: &self.depth_view,
+                        depth_ops: Some(wgpu::Operations {
+                            load: wgpu::LoadOp::Clear(1.0),
+                            store: true,
+                        }),
+                        stencil_ops: None,
+                    },
+                ),
+            });
+
+        let render_pipeline = if self.draw_mesh {
+            &self.render_pipeline_mesh
+        } else {
+            &self.render_pipeline_model
+        };
+
+        render_pass.set_pipeline(render_pipeline);
+        render_pass.set_bind_group(0, &self.bind_group, &[]);
+        render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
+        render_pass.set_index_buffer(
+            self.index_buffer.slice(..),
+            wgpu::IndexFormat::Uint32,
+        );
+
+        render_pass.draw_indexed(0..self.num_indices, 0, 0..1);
     }
 
     fn aspect_ratio(&self) -> f32 {
