@@ -144,7 +144,6 @@ impl Renderer {
 
         let depth_view = create_depth_buffer(&device, &surface_config);
 
-        let polygon_mode = wgpu::PolygonMode::Fill;
         let pipeline_layout =
             device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
                 label: None,
@@ -155,7 +154,7 @@ impl Renderer {
             &device,
             &pipeline_layout,
             &shader,
-            polygon_mode,
+            wgpu::PolygonMode::Fill,
         );
         let render_pipeline_mesh = create_render_pipeline(
             &device,
