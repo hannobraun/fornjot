@@ -230,7 +230,12 @@ impl Renderer {
             &wgpu::CommandEncoderDescriptor { label: None },
         );
 
-        self.do_render_pass(&mut encoder, &view);
+        let render_pipeline = if self.draw_mesh {
+            &self.render_pipeline_mesh
+        } else {
+            &self.render_pipeline_model
+        };
+        self.do_render_pass(&mut encoder, &view, render_pipeline);
 
         // Workaround for gfx-rs/wgpu#1797:
         // https://github.com/gfx-rs/wgpu/issues/1797
@@ -250,6 +255,7 @@ impl Renderer {
         &self,
         encoder: &mut wgpu::CommandEncoder,
         view: &wgpu::TextureView,
+        render_pipeline: &wgpu::RenderPipeline,
     ) {
         let mut render_pass =
             encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
@@ -273,12 +279,6 @@ impl Renderer {
                     },
                 ),
             });
-
-        let render_pipeline = if self.draw_mesh {
-            &self.render_pipeline_mesh
-        } else {
-            &self.render_pipeline_model
-        };
 
         render_pass.set_pipeline(render_pipeline);
         render_pass.set_bind_group(0, &self.bind_group, &[]);
