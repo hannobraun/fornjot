@@ -26,10 +26,7 @@ pub struct Renderer {
     depth_view: wgpu::TextureView,
 
     bind_group: wgpu::BindGroup,
-    shader: wgpu::ShaderModule,
 
-    polygon_mode: wgpu::PolygonMode,
-    pipeline_layout: wgpu::PipelineLayout,
     render_pipeline_model: wgpu::RenderPipeline,
     render_pipeline_mesh: wgpu::RenderPipeline,
 
@@ -184,10 +181,7 @@ impl Renderer {
             depth_view,
 
             bind_group,
-            shader,
 
-            polygon_mode,
-            pipeline_layout,
             render_pipeline_model,
             render_pipeline_mesh,
 
