@@ -150,6 +150,7 @@ impl Renderer {
                 bind_group_layouts: &[&bind_group_layout],
                 push_constant_ranges: &[],
             });
+
         let render_pipeline_model = create_render_pipeline(
             &device,
             &pipeline_layout,
