@@ -30,7 +30,8 @@ pub struct Renderer {
 
     polygon_mode: wgpu::PolygonMode,
     pipeline_layout: wgpu::PipelineLayout,
-    render_pipeline: wgpu::RenderPipeline,
+    render_pipeline_model: wgpu::RenderPipeline,
+    render_pipeline_mesh: wgpu::RenderPipeline,
 
     num_indices: u32,
 }
@@ -153,11 +154,17 @@ impl Renderer {
                 bind_group_layouts: &[&bind_group_layout],
                 push_constant_ranges: &[],
             });
-        let render_pipeline = create_render_pipeline(
+        let render_pipeline_model = create_render_pipeline(
             &device,
             &pipeline_layout,
             &shader,
             polygon_mode,
+        );
+        let render_pipeline_mesh = create_render_pipeline(
+            &device,
+            &pipeline_layout,
+            &shader,
+            wgpu::PolygonMode::Line,
         );
 
         Ok(Self {
@@ -179,7 +186,8 @@ impl Renderer {
 
             polygon_mode,
             pipeline_layout,
-            render_pipeline,
+            render_pipeline_model,
+            render_pipeline_mesh,
 
             num_indices: mesh
                 .indices()
@@ -209,13 +217,6 @@ impl Renderer {
             wgpu::PolygonMode::Line => wgpu::PolygonMode::Fill,
             wgpu::PolygonMode::Point => unreachable!("Invalid polygon mode"),
         };
-
-        self.render_pipeline = create_render_pipeline(
-            &self.device,
-            &self.pipeline_layout,
-            &self.shader,
-            self.polygon_mode,
-        );
     }
 
     pub fn draw(&mut self, transform: &Transform) -> Result<(), DrawError> {
@@ -264,7 +265,15 @@ impl Renderer {
                     ),
                 });
 
-            render_pass.set_pipeline(&self.render_pipeline);
+            let render_pipeline = match self.polygon_mode {
+                wgpu::PolygonMode::Fill => &self.render_pipeline_model,
+                wgpu::PolygonMode::Line => &self.render_pipeline_mesh,
+                wgpu::PolygonMode::Point => {
+                    unreachable!("Invalid polygon mode")
+                }
+            };
+
+            render_pass.set_pipeline(render_pipeline);
             render_pass.set_bind_group(0, &self.bind_group, &[]);
             render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
             render_pass.set_index_buffer(
