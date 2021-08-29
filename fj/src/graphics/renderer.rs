@@ -377,19 +377,13 @@ fn create_render_pipeline(
 #[derive(Error, Debug)]
 pub enum InitError {
     #[error("I/O error")]
-    Io(io::Error),
+    Io(#[from] io::Error),
 
     #[error("Error request adapter")]
     RequestAdapter,
 
     #[error("Error requesting device")]
     RequestDevice(wgpu::RequestDeviceError),
-}
-
-impl From<io::Error> for InitError {
-    fn from(err: io::Error) -> Self {
-        Self::Io(err)
-    }
 }
 
 #[derive(Debug)]
