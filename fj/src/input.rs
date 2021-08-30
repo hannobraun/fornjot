@@ -12,6 +12,7 @@ use crate::graphics::Transform;
 pub struct Handler {
     cursor: Option<PhysicalPosition<f64>>,
     rotating: bool,
+    moving: bool,
 }
 
 impl Handler {
@@ -19,6 +20,7 @@ impl Handler {
         Self {
             cursor: None,
             rotating: false,
+            moving: false,
         }
     }
 
@@ -68,6 +70,10 @@ impl Handler {
 
                 transform.rotation = y_rot * x_rot * transform.rotation;
             }
+            if self.moving {
+                // TASK: Implement.
+                println!("Moving...");
+            }
         }
 
         self.cursor = Some(position);
@@ -84,6 +90,12 @@ impl Handler {
             }
             (MouseButton::Left, ElementState::Released) => {
                 self.rotating = false;
+            }
+            (MouseButton::Right, ElementState::Pressed) => {
+                self.moving = true;
+            }
+            (MouseButton::Right, ElementState::Released) => {
+                self.moving = false;
             }
             _ => {}
         }
