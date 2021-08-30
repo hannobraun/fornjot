@@ -78,17 +78,14 @@ impl Handler {
         state: ElementState,
         button: MouseButton,
     ) {
-        match state {
-            ElementState::Pressed => {
-                if button == MouseButton::Left {
-                    self.rotating = true;
-                }
+        match (button, state) {
+            (MouseButton::Left, ElementState::Pressed) => {
+                self.rotating = true;
             }
-            ElementState::Released => {
-                if button == MouseButton::Left {
-                    self.rotating = false;
-                }
+            (MouseButton::Left, ElementState::Released) => {
+                self.rotating = false;
             }
+            _ => {}
         }
     }
 
