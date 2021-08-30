@@ -75,8 +75,8 @@ impl Handler {
 
     pub fn handle_mouse_input(
         &mut self,
-        state: ElementState,
         button: MouseButton,
+        state: ElementState,
     ) {
         match (button, state) {
             (MouseButton::Left, ElementState::Pressed) => {

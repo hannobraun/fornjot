@@ -125,7 +125,7 @@ fn run_inner(
                 event: WindowEvent::MouseInput { state, button, .. },
                 ..
             } => {
-                input_handler.handle_mouse_input(state, button);
+                input_handler.handle_mouse_input(button, state);
             }
             Event::WindowEvent {
                 event: WindowEvent::MouseWheel { delta, .. },
