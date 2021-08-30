@@ -159,6 +159,9 @@ fn run_inner(
         if actions.exit {
             *control_flow = ControlFlow::Exit;
         }
+        if actions.toggle_model {
+            renderer.toggle_model();
+        }
         if actions.toggle_mesh {
             renderer.toggle_mesh();
         }

@@ -30,6 +30,7 @@ pub struct Renderer {
     render_pipeline_model: wgpu::RenderPipeline,
     render_pipeline_mesh: wgpu::RenderPipeline,
 
+    draw_model: bool,
     draw_mesh: bool,
 
     num_indices: u32,
@@ -182,6 +183,7 @@ impl Renderer {
             render_pipeline_model,
             render_pipeline_mesh,
 
+            draw_model: true,
             draw_mesh: false,
 
             num_indices: mesh
@@ -203,7 +205,9 @@ impl Renderer {
         self.depth_view = depth_view;
     }
 
-    // TASK: Add method to toggle model.
+    pub fn toggle_model(&mut self) {
+        self.draw_model = !self.draw_model;
+    }
 
     pub fn toggle_mesh(&mut self) {
         self.draw_mesh = !self.draw_mesh;
@@ -232,7 +236,13 @@ impl Renderer {
 
         Self::clear_background(&mut encoder, &view);
 
-        self.do_render_pass(&mut encoder, &view, &self.render_pipeline_model);
+        if self.draw_model {
+            self.do_render_pass(
+                &mut encoder,
+                &view,
+                &self.render_pipeline_model,
+            );
+        }
         if self.draw_mesh {
             self.do_render_pass(
                 &mut encoder,
