@@ -251,46 +251,6 @@ impl Renderer {
         Ok(())
     }
 
-    fn do_render_pass(
-        &self,
-        encoder: &mut wgpu::CommandEncoder,
-        view: &wgpu::TextureView,
-        pipeline: &wgpu::RenderPipeline,
-    ) {
-        let mut render_pass =
-            encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                label: None,
-                color_attachments: &[wgpu::RenderPassColorAttachment {
-                    view,
-                    resolve_target: None,
-                    ops: wgpu::Operations {
-                        load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
-                        store: true,
-                    },
-                }],
-                depth_stencil_attachment: Some(
-                    wgpu::RenderPassDepthStencilAttachment {
-                        view: &self.depth_view,
-                        depth_ops: Some(wgpu::Operations {
-                            load: wgpu::LoadOp::Clear(1.0),
-                            store: true,
-                        }),
-                        stencil_ops: None,
-                    },
-                ),
-            });
-
-        render_pass.set_pipeline(pipeline);
-        render_pass.set_bind_group(0, &self.bind_group, &[]);
-        render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
-        render_pass.set_index_buffer(
-            self.index_buffer.slice(..),
-            wgpu::IndexFormat::Uint32,
-        );
-
-        render_pass.draw_indexed(0..self.num_indices, 0, 0..1);
-    }
-
     fn create_depth_buffer(
         device: &wgpu::Device,
         surface_config: &wgpu::SurfaceConfiguration,
@@ -375,6 +335,46 @@ impl Renderer {
 
     fn aspect_ratio(&self) -> f32 {
         self.surface_config.width as f32 / self.surface_config.height as f32
+    }
+
+    fn do_render_pass(
+        &self,
+        encoder: &mut wgpu::CommandEncoder,
+        view: &wgpu::TextureView,
+        pipeline: &wgpu::RenderPipeline,
+    ) {
+        let mut render_pass =
+            encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                label: None,
+                color_attachments: &[wgpu::RenderPassColorAttachment {
+                    view,
+                    resolve_target: None,
+                    ops: wgpu::Operations {
+                        load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
+                        store: true,
+                    },
+                }],
+                depth_stencil_attachment: Some(
+                    wgpu::RenderPassDepthStencilAttachment {
+                        view: &self.depth_view,
+                        depth_ops: Some(wgpu::Operations {
+                            load: wgpu::LoadOp::Clear(1.0),
+                            store: true,
+                        }),
+                        stencil_ops: None,
+                    },
+                ),
+            });
+
+        render_pass.set_pipeline(pipeline);
+        render_pass.set_bind_group(0, &self.bind_group, &[]);
+        render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
+        render_pass.set_index_buffer(
+            self.index_buffer.slice(..),
+            wgpu::IndexFormat::Uint32,
+        );
+
+        render_pass.draw_indexed(0..self.num_indices, 0, 0..1);
     }
 }
 
