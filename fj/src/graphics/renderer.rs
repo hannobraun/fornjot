@@ -230,6 +230,8 @@ impl Renderer {
             &wgpu::CommandEncoderDescriptor { label: None },
         );
 
+        self.clear_views(&mut encoder, &view);
+
         let render_pipeline = if self.draw_mesh {
             &self.render_pipeline_mesh
         } else {
@@ -337,6 +339,34 @@ impl Renderer {
         self.surface_config.width as f32 / self.surface_config.height as f32
     }
 
+    fn clear_views(
+        &self,
+        encoder: &mut wgpu::CommandEncoder,
+        view: &wgpu::TextureView,
+    ) {
+        encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+            label: None,
+            color_attachments: &[wgpu::RenderPassColorAttachment {
+                view,
+                resolve_target: None,
+                ops: wgpu::Operations {
+                    load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
+                    store: true,
+                },
+            }],
+            depth_stencil_attachment: Some(
+                wgpu::RenderPassDepthStencilAttachment {
+                    view: &self.depth_view,
+                    depth_ops: Some(wgpu::Operations {
+                        load: wgpu::LoadOp::Clear(1.0),
+                        store: true,
+                    }),
+                    stencil_ops: None,
+                },
+            ),
+        });
+    }
+
     fn do_render_pass(
         &self,
         encoder: &mut wgpu::CommandEncoder,
@@ -350,7 +380,7 @@ impl Renderer {
                     view,
                     resolve_target: None,
                     ops: wgpu::Operations {
-                        load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
+                        load: wgpu::LoadOp::Load,
                         store: true,
                     },
                 }],
@@ -358,7 +388,7 @@ impl Renderer {
                     wgpu::RenderPassDepthStencilAttachment {
                         view: &self.depth_view,
                         depth_ops: Some(wgpu::Operations {
-                            load: wgpu::LoadOp::Clear(1.0),
+                            load: wgpu::LoadOp::Load,
                             store: true,
                         }),
                         stencil_ops: None,
