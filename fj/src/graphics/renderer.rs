@@ -230,7 +230,7 @@ impl Renderer {
             &wgpu::CommandEncoderDescriptor { label: None },
         );
 
-        self.clear_views(&mut encoder, &view);
+        self.clear_background(&mut encoder, &view);
 
         let render_pipeline = if self.draw_mesh {
             &self.render_pipeline_mesh
@@ -339,7 +339,7 @@ impl Renderer {
         self.surface_config.width as f32 / self.surface_config.height as f32
     }
 
-    fn clear_views(
+    fn clear_background(
         &self,
         encoder: &mut wgpu::CommandEncoder,
         view: &wgpu::TextureView,
