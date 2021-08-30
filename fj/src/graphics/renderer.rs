@@ -203,8 +203,8 @@ impl Renderer {
         self.depth_view = depth_view;
     }
 
-    // TASK: Instead of switching between drawing the body _or_ the mesh, make
-    //       it so that each can be enabled or disabled on its own.
+    // TASK: Add method to toggle model.
+
     pub fn toggle_mesh(&mut self) {
         self.draw_mesh = !self.draw_mesh;
     }
@@ -232,12 +232,14 @@ impl Renderer {
 
         Self::clear_background(&mut encoder, &view);
 
-        let render_pipeline = if self.draw_mesh {
-            &self.render_pipeline_mesh
-        } else {
-            &self.render_pipeline_model
-        };
-        self.do_render_pass(&mut encoder, &view, render_pipeline);
+        self.do_render_pass(&mut encoder, &view, &self.render_pipeline_model);
+        if self.draw_mesh {
+            self.do_render_pass(
+                &mut encoder,
+                &view,
+                &self.render_pipeline_mesh,
+            );
+        }
 
         // Workaround for gfx-rs/wgpu#1797:
         // https://github.com/gfx-rs/wgpu/issues/1797
