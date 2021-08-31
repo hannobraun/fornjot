@@ -1,4 +1,4 @@
-use nalgebra::{Rotation3, Unit};
+use nalgebra::{Rotation3, Translation2, Unit};
 use winit::{
     dpi::PhysicalPosition,
     event::{
@@ -71,8 +71,14 @@ impl Handler {
                 transform.rotation = y_rot * x_rot * transform.rotation;
             }
             if self.moving {
-                // TASK: Implement.
-                println!("Moving...");
+                let f = 0.2;
+
+                let x_trans = diff_x as f32 * f;
+                let y_trans = -diff_y as f32 * f;
+
+                let translation = Translation2::new(x_trans, y_trans);
+
+                transform.translation = translation * transform.translation;
             }
         }
 
