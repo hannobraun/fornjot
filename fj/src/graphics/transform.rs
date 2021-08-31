@@ -1,17 +1,17 @@
 use nalgebra::{
-    Isometry3, Perspective3, RealField as _, Rotation3, Translation3,
+    Isometry3, Perspective3, RealField as _, Rotation, Translation3,
 };
 
 #[derive(Debug)]
 pub struct Transform {
-    pub rotation: Rotation3<f32>,
+    pub rotation: Rotation<f32, 3>,
     pub distance: f32,
 }
 
 impl Transform {
     pub fn new() -> Self {
         Self {
-            rotation: Rotation3::identity(),
+            rotation: Rotation::identity(),
             distance: 400.0,
         }
     }
