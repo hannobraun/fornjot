@@ -1,5 +1,5 @@
 use nalgebra::{
-    Isometry3, Perspective3, RealField as _, Rotation, Translation3,
+    Isometry3, Perspective3, RealField as _, Rotation, Translation,
 };
 
 #[derive(Debug)]
@@ -44,7 +44,7 @@ impl Transform {
 
     fn view_transform(&self) -> Isometry3<f32> {
         Isometry3::from_parts(
-            Translation3::from([0.0, 0.0, -self.distance]),
+            Translation::from([0.0, 0.0, -self.distance]),
             self.rotation.into(),
         )
     }
