@@ -5,6 +5,7 @@ use nalgebra::{
 #[derive(Debug)]
 pub struct Transform {
     pub rotation: Rotation<f32, 3>,
+    pub translation: Translation<f32, 2>,
     pub distance: f32,
 }
 
@@ -12,6 +13,7 @@ impl Transform {
     pub fn new() -> Self {
         Self {
             rotation: Rotation::identity(),
+            translation: Translation::identity(),
             distance: 400.0,
         }
     }
@@ -44,7 +46,11 @@ impl Transform {
 
     fn view_transform(&self) -> Isometry3<f32> {
         Isometry3::from_parts(
-            Translation::from([0.0, 0.0, -self.distance]),
+            Translation::from([
+                self.translation.x,
+                self.translation.y,
+                -self.distance,
+            ]),
             self.rotation.into(),
         )
     }
