@@ -21,6 +21,8 @@ It is very likely that you will run into limits when trying to use Fornjot for a
 
 Fornjot is a regular Rust library, and CAD models are just Rust applications that use the library. To use Fornjot for your own models, create a Rust application using Cargo, include Fornjot as a dependency (see [`fj`] on crates.io), and use one of the models from this repository (see above) as a template.
 
+### Display a Model
+
 To display one of the models from this repository, run:
 
 ``` bash
@@ -29,6 +31,8 @@ cargo run --bin spacer
 
 Replace `spacer` with the name of the model you want to see.
 
+### Export a Model
+
 To export one of the models from this repository to 3MF, run:
 
 ``` bash
@@ -36,6 +40,8 @@ cargo run --bin spacer -- --export model.3mf
 ```
 
 Replace `spacer` with the name of the model you want to export.
+
+### Model Parameters
 
 Some models have parameters that can be overridden. For example, you can override the inner radius of the `spacer` model like this:
 
