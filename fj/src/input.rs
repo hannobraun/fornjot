@@ -71,6 +71,25 @@ impl Handler {
                 transform.rotation = y_rot * x_rot * transform.rotation;
             }
             if self.moving {
+                // TASK: Moving feels good, if you're dragging the model exactly
+                //       where your mouse goes. It feels weird, if the mouse
+                //       cursor moves faster or slower than the model you're
+                //       moving.
+                //
+                //       The following factor achieves this good-feeling move
+                //       for relatively small models at the default distance
+                //       between camera and model origin. It breaks down when
+                //       moving the camera closer or away from the model, which
+                //       is the far more common case.
+                //
+                //       It would be nicer to have a zoom factor that depends on
+                //       the distance between camera and model origin, or even
+                //       the distance between the camera and the part of the
+                //       model the mouse is currently pointing at (or more
+                //       precisely, the distance between the camera and a plane
+                //       that touches the surface of the model where the mouse
+                //       is pointing, and whose normal is parallel to the
+                //       camera's viewing direction).
                 let f = 0.2;
 
                 let x_trans = diff_x as f32 * f;
