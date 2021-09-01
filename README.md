@@ -31,6 +31,10 @@ cargo run --bin spacer
 
 Replace `spacer` with the name of the model you want to see.
 
+Rotate the model by pressing the left mouse button while moving the mouse. Move the model by pressing the right mouse button while moving the mouse.
+
+Toggle model rendering by pressing `1`. Toggle mesh rendering by pressing `2`.
+
 ### Export a Model
 
 To export one of the models from this repository to 3MF, run:
