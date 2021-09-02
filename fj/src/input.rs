@@ -147,6 +147,7 @@ pub struct Actions {
 
     pub toggle_model: bool,
     pub toggle_mesh: bool,
+    pub toggle_grid: bool,
 }
 
 impl Actions {
@@ -156,6 +157,7 @@ impl Actions {
 
             toggle_model: false,
             toggle_mesh: false,
+            toggle_grid: false,
         }
     }
 }

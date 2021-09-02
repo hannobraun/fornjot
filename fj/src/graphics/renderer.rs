@@ -35,6 +35,7 @@ pub struct Renderer {
 
     draw_model: bool,
     draw_mesh: bool,
+    draw_grid: bool,
 
     num_indices: u32,
 }
@@ -188,6 +189,7 @@ impl Renderer {
 
             draw_model: true,
             draw_mesh: false,
+            draw_grid: false,
 
             num_indices: mesh
                 .indices()
@@ -214,6 +216,11 @@ impl Renderer {
 
     pub fn toggle_mesh(&mut self) {
         self.draw_mesh = !self.draw_mesh;
+    }
+
+    // TASK: This doesn't currently do anything.
+    pub fn toggle_grid(&mut self) {
+        self.draw_grid = !self.draw_grid;
     }
 
     pub fn draw(&mut self, transform: &Transform) -> Result<(), DrawError> {

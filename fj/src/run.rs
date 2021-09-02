@@ -161,6 +161,9 @@ fn run_inner(
         if actions.toggle_mesh {
             renderer.toggle_mesh();
         }
+        if actions.toggle_grid {
+            renderer.toggle_grid();
+        }
 
         trace!("Event handled: {:?}", event);
     })
