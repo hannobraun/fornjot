@@ -39,6 +39,7 @@ impl Handler {
                 VirtualKeyCode::Escape => actions.exit = true,
                 VirtualKeyCode::Key1 => actions.toggle_model = true,
                 VirtualKeyCode::Key2 => actions.toggle_mesh = true,
+                VirtualKeyCode::Key3 => actions.toggle_grid = true,
                 _ => (),
             }
         }
