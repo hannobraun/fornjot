@@ -4,6 +4,7 @@ use nalgebra::Matrix4;
 use super::transform::NativeTransform;
 
 #[derive(Clone, Copy)]
+#[repr(C)]
 pub struct Uniforms {
     pub transform: NativeTransform,
     pub transform_normals: NativeTransform,
