@@ -88,6 +88,7 @@ impl From<mesh::Mesh> for Mesh {
                     normal[1].into_inner(),
                     normal[2].into_inner(),
                 ],
+                color: [1.0, 0.0, 0.0, 1.0],
             })
             .collect();
 
