@@ -227,6 +227,7 @@ impl Renderer {
         let uniforms = Uniforms {
             transform: transform.to_native(self.aspect_ratio()),
             transform_normals: transform.to_normals_transform(),
+            ..Uniforms::default()
         };
 
         self.queue.write_buffer(
