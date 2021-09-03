@@ -8,6 +8,13 @@ use super::transform::NativeTransform;
 pub struct Uniforms {
     pub transform: NativeTransform,
     pub transform_normals: NativeTransform,
+    pub invert_color: bool,
+
+    /// Padding to make this struct match its WGSL equivalent
+    ///
+    /// WGSL seems to size its structs in increments of 16, so we need some
+    /// padding here to prevent a validation error.
+    pub _padding: [u8; 15],
 }
 
 impl Default for Uniforms {
@@ -23,6 +30,8 @@ impl Default for Uniforms {
         Self {
             transform,
             transform_normals,
+            invert_color: false,
+            _padding: [0; 15],
         }
     }
 }

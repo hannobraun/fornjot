@@ -8,6 +8,7 @@ struct VertexOutput {
 struct Uniforms {
     transform: mat4x4<f32>;
     transform_normals: mat4x4<f32>;
+    invert_color: bool;
 };
 
 [[group(0), binding(0)]]
