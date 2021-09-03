@@ -41,7 +41,20 @@ fn fragment(in: VertexOutput) -> [[location(0)]] vec4<f32> {
 
     let f_normal = max(1.0 - f_angle, 0.0);
 
-    let color = vec4<f32>(in.color.rgb * f_normal, in.color.a);
+    var in_color = vec4<f32>(0.0, 0.0, 0.0, 0.0);
+    if (uniforms.invert_color) {
+        in_color = vec4<f32>(
+            1.0 - in.color.r,
+            1.0 - in.color.g,
+            1.0 - in.color.b,
+            in.color.a,
+        );
+    }
+    else {
+        in_color = in.color;
+    }
+
+    let color = vec4<f32>(in_color.rgb * f_normal, in_color.a);
 
     return color;
 }
