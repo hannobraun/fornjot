@@ -1,6 +1,7 @@
 struct VertexOutput {
     [[builtin(position)]] position: vec4<f32>;
     [[location(0)]] normal: vec3<f32>;
+    [[location(1)]] color: vec4<f32>;
 };
 
 [[block]]
@@ -23,6 +24,7 @@ fn vertex(
     var out: VertexOutput;
     out.normal = (uniforms.transform_normals * vec4<f32>(normal, 0.0)).xyz;
     out.position = uniforms.transform * vec4<f32>(position, 1.0);
+    out.color = color;
 
     return out;
 }
@@ -38,7 +40,7 @@ fn fragment(in: VertexOutput) -> [[location(0)]] vec4<f32> {
 
     let f_normal = max(1.0 - f_angle, 0.0);
 
-    let color = vec4<f32>(vec3<f32>(1.0, 0.0, 0.0) * f_normal, 1.0);
+    let color = vec4<f32>(in.color.rgb * f_normal, in.color.a);
 
     return color;
 }
