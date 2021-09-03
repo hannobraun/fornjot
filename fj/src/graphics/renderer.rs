@@ -351,6 +351,7 @@ impl Renderer {
                 entry_point: "fragment",
                 targets: &[wgpu::ColorTargetState {
                     format: wgpu::TextureFormat::Bgra8UnormSrgb,
+                    // TASK: Enable alpha blending.
                     blend: None,
                     write_mask: wgpu::ColorWrites::ALL,
                 }],
