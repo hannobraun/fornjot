@@ -219,10 +219,18 @@ impl Renderer {
         Self::clear_background(&mut encoder, &view);
 
         if self.draw_model {
-            self.do_render_pass(&mut encoder, &view, &self.drawables.model);
+            self.do_render_pass(
+                &mut encoder,
+                &view,
+                &self.drawables.model.pipeline,
+            );
         }
         if self.draw_mesh {
-            self.do_render_pass(&mut encoder, &view, &self.drawables.mesh);
+            self.do_render_pass(
+                &mut encoder,
+                &view,
+                &self.drawables.mesh.pipeline,
+            );
         }
 
         // Workaround for gfx-rs/wgpu#1797:
