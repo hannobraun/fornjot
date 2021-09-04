@@ -222,11 +222,7 @@ impl Renderer {
             self.do_render_pass(&mut encoder, &view, &self.drawables.model);
         }
         if self.draw_mesh {
-            self.do_render_pass(
-                &mut encoder,
-                &view,
-                &self.drawables.render_pipeline_mesh,
-            );
+            self.do_render_pass(&mut encoder, &view, &self.drawables.mesh);
         }
 
         // Workaround for gfx-rs/wgpu#1797:
