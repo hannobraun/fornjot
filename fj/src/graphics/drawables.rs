@@ -28,22 +28,18 @@ impl Drawables {
                 ))),
             });
 
-        let model = Drawable {
-            pipeline: create_render_pipeline(
-                device,
-                &pipeline_layout,
-                &shader,
-                wgpu::PolygonMode::Fill,
-            ),
-        };
-        let mesh = Drawable {
-            pipeline: create_render_pipeline(
-                device,
-                &pipeline_layout,
-                &shader,
-                wgpu::PolygonMode::Line,
-            ),
-        };
+        let model = Drawable::new(
+            device,
+            &pipeline_layout,
+            &shader,
+            wgpu::PolygonMode::Fill,
+        );
+        let mesh = Drawable::new(
+            device,
+            &pipeline_layout,
+            &shader,
+            wgpu::PolygonMode::Line,
+        );
 
         Self { model, mesh }
     }
@@ -52,6 +48,24 @@ impl Drawables {
 #[derive(Debug)]
 pub struct Drawable {
     pub pipeline: wgpu::RenderPipeline,
+}
+
+impl Drawable {
+    pub fn new(
+        device: &wgpu::Device,
+        pipeline_layout: &wgpu::PipelineLayout,
+        shader: &wgpu::ShaderModule,
+        polygon_mode: wgpu::PolygonMode,
+    ) -> Self {
+        Self {
+            pipeline: create_render_pipeline(
+                device,
+                pipeline_layout,
+                shader,
+                polygon_mode,
+            ),
+        }
+    }
 }
 
 fn create_render_pipeline(
