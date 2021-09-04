@@ -169,6 +169,11 @@ impl Renderer {
             wgpu::PolygonMode::Line,
         );
 
+        let drawables = Drawables {
+            render_pipeline_model,
+            render_pipeline_mesh,
+        };
+
         Ok(Self {
             surface,
             device,
@@ -184,10 +189,7 @@ impl Renderer {
 
             bind_group,
 
-            drawables: Drawables {
-                render_pipeline_model,
-                render_pipeline_mesh,
-            },
+            drawables,
 
             draw_model: true,
             draw_mesh: false,
