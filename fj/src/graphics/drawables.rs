@@ -49,10 +49,7 @@ impl Drawable {
         Self::new(
             device,
             &pipeline_layout,
-            Shader {
-                module: &shader,
-                frag_entry: "frag_model",
-            },
+            Shader::model(&shader),
             wgpu::PolygonMode::Fill,
         )
     }
@@ -65,10 +62,7 @@ impl Drawable {
         Self::new(
             device,
             &pipeline_layout,
-            Shader {
-                module: &shader,
-                frag_entry: "frag_mesh",
-            },
+            Shader::mesh(&shader),
             wgpu::PolygonMode::Line,
         )
     }
