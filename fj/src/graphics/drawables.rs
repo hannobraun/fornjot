@@ -1,6 +1,6 @@
 use std::{borrow::Cow, mem::size_of};
 
-use super::{vertices::Vertex, DEPTH_FORMAT};
+use super::{shaders::Shader, vertices::Vertex, DEPTH_FORMAT};
 
 #[derive(Debug)]
 pub struct Drawables {
@@ -49,8 +49,10 @@ impl Drawable {
         Self::new(
             device,
             &pipeline_layout,
-            &shader,
-            "frag_model",
+            Shader {
+                module: &shader,
+                frag_entry: "frag_model",
+            },
             wgpu::PolygonMode::Fill,
         )
     }
@@ -63,8 +65,10 @@ impl Drawable {
         Self::new(
             device,
             &pipeline_layout,
-            &shader,
-            "frag_mesh",
+            Shader {
+                module: &shader,
+                frag_entry: "frag_mesh",
+            },
             wgpu::PolygonMode::Line,
         )
     }
@@ -72,8 +76,7 @@ impl Drawable {
     fn new(
         device: &wgpu::Device,
         pipeline_layout: &wgpu::PipelineLayout,
-        shader: &wgpu::ShaderModule,
-        frag_entry: &str,
+        shader: Shader,
         polygon_mode: wgpu::PolygonMode,
     ) -> Self {
         let pipeline =
@@ -81,7 +84,7 @@ impl Drawable {
                 label: None,
                 layout: Some(pipeline_layout),
                 vertex: wgpu::VertexState {
-                    module: shader,
+                    module: shader.module,
                     entry_point: "vertex",
                     buffers: &[wgpu::VertexBufferLayout {
                         array_stride: size_of::<Vertex>() as u64,
@@ -120,8 +123,8 @@ impl Drawable {
                     alpha_to_coverage_enabled: false,
                 },
                 fragment: Some(wgpu::FragmentState {
-                    module: &shader,
-                    entry_point: frag_entry,
+                    module: shader.module,
+                    entry_point: shader.frag_entry,
                     targets: &[wgpu::ColorTargetState {
                         format: wgpu::TextureFormat::Bgra8UnormSrgb,
                         // TASK: Enable alpha blending.
