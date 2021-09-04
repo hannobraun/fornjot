@@ -219,7 +219,7 @@ impl Renderer {
             &wgpu::CommandEncoderDescriptor { label: None },
         );
 
-        self.clear_background(&mut encoder, &view);
+        self.clear_views(&mut encoder, &view);
 
         if self.draw_model {
             self.do_render_pass(&mut encoder, &view, &self.drawables.model);
@@ -269,7 +269,7 @@ impl Renderer {
         self.surface_config.width as f32 / self.surface_config.height as f32
     }
 
-    fn clear_background(
+    fn clear_views(
         &self,
         encoder: &mut wgpu::CommandEncoder,
         view: &wgpu::TextureView,
