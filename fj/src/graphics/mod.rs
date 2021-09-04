@@ -11,3 +11,5 @@ pub use self::{
     transform::Transform,
     vertices::{Index, Vertex},
 };
+
+const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth32Float;

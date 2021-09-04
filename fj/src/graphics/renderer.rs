@@ -10,10 +10,8 @@ use winit::{dpi::PhysicalSize, window::Window};
 
 use super::{
     drawables::Drawables, mesh::Mesh, transform::Transform, uniforms::Uniforms,
-    vertices::Vertex,
+    vertices::Vertex, DEPTH_FORMAT,
 };
-
-const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth32Float;
 
 #[derive(Debug)]
 pub struct Renderer {
