@@ -46,7 +46,13 @@ impl Drawable {
         pipeline_layout: &wgpu::PipelineLayout,
         shader: &wgpu::ShaderModule,
     ) -> Self {
-        Self::new(device, &pipeline_layout, &shader, wgpu::PolygonMode::Fill)
+        Self::new(
+            device,
+            &pipeline_layout,
+            &shader,
+            "fragment",
+            wgpu::PolygonMode::Fill,
+        )
     }
 
     fn mesh(
@@ -54,13 +60,20 @@ impl Drawable {
         pipeline_layout: &wgpu::PipelineLayout,
         shader: &wgpu::ShaderModule,
     ) -> Self {
-        Self::new(device, &pipeline_layout, &shader, wgpu::PolygonMode::Line)
+        Self::new(
+            device,
+            &pipeline_layout,
+            &shader,
+            "fragment",
+            wgpu::PolygonMode::Line,
+        )
     }
 
     fn new(
         device: &wgpu::Device,
         pipeline_layout: &wgpu::PipelineLayout,
         shader: &wgpu::ShaderModule,
+        frag_entry: &str,
         polygon_mode: wgpu::PolygonMode,
     ) -> Self {
         let pipeline =
@@ -108,7 +121,7 @@ impl Drawable {
                 },
                 fragment: Some(wgpu::FragmentState {
                     module: &shader,
-                    entry_point: "fragment",
+                    entry_point: frag_entry,
                     targets: &[wgpu::ColorTargetState {
                         format: wgpu::TextureFormat::Bgra8UnormSrgb,
                         // TASK: Enable alpha blending.
