@@ -28,18 +28,8 @@ impl Drawables {
                 ))),
             });
 
-        let model = Drawable::new(
-            device,
-            &pipeline_layout,
-            &shader,
-            wgpu::PolygonMode::Fill,
-        );
-        let mesh = Drawable::new(
-            device,
-            &pipeline_layout,
-            &shader,
-            wgpu::PolygonMode::Line,
-        );
+        let model = Drawable::model(device, &pipeline_layout, &shader);
+        let mesh = Drawable::mesh(device, &pipeline_layout, &shader);
 
         Self { model, mesh }
     }
@@ -51,6 +41,22 @@ pub struct Drawable {
 }
 
 impl Drawable {
+    fn model(
+        device: &wgpu::Device,
+        pipeline_layout: &wgpu::PipelineLayout,
+        shader: &wgpu::ShaderModule,
+    ) -> Self {
+        Self::new(device, &pipeline_layout, &shader, wgpu::PolygonMode::Fill)
+    }
+
+    fn mesh(
+        device: &wgpu::Device,
+        pipeline_layout: &wgpu::PipelineLayout,
+        shader: &wgpu::ShaderModule,
+    ) -> Self {
+        Self::new(device, &pipeline_layout, &shader, wgpu::PolygonMode::Line)
+    }
+
     fn new(
         device: &wgpu::Device,
         pipeline_layout: &wgpu::PipelineLayout,
