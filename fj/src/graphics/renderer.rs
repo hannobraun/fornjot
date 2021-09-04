@@ -1,7 +1,7 @@
 // TASK: Implement a way to display the grid that is used to sample the
 //       geometry.
 
-use std::{borrow::Cow, convert::TryInto, io, mem::size_of};
+use std::{convert::TryInto, io, mem::size_of};
 
 use thiserror::Error;
 use tracing::debug;
@@ -137,40 +137,9 @@ impl Renderer {
             label: None,
         });
 
-        let shader =
-            device.create_shader_module(&wgpu::ShaderModuleDescriptor {
-                label: None,
-                source: wgpu::ShaderSource::Wgsl(Cow::Borrowed(include_str!(
-                    "shader.wgsl"
-                ))),
-            });
-
         let depth_view = Self::create_depth_buffer(&device, &surface_config);
 
-        let pipeline_layout =
-            device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
-                label: None,
-                bind_group_layouts: &[&bind_group_layout],
-                push_constant_ranges: &[],
-            });
-
-        let render_pipeline_model = Drawables::create_render_pipeline(
-            &device,
-            &pipeline_layout,
-            &shader,
-            wgpu::PolygonMode::Fill,
-        );
-        let render_pipeline_mesh = Drawables::create_render_pipeline(
-            &device,
-            &pipeline_layout,
-            &shader,
-            wgpu::PolygonMode::Line,
-        );
-
-        let drawables = Drawables {
-            render_pipeline_model,
-            render_pipeline_mesh,
-        };
+        let drawables = Drawables::new(&device, &bind_group_layout);
 
         Ok(Self {
             surface,

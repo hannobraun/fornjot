@@ -1,4 +1,4 @@
-use std::mem::size_of;
+use std::{borrow::Cow, mem::size_of};
 
 use super::{vertices::Vertex, DEPTH_FORMAT};
 
@@ -9,6 +9,44 @@ pub struct Drawables {
 }
 
 impl Drawables {
+    pub fn new(
+        device: &wgpu::Device,
+        bind_group_layout: &wgpu::BindGroupLayout,
+    ) -> Self {
+        let pipeline_layout =
+            device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+                label: None,
+                bind_group_layouts: &[bind_group_layout],
+                push_constant_ranges: &[],
+            });
+
+        let shader =
+            device.create_shader_module(&wgpu::ShaderModuleDescriptor {
+                label: None,
+                source: wgpu::ShaderSource::Wgsl(Cow::Borrowed(include_str!(
+                    "shader.wgsl"
+                ))),
+            });
+
+        let render_pipeline_model = Drawables::create_render_pipeline(
+            device,
+            &pipeline_layout,
+            &shader,
+            wgpu::PolygonMode::Fill,
+        );
+        let render_pipeline_mesh = Drawables::create_render_pipeline(
+            device,
+            &pipeline_layout,
+            &shader,
+            wgpu::PolygonMode::Line,
+        );
+
+        Self {
+            render_pipeline_model,
+            render_pipeline_mesh,
+        }
+    }
+
     pub fn create_render_pipeline(
         device: &wgpu::Device,
         pipeline_layout: &wgpu::PipelineLayout,
