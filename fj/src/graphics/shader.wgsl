@@ -44,3 +44,8 @@ fn frag_model(in: VertexOutput) -> [[location(0)]] vec4<f32> {
 
     return color;
 }
+
+[[stage(fragment)]]
+fn frag_mesh(in: VertexOutput) -> [[location(0)]] vec4<f32> {
+    return vec4<f32>(1.0 - in.color.rgb, in.color.a);
+}

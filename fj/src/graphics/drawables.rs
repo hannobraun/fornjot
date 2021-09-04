@@ -64,7 +64,7 @@ impl Drawable {
             device,
             &pipeline_layout,
             &shader,
-            "frag_model",
+            "frag_mesh",
             wgpu::PolygonMode::Line,
         )
     }
