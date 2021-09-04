@@ -1,6 +1,6 @@
 use std::{borrow::Cow, mem::size_of};
 
-use super::{shaders::Shader, vertices::Vertex, DEPTH_FORMAT};
+use super::{shader::Shader, vertices::Vertex, DEPTH_FORMAT};
 
 #[derive(Debug)]
 pub struct Drawables {
