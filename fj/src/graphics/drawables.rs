@@ -4,7 +4,7 @@ use super::{vertices::Vertex, DEPTH_FORMAT};
 
 #[derive(Debug)]
 pub struct Drawables {
-    pub render_pipeline_model: wgpu::RenderPipeline,
+    pub model: wgpu::RenderPipeline,
     pub render_pipeline_mesh: wgpu::RenderPipeline,
 }
 
@@ -28,7 +28,7 @@ impl Drawables {
                 ))),
             });
 
-        let render_pipeline_model = create_render_pipeline(
+        let model = create_render_pipeline(
             device,
             &pipeline_layout,
             &shader,
@@ -42,7 +42,7 @@ impl Drawables {
         );
 
         Self {
-            render_pipeline_model,
+            model,
             render_pipeline_mesh,
         }
     }

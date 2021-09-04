@@ -219,11 +219,7 @@ impl Renderer {
         Self::clear_background(&mut encoder, &view);
 
         if self.draw_model {
-            self.do_render_pass(
-                &mut encoder,
-                &view,
-                &self.drawables.render_pipeline_model,
-            );
+            self.do_render_pass(&mut encoder, &view, &self.drawables.model);
         }
         if self.draw_mesh {
             self.do_render_pass(
