@@ -9,7 +9,10 @@ use wgpu::util::DeviceExt as _;
 use winit::{dpi::PhysicalSize, window::Window};
 
 use super::{
-    drawables::Drawables, mesh::Mesh, transform::Transform, uniforms::Uniforms,
+    drawables::{Drawable, Drawables},
+    mesh::Mesh,
+    transform::Transform,
+    uniforms::Uniforms,
     DEPTH_FORMAT,
 };
 
@@ -219,18 +222,10 @@ impl Renderer {
         Self::clear_background(&mut encoder, &view);
 
         if self.draw_model {
-            self.do_render_pass(
-                &mut encoder,
-                &view,
-                &self.drawables.model.pipeline,
-            );
+            self.do_render_pass(&mut encoder, &view, &self.drawables.model);
         }
         if self.draw_mesh {
-            self.do_render_pass(
-                &mut encoder,
-                &view,
-                &self.drawables.mesh.pipeline,
-            );
+            self.do_render_pass(&mut encoder, &view, &self.drawables.mesh);
         }
 
         // Workaround for gfx-rs/wgpu#1797:
@@ -296,7 +291,7 @@ impl Renderer {
         &self,
         encoder: &mut wgpu::CommandEncoder,
         view: &wgpu::TextureView,
-        pipeline: &wgpu::RenderPipeline,
+        drawable: &Drawable,
     ) {
         let mut render_pass =
             encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
@@ -321,7 +316,7 @@ impl Renderer {
                 ),
             });
 
-        render_pass.set_pipeline(pipeline);
+        render_pass.set_pipeline(&drawable.pipeline);
         render_pass.set_bind_group(0, &self.bind_group, &[]);
         render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
         render_pass.set_index_buffer(
