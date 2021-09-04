@@ -50,7 +50,7 @@ impl Drawable {
             device,
             &pipeline_layout,
             &shader,
-            "fragment",
+            "frag_model",
             wgpu::PolygonMode::Fill,
         )
     }
@@ -64,7 +64,7 @@ impl Drawable {
             device,
             &pipeline_layout,
             &shader,
-            "fragment",
+            "frag_model",
             wgpu::PolygonMode::Line,
         )
     }

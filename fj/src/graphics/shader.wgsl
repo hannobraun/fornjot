@@ -32,7 +32,7 @@ fn vertex(
 let pi: f32 = 3.14159265359;
 
 [[stage(fragment)]]
-fn fragment(in: VertexOutput) -> [[location(0)]] vec4<f32> {
+fn frag_model(in: VertexOutput) -> [[location(0)]] vec4<f32> {
     let light = vec3<f32>(0.0, 0.0, -1.0);
 
     let angle = acos(dot(light, -in.normal));
