@@ -57,14 +57,14 @@ impl Drawable {
         shader: &wgpu::ShaderModule,
         polygon_mode: wgpu::PolygonMode,
     ) -> Self {
-        Self {
-            pipeline: create_render_pipeline(
-                device,
-                pipeline_layout,
-                shader,
-                polygon_mode,
-            ),
-        }
+        let pipeline = create_render_pipeline(
+            device,
+            pipeline_layout,
+            shader,
+            polygon_mode,
+        );
+
+        Self { pipeline }
     }
 }
 
