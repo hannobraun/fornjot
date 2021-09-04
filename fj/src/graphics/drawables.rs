@@ -47,7 +47,7 @@ impl Drawables {
         }
     }
 
-    pub fn create_render_pipeline(
+    fn create_render_pipeline(
         device: &wgpu::Device,
         pipeline_layout: &wgpu::PipelineLayout,
         shader: &wgpu::ShaderModule,
