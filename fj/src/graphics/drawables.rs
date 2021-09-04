@@ -51,7 +51,7 @@ pub struct Drawable {
 }
 
 impl Drawable {
-    pub fn new(
+    fn new(
         device: &wgpu::Device,
         pipeline_layout: &wgpu::PipelineLayout,
         shader: &wgpu::ShaderModule,
