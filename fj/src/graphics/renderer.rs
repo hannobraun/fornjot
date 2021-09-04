@@ -9,7 +9,8 @@ use wgpu::util::DeviceExt as _;
 use winit::{dpi::PhysicalSize, window::Window};
 
 use super::{
-    mesh::Mesh, transform::Transform, uniforms::Uniforms, vertices::Vertex,
+    drawables::Drawables, mesh::Mesh, transform::Transform, uniforms::Uniforms,
+    vertices::Vertex,
 };
 
 const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth32Float;
@@ -30,8 +31,7 @@ pub struct Renderer {
 
     bind_group: wgpu::BindGroup,
 
-    render_pipeline_model: wgpu::RenderPipeline,
-    render_pipeline_mesh: wgpu::RenderPipeline,
+    drawables: Drawables,
 
     draw_model: bool,
     draw_mesh: bool,
@@ -184,8 +184,10 @@ impl Renderer {
 
             bind_group,
 
-            render_pipeline_model,
-            render_pipeline_mesh,
+            drawables: Drawables {
+                render_pipeline_model,
+                render_pipeline_mesh,
+            },
 
             draw_model: true,
             draw_mesh: false,
@@ -251,14 +253,14 @@ impl Renderer {
             self.do_render_pass(
                 &mut encoder,
                 &view,
-                &self.render_pipeline_model,
+                &self.drawables.render_pipeline_model,
             );
         }
         if self.draw_mesh {
             self.do_render_pass(
                 &mut encoder,
                 &view,
-                &self.render_pipeline_mesh,
+                &self.drawables.render_pipeline_mesh,
             );
         }
 

@@ -1,3 +1,4 @@
+mod drawables;
 mod mesh;
 mod renderer;
 mod transform;
