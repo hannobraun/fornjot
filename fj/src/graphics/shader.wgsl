@@ -8,7 +8,6 @@ struct VertexOutput {
 struct Uniforms {
     transform: mat4x4<f32>;
     transform_normals: mat4x4<f32>;
-    invert_color: bool;
 };
 
 [[group(0), binding(0)]]
@@ -41,20 +40,7 @@ fn fragment(in: VertexOutput) -> [[location(0)]] vec4<f32> {
 
     let f_normal = max(1.0 - f_angle, 0.0);
 
-    var in_color = vec4<f32>(0.0, 0.0, 0.0, 0.0);
-    if (uniforms.invert_color) {
-        in_color = vec4<f32>(
-            1.0 - in.color.r,
-            1.0 - in.color.g,
-            1.0 - in.color.b,
-            in.color.a,
-        );
-    }
-    else {
-        in_color = in.color;
-    }
-
-    let color = vec4<f32>(in_color.rgb * f_normal, in_color.a);
+    let color = vec4<f32>(in.color.rgb * f_normal, in.color.a);
 
     return color;
 }
