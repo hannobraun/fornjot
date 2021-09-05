@@ -1,22 +1,26 @@
-pub struct Shaders<'r> {
-    model: Shader<'r>,
-    mesh: Shader<'r>,
-}
+use std::borrow::Cow;
 
-impl<'r> Shaders<'r> {
-    pub fn new(module: &'r wgpu::ShaderModule) -> Self {
-        Self {
-            model: Shader::model(module),
-            mesh: Shader::mesh(module),
-        }
+pub struct Shaders(wgpu::ShaderModule);
+
+impl Shaders {
+    pub fn new(device: &wgpu::Device) -> Self {
+        let module =
+            device.create_shader_module(&wgpu::ShaderModuleDescriptor {
+                label: None,
+                source: wgpu::ShaderSource::Wgsl(Cow::Borrowed(include_str!(
+                    "shader.wgsl"
+                ))),
+            });
+
+        Self(module)
     }
 
     pub fn model(&self) -> Shader {
-        self.model
+        Shader::model(&self.0)
     }
 
     pub fn mesh(&self) -> Shader {
-        self.mesh
+        Shader::mesh(&self.0)
     }
 }
 

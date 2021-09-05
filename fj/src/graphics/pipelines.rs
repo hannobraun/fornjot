@@ -1,4 +1,4 @@
-use std::{borrow::Cow, mem::size_of};
+use std::mem::size_of;
 
 use super::{
     shaders::{Shader, Shaders},
@@ -24,15 +24,7 @@ impl Pipelines {
                 push_constant_ranges: &[],
             });
 
-        let shader =
-            device.create_shader_module(&wgpu::ShaderModuleDescriptor {
-                label: None,
-                source: wgpu::ShaderSource::Wgsl(Cow::Borrowed(include_str!(
-                    "shader.wgsl"
-                ))),
-            });
-
-        let shaders = Shaders::new(&shader);
+        let shaders = Shaders::new(device);
 
         let model = Pipeline::new(
             device,
