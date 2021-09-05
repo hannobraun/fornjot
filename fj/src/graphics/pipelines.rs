@@ -28,8 +28,18 @@ impl Pipelines {
                 ))),
             });
 
-        let model = Pipeline::model(device, &pipeline_layout, &shader);
-        let mesh = Pipeline::mesh(device, &pipeline_layout, &shader);
+        let model = Pipeline::new(
+            device,
+            &pipeline_layout,
+            Shader::model(&shader),
+            wgpu::PolygonMode::Fill,
+        );
+        let mesh = Pipeline::new(
+            device,
+            &pipeline_layout,
+            Shader::mesh(&shader),
+            wgpu::PolygonMode::Line,
+        );
 
         Self { model, mesh }
     }
@@ -39,32 +49,6 @@ impl Pipelines {
 pub struct Pipeline(pub wgpu::RenderPipeline);
 
 impl Pipeline {
-    fn model(
-        device: &wgpu::Device,
-        pipeline_layout: &wgpu::PipelineLayout,
-        shader: &wgpu::ShaderModule,
-    ) -> Self {
-        Self::new(
-            device,
-            &pipeline_layout,
-            Shader::model(&shader),
-            wgpu::PolygonMode::Fill,
-        )
-    }
-
-    fn mesh(
-        device: &wgpu::Device,
-        pipeline_layout: &wgpu::PipelineLayout,
-        shader: &wgpu::ShaderModule,
-    ) -> Self {
-        Self::new(
-            device,
-            &pipeline_layout,
-            Shader::mesh(&shader),
-            wgpu::PolygonMode::Line,
-        )
-    }
-
     fn new(
         device: &wgpu::Device,
         pipeline_layout: &wgpu::PipelineLayout,
