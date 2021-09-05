@@ -36,9 +36,7 @@ impl Drawables {
 }
 
 #[derive(Debug)]
-pub struct Pipeline {
-    pub pipeline: wgpu::RenderPipeline,
-}
+pub struct Pipeline(pub wgpu::RenderPipeline);
 
 impl Pipeline {
     fn model(
@@ -128,6 +126,6 @@ impl Pipeline {
                 }),
             });
 
-        Self { pipeline }
+        Self(pipeline)
     }
 }

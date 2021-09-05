@@ -306,7 +306,7 @@ impl Renderer {
                 ),
             });
 
-        render_pass.set_pipeline(&drawable.pipeline);
+        render_pass.set_pipeline(&drawable.0);
         render_pass.set_bind_group(0, &self.bind_group, &[]);
         render_pass.set_vertex_buffer(0, self.mesh.vertex_buffer.slice(..));
         render_pass.set_index_buffer(
