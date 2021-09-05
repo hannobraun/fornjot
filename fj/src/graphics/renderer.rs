@@ -197,6 +197,7 @@ impl Renderer {
             self.do_render_pass(
                 &mut encoder,
                 &view,
+                &self.bind_group,
                 Drawable {
                     geometry: &self.geometries.mesh,
                     pipeline: &self.pipelines.model,
@@ -207,6 +208,7 @@ impl Renderer {
             self.do_render_pass(
                 &mut encoder,
                 &view,
+                &self.bind_group,
                 Drawable {
                     geometry: &self.geometries.mesh,
                     pipeline: &self.pipelines.mesh,
@@ -287,6 +289,7 @@ impl Renderer {
         &self,
         encoder: &mut wgpu::CommandEncoder,
         view: &wgpu::TextureView,
+        bind_group: &wgpu::BindGroup,
         drawable: Drawable,
     ) {
         let mut render_pass =
@@ -313,7 +316,7 @@ impl Renderer {
             });
 
         render_pass.set_pipeline(&drawable.pipeline.0);
-        render_pass.set_bind_group(0, &self.bind_group, &[]);
+        render_pass.set_bind_group(0, bind_group, &[]);
         render_pass
             .set_vertex_buffer(0, drawable.geometry.vertex_buffer.slice(..));
         render_pass.set_index_buffer(
