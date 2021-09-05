@@ -9,6 +9,14 @@ pub struct Geometries {
     pub mesh: Geometry,
 }
 
+impl Geometries {
+    pub fn new(device: &wgpu::Device, mesh: &Mesh) -> Self {
+        Self {
+            mesh: Geometry::mesh(&device, mesh),
+        }
+    }
+}
+
 #[derive(Debug)]
 pub struct Geometry {
     pub vertex_buffer: wgpu::Buffer,

@@ -125,9 +125,7 @@ impl Renderer {
             label: None,
         });
 
-        let geometries = Geometries {
-            mesh: Geometry::mesh(&device, mesh),
-        };
+        let geometries = Geometries::new(&device, mesh);
         let pipelines = Pipelines::new(&device, &bind_group_layout);
 
         Ok(Self {
