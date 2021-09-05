@@ -9,7 +9,7 @@ use wgpu::util::DeviceExt as _;
 use winit::{dpi::PhysicalSize, window::Window};
 
 use super::{
-    drawables::{Drawable, Drawables},
+    drawables::{Drawables, Pipeline},
     geometry::Geometry,
     mesh::Mesh,
     transform::Transform,
@@ -281,7 +281,7 @@ impl Renderer {
         &self,
         encoder: &mut wgpu::CommandEncoder,
         view: &wgpu::TextureView,
-        drawable: &Drawable,
+        drawable: &Pipeline,
     ) {
         let mut render_pass =
             encoder.begin_render_pass(&wgpu::RenderPassDescriptor {

@@ -4,8 +4,8 @@ use super::{shader::Shader, vertex::Vertex, DEPTH_FORMAT};
 
 #[derive(Debug)]
 pub struct Drawables {
-    pub model: Drawable,
-    pub mesh: Drawable,
+    pub model: Pipeline,
+    pub mesh: Pipeline,
 }
 
 impl Drawables {
@@ -28,19 +28,19 @@ impl Drawables {
                 ))),
             });
 
-        let model = Drawable::model(device, &pipeline_layout, &shader);
-        let mesh = Drawable::mesh(device, &pipeline_layout, &shader);
+        let model = Pipeline::model(device, &pipeline_layout, &shader);
+        let mesh = Pipeline::mesh(device, &pipeline_layout, &shader);
 
         Self { model, mesh }
     }
 }
 
 #[derive(Debug)]
-pub struct Drawable {
+pub struct Pipeline {
     pub pipeline: wgpu::RenderPipeline,
 }
 
-impl Drawable {
+impl Pipeline {
     fn model(
         device: &wgpu::Device,
         pipeline_layout: &wgpu::PipelineLayout,
