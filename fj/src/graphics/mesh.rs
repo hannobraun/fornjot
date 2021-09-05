@@ -4,7 +4,7 @@ use nalgebra::Point;
 
 use crate::mesh;
 
-use super::vertices::{Index, Vertex};
+use super::vertex::{Index, Vertex};
 
 #[derive(Debug)]
 pub struct Mesh {
