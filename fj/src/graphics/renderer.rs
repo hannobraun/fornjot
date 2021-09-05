@@ -198,14 +198,26 @@ impl Renderer {
                 geometry: &self.geometries.mesh,
                 pipeline: &self.pipelines.model,
             };
-            self.do_render_pass(&mut encoder, &view, &self.bind_group, model);
+            self.do_render_pass(
+                &mut encoder,
+                &view,
+                &self.depth_view,
+                &self.bind_group,
+                model,
+            );
         }
         if self.draw_mesh {
             let mesh = Drawable {
                 geometry: &self.geometries.mesh,
                 pipeline: &self.pipelines.mesh,
             };
-            self.do_render_pass(&mut encoder, &view, &self.bind_group, mesh);
+            self.do_render_pass(
+                &mut encoder,
+                &view,
+                &self.depth_view,
+                &self.bind_group,
+                mesh,
+            );
         }
 
         // Workaround for gfx-rs/wgpu#1797:
@@ -281,6 +293,7 @@ impl Renderer {
         &self,
         encoder: &mut wgpu::CommandEncoder,
         color_view: &wgpu::TextureView,
+        depth_view: &wgpu::TextureView,
         bind_group: &wgpu::BindGroup,
         drawable: Drawable,
     ) {
@@ -297,7 +310,7 @@ impl Renderer {
                 }],
                 depth_stencil_attachment: Some(
                     wgpu::RenderPassDepthStencilAttachment {
-                        view: &self.depth_view,
+                        view: depth_view,
                         depth_ops: Some(wgpu::Operations {
                             load: wgpu::LoadOp::Load,
                             store: true,
