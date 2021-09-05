@@ -1,7 +1,7 @@
 // TASK: Implement a way to display the grid that is used to sample the
 //       geometry.
 
-use std::{convert::TryInto, io, mem::size_of};
+use std::{io, mem::size_of};
 
 use thiserror::Error;
 use tracing::debug;
@@ -94,27 +94,7 @@ impl Renderer {
                 usage: wgpu::BufferUsages::UNIFORM
                     | wgpu::BufferUsages::COPY_DST,
             });
-        let mesh = Geometry {
-            vertex_buffer: device.create_buffer_init(
-                &wgpu::util::BufferInitDescriptor {
-                    label: None,
-                    contents: bytemuck::cast_slice(mesh.vertices()),
-                    usage: wgpu::BufferUsages::VERTEX,
-                },
-            ),
-            index_buffer: device.create_buffer_init(
-                &wgpu::util::BufferInitDescriptor {
-                    label: None,
-                    contents: bytemuck::cast_slice(mesh.indices()),
-                    usage: wgpu::BufferUsages::INDEX,
-                },
-            ),
-            num_indices: mesh
-                .indices()
-                .len()
-                .try_into()
-                .expect("`usize` couldn't be cast to `u32`"),
-        };
+        let mesh = Geometry::mesh(&device, &mesh);
 
         let bind_group_layout =
             device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
