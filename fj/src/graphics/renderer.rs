@@ -32,7 +32,7 @@ pub struct Renderer {
 
     bind_group: wgpu::BindGroup,
 
-    drawables: Pipelines,
+    pipelines: Pipelines,
 
     draw_model: bool,
     draw_mesh: bool,
@@ -129,7 +129,7 @@ impl Renderer {
 
         let depth_view = Self::create_depth_buffer(&device, &surface_config);
 
-        let drawables = Pipelines::new(&device, &bind_group_layout);
+        let pipelines = Pipelines::new(&device, &bind_group_layout);
 
         Ok(Self {
             surface,
@@ -145,7 +145,7 @@ impl Renderer {
 
             bind_group,
 
-            drawables,
+            pipelines,
 
             draw_model: true,
             draw_mesh: false,
@@ -202,10 +202,10 @@ impl Renderer {
         self.clear_views(&mut encoder, &view);
 
         if self.draw_model {
-            self.do_render_pass(&mut encoder, &view, &self.drawables.model);
+            self.do_render_pass(&mut encoder, &view, &self.pipelines.model);
         }
         if self.draw_mesh {
-            self.do_render_pass(&mut encoder, &view, &self.drawables.mesh);
+            self.do_render_pass(&mut encoder, &view, &self.pipelines.mesh);
         }
 
         // Workaround for gfx-rs/wgpu#1797:
