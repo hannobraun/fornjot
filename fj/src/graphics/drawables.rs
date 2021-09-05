@@ -1,8 +1,20 @@
-use super::{geometry::Geometry, pipelines::Pipeline};
+use super::{
+    geometry::{Geometries, Geometry},
+    pipelines::{Pipeline, Pipelines},
+};
 
 pub struct Drawables<'r> {
     pub model: Drawable<'r>,
     pub mesh: Drawable<'r>,
+}
+
+impl<'r> Drawables<'r> {
+    pub fn new(geometries: &'r Geometries, pipelines: &'r Pipelines) -> Self {
+        Self {
+            model: Drawable::new(&geometries.mesh, &pipelines.model),
+            mesh: Drawable::new(&geometries.mesh, &pipelines.mesh),
+        }
+    }
 }
 
 pub struct Drawable<'r> {

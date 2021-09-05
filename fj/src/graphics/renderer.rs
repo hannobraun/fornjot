@@ -9,12 +9,8 @@ use wgpu::util::DeviceExt as _;
 use winit::{dpi::PhysicalSize, window::Window};
 
 use super::{
-    drawables::{Drawable, Drawables},
-    geometry::Geometries,
-    mesh::Mesh,
-    pipelines::Pipelines,
-    transform::Transform,
-    uniforms::Uniforms,
+    drawables::Drawables, geometry::Geometries, mesh::Mesh,
+    pipelines::Pipelines, transform::Transform, uniforms::Uniforms,
     DEPTH_FORMAT,
 };
 
@@ -197,10 +193,7 @@ impl Renderer {
 
         self.clear_views(&mut encoder, &view);
 
-        let drawables = Drawables {
-            model: Drawable::new(&self.geometries.mesh, &self.pipelines.model),
-            mesh: Drawable::new(&self.geometries.mesh, &self.pipelines.mesh),
-        };
+        let drawables = Drawables::new(&self.geometries, &self.pipelines);
 
         if self.draw_model {
             drawables.model.draw(
