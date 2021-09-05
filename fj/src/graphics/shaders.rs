@@ -1,6 +1,6 @@
 pub struct Shaders<'r> {
-    pub model: Shader<'r>,
-    pub mesh: Shader<'r>,
+    model: Shader<'r>,
+    mesh: Shader<'r>,
 }
 
 impl<'r> Shaders<'r> {
