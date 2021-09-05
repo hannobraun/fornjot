@@ -4,10 +4,10 @@ pub struct Shaders<'r> {
 }
 
 impl<'r> Shaders<'r> {
-    pub fn new(shader: &'r wgpu::ShaderModule) -> Self {
+    pub fn new(module: &'r wgpu::ShaderModule) -> Self {
         Self {
-            model: Shader::model(shader),
-            mesh: Shader::mesh(shader),
+            model: Shader::model(module),
+            mesh: Shader::mesh(module),
         }
     }
 }
