@@ -3,7 +3,7 @@ mod geometries;
 mod mesh;
 mod pipelines;
 mod renderer;
-mod shader;
+mod shaders;
 mod transform;
 mod uniforms;
 mod vertex;

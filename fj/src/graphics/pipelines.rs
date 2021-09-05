@@ -1,7 +1,7 @@
 use std::{borrow::Cow, mem::size_of};
 
 use super::{
-    shader::{Shader, Shaders},
+    shaders::{Shader, Shaders},
     vertex::Vertex,
     DEPTH_FORMAT,
 };
