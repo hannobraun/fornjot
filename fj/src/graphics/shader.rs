@@ -1,3 +1,8 @@
+pub struct Shaders<'r> {
+    pub model: Shader<'r>,
+    pub mesh: Shader<'r>,
+}
+
 pub struct Shader<'r> {
     pub module: &'r wgpu::ShaderModule,
     pub frag_entry: &'static str,

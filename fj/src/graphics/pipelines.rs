@@ -1,6 +1,10 @@
 use std::{borrow::Cow, mem::size_of};
 
-use super::{shader::Shader, vertex::Vertex, DEPTH_FORMAT};
+use super::{
+    shader::{Shader, Shaders},
+    vertex::Vertex,
+    DEPTH_FORMAT,
+};
 
 #[derive(Debug)]
 pub struct Pipelines {
@@ -28,16 +32,21 @@ impl Pipelines {
                 ))),
             });
 
+        let shaders = Shaders {
+            model: Shader::model(&shader),
+            mesh: Shader::mesh(&shader),
+        };
+
         let model = Pipeline::new(
             device,
             &pipeline_layout,
-            Shader::model(&shader),
+            shaders.model,
             wgpu::PolygonMode::Fill,
         );
         let mesh = Pipeline::new(
             device,
             &pipeline_layout,
-            Shader::mesh(&shader),
+            shaders.mesh,
             wgpu::PolygonMode::Line,
         );
 
