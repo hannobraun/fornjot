@@ -5,7 +5,7 @@ pub struct Drawable<'r> {
     pub pipeline: &'r Pipeline,
 }
 
-impl Drawable<'_> {
+impl<'r> Drawable<'r> {
     pub fn draw(
         &self,
         encoder: &mut wgpu::CommandEncoder,
