@@ -1,5 +1,10 @@
 use super::{geometry::Geometry, pipelines::Pipeline};
 
+pub struct Drawables<'r> {
+    pub model: Drawable<'r>,
+    pub mesh: Drawable<'r>,
+}
+
 pub struct Drawable<'r> {
     pub geometry: &'r Geometry,
     pub pipeline: &'r Pipeline,
