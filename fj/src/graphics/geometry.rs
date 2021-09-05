@@ -21,7 +21,7 @@ impl Geometry {
         vertices: &[Vertex],
         indices: &[u32],
     ) -> Self {
-        Geometry {
+        Self {
             vertex_buffer: device.create_buffer_init(
                 &wgpu::util::BufferInitDescriptor {
                     label: None,
