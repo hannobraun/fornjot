@@ -6,7 +6,7 @@ pub struct Drawable<'r> {
 }
 
 impl Drawable<'_> {
-    pub fn do_render_pass(
+    pub fn draw(
         &self,
         encoder: &mut wgpu::CommandEncoder,
         color_view: &wgpu::TextureView,

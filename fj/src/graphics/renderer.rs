@@ -198,7 +198,7 @@ impl Renderer {
                 geometry: &self.geometries.mesh,
                 pipeline: &self.pipelines.model,
             };
-            model.do_render_pass(
+            model.draw(
                 &mut encoder,
                 &view,
                 &self.depth_view,
@@ -210,7 +210,7 @@ impl Renderer {
                 geometry: &self.geometries.mesh,
                 pipeline: &self.pipelines.mesh,
             };
-            mesh.do_render_pass(
+            mesh.draw(
                 &mut encoder,
                 &view,
                 &self.depth_view,
