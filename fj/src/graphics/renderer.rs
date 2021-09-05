@@ -10,6 +10,7 @@ use winit::{dpi::PhysicalSize, window::Window};
 
 use super::{
     drawables::{Drawable, Drawables},
+    geometry::Geometry,
     mesh::Mesh,
     transform::Transform,
     uniforms::Uniforms,
@@ -25,8 +26,7 @@ pub struct Renderer {
     surface_config: wgpu::SurfaceConfiguration,
 
     uniform_buffer: wgpu::Buffer,
-    vertex_buffer: wgpu::Buffer,
-    index_buffer: wgpu::Buffer,
+    mesh: Geometry,
 
     depth_view: wgpu::TextureView,
 
@@ -37,8 +37,6 @@ pub struct Renderer {
     draw_model: bool,
     draw_mesh: bool,
     draw_grid: bool,
-
-    num_indices: u32,
 }
 
 impl Renderer {
@@ -96,18 +94,27 @@ impl Renderer {
                 usage: wgpu::BufferUsages::UNIFORM
                     | wgpu::BufferUsages::COPY_DST,
             });
-        let vertex_buffer =
-            device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-                label: None,
-                contents: bytemuck::cast_slice(mesh.vertices()),
-                usage: wgpu::BufferUsages::VERTEX,
-            });
-        let index_buffer =
-            device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-                label: None,
-                contents: bytemuck::cast_slice(mesh.indices()),
-                usage: wgpu::BufferUsages::INDEX,
-            });
+        let mesh = Geometry {
+            vertex_buffer: device.create_buffer_init(
+                &wgpu::util::BufferInitDescriptor {
+                    label: None,
+                    contents: bytemuck::cast_slice(mesh.vertices()),
+                    usage: wgpu::BufferUsages::VERTEX,
+                },
+            ),
+            index_buffer: device.create_buffer_init(
+                &wgpu::util::BufferInitDescriptor {
+                    label: None,
+                    contents: bytemuck::cast_slice(mesh.indices()),
+                    usage: wgpu::BufferUsages::INDEX,
+                },
+            ),
+            num_indices: mesh
+                .indices()
+                .len()
+                .try_into()
+                .expect("`usize` couldn't be cast to `u32`"),
+        };
 
         let bind_group_layout =
             device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
@@ -152,8 +159,7 @@ impl Renderer {
             surface_config,
 
             uniform_buffer,
-            vertex_buffer,
-            index_buffer,
+            mesh,
 
             depth_view,
 
@@ -164,12 +170,6 @@ impl Renderer {
             draw_model: true,
             draw_mesh: false,
             draw_grid: false,
-
-            num_indices: mesh
-                .indices()
-                .len()
-                .try_into()
-                .expect("`usize` couldn't be cast to `u32`"),
         })
     }
 
@@ -328,13 +328,13 @@ impl Renderer {
 
         render_pass.set_pipeline(&drawable.pipeline);
         render_pass.set_bind_group(0, &self.bind_group, &[]);
-        render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
+        render_pass.set_vertex_buffer(0, self.mesh.vertex_buffer.slice(..));
         render_pass.set_index_buffer(
-            self.index_buffer.slice(..),
+            self.mesh.index_buffer.slice(..),
             wgpu::IndexFormat::Uint32,
         );
 
-        render_pass.draw_indexed(0..self.num_indices, 0, 0..1);
+        render_pass.draw_indexed(0..self.mesh.num_indices, 0, 0..1);
     }
 }
 

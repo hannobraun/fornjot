@@ -1,4 +1,5 @@
 mod drawables;
+mod geometry;
 mod mesh;
 mod renderer;
 mod shader;
