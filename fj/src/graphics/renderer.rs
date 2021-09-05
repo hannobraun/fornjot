@@ -40,7 +40,7 @@ pub struct Renderer {
 }
 
 impl Renderer {
-    pub async fn new(window: &Window, mesh: Mesh) -> Result<Self, InitError> {
+    pub async fn new(window: &Window, mesh: &Mesh) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::VULKAN);
 
         // This is sound, as `window` is an object to create a surface upon.
@@ -94,7 +94,7 @@ impl Renderer {
                 usage: wgpu::BufferUsages::UNIFORM
                     | wgpu::BufferUsages::COPY_DST,
             });
-        let mesh = Geometry::mesh(&device, &mesh);
+        let mesh = Geometry::mesh(&device, mesh);
 
         let bind_group_layout =
             device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
