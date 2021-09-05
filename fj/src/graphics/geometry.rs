@@ -5,6 +5,11 @@ use wgpu::util::DeviceExt;
 use super::{mesh::Mesh, vertex::Vertex};
 
 #[derive(Debug)]
+pub struct Geometries {
+    pub mesh: Geometry,
+}
+
+#[derive(Debug)]
 pub struct Geometry {
     pub vertex_buffer: wgpu::Buffer,
     pub index_buffer: wgpu::Buffer,

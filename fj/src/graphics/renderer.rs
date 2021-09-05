@@ -9,7 +9,7 @@ use wgpu::util::DeviceExt as _;
 use winit::{dpi::PhysicalSize, window::Window};
 
 use super::{
-    geometry::Geometry,
+    geometry::{Geometries, Geometry},
     mesh::Mesh,
     pipelines::{Pipeline, Pipelines},
     transform::Transform,
@@ -26,7 +26,7 @@ pub struct Renderer {
     surface_config: wgpu::SurfaceConfiguration,
 
     uniform_buffer: wgpu::Buffer,
-    mesh: Geometry,
+    geometries: Geometries,
 
     depth_view: wgpu::TextureView,
 
@@ -94,7 +94,9 @@ impl Renderer {
                 usage: wgpu::BufferUsages::UNIFORM
                     | wgpu::BufferUsages::COPY_DST,
             });
-        let mesh = Geometry::mesh(&device, mesh);
+        let geometries = Geometries {
+            mesh: Geometry::mesh(&device, mesh),
+        };
 
         let bind_group_layout =
             device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
@@ -139,7 +141,7 @@ impl Renderer {
             surface_config,
 
             uniform_buffer,
-            mesh,
+            geometries,
 
             depth_view,
 
@@ -308,13 +310,14 @@ impl Renderer {
 
         render_pass.set_pipeline(&pipeline.0);
         render_pass.set_bind_group(0, &self.bind_group, &[]);
-        render_pass.set_vertex_buffer(0, self.mesh.vertex_buffer.slice(..));
+        render_pass
+            .set_vertex_buffer(0, self.geometries.mesh.vertex_buffer.slice(..));
         render_pass.set_index_buffer(
-            self.mesh.index_buffer.slice(..),
+            self.geometries.mesh.index_buffer.slice(..),
             wgpu::IndexFormat::Uint32,
         );
 
-        render_pass.draw_indexed(0..self.mesh.num_indices, 0, 0..1);
+        render_pass.draw_indexed(0..self.geometries.mesh.num_indices, 0, 0..1);
     }
 }
 
