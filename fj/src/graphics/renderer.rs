@@ -164,7 +164,6 @@ impl Renderer {
         self.draw_mesh = !self.draw_mesh;
     }
 
-    // TASK: This doesn't currently do anything.
     pub fn toggle_grid(&mut self) {
         self.draw_grid = !self.draw_grid;
     }
@@ -210,6 +209,9 @@ impl Renderer {
                 &self.depth_view,
                 &self.bind_group,
             );
+        }
+        if self.draw_grid {
+            // TASK: Draw grid.
         }
 
         // Workaround for gfx-rs/wgpu#1797:
