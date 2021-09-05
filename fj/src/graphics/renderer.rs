@@ -85,6 +85,8 @@ impl Renderer {
         };
         surface.configure(&device, &surface_config);
 
+        let depth_view = Self::create_depth_buffer(&device, &surface_config);
+
         let uniform_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
@@ -92,10 +94,6 @@ impl Renderer {
                 usage: wgpu::BufferUsages::UNIFORM
                     | wgpu::BufferUsages::COPY_DST,
             });
-        let geometries = Geometries {
-            mesh: Geometry::mesh(&device, mesh),
-        };
-
         let bind_group_layout =
             device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
                 entries: &[wgpu::BindGroupLayoutEntry {
@@ -127,8 +125,9 @@ impl Renderer {
             label: None,
         });
 
-        let depth_view = Self::create_depth_buffer(&device, &surface_config);
-
+        let geometries = Geometries {
+            mesh: Geometry::mesh(&device, mesh),
+        };
         let pipelines = Pipelines::new(&device, &bind_group_layout);
 
         Ok(Self {
