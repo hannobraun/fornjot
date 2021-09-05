@@ -37,13 +37,13 @@ impl Pipelines {
         let model = Pipeline::new(
             device,
             &pipeline_layout,
-            shaders.model,
+            shaders.model(),
             wgpu::PolygonMode::Fill,
         );
         let mesh = Pipeline::new(
             device,
             &pipeline_layout,
-            shaders.mesh,
+            shaders.mesh(),
             wgpu::PolygonMode::Line,
         );
 

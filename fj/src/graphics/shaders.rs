@@ -10,6 +10,14 @@ impl<'r> Shaders<'r> {
             mesh: Shader::mesh(module),
         }
     }
+
+    pub fn model(&self) -> Shader {
+        self.model
+    }
+
+    pub fn mesh(&self) -> Shader {
+        self.mesh
+    }
 }
 
 #[derive(Clone, Copy)]
