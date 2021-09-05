@@ -24,14 +24,12 @@ pub struct Renderer {
     queue: wgpu::Queue,
 
     surface_config: wgpu::SurfaceConfiguration,
-
-    uniform_buffer: wgpu::Buffer,
-    geometries: Geometries,
-
     depth_view: wgpu::TextureView,
 
+    uniform_buffer: wgpu::Buffer,
     bind_group: wgpu::BindGroup,
 
+    geometries: Geometries,
     pipelines: Pipelines,
 
     draw_model: bool,
@@ -139,14 +137,12 @@ impl Renderer {
             queue,
 
             surface_config,
-
-            uniform_buffer,
-            geometries,
-
             depth_view,
 
+            uniform_buffer,
             bind_group,
 
+            geometries,
             pipelines,
 
             draw_model: true,
