@@ -1,3 +1,4 @@
+mod drawables;
 mod geometry;
 mod mesh;
 mod pipelines;
