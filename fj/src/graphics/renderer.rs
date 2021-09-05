@@ -9,7 +9,7 @@ use wgpu::util::DeviceExt as _;
 use winit::{dpi::PhysicalSize, window::Window};
 
 use super::{
-    drawables::{Drawables, Pipeline},
+    drawables::{Pipeline, Pipelines},
     geometry::Geometry,
     mesh::Mesh,
     transform::Transform,
@@ -32,7 +32,7 @@ pub struct Renderer {
 
     bind_group: wgpu::BindGroup,
 
-    drawables: Drawables,
+    drawables: Pipelines,
 
     draw_model: bool,
     draw_mesh: bool,
@@ -129,7 +129,7 @@ impl Renderer {
 
         let depth_view = Self::create_depth_buffer(&device, &surface_config);
 
-        let drawables = Drawables::new(&device, &bind_group_layout);
+        let drawables = Pipelines::new(&device, &bind_group_layout);
 
         Ok(Self {
             surface,

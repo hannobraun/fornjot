@@ -3,12 +3,12 @@ use std::{borrow::Cow, mem::size_of};
 use super::{shader::Shader, vertex::Vertex, DEPTH_FORMAT};
 
 #[derive(Debug)]
-pub struct Drawables {
+pub struct Pipelines {
     pub model: Pipeline,
     pub mesh: Pipeline,
 }
 
-impl Drawables {
+impl Pipelines {
     pub fn new(
         device: &wgpu::Device,
         bind_group_layout: &wgpu::BindGroupLayout,
