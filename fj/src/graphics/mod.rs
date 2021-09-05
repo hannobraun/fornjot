@@ -1,6 +1,6 @@
-mod drawables;
 mod geometry;
 mod mesh;
+mod pipelines;
 mod renderer;
 mod shader;
 mod transform;
