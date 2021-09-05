@@ -204,10 +204,20 @@ impl Renderer {
         self.clear_views(&mut encoder, &view);
 
         if self.draw_model {
-            self.do_render_pass(&mut encoder, &view, &self.pipelines.model);
+            self.do_render_pass(
+                &mut encoder,
+                &view,
+                &self.geometries.mesh,
+                &self.pipelines.model,
+            );
         }
         if self.draw_mesh {
-            self.do_render_pass(&mut encoder, &view, &self.pipelines.mesh);
+            self.do_render_pass(
+                &mut encoder,
+                &view,
+                &self.geometries.mesh,
+                &self.pipelines.mesh,
+            );
         }
 
         // Workaround for gfx-rs/wgpu#1797:
@@ -283,6 +293,7 @@ impl Renderer {
         &self,
         encoder: &mut wgpu::CommandEncoder,
         view: &wgpu::TextureView,
+        geometry: &Geometry,
         pipeline: &Pipeline,
     ) {
         let mut render_pass =
@@ -310,14 +321,13 @@ impl Renderer {
 
         render_pass.set_pipeline(&pipeline.0);
         render_pass.set_bind_group(0, &self.bind_group, &[]);
-        render_pass
-            .set_vertex_buffer(0, self.geometries.mesh.vertex_buffer.slice(..));
+        render_pass.set_vertex_buffer(0, geometry.vertex_buffer.slice(..));
         render_pass.set_index_buffer(
-            self.geometries.mesh.index_buffer.slice(..),
+            geometry.index_buffer.slice(..),
             wgpu::IndexFormat::Uint32,
         );
 
-        render_pass.draw_indexed(0..self.geometries.mesh.num_indices, 0, 0..1);
+        render_pass.draw_indexed(0..geometry.num_indices, 0, 0..1);
     }
 }
 
