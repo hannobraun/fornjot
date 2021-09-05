@@ -26,20 +26,20 @@ impl Pipelines {
 
         let shaders = Shaders::new(device);
 
-        let model = Pipeline::new(
-            device,
-            &pipeline_layout,
-            shaders.model(),
-            wgpu::PolygonMode::Fill,
-        );
-        let mesh = Pipeline::new(
-            device,
-            &pipeline_layout,
-            shaders.mesh(),
-            wgpu::PolygonMode::Line,
-        );
-
-        Self { model, mesh }
+        Self {
+            model: Pipeline::new(
+                device,
+                &pipeline_layout,
+                shaders.model(),
+                wgpu::PolygonMode::Fill,
+            ),
+            mesh: Pipeline::new(
+                device,
+                &pipeline_layout,
+                shaders.mesh(),
+                wgpu::PolygonMode::Line,
+            ),
+        }
     }
 }
 
