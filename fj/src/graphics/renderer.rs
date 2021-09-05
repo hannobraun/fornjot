@@ -194,26 +194,18 @@ impl Renderer {
         self.clear_views(&mut encoder, &view);
 
         if self.draw_model {
-            self.do_render_pass(
-                &mut encoder,
-                &view,
-                &self.bind_group,
-                Drawable {
-                    geometry: &self.geometries.mesh,
-                    pipeline: &self.pipelines.model,
-                },
-            );
+            let model = Drawable {
+                geometry: &self.geometries.mesh,
+                pipeline: &self.pipelines.model,
+            };
+            self.do_render_pass(&mut encoder, &view, &self.bind_group, model);
         }
         if self.draw_mesh {
-            self.do_render_pass(
-                &mut encoder,
-                &view,
-                &self.bind_group,
-                Drawable {
-                    geometry: &self.geometries.mesh,
-                    pipeline: &self.pipelines.mesh,
-                },
-            );
+            let mesh = Drawable {
+                geometry: &self.geometries.mesh,
+                pipeline: &self.pipelines.mesh,
+            };
+            self.do_render_pass(&mut encoder, &view, &self.bind_group, mesh);
         }
 
         // Workaround for gfx-rs/wgpu#1797:
