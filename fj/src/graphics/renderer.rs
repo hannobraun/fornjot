@@ -198,24 +198,14 @@ impl Renderer {
                 geometry: &self.geometries.mesh,
                 pipeline: &self.pipelines.model,
             };
-            model.draw(
-                &mut encoder,
-                &view,
-                &self.depth_view,
-                &self.bind_group,
-            );
+            model.draw(&mut encoder, &view, &self.depth_view, &self.bind_group);
         }
         if self.draw_mesh {
             let mesh = Drawable {
                 geometry: &self.geometries.mesh,
                 pipeline: &self.pipelines.mesh,
             };
-            mesh.draw(
-                &mut encoder,
-                &view,
-                &self.depth_view,
-                &self.bind_group,
-            );
+            mesh.draw(&mut encoder, &view, &self.depth_view, &self.bind_group);
         }
 
         // Workaround for gfx-rs/wgpu#1797:
