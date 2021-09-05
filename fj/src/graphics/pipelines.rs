@@ -32,10 +32,7 @@ impl Pipelines {
                 ))),
             });
 
-        let shaders = Shaders {
-            model: Shader::model(&shader),
-            mesh: Shader::mesh(&shader),
-        };
+        let shaders = Shaders::new(&shader);
 
         let model = Pipeline::new(
             device,

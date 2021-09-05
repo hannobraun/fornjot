@@ -3,6 +3,15 @@ pub struct Shaders<'r> {
     pub mesh: Shader<'r>,
 }
 
+impl<'r> Shaders<'r> {
+    pub fn new(shader: &'r wgpu::ShaderModule) -> Self {
+        Self {
+            model: Shader::model(shader),
+            mesh: Shader::mesh(shader),
+        }
+    }
+}
+
 pub struct Shader<'r> {
     pub module: &'r wgpu::ShaderModule,
     pub frag_entry: &'static str,
