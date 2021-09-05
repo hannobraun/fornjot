@@ -12,7 +12,7 @@ pub struct Geometries {
 impl Geometries {
     pub fn new(device: &wgpu::Device, mesh: &Mesh) -> Self {
         Self {
-            mesh: Geometry::mesh(&device, mesh),
+            mesh: Geometry::new(device, mesh.vertices(), mesh.indices()),
         }
     }
 }
@@ -25,10 +25,6 @@ pub struct Geometry {
 }
 
 impl Geometry {
-    pub fn mesh(device: &wgpu::Device, mesh: &Mesh) -> Self {
-        Self::new(device, mesh.vertices(), mesh.indices())
-    }
-
     fn new(
         device: &wgpu::Device,
         vertices: &[Vertex],
