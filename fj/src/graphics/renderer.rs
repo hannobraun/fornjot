@@ -194,17 +194,13 @@ impl Renderer {
         self.clear_views(&mut encoder, &view);
 
         if self.draw_model {
-            let model = Drawable {
-                geometry: &self.geometries.mesh,
-                pipeline: &self.pipelines.model,
-            };
+            let model =
+                Drawable::new(&self.geometries.mesh, &self.pipelines.model);
             model.draw(&mut encoder, &view, &self.depth_view, &self.bind_group);
         }
         if self.draw_mesh {
-            let mesh = Drawable {
-                geometry: &self.geometries.mesh,
-                pipeline: &self.pipelines.mesh,
-            };
+            let mesh =
+                Drawable::new(&self.geometries.mesh, &self.pipelines.mesh);
             mesh.draw(&mut encoder, &view, &self.depth_view, &self.bind_group);
         }
 

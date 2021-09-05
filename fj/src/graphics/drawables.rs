@@ -6,6 +6,10 @@ pub struct Drawable<'r> {
 }
 
 impl<'r> Drawable<'r> {
+    pub fn new(geometry: &'r Geometry, pipeline: &'r Pipeline) -> Self {
+        Self { geometry, pipeline }
+    }
+
     pub fn draw(
         &self,
         encoder: &mut wgpu::CommandEncoder,
