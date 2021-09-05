@@ -1,5 +1,5 @@
 use super::{
-    geometry::{Geometries, Geometry},
+    geometries::{Geometries, Geometry},
     pipelines::{Pipeline, Pipelines},
 };
 

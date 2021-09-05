@@ -9,7 +9,7 @@ use wgpu::util::DeviceExt as _;
 use winit::{dpi::PhysicalSize, window::Window};
 
 use super::{
-    drawables::Drawables, geometry::Geometries, mesh::Mesh,
+    drawables::Drawables, geometries::Geometries, mesh::Mesh,
     pipelines::Pipelines, transform::Transform, uniforms::Uniforms,
     DEPTH_FORMAT,
 };

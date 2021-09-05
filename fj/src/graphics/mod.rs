@@ -1,5 +1,5 @@
 mod drawables;
-mod geometry;
+mod geometries;
 mod mesh;
 mod pipelines;
 mod renderer;
