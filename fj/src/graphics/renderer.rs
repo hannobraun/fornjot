@@ -280,7 +280,7 @@ impl Renderer {
     fn do_render_pass(
         &self,
         encoder: &mut wgpu::CommandEncoder,
-        view: &wgpu::TextureView,
+        color_view: &wgpu::TextureView,
         bind_group: &wgpu::BindGroup,
         drawable: Drawable,
     ) {
@@ -288,7 +288,7 @@ impl Renderer {
             encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                 label: None,
                 color_attachments: &[wgpu::RenderPassColorAttachment {
-                    view,
+                    view: color_view,
                     resolve_target: None,
                     ops: wgpu::Operations {
                         load: wgpu::LoadOp::Load,
