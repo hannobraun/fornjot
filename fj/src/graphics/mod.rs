@@ -6,13 +6,11 @@ mod renderer;
 mod shaders;
 mod transform;
 mod uniforms;
-mod vertex;
 
 pub use self::{
-    mesh::Mesh,
+    mesh::{Index, Mesh, Vertex},
     renderer::{DrawError, Renderer},
     transform::Transform,
-    vertex::{Index, Vertex},
 };
 
 const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth32Float;

@@ -1,10 +1,9 @@
+use bytemuck::{Pod, Zeroable};
 use decorum::R32;
 use indexmap::IndexMap;
 use nalgebra::Point;
 
 use crate::mesh;
-
-use super::vertex::{Index, Vertex};
 
 #[derive(Debug)]
 pub struct Mesh {
@@ -95,3 +94,15 @@ impl From<mesh::Mesh> for Mesh {
         Self { vertices, indices }
     }
 }
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct Vertex {
+    pub position: [f32; 3],
+    pub normal: [f32; 3],
+    pub color: [f32; 4],
+}
+
+unsafe impl Zeroable for Vertex {}
+unsafe impl Pod for Vertex {}
+
+pub type Index = u32;
