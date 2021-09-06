@@ -6,12 +6,12 @@ use nalgebra::Point;
 use crate::mesh;
 
 #[derive(Debug)]
-pub struct Mesh {
+pub struct Vertices {
     vertices: Vec<Vertex>,
     indices: Vec<Index>,
 }
 
-impl Mesh {
+impl Vertices {
     pub fn vertices(&self) -> &[Vertex] {
         self.vertices.as_slice()
     }
@@ -21,7 +21,7 @@ impl Mesh {
     }
 }
 
-impl From<mesh::Mesh> for Mesh {
+impl From<mesh::Mesh> for Vertices {
     fn from(mesh: mesh::Mesh) -> Self {
         let vertices: Vec<_> = mesh
             .vertices()

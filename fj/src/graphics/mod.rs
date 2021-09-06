@@ -8,7 +8,7 @@ mod transform;
 mod uniforms;
 
 pub use self::{
-    mesh::{Index, Mesh, Vertex},
+    mesh::{Index, Vertex, Vertices},
     renderer::{DrawError, Renderer},
     transform::Transform,
 };

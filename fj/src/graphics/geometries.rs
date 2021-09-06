@@ -2,7 +2,7 @@ use std::convert::TryInto;
 
 use wgpu::util::DeviceExt;
 
-use super::{mesh::Mesh, Vertex};
+use super::{mesh::Vertices, Vertex};
 
 #[derive(Debug)]
 pub struct Geometries {
@@ -10,7 +10,7 @@ pub struct Geometries {
 }
 
 impl Geometries {
-    pub fn new(device: &wgpu::Device, mesh: &Mesh) -> Self {
+    pub fn new(device: &wgpu::Device, mesh: &Vertices) -> Self {
         Self {
             mesh: Geometry::new(device, mesh.vertices(), mesh.indices()),
         }

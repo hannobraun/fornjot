@@ -9,7 +9,7 @@ use wgpu::util::DeviceExt as _;
 use winit::{dpi::PhysicalSize, window::Window};
 
 use super::{
-    drawables::Drawables, geometries::Geometries, mesh::Mesh,
+    drawables::Drawables, geometries::Geometries, mesh::Vertices,
     pipelines::Pipelines, transform::Transform, uniforms::Uniforms,
     DEPTH_FORMAT,
 };
@@ -35,7 +35,10 @@ pub struct Renderer {
 }
 
 impl Renderer {
-    pub async fn new(window: &Window, mesh: &Mesh) -> Result<Self, InitError> {
+    pub async fn new(
+        window: &Window,
+        mesh: &Vertices,
+    ) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::VULKAN);
 
         // This is sound, as `window` is an object to create a surface upon.
