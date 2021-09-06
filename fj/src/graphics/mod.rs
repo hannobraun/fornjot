@@ -1,16 +1,16 @@
 mod drawables;
 mod geometries;
-mod mesh;
 mod pipelines;
 mod renderer;
 mod shaders;
 mod transform;
 mod uniforms;
+mod vertices;
 
 pub use self::{
-    mesh::{Index, Vertex, Vertices},
     renderer::{DrawError, Renderer},
     transform::Transform,
+    vertices::{Index, Vertex, Vertices},
 };
 
 const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth32Float;
