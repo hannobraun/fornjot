@@ -15,7 +15,7 @@ pub struct Cell {
 }
 
 impl Cell {
-    /// Iterate over the vertices of the cell
+    /// Iterate over the indices of the cell's vertices
     pub fn vertices(&self) -> impl Iterator<Item = Index> + '_ {
         let vertices = [
             [0, 0, 0],
