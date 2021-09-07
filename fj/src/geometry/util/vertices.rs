@@ -3,11 +3,11 @@ use std::{collections::HashMap, convert::TryInto};
 use decorum::R32;
 use nalgebra::Point;
 
-use crate::graphics;
+use crate::graphics::Index;
 
 #[derive(Default)]
 pub struct Vertices {
-    indices_by_vertex: HashMap<Vertex, graphics::Index>,
+    indices_by_vertex: HashMap<Vertex, Index>,
     vertices: Vec<Vertex>,
 }
 
@@ -23,10 +23,7 @@ impl Vertices {
             .map(|v| v.map(|coord| coord.into()))
     }
 
-    pub fn index_for_vertex(
-        &mut self,
-        vertex: Point<f32, 3>,
-    ) -> graphics::Index {
+    pub fn index_for_vertex(&mut self, vertex: Point<f32, 3>) -> Index {
         let vertex = vertex.map(|coord| coord.into());
 
         let vertices = &mut self.vertices;
