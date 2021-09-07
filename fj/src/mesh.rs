@@ -1,12 +1,12 @@
 use nalgebra::Point;
 
-use crate::{geometry::util, graphics};
+use crate::{geometry::util, graphics::Index};
 
 /// A triangle mesh
 #[derive(Default)]
 pub struct Mesh {
     vertices: util::Vertices,
-    triangles: Vec<[graphics::Index; 3]>,
+    triangles: Vec<[Index; 3]>,
 }
 
 impl Mesh {
@@ -52,12 +52,12 @@ impl Mesh {
     }
 
     /// Iterate over all indices
-    pub fn indices(&self) -> impl Iterator<Item = graphics::Index> + '_ {
+    pub fn indices(&self) -> impl Iterator<Item = Index> + '_ {
         self.triangles.iter().flatten().copied()
     }
 
     /// Iterate over all triangles
-    pub fn triangles(&self) -> impl Iterator<Item = [graphics::Index; 3]> + '_ {
+    pub fn triangles(&self) -> impl Iterator<Item = [Index; 3]> + '_ {
         self.triangles.iter().copied()
     }
 }
