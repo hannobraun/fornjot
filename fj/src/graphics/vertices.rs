@@ -2,7 +2,7 @@ use bytemuck::{Pod, Zeroable};
 use decorum::R32;
 use indexmap::IndexMap;
 
-use crate::{mesh, types::Index};
+use crate::{geometry::isosurface::grid, mesh, types::Index, util};
 
 #[derive(Debug)]
 pub struct Vertices {
@@ -17,6 +17,38 @@ impl Vertices {
 
     pub fn indices(&self) -> &[Index] {
         self.indices.as_slice()
+    }
+}
+
+impl From<grid::Descriptor> for Vertices {
+    fn from(grid: grid::Descriptor) -> Self {
+        let mut vertices = util::Vertices::new();
+        let mut indices = Vec::new();
+
+        for cell in grid.cells() {
+            for (a, b) in cell.edges() {
+                let a = a.to_position(grid.aabb.min, grid.resolution);
+                let b = b.to_position(grid.aabb.min, grid.resolution);
+
+                let a = vertices.index_for_vertex(a);
+                let b = vertices.index_for_vertex(b);
+
+                indices.push(a);
+                indices.push(b);
+            }
+        }
+
+        let vertices = vertices
+            .iter()
+            .map(|vertex| Vertex {
+                position: vertex.into(),
+                normal: [0.0, 0.0, 0.0], // normal not used for grid
+                // TASK: Set color according to distance value at this position.
+                color: [1.0, 1.0, 1.0, 1.0],
+            })
+            .collect();
+
+        Self { vertices, indices }
     }
 }
 
