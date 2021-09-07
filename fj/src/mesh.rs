@@ -39,10 +39,6 @@ impl Mesh {
         assert_ne!(v0, v2);
         assert_ne!(v1, v2);
 
-        let v0 = v0.map(|coord| coord.into());
-        let v1 = v1.map(|coord| coord.into());
-        let v2 = v2.map(|coord| coord.into());
-
         let i0 = self.vertices.index_for_vertex(v0);
         let i1 = self.vertices.index_for_vertex(v1);
         let i2 = self.vertices.index_for_vertex(v2);

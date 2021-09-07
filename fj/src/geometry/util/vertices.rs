@@ -23,7 +23,12 @@ impl Vertices {
             .map(|v| v.map(|coord| coord.into()))
     }
 
-    pub fn index_for_vertex(&mut self, vertex: Vertex) -> graphics::Index {
+    pub fn index_for_vertex(
+        &mut self,
+        vertex: Point<f32, 3>,
+    ) -> graphics::Index {
+        let vertex = vertex.map(|coord| coord.into());
+
         let vertices = &mut self.vertices;
 
         let index = self.indices_by_vertex.entry(vertex).or_insert_with(|| {
