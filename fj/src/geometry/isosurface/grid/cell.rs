@@ -28,10 +28,8 @@ impl Cell {
             [1, 1, 1],
         ];
 
-        array::IntoIter::new(vertices).map(move |cell_index| {
-            let grid_index = self.min_index + cell_index;
-            grid_index
-        })
+        array::IntoIter::new(vertices)
+            .map(move |cell_index| self.min_index + cell_index)
     }
 
     /// Iterate over the edges of the cell
