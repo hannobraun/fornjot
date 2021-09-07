@@ -1,6 +1,6 @@
 use nalgebra::Point;
 
-use crate::{geometry::util, types::Index};
+use crate::{types::Index, util};
 
 /// A triangle mesh
 #[derive(Default)]

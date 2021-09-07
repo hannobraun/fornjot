@@ -15,6 +15,7 @@ mod graphics;
 mod input;
 mod run;
 mod types;
+mod util;
 
 pub use self::{
     geometry::{

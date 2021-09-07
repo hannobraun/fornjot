@@ -2,7 +2,7 @@ use std::fmt;
 
 use nalgebra::{Point, SVector};
 
-use crate::geometry::util::DebugPoint;
+use crate::util::DebugPoint;
 
 /// An axis-aligned bounding box
 #[derive(Clone, Copy, PartialEq)]
