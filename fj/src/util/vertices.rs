@@ -7,8 +7,8 @@ use crate::types::Index;
 
 #[derive(Default)]
 pub struct Vertices {
-    indices_by_vertex: HashMap<Vertex, Index>,
     vertices: Vec<Vertex>,
+    indices_by_vertex: HashMap<Vertex, Index>,
 }
 
 impl Vertices {
