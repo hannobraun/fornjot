@@ -1,6 +1,6 @@
 use std::array;
 
-use nalgebra::{Point, SVector};
+use nalgebra::Point;
 
 use super::Index;
 
@@ -16,10 +16,7 @@ pub struct Cell {
 
 impl Cell {
     /// Iterate over the vertices of the cell
-    pub fn vertices(
-        &self,
-        resolution: f32,
-    ) -> impl Iterator<Item = (Index, Point<f32, 3>)> + '_ {
+    pub fn vertices(&self) -> impl Iterator<Item = Index> + '_ {
         let vertices = [
             [0, 0, 0],
             [0, 0, 1],
@@ -33,10 +30,7 @@ impl Cell {
 
         array::IntoIter::new(vertices).map(move |cell_index| {
             let grid_index = self.min_index + cell_index;
-            let grid_vertex = self.min_position
-                + SVector::from(cell_index).map(|c| c as f32 * resolution);
-
-            (grid_index, grid_vertex)
+            grid_index
         })
     }
 

@@ -43,7 +43,7 @@ impl Grid {
         let surface_vertices = descriptor
             .cells()
             .filter_map(|cell| {
-                for (index, _) in cell.vertices(descriptor.resolution) {
+                for index in cell.vertices() {
                     let vertex = index.to_position(
                         descriptor.aabb.min,
                         descriptor.resolution,
