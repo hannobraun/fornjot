@@ -1,7 +1,6 @@
 use bytemuck::{Pod, Zeroable};
 use decorum::R32;
 use indexmap::IndexMap;
-use nalgebra::Point;
 
 use crate::mesh;
 
@@ -23,16 +22,7 @@ impl Vertices {
 
 impl From<mesh::Mesh> for Vertices {
     fn from(mesh: mesh::Mesh) -> Self {
-        let vertices: Vec<_> = mesh
-            .vertices()
-            .map(|vertex| {
-                Point::from([
-                    vertex[0].into_inner(),
-                    vertex[1].into_inner(),
-                    vertex[2].into_inner(),
-                ])
-            })
-            .collect();
+        let vertices: Vec<_> = mesh.vertices().collect();
 
         let mut indices_by_vertex_with_normal = IndexMap::new();
         let mut indices = Vec::new();

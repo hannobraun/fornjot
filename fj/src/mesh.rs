@@ -58,8 +58,11 @@ impl Mesh {
     }
 
     /// Iterate over all vertices
-    pub fn vertices(&self) -> impl Iterator<Item = Vertex> + '_ {
-        self.vertices.iter().copied()
+    pub fn vertices(&self) -> impl Iterator<Item = Point<f32, 3>> + '_ {
+        self.vertices
+            .iter()
+            .copied()
+            .map(|v| v.map(|coord| coord.into()))
     }
 
     /// Iterate over all indices
