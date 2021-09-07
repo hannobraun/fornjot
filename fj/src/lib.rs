@@ -14,14 +14,16 @@ mod args;
 mod graphics;
 mod input;
 mod run;
+mod types;
 
 pub use self::{
     geometry::{
         operations::{Difference, Sweep},
         shapes::Cylinder,
     },
-    graphics::{Index, Vertex},
+    graphics::Vertex,
     mesh::Mesh,
     model::Model,
     run::{run_mesh, run_model},
+    types::Index,
 };

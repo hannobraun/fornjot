@@ -2,7 +2,7 @@ use bytemuck::{Pod, Zeroable};
 use decorum::R32;
 use indexmap::IndexMap;
 
-use crate::mesh;
+use crate::{mesh, types::Index};
 
 #[derive(Debug)]
 pub struct Vertices {
@@ -94,5 +94,3 @@ pub struct Vertex {
 
 unsafe impl Zeroable for Vertex {}
 unsafe impl Pod for Vertex {}
-
-pub type Index = u32;

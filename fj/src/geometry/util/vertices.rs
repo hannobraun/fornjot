@@ -3,7 +3,7 @@ use std::{collections::HashMap, convert::TryInto};
 use decorum::R32;
 use nalgebra::Point;
 
-use crate::graphics::Index;
+use crate::types::Index;
 
 #[derive(Default)]
 pub struct Vertices {

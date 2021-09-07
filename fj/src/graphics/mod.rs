@@ -10,7 +10,7 @@ mod vertices;
 pub use self::{
     renderer::{DrawError, Renderer},
     transform::Transform,
-    vertices::{Index, Vertex, Vertices},
+    vertices::{Vertex, Vertices},
 };
 
 const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth32Float;
