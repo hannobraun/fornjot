@@ -1,16 +1,11 @@
-use std::{collections::HashMap, convert::TryInto};
-
-use decorum::R32;
 use nalgebra::Point;
 
-use crate::graphics;
+use crate::{geometry::util, graphics};
 
 /// A triangle mesh
 #[derive(Default)]
 pub struct Mesh {
-    indices_by_vertex: HashMap<Vertex, graphics::Index>,
-
-    vertices: Vec<Vertex>,
+    vertices: util::Vertices,
     triangles: Vec<[graphics::Index; 3]>,
 }
 
@@ -18,9 +13,7 @@ impl Mesh {
     /// Create an empty triangle mesh
     pub fn new() -> Self {
         Self {
-            indices_by_vertex: HashMap::new(),
-
-            vertices: Vec::new(),
+            vertices: util::Vertices::new(),
             triangles: Vec::new(),
         }
     }
@@ -50,19 +43,16 @@ impl Mesh {
         let v1 = v1.map(|coord| coord.into());
         let v2 = v2.map(|coord| coord.into());
 
-        let i0 = self.index_for_vertex(v0);
-        let i1 = self.index_for_vertex(v1);
-        let i2 = self.index_for_vertex(v2);
+        let i0 = self.vertices.index_for_vertex(v0);
+        let i1 = self.vertices.index_for_vertex(v1);
+        let i2 = self.vertices.index_for_vertex(v2);
 
         self.triangles.push([i0, i1, i2]);
     }
 
     /// Iterate over all vertices
     pub fn vertices(&self) -> impl Iterator<Item = Point<f32, 3>> + '_ {
-        self.vertices
-            .iter()
-            .copied()
-            .map(|v| v.map(|coord| coord.into()))
+        self.vertices.iter()
     }
 
     /// Iterate over all indices
@@ -74,18 +64,4 @@ impl Mesh {
     pub fn triangles(&self) -> impl Iterator<Item = [graphics::Index; 3]> + '_ {
         self.triangles.iter().copied()
     }
-
-    fn index_for_vertex(&mut self, vertex: Vertex) -> graphics::Index {
-        let vertices = &mut self.vertices;
-
-        let index = self.indices_by_vertex.entry(vertex).or_insert_with(|| {
-            let index = vertices.len();
-            vertices.push(vertex);
-            index.try_into().unwrap()
-        });
-
-        *index
-    }
 }
-
-type Vertex = Point<R32, 3>;
