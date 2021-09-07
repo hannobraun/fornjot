@@ -43,7 +43,11 @@ impl Grid {
         let surface_vertices = descriptor
             .cells()
             .filter_map(|cell| {
-                for (index, vertex) in cell.vertices(descriptor.resolution) {
+                for (index, _) in cell.vertices(descriptor.resolution) {
+                    let vertex = index.to_position(
+                        descriptor.aabb.min,
+                        descriptor.resolution,
+                    );
                     grid_vertex_samples
                         .entry(index)
                         .or_insert_with(|| geometry.sample(vertex));
