@@ -87,6 +87,7 @@ fn run_inner(
     let mut transform = Transform::new();
 
     trace!("Initializing renderer...");
+    // TASK: Pass grid, if one has been used to create the mesh.
     let mut renderer = block_on(Renderer::new(&window, &mesh.into(), None))?;
 
     trace!("Finished initialization.");
