@@ -9,6 +9,7 @@ use super::{
 pub struct Pipelines {
     pub model: Pipeline,
     pub mesh: Pipeline,
+    // TASK: Add optional grid pipeline.
 }
 
 impl Pipelines {

@@ -6,6 +6,7 @@ use super::{
 pub struct Drawables<'r> {
     pub model: Drawable<'r>,
     pub mesh: Drawable<'r>,
+    // TASK: Add optional grid drawable, once the pipeline for that exists.
 }
 
 impl<'r> Drawables<'r> {
