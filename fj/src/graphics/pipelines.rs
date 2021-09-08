@@ -45,7 +45,7 @@ impl Pipelines {
                 device,
                 &pipeline_layout,
                 shaders.grid(),
-                wgpu::PrimitiveTopology::TriangleList,
+                wgpu::PrimitiveTopology::LineList,
                 wgpu::PolygonMode::Fill,
             ),
         }
