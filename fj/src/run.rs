@@ -23,14 +23,14 @@ pub fn run_model(model: impl Model) -> anyhow::Result<()> {
     )?;
     let mesh = model.instantiate(params);
 
-    run_inner(mesh, args.export)?;
+    run_inner(mesh.into(), args.export)?;
 
     Ok(())
 }
 
 pub fn run_mesh(mesh: impl Into<Mesh>) -> anyhow::Result<()> {
     let args = init();
-    run_inner(mesh, args.export)?;
+    run_inner(mesh.into(), args.export)?;
     Ok(())
 }
 
@@ -46,10 +46,7 @@ fn init() -> Args {
     Args::parse()
 }
 
-fn run_inner(
-    mesh: impl Into<Mesh>,
-    export: Option<PathBuf>,
-) -> anyhow::Result<()> {
+fn run_inner(mesh: Mesh, export: Option<PathBuf>) -> anyhow::Result<()> {
     info!("Converting geometry to triangle mesh...");
 
     let start_of_conversion = Instant::now();
