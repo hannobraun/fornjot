@@ -26,7 +26,7 @@ pub fn run_model(model: impl Model) -> anyhow::Result<()> {
 
     let mesh = geometry.into();
 
-    // TASK: Pass grid used to instantiate the model.
+    // TASK: Pass grid used to convert model geometry into mesh.
     run_inner(mesh, None, args.export)?;
 
     Ok(())
