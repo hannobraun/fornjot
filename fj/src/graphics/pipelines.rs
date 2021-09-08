@@ -31,18 +31,21 @@ impl Pipelines {
                 device,
                 &pipeline_layout,
                 shaders.model(),
+                wgpu::PrimitiveTopology::TriangleList,
                 wgpu::PolygonMode::Fill,
             ),
             mesh: Pipeline::new(
                 device,
                 &pipeline_layout,
                 shaders.mesh(),
+                wgpu::PrimitiveTopology::TriangleList,
                 wgpu::PolygonMode::Line,
             ),
             grid: Pipeline::new(
                 device,
                 &pipeline_layout,
                 shaders.grid(),
+                wgpu::PrimitiveTopology::TriangleList,
                 wgpu::PolygonMode::Fill,
             ),
         }
@@ -57,6 +60,7 @@ impl Pipeline {
         device: &wgpu::Device,
         pipeline_layout: &wgpu::PipelineLayout,
         shader: Shader,
+        topology: wgpu::PrimitiveTopology,
         polygon_mode: wgpu::PolygonMode,
     ) -> Self {
         let pipeline =
@@ -77,7 +81,7 @@ impl Pipeline {
                     }],
                 },
                 primitive: wgpu::PrimitiveState {
-                    topology: wgpu::PrimitiveTopology::TriangleList,
+                    topology,
                     strip_index_format: None,
                     front_face: wgpu::FrontFace::Ccw,
                     cull_mode: None,
