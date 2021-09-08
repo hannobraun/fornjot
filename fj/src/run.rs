@@ -11,6 +11,7 @@ use winit::{
 
 use crate::{
     args::Args,
+    geometry::isosurface::grid,
     graphics::{DrawError, Renderer, Transform},
     input, threemf, Mesh, Model,
 };
@@ -23,14 +24,15 @@ pub fn run_model(model: impl Model) -> anyhow::Result<()> {
     )?;
     let mesh = model.instantiate(params);
 
-    run_inner(mesh.into(), args.export)?;
+    // TASK: Pass grid used to instantiate the model.
+    run_inner(mesh.into(), None, args.export)?;
 
     Ok(())
 }
 
 pub fn run_mesh(mesh: impl Into<Mesh>) -> anyhow::Result<()> {
     let args = init();
-    run_inner(mesh.into(), args.export)?;
+    run_inner(mesh.into(), None, args.export)?;
     Ok(())
 }
 
@@ -46,7 +48,11 @@ fn init() -> Args {
     Args::parse()
 }
 
-fn run_inner(mesh: Mesh, export: Option<PathBuf>) -> anyhow::Result<()> {
+fn run_inner(
+    mesh: Mesh,
+    grid: Option<grid::Descriptor>,
+    export: Option<PathBuf>,
+) -> anyhow::Result<()> {
     info!("Converting geometry to triangle mesh...");
 
     let start_of_conversion = Instant::now();
@@ -84,8 +90,11 @@ fn run_inner(mesh: Mesh, export: Option<PathBuf>) -> anyhow::Result<()> {
     let mut transform = Transform::new();
 
     trace!("Initializing renderer...");
-    // TASK: Pass grid, if one has been used to create the mesh.
-    let mut renderer = block_on(Renderer::new(&window, &mesh.into(), None))?;
+    let mut renderer = block_on(Renderer::new(
+        &window,
+        &mesh.into(),
+        grid.map(|grid| grid.into()).as_ref(),
+    ))?;
 
     trace!("Finished initialization.");
 
