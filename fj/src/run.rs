@@ -13,7 +13,9 @@ use crate::{
     args::Args,
     geometry::isosurface::grid,
     graphics::{DrawError, Renderer, Transform},
-    input, threemf, Mesh, Model,
+    input,
+    model::IntoMesh,
+    threemf, Mesh, Model,
 };
 
 pub fn run_model(model: impl Model) -> anyhow::Result<()> {
@@ -24,7 +26,7 @@ pub fn run_model(model: impl Model) -> anyhow::Result<()> {
     )?;
     let geometry = model.instantiate(params);
 
-    let mesh = geometry.into();
+    let mesh = geometry.into_mesh();
 
     // TASK: Pass grid used to convert model geometry into mesh.
     run_inner(mesh, None, args.export)?;

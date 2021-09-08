@@ -13,19 +13,24 @@ pub trait Model {
     type Params: DeserializeOwned;
 
     /// The type of the model's geometry
-    type Ty: Into<Mesh>;
+    type Ty: IntoMesh;
 
     /// Instantiate the model
     fn instantiate(&self, params: Self::Params) -> Self::Ty;
 }
 
-impl<T> From<T> for Mesh
+/// A type that knows how to convert itself into a triangle mesh
+pub trait IntoMesh {
+    fn into_mesh(&self) -> Mesh;
+}
+
+impl<T> IntoMesh for T
 where
     T: BoundingVolume<3> + Geometry<3>,
 {
-    fn from(value: T) -> Self {
-        let resolution = value.aabb().size().max() / 100.0;
-        isosurface::to_mesh(&value, resolution)
+    fn into_mesh(&self) -> Mesh {
+        let resolution = self.aabb().size().max() / 100.0;
+        isosurface::to_mesh(self, resolution)
     }
 }
 
@@ -44,11 +49,11 @@ pub struct WithResolution<T> {
     pub resolution: f32,
 }
 
-impl<T> From<WithResolution<T>> for Mesh
+impl<T> IntoMesh for WithResolution<T>
 where
     T: BoundingVolume<3> + Geometry<3>,
 {
-    fn from(value: WithResolution<T>) -> Mesh {
-        isosurface::to_mesh(&value.geometry, value.resolution)
+    fn into_mesh(&self) -> Mesh {
+        isosurface::to_mesh(&self.geometry, self.resolution)
     }
 }
