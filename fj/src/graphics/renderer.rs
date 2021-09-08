@@ -218,7 +218,14 @@ impl Renderer {
             );
         }
         if self.draw_grid {
-            // TASK: Draw grid.
+            drawables.grid.map(|grid| {
+                grid.draw(
+                    &mut encoder,
+                    &view,
+                    &self.depth_view,
+                    &self.bind_group,
+                )
+            });
         }
 
         // Workaround for gfx-rs/wgpu#1797:
