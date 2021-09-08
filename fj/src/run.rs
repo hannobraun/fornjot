@@ -24,8 +24,10 @@ pub fn run_model(model: impl Model) -> anyhow::Result<()> {
     )?;
     let geometry = model.instantiate(params);
 
+    let mesh = geometry.into();
+
     // TASK: Pass grid used to instantiate the model.
-    run_inner(geometry.into(), None, args.export)?;
+    run_inner(mesh, None, args.export)?;
 
     Ok(())
 }
