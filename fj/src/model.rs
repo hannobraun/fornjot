@@ -1,7 +1,7 @@
 use serde::de::DeserializeOwned;
 
 use crate::geometry::{
-    isosurface,
+    isosurface::{self, grid},
     traits::{BoundingVolume, Geometry},
 };
 
@@ -21,16 +21,16 @@ pub trait Model {
 
 /// A type that knows how to convert itself into a triangle mesh
 pub trait IntoMesh {
-    fn into_mesh(&self) -> Mesh;
+    fn into_mesh(&self) -> (Mesh, grid::Descriptor);
 }
 
 impl<T> IntoMesh for T
 where
     T: BoundingVolume<3> + Geometry<3>,
 {
-    fn into_mesh(&self) -> Mesh {
+    fn into_mesh(&self) -> (Mesh, grid::Descriptor) {
         let resolution = self.aabb().size().max() / 100.0;
-        isosurface::to_mesh(self, resolution).0
+        isosurface::to_mesh(self, resolution)
     }
 }
 
@@ -53,7 +53,7 @@ impl<T> IntoMesh for WithResolution<T>
 where
     T: BoundingVolume<3> + Geometry<3>,
 {
-    fn into_mesh(&self) -> Mesh {
-        isosurface::to_mesh(&self.geometry, self.resolution).0
+    fn into_mesh(&self) -> (Mesh, grid::Descriptor) {
+        isosurface::to_mesh(&self.geometry, self.resolution)
     }
 }
