@@ -9,7 +9,7 @@ use super::{Cell, Index};
 /// Describes a uniform grid for isosurface extraction
 ///
 /// A grid consists of uniformly laid out vertices that form a number of cells.
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub struct Descriptor {
     /// The axis-aligned bounding box of the isosurface
     ///
