@@ -30,7 +30,7 @@ where
 {
     fn into_mesh(&self) -> Mesh {
         let resolution = self.aabb().size().max() / 100.0;
-        isosurface::to_mesh(self, resolution)
+        isosurface::to_mesh(self, resolution).0
     }
 }
 
@@ -54,6 +54,6 @@ where
     T: BoundingVolume<3> + Geometry<3>,
 {
     fn into_mesh(&self) -> Mesh {
-        isosurface::to_mesh(&self.geometry, self.resolution)
+        isosurface::to_mesh(&self.geometry, self.resolution).0
     }
 }
