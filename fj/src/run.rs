@@ -87,7 +87,8 @@ fn run_inner(
     let mut transform = Transform::new();
 
     trace!("Initializing renderer...");
-    let mut renderer = block_on(Renderer::new(&window, &mesh.into())).unwrap();
+    let mut renderer =
+        block_on(Renderer::new(&window, &mesh.into(), None)).unwrap();
 
     trace!("Finished initialization.");
 

@@ -37,6 +37,7 @@ impl Renderer {
     pub async fn new(
         window: &Window,
         mesh: &Vertices,
+        grid: Option<&Vertices>,
     ) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::VULKAN);
 
@@ -124,7 +125,7 @@ impl Renderer {
             label: None,
         });
 
-        let geometries = Geometries::new(&device, mesh);
+        let geometries = Geometries::new(&device, mesh, grid);
         let pipelines = Pipelines::new(&device, &bind_group_layout);
 
         Ok(Self {
