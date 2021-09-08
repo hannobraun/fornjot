@@ -14,7 +14,7 @@ pub fn to_mesh(
         aabb: geometry.aabb(),
         resolution,
     };
-    let grid = Grid::from_descriptor(grid_descriptor, geometry);
+    let grid = Grid::from_descriptor(&grid_descriptor, geometry);
 
     let mut mesh = Mesh::new();
 
