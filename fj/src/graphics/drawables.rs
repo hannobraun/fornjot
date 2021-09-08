@@ -11,10 +11,10 @@ pub struct Drawables<'r> {
 
 impl<'r> Drawables<'r> {
     pub fn new(geometries: &'r Geometries, pipelines: &'r Pipelines) -> Self {
-        Self {
-            model: Drawable::new(&geometries.mesh, &pipelines.model),
-            mesh: Drawable::new(&geometries.mesh, &pipelines.mesh),
-        }
+        let model = Drawable::new(&geometries.mesh, &pipelines.model);
+        let mesh = Drawable::new(&geometries.mesh, &pipelines.mesh);
+
+        Self { model, mesh }
     }
 }
 
