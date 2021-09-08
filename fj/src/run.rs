@@ -22,10 +22,10 @@ pub fn run_model(model: impl Model) -> anyhow::Result<()> {
     let params = serde_json::from_str(
         &args.model_params.unwrap_or_else(|| String::from("{}")),
     )?;
-    let mesh = model.instantiate(params);
+    let geometry = model.instantiate(params);
 
     // TASK: Pass grid used to instantiate the model.
-    run_inner(mesh.into(), None, args.export)?;
+    run_inner(geometry.into(), None, args.export)?;
 
     Ok(())
 }
