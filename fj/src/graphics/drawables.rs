@@ -6,16 +6,14 @@ use super::{
 pub struct Drawables<'r> {
     pub model: Drawable<'r>,
     pub mesh: Drawable<'r>,
-    pub grid: Option<Drawable<'r>>,
+    pub grid: Drawable<'r>,
 }
 
 impl<'r> Drawables<'r> {
     pub fn new(geometries: &'r Geometries, pipelines: &'r Pipelines) -> Self {
         let model = Drawable::new(&geometries.mesh, &pipelines.model);
         let mesh = Drawable::new(&geometries.mesh, &pipelines.mesh);
-        // TASK: Simplify this. It's possible to make `grid` non-optional now.
-        let grid = Some(&geometries.grid)
-            .map(|geometry| Drawable::new(geometry, &pipelines.grid));
+        let grid = Drawable::new(&geometries.grid, &pipelines.grid);
 
         Self { model, mesh, grid }
     }

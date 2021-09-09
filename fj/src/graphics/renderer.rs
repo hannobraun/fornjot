@@ -220,14 +220,12 @@ impl Renderer {
             //
             //       Maybe the grid should be drawn mostly transparently, except
             //       for vertices that are close to the camera.
-            drawables.grid.map(|grid| {
-                grid.draw(
-                    &mut encoder,
-                    &view,
-                    &self.depth_view,
-                    &self.bind_group,
-                )
-            });
+            drawables.grid.draw(
+                &mut encoder,
+                &view,
+                &self.depth_view,
+                &self.bind_group,
+            );
         }
 
         // Workaround for gfx-rs/wgpu#1797:
