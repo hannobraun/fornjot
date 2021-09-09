@@ -26,7 +26,18 @@ pub fn run_model(model: impl Model) -> anyhow::Result<()> {
     )?;
     let geometry = model.instantiate(params);
 
+    info!("Converting geometry to triangle mesh...");
+
+    let start_of_conversion = Instant::now();
     let (mesh, grid) = geometry.into_mesh();
+    let conversion_duration = start_of_conversion.elapsed();
+
+    info!(
+        "Converted geometry in {}.{:03}s",
+        conversion_duration.as_secs(),
+        conversion_duration.subsec_millis()
+    );
+
     run_inner(mesh, Some(grid), args.export)?;
 
     Ok(())
@@ -55,18 +66,6 @@ fn run_inner(
     grid: Option<grid::Descriptor>,
     export: Option<PathBuf>,
 ) -> anyhow::Result<()> {
-    info!("Converting geometry to triangle mesh...");
-
-    let start_of_conversion = Instant::now();
-    let mesh = mesh.into();
-    let conversion_duration = start_of_conversion.elapsed();
-
-    info!(
-        "Converted geometry in {}.{:03}s",
-        conversion_duration.as_secs(),
-        conversion_duration.subsec_millis()
-    );
-
     if let Some(path) = export {
         info!("Exporting to `{}`", path.display());
         threemf::export(&mesh, path)?;
