@@ -1,6 +1,3 @@
-// TASK: Implement a way to display the grid that is used to sample the
-//       geometry.
-
 use std::{io, mem::size_of};
 
 use thiserror::Error;
