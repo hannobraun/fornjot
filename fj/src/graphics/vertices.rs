@@ -51,6 +51,13 @@ impl From<grid::Descriptor> for Vertices {
                 position: vertex.into(),
                 normal: [0.0, 0.0, 0.0], // normal not used for grid
                 // TASK: Set color according to distance value at this position.
+                //
+                //       Current idea:
+                //       - Vertices clearly within the model are green.
+                //       - Vertices clearly outside of the model are red.
+                //       - Vertices close to the surface are interpolated
+                //         between green and red.
+                //       - Vertices far from the surface are mostly transparent.
                 color: [0.0, 0.0, 0.0, 0.2],
             })
             .collect();

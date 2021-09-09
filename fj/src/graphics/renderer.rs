@@ -215,11 +215,6 @@ impl Renderer {
             );
         }
         if self.draw_grid {
-            // TASK: Draw grid in a way that makes it more useful. Currently,
-            //       you can barely see anything when grid drawing is active.
-            //
-            //       Maybe the grid should be drawn mostly transparently, except
-            //       for vertices that are close to the camera.
             drawables.grid.draw(
                 &mut encoder,
                 &view,
