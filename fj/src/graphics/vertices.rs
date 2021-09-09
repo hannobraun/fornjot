@@ -51,7 +51,7 @@ impl From<grid::Descriptor> for Vertices {
                 position: vertex.into(),
                 normal: [0.0, 0.0, 0.0], // normal not used for grid
                 // TASK: Set color according to distance value at this position.
-                color: [1.0, 1.0, 1.0, 1.0],
+                color: [0.0, 0.0, 0.0, 1.0],
             })
             .collect();
 
