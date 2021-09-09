@@ -11,6 +11,13 @@ pub struct Vertices {
 }
 
 impl Vertices {
+    pub fn empty() -> Self {
+        Self {
+            vertices: Vec::new(),
+            indices: Vec::new(),
+        }
+    }
+
     pub fn vertices(&self) -> &[Vertex] {
         self.vertices.as_slice()
     }

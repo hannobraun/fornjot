@@ -7,18 +7,13 @@ use super::{Vertex, Vertices};
 #[derive(Debug)]
 pub struct Geometries {
     pub mesh: Geometry,
-    pub grid: Option<Geometry>,
+    pub grid: Geometry,
 }
 
 impl Geometries {
-    pub fn new(
-        device: &wgpu::Device,
-        mesh: Vertices,
-        grid: Option<Vertices>,
-    ) -> Self {
+    pub fn new(device: &wgpu::Device, mesh: Vertices, grid: Vertices) -> Self {
         let mesh = Geometry::new(device, mesh.vertices(), mesh.indices());
-        let grid = grid
-            .map(|grid| Geometry::new(device, grid.vertices(), grid.indices()));
+        let grid = Geometry::new(device, grid.vertices(), grid.indices());
 
         Self { mesh, grid }
     }

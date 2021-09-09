@@ -122,11 +122,11 @@ impl Renderer {
             label: None,
         });
 
-        // TASK: Consider passing an empty `Vertices` instead of `None`, if
-        //       `grid` is `None`. This would make `Geometries` and `Drawables`
-        //       more regular, but I'm not sure if empty vertex and index
-        //       buffers would lead to runtime errors.
-        let geometries = Geometries::new(&device, mesh, grid);
+        let geometries = Geometries::new(
+            &device,
+            mesh,
+            grid.unwrap_or_else(|| Vertices::empty()),
+        );
         let pipelines = Pipelines::new(&device, &bind_group_layout);
 
         Ok(Self {
