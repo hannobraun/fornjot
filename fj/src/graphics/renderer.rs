@@ -33,8 +33,8 @@ pub struct Renderer {
 impl Renderer {
     pub async fn new(
         window: &Window,
-        mesh: &Vertices,
-        grid: Option<&Vertices>,
+        mesh: Vertices,
+        grid: Option<Vertices>,
     ) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::VULKAN);
 
@@ -126,7 +126,7 @@ impl Renderer {
         //       `grid` is `None`. This would make `Geometries` and `Drawables`
         //       more regular, but I'm not sure if empty vertex and index
         //       buffers would lead to runtime errors.
-        let geometries = Geometries::new(&device, mesh, grid);
+        let geometries = Geometries::new(&device, &mesh, grid.as_ref());
         let pipelines = Pipelines::new(&device, &bind_group_layout);
 
         Ok(Self {
