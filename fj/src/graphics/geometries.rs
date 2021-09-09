@@ -13,8 +13,8 @@ pub struct Geometries {
 impl Geometries {
     pub fn new(
         device: &wgpu::Device,
-        mesh: &Vertices,
-        grid: Option<&Vertices>,
+        mesh: Vertices,
+        grid: Option<Vertices>,
     ) -> Self {
         let mesh = Geometry::new(device, mesh.vertices(), mesh.indices());
         let grid = grid

@@ -126,7 +126,7 @@ impl Renderer {
         //       `grid` is `None`. This would make `Geometries` and `Drawables`
         //       more regular, but I'm not sure if empty vertex and index
         //       buffers would lead to runtime errors.
-        let geometries = Geometries::new(&device, &mesh, grid.as_ref());
+        let geometries = Geometries::new(&device, mesh, grid);
         let pipelines = Pipelines::new(&device, &bind_group_layout);
 
         Ok(Self {
