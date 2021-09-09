@@ -111,8 +111,9 @@ impl Pipeline {
                     entry_point: shader.frag_entry,
                     targets: &[wgpu::ColorTargetState {
                         format: wgpu::TextureFormat::Bgra8UnormSrgb,
-                        // TASK: Enable alpha blending.
-                        blend: None,
+                        blend: Some(
+                            wgpu::BlendState::PREMULTIPLIED_ALPHA_BLENDING,
+                        ),
                         write_mask: wgpu::ColorWrites::ALL,
                     }],
                 }),

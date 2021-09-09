@@ -24,7 +24,8 @@ fn vertex(
     var out: VertexOutput;
     out.normal = (uniforms.transform_normals * vec4<f32>(normal, 0.0)).xyz;
     out.position = uniforms.transform * vec4<f32>(position, 1.0);
-    out.color = color;
+    // We use premultiplied alpha blending.
+    out.color = vec4<f32>(color.rgb * color.a, color.a);
 
     return out;
 }
