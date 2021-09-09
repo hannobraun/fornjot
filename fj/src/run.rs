@@ -40,7 +40,10 @@ pub fn run_mesh(mesh: impl Into<Mesh>) -> anyhow::Result<()> {
 
 fn init() -> Args {
     tracing_subscriber::fmt()
-        .with_env_filter(EnvFilter::from_default_env())
+        .with_env_filter(
+            EnvFilter::from_default_env()
+                .add_directive("fj=info".parse().unwrap()),
+        )
         .pretty()
         .init();
 
