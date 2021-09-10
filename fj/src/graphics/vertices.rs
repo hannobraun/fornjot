@@ -48,10 +48,10 @@ impl From<Grid> for Vertices {
                 let threshold_a = (resolution, 1.0);
                 let threshold_b = (resolution * 3.0, 0.2);
 
-                let alpha = if vertex.distance <= threshold_a.0 {
+                let alpha = if vertex.distance.abs() <= threshold_a.0 {
                     threshold_a.1
-                } else if vertex.distance <= threshold_b.0 {
-                    (vertex.distance - threshold_a.0)
+                } else if vertex.distance.abs() <= threshold_b.0 {
+                    (vertex.distance.abs() - threshold_a.0)
                         / (threshold_b.0 - threshold_a.0)
                         * (threshold_a.1 - threshold_b.1)
                         + threshold_b.1
