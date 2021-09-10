@@ -32,23 +32,21 @@ impl From<Grid> for Vertices {
         let mut vertices = util::Vertices::new();
         let mut indices = Vec::new();
 
-        for cell in grid.descriptor().cells() {
-            for (a, b) in cell.edges() {
-                let a = a.to_position(
-                    grid.descriptor().aabb.min,
-                    grid.descriptor().resolution,
-                );
-                let b = b.to_position(
-                    grid.descriptor().aabb.min,
-                    grid.descriptor().resolution,
-                );
+        for edge in grid.all_edges() {
+            let a = edge.a.index.to_position(
+                grid.descriptor().aabb.min,
+                grid.descriptor().resolution,
+            );
+            let b = edge.b.index.to_position(
+                grid.descriptor().aabb.min,
+                grid.descriptor().resolution,
+            );
 
-                let a = vertices.index_for_vertex(a);
-                let b = vertices.index_for_vertex(b);
+            let a = vertices.index_for_vertex(a);
+            let b = vertices.index_for_vertex(b);
 
-                indices.push(a);
-                indices.push(b);
-            }
+            indices.push(a);
+            indices.push(b);
         }
 
         let vertices = vertices
