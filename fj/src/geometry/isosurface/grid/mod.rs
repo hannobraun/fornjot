@@ -35,7 +35,7 @@ pub struct Grid {
 impl Grid {
     /// Create the grid from the descriptor and populate it with distance values
     pub fn from_descriptor(
-        descriptor: &Descriptor,
+        descriptor: Descriptor,
         geometry: &(impl Geometry<3> + Normal<3>),
     ) -> Self {
         let mut grid_vertex_samples = BTreeMap::new();
