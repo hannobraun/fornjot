@@ -38,7 +38,7 @@ pub fn run_model(model: impl Model) -> anyhow::Result<()> {
         conversion_duration.subsec_millis()
     );
 
-    run_inner(mesh, Some(grid), args.export)?;
+    run_inner(mesh, Some(*grid.descriptor()), args.export)?;
 
     Ok(())
 }
