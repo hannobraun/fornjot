@@ -45,9 +45,7 @@ impl From<Grid> for Vertices {
 
         let vertices = vertices
             .iter()
-            .map(|vertex| Vertex {
-                position: vertex.into(),
-                normal: [0.0, 0.0, 0.0], // normal not used for grid
+            .map(|vertex| {
                 // TASK: Set color according to distance value at this position.
                 //
                 //       Current idea:
@@ -56,7 +54,13 @@ impl From<Grid> for Vertices {
                 //       - Vertices close to the surface are interpolated
                 //         between green and red.
                 //       - Vertices far from the surface are mostly transparent.
-                color: [0.0, 0.0, 0.0, 0.2],
+                let color = [0.0, 0.0, 0.0, 0.2];
+
+                Vertex {
+                    position: vertex.into(),
+                    normal: [0.0, 0.0, 0.0], // normal not used for grid
+                    color,
+                }
             })
             .collect();
 
