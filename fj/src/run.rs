@@ -94,7 +94,7 @@ fn run_inner(
     let mut renderer = block_on(Renderer::new(
         &window,
         mesh.into(),
-        grid.map(|grid| (*grid.descriptor()).into()),
+        grid.map(|grid| grid.into()),
     ))?;
 
     trace!("Finished initialization.");

@@ -2,7 +2,7 @@ use bytemuck::{Pod, Zeroable};
 use decorum::R32;
 use indexmap::IndexMap;
 
-use crate::{geometry::isosurface::grid, mesh, types::Index, util};
+use crate::{geometry::isosurface::grid::Grid, mesh, types::Index, util};
 
 #[derive(Debug)]
 pub struct Vertices {
@@ -27,15 +27,21 @@ impl Vertices {
     }
 }
 
-impl From<grid::Descriptor> for Vertices {
-    fn from(grid: grid::Descriptor) -> Self {
+impl From<Grid> for Vertices {
+    fn from(grid: Grid) -> Self {
         let mut vertices = util::Vertices::new();
         let mut indices = Vec::new();
 
-        for cell in grid.cells() {
+        for cell in grid.descriptor().cells() {
             for (a, b) in cell.edges() {
-                let a = a.to_position(grid.aabb.min, grid.resolution);
-                let b = b.to_position(grid.aabb.min, grid.resolution);
+                let a = a.to_position(
+                    grid.descriptor().aabb.min,
+                    grid.descriptor().resolution,
+                );
+                let b = b.to_position(
+                    grid.descriptor().aabb.min,
+                    grid.descriptor().resolution,
+                );
 
                 let a = vertices.index_for_vertex(a);
                 let b = vertices.index_for_vertex(b);
