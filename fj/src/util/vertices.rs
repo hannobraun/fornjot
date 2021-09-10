@@ -6,7 +6,7 @@ use nalgebra::Point;
 use crate::types::Index;
 
 pub struct Vertices {
-    vertices: Vec<Vertex>,
+    vertices: Vec<Point<f32, 3>>,
     indices_by_vertex: HashMap<Vertex, Index>,
 }
 
@@ -26,15 +26,16 @@ impl Vertices {
     }
 
     pub fn index_for_vertex(&mut self, vertex: Point<f32, 3>) -> Index {
-        let vertex = vertex.map(|coord| coord.into());
+        let vertex_r32 = vertex.map(|coord| coord.into());
 
         let vertices = &mut self.vertices;
 
-        let index = self.indices_by_vertex.entry(vertex).or_insert_with(|| {
-            let index = vertices.len();
-            vertices.push(vertex);
-            index.try_into().unwrap()
-        });
+        let index =
+            self.indices_by_vertex.entry(vertex_r32).or_insert_with(|| {
+                let index = vertices.len();
+                vertices.push(vertex);
+                index.try_into().unwrap()
+            });
 
         *index
     }
