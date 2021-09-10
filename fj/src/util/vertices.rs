@@ -5,12 +5,12 @@ use nalgebra::Point;
 
 use crate::types::Index;
 
-pub struct Vertices {
-    vertices: Vec<Point<f32, 3>>,
+pub struct Vertices<T = Point<f32, 3>> {
+    vertices: Vec<T>,
     indices_by_vertex: HashMap<Vertex, Index>,
 }
 
-impl Vertices {
+impl<T> Vertices<T> {
     pub fn new() -> Self {
         Self {
             vertices: Vec::new(),
@@ -18,13 +18,18 @@ impl Vertices {
         }
     }
 
-    pub fn iter(&self) -> impl Iterator<Item = Point<f32, 3>> + '_ {
+    pub fn iter(&self) -> impl Iterator<Item = T> + '_
+    where
+        T: Copy,
+    {
         self.vertices.iter().copied()
     }
 
-    pub fn index_for_vertex(&mut self, vertex: impl AsPoint) -> Index {
-        let vertex = vertex.as_point();
-        let vertex_r32 = vertex.map(|coord| coord.into());
+    pub fn index_for_vertex(&mut self, vertex: T) -> Index
+    where
+        T: AsPoint,
+    {
+        let vertex_r32 = vertex.as_point().map(|coord| coord.into());
 
         let vertices = &mut self.vertices;
 
