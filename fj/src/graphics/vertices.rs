@@ -43,6 +43,22 @@ impl From<Grid> for Vertices {
         let vertices = vertices
             .iter()
             .map(|vertex| {
+                let resolution = grid.descriptor().resolution;
+
+                let threshold_a = (resolution, 1.0);
+                let threshold_b = (resolution * 3.0, 0.2);
+
+                let alpha = if vertex.distance <= threshold_a.0 {
+                    threshold_a.1
+                } else if vertex.distance <= threshold_b.0 {
+                    (vertex.distance - threshold_a.0)
+                        / (threshold_b.0 - threshold_a.0)
+                        * (threshold_a.1 - threshold_b.1)
+                        + threshold_b.1
+                } else {
+                    threshold_b.1
+                };
+
                 // TASK: Set color according to distance value at this position.
                 //
                 //       Current idea:
@@ -50,8 +66,7 @@ impl From<Grid> for Vertices {
                 //       - Vertices clearly outside of the model are red.
                 //       - Vertices close to the surface are interpolated
                 //         between green and red.
-                //       - Vertices far from the surface are mostly transparent.
-                let color = [0.0, 0.0, 0.0, 0.2];
+                let color = [0.0, 0.0, 0.0, alpha];
 
                 Vertex {
                     position: vertex.point.into(),
