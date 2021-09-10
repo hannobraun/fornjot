@@ -33,14 +33,8 @@ impl From<Grid> for Vertices {
         let mut indices = Vec::new();
 
         for edge in grid.all_edges() {
-            let a = edge.a.index.to_position(
-                grid.descriptor().aabb.min,
-                grid.descriptor().resolution,
-            );
-            let b = edge.b.index.to_position(
-                grid.descriptor().aabb.min,
-                grid.descriptor().resolution,
-            );
+            let a = edge.a.point;
+            let b = edge.b.point;
 
             let a = vertices.index_for_vertex(a);
             let b = vertices.index_for_vertex(b);
