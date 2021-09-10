@@ -3,7 +3,6 @@ use nalgebra::Point;
 use crate::{types::Index, util};
 
 /// A triangle mesh
-#[derive(Default)]
 pub struct Mesh {
     vertices: util::Vertices,
     triangles: Vec<[Index; 3]>,
