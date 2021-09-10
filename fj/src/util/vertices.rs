@@ -22,7 +22,8 @@ impl Vertices {
         self.vertices.iter().copied()
     }
 
-    pub fn index_for_vertex(&mut self, vertex: Point<f32, 3>) -> Index {
+    pub fn index_for_vertex(&mut self, vertex: impl AsPoint) -> Index {
+        let vertex = vertex.as_point();
         let vertex_r32 = vertex.map(|coord| coord.into());
 
         let vertices = &mut self.vertices;
@@ -35,6 +36,16 @@ impl Vertices {
             });
 
         *index
+    }
+}
+
+pub trait AsPoint {
+    fn as_point(&self) -> Point<f32, 3>;
+}
+
+impl AsPoint for Point<f32, 3> {
+    fn as_point(&self) -> Point<f32, 3> {
+        *self
     }
 }
 
