@@ -5,7 +5,6 @@ use nalgebra::Point;
 
 use crate::types::Index;
 
-#[derive(Default)]
 pub struct Vertices {
     vertices: Vec<Vertex>,
     indices_by_vertex: HashMap<Vertex, Index>,
