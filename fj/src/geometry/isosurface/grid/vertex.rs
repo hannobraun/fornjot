@@ -1,5 +1,7 @@
 use nalgebra::Point;
 
+use crate::util::vertices::AsPoint;
+
 use super::Index;
 
 /// A vertex in an isosurface extraction grid
@@ -13,4 +15,10 @@ pub struct Vertex {
 
     /// The (signed) distance of the vertex to the closest surface point
     pub distance: f32,
+}
+
+impl AsPoint for Vertex {
+    fn as_point(&self) -> Point<f32, 3> {
+        self.point
+    }
 }
