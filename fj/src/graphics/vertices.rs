@@ -33,8 +33,8 @@ impl From<Grid> for Vertices {
         let mut indices = Vec::new();
 
         for edge in grid.all_edges() {
-            let a = vertices.index_for_vertex(edge.a.point);
-            let b = vertices.index_for_vertex(edge.b.point);
+            let a = vertices.index_for_vertex(edge.a);
+            let b = vertices.index_for_vertex(edge.b);
 
             indices.push(a);
             indices.push(b);
@@ -54,7 +54,7 @@ impl From<Grid> for Vertices {
                 let color = [0.0, 0.0, 0.0, 0.2];
 
                 Vertex {
-                    position: vertex.into(),
+                    position: vertex.point.into(),
                     normal: [0.0, 0.0, 0.0], // normal not used for grid
                     color,
                 }
