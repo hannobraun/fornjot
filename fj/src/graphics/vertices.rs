@@ -43,6 +43,10 @@ impl From<Grid> for Vertices {
         let vertices = vertices
             .iter()
             .map(|vertex| {
+                // TASK: For some reason, there are yellow grid vertices on the
+                //       top and bottom of the spacer hole. The alpha values in
+                //       the hole also seem to be wrong. Something is wrong.
+
                 let resolution = grid.descriptor().resolution;
 
                 let threshold_a = (resolution, 1.0);
