@@ -71,12 +71,10 @@ impl From<Grid> for Vertices {
                     threshold_b.1
                 };
 
-                let color = [color[0], color[1], color[2], alpha];
-
                 Vertex {
                     position: vertex.point.into(),
                     normal: [0.0, 0.0, 0.0], // normal not used for grid
-                    color,
+                    color: [color[0], color[1], color[2], alpha],
                 }
             })
             .collect();
