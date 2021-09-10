@@ -11,7 +11,7 @@ use winit::{
 
 use crate::{
     args::Args,
-    geometry::isosurface::grid,
+    geometry::isosurface::grid::Grid,
     graphics::{DrawError, Renderer, Transform},
     input,
     model::IntoMesh,
@@ -38,7 +38,7 @@ pub fn run_model(model: impl Model) -> anyhow::Result<()> {
         conversion_duration.subsec_millis()
     );
 
-    run_inner(mesh, Some(*grid.descriptor()), args.export)?;
+    run_inner(mesh, Some(grid), args.export)?;
 
     Ok(())
 }
@@ -63,7 +63,7 @@ fn init() -> Args {
 
 fn run_inner(
     mesh: Mesh,
-    grid: Option<grid::Descriptor>,
+    grid: Option<Grid>,
     export: Option<PathBuf>,
 ) -> anyhow::Result<()> {
     if let Some(path) = export {
@@ -94,7 +94,7 @@ fn run_inner(
     let mut renderer = block_on(Renderer::new(
         &window,
         mesh.into(),
-        grid.map(|grid| grid.into()),
+        grid.map(|grid| (*grid.descriptor()).into()),
     ))?;
 
     trace!("Finished initialization.");
