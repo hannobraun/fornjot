@@ -38,7 +38,7 @@ impl Grid {
         geometry: &(impl Geometry<3> + Normal<3>),
     ) -> Self {
         let mut grid_vertex_samples = BTreeMap::new();
-        let mut edges = BTreeMap::new();
+        let mut edges_at_surface = BTreeMap::new();
 
         let surface_vertices = descriptor
             .cells()
@@ -73,7 +73,7 @@ impl Grid {
                     };
 
                     if edge.at_surface() {
-                        edges.insert((a, b), edge);
+                        edges_at_surface.insert((a, b), edge);
 
                         let f = edge.a.distance.abs()
                             / (edge.a.distance.abs() + edge.b.distance.abs());
@@ -104,7 +104,7 @@ impl Grid {
             .collect();
 
         Self {
-            edges_at_surface: edges,
+            edges_at_surface,
             surface_vertices: SurfaceVertices(surface_vertices),
         }
     }
