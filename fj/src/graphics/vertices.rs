@@ -48,6 +48,18 @@ impl From<Grid> for Vertices {
                 let threshold_a = (resolution, 1.0);
                 let threshold_b = (resolution * 3.0, 0.2);
 
+                let color = if vertex.distance.abs() > threshold_a.0 {
+                    if vertex.distance >= 0.0 {
+                        [1.0, 0.0, 0.0]
+                    } else {
+                        [0.0, 1.0, 0.0]
+                    }
+                } else {
+                    // TASK: Interpolate between red and green, depending in
+                    //       (signed) distance.
+                    [1.0, 1.0, 0.0]
+                };
+
                 let alpha = if vertex.distance.abs() <= threshold_a.0 {
                     threshold_a.1
                 } else if vertex.distance.abs() <= threshold_b.0 {
@@ -59,14 +71,7 @@ impl From<Grid> for Vertices {
                     threshold_b.1
                 };
 
-                // TASK: Set color according to distance value at this position.
-                //
-                //       Current idea:
-                //       - Vertices clearly within the model are green.
-                //       - Vertices clearly outside of the model are red.
-                //       - Vertices close to the surface are interpolated
-                //         between green and red.
-                let color = [0.0, 0.0, 0.0, alpha];
+                let color = [color[0], color[1], color[2], alpha];
 
                 Vertex {
                     position: vertex.point.into(),
