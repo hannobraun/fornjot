@@ -59,7 +59,7 @@ impl From<Grid> for Vertices {
                         [0.0, 1.0, 0.0]
                     }
                 } else {
-                    // TASK: Interpolate between red and green, depending in
+                    // TASK: Interpolate between red and green, depending on
                     //       (signed) distance.
                     [1.0, 1.0, 0.0]
                 };
