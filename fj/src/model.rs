@@ -30,7 +30,8 @@ where
 {
     fn into_mesh(&self) -> (Mesh, grid::Descriptor) {
         let resolution = self.aabb().size().max() / 100.0;
-        isosurface::to_mesh(self, resolution)
+        let (mesh, grid) = isosurface::to_mesh(self, resolution);
+        (mesh, *grid.descriptor())
     }
 }
 
@@ -54,6 +55,7 @@ where
     T: BoundingVolume<3> + Geometry<3>,
 {
     fn into_mesh(&self) -> (Mesh, grid::Descriptor) {
-        isosurface::to_mesh(&self.geometry, self.resolution)
+        let (mesh, grid) = isosurface::to_mesh(&self.geometry, self.resolution);
+        (mesh, *grid.descriptor())
     }
 }

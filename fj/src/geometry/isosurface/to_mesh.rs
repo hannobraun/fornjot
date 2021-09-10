@@ -9,7 +9,7 @@ use super::{grid, Grid};
 pub fn to_mesh(
     geometry: &(impl Geometry<3> + BoundingVolume<3>),
     resolution: f32,
-) -> (Mesh, grid::Descriptor) {
+) -> (Mesh, Grid) {
     let grid_descriptor = grid::Descriptor {
         aabb: geometry.aabb(),
         resolution,
@@ -25,5 +25,5 @@ pub fn to_mesh(
         mesh.triangle(b, c, d);
     }
 
-    (mesh, grid_descriptor)
+    (mesh, grid)
 }
