@@ -13,7 +13,10 @@ pub struct Vertices {
 
 impl Vertices {
     pub fn new() -> Self {
-        Self::default()
+        Self {
+            vertices: Vec::new(),
+            indices_by_vertex: HashMap::new(),
+        }
     }
 
     pub fn iter(&self) -> impl Iterator<Item = Point<f32, 3>> + '_ {
