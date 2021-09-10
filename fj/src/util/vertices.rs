@@ -19,10 +19,7 @@ impl Vertices {
     }
 
     pub fn iter(&self) -> impl Iterator<Item = Point<f32, 3>> + '_ {
-        self.vertices
-            .iter()
-            .copied()
-            .map(|v| v.map(|coord| coord.into()))
+        self.vertices.iter().copied()
     }
 
     pub fn index_for_vertex(&mut self, vertex: Point<f32, 3>) -> Index {
