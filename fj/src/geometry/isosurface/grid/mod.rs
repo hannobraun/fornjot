@@ -27,6 +27,7 @@ use super::place_surface_vertex::place_surface_vertex;
 /// A uniform grid for isosurface extraction
 #[derive(Debug)]
 pub struct Grid {
+    all_edges: BTreeMap<(Index, Index), Edge>,
     edges_at_surface: BTreeMap<(Index, Index), Edge>,
     surface_vertices: SurfaceVertices,
 }
@@ -38,6 +39,8 @@ impl Grid {
         geometry: &(impl Geometry<3> + Normal<3>),
     ) -> Self {
         let mut grid_vertex_samples = BTreeMap::new();
+
+        let mut all_edges = BTreeMap::new();
         let mut edges_at_surface = BTreeMap::new();
 
         let surface_vertices = descriptor
@@ -72,6 +75,8 @@ impl Grid {
                         },
                     };
 
+                    all_edges.insert((a, b), edge);
+
                     if edge.at_surface() {
                         edges_at_surface.insert((a, b), edge);
 
@@ -104,9 +109,15 @@ impl Grid {
             .collect();
 
         Self {
+            all_edges,
             edges_at_surface,
             surface_vertices: SurfaceVertices(surface_vertices),
         }
+    }
+
+    /// Iterate over all grid edges
+    pub fn all_edges(&self) -> impl Iterator<Item = Edge> + '_ {
+        self.all_edges.values().copied()
     }
 
     /// Iterate over all grid edges that are near a surface
