@@ -6,8 +6,11 @@ use std::{io, mem::size_of};
 
 use thiserror::Error;
 use tracing::debug;
-use wgpu::util::DeviceExt as _;
-use wgpu_glyph::ab_glyph::InvalidFont;
+use wgpu::util::{DeviceExt as _, StagingBelt};
+use wgpu_glyph::{
+    ab_glyph::{FontArc, InvalidFont},
+    GlyphBrush, GlyphBrushBuilder, Section, Text,
+};
 use winit::{dpi::PhysicalSize, window::Window};
 
 use super::{
@@ -21,6 +24,7 @@ pub struct Renderer {
     surface: wgpu::Surface,
     device: wgpu::Device,
     queue: wgpu::Queue,
+    glyph_brush: GlyphBrush<()>,
 
     surface_config: wgpu::SurfaceConfiguration,
     depth_view: wgpu::TextureView,
@@ -122,6 +126,11 @@ impl Renderer {
             label: None,
         });
 
+        let font =
+            FontArc::try_from_slice(include_bytes!("fonts/B612-Bold.ttf"))?;
+        let glyph_brush =
+            GlyphBrushBuilder::using_font(font).build(&device, COLOR_FORMAT);
+
         let geometries = Geometries::new(
             &device,
             mesh,
@@ -133,6 +142,7 @@ impl Renderer {
             surface,
             device,
             queue,
+            glyph_brush,
 
             surface_config,
             depth_view,
@@ -222,6 +232,28 @@ impl Renderer {
                 &self.bind_group,
             );
         }
+
+        // TASK: Remove.
+        self.glyph_brush.queue(
+            Section::new().with_screen_position((50.0, 50.0)).add_text(
+                Text::new("test")
+                    .with_color([0.0, 0.0, 0.0, 1.0])
+                    .with_scale(100.0),
+            ),
+        );
+
+        self.glyph_brush
+            .draw_queued(
+                &self.device,
+                // TASK: Put more thought into the staging belt's buffer size.
+                &mut StagingBelt::new(1024),
+                &mut encoder,
+                &view,
+                self.surface_config.width,
+                self.surface_config.height,
+            )
+            // TASK: Improve error handling.
+            .unwrap();
 
         // Workaround for gfx-rs/wgpu#1797:
         // https://github.com/gfx-rs/wgpu/issues/1797
