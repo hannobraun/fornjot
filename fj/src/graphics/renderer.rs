@@ -252,8 +252,7 @@ impl Renderer {
                 self.surface_config.width,
                 self.surface_config.height,
             )
-            // TASK: Improve error handling.
-            .unwrap();
+            .map_err(|err| DrawError::Text(err))?;
 
         // Workaround for gfx-rs/wgpu#1797:
         // https://github.com/gfx-rs/wgpu/issues/1797
@@ -361,4 +360,7 @@ pub enum InitError {
 pub enum DrawError {
     #[error("Error acquiring output surface")]
     Surface(#[from] wgpu::SurfaceError),
+
+    #[error("Error drawing text")]
+    Text(String),
 }
