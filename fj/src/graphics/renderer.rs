@@ -233,25 +233,7 @@ impl Renderer {
             );
         }
 
-        // TASK: Remove.
-        self.glyph_brush.queue(
-            Section::new().with_screen_position((50.0, 50.0)).add_text(
-                Text::new("test")
-                    .with_color([0.0, 0.0, 0.0, 1.0])
-                    .with_scale(100.0),
-            ),
-        );
-
-        self.glyph_brush
-            .draw_queued(
-                &self.device,
-                // TASK: Put more thought into the staging belt's buffer size.
-                &mut StagingBelt::new(1024),
-                &mut encoder,
-                &view,
-                self.surface_config.width,
-                self.surface_config.height,
-            )
+        self.draw_config_ui(&mut encoder, &view)
             .map_err(|err| DrawError::Text(err))?;
 
         // Workaround for gfx-rs/wgpu#1797:
@@ -321,6 +303,33 @@ impl Renderer {
                 },
             ),
         });
+    }
+
+    fn draw_config_ui(
+        &mut self,
+        encoder: &mut wgpu::CommandEncoder,
+        view: &wgpu::TextureView,
+    ) -> Result<(), String> {
+        // TASK: Remove.
+        self.glyph_brush.queue(
+            Section::new().with_screen_position((50.0, 50.0)).add_text(
+                Text::new("test")
+                    .with_color([0.0, 0.0, 0.0, 1.0])
+                    .with_scale(100.0),
+            ),
+        );
+
+        self.glyph_brush.draw_queued(
+            &self.device,
+            // TASK: Put more thought into the staging belt's buffer size.
+            &mut StagingBelt::new(1024),
+            encoder,
+            &view,
+            self.surface_config.width,
+            self.surface_config.height,
+        )?;
+
+        Ok(())
     }
 }
 
