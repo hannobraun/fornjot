@@ -1,7 +1,7 @@
 use std::{path::PathBuf, time::Instant};
 
 use futures::executor::block_on;
-use tracing::{error, info, trace};
+use tracing::{info, trace};
 use tracing_subscriber::EnvFilter;
 use winit::{
     event::{Event, WindowEvent},
@@ -12,7 +12,7 @@ use winit::{
 use crate::{
     args::Args,
     geometry::isosurface::grid::Grid,
-    graphics::{DrawError, Renderer, Transform},
+    graphics::{Renderer, Transform},
     input,
     model::IntoMesh,
     threemf, Mesh, Model,
@@ -144,21 +144,12 @@ fn run_inner(
             Event::MainEventsCleared => {
                 window.request_redraw();
             }
-            Event::RedrawRequested(_) => {
-                match renderer.draw(&transform) {
-                    Ok(()) => {}
-                    Err(
-                        err @ DrawError::Surface(wgpu::SurfaceError::Outdated),
-                    ) => {
-                        // I'm getting this from time to time when resizing the
-                        // window. It's not catastrophic.
-                        error!("{}", err)
-                    }
-                    Err(err) => {
-                        panic!("Draw error: {:?}", err);
-                    }
+            Event::RedrawRequested(_) => match renderer.draw(&transform) {
+                Ok(()) => {}
+                Err(err) => {
+                    panic!("Draw error: {:?}", err);
                 }
-            }
+            },
             _ => {}
         }
 
