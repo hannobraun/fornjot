@@ -26,6 +26,7 @@ thiserror          = "1.0.25"
 tracing            = "0.1.26"
 tracing-subscriber = "0.2.18"
 wgpu               = "0.10.1"
+wgpu_glyph         = "0.14.1"
 winit              = "0.25.0"
 zip                = "0.5.13"
 
