@@ -147,7 +147,11 @@ fn run_inner(
             Event::RedrawRequested(_) => {
                 match renderer.draw(&transform) {
                     Ok(()) => {}
-                    err @ Err(DrawError(wgpu::SurfaceError::Outdated)) => {
+                    err
+                    @
+                    Err(DrawError::Surface(
+                        wgpu::SurfaceError::Outdated,
+                    )) => {
                         // I'm getting this from time to time when resizing the
                         // window. It's not catastrophic.
                         println!("Draw error: {:?}", err);

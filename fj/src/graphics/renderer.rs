@@ -358,5 +358,7 @@ pub enum InitError {
 }
 
 #[derive(Error, Debug)]
-#[error("Draw error")]
-pub struct DrawError(#[from] pub wgpu::SurfaceError);
+pub enum DrawError {
+    #[error("Error acquiring output surface")]
+    Surface(#[from] wgpu::SurfaceError),
+}
