@@ -312,11 +312,18 @@ impl Renderer {
     ) -> Result<(), String> {
         // TASK: Remove.
         self.glyph_brush.queue(
-            Section::new().with_screen_position((50.0, 50.0)).add_text(
-                Text::new("test")
-                    .with_color([0.0, 0.0, 0.0, 1.0])
-                    .with_scale(100.0),
-            ),
+            Section::new()
+                .with_screen_position((50.0, 50.0))
+                .add_text(
+                    Text::new("test\n")
+                        .with_color([0.0, 0.0, 0.0, 1.0])
+                        .with_scale(100.0),
+                )
+                .add_text(
+                    Text::new("test\n")
+                        .with_color([0.0, 0.0, 0.0, 1.0])
+                        .with_scale(100.0),
+                ),
         );
 
         self.glyph_brush.draw_queued(
