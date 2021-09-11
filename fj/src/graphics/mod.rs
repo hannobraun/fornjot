@@ -1,3 +1,4 @@
+mod config_ui;
 mod drawables;
 mod geometries;
 mod pipelines;
