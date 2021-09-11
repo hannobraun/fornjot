@@ -152,13 +152,10 @@ impl From<mesh::Mesh> for Vertices {
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, Pod, Zeroable)]
 #[repr(C)]
 pub struct Vertex {
     pub position: [f32; 3],
     pub normal: [f32; 3],
     pub color: [f32; 4],
 }
-
-unsafe impl Zeroable for Vertex {}
-unsafe impl Pod for Vertex {}
