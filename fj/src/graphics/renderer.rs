@@ -1,3 +1,7 @@
+// TASK: Render text that describes the current render configuration in a corner
+//       of the screen. Also make sure to display the key used to toggle each
+//       option.
+
 use std::{io, mem::size_of};
 
 use thiserror::Error;
@@ -207,6 +211,8 @@ impl Renderer {
             );
         }
         if self.config.draw_grid {
+            // TASK: Draw the distance value for each grid vertex that is close
+            //       to the camera.
             drawables.grid.draw(
                 &mut encoder,
                 &view,
