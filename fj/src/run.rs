@@ -147,7 +147,7 @@ fn run_inner(
             Event::RedrawRequested(_) => match renderer.draw(&transform) {
                 Ok(()) => {}
                 Err(err) => {
-                    panic!("Draw error: {:?}", err);
+                    panic!("Draw error: {}", err);
                 }
             },
             _ => {}
