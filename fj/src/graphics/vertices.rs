@@ -153,6 +153,7 @@ impl From<mesh::Mesh> for Vertices {
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
+#[repr(C)]
 pub struct Vertex {
     pub position: [f32; 3],
     pub normal: [f32; 3],
