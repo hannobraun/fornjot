@@ -25,9 +25,7 @@ pub struct Renderer {
     geometries: Geometries,
     pipelines: Pipelines,
 
-    draw_model: bool,
-    draw_mesh: bool,
-    draw_grid: bool,
+    config: Config,
 }
 
 impl Renderer {
@@ -139,9 +137,7 @@ impl Renderer {
             geometries,
             pipelines,
 
-            draw_model: true,
-            draw_mesh: false,
-            draw_grid: false,
+            config: Config::default(),
         })
     }
 
@@ -157,15 +153,15 @@ impl Renderer {
     }
 
     pub fn toggle_model(&mut self) {
-        self.draw_model = !self.draw_model;
+        self.config.draw_model = !self.config.draw_model;
     }
 
     pub fn toggle_mesh(&mut self) {
-        self.draw_mesh = !self.draw_mesh;
+        self.config.draw_mesh = !self.config.draw_mesh;
     }
 
     pub fn toggle_grid(&mut self) {
-        self.draw_grid = !self.draw_grid;
+        self.config.draw_grid = !self.config.draw_grid;
     }
 
     pub fn draw(&mut self, transform: &Transform) -> Result<(), DrawError> {
@@ -194,7 +190,7 @@ impl Renderer {
 
         let drawables = Drawables::new(&self.geometries, &self.pipelines);
 
-        if self.draw_model {
+        if self.config.draw_model {
             drawables.model.draw(
                 &mut encoder,
                 &view,
@@ -202,7 +198,7 @@ impl Renderer {
                 &self.bind_group,
             );
         }
-        if self.draw_mesh {
+        if self.config.draw_mesh {
             drawables.mesh.draw(
                 &mut encoder,
                 &view,
@@ -210,7 +206,7 @@ impl Renderer {
                 &self.bind_group,
             );
         }
-        if self.draw_grid {
+        if self.config.draw_grid {
             drawables.grid.draw(
                 &mut encoder,
                 &view,
@@ -286,6 +282,23 @@ impl Renderer {
                 },
             ),
         });
+    }
+}
+
+#[derive(Debug)]
+struct Config {
+    draw_model: bool,
+    draw_mesh: bool,
+    draw_grid: bool,
+}
+
+impl Default for Config {
+    fn default() -> Self {
+        Self {
+            draw_model: true,
+            draw_mesh: false,
+            draw_grid: false,
+        }
     }
 }
 
