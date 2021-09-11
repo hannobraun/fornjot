@@ -3,7 +3,7 @@ use nalgebra::Matrix4;
 
 use super::transform::NativeTransform;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Pod, Zeroable)]
 #[repr(C)]
 pub struct Uniforms {
     pub transform: NativeTransform,
@@ -26,6 +26,3 @@ impl Default for Uniforms {
         }
     }
 }
-
-unsafe impl Zeroable for Uniforms {}
-unsafe impl Pod for Uniforms {}
