@@ -314,16 +314,8 @@ impl Renderer {
         self.glyph_brush.queue(
             Section::new()
                 .with_screen_position((50.0, 50.0))
-                .add_text(
-                    Text::new("test\n")
-                        .with_color([0.0, 0.0, 0.0, 1.0])
-                        .with_scale(100.0),
-                )
-                .add_text(
-                    Text::new("test\n")
-                        .with_color([0.0, 0.0, 0.0, 1.0])
-                        .with_scale(100.0),
-                ),
+                .add_text(text("test\n"))
+                .add_text(text("test\n")),
         );
 
         self.glyph_brush.draw_queued(
@@ -379,4 +371,10 @@ pub enum DrawError {
 
     #[error("Error drawing text")]
     Text(String),
+}
+
+fn text(text: &str) -> Text {
+    Text::new(text)
+        .with_color([0.0, 0.0, 0.0, 1.0])
+        .with_scale(100.0)
 }
