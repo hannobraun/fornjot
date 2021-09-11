@@ -53,13 +53,9 @@ impl Renderer {
             .request_device(
                 &wgpu::DeviceDescriptor {
                     label: None,
-                    // TASK: Be smarter about this. Any feature enabled here
-                    //       might lead to a runtime error.
-                    //
-                    //       It might be best to request a device for every
-                    //       single feature that is desired, log a warning for
-                    //       each that isn't available, then request the final
-                    //       device for those that are.
+                    // TASK: Check available features via `Adapter::features`
+                    //       before requesting them here. Otherwise, the call
+                    //       to `request_device` might fail.
                     //
                     //       In addition, the available features must be stored
                     //       somewhere, so code that requires any unavailable
