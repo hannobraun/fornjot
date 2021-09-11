@@ -1,7 +1,7 @@
 use std::{path::PathBuf, time::Instant};
 
 use futures::executor::block_on;
-use tracing::{info, trace};
+use tracing::{error, info, trace};
 use tracing_subscriber::EnvFilter;
 use winit::{
     event::{Event, WindowEvent},
@@ -152,7 +152,7 @@ fn run_inner(
                     ) => {
                         // I'm getting this from time to time when resizing the
                         // window. It's not catastrophic.
-                        println!("Draw error: {:?}", err);
+                        error!("{}", err)
                     }
                     Err(err) => {
                         panic!("Draw error: {:?}", err);
