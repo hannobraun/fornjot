@@ -2,7 +2,7 @@ use std::mem::size_of;
 
 use super::{
     shaders::{Shader, Shaders},
-    Vertex, DEPTH_FORMAT,
+    Vertex, COLOR_FORMAT, DEPTH_FORMAT,
 };
 
 #[derive(Debug)]
@@ -110,7 +110,7 @@ impl Pipeline {
                     module: shader.module,
                     entry_point: shader.frag_entry,
                     targets: &[wgpu::ColorTargetState {
-                        format: wgpu::TextureFormat::Bgra8UnormSrgb,
+                        format: COLOR_FORMAT,
                         blend: Some(
                             wgpu::BlendState::PREMULTIPLIED_ALPHA_BLENDING,
                         ),

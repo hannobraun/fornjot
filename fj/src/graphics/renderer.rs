@@ -11,7 +11,8 @@ use winit::{dpi::PhysicalSize, window::Window};
 
 use super::{
     drawables::Drawables, geometries::Geometries, pipelines::Pipelines,
-    transform::Transform, uniforms::Uniforms, Vertices, DEPTH_FORMAT,
+    transform::Transform, uniforms::Uniforms, Vertices, COLOR_FORMAT,
+    DEPTH_FORMAT,
 };
 
 #[derive(Debug)]
@@ -73,7 +74,7 @@ impl Renderer {
 
         let surface_config = wgpu::SurfaceConfiguration {
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
-            format: wgpu::TextureFormat::Bgra8UnormSrgb,
+            format: COLOR_FORMAT,
             width: size.width,
             height: size.height,
             present_mode: wgpu::PresentMode::Fifo,
