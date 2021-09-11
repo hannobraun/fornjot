@@ -1,7 +1,3 @@
-// TASK: Render text that describes the current render configuration in a corner
-//       of the screen. Also make sure to display the key used to toggle each
-//       option.
-
 use std::{io, mem::size_of};
 
 use thiserror::Error;
@@ -310,6 +306,9 @@ impl Renderer {
         encoder: &mut wgpu::CommandEncoder,
         view: &wgpu::TextureView,
     ) -> Result<(), String> {
+        // TASK: Update this to display the current configuration. Ideas:
+        //       - Display text like "X enabled/disabled (toggle with y)".
+        //       - Make text for disabled config semi-transparent.
         self.glyph_brush.queue(
             Section::new()
                 .with_screen_position((50.0, 50.0))
