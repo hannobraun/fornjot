@@ -229,8 +229,14 @@ impl Renderer {
             );
         }
 
-        self.draw_config_ui(&mut encoder, &view)
-            .map_err(|err| DrawError::Text(err))?;
+        Self::draw_config_ui(
+            &mut self.glyph_brush,
+            &self.device,
+            &mut encoder,
+            &view,
+            &self.surface_config,
+        )
+        .map_err(|err| DrawError::Text(err))?;
 
         // Workaround for gfx-rs/wgpu#1797:
         // https://github.com/gfx-rs/wgpu/issues/1797
@@ -302,14 +308,16 @@ impl Renderer {
     }
 
     fn draw_config_ui(
-        &mut self,
+        glyph_brush: &mut GlyphBrush<()>,
+        device: &wgpu::Device,
         encoder: &mut wgpu::CommandEncoder,
         view: &wgpu::TextureView,
+        surface_config: &wgpu::SurfaceConfiguration,
     ) -> Result<(), String> {
         // TASK: Update this to display the current configuration. Ideas:
         //       - Display text like "X enabled/disabled (toggle with y)".
         //       - Make text for disabled config semi-transparent.
-        self.glyph_brush.queue(
+        glyph_brush.queue(
             Section::new()
                 .with_screen_position((50.0, 50.0))
                 .add_text(text("Toggle model rendering with 1\n", true))
@@ -317,14 +325,14 @@ impl Renderer {
                 .add_text(text("Toggle grid rendering with 3\n", true)),
         );
 
-        self.glyph_brush.draw_queued(
-            &self.device,
+        glyph_brush.draw_queued(
+            device,
             // TASK: Put more thought into the staging belt's buffer size.
             &mut StagingBelt::new(1024),
             encoder,
             &view,
-            self.surface_config.width,
-            self.surface_config.height,
+            surface_config.width,
+            surface_config.height,
         )?;
 
         Ok(())
