@@ -7,6 +7,7 @@ use std::{io, mem::size_of};
 use thiserror::Error;
 use tracing::debug;
 use wgpu::util::DeviceExt as _;
+use wgpu_glyph::ab_glyph::InvalidFont;
 use winit::{dpi::PhysicalSize, window::Window};
 
 use super::{
@@ -319,6 +320,9 @@ pub enum InitError {
 
     #[error("Error requesting device")]
     RequestDevice(#[from] wgpu::RequestDeviceError),
+
+    #[error("Error loading font")]
+    InvalidFont(#[from] InvalidFont),
 }
 
 #[derive(Error, Debug)]
