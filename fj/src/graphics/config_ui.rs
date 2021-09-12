@@ -64,9 +64,6 @@ impl ConfigUi {
             section = section.add_text(text);
         }
 
-        // TASK: Update this to display the current configuration. Ideas:
-        //       - Display text like "X enabled/disabled (toggle with y)".
-        //       - Make text for disabled config semi-transparent.
         self.glyph_brush.queue(section);
 
         self.glyph_brush.draw_queued(
