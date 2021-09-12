@@ -43,7 +43,12 @@ impl ConfigUi {
     ) -> Result<(), String> {
         let mut section = Section::new().with_screen_position((50.0, 50.0));
 
-        for text in [&self.model_text, &self.mesh_text, &self.grid_text] {
+        for element in [Element::Model, Element::Mesh, Element::Grid] {
+            let text = match element {
+                Element::Model => &self.model_text,
+                Element::Mesh => &self.mesh_text,
+                Element::Grid => &self.grid_text,
+            };
             let opaque = true;
 
             let alpha = if opaque { 1.0 } else { 0.75 };
@@ -72,4 +77,10 @@ impl ConfigUi {
 
         Ok(())
     }
+}
+
+enum Element {
+    Model,
+    Mesh,
+    Grid,
 }
