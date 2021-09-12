@@ -229,14 +229,15 @@ impl Renderer {
             );
         }
 
-        ConfigUi::draw(
-            &mut self.glyph_brush,
-            &self.device,
-            &mut encoder,
-            &view,
-            &self.surface_config,
-        )
-        .map_err(|err| DrawError::Text(err))?;
+        ConfigUi
+            .draw(
+                &mut self.glyph_brush,
+                &self.device,
+                &mut encoder,
+                &view,
+                &self.surface_config,
+            )
+            .map_err(|err| DrawError::Text(err))?;
 
         // Workaround for gfx-rs/wgpu#1797:
         // https://github.com/gfx-rs/wgpu/issues/1797

@@ -5,6 +5,7 @@ pub struct ConfigUi;
 
 impl ConfigUi {
     pub fn draw(
+        &mut self,
         glyph_brush: &mut GlyphBrush<()>,
         device: &wgpu::Device,
         encoder: &mut wgpu::CommandEncoder,
