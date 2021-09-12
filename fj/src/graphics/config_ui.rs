@@ -39,7 +39,7 @@ impl ConfigUi {
     ) -> Result<(), String> {
         let mut section = Section::new().with_screen_position((50.0, 50.0));
 
-        for element in [Element::Model, Element::Mesh, Element::Grid] {
+        for element in Element::elements() {
             let text = &self.texts[&element];
             let opaque = true;
 
@@ -76,4 +76,10 @@ enum Element {
     Model,
     Mesh,
     Grid,
+}
+
+impl Element {
+    fn elements() -> &'static [Self] {
+        &[Self::Model, Self::Mesh, Self::Grid]
+    }
 }
