@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use wgpu::util::StagingBelt;
 use wgpu_glyph::{
     ab_glyph::{FontArc, InvalidFont},
@@ -9,10 +11,7 @@ use super::COLOR_FORMAT;
 #[derive(Debug)]
 pub struct ConfigUi {
     glyph_brush: GlyphBrush<()>,
-
-    model_text: String,
-    mesh_text: String,
-    grid_text: String,
+    texts: HashMap<Element, String>,
 }
 
 impl ConfigUi {
@@ -22,16 +21,13 @@ impl ConfigUi {
         let glyph_brush =
             GlyphBrushBuilder::using_font(font).build(device, COLOR_FORMAT);
 
-        let model_text = format!("Toggle model rendering with 1\n");
-        let mesh_text = format!("Toggle mesh rendering with 2\n");
-        let grid_text = format!("Toggle grid rendering with 3\n");
+        let mut texts = HashMap::new();
+        texts
+            .insert(Element::Model, format!("Toggle model rendering with 1\n"));
+        texts.insert(Element::Mesh, format!("Toggle mesh rendering with 2\n"));
+        texts.insert(Element::Grid, format!("Toggle grid rendering with 3\n"));
 
-        Ok(Self {
-            glyph_brush,
-            model_text,
-            mesh_text,
-            grid_text,
-        })
+        Ok(Self { glyph_brush, texts })
     }
 
     pub fn draw(
@@ -44,11 +40,7 @@ impl ConfigUi {
         let mut section = Section::new().with_screen_position((50.0, 50.0));
 
         for element in [Element::Model, Element::Mesh, Element::Grid] {
-            let text = match element {
-                Element::Model => &self.model_text,
-                Element::Mesh => &self.mesh_text,
-                Element::Grid => &self.grid_text,
-            };
+            let text = &self.texts[&element];
             let opaque = true;
 
             let alpha = if opaque { 1.0 } else { 0.75 };
