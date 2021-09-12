@@ -79,6 +79,7 @@ impl ConfigUi {
     }
 }
 
+#[derive(Debug, Eq, Hash, PartialEq)]
 enum Element {
     Model,
     Mesh,
