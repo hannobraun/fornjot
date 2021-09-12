@@ -41,16 +41,16 @@ impl ConfigUi {
         view: &wgpu::TextureView,
         surface_config: &wgpu::SurfaceConfiguration,
     ) -> Result<(), String> {
+        let mut section = Section::new().with_screen_position((50.0, 50.0));
+
+        for text in [&self.model_text, &self.mesh_text, &self.grid_text] {
+            section = section.add_text(self.text(text, true));
+        }
+
         // TASK: Update this to display the current configuration. Ideas:
         //       - Display text like "X enabled/disabled (toggle with y)".
         //       - Make text for disabled config semi-transparent.
-        self.glyph_brush.queue(
-            Section::new()
-                .with_screen_position((50.0, 50.0))
-                .add_text(self.text(&self.model_text, true))
-                .add_text(self.text(&self.mesh_text, true))
-                .add_text(self.text(&self.grid_text, true)),
-        );
+        self.glyph_brush.queue(section);
 
         self.glyph_brush.draw_queued(
             device,
