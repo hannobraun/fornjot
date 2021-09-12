@@ -216,7 +216,13 @@ impl Renderer {
         }
 
         self.config_ui
-            .draw(&self.device, &mut encoder, &view, &self.surface_config)
+            .draw(
+                &self.device,
+                &mut encoder,
+                &view,
+                &self.surface_config,
+                config,
+            )
             .map_err(|err| DrawError::Text(err))?;
 
         // Workaround for gfx-rs/wgpu#1797:

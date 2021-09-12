@@ -6,6 +6,8 @@ use wgpu_glyph::{
     GlyphBrush, GlyphBrushBuilder, Section, Text,
 };
 
+use crate::draw_config::DrawConfig;
+
 use super::COLOR_FORMAT;
 
 #[derive(Debug)]
@@ -39,12 +41,13 @@ impl ConfigUi {
         encoder: &mut wgpu::CommandEncoder,
         view: &wgpu::TextureView,
         surface_config: &wgpu::SurfaceConfiguration,
+        draw_config: &DrawConfig,
     ) -> Result<(), String> {
         let mut section = Section::new().with_screen_position((50.0, 50.0));
 
         for element in Element::elements() {
             let text = &self.texts[&element];
-            let opaque = true;
+            let opaque = element.is_enabled(draw_config);
 
             let alpha = if opaque { 1.0 } else { 0.75 };
 
@@ -91,6 +94,14 @@ impl Element {
             Self::Model => ("model", "1"),
             Self::Mesh => ("mesh", "2"),
             Self::Grid => ("grid", "3"),
+        }
+    }
+
+    fn is_enabled(&self, config: &DrawConfig) -> bool {
+        match self {
+            Self::Model => config.draw_model,
+            Self::Mesh => config.draw_mesh,
+            Self::Grid => config.draw_grid,
         }
     }
 }
