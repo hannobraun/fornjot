@@ -98,7 +98,7 @@ fn run_inner(
         grid.map(|grid| grid.into()),
     ))?;
 
-    let mut render_config = DrawConfig::default();
+    let mut draw_config = DrawConfig::default();
 
     trace!("Finished initialization.");
 
@@ -148,7 +148,7 @@ fn run_inner(
                 window.request_redraw();
             }
             Event::RedrawRequested(_) => {
-                match renderer.draw(&transform, &render_config) {
+                match renderer.draw(&transform, &draw_config) {
                     Ok(()) => {}
                     Err(err) => {
                         panic!("Draw error: {}", err);
@@ -162,13 +162,13 @@ fn run_inner(
             *control_flow = ControlFlow::Exit;
         }
         if actions.toggle_model {
-            render_config.draw_model = !render_config.draw_model;
+            draw_config.draw_model = !draw_config.draw_model;
         }
         if actions.toggle_mesh {
-            render_config.draw_mesh = !render_config.draw_mesh;
+            draw_config.draw_mesh = !draw_config.draw_mesh;
         }
         if actions.toggle_grid {
-            render_config.draw_grid = !render_config.draw_grid;
+            draw_config.draw_grid = !draw_config.draw_grid;
         }
 
         trace!("Event handled: {:?}", event);
