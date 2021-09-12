@@ -13,7 +13,7 @@ use super::COLOR_FORMAT;
 #[derive(Debug)]
 pub struct ConfigUi {
     glyph_brush: GlyphBrush<()>,
-    texts: HashMap<Element, String>,
+    texts: HashMap<(Element, bool), String>,
 }
 
 impl ConfigUi {
@@ -26,10 +26,16 @@ impl ConfigUi {
         let mut texts = HashMap::new();
         for element in Element::elements() {
             let (name, key) = element.name_key();
-            texts.insert(
-                element,
-                format!("Toggle {} rendering with {}\n", name, key),
-            );
+
+            for (enabled, word) in [(false, "disabled"), (true, "enabled")] {
+                texts.insert(
+                    (element, enabled),
+                    format!(
+                        "{} rendering is {} (toggle with {})\n",
+                        name, word, key
+                    ),
+                );
+            }
         }
 
         Ok(Self { glyph_brush, texts })
@@ -47,7 +53,7 @@ impl ConfigUi {
 
         for element in Element::elements() {
             let enabled = element.is_enabled(draw_config);
-            let text = &self.texts[&element];
+            let text = &self.texts[&(element, enabled)];
 
             let alpha = if enabled { 1.0 } else { 0.75 };
 
