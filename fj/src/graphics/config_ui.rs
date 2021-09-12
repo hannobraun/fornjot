@@ -65,7 +65,6 @@ impl ConfigUi {
         }
 
         self.glyph_brush.queue(section);
-
         self.glyph_brush.draw_queued(
             device,
             // TASK: Put more thought into the staging belt's buffer size.
