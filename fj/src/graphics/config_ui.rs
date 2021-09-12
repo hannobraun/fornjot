@@ -8,8 +8,7 @@ use super::COLOR_FORMAT;
 
 #[derive(Debug)]
 pub struct ConfigUi {
-    // TASK: Make private.
-    pub glyph_brush: GlyphBrush<()>,
+    glyph_brush: GlyphBrush<()>,
 }
 
 impl ConfigUi {
