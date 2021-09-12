@@ -6,7 +6,7 @@ use wgpu::util::DeviceExt as _;
 use wgpu_glyph::ab_glyph::InvalidFont;
 use winit::{dpi::PhysicalSize, window::Window};
 
-use crate::render_config::Config;
+use crate::render_config::RenderConfig;
 
 use super::{
     config_ui::ConfigUi, drawables::Drawables, geometries::Geometries,
@@ -31,7 +31,7 @@ pub struct Renderer {
 
     config_ui: ConfigUi,
 
-    config: Config,
+    config: RenderConfig,
 }
 
 impl Renderer {
@@ -147,7 +147,7 @@ impl Renderer {
 
             config_ui,
 
-            config: Config::default(),
+            config: RenderConfig::default(),
         })
     }
 
