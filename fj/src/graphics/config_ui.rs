@@ -65,7 +65,7 @@ impl ConfigUi {
         Ok(())
     }
 
-    fn text(text: &str, opaque: bool) -> Text {
+    fn text<'r>(text: &'r str, opaque: bool) -> Text<'r> {
         let alpha = if opaque { 1.0 } else { 0.75 };
 
         Text::new(text)
