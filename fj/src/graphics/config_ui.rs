@@ -1,6 +1,7 @@
 use wgpu::util::StagingBelt;
 use wgpu_glyph::{GlyphBrush, Section, Text};
 
+#[derive(Debug)]
 pub struct ConfigUi;
 
 impl ConfigUi {
