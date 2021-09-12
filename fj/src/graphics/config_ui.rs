@@ -47,9 +47,9 @@ impl ConfigUi {
         self.glyph_brush.queue(
             Section::new()
                 .with_screen_position((50.0, 50.0))
-                .add_text(Self::text(&self.model_text, true))
-                .add_text(Self::text(&self.mesh_text, true))
-                .add_text(Self::text(&self.grid_text, true)),
+                .add_text(self.text(&self.model_text, true))
+                .add_text(self.text(&self.mesh_text, true))
+                .add_text(self.text(&self.grid_text, true)),
         );
 
         self.glyph_brush.draw_queued(
@@ -65,7 +65,7 @@ impl ConfigUi {
         Ok(())
     }
 
-    fn text<'r>(text: &'r str, opaque: bool) -> Text<'r> {
+    fn text<'r>(&self, text: &'r str, opaque: bool) -> Text<'r> {
         let alpha = if opaque { 1.0 } else { 0.75 };
 
         Text::new(text)
