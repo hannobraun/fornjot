@@ -6,7 +6,7 @@ use wgpu::util::DeviceExt as _;
 use wgpu_glyph::ab_glyph::InvalidFont;
 use winit::{dpi::PhysicalSize, window::Window};
 
-use crate::render_config::RenderConfig;
+use crate::render_config::DrawConfig;
 
 use super::{
     config_ui::ConfigUi, drawables::Drawables, geometries::Geometries,
@@ -161,7 +161,7 @@ impl Renderer {
     pub fn draw(
         &mut self,
         transform: &Transform,
-        config: &RenderConfig,
+        config: &DrawConfig,
     ) -> Result<(), DrawError> {
         let uniforms = Uniforms {
             transform: transform.to_native(self.aspect_ratio()),

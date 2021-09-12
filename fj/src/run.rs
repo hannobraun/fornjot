@@ -15,7 +15,7 @@ use crate::{
     graphics::{Renderer, Transform},
     input,
     model::IntoMesh,
-    render_config::RenderConfig,
+    render_config::DrawConfig,
     threemf, Mesh, Model,
 };
 
@@ -98,7 +98,7 @@ fn run_inner(
         grid.map(|grid| grid.into()),
     ))?;
 
-    let mut render_config = RenderConfig::default();
+    let mut render_config = DrawConfig::default();
 
     trace!("Finished initialization.");
 

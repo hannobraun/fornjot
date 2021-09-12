@@ -1,11 +1,11 @@
 #[derive(Debug)]
-pub struct RenderConfig {
+pub struct DrawConfig {
     pub draw_model: bool,
     pub draw_mesh: bool,
     pub draw_grid: bool,
 }
 
-impl Default for RenderConfig {
+impl Default for DrawConfig {
     fn default() -> Self {
         Self {
             draw_model: true,
