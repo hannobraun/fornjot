@@ -11,11 +11,11 @@ use winit::{
 
 use crate::{
     args::Args,
+    draw_config::DrawConfig,
     geometry::isosurface::grid::Grid,
     graphics::{Renderer, Transform},
     input,
     model::IntoMesh,
-    render_config::DrawConfig,
     threemf, Mesh, Model,
 };
 

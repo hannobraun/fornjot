@@ -11,9 +11,9 @@ pub mod prelude {
 }
 
 mod args;
+mod draw_config;
 mod graphics;
 mod input;
-mod render_config;
 mod run;
 mod types;
 mod util;

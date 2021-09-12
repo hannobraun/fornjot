@@ -6,7 +6,7 @@ use wgpu::util::DeviceExt as _;
 use wgpu_glyph::ab_glyph::InvalidFont;
 use winit::{dpi::PhysicalSize, window::Window};
 
-use crate::render_config::DrawConfig;
+use crate::draw_config::DrawConfig;
 
 use super::{
     config_ui::ConfigUi, drawables::Drawables, geometries::Geometries,
