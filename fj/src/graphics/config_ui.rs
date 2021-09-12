@@ -46,8 +46,8 @@ impl ConfigUi {
         let mut section = Section::new().with_screen_position((50.0, 50.0));
 
         for element in Element::elements() {
-            let text = &self.texts[&element];
             let enabled = element.is_enabled(draw_config);
+            let text = &self.texts[&element];
 
             let alpha = if enabled { 1.0 } else { 0.75 };
 
