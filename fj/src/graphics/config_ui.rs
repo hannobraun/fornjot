@@ -22,10 +22,13 @@ impl ConfigUi {
             GlyphBrushBuilder::using_font(font).build(device, COLOR_FORMAT);
 
         let mut texts = HashMap::new();
-        texts
-            .insert(Element::Model, format!("Toggle model rendering with 1\n"));
-        texts.insert(Element::Mesh, format!("Toggle mesh rendering with 2\n"));
-        texts.insert(Element::Grid, format!("Toggle grid rendering with 3\n"));
+        for element in Element::elements() {
+            let (name, key) = element.name_key();
+            texts.insert(
+                element,
+                format!("Toggle {} rendering with {}\n", name, key),
+            );
+        }
 
         Ok(Self { glyph_brush, texts })
     }
@@ -81,5 +84,13 @@ enum Element {
 impl Element {
     fn elements() -> [Self; 3] {
         [Self::Model, Self::Mesh, Self::Grid]
+    }
+
+    fn name_key(&self) -> (&'static str, &'static str) {
+        match self {
+            Self::Model => ("model", "1"),
+            Self::Mesh => ("mesh", "2"),
+            Self::Grid => ("grid", "3"),
+        }
     }
 }
