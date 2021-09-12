@@ -135,6 +135,8 @@ impl Renderer {
         );
         let pipelines = Pipelines::new(&device, &bind_group_layout);
 
+        let config_ui = ConfigUi { glyph_brush };
+
         Ok(Self {
             surface,
             device,
@@ -149,7 +151,7 @@ impl Renderer {
             geometries,
             pipelines,
 
-            config_ui: ConfigUi { glyph_brush },
+            config_ui,
 
             config: Config::default(),
         })
