@@ -2,12 +2,14 @@ use wgpu::util::StagingBelt;
 use wgpu_glyph::{GlyphBrush, Section, Text};
 
 #[derive(Debug)]
-pub struct ConfigUi;
+pub struct ConfigUi {
+    // TASK: Make private.
+    pub glyph_brush: GlyphBrush<()>,
+}
 
 impl ConfigUi {
     pub fn draw(
         &mut self,
-        glyph_brush: &mut GlyphBrush<()>,
         device: &wgpu::Device,
         encoder: &mut wgpu::CommandEncoder,
         view: &wgpu::TextureView,
@@ -16,7 +18,7 @@ impl ConfigUi {
         // TASK: Update this to display the current configuration. Ideas:
         //       - Display text like "X enabled/disabled (toggle with y)".
         //       - Make text for disabled config semi-transparent.
-        glyph_brush.queue(
+        self.glyph_brush.queue(
             Section::new()
                 .with_screen_position((50.0, 50.0))
                 .add_text(text("Toggle model rendering with 1\n", true))
@@ -24,7 +26,7 @@ impl ConfigUi {
                 .add_text(text("Toggle grid rendering with 3\n", true)),
         );
 
-        glyph_brush.draw_queued(
+        self.glyph_brush.draw_queued(
             device,
             // TASK: Put more thought into the staging belt's buffer size.
             &mut StagingBelt::new(1024),

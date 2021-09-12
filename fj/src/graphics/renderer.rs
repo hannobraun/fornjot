@@ -5,7 +5,7 @@ use tracing::debug;
 use wgpu::util::DeviceExt as _;
 use wgpu_glyph::{
     ab_glyph::{FontArc, InvalidFont},
-    GlyphBrush, GlyphBrushBuilder,
+    GlyphBrushBuilder,
 };
 use winit::{dpi::PhysicalSize, window::Window};
 
@@ -20,7 +20,6 @@ pub struct Renderer {
     surface: wgpu::Surface,
     device: wgpu::Device,
     queue: wgpu::Queue,
-    glyph_brush: GlyphBrush<()>,
 
     surface_config: wgpu::SurfaceConfiguration,
     depth_view: wgpu::TextureView,
@@ -140,7 +139,6 @@ impl Renderer {
             surface,
             device,
             queue,
-            glyph_brush,
 
             surface_config,
             depth_view,
@@ -151,7 +149,7 @@ impl Renderer {
             geometries,
             pipelines,
 
-            config_ui: ConfigUi,
+            config_ui: ConfigUi { glyph_brush },
 
             config: Config::default(),
         })
@@ -234,13 +232,7 @@ impl Renderer {
         }
 
         self.config_ui
-            .draw(
-                &mut self.glyph_brush,
-                &self.device,
-                &mut encoder,
-                &view,
-                &self.surface_config,
-            )
+            .draw(&self.device, &mut encoder, &view, &self.surface_config)
             .map_err(|err| DrawError::Text(err))?;
 
         // Workaround for gfx-rs/wgpu#1797:
