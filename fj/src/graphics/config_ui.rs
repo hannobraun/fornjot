@@ -9,6 +9,10 @@ use super::COLOR_FORMAT;
 #[derive(Debug)]
 pub struct ConfigUi {
     glyph_brush: GlyphBrush<()>,
+
+    model_text: String,
+    mesh_text: String,
+    grid_text: String,
 }
 
 impl ConfigUi {
@@ -18,7 +22,16 @@ impl ConfigUi {
         let glyph_brush =
             GlyphBrushBuilder::using_font(font).build(device, COLOR_FORMAT);
 
-        Ok(Self { glyph_brush })
+        let model_text = format!("Toggle model rendering with 1\n");
+        let mesh_text = format!("Toggle mesh rendering with 2\n");
+        let grid_text = format!("Toggle grid rendering with 3\n");
+
+        Ok(Self {
+            glyph_brush,
+            model_text,
+            mesh_text,
+            grid_text,
+        })
     }
 
     pub fn draw(
@@ -34,9 +47,9 @@ impl ConfigUi {
         self.glyph_brush.queue(
             Section::new()
                 .with_screen_position((50.0, 50.0))
-                .add_text(Self::text("Toggle model rendering with 1\n", true))
-                .add_text(Self::text("Toggle mesh rendering with 2\n", true))
-                .add_text(Self::text("Toggle grid rendering with 3\n", true)),
+                .add_text(Self::text(&self.model_text, true))
+                .add_text(Self::text(&self.mesh_text, true))
+                .add_text(Self::text(&self.grid_text, true)),
         );
 
         self.glyph_brush.draw_queued(
