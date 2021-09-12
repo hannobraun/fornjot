@@ -47,9 +47,9 @@ impl ConfigUi {
 
         for element in Element::elements() {
             let text = &self.texts[&element];
-            let opaque = element.is_enabled(draw_config);
+            let enabled = element.is_enabled(draw_config);
 
-            let alpha = if opaque { 1.0 } else { 0.75 };
+            let alpha = if enabled { 1.0 } else { 0.75 };
 
             let text = Text::new(text)
                 .with_color([0.0, 0.0, 0.0, alpha])
