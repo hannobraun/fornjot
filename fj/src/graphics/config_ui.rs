@@ -79,7 +79,7 @@ enum Element {
 }
 
 impl Element {
-    fn elements() -> &'static [Self] {
-        &[Self::Model, Self::Mesh, Self::Grid]
+    fn elements() -> [Self; 3] {
+        [Self::Model, Self::Mesh, Self::Grid]
     }
 }
