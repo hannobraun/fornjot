@@ -3,10 +3,7 @@ use std::{io, mem::size_of};
 use thiserror::Error;
 use tracing::debug;
 use wgpu::util::DeviceExt as _;
-use wgpu_glyph::{
-    ab_glyph::{FontArc, InvalidFont},
-    GlyphBrushBuilder,
-};
+use wgpu_glyph::ab_glyph::InvalidFont;
 use winit::{dpi::PhysicalSize, window::Window};
 
 use super::{
@@ -123,11 +120,6 @@ impl Renderer {
             label: None,
         });
 
-        let font =
-            FontArc::try_from_slice(include_bytes!("fonts/B612-Bold.ttf"))?;
-        let glyph_brush =
-            GlyphBrushBuilder::using_font(font).build(&device, COLOR_FORMAT);
-
         let geometries = Geometries::new(
             &device,
             mesh,
@@ -135,7 +127,7 @@ impl Renderer {
         );
         let pipelines = Pipelines::new(&device, &bind_group_layout);
 
-        let config_ui = ConfigUi { glyph_brush };
+        let config_ui = ConfigUi::new(&device)?;
 
         Ok(Self {
             surface,

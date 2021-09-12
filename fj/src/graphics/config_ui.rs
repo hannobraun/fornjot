@@ -1,5 +1,10 @@
 use wgpu::util::StagingBelt;
-use wgpu_glyph::{GlyphBrush, Section, Text};
+use wgpu_glyph::{
+    ab_glyph::{FontArc, InvalidFont},
+    GlyphBrush, GlyphBrushBuilder, Section, Text,
+};
+
+use super::COLOR_FORMAT;
 
 #[derive(Debug)]
 pub struct ConfigUi {
@@ -8,6 +13,15 @@ pub struct ConfigUi {
 }
 
 impl ConfigUi {
+    pub fn new(device: &wgpu::Device) -> Result<Self, InvalidFont> {
+        let font =
+            FontArc::try_from_slice(include_bytes!("fonts/B612-Bold.ttf"))?;
+        let glyph_brush =
+            GlyphBrushBuilder::using_font(font).build(device, COLOR_FORMAT);
+
+        Ok(Self { glyph_brush })
+    }
+
     pub fn draw(
         &mut self,
         device: &wgpu::Device,
