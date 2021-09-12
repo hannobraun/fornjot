@@ -15,6 +15,7 @@ use crate::{
     graphics::{Renderer, Transform},
     input,
     model::IntoMesh,
+    render_config::RenderConfig,
     threemf, Mesh, Model,
 };
 
@@ -97,6 +98,8 @@ fn run_inner(
         grid.map(|grid| grid.into()),
     ))?;
 
+    let mut render_config = RenderConfig::default();
+
     trace!("Finished initialization.");
 
     event_loop.run(move |event, _, control_flow| {
@@ -144,12 +147,14 @@ fn run_inner(
             Event::MainEventsCleared => {
                 window.request_redraw();
             }
-            Event::RedrawRequested(_) => match renderer.draw(&transform) {
-                Ok(()) => {}
-                Err(err) => {
-                    panic!("Draw error: {}", err);
+            Event::RedrawRequested(_) => {
+                match renderer.draw(&transform, &render_config) {
+                    Ok(()) => {}
+                    Err(err) => {
+                        panic!("Draw error: {}", err);
+                    }
                 }
-            },
+            }
             _ => {}
         }
 
@@ -157,13 +162,13 @@ fn run_inner(
             *control_flow = ControlFlow::Exit;
         }
         if actions.toggle_model {
-            renderer.toggle_model();
+            render_config.draw_model = !render_config.draw_model;
         }
         if actions.toggle_mesh {
-            renderer.toggle_mesh();
+            render_config.draw_mesh = !render_config.draw_mesh;
         }
         if actions.toggle_grid {
-            renderer.toggle_grid();
+            render_config.draw_grid = !render_config.draw_grid;
         }
 
         trace!("Event handled: {:?}", event);

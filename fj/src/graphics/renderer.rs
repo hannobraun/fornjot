@@ -30,8 +30,6 @@ pub struct Renderer {
     pipelines: Pipelines,
 
     config_ui: ConfigUi,
-
-    config: RenderConfig,
 }
 
 impl Renderer {
@@ -146,8 +144,6 @@ impl Renderer {
             pipelines,
 
             config_ui,
-
-            config: RenderConfig::default(),
         })
     }
 
@@ -162,19 +158,11 @@ impl Renderer {
         self.depth_view = depth_view;
     }
 
-    pub fn toggle_model(&mut self) {
-        self.config.draw_model = !self.config.draw_model;
-    }
-
-    pub fn toggle_mesh(&mut self) {
-        self.config.draw_mesh = !self.config.draw_mesh;
-    }
-
-    pub fn toggle_grid(&mut self) {
-        self.config.draw_grid = !self.config.draw_grid;
-    }
-
-    pub fn draw(&mut self, transform: &Transform) -> Result<(), DrawError> {
+    pub fn draw(
+        &mut self,
+        transform: &Transform,
+        config: &RenderConfig,
+    ) -> Result<(), DrawError> {
         let uniforms = Uniforms {
             transform: transform.to_native(self.aspect_ratio()),
             transform_normals: transform.to_normals_transform(),
@@ -200,7 +188,7 @@ impl Renderer {
 
         let drawables = Drawables::new(&self.geometries, &self.pipelines);
 
-        if self.config.draw_model {
+        if config.draw_model {
             drawables.model.draw(
                 &mut encoder,
                 &view,
@@ -208,7 +196,7 @@ impl Renderer {
                 &self.bind_group,
             );
         }
-        if self.config.draw_mesh {
+        if config.draw_mesh {
             drawables.mesh.draw(
                 &mut encoder,
                 &view,
@@ -216,7 +204,7 @@ impl Renderer {
                 &self.bind_group,
             );
         }
-        if self.config.draw_grid {
+        if config.draw_grid {
             // TASK: Draw the distance value for each grid vertex that is close
             //       to the camera.
             drawables.grid.draw(
