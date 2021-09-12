@@ -10,7 +10,7 @@ use wgpu_glyph::{
 use winit::{dpi::PhysicalSize, window::Window};
 
 use super::{
-    config_ui, drawables::Drawables, geometries::Geometries,
+    config_ui::ConfigUi, drawables::Drawables, geometries::Geometries,
     pipelines::Pipelines, transform::Transform, uniforms::Uniforms, Vertices,
     COLOR_FORMAT, DEPTH_FORMAT,
 };
@@ -229,7 +229,7 @@ impl Renderer {
             );
         }
 
-        config_ui::draw(
+        ConfigUi::draw(
             &mut self.glyph_brush,
             &self.device,
             &mut encoder,
