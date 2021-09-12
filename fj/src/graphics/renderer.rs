@@ -31,6 +31,8 @@ pub struct Renderer {
     geometries: Geometries,
     pipelines: Pipelines,
 
+    config_ui: ConfigUi,
+
     config: Config,
 }
 
@@ -149,6 +151,8 @@ impl Renderer {
             geometries,
             pipelines,
 
+            config_ui: ConfigUi,
+
             config: Config::default(),
         })
     }
@@ -229,7 +233,7 @@ impl Renderer {
             );
         }
 
-        ConfigUi
+        self.config_ui
             .draw(
                 &mut self.glyph_brush,
                 &self.device,
