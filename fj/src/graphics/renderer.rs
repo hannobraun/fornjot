@@ -6,6 +6,8 @@ use wgpu::util::DeviceExt as _;
 use wgpu_glyph::ab_glyph::InvalidFont;
 use winit::{dpi::PhysicalSize, window::Window};
 
+use crate::render_config::Config;
+
 use super::{
     config_ui::ConfigUi, drawables::Drawables, geometries::Geometries,
     pipelines::Pipelines, transform::Transform, uniforms::Uniforms, Vertices,
@@ -296,23 +298,6 @@ impl Renderer {
                 },
             ),
         });
-    }
-}
-
-#[derive(Debug)]
-struct Config {
-    draw_model: bool,
-    draw_mesh: bool,
-    draw_grid: bool,
-}
-
-impl Default for Config {
-    fn default() -> Self {
-        Self {
-            draw_model: true,
-            draw_mesh: false,
-            draw_grid: false,
-        }
     }
 }
 
