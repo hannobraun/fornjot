@@ -1,7 +1,7 @@
 use wgpu::util::StagingBelt;
 use wgpu_glyph::{GlyphBrush, Section, Text};
 
-pub fn draw_config_ui(
+pub fn draw(
     glyph_brush: &mut GlyphBrush<()>,
     device: &wgpu::Device,
     encoder: &mut wgpu::CommandEncoder,

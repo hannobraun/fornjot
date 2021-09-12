@@ -229,7 +229,7 @@ impl Renderer {
             );
         }
 
-        config_ui::draw_config_ui(
+        config_ui::draw(
             &mut self.glyph_brush,
             &self.device,
             &mut encoder,
