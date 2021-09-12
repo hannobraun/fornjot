@@ -34,9 +34,9 @@ impl ConfigUi {
         self.glyph_brush.queue(
             Section::new()
                 .with_screen_position((50.0, 50.0))
-                .add_text(text("Toggle model rendering with 1\n", true))
-                .add_text(text("Toggle mesh rendering with 2\n", true))
-                .add_text(text("Toggle grid rendering with 3\n", true)),
+                .add_text(Self::text("Toggle model rendering with 1\n", true))
+                .add_text(Self::text("Toggle mesh rendering with 2\n", true))
+                .add_text(Self::text("Toggle grid rendering with 3\n", true)),
         );
 
         self.glyph_brush.draw_queued(
@@ -51,12 +51,12 @@ impl ConfigUi {
 
         Ok(())
     }
-}
 
-fn text(text: &str, opaque: bool) -> Text {
-    let alpha = if opaque { 1.0 } else { 0.75 };
+    fn text(text: &str, opaque: bool) -> Text {
+        let alpha = if opaque { 1.0 } else { 0.75 };
 
-    Text::new(text)
-        .with_color([0.0, 0.0, 0.0, alpha])
-        .with_scale(100.0)
+        Text::new(text)
+            .with_color([0.0, 0.0, 0.0, alpha])
+            .with_scale(100.0)
+    }
 }
