@@ -44,7 +44,15 @@ impl ConfigUi {
         let mut section = Section::new().with_screen_position((50.0, 50.0));
 
         for text in [&self.model_text, &self.mesh_text, &self.grid_text] {
-            section = section.add_text(self.text(text, true));
+            let opaque = true;
+
+            let alpha = if opaque { 1.0 } else { 0.75 };
+
+            let text = Text::new(text)
+                .with_color([0.0, 0.0, 0.0, alpha])
+                .with_scale(100.0);
+
+            section = section.add_text(text);
         }
 
         // TASK: Update this to display the current configuration. Ideas:
@@ -63,13 +71,5 @@ impl ConfigUi {
         )?;
 
         Ok(())
-    }
-
-    fn text<'r>(&self, text: &'r str, opaque: bool) -> Text<'r> {
-        let alpha = if opaque { 1.0 } else { 0.75 };
-
-        Text::new(text)
-            .with_color([0.0, 0.0, 0.0, alpha])
-            .with_scale(100.0)
     }
 }
