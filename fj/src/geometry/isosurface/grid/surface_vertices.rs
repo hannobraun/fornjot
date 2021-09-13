@@ -12,6 +12,10 @@ use super::{
 pub struct SurfaceVertices(pub BTreeMap<Index, Point<f32, 3>>);
 
 impl SurfaceVertices {
+    pub fn new() -> Self {
+        Self(BTreeMap::new())
+    }
+
     /// Return the neighboring surface vertices of an edge
     pub fn neighbors_of_edge(&self, edge: Edge) -> [Point<f32, 3>; 4] {
         let direction = edge.direction();

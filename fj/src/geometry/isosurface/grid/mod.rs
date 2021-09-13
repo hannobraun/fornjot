@@ -43,7 +43,7 @@ impl Grid {
 
         let mut all_edges = BTreeMap::new();
         let mut edges_at_surface = BTreeMap::new();
-        let mut surface_vertices = SurfaceVertices(BTreeMap::new());
+        let mut surface_vertices = SurfaceVertices::new();
 
         for cell in descriptor.cells() {
             for index in cell.vertices() {
