@@ -88,7 +88,7 @@ fn run_inner(
     trace!("Initializing event handler...");
     let mut input_handler = input::Handler::new();
 
-    trace!("Initializing transform...");
+    trace!("Initializing state...");
     let mut transform = Transform::new();
     let mut draw_config = DrawConfig::default();
 
