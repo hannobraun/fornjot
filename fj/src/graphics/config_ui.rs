@@ -59,7 +59,7 @@ impl ConfigUi {
 
             let text = Text::new(text)
                 .with_color([0.0, 0.0, 0.0, alpha])
-                .with_scale(100.0);
+                .with_scale(50.0);
 
             section = section.add_text(text);
         }
