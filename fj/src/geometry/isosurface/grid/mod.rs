@@ -102,7 +102,7 @@ impl Grid {
                 &points_and_normals,
             );
 
-            surface_vertices.0.insert(cell.min_index, surface_vertex);
+            surface_vertices.insert(cell.min_index, surface_vertex);
         }
 
         Self {

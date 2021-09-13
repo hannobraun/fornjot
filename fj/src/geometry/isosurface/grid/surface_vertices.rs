@@ -16,6 +16,10 @@ impl SurfaceVertices {
         Self(BTreeMap::new())
     }
 
+    pub fn insert(&mut self, index: Index, vertex: Point<f32, 3>) {
+        self.0.insert(index, vertex);
+    }
+
     /// Return the neighboring surface vertices of an edge
     pub fn neighbors_of_edge(&self, edge: Edge) -> [Point<f32, 3>; 4] {
         let direction = edge.direction();
