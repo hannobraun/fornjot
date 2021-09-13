@@ -43,72 +43,67 @@ impl Grid {
 
         let mut all_edges = BTreeMap::new();
         let mut edges_at_surface = BTreeMap::new();
+        let mut surface_vertices = SurfaceVertices(BTreeMap::new());
 
-        let surface_vertices = descriptor
-            .cells()
-            .filter_map(|cell| {
-                for index in cell.vertices() {
-                    let vertex = index.to_position(
-                        descriptor.aabb.min,
-                        descriptor.resolution,
-                    );
-                    grid_vertex_samples
-                        .entry(index)
-                        .or_insert_with(|| geometry.sample(vertex));
+        for cell in descriptor.cells() {
+            for index in cell.vertices() {
+                let vertex = index
+                    .to_position(descriptor.aabb.min, descriptor.resolution);
+                grid_vertex_samples
+                    .entry(index)
+                    .or_insert_with(|| geometry.sample(vertex));
+            }
+
+            let mut points_and_normals = Vec::new();
+
+            for (a, b) in cell.edges() {
+                let sample_a = grid_vertex_samples[&a];
+                let sample_b = grid_vertex_samples[&b];
+
+                let edge = Edge {
+                    a: Vertex {
+                        index: a,
+                        point: sample_a.point,
+                        distance: sample_a.distance,
+                    },
+                    b: Vertex {
+                        index: b,
+                        point: sample_b.point,
+                        distance: sample_b.distance,
+                    },
+                };
+
+                all_edges.insert((a, b), edge);
+
+                if edge.at_surface() {
+                    edges_at_surface.insert((a, b), edge);
+
+                    let f = edge.a.distance.abs()
+                        / (edge.a.distance.abs() + edge.b.distance.abs());
+
+                    assert!(f.is_finite());
+                    assert!(!f.is_nan());
+
+                    let point =
+                        edge.a.point + (edge.b.point - edge.a.point) * f;
+                    let normal = geometry.normal(point);
+
+                    points_and_normals.push((point, normal));
                 }
+            }
 
-                let mut points_and_normals = Vec::new();
+            if points_and_normals.len() == 0 {
+                continue;
+            }
 
-                for (a, b) in cell.edges() {
-                    let sample_a = grid_vertex_samples[&a];
-                    let sample_b = grid_vertex_samples[&b];
+            let surface_vertex = place_surface_vertex(
+                cell,
+                descriptor.resolution,
+                &points_and_normals,
+            );
 
-                    let edge = Edge {
-                        a: Vertex {
-                            index: a,
-                            point: sample_a.point,
-                            distance: sample_a.distance,
-                        },
-                        b: Vertex {
-                            index: b,
-                            point: sample_b.point,
-                            distance: sample_b.distance,
-                        },
-                    };
-
-                    all_edges.insert((a, b), edge);
-
-                    if edge.at_surface() {
-                        edges_at_surface.insert((a, b), edge);
-
-                        let f = edge.a.distance.abs()
-                            / (edge.a.distance.abs() + edge.b.distance.abs());
-
-                        assert!(f.is_finite());
-                        assert!(!f.is_nan());
-
-                        let point =
-                            edge.a.point + (edge.b.point - edge.a.point) * f;
-                        let normal = geometry.normal(point);
-
-                        points_and_normals.push((point, normal));
-                    }
-                }
-
-                if points_and_normals.len() == 0 {
-                    return None;
-                }
-
-                let surface_vertex = place_surface_vertex(
-                    cell,
-                    descriptor.resolution,
-                    &points_and_normals,
-                );
-
-                Some((cell.min_index, surface_vertex))
-            })
-            .collect();
-        let surface_vertices = SurfaceVertices(surface_vertices);
+            surface_vertices.0.insert(cell.min_index, surface_vertex);
+        }
 
         Self {
             descriptor,
