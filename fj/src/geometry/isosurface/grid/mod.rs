@@ -108,12 +108,13 @@ impl Grid {
                 Some((cell.min_index, surface_vertex))
             })
             .collect();
+        let surface_vertices = SurfaceVertices(surface_vertices);
 
         Self {
             descriptor,
             all_edges,
             edges_at_surface,
-            surface_vertices: SurfaceVertices(surface_vertices),
+            surface_vertices,
         }
     }
 
