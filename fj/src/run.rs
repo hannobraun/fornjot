@@ -90,6 +90,7 @@ fn run_inner(
 
     trace!("Initializing transform...");
     let mut transform = Transform::new();
+    let mut draw_config = DrawConfig::default();
 
     trace!("Initializing renderer...");
     let mut renderer = block_on(Renderer::new(
@@ -97,8 +98,6 @@ fn run_inner(
         mesh.into(),
         grid.map(|grid| grid.into()),
     ))?;
-
-    let mut draw_config = DrawConfig::default();
 
     trace!("Finished initialization.");
 
