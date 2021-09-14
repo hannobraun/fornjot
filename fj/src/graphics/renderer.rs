@@ -122,7 +122,7 @@ impl Renderer {
 
         let geometries = Geometries::new(
             &device,
-            mesh,
+            &mesh,
             grid.unwrap_or_else(|| Vertices::empty()),
         );
         let pipelines = Pipelines::new(&device, &bind_group_layout);
