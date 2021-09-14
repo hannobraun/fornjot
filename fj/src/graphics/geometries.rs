@@ -11,7 +11,11 @@ pub struct Geometries {
 }
 
 impl Geometries {
-    pub fn new(device: &wgpu::Device, mesh: &Vertices, grid: Vertices) -> Self {
+    pub fn new(
+        device: &wgpu::Device,
+        mesh: &Vertices,
+        grid: &Vertices,
+    ) -> Self {
         let mesh = Geometry::new(device, mesh.vertices(), mesh.indices());
         let grid = Geometry::new(device, grid.vertices(), grid.indices());
 

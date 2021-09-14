@@ -121,8 +121,11 @@ impl Renderer {
         });
 
         let empty_vertices = Vertices::empty();
-        let geometries =
-            Geometries::new(&device, &mesh, grid.unwrap_or(empty_vertices));
+        let geometries = Geometries::new(
+            &device,
+            &mesh,
+            grid.as_ref().unwrap_or(&empty_vertices),
+        );
         let pipelines = Pipelines::new(&device, &bind_group_layout);
 
         let config_ui = ConfigUi::new(&device)?;
