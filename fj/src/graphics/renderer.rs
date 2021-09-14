@@ -120,10 +120,11 @@ impl Renderer {
             label: None,
         });
 
+        let empty_vertices = Vertices::empty();
         let geometries = Geometries::new(
             &device,
             &mesh,
-            grid.unwrap_or_else(|| Vertices::empty()),
+            grid.unwrap_or_else(|| empty_vertices),
         );
         let pipelines = Pipelines::new(&device, &bind_group_layout);
 
