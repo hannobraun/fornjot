@@ -148,7 +148,13 @@ impl Handler {
             }
         };
 
-        self.zoom_speed += delta * 0.5;
+        if delta > 0.0 && self.zoom_speed < 0.0
+            || delta < 0.0 && self.zoom_speed > 0.0
+        {
+            self.zoom_speed = 0.0;
+        } else {
+            self.zoom_speed += delta * 0.5;
+        }
     }
 
     pub fn update(&mut self, delta_t: f32, transform: &mut Transform) {
