@@ -149,6 +149,10 @@ impl Handler {
 
         transform.distance += delta;
     }
+
+    pub fn update(&mut self) {
+        // TASK: Implement.
+    }
 }
 
 pub struct Actions {
