@@ -150,7 +150,7 @@ impl Handler {
 
     pub fn update(&mut self, transform: &mut Transform) {
         transform.distance += self.zoom_velocity;
-        self.zoom_velocity = 0.0;
+        self.zoom_velocity *= 0.9;
     }
 }
 
