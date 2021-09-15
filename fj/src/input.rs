@@ -57,6 +57,9 @@ impl Handler {
             let diff_y = position.y - previous.y;
 
             if self.rotating {
+                // TASK: Rotate the model around the point on the surface that
+                //       the cursor is currently pointing at.
+
                 let f = 0.005;
 
                 let x_angle = diff_y as f32 * f;
