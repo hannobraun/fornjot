@@ -148,7 +148,7 @@ impl Handler {
             }
         };
 
-        self.zoom_speed += delta;
+        self.zoom_speed += delta * 0.5;
     }
 
     pub fn update(&mut self, delta_t: f32, transform: &mut Transform) {
