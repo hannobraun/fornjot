@@ -152,7 +152,7 @@ impl Handler {
     pub fn update(&mut self, delta_t: f32, transform: &mut Transform) {
         transform.distance += self.zoom_speed;
 
-        // Reduce zoom speed such, that it is `zoom_speed * 0.1` after one
+        // Reduce zoom speed such, that it is `zoom_speed * f` after one
         // second.
         let f: f32 = 0.1;
         let n = 1.0 / delta_t;
