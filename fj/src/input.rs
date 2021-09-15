@@ -145,7 +145,7 @@ impl Handler {
         {
             self.zoom_speed = 0.0;
         } else {
-            self.zoom_speed += delta * 0.5;
+            self.zoom_speed += delta * 0.02;
         }
     }
 
@@ -154,7 +154,7 @@ impl Handler {
 
         // Reduce zoom speed such, that it is `zoom_speed * f` after one
         // second.
-        let f: f32 = 0.1;
+        let f: f32 = 0.2;
         let n = 1.0 / delta_t;
         self.zoom_speed *= f.powf(1.0 / n);
     }
