@@ -101,6 +101,8 @@ fn run_inner(
 
     trace!("Finished initialization.");
 
+    let mut previous_time = Instant::now();
+
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
 
@@ -144,9 +146,13 @@ fn run_inner(
                 input_handler.handle_mouse_wheel(delta);
             }
             Event::MainEventsCleared => {
+                let now = Instant::now();
+                let delta_t = now.duration_since(previous_time);
+                previous_time = now;
+
                 // TASK: Create a proper main loop and call this at a fixed
                 //       frequency instead of whenever this event pops up.
-                input_handler.update(&mut transform);
+                input_handler.update(delta_t.as_secs_f32(), &mut transform);
 
                 window.request_redraw();
             }
