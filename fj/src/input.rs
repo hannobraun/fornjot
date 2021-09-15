@@ -13,7 +13,7 @@ pub struct Handler {
     cursor: Option<PhysicalPosition<f64>>,
     rotating: bool,
     moving: bool,
-    zoom_velocity: f32,
+    zoom_speed: f32,
 }
 
 impl Handler {
@@ -22,7 +22,7 @@ impl Handler {
             cursor: None,
             rotating: false,
             moving: false,
-            zoom_velocity: 0.0,
+            zoom_speed: 0.0,
         }
     }
 
@@ -148,12 +148,12 @@ impl Handler {
             }
         };
 
-        self.zoom_velocity += delta;
+        self.zoom_speed += delta;
     }
 
     pub fn update(&mut self, transform: &mut Transform) {
-        transform.distance += self.zoom_velocity;
-        self.zoom_velocity *= 0.9;
+        transform.distance += self.zoom_speed;
+        self.zoom_speed *= 0.9;
     }
 }
 
