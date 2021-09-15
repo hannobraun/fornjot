@@ -150,8 +150,6 @@ fn run_inner(
                 let delta_t = now.duration_since(previous_time);
                 previous_time = now;
 
-                // TASK: Create a proper main loop and call this at a fixed
-                //       frequency instead of whenever this event pops up.
                 input_handler.update(delta_t.as_secs_f32(), &mut transform);
 
                 window.request_redraw();
