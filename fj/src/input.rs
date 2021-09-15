@@ -133,14 +133,6 @@ impl Handler {
     }
 
     pub fn handle_mouse_wheel(&mut self, delta: MouseScrollDelta) {
-        // TASK: Improve zooming behavior. Right now, zooming is way too coarse,
-        //       when close to the model, trying to look at details. Just making
-        //       it finer wouldn't be a good solution though, as that will
-        //       prevent the user from quickly zooming in or out.
-        //
-        //       It might be best to add a zooming velocity that is added to
-        //       when repeatedly zooming in the same direction. Zooming against
-        //       the zooming velocity should immediately stop the zoom.
         let delta = match delta {
             MouseScrollDelta::LineDelta(_, y) => y * 10.0,
             MouseScrollDelta::PixelDelta(PhysicalPosition { y, .. }) => {
