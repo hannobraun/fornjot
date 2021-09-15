@@ -139,9 +139,9 @@ impl Handler {
         //       when repeatedly zooming in the same direction. Zooming against
         //       the zooming velocity should immediately stop the zoom.
         let delta = match delta {
-            MouseScrollDelta::LineDelta(_, y) => y * 50.0,
+            MouseScrollDelta::LineDelta(_, y) => y * 10.0,
             MouseScrollDelta::PixelDelta(PhysicalPosition { y, .. }) => {
-                y as f32 * 5.0
+                y as f32
             }
         };
 
