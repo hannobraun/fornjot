@@ -13,6 +13,7 @@ pub struct Handler {
     cursor: Option<PhysicalPosition<f64>>,
     rotating: bool,
     moving: bool,
+    zoom_velocity: f32,
 }
 
 impl Handler {
@@ -21,6 +22,7 @@ impl Handler {
             cursor: None,
             rotating: false,
             moving: false,
+            zoom_velocity: 0.0,
         }
     }
 
@@ -127,11 +129,7 @@ impl Handler {
         }
     }
 
-    pub fn handle_mouse_wheel(
-        &mut self,
-        delta: MouseScrollDelta,
-        transform: &mut Transform,
-    ) {
+    pub fn handle_mouse_wheel(&mut self, delta: MouseScrollDelta) {
         // TASK: Improve zooming behavior. Right now, zooming is way too coarse,
         //       when close to the model, trying to look at details. Just making
         //       it finer wouldn't be a good solution though, as that will
@@ -147,11 +145,12 @@ impl Handler {
             }
         };
 
-        transform.distance += delta;
+        self.zoom_velocity += delta;
     }
 
-    pub fn update(&mut self) {
-        // TASK: Implement.
+    pub fn update(&mut self, transform: &mut Transform) {
+        transform.distance += self.zoom_velocity;
+        self.zoom_velocity = 0.0;
     }
 }
 

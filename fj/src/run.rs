@@ -141,12 +141,12 @@ fn run_inner(
                 event: WindowEvent::MouseWheel { delta, .. },
                 ..
             } => {
-                input_handler.handle_mouse_wheel(delta, &mut transform);
+                input_handler.handle_mouse_wheel(delta);
             }
             Event::MainEventsCleared => {
                 // TASK: Create a proper main loop and call this at a fixed
                 //       frequency instead of whenever this event pops up.
-                input_handler.update();
+                input_handler.update(&mut transform);
 
                 window.request_redraw();
             }
