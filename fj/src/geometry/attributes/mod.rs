@@ -3,21 +3,15 @@
 //! Contains traits and supporting types that define various attributes that
 //! geometry can have.
 
+pub mod bounding_volume;
 pub mod signed_distance_field;
 pub mod surface_normal;
 
 pub use self::{
+    bounding_volume::BoundingVolume,
     signed_distance_field::{Distance, SignedDistanceField},
     surface_normal::SurfaceNormal,
 };
-
-use crate::geometry::aabb::Aabb;
-
-/// Defines a bounding volume that encloses geometry
-pub trait BoundingVolume<const D: usize> {
-    /// Return the geometry's axis-aligned bounding box
-    fn aabb(&self) -> Aabb<D>;
-}
 
 #[cfg(test)]
 mod tests {
