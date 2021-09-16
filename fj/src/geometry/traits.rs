@@ -7,10 +7,10 @@ use crate::geometry::aabb::Aabb;
 /// The `D` parameter defines the dimensionality of the geometry (typically
 /// geometry would be 2- or 3-dimensional).
 pub trait Geometry<const D: usize> {
-    /// Sample the geometry at the specified point
+    /// Compute distance to surface at the specified point
     ///
-    /// Returns a `Sample` value which describes, among other attributes, the
-    /// distance of the point from the surface.
+    /// Returns a `Distance` value which indicates the distance of the point
+    /// from the surface.
     fn distance(&self, point: impl Into<Point<f32, D>>) -> Distance<D>;
 }
 
