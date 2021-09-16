@@ -2,7 +2,7 @@ use std::ops::Range;
 
 use itertools::Itertools as _;
 
-use crate::geometry::aabb::Aabb;
+use crate::geometry::attributes::Aabb;
 
 use super::{Cell, Index};
 
@@ -56,7 +56,7 @@ fn cell_indices(min: f32, max: f32, resolution: f32) -> Range<usize> {
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::{aabb::Aabb, isosurface::grid};
+    use crate::geometry::{attributes::Aabb, isosurface::grid};
 
     use super::Descriptor;
 

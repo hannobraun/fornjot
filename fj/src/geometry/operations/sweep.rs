@@ -1,8 +1,7 @@
 use nalgebra::{Point, Vector};
 
-use crate::geometry::{
-    aabb::Aabb,
-    attributes::{BoundingVolume, Distance, SignedDistanceField},
+use crate::geometry::attributes::{
+    Aabb, BoundingVolume, Distance, SignedDistanceField,
 };
 
 /// A 3-dimensional sweep of a 2-dimensional sketch

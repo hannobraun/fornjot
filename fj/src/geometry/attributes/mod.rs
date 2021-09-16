@@ -8,7 +8,7 @@ pub mod signed_distance_field;
 pub mod surface_normal;
 
 pub use self::{
-    bounding_volume::BoundingVolume,
+    bounding_volume::{Aabb, BoundingVolume},
     signed_distance_field::{Distance, SignedDistanceField},
     surface_normal::SurfaceNormal,
 };
