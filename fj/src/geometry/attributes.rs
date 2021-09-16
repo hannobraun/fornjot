@@ -1,3 +1,8 @@
+//! Attributes of geometry
+//!
+//! Contains traits and supporting types that define various attributes that
+//! geometry can have.
+
 use nalgebra::{vector, Point, SVector};
 
 use crate::geometry::aabb::Aabb;
