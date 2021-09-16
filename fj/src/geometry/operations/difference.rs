@@ -36,11 +36,11 @@ where
         let point = point.into();
 
         let dist_a = self.a.sample(point);
-        let sample_b = self.b.sample(point);
+        let dist_b = self.b.sample(point);
 
         let sample_b = Distance {
-            distance: -sample_b.distance,
-            ..sample_b
+            distance: -dist_b.distance,
+            ..dist_b
         };
 
         if dist_a.distance > sample_b.distance {
