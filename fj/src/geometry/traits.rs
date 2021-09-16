@@ -14,12 +14,12 @@ pub trait Geometry<const D: usize> {
     fn sample(&self, point: impl Into<Point<f32, D>>) -> Distance<D>;
 }
 
-/// The result of sampling geometry at a specific point
+/// The minimum distance of a specific point to a surface
 ///
 /// Returned by [`Geometry::sample`].
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Distance<const D: usize> {
-    /// The point at which the geometry was sampled
+    /// The point from which the distance was determined
     pub point: Point<f32, D>,
 
     /// The minimum distance of the point to the surface
