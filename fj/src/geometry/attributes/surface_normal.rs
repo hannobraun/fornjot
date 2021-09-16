@@ -1,4 +1,4 @@
-use nalgebra::{Point, SVector, vector};
+use nalgebra::{vector, Point, SVector};
 
 use super::SignedDistanceField;
 
