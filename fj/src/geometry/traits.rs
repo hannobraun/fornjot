@@ -2,7 +2,7 @@ use nalgebra::{vector, Point, SVector};
 
 use crate::geometry::aabb::Aabb;
 
-/// Defines geometry that can be sampled
+/// Implemented for geometry that defines a signed distance field
 ///
 /// The `D` parameter defines the dimensionality of the geometry (typically
 /// geometry would be 2- or 3-dimensional).
