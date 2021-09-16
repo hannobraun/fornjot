@@ -1,8 +1,8 @@
 use serde::de::DeserializeOwned;
 
 use crate::geometry::{
+    attributes::{BoundingVolume, SignedDistanceField},
     isosurface::{self, grid::Grid},
-    traits::{BoundingVolume, SignedDistanceField},
 };
 
 use super::Mesh;

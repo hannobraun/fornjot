@@ -14,7 +14,7 @@ use std::collections::BTreeMap;
 
 use nalgebra::Point;
 
-use crate::geometry::traits::{SignedDistanceField, SurfaceNormal};
+use crate::geometry::attributes::{SignedDistanceField, SurfaceNormal};
 
 use self::surface_vertices::SurfaceVertices;
 

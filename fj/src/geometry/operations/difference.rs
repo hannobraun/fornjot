@@ -2,7 +2,7 @@ use nalgebra::Point;
 
 use crate::geometry::{
     aabb::Aabb,
-    traits::{BoundingVolume, Distance, SignedDistanceField},
+    attributes::{BoundingVolume, Distance, SignedDistanceField},
 };
 
 /// The difference of two bodies
@@ -53,7 +53,9 @@ where
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::{shapes::Sphere, traits::SignedDistanceField as _};
+    use crate::geometry::{
+        attributes::SignedDistanceField as _, shapes::Sphere,
+    };
 
     use super::Difference;
 
