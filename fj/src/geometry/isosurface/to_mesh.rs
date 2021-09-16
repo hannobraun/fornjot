@@ -1,5 +1,5 @@
 use crate::{
-    geometry::traits::{BoundingVolume, Geometry},
+    geometry::traits::{BoundingVolume, SignedDistanceField},
     mesh::Mesh,
 };
 
@@ -7,7 +7,7 @@ use super::{grid, Grid};
 
 /// Convert functionally defined geometry into a triangle mesh
 pub fn to_mesh(
-    geometry: &(impl Geometry<3> + BoundingVolume<3>),
+    geometry: &(impl SignedDistanceField<3> + BoundingVolume<3>),
     resolution: f32,
 ) -> (Mesh, Grid) {
     let grid_descriptor = grid::Descriptor {

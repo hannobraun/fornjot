@@ -6,7 +6,7 @@ use crate::geometry::aabb::Aabb;
 ///
 /// The `D` parameter defines the dimensionality of the geometry (typically
 /// geometry would be 2- or 3-dimensional).
-pub trait Geometry<const D: usize> {
+pub trait SignedDistanceField<const D: usize> {
     /// Compute distance to surface at the specified point
     ///
     /// Returns a `Distance` value which indicates the distance of the point
@@ -42,7 +42,7 @@ pub trait Normal<const D: usize> {
 
 impl<T> Normal<2> for T
 where
-    T: Geometry<2>,
+    T: SignedDistanceField<2>,
 {
     fn normal(&self, point: impl Into<Point<f32, 2>>) -> SVector<f32, 2> {
         const EPSILON: f32 = 0.1;
@@ -65,7 +65,7 @@ where
 
 impl<T> Normal<3> for T
 where
-    T: Geometry<3>,
+    T: SignedDistanceField<3>,
 {
     fn normal(&self, point: impl Into<Point<f32, 3>>) -> SVector<f32, 3> {
         const EPSILON: f32 = 0.1;

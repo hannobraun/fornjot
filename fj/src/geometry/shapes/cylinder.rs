@@ -37,7 +37,7 @@ impl Default for Cylinder {
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::traits::Geometry as _;
+    use crate::geometry::traits::SignedDistanceField as _;
 
     use super::Cylinder;
 

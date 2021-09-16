@@ -2,7 +2,7 @@ use serde::de::DeserializeOwned;
 
 use crate::geometry::{
     isosurface::{self, grid::Grid},
-    traits::{BoundingVolume, Geometry},
+    traits::{BoundingVolume, SignedDistanceField},
 };
 
 use super::Mesh;
@@ -26,7 +26,7 @@ pub trait IntoMesh {
 
 impl<T> IntoMesh for T
 where
-    T: BoundingVolume<3> + Geometry<3>,
+    T: BoundingVolume<3> + SignedDistanceField<3>,
 {
     fn into_mesh(&self) -> (Mesh, Grid) {
         let resolution = self.aabb().size().max() / 100.0;
@@ -51,7 +51,7 @@ pub struct WithResolution<T> {
 
 impl<T> IntoMesh for WithResolution<T>
 where
-    T: BoundingVolume<3> + Geometry<3>,
+    T: BoundingVolume<3> + SignedDistanceField<3>,
 {
     fn into_mesh(&self) -> (Mesh, Grid) {
         isosurface::to_mesh(&self.geometry, self.resolution)

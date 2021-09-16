@@ -14,7 +14,7 @@ use std::collections::BTreeMap;
 
 use nalgebra::Point;
 
-use crate::geometry::traits::{Geometry, Normal};
+use crate::geometry::traits::{Normal, SignedDistanceField};
 
 use self::surface_vertices::SurfaceVertices;
 
@@ -37,7 +37,7 @@ impl Grid {
     /// Create the grid from the descriptor and populate it with distance values
     pub fn from_descriptor(
         descriptor: Descriptor,
-        geometry: &(impl Geometry<3> + Normal<3>),
+        geometry: &(impl SignedDistanceField<3> + Normal<3>),
     ) -> Self {
         let mut grid_vertex_samples = BTreeMap::new();
 

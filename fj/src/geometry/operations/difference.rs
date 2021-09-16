@@ -2,7 +2,7 @@ use nalgebra::Point;
 
 use crate::geometry::{
     aabb::Aabb,
-    traits::{BoundingVolume, Distance, Geometry},
+    traits::{BoundingVolume, Distance, SignedDistanceField},
 };
 
 /// The difference of two bodies
@@ -27,10 +27,10 @@ where
     }
 }
 
-impl<A, B, const D: usize> Geometry<D> for Difference<A, B>
+impl<A, B, const D: usize> SignedDistanceField<D> for Difference<A, B>
 where
-    A: Geometry<D>,
-    B: Geometry<D>,
+    A: SignedDistanceField<D>,
+    B: SignedDistanceField<D>,
 {
     fn distance(&self, point: impl Into<Point<f32, D>>) -> Distance<D> {
         let point = point.into();
@@ -53,7 +53,7 @@ where
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::{shapes::Sphere, traits::Geometry as _};
+    use crate::geometry::{shapes::Sphere, traits::SignedDistanceField as _};
 
     use super::Difference;
 

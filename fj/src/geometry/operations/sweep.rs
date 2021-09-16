@@ -2,7 +2,7 @@ use nalgebra::{Point, Vector};
 
 use crate::geometry::{
     aabb::Aabb,
-    traits::{BoundingVolume, Distance, Geometry},
+    traits::{BoundingVolume, Distance, SignedDistanceField},
 };
 
 /// A 3-dimensional sweep of a 2-dimensional sketch
@@ -43,9 +43,9 @@ where
     }
 }
 
-impl<Sketch> Geometry<3> for Sweep<Sketch>
+impl<Sketch> SignedDistanceField<3> for Sweep<Sketch>
 where
-    Sketch: Geometry<2>,
+    Sketch: SignedDistanceField<2>,
 {
     fn distance(&self, point: impl Into<Point<f32, 3>>) -> Distance<3> {
         let point = point.into();
