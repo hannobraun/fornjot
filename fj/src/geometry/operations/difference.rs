@@ -35,7 +35,7 @@ where
     fn sample(&self, point: impl Into<Point<f32, D>>) -> Distance<D> {
         let point = point.into();
 
-        let sample_a = self.a.sample(point);
+        let dist_a = self.a.sample(point);
         let sample_b = self.b.sample(point);
 
         let sample_b = Distance {
@@ -43,8 +43,8 @@ where
             ..sample_b
         };
 
-        if sample_a.distance > sample_b.distance {
-            sample_a
+        if dist_a.distance > sample_b.distance {
+            dist_a
         } else {
             sample_b
         }
