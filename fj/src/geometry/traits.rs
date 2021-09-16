@@ -35,12 +35,12 @@ pub struct Distance<const D: usize> {
 /// The `D` parameter defines the dimensionality of the geometry. Blanked
 /// implementations for 2- and 3-dimensional geometry (i.e. implementations of
 /// `Geometry<2>` and `Geometry<3>`) exist.
-pub trait Normal<const D: usize> {
+pub trait SurfaceNormal<const D: usize> {
     /// Return the surface normal at the given point
     fn normal(&self, point: impl Into<Point<f32, D>>) -> SVector<f32, D>;
 }
 
-impl<T> Normal<2> for T
+impl<T> SurfaceNormal<2> for T
 where
     T: SignedDistanceField<2>,
 {
@@ -63,7 +63,7 @@ where
     }
 }
 
-impl<T> Normal<3> for T
+impl<T> SurfaceNormal<3> for T
 where
     T: SignedDistanceField<3>,
 {
@@ -101,7 +101,7 @@ mod tests {
 
     use crate::geometry::shapes::{Circle, Sphere};
 
-    use super::Normal as _;
+    use super::SurfaceNormal as _;
 
     #[test]
     fn normal_trait_should_be_implemented_for_2d_geometry() {
