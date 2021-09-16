@@ -11,7 +11,7 @@ pub trait Geometry<const D: usize> {
     ///
     /// Returns a `Sample` value which describes, among other attributes, the
     /// distance of the point from the surface.
-    fn sample(&self, point: impl Into<Point<f32, D>>) -> Distance<D>;
+    fn distance(&self, point: impl Into<Point<f32, D>>) -> Distance<D>;
 }
 
 /// The minimum distance of a specific point to a surface
@@ -53,10 +53,10 @@ where
         let eps_y = vector![0.0, EPSILON];
 
         let dir = vector![
-            self.sample(point + eps_x).distance
-                - self.sample(point - eps_x).distance,
-            self.sample(point + eps_y).distance
-                - self.sample(point - eps_y).distance
+            self.distance(point + eps_x).distance
+                - self.distance(point - eps_x).distance,
+            self.distance(point + eps_y).distance
+                - self.distance(point - eps_y).distance
         ];
 
         dir.normalize()
@@ -77,12 +77,12 @@ where
         let eps_z = vector![0.0, 0.0, EPSILON];
 
         let dir = vector![
-            self.sample(point + eps_x).distance
-                - self.sample(point - eps_x).distance,
-            self.sample(point + eps_y).distance
-                - self.sample(point - eps_y).distance,
-            self.sample(point + eps_z).distance
-                - self.sample(point - eps_z).distance
+            self.distance(point + eps_x).distance
+                - self.distance(point - eps_x).distance,
+            self.distance(point + eps_y).distance
+                - self.distance(point - eps_y).distance,
+            self.distance(point + eps_z).distance
+                - self.distance(point - eps_z).distance
         ];
 
         dir.normalize()

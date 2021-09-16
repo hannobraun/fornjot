@@ -45,7 +45,7 @@ impl<const D: usize> BoundingVolume<D> for Hypersphere<D> {
 }
 
 impl<const D: usize> Geometry<D> for Hypersphere<D> {
-    fn sample(&self, point: impl Into<Point<f32, D>>) -> Distance<D> {
+    fn distance(&self, point: impl Into<Point<f32, D>>) -> Distance<D> {
         let point = point.into();
 
         Distance {

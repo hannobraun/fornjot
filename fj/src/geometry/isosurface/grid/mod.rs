@@ -51,7 +51,7 @@ impl Grid {
                     .to_position(descriptor.aabb.min, descriptor.resolution);
                 grid_vertex_samples
                     .entry(index)
-                    .or_insert_with(|| geometry.sample(vertex));
+                    .or_insert_with(|| geometry.distance(vertex));
             }
 
             let mut points_and_normals = Vec::new();
