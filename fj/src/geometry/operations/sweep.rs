@@ -2,7 +2,7 @@ use nalgebra::{Point, Vector};
 
 use crate::geometry::{
     aabb::Aabb,
-    traits::{BoundingVolume, Geometry, Sample},
+    traits::{BoundingVolume, Distance, Geometry},
 };
 
 /// A 3-dimensional sweep of a 2-dimensional sketch
@@ -47,7 +47,7 @@ impl<Sketch> Geometry<3> for Sweep<Sketch>
 where
     Sketch: Geometry<2>,
 {
-    fn sample(&self, point: impl Into<Point<f32, 3>>) -> Sample<3> {
+    fn sample(&self, point: impl Into<Point<f32, 3>>) -> Distance<3> {
         let point = point.into();
 
         let sample_xy = self.sketch.sample(point.xy());
@@ -59,7 +59,7 @@ where
 
         let distance = f32::min(f32::max(d_xy, d_z), 0.0) + w.magnitude();
 
-        Sample { point, distance }
+        Distance { point, distance }
     }
 }
 

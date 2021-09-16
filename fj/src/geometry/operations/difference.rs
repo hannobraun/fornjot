@@ -2,7 +2,7 @@ use nalgebra::Point;
 
 use crate::geometry::{
     aabb::Aabb,
-    traits::{BoundingVolume, Geometry, Sample},
+    traits::{BoundingVolume, Distance, Geometry},
 };
 
 /// The difference of two bodies
@@ -32,13 +32,13 @@ where
     A: Geometry<D>,
     B: Geometry<D>,
 {
-    fn sample(&self, point: impl Into<Point<f32, D>>) -> Sample<D> {
+    fn sample(&self, point: impl Into<Point<f32, D>>) -> Distance<D> {
         let point = point.into();
 
         let sample_a = self.a.sample(point);
         let sample_b = self.b.sample(point);
 
-        let sample_b = Sample {
+        let sample_b = Distance {
             distance: -sample_b.distance,
             ..sample_b
         };

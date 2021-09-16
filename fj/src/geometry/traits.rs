@@ -11,14 +11,14 @@ pub trait Geometry<const D: usize> {
     ///
     /// Returns a `Sample` value which describes, among other attributes, the
     /// distance of the point from the surface.
-    fn sample(&self, point: impl Into<Point<f32, D>>) -> Sample<D>;
+    fn sample(&self, point: impl Into<Point<f32, D>>) -> Distance<D>;
 }
 
 /// The result of sampling geometry at a specific point
 ///
 /// Returned by [`Geometry::sample`].
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Sample<const D: usize> {
+pub struct Distance<const D: usize> {
     /// The point at which the geometry was sampled
     pub point: Point<f32, D>,
 
