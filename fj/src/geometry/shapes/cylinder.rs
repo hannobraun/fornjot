@@ -26,7 +26,12 @@ impl Cylinder {
         self
     }
 
-    // `with_height` method is not required here, as `Sweep` already has it.
+    /// Update height
+    ///
+    /// Returns a copy of `self` with the height replaced with `height`.
+    pub fn with_height(self, height: f32) -> Self {
+        self.with_distance(height)
+    }
 }
 
 impl Default for Cylinder {
