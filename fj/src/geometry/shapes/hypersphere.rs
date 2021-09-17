@@ -1,7 +1,3 @@
-use nalgebra::Point;
-
-use crate::geometry::attributes::{Distance, SignedDistanceField};
-
 /// An n-dimensional hypersphere
 ///
 /// `Hypersphere` is typically used through one of its type aliases, like
@@ -29,16 +25,5 @@ impl<const D: usize> Hypersphere<D> {
     pub fn with_radius(mut self, radius: f32) -> Self {
         self.radius = radius;
         self
-    }
-}
-
-impl<const D: usize> SignedDistanceField<D> for Hypersphere<D> {
-    fn distance(&self, point: impl Into<Point<f32, D>>) -> Distance<D> {
-        let point = point.into();
-
-        Distance {
-            point,
-            distance: point.coords.magnitude() - self.radius,
-        }
     }
 }

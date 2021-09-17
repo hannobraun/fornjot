@@ -1,4 +1,6 @@
-use nalgebra::Point;
+use nalgebra::{Point, Vector};
+
+use crate::geometry::{operations, shapes};
 
 /// Implemented for geometry that defines a signed distance field
 ///
@@ -10,6 +12,62 @@ pub trait SignedDistanceField<const D: usize> {
     /// Returns a `Distance` value which indicates the distance of the point
     /// from the surface.
     fn distance(&self, point: impl Into<Point<f32, D>>) -> Distance<D>;
+}
+
+impl<const D: usize> SignedDistanceField<D> for shapes::Hypersphere<D> {
+    fn distance(&self, point: impl Into<Point<f32, D>>) -> Distance<D> {
+        let point = point.into();
+
+        Distance {
+            point,
+            distance: point.coords.magnitude() - self.radius,
+        }
+    }
+}
+
+impl<A, B, const D: usize> SignedDistanceField<D>
+    for operations::Difference<A, B>
+where
+    A: SignedDistanceField<D>,
+    B: SignedDistanceField<D>,
+{
+    fn distance(&self, point: impl Into<Point<f32, D>>) -> Distance<D> {
+        let point = point.into();
+
+        let dist_a = self.a.distance(point);
+        let dist_b = self.b.distance(point);
+
+        let dist_b = Distance {
+            distance: -dist_b.distance,
+            ..dist_b
+        };
+
+        if dist_a.distance > dist_b.distance {
+            dist_a
+        } else {
+            dist_b
+        }
+    }
+}
+
+impl<Sketch> SignedDistanceField<3> for operations::Sweep<Sketch>
+where
+    Sketch: SignedDistanceField<2>,
+{
+    fn distance(&self, point: impl Into<Point<f32, 3>>) -> Distance<3> {
+        let point = point.into();
+
+        let sample_xy = self.sketch.distance(point.xy());
+
+        let d_xy = sample_xy.distance;
+        let d_z = point.z.abs() - self.distance / 2.0;
+
+        let w = Vector::from([f32::max(d_xy, 0.0), f32::max(d_z, 0.0)]);
+
+        let distance = f32::min(f32::max(d_xy, d_z), 0.0) + w.magnitude();
+
+        Distance { point, distance }
+    }
 }
 
 /// The minimum distance of a specific point to a surface
