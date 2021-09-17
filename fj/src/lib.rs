@@ -20,7 +20,7 @@ mod util;
 
 pub use self::{
     geometry::{
-        operations::{Difference, Sweep},
+        operations::{Difference, LinearSweep},
         shapes::Cylinder,
     },
     graphics::Vertex,

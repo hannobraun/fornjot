@@ -27,12 +27,12 @@ impl<A, B> Difference<A, B> for (A, B) {
 /// This trait is implemented for all types. The call `sketch.sweep(distance)`
 /// will create a sweep of `sketch` over `distance`.
 pub trait Sweep<Sketch> {
-    fn sweep(self, distance: f32) -> operations::Sweep<Sketch>;
+    fn sweep(self, distance: f32) -> operations::LinearSweep<Sketch>;
 }
 
 impl<Sketch> Sweep<Sketch> for Sketch {
-    fn sweep(self, distance: f32) -> operations::Sweep<Sketch> {
-        operations::Sweep {
+    fn sweep(self, distance: f32) -> operations::LinearSweep<Sketch> {
+        operations::LinearSweep {
             sketch: self,
             distance,
         }

@@ -35,7 +35,7 @@ where
     }
 }
 
-impl<Sketch> BoundingVolume<3> for operations::Sweep<Sketch>
+impl<Sketch> BoundingVolume<3> for operations::LinearSweep<Sketch>
 where
     Sketch: BoundingVolume<2>,
 {

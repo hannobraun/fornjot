@@ -50,7 +50,7 @@ where
     }
 }
 
-impl<Sketch> SignedDistanceField<3> for operations::Sweep<Sketch>
+impl<Sketch> SignedDistanceField<3> for operations::LinearSweep<Sketch>
 where
     Sketch: SignedDistanceField<2>,
 {

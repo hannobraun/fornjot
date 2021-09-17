@@ -1,5 +1,5 @@
 /// A 3-dimensional sweep of a 2-dimensional sketch
-pub struct Sweep<Sketch> {
+pub struct LinearSweep<Sketch> {
     /// The sketch being swept
     pub sketch: Sketch,
 
@@ -7,7 +7,7 @@ pub struct Sweep<Sketch> {
     pub distance: f32,
 }
 
-impl<Sketch> Sweep<Sketch> {
+impl<Sketch> LinearSweep<Sketch> {
     /// Update sketch
     ///
     /// Returns a copy of `self` with the sketch replaced with `sketch`.
