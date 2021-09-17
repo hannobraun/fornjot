@@ -16,8 +16,10 @@ impl fj::Model for Spacer {
         let inner = params.inner.unwrap_or(25.0);
         let height = params.height.unwrap_or(25.0);
 
-        let outer = fj::Cylinder::new().with_radius(outer).with_height(height);
-        let inner = fj::Cylinder::new().with_radius(inner).with_height(height);
+        let outer =
+            fj::Cylinder::new().with_radius(outer).with_distance(height);
+        let inner =
+            fj::Cylinder::new().with_radius(inner).with_distance(height);
 
         (outer, inner).difference()
     }

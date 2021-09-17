@@ -19,7 +19,7 @@ impl<Sketch> LinearSweep<Sketch> {
     /// Update height
     ///
     /// Returns a copy of `self` with the height replaced with `height`.
-    pub fn with_height(mut self, height: f32) -> Self {
+    pub fn with_distance(mut self, height: f32) -> Self {
         self.distance = height;
         self
     }

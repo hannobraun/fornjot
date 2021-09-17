@@ -43,7 +43,7 @@ mod tests {
 
     #[test]
     fn distance() {
-        let cylinder = Cylinder::new().with_radius(0.5).with_height(1.0);
+        let cylinder = Cylinder::new().with_radius(0.5).with_distance(1.0);
 
         assert_eq!(cylinder.distance([0.0, 0.0, 0.0]).distance, -0.5);
         assert_eq!(cylinder.distance([0.25, 0.0, 0.0]).distance, -0.25);
