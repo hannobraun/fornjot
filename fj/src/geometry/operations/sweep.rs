@@ -1,4 +1,4 @@
-/// A 3-dimensional sweep of a 2-dimensional sketch
+/// A 3-dimensional sweep of a 2-dimensional sketch along a straight path
 pub struct LinearSweep<Sketch> {
     /// The sketch being swept
     pub sketch: Sketch,
