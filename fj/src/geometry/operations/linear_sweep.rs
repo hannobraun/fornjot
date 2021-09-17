@@ -16,9 +16,9 @@ impl<Sketch> LinearSweep<Sketch> {
         self
     }
 
-    /// Update height
+    /// Update distance
     ///
-    /// Returns a copy of `self` with the height replaced with `height`.
+    /// Returns a copy of `self` with the distance replaced with `distance`.
     pub fn with_distance(mut self, distance: f32) -> Self {
         self.distance = distance;
         self
