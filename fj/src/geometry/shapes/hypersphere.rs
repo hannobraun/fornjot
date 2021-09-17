@@ -1,8 +1,6 @@
 use nalgebra::Point;
 
-use crate::geometry::attributes::{
-    Aabb, BoundingVolume, Distance, SignedDistanceField,
-};
+use crate::geometry::attributes::{Distance, SignedDistanceField};
 
 /// An n-dimensional hypersphere
 ///
@@ -31,15 +29,6 @@ impl<const D: usize> Hypersphere<D> {
     pub fn with_radius(mut self, radius: f32) -> Self {
         self.radius = radius;
         self
-    }
-}
-
-impl<const D: usize> BoundingVolume<D> for Hypersphere<D> {
-    fn aabb(&self) -> Aabb<D> {
-        Aabb {
-            min: [-self.radius; D].into(),
-            max: [self.radius; D].into(),
-        }
     }
 }
 

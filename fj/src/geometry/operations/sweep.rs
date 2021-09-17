@@ -1,8 +1,6 @@
 use nalgebra::{Point, Vector};
 
-use crate::geometry::attributes::{
-    Aabb, BoundingVolume, Distance, SignedDistanceField,
-};
+use crate::geometry::attributes::{Distance, SignedDistanceField};
 
 /// A 3-dimensional sweep of a 2-dimensional sketch
 pub struct Sweep<Sketch> {
@@ -28,17 +26,6 @@ impl<Sketch> Sweep<Sketch> {
     pub fn with_height(mut self, height: f32) -> Self {
         self.distance = height;
         self
-    }
-}
-
-impl<Sketch> BoundingVolume<3> for Sweep<Sketch>
-where
-    Sketch: BoundingVolume<2>,
-{
-    fn aabb(&self) -> Aabb<3> {
-        self.sketch
-            .aabb()
-            .extend(-self.distance / 2.0, self.distance / 2.0)
     }
 }
 
