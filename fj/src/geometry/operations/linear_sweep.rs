@@ -25,4 +25,4 @@ impl<Sketch> LinearSweep<Sketch> {
     }
 }
 
-// `Sweep` is covered by a bunch of unit tests in `cylinder`.
+// `LinearSweep` is covered by a bunch of unit tests in `cylinder`.
