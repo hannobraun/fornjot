@@ -30,8 +30,8 @@ pub trait Sweep<Shape> {
     fn sweep(self, distance: f32) -> operations::LinearSweep<Shape>;
 }
 
-impl<Sketch> Sweep<Sketch> for Sketch {
-    fn sweep(self, distance: f32) -> operations::LinearSweep<Sketch> {
+impl<Shape> Sweep<Shape> for Shape {
+    fn sweep(self, distance: f32) -> operations::LinearSweep<Shape> {
         operations::LinearSweep {
             shape: self,
             distance,
