@@ -2,7 +2,7 @@ use bytemuck::{Pod, Zeroable};
 use decorum::R32;
 use indexmap::IndexMap;
 
-use crate::{geometry::isosurface::grid::Grid, mesh, types::Index, util};
+use crate::{geometry::isosurface::grid::Grid, types::Index, util, Mesh};
 
 #[derive(Debug)]
 pub struct Vertices {
@@ -87,8 +87,8 @@ impl From<Grid> for Vertices {
     }
 }
 
-impl From<mesh::Mesh> for Vertices {
-    fn from(mesh: mesh::Mesh) -> Self {
+impl From<Mesh> for Vertices {
+    fn from(mesh: Mesh) -> Self {
         let vertices: Vec<_> = mesh.vertices().collect();
 
         let mut indices_by_vertex_with_normal = IndexMap::new();
