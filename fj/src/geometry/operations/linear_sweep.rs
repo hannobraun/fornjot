@@ -1,7 +1,7 @@
 /// A 3-dimensional sweep of a 2-dimensional sketch along a straight path
-pub struct LinearSweep<Sketch> {
+pub struct LinearSweep<Shape> {
     /// The sketch being swept
-    pub sketch: Sketch,
+    pub sketch: Shape,
 
     /// The distance that the sketch is being swept through space
     pub distance: f32,
