@@ -11,8 +11,8 @@ impl<Shape> LinearSweep<Shape> {
     /// Update sketch
     ///
     /// Returns a copy of `self` with the sketch replaced with `sketch`.
-    pub fn with_sketch(mut self, sketch: Shape) -> Self {
-        self.shape = sketch;
+    pub fn with_sketch(mut self, shape: Shape) -> Self {
+        self.shape = shape;
         self
     }
 
