@@ -40,7 +40,7 @@ where
     Sketch: BoundingVolume<2>,
 {
     fn aabb(&self) -> Aabb<3> {
-        self.sketch
+        self.shape
             .aabb()
             .extend(-self.distance / 2.0, self.distance / 2.0)
     }

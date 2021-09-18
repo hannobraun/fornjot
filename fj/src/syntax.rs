@@ -33,7 +33,7 @@ pub trait Sweep<Sketch> {
 impl<Sketch> Sweep<Sketch> for Sketch {
     fn sweep(self, distance: f32) -> operations::LinearSweep<Sketch> {
         operations::LinearSweep {
-            sketch: self,
+            shape: self,
             distance,
         }
     }

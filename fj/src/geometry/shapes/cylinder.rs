@@ -13,7 +13,7 @@ impl Cylinder {
     /// Sweeps a default [`Circle`] along a distance of `1.0`.
     pub fn new() -> Self {
         LinearSweep {
-            sketch: Circle::new(),
+            shape: Circle::new(),
             distance: 1.0,
         }
     }
@@ -22,7 +22,7 @@ impl Cylinder {
     ///
     /// Returns a copy of `self` with the radius replaced with `radius`.
     pub fn with_radius(mut self, radius: f32) -> Self {
-        self.sketch = self.sketch.with_radius(radius);
+        self.shape = self.shape.with_radius(radius);
         self
     }
 

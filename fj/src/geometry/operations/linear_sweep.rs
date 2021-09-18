@@ -1,7 +1,7 @@
 /// A 3-dimensional sweep of a 2-dimensional sketch along a straight path
 pub struct LinearSweep<Shape> {
     /// The sketch being swept
-    pub sketch: Shape,
+    pub shape: Shape,
 
     /// The distance that the sketch is being swept through space
     pub distance: f32,
@@ -12,7 +12,7 @@ impl<Shape> LinearSweep<Shape> {
     ///
     /// Returns a copy of `self` with the sketch replaced with `sketch`.
     pub fn with_sketch(mut self, sketch: Shape) -> Self {
-        self.sketch = sketch;
+        self.shape = sketch;
         self
     }
 

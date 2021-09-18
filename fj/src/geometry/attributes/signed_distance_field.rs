@@ -57,7 +57,7 @@ where
     fn distance(&self, point: impl Into<Point<f32, 3>>) -> Distance<3> {
         let point = point.into();
 
-        let sample_xy = self.sketch.distance(point.xy());
+        let sample_xy = self.shape.distance(point.xy());
 
         let d_xy = sample_xy.distance;
         let d_z = point.z.abs() - self.distance / 2.0;
