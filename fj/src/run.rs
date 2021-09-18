@@ -12,11 +12,11 @@ use winit::{
 use crate::{
     args::Args,
     draw_config::DrawConfig,
-    geometry::isosurface::grid::Grid,
+    geometry::{attributes::Mesh, isosurface::grid::Grid},
     graphics::{Renderer, Transform},
     input,
     model::IntoMesh,
-    threemf, Mesh, Model,
+    threemf, Model,
 };
 
 pub fn run_model(model: impl Model) -> anyhow::Result<()> {

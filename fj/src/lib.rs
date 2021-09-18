@@ -1,7 +1,6 @@
 #![allow(uncommon_codepoints)]
 
 pub mod geometry;
-pub mod mesh;
 pub mod model;
 pub mod syntax;
 pub mod threemf;
@@ -20,11 +19,11 @@ mod util;
 
 pub use self::{
     geometry::{
+        attributes::Mesh,
         operations::{Difference, LinearSweep},
         shapes::Cylinder,
     },
     graphics::Vertex,
-    mesh::Mesh,
     model::Model,
     run::{run_mesh, run_model},
     types::Index,

@@ -1,11 +1,9 @@
 use serde::de::DeserializeOwned;
 
 use crate::geometry::{
-    attributes::{BoundingVolume, SignedDistanceField},
+    attributes::{BoundingVolume, Mesh, SignedDistanceField},
     isosurface::{self, grid::Grid},
 };
-
-use super::Mesh;
 
 /// Implemented by Fornjot models
 pub trait Model {

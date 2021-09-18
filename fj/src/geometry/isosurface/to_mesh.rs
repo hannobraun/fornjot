@@ -1,7 +1,4 @@
-use crate::{
-    geometry::attributes::{BoundingVolume, SignedDistanceField},
-    mesh::Mesh,
-};
+use crate::geometry::attributes::{BoundingVolume, Mesh, SignedDistanceField};
 
 use super::{grid, Grid};
 

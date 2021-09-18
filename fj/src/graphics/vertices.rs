@@ -2,7 +2,11 @@ use bytemuck::{Pod, Zeroable};
 use decorum::R32;
 use indexmap::IndexMap;
 
-use crate::{geometry::isosurface::grid::Grid, types::Index, util, Mesh};
+use crate::{
+    geometry::{attributes::Mesh, isosurface::grid::Grid},
+    types::Index,
+    util,
+};
 
 #[derive(Debug)]
 pub struct Vertices {
