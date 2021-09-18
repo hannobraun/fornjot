@@ -6,6 +6,7 @@
 pub mod bounding_volume;
 pub mod signed_distance_field;
 pub mod surface_normal;
+pub mod triangle_mesh;
 
 pub use self::{
     bounding_volume::{Aabb, BoundingVolume},
