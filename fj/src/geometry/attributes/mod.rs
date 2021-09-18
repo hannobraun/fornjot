@@ -12,4 +12,5 @@ pub use self::{
     bounding_volume::{Aabb, BoundingVolume},
     signed_distance_field::{Distance, SignedDistanceField},
     surface_normal::SurfaceNormal,
+    triangle_mesh::TriangleMesh,
 };
