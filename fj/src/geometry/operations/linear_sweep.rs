@@ -7,11 +7,11 @@ pub struct LinearSweep<Shape> {
     pub distance: f32,
 }
 
-impl<Sketch> LinearSweep<Sketch> {
+impl<Shape> LinearSweep<Shape> {
     /// Update sketch
     ///
     /// Returns a copy of `self` with the sketch replaced with `sketch`.
-    pub fn with_sketch(mut self, sketch: Sketch) -> Self {
+    pub fn with_sketch(mut self, sketch: Shape) -> Self {
         self.sketch = sketch;
         self
     }
