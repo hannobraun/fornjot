@@ -1,4 +1,12 @@
 /// A sweep of a shape along a path
+///
+/// This struct is generic over `Path`, which can be any type that describes a
+/// path through space. Examples of this would be a vector, or a type describing
+/// some kind of curve.
+///
+/// As of this writing, a lot of operations are implemented for `Sweep<T, f32>`,
+/// and just sweep 2-dimensional shapes along the z-axis, with the `f32`
+/// representing the distance.
 pub struct Sweep<T, Path> {
     /// The shape being swept
     pub shape: T,
