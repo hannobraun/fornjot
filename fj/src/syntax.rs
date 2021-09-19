@@ -44,8 +44,8 @@ impl<Geometry> Resolution for Geometry {}
 ///
 /// This trait is implemented for all types. The call `shape.sweep(distance)`
 /// will create a sweep of `shape` over `distance`.
-pub trait Sweep<Shape> {
-    fn sweep(self, distance: f32) -> operations::LinearSweep<Shape>;
+pub trait Sweep<T> {
+    fn sweep(self, distance: f32) -> operations::LinearSweep<T>;
 }
 
 impl<Shape> Sweep<Shape> for Shape {
