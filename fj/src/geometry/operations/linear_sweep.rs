@@ -19,7 +19,7 @@ impl<T, Path> LinearSweep<T, Path> {
     /// Update distance
     ///
     /// Returns a copy of `self` with the distance replaced with `distance`.
-    pub fn with_distance(mut self, path: Path) -> Self {
+    pub fn with_path(mut self, path: Path) -> Self {
         self.path = path;
         self
     }

@@ -30,7 +30,7 @@ impl Cylinder {
     ///
     /// Returns a copy of `self` with the height replaced with `height`.
     pub fn with_height(self, height: f32) -> Self {
-        self.with_distance(height)
+        self.with_path(height)
     }
 }
 
