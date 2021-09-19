@@ -15,6 +15,21 @@ impl<const D: usize> Vertices<D> for Translate<Vertex, D> {
     }
 }
 
+impl<T, const D: usize> Vertices<D> for Translate<T, D>
+where
+    T: Vertices<D>,
+{
+    fn vertices(&self) -> Vec<Translate<Vertex, D>> {
+        let mut vertices = self.shape.vertices();
+
+        for translate in &mut vertices {
+            translate.offset += self.offset;
+        }
+
+        vertices
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use nalgebra::vector;
