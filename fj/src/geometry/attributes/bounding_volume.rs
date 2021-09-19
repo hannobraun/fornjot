@@ -35,9 +35,9 @@ where
     }
 }
 
-impl<Shape> BoundingVolume<3> for operations::LinearSweep<Shape>
+impl<T> BoundingVolume<3> for operations::LinearSweep<T>
 where
-    Shape: BoundingVolume<2>,
+    T: BoundingVolume<2>,
 {
     fn aabb(&self) -> Aabb<3> {
         self.shape
