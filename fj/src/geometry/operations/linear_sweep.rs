@@ -1,7 +1,7 @@
 /// A sweep of a shape along a straight path
-pub struct LinearSweep<Shape> {
+pub struct LinearSweep<T> {
     /// The shape being swept
-    pub shape: Shape,
+    pub shape: T,
 
     /// The distance that the shape is being swept through space
     pub distance: f32,
