@@ -50,9 +50,9 @@ where
     }
 }
 
-impl<Shape> SignedDistanceField<3> for operations::LinearSweep<Shape>
+impl<T> SignedDistanceField<3> for operations::LinearSweep<T>
 where
-    Shape: SignedDistanceField<2>,
+    T: SignedDistanceField<2>,
 {
     fn distance(&self, point: impl Into<Point<f32, 3>>) -> Distance<3> {
         let point = point.into();
