@@ -3,6 +3,8 @@
 //! Import the prelude (`use fj::prelude::*;`) to make these traits available to
 //! you.
 
+use nalgebra::SVector;
+
 use crate::{geometry::operations, model};
 
 /// Provides convenient syntax for [`operations::Difference`]
@@ -51,6 +53,23 @@ impl<Shape> Sweep<Shape> for Shape {
         operations::LinearSweep {
             shape: self,
             distance,
+        }
+    }
+}
+
+/// Provides convenient syntax for [`operations::Translate`]
+///
+/// This trait is implemented for all types. The call `shape.translate(offset)`
+/// will translate `shape` by `offset`.
+pub trait Translate<T, const D: usize> {
+    fn translate(self, offset: SVector<f32, D>) -> operations::Translate<T, D>;
+}
+
+impl<T, const D: usize> Translate<T, D> for T {
+    fn translate(self, offset: SVector<f32, D>) -> operations::Translate<T, D> {
+        operations::Translate {
+            shape: self,
+            offset,
         }
     }
 }
