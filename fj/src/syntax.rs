@@ -22,6 +22,22 @@ impl<A, B> Difference<A, B> for (A, B) {
     }
 }
 
+/// Provides convenient syntax for [`model::WithResolution`]
+///
+/// This trait is implemented for all types. The call `geometry.resolution(res)`
+/// will wrap `geometry` in a `model::WithResolution` struct, which can then be
+/// converted into a triangle mesh, using the resolution specified.
+pub trait Resolution: Sized {
+    fn resolution(self, resolution: f32) -> model::WithResolution<Self> {
+        model::WithResolution {
+            geometry: self,
+            resolution,
+        }
+    }
+}
+
+impl<Geometry> Resolution for Geometry {}
+
 /// Provides convenient syntax for [`operations::Sweep`]
 ///
 /// This trait is implemented for all types. The call `shape.sweep(distance)`
@@ -38,19 +54,3 @@ impl<Shape> Sweep<Shape> for Shape {
         }
     }
 }
-
-/// Provides convenient syntax for [`model::WithResolution`]
-///
-/// This trait is implemented for all types. The call `geometry.resolution(res)`
-/// will wrap `geometry` in a `model::WithResolution` struct, which can then be
-/// converted into a triangle mesh, using the resolution specified.
-pub trait Resolution: Sized {
-    fn resolution(self, resolution: f32) -> model::WithResolution<Self> {
-        model::WithResolution {
-            geometry: self,
-            resolution,
-        }
-    }
-}
-
-impl<Geometry> Resolution for Geometry {}
