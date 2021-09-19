@@ -1,6 +1,6 @@
 use nalgebra::SVector;
 
-use crate::geometry::{operations, shapes::Vertex};
+use crate::geometry::{operations, shapes};
 
 /// Implemented by shapes that can return the vertices that make them up
 ///
@@ -8,11 +8,11 @@ use crate::geometry::{operations, shapes::Vertex};
 /// defines the dimension of those vertices' positions.
 pub trait Vertices<const D: usize> {
     /// Return the vertices of the shape
-    fn vertices(&self) -> Vec<operations::Translate<Vertex, D>>;
+    fn vertices(&self) -> Vec<operations::Translate<shapes::Vertex, D>>;
 }
 
-impl<const D: usize> Vertices<D> for Vertex {
-    fn vertices(&self) -> Vec<operations::Translate<Vertex, D>> {
+impl<const D: usize> Vertices<D> for shapes::Vertex {
+    fn vertices(&self) -> Vec<operations::Translate<shapes::Vertex, D>> {
         vec![operations::Translate {
             shape: *self,
             offset: SVector::zeros(),
@@ -24,7 +24,7 @@ impl<T, const D: usize> Vertices<D> for operations::Translate<T, D>
 where
     T: Vertices<D>,
 {
-    fn vertices(&self) -> Vec<operations::Translate<Vertex, D>> {
+    fn vertices(&self) -> Vec<operations::Translate<shapes::Vertex, D>> {
         let mut vertices = self.shape.vertices();
 
         for translate in &mut vertices {
