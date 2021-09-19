@@ -1,4 +1,4 @@
-/// A sweep of a shape along a straight path
+/// A sweep of a shape along a path
 pub struct LinearSweep<T, Path> {
     /// The shape being swept
     pub shape: T,
