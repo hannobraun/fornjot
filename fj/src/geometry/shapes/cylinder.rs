@@ -5,7 +5,7 @@ use super::Circle;
 /// A cylinder
 ///
 /// Defined as a [`Sweep`] of a [`Circle`].
-pub type Cylinder = LinearSweep<Circle>;
+pub type Cylinder = LinearSweep<Circle, f32>;
 
 impl Cylinder {
     /// Create a new `Cylinder`

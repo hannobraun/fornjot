@@ -50,7 +50,7 @@ where
     }
 }
 
-impl<T> SignedDistanceField<3> for operations::LinearSweep<T>
+impl<T> SignedDistanceField<3> for operations::LinearSweep<T, f32>
 where
     T: SignedDistanceField<2>,
 {
