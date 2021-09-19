@@ -1,3 +1,5 @@
+use nalgebra::SVector;
+
 use crate::geometry::{operations::Translate, shapes::Vertex};
 
 /// Implemented by shapes that can return the vertices that make them up
@@ -9,9 +11,12 @@ pub trait Vertices<const D: usize> {
     fn vertices(&self) -> Vec<Translate<Vertex, D>>;
 }
 
-impl<const D: usize> Vertices<D> for Translate<Vertex, D> {
+impl<const D: usize> Vertices<D> for Vertex {
     fn vertices(&self) -> Vec<Translate<Vertex, D>> {
-        vec![*self]
+        vec![Translate {
+            shape: *self,
+            offset: SVector::zeros(),
+        }]
     }
 }
 
@@ -36,7 +41,23 @@ mod tests {
 
     use crate::{geometry::shapes::Vertex, prelude::*};
 
-    use super::Vertices as _;
+    use super::Vertices;
+
+    #[test]
+    fn test_vertices_for_vertex() {
+        assert_eq!(
+            <Vertex as Vertices<1>>::vertices(&Vertex),
+            [Vertex.translate(vector![0.])],
+        );
+        assert_eq!(
+            <Vertex as Vertices<2>>::vertices(&Vertex),
+            [Vertex.translate(vector![0., 0.])],
+        );
+        assert_eq!(
+            <Vertex as Vertices<3>>::vertices(&Vertex),
+            [Vertex.translate(vector![0., 0., 0.])],
+        );
+    }
 
     #[test]
     fn test_vertices_for_translate_vertices() {
