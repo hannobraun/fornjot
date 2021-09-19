@@ -11,7 +11,7 @@ pub struct Sweep<T, Path> {
     /// The shape being swept
     pub shape: T,
 
-    /// The distance that the shape is being swept through space
+    /// The path along which the shape is being swept through space
     pub path: Path,
 }
 
