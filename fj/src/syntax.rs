@@ -49,11 +49,8 @@ pub trait Sweep<T, Path> {
 }
 
 impl<T, Path> Sweep<T, Path> for T {
-    fn sweep(self, distance: Path) -> operations::Sweep<T, Path> {
-        operations::Sweep {
-            shape: self,
-            path: distance,
-        }
+    fn sweep(self, path: Path) -> operations::Sweep<T, Path> {
+        operations::Sweep { shape: self, path }
     }
 }
 
