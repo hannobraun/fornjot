@@ -1,7 +1,5 @@
 pub mod difference;
-pub mod linear_sweep;
+pub mod sweep;
 pub mod translate;
 
-pub use self::{
-    difference::Difference, linear_sweep::Sweep, translate::Translate,
-};
+pub use self::{difference::Difference, sweep::Sweep, translate::Translate};
