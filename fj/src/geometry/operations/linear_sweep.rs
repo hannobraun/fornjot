@@ -1,5 +1,5 @@
 /// A sweep of a shape along a path
-pub struct LinearSweep<T, Path> {
+pub struct Sweep<T, Path> {
     /// The shape being swept
     pub shape: T,
 
@@ -7,7 +7,7 @@ pub struct LinearSweep<T, Path> {
     pub path: Path,
 }
 
-impl<T, Path> LinearSweep<T, Path> {
+impl<T, Path> Sweep<T, Path> {
     /// Update shape
     ///
     /// Returns a copy of `self` with the shape replaced with `shape`.

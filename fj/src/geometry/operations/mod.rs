@@ -3,5 +3,5 @@ pub mod linear_sweep;
 pub mod translate;
 
 pub use self::{
-    difference::Difference, linear_sweep::LinearSweep, translate::Translate,
+    difference::Difference, linear_sweep::Sweep, translate::Translate,
 };

@@ -35,7 +35,7 @@ where
     }
 }
 
-impl<T> BoundingVolume<3> for operations::LinearSweep<T, f32>
+impl<T> BoundingVolume<3> for operations::Sweep<T, f32>
 where
     T: BoundingVolume<2>,
 {

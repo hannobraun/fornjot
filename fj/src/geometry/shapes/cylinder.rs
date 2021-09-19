@@ -1,18 +1,18 @@
-use crate::geometry::operations::LinearSweep;
+use crate::geometry::operations::Sweep;
 
 use super::Circle;
 
 /// A cylinder
 ///
 /// Defined as a [`Sweep`] of a [`Circle`].
-pub type Cylinder = LinearSweep<Circle, f32>;
+pub type Cylinder = Sweep<Circle, f32>;
 
 impl Cylinder {
     /// Create a new `Cylinder`
     ///
     /// Sweeps a default [`Circle`] along a distance of `1.0`.
     pub fn new() -> Self {
-        LinearSweep {
+        Sweep {
             shape: Circle::new(),
             path: 1.0,
         }

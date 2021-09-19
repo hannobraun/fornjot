@@ -22,7 +22,7 @@ mod util;
 pub use self::{
     geometry::{
         attributes::Mesh,
-        operations::{Difference, LinearSweep},
+        operations::{Difference, Sweep},
         shapes::Cylinder,
     },
     graphics::Vertex,
