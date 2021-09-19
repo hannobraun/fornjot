@@ -60,7 +60,7 @@ where
         let sample_xy = self.shape.distance(point.xy());
 
         let d_xy = sample_xy.distance;
-        let d_z = point.z.abs() - self.distance / 2.0;
+        let d_z = point.z.abs() - self.path / 2.0;
 
         let w = Vector::from([f32::max(d_xy, 0.0), f32::max(d_z, 0.0)]);
 

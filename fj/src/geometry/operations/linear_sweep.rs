@@ -4,7 +4,7 @@ pub struct LinearSweep<T, Path> {
     pub shape: T,
 
     /// The distance that the shape is being swept through space
-    pub distance: Path,
+    pub path: Path,
 }
 
 impl<T, Path> LinearSweep<T, Path> {
@@ -20,7 +20,7 @@ impl<T, Path> LinearSweep<T, Path> {
     ///
     /// Returns a copy of `self` with the distance replaced with `distance`.
     pub fn with_distance(mut self, distance: Path) -> Self {
-        self.distance = distance;
+        self.path = distance;
         self
     }
 }

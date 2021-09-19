@@ -52,7 +52,7 @@ impl<T> Sweep<T> for T {
     fn sweep(self, distance: f32) -> operations::LinearSweep<T, f32> {
         operations::LinearSweep {
             shape: self,
-            distance,
+            path: distance,
         }
     }
 }

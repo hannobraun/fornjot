@@ -42,7 +42,7 @@ where
     fn aabb(&self) -> Aabb<3> {
         self.shape
             .aabb()
-            .extend(-self.distance / 2.0, self.distance / 2.0)
+            .extend(-self.path / 2.0, self.path / 2.0)
     }
 }
 
