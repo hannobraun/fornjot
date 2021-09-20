@@ -61,9 +61,9 @@ mod tests {
 
     #[test]
     fn test_vertices_for_translate_vertices() {
-        let vertex_1d = Vertex.translate(vector![2.0]);
-        let vertex_2d = Vertex.translate(vector![2.0, 3.0]);
-        let vertex_3d = Vertex.translate(vector![2.0, 3.0, 4.0]);
+        let vertex_1d = Vertex.translate(vector![2.]);
+        let vertex_2d = Vertex.translate(vector![2., 3.]);
+        let vertex_3d = Vertex.translate(vector![2., 3., 4.]);
 
         assert_eq!(vertex_1d.vertices(), [vertex_1d]);
         assert_eq!(vertex_2d.vertices(), [vertex_2d]);
