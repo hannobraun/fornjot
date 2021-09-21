@@ -6,7 +6,7 @@ use crate::{math::Point, types::Index};
 
 pub struct Vertices<T> {
     vertices: Vec<T>,
-    indices_by_vertex: HashMap<Vertex, Index>,
+    indices_by_vertex: HashMap<Vertex<3>, Index>,
 }
 
 impl<T> Vertices<T> {
@@ -53,4 +53,4 @@ impl<const D: usize> AsPoint<D> for Point<D> {
     }
 }
 
-type Vertex = nalgebra::Point<R32, 3>;
+type Vertex<const D: usize> = nalgebra::Point<R32, D>;
