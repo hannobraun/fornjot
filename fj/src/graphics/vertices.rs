@@ -91,8 +91,8 @@ impl From<Grid> for Vertices {
     }
 }
 
-impl From<Mesh> for Vertices {
-    fn from(mesh: Mesh) -> Self {
+impl From<Mesh<3>> for Vertices {
+    fn from(mesh: Mesh<3>) -> Self {
         let vertices: Vec<_> = mesh.vertices().collect();
 
         let mut indices_by_vertex_with_normal = IndexMap::new();

@@ -44,7 +44,7 @@ pub fn run_model(model: impl Model) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn run_mesh(mesh: impl Into<Mesh>) -> anyhow::Result<()> {
+pub fn run_mesh(mesh: impl Into<Mesh<3>>) -> anyhow::Result<()> {
     let args = init();
     run_inner(mesh.into(), None, args.export)?;
     Ok(())
@@ -63,7 +63,7 @@ fn init() -> Args {
 }
 
 fn run_inner(
-    mesh: Mesh,
+    mesh: Mesh<3>,
     grid: Option<Grid>,
     export: Option<PathBuf>,
 ) -> anyhow::Result<()> {

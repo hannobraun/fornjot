@@ -16,7 +16,7 @@ use crate::geometry::attributes::Mesh;
 ///
 /// [3MF specification]: https://3mf.io/specification/
 /// [Open Packaging Conventions]: https://standards.iso.org/ittf/PubliclyAvailableStandards/c061796_ISO_IEC_29500-2_2012.zip
-pub fn export(mesh: &Mesh, path: PathBuf) -> Result<(), Error> {
+pub fn export(mesh: &Mesh<3>, path: PathBuf) -> Result<(), Error> {
     let file = File::create(&path)?;
     let mut archive = ZipWriter::new(file);
 
@@ -34,7 +34,7 @@ pub fn export(mesh: &Mesh, path: PathBuf) -> Result<(), Error> {
     Ok(())
 }
 
-fn write_mesh(mesh: &Mesh, mut sink: impl Write) -> io::Result<()> {
+fn write_mesh(mesh: &Mesh<3>, mut sink: impl Write) -> io::Result<()> {
     sink.write_all(include_bytes!("model-header.xml"))?;
 
     writeln!(sink, "\t\t\t\t<vertices>")?;

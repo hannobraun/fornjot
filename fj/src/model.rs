@@ -19,14 +19,14 @@ pub trait Model {
 
 /// A type that knows how to convert itself into a triangle mesh
 pub trait IntoMesh {
-    fn into_mesh(&self) -> (Mesh, Grid);
+    fn into_mesh(&self) -> (Mesh<3>, Grid);
 }
 
 impl<T> IntoMesh for T
 where
     T: BoundingVolume<3> + SignedDistanceField<3>,
 {
-    fn into_mesh(&self) -> (Mesh, Grid) {
+    fn into_mesh(&self) -> (Mesh<3>, Grid) {
         let resolution = self.aabb().size().max() / 100.0;
         isosurface::to_mesh(self, resolution)
     }
@@ -51,7 +51,7 @@ impl<T> IntoMesh for WithResolution<T>
 where
     T: BoundingVolume<3> + SignedDistanceField<3>,
 {
-    fn into_mesh(&self) -> (Mesh, Grid) {
+    fn into_mesh(&self) -> (Mesh<3>, Grid) {
         isosurface::to_mesh(&self.geometry, self.resolution)
     }
 }

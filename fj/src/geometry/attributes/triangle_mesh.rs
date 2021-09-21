@@ -3,16 +3,16 @@ use crate::{math::Point, types::Index, util};
 /// Implemented for geometry that can be converted to a triangle mesh
 pub trait TriangleMesh {
     /// Convert geometry to a triangle mesh
-    fn mesh(&self) -> Mesh;
+    fn mesh(&self) -> Mesh<3>;
 }
 
 /// A triangle mesh
-pub struct Mesh {
-    vertices: util::Vertices<Point<3>, 3>,
+pub struct Mesh<const D: usize> {
+    vertices: util::Vertices<Point<D>, D>,
     triangles: Vec<[Index; 3]>,
 }
 
-impl Mesh {
+impl<const D: usize> Mesh<D> {
     /// Create an empty triangle mesh
     pub fn new() -> Self {
         Self {
@@ -29,9 +29,9 @@ impl Mesh {
     /// two of them are equal).
     pub fn triangle(
         &mut self,
-        v0: impl Into<Point<3>>,
-        v1: impl Into<Point<3>>,
-        v2: impl Into<Point<3>>,
+        v0: impl Into<Point<D>>,
+        v1: impl Into<Point<D>>,
+        v2: impl Into<Point<D>>,
     ) {
         let v0 = v0.into();
         let v1 = v1.into();
@@ -50,7 +50,7 @@ impl Mesh {
     }
 
     /// Iterate over all vertices
-    pub fn vertices(&self) -> impl Iterator<Item = Point<3>> + '_ {
+    pub fn vertices(&self) -> impl Iterator<Item = Point<D>> + '_ {
         self.vertices.iter()
     }
 

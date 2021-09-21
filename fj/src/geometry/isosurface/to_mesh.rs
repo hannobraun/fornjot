@@ -6,7 +6,7 @@ use super::{grid, Grid};
 pub fn to_mesh(
     geometry: &(impl SignedDistanceField<3> + BoundingVolume<3>),
     resolution: f32,
-) -> (Mesh, Grid) {
+) -> (Mesh<3>, Grid) {
     let grid_descriptor = grid::Descriptor {
         aabb: geometry.aabb(),
         resolution,
