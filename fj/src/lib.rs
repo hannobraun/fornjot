@@ -1,6 +1,7 @@
 #![allow(uncommon_codepoints)]
 
 pub mod geometry;
+pub mod math;
 pub mod model;
 pub mod syntax;
 pub mod threemf;
