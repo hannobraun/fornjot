@@ -14,4 +14,5 @@ pub use self::{
     signed_distance_field::{Distance, SignedDistanceField},
     surface_normal::SurfaceNormal,
     triangle_mesh::{Mesh, TriangleMesh},
+    vertices::Vertices,
 };
