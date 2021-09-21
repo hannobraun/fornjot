@@ -1,6 +1,4 @@
-use nalgebra::Point;
-
-use crate::{types::Index, util};
+use crate::{math::Point, types::Index, util};
 
 /// Implemented for geometry that can be converted to a triangle mesh
 pub trait TriangleMesh {
@@ -31,9 +29,9 @@ impl Mesh {
     /// two of them are equal).
     pub fn triangle(
         &mut self,
-        v0: impl Into<Point<f32, 3>>,
-        v1: impl Into<Point<f32, 3>>,
-        v2: impl Into<Point<f32, 3>>,
+        v0: impl Into<Point<3>>,
+        v1: impl Into<Point<3>>,
+        v2: impl Into<Point<3>>,
     ) {
         let v0 = v0.into();
         let v1 = v1.into();
@@ -52,7 +50,7 @@ impl Mesh {
     }
 
     /// Iterate over all vertices
-    pub fn vertices(&self) -> impl Iterator<Item = Point<f32, 3>> + '_ {
+    pub fn vertices(&self) -> impl Iterator<Item = Point<3>> + '_ {
         self.vertices.iter()
     }
 

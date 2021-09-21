@@ -1,12 +1,14 @@
-use nalgebra::{vector, Matrix3, Matrix3x1, Point, SVector};
+use nalgebra::{vector, Matrix3, Matrix3x1, SVector};
+
+use crate::math::Point;
 
 use super::grid::Cell;
 
 pub fn place_surface_vertex(
     cell: Cell,
     resolution: f32,
-    planes: &[(Point<f32, 3>, SVector<f32, 3>)],
-) -> Point<f32, 3> {
+    planes: &[(Point<3>, SVector<f32, 3>)],
+) -> Point<3> {
     let cell_min = cell.min_position;
     let cell_max = cell_min + vector![resolution, resolution, resolution];
 
@@ -27,8 +29,8 @@ pub fn place_surface_vertex(
 
 #[allow(non_snake_case)]
 fn place_at_plane_intersection(
-    planes: &[(Point<f32, 3>, SVector<f32, 3>)],
-) -> Point<f32, 3> {
+    planes: &[(Point<3>, SVector<f32, 3>)],
+) -> Point<3> {
     // Based on the approach from https://www.mattkeeter.com/projects/qef/.
 
     let mut AᵀA = Matrix3::zeros();
@@ -50,9 +52,7 @@ fn place_at_plane_intersection(
     result.into()
 }
 
-pub fn place_at_average(
-    planes: &[(Point<f32, 3>, SVector<f32, 3>)],
-) -> Point<f32, 3> {
+pub fn place_at_average(planes: &[(Point<3>, SVector<f32, 3>)]) -> Point<3> {
     let mut surface_vertex = Point::origin();
     for (point, _) in planes {
         surface_vertex += point.coords;

@@ -1,4 +1,6 @@
-use nalgebra::{vector, Point, SVector};
+use nalgebra::{vector, SVector};
+
+use crate::math::Point;
 
 use super::SignedDistanceField;
 
@@ -9,14 +11,14 @@ use super::SignedDistanceField;
 /// `Geometry<2>` and `Geometry<3>`) exist.
 pub trait SurfaceNormal<const D: usize> {
     /// Return the surface normal at the given point
-    fn normal(&self, point: impl Into<Point<f32, D>>) -> SVector<f32, D>;
+    fn normal(&self, point: impl Into<Point<D>>) -> SVector<f32, D>;
 }
 
 impl<T> SurfaceNormal<2> for T
 where
     T: SignedDistanceField<2>,
 {
-    fn normal(&self, point: impl Into<Point<f32, 2>>) -> SVector<f32, 2> {
+    fn normal(&self, point: impl Into<Point<2>>) -> SVector<f32, 2> {
         const EPSILON: f32 = 0.1;
 
         let point = point.into();
@@ -39,7 +41,7 @@ impl<T> SurfaceNormal<3> for T
 where
     T: SignedDistanceField<3>,
 {
-    fn normal(&self, point: impl Into<Point<f32, 3>>) -> SVector<f32, 3> {
+    fn normal(&self, point: impl Into<Point<3>>) -> SVector<f32, 3> {
         const EPSILON: f32 = 0.1;
 
         let point = point.into();

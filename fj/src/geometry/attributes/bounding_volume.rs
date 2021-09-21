@@ -1,9 +1,10 @@
 use std::fmt;
 
-use nalgebra::{Point, SVector};
+use nalgebra::SVector;
 
 use crate::{
     geometry::{operations, shapes},
+    math::Point,
     util::DebugPoint,
 };
 
@@ -48,10 +49,10 @@ where
 #[derive(Clone, Copy, PartialEq)]
 pub struct Aabb<const D: usize> {
     /// Minimum point of the axis-aligned bounding box
-    pub min: Point<f32, D>,
+    pub min: Point<D>,
 
     /// Maximum point of the axis-aligned bounding box
-    pub max: Point<f32, D>,
+    pub max: Point<D>,
 }
 
 impl<const D: usize> Aabb<D> {
@@ -60,10 +61,7 @@ impl<const D: usize> Aabb<D> {
     /// # Panics
     /// Panics, if `size` has at least one negative component, or a magnitude of
     /// zero.
-    pub fn from_min_and_size(
-        min: Point<f32, D>,
-        size: SVector<f32, D>,
-    ) -> Self {
+    pub fn from_min_and_size(min: Point<D>, size: SVector<f32, D>) -> Self {
         assert!(size[0] >= 0.0 && size[1] >= 0.0 && size[2] >= 0.0);
         assert!(size.magnitude_squared() > 0.0);
 
@@ -79,7 +77,7 @@ impl<const D: usize> Aabb<D> {
     }
 
     /// Center point of the axis-aligned bounding box
-    pub fn center(&self) -> Point<f32, D> {
+    pub fn center(&self) -> Point<D> {
         self.min + self.size() / 2.0
     }
 }
@@ -96,7 +94,7 @@ impl Aabb<2> {
 
 impl Aabb<3> {
     /// Vertices of the axis-aligned bounding box
-    pub fn vertices(&self) -> [Point<f32, 3>; 8] {
+    pub fn vertices(&self) -> [Point<3>; 8] {
         [
             [self.min.x, self.min.y, self.min.z].into(),
             [self.min.x, self.min.y, self.max.z].into(),
@@ -111,7 +109,7 @@ impl Aabb<3> {
 
     /// Edges of the axis-aligned bounding
     #[allow(clippy::many_single_char_names)]
-    pub fn edges(&self) -> [[Point<f32, 3>; 2]; 12] {
+    pub fn edges(&self) -> [[Point<3>; 2]; 12] {
         let [a, b, c, d, e, f, g, h] = self.vertices();
 
         [

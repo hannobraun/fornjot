@@ -1,6 +1,6 @@
 use std::array;
 
-use nalgebra::Point;
+use crate::math::Point;
 
 use super::Index;
 
@@ -11,7 +11,7 @@ pub struct Cell {
     pub min_index: Index,
 
     /// The position of the minimum (as defined by index ordering) cell vertex
-    pub min_position: Point<f32, 3>,
+    pub min_position: Point<3>,
 }
 
 impl Cell {

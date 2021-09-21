@@ -1,6 +1,4 @@
-use nalgebra::Point;
-
-use crate::util::vertices::AsPoint;
+use crate::{math::Point, util::vertices::AsPoint};
 
 use super::Index;
 
@@ -11,14 +9,14 @@ pub struct Vertex {
     pub index: Index,
 
     /// The position of the vertex
-    pub point: Point<f32, 3>,
+    pub point: Point<3>,
 
     /// The (signed) distance of the vertex to the closest surface point
     pub distance: f32,
 }
 
 impl AsPoint for Vertex {
-    fn as_point(&self) -> Point<f32, 3> {
+    fn as_point(&self) -> Point<3> {
         self.point
     }
 }

@@ -12,9 +12,10 @@ pub use self::{
 
 use std::collections::BTreeMap;
 
-use nalgebra::Point;
-
-use crate::geometry::attributes::{SignedDistanceField, SurfaceNormal};
+use crate::{
+    geometry::attributes::{SignedDistanceField, SurfaceNormal},
+    math::Point,
+};
 
 use self::surface_vertices::SurfaceVertices;
 
@@ -129,7 +130,7 @@ impl Grid {
     }
 
     /// Get the 4 neighboring surface vertices of a grid edge
-    pub fn neighbors_of_edge(&self, edge: Edge) -> [Point<f32, 3>; 4] {
+    pub fn neighbors_of_edge(&self, edge: Edge) -> [Point<3>; 4] {
         self.surface_vertices.neighbors_of_edge(edge)
     }
 }

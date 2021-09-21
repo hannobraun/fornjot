@@ -1,11 +1,10 @@
 use std::{collections::HashMap, convert::TryInto};
 
 use decorum::R32;
-use nalgebra::Point;
 
-use crate::types::Index;
+use crate::{math::Point, types::Index};
 
-pub struct Vertices<T = Point<f32, 3>> {
+pub struct Vertices<T = Point<3>> {
     vertices: Vec<T>,
     indices_by_vertex: HashMap<Vertex, Index>,
 }
@@ -45,13 +44,13 @@ impl<T> Vertices<T> {
 }
 
 pub trait AsPoint {
-    fn as_point(&self) -> Point<f32, 3>;
+    fn as_point(&self) -> Point<3>;
 }
 
-impl AsPoint for Point<f32, 3> {
-    fn as_point(&self) -> Point<f32, 3> {
+impl AsPoint for Point<3> {
+    fn as_point(&self) -> Point<3> {
         *self
     }
 }
 
-type Vertex = Point<R32, 3>;
+type Vertex = nalgebra::Point<R32, 3>;
