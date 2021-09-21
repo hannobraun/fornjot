@@ -8,7 +8,7 @@ pub trait TriangleMesh {
 
 /// A triangle mesh
 pub struct Mesh {
-    vertices: util::Vertices,
+    vertices: util::Vertices<Point<3>>,
     triangles: Vec<[Index; 3]>,
 }
 
