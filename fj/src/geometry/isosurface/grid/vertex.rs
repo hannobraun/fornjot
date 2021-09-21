@@ -15,7 +15,7 @@ pub struct Vertex {
     pub distance: f32,
 }
 
-impl AsPoint for Vertex {
+impl AsPoint<3> for Vertex {
     fn as_point(&self) -> Point<3> {
         self.point
     }

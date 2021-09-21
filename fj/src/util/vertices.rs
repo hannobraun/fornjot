@@ -26,7 +26,7 @@ impl<T> Vertices<T> {
 
     pub fn index_for_vertex(&mut self, vertex: T) -> Index
     where
-        T: AsPoint,
+        T: AsPoint<3>,
     {
         let vertex_r32 = vertex.as_point().map(|coord| coord.into());
 
@@ -43,12 +43,12 @@ impl<T> Vertices<T> {
     }
 }
 
-pub trait AsPoint {
-    fn as_point(&self) -> Point<3>;
+pub trait AsPoint<const D: usize> {
+    fn as_point(&self) -> Point<D>;
 }
 
-impl AsPoint for Point<3> {
-    fn as_point(&self) -> Point<3> {
+impl<const D: usize> AsPoint<D> for Point<D> {
+    fn as_point(&self) -> Point<D> {
         *self
     }
 }
