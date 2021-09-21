@@ -4,12 +4,12 @@ use decorum::R32;
 
 use crate::{math::Point, types::Index};
 
-pub struct Vertices<T> {
+pub struct Vertices<T, const D: usize> {
     vertices: Vec<T>,
-    indices_by_vertex: HashMap<Vertex<3>, Index>,
+    indices_by_vertex: HashMap<Vertex<D>, Index>,
 }
 
-impl<T> Vertices<T> {
+impl<T, const D: usize> Vertices<T, D> {
     pub fn new() -> Self {
         Self {
             vertices: Vec::new(),
@@ -26,7 +26,7 @@ impl<T> Vertices<T> {
 
     pub fn index_for_vertex(&mut self, vertex: T) -> Index
     where
-        T: AsPoint<3>,
+        T: AsPoint<D>,
     {
         let vertex_r32 = vertex.as_point().map(|coord| coord.into());
 
