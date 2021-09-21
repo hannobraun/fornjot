@@ -1,5 +1,3 @@
-use nalgebra::SVector;
-
 use crate::{
     geometry::{operations, shapes},
     math::Vector,
@@ -18,7 +16,7 @@ impl<const D: usize> Vertices<D> for shapes::Vertex {
     fn vertices(&self) -> Vec<operations::Translate<shapes::Vertex, D>> {
         vec![operations::Translate {
             shape: *self,
-            offset: SVector::zeros(),
+            offset: Vector::zeros(),
         }]
     }
 }
