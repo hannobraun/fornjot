@@ -1,8 +1,6 @@
-use nalgebra::Vector;
-
 use crate::{
     geometry::{operations, shapes},
-    math::Point,
+    math::{Point, Vector},
 };
 
 /// Implemented for geometry that defines a signed distance field
