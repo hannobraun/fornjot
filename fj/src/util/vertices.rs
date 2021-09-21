@@ -4,7 +4,7 @@ use decorum::R32;
 
 use crate::{math::Point, types::Index};
 
-pub struct Vertices<T = Point<3>> {
+pub struct Vertices<T> {
     vertices: Vec<T>,
     indices_by_vertex: HashMap<Vertex, Index>,
 }
