@@ -1,10 +1,8 @@
 use std::fmt;
 
-use nalgebra::SVector;
-
 use crate::{
     geometry::{operations, shapes},
-    math::Point,
+    math::{Point, Vector},
     util::DebugPoint,
 };
 
@@ -61,7 +59,7 @@ impl<const D: usize> Aabb<D> {
     /// # Panics
     /// Panics, if `size` has at least one negative component, or a magnitude of
     /// zero.
-    pub fn from_min_and_size(min: Point<D>, size: SVector<f32, D>) -> Self {
+    pub fn from_min_and_size(min: Point<D>, size: Vector<D>) -> Self {
         assert!(size[0] >= 0.0 && size[1] >= 0.0 && size[2] >= 0.0);
         assert!(size.magnitude_squared() > 0.0);
 
@@ -72,7 +70,7 @@ impl<const D: usize> Aabb<D> {
     }
 
     /// Size of the axis-aligned bounding box
-    pub fn size(&self) -> SVector<f32, D> {
+    pub fn size(&self) -> Vector<D> {
         self.max - self.min
     }
 

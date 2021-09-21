@@ -1,4 +1,4 @@
-use nalgebra::SVector;
+use crate::math::Vector;
 
 /// Translates a shape
 ///
@@ -10,5 +10,5 @@ pub struct Translate<T, const D: usize> {
     pub shape: T,
 
     /// The offset created by the translation
-    pub offset: SVector<f32, D>,
+    pub offset: Vector<D>,
 }

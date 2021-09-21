@@ -1,6 +1,9 @@
 use nalgebra::SVector;
 
-use crate::geometry::{operations, shapes};
+use crate::{
+    geometry::{operations, shapes},
+    math::Vector,
+};
 
 /// Implemented by shapes that can return the vertices that make them up
 ///
@@ -20,7 +23,7 @@ impl<const D: usize> Vertices<D> for shapes::Vertex {
     }
 }
 
-impl<T, const D: usize> Vertices<D> for operations::Sweep<T, SVector<f32, D>>
+impl<T, const D: usize> Vertices<D> for operations::Sweep<T, Vector<D>>
 where
     T: Vertices<D>,
 {
