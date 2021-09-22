@@ -3,7 +3,7 @@ use crate::{
     math::Vector,
 };
 
-/// Implemented by shapes that can return the vertices that make them up
+/// The vertices that make up a shape
 ///
 /// Since the vertices of a shape are going to have a position in space, `D`
 /// defines the dimension of those vertices' positions.
