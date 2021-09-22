@@ -3,4 +3,4 @@ use crate::{
     math::Vector,
 };
 
-pub type Line = Sweep<Vertex, Vector<1>>;
+pub type Edge = Sweep<Vertex, Vector<1>>;

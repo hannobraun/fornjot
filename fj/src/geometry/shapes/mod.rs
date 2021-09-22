@@ -8,7 +8,7 @@ pub mod toroid;
 pub mod vertex;
 
 pub use self::{
-    circle::Circle, cylinder::Cylinder, hypersphere::Hypersphere, line::Line,
+    circle::Circle, cylinder::Cylinder, hypersphere::Hypersphere, line::Edge,
     parallelogram::Parallelogram, sphere::Sphere, toroid::Toroid,
     vertex::Vertex,
 };
