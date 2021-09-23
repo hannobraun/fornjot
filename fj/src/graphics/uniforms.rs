@@ -1,5 +1,6 @@
 use bytemuck::{Pod, Zeroable};
-use nalgebra::Matrix4;
+
+use crate::math::Matrix;
 
 use super::transform::NativeTransform;
 
@@ -12,7 +13,7 @@ pub struct Uniforms {
 
 impl Default for Uniforms {
     fn default() -> Self {
-        let identity = Matrix4::<f32>::identity();
+        let identity = Matrix::<4, 4>::identity();
 
         let mut transform = [0.0; 16];
         transform.copy_from_slice(identity.data.as_slice());

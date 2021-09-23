@@ -1,6 +1,6 @@
-use nalgebra::{vector, Matrix3, Matrix3x1};
+use nalgebra::vector;
 
-use crate::math::{Point, Vector};
+use crate::math::{Matrix, Point, Vector};
 
 use super::grid::Cell;
 
@@ -31,8 +31,8 @@ pub fn place_surface_vertex(
 fn place_at_plane_intersection(planes: &[(Point<3>, Vector<3>)]) -> Point<3> {
     // Based on the approach from https://www.mattkeeter.com/projects/qef/.
 
-    let mut AᵀA = Matrix3::zeros();
-    let mut AᵀB = Matrix3x1::zeros();
+    let mut AᵀA = Matrix::<3, 3>::zeros();
+    let mut AᵀB = Matrix::<3, 1>::zeros();
 
     for (point, normal) in planes {
         AᵀA += normal * normal.transpose();
