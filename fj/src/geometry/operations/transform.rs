@@ -16,6 +16,6 @@ where
     /// The shape being transformed
     pub shape: T,
 
-    /// The transform
+    /// The affine transform
     pub transform: nalgebra::Transform<f32, TAffine, D>,
 }
