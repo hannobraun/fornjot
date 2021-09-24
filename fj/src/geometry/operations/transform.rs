@@ -1,18 +1,21 @@
-use nalgebra::Rotation;
-
-use crate::math::Vector;
+use nalgebra::{
+    allocator::Allocator, Const, DefaultAllocator, DimNameAdd, DimNameSum,
+    TAffine, U1,
+};
 
 /// Transforms (translates and rotates) a shape
 ///
 /// `D` defines the dimensionality of the transformation. Typically,
 /// transformations will be 2- or 3-dimensional.
-pub struct Transform<T, const D: usize> {
+pub struct Transform<T, const D: usize>
+where
+    Const<D>: DimNameAdd<U1>,
+    DefaultAllocator:
+        Allocator<f32, DimNameSum<Const<D>, U1>, DimNameSum<Const<D>, U1>>,
+{
     /// The shape being transformed
     pub shape: T,
 
-    /// The translational part of the transformation
-    pub translation: Vector<D>,
-
-    /// The rotational part of the transformation
-    pub rotation: Rotation<f32, D>,
+    /// The transform
+    pub transform: nalgebra::Transform<f32, TAffine, D>,
 }
