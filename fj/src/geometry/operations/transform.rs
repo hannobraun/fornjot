@@ -3,7 +3,7 @@ use nalgebra::{
     TAffine, U1,
 };
 
-/// Transforms (translates and rotates) a shape
+/// Applies an affine transformation to a shape
 ///
 /// `D` defines the dimensionality of the transformation. Typically,
 /// transformations will be 2- or 3-dimensional.
