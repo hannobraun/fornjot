@@ -50,12 +50,12 @@ impl<Geometry> Resolution for Geometry {}
 ///
 /// This trait is implemented for all types. The call `shape.sweep(distance)`
 /// will create a sweep of `shape` over `distance`.
-pub trait Sweep<T, Path>: Sized {
-    fn sweep(self, path: Path) -> operations::Sweep<T, Path>;
+pub trait Sweep<Path>: Sized {
+    fn sweep(self, path: Path) -> operations::Sweep<Self, Path>;
 }
 
-impl<T, Path> Sweep<T, Path> for T {
-    fn sweep(self, path: Path) -> operations::Sweep<T, Path> {
+impl<T, Path> Sweep<Path> for T {
+    fn sweep(self, path: Path) -> operations::Sweep<Self, Path> {
         operations::Sweep { shape: self, path }
     }
 }
