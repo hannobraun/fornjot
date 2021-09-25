@@ -74,7 +74,12 @@ where
     fn transform(
         self,
         transform: impl Into<math::Transform<D>>,
-    ) -> operations::Transform<Self, D>;
+    ) -> operations::Transform<Self, D> {
+        operations::Transform {
+            shape: self,
+            transform: transform.into(),
+        }
+    }
 }
 
 impl<T, const D: usize> Transform<D> for T
@@ -83,15 +88,6 @@ where
     DefaultAllocator:
         Allocator<f32, DimNameSum<Const<D>, U1>, DimNameSum<Const<D>, U1>>,
 {
-    fn transform(
-        self,
-        transform: impl Into<math::Transform<D>>,
-    ) -> operations::Transform<Self, D> {
-        operations::Transform {
-            shape: self,
-            transform: transform.into(),
-        }
-    }
 }
 
 /// Provides convenient syntax for [`operations::Translate`]
