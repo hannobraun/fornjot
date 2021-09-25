@@ -98,10 +98,6 @@ where
 /// shapes.
 pub trait Translate<const D: usize>: Sized {
     /// Translate `self` by `offset`
-    fn translate(self, offset: Vector<D>) -> operations::Translate<Self, D>;
-}
-
-impl<T, const D: usize> Translate<D> for T {
     fn translate(self, offset: Vector<D>) -> operations::Translate<Self, D> {
         operations::Translate {
             shape: self,
@@ -109,3 +105,5 @@ impl<T, const D: usize> Translate<D> for T {
         }
     }
 }
+
+impl<T, const D: usize> Translate<D> for T {}
