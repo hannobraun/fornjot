@@ -52,14 +52,12 @@ impl<Geometry> Resolution for Geometry {}
 /// `operations::Sweep` will only be available for types that represent shapes.
 pub trait Sweep<Path>: Sized {
     /// Create a sweep of `self` over `path`
-    fn sweep(self, path: Path) -> operations::Sweep<Self, Path>;
-}
-
-impl<T, Path> Sweep<Path> for T {
     fn sweep(self, path: Path) -> operations::Sweep<Self, Path> {
         operations::Sweep { shape: self, path }
     }
 }
+
+impl<T, Path> Sweep<Path> for T {}
 
 /// Provides convenient syntax for [`operations::Transform`]
 ///
