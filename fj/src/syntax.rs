@@ -36,10 +36,13 @@ impl<A, B> Difference<A, B> for (A, B) {
 /// will wrap `geometry` in a `model::WithResolution` struct, which can then be
 /// converted into a triangle mesh, using the resolution specified.
 pub trait Resolution: Sized {
-    fn resolution(self, resolution: f32) -> model::WithResolution<Self> {
+    fn resolution(
+        self,
+        resolution: impl Into<f32>,
+    ) -> model::WithResolution<Self> {
         model::WithResolution {
             geometry: self,
-            resolution,
+            resolution: resolution.into(),
         }
     }
 }
@@ -98,10 +101,13 @@ where
 /// shapes.
 pub trait Translate<const D: usize>: Sized {
     /// Translate `self` by `offset`
-    fn translate(self, offset: Vector<D>) -> operations::Translate<Self, D> {
+    fn translate(
+        self,
+        offset: impl Into<Vector<D>>,
+    ) -> operations::Translate<Self, D> {
         operations::Translate {
             shape: self,
-            offset,
+            offset: offset.into(),
         }
     }
 }
