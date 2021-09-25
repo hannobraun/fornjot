@@ -1,7 +1,7 @@
 use crate::{math::Point, types::Index, util};
 
 /// Implemented for geometry that can be converted to a triangle mesh
-pub trait TriangleMesh<const D: usize> {
+pub trait SurfaceMesh<const D: usize> {
     /// Convert geometry to a triangle mesh
     fn mesh(&self) -> Mesh<D>;
 }
