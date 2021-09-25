@@ -1,7 +1,8 @@
 use nalgebra::{
-    allocator::Allocator, Const, DefaultAllocator, DimNameAdd, DimNameSum,
-    TAffine, U1,
+    allocator::Allocator, Const, DefaultAllocator, DimNameAdd, DimNameSum, U1,
 };
+
+use crate::math;
 
 /// Applies an affine transformation to a shape
 ///
@@ -17,5 +18,5 @@ where
     pub shape: T,
 
     /// The affine transform
-    pub transform: nalgebra::Transform<f32, TAffine, D>,
+    pub transform: math::Transform<D>,
 }
