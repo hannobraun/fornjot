@@ -8,6 +8,7 @@ use crate::math;
 ///
 /// `D` defines the dimensionality of the transformation. Typically,
 /// transformations will be 2- or 3-dimensional.
+#[derive(Clone, Debug, PartialEq)]
 pub struct Transform<T, const D: usize>
 where
     Const<D>: DimNameAdd<U1>,
