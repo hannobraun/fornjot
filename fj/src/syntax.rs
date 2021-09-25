@@ -3,7 +3,15 @@
 //! Import the prelude (`use fj::prelude::*;`) to make these traits available to
 //! you.
 
-use crate::{geometry::operations, math::Vector, model};
+use nalgebra::{
+    allocator::Allocator, Const, DefaultAllocator, DimNameAdd, DimNameSum, U1,
+};
+
+use crate::{
+    geometry::operations,
+    math::{self, Vector},
+    model,
+};
 
 /// Provides convenient syntax for [`operations::Difference`]
 ///
@@ -49,6 +57,39 @@ pub trait Sweep<T, Path> {
 impl<T, Path> Sweep<T, Path> for T {
     fn sweep(self, path: Path) -> operations::Sweep<T, Path> {
         operations::Sweep { shape: self, path }
+    }
+}
+
+/// Provides convenient syntax for [`operations::Transform`]
+///
+/// This trait is implemented for all types. The call
+/// `shape.transform(transform)` will transform `shape` using `transform`.
+pub trait Transform<T, const D: usize>
+where
+    Const<D>: DimNameAdd<U1>,
+    DefaultAllocator:
+        Allocator<f32, DimNameSum<Const<D>, U1>, DimNameSum<Const<D>, U1>>,
+{
+    fn transform(
+        self,
+        transform: impl Into<math::Transform<D>>,
+    ) -> operations::Transform<T, D>;
+}
+
+impl<T, const D: usize> Transform<T, D> for T
+where
+    Const<D>: DimNameAdd<U1>,
+    DefaultAllocator:
+        Allocator<f32, DimNameSum<Const<D>, U1>, DimNameSum<Const<D>, U1>>,
+{
+    fn transform(
+        self,
+        transform: impl Into<math::Transform<D>>,
+    ) -> operations::Transform<T, D> {
+        operations::Transform {
+            shape: self,
+            transform: transform.into(),
+        }
     }
 }
 
