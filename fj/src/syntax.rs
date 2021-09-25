@@ -64,7 +64,7 @@ impl<T, Path> Sweep<Path> for T {}
 /// This trait is implemented for all types, but most features of the resulting
 /// `operations::Transform` will only be available for types that represent
 /// shapes.
-pub trait Transform<T, const D: usize>: Sized
+pub trait Transform<const D: usize>: Sized
 where
     Const<D>: DimNameAdd<U1>,
     DefaultAllocator:
@@ -74,10 +74,10 @@ where
     fn transform(
         self,
         transform: impl Into<math::Transform<D>>,
-    ) -> operations::Transform<T, D>;
+    ) -> operations::Transform<Self, D>;
 }
 
-impl<T, const D: usize> Transform<T, D> for T
+impl<T, const D: usize> Transform<D> for T
 where
     Const<D>: DimNameAdd<U1>,
     DefaultAllocator:
@@ -86,7 +86,7 @@ where
     fn transform(
         self,
         transform: impl Into<math::Transform<D>>,
-    ) -> operations::Transform<T, D> {
+    ) -> operations::Transform<Self, D> {
         operations::Transform {
             shape: self,
             transform: transform.into(),
