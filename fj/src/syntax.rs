@@ -92,9 +92,11 @@ where
 
 /// Provides convenient syntax for [`operations::Translate`]
 ///
-/// This trait is implemented for all types. The call `shape.translate(offset)`
-/// will translate `shape` by `offset`.
+/// This trait is implemented for all types, but most features of the resulting
+/// [`operations::Translate`] will only be available for types that represent
+/// shapes.
 pub trait Translate<T, const D: usize>: Sized {
+    /// Translate `self` by `offset`
     fn translate(self, offset: Vector<D>) -> operations::Translate<T, D>;
 }
 
