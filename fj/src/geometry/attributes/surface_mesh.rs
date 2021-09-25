@@ -1,7 +1,7 @@
 use crate::geometry::shapes::Mesh;
 
-/// Implemented for geometry that can be converted to a triangle mesh
+/// Compute a triangle mesh that approximates a shape's surface
 pub trait SurfaceMesh<const D: usize> {
-    /// Convert geometry to a triangle mesh
+    /// Compute surface mesh for shape
     fn mesh(&self) -> Mesh<D>;
 }
