@@ -36,8 +36,8 @@ where
 /// Can be used to convert geometry to a mesh, using a specific resolution
 ///
 /// There exists an `Into<Mesh>` implementation for geometry (i.e.
-/// implementations of [`BoundingVolume<3>`] and [`Geometry<3>`]) that
-/// automatically chooses a resolution based on the overall size of the
+/// implementations of [`BoundingVolume<3>`] and [`SignedDistanceField<3>`])
+/// that automatically chooses a resolution based on the overall size of the
 /// geometry. For cases where this is not appropriate, this struct can be used
 /// to provide such a conversion, but with an explicitly provided resolution.
 pub struct WithResolution<T> {

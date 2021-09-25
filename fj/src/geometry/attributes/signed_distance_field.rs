@@ -73,7 +73,7 @@ where
 
 /// The minimum distance of a specific point to a surface
 ///
-/// Returned by [`Geometry::sample`].
+/// Returned by [`SignedDistanceField::distance`].
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Distance<const D: usize> {
     /// The point from which the distance was determined
