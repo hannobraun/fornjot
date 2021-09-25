@@ -6,3 +6,5 @@ pub type Matrix<const R: usize, const C: usize> = nalgebra::Matrix<
     nalgebra::Const<C>,
     nalgebra::ArrayStorage<f32, R, C>,
 >;
+pub type Transform<const D: usize> =
+    nalgebra::Transform<f32, nalgebra::TAffine, D>;
