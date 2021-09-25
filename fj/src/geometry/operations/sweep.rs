@@ -7,6 +7,7 @@
 /// As of this writing, a lot of operations are implemented for `Sweep<T, f32>`,
 /// and just sweep 2-dimensional shapes along the z-axis, with the `f32`
 /// representing the distance.
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Sweep<T, Path> {
     /// The shape being swept
     pub shape: T,
