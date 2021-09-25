@@ -22,9 +22,8 @@ mod util;
 
 pub use self::{
     geometry::{
-        attributes::Mesh,
         operations::{Difference, Sweep},
-        shapes::Cylinder,
+        shapes::{Cylinder, Mesh},
     },
     graphics::Vertex,
     model::Model,

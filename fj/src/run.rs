@@ -12,7 +12,7 @@ use winit::{
 use crate::{
     args::Args,
     draw_config::DrawConfig,
-    geometry::{attributes::Mesh, isosurface::grid::Grid},
+    geometry::{isosurface::grid::Grid, shapes::Mesh},
     graphics::{Renderer, Transform},
     input,
     model::IntoMesh,

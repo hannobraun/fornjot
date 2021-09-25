@@ -1,8 +1,9 @@
 use serde::de::DeserializeOwned;
 
 use crate::geometry::{
-    attributes::{BoundingVolume, Mesh, SignedDistanceField},
+    attributes::{BoundingVolume, SignedDistanceField},
     isosurface::{self, grid::Grid},
+    shapes::Mesh,
 };
 
 /// Implemented by Fornjot models

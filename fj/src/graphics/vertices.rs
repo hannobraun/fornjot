@@ -3,7 +3,7 @@ use decorum::R32;
 use indexmap::IndexMap;
 
 use crate::{
-    geometry::{attributes::Mesh, isosurface::grid::Grid},
+    geometry::{isosurface::grid::Grid, shapes::Mesh},
     types::Index,
     util,
 };

@@ -8,7 +8,7 @@ use thiserror::Error;
 
 use zip::{result::ZipError, write::FileOptions, ZipWriter};
 
-use crate::geometry::attributes::Mesh;
+use crate::geometry::shapes::Mesh;
 
 /// Export mesh to 3MF file
 ///
