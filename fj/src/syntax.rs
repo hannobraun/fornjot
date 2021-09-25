@@ -96,13 +96,13 @@ where
 /// This trait is implemented for all types, but most features of the resulting
 /// [`operations::Translate`] will only be available for types that represent
 /// shapes.
-pub trait Translate<T, const D: usize>: Sized {
+pub trait Translate<const D: usize>: Sized {
     /// Translate `self` by `offset`
-    fn translate(self, offset: Vector<D>) -> operations::Translate<T, D>;
+    fn translate(self, offset: Vector<D>) -> operations::Translate<Self, D>;
 }
 
-impl<T, const D: usize> Translate<T, D> for T {
-    fn translate(self, offset: Vector<D>) -> operations::Translate<T, D> {
+impl<T, const D: usize> Translate<D> for T {
+    fn translate(self, offset: Vector<D>) -> operations::Translate<Self, D> {
         operations::Translate {
             shape: self,
             offset,
