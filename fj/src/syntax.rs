@@ -50,7 +50,7 @@ impl<Geometry> Resolution for Geometry {}
 ///
 /// This trait is implemented for all types. The call `shape.sweep(distance)`
 /// will create a sweep of `shape` over `distance`.
-pub trait Sweep<T, Path> {
+pub trait Sweep<T, Path>: Sized {
     fn sweep(self, path: Path) -> operations::Sweep<T, Path>;
 }
 
@@ -64,7 +64,7 @@ impl<T, Path> Sweep<T, Path> for T {
 ///
 /// This trait is implemented for all types. The call
 /// `shape.transform(transform)` will transform `shape` using `transform`.
-pub trait Transform<T, const D: usize>
+pub trait Transform<T, const D: usize>: Sized
 where
     Const<D>: DimNameAdd<U1>,
     DefaultAllocator:
@@ -97,7 +97,7 @@ where
 ///
 /// This trait is implemented for all types. The call `shape.translate(offset)`
 /// will translate `shape` by `offset`.
-pub trait Translate<T, const D: usize> {
+pub trait Translate<T, const D: usize>: Sized {
     fn translate(self, offset: Vector<D>) -> operations::Translate<T, D>;
 }
 
