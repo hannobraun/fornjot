@@ -61,14 +61,16 @@ impl<T, Path> Sweep<Path> for T {}
 
 /// Provides convenient syntax for [`operations::Transform`]
 ///
-/// This trait is implemented for all types. The call
-/// `shape.transform(transform)` will transform `shape` using `transform`.
+/// This trait is implemented for all types, but most features of the resulting
+/// `operations::Transform` will only be available for types that represent
+/// shapes.
 pub trait Transform<T, const D: usize>: Sized
 where
     Const<D>: DimNameAdd<U1>,
     DefaultAllocator:
         Allocator<f32, DimNameSum<Const<D>, U1>, DimNameSum<Const<D>, U1>>,
 {
+    /// Transform `self` with `transform`
     fn transform(
         self,
         transform: impl Into<math::Transform<D>>,
