@@ -66,6 +66,10 @@ mod tests {
     #[test]
     fn test_vertices_for_vertex() {
         assert_eq!(
+            <Vertex as Vertices<0>>::vertices(&Vertex),
+            [Vertex.translate(vector![])],
+        );
+        assert_eq!(
             <Vertex as Vertices<1>>::vertices(&Vertex),
             [Vertex.translate(vector![0.])],
         );
