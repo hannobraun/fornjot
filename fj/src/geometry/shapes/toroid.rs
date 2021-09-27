@@ -4,3 +4,15 @@ use crate::geometry::{operations::Sweep, shapes::Circle};
 ///
 /// Defined as a sweep of a shape around a circle.
 pub type Toroid<T> = Sweep<T, Circle>;
+
+impl<T> Toroid<T> {
+    /// Create a new `Toroid` from a shape
+    ///
+    /// The radius of the circle is initially set to `1.0`.
+    pub fn from_shape(shape: T) -> Self {
+        Self {
+            shape,
+            path: Circle::new(),
+        }
+    }
+}
