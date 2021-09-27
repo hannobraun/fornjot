@@ -7,5 +7,5 @@ pub trait SurfaceMesh<const D: usize> {
     /// If the surface mesh can only be approximated, `n` defines the number of
     /// computational steps taken to compute the mesh.
     // TASK: Replace `n` with a tolerance value.
-    fn mesh(&self, n: u32) -> Mesh<D>;
+    fn surface_mesh(&self, n: u32) -> Mesh<D>;
 }
