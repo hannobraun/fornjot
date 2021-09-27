@@ -25,11 +25,4 @@ impl Edge {
         self.path.x = length;
         self
     }
-
-    pub fn from_length(length: f32) -> Self {
-        Sweep {
-            shape: Vertex,
-            path: vector![length],
-        }
-    }
 }
