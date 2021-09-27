@@ -48,7 +48,7 @@ mod tests {
 
     #[test]
     fn test_edges_for_edge() {
-        let edge = Edge::from_length(1.0);
+        let edge = Edge::new().with_length(1.0);
 
         assert_eq!(
             <Edge as Edges<1>>::edges(&edge),
