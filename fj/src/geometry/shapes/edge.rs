@@ -5,6 +5,10 @@ use crate::{
     math::Vector,
 };
 
+/// A 1-dimensional edge
+///
+/// Defined as a sweep of a 0-dimensional `Vertex` over a straight path of a
+/// given length.
 pub type Edge = Sweep<Vertex, Vector<1>>;
 
 impl Edge {
