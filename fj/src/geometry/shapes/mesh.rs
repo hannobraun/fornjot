@@ -53,6 +53,19 @@ impl<const D: usize> Mesh<D> {
         self.triangles.iter().flatten().copied()
     }
 
+    /// Iterate over the vertices that make up all triangles
+    pub fn triangle_vertices(
+        &self,
+    ) -> impl Iterator<Item = [Point<D>; 3]> + '_ {
+        self.triangles.iter().copied().map(move |[a, b, c]| {
+            [
+                self.vertices.vertex(a),
+                self.vertices.vertex(b),
+                self.vertices.vertex(c),
+            ]
+        })
+    }
+
     /// Iterate over the indices that make up all triangles
     pub fn triangle_indices(&self) -> impl Iterator<Item = [Index; 3]> + '_ {
         self.triangles.iter().copied()
