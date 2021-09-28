@@ -94,7 +94,7 @@ impl From<Mesh<3>> for Vertices {
         let mut indices_by_vertex_with_normal = IndexMap::new();
         let mut indices = Vec::new();
 
-        for [i0, i1, i2] in mesh.triangles() {
+        for [i0, i1, i2] in mesh.triangle_indices() {
             let v0 = vertices[i0 as usize];
             let v1 = vertices[i1 as usize];
             let v2 = vertices[i2 as usize];

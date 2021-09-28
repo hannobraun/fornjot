@@ -48,7 +48,7 @@ fn write_mesh(mesh: &Mesh<3>, mut sink: impl Write) -> io::Result<()> {
     writeln!(sink, "\t\t\t\t</vertices>")?;
 
     writeln!(sink, "\t\t\t\t<triangles>")?;
-    for [v1, v2, v3] in mesh.triangles() {
+    for [v1, v2, v3] in mesh.triangle_indices() {
         writeln!(
             sink,
             "\t\t\t\t\t<triangle v1=\"{}\" v2=\"{}\" v3=\"{}\" />",
