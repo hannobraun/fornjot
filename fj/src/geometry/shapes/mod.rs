@@ -6,10 +6,11 @@ pub mod mesh;
 pub mod parallelogram;
 pub mod sphere;
 pub mod toroid;
+pub mod triangle;
 pub mod vertex;
 
 pub use self::{
     circle::Circle, cylinder::Cylinder, edge::Edge, hypersphere::Hypersphere,
     mesh::Mesh, parallelogram::Parallelogram, sphere::Sphere, toroid::Toroid,
-    vertex::Vertex,
+    triangle::Triangle, vertex::Vertex,
 };
