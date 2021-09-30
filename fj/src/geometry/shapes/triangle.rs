@@ -9,4 +9,9 @@ impl<const D: usize> Triangle<D> {
         // TASK: Normalize triangle.
         Some(Self(points))
     }
+
+    /// Return the points of the triangle
+    pub fn points(&self) -> [Point<D>; 3] {
+        self.0
+    }
 }
