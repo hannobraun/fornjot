@@ -15,3 +15,18 @@ impl<const D: usize> Triangle<D> {
         self.0
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use nalgebra::point;
+
+    use crate::geometry::shapes::Triangle;
+
+    #[test]
+    fn test_triangle_new() {
+        let triangle =
+            Triangle::new([point![0., 0.], point![0., 1.], point![1., 1.]]);
+
+        assert!(triangle.is_some());
+    }
+}
