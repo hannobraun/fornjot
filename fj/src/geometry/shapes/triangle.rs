@@ -4,10 +4,10 @@ pub struct Triangle<const D: usize>([Point<D>; 3]);
 
 impl<const D: usize> Triangle<D> {
     /// Create a new `Triangle`
-    pub fn new(points: [Point<D>; 3]) -> Option<Self> {
+    pub fn new([a, b, c]: [Point<D>; 3]) -> Option<Self> {
         // TASK: Make sure that points form a triangle.
         // TASK: Normalize triangle.
-        Some(Self(points))
+        Some(Self([a, b, c]))
     }
 
     /// Return the points of the triangle
