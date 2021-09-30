@@ -9,13 +9,4 @@ impl<const D: usize> Triangle<D> {
         // TASK: Normalize triangle.
         Some(Self(points))
     }
-
-    /// Normalize the triangle
-    ///
-    /// Given two triangles that contain the same points, calling this method on
-    /// them will return the same triangle.
-    pub fn normalize(self) -> Self {
-        // TASK: Implement.
-        todo!()
-    }
 }
