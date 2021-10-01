@@ -8,6 +8,9 @@ impl<const D: usize> Triangle<D> {
         if a == b || a == c || b == c {
             return None;
         }
+        if (b - a).normalize() == (c - b).normalize() {
+            return None;
+        }
 
         // TASK: Make sure that points form a triangle.
         // TASK: Normalize triangle.
@@ -30,10 +33,13 @@ mod tests {
     fn test_triangle_new() {
         let triangle =
             Triangle::new([point![0., 0.], point![0., 1.], point![1., 1.]]);
+        let points_on_a_line =
+            Triangle::new([point![0., 0.], point![1., 1.], point![2., 2.]]);
         let collapsed_points =
             Triangle::new([point![0., 0.], point![1., 1.], point![1., 1.]]);
 
         assert!(triangle.is_some());
+        assert!(points_on_a_line.is_none());
         assert!(collapsed_points.is_none());
     }
 }
