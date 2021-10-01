@@ -12,7 +12,6 @@ impl<const D: usize> Triangle<D> {
             return None;
         }
 
-        // TASK: Make sure that points form a triangle.
         // TASK: Normalize triangle.
         Some(Self([a, b, c]))
     }
