@@ -33,7 +33,7 @@ pub enum Error {
 mod tests {
     use nalgebra::point;
 
-    use super::Triangle;
+    use super::{Error, Triangle};
 
     #[test]
     fn validation() {
@@ -45,7 +45,7 @@ mod tests {
             Triangle::new(point![0., 0.], point![1., 1.], point![1., 1.]);
 
         assert!(triangle.is_ok());
-        assert!(points_on_a_line.is_err());
-        assert!(collapsed_points.is_err());
+        assert_eq!(points_on_a_line, Err(Error::IsALineSegment));
+        assert_eq!(collapsed_points, Err(Error::CollapsedPoints));
     }
 }
