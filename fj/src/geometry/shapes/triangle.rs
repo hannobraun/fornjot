@@ -1,3 +1,5 @@
+use std::cmp::min;
+
 use decorum::R32;
 
 use crate::math::Point;
@@ -19,7 +21,17 @@ impl<const D: usize> Triangle<D> {
         let b = b.map(|coord| coord.into());
         let c = c.map(|coord| coord.into());
 
-        // TASK: Normalize triangle.
+        let min = min(a.coords.data.0, min(b.coords.data.0, c.coords.data.0));
+        let min = nalgebra::Point::from(min[0]);
+
+        let (a, b, c) = if a == min {
+            (a, b, c)
+        } else if b == min {
+            (b, c, a)
+        } else {
+            (c, a, b)
+        };
+
         Ok(Self([a, b, c]))
     }
 
@@ -39,6 +51,8 @@ pub enum Error {
 mod tests {
     use nalgebra::point;
 
+    use crate::math::Point;
+
     use super::{Error, Triangle};
 
     #[test]
@@ -53,5 +67,33 @@ mod tests {
         assert!(triangle.is_ok());
         assert_eq!(points_on_a_line, Err(Error::IsALineSegment));
         assert_eq!(collapsed_points, Err(Error::CollapsedPoints));
+    }
+
+    #[test]
+    fn normalization() {
+        let a = point![0., 0.];
+        let b = point![0., 1.];
+        let c = point![1., 1.];
+
+        // Test with triangles in both directions, to make sure the
+        // normalization preserves direction.
+        test(a, b, c);
+        test(a, c, b);
+
+        fn test<const D: usize>(a: Point<D>, b: Point<D>, c: Point<D>) {
+            let abc = Triangle::new(a, b, c).unwrap();
+            let bca = Triangle::new(b, c, a).unwrap();
+            let cab = Triangle::new(c, a, b).unwrap();
+
+            assert_eq!(abc.points(), bca.points());
+            assert_eq!(abc.points(), cab.points());
+
+            // But don't change order of triangle points.
+            assert!(
+                abc.points() == [a, b, c]
+                    || abc.points() == [b, c, a]
+                    || abc.points() == [c, b, a]
+            );
+        }
     }
 }
