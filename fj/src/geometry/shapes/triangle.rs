@@ -29,7 +29,7 @@ mod tests {
     use crate::geometry::shapes::Triangle;
 
     #[test]
-    fn test_triangle_new() {
+    fn validation() {
         let triangle =
             Triangle::new([point![0., 0.], point![0., 1.], point![1., 1.]]);
         let points_on_a_line =
