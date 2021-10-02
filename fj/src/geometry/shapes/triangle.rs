@@ -23,6 +23,7 @@ impl<const D: usize> Triangle<D> {
     }
 }
 
+#[derive(Debug, Eq, PartialEq)]
 pub enum Error {
     CollapsedPoints,
     IsALineSegment,
