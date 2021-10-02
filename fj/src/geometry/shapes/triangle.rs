@@ -1,5 +1,6 @@
 use crate::math::Point;
 
+#[derive(Debug, PartialEq)]
 pub struct Triangle<const D: usize>([Point<D>; 3]);
 
 impl<const D: usize> Triangle<D> {
