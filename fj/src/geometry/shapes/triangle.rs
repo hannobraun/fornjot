@@ -1,7 +1,9 @@
+use decorum::R32;
+
 use crate::math::Point;
 
 #[derive(Debug, PartialEq)]
-pub struct Triangle<const D: usize>([Point<D>; 3]);
+pub struct Triangle<const D: usize>([nalgebra::Point<R32, D>; 3]);
 
 impl<const D: usize> Triangle<D> {
     /// Create a new `Triangle`
@@ -13,13 +15,17 @@ impl<const D: usize> Triangle<D> {
             return Err(Error::IsALineSegment);
         }
 
+        let a = a.map(|coord| coord.into());
+        let b = b.map(|coord| coord.into());
+        let c = c.map(|coord| coord.into());
+
         // TASK: Normalize triangle.
         Ok(Self([a, b, c]))
     }
 
     /// Return the points of the triangle
     pub fn points(&self) -> [Point<D>; 3] {
-        self.0
+        self.0.map(|point| point.map(|coord| coord.into()))
     }
 }
 
