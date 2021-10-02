@@ -31,7 +31,7 @@ pub enum Error {
 mod tests {
     use nalgebra::point;
 
-    use crate::geometry::shapes::Triangle;
+    use super::Triangle;
 
     #[test]
     fn validation() {
