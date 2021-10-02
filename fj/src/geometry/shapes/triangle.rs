@@ -4,7 +4,7 @@ use decorum::R32;
 
 use crate::math::Point;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Eq, Hash, PartialEq)]
 pub struct Triangle<const D: usize>([nalgebra::Point<R32, D>; 3]);
 
 impl<const D: usize> Triangle<D> {
