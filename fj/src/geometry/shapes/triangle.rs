@@ -9,7 +9,15 @@ pub struct Triangle<const D: usize>([nalgebra::Point<R32, D>; 3]);
 
 impl<const D: usize> Triangle<D> {
     /// Create a new `Triangle`
-    pub fn new(a: Point<D>, b: Point<D>, c: Point<D>) -> Result<Self, Error> {
+    pub fn new(
+        a: impl Into<Point<D>>,
+        b: impl Into<Point<D>>,
+        c: impl Into<Point<D>>,
+    ) -> Result<Self, Error> {
+        let a = a.into();
+        let b = b.into();
+        let c = c.into();
+
         if a == b || a == c || b == c {
             return Err(Error::CollapsedPoints);
         }
