@@ -1,5 +1,7 @@
 use crate::{math::Point, types::Index, util};
 
+use super::Triangle;
+
 /// A triangle mesh
 pub struct Mesh<const D: usize> {
     vertices: util::Vertices<Point<D>, D>,
@@ -21,20 +23,8 @@ impl<const D: usize> Mesh<D> {
     ///
     /// Panics, if the three vertices don't form a triangle (i.e. if at least
     /// two of them are equal).
-    pub fn triangle(
-        &mut self,
-        v0: impl Into<Point<D>>,
-        v1: impl Into<Point<D>>,
-        v2: impl Into<Point<D>>,
-    ) {
-        let v0 = v0.into();
-        let v1 = v1.into();
-        let v2 = v2.into();
-
-        // Make sure this is a real triangle.
-        assert_ne!(v0, v1);
-        assert_ne!(v0, v2);
-        assert_ne!(v1, v2);
+    pub fn triangle(&mut self, triangle: Triangle<D>) {
+        let [v0, v1, v2] = triangle.points();
 
         let i0 = self.vertices.index_for_vertex(v0);
         let i1 = self.vertices.index_for_vertex(v1);
