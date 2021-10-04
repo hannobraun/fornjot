@@ -39,6 +39,7 @@ impl<const D: usize> Polygon<D, 3> {
             }
         }
 
+        // Convert `f32` coordinates to `R32`.
         let points = points.map(|point| point.map(|coord| coord.into()));
 
         let min = points
