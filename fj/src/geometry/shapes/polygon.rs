@@ -16,10 +16,8 @@ pub struct Polygon<const D: usize, const N: usize> {
 // TASK: Make generic over `N`.
 impl<const D: usize> Polygon<D, 3> {
     /// Create a new `Triangle`
-    pub fn new([a, b, c]: [impl Into<Point<D>>; 3]) -> Result<Self, Error> {
-        let a = a.into();
-        let b = b.into();
-        let c = c.into();
+    pub fn new(points: [impl Into<Point<D>>; 3]) -> Result<Self, Error> {
+        let [a, b, c] = points.map(|point| point.into());
 
         if a == b || a == c || b == c {
             return Err(Error::IdenticalPoints);
