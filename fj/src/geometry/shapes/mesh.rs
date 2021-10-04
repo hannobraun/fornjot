@@ -1,6 +1,6 @@
 use crate::{math::Point, types::Index, util};
 
-use super::Polygon;
+use super::Triangle;
 
 /// A triangle mesh
 pub struct Mesh<const D: usize> {
@@ -23,7 +23,7 @@ impl<const D: usize> Mesh<D> {
     ///
     /// Panics, if the three vertices don't form a triangle (i.e. if at least
     /// two of them are equal).
-    pub fn triangle(&mut self, triangle: Polygon<D, 3>) {
+    pub fn triangle(&mut self, triangle: Triangle<D>) {
         let [v0, v1, v2] = triangle.points();
 
         let i0 = self.vertices.index_for_vertex(v0);
@@ -44,11 +44,9 @@ impl<const D: usize> Mesh<D> {
     }
 
     /// Iterate over the vertices that make up all triangles
-    pub fn triangle_vertices(
-        &self,
-    ) -> impl Iterator<Item = Polygon<D, 3>> + '_ {
+    pub fn triangle_vertices(&self) -> impl Iterator<Item = Triangle<D>> + '_ {
         self.triangles.iter().copied().map(move |[a, b, c]| {
-            Polygon::new(
+            Triangle::new(
                 self.vertices.vertex(a),
                 self.vertices.vertex(b),
                 self.vertices.vertex(c),
