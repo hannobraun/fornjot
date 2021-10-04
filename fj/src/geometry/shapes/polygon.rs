@@ -49,9 +49,7 @@ impl<const D: usize> Polygon<D, 3> {
             .unwrap();
         points.rotate_left(min_index);
 
-        let [a, b, c] = points;
-
-        Ok(Self { points: [a, b, c] })
+        Ok(Self { points })
     }
 
     /// Return the points of the triangle
