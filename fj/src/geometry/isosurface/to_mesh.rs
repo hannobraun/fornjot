@@ -1,6 +1,6 @@
 use crate::geometry::{
     attributes::{BoundingVolume, SignedDistanceField},
-    shapes::{Mesh, Polygon},
+    shapes::{Mesh, Triangle},
 };
 
 use super::{grid, Grid};
@@ -21,8 +21,8 @@ pub fn to_mesh(
     for edge in grid.edges_at_surface() {
         let [a, b, c, d] = grid.neighbors_of_edge(edge);
 
-        mesh.triangle(Polygon::new(a, b, d).unwrap());
-        mesh.triangle(Polygon::new(b, c, d).unwrap());
+        mesh.triangle(Triangle::new(a, b, d).unwrap());
+        mesh.triangle(Triangle::new(b, c, d).unwrap());
     }
 
     (mesh, grid)
