@@ -52,9 +52,13 @@ impl<const D: usize> Triangle<D> {
     }
 }
 
+/// Error that can occur when constructing a `Triangle`
 #[derive(Debug, Eq, PartialEq)]
 pub enum Error {
+    /// At least two points are identical to each other
     CollapsedPoints,
+
+    /// The three points are on a line
     PointsOnLine,
 }
 
