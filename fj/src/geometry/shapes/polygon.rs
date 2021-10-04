@@ -42,8 +42,8 @@ impl<const D: usize> Polygon<D, 3> {
         // Convert `f32` coordinates to `R32`.
         let points = points.map(|point| point.map(|coord| coord.into()));
 
-        let min = points
-            .iter()
+        // Can be simplified to just `.into_iter()` with the 2021 edition.
+        let min = IntoIterator::into_iter(points)
             .map(|point| point.coords.data.0)
             .min()
             .unwrap();
