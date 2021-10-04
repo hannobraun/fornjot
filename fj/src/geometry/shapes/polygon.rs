@@ -41,11 +41,7 @@ impl<const D: usize> Polygon<D, 3> {
             }
         }
 
-        let [a, b, c] = points;
-
-        let a = a.map(|coord| coord.into());
-        let b = b.map(|coord| coord.into());
-        let c = c.map(|coord| coord.into());
+        let [a, b, c] = points.map(|point| point.map(|coord| coord.into()));
 
         let min = min(a.coords.data.0, min(b.coords.data.0, c.coords.data.0));
         let min = nalgebra::Point::from(min[0]);
