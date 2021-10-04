@@ -40,22 +40,16 @@ impl<const D: usize> Polygon<D, 3> {
         }
 
         // Convert `f32` coordinates to `R32`.
-        let points = points.map(|point| point.map(|coord| coord.into()));
+        let mut points = points.map(|point| point.map(|coord| coord.into()));
 
         // Can be simplified to just `.into_iter()` with the 2021 edition.
-        let min = IntoIterator::into_iter(points)
-            .min_by_key(|point| point.coords.data.0)
+        let (min_index, _) = IntoIterator::into_iter(points)
+            .enumerate()
+            .min_by_key(|(_, point)| point.coords.data.0)
             .unwrap();
+        points.rotate_left(min_index);
 
         let [a, b, c] = points;
-
-        let (a, b, c) = if a == min {
-            (a, b, c)
-        } else if b == min {
-            (b, c, a)
-        } else {
-            (c, a, b)
-        };
 
         Ok(Self { points: [a, b, c] })
     }
