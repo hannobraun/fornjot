@@ -22,7 +22,7 @@ impl<const D: usize> Triangle<D> {
         let c = c.into();
 
         if a == b || a == c || b == c {
-            return Err(Error::CollapsedPoints);
+            return Err(Error::IdenticalPoints);
         }
         if (b - a).normalize() == (c - b).normalize() {
             return Err(Error::PointsOnLine);
@@ -56,7 +56,7 @@ impl<const D: usize> Triangle<D> {
 #[derive(Debug, Eq, PartialEq)]
 pub enum Error {
     /// At least two points are identical to each other
-    CollapsedPoints,
+    IdenticalPoints,
 
     /// The three points are on a line
     PointsOnLine,
@@ -81,7 +81,7 @@ mod tests {
 
         assert!(triangle.is_ok());
         assert_eq!(points_on_a_line, Err(Error::PointsOnLine));
-        assert_eq!(collapsed_points, Err(Error::CollapsedPoints));
+        assert_eq!(collapsed_points, Err(Error::IdenticalPoints));
     }
 
     #[test]
