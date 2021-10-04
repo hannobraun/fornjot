@@ -12,5 +12,5 @@ pub mod vertex;
 pub use self::{
     circle::Circle, cylinder::Cylinder, edge::Edge, hypersphere::Hypersphere,
     mesh::Mesh, parallelogram::Parallelogram, sphere::Sphere, toroid::Toroid,
-    triangle::Triangle, vertex::Vertex,
+    triangle::Polygon, vertex::Vertex,
 };

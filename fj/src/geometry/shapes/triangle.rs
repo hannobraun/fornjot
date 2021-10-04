@@ -5,14 +5,13 @@ use decorum::R32;
 use crate::math::Point;
 
 // TASK: Document.
-// TASK: Rename to `Polygon`.
 #[derive(Debug, Eq, Hash, PartialEq)]
-pub struct Triangle<const D: usize, const N: usize> {
+pub struct Polygon<const D: usize, const N: usize> {
     points: [nalgebra::Point<R32, D>; N],
 }
 
 // TASK: Make generic over `N`.
-impl<const D: usize> Triangle<D, 3> {
+impl<const D: usize> Polygon<D, 3> {
     /// Create a new `Triangle`
     pub fn new(
         a: impl Into<Point<D>>,
@@ -70,16 +69,16 @@ mod tests {
 
     use crate::math::Point;
 
-    use super::{Error, Triangle};
+    use super::{Error, Polygon};
 
     #[test]
     fn validation() {
         let triangle =
-            Triangle::new(point![0., 0.], point![0., 1.], point![1., 1.]);
+            Polygon::new(point![0., 0.], point![0., 1.], point![1., 1.]);
         let points_on_a_line =
-            Triangle::new(point![0., 0.], point![1., 1.], point![2., 2.]);
+            Polygon::new(point![0., 0.], point![1., 1.], point![2., 2.]);
         let collapsed_points =
-            Triangle::new(point![0., 0.], point![1., 1.], point![1., 1.]);
+            Polygon::new(point![0., 0.], point![1., 1.], point![1., 1.]);
 
         assert!(triangle.is_ok());
         assert_eq!(points_on_a_line, Err(Error::PointsOnLine));
@@ -98,9 +97,9 @@ mod tests {
         test(a, c, b);
 
         fn test<const D: usize>(a: Point<D>, b: Point<D>, c: Point<D>) {
-            let abc = Triangle::new(a, b, c).unwrap();
-            let bca = Triangle::new(b, c, a).unwrap();
-            let cab = Triangle::new(c, a, b).unwrap();
+            let abc = Polygon::new(a, b, c).unwrap();
+            let bca = Polygon::new(b, c, a).unwrap();
+            let cab = Polygon::new(c, a, b).unwrap();
 
             assert_eq!(abc.points(), bca.points());
             assert_eq!(abc.points(), cab.points());
