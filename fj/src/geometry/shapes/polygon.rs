@@ -17,11 +17,16 @@ pub struct Polygon<const D: usize, const N: usize> {
 impl<const D: usize> Polygon<D, 3> {
     /// Create a new `Triangle`
     pub fn new(points: [impl Into<Point<D>>; 3]) -> Result<Self, Error> {
-        let [a, b, c] = points.map(|point| point.into());
+        let points = points.map(|point| point.into());
 
-        if a == b || a == c || b == c {
-            return Err(Error::IdenticalPoints);
+        for (i, a) in points.iter().enumerate() {
+            for b in points[i + 1..].iter() {
+                if a == b {
+                    return Err(Error::IdenticalPoints);
+                }
+            }
         }
+        let [a, b, c] = points;
         if (b - a).normalize() == (c - b).normalize() {
             return Err(Error::PointsOnLine);
         }
