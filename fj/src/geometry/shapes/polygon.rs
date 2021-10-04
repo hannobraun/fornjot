@@ -44,10 +44,8 @@ impl<const D: usize> Polygon<D, 3> {
 
         // Can be simplified to just `.into_iter()` with the 2021 edition.
         let min = IntoIterator::into_iter(points)
-            .map(|point| point.coords.data.0)
-            .min()
+            .min_by_key(|point| point.coords.data.0)
             .unwrap();
-        let min = nalgebra::Point::from(min[0]);
 
         let [a, b, c] = points;
 
