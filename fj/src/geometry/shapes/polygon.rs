@@ -1,5 +1,3 @@
-use std::cmp::min;
-
 use decorum::R32;
 
 use crate::math::Point;
@@ -41,10 +39,16 @@ impl<const D: usize> Polygon<D, 3> {
             }
         }
 
-        let [a, b, c] = points.map(|point| point.map(|coord| coord.into()));
+        let points = points.map(|point| point.map(|coord| coord.into()));
 
-        let min = min(a.coords.data.0, min(b.coords.data.0, c.coords.data.0));
+        let min = points
+            .iter()
+            .map(|point| point.coords.data.0)
+            .min()
+            .unwrap();
         let min = nalgebra::Point::from(min[0]);
+
+        let [a, b, c] = points;
 
         let (a, b, c) = if a == min {
             (a, b, c)
