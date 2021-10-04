@@ -23,7 +23,7 @@ impl<const D: usize> Mesh<D> {
     ///
     /// Panics, if the three vertices don't form a triangle (i.e. if at least
     /// two of them are equal).
-    pub fn triangle(&mut self, triangle: Triangle<D>) {
+    pub fn triangle(&mut self, triangle: Triangle<D, 3>) {
         let [v0, v1, v2] = triangle.points();
 
         let i0 = self.vertices.index_for_vertex(v0);
@@ -44,7 +44,9 @@ impl<const D: usize> Mesh<D> {
     }
 
     /// Iterate over the vertices that make up all triangles
-    pub fn triangle_vertices(&self) -> impl Iterator<Item = Triangle<D>> + '_ {
+    pub fn triangle_vertices(
+        &self,
+    ) -> impl Iterator<Item = Triangle<D, 3>> + '_ {
         self.triangles.iter().copied().map(move |[a, b, c]| {
             Triangle::new(
                 self.vertices.vertex(a),

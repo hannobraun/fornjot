@@ -5,12 +5,14 @@ use decorum::R32;
 use crate::math::Point;
 
 // TASK: Document.
+// TASK: Rename to `Polygon`.
 #[derive(Debug, Eq, Hash, PartialEq)]
-pub struct Triangle<const D: usize> {
-    points: [nalgebra::Point<R32, D>; 3],
+pub struct Triangle<const D: usize, const N: usize> {
+    points: [nalgebra::Point<R32, D>; N],
 }
 
-impl<const D: usize> Triangle<D> {
+// TASK: Make generic over `N`.
+impl<const D: usize> Triangle<D, 3> {
     /// Create a new `Triangle`
     pub fn new(
         a: impl Into<Point<D>>,
