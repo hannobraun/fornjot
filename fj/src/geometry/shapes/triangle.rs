@@ -25,7 +25,7 @@ impl<const D: usize> Triangle<D> {
             return Err(Error::CollapsedPoints);
         }
         if (b - a).normalize() == (c - b).normalize() {
-            return Err(Error::IsALineSegment);
+            return Err(Error::PointsOnLine);
         }
 
         let a = a.map(|coord| coord.into());
@@ -55,7 +55,7 @@ impl<const D: usize> Triangle<D> {
 #[derive(Debug, Eq, PartialEq)]
 pub enum Error {
     CollapsedPoints,
-    IsALineSegment,
+    PointsOnLine,
 }
 
 #[cfg(test)]
@@ -76,7 +76,7 @@ mod tests {
             Triangle::new(point![0., 0.], point![1., 1.], point![1., 1.]);
 
         assert!(triangle.is_ok());
-        assert_eq!(points_on_a_line, Err(Error::IsALineSegment));
+        assert_eq!(points_on_a_line, Err(Error::PointsOnLine));
         assert_eq!(collapsed_points, Err(Error::CollapsedPoints));
     }
 
