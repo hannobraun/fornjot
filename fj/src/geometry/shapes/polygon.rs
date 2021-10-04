@@ -11,10 +11,9 @@ pub struct Polygon<const D: usize, const N: usize> {
     points: [nalgebra::Point<R32, D>; N],
 }
 
-// TASK: Make generic over `N`.
-impl<const D: usize> Polygon<D, 3> {
+impl<const D: usize, const N: usize> Polygon<D, N> {
     /// Create a new `Triangle`
-    pub fn new(points: [impl Into<Point<D>>; 3]) -> Result<Self, Error> {
+    pub fn new(points: [impl Into<Point<D>>; N]) -> Result<Self, Error> {
         let points = points.map(|point| point.into());
 
         for (i, a) in points.iter().enumerate() {
@@ -53,7 +52,7 @@ impl<const D: usize> Polygon<D, 3> {
     }
 
     /// Return the points of the triangle
-    pub fn points(&self) -> [Point<D>; 3] {
+    pub fn points(&self) -> [Point<D>; N] {
         self.points.map(|point| point.map(|coord| coord.into()))
     }
 }
