@@ -22,3 +22,13 @@ where
         todo!()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    #[ignore]
+    fn test_triangle_mesh_for_toroid() {
+        // TASK: Implement.
+        todo!()
+    }
+}
