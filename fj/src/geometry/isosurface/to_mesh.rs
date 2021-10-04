@@ -21,8 +21,8 @@ pub fn to_mesh(
     for edge in grid.edges_at_surface() {
         let [a, b, c, d] = grid.neighbors_of_edge(edge);
 
-        mesh.triangle(Triangle::new(a, b, d).unwrap());
-        mesh.triangle(Triangle::new(b, c, d).unwrap());
+        mesh.triangle(Triangle::new([a, b, d]).unwrap());
+        mesh.triangle(Triangle::new([b, c, d]).unwrap());
     }
 
     (mesh, grid)

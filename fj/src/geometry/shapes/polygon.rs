@@ -13,11 +13,7 @@ pub struct Polygon<const D: usize, const N: usize> {
 // TASK: Make generic over `N`.
 impl<const D: usize> Polygon<D, 3> {
     /// Create a new `Triangle`
-    pub fn new(
-        a: impl Into<Point<D>>,
-        b: impl Into<Point<D>>,
-        c: impl Into<Point<D>>,
-    ) -> Result<Self, Error> {
+    pub fn new([a, b, c]: [impl Into<Point<D>>; 3]) -> Result<Self, Error> {
         let a = a.into();
         let b = b.into();
         let c = c.into();
@@ -74,11 +70,11 @@ mod tests {
     #[test]
     fn validation() {
         let triangle =
-            Polygon::new(point![0., 0.], point![0., 1.], point![1., 1.]);
+            Polygon::new([point![0., 0.], point![0., 1.], point![1., 1.]]);
         let points_on_a_line =
-            Polygon::new(point![0., 0.], point![1., 1.], point![2., 2.]);
+            Polygon::new([point![0., 0.], point![1., 1.], point![2., 2.]]);
         let collapsed_points =
-            Polygon::new(point![0., 0.], point![1., 1.], point![1., 1.]);
+            Polygon::new([point![0., 0.], point![1., 1.], point![1., 1.]]);
 
         assert!(triangle.is_ok());
         assert_eq!(points_on_a_line, Err(Error::PointsOnLine));
@@ -97,9 +93,9 @@ mod tests {
         test(a, c, b);
 
         fn test<const D: usize>(a: Point<D>, b: Point<D>, c: Point<D>) {
-            let abc = Polygon::new(a, b, c).unwrap();
-            let bca = Polygon::new(b, c, a).unwrap();
-            let cab = Polygon::new(c, a, b).unwrap();
+            let abc = Polygon::new([a, b, c]).unwrap();
+            let bca = Polygon::new([b, c, a]).unwrap();
+            let cab = Polygon::new([c, a, b]).unwrap();
 
             assert_eq!(abc.points(), bca.points());
             assert_eq!(abc.points(), cab.points());
