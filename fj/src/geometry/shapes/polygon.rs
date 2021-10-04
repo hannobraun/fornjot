@@ -26,10 +26,22 @@ impl<const D: usize> Polygon<D, 3> {
                 }
             }
         }
-        let [a, b, c] = points;
-        if (b - a).normalize() == (c - b).normalize() {
-            return Err(Error::PointsOnLine);
+
+        // This can be made a bit nicer using `array_windows` once that becomes
+        // stable.
+        for abc in points.windows(3) {
+            let mut abc = abc.iter();
+
+            let a = abc.next().unwrap();
+            let b = abc.next().unwrap();
+            let c = abc.next().unwrap();
+
+            if (b - a).normalize() == (c - b).normalize() {
+                return Err(Error::PointsOnLine);
+            }
         }
+
+        let [a, b, c] = points;
 
         let a = a.map(|coord| coord.into());
         let b = b.map(|coord| coord.into());
