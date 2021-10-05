@@ -43,7 +43,7 @@ mod tests {
 
     #[test]
     #[ignore]
-    fn test_triangle_mesh_for_toroid() {
+    fn triangle_mesh_for_toroid() {
         struct Square;
 
         impl Edges<2> for Square {
