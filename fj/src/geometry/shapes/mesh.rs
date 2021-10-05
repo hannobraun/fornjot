@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::{math::Point, types::Index, util};
 
 use super::Triangle;
@@ -5,7 +7,7 @@ use super::Triangle;
 /// A triangle mesh
 pub struct Mesh<const D: usize> {
     vertices: util::Vertices<Point<D>, D>,
-    triangles: Vec<[Index; 3]>,
+    triangles: HashMap<Triangle<D>, [Index; 3]>,
 }
 
 impl<const D: usize> Mesh<D> {
@@ -13,7 +15,7 @@ impl<const D: usize> Mesh<D> {
     pub fn new() -> Self {
         Self {
             vertices: util::Vertices::new(),
-            triangles: Vec::new(),
+            triangles: HashMap::new(),
         }
     }
 
@@ -30,7 +32,7 @@ impl<const D: usize> Mesh<D> {
         let i1 = self.vertices.index_for_vertex(v1);
         let i2 = self.vertices.index_for_vertex(v2);
 
-        self.triangles.push([i0, i1, i2]);
+        self.triangles.insert(triangle, [i0, i1, i2]);
     }
 
     /// Iterate over all vertices
@@ -40,12 +42,12 @@ impl<const D: usize> Mesh<D> {
 
     /// Iterate over all indices
     pub fn indices(&self) -> impl Iterator<Item = Index> + '_ {
-        self.triangles.iter().flatten().copied()
+        self.triangles.values().flatten().copied()
     }
 
     /// Iterate over the vertices that make up all triangles
     pub fn triangle_vertices(&self) -> impl Iterator<Item = Triangle<D>> + '_ {
-        self.triangles.iter().copied().map(move |[a, b, c]| {
+        self.triangles.values().copied().map(move |[a, b, c]| {
             Triangle::new([
                 self.vertices.vertex(a),
                 self.vertices.vertex(b),
@@ -59,6 +61,6 @@ impl<const D: usize> Mesh<D> {
 
     /// Iterate over the indices that make up all triangles
     pub fn triangle_indices(&self) -> impl Iterator<Item = [Index; 3]> + '_ {
-        self.triangles.iter().copied()
+        self.triangles.values().copied()
     }
 }
