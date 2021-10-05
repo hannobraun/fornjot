@@ -25,10 +25,71 @@ where
 
 #[cfg(test)]
 mod tests {
+    use std::f32::consts::{FRAC_PI_2, PI};
+
+    use nalgebra::{vector, Isometry2};
+
+    use crate::{
+        geometry::{
+            attributes::Edges,
+            operations,
+            shapes::{Edge, Quad, Toroid},
+        },
+        math,
+        syntax::Transform as _,
+    };
+
+    use super::SurfaceMesh;
+
     #[test]
     #[ignore]
     fn test_triangle_mesh_for_toroid() {
-        // TASK: Implement.
-        todo!()
+        struct Square;
+
+        impl Edges<2> for Square {
+            fn edges(&self) -> Vec<operations::Transform<Edge, 2>> {
+                vec![
+                    Edge::new().transform(
+                        math::Transform::identity()
+                            * Isometry2::new(vector![1., 0.], FRAC_PI_2),
+                    ),
+                    Edge::new().transform(
+                        math::Transform::identity()
+                            * Isometry2::new(vector![2., 0.], FRAC_PI_2),
+                    ),
+                    Edge::new().transform(
+                        math::Transform::identity()
+                            * Isometry2::new(vector![2., 1.], PI),
+                    ),
+                    Edge::new().transform(
+                        math::Transform::identity()
+                            * Isometry2::new(vector![1., 1.], FRAC_PI_2 * 3.),
+                    ),
+                ]
+            }
+        }
+
+        let toroid = Toroid::from_shape(Square);
+        let mesh = toroid.surface_mesh(4);
+
+        #[rustfmt::skip]
+        let quads = [
+            // Inner shell
+            [[ 1.,  0., 0.], [ 1.,  0., 1.], [ 0.,  1., 1.], [ 0.,  1., 0.]],
+            [[ 0.,  1., 0.], [ 0.,  1., 1.], [-1.,  0., 1.], [-1.,  0., 0.]],
+            [[-1.,  0., 0.], [-1.,  0., 1.], [ 0., -1., 1.], [ 0., -1., 0.]],
+            [[ 0., -1., 0.], [ 0., -1., 1.], [ 1.,  0., 1.], [ 1.,  0., 0.]],
+
+            // Outer shell
+            [[ 2.,  0., 0.], [ 2.,  0., 1.], [ 0.,  2., 1.], [ 0.,  2., 0.]],
+            [[ 0.,  2., 0.], [ 0.,  2., 1.], [-2.,  0., 1.], [-2.,  0., 0.]],
+            [[-2.,  0., 0.], [-2.,  0., 1.], [ 0., -2., 1.], [ 0., -2., 0.]],
+            [[ 0., -2., 0.], [ 0., -2., 1.], [ 2.,  0., 1.], [ 2.,  0., 0.]],
+        ];
+
+        for quad in quads {
+            let quad = Quad::new(quad).unwrap();
+            assert!(mesh.contains_quad(&quad));
+        }
     }
 }
