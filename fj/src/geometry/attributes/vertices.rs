@@ -85,7 +85,7 @@ mod tests {
 
     #[test]
     fn test_vertices_for_sweep() {
-        let vertices = MockVertices(vec![
+        let vertices = MockVertices([
             Vertex.translate(vector![1., 2., 3.]),
             Vertex.translate(vector![2., 3., 4.]),
         ]);
@@ -114,9 +114,9 @@ mod tests {
         assert_eq!(vertex_3d.vertices(), [vertex_3d]);
     }
 
-    struct MockVertices(Vec<Translate<Vertex, 3>>);
+    struct MockVertices<const N: usize>([Translate<Vertex, 3>; N]);
 
-    impl Vertices<3> for MockVertices {
+    impl<const N: usize> Vertices<3> for MockVertices<N> {
         fn vertices(
             &self,
         ) -> Vec<
@@ -125,7 +125,7 @@ mod tests {
                 3,
             >,
         > {
-            self.0.clone()
+            self.0.into()
         }
     }
 }
