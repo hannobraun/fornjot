@@ -88,6 +88,7 @@ mod tests {
         ];
 
         for quad in quads {
+            println!("Checking {:?}...", quad);
             let quad = Quad::new(quad).unwrap();
             assert!(mesh.contains_quad(&quad));
         }
