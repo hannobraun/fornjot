@@ -5,8 +5,7 @@ use crate::{
 
 /// The vertices that make up a shape
 ///
-/// Since the vertices of a shape are going to have a position in space, `D`
-/// defines the dimension of those vertices' positions.
+/// `D` defines the dimension of the vertices' positions.
 pub trait Vertices<const D: usize> {
     /// Return the vertices of the shape
     fn vertices(&self) -> Vec<operations::Translate<shapes::Vertex, D>>;
