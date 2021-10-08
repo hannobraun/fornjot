@@ -178,7 +178,7 @@ impl Renderer {
         );
 
         let surface_texture = self.surface.get_current_texture()?;
-        let view = surface_texture
+        let color_view = surface_texture
             .texture
             .create_view(&wgpu::TextureViewDescriptor::default());
 
@@ -186,14 +186,14 @@ impl Renderer {
             &wgpu::CommandEncoderDescriptor { label: None },
         );
 
-        self.clear_views(&mut encoder, &view);
+        self.clear_views(&mut encoder, &color_view);
 
         let drawables = Drawables::new(&self.geometries, &self.pipelines);
 
         if config.draw_model {
             drawables.model.draw(
                 &mut encoder,
-                &view,
+                &color_view,
                 &self.depth_view,
                 &self.bind_group,
             );
@@ -201,7 +201,7 @@ impl Renderer {
         if config.draw_mesh {
             drawables.mesh.draw(
                 &mut encoder,
-                &view,
+                &color_view,
                 &self.depth_view,
                 &self.bind_group,
             );
@@ -211,7 +211,7 @@ impl Renderer {
             //       to the camera.
             drawables.grid.draw(
                 &mut encoder,
-                &view,
+                &color_view,
                 &self.depth_view,
                 &self.bind_group,
             );
@@ -221,7 +221,7 @@ impl Renderer {
             .draw(
                 &self.device,
                 &mut encoder,
-                &view,
+                &color_view,
                 &self.surface_config,
                 config,
             )
@@ -229,7 +229,7 @@ impl Renderer {
 
         // Workaround for gfx-rs/wgpu#1797:
         // https://github.com/gfx-rs/wgpu/issues/1797
-        drop(view);
+        drop(color_view);
 
         let command_buffer = encoder.finish();
         self.queue.submit(Some(command_buffer));
