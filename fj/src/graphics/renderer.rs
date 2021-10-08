@@ -46,6 +46,7 @@ impl Renderer {
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptions {
                 power_preference: wgpu::PowerPreference::HighPerformance,
+                force_fallback_adapter: false,
                 compatible_surface: Some(&surface),
             })
             .await
@@ -62,7 +63,7 @@ impl Renderer {
                     //       In addition, the available features must be stored
                     //       somewhere, so code that requires any unavailable
                     //       ones isn't run.
-                    features: wgpu::Features::NON_FILL_POLYGON_MODE,
+                    features: wgpu::Features::POLYGON_MODE_LINE,
                     limits: wgpu::Limits::default(),
                 },
                 None,
@@ -176,7 +177,7 @@ impl Renderer {
             bytemuck::cast_slice(&[uniforms]),
         );
 
-        let output = self.surface.get_current_frame()?.output;
+        let output = self.surface.get_current_texture()?;
         let view = output
             .texture
             .create_view(&wgpu::TextureViewDescriptor::default());
@@ -233,8 +234,8 @@ impl Renderer {
         let command_buffer = encoder.finish();
         self.queue.submit(Some(command_buffer));
 
-        debug!("Dropping `output`...");
-        drop(output);
+        debug!("Presenting...");
+        output.present();
 
         debug!("Finished drawing.");
         Ok(())
