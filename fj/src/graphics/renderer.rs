@@ -177,8 +177,8 @@ impl Renderer {
             bytemuck::cast_slice(&[uniforms]),
         );
 
-        let output = self.surface.get_current_texture()?;
-        let view = output
+        let surface_texture = self.surface.get_current_texture()?;
+        let view = surface_texture
             .texture
             .create_view(&wgpu::TextureViewDescriptor::default());
 
@@ -235,7 +235,7 @@ impl Renderer {
         self.queue.submit(Some(command_buffer));
 
         debug!("Presenting...");
-        output.present();
+        surface_texture.present();
 
         debug!("Finished drawing.");
         Ok(())
