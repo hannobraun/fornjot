@@ -227,10 +227,6 @@ impl Renderer {
             )
             .map_err(|err| DrawError::Text(err))?;
 
-        // Workaround for gfx-rs/wgpu#1797:
-        // https://github.com/gfx-rs/wgpu/issues/1797
-        drop(color_view);
-
         let command_buffer = encoder.finish();
         self.queue.submit(Some(command_buffer));
 
