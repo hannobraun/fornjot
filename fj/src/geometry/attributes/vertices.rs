@@ -54,15 +54,6 @@ where
     }
 }
 
-/// The statically known number of vertices of a shape
-///
-/// `D1 defines the dimension of the vertices' positions. `N` defines the number
-/// of vertices.
-pub trait VerticesStatic<const D: usize, const N: usize> {
-    /// Return the vertices of the shape
-    fn vertices_static(&self) -> [operations::Translate<shapes::Vertex, D>; N];
-}
-
 #[cfg(test)]
 mod tests {
     use nalgebra::vector;
