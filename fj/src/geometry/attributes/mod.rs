@@ -5,6 +5,7 @@
 
 pub mod bounding_volume;
 pub mod edges;
+pub mod path;
 pub mod signed_distance_field;
 pub mod surface_mesh;
 pub mod surface_normal;
