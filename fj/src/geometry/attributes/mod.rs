@@ -14,6 +14,7 @@ pub mod vertices;
 pub use self::{
     bounding_volume::{Aabb, BoundingVolume},
     edges::Edges,
+    path::Path,
     signed_distance_field::{Distance, SignedDistanceField},
     surface_mesh::SurfaceMesh,
     surface_normal::SurfaceNormal,
