@@ -3,6 +3,8 @@ use crate::{
     math::Vector,
 };
 
+use super::Path;
+
 /// The vertices that make up a shape
 ///
 /// `D` defines the dimension of the vertices' positions.
@@ -20,27 +22,16 @@ impl<const D: usize> Vertices<D> for shapes::Vertex {
     }
 }
 
-// TASK: Something doesn't make sense here. An edge is a one-dimensional object.
-//       Defined as the sweep of a 0-dimensional vertex over a 1-dimensional
-//       straight path (represented by a vector). However, a 1-dimensional
-//       object like an edge, can still be positioned in 3-dimensional space.
-//       Hence, it should implement `Vertices` for all dimensions >= 1, which
-//       this implementation doesn't do.
-//
-//       The question is, is this implementation wrong, or is the system of
-//       defining objects like vertices and edges so minimally? For example,
-//       defining a vertex as 0-dimensional and only giving it a position in
-//       space through a `Translate<D>` seems kinda neat, but there's no proven
-//       advantage. And it seems to make things more difficult, in this case.
-impl<T, const D: usize> Vertices<D> for operations::Sweep<T, Vector<D>>
+impl<T, P, const D: usize> Vertices<D> for operations::Sweep<T, P>
 where
     T: Vertices<D>,
+    P: Path<D>,
 {
     fn vertices(&self) -> Vec<operations::Translate<shapes::Vertex, D>> {
         let mut vertices = self.shape.vertices().clone();
 
         for mut vertex in self.shape.vertices() {
-            vertex.offset += self.path;
+            vertex.offset += self.path.path();
             vertices.push(vertex);
         }
 
