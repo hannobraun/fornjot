@@ -6,6 +6,11 @@ use crate::math::Vector;
 ///
 /// `D` defines the dimension that the path is described in.
 pub trait Path<const D: usize> {
+    // TASK: Extend this interface, so it can represent arbitrary curved paths.
+    //       Idea:
+    //       - `fn point_at(&self, s: f32) -> Point<D>; // 0.0 <= s <= 1.0`
+    //       - `fn next_s(&self, tolerance: f32) -> f32;`
+
     fn path(&self) -> Vector<D>;
 }
 
