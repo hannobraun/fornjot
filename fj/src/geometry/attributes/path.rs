@@ -6,6 +6,7 @@ use crate::math::{Point, Vector};
 ///
 /// `D` defines the dimension that the path is described in.
 pub trait Path<const D: usize> {
+    // TASK: Remove, once the other two methods are fully implemented.
     /// Return the vector that describes the path
     ///
     /// Only straight paths are supported right now.
