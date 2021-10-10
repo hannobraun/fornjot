@@ -11,6 +11,9 @@ pub trait Path<const D: usize> {
     //       - `fn point_at(&self, s: f32) -> Point<D>; // 0.0 <= s <= 1.0`
     //       - `fn next_s(&self, tolerance: f32) -> f32;`
 
+    /// Return the vector that describes the path
+    ///
+    /// Only straight paths are supported right now.
     fn path(&self) -> Vector<D>;
 }
 
