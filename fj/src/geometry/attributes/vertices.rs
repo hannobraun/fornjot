@@ -46,8 +46,8 @@ where
     fn vertices(&self) -> Vec<operations::Translate<shapes::Vertex, D>> {
         let mut vertices = self.shape.vertices();
 
-        for translate in &mut vertices {
-            translate.offset += self.offset;
+        for vertex in &mut vertices {
+            vertex.offset += self.offset;
         }
 
         vertices
