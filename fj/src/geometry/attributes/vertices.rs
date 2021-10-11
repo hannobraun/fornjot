@@ -106,7 +106,7 @@ mod tests {
     }
 
     #[test]
-    fn test_vertices_for_translate() {
+    fn for_translate() {
         let vertex_1d = Vertex.translate(vector![2.]);
         let vertex_2d = Vertex.translate(vector![2., 3.]);
         let vertex_3d = Vertex.translate(vector![2., 3., 4.]);
