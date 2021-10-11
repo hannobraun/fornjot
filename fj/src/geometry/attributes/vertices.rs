@@ -66,7 +66,7 @@ mod tests {
     use super::Vertices;
 
     #[test]
-    fn test_vertices_for_vertex() {
+    fn for_vertex() {
         assert_eq!(
             <Vertex as Vertices<0>>::vertices(&Vertex),
             [Vertex.translate(vector![])],
