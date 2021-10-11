@@ -86,7 +86,7 @@ mod tests {
     }
 
     #[test]
-    fn test_vertices_for_sweep() {
+    fn for_sweep() {
         let vertices = MockVertices([
             Vertex.translate(vector![1., 2., 3.]),
             Vertex.translate(vector![2., 3., 4.]),
