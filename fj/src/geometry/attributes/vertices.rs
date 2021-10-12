@@ -1,3 +1,7 @@
+use nalgebra::{
+    allocator::Allocator, Const, DefaultAllocator, DimNameAdd, DimNameSum, U1,
+};
+
 use crate::{
     geometry::{operations, shapes},
     math::Vector,
@@ -33,6 +37,28 @@ where
         for mut vertex in self.shape.vertices() {
             vertex.offset += self.path.path();
             vertices.push(vertex);
+        }
+
+        vertices
+    }
+}
+
+impl<T, const D: usize> Vertices<D> for operations::Transform<T, D>
+where
+    T: Vertices<D>,
+    Const<D>: DimNameAdd<U1>,
+    DefaultAllocator: Allocator<f32, DimNameSum<Const<D>, U1>, DimNameSum<Const<D>, U1>>
+        + Allocator<f32, DimNameSum<Const<D>, U1>, U1>,
+{
+    fn vertices(&self) -> Vec<operations::Translate<shapes::Vertex, D>> {
+        let mut vertices = self.shape.vertices();
+
+        for translate in &mut vertices {
+            // TASK: `transform_vector ignores the translational part of the
+            //       transformation, which can't be right. Do I need to
+            //       transform the offset into a point, then back to a vector?
+            translate.offset =
+                self.transform.transform_vector(&translate.offset);
         }
 
         vertices
