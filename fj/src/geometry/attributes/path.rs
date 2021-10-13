@@ -1,5 +1,3 @@
-use nalgebra::vector;
-
 use crate::math::{Point, Vector};
 
 /// Shapes that describe a path
@@ -39,38 +37,35 @@ pub trait Path<const D: usize> {
     }
 }
 
-impl Path<1> for Vector<1> {
-    fn path(&self) -> Vector<1> {
-        *self
+impl<const D: usize> Path<D> for Vector<1> {
+    fn path(&self) -> Vector<D> {
+        let mut vector = [0.0; D];
+
+        vector[0] = self.x;
+
+        vector.into()
     }
 }
 
-impl Path<2> for Vector<1> {
-    fn path(&self) -> Vector<2> {
-        vector![self.x, 0.0]
+impl<const D: usize> Path<D> for Vector<2> {
+    fn path(&self) -> Vector<D> {
+        let mut vector = [0.0; D];
+
+        vector[0] = self.x;
+        vector[1] = self.y;
+
+        vector.into()
     }
 }
 
-impl Path<3> for Vector<1> {
-    fn path(&self) -> Vector<3> {
-        vector![self.x, 0.0, 0.0]
-    }
-}
+impl<const D: usize> Path<D> for Vector<3> {
+    fn path(&self) -> Vector<D> {
+        let mut vector = [0.0; D];
 
-impl Path<2> for Vector<2> {
-    fn path(&self) -> Vector<2> {
-        *self
-    }
-}
+        vector[0] = self.x;
+        vector[1] = self.y;
+        vector[2] = self.y;
 
-impl Path<3> for Vector<2> {
-    fn path(&self) -> Vector<3> {
-        vector![self.x, self.y, 0.0]
-    }
-}
-
-impl Path<3> for Vector<3> {
-    fn path(&self) -> Vector<3> {
-        *self
+        vector.into()
     }
 }
