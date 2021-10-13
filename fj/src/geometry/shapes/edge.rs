@@ -1,7 +1,16 @@
-use nalgebra::vector;
+use std::fmt;
+
+use nalgebra::{
+    allocator::Allocator, vector, Const, DefaultAllocator, DimNameAdd,
+    DimNameSum, U1,
+};
 
 use crate::{
-    geometry::{operations::Sweep, shapes::Vertex},
+    geometry::{
+        attributes::Vertices as _,
+        operations::{Sweep, Transform},
+        shapes::Vertex,
+    },
     math::Vector,
 };
 
@@ -28,5 +37,21 @@ impl Edge {
     pub fn with_length(mut self, length: f32) -> Self {
         self.path.x = length;
         self
+    }
+}
+
+impl<const D: usize> Transform<Edge, D>
+where
+    Const<D>: DimNameAdd<U1>,
+    DefaultAllocator: Allocator<f32, DimNameSum<Const<D>, U1>, DimNameSum<Const<D>, U1>>
+        + Allocator<f32, DimNameSum<Const<D>, U1>, U1>,
+{
+    pub fn display(&self) -> impl fmt::Display {
+        let vertices = self.vertices();
+
+        let a = vertices[0];
+        let b = vertices[1];
+
+        format!("{} -> {}", a.display(), b.display())
     }
 }
