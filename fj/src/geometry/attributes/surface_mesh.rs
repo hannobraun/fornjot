@@ -51,7 +51,7 @@ mod tests {
                 vec![
                     Edge::new().transform(
                         math::Transform::identity()
-                            * Isometry2::new(vector![1., 0.], FRAC_PI_2),
+                            * Isometry2::new(vector![1., 0.], 0.0),
                     ),
                     Edge::new().transform(
                         math::Transform::identity()
