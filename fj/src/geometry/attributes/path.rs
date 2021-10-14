@@ -64,7 +64,7 @@ impl<const D: usize> Path<D> for Vector<3> {
 
         vector[0] = self.x;
         vector[1] = self.y;
-        vector[2] = self.y;
+        vector[2] = self.z;
 
         vector.into()
     }
