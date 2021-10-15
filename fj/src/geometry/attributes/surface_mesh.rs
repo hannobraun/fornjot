@@ -73,6 +73,11 @@ mod tests {
         let mut mesh = toroid.surface_mesh(4);
         mesh.round();
 
+        println!("Triangles:");
+        for triangle in mesh.triangle_vertices() {
+            println!("{}", triangle);
+        }
+
         #[rustfmt::skip]
         let quads = [
             // Inner shell
