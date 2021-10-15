@@ -54,7 +54,7 @@ where
         let mut vertices = self.shape.vertices();
 
         for translate in &mut vertices {
-            // TASK: `transform_vector ignores the translational part of the
+            // TASK: `transform_vector` ignores the translational part of the
             //       transformation, which can't be right. Do I need to
             //       transform the offset into a point, then back to a vector?
             translate.offset =
