@@ -4,7 +4,7 @@ use nalgebra::{
 
 use crate::{
     geometry::{operations, shapes},
-    math::Vector,
+    math::{Point, Vector},
 };
 
 use super::Path;
@@ -54,11 +54,8 @@ where
         let mut vertices = self.shape.vertices();
 
         for translate in &mut vertices {
-            // TASK: `transform_vector` ignores the translational part of the
-            //       transformation, which can't be right. Do I need to
-            //       transform the offset into a point, then back to a vector?
-            translate.offset =
-                self.transform.transform_vector(&translate.offset);
+            let point = Point::from(translate.offset.data.0[0]);
+            translate.offset = self.transform.transform_point(&point).coords;
         }
 
         vertices
