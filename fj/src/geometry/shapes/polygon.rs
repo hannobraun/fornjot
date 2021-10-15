@@ -6,7 +6,7 @@ use crate::math::Point;
 ///
 /// `D` defines the dimension of the polygon's points. `N` defines the number of
 /// points of the polygon.
-#[derive(Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub struct Polygon<const D: usize, const N: usize> {
     points: [nalgebra::Point<R32, D>; N],
 }
