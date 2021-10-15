@@ -70,7 +70,8 @@ mod tests {
         }
 
         let toroid = Toroid::from_shape(Square);
-        let mesh = toroid.surface_mesh(4);
+        let mut mesh = toroid.surface_mesh(4);
+        mesh.round();
 
         #[rustfmt::skip]
         let quads = [
