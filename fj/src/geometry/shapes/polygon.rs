@@ -1,3 +1,5 @@
+use std::fmt;
+
 use decorum::R32;
 
 use crate::math::Point;
@@ -54,6 +56,20 @@ impl<const D: usize, const N: usize> Polygon<D, N> {
     /// Return the points of the triangle
     pub fn points(&self) -> [Point<D>; N] {
         self.points.map(|point| point.map(|coord| coord.into()))
+    }
+}
+
+impl<const D: usize, const N: usize> fmt::Display for Polygon<D, N> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        for (i, point) in self.points.iter().enumerate() {
+            write!(f, "{}", point)?;
+
+            if i < N - 1 {
+                write!(f, ", ")?;
+            }
+        }
+
+        Ok(())
     }
 }
 
