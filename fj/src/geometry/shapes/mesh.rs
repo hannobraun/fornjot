@@ -72,6 +72,31 @@ impl<const D: usize> Mesh<D> {
             || self.triangles.contains_key(&abd)
                 && self.triangles.contains_key(&bcd)
     }
+
+    /// Round all coordinates of all triangles
+    ///
+    /// This method is intended for testing only. It is going to corrupt the
+    /// `Mesh`'s internal state, only leaving some methods functional.
+    pub fn round(&mut self) {
+        fn round(v: f32) -> f32 {
+            (v * 100.).round() / 100.
+        }
+
+        self.triangles = self
+            .triangles
+            .clone()
+            .into_iter()
+            .map(|(triangle, indices)| {
+                let mut points = triangle.points();
+
+                for point in &mut points {
+                    *point = point.map(|coord| round(coord));
+                }
+
+                (Triangle::new(points).unwrap(), indices)
+            })
+            .collect()
+    }
 }
 
 #[cfg(test)]
