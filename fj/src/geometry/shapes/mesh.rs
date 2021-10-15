@@ -47,16 +47,7 @@ impl<const D: usize> Mesh<D> {
 
     /// Iterate over the vertices that make up all triangles
     pub fn triangle_vertices(&self) -> impl Iterator<Item = Triangle<D>> + '_ {
-        self.triangles.values().copied().map(move |[a, b, c]| {
-            Triangle::new([
-                self.vertices.vertex(a),
-                self.vertices.vertex(b),
-                self.vertices.vertex(c),
-            ])
-            // This should never panic, as the vertices were originally taken
-            // from a `Triangle`, thus should not fail to form a new `Triangle`.
-            .expect("Failed to construct `Triangle`")
-        })
+        self.triangles.keys().copied()
     }
 
     /// Iterate over the indices that make up all triangles

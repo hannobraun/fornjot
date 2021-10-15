@@ -41,13 +41,6 @@ impl<T, const D: usize> Vertices<T, D> {
 
         *index
     }
-
-    pub fn vertex(&self, index: Index) -> T
-    where
-        T: Copy,
-    {
-        self.vertices[index as usize]
-    }
 }
 
 pub trait AsPoint<const D: usize> {
