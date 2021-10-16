@@ -51,6 +51,7 @@ where
     }
 }
 
+// TASK: Replace `f32` with `Path`.
 impl<T> SignedDistanceField<3> for operations::Sweep<T, f32>
 where
     T: SignedDistanceField<2>,

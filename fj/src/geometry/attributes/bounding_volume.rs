@@ -34,6 +34,7 @@ where
     }
 }
 
+// TASK: Replace `f32` with `Path`.
 impl<T> BoundingVolume<3> for operations::Sweep<T, f32>
 where
     T: BoundingVolume<2>,
