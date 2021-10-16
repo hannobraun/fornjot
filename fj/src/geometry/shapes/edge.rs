@@ -8,7 +8,7 @@ use nalgebra::{
 use crate::{
     geometry::{
         attributes::Vertices as _,
-        operations::{Sweep, Transform},
+        operations::{Sweep, Transform, Translate},
         shapes::Vertex,
     },
     math::Vector,
@@ -31,6 +31,20 @@ impl Edge {
         }
     }
 
+    /// Create an `Edge` from two vertices
+    pub fn from_vertices<const D: usize>(
+        _a: Translate<Vertex, D>,
+        _b: Translate<Vertex, D>,
+    ) -> Transform<Self, D>
+    where
+        Const<D>: DimNameAdd<U1>,
+        DefaultAllocator:
+            Allocator<f32, DimNameSum<Const<D>, U1>, DimNameSum<Const<D>, U1>>,
+    {
+        // TASK: Implement.
+        todo!()
+    }
+
     /// Update length
     ///
     /// Returns a copy of `self`, with the length replaced with `length`.
@@ -46,9 +60,6 @@ where
     DefaultAllocator: Allocator<f32, DimNameSum<Const<D>, U1>, DimNameSum<Const<D>, U1>>
         + Allocator<f32, DimNameSum<Const<D>, U1>, U1>,
 {
-    // TASK: Implement `from_vertices`, which creates a `Transform<Edge>` from
-    //       two `Translate<Vertex>`.
-
     pub fn display(&self) -> impl fmt::Display {
         let vertices = self.vertices();
 
@@ -57,4 +68,31 @@ where
 
         format!("{} -> {}", a.display(), b.display())
     }
+}
+
+#[cfg(test)]
+mod tests {
+    use nalgebra::vector;
+
+    use crate::{geometry::shapes::Vertex, syntax::Translate as _};
+
+    use super::Edge;
+
+    #[test]
+    #[ignore]
+    fn test_from_vertices() {
+        let a = vector![1., 2.];
+        let b = vector![2., 3.];
+
+        let edge =
+            Edge::from_vertices(Vertex.translate(a), Vertex.translate(b));
+
+        assert_eq!(edge.transform.transform_vector(&vector![0., 0.]), a);
+        assert_eq!(
+            edge.transform.transform_vector(&vector![(2f32.sqrt()), 0.]),
+            a,
+        );
+    }
+
+    // TASK: Test `from_vertices` with negative angle.
 }
