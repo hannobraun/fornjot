@@ -46,6 +46,9 @@ where
     DefaultAllocator: Allocator<f32, DimNameSum<Const<D>, U1>, DimNameSum<Const<D>, U1>>
         + Allocator<f32, DimNameSum<Const<D>, U1>, U1>,
 {
+    // TASK: Implement `from_vertices`, which creates a `Transform<Edge>` from
+    //       two `Translate<Vertex>`.
+
     pub fn display(&self) -> impl fmt::Display {
         let vertices = self.vertices();
 
