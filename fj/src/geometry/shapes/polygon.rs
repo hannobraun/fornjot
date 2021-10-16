@@ -14,7 +14,7 @@ pub struct Polygon<const D: usize, const N: usize> {
 }
 
 impl<const D: usize, const N: usize> Polygon<D, N> {
-    /// Create a new `Triangle`
+    /// Create a new `Polygon`
     pub fn from_points(
         points: [impl Into<Point<D>>; N],
     ) -> Result<Self, Error> {
