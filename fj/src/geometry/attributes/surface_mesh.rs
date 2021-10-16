@@ -95,7 +95,7 @@ mod tests {
 
         for quad in quads {
             println!("Checking {:?}...", quad);
-            let quad = Quad::new(quad).unwrap();
+            let quad = Quad::from_points(quad).unwrap();
             assert!(mesh.contains_quad(&quad));
         }
     }

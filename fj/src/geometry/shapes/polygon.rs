@@ -15,7 +15,9 @@ pub struct Polygon<const D: usize, const N: usize> {
 
 impl<const D: usize, const N: usize> Polygon<D, N> {
     /// Create a new `Triangle`
-    pub fn new(points: [impl Into<Point<D>>; N]) -> Result<Self, Error> {
+    pub fn from_points(
+        points: [impl Into<Point<D>>; N],
+    ) -> Result<Self, Error> {
         let points = points.map(|point| point.into());
 
         for (i, a) in points.iter().enumerate() {
@@ -93,12 +95,21 @@ mod tests {
 
     #[test]
     fn validation() {
-        let triangle =
-            Polygon::new([point![0., 0.], point![0., 1.], point![1., 1.]]);
-        let points_on_a_line =
-            Polygon::new([point![0., 0.], point![1., 1.], point![2., 2.]]);
-        let collapsed_points =
-            Polygon::new([point![0., 0.], point![1., 1.], point![1., 1.]]);
+        let triangle = Polygon::from_points([
+            point![0., 0.],
+            point![0., 1.],
+            point![1., 1.],
+        ]);
+        let points_on_a_line = Polygon::from_points([
+            point![0., 0.],
+            point![1., 1.],
+            point![2., 2.],
+        ]);
+        let collapsed_points = Polygon::from_points([
+            point![0., 0.],
+            point![1., 1.],
+            point![1., 1.],
+        ]);
 
         assert!(triangle.is_ok());
         assert_eq!(points_on_a_line, Err(Error::PointsOnLine));
@@ -117,9 +128,9 @@ mod tests {
         test(a, c, b);
 
         fn test<const D: usize>(a: Point<D>, b: Point<D>, c: Point<D>) {
-            let abc = Polygon::new([a, b, c]).unwrap();
-            let bca = Polygon::new([b, c, a]).unwrap();
-            let cab = Polygon::new([c, a, b]).unwrap();
+            let abc = Polygon::from_points([a, b, c]).unwrap();
+            let bca = Polygon::from_points([b, c, a]).unwrap();
+            let cab = Polygon::from_points([c, a, b]).unwrap();
 
             assert_eq!(abc.points(), bca.points());
             assert_eq!(abc.points(), cab.points());

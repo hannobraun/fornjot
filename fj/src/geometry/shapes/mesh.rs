@@ -62,11 +62,11 @@ impl<const D: usize> Mesh<D> {
         // Neither of the following triangle constructions can panic, as the
         // points come from a quad, meaning they are already validated.
 
-        let abc = Triangle::new([a, b, c]).unwrap();
-        let acd = Triangle::new([a, c, d]).unwrap();
+        let abc = Triangle::from_points([a, b, c]).unwrap();
+        let acd = Triangle::from_points([a, c, d]).unwrap();
 
-        let abd = Triangle::new([a, b, d]).unwrap();
-        let bcd = Triangle::new([b, c, d]).unwrap();
+        let abd = Triangle::from_points([a, b, d]).unwrap();
+        let bcd = Triangle::from_points([b, c, d]).unwrap();
 
         self.triangles.contains_key(&abc) && self.triangles.contains_key(&acd)
             || self.triangles.contains_key(&abd)
@@ -93,7 +93,7 @@ impl<const D: usize> Mesh<D> {
                     *point = point.map(|coord| round(coord));
                 }
 
-                (Triangle::new(points).unwrap(), indices)
+                (Triangle::from_points(points).unwrap(), indices)
             })
             .collect()
     }
@@ -113,14 +113,14 @@ mod tests {
         let d = [0., 1.];
 
         // Quad 1
-        let abc = Triangle::new([a, b, c]).unwrap();
-        let acd = Triangle::new([a, c, d]).unwrap();
+        let abc = Triangle::from_points([a, b, c]).unwrap();
+        let acd = Triangle::from_points([a, c, d]).unwrap();
 
         // Quad 2
-        let abd = Triangle::new([a, b, d]).unwrap();
-        let bcd = Triangle::new([b, c, d]).unwrap();
+        let abd = Triangle::from_points([a, b, d]).unwrap();
+        let bcd = Triangle::from_points([b, c, d]).unwrap();
 
-        let quad = Quad::new([a, b, c, d]).unwrap();
+        let quad = Quad::from_points([a, b, c, d]).unwrap();
 
         let mut mesh = Mesh::new();
         assert!(!mesh.contains_quad(&quad));
