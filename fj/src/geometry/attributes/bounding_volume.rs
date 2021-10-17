@@ -40,7 +40,7 @@ where
     T: BoundingVolume<2>,
 {
     fn aabb(&self) -> Aabb<3> {
-        self.shape.aabb().extend(-self.path / 2.0, self.path / 2.0)
+        self.shape.aabb().extend(0., self.path)
     }
 }
 

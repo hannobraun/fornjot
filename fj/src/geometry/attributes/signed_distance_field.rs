@@ -62,7 +62,13 @@ where
         let sample_xy = self.shape.distance(point.xy());
 
         let d_xy = sample_xy.distance;
-        let d_z = point.z.abs() - self.path / 2.0;
+        let d_z = if point.z <= 0. {
+            point.z.abs()
+        } else if point.z > 0. && point.z < self.path {
+            -f32::min(point.z, self.path - point.z)
+        } else {
+            point.z - self.path
+        };
 
         let w = Vector::from([f32::max(d_xy, 0.0), f32::max(d_z, 0.0)]);
 
