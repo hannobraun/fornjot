@@ -1,6 +1,7 @@
 use std::fmt;
 
 use decorum::R32;
+use thiserror::Error;
 
 use crate::math::Point;
 
@@ -76,12 +77,14 @@ impl<const D: usize, const N: usize> fmt::Display for Polygon<D, N> {
 }
 
 /// Error that can occur when constructing a `Triangle`
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, Error, PartialEq)]
 pub enum Error {
     /// At least two points are identical to each other
+    #[error("At least two points are identical to each other")]
     IdenticalPoints,
 
     /// The three points are on a line
+    #[error("Three neighboring points are on a line")]
     PointsOnLine,
 }
 
