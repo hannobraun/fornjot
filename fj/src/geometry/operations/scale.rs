@@ -9,3 +9,10 @@ pub struct Scale<T> {
     /// The factor to scale the shape by
     pub factor: f32,
 }
+
+impl<T> Scale<T> {
+    pub fn with_factor(mut self, factor: f32) -> Self {
+        self.factor = factor;
+        self
+    }
+}
