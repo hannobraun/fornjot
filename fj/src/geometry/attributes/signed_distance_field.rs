@@ -51,6 +51,17 @@ where
     }
 }
 
+impl<T, const D: usize> SignedDistanceField<D> for operations::Scale<T>
+where
+    T: SignedDistanceField<D>,
+{
+    fn distance(&self, point: impl Into<Point<D>>) -> Distance<D> {
+        let mut distance = self.shape.distance(point.into() / self.factor);
+        distance.distance *= self.factor;
+        distance
+    }
+}
+
 // TASK: Replace `f32` with `Path`.
 impl<T> SignedDistanceField<3> for operations::Sweep<T, f32>
 where
