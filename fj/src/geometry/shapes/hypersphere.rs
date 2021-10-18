@@ -19,6 +19,7 @@ impl<const D: usize> Hypersphere<D> {
         Self { radius: 1.0 }
     }
 
+    /// Create a new hypersphere with the given radius
     pub fn from_radius(radius: f32) -> Self {
         let mut hypersphere = Self::new();
         hypersphere.radius = radius;
