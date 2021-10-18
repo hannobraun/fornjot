@@ -83,7 +83,7 @@ pub enum Error {
     #[error("At least two points are identical to each other")]
     IdenticalPoints,
 
-    /// The three points are on a line
+    /// Three neighboring points are on a line
     #[error("Three neighboring points are on a line")]
     PointsOnLine,
 }
