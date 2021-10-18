@@ -19,6 +19,12 @@ impl<const D: usize> Hypersphere<D> {
         Self { radius: 1.0 }
     }
 
+    pub fn from_radius(radius: f32) -> Self {
+        let mut hypersphere = Self::new();
+        hypersphere.radius = radius;
+        hypersphere
+    }
+
     /// Update radius
     ///
     /// Returns a copy of `self`, with the radius replaced with `radius`.
