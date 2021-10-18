@@ -18,8 +18,8 @@ mod tests {
     #[test]
     fn distance() {
         let difference = Difference {
-            a: Sphere::new().with_radius(1.0),
-            b: Sphere::new().with_radius(0.5),
+            a: Sphere::from_radius(1.0),
+            b: Sphere::from_radius(0.5),
         };
 
         assert_eq!(difference.distance([0.0, 0.0, 0.0]).distance, 0.5);
