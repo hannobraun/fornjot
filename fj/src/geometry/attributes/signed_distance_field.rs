@@ -21,7 +21,7 @@ impl<const D: usize> SignedDistanceField<D> for shapes::Hypersphere<D> {
 
         Distance {
             point,
-            distance: point.coords.magnitude() - self.radius,
+            distance: point.coords.magnitude() - 1.0,
         }
     }
 }

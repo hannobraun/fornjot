@@ -1,11 +1,11 @@
-use crate::geometry::operations::Sweep;
+use crate::geometry::operations::{Scale, Sweep};
 
 use super::Circle;
 
 /// A cylinder
 ///
 /// Defined as a [`Sweep`] of a [`Circle`].
-pub type Cylinder = Sweep<Circle, f32>;
+pub type Cylinder = Sweep<Scale<Circle>, f32>;
 
 impl Cylinder {
     /// Create a new `Cylinder`
@@ -13,7 +13,7 @@ impl Cylinder {
     /// Sweeps a default [`Circle`] along a distance of `1.0`.
     pub fn new() -> Self {
         Sweep {
-            shape: Circle::new(),
+            shape: Circle::from_radius(1.0),
             path: 1.0,
         }
     }
@@ -22,7 +22,7 @@ impl Cylinder {
     ///
     /// Returns a copy of `self` with the radius replaced with `radius`.
     pub fn with_radius(mut self, radius: f32) -> Self {
-        self.shape = self.shape.with_radius(radius);
+        self.shape = self.shape.with_factor(radius);
         self
     }
 
