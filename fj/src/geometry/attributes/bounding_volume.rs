@@ -34,6 +34,20 @@ where
     }
 }
 
+impl<T, const D: usize> BoundingVolume<D> for operations::Scale<T>
+where
+    T: BoundingVolume<D>,
+{
+    fn aabb(&self) -> Aabb<D> {
+        let mut aabb = self.shape.aabb();
+
+        aabb.min *= self.factor;
+        aabb.max *= self.factor;
+
+        aabb
+    }
+}
+
 // TASK: Replace `f32` with `Path`.
 impl<T> BoundingVolume<3> for operations::Sweep<T, f32>
 where
