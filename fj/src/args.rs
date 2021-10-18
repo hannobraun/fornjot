@@ -1,8 +1,6 @@
 use std::path::PathBuf;
 
-use clap::Clap;
-
-#[derive(Clap)]
+#[derive(clap::Parser)]
 pub struct Args {
     /// Export model to this path
     #[clap(short, long)]
@@ -19,6 +17,6 @@ impl Args {
     /// Convenience method that saves the caller from having to import the
     /// `Clap` trait.
     pub fn parse() -> Self {
-        <Self as Clap>::parse()
+        <Self as clap::Parser>::parse()
     }
 }
