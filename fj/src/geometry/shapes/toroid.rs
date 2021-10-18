@@ -15,12 +15,4 @@ impl<T> Toroid<T> {
             path: Circle::new(),
         }
     }
-
-    /// Update radius
-    ///
-    /// Returns a copy of `self`, with the radius replaced with `radius`.
-    pub fn with_radius(mut self, radius: f32) -> Self {
-        self.path = self.path.with_radius(radius);
-        self
-    }
 }
