@@ -3,10 +3,7 @@ use nalgebra::{
 };
 
 use crate::{
-    geometry::{
-        operations,
-        shapes::{self, Edge},
-    },
+    geometry::{operations, shapes},
     math,
 };
 
@@ -24,7 +21,7 @@ where
     fn edges(&self) -> Vec<operations::Transform<shapes::Edge, D>>;
 }
 
-impl<const D: usize> Edges<D> for Edge
+impl<const D: usize> Edges<D> for shapes::Edge
 where
     Const<D>: DimNameAdd<U1>,
     DefaultAllocator:
