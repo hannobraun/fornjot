@@ -72,7 +72,7 @@ where
 
 #[cfg(test)]
 mod tests {
-    use nalgebra::vector;
+    use nalgebra::point;
 
     use crate::{geometry::shapes::Vertex, syntax::Translate as _};
 
@@ -81,15 +81,17 @@ mod tests {
     #[test]
     #[ignore]
     fn test_from_vertices() {
-        let a = vector![1., 2.];
-        let b = vector![2., 3.];
+        let a = point![1., 2.];
+        let b = point![2., 3.];
 
-        let edge =
-            Edge::from_vertices(Vertex.translate(a), Vertex.translate(b));
+        let edge = Edge::from_vertices(
+            Vertex.translate(a.coords),
+            Vertex.translate(b.coords),
+        );
 
-        assert_eq!(edge.transform.transform_vector(&vector![0., 0.]), a);
+        assert_eq!(edge.transform.transform_point(&point![0., 0.]), a);
         assert_eq!(
-            edge.transform.transform_vector(&vector![(2f32.sqrt()), 0.]),
+            edge.transform.transform_point(&point![(2f32.sqrt()), 0.]),
             a,
         );
     }
