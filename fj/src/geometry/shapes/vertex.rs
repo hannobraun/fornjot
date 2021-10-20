@@ -1,6 +1,6 @@
 use std::fmt;
 
-use crate::geometry::operations::Translate;
+use crate::{geometry::operations::Translate, math::Point};
 
 /// A 0-dimensional vertex
 ///
@@ -13,5 +13,14 @@ pub struct Vertex;
 impl<const D: usize> Translate<Vertex, D> {
     pub fn display(&self) -> impl fmt::Display {
         self.offset
+    }
+}
+
+impl<const D: usize> From<Point<D>> for Translate<Vertex, D> {
+    fn from(point: Point<D>) -> Self {
+        Translate {
+            shape: Vertex,
+            offset: point.coords,
+        }
     }
 }
