@@ -26,6 +26,12 @@ impl<const D: usize> Vertices<D> for shapes::Vertex {
     }
 }
 
+impl<const D: usize> Vertices<D> for shapes::Edge2<D> {
+    fn vertices(&self) -> Vec<operations::Translate<shapes::Vertex, D>> {
+        self.0.into()
+    }
+}
+
 impl<T, P, const D: usize> Vertices<D> for operations::Sweep<T, P>
 where
     T: Vertices<D>,
