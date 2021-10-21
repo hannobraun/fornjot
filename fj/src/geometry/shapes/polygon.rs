@@ -77,7 +77,7 @@ impl<const D: usize, const N: usize> fmt::Display for Polygon<D, N> {
 }
 
 /// Error that can occur when constructing a `Triangle`
-#[derive(Debug, Eq, Error, PartialEq)]
+#[derive(Debug, Error, PartialEq)]
 pub enum Error<const D: usize> {
     /// At least two points are identical to each other
     #[error("At least two points are identical to each other")]
