@@ -59,6 +59,8 @@ mod tests {
             println!("{}", triangle);
         }
 
+        // TASK: This is probably describing the toroid in the wrong
+        //       orientation.
         #[rustfmt::skip]
         let quads = [
             // Inner shell
