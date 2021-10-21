@@ -1,5 +1,6 @@
 use crate::geometry::shapes::{self, Edge2};
 
+// TASK: Replace `Edges` with this.
 /// The edges that make up a shape
 ///
 /// `D` defines the dimension of the edges.

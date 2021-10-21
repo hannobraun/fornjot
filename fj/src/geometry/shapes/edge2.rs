@@ -1,5 +1,6 @@
 use crate::geometry::{operations::Translate, shapes::Vertex};
 
+// TASK: Replace `Edge` with this.
 /// An edge, defined by two vertices
 #[derive(Debug)]
 pub struct Edge2<const D: usize>(pub [Translate<Vertex, D>; 2]);
