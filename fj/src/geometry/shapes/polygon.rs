@@ -21,8 +21,8 @@ impl<const D: usize, const N: usize> Polygon<D, N> {
     ) -> Result<Self, Error<D>> {
         let points = points.map(|point| point.into());
 
-        for (i, a) in points.iter().enumerate() {
-            for b in points[i + 1..].iter() {
+        for (i, &a) in points.iter().enumerate() {
+            for &b in points[i + 1..].iter() {
                 if a == b {
                     return Err(Error::IdenticalPoints);
                 }
