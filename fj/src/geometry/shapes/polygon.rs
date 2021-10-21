@@ -18,7 +18,7 @@ impl<const D: usize, const N: usize> Polygon<D, N> {
     /// Create a new `Polygon`
     pub fn from_points(
         points: [impl Into<Point<D>>; N],
-    ) -> Result<Self, Error> {
+    ) -> Result<Self, Error<D>> {
         let points = points.map(|point| point.into());
 
         for (i, a) in points.iter().enumerate() {
@@ -78,7 +78,7 @@ impl<const D: usize, const N: usize> fmt::Display for Polygon<D, N> {
 
 /// Error that can occur when constructing a `Triangle`
 #[derive(Debug, Eq, Error, PartialEq)]
-pub enum Error {
+pub enum Error<const D: usize> {
     /// At least two points are identical to each other
     #[error("At least two points are identical to each other")]
     IdenticalPoints,
