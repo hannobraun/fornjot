@@ -1844,6 +1844,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "spacer2"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "fj",
+ "serde",
+]
+
+[[package]]
 name = "spirv"
 version = "0.2.0+1.5.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"

@@ -3,6 +3,7 @@ members = [
     "fj",
     "models/cube",
     "models/spacer",
+    "models/spacer2",
 ]
 resolver = "2"
 
