@@ -2,7 +2,7 @@
 name    = "fj"
 version = "0.2.0"
 authors = ["Hanno Braun <hanno@braun-odw.eu>"]
-edition = "2018"
+edition = "2021"
 
 description = "Experimental CAD system"
 readme      = "../README.md"
