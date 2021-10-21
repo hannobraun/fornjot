@@ -13,5 +13,5 @@ fn main() -> anyhow::Result<()> {
     ])?;
     let spacer = fj::Toroid::from_shape(cross_section);
 
-    fj::run_mesh(spacer.surface_mesh(100))
+    fj::run_mesh(spacer.surface_mesh(360))
 }
