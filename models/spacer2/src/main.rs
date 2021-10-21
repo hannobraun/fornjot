@@ -6,10 +6,10 @@ fn main() -> anyhow::Result<()> {
     let height = 25.0;
 
     let cross_section = fj::Quad::from_points([
-        [inner, 0.0],
-        [outer, 0.0],
-        [outer, height],
         [inner, height],
+        [outer, height],
+        [outer, 0.0],
+        [inner, 0.0],
     ])?;
     let spacer = fj::Toroid::from_shape(cross_section);
 
