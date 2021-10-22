@@ -4,7 +4,7 @@
 //! geometry can have.
 
 pub mod bounding_volume;
-pub mod edges2;
+pub mod edges;
 pub mod path;
 pub mod signed_distance_field;
 pub mod surface_mesh;
@@ -13,7 +13,7 @@ pub mod vertices;
 
 pub use self::{
     bounding_volume::{Aabb, BoundingVolume},
-    edges2::Edges,
+    edges::Edges,
     path::Path,
     signed_distance_field::{Distance, SignedDistanceField},
     surface_mesh::SurfaceMesh,
