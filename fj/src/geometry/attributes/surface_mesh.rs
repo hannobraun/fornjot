@@ -4,7 +4,7 @@ use nalgebra::{point, vector, Rotation3};
 
 use crate::{
     geometry::{
-        attributes::{Edges2, Vertices as _},
+        attributes::{Edges, Vertices as _},
         shapes::{Mesh, Toroid},
     },
     Triangle,
@@ -22,7 +22,7 @@ pub trait SurfaceMesh<const D: usize> {
 
 impl<T> SurfaceMesh<3> for Toroid<T>
 where
-    T: Edges2<2>,
+    T: Edges<2>,
 {
     fn surface_mesh(&self, n: u32) -> Mesh<3> {
         let edges = self.shape.edges();
@@ -70,7 +70,7 @@ mod tests {
     use nalgebra::point;
 
     use crate::geometry::{
-        attributes::Edges2,
+        attributes::Edges,
         shapes::{Edge2, Quad, Toroid},
     };
 
@@ -82,7 +82,7 @@ mod tests {
     fn triangle_mesh_for_toroid() {
         struct Square;
 
-        impl Edges2<2> for Square {
+        impl Edges<2> for Square {
             fn edges(&self) -> Vec<Edge2<2>> {
                 vec![
                     [point![1., 0.], point![2., 0.]].into(),

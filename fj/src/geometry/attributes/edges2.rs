@@ -1,15 +1,14 @@
 use crate::geometry::shapes::{self, Edge2};
 
-// TASK: Replace `Edges` with this.
 /// The edges that make up a shape
 ///
 /// `D` defines the dimension of the edges.
-pub trait Edges2<const D: usize> {
+pub trait Edges<const D: usize> {
     /// Return the edges of the shape
     fn edges(&self) -> Vec<Edge2<D>>;
 }
 
-impl<const D: usize, const N: usize> Edges2<D> for shapes::Polygon<D, N> {
+impl<const D: usize, const N: usize> Edges<D> for shapes::Polygon<D, N> {
     fn edges(&self) -> Vec<Edge2<D>> {
         let mut edges = Vec::new();
 
