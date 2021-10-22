@@ -71,7 +71,7 @@ mod tests {
 
     use crate::geometry::{
         attributes::Edges,
-        shapes::{Edge2, Quad, Toroid},
+        shapes::{Edge, Quad, Toroid},
     };
 
     use super::SurfaceMesh;
@@ -83,7 +83,7 @@ mod tests {
         struct Square;
 
         impl Edges<2> for Square {
-            fn edges(&self) -> Vec<Edge2<2>> {
+            fn edges(&self) -> Vec<Edge<2>> {
                 vec![
                     [point![1., 0.], point![2., 0.]].into(),
                     [point![2., 0.], point![2., 1.]].into(),

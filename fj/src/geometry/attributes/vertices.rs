@@ -26,7 +26,7 @@ impl<const D: usize> Vertices<D> for shapes::Vertex {
     }
 }
 
-impl<const D: usize> Vertices<D> for shapes::Edge2<D> {
+impl<const D: usize> Vertices<D> for shapes::Edge<D> {
     fn vertices(&self) -> Vec<operations::Translate<shapes::Vertex, D>> {
         self.0.into()
     }
