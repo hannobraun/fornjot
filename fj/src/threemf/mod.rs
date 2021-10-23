@@ -1,5 +1,5 @@
-mod export;
-mod mesh;
+pub mod export;
+pub mod mesh;
 
 pub use self::{
     export::export,
