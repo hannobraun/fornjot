@@ -11,11 +11,6 @@ use zip::{result::ZipError, write::FileOptions, ZipWriter};
 use super::TriangleMesh;
 
 /// Export a triangle mesh to a 3MF file
-///
-/// See [3MF specification] and [Open Packaging Conventions].
-///
-/// [3MF specification]: https://3mf.io/specification/
-/// [Open Packaging Conventions]: https://standards.iso.org/ittf/PubliclyAvailableStandards/c061796_ISO_IEC_29500-2_2012.zip
 pub fn export(mesh: &TriangleMesh, path: PathBuf) -> Result<(), Error> {
     let file = File::create(&path)?;
     let mut archive = ZipWriter::new(file);
