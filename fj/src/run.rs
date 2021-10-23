@@ -69,7 +69,17 @@ fn run_inner(
 ) -> anyhow::Result<()> {
     if let Some(path) = export {
         info!("Exporting to `{}`", path.display());
+
+        let mesh = threemf::TriangleMesh {
+            vertices: mesh.vertices().map(|vertex| vertex.into()).collect(),
+            triangles: mesh
+                .triangle_indices()
+                .map(|triangle| triangle.map(|index| index as usize))
+                .collect(),
+        };
+
         threemf::export(&mesh, path)?;
+
         return Ok(());
     }
 

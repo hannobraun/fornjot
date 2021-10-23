@@ -8,7 +8,7 @@ use thiserror::Error;
 
 use zip::{result::ZipError, write::FileOptions, ZipWriter};
 
-use crate::geometry::shapes::Mesh;
+use super::TriangleMesh;
 
 /// Export a triangle mesh to a 3MF file
 ///
@@ -16,7 +16,7 @@ use crate::geometry::shapes::Mesh;
 ///
 /// [3MF specification]: https://3mf.io/specification/
 /// [Open Packaging Conventions]: https://standards.iso.org/ittf/PubliclyAvailableStandards/c061796_ISO_IEC_29500-2_2012.zip
-pub fn export(mesh: &Mesh<3>, path: PathBuf) -> Result<(), Error> {
+pub fn export(mesh: &TriangleMesh, path: PathBuf) -> Result<(), Error> {
     let file = File::create(&path)?;
     let mut archive = ZipWriter::new(file);
 
@@ -34,21 +34,21 @@ pub fn export(mesh: &Mesh<3>, path: PathBuf) -> Result<(), Error> {
     Ok(())
 }
 
-fn write_mesh(mesh: &Mesh<3>, mut sink: impl Write) -> io::Result<()> {
+fn write_mesh(mesh: &TriangleMesh, mut sink: impl Write) -> io::Result<()> {
     sink.write_all(include_bytes!("model-header.xml"))?;
 
     writeln!(sink, "\t\t\t\t<vertices>")?;
-    for vertex in mesh.vertices() {
+    for vertex in &mesh.vertices {
         writeln!(
             sink,
             "\t\t\t\t\t<vertex x=\"{}\" y=\"{}\" z=\"{}\" />",
-            vertex.x, vertex.y, vertex.z,
+            vertex[0], vertex[1], vertex[2],
         )?;
     }
     writeln!(sink, "\t\t\t\t</vertices>")?;
 
     writeln!(sink, "\t\t\t\t<triangles>")?;
-    for [i1, i2, i3] in mesh.triangle_indices() {
+    for [i1, i2, i3] in &mesh.triangles {
         writeln!(
             sink,
             "\t\t\t\t\t<triangle v1=\"{}\" v2=\"{}\" v3=\"{}\" />",
