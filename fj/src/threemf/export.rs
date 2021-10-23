@@ -66,10 +66,10 @@ fn write_mesh(mesh: &TriangleMesh, mut sink: impl Write) -> io::Result<()> {
 #[derive(Debug, Error)]
 pub enum Error {
     /// I/O error while exporting to 3MF file
-    #[error("I/O error")]
+    #[error("I/O error while exporting to 3MF file")]
     Io(#[from] io::Error),
 
     /// Error creating ZIP file (3MF files are ZIP files)
-    #[error("Zip error")]
+    #[error("Error creating ZIP file (3MF files are ZIP files)")]
     Zip(#[from] ZipError),
 }
