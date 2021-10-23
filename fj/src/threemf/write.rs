@@ -65,6 +65,6 @@ pub enum Error {
     Io(#[from] io::Error),
 
     /// Error writing ZIP file (3MF files are ZIP files)
-    #[error("Error creating ZIP file (3MF files are ZIP files)")]
+    #[error("Error writing ZIP file (3MF files are ZIP files)")]
     Zip(#[from] ZipError),
 }
