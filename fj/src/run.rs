@@ -78,7 +78,7 @@ fn run_inner(
                 .collect(),
         };
 
-        threemf::export(&mesh, path)?;
+        threemf::write(&mesh, path)?;
 
         return Ok(());
     }

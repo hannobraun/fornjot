@@ -18,4 +18,4 @@
 pub mod mesh;
 pub mod write;
 
-pub use self::{mesh::TriangleMesh, write::export};
+pub use self::{mesh::TriangleMesh, write::write};
