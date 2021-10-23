@@ -22,14 +22,14 @@ pub fn write(mesh: &TriangleMesh, path: PathBuf) -> Result<(), Error> {
     archive.write_all(include_bytes!("rels.xml"))?;
 
     archive.start_file("3D/model.model", FileOptions::default())?;
-    write_mesh(mesh, &mut archive)?;
+    write_mesh(&mut archive, mesh)?;
 
     archive.finish()?;
 
     Ok(())
 }
 
-fn write_mesh(mesh: &TriangleMesh, mut sink: impl Write) -> io::Result<()> {
+fn write_mesh(mut sink: impl Write, mesh: &TriangleMesh) -> io::Result<()> {
     sink.write_all(include_bytes!("model-header.xml"))?;
 
     writeln!(sink, "\t\t\t\t<vertices>")?;
