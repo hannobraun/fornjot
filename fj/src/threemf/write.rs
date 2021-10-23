@@ -10,7 +10,7 @@ use zip::{result::ZipError, write::FileOptions, ZipWriter};
 
 use super::TriangleMesh;
 
-/// Export a triangle mesh to a 3MF file
+/// Write a triangle mesh to a 3MF file
 pub fn write(mesh: &TriangleMesh, path: PathBuf) -> Result<(), Error> {
     let file = File::create(&path)?;
     let mut archive = ZipWriter::new(file);
@@ -57,14 +57,14 @@ fn write_mesh(mesh: &TriangleMesh, mut sink: impl Write) -> io::Result<()> {
     Ok(())
 }
 
-/// An error that can occur while exporting to a 3MF file
+/// An error that can occur while writing a 3MF file
 #[derive(Debug, Error)]
 pub enum Error {
-    /// I/O error while exporting to 3MF file
+    /// I/O error while writing 3MF file
     #[error("I/O error while exporting to 3MF file")]
     Io(#[from] io::Error),
 
-    /// Error creating ZIP file (3MF files are ZIP files)
+    /// Error writing ZIP file (3MF files are ZIP files)
     #[error("Error creating ZIP file (3MF files are ZIP files)")]
     Zip(#[from] ZipError),
 }
