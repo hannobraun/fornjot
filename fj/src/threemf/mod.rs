@@ -64,9 +64,6 @@ fn write_mesh(mesh: &Mesh<3>, mut sink: impl Write) -> io::Result<()> {
 
 #[derive(Debug, Error)]
 pub enum Error {
-    #[error("Expected path to file, got `{0}`")]
-    NoFileName(PathBuf),
-
     #[error("I/O error")]
     Io(#[from] io::Error),
 
