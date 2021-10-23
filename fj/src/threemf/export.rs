@@ -10,7 +10,7 @@ use zip::{result::ZipError, write::FileOptions, ZipWriter};
 
 use crate::geometry::shapes::Mesh;
 
-/// Export mesh to 3MF file
+/// Export a triangle mesh to a 3MF file
 ///
 /// See [3MF specification] and [Open Packaging Conventions].
 ///
