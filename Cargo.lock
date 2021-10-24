@@ -1930,7 +1930,8 @@ dependencies = [
 [[package]]
 name = "threemf"
 version = "0.1.0"
-source = "git+https://github.com/hannobraun/3mf-rs.git#384b0412345a1cf1cd3c5c4e809172572ed3b980"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ffa8d36d5b7da9031a136f5afc62919e0c3272de8daff97ede581f4714cb21da"
 dependencies = [
  "thiserror",
  "zip",
