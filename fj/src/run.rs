@@ -16,7 +16,7 @@ use crate::{
     graphics::{Renderer, Transform},
     input,
     model::IntoMesh,
-    threemf, Model,
+    Model,
 };
 
 pub fn run_model(model: impl Model) -> anyhow::Result<()> {
