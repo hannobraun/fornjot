@@ -607,6 +607,7 @@ dependencies = [
  "serde",
  "serde_json",
  "thiserror",
+ "threemf",
  "tracing",
  "tracing-subscriber",
  "wgpu",
@@ -1924,6 +1925,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8018d24e04c95ac8790716a5987d0fec4f8b27249ffa0f7d33f1369bdfb88cbd"
 dependencies = [
  "once_cell",
+]
+
+[[package]]
+name = "threemf"
+version = "0.1.0"
+source = "git+https://github.com/hannobraun/3mf-rs.git#384b0412345a1cf1cd3c5c4e809172572ed3b980"
+dependencies = [
+ "thiserror",
+ "zip",
 ]
 
 [[package]]

@@ -33,6 +33,9 @@ zip        = "0.5.13"
 version  = "1.0.126"
 features = ["derive"]
 
+[dependencies.threemf]
+git = "https://github.com/hannobraun/3mf-rs.git"
+
 [dependencies.tracing-subscriber]
 version  = "0.3.0"
 features = ["env-filter"]
