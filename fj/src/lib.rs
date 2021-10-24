@@ -4,7 +4,6 @@ pub mod geometry;
 pub mod math;
 pub mod model;
 pub mod syntax;
-pub mod threemf;
 
 pub mod prelude {
     pub use crate::syntax::{
