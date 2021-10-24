@@ -613,7 +613,6 @@ dependencies = [
  "wgpu",
  "wgpu_glyph",
  "winit",
- "zip",
 ]
 
 [[package]]
