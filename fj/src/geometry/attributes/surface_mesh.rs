@@ -4,7 +4,7 @@ use nalgebra::{point, vector, Rotation3};
 
 use crate::geometry::{
     attributes::{Edges, Vertices as _},
-    shapes::{Mesh, Toroid, Triangle},
+    shapes::{self, Mesh, Triangle},
 };
 
 /// Compute a triangle mesh that approximates a shape's surface
@@ -17,7 +17,7 @@ pub trait SurfaceMesh<const D: usize> {
     fn surface_mesh(&self, n: u32) -> Mesh<D>;
 }
 
-impl<T> SurfaceMesh<3> for Toroid<T>
+impl<T> SurfaceMesh<3> for shapes::Toroid<T>
 where
     T: Edges<2>,
 {
