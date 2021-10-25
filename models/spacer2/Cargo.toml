@@ -7,8 +7,9 @@ publish = false
 
 
 [dependencies]
-anyhow = "*"
-serde  = "*"
+anyhow   = "*"
+nalgebra = "*"
+serde    = "*"
 
 [dependencies.fj]
 path = "../../fj"
