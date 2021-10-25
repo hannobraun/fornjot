@@ -4,7 +4,8 @@
 //! you.
 
 use nalgebra::{
-    allocator::Allocator, Const, DefaultAllocator, DimNameAdd, DimNameSum, U1,
+    allocator::Allocator, Const, DefaultAllocator, DimNameAdd, DimNameSum,
+    Rotation, U1,
 };
 
 use crate::{
@@ -48,6 +49,22 @@ pub trait Resolution: Sized {
 }
 
 impl<Geometry> Resolution for Geometry {}
+
+/// Provides convenient syntax for [`operations::Rotate`]
+///
+/// This trait is implemented for all types, but most features of the resulting
+/// [`operations::Rotate`] will only be available for types that represent
+/// shapes.
+pub trait Rotate<const D: usize>: Sized {
+    fn rotate(self, rotation: Rotation<f32, D>) -> operations::Rotate<Self, D> {
+        operations::Rotate {
+            shape: self,
+            rotation,
+        }
+    }
+}
+
+impl<T, const D: usize> Rotate<D> for T {}
 
 /// Provides convenient syntax for [`operations::Sweep`]
 ///

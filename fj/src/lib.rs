@@ -7,7 +7,8 @@ pub mod syntax;
 
 pub mod prelude {
     pub use crate::syntax::{
-        Difference as _, Resolution as _, Sweep as _, Translate as _,
+        Difference as _, Resolution as _, Rotate as _, Sweep as _,
+        Translate as _,
     };
 }
 
