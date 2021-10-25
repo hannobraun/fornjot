@@ -25,11 +25,6 @@ impl<const D: usize> Mesh<D> {
     }
 
     /// Add a triangle to the mesh
-    ///
-    /// # Panics
-    ///
-    /// Panics, if the three vertices don't form a triangle (i.e. if at least
-    /// two of them are equal).
     pub fn triangle(&mut self, triangle: Triangle<D>) {
         let [v0, v1, v2] = triangle.points();
 
