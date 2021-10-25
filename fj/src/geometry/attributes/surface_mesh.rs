@@ -2,12 +2,9 @@ use std::f32::consts::PI;
 
 use nalgebra::{point, vector, Rotation3};
 
-use crate::{
-    geometry::{
-        attributes::{Edges, Vertices as _},
-        shapes::{Mesh, Toroid},
-    },
-    Triangle,
+use crate::geometry::{
+    attributes::{Edges, Vertices as _},
+    shapes::{Mesh, Toroid, Triangle},
 };
 
 /// Compute a triangle mesh that approximates a shape's surface
