@@ -83,12 +83,7 @@ impl<const D: usize> Mesh<D> {
             .clone()
             .into_iter()
             .map(|(triangle, indices)| {
-                let mut points = triangle.points();
-
-                for point in &mut points {
-                    *point = f(*point);
-                }
-
+                let points = triangle.points().map(&mut f);
                 (Triangle::from_points(points).unwrap(), indices)
             })
             .collect()
