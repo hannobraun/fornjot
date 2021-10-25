@@ -6,7 +6,7 @@ use crate::math::Vector;
 /// will be 1-, 2-, or 3-dimensional.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Translate<T, const D: usize> {
-    /// The shape being translated.
+    /// The shape being translated
     pub shape: T,
 
     /// The offset created by the translation
