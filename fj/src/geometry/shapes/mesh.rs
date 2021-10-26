@@ -1,8 +1,3 @@
-// TASK: Split `Mesh` and `MeshBuilder`. `MeshBuilder` (`MeshMaker`)? would be
-//       an API for creating meshes. It would would inherit most of the
-//       complexity of the current `Mesh`. `Mesh` would become much simpler,
-//       something like `threemf::TriangleMesh` or `graphics::Vertices`.
-
 use std::collections::HashMap;
 
 use crate::{math::Point, types::Index, util};
