@@ -11,14 +11,14 @@ use super::{Quad, Triangle};
 
 /// A triangle mesh
 pub struct Mesh<const D: usize> {
-    vertices: util::Vertices<Point<D>, D>,
+    vertices: Vec<Point<D>>,
     triangles: HashMap<Triangle<D>, [Index; 3]>,
 }
 
 impl<const D: usize> Mesh<D> {
     /// Iterate over all vertices
     pub fn vertices(&self) -> impl Iterator<Item = Point<D>> + '_ {
-        self.vertices.iter()
+        self.vertices.iter().copied()
     }
 
     /// Iterate over all indices
@@ -99,7 +99,7 @@ impl<const D: usize> MeshMaker<D> {
 
     pub fn make(&self) -> Mesh<D> {
         Mesh {
-            vertices: self.vertices.clone(),
+            vertices: self.vertices.iter().collect(),
             triangles: self.triangles.clone(),
         }
     }
