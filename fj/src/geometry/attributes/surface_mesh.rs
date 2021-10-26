@@ -4,6 +4,7 @@ use nalgebra::{point, vector, Rotation3};
 
 use crate::geometry::{
     attributes::{Edges, Vertices as _},
+    operations,
     shapes::{self, mesh::MeshMaker, Mesh, Triangle},
 };
 
@@ -59,5 +60,16 @@ where
         }
 
         mesh.make()
+    }
+}
+
+impl<T> SurfaceMesh<3> for operations::Rotate<T, 3>
+where
+    T: SurfaceMesh<3>,
+{
+    fn surface_mesh(&self, n: u32) -> Mesh<3> {
+        let mut surface_mesh = self.shape.surface_mesh(n);
+        surface_mesh.map(|vertex| self.rotation.transform_point(&vertex));
+        surface_mesh
     }
 }
