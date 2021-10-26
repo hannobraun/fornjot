@@ -12,7 +12,7 @@ use super::Triangle;
 /// A triangle mesh
 pub struct Mesh<const D: usize> {
     vertices: Vec<Point<D>>,
-    triangles: HashMap<Triangle<D>, [Index; 3]>,
+    triangles: Vec<[Index; 3]>,
 }
 
 impl<const D: usize> Mesh<D> {
@@ -23,33 +23,31 @@ impl<const D: usize> Mesh<D> {
 
     /// Iterate over all indices
     pub fn indices(&self) -> impl Iterator<Item = Index> + '_ {
-        self.triangles.values().flatten().copied()
+        self.triangles.iter().flatten().copied()
     }
 
     /// Iterate over the vertices that make up all triangles
     pub fn triangle_vertices(&self) -> impl Iterator<Item = Triangle<D>> + '_ {
-        self.triangles.keys().copied()
+        self.triangles.iter().copied().map(|[i1, i2, i3]| {
+            let v1 = self.vertices[i1 as usize];
+            let v2 = self.vertices[i2 as usize];
+            let v3 = self.vertices[i3 as usize];
+
+            Triangle::from_points([v1, v2, v3]).unwrap()
+        })
     }
 
     /// Iterate over the indices that make up all triangles
     pub fn triangle_indices(&self) -> impl Iterator<Item = [Index; 3]> + '_ {
-        self.triangles.values().copied()
+        self.triangles.iter().copied()
     }
 
     /// Map all vertices
     ///
     /// This method is intended for testing only. It is going to corrupt the
     /// `Mesh`'s internal state, only leaving some methods functional.
-    pub fn map(&mut self, mut f: impl FnMut(Point<D>) -> Point<D>) {
-        self.triangles = self
-            .triangles
-            .clone()
-            .into_iter()
-            .map(|(triangle, indices)| {
-                let points = triangle.points().map(&mut f);
-                (Triangle::from_points(points).unwrap(), indices)
-            })
-            .collect()
+    pub fn map(&mut self, f: impl FnMut(Point<D>) -> Point<D>) {
+        self.vertices = self.vertices.iter().copied().map(f).collect()
     }
 }
 
@@ -82,7 +80,7 @@ impl<const D: usize> MeshMaker<D> {
     pub fn make(&self) -> Mesh<D> {
         Mesh {
             vertices: self.vertices.iter().collect(),
-            triangles: self.triangles.clone(),
+            triangles: self.triangles.values().copied().collect(),
         }
     }
 }
