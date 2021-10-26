@@ -7,7 +7,7 @@ use std::collections::HashMap;
 
 use crate::{math::Point, types::Index, util};
 
-use super::{Quad, Triangle};
+use super::Triangle;
 
 /// A triangle mesh
 pub struct Mesh<const D: usize> {
@@ -34,24 +34,6 @@ impl<const D: usize> Mesh<D> {
     /// Iterate over the indices that make up all triangles
     pub fn triangle_indices(&self) -> impl Iterator<Item = [Index; 3]> + '_ {
         self.triangles.values().copied()
-    }
-
-    /// Indicate, whether the mesh contains triangles that make up a quad
-    pub fn contains_quad(&self, quad: &Quad<D>) -> bool {
-        let [a, b, c, d] = quad.points();
-
-        // Neither of the following triangle constructions can panic, as the
-        // points come from a quad, meaning they are already validated.
-
-        let abc = Triangle::from_points([a, b, c]).unwrap();
-        let acd = Triangle::from_points([a, c, d]).unwrap();
-
-        let abd = Triangle::from_points([a, b, d]).unwrap();
-        let bcd = Triangle::from_points([b, c, d]).unwrap();
-
-        self.triangles.contains_key(&abc) && self.triangles.contains_key(&acd)
-            || self.triangles.contains_key(&abd)
-                && self.triangles.contains_key(&bcd)
     }
 
     /// Map all vertices
@@ -102,44 +84,5 @@ impl<const D: usize> MeshMaker<D> {
             vertices: self.vertices.iter().collect(),
             triangles: self.triangles.clone(),
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use crate::geometry::shapes::{Quad, Triangle};
-
-    use super::MeshMaker;
-
-    #[test]
-    fn test_contains_quad() {
-        let a = [0., 0.];
-        let b = [1., 0.];
-        let c = [1., 1.];
-        let d = [0., 1.];
-
-        // Quad 1
-        let abc = Triangle::from_points([a, b, c]).unwrap();
-        let acd = Triangle::from_points([a, c, d]).unwrap();
-
-        // Quad 2
-        let abd = Triangle::from_points([a, b, d]).unwrap();
-        let bcd = Triangle::from_points([b, c, d]).unwrap();
-
-        let quad = Quad::from_points([a, b, c, d]).unwrap();
-
-        let mut mesh = MeshMaker::new();
-        assert!(!mesh.make().contains_quad(&quad));
-        mesh.triangle(abc);
-        assert!(!mesh.make().contains_quad(&quad));
-        mesh.triangle(acd);
-        assert!(mesh.make().contains_quad(&quad));
-
-        let mut mesh = MeshMaker::new();
-        assert!(!mesh.make().contains_quad(&quad));
-        mesh.triangle(abd);
-        assert!(!mesh.make().contains_quad(&quad));
-        mesh.triangle(bcd);
-        assert!(mesh.make().contains_quad(&quad));
     }
 }
