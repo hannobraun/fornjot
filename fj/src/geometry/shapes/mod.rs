@@ -11,7 +11,15 @@ pub mod triangle;
 pub mod vertex;
 
 pub use self::{
-    circle::Circle, cylinder::Cylinder, edge::Edge, hypersphere::Hypersphere,
-    mesh::Mesh, polygon::Polygon, quad::Quad, sphere::Sphere, toroid::Toroid,
-    triangle::Triangle, vertex::Vertex,
+    circle::Circle,
+    cylinder::Cylinder,
+    edge::Edge,
+    hypersphere::Hypersphere,
+    mesh::{Mesh, MeshMaker},
+    polygon::Polygon,
+    quad::Quad,
+    sphere::Sphere,
+    toroid::Toroid,
+    triangle::Triangle,
+    vertex::Vertex,
 };

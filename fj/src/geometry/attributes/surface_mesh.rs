@@ -4,7 +4,7 @@ use nalgebra::{point, vector, Rotation3};
 
 use crate::geometry::{
     attributes::{Edges, Vertices as _},
-    shapes::{self, Mesh, Triangle},
+    shapes::{self, mesh::MeshMaker, Mesh, Triangle},
 };
 
 /// Compute a triangle mesh that approximates a shape's surface
@@ -24,7 +24,7 @@ where
     fn surface_mesh(&self, n: u32) -> Mesh<3> {
         let edges = self.shape.edges();
 
-        let mut mesh = Mesh::new();
+        let mut mesh = MeshMaker::new();
         let mut angle = 0.;
 
         for _ in 0..n {
@@ -58,7 +58,7 @@ where
             angle = next_angle;
         }
 
-        mesh
+        mesh.make()
     }
 }
 

@@ -16,25 +16,6 @@ pub struct Mesh<const D: usize> {
 }
 
 impl<const D: usize> Mesh<D> {
-    /// Create an empty triangle mesh
-    pub fn new() -> Self {
-        Self {
-            vertices: util::Vertices::new(),
-            triangles: HashMap::new(),
-        }
-    }
-
-    /// Add a triangle to the mesh
-    pub fn triangle(&mut self, triangle: Triangle<D>) {
-        let [v0, v1, v2] = triangle.points();
-
-        let i0 = self.vertices.index_for_vertex(v0);
-        let i1 = self.vertices.index_for_vertex(v1);
-        let i2 = self.vertices.index_for_vertex(v2);
-
-        self.triangles.insert(triangle, [i0, i1, i2]);
-    }
-
     /// Iterate over all vertices
     pub fn vertices(&self) -> impl Iterator<Item = Point<D>> + '_ {
         self.vertices.iter()
@@ -90,11 +71,45 @@ impl<const D: usize> Mesh<D> {
     }
 }
 
+/// API for creating `Mesh`es
+pub struct MeshMaker<const D: usize> {
+    vertices: util::Vertices<Point<D>, D>,
+    triangles: HashMap<Triangle<D>, [Index; 3]>,
+}
+
+impl<const D: usize> MeshMaker<D> {
+    /// Create a new `MeshMaker`
+    pub fn new() -> Self {
+        Self {
+            vertices: util::Vertices::new(),
+            triangles: HashMap::new(),
+        }
+    }
+
+    /// Add a triangle to the mesh
+    pub fn triangle(&mut self, triangle: Triangle<D>) {
+        let [v0, v1, v2] = triangle.points();
+
+        let i0 = self.vertices.index_for_vertex(v0);
+        let i1 = self.vertices.index_for_vertex(v1);
+        let i2 = self.vertices.index_for_vertex(v2);
+
+        self.triangles.insert(triangle, [i0, i1, i2]);
+    }
+
+    pub fn make(&self) -> Mesh<D> {
+        Mesh {
+            vertices: self.vertices.clone(),
+            triangles: self.triangles.clone(),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::geometry::shapes::{Quad, Triangle};
 
-    use super::Mesh;
+    use super::MeshMaker;
 
     #[test]
     fn test_contains_quad() {
@@ -113,18 +128,18 @@ mod tests {
 
         let quad = Quad::from_points([a, b, c, d]).unwrap();
 
-        let mut mesh = Mesh::new();
-        assert!(!mesh.contains_quad(&quad));
+        let mut mesh = MeshMaker::new();
+        assert!(!mesh.make().contains_quad(&quad));
         mesh.triangle(abc);
-        assert!(!mesh.contains_quad(&quad));
+        assert!(!mesh.make().contains_quad(&quad));
         mesh.triangle(acd);
-        assert!(mesh.contains_quad(&quad));
+        assert!(mesh.make().contains_quad(&quad));
 
-        let mut mesh = Mesh::new();
-        assert!(!mesh.contains_quad(&quad));
+        let mut mesh = MeshMaker::new();
+        assert!(!mesh.make().contains_quad(&quad));
         mesh.triangle(abd);
-        assert!(!mesh.contains_quad(&quad));
+        assert!(!mesh.make().contains_quad(&quad));
         mesh.triangle(bcd);
-        assert!(mesh.contains_quad(&quad));
+        assert!(mesh.make().contains_quad(&quad));
     }
 }

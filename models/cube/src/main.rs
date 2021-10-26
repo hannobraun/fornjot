@@ -1,6 +1,6 @@
 #[rustfmt::skip]
 fn main() -> anyhow::Result<()> {
-    let mut mesh = fj::Mesh::new();
+    let mut mesh = fj::MeshMaker::new();
 
     let d = 50.0;
 
@@ -37,7 +37,7 @@ fn main() -> anyhow::Result<()> {
     mesh.triangle(fj::Triangle::from_points([v1, v5, v7]).unwrap());
     mesh.triangle(fj::Triangle::from_points([v1, v7, v3]).unwrap());
 
-    fj::run_mesh(mesh)?;
+    fj::run_mesh(mesh.make())?;
 
     Ok(())
 }
