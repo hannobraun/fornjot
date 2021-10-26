@@ -5,6 +5,7 @@ use crate::{math::Point, types::Index, util};
 use super::Triangle;
 
 /// A triangle mesh
+#[derive(Debug)]
 pub struct Mesh<const D: usize> {
     vertices: Vec<Point<D>>,
     triangles: Vec<[Index; 3]>,
