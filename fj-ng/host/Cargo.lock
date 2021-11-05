@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "fj-ng"
+name = "host"
 version = "0.1.0"
