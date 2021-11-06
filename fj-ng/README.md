@@ -21,4 +21,4 @@ As for that second point, I hope to avoid including a scripting language, becaus
 
 ## Status
 
-Vaporware. Right now, only this README exists.
+Implementation has begun. A host application that runs a model as a plug-in has been created. No CAD functionality exists yet.
