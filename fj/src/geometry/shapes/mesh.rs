@@ -92,9 +92,6 @@ impl<const D: usize> MeshMaker<D> {
         let vertices = self.vertices.iter().collect();
         let triangles = self.triangles.values().copied().collect();
 
-        Mesh {
-            vertices,
-            triangles,
-        }
+        Mesh::new(vertices, triangles)
     }
 }
