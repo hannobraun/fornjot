@@ -1,3 +1,5 @@
 # Cargo
 /target
+/fj/Cargo.lock
+/fj/target
 /model/target
