@@ -11,11 +11,13 @@ fn main() -> anyhow::Result<()> {
 
     // TASK: Read up why those calls are unsafe. Make sure calling them is
     //       sound, and document why that is.
-    let _model = unsafe {
+    let model = unsafe {
         let lib = libloading::Library::new("model/target/debug/libmodel.so")?;
         let func: libloading::Symbol<ModelFn> = lib.get(b"model")?;
         func()
     };
+
+    println!("{:?}", model);
 
     Ok(())
 }
