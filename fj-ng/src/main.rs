@@ -9,13 +9,13 @@ fn main() -> anyhow::Result<()> {
         .status()?;
     assert!(status.success());
 
-    unsafe {
+    let _model = unsafe {
         let lib = libloading::Library::new("model/target/debug/libmodel.so")?;
         let func: libloading::Symbol<ModelFn> = lib.get(b"model")?;
         func()
-    }
+    };
 
     Ok(())
 }
 
-type ModelFn = unsafe extern "C" fn();
+type ModelFn = unsafe extern "C" fn() -> fj::Model;
