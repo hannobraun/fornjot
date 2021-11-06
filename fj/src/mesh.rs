@@ -1,4 +1,4 @@
-use crate::{math::Point, types::Index, Triangle};
+use crate::{math::Point, Triangle};
 
 /// A triangle mesh
 #[derive(Debug)]
@@ -57,3 +57,5 @@ impl<const D: usize> Mesh<D> {
         self.vertices = self.vertices.iter().copied().map(f).collect()
     }
 }
+
+pub type Index = u32;

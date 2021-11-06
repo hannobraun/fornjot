@@ -18,7 +18,6 @@ mod graphics;
 mod input;
 mod mesh;
 mod run;
-mod types;
 mod util;
 
 pub use self::{
@@ -27,7 +26,7 @@ pub use self::{
         shapes::{Cylinder, Mesh, MeshMaker, Polygon, Quad, Toroid, Triangle},
     },
     graphics::Vertex,
+    mesh::Index,
     model::Model,
     run::{run_mesh, run_model},
-    types::Index,
 };

@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::{math::Point, types::Index, util};
+use crate::{math::Point, mesh::Index, util};
 
 use super::Triangle;
 

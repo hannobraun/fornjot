@@ -4,7 +4,7 @@ use indexmap::IndexMap;
 
 use crate::{
     geometry::{isosurface::grid::Grid, shapes::Mesh},
-    types::Index,
+    mesh::Index,
     util,
 };
 

@@ -2,7 +2,7 @@ use std::{collections::HashMap, convert::TryInto};
 
 use decorum::R32;
 
-use crate::{math::Point, types::Index};
+use crate::{math::Point, mesh::Index};
 
 #[derive(Clone, Debug)]
 pub struct Vertices<T, const D: usize> {
