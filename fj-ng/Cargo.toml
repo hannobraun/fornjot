@@ -3,6 +3,10 @@ name    = "fj-host"
 version = "0.1.0"
 edition = "2021"
 
+
 [dependencies]
 anyhow     = "*"
 libloading = "*"
+
+[dependencies.fj]
+path = "fj"
