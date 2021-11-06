@@ -5,7 +5,7 @@ members = [
     "models/spacer",
     "models/spacer2",
 ]
-exclude = ["fj-ng"]
+exclude = ["ng"]
 resolver = "2"
 
 [profile.dev]
