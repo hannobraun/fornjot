@@ -74,9 +74,12 @@ impl<const D: usize> MeshMaker<D> {
     }
 
     pub fn make(&self) -> Mesh<D> {
+        let vertices = self.vertices.iter().collect();
+        let triangles = self.triangles.values().copied().collect();
+
         Mesh {
-            vertices: self.vertices.iter().collect(),
-            triangles: self.triangles.values().copied().collect(),
+            vertices,
+            triangles,
         }
     }
 }
