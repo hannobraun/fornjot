@@ -9,7 +9,7 @@ The following models are currently available:
 - [Cube](https://github.com/hannobraun/fornjot/blob/main/models/cube)
 - [Spacer](https://github.com/hannobraun/fornjot/blob/main/models/spacer)
 
-Please check out the `fj-ng/` directory for latest developments.
+Please check out the `ng/` directory for latest developments.
 
 
 ## Status
