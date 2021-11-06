@@ -16,6 +16,7 @@ mod args;
 mod draw_config;
 mod graphics;
 mod input;
+mod mesh;
 mod run;
 mod types;
 mod util;
