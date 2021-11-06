@@ -23,10 +23,10 @@ mod util;
 pub use self::{
     geometry::{
         operations::{Difference, Sweep},
-        shapes::{Cylinder, Mesh, MeshMaker, Polygon, Quad, Toroid, Triangle},
+        shapes::{Cylinder, MeshMaker, Polygon, Quad, Toroid, Triangle},
     },
     graphics::Vertex,
-    mesh::Index,
+    mesh::{Index, Mesh},
     model::Model,
     run::{run_mesh, run_model},
 };
