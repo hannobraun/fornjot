@@ -12,6 +12,21 @@ pub struct Mesh<const D: usize> {
 }
 
 impl<const D: usize> Mesh<D> {
+    /// Create a new instance of `Mesh`
+    ///
+    /// This method expects the vertices that make up the mesh, as well as the
+    /// triangles that provide the structure. The triangles consist of indices
+    /// that index into `vertices`.
+    ///
+    /// At this point in time, no validation is done to verify that the indices
+    /// are valid.
+    pub fn new(vertices: Vec<Point<D>>, triangles: Vec<[Index; 3]>) -> Self {
+        Self {
+            vertices,
+            triangles,
+        }
+    }
+
     /// Iterate over all vertices
     pub fn vertices(&self) -> impl Iterator<Item = Point<D>> + '_ {
         self.vertices.iter().copied()
