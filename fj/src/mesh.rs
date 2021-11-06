@@ -1,4 +1,4 @@
-use crate::{math::Point, Triangle};
+use crate::math::Point;
 
 /// A triangle mesh
 #[derive(Debug)]
@@ -34,13 +34,15 @@ impl<const D: usize> Mesh<D> {
     }
 
     /// Iterate over the vertices that make up all triangles
-    pub fn triangle_vertices(&self) -> impl Iterator<Item = Triangle<D>> + '_ {
+    pub fn triangle_vertices(
+        &self,
+    ) -> impl Iterator<Item = [Point<D>; 3]> + '_ {
         self.triangles.iter().copied().map(|[i1, i2, i3]| {
             let v1 = self.vertices[i1 as usize];
             let v2 = self.vertices[i2 as usize];
             let v3 = self.vertices[i3 as usize];
 
-            Triangle::from_points([v1, v2, v3]).unwrap()
+            [v1, v2, v3]
         })
     }
 
