@@ -8,6 +8,7 @@ edition = "2021"
 anyhow     = "*"
 decorum    = "*"
 libloading = "*"
+wgpu       = "*"
 
 [dependencies.fj]
 path = "fj"
