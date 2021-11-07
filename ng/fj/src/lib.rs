@@ -1,2 +1,6 @@
 /// Placeholder for what will end up being the representation of a CAD model
-pub type Model = f32;
+#[derive(Debug)]
+#[repr(C)]
+pub struct Model {
+    pub size: f32,
+}
