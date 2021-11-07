@@ -79,7 +79,7 @@ impl MeshMaker {
 }
 
 /// Utility struct for managing triangle mesh vertices
-struct Vertices {
+pub struct Vertices {
     vertices: Vec<Vertex>,
     indices_by_vertex: HashMap<HashVertex, Index>,
 }
