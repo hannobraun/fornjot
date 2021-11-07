@@ -60,7 +60,7 @@ impl MeshMaker {
     }
 
     /// Add a triangle to the mesh
-    pub fn triangle(&mut self, triangle: [[f32; 3]; 3]) {
+    pub fn triangle(&mut self, triangle: [Vertex; 3]) {
         let [v0, v1, v2] = triangle;
 
         let i0 = self.vertices.index_for_vertex(v0);
