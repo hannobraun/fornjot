@@ -275,6 +275,7 @@ dependencies = [
  "bytemuck",
  "decorum",
  "fj",
+ "indexmap",
  "libloading",
  "nalgebra",
  "thiserror",
