@@ -12,6 +12,7 @@ indexmap   = "*"
 libloading = "*"
 nalgebra   = "*"
 thiserror  = "*"
+tracing    = "*"
 wgpu       = "*"
 wgpu_glyph = "*"
 
