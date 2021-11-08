@@ -1,6 +1,6 @@
-use nalgebra::{
-    Isometry3, Perspective3, RealField as _, Rotation, Translation,
-};
+use std::f32::consts::FRAC_PI_4;
+
+use nalgebra::{Isometry3, Perspective3, Rotation, Translation};
 
 #[derive(Debug)]
 pub struct Transform {
@@ -21,9 +21,9 @@ impl Transform {
     pub fn to_native(&self, aspect_ratio: f32) -> NativeTransform {
         let projection = Perspective3::new(
             aspect_ratio,
-            f32::frac_pi_4(), // field of view; 45 degrees
-            1.0,              // near plane
-            1000.0,           // far plane
+            FRAC_PI_4, // field of view; 45 degrees
+            1.0,       // near plane
+            1000.0,    // far plane
         );
 
         let transform = projection.to_projective() * self.view_transform();
