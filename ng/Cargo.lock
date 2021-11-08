@@ -272,6 +272,7 @@ name = "fj-host"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "bytemuck",
  "decorum",
  "fj",
  "libloading",
