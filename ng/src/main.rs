@@ -22,7 +22,7 @@ fn main() -> anyhow::Result<()> {
     };
 
     let mut mesh = MeshMaker::new();
-    let s = model.size;
+    let s = model.cube_size;
 
     // Define a cube
     let v0 = [-s, -s, -s];

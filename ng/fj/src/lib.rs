@@ -2,5 +2,5 @@
 #[derive(Debug)]
 #[repr(C)]
 pub struct Model {
-    pub size: f32,
+    pub cube_size: f32,
 }

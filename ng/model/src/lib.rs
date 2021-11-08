@@ -1,4 +1,4 @@
 #[no_mangle]
 pub extern "C" fn model() -> fj::Model {
-    fj::Model { size: 1.0 }
+    fj::Model { cube_size: 1.0 }
 }
