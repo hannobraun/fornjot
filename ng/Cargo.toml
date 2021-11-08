@@ -10,6 +10,7 @@ decorum    = "*"
 libloading = "*"
 thiserror  = "*"
 wgpu       = "*"
+wgpu_glyph = "*"
 
 [dependencies.fj]
 path = "fj"
