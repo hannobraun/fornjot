@@ -11,9 +11,8 @@ use winit::{
 
 use crate::{
     args::Args,
-    draw_config::DrawConfig,
     geometry::{isosurface::grid::Grid, shapes::Mesh},
-    graphics::{Renderer, Transform},
+    graphics::{DrawConfig, Renderer, Transform},
     input,
     model::IntoMesh,
     Model,

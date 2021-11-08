@@ -1,4 +1,5 @@
 mod config_ui;
+mod draw_config;
 mod drawables;
 mod geometries;
 mod pipelines;
@@ -12,6 +13,7 @@ mod uniforms;
 mod vertices;
 
 pub use self::{
+    draw_config::DrawConfig,
     renderer::{DrawError, Renderer},
     transform::Transform,
     vertices::{Vertex, Vertices},

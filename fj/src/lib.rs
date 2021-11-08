@@ -13,7 +13,6 @@ pub mod prelude {
 }
 
 mod args;
-mod draw_config;
 mod graphics;
 mod input;
 mod mesh;

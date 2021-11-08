@@ -6,12 +6,10 @@ use wgpu::util::DeviceExt as _;
 use wgpu_glyph::ab_glyph::InvalidFont;
 use winit::{dpi::PhysicalSize, window::Window};
 
-use crate::draw_config::DrawConfig;
-
 use super::{
-    config_ui::ConfigUi, drawables::Drawables, geometries::Geometries,
-    pipelines::Pipelines, transform::Transform, uniforms::Uniforms, Vertices,
-    COLOR_FORMAT, DEPTH_FORMAT,
+    config_ui::ConfigUi, draw_config::DrawConfig, drawables::Drawables,
+    geometries::Geometries, pipelines::Pipelines, transform::Transform,
+    uniforms::Uniforms, Vertices, COLOR_FORMAT, DEPTH_FORMAT,
 };
 
 #[derive(Debug)]

@@ -6,9 +6,7 @@ use wgpu_glyph::{
     GlyphBrush, GlyphBrushBuilder, Section, Text,
 };
 
-use crate::draw_config::DrawConfig;
-
-use super::COLOR_FORMAT;
+use super::{draw_config::DrawConfig, COLOR_FORMAT};
 
 #[derive(Debug)]
 pub struct ConfigUi {
