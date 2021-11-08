@@ -18,8 +18,8 @@ impl Mesh {
     /// The triangles that provide the structure of the triangle mesh
     ///
     /// Each triangle consists of indices that index into `vertices`.
-    pub fn indices(&self) -> impl Iterator<Item = Index> + '_ {
-        self.triangles.iter().flatten().copied()
+    pub fn triangles(&self) -> impl Iterator<Item = Triangle> + '_ {
+        self.triangles.iter().copied()
     }
 }
 

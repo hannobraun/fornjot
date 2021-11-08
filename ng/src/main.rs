@@ -61,7 +61,7 @@ fn main() -> anyhow::Result<()> {
     let mesh = mesh.make();
 
     println!("Vertices: {:?}", mesh.vertices().collect::<Vec<_>>());
-    println!("Indices: {:?}", mesh.indices().collect::<Vec<_>>());
+    println!("Triangles: {:?}", mesh.triangles().collect::<Vec<_>>());
 
     Ok(())
 }
