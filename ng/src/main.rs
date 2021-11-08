@@ -2,6 +2,9 @@ mod mesh;
 
 use std::process::Command;
 
+use tracing::trace;
+use winit::event_loop::EventLoop;
+
 use self::mesh::MeshMaker;
 
 fn main() -> anyhow::Result<()> {
@@ -63,7 +66,11 @@ fn main() -> anyhow::Result<()> {
     println!("Vertices: {:?}", mesh.vertices().collect::<Vec<_>>());
     println!("Triangles: {:?}", mesh.triangles().collect::<Vec<_>>());
 
-    Ok(())
+    let event_loop = EventLoop::new();
+
+    event_loop.run(move |event, _, _control_flow| {
+        trace!("Handling event: {:?}", event);
+    });
 }
 
 type ModelFn = unsafe extern "C" fn() -> fj::Model;
