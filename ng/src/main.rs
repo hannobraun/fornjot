@@ -1,11 +1,20 @@
+mod graphics;
 mod mesh;
 
 use std::process::Command;
 
+use futures::executor::block_on;
 use tracing::trace;
-use winit::event_loop::EventLoop;
+use winit::{
+    event::{Event, WindowEvent},
+    event_loop::{ControlFlow, EventLoop},
+    window::WindowBuilder,
+};
 
-use self::mesh::MeshMaker;
+use self::{
+    graphics::{DrawConfig, Renderer, Transform},
+    mesh::MeshMaker,
+};
 
 fn main() -> anyhow::Result<()> {
     // This can be made a bit more contact using `ExitStatus::exit_ok`, once
@@ -67,9 +76,51 @@ fn main() -> anyhow::Result<()> {
     println!("Triangles: {:?}", mesh.triangles().collect::<Vec<_>>());
 
     let event_loop = EventLoop::new();
+    let window = WindowBuilder::new()
+        .with_title("Fornjot")
+        .with_maximized(true)
+        .with_decorations(true)
+        .with_transparent(false)
+        .build(&event_loop)
+        .unwrap();
 
-    event_loop.run(move |event, _, _control_flow| {
+    let mesh = mesh.into();
+    let grid = None;
+
+    let mut renderer = block_on(Renderer::new(&window, mesh, grid))?;
+
+    let draw_config = DrawConfig::default();
+    let transform = Transform::new();
+
+    event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
+
+        match event {
+            Event::WindowEvent {
+                event: WindowEvent::CloseRequested,
+                ..
+            } => {
+                *control_flow = ControlFlow::Exit;
+            }
+            Event::WindowEvent {
+                event: WindowEvent::Resized(size),
+                ..
+            } => {
+                renderer.handle_resize(size);
+            }
+            Event::MainEventsCleared => {
+                window.request_redraw();
+            }
+            Event::RedrawRequested(_) => {
+                match renderer.draw(&transform, &draw_config) {
+                    Ok(()) => {}
+                    Err(err) => {
+                        panic!("Draw error: {}", err);
+                    }
+                }
+            }
+            _ => {}
+        }
     });
 }
 
