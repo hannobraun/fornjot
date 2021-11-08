@@ -15,6 +15,7 @@ thiserror  = "*"
 tracing    = "*"
 wgpu       = "*"
 wgpu_glyph = "*"
+winit      = "*"
 
 [dependencies.fj]
 path = "fj"
