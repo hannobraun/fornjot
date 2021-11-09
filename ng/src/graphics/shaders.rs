@@ -28,13 +28,6 @@ impl Shaders {
             frag_entry: "frag_mesh",
         }
     }
-
-    pub fn grid(&self) -> Shader {
-        Shader {
-            module: &self.0,
-            frag_entry: "frag_grid",
-        }
-    }
 }
 
 #[derive(Clone, Copy)]
