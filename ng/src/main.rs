@@ -1,7 +1,8 @@
 mod graphics;
+mod input;
 mod mesh;
 
-use std::process::Command;
+use std::{process::Command, time::Instant};
 
 use futures::executor::block_on;
 use tracing::trace;
@@ -81,13 +82,18 @@ fn main() -> anyhow::Result<()> {
         .build(&event_loop)
         .unwrap();
 
+    let mut input_handler = input::Handler::new();
     let mut renderer = block_on(Renderer::new(&window, mesh.into()))?;
 
     let draw_config = DrawConfig::default();
-    let transform = Transform::new();
+    let mut transform = Transform::new();
+
+    let mut previous_time = Instant::now();
 
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
+
+        let mut actions = input::Actions::new();
 
         match event {
             Event::WindowEvent {
@@ -102,7 +108,37 @@ fn main() -> anyhow::Result<()> {
             } => {
                 renderer.handle_resize(size);
             }
+            Event::WindowEvent {
+                event: WindowEvent::KeyboardInput { input, .. },
+                ..
+            } => {
+                input_handler.handle_keyboard_input(input, &mut actions);
+            }
+            Event::WindowEvent {
+                event: WindowEvent::CursorMoved { position, .. },
+                ..
+            } => {
+                input_handler.handle_cursor_moved(position, &mut transform);
+            }
+            Event::WindowEvent {
+                event: WindowEvent::MouseInput { state, button, .. },
+                ..
+            } => {
+                input_handler.handle_mouse_input(button, state);
+            }
+            Event::WindowEvent {
+                event: WindowEvent::MouseWheel { delta, .. },
+                ..
+            } => {
+                input_handler.handle_mouse_wheel(delta);
+            }
             Event::MainEventsCleared => {
+                let now = Instant::now();
+                let delta_t = now.duration_since(previous_time);
+                previous_time = now;
+
+                input_handler.update(delta_t.as_secs_f32(), &mut transform);
+
                 window.request_redraw();
             }
             Event::RedrawRequested(_) => {
