@@ -85,7 +85,7 @@ fn main() -> anyhow::Result<()> {
     let mut input_handler = input::Handler::new();
     let mut renderer = block_on(Renderer::new(&window, mesh.into()))?;
 
-    let draw_config = DrawConfig::default();
+    let mut draw_config = DrawConfig::default();
     let mut transform = Transform::new();
 
     let mut previous_time = Instant::now();
@@ -150,6 +150,16 @@ fn main() -> anyhow::Result<()> {
                 }
             }
             _ => {}
+        }
+
+        if actions.exit {
+            *control_flow = ControlFlow::Exit;
+        }
+        if actions.toggle_model {
+            draw_config.draw_model = !draw_config.draw_model;
+        }
+        if actions.toggle_mesh {
+            draw_config.draw_mesh = !draw_config.draw_mesh;
         }
     });
 }
