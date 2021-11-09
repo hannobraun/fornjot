@@ -34,7 +34,6 @@ impl Renderer {
     pub async fn new(
         window: &Window,
         mesh: Vertices,
-        grid: Option<Vertices>,
     ) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::VULKAN);
 
@@ -119,11 +118,9 @@ impl Renderer {
             label: None,
         });
 
-        let empty_vertices = Vertices::empty();
         let geometries = Geometries::new(
             &device,
             &mesh,
-            grid.as_ref().unwrap_or(&empty_vertices),
         );
         let pipelines = Pipelines::new(&device, &bind_group_layout);
 
@@ -198,16 +195,6 @@ impl Renderer {
         }
         if config.draw_mesh {
             drawables.mesh.draw(
-                &mut encoder,
-                &color_view,
-                &self.depth_view,
-                &self.bind_group,
-            );
-        }
-        if config.draw_grid {
-            // TASK: Draw the distance value for each grid vertex that is close
-            //       to the camera.
-            drawables.grid.draw(
                 &mut encoder,
                 &color_view,
                 &self.depth_view,

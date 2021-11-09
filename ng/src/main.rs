@@ -85,9 +85,8 @@ fn main() -> anyhow::Result<()> {
         .unwrap();
 
     let mesh = mesh.into();
-    let grid = None;
 
-    let mut renderer = block_on(Renderer::new(&window, mesh, grid))?;
+    let mut renderer = block_on(Renderer::new(&window, mesh))?;
 
     let draw_config = DrawConfig::default();
     let transform = Transform::new();
