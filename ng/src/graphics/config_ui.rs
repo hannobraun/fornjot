@@ -81,19 +81,17 @@ impl ConfigUi {
 enum Element {
     Model,
     Mesh,
-    Grid,
 }
 
 impl Element {
-    fn elements() -> [Self; 3] {
-        [Self::Model, Self::Mesh, Self::Grid]
+    fn elements() -> [Self; 2] {
+        [Self::Model, Self::Mesh]
     }
 
     fn name_key(&self) -> (&'static str, &'static str) {
         match self {
             Self::Model => ("model", "1"),
             Self::Mesh => ("mesh", "2"),
-            Self::Grid => ("grid", "3"),
         }
     }
 
@@ -101,7 +99,6 @@ impl Element {
         match self {
             Self::Model => config.draw_model,
             Self::Mesh => config.draw_mesh,
-            Self::Grid => config.draw_grid,
         }
     }
 }
