@@ -34,8 +34,10 @@ fn main() -> anyhow::Result<()> {
         func()
     };
 
+    let fj::Shape::Cube { size } = model;
+
     let mut mesh = MeshMaker::new();
-    let s = model.cube_size / 2.;
+    let s = size / 2.;
 
     // Define a cube
     let v0 = [-s, -s, -s];
