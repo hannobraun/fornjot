@@ -32,7 +32,7 @@ fn main() -> anyhow::Result<()> {
         func()
     };
 
-    let mesh = geometry::to_triangle_mesh(shape);
+    let mesh = geometry::shape_to_triangle_mesh(shape);
 
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new()

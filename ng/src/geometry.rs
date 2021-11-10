@@ -1,6 +1,6 @@
 use crate::mesh::{Mesh, MeshMaker};
 
-pub fn to_triangle_mesh(shape: fj::Shape) -> Mesh {
+pub fn shape_to_triangle_mesh(shape: fj::Shape) -> Mesh {
     let fj::Shape::Cube(cube) = shape;
     cube_to_triangle_mesh(cube)
 }
