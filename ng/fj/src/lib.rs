@@ -1,7 +1,8 @@
-/// Placeholder for what will end up being the representation of a CAD model
+/// A shape
 #[derive(Debug)]
 #[repr(C)]
 pub enum Shape {
+    /// A cube
     Cube(Cube),
 }
 
