@@ -1,8 +1,9 @@
 use crate::mesh::{Mesh, MeshMaker};
 
 pub fn shape_to_triangle_mesh(shape: fj::Shape) -> Mesh {
-    let fj::Shape::Cube(cube) = shape;
-    cube_to_triangle_mesh(cube)
+    match shape {
+        fj::Shape::Cube(cube) => cube_to_triangle_mesh(cube),
+    }
 }
 
 fn cube_to_triangle_mesh(cube: fj::Cube) -> Mesh {
