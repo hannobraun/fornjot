@@ -2,7 +2,10 @@ use crate::mesh::{Mesh, MeshMaker};
 
 pub fn to_triangle_mesh(shape: fj::Shape) -> Mesh {
     let fj::Shape::Cube(cube) = shape;
+    cube_to_triangle_mesh(cube)
+}
 
+fn cube_to_triangle_mesh(cube: fj::Cube) -> Mesh {
     let mut mesh = MeshMaker::new();
     let s = cube.size / 2.;
 
