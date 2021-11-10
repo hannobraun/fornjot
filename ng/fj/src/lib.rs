@@ -6,6 +6,12 @@ pub enum Shape {
     Cube(Cube),
 }
 
+impl From<Cube> for Shape {
+    fn from(cube: Cube) -> Self {
+        Self::Cube(cube)
+    }
+}
+
 /// A cube
 #[derive(Debug)]
 #[repr(C)]
