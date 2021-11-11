@@ -20,15 +20,16 @@ impl ToMesh for fj::Cube {
         let s = self.size / 2.;
 
         // Define a cube
+        #[rustfmt::skip]
         let v = [
             [-s, -s, -s],
-            [-s, -s, s],
-            [-s, s, -s],
-            [-s, s, s],
-            [s, -s, -s],
-            [s, -s, s],
-            [s, s, -s],
-            [s, s, s],
+            [-s, -s,  s],
+            [-s,  s, -s],
+            [-s,  s,  s],
+            [ s, -s, -s],
+            [ s, -s,  s],
+            [ s,  s, -s],
+            [ s,  s,  s],
         ];
         let v = v.map(|coord| coord.into());
 
