@@ -53,7 +53,7 @@ fn main() -> anyhow::Result<()> {
     let mut renderer = block_on(Renderer::new(&window, mesh.into()))?;
 
     let mut draw_config = DrawConfig::default();
-    let mut transform = Transform::new();
+    let mut transform = Transform::new(shape.aabb());
 
     let mut previous_time = Instant::now();
 

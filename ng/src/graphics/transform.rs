@@ -2,6 +2,8 @@ use std::f32::consts::FRAC_PI_4;
 
 use nalgebra::{Isometry3, Perspective3, Rotation, Translation};
 
+use crate::geometry::bounding_volume::Aabb;
+
 #[derive(Debug)]
 pub struct Transform {
     pub rotation: Rotation<f32, 3>,
@@ -10,11 +12,37 @@ pub struct Transform {
 }
 
 impl Transform {
-    pub fn new() -> Self {
+    pub fn new(aabb: Aabb) -> Self {
+        // Let's make sure we choose a distance, so that the model fills most of
+        // the screen.
+        //
+        // To do that, first compute the model's highest point, as well as the
+        // furthers point from the origin, in x and y.
+        let highest_point = aabb.max.z;
+        let furthest_point =
+            [aabb.min.x.abs(), aabb.max.x, aabb.min.y.abs(), aabb.max.y]
+                .into_iter()
+                .reduce(|a, b| f32::max(a, b))
+                // `reduce` can only return `None`, if there are no items in the
+                // iterator. And since we're creating an array full of items
+                // above, we know this can't panic.
+                .unwrap();
+
+        // The actual furthest point is not far enough. We don't want the model
+        // to fill the whole screen.
+        let furthest_point = furthest_point * 2.;
+
+        // Having computed those points, figuring out how far the camera needs
+        // to be from the model is just a bit of trigonometry.
+        let distance_from_model = furthest_point / (FIELD_OF_VIEW / 2.).atan();
+
+        // An finally, the distance from the origin is trivial now.
+        let distance = highest_point + distance_from_model;
+
         Self {
             rotation: Rotation::identity(),
             translation: Translation::identity(),
-            distance: 400.0,
+            distance,
         }
     }
 
