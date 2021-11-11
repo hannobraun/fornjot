@@ -2,6 +2,8 @@ use std::collections::HashMap;
 
 use decorum::R32;
 
+use crate::math::Point;
+
 /// A triangle mesh
 #[derive(Debug)]
 pub struct Mesh {
@@ -26,7 +28,7 @@ impl Mesh {
 /// A vertex in a triangle mesh
 ///
 /// See [`Mesh`].
-pub type Vertex = nalgebra::Point<f32, 3>;
+pub type Vertex = Point;
 
 /// An index that refers to a vertex
 ///

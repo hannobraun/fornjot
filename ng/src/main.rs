@@ -1,6 +1,7 @@
 mod geometry;
 mod graphics;
 mod input;
+mod math;
 mod mesh;
 
 use std::{process::Command, time::Instant};
