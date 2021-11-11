@@ -13,7 +13,7 @@ use winit::{
     window::WindowBuilder,
 };
 
-use self::graphics::{DrawConfig, Renderer, Transform};
+use crate::graphics::{DrawConfig, Renderer, Transform};
 
 fn main() -> anyhow::Result<()> {
     // This can be made a bit more contact using `ExitStatus::exit_ok`, once
