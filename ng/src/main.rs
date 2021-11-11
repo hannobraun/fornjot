@@ -38,8 +38,6 @@ fn main() -> anyhow::Result<()> {
 
     let mesh = shape.to_mesh();
 
-    println!("{:?}", shape.aabb());
-
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new()
         .with_title("Fornjot")
