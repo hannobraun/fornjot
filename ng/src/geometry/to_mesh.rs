@@ -20,7 +20,7 @@ impl ToMesh for fj::Cube {
 
 pub fn shape_to_triangle_mesh(shape: &fj::Shape) -> Mesh {
     match shape {
-        fj::Shape::Cube(cube) => cube_to_triangle_mesh(cube),
+        fj::Shape::Cube(cube) => cube.to_mesh(),
     }
 }
 
