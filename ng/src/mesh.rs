@@ -26,7 +26,7 @@ impl Mesh {
 /// A vertex in a triangle mesh
 ///
 /// See [`Mesh`].
-pub type Vertex = [f32; 3];
+pub type Vertex = nalgebra::Point<f32, 3>;
 
 /// An index that refers to a vertex
 ///
@@ -93,7 +93,7 @@ impl Vertices {
     }
 
     pub fn index_for_vertex(&mut self, vertex: Vertex) -> Index {
-        let hash_vertex = vertex.map(|coord| coord.into());
+        let hash_vertex = vertex.coords.data.0[0].map(|coord| coord.into());
 
         let index =
             self.indices_by_vertex
