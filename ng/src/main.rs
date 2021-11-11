@@ -15,7 +15,7 @@ use winit::{
 };
 
 use crate::{
-    geometry::to_mesh::ToMesh as _,
+    geometry::{bounding_volume::BoundingVolume as _, to_mesh::ToMesh as _},
     graphics::{DrawConfig, Renderer, Transform},
 };
 
@@ -37,6 +37,8 @@ fn main() -> anyhow::Result<()> {
     };
 
     let mesh = shape.to_mesh();
+
+    println!("{:?}", shape.aabb());
 
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new()
