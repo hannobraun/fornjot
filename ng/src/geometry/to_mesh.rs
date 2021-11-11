@@ -29,29 +29,31 @@ impl ToMesh for fj::Cube {
         let v6 = [s, s, -s].into();
         let v7 = [s, s, s].into();
 
+        let v = [v0, v1, v2, v3, v4, v5, v6, v7];
+
         // left
-        mesh.triangle([v0, v1, v2]);
-        mesh.triangle([v2, v1, v3]);
+        mesh.triangle([v[0], v[1], v[2]]);
+        mesh.triangle([v[2], v[1], v[3]]);
 
         // right
-        mesh.triangle([v4, v6, v5]);
-        mesh.triangle([v6, v7, v5]);
+        mesh.triangle([v[4], v[6], v[5]]);
+        mesh.triangle([v[6], v[7], v[5]]);
 
         // front
-        mesh.triangle([v0, v4, v1]);
-        mesh.triangle([v4, v5, v1]);
+        mesh.triangle([v[0], v[4], v[1]]);
+        mesh.triangle([v[4], v[5], v[1]]);
 
         // back
-        mesh.triangle([v2, v3, v6]);
-        mesh.triangle([v6, v3, v7]);
+        mesh.triangle([v[2], v[3], v[6]]);
+        mesh.triangle([v[6], v[3], v[7]]);
 
         // bottom
-        mesh.triangle([v0, v2, v6]);
-        mesh.triangle([v0, v6, v4]);
+        mesh.triangle([v[0], v[2], v[6]]);
+        mesh.triangle([v[0], v[6], v[4]]);
 
         // top
-        mesh.triangle([v1, v5, v7]);
-        mesh.triangle([v1, v7, v3]);
+        mesh.triangle([v[1], v[5], v[7]]);
+        mesh.triangle([v[1], v[7], v[3]]);
 
         mesh.make()
     }
