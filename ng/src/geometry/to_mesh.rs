@@ -8,7 +8,9 @@ pub trait ToMesh {
 
 impl ToMesh for fj::Shape {
     fn to_mesh(&self) -> Mesh {
-        shape_to_triangle_mesh(self)
+        match self {
+            fj::Shape::Cube(cube) => cube.to_mesh(),
+        }
     }
 }
 
@@ -52,11 +54,5 @@ impl ToMesh for fj::Cube {
         mesh.triangle([v1, v7, v3]);
 
         mesh.make()
-    }
-}
-
-pub fn shape_to_triangle_mesh(shape: &fj::Shape) -> Mesh {
-    match shape {
-        fj::Shape::Cube(cube) => cube.to_mesh(),
     }
 }
