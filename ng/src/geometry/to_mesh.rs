@@ -19,9 +19,9 @@ impl ToMesh for fj::Shape {
 
 impl ToMesh for fj::Cube {
     fn to_mesh(&self) -> Mesh {
-        let mut mesh = MeshMaker::new();
-
         let v = self.vertices();
+
+        let mut mesh = MeshMaker::new();
 
         // left
         mesh.triangle([v[0], v[1], v[2]]);
