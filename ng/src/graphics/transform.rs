@@ -22,7 +22,7 @@ impl Transform {
         let projection = Perspective3::new(
             aspect_ratio,
             FIELD_OF_VIEW,
-            1.0,    // near plane
+            0.1,    // near plane
             1000.0, // far plane
         );
 
