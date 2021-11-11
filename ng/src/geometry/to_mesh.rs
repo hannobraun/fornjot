@@ -1,5 +1,23 @@
 use crate::mesh::{Mesh, MeshMaker};
 
+/// Convert a shape into a [`Mesh`]
+pub trait ToMesh {
+    /// Convert a shape into a [`Mesh`]
+    fn to_mesh(&self) -> Mesh;
+}
+
+impl ToMesh for fj::Shape {
+    fn to_mesh(&self) -> Mesh {
+        shape_to_triangle_mesh(self)
+    }
+}
+
+impl ToMesh for fj::Cube {
+    fn to_mesh(&self) -> Mesh {
+        cube_to_triangle_mesh(self)
+    }
+}
+
 pub fn shape_to_triangle_mesh(shape: &fj::Shape) -> Mesh {
     match shape {
         fj::Shape::Cube(cube) => cube_to_triangle_mesh(cube),
