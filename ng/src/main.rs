@@ -13,7 +13,10 @@ use winit::{
     window::WindowBuilder,
 };
 
-use crate::graphics::{DrawConfig, Renderer, Transform};
+use crate::{
+    geometry::to_mesh::ToMesh as _,
+    graphics::{DrawConfig, Renderer, Transform},
+};
 
 fn main() -> anyhow::Result<()> {
     // This can be made a bit more contact using `ExitStatus::exit_ok`, once
@@ -32,7 +35,7 @@ fn main() -> anyhow::Result<()> {
         func()
     };
 
-    let mesh = geometry::shape_to_triangle_mesh(&shape);
+    let mesh = shape.to_mesh();
 
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new()
