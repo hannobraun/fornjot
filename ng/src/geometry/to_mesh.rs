@@ -20,16 +20,16 @@ impl ToMesh for fj::Cube {
         let s = self.size / 2.;
 
         // Define a cube
-        let v0 = [-s, -s, -s].into();
-        let v1 = [-s, -s, s].into();
-        let v2 = [-s, s, -s].into();
-        let v3 = [-s, s, s].into();
-        let v4 = [s, -s, -s].into();
-        let v5 = [s, -s, s].into();
-        let v6 = [s, s, -s].into();
-        let v7 = [s, s, s].into();
-
-        let v = [v0, v1, v2, v3, v4, v5, v6, v7];
+        let v = [
+            [-s, -s, -s].into(),
+            [-s, -s, s].into(),
+            [-s, s, -s].into(),
+            [-s, s, s].into(),
+            [s, -s, -s].into(),
+            [s, -s, s].into(),
+            [s, s, -s].into(),
+            [s, s, s].into(),
+        ];
 
         // left
         mesh.triangle([v[0], v[1], v[2]]);
