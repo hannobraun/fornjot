@@ -1,12 +1,12 @@
 use crate::mesh::{Mesh, MeshMaker};
 
-pub fn shape_to_triangle_mesh(shape: fj::Shape) -> Mesh {
+pub fn shape_to_triangle_mesh(shape: &fj::Shape) -> Mesh {
     match shape {
         fj::Shape::Cube(cube) => cube_to_triangle_mesh(cube),
     }
 }
 
-fn cube_to_triangle_mesh(cube: fj::Cube) -> Mesh {
+fn cube_to_triangle_mesh(cube: &fj::Cube) -> Mesh {
     let mut mesh = MeshMaker::new();
     let s = cube.size / 2.;
 
