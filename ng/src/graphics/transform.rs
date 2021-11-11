@@ -21,9 +21,9 @@ impl Transform {
     pub fn to_native(&self, aspect_ratio: f32) -> NativeTransform {
         let projection = Perspective3::new(
             aspect_ratio,
-            FRAC_PI_4, // field of view; 45 degrees
-            1.0,       // near plane
-            1000.0,    // far plane
+            FIELD_OF_VIEW,
+            1.0,    // near plane
+            1000.0, // far plane
         );
 
         let transform = projection.to_projective() * self.view_transform();
@@ -57,3 +57,5 @@ impl Transform {
 }
 
 pub type NativeTransform = [f32; 16];
+
+const FIELD_OF_VIEW: f32 = FRAC_PI_4; // 45 degrees
