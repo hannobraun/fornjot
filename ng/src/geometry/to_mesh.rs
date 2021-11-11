@@ -1,4 +1,7 @@
-use crate::mesh::{Mesh, MeshMaker};
+use crate::{
+    geometry::vertices::Vertices as _,
+    mesh::{Mesh, MeshMaker},
+};
 
 /// Convert a shape into a [`Mesh`]
 pub trait ToMesh {
@@ -17,21 +20,8 @@ impl ToMesh for fj::Shape {
 impl ToMesh for fj::Cube {
     fn to_mesh(&self) -> Mesh {
         let mut mesh = MeshMaker::new();
-        let s = self.size / 2.;
 
-        // Define a cube
-        #[rustfmt::skip]
-        let v = [
-            [-s, -s, -s],
-            [-s, -s,  s],
-            [-s,  s, -s],
-            [-s,  s,  s],
-            [ s, -s, -s],
-            [ s, -s,  s],
-            [ s,  s, -s],
-            [ s,  s,  s],
-        ];
-        let v = v.map(|coord| coord.into());
+        let v = self.vertices();
 
         // left
         mesh.triangle([v[0], v[1], v[2]]);
