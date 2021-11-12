@@ -14,6 +14,19 @@ where
     }
 }
 
+/// A 2-dimensional shape
+#[derive(Debug)]
+#[repr(C)]
+pub enum Shape2d {
+    Square(Square),
+}
+
+impl From<Square> for Shape2d {
+    fn from(square: Square) -> Self {
+        Self::Square(square)
+    }
+}
+
 /// A 3-dimensional shape
 #[derive(Debug)]
 #[repr(C)]
