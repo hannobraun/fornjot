@@ -35,6 +35,12 @@ pub struct Square {
     pub size: f32,
 }
 
+impl From<Square> for Shape {
+    fn from(square: Square) -> Self {
+        Self::Shape2d(Shape2d::Square(square))
+    }
+}
+
 impl From<Square> for Shape2d {
     fn from(shape: Square) -> Self {
         Self::Square(shape)
