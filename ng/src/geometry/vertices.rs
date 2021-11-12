@@ -14,6 +14,14 @@ impl Vertices for fj::Shape {
     }
 }
 
+impl Vertices for fj::Shape2d {
+    fn vertices(&self) -> Vec<Point> {
+        match self {
+            fj::Shape2d::Square(square) => square.vertices(),
+        }
+    }
+}
+
 impl Vertices for fj::Shape3d {
     fn vertices(&self) -> Vec<Point> {
         match self {

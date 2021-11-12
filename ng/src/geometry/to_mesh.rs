@@ -17,6 +17,14 @@ impl ToMesh for fj::Shape {
     }
 }
 
+impl ToMesh for fj::Shape2d {
+    fn to_mesh(&self) -> Mesh {
+        match self {
+            fj::Shape2d::Square(square) => square.to_mesh(),
+        }
+    }
+}
+
 impl ToMesh for fj::Shape3d {
     fn to_mesh(&self) -> Mesh {
         match self {

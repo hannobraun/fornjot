@@ -14,6 +14,14 @@ impl BoundingVolume for fj::Shape {
     }
 }
 
+impl BoundingVolume for fj::Shape2d {
+    fn aabb(&self) -> Aabb {
+        match self {
+            fj::Shape2d::Square(square) => square.aabb(),
+        }
+    }
+}
+
 impl BoundingVolume for fj::Shape3d {
     fn aabb(&self) -> Aabb {
         match self {
