@@ -25,6 +25,19 @@ impl ToMesh for fj::Shape3d {
     }
 }
 
+impl ToMesh for fj::Square {
+    fn to_mesh(&self) -> Mesh {
+        let v = self.vertices();
+
+        let mut mesh = MeshMaker::new();
+
+        mesh.triangle([v[0], v[1], v[2]]);
+        mesh.triangle([v[0], v[2], v[3]]);
+
+        mesh.make()
+    }
+}
+
 impl ToMesh for fj::Cube {
     fn to_mesh(&self) -> Mesh {
         let v = self.vertices();

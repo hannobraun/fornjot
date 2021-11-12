@@ -22,6 +22,41 @@ impl BoundingVolume for fj::Shape3d {
     }
 }
 
+impl BoundingVolume for fj::Square {
+    fn aabb(&self) -> Aabb {
+        let mut vertices = self.vertices();
+
+        // Can't panic. We know a squqre has at least one vertex.
+        let vertex = vertices.pop().unwrap();
+
+        // Seed values with one of the square's vertices.
+        let mut min_x = vertex.x;
+        let mut max_x = vertex.x;
+        let mut min_y = vertex.y;
+        let mut max_y = vertex.y;
+
+        for vertex in vertices {
+            if vertex.x < min_x {
+                min_x = vertex.x;
+            }
+            if vertex.x > max_x {
+                max_x = vertex.x;
+            }
+            if vertex.y < min_y {
+                min_y = vertex.y;
+            }
+            if vertex.y > max_y {
+                max_y = vertex.y;
+            }
+        }
+
+        Aabb {
+            min: [min_x, min_y, 0.0].into(),
+            max: [max_x, max_y, 0.0].into(),
+        }
+    }
+}
+
 impl BoundingVolume for fj::Cube {
     fn aabb(&self) -> Aabb {
         let mut vertices = self.vertices();
