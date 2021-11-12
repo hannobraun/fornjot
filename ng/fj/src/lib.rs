@@ -20,12 +20,9 @@ pub enum Shape3d {
     Cube(Cube),
 }
 
-impl<T> From<T> for Shape
-where
-    T: Into<Shape3d>,
-{
-    fn from(shape: T) -> Self {
-        Self::Shape3d(shape.into())
+impl From<Shape3d> for Shape {
+    fn from(shape_3d: Shape3d) -> Self {
+        Self::Shape3d(shape_3d.into())
     }
 }
 
@@ -49,6 +46,12 @@ impl From<Square> for Shape2d {
 pub struct Cube {
     /// The side length of the cube
     pub size: f32,
+}
+
+impl From<Cube> for Shape {
+    fn from(cube: Cube) -> Self {
+        Self::Shape3d(Shape3d::Cube(cube))
+    }
 }
 
 impl From<Cube> for Shape3d {
