@@ -6,6 +6,14 @@ pub trait Vertices {
     fn vertices(&self) -> Vec<Point>;
 }
 
+impl Vertices for fj::Shape {
+    fn vertices(&self) -> Vec<Point> {
+        match self {
+            fj::Shape::Shape3d(shape_3d) => shape_3d.vertices(),
+        }
+    }
+}
+
 impl Vertices for fj::Shape3d {
     fn vertices(&self) -> Vec<Point> {
         match self {
