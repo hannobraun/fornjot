@@ -35,7 +35,7 @@ impl BoundingVolume for fj::Square {
     fn aabb(&self) -> Aabb {
         let mut vertices = self.vertices();
 
-        // Can't panic. We know a squqre has at least one vertex.
+        // Can't panic. We know a square has at least one vertex.
         let vertex = vertices.pop().unwrap();
 
         // Seed values with one of the square's vertices.
