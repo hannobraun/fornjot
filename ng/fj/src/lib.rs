@@ -2,6 +2,7 @@
 #[derive(Debug)]
 #[repr(C)]
 pub enum Shape {
+    Shape2d(Shape2d),
     Shape3d(Shape3d),
 }
 
