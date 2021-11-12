@@ -1,4 +1,4 @@
-/// A shape
+/// A 3-dimensional shape
 #[derive(Debug)]
 #[repr(C)]
 pub enum Shape3d {
