@@ -1,3 +1,5 @@
+use nalgebra::vector;
+
 use crate::math::Point;
 
 /// Return a shape's vertices
@@ -27,10 +29,7 @@ impl Vertices for fj::Shape3d {
     fn vertices(&self) -> Vec<Point> {
         match self {
             Self::Cube(shape) => shape.vertices(),
-            Self::Sweep(_) => {
-                // TASK: Implement.
-                todo!()
-            }
+            Self::Sweep(shape) => shape.vertices(),
         }
     }
 }
@@ -68,5 +67,18 @@ impl Vertices for fj::Cube {
         ];
 
         v.map(|coord| coord.into()).to_vec()
+    }
+}
+
+impl Vertices for fj::Sweep {
+    fn vertices(&self) -> Vec<Point> {
+        let mut vertices = Vec::new();
+
+        for vertex in self.shape.vertices() {
+            vertices.push(vertex);
+            vertices.push(vertex + vector![0.0, 0.0, self.length]);
+        }
+
+        vertices
     }
 }
