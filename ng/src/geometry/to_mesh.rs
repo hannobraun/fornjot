@@ -30,6 +30,10 @@ impl ToMesh for fj::Shape3d {
     fn to_mesh(&self) -> Mesh {
         match self {
             Self::Cube(shape) => shape.to_mesh(),
+            Self::Sweep(_) => {
+                // TASK: Implement.
+                todo!()
+            }
         }
     }
 }

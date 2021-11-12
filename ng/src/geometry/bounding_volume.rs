@@ -27,6 +27,10 @@ impl BoundingVolume for fj::Shape3d {
     fn aabb(&self) -> Aabb {
         match self {
             Self::Cube(shape) => shape.aabb(),
+            Self::Sweep(_) => {
+                // TASK: Implement.
+                todo!()
+            }
         }
     }
 }

@@ -27,6 +27,10 @@ impl Vertices for fj::Shape3d {
     fn vertices(&self) -> Vec<Point> {
         match self {
             Self::Cube(shape) => shape.vertices(),
+            Self::Sweep(_) => {
+                // TASK: Implement.
+                todo!()
+            }
         }
     }
 }

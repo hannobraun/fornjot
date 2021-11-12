@@ -1,4 +1,4 @@
-use crate::Shape;
+use crate::{Shape, Shape2d};
 
 /// A 3-dimensional shape
 #[derive(Debug)]
@@ -6,6 +6,9 @@ use crate::Shape;
 pub enum Shape3d {
     /// A cube
     Cube(Cube),
+
+    /// A sweep of 2-dimensional shape along the z-axis
+    Sweep(Sweep),
 }
 
 impl From<Shape3d> for Shape {
@@ -31,5 +34,28 @@ impl From<Cube> for Shape {
 impl From<Cube> for Shape3d {
     fn from(shape: Cube) -> Self {
         Self::Cube(shape)
+    }
+}
+
+/// A sweep of 2-dimensional shape along the z-axis
+#[derive(Debug)]
+#[repr(C)]
+pub struct Sweep {
+    /// The 2-dimensional shape being swept
+    pub shape: Shape2d,
+
+    /// The length of the sweep
+    pub length: f32,
+}
+
+impl From<Sweep> for Shape {
+    fn from(shape: Sweep) -> Self {
+        Self::Shape3d(Shape3d::Sweep(shape))
+    }
+}
+
+impl From<Sweep> for Shape3d {
+    fn from(shape: Sweep) -> Self {
+        Self::Sweep(shape)
     }
 }
