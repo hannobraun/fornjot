@@ -21,8 +21,8 @@ pub enum Shape3d {
 }
 
 impl From<Shape3d> for Shape {
-    fn from(shape_3d: Shape3d) -> Self {
-        Self::Shape3d(shape_3d.into())
+    fn from(shape: Shape3d) -> Self {
+        Self::Shape3d(shape.into())
     }
 }
 
@@ -35,8 +35,8 @@ pub struct Square {
 }
 
 impl From<Square> for Shape2d {
-    fn from(square: Square) -> Self {
-        Self::Square(square)
+    fn from(shape: Square) -> Self {
+        Self::Square(shape)
     }
 }
 
@@ -49,13 +49,13 @@ pub struct Cube {
 }
 
 impl From<Cube> for Shape {
-    fn from(cube: Cube) -> Self {
-        Self::Shape3d(Shape3d::Cube(cube))
+    fn from(shape: Cube) -> Self {
+        Self::Shape3d(Shape3d::Cube(shape))
     }
 }
 
 impl From<Cube> for Shape3d {
-    fn from(cube: Cube) -> Self {
-        Self::Cube(cube)
+    fn from(shape: Cube) -> Self {
+        Self::Cube(shape)
     }
 }
