@@ -6,6 +6,16 @@ pub trait BoundingVolume {
     fn aabb(&self) -> Aabb;
 }
 
+/// An axis-aligned bounding box
+#[derive(Debug)]
+pub struct Aabb {
+    /// Minimum point of the axis-aligned bounding box
+    pub min: Point,
+
+    /// Maximum point of the axis-aligned bounding box
+    pub max: Point,
+}
+
 impl BoundingVolume for fj::Shape {
     fn aabb(&self) -> Aabb {
         match self {
@@ -116,14 +126,4 @@ impl BoundingVolume for fj::Sweep {
         aabb.max.z = self.length;
         aabb
     }
-}
-
-/// An axis-aligned bounding box
-#[derive(Debug)]
-pub struct Aabb {
-    /// Minimum point of the axis-aligned bounding box
-    pub min: Point,
-
-    /// Maximum point of the axis-aligned bounding box
-    pub max: Point,
 }
