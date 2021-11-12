@@ -28,6 +28,14 @@ impl From<Cube> for Shape3d {
     }
 }
 
+/// A square
+#[derive(Debug)]
+#[repr(C)]
+pub struct Square {
+    /// The side length of the square
+    pub size: f32,
+}
+
 /// A cube
 #[derive(Debug)]
 #[repr(C)]
