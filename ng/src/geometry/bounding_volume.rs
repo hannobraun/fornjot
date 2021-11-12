@@ -27,10 +27,7 @@ impl BoundingVolume for fj::Shape3d {
     fn aabb(&self) -> Aabb {
         match self {
             Self::Cube(shape) => shape.aabb(),
-            Self::Sweep(_) => {
-                // TASK: Implement.
-                todo!()
-            }
+            Self::Sweep(shape) => shape.aabb(),
         }
     }
 }
@@ -110,6 +107,14 @@ impl BoundingVolume for fj::Cube {
             min: [min_x, min_y, min_z].into(),
             max: [max_x, max_y, max_z].into(),
         }
+    }
+}
+
+impl BoundingVolume for fj::Sweep {
+    fn aabb(&self) -> Aabb {
+        let mut aabb = self.shape.aabb();
+        aabb.max.z = self.length;
+        aabb
     }
 }
 
