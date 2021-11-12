@@ -129,4 +129,4 @@ fn main() -> anyhow::Result<()> {
     });
 }
 
-type ModelFn = unsafe extern "C" fn() -> fj::Shape3d;
+type ModelFn = unsafe extern "C" fn() -> fj::Shape;
