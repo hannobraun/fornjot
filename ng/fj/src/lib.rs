@@ -1,12 +1,12 @@
 /// A shape
 #[derive(Debug)]
 #[repr(C)]
-pub enum Shape {
+pub enum Shape3d {
     /// A cube
     Cube(Cube),
 }
 
-impl From<Cube> for Shape {
+impl From<Cube> for Shape3d {
     fn from(cube: Cube) -> Self {
         Self::Cube(cube)
     }

@@ -9,10 +9,10 @@ pub trait ToMesh {
     fn to_mesh(&self) -> Mesh;
 }
 
-impl ToMesh for fj::Shape {
+impl ToMesh for fj::Shape3d {
     fn to_mesh(&self) -> Mesh {
         match self {
-            fj::Shape::Cube(cube) => cube.to_mesh(),
+            fj::Shape3d::Cube(cube) => cube.to_mesh(),
         }
     }
 }
