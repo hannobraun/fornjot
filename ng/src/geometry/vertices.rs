@@ -9,8 +9,8 @@ pub trait Vertices {
 impl Vertices for fj::Shape {
     fn vertices(&self) -> Vec<Point> {
         match self {
-            fj::Shape::Shape2d(shape) => shape.vertices(),
-            fj::Shape::Shape3d(shape) => shape.vertices(),
+            Self::Shape2d(shape) => shape.vertices(),
+            Self::Shape3d(shape) => shape.vertices(),
         }
     }
 }
@@ -18,7 +18,7 @@ impl Vertices for fj::Shape {
 impl Vertices for fj::Shape2d {
     fn vertices(&self) -> Vec<Point> {
         match self {
-            fj::Shape2d::Square(shape) => shape.vertices(),
+            Self::Square(shape) => shape.vertices(),
         }
     }
 }
@@ -26,7 +26,7 @@ impl Vertices for fj::Shape2d {
 impl Vertices for fj::Shape3d {
     fn vertices(&self) -> Vec<Point> {
         match self {
-            fj::Shape3d::Cube(shape) => shape.vertices(),
+            Self::Cube(shape) => shape.vertices(),
         }
     }
 }

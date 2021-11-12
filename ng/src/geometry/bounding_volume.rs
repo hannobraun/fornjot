@@ -9,8 +9,8 @@ pub trait BoundingVolume {
 impl BoundingVolume for fj::Shape {
     fn aabb(&self) -> Aabb {
         match self {
-            fj::Shape::Shape2d(shape) => shape.aabb(),
-            fj::Shape::Shape3d(shape) => shape.aabb(),
+            Self::Shape2d(shape) => shape.aabb(),
+            Self::Shape3d(shape) => shape.aabb(),
         }
     }
 }
@@ -18,7 +18,7 @@ impl BoundingVolume for fj::Shape {
 impl BoundingVolume for fj::Shape2d {
     fn aabb(&self) -> Aabb {
         match self {
-            fj::Shape2d::Square(shape) => shape.aabb(),
+            Self::Square(shape) => shape.aabb(),
         }
     }
 }
@@ -26,7 +26,7 @@ impl BoundingVolume for fj::Shape2d {
 impl BoundingVolume for fj::Shape3d {
     fn aabb(&self) -> Aabb {
         match self {
-            fj::Shape3d::Cube(shape) => shape.aabb(),
+            Self::Cube(shape) => shape.aabb(),
         }
     }
 }

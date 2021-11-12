@@ -12,8 +12,8 @@ pub trait ToMesh {
 impl ToMesh for fj::Shape {
     fn to_mesh(&self) -> Mesh {
         match self {
-            fj::Shape::Shape2d(shape) => shape.to_mesh(),
-            fj::Shape::Shape3d(shape) => shape.to_mesh(),
+            Self::Shape2d(shape) => shape.to_mesh(),
+            Self::Shape3d(shape) => shape.to_mesh(),
         }
     }
 }
@@ -21,7 +21,7 @@ impl ToMesh for fj::Shape {
 impl ToMesh for fj::Shape2d {
     fn to_mesh(&self) -> Mesh {
         match self {
-            fj::Shape2d::Square(shape) => shape.to_mesh(),
+            Self::Square(shape) => shape.to_mesh(),
         }
     }
 }
@@ -29,7 +29,7 @@ impl ToMesh for fj::Shape2d {
 impl ToMesh for fj::Shape3d {
     fn to_mesh(&self) -> Mesh {
         match self {
-            fj::Shape3d::Cube(shape) => shape.to_mesh(),
+            Self::Cube(shape) => shape.to_mesh(),
         }
     }
 }
