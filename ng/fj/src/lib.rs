@@ -1,3 +1,10 @@
+/// A shape
+#[derive(Debug)]
+#[repr(C)]
+pub enum Shape {
+    Shape3d(Shape3d),
+}
+
 /// A 3-dimensional shape
 #[derive(Debug)]
 #[repr(C)]
