@@ -2,7 +2,7 @@ use bytemuck::{Pod, Zeroable};
 use decorum::R32;
 use indexmap::IndexMap;
 
-use crate::math::Point;
+use crate::{geometry::triangles::Triangle, math::Point};
 
 #[derive(Debug)]
 pub struct Mesh {
@@ -20,8 +20,8 @@ impl Mesh {
     }
 }
 
-impl From<Vec<[Point; 3]>> for Mesh {
-    fn from(triangles: Vec<[Point; 3]>) -> Self {
+impl From<Vec<Triangle>> for Mesh {
+    fn from(triangles: Vec<Triangle>) -> Self {
         let mut indices_by_vertex_with_normal = IndexMap::new();
         let mut indices = Vec::new();
 
