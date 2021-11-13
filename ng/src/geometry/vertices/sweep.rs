@@ -10,22 +10,14 @@ impl Vertices for fj::Sweep {
     type Vertices = SweepVertices;
 
     fn vertices(&self) -> Self::Vertices {
-        SweepVertices {
-            vertices: self.shape.vertices(),
-            length: self.length,
-        }
+        SweepVertices(self.clone())
     }
 }
 
 /// The vertices of a swept shape
 ///
 /// See [`fj::Sweep`], specifically its implementation of [`Vertices`].
-pub struct SweepVertices {
-    /// The vertices of the original shape
-    pub vertices: Vec<Point>,
-
-    length: f32,
-}
+pub struct SweepVertices(fj::Sweep);
 
 impl IntoIterator for SweepVertices {
     type Item = Point;
@@ -37,9 +29,9 @@ impl IntoIterator for SweepVertices {
 
         let mut vertices = Vec::new();
 
-        for vertex in self.vertices {
+        for vertex in self.0.shape.vertices() {
             vertices.push(vertex);
-            vertices.push(vertex + vector![0.0, 0.0, self.length]);
+            vertices.push(vertex + vector![0.0, 0.0, self.0.length]);
         }
 
         vertices.into_iter()
