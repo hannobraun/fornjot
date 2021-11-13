@@ -1,4 +1,4 @@
-use nalgebra::vector;
+mod sweep;
 
 use crate::math::Point;
 
@@ -79,20 +79,5 @@ impl Vertices for fj::Cube {
         ];
 
         v.map(|coord| coord.into()).to_vec()
-    }
-}
-
-impl Vertices for fj::Sweep {
-    type Vertices = Vec<Point>;
-
-    fn vertices(&self) -> Self::Vertices {
-        let mut vertices = Vec::new();
-
-        for vertex in self.shape.vertices() {
-            vertices.push(vertex);
-            vertices.push(vertex + vector![0.0, 0.0, self.length]);
-        }
-
-        vertices
     }
 }
