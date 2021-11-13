@@ -23,16 +23,10 @@ impl Vertices {
 
 impl From<Mesh> for Vertices {
     fn from(mesh: Mesh) -> Self {
-        let vertices: Vec<_> = mesh.vertices().collect();
-
         let mut indices_by_vertex_with_normal = IndexMap::new();
         let mut indices = Vec::new();
 
-        for [i0, i1, i2] in mesh.triangles() {
-            let v0 = vertices[i0 as usize];
-            let v1 = vertices[i1 as usize];
-            let v2 = vertices[i2 as usize];
-
+        for [v0, v1, v2] in mesh.triangles() {
             let v0 = Point::from(v0);
             let v1 = Point::from(v1);
             let v2 = Point::from(v2);

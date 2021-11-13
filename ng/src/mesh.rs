@@ -12,16 +12,13 @@ pub struct Mesh {
 }
 
 impl Mesh {
-    /// The vertices that make up the triangle mesh
-    pub fn vertices(&self) -> impl Iterator<Item = Vertex> + '_ {
-        self.vertices.iter().copied()
-    }
-
     /// The triangles that provide the structure of the triangle mesh
     ///
     /// Each triangle consists of indices that index into `vertices`.
-    pub fn triangles(&self) -> impl Iterator<Item = IndexTriangle> + '_ {
-        self.triangles.iter().copied()
+    pub fn triangles(&self) -> impl Iterator<Item = VertexTriangle> + '_ {
+        self.triangles
+            .iter()
+            .map(|triangle| triangle.map(|index| self.vertices[index as usize]))
     }
 }
 
