@@ -30,10 +30,7 @@ impl ToMesh for fj::Shape3d {
     fn to_mesh(&self) -> Mesh {
         match self {
             Self::Cube(shape) => shape.to_mesh(),
-            Self::Sweep(_) => {
-                // TASK: Implement.
-                todo!()
-            }
+            Self::Sweep(shape) => shape.to_mesh(),
         }
     }
 }
@@ -80,6 +77,58 @@ impl ToMesh for fj::Cube {
         // top
         mesh.triangle([v[1], v[5], v[7]]);
         mesh.triangle([v[1], v[7], v[3]]);
+
+        mesh.make()
+    }
+}
+
+impl ToMesh for fj::Sweep {
+    fn to_mesh(&self) -> Mesh {
+        let mut mesh = MeshMaker::new();
+
+        // PARTIAL IMPLEMENTATION
+        //
+        // Only the side faces are being generated. Bottom and top faces are
+        // currently missing.
+        // TASK: Add bottom face.
+        // TASK: Add top face.
+
+        // Create pairs of vertices. Neighboring vertices of a sweep are always
+        // a vertex from the original shape and its swept counterpart.
+        //
+        // This can be simplified (and made non-panicky), once `array_chunks` is
+        // stabilized.
+        let mut vertex_pairs: Vec<_> = self
+            .vertices()
+            .chunks(2)
+            .map(|chunk| {
+                let a = chunk[0];
+                let b = chunk[1];
+
+                [a, b]
+            })
+            .collect();
+
+        // In the next step, we're going to collect those pairs of vertices into
+        // quads. But we also need to make sure we'll get the last quad, which
+        // is made up of the last and first pair.
+        vertex_pairs.push(vertex_pairs[0]);
+
+        // Collect all vertices that make up the quads of the side faces.
+        //
+        // This can be simplified (and made non-panicky), once `array_windows`
+        // is stabilized.
+        let quads = vertex_pairs.windows(2).map(|window| {
+            let [v0, v3] = window[0];
+            let [v1, v2] = window[1];
+
+            [v0, v1, v2, v3]
+        });
+
+        for [v0, v1, v2, v3] in quads {
+            mesh.triangle([v0, v1, v2]);
+            mesh.triangle([v0, v2, v3]);
+        }
 
         mesh.make()
     }
