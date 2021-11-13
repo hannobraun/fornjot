@@ -21,7 +21,7 @@ use crate::{
 };
 
 fn main() -> anyhow::Result<()> {
-    let model_dir = "model";
+    let model_dir = "models/cube";
 
     // This can be made a bit more contact using `ExitStatus::exit_ok`, once
     // that is stable.
