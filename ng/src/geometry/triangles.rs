@@ -62,7 +62,6 @@ impl Triangles for fj::Shape2d {
 impl Triangles for fj::Shape3d {
     fn triangles(&self) -> Vec<Triangle> {
         match self {
-            Self::Cube(shape) => shape.triangles(),
             Self::Sweep(shape) => shape.triangles(),
         }
     }
@@ -76,40 +75,6 @@ impl Triangles for fj::Square {
 
         triangles.push([v[0], v[1], v[2]].into());
         triangles.push([v[0], v[2], v[3]].into());
-
-        triangles
-    }
-}
-
-impl Triangles for fj::Cube {
-    fn triangles(&self) -> Vec<Triangle> {
-        let mut triangles = Vec::new();
-
-        let v = self.vertices();
-
-        // left
-        triangles.push([v[0], v[1], v[2]].into());
-        triangles.push([v[2], v[1], v[3]].into());
-
-        // right
-        triangles.push([v[4], v[6], v[5]].into());
-        triangles.push([v[6], v[7], v[5]].into());
-
-        // front
-        triangles.push([v[0], v[4], v[1]].into());
-        triangles.push([v[4], v[5], v[1]].into());
-
-        // back
-        triangles.push([v[2], v[3], v[6]].into());
-        triangles.push([v[6], v[3], v[7]].into());
-
-        // bottom
-        triangles.push([v[0], v[2], v[6]].into());
-        triangles.push([v[0], v[6], v[4]].into());
-
-        // top
-        triangles.push([v[1], v[5], v[7]].into());
-        triangles.push([v[1], v[7], v[3]].into());
 
         triangles
     }

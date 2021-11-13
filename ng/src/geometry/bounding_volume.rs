@@ -87,19 +87,12 @@ impl BoundingVolume for fj::Shape2d {
 impl BoundingVolume for fj::Shape3d {
     fn aabb(&self) -> Aabb {
         match self {
-            Self::Cube(shape) => shape.aabb(),
             Self::Sweep(shape) => shape.aabb(),
         }
     }
 }
 
 impl BoundingVolume for fj::Square {
-    fn aabb(&self) -> Aabb {
-        Aabb::from_vertices(self.vertices())
-    }
-}
-
-impl BoundingVolume for fj::Cube {
     fn aabb(&self) -> Aabb {
         Aabb::from_vertices(self.vertices())
     }

@@ -38,7 +38,6 @@ impl Vertices for fj::Shape3d {
 
     fn vertices(&self) -> Self::Vertices {
         match self {
-            Self::Cube(shape) => shape.vertices(),
             Self::Sweep(shape) => shape.vertices().into_iter().collect(),
         }
     }
@@ -56,28 +55,6 @@ impl Vertices for fj::Square {
             [ s, -s, 0.0],
             [ s,  s, 0.0],
             [-s,  s, 0.0],
-        ];
-
-        v.map(|coord| coord.into()).to_vec()
-    }
-}
-
-impl Vertices for fj::Cube {
-    type Vertices = Vec<Point>;
-
-    fn vertices(&self) -> Self::Vertices {
-        let s = self.size / 2.;
-
-        #[rustfmt::skip]
-        let v = [
-            [-s, -s, -s],
-            [-s, -s,  s],
-            [-s,  s, -s],
-            [-s,  s,  s],
-            [ s, -s, -s],
-            [ s, -s,  s],
-            [ s,  s, -s],
-            [ s,  s,  s],
         ];
 
         v.map(|coord| coord.into()).to_vec()
