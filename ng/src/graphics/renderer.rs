@@ -8,8 +8,8 @@ use winit::{dpi::PhysicalSize, window::Window};
 
 use super::{
     config_ui::ConfigUi, draw_config::DrawConfig, drawables::Drawables,
-    geometries::Geometries, pipelines::Pipelines, transform::Transform,
-    uniforms::Uniforms, mesh::Mesh, COLOR_FORMAT, DEPTH_FORMAT,
+    geometries::Geometries, mesh::Mesh, pipelines::Pipelines,
+    transform::Transform, uniforms::Uniforms, COLOR_FORMAT, DEPTH_FORMAT,
 };
 
 #[derive(Debug)]
@@ -31,10 +31,7 @@ pub struct Renderer {
 }
 
 impl Renderer {
-    pub async fn new(
-        window: &Window,
-        mesh: Mesh,
-    ) -> Result<Self, InitError> {
+    pub async fn new(window: &Window, mesh: Mesh) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::VULKAN);
 
         // This is sound, as `window` is an object to create a surface upon.
@@ -118,10 +115,7 @@ impl Renderer {
             label: None,
         });
 
-        let geometries = Geometries::new(
-            &device,
-            &mesh,
-        );
+        let geometries = Geometries::new(&device, &mesh);
         let pipelines = Pipelines::new(&device, &bind_group_layout);
 
         let config_ui = ConfigUi::new(&device)?;
