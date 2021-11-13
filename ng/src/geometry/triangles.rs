@@ -87,10 +87,13 @@ impl Triangles for fj::Sweep {
 
         // PARTIAL IMPLEMENTATION
         //
-        // Only the side faces are being generated. Bottom and top faces are
-        // currently missing.
-        // TASK: Add bottom face.
+        // The top face is currently missing.
         // TASK: Add top face.
+
+        // Bottom face
+        // TASK: This shows the wrong side on the outside. The triangles need to
+        //       be inverted.
+        triangles.extend(self.shape.triangles());
 
         // In the next step, we're going to collect those pairs of vertices into
         // quads. But we also need to make sure we'll get the last quad, which
