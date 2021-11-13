@@ -9,7 +9,7 @@ use winit::{dpi::PhysicalSize, window::Window};
 use super::{
     config_ui::ConfigUi, draw_config::DrawConfig, drawables::Drawables,
     geometries::Geometries, pipelines::Pipelines, transform::Transform,
-    uniforms::Uniforms, Vertices, COLOR_FORMAT, DEPTH_FORMAT,
+    uniforms::Uniforms, vertices::Vertices, COLOR_FORMAT, DEPTH_FORMAT,
 };
 
 #[derive(Debug)]
