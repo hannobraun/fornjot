@@ -39,11 +39,9 @@ pub type Vertex = Point;
 /// and for that we need a type with defined size.
 pub type Index = u32;
 
-/// A triangle of a triangle mesh
+/// A triangle consisting of indices that refer to mesh vertices
 ///
 /// See [`Mesh`].
-///
-/// The triangle consists of indices that refer to vertices of the mesh.
 pub type IndexTriangle = [Index; 3];
 
 /// API for creating [`Mesh`]es
