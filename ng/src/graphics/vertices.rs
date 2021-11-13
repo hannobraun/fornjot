@@ -21,11 +21,11 @@ impl Vertices {
 }
 
 impl From<Vec<[Point; 3]>> for Vertices {
-    fn from(mesh: Vec<[Point; 3]>) -> Self {
+    fn from(triangles: Vec<[Point; 3]>) -> Self {
         let mut indices_by_vertex_with_normal = IndexMap::new();
         let mut indices = Vec::new();
 
-        for [v0, v1, v2] in mesh {
+        for [v0, v1, v2] in triangles {
             let v0 = Point::from(v0);
             let v1 = Point::from(v1);
             let v2 = Point::from(v2);
