@@ -24,8 +24,8 @@ impl Triangle {
 }
 
 impl From<[Point; 3]> for Triangle {
-    fn from(points: [Point; 3]) -> Self {
-        Self(points)
+    fn from(vertices: [Point; 3]) -> Self {
+        Self(vertices)
     }
 }
 
