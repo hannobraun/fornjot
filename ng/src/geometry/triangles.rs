@@ -88,11 +88,6 @@ impl Triangles for fj::Sweep {
     fn triangles(&self) -> Vec<Triangle> {
         let mut triangles = Vec::new();
 
-        // PARTIAL IMPLEMENTATION
-        //
-        // The top face is currently missing.
-        // TASK: Add top face.
-
         let original_triangles = self.shape.triangles();
 
         // Bottom face
