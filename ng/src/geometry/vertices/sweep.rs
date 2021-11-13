@@ -19,6 +19,25 @@ impl Vertices for fj::Sweep {
 /// See [`fj::Sweep`], specifically its implementation of [`Vertices`].
 pub struct SweepVertices(fj::Sweep);
 
+impl SweepVertices {
+    /// Compute pairs of original and swept vertices
+    ///
+    /// Returns each vertex of the original shape, together with the vertex that
+    /// was created by sweeping it.
+    pub fn vertex_pairs(&self) -> Vec<(Point, Point)> {
+        let mut pairs = Vec::new();
+
+        for vertex in self.0.shape.vertices() {
+            let a = vertex;
+            let b = vertex + vector![0.0, 0.0, self.0.length];
+
+            pairs.push((a, b));
+        }
+
+        pairs
+    }
+}
+
 impl IntoIterator for SweepVertices {
     type Item = Point;
     type IntoIter = vec::IntoIter<Self::Item>;
@@ -29,9 +48,9 @@ impl IntoIterator for SweepVertices {
 
         let mut vertices = Vec::new();
 
-        for vertex in self.0.shape.vertices() {
-            vertices.push(vertex);
-            vertices.push(vertex + vector![0.0, 0.0, self.0.length]);
+        for (a, b) in self.vertex_pairs() {
+            vertices.push(a);
+            vertices.push(b);
         }
 
         vertices.into_iter()
