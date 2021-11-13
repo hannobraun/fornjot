@@ -16,7 +16,6 @@ pub use self::{
     draw_config::DrawConfig,
     renderer::{DrawError, Renderer},
     transform::Transform,
-    vertices::{Vertex, Vertices},
 };
 
 const COLOR_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Bgra8UnormSrgb;
