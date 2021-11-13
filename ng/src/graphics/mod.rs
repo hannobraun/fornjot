@@ -2,12 +2,12 @@ mod config_ui;
 mod draw_config;
 mod drawables;
 mod geometries;
+mod mesh;
 mod pipelines;
 mod renderer;
 mod shaders;
 mod transform;
 mod uniforms;
-mod vertices;
 
 pub use self::{
     draw_config::DrawConfig,

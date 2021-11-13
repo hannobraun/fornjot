@@ -1,8 +1,8 @@
 use std::mem::size_of;
 
 use super::{
+    mesh::Vertex,
     shaders::{Shader, Shaders},
-    vertices::Vertex,
     COLOR_FORMAT, DEPTH_FORMAT,
 };
 
