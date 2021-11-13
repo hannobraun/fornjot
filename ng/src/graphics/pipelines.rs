@@ -2,7 +2,8 @@ use std::mem::size_of;
 
 use super::{
     shaders::{Shader, Shaders},
-    Vertex, COLOR_FORMAT, DEPTH_FORMAT,
+    vertices::Vertex,
+    COLOR_FORMAT, DEPTH_FORMAT,
 };
 
 #[derive(Debug)]
