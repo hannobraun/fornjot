@@ -35,7 +35,7 @@ fn main() -> anyhow::Result<()> {
         func()
     };
 
-    let triangles = shape.to_mesh();
+    let triangles = shape.triangles();
 
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new()
