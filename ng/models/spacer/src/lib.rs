@@ -3,7 +3,12 @@ pub extern "C" fn model() -> fj::Shape {
     let circle = fj::Circle { radius: 1.0 };
 
     // TASK: Make hole in circle.
-    // TASK: Extrude 2D shape into 3D shape..
+    let footprint = circle;
 
-    circle.into()
+    let spacer = fj::Sweep {
+        shape: footprint.into(),
+        length: 1.0,
+    };
+
+    spacer.into()
 }
