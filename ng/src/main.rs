@@ -1,3 +1,4 @@
+mod args;
 mod geometry;
 mod graphics;
 mod input;
@@ -14,6 +15,7 @@ use winit::{
 };
 
 use crate::{
+    args::Args,
     geometry::{
         bounding_volume::BoundingVolume as _, triangles::Triangles as _,
     },
@@ -21,7 +23,8 @@ use crate::{
 };
 
 fn main() -> anyhow::Result<()> {
-    let model_dir = "models/cube";
+    let args = Args::parse();
+    let model_dir = format!("models/{}", args.model.display());
 
     // This can be made a bit more contact using `ExitStatus::exit_ok`, once
     // that is stable.
