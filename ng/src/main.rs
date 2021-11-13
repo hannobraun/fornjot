@@ -38,8 +38,8 @@ fn main() -> anyhow::Result<()> {
     //       sound, and document why that is.
     let shape = unsafe {
         let lib = libloading::Library::new(format!(
-            "{}/target/debug/libmodel.so",
-            model_dir
+            "{}/target/debug/lib{}.so",
+            model_dir, args.model,
         ))?;
         let func: libloading::Symbol<ModelFn> = lib.get(b"model")?;
         func()
