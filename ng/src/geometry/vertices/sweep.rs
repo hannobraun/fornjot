@@ -2,7 +2,9 @@ use nalgebra::vector;
 
 use crate::math::Point;
 
-impl super::Vertices for fj::Sweep {
+use super::Vertices;
+
+impl Vertices for fj::Sweep {
     type Vertices = Vec<Point>;
 
     fn vertices(&self) -> Self::Vertices {
