@@ -36,8 +36,7 @@ fn main() -> anyhow::Result<()> {
         func()
     };
 
-    let mesh = shape.to_mesh();
-    let triangles: Vec<_> = mesh;
+    let triangles = shape.to_mesh();
 
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new()
