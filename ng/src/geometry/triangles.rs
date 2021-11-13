@@ -1,6 +1,9 @@
 use nalgebra::vector;
 
-use crate::{geometry::vertices::Vertices as _, math::Point};
+use crate::{
+    geometry::vertices::Vertices as _,
+    math::{Point, Vector},
+};
 
 /// The triangles that make up a shape
 pub trait Triangles {
@@ -27,7 +30,7 @@ impl Triangle {
     /// Translate the triangle
     ///
     /// Translate all triangle vertices by the given vector.
-    pub fn translate(self, vector: nalgebra::SVector<f32, 3>) -> Self {
+    pub fn translate(self, vector: Vector) -> Self {
         let vertices = self.0.map(|vertex| vertex + vector);
         Self(vertices)
     }
