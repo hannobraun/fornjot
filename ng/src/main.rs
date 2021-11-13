@@ -37,6 +37,7 @@ fn main() -> anyhow::Result<()> {
     };
 
     let mesh = shape.to_mesh();
+    let triangles: Vec<_> = mesh.triangles().collect();
 
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new()
@@ -46,8 +47,6 @@ fn main() -> anyhow::Result<()> {
         .with_transparent(false)
         .build(&event_loop)
         .unwrap();
-
-    let triangles: Vec<_> = mesh.triangles().collect();
 
     let mut input_handler = input::Handler::new();
     let mut renderer = block_on(Renderer::new(&window, triangles.into()))?;
