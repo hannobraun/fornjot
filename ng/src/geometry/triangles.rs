@@ -12,6 +12,16 @@ pub trait Triangles {
 /// ensure those points form an actual triangle.
 pub struct Triangle(pub [Point; 3]);
 
+impl Triangle {
+    /// Invert the triangle
+    ///
+    /// Inverts the order of triangle vertices.
+    pub fn invert(self) -> Self {
+        let [v0, v1, v2] = self.0;
+        Self([v0, v2, v1])
+    }
+}
+
 impl From<[Point; 3]> for Triangle {
     fn from(points: [Point; 3]) -> Self {
         Self(points)
@@ -101,9 +111,12 @@ impl Triangles for fj::Sweep {
         // TASK: Add top face.
 
         // Bottom face
-        // TASK: This shows the wrong side on the outside. The triangles need to
-        //       be inverted.
-        triangles.extend(self.shape.triangles());
+        triangles.extend(
+            self.shape
+                .triangles()
+                .into_iter()
+                .map(|triangle| triangle.invert()),
+        );
 
         // In the next step, we're going to collect those pairs of vertices into
         // quads. But we also need to make sure we'll get the last quad, which
