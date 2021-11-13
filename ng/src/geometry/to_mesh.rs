@@ -1,14 +1,14 @@
 use crate::{geometry::vertices::Vertices as _, math::Point};
 
 /// Convert a shape into a [`Mesh`]
-pub trait ToMesh {
+pub trait Triangles {
     /// Convert a shape into a [`Mesh`]
     fn to_mesh(&self) -> Vec<Triangle>;
 }
 
 pub type Triangle = [Point; 3];
 
-impl ToMesh for fj::Shape {
+impl Triangles for fj::Shape {
     fn to_mesh(&self) -> Vec<Triangle> {
         match self {
             Self::Shape2d(shape) => shape.to_mesh(),
@@ -17,7 +17,7 @@ impl ToMesh for fj::Shape {
     }
 }
 
-impl ToMesh for fj::Shape2d {
+impl Triangles for fj::Shape2d {
     fn to_mesh(&self) -> Vec<Triangle> {
         match self {
             Self::Square(shape) => shape.to_mesh(),
@@ -25,7 +25,7 @@ impl ToMesh for fj::Shape2d {
     }
 }
 
-impl ToMesh for fj::Shape3d {
+impl Triangles for fj::Shape3d {
     fn to_mesh(&self) -> Vec<Triangle> {
         match self {
             Self::Cube(shape) => shape.to_mesh(),
@@ -34,7 +34,7 @@ impl ToMesh for fj::Shape3d {
     }
 }
 
-impl ToMesh for fj::Square {
+impl Triangles for fj::Square {
     fn to_mesh(&self) -> Vec<Triangle> {
         let mut triangles = Vec::new();
 
@@ -47,7 +47,7 @@ impl ToMesh for fj::Square {
     }
 }
 
-impl ToMesh for fj::Cube {
+impl Triangles for fj::Cube {
     fn to_mesh(&self) -> Vec<Triangle> {
         let mut triangles = Vec::new();
 
@@ -81,7 +81,7 @@ impl ToMesh for fj::Cube {
     }
 }
 
-impl ToMesh for fj::Sweep {
+impl Triangles for fj::Sweep {
     fn to_mesh(&self) -> Vec<Triangle> {
         let mut triangles = Vec::new();
 
