@@ -8,7 +8,7 @@ use crate::math::Point;
 #[derive(Debug)]
 pub struct Mesh {
     vertices: Vec<Vertex>,
-    triangles: Vec<Triangle>,
+    triangles: Vec<IndexTriangle>,
 }
 
 impl Mesh {
@@ -20,7 +20,7 @@ impl Mesh {
     /// The triangles that provide the structure of the triangle mesh
     ///
     /// Each triangle consists of indices that index into `vertices`.
-    pub fn triangles(&self) -> impl Iterator<Item = Triangle> + '_ {
+    pub fn triangles(&self) -> impl Iterator<Item = IndexTriangle> + '_ {
         self.triangles.iter().copied()
     }
 }
@@ -44,12 +44,12 @@ pub type Index = u32;
 /// See [`Mesh`].
 ///
 /// The triangle consists of indices that refer to vertices of the mesh.
-pub type Triangle = [Index; 3];
+pub type IndexTriangle = [Index; 3];
 
 /// API for creating [`Mesh`]es
 pub struct MeshMaker {
     vertices: Vertices,
-    triangles: Vec<Triangle>,
+    triangles: Vec<IndexTriangle>,
 }
 
 impl MeshMaker {
