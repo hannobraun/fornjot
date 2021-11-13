@@ -115,9 +115,7 @@ impl Triangles for fj::Sweep {
 
         // Bottom face
         triangles.extend(
-            original_triangles
-                .into_iter()
-                .map(|triangle| triangle.invert()),
+            original_triangles.iter().map(|triangle| triangle.invert()),
         );
 
         // In the next step, we're going to collect those pairs of vertices into
