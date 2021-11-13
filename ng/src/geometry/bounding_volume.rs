@@ -1,8 +1,13 @@
 use crate::{geometry::vertices::Vertices as _, math::Point};
 
 /// Compute the bounding volume of a shape
+///
+/// The bounding volume is a volume that contains all of the shape.
 pub trait BoundingVolume {
-    /// Compute the [`Aabb`] of a shape
+    /// Compute the axis-aligned bounding box of a shape
+    ///
+    /// If a shape is empty, its [`Aabb`]'s `min` and `max` points must be equal
+    /// (but are otherwise not specified).
     fn aabb(&self) -> Aabb;
 }
 
