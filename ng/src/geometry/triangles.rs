@@ -6,7 +6,13 @@ pub trait Triangles {
     fn triangles(&self) -> Vec<Triangle>;
 }
 
-pub type Triangle = [Point; 3];
+pub struct Triangle(pub [Point; 3]);
+
+impl From<[Point; 3]> for Triangle {
+    fn from(points: [Point; 3]) -> Self {
+        Self(points)
+    }
+}
 
 impl Triangles for fj::Shape {
     fn triangles(&self) -> Vec<Triangle> {
@@ -40,8 +46,8 @@ impl Triangles for fj::Square {
 
         let v = self.vertices();
 
-        triangles.push([v[0], v[1], v[2]]);
-        triangles.push([v[0], v[2], v[3]]);
+        triangles.push([v[0], v[1], v[2]].into());
+        triangles.push([v[0], v[2], v[3]].into());
 
         triangles
     }
@@ -54,28 +60,28 @@ impl Triangles for fj::Cube {
         let v = self.vertices();
 
         // left
-        triangles.push([v[0], v[1], v[2]]);
-        triangles.push([v[2], v[1], v[3]]);
+        triangles.push([v[0], v[1], v[2]].into());
+        triangles.push([v[2], v[1], v[3]].into());
 
         // right
-        triangles.push([v[4], v[6], v[5]]);
-        triangles.push([v[6], v[7], v[5]]);
+        triangles.push([v[4], v[6], v[5]].into());
+        triangles.push([v[6], v[7], v[5]].into());
 
         // front
-        triangles.push([v[0], v[4], v[1]]);
-        triangles.push([v[4], v[5], v[1]]);
+        triangles.push([v[0], v[4], v[1]].into());
+        triangles.push([v[4], v[5], v[1]].into());
 
         // back
-        triangles.push([v[2], v[3], v[6]]);
-        triangles.push([v[6], v[3], v[7]]);
+        triangles.push([v[2], v[3], v[6]].into());
+        triangles.push([v[6], v[3], v[7]].into());
 
         // bottom
-        triangles.push([v[0], v[2], v[6]]);
-        triangles.push([v[0], v[6], v[4]]);
+        triangles.push([v[0], v[2], v[6]].into());
+        triangles.push([v[0], v[6], v[4]].into());
 
         // top
-        triangles.push([v[1], v[5], v[7]]);
-        triangles.push([v[1], v[7], v[3]]);
+        triangles.push([v[1], v[5], v[7]].into());
+        triangles.push([v[1], v[7], v[3]].into());
 
         triangles
     }
@@ -113,8 +119,8 @@ impl Triangles for fj::Sweep {
         });
 
         for [v0, v1, v2, v3] in quads {
-            triangles.push([v0, v1, v2]);
-            triangles.push([v0, v2, v3]);
+            triangles.push([v0, v1, v2].into());
+            triangles.push([v0, v2, v3].into());
         }
 
         triangles

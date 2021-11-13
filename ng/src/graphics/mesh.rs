@@ -25,7 +25,9 @@ impl From<Vec<Triangle>> for Mesh {
         let mut indices_by_vertex_with_normal = IndexMap::new();
         let mut indices = Vec::new();
 
-        for [v0, v1, v2] in triangles {
+        for triangle in triangles {
+            let [v0, v1, v2] = triangle.0;
+
             let v0 = Point::from(v0);
             let v1 = Point::from(v1);
             let v2 = Point::from(v2);
