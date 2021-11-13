@@ -47,8 +47,10 @@ fn main() -> anyhow::Result<()> {
         .build(&event_loop)
         .unwrap();
 
+    let triangles = mesh;
+
     let mut input_handler = input::Handler::new();
-    let mut renderer = block_on(Renderer::new(&window, mesh.into()))?;
+    let mut renderer = block_on(Renderer::new(&window, triangles.into()))?;
 
     let mut draw_config = DrawConfig::default();
     let mut transform = Transform::new(shape.aabb());
