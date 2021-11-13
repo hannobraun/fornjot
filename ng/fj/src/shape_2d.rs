@@ -4,6 +4,7 @@ use crate::Shape;
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub enum Shape2d {
+    /// A square
     Square(Square),
 }
 
