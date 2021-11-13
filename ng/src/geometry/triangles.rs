@@ -1,3 +1,5 @@
+use nalgebra::vector;
+
 use crate::{geometry::vertices::Vertices as _, math::Point};
 
 /// The triangles that make up a shape
@@ -20,6 +22,14 @@ impl Triangle {
     pub fn invert(self) -> Self {
         let [v0, v1, v2] = self.0;
         Self([v0, v2, v1])
+    }
+
+    /// Translate the triangle
+    ///
+    /// Translate all triangle vertices by the given vector.
+    pub fn translate(self, vector: nalgebra::SVector<f32, 3>) -> Self {
+        let vertices = self.0.map(|vertex| vertex + vector);
+        Self(vertices)
     }
 }
 
@@ -117,6 +127,11 @@ impl Triangles for fj::Sweep {
         triangles.extend(
             original_triangles.iter().map(|triangle| triangle.invert()),
         );
+
+        // Top face
+        triangles.extend(original_triangles.iter().map(|triangle| {
+            triangle.translate(vector![0.0, 0.0, self.length])
+        }));
 
         // In the next step, we're going to collect those pairs of vertices into
         // quads. But we also need to make sure we'll get the last quad, which
