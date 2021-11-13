@@ -14,7 +14,9 @@ use winit::{
 };
 
 use crate::{
-    geometry::{bounding_volume::BoundingVolume as _, to_mesh::Triangles as _},
+    geometry::{
+        bounding_volume::BoundingVolume as _, triangles::Triangles as _,
+    },
     graphics::{DrawConfig, Renderer, Transform},
 };
 
