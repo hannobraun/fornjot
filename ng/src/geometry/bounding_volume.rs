@@ -31,7 +31,6 @@ impl Aabb {
         // box located at the origin.
         let vertex = vertices.next().unwrap_or(Point::origin());
 
-        // Seed values with one of the cube's vertices.
         let mut min_x = vertex.x;
         let mut max_x = vertex.x;
         let mut min_y = vertex.y;
