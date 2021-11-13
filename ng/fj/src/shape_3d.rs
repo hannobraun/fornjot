@@ -1,7 +1,7 @@
 use crate::{Shape, Shape2d};
 
 /// A 3-dimensional shape
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 #[repr(C)]
 pub enum Shape3d {
     /// A cube
@@ -18,7 +18,7 @@ impl From<Shape3d> for Shape {
 }
 
 /// A cube
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Cube {
     /// The side length of the cube
@@ -38,7 +38,7 @@ impl From<Cube> for Shape3d {
 }
 
 /// A sweep of 2-dimensional shape along the z-axis
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Sweep {
     /// The 2-dimensional shape being swept

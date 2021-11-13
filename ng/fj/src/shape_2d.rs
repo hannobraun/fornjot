@@ -1,14 +1,14 @@
 use crate::Shape;
 
 /// A 2-dimensional shape
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 #[repr(C)]
 pub enum Shape2d {
     Square(Square),
 }
 
 /// A square
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Square {
     /// The side length of the square
