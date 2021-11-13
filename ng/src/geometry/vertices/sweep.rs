@@ -10,10 +10,8 @@ impl Vertices for fj::Sweep {
     type Vertices = SweepVertices;
 
     fn vertices(&self) -> Self::Vertices {
-        let original = self.shape.vertices();
-
         SweepVertices {
-            original,
+            original: self.shape.vertices(),
             length: self.length,
         }
     }
