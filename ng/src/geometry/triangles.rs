@@ -6,6 +6,10 @@ pub trait Triangles {
     fn triangles(&self) -> Vec<Triangle>;
 }
 
+/// A triangle
+///
+/// Or more specifically, three points. Currently now validation is done, to
+/// ensure those points form an actual triangle.
 pub struct Triangle(pub [Point; 3]);
 
 impl From<[Point; 3]> for Triangle {
