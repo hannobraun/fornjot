@@ -8,7 +8,7 @@ use crate::{
 /// The triangles that make up a shape
 pub trait Triangles {
     /// Compute the triangles of a shape
-    fn triangles(&self) -> Vec<Triangle>;
+    fn triangles(&self, tolerance: f32) -> Vec<Triangle>;
 }
 
 /// A triangle
@@ -43,36 +43,36 @@ impl From<[Point; 3]> for Triangle {
 }
 
 impl Triangles for fj::Shape {
-    fn triangles(&self) -> Vec<Triangle> {
+    fn triangles(&self, tolerance: f32) -> Vec<Triangle> {
         match self {
-            Self::Shape2d(shape) => shape.triangles(),
-            Self::Shape3d(shape) => shape.triangles(),
+            Self::Shape2d(shape) => shape.triangles(tolerance),
+            Self::Shape3d(shape) => shape.triangles(tolerance),
         }
     }
 }
 
 impl Triangles for fj::Shape2d {
-    fn triangles(&self) -> Vec<Triangle> {
+    fn triangles(&self, tolerance: f32) -> Vec<Triangle> {
         match self {
             Self::Circle(_) => {
                 // TASK: Implement.
                 todo!()
             }
-            Self::Square(shape) => shape.triangles(),
+            Self::Square(shape) => shape.triangles(tolerance),
         }
     }
 }
 
 impl Triangles for fj::Shape3d {
-    fn triangles(&self) -> Vec<Triangle> {
+    fn triangles(&self, tolerance: f32) -> Vec<Triangle> {
         match self {
-            Self::Sweep(shape) => shape.triangles(),
+            Self::Sweep(shape) => shape.triangles(tolerance),
         }
     }
 }
 
 impl Triangles for fj::Square {
-    fn triangles(&self) -> Vec<Triangle> {
+    fn triangles(&self, _: f32) -> Vec<Triangle> {
         let mut triangles = Vec::new();
 
         let v = self.vertices();
@@ -85,10 +85,10 @@ impl Triangles for fj::Square {
 }
 
 impl Triangles for fj::Sweep {
-    fn triangles(&self) -> Vec<Triangle> {
+    fn triangles(&self, tolerance: f32) -> Vec<Triangle> {
         let mut triangles = Vec::new();
 
-        let original_triangles = self.shape.triangles();
+        let original_triangles = self.shape.triangles(tolerance);
 
         // Bottom face
         triangles.extend(

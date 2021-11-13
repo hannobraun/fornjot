@@ -45,7 +45,8 @@ fn main() -> anyhow::Result<()> {
         func()
     };
 
-    let triangles = shape.triangles();
+    // TASK: Choose tolerance value intelligently.
+    let triangles = shape.triangles(0.1);
 
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new()
