@@ -44,6 +44,11 @@ pub type Index = u32;
 /// See [`Mesh`].
 pub type IndexTriangle = [Index; 3];
 
+/// A triangle consisting of mesh vertices
+///
+/// See [`Mesh`].
+pub type VertexTriangle = [Vertex; 3];
+
 /// API for creating [`Mesh`]es
 pub struct MeshMaker {
     vertices: Vertices,
@@ -60,7 +65,7 @@ impl MeshMaker {
     }
 
     /// Add a triangle to the mesh
-    pub fn triangle(&mut self, triangle: [Vertex; 3]) {
+    pub fn triangle(&mut self, triangle: VertexTriangle) {
         let [v0, v1, v2] = triangle;
 
         let i0 = self.vertices.index_for_vertex(v0);
