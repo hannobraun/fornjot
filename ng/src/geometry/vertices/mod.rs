@@ -1,5 +1,7 @@
 mod sweep;
 
+pub use self::sweep::SweepVertices;
+
 use crate::math::Point;
 
 /// Return a shape's vertices
@@ -37,7 +39,7 @@ impl Vertices for fj::Shape3d {
     fn vertices(&self) -> Self::Vertices {
         match self {
             Self::Cube(shape) => shape.vertices(),
-            Self::Sweep(shape) => shape.vertices(),
+            Self::Sweep(shape) => shape.vertices().into_iter().collect(),
         }
     }
 }

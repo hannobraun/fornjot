@@ -93,13 +93,14 @@ impl ToMesh for fj::Sweep {
         // TASK: Add bottom face.
         // TASK: Add top face.
 
+        let vertices: Vec<_> = self.vertices().into_iter().collect();
+
         // Create pairs of vertices. Neighboring vertices of a sweep are always
         // a vertex from the original shape and its swept counterpart.
         //
         // This can be simplified (and made non-panicky), once `array_chunks` is
         // stabilized.
-        let mut vertex_pairs: Vec<_> = self
-            .vertices()
+        let mut vertex_pairs: Vec<_> = vertices
             .chunks(2)
             .map(|chunk| {
                 let a = chunk[0];
