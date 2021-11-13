@@ -4,12 +4,16 @@ use crate::math::Point;
 
 /// Return a shape's vertices
 pub trait Vertices {
+    type Vertices: IntoIterator<Item = Point>;
+
     /// Return a shape's vertices
-    fn vertices(&self) -> Vec<Point>;
+    fn vertices(&self) -> Self::Vertices;
 }
 
 impl Vertices for fj::Shape {
-    fn vertices(&self) -> Vec<Point> {
+    type Vertices = Vec<Point>;
+
+    fn vertices(&self) -> Self::Vertices {
         match self {
             Self::Shape2d(shape) => shape.vertices(),
             Self::Shape3d(shape) => shape.vertices(),
@@ -18,7 +22,9 @@ impl Vertices for fj::Shape {
 }
 
 impl Vertices for fj::Shape2d {
-    fn vertices(&self) -> Vec<Point> {
+    type Vertices = Vec<Point>;
+
+    fn vertices(&self) -> Self::Vertices {
         match self {
             Self::Square(shape) => shape.vertices(),
         }
@@ -26,7 +32,9 @@ impl Vertices for fj::Shape2d {
 }
 
 impl Vertices for fj::Shape3d {
-    fn vertices(&self) -> Vec<Point> {
+    type Vertices = Vec<Point>;
+
+    fn vertices(&self) -> Self::Vertices {
         match self {
             Self::Cube(shape) => shape.vertices(),
             Self::Sweep(shape) => shape.vertices(),
@@ -35,7 +43,9 @@ impl Vertices for fj::Shape3d {
 }
 
 impl Vertices for fj::Square {
-    fn vertices(&self) -> Vec<Point> {
+    type Vertices = Vec<Point>;
+
+    fn vertices(&self) -> Self::Vertices {
         let s = self.size / 2.;
 
         #[rustfmt::skip]
@@ -51,7 +61,9 @@ impl Vertices for fj::Square {
 }
 
 impl Vertices for fj::Cube {
-    fn vertices(&self) -> Vec<Point> {
+    type Vertices = Vec<Point>;
+
+    fn vertices(&self) -> Self::Vertices {
         let s = self.size / 2.;
 
         #[rustfmt::skip]
@@ -71,7 +83,9 @@ impl Vertices for fj::Cube {
 }
 
 impl Vertices for fj::Sweep {
-    fn vertices(&self) -> Vec<Point> {
+    type Vertices = Vec<Point>;
+
+    fn vertices(&self) -> Self::Vertices {
         let mut vertices = Vec::new();
 
         for vertex in self.shape.vertices() {
