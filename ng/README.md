@@ -21,4 +21,4 @@ As for that second point, I hope to avoid including a scripting language, becaus
 
 ## Status
 
-Implementation has begun. A host application that runs a model as a plug-in has been created. No CAD functionality exists yet.
+Implementation has begun. A host application that runs a model as a plug-in has been created. Very basic CAD functionality exists.
