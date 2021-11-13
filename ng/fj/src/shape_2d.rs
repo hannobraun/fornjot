@@ -16,8 +16,8 @@ pub struct Square {
 }
 
 impl From<Square> for Shape {
-    fn from(square: Square) -> Self {
-        Self::Shape2d(Shape2d::Square(square))
+    fn from(shape: Square) -> Self {
+        Self::Shape2d(Shape2d::Square(shape))
     }
 }
 
