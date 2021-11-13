@@ -10,6 +10,7 @@ pub trait Triangles {
 ///
 /// Or more specifically, three points. Currently now validation is done, to
 /// ensure those points form an actual triangle.
+#[derive(Clone, Copy)]
 pub struct Triangle(pub [Point; 3]);
 
 impl Triangle {
