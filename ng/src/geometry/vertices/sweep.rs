@@ -24,14 +24,14 @@ impl SweepVertices {
     ///
     /// Returns each vertex of the original shape, together with the vertex that
     /// was created by sweeping it.
-    pub fn vertex_pairs(&self) -> Vec<(Point, Point)> {
+    pub fn vertex_pairs(&self) -> Vec<[Point; 2]> {
         let mut pairs = Vec::new();
 
         for vertex in self.0.shape.vertices() {
             let a = vertex;
             let b = vertex + vector![0.0, 0.0, self.0.length];
 
-            pairs.push((a, b));
+            pairs.push([a, b]);
         }
 
         pairs
@@ -45,7 +45,7 @@ impl IntoIterator for SweepVertices {
     fn into_iter(self) -> Self::IntoIter {
         let mut vertices = Vec::new();
 
-        for (a, b) in self.vertex_pairs() {
+        for [a, b] in self.vertex_pairs() {
             vertices.push(a);
             vertices.push(b);
         }
