@@ -2,5 +2,5 @@
 /target
 /fj/Cargo.lock
 /fj/target
-/model/Cargo.lock
-/model/target
+/models/*/Cargo.lock
+/models/*/target
