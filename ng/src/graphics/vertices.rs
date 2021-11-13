@@ -5,12 +5,12 @@ use indexmap::IndexMap;
 use crate::math::Point;
 
 #[derive(Debug)]
-pub struct Vertices {
+pub struct Mesh {
     vertices: Vec<Vertex>,
     indices: Vec<Index>,
 }
 
-impl Vertices {
+impl Mesh {
     pub fn vertices(&self) -> &[Vertex] {
         self.vertices.as_slice()
     }
@@ -20,7 +20,7 @@ impl Vertices {
     }
 }
 
-impl From<Vec<[Point; 3]>> for Vertices {
+impl From<Vec<[Point; 3]>> for Mesh {
     fn from(triangles: Vec<[Point; 3]>) -> Self {
         let mut indices_by_vertex_with_normal = IndexMap::new();
         let mut indices = Vec::new();

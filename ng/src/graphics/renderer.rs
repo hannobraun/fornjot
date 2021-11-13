@@ -9,7 +9,7 @@ use winit::{dpi::PhysicalSize, window::Window};
 use super::{
     config_ui::ConfigUi, draw_config::DrawConfig, drawables::Drawables,
     geometries::Geometries, pipelines::Pipelines, transform::Transform,
-    uniforms::Uniforms, vertices::Vertices, COLOR_FORMAT, DEPTH_FORMAT,
+    uniforms::Uniforms, vertices::Mesh, COLOR_FORMAT, DEPTH_FORMAT,
 };
 
 #[derive(Debug)]
@@ -33,7 +33,7 @@ pub struct Renderer {
 impl Renderer {
     pub async fn new(
         window: &Window,
-        mesh: Vertices,
+        mesh: Mesh,
     ) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::VULKAN);
 
