@@ -1,9 +1,11 @@
 use bytemuck::{Pod, Zeroable};
 use decorum::R32;
 use indexmap::IndexMap;
-use nalgebra::Point;
 
-use crate::mesh::{Index, Mesh};
+use crate::{
+    math::Point,
+    mesh::{Index, Mesh},
+};
 
 #[derive(Debug)]
 pub struct Vertices {
