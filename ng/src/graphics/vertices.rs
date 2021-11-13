@@ -2,7 +2,7 @@ use bytemuck::{Pod, Zeroable};
 use decorum::R32;
 use indexmap::IndexMap;
 
-use crate::{math::Point, mesh::Index};
+use crate::math::Point;
 
 #[derive(Debug)]
 pub struct Vertices {
@@ -90,3 +90,5 @@ pub struct Vertex {
     pub normal: [f32; 3],
     pub color: [f32; 4],
 }
+
+type Index = u32;
