@@ -110,10 +110,11 @@ impl Triangles for fj::Sweep {
         // The top face is currently missing.
         // TASK: Add top face.
 
+        let original_triangles = self.shape.triangles();
+
         // Bottom face
         triangles.extend(
-            self.shape
-                .triangles()
+            original_triangles
                 .into_iter()
                 .map(|triangle| triangle.invert()),
         );
