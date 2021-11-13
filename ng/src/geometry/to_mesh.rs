@@ -36,54 +36,54 @@ impl ToMesh for fj::Shape3d {
 
 impl ToMesh for fj::Square {
     fn to_mesh(&self) -> Vec<Triangle> {
-        let mut mesh = Vec::new();
+        let mut triangles = Vec::new();
 
         let v = self.vertices();
 
-        mesh.push([v[0], v[1], v[2]]);
-        mesh.push([v[0], v[2], v[3]]);
+        triangles.push([v[0], v[1], v[2]]);
+        triangles.push([v[0], v[2], v[3]]);
 
-        mesh
+        triangles
     }
 }
 
 impl ToMesh for fj::Cube {
     fn to_mesh(&self) -> Vec<Triangle> {
-        let mut mesh = Vec::new();
+        let mut triangles = Vec::new();
 
         let v = self.vertices();
 
         // left
-        mesh.push([v[0], v[1], v[2]]);
-        mesh.push([v[2], v[1], v[3]]);
+        triangles.push([v[0], v[1], v[2]]);
+        triangles.push([v[2], v[1], v[3]]);
 
         // right
-        mesh.push([v[4], v[6], v[5]]);
-        mesh.push([v[6], v[7], v[5]]);
+        triangles.push([v[4], v[6], v[5]]);
+        triangles.push([v[6], v[7], v[5]]);
 
         // front
-        mesh.push([v[0], v[4], v[1]]);
-        mesh.push([v[4], v[5], v[1]]);
+        triangles.push([v[0], v[4], v[1]]);
+        triangles.push([v[4], v[5], v[1]]);
 
         // back
-        mesh.push([v[2], v[3], v[6]]);
-        mesh.push([v[6], v[3], v[7]]);
+        triangles.push([v[2], v[3], v[6]]);
+        triangles.push([v[6], v[3], v[7]]);
 
         // bottom
-        mesh.push([v[0], v[2], v[6]]);
-        mesh.push([v[0], v[6], v[4]]);
+        triangles.push([v[0], v[2], v[6]]);
+        triangles.push([v[0], v[6], v[4]]);
 
         // top
-        mesh.push([v[1], v[5], v[7]]);
-        mesh.push([v[1], v[7], v[3]]);
+        triangles.push([v[1], v[5], v[7]]);
+        triangles.push([v[1], v[7], v[3]]);
 
-        mesh
+        triangles
     }
 }
 
 impl ToMesh for fj::Sweep {
     fn to_mesh(&self) -> Vec<Triangle> {
-        let mut mesh = Vec::new();
+        let mut triangles = Vec::new();
 
         // PARTIAL IMPLEMENTATION
         //
@@ -110,10 +110,10 @@ impl ToMesh for fj::Sweep {
         });
 
         for [v0, v1, v2, v3] in quads {
-            mesh.push([v0, v1, v2]);
-            mesh.push([v0, v2, v3]);
+            triangles.push([v0, v1, v2]);
+            triangles.push([v0, v2, v3]);
         }
 
-        mesh
+        triangles
     }
 }
