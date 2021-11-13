@@ -2,10 +2,7 @@ use bytemuck::{Pod, Zeroable};
 use decorum::R32;
 use indexmap::IndexMap;
 
-use crate::{
-    math::Point,
-    mesh::{Index, Mesh},
-};
+use crate::{math::Point, mesh::Index};
 
 #[derive(Debug)]
 pub struct Vertices {
@@ -23,12 +20,12 @@ impl Vertices {
     }
 }
 
-impl From<Mesh> for Vertices {
-    fn from(mesh: Mesh) -> Self {
+impl From<Vec<[Point; 3]>> for Vertices {
+    fn from(mesh: Vec<[Point; 3]>) -> Self {
         let mut indices_by_vertex_with_normal = IndexMap::new();
         let mut indices = Vec::new();
 
-        for [v0, v1, v2] in mesh.triangles() {
+        for [v0, v1, v2] in mesh {
             let v0 = Point::from(v0);
             let v1 = Point::from(v1);
             let v2 = Point::from(v2);
