@@ -43,9 +43,6 @@ impl IntoIterator for SweepVertices {
     type IntoIter = vec::IntoIter<Self::Item>;
 
     fn into_iter(self) -> Self::IntoIter {
-        // TASK: Simplify implementation, once external code no longer relies on
-        //       the order vertices.
-
         let mut vertices = Vec::new();
 
         for (a, b) in self.vertex_pairs() {
