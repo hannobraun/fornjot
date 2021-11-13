@@ -1,11 +1,9 @@
-use std::path::PathBuf;
-
 /// Fornjot - Experimental CAD System - Host Application
 #[derive(clap::Parser)]
 pub struct Args {
     /// The model to open
     #[clap(short, long, default_value = "cube")]
-    pub model: PathBuf,
+    pub model: String,
 }
 
 impl Args {

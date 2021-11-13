@@ -24,7 +24,7 @@ use crate::{
 
 fn main() -> anyhow::Result<()> {
     let args = Args::parse();
-    let model_dir = format!("models/{}", args.model.display());
+    let model_dir = format!("models/{}", args.model);
 
     // This can be made a bit more contact using `ExitStatus::exit_ok`, once
     // that is stable.
