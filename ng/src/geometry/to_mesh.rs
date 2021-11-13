@@ -1,8 +1,8 @@
 use crate::{geometry::vertices::Vertices as _, math::Point};
 
-/// Convert a shape into a [`Mesh`]
+/// The triangles that make up a shape
 pub trait Triangles {
-    /// Convert a shape into a [`Mesh`]
+    /// Compute the triangles of a shape
     fn triangles(&self) -> Vec<Triangle>;
 }
 
