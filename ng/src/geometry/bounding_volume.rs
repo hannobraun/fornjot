@@ -21,73 +21,15 @@ pub struct Aabb {
     pub max: Point,
 }
 
-impl BoundingVolume for fj::Shape {
-    fn aabb(&self) -> Aabb {
-        match self {
-            Self::Shape2d(shape) => shape.aabb(),
-            Self::Shape3d(shape) => shape.aabb(),
-        }
-    }
-}
+impl Aabb {
+    pub fn from_vertices(vertices: impl IntoIterator<Item = Point>) -> Self {
+        let mut vertices = vertices.into_iter();
 
-impl BoundingVolume for fj::Shape2d {
-    fn aabb(&self) -> Aabb {
-        match self {
-            Self::Square(shape) => shape.aabb(),
-        }
-    }
-}
-
-impl BoundingVolume for fj::Shape3d {
-    fn aabb(&self) -> Aabb {
-        match self {
-            Self::Cube(shape) => shape.aabb(),
-            Self::Sweep(shape) => shape.aabb(),
-        }
-    }
-}
-
-impl BoundingVolume for fj::Square {
-    fn aabb(&self) -> Aabb {
-        let mut vertices = self.vertices();
-
-        // Can't panic. We know a square has at least one vertex.
-        let vertex = vertices.pop().unwrap();
-
-        // Seed values with one of the square's vertices.
-        let mut min_x = vertex.x;
-        let mut max_x = vertex.x;
-        let mut min_y = vertex.y;
-        let mut max_y = vertex.y;
-
-        for vertex in vertices {
-            if vertex.x < min_x {
-                min_x = vertex.x;
-            }
-            if vertex.x > max_x {
-                max_x = vertex.x;
-            }
-            if vertex.y < min_y {
-                min_y = vertex.y;
-            }
-            if vertex.y > max_y {
-                max_y = vertex.y;
-            }
-        }
-
-        Aabb {
-            min: [min_x, min_y, 0.0].into(),
-            max: [max_x, max_y, 0.0].into(),
-        }
-    }
-}
-
-impl BoundingVolume for fj::Cube {
-    fn aabb(&self) -> Aabb {
-        let mut vertices = self.vertices();
-
-        // Can't panic. We know a cube has at least one vertex.
-        let vertex = vertices.pop().unwrap();
+        // We need one vertex to seed our min/max coordinates, before going into
+        // the loop. If the shape has no vertices, we'll just use the point at
+        // the origin as a replacement. This will result in an empty bounding
+        // box located at the origin.
+        let vertex = vertices.next().unwrap_or(Point::origin());
 
         // Seed values with one of the cube's vertices.
         let mut min_x = vertex.x;
@@ -122,6 +64,44 @@ impl BoundingVolume for fj::Cube {
             min: [min_x, min_y, min_z].into(),
             max: [max_x, max_y, max_z].into(),
         }
+    }
+}
+
+impl BoundingVolume for fj::Shape {
+    fn aabb(&self) -> Aabb {
+        match self {
+            Self::Shape2d(shape) => shape.aabb(),
+            Self::Shape3d(shape) => shape.aabb(),
+        }
+    }
+}
+
+impl BoundingVolume for fj::Shape2d {
+    fn aabb(&self) -> Aabb {
+        match self {
+            Self::Square(shape) => shape.aabb(),
+        }
+    }
+}
+
+impl BoundingVolume for fj::Shape3d {
+    fn aabb(&self) -> Aabb {
+        match self {
+            Self::Cube(shape) => shape.aabb(),
+            Self::Sweep(shape) => shape.aabb(),
+        }
+    }
+}
+
+impl BoundingVolume for fj::Square {
+    fn aabb(&self) -> Aabb {
+        Aabb::from_vertices(self.vertices())
+    }
+}
+
+impl BoundingVolume for fj::Cube {
+    fn aabb(&self) -> Aabb {
+        Aabb::from_vertices(self.vertices())
     }
 }
 
