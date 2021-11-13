@@ -28,6 +28,10 @@ impl Vertices for fj::Shape2d {
 
     fn vertices(&self) -> Self::Vertices {
         match self {
+            Self::Circle(_) => {
+                // TASK: Implement.
+                todo!()
+            }
             Self::Square(shape) => shape.vertices(),
         }
     }

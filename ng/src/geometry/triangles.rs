@@ -54,6 +54,10 @@ impl Triangles for fj::Shape {
 impl Triangles for fj::Shape2d {
     fn triangles(&self) -> Vec<Triangle> {
         match self {
+            Self::Circle(_) => {
+                // TASK: Implement.
+                todo!()
+            }
             Self::Square(shape) => shape.triangles(),
         }
     }

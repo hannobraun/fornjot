@@ -78,6 +78,10 @@ impl BoundingVolume for fj::Shape {
 impl BoundingVolume for fj::Shape2d {
     fn aabb(&self) -> Aabb {
         match self {
+            Self::Circle(_) => {
+                // TASK: Implement.
+                todo!()
+            }
             Self::Square(shape) => shape.aabb(),
         }
     }
