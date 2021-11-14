@@ -7,7 +7,10 @@ use crate::{
 
 /// The triangles that make up a shape
 pub trait Triangles {
-    /// Compute the triangles of a shape
+    /// Compute triangles to approximate the shape's faces
+    ///
+    /// `tolerance` defines by how far this triangulation is allowed to deviate
+    /// from the shape's actual faces.
     fn triangles(&self, tolerance: f32) -> Vec<Triangle>;
 }
 
