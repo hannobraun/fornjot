@@ -10,11 +10,14 @@ pub trait Edges {
     /// This method presents a weird API right now, as it just returns all the
     /// segments, not distinguishing which edge they approximate. This design is
     /// simple and in line with current use cases, but not expected to last.
-    fn segments(&self, tolerance: f32) -> Vec<[Point; 2]>;
+    fn segments(&self, tolerance: f32) -> Vec<Segment>;
 }
 
+/// A line segment
+pub type Segment = [Point; 2];
+
 impl Edges for fj::Shape {
-    fn segments(&self, tolerance: f32) -> Vec<[Point; 2]> {
+    fn segments(&self, tolerance: f32) -> Vec<Segment> {
         match self {
             Self::Shape2d(shape) => shape.segments(tolerance),
             Self::Shape3d(shape) => shape.segments(tolerance),
@@ -23,7 +26,7 @@ impl Edges for fj::Shape {
 }
 
 impl Edges for fj::Shape2d {
-    fn segments(&self, _: f32) -> Vec<[Point; 2]> {
+    fn segments(&self, _: f32) -> Vec<Segment> {
         match self {
             Self::Circle(_) => {
                 // TASK: Implement.
@@ -38,7 +41,7 @@ impl Edges for fj::Shape2d {
 }
 
 impl Edges for fj::Shape3d {
-    fn segments(&self, _: f32) -> Vec<[Point; 2]> {
+    fn segments(&self, _: f32) -> Vec<Segment> {
         match self {
             Self::Sweep(_) => {
                 // TASK: Implement.
