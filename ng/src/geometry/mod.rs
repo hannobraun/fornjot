@@ -1,3 +1,3 @@
 pub mod bounding_volume;
-pub mod triangles;
+pub mod faces;
 pub mod vertices;

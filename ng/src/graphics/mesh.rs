@@ -2,7 +2,7 @@ use bytemuck::{Pod, Zeroable};
 use decorum::R32;
 use indexmap::IndexMap;
 
-use crate::{geometry::triangles::Triangle, math::Point};
+use crate::{geometry::faces::Triangle, math::Point};
 
 #[derive(Debug)]
 pub struct Mesh {
