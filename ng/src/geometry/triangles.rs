@@ -5,12 +5,12 @@ use crate::{
     math::{Point, Vector},
 };
 
-/// The triangles that make up a shape
+/// Access a shape's faces
 pub trait Faces {
     /// Compute triangles to approximate the shape's faces
     ///
     /// `tolerance` defines by how far this triangulation is allowed to deviate
-    /// from the shape's actual faces.
+    /// from the faces' actual dimensions.
     fn triangles(&self, tolerance: f32) -> Vec<Triangle>;
 }
 
