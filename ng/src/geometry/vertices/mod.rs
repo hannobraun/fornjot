@@ -4,11 +4,11 @@ pub use self::sweep::SweepVertices;
 
 use crate::math::Point;
 
-/// Return a shape's vertices
+/// A shape's vertices
 pub trait Vertices {
     type Vertices: IntoIterator<Item = Point>;
 
-    /// Return a shape's vertices
+    /// Return the shape's vertices
     fn vertices(&self) -> Self::Vertices;
 }
 
