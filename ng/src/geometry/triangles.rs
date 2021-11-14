@@ -6,7 +6,7 @@ use crate::{
 };
 
 /// The triangles that make up a shape
-pub trait Triangles {
+pub trait Faces {
     /// Compute triangles to approximate the shape's faces
     ///
     /// `tolerance` defines by how far this triangulation is allowed to deviate
@@ -45,7 +45,7 @@ impl From<[Point; 3]> for Triangle {
     }
 }
 
-impl Triangles for fj::Shape {
+impl Faces for fj::Shape {
     fn triangles(&self, tolerance: f32) -> Vec<Triangle> {
         match self {
             Self::Shape2d(shape) => shape.triangles(tolerance),
@@ -54,7 +54,7 @@ impl Triangles for fj::Shape {
     }
 }
 
-impl Triangles for fj::Shape2d {
+impl Faces for fj::Shape2d {
     fn triangles(&self, tolerance: f32) -> Vec<Triangle> {
         match self {
             Self::Circle(_) => {
@@ -66,7 +66,7 @@ impl Triangles for fj::Shape2d {
     }
 }
 
-impl Triangles for fj::Shape3d {
+impl Faces for fj::Shape3d {
     fn triangles(&self, tolerance: f32) -> Vec<Triangle> {
         match self {
             Self::Sweep(shape) => shape.triangles(tolerance),
@@ -74,7 +74,7 @@ impl Triangles for fj::Shape3d {
     }
 }
 
-impl Triangles for fj::Square {
+impl Faces for fj::Square {
     fn triangles(&self, _: f32) -> Vec<Triangle> {
         let mut triangles = Vec::new();
 
@@ -87,7 +87,7 @@ impl Triangles for fj::Square {
     }
 }
 
-impl Triangles for fj::Sweep {
+impl Faces for fj::Sweep {
     fn triangles(&self, tolerance: f32) -> Vec<Triangle> {
         let mut triangles = Vec::new();
 
