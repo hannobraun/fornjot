@@ -589,7 +589,6 @@ dependencies = [
  "decorum",
  "fj",
  "futures",
- "indexmap",
  "libloading 0.7.1",
  "nalgebra",
  "thiserror",
