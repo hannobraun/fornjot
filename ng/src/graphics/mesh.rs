@@ -3,7 +3,6 @@ use decorum::R32;
 
 use crate::{
     geometry::faces::Triangle,
-    math::Point,
     mesh::{Index, MeshMaker},
 };
 
@@ -29,10 +28,6 @@ impl From<Vec<Triangle>> for Mesh {
 
         for triangle in triangles {
             let [v0, v1, v2] = triangle.0;
-
-            let v0 = Point::from(v0);
-            let v1 = Point::from(v1);
-            let v2 = Point::from(v2);
 
             let normal = (v1 - v0).cross(&(v2 - v0)).normalize();
 
