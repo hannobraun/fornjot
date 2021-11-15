@@ -1,8 +1,11 @@
 use bytemuck::{Pod, Zeroable};
 use decorum::R32;
-use indexmap::IndexMap;
 
-use crate::{geometry::faces::Triangle, math::Point, mesh::Index};
+use crate::{
+    geometry::faces::Triangle,
+    math::Point,
+    mesh::{Index, MeshMaker},
+};
 
 #[derive(Debug)]
 pub struct Mesh {
@@ -22,8 +25,7 @@ impl Mesh {
 
 impl From<Vec<Triangle>> for Mesh {
     fn from(triangles: Vec<Triangle>) -> Self {
-        let mut indices_by_vertex_with_normal = IndexMap::new();
-        let mut indices = Vec::new();
+        let mut mesh = MeshMaker::new();
 
         for triangle in triangles {
             let [v0, v1, v2] = triangle.0;
@@ -44,28 +46,13 @@ impl From<Vec<Triangle>> for Mesh {
                 R32::from(normal.z),
             ];
 
-            let next_index = indices_by_vertex_with_normal.len();
-            let i0 = *indices_by_vertex_with_normal
-                .entry((v0, normal))
-                .or_insert(next_index);
-
-            let next_index = indices_by_vertex_with_normal.len();
-            let i1 = *indices_by_vertex_with_normal
-                .entry((v1, normal))
-                .or_insert(next_index);
-
-            let next_index = indices_by_vertex_with_normal.len();
-            let i2 = *indices_by_vertex_with_normal
-                .entry((v2, normal))
-                .or_insert(next_index);
-
-            indices.push(i0 as u32);
-            indices.push(i1 as u32);
-            indices.push(i2 as u32);
+            mesh.push((v0, normal));
+            mesh.push((v1, normal));
+            mesh.push((v2, normal));
         }
 
-        let vertices = indices_by_vertex_with_normal
-            .keys()
+        let vertices = mesh
+            .vertices()
             .map(|(vertex, normal)| Vertex {
                 position: [
                     vertex[0].into_inner(),
@@ -80,6 +67,8 @@ impl From<Vec<Triangle>> for Mesh {
                 color: [1.0, 0.0, 0.0, 1.0],
             })
             .collect();
+
+        let indices = mesh.indices().collect();
 
         Self { vertices, indices }
     }
