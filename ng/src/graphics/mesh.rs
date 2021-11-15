@@ -2,7 +2,7 @@ use bytemuck::{Pod, Zeroable};
 use decorum::R32;
 use indexmap::IndexMap;
 
-use crate::{geometry::faces::Triangle, math::Point};
+use crate::{geometry::faces::Triangle, math::Point, mesh::Index};
 
 #[derive(Debug)]
 pub struct Mesh {
@@ -92,5 +92,3 @@ pub struct Vertex {
     pub normal: [f32; 3],
     pub color: [f32; 4],
 }
-
-type Index = u32;
