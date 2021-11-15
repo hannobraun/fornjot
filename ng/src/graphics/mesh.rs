@@ -44,16 +44,8 @@ impl From<Vec<Triangle>> for Mesh {
         let vertices = mesh
             .vertices()
             .map(|(vertex, normal)| Vertex {
-                position: [
-                    vertex.0[0].into_inner(),
-                    vertex.0[1].into_inner(),
-                    vertex.0[2].into_inner(),
-                ],
-                normal: [
-                    normal.0[0].into_inner(),
-                    normal.0[1].into_inner(),
-                    normal.0[2].into_inner(),
-                ],
+                position: vertex.into(),
+                normal: normal.into(),
                 color: [1.0, 0.0, 0.0, 1.0],
             })
             .collect();
