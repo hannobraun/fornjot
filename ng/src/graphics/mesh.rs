@@ -1,5 +1,4 @@
 use bytemuck::{Pod, Zeroable};
-use decorum::R32;
 
 use crate::{
     geometry::faces::Triangle,
@@ -35,11 +34,7 @@ impl From<Vec<Triangle>> for Mesh {
             let v1 = HashVector::from(v1);
             let v2 = HashVector::from(v2);
 
-            let normal = [
-                R32::from(normal.x),
-                R32::from(normal.y),
-                R32::from(normal.z),
-            ];
+            let normal = HashVector::from(normal);
 
             mesh.push((v0, normal));
             mesh.push((v1, normal));
@@ -55,9 +50,9 @@ impl From<Vec<Triangle>> for Mesh {
                     vertex.0[2].into_inner(),
                 ],
                 normal: [
-                    normal[0].into_inner(),
-                    normal[1].into_inner(),
-                    normal[2].into_inner(),
+                    normal.0[0].into_inner(),
+                    normal.0[1].into_inner(),
+                    normal.0[2].into_inner(),
                 ],
                 color: [1.0, 0.0, 0.0, 1.0],
             })

@@ -2,7 +2,7 @@ use std::{collections::HashMap, hash::Hash};
 
 use decorum::R32;
 
-use crate::math::Point;
+use crate::math::{Point, Vector};
 
 /// API for creating a mesh
 pub struct MeshMaker<V> {
@@ -55,6 +55,16 @@ pub struct HashVector(pub [R32; 3]);
 impl From<Point> for HashVector {
     fn from(point: Point) -> Self {
         Self([R32::from(point.x), R32::from(point.y), R32::from(point.z)])
+    }
+}
+
+impl From<Vector> for HashVector {
+    fn from(vector: Vector) -> Self {
+        Self([
+            R32::from(vector.x),
+            R32::from(vector.y),
+            R32::from(vector.z),
+        ])
     }
 }
 
