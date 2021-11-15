@@ -1,5 +1,9 @@
 use std::{collections::HashMap, hash::Hash};
 
+use decorum::R32;
+
+use crate::math::Point;
+
 /// API for creating a mesh
 pub struct MeshMaker<V> {
     vertices: Vec<V>,
@@ -41,6 +45,16 @@ where
     /// Access the indices of the mesh
     pub fn indices(&self) -> impl Iterator<Item = Index> + '_ {
         self.indices.iter().copied()
+    }
+}
+
+/// A point/vector type that can be used as a [`HashMap`] key
+#[derive(Clone, Copy, Eq, Hash, PartialEq)]
+pub struct HashVector(pub [R32; 3]);
+
+impl From<Point> for HashVector {
+    fn from(point: Point) -> Self {
+        Self([R32::from(point.x), R32::from(point.y), R32::from(point.z)])
     }
 }
 

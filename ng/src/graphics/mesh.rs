@@ -3,7 +3,7 @@ use decorum::R32;
 
 use crate::{
     geometry::faces::Triangle,
-    mesh::{Index, MeshMaker},
+    mesh::{HashVector, Index, MeshMaker},
 };
 
 #[derive(Debug)]
@@ -31,9 +31,9 @@ impl From<Vec<Triangle>> for Mesh {
 
             let normal = (v1 - v0).cross(&(v2 - v0)).normalize();
 
-            let v0 = [R32::from(v0.x), R32::from(v0.y), R32::from(v0.z)];
-            let v1 = [R32::from(v1.x), R32::from(v1.y), R32::from(v1.z)];
-            let v2 = [R32::from(v2.x), R32::from(v2.y), R32::from(v2.z)];
+            let v0 = HashVector::from(v0);
+            let v1 = HashVector::from(v1);
+            let v2 = HashVector::from(v2);
 
             let normal = [
                 R32::from(normal.x),
@@ -50,9 +50,9 @@ impl From<Vec<Triangle>> for Mesh {
             .vertices()
             .map(|(vertex, normal)| Vertex {
                 position: [
-                    vertex[0].into_inner(),
-                    vertex[1].into_inner(),
-                    vertex[2].into_inner(),
+                    vertex.0[0].into_inner(),
+                    vertex.0[1].into_inner(),
+                    vertex.0[2].into_inner(),
                 ],
                 normal: [
                     normal[0].into_inner(),
