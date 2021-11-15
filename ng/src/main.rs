@@ -46,6 +46,11 @@ fn main() -> anyhow::Result<()> {
     // TASK: Choose tolerance value intelligently.
     let triangles = shape.triangles(0.1);
 
+    if let Some(_path) = args.export {
+        // TASK: Implement.
+        todo!()
+    }
+
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new()
         .with_title("Fornjot")
