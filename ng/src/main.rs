@@ -19,6 +19,7 @@ use crate::{
     args::Args,
     geometry::{bounding_volume::BoundingVolume as _, faces::Faces as _},
     graphics::{DrawConfig, Renderer, Transform},
+    mesh::{HashVector, MeshMaker},
 };
 
 fn main() -> anyhow::Result<()> {
@@ -47,9 +48,38 @@ fn main() -> anyhow::Result<()> {
     // TASK: Choose tolerance value intelligently.
     let triangles = shape.triangles(0.1);
 
-    if let Some(_path) = args.export {
-        // TASK: Implement.
-        todo!()
+    if let Some(path) = args.export {
+        let mut mesh_maker = MeshMaker::new();
+
+        for triangle in triangles {
+            for vertex in triangle.0 {
+                mesh_maker.push(HashVector::from(vertex));
+            }
+        }
+
+        let vertices =
+            mesh_maker.vertices().map(|vertex| vertex.into()).collect();
+
+        let indices: Vec<_> = mesh_maker.indices().collect();
+        let triangles = indices
+            .chunks(3)
+            .map(|triangle| {
+                [
+                    triangle[0] as usize,
+                    triangle[1] as usize,
+                    triangle[2] as usize,
+                ]
+            })
+            .collect();
+
+        let mesh = threemf::TriangleMesh {
+            vertices,
+            triangles,
+        };
+
+        threemf::write(path, &mesh)?;
+
+        return Ok(());
     }
 
     let event_loop = EventLoop::new();
