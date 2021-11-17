@@ -1,4 +1,4 @@
-use crate::math::Point;
+use crate::{geometry::vertices::Vertices as _, math::Point};
 
 /// Access the edges of a shape
 pub trait Edges {
@@ -57,8 +57,16 @@ impl Edges for fj::Circle {
 
 impl Edges for fj::Square {
     fn segments(&self, _: f32) -> Vec<Segment> {
-        // TASK: Implement.
-        todo!()
+        let mut edges = Vec::new();
+
+        let v = self.vertices();
+
+        edges.push([v[0], v[1]].into());
+        edges.push([v[1], v[2]].into());
+        edges.push([v[2], v[3]].into());
+        edges.push([v[3], v[0]].into());
+
+        edges
     }
 }
 
