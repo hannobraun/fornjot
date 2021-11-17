@@ -57,10 +57,7 @@ impl Faces for fj::Shape {
 impl Faces for fj::Shape2d {
     fn triangles(&self, tolerance: f32) -> Vec<Triangle> {
         match self {
-            Self::Circle(_) => {
-                // TASK: Implement.
-                todo!()
-            }
+            Self::Circle(shape) => shape.triangles(tolerance),
             Self::Square(shape) => shape.triangles(tolerance),
         }
     }
@@ -71,6 +68,13 @@ impl Faces for fj::Shape3d {
         match self {
             Self::Sweep(shape) => shape.triangles(tolerance),
         }
+    }
+}
+
+impl Faces for fj::Circle {
+    fn triangles(&self, _tolerance: f32) -> Vec<Triangle> {
+        // TASK: Implement.
+        todo!()
     }
 }
 
