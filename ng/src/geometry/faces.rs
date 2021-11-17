@@ -107,6 +107,13 @@ impl Faces for fj::Sweep {
             triangle.translate(vector![0.0, 0.0, self.length])
         }));
 
+        // TASK: `vertex_pairs` is based on `Vertices::vertices`, which expects
+        //       get get enough vertices to fully approximate the shape. This
+        //       doesn't work for rounded shapes.
+        //
+        //       That code should probably be replaced with a computation of the
+        //       side quads based on `Edges::segments`.
+
         // In the next step, we're going to collect those pairs of vertices into
         // quads. But we also need to make sure we'll get the last quad, which
         // is made up of the last and first pair.
