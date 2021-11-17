@@ -26,27 +26,39 @@ impl Edges for fj::Shape {
 }
 
 impl Edges for fj::Shape2d {
-    fn segments(&self, _: f32) -> Vec<Segment> {
+    fn segments(&self, tolerance: f32) -> Vec<Segment> {
         match self {
-            Self::Circle(_) => {
-                // TASK: Implement.
-                todo!()
-            }
-            Self::Square(_) => {
-                // TASK: Implement.
-                todo!()
-            }
+            Self::Circle(shape) => shape.segments(tolerance),
+            Self::Square(shape) => shape.segments(tolerance),
         }
     }
 }
 
 impl Edges for fj::Shape3d {
-    fn segments(&self, _: f32) -> Vec<Segment> {
+    fn segments(&self, tolerance: f32) -> Vec<Segment> {
         match self {
-            Self::Sweep(_) => {
-                // TASK: Implement.
-                todo!()
-            }
+            Self::Sweep(shape) => shape.segments(tolerance),
         }
+    }
+}
+
+impl Edges for fj::Circle {
+    fn segments(&self, _tolerance: f32) -> Vec<Segment> {
+        // TASK: Implement.
+        todo!()
+    }
+}
+
+impl Edges for fj::Square {
+    fn segments(&self, _: f32) -> Vec<Segment> {
+        // TASK: Implement.
+        todo!()
+    }
+}
+
+impl Edges for fj::Sweep {
+    fn segments(&self, _tolerance: f32) -> Vec<Segment> {
+        // TASK: Implement.
+        todo!()
     }
 }
