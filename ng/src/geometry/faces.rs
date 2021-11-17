@@ -16,7 +16,7 @@ pub trait Faces {
 
 /// A triangle
 ///
-/// Or more specifically, three points. Currently now validation is done, to
+/// Or more specifically, three points. Currently no validation is done, to
 /// ensure those points form an actual triangle.
 #[derive(Clone, Copy)]
 pub struct Triangle(pub [Point; 3]);
