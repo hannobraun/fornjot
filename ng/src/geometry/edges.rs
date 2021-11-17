@@ -14,7 +14,7 @@ pub trait Edges {
 }
 
 /// A line segment
-pub type Segment = [Point; 2];
+pub struct Segment(pub [Point; 2]);
 
 impl Edges for fj::Shape {
     fn segments(&self, tolerance: f32) -> Vec<Segment> {
