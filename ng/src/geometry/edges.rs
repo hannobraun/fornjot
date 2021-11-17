@@ -16,6 +16,12 @@ pub trait Edges {
 /// A line segment
 pub struct Segment(pub [Point; 2]);
 
+impl From<[Point; 2]> for Segment {
+    fn from(vertices: [Point; 2]) -> Self {
+        Self(vertices)
+    }
+}
+
 impl Edges for fj::Shape {
     fn segments(&self, tolerance: f32) -> Vec<Segment> {
         match self {
