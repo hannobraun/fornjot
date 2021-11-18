@@ -21,6 +21,10 @@ impl Segments {
     pub fn new() -> Self {
         Self(Vec::new())
     }
+
+    pub fn push(&mut self, segment: impl Into<Segment>) {
+        self.0.push(segment.into())
+    }
 }
 
 /// A line segment
@@ -71,10 +75,10 @@ impl Edges for fj::Square {
 
         let v = self.vertices();
 
-        segments.0.push([v[0], v[1]].into());
-        segments.0.push([v[1], v[2]].into());
-        segments.0.push([v[2], v[3]].into());
-        segments.0.push([v[3], v[0]].into());
+        segments.push([v[0], v[1]]);
+        segments.push([v[1], v[2]]);
+        segments.push([v[2], v[3]]);
+        segments.push([v[3], v[0]]);
 
         segments
     }
