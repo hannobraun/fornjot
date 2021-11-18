@@ -17,6 +17,7 @@ pub trait Edges {
 }
 
 /// Line segments that approximate a shape's edges
+#[derive(Debug)]
 pub struct Segments(pub Vec<Segment>);
 
 impl Segments {
@@ -32,6 +33,7 @@ impl Segments {
 }
 
 /// A line segment
+#[derive(Debug)]
 pub struct Segment(pub [Point; 2]);
 
 impl Segment {
