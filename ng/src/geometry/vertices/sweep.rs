@@ -10,7 +10,8 @@ impl Vertices for fj::Sweep {
     type Vertices = SweepVertices;
 
     fn vertices(&self) -> Self::Vertices {
-        SweepVertices(self.clone())
+        // TASK Implement.
+        todo!()
     }
 }
 
