@@ -2,16 +2,12 @@ use crate::math::Point;
 
 /// A shape's vertices
 pub trait Vertices {
-    type Vertices: IntoIterator<Item = Point>;
-
     /// Return the shape's vertices
-    fn vertices(&self) -> Self::Vertices;
+    fn vertices(&self) -> Vec<Point>;
 }
 
 impl Vertices for fj::Shape {
-    type Vertices = Vec<Point>;
-
-    fn vertices(&self) -> Self::Vertices {
+    fn vertices(&self) -> Vec<Point> {
         match self {
             Self::Shape2d(shape) => shape.vertices(),
             Self::Shape3d(shape) => shape.vertices(),
@@ -20,9 +16,7 @@ impl Vertices for fj::Shape {
 }
 
 impl Vertices for fj::Shape2d {
-    type Vertices = Vec<Point>;
-
-    fn vertices(&self) -> Self::Vertices {
+    fn vertices(&self) -> Vec<Point> {
         match self {
             Self::Circle(shape) => shape.vertices(),
             Self::Square(shape) => shape.vertices(),
@@ -31,9 +25,7 @@ impl Vertices for fj::Shape2d {
 }
 
 impl Vertices for fj::Shape3d {
-    type Vertices = Vec<Point>;
-
-    fn vertices(&self) -> Self::Vertices {
+    fn vertices(&self) -> Vec<Point> {
         match self {
             Self::Sweep(shape) => shape.vertices().into_iter().collect(),
         }
@@ -41,18 +33,14 @@ impl Vertices for fj::Shape3d {
 }
 
 impl Vertices for fj::Circle {
-    type Vertices = Vec<Point>;
-
-    fn vertices(&self) -> Self::Vertices {
+    fn vertices(&self) -> Vec<Point> {
         // Circles have just a single round edge with no vertices.
         Vec::new()
     }
 }
 
 impl Vertices for fj::Square {
-    type Vertices = Vec<Point>;
-
-    fn vertices(&self) -> Self::Vertices {
+    fn vertices(&self) -> Vec<Point> {
         let s = self.size / 2.;
 
         #[rustfmt::skip]
@@ -68,9 +56,7 @@ impl Vertices for fj::Square {
 }
 
 impl Vertices for fj::Sweep {
-    type Vertices = Vec<Point>;
-
-    fn vertices(&self) -> Self::Vertices {
+    fn vertices(&self) -> Vec<Point> {
         // TASK Implement.
         todo!()
     }
