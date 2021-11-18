@@ -22,6 +22,7 @@ impl Segments {
         Self(Vec::new())
     }
 
+    /// Add a segment
     pub fn push(&mut self, segment: impl Into<Segment>) {
         self.0.push(segment.into())
     }
