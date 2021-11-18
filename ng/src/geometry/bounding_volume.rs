@@ -24,6 +24,7 @@ pub struct Aabb {
 }
 
 impl Aabb {
+    /// Create a bounding volume that encloses the provided vertices
     pub fn from_vertices(vertices: impl IntoIterator<Item = Point>) -> Self {
         let mut vertices = vertices.into_iter();
 
