@@ -1,5 +1,3 @@
-mod sweep;
-
 use crate::math::Point;
 
 /// A shape's vertices
@@ -66,5 +64,14 @@ impl Vertices for fj::Square {
         ];
 
         v.map(|coord| coord.into()).to_vec()
+    }
+}
+
+impl Vertices for fj::Sweep {
+    type Vertices = Vec<Point>;
+
+    fn vertices(&self) -> Self::Vertices {
+        // TASK Implement.
+        todo!()
     }
 }
