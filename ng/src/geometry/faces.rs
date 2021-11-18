@@ -108,7 +108,7 @@ impl Faces for fj::Sweep {
         }));
 
         // TASK: `vertex_pairs` is based on `Vertices::vertices`, which expects
-        //       get get enough vertices to fully approximate the shape. This
+        //       to get enough vertices to fully approximate the shape. This
         //       doesn't work for rounded shapes.
         //
         //       That code should probably be replaced with a computation of the
