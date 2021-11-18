@@ -10,8 +10,11 @@ pub trait Edges {
     /// This method presents a weird API right now, as it just returns all the
     /// segments, not distinguishing which edge they approximate. This design is
     /// simple and in line with current use cases, but not expected to last.
-    fn segments(&self, tolerance: f32) -> Vec<Segment>;
+    fn segments(&self, tolerance: f32) -> Segments;
 }
+
+/// Line segments that approximate a shape's edges
+pub type Segments = Vec<Segment>;
 
 /// A line segment
 pub struct Segment(pub [Point; 2]);
@@ -23,7 +26,7 @@ impl From<[Point; 2]> for Segment {
 }
 
 impl Edges for fj::Shape {
-    fn segments(&self, tolerance: f32) -> Vec<Segment> {
+    fn segments(&self, tolerance: f32) -> Segments {
         match self {
             Self::Shape2d(shape) => shape.segments(tolerance),
             Self::Shape3d(shape) => shape.segments(tolerance),
@@ -32,7 +35,7 @@ impl Edges for fj::Shape {
 }
 
 impl Edges for fj::Shape2d {
-    fn segments(&self, tolerance: f32) -> Vec<Segment> {
+    fn segments(&self, tolerance: f32) -> Segments {
         match self {
             Self::Circle(shape) => shape.segments(tolerance),
             Self::Square(shape) => shape.segments(tolerance),
@@ -41,7 +44,7 @@ impl Edges for fj::Shape2d {
 }
 
 impl Edges for fj::Shape3d {
-    fn segments(&self, tolerance: f32) -> Vec<Segment> {
+    fn segments(&self, tolerance: f32) -> Segments {
         match self {
             Self::Sweep(shape) => shape.segments(tolerance),
         }
@@ -49,14 +52,14 @@ impl Edges for fj::Shape3d {
 }
 
 impl Edges for fj::Circle {
-    fn segments(&self, _tolerance: f32) -> Vec<Segment> {
+    fn segments(&self, _tolerance: f32) -> Segments {
         // TASK: Implement.
         todo!()
     }
 }
 
 impl Edges for fj::Square {
-    fn segments(&self, _: f32) -> Vec<Segment> {
+    fn segments(&self, _: f32) -> Segments {
         let mut segments = Vec::new();
 
         let v = self.vertices();
@@ -71,7 +74,7 @@ impl Edges for fj::Square {
 }
 
 impl Edges for fj::Sweep {
-    fn segments(&self, _tolerance: f32) -> Vec<Segment> {
+    fn segments(&self, _tolerance: f32) -> Segments {
         // TASK: Implement.
         todo!()
     }
