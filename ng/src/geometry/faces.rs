@@ -83,7 +83,7 @@ impl Faces for fj::Circle {
 
 impl Faces for fj::Square {
     fn triangles(&self, _: f32) -> Triangles {
-        let mut triangles = Vec::new();
+        let mut triangles = Triangles::new();
 
         let v = self.vertices();
 
@@ -96,7 +96,7 @@ impl Faces for fj::Square {
 
 impl Faces for fj::Sweep {
     fn triangles(&self, tolerance: f32) -> Triangles {
-        let mut triangles = Vec::new();
+        let mut triangles = Triangles::new();
 
         let original_triangles = self.shape.triangles(tolerance);
 
