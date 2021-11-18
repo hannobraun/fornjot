@@ -51,7 +51,7 @@ fn main() -> anyhow::Result<()> {
     if let Some(path) = args.export {
         let mut mesh_maker = MeshMaker::new();
 
-        for triangle in triangles {
+        for triangle in triangles.0 {
             for vertex in triangle.0 {
                 mesh_maker.push(HashVector::from(vertex));
             }
@@ -92,7 +92,7 @@ fn main() -> anyhow::Result<()> {
         .unwrap();
 
     let mut input_handler = input::Handler::new();
-    let mut renderer = block_on(Renderer::new(&window, triangles.into()))?;
+    let mut renderer = block_on(Renderer::new(&window, triangles.0.into()))?;
 
     let mut draw_config = DrawConfig::default();
     let mut transform = Transform::new(shape.aabb());

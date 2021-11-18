@@ -15,7 +15,14 @@ pub trait Faces {
 }
 
 /// The triangles that approximate a shape's faces
-pub type Triangles = Vec<Triangle>;
+pub struct Triangles(pub Vec<Triangle>);
+
+impl Triangles {
+    /// Create new instance of `Triangles`
+    pub fn new() -> Self {
+        Self(Vec::new())
+    }
+}
 
 /// A triangle
 ///
@@ -87,8 +94,8 @@ impl Faces for fj::Square {
 
         let v = self.vertices();
 
-        triangles.push([v[0], v[1], v[2]].into());
-        triangles.push([v[0], v[2], v[3]].into());
+        triangles.0.push([v[0], v[1], v[2]].into());
+        triangles.0.push([v[0], v[2], v[3]].into());
 
         triangles
     }
@@ -101,14 +108,19 @@ impl Faces for fj::Sweep {
         let original_triangles = self.shape.triangles(tolerance);
 
         // Bottom face
-        triangles.extend(
-            original_triangles.iter().map(|triangle| triangle.invert()),
+        triangles.0.extend(
+            original_triangles
+                .0
+                .iter()
+                .map(|triangle| triangle.invert()),
         );
 
         // Top face
-        triangles.extend(original_triangles.iter().map(|triangle| {
-            triangle.translate(vector![0.0, 0.0, self.length])
-        }));
+        triangles
+            .0
+            .extend(original_triangles.0.iter().map(|triangle| {
+                triangle.translate(vector![0.0, 0.0, self.length])
+            }));
 
         let segments = self.shape.segments(tolerance);
 
@@ -124,8 +136,8 @@ impl Faces for fj::Sweep {
         }
 
         for [v0, v1, v2, v3] in quads {
-            triangles.push([v0, v1, v2].into());
-            triangles.push([v0, v2, v3].into());
+            triangles.0.push([v0, v1, v2].into());
+            triangles.0.push([v0, v2, v3].into());
         }
 
         triangles
