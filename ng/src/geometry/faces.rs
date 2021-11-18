@@ -22,6 +22,11 @@ impl Triangles {
     pub fn new() -> Self {
         Self(Vec::new())
     }
+
+    /// Add a triangle
+    pub fn push(&mut self, triangle: impl Into<Triangle>) {
+        self.0.push(triangle.into())
+    }
 }
 
 /// A triangle
@@ -94,8 +99,8 @@ impl Faces for fj::Square {
 
         let v = self.vertices();
 
-        triangles.0.push([v[0], v[1], v[2]].into());
-        triangles.0.push([v[0], v[2], v[3]].into());
+        triangles.push([v[0], v[1], v[2]]);
+        triangles.push([v[0], v[2], v[3]]);
 
         triangles
     }
@@ -136,8 +141,8 @@ impl Faces for fj::Sweep {
         }
 
         for [v0, v1, v2, v3] in quads {
-            triangles.0.push([v0, v1, v2].into());
-            triangles.0.push([v0, v2, v3].into());
+            triangles.push([v0, v1, v2]);
+            triangles.push([v0, v2, v3]);
         }
 
         triangles
