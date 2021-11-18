@@ -45,6 +45,8 @@ fn main() -> anyhow::Result<()> {
         func()
     };
 
+    let aabb = shape.aabb();
+
     // TASK: Choose tolerance value intelligently.
     let tolerance = 0.1;
     let triangles = shape.triangles(tolerance);
@@ -96,7 +98,7 @@ fn main() -> anyhow::Result<()> {
     let mut renderer = block_on(Renderer::new(&window, triangles.0.into()))?;
 
     let mut draw_config = DrawConfig::default();
-    let mut transform = Transform::new(shape.aabb());
+    let mut transform = Transform::new(aabb);
 
     let mut previous_time = Instant::now();
 
