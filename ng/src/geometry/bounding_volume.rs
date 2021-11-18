@@ -1,6 +1,9 @@
 use nalgebra::point;
 
-use crate::{geometry::vertices::Vertices as _, math::Point};
+use crate::{
+    geometry::vertices::Vertices as _,
+    math::{Point, Vector},
+};
 
 /// Compute the bounding volume of a shape
 ///
@@ -66,6 +69,11 @@ impl Aabb {
             min: [min_x, min_y, min_z].into(),
             max: [max_x, max_y, max_z].into(),
         }
+    }
+
+    /// Compute the size of the axis-aligned bounding box
+    pub fn size(&self) -> Vector {
+        self.max - self.min
     }
 }
 

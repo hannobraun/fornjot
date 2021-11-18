@@ -47,8 +47,7 @@ fn main() -> anyhow::Result<()> {
 
     let aabb = shape.aabb();
 
-    // TASK: Choose tolerance value intelligently.
-    let tolerance = 0.1;
+    let tolerance = aabb.size().min() / 1000.;
     let triangles = shape.triangles(tolerance);
 
     if let Some(path) = args.export {
