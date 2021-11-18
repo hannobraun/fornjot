@@ -46,7 +46,8 @@ fn main() -> anyhow::Result<()> {
     };
 
     // TASK: Choose tolerance value intelligently.
-    let triangles = shape.triangles(0.1);
+    let tolerance = 0.1;
+    let triangles = shape.triangles(tolerance);
 
     if let Some(path) = args.export {
         let mut mesh_maker = MeshMaker::new();
