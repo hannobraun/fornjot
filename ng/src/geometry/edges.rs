@@ -57,16 +57,16 @@ impl Edges for fj::Circle {
 
 impl Edges for fj::Square {
     fn segments(&self, _: f32) -> Vec<Segment> {
-        let mut edges = Vec::new();
+        let mut segments = Vec::new();
 
         let v = self.vertices();
 
-        edges.push([v[0], v[1]].into());
-        edges.push([v[1], v[2]].into());
-        edges.push([v[2], v[3]].into());
-        edges.push([v[3], v[0]].into());
+        segments.push([v[0], v[1]].into());
+        segments.push([v[1], v[2]].into());
+        segments.push([v[2], v[3]].into());
+        segments.push([v[3], v[0]].into());
 
-        edges
+        segments
     }
 }
 
