@@ -88,10 +88,22 @@ impl Faces for fj::Shape3d {
 
 impl Faces for fj::Circle {
     fn triangles(&self, tolerance: f32) -> Triangles {
-        dbg!(self.segments(tolerance));
+        let mut triangles = Triangles::new();
 
-        // TASK: Implement.
-        todo!()
+        let mut segments = self.segments(tolerance);
+        while segments.0.len() >= 3 {
+            // None of those `unwrap`s are going to panic. We just checked that
+            // we have more than those two segments.
+            let [v2, v0] = segments.0.pop().unwrap().0;
+            let [v1, _] = segments.0.pop().unwrap().0;
+
+            // We just opened the shape by removing two edges. Close it again.
+            segments.push([v1, v0]);
+
+            triangles.push([v0, v1, v2]);
+        }
+
+        triangles
     }
 }
 
