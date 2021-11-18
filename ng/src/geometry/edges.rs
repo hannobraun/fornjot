@@ -1,3 +1,5 @@
+use std::f32::consts::PI;
+
 use crate::{
     geometry::vertices::Vertices as _,
     math::{Point, Vector},
@@ -79,9 +81,56 @@ impl Edges for fj::Shape3d {
 }
 
 impl Edges for fj::Circle {
-    fn segments(&self, _tolerance: f32) -> Segments {
-        // TASK: Implement.
-        todo!()
+    fn segments(&self, tolerance: f32) -> Segments {
+        // To approximate the circle, we use a regular polygon for which the
+        // circle is the circumscribed circle. The `tolerance` parameter is the
+        // maximum allowed distance between the polygon and the circle. This is
+        // the same as the difference between the circumscribed circle and the
+        // incircle.
+        //
+        // Let's figure which regular polygon we need to use, by just trying out
+        // some of them until we find one whose maximum error is less than or
+        // equal to the tolerance.
+        let mut n = 3;
+        loop {
+            let incircle_radius = self.radius * (PI / n as f32).cos();
+            let maximum_error = self.radius - incircle_radius;
+
+            if maximum_error <= tolerance {
+                break;
+            }
+
+            n += 1;
+        }
+
+        let mut vertices = Vec::new();
+        for i in 0..n {
+            let angle = 2. * PI / n as f32 * i as f32;
+
+            let (sin, cos) = angle.sin_cos();
+
+            let x = cos * self.radius;
+            let y = sin * self.radius;
+
+            vertices.push(Point::new(x, y, 0.0));
+        }
+
+        // We're about to convert these vertices into line segments, and we need
+        // a connection from the last to the first.
+        //
+        // The indexing operation can't panic, as we've initialized `n` with `3`
+        // above, hence there must be at least 3 vertices in `vertices`.
+        vertices.push(vertices[0]);
+
+        let mut segments = Segments::new();
+        for segment in vertices.windows(2) {
+            let v0 = segment[0];
+            let v1 = segment[1];
+
+            segments.push([v0, v1]);
+        }
+
+        segments
     }
 }
 
