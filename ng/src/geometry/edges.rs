@@ -60,7 +60,7 @@ impl Edges for fj::Circle {
 
 impl Edges for fj::Square {
     fn segments(&self, _: f32) -> Segments {
-        let mut segments = Vec::new();
+        let mut segments = Segments::new();
 
         let v = self.vertices();
 
