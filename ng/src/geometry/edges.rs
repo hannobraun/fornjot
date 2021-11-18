@@ -14,7 +14,14 @@ pub trait Edges {
 }
 
 /// Line segments that approximate a shape's edges
-pub type Segments = Vec<Segment>;
+pub struct Segments(pub Vec<Segment>);
+
+impl Segments {
+    /// Create a new instance of `Segments`
+    pub fn new() -> Self {
+        Self(Vec::new())
+    }
+}
 
 /// A line segment
 pub struct Segment(pub [Point; 2]);
@@ -64,10 +71,10 @@ impl Edges for fj::Square {
 
         let v = self.vertices();
 
-        segments.push([v[0], v[1]].into());
-        segments.push([v[1], v[2]].into());
-        segments.push([v[2], v[3]].into());
-        segments.push([v[3], v[0]].into());
+        segments.0.push([v[0], v[1]].into());
+        segments.0.push([v[1], v[2]].into());
+        segments.0.push([v[2], v[3]].into());
+        segments.0.push([v[3], v[0]].into());
 
         segments
     }
