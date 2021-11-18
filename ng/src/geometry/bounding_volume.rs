@@ -62,7 +62,7 @@ impl Aabb {
             }
         }
 
-        Aabb {
+        Self {
             min: [min_x, min_y, min_z].into(),
             max: [max_x, max_y, max_z].into(),
         }
