@@ -1,7 +1,7 @@
 use nalgebra::vector;
 
 use crate::{
-    geometry::vertices::Vertices as _,
+    geometry::{edges::Edges as _, vertices::Vertices as _},
     math::{Point, Vector},
 };
 
@@ -107,29 +107,18 @@ impl Faces for fj::Sweep {
             triangle.translate(vector![0.0, 0.0, self.length])
         }));
 
-        // TASK: `vertex_pairs` is based on `Vertices::vertices`, which expects
-        //       to get enough vertices to fully approximate the shape. This
-        //       doesn't work for rounded shapes.
-        //
-        //       That code should probably be replaced with a computation of the
-        //       side quads based on `Edges::segments`.
+        let segments = self.shape.segments(tolerance);
 
-        // In the next step, we're going to collect those pairs of vertices into
-        // quads. But we also need to make sure we'll get the last quad, which
-        // is made up of the last and first pair.
-        let mut vertex_pairs = self.vertices().vertex_pairs();
-        vertex_pairs.push(vertex_pairs[0]);
+        let mut quads = Vec::new();
+        for segment in segments {
+            let [v0, v1] = segment.0;
 
-        // Collect all vertices that make up the quads of the side faces.
-        //
-        // This can be simplified (and made non-panicky), once `array_windows`
-        // is stabilized.
-        let quads = vertex_pairs.windows(2).map(|window| {
-            let [v0, v3] = window[0];
-            let [v1, v2] = window[1];
+            // TASK: Consolidate this into a `Segment::translate` method.
+            let v3 = v0 + vector![0.0, 0.0, self.length];
+            let v2 = v1 + vector![0.0, 0.0, self.length];
 
-            [v0, v1, v2, v3]
-        });
+            quads.push([v0, v1, v2, v3]);
+        }
 
         for [v0, v1, v2, v3] in quads {
             triangles.push([v0, v1, v2].into());
