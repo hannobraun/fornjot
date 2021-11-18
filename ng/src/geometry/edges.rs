@@ -1,4 +1,7 @@
-use crate::{geometry::vertices::Vertices as _, math::Point};
+use crate::{
+    geometry::vertices::Vertices as _,
+    math::{Point, Vector},
+};
 
 /// Access the edges of a shape
 pub trait Edges {
@@ -30,6 +33,16 @@ impl Segments {
 
 /// A line segment
 pub struct Segment(pub [Point; 2]);
+
+impl Segment {
+    /// Translate the segment
+    ///
+    /// Translate all segment vertices by the given vector.
+    pub fn translate(self, vector: Vector) -> Self {
+        let vertices = self.0.map(|vertex| vertex + vector);
+        Self(vertices)
+    }
+}
 
 impl From<[Point; 2]> for Segment {
     fn from(vertices: [Point; 2]) -> Self {

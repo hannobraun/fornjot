@@ -132,10 +132,7 @@ impl Faces for fj::Sweep {
         let mut quads = Vec::new();
         for segment in segments.0 {
             let [v0, v1] = segment.0;
-
-            // TASK: Consolidate this into a `Segment::translate` method.
-            let v3 = v0 + vector![0.0, 0.0, self.length];
-            let v2 = v1 + vector![0.0, 0.0, self.length];
+            let [v3, v2] = segment.translate(vector![0.0, 0.0, self.length]).0;
 
             quads.push([v0, v1, v2, v3]);
         }
