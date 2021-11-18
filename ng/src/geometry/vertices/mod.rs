@@ -1,7 +1,5 @@
 mod sweep;
 
-pub use self::sweep::SweepVertices;
-
 use crate::math::Point;
 
 /// A shape's vertices
