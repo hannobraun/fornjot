@@ -87,7 +87,9 @@ impl Faces for fj::Shape3d {
 }
 
 impl Faces for fj::Circle {
-    fn triangles(&self, _tolerance: f32) -> Triangles {
+    fn triangles(&self, tolerance: f32) -> Triangles {
+        dbg!(self.segments(tolerance));
+
         // TASK: Implement.
         todo!()
     }
