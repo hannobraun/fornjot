@@ -1,3 +1,5 @@
+use nalgebra::point;
+
 use crate::{geometry::vertices::Vertices as _, math::Point};
 
 /// Compute the bounding volume of a shape
@@ -78,10 +80,7 @@ impl BoundingVolume for fj::Shape {
 impl BoundingVolume for fj::Shape2d {
     fn aabb(&self) -> Aabb {
         match self {
-            Self::Circle(_) => {
-                // TASK: Implement.
-                todo!()
-            }
+            Self::Circle(shape) => shape.aabb(),
             Self::Square(shape) => shape.aabb(),
         }
     }
@@ -91,6 +90,15 @@ impl BoundingVolume for fj::Shape3d {
     fn aabb(&self) -> Aabb {
         match self {
             Self::Sweep(shape) => shape.aabb(),
+        }
+    }
+}
+
+impl BoundingVolume for fj::Circle {
+    fn aabb(&self) -> Aabb {
+        Aabb {
+            min: point![-self.radius, -self.radius, 0.0],
+            max: point![self.radius, self.radius, 0.0],
         }
     }
 }
