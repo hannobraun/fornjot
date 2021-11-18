@@ -11,8 +11,11 @@ pub trait Faces {
     ///
     /// `tolerance` defines by how far this triangulation is allowed to deviate
     /// from the faces' actual dimensions.
-    fn triangles(&self, tolerance: f32) -> Vec<Triangle>;
+    fn triangles(&self, tolerance: f32) -> Triangles;
 }
+
+/// The triangles that approximate a shape's faces
+pub type Triangles = Vec<Triangle>;
 
 /// A triangle
 ///
@@ -46,7 +49,7 @@ impl From<[Point; 3]> for Triangle {
 }
 
 impl Faces for fj::Shape {
-    fn triangles(&self, tolerance: f32) -> Vec<Triangle> {
+    fn triangles(&self, tolerance: f32) -> Triangles {
         match self {
             Self::Shape2d(shape) => shape.triangles(tolerance),
             Self::Shape3d(shape) => shape.triangles(tolerance),
@@ -55,7 +58,7 @@ impl Faces for fj::Shape {
 }
 
 impl Faces for fj::Shape2d {
-    fn triangles(&self, tolerance: f32) -> Vec<Triangle> {
+    fn triangles(&self, tolerance: f32) -> Triangles {
         match self {
             Self::Circle(shape) => shape.triangles(tolerance),
             Self::Square(shape) => shape.triangles(tolerance),
@@ -64,7 +67,7 @@ impl Faces for fj::Shape2d {
 }
 
 impl Faces for fj::Shape3d {
-    fn triangles(&self, tolerance: f32) -> Vec<Triangle> {
+    fn triangles(&self, tolerance: f32) -> Triangles {
         match self {
             Self::Sweep(shape) => shape.triangles(tolerance),
         }
@@ -72,14 +75,14 @@ impl Faces for fj::Shape3d {
 }
 
 impl Faces for fj::Circle {
-    fn triangles(&self, _tolerance: f32) -> Vec<Triangle> {
+    fn triangles(&self, _tolerance: f32) -> Triangles {
         // TASK: Implement.
         todo!()
     }
 }
 
 impl Faces for fj::Square {
-    fn triangles(&self, _: f32) -> Vec<Triangle> {
+    fn triangles(&self, _: f32) -> Triangles {
         let mut triangles = Vec::new();
 
         let v = self.vertices();
@@ -92,7 +95,7 @@ impl Faces for fj::Square {
 }
 
 impl Faces for fj::Sweep {
-    fn triangles(&self, tolerance: f32) -> Vec<Triangle> {
+    fn triangles(&self, tolerance: f32) -> Triangles {
         let mut triangles = Vec::new();
 
         let original_triangles = self.shape.triangles(tolerance);
