@@ -115,8 +115,10 @@ impl BoundingVolume for fj::Circle {
 
 impl BoundingVolume for fj::Difference {
     fn aabb(&self) -> Aabb {
-        // TASK: Implement.
-        todo!()
+        // This is a conservative estimate of the bounding box: It's never going
+        // to be bigger than the bounding box of the original shape that another
+        // is being subtracted from.
+        self.a.aabb()
     }
 }
 
