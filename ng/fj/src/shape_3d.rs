@@ -14,7 +14,7 @@ impl From<Shape3d> for Shape {
     }
 }
 
-/// A sweep of 2-dimensional shape along the z-axis
+/// A sweep of a 2-dimensional shape along the z-axis
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Sweep {
