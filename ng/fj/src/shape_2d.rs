@@ -7,6 +7,9 @@ pub enum Shape2d {
     /// A circle
     Circle(Circle),
 
+    /// A difference between two shapes
+    Difference(Box<Difference>),
+
     /// A square
     Square(Square),
 }

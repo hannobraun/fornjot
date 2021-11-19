@@ -73,6 +73,7 @@ impl Faces for fj::Shape2d {
     fn triangles(&self, tolerance: f32) -> Triangles {
         match self {
             Self::Circle(shape) => shape.triangles(tolerance),
+            Self::Difference(shape) => shape.triangles(tolerance),
             Self::Square(shape) => shape.triangles(tolerance),
         }
     }
@@ -104,6 +105,13 @@ impl Faces for fj::Circle {
         }
 
         triangles
+    }
+}
+
+impl Faces for fj::Difference {
+    fn triangles(&self, _tolerance: f32) -> Triangles {
+        // TASK: Implement.
+        todo!()
     }
 }
 

@@ -67,6 +67,7 @@ impl Edges for fj::Shape2d {
     fn segments(&self, tolerance: f32) -> Segments {
         match self {
             Self::Circle(shape) => shape.segments(tolerance),
+            Self::Difference(shape) => shape.segments(tolerance),
             Self::Square(shape) => shape.segments(tolerance),
         }
     }
@@ -131,6 +132,13 @@ impl Edges for fj::Circle {
         }
 
         segments
+    }
+}
+
+impl Edges for fj::Difference {
+    fn segments(&self, _tolerance: f32) -> Segments {
+        // TASK: Implement.
+        todo!()
     }
 }
 

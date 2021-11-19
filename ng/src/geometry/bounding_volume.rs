@@ -90,6 +90,7 @@ impl BoundingVolume for fj::Shape2d {
     fn aabb(&self) -> Aabb {
         match self {
             Self::Circle(shape) => shape.aabb(),
+            Self::Difference(shape) => shape.aabb(),
             Self::Square(shape) => shape.aabb(),
         }
     }
@@ -109,6 +110,13 @@ impl BoundingVolume for fj::Circle {
             min: point![-self.radius, -self.radius, 0.0],
             max: point![self.radius, self.radius, 0.0],
         }
+    }
+}
+
+impl BoundingVolume for fj::Difference {
+    fn aabb(&self) -> Aabb {
+        // TASK: Implement.
+        todo!()
     }
 }
 

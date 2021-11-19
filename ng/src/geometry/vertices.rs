@@ -19,6 +19,7 @@ impl Vertices for fj::Shape2d {
     fn vertices(&self) -> Vec<Point> {
         match self {
             Self::Circle(shape) => shape.vertices(),
+            Self::Difference(shape) => shape.vertices(),
             Self::Square(shape) => shape.vertices(),
         }
     }
@@ -36,6 +37,13 @@ impl Vertices for fj::Circle {
     fn vertices(&self) -> Vec<Point> {
         // Circles have just a single round edge with no vertices.
         Vec::new()
+    }
+}
+
+impl Vertices for fj::Difference {
+    fn vertices(&self) -> Vec<Point> {
+        // TASK: Implement.
+        todo!()
     }
 }
 
