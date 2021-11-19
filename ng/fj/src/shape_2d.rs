@@ -31,6 +31,17 @@ impl From<Circle> for Shape2d {
     }
 }
 
+/// A difference between two shapes
+#[derive(Clone, Debug)]
+#[repr(C)]
+pub struct Difference {
+    /// The original shape
+    pub a: Shape2d,
+
+    /// The shape being subtracted
+    pub b: Shape2d,
+}
+
 /// A square
 #[derive(Clone, Debug)]
 #[repr(C)]
