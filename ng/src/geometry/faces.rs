@@ -15,6 +15,7 @@ pub trait Faces {
 }
 
 /// The triangles that approximate a shape's faces
+#[derive(Debug)]
 pub struct Triangles(pub Vec<Triangle>);
 
 impl Triangles {
@@ -33,7 +34,7 @@ impl Triangles {
 ///
 /// Or more specifically, three points. Currently no validation is done to
 /// ensure those points form an actual triangle.
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub struct Triangle(pub [Point; 3]);
 
 impl Triangle {
