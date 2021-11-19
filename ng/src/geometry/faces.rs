@@ -9,6 +9,9 @@ use crate::{
 pub trait Faces {
     /// Compute triangles to approximate the shape's faces
     ///
+    /// The shape defined by the approximated triangles must be fully contained
+    /// within the actual shape.
+    ///
     /// `tolerance` defines by how far this triangulation is allowed to deviate
     /// from the faces' actual dimensions.
     fn triangles(&self, tolerance: f32) -> Triangles;
