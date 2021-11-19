@@ -45,6 +45,18 @@ pub struct Difference {
     pub b: Shape2d,
 }
 
+impl From<Difference> for Shape {
+    fn from(shape: Difference) -> Self {
+        Self::Shape2d(Shape2d::Difference(Box::new(shape)))
+    }
+}
+
+impl From<Difference> for Shape2d {
+    fn from(shape: Difference) -> Self {
+        Self::Difference(Box::new(shape))
+    }
+}
+
 /// A square
 #[derive(Clone, Debug)]
 #[repr(C)]
