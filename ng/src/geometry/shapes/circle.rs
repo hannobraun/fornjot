@@ -52,7 +52,11 @@ impl Shape for fj::Circle {
         }
 
         let mut vertices = Vec::new();
-        for i in 0..n {
+
+        let first_vertex = angle_to_point(0.0);
+        vertices.push(first_vertex);
+
+        for i in 1..n {
             let angle = 2. * PI / n as f64 * i as f64;
             vertices.push(angle_to_point(angle));
         }
