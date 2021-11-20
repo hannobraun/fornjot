@@ -15,7 +15,7 @@ pub trait Edges {
     /// This method presents a weird API right now, as it just returns all the
     /// segments, not distinguishing which edge they approximate. This design is
     /// simple and in line with current use cases, but not expected to last.
-    fn edge_vertices(&self, tolerance: f64) -> EdgeVertices;
+    fn edge_vertices(&self, tolerance: f64) -> Vec<EdgeVertices>;
 
     /// Compute line segments to approximate the shape's edges
     ///
@@ -27,24 +27,26 @@ pub trait Edges {
     /// simple and in line with current use cases, but not expected to last.
     fn edge_segments(&self, tolerance: f64) -> EdgeSegments {
         let mut segments = EdgeSegments::new();
-        let mut vertices = self.edge_vertices(tolerance);
+        let edges = self.edge_vertices(tolerance);
 
-        // We're about to convert these vertices into line segments, and we need
-        // a connection from the last to the first.
-        match vertices.first() {
-            Some(&vertex) => vertices.push(vertex),
-            None => {
-                // If there is not first vertex, there are no vertices. If there
-                // are no vertices, there are no segments.
-                return segments;
+        for mut vertices in edges {
+            // We're about to convert these vertices into line segments, and we
+            // need a connection from the last to the first.
+            match vertices.first() {
+                Some(&vertex) => vertices.push(vertex),
+                None => {
+                    // If there is not first vertex, there are no vertices. If
+                    // there are no vertices, there are no segments.
+                    return segments;
+                }
             }
-        }
 
-        for segment in vertices.windows(2) {
-            let v0 = segment[0];
-            let v1 = segment[1];
+            for segment in vertices.windows(2) {
+                let v0 = segment[0];
+                let v1 = segment[1];
 
-            segments.push([v0, v1].into());
+                segments.push([v0, v1].into());
+            }
         }
 
         segments
@@ -78,7 +80,7 @@ impl From<[Point; 2]> for Segment {
 }
 
 impl Edges for fj::Shape {
-    fn edge_vertices(&self, tolerance: f64) -> EdgeVertices {
+    fn edge_vertices(&self, tolerance: f64) -> Vec<EdgeVertices> {
         match self {
             Self::Shape2d(shape) => shape.edge_vertices(tolerance),
             Self::Shape3d(shape) => shape.edge_vertices(tolerance),
@@ -94,7 +96,7 @@ impl Edges for fj::Shape {
 }
 
 impl Edges for fj::Shape2d {
-    fn edge_vertices(&self, tolerance: f64) -> EdgeVertices {
+    fn edge_vertices(&self, tolerance: f64) -> Vec<EdgeVertices> {
         match self {
             Self::Circle(shape) => shape.edge_vertices(tolerance),
             Self::Difference(shape) => shape.edge_vertices(tolerance),
@@ -112,7 +114,7 @@ impl Edges for fj::Shape2d {
 }
 
 impl Edges for fj::Shape3d {
-    fn edge_vertices(&self, tolerance: f64) -> EdgeVertices {
+    fn edge_vertices(&self, tolerance: f64) -> Vec<EdgeVertices> {
         match self {
             Self::Sweep(shape) => shape.edge_vertices(tolerance),
         }
@@ -126,7 +128,7 @@ impl Edges for fj::Shape3d {
 }
 
 impl Edges for fj::Circle {
-    fn edge_vertices(&self, tolerance: f64) -> EdgeVertices {
+    fn edge_vertices(&self, tolerance: f64) -> Vec<EdgeVertices> {
         // To approximate the circle, we use a regular polygon for which the
         // circle is the circumscribed circle. The `tolerance` parameter is the
         // maximum allowed distance between the polygon and the circle. This is
@@ -160,25 +162,25 @@ impl Edges for fj::Circle {
             vertices.push([x, y, 0.].into());
         }
 
-        vertices
+        vec![vertices]
     }
 }
 
 impl Edges for fj::Difference {
-    fn edge_vertices(&self, _tolerance: f64) -> EdgeVertices {
+    fn edge_vertices(&self, _tolerance: f64) -> Vec<EdgeVertices> {
         // TASK: Implement.
         todo!()
     }
 }
 
 impl Edges for fj::Square {
-    fn edge_vertices(&self, _: f64) -> EdgeVertices {
-        self.vertices()
+    fn edge_vertices(&self, _: f64) -> Vec<EdgeVertices> {
+        vec![self.vertices()]
     }
 }
 
 impl Edges for fj::Sweep {
-    fn edge_vertices(&self, _tolerance: f64) -> EdgeVertices {
+    fn edge_vertices(&self, _tolerance: f64) -> Vec<EdgeVertices> {
         // TASK: Implement.
         todo!()
     }

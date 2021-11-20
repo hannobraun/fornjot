@@ -89,7 +89,12 @@ impl Faces for fj::Shape3d {
 
 impl Faces for fj::Circle {
     fn triangles(&self, tolerance: f64) -> Triangles {
-        triangulate(&self.edge_vertices(tolerance))
+        let vertices: Vec<_> = self
+            .edge_vertices(tolerance)
+            .into_iter()
+            .flatten()
+            .collect();
+        triangulate(&vertices)
     }
 }
 
@@ -98,8 +103,18 @@ impl Faces for fj::Difference {
         // TASK: Carefully think about the limits of this algorithm, and make
         //       sure to panic with a `todo!` in cases that are not supported.
 
-        let a = self.a.edge_vertices(tolerance);
-        let b = self.b.edge_vertices(tolerance);
+        let a: Vec<_> = self
+            .a
+            .edge_vertices(tolerance)
+            .into_iter()
+            .flatten()
+            .collect();
+        let b: Vec<_> = self
+            .b
+            .edge_vertices(tolerance)
+            .into_iter()
+            .flatten()
+            .collect();
 
         let mut vertices = Vec::new();
         vertices.extend(&a);
