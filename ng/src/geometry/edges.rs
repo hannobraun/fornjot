@@ -30,7 +30,7 @@ impl Edge {
     /// `tolerance` defines how far the implicit line segments between those
     /// vertices are allowed to deviate from the actual edge.
     pub fn vertices(&self, tolerance: f64) -> Vec<Point> {
-        match &self.path {
+        let vertices = match &self.path {
             Path::Arc { radius } => {
                 let angle_to_point = |angle: f64| {
                     let (sin, cos) = angle.sin_cos();
@@ -79,7 +79,9 @@ impl Edge {
             }
             Path::LineSegment { start, end } => vec![*start, *end],
             Path::Approximated(vertices) => vertices.clone(),
-        }
+        };
+
+        vertices
     }
 }
 
