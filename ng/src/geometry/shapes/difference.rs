@@ -27,10 +27,10 @@ impl Shape for fj::Difference {
         }
 
         for edge in self.b.edges(tolerance) {
-            let mut vertices = edge.vertices(tolerance);
-            vertices.reverse();
+            let vertices = edge.vertices(tolerance);
             edges.push(Edge {
                 path: Path::Approximated(vertices),
+                reverse: true,
             });
         }
 

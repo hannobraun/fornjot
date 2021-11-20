@@ -8,6 +8,9 @@ use crate::math::{Point, Vector};
 pub struct Edge {
     /// The path that defines the edge
     pub path: Path,
+
+    /// Indicates whether the path is reversed
+    pub reverse: bool,
 }
 
 impl Edge {
@@ -15,6 +18,7 @@ impl Edge {
     pub fn arc(radius: f64) -> Self {
         Self {
             path: Path::Arc { radius },
+            reverse: false,
         }
     }
 
@@ -22,6 +26,7 @@ impl Edge {
     pub fn line_segment(start: Point, end: Point) -> Self {
         Self {
             path: Path::LineSegment { start, end },
+            reverse: false,
         }
     }
 
@@ -30,7 +35,7 @@ impl Edge {
     /// `tolerance` defines how far the implicit line segments between those
     /// vertices are allowed to deviate from the actual edge.
     pub fn vertices(&self, tolerance: f64) -> Vec<Point> {
-        let vertices = match &self.path {
+        let mut vertices = match &self.path {
             Path::Arc { radius } => {
                 let angle_to_point = |angle: f64| {
                     let (sin, cos) = angle.sin_cos();
@@ -80,6 +85,10 @@ impl Edge {
             Path::LineSegment { start, end } => vec![*start, *end],
             Path::Approximated(vertices) => vertices.clone(),
         };
+
+        if self.reverse {
+            vertices.reverse()
+        }
 
         vertices
     }
