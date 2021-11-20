@@ -20,13 +20,14 @@ impl Shape for fj::Circle {
 
     fn edges(&self) -> Edges {
         let mut edges = Edges::new();
-        edges.push(Edge::arc(self.radius));
+        edges.0.push(Edge::arc(self.radius));
         edges
     }
 
     fn triangles(&self, tolerance: f64) -> Vec<Triangle> {
         let vertices: Vec<_> = self
             .edges()
+            .0
             .into_iter()
             .map(|edge| edge.vertices(tolerance))
             .flatten()

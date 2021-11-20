@@ -3,7 +3,14 @@ use std::f64::consts::PI;
 use crate::math::{Point, Vector};
 
 /// The edges of a shape
-pub type Edges = Vec<Edge>;
+pub struct Edges(pub Vec<Edge>);
+
+impl Edges {
+    /// Construct a new instance of `Edges`
+    pub fn new() -> Self {
+        Self(Vec::new())
+    }
+}
 
 /// An edge of a shape
 pub struct Edge {

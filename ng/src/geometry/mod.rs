@@ -34,7 +34,7 @@ pub trait Shape {
         let edges = self.edges();
 
         let mut vertices = Vec::new();
-        for edge in edges {
+        for edge in edges.0 {
             vertices.extend(edge.vertices(tolerance));
         }
 

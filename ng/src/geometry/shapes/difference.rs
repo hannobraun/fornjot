@@ -20,11 +20,15 @@ impl Shape for fj::Difference {
         // TASK: This method assumes that `b` is fully contained within `a`. As
         //       long as this precondition exists, it should at least be
         //       checked.
-        self.a
+        let edges = self
+            .a
             .edges()
+            .0
             .into_iter()
-            .chain(self.b.edges().into_iter().map(|edge| edge.reverse()))
-            .collect()
+            .chain(self.b.edges().0.into_iter().map(|edge| edge.reverse()))
+            .collect();
+
+        Edges(edges)
     }
 
     fn triangles(&self, tolerance: f64) -> Vec<Triangle> {
@@ -34,6 +38,7 @@ impl Shape for fj::Difference {
         let a: Vec<_> = self
             .a
             .edges()
+            .0
             .into_iter()
             .map(|edge| edge.vertices(tolerance))
             .flatten()
@@ -41,6 +46,7 @@ impl Shape for fj::Difference {
         let b: Vec<_> = self
             .b
             .edges()
+            .0
             .into_iter()
             .map(|edge| edge.vertices(tolerance))
             .flatten()

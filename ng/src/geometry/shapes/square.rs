@@ -17,10 +17,10 @@ impl Shape for fj::Square {
         let v = self.vertices();
 
         let mut edges = Edges::new();
-        edges.push(Edge::line_segment(v[0], v[1]));
-        edges.push(Edge::line_segment(v[1], v[2]));
-        edges.push(Edge::line_segment(v[2], v[3]));
-        edges.push(Edge::line_segment(v[3], v[0]));
+        edges.0.push(Edge::line_segment(v[0], v[1]));
+        edges.0.push(Edge::line_segment(v[1], v[2]));
+        edges.0.push(Edge::line_segment(v[2], v[3]));
+        edges.0.push(Edge::line_segment(v[3], v[0]));
 
         edges
     }
