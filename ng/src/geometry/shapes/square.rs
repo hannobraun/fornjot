@@ -9,6 +9,7 @@ impl Shape for fj::Square {
     }
 
     fn edge_vertices(&self, _: f64) -> Vec<Vec<Point>> {
+        // TASK: This is totally wrong. A square has 4 edges, not one.
         vec![self.vertices()]
     }
 
