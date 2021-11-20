@@ -3,7 +3,6 @@ use nalgebra::vector;
 use crate::{
     geometry::{
         bounding_volume::Aabb,
-        edges::Edges,
         faces::{Faces, Triangle},
         vertices::Vertices,
         Shape,
@@ -17,9 +16,7 @@ impl Shape for fj::Sweep {
         aabb.max.z = self.length;
         aabb
     }
-}
 
-impl Edges for fj::Sweep {
     fn edge_vertices(&self, _tolerance: f64) -> Vec<Vec<Point>> {
         // TASK: Implement.
         todo!()

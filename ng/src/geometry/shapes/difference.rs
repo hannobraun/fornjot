@@ -1,7 +1,6 @@
 use crate::{
     geometry::{
         bounding_volume::Aabb,
-        edges::Edges,
         faces::{triangulate, Faces, Triangle},
         vertices::Vertices,
         Shape,
@@ -16,9 +15,7 @@ impl Shape for fj::Difference {
         // is being subtracted from.
         self.a.aabb()
     }
-}
 
-impl Edges for fj::Difference {
     fn edge_vertices(&self, tolerance: f64) -> Vec<Vec<Point>> {
         // TASK: This algorithm assumes that `b` is fully contained within `a`.
         //       As long as this precondition exists, it should be checked.

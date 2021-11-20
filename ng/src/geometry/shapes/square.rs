@@ -1,7 +1,6 @@
 use crate::{
     geometry::{
         bounding_volume::Aabb,
-        edges::Edges,
         faces::{Faces, Triangle},
         vertices::Vertices,
         Shape,
@@ -13,9 +12,7 @@ impl Shape for fj::Square {
     fn aabb(&self) -> Aabb {
         Aabb::from_vertices(self.vertices())
     }
-}
 
-impl Edges for fj::Square {
     fn edge_vertices(&self, _: f64) -> Vec<Vec<Point>> {
         vec![self.vertices()]
     }
