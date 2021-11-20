@@ -4,6 +4,15 @@ use crate::math::{Point, Vector};
 ///
 /// See [`Shape::edges`].
 pub enum Edge {
+    /// The edge is a line segment
+    LineSegment {
+        /// The start of the line segment
+        start: Point,
+
+        /// The end of the line segment
+        end: Point,
+    },
+
     /// The edge is approximated through vertices
     ///
     /// This variant only exists temporarily while a refactoring is going on.
@@ -11,9 +20,15 @@ pub enum Edge {
 }
 
 impl Edge {
+    /// Create a line segment
+    pub fn line_segment(start: Point, end: Point) -> Self {
+        Self::LineSegment { start, end }
+    }
+
     /// Access the vertices
     pub fn vertices(&self, _tolerance: f64) -> Vec<Point> {
         match self {
+            Self::LineSegment { start, end } => vec![*start, *end],
             Self::Approximated(vertices) => vertices.clone(),
         }
     }

@@ -12,10 +12,10 @@ impl Shape for fj::Square {
         let v = self.vertices();
 
         vec![
-            Edge::Approximated([v[0], v[1]].into()),
-            Edge::Approximated([v[1], v[2]].into()),
-            Edge::Approximated([v[2], v[3]].into()),
-            Edge::Approximated([v[3], v[0]].into()),
+            Edge::line_segment(v[0], v[1]),
+            Edge::line_segment(v[1], v[2]),
+            Edge::line_segment(v[2], v[3]),
+            Edge::line_segment(v[3], v[0]),
         ]
     }
 
