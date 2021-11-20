@@ -167,9 +167,22 @@ impl Edges for fj::Circle {
 }
 
 impl Edges for fj::Difference {
-    fn edge_vertices(&self, _tolerance: f64) -> Vec<EdgeVertices> {
-        // TASK: Implement.
-        todo!()
+    fn edge_vertices(&self, tolerance: f64) -> Vec<EdgeVertices> {
+        // TASK: This algorithm assumes that `b` is fully contained within `a`.
+        //       As long as this precondition exists, it should be checked.
+
+        let mut edges = Vec::new();
+
+        for edge in self.a.edge_vertices(tolerance) {
+            edges.push(edge);
+        }
+
+        for mut edge in self.b.edge_vertices(tolerance) {
+            edge.reverse();
+            edges.push(edge);
+        }
+
+        edges
     }
 }
 
