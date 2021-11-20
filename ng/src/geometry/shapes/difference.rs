@@ -65,15 +65,14 @@ impl Shape for fj::Difference {
         // TASK: This method assumes that `b` is fully contained within `a`. As
         //       long as this precondition exists, it should at least be
         //       checked.
-        let edges = self
-            .a
-            .edges()
-            .0
-            .into_iter()
-            .chain(self.b.edges().0.into_iter().map(|edge| edge.reverse()))
-            .collect();
 
-        Edges(edges)
+        let mut edges = self.a.edges();
+
+        for edge in self.b.edges().0 {
+            edges.0.push(edge.reverse());
+        }
+
+        edges
     }
 
     fn vertices(&self) -> Vec<Point> {
