@@ -41,12 +41,12 @@ impl Shape for fj::Difference {
         vertices.extend(&a);
         vertices.extend(&b);
 
-        let mut triangles = Faces(triangulate(&vertices));
+        let mut triangles = triangulate(&vertices);
 
         // Now we have a full Delaunay triangulation of all vertices. We still
         // need to filter out the triangles that aren't actually part of the
         // difference.
-        triangles.0.retain(|triangle| {
+        triangles.retain(|triangle| {
             let mut edges_of_b = 0;
 
             for [v0, v1] in triangle.edges() {
@@ -58,7 +58,7 @@ impl Shape for fj::Difference {
             edges_of_b <= 1
         });
 
-        triangles
+        Faces(triangles)
     }
 
     fn edges(&self) -> Edges {
