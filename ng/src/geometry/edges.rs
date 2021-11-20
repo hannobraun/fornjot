@@ -31,8 +31,14 @@ pub trait Edges {
 
         // We're about to convert these vertices into line segments, and we need
         // a connection from the last to the first.
-        // TASK: Make this panic-proof.
-        vertices.push(vertices.0[0]);
+        match vertices.0.first() {
+            Some(&vertex) => vertices.push(vertex),
+            None => {
+                // If there is not first vertex, there are no vertices. If there
+                // are no vertices, there are no segments.
+                return segments;
+            }
+        }
 
         for segment in vertices.0.windows(2) {
             let v0 = segment[0];
