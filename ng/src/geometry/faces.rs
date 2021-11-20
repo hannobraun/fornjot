@@ -14,11 +14,8 @@ pub trait Faces {
     ///
     /// `tolerance` defines by how far this triangulation is allowed to deviate
     /// from the faces' actual dimensions.
-    fn triangles(&self, tolerance: f64) -> Triangles;
+    fn triangles(&self, tolerance: f64) -> Vec<Triangle>;
 }
-
-/// The triangles that approximate a shape's faces
-pub type Triangles = Vec<Triangle>;
 
 /// A triangle
 ///
@@ -61,7 +58,7 @@ impl From<[Point; 3]> for Triangle {
 }
 
 impl Faces for fj::Shape {
-    fn triangles(&self, tolerance: f64) -> Triangles {
+    fn triangles(&self, tolerance: f64) -> Vec<Triangle> {
         match self {
             Self::Shape2d(shape) => shape.triangles(tolerance),
             Self::Shape3d(shape) => shape.triangles(tolerance),
@@ -70,7 +67,7 @@ impl Faces for fj::Shape {
 }
 
 impl Faces for fj::Shape2d {
-    fn triangles(&self, tolerance: f64) -> Triangles {
+    fn triangles(&self, tolerance: f64) -> Vec<Triangle> {
         match self {
             Self::Circle(shape) => shape.triangles(tolerance),
             Self::Difference(shape) => shape.triangles(tolerance),
@@ -80,7 +77,7 @@ impl Faces for fj::Shape2d {
 }
 
 impl Faces for fj::Shape3d {
-    fn triangles(&self, tolerance: f64) -> Triangles {
+    fn triangles(&self, tolerance: f64) -> Vec<Triangle> {
         match self {
             Self::Sweep(shape) => shape.triangles(tolerance),
         }
@@ -88,7 +85,7 @@ impl Faces for fj::Shape3d {
 }
 
 impl Faces for fj::Circle {
-    fn triangles(&self, tolerance: f64) -> Triangles {
+    fn triangles(&self, tolerance: f64) -> Vec<Triangle> {
         let vertices: Vec<_> = self
             .edge_vertices(tolerance)
             .into_iter()
@@ -99,7 +96,7 @@ impl Faces for fj::Circle {
 }
 
 impl Faces for fj::Difference {
-    fn triangles(&self, tolerance: f64) -> Triangles {
+    fn triangles(&self, tolerance: f64) -> Vec<Triangle> {
         // TASK: Carefully think about the limits of this algorithm, and make
         //       sure to panic with a `todo!` in cases that are not supported.
 
@@ -142,7 +139,7 @@ impl Faces for fj::Difference {
 }
 
 impl Faces for fj::Square {
-    fn triangles(&self, _: f64) -> Triangles {
+    fn triangles(&self, _: f64) -> Vec<Triangle> {
         let mut triangles = Vec::new();
 
         let v = self.vertices();
@@ -155,7 +152,7 @@ impl Faces for fj::Square {
 }
 
 impl Faces for fj::Sweep {
-    fn triangles(&self, tolerance: f64) -> Triangles {
+    fn triangles(&self, tolerance: f64) -> Vec<Triangle> {
         let mut triangles = Vec::new();
 
         let original_triangles = self.shape.triangles(tolerance);
@@ -189,7 +186,7 @@ impl Faces for fj::Sweep {
     }
 }
 
-fn triangulate(vertices: &[Point]) -> Triangles {
+fn triangulate(vertices: &[Point]) -> Vec<Triangle> {
     let points: Vec<_> = vertices
         .iter()
         .map(|vertex| delaunator::Point {
