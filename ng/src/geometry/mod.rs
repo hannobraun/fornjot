@@ -43,14 +43,21 @@ pub trait Shape {
     fn edge_segments(&self, tolerance: f64) -> Vec<Segment> {
         let edges = self.edge_vertices(tolerance);
 
-        let mut segments = Vec::new();
+        let mut vertices = Vec::new();
         for edge in edges {
-            for segment in edge.vertices().windows(2) {
-                let v0 = segment[0];
-                let v1 = segment[1];
+            vertices.extend(edge.vertices());
+        }
 
-                segments.push([v0, v1].into());
-            }
+        // If we have multiple connected edges, the previous step will produce
+        // duplicate vertices.
+        vertices.dedup();
+
+        let mut segments = Vec::new();
+        for segment in vertices.windows(2) {
+            let v0 = segment[0];
+            let v1 = segment[1];
+
+            segments.push([v0, v1].into());
         }
 
         segments
