@@ -117,26 +117,6 @@ impl Edges for fj::Shape3d {
     }
 }
 
-impl Edges for fj::Difference {
-    fn edge_vertices(&self, tolerance: f64) -> Vec<Vec<Point>> {
-        // TASK: This algorithm assumes that `b` is fully contained within `a`.
-        //       As long as this precondition exists, it should be checked.
-
-        let mut edges = Vec::new();
-
-        for edge in self.a.edge_vertices(tolerance) {
-            edges.push(edge);
-        }
-
-        for mut edge in self.b.edge_vertices(tolerance) {
-            edge.reverse();
-            edges.push(edge);
-        }
-
-        edges
-    }
-}
-
 impl Edges for fj::Square {
     fn edge_vertices(&self, _: f64) -> Vec<Vec<Point>> {
         vec![self.vertices()]

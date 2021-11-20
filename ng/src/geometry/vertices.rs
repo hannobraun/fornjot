@@ -33,13 +33,6 @@ impl Vertices for fj::Shape3d {
     }
 }
 
-impl Vertices for fj::Difference {
-    fn vertices(&self) -> Vec<Point> {
-        // TASK: Implement.
-        todo!()
-    }
-}
-
 impl Vertices for fj::Square {
     fn vertices(&self) -> Vec<Point> {
         let s = self.size / 2.;

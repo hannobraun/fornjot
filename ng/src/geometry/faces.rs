@@ -84,49 +84,6 @@ impl Faces for fj::Shape3d {
     }
 }
 
-impl Faces for fj::Difference {
-    fn triangles(&self, tolerance: f64) -> Vec<Triangle> {
-        // TASK: Carefully think about the limits of this algorithm, and make
-        //       sure to panic with a `todo!` in cases that are not supported.
-
-        let a: Vec<_> = self
-            .a
-            .edge_vertices(tolerance)
-            .into_iter()
-            .flatten()
-            .collect();
-        let b: Vec<_> = self
-            .b
-            .edge_vertices(tolerance)
-            .into_iter()
-            .flatten()
-            .collect();
-
-        let mut vertices = Vec::new();
-        vertices.extend(&a);
-        vertices.extend(&b);
-
-        let mut triangles = triangulate(&vertices);
-
-        // Now we have a full Delaunay triangulation of all vertices. We still
-        // need to filter out the triangles that aren't actually part of the
-        // difference.
-        triangles.retain(|triangle| {
-            let mut edges_of_b = 0;
-
-            for [v0, v1] in triangle.edges() {
-                if b.contains(&v0) && b.contains(&v1) {
-                    edges_of_b += 1;
-                }
-            }
-
-            edges_of_b <= 1
-        });
-
-        triangles
-    }
-}
-
 impl Faces for fj::Square {
     fn triangles(&self, _: f64) -> Vec<Triangle> {
         let mut triangles = Vec::new();

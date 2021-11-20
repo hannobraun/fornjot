@@ -102,15 +102,6 @@ impl BoundingVolume for fj::Shape3d {
     }
 }
 
-impl BoundingVolume for fj::Difference {
-    fn aabb(&self) -> Aabb {
-        // This is a conservative estimate of the bounding box: It's never going
-        // to be bigger than the bounding box of the original shape that another
-        // is being subtracted from.
-        self.a.aabb()
-    }
-}
-
 impl BoundingVolume for fj::Square {
     fn aabb(&self) -> Aabb {
         Aabb::from_vertices(self.vertices())
