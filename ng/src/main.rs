@@ -26,6 +26,9 @@ fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     let model_dir = format!("models/{}", args.model);
 
+    // TASK: Parse arguments, pass them to model.
+    dbg!(args.arguments);
+
     // This can be made a bit more contact using `ExitStatus::exit_ok`, once
     // that is stable.
     let status = Command::new("cargo")

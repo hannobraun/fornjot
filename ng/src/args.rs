@@ -10,6 +10,10 @@ pub struct Args {
     /// Export model to this path
     #[clap(short, long)]
     pub export: Option<PathBuf>,
+
+    /// Arguments for the model, each in the form `key=value`
+    #[clap(short, long)]
+    pub arguments: Vec<String>,
 }
 
 impl Args {
