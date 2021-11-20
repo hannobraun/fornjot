@@ -30,6 +30,14 @@ impl Edge {
         }
     }
 
+    /// Reverse the edge's path
+    pub fn reverse(self) -> Self {
+        Self {
+            path: self.path,
+            reverse: !self.reverse,
+        }
+    }
+
     /// Compute vertices to approximate the edge
     ///
     /// `tolerance` defines how far the implicit line segments between those
@@ -83,7 +91,6 @@ impl Edge {
                 vertices
             }
             Path::LineSegment { start, end } => vec![*start, *end],
-            Path::Approximated(vertices) => vertices.clone(),
         };
 
         if self.reverse {
@@ -113,11 +120,6 @@ pub enum Path {
         /// The end of the line segment
         end: Point,
     },
-
-    /// The edge is approximated through vertices
-    ///
-    /// This variant only exists temporarily while a refactoring is going on.
-    Approximated(Vec<Point>),
 }
 
 /// A line segment
