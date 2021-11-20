@@ -18,14 +18,19 @@ impl Shape for fj::Sweep {
         let original_triangles = self.shape.faces(tolerance);
 
         // Bottom face
-        triangles.extend(
-            original_triangles.iter().map(|triangle| triangle.invert()),
+        triangles.0.extend(
+            original_triangles
+                .0
+                .iter()
+                .map(|triangle| triangle.invert()),
         );
 
         // Top face
-        triangles.extend(original_triangles.iter().map(|triangle| {
-            triangle.translate(vector![0.0, 0.0, self.length])
-        }));
+        triangles
+            .0
+            .extend(original_triangles.0.iter().map(|triangle| {
+                triangle.translate(vector![0.0, 0.0, self.length])
+            }));
 
         let segments = self.shape.edges().segments(tolerance);
 
@@ -38,8 +43,8 @@ impl Shape for fj::Sweep {
         }
 
         for [v0, v1, v2, v3] in quads {
-            triangles.push([v0, v1, v2].into());
-            triangles.push([v0, v2, v3].into());
+            triangles.0.push([v0, v1, v2].into());
+            triangles.0.push([v0, v2, v3].into());
         }
 
         triangles

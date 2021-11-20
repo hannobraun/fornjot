@@ -18,8 +18,8 @@ impl Shape for fj::Square {
 
         let v = self.vertices();
 
-        triangles.push([v[0], v[1], v[2]].into());
-        triangles.push([v[0], v[2], v[3]].into());
+        triangles.0.push([v[0], v[1], v[2]].into());
+        triangles.0.push([v[0], v[2], v[3]].into());
 
         triangles
     }

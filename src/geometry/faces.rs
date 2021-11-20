@@ -1,7 +1,14 @@
 use crate::math::{Point, Vector};
 
 /// The faces of a shape
-pub type Faces = Vec<Triangle>;
+pub struct Faces(pub Vec<Triangle>);
+
+impl Faces {
+    /// Construct a new instance of `Faces`
+    pub fn new() -> Self {
+        Self(Vec::new())
+    }
+}
 
 /// A triangle
 ///
