@@ -92,11 +92,15 @@ macro_rules! dispatch_shape2d {
 }
 
 macro_rules! dispatch_shape3d {
-    ($method:ident($($arg_name:ident: $arg_ty:ident)*) -> $ret:ty) => {
-        fn $method(&self, $($arg_name: $arg_ty)*) -> $ret {
-            match self {
-                Self::Sweep(shape) => shape.$method($($arg_name)*),
-            }
+    ($($method:ident($($arg_name:ident: $arg_ty:ident)*) -> $ret:ty;)*) => {
+        impl Shape for fj::Shape3d {
+            $(
+                fn $method(&self, $($arg_name: $arg_ty)*) -> $ret {
+                    match self {
+                        Self::Sweep(shape) => shape.$method($($arg_name)*),
+                    }
+                }
+            )*
         }
     };
 }
@@ -113,8 +117,8 @@ dispatch_shape2d! {
     edge_segments(tolerance: f64) -> Vec<Segment>;
 }
 
-impl Shape for fj::Shape3d {
-    dispatch_shape3d!(aabb() -> Aabb);
-    dispatch_shape3d!(edge_vertices(tolerance: f64) -> Vec<Vec<Point>>);
-    dispatch_shape3d!(edge_segments(tolerance: f64) -> Vec<Segment>);
+dispatch_shape3d! {
+    aabb() -> Aabb;
+    edge_vertices(tolerance: f64) -> Vec<Vec<Point>>;
+    edge_segments(tolerance: f64) -> Vec<Segment>;
 }
