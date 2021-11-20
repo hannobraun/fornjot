@@ -9,7 +9,7 @@ use self::{bounding_volume::Aabb, edges::Segment, faces::Triangle};
 
 /// Implemented by all shapes
 pub trait Shape {
-    /// Compute the axis-aligned bounding box of a shape
+    /// Access the axis-aligned bounding box of a shape
     ///
     /// If a shape is empty, its [`Aabb`]'s `min` and `max` points must be equal
     /// (but are otherwise not specified).
