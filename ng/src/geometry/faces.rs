@@ -158,7 +158,7 @@ impl Faces for fj::Sweep {
         let segments = self.shape.edge_segments(tolerance);
 
         let mut quads = Vec::new();
-        for segment in segments.0 {
+        for segment in segments {
             let [v0, v1] = segment.0;
             let [v3, v2] = segment.translate(vector![0.0, 0.0, self.length]).0;
 

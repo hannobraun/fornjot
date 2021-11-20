@@ -44,7 +44,7 @@ pub trait Edges {
             let v0 = segment[0];
             let v1 = segment[1];
 
-            segments.push([v0, v1]);
+            segments.push([v0, v1].into());
         }
 
         segments
@@ -55,20 +55,7 @@ pub trait Edges {
 pub type EdgeVertices = Vec<Point>;
 
 /// Line segments that approximate a shape's edges
-#[derive(Debug)]
-pub struct EdgeSegments(pub Vec<Segment>);
-
-impl EdgeSegments {
-    /// Create a new instance of `EdgeSegments`
-    pub fn new() -> Self {
-        Self(Vec::new())
-    }
-
-    /// Add a segment
-    pub fn push(&mut self, segment: impl Into<Segment>) {
-        self.0.push(segment.into())
-    }
-}
+pub type EdgeSegments = Vec<Segment>;
 
 /// A line segment
 #[derive(Debug)]
