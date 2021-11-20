@@ -21,6 +21,15 @@ impl Shape for fj::Circle {
     }
 
     fn edge_vertices(&self, tolerance: f64) -> Vec<Edge> {
+        let angle_to_point = |angle: f64| {
+            let (sin, cos) = angle.sin_cos();
+
+            let x = cos * self.radius;
+            let y = sin * self.radius;
+
+            [x, y, 0.].into()
+        };
+
         // To approximate the circle, we use a regular polygon for which the
         // circle is the circumscribed circle. The `tolerance` parameter is the
         // maximum allowed distance between the polygon and the circle. This is
@@ -45,13 +54,7 @@ impl Shape for fj::Circle {
         let mut vertices = Vec::new();
         for i in 0..n {
             let angle = 2. * PI / n as f64 * i as f64;
-
-            let (sin, cos) = angle.sin_cos();
-
-            let x = cos * self.radius;
-            let y = sin * self.radius;
-
-            vertices.push([x, y, 0.].into());
+            vertices.push(angle_to_point(angle));
         }
 
         vec![Edge(vertices)]
