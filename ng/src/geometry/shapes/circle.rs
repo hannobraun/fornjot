@@ -64,7 +64,7 @@ impl Shape for fj::Circle {
         // Connect the circle's edge to itself.
         vertices.push(first_vertex);
 
-        vec![Edge(vertices)]
+        vec![Edge::Approximated(vertices)]
     }
 
     fn triangles(&self, tolerance: f64) -> Vec<Triangle> {

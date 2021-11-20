@@ -3,12 +3,19 @@ use crate::math::{Point, Vector};
 /// An edge of a shape
 ///
 /// See [`Shape::edges`].
-pub struct Edge(pub Vec<Point>);
+pub enum Edge {
+    /// The edge is approximated through vertices
+    ///
+    /// This variant only exists temporarily while a refactoring is going on.
+    Approximated(Vec<Point>),
+}
 
 impl Edge {
     /// Access the vertices
     pub fn vertices(&self) -> Vec<Point> {
-        self.0.clone()
+        match self {
+            Self::Approximated(vertices) => vertices.clone(),
+        }
     }
 }
 

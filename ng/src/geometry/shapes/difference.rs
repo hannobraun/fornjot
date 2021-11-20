@@ -29,7 +29,7 @@ impl Shape for fj::Difference {
         for edge in self.b.edge_vertices(tolerance) {
             let mut vertices = edge.vertices();
             vertices.reverse();
-            edges.push(Edge(vertices));
+            edges.push(Edge::Approximated(vertices));
         }
 
         edges
