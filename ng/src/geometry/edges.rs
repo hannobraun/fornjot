@@ -25,7 +25,24 @@ pub trait Edges {
     /// This method presents a weird API right now, as it just returns all the
     /// segments, not distinguishing which edge they approximate. This design is
     /// simple and in line with current use cases, but not expected to last.
-    fn segments(&self, tolerance: f32) -> Segments;
+    fn segments(&self, tolerance: f32) -> Segments {
+        let mut vertices = self.edge_vertices(tolerance);
+
+        // We're about to convert these vertices into line segments, and we need
+        // a connection from the last to the first.
+        // TASK: Make this panic-proof.
+        vertices.push(vertices.0[0]);
+
+        let mut segments = Segments::new();
+        for segment in vertices.0.windows(2) {
+            let v0 = segment[0];
+            let v1 = segment[1];
+
+            segments.push([v0, v1]);
+        }
+
+        segments
+    }
 }
 
 /// Vertices that approximate a shape's edges
@@ -164,27 +181,6 @@ impl Edges for fj::Circle {
         }
 
         vertices
-    }
-
-    fn segments(&self, tolerance: f32) -> Segments {
-        let mut vertices = self.edge_vertices(tolerance);
-
-        // We're about to convert these vertices into line segments, and we need
-        // a connection from the last to the first.
-        //
-        // The indexing operation can't panic, as we've initialized `n` with `3`
-        // above, hence there must be at least 3 vertices in `vertices`.
-        vertices.push(vertices.0[0]);
-
-        let mut segments = Segments::new();
-        for segment in vertices.0.windows(2) {
-            let v0 = segment[0];
-            let v1 = segment[1];
-
-            segments.push([v0, v1]);
-        }
-
-        segments
     }
 }
 
