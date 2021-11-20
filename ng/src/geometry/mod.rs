@@ -13,7 +13,7 @@ pub trait Shape {
     ///
     /// If a shape is empty, its [`Aabb`]'s `min` and `max` points must be equal
     /// (but are otherwise not specified).
-    fn aabb(&self) -> Aabb;
+    fn bounding_volume(&self) -> Aabb;
 
     /// Compute vertices to approximate the shape's edges
     ///
@@ -109,7 +109,7 @@ macro_rules! dispatch {
 }
 
 dispatch! {
-    aabb() -> Aabb;
+    bounding_volume() -> Aabb;
     edge_vertices(tolerance: f64) -> Vec<Vec<Point>>;
     edge_segments(tolerance: f64) -> Vec<Segment>;
     triangles(tolerance: f64) -> Vec<Triangle>;

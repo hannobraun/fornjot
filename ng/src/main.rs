@@ -45,7 +45,7 @@ fn main() -> anyhow::Result<()> {
         func()
     };
 
-    let aabb = shape.aabb();
+    let aabb = shape.bounding_volume();
 
     let tolerance = aabb.size().min() / 1000.;
     let triangles = shape.triangles(tolerance);

@@ -8,11 +8,11 @@ use crate::{
 };
 
 impl Shape for fj::Difference {
-    fn aabb(&self) -> Aabb {
+    fn bounding_volume(&self) -> Aabb {
         // This is a conservative estimate of the bounding box: It's never going
         // to be bigger than the bounding box of the original shape that another
         // is being subtracted from.
-        self.a.aabb()
+        self.a.bounding_volume()
     }
 
     fn edge_vertices(&self, tolerance: f64) -> Vec<Vec<Point>> {

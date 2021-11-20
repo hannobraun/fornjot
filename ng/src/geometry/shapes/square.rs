@@ -4,7 +4,7 @@ use crate::{
 };
 
 impl Shape for fj::Square {
-    fn aabb(&self) -> Aabb {
+    fn bounding_volume(&self) -> Aabb {
         Aabb::from_vertices(self.vertices())
     }
 
