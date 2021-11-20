@@ -76,13 +76,17 @@ macro_rules! dispatch_shape {
 }
 
 macro_rules! dispatch_shape2d {
-    ($method:ident($($arg_name:ident: $arg_ty:ident)*) -> $ret:ty) => {
-        fn $method(&self, $($arg_name: $arg_ty)*) -> $ret {
-            match self {
-                Self::Circle(shape) => shape.$method($($arg_name)*),
-                Self::Difference(shape) => shape.$method($($arg_name)*),
-                Self::Square(shape) => shape.$method($($arg_name)*),
-            }
+    ($($method:ident($($arg_name:ident: $arg_ty:ident)*) -> $ret:ty;)*) => {
+        impl Shape for fj::Shape2d {
+            $(
+                fn $method(&self, $($arg_name: $arg_ty)*) -> $ret {
+                    match self {
+                        Self::Circle(shape) => shape.$method($($arg_name)*),
+                        Self::Difference(shape) => shape.$method($($arg_name)*),
+                        Self::Square(shape) => shape.$method($($arg_name)*),
+                    }
+                }
+            )*
         }
     };
 }
@@ -103,10 +107,10 @@ dispatch_shape! {
     edge_segments(tolerance: f64) -> Vec<Segment>;
 }
 
-impl Shape for fj::Shape2d {
-    dispatch_shape2d!(aabb() -> Aabb);
-    dispatch_shape2d!(edge_vertices(tolerance: f64) -> Vec<Vec<Point>>);
-    dispatch_shape2d!(edge_segments(tolerance: f64) -> Vec<Segment>);
+dispatch_shape2d! {
+    aabb() -> Aabb;
+    edge_vertices(tolerance: f64) -> Vec<Vec<Point>>;
+    edge_segments(tolerance: f64) -> Vec<Segment>;
 }
 
 impl Shape for fj::Shape3d {
