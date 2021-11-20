@@ -186,7 +186,7 @@ impl Faces for fj::Sweep {
     }
 }
 
-fn triangulate(vertices: &[Point]) -> Vec<Triangle> {
+pub fn triangulate(vertices: &[Point]) -> Vec<Triangle> {
     let points: Vec<_> = vertices
         .iter()
         .map(|vertex| delaunator::Point {
