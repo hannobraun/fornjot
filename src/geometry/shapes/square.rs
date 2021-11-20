@@ -14,14 +14,14 @@ impl Shape for fj::Square {
     }
 
     fn faces(&self, _: f64) -> Faces {
-        let mut triangles = Faces::new();
+        let mut triangles = Vec::new();
 
         let v = self.vertices();
 
-        triangles.0.push([v[0], v[1], v[2]].into());
-        triangles.0.push([v[0], v[2], v[3]].into());
+        triangles.push([v[0], v[1], v[2]].into());
+        triangles.push([v[0], v[2], v[3]].into());
 
-        triangles
+        Faces(triangles)
     }
 
     fn edges(&self) -> Edges {
