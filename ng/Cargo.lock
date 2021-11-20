@@ -1823,9 +1823,9 @@ dependencies = [
 
 [[package]]
 name = "threemf"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ffa8d36d5b7da9031a136f5afc62919e0c3272de8daff97ede581f4714cb21da"
+checksum = "c0c98800ca8044fa88359515e47c1e2a432dd463b7cfb0764307d5e643e6cc93"
 dependencies = [
  "thiserror",
  "zip",

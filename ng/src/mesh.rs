@@ -74,5 +74,11 @@ impl From<HashVector> for [f32; 3] {
     }
 }
 
+impl From<HashVector> for [f64; 3] {
+    fn from(hash_vector: HashVector) -> Self {
+        hash_vector.0.map(|coord| coord.into_inner() as f64)
+    }
+}
+
 /// An index that refers to a vertex in a mesh
 pub type Index = u32;
