@@ -26,6 +26,7 @@ pub trait Edges {
     /// segments, not distinguishing which edge they approximate. This design is
     /// simple and in line with current use cases, but not expected to last.
     fn segments(&self, tolerance: f32) -> Segments {
+        let mut segments = Segments::new();
         let mut vertices = self.edge_vertices(tolerance);
 
         // We're about to convert these vertices into line segments, and we need
@@ -33,7 +34,6 @@ pub trait Edges {
         // TASK: Make this panic-proof.
         vertices.push(vertices.0[0]);
 
-        let mut segments = Segments::new();
         for segment in vertices.0.windows(2) {
             let v0 = segment[0];
             let v1 = segment[1];
