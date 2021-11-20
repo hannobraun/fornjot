@@ -2,7 +2,7 @@ use crate::{
     geometry::{
         bounding_volume::Aabb,
         edges::Edges,
-        faces::{triangulate, Triangle},
+        faces::{triangulate, Faces},
         Shape,
     },
     math::Point,
@@ -16,7 +16,7 @@ impl Shape for fj::Difference {
         self.a.bounding_volume()
     }
 
-    fn faces(&self, tolerance: f64) -> Vec<Triangle> {
+    fn faces(&self, tolerance: f64) -> Faces {
         // TASK: Carefully think about the limits of this algorithm, and make
         //       sure to panic with a `todo!` in cases that are not supported.
 

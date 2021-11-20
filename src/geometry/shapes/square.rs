@@ -2,7 +2,7 @@ use crate::{
     geometry::{
         bounding_volume::Aabb,
         edges::{Edge, Edges},
-        faces::Triangle,
+        faces::Faces,
         Shape,
     },
     math::Point,
@@ -13,7 +13,7 @@ impl Shape for fj::Square {
         Aabb::from_vertices(self.vertices())
     }
 
-    fn faces(&self, _: f64) -> Vec<Triangle> {
+    fn faces(&self, _: f64) -> Faces {
         let mut triangles = Vec::new();
 
         let v = self.vertices();

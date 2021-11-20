@@ -4,7 +4,7 @@ use crate::{
     geometry::{
         bounding_volume::Aabb,
         edges::{Edge, Edges},
-        faces::{triangulate, Triangle},
+        faces::{triangulate, Faces},
         Shape,
     },
     math::Point,
@@ -18,7 +18,7 @@ impl Shape for fj::Circle {
         }
     }
 
-    fn faces(&self, tolerance: f64) -> Vec<Triangle> {
+    fn faces(&self, tolerance: f64) -> Faces {
         let vertices: Vec<_> = self
             .edges()
             .0

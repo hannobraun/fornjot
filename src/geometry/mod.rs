@@ -5,7 +5,7 @@ pub mod shapes;
 
 use crate::math::Point;
 
-use self::{bounding_volume::Aabb, edges::Edges, faces::Triangle};
+use self::{bounding_volume::Aabb, edges::Edges, faces::Faces};
 
 /// Implemented by all shapes
 pub trait Shape {
@@ -22,7 +22,7 @@ pub trait Shape {
     ///
     /// `tolerance` defines by how far this triangulation is allowed to deviate
     /// from the faces' actual dimensions.
-    fn faces(&self, tolerance: f64) -> Vec<Triangle>;
+    fn faces(&self, tolerance: f64) -> Faces;
 
     /// Access the edges of the shape
     fn edges(&self) -> Edges;
@@ -70,7 +70,7 @@ macro_rules! dispatch {
 
 dispatch! {
     bounding_volume() -> Aabb;
-    faces(tolerance: f64) -> Vec<Triangle>;
+    faces(tolerance: f64) -> Faces;
     edges() -> Edges;
     vertices() -> Vec<Point>;
 }

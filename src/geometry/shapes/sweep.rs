@@ -1,7 +1,7 @@
 use nalgebra::vector;
 
 use crate::{
-    geometry::{bounding_volume::Aabb, edges::Edges, faces::Triangle, Shape},
+    geometry::{bounding_volume::Aabb, edges::Edges, faces::Faces, Shape},
     math::Point,
 };
 
@@ -12,7 +12,7 @@ impl Shape for fj::Sweep {
         aabb
     }
 
-    fn faces(&self, tolerance: f64) -> Vec<Triangle> {
+    fn faces(&self, tolerance: f64) -> Faces {
         let mut triangles = Vec::new();
 
         let original_triangles = self.shape.faces(tolerance);
