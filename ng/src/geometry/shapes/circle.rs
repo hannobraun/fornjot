@@ -61,6 +61,9 @@ impl Shape for fj::Circle {
             vertices.push(angle_to_point(angle));
         }
 
+        // Connect the circle's edge to itself.
+        vertices.push(first_vertex);
+
         vec![Edge(vertices)]
     }
 

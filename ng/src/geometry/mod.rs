@@ -40,18 +40,7 @@ pub trait Shape {
 
         let mut segments = Vec::new();
         for edge in edges {
-            let mut vertices = edge.vertices();
-
-            // We're about to convert these vertices into line segments, and we
-            // need a connection from the last to the first.
-            match vertices.first() {
-                Some(&vertex) => vertices.push(vertex),
-                None => {
-                    // If there is not first vertex, there are no vertices. If
-                    // there are no vertices, there are no segments.
-                    return segments;
-                }
-            }
+            let vertices = edge.vertices();
 
             for segment in vertices.windows(2) {
                 let v0 = segment[0];
