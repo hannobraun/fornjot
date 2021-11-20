@@ -13,12 +13,12 @@ impl Shape for fj::Sweep {
     }
 
     fn faces(&self, tolerance: f64) -> Faces {
-        let mut triangles = Faces::new();
+        let mut triangles = Vec::new();
 
         let original_triangles = self.shape.faces(tolerance);
 
         // Bottom face
-        triangles.0.extend(
+        triangles.extend(
             original_triangles
                 .0
                 .iter()
@@ -26,11 +26,9 @@ impl Shape for fj::Sweep {
         );
 
         // Top face
-        triangles
-            .0
-            .extend(original_triangles.0.iter().map(|triangle| {
-                triangle.translate(vector![0.0, 0.0, self.length])
-            }));
+        triangles.extend(original_triangles.0.iter().map(|triangle| {
+            triangle.translate(vector![0.0, 0.0, self.length])
+        }));
 
         let segments = self.shape.edges().segments(tolerance);
 
@@ -43,11 +41,11 @@ impl Shape for fj::Sweep {
         }
 
         for [v0, v1, v2, v3] in quads {
-            triangles.0.push([v0, v1, v2].into());
-            triangles.0.push([v0, v2, v3].into());
+            triangles.push([v0, v1, v2].into());
+            triangles.push([v0, v2, v3].into());
         }
 
-        triangles
+        Faces(triangles)
     }
 
     fn edges(&self) -> Edges {
