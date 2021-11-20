@@ -193,21 +193,7 @@ impl Edges for fj::Difference {
 
 impl Edges for fj::Square {
     fn edge_vertices(&self, _: f32) -> EdgeVertices {
-        // TASK: Implement.
-        todo!()
-    }
-
-    fn segments(&self, _: f32) -> Segments {
-        let mut segments = Segments::new();
-
-        let v = self.vertices();
-
-        segments.push([v[0], v[1]]);
-        segments.push([v[1], v[2]]);
-        segments.push([v[2], v[3]]);
-        segments.push([v[3], v[0]]);
-
-        segments
+        EdgeVertices(self.vertices())
     }
 }
 
