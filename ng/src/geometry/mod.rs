@@ -15,29 +15,47 @@ pub trait Shape {
     fn aabb(&self) -> Aabb;
 }
 
-impl Shape for fj::Shape {
-    fn aabb(&self) -> Aabb {
-        match self {
-            Self::Shape2d(shape) => shape.aabb(),
-            Self::Shape3d(shape) => shape.aabb(),
+macro_rules! dispatch_shape {
+    ($method:ident) => {
+        fn $method(&self) -> Aabb {
+            match self {
+                Self::Shape2d(shape) => shape.$method(),
+                Self::Shape3d(shape) => shape.$method(),
+            }
         }
-    }
+    };
+}
+
+macro_rules! dispatch_shape2d {
+    ($method:ident) => {
+        fn $method(&self) -> Aabb {
+            match self {
+                Self::Circle(shape) => shape.$method(),
+                Self::Difference(shape) => shape.$method(),
+                Self::Square(shape) => shape.$method(),
+            }
+        }
+    };
+}
+
+macro_rules! dispatch_shape3d {
+    ($method:ident) => {
+        fn $method(&self) -> Aabb {
+            match self {
+                Self::Sweep(shape) => shape.$method(),
+            }
+        }
+    };
+}
+
+impl Shape for fj::Shape {
+    dispatch_shape!(aabb);
 }
 
 impl Shape for fj::Shape2d {
-    fn aabb(&self) -> Aabb {
-        match self {
-            Self::Circle(shape) => shape.aabb(),
-            Self::Difference(shape) => shape.aabb(),
-            Self::Square(shape) => shape.aabb(),
-        }
-    }
+    dispatch_shape2d!(aabb);
 }
 
 impl Shape for fj::Shape3d {
-    fn aabb(&self) -> Aabb {
-        match self {
-            Self::Sweep(shape) => shape.aabb(),
-        }
-    }
+    dispatch_shape3d!(aabb);
 }
