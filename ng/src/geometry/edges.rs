@@ -113,10 +113,3 @@ impl Edges for fj::Shape3d {
         }
     }
 }
-
-impl Edges for fj::Sweep {
-    fn edge_vertices(&self, _tolerance: f64) -> Vec<Vec<Point>> {
-        // TASK: Implement.
-        todo!()
-    }
-}

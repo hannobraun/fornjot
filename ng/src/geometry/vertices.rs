@@ -32,10 +32,3 @@ impl Vertices for fj::Shape3d {
         }
     }
 }
-
-impl Vertices for fj::Sweep {
-    fn vertices(&self) -> Vec<Point> {
-        // TASK Implement.
-        todo!()
-    }
-}

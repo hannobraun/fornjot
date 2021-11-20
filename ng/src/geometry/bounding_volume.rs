@@ -98,11 +98,3 @@ impl BoundingVolume for fj::Shape3d {
         }
     }
 }
-
-impl BoundingVolume for fj::Sweep {
-    fn aabb(&self) -> Aabb {
-        let mut aabb = self.shape.aabb();
-        aabb.max.z = self.length;
-        aabb
-    }
-}
