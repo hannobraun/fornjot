@@ -19,7 +19,7 @@ pub enum Shape2d {
 #[repr(C)]
 pub struct Circle {
     /// The radius of the circle
-    pub radius: f32,
+    pub radius: f64,
 }
 
 impl From<Circle> for Shape {
@@ -62,7 +62,7 @@ impl From<Difference> for Shape2d {
 #[repr(C)]
 pub struct Square {
     /// The side length of the square
-    pub size: f32,
+    pub size: f64,
 }
 
 impl From<Square> for Shape {

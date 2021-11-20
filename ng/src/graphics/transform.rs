@@ -22,7 +22,7 @@ impl Transform {
         let furthest_point =
             [aabb.min.x.abs(), aabb.max.x, aabb.min.y.abs(), aabb.max.y]
                 .into_iter()
-                .reduce(|a, b| f32::max(a, b))
+                .reduce(|a, b| f64::max(a, b))
                 // `reduce` can only return `None`, if there are no items in the
                 // iterator. And since we're creating an array full of items
                 // above, we know this can't panic.
@@ -34,7 +34,8 @@ impl Transform {
 
         // Having computed those points, figuring out how far the camera needs
         // to be from the model is just a bit of trigonometry.
-        let distance_from_model = furthest_point / (FIELD_OF_VIEW / 2.).atan();
+        let distance_from_model =
+            furthest_point / (FIELD_OF_VIEW as f64 / 2.).atan();
 
         // An finally, the distance from the origin is trivial now.
         let distance = highest_point + distance_from_model;
@@ -42,7 +43,7 @@ impl Transform {
         Self {
             rotation: Rotation::identity(),
             translation: Translation::identity(),
-            distance,
+            distance: distance as f32,
         }
     }
 

@@ -22,7 +22,7 @@ pub struct Sweep {
     pub shape: Shape2d,
 
     /// The length of the sweep
-    pub length: f32,
+    pub length: f64,
 }
 
 impl From<Sweep> for Shape {

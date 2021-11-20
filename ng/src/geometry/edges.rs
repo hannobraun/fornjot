@@ -1,4 +1,4 @@
-use std::f32::consts::PI;
+use std::f64::consts::PI;
 
 use crate::{
     geometry::vertices::Vertices as _,
@@ -15,7 +15,7 @@ pub trait Edges {
     /// This method presents a weird API right now, as it just returns all the
     /// segments, not distinguishing which edge they approximate. This design is
     /// simple and in line with current use cases, but not expected to last.
-    fn edge_vertices(&self, tolerance: f32) -> EdgeVertices;
+    fn edge_vertices(&self, tolerance: f64) -> EdgeVertices;
 
     /// Compute line segments to approximate the shape's edges
     ///
@@ -25,7 +25,7 @@ pub trait Edges {
     /// This method presents a weird API right now, as it just returns all the
     /// segments, not distinguishing which edge they approximate. This design is
     /// simple and in line with current use cases, but not expected to last.
-    fn edge_segments(&self, tolerance: f32) -> EdgeSegments {
+    fn edge_segments(&self, tolerance: f64) -> EdgeSegments {
         let mut segments = EdgeSegments::new();
         let mut vertices = self.edge_vertices(tolerance);
 
@@ -104,14 +104,14 @@ impl From<[Point; 2]> for Segment {
 }
 
 impl Edges for fj::Shape {
-    fn edge_vertices(&self, tolerance: f32) -> EdgeVertices {
+    fn edge_vertices(&self, tolerance: f64) -> EdgeVertices {
         match self {
             Self::Shape2d(shape) => shape.edge_vertices(tolerance),
             Self::Shape3d(shape) => shape.edge_vertices(tolerance),
         }
     }
 
-    fn edge_segments(&self, tolerance: f32) -> EdgeSegments {
+    fn edge_segments(&self, tolerance: f64) -> EdgeSegments {
         match self {
             Self::Shape2d(shape) => shape.edge_segments(tolerance),
             Self::Shape3d(shape) => shape.edge_segments(tolerance),
@@ -120,7 +120,7 @@ impl Edges for fj::Shape {
 }
 
 impl Edges for fj::Shape2d {
-    fn edge_vertices(&self, tolerance: f32) -> EdgeVertices {
+    fn edge_vertices(&self, tolerance: f64) -> EdgeVertices {
         match self {
             Self::Circle(shape) => shape.edge_vertices(tolerance),
             Self::Difference(shape) => shape.edge_vertices(tolerance),
@@ -128,7 +128,7 @@ impl Edges for fj::Shape2d {
         }
     }
 
-    fn edge_segments(&self, tolerance: f32) -> EdgeSegments {
+    fn edge_segments(&self, tolerance: f64) -> EdgeSegments {
         match self {
             Self::Circle(shape) => shape.edge_segments(tolerance),
             Self::Difference(shape) => shape.edge_segments(tolerance),
@@ -138,13 +138,13 @@ impl Edges for fj::Shape2d {
 }
 
 impl Edges for fj::Shape3d {
-    fn edge_vertices(&self, tolerance: f32) -> EdgeVertices {
+    fn edge_vertices(&self, tolerance: f64) -> EdgeVertices {
         match self {
             Self::Sweep(shape) => shape.edge_vertices(tolerance),
         }
     }
 
-    fn edge_segments(&self, tolerance: f32) -> EdgeSegments {
+    fn edge_segments(&self, tolerance: f64) -> EdgeSegments {
         match self {
             Self::Sweep(shape) => shape.edge_segments(tolerance),
         }
@@ -152,7 +152,7 @@ impl Edges for fj::Shape3d {
 }
 
 impl Edges for fj::Circle {
-    fn edge_vertices(&self, tolerance: f32) -> EdgeVertices {
+    fn edge_vertices(&self, tolerance: f64) -> EdgeVertices {
         // To approximate the circle, we use a regular polygon for which the
         // circle is the circumscribed circle. The `tolerance` parameter is the
         // maximum allowed distance between the polygon and the circle. This is
@@ -164,7 +164,7 @@ impl Edges for fj::Circle {
         // equal to the tolerance.
         let mut n = 3;
         loop {
-            let incircle_radius = self.radius * (PI / n as f32).cos();
+            let incircle_radius = self.radius * (PI / n as f64).cos();
             let maximum_error = self.radius - incircle_radius;
 
             if maximum_error <= tolerance {
@@ -176,7 +176,7 @@ impl Edges for fj::Circle {
 
         let mut vertices = EdgeVertices::new();
         for i in 0..n {
-            let angle = 2. * PI / n as f32 * i as f32;
+            let angle = 2. * PI / n as f64 * i as f64;
 
             let (sin, cos) = angle.sin_cos();
 
@@ -191,20 +191,20 @@ impl Edges for fj::Circle {
 }
 
 impl Edges for fj::Difference {
-    fn edge_vertices(&self, _tolerance: f32) -> EdgeVertices {
+    fn edge_vertices(&self, _tolerance: f64) -> EdgeVertices {
         // TASK: Implement.
         todo!()
     }
 }
 
 impl Edges for fj::Square {
-    fn edge_vertices(&self, _: f32) -> EdgeVertices {
+    fn edge_vertices(&self, _: f64) -> EdgeVertices {
         EdgeVertices(self.vertices())
     }
 }
 
 impl Edges for fj::Sweep {
-    fn edge_vertices(&self, _tolerance: f32) -> EdgeVertices {
+    fn edge_vertices(&self, _tolerance: f64) -> EdgeVertices {
         // TASK: Implement.
         todo!()
     }
