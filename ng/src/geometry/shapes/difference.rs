@@ -1,7 +1,7 @@
 use crate::{
     geometry::{
         bounding_volume::Aabb,
-        edges::Edge,
+        edges::Edges,
         faces::{triangulate, Triangle},
         Shape,
     },
@@ -16,7 +16,7 @@ impl Shape for fj::Difference {
         self.a.bounding_volume()
     }
 
-    fn edges(&self) -> Vec<Edge> {
+    fn edges(&self) -> Edges {
         // TASK: This method assumes that `b` is fully contained within `a`. As
         //       long as this precondition exists, it should at least be
         //       checked.

@@ -7,7 +7,7 @@ use crate::math::Point;
 
 use self::{
     bounding_volume::Aabb,
-    edges::{Edge, Segment},
+    edges::{Edges, Segment},
     faces::Triangle,
 };
 
@@ -20,7 +20,7 @@ pub trait Shape {
     fn bounding_volume(&self) -> Aabb;
 
     /// Access the edges of the shape
-    fn edges(&self) -> Vec<Edge>;
+    fn edges(&self) -> Edges;
 
     /// Compute line segments to approximate the shape's edges
     ///
@@ -105,7 +105,7 @@ macro_rules! dispatch {
 
 dispatch! {
     bounding_volume() -> Aabb;
-    edges() -> Vec<Edge>;
+    edges() -> Edges;
     edge_segments(tolerance: f64) -> Vec<Segment>;
     triangles(tolerance: f64) -> Vec<Triangle>;
     vertices() -> Vec<Point>;

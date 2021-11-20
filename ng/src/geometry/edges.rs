@@ -2,6 +2,9 @@ use std::f64::consts::PI;
 
 use crate::math::{Point, Vector};
 
+/// The edges of a shape
+pub type Edges = Vec<Edge>;
+
 /// An edge of a shape
 pub struct Edge {
     /// The path that defines the edge

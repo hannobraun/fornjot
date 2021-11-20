@@ -3,7 +3,7 @@ use nalgebra::point;
 use crate::{
     geometry::{
         bounding_volume::Aabb,
-        edges::Edge,
+        edges::{Edge, Edges},
         faces::{triangulate, Triangle},
         Shape,
     },
@@ -18,7 +18,7 @@ impl Shape for fj::Circle {
         }
     }
 
-    fn edges(&self) -> Vec<Edge> {
+    fn edges(&self) -> Edges {
         vec![Edge::arc(self.radius)]
     }
 
