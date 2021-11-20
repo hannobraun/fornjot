@@ -1,5 +1,5 @@
 use crate::{
-    geometry::{bounding_volume::Aabb, faces::Triangle, Shape},
+    geometry::{bounding_volume::Aabb, edges::Edge, faces::Triangle, Shape},
     math::Point,
 };
 
@@ -8,7 +8,7 @@ impl Shape for fj::Square {
         Aabb::from_vertices(self.vertices())
     }
 
-    fn edge_vertices(&self, _: f64) -> Vec<Vec<Point>> {
+    fn edge_vertices(&self, _: f64) -> Vec<Edge> {
         // TASK: This is totally wrong. A square has 4 edges, not one.
         vec![self.vertices()]
     }

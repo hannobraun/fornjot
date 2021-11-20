@@ -1,5 +1,10 @@
 use crate::math::{Point, Vector};
 
+/// The edges of a shape
+///
+/// See [`Shape::edges`].
+pub type Edge = Vec<Point>;
+
 /// A line segment
 #[derive(Debug)]
 pub struct Segment(pub [Point; 2]);

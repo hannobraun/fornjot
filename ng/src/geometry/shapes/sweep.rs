@@ -1,7 +1,7 @@
 use nalgebra::vector;
 
 use crate::{
-    geometry::{bounding_volume::Aabb, faces::Triangle, Shape},
+    geometry::{bounding_volume::Aabb, edges::Edge, faces::Triangle, Shape},
     math::Point,
 };
 
@@ -12,7 +12,7 @@ impl Shape for fj::Sweep {
         aabb
     }
 
-    fn edge_vertices(&self, _tolerance: f64) -> Vec<Vec<Point>> {
+    fn edge_vertices(&self, _tolerance: f64) -> Vec<Edge> {
         // TASK: Implement.
         todo!()
     }

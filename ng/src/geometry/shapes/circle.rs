@@ -5,6 +5,7 @@ use nalgebra::point;
 use crate::{
     geometry::{
         bounding_volume::Aabb,
+        edges::Edge,
         faces::{triangulate, Triangle},
         Shape,
     },
@@ -19,7 +20,7 @@ impl Shape for fj::Circle {
         }
     }
 
-    fn edge_vertices(&self, tolerance: f64) -> Vec<Vec<Point>> {
+    fn edge_vertices(&self, tolerance: f64) -> Vec<Edge> {
         // To approximate the circle, we use a regular polygon for which the
         // circle is the circumscribed circle. The `tolerance` parameter is the
         // maximum allowed distance between the polygon and the circle. This is

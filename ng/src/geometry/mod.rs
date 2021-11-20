@@ -5,7 +5,11 @@ pub mod shapes;
 
 use crate::math::Point;
 
-use self::{bounding_volume::Aabb, edges::Segment, faces::Triangle};
+use self::{
+    bounding_volume::Aabb,
+    edges::{Edge, Segment},
+    faces::Triangle,
+};
 
 /// Implemented by all shapes
 pub trait Shape {
@@ -21,7 +25,7 @@ pub trait Shape {
     ///
     /// `tolerance` defines how far the implicit line segments between those
     /// vertices are allowed to deviate from the actual edges of the shape.
-    fn edge_vertices(&self, tolerance: f64) -> Vec<Vec<Point>>;
+    fn edge_vertices(&self, tolerance: f64) -> Vec<Edge>;
 
     /// Compute line segments to approximate the shape's edges
     ///
@@ -110,7 +114,7 @@ macro_rules! dispatch {
 
 dispatch! {
     bounding_volume() -> Aabb;
-    edge_vertices(tolerance: f64) -> Vec<Vec<Point>>;
+    edge_vertices(tolerance: f64) -> Vec<Edge>;
     edge_segments(tolerance: f64) -> Vec<Segment>;
     triangles(tolerance: f64) -> Vec<Triangle>;
     vertices() -> Vec<Point>;
