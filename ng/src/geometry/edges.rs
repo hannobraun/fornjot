@@ -25,7 +25,10 @@ impl Edge {
         Self::LineSegment { start, end }
     }
 
-    /// Access the vertices
+    /// Compute vertices to approximate the edge
+    ///
+    /// `tolerance` defines how far the implicit line segments between those
+    /// vertices are allowed to deviate from the actual edge.
     pub fn vertices(&self, _tolerance: f64) -> Vec<Point> {
         match self {
             Self::LineSegment { start, end } => vec![*start, *end],

@@ -19,17 +19,7 @@ pub trait Shape {
     /// (but are otherwise not specified).
     fn bounding_volume(&self) -> Aabb;
 
-    /// Compute vertices to approximate the shape's edges
-    ///
-    /// Returns a `Vec` that contains a `Vec<Point>` for each edge of the shape.
-    ///
-    /// Connections between edges must be preserved in the approximation. This
-    /// means, if an edge is connected to another edge, the first edge's last
-    /// vertex must be equal to the second edge's first vertex. If an edge
-    /// connects to itself, its first and last vertices must be equal.
-    ///
-    /// `tolerance` defines how far the implicit line segments between those
-    /// vertices are allowed to deviate from the actual edges of the shape.
+    /// Access the edges of the shape
     fn edges(&self, tolerance: f64) -> Vec<Edge>;
 
     /// Compute line segments to approximate the shape's edges
