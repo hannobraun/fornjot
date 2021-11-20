@@ -16,19 +16,14 @@ impl Shape for fj::Difference {
         self.a.bounding_volume()
     }
 
-    fn edges(&self, tolerance: f64) -> Vec<Edge> {
+    fn edges(&self) -> Vec<Edge> {
         // TASK: This method assumes that `b` is fully contained within `a`. As
         //       long as this precondition exists, it should at least be
         //       checked.
         self.a
-            .edges(tolerance)
+            .edges()
             .into_iter()
-            .chain(
-                self.b
-                    .edges(tolerance)
-                    .into_iter()
-                    .map(|edge| edge.reverse()),
-            )
+            .chain(self.b.edges().into_iter().map(|edge| edge.reverse()))
             .collect()
     }
 
@@ -38,14 +33,14 @@ impl Shape for fj::Difference {
 
         let a: Vec<_> = self
             .a
-            .edges(tolerance)
+            .edges()
             .into_iter()
             .map(|edge| edge.vertices(tolerance))
             .flatten()
             .collect();
         let b: Vec<_> = self
             .b
-            .edges(tolerance)
+            .edges()
             .into_iter()
             .map(|edge| edge.vertices(tolerance))
             .flatten()

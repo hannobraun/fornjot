@@ -20,7 +20,7 @@ pub trait Shape {
     fn bounding_volume(&self) -> Aabb;
 
     /// Access the edges of the shape
-    fn edges(&self, tolerance: f64) -> Vec<Edge>;
+    fn edges(&self) -> Vec<Edge>;
 
     /// Compute line segments to approximate the shape's edges
     ///
@@ -31,7 +31,7 @@ pub trait Shape {
     /// segments, not distinguishing which edge they approximate. This design is
     /// simple and in line with current use cases, but not expected to last.
     fn edge_segments(&self, tolerance: f64) -> Vec<Segment> {
-        let edges = self.edges(tolerance);
+        let edges = self.edges();
 
         let mut vertices = Vec::new();
         for edge in edges {
@@ -105,7 +105,7 @@ macro_rules! dispatch {
 
 dispatch! {
     bounding_volume() -> Aabb;
-    edges(tolerance: f64) -> Vec<Edge>;
+    edges() -> Vec<Edge>;
     edge_segments(tolerance: f64) -> Vec<Segment>;
     triangles(tolerance: f64) -> Vec<Triangle>;
     vertices() -> Vec<Point>;
