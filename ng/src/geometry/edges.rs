@@ -1,6 +1,6 @@
 use crate::math::{Point, Vector};
 
-/// The edges of a shape
+/// An edge of a shape
 ///
 /// See [`Shape::edges`].
 pub struct Edge(pub Vec<Point>);
