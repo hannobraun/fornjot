@@ -31,7 +31,7 @@ pub trait Edges {
 
         // We're about to convert these vertices into line segments, and we need
         // a connection from the last to the first.
-        match vertices.0.first() {
+        match vertices.first() {
             Some(&vertex) => vertices.push(vertex),
             None => {
                 // If there is not first vertex, there are no vertices. If there
@@ -40,7 +40,7 @@ pub trait Edges {
             }
         }
 
-        for segment in vertices.0.windows(2) {
+        for segment in vertices.windows(2) {
             let v0 = segment[0];
             let v1 = segment[1];
 
@@ -52,20 +52,7 @@ pub trait Edges {
 }
 
 /// Vertices that approximate a shape's edges
-#[derive(Debug)]
-pub struct EdgeVertices(pub Vec<Point>);
-
-impl EdgeVertices {
-    /// Create a new instance of `EdgeVertices`
-    pub fn new() -> Self {
-        Self(Vec::new())
-    }
-
-    /// Add a vertex
-    pub fn push(&mut self, vertex: impl Into<Point>) {
-        self.0.push(vertex.into())
-    }
-}
+pub type EdgeVertices = Vec<Point>;
 
 /// Line segments that approximate a shape's edges
 #[derive(Debug)]
@@ -183,7 +170,7 @@ impl Edges for fj::Circle {
             let x = cos * self.radius;
             let y = sin * self.radius;
 
-            vertices.push([x, y, 0.]);
+            vertices.push([x, y, 0.].into());
         }
 
         vertices
@@ -199,7 +186,7 @@ impl Edges for fj::Difference {
 
 impl Edges for fj::Square {
     fn edge_vertices(&self, _: f64) -> EdgeVertices {
-        EdgeVertices(self.vertices())
+        self.vertices()
     }
 }
 

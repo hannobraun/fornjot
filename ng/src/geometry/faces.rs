@@ -89,7 +89,7 @@ impl Faces for fj::Shape3d {
 
 impl Faces for fj::Circle {
     fn triangles(&self, tolerance: f64) -> Triangles {
-        triangulate(&self.edge_vertices(tolerance).0)
+        triangulate(&self.edge_vertices(tolerance))
     }
 }
 
@@ -102,8 +102,8 @@ impl Faces for fj::Difference {
         let b = self.b.edge_vertices(tolerance);
 
         let mut vertices = Vec::new();
-        vertices.extend(a.0);
-        vertices.extend(b.0.iter());
+        vertices.extend(a);
+        vertices.extend(b.iter());
 
         let mut triangles = triangulate(&vertices);
 
@@ -114,7 +114,7 @@ impl Faces for fj::Difference {
             let mut edges_of_b = 0;
 
             for [v0, v1] in triangle.edges() {
-                if b.0.contains(&v0) && b.0.contains(&v1) {
+                if b.contains(&v0) && b.contains(&v1) {
                     edges_of_b += 1;
                 }
             }
