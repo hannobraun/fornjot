@@ -17,8 +17,9 @@ impl Shape for fj::Difference {
     }
 
     fn edges(&self, tolerance: f64) -> Vec<Edge> {
-        // TASK: This algorithm assumes that `b` is fully contained within `a`.
-        //       As long as this precondition exists, it should be checked.
+        // TASK: This method assumes that `b` is fully contained within `a`. As
+        //       long as this precondition exists, it should at least be
+        //       checked.
 
         let mut edges = Vec::new();
 
