@@ -160,7 +160,7 @@ impl Edges for fj::Circle {
             let x = cos * self.radius;
             let y = sin * self.radius;
 
-            vertices.push(Point::new(x, y, 0.0));
+            vertices.push([x, y, 0.0]);
         }
 
         vertices
