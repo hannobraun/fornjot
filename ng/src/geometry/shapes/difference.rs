@@ -27,7 +27,7 @@ impl Shape for fj::Difference {
         }
 
         for edge in self.b.edge_vertices(tolerance) {
-            let mut vertices = edge.0;
+            let mut vertices = edge.vertices();
             vertices.reverse();
             edges.push(Edge(vertices));
         }
@@ -43,14 +43,14 @@ impl Shape for fj::Difference {
             .a
             .edge_vertices(tolerance)
             .into_iter()
-            .map(|edge| edge.0)
+            .map(|edge| edge.vertices())
             .flatten()
             .collect();
         let b: Vec<_> = self
             .b
             .edge_vertices(tolerance)
             .into_iter()
-            .map(|edge| edge.0)
+            .map(|edge| edge.vertices())
             .flatten()
             .collect();
 

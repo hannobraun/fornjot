@@ -5,6 +5,13 @@ use crate::math::{Point, Vector};
 /// See [`Shape::edges`].
 pub struct Edge(pub Vec<Point>);
 
+impl Edge {
+    /// Access the vertices
+    pub fn vertices(&self) -> Vec<Point> {
+        self.0.clone()
+    }
+}
+
 /// A line segment
 #[derive(Debug)]
 pub struct Segment(pub [Point; 2]);

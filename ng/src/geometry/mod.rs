@@ -40,7 +40,7 @@ pub trait Shape {
         let edges = self.edge_vertices(tolerance);
 
         for edge in edges {
-            let mut vertices = edge.0;
+            let mut vertices = edge.vertices();
 
             // We're about to convert these vertices into line segments, and we
             // need a connection from the last to the first.
