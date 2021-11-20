@@ -26,9 +26,10 @@ impl Shape for fj::Difference {
             edges.push(edge);
         }
 
-        for mut edge in self.b.edge_vertices(tolerance) {
-            edge.0.reverse();
-            edges.push(edge);
+        for edge in self.b.edge_vertices(tolerance) {
+            let mut vertices = edge.0;
+            vertices.reverse();
+            edges.push(Edge(vertices));
         }
 
         edges
