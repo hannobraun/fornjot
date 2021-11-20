@@ -31,6 +31,11 @@ pub enum Edge {
 }
 
 impl Edge {
+    /// Create an arc
+    pub fn arc(radius: f64) -> Self {
+        Self::Arc { radius }
+    }
+
     /// Create a line segment
     pub fn line_segment(start: Point, end: Point) -> Self {
         Self::LineSegment { start, end }

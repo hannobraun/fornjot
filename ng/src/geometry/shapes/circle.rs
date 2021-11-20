@@ -19,9 +19,7 @@ impl Shape for fj::Circle {
     }
 
     fn edges(&self, _: f64) -> Vec<Edge> {
-        vec![Edge::Arc {
-            radius: self.radius,
-        }]
+        vec![Edge::arc(self.radius)]
     }
 
     fn triangles(&self, tolerance: f64) -> Vec<Triangle> {
