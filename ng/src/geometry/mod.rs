@@ -28,7 +28,7 @@ macro_rules! dispatch_shape {
 
 macro_rules! dispatch_shape2d {
     ($method:ident($($arg_name:ident: $arg_ty:ident)*) -> $ret:ty) => {
-        fn $method(&self) -> $ret {
+        fn $method(&self, $($arg_name: $arg_ty)*) -> $ret {
             match self {
                 Self::Circle(shape) => shape.$method($($arg_name)*),
                 Self::Difference(shape) => shape.$method($($arg_name)*),
@@ -40,7 +40,7 @@ macro_rules! dispatch_shape2d {
 
 macro_rules! dispatch_shape3d {
     ($method:ident($($arg_name:ident: $arg_ty:ident)*) -> $ret:ty) => {
-        fn $method(&self) -> $ret {
+        fn $method(&self, $($arg_name: $arg_ty)*) -> $ret {
             match self {
                 Self::Sweep(shape) => shape.$method($($arg_name)*),
             }
