@@ -25,7 +25,7 @@ pub trait Edges {
     /// This method presents a weird API right now, as it just returns all the
     /// segments, not distinguishing which edge they approximate. This design is
     /// simple and in line with current use cases, but not expected to last.
-    fn segments(&self, tolerance: f32) -> Segments {
+    fn edge_segments(&self, tolerance: f32) -> Segments {
         let mut segments = Segments::new();
         let mut vertices = self.edge_vertices(tolerance);
 
@@ -111,10 +111,10 @@ impl Edges for fj::Shape {
         }
     }
 
-    fn segments(&self, tolerance: f32) -> Segments {
+    fn edge_segments(&self, tolerance: f32) -> Segments {
         match self {
-            Self::Shape2d(shape) => shape.segments(tolerance),
-            Self::Shape3d(shape) => shape.segments(tolerance),
+            Self::Shape2d(shape) => shape.edge_segments(tolerance),
+            Self::Shape3d(shape) => shape.edge_segments(tolerance),
         }
     }
 }
@@ -128,11 +128,11 @@ impl Edges for fj::Shape2d {
         }
     }
 
-    fn segments(&self, tolerance: f32) -> Segments {
+    fn edge_segments(&self, tolerance: f32) -> Segments {
         match self {
-            Self::Circle(shape) => shape.segments(tolerance),
-            Self::Difference(shape) => shape.segments(tolerance),
-            Self::Square(shape) => shape.segments(tolerance),
+            Self::Circle(shape) => shape.edge_segments(tolerance),
+            Self::Difference(shape) => shape.edge_segments(tolerance),
+            Self::Square(shape) => shape.edge_segments(tolerance),
         }
     }
 }
@@ -144,9 +144,9 @@ impl Edges for fj::Shape3d {
         }
     }
 
-    fn segments(&self, tolerance: f32) -> Segments {
+    fn edge_segments(&self, tolerance: f32) -> Segments {
         match self {
-            Self::Sweep(shape) => shape.segments(tolerance),
+            Self::Sweep(shape) => shape.edge_segments(tolerance),
         }
     }
 }
