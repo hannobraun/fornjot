@@ -36,9 +36,9 @@ pub trait Shape {
     /// segments, not distinguishing which edge they approximate. This design is
     /// simple and in line with current use cases, but not expected to last.
     fn edge_segments(&self, tolerance: f64) -> Vec<Segment> {
-        let mut segments = Vec::new();
         let edges = self.edge_vertices(tolerance);
 
+        let mut segments = Vec::new();
         for edge in edges {
             let mut vertices = edge.vertices();
 
