@@ -15,7 +15,7 @@ pub trait Edges {
     /// This method presents a weird API right now, as it just returns all the
     /// segments, not distinguishing which edge they approximate. This design is
     /// simple and in line with current use cases, but not expected to last.
-    fn edge_vertices(&self, tolerance: f64) -> Vec<EdgeVertices>;
+    fn edge_vertices(&self, tolerance: f64) -> Vec<Vec<Point>>;
 
     /// Compute line segments to approximate the shape's edges
     ///
@@ -53,9 +53,6 @@ pub trait Edges {
     }
 }
 
-/// Vertices that approximate a shape's edges
-pub type EdgeVertices = Vec<Point>;
-
 /// Line segments that approximate a shape's edges
 pub type EdgeSegments = Vec<Segment>;
 
@@ -80,7 +77,7 @@ impl From<[Point; 2]> for Segment {
 }
 
 impl Edges for fj::Shape {
-    fn edge_vertices(&self, tolerance: f64) -> Vec<EdgeVertices> {
+    fn edge_vertices(&self, tolerance: f64) -> Vec<Vec<Point>> {
         match self {
             Self::Shape2d(shape) => shape.edge_vertices(tolerance),
             Self::Shape3d(shape) => shape.edge_vertices(tolerance),
@@ -96,7 +93,7 @@ impl Edges for fj::Shape {
 }
 
 impl Edges for fj::Shape2d {
-    fn edge_vertices(&self, tolerance: f64) -> Vec<EdgeVertices> {
+    fn edge_vertices(&self, tolerance: f64) -> Vec<Vec<Point>> {
         match self {
             Self::Circle(shape) => shape.edge_vertices(tolerance),
             Self::Difference(shape) => shape.edge_vertices(tolerance),
@@ -114,7 +111,7 @@ impl Edges for fj::Shape2d {
 }
 
 impl Edges for fj::Shape3d {
-    fn edge_vertices(&self, tolerance: f64) -> Vec<EdgeVertices> {
+    fn edge_vertices(&self, tolerance: f64) -> Vec<Vec<Point>> {
         match self {
             Self::Sweep(shape) => shape.edge_vertices(tolerance),
         }
@@ -128,7 +125,7 @@ impl Edges for fj::Shape3d {
 }
 
 impl Edges for fj::Circle {
-    fn edge_vertices(&self, tolerance: f64) -> Vec<EdgeVertices> {
+    fn edge_vertices(&self, tolerance: f64) -> Vec<Vec<Point>> {
         // To approximate the circle, we use a regular polygon for which the
         // circle is the circumscribed circle. The `tolerance` parameter is the
         // maximum allowed distance between the polygon and the circle. This is
@@ -167,7 +164,7 @@ impl Edges for fj::Circle {
 }
 
 impl Edges for fj::Difference {
-    fn edge_vertices(&self, tolerance: f64) -> Vec<EdgeVertices> {
+    fn edge_vertices(&self, tolerance: f64) -> Vec<Vec<Point>> {
         // TASK: This algorithm assumes that `b` is fully contained within `a`.
         //       As long as this precondition exists, it should be checked.
 
@@ -187,13 +184,13 @@ impl Edges for fj::Difference {
 }
 
 impl Edges for fj::Square {
-    fn edge_vertices(&self, _: f64) -> Vec<EdgeVertices> {
+    fn edge_vertices(&self, _: f64) -> Vec<Vec<Point>> {
         vec![self.vertices()]
     }
 }
 
 impl Edges for fj::Sweep {
-    fn edge_vertices(&self, _tolerance: f64) -> Vec<EdgeVertices> {
+    fn edge_vertices(&self, _tolerance: f64) -> Vec<Vec<Point>> {
         // TASK: Implement.
         todo!()
     }
