@@ -25,8 +25,8 @@ pub trait Edges {
     /// This method presents a weird API right now, as it just returns all the
     /// segments, not distinguishing which edge they approximate. This design is
     /// simple and in line with current use cases, but not expected to last.
-    fn edge_segments(&self, tolerance: f32) -> Segments {
-        let mut segments = Segments::new();
+    fn edge_segments(&self, tolerance: f32) -> EdgeSegments {
+        let mut segments = EdgeSegments::new();
         let mut vertices = self.edge_vertices(tolerance);
 
         // We're about to convert these vertices into line segments, and we need
@@ -69,10 +69,10 @@ impl EdgeVertices {
 
 /// Line segments that approximate a shape's edges
 #[derive(Debug)]
-pub struct Segments(pub Vec<Segment>);
+pub struct EdgeSegments(pub Vec<Segment>);
 
-impl Segments {
-    /// Create a new instance of `Segments`
+impl EdgeSegments {
+    /// Create a new instance of `EdgeSegments`
     pub fn new() -> Self {
         Self(Vec::new())
     }
@@ -111,7 +111,7 @@ impl Edges for fj::Shape {
         }
     }
 
-    fn edge_segments(&self, tolerance: f32) -> Segments {
+    fn edge_segments(&self, tolerance: f32) -> EdgeSegments {
         match self {
             Self::Shape2d(shape) => shape.edge_segments(tolerance),
             Self::Shape3d(shape) => shape.edge_segments(tolerance),
@@ -128,7 +128,7 @@ impl Edges for fj::Shape2d {
         }
     }
 
-    fn edge_segments(&self, tolerance: f32) -> Segments {
+    fn edge_segments(&self, tolerance: f32) -> EdgeSegments {
         match self {
             Self::Circle(shape) => shape.edge_segments(tolerance),
             Self::Difference(shape) => shape.edge_segments(tolerance),
@@ -144,7 +144,7 @@ impl Edges for fj::Shape3d {
         }
     }
 
-    fn edge_segments(&self, tolerance: f32) -> Segments {
+    fn edge_segments(&self, tolerance: f32) -> EdgeSegments {
         match self {
             Self::Sweep(shape) => shape.edge_segments(tolerance),
         }
