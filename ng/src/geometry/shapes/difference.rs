@@ -16,17 +16,17 @@ impl Shape for fj::Difference {
         self.a.bounding_volume()
     }
 
-    fn edge_vertices(&self, tolerance: f64) -> Vec<Edge> {
+    fn edges(&self, tolerance: f64) -> Vec<Edge> {
         // TASK: This algorithm assumes that `b` is fully contained within `a`.
         //       As long as this precondition exists, it should be checked.
 
         let mut edges = Vec::new();
 
-        for edge in self.a.edge_vertices(tolerance) {
+        for edge in self.a.edges(tolerance) {
             edges.push(edge);
         }
 
-        for edge in self.b.edge_vertices(tolerance) {
+        for edge in self.b.edges(tolerance) {
             let mut vertices = edge.vertices();
             vertices.reverse();
             edges.push(Edge::Approximated(vertices));
@@ -41,14 +41,14 @@ impl Shape for fj::Difference {
 
         let a: Vec<_> = self
             .a
-            .edge_vertices(tolerance)
+            .edges(tolerance)
             .into_iter()
             .map(|edge| edge.vertices())
             .flatten()
             .collect();
         let b: Vec<_> = self
             .b
-            .edge_vertices(tolerance)
+            .edges(tolerance)
             .into_iter()
             .map(|edge| edge.vertices())
             .flatten()

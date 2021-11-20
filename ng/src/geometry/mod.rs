@@ -30,7 +30,7 @@ pub trait Shape {
     ///
     /// `tolerance` defines how far the implicit line segments between those
     /// vertices are allowed to deviate from the actual edges of the shape.
-    fn edge_vertices(&self, tolerance: f64) -> Vec<Edge>;
+    fn edges(&self, tolerance: f64) -> Vec<Edge>;
 
     /// Compute line segments to approximate the shape's edges
     ///
@@ -41,7 +41,7 @@ pub trait Shape {
     /// segments, not distinguishing which edge they approximate. This design is
     /// simple and in line with current use cases, but not expected to last.
     fn edge_segments(&self, tolerance: f64) -> Vec<Segment> {
-        let edges = self.edge_vertices(tolerance);
+        let edges = self.edges(tolerance);
 
         let mut vertices = Vec::new();
         for edge in edges {
@@ -115,7 +115,7 @@ macro_rules! dispatch {
 
 dispatch! {
     bounding_volume() -> Aabb;
-    edge_vertices(tolerance: f64) -> Vec<Edge>;
+    edges(tolerance: f64) -> Vec<Edge>;
     edge_segments(tolerance: f64) -> Vec<Segment>;
     triangles(tolerance: f64) -> Vec<Triangle>;
     vertices() -> Vec<Point>;

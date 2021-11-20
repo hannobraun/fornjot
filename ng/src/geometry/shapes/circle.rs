@@ -20,7 +20,7 @@ impl Shape for fj::Circle {
         }
     }
 
-    fn edge_vertices(&self, tolerance: f64) -> Vec<Edge> {
+    fn edges(&self, tolerance: f64) -> Vec<Edge> {
         let angle_to_point = |angle: f64| {
             let (sin, cos) = angle.sin_cos();
 
@@ -69,7 +69,7 @@ impl Shape for fj::Circle {
 
     fn triangles(&self, tolerance: f64) -> Vec<Triangle> {
         let vertices: Vec<_> = self
-            .edge_vertices(tolerance)
+            .edges(tolerance)
             .into_iter()
             .map(|edge| edge.vertices())
             .flatten()

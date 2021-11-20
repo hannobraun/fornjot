@@ -12,7 +12,7 @@ impl Shape for fj::Sweep {
         aabb
     }
 
-    fn edge_vertices(&self, _tolerance: f64) -> Vec<Edge> {
+    fn edges(&self, _tolerance: f64) -> Vec<Edge> {
         // TASK: Implement.
         todo!()
     }

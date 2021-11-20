@@ -8,7 +8,7 @@ impl Shape for fj::Square {
         Aabb::from_vertices(self.vertices())
     }
 
-    fn edge_vertices(&self, _: f64) -> Vec<Edge> {
+    fn edges(&self, _: f64) -> Vec<Edge> {
         let v = self.vertices();
 
         vec![
