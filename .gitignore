@@ -1,2 +1,6 @@
 # Cargo
 /target
+/fj/Cargo.lock
+/fj/target
+/models/*/Cargo.lock
+/models/*/target

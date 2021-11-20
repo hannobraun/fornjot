@@ -1,31 +1,12 @@
-#![allow(uncommon_codepoints)]
+mod shape_2d;
+mod shape_3d;
 
-pub mod geometry;
-pub mod math;
-pub mod model;
-pub mod syntax;
+pub use self::{shape_2d::*, shape_3d::*};
 
-pub mod prelude {
-    pub use crate::syntax::{
-        Difference as _, Resolution as _, Rotate as _, Sweep as _,
-        Translate as _,
-    };
+/// A shape
+#[derive(Clone, Debug)]
+#[repr(C)]
+pub enum Shape {
+    Shape2d(Shape2d),
+    Shape3d(Shape3d),
 }
-
-mod args;
-mod graphics;
-mod input;
-mod mesh;
-mod run;
-mod util;
-
-pub use self::{
-    geometry::{
-        operations::{Difference, Sweep},
-        shapes::{Cylinder, MeshMaker, Polygon, Quad, Toroid, Triangle},
-    },
-    graphics::Vertex,
-    mesh::{Index, Mesh},
-    model::Model,
-    run::{run_mesh, run_model},
-};

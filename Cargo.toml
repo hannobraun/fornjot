@@ -1,12 +1,24 @@
-[workspace]
-members = [
-    "fj",
-    "models/cube",
-    "models/spacer",
-    "models/spacer2",
-]
-exclude = ["ng"]
-resolver = "2"
+[package]
+name    = "fj-host"
+version = "0.1.0"
+edition = "2021"
 
-[profile.dev]
-opt-level = 3
+
+[dependencies]
+anyhow     = "*"
+bytemuck   = "*"
+clap       = "3.0.0-beta.5"
+decorum    = "*"
+delaunator = "*"
+futures    = "*"
+libloading = "*"
+nalgebra   = "*"
+thiserror  = "*"
+threemf    = "*"
+tracing    = "*"
+wgpu       = "*"
+wgpu_glyph = "*"
+winit      = "*"
+
+[dependencies.fj]
+path = "fj"

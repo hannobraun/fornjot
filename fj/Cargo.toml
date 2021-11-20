@@ -1,38 +1,4 @@
 [package]
 name    = "fj"
-version = "0.2.0"
-authors = ["Hanno Braun <hanno@braun-odw.eu>"]
+version = "0.1.0"
 edition = "2021"
-
-description = "Experimental CAD system"
-readme      = "../README.md"
-repository  = "https://github.com/hannobraun/fornjot"
-license     = "0BSD"
-keywords    = ["cad", "programmatic", "constructive", "solid", "geometry"]
-categories  = ["mathematics", "rendering"]
-
-
-[dependencies]
-anyhow     = "1.0.41"
-bytemuck   = "1.6.1"
-clap       = "=3.0.0-beta.5"
-decorum    = "0.3.1"
-futures    = "0.3.15"
-indexmap   = "1.6.2"
-itertools  = "0.10.1"
-nalgebra   = "0.29.0"
-serde_json = "1.0.64"
-thiserror  = "1.0.25"
-threemf    = "0.1.0"
-tracing    = "0.1.26"
-wgpu       = "0.11.0"
-wgpu_glyph = "0.15.1"
-winit      = "0.25.0"
-
-[dependencies.serde]
-version  = "1.0.126"
-features = ["derive"]
-
-[dependencies.tracing-subscriber]
-version  = "0.3.0"
-features = ["env-filter"]

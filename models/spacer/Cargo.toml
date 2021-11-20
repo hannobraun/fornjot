@@ -1,14 +1,10 @@
 [package]
 name    = "spacer"
 version = "0.1.0"
-authors = ["Hanno Braun <hanno@braun-odw.eu>"]
 edition = "2021"
-publish = false
 
-
-[dependencies]
-anyhow = "*"
-serde  = "*"
+[lib]
+crate-type = ["cdylib"]
 
 [dependencies.fj]
 path = "../../fj"

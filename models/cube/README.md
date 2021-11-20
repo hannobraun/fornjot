@@ -1,5 +1,5 @@
 # Fornjot - Cube
 
-This is a simple cube model that demonstrates how to use the `Mesh` type to manually generate a triangle mesh, bypassing most of Fornjot's features.
+A model of a simple cube that demonstrates sweeping a 3D shape from a primitive with multiple connected edges.
 
-![Screenshot of the cube model](https://github.com/hannobraun/fornjot/blob/main/models/cube/cube.png)
+![Screenshot of the cube model](https://github.com/hannobraun/fornjot/blob/main/ng/models/cube/cube.png)
