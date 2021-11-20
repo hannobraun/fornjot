@@ -45,9 +45,7 @@ pub trait Shape {
 
         let mut segments = Vec::new();
         for edge in edges {
-            let vertices = edge.vertices();
-
-            for segment in vertices.windows(2) {
+            for segment in edge.vertices().windows(2) {
                 let v0 = segment[0];
                 let v1 = segment[1];
 
