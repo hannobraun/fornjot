@@ -189,11 +189,6 @@ impl Edges for fj::Difference {
         // TASK: Implement.
         todo!()
     }
-
-    fn segments(&self, _tolerance: f32) -> Segments {
-        // TASK: Implement.
-        todo!()
-    }
 }
 
 impl Edges for fj::Square {
@@ -218,11 +213,6 @@ impl Edges for fj::Square {
 
 impl Edges for fj::Sweep {
     fn edge_vertices(&self, _tolerance: f32) -> EdgeVertices {
-        // TASK: Implement.
-        todo!()
-    }
-
-    fn segments(&self, _tolerance: f32) -> Segments {
         // TASK: Implement.
         todo!()
     }
