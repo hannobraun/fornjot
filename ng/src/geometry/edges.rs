@@ -32,6 +32,18 @@ pub trait Edges {
 #[derive(Debug)]
 pub struct EdgeVertices(pub Vec<Point>);
 
+impl EdgeVertices {
+    /// Create a new instance of `EdgeVertices`
+    pub fn new() -> Self {
+        Self(Vec::new())
+    }
+
+    /// Add a vertex
+    pub fn push(&mut self, vertex: impl Into<Point>) {
+        self.0.push(vertex.into())
+    }
+}
+
 /// Line segments that approximate a shape's edges
 #[derive(Debug)]
 pub struct Segments(pub Vec<Segment>);
@@ -117,12 +129,7 @@ impl Edges for fj::Shape3d {
 }
 
 impl Edges for fj::Circle {
-    fn edge_vertices(&self, _tolerance: f32) -> EdgeVertices {
-        // TASK: Implement.
-        todo!()
-    }
-
-    fn segments(&self, tolerance: f32) -> Segments {
+    fn edge_vertices(&self, tolerance: f32) -> EdgeVertices {
         // To approximate the circle, we use a regular polygon for which the
         // circle is the circumscribed circle. The `tolerance` parameter is the
         // maximum allowed distance between the polygon and the circle. This is
@@ -144,7 +151,7 @@ impl Edges for fj::Circle {
             n += 1;
         }
 
-        let mut vertices = Vec::new();
+        let mut vertices = EdgeVertices::new();
         for i in 0..n {
             let angle = 2. * PI / n as f32 * i as f32;
 
@@ -156,15 +163,21 @@ impl Edges for fj::Circle {
             vertices.push(Point::new(x, y, 0.0));
         }
 
+        vertices
+    }
+
+    fn segments(&self, tolerance: f32) -> Segments {
+        let mut vertices = self.edge_vertices(tolerance);
+
         // We're about to convert these vertices into line segments, and we need
         // a connection from the last to the first.
         //
         // The indexing operation can't panic, as we've initialized `n` with `3`
         // above, hence there must be at least 3 vertices in `vertices`.
-        vertices.push(vertices[0]);
+        vertices.push(vertices.0[0]);
 
         let mut segments = Segments::new();
-        for segment in vertices.windows(2) {
+        for segment in vertices.0.windows(2) {
             let v0 = segment[0];
             let v1 = segment[1];
 
