@@ -150,7 +150,7 @@ impl Edges for fj::Circle {
             n += 1;
         }
 
-        let mut vertices = EdgeVertices::new();
+        let mut vertices = Vec::new();
         for i in 0..n {
             let angle = 2. * PI / n as f64 * i as f64;
 
