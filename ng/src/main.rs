@@ -42,9 +42,6 @@ fn main() -> anyhow::Result<()> {
         arguments.insert(key, value);
     }
 
-    // TASK: Pass arguments to model.
-    dbg!(arguments);
-
     // This can be made a bit more contact using `ExitStatus::exit_ok`, once
     // that is stable.
     let status = Command::new("cargo")
@@ -61,7 +58,7 @@ fn main() -> anyhow::Result<()> {
             model_dir, args.model,
         ))?;
         let model: libloading::Symbol<ModelFn> = lib.get(b"model")?;
-        model()
+        model(&arguments)
     };
 
     let aabb = shape.bounding_volume();
@@ -194,4 +191,5 @@ fn main() -> anyhow::Result<()> {
     });
 }
 
-type ModelFn = unsafe extern "C" fn() -> fj::Shape;
+type ModelFn =
+    unsafe extern "C" fn(args: &HashMap<String, String>) -> fj::Shape;

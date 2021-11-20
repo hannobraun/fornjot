@@ -1,5 +1,10 @@
+use std::collections::HashMap;
+
 #[no_mangle]
-pub extern "C" fn model() -> fj::Shape {
+pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
+    // TASK: Process arguments.
+    dbg!(args);
+
     let outer_edge = fj::Circle { radius: 1.0 };
     let inner_edge = fj::Circle { radius: 0.5 };
 
