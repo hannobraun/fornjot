@@ -18,20 +18,7 @@ pub trait Faces {
 }
 
 /// The triangles that approximate a shape's faces
-#[derive(Debug)]
-pub struct Triangles(pub Vec<Triangle>);
-
-impl Triangles {
-    /// Create new instance of `Triangles`
-    pub fn new() -> Self {
-        Self(Vec::new())
-    }
-
-    /// Add a triangle
-    pub fn push(&mut self, triangle: impl Into<Triangle>) {
-        self.0.push(triangle.into())
-    }
-}
+pub type Triangles = Vec<Triangle>;
 
 /// A triangle
 ///
@@ -123,7 +110,7 @@ impl Faces for fj::Difference {
         // Now we have a full Delaunay triangulation of all vertices. We still
         // need to filter out the triangles that aren't actually part of the
         // difference.
-        triangles.0.retain(|triangle| {
+        triangles.retain(|triangle| {
             let mut edges_of_b = 0;
 
             for [v0, v1] in triangle.edges() {
@@ -145,8 +132,8 @@ impl Faces for fj::Square {
 
         let v = self.vertices();
 
-        triangles.push([v[0], v[1], v[2]]);
-        triangles.push([v[0], v[2], v[3]]);
+        triangles.push([v[0], v[1], v[2]].into());
+        triangles.push([v[0], v[2], v[3]].into());
 
         triangles
     }
@@ -159,19 +146,14 @@ impl Faces for fj::Sweep {
         let original_triangles = self.shape.triangles(tolerance);
 
         // Bottom face
-        triangles.0.extend(
-            original_triangles
-                .0
-                .iter()
-                .map(|triangle| triangle.invert()),
+        triangles.extend(
+            original_triangles.iter().map(|triangle| triangle.invert()),
         );
 
         // Top face
-        triangles
-            .0
-            .extend(original_triangles.0.iter().map(|triangle| {
-                triangle.translate(vector![0.0, 0.0, self.length])
-            }));
+        triangles.extend(original_triangles.iter().map(|triangle| {
+            triangle.translate(vector![0.0, 0.0, self.length])
+        }));
 
         let segments = self.shape.edge_segments(tolerance);
 
@@ -184,8 +166,8 @@ impl Faces for fj::Sweep {
         }
 
         for [v0, v1, v2, v3] in quads {
-            triangles.push([v0, v1, v2]);
-            triangles.push([v0, v2, v3]);
+            triangles.push([v0, v1, v2].into());
+            triangles.push([v0, v2, v3].into());
         }
 
         triangles
@@ -209,7 +191,7 @@ fn triangulate(vertices: &[Point]) -> Triangles {
         let i1 = triangle[1];
         let i2 = triangle[2];
 
-        triangles.push([vertices[i0], vertices[i2], vertices[i1]]);
+        triangles.push([vertices[i0], vertices[i2], vertices[i1]].into());
     }
 
     triangles
