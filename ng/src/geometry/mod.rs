@@ -60,7 +60,7 @@ pub trait Shape {
     }
 }
 
-macro_rules! dispatch_shape {
+macro_rules! dispatch {
     ($($method:ident($($arg_name:ident: $arg_ty:ident)*) -> $ret:ty;)*) => {
         impl Shape for fj::Shape {
             $(
@@ -72,11 +72,7 @@ macro_rules! dispatch_shape {
                 }
             )*
         }
-    };
-}
 
-macro_rules! dispatch_shape2d {
-    ($($method:ident($($arg_name:ident: $arg_ty:ident)*) -> $ret:ty;)*) => {
         impl Shape for fj::Shape2d {
             $(
                 fn $method(&self, $($arg_name: $arg_ty)*) -> $ret {
@@ -88,11 +84,7 @@ macro_rules! dispatch_shape2d {
                 }
             )*
         }
-    };
-}
 
-macro_rules! dispatch_shape3d {
-    ($($method:ident($($arg_name:ident: $arg_ty:ident)*) -> $ret:ty;)*) => {
         impl Shape for fj::Shape3d {
             $(
                 fn $method(&self, $($arg_name: $arg_ty)*) -> $ret {
@@ -105,19 +97,7 @@ macro_rules! dispatch_shape3d {
     };
 }
 
-dispatch_shape! {
-    aabb() -> Aabb;
-    edge_vertices(tolerance: f64) -> Vec<Vec<Point>>;
-    edge_segments(tolerance: f64) -> Vec<Segment>;
-}
-
-dispatch_shape2d! {
-    aabb() -> Aabb;
-    edge_vertices(tolerance: f64) -> Vec<Vec<Point>>;
-    edge_segments(tolerance: f64) -> Vec<Segment>;
-}
-
-dispatch_shape3d! {
+dispatch! {
     aabb() -> Aabb;
     edge_vertices(tolerance: f64) -> Vec<Vec<Point>>;
     edge_segments(tolerance: f64) -> Vec<Segment>;
