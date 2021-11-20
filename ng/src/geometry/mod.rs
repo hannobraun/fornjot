@@ -45,7 +45,7 @@ pub trait Shape {
 
         let mut vertices = Vec::new();
         for edge in edges {
-            vertices.extend(edge.vertices());
+            vertices.extend(edge.vertices(tolerance));
         }
 
         // If we have multiple connected edges, the previous step will produce

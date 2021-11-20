@@ -71,7 +71,7 @@ impl Shape for fj::Circle {
         let vertices: Vec<_> = self
             .edges(tolerance)
             .into_iter()
-            .map(|edge| edge.vertices())
+            .map(|edge| edge.vertices(tolerance))
             .flatten()
             .collect();
         triangulate(&vertices)

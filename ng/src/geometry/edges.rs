@@ -12,7 +12,7 @@ pub enum Edge {
 
 impl Edge {
     /// Access the vertices
-    pub fn vertices(&self) -> Vec<Point> {
+    pub fn vertices(&self, _tolerance: f64) -> Vec<Point> {
         match self {
             Self::Approximated(vertices) => vertices.clone(),
         }
