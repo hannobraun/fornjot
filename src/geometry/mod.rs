@@ -22,7 +22,7 @@ pub trait Shape {
     ///
     /// `tolerance` defines by how far this triangulation is allowed to deviate
     /// from the faces' actual dimensions.
-    fn triangles(&self, tolerance: f64) -> Vec<Triangle>;
+    fn faces(&self, tolerance: f64) -> Vec<Triangle>;
 
     /// Access the edges of the shape
     fn edges(&self) -> Edges;
@@ -70,7 +70,7 @@ macro_rules! dispatch {
 
 dispatch! {
     bounding_volume() -> Aabb;
-    triangles(tolerance: f64) -> Vec<Triangle>;
+    faces(tolerance: f64) -> Vec<Triangle>;
     edges() -> Edges;
     vertices() -> Vec<Point>;
 }

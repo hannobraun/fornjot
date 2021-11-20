@@ -64,7 +64,7 @@ fn main() -> anyhow::Result<()> {
     let aabb = shape.bounding_volume();
 
     let tolerance = aabb.size().min() / 1000.;
-    let triangles = shape.triangles(tolerance);
+    let triangles = shape.faces(tolerance);
 
     if let Some(path) = args.export {
         let mut mesh_maker = MeshMaker::new();

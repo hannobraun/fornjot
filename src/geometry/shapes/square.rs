@@ -13,7 +13,7 @@ impl Shape for fj::Square {
         Aabb::from_vertices(self.vertices())
     }
 
-    fn triangles(&self, _: f64) -> Vec<Triangle> {
+    fn faces(&self, _: f64) -> Vec<Triangle> {
         let mut triangles = Vec::new();
 
         let v = self.vertices();

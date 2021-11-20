@@ -18,7 +18,7 @@ impl Shape for fj::Circle {
         }
     }
 
-    fn triangles(&self, tolerance: f64) -> Vec<Triangle> {
+    fn faces(&self, tolerance: f64) -> Vec<Triangle> {
         let vertices: Vec<_> = self
             .edges()
             .0
