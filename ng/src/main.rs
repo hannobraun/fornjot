@@ -5,7 +5,7 @@ mod input;
 mod math;
 mod mesh;
 
-use std::{process::Command, time::Instant};
+use std::{collections::HashMap, process::Command, time::Instant};
 
 use futures::executor::block_on;
 use tracing::trace;
@@ -26,8 +26,24 @@ fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     let model_dir = format!("models/{}", args.model);
 
-    // TASK: Parse arguments, pass them to model.
-    dbg!(args.arguments);
+    let mut arguments = HashMap::new();
+    for argument in args.arguments {
+        let mut argument = argument.splitn(2, "=");
+
+        let key = argument
+            .next()
+            .expect("model argument: key not found")
+            .to_owned();
+        let value = argument
+            .next()
+            .expect("model argument: value not found")
+            .to_owned();
+
+        arguments.insert(key, value);
+    }
+
+    // TASK: Pass arguments to model.
+    dbg!(arguments);
 
     // This can be made a bit more contact using `ExitStatus::exit_ok`, once
     // that is stable.
