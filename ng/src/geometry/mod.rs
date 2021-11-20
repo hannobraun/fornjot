@@ -15,9 +15,6 @@ pub trait Shape {
     /// (but are otherwise not specified).
     fn bounding_volume(&self) -> Aabb;
 
-    /// Access the edges of the shape
-    fn edges(&self) -> Edges;
-
     /// Compute triangles to approximate the shape's faces
     ///
     /// The shape defined by the approximated triangles must be fully contained
@@ -26,6 +23,9 @@ pub trait Shape {
     /// `tolerance` defines by how far this triangulation is allowed to deviate
     /// from the faces' actual dimensions.
     fn triangles(&self, tolerance: f64) -> Vec<Triangle>;
+
+    /// Access the edges of the shape
+    fn edges(&self) -> Edges;
 
     /// Return the shape's vertices
     fn vertices(&self) -> Vec<Point>;
@@ -70,7 +70,7 @@ macro_rules! dispatch {
 
 dispatch! {
     bounding_volume() -> Aabb;
-    edges() -> Edges;
     triangles(tolerance: f64) -> Vec<Triangle>;
+    edges() -> Edges;
     vertices() -> Vec<Point>;
 }

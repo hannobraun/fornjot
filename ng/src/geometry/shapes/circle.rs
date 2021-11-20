@@ -18,12 +18,6 @@ impl Shape for fj::Circle {
         }
     }
 
-    fn edges(&self) -> Edges {
-        let mut edges = Edges::new();
-        edges.0.push(Edge::arc(self.radius));
-        edges
-    }
-
     fn triangles(&self, tolerance: f64) -> Vec<Triangle> {
         let vertices: Vec<_> = self
             .edges()
@@ -33,6 +27,12 @@ impl Shape for fj::Circle {
             .flatten()
             .collect();
         triangulate(&vertices)
+    }
+
+    fn edges(&self) -> Edges {
+        let mut edges = Edges::new();
+        edges.0.push(Edge::arc(self.radius));
+        edges
     }
 
     fn vertices(&self) -> Vec<Point> {

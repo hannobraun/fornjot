@@ -13,6 +13,17 @@ impl Shape for fj::Square {
         Aabb::from_vertices(self.vertices())
     }
 
+    fn triangles(&self, _: f64) -> Vec<Triangle> {
+        let mut triangles = Vec::new();
+
+        let v = self.vertices();
+
+        triangles.push([v[0], v[1], v[2]].into());
+        triangles.push([v[0], v[2], v[3]].into());
+
+        triangles
+    }
+
     fn edges(&self) -> Edges {
         let v = self.vertices();
 
@@ -23,17 +34,6 @@ impl Shape for fj::Square {
         edges.0.push(Edge::line_segment(v[3], v[0]));
 
         edges
-    }
-
-    fn triangles(&self, _: f64) -> Vec<Triangle> {
-        let mut triangles = Vec::new();
-
-        let v = self.vertices();
-
-        triangles.push([v[0], v[1], v[2]].into());
-        triangles.push([v[0], v[2], v[3]].into());
-
-        triangles
     }
 
     fn vertices(&self) -> Vec<Point> {

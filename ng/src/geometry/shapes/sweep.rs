@@ -12,11 +12,6 @@ impl Shape for fj::Sweep {
         aabb
     }
 
-    fn edges(&self) -> Edges {
-        // TASK: Implement.
-        todo!()
-    }
-
     fn triangles(&self, tolerance: f64) -> Vec<Triangle> {
         let mut triangles = Vec::new();
 
@@ -48,6 +43,11 @@ impl Shape for fj::Sweep {
         }
 
         triangles
+    }
+
+    fn edges(&self) -> Edges {
+        // TASK: Implement.
+        todo!()
     }
 
     fn vertices(&self) -> Vec<Point> {
