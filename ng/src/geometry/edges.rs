@@ -3,8 +3,6 @@ use std::f64::consts::PI;
 use crate::math::{Point, Vector};
 
 /// An edge of a shape
-///
-/// See [`Shape::edges`].
 pub struct Edge {
     /// The path that defines the edge
     pub path: Path,
