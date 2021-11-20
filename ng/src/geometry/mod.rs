@@ -61,12 +61,16 @@ pub trait Shape {
 }
 
 macro_rules! dispatch_shape {
-    ($method:ident($($arg_name:ident: $arg_ty:ident)*) -> $ret:ty) => {
-        fn $method(&self, $($arg_name: $arg_ty)*) -> $ret {
-            match self {
-                Self::Shape2d(shape) => shape.$method($($arg_name)*),
-                Self::Shape3d(shape) => shape.$method($($arg_name)*),
-            }
+    ($($method:ident($($arg_name:ident: $arg_ty:ident)*) -> $ret:ty;)*) => {
+        impl Shape for fj::Shape {
+            $(
+                fn $method(&self, $($arg_name: $arg_ty)*) -> $ret {
+                    match self {
+                        Self::Shape2d(shape) => shape.$method($($arg_name)*),
+                        Self::Shape3d(shape) => shape.$method($($arg_name)*),
+                    }
+                }
+            )*
         }
     };
 }
@@ -93,10 +97,10 @@ macro_rules! dispatch_shape3d {
     };
 }
 
-impl Shape for fj::Shape {
-    dispatch_shape!(aabb() -> Aabb);
-    dispatch_shape!(edge_vertices(tolerance: f64) -> Vec<Vec<Point>>);
-    dispatch_shape!(edge_segments(tolerance: f64) -> Vec<Segment>);
+dispatch_shape! {
+    aabb() -> Aabb;
+    edge_vertices(tolerance: f64) -> Vec<Vec<Point>>;
+    edge_segments(tolerance: f64) -> Vec<Segment>;
 }
 
 impl Shape for fj::Shape2d {
