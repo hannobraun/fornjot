@@ -13,7 +13,7 @@ impl Shape for fj::Sweep {
     }
 
     fn faces(&self, tolerance: f64) -> Faces {
-        let mut triangles = Vec::new();
+        let mut triangles = Faces::new();
 
         let original_triangles = self.shape.faces(tolerance);
 

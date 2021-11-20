@@ -14,7 +14,7 @@ impl Shape for fj::Square {
     }
 
     fn faces(&self, _: f64) -> Faces {
-        let mut triangles = Vec::new();
+        let mut triangles = Faces::new();
 
         let v = self.vertices();
 
