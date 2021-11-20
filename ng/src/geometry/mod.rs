@@ -5,11 +5,7 @@ pub mod shapes;
 
 use crate::math::Point;
 
-use self::{
-    bounding_volume::Aabb,
-    edges::{Edges, Segment},
-    faces::Triangle,
-};
+use self::{bounding_volume::Aabb, edges::Edges, faces::Triangle};
 
 /// Implemented by all shapes
 pub trait Shape {
@@ -21,37 +17,6 @@ pub trait Shape {
 
     /// Access the edges of the shape
     fn edges(&self) -> Edges;
-
-    /// Compute line segments to approximate the shape's edges
-    ///
-    /// `tolerance` defines how far these line segments are allowed to deviate
-    /// from the actual edges of the shape.
-    ///
-    /// This method presents a weird API right now, as it just returns all the
-    /// segments, not distinguishing which edge they approximate. This design is
-    /// simple and in line with current use cases, but not expected to last.
-    fn edge_segments(&self, tolerance: f64) -> Vec<Segment> {
-        let edges = self.edges();
-
-        let mut vertices = Vec::new();
-        for edge in edges.0 {
-            vertices.extend(edge.vertices(tolerance));
-        }
-
-        // If we have multiple connected edges, the previous step will produce
-        // duplicate vertices.
-        vertices.dedup();
-
-        let mut segments = Vec::new();
-        for segment in vertices.windows(2) {
-            let v0 = segment[0];
-            let v1 = segment[1];
-
-            segments.push([v0, v1].into());
-        }
-
-        segments
-    }
 
     /// Compute triangles to approximate the shape's faces
     ///
@@ -106,7 +71,6 @@ macro_rules! dispatch {
 dispatch! {
     bounding_volume() -> Aabb;
     edges() -> Edges;
-    edge_segments(tolerance: f64) -> Vec<Segment>;
     triangles(tolerance: f64) -> Vec<Triangle>;
     vertices() -> Vec<Point>;
 }

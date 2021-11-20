@@ -10,6 +10,31 @@ impl Edges {
     pub fn new() -> Self {
         Self(Vec::new())
     }
+
+    /// Compute line segments to approximate the edges
+    ///
+    /// `tolerance` defines how far these line segments are allowed to deviate
+    /// from the actual edges of the shape.
+    pub fn segments(&self, tolerance: f64) -> Vec<Segment> {
+        let mut vertices = Vec::new();
+        for edge in &self.0 {
+            vertices.extend(edge.vertices(tolerance));
+        }
+
+        // If we have multiple connected edges, the previous step will produce
+        // duplicate vertices.
+        vertices.dedup();
+
+        let mut segments = Vec::new();
+        for segment in vertices.windows(2) {
+            let v0 = segment[0];
+            let v1 = segment[1];
+
+            segments.push([v0, v1].into());
+        }
+
+        segments
+    }
 }
 
 /// An edge of a shape

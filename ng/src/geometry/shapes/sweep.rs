@@ -32,7 +32,7 @@ impl Shape for fj::Sweep {
             triangle.translate(vector![0.0, 0.0, self.length])
         }));
 
-        let segments = self.shape.edge_segments(tolerance);
+        let segments = self.shape.edges().segments(tolerance);
 
         let mut quads = Vec::new();
         for segment in segments {
