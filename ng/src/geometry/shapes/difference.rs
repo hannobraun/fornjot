@@ -1,7 +1,7 @@
 use crate::{
     geometry::{
         bounding_volume::Aabb,
-        edges::Edge,
+        edges::{Edge, Path},
         faces::{triangulate, Triangle},
         Shape,
     },
@@ -29,7 +29,9 @@ impl Shape for fj::Difference {
         for edge in self.b.edges(tolerance) {
             let mut vertices = edge.vertices(tolerance);
             vertices.reverse();
-            edges.push(Edge::Approximated(vertices));
+            edges.push(Edge {
+                path: Path::Approximated(vertices),
+            });
         }
 
         edges

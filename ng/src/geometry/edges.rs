@@ -5,40 +5,24 @@ use crate::math::{Point, Vector};
 /// An edge of a shape
 ///
 /// See [`Shape::edges`].
-pub enum Edge {
-    /// The edge is an arc
-    ///
-    /// The naming here is a bit ambitious, as actual arcs aren't supported yet,
-    /// only full circles.
-    Arc {
-        /// The radius of the arc
-        radius: f64,
-    },
-
-    /// The edge is a line segment
-    LineSegment {
-        /// The start of the line segment
-        start: Point,
-
-        /// The end of the line segment
-        end: Point,
-    },
-
-    /// The edge is approximated through vertices
-    ///
-    /// This variant only exists temporarily while a refactoring is going on.
-    Approximated(Vec<Point>),
+pub struct Edge {
+    /// The path that defines the edge
+    pub path: Path,
 }
 
 impl Edge {
     /// Create an arc
     pub fn arc(radius: f64) -> Self {
-        Self::Arc { radius }
+        Self {
+            path: Path::Arc { radius },
+        }
     }
 
     /// Create a line segment
     pub fn line_segment(start: Point, end: Point) -> Self {
-        Self::LineSegment { start, end }
+        Self {
+            path: Path::LineSegment { start, end },
+        }
     }
 
     /// Compute vertices to approximate the edge
@@ -46,8 +30,8 @@ impl Edge {
     /// `tolerance` defines how far the implicit line segments between those
     /// vertices are allowed to deviate from the actual edge.
     pub fn vertices(&self, tolerance: f64) -> Vec<Point> {
-        match self {
-            Self::Arc { radius } => {
+        match &self.path {
+            Path::Arc { radius } => {
                 let angle_to_point = |angle: f64| {
                     let (sin, cos) = angle.sin_cos();
 
@@ -93,10 +77,36 @@ impl Edge {
 
                 vertices
             }
-            Self::LineSegment { start, end } => vec![*start, *end],
-            Self::Approximated(vertices) => vertices.clone(),
+            Path::LineSegment { start, end } => vec![*start, *end],
+            Path::Approximated(vertices) => vertices.clone(),
         }
     }
+}
+
+/// A path
+pub enum Path {
+    /// The edge is an arc
+    ///
+    /// The naming here is a bit ambitious, as actual arcs aren't supported yet,
+    /// only full circles.
+    Arc {
+        /// The radius of the arc
+        radius: f64,
+    },
+
+    /// The edge is a line segment
+    LineSegment {
+        /// The start of the line segment
+        start: Point,
+
+        /// The end of the line segment
+        end: Point,
+    },
+
+    /// The edge is approximated through vertices
+    ///
+    /// This variant only exists temporarily while a refactoring is going on.
+    Approximated(Vec<Point>),
 }
 
 /// A line segment
