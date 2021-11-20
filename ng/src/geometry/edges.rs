@@ -1,7 +1,4 @@
-use crate::{
-    geometry::vertices::Vertices as _,
-    math::{Point, Vector},
-};
+use crate::math::{Point, Vector};
 
 /// Access the edges of a shape
 pub trait Edges {
@@ -114,12 +111,6 @@ impl Edges for fj::Shape3d {
         match self {
             Self::Sweep(shape) => shape.edge_segments(tolerance),
         }
-    }
-}
-
-impl Edges for fj::Square {
-    fn edge_vertices(&self, _: f64) -> Vec<Vec<Point>> {
-        vec![self.vertices()]
     }
 }
 

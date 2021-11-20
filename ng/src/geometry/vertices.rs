@@ -33,22 +33,6 @@ impl Vertices for fj::Shape3d {
     }
 }
 
-impl Vertices for fj::Square {
-    fn vertices(&self) -> Vec<Point> {
-        let s = self.size / 2.;
-
-        #[rustfmt::skip]
-        let v = [
-            [-s, -s, 0.0],
-            [ s, -s, 0.0],
-            [ s,  s, 0.0],
-            [-s,  s, 0.0],
-        ];
-
-        v.map(|coord| coord.into()).to_vec()
-    }
-}
-
 impl Vertices for fj::Sweep {
     fn vertices(&self) -> Vec<Point> {
         // TASK Implement.

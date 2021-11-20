@@ -1,7 +1,7 @@
 use nalgebra::vector;
 
 use crate::{
-    geometry::{edges::Edges as _, vertices::Vertices as _},
+    geometry::edges::Edges as _,
     math::{Point, Vector},
 };
 
@@ -81,19 +81,6 @@ impl Faces for fj::Shape3d {
         match self {
             Self::Sweep(shape) => shape.triangles(tolerance),
         }
-    }
-}
-
-impl Faces for fj::Square {
-    fn triangles(&self, _: f64) -> Vec<Triangle> {
-        let mut triangles = Vec::new();
-
-        let v = self.vertices();
-
-        triangles.push([v[0], v[1], v[2]].into());
-        triangles.push([v[0], v[2], v[3]].into());
-
-        triangles
     }
 }
 

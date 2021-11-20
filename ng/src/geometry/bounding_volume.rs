@@ -1,7 +1,4 @@
-use crate::{
-    geometry::vertices::Vertices as _,
-    math::{Point, Vector},
-};
+use crate::math::{Point, Vector};
 
 /// Compute the bounding volume of a shape
 ///
@@ -99,12 +96,6 @@ impl BoundingVolume for fj::Shape3d {
         match self {
             Self::Sweep(shape) => shape.aabb(),
         }
-    }
-}
-
-impl BoundingVolume for fj::Square {
-    fn aabb(&self) -> Aabb {
-        Aabb::from_vertices(self.vertices())
     }
 }
 
