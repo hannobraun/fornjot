@@ -2,15 +2,16 @@ use nalgebra::vector;
 
 use crate::{
     geometry::{
-        bounding_volume::{Aabb, BoundingVolume},
+        bounding_volume::Aabb,
         edges::Edges,
         faces::{Faces, Triangle},
         vertices::Vertices,
+        Shape,
     },
     math::Point,
 };
 
-impl BoundingVolume for fj::Sweep {
+impl Shape for fj::Sweep {
     fn aabb(&self) -> Aabb {
         let mut aabb = self.shape.aabb();
         aabb.max.z = self.length;

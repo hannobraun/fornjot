@@ -17,7 +17,7 @@ use winit::{
 
 use crate::{
     args::Args,
-    geometry::{bounding_volume::BoundingVolume as _, faces::Faces as _},
+    geometry::{faces::Faces as _, Shape as _},
     graphics::{DrawConfig, Renderer, Transform},
     mesh::{HashVector, MeshMaker},
 };

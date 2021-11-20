@@ -1,14 +1,15 @@
 use crate::{
     geometry::{
-        bounding_volume::{Aabb, BoundingVolume},
+        bounding_volume::Aabb,
         edges::Edges,
         faces::{Faces, Triangle},
         vertices::Vertices,
+        Shape,
     },
     math::Point,
 };
 
-impl BoundingVolume for fj::Square {
+impl Shape for fj::Square {
     fn aabb(&self) -> Aabb {
         Aabb::from_vertices(self.vertices())
     }

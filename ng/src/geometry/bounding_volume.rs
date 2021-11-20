@@ -1,16 +1,5 @@
 use crate::math::{Point, Vector};
 
-/// Compute the bounding volume of a shape
-///
-/// The bounding volume is a volume that contains all of the shape.
-pub trait BoundingVolume {
-    /// Compute the axis-aligned bounding box of a shape
-    ///
-    /// If a shape is empty, its [`Aabb`]'s `min` and `max` points must be equal
-    /// (but are otherwise not specified).
-    fn aabb(&self) -> Aabb;
-}
-
 /// An axis-aligned bounding box
 #[derive(Debug)]
 pub struct Aabb {
@@ -69,32 +58,5 @@ impl Aabb {
     /// Compute the size of the axis-aligned bounding box
     pub fn size(&self) -> Vector {
         self.max - self.min
-    }
-}
-
-impl BoundingVolume for fj::Shape {
-    fn aabb(&self) -> Aabb {
-        match self {
-            Self::Shape2d(shape) => shape.aabb(),
-            Self::Shape3d(shape) => shape.aabb(),
-        }
-    }
-}
-
-impl BoundingVolume for fj::Shape2d {
-    fn aabb(&self) -> Aabb {
-        match self {
-            Self::Circle(shape) => shape.aabb(),
-            Self::Difference(shape) => shape.aabb(),
-            Self::Square(shape) => shape.aabb(),
-        }
-    }
-}
-
-impl BoundingVolume for fj::Shape3d {
-    fn aabb(&self) -> Aabb {
-        match self {
-            Self::Sweep(shape) => shape.aabb(),
-        }
     }
 }

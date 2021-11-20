@@ -1,14 +1,15 @@
 use crate::{
     geometry::{
-        bounding_volume::{Aabb, BoundingVolume},
+        bounding_volume::Aabb,
         edges::Edges,
         faces::{triangulate, Faces, Triangle},
         vertices::Vertices,
+        Shape,
     },
     math::Point,
 };
 
-impl BoundingVolume for fj::Difference {
+impl Shape for fj::Difference {
     fn aabb(&self) -> Aabb {
         // This is a conservative estimate of the bounding box: It's never going
         // to be bigger than the bounding box of the original shape that another

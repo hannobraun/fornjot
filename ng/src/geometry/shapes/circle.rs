@@ -4,15 +4,16 @@ use nalgebra::point;
 
 use crate::{
     geometry::{
-        bounding_volume::{Aabb, BoundingVolume},
+        bounding_volume::Aabb,
         edges::Edges,
         faces::{triangulate, Faces, Triangle},
         vertices::Vertices,
+        Shape,
     },
     math::Point,
 };
 
-impl BoundingVolume for fj::Circle {
+impl Shape for fj::Circle {
     fn aabb(&self) -> Aabb {
         Aabb {
             min: point![-self.radius, -self.radius, 0.0],
