@@ -16,12 +16,13 @@ impl Shape for fj::Square {
     fn edges(&self) -> Edges {
         let v = self.vertices();
 
-        vec![
-            Edge::line_segment(v[0], v[1]),
-            Edge::line_segment(v[1], v[2]),
-            Edge::line_segment(v[2], v[3]),
-            Edge::line_segment(v[3], v[0]),
-        ]
+        let mut edges = Edges::new();
+        edges.push(Edge::line_segment(v[0], v[1]));
+        edges.push(Edge::line_segment(v[1], v[2]));
+        edges.push(Edge::line_segment(v[2], v[3]));
+        edges.push(Edge::line_segment(v[3], v[0]));
+
+        edges
     }
 
     fn triangles(&self, _: f64) -> Vec<Triangle> {
