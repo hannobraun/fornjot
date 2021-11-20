@@ -20,18 +20,16 @@ impl Shape for fj::Difference {
         // TASK: This method assumes that `b` is fully contained within `a`. As
         //       long as this precondition exists, it should at least be
         //       checked.
-
-        let mut edges = Vec::new();
-
-        for edge in self.a.edges(tolerance) {
-            edges.push(edge);
-        }
-
-        for edge in self.b.edges(tolerance) {
-            edges.push(edge.reverse());
-        }
-
-        edges
+        self.a
+            .edges(tolerance)
+            .into_iter()
+            .chain(
+                self.b
+                    .edges(tolerance)
+                    .into_iter()
+                    .map(|edge| edge.reverse()),
+            )
+            .collect()
     }
 
     fn triangles(&self, tolerance: f64) -> Vec<Triangle> {
