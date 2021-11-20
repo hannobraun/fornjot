@@ -5,7 +5,7 @@ use nalgebra::point;
 use crate::{
     geometry::{
         bounding_volume::Aabb,
-        faces::{triangulate, Faces, Triangle},
+        faces::{triangulate, Triangle},
         vertices::Vertices,
         Shape,
     },
@@ -56,9 +56,7 @@ impl Shape for fj::Circle {
 
         vec![vertices]
     }
-}
 
-impl Faces for fj::Circle {
     fn triangles(&self, tolerance: f64) -> Vec<Triangle> {
         let vertices: Vec<_> = self
             .edge_vertices(tolerance)

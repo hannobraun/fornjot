@@ -6,7 +6,7 @@ pub mod vertices;
 
 use crate::math::Point;
 
-use self::{bounding_volume::Aabb, edges::Segment};
+use self::{bounding_volume::Aabb, edges::Segment, faces::Triangle};
 
 /// Implemented by all shapes
 pub trait Shape {
@@ -58,6 +58,15 @@ pub trait Shape {
 
         segments
     }
+
+    /// Compute triangles to approximate the shape's faces
+    ///
+    /// The shape defined by the approximated triangles must be fully contained
+    /// within the actual shape.
+    ///
+    /// `tolerance` defines by how far this triangulation is allowed to deviate
+    /// from the faces' actual dimensions.
+    fn triangles(&self, tolerance: f64) -> Vec<Triangle>;
 }
 
 macro_rules! dispatch {
@@ -101,4 +110,5 @@ dispatch! {
     aabb() -> Aabb;
     edge_vertices(tolerance: f64) -> Vec<Vec<Point>>;
     edge_segments(tolerance: f64) -> Vec<Segment>;
+    triangles(tolerance: f64) -> Vec<Triangle>;
 }

@@ -2,10 +2,7 @@ use nalgebra::vector;
 
 use crate::{
     geometry::{
-        bounding_volume::Aabb,
-        faces::{Faces, Triangle},
-        vertices::Vertices,
-        Shape,
+        bounding_volume::Aabb, faces::Triangle, vertices::Vertices, Shape,
     },
     math::Point,
 };
@@ -21,9 +18,7 @@ impl Shape for fj::Sweep {
         // TASK: Implement.
         todo!()
     }
-}
 
-impl Faces for fj::Sweep {
     fn triangles(&self, tolerance: f64) -> Vec<Triangle> {
         let mut triangles = Vec::new();
 

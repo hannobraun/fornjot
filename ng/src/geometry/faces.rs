@@ -1,17 +1,5 @@
 use crate::math::{Point, Vector};
 
-/// Access a shape's faces
-pub trait Faces {
-    /// Compute triangles to approximate the shape's faces
-    ///
-    /// The shape defined by the approximated triangles must be fully contained
-    /// within the actual shape.
-    ///
-    /// `tolerance` defines by how far this triangulation is allowed to deviate
-    /// from the faces' actual dimensions.
-    fn triangles(&self, tolerance: f64) -> Vec<Triangle>;
-}
-
 /// A triangle
 ///
 /// Or more specifically, three points. Currently no validation is done to
@@ -49,33 +37,6 @@ impl Triangle {
 impl From<[Point; 3]> for Triangle {
     fn from(vertices: [Point; 3]) -> Self {
         Self(vertices)
-    }
-}
-
-impl Faces for fj::Shape {
-    fn triangles(&self, tolerance: f64) -> Vec<Triangle> {
-        match self {
-            Self::Shape2d(shape) => shape.triangles(tolerance),
-            Self::Shape3d(shape) => shape.triangles(tolerance),
-        }
-    }
-}
-
-impl Faces for fj::Shape2d {
-    fn triangles(&self, tolerance: f64) -> Vec<Triangle> {
-        match self {
-            Self::Circle(shape) => shape.triangles(tolerance),
-            Self::Difference(shape) => shape.triangles(tolerance),
-            Self::Square(shape) => shape.triangles(tolerance),
-        }
-    }
-}
-
-impl Faces for fj::Shape3d {
-    fn triangles(&self, tolerance: f64) -> Vec<Triangle> {
-        match self {
-            Self::Sweep(shape) => shape.triangles(tolerance),
-        }
     }
 }
 

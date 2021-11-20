@@ -17,7 +17,7 @@ use winit::{
 
 use crate::{
     args::Args,
-    geometry::{faces::Faces as _, Shape as _},
+    geometry::Shape as _,
     graphics::{DrawConfig, Renderer, Transform},
     mesh::{HashVector, MeshMaker},
 };
