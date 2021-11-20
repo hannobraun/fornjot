@@ -102,8 +102,8 @@ impl Faces for fj::Difference {
         let b = self.b.edge_vertices(tolerance);
 
         let mut vertices = Vec::new();
-        vertices.extend(a);
-        vertices.extend(b.iter());
+        vertices.extend(&a);
+        vertices.extend(&b);
 
         let mut triangles = triangulate(&vertices);
 
