@@ -1,5 +1,3 @@
-use nalgebra::point;
-
 use crate::{
     geometry::vertices::Vertices as _,
     math::{Point, Vector},
@@ -100,15 +98,6 @@ impl BoundingVolume for fj::Shape3d {
     fn aabb(&self) -> Aabb {
         match self {
             Self::Sweep(shape) => shape.aabb(),
-        }
-    }
-}
-
-impl BoundingVolume for fj::Circle {
-    fn aabb(&self) -> Aabb {
-        Aabb {
-            min: point![-self.radius, -self.radius, 0.0],
-            max: point![self.radius, self.radius, 0.0],
         }
     }
 }

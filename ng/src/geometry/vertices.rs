@@ -33,13 +33,6 @@ impl Vertices for fj::Shape3d {
     }
 }
 
-impl Vertices for fj::Circle {
-    fn vertices(&self) -> Vec<Point> {
-        // Circles have just a single round edge with no vertices.
-        Vec::new()
-    }
-}
-
 impl Vertices for fj::Difference {
     fn vertices(&self) -> Vec<Point> {
         // TASK: Implement.
