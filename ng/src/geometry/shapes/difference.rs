@@ -2,7 +2,6 @@ use crate::{
     geometry::{
         bounding_volume::Aabb,
         faces::{triangulate, Triangle},
-        vertices::Vertices,
         Shape,
     },
     math::Point,
@@ -74,9 +73,7 @@ impl Shape for fj::Difference {
 
         triangles
     }
-}
 
-impl Vertices for fj::Difference {
     fn vertices(&self) -> Vec<Point> {
         // TASK: Implement.
         todo!()

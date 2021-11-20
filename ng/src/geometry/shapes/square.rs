@@ -1,7 +1,5 @@
 use crate::{
-    geometry::{
-        bounding_volume::Aabb, faces::Triangle, vertices::Vertices, Shape,
-    },
+    geometry::{bounding_volume::Aabb, faces::Triangle, Shape},
     math::Point,
 };
 
@@ -24,9 +22,7 @@ impl Shape for fj::Square {
 
         triangles
     }
-}
 
-impl Vertices for fj::Square {
     fn vertices(&self) -> Vec<Point> {
         let s = self.size / 2.;
 

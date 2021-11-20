@@ -6,7 +6,6 @@ use crate::{
     geometry::{
         bounding_volume::Aabb,
         faces::{triangulate, Triangle},
-        vertices::Vertices,
         Shape,
     },
     math::Point,
@@ -65,9 +64,7 @@ impl Shape for fj::Circle {
             .collect();
         triangulate(&vertices)
     }
-}
 
-impl Vertices for fj::Circle {
     fn vertices(&self) -> Vec<Point> {
         // Circles have just a single round edge with no vertices.
         Vec::new()

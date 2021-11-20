@@ -2,7 +2,6 @@ pub mod bounding_volume;
 pub mod edges;
 pub mod faces;
 pub mod shapes;
-pub mod vertices;
 
 use crate::math::Point;
 
@@ -67,6 +66,9 @@ pub trait Shape {
     /// `tolerance` defines by how far this triangulation is allowed to deviate
     /// from the faces' actual dimensions.
     fn triangles(&self, tolerance: f64) -> Vec<Triangle>;
+
+    /// Return the shape's vertices
+    fn vertices(&self) -> Vec<Point>;
 }
 
 macro_rules! dispatch {
@@ -111,4 +113,5 @@ dispatch! {
     edge_vertices(tolerance: f64) -> Vec<Vec<Point>>;
     edge_segments(tolerance: f64) -> Vec<Segment>;
     triangles(tolerance: f64) -> Vec<Triangle>;
+    vertices() -> Vec<Point>;
 }
