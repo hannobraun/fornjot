@@ -2,11 +2,24 @@ use std::collections::HashMap;
 
 #[no_mangle]
 pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
-    // TASK: Process arguments.
-    dbg!(args);
+    let outer = args
+        .get("outer")
+        .unwrap_or(&"1.0".to_owned())
+        .parse()
+        .unwrap();
+    let inner = args
+        .get("inner")
+        .unwrap_or(&"0.5".to_owned())
+        .parse()
+        .unwrap();
+    let height = args
+        .get("height")
+        .unwrap_or(&"1.0".to_owned())
+        .parse()
+        .unwrap();
 
-    let outer_edge = fj::Circle { radius: 1.0 };
-    let inner_edge = fj::Circle { radius: 0.5 };
+    let outer_edge = fj::Circle { radius: outer };
+    let inner_edge = fj::Circle { radius: inner };
 
     let footprint = fj::Difference {
         a: outer_edge.into(),
@@ -15,7 +28,7 @@ pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
 
     let spacer = fj::Sweep {
         shape: footprint.into(),
-        length: 1.0,
+        length: height,
     };
 
     spacer.into()
