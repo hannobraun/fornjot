@@ -54,13 +54,14 @@ impl Shape for fj::Circle {
             vertices.push([x, y, 0.].into());
         }
 
-        vec![vertices]
+        vec![Edge(vertices)]
     }
 
     fn triangles(&self, tolerance: f64) -> Vec<Triangle> {
         let vertices: Vec<_> = self
             .edge_vertices(tolerance)
             .into_iter()
+            .map(|edge| edge.0)
             .flatten()
             .collect();
         triangulate(&vertices)

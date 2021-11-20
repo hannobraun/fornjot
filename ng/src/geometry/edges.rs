@@ -3,7 +3,7 @@ use crate::math::{Point, Vector};
 /// The edges of a shape
 ///
 /// See [`Shape::edges`].
-pub type Edge = Vec<Point>;
+pub struct Edge(pub Vec<Point>);
 
 /// A line segment
 #[derive(Debug)]

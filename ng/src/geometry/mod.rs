@@ -42,8 +42,8 @@ pub trait Shape {
         for mut vertices in edges {
             // We're about to convert these vertices into line segments, and we
             // need a connection from the last to the first.
-            match vertices.first() {
-                Some(&vertex) => vertices.push(vertex),
+            match vertices.0.first() {
+                Some(&vertex) => vertices.0.push(vertex),
                 None => {
                     // If there is not first vertex, there are no vertices. If
                     // there are no vertices, there are no segments.
@@ -51,7 +51,7 @@ pub trait Shape {
                 }
             }
 
-            for segment in vertices.windows(2) {
+            for segment in vertices.0.windows(2) {
                 let v0 = segment[0];
                 let v1 = segment[1];
 
