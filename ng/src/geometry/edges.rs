@@ -7,6 +7,16 @@ use crate::{
 
 /// Access the edges of a shape
 pub trait Edges {
+    /// Compute vertices to approximate the shape's edges
+    ///
+    /// `tolerance` defines how far the implicit line segments between those
+    /// vertices are allowed to deviate from the actual edges of the shape.
+    ///
+    /// This method presents a weird API right now, as it just returns all the
+    /// segments, not distinguishing which edge they approximate. This design is
+    /// simple and in line with current use cases, but not expected to last.
+    fn edge_vertices(&self, tolerance: f32) -> EdgeVertices;
+
     /// Compute line segments to approximate the shape's edges
     ///
     /// `tolerance` defines how far these line segments are allowed to deviate
@@ -17,6 +27,10 @@ pub trait Edges {
     /// simple and in line with current use cases, but not expected to last.
     fn segments(&self, tolerance: f32) -> Segments;
 }
+
+/// Vertices that approximate a shape's edges
+#[derive(Debug)]
+pub struct EdgeVertices(pub Vec<Point>);
 
 /// Line segments that approximate a shape's edges
 #[derive(Debug)]
@@ -55,6 +69,13 @@ impl From<[Point; 2]> for Segment {
 }
 
 impl Edges for fj::Shape {
+    fn edge_vertices(&self, tolerance: f32) -> EdgeVertices {
+        match self {
+            Self::Shape2d(shape) => shape.edge_vertices(tolerance),
+            Self::Shape3d(shape) => shape.edge_vertices(tolerance),
+        }
+    }
+
     fn segments(&self, tolerance: f32) -> Segments {
         match self {
             Self::Shape2d(shape) => shape.segments(tolerance),
@@ -64,6 +85,14 @@ impl Edges for fj::Shape {
 }
 
 impl Edges for fj::Shape2d {
+    fn edge_vertices(&self, tolerance: f32) -> EdgeVertices {
+        match self {
+            Self::Circle(shape) => shape.edge_vertices(tolerance),
+            Self::Difference(shape) => shape.edge_vertices(tolerance),
+            Self::Square(shape) => shape.edge_vertices(tolerance),
+        }
+    }
+
     fn segments(&self, tolerance: f32) -> Segments {
         match self {
             Self::Circle(shape) => shape.segments(tolerance),
@@ -74,6 +103,12 @@ impl Edges for fj::Shape2d {
 }
 
 impl Edges for fj::Shape3d {
+    fn edge_vertices(&self, tolerance: f32) -> EdgeVertices {
+        match self {
+            Self::Sweep(shape) => shape.edge_vertices(tolerance),
+        }
+    }
+
     fn segments(&self, tolerance: f32) -> Segments {
         match self {
             Self::Sweep(shape) => shape.segments(tolerance),
@@ -82,6 +117,11 @@ impl Edges for fj::Shape3d {
 }
 
 impl Edges for fj::Circle {
+    fn edge_vertices(&self, _tolerance: f32) -> EdgeVertices {
+        // TASK: Implement.
+        todo!()
+    }
+
     fn segments(&self, tolerance: f32) -> Segments {
         // To approximate the circle, we use a regular polygon for which the
         // circle is the circumscribed circle. The `tolerance` parameter is the
@@ -136,6 +176,11 @@ impl Edges for fj::Circle {
 }
 
 impl Edges for fj::Difference {
+    fn edge_vertices(&self, _tolerance: f32) -> EdgeVertices {
+        // TASK: Implement.
+        todo!()
+    }
+
     fn segments(&self, _tolerance: f32) -> Segments {
         // TASK: Implement.
         todo!()
@@ -143,6 +188,11 @@ impl Edges for fj::Difference {
 }
 
 impl Edges for fj::Square {
+    fn edge_vertices(&self, _: f32) -> EdgeVertices {
+        // TASK: Implement.
+        todo!()
+    }
+
     fn segments(&self, _: f32) -> Segments {
         let mut segments = Segments::new();
 
@@ -158,6 +208,11 @@ impl Edges for fj::Square {
 }
 
 impl Edges for fj::Sweep {
+    fn edge_vertices(&self, _tolerance: f32) -> EdgeVertices {
+        // TASK: Implement.
+        todo!()
+    }
+
     fn segments(&self, _tolerance: f32) -> Segments {
         // TASK: Implement.
         todo!()
