@@ -60,8 +60,8 @@ fn main() -> anyhow::Result<()> {
             "{}/target/debug/lib{}.so",
             model_dir, args.model,
         ))?;
-        let func: libloading::Symbol<ModelFn> = lib.get(b"model")?;
-        func()
+        let model: libloading::Symbol<ModelFn> = lib.get(b"model")?;
+        model()
     };
 
     let aabb = shape.bounding_volume();
