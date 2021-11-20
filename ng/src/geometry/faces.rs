@@ -41,6 +41,15 @@ impl Triangles {
 pub struct Triangle(pub [Point; 3]);
 
 impl Triangle {
+    /// Access the edges of the triangle
+    pub fn edges(&self) -> impl Iterator<Item = [Point; 2]> {
+        let v0 = self.0[0];
+        let v1 = self.0[1];
+        let v2 = self.0[2];
+
+        [[v0, v1], [v1, v2], [v2, v0]].into_iter()
+    }
+
     /// Invert the triangle
     ///
     /// Inverts the order of triangle vertices.
@@ -98,9 +107,35 @@ impl Faces for fj::Circle {
 }
 
 impl Faces for fj::Difference {
-    fn triangles(&self, _tolerance: f64) -> Triangles {
-        // TASK: Implement.
-        todo!()
+    fn triangles(&self, tolerance: f64) -> Triangles {
+        // TASK: Carefully think about the limits of this algorithm, and make
+        //       sure to panic with a `todo!` in cases that are not supported.
+
+        let a = self.a.edge_vertices(tolerance);
+        let b = self.b.edge_vertices(tolerance);
+
+        let mut vertices = Vec::new();
+        vertices.extend(a.0);
+        vertices.extend(b.0.iter());
+
+        let mut triangles = triangulate(&vertices);
+
+        // Now we have a full Delaunay triangulation of all vertices. We still
+        // need to filter out the triangles that aren't actually part of the
+        // difference.
+        triangles.0.retain(|triangle| {
+            let mut edges_of_b = 0;
+
+            for [v0, v1] in triangle.edges() {
+                if b.0.contains(&v0) && b.0.contains(&v1) {
+                    edges_of_b += 1;
+                }
+            }
+
+            edges_of_b <= 1
+        });
+
+        triangles
     }
 }
 
