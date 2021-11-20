@@ -143,7 +143,7 @@ impl Faces for fj::Difference {
 
 impl Faces for fj::Square {
     fn triangles(&self, _: f64) -> Triangles {
-        let mut triangles = Triangles::new();
+        let mut triangles = Vec::new();
 
         let v = self.vertices();
 
@@ -156,7 +156,7 @@ impl Faces for fj::Square {
 
 impl Faces for fj::Sweep {
     fn triangles(&self, tolerance: f64) -> Triangles {
-        let mut triangles = Triangles::new();
+        let mut triangles = Vec::new();
 
         let original_triangles = self.shape.triangles(tolerance);
 
@@ -200,7 +200,7 @@ fn triangulate(vertices: &[Point]) -> Triangles {
 
     let triangulation = delaunator::triangulate(&points);
 
-    let mut triangles = Triangles::new();
+    let mut triangles = Vec::new();
     for triangle in triangulation.triangles.chunks(3) {
         let i0 = triangle[0];
         let i1 = triangle[1];
