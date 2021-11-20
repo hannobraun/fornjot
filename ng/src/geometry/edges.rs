@@ -23,7 +23,7 @@ pub trait Edges {
     /// This method presents a weird API right now, as it just returns all the
     /// segments, not distinguishing which edge they approximate. This design is
     /// simple and in line with current use cases, but not expected to last.
-    fn edge_segments(&self, tolerance: f64) -> EdgeSegments {
+    fn edge_segments(&self, tolerance: f64) -> Vec<Segment> {
         let mut segments = Vec::new();
         let edges = self.edge_vertices(tolerance);
 
@@ -50,9 +50,6 @@ pub trait Edges {
         segments
     }
 }
-
-/// Line segments that approximate a shape's edges
-pub type EdgeSegments = Vec<Segment>;
 
 /// A line segment
 #[derive(Debug)]
@@ -82,7 +79,7 @@ impl Edges for fj::Shape {
         }
     }
 
-    fn edge_segments(&self, tolerance: f64) -> EdgeSegments {
+    fn edge_segments(&self, tolerance: f64) -> Vec<Segment> {
         match self {
             Self::Shape2d(shape) => shape.edge_segments(tolerance),
             Self::Shape3d(shape) => shape.edge_segments(tolerance),
@@ -99,7 +96,7 @@ impl Edges for fj::Shape2d {
         }
     }
 
-    fn edge_segments(&self, tolerance: f64) -> EdgeSegments {
+    fn edge_segments(&self, tolerance: f64) -> Vec<Segment> {
         match self {
             Self::Circle(shape) => shape.edge_segments(tolerance),
             Self::Difference(shape) => shape.edge_segments(tolerance),
@@ -115,7 +112,7 @@ impl Edges for fj::Shape3d {
         }
     }
 
-    fn edge_segments(&self, tolerance: f64) -> EdgeSegments {
+    fn edge_segments(&self, tolerance: f64) -> Vec<Segment> {
         match self {
             Self::Sweep(shape) => shape.edge_segments(tolerance),
         }
