@@ -93,22 +93,7 @@ impl Faces for fj::Shape3d {
 
 impl Faces for fj::Circle {
     fn triangles(&self, tolerance: f64) -> Triangles {
-        let mut triangles = Triangles::new();
-        let mut segments = self.edge_segments(tolerance);
-
-        while segments.0.len() >= 3 {
-            // None of those `unwrap`s are going to panic. We just checked that
-            // we have more than those two segments.
-            let [v2, v0] = segments.0.pop().unwrap().0;
-            let [v1, _] = segments.0.pop().unwrap().0;
-
-            // We just opened the shape by removing two edges. Close it again.
-            segments.push([v1, v0]);
-
-            triangles.push([v0, v1, v2]);
-        }
-
-        triangles
+        triangulate(&self.edge_vertices(tolerance).0)
     }
 }
 
@@ -170,4 +155,27 @@ impl Faces for fj::Sweep {
 
         triangles
     }
+}
+
+fn triangulate(vertices: &[Point]) -> Triangles {
+    let points: Vec<_> = vertices
+        .iter()
+        .map(|vertex| delaunator::Point {
+            x: vertex.x,
+            y: vertex.y,
+        })
+        .collect();
+
+    let triangulation = delaunator::triangulate(&points);
+
+    let mut triangles = Triangles::new();
+    for triangle in triangulation.triangles.chunks(3) {
+        let i0 = triangle[0];
+        let i1 = triangle[1];
+        let i2 = triangle[2];
+
+        triangles.push([vertices[i0], vertices[i2], vertices[i1]]);
+    }
+
+    triangles
 }
