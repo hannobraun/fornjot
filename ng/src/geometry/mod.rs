@@ -16,8 +16,8 @@ pub trait Shape {
 }
 
 macro_rules! dispatch_shape {
-    ($method:ident($($arg_name:ident: $arg_ty:ident)*)) => {
-        fn $method(&self, $($arg_name: $arg_ty)*) -> Aabb {
+    ($method:ident($($arg_name:ident: $arg_ty:ident)*) -> $ret:ty) => {
+        fn $method(&self, $($arg_name: $arg_ty)*) -> $ret {
             match self {
                 Self::Shape2d(shape) => shape.$method($($arg_name)*),
                 Self::Shape3d(shape) => shape.$method($($arg_name)*),
@@ -27,8 +27,8 @@ macro_rules! dispatch_shape {
 }
 
 macro_rules! dispatch_shape2d {
-    ($method:ident($($arg_name:ident: $arg_ty:ident)*)) => {
-        fn $method(&self) -> Aabb {
+    ($method:ident($($arg_name:ident: $arg_ty:ident)*) -> $ret:ty) => {
+        fn $method(&self) -> $ret {
             match self {
                 Self::Circle(shape) => shape.$method($($arg_name)*),
                 Self::Difference(shape) => shape.$method($($arg_name)*),
@@ -39,8 +39,8 @@ macro_rules! dispatch_shape2d {
 }
 
 macro_rules! dispatch_shape3d {
-    ($method:ident($($arg_name:ident: $arg_ty:ident)*)) => {
-        fn $method(&self) -> Aabb {
+    ($method:ident($($arg_name:ident: $arg_ty:ident)*) -> $ret:ty) => {
+        fn $method(&self) -> $ret {
             match self {
                 Self::Sweep(shape) => shape.$method($($arg_name)*),
             }
@@ -49,13 +49,13 @@ macro_rules! dispatch_shape3d {
 }
 
 impl Shape for fj::Shape {
-    dispatch_shape!(aabb());
+    dispatch_shape!(aabb() -> Aabb);
 }
 
 impl Shape for fj::Shape2d {
-    dispatch_shape2d!(aabb());
+    dispatch_shape2d!(aabb() -> Aabb);
 }
 
 impl Shape for fj::Shape3d {
-    dispatch_shape3d!(aabb());
+    dispatch_shape3d!(aabb() -> Aabb);
 }
