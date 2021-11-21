@@ -14,9 +14,9 @@ The following models are currently available:
 
 ## Status
 
-Fornjot is still **highly experimental**. Development is currently focused on incrementally expanding features, to support specific new CAD models. This grounds the development effort in practical use cases and ensures constant forward motion. Which is good, because CAD is a very difficult topic, and there's always the danger of getting lost in the weeds, trying to implement some complicated algorithm from a barely legible paper.
+Fornjot is still **highly experimental**. Development is currently focused on incrementally expanding features, to support specific new CAD models. This grounds the development effort in practical use cases and ensures steady progress. Which is good, because CAD is a very difficult subject, and there's always the danger of getting lost in the weeds, trying to implement some complicated algorithm from a barely legible paper.
 
-However, that also means that other models, even if they're very similar to existing ones, are often not supported, because the algorithms used make simplifying assumptions. If you're interested in Fornjot and are considering to use it, you should fully expect to run into limitation pretty much immediately. Unless you are willing to contribute to its development, it would be better to wait for a year or ten, to let it mature.
+However, that also means that other models, even if they're very similar to existing ones, are often not supported, because the algorithms make simplifying assumptions. If you're interested in Fornjot and are considering to use it, you should fully expect to run into limitation pretty much immediately. Unless you are willing to contribute to its development, it would be better to wait for a year or ten, to let it mature.
 
 
 ## Features
