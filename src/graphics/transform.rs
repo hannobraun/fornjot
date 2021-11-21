@@ -87,4 +87,4 @@ impl Transform {
 
 pub type NativeTransform = [f32; 16];
 
-const FIELD_OF_VIEW: f32 = FRAC_PI_4; // 45 degrees
+pub const FIELD_OF_VIEW: f32 = FRAC_PI_4; // 45 degrees
