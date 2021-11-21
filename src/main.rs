@@ -18,7 +18,7 @@ use winit::{
 use crate::{
     args::Args,
     geometry::Shape as _,
-    graphics::{DrawConfig, Renderer, Transform},
+    graphics::{DrawConfig, Renderer, Transform, FIELD_OF_VIEW},
     mesh::{HashVector, MeshMaker},
 };
 
@@ -100,6 +100,35 @@ fn main() -> anyhow::Result<()> {
         return Ok(());
     }
 
+    let initial_distance = {
+        // Let's make sure we choose a distance, so that the model fills most of
+        // the screen.
+        //
+        // To do that, first compute the model's highest point, as well as the
+        // furthers point from the origin, in x and y.
+        let highest_point = aabb.max.z;
+        let furthest_point =
+            [aabb.min.x.abs(), aabb.max.x, aabb.min.y.abs(), aabb.max.y]
+                .into_iter()
+                .reduce(|a, b| f64::max(a, b))
+                // `reduce` can only return `None`, if there are no items in the
+                // iterator. And since we're creating an array full of items
+                // above, we know this can't panic.
+                .unwrap();
+
+        // The actual furthest point is not far enough. We don't want the model
+        // to fill the whole screen.
+        let furthest_point = furthest_point * 2.;
+
+        // Having computed those points, figuring out how far the camera needs
+        // to be from the model is just a bit of trigonometry.
+        let distance_from_model =
+            furthest_point / (FIELD_OF_VIEW as f64 / 2.).atan();
+
+        // An finally, the distance from the origin is trivial now.
+        highest_point + distance_from_model
+    };
+
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new()
         .with_title("Fornjot")
@@ -113,7 +142,7 @@ fn main() -> anyhow::Result<()> {
     let mut renderer = block_on(Renderer::new(&window, triangles.0.into()))?;
 
     let mut draw_config = DrawConfig::default();
-    let mut transform = Transform::new(aabb);
+    let mut transform = Transform::new(initial_distance as f32);
 
     let mut previous_time = Instant::now();
 
