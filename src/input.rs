@@ -139,6 +139,17 @@ impl Handler {
             }
         };
 
+        // TASK: Zooming doesn't work well, and the zoom speed idea might have
+        //       been misguided for this application.
+        //
+        //       I'm not sure what the right solution is, but it needs to have
+        //       the following properties:
+        //       - While zoomed in closely, camera movement needs to be very
+        //         precise.
+        //       - But it should still be possible to zoom out quickly, if
+        //         desired.
+        //       - While less close, camera movement should be quicker and less
+        //         precise.
         if delta > 0.0 && self.zoom_speed < 0.0
             || delta < 0.0 && self.zoom_speed > 0.0
         {
