@@ -18,6 +18,8 @@ Fornjot is still **highly experimental**. Development is currently focused on in
 
 However, that also means that other models, even if they're very similar to existing ones, are often not supported, because the algorithms make simplifying assumptions. If you're interested in Fornjot and are considering to use it, you should fully expect to run into limitation pretty much immediately. Unless you are willing to contribute to its development, it would be better to wait for a year or ten, to let it mature.
 
+At this point, performance is not much of a concern. Models are simple so far, and liberally sprinkling heap allocations makes algorithms easy to write. At some point, that focus will likely change, but for now ease of coding is more important than scalability.
+
 
 ## Features
 
