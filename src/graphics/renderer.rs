@@ -31,7 +31,7 @@ pub struct Renderer {
 }
 
 impl Renderer {
-    pub async fn new(window: &Window, mesh: Mesh) -> Result<Self, InitError> {
+    pub async fn new(window: &Window) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::VULKAN);
 
         // This is sound, as `window` is an object to create a surface upon.
@@ -115,7 +115,7 @@ impl Renderer {
             label: None,
         });
 
-        let geometries = Geometries::new(&device, &mesh);
+        let geometries = Geometries::new(&device, &Mesh::empty());
         let pipelines = Pipelines::new(&device, &bind_group_layout);
 
         let config_ui = ConfigUi::new(&device)?;
@@ -136,6 +136,10 @@ impl Renderer {
 
             config_ui,
         })
+    }
+
+    pub fn update_geometry(&mut self, mesh: Mesh) {
+        self.geometries = Geometries::new(&self.device, &mesh);
     }
 
     pub fn handle_resize(&mut self, size: PhysicalSize<u32>) {

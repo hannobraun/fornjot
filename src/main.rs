@@ -161,7 +161,8 @@ fn main() -> anyhow::Result<()> {
         .unwrap();
 
     let mut input_handler = input::Handler::new();
-    let mut renderer = block_on(Renderer::new(&window, triangles.0.into()))?;
+    let mut renderer = block_on(Renderer::new(&window))?;
+    renderer.update_geometry(triangles.0.into());
 
     let mut draw_config = DrawConfig::default();
     let mut transform = Transform::new(initial_distance as f32);
