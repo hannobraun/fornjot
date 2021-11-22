@@ -60,7 +60,7 @@ fn main() -> anyhow::Result<()> {
             //       handle it.
             let event = event.expect("Error handling watch event");
 
-            let event = match event.kind {
+            match event.kind {
                 notify::EventKind::Access(
                     notify::event::AccessKind::Close(
                         notify::event::AccessMode::Write,
@@ -74,8 +74,6 @@ fn main() -> anyhow::Result<()> {
 
             // TASK: Render the reloaded model.
             model.load(&arguments).expect("Error loading model");
-
-            println!("{:?}", event);
         },
     )?;
     watcher.watch(&watch_path, notify::RecursiveMode::Recursive)?;
