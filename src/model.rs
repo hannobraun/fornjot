@@ -18,7 +18,7 @@ impl Model {
     }
 
     pub fn build(&self) -> anyhow::Result<()> {
-        // This can be made a bit more contact using `ExitStatus::exit_ok`, once
+        // This can be made a bit more compact using `ExitStatus::exit_ok`, once
         // that is stable.
         let status = Command::new("cargo")
             .arg("build")
