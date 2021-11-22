@@ -1,7 +1,5 @@
 use std::{collections::HashMap, process::Command};
 
-use super::ModelFn;
-
 pub struct Model {
     name: String,
 }
@@ -50,3 +48,6 @@ impl Model {
         Ok(shape)
     }
 }
+
+type ModelFn =
+    unsafe extern "C" fn(args: &HashMap<String, String>) -> fj::Shape;

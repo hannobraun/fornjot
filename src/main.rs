@@ -205,6 +205,3 @@ fn main() -> anyhow::Result<()> {
         }
     });
 }
-
-type ModelFn =
-    unsafe extern "C" fn(args: &HashMap<String, String>) -> fj::Shape;
