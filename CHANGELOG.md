@@ -1,5 +1,9 @@
 # Fornjot - Changelog
 
+## 0.3.1 (2021-11-22)
+
+- Reload current model, whenever its source code is modified.
+
 ## v0.3.0 (2021-11-21)
 
 - Function representation (F-rep) has been phased out in favor of a more traditional approach inspired by boundary (B-rep). This has resulted in much higher-quality triangulation of the geometry (spacer previously took around 1 second, now there is no perceivable delay).
