@@ -176,8 +176,8 @@ fn main() -> anyhow::Result<()> {
 
         match watcher_rx.try_recv() {
             Ok(shape) => {
-                // TASK: Render the reloaded model.
-                dbg!(shape);
+                let triangles = shape.faces(tolerance);
+                renderer.update_geometry(triangles.0.into());
             }
             Err(mpsc::TryRecvError::Empty) => {
                 // Nothing to receive from the channel. We don't care.
