@@ -9,7 +9,7 @@ mod model;
 use std::{collections::HashMap, time::Instant};
 
 use futures::executor::block_on;
-use notify::Watcher;
+use notify::Watcher as _;
 use tracing::trace;
 use winit::{
     event::{Event, WindowEvent},
