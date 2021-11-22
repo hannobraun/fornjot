@@ -60,20 +60,15 @@ fn main() -> anyhow::Result<()> {
             //       handle it.
             let event = event.expect("Error handling watch event");
 
-            match event.kind {
-                notify::EventKind::Access(
-                    notify::event::AccessKind::Close(
-                        notify::event::AccessMode::Write,
-                    ),
-                ) => event,
-                _ => {
-                    // irrelevant event
-                    return;
-                }
-            };
-
-            // TASK: Render the reloaded model.
-            model.load(&arguments).expect("Error loading model");
+            if let notify::EventKind::Access(
+                notify::event::AccessKind::Close(
+                    notify::event::AccessMode::Write,
+                ),
+            ) = event.kind
+            {
+                // TASK: Render the reloaded model.
+                model.load(&arguments).expect("Error loading model");
+            }
         },
     )?;
     watcher.watch(&watch_path, notify::RecursiveMode::Recursive)?;
