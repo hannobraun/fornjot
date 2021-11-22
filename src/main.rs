@@ -45,6 +45,12 @@ fn main() -> anyhow::Result<()> {
         arguments.insert(key, value);
     }
 
+    // TASK: Since we're loading the model before setting up the watcher below,
+    //       there's a race condition, and a modification could be missed
+    //       between those two events.
+    //
+    //       This can't be addressed with the current structure, since the
+    //       watcher closure takes ownership of the model.
     let shape = model.load(&arguments)?;
 
     let watch_path = model.src_path();
