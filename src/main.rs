@@ -6,7 +6,7 @@ mod math;
 mod mesh;
 mod model;
 
-use std::{collections::HashMap, process::Command, time::Instant};
+use std::{collections::HashMap, time::Instant};
 
 use futures::executor::block_on;
 use tracing::trace;
@@ -44,13 +44,7 @@ fn main() -> anyhow::Result<()> {
         arguments.insert(key, value);
     }
 
-    // This can be made a bit more contact using `ExitStatus::exit_ok`, once
-    // that is stable.
-    let status = Command::new("cargo")
-        .arg("build")
-        .args(["--manifest-path", &format!("{}/Cargo.toml", model.path())])
-        .status()?;
-    assert!(status.success());
+    model.build()?;
 
     // TASK: Read up why those calls are unsafe. Make sure calling them is
     //       sound, and document why that is.
