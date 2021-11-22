@@ -48,8 +48,8 @@ fn main() -> anyhow::Result<()> {
     let shape = model.load(&arguments)?;
 
     let watch_path = model.src_path();
-    let mut watcher =
-        notify::recommended_watcher(|event: notify::Result<notify::Event>| {
+    let mut watcher = notify::recommended_watcher(
+        move |event: notify::Result<notify::Event>| {
             // TASK: Figure out when this can happen, find a better way to
             //       handle it.
             let event = event.expect("Error handling watch event");
@@ -67,7 +67,8 @@ fn main() -> anyhow::Result<()> {
             };
 
             println!("{:?}", event);
-        })?;
+        },
+    )?;
     watcher.watch(&watch_path, notify::RecursiveMode::Recursive)?;
 
     let aabb = shape.bounding_volume();
