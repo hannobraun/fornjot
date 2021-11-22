@@ -56,7 +56,7 @@ fn main() -> anyhow::Result<()> {
     let watch_path = model.src_path();
     let mut watcher = notify::recommended_watcher(
         move |event: notify::Result<notify::Event>| {
-            // TASK: Figure out when this can happen, find a better way to
+            // TASK: Figure out when this error can happen, find a better way to
             //       handle it.
             let event = event.expect("Error handling watch event");
 
