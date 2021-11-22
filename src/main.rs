@@ -45,9 +45,13 @@ fn main() -> anyhow::Result<()> {
         arguments.insert(key, value);
     }
 
-    let mut watcher = notify::recommended_watcher(|event| {
-        println!("{:?}", event);
-    })?;
+    let mut watcher =
+        notify::recommended_watcher(|event: notify::Result<notify::Event>| {
+            // TASK: Figure out when this can happen, find a better way to
+            //       handle it.
+            let event = event.expect("Error handling watch event");
+            println!("{:?}", event);
+        })?;
     watcher.watch(&model.src_path(), notify::RecursiveMode::Recursive)?;
 
     model.build()?;
