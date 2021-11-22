@@ -66,6 +66,9 @@ fn main() -> anyhow::Result<()> {
                 }
             };
 
+            // TASK: Render the reloaded model.
+            model.load(&arguments).expect("Error loading model");
+
             println!("{:?}", event);
         },
     )?;
