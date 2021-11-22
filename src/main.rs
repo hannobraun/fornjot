@@ -6,7 +6,7 @@ mod math;
 mod mesh;
 mod model;
 
-use std::{collections::HashMap, time::Instant};
+use std::{collections::HashMap, sync::mpsc, time::Instant};
 
 use futures::executor::block_on;
 use notify::Watcher as _;
@@ -53,6 +53,8 @@ fn main() -> anyhow::Result<()> {
     //       watcher closure takes ownership of the model.
     let shape = model.load(&arguments)?;
 
+    let (watcher_tx, watcher_rx) = mpsc::sync_channel(0);
+
     let watch_path = model.src_path();
     let mut watcher = notify::recommended_watcher(
         move |event: notify::Result<notify::Event>| {
@@ -66,8 +68,16 @@ fn main() -> anyhow::Result<()> {
                 ),
             ) = event.kind
             {
-                // TASK: Render the reloaded model.
-                model.load(&arguments).expect("Error loading model");
+                let shape =
+                    model.load(&arguments).expect("Error loading model");
+
+                // This will panic, if the other end is disconnected, which is
+                // probably the result of a panic on that thread, or the
+                // application is being shut down.
+                //
+                // Either way, not much we can do about it here, except maybe to
+                // provide a better error message in the future.
+                watcher_tx.send(shape).unwrap();
             }
         },
     )?;
@@ -162,6 +172,22 @@ fn main() -> anyhow::Result<()> {
         trace!("Handling event: {:?}", event);
 
         let mut actions = input::Actions::new();
+
+        match watcher_rx.try_recv() {
+            Ok(shape) => {
+                // TASK: Render the reloaded model.
+                dbg!(shape);
+            }
+            Err(mpsc::TryRecvError::Empty) => {
+                // Nothing to receive from the channel. We don't care.
+            }
+            Err(mpsc::TryRecvError::Disconnected) => {
+                // The other end has disconnected. This is probably the result
+                // of a panic on the other thread, or a program shutdown in
+                // progress. In any case, not much we can do here.
+                panic!();
+            }
+        }
 
         match event {
             Event::WindowEvent {
