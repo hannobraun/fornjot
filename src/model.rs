@@ -27,13 +27,14 @@ impl Model {
         &self,
         arguments: &HashMap<String, String>,
     ) -> Result<fj::Shape, Error> {
-        // This can be made a bit more compact using `ExitStatus::exit_ok`, once
-        // that is stable.
         let status = Command::new("cargo")
             .arg("build")
             .args(["--manifest-path", &format!("{}/Cargo.toml", self.path())])
             .status()?;
-        assert!(status.success());
+
+        if !status.success() {
+            return Err(Error::Compile);
+        }
 
         // TASK: Read up why those calls are unsafe. Make sure calling them is
         //       sound, and document why that is.
@@ -53,6 +54,9 @@ impl Model {
 
 #[derive(Debug, Error)]
 pub enum Error {
+    #[error("Error compiling model")]
+    Compile,
+
     #[error("I/O error while loading model")]
     Io(#[from] io::Error),
 
