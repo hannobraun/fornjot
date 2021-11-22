@@ -50,6 +50,19 @@ fn main() -> anyhow::Result<()> {
             // TASK: Figure out when this can happen, find a better way to
             //       handle it.
             let event = event.expect("Error handling watch event");
+
+            let event = match event.kind {
+                notify::EventKind::Access(
+                    notify::event::AccessKind::Close(
+                        notify::event::AccessMode::Write,
+                    ),
+                ) => event,
+                _ => {
+                    // irrelevant event
+                    return;
+                }
+            };
+
             println!("{:?}", event);
         })?;
     watcher.watch(&model.src_path(), notify::RecursiveMode::Recursive)?;
