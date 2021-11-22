@@ -68,8 +68,17 @@ fn main() -> anyhow::Result<()> {
                 ),
             ) = event.kind
             {
-                let shape =
-                    model.load(&arguments).expect("Error loading model");
+                let shape = match model.load(&arguments) {
+                    Ok(shape) => shape,
+                    Err(model::Error::Compile) => {
+                        // TASK: Display error message in graphics window.
+                        println!("Error compiling model");
+                        return;
+                    }
+                    Err(err) => {
+                        panic!("Error reloading model: {:?}", err);
+                    }
+                };
 
                 // This will panic, if the other end is disconnected, which is
                 // probably the result of a panic on that thread, or the
