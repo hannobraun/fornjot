@@ -47,6 +47,7 @@ fn main() -> anyhow::Result<()> {
 
     let shape = model.load(&arguments)?;
 
+    let watch_path = model.src_path();
     let mut watcher =
         notify::recommended_watcher(|event: notify::Result<notify::Event>| {
             // TASK: Figure out when this can happen, find a better way to
@@ -67,7 +68,7 @@ fn main() -> anyhow::Result<()> {
 
             println!("{:?}", event);
         })?;
-    watcher.watch(&model.src_path(), notify::RecursiveMode::Recursive)?;
+    watcher.watch(&watch_path, notify::RecursiveMode::Recursive)?;
 
     let aabb = shape.bounding_volume();
 
