@@ -21,7 +21,10 @@ impl Model {
         format!("{}/src", self.path()).into()
     }
 
-    pub fn build(&self) -> anyhow::Result<()> {
+    pub fn load(
+        &self,
+        arguments: &HashMap<String, String>,
+    ) -> anyhow::Result<fj::Shape> {
         // This can be made a bit more compact using `ExitStatus::exit_ok`, once
         // that is stable.
         let status = Command::new("cargo")
@@ -30,13 +33,6 @@ impl Model {
             .status()?;
         assert!(status.success());
 
-        Ok(())
-    }
-
-    pub fn load(
-        &self,
-        arguments: &HashMap<String, String>,
-    ) -> anyhow::Result<fj::Shape> {
         // TASK: Read up why those calls are unsafe. Make sure calling them is
         //       sound, and document why that is.
         let shape = unsafe {

@@ -67,7 +67,6 @@ fn main() -> anyhow::Result<()> {
         })?;
     watcher.watch(&model.src_path(), notify::RecursiveMode::Recursive)?;
 
-    model.build()?;
     let shape = model.load(&arguments)?;
 
     let aabb = shape.bounding_volume();
