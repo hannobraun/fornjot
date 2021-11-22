@@ -4,6 +4,7 @@ mod graphics;
 mod input;
 mod math;
 mod mesh;
+mod model;
 
 use std::{collections::HashMap, process::Command, time::Instant};
 
@@ -20,11 +21,12 @@ use crate::{
     geometry::Shape as _,
     graphics::{DrawConfig, Renderer, Transform, FIELD_OF_VIEW},
     mesh::{HashVector, MeshMaker},
+    model::Model,
 };
 
 fn main() -> anyhow::Result<()> {
     let args = Args::parse();
-    let model_dir = format!("models/{}", args.model);
+    let model = Model::new(args.model);
 
     let mut arguments = HashMap::new();
     for argument in args.arguments {
@@ -46,7 +48,7 @@ fn main() -> anyhow::Result<()> {
     // that is stable.
     let status = Command::new("cargo")
         .arg("build")
-        .args(["--manifest-path", &format!("{}/Cargo.toml", model_dir)])
+        .args(["--manifest-path", &format!("{}/Cargo.toml", model.path())])
         .status()?;
     assert!(status.success());
 
@@ -55,7 +57,8 @@ fn main() -> anyhow::Result<()> {
     let shape = unsafe {
         let lib = libloading::Library::new(format!(
             "{}/target/debug/lib{}.so",
-            model_dir, args.model,
+            model.path(),
+            model.name(),
         ))?;
         let model: libloading::Symbol<ModelFn> = lib.get(b"model")?;
         model(&arguments)
