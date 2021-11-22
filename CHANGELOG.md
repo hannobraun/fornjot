@@ -1,6 +1,6 @@
 # Fornjot - Changelog
 
-## 0.3.1 (2021-11-22)
+## v0.3.1 (2021-11-22)
 
 - Reload current model, whenever its source code is modified.
 
