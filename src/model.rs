@@ -1,4 +1,4 @@
-use std::{collections::HashMap, process::Command};
+use std::{collections::HashMap, path::PathBuf, process::Command};
 
 pub struct Model {
     name: String,
@@ -15,6 +15,10 @@ impl Model {
 
     pub fn path(&self) -> String {
         format!("models/{}", self.name)
+    }
+
+    pub fn src_path(&self) -> PathBuf {
+        format!("{}/src", self.path()).into()
     }
 
     pub fn build(&self) -> anyhow::Result<()> {

@@ -9,6 +9,7 @@ mod model;
 use std::{collections::HashMap, time::Instant};
 
 use futures::executor::block_on;
+use notify::Watcher;
 use tracing::trace;
 use winit::{
     event::{Event, WindowEvent},
@@ -43,6 +44,11 @@ fn main() -> anyhow::Result<()> {
 
         arguments.insert(key, value);
     }
+
+    let mut watcher = notify::recommended_watcher(|event| {
+        println!("{:?}", event);
+    })?;
+    watcher.watch(&model.src_path(), notify::RecursiveMode::Recursive)?;
 
     model.build()?;
     let shape = model.load(&arguments)?;
