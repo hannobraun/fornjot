@@ -1,4 +1,6 @@
-use std::process::Command;
+use std::{collections::HashMap, process::Command};
+
+use super::ModelFn;
 
 pub struct Model {
     name: String,
@@ -27,5 +29,24 @@ impl Model {
         assert!(status.success());
 
         Ok(())
+    }
+
+    pub fn load(
+        &self,
+        arguments: &HashMap<String, String>,
+    ) -> anyhow::Result<fj::Shape> {
+        // TASK: Read up why those calls are unsafe. Make sure calling them is
+        //       sound, and document why that is.
+        let shape = unsafe {
+            let lib = libloading::Library::new(format!(
+                "{}/target/debug/lib{}.so",
+                self.path(),
+                self.name(),
+            ))?;
+            let model: libloading::Symbol<ModelFn> = lib.get(b"model")?;
+            model(&arguments)
+        };
+
+        Ok(shape)
     }
 }

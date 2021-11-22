@@ -45,18 +45,7 @@ fn main() -> anyhow::Result<()> {
     }
 
     model.build()?;
-
-    // TASK: Read up why those calls are unsafe. Make sure calling them is
-    //       sound, and document why that is.
-    let shape = unsafe {
-        let lib = libloading::Library::new(format!(
-            "{}/target/debug/lib{}.so",
-            model.path(),
-            model.name(),
-        ))?;
-        let model: libloading::Symbol<ModelFn> = lib.get(b"model")?;
-        model(&arguments)
-    };
+    let shape = model.load(&arguments)?;
 
     let aabb = shape.bounding_volume();
 
