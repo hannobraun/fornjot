@@ -169,14 +169,14 @@ fn main() -> anyhow::Result<()> {
         .build(&event_loop)
         .unwrap();
 
+    let mut previous_time = Instant::now();
+
     let mut input_handler = input::Handler::new();
     let mut renderer = block_on(Renderer::new(&window))?;
     renderer.update_geometry(triangles.0.into());
 
     let mut draw_config = DrawConfig::default();
     let mut transform = Transform::new(initial_distance as f32);
-
-    let mut previous_time = Instant::now();
 
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
