@@ -8,14 +8,19 @@ pub struct Zoom {
 
     target_speed: f32,
     current_speed: f32,
+
+    last_direction: Direction,
 }
 
 impl Zoom {
     pub fn new() -> Self {
         Self {
             events: VecDeque::new(),
+
             target_speed: 0.0,
             current_speed: 0.0,
+
+            last_direction: Direction::None,
         }
     }
 
@@ -28,8 +33,8 @@ impl Zoom {
 
         // If this input is opposite to previous inputs, discard previous inputs
         // to stop ongoing zoom.
-        if let Some((_, event)) = self.events.front() {
-            if event.signum() != new_event.signum() {
+        if let Some(&(_, event)) = self.events.front() {
+            if Direction::from(event).is_opposite(&Direction::from(new_event)) {
                 self.events.clear();
 
                 // Make sure that this breaks the zoom instantly.
@@ -63,11 +68,42 @@ impl Zoom {
 
         let speed_delta = self.target_speed - self.current_speed;
         self.current_speed += speed_delta / 8.;
+
+        self.last_direction = Direction::from(self.current_speed);
     }
 
     /// Access the current zoom speed
     pub fn speed(&self) -> f32 {
         self.current_speed
+    }
+}
+
+enum Direction {
+    Pos,
+    Neg,
+    None,
+}
+
+impl Direction {
+    fn is_opposite(&self, other: &Self) -> bool {
+        match (self, other) {
+            (Self::Pos, Self::Neg) => true,
+            (Self::Neg, Self::Pos) => true,
+            _ => false,
+        }
+    }
+}
+
+impl From<f32> for Direction {
+    fn from(speed: f32) -> Self {
+        if speed > 0.0 {
+            return Self::Pos;
+        }
+        if speed < 0.0 {
+            return Self::Neg;
+        }
+
+        Self::None
     }
 }
 
