@@ -56,7 +56,7 @@ impl Zoom {
     /// See [`ZOOM_INPUT_WINDOW`].
     pub fn discard_old_events(&mut self, now: Instant) {
         while let Some((time, _)) = self.events.front() {
-            if now.duration_since(*time) > ZOOM_INPUT_WINDOW {
+            if now.duration_since(*time) > INPUT_WINDOW {
                 self.events.pop_front();
                 continue;
             }
@@ -129,4 +129,4 @@ impl From<f32> for Direction {
 ///   events, meaning zoom speed can't get very high.
 /// - If this value is too high, a single zoom event will have too long of an
 ///   effect, leading to spongy control behavior.
-const ZOOM_INPUT_WINDOW: Duration = Duration::from_millis(500);
+const INPUT_WINDOW: Duration = Duration::from_millis(500);
