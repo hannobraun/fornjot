@@ -12,4 +12,19 @@ impl Zoom {
             speed: 0.0,
         }
     }
+
+    pub fn push_delta(&mut self, delta: f32, now: Instant) {
+        let new_event = delta * 0.1;
+
+        // If this input is opposite to previous inputs, discard previous inputs
+        // to stop ongoing zoom.
+        if let Some((_, event)) = self.events.front() {
+            if event.signum() != new_event.signum() {
+                self.events.clear();
+                return;
+            }
+        }
+
+        self.events.push_back((now, new_event));
+    }
 }

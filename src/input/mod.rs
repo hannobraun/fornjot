@@ -151,18 +151,7 @@ impl Handler {
             }
         };
 
-        let new_event = delta * 0.1;
-
-        // If this input is opposite to previous inputs, discard previous inputs
-        // to stop ongoing zoom.
-        if let Some((_, event)) = self.zoom.events.front() {
-            if event.signum() != new_event.signum() {
-                self.zoom.events.clear();
-                return;
-            }
-        }
-
-        self.zoom.events.push_back((now, new_event));
+        self.zoom.push_delta(delta, now);
     }
 
     pub fn update(
