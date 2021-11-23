@@ -183,6 +183,8 @@ fn main() -> anyhow::Result<()> {
 
         let mut actions = input::Actions::new();
 
+        let now = Instant::now();
+
         match watcher_rx.try_recv() {
             Ok(shape) => {
                 let triangles = shape.faces(tolerance);
@@ -237,7 +239,6 @@ fn main() -> anyhow::Result<()> {
                 input_handler.handle_mouse_wheel(delta);
             }
             Event::MainEventsCleared => {
-                let now = Instant::now();
                 let delta_t = now.duration_since(previous_time);
                 previous_time = now;
 
