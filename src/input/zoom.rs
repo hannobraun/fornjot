@@ -96,11 +96,6 @@ impl Zoom {
         } else {
             self.idle_since = None
         }
-
-        // TASK: Remove.
-        dbg!(self
-            .idle_since
-            .map(|idle_since| idle_since.elapsed().as_millis()));
     }
 
     /// Access the current zoom speed
