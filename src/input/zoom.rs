@@ -31,6 +31,10 @@ impl Zoom {
         if let Some((_, event)) = self.events.front() {
             if event.signum() != new_event.signum() {
                 self.events.clear();
+
+                // Make sure that this breaks the zoom instantly.
+                self.current_speed = 0.0;
+
                 return;
             }
         }
