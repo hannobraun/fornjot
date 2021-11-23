@@ -1,7 +1,6 @@
-use std::{
-    collections::VecDeque,
-    time::{Duration, Instant},
-};
+mod zoom;
+
+use std::time::{Duration, Instant};
 
 use nalgebra::{Rotation3, Translation2, Unit};
 use winit::{
@@ -14,13 +13,14 @@ use winit::{
 
 use crate::graphics::Transform;
 
+use self::zoom::Zoom;
+
 pub struct Handler {
     cursor: Option<PhysicalPosition<f64>>,
     rotating: bool,
     moving: bool,
 
-    zoom_events: VecDeque<(Instant, f32)>,
-    zoom_speed: f32,
+    zoom: Zoom,
 }
 
 impl Handler {
@@ -30,8 +30,7 @@ impl Handler {
             rotating: false,
             moving: false,
 
-            zoom_events: VecDeque::new(),
-            zoom_speed: 0.0,
+            zoom: Zoom::new(),
         }
     }
 
@@ -156,14 +155,14 @@ impl Handler {
 
         // If this input is opposite to previous inputs, discard previous inputs
         // to stop ongoing zoom.
-        if let Some((_, event)) = self.zoom_events.front() {
+        if let Some((_, event)) = self.zoom.zoom_events.front() {
             if event.signum() != new_event.signum() {
-                self.zoom_events.clear();
+                self.zoom.zoom_events.clear();
                 return;
             }
         }
 
-        self.zoom_events.push_back((now, new_event));
+        self.zoom.zoom_events.push_back((now, new_event));
     }
 
     pub fn update(
@@ -175,9 +174,9 @@ impl Handler {
         // Discard all zoom input events that fall out of the zoom input time
         // window.
         const ZOOM_INPUT_WINDOW: Duration = Duration::from_millis(500);
-        while let Some((time, _)) = self.zoom_events.front() {
+        while let Some((time, _)) = self.zoom.zoom_events.front() {
             if now.duration_since(*time) > ZOOM_INPUT_WINDOW {
-                self.zoom_events.pop_front();
+                self.zoom.zoom_events.pop_front();
                 continue;
             }
 
@@ -187,9 +186,10 @@ impl Handler {
         // TASK: Limit zoom speed depending on distance to model surface.
         // TASK: Reduce zoom speed gradually, don't kill it instantly. It seems
         //       jarring.
-        self.zoom_speed = self.zoom_events.iter().map(|(_, event)| event).sum();
+        self.zoom.zoom_speed =
+            self.zoom.zoom_events.iter().map(|(_, event)| event).sum();
 
-        transform.distance += self.zoom_speed;
+        transform.distance += self.zoom.zoom_speed;
     }
 }
 
