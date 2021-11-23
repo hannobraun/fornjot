@@ -5,14 +5,14 @@ use std::{
 
 pub struct Zoom {
     events: VecDeque<(Instant, f32)>,
-    speed: f32,
+    target_speed: f32,
 }
 
 impl Zoom {
     pub fn new() -> Self {
         Self {
             events: VecDeque::new(),
-            speed: 0.0,
+            target_speed: 0.0,
         }
     }
 
@@ -54,12 +54,12 @@ impl Zoom {
         // TASK: Limit zoom speed depending on distance to model surface.
         // TASK: Reduce zoom speed gradually, don't kill it instantly. It seems
         //       jarring.
-        self.speed = self.events.iter().map(|(_, event)| event).sum();
+        self.target_speed = self.events.iter().map(|(_, event)| event).sum();
     }
 
     /// Access the current zoom speed
     pub fn speed(&self) -> f32 {
-        self.speed
+        self.target_speed
     }
 }
 
