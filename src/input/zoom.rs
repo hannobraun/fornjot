@@ -57,9 +57,8 @@ impl Zoom {
         // TASK: Limit zoom speed depending on distance to model surface.
         self.target_speed = self.events.iter().map(|(_, event)| event).sum();
 
-        // TASK: Reduce zoom speed gradually, don't kill it instantly. It seems
-        //       jarring.
-        self.current_speed = self.target_speed;
+        let speed_delta = self.target_speed - self.current_speed;
+        self.current_speed += speed_delta / 8.;
     }
 
     /// Access the current zoom speed
