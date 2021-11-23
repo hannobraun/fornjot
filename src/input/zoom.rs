@@ -119,4 +119,14 @@ impl From<f32> for Direction {
     }
 }
 
+/// Zoom input window
+///
+/// This is the time window during which a zoom input event still has an effect
+/// on target zoom speed.
+///
+/// Tuning notes:
+/// - If this value is too low, the user can't accumulate many active zooming
+///   events, meaning zoom speed can't get very high.
+/// - If this value is too high, a single zoom event will have too long of an
+///   effect, leading to spongy control behavior.
 const ZOOM_INPUT_WINDOW: Duration = Duration::from_millis(500);
