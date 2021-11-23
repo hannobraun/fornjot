@@ -129,4 +129,7 @@ impl From<f32> for Direction {
 ///   events, meaning zoom speed can't get very high.
 /// - If this value is too high, a single zoom event will have too long of an
 ///   effect, leading to spongy control behavior.
+///
+/// This value should be as low as possible, giving the user precise control,
+/// while still accommodating high enough zoom speeds.
 const INPUT_WINDOW: Duration = Duration::from_millis(500);
