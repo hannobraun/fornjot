@@ -66,6 +66,9 @@ impl Zoom {
         // TASK: Limit zoom speed depending on distance to model surface.
         self.target_speed = self.events.iter().map(|(_, event)| event).sum();
 
+        // Compute current speed from target speed. Gradually move towards
+        // target speed, but snap to target speed once the difference becomes
+        // minuscule. That latter attribute helps track the last zoom direction.
         let speed_delta = self.target_speed - self.current_speed;
         self.current_speed = if speed_delta.abs() >= 0.01 {
             self.current_speed + speed_delta / 8.
@@ -73,6 +76,7 @@ impl Zoom {
             self.target_speed
         };
 
+        // Track last zoom direction.
         self.last_direction = Direction::from(self.current_speed);
     }
 
