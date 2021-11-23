@@ -4,8 +4,8 @@ use std::{
 };
 
 pub struct Zoom {
-    pub events: VecDeque<(Instant, f32)>,
-    pub speed: f32,
+    events: VecDeque<(Instant, f32)>,
+    speed: f32,
 }
 
 impl Zoom {
