@@ -186,10 +186,9 @@ impl Handler {
         // TASK: Limit zoom speed depending on distance to model surface.
         // TASK: Reduce zoom speed gradually, don't kill it instantly. It seems
         //       jarring.
-        self.zoom.zoom_speed =
-            self.zoom.events.iter().map(|(_, event)| event).sum();
+        self.zoom.speed = self.zoom.events.iter().map(|(_, event)| event).sum();
 
-        transform.distance += self.zoom.zoom_speed;
+        transform.distance += self.zoom.speed;
     }
 }
 
