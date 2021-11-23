@@ -155,14 +155,14 @@ impl Handler {
 
         // If this input is opposite to previous inputs, discard previous inputs
         // to stop ongoing zoom.
-        if let Some((_, event)) = self.zoom.zoom_events.front() {
+        if let Some((_, event)) = self.zoom.events.front() {
             if event.signum() != new_event.signum() {
-                self.zoom.zoom_events.clear();
+                self.zoom.events.clear();
                 return;
             }
         }
 
-        self.zoom.zoom_events.push_back((now, new_event));
+        self.zoom.events.push_back((now, new_event));
     }
 
     pub fn update(
@@ -174,9 +174,9 @@ impl Handler {
         // Discard all zoom input events that fall out of the zoom input time
         // window.
         const ZOOM_INPUT_WINDOW: Duration = Duration::from_millis(500);
-        while let Some((time, _)) = self.zoom.zoom_events.front() {
+        while let Some((time, _)) = self.zoom.events.front() {
             if now.duration_since(*time) > ZOOM_INPUT_WINDOW {
-                self.zoom.zoom_events.pop_front();
+                self.zoom.events.pop_front();
                 continue;
             }
 
@@ -187,7 +187,7 @@ impl Handler {
         // TASK: Reduce zoom speed gradually, don't kill it instantly. It seems
         //       jarring.
         self.zoom.zoom_speed =
-            self.zoom.zoom_events.iter().map(|(_, event)| event).sum();
+            self.zoom.events.iter().map(|(_, event)| event).sum();
 
         transform.distance += self.zoom.zoom_speed;
     }
