@@ -151,7 +151,7 @@ impl Handler {
             }
         };
 
-        self.zoom.push_delta(delta, now);
+        self.zoom.push_input_delta(delta, now);
     }
 
     pub fn update(

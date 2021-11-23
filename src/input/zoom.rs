@@ -16,7 +16,7 @@ impl Zoom {
         }
     }
 
-    pub fn push_delta(&mut self, delta: f32, now: Instant) {
+    pub fn push_input_delta(&mut self, delta: f32, now: Instant) {
         let new_event = delta * 0.1;
 
         // If this input is opposite to previous inputs, discard previous inputs
