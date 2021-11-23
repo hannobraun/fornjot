@@ -5,7 +5,9 @@ use std::{
 
 pub struct Zoom {
     events: VecDeque<(Instant, f32)>,
+
     target_speed: f32,
+    current_speed: f32,
 }
 
 impl Zoom {
@@ -13,6 +15,7 @@ impl Zoom {
         Self {
             events: VecDeque::new(),
             target_speed: 0.0,
+            current_speed: 0.0,
         }
     }
 
@@ -52,14 +55,16 @@ impl Zoom {
     /// Update the zoom speed based on active zoom events
     pub fn update_speed(&mut self) {
         // TASK: Limit zoom speed depending on distance to model surface.
+        self.target_speed = self.events.iter().map(|(_, event)| event).sum();
+
         // TASK: Reduce zoom speed gradually, don't kill it instantly. It seems
         //       jarring.
-        self.target_speed = self.events.iter().map(|(_, event)| event).sum();
+        self.current_speed = self.target_speed;
     }
 
     /// Access the current zoom speed
     pub fn speed(&self) -> f32 {
-        self.target_speed
+        self.current_speed
     }
 }
 
