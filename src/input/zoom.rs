@@ -56,6 +56,11 @@ impl Zoom {
         //       jarring.
         self.speed = self.events.iter().map(|(_, event)| event).sum();
     }
+
+    /// Access the current zoom speed
+    pub fn speed(&self) -> f32 {
+        self.speed
+    }
 }
 
 const ZOOM_INPUT_WINDOW: Duration = Duration::from_millis(500);

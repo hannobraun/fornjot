@@ -163,7 +163,7 @@ impl Handler {
         self.zoom.discard_old_events(now);
         self.zoom.update_speed();
 
-        transform.distance += self.zoom.speed;
+        transform.distance += self.zoom.speed();
     }
 }
 
