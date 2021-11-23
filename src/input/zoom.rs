@@ -67,7 +67,11 @@ impl Zoom {
         self.target_speed = self.events.iter().map(|(_, event)| event).sum();
 
         let speed_delta = self.target_speed - self.current_speed;
-        self.current_speed += speed_delta / 8.;
+        self.current_speed = if speed_delta.abs() >= 0.01 {
+            self.current_speed + speed_delta / 8.
+        } else {
+            self.target_speed
+        };
 
         self.last_direction = Direction::from(self.current_speed);
     }
