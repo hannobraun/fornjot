@@ -33,21 +33,21 @@ impl Zoom {
     pub fn push_input_delta(&mut self, delta: f32, now: Instant) {
         let new_event = delta * 0.01;
 
-        // TASK: If zoom speed was non-zero just a short time ago, don't accept
-        //       a zoom event in the opposite direction. A zoom event that's
-        //       timed like that, is likely meant as a breaking operation.
-
         // If this input is opposite to previous inputs, discard previous inputs
         // to stop ongoing zoom.
-        if let Some(&(_, event)) = self.events.front() {
-            if Direction::from(event).is_opposite(&Direction::from(new_event)) {
-                self.events.clear();
+        let can_break = match self.idle_since {
+            Some(idle_since) => idle_since.elapsed() < BREAK_WINDOW,
+            None => true, // ongoing movement; can always break that
+        };
+        if self.last_direction.is_opposite(&Direction::from(new_event))
+            && can_break
+        {
+            self.events.clear();
 
-                // Make sure that this breaks the zoom instantly.
-                self.current_speed = 0.0;
+            // Make sure that this breaks the zoom instantly.
+            self.current_speed = 0.0;
 
-                return;
-            }
+            return;
         }
 
         self.events.push_back((now, new_event));
@@ -152,6 +152,22 @@ impl From<f32> for Direction {
 /// This value should be as low as possible, giving the user precise control,
 /// while still accommodating high enough zoom speeds.
 const INPUT_WINDOW: Duration = Duration::from_millis(500);
+
+/// Time window in which opposite movement is interpreted as breaking
+///
+/// Defines the time window after a movement ends, during which an input
+/// opposite to the movement is interpreted as breaking, not as a new movement.
+///
+/// Tuning notes:
+/// - If this value is too low, zoom input intended to stop the previous
+///   movement will instead start a new, opposite movement, leading to jumpy
+///   zooming behavior.
+/// - If this value is too high, input meant to start a new zoom movement will
+///   not be detected, making zoom less controllable.
+///
+/// This value should be as low as possible, while still preventing jumpy
+/// zooming behavior.
+const BREAK_WINDOW: Duration = Duration::from_millis(50);
 
 /// The minimum delta between current and target zoom speed
 ///
