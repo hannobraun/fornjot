@@ -1,3 +1,8 @@
+use std::{
+    collections::VecDeque,
+    time::{Duration, Instant},
+};
+
 use nalgebra::{Rotation3, Translation2, Unit};
 use winit::{
     dpi::PhysicalPosition,
@@ -13,6 +18,8 @@ pub struct Handler {
     cursor: Option<PhysicalPosition<f64>>,
     rotating: bool,
     moving: bool,
+
+    zoom_events: VecDeque<(Instant, f32)>,
     zoom_speed: f32,
 }
 
@@ -22,6 +29,8 @@ impl Handler {
             cursor: None,
             rotating: false,
             moving: false,
+
+            zoom_events: VecDeque::new(),
             zoom_speed: 0.0,
         }
     }
@@ -131,7 +140,11 @@ impl Handler {
         }
     }
 
-    pub fn handle_mouse_wheel(&mut self, delta: MouseScrollDelta) {
+    pub fn handle_mouse_wheel(
+        &mut self,
+        delta: MouseScrollDelta,
+        now: Instant,
+    ) {
         let delta = match delta {
             MouseScrollDelta::LineDelta(_, y) => y * 10.0,
             MouseScrollDelta::PixelDelta(PhysicalPosition { y, .. }) => {
@@ -139,34 +152,44 @@ impl Handler {
             }
         };
 
-        // TASK: Zooming doesn't work well, and the zoom speed idea might have
-        //       been misguided for this application.
-        //
-        //       I'm not sure what the right solution is, but it needs to have
-        //       the following properties:
-        //       - While zoomed in closely, camera movement needs to be very
-        //         precise.
-        //       - But it should still be possible to zoom out quickly, if
-        //         desired.
-        //       - While less close, camera movement should be quicker and less
-        //         precise.
-        if delta > 0.0 && self.zoom_speed < 0.0
-            || delta < 0.0 && self.zoom_speed > 0.0
-        {
-            self.zoom_speed = 0.0;
-        } else {
-            self.zoom_speed += delta * 0.02;
+        let new_event = delta * 0.1;
+
+        // If this input is opposite to previous inputs, discard previous inputs
+        // to stop ongoing zoom.
+        if let Some((_, event)) = self.zoom_events.front() {
+            if event.signum() != new_event.signum() {
+                self.zoom_events.clear();
+                return;
+            }
         }
+
+        self.zoom_events.push_back((now, new_event));
     }
 
-    pub fn update(&mut self, delta_t: f32, transform: &mut Transform) {
-        transform.distance += self.zoom_speed;
+    pub fn update(
+        &mut self,
+        _delta_t: f32,
+        now: Instant,
+        transform: &mut Transform,
+    ) {
+        // Discard all zoom input events that fall out of the zoom input time
+        // window.
+        const ZOOM_INPUT_WINDOW: Duration = Duration::from_millis(500);
+        while let Some((time, _)) = self.zoom_events.front() {
+            if now.duration_since(*time) > ZOOM_INPUT_WINDOW {
+                self.zoom_events.pop_front();
+                continue;
+            }
 
-        // Reduce zoom speed such, that it is `zoom_speed * f` after one
-        // second.
-        let f: f32 = 0.2;
-        let n = 1.0 / delta_t;
-        self.zoom_speed *= f.powf(1.0 / n);
+            break;
+        }
+
+        // TASK: Limit zoom speed depending on distance to model surface.
+        // TASK: Reduce zoom speed gradually, don't kill it instantly. It seems
+        //       jarring.
+        self.zoom_speed = self.zoom_events.iter().map(|(_, event)| event).sum();
+
+        transform.distance += self.zoom_speed;
     }
 }
 

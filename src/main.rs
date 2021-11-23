@@ -236,13 +236,17 @@ fn main() -> anyhow::Result<()> {
                 event: WindowEvent::MouseWheel { delta, .. },
                 ..
             } => {
-                input_handler.handle_mouse_wheel(delta);
+                input_handler.handle_mouse_wheel(delta, now);
             }
             Event::MainEventsCleared => {
                 let delta_t = now.duration_since(previous_time);
                 previous_time = now;
 
-                input_handler.update(delta_t.as_secs_f32(), &mut transform);
+                input_handler.update(
+                    delta_t.as_secs_f32(),
+                    now,
+                    &mut transform,
+                );
 
                 window.request_redraw();
             }
