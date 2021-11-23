@@ -24,7 +24,7 @@ impl Zoom {
     /// Expects the delta to be normalized, so using the mouse wheel and track
     /// pad lead to the same zoom feel.
     pub fn push_input_delta(&mut self, delta: f32, now: Instant) {
-        let new_event = delta * 0.1;
+        let new_event = delta * 0.01;
 
         // If this input is opposite to previous inputs, discard previous inputs
         // to stop ongoing zoom.
