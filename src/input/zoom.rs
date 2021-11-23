@@ -10,10 +10,11 @@ pub struct Zoom {
     current_speed: f32,
 
     last_direction: Direction,
+    idle_since: Option<Instant>,
 }
 
 impl Zoom {
-    pub fn new() -> Self {
+    pub fn new(now: Instant) -> Self {
         Self {
             events: VecDeque::new(),
 
@@ -21,6 +22,7 @@ impl Zoom {
             current_speed: 0.0,
 
             last_direction: Direction::None,
+            idle_since: Some(now),
         }
     }
 
@@ -66,7 +68,7 @@ impl Zoom {
     }
 
     /// Update the zoom speed based on active zoom events
-    pub fn update_speed(&mut self) {
+    pub fn update_speed(&mut self, now: Instant) {
         // TASK: Limit zoom speed depending on distance to model surface.
         self.target_speed = self.events.iter().map(|(_, event)| event).sum();
 
@@ -85,6 +87,20 @@ impl Zoom {
 
         // Track last zoom direction.
         self.last_direction = Direction::from(self.current_speed);
+
+        // Track idle time
+        if self.current_speed == 0.0 {
+            if self.idle_since.is_none() {
+                self.idle_since = Some(now);
+            }
+        } else {
+            self.idle_since = None
+        }
+
+        // TASK: Remove.
+        dbg!(self
+            .idle_since
+            .map(|idle_since| idle_since.elapsed().as_millis()));
     }
 
     /// Access the current zoom speed

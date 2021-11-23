@@ -24,13 +24,13 @@ pub struct Handler {
 }
 
 impl Handler {
-    pub fn new() -> Self {
+    pub fn new(now: Instant) -> Self {
         Self {
             cursor: None,
             rotating: false,
             moving: false,
 
-            zoom: Zoom::new(),
+            zoom: Zoom::new(now),
         }
     }
 
@@ -161,7 +161,7 @@ impl Handler {
         transform: &mut Transform,
     ) {
         self.zoom.discard_old_events(now);
-        self.zoom.update_speed();
+        self.zoom.update_speed(now);
 
         transform.distance += self.zoom.speed();
     }
