@@ -1,4 +1,7 @@
-use std::{collections::VecDeque, time::Instant};
+use std::{
+    collections::VecDeque,
+    time::{Duration, Instant},
+};
 
 pub struct Zoom {
     pub events: VecDeque<(Instant, f32)>,
@@ -26,5 +29,19 @@ impl Zoom {
         }
 
         self.events.push_back((now, new_event));
+    }
+
+    pub fn discard_old_events(&mut self, now: Instant) {
+        // Discard all zoom input events that fall out of the zoom input time
+        // window.
+        const ZOOM_INPUT_WINDOW: Duration = Duration::from_millis(500);
+        while let Some((time, _)) = self.events.front() {
+            if now.duration_since(*time) > ZOOM_INPUT_WINDOW {
+                self.events.pop_front();
+                continue;
+            }
+
+            break;
+        }
     }
 }

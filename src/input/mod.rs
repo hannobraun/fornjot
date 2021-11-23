@@ -1,6 +1,6 @@
 mod zoom;
 
-use std::time::{Duration, Instant};
+use std::time::Instant;
 
 use nalgebra::{Rotation3, Translation2, Unit};
 use winit::{
@@ -160,17 +160,7 @@ impl Handler {
         now: Instant,
         transform: &mut Transform,
     ) {
-        // Discard all zoom input events that fall out of the zoom input time
-        // window.
-        const ZOOM_INPUT_WINDOW: Duration = Duration::from_millis(500);
-        while let Some((time, _)) = self.zoom.events.front() {
-            if now.duration_since(*time) > ZOOM_INPUT_WINDOW {
-                self.zoom.events.pop_front();
-                continue;
-            }
-
-            break;
-        }
+        self.zoom.discard_old_events(now);
 
         // TASK: Limit zoom speed depending on distance to model surface.
         // TASK: Reduce zoom speed gradually, don't kill it instantly. It seems
