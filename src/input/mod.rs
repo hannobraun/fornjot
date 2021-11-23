@@ -161,11 +161,7 @@ impl Handler {
         transform: &mut Transform,
     ) {
         self.zoom.discard_old_events(now);
-
-        // TASK: Limit zoom speed depending on distance to model surface.
-        // TASK: Reduce zoom speed gradually, don't kill it instantly. It seems
-        //       jarring.
-        self.zoom.speed = self.zoom.events.iter().map(|(_, event)| event).sum();
+        self.zoom.update_speed();
 
         transform.distance += self.zoom.speed;
     }

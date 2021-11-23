@@ -48,6 +48,14 @@ impl Zoom {
             break;
         }
     }
+
+    /// Update the zoom speed based on active zoom events
+    pub fn update_speed(&mut self) {
+        // TASK: Limit zoom speed depending on distance to model surface.
+        // TASK: Reduce zoom speed gradually, don't kill it instantly. It seems
+        //       jarring.
+        self.speed = self.events.iter().map(|(_, event)| event).sum();
+    }
 }
 
 const ZOOM_INPUT_WINDOW: Duration = Duration::from_millis(500);
