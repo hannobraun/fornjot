@@ -37,7 +37,6 @@ impl Zoom {
 
     /// Discard zoom events that fall out of the zoom input time window
     pub fn discard_old_events(&mut self, now: Instant) {
-        const ZOOM_INPUT_WINDOW: Duration = Duration::from_millis(500);
         while let Some((time, _)) = self.events.front() {
             if now.duration_since(*time) > ZOOM_INPUT_WINDOW {
                 self.events.pop_front();
@@ -48,3 +47,5 @@ impl Zoom {
         }
     }
 }
+
+const ZOOM_INPUT_WINDOW: Duration = Duration::from_millis(500);
