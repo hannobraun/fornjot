@@ -31,6 +31,10 @@ impl Zoom {
     pub fn push_input_delta(&mut self, delta: f32, now: Instant) {
         let new_event = delta * 0.01;
 
+        // TASK: If zoom speed was non-zero just a short time ago, don't accept
+        //       a zoom event in the opposite direction. A zoom event that's
+        //       timed like that, is likely meant as a breaking operation.
+
         // If this input is opposite to previous inputs, discard previous inputs
         // to stop ongoing zoom.
         if let Some(&(_, event)) = self.events.front() {
