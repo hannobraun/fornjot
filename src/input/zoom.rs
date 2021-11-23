@@ -119,7 +119,7 @@ impl From<f32> for Direction {
     }
 }
 
-/// Zoom input window
+/// Time window for active zoom events
 ///
 /// This is the time window during which a zoom input event still has an effect
 /// on target zoom speed.
