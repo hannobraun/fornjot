@@ -74,8 +74,11 @@ impl Zoom {
         // target speed, but snap to target speed once the difference becomes
         // minuscule. That latter attribute helps track the last zoom direction.
         let speed_delta = self.target_speed - self.current_speed;
-        self.current_speed = if speed_delta.abs() >= 0.01 {
-            self.current_speed + speed_delta / 8.
+        self.current_speed = if speed_delta.abs() >= MIN_SPEED_DELTA {
+            // TASK: Application of `SPEED_DELTA_DIVISOR` doesn't take frame
+            //       rates into account, which will lead to different behavior
+            //       at different frame rates.
+            self.current_speed + speed_delta / SPEED_DELTA_DIVISOR
         } else {
             self.target_speed
         };
@@ -133,3 +136,22 @@ impl From<f32> for Direction {
 /// This value should be as low as possible, giving the user precise control,
 /// while still accommodating high enough zoom speeds.
 const INPUT_WINDOW: Duration = Duration::from_millis(500);
+
+/// The minimum delta between current and target zoom speed
+///
+/// If the speed delta is below this value, the current zoom speed is snapped to
+/// the target zoom speed.
+///
+/// Tuning notes:
+/// - If this value is too low, zoom speed will technically be non-zero, even
+///   though no movement is perceivable. This makes detection of last zoom speed
+///   and idle time inaccurate, leading to problems.
+/// - If this value is too high, zoom acceleration will jump to infinite in that
+///   last moment before reaching the target speed, which can seem jarring.
+///
+/// This value should be as high as possible, allowing for precise detection of
+/// last zoom speed an idle time, while not causing jarring accelerations.
+const MIN_SPEED_DELTA: f32 = 0.01;
+
+/// Work in progress
+const SPEED_DELTA_DIVISOR: f32 = 8.;
