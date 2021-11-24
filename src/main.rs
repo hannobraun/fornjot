@@ -226,13 +226,17 @@ fn main() -> anyhow::Result<()> {
             } => {
                 input_handler.handle_cursor_moved(position, &mut transform);
 
-                // TASK: Use cursor position to compute the point on the model
-                //       where the cursor points.
-                println!(
-                    "{:?}, {:?}",
-                    renderer.surface_size(),
-                    input_handler.cursor(),
-                );
+                if let Some(cursor) = input_handler.cursor() {
+                    let [width, height] = renderer.surface_size();
+
+                    let x = cursor.x - width as f64 / 2.;
+                    let y = cursor.y - height as f64 / 2.;
+
+                    println!("{}, {}", x, y);
+
+                    // TASK: Use cursor position to compute the point on the
+                    //       model where the cursor points.
+                }
             }
             Event::WindowEvent {
                 event: WindowEvent::MouseInput { state, button, .. },
