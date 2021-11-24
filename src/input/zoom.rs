@@ -80,7 +80,7 @@ impl Zoom {
             // TASK: Application of `SPEED_DELTA_DIVISOR` doesn't take frame
             //       rates into account, which will lead to different behavior
             //       at different frame rates.
-            self.current_speed + speed_delta / SPEED_DELTA_DIVISOR
+            self.current_speed + speed_delta / 8.
         } else {
             self.target_speed
         };
@@ -179,6 +179,3 @@ const BREAK_WINDOW: Duration = Duration::from_millis(50);
 /// This value should be as high as possible, allowing for precise detection of
 /// last zoom speed an idle time, while not causing jarring accelerations.
 const MIN_SPEED_DELTA: f32 = 0.01;
-
-/// Work in progress
-const SPEED_DELTA_DIVISOR: f32 = 8.;
