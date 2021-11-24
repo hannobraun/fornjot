@@ -156,12 +156,12 @@ impl Handler {
 
     pub fn update(
         &mut self,
-        _delta_t: f32,
+        delta_t: f32,
         now: Instant,
         transform: &mut Transform,
     ) {
         self.zoom.discard_old_events(now);
-        self.zoom.update_speed(now);
+        self.zoom.update_speed(now, delta_t);
 
         transform.distance += self.zoom.speed();
     }

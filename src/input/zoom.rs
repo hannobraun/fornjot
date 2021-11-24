@@ -68,7 +68,7 @@ impl Zoom {
     }
 
     /// Update the zoom speed based on active zoom events
-    pub fn update_speed(&mut self, now: Instant) {
+    pub fn update_speed(&mut self, now: Instant, delta_t: f32) {
         // TASK: Limit zoom speed depending on distance to model surface.
         self.target_speed = self.events.iter().map(|(_, event)| event).sum();
 
@@ -77,10 +77,21 @@ impl Zoom {
         // minuscule.
         let speed_delta = self.target_speed - self.current_speed;
         if speed_delta.abs() >= MIN_SPEED_DELTA {
-            // TASK: Application of `SPEED_DELTA_DIVISOR` doesn't take frame
-            //       rates into account, which will lead to different behavior
-            //       at different frame rates.
-            self.current_speed += speed_delta / 8.;
+            let accel = speed_delta.signum() * ACCELERATION;
+            self.current_speed += accel * delta_t;
+
+            // By just applying the acceleration, we can overshoot the target,
+            // which can cause erratic movement, as we overshoot again every
+            // frame.
+            //
+            // If you need to test this code, you can trigger the problem quite
+            // easily by setting acceleration to a really high value.
+            if (self.target_speed - self.current_speed).signum()
+                != speed_delta.signum()
+            {
+                // We overshot. Snap to target speed.
+                self.current_speed = self.target_speed;
+            }
         } else {
             self.current_speed = self.target_speed;
         }
@@ -179,3 +190,15 @@ const BREAK_WINDOW: Duration = Duration::from_millis(50);
 /// This value should be as high as possible, allowing for precise detection of
 /// last zoom speed an idle time, while not causing jarring accelerations.
 const MIN_SPEED_DELTA: f32 = 0.01;
+
+/// Acceleration value for the zoom movement
+///
+/// Tuning notes:
+/// - If this value is too low, target zoom speed will be reached slowly,
+///   leading to less precise control.
+/// - If this value is too high, zoom movement seems unnatural, which can cause
+///   a jarring experience.
+///
+/// This value should be as high as possible, while not causing jarring
+/// accelerations.
+const ACCELERATION: f32 = 0.5;
