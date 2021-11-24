@@ -282,11 +282,13 @@ fn main() -> anyhow::Result<()> {
 
                         // TASK: Compute the point on the model where the cursor
                         //       points.
-                        dbg!((
-                            intersection.distance,
-                            intersection.u,
-                            intersection.v,
-                        ));
+                        if intersection.distance.is_finite() {
+                            dbg!((
+                                intersection.distance,
+                                intersection.u,
+                                intersection.v,
+                            ));
+                        }
                     }
                 }
             }
