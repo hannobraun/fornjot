@@ -283,6 +283,8 @@ fn main() -> anyhow::Result<()> {
                         // TASK: Compute the point on the model where the cursor
                         //       points.
                         if intersection.distance.is_finite() {
+                            // TASK: This doesn't show intersections where they
+                            //       should be. Something is buggy.
                             dbg!((
                                 intersection.distance,
                                 intersection.u,
