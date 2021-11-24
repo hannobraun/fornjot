@@ -238,8 +238,8 @@ fn main() -> anyhow::Result<()> {
 
                     println!("{}, {}", x, y);
 
-                    // TASK: Use cursor position to compute the point on the
-                    //       model where the cursor points.
+                    // TASK: Compute the point on the model where the cursor
+                    //       points.
                 }
             }
             Event::WindowEvent {
