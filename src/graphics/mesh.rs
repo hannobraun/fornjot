@@ -28,8 +28,8 @@ impl Mesh {
     }
 }
 
-impl From<Vec<Triangle>> for Mesh {
-    fn from(triangles: Vec<Triangle>) -> Self {
+impl From<&Vec<Triangle>> for Mesh {
+    fn from(triangles: &Vec<Triangle>) -> Self {
         let mut mesh = MeshMaker::new();
 
         for triangle in triangles {
