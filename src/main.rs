@@ -97,7 +97,7 @@ fn main() -> anyhow::Result<()> {
     let aabb = shape.bounding_volume();
 
     let tolerance = aabb.size().min() / 1000.;
-    let triangles = shape.faces(tolerance);
+    let mut triangles = shape.faces(tolerance);
 
     if let Some(path) = args.export {
         let mut mesh_maker = MeshMaker::new();
@@ -189,7 +189,7 @@ fn main() -> anyhow::Result<()> {
 
         match watcher_rx.try_recv() {
             Ok(shape) => {
-                let triangles = shape.faces(tolerance);
+                triangles = shape.faces(tolerance);
                 renderer.update_geometry((&triangles.0).into());
             }
             Err(mpsc::TryRecvError::Empty) => {
@@ -263,10 +263,31 @@ fn main() -> anyhow::Result<()> {
 
                     let ray = Ray::new(origin, direction);
 
-                    println!("{:?},", ray);
+                    for triangle in &triangles.0 {
+                        let a = triangle.0[0];
+                        let b = triangle.0[1];
+                        let c = triangle.0[2];
 
-                    // TASK: Compute the point on the model where the cursor
-                    //       points.
+                        let intersection = ray.intersects_triangle(
+                            &bvh::Point3::new(
+                                a.x as f32, a.y as f32, a.z as f32,
+                            ),
+                            &bvh::Point3::new(
+                                b.x as f32, b.y as f32, b.z as f32,
+                            ),
+                            &bvh::Point3::new(
+                                c.x as f32, c.y as f32, c.z as f32,
+                            ),
+                        );
+
+                        // TASK: Compute the point on the model where the cursor
+                        //       points.
+                        dbg!((
+                            intersection.distance,
+                            intersection.u,
+                            intersection.v,
+                        ));
+                    }
                 }
             }
             Event::WindowEvent {
