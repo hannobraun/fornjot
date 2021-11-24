@@ -72,7 +72,7 @@ impl Zoom {
         // TASK: Limit zoom speed depending on distance to model surface.
         self.target_speed = self.events.iter().map(|(_, event)| event).sum();
 
-        // Compute current speed from target speed. Gradually move towards
+        // Compute current speed from target speed. Gradually converge towards
         // target speed, but snap to target speed once the difference becomes
         // minuscule. That latter attribute helps track the last zoom direction.
         let speed_delta = self.target_speed - self.current_speed;
