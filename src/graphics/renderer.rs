@@ -158,6 +158,10 @@ impl Renderer {
         transform: &Transform,
         config: &DrawConfig,
     ) -> Result<(), DrawError> {
+        // TASK: Experiment with displaying a background. Some kind of far-away
+        //       walls. This could help illustrate that the input moves the
+        //       object, not some camera around the object.
+
         let uniforms = Uniforms {
             transform: transform.to_native(self.aspect_ratio()),
             transform_normals: transform.to_normals_transform(),
