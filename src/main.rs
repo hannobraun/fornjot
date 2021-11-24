@@ -8,6 +8,7 @@ mod model;
 
 use std::{collections::HashMap, sync::mpsc, time::Instant};
 
+use bvh::ray::Ray;
 use futures::executor::block_on;
 use notify::Watcher as _;
 use tracing::trace;
@@ -242,8 +243,27 @@ fn main() -> anyhow::Result<()> {
                         .view_transform()
                         .inverse()
                         .transform_point(&Point::origin());
+                    let origin = bvh::Point3::new(
+                        origin.x as f32,
+                        origin.y as f32,
+                        origin.z as f32,
+                    );
 
-                    println!("{:?}, {}/{}", origin, x, y);
+                    // Compute the direction of the ray going through the
+                    // cursor.
+                    //
+                    // Dividing `y` by `w_div_2` is not a typo. Field of view is
+                    // defined in terms of width, so the height of the screen is
+                    // really not important for this operation.
+                    let direction = bvh::Vector3::new(
+                        (x / w_div_2) as f32,
+                        (y / w_div_2) as f32,
+                        -1.0,
+                    );
+
+                    let ray = Ray::new(origin, direction);
+
+                    println!("{:?},", ray);
 
                     // TASK: Compute the point on the model where the cursor
                     //       points.
