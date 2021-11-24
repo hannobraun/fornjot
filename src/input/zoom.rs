@@ -4,10 +4,10 @@ use std::{
 };
 
 pub struct Zoom {
-    events: VecDeque<(Instant, f32)>,
+    events: VecDeque<(Instant, f64)>,
 
-    target_speed: f32,
-    current_speed: f32,
+    target_speed: f64,
+    current_speed: f64,
 
     last_direction: Direction,
     idle_since: Option<Instant>,
@@ -30,7 +30,7 @@ impl Zoom {
     ///
     /// Expects the delta to be normalized, so using the mouse wheel and track
     /// pad lead to the same zoom feel.
-    pub fn push_input_delta(&mut self, delta: f32, now: Instant) {
+    pub fn push_input_delta(&mut self, delta: f64, now: Instant) {
         let new_event = delta * 0.01;
 
         // If this input is opposite to previous inputs, discard previous inputs
@@ -68,7 +68,7 @@ impl Zoom {
     }
 
     /// Update the zoom speed based on active zoom events
-    pub fn update_speed(&mut self, now: Instant, delta_t: f32) {
+    pub fn update_speed(&mut self, now: Instant, delta_t: f64) {
         // TASK: Limit zoom speed depending on distance to model surface.
         self.target_speed = self.events.iter().map(|(_, event)| event).sum();
 
@@ -110,7 +110,7 @@ impl Zoom {
     }
 
     /// Access the current zoom speed
-    pub fn speed(&self) -> f32 {
+    pub fn speed(&self) -> f64 {
         self.current_speed
     }
 }
@@ -131,8 +131,8 @@ impl Direction {
     }
 }
 
-impl From<f32> for Direction {
-    fn from(speed: f32) -> Self {
+impl From<f64> for Direction {
+    fn from(speed: f64) -> Self {
         if speed > 0.0 {
             return Self::Pos;
         }
@@ -189,7 +189,7 @@ const BREAK_WINDOW: Duration = Duration::from_millis(50);
 ///
 /// This value should be as high as possible, allowing for precise detection of
 /// last zoom speed an idle time, while not causing jarring accelerations.
-const MIN_SPEED_DELTA: f32 = 0.01;
+const MIN_SPEED_DELTA: f64 = 0.01;
 
 /// Acceleration value for the zoom movement
 ///
@@ -201,4 +201,4 @@ const MIN_SPEED_DELTA: f32 = 0.01;
 ///
 /// This value should be as high as possible, while not causing jarring
 /// accelerations.
-const ACCELERATION: f32 = 0.5;
+const ACCELERATION: f64 = 0.5;

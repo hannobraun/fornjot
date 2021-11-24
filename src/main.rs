@@ -176,7 +176,7 @@ fn main() -> anyhow::Result<()> {
     renderer.update_geometry(triangles.0.into());
 
     let mut draw_config = DrawConfig::default();
-    let mut transform = Transform::new(initial_distance as f32);
+    let mut transform = Transform::new(initial_distance);
 
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
@@ -259,7 +259,7 @@ fn main() -> anyhow::Result<()> {
                 previous_time = now;
 
                 input_handler.update(
-                    delta_t.as_secs_f32(),
+                    delta_t.as_secs_f64(),
                     now,
                     &mut transform,
                 );

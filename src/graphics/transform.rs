@@ -1,16 +1,16 @@
-use std::f32::consts::FRAC_PI_4;
+use std::f64::consts::FRAC_PI_4;
 
 use nalgebra::{Isometry3, Perspective3, Rotation, Translation};
 
 #[derive(Debug)]
 pub struct Transform {
-    pub rotation: Rotation<f32, 3>,
-    pub translation: Translation<f32, 2>,
-    pub distance: f32,
+    pub rotation: Rotation<f64, 3>,
+    pub translation: Translation<f64, 2>,
+    pub distance: f64,
 }
 
 impl Transform {
-    pub fn new(initial_distance: f32) -> Self {
+    pub fn new(initial_distance: f64) -> Self {
         Self {
             rotation: Rotation::identity(),
             translation: Translation::identity(),
@@ -18,7 +18,7 @@ impl Transform {
         }
     }
 
-    pub fn to_native(&self, aspect_ratio: f32) -> NativeTransform {
+    pub fn to_native(&self, aspect_ratio: f64) -> NativeTransform {
         let projection = Perspective3::new(
             aspect_ratio,
             FIELD_OF_VIEW,
@@ -31,7 +31,7 @@ impl Transform {
         let mut native = [0.0; 16];
         native.copy_from_slice(transform.matrix().data.as_slice());
 
-        native
+        native.map(|val| val as f32)
     }
 
     pub fn to_normals_transform(&self) -> NativeTransform {
@@ -41,10 +41,10 @@ impl Transform {
         let mut native = [0.0; 16];
         native.copy_from_slice(transform.data.as_slice());
 
-        native
+        native.map(|val| val as f32)
     }
 
-    fn view_transform(&self) -> Isometry3<f32> {
+    fn view_transform(&self) -> Isometry3<f64> {
         Isometry3::from_parts(
             Translation::from([
                 self.translation.x,
@@ -58,6 +58,6 @@ impl Transform {
 
 pub type NativeTransform = [f32; 16];
 
-pub const NEAR_PLANE: f32 = 0.1;
-pub const FAR_PLANE: f32 = 1000.0;
-pub const FIELD_OF_VIEW: f32 = FRAC_PI_4; // 45 degrees
+pub const NEAR_PLANE: f64 = 0.1;
+pub const FAR_PLANE: f64 = 1000.0;
+pub const FIELD_OF_VIEW: f64 = FRAC_PI_4; // 45 degrees

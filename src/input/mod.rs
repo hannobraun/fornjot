@@ -73,8 +73,8 @@ impl Handler {
 
                 let f = 0.005;
 
-                let x_angle = diff_y as f32 * f;
-                let y_angle = diff_x as f32 * f;
+                let x_angle = diff_y * f;
+                let y_angle = diff_x * f;
 
                 let x_rot = Rotation3::from_axis_angle(
                     &Unit::new_unchecked([1.0, 0.0, 0.0].into()),
@@ -109,8 +109,8 @@ impl Handler {
                 //       camera's viewing direction).
                 let f = 0.2;
 
-                let x_trans = diff_x as f32 * f;
-                let y_trans = -diff_y as f32 * f;
+                let x_trans = diff_x * f;
+                let y_trans = -diff_y * f;
 
                 let translation = Translation2::new(x_trans, y_trans);
 
@@ -149,10 +149,8 @@ impl Handler {
         now: Instant,
     ) {
         let delta = match delta {
-            MouseScrollDelta::LineDelta(_, y) => y * 10.0,
-            MouseScrollDelta::PixelDelta(PhysicalPosition { y, .. }) => {
-                y as f32
-            }
+            MouseScrollDelta::LineDelta(_, y) => y as f64 * 10.0,
+            MouseScrollDelta::PixelDelta(PhysicalPosition { y, .. }) => y,
         };
 
         self.zoom.push_input_delta(delta, now);
@@ -160,7 +158,7 @@ impl Handler {
 
     pub fn update(
         &mut self,
-        delta_t: f32,
+        delta_t: f64,
         now: Instant,
         transform: &mut Transform,
     ) {

@@ -224,10 +224,10 @@ impl Renderer {
         Ok(())
     }
 
-    pub fn surface_size(&self) -> [f32; 2] {
+    pub fn surface_size(&self) -> [f64; 2] {
         [
-            self.surface_config.width as f32,
-            self.surface_config.height as f32,
+            self.surface_config.width as f64,
+            self.surface_config.height as f64,
         ]
     }
 
@@ -254,7 +254,7 @@ impl Renderer {
         view
     }
 
-    fn aspect_ratio(&self) -> f32 {
+    fn aspect_ratio(&self) -> f64 {
         let [width, height] = self.surface_size();
         width / height
     }
