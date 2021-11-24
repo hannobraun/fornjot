@@ -76,14 +76,14 @@ impl Zoom {
         // target speed, but snap to target speed once the difference becomes
         // minuscule.
         let speed_delta = self.target_speed - self.current_speed;
-        self.current_speed = if speed_delta.abs() >= MIN_SPEED_DELTA {
+        if speed_delta.abs() >= MIN_SPEED_DELTA {
             // TASK: Application of `SPEED_DELTA_DIVISOR` doesn't take frame
             //       rates into account, which will lead to different behavior
             //       at different frame rates.
-            self.current_speed + speed_delta / 8.
+            self.current_speed += speed_delta / 8.;
         } else {
-            self.target_speed
-        };
+            self.current_speed = self.target_speed;
+        }
 
         // Track last zoom direction.
         self.last_direction = Direction::from(self.current_speed);
