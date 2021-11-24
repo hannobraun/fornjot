@@ -229,9 +229,12 @@ fn main() -> anyhow::Result<()> {
                 if let Some(cursor) = input_handler.cursor() {
                     let [width, height] = renderer.surface_size();
 
+                    let w_div_2 = width as f64 / 2.;
+                    let h_div_2 = height as f64 / 2.;
+
                     // Offset of cursor from screen center.
-                    let x = cursor.x - width as f64 / 2.;
-                    let y = cursor.y - height as f64 / 2.;
+                    let x = cursor.x - w_div_2;
+                    let y = cursor.y - h_div_2;
 
                     println!("{}, {}", x, y);
 
