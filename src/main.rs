@@ -21,6 +21,7 @@ use crate::{
     args::Args,
     geometry::Shape as _,
     graphics::{DrawConfig, Renderer, Transform, FIELD_OF_VIEW},
+    math::Point,
     mesh::{HashVector, MeshMaker},
     model::Model,
 };
@@ -236,7 +237,13 @@ fn main() -> anyhow::Result<()> {
                     let x = cursor.x - w_div_2;
                     let y = cursor.y - h_div_2;
 
-                    println!("{}, {}", x, y);
+                    // Compute camera position in model coordinates.
+                    let origin = transform
+                        .view_transform()
+                        .inverse()
+                        .transform_point(&Point::origin());
+
+                    println!("{:?}, {}/{}", origin, x, y);
 
                     // TASK: Compute the point on the model where the cursor
                     //       points.
