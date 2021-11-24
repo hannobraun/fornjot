@@ -74,7 +74,7 @@ impl Zoom {
 
         // Compute current speed from target speed. Gradually converge towards
         // target speed, but snap to target speed once the difference becomes
-        // minuscule. That latter attribute helps track the last zoom direction.
+        // minuscule.
         let speed_delta = self.target_speed - self.current_speed;
         self.current_speed = if speed_delta.abs() >= MIN_SPEED_DELTA {
             // TASK: Application of `SPEED_DELTA_DIVISOR` doesn't take frame
