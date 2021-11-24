@@ -44,7 +44,7 @@ impl Transform {
         native.map(|val| val as f32)
     }
 
-    fn view_transform(&self) -> Isometry3<f64> {
+    pub fn view_transform(&self) -> Isometry3<f64> {
         Isometry3::from_parts(
             Translation::from([
                 self.translation.x,
