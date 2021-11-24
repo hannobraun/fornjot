@@ -6,6 +6,7 @@ edition = "2021"
 
 [dependencies]
 anyhow     = "*"
+bvh        = "*"
 bytemuck   = "*"
 clap       = "3.0.0-beta.5"
 decorum    = "*"
