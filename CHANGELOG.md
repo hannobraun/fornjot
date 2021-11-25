@@ -2,8 +2,14 @@
 
 ## Unreleased
 
-- Replace `fj::Square` with `fj::Rectangle`.
+### Host Application
+
+- Tweak zooming behavior.
 - Rename `--arguments` argument of host application to `--parameters`.
+
+### `fj` Library
+
+- Replace `fj::Square` with `fj::Rectangle`.
 
 
 ## v0.3.1 (2021-11-22)
