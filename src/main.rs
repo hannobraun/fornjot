@@ -37,11 +37,11 @@ fn main() -> anyhow::Result<()> {
 
         let key = parameter
             .next()
-            .expect("model argument: key not found")
+            .expect("model parameter: key not found")
             .to_owned();
         let value = parameter
             .next()
-            .expect("model argument: value not found")
+            .expect("model parameter: value not found")
             .to_owned();
 
         parameters.insert(key, value);
