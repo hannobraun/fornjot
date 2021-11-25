@@ -13,10 +13,10 @@ pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
         .parse()
         .unwrap();
 
-    let square = fj::Rectangle { size: width }.into();
+    let rectangle = fj::Rectangle { size: width }.into();
 
     let cuboid = fj::Sweep {
-        shape: square,
+        shape: rectangle,
         length: height,
     };
 
