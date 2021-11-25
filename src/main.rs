@@ -31,7 +31,7 @@ fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     let model = Model::new(args.model);
 
-    let mut arguments = HashMap::new();
+    let mut parameters = HashMap::new();
     for parameter in args.parameters {
         let mut parameter = parameter.splitn(2, "=");
 
@@ -44,7 +44,7 @@ fn main() -> anyhow::Result<()> {
             .expect("model argument: value not found")
             .to_owned();
 
-        arguments.insert(key, value);
+        parameters.insert(key, value);
     }
 
     // TASK: Since we're loading the model before setting up the watcher below,
@@ -53,7 +53,7 @@ fn main() -> anyhow::Result<()> {
     //
     //       This can't be addressed with the current structure, since the
     //       watcher closure takes ownership of the model.
-    let shape = model.load(&arguments)?;
+    let shape = model.load(&parameters)?;
 
     let (watcher_tx, watcher_rx) = mpsc::sync_channel(0);
 
@@ -70,7 +70,7 @@ fn main() -> anyhow::Result<()> {
                 ),
             ) = event.kind
             {
-                let shape = match model.load(&arguments) {
+                let shape = match model.load(&parameters) {
                     Ok(shape) => shape,
                     Err(model::Error::Compile) => {
                         // TASK: Display error message in graphics window.
