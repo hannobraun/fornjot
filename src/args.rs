@@ -13,7 +13,7 @@ pub struct Args {
 
     /// Arguments for the model, each in the form `key=value`
     #[clap(short, long)]
-    pub arguments: Vec<String>,
+    pub parameters: Vec<String>,
 }
 
 impl Args {
