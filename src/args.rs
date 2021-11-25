@@ -11,7 +11,7 @@ pub struct Args {
     #[clap(short, long)]
     pub export: Option<PathBuf>,
 
-    /// Arguments for the model, each in the form `key=value`
+    /// Parameters for the model, each in the form `key=value`
     #[clap(short, long)]
     pub parameters: Vec<String>,
 }
