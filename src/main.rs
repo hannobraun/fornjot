@@ -238,7 +238,7 @@ fn main() -> anyhow::Result<()> {
                     let x = cursor.x - w_div_2;
                     let y = cursor.y - h_div_2;
 
-                    // Compute camera position in model coordinates.
+                    // Transform camera position into model coordinates.
                     let origin = transform
                         .view_transform()
                         .inverse()
