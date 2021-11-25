@@ -8,7 +8,7 @@ use crate::{
     math::Point,
 };
 
-impl Shape for fj::Square {
+impl Shape for fj::Rectangle {
     fn bounding_volume(&self) -> Aabb {
         Aabb::from_vertices(self.vertices())
     }

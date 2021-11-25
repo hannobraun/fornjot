@@ -11,7 +11,7 @@ pub enum Shape2d {
     Difference(Box<Difference>),
 
     /// A square
-    Square(Square),
+    Square(Rectangle),
 }
 
 /// A circle
@@ -60,19 +60,19 @@ impl From<Difference> for Shape2d {
 /// A square
 #[derive(Clone, Debug)]
 #[repr(C)]
-pub struct Square {
+pub struct Rectangle {
     /// The side length of the square
     pub size: f64,
 }
 
-impl From<Square> for Shape {
-    fn from(shape: Square) -> Self {
+impl From<Rectangle> for Shape {
+    fn from(shape: Rectangle) -> Self {
         Self::Shape2d(Shape2d::Square(shape))
     }
 }
 
-impl From<Square> for Shape2d {
-    fn from(shape: Square) -> Self {
+impl From<Rectangle> for Shape2d {
+    fn from(shape: Rectangle) -> Self {
         Self::Square(shape)
     }
 }
