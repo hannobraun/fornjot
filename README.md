@@ -8,7 +8,7 @@ Experimental CAD system, written in the Rust programming language.
 
 The following models are currently available:
 
-- [Cube](/models/cube)
+- [Cuboid](/models/cuboid)
 - [Spacer](/models/spacer)
 
 

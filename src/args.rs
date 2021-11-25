@@ -4,7 +4,7 @@ use std::path::PathBuf;
 #[derive(clap::Parser)]
 pub struct Args {
     /// The model to open
-    #[clap(short, long, default_value = "cube")]
+    #[clap(short, long, default_value = "cuboid")]
     pub model: String,
 
     /// Export model to this path
