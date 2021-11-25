@@ -1,5 +1,10 @@
 # Fornjot - Changelog
 
+## Unreleased
+
+- Replace `fj::Square` with `fj::Rectangle`.
+- Rename `--arguments` argument of host application to `--parameters`.
+
 ## v0.3.1 (2021-11-22)
 
 - Reload current model, whenever its source code is modified.
