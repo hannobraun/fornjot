@@ -10,7 +10,7 @@ pub enum Shape2d {
     /// A difference between two shapes
     Difference(Box<Difference>),
 
-    /// A square
+    /// A rectangle
     Rectangle(Rectangle),
 }
 
@@ -57,7 +57,7 @@ impl From<Difference> for Shape2d {
     }
 }
 
-/// A square
+/// A rectangle
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Rectangle {
