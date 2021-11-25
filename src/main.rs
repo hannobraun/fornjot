@@ -33,13 +33,13 @@ fn main() -> anyhow::Result<()> {
 
     let mut arguments = HashMap::new();
     for parameter in args.parameters {
-        let mut argument = parameter.splitn(2, "=");
+        let mut parameter = parameter.splitn(2, "=");
 
-        let key = argument
+        let key = parameter
             .next()
             .expect("model argument: key not found")
             .to_owned();
-        let value = argument
+        let value = parameter
             .next()
             .expect("model argument: value not found")
             .to_owned();
