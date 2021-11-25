@@ -32,8 +32,8 @@ fn main() -> anyhow::Result<()> {
     let model = Model::new(args.model);
 
     let mut arguments = HashMap::new();
-    for argument in args.parameters {
-        let mut argument = argument.splitn(2, "=");
+    for parameter in args.parameters {
+        let mut argument = parameter.splitn(2, "=");
 
         let key = argument
             .next()
