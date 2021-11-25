@@ -11,7 +11,7 @@ pub enum Shape2d {
     Difference(Box<Difference>),
 
     /// A square
-    Square(Rectangle),
+    Rectangle(Rectangle),
 }
 
 /// A circle
@@ -67,12 +67,12 @@ pub struct Rectangle {
 
 impl From<Rectangle> for Shape {
     fn from(shape: Rectangle) -> Self {
-        Self::Shape2d(Shape2d::Square(shape))
+        Self::Shape2d(Shape2d::Rectangle(shape))
     }
 }
 
 impl From<Rectangle> for Shape2d {
     fn from(shape: Rectangle) -> Self {
-        Self::Square(shape)
+        Self::Rectangle(shape)
     }
 }

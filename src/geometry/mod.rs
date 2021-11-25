@@ -50,7 +50,7 @@ macro_rules! dispatch {
                     match self {
                         Self::Circle(shape) => shape.$method($($arg_name)*),
                         Self::Difference(shape) => shape.$method($($arg_name)*),
-                        Self::Square(shape) => shape.$method($($arg_name)*),
+                        Self::Rectangle(shape) => shape.$method($($arg_name)*),
                     }
                 }
             )*
