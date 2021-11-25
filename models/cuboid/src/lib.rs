@@ -7,13 +7,13 @@ pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
         .unwrap_or(&"1.0".to_owned())
         .parse()
         .unwrap();
-    let height = args.get("z").unwrap_or(&"1.0".to_owned()).parse().unwrap();
+    let z = args.get("z").unwrap_or(&"1.0".to_owned()).parse().unwrap();
 
     let rectangle = fj::Rectangle { x: width, y: width }.into();
 
     let cuboid = fj::Sweep {
         shape: rectangle,
-        length: height,
+        length: z,
     };
 
     cuboid.into()
