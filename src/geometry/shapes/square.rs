@@ -37,14 +37,15 @@ impl Shape for fj::Rectangle {
     }
 
     fn vertices(&self) -> Vec<Point> {
-        let s = self.size / 2.;
+        let x = self.x / 2.;
+        let y = self.y / 2.;
 
         #[rustfmt::skip]
         let v = [
-            [-s, -s, 0.0],
-            [ s, -s, 0.0],
-            [ s,  s, 0.0],
-            [-s,  s, 0.0],
+            [-x, -y, 0.0],
+            [ x, -y, 0.0],
+            [ x,  y, 0.0],
+            [-x,  y, 0.0],
         ];
 
         v.map(|coord| coord.into()).to_vec()

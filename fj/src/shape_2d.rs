@@ -61,8 +61,11 @@ impl From<Difference> for Shape2d {
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Rectangle {
-    /// The side length of the square
-    pub size: f64,
+    /// The size of the rectangle along the x-axis
+    pub x: f64,
+
+    /// The size of the rectangle along the y-axis
+    pub y: f64,
 }
 
 impl From<Rectangle> for Shape {
