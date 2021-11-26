@@ -10,6 +10,7 @@ use std::{collections::HashMap, sync::mpsc, time::Instant};
 
 use bvh::ray::Ray;
 use futures::executor::block_on;
+use nalgebra::Rotation3;
 use notify::Watcher as _;
 use tracing::trace;
 use winit::{
@@ -244,15 +245,61 @@ fn main() -> anyhow::Result<()> {
                         .inverse()
                         .transform_point(&Point::origin());
 
-                    // TASK: This is obviously wrong. It assumes the camera is
-                    //       looking down from above the model.
-                    // Compute the direction of the ray going through the
-                    // cursor.
+                    // For the following computations we need to know, what the
+                    // vector from the camera to the model origin is, in model
+                    // coordinates.
+                    let camera_to_model = Point::origin() - origin;
+
+                    // Furthermore, we need a vector that defines the direction
+                    // of the ray, if we were looking down on the model, along
+                    // the z-axis. We're not always doing that, of course, so
+                    // we'll need to rotate that vector later.
                     //
                     // Dividing `y` by `w_div_2` is not a typo. Field of view is
                     // defined in terms of width, so the height of the screen is
-                    // really not important for this operation.
-                    let direction = Vector::new(x / w_div_2, y / w_div_2, -1.0);
+                    // really not important for this calculation.
+                    let direction_from_above =
+                        Vector::new(x / w_div_2, y / w_div_2, -1.0);
+
+                    // Okay, so we need to rotate `direction_from_above`, but
+                    // by what angles? Let's figure that out.
+                    //
+                    // As mentioned above, the base we're working from is a
+                    // vector looking down, so (0, 0, -1). We need to calculate
+                    // how much to rotate `direction_from_above`, so it becomes
+                    // relevant to the actual viewing direction.
+                    //
+                    // Let's start by calculating the angle between
+                    // `camera_to_model` and our reference vector in the x-z
+                    // plane.
+                    //
+                    // TASK: I'd expect this value to become positive, when
+                    //       rotating the model, so the camera looks at it from
+                    //       the right. Either my understanding needs to be
+                    //       fixed, or that's a bug.
+                    let rot_x_z =
+                        f64::atan2(camera_to_model.x, -camera_to_model.z);
+
+                    // Now let's do that same for the y-z axis.
+                    let rot_y_z =
+                        f64::atan2(camera_to_model.y, -camera_to_model.z);
+
+                    // Using these angles, we can rotate `direction_from_above`,
+                    // so it becomes relative to `camera_to_model`, not its
+                    // reference vector.
+                    //
+                    // TASK: I'm pretty sure this is not the right method to
+                    //       combine these angles into a rotation. I'm leaving
+                    //       this here as a placeholder, while I go fix my
+                    //       brain.
+                    let direction = (Rotation3::from_axis_angle(
+                        &Vector::y_axis(),
+                        rot_x_z,
+                    ) * Rotation3::from_axis_angle(
+                        &-Vector::x_axis(),
+                        rot_y_z,
+                    ))
+                    .transform_vector(&direction_from_above);
 
                     let origin = bvh::Point3::new(
                         origin.x as f32,
