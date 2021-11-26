@@ -243,11 +243,6 @@ fn main() -> anyhow::Result<()> {
                         .view_transform()
                         .inverse()
                         .transform_point(&Point::origin());
-                    let origin = bvh::Point3::new(
-                        origin.x as f32,
-                        origin.y as f32,
-                        origin.z as f32,
-                    );
 
                     // TASK: This is obviously wrong. It assumes the camera is
                     //       looking down from above the model.
@@ -263,6 +258,11 @@ fn main() -> anyhow::Result<()> {
                         -1.0,
                     );
 
+                    let origin = bvh::Point3::new(
+                        origin.x as f32,
+                        origin.y as f32,
+                        origin.z as f32,
+                    );
                     let ray = Ray::new(origin, direction);
 
                     for triangle in &triangles.0 {
