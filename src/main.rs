@@ -281,6 +281,11 @@ fn main() -> anyhow::Result<()> {
                         f64::atan2(camera_to_model.x, -camera_to_model.z);
 
                     // Now let's do that same for the y-z axis.
+                    //
+                    // TASK: I'd expect this value to become positive, when
+                    //       rotating the model, so the camera looks at it from
+                    //       behind. Either my understanding needs to be fixed,
+                    //       or that's a bug.
                     let rot_y_z =
                         f64::atan2(camera_to_model.y, -camera_to_model.z);
 
