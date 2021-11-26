@@ -249,6 +249,8 @@ fn main() -> anyhow::Result<()> {
                         origin.z as f32,
                     );
 
+                    // TASK: This is obviously wrong. It assumes the camera is
+                    //       looking down from above the model.
                     // Compute the direction of the ray going through the
                     // cursor.
                     //
