@@ -22,7 +22,7 @@ use crate::{
     args::Args,
     geometry::Shape as _,
     graphics::{DrawConfig, Renderer, Transform, FIELD_OF_VIEW},
-    math::Point,
+    math::{Point, Vector},
     mesh::{HashVector, MeshMaker},
     model::Model,
 };
@@ -252,16 +252,17 @@ fn main() -> anyhow::Result<()> {
                     // Dividing `y` by `w_div_2` is not a typo. Field of view is
                     // defined in terms of width, so the height of the screen is
                     // really not important for this operation.
-                    let direction = bvh::Vector3::new(
-                        (x / w_div_2) as f32,
-                        (y / w_div_2) as f32,
-                        -1.0,
-                    );
+                    let direction = Vector::new(x / w_div_2, y / w_div_2, -1.0);
 
                     let origin = bvh::Point3::new(
                         origin.x as f32,
                         origin.y as f32,
                         origin.z as f32,
+                    );
+                    let direction = bvh::Vector3::new(
+                        direction.x as f32,
+                        direction.y as f32,
+                        direction.z as f32,
                     );
                     let ray = Ray::new(origin, direction);
 
