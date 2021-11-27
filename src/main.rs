@@ -272,20 +272,10 @@ fn main() -> anyhow::Result<()> {
                     // Let's start by calculating the angle between
                     // `camera_to_model` and our reference vector in the x-z
                     // plane.
-                    //
-                    // TASK: I'd expect this value to become positive, when
-                    //       rotating the model, so the camera looks at it from
-                    //       the right. Either my understanding needs to be
-                    //       fixed, or that's a bug.
                     let rot_x_z =
                         f64::atan2(camera_to_model.x, -camera_to_model.z);
 
                     // Now let's do that same for the y-z axis.
-                    //
-                    // TASK: I'd expect this value to become positive, when
-                    //       rotating the model, so the camera looks at it from
-                    //       behind. Either my understanding needs to be fixed,
-                    //       or that's a bug.
                     let rot_y_z =
                         f64::atan2(camera_to_model.y, -camera_to_model.z);
 
