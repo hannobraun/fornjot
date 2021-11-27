@@ -275,7 +275,7 @@ fn main() -> anyhow::Result<()> {
                     let rot_x_z =
                         f64::atan2(camera_to_model.x, -camera_to_model.z);
 
-                    // Now let's do that same for the y-z axis.
+                    // Now let's do that same for the y-z plane.
                     let rot_y_z =
                         f64::atan2(camera_to_model.y, -camera_to_model.z);
 
