@@ -283,18 +283,33 @@ fn main() -> anyhow::Result<()> {
                     // so it becomes relative to `camera_to_model`, not its
                     // reference vector.
                     //
-                    // TASK: I'm pretty sure this is not the right method to
-                    //       combine these angles into a rotation. I'm leaving
-                    //       this here as a placeholder, while I go fix my
-                    //       brain.
-                    let direction = (Rotation3::from_axis_angle(
-                        &Vector::y_axis(),
-                        rot_x_z,
-                    ) * Rotation3::from_axis_angle(
-                        &-Vector::x_axis(),
-                        rot_y_z,
-                    ))
-                    .transform_vector(&direction_from_above);
+                    // Why do we rotate around positive x axis, but negative y
+                    // axis? Because the `atan2` operations above are defined in
+                    // terms of the x-z and y-z planes, such that z always
+                    // points up, and x and y respectively always point right.
+                    //
+                    // When looking at the x-z plane that way, the y axis is
+                    // pointing away from us. When looking at y-z, the x axis is
+                    // pointing towards us. Hence the difference.
+                    //
+                    // If this doesn't make immediate sense, believe me, neither
+                    // did it to me. I recommend liberal application of the
+                    // right hand rule to sort that out. Maybe grab a partner. I
+                    // had to do it alone, and really could have used another
+                    // right hand (or two).
+                    //
+                    // TASK: This still doesn't work correctly. It works better
+                    //       than the previous versions, in that I now get a
+                    //       sensible-looking direction vector from all
+                    //       perspectives, but "sensible-looking" is not quite
+                    //       the same as "correct".
+                    let rot_x_z =
+                        Rotation3::from_axis_angle(&-Vector::y_axis(), rot_x_z);
+                    let rot_y_z =
+                        Rotation3::from_axis_angle(&Vector::x_axis(), rot_y_z);
+                    let direction = rot_x_z.transform_vector(
+                        &rot_y_z.transform_vector(&direction_from_above),
+                    );
 
                     let origin = bvh::Point3::new(
                         origin.x as f32,
