@@ -259,7 +259,7 @@ fn main() -> anyhow::Result<()> {
                     // defined in terms of width, so the height of the screen is
                     // really not important for this calculation.
                     let direction_from_above =
-                        Vector::new(x / w_div_2, y / w_div_2, -1.0);
+                        Vector::new(x / w_div_2, -y / w_div_2, -1.0);
 
                     // Okay, so we need to rotate `direction_from_above`, but
                     // by what angles? Let's figure that out.
