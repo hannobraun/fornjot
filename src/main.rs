@@ -221,7 +221,11 @@ fn main() -> anyhow::Result<()> {
                 event: WindowEvent::KeyboardInput { input, .. },
                 ..
             } => {
-                input_handler.handle_keyboard_input(input, &mut actions);
+                input_handler.handle_keyboard_input(
+                    input,
+                    &mut actions,
+                    &mut transform,
+                );
             }
             Event::WindowEvent {
                 event: WindowEvent::CursorMoved { position, .. },
