@@ -1,8 +1,9 @@
+mod rotation;
 mod zoom;
 
 use std::time::Instant;
 
-use nalgebra::{Rotation3, Translation2, Unit};
+use nalgebra::Translation2;
 use winit::{
     dpi::PhysicalPosition,
     event::{
@@ -13,7 +14,7 @@ use winit::{
 
 use crate::graphics::Transform;
 
-use self::zoom::Zoom;
+use self::{rotation::Rotation, zoom::Zoom};
 
 pub struct Handler {
     cursor: Option<PhysicalPosition<f64>>,
@@ -76,16 +77,7 @@ impl Handler {
                 let angle_x = diff_y * f;
                 let angle_y = diff_x * f;
 
-                let rot_x = Rotation3::from_axis_angle(
-                    &Unit::new_unchecked([1.0, 0.0, 0.0].into()),
-                    angle_x,
-                );
-                let rot_y = Rotation3::from_axis_angle(
-                    &Unit::new_unchecked([0.0, 1.0, 0.0].into()),
-                    angle_y,
-                );
-
-                transform.rotation = rot_y * rot_x * transform.rotation;
+                Rotation.apply(angle_x, angle_y, transform);
             }
             if self.right_mouse_button {
                 // TASK: Moving feels good, if you're dragging the model exactly
