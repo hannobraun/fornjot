@@ -76,16 +76,16 @@ impl Handler {
                 let angle_x = diff_y * f;
                 let angle_y = diff_x * f;
 
-                let x_rot = Rotation3::from_axis_angle(
+                let rot_x = Rotation3::from_axis_angle(
                     &Unit::new_unchecked([1.0, 0.0, 0.0].into()),
                     angle_x,
                 );
-                let y_rot = Rotation3::from_axis_angle(
+                let rot_y = Rotation3::from_axis_angle(
                     &Unit::new_unchecked([0.0, 1.0, 0.0].into()),
                     angle_y,
                 );
 
-                transform.rotation = y_rot * x_rot * transform.rotation;
+                transform.rotation = rot_y * rot_x * transform.rotation;
             }
             if self.right_mouse_button {
                 // TASK: Moving feels good, if you're dragging the model exactly
