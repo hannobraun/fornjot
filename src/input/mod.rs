@@ -73,16 +73,16 @@ impl Handler {
 
                 let f = 0.005;
 
-                let x_angle = diff_y * f;
-                let y_angle = diff_x * f;
+                let angle_x = diff_y * f;
+                let angle_y = diff_x * f;
 
                 let x_rot = Rotation3::from_axis_angle(
                     &Unit::new_unchecked([1.0, 0.0, 0.0].into()),
-                    x_angle,
+                    angle_x,
                 );
                 let y_rot = Rotation3::from_axis_angle(
                     &Unit::new_unchecked([0.0, 1.0, 0.0].into()),
-                    y_angle,
+                    angle_y,
                 );
 
                 transform.rotation = y_rot * x_rot * transform.rotation;
