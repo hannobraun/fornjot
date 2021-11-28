@@ -5,6 +5,7 @@
 ### Host Application
 
 - Tweak zooming behavior.
+- Support rotating model with cursor keys.
 - Rename `--arguments` argument of host application to `--parameters`.
 
 ### `fj` Library
