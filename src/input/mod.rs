@@ -18,7 +18,7 @@ use self::zoom::Zoom;
 pub struct Handler {
     cursor: Option<PhysicalPosition<f64>>,
     left_mouse_button: bool,
-    moving: bool,
+    right_mouse_button: bool,
 
     zoom: Zoom,
 }
@@ -28,7 +28,7 @@ impl Handler {
         Self {
             cursor: None,
             left_mouse_button: false,
-            moving: false,
+            right_mouse_button: false,
 
             zoom: Zoom::new(now),
         }
@@ -87,7 +87,7 @@ impl Handler {
 
                 transform.rotation = y_rot * x_rot * transform.rotation;
             }
-            if self.moving {
+            if self.right_mouse_button {
                 // TASK: Moving feels good, if you're dragging the model exactly
                 //       where your mouse goes. It feels weird, if the mouse
                 //       cursor moves faster or slower than the model you're
@@ -134,10 +134,10 @@ impl Handler {
                 self.left_mouse_button = false;
             }
             (MouseButton::Right, ElementState::Pressed) => {
-                self.moving = true;
+                self.right_mouse_button = true;
             }
             (MouseButton::Right, ElementState::Released) => {
-                self.moving = false;
+                self.right_mouse_button = false;
             }
             _ => {}
         }
