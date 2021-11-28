@@ -17,7 +17,7 @@ use self::zoom::Zoom;
 
 pub struct Handler {
     cursor: Option<PhysicalPosition<f64>>,
-    rotating: bool,
+    left_mouse_button: bool,
     moving: bool,
 
     zoom: Zoom,
@@ -27,7 +27,7 @@ impl Handler {
     pub fn new(now: Instant) -> Self {
         Self {
             cursor: None,
-            rotating: false,
+            left_mouse_button: false,
             moving: false,
 
             zoom: Zoom::new(now),
@@ -67,7 +67,7 @@ impl Handler {
             let diff_x = position.x - previous.x;
             let diff_y = position.y - previous.y;
 
-            if self.rotating {
+            if self.left_mouse_button {
                 // TASK: Rotate the model around the point on the surface that
                 //       the cursor is currently pointing at.
 
@@ -128,10 +128,10 @@ impl Handler {
     ) {
         match (button, state) {
             (MouseButton::Left, ElementState::Pressed) => {
-                self.rotating = true;
+                self.left_mouse_button = true;
             }
             (MouseButton::Left, ElementState::Released) => {
-                self.rotating = false;
+                self.left_mouse_button = false;
             }
             (MouseButton::Right, ElementState::Pressed) => {
                 self.moving = true;
