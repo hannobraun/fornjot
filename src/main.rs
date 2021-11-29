@@ -302,11 +302,10 @@ fn main() -> anyhow::Result<()> {
                     // had to do it alone, and really could have used another
                     // right hand (or two).
                     //
-                    // TASK: This still doesn't work correctly. It works better
-                    //       than the previous versions, in that I now get a
-                    //       sensible-looking direction vector from all
-                    //       perspectives, but "sensible-looking" is not quite
-                    //       the same as "correct".
+                    // TASK: `direction` is correct when looking from the top,
+                    //       front, or left (so looking along negative-z,
+                    //       positive-y, and positive-x). It is exactly inverted
+                    //       when looking from the opposite directions.
                     let rot_x_z =
                         Rotation3::from_axis_angle(&-Vector::y_axis(), rot_x_z);
                     let rot_y_z =
