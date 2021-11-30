@@ -233,6 +233,17 @@ fn main() -> anyhow::Result<()> {
             } => {
                 input_handler.handle_cursor_moved(position, &mut transform);
 
+                // TASK: This approach might not be the right one (see comments
+                //       down there). A quick search came up with the following
+                //       resources:
+                //       - https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-generating-camera-rays/generating-camera-rays
+                //         Seems to describe exactly what we need here.
+                //       - https://gamedev.stackexchange.com/a/194578
+                //         The question is Unity-specific, but that code example
+                //         in the answer looks relevant.
+                //
+                //       Check those out, and see if they provide a better
+                //       approach to a solution.
                 if let Some(cursor) = input_handler.cursor() {
                     let [width, height] = renderer.surface_size();
 
