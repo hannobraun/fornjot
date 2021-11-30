@@ -302,10 +302,36 @@ fn main() -> anyhow::Result<()> {
                     // had to do it alone, and really could have used another
                     // right hand (or two).
                     //
-                    // TASK: `direction` is correct when looking from the top,
-                    //       front, or left (so looking along negative-z,
-                    //       positive-y, and positive-x). It is exactly inverted
-                    //       when looking from the opposite directions.
+                    // TASK: So, I'm pretty sure I've figured out what the
+                    //       problem here is.
+                    //
+                    //       Say, we're rotating the model around the x axis.
+                    //       This will, at first, only affect `rot_y_z`, not
+                    //       `rot_x_z`. Until we start looking at the model from
+                    //       below, then `rot_x_z` will be flipped from 0 to PI.
+                    //
+                    //       This is fully expected. It's the correct outcome of
+                    //       the calculations above.
+                    //
+                    //       The problem comes in, when we're applying those
+                    //       angles to `direction_from_above`. Say, we're
+                    //       looking at the model directly from below. Both
+                    //       `rot_x_y` and `rot_x_y` are basically the same
+                    //       value (+PI and -PI).
+                    //
+                    //       But they interfere with each other. Applying one
+                    //       rotation results in the correct `direction`.
+                    //       Applying the second rotation undoes the first one,
+                    //       resulting in a result that is the inverse of what
+                    //       is expected. This happens when looking from the
+                    //       bottom, back, or right.
+                    //
+                    //       Makes total sense to me. Where I'm getting lost, is
+                    //       how to fix it. Maybe there's a better way to
+                    //       combine both rotations, that doesn't have the same
+                    //       problem. Maybe my whole approach with the angles in
+                    //       two planes is not optimal, and there's a far better
+                    //       one (quite likely).
                     let rot_x_z =
                         Rotation3::from_axis_angle(&-Vector::y_axis(), rot_x_z);
                     let rot_y_z =
