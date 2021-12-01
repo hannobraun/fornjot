@@ -254,7 +254,7 @@ impl Renderer {
         view
     }
 
-    fn aspect_ratio(&self) -> f64 {
+    pub fn aspect_ratio(&self) -> f64 {
         let [width, height] = self.surface_size();
         width / height
     }
