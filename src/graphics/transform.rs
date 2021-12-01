@@ -1,7 +1,7 @@
 use std::f64::consts::FRAC_PI_4;
 
 use bytemuck::{Pod, Zeroable};
-use nalgebra::{Isometry3, Perspective3, Rotation, Translation};
+use nalgebra::{Isometry3, Matrix4, Perspective3, Rotation, Translation};
 
 #[derive(Debug)]
 pub struct Transform {
@@ -60,6 +60,17 @@ impl Transform {
 #[derive(Clone, Copy, Pod, Zeroable)]
 #[repr(transparent)]
 pub struct NativeTransform(pub [f32; 16]);
+
+impl NativeTransform {
+    pub fn identity() -> Self {
+        let identity = Matrix4::identity();
+
+        let mut self_ = NativeTransform([0.0; 16]);
+        self_.0.copy_from_slice(identity.data.as_slice());
+
+        self_
+    }
+}
 
 pub const NEAR_PLANE: f64 = 0.1;
 pub const FAR_PLANE: f64 = 1000.0;
