@@ -29,20 +29,14 @@ impl Transform {
 
         let transform = projection.to_projective() * self.view_transform();
 
-        let mut native = [0.0; 16];
-        native.copy_from_slice(transform.matrix().data.as_slice());
-
-        NativeTransform(native.map(|val| val as f32))
+        NativeTransform::from_matrix(transform.matrix())
     }
 
     pub fn to_normals_transform(&self) -> NativeTransform {
         let transform =
             self.view_transform().inverse().to_homogeneous().transpose();
 
-        let mut native = [0.0; 16];
-        native.copy_from_slice(transform.data.as_slice());
-
-        NativeTransform(native.map(|val| val as f32))
+        NativeTransform::from_matrix(&transform)
     }
 
     pub fn view_transform(&self) -> Isometry3<f64> {
@@ -69,6 +63,13 @@ impl NativeTransform {
         self_.0.copy_from_slice(identity.data.as_slice());
 
         self_
+    }
+
+    pub fn from_matrix(transform: &Matrix4<f64>) -> Self {
+        let mut native = [0.0; 16];
+        native.copy_from_slice(transform.data.as_slice());
+
+        Self(native.map(|val| val as f32))
     }
 }
 
