@@ -60,9 +60,9 @@ impl NativeTransform {
         Self::from_matrix(&Matrix4::identity())
     }
 
-    pub fn from_matrix(transform: &Matrix4<f64>) -> Self {
+    pub fn from_matrix(matrix: &Matrix4<f64>) -> Self {
         let mut native = [0.0; 16];
-        native.copy_from_slice(transform.data.as_slice());
+        native.copy_from_slice(matrix.data.as_slice());
 
         Self(native.map(|val| val as f32))
     }
