@@ -57,12 +57,7 @@ pub struct NativeTransform(pub [f32; 16]);
 
 impl NativeTransform {
     pub fn identity() -> Self {
-        let identity = Matrix4::identity();
-
-        let mut self_ = NativeTransform([0.0; 16]);
-        self_.0.copy_from_slice(identity.data.as_slice());
-
-        self_
+        Self::from_matrix(&Matrix4::identity())
     }
 
     pub fn from_matrix(transform: &Matrix4<f64>) -> Self {
