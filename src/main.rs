@@ -10,7 +10,6 @@ use std::{collections::HashMap, sync::mpsc, time::Instant};
 
 use bvh::ray::Ray;
 use futures::executor::block_on;
-use nalgebra::Rotation3;
 use notify::Watcher as _;
 use tracing::trace;
 use winit::{
@@ -22,7 +21,7 @@ use winit::{
 use crate::{
     args::Args,
     geometry::Shape as _,
-    graphics::{DrawConfig, Renderer, Transform, FIELD_OF_VIEW},
+    graphics::{DrawConfig, Renderer, Transform, FIELD_OF_VIEW, NEAR_PLANE},
     math::{Point, Vector},
     mesh::{HashVector, MeshMaker},
     model::Model,
@@ -233,123 +232,29 @@ fn main() -> anyhow::Result<()> {
             } => {
                 input_handler.handle_cursor_moved(position, &mut transform);
 
-                // TASK: This approach might not be the right one (see comments
-                //       down there). A quick search came up with the following
-                //       resources:
-                //       - https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-generating-camera-rays/generating-camera-rays
-                //         Seems to describe exactly what we need here.
-                //       - https://gamedev.stackexchange.com/a/194578
-                //         The question is Unity-specific, but that code example
-                //         in the answer looks relevant.
-                //
-                //       Check those out, and see if they provide a better
-                //       approach to a solution.
                 if let Some(cursor) = input_handler.cursor() {
                     let [width, height] = renderer.surface_size();
+                    let aspect_ratio = renderer.aspect_ratio();
 
-                    let w_div_2 = width as f64 / 2.;
-                    let h_div_2 = height as f64 / 2.;
+                    // Cursor position in normalized coordinates (-1 to +1) with
+                    // aspect ratio taken into account.
+                    let x = cursor.x / width as f64 * 2. - 1.;
+                    let y =
+                        -(cursor.y / height as f64 * 2. - 1.) / aspect_ratio;
 
-                    // Offset of cursor from screen center.
-                    let x = cursor.x - w_div_2;
-                    let y = cursor.y - h_div_2;
+                    // Cursor position in camera space.
+                    let fov = FIELD_OF_VIEW.tan();
+                    let cursor = Point::origin()
+                        + Vector::new(x * fov, y * fov, -NEAR_PLANE);
 
-                    // Transform camera position into model coordinates.
-                    let origin = transform
-                        .view_transform()
-                        .inverse()
-                        .transform_point(&Point::origin());
+                    // Transform camera and cursor positions to model space.
+                    let camera_to_model = transform.view_transform().inverse();
+                    let origin =
+                        camera_to_model.transform_point(&Point::origin());
+                    let cursor = camera_to_model.transform_point(&cursor);
 
-                    // For the following computations we need to know, what the
-                    // vector from the camera to the model origin is, in model
-                    // coordinates.
-                    let camera_to_model = Point::origin() - origin;
-
-                    // Furthermore, we need a vector that defines the direction
-                    // of the ray, if we were looking down on the model, along
-                    // the z-axis. We're not always doing that, of course, so
-                    // we'll need to rotate that vector later.
-                    //
-                    // Dividing `y` by `w_div_2` is not a typo. Field of view is
-                    // defined in terms of width, so the height of the screen is
-                    // really not important for this calculation.
-                    let direction_from_above =
-                        Vector::new(x / w_div_2, -y / w_div_2, -1.0);
-
-                    // Okay, so we need to rotate `direction_from_above`, but
-                    // by what angles? Let's figure that out.
-                    //
-                    // As mentioned above, the base we're working from is a
-                    // vector looking down, so (0, 0, -1). We need to calculate
-                    // how much to rotate `direction_from_above`, so it becomes
-                    // relevant to the actual viewing direction.
-                    //
-                    // Let's start by calculating the angle between
-                    // `camera_to_model` and our reference vector in the x-z
-                    // plane.
-                    let rot_x_z =
-                        f64::atan2(camera_to_model.x, -camera_to_model.z);
-
-                    // Now let's do that same for the y-z plane.
-                    let rot_y_z =
-                        f64::atan2(camera_to_model.y, -camera_to_model.z);
-
-                    // Using these angles, we can rotate `direction_from_above`,
-                    // so it becomes relative to `camera_to_model`, not its
-                    // reference vector.
-                    //
-                    // Why do we rotate around positive x axis, but negative y
-                    // axis? Because the `atan2` operations above are defined in
-                    // terms of the x-z and y-z planes, such that z always
-                    // points up, and x and y respectively always point right.
-                    //
-                    // When looking at the x-z plane that way, the y axis is
-                    // pointing away from us. When looking at y-z, the x axis is
-                    // pointing towards us. Hence the difference.
-                    //
-                    // If this doesn't make immediate sense, believe me, neither
-                    // did it to me. I recommend liberal application of the
-                    // right hand rule to sort that out. Maybe grab a partner. I
-                    // had to do it alone, and really could have used another
-                    // right hand (or two).
-                    //
-                    // TASK: So, I'm pretty sure I've figured out what the
-                    //       problem here is.
-                    //
-                    //       Say, we're rotating the model around the x axis.
-                    //       This will, at first, only affect `rot_y_z`, not
-                    //       `rot_x_z`. Until we start looking at the model from
-                    //       below, then `rot_x_z` will be flipped from 0 to PI.
-                    //
-                    //       This is fully expected. It's the correct outcome of
-                    //       the calculations above.
-                    //
-                    //       The problem comes in, when we're applying those
-                    //       angles to `direction_from_above`. Say, we're
-                    //       looking at the model directly from below. Both
-                    //       `rot_x_y` and `rot_x_y` are basically the same
-                    //       value (+PI and -PI).
-                    //
-                    //       But they interfere with each other. Applying one
-                    //       rotation results in the correct `direction`.
-                    //       Applying the second rotation undoes the first one,
-                    //       resulting in a result that is the inverse of what
-                    //       is expected. This happens when looking from the
-                    //       bottom, back, or right.
-                    //
-                    //       Makes total sense to me. Where I'm getting lost, is
-                    //       how to fix it. Maybe there's a better way to
-                    //       combine both rotations, that doesn't have the same
-                    //       problem. Maybe my whole approach with the angles in
-                    //       two planes is not optimal, and there's a far better
-                    //       one (quite likely).
-                    let rot_x_z =
-                        Rotation3::from_axis_angle(&-Vector::y_axis(), rot_x_z);
-                    let rot_y_z =
-                        Rotation3::from_axis_angle(&Vector::x_axis(), rot_y_z);
-                    let direction = rot_x_z.transform_vector(
-                        &rot_y_z.transform_vector(&direction_from_above),
-                    );
+                    // Direction of the ray.
+                    let direction = cursor - origin;
 
                     let origin = bvh::Point3::new(
                         origin.x as f32,
