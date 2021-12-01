@@ -29,14 +29,14 @@ impl Transform {
 
         let transform = projection.to_projective() * self.view_transform();
 
-        NativeTransform::from_matrix(transform.matrix())
+        NativeTransform::from(transform.matrix())
     }
 
     pub fn to_normals_transform(&self) -> NativeTransform {
         let transform =
             self.view_transform().inverse().to_homogeneous().transpose();
 
-        NativeTransform::from_matrix(&transform)
+        NativeTransform::from(&transform)
     }
 
     pub fn view_transform(&self) -> Isometry3<f64> {
@@ -57,10 +57,12 @@ pub struct NativeTransform(pub [f32; 16]);
 
 impl NativeTransform {
     pub fn identity() -> Self {
-        Self::from_matrix(&Matrix4::identity())
+        Self::from(&Matrix4::identity())
     }
+}
 
-    pub fn from_matrix(matrix: &Matrix4<f64>) -> Self {
+impl From<&Matrix4<f64>> for NativeTransform {
+    fn from(matrix: &Matrix4<f64>) -> Self {
         let mut native = [0.0; 16];
         native.copy_from_slice(matrix.data.as_slice());
 
