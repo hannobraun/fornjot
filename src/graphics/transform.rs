@@ -1,5 +1,6 @@
 use std::f64::consts::FRAC_PI_4;
 
+use bytemuck::{Pod, Zeroable};
 use nalgebra::{Isometry3, Perspective3, Rotation, Translation};
 
 #[derive(Debug)]
@@ -31,7 +32,7 @@ impl Transform {
         let mut native = [0.0; 16];
         native.copy_from_slice(transform.matrix().data.as_slice());
 
-        native.map(|val| val as f32)
+        NativeTransform(native.map(|val| val as f32))
     }
 
     pub fn to_normals_transform(&self) -> NativeTransform {
@@ -41,7 +42,7 @@ impl Transform {
         let mut native = [0.0; 16];
         native.copy_from_slice(transform.data.as_slice());
 
-        native.map(|val| val as f32)
+        NativeTransform(native.map(|val| val as f32))
     }
 
     pub fn view_transform(&self) -> Isometry3<f64> {
@@ -56,7 +57,9 @@ impl Transform {
     }
 }
 
-pub type NativeTransform = [f32; 16];
+#[derive(Clone, Copy, Pod, Zeroable)]
+#[repr(transparent)]
+pub struct NativeTransform(pub [f32; 16]);
 
 pub const NEAR_PLANE: f64 = 0.1;
 pub const FAR_PLANE: f64 = 1000.0;
