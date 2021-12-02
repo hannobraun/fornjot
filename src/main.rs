@@ -8,7 +8,6 @@ mod model;
 
 use std::{collections::HashMap, sync::mpsc, time::Instant};
 
-use bvh::ray::Ray;
 use futures::executor::block_on;
 use notify::Watcher as _;
 use tracing::trace;
@@ -256,46 +255,15 @@ fn main() -> anyhow::Result<()> {
                     // Direction of the ray.
                     let direction = cursor - origin;
 
-                    let origin = bvh::Point3::new(
-                        origin.x as f32,
-                        origin.y as f32,
-                        origin.z as f32,
-                    );
-                    let direction = bvh::Vector3::new(
-                        direction.x as f32,
-                        direction.y as f32,
-                        direction.z as f32,
-                    );
-                    let ray = Ray::new(origin, direction);
-
                     for triangle in &triangles.0 {
                         let a = triangle.0[0];
                         let b = triangle.0[1];
                         let c = triangle.0[2];
 
-                        let intersection = ray.intersects_triangle(
-                            &bvh::Point3::new(
-                                a.x as f32, a.y as f32, a.z as f32,
-                            ),
-                            &bvh::Point3::new(
-                                b.x as f32, b.y as f32, b.z as f32,
-                            ),
-                            &bvh::Point3::new(
-                                c.x as f32, c.y as f32, c.z as f32,
-                            ),
-                        );
+                        dbg!((direction, a, b, c));
 
                         // TASK: Compute the point on the model where the cursor
                         //       points.
-                        if intersection.distance.is_finite() {
-                            // TASK: This doesn't show intersections where they
-                            //       should be. Something is buggy.
-                            dbg!((
-                                intersection.distance,
-                                intersection.u,
-                                intersection.v,
-                            ));
-                        }
                     }
                 }
             }
