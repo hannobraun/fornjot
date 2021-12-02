@@ -10,6 +10,7 @@ use std::{collections::HashMap, sync::mpsc, time::Instant};
 
 use futures::executor::block_on;
 use notify::Watcher as _;
+use parry3d_f64::query::Ray;
 use tracing::trace;
 use winit::{
     event::{Event, WindowEvent},
@@ -252,15 +253,17 @@ fn main() -> anyhow::Result<()> {
                         camera_to_model.transform_point(&Point::origin());
                     let cursor = camera_to_model.transform_point(&cursor);
 
-                    // Direction of the ray.
-                    let direction = cursor - origin;
+                    let ray = Ray {
+                        origin,
+                        dir: cursor - origin,
+                    };
 
                     for triangle in &triangles.0 {
                         let a = triangle.0[0];
                         let b = triangle.0[1];
                         let c = triangle.0[2];
 
-                        dbg!((direction, a, b, c));
+                        dbg!((ray, a, b, c));
 
                         // TASK: Compute the point on the model where the cursor
                         //       points.
