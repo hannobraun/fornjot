@@ -37,15 +37,15 @@ impl From<&Vec<Triangle>> for Mesh {
 
             let normal = (b - a).cross(&(c - a)).normalize();
 
-            let v0 = HashVector::from(a);
-            let v1 = HashVector::from(b);
-            let v2 = HashVector::from(c);
+            let a = HashVector::from(a);
+            let b = HashVector::from(b);
+            let c = HashVector::from(c);
 
             let normal = HashVector::from(normal);
 
-            mesh.push((v0, normal));
-            mesh.push((v1, normal));
-            mesh.push((v2, normal));
+            mesh.push((a, normal));
+            mesh.push((b, normal));
+            mesh.push((c, normal));
         }
 
         let vertices = mesh
