@@ -49,8 +49,8 @@ impl Shape for fj::Difference {
         triangles.retain(|triangle| {
             let mut edges_of_b = 0;
 
-            for [v0, v1] in triangle.edges() {
-                if b.contains(&v0) && b.contains(&v1) {
+            for segment in triangle.edges() {
+                if b.contains(&segment.a) && b.contains(&segment.b) {
                     edges_of_b += 1;
                 }
             }

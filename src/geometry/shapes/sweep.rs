@@ -1,12 +1,8 @@
 use nalgebra::vector;
+use parry3d_f64::{math::Isometry, shape::Triangle};
 
 use crate::{
-    geometry::{
-        bounding_volume::Aabb,
-        edges::Edges,
-        faces::{Faces, Triangle},
-        Shape,
-    },
+    geometry::{bounding_volume::Aabb, edges::Edges, faces::Faces, Shape},
     math::Point,
 };
 
@@ -23,13 +19,15 @@ impl Shape for fj::Sweep {
         let original_triangles = self.shape.faces(tolerance);
 
         // Bottom face
-        triangles.extend(original_triangles.0.iter().map(|triangle| {
-            Triangle([triangle.0[0], triangle.0[2], triangle.0[1]])
-        }));
+        triangles.extend(
+            original_triangles.0.iter().map(|triangle| {
+                Triangle::new(triangle.a, triangle.c, triangle.b)
+            }),
+        );
 
         // Top face
         triangles.extend(original_triangles.0.iter().map(|triangle| {
-            triangle.translate(vector![0.0, 0.0, self.length])
+            triangle.transformed(&Isometry::translation(0.0, 0.0, self.length))
         }));
 
         let segments = self.shape.edges().segments(tolerance);

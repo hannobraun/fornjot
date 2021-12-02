@@ -1,39 +1,9 @@
-use crate::math::{Point, Vector};
+use parry3d_f64::shape::Triangle;
+
+use crate::math::Point;
 
 /// The faces of a shape
 pub struct Faces(pub Vec<Triangle>);
-
-/// A triangle
-///
-/// Or more specifically, three points. Currently no validation is done to
-/// ensure those points form an actual triangle.
-#[derive(Clone, Copy, Debug)]
-pub struct Triangle(pub [Point; 3]);
-
-impl Triangle {
-    /// Access the edges of the triangle
-    pub fn edges(&self) -> impl Iterator<Item = [Point; 2]> {
-        let v0 = self.0[0];
-        let v1 = self.0[1];
-        let v2 = self.0[2];
-
-        [[v0, v1], [v1, v2], [v2, v0]].into_iter()
-    }
-
-    /// Translate the triangle
-    ///
-    /// Translate all triangle vertices by the given vector.
-    pub fn translate(self, vector: Vector) -> Self {
-        let vertices = self.0.map(|vertex| vertex + vector);
-        Self(vertices)
-    }
-}
-
-impl From<[Point; 3]> for Triangle {
-    fn from(vertices: [Point; 3]) -> Self {
-        Self(vertices)
-    }
-}
 
 pub fn triangulate(vertices: &[Point]) -> Vec<Triangle> {
     let points: Vec<_> = vertices

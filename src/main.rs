@@ -103,8 +103,8 @@ fn main() -> anyhow::Result<()> {
         let mut mesh_maker = MeshMaker::new();
 
         for triangle in triangles.0 {
-            for vertex in triangle.0 {
-                mesh_maker.push(HashVector::from(&vertex));
+            for vertex in triangle.vertices() {
+                mesh_maker.push(HashVector::from(vertex));
             }
         }
 
@@ -259,9 +259,9 @@ fn main() -> anyhow::Result<()> {
                     };
 
                     for triangle in &triangles.0 {
-                        let a = triangle.0[0];
-                        let b = triangle.0[1];
-                        let c = triangle.0[2];
+                        let a = triangle.a;
+                        let b = triangle.b;
+                        let c = triangle.c;
 
                         dbg!((ray, a, b, c));
 

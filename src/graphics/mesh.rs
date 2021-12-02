@@ -1,9 +1,7 @@
 use bytemuck::{Pod, Zeroable};
+use parry3d_f64::shape::Triangle;
 
-use crate::{
-    geometry::faces::Triangle,
-    mesh::{HashVector, Index, MeshMaker},
-};
+use crate::mesh::{HashVector, Index, MeshMaker};
 
 #[derive(Debug)]
 pub struct Mesh {
@@ -33,13 +31,13 @@ impl From<&Vec<Triangle>> for Mesh {
         let mut mesh = MeshMaker::new();
 
         for triangle in triangles {
-            let [a, b, c] = triangle.0;
+            let [a, b, c] = triangle.vertices();
 
             let normal = (b - a).cross(&(c - a)).normalize();
 
-            let a = HashVector::from(&a);
-            let b = HashVector::from(&b);
-            let c = HashVector::from(&c);
+            let a = HashVector::from(a);
+            let b = HashVector::from(b);
+            let c = HashVector::from(c);
 
             let normal = HashVector::from(&normal);
 
