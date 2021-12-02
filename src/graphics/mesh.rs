@@ -41,7 +41,7 @@ impl From<&Vec<Triangle>> for Mesh {
             let b = HashVector::from(&b);
             let c = HashVector::from(&c);
 
-            let normal = HashVector::from(normal);
+            let normal = HashVector::from(&normal);
 
             mesh.push((a, normal));
             mesh.push((b, normal));
