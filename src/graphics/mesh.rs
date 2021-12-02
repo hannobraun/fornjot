@@ -33,13 +33,13 @@ impl From<&Vec<Triangle>> for Mesh {
         let mut mesh = MeshMaker::new();
 
         for triangle in triangles {
-            let [v0, v1, v2] = triangle.0;
+            let [a, b, c] = triangle.0;
 
-            let normal = (v1 - v0).cross(&(v2 - v0)).normalize();
+            let normal = (b - a).cross(&(c - a)).normalize();
 
-            let v0 = HashVector::from(v0);
-            let v1 = HashVector::from(v1);
-            let v2 = HashVector::from(v2);
+            let v0 = HashVector::from(a);
+            let v1 = HashVector::from(b);
+            let v2 = HashVector::from(c);
 
             let normal = HashVector::from(normal);
 
