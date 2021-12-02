@@ -10,7 +10,10 @@ use std::{collections::HashMap, sync::mpsc, time::Instant};
 
 use futures::executor::block_on;
 use notify::Watcher as _;
-use parry3d_f64::query::Ray;
+use parry3d_f64::{
+    math::Isometry,
+    query::{Ray, RayCast as _},
+};
 use tracing::trace;
 use winit::{
     event::{Event, WindowEvent},
@@ -259,11 +262,16 @@ fn main() -> anyhow::Result<()> {
                     };
 
                     for triangle in &triangles.0 {
-                        let a = triangle.a;
-                        let b = triangle.b;
-                        let c = triangle.c;
-
-                        dbg!((ray, a, b, c));
+                        // TASK: This always returns `None`. Figure out why.
+                        let t = triangle.cast_ray(
+                            &Isometry::identity(),
+                            &ray,
+                            // TASK: This is the maximum time of impact. Come up
+                            //       with a better value.
+                            f64::INFINITY,
+                            true,
+                        );
+                        dbg!(t);
 
                         // TASK: Compute the point on the model where the cursor
                         //       points.
