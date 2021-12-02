@@ -52,8 +52,8 @@ where
 #[derive(Clone, Copy, Eq, Hash, PartialEq)]
 pub struct HashVector(pub [R64; 3]);
 
-impl From<Point> for HashVector {
-    fn from(point: Point) -> Self {
+impl From<&Point> for HashVector {
+    fn from(point: &Point) -> Self {
         Self([R64::from(point.x), R64::from(point.y), R64::from(point.z)])
     }
 }

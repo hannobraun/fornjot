@@ -104,7 +104,7 @@ fn main() -> anyhow::Result<()> {
 
         for triangle in triangles.0 {
             for vertex in triangle.0 {
-                mesh_maker.push(HashVector::from(vertex));
+                mesh_maker.push(HashVector::from(&vertex));
             }
         }
 

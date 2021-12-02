@@ -37,9 +37,9 @@ impl From<&Vec<Triangle>> for Mesh {
 
             let normal = (b - a).cross(&(c - a)).normalize();
 
-            let a = HashVector::from(a);
-            let b = HashVector::from(b);
-            let c = HashVector::from(c);
+            let a = HashVector::from(&a);
+            let b = HashVector::from(&b);
+            let c = HashVector::from(&c);
 
             let normal = HashVector::from(normal);
 
