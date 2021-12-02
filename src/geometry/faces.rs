@@ -20,14 +20,6 @@ impl Triangle {
         [[v0, v1], [v1, v2], [v2, v0]].into_iter()
     }
 
-    /// Invert the triangle
-    ///
-    /// Inverts the order of triangle vertices.
-    pub fn invert(self) -> Self {
-        let [v0, v1, v2] = self.0;
-        Self([v0, v2, v1])
-    }
-
     /// Translate the triangle
     ///
     /// Translate all triangle vertices by the given vector.

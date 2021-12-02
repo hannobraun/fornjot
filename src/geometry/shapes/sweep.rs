@@ -1,7 +1,12 @@
 use nalgebra::vector;
 
 use crate::{
-    geometry::{bounding_volume::Aabb, edges::Edges, faces::Faces, Shape},
+    geometry::{
+        bounding_volume::Aabb,
+        edges::Edges,
+        faces::{Faces, Triangle},
+        Shape,
+    },
     math::Point,
 };
 
@@ -18,12 +23,9 @@ impl Shape for fj::Sweep {
         let original_triangles = self.shape.faces(tolerance);
 
         // Bottom face
-        triangles.extend(
-            original_triangles
-                .0
-                .iter()
-                .map(|triangle| triangle.invert()),
-        );
+        triangles.extend(original_triangles.0.iter().map(|triangle| {
+            Triangle([triangle.0[0], triangle.0[2], triangle.0[1]])
+        }));
 
         // Top face
         triangles.extend(original_triangles.0.iter().map(|triangle| {
