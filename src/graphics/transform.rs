@@ -20,9 +20,11 @@ impl Transform {
     }
 
     pub fn to_native(&self, aspect_ratio: f64) -> NativeTransform {
+        let field_of_view_y = FIELD_OF_VIEW_IN_X / aspect_ratio;
+
         let projection = Perspective3::new(
             aspect_ratio,
-            FIELD_OF_VIEW_IN_X,
+            field_of_view_y,
             NEAR_PLANE,
             FAR_PLANE,
         );
