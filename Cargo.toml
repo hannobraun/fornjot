@@ -24,3 +24,9 @@ winit       = "*"
 
 [dependencies.fj]
 path = "fj"
+
+
+# TASK: Remove this, once a new release of `wgpu_glyph` is out. See this issue
+#       for context: https://github.com/hecrj/wgpu_glyph/issues/81
+[patch.crates-io.wgpu_glyph]
+git = "https://github.com/hecrj/wgpu_glyph.git"
