@@ -261,13 +261,8 @@ fn main() -> anyhow::Result<()> {
                     let mut min_t = None;
 
                     for triangle in &triangles.0 {
-                        let t = triangle.cast_local_ray(
-                            &ray,
-                            // TASK: This is the maximum time of impact. Come up
-                            //       with a better value.
-                            f64::INFINITY,
-                            true,
-                        );
+                        let t =
+                            triangle.cast_local_ray(&ray, f64::INFINITY, true);
 
                         if let Some(t) = t {
                             if t <= min_t.unwrap_or(t) {
