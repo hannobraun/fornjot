@@ -276,8 +276,8 @@ fn main() -> anyhow::Result<()> {
                             dbg!(ray.point_at(t));
                         }
 
-                        // TASK: Compute the point on the model where the cursor
-                        //       points.
+                        // TASK: Compute the point on the model that the cursor
+                        //       points at.
                     }
                 }
             }
