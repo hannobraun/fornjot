@@ -22,7 +22,7 @@ impl Transform {
     pub fn to_native(&self, aspect_ratio: f64) -> NativeTransform {
         let projection = Perspective3::new(
             aspect_ratio,
-            FIELD_OF_VIEW,
+            FIELD_OF_VIEW_IN_X,
             NEAR_PLANE,
             FAR_PLANE,
         );
@@ -72,4 +72,4 @@ impl From<&Matrix4<f64>> for NativeTransform {
 
 pub const NEAR_PLANE: f64 = 0.1;
 pub const FAR_PLANE: f64 = 1000.0;
-pub const FIELD_OF_VIEW: f64 = FRAC_PI_2; // 90 degrees
+pub const FIELD_OF_VIEW_IN_X: f64 = FRAC_PI_2; // 90 degrees

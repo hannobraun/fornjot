@@ -21,7 +21,7 @@ use winit::{
 use crate::{
     args::Args,
     geometry::Shape as _,
-    graphics::{DrawConfig, Renderer, Transform, FIELD_OF_VIEW, NEAR_PLANE},
+    graphics::{DrawConfig, Renderer, Transform, FIELD_OF_VIEW_IN_X, NEAR_PLANE},
     math::{Point, Vector},
     mesh::{HashVector, MeshMaker},
     model::Model,
@@ -156,7 +156,7 @@ fn main() -> anyhow::Result<()> {
         // Having computed those points, figuring out how far the camera needs
         // to be from the model is just a bit of trigonometry.
         let distance_from_model =
-            furthest_point / (FIELD_OF_VIEW as f64 / 2.).atan();
+            furthest_point / (FIELD_OF_VIEW_IN_X as f64 / 2.).atan();
 
         // An finally, the distance from the origin is trivial now.
         highest_point + distance_from_model
@@ -243,7 +243,7 @@ fn main() -> anyhow::Result<()> {
                         -(cursor.y / height as f64 * 2. - 1.) / aspect_ratio;
 
                     // Cursor position in camera space.
-                    let fov = FIELD_OF_VIEW.tan();
+                    let fov = FIELD_OF_VIEW_IN_X.tan();
                     let cursor = Point::origin()
                         + Vector::new(x * fov, y * fov, -NEAR_PLANE);
 
