@@ -263,7 +263,6 @@ fn main() -> anyhow::Result<()> {
                     };
 
                     for triangle in &triangles.0 {
-                        // TASK: This always returns `None`. Figure out why.
                         let t = triangle.cast_local_ray(
                             &ray,
                             // TASK: This is the maximum time of impact. Come up
@@ -272,6 +271,7 @@ fn main() -> anyhow::Result<()> {
                             true,
                         );
 
+                        // TASK: `t` is always `None`. Figure out why.
                         if let Some(t) = t {
                             dbg!(ray.point_at(t));
                         }
