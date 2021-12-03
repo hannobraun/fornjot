@@ -252,15 +252,13 @@ fn main() -> anyhow::Result<()> {
                     let origin =
                         camera_to_model.transform_point(&Point::origin());
                     let cursor = camera_to_model.transform_point(&cursor);
+                    let dir = (cursor - origin).normalize();
 
                     // TASK: Ray direction behaves weirdly, when looking at it
                     //       more closely. It changes a lot when moving the
                     //       cursor near the center of the screen, but barely at
                     //       the edges.
-                    let ray = Ray {
-                        origin,
-                        dir: (cursor - origin).normalize(),
-                    };
+                    let ray = Ray { origin, dir };
 
                     for triangle in &triangles.0 {
                         let t = triangle.cast_local_ray(
