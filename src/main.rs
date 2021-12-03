@@ -282,6 +282,12 @@ fn main() -> anyhow::Result<()> {
                     }
 
                     if let Some(t) = min_t {
+                        // TASK: The detected point is implausible. Even though
+                        //       intersections are only detected near the center
+                        //       of the screen, x and y coordinates of the
+                        //       intersection point are too large.
+                        //
+                        //       There must be a problem with the perspective.
                         let point = ray.point_at(t);
                         dbg!(point);
                     }
