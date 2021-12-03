@@ -1,4 +1,4 @@
-use std::f64::consts::FRAC_PI_4;
+use std::f64::consts::FRAC_PI_2;
 
 use bytemuck::{Pod, Zeroable};
 use nalgebra::{Isometry3, Matrix4, Perspective3, Rotation, Translation};
@@ -72,4 +72,4 @@ impl From<&Matrix4<f64>> for NativeTransform {
 
 pub const NEAR_PLANE: f64 = 0.1;
 pub const FAR_PLANE: f64 = 1000.0;
-pub const FIELD_OF_VIEW: f64 = FRAC_PI_4; // 45 degrees
+pub const FIELD_OF_VIEW: f64 = FRAC_PI_2; // 90 degrees
