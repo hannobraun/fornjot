@@ -269,7 +269,9 @@ fn main() -> anyhow::Result<()> {
                             true,
                         );
 
-                        // TASK: `t` is always `None`. Figure out why.
+                        // TASK: Intersections are only detected at the very
+                        //       center of the screen, even though the triangles
+                        //       cover a much larger area on screen.
                         if let Some(t) = t {
                             let point_on_triangle = ray.point_at(t);
                             dbg!((triangle, point_on_triangle));
