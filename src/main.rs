@@ -272,7 +272,7 @@ fn main() -> anyhow::Result<()> {
                         // TASK: `t` is always `None`. Figure out why.
                         if let Some(t) = t {
                             let point_on_triangle = ray.point_at(t);
-                            dbg!(point_on_triangle);
+                            dbg!((triangle, point_on_triangle));
                         }
 
                         // TASK: Compute the point on the model that the cursor
