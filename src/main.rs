@@ -243,9 +243,9 @@ fn main() -> anyhow::Result<()> {
                         -(cursor.y / height as f64 * 2. - 1.) / aspect_ratio;
 
                     // Cursor position in camera space.
-                    let fov = FIELD_OF_VIEW_IN_X.tan();
+                    let f = (FIELD_OF_VIEW_IN_X / 2.).tan() * NEAR_PLANE;
                     let cursor = Point::origin()
-                        + Vector::new(x * fov, y * fov, -NEAR_PLANE);
+                        + Vector::new(x * f, y * f, -NEAR_PLANE);
 
                     // Transform camera and cursor positions to model space.
                     let camera_to_model = transform.view_transform().inverse();
