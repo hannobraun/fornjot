@@ -260,6 +260,8 @@ fn main() -> anyhow::Result<()> {
                     //       the edges.
                     let ray = Ray { origin, dir };
 
+                    let mut min_t = None;
+
                     for triangle in &triangles.0 {
                         let t = triangle.cast_local_ray(
                             &ray,
@@ -273,12 +275,15 @@ fn main() -> anyhow::Result<()> {
                         //       center of the screen, even though the triangles
                         //       cover a much larger area on screen.
                         if let Some(t) = t {
-                            let point_on_triangle = ray.point_at(t);
-                            dbg!((triangle, point_on_triangle));
+                            if t <= min_t.unwrap_or(t) {
+                                min_t = Some(t);
+                            }
                         }
+                    }
 
-                        // TASK: Compute the point on the model that the cursor
-                        //       points at.
+                    if let Some(t) = min_t {
+                        let point = ray.point_at(t);
+                        dbg!(point);
                     }
                 }
             }
