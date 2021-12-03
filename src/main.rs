@@ -254,10 +254,6 @@ fn main() -> anyhow::Result<()> {
                     let cursor = camera_to_model.transform_point(&cursor);
                     let dir = (cursor - origin).normalize();
 
-                    // TASK: Ray direction behaves weirdly, when looking at it
-                    //       more closely. It changes a lot when moving the
-                    //       cursor near the center of the screen, but barely at
-                    //       the edges.
                     let ray = Ray { origin, dir };
 
                     let mut min_t = None;
@@ -271,9 +267,6 @@ fn main() -> anyhow::Result<()> {
                             true,
                         );
 
-                        // TASK: Intersections are only detected at the very
-                        //       center of the screen, even though the triangles
-                        //       cover a much larger area on screen.
                         if let Some(t) = t {
                             if t <= min_t.unwrap_or(t) {
                                 min_t = Some(t);
@@ -282,12 +275,6 @@ fn main() -> anyhow::Result<()> {
                     }
 
                     if let Some(t) = min_t {
-                        // TASK: The detected point is implausible. Even though
-                        //       intersections are only detected near the center
-                        //       of the screen, x and y coordinates of the
-                        //       intersection point are too large.
-                        //
-                        //       There must be a problem with the perspective.
                         let point = ray.point_at(t);
                         dbg!(point);
                     }
