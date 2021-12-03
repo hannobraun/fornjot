@@ -21,7 +21,9 @@ use winit::{
 use crate::{
     args::Args,
     geometry::Shape as _,
-    graphics::{DrawConfig, Renderer, Transform, FIELD_OF_VIEW_IN_X, NEAR_PLANE},
+    graphics::{
+        DrawConfig, Renderer, Transform, FIELD_OF_VIEW_IN_X, NEAR_PLANE,
+    },
     math::{Point, Vector},
     mesh::{HashVector, MeshMaker},
     model::Model,
