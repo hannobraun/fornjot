@@ -258,7 +258,7 @@ fn main() -> anyhow::Result<()> {
 
                     let ray = Ray {
                         origin,
-                        dir: cursor - origin,
+                        dir: (cursor - origin).normalize(),
                     };
 
                     for triangle in &triangles.0 {
