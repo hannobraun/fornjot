@@ -271,6 +271,8 @@ fn main() -> anyhow::Result<()> {
                         }
                     }
 
+                    // TASK: This still doesn't work quite right. It doesn't
+                    //       detect intersections near the edges of the shape.
                     if let Some(t) = min_t {
                         let point = ray.point_at(t);
                         dbg!(point);
