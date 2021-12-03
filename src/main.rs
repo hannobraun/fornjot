@@ -271,7 +271,10 @@ fn main() -> anyhow::Result<()> {
                             f64::INFINITY,
                             true,
                         );
-                        dbg!(t);
+
+                        if let Some(t) = t {
+                            dbg!(ray.point_at(t));
+                        }
 
                         // TASK: Compute the point on the model where the cursor
                         //       points.
