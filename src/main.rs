@@ -98,12 +98,12 @@ fn main() -> anyhow::Result<()> {
     let aabb = shape.bounding_volume();
 
     let tolerance = aabb.size().min() / 1000.;
-    let mut triangles = shape.faces(tolerance);
+    let mut faces = shape.faces(tolerance);
 
     if let Some(path) = args.export {
         let mut mesh_maker = MeshMaker::new();
 
-        for triangle in triangles.0 {
+        for triangle in faces.0 {
             for vertex in triangle.vertices() {
                 mesh_maker.push(HashVector::from(vertex));
             }
@@ -141,7 +141,7 @@ fn main() -> anyhow::Result<()> {
 
     let mut input_handler = input::Handler::new(previous_time);
     let mut renderer = block_on(Renderer::new(&window))?;
-    renderer.update_geometry((&triangles.0).into());
+    renderer.update_geometry((&faces.0).into());
 
     let mut draw_config = DrawConfig::default();
     let mut camera = Camera::new(&aabb);
@@ -155,8 +155,8 @@ fn main() -> anyhow::Result<()> {
 
         match watcher_rx.try_recv() {
             Ok(shape) => {
-                triangles = shape.faces(tolerance);
-                renderer.update_geometry((&triangles.0).into());
+                faces = shape.faces(tolerance);
+                renderer.update_geometry((&faces.0).into());
             }
             Err(mpsc::TryRecvError::Empty) => {
                 // Nothing to receive from the channel. We don't care.
@@ -200,7 +200,7 @@ fn main() -> anyhow::Result<()> {
 
                 if let Some(cursor) = input_handler.cursor() {
                     if let Some(point) =
-                        camera.focus_point(&window, cursor, &triangles)
+                        camera.focus_point(&window, cursor, &faces)
                     {
                         dbg!(point);
                     }
