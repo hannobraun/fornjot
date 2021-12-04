@@ -87,21 +87,6 @@ impl Camera {
             .inverse_transform_point(&Point::origin())
     }
 
-    pub fn view_transform(&self) -> Transform<f64, TAffine, 3> {
-        // Using a mutable variable cleanly takes care of any type inference
-        // problems that this operation would otherwise have.
-        let mut transform = Transform::identity();
-
-        transform *= Translation::from([
-            self.translation.x,
-            self.translation.y,
-            -self.distance,
-        ]);
-        transform *= self.rotation;
-
-        transform
-    }
-
     /// Compute the point on the model, that the cursor currently points to
     pub fn focus_point(
         &self,
@@ -145,5 +130,20 @@ impl Camera {
         }
 
         min_t.map(|t| ray.point_at(t))
+    }
+
+    pub fn view_transform(&self) -> Transform<f64, TAffine, 3> {
+        // Using a mutable variable cleanly takes care of any type inference
+        // problems that this operation would otherwise have.
+        let mut transform = Transform::identity();
+
+        transform *= Translation::from([
+            self.translation.x,
+            self.translation.y,
+            -self.distance,
+        ]);
+        transform *= self.rotation;
+
+        transform
     }
 }
