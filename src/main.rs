@@ -142,7 +142,7 @@ fn main() -> anyhow::Result<()> {
     let mut previous_time = Instant::now();
 
     let mut input_handler = input::Handler::new(previous_time);
-    let mut renderer = block_on(Renderer::new(&window.0))?;
+    let mut renderer = block_on(Renderer::new(window.inner()))?;
     renderer.update_geometry((&triangles.0).into());
 
     let mut draw_config = DrawConfig::default();
@@ -264,7 +264,7 @@ fn main() -> anyhow::Result<()> {
 
                 input_handler.update(delta_t.as_secs_f64(), now, &mut camera);
 
-                window.0.request_redraw();
+                window.inner().request_redraw();
             }
             Event::RedrawRequested(_) => {
                 match renderer.draw(&camera, &draw_config) {

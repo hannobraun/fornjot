@@ -14,4 +14,8 @@ impl Window {
 
         Self(window)
     }
+
+    pub fn inner(&self) -> &winit::window::Window {
+        &self.0
+    }
 }
