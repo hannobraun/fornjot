@@ -25,7 +25,7 @@ impl Camera {
         }
     }
 
-    pub fn to_native(&self, aspect_ratio: f64) -> NativeTransform {
+    pub fn to_vertex_transform(&self, aspect_ratio: f64) -> NativeTransform {
         let field_of_view_y = FIELD_OF_VIEW_IN_X / aspect_ratio;
 
         let projection = Perspective3::new(

@@ -163,7 +163,7 @@ impl Renderer {
         //       object, not some camera around the object.
 
         let uniforms = Uniforms {
-            transform: camera.to_native(self.aspect_ratio()),
+            transform: camera.to_vertex_transform(self.aspect_ratio()),
             transform_normals: camera.to_normal_transform(),
             ..Uniforms::default()
         };
