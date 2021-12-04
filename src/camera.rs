@@ -82,6 +82,11 @@ impl Camera {
         Self::INITIAL_FIELD_OF_VIEW_IN_X
     }
 
+    pub fn position(&self) -> Point {
+        self.view_transform()
+            .inverse_transform_point(&Point::origin())
+    }
+
     pub fn view_transform(&self) -> Transform<f64, TAffine, 3> {
         // Using a mutable variable cleanly takes care of any type inference
         // problems that this operation would otherwise have.
@@ -122,7 +127,7 @@ impl Camera {
 
         // Transform camera and cursor positions to model space.
         let camera_to_model = self.view_transform().inverse();
-        let origin = camera_to_model.transform_point(&Point::origin());
+        let origin = self.position();
         let cursor = camera_to_model.transform_point(&cursor);
         let dir = (cursor - origin).normalize();
 
