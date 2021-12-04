@@ -6,6 +6,7 @@ mod input;
 mod math;
 mod mesh;
 mod model;
+mod window;
 
 use std::{collections::HashMap, sync::mpsc, time::Instant};
 
@@ -17,7 +18,6 @@ use tracing::trace;
 use winit::{
     event::{Event, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
-    window::WindowBuilder,
 };
 
 use crate::{
@@ -27,6 +27,7 @@ use crate::{
     math::{Point, Vector},
     mesh::{HashVector, MeshMaker},
     model::Model,
+    window::Window,
 };
 
 fn main() -> anyhow::Result<()> {
@@ -136,18 +137,12 @@ fn main() -> anyhow::Result<()> {
     }
 
     let event_loop = EventLoop::new();
-    let window = WindowBuilder::new()
-        .with_title("Fornjot")
-        .with_maximized(true)
-        .with_decorations(true)
-        .with_transparent(false)
-        .build(&event_loop)
-        .unwrap();
+    let window = Window::new(&event_loop);
 
     let mut previous_time = Instant::now();
 
     let mut input_handler = input::Handler::new(previous_time);
-    let mut renderer = block_on(Renderer::new(&window))?;
+    let mut renderer = block_on(Renderer::new(&window.0))?;
     renderer.update_geometry((&triangles.0).into());
 
     let mut draw_config = DrawConfig::default();
@@ -269,7 +264,7 @@ fn main() -> anyhow::Result<()> {
 
                 input_handler.update(delta_t.as_secs_f64(), now, &mut camera);
 
-                window.request_redraw();
+                window.0.request_redraw();
             }
             Event::RedrawRequested(_) => {
                 match renderer.draw(&camera, &draw_config) {
