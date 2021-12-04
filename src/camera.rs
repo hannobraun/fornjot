@@ -102,7 +102,7 @@ impl Camera {
         &self,
         window: &Window,
         cursor: PhysicalPosition<f64>,
-        triangles: &Faces,
+        faces: &Faces,
     ) -> Option<Point> {
         let width = window.width() as f64;
         let height = window.height() as f64;
@@ -128,7 +128,7 @@ impl Camera {
 
         let mut min_t = None;
 
-        for triangle in &triangles.0 {
+        for triangle in &faces.0 {
             let t = triangle.cast_local_ray(&ray, f64::INFINITY, true);
 
             if let Some(t) = t {
