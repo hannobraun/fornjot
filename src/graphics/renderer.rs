@@ -164,7 +164,7 @@ impl Renderer {
 
         let uniforms = Uniforms {
             transform: camera.to_native(self.aspect_ratio()),
-            transform_normals: camera.to_normals_transform(),
+            transform_normals: camera.to_normal_transform(),
             ..Uniforms::default()
         };
 

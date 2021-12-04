@@ -40,7 +40,7 @@ impl Camera {
         NativeTransform::from(transform.matrix())
     }
 
-    pub fn to_normals_transform(&self) -> NativeTransform {
+    pub fn to_normal_transform(&self) -> NativeTransform {
         let transform =
             self.view_transform().inverse().to_homogeneous().transpose();
 
