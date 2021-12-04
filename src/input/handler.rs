@@ -125,7 +125,7 @@ impl Handler {
                 self.movement.start();
             }
             (MouseButton::Right, ElementState::Released) => {
-                self.movement.started = false;
+                self.movement.stop();
             }
             _ => {}
         }

@@ -10,4 +10,8 @@ impl Movement {
     pub fn start(&mut self) {
         self.started = true;
     }
+
+    pub fn stop(&mut self) {
+        self.started = false;
+    }
 }
