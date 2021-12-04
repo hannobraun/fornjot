@@ -45,17 +45,17 @@ impl Camera {
                 [aabb.min.x.abs(), aabb.max.x, aabb.min.y.abs(), aabb.max.y]
                     .into_iter()
                     .reduce(|a, b| f64::max(a, b))
-                    // `reduce` can only return `None`, if there are no items in the
-                    // iterator. And since we're creating an array full of items
-                    // above, we know this can't panic.
+                    // `reduce` can only return `None`, if there are no items in
+                    // the iterator. And since we're creating an array full of
+                    // items above, we know this can't panic.
                     .unwrap();
 
-            // The actual furthest point is not far enough. We don't want the model
-            // to fill the whole screen.
+            // The actual furthest point is not far enough. We don't want the
+            // model to fill the whole screen.
             let furthest_point = furthest_point * 2.;
 
-            // Having computed those points, figuring out how far the camera needs
-            // to be from the model is just a bit of trigonometry.
+            // Having computed those points, figuring out how far the camera
+            // needs to be from the model is just a bit of trigonometry.
             let distance_from_model =
                 furthest_point / (Self::INITIAL_FIELD_OF_VIEW_IN_X / 2.).atan();
 
