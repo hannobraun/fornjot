@@ -12,7 +12,7 @@ use winit::{
     },
 };
 
-use crate::graphics::Transform;
+use crate::graphics::Camera;
 
 use self::{rotation::Rotation, zoom::Zoom};
 
@@ -43,7 +43,7 @@ impl Handler {
         &mut self,
         input: KeyboardInput,
         actions: &mut Actions,
-        transform: &mut Transform,
+        transform: &mut Camera,
     ) {
         if let KeyboardInput {
             state: ElementState::Pressed,
@@ -80,7 +80,7 @@ impl Handler {
     pub fn handle_cursor_moved(
         &mut self,
         position: PhysicalPosition<f64>,
-        transform: &mut Transform,
+        transform: &mut Camera,
     ) {
         if let Some(previous) = self.cursor {
             let diff_x = position.x - previous.x;
@@ -170,7 +170,7 @@ impl Handler {
         &mut self,
         delta_t: f64,
         now: Instant,
-        transform: &mut Transform,
+        transform: &mut Camera,
     ) {
         self.zoom.discard_old_events(now);
         self.zoom.update_speed(now, delta_t);

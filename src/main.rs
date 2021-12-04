@@ -21,9 +21,7 @@ use winit::{
 use crate::{
     args::Args,
     geometry::Shape as _,
-    graphics::{
-        DrawConfig, Renderer, Transform, FIELD_OF_VIEW_IN_X, NEAR_PLANE,
-    },
+    graphics::{Camera, DrawConfig, Renderer, FIELD_OF_VIEW_IN_X, NEAR_PLANE},
     math::{Point, Vector},
     mesh::{HashVector, MeshMaker},
     model::Model,
@@ -180,7 +178,7 @@ fn main() -> anyhow::Result<()> {
     renderer.update_geometry((&triangles.0).into());
 
     let mut draw_config = DrawConfig::default();
-    let mut transform = Transform::new(initial_distance);
+    let mut transform = Camera::new(initial_distance);
 
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);

@@ -4,13 +4,13 @@ use bytemuck::{Pod, Zeroable};
 use nalgebra::{Matrix4, Perspective3, Rotation, TAffine, Translation};
 
 #[derive(Debug)]
-pub struct Transform {
+pub struct Camera {
     pub rotation: Rotation<f64, 3>,
     pub translation: Translation<f64, 2>,
     pub distance: f64,
 }
 
-impl Transform {
+impl Camera {
     pub fn new(initial_distance: f64) -> Self {
         Self {
             rotation: Rotation::identity(),

@@ -9,7 +9,7 @@ use winit::{dpi::PhysicalSize, window::Window};
 use super::{
     config_ui::ConfigUi, draw_config::DrawConfig, drawables::Drawables,
     geometries::Geometries, mesh::Mesh, pipelines::Pipelines,
-    transform::Transform, uniforms::Uniforms, COLOR_FORMAT, DEPTH_FORMAT,
+    transform::Camera, uniforms::Uniforms, COLOR_FORMAT, DEPTH_FORMAT,
 };
 
 #[derive(Debug)]
@@ -155,7 +155,7 @@ impl Renderer {
 
     pub fn draw(
         &mut self,
-        transform: &Transform,
+        transform: &Camera,
         config: &DrawConfig,
     ) -> Result<(), DrawError> {
         // TASK: Experiment with displaying a background. Some kind of far-away
