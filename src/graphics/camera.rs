@@ -1,5 +1,4 @@
 // TASK: Rename `graphics::camera` to `graphics::transform`.
-// TASK: Rename `NativeTransform` to `Transform`.
 
 use std::f64::consts::FRAC_PI_2;
 
@@ -10,9 +9,9 @@ use crate::camera::Camera;
 
 #[derive(Clone, Copy, Pod, Zeroable)]
 #[repr(transparent)]
-pub struct NativeTransform(pub [f32; 16]);
+pub struct Transform(pub [f32; 16]);
 
-impl NativeTransform {
+impl Transform {
     pub fn identity() -> Self {
         Self::from(&Matrix4::identity())
     }
@@ -50,7 +49,7 @@ impl NativeTransform {
     }
 }
 
-impl From<&Matrix4<f64>> for NativeTransform {
+impl From<&Matrix4<f64>> for Transform {
     fn from(matrix: &Matrix4<f64>) -> Self {
         let mut native = [0.0; 16];
         native.copy_from_slice(matrix.data.as_slice());

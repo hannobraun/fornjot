@@ -9,7 +9,7 @@ use winit::{dpi::PhysicalSize, window::Window};
 use crate::camera::Camera;
 
 use super::{
-    camera::NativeTransform, config_ui::ConfigUi, draw_config::DrawConfig,
+    camera::Transform, config_ui::ConfigUi, draw_config::DrawConfig,
     drawables::Drawables, geometries::Geometries, mesh::Mesh,
     pipelines::Pipelines, uniforms::Uniforms, COLOR_FORMAT, DEPTH_FORMAT,
 };
@@ -165,11 +165,8 @@ impl Renderer {
         //       object, not some camera around the object.
 
         let uniforms = Uniforms {
-            transform: NativeTransform::for_vertices(
-                camera,
-                self.aspect_ratio(),
-            ),
-            transform_normals: NativeTransform::for_normals(camera),
+            transform: Transform::for_vertices(camera, self.aspect_ratio()),
+            transform_normals: Transform::for_normals(camera),
             ..Uniforms::default()
         };
 
