@@ -4,9 +4,9 @@ use thiserror::Error;
 use tracing::debug;
 use wgpu::util::DeviceExt as _;
 use wgpu_glyph::ab_glyph::InvalidFont;
-use winit::{dpi::PhysicalSize, window::Window};
+use winit::dpi::PhysicalSize;
 
-use crate::camera::Camera;
+use crate::{camera::Camera, window::Window};
 
 use super::{
     config_ui::ConfigUi, draw_config::DrawConfig, drawables::Drawables,
@@ -37,7 +37,7 @@ impl Renderer {
         let instance = wgpu::Instance::new(wgpu::Backends::VULKAN);
 
         // This is sound, as `window` is an object to create a surface upon.
-        let surface = unsafe { instance.create_surface(window) };
+        let surface = unsafe { instance.create_surface(window.inner()) };
 
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptions {
@@ -66,7 +66,7 @@ impl Renderer {
             )
             .await?;
 
-        let size = window.inner_size();
+        let size = window.inner().inner_size();
 
         let surface_config = wgpu::SurfaceConfiguration {
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
