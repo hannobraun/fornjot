@@ -40,10 +40,10 @@ impl Movement {
             //       normal is parallel to the camera's viewing direction).
             let f = 0.2;
 
-            let x_trans = diff_x * f;
-            let y_trans = -diff_y * f;
+            let trans_x = diff_x * f;
+            let trans_y = -diff_y * f;
 
-            let translation = Translation2::new(x_trans, y_trans);
+            let translation = Translation2::new(trans_x, trans_y);
 
             camera.translation = translation * camera.translation;
         }
