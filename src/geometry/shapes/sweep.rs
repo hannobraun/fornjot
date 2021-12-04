@@ -54,7 +54,7 @@ impl Shape for fj::Sweep {
     }
 
     fn vertices(&self) -> Vec<Point> {
-        // TASK Implement.
+        // TASK: Implement.
         todo!()
     }
 }
