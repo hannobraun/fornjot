@@ -12,7 +12,7 @@ use winit::{
     },
 };
 
-use crate::{camera::Camera, geometry::faces::Faces, window::Window};
+use crate::{camera::Camera, math::Point};
 
 use self::{rotation::Rotation, zoom::Zoom};
 
@@ -33,6 +33,10 @@ impl Handler {
             rotation: Rotation::new(),
             zoom: Zoom::new(now),
         }
+    }
+
+    pub fn cursor(&self) -> Option<PhysicalPosition<f64>> {
+        self.cursor
     }
 
     pub fn handle_keyboard_input(
@@ -60,9 +64,8 @@ impl Handler {
     pub fn handle_cursor_moved(
         &mut self,
         cursor: PhysicalPosition<f64>,
+        focus_point: Option<Point>,
         camera: &mut Camera,
-        window: &Window,
-        faces: &Faces,
     ) {
         if let Some(previous) = self.cursor {
             let diff_x = cursor.x - previous.x;
@@ -70,8 +73,6 @@ impl Handler {
 
             // TASK: Use the focus point from the beginning of the rotation, not
             //       the current one.
-            let focus_point = camera.focus_point(window, Some(cursor), faces);
-
             if let Some(focus_point) = focus_point {
                 let f = 0.005;
 
