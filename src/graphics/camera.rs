@@ -25,6 +25,10 @@ impl Camera {
         }
     }
 
+    /// Compute transform used for vertices
+    ///
+    /// This method is only relevant for the graphics code. The returned
+    /// transform is used for transforming vertices on the GPU.
     pub fn to_vertex_transform(&self, aspect_ratio: f64) -> NativeTransform {
         let field_of_view_y = FIELD_OF_VIEW_IN_X / aspect_ratio;
 
@@ -40,6 +44,10 @@ impl Camera {
         NativeTransform::from(transform.matrix())
     }
 
+    /// Compute transform used for normals
+    ///
+    /// This method is only relevant for the graphics code. The returned
+    /// transform is used for transforming normals on the GPU.
     pub fn to_normal_transform(&self) -> NativeTransform {
         let transform =
             self.view_transform().inverse().to_homogeneous().transpose();
