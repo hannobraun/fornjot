@@ -51,7 +51,7 @@ impl Handler {
             ..
         } = input
         {
-            const ROT: f64 = FRAC_PI_6;
+            const ROT_ANGLE: f64 = FRAC_PI_6;
 
             match virtual_key_code {
                 VirtualKeyCode::Escape => actions.exit = true,
@@ -59,10 +59,18 @@ impl Handler {
                 VirtualKeyCode::Key1 => actions.toggle_model = true,
                 VirtualKeyCode::Key2 => actions.toggle_mesh = true,
 
-                VirtualKeyCode::Left => Rotation.apply(0.0, -ROT, transform),
-                VirtualKeyCode::Right => Rotation.apply(0.0, ROT, transform),
-                VirtualKeyCode::Up => Rotation.apply(-ROT, 0.0, transform),
-                VirtualKeyCode::Down => Rotation.apply(ROT, 0.0, transform),
+                VirtualKeyCode::Left => {
+                    Rotation.apply(0.0, -ROT_ANGLE, transform)
+                }
+                VirtualKeyCode::Right => {
+                    Rotation.apply(0.0, ROT_ANGLE, transform)
+                }
+                VirtualKeyCode::Up => {
+                    Rotation.apply(-ROT_ANGLE, 0.0, transform)
+                }
+                VirtualKeyCode::Down => {
+                    Rotation.apply(ROT_ANGLE, 0.0, transform)
+                }
 
                 _ => (),
             }
