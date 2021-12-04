@@ -1,6 +1,6 @@
 use winit::{event_loop::EventLoop, window::WindowBuilder};
 
-pub struct Window(pub winit::window::Window);
+pub struct Window(winit::window::Window);
 
 impl Window {
     pub fn new(event_loop: &EventLoop<()>) -> Self {
