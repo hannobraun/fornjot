@@ -16,7 +16,9 @@
 use std::f64::consts::FRAC_PI_2;
 
 use bytemuck::{Pod, Zeroable};
-use nalgebra::{Matrix4, Perspective3, Rotation, TAffine, Translation};
+use nalgebra::{
+    Matrix4, Perspective3, Rotation, TAffine, Transform, Translation,
+};
 
 /// The camera abstraction
 ///
@@ -70,10 +72,10 @@ impl Camera {
         NativeTransform::from(&transform)
     }
 
-    pub fn view_transform(&self) -> nalgebra::Transform<f64, TAffine, 3> {
+    pub fn view_transform(&self) -> Transform<f64, TAffine, 3> {
         // Using a mutable variable cleanly takes care of any type inference
         // problems that this operation would otherwise have.
-        let mut transform = nalgebra::Transform::identity();
+        let mut transform = Transform::identity();
 
         transform *= Translation::from([
             self.translation.x,
