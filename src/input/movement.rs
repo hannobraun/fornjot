@@ -1,51 +1,57 @@
-use nalgebra::Translation2;
+use nalgebra::{distance, Translation2};
+use winit::dpi::PhysicalPosition;
 
-use crate::{camera::Camera, math::Point};
+use crate::{camera::Camera, math::Point, window::Window};
 
 pub struct Movement {
     focus_point: Option<Point>,
+    cursor: Option<PhysicalPosition<f64>>,
 }
 
 impl Movement {
     pub fn new() -> Self {
-        Self { focus_point: None }
+        Self {
+            focus_point: None,
+            cursor: None,
+        }
     }
 
-    pub fn start(&mut self, focus_point: Option<Point>) {
+    pub fn start(
+        &mut self,
+        focus_point: Option<Point>,
+        cursor: Option<PhysicalPosition<f64>>,
+    ) {
         self.focus_point = focus_point;
+        self.cursor = cursor;
     }
 
     pub fn stop(&mut self) {
         self.focus_point = None;
     }
 
-    pub fn apply(&mut self, diff_x: f64, diff_y: f64, camera: &mut Camera) {
-        if let Some(_) = self.focus_point {
-            // TASK: Moving feels good, if you're dragging the model exactly
-            //       where your mouse goes. It feels weird, if the mouse cursor
-            //       moves faster or slower than the model you're moving.
-            //
-            //       The following factor achieves this good-feeling move for
-            //       relatively small models at the default distance between
-            //       camera and model origin. It breaks down when moving the
-            //       camera closer or away from the model, which is the far more
-            //       common case.
-            //
-            //       It would be nicer to have a zoom factor that depends on the
-            //       distance between camera and model origin, or even the
-            //       distance between the camera and the part of the model the
-            //       mouse is currently pointing at (or more precisely, the
-            //       distance between the camera and a plane that touches the
-            //       surface of the model where the mouse is pointing, and whose
-            //       normal is parallel to the camera's viewing direction).
-            let f = 0.2;
+    pub fn apply(
+        &mut self,
+        cursor: Option<PhysicalPosition<f64>>,
+        camera: &mut Camera,
+        window: &Window,
+    ) {
+        if let (Some(previous), Some(cursor)) = (self.cursor, cursor) {
+            let previous = camera.cursor_to_model_space(previous, window);
+            let cursor = camera.cursor_to_model_space(cursor, window);
 
-            let trans_x = diff_x * f;
-            let trans_y = -diff_y * f;
+            if let Some(focus_point) = self.focus_point {
+                let d1 = distance(&camera.position(), &cursor);
+                let d2 = distance(&camera.position(), &focus_point);
 
-            let translation = Translation2::new(trans_x, trans_y);
+                let f = d2 / d1;
 
-            camera.translation = translation * camera.translation;
+                let diff = (cursor - previous) * f;
+                let translation = Translation2::new(diff.x, diff.y);
+
+                camera.translation = translation * camera.translation;
+            }
         }
+
+        self.cursor = cursor;
     }
 }

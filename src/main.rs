@@ -192,7 +192,11 @@ fn main() -> anyhow::Result<()> {
                 event: WindowEvent::CursorMoved { position, .. },
                 ..
             } => {
-                input_handler.handle_cursor_moved(position, &mut camera);
+                input_handler.handle_cursor_moved(
+                    position,
+                    &mut camera,
+                    &window,
+                );
             }
             Event::WindowEvent {
                 event: WindowEvent::MouseInput { state, button, .. },

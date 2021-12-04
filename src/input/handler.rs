@@ -8,7 +8,7 @@ use winit::{
     },
 };
 
-use crate::{camera::Camera, math::Point};
+use crate::{camera::Camera, math::Point, window::Window};
 
 use super::{movement::Movement, rotation::Rotation, zoom::Zoom};
 
@@ -61,12 +61,13 @@ impl Handler {
         &mut self,
         cursor: PhysicalPosition<f64>,
         camera: &mut Camera,
+        window: &Window,
     ) {
         if let Some(previous) = self.cursor {
             let diff_x = cursor.x - previous.x;
             let diff_y = cursor.y - previous.y;
 
-            self.movement.apply(diff_x, diff_y, camera);
+            self.movement.apply(self.cursor, camera, window);
             self.rotation.apply(diff_x, diff_y, camera);
         }
 
@@ -87,7 +88,7 @@ impl Handler {
                 self.rotation.stop();
             }
             (MouseButton::Right, ElementState::Pressed) => {
-                self.movement.start(focus_point);
+                self.movement.start(focus_point, self.cursor);
             }
             (MouseButton::Right, ElementState::Released) => {
                 self.movement.stop();
