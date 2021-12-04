@@ -202,14 +202,6 @@ fn main() -> anyhow::Result<()> {
                     &window,
                     &faces,
                 );
-
-                if let Some(cursor) = input_handler.cursor() {
-                    if let Some(point) =
-                        camera.focus_point(&window, cursor, &faces)
-                    {
-                        dbg!(point);
-                    }
-                }
             }
             Event::WindowEvent {
                 event: WindowEvent::MouseInput { state, button, .. },

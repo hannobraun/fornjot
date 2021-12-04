@@ -35,10 +35,6 @@ impl Handler {
         }
     }
 
-    pub fn cursor(&self) -> Option<PhysicalPosition<f64>> {
-        self.cursor
-    }
-
     pub fn handle_keyboard_input(
         &mut self,
         input: KeyboardInput,
