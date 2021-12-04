@@ -1,6 +1,8 @@
+use std::f64::consts::FRAC_PI_2;
+
 use nalgebra::{TAffine, Transform, Translation};
 
-use crate::{geometry::bounding_volume::Aabb, graphics::FIELD_OF_VIEW_IN_X};
+use crate::geometry::bounding_volume::Aabb;
 
 /// The camera abstraction
 ///
@@ -23,6 +25,7 @@ pub struct Camera {
 impl Camera {
     const INITIAL_NEAR_PLANE: f64 = 0.1;
     const INITIAL_FAR_PLANE: f64 = 1000.0;
+    const INITIAL_FIELD_OF_VIEW_IN_X: f64 = FRAC_PI_2; // 90 degrees
 
     pub fn new(aabb: &Aabb) -> Self {
         let initial_distance = {
@@ -48,7 +51,7 @@ impl Camera {
             // Having computed those points, figuring out how far the camera needs
             // to be from the model is just a bit of trigonometry.
             let distance_from_model =
-                furthest_point / (FIELD_OF_VIEW_IN_X / 2.).atan();
+                furthest_point / (Self::INITIAL_FIELD_OF_VIEW_IN_X / 2.).atan();
 
             // An finally, the distance from the origin is trivial now.
             highest_point + distance_from_model
@@ -67,6 +70,10 @@ impl Camera {
 
     pub fn far_plane(&self) -> f64 {
         Self::INITIAL_FAR_PLANE
+    }
+
+    pub fn field_of_view_in_x(&self) -> f64 {
+        Self::INITIAL_FIELD_OF_VIEW_IN_X
     }
 
     pub fn view_transform(&self) -> Transform<f64, TAffine, 3> {

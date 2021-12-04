@@ -23,7 +23,7 @@ use winit::{
 use crate::{
     args::Args,
     geometry::Shape as _,
-    graphics::{DrawConfig, Renderer, FIELD_OF_VIEW_IN_X},
+    graphics::{DrawConfig, Renderer},
     math::{Point, Vector},
     mesh::{HashVector, MeshMaker},
     model::Model,
@@ -216,8 +216,8 @@ fn main() -> anyhow::Result<()> {
                         -(cursor.y / height as f64 * 2. - 1.) / aspect_ratio;
 
                     // Cursor position in camera space.
-                    let f =
-                        (FIELD_OF_VIEW_IN_X / 2.).tan() * camera.near_plane();
+                    let f = (camera.field_of_view_in_x() / 2.).tan()
+                        * camera.near_plane();
                     let cursor = Point::origin()
                         + Vector::new(x * f, y * f, -camera.near_plane());
 

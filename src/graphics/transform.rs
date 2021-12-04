@@ -1,5 +1,3 @@
-use std::f64::consts::FRAC_PI_2;
-
 use bytemuck::{Pod, Zeroable};
 use nalgebra::{Matrix4, Perspective3};
 
@@ -18,7 +16,7 @@ impl Transform {
     ///
     /// The returned transform is used for transforming vertices on the GPU.
     pub fn for_vertices(camera: &Camera, aspect_ratio: f64) -> Self {
-        let field_of_view_y = FIELD_OF_VIEW_IN_X / aspect_ratio;
+        let field_of_view_y = camera.field_of_view_in_x() / aspect_ratio;
 
         let projection = Perspective3::new(
             aspect_ratio,
@@ -55,5 +53,3 @@ impl From<&Matrix4<f64>> for Transform {
         Self(native.map(|val| val as f32))
     }
 }
-
-pub const FIELD_OF_VIEW_IN_X: f64 = FRAC_PI_2; // 90 degrees
