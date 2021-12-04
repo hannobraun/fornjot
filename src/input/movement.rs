@@ -19,7 +19,7 @@ impl Movement {
         self.focus_point = None;
     }
 
-    pub fn apply(&self, diff_x: f64, diff_y: f64, camera: &mut Camera) {
+    pub fn apply(&mut self, diff_x: f64, diff_y: f64, camera: &mut Camera) {
         if let Some(_) = self.focus_point {
             // TASK: Moving feels good, if you're dragging the model exactly
             //       where your mouse goes. It feels weird, if the mouse cursor
