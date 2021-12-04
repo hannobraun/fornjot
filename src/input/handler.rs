@@ -11,12 +11,12 @@ use winit::{
 
 use crate::{camera::Camera, math::Point};
 
-use super::{rotation::Rotation, zoom::Zoom};
+use super::{movement::Movement, rotation::Rotation, zoom::Zoom};
 
 pub struct Handler {
     cursor: Option<PhysicalPosition<f64>>,
-    right_mouse_button: bool,
 
+    movement: Movement,
     rotation: Rotation,
     zoom: Zoom,
 }
@@ -25,8 +25,8 @@ impl Handler {
     pub fn new(now: Instant) -> Self {
         Self {
             cursor: None,
-            right_mouse_button: false,
 
+            movement: Movement::new(),
             rotation: Rotation::new(),
             zoom: Zoom::new(now),
         }
@@ -74,7 +74,7 @@ impl Handler {
 
             self.rotation.apply(angle_x, angle_y, camera);
 
-            if self.right_mouse_button {
+            if self.movement.started {
                 // TASK: Moving feels good, if you're dragging the model exactly
                 //       where your mouse goes. It feels weird, if the mouse
                 //       cursor moves faster or slower than the model you're
@@ -122,10 +122,10 @@ impl Handler {
                 self.rotation.stop();
             }
             (MouseButton::Right, ElementState::Pressed) => {
-                self.right_mouse_button = true;
+                self.movement.started = true;
             }
             (MouseButton::Right, ElementState::Released) => {
-                self.right_mouse_button = false;
+                self.movement.started = false;
             }
             _ => {}
         }
