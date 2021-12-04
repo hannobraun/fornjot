@@ -45,17 +45,6 @@ impl Camera {
         }
     }
 
-    /// Compute transform used for normals
-    ///
-    /// This method is only relevant for the graphics code. The returned
-    /// transform is used for transforming normals on the GPU.
-    pub fn to_normal_transform(&self) -> NativeTransform {
-        let transform =
-            self.view_transform().inverse().to_homogeneous().transpose();
-
-        NativeTransform::from(&transform)
-    }
-
     pub fn view_transform(&self) -> Transform<f64, TAffine, 3> {
         // Using a mutable variable cleanly takes care of any type inference
         // problems that this operation would otherwise have.
@@ -97,6 +86,20 @@ impl NativeTransform {
         let transform = projection.to_projective() * camera.view_transform();
 
         Self::from(transform.matrix())
+    }
+
+    /// Compute transform used for normals
+    ///
+    /// This method is only relevant for the graphics code. The returned
+    /// transform is used for transforming normals on the GPU.
+    pub fn for_normals(camera: &Camera) -> Self {
+        let transform = camera
+            .view_transform()
+            .inverse()
+            .to_homogeneous()
+            .transpose();
+
+        Self::from(&transform)
     }
 }
 

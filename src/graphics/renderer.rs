@@ -173,7 +173,7 @@ impl Renderer {
                 camera,
                 self.aspect_ratio(),
             ),
-            transform_normals: camera.to_normal_transform(),
+            transform_normals: NativeTransform::for_normals(camera),
             ..Uniforms::default()
         };
 
