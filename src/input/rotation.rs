@@ -6,7 +6,7 @@ use crate::{
 };
 
 pub struct Rotation {
-    pub started: bool,
+    started: bool,
 }
 
 impl Rotation {
