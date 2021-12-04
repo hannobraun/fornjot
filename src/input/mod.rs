@@ -43,7 +43,7 @@ impl Handler {
         &mut self,
         input: KeyboardInput,
         actions: &mut Actions,
-        transform: &mut Camera,
+        camera: &mut Camera,
     ) {
         if let KeyboardInput {
             state: ElementState::Pressed,
@@ -59,18 +59,10 @@ impl Handler {
                 VirtualKeyCode::Key1 => actions.toggle_model = true,
                 VirtualKeyCode::Key2 => actions.toggle_mesh = true,
 
-                VirtualKeyCode::Left => {
-                    Rotation.apply(0.0, -ROT_ANGLE, transform)
-                }
-                VirtualKeyCode::Right => {
-                    Rotation.apply(0.0, ROT_ANGLE, transform)
-                }
-                VirtualKeyCode::Up => {
-                    Rotation.apply(-ROT_ANGLE, 0.0, transform)
-                }
-                VirtualKeyCode::Down => {
-                    Rotation.apply(ROT_ANGLE, 0.0, transform)
-                }
+                VirtualKeyCode::Left => Rotation.apply(0.0, -ROT_ANGLE, camera),
+                VirtualKeyCode::Right => Rotation.apply(0.0, ROT_ANGLE, camera),
+                VirtualKeyCode::Up => Rotation.apply(-ROT_ANGLE, 0.0, camera),
+                VirtualKeyCode::Down => Rotation.apply(ROT_ANGLE, 0.0, camera),
 
                 _ => (),
             }
