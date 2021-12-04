@@ -45,25 +45,6 @@ impl Camera {
         }
     }
 
-    /// Compute transform used for vertices
-    ///
-    /// This method is only relevant for the graphics code. The returned
-    /// transform is used for transforming vertices on the GPU.
-    pub fn to_vertex_transform(&self, aspect_ratio: f64) -> NativeTransform {
-        let field_of_view_y = FIELD_OF_VIEW_IN_X / aspect_ratio;
-
-        let projection = Perspective3::new(
-            aspect_ratio,
-            field_of_view_y,
-            NEAR_PLANE,
-            FAR_PLANE,
-        );
-
-        let transform = projection.to_projective() * self.view_transform();
-
-        NativeTransform::from(transform.matrix())
-    }
-
     /// Compute transform used for normals
     ///
     /// This method is only relevant for the graphics code. The returned
@@ -98,6 +79,24 @@ pub struct NativeTransform(pub [f32; 16]);
 impl NativeTransform {
     pub fn identity() -> Self {
         Self::from(&Matrix4::identity())
+    }
+
+    /// Compute transform used for vertices
+    ///
+    /// The returned transform is used for transforming vertices on the GPU.
+    pub fn for_vertices(camera: &Camera, aspect_ratio: f64) -> Self {
+        let field_of_view_y = FIELD_OF_VIEW_IN_X / aspect_ratio;
+
+        let projection = Perspective3::new(
+            aspect_ratio,
+            field_of_view_y,
+            NEAR_PLANE,
+            FAR_PLANE,
+        );
+
+        let transform = projection.to_projective() * camera.view_transform();
+
+        Self::from(transform.matrix())
     }
 }
 

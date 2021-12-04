@@ -7,9 +7,15 @@ use wgpu_glyph::ab_glyph::InvalidFont;
 use winit::{dpi::PhysicalSize, window::Window};
 
 use super::{
-    camera::Camera, config_ui::ConfigUi, draw_config::DrawConfig,
-    drawables::Drawables, geometries::Geometries, mesh::Mesh,
-    pipelines::Pipelines, uniforms::Uniforms, COLOR_FORMAT, DEPTH_FORMAT,
+    camera::{Camera, NativeTransform},
+    config_ui::ConfigUi,
+    draw_config::DrawConfig,
+    drawables::Drawables,
+    geometries::Geometries,
+    mesh::Mesh,
+    pipelines::Pipelines,
+    uniforms::Uniforms,
+    COLOR_FORMAT, DEPTH_FORMAT,
 };
 
 #[derive(Debug)]
@@ -163,7 +169,10 @@ impl Renderer {
         //       object, not some camera around the object.
 
         let uniforms = Uniforms {
-            transform: camera.to_vertex_transform(self.aspect_ratio()),
+            transform: NativeTransform::for_vertices(
+                camera,
+                self.aspect_ratio(),
+            ),
             transform_normals: camera.to_normal_transform(),
             ..Uniforms::default()
         };
