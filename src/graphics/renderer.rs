@@ -162,8 +162,10 @@ impl Renderer {
         //       walls. This could help illustrate that the input moves the
         //       object, not some camera around the object.
 
+        let aspect_ratio = self.surface_config.width as f64
+            / self.surface_config.height as f64;
         let uniforms = Uniforms {
-            transform: Transform::for_vertices(camera, self.aspect_ratio()),
+            transform: Transform::for_vertices(camera, aspect_ratio),
             transform_normals: Transform::for_normals(camera),
             ..Uniforms::default()
         };
@@ -245,10 +247,6 @@ impl Renderer {
         let view = texture.create_view(&wgpu::TextureViewDescriptor::default());
 
         view
-    }
-
-    pub fn aspect_ratio(&self) -> f64 {
-        self.surface_config.width as f64 / self.surface_config.height as f64
     }
 
     fn clear_views(
