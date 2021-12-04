@@ -3,7 +3,7 @@ use nalgebra::Translation2;
 use crate::camera::Camera;
 
 pub struct Movement {
-    pub started: bool,
+    started: bool,
 }
 
 impl Movement {
