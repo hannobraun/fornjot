@@ -21,6 +21,7 @@ pub struct Handler {
     left_mouse_button: bool,
     right_mouse_button: bool,
 
+    rotation: Rotation,
     zoom: Zoom,
 }
 
@@ -31,6 +32,7 @@ impl Handler {
             left_mouse_button: false,
             right_mouse_button: false,
 
+            rotation: Rotation,
             zoom: Zoom::new(now),
         }
     }
@@ -56,18 +58,30 @@ impl Handler {
                 VirtualKeyCode::Key1 => actions.toggle_model = true,
                 VirtualKeyCode::Key2 => actions.toggle_mesh = true,
 
-                VirtualKeyCode::Left => {
-                    Rotation.apply(ROT_CENTER.into(), 0.0, -ROT_ANGLE, camera)
-                }
-                VirtualKeyCode::Right => {
-                    Rotation.apply(ROT_CENTER.into(), 0.0, ROT_ANGLE, camera)
-                }
-                VirtualKeyCode::Up => {
-                    Rotation.apply(ROT_CENTER.into(), -ROT_ANGLE, 0.0, camera)
-                }
-                VirtualKeyCode::Down => {
-                    Rotation.apply(ROT_CENTER.into(), ROT_ANGLE, 0.0, camera)
-                }
+                VirtualKeyCode::Left => self.rotation.apply(
+                    ROT_CENTER.into(),
+                    0.0,
+                    -ROT_ANGLE,
+                    camera,
+                ),
+                VirtualKeyCode::Right => self.rotation.apply(
+                    ROT_CENTER.into(),
+                    0.0,
+                    ROT_ANGLE,
+                    camera,
+                ),
+                VirtualKeyCode::Up => self.rotation.apply(
+                    ROT_CENTER.into(),
+                    -ROT_ANGLE,
+                    0.0,
+                    camera,
+                ),
+                VirtualKeyCode::Down => self.rotation.apply(
+                    ROT_CENTER.into(),
+                    ROT_ANGLE,
+                    0.0,
+                    camera,
+                ),
 
                 _ => (),
             }
@@ -96,7 +110,7 @@ impl Handler {
                     let angle_x = diff_y * f;
                     let angle_y = diff_x * f;
 
-                    Rotation.apply(focus_point, angle_x, angle_y, camera);
+                    self.rotation.apply(focus_point, angle_x, angle_y, camera);
                 }
             }
             if self.right_mouse_button {
