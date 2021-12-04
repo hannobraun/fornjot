@@ -101,9 +101,11 @@ impl Camera {
     pub fn focus_point(
         &self,
         window: &Window,
-        cursor: PhysicalPosition<f64>,
+        cursor: Option<PhysicalPosition<f64>>,
         faces: &Faces,
     ) -> Option<Point> {
+        let cursor = cursor?;
+
         let width = window.width() as f64;
         let height = window.height() as f64;
         let aspect_ratio = width / height;

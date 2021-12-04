@@ -99,7 +99,7 @@ impl Handler {
 
             // TASK: Use the focus point from the beginning of the rotation, not
             //       the current one.
-            let focus_point = camera.focus_point(window, cursor, faces);
+            let focus_point = camera.focus_point(window, Some(cursor), faces);
 
             if let Some(focus_point) = focus_point {
                 let f = 0.005;
