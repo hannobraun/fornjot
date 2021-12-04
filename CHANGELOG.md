@@ -7,6 +7,8 @@
 - Tweak zooming behavior.
 - Improve rotation behavior.
   Always rotate the model around the point on the model that the mouse cursor points at, not the origin of the model coordinate system. This allows for much more precise control when inspecting details of the model.
+- Improve movement behavior.
+  When moving the model, keep the same point on the model under the cursor for the whole movement. This doesn't work great yet (see [#18](https://github.com/hannobraun/fornjot/issues/18)).
 - Rename `--arguments` argument of host application to `--parameters`.
 
 ### `fj` Library
