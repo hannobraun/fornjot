@@ -72,7 +72,7 @@ impl Handler {
     pub fn handle_cursor_moved(
         &mut self,
         position: PhysicalPosition<f64>,
-        transform: &mut Camera,
+        camera: &mut Camera,
     ) {
         if let Some(previous) = self.cursor {
             let diff_x = position.x - previous.x;
@@ -87,7 +87,7 @@ impl Handler {
                 let angle_x = diff_y * f;
                 let angle_y = diff_x * f;
 
-                Rotation.apply(angle_x, angle_y, transform);
+                Rotation.apply(angle_x, angle_y, camera);
             }
             if self.right_mouse_button {
                 // TASK: Moving feels good, if you're dragging the model exactly
@@ -116,7 +116,7 @@ impl Handler {
 
                 let translation = Translation2::new(x_trans, y_trans);
 
-                transform.translation = translation * transform.translation;
+                camera.translation = translation * camera.translation;
             }
         }
 
