@@ -140,7 +140,7 @@ fn main() -> anyhow::Result<()> {
         // the screen.
         //
         // To do that, first compute the model's highest point, as well as the
-        // furthers point from the origin, in x and y.
+        // furthest point from the origin, in x and y.
         let highest_point = aabb.max.z;
         let furthest_point =
             [aabb.min.x.abs(), aabb.max.x, aabb.min.y.abs(), aabb.max.y]
