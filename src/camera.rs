@@ -126,9 +126,8 @@ impl Camera {
             Point::origin() + Vector::new(x * f, y * f, -self.near_plane());
 
         // Transform camera and cursor positions to model space.
-        let camera_to_model = self.view_transform().inverse();
         let origin = self.position();
-        let cursor = camera_to_model.transform_point(&cursor);
+        let cursor = self.view_transform().inverse_transform_point(&cursor);
         let dir = (cursor - origin).normalize();
 
         let ray = Ray { origin, dir };
