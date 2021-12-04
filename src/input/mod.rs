@@ -12,7 +12,7 @@ use winit::{
     },
 };
 
-use crate::graphics::Camera;
+use crate::{graphics::Camera, math::Point};
 
 use self::{rotation::Rotation, zoom::Zoom};
 
@@ -51,6 +51,7 @@ impl Handler {
             ..
         } = input
         {
+            const ROT_CENTER: [f64; 3] = [0., 0., 0.];
             const ROT_ANGLE: f64 = FRAC_PI_6;
 
             match virtual_key_code {
@@ -59,10 +60,18 @@ impl Handler {
                 VirtualKeyCode::Key1 => actions.toggle_model = true,
                 VirtualKeyCode::Key2 => actions.toggle_mesh = true,
 
-                VirtualKeyCode::Left => Rotation.apply(0.0, -ROT_ANGLE, camera),
-                VirtualKeyCode::Right => Rotation.apply(0.0, ROT_ANGLE, camera),
-                VirtualKeyCode::Up => Rotation.apply(-ROT_ANGLE, 0.0, camera),
-                VirtualKeyCode::Down => Rotation.apply(ROT_ANGLE, 0.0, camera),
+                VirtualKeyCode::Left => {
+                    Rotation.apply(ROT_CENTER.into(), 0.0, -ROT_ANGLE, camera)
+                }
+                VirtualKeyCode::Right => {
+                    Rotation.apply(ROT_CENTER.into(), 0.0, ROT_ANGLE, camera)
+                }
+                VirtualKeyCode::Up => {
+                    Rotation.apply(ROT_CENTER.into(), -ROT_ANGLE, 0.0, camera)
+                }
+                VirtualKeyCode::Down => {
+                    Rotation.apply(ROT_CENTER.into(), ROT_ANGLE, 0.0, camera)
+                }
 
                 _ => (),
             }
@@ -87,7 +96,7 @@ impl Handler {
                 let angle_x = diff_y * f;
                 let angle_y = diff_x * f;
 
-                Rotation.apply(angle_x, angle_y, camera);
+                Rotation.apply(Point::origin(), angle_x, angle_y, camera);
             }
             if self.right_mouse_button {
                 // TASK: Moving feels good, if you're dragging the model exactly
