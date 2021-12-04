@@ -5,7 +5,7 @@
 ### Host Application
 
 - Tweak zooming behavior.
-- Improve rotation behavior
+- Improve rotation behavior.
   Always rotate the model around the point on the model that the mouse cursor points at, not the origin of the model coordinate system. This allows for much more precise control when inspecting details of the model.
 - Rename `--arguments` argument of host application to `--parameters`.
 
