@@ -155,7 +155,7 @@ impl Renderer {
 
     pub fn draw(
         &mut self,
-        transform: &Camera,
+        camera: &Camera,
         config: &DrawConfig,
     ) -> Result<(), DrawError> {
         // TASK: Experiment with displaying a background. Some kind of far-away
@@ -163,8 +163,8 @@ impl Renderer {
         //       object, not some camera around the object.
 
         let uniforms = Uniforms {
-            transform: transform.to_native(self.aspect_ratio()),
-            transform_normals: transform.to_normals_transform(),
+            transform: camera.to_native(self.aspect_ratio()),
+            transform_normals: camera.to_normals_transform(),
             ..Uniforms::default()
         };
 
