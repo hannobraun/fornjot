@@ -18,7 +18,6 @@ use self::{rotation::Rotation, zoom::Zoom};
 
 pub struct Handler {
     cursor: Option<PhysicalPosition<f64>>,
-    left_mouse_button: bool,
     right_mouse_button: bool,
 
     rotation: Rotation,
@@ -29,7 +28,6 @@ impl Handler {
     pub fn new(now: Instant) -> Self {
         Self {
             cursor: None,
-            left_mouse_button: false,
             right_mouse_button: false,
 
             rotation: Rotation::new(),
@@ -99,7 +97,7 @@ impl Handler {
             let diff_x = cursor.x - previous.x;
             let diff_y = cursor.y - previous.y;
 
-            if self.left_mouse_button {
+            if self.rotation.started {
                 // TASK: Use the focus point from the beginning of the rotation,
                 //       not the current one.
                 let focus_point = camera.focus_point(window, cursor, faces);
@@ -154,10 +152,10 @@ impl Handler {
     ) {
         match (button, state) {
             (MouseButton::Left, ElementState::Pressed) => {
-                self.left_mouse_button = true;
+                self.rotation.started = true;
             }
             (MouseButton::Left, ElementState::Released) => {
-                self.left_mouse_button = false;
+                self.rotation.started = false;
             }
             (MouseButton::Right, ElementState::Pressed) => {
                 self.right_mouse_button = true;

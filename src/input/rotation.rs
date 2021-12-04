@@ -5,11 +5,13 @@ use crate::{
     math::{Point, Vector},
 };
 
-pub struct Rotation;
+pub struct Rotation {
+    pub started: bool,
+}
 
 impl Rotation {
     pub fn new() -> Self {
-        Self
+        Self { started: false }
     }
 
     pub fn apply(
