@@ -16,9 +16,7 @@
 use std::f64::consts::FRAC_PI_2;
 
 use bytemuck::{Pod, Zeroable};
-use nalgebra::{
-    Matrix4, Perspective3, Rotation, TAffine, Transform, Translation,
-};
+use nalgebra::{Matrix4, Perspective3, TAffine, Transform, Translation};
 
 /// The camera abstraction
 ///
@@ -28,7 +26,12 @@ use nalgebra::{
 /// translated and rotated.
 #[derive(Debug)]
 pub struct Camera {
-    pub rotation: Rotation<f64, 3>,
+    /// The rotational part of the transform
+    ///
+    /// This is not an `nalgebra::Rotation`, as rotations happen around a center
+    /// point, which means they must include a translational component.
+    pub rotation: Transform<f64, TAffine, 3>,
+
     pub translation: Translation<f64, 2>,
     pub distance: f64,
 }
@@ -36,7 +39,7 @@ pub struct Camera {
 impl Camera {
     pub fn new(initial_distance: f64) -> Self {
         Self {
-            rotation: Rotation::identity(),
+            rotation: Transform::identity(),
             translation: Translation::identity(),
             distance: initial_distance,
         }
