@@ -178,7 +178,7 @@ fn main() -> anyhow::Result<()> {
     renderer.update_geometry((&triangles.0).into());
 
     let mut draw_config = DrawConfig::default();
-    let mut transform = Camera::new(initial_distance);
+    let mut camera = Camera::new(initial_distance);
 
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
@@ -223,14 +223,14 @@ fn main() -> anyhow::Result<()> {
                 input_handler.handle_keyboard_input(
                     input,
                     &mut actions,
-                    &mut transform,
+                    &mut camera,
                 );
             }
             Event::WindowEvent {
                 event: WindowEvent::CursorMoved { position, .. },
                 ..
             } => {
-                input_handler.handle_cursor_moved(position, &mut transform);
+                input_handler.handle_cursor_moved(position, &mut camera);
 
                 if let Some(cursor) = input_handler.cursor() {
                     let [width, height] = renderer.surface_size();
@@ -248,7 +248,7 @@ fn main() -> anyhow::Result<()> {
                         + Vector::new(x * f, y * f, -NEAR_PLANE);
 
                     // Transform camera and cursor positions to model space.
-                    let camera_to_model = transform.view_transform().inverse();
+                    let camera_to_model = camera.view_transform().inverse();
                     let origin =
                         camera_to_model.transform_point(&Point::origin());
                     let cursor = camera_to_model.transform_point(&cursor);
@@ -293,16 +293,12 @@ fn main() -> anyhow::Result<()> {
                 let delta_t = now.duration_since(previous_time);
                 previous_time = now;
 
-                input_handler.update(
-                    delta_t.as_secs_f64(),
-                    now,
-                    &mut transform,
-                );
+                input_handler.update(delta_t.as_secs_f64(), now, &mut camera);
 
                 window.request_redraw();
             }
             Event::RedrawRequested(_) => {
-                match renderer.draw(&transform, &draw_config) {
+                match renderer.draw(&camera, &draw_config) {
                     Ok(()) => {}
                     Err(err) => {
                         panic!("Draw error: {}", err);
