@@ -1,5 +1,3 @@
-// TASK: Rename `graphics::camera` to `graphics::transform`.
-
 use std::f64::consts::FRAC_PI_2;
 
 use bytemuck::{Pod, Zeroable};

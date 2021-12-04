@@ -9,9 +9,9 @@ use winit::{dpi::PhysicalSize, window::Window};
 use crate::camera::Camera;
 
 use super::{
-    camera::Transform, config_ui::ConfigUi, draw_config::DrawConfig,
-    drawables::Drawables, geometries::Geometries, mesh::Mesh,
-    pipelines::Pipelines, uniforms::Uniforms, COLOR_FORMAT, DEPTH_FORMAT,
+    config_ui::ConfigUi, draw_config::DrawConfig, drawables::Drawables,
+    geometries::Geometries, mesh::Mesh, pipelines::Pipelines,
+    transform::Transform, uniforms::Uniforms, COLOR_FORMAT, DEPTH_FORMAT,
 };
 
 #[derive(Debug)]

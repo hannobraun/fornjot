@@ -1,6 +1,6 @@
 use bytemuck::{Pod, Zeroable};
 
-use super::camera::Transform;
+use super::transform::Transform;
 
 #[derive(Clone, Copy, Pod, Zeroable)]
 #[repr(C)]
