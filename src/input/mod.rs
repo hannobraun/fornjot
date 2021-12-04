@@ -1,7 +1,7 @@
 mod rotation;
 mod zoom;
 
-use std::{f64::consts::FRAC_PI_6, time::Instant};
+use std::time::Instant;
 
 use nalgebra::Translation2;
 use winit::{
@@ -39,7 +39,6 @@ impl Handler {
         &mut self,
         input: KeyboardInput,
         actions: &mut Actions,
-        camera: &mut Camera,
     ) {
         if let KeyboardInput {
             state: ElementState::Pressed,
@@ -47,39 +46,11 @@ impl Handler {
             ..
         } = input
         {
-            const ROT_CENTER: [f64; 3] = [0., 0., 0.];
-            const ROT_ANGLE: f64 = FRAC_PI_6;
-
             match virtual_key_code {
                 VirtualKeyCode::Escape => actions.exit = true,
 
                 VirtualKeyCode::Key1 => actions.toggle_model = true,
                 VirtualKeyCode::Key2 => actions.toggle_mesh = true,
-
-                VirtualKeyCode::Left => self.rotation.apply(
-                    ROT_CENTER.into(),
-                    0.0,
-                    -ROT_ANGLE,
-                    camera,
-                ),
-                VirtualKeyCode::Right => self.rotation.apply(
-                    ROT_CENTER.into(),
-                    0.0,
-                    ROT_ANGLE,
-                    camera,
-                ),
-                VirtualKeyCode::Up => self.rotation.apply(
-                    ROT_CENTER.into(),
-                    -ROT_ANGLE,
-                    0.0,
-                    camera,
-                ),
-                VirtualKeyCode::Down => self.rotation.apply(
-                    ROT_CENTER.into(),
-                    ROT_ANGLE,
-                    0.0,
-                    camera,
-                ),
 
                 _ => (),
             }
