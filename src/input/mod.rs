@@ -32,7 +32,7 @@ impl Handler {
             left_mouse_button: false,
             right_mouse_button: false,
 
-            rotation: Rotation,
+            rotation: Rotation::new(),
             zoom: Zoom::new(now),
         }
     }

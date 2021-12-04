@@ -8,6 +8,10 @@ use crate::{
 pub struct Rotation;
 
 impl Rotation {
+    pub fn new() -> Self {
+        Self
+    }
+
     pub fn apply(
         &self,
         center: Point,
