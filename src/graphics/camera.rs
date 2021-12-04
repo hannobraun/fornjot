@@ -7,8 +7,6 @@
 //       core to the responsibility of `graphics`.
 //
 //       I have the following idea:
-//       - Convert `to_vertex_transform` and `to_normal_transform` into
-//         constructors of `NativeTransform`.
 //       - Move `Camera` to new `crate::camera` module.
 //       - Rename `graphics::camera` to `graphics::transform`.
 //       - Rename `NativeTransform` to `Transform`.
