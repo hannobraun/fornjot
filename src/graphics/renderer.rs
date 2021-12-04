@@ -66,13 +66,11 @@ impl Renderer {
             )
             .await?;
 
-        let size = window.inner().inner_size();
-
         let surface_config = wgpu::SurfaceConfiguration {
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
             format: COLOR_FORMAT,
-            width: size.width,
-            height: size.height,
+            width: window.width(),
+            height: window.height(),
             present_mode: wgpu::PresentMode::Fifo,
         };
         surface.configure(&device, &surface_config);

@@ -18,4 +18,12 @@ impl Window {
     pub fn inner(&self) -> &winit::window::Window {
         &self.0
     }
+
+    pub fn width(&self) -> u32 {
+        self.0.inner_size().width
+    }
+
+    pub fn height(&self) -> u32 {
+        self.0.inner_size().height
+    }
 }
