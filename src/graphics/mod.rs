@@ -12,7 +12,7 @@ mod uniforms;
 pub use self::{
     draw_config::DrawConfig,
     renderer::{DrawError, Renderer},
-    transform::{FIELD_OF_VIEW_IN_X, NEAR_PLANE},
+    transform::FIELD_OF_VIEW_IN_X,
 };
 
 const COLOR_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Bgra8UnormSrgb;

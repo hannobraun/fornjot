@@ -27,6 +27,10 @@ impl Camera {
         }
     }
 
+    pub fn near_plane(&self) -> f64 {
+        0.1
+    }
+
     pub fn view_transform(&self) -> Transform<f64, TAffine, 3> {
         // Using a mutable variable cleanly takes care of any type inference
         // problems that this operation would otherwise have.

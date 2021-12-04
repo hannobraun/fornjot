@@ -23,7 +23,7 @@ impl Transform {
         let projection = Perspective3::new(
             aspect_ratio,
             field_of_view_y,
-            NEAR_PLANE,
+            camera.near_plane(),
             FAR_PLANE,
         );
 
@@ -56,6 +56,5 @@ impl From<&Matrix4<f64>> for Transform {
     }
 }
 
-pub const NEAR_PLANE: f64 = 0.1;
 pub const FAR_PLANE: f64 = 1000.0;
 pub const FIELD_OF_VIEW_IN_X: f64 = FRAC_PI_2; // 90 degrees
