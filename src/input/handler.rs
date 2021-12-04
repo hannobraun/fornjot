@@ -122,7 +122,7 @@ impl Handler {
                 self.rotation.stop();
             }
             (MouseButton::Right, ElementState::Pressed) => {
-                self.movement.started = true;
+                self.movement.start();
             }
             (MouseButton::Right, ElementState::Released) => {
                 self.movement.started = false;
