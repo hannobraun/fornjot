@@ -1,7 +1,9 @@
 use std::f64::consts::FRAC_PI_2;
 
 use bytemuck::{Pod, Zeroable};
-use nalgebra::{Isometry3, Matrix4, Perspective3, Rotation, Translation};
+use nalgebra::{
+    Isometry3, Matrix4, Perspective3, Rotation, TAffine, Translation,
+};
 
 #[derive(Debug)]
 pub struct Transform {
@@ -41,14 +43,17 @@ impl Transform {
         NativeTransform::from(&transform)
     }
 
-    pub fn view_transform(&self) -> Isometry3<f64> {
-        Isometry3::from_parts(
-            Translation::from([
-                self.translation.x,
-                self.translation.y,
-                -self.distance,
-            ]),
-            self.rotation.into(),
+    pub fn view_transform(&self) -> nalgebra::Transform<f64, TAffine, 3> {
+        nalgebra::Transform::from_matrix_unchecked(
+            Isometry3::from_parts(
+                Translation::from([
+                    self.translation.x,
+                    self.translation.y,
+                    -self.distance,
+                ]),
+                self.rotation.into(),
+            )
+            .to_matrix(),
         )
     }
 }
