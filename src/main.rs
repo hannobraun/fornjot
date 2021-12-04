@@ -74,7 +74,7 @@ fn main() -> anyhow::Result<()> {
                 let shape = match model.load(&parameters) {
                     Ok(shape) => shape,
                     Err(model::Error::Compile) => {
-                        // TASK: Display error message in graphics window.
+                        // TASK: Display error message on screen.
                         println!("Error compiling model");
                         return;
                     }
