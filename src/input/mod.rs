@@ -12,7 +12,7 @@ use winit::{
     },
 };
 
-use crate::{camera::Camera, math::Point};
+use crate::{camera::Camera, geometry::faces::Faces, window::Window};
 
 use self::{rotation::Rotation, zoom::Zoom};
 
@@ -82,21 +82,26 @@ impl Handler {
         &mut self,
         position: PhysicalPosition<f64>,
         camera: &mut Camera,
+        window: &Window,
+        faces: &Faces,
     ) {
         if let Some(previous) = self.cursor {
             let diff_x = position.x - previous.x;
             let diff_y = position.y - previous.y;
 
             if self.left_mouse_button {
-                // TASK: Rotate the model around the point on the surface that
-                //       the cursor is currently pointing at.
+                // TASK: Use the focus point from the beginning of the rotation,
+                //       not the current one.
+                let focus_point = camera.focus_point(window, position, faces);
 
-                let f = 0.005;
+                if let Some(focus_point) = focus_point {
+                    let f = 0.005;
 
-                let angle_x = diff_y * f;
-                let angle_y = diff_x * f;
+                    let angle_x = diff_y * f;
+                    let angle_y = diff_x * f;
 
-                Rotation.apply(Point::origin(), angle_x, angle_y, camera);
+                    Rotation.apply(focus_point, angle_x, angle_y, camera);
+                }
             }
             if self.right_mouse_button {
                 // TASK: Moving feels good, if you're dragging the model exactly

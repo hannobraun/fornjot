@@ -196,7 +196,12 @@ fn main() -> anyhow::Result<()> {
                 event: WindowEvent::CursorMoved { position, .. },
                 ..
             } => {
-                input_handler.handle_cursor_moved(position, &mut camera);
+                input_handler.handle_cursor_moved(
+                    position,
+                    &mut camera,
+                    &window,
+                    &faces,
+                );
 
                 if let Some(cursor) = input_handler.cursor() {
                     if let Some(point) =
