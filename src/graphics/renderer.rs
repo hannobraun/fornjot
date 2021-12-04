@@ -224,13 +224,6 @@ impl Renderer {
         Ok(())
     }
 
-    pub fn surface_size(&self) -> [f64; 2] {
-        [
-            self.surface_config.width as f64,
-            self.surface_config.height as f64,
-        ]
-    }
-
     fn create_depth_buffer(
         device: &wgpu::Device,
         surface_config: &wgpu::SurfaceConfiguration,
@@ -255,8 +248,7 @@ impl Renderer {
     }
 
     pub fn aspect_ratio(&self) -> f64 {
-        let [width, height] = self.surface_size();
-        width / height
+        self.surface_config.width as f64 / self.surface_config.height as f64
     }
 
     fn clear_views(
