@@ -19,6 +19,9 @@ pub struct Camera {
 }
 
 impl Camera {
+    const INITIAL_NEAR_PLANE: f64 = 0.1;
+    const INITIAL_FAR_PLANE: f64 = 1000.0;
+
     pub fn new(initial_distance: f64) -> Self {
         Self {
             rotation: Transform::identity(),
@@ -28,11 +31,11 @@ impl Camera {
     }
 
     pub fn near_plane(&self) -> f64 {
-        0.1
+        Self::INITIAL_NEAR_PLANE
     }
 
     pub fn far_plane(&self) -> f64 {
-        1000.0
+        Self::INITIAL_FAR_PLANE
     }
 
     pub fn view_transform(&self) -> Transform<f64, TAffine, 3> {
