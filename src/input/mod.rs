@@ -152,7 +152,7 @@ impl Handler {
     ) {
         match (button, state) {
             (MouseButton::Left, ElementState::Pressed) => {
-                self.rotation.started = true;
+                self.rotation.start();
             }
             (MouseButton::Left, ElementState::Released) => {
                 self.rotation.started = false;

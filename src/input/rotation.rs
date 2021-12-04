@@ -14,6 +14,10 @@ impl Rotation {
         Self { started: false }
     }
 
+    pub fn start(&mut self) {
+        self.started = true;
+    }
+
     pub fn apply(
         &self,
         center: Point,
