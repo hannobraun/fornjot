@@ -1,26 +1,26 @@
 use nalgebra::Translation2;
 
-use crate::camera::Camera;
+use crate::{camera::Camera, math::Point};
 
 pub struct Movement {
-    started: bool,
+    focus_point: Option<Point>,
 }
 
 impl Movement {
     pub fn new() -> Self {
-        Self { started: false }
+        Self { focus_point: None }
     }
 
-    pub fn start(&mut self) {
-        self.started = true;
+    pub fn start(&mut self, focus_point: Option<Point>) {
+        self.focus_point = focus_point;
     }
 
     pub fn stop(&mut self) {
-        self.started = false;
+        self.focus_point = None;
     }
 
     pub fn apply(&self, diff_x: f64, diff_y: f64, camera: &mut Camera) {
-        if self.started {
+        if let Some(_) = self.focus_point {
             // TASK: Moving feels good, if you're dragging the model exactly
             //       where your mouse goes. It feels weird, if the mouse cursor
             //       moves faster or slower than the model you're moving.

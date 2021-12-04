@@ -87,7 +87,7 @@ impl Handler {
                 self.rotation.stop();
             }
             (MouseButton::Right, ElementState::Pressed) => {
-                self.movement.start();
+                self.movement.start(focus_point);
             }
             (MouseButton::Right, ElementState::Released) => {
                 self.movement.stop();
