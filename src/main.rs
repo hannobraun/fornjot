@@ -13,7 +13,6 @@ use std::{collections::HashMap, sync::mpsc, time::Instant};
 use camera::Camera;
 use futures::executor::block_on;
 use notify::Watcher as _;
-use parry3d_f64::query::{Ray, RayCast as _};
 use tracing::trace;
 use winit::{
     event::{Event, WindowEvent},
@@ -24,7 +23,6 @@ use crate::{
     args::Args,
     geometry::Shape as _,
     graphics::{DrawConfig, Renderer},
-    math::{Point, Vector},
     mesh::{HashVector, MeshMaker},
     model::Model,
     window::Window,
@@ -201,47 +199,9 @@ fn main() -> anyhow::Result<()> {
                 input_handler.handle_cursor_moved(position, &mut camera);
 
                 if let Some(cursor) = input_handler.cursor() {
-                    let width = window.width() as f64;
-                    let height = window.height() as f64;
-                    let aspect_ratio = width / height;
-
-                    // Cursor position in normalized coordinates (-1 to +1) with
-                    // aspect ratio taken into account.
-                    let x = cursor.x / width * 2. - 1.;
-                    let y = -(cursor.y / height * 2. - 1.) / aspect_ratio;
-
-                    // Cursor position in camera space.
-                    let f = (camera.field_of_view_in_x() / 2.).tan()
-                        * camera.near_plane();
-                    let cursor = Point::origin()
-                        + Vector::new(x * f, y * f, -camera.near_plane());
-
-                    // Transform camera and cursor positions to model space.
-                    let camera_to_model = camera.view_transform().inverse();
-                    let origin =
-                        camera_to_model.transform_point(&Point::origin());
-                    let cursor = camera_to_model.transform_point(&cursor);
-                    let dir = (cursor - origin).normalize();
-
-                    let ray = Ray { origin, dir };
-
-                    let mut min_t = None;
-
-                    for triangle in &triangles.0 {
-                        let t =
-                            triangle.cast_local_ray(&ray, f64::INFINITY, true);
-
-                        if let Some(t) = t {
-                            if t <= min_t.unwrap_or(t) {
-                                min_t = Some(t);
-                            }
-                        }
-                    }
-
-                    // TASK: This still doesn't work quite right. It doesn't
-                    //       detect intersections near the edges of the shape.
-                    if let Some(t) = min_t {
-                        let point = ray.point_at(t);
+                    if let Some(point) =
+                        camera.focus_point(&window, cursor, &triangles)
+                    {
                         dbg!(point);
                     }
                 }

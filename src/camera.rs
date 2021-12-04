@@ -1,8 +1,14 @@
 use std::f64::consts::FRAC_PI_2;
 
 use nalgebra::{TAffine, Transform, Translation};
+use parry3d_f64::query::{Ray, RayCast as _};
+use winit::dpi::PhysicalPosition;
 
-use crate::geometry::bounding_volume::Aabb;
+use crate::{
+    geometry::{bounding_volume::Aabb, faces::Faces},
+    math::{Point, Vector},
+    window::Window,
+};
 
 /// The camera abstraction
 ///
@@ -89,5 +95,51 @@ impl Camera {
         transform *= self.rotation;
 
         transform
+    }
+
+    /// Compute the point on the model, that the cursor currently points to
+    pub fn focus_point(
+        &self,
+        window: &Window,
+        cursor: PhysicalPosition<f64>,
+        triangles: &Faces,
+    ) -> Option<Point> {
+        let width = window.width() as f64;
+        let height = window.height() as f64;
+        let aspect_ratio = width / height;
+
+        // Cursor position in normalized coordinates (-1 to +1) with
+        // aspect ratio taken into account.
+        let x = cursor.x / width * 2. - 1.;
+        let y = -(cursor.y / height * 2. - 1.) / aspect_ratio;
+
+        // Cursor position in camera space.
+        let f = (self.field_of_view_in_x() / 2.).tan() * self.near_plane();
+        let cursor =
+            Point::origin() + Vector::new(x * f, y * f, -self.near_plane());
+
+        // Transform camera and cursor positions to model space.
+        let camera_to_model = self.view_transform().inverse();
+        let origin = camera_to_model.transform_point(&Point::origin());
+        let cursor = camera_to_model.transform_point(&cursor);
+        let dir = (cursor - origin).normalize();
+
+        let ray = Ray { origin, dir };
+
+        let mut min_t = None;
+
+        for triangle in &triangles.0 {
+            let t = triangle.cast_local_ray(&ray, f64::INFINITY, true);
+
+            if let Some(t) = t {
+                if t <= min_t.unwrap_or(t) {
+                    min_t = Some(t);
+                }
+            }
+        }
+
+        // TASK: This still doesn't work quite right. It doesn't
+        //       detect intersections near the edges of the shape.
+        min_t.map(|t| ray.point_at(t))
     }
 }
