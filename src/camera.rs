@@ -1,5 +1,7 @@
 use nalgebra::{TAffine, Transform, Translation};
 
+use crate::{geometry::bounding_volume::Aabb, graphics::FIELD_OF_VIEW_IN_X};
+
 /// The camera abstraction
 ///
 /// Please note that the metaphor we're using (which influences how mouse input
@@ -22,7 +24,36 @@ impl Camera {
     const INITIAL_NEAR_PLANE: f64 = 0.1;
     const INITIAL_FAR_PLANE: f64 = 1000.0;
 
-    pub fn new(initial_distance: f64) -> Self {
+    pub fn new(aabb: &Aabb) -> Self {
+        let initial_distance = {
+            // Let's make sure we choose a distance, so that the model fills
+            // most of the screen.
+            //
+            // To do that, first compute the model's highest point, as well as
+            // the furthest point from the origin, in x and y.
+            let highest_point = aabb.max.z;
+            let furthest_point =
+                [aabb.min.x.abs(), aabb.max.x, aabb.min.y.abs(), aabb.max.y]
+                    .into_iter()
+                    .reduce(|a, b| f64::max(a, b))
+                    // `reduce` can only return `None`, if there are no items in the
+                    // iterator. And since we're creating an array full of items
+                    // above, we know this can't panic.
+                    .unwrap();
+
+            // The actual furthest point is not far enough. We don't want the model
+            // to fill the whole screen.
+            let furthest_point = furthest_point * 2.;
+
+            // Having computed those points, figuring out how far the camera needs
+            // to be from the model is just a bit of trigonometry.
+            let distance_from_model =
+                furthest_point / (FIELD_OF_VIEW_IN_X / 2.).atan();
+
+            // An finally, the distance from the origin is trivial now.
+            highest_point + distance_from_model
+        };
+
         Self {
             rotation: Transform::identity(),
             translation: Translation::identity(),
