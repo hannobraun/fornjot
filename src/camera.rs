@@ -87,15 +87,12 @@ impl Camera {
             .inverse_transform_point(&Point::origin())
     }
 
-    /// Compute the point on the model, that the cursor currently points to
-    pub fn focus_point(
+    /// Transform the position of the cursor on the near plane to model space
+    pub fn cursor_to_model_space(
         &self,
+        cursor: PhysicalPosition<f64>,
         window: &Window,
-        cursor: Option<PhysicalPosition<f64>>,
-        faces: &Faces,
-    ) -> Option<Point> {
-        let cursor = cursor?;
-
+    ) -> Point {
         let width = window.width() as f64;
         let height = window.height() as f64;
         let aspect_ratio = width / height;
@@ -110,9 +107,21 @@ impl Camera {
         let cursor =
             Point::origin() + Vector::new(x * f, y * f, -self.near_plane());
 
+        self.view_transform().inverse_transform_point(&cursor)
+    }
+
+    /// Compute the point on the model, that the cursor currently points to
+    pub fn focus_point(
+        &self,
+        window: &Window,
+        cursor: Option<PhysicalPosition<f64>>,
+        faces: &Faces,
+    ) -> Option<Point> {
+        let cursor = cursor?;
+
         // Transform camera and cursor positions to model space.
         let origin = self.position();
-        let cursor = self.view_transform().inverse_transform_point(&cursor);
+        let cursor = self.cursor_to_model_space(cursor, window);
         let dir = (cursor - origin).normalize();
 
         let ray = Ray { origin, dir };
