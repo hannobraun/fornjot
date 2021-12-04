@@ -67,12 +67,7 @@ impl Handler {
             let diff_x = cursor.x - previous.x;
             let diff_y = cursor.y - previous.y;
 
-            let f = 0.005;
-
-            let angle_x = diff_y * f;
-            let angle_y = diff_x * f;
-
-            self.rotation.apply(angle_x, angle_y, camera);
+            self.rotation.apply(diff_x, diff_y, camera);
 
             if self.movement.started {
                 // TASK: Moving feels good, if you're dragging the model exactly
