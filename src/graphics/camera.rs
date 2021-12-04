@@ -3,6 +3,12 @@ use std::f64::consts::FRAC_PI_2;
 use bytemuck::{Pod, Zeroable};
 use nalgebra::{Matrix4, Perspective3, Rotation, TAffine, Translation};
 
+/// The camera abstraction
+///
+/// Please note that the metaphor we're using (which influences how mouse input
+/// is handled, for example) is not that of a camera freely flying through a
+/// static scene. Instead, the camera is static, and the model is freely
+/// translated and rotated.
 #[derive(Debug)]
 pub struct Camera {
     pub rotation: Rotation<f64, 3>,
