@@ -158,16 +158,11 @@ impl Handler {
         self.zoom.push_input_delta(delta, now);
     }
 
-    pub fn update(
-        &mut self,
-        delta_t: f64,
-        now: Instant,
-        transform: &mut Camera,
-    ) {
+    pub fn update(&mut self, delta_t: f64, now: Instant, camera: &mut Camera) {
         self.zoom.discard_old_events(now);
         self.zoom.update_speed(now, delta_t);
 
-        transform.distance += self.zoom.speed();
+        camera.distance += self.zoom.speed();
     }
 }
 
