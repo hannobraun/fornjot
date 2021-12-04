@@ -192,20 +192,16 @@ fn main() -> anyhow::Result<()> {
                 event: WindowEvent::CursorMoved { position, .. },
                 ..
             } => {
-                let focus_point =
-                    camera.focus_point(&window, input_handler.cursor(), &faces);
-
-                input_handler.handle_cursor_moved(
-                    position,
-                    focus_point,
-                    &mut camera,
-                );
+                input_handler.handle_cursor_moved(position, &mut camera);
             }
             Event::WindowEvent {
                 event: WindowEvent::MouseInput { state, button, .. },
                 ..
             } => {
-                input_handler.handle_mouse_input(button, state);
+                let focus_point =
+                    camera.focus_point(&window, input_handler.cursor(), &faces);
+
+                input_handler.handle_mouse_input(button, state, focus_point);
             }
             Event::WindowEvent {
                 event: WindowEvent::MouseWheel { delta, .. },

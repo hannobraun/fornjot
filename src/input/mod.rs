@@ -64,23 +64,19 @@ impl Handler {
     pub fn handle_cursor_moved(
         &mut self,
         cursor: PhysicalPosition<f64>,
-        focus_point: Option<Point>,
         camera: &mut Camera,
     ) {
         if let Some(previous) = self.cursor {
             let diff_x = cursor.x - previous.x;
             let diff_y = cursor.y - previous.y;
 
-            // TASK: Use the focus point from the beginning of the rotation, not
-            //       the current one.
-            if let Some(focus_point) = focus_point {
-                let f = 0.005;
+            let f = 0.005;
 
-                let angle_x = diff_y * f;
-                let angle_y = diff_x * f;
+            let angle_x = diff_y * f;
+            let angle_y = diff_x * f;
 
-                self.rotation.apply(focus_point, angle_x, angle_y, camera);
-            }
+            self.rotation.apply(angle_x, angle_y, camera);
+
             if self.right_mouse_button {
                 // TASK: Moving feels good, if you're dragging the model exactly
                 //       where your mouse goes. It feels weird, if the mouse
@@ -119,10 +115,11 @@ impl Handler {
         &mut self,
         button: MouseButton,
         state: ElementState,
+        focus_point: Option<Point>,
     ) {
         match (button, state) {
             (MouseButton::Left, ElementState::Pressed) => {
-                self.rotation.start();
+                self.rotation.start(focus_point);
             }
             (MouseButton::Left, ElementState::Released) => {
                 self.rotation.stop();
