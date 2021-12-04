@@ -201,14 +201,14 @@ fn main() -> anyhow::Result<()> {
                 input_handler.handle_cursor_moved(position, &mut camera);
 
                 if let Some(cursor) = input_handler.cursor() {
-                    let [width, height] = renderer.surface_size();
-                    let aspect_ratio = renderer.aspect_ratio();
+                    let width = window.width() as f64;
+                    let height = window.height() as f64;
+                    let aspect_ratio = width / height;
 
                     // Cursor position in normalized coordinates (-1 to +1) with
                     // aspect ratio taken into account.
-                    let x = cursor.x / width as f64 * 2. - 1.;
-                    let y =
-                        -(cursor.y / height as f64 * 2. - 1.) / aspect_ratio;
+                    let x = cursor.x / width * 2. - 1.;
+                    let y = -(cursor.y / height * 2. - 1.) / aspect_ratio;
 
                     // Cursor position in camera space.
                     let f = (camera.field_of_view_in_x() / 2.).tan()
