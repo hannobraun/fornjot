@@ -144,8 +144,6 @@ impl Camera {
             }
         }
 
-        // TASK: This still doesn't work quite right. It doesn't
-        //       detect intersections near the edges of the shape.
         min_t.map(|t| ray.point_at(t))
     }
 }
