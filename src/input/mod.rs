@@ -76,19 +76,19 @@ impl Handler {
 
     pub fn handle_cursor_moved(
         &mut self,
-        position: PhysicalPosition<f64>,
+        cursor: PhysicalPosition<f64>,
         camera: &mut Camera,
         window: &Window,
         faces: &Faces,
     ) {
         if let Some(previous) = self.cursor {
-            let diff_x = position.x - previous.x;
-            let diff_y = position.y - previous.y;
+            let diff_x = cursor.x - previous.x;
+            let diff_y = cursor.y - previous.y;
 
             if self.left_mouse_button {
                 // TASK: Use the focus point from the beginning of the rotation,
                 //       not the current one.
-                let focus_point = camera.focus_point(window, position, faces);
+                let focus_point = camera.focus_point(window, cursor, faces);
 
                 if let Some(focus_point) = focus_point {
                     let f = 0.005;
@@ -130,7 +130,7 @@ impl Handler {
             }
         }
 
-        self.cursor = Some(position);
+        self.cursor = Some(cursor);
     }
 
     pub fn handle_mouse_input(
