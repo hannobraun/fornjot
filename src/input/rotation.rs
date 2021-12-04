@@ -29,12 +29,14 @@ impl Rotation {
         angle_y: f64,
         camera: &mut Camera,
     ) {
-        let trans = Translation::from(center.coords);
+        if self.started {
+            let trans = Translation::from(center.coords);
 
-        let rot_x = Rotation3::from_axis_angle(&Vector::x_axis(), angle_x);
-        let rot_y = Rotation3::from_axis_angle(&Vector::y_axis(), angle_y);
+            let rot_x = Rotation3::from_axis_angle(&Vector::x_axis(), angle_x);
+            let rot_y = Rotation3::from_axis_angle(&Vector::y_axis(), angle_y);
 
-        camera.rotation =
-            trans * rot_y * rot_x * trans.inverse() * camera.rotation;
+            camera.rotation =
+                trans * rot_y * rot_x * trans.inverse() * camera.rotation;
+        }
     }
 }

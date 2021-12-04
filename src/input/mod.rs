@@ -97,19 +97,17 @@ impl Handler {
             let diff_x = cursor.x - previous.x;
             let diff_y = cursor.y - previous.y;
 
-            if self.rotation.started {
-                // TASK: Use the focus point from the beginning of the rotation,
-                //       not the current one.
-                let focus_point = camera.focus_point(window, cursor, faces);
+            // TASK: Use the focus point from the beginning of the rotation, not
+            //       the current one.
+            let focus_point = camera.focus_point(window, cursor, faces);
 
-                if let Some(focus_point) = focus_point {
-                    let f = 0.005;
+            if let Some(focus_point) = focus_point {
+                let f = 0.005;
 
-                    let angle_x = diff_y * f;
-                    let angle_y = diff_x * f;
+                let angle_x = diff_y * f;
+                let angle_y = diff_x * f;
 
-                    self.rotation.apply(focus_point, angle_x, angle_y, camera);
-                }
+                self.rotation.apply(focus_point, angle_x, angle_y, camera);
             }
             if self.right_mouse_button {
                 // TASK: Moving feels good, if you're dragging the model exactly
