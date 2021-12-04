@@ -1,15 +1,5 @@
-// TASK: Consider splitting this method into two modules: `crate::camera` and
-//       `graphics::transform`.
-//
-//       `Camera` arguably contains code that is separate from the core concerns
-//       of `graphics`. Once I add more stuff here, like ray casting, this will
-//       only become more pronounced. `NativeTransform`, on the other hand, is
-//       core to the responsibility of `graphics`.
-//
-//       I have the following idea:
-//       - Move `Camera` to new `crate::camera` module.
-//       - Rename `graphics::camera` to `graphics::transform`.
-//       - Rename `NativeTransform` to `Transform`.
+// TASK: Rename `graphics::camera` to `graphics::transform`.
+// TASK: Rename `NativeTransform` to `Transform`.
 
 use std::f64::consts::FRAC_PI_2;
 
