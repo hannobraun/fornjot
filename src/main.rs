@@ -158,7 +158,7 @@ fn main() -> anyhow::Result<()> {
         // Having computed those points, figuring out how far the camera needs
         // to be from the model is just a bit of trigonometry.
         let distance_from_model =
-            furthest_point / (FIELD_OF_VIEW_IN_X as f64 / 2.).atan();
+            furthest_point / (FIELD_OF_VIEW_IN_X / 2.).atan();
 
         // An finally, the distance from the origin is trivial now.
         highest_point + distance_from_model
