@@ -1,7 +1,7 @@
 use nalgebra::{Rotation3, Translation};
 
 use crate::{
-    graphics::Camera,
+    camera::Camera,
     math::{Point, Vector},
 };
 

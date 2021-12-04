@@ -12,7 +12,7 @@ use winit::{
     },
 };
 
-use crate::{graphics::Camera, math::Point};
+use crate::{camera::Camera, math::Point};
 
 use self::{rotation::Rotation, zoom::Zoom};
 

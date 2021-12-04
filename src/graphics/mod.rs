@@ -10,7 +10,7 @@ mod shaders;
 mod uniforms;
 
 pub use self::{
-    camera::{Camera, FIELD_OF_VIEW_IN_X, NEAR_PLANE},
+    camera::{FIELD_OF_VIEW_IN_X, NEAR_PLANE},
     draw_config::DrawConfig,
     renderer::{DrawError, Renderer},
 };

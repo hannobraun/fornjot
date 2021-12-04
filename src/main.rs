@@ -1,4 +1,5 @@
 mod args;
+mod camera;
 mod geometry;
 mod graphics;
 mod input;
@@ -8,6 +9,7 @@ mod model;
 
 use std::{collections::HashMap, sync::mpsc, time::Instant};
 
+use camera::Camera;
 use futures::executor::block_on;
 use notify::Watcher as _;
 use parry3d_f64::query::{Ray, RayCast as _};
@@ -21,7 +23,7 @@ use winit::{
 use crate::{
     args::Args,
     geometry::Shape as _,
-    graphics::{Camera, DrawConfig, Renderer, FIELD_OF_VIEW_IN_X, NEAR_PLANE},
+    graphics::{DrawConfig, Renderer, FIELD_OF_VIEW_IN_X, NEAR_PLANE},
     math::{Point, Vector},
     mesh::{HashVector, MeshMaker},
     model::Model,

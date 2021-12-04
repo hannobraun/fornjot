@@ -6,16 +6,12 @@ use wgpu::util::DeviceExt as _;
 use wgpu_glyph::ab_glyph::InvalidFont;
 use winit::{dpi::PhysicalSize, window::Window};
 
+use crate::camera::Camera;
+
 use super::{
-    camera::{Camera, NativeTransform},
-    config_ui::ConfigUi,
-    draw_config::DrawConfig,
-    drawables::Drawables,
-    geometries::Geometries,
-    mesh::Mesh,
-    pipelines::Pipelines,
-    uniforms::Uniforms,
-    COLOR_FORMAT, DEPTH_FORMAT,
+    camera::NativeTransform, config_ui::ConfigUi, draw_config::DrawConfig,
+    drawables::Drawables, geometries::Geometries, mesh::Mesh,
+    pipelines::Pipelines, uniforms::Uniforms, COLOR_FORMAT, DEPTH_FORMAT,
 };
 
 #[derive(Debug)]
