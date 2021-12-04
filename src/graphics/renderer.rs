@@ -7,9 +7,9 @@ use wgpu_glyph::ab_glyph::InvalidFont;
 use winit::{dpi::PhysicalSize, window::Window};
 
 use super::{
-    config_ui::ConfigUi, draw_config::DrawConfig, drawables::Drawables,
-    geometries::Geometries, mesh::Mesh, pipelines::Pipelines,
-    transform::Camera, uniforms::Uniforms, COLOR_FORMAT, DEPTH_FORMAT,
+    camera::Camera, config_ui::ConfigUi, draw_config::DrawConfig,
+    drawables::Drawables, geometries::Geometries, mesh::Mesh,
+    pipelines::Pipelines, uniforms::Uniforms, COLOR_FORMAT, DEPTH_FORMAT,
 };
 
 #[derive(Debug)]
