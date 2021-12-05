@@ -135,7 +135,7 @@ impl Zoom {
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 enum Direction {
-    Pos,
+    Out,
     Neg,
     None,
 }
@@ -143,8 +143,8 @@ enum Direction {
 impl Direction {
     fn is_opposite(&self, other: &Self) -> bool {
         match (self, other) {
-            (Self::Pos, Self::Neg) => true,
-            (Self::Neg, Self::Pos) => true,
+            (Self::Out, Self::Neg) => true,
+            (Self::Neg, Self::Out) => true,
             _ => false,
         }
     }
@@ -153,7 +153,7 @@ impl Direction {
 impl From<f64> for Direction {
     fn from(speed: f64) -> Self {
         if speed > 0.0 {
-            return Self::Pos;
+            return Self::Out;
         }
         if speed < 0.0 {
             return Self::Neg;
