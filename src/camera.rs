@@ -24,6 +24,9 @@ pub struct Camera {
     /// The distance to the near plane
     near_plane: f64,
 
+    /// The distance to the far plane
+    far_plane: f64,
+
     /// The rotational part of the transform
     ///
     /// This is not an `nalgebra::Rotation`, as rotations happen around a center
@@ -75,6 +78,7 @@ impl Camera {
 
         Self {
             near_plane: Self::INITIAL_NEAR_PLANE,
+            far_plane: Self::INITIAL_FAR_PLANE,
 
             rotation: Transform::identity(),
             translation: Translation::identity(),
@@ -95,7 +99,7 @@ impl Camera {
     }
 
     pub fn far_plane(&self) -> f64 {
-        Self::INITIAL_FAR_PLANE
+        self.far_plane
     }
 
     pub fn field_of_view_in_x(&self) -> f64 {
