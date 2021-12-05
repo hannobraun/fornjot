@@ -21,6 +21,9 @@ use crate::{
 /// translated and rotated.
 #[derive(Debug)]
 pub struct Camera {
+    /// The distance to the near plane
+    near_plane: f64,
+
     /// The rotational part of the transform
     ///
     /// This is not an `nalgebra::Rotation`, as rotations happen around a center
@@ -71,6 +74,8 @@ impl Camera {
         };
 
         Self {
+            near_plane: Self::INITIAL_NEAR_PLANE,
+
             rotation: Transform::identity(),
             translation: Translation::identity(),
             distance: initial_distance,
@@ -86,7 +91,7 @@ impl Camera {
     }
 
     pub fn near_plane(&self) -> f64 {
-        Self::INITIAL_NEAR_PLANE
+        self.near_plane
     }
 
     pub fn far_plane(&self) -> f64 {
