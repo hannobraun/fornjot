@@ -7,7 +7,7 @@ pub struct Aabb {
     pub mins: Point,
 
     /// Maximum point of the axis-aligned bounding box
-    pub max: Point,
+    pub maxs: Point,
 }
 
 impl Aabb {
@@ -51,12 +51,12 @@ impl Aabb {
 
         Self {
             mins: [min_x, min_y, min_z].into(),
-            max: [max_x, max_y, max_z].into(),
+            maxs: [max_x, max_y, max_z].into(),
         }
     }
 
     /// Compute the size of the axis-aligned bounding box
     pub fn size(&self) -> Vector {
-        self.max - self.mins
+        self.maxs - self.mins
     }
 }

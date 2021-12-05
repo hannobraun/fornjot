@@ -40,15 +40,19 @@ impl Camera {
             //
             // To do that, first compute the model's highest point, as well as
             // the furthest point from the origin, in x and y.
-            let highest_point = aabb.max.z;
-            let furthest_point =
-                [aabb.mins.x.abs(), aabb.max.x, aabb.mins.y.abs(), aabb.max.y]
-                    .into_iter()
-                    .reduce(|a, b| f64::max(a, b))
-                    // `reduce` can only return `None`, if there are no items in
-                    // the iterator. And since we're creating an array full of
-                    // items above, we know this can't panic.
-                    .unwrap();
+            let highest_point = aabb.maxs.z;
+            let furthest_point = [
+                aabb.mins.x.abs(),
+                aabb.maxs.x,
+                aabb.mins.y.abs(),
+                aabb.maxs.y,
+            ]
+            .into_iter()
+            .reduce(|a, b| f64::max(a, b))
+            // `reduce` can only return `None`, if there are no items in
+            // the iterator. And since we're creating an array full of
+            // items above, we know this can't panic.
+            .unwrap();
 
             // The actual furthest point is not far enough. We don't want the
             // model to fill the whole screen.

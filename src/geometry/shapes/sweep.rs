@@ -9,7 +9,7 @@ use crate::{
 impl Shape for fj::Sweep {
     fn bounding_volume(&self) -> Aabb {
         let mut aabb = self.shape.bounding_volume();
-        aabb.max.z = self.length;
+        aabb.maxs.z = self.length;
         aabb
     }
 

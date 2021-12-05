@@ -14,7 +14,7 @@ impl Shape for fj::Circle {
     fn bounding_volume(&self) -> Aabb {
         Aabb {
             mins: point![-self.radius, -self.radius, 0.0],
-            max: point![self.radius, self.radius, 0.0],
+            maxs: point![self.radius, self.radius, 0.0],
         }
     }
 
