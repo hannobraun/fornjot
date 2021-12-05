@@ -2176,8 +2176,9 @@ dependencies = [
 
 [[package]]
 name = "wgpu_glyph"
-version = "0.15.1"
-source = "git+https://github.com/hecrj/wgpu_glyph.git#f9f9adb9f134edebecfc9d20de0edb063de22071"
+version = "0.15.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3f5774759a6288a2bf29dd56d04ef79e73c1bc2b1c289fdf25e502a2a7dc3eda"
 dependencies = [
  "bytemuck",
  "glyph_brush",
