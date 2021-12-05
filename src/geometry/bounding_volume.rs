@@ -58,7 +58,7 @@ impl Aabb {
     }
 
     /// Compute the size of the axis-aligned bounding box
-    pub fn size(&self) -> Vector {
+    pub fn extents(&self) -> Vector {
         self.maxs - self.mins
     }
 }

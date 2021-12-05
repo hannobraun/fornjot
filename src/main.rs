@@ -97,7 +97,7 @@ fn main() -> anyhow::Result<()> {
 
     let aabb = shape.bounding_volume();
 
-    let tolerance = aabb.size().min() / 1000.;
+    let tolerance = aabb.extents().min() / 1000.;
     let mut faces = shape.faces(tolerance);
 
     if let Some(path) = args.export {
