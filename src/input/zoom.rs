@@ -111,7 +111,7 @@ impl Zoom {
 
         // Limit current speed, if close to focus point and zooming in.
         if let Some(focus_point) = focus_point {
-            if self.last_direction == Direction::Neg {
+            if self.last_direction == Direction::In {
                 let d = distance(&focus_point, &camera.position());
                 self.current_speed = -f64::min(-self.current_speed, d / 8.);
             }
@@ -136,15 +136,15 @@ impl Zoom {
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 enum Direction {
     Out,
-    Neg,
+    In,
     None,
 }
 
 impl Direction {
     fn is_opposite(&self, other: &Self) -> bool {
         match (self, other) {
-            (Self::Out, Self::Neg) => true,
-            (Self::Neg, Self::Out) => true,
+            (Self::Out, Self::In) => true,
+            (Self::In, Self::Out) => true,
             _ => false,
         }
     }
@@ -156,7 +156,7 @@ impl From<f64> for Direction {
             return Self::Out;
         }
         if speed < 0.0 {
-            return Self::Neg;
+            return Self::In;
         }
 
         Self::None
