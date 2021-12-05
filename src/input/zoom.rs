@@ -79,7 +79,6 @@ impl Zoom {
         focus_point: Option<Point>,
         camera: &Camera,
     ) {
-        // TASK: Limit zoom speed depending on distance to model surface.
         self.target_speed = self.events.iter().map(|(_, event)| event).sum();
 
         // Compute current speed from target speed. Gradually converge towards
