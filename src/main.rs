@@ -217,7 +217,13 @@ fn main() -> anyhow::Result<()> {
                 let delta_t = now.duration_since(previous_time);
                 previous_time = now;
 
-                input_handler.update(delta_t.as_secs_f64(), now, &mut camera);
+                input_handler.update(
+                    delta_t.as_secs_f64(),
+                    now,
+                    &mut camera,
+                    &window,
+                    &faces,
+                );
 
                 window.inner().request_redraw();
             }

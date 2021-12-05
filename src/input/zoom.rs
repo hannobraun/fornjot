@@ -3,6 +3,10 @@ use std::{
     time::{Duration, Instant},
 };
 
+use nalgebra::distance;
+
+use crate::{camera::Camera, math::Point};
+
 pub struct Zoom {
     events: VecDeque<(Instant, f64)>,
 
@@ -68,7 +72,13 @@ impl Zoom {
     }
 
     /// Update the zoom speed based on active zoom events
-    pub fn update_speed(&mut self, now: Instant, delta_t: f64) {
+    pub fn update_speed(
+        &mut self,
+        now: Instant,
+        delta_t: f64,
+        focus_point: Option<Point>,
+        camera: &Camera,
+    ) {
         // TASK: Limit zoom speed depending on distance to model surface.
         self.target_speed = self.events.iter().map(|(_, event)| event).sum();
 
@@ -98,6 +108,14 @@ impl Zoom {
 
         // Track last zoom direction.
         self.last_direction = Direction::from(self.current_speed);
+
+        // Limit current speed, if close to focus point and zooming in.
+        if let Some(focus_point) = focus_point {
+            if self.last_direction == Direction::Neg {
+                let d = distance(&focus_point, &camera.position());
+                self.current_speed = -f64::min(-self.current_speed, d / 8.);
+            }
+        }
 
         // Track idle time
         if self.current_speed == 0.0 {

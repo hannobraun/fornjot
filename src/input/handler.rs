@@ -8,7 +8,9 @@ use winit::{
     },
 };
 
-use crate::{camera::Camera, math::Point, window::Window};
+use crate::{
+    camera::Camera, geometry::faces::Faces, math::Point, window::Window,
+};
 
 use super::{movement::Movement, rotation::Rotation, zoom::Zoom};
 
@@ -110,9 +112,18 @@ impl Handler {
         self.zoom.push_input_delta(delta, now);
     }
 
-    pub fn update(&mut self, delta_t: f64, now: Instant, camera: &mut Camera) {
+    pub fn update(
+        &mut self,
+        delta_t: f64,
+        now: Instant,
+        camera: &mut Camera,
+        window: &Window,
+        faces: &Faces,
+    ) {
+        let focus_point = camera.focus_point(window, self.cursor, faces);
+
         self.zoom.discard_old_events(now);
-        self.zoom.update_speed(now, delta_t);
+        self.zoom.update_speed(now, delta_t, focus_point, camera);
 
         camera.distance += self.zoom.speed();
     }
