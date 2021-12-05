@@ -12,7 +12,7 @@ pub struct Aabb {
 
 impl Aabb {
     /// Create a bounding volume that encloses the provided vertices
-    pub fn from_vertices(vertices: impl IntoIterator<Item = Point>) -> Self {
+    pub fn from_points(vertices: impl IntoIterator<Item = Point>) -> Self {
         let mut vertices = vertices.into_iter();
 
         // We need one vertex to seed our min/max coordinates, before going into
