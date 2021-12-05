@@ -1,8 +1,8 @@
 use nalgebra::vector;
-use parry3d_f64::{math::Isometry, shape::Triangle};
+use parry3d_f64::{bounding_volume::AABB, math::Isometry, shape::Triangle};
 
 use crate::{
-    geometry::{bounding_volume::AABB, edges::Edges, faces::Faces, Shape},
+    geometry::{edges::Edges, faces::Faces, Shape},
     math::Point,
 };
 

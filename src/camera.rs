@@ -1,11 +1,14 @@
 use std::f64::consts::FRAC_PI_2;
 
 use nalgebra::{TAffine, Transform, Translation};
-use parry3d_f64::query::{Ray, RayCast as _};
+use parry3d_f64::{
+    bounding_volume::AABB,
+    query::{Ray, RayCast as _},
+};
 use winit::dpi::PhysicalPosition;
 
 use crate::{
-    geometry::{bounding_volume::AABB, faces::Faces},
+    geometry::faces::Faces,
     math::{Point, Vector},
     window::Window,
 };

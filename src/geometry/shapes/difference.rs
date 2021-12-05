@@ -1,6 +1,7 @@
+use parry3d_f64::bounding_volume::AABB;
+
 use crate::{
     geometry::{
-        bounding_volume::AABB,
         edges::Edges,
         faces::{triangulate, Faces},
         Shape,
