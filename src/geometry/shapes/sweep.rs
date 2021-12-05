@@ -2,12 +2,12 @@ use nalgebra::vector;
 use parry3d_f64::{math::Isometry, shape::Triangle};
 
 use crate::{
-    geometry::{bounding_volume::Aabb, edges::Edges, faces::Faces, Shape},
+    geometry::{bounding_volume::AABB, edges::Edges, faces::Faces, Shape},
     math::Point,
 };
 
 impl Shape for fj::Sweep {
-    fn bounding_volume(&self) -> Aabb {
+    fn bounding_volume(&self) -> AABB {
         let mut aabb = self.shape.bounding_volume();
         aabb.maxs.z = self.length;
         aabb

@@ -5,7 +5,7 @@ use parry3d_f64::query::{Ray, RayCast as _};
 use winit::dpi::PhysicalPosition;
 
 use crate::{
-    geometry::{bounding_volume::Aabb, faces::Faces},
+    geometry::{bounding_volume::AABB, faces::Faces},
     math::{Point, Vector},
     window::Window,
 };
@@ -33,7 +33,7 @@ impl Camera {
     const INITIAL_FAR_PLANE: f64 = 1000.0;
     const INITIAL_FIELD_OF_VIEW_IN_X: f64 = FRAC_PI_2; // 90 degrees
 
-    pub fn new(aabb: &Aabb) -> Self {
+    pub fn new(aabb: &AABB) -> Self {
         let initial_distance = {
             // Let's make sure we choose a distance, so that the model fills
             // most of the screen.

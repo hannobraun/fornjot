@@ -1,6 +1,6 @@
 use crate::{
     geometry::{
-        bounding_volume::Aabb,
+        bounding_volume::AABB,
         edges::{Edge, Edges},
         faces::Faces,
         Shape,
@@ -9,8 +9,8 @@ use crate::{
 };
 
 impl Shape for fj::Rectangle {
-    fn bounding_volume(&self) -> Aabb {
-        Aabb::from_points(&self.vertices())
+    fn bounding_volume(&self) -> AABB {
+        AABB::from_points(&self.vertices())
     }
 
     fn faces(&self, _: f64) -> Faces {

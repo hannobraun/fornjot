@@ -2,7 +2,7 @@ use nalgebra::point;
 
 use crate::{
     geometry::{
-        bounding_volume::Aabb,
+        bounding_volume::AABB,
         edges::{Edge, Edges},
         faces::{triangulate, Faces},
         Shape,
@@ -11,8 +11,8 @@ use crate::{
 };
 
 impl Shape for fj::Circle {
-    fn bounding_volume(&self) -> Aabb {
-        Aabb {
+    fn bounding_volume(&self) -> AABB {
+        AABB {
             mins: point![-self.radius, -self.radius, 0.0],
             maxs: point![self.radius, self.radius, 0.0],
         }

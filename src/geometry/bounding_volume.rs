@@ -2,7 +2,7 @@ use crate::math::{Point, Vector};
 
 /// An axis-aligned bounding box
 #[derive(Debug)]
-pub struct Aabb {
+pub struct AABB {
     /// Minimum point of the axis-aligned bounding box
     pub mins: Point,
 
@@ -10,7 +10,7 @@ pub struct Aabb {
     pub maxs: Point,
 }
 
-impl Aabb {
+impl AABB {
     /// Create a bounding volume that encloses the provided vertices
     pub fn from_points<'a>(
         vertices: impl IntoIterator<Item = &'a Point>,

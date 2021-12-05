@@ -5,7 +5,7 @@ pub mod shapes;
 
 use crate::math::Point;
 
-use self::{bounding_volume::Aabb, edges::Edges, faces::Faces};
+use self::{bounding_volume::AABB, edges::Edges, faces::Faces};
 
 /// Implemented by all shapes
 pub trait Shape {
@@ -13,7 +13,7 @@ pub trait Shape {
     ///
     /// If a shape is empty, its [`Aabb`]'s `min` and `max` points must be equal
     /// (but are otherwise not specified).
-    fn bounding_volume(&self) -> Aabb;
+    fn bounding_volume(&self) -> AABB;
 
     /// Compute triangles to approximate the shape's faces
     ///
@@ -69,7 +69,7 @@ macro_rules! dispatch {
 }
 
 dispatch! {
-    bounding_volume() -> Aabb;
+    bounding_volume() -> AABB;
     faces(tolerance: f64) -> Faces;
     edges() -> Edges;
     vertices() -> Vec<Point>;
