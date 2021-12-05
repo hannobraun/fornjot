@@ -10,7 +10,7 @@ use crate::{
 
 impl Shape for fj::Rectangle {
     fn bounding_volume(&self) -> Aabb {
-        Aabb::from_points(self.vertices())
+        Aabb::from_points(&self.vertices())
     }
 
     fn faces(&self, _: f64) -> Faces {

@@ -12,8 +12,10 @@ pub struct Aabb {
 
 impl Aabb {
     /// Create a bounding volume that encloses the provided vertices
-    pub fn from_points(vertices: impl IntoIterator<Item = Point>) -> Self {
-        let mut vertices = vertices.into_iter();
+    pub fn from_points<'a>(
+        vertices: impl IntoIterator<Item = &'a Point>,
+    ) -> Self {
+        let mut vertices = vertices.into_iter().copied();
 
         // We need one vertex to seed our min/max coordinates, before going into
         // the loop. If the shape has no vertices, we'll just use the point at
