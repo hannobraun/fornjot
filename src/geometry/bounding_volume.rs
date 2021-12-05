@@ -4,7 +4,7 @@ use crate::math::{Point, Vector};
 #[derive(Debug)]
 pub struct Aabb {
     /// Minimum point of the axis-aligned bounding box
-    pub min: Point,
+    pub mins: Point,
 
     /// Maximum point of the axis-aligned bounding box
     pub max: Point,
@@ -50,13 +50,13 @@ impl Aabb {
         }
 
         Self {
-            min: [min_x, min_y, min_z].into(),
+            mins: [min_x, min_y, min_z].into(),
             max: [max_x, max_y, max_z].into(),
         }
     }
 
     /// Compute the size of the axis-aligned bounding box
     pub fn size(&self) -> Vector {
-        self.max - self.min
+        self.max - self.mins
     }
 }
