@@ -228,6 +228,7 @@ fn main() -> anyhow::Result<()> {
                 window.inner().request_redraw();
             }
             Event::RedrawRequested(_) => {
+                camera.update_planes(&aabb);
                 match renderer.draw(&camera, &draw_config) {
                     Ok(()) => {}
                     Err(err) => {

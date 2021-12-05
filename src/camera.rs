@@ -77,6 +77,14 @@ impl Camera {
         }
     }
 
+    /// Update the distances of the near and far planes
+    ///
+    /// Sets those distances such, that they envelope the model, so everything
+    /// is always shown, no matter how close the camera is to it.
+    pub fn update_planes(&mut self, _aabb: &AABB) {
+        // TASK: Implement.
+    }
+
     pub fn near_plane(&self) -> f64 {
         Self::INITIAL_NEAR_PLANE
     }
