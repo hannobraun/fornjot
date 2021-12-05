@@ -91,7 +91,26 @@ impl Camera {
     /// Sets those distances such, that they envelope the model, so everything
     /// is always shown, no matter how close the camera is to it.
     pub fn update_planes(&mut self, _aabb: &AABB) {
-        // TASK: Implement.
+        // TASK: Set the near plane distance, so that every part of the model on
+        //       screen is visible.
+        //
+        //       I initially thought we could do this based on the bounding
+        //       volume, but I realized this is not true. If the model is
+        //       concave, the camera might be within the bounding volume, so we
+        //       can't use the bounding volume to make decisions about the near
+        //       plane in this case.
+        //
+        //       Maybe any of those are better solutions:
+        //       - Use distance to the focus point.
+        //       - Shoot one or more representative rays at the model.
+        //       - Do collision detection between model and camera cone.
+        //
+        //       Or a different approach: Work out the maximum ratio between
+        //       near and far plane. Compute far plane distance, than choose the
+        //       smallest possible near plane distance based on the maximum
+        //       ratio.
+        // TASK: Set the far plane distance, so that back of the bounding volume
+        //       is fully contained.
     }
 
     pub fn near_plane(&self) -> f64 {
