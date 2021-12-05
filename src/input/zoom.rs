@@ -115,6 +115,7 @@ impl Zoom {
     }
 }
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 enum Direction {
     Pos,
     Neg,
