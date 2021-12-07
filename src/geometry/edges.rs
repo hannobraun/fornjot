@@ -58,7 +58,7 @@ impl Edge {
     /// Create a line segment
     pub fn line_segment(start: Point, end: Point) -> Self {
         Self {
-            curve: Curve::LineSegment { start, end },
+            curve: Curve::Line { start, end },
             reverse: false,
         }
     }
@@ -123,7 +123,7 @@ impl Edge {
 
                 vertices
             }
-            Curve::LineSegment { start, end } => vec![*start, *end],
+            Curve::Line { start, end } => vec![*start, *end],
         };
 
         if self.reverse {
@@ -155,7 +155,7 @@ pub enum Curve {
     },
 
     /// The edge is a line segment
-    LineSegment {
+    Line {
         /// The start of the line segment
         start: Point,
 
