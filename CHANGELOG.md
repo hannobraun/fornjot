@@ -1,6 +1,6 @@
 # Fornjot - Changelog
 
-## Unreleased
+## v0.4.0 (2021-12-07)
 
 ### Host Application
 
