@@ -50,7 +50,7 @@ impl Edge {
     /// Create an arc
     pub fn arc(radius: f64) -> Self {
         Self {
-            curve: Curve::Arc { radius },
+            curve: Curve::Circle { radius },
             reverse: false,
         }
     }
@@ -77,7 +77,7 @@ impl Edge {
     /// vertices are allowed to deviate from the actual edge.
     pub fn vertices(&self, tolerance: f64) -> Vec<Point> {
         let mut vertices = match &self.curve {
-            Curve::Arc { radius } => {
+            Curve::Circle { radius } => {
                 let angle_to_point = |angle: f64| {
                     let (sin, cos) = angle.sin_cos();
 
@@ -149,7 +149,7 @@ pub enum Curve {
     ///
     /// The naming here is a bit ambitious, as actual arcs aren't supported yet,
     /// only full circles.
-    Arc {
+    Circle {
         /// The radius of the arc
         radius: f64,
     },
