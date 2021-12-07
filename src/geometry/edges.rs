@@ -63,7 +63,7 @@ impl Edge {
         }
     }
 
-    /// Reverse the edge's path
+    /// Reverse the edge
     pub fn reverse(self) -> Self {
         Self {
             curve: self.curve,
