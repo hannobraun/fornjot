@@ -154,12 +154,12 @@ pub enum Curve {
         radius: f64,
     },
 
-    /// The edge is a line segment
+    /// A line, defined by two points
     Line {
-        /// The start of the line segment
+        /// One point defining the line
         a: Point,
 
-        /// The end of the line segment
+        /// The other point defining the line
         b: Point,
     },
 }
