@@ -40,6 +40,14 @@ impl Edges {
 /// An edge of a shape
 pub struct Edge {
     /// The curve that defines the edge's geometry
+    ///
+    /// In principle, curves could be reused for multiple edges. However, this
+    /// requires a facility, here in `Edge`, to define the boundary of the edge
+    /// on the curve.
+    ///
+    /// While such a facility doesn't exist, edges are assumed to be bounded by
+    /// the points with `0` and `1` parameters on the curve. For a line, those
+    /// would be the two points that define the line, for example.
     pub curve: Curve,
 
     /// Indicates whether the curve is reversed
