@@ -4,7 +4,8 @@
 
 ### Host Application
 
-- Tweak zooming behavior.
+- Tweak zooming behavior:
+  Zoom speed is dependent on the frequency of input signals (either the movement of the mouse wheel, or of the fingers on the track pad). Speed zooming in is limited depending on the distance to the model.
 - Improve rotation behavior:
   Always rotate the model around the point on the model that the mouse cursor points at, not the origin of the model coordinate system. This allows for much more precise control when inspecting details of the model.
 - Improve movement behavior:
