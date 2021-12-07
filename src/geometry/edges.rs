@@ -39,10 +39,10 @@ impl Edges {
 
 /// An edge of a shape
 pub struct Edge {
-    /// The path that defines the edge
+    /// The curve that defines the edge's geometry
     pub curve: Curve,
 
-    /// Indicates whether the path is reversed
+    /// Indicates whether the curve is reversed
     pub reverse: bool,
 }
 
