@@ -40,7 +40,7 @@ impl Edges {
 /// An edge of a shape
 pub struct Edge {
     /// The path that defines the edge
-    pub path: Curve,
+    pub curve: Curve,
 
     /// Indicates whether the path is reversed
     pub reverse: bool,
@@ -50,7 +50,7 @@ impl Edge {
     /// Create an arc
     pub fn arc(radius: f64) -> Self {
         Self {
-            path: Curve::Arc { radius },
+            curve: Curve::Arc { radius },
             reverse: false,
         }
     }
@@ -58,7 +58,7 @@ impl Edge {
     /// Create a line segment
     pub fn line_segment(start: Point, end: Point) -> Self {
         Self {
-            path: Curve::LineSegment { start, end },
+            curve: Curve::LineSegment { start, end },
             reverse: false,
         }
     }
@@ -66,7 +66,7 @@ impl Edge {
     /// Reverse the edge's path
     pub fn reverse(self) -> Self {
         Self {
-            path: self.path,
+            curve: self.curve,
             reverse: !self.reverse,
         }
     }
@@ -76,7 +76,7 @@ impl Edge {
     /// `tolerance` defines how far the implicit line segments between those
     /// vertices are allowed to deviate from the actual edge.
     pub fn vertices(&self, tolerance: f64) -> Vec<Point> {
-        let mut vertices = match &self.path {
+        let mut vertices = match &self.curve {
             Curve::Arc { radius } => {
                 let angle_to_point = |angle: f64| {
                     let (sin, cos) = angle.sin_cos();
