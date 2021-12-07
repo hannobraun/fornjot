@@ -134,7 +134,16 @@ impl Edge {
     }
 }
 
-/// A path
+/// A one-dimensional shape
+///
+/// The word "curve" is used as an umbrella term for all one-dimensional shapes,
+/// and doesn't imply that those shapes need to be curved. Straight lines are
+/// included.
+///
+/// The nomenclature is inspired by Boundary Representation Modelling Techniques
+/// by Ian Stroud. There, curves refer to unbounded one-dimensional geometry,
+/// while edges are bounded portions of curves. This distinction is not observed
+/// here, but moving things into that direction is the intention.
 pub enum Curve {
     /// The edge is an arc
     ///
