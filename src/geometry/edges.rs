@@ -145,12 +145,19 @@ impl Edge {
 /// while edges are bounded portions of curves. This distinction is not observed
 /// here, but moving things into that direction is the intention.
 pub enum Curve {
-    /// The edge is an arc
+    /// A circle
     ///
-    /// The naming here is a bit ambitious, as actual arcs aren't supported yet,
-    /// only full circles.
+    /// This representation is not optimal, for two reasons:
+    /// - It doesn't define the center point of the circle. For that reason,
+    ///   only circles centered on the origin are supported at this point.
+    /// - It doesn't define where the circle begins. For the purposes of
+    ///   defining an arc on the circle, the zero angle will implicitly be to
+    ///   the right.
+    ///
+    /// It might be better to define a circle using two points: The center, and
+    /// the "zero" point on the circumference.
     Circle {
-        /// The radius of the arc
+        /// The radius of the circle
         radius: f64,
     },
 
