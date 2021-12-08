@@ -60,6 +60,7 @@ impl From<Difference> for Shape2d {
     }
 }
 
+// TASK: Remove `Rectangle`, once `Shape` is powerful enough to replace it.
 /// A rectangle
 #[derive(Clone, Debug)]
 #[repr(C)]
