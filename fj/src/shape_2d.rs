@@ -88,4 +88,5 @@ impl From<Rectangle> for Shape2d {
 /// Sketches are currently limited to a single cycle of straight lines.
 #[derive(Clone, Debug)]
 #[repr(C)]
+// TASK: This is not FFI-safe, meaning it can't really be used in models.
 pub struct Sketch(pub Vec<[f64; 2]>);
