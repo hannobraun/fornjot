@@ -6,10 +6,10 @@ pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
     let y = args.get("y").unwrap_or(&"2.0".to_owned()).parse().unwrap();
     let z = args.get("z").unwrap_or(&"1.0".to_owned()).parse().unwrap();
 
-    let rectangle = fj::Rectangle { x, y }.into();
+    let rectangle = fj::Rectangle { x, y };
 
     let cuboid = fj::Sweep {
-        shape: rectangle,
+        shape: rectangle.into(),
         length: z,
     };
 
