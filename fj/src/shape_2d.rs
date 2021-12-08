@@ -12,6 +12,9 @@ pub enum Shape2d {
 
     /// A rectangle
     Rectangle(Rectangle),
+
+    /// A sketch
+    Sketch(Sketch),
 }
 
 /// A circle
@@ -79,3 +82,10 @@ impl From<Rectangle> for Shape2d {
         Self::Rectangle(shape)
     }
 }
+
+/// A sketch
+///
+/// Sketches are currently limited to a single cycle of straight lines.
+#[derive(Clone, Debug)]
+#[repr(C)]
+pub struct Sketch(pub Vec<[f64; 2]>);

@@ -52,6 +52,7 @@ macro_rules! dispatch {
                         Self::Circle(shape) => shape.$method($($arg_name)*),
                         Self::Difference(shape) => shape.$method($($arg_name)*),
                         Self::Rectangle(shape) => shape.$method($($arg_name)*),
+                        Self::Sketch(shape) => shape.$method($($arg_name)*),
                     }
                 }
             )*
