@@ -3,6 +3,9 @@ use parry3d_f64::shape::Triangle;
 use crate::math::Point;
 
 /// The faces of a shape
+///
+/// Right now, this is just the triangulated form of all faces. The plan is to
+/// refactor this over time, to make it more similar to `Edges`.
 pub struct Faces(pub Vec<Triangle>);
 
 pub fn triangulate(vertices: &[Point]) -> Vec<Triangle> {
