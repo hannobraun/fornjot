@@ -97,6 +97,11 @@ impl Sketch {
     pub fn from_points(points: Vec<[f64; 2]>) -> Self {
         Self(points)
     }
+
+    /// Return the points of the sketch
+    pub fn as_points(&self) -> &[[f64; 2]] {
+        self.0.as_slice()
+    }
 }
 
 impl From<Sketch> for Shape {
