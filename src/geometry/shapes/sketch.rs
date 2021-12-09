@@ -1,7 +1,11 @@
 use parry3d_f64::bounding_volume::AABB;
 
 use crate::{
-    geometry::{edges::Edges, faces::Faces, Shape},
+    geometry::{
+        edges::Edges,
+        faces::{triangulate, Faces},
+        Shape,
+    },
     math::Point,
 };
 
@@ -11,8 +15,9 @@ impl Shape for fj::Sketch {
     }
 
     fn faces(&self, _: f64) -> Faces {
-        // TASK: Implement.
-        todo!()
+        // TASK: This assumes that the sketch is convex. Remove this
+        //       precondition, or at least add a check for it.
+        Faces(triangulate(&self.vertices()))
     }
 
     fn edges(&self) -> Edges {
