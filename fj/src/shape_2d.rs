@@ -101,8 +101,8 @@ impl Sketch {
     }
 
     /// Return the points of the sketch
-    pub fn as_points(&self) -> &[[f64; 2]] {
-        self.0.as_slice()
+    pub fn to_points(&self) -> Vec<[f64; 2]> {
+        self.0.clone()
     }
 }
 
