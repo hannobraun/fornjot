@@ -113,6 +113,10 @@ impl Sketch {
         let length = points.len();
         let capacity = points.capacity();
 
+        // We're taking ownership of the memory here, so we can't allow `points`
+        // to deallocate it.
+        mem::forget(points);
+
         Self {
             ptr,
             length,
