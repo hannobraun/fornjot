@@ -91,6 +91,10 @@ impl From<Rectangle> for Shape2d {
 /// Sketches are currently limited to a single cycle of straight lines,
 /// represented by a number of points. For example, if the points a, b, and c
 /// are provided, the edges ab, bc, and ca are assumed.
+///
+/// Nothing about these edges is checked right now, but algorithms might assume
+/// that the edges are non-overlapping. If you create a `Sketch` with
+/// overlapping edges, you're on your own.
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Sketch {
