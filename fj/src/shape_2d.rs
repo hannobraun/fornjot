@@ -90,7 +90,7 @@ impl From<Rectangle> for Shape2d {
 #[derive(Clone, Debug)]
 #[repr(C)]
 // TASK: This is not FFI-safe, meaning it can't really be used in models.
-pub struct Sketch(pub Vec<[f64; 2]>);
+pub struct Sketch(Vec<[f64; 2]>);
 
 impl Sketch {
     /// Create a sketch from a bunch of points
