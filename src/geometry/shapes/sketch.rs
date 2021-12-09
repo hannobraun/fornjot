@@ -22,7 +22,9 @@ impl Shape for fj::Sketch {
     }
 
     fn vertices(&self) -> Vec<Point> {
-        // TASK: Implement.
-        todo!()
+        self.to_points()
+            .into_iter()
+            .map(|[x, y]| Point::new(x, y, 0.))
+            .collect()
     }
 }
