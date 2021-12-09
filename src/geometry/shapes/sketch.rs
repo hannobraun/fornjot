@@ -7,8 +7,7 @@ use crate::{
 
 impl Shape for fj::Sketch {
     fn bounding_volume(&self) -> AABB {
-        // TASK: Implement.
-        todo!()
+        AABB::from_points(&self.vertices())
     }
 
     fn faces(&self, _: f64) -> Faces {
