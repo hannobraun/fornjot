@@ -86,7 +86,9 @@ impl From<Rectangle> for Shape2d {
 
 /// A sketch
 ///
-/// Sketches are currently limited to a single cycle of straight lines.
+/// Sketches are currently limited to a single cycle of straight lines,
+/// represented by a number of points. For example, if the points a, b, and c
+/// are provided, the edges ab, bc, and ca are assumed.
 #[derive(Clone, Debug)]
 #[repr(C)]
 // TASK: This is not FFI-safe, meaning it can't really be used in models.
