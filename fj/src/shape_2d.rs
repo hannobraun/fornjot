@@ -12,9 +12,6 @@ pub enum Shape2d {
     /// A difference between two shapes
     Difference(Box<Difference>),
 
-    /// A rectangle
-    Rectangle(Rectangle),
-
     /// A sketch
     Sketch(Sketch),
 }
@@ -59,30 +56,6 @@ impl From<Difference> for Shape {
 impl From<Difference> for Shape2d {
     fn from(shape: Difference) -> Self {
         Self::Difference(Box::new(shape))
-    }
-}
-
-// TASK: Remove `Rectangle`, once `Shape` is powerful enough to replace it.
-/// A rectangle
-#[derive(Clone, Debug)]
-#[repr(C)]
-pub struct Rectangle {
-    /// The size of the rectangle along the x-axis
-    pub x: f64,
-
-    /// The size of the rectangle along the y-axis
-    pub y: f64,
-}
-
-impl From<Rectangle> for Shape {
-    fn from(shape: Rectangle) -> Self {
-        Self::Shape2d(Shape2d::Rectangle(shape))
-    }
-}
-
-impl From<Rectangle> for Shape2d {
-    fn from(shape: Rectangle) -> Self {
-        Self::Rectangle(shape)
     }
 }
 
