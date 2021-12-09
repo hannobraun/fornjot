@@ -1,3 +1,5 @@
+use std::mem;
+
 use crate::Shape;
 
 /// A 2-dimensional shape
@@ -91,18 +93,48 @@ impl From<Rectangle> for Shape2d {
 /// are provided, the edges ab, bc, and ca are assumed.
 #[derive(Clone, Debug)]
 #[repr(C)]
-// TASK: This is not FFI-safe, meaning it can't really be used in models.
-pub struct Sketch(Vec<[f64; 2]>);
+pub struct Sketch {
+    // The fields are the raw parts of a `Vec`. `Sketch` needs to be FFI-safe,
+    // meaning it can't store a `Vec` directly. It needs to take this detour.
+    ptr: *mut [f64; 2],
+    length: usize,
+    capacity: usize,
+}
 
 impl Sketch {
     /// Create a sketch from a bunch of points
-    pub fn from_points(points: Vec<[f64; 2]>) -> Self {
-        Self(points)
+    pub fn from_points(mut points: Vec<[f64; 2]>) -> Self {
+        // This can be cleaned up, once `Vec::into_raw_parts` is stable.
+        let ptr = points.as_mut_ptr();
+        let length = points.len();
+        let capacity = points.capacity();
+
+        Self {
+            ptr,
+            length,
+            capacity,
+        }
     }
 
     /// Return the points of the sketch
     pub fn to_points(&self) -> Vec<[f64; 2]> {
-        self.0.clone()
+        // This is sound. All invariants are automatically kept, as the raw
+        // parts come from an original `Vec` that is identical to the new one we
+        // create here, and aren't being modified anywhere.
+        let points = unsafe {
+            Vec::from_raw_parts(self.ptr, self.length, self.capacity)
+        };
+
+        // Ownership of the pointer in `self.raw_parts` transferred to `points`.
+        // We work around that, by returning a clone of `points` (hence not
+        // giving ownership to the caller).
+        let ret = points.clone();
+
+        // Now we just need to forget that `points` ever existed, and we keep
+        // ownership of the pointer.
+        mem::forget(points);
+
+        ret
     }
 }
 
@@ -117,3 +149,7 @@ impl From<Sketch> for Shape2d {
         Self::Sketch(shape)
     }
 }
+
+// `Sketch` can be `Send`, because it encapsulates the raw pointer it contains,
+// making sure memory ownership rules are observed.
+unsafe impl Send for Sketch {}
