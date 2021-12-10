@@ -1,5 +1,11 @@
 # Fornjot - Changelog
 
+## Unreleased
+
+### `fj` Library
+
+- Replaced `fj::Rectangle` with the more powerful `fj::Sketch`.
+
 ## v0.4.0 (2021-12-07)
 
 ### Host Application
