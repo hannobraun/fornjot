@@ -158,10 +158,6 @@ impl Renderer {
         camera: &Camera,
         config: &DrawConfig,
     ) -> Result<(), DrawError> {
-        // TASK: Experiment with displaying a background. Some kind of far-away
-        //       walls. This could help illustrate that the input moves the
-        //       object, not some camera around the object.
-
         let aspect_ratio = self.surface_config.width as f64
             / self.surface_config.height as f64;
         let uniforms = Uniforms {
