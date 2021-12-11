@@ -87,6 +87,22 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
     assert_eq!(inner_depth, 470.);
     assert_eq!(inner_height, 415.);
 
+    // ## Outer Dimensions
+    //
+    // To compute the outer dimensions, we need to know the material strength.
+    // The following is my current assumption:
+    let material_strength = 12.;
+
+    // This gives us the following outer dimensions:
+    let outer_width = inner_width + material_strength * 2.;
+    let outer_depth = inner_depth + material_strength * 2.;
+    let outer_height = inner_height + material_strength * 2.;
+
+    // These are the values for the outer dimensions:
+    assert_eq!(outer_width, 439.);
+    assert_eq!(outer_depth, 494.);
+    assert_eq!(outer_height, 439.);
+
     // TASK: Implement.
     todo!()
 }
