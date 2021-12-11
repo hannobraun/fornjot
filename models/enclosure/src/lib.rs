@@ -103,6 +103,20 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
     assert_eq!(outer_depth, 494.);
     assert_eq!(outer_height, 439.);
 
+    // ## Tolerances
+    //
+    // Since all dimensions are based on guesstimated margins, there is mostly
+    // some wiggle room. For width and depth, a few mm less or a few cm more
+    // won't matter.
+    //
+    // However, height is a *critical dimension*. A few mm less won't matter
+    // here either, but the height where I want to place the enclosure is
+    // limited. As planned, there are only going to be a few mm of space left
+    // above the enclosure.
+    //
+    // To be on the safe side, the height should be limited to this value:
+    assert!(outer_height < 440.);
+
     // TASK: Implement.
     todo!()
 }
