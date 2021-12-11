@@ -117,6 +117,16 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
     // To be on the safe side, the height should be limited to this value:
     assert!(outer_height < 440.);
 
-    // TASK: Implement.
-    todo!()
+    #[rustfmt::skip]
+    let base = fj::Sketch::from_points(vec![
+        [         0.,          0.],
+        [outer_width,          0.],
+        [outer_width, outer_depth],
+        [         0., outer_depth],
+    ]);
+    // TASK: Sweep base by `material_strength`.
+
+    // TASK: Model rest of enclosure.
+
+    base.into()
 }
