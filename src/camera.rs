@@ -76,6 +76,9 @@ impl Camera {
             highest_point + distance_from_model
         };
 
+        // TASK: Set initial translation, so that camera is centered on the
+        //       model.
+
         Self {
             near_plane: Self::INITIAL_NEAR_PLANE,
             far_plane: Self::INITIAL_FAR_PLANE,
