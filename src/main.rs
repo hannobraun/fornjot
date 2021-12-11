@@ -228,10 +228,7 @@ fn main() -> anyhow::Result<()> {
                 window.inner().request_redraw();
             }
             Event::RedrawRequested(_) => {
-                // TASK: Update near and far plane, so they enclose the model.
-                //
-                //       See this issue:
-                //       https://github.com/hannobraun/fornjot/issues/19
+                camera.update_planes(&aabb);
 
                 match renderer.draw(&camera, &draw_config) {
                     Ok(()) => {}

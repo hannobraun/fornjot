@@ -174,4 +174,11 @@ impl Camera {
 
         transform
     }
+
+    pub fn update_planes(&mut self, _aabb: &AABB) {
+        // TASK: Update near and far plane, so they enclose the model.
+        //
+        //       See this issue:
+        //       https://github.com/hannobraun/fornjot/issues/19
+    }
 }
