@@ -39,7 +39,7 @@ pub struct Camera {
 
 impl Camera {
     const INITIAL_NEAR_PLANE: f64 = 0.1;
-    const INITIAL_FAR_PLANE: f64 = 1000.0;
+    const INITIAL_FAR_PLANE: f64 = 10_000.0;
     const INITIAL_FIELD_OF_VIEW_IN_X: f64 = FRAC_PI_2; // 90 degrees
 
     pub fn new(aabb: &AABB) -> Self {
