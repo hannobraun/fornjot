@@ -204,13 +204,19 @@ impl Camera {
             }
         }
 
-        // TASK: Handle `dist_min` and `dist_max` being negative.
-
         // TASK: Setting `self.near_plane` to `dist_min` should theoretically
         //       work, but results in the front of the model being clipped. I
         //       wasn't able to figure out why, and for the time being, this
         //       factor seems to work well enough.
-        self.near_plane = dist_min * 0.5;
-        self.far_plane = dist_max;
+        self.near_plane = if dist_min > 0. {
+            dist_min * 0.5
+        } else {
+            Self::DEFAULT_NEAR_PLANE
+        };
+        self.far_plane = if dist_max > 0. {
+            dist_max
+        } else {
+            Self::DEFAULT_FAR_PLANE
+        };
     }
 }
