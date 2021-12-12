@@ -1,4 +1,4 @@
-use nalgebra::{distance, Translation2};
+use nalgebra::distance;
 use winit::dpi::PhysicalPosition;
 
 use crate::{camera::Camera, math::Point, window::Window};
@@ -46,9 +46,9 @@ impl Movement {
                 let f = d2 / d1;
 
                 let diff = (cursor - previous) * f;
-                let translation = Translation2::new(diff.x, diff.y);
 
-                camera.translation = translation * camera.translation;
+                camera.translation.x += diff.x;
+                camera.translation.y += diff.y;
             }
         }
 
