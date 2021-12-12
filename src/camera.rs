@@ -204,11 +204,11 @@ impl Camera {
             }
         }
 
-        // TASK: Setting `self.near_plane` to `dist_min` should theoretically
-        //       work, but results in the front of the model being clipped. I
-        //       wasn't able to figure out why, and for the time being, this
-        //       factor seems to work well enough.
         self.near_plane = if dist_min > 0. {
+            // TASK: Setting `self.near_plane` to `dist_min` should
+            //       theoretically work, but results in the front of the model
+            //       being clipped. I wasn't able to figure out why, and for the
+            //       time being, this factor seems to work well enough.
             dist_min * 0.5
         } else {
             Self::DEFAULT_NEAR_PLANE
