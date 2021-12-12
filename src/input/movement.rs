@@ -43,9 +43,7 @@ impl Movement {
                 let d1 = distance(&camera.position(), &cursor);
                 let d2 = distance(&camera.position(), &focus_point);
 
-                let f = d2 / d1;
-
-                let diff = (cursor - previous) * f;
+                let diff = (cursor - previous) * d2 / d1;
 
                 camera.translation.x += diff.x;
                 camera.translation.y += diff.y;
