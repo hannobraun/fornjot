@@ -39,7 +39,7 @@ pub struct Camera {
 
 impl Camera {
     const DEFAULT_NEAR_PLANE: f64 = 0.0001;
-    const INITIAL_FAR_PLANE: f64 = 1000.0;
+    const DEFAULT_FAR_PLANE: f64 = 1000.0;
 
     const INITIAL_FIELD_OF_VIEW_IN_X: f64 = FRAC_PI_2; // 90 degrees
 
@@ -82,7 +82,7 @@ impl Camera {
 
         Self {
             near_plane: Self::DEFAULT_NEAR_PLANE,
-            far_plane: Self::INITIAL_FAR_PLANE,
+            far_plane: Self::DEFAULT_FAR_PLANE,
 
             rotation: Transform::identity(),
             translation: Translation::identity(),
