@@ -175,10 +175,41 @@ impl Camera {
         transform
     }
 
-    pub fn update_planes(&mut self, _aabb: &AABB) {
-        // TASK: Update near and far plane, so they enclose the model.
-        //
-        //       See this issue:
-        //       https://github.com/hannobraun/fornjot/issues/19
+    pub fn update_planes(&mut self, aabb: &AABB) {
+        let view_transform = self.view_transform();
+        let view_direction = Vector::new(0., 0., -1.);
+
+        let mut dist_min = f64::INFINITY;
+        let mut dist_max = f64::NEG_INFINITY;
+
+        for vertex in aabb.vertices() {
+            let point = view_transform.transform_point(&vertex);
+
+            // Project `point` onto `view_direction`. See this Wikipedia page:
+            // https://en.wikipedia.org/wiki/Vector_projection
+            //
+            // Let's rename the variables first, so they fit the names in that
+            // page.
+            let (a, b) = (point.coords, view_direction);
+            let a1 = a.dot(&b) / b.dot(&b) * b;
+
+            let dist = a1.magnitude();
+
+            if dist < dist_min {
+                dist_min = dist;
+            }
+            if dist > dist_max {
+                dist_max = dist;
+            }
+        }
+
+        // TASK: Handle `dist_min` and `dist_max` being negative.
+
+        // TASK: Setting `self.near_plane` to `dist_min` should theoretically
+        //       work, but results in the front of the model being clipped. I
+        //       wasn't able to figure out why, and for the time being, this
+        //       factor seems to work well enough.
+        self.near_plane = dist_min * 0.5;
+        self.far_plane = dist_max;
     }
 }
