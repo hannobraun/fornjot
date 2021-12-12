@@ -45,6 +45,9 @@ impl Movement {
 
                 let diff = (cursor - previous) * d2 / d1;
 
+                // TASK: This doesn't take rotation into account, and thus
+                //       doesn't work correctly if any rotation has been
+                //       applied.
                 camera.translation.x += diff.x;
                 camera.translation.y += diff.y;
             }
