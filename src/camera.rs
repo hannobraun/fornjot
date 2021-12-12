@@ -33,8 +33,7 @@ pub struct Camera {
     /// point, which means they must include a translational component.
     pub rotation: Transform<f64, TAffine, 3>,
 
-    pub translation: Translation<f64, 2>,
-    pub distance: f64,
+    pub translation: Translation<f64, 3>,
 }
 
 impl Camera {
@@ -85,8 +84,7 @@ impl Camera {
             far_plane: Self::DEFAULT_FAR_PLANE,
 
             rotation: Transform::identity(),
-            translation: Translation::identity(),
-            distance: initial_distance,
+            translation: Translation::from([0.0, 0.0, -initial_distance]),
         }
     }
 
@@ -166,11 +164,7 @@ impl Camera {
         // problems that this operation would otherwise have.
         let mut transform = Transform::identity();
 
-        transform *= Translation::from([
-            self.translation.x,
-            self.translation.y,
-            -self.distance,
-        ]);
+        transform *= self.translation;
         transform *= self.rotation;
 
         transform
