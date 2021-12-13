@@ -25,7 +25,7 @@ impl Transform {
             camera.far_plane(),
         );
 
-        let transform = projection.to_projective() * camera.view_transform();
+        let transform = projection.to_projective() * camera.camera_to_model();
 
         Self::from(transform.matrix())
     }
@@ -36,7 +36,7 @@ impl Transform {
     /// transform is used for transforming normals on the GPU.
     pub fn for_normals(camera: &Camera) -> Self {
         let transform = camera
-            .view_transform()
+            .camera_to_model()
             .inverse()
             .to_homogeneous()
             .transpose();

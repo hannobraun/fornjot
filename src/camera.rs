@@ -101,7 +101,7 @@ impl Camera {
     }
 
     pub fn position(&self) -> Point {
-        self.view_transform()
+        self.camera_to_model()
             .inverse_transform_point(&Point::origin())
     }
 
@@ -125,7 +125,7 @@ impl Camera {
         let cursor =
             Point::origin() + Vector::new(x * f, y * f, -self.near_plane());
 
-        self.view_transform().inverse_transform_point(&cursor)
+        self.camera_to_model().inverse_transform_point(&cursor)
     }
 
     /// Compute the point on the model, that the cursor currently points to
@@ -160,7 +160,7 @@ impl Camera {
     }
 
     /// Access the transform from camera to model space
-    pub fn view_transform(&self) -> Transform<f64, TAffine, 3> {
+    pub fn camera_to_model(&self) -> Transform<f64, TAffine, 3> {
         // Using a mutable variable cleanly takes care of any type inference
         // problems that this operation would otherwise have.
         let mut transform = Transform::identity();
@@ -172,7 +172,7 @@ impl Camera {
     }
 
     pub fn update_planes(&mut self, aabb: &AABB) {
-        let view_transform = self.view_transform();
+        let view_transform = self.camera_to_model();
         let view_direction = Vector::new(0., 0., -1.);
 
         let mut dist_min = f64::INFINITY;

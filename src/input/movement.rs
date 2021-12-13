@@ -44,7 +44,7 @@ impl Movement {
                 let d2 = distance(&camera.position(), &focus_point);
 
                 let diff = (cursor - previous) * d2 / d1;
-                let offset = camera.view_transform().transform_vector(&diff);
+                let offset = camera.camera_to_model().transform_vector(&diff);
 
                 camera.translation.x += offset.x;
                 camera.translation.y += offset.y;
