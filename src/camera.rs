@@ -159,6 +159,7 @@ impl Camera {
         min_t.map(|t| ray.point_at(t))
     }
 
+    /// Access the transform from camera to model space
     pub fn view_transform(&self) -> Transform<f64, TAffine, 3> {
         // Using a mutable variable cleanly takes care of any type inference
         // problems that this operation would otherwise have.
