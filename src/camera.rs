@@ -76,15 +76,22 @@ impl Camera {
             highest_point + distance_from_model
         };
 
-        // TASK: Set initial translation, so that camera is centered on the
-        //       model.
+        let initial_offset = {
+            let mut offset = aabb.center();
+            offset.z = 0.;
+            -offset
+        };
 
         Self {
             near_plane: Self::DEFAULT_NEAR_PLANE,
             far_plane: Self::DEFAULT_FAR_PLANE,
 
             rotation: Transform::identity(),
-            translation: Translation::from([0.0, 0.0, -initial_distance]),
+            translation: Translation::from([
+                initial_offset.x,
+                initial_offset.y,
+                -initial_distance,
+            ]),
         }
     }
 
