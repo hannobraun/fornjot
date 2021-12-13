@@ -124,7 +124,10 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
         [outer_width, outer_depth],
         [         0., outer_depth],
     ]);
-    // TASK: Sweep base by `material_strength`.
+    let base = fj::Sweep {
+        shape: base.into(),
+        length: material_strength,
+    };
 
     // TASK: Model rest of enclosure.
 
