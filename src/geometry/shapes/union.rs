@@ -13,9 +13,14 @@ impl Shape for fj::Union {
         a.merged(&b)
     }
 
-    fn faces(&self, _tolerance: f64) -> Faces {
-        // TASK: Implement.
-        todo!()
+    fn faces(&self, tolerance: f64) -> Faces {
+        let a = self.a.faces(tolerance);
+        let b = self.b.faces(tolerance);
+
+        let mut triangles = a.0;
+        triangles.extend(b.0);
+
+        Faces(triangles)
     }
 
     fn edges(&self) -> Edges {
