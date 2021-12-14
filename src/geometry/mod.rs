@@ -62,6 +62,7 @@ macro_rules! dispatch {
                 fn $method(&self, $($arg_name: $arg_ty)*) -> $ret {
                     match self {
                         Self::Sweep(shape) => shape.$method($($arg_name)*),
+                        Self::Union(shape) => shape.$method($($arg_name)*),
                     }
                 }
             )*

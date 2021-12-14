@@ -6,6 +6,9 @@ use crate::{Shape, Shape2d};
 pub enum Shape3d {
     /// A sweep of 2-dimensional shape along the z-axis
     Sweep(Sweep),
+
+    /// A union of 2 3-dimensional shapes
+    Union(Union),
 }
 
 impl From<Shape3d> for Shape {
@@ -34,5 +37,28 @@ impl From<Sweep> for Shape {
 impl From<Sweep> for Shape3d {
     fn from(shape: Sweep) -> Self {
         Self::Sweep(shape)
+    }
+}
+
+/// A union of 2 3-dimensional shapes
+#[derive(Clone, Debug)]
+#[repr(C)]
+pub struct Union {
+    /// The first of the shapes
+    pub a: Box<Shape3d>,
+
+    /// The second of the shapes
+    pub b: Box<Shape3d>,
+}
+
+impl From<Union> for Shape {
+    fn from(shape: Union) -> Self {
+        Self::Shape3d(Shape3d::Union(shape))
+    }
+}
+
+impl From<Union> for Shape3d {
+    fn from(shape: Union) -> Self {
+        Self::Union(shape)
     }
 }
