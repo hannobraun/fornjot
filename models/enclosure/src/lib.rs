@@ -129,7 +129,25 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
         length: material_strength,
     };
 
+    #[rustfmt::skip]
+    let left = fj::Sketch::from_points(vec![
+        [         0.,           0.],
+        [outer_depth,           0.],
+        [outer_depth, inner_height],
+        [         0., inner_height],
+    ]);
+    let left = fj::Sweep {
+        shape: left.into(),
+        length: material_strength * 2.,
+    };
+    // TASK: Transform left wall.
+
     // TASK: Model rest of enclosure.
 
-    base.into()
+    let enclosure = fj::Union {
+        a: Box::new(base.into()),
+        b: Box::new(left.into()),
+    };
+
+    enclosure.into()
 }
