@@ -4,6 +4,9 @@ use crate::{Shape, Shape2d};
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub enum Shape3d {
+    /// A rotated 3-dimensional shape
+    Rotate(Rotate),
+
     /// A sweep of 2-dimensional shape along the z-axis
     Sweep(Sweep),
 
@@ -14,6 +17,35 @@ pub enum Shape3d {
 impl From<Shape3d> for Shape {
     fn from(shape: Shape3d) -> Self {
         Self::Shape3d(shape.into())
+    }
+}
+
+/// A rotated 3-dimensional shape
+#[derive(Clone, Debug)]
+#[repr(C)]
+pub struct Rotate {
+    /// The shape being rotated
+    pub shape: Box<Shape3d>,
+
+    /// The rotation around the X axis in rad
+    pub x: f64,
+
+    /// The rotation around the Y axis in rad
+    pub y: f64,
+
+    /// The rotation around the Z axis in rad
+    pub z: f64,
+}
+
+impl From<Rotate> for Shape {
+    fn from(shape: Rotate) -> Self {
+        Self::Shape3d(Shape3d::Rotate(shape))
+    }
+}
+
+impl From<Rotate> for Shape3d {
+    fn from(shape: Rotate) -> Self {
+        Self::Rotate(shape)
     }
 }
 
