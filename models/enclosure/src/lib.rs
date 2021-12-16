@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, f64::consts::PI};
 
 #[no_mangle]
 pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
@@ -140,7 +140,13 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
         shape: left.into(),
         length: material_strength * 2.,
     };
-    // TASK: Transform left wall.
+    let left = fj::Rotate {
+        shape: Box::new(left.into()),
+        x: 0.,
+        y: -PI,
+        z: 0.,
+    };
+    // TASK: Translate left wall.
 
     // TASK: Model rest of enclosure.
 
