@@ -138,7 +138,7 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
     ]);
     let left = fj::Sweep {
         shape: left.into(),
-        length: material_strength * 2.,
+        length: material_strength,
     };
     let left = fj::Rotate {
         shape: Box::new(left.into()),
