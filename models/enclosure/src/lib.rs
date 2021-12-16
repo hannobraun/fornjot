@@ -131,10 +131,10 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
 
     #[rustfmt::skip]
     let left = fj::Sketch::from_points(vec![
-        [         0.,           0.],
-        [outer_depth,           0.],
-        [outer_depth, inner_height],
-        [         0., inner_height],
+        [          0.,          0.],
+        [inner_height,          0.],
+        [inner_height, outer_depth],
+        [          0., outer_depth],
     ]);
     let left = fj::Sweep {
         shape: left.into(),
