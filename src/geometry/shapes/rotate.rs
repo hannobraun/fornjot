@@ -10,9 +10,15 @@ impl Shape for fj::Rotate {
         self.shape.bounding_volume().transform_by(&isometry(self))
     }
 
-    fn faces(&self, _tolerance: f64) -> Faces {
-        // TASK: Implement.
-        todo!()
+    fn faces(&self, tolerance: f64) -> Faces {
+        let mut faces = self.shape.faces(tolerance);
+        let isometry = isometry(self);
+
+        for triangle in &mut faces.0 {
+            *triangle = triangle.transformed(&isometry);
+        }
+
+        faces
     }
 
     fn edges(&self) -> Edges {
