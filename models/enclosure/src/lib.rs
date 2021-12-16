@@ -1,4 +1,4 @@
-use std::{collections::HashMap, f64::consts::PI};
+use std::{collections::HashMap, f64::consts::FRAC_PI_2};
 
 #[no_mangle]
 pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
@@ -143,7 +143,7 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
     let left = fj::Rotate {
         shape: Box::new(left.into()),
         axis: [0., 1., 0.],
-        angle: -PI,
+        angle: -FRAC_PI_2,
     };
     // TASK: Translate left wall.
 
