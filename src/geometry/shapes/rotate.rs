@@ -7,11 +7,7 @@ use crate::{
 
 impl Shape for fj::Rotate {
     fn bounding_volume(&self) -> AABB {
-        let axis = Vector::from(self.axis).normalize();
-
-        self.shape
-            .bounding_volume()
-            .transform_by(&Isometry::rotation(axis * self.angle))
+        self.shape.bounding_volume().transform_by(&isometry(self))
     }
 
     fn faces(&self, _tolerance: f64) -> Faces {
@@ -28,4 +24,9 @@ impl Shape for fj::Rotate {
         // TASK: Implement.
         todo!()
     }
+}
+
+fn isometry(rotate: &fj::Rotate) -> Isometry<f64> {
+    let axis = Vector::from(rotate.axis).normalize();
+    Isometry::rotation(axis * rotate.angle)
 }
