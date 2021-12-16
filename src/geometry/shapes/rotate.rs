@@ -1,14 +1,17 @@
-use parry3d_f64::bounding_volume::AABB;
+use parry3d_f64::{bounding_volume::AABB, math::Isometry};
 
 use crate::{
     geometry::{edges::Edges, faces::Faces, Shape},
-    math::Point,
+    math::{Point, Vector},
 };
 
 impl Shape for fj::Rotate {
     fn bounding_volume(&self) -> AABB {
-        // TASK: Implement.
-        todo!()
+        let axis = Vector::from(self.axis).normalize();
+
+        self.shape
+            .bounding_volume()
+            .transform_by(&Isometry::rotation(axis * self.angle))
     }
 
     fn faces(&self, _tolerance: f64) -> Faces {
