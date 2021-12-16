@@ -27,14 +27,11 @@ pub struct Rotate {
     /// The shape being rotated
     pub shape: Box<Shape3d>,
 
-    /// The rotation around the X axis in rad
-    pub x: f64,
+    /// The axis of the rotation
+    pub axis: [f64; 3],
 
-    /// The rotation around the Y axis in rad
-    pub y: f64,
-
-    /// The rotation around the Z axis in rad
-    pub z: f64,
+    /// The angle of the rotation
+    pub angle: f64,
 }
 
 impl From<Rotate> for Shape {

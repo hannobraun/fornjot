@@ -142,9 +142,8 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
     };
     let left = fj::Rotate {
         shape: Box::new(left.into()),
-        x: 0.,
-        y: -PI,
-        z: 0.,
+        axis: [0., 1., 0.],
+        angle: -PI,
     };
     // TASK: Translate left wall.
 
