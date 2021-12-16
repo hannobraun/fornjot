@@ -34,7 +34,7 @@ pub struct Renderer {
 
 impl Renderer {
     pub async fn new(window: &Window) -> Result<Self, InitError> {
-        let instance = wgpu::Instance::new(wgpu::Backends::VULKAN);
+        let instance = wgpu::Instance::new(wgpu::Backends::PRIMARY);
 
         // This is sound, as `window` is an object to create a surface upon.
         let surface = unsafe { instance.create_surface(window.inner()) };
