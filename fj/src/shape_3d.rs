@@ -20,7 +20,10 @@ impl From<Shape3d> for Shape {
     }
 }
 
-/// A rotated 3-dimensional shape
+/// A transformed 3-dimensional shape
+///
+/// Transformations are currently limited to a rotation, followed by a
+/// translation.
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Transform {
