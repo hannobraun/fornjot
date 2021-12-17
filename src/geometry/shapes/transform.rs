@@ -34,5 +34,5 @@ impl Shape for fj::Transform {
 
 fn isometry(transform: &fj::Transform) -> Isometry<f64> {
     let axis = Vector::from(transform.axis).normalize();
-    Isometry::rotation(axis * transform.angle)
+    Isometry::new(Vector::from(transform.offset), axis * transform.angle)
 }
