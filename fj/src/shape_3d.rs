@@ -7,7 +7,7 @@ pub enum Shape3d {
     /// A sweep of 2-dimensional shape along the z-axis
     Sweep(Sweep),
 
-    /// A rotated 3-dimensional shape
+    /// A transformed 3-dimensional shape
     Transform(Transform),
 
     /// A union of 2 3-dimensional shapes
