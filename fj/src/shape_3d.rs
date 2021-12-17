@@ -53,6 +53,18 @@ impl Transform {
             offset: [0.; 3],
         }
     }
+
+    /// Create a translation
+    ///
+    /// Create a translation that translates `shape` by `offset`.
+    pub fn translation(shape: Shape3d, offset: [f64; 3]) -> Self {
+        Self {
+            shape: Box::new(shape),
+            axis: [1., 0., 0.],
+            angle: 0.,
+            offset,
+        }
+    }
 }
 
 impl From<Transform> for Shape {
