@@ -141,7 +141,10 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
         length: material_strength,
     };
     let left = fj::Transform::rotation(left.into(), [0., 1., 0.], -FRAC_PI_2);
-    // TASK: Translate left wall.
+    let left = fj::Transform::translation(
+        left.into(),
+        [material_strength, 0., material_strength],
+    );
 
     // TASK: Model rest of enclosure.
 
