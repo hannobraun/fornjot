@@ -32,7 +32,7 @@ impl Shape for fj::Transform {
     }
 }
 
-fn isometry(rotate: &fj::Transform) -> Isometry<f64> {
-    let axis = Vector::from(rotate.axis).normalize();
-    Isometry::rotation(axis * rotate.angle)
+fn isometry(transform: &fj::Transform) -> Isometry<f64> {
+    let axis = Vector::from(transform.axis).normalize();
+    Isometry::rotation(axis * transform.angle)
 }
