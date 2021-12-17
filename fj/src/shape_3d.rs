@@ -32,6 +32,9 @@ pub struct Transform {
 
     /// The angle of the rotation
     pub angle: f64,
+
+    /// The offset of the translation
+    pub offset: [f64; 3],
 }
 
 impl Transform {
@@ -44,6 +47,7 @@ impl Transform {
             shape: Box::new(shape),
             axis,
             angle,
+            offset: [0.; 3],
         }
     }
 }
