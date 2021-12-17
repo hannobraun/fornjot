@@ -5,7 +5,7 @@ use crate::{Shape, Shape2d};
 #[repr(C)]
 pub enum Shape3d {
     /// A rotated 3-dimensional shape
-    Rotate(Transform),
+    Transform(Transform),
 
     /// A sweep of 2-dimensional shape along the z-axis
     Sweep(Sweep),
@@ -50,13 +50,13 @@ impl Transform {
 
 impl From<Transform> for Shape {
     fn from(shape: Transform) -> Self {
-        Self::Shape3d(Shape3d::Rotate(shape))
+        Self::Shape3d(Shape3d::Transform(shape))
     }
 }
 
 impl From<Transform> for Shape3d {
     fn from(shape: Transform) -> Self {
-        Self::Rotate(shape)
+        Self::Transform(shape)
     }
 }
 
