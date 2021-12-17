@@ -5,7 +5,7 @@ use crate::{Shape, Shape2d};
 #[repr(C)]
 pub enum Shape3d {
     /// A rotated 3-dimensional shape
-    Rotate(Rotate),
+    Rotate(Transform),
 
     /// A sweep of 2-dimensional shape along the z-axis
     Sweep(Sweep),
@@ -23,7 +23,7 @@ impl From<Shape3d> for Shape {
 /// A rotated 3-dimensional shape
 #[derive(Clone, Debug)]
 #[repr(C)]
-pub struct Rotate {
+pub struct Transform {
     /// The shape being rotated
     pub shape: Box<Shape3d>,
 
@@ -34,7 +34,7 @@ pub struct Rotate {
     pub angle: f64,
 }
 
-impl Rotate {
+impl Transform {
     /// Create a rotation
     ///
     /// Create a rotation that rotates `shape` by `angle` around an axis defined
@@ -48,14 +48,14 @@ impl Rotate {
     }
 }
 
-impl From<Rotate> for Shape {
-    fn from(shape: Rotate) -> Self {
+impl From<Transform> for Shape {
+    fn from(shape: Transform) -> Self {
         Self::Shape3d(Shape3d::Rotate(shape))
     }
 }
 
-impl From<Rotate> for Shape3d {
-    fn from(shape: Rotate) -> Self {
+impl From<Transform> for Shape3d {
+    fn from(shape: Transform) -> Self {
         Self::Rotate(shape)
     }
 }
