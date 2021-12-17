@@ -4,11 +4,11 @@ use crate::{Shape, Shape2d};
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub enum Shape3d {
-    /// A rotated 3-dimensional shape
-    Transform(Transform),
-
     /// A sweep of 2-dimensional shape along the z-axis
     Sweep(Sweep),
+
+    /// A rotated 3-dimensional shape
+    Transform(Transform),
 
     /// A union of 2 3-dimensional shapes
     Union(Union),
