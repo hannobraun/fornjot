@@ -152,6 +152,7 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
         left.into(),
         [material_strength, 0., material_strength],
     );
+    // TASK: Model right wall.
 
     // TASK: Model rest of enclosure.
 
