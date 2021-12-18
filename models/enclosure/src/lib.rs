@@ -117,6 +117,11 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
     // To be on the safe side, the height should be limited to this value:
     assert!(outer_height < 440.);
 
+    // ## Structure
+    //
+    // Now that we got the dimensions, let's think about the structure of the
+    // enclosure. I figure, it's best for the stability of the construction, if
+    // there is a base piece where everything else rests on.
     #[rustfmt::skip]
     let base = fj::Sketch::from_points(vec![
         [         0.,          0.],
@@ -129,6 +134,8 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
         length: material_strength,
     };
 
+    // Left and right walls rest on the base and reach from front to back. They
+    // don't reach to the outer height, to leave room for the top.
     #[rustfmt::skip]
     let left = fj::Sketch::from_points(vec![
         [          0.,          0.],
