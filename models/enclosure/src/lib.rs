@@ -1,5 +1,7 @@
 use std::{collections::HashMap, f64::consts::FRAC_PI_2};
 
+use fj::prelude::*;
+
 #[no_mangle]
 pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
     // # Prusa Mini Enclosure
@@ -128,11 +130,7 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
         [outer_width,          0.],
         [outer_width, outer_depth],
         [         0., outer_depth],
-    ]);
-    let base = fj::Sweep {
-        shape: base.into(),
-        length: material_strength,
-    };
+    ]).sweep(material_strength);
 
     // Left and right walls rest on the base and reach from front to back. They
     // don't reach to the outer height, to leave room for the top.
@@ -142,11 +140,7 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
         [inner_height,          0.],
         [inner_height, outer_depth],
         [          0., outer_depth],
-    ]);
-    let side = fj::Sweep {
-        shape: side.into(),
-        length: material_strength,
-    };
+    ]).sweep(material_strength);
     let side = fj::Transform::rotation(side.into(), [0., 1., 0.], -FRAC_PI_2);
     let side =
         fj::Transform::translation(side.into(), [0., 0., material_strength]);
