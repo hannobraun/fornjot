@@ -22,7 +22,6 @@ where
 {
     fn sweep(self, length: f64) -> crate::Sweep {
         let shape = self.into();
-        let sweep = crate::Sweep { shape, length };
-        sweep.into()
+        crate::Sweep { shape, length }
     }
 }
