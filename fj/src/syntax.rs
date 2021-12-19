@@ -48,6 +48,11 @@ where
 {
     fn translate(self, offset: [f64; 3]) -> crate::Transform {
         let shape = self.into();
-        crate::Transform::translation(shape, offset)
+        crate::Transform {
+            shape: Box::new(shape),
+            axis: [1., 0., 0.],
+            angle: 0.,
+            offset,
+        }
     }
 }
