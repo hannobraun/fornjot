@@ -3,15 +3,15 @@ pub trait Rotate {
     ///
     /// Create a rotation that rotates `shape` by `angle` around an axis defined
     /// by `axis`.
-    fn rotate(self, axis: [f64; 3], angle: f64) -> crate::Transform;
+    fn rotate(&self, axis: [f64; 3], angle: f64) -> crate::Transform;
 }
 
 impl<T> Rotate for T
 where
-    T: Into<crate::Shape3d>,
+    T: Clone + Into<crate::Shape3d>,
 {
-    fn rotate(self, axis: [f64; 3], angle: f64) -> crate::Transform {
-        let shape = self.into();
+    fn rotate(&self, axis: [f64; 3], angle: f64) -> crate::Transform {
+        let shape = self.clone().into();
         crate::Transform {
             shape: Box::new(shape),
             axis,
@@ -22,15 +22,15 @@ where
 }
 
 pub trait Sweep {
-    fn sweep(self, length: f64) -> crate::Sweep;
+    fn sweep(&self, length: f64) -> crate::Sweep;
 }
 
 impl<T> Sweep for T
 where
-    T: Into<crate::Shape2d>,
+    T: Clone + Into<crate::Shape2d>,
 {
-    fn sweep(self, length: f64) -> crate::Sweep {
-        let shape = self.into();
+    fn sweep(&self, length: f64) -> crate::Sweep {
+        let shape = self.clone().into();
         crate::Sweep { shape, length }
     }
 }
@@ -39,15 +39,15 @@ pub trait Translate {
     /// Create a translation
     ///
     /// Create a translation that translates `shape` by `offset`.
-    fn translate(self, offset: [f64; 3]) -> crate::Transform;
+    fn translate(&self, offset: [f64; 3]) -> crate::Transform;
 }
 
 impl<T> Translate for T
 where
-    T: Into<crate::Shape3d>,
+    T: Clone + Into<crate::Shape3d>,
 {
-    fn translate(self, offset: [f64; 3]) -> crate::Transform {
-        let shape = self.into();
+    fn translate(&self, offset: [f64; 3]) -> crate::Transform {
+        let shape = self.clone().into();
         crate::Transform {
             shape: Box::new(shape),
             axis: [1., 0., 0.],
