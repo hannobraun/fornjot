@@ -150,15 +150,21 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
     let side = fj::Transform::rotation(side.into(), [0., 1., 0.], -FRAC_PI_2);
     let side =
         fj::Transform::translation(side.into(), [0., 0., material_strength]);
-    let left =
-        fj::Transform::translation(side.into(), [material_strength, 0., 0.]);
-    // TASK: Model right wall.
+    let left = fj::Transform::translation(
+        side.clone().into(),
+        [material_strength, 0., 0.],
+    );
+    let right = fj::Transform::translation(side.into(), [outer_width, 0., 0.]);
 
     // TASK: Model rest of enclosure.
 
     let enclosure = fj::Union {
         a: Box::new(base.into()),
         b: Box::new(left.into()),
+    };
+    let enclosure = fj::Union {
+        a: Box::new(enclosure.into()),
+        b: Box::new(right.into()),
     };
 
     enclosure.into()
