@@ -137,14 +137,14 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
     // Left and right walls rest on the base and reach from front to back. They
     // don't reach to the outer height, to leave room for the top.
     #[rustfmt::skip]
-    let left = fj::Sketch::from_points(vec![
+    let side = fj::Sketch::from_points(vec![
         [          0.,          0.],
         [inner_height,          0.],
         [inner_height, outer_depth],
         [          0., outer_depth],
     ]);
     let left = fj::Sweep {
-        shape: left.into(),
+        shape: side.into(),
         length: material_strength,
     };
     let left = fj::Transform::rotation(left.into(), [0., 1., 0.], -FRAC_PI_2);
