@@ -34,3 +34,20 @@ where
         crate::Sweep { shape, length }
     }
 }
+
+pub trait Translate {
+    /// Create a translation
+    ///
+    /// Create a translation that translates `shape` by `offset`.
+    fn translate(self, offset: [f64; 3]) -> crate::Transform;
+}
+
+impl<T> Translate for T
+where
+    T: Into<crate::Shape3d>,
+{
+    fn translate(self, offset: [f64; 3]) -> crate::Transform {
+        let shape = self.into();
+        crate::Transform::translation(shape, offset)
+    }
+}

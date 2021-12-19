@@ -142,15 +142,11 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
         [          0., outer_depth],
     ])
     .sweep(material_strength)
-    .rotate([0., 1., 0.], -FRAC_PI_2);
+    .rotate([0., 1., 0.], -FRAC_PI_2)
+    .translate([0., 0., material_strength]);
 
-    let side =
-        fj::Transform::translation(side.into(), [0., 0., material_strength]);
-    let left = fj::Transform::translation(
-        side.clone().into(),
-        [material_strength, 0., 0.],
-    );
-    let right = fj::Transform::translation(side.into(), [outer_width, 0., 0.]);
+    let left = side.clone().translate([material_strength, 0., 0.]);
+    let right = side.translate([outer_width, 0., 0.]);
 
     // TASK: Model rest of enclosure.
 
