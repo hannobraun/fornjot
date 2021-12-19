@@ -1,4 +1,8 @@
 pub trait Rotate {
+    /// Create a rotation
+    ///
+    /// Create a rotation that rotates `shape` by `angle` around an axis defined
+    /// by `axis`.
     fn rotate(self, axis: [f64; 3], angle: f64) -> crate::Transform;
 }
 
