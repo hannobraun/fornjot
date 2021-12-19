@@ -8,7 +8,12 @@ where
 {
     fn rotate(self, axis: [f64; 3], angle: f64) -> crate::Transform {
         let shape = self.into();
-        crate::Transform::rotation(shape, axis, angle)
+        crate::Transform {
+            shape: Box::new(shape),
+            axis,
+            angle,
+            offset: [0.; 3],
+        }
     }
 }
 

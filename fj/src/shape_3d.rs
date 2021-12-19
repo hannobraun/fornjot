@@ -41,19 +41,6 @@ pub struct Transform {
 }
 
 impl Transform {
-    /// Create a rotation
-    ///
-    /// Create a rotation that rotates `shape` by `angle` around an axis defined
-    /// by `axis`.
-    pub fn rotation(shape: Shape3d, axis: [f64; 3], angle: f64) -> Self {
-        Self {
-            shape: Box::new(shape),
-            axis,
-            angle,
-            offset: [0.; 3],
-        }
-    }
-
     /// Create a translation
     ///
     /// Create a translation that translates `shape` by `offset`.
