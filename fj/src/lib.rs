@@ -3,7 +3,9 @@ mod shape_3d;
 mod syntax;
 
 pub mod prelude {
-    pub use crate::syntax::{Rotate as _, Sweep as _, Translate as _};
+    pub use crate::syntax::{
+        Rotate as _, Sweep as _, Translate as _, Union as _,
+    };
 }
 
 pub use self::{shape_2d::*, shape_3d::*};

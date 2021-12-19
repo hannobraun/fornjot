@@ -150,14 +150,7 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
 
     // TASK: Model rest of enclosure.
 
-    let enclosure = fj::Union {
-        a: Box::new(base.into()),
-        b: Box::new(left.into()),
-    };
-    let enclosure = fj::Union {
-        a: Box::new(enclosure.into()),
-        b: Box::new(right.into()),
-    };
+    let enclosure = base.union(&left).union(&right);
 
     enclosure.into()
 }

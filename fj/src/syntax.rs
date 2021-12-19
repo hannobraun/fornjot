@@ -56,3 +56,24 @@ where
         }
     }
 }
+
+pub trait Union {
+    fn union<Other>(&self, other: &Other) -> crate::Union
+    where
+        Other: Clone + Into<crate::Shape3d>;
+}
+
+impl<T> Union for T
+where
+    T: Clone + Into<crate::Shape3d>,
+{
+    fn union<Other>(&self, other: &Other) -> crate::Union
+    where
+        Other: Clone + Into<crate::Shape3d>,
+    {
+        let a = Box::new(self.clone().into());
+        let b = Box::new(other.clone().into());
+
+        crate::Union { a, b }
+    }
+}
