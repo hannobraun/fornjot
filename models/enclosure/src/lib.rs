@@ -143,11 +143,11 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
         [inner_height, outer_depth],
         [          0., outer_depth],
     ]);
-    let left = fj::Sweep {
+    let side = fj::Sweep {
         shape: side.into(),
         length: material_strength,
     };
-    let left = fj::Transform::rotation(left.into(), [0., 1., 0.], -FRAC_PI_2);
+    let left = fj::Transform::rotation(side.into(), [0., 1., 0.], -FRAC_PI_2);
     let left = fj::Transform::translation(
         left.into(),
         [material_strength, 0., material_strength],
