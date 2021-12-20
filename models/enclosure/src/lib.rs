@@ -148,9 +148,12 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
     let left = side.translate([material_strength, 0., 0.]);
     let right = side.translate([outer_width, 0., 0.]);
 
+    // The top rests on the left and right walls.
+    let top = base.translate([0., 0., outer_height - material_strength]);
+
     // TASK: Model rest of enclosure.
 
-    let enclosure = base.union(&left).union(&right);
+    let enclosure = base.union(&left).union(&right).union(&top);
 
     enclosure.into()
 }
