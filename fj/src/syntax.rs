@@ -21,6 +21,19 @@ where
     }
 }
 
+pub trait Sketch {
+    fn sketch(&self) -> crate::Sketch;
+}
+
+impl<T> Sketch for T
+where
+    T: AsRef<[[f64; 2]]>,
+{
+    fn sketch(&self) -> crate::Sketch {
+        crate::Sketch::from_points(self.as_ref().to_vec())
+    }
+}
+
 pub trait Sweep {
     fn sweep(&self, length: f64) -> crate::Sweep;
 }

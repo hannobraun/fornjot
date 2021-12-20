@@ -125,25 +125,28 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
     // enclosure. I figure, it's best for the stability of the construction, if
     // there is a base piece where everything else rests on.
     #[rustfmt::skip]
-    let base = fj::Sketch::from_points(vec![
+    let base = [
         [         0.,          0.],
         [outer_width,          0.],
         [outer_width, outer_depth],
         [         0., outer_depth],
-    ]).sweep(material_strength);
+    ];
+    let base = base.sketch().sweep(material_strength);
 
     // Left and right walls rest on the base and reach from front to back. They
     // don't reach to the outer height, to leave room for the top.
     #[rustfmt::skip]
-    let side = fj::Sketch::from_points(vec![
+    let side = [
         [          0.,          0.],
         [inner_height,          0.],
         [inner_height, outer_depth],
         [          0., outer_depth],
-    ])
-    .sweep(material_strength)
-    .rotate([0., 1., 0.], -FRAC_PI_2)
-    .translate([0., 0., material_strength]);
+    ];
+    let side = side
+        .sketch()
+        .sweep(material_strength)
+        .rotate([0., 1., 0.], -FRAC_PI_2)
+        .translate([0., 0., material_strength]);
 
     let left = side.translate([material_strength, 0., 0.]);
     let right = side.translate([outer_width, 0., 0.]);

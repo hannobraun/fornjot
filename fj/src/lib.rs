@@ -4,7 +4,7 @@ mod syntax;
 
 pub mod prelude {
     pub use crate::syntax::{
-        Rotate as _, Sweep as _, Translate as _, Union as _,
+        Rotate as _, Sketch as _, Sweep as _, Translate as _, Union as _,
     };
 }
 
