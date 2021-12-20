@@ -125,7 +125,7 @@ impl Handler {
         self.zoom.discard_old_events(now);
         self.zoom.update_speed(now, delta_t, focus_point, camera);
 
-        camera.translation.z += self.zoom.speed();
+        camera.translation.z -= self.zoom.speed();
     }
 }
 
