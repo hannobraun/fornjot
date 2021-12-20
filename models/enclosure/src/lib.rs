@@ -154,9 +154,23 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
     // The top rests on the left and right walls.
     let top = base.translate([0., 0., outer_height - material_strength]);
 
+    // The back fills in the room left by the other parts.
+    #[rustfmt::skip]
+    let back = [
+        [         0.,           0.],
+        [inner_width,           0.],
+        [inner_width, inner_height],
+        [         0., inner_height],
+    ];
+    let back = back
+        .sketch()
+        .sweep(material_strength)
+        .rotate([1., 0., 0.], FRAC_PI_2)
+        .translate([material_strength, outer_depth, material_strength]);
+
     // TASK: Model rest of enclosure.
 
-    let enclosure = base.union(&left).union(&right).union(&top);
+    let enclosure = base.union(&left).union(&right).union(&top).union(&back);
 
     enclosure.into()
 }
