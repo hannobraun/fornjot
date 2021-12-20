@@ -276,11 +276,12 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
         ]);
 
     // And the right opening.
+    #[rustfmt::skip]
     let right_opening = [
-        [0., 0.],
-        [opening_height, 0.],
+        [            0.,                  0.],
+        [opening_height,                  0.],
         [opening_height, right_opening_width],
-        [0., right_opening_width],
+        [            0., right_opening_width],
     ];
     // TASK: Material strength is increased to aid testing. Set correct value.
     let right_opening = right_opening
