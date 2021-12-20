@@ -197,6 +197,62 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
     // shouldn't be a problem and can easily be done after the enclosure has
     // been built.
 
+    // ## Access Ports
+    //
+    // The printer needs to interface with the world outside of the enclosure in
+    // various ways:
+    // - Power cable
+    // - Network cable
+    // - USB ports
+    // - Filament
+    // - Power switch
+    //
+    // To accommodate these, the enclosure needs two openings. One on the back
+    // side, one on the right side.
+    //
+    // In addition to providing the means to guide cables/filament through,
+    // those openings need to be big enough to allow access to the printer's
+    // ports. Cables need to be connected/disconnected, filament needs to be
+    // loaded/unloaded, and the USB port takes a flash drive.
+    //
+    // I think the most practical way to address this, is to make the openings
+    // rather large, so it is easy to access the inside. To prevent this from
+    // causing an unwanted draft during printing, I can later print a panel that
+    // covers the openings, still lets cables and filament through, and can be
+    // removed whenever anything needs to be plugged/unplugged/loaded/unloaded.
+    //
+    // Since both openings must allow for the same kind of access, they can both
+    // have the same height:
+    let opening_height = 70.;
+
+    // In addition, the lower boundaries of both openings are flush with the
+    // upper surface of the base, i.e. the surface the printer stands on.
+    //
+    // Please note that the the position of those openings is specified in terms
+    // of the distances from the _inner_ surfaces of the back and right walls.
+
+    // ### Back Opening
+    //
+    // The back opening needs to accommodate the power and network ports. It
+    // requires the following width:
+    let back_opening_width = 130.;
+
+    // Here's the distance from the inner surface of the right wall to the
+    // boundary of the opening:
+    let back_opening_to_right_wall = margin_right + 30.;
+    assert_eq!(back_opening_to_right_wall, 90.);
+
+    // ### Right Opening
+    //
+    // The right needs to accommodate the USB ports, filament, and power switch.
+    // It requires the following width:
+    let right_opening_width = 120.;
+
+    // The distance from the inner surface of the back wall to the boundary of
+    // the opening:
+    let right_opening_to_back_wall = margin_back;
+    assert_eq!(right_opening_to_back_wall, 110.);
+
     // TASK: Model rest of enclosure.
 
     let enclosure = base.union(&left).union(&right).union(&top).union(&back);
