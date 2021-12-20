@@ -253,9 +253,37 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
     let right_opening_to_back_wall = margin_back;
     assert_eq!(right_opening_to_back_wall, 110.);
 
+    // Let's model the back opening.
+    #[rustfmt::skip]
+    let back_opening = [
+        [                0.,             0.],
+        [back_opening_width,             0.],
+        [back_opening_width, opening_height],
+        [                0., opening_height],
+    ];
+    // TASK: Material strength is increased to aid testing. Set correct value.
+    let back_opening = back_opening
+        .sketch()
+        .sweep(material_strength * 2.)
+        .rotate([1., 0., 0.], FRAC_PI_2)
+        .translate([
+            outer_width
+                - material_strength
+                - back_opening_width
+                - back_opening_to_right_wall,
+            outer_depth,
+            material_strength,
+        ]);
+
     // TASK: Model rest of enclosure.
 
-    let enclosure = base.union(&left).union(&right).union(&top).union(&back);
+    let enclosure = base
+        .union(&left)
+        .union(&right)
+        .union(&top)
+        .union(&back)
+        // TASK: Subtract back opening instead of adding it.
+        .union(&back_opening);
 
     enclosure.into()
 }
