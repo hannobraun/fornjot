@@ -296,8 +296,6 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
             material_strength,
         ]);
 
-    // TASK: Model rest of enclosure.
-
     let enclosure = base
         .union(&left)
         .union(&right)
