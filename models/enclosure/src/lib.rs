@@ -275,6 +275,27 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
             material_strength,
         ]);
 
+    // And the right opening.
+    let right_opening = [
+        [0., 0.],
+        [opening_height, 0.],
+        [opening_height, right_opening_width],
+        [0., right_opening_width],
+    ];
+    // TASK: Material strength is increased to aid testing. Set correct value.
+    let right_opening = right_opening
+        .sketch()
+        .sweep(material_strength * 2.)
+        .rotate([0., 1., 0.], -FRAC_PI_2)
+        .translate([
+            outer_width,
+            outer_depth
+                - material_strength
+                - right_opening_width
+                - right_opening_to_back_wall,
+            material_strength,
+        ]);
+
     // TASK: Model rest of enclosure.
 
     let enclosure = base
@@ -283,7 +304,9 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
         .union(&top)
         .union(&back)
         // TASK: Subtract back opening instead of adding it.
-        .union(&back_opening);
+        .union(&back_opening)
+        // TASK: Subtract right opening instead of adding it.
+        .union(&right_opening);
 
     enclosure.into()
 }
