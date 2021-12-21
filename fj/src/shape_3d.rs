@@ -4,6 +4,9 @@ use crate::{Shape, Shape2d};
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub enum Shape3d {
+    /// The difference of two 3-dimensional shapes
+    Difference(Box<Difference>),
+
     /// A sweep of 2-dimensional shape along the z-axis
     Sweep(Sweep),
 
@@ -17,6 +20,29 @@ pub enum Shape3d {
 impl From<Shape3d> for Shape {
     fn from(shape: Shape3d) -> Self {
         Self::Shape3d(shape.into())
+    }
+}
+
+/// The difference of two 3-dimensional shapes
+#[derive(Clone, Debug)]
+#[repr(C)]
+pub struct Difference {
+    /// The first of the shapes
+    pub a: Shape3d,
+
+    /// The second of the shapes
+    pub b: Shape3d,
+}
+
+impl From<Difference> for Shape {
+    fn from(shape: Difference) -> Self {
+        Self::Shape3d(Shape3d::Difference(Box::new(shape)))
+    }
+}
+
+impl From<Difference> for Shape3d {
+    fn from(shape: Difference) -> Self {
+        Self::Difference(Box::new(shape))
     }
 }
 
