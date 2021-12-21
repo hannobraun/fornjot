@@ -8,7 +8,7 @@ pub enum Shape3d {
     Sweep(Sweep),
 
     /// A transformed 3-dimensional shape
-    Transform(Transform),
+    Transform(Box<Transform>),
 
     /// A union of 2 3-dimensional shapes
     Union(Union),
@@ -28,7 +28,7 @@ impl From<Shape3d> for Shape {
 #[repr(C)]
 pub struct Transform {
     /// The shape being rotated
-    pub shape: Box<Shape3d>,
+    pub shape: Shape3d,
 
     /// The axis of the rotation
     pub axis: [f64; 3],
@@ -42,13 +42,13 @@ pub struct Transform {
 
 impl From<Transform> for Shape {
     fn from(shape: Transform) -> Self {
-        Self::Shape3d(Shape3d::Transform(shape))
+        Self::Shape3d(Shape3d::Transform(Box::new(shape)))
     }
 }
 
 impl From<Transform> for Shape3d {
     fn from(shape: Transform) -> Self {
-        Self::Transform(shape)
+        Self::Transform(Box::new(shape))
     }
 }
 

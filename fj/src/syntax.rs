@@ -13,7 +13,7 @@ where
     fn rotate(&self, axis: [f64; 3], angle: f64) -> crate::Transform {
         let shape = self.clone().into();
         crate::Transform {
-            shape: Box::new(shape),
+            shape,
             axis,
             angle,
             offset: [0.; 3],
@@ -62,7 +62,7 @@ where
     fn translate(&self, offset: [f64; 3]) -> crate::Transform {
         let shape = self.clone().into();
         crate::Transform {
-            shape: Box::new(shape),
+            shape,
             axis: [1., 0., 0.],
             angle: 0.,
             offset,
