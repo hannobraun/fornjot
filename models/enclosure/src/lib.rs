@@ -261,10 +261,9 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
         [back_opening_width, opening_height],
         [                0., opening_height],
     ];
-    // TASK: Material strength is increased to aid testing. Set correct value.
     let back_opening = back_opening
         .sketch()
-        .sweep(material_strength * 2.)
+        .sweep(material_strength)
         .rotate([1., 0., 0.], FRAC_PI_2)
         .translate([
             outer_width
@@ -283,10 +282,9 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
         [opening_height, right_opening_width],
         [            0., right_opening_width],
     ];
-    // TASK: Material strength is increased to aid testing. Set correct value.
     let right_opening = right_opening
         .sketch()
-        .sweep(material_strength * 2.)
+        .sweep(material_strength)
         .rotate([0., 1., 0.], -FRAC_PI_2)
         .translate([
             outer_width,
