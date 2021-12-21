@@ -75,7 +75,7 @@ impl From<Sweep> for Shape3d {
     }
 }
 
-/// A union of 2 3-dimensional shapes
+/// The union of two 3-dimensional shapes
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Union {
