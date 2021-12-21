@@ -84,8 +84,8 @@ where
     where
         Other: Clone + Into<crate::Shape3d>,
     {
-        let a = Box::new(self.clone().into());
-        let b = Box::new(other.clone().into());
+        let a = self.clone().into();
+        let b = other.clone().into();
 
         crate::Union { a, b }
     }

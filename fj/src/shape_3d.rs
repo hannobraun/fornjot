@@ -11,7 +11,7 @@ pub enum Shape3d {
     Transform(Box<Transform>),
 
     /// A union of 2 3-dimensional shapes
-    Union(Union),
+    Union(Box<Union>),
 }
 
 impl From<Shape3d> for Shape {
@@ -80,20 +80,20 @@ impl From<Sweep> for Shape3d {
 #[repr(C)]
 pub struct Union {
     /// The first of the shapes
-    pub a: Box<Shape3d>,
+    pub a: Shape3d,
 
     /// The second of the shapes
-    pub b: Box<Shape3d>,
+    pub b: Shape3d,
 }
 
 impl From<Union> for Shape {
     fn from(shape: Union) -> Self {
-        Self::Shape3d(Shape3d::Union(shape))
+        Self::Shape3d(Shape3d::Union(Box::new(shape)))
     }
 }
 
 impl From<Union> for Shape3d {
     fn from(shape: Union) -> Self {
-        Self::Union(shape)
+        Self::Union(Box::new(shape))
     }
 }
