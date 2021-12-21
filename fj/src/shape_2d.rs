@@ -10,7 +10,7 @@ pub enum Shape2d {
     Circle(Circle),
 
     /// A difference between two shapes
-    Difference(Box<Difference>),
+    Difference(Box<Difference2d>),
 
     /// A sketch
     Sketch(Sketch),
@@ -39,7 +39,7 @@ impl From<Circle> for Shape2d {
 /// A difference between two shapes
 #[derive(Clone, Debug)]
 #[repr(C)]
-pub struct Difference {
+pub struct Difference2d {
     /// The original shape
     pub a: Shape2d,
 
@@ -47,14 +47,14 @@ pub struct Difference {
     pub b: Shape2d,
 }
 
-impl From<Difference> for Shape {
-    fn from(shape: Difference) -> Self {
+impl From<Difference2d> for Shape {
+    fn from(shape: Difference2d) -> Self {
         Self::Shape2d(Shape2d::Difference(Box::new(shape)))
     }
 }
 
-impl From<Difference> for Shape2d {
-    fn from(shape: Difference) -> Self {
+impl From<Difference2d> for Shape2d {
+    fn from(shape: Difference2d) -> Self {
         Self::Difference(Box::new(shape))
     }
 }

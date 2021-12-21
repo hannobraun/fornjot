@@ -9,7 +9,7 @@ use crate::{
     math::Point,
 };
 
-impl Shape for fj::Difference {
+impl Shape for fj::Difference2d {
     fn bounding_volume(&self) -> AABB {
         // This is a conservative estimate of the bounding box: It's never going
         // to be bigger than the bounding box of the original shape that another
