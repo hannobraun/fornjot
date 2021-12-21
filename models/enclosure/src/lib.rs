@@ -302,10 +302,8 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
         .union(&right)
         .union(&top)
         .union(&back)
-        // TASK: Subtract back opening instead of adding it.
-        .union(&back_opening)
-        // TASK: Subtract right opening instead of adding it.
-        .union(&right_opening);
+        .difference(&back_opening)
+        .difference(&right_opening);
 
     enclosure.into()
 }
