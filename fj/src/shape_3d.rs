@@ -10,7 +10,7 @@ pub enum Shape3d {
     /// A transformed 3-dimensional shape
     Transform(Box<Transform>),
 
-    /// A union of 2 3-dimensional shapes
+    /// The union of two 3-dimensional shapes
     Union(Box<Union>),
 }
 
