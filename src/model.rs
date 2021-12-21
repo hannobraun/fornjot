@@ -39,27 +39,14 @@ impl Model {
         // TASK: Read up why those calls are unsafe. Make sure calling them is
         //       sound, and document why that is.
         let shape = unsafe {
-            let lib = libloading::Library::new(
-                if cfg!(windows) {
-                    format!(
-                        "{}/target/debug/{}.dll",
-                        self.path(),
-                        self.name(),
-                    )
-                } else if cfg!(target_os = "macos") {
-                    format!(
-                        "{}/target/debug/lib{}.dylib",
-                        self.path(),
-                        self.name(),
-                    )
-                } else { //Unix
-                    format!(
-                        "{}/target/debug/lib{}.so",
-                        self.path(),
-                        self.name(),
-                    )
-                }
-            )?;
+            let lib = libloading::Library::new(if cfg!(windows) {
+                format!("{}/target/debug/{}.dll", self.path(), self.name(),)
+            } else if cfg!(target_os = "macos") {
+                format!("{}/target/debug/lib{}.dylib", self.path(), self.name(),)
+            } else {
+                //Unix
+                format!("{}/target/debug/lib{}.so", self.path(), self.name(),)
+            })?;
             let model: libloading::Symbol<ModelFn> = lib.get(b"model")?;
             model(&arguments)
         };
