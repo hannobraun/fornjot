@@ -4,7 +4,6 @@ struct VertexOutput {
     [[location(1)]] color: vec4<f32>;
 };
 
-[[block]]
 struct Uniforms {
     transform: mat4x4<f32>;
     transform_normals: mat4x4<f32>;

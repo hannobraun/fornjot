@@ -78,7 +78,7 @@ impl Pipeline {
                     strip_index_format: None,
                     front_face: wgpu::FrontFace::Ccw,
                     cull_mode: None,
-                    clamp_depth: false,
+                    unclipped_depth: false,
                     polygon_mode: polygon_mode,
                     conservative: false,
                 },
@@ -110,6 +110,7 @@ impl Pipeline {
                         write_mask: wgpu::ColorWrites::ALL,
                     }],
                 }),
+                multiview: None,
             });
 
         Self(pipeline)

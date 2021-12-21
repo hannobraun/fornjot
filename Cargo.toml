@@ -17,8 +17,7 @@ parry3d-f64 = "*"
 thiserror   = "*"
 threemf     = "*"
 tracing     = "*"
-# TASK: Upgrade, once `wgpu_glyph` has been updated.
-wgpu        = "0.11.1"
+wgpu        = "*"
 wgpu_glyph  = "*"
 winit       = "*"
 
