@@ -7,8 +7,10 @@ use crate::{
 
 impl Shape for fj::Difference {
     fn bounding_volume(&self) -> AABB {
-        // TASK: Implement.
-        todo!()
+        // This is a conservative estimate of the bounding box: It's never going
+        // to be bigger than the bounding box of the original shape that another
+        // is being subtracted from.
+        self.a.bounding_volume()
     }
 
     fn faces(&self, _tolerance: f64) -> Faces {
