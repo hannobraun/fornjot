@@ -1,8 +1,8 @@
 mod args;
 mod camera;
-mod geometry;
 mod graphics;
 mod input;
+mod kernel;
 mod math;
 mod mesh;
 mod model;
@@ -21,8 +21,8 @@ use winit::{
 
 use crate::{
     args::Args,
-    geometry::Shape as _,
     graphics::{DrawConfig, Renderer},
+    kernel::Shape as _,
     mesh::{HashVector, MeshMaker},
     model::Model,
     window::Window,

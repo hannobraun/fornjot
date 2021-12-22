@@ -2,7 +2,7 @@ use nalgebra::vector;
 use parry3d_f64::{bounding_volume::AABB, math::Isometry, shape::Triangle};
 
 use crate::{
-    geometry::{edges::Edges, faces::Faces, Shape},
+    kernel::{edges::Edges, faces::Faces, Shape},
     math::Point,
 };
 

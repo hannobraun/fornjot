@@ -1,7 +1,7 @@
 use parry3d_f64::bounding_volume::{BoundingVolume as _, AABB};
 
 use crate::{
-    geometry::{edges::Edges, faces::Faces, Shape},
+    kernel::{edges::Edges, faces::Faces, Shape},
     math::Point,
 };
 

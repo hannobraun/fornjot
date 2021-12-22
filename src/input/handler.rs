@@ -9,7 +9,7 @@ use winit::{
 };
 
 use crate::{
-    camera::Camera, geometry::faces::Faces, math::Point, window::Window,
+    camera::Camera, kernel::faces::Faces, math::Point, window::Window,
 };
 
 use super::{movement::Movement, rotation::Rotation, zoom::Zoom};

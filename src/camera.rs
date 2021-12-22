@@ -8,7 +8,7 @@ use parry3d_f64::{
 use winit::dpi::PhysicalPosition;
 
 use crate::{
-    geometry::faces::Faces,
+    kernel::faces::Faces,
     math::{Point, Vector},
     window::Window,
 };
