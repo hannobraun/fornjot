@@ -22,6 +22,15 @@ pub enum Curve {
     Line(Line),
 }
 
+impl Curve {
+    pub fn approx_vertices(&self, tolerance: f64) -> Vec<Point> {
+        match self {
+            Curve::Circle(circle) => circle.approx_vertices(tolerance),
+            Curve::Line(Line { a, b }) => vec![*a, *b],
+        }
+    }
+}
+
 /// A circle
 ///
 /// This representation is not optimal, for two reasons:
