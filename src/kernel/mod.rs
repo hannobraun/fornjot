@@ -1,5 +1,6 @@
 pub mod edges;
 pub mod faces;
+pub mod geometry;
 pub mod shapes;
 
 use parry3d_f64::bounding_volume::AABB;
