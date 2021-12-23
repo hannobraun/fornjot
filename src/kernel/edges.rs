@@ -1,5 +1,5 @@
 use crate::{
-    kernel::geometry::{Circle, Curve},
+    kernel::geometry::{Circle, Curve, Line},
     math::{Point, Vector},
 };
 
@@ -70,7 +70,7 @@ impl Edge {
     /// Create a line segment
     pub fn line_segment(start: Point, end: Point) -> Self {
         Self {
-            curve: Curve::Line { a: start, b: end },
+            curve: Curve::Line(Line { a: start, b: end }),
             reverse: false,
         }
     }
@@ -90,7 +90,7 @@ impl Edge {
     pub fn approx_vertices(&self, tolerance: f64) -> Vec<Point> {
         let mut vertices = match &self.curve {
             Curve::Circle(circle) => circle.approx_vertices(tolerance),
-            Curve::Line { a, b } => vec![*a, *b],
+            Curve::Line(Line { a, b }) => vec![*a, *b],
         };
 
         if self.reverse {

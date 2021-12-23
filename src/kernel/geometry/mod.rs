@@ -1,3 +1,3 @@
 pub mod curves;
 
-pub use self::curves::{Circle, Curve};
+pub use self::curves::{Circle, Curve, Line};

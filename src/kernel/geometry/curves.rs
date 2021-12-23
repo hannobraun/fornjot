@@ -18,14 +18,8 @@ pub enum Curve {
     /// A circle
     Circle(Circle),
 
-    /// A line, defined by two points
-    Line {
-        /// One point defining the line
-        a: Point,
-
-        /// The other point defining the line
-        b: Point,
-    },
+    /// A line
+    Line(Line),
 }
 
 /// A circle
@@ -91,4 +85,13 @@ impl Circle {
 
         vertices
     }
+}
+
+/// A line, defined by two points
+pub struct Line {
+    /// One point defining the line
+    pub a: Point,
+
+    /// The other point defining the line
+    pub b: Point,
 }
