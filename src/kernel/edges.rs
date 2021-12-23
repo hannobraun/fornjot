@@ -1,7 +1,7 @@
 use std::f64::consts::PI;
 
 use crate::{
-    kernel::geometry::Curve,
+    kernel::geometry::{Circle, Curve},
     math::{Point, Vector},
 };
 
@@ -64,7 +64,7 @@ impl Edge {
     /// are supported.
     pub fn arc(radius: f64) -> Self {
         Self {
-            curve: Curve::Circle { radius },
+            curve: Curve::Circle(Circle { radius }),
             reverse: false,
         }
     }
@@ -91,7 +91,7 @@ impl Edge {
     /// vertices are allowed to deviate from the actual edge.
     pub fn vertices(&self, tolerance: f64) -> Vec<Point> {
         let mut vertices = match &self.curve {
-            Curve::Circle { radius } => {
+            Curve::Circle(Circle { radius }) => {
                 let angle_to_point = |angle: f64| {
                     let (sin, cos) = angle.sin_cos();
 

@@ -14,20 +14,7 @@ use crate::math::Point;
 /// is the intention.
 pub enum Curve {
     /// A circle
-    ///
-    /// This representation is not optimal, for two reasons:
-    /// - It doesn't define the center point of the circle. For that reason,
-    ///   only circles centered on the origin are supported at this point.
-    /// - It doesn't define where the circle begins. For the purposes of
-    ///   defining an arc on the circle, the zero angle will implicitly be to
-    ///   the right.
-    ///
-    /// It might be better to define a circle using two points: The center, and
-    /// the "zero" point on the circumference.
-    Circle {
-        /// The radius of the circle
-        radius: f64,
-    },
+    Circle(Circle),
 
     /// A line, defined by two points
     Line {
@@ -37,4 +24,20 @@ pub enum Curve {
         /// The other point defining the line
         b: Point,
     },
+}
+
+/// A circle
+///
+/// This representation is not optimal, for two reasons:
+/// - It doesn't define the center point of the circle. For that reason,
+///   only circles centered on the origin are supported at this point.
+/// - It doesn't define where the circle begins. For the purposes of
+///   defining an arc on the circle, the zero angle will implicitly be to
+///   the right.
+///
+/// It might be better to define a circle using two points: The center, and
+/// the "zero" point on the circumference.
+pub struct Circle {
+    /// The radius of the circle
+    pub radius: f64,
 }
