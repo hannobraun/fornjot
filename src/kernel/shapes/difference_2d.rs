@@ -26,7 +26,7 @@ impl Shape for fj::Difference2d {
             .edges()
             .0
             .into_iter()
-            .map(|edge| edge.vertices(tolerance))
+            .map(|edge| edge.approx_vertices(tolerance))
             .flatten()
             .collect();
         let b: Vec<_> = self
@@ -34,7 +34,7 @@ impl Shape for fj::Difference2d {
             .edges()
             .0
             .into_iter()
-            .map(|edge| edge.vertices(tolerance))
+            .map(|edge| edge.approx_vertices(tolerance))
             .flatten()
             .collect();
 

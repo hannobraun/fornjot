@@ -23,7 +23,7 @@ impl Shape for fj::Circle {
             .edges()
             .0
             .into_iter()
-            .map(|edge| edge.vertices(tolerance))
+            .map(|edge| edge.approx_vertices(tolerance))
             .flatten()
             .collect();
         Faces(triangulate(&vertices))

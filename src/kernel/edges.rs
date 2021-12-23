@@ -21,7 +21,7 @@ impl Edges {
     pub fn segments(&self, tolerance: f64) -> Vec<Segment> {
         let mut vertices = Vec::new();
         for edge in &self.0 {
-            vertices.extend(edge.vertices(tolerance));
+            vertices.extend(edge.approx_vertices(tolerance));
         }
 
         // If we have multiple connected edges, the previous step will produce
@@ -89,7 +89,7 @@ impl Edge {
     ///
     /// `tolerance` defines how far the implicit line segments between those
     /// vertices are allowed to deviate from the actual edge.
-    pub fn vertices(&self, tolerance: f64) -> Vec<Point> {
+    pub fn approx_vertices(&self, tolerance: f64) -> Vec<Point> {
         let mut vertices = match &self.curve {
             Curve::Circle(Circle { radius }) => {
                 let angle_to_point = |angle: f64| {
