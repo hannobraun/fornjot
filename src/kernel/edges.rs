@@ -1,5 +1,3 @@
-use std::f64::consts::PI;
-
 use crate::{
     kernel::geometry::{Circle, Curve},
     math::{Point, Vector},
@@ -91,52 +89,7 @@ impl Edge {
     /// vertices are allowed to deviate from the actual edge.
     pub fn approx_vertices(&self, tolerance: f64) -> Vec<Point> {
         let mut vertices = match &self.curve {
-            Curve::Circle(Circle { radius }) => {
-                let angle_to_point = |angle: f64| {
-                    let (sin, cos) = angle.sin_cos();
-
-                    let x = cos * radius;
-                    let y = sin * radius;
-
-                    [x, y, 0.].into()
-                };
-
-                // To approximate the circle, we use a regular polygon for which
-                // the circle is the circumscribed circle. The `tolerance`
-                // parameter is the maximum allowed distance between the polygon
-                // and the circle. This is the same as the difference between
-                // the circumscribed circle and the incircle.
-                //
-                // Let's figure which regular polygon we need to use, by just
-                // trying out some of them until we find one whose maximum error
-                // is less than or equal to the tolerance.
-                let mut n = 3;
-                loop {
-                    let incircle_radius = radius * (PI / n as f64).cos();
-                    let maximum_error = radius - incircle_radius;
-
-                    if maximum_error <= tolerance {
-                        break;
-                    }
-
-                    n += 1;
-                }
-
-                let mut vertices = Vec::new();
-
-                let first_vertex = angle_to_point(0.0);
-                vertices.push(first_vertex);
-
-                for i in 1..n {
-                    let angle = 2. * PI / n as f64 * i as f64;
-                    vertices.push(angle_to_point(angle));
-                }
-
-                // Connect the circle's to itself.
-                vertices.push(first_vertex);
-
-                vertices
-            }
+            Curve::Circle(circle) => circle.approx_vertices(tolerance),
             Curve::Line { a, b } => vec![*a, *b],
         };
 
