@@ -18,7 +18,7 @@ impl Edges {
     ///
     /// `tolerance` defines how far these line segments are allowed to deviate
     /// from the actual edges of the shape.
-    pub fn segments(&self, tolerance: f64) -> Vec<Segment> {
+    pub fn approx_segments(&self, tolerance: f64) -> Vec<Segment> {
         let mut vertices = Vec::new();
         for edge in &self.0 {
             vertices.extend(edge.approx_vertices(tolerance));
