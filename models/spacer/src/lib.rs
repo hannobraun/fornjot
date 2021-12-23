@@ -21,7 +21,7 @@ pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
     let outer_edge = fj::Circle { radius: outer };
     let inner_edge = fj::Circle { radius: inner };
 
-    let footprint = fj::Difference {
+    let footprint = fj::Difference2d {
         a: outer_edge.into(),
         b: inner_edge.into(),
     };
