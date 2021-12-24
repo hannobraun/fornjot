@@ -153,7 +153,7 @@ impl Camera {
 
         let mut min_t = None;
 
-        for triangle in &faces.0 {
+        for triangle in faces.triangles() {
             let t = triangle.cast_local_ray(&ray, f64::INFINITY, true);
 
             if let Some(t) = t {

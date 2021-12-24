@@ -20,15 +20,21 @@ impl Shape for fj::Sweep {
 
         // Bottom face
         triangles.extend(
-            original_triangles.0.iter().map(|triangle| {
+            original_triangles.triangles().iter().map(|triangle| {
                 Triangle::new(triangle.a, triangle.c, triangle.b)
             }),
         );
 
         // Top face
-        triangles.extend(original_triangles.0.iter().map(|triangle| {
-            triangle.transformed(&Isometry::translation(0.0, 0.0, self.length))
-        }));
+        triangles.extend(original_triangles.triangles().iter().map(
+            |triangle| {
+                triangle.transformed(&Isometry::translation(
+                    0.0,
+                    0.0,
+                    self.length,
+                ))
+            },
+        ));
 
         let segments = self.shape.edges().approx_segments(tolerance);
 

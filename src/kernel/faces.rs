@@ -12,6 +12,10 @@ impl Faces {
     pub fn into_triangles(self) -> Vec<Triangle> {
         self.0
     }
+
+    pub fn triangles(&self) -> &Vec<Triangle> {
+        &self.0
+    }
 }
 
 pub fn triangulate(vertices: &[Point]) -> Vec<Triangle> {

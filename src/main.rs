@@ -141,7 +141,7 @@ fn main() -> anyhow::Result<()> {
 
     let mut input_handler = input::Handler::new(previous_time);
     let mut renderer = block_on(Renderer::new(&window))?;
-    renderer.update_geometry((&faces.0).into());
+    renderer.update_geometry(faces.triangles().into());
 
     let mut draw_config = DrawConfig::default();
     let mut camera = Camera::new(&aabb);
@@ -156,7 +156,7 @@ fn main() -> anyhow::Result<()> {
         match watcher_rx.try_recv() {
             Ok(shape) => {
                 faces = shape.faces(tolerance);
-                renderer.update_geometry((&faces.0).into());
+                renderer.update_geometry(faces.triangles().into());
             }
             Err(mpsc::TryRecvError::Empty) => {
                 // Nothing to receive from the channel. We don't care.
