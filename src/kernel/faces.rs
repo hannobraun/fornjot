@@ -8,6 +8,12 @@ use crate::math::Point;
 /// refactor this over time, to make it more similar to `Edges`.
 pub struct Faces(pub Vec<Triangle>);
 
+impl Faces {
+    pub fn into_triangles(self) -> Vec<Triangle> {
+        self.0
+    }
+}
+
 pub fn triangulate(vertices: &[Point]) -> Vec<Triangle> {
     let points: Vec<_> = vertices
         .iter()

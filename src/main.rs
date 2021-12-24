@@ -103,7 +103,7 @@ fn main() -> anyhow::Result<()> {
     if let Some(path) = args.export {
         let mut mesh_maker = MeshMaker::new();
 
-        for triangle in faces.0 {
+        for triangle in faces.into_triangles() {
             for vertex in triangle.vertices() {
                 mesh_maker.push(HashVector::from(vertex));
             }
