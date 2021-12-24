@@ -51,7 +51,7 @@ impl Shape for fj::Sweep {
             triangles.push([v0, v2, v3].into());
         }
 
-        Faces(triangles)
+        Faces::Triangles(triangles)
     }
 
     fn edges(&self) -> Edges {

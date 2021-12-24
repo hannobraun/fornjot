@@ -6,19 +6,28 @@ use crate::math::Point;
 ///
 /// Right now, this is just the triangulated form of all faces. The plan is to
 /// refactor this over time, to make it more similar to `Edges`.
-pub struct Faces(pub Vec<Triangle>);
+pub enum Faces {
+    /// The faces are only available in the form of triangles
+    ///
+    /// This variant exists for a transitionary phase, as `Faces` is refactored
+    /// to be more structured.
+    Triangles(Vec<Triangle>),
+}
 
 impl Faces {
     pub fn into_triangles(self) -> Vec<Triangle> {
-        self.0
+        let Self::Triangles(triangles) = self;
+        triangles
     }
 
     pub fn triangles(&self) -> &Vec<Triangle> {
-        &self.0
+        let Self::Triangles(triangles) = self;
+        triangles
     }
 
     pub fn triangles_mut(&mut self) -> &mut Vec<Triangle> {
-        &mut self.0
+        let Self::Triangles(triangles) = self;
+        triangles
     }
 }
 

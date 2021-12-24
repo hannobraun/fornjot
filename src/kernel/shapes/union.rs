@@ -20,7 +20,7 @@ impl Shape for fj::Union {
         let mut triangles = a.into_triangles();
         triangles.extend(b.into_triangles());
 
-        Faces(triangles)
+        Faces::Triangles(triangles)
     }
 
     fn edges(&self) -> Edges {
