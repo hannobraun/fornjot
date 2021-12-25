@@ -11,14 +11,15 @@ impl Shape for fj::Transform {
     }
 
     fn faces(&self, tolerance: f64) -> Faces {
-        let mut faces = self.shape.faces(tolerance);
+        let faces = self.shape.faces(tolerance);
         let isometry = isometry(self);
 
-        for triangle in faces.triangles_mut() {
+        let mut triangles = faces.into_triangles();
+        for triangle in &mut triangles {
             *triangle = triangle.transformed(&isometry);
         }
 
-        faces
+        Faces::Triangles(triangles)
     }
 
     fn edges(&self) -> Edges {

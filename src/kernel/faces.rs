@@ -24,11 +24,6 @@ impl Faces {
         let Self::Triangles(triangles) = self;
         triangles
     }
-
-    pub fn triangles_mut(&mut self) -> &mut Vec<Triangle> {
-        let Self::Triangles(triangles) = self;
-        triangles
-    }
 }
 
 pub fn triangulate(vertices: &[Point]) -> Vec<Triangle> {
