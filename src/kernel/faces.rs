@@ -15,14 +15,9 @@ pub enum Faces {
 }
 
 impl Faces {
-    pub fn into_triangles(self) -> Vec<Triangle> {
+    pub fn triangles(&self) -> Vec<Triangle> {
         let Self::Triangles(triangles) = self;
-        triangles
-    }
-
-    pub fn triangles(&self) -> &Vec<Triangle> {
-        let Self::Triangles(triangles) = self;
-        triangles
+        triangles.clone()
     }
 }
 
