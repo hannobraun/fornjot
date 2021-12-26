@@ -8,7 +8,7 @@ pub struct Faces(pub Vec<Face>);
 impl Faces {
     pub fn triangles(&self, out: &mut Vec<Triangle>) {
         for face in &self.0 {
-            out.extend(&face.0);
+            face.triangles(out);
         }
     }
 }
@@ -19,6 +19,12 @@ impl Faces {
 /// temporary state. The plan is to eventually represent faces as a geometric
 /// surface, bounded by edges.
 pub struct Face(pub Vec<Triangle>);
+
+impl Face {
+    pub fn triangles(&self, out: &mut Vec<Triangle>) {
+        out.extend(&self.0);
+    }
+}
 
 pub fn triangulate(vertices: &[Point]) -> Vec<Triangle> {
     let points: Vec<_> = vertices
