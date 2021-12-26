@@ -1,4 +1,4 @@
-use parry3d_f64::shape::Triangle;
+use parry3d_f64::{math::Isometry, shape::Triangle};
 
 use crate::math::Point;
 
@@ -23,6 +23,12 @@ pub struct Face(pub Vec<Triangle>);
 impl Face {
     pub fn triangles(&self, out: &mut Vec<Triangle>) {
         out.extend(&self.0);
+    }
+
+    pub fn transform(&mut self, transform: &Isometry<f64>) {
+        for triangle in &mut self.0 {
+            *triangle = triangle.transformed(transform);
+        }
     }
 }
 
