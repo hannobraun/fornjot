@@ -1,5 +1,5 @@
 use nalgebra::vector;
-use parry3d_f64::{bounding_volume::AABB, math::Isometry, shape::Triangle};
+use parry3d_f64::{bounding_volume::AABB, math::Isometry};
 
 use crate::{
     kernel::{edges::Edges, faces::Faces, Shape},
@@ -22,11 +22,7 @@ impl Shape for fj::Sweep {
             .triangles(&mut original_triangles);
 
         // Bottom face
-        triangles.extend(
-            original_triangles.iter().map(|triangle| {
-                Triangle::new(triangle.a, triangle.c, triangle.b)
-            }),
-        );
+        triangles.extend(&original_triangles);
 
         // Top face
         triangles.extend(original_triangles.iter().map(|triangle| {
