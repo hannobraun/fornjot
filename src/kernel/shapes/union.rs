@@ -17,6 +17,8 @@ impl Shape for fj::Union {
         let Faces::Faces(a) = self.a.faces(tolerance);
         let Faces::Faces(b) = self.b.faces(tolerance);
 
+        // TASK: This doesn't create a true union, as it doesn't eliminate,
+        //       merge faces, or split faces.
         let mut faces = Vec::new();
         faces.extend(a);
         faces.extend(b);
