@@ -1,7 +1,11 @@
 use parry3d_f64::{bounding_volume::AABB, math::Isometry};
 
 use crate::{
-    kernel::{edges::Edges, faces::Faces, Shape},
+    kernel::{
+        edges::Edges,
+        faces::{Face, Faces},
+        Shape,
+    },
     math::{Point, Vector},
 };
 
@@ -21,7 +25,7 @@ impl Shape for fj::Transform {
             *triangle = triangle.transformed(&isometry);
         }
 
-        Faces::Triangles(triangles)
+        Faces::Faces(vec![Face(triangles)])
     }
 
     fn edges(&self) -> Edges {
