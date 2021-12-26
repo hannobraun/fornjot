@@ -16,16 +16,14 @@ impl Shape for fj::Sweep {
     fn faces(&self, tolerance: f64) -> Faces {
         let mut triangles = Vec::new();
 
-        let mut original_triangles = Vec::new();
-        self.shape
-            .faces(tolerance)
-            .triangles(&mut original_triangles);
+        let mut bottom_face = Vec::new();
+        self.shape.faces(tolerance).triangles(&mut bottom_face);
 
         // Bottom face
-        triangles.extend(&original_triangles);
+        triangles.extend(&bottom_face);
 
         // Top face
-        triangles.extend(original_triangles.iter().map(|triangle| {
+        triangles.extend(bottom_face.iter().map(|triangle| {
             triangle.transformed(&Isometry::translation(0.0, 0.0, self.length))
         }));
 
