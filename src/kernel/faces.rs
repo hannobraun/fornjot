@@ -9,12 +9,6 @@ use crate::math::Point;
 pub enum Faces {
     /// The faces
     Faces(Vec<Face>),
-
-    /// The faces are only available in the form of triangles
-    ///
-    /// This variant exists for a transitionary phase, as `Faces` is refactored
-    /// to be more structured.
-    Triangles(Vec<Triangle>),
 }
 
 impl Faces {
@@ -24,9 +18,6 @@ impl Faces {
                 for face in faces {
                     out.extend(&face.0);
                 }
-            }
-            Self::Triangles(triangles) => {
-                out.extend(triangles);
             }
         }
     }

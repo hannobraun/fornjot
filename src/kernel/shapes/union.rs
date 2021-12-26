@@ -14,14 +14,14 @@ impl Shape for fj::Union {
     }
 
     fn faces(&self, tolerance: f64) -> Faces {
-        let a = self.a.faces(tolerance);
-        let b = self.b.faces(tolerance);
+        let Faces::Faces(a) = self.a.faces(tolerance);
+        let Faces::Faces(b) = self.b.faces(tolerance);
 
-        let mut triangles = Vec::new();
-        a.triangles(&mut triangles);
-        b.triangles(&mut triangles);
+        let mut faces = Vec::new();
+        faces.extend(a);
+        faces.extend(b);
 
-        Faces::Triangles(triangles)
+        Faces::Faces(faces)
     }
 
     fn edges(&self) -> Edges {
