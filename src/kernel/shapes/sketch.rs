@@ -17,7 +17,8 @@ impl Shape for fj::Sketch {
     fn faces(&self, _: f64) -> Faces {
         // TASK: This assumes that the sketch is convex. Remove this
         //       precondition, or at least add a check for it.
-        Faces::Triangles(triangulate(&self.vertices()))
+        let triangles = triangulate(&self.vertices());
+        Faces::Triangles(triangles)
     }
 
     fn edges(&self) -> Edges {
