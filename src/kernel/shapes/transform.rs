@@ -25,7 +25,7 @@ impl Shape for fj::Transform {
             *triangle = triangle.transformed(&isometry);
         }
 
-        Faces::Faces(vec![Face(triangles)])
+        Faces(vec![Face(triangles)])
     }
 
     fn edges(&self) -> Edges {

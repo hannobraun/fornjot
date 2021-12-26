@@ -14,8 +14,8 @@ impl Shape for fj::Union {
     }
 
     fn faces(&self, tolerance: f64) -> Faces {
-        let Faces::Faces(a) = self.a.faces(tolerance);
-        let Faces::Faces(b) = self.b.faces(tolerance);
+        let Faces(a) = self.a.faces(tolerance);
+        let Faces(b) = self.b.faces(tolerance);
 
         // TASK: This doesn't create a true union, as it doesn't eliminate,
         //       merge faces, or split faces.
@@ -23,7 +23,7 @@ impl Shape for fj::Union {
         faces.extend(a);
         faces.extend(b);
 
-        Faces::Faces(faces)
+        Faces(faces)
     }
 
     fn edges(&self) -> Edges {

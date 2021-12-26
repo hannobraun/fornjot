@@ -59,7 +59,7 @@ impl Shape for fj::Difference2d {
             edges_of_b <= 1
         });
 
-        Faces::Faces(vec![Face(triangles)])
+        Faces(vec![Face(triangles)])
     }
 
     fn edges(&self) -> Edges {

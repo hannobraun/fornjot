@@ -19,7 +19,7 @@ impl Shape for fj::Sketch {
         //       precondition, or at least add a check for it.
         let triangles = triangulate(&self.vertices());
         let faces = vec![Face(triangles)];
-        Faces::Faces(faces)
+        Faces(faces)
     }
 
     fn edges(&self) -> Edges {

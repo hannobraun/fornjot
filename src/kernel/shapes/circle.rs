@@ -29,7 +29,7 @@ impl Shape for fj::Circle {
         let triangles = triangulate(&vertices);
         let faces = vec![Face(triangles)];
 
-        Faces::Faces(faces)
+        Faces(faces)
     }
 
     fn edges(&self) -> Edges {
