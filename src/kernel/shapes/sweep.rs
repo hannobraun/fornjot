@@ -2,7 +2,11 @@ use nalgebra::vector;
 use parry3d_f64::{bounding_volume::AABB, math::Isometry, shape::Triangle};
 
 use crate::{
-    kernel::{edges::Edges, faces::Faces, Shape},
+    kernel::{
+        edges::Edges,
+        faces::{Face, Faces},
+        Shape,
+    },
     math::Point,
 };
 
@@ -14,22 +18,28 @@ impl Shape for fj::Sweep {
     }
 
     fn faces(&self, tolerance: f64) -> Faces {
-        let mut triangles = Vec::new();
-
         let mut original_face = Vec::new();
         self.shape.faces(tolerance).triangles(&mut original_face);
 
-        // Bottom face
-        triangles.extend(original_face.iter().map(|triangle| {
-            // Change triangle direction, as the bottom of the sweep points
-            // down, while the original face pointed up.
-            Triangle::new(triangle.a, triangle.c, triangle.b)
-        }));
+        let bottom_face = original_face
+            .iter()
+            .map(|triangle| {
+                // Change triangle direction, as the bottom of the sweep points
+                // down, while the original face pointed up.
+                Triangle::new(triangle.a, triangle.c, triangle.b)
+            })
+            .collect();
 
-        // Top face
-        triangles.extend(original_face.iter().map(|triangle| {
-            triangle.transformed(&Isometry::translation(0.0, 0.0, self.length))
-        }));
+        let top_face = original_face
+            .iter()
+            .map(|triangle| {
+                triangle.transformed(&Isometry::translation(
+                    0.0,
+                    0.0,
+                    self.length,
+                ))
+            })
+            .collect();
 
         let segments = self.shape.edges().approx_segments(tolerance);
 
@@ -41,12 +51,13 @@ impl Shape for fj::Sweep {
             quads.push([v0, v1, v2, v3]);
         }
 
+        let mut side_face = Vec::new();
         for [v0, v1, v2, v3] in quads {
-            triangles.push([v0, v1, v2].into());
-            triangles.push([v0, v2, v3].into());
+            side_face.push([v0, v1, v2].into());
+            side_face.push([v0, v2, v3].into());
         }
 
-        Faces::Triangles(triangles)
+        Faces::Faces(vec![Face(bottom_face), Face(top_face), Face(side_face)])
     }
 
     fn edges(&self) -> Edges {
