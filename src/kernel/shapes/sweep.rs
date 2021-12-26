@@ -20,11 +20,11 @@ impl Shape for fj::Sweep {
         self.shape.faces(tolerance).triangles(&mut bottom_face);
 
         // Bottom face
-        triangles.extend(
-            bottom_face.iter().map(|triangle| {
-                Triangle::new(triangle.a, triangle.c, triangle.b)
-            }),
-        );
+        triangles.extend(bottom_face.iter().map(|triangle| {
+            // Change triangle direction, as the bottom of the sweep points
+            // down, while the original face pointed up.
+            Triangle::new(triangle.a, triangle.c, triangle.b)
+        }));
 
         // Top face
         triangles.extend(bottom_face.iter().map(|triangle| {
