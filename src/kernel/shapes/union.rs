@@ -17,8 +17,9 @@ impl Shape for fj::Union {
         let a = self.a.faces(tolerance);
         let b = self.b.faces(tolerance);
 
-        let mut triangles = a.triangles();
-        triangles.extend(b.triangles());
+        let mut triangles = Vec::new();
+        a.triangles(&mut triangles);
+        b.triangles(&mut triangles);
 
         Faces::Triangles(triangles)
     }

@@ -14,7 +14,9 @@ impl Shape for fj::Transform {
         let faces = self.shape.faces(tolerance);
         let isometry = isometry(self);
 
-        let mut triangles = faces.triangles();
+        let mut triangles = Vec::new();
+        faces.triangles(&mut triangles);
+
         for triangle in &mut triangles {
             *triangle = triangle.transformed(&isometry);
         }

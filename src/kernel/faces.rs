@@ -15,9 +15,9 @@ pub enum Faces {
 }
 
 impl Faces {
-    pub fn triangles(&self) -> Vec<Triangle> {
+    pub fn triangles(&self, out: &mut Vec<Triangle>) {
         let Self::Triangles(triangles) = self;
-        triangles.clone()
+        out.extend(triangles);
     }
 }
 
