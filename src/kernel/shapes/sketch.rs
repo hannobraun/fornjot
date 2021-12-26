@@ -3,7 +3,7 @@ use parry3d_f64::bounding_volume::AABB;
 use crate::{
     kernel::{
         edges::{Edge, Edges},
-        faces::{triangulate, Faces},
+        faces::{triangulate, Face, Faces},
         Shape,
     },
     math::Point,
@@ -18,7 +18,8 @@ impl Shape for fj::Sketch {
         // TASK: This assumes that the sketch is convex. Remove this
         //       precondition, or at least add a check for it.
         let triangles = triangulate(&self.vertices());
-        Faces::Triangles(triangles)
+        let faces = vec![Face(triangles)];
+        Faces::Faces(faces)
     }
 
     fn edges(&self) -> Edges {
