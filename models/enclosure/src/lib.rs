@@ -301,8 +301,10 @@ pub extern "C" fn model(_args: &HashMap<String, String>) -> fj::Shape {
         .union(&right)
         .union(&top)
         .union(&back)
-        .difference(&back_opening)
-        .difference(&right_opening);
+        // TASK: Change to `difference`.
+        .union(&back_opening)
+        // TASK: Change to `difference`.
+        .union(&right_opening);
 
     enclosure.into()
 }
