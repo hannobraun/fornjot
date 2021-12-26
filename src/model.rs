@@ -23,6 +23,20 @@ impl Model {
         format!("{}/src", self.path()).into()
     }
 
+    pub fn lib_path(&self) -> String {
+        let path = format!("{}/target/debug/", self.path(),);
+        let filename: String;
+        if cfg!(windows) {
+            filename = format!("{}.dll", self.name())
+        } else if cfg!(target_os = "macos") {
+            filename = format!("lib{}.dylib", self.name())
+        } else {
+            //Unix
+            filename = format!("lib{}.so", self.name())
+        }
+        format!("{}{}", path, filename)
+    }
+
     pub fn load(
         &self,
         arguments: &HashMap<String, String>,
@@ -39,19 +53,7 @@ impl Model {
         // TASK: Read up why those calls are unsafe. Make sure calling them is
         //       sound, and document why that is.
         let shape = unsafe {
-            let lib = libloading::Library::new({
-                let path = format!("{}/target/debug/", self.path(),);
-                let filename: String;
-                if cfg!(windows) {
-                    filename = format!("{}.dll", self.name(),)
-                } else if cfg!(target_os = "macos") {
-                    filename = format!("lib{}.dylib", self.name(),)
-                } else {
-                    //Unix
-                    filename = format!("lib{}.so", self.name(),)
-                }
-                format!("{}{}", path, filename)
-            })?;
+            let lib = libloading::Library::new(self.lib_path())?;
             let model: libloading::Symbol<ModelFn> = lib.get(b"model")?;
             model(&arguments)
         };
