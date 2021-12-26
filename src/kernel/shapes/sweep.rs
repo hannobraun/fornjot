@@ -61,7 +61,11 @@ impl Shape for fj::Sweep {
             side_face.push([v0, v2, v3].into());
         }
 
-        Faces(vec![Face(bottom_face), Face(top_face), Face(side_face)])
+        Faces(vec![
+            Face::Triangles(bottom_face),
+            Face::Triangles(top_face),
+            Face::Triangles(side_face),
+        ])
     }
 
     fn edges(&self) -> Edges {

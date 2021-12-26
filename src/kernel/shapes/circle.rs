@@ -27,7 +27,7 @@ impl Shape for fj::Circle {
             .flatten()
             .collect();
         let triangles = triangulate(&vertices);
-        let faces = vec![Face(triangles)];
+        let faces = vec![Face::Triangles(triangles)];
 
         Faces(faces)
     }

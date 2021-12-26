@@ -18,7 +18,7 @@ impl Shape for fj::Sketch {
         // TASK: This assumes that the sketch is convex. Remove this
         //       precondition, or at least add a check for it.
         let triangles = triangulate(&self.vertices());
-        let faces = vec![Face(triangles)];
+        let faces = vec![Face::Triangles(triangles)];
         Faces(faces)
     }
 

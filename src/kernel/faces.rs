@@ -14,19 +14,26 @@ impl Faces {
 }
 
 /// A face of a shape
-///
-/// Right now, faces are represented as a collection of triangles. This is a
-/// temporary state. The plan is to eventually represent faces as a geometric
-/// surface, bounded by edges.
-pub struct Face(pub Vec<Triangle>);
+pub enum Face {
+    /// The triangles of the face
+    ///
+    /// Representing faces as a collection of triangles is a temporary state.
+    /// The plan is to eventually represent faces as a geometric surface,
+    /// bounded by edges. While the transition is being made, this variant is
+    /// still required.
+    Triangles(Vec<Triangle>),
+}
 
 impl Face {
     pub fn triangles(&self, out: &mut Vec<Triangle>) {
-        out.extend(&self.0);
+        let Self::Triangles(triangles) = self;
+        out.extend(triangles);
     }
 
     pub fn transform(&mut self, transform: &Isometry<f64>) {
-        for triangle in &mut self.0 {
+        let Self::Triangles(triangles) = self;
+
+        for triangle in triangles {
             *triangle = triangle.transformed(transform);
         }
     }
