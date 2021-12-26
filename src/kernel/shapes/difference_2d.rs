@@ -3,7 +3,7 @@ use parry3d_f64::bounding_volume::AABB;
 use crate::{
     kernel::{
         edges::Edges,
-        faces::{triangulate, Faces},
+        faces::{triangulate, Face, Faces},
         Shape,
     },
     math::Point,
@@ -59,7 +59,7 @@ impl Shape for fj::Difference2d {
             edges_of_b <= 1
         });
 
-        Faces::Triangles(triangles)
+        Faces::Faces(vec![Face(triangles)])
     }
 
     fn edges(&self) -> Edges {
