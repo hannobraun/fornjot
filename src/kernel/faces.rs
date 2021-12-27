@@ -38,11 +38,17 @@ pub enum Face {
 }
 
 impl Face {
-    pub fn triangles(&self, _tolerance: f64, out: &mut Vec<Triangle>) {
+    pub fn triangles(&self, tolerance: f64, out: &mut Vec<Triangle>) {
         match self {
-            Self::Face { edges: _ } => {
-                // TASK: Implement.
-                todo!()
+            Self::Face { edges } => {
+                // TASK: This only works for faces that are convex and have no
+                //       holes. These limitations should be lifted, ideally. At
+                //       least, the presence of either of these should cause a
+                //       panic, instead of incorrect results.
+
+                let vertices = edges.approx_vertices(tolerance);
+                let triangles = &triangulate(&vertices);
+                out.extend(triangles);
             }
             Self::Triangles(triangles) => out.extend(triangles),
         }
