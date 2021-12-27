@@ -7,7 +7,7 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug executable 'fj-host'",
+            "name": "Debug executable 'fj'",
             "cargo": {
                 "args": [
                     "build",
@@ -25,7 +25,7 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug unit tests in executable 'fj-host'",
+            "name": "Debug unit tests in executable 'fj'",
             "cargo": {
                 "args": [
                     "test",
