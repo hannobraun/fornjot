@@ -4,7 +4,7 @@ use crate::{
 };
 
 /// The edges of a shape
-pub struct Edges(pub Vec<Edge>);
+pub struct Edges(pub Vec<Cycle>);
 
 impl Edges {
     /// Construct a new instance of `Edges`
@@ -18,7 +18,7 @@ impl Edges {
     /// the actual edges of the shape.
     pub fn approx_vertices(&self, tolerance: f64) -> Vec<Point> {
         let mut vertices = Vec::new();
-        for edge in &self.0 {
+        for edge in self.0.iter().map(|cycle| &cycle.0).flatten() {
             vertices.extend(edge.approx_vertices(tolerance));
         }
 
@@ -45,6 +45,20 @@ impl Edges {
         }
 
         segments
+    }
+}
+
+/// A cycle of connected edges
+///
+/// The end of each edge in the cycle must connect to the beginning of the next
+/// edge. The end of the last edge must connect to the beginning of the first
+/// one.
+pub struct Cycle(pub Vec<Edge>);
+
+impl Cycle {
+    /// Construct a new instance of `Cycle`
+    pub fn new() -> Self {
+        Self(Vec::new())
     }
 }
 

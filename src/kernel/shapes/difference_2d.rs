@@ -26,6 +26,8 @@ impl Shape for fj::Difference2d {
             .edges()
             .0
             .into_iter()
+            .map(|cycle| cycle.0)
+            .flatten()
             .map(|edge| edge.approx_vertices(tolerance))
             .flatten()
             .collect();
@@ -34,6 +36,8 @@ impl Shape for fj::Difference2d {
             .edges()
             .0
             .into_iter()
+            .map(|cycle| cycle.0)
+            .flatten()
             .map(|edge| edge.approx_vertices(tolerance))
             .flatten()
             .collect();
@@ -67,13 +71,24 @@ impl Shape for fj::Difference2d {
         //       long as this precondition exists, it should at least be
         //       checked.
 
-        let mut edges = self.a.edges();
+        let mut a = self.a.edges();
+        let mut b = self.b.edges();
 
-        for edge in self.b.edges().0 {
-            edges.0.push(edge.reverse());
+        let (a, mut b) = if a.0.len() == 1 && b.0.len() == 1 {
+            (a.0.pop().unwrap(), b.0.pop().unwrap())
+        } else {
+            // TASK: Open issue, link it in the error message.
+            todo!(
+                "The 2-dimensional difference operation only supports one \
+                cycle in each operand."
+            );
+        };
+
+        for edge in &mut b.0 {
+            *edge = edge.clone().reverse();
         }
 
-        edges
+        Edges(vec![a, b])
     }
 
     fn vertices(&self) -> Vec<Point> {
