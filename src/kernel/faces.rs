@@ -19,8 +19,8 @@ impl Faces {
 pub enum Face {
     /// A face of a shape
     ///
-    /// A face is a section of a surface, bounded by edges. At this point, this
-    /// point, the surface is implicit, and assumed to be the x-y plane.
+    /// A face is a section of a surface, bounded by edges. At this point, the
+    /// surface is implicit, and assumed to be the x-y plane.
     Face {
         /// The edges that bounds of the face
         edges: Edges,
