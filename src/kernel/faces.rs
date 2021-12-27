@@ -2,6 +2,8 @@ use parry3d_f64::{math::Isometry, shape::Triangle};
 
 use crate::math::Point;
 
+use super::edges::Edges;
+
 /// The faces of a shape
 pub struct Faces(pub Vec<Face>);
 
@@ -15,6 +17,17 @@ impl Faces {
 
 /// A face of a shape
 pub enum Face {
+    /// A face of a shape
+    ///
+    /// A face is a section of a surface, bounded by edges. At this point, this
+    /// point, the surface is implicit, and assumed to be the x-y plane.
+    // TASK: Remove `#[allow(unused)]`, once this variant is used.
+    #[allow(unused)]
+    Face {
+        /// The edges that bounds of the face
+        edges: Edges,
+    },
+
     /// The triangles of the face
     ///
     /// Representing faces as a collection of triangles is a temporary state.
@@ -27,12 +40,20 @@ pub enum Face {
 impl Face {
     pub fn triangles(&self, _tolerance: f64, out: &mut Vec<Triangle>) {
         match self {
+            Self::Face { edges: _ } => {
+                // TASK: Implement.
+                todo!()
+            }
             Self::Triangles(triangles) => out.extend(triangles),
         }
     }
 
     pub fn transform(&mut self, transform: &Isometry<f64>) {
         match self {
+            Self::Face { edges: _ } => {
+                // TASK: Implement.
+                todo!()
+            }
             Self::Triangles(triangles) => {
                 for triangle in triangles {
                     *triangle = triangle.transformed(transform);
