@@ -85,7 +85,7 @@ impl Shape for fj::Difference2d {
         };
 
         for edge in &mut b.0 {
-            *edge = edge.clone().reverse();
+            edge.reverse();
         }
 
         Edges(vec![a, b])

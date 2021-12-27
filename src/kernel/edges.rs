@@ -101,11 +101,8 @@ impl Edge {
     }
 
     /// Reverse the edge
-    pub fn reverse(self) -> Self {
-        Self {
-            curve: self.curve,
-            reverse: !self.reverse,
-        }
+    pub fn reverse(&mut self) {
+        self.reverse = !self.reverse;
     }
 
     /// Compute vertices to approximate the edge
