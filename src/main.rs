@@ -65,6 +65,7 @@ fn main() -> anyhow::Result<()> {
             //       handle it.
             let event = event.expect("Error handling watch event");
 
+            //Various acceptable ModifyKind kinds. Varies across platforms (e.g. MacOs vs. Windows10)
             if let notify::EventKind::Modify(notify::event::ModifyKind::Any)
             | notify::EventKind::Modify(notify::event::ModifyKind::Data(
                 notify::event::DataChange::Any,
