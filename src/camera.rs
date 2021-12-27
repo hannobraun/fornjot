@@ -141,6 +141,7 @@ impl Camera {
         window: &Window,
         cursor: Option<PhysicalPosition<f64>>,
         faces: &Faces,
+        tolerance: f64,
     ) -> Option<Point> {
         let cursor = cursor?;
 
@@ -154,7 +155,7 @@ impl Camera {
         let mut min_t = None;
 
         let mut triangles = Vec::new();
-        faces.triangles(&mut triangles);
+        faces.triangles(tolerance, &mut triangles);
 
         for triangle in triangles {
             let t = triangle.cast_local_ray(&ray, f64::INFINITY, true);

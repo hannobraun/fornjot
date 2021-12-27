@@ -6,9 +6,9 @@ use crate::math::Point;
 pub struct Faces(pub Vec<Face>);
 
 impl Faces {
-    pub fn triangles(&self, out: &mut Vec<Triangle>) {
+    pub fn triangles(&self, tolerance: f64, out: &mut Vec<Triangle>) {
         for face in &self.0 {
-            face.triangles(out);
+            face.triangles(tolerance, out);
         }
     }
 }
@@ -25,7 +25,7 @@ pub enum Face {
 }
 
 impl Face {
-    pub fn triangles(&self, out: &mut Vec<Triangle>) {
+    pub fn triangles(&self, _tolerance: f64, out: &mut Vec<Triangle>) {
         match self {
             Self::Triangles(triangles) => out.extend(triangles),
         }

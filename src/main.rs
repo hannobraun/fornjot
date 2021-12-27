@@ -104,7 +104,7 @@ fn main() -> anyhow::Result<()> {
         let mut mesh_maker = MeshMaker::new();
 
         let mut triangles = Vec::new();
-        faces.triangles(&mut triangles);
+        faces.triangles(tolerance, &mut triangles);
 
         for triangle in triangles {
             for vertex in triangle.vertices() {
@@ -146,7 +146,7 @@ fn main() -> anyhow::Result<()> {
     let mut renderer = block_on(Renderer::new(&window))?;
 
     let mut triangles = Vec::new();
-    faces.triangles(&mut triangles);
+    faces.triangles(tolerance, &mut triangles);
     renderer.update_geometry((&triangles).into());
 
     let mut draw_config = DrawConfig::default();
@@ -164,7 +164,7 @@ fn main() -> anyhow::Result<()> {
                 faces = shape.faces(tolerance);
 
                 let mut triangles = Vec::new();
-                faces.triangles(&mut triangles);
+                faces.triangles(tolerance, &mut triangles);
 
                 renderer.update_geometry((&triangles).into());
             }
@@ -212,8 +212,12 @@ fn main() -> anyhow::Result<()> {
                 event: WindowEvent::MouseInput { state, button, .. },
                 ..
             } => {
-                let focus_point =
-                    camera.focus_point(&window, input_handler.cursor(), &faces);
+                let focus_point = camera.focus_point(
+                    &window,
+                    input_handler.cursor(),
+                    &faces,
+                    tolerance,
+                );
 
                 input_handler.handle_mouse_input(button, state, focus_point);
             }
@@ -233,6 +237,7 @@ fn main() -> anyhow::Result<()> {
                     &mut camera,
                     &window,
                     &faces,
+                    tolerance,
                 );
 
                 window.inner().request_redraw();

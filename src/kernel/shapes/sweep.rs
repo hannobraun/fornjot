@@ -23,7 +23,9 @@ impl Shape for fj::Sweep {
         //       general, but it certainly doesn't reflect the data structures,
         //       which allow an arbitrary number of faces in any shape.
         let mut original_face = Vec::new();
-        self.shape.faces(tolerance).triangles(&mut original_face);
+        self.shape
+            .faces(tolerance)
+            .triangles(tolerance, &mut original_face);
 
         let bottom_face = original_face
             .iter()

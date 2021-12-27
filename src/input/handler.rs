@@ -119,8 +119,10 @@ impl Handler {
         camera: &mut Camera,
         window: &Window,
         faces: &Faces,
+        tolerance: f64,
     ) {
-        let focus_point = camera.focus_point(window, self.cursor, faces);
+        let focus_point =
+            camera.focus_point(window, self.cursor, faces, tolerance);
 
         self.zoom.discard_old_events(now);
         self.zoom.update_speed(now, delta_t, focus_point, camera);
