@@ -14,7 +14,7 @@ use crate::math::Point;
 ///
 /// This distinction is not observed here, but moving things into that direction
 /// is the intention.
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum Curve {
     /// A circle
     Circle(Circle),
@@ -43,7 +43,7 @@ impl Curve {
 ///
 /// It might be better to define a circle using two points: The center, and
 /// the "zero" point on the circumference.
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Circle {
     /// The radius of the circle
     pub radius: f64,
@@ -99,7 +99,7 @@ impl Circle {
 }
 
 /// A line, defined by two points
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Line {
     /// One point defining the line
     pub a: Point,
