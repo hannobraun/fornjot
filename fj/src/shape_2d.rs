@@ -73,8 +73,8 @@ impl From<Difference2d> for Shape2d {
 /// ## Limitations
 ///
 /// At this point, only convex sketches are supported. This is a temporary
-/// limitation, until someone implements a more advanced algorithm to
-/// triangulate faces made from sketches.
+/// limitation, until someone implements a more advanced algorithm for
+/// triangulating faces made from sketches.
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Sketch {
