@@ -39,6 +39,7 @@ impl Edges {
 }
 
 /// An edge of a shape
+#[derive(Debug)]
 pub struct Edge {
     /// The curve that defines the edge's geometry
     ///
