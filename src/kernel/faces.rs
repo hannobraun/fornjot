@@ -21,8 +21,6 @@ pub enum Face {
     ///
     /// A face is a section of a surface, bounded by edges. At this point, this
     /// point, the surface is implicit, and assumed to be the x-y plane.
-    // TASK: Remove `#[allow(unused)]`, once this variant is used.
-    #[allow(unused)]
     Face {
         /// The edges that bounds of the face
         edges: Edges,
