@@ -65,11 +65,8 @@ fn main() -> anyhow::Result<()> {
             //       handle it.
             let event = event.expect("Error handling watch event");
 
-            if let notify::EventKind::Access(
-                notify::event::AccessKind::Close(
-                    notify::event::AccessMode::Write,
-                ),
-            ) = event.kind
+            if let notify::EventKind::Modify(notify::event::ModifyKind::Any) =
+                event.kind
             {
                 let shape = match model.load(&parameters) {
                     Ok(shape) => shape,
