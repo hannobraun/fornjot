@@ -26,15 +26,18 @@ pub enum Face {
 
 impl Face {
     pub fn triangles(&self, out: &mut Vec<Triangle>) {
-        let Self::Triangles(triangles) = self;
-        out.extend(triangles);
+        match self {
+            Self::Triangles(triangles) => out.extend(triangles),
+        }
     }
 
     pub fn transform(&mut self, transform: &Isometry<f64>) {
-        let Self::Triangles(triangles) = self;
-
-        for triangle in triangles {
-            *triangle = triangle.transformed(transform);
+        match self {
+            Self::Triangles(triangles) => {
+                for triangle in triangles {
+                    *triangle = triangle.transformed(transform);
+                }
+            }
         }
     }
 }
