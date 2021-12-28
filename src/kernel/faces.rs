@@ -1,4 +1,12 @@
-use parry3d_f64::{math::Isometry, shape::Triangle};
+use std::collections::BTreeSet;
+
+use decorum::R64;
+use parry3d_f64::{
+    bounding_volume::AABB,
+    math::Isometry,
+    query::{Ray, RayCast as _},
+    shape::Triangle,
+};
 
 use crate::math::Point;
 
@@ -48,9 +56,61 @@ impl Face {
                 edges.approx_vertices(tolerance, &mut vertices);
                 let mut triangles = triangulate(&vertices);
 
-                triangles.retain(|_triangle| {
-                    // TASK: Filter out all triangles that have segments that
-                    //       are not inside the face.
+                // For the next step, we need to represent the face as a
+                // polygon, but there aren't many requirements on how
+                // specifically to do that. All we need is a list of polygon
+                // edges. Anything else really doesn't matter.
+                let mut face_as_polygon = Vec::new();
+                edges.approx_segments(tolerance, &mut face_as_polygon);
+
+                // We're also going to need a point outside of the polygon.
+                let aabb = AABB::from_points(&vertices);
+                let outside = aabb.maxs * 2.;
+
+                triangles.retain(|triangle| {
+                    for segment in triangle.edges() {
+                        // If the segment is an edge of the face, we don't need
+                        // to take a closer look.
+                        if face_as_polygon.contains(&segment) {
+                            continue;
+                        }
+
+                        // To determine if the edge is within the polygon, we
+                        // determine if its center point is in the polygon.
+                        let center = segment.a + (segment.b - segment.a) * 0.5;
+
+                        let ray = Ray {
+                            origin: center,
+                            dir: outside - center,
+                        };
+
+                        // We need to keep track of where our ray hits the
+                        // edges. Otherwise, if the ray hits a vertex, we might
+                        // count that hit twice, as every vertex is attached to
+                        // two edges.
+                        let mut hits = BTreeSet::new();
+
+                        // Use ray-casting to determine if `center` is within
+                        // the face-polygon.
+                        for edge in &face_as_polygon {
+                            let intersection =
+                                edge.cast_local_ray(&ray, f64::INFINITY, true);
+
+                            if let Some(t) = intersection {
+                                let t: R64 = t.into();
+                                hits.insert(t);
+                            }
+                        }
+
+                        if hits.len() % 2 == 0 {
+                            // The segment is outside of the face. This means we
+                            // can throw away the whole triangle.
+                            return false;
+                        }
+                    }
+
+                    // If we didn't throw away the triangle up till now, this
+                    // means all its edges are within the face.
                     true
                 });
 
