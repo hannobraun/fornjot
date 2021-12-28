@@ -68,13 +68,6 @@ impl From<Difference2d> for Shape2d {
 /// Nothing about these edges is checked right now, but algorithms might assume
 /// that the edges are non-overlapping. If you create a `Sketch` with
 /// overlapping edges, you're on your own.
-///
-///
-/// ## Limitations
-///
-/// At this point, only convex sketches are supported. This is a temporary
-/// limitation, until someone implements a more advanced algorithm for
-/// triangulating faces made from sketches.
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Sketch {
