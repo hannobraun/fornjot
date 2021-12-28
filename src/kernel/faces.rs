@@ -45,7 +45,14 @@ impl Face {
                 //       panic, instead of incorrect results.
 
                 let vertices = edges.approx_vertices(tolerance);
-                let all_triangles = triangulate(&vertices);
+                let mut all_triangles = triangulate(&vertices);
+
+                all_triangles.retain(|_triangle| {
+                    // TASK: Filter out all triangles that have segments that
+                    //       are not inside the face.
+                    true
+                });
+
                 out.extend(all_triangles);
             }
             Self::Triangles(triangles) => out.extend(triangles),
