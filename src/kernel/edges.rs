@@ -1,6 +1,8 @@
+use parry3d_f64::math::Isometry;
+
 use crate::{
     kernel::geometry::{Circle, Curve, Line},
-    math::{Point, Vector},
+    math::Point,
 };
 
 /// The edges of a shape
@@ -150,10 +152,10 @@ pub struct Segment {
 }
 
 impl Segment {
-    pub fn transformed(self, vector: Vector) -> Self {
+    pub fn transformed(self, transform: &Isometry<f64>) -> Self {
         Self {
-            a: self.a + vector,
-            b: self.b + vector,
+            a: transform.transform_point(&self.a),
+            b: transform.transform_point(&self.b),
         }
     }
 }

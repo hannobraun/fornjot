@@ -1,4 +1,3 @@
-use nalgebra::vector;
 use parry3d_f64::{bounding_volume::AABB, math::Isometry, shape::Triangle};
 
 use crate::{
@@ -53,8 +52,11 @@ impl Shape for fj::Sweep {
         for segment in segments {
             let [v0, v1] = [segment.a, segment.b];
             let [v3, v2] = {
-                let segment =
-                    segment.transformed(vector![0.0, 0.0, self.length]);
+                let segment = segment.transformed(&Isometry::translation(
+                    0.0,
+                    0.0,
+                    self.length,
+                ));
                 [segment.a, segment.b]
             };
 
