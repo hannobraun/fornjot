@@ -144,20 +144,25 @@ impl Edge {
 
 /// A line segment
 #[derive(Debug)]
-pub struct Segment(pub [Point; 2]);
+pub struct Segment {
+    pub a: Point,
+    pub b: Point,
+}
 
 impl Segment {
     /// Translate the segment
     ///
     /// Translate all segment vertices by the given vector.
     pub fn translate(self, vector: Vector) -> Self {
-        let vertices = self.0.map(|vertex| vertex + vector);
-        Self(vertices)
+        Self {
+            a: self.a + vector,
+            b: self.b + vector,
+        }
     }
 }
 
 impl From<[Point; 2]> for Segment {
-    fn from(vertices: [Point; 2]) -> Self {
-        Self(vertices)
+    fn from([a, b]: [Point; 2]) -> Self {
+        Self { a, b }
     }
 }

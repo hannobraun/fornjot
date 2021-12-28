@@ -51,8 +51,11 @@ impl Shape for fj::Sweep {
 
         let mut quads = Vec::new();
         for segment in segments {
-            let [v0, v1] = segment.0;
-            let [v3, v2] = segment.translate(vector![0.0, 0.0, self.length]).0;
+            let [v0, v1] = [segment.a, segment.b];
+            let [v3, v2] = {
+                let segment = segment.translate(vector![0.0, 0.0, self.length]);
+                [segment.a, segment.b]
+            };
 
             quads.push([v0, v1, v2, v3]);
         }
