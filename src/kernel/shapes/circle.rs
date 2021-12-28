@@ -4,7 +4,7 @@ use parry3d_f64::bounding_volume::AABB;
 use crate::{
     kernel::{
         edges::{Edge, Edges},
-        faces::Faces,
+        faces::{Face, Faces},
         Shape,
     },
     math::Point,
@@ -19,8 +19,8 @@ impl Shape for fj::Circle {
     }
 
     fn faces(&self, _: f64) -> Faces {
-        // TASK: Implement.
-        todo!()
+        let edges = Edges::single_cycle([Edge::arc(self.radius)]);
+        Faces(vec![Face::Face { edges }])
     }
 
     fn edges(&self) -> Edges {
