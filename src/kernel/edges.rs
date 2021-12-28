@@ -18,13 +18,9 @@ impl Edges {
     /// the actual edges of the shape.
     pub fn approx_vertices(&self, tolerance: f64) -> Vec<Point> {
         let mut vertices = Vec::new();
-        for edge in self.0.iter().map(|cycle| &cycle.0).flatten() {
-            vertices.extend(edge.approx_vertices(tolerance));
+        for cycle in &self.0 {
+            cycle.approx_vertices(tolerance, &mut vertices);
         }
-
-        // If we have multiple connected edges, the previous step will produce
-        // duplicate vertices.
-        vertices.dedup();
 
         vertices
     }
@@ -59,6 +55,23 @@ impl Cycle {
     /// Construct a new instance of `Cycle`
     pub fn new() -> Self {
         Self(Vec::new())
+    }
+
+    /// Compute vertices to approximate the edges of this cycle
+    ///
+    /// `tolerance` defines how far these vertices are allowed to deviate from
+    /// the actual edges of the shape.
+    ///
+    /// No assumptions must be made about already existing contents of `out`, as
+    /// this method might modify them.
+    pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point>) {
+        for edge in &self.0 {
+            out.extend(edge.approx_vertices(tolerance));
+        }
+
+        // As this is a cycle, the last vertex of an edge could be identical to
+        // the first vertex of the next. Let's remove those duplicates.
+        out.dedup();
     }
 }
 
