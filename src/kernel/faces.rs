@@ -45,7 +45,7 @@ impl Face {
                 //       panic, instead of incorrect results.
 
                 let vertices = edges.approx_vertices(tolerance);
-                let all_triangles = &triangulate(&vertices);
+                let all_triangles = triangulate(&vertices);
                 out.extend(all_triangles);
             }
             Self::Triangles(triangles) => out.extend(triangles),
