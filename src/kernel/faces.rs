@@ -22,7 +22,7 @@ pub enum Face {
     /// A face is a section of a surface, bounded by edges. At this point, the
     /// surface is implicit, and assumed to be the x-y plane.
     Face {
-        /// The edges that bounds of the face
+        /// The edges that bound the face
         edges: Edges,
     },
 
