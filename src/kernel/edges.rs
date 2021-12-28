@@ -1,4 +1,4 @@
-use parry3d_f64::math::Isometry;
+use parry3d_f64::shape::Segment;
 
 use crate::{
     kernel::geometry::{Circle, Curve, Line},
@@ -141,27 +141,5 @@ impl Edge {
         }
 
         vertices
-    }
-}
-
-/// A line segment
-#[derive(Debug)]
-pub struct Segment {
-    pub a: Point,
-    pub b: Point,
-}
-
-impl Segment {
-    pub fn transformed(self, transform: &Isometry<f64>) -> Self {
-        Self {
-            a: transform.transform_point(&self.a),
-            b: transform.transform_point(&self.b),
-        }
-    }
-}
-
-impl From<[Point; 2]> for Segment {
-    fn from([a, b]: [Point; 2]) -> Self {
-        Self { a, b }
     }
 }
