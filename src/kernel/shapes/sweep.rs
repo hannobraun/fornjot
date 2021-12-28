@@ -53,7 +53,8 @@ impl Shape for fj::Sweep {
         for segment in segments {
             let [v0, v1] = [segment.a, segment.b];
             let [v3, v2] = {
-                let segment = segment.translate(vector![0.0, 0.0, self.length]);
+                let segment =
+                    segment.transformed(vector![0.0, 0.0, self.length]);
                 [segment.a, segment.b]
             };
 

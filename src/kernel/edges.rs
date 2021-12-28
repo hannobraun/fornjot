@@ -153,7 +153,7 @@ impl Segment {
     /// Translate the segment
     ///
     /// Translate all segment vertices by the given vector.
-    pub fn translate(self, vector: Vector) -> Self {
+    pub fn transformed(self, vector: Vector) -> Self {
         Self {
             a: self.a + vector,
             b: self.b + vector,
