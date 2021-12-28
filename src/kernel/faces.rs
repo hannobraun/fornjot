@@ -67,6 +67,7 @@ impl Face {
     }
 }
 
+/// Create a Delaunay triangulation of all vertices
 pub fn triangulate(vertices: &[Point]) -> Vec<Triangle> {
     let points: Vec<_> = vertices
         .iter()
