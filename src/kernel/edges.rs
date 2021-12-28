@@ -150,9 +150,6 @@ pub struct Segment {
 }
 
 impl Segment {
-    /// Translate the segment
-    ///
-    /// Translate all segment vertices by the given vector.
     pub fn transformed(self, vector: Vector) -> Self {
         Self {
             a: self.a + vector,
