@@ -44,7 +44,8 @@ impl Face {
                 //       least, the presence of either of these should cause a
                 //       panic, instead of incorrect results.
 
-                let vertices = edges.approx_vertices(tolerance);
+                let mut vertices = Vec::new();
+                edges.approx_vertices(tolerance, &mut vertices);
                 let mut triangles = triangulate(&vertices);
 
                 triangles.retain(|_triangle| {

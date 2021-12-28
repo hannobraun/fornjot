@@ -30,13 +30,10 @@ impl Edges {
     ///
     /// `tolerance` defines how far these vertices are allowed to deviate from
     /// the actual edges of the shape.
-    pub fn approx_vertices(&self, tolerance: f64) -> Vec<Point> {
-        let mut vertices = Vec::new();
+    pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point>) {
         for cycle in &self.cycles {
-            cycle.approx_vertices(tolerance, &mut vertices);
+            cycle.approx_vertices(tolerance, out);
         }
-
-        vertices
     }
 
     /// Compute line segments to approximate the edges
@@ -44,7 +41,8 @@ impl Edges {
     /// `tolerance` defines how far these line segments are allowed to deviate
     /// from the actual edges of the shape.
     pub fn approx_segments(&self, tolerance: f64) -> Vec<Segment> {
-        let vertices = self.approx_vertices(tolerance);
+        let mut vertices = Vec::new();
+        self.approx_vertices(tolerance, &mut vertices);
 
         let mut segments = Vec::new();
         for segment in vertices.windows(2) {
