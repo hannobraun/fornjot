@@ -58,11 +58,6 @@ pub struct Cycle {
 }
 
 impl Cycle {
-    /// Construct a new instance of `Cycle`
-    pub fn new() -> Self {
-        Self { edges: Vec::new() }
-    }
-
     /// Compute vertices to approximate the edges of this cycle
     ///
     /// `tolerance` defines how far these vertices are allowed to deviate from

@@ -2,7 +2,7 @@ use parry3d_f64::bounding_volume::AABB;
 
 use crate::{
     kernel::{
-        edges::{Cycle, Edge, Edges},
+        edges::{Edge, Edges},
         faces::{Face, Faces},
         Shape,
     },
@@ -33,7 +33,7 @@ impl Shape for fj::Sketch {
             }
         };
 
-        let mut cycle = Cycle::new();
+        let mut edges = Vec::new();
         for window in v.windows(2) {
             // Can't panic, we passed `2` to `windows`.
             //
@@ -41,10 +41,10 @@ impl Shape for fj::Sketch {
             let a = window[0];
             let b = window[1];
 
-            cycle.edges.push(Edge::line_segment(a, b));
+            edges.push(Edge::line_segment(a, b));
         }
 
-        Edges(vec![cycle])
+        Edges::single_cycle(edges)
     }
 
     fn vertices(&self) -> Vec<Point> {
