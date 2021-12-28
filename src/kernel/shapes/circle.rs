@@ -3,7 +3,7 @@ use parry3d_f64::bounding_volume::AABB;
 
 use crate::{
     kernel::{
-        edges::{Cycle, Edge, Edges},
+        edges::{Edge, Edges},
         faces::Faces,
         Shape,
     },
@@ -24,11 +24,7 @@ impl Shape for fj::Circle {
     }
 
     fn edges(&self) -> Edges {
-        let mut edges = Edges::new();
-        edges.0.push(Cycle {
-            edges: vec![Edge::arc(self.radius)],
-        });
-        edges
+        Edges::single_cycle([Edge::arc(self.radius)])
     }
 
     fn vertices(&self) -> Vec<Point> {

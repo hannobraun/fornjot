@@ -7,9 +7,13 @@ use crate::{
 pub struct Edges(pub Vec<Cycle>);
 
 impl Edges {
-    /// Construct a new instance of `Edges`
-    pub fn new() -> Self {
-        Self(Vec::new())
+    /// Construct a new instance of `Edges`, with a single cycle
+    pub fn single_cycle(edges: impl IntoIterator<Item = Edge>) -> Self {
+        let edges = edges.into_iter();
+        let cycle = Cycle {
+            edges: edges.collect(),
+        };
+        Self(vec![cycle])
     }
 
     /// Compute vertices to approximate the edges
