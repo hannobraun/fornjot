@@ -5,6 +5,11 @@ use crate::{
 
 /// The edges of a shape
 pub struct Edges {
+    /// The cycles that the edges of the shape form
+    ///
+    /// Code reading this field generally assumes that cycles do not overlap.
+    /// This precondition is currently not checked, and must be upheld by all
+    /// code writing to this field.
     pub cycles: Vec<Cycle>,
 }
 
