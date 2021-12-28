@@ -46,7 +46,8 @@ impl Shape for fj::Sweep {
             })
             .collect();
 
-        let segments = self.shape.edges().approx_segments(tolerance);
+        let mut segments = Vec::new();
+        self.shape.edges().approx_segments(tolerance, &mut segments);
 
         let mut quads = Vec::new();
         for segment in segments {
