@@ -41,7 +41,7 @@ impl Shape for fj::Sketch {
             let a = window[0];
             let b = window[1];
 
-            cycle.0.push(Edge::line_segment(a, b));
+            cycle.edges.push(Edge::line_segment(a, b));
         }
 
         Edges(vec![cycle])

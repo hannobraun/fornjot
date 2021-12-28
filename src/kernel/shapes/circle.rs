@@ -25,7 +25,9 @@ impl Shape for fj::Circle {
 
     fn edges(&self) -> Edges {
         let mut edges = Edges::new();
-        edges.0.push(Cycle(vec![Edge::arc(self.radius)]));
+        edges.0.push(Cycle {
+            edges: vec![Edge::arc(self.radius)],
+        });
         edges
     }
 

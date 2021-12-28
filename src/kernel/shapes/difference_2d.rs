@@ -26,7 +26,7 @@ impl Shape for fj::Difference2d {
             .edges()
             .0
             .into_iter()
-            .map(|cycle| cycle.0)
+            .map(|cycle| cycle.edges)
             .flatten()
             .map(|edge| edge.approx_vertices(tolerance))
             .flatten()
@@ -36,7 +36,7 @@ impl Shape for fj::Difference2d {
             .edges()
             .0
             .into_iter()
-            .map(|cycle| cycle.0)
+            .map(|cycle| cycle.edges)
             .flatten()
             .map(|edge| edge.approx_vertices(tolerance))
             .flatten()
@@ -84,7 +84,7 @@ impl Shape for fj::Difference2d {
             );
         };
 
-        for edge in &mut b.0 {
+        for edge in &mut b.edges {
             edge.reverse();
         }
 

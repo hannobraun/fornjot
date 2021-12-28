@@ -49,12 +49,14 @@ impl Edges {
 /// The end of each edge in the cycle must connect to the beginning of the next
 /// edge. The end of the last edge must connect to the beginning of the first
 /// one.
-pub struct Cycle(pub Vec<Edge>);
+pub struct Cycle {
+    pub edges: Vec<Edge>,
+}
 
 impl Cycle {
     /// Construct a new instance of `Cycle`
     pub fn new() -> Self {
-        Self(Vec::new())
+        Self { edges: Vec::new() }
     }
 
     /// Compute vertices to approximate the edges of this cycle
@@ -65,7 +67,7 @@ impl Cycle {
     /// No assumptions must be made about already existing contents of `out`, as
     /// this method might modify them.
     pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point>) {
-        for edge in &self.0 {
+        for edge in &self.edges {
             out.extend(edge.approx_vertices(tolerance));
         }
 
