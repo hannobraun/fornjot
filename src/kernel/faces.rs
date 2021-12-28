@@ -97,6 +97,12 @@ impl Face {
                                 edge.cast_local_ray(&ray, f64::INFINITY, true);
 
                             if let Some(t) = intersection {
+                                // Due to slight inaccuracies, we might get
+                                // different values for the same intersections.
+                                // Let's round `t` before using it.
+                                let eps = 1000.0;
+                                let t = (t * eps).round() / eps;
+
                                 let t: R64 = t.into();
                                 hits.insert(t);
                             }
