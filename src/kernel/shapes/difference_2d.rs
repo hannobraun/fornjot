@@ -24,7 +24,7 @@ impl Shape for fj::Difference2d {
         let a: Vec<_> = self
             .a
             .edges()
-            .0
+            .cycles
             .into_iter()
             .map(|cycle| cycle.edges)
             .flatten()
@@ -34,7 +34,7 @@ impl Shape for fj::Difference2d {
         let b: Vec<_> = self
             .b
             .edges()
-            .0
+            .cycles
             .into_iter()
             .map(|cycle| cycle.edges)
             .flatten()
@@ -74,8 +74,8 @@ impl Shape for fj::Difference2d {
         let mut a = self.a.edges();
         let mut b = self.b.edges();
 
-        let (a, mut b) = if a.0.len() == 1 && b.0.len() == 1 {
-            (a.0.pop().unwrap(), b.0.pop().unwrap())
+        let (a, mut b) = if a.cycles.len() == 1 && b.cycles.len() == 1 {
+            (a.cycles.pop().unwrap(), b.cycles.pop().unwrap())
         } else {
             // TASK: Open issue, link it in the error message.
             todo!(
@@ -88,7 +88,7 @@ impl Shape for fj::Difference2d {
             edge.reverse();
         }
 
-        Edges(vec![a, b])
+        Edges { cycles: vec![a, b] }
     }
 
     fn vertices(&self) -> Vec<Point> {

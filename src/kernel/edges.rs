@@ -4,7 +4,9 @@ use crate::{
 };
 
 /// The edges of a shape
-pub struct Edges(pub Vec<Cycle>);
+pub struct Edges {
+    pub cycles: Vec<Cycle>,
+}
 
 impl Edges {
     /// Construct a new instance of `Edges`, with a single cycle
@@ -13,7 +15,10 @@ impl Edges {
         let cycle = Cycle {
             edges: edges.collect(),
         };
-        Self(vec![cycle])
+
+        Self {
+            cycles: vec![cycle],
+        }
     }
 
     /// Compute vertices to approximate the edges
@@ -22,7 +27,7 @@ impl Edges {
     /// the actual edges of the shape.
     pub fn approx_vertices(&self, tolerance: f64) -> Vec<Point> {
         let mut vertices = Vec::new();
-        for cycle in &self.0 {
+        for cycle in &self.cycles {
             cycle.approx_vertices(tolerance, &mut vertices);
         }
 
