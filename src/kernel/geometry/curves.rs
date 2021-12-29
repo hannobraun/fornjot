@@ -79,6 +79,10 @@ impl Circle {
             }
 
             n += 1;
+
+            // TASK: Log a warning, if `n` is becoming unreasonably large. This
+            //       is either a bug, or the consequence of an unreasonably low
+            //       value for `tolerance`.
         }
 
         let mut vertices = Vec::new();
