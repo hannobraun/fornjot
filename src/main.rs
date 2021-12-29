@@ -100,7 +100,24 @@ fn main() -> anyhow::Result<()> {
 
     let aabb = shape.bounding_volume();
 
-    let tolerance = aabb.extents().min() / 1000.;
+    // Compute a reasonable default for the tolerance value. To do this, we just
+    // look at the smallest non-zero extent of the bounding box and divide that
+    // by some value.
+    let tolerance = {
+        let mut min_extent = f64::MAX;
+        for &extent in aabb.extents().iter() {
+            if extent > 0. && extent < min_extent {
+                min_extent = extent;
+            }
+        }
+
+        // `tolerance` must not be zero, or we'll run into trouble.
+        let tolerance = min_extent / 1000.;
+        assert!(tolerance > 0.);
+
+        tolerance
+    };
+
     let mut faces = shape.faces(tolerance);
 
     if let Some(path) = args.export {
