@@ -100,7 +100,7 @@ impl Face {
                                 // Due to slight inaccuracies, we might get
                                 // different values for the same intersections.
                                 // Let's round `t` before using it.
-                                let eps = 1000.0;
+                                let eps = 1_000_000.0;
                                 let t = (t * eps).round() / eps;
 
                                 let t: R64 = t.into();
