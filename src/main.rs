@@ -77,7 +77,9 @@ fn main() -> anyhow::Result<()> {
                 let shape = match model.load(&parameters) {
                     Ok(shape) => shape,
                     Err(model::Error::Compile) => {
-                        // TASK: Display error message on screen.
+                        // It would be better to display an error in the UI,
+                        // where the user can actually see it. Issue:
+                        // https://github.com/hannobraun/fornjot/issues/30
                         println!("Error compiling model");
                         return;
                     }
