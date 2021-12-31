@@ -100,7 +100,7 @@ fn main() -> anyhow::Result<()> {
     )?;
     watcher.watch(&watch_path, notify::RecursiveMode::Recursive)?;
 
-    let aabb = shape.bounding_volume();
+    let mut aabb = shape.bounding_volume();
 
     // Compute a reasonable default for the tolerance value. To do this, we just
     // look at the smallest non-zero extent of the bounding box and divide that
@@ -184,6 +184,8 @@ fn main() -> anyhow::Result<()> {
         match watcher_rx.try_recv() {
             Ok(shape) => {
                 let faces = shape.faces(tolerance);
+
+                aabb = shape.bounding_volume();
 
                 triangles.clear();
                 faces.triangles(tolerance, &mut triangles);
