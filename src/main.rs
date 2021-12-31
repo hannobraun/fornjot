@@ -185,7 +185,7 @@ fn main() -> anyhow::Result<()> {
             Ok(shape) => {
                 faces = shape.faces(tolerance);
 
-                let mut triangles = Vec::new();
+                triangles.clear();
                 faces.triangles(tolerance, &mut triangles);
 
                 renderer.update_geometry((&triangles).into());
