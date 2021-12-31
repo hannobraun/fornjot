@@ -120,7 +120,7 @@ fn main() -> anyhow::Result<()> {
         tolerance
     };
 
-    let mut faces = shape.faces(tolerance);
+    let faces = shape.faces(tolerance);
 
     if let Some(path) = args.export {
         let mut mesh_maker = MeshMaker::new();
@@ -183,7 +183,7 @@ fn main() -> anyhow::Result<()> {
 
         match watcher_rx.try_recv() {
             Ok(shape) => {
-                faces = shape.faces(tolerance);
+                let faces = shape.faces(tolerance);
 
                 triangles.clear();
                 faces.triangles(tolerance, &mut triangles);
@@ -237,8 +237,7 @@ fn main() -> anyhow::Result<()> {
                 let focus_point = camera.focus_point(
                     &window,
                     input_handler.cursor(),
-                    &faces,
-                    tolerance,
+                    &triangles,
                 );
 
                 input_handler.handle_mouse_input(button, state, focus_point);
@@ -258,8 +257,7 @@ fn main() -> anyhow::Result<()> {
                     now,
                     &mut camera,
                     &window,
-                    &faces,
-                    tolerance,
+                    &triangles,
                 );
 
                 window.inner().request_redraw();

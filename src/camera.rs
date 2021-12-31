@@ -4,11 +4,11 @@ use nalgebra::{TAffine, Transform, Translation};
 use parry3d_f64::{
     bounding_volume::AABB,
     query::{Ray, RayCast as _},
+    shape::Triangle,
 };
 use winit::dpi::PhysicalPosition;
 
 use crate::{
-    kernel::faces::Faces,
     math::{Point, Vector},
     window::Window,
 };
@@ -140,8 +140,7 @@ impl Camera {
         &self,
         window: &Window,
         cursor: Option<PhysicalPosition<f64>>,
-        faces: &Faces,
-        tolerance: f64,
+        triangles: &Vec<Triangle>,
     ) -> Option<Point> {
         let cursor = cursor?;
 
@@ -153,9 +152,6 @@ impl Camera {
         let ray = Ray { origin, dir };
 
         let mut min_t = None;
-
-        let mut triangles = Vec::new();
-        faces.triangles(tolerance, &mut triangles);
 
         for triangle in triangles {
             let t = triangle.cast_local_ray(&ray, f64::INFINITY, true);

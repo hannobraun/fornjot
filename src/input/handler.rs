@@ -1,5 +1,6 @@
 use std::time::Instant;
 
+use parry3d_f64::shape::Triangle;
 use winit::{
     dpi::PhysicalPosition,
     event::{
@@ -8,9 +9,7 @@ use winit::{
     },
 };
 
-use crate::{
-    camera::Camera, kernel::faces::Faces, math::Point, window::Window,
-};
+use crate::{camera::Camera, math::Point, window::Window};
 
 use super::{movement::Movement, rotation::Rotation, zoom::Zoom};
 
@@ -118,11 +117,9 @@ impl Handler {
         now: Instant,
         camera: &mut Camera,
         window: &Window,
-        faces: &Faces,
-        tolerance: f64,
+        triangles: &Vec<Triangle>,
     ) {
-        let focus_point =
-            camera.focus_point(window, self.cursor, faces, tolerance);
+        let focus_point = camera.focus_point(window, self.cursor, triangles);
 
         self.zoom.discard_old_events(now);
         self.zoom.update_speed(now, delta_t, focus_point, camera);
