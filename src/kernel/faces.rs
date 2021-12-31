@@ -93,6 +93,11 @@ impl Face {
                         // Use ray-casting to determine if `center` is within
                         // the face-polygon.
                         for edge in &face_as_polygon {
+                            // Please note that we if we get to this point, then
+                            // the point is not on a polygon edge, due to the
+                            // check above. We don't need to handle any edge
+                            // cases that would arise from that case.
+
                             let intersection =
                                 edge.cast_local_ray(&ray, f64::INFINITY, true);
 
