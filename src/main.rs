@@ -58,50 +58,6 @@ fn main() -> anyhow::Result<()> {
     //       watcher closure takes ownership of the model.
     let shape = model.load(&parameters)?;
 
-    let (watcher_tx, watcher_rx) = mpsc::sync_channel(0);
-
-    let watch_path = model.src_path();
-    let mut watcher = notify::recommended_watcher(
-        move |event: notify::Result<notify::Event>| {
-            // TASK: Figure out when this error can happen, find a better way to
-            //       handle it.
-            let event = event.expect("Error handling watch event");
-
-            //Various acceptable ModifyKind kinds. Varies across platforms (e.g. MacOs vs. Windows10)
-            if let notify::EventKind::Modify(notify::event::ModifyKind::Any)
-            | notify::EventKind::Modify(notify::event::ModifyKind::Data(
-                notify::event::DataChange::Any,
-            ))
-            | notify::EventKind::Modify(notify::event::ModifyKind::Data(
-                notify::event::DataChange::Content,
-            )) = event.kind
-            {
-                let shape = match model.load(&parameters) {
-                    Ok(shape) => shape,
-                    Err(model::Error::Compile) => {
-                        // It would be better to display an error in the UI,
-                        // where the user can actually see it. Issue:
-                        // https://github.com/hannobraun/fornjot/issues/30
-                        println!("Error compiling model");
-                        return;
-                    }
-                    Err(err) => {
-                        panic!("Error reloading model: {:?}", err);
-                    }
-                };
-
-                // This will panic, if the other end is disconnected, which is
-                // probably the result of a panic on that thread, or the
-                // application is being shut down.
-                //
-                // Either way, not much we can do about it here, except maybe to
-                // provide a better error message in the future.
-                watcher_tx.send(shape).unwrap();
-            }
-        },
-    )?;
-    watcher.watch(&watch_path, notify::RecursiveMode::Recursive)?;
-
     let mut aabb = shape.bounding_volume();
 
     // Compute a reasonable default for the tolerance value. To do this, we just
@@ -161,6 +117,50 @@ fn main() -> anyhow::Result<()> {
 
         return Ok(());
     }
+
+    let (watcher_tx, watcher_rx) = mpsc::sync_channel(0);
+
+    let watch_path = model.src_path();
+    let mut watcher = notify::recommended_watcher(
+        move |event: notify::Result<notify::Event>| {
+            // TASK: Figure out when this error can happen, find a better way to
+            //       handle it.
+            let event = event.expect("Error handling watch event");
+
+            //Various acceptable ModifyKind kinds. Varies across platforms (e.g. MacOs vs. Windows10)
+            if let notify::EventKind::Modify(notify::event::ModifyKind::Any)
+            | notify::EventKind::Modify(notify::event::ModifyKind::Data(
+                notify::event::DataChange::Any,
+            ))
+            | notify::EventKind::Modify(notify::event::ModifyKind::Data(
+                notify::event::DataChange::Content,
+            )) = event.kind
+            {
+                let shape = match model.load(&parameters) {
+                    Ok(shape) => shape,
+                    Err(model::Error::Compile) => {
+                        // It would be better to display an error in the UI,
+                        // where the user can actually see it. Issue:
+                        // https://github.com/hannobraun/fornjot/issues/30
+                        println!("Error compiling model");
+                        return;
+                    }
+                    Err(err) => {
+                        panic!("Error reloading model: {:?}", err);
+                    }
+                };
+
+                // This will panic, if the other end is disconnected, which is
+                // probably the result of a panic on that thread, or the
+                // application is being shut down.
+                //
+                // Either way, not much we can do about it here, except maybe to
+                // provide a better error message in the future.
+                watcher_tx.send(shape).unwrap();
+            }
+        },
+    )?;
+    watcher.watch(&watch_path, notify::RecursiveMode::Recursive)?;
 
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop);
