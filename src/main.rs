@@ -11,7 +11,6 @@ mod window;
 
 use std::{collections::HashMap, sync::mpsc, time::Instant};
 
-use camera::Camera;
 use futures::executor::block_on;
 use notify::Watcher as _;
 use tracing::trace;
@@ -22,6 +21,7 @@ use winit::{
 
 use crate::{
     args::Args,
+    camera::Camera,
     debug::DebugInfo,
     graphics::{DrawConfig, Renderer},
     kernel::Shape as _,
