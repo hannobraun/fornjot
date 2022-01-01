@@ -129,7 +129,7 @@ fn main() -> anyhow::Result<()> {
         let mut mesh_maker = MeshMaker::new();
 
         let mut triangles = Vec::new();
-        faces.triangles(tolerance, &mut triangles);
+        faces.triangles(tolerance, &mut triangles, &mut debug_info);
 
         for triangle in triangles {
             for vertex in triangle.vertices() {
@@ -171,7 +171,7 @@ fn main() -> anyhow::Result<()> {
     let mut renderer = block_on(Renderer::new(&window))?;
 
     let mut triangles = Vec::new();
-    faces.triangles(tolerance, &mut triangles);
+    faces.triangles(tolerance, &mut triangles, &mut debug_info);
     renderer.update_geometry((&triangles).into());
 
     let mut draw_config = DrawConfig::default();
@@ -191,7 +191,7 @@ fn main() -> anyhow::Result<()> {
                 aabb = shape.bounding_volume();
 
                 triangles.clear();
-                faces.triangles(tolerance, &mut triangles);
+                faces.triangles(tolerance, &mut triangles, &mut debug_info);
 
                 renderer.update_geometry((&triangles).into());
             }

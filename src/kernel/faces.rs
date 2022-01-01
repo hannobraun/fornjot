@@ -8,7 +8,7 @@ use parry3d_f64::{
     shape::Triangle,
 };
 
-use crate::math::Point;
+use crate::{debug::DebugInfo, math::Point};
 
 use super::edges::Edges;
 
@@ -16,9 +16,14 @@ use super::edges::Edges;
 pub struct Faces(pub Vec<Face>);
 
 impl Faces {
-    pub fn triangles(&self, tolerance: f64, out: &mut Vec<Triangle>) {
+    pub fn triangles(
+        &self,
+        tolerance: f64,
+        out: &mut Vec<Triangle>,
+        debug_info: &mut DebugInfo,
+    ) {
         for face in &self.0 {
-            face.triangles(tolerance, out);
+            face.triangles(tolerance, out, debug_info);
         }
     }
 }
@@ -44,7 +49,12 @@ pub enum Face {
 }
 
 impl Face {
-    pub fn triangles(&self, tolerance: f64, out: &mut Vec<Triangle>) {
+    pub fn triangles(
+        &self,
+        tolerance: f64,
+        out: &mut Vec<Triangle>,
+        _: &mut DebugInfo,
+    ) {
         match self {
             Self::Face { edges } => {
                 // TASK: This only works for faces that are convex and have no

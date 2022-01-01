@@ -1,12 +1,13 @@
 use parry3d_f64::{bounding_volume::AABB, math::Isometry, shape::Triangle};
 
 use crate::{
+    debug::DebugInfo,
     kernel::{
         edges::Edges,
         faces::{Face, Faces},
         Shape,
     },
-    math::Point, debug::DebugInfo,
+    math::Point,
 };
 
 impl Shape for fj::Sweep {
@@ -22,9 +23,11 @@ impl Shape for fj::Sweep {
         //       general, but it certainly doesn't reflect the data structures,
         //       which allow an arbitrary number of faces in any shape.
         let mut original_face = Vec::new();
-        self.shape
-            .faces(tolerance, debug_info)
-            .triangles(tolerance, &mut original_face);
+        self.shape.faces(tolerance, debug_info).triangles(
+            tolerance,
+            &mut original_face,
+            debug_info,
+        );
 
         let bottom_face = original_face
             .iter()
