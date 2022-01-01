@@ -53,7 +53,7 @@ impl Face {
         &self,
         tolerance: f64,
         out: &mut Vec<Triangle>,
-        _: &mut DebugInfo,
+        debug_info: &mut DebugInfo,
     ) {
         match self {
             Self::Face { edges } => {
@@ -93,6 +93,7 @@ impl Face {
                             origin: center,
                             dir: outside - center,
                         };
+                        debug_info.rays.push(ray);
 
                         // We need to keep track of where our ray hits the
                         // edges. Otherwise, if the ray hits a vertex, we might
