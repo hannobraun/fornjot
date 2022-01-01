@@ -138,7 +138,7 @@ impl Renderer {
         })
     }
 
-    pub fn update_geometry(&mut self, mesh: Mesh) {
+    pub fn update_data(&mut self, mesh: Mesh) {
         self.geometries = Geometries::new(&self.device, &mesh);
     }
 
