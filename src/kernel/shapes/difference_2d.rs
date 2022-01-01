@@ -6,7 +6,7 @@ use crate::{
         faces::{triangulate, Face, Faces},
         Shape,
     },
-    math::Point,
+    math::Point, debug::DebugInfo,
 };
 
 impl Shape for fj::Difference2d {
@@ -17,7 +17,7 @@ impl Shape for fj::Difference2d {
         self.a.bounding_volume()
     }
 
-    fn faces(&self, tolerance: f64) -> Faces {
+    fn faces(&self, tolerance: f64, _: &mut DebugInfo) -> Faces {
         // TASK: Carefully think about the limits of this algorithm, and make
         //       sure to panic with a `todo!` in cases that are not supported.
 

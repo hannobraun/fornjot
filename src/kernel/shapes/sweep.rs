@@ -6,7 +6,7 @@ use crate::{
         faces::{Face, Faces},
         Shape,
     },
-    math::Point,
+    math::Point, debug::DebugInfo,
 };
 
 impl Shape for fj::Sweep {
@@ -16,14 +16,14 @@ impl Shape for fj::Sweep {
         aabb
     }
 
-    fn faces(&self, tolerance: f64) -> Faces {
+    fn faces(&self, tolerance: f64, debug_info: &mut DebugInfo) -> Faces {
         // TASK: This assumes that a 2-dimensional shape only consists of one
         //       face. I don't know if this is a reasonable assumption in
         //       general, but it certainly doesn't reflect the data structures,
         //       which allow an arbitrary number of faces in any shape.
         let mut original_face = Vec::new();
         self.shape
-            .faces(tolerance)
+            .faces(tolerance, debug_info)
             .triangles(tolerance, &mut original_face);
 
         let bottom_face = original_face

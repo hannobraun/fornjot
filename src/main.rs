@@ -1,5 +1,6 @@
 mod args;
 mod camera;
+mod debug;
 mod graphics;
 mod input;
 mod kernel;
@@ -120,7 +121,8 @@ fn main() -> anyhow::Result<()> {
         tolerance
     };
 
-    let faces = shape.faces(tolerance);
+    let mut debug_info = ();
+    let faces = shape.faces(tolerance, &mut debug_info);
 
     if let Some(path) = args.export {
         let mut mesh_maker = MeshMaker::new();
@@ -183,7 +185,7 @@ fn main() -> anyhow::Result<()> {
 
         match watcher_rx.try_recv() {
             Ok(shape) => {
-                let faces = shape.faces(tolerance);
+                let faces = shape.faces(tolerance, &mut debug_info);
 
                 aabb = shape.bounding_volume();
 

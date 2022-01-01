@@ -6,7 +6,7 @@ use crate::{
         faces::{Face, Faces},
         Shape,
     },
-    math::Point,
+    math::Point, debug::DebugInfo,
 };
 
 impl Shape for fj::Sketch {
@@ -14,7 +14,7 @@ impl Shape for fj::Sketch {
         AABB::from_points(&self.vertices())
     }
 
-    fn faces(&self, _: f64) -> Faces {
+    fn faces(&self, _: f64, _: &mut DebugInfo) -> Faces {
         let edges = self.edges();
         let face = Face::Face { edges };
         Faces(vec![face])
