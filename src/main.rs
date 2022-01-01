@@ -184,6 +184,7 @@ fn main() -> anyhow::Result<()> {
 
         match watcher_rx.try_recv() {
             Ok(shape) => {
+                debug_info.clear();
                 let faces = shape.faces(tolerance, &mut debug_info);
 
                 aabb = shape.bounding_volume();

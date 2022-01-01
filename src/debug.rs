@@ -12,4 +12,8 @@ impl DebugInfo {
     pub fn new() -> Self {
         Self { rays: Vec::new() }
     }
+
+    pub fn clear(&mut self) {
+        self.rays.clear();
+    }
 }
