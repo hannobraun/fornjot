@@ -203,6 +203,8 @@ impl Renderer {
             );
         }
 
+        // TASK: Draw debug info.
+
         self.config_ui
             .draw(
                 &self.device,
