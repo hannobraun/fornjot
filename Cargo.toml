@@ -22,7 +22,7 @@ wgpu_glyph  = "*"
 winit       = "*"
 
 [dependencies.clap]
-version  = "3.0.0-rc.1"
+version  = "*"
 features = ["derive"]
 
 [dependencies.fj]
