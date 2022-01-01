@@ -81,11 +81,11 @@ fn main() -> anyhow::Result<()> {
     let mut debug_info = DebugInfo::new();
     let faces = shape.faces(tolerance, &mut debug_info);
 
+    let mut triangles = Vec::new();
+    faces.triangles(tolerance, &mut triangles, &mut debug_info);
+
     if let Some(path) = args.export {
         let mut mesh_maker = MeshMaker::new();
-
-        let mut triangles = Vec::new();
-        faces.triangles(tolerance, &mut triangles, &mut debug_info);
 
         for triangle in triangles {
             for vertex in triangle.vertices() {
@@ -170,8 +170,6 @@ fn main() -> anyhow::Result<()> {
     let mut input_handler = input::Handler::new(previous_time);
     let mut renderer = block_on(Renderer::new(&window))?;
 
-    let mut triangles = Vec::new();
-    faces.triangles(tolerance, &mut triangles, &mut debug_info);
     renderer.update_geometry((&triangles).into());
 
     let mut draw_config = DrawConfig::default();
