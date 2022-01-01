@@ -122,7 +122,7 @@ fn main() -> anyhow::Result<()> {
         tolerance
     };
 
-    let mut debug_info = DebugInfo;
+    let mut debug_info = DebugInfo::new();
     let faces = shape.faces(tolerance, &mut debug_info);
 
     if let Some(path) = args.export {
