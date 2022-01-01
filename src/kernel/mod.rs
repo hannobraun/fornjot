@@ -34,13 +34,13 @@ pub trait Shape {
 }
 
 macro_rules! dispatch {
-    ($($method:ident($($arg_name:ident: $arg_ty:ident)*) -> $ret:ty;)*) => {
+    ($($method:ident($($arg_name:ident: $arg_ty:ty),*) -> $ret:ty;)*) => {
         impl Shape for fj::Shape {
             $(
-                fn $method(&self, $($arg_name: $arg_ty)*) -> $ret {
+                fn $method(&self, $($arg_name: $arg_ty),*) -> $ret {
                     match self {
-                        Self::Shape2d(shape) => shape.$method($($arg_name)*),
-                        Self::Shape3d(shape) => shape.$method($($arg_name)*),
+                        Self::Shape2d(shape) => shape.$method($($arg_name),*),
+                        Self::Shape3d(shape) => shape.$method($($arg_name),*),
                     }
                 }
             )*
@@ -48,11 +48,11 @@ macro_rules! dispatch {
 
         impl Shape for fj::Shape2d {
             $(
-                fn $method(&self, $($arg_name: $arg_ty)*) -> $ret {
+                fn $method(&self, $($arg_name: $arg_ty),*) -> $ret {
                     match self {
-                        Self::Circle(shape) => shape.$method($($arg_name)*),
-                        Self::Difference(shape) => shape.$method($($arg_name)*),
-                        Self::Sketch(shape) => shape.$method($($arg_name)*),
+                        Self::Circle(shape) => shape.$method($($arg_name),*),
+                        Self::Difference(shape) => shape.$method($($arg_name),*),
+                        Self::Sketch(shape) => shape.$method($($arg_name),*),
                     }
                 }
             )*
@@ -60,12 +60,12 @@ macro_rules! dispatch {
 
         impl Shape for fj::Shape3d {
             $(
-                fn $method(&self, $($arg_name: $arg_ty)*) -> $ret {
+                fn $method(&self, $($arg_name: $arg_ty),*) -> $ret {
                     match self {
-                        Self::Difference(shape) => shape.$method($($arg_name)*),
-                        Self::Sweep(shape) => shape.$method($($arg_name)*),
-                        Self::Transform(shape) => shape.$method($($arg_name)*),
-                        Self::Union(shape) => shape.$method($($arg_name)*),
+                        Self::Difference(shape) => shape.$method($($arg_name),*),
+                        Self::Sweep(shape) => shape.$method($($arg_name),*),
+                        Self::Transform(shape) => shape.$method($($arg_name),*),
+                        Self::Union(shape) => shape.$method($($arg_name),*),
                     }
                 }
             )*
