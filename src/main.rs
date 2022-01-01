@@ -22,6 +22,7 @@ use winit::{
 
 use crate::{
     args::Args,
+    debug::DebugInfo,
     graphics::{DrawConfig, Renderer},
     kernel::Shape as _,
     mesh::{HashVector, MeshMaker},
@@ -121,7 +122,7 @@ fn main() -> anyhow::Result<()> {
         tolerance
     };
 
-    let mut debug_info = ();
+    let mut debug_info = DebugInfo;
     let faces = shape.faces(tolerance, &mut debug_info);
 
     if let Some(path) = args.export {
