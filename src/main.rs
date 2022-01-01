@@ -185,11 +185,11 @@ fn main() -> anyhow::Result<()> {
         match watcher_rx.try_recv() {
             Ok(shape) => {
                 debug_info.clear();
+                triangles.clear();
+
                 let faces = shape.faces(tolerance, &mut debug_info);
 
                 aabb = shape.bounding_volume();
-
-                triangles.clear();
                 faces.triangles(tolerance, &mut triangles, &mut debug_info);
 
                 renderer.update_geometry((&triangles).into());
