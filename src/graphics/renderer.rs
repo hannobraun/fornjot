@@ -6,7 +6,7 @@ use wgpu::util::DeviceExt as _;
 use wgpu_glyph::ab_glyph::InvalidFont;
 use winit::dpi::PhysicalSize;
 
-use crate::{camera::Camera, window::Window};
+use crate::{camera::Camera, debug::DebugInfo, window::Window};
 
 use super::{
     config_ui::ConfigUi, draw_config::DrawConfig, drawables::Drawables,
@@ -138,8 +138,9 @@ impl Renderer {
         })
     }
 
-    pub fn update_data(&mut self, mesh: Mesh) {
+    pub fn update_data(&mut self, mesh: Mesh, _: &DebugInfo) {
         self.geometries = Geometries::new(&self.device, &mesh);
+        // TASK: Update debug info.
     }
 
     pub fn handle_resize(&mut self, size: PhysicalSize<u32>) {
