@@ -203,7 +203,12 @@ impl Renderer {
             );
         }
 
-        // TASK: Draw debug info.
+        drawables.rays.draw(
+            &mut encoder,
+            &color_view,
+            &self.depth_view,
+            &self.bind_group,
+        );
 
         self.config_ui
             .draw(
