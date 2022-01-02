@@ -202,13 +202,14 @@ impl Renderer {
                 &self.bind_group,
             );
         }
-
-        drawables.rays.draw(
-            &mut encoder,
-            &color_view,
-            &self.depth_view,
-            &self.bind_group,
-        );
+        if config.draw_debug {
+            drawables.rays.draw(
+                &mut encoder,
+                &color_view,
+                &self.depth_view,
+                &self.bind_group,
+            );
+        }
 
         self.config_ui
             .draw(
