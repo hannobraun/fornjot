@@ -6,16 +6,16 @@ use super::{
 pub struct Drawables<'r> {
     pub model: Drawable<'r>,
     pub mesh: Drawable<'r>,
-    pub rays: Drawable<'r>,
+    pub lines: Drawable<'r>,
 }
 
 impl<'r> Drawables<'r> {
     pub fn new(geometries: &'r Geometries, pipelines: &'r Pipelines) -> Self {
         let model = Drawable::new(&geometries.mesh, &pipelines.model);
         let mesh = Drawable::new(&geometries.mesh, &pipelines.mesh);
-        let rays = Drawable::new(&geometries.rays, &pipelines.rays);
+        let lines = Drawable::new(&geometries.rays, &pipelines.rays);
 
-        Self { model, mesh, rays }
+        Self { model, mesh, lines }
     }
 }
 

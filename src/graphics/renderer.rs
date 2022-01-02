@@ -203,7 +203,7 @@ impl Renderer {
             );
         }
         if config.draw_debug {
-            drawables.rays.draw(
+            drawables.lines.draw(
                 &mut encoder,
                 &color_view,
                 &self.depth_view,
