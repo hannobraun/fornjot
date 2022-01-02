@@ -29,8 +29,6 @@ impl Shaders {
         }
     }
 
-    // TASK: Un-suppress warning.
-    #[allow(unused)]
     pub fn rays(&self) -> Shader {
         Shader {
             module: &self.0,

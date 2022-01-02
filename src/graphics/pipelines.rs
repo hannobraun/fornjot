@@ -10,6 +10,7 @@ use super::{
 pub struct Pipelines {
     pub model: Pipeline,
     pub mesh: Pipeline,
+    pub rays: Pipeline,
 }
 
 impl Pipelines {
@@ -39,6 +40,13 @@ impl Pipelines {
                 &pipeline_layout,
                 shaders.mesh(),
                 wgpu::PrimitiveTopology::TriangleList,
+                wgpu::PolygonMode::Line,
+            ),
+            rays: Pipeline::new(
+                device,
+                &pipeline_layout,
+                shaders.rays(),
+                wgpu::PrimitiveTopology::LineList,
                 wgpu::PolygonMode::Line,
             ),
         }
