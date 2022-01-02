@@ -32,7 +32,7 @@ impl Shaders {
     pub fn lines(&self) -> Shader {
         Shader {
             module: &self.0,
-            frag_entry: "frag_rays",
+            frag_entry: "frag_lines",
         }
     }
 }
