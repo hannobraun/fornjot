@@ -13,7 +13,7 @@ impl<'r> Drawables<'r> {
     pub fn new(geometries: &'r Geometries, pipelines: &'r Pipelines) -> Self {
         let model = Drawable::new(&geometries.mesh, &pipelines.model);
         let mesh = Drawable::new(&geometries.mesh, &pipelines.mesh);
-        let lines = Drawable::new(&geometries.lines, &pipelines.rays);
+        let lines = Drawable::new(&geometries.lines, &pipelines.lines);
 
         Self { model, mesh, lines }
     }
