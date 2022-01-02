@@ -52,6 +52,7 @@ impl Handler {
 
                 VirtualKeyCode::Key1 => actions.toggle_model = true,
                 VirtualKeyCode::Key2 => actions.toggle_mesh = true,
+                VirtualKeyCode::Key3 => actions.toggle_debug = true,
 
                 _ => (),
             }
@@ -133,6 +134,7 @@ pub struct Actions {
 
     pub toggle_model: bool,
     pub toggle_mesh: bool,
+    pub toggle_debug: bool,
 }
 
 impl Actions {
@@ -142,6 +144,7 @@ impl Actions {
 
             toggle_model: false,
             toggle_mesh: false,
+            toggle_debug: false,
         }
     }
 }

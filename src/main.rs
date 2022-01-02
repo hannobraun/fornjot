@@ -289,5 +289,8 @@ fn main() -> anyhow::Result<()> {
         if actions.toggle_mesh {
             draw_config.draw_mesh = !draw_config.draw_mesh;
         }
+        if actions.toggle_debug {
+            draw_config.draw_debug = !draw_config.draw_debug;
+        }
     });
 }
