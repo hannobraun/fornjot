@@ -45,7 +45,7 @@ impl Pipelines {
             lines: Pipeline::new(
                 device,
                 &pipeline_layout,
-                shaders.rays(),
+                shaders.lines(),
                 wgpu::PrimitiveTopology::LineList,
                 wgpu::PolygonMode::Line,
             ),
