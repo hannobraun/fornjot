@@ -28,6 +28,15 @@ impl Shaders {
             frag_entry: "frag_mesh",
         }
     }
+
+    // TASK: Un-suppress warning.
+    #[allow(unused)]
+    pub fn rays(&self) -> Shader {
+        Shader {
+            module: &self.0,
+            frag_entry: "frag_rays",
+        }
+    }
 }
 
 #[derive(Clone, Copy)]
