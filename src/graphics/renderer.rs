@@ -115,7 +115,8 @@ impl Renderer {
             label: None,
         });
 
-        let geometries = Geometries::new(&device, &Vertices::empty());
+        let geometries =
+            Geometries::new(&device, &Vertices::empty(), &Vertices::empty());
         let pipelines = Pipelines::new(&device, &bind_group_layout);
 
         let config_ui = ConfigUi::new(&device)?;
@@ -138,9 +139,8 @@ impl Renderer {
         })
     }
 
-    pub fn update_geometry(&mut self, mesh: Vertices, _rays: Vertices) {
-        self.geometries = Geometries::new(&self.device, &mesh);
-        // TASK: Update debug info.
+    pub fn update_geometry(&mut self, mesh: Vertices, rays: Vertices) {
+        self.geometries = Geometries::new(&self.device, &mesh, &rays);
     }
 
     pub fn handle_resize(&mut self, size: PhysicalSize<u32>) {

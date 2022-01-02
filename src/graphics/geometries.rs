@@ -7,13 +7,20 @@ use super::vertices::{Vertex, Vertices};
 #[derive(Debug)]
 pub struct Geometries {
     pub mesh: Geometry,
+    pub rays: Geometry,
 }
 
 impl Geometries {
-    pub fn new(device: &wgpu::Device, mesh: &Vertices) -> Self {
+    pub fn new(
+        device: &wgpu::Device,
+        mesh: &Vertices,
+        debug_info: &Vertices,
+    ) -> Self {
         let mesh = Geometry::new(device, mesh.vertices(), mesh.indices());
+        let rays =
+            Geometry::new(device, debug_info.vertices(), debug_info.indices());
 
-        Self { mesh }
+        Self { mesh, rays }
     }
 }
 
