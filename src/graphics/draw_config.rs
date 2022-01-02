@@ -10,8 +10,7 @@ impl Default for DrawConfig {
         Self {
             draw_model: true,
             draw_mesh: false,
-            // TASK: Turn off by default.
-            draw_debug: true,
+            draw_debug: false,
         }
     }
 }
