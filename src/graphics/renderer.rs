@@ -139,8 +139,8 @@ impl Renderer {
         })
     }
 
-    pub fn update_geometry(&mut self, mesh: Vertices, rays: Vertices) {
-        self.geometries = Geometries::new(&self.device, &mesh, &rays);
+    pub fn update_geometry(&mut self, mesh: Vertices, lines: Vertices) {
+        self.geometries = Geometries::new(&self.device, &mesh, &lines);
     }
 
     pub fn handle_resize(&mut self, size: PhysicalSize<u32>) {
