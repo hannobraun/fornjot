@@ -10,8 +10,8 @@ use crate::{camera::Camera, debug::DebugInfo, window::Window};
 
 use super::{
     config_ui::ConfigUi, draw_config::DrawConfig, drawables::Drawables,
-    geometries::Geometries, mesh::Vertices, pipelines::Pipelines,
-    transform::Transform, uniforms::Uniforms, COLOR_FORMAT, DEPTH_FORMAT,
+    geometries::Geometries, pipelines::Pipelines, transform::Transform,
+    uniforms::Uniforms, vertices::Vertices, COLOR_FORMAT, DEPTH_FORMAT,
 };
 
 #[derive(Debug)]

@@ -2,7 +2,7 @@ use std::convert::TryInto;
 
 use wgpu::util::DeviceExt;
 
-use super::mesh::{Vertex, Vertices};
+use super::vertices::{Vertex, Vertices};
 
 #[derive(Debug)]
 pub struct Geometries {
