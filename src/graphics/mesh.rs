@@ -4,12 +4,12 @@ use parry3d_f64::shape::Triangle;
 use crate::mesh::{HashVector, Index, MeshMaker};
 
 #[derive(Debug)]
-pub struct Mesh {
+pub struct Vertices {
     vertices: Vec<Vertex>,
     indices: Vec<Index>,
 }
 
-impl Mesh {
+impl Vertices {
     pub fn empty() -> Self {
         Self {
             vertices: Vec::new(),
@@ -26,7 +26,7 @@ impl Mesh {
     }
 }
 
-impl From<&Vec<Triangle>> for Mesh {
+impl From<&Vec<Triangle>> for Vertices {
     fn from(triangles: &Vec<Triangle>) -> Self {
         let mut mesh = MeshMaker::new();
 

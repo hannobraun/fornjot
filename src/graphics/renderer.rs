@@ -10,7 +10,7 @@ use crate::{camera::Camera, debug::DebugInfo, window::Window};
 
 use super::{
     config_ui::ConfigUi, draw_config::DrawConfig, drawables::Drawables,
-    geometries::Geometries, mesh::Mesh, pipelines::Pipelines,
+    geometries::Geometries, mesh::Vertices, pipelines::Pipelines,
     transform::Transform, uniforms::Uniforms, COLOR_FORMAT, DEPTH_FORMAT,
 };
 
@@ -115,7 +115,7 @@ impl Renderer {
             label: None,
         });
 
-        let geometries = Geometries::new(&device, &Mesh::empty());
+        let geometries = Geometries::new(&device, &Vertices::empty());
         let pipelines = Pipelines::new(&device, &bind_group_layout);
 
         let config_ui = ConfigUi::new(&device)?;
@@ -138,7 +138,7 @@ impl Renderer {
         })
     }
 
-    pub fn update_geometry(&mut self, mesh: Mesh, _: &DebugInfo) {
+    pub fn update_geometry(&mut self, mesh: Vertices, _: &DebugInfo) {
         self.geometries = Geometries::new(&self.device, &mesh);
         // TASK: Update debug info.
     }
