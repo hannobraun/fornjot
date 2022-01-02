@@ -1,7 +1,10 @@
 use bytemuck::{Pod, Zeroable};
 use parry3d_f64::shape::Triangle;
 
-use crate::mesh::{HashVector, Index, MeshMaker};
+use crate::{
+    debug::DebugInfo,
+    mesh::{HashVector, Index, MeshMaker},
+};
 
 #[derive(Debug)]
 pub struct Vertices {
@@ -58,6 +61,13 @@ impl From<&Vec<Triangle>> for Vertices {
         let indices = mesh.indices().collect();
 
         Self { vertices, indices }
+    }
+}
+
+impl From<&DebugInfo> for Vertices {
+    fn from(_debug_info: &DebugInfo) -> Self {
+        // TASK: Implement.
+        Self::empty()
     }
 }
 
