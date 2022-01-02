@@ -3,6 +3,7 @@ use parry3d_f64::shape::Triangle;
 
 use crate::{
     debug::DebugInfo,
+    math::Point,
     mesh::{HashVector, Index, MeshMaker},
 };
 
@@ -65,9 +66,27 @@ impl From<&Vec<Triangle>> for Vertices {
 }
 
 impl From<&DebugInfo> for Vertices {
-    fn from(_debug_info: &DebugInfo) -> Self {
-        // TASK: Implement.
-        Self::empty()
+    fn from(debug_info: &DebugInfo) -> Self {
+        let mut vertices = Vec::new();
+        let mut indices = Vec::new();
+
+        for ray in &debug_info.rays {
+            vertices.push(vertex(ray.origin));
+            vertices.push(vertex(ray.origin + ray.dir));
+
+            indices.push(indices.len() as u32);
+            indices.push(indices.len() as u32);
+
+            fn vertex(pos: Point) -> Vertex {
+                Vertex {
+                    position: [pos.x as f32, pos.y as f32, pos.z as f32],
+                    normal: [0.; 3],
+                    color: [0., 0., 0., 1.],
+                }
+            }
+        }
+
+        Self { vertices, indices }
     }
 }
 
