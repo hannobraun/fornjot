@@ -1,8 +1,9 @@
 use parry3d_f64::bounding_volume::AABB;
 
 use crate::{
+    debug::DebugInfo,
     kernel::{edges::Edges, faces::Faces, Shape},
-    math::Point, debug::DebugInfo,
+    math::Point,
 };
 
 impl Shape for fj::Difference {
