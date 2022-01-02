@@ -7,7 +7,7 @@ use super::vertices::{Vertex, Vertices};
 #[derive(Debug)]
 pub struct Geometries {
     pub mesh: Geometry,
-    pub rays: Geometry,
+    pub lines: Geometry,
 }
 
 impl Geometries {
@@ -17,10 +17,10 @@ impl Geometries {
         debug_info: &Vertices,
     ) -> Self {
         let mesh = Geometry::new(device, mesh.vertices(), mesh.indices());
-        let rays =
+        let lines =
             Geometry::new(device, debug_info.vertices(), debug_info.indices());
 
-        Self { mesh, rays }
+        Self { mesh, lines }
     }
 }
 
