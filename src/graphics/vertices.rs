@@ -71,19 +71,21 @@ impl From<&DebugInfo> for Vertices {
         let mut indices = Vec::new();
 
         for triangle_edge_check in &debug_info.triangle_edge_checks {
-            vertices.push(vertex(triangle_edge_check.ray.origin));
+            vertices
+                .push(vertex(triangle_edge_check.ray.origin, [0., 0., 0., 1.]));
             vertices.push(vertex(
                 triangle_edge_check.ray.origin + triangle_edge_check.ray.dir,
+                [0., 0., 0., 1.],
             ));
 
             indices.push(indices.len() as u32);
             indices.push(indices.len() as u32);
 
-            fn vertex(pos: Point) -> Vertex {
+            fn vertex(pos: Point, color: [f32; 4]) -> Vertex {
                 Vertex {
                     position: [pos.x as f32, pos.y as f32, pos.z as f32],
                     normal: [0.; 3],
-                    color: [0., 0., 0., 1.],
+                    color,
                 }
             }
         }
