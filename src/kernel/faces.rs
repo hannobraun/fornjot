@@ -96,7 +96,7 @@ impl Face {
                             origin: center,
                             dir: outside - center,
                         };
-                        let check = TriangleEdgeCheck { ray };
+                        let check = TriangleEdgeCheck::new(ray);
 
                         // We need to keep track of where our ray hits the
                         // edges. Otherwise, if the ray hits a vertex, we might

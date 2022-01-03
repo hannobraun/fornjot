@@ -24,3 +24,9 @@ impl DebugInfo {
 pub struct TriangleEdgeCheck {
     pub ray: Ray,
 }
+
+impl TriangleEdgeCheck {
+    pub fn new(ray: Ray) -> Self {
+        Self { ray }
+    }
+}
