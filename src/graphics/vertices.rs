@@ -70,9 +70,11 @@ impl From<&DebugInfo> for Vertices {
         let mut vertices = Vec::new();
         let mut indices = Vec::new();
 
-        for ray in &debug_info.rays {
-            vertices.push(vertex(ray.origin));
-            vertices.push(vertex(ray.origin + ray.dir));
+        for triangle_edge_check in &debug_info.triangle_edge_checks {
+            vertices.push(vertex(triangle_edge_check.ray.origin));
+            vertices.push(vertex(
+                triangle_edge_check.ray.origin + triangle_edge_check.ray.dir,
+            ));
 
             indices.push(indices.len() as u32);
             indices.push(indices.len() as u32);

@@ -8,7 +8,10 @@ use parry3d_f64::{
     shape::Triangle,
 };
 
-use crate::{debug::DebugInfo, math::Point};
+use crate::{
+    debug::{DebugInfo, TriangleEdgeCheck},
+    math::Point,
+};
 
 use super::edges::Edges;
 
@@ -93,7 +96,9 @@ impl Face {
                             origin: center,
                             dir: outside - center,
                         };
-                        debug_info.rays.push(ray);
+                        debug_info
+                            .triangle_edge_checks
+                            .push(TriangleEdgeCheck { ray });
 
                         // We need to keep track of where our ray hits the
                         // edges. Otherwise, if the ray hits a vertex, we might
