@@ -96,7 +96,7 @@ impl Face {
                             origin: center,
                             dir: outside - center,
                         };
-                        let check = TriangleEdgeCheck::new(ray);
+                        let mut check = TriangleEdgeCheck::new(ray);
 
                         // We need to keep track of where our ray hits the
                         // edges. Otherwise, if the ray hits a vertex, we might
@@ -125,6 +125,8 @@ impl Face {
                                 // Let's round `t` before using it.
                                 let eps = 1_000_000.0;
                                 let t = (t * eps).round() / eps;
+
+                                check.hits.push(t);
 
                                 let t: R64 = t.into();
                                 hits.insert(t);

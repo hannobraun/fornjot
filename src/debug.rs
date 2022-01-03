@@ -23,10 +23,14 @@ impl DebugInfo {
 /// Record of a check to determine if a triangle edge is within a face
 pub struct TriangleEdgeCheck {
     pub ray: Ray,
+    pub hits: Vec<f64>,
 }
 
 impl TriangleEdgeCheck {
     pub fn new(ray: Ray) -> Self {
-        Self { ray }
+        Self {
+            ray,
+            hits: Vec::new(),
+        }
     }
 }
