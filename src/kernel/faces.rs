@@ -96,9 +96,7 @@ impl Face {
                             origin: center,
                             dir: outside - center,
                         };
-                        debug_info
-                            .triangle_edge_checks
-                            .push(TriangleEdgeCheck { ray });
+                        let check = TriangleEdgeCheck { ray };
 
                         // We need to keep track of where our ray hits the
                         // edges. Otherwise, if the ray hits a vertex, we might
@@ -132,6 +130,8 @@ impl Face {
                                 hits.insert(t);
                             }
                         }
+
+                        debug_info.triangle_edge_checks.push(check);
 
                         if hits.len() % 2 == 0 {
                             // The segment is outside of the face. This means we
