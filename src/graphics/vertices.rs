@@ -80,14 +80,20 @@ impl From<&DebugInfo> for Vertices {
                 green
             };
 
-            vertices.push(vertex(triangle_edge_check.ray.origin, color));
-            vertices.push(vertex(
+            let line = line(
+                triangle_edge_check.ray.origin,
                 triangle_edge_check.ray.origin + triangle_edge_check.ray.dir,
                 color,
-            ));
+            );
+
+            vertices.extend(line);
 
             indices.push(indices.len() as u32);
             indices.push(indices.len() as u32);
+
+            fn line(a: Point, b: Point, color: [f32; 4]) -> [Vertex; 2] {
+                [vertex(a, color), vertex(b, color)]
+            }
 
             fn vertex(pos: Point, color: [f32; 4]) -> Vertex {
                 Vertex {
