@@ -25,10 +25,16 @@ pub enum Curve {
 
 impl Curve {
     pub fn approx_vertices(&self, tolerance: f64) -> Vec<Point> {
+        let mut out = Vec::new();
+
         match self {
-            Curve::Circle(circle) => circle.approx_vertices(tolerance),
-            Curve::Line(Line { a, b }) => vec![*a, *b],
+            Curve::Circle(circle) => {
+                circle.approx_vertices(tolerance, &mut out)
+            }
+            Curve::Line(Line { a, b }) => return vec![*a, *b],
         }
+
+        out
     }
 }
 
@@ -50,7 +56,7 @@ pub struct Circle {
 }
 
 impl Circle {
-    pub fn approx_vertices(&self, tolerance: f64) -> Vec<Point> {
+    pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point>) {
         let angle_to_point = |angle: f64| {
             let (sin, cos) = angle.sin_cos();
 
@@ -85,13 +91,10 @@ impl Circle {
             //       value for `tolerance`.
         }
 
-        let mut vertices = Vec::new();
         for i in 0..n {
             let angle = 2. * PI / n as f64 * i as f64;
-            vertices.push(angle_to_point(angle));
+            out.push(angle_to_point(angle));
         }
-
-        vertices
     }
 }
 
