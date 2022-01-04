@@ -31,7 +31,7 @@ impl Curve {
             Curve::Circle(circle) => {
                 circle.approx_vertices(tolerance, &mut out)
             }
-            Curve::Line(Line { a, b }) => return vec![*a, *b],
+            Curve::Line(Line { a, b }) => out.extend([*a, *b]),
         }
 
         out
