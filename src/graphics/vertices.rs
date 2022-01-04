@@ -1,4 +1,5 @@
 use bytemuck::{Pod, Zeroable};
+use nalgebra::vector;
 use parry3d_f64::shape::Triangle;
 
 use crate::{
@@ -108,6 +109,24 @@ impl From<&DebugInfo> for Vertices {
                 normal,
                 color,
             );
+
+            for &hit in &triangle_edge_check.hits {
+                let point = triangle_edge_check.ray.point_at(hit);
+
+                let d = 0.05;
+                let color = [0., 0., 0., 1.];
+
+                self_.push_line(
+                    [point - vector![d, 0., 0.], point + vector![d, 0., 0.]],
+                    normal,
+                    color,
+                );
+                self_.push_line(
+                    [point - vector![0., d, 0.], point + vector![0., d, 0.]],
+                    normal,
+                    color,
+                );
+            }
         }
 
         self_
