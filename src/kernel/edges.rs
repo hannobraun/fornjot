@@ -143,7 +143,8 @@ impl Edge {
     /// `tolerance` defines how far the implicit line segments between those
     /// vertices are allowed to deviate from the actual edge.
     pub fn approx_vertices(&self, tolerance: f64) -> Vec<Point> {
-        let mut vertices = self.curve.approx_vertices(tolerance);
+        let mut vertices = Vec::new();
+        self.curve.approx_vertices(tolerance, &mut vertices);
 
         if self.reverse {
             vertices.reverse()

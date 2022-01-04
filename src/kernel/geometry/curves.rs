@@ -24,17 +24,11 @@ pub enum Curve {
 }
 
 impl Curve {
-    pub fn approx_vertices(&self, tolerance: f64) -> Vec<Point> {
-        let mut out = Vec::new();
-
+    pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point>) {
         match self {
-            Curve::Circle(circle) => {
-                circle.approx_vertices(tolerance, &mut out)
-            }
+            Curve::Circle(circle) => circle.approx_vertices(tolerance, out),
             Curve::Line(Line { a, b }) => out.extend([*a, *b]),
         }
-
-        out
     }
 }
 
