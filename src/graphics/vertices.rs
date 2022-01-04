@@ -88,6 +88,8 @@ impl From<&DebugInfo> for Vertices {
         let mut self_ = Self::empty();
 
         for triangle_edge_check in &debug_info.triangle_edge_checks {
+            let normal = [0.; 3];
+
             let red = [1., 0., 0., 1.];
             let green = [0., 1., 0., 1.];
 
@@ -103,7 +105,7 @@ impl From<&DebugInfo> for Vertices {
                     triangle_edge_check.ray.origin
                         + triangle_edge_check.ray.dir,
                 ],
-                [0.; 3],
+                normal,
                 color,
             );
         }
