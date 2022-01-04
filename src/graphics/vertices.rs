@@ -28,6 +28,24 @@ impl Vertices {
     pub fn indices(&self) -> &[Index] {
         self.indices.as_slice()
     }
+
+    pub fn push_line(
+        &mut self,
+        line: [Point; 2],
+        normal: [f32; 3],
+        color: [f32; 4],
+    ) {
+        let line = line.into_iter().map(|point| Vertex {
+            position: [point.x as f32, point.y as f32, point.z as f32],
+            normal,
+            color,
+        });
+
+        self.vertices.extend(line);
+
+        self.indices.push(self.indices.len() as u32);
+        self.indices.push(self.indices.len() as u32);
+    }
 }
 
 impl From<&Vec<Triangle>> for Vertices {
@@ -79,28 +97,15 @@ impl From<&DebugInfo> for Vertices {
                 green
             };
 
-            let line = line(
-                triangle_edge_check.ray.origin,
-                triangle_edge_check.ray.origin + triangle_edge_check.ray.dir,
+            self_.push_line(
+                [
+                    triangle_edge_check.ray.origin,
+                    triangle_edge_check.ray.origin
+                        + triangle_edge_check.ray.dir,
+                ],
+                [0.; 3],
                 color,
             );
-
-            self_.vertices.extend(line);
-
-            self_.indices.push(self_.indices.len() as u32);
-            self_.indices.push(self_.indices.len() as u32);
-
-            fn line(a: Point, b: Point, color: [f32; 4]) -> [Vertex; 2] {
-                [vertex(a, color), vertex(b, color)]
-            }
-
-            fn vertex(pos: Point, color: [f32; 4]) -> Vertex {
-                Vertex {
-                    position: [pos.x as f32, pos.y as f32, pos.z as f32],
-                    normal: [0.; 3],
-                    color,
-                }
-            }
         }
 
         self_
