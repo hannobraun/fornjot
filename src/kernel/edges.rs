@@ -18,9 +18,8 @@ pub struct Edges {
 impl Edges {
     /// Construct a new instance of `Edges`, with a single cycle
     pub fn single_cycle(edges: impl IntoIterator<Item = Edge>) -> Self {
-        let edges = edges.into_iter();
         let cycle = Cycle {
-            edges: edges.collect(),
+            edges: edges.into_iter().collect(),
         };
 
         Self {
