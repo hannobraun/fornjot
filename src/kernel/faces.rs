@@ -128,8 +128,8 @@ impl Face {
 
                                 check.hits.push(t);
 
-                                let t: R64 = t.into();
-                                hits.insert(t);
+                                let t_r64: R64 = t.into();
+                                hits.insert(t_r64);
                             }
                         }
 
