@@ -95,9 +95,6 @@ impl Circle {
             vertices.push(angle_to_point(angle));
         }
 
-        // Connect the circle's to itself.
-        vertices.push(first_vertex);
-
         vertices
     }
 }
