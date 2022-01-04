@@ -34,7 +34,7 @@ impl Curve {
 
 /// A circle
 ///
-/// This representation is not optimal, for two reasons:
+/// This representation quite limited, for two reasons:
 /// - It doesn't define the center point of the circle. For that reason,
 ///   only circles centered on the origin are supported at this point.
 /// - It doesn't define where the circle begins. For the purposes of
