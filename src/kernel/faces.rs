@@ -126,10 +126,10 @@ impl Face {
                                 let eps = 1_000_000.0;
                                 let t = (t * eps).round() / eps;
 
-                                check.hits.push(t);
-
                                 let t_r64: R64 = t.into();
-                                hits.insert(t_r64);
+                                if hits.insert(t_r64) {
+                                    check.hits.push(t);
+                                }
                             }
                         }
 
