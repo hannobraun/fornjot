@@ -67,8 +67,7 @@ impl From<&Vec<Triangle>> for Vertices {
 
 impl From<&DebugInfo> for Vertices {
     fn from(debug_info: &DebugInfo) -> Self {
-        let mut vertices = Vec::new();
-        let mut indices = Vec::new();
+        let mut self_ = Self::empty();
 
         for triangle_edge_check in &debug_info.triangle_edge_checks {
             let red = [1., 0., 0., 1.];
@@ -86,10 +85,10 @@ impl From<&DebugInfo> for Vertices {
                 color,
             );
 
-            vertices.extend(line);
+            self_.vertices.extend(line);
 
-            indices.push(indices.len() as u32);
-            indices.push(indices.len() as u32);
+            self_.indices.push(self_.indices.len() as u32);
+            self_.indices.push(self_.indices.len() as u32);
 
             fn line(a: Point, b: Point, color: [f32; 4]) -> [Vertex; 2] {
                 [vertex(a, color), vertex(b, color)]
@@ -104,7 +103,7 @@ impl From<&DebugInfo> for Vertices {
             }
         }
 
-        Self { vertices, indices }
+        self_
     }
 }
 
