@@ -71,10 +71,13 @@ impl From<&DebugInfo> for Vertices {
         let mut indices = Vec::new();
 
         for triangle_edge_check in &debug_info.triangle_edge_checks {
+            let red = [1., 0., 0., 1.];
+            let green = [0., 1., 0., 1.];
+
             let color = if triangle_edge_check.hits.len() % 2 == 0 {
-                [1., 0., 0., 1.]
+                red
             } else {
-                [0., 1., 0., 1.]
+                green
             };
 
             vertices.push(vertex(triangle_edge_check.ray.origin, color));
