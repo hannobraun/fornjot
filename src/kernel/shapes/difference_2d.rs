@@ -4,7 +4,7 @@ use crate::{
     debug::DebugInfo,
     kernel::{
         edges::Edges,
-        faces::{triangulate, Face, Faces},
+        faces::{Face, Faces},
         Shape,
     },
     math::Point,
@@ -18,53 +18,37 @@ impl Shape for fj::Difference2d {
         self.a.bounding_volume()
     }
 
-    fn faces(&self, tolerance: f64, _: &mut DebugInfo) -> Faces {
-        // TASK: Carefully think about the limits of this algorithm, and make
-        //       sure to panic with a `todo!` in cases that are not supported.
+    fn faces(&self, tolerance: f64, debug_info: &mut DebugInfo) -> Faces {
+        // TASK: This method assumes that `b` is fully contained within `a`. As
+        //       long as this precondition exists, it should at least be
+        //       checked.
 
-        let a: Vec<_> = self
-            .a
-            .edges()
-            .cycles
-            .into_iter()
-            .map(|cycle| cycle.edges)
-            .flatten()
-            .map(|edge| edge.approx_vertices(tolerance))
-            .flatten()
-            .collect();
-        let b: Vec<_> = self
-            .b
-            .edges()
-            .cycles
-            .into_iter()
-            .map(|cycle| cycle.edges)
-            .flatten()
-            .map(|edge| edge.approx_vertices(tolerance))
-            .flatten()
-            .collect();
+        let mut a = self.a.faces(tolerance, debug_info);
+        let mut b = self.b.faces(tolerance, debug_info);
 
-        let mut vertices = Vec::new();
-        vertices.extend(&a);
-        vertices.extend(&b);
+        let (a, b) = if a.0.len() == 1 && b.0.len() == 1 {
+            // Can't panic. We just checked that length of `a` and `b` is 1.
+            (a.0.pop().unwrap(), b.0.pop().unwrap())
+        } else {
+            // TASK: Open issue, link it in the error message.
+            todo!(
+                "The 2-dimensional difference operation only supports one face \
+                in each operand."
+            );
+        };
 
-        let mut triangles = triangulate(&vertices);
-
-        // Now we have a full Delaunay triangulation of all vertices. We still
-        // need to filter out the triangles that aren't actually part of the
-        // difference.
-        triangles.retain(|triangle| {
-            let mut edges_of_b = 0;
-
-            for segment in triangle.edges() {
-                if b.contains(&segment.a) && b.contains(&segment.b) {
-                    edges_of_b += 1;
-                }
+        let (a, b) = match (a, b) {
+            (Face::Face { edges: a }, Face::Face { edges: b }) => (a, b),
+            _ => {
+                // None of the 2D types still use the triangles representation.
+                unreachable!()
             }
+        };
 
-            edges_of_b <= 1
-        });
+        let mut edges = a;
+        edges.cycles.extend(b.cycles);
 
-        Faces(vec![Face::Triangles(triangles)])
+        Faces(vec![Face::Face { edges }])
     }
 
     fn edges(&self) -> Edges {
