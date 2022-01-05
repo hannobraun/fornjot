@@ -109,7 +109,7 @@ pub struct Edge {
     /// would be the two points that define the line, for example.
     pub curve: Curve,
 
-    /// Indicates whether the curve is reversed
+    /// Indicates whether the curve's direction is reversed
     pub reverse: bool,
 }
 
