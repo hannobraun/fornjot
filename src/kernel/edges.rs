@@ -105,6 +105,9 @@ pub struct Edge {
 
     /// Indicates whether the curve's direction is reversed
     pub reverse: bool,
+
+    /// Indicates whether the start and end of this edge are connected
+    pub closed: bool,
 }
 
 impl Edge {
@@ -116,6 +119,7 @@ impl Edge {
         Self {
             curve: Curve::Circle(Circle { radius }),
             reverse: false,
+            closed: true,
         }
     }
 
@@ -124,6 +128,7 @@ impl Edge {
         Self {
             curve: Curve::Line(Line { a: start, b: end }),
             reverse: false,
+            closed: false,
         }
     }
 
@@ -166,7 +171,13 @@ impl Edge {
     /// `tolerance` defines how far the implicit line segments between those
     /// segments are allowed to deviate from the actual edge.
     pub fn approx_segments(&self, tolerance: f64, out: &mut Vec<Segment>) {
-        let vertices = self.approx_vertices(tolerance);
+        let mut vertices = self.approx_vertices(tolerance);
+
+        if self.closed {
+            if let Some(&vertex) = vertices.first() {
+                vertices.push(vertex);
+            }
+        }
 
         for segment in vertices.windows(2) {
             let v0 = segment[0];
