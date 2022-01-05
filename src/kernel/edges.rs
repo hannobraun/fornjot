@@ -83,14 +83,8 @@ impl Cycle {
     /// No assumptions must be made about already existing contents of `out`, as
     /// this method might modify them.
     pub fn approx_segments(&self, tolerance: f64, out: &mut Vec<Segment>) {
-        let mut vertices = Vec::new();
-        self.approx_vertices(tolerance, &mut vertices);
-
-        for segment in vertices.windows(2) {
-            let v0 = segment[0];
-            let v1 = segment[1];
-
-            out.push([v0, v1].into());
+        for edge in &self.edges {
+            edge.approx_segments(tolerance, out);
         }
     }
 }
@@ -151,5 +145,20 @@ impl Edge {
         }
 
         out
+    }
+
+    /// Compute segments to approximate the edge
+    ///
+    /// `tolerance` defines how far the implicit line segments between those
+    /// segments are allowed to deviate from the actual edge.
+    pub fn approx_segments(&self, tolerance: f64, out: &mut Vec<Segment>) {
+        let vertices = self.approx_vertices(tolerance);
+
+        for segment in vertices.windows(2) {
+            let v0 = segment[0];
+            let v1 = segment[1];
+
+            out.push([v0, v1].into());
+        }
     }
 }
