@@ -82,9 +82,12 @@ impl Face {
 
                 triangles.retain(|triangle| {
                     for segment in triangle.edges() {
+                        let triangle_segment_is_face_edge =
+                            face_as_polygon.contains(&segment);
+
                         // If the segment is an edge of the face, we don't need
                         // to take a closer look.
-                        if face_as_polygon.contains(&segment) {
+                        if triangle_segment_is_face_edge {
                             continue;
                         }
 
