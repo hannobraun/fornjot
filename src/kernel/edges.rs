@@ -137,6 +137,20 @@ impl Edge {
     /// `tolerance` defines how far the implicit line segments between those
     /// vertices are allowed to deviate from the actual edge.
     pub fn approx_vertices(&self, tolerance: f64) -> Vec<Point> {
+        // This method doesn't follow the style of the other methods that return
+        // approximate vertices, allocating its output `Vec` itself, instead of
+        // using one passed into it as a mutable reference.
+        //
+        // I initially intended to convert all these methods to the new style
+        // (i.e. the pass `&mut Vec` style), until I hit this one. The problem
+        // here is the `reverse` below. Doing that on a passed in `Vec` would
+        // be disruptive to callers and keeping track of the slice to call the
+        // `reverse` on would be additional complexity.
+        //
+        // I don't know what to do about that, but I think leaving things as
+        // they are and writing this comment to explain that is a good enough
+        // solution.
+
         let mut out = Vec::new();
         self.curve.approx_vertices(tolerance, &mut out);
 
