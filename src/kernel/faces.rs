@@ -82,8 +82,12 @@ impl Face {
 
                 triangles.retain(|triangle| {
                     for segment in triangle.edges() {
-                        let triangle_segment_is_face_edge =
-                            face_as_polygon.contains(&segment);
+                        let mut inverted_segment = segment;
+                        inverted_segment.swap();
+
+                        let triangle_segment_is_face_edge = face_as_polygon
+                            .contains(&segment)
+                            || face_as_polygon.contains(&inverted_segment);
 
                         // If the segment is an edge of the face, we don't need
                         // to take a closer look.
