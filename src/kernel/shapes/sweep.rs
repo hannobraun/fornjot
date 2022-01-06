@@ -3,8 +3,10 @@ use parry3d_f64::{bounding_volume::AABB, math::Isometry, shape::Triangle};
 use crate::{
     debug::DebugInfo,
     kernel::{
-        edges::Edges,
-        faces::{Face, Faces},
+        topology::{
+            edges::Edges,
+            faces::{Face, Faces},
+        },
         Shape,
     },
     math::Point,

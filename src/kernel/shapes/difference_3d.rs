@@ -2,7 +2,10 @@ use parry3d_f64::bounding_volume::AABB;
 
 use crate::{
     debug::DebugInfo,
-    kernel::{edges::Edges, faces::Faces, Shape},
+    kernel::{
+        topology::{edges::Edges, faces::Faces},
+        Shape,
+    },
     math::Point,
 };
 

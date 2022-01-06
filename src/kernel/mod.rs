@@ -1,13 +1,12 @@
-pub mod edges;
-pub mod faces;
 pub mod geometry;
 pub mod shapes;
+pub mod topology;
 
 use parry3d_f64::bounding_volume::AABB;
 
 use crate::{debug::DebugInfo, math::Point};
 
-use self::{edges::Edges, faces::Faces};
+use self::topology::{edges::Edges, faces::Faces};
 
 /// Implemented by all shapes
 pub trait Shape {
