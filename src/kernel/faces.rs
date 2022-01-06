@@ -60,11 +60,6 @@ impl Face {
     ) {
         match self {
             Self::Face { edges } => {
-                // TASK: This only works for faces that are convex and have no
-                //       holes. These limitations should be lifted, ideally. At
-                //       least, the presence of either of these should cause a
-                //       panic, instead of incorrect results.
-
                 let mut vertices = Vec::new();
                 edges.approx_vertices(tolerance, &mut vertices);
                 let mut triangles = triangulate(&vertices);
