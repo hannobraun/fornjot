@@ -1,6 +1,4 @@
 /// A two-dimensional shape
-// TASK: Un-suppress warning.
-#[allow(unused)]
 pub enum Surface {
     /// The X-Y plane
     ///

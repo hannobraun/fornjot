@@ -3,6 +3,7 @@ use parry3d_f64::bounding_volume::AABB;
 use crate::{
     debug::DebugInfo,
     kernel::{
+        geometry::Surface,
         topology::{
             edges::Edges,
             faces::{Face, Faces},
@@ -40,7 +41,16 @@ impl Shape for fj::Difference2d {
         };
 
         let (a, b) = match (a, b) {
-            (Face::Face { edges: a }, Face::Face { edges: b }) => (a, b),
+            (
+                Face::Face {
+                    edges: a,
+                    surface: Surface::XYPlane,
+                },
+                Face::Face {
+                    edges: b,
+                    surface: Surface::XYPlane,
+                },
+            ) => (a, b),
             _ => {
                 // None of the 2D types still use the triangles representation.
                 unreachable!()
@@ -50,7 +60,10 @@ impl Shape for fj::Difference2d {
         let mut edges = a;
         edges.cycles.extend(b.cycles);
 
-        Faces(vec![Face::Face { edges }])
+        Faces(vec![Face::Face {
+            edges,
+            surface: Surface::XYPlane,
+        }])
     }
 
     fn edges(&self) -> Edges {

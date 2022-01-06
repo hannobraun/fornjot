@@ -10,6 +10,7 @@ use parry3d_f64::{
 
 use crate::{
     debug::{DebugInfo, TriangleEdgeCheck},
+    kernel::geometry::Surface,
     math::Point,
 };
 
@@ -41,6 +42,9 @@ pub enum Face {
     Face {
         /// The edges that bound the face
         edges: Edges,
+
+        /// The surface that this face is a section of
+        surface: Surface,
     },
 
     /// The triangles of the face
@@ -60,7 +64,10 @@ impl Face {
         debug_info: &mut DebugInfo,
     ) {
         match self {
-            Self::Face { edges } => {
+            Self::Face {
+                edges,
+                surface: Surface::XYPlane,
+            } => {
                 let mut vertices = Vec::new();
                 edges.approx_vertices(tolerance, &mut vertices);
                 let mut triangles = triangulate(&vertices);
@@ -158,7 +165,10 @@ impl Face {
 
     pub fn transform(&mut self, transform: &Isometry<f64>) {
         match self {
-            Self::Face { edges: _ } => {
+            Self::Face {
+                edges: _,
+                surface: _,
+            } => {
                 // TASK: Implement.
                 todo!()
             }

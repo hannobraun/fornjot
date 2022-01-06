@@ -3,6 +3,7 @@ use parry3d_f64::bounding_volume::AABB;
 use crate::{
     debug::DebugInfo,
     kernel::{
+        geometry::Surface,
         topology::{
             edges::{Edge, Edges},
             faces::{Face, Faces},
@@ -19,7 +20,10 @@ impl Shape for fj::Sketch {
 
     fn faces(&self, _: f64, _: &mut DebugInfo) -> Faces {
         let edges = self.edges();
-        let face = Face::Face { edges };
+        let face = Face::Face {
+            edges,
+            surface: Surface::XYPlane,
+        };
         Faces(vec![face])
     }
 
