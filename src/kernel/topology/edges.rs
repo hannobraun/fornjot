@@ -1,4 +1,4 @@
-use parry3d_f64::shape::Segment;
+use parry3d_f64::shape::Segment as Segment3;
 
 use crate::{
     kernel::geometry::{Circle, Curve, Line},
@@ -41,7 +41,7 @@ impl Edges {
     ///
     /// `tolerance` defines how far these line segments are allowed to deviate
     /// from the actual edges of the shape.
-    pub fn approx_segments(&self, tolerance: f64, out: &mut Vec<Segment>) {
+    pub fn approx_segments(&self, tolerance: f64, out: &mut Vec<Segment3>) {
         for cycle in &self.cycles {
             cycle.approx_segments(tolerance, out);
         }
@@ -82,7 +82,7 @@ impl Cycle {
     ///
     /// No assumptions must be made about already existing contents of `out`, as
     /// this method might modify them.
-    pub fn approx_segments(&self, tolerance: f64, out: &mut Vec<Segment>) {
+    pub fn approx_segments(&self, tolerance: f64, out: &mut Vec<Segment3>) {
         for edge in &self.edges {
             edge.approx_segments(tolerance, out);
         }
@@ -170,7 +170,7 @@ impl Edge {
     ///
     /// `tolerance` defines how far the implicit line segments between those
     /// segments are allowed to deviate from the actual edge.
-    pub fn approx_segments(&self, tolerance: f64, out: &mut Vec<Segment>) {
+    pub fn approx_segments(&self, tolerance: f64, out: &mut Vec<Segment3>) {
         let mut vertices = self.approx_vertices(tolerance);
 
         if self.closed {
