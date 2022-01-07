@@ -5,7 +5,7 @@ use parry3d_f64::{
     bounding_volume::AABB,
     math::Isometry,
     query::{Ray, RayCast as _},
-    shape::Triangle,
+    shape::Triangle as Triangle3,
 };
 
 use crate::{
@@ -23,7 +23,7 @@ impl Faces {
     pub fn triangles(
         &self,
         tolerance: f64,
-        out: &mut Vec<Triangle>,
+        out: &mut Vec<Triangle3>,
         debug_info: &mut DebugInfo,
     ) {
         for face in &self.0 {
@@ -53,14 +53,14 @@ pub enum Face {
     /// The plan is to eventually represent faces as a geometric surface,
     /// bounded by edges. While the transition is being made, this variant is
     /// still required.
-    Triangles(Vec<Triangle>),
+    Triangles(Vec<Triangle3>),
 }
 
 impl Face {
     pub fn triangles(
         &self,
         tolerance: f64,
-        out: &mut Vec<Triangle>,
+        out: &mut Vec<Triangle3>,
         debug_info: &mut DebugInfo,
     ) {
         match self {
@@ -182,7 +182,7 @@ impl Face {
 }
 
 /// Create a Delaunay triangulation of all vertices
-pub fn triangulate(vertices: &[Point]) -> Vec<Triangle> {
+pub fn triangulate(vertices: &[Point]) -> Vec<Triangle3> {
     let points: Vec<_> = vertices
         .iter()
         .map(|vertex| delaunator::Point {
