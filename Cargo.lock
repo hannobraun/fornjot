@@ -547,6 +547,7 @@ dependencies = [
  "libloading",
  "nalgebra",
  "notify",
+ "parry2d-f64",
  "parry3d-f64",
  "thiserror",
  "threemf",
@@ -1384,6 +1385,26 @@ dependencies = [
  "redox_syscall",
  "smallvec",
  "winapi",
+]
+
+[[package]]
+name = "parry2d-f64"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e96040e0f10b65df992e8367983b7c3ac779046cd6d9a4a7cd1496e8c6b6ef51"
+dependencies = [
+ "approx 0.5.0",
+ "arrayvec",
+ "bitflags",
+ "downcast-rs",
+ "either",
+ "nalgebra",
+ "num-derive",
+ "num-traits",
+ "rustc-hash",
+ "simba",
+ "slab",
+ "smallvec",
 ]
 
 [[package]]
