@@ -12,25 +12,25 @@ categories  = ["mathematics", "rendering"]
 
 
 [dependencies]
-anyhow      = "*"
-bytemuck    = "*"
-decorum     = "*"
-delaunator  = "*"
-futures     = "*"
-libloading  = "*"
-nalgebra    = "*"
+anyhow      = "1.0.52"
+bytemuck    = "1.7.3"
+decorum     = "0.3.1"
+delaunator  = "1.0.1"
+futures     = "0.3.19"
+libloading  = "0.7.2"
+nalgebra    = "0.30.0"
 notify      = "5.0.0-pre.13"
-parry2d-f64 = "*"
-parry3d-f64 = "*"
-thiserror   = "*"
-threemf     = "*"
-tracing     = "*"
-wgpu        = "*"
-wgpu_glyph  = "*"
-winit       = "*"
+parry2d-f64 = "0.8.0"
+parry3d-f64 = "0.8.0"
+thiserror   = "1.0.30"
+threemf     = "0.2.0"
+tracing     = "0.1.29"
+wgpu        = "0.12.0"
+wgpu_glyph  = "0.16.0"
+winit       = "0.26.1"
 
 [dependencies.clap]
-version  = "*"
+version  = "3.0.5"
 features = ["derive"]
 
 [dependencies.fj]
