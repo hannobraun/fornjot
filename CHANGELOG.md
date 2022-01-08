@@ -15,7 +15,7 @@
 ### Host Application
 
 - Fix shapes that are very near or very far not being shown on camera.
-- Add support for Windows and macOS ([#22], [#23], [#28]; special thanks to Fornjot's first contributor, @Bandsberg!).
+- Add support for Windows and macOS ([#22], [#23], [#28]; special thanks to Fornjot's first contributor, [@Bandsberg](https://github.com/Bandsberg)!).
 - Add support for concave 2D sketches.
 - Add debug info visualization mechanism to help debug internal algorithms. So far, it just outputs lines to visualize the triangulation algorithm.
 - Fix bug in 2D difference operation, that would create an internal pseudo-face within the model, if the 2D difference was swept into a 3D model.
