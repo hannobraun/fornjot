@@ -102,6 +102,16 @@ impl From<Sweep> for Shape3d {
 }
 
 /// The union of two 3-dimensional shapes
+///
+/// # Limitations
+///
+/// Support for unions is somewhat limited right now. A union of 2 distinct
+/// shapes doesn't really create a new shape, but just an aggregation of the
+/// two original shapes.
+///
+/// This means, for example, that generating the triangle mesh of the union does
+/// not result in a proper triangle mesh, but rather the two, possibly
+/// intersecting, triangle meshes of the original shapes.
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Union {
