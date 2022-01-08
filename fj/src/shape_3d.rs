@@ -24,6 +24,11 @@ impl From<Shape3d> for Shape {
 }
 
 /// The difference of two 3-dimensional shapes
+///
+/// # Limitations
+///
+/// This operation is not supported right now. Using it in a model, will result
+/// in the host application to crash.
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Difference {
