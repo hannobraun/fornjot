@@ -52,13 +52,12 @@ impl Renderer {
             .request_device(
                 &wgpu::DeviceDescriptor {
                     label: None,
-                    // TASK: Check available features via `Adapter::features`
-                    //       before requesting them here. Otherwise, the call
-                    //       to `request_device` might fail.
+                    // Don't just blindly assume that we can request this
+                    // feature. If it isn't available, that might cause a panic,
+                    // or an error to be returned here.
                     //
-                    //       In addition, the available features must be stored
-                    //       somewhere, so code that requires any unavailable
-                    //       ones isn't run.
+                    // See this issue:
+                    // https://github.com/hannobraun/fornjot/issues/33
                     features: wgpu::Features::POLYGON_MODE_LINE,
                     limits: wgpu::Limits::default(),
                 },
