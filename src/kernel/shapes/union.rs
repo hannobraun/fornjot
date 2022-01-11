@@ -22,7 +22,7 @@ impl Shape for fj::Union {
         let b = self.b.faces(tolerance, debug_info);
 
         // TASK: This doesn't create a true union, as it doesn't eliminate,
-        //       merge faces, or split faces.
+        //       merge, or split faces.
         let mut faces = Vec::new();
         faces.extend(a.0);
         faces.extend(b.0);
