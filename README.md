@@ -1,24 +1,30 @@
+**Please consider supporting Fornjot's development by [sponsoring @hannobraun](https://github.com/sponsors/hannobraun).**
+
 # Fornjot
 
 ## About
 
-Experimental CAD system, written in the Rust programming language.
+Fornjot is an attempt at creating a **next-generation Code-CAD application**. Because [**the world needs another CAD program**](https://github.com/sponsors/hannobraun).
 
 ![Screenshot of the spacer model](https://github.com/hannobraun/fornjot/blob/main/models/spacer/spacer.png)
 
-The following models are currently available:
+Fornjot's development follows the following principles:
 
-- [Cuboid](/models/cuboid)
-- [Spacer](/models/spacer)
+- **Models defined as code**: Program your CAD models like you would program software. Currently, Rust is supported as a modeling language, but Fornjot is architected to be language-agnostic.
+- **Advanced modeling features**: Many Code-CAD programs have a very limited feature set. At this early stage, Fornjot is even worse. But it keeps its options open, by leveraging traditional techniques.
+- **Widely portable**: Fornjot is primarily developed on Linux, but the plan is to support all major desktop and mobile platforms, and the web.
+- **Open source, permissive license**: Whether you're using Fornjot for fun, or to build a commercial project on top of it, the maximally permissive 0BSD license won't get in your way.
+
+At some point, I'd like to add **high-performance** to this list, but for now this takes a backseat to feature development.
 
 
 ## Status
 
 Fornjot is still **highly experimental**. Development is currently focused on incrementally expanding features, to support specific new CAD models. This grounds the development effort in practical use cases and ensures steady progress. Which is good, because CAD is a very difficult subject, and there's always the danger of getting lost in the weeds, trying to implement some complicated algorithm from a barely legible paper.
 
-However, that also means that other models, even if they're very similar to existing ones, are often not supported, because the algorithms make simplifying assumptions. If you're interested in Fornjot and are considering to use it, you should fully expect to run into limitation pretty much immediately. Unless you are willing to contribute to its development, it would be better to wait for a year or ten, to let it mature.
+However, that also means that other models, even if they're very similar to existing ones, are often not supported, because the algorithms make simplifying assumptions. If you are interested in Fornjot and are considering to use it, you should fully expect to run into limitation pretty much immediately. Unless you are willing to contribute to its development, it would be better to wait for a year or ten, to let it mature.
 
-At this point, performance is not much of a concern. Models are simple so far, and liberally sprinkling heap allocations makes algorithms easy to write. At some point, that focus will likely shift, but for now ease of development is more important than scalability.
+At this point, performance is not much of a concern. Models are simple so far, and liberally sprinkling heap allocations makes algorithms easy to write. At some point that focus will shift, but for now ease of development is more important than scalability.
 
 
 ## Features
