@@ -68,6 +68,25 @@ impl Face {
                 edges,
                 surface: Surface::XYPlane,
             } => {
+                // TASK: For the next step in the series of refactorings to
+                //       replace `Face::Triangles` with `Face::Face`, we need
+                //       the capability to transform surfaces (and thus, the
+                //       faces that are based on them).
+                //
+                //       Most immediately, this is needed to convert the
+                //       sweeping code, as both the bottom and top faces of the
+                //       sweep need to be transformed.
+                //
+                //       So far, this algorithm here works with absolute
+                //       coordinates. This works because the only surface we
+                //       ever deal with here is the x-y plane, so passing the 3D
+                //       points to the triangulation function and just cutting
+                //       off the z coordinate is fine
+                //
+                //       What we need to do is to work with points and segments
+                //       in surface coordinates. Then we can triangulate them,
+                //       and convert to absolute 3D coordinate afterwards.
+
                 let mut vertices = Vec::new();
                 edges.approx_vertices(tolerance, &mut vertices);
                 let mut triangles = triangulate(&vertices);
