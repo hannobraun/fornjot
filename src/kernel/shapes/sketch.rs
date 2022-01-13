@@ -57,7 +57,7 @@ impl Shape for fj::Sketch {
     fn vertices(&self) -> Vec<Point> {
         self.to_points()
             .into_iter()
-            .map(|[x, y]| Point::new(x, y, 0.))
+            .map(|[x, y]| Point::from([x, y, 0.]))
             .collect()
     }
 }
