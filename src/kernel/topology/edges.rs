@@ -33,17 +33,13 @@ impl Edges {
     /// the actual edges.
     ///
     /// Returns a sequence of points, in 2-dimensional surface coordinates.
-    pub fn approx(
-        &self,
-        tolerance: f64,
-        Surface::XYPlane: &Surface,
-    ) -> Vec<Point<2>> {
+    pub fn approx(&self, tolerance: f64, surface: &Surface) -> Vec<Point<2>> {
         let mut vertices = Vec::new();
         self.approx_vertices(tolerance, &mut vertices);
 
         vertices
             .into_iter()
-            .map(|vertex| Point::from([vertex.x, vertex.y]))
+            .map(|vertex| surface.model_to_surface(vertex))
             .collect()
     }
 
