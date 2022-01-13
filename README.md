@@ -20,11 +20,11 @@ At some point, I'd like to add **high-performance** to this list, but for now th
 
 ## Status
 
-Fornjot is still **highly experimental**. Development is currently focused on incrementally expanding features, to support specific new CAD models. This grounds the development effort in practical use cases and ensures steady progress. Which is good, because CAD is a very difficult subject, and there's always the danger of getting lost in the weeds, trying to implement some complicated algorithm from a barely legible paper.
+Fornjot is **under active development, but still experimental**. Efforts are currently focused on incrementally expanding features, to support more kinds of CAD models, and plugging holes in the algorithms used, to solidify the existing functionality. Right now, there still many such holes, as many of the algorithms make simplifying assumptions that might not be true for your model.
 
-However, that also means that other models, even if they're very similar to existing ones, are often not supported, because the algorithms make simplifying assumptions. If you are interested in Fornjot and are considering to use it, you should fully expect to run into limitation pretty much immediately. Unless you are willing to contribute to its development, it would be better to wait for a year or ten, to let it mature.
+Priorities have recently shifted towards addressing that, but it will take a while to fix everything. If you are interested in Fornjot and are considering to use it, you should fully expect to run into limitation pretty much immediately. Unless you are willing to contribute to its development, it would be better to wait for a year or ten, to let it mature.
 
-At this point, performance is not much of a concern. Models are simple so far, and liberally sprinkling heap allocations makes algorithms easy to write. At some point that focus will shift, but for now ease of development is more important than scalability.
+At this point, performance is not much of a concern. This will change, but for now, ease of development is much more important than scaling to more complex models.
 
 
 ## Features
