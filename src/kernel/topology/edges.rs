@@ -1,7 +1,7 @@
 use parry3d_f64::shape::Segment as Segment3;
 
 use crate::{
-    kernel::geometry::{Circle, Curve, Line},
+    kernel::geometry::{Circle, Curve, Line, Surface},
     math::Point,
 };
 
@@ -25,6 +25,28 @@ impl Edges {
         Self {
             cycles: vec![cycle],
         }
+    }
+
+    /// Compute an approximation of the edges
+    ///
+    /// `tolerance` defines how far the approximation is allowed to deviate from
+    /// the actual edges.
+    ///
+    /// Returns a sequence of points, in 2-dimensional surface coordinates.
+    // TASK: Un-suppress warning.
+    #[allow(unused)]
+    pub fn approx(
+        &self,
+        tolerance: f64,
+        Surface::XYPlane: &Surface,
+    ) -> Vec<Point<2>> {
+        let mut vertices = Vec::new();
+        self.approx_vertices(tolerance, &mut vertices);
+
+        vertices
+            .into_iter()
+            .map(|vertex| Point::from([vertex.x, vertex.y]))
+            .collect()
     }
 
     /// Compute vertices to approximate the edges
