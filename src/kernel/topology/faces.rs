@@ -1,6 +1,7 @@
 use std::collections::BTreeSet;
 
 use decorum::R64;
+use parry2d_f64::shape::Triangle as Triangle2;
 use parry3d_f64::{
     bounding_volume::AABB,
     math::Isometry,
@@ -64,10 +65,24 @@ impl Face {
         debug_info: &mut DebugInfo,
     ) {
         match self {
-            Self::Face {
-                edges,
-                surface: Surface::XYPlane,
-            } => {
+            Self::Face { edges, surface } => {
+                let vertices = edges.approx(tolerance, surface);
+                let triangles = triangulate(&vertices);
+
+                // Convert 2-dimensional surface triangles into 3-dimensional
+                // triangles, as the rest of this algorithm hasn't been adapted
+                // yet.
+                let mut triangles: Vec<_> = triangles
+                    .into_iter()
+                    .map(|Triangle2 { a, b, c }| {
+                        let a = Point::from([a.x, a.y, 0.]);
+                        let b = Point::from([b.x, b.y, 0.]);
+                        let c = Point::from([c.x, c.y, 0.]);
+
+                        Triangle3 { a, b, c }
+                    })
+                    .collect();
+
                 // TASK: For the next step in the series of refactorings to
                 //       replace `Face::Triangles` with `Face::Face`, we need
                 //       the capability to transform surfaces (and thus, the
@@ -89,7 +104,6 @@ impl Face {
 
                 let mut vertices = Vec::new();
                 edges.approx_vertices(tolerance, &mut vertices);
-                let mut triangles = triangulate(&vertices);
 
                 // For the next step, we need to represent the face as a
                 // polygon, but there aren't many requirements on how
@@ -201,7 +215,7 @@ impl Face {
 }
 
 /// Create a Delaunay triangulation of all vertices
-pub fn triangulate(vertices: &[Point<3>]) -> Vec<Triangle3> {
+pub fn triangulate(vertices: &[Point<2>]) -> Vec<Triangle2> {
     let points: Vec<_> = vertices
         .iter()
         .map(|vertex| delaunator::Point {
