@@ -54,7 +54,7 @@ impl Shape for fj::Sketch {
         Edges::single_cycle(edges)
     }
 
-    fn vertices(&self) -> Vec<Point> {
+    fn vertices(&self) -> Vec<Point<3>> {
         self.to_points()
             .into_iter()
             .map(|[x, y]| Point::from([x, y, 0.]))

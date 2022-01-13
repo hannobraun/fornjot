@@ -27,7 +27,7 @@ impl Shape for fj::Difference {
         todo!()
     }
 
-    fn vertices(&self) -> Vec<Point> {
+    fn vertices(&self) -> Vec<Point<3>> {
         // TASK: Implement.
         todo!()
     }

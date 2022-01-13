@@ -24,7 +24,7 @@ pub enum Curve {
 }
 
 impl Curve {
-    pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point>) {
+    pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
         match self {
             Curve::Circle(circle) => circle.approx_vertices(tolerance, out),
             Curve::Line(Line { a, b }) => out.extend([*a, *b]),
@@ -50,7 +50,7 @@ pub struct Circle {
 }
 
 impl Circle {
-    pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point>) {
+    pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
         let angle_to_point = |angle: f64| {
             let (sin, cos) = angle.sin_cos();
 
@@ -96,8 +96,8 @@ impl Circle {
 #[derive(Clone, Debug)]
 pub struct Line {
     /// One point defining the line
-    pub a: Point,
+    pub a: Point<3>,
 
     /// The other point defining the line
-    pub b: Point,
+    pub b: Point<3>,
 }

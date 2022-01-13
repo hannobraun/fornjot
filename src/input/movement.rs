@@ -4,7 +4,7 @@ use winit::dpi::PhysicalPosition;
 use crate::{camera::Camera, math::Point, window::Window};
 
 pub struct Movement {
-    focus_point: Option<Point>,
+    focus_point: Option<Point<3>>,
     cursor: Option<PhysicalPosition<f64>>,
 }
 
@@ -18,7 +18,7 @@ impl Movement {
 
     pub fn start(
         &mut self,
-        focus_point: Option<Point>,
+        focus_point: Option<Point<3>>,
         cursor: Option<PhysicalPosition<f64>>,
     ) {
         self.focus_point = focus_point;

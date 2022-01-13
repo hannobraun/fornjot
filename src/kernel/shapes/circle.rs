@@ -34,7 +34,7 @@ impl Shape for fj::Circle {
         Edges::single_cycle([Edge::arc(self.radius)])
     }
 
-    fn vertices(&self) -> Vec<Point> {
+    fn vertices(&self) -> Vec<Point<3>> {
         // Circles have just a single round edge with no vertices.
         Vec::new()
     }

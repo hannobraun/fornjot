@@ -201,7 +201,7 @@ impl Face {
 }
 
 /// Create a Delaunay triangulation of all vertices
-pub fn triangulate(vertices: &[Point]) -> Vec<Triangle3> {
+pub fn triangulate(vertices: &[Point<3>]) -> Vec<Triangle3> {
     let points: Vec<_> = vertices
         .iter()
         .map(|vertex| delaunator::Point {

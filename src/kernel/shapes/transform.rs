@@ -30,7 +30,7 @@ impl Shape for fj::Transform {
         todo!()
     }
 
-    fn vertices(&self) -> Vec<Point> {
+    fn vertices(&self) -> Vec<Point<3>> {
         // TASK: Implement.
         todo!()
     }

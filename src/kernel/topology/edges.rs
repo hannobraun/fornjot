@@ -31,7 +31,7 @@ impl Edges {
     ///
     /// `tolerance` defines how far these vertices are allowed to deviate from
     /// the actual edges of the shape.
-    pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point>) {
+    pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
         for cycle in &self.cycles {
             cycle.approx_vertices(tolerance, out);
         }
@@ -65,7 +65,7 @@ impl Cycle {
     ///
     /// No assumptions must be made about already existing contents of `out`, as
     /// this method might modify them.
-    pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point>) {
+    pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
         for edge in &self.edges {
             out.extend(edge.approx_vertices(tolerance));
         }
@@ -124,7 +124,7 @@ impl Edge {
     }
 
     /// Create a line segment
-    pub fn line_segment(start: Point, end: Point) -> Self {
+    pub fn line_segment(start: Point<3>, end: Point<3>) -> Self {
         Self {
             curve: Curve::Line(Line { a: start, b: end }),
             reverse: false,
@@ -141,7 +141,7 @@ impl Edge {
     ///
     /// `tolerance` defines how far the implicit line segments between those
     /// vertices are allowed to deviate from the actual edge.
-    pub fn approx_vertices(&self, tolerance: f64) -> Vec<Point> {
+    pub fn approx_vertices(&self, tolerance: f64) -> Vec<Point<3>> {
         // This method doesn't follow the style of the other methods that return
         // approximate vertices, allocating its output `Vec` itself, instead of
         // using one passed into it as a mutable reference.

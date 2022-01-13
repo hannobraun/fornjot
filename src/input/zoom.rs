@@ -76,7 +76,7 @@ impl Zoom {
         &mut self,
         now: Instant,
         delta_t: f64,
-        focus_point: Option<Point>,
+        focus_point: Option<Point<3>>,
         camera: &Camera,
     ) {
         self.target_speed = self.events.iter().map(|(_, event)| event).sum();

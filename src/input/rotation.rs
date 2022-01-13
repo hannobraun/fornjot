@@ -6,7 +6,7 @@ use crate::{
 };
 
 pub struct Rotation {
-    focus_point: Option<Point>,
+    focus_point: Option<Point<3>>,
 }
 
 impl Rotation {
@@ -14,7 +14,7 @@ impl Rotation {
         Self { focus_point: None }
     }
 
-    pub fn start(&mut self, focus_point: Option<Point>) {
+    pub fn start(&mut self, focus_point: Option<Point<3>>) {
         self.focus_point = focus_point;
     }
 

@@ -107,7 +107,7 @@ impl Camera {
         Self::INITIAL_FIELD_OF_VIEW_IN_X
     }
 
-    pub fn position(&self) -> Point {
+    pub fn position(&self) -> Point<3> {
         self.camera_to_model()
             .inverse_transform_point(&Point::origin())
     }
@@ -117,7 +117,7 @@ impl Camera {
         &self,
         cursor: PhysicalPosition<f64>,
         window: &Window,
-    ) -> Point {
+    ) -> Point<3> {
         let width = window.width() as f64;
         let height = window.height() as f64;
         let aspect_ratio = width / height;
@@ -141,7 +141,7 @@ impl Camera {
         window: &Window,
         cursor: Option<PhysicalPosition<f64>>,
         triangles: &Vec<Triangle>,
-    ) -> Option<Point> {
+    ) -> Option<Point<3>> {
         let cursor = cursor?;
 
         // Transform camera and cursor positions to model space.

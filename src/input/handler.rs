@@ -80,7 +80,7 @@ impl Handler {
         &mut self,
         button: MouseButton,
         state: ElementState,
-        focus_point: Option<Point>,
+        focus_point: Option<Point<3>>,
     ) {
         match (button, state) {
             (MouseButton::Left, ElementState::Pressed) => {

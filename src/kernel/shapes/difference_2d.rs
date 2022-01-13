@@ -91,7 +91,7 @@ impl Shape for fj::Difference2d {
         Edges { cycles: vec![a, b] }
     }
 
-    fn vertices(&self) -> Vec<Point> {
+    fn vertices(&self) -> Vec<Point<3>> {
         // TASK: Implement.
         todo!()
     }

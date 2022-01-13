@@ -29,7 +29,7 @@ pub trait Shape {
     fn edges(&self) -> Edges;
 
     /// Return the shape's vertices
-    fn vertices(&self) -> Vec<Point>;
+    fn vertices(&self) -> Vec<Point<3>>;
 }
 
 macro_rules! dispatch {
@@ -76,5 +76,5 @@ dispatch! {
     bounding_volume() -> AABB;
     faces(tolerance: f64, debug: &mut DebugInfo) -> Faces;
     edges() -> Edges;
-    vertices() -> Vec<Point>;
+    vertices() -> Vec<Point<3>>;
 }

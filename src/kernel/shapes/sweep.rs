@@ -87,7 +87,7 @@ impl Shape for fj::Sweep {
         todo!()
     }
 
-    fn vertices(&self) -> Vec<Point> {
+    fn vertices(&self) -> Vec<Point<3>> {
         // TASK: Implement.
         todo!()
     }

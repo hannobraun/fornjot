@@ -32,7 +32,7 @@ impl Vertices {
 
     pub fn push_line(
         &mut self,
-        line: [Point; 2],
+        line: [Point<3>; 2],
         normal: [f32; 3],
         color: [f32; 4],
     ) {
