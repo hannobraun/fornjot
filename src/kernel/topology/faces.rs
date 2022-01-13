@@ -92,7 +92,7 @@ impl Face {
                 //       sweeping code, as both the bottom and top faces of the
                 //       sweep need to be transformed.
                 //
-                //       So far, this algorithm here works with absolute
+                //       So far, most of this algorithm here works with absolute
                 //       coordinates. This works because the only surface we
                 //       ever deal with here is the x-y plane, so passing the 3D
                 //       points to the triangulation function and just cutting
