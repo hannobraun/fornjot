@@ -15,7 +15,7 @@ Fornjot's development follows the following principles:
 - **Widely portable**: Fornjot is primarily developed on Linux, but the plan is to support all major desktop and mobile platforms, and the web.
 - **Open source, permissive license**: Whether you're using Fornjot for fun, or to build a commercial project on top of it, the maximally permissive 0BSD license won't get in your way.
 
-At some point, I'd like to add **high-performance** to this list, but for now this takes a backseat to feature development.
+At some point, I'd like to add **high-performance** to this list, but for now this takes a backseat to adding more features.
 
 
 ## Status
