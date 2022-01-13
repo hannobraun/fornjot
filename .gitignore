@@ -4,3 +4,6 @@
 /fj/target
 /models/*/Cargo.lock
 /models/*/target
+
+# Zola
+/website/public
