@@ -24,7 +24,10 @@ body {
         margin-top: $margin-wide;
 
         font-size: 80%;
-        font-style: italic;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 }
 
