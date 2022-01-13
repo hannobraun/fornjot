@@ -1,4 +1,5 @@
 /// A two-dimensional shape
+#[derive(Debug)]
 pub enum Surface {
     /// The X-Y plane
     ///
