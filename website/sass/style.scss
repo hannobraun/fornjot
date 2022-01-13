@@ -1,0 +1,29 @@
+$margin-wide: 3rem;
+
+body {
+    font-family: Arial, sans-serif;
+
+    max-width: 42rem;
+    margin: 0 auto;
+
+    > header {
+        margin-bottom: $margin-wide;
+
+        h1 {
+            margin-bottom: 0;
+            font-size: 250%;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 100%;
+        }
+    }
+
+    > footer {
+        margin-top: $margin-wide;
+
+        font-size: 80%;
+        font-style: italic;
+    }
+}
