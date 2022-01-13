@@ -33,8 +33,6 @@ impl Edges {
     /// the actual edges.
     ///
     /// Returns a sequence of points, in 2-dimensional surface coordinates.
-    // TASK: Un-suppress warning.
-    #[allow(unused)]
     pub fn approx(
         &self,
         tolerance: f64,
