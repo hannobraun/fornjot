@@ -31,7 +31,7 @@ At this point, performance is not much of a concern. This will change, but for n
 
 ### Code-CAD in Rust
 
-Models are defined as Rust code. They are compiled separately, and loaded into a host application as a plug-in, to ensure fast compile times.
+Models are defined as Rust code. To ensure fast compile times, they are compiled separately, and loaded into a host application as a plug-in.
 
 ``` rust
 use std::collections::HashMap;
