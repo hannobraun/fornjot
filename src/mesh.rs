@@ -58,8 +58,8 @@ impl From<&Point<3>> for HashVector {
     }
 }
 
-impl From<&Vector> for HashVector {
-    fn from(vector: &Vector) -> Self {
+impl From<&Vector<3>> for HashVector {
+    fn from(vector: &Vector<3>) -> Self {
         Self([
             R64::from(vector.x),
             R64::from(vector.y),
