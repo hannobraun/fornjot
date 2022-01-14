@@ -75,9 +75,9 @@ impl Face {
                 let mut triangles: Vec<_> = triangles
                     .into_iter()
                     .map(|Triangle2 { a, b, c }| {
-                        let a = surface.surface_to_model(a);
-                        let b = surface.surface_to_model(b);
-                        let c = surface.surface_to_model(c);
+                        let a = surface.point_surface_to_model(a);
+                        let b = surface.point_surface_to_model(b);
+                        let c = surface.point_surface_to_model(c);
 
                         Triangle3 { a, b, c }
                     })

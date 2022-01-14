@@ -25,7 +25,7 @@ impl Surface {
     }
 
     /// Convert a point in surface coordinates to model coordinates
-    pub fn surface_to_model(&self, point: Point<2>) -> Point<3> {
+    pub fn point_surface_to_model(&self, point: Point<2>) -> Point<3> {
         match self {
             Surface::XYPlane => Point::from([point.x, point.y, 0.]),
         }
