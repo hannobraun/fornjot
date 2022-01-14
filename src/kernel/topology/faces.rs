@@ -1,12 +1,13 @@
 use std::collections::BTreeSet;
 
 use decorum::R64;
-use parry2d_f64::shape::Triangle as Triangle2;
-use parry3d_f64::{
+use parry2d_f64::{
     bounding_volume::AABB,
-    math::Isometry,
-    query::{Ray as Ray3, RayCast as _},
-    shape::Triangle as Triangle3,
+    query::{Ray as Ray2, RayCast as _},
+    shape::Triangle as Triangle2,
+};
+use parry3d_f64::{
+    math::Isometry, query::Ray as Ray3, shape::Triangle as Triangle3,
 };
 
 use crate::{
@@ -67,53 +68,11 @@ impl Face {
         match self {
             Self::Face { edges, surface } => {
                 let approx = edges.approx(tolerance, surface);
-                let triangles = triangulate(&approx.vertices);
-
-                // Convert 2-dimensional surface triangles into 3-dimensional
-                // triangles, as the rest of this algorithm hasn't been adapted
-                // yet.
-                let mut triangles: Vec<_> = triangles
-                    .into_iter()
-                    .map(|Triangle2 { a, b, c }| {
-                        let a = surface.point_surface_to_model(a);
-                        let b = surface.point_surface_to_model(b);
-                        let c = surface.point_surface_to_model(c);
-
-                        Triangle3 { a, b, c }
-                    })
-                    .collect();
-
-                // TASK: For the next step in the series of refactorings to
-                //       replace `Face::Triangles` with `Face::Face`, we need
-                //       the capability to transform surfaces (and thus, the
-                //       faces that are based on them).
-                //
-                //       Most immediately, this is needed to convert the
-                //       sweeping code, as both the bottom and top faces of the
-                //       sweep need to be transformed.
-                //
-                //       So far, most of this algorithm here works with absolute
-                //       coordinates. This works because the only surface we
-                //       ever deal with here is the x-y plane, so passing the 3D
-                //       points to the triangulation function and just cutting
-                //       off the z coordinate is fine
-                //
-                //       What we need to do is to work with points and segments
-                //       in surface coordinates. Then we can triangulate them,
-                //       and convert to absolute 3D coordinate afterwards.
-
-                let mut vertices = Vec::new();
-                edges.approx_vertices(tolerance, &mut vertices);
-
-                // For the next step, we need to represent the face as a
-                // polygon, but there aren't many requirements on how
-                // specifically to do that. All we need is a list of polygon
-                // edges. Anything else really doesn't matter.
-                let mut face_as_polygon = Vec::new();
-                edges.approx_segments(tolerance, &mut face_as_polygon);
+                let mut triangles = triangulate(&approx.vertices);
+                let face_as_polygon = approx.segments;
 
                 // We're also going to need a point outside of the polygon.
-                let aabb = AABB::from_points(&vertices);
+                let aabb = AABB::from_points(&approx.vertices);
                 let outside = aabb.maxs * 2.;
 
                 triangles.retain(|triangle| {
@@ -135,11 +94,14 @@ impl Face {
                         // determine if its center point is in the polygon.
                         let center = segment.a + (segment.b - segment.a) * 0.5;
 
-                        let ray = Ray3 {
+                        let ray = Ray2 {
                             origin: center,
                             dir: outside - center,
                         };
-                        let mut check = TriangleEdgeCheck::new(ray);
+                        let mut check = TriangleEdgeCheck::new(Ray3 {
+                            origin: surface.point_surface_to_model(ray.origin),
+                            dir: surface.vector_surface_to_model(ray.dir),
+                        });
 
                         // We need to keep track of where our ray hits the
                         // edges. Otherwise, if the ray hits a vertex, we might
@@ -189,6 +151,19 @@ impl Face {
                     // means all its edges are within the face.
                     true
                 });
+
+                // Convert 2-dimensional surface triangles into 3-dimensional
+                // triangles, as that is what the caller expects to get back.
+                let triangles: Vec<_> = triangles
+                    .into_iter()
+                    .map(|Triangle2 { a, b, c }| {
+                        let a = surface.point_surface_to_model(a);
+                        let b = surface.point_surface_to_model(b);
+                        let c = surface.point_surface_to_model(c);
+
+                        Triangle3 { a, b, c }
+                    })
+                    .collect();
 
                 out.extend(triangles);
             }
