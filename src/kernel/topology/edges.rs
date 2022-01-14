@@ -1,3 +1,4 @@
+use parry2d_f64::shape::Segment as Segment2;
 use parry3d_f64::shape::Segment as Segment3;
 
 use crate::{
@@ -37,12 +38,26 @@ impl Edges {
         let mut vertices = Vec::new();
         self.approx_vertices(tolerance, &mut vertices);
 
+        // This needlessly calls `self.approx_vertices` again, internally. The
+        // vertices are already computed, so they can just be removed.
+        let mut segments = Vec::new();
+        self.approx_segments(tolerance, &mut segments);
+
         let vertices = vertices
             .into_iter()
             .map(|vertex| surface.model_to_surface(vertex))
             .collect();
+        let segments = segments
+            .into_iter()
+            .map(|Segment3 { a, b }| {
+                let a = surface.model_to_surface(a);
+                let b = surface.model_to_surface(b);
 
-        Approx { vertices }
+                Segment2 { a, b }
+            })
+            .collect();
+
+        Approx { vertices, segments }
     }
 
     /// Compute vertices to approximate the edges
@@ -209,4 +224,5 @@ impl Edge {
 /// An approximation of one or more edges
 pub struct Approx {
     pub vertices: Vec<Point<2>>,
+    pub segments: Vec<Segment2>,
 }
