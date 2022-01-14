@@ -33,14 +33,16 @@ impl Edges {
     /// the actual edges.
     ///
     /// Returns a sequence of points, in 2-dimensional surface coordinates.
-    pub fn approx(&self, tolerance: f64, surface: &Surface) -> Vec<Point<2>> {
+    pub fn approx(&self, tolerance: f64, surface: &Surface) -> Approx {
         let mut vertices = Vec::new();
         self.approx_vertices(tolerance, &mut vertices);
 
-        vertices
+        let vertices = vertices
             .into_iter()
             .map(|vertex| surface.model_to_surface(vertex))
-            .collect()
+            .collect();
+
+        Approx { vertices }
     }
 
     /// Compute vertices to approximate the edges
@@ -202,4 +204,9 @@ impl Edge {
             out.push([v0, v1].into());
         }
     }
+}
+
+/// An approximation of one or more edges
+pub struct Approx {
+    pub vertices: Vec<Point<2>>,
 }

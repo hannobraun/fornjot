@@ -67,7 +67,7 @@ impl Face {
         match self {
             Self::Face { edges, surface } => {
                 let vertices = edges.approx(tolerance, surface);
-                let triangles = triangulate(&vertices);
+                let triangles = triangulate(&vertices.vertices);
 
                 // Convert 2-dimensional surface triangles into 3-dimensional
                 // triangles, as the rest of this algorithm hasn't been adapted
