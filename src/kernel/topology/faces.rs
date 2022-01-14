@@ -152,20 +152,15 @@ impl Face {
                     true
                 });
 
-                // Convert 2-dimensional surface triangles into 3-dimensional
-                // triangles, as that is what the caller expects to get back.
-                let triangles: Vec<_> = triangles
-                    .into_iter()
-                    .map(|Triangle2 { a, b, c }| {
+                out.extend(triangles.into_iter().map(
+                    |Triangle2 { a, b, c }| {
                         let a = surface.point_surface_to_model(a);
                         let b = surface.point_surface_to_model(b);
                         let c = surface.point_surface_to_model(c);
 
                         Triangle3 { a, b, c }
-                    })
-                    .collect();
-
-                out.extend(triangles);
+                    },
+                ));
             }
             Self::Triangles(triangles) => out.extend(triangles),
         }
