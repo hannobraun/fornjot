@@ -130,7 +130,7 @@ impl Camera {
         // Cursor position in camera space.
         let f = (self.field_of_view_in_x() / 2.).tan() * self.near_plane();
         let cursor =
-            Point::origin() + Vector::new(x * f, y * f, -self.near_plane());
+            Point::origin() + Vector::from([x * f, y * f, -self.near_plane()]);
 
         self.camera_to_model().inverse_transform_point(&cursor)
     }
@@ -180,7 +180,7 @@ impl Camera {
 
     pub fn update_planes(&mut self, aabb: &AABB) {
         let view_transform = self.camera_to_model();
-        let view_direction = Vector::new(0., 0., -1.);
+        let view_direction = Vector::from([0., 0., -1.]);
 
         let mut dist_min = f64::INFINITY;
         let mut dist_max = f64::NEG_INFINITY;
