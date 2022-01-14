@@ -12,7 +12,7 @@ pub enum Surface {
 
 impl Surface {
     /// Convert a point in model coordinates to surface coordinates
-    pub fn model_to_surface(&self, point: Point<3>) -> Point<2> {
+    pub fn point_model_to_surface(&self, point: Point<3>) -> Point<2> {
         match self {
             Surface::XYPlane => {
                 if point.z != 0. {

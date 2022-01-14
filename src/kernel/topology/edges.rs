@@ -45,13 +45,13 @@ impl Edges {
 
         let vertices = vertices
             .into_iter()
-            .map(|vertex| surface.model_to_surface(vertex))
+            .map(|vertex| surface.point_model_to_surface(vertex))
             .collect();
         let segments = segments
             .into_iter()
             .map(|Segment3 { a, b }| {
-                let a = surface.model_to_surface(a);
-                let b = surface.model_to_surface(b);
+                let a = surface.point_model_to_surface(a);
+                let b = surface.point_model_to_surface(b);
 
                 Segment2 { a, b }
             })
