@@ -5,7 +5,7 @@ use parry2d_f64::shape::Triangle as Triangle2;
 use parry3d_f64::{
     bounding_volume::AABB,
     math::Isometry,
-    query::{Ray, RayCast as _},
+    query::{Ray as Ray3, RayCast as _},
     shape::Triangle as Triangle3,
 };
 
@@ -135,7 +135,7 @@ impl Face {
                         // determine if its center point is in the polygon.
                         let center = segment.a + (segment.b - segment.a) * 0.5;
 
-                        let ray = Ray {
+                        let ray = Ray3 {
                             origin: center,
                             dir: outside - center,
                         };
