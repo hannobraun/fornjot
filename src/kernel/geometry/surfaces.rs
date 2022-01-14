@@ -1,4 +1,4 @@
-use crate::math::Point;
+use crate::math::{Point, Vector};
 
 /// A two-dimensional shape
 #[derive(Debug)]
@@ -26,8 +26,14 @@ impl Surface {
 
     /// Convert a point in surface coordinates to model coordinates
     pub fn point_surface_to_model(&self, point: Point<2>) -> Point<3> {
+        let coords = self.vector_surface_to_model(point.coords);
+        Point { coords }
+    }
+
+    /// Convert a vector in surface coordinates to model coordinates
+    pub fn vector_surface_to_model(&self, point: Vector<2>) -> Vector<3> {
         match self {
-            Surface::XYPlane => Point::from([point.x, point.y, 0.]),
+            Surface::XYPlane => Vector::from([point.x, point.y, 0.]),
         }
     }
 }
