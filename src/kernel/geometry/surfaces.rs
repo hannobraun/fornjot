@@ -1,4 +1,8 @@
 use nalgebra::point;
+#[cfg(test)]
+use nalgebra::UnitQuaternion;
+#[cfg(test)]
+use parry3d_f64::math::Isometry;
 
 use crate::math::{Point, Vector};
 
@@ -24,6 +28,20 @@ impl Surface {
     pub fn x_y_plane() -> Self {
         Self::Plane {
             origin: Point::origin(),
+        }
+    }
+
+    /// Transform the surface
+    #[cfg(test)]
+    pub fn transform(&mut self, transform: &Isometry<f64>) {
+        match self {
+            Self::Plane { origin } => {
+                // The plane representation is still too limited to support
+                // rotations.
+                assert!(transform.rotation == UnitQuaternion::identity());
+
+                *origin += transform.translation.vector;
+            }
         }
     }
 
@@ -74,9 +92,29 @@ impl Surface {
 
 #[cfg(test)]
 mod tests {
-    use nalgebra::{point, vector};
+    use nalgebra::{point, vector, UnitQuaternion};
+    use parry3d_f64::math::{Isometry, Translation};
 
     use super::Surface;
+
+    #[test]
+    fn test_transform() {
+        let mut plane = Surface::Plane {
+            origin: point![1., 2., 3.],
+        };
+
+        plane.transform(&Isometry::from_parts(
+            Translation::from([2., 4., 6.]),
+            UnitQuaternion::identity(),
+        ));
+
+        assert_eq!(
+            plane,
+            Surface::Plane {
+                origin: point![3., 6., 9.],
+            }
+        );
+    }
 
     #[test]
     fn test_model_to_surface_point_conversion() {
