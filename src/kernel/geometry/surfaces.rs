@@ -77,4 +77,14 @@ mod tests {
         );
         assert_eq!(plane.point_model_to_surface(invalid_model_point), Err(()));
     }
+
+    #[test]
+    fn test_surface_to_model_point_conversion() {
+        let plane = Surface::Plane;
+
+        assert_eq!(
+            plane.point_surface_to_model(point![2., 4.]),
+            point![2., 4., 0.],
+        );
+    }
 }
