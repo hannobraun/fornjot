@@ -53,6 +53,8 @@ impl From<Difference> for Shape3d {
 
 /// A transformed 3-dimensional shape
 ///
+/// # Limitations
+///
 /// Transformations are currently limited to a rotation, followed by a
 /// translation.
 #[derive(Clone, Debug)]
