@@ -1,4 +1,4 @@
-use crate::math::Point;
+use crate::math::{Point, Vector};
 
 /// A line, defined by two points
 #[derive(Clone, Debug)]
@@ -9,6 +9,10 @@ pub struct Line {
     /// coordinate system.
     pub origin: Point<3>,
 
-    /// The other point defining the line
-    pub b: Point<3>,
+    /// The direction of the line
+    ///
+    /// In addition to defining the direction of the line, the length of this
+    /// vector defines the curve coordinate system: The point at `origin` +
+    /// `dir` has curve coordinate `1.0`.
+    pub dir: Vector<3>,
 }
