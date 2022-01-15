@@ -42,3 +42,20 @@ impl Surface {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use nalgebra::point;
+
+    use super::Surface;
+
+    #[test]
+    fn test_model_to_surface_point_conversion() {
+        let plane = Surface::Plane;
+
+        let model_point = point![1., 2., 0.];
+
+        let surface_point = plane.point_model_to_surface(model_point);
+        assert_eq!(surface_point, point![1., 2.]);
+    }
+}
