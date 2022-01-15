@@ -1,7 +1,7 @@
 use crate::math::{Point, Vector};
 
 /// A two-dimensional shape
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Surface {
     /// The X-Y plane
     ///
