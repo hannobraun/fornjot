@@ -1,3 +1,5 @@
+use approx::AbsDiffEq;
+
 use crate::math::{Point, Vector};
 
 /// A line, defined by two points
@@ -15,4 +17,17 @@ pub struct Line {
     /// vector defines the curve coordinate system: The point at `origin` +
     /// `dir` has curve coordinate `1.0`.
     pub dir: Vector<3>,
+}
+
+impl AbsDiffEq for Line {
+    type Epsilon = <f64 as AbsDiffEq>::Epsilon;
+
+    fn default_epsilon() -> Self::Epsilon {
+        f64::default_epsilon()
+    }
+
+    fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
+        self.origin.abs_diff_eq(&other.origin, epsilon)
+            && self.dir.abs_diff_eq(&other.dir, epsilon)
+    }
 }
