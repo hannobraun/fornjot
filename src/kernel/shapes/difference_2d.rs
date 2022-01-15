@@ -62,7 +62,7 @@ impl Shape for fj::Difference2d {
 
         Faces(vec![Face::Face {
             edges,
-            surface: Surface::XYPlane,
+            surface: Surface::x_y_plane(),
         }])
     }
 

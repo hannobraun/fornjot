@@ -26,7 +26,7 @@ impl Shape for fj::Circle {
         let edges = Edges::single_cycle([Edge::arc(self.radius)]);
         Faces(vec![Face::Face {
             edges,
-            surface: Surface::XYPlane,
+            surface: Surface::x_y_plane(),
         }])
     }
 

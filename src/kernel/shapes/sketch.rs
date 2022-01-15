@@ -22,7 +22,7 @@ impl Shape for fj::Sketch {
         let edges = self.edges();
         let face = Face::Face {
             edges,
-            surface: Surface::XYPlane,
+            surface: Surface::x_y_plane(),
         };
         Faces(vec![face])
     }
