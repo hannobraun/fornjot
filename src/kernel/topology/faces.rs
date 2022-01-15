@@ -61,6 +61,23 @@ pub enum Face {
 }
 
 impl Face {
+    pub fn transform(&mut self, transform: &Isometry<f64>) {
+        match self {
+            Self::Face {
+                edges: _,
+                surface: _,
+            } => {
+                // TASK: Implement.
+                todo!()
+            }
+            Self::Triangles(triangles) => {
+                for triangle in triangles {
+                    *triangle = triangle.transformed(transform);
+                }
+            }
+        }
+    }
+
     pub fn triangles(
         &self,
         tolerance: f64,
@@ -165,23 +182,6 @@ impl Face {
                 ));
             }
             Self::Triangles(triangles) => out.extend(triangles),
-        }
-    }
-
-    pub fn transform(&mut self, transform: &Isometry<f64>) {
-        match self {
-            Self::Face {
-                edges: _,
-                surface: _,
-            } => {
-                // TASK: Implement.
-                todo!()
-            }
-            Self::Triangles(triangles) => {
-                for triangle in triangles {
-                    *triangle = triangle.transformed(transform);
-                }
-            }
         }
     }
 }
