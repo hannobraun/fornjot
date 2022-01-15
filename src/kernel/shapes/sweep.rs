@@ -24,14 +24,14 @@ impl Shape for fj::Sweep {
         //       face. I don't know if this is a reasonable assumption in
         //       general, but it certainly doesn't reflect the data structures,
         //       which allow an arbitrary number of faces in any shape.
-        let mut original_face = Vec::new();
+        let mut original_face_triangles = Vec::new();
         self.shape.faces(tolerance, debug_info).triangles(
             tolerance,
-            &mut original_face,
+            &mut original_face_triangles,
             debug_info,
         );
 
-        let bottom_face = original_face
+        let bottom_face = original_face_triangles
             .iter()
             .map(|triangle| {
                 // Change triangle direction, as the bottom of the sweep points
@@ -40,7 +40,7 @@ impl Shape for fj::Sweep {
             })
             .collect();
 
-        let top_face = original_face
+        let top_face = original_face_triangles
             .iter()
             .map(|triangle| {
                 triangle.transformed(&Isometry::translation(
