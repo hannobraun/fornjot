@@ -19,7 +19,7 @@ pub enum Surface {
 }
 
 impl Surface {
-    /// Construct a `Surface` that represents to x-y plane
+    /// Construct a `Surface` that represents the x-y plane
     pub fn x_y_plane() -> Self {
         Self::Plane {
             origin: Point::origin(),
