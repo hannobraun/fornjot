@@ -3,10 +3,10 @@ use crate::math::{Point, Vector};
 /// A two-dimensional shape
 #[derive(Debug, PartialEq)]
 pub enum Surface {
-    /// The X-Y plane
+    /// A plane
     ///
-    /// This will be replaced with a more general plane representation in due
-    /// time.
+    /// For the time being, this is always going to be the x-y plane. Making
+    /// this code more flexible is subject of ongoing work.
     Plane,
 }
 
