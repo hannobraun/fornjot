@@ -7,8 +7,9 @@ use crate::math::{Point, Vector};
 pub enum Surface {
     /// A plane
     ///
-    /// For the time being, this is always going to be the x-y plane. Making
-    /// this code more flexible is subject of ongoing work.
+    /// For the time being, only planes parallel to the x-y plane are supported.
+    /// Making this code more flexible to support all planes is subject of an
+    /// ongoing effort.
     Plane {
         /// The origin point of the plane
         ///
