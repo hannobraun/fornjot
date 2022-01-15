@@ -7,6 +7,7 @@ use crate::{
 };
 
 /// The edges of a shape
+#[derive(Clone)]
 pub struct Edges {
     /// The cycles that the edges of the shape form
     ///
@@ -82,6 +83,7 @@ impl Edges {
 /// The end of each edge in the cycle must connect to the beginning of the next
 /// edge. The end of the last edge must connect to the beginning of the first
 /// one.
+#[derive(Clone)]
 pub struct Cycle {
     pub edges: Vec<Edge>,
 }
