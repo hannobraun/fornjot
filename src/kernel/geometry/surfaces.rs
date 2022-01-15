@@ -1,3 +1,5 @@
+use nalgebra::point;
+
 use crate::math::{Point, Vector};
 
 /// A two-dimensional shape
@@ -7,13 +9,21 @@ pub enum Surface {
     ///
     /// For the time being, this is always going to be the x-y plane. Making
     /// this code more flexible is subject of ongoing work.
-    Plane,
+    Plane {
+        /// The origin point of the plane
+        ///
+        /// The point on the plane that is the origin of the 2-dimensional
+        /// surface coordinate system.
+        origin: Point<3>,
+    },
 }
 
 impl Surface {
     /// Construct a `Surface` that represents to x-y plane
     pub fn x_y_plane() -> Self {
-        Self::Plane
+        Self::Plane {
+            origin: Point::origin(),
+        }
     }
 
     /// Convert a point in model coordinates to surface coordinates
@@ -34,26 +44,29 @@ impl Surface {
         point: Point<3>,
     ) -> Result<Point<2>, ()> {
         match self {
-            Self::Plane => {
-                if point.z != 0. {
+            Self::Plane { origin } => {
+                if point.z != origin.z {
                     return Err(());
                 }
 
-                Ok(point.xy())
+                Ok(point.xy() - origin.xy().coords)
             }
         }
     }
 
     /// Convert a point in surface coordinates to model coordinates
     pub fn point_surface_to_model(&self, point: Point<2>) -> Point<3> {
-        let coords = self.vector_surface_to_model(point.coords);
-        Point { coords }
+        match self {
+            Self::Plane { origin } => {
+                point![point.x, point.y, 0.] + origin.coords
+            }
+        }
     }
 
     /// Convert a vector in surface coordinates to model coordinates
     pub fn vector_surface_to_model(&self, point: Vector<2>) -> Vector<3> {
         match self {
-            Self::Plane => Vector::from([point.x, point.y, 0.]),
+            Self::Plane { origin: _ } => Vector::from([point.x, point.y, 0.]),
         }
     }
 }
@@ -66,31 +79,37 @@ mod tests {
 
     #[test]
     fn test_model_to_surface_point_conversion() {
-        let plane = Surface::Plane;
+        let plane = Surface::Plane {
+            origin: point![1., 2., 3.],
+        };
 
-        let valid_model_point = point![2., 4., 0.];
+        let valid_model_point = point![2., 4., 3.];
         let invalid_model_point = point![2., 4., 6.];
 
         assert_eq!(
             plane.point_model_to_surface(valid_model_point),
-            Ok(point![2., 4.]),
+            Ok(point![1., 2.]),
         );
         assert_eq!(plane.point_model_to_surface(invalid_model_point), Err(()));
     }
 
     #[test]
     fn test_surface_to_model_point_conversion() {
-        let plane = Surface::Plane;
+        let plane = Surface::Plane {
+            origin: point![1., 2., 3.],
+        };
 
         assert_eq!(
             plane.point_surface_to_model(point![2., 4.]),
-            point![2., 4., 0.],
+            point![3., 6., 3.],
         );
     }
 
     #[test]
     fn test_surface_to_model_vector_conversion() {
-        let plane = Surface::Plane;
+        let plane = Surface::Plane {
+            origin: point![1., 2., 3.],
+        };
 
         assert_eq!(
             plane.vector_surface_to_model(vector![2., 4.]),
