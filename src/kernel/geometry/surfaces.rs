@@ -3,7 +3,7 @@ use nalgebra::point;
 use crate::math::{Point, Vector};
 
 /// A two-dimensional shape
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum Surface {
     /// A plane
     ///
