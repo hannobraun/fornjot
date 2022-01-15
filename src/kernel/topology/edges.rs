@@ -199,7 +199,7 @@ impl Edge {
     /// Create a line segment
     pub fn line_segment(start: Point<3>, end: Point<3>) -> Self {
         Self {
-            curve: Curve::Line(Line { a: start, b: end }),
+            curve: Curve::Line(Line { origin: start, b: end }),
             reverse: false,
             closed: false,
         }
