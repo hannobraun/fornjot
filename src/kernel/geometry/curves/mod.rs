@@ -1,6 +1,7 @@
 mod circle;
+mod line;
 
-pub use self::circle::Circle;
+pub use self::{circle::Circle, line::Line};
 
 use crate::math::Point;
 
@@ -32,14 +33,4 @@ impl Curve {
             Curve::Line(Line { a, b }) => out.extend([*a, *b]),
         }
     }
-}
-
-/// A line, defined by two points
-#[derive(Clone, Debug)]
-pub struct Line {
-    /// One point defining the line
-    pub a: Point<3>,
-
-    /// The other point defining the line
-    pub b: Point<3>,
 }
