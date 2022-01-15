@@ -32,8 +32,6 @@ impl Edges {
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual edges.
-    ///
-    /// Returns a sequence of points, in 2-dimensional surface coordinates.
     pub fn approx(&self, tolerance: f64, surface: &Surface) -> Approx {
         let mut vertices = Vec::new();
         self.approx_vertices(tolerance, &mut vertices);
