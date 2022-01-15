@@ -3,7 +3,6 @@ use parry3d_f64::bounding_volume::AABB;
 use crate::{
     debug::DebugInfo,
     kernel::{
-        geometry::Surface,
         topology::{
             edges::Edges,
             faces::{Face, Faces},
@@ -40,30 +39,34 @@ impl Shape for fj::Difference2d {
             );
         };
 
-        let (a, b) = match (a, b) {
+        let (a, b, surface_a, surface_b) = match (a, b) {
             (
                 Face::Face {
                     edges: a,
-                    surface: Surface::XYPlane,
+                    surface: surface_a,
                 },
                 Face::Face {
                     edges: b,
-                    surface: Surface::XYPlane,
+                    surface: surface_b,
                 },
-            ) => (a, b),
+            ) => (a, b, surface_a, surface_b),
             _ => {
                 // None of the 2D types still use the triangles representation.
                 unreachable!()
             }
         };
 
+        if surface_a != surface_b {
+            // Panicking is not great, but as long as we don't have a real error
+            // handling mechanism, it will do.
+            panic!("Trying to subtract sketches with different surfaces.")
+        }
+        let surface = surface_a;
+
         let mut edges = a;
         edges.cycles.extend(b.cycles);
 
-        Faces(vec![Face::Face {
-            edges,
-            surface: Surface::x_y_plane(),
-        }])
+        Faces(vec![Face::Face { edges, surface }])
     }
 
     fn edges(&self) -> Edges {
