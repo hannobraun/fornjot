@@ -39,7 +39,7 @@ impl Surface {
                     return Err(());
                 }
 
-                Ok(Point::from([point.x, point.y]))
+                Ok(point.xy())
             }
         }
     }
