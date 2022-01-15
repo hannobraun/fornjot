@@ -60,7 +60,7 @@ impl Surface {
 
 #[cfg(test)]
 mod tests {
-    use nalgebra::point;
+    use nalgebra::{point, vector};
 
     use super::Surface;
 
@@ -85,6 +85,16 @@ mod tests {
         assert_eq!(
             plane.point_surface_to_model(point![2., 4.]),
             point![2., 4., 0.],
+        );
+    }
+
+    #[test]
+    fn test_surface_to_model_vector_conversion() {
+        let plane = Surface::Plane;
+
+        assert_eq!(
+            plane.vector_surface_to_model(vector![2., 4.]),
+            vector![2., 4., 0.],
         );
     }
 }
