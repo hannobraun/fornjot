@@ -19,6 +19,7 @@ use crate::{
 use super::edges::Edges;
 
 /// The faces of a shape
+#[derive(Clone)]
 pub struct Faces(pub Vec<Face>);
 
 impl Faces {
@@ -35,6 +36,7 @@ impl Faces {
 }
 
 /// A face of a shape
+#[derive(Clone)]
 pub enum Face {
     /// A face of a shape
     ///
