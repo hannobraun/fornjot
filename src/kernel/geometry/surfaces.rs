@@ -60,7 +60,9 @@ mod tests {
 
         let valid_model_point = point![1., 2., 0.];
 
-        let surface_point = plane.point_model_to_surface(valid_model_point);
-        assert_eq!(surface_point, Ok(point![1., 2.]));
+        assert_eq!(
+            plane.point_model_to_surface(valid_model_point),
+            Ok(point![1., 2.]),
+        );
     }
 }
