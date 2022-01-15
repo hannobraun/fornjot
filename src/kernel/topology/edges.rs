@@ -34,7 +34,9 @@ impl Edges {
     /// the actual edges.
     pub fn approx(&self, tolerance: f64, surface: &Surface) -> Approx {
         let mut vertices = Vec::new();
-        self.approx_vertices(tolerance, &mut vertices);
+        for cycle in &self.cycles {
+            cycle.approx_vertices(tolerance, &mut vertices);
+        }
 
         // This needlessly calls `self.approx_vertices` again, internally. The
         // vertices are already computed, so they can just be removed.
@@ -56,16 +58,6 @@ impl Edges {
             .collect();
 
         Approx { vertices, segments }
-    }
-
-    /// Compute vertices to approximate the edges
-    ///
-    /// `tolerance` defines how far these vertices are allowed to deviate from
-    /// the actual edges of the shape.
-    pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
-        for cycle in &self.cycles {
-            cycle.approx_vertices(tolerance, out);
-        }
     }
 
     /// Compute line segments to approximate the edges
