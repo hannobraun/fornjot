@@ -45,6 +45,15 @@ pub enum Face {
     /// x-y plane.
     Face {
         /// The edges that bound the face
+        ///
+        /// # Implementation Note
+        ///
+        /// Since these edges bound the face, they must lie in the face. We're
+        /// using [`Edges`] here, however, which has no such limitation.
+        ///
+        /// It might be less error-prone, and possibly more efficient, to use a
+        /// more specialized data structure here, that specifies the edges in
+        /// surface coordinates.
         edges: Edges,
 
         /// The surface that this face is a section of
