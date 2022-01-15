@@ -1,5 +1,5 @@
 use parry2d_f64::shape::Segment as Segment2;
-use parry3d_f64::shape::Segment as Segment3;
+use parry3d_f64::{math::Isometry, shape::Segment as Segment3};
 
 use crate::{
     kernel::geometry::{Circle, Curve, Line, Surface},
@@ -26,6 +26,15 @@ impl Edges {
 
         Self {
             cycles: vec![cycle],
+        }
+    }
+
+    /// Transform the edges
+    pub fn transform(&mut self, transform: &Isometry<f64>) {
+        for cycle in &mut self.cycles {
+            for edge in &mut cycle.edges {
+                edge.curve.transform(transform);
+            }
         }
     }
 

@@ -1,5 +1,4 @@
 use approx::AbsDiffEq;
-#[cfg(test)]
 use parry3d_f64::math::Isometry;
 
 use crate::math::{Point, Vector};
@@ -23,7 +22,6 @@ pub struct Line {
 
 impl Line {
     /// Transform the line
-    #[cfg(test)]
     pub fn transform(&mut self, transform: &Isometry<f64>) {
         self.origin = transform.transform_point(&self.origin);
         self.dir = transform.transform_vector(&self.dir);

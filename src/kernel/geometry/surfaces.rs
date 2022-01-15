@@ -1,7 +1,4 @@
-use nalgebra::point;
-#[cfg(test)]
-use nalgebra::UnitQuaternion;
-#[cfg(test)]
+use nalgebra::{point, UnitQuaternion};
 use parry3d_f64::math::Isometry;
 
 use crate::math::{Point, Vector};
@@ -32,7 +29,6 @@ impl Surface {
     }
 
     /// Transform the surface
-    #[cfg(test)]
     pub fn transform(&mut self, transform: &Isometry<f64>) {
         match self {
             Self::Plane { origin } => {

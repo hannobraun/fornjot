@@ -1,6 +1,8 @@
 mod circle;
 mod line;
 
+use parry3d_f64::math::Isometry;
+
 pub use self::{circle::Circle, line::Line};
 
 use crate::math::Point;
@@ -27,6 +29,12 @@ pub enum Curve {
 }
 
 impl Curve {
+    pub fn transform(&mut self, transform: &Isometry<f64>) {
+        match self {
+            Self::Circle(_) => todo!(),
+            Self::Line(line) => line.transform(transform),
+        }
+    }
     pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
         match self {
             Self::Circle(circle) => circle.approx_vertices(tolerance, out),

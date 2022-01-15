@@ -72,12 +72,9 @@ pub enum Face {
 impl Face {
     pub fn transform(&mut self, transform: &Isometry<f64>) {
         match self {
-            Self::Face {
-                edges: _,
-                surface: _,
-            } => {
-                // TASK: Implement.
-                todo!()
+            Self::Face { edges, surface } => {
+                edges.transform(transform);
+                surface.transform(transform);
             }
             Self::Triangles(triangles) => {
                 for triangle in triangles {
