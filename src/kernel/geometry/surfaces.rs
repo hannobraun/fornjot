@@ -7,19 +7,19 @@ pub enum Surface {
     ///
     /// This will be replaced with a more general plane representation in due
     /// time.
-    XYPlane,
+    Plane,
 }
 
 impl Surface {
     /// Construct a `Surface` that represents to x-y plane
     pub fn x_y_plane() -> Self {
-        Self::XYPlane
+        Self::Plane
     }
 
     /// Convert a point in model coordinates to surface coordinates
     pub fn point_model_to_surface(&self, point: Point<3>) -> Point<2> {
         match self {
-            Self::XYPlane => {
+            Self::Plane => {
                 if point.z != 0. {
                     panic!("Point {:?} is not in surface {:?}", point, self);
                 }
@@ -38,7 +38,7 @@ impl Surface {
     /// Convert a vector in surface coordinates to model coordinates
     pub fn vector_surface_to_model(&self, point: Vector<2>) -> Vector<3> {
         match self {
-            Self::XYPlane => Vector::from([point.x, point.y, 0.]),
+            Self::Plane => Vector::from([point.x, point.y, 0.]),
         }
     }
 }
