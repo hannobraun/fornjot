@@ -1,7 +1,7 @@
 use crate::math::{Point, Vector};
 
 /// A line, defined by two points
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Line {
     /// The origin point of the line
     ///
