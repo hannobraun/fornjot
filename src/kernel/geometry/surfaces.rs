@@ -53,9 +53,9 @@ mod tests {
     fn test_model_to_surface_point_conversion() {
         let plane = Surface::Plane;
 
-        let model_point = point![1., 2., 0.];
+        let valid_model_point = point![1., 2., 0.];
 
-        let surface_point = plane.point_model_to_surface(model_point);
+        let surface_point = plane.point_model_to_surface(valid_model_point);
         assert_eq!(surface_point, point![1., 2.]);
     }
 }
