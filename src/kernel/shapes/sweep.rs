@@ -42,16 +42,8 @@ impl Shape for fj::Sweep {
             })
             .collect();
 
-        let top_face = original_face_triangles
-            .iter()
-            .map(|triangle| {
-                triangle.transformed(&Isometry::translation(
-                    0.0,
-                    0.0,
-                    self.length,
-                ))
-            })
-            .collect();
+        let mut top_faces = original_faces.clone();
+        top_faces.transform(&Isometry::translation(0.0, 0.0, self.length));
 
         let mut segments = Vec::new();
         self.shape.edges().approx_segments(tolerance, &mut segments);
@@ -79,7 +71,7 @@ impl Shape for fj::Sweep {
 
         let mut faces = Vec::new();
         faces.push(Face::Triangles(bottom_face));
-        faces.push(Face::Triangles(top_face));
+        faces.extend(top_faces.0);
         faces.push(Face::Triangles(side_face));
 
         Faces(faces)
