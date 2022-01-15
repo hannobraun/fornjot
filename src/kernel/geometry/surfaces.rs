@@ -1,3 +1,5 @@
+use std::convert::Infallible;
+
 use crate::math::{Point, Vector};
 
 /// A two-dimensional shape
@@ -17,14 +19,17 @@ impl Surface {
     }
 
     /// Convert a point in model coordinates to surface coordinates
-    pub fn point_model_to_surface(&self, point: Point<3>) -> Point<2> {
+    pub fn point_model_to_surface(
+        &self,
+        point: Point<3>,
+    ) -> Result<Point<2>, Infallible> {
         match self {
             Self::Plane => {
                 if point.z != 0. {
                     panic!("Point {:?} is not in surface {:?}", point, self);
                 }
 
-                Point::from([point.x, point.y])
+                Ok(Point::from([point.x, point.y]))
             }
         }
     }
@@ -56,6 +61,6 @@ mod tests {
         let valid_model_point = point![1., 2., 0.];
 
         let surface_point = plane.point_model_to_surface(valid_model_point);
-        assert_eq!(surface_point, point![1., 2.]);
+        assert_eq!(surface_point, Ok(point![1., 2.]));
     }
 }

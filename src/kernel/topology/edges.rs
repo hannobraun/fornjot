@@ -45,13 +45,19 @@ impl Edges {
 
         let vertices = vertices
             .into_iter()
-            .map(|vertex| surface.point_model_to_surface(vertex))
+            .map(|vertex| {
+                // Can't panic, unless the approximation wrongfully generates
+                // points that are not in the surface.
+                surface.point_model_to_surface(vertex).unwrap()
+            })
             .collect();
         let segments = segments
             .into_iter()
             .map(|Segment3 { a, b }| {
-                let a = surface.point_model_to_surface(a);
-                let b = surface.point_model_to_surface(b);
+                // Can't panic, unless the approximation wrongfully generates
+                // points that are not in the surface.
+                let a = surface.point_model_to_surface(a).unwrap();
+                let b = surface.point_model_to_surface(b).unwrap();
 
                 Segment2 { a, b }
             })
