@@ -52,13 +52,7 @@ impl Surface {
     /// Convert a point in surface coordinates to model coordinates
     pub fn point_surface_to_model(&self, point: Point<2>) -> Point<3> {
         match self {
-            Self::Plane(Plane { origin, v, w }) => {
-                // This method doesn't support any rotated planes yet.
-                assert_eq!(v, &vector![1., 0., 0.]);
-                assert_eq!(w, &vector![0., 1., 0.]);
-
-                point![point.x, point.y, 0.] + origin.coords
-            }
+            Self::Plane(plane) => plane.point_surface_to_model(point),
         }
     }
 
@@ -139,6 +133,15 @@ impl Plane {
         }
 
         Ok(point.xy() - self.origin.xy().coords)
+    }
+
+    /// Convert a point in surface coordinates to model coordinates
+    pub fn point_surface_to_model(&self, point: Point<2>) -> Point<3> {
+        // This method doesn't support any rotated planes yet.
+        assert_eq!(self.v, vector![1., 0., 0.]);
+        assert_eq!(self.w, vector![0., 1., 0.]);
+
+        point![point.x, point.y, 0.] + self.origin.coords
     }
 }
 
