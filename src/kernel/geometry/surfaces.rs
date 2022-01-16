@@ -58,7 +58,7 @@ impl Surface {
                 // rotations.
                 assert!(transform.rotation == UnitQuaternion::identity());
 
-                *origin += transform.translation.vector;
+                *origin = transform.transform_point(origin);
             }
         }
     }
