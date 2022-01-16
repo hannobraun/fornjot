@@ -85,17 +85,17 @@ pub struct Plane {
     /// to allow for the definition of interesting coordinate systems. It's
     /// unclear how well all algorithms will handle those though.
     ///
-    /// Must not be parallel to `w`.
+    /// Must not be parallel to `v`.
     pub u: Vector<3>,
 
     /// Second direction that defines the plane orientation
     ///
     /// It might be most reasonable, if this were a unit vector that is
-    /// orthogonal to `w`. As an experiment, this isn't required right now,
+    /// orthogonal to `u`. As an experiment, this isn't required right now,
     /// to allow for the definition of interesting coordinate systems. It's
     /// unclear how well all algorithms will handle those though.
     ///
-    /// Must not be parallel to `v`.
+    /// Must not be parallel to `u`.
     pub v: Vector<3>,
 }
 
