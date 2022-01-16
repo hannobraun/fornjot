@@ -7,53 +7,23 @@ use crate::math::{Point, Vector};
 #[derive(Clone, Debug, PartialEq)]
 pub enum Surface {
     /// A plane
-    ///
-    /// For the time being, only planes parallel to the x-y plane are supported.
-    /// Making this code more flexible to support all planes is subject of an
-    /// ongoing effort.
-    Plane {
-        /// The origin point of the plane
-        ///
-        /// The point on the plane that is the origin of the 2-dimensional
-        /// surface coordinate system.
-        origin: Point<3>,
-
-        /// First direction that defines the plane orientation
-        ///
-        /// It might be most reasonable, if this were a unit vector that is
-        /// orthogonal to `v`. As an experiment, this isn't required right now,
-        /// to allow for the definition of interesting coordinate systems. It's
-        /// unclear how well all algorithms will handle those though.
-        ///
-        /// Must not be parallel to `w`.
-        v: Vector<3>,
-
-        /// Second direction that defines the plane orientation
-        ///
-        /// It might be most reasonable, if this were a unit vector that is
-        /// orthogonal to `w`. As an experiment, this isn't required right now,
-        /// to allow for the definition of interesting coordinate systems. It's
-        /// unclear how well all algorithms will handle those though.
-        ///
-        /// Must not be parallel to `v`.
-        w: Vector<3>,
-    },
+    Plane(Plane),
 }
 
 impl Surface {
     /// Construct a `Surface` that represents the x-y plane
     pub fn x_y_plane() -> Self {
-        Self::Plane {
+        Self::Plane(Plane {
             origin: Point::origin(),
             v: vector![1., 0., 0.],
             w: vector![0., 1., 0.],
-        }
+        })
     }
 
     /// Transform the surface
     pub fn transform(&mut self, transform: &Isometry<f64>) {
         match self {
-            Self::Plane { origin, v: _, w: _ } => {
+            Self::Plane(Plane { origin, v: _, w: _ }) => {
                 // The plane representation is still too limited to support
                 // rotations.
                 assert!(transform.rotation == UnitQuaternion::identity());
@@ -81,7 +51,7 @@ impl Surface {
         point: Point<3>,
     ) -> Result<Point<2>, ()> {
         match self {
-            Self::Plane { origin, v, w } => {
+            Self::Plane(Plane { origin, v, w }) => {
                 // This method doesn't support any rotated planes yet.
                 assert_eq!(v, &vector![1., 0., 0.]);
                 assert_eq!(w, &vector![0., 1., 0.]);
@@ -98,7 +68,7 @@ impl Surface {
     /// Convert a point in surface coordinates to model coordinates
     pub fn point_surface_to_model(&self, point: Point<2>) -> Point<3> {
         match self {
-            Self::Plane { origin, v, w } => {
+            Self::Plane(Plane { origin, v, w }) => {
                 // This method doesn't support any rotated planes yet.
                 assert_eq!(v, &vector![1., 0., 0.]);
                 assert_eq!(w, &vector![0., 1., 0.]);
@@ -111,7 +81,7 @@ impl Surface {
     /// Convert a vector in surface coordinates to model coordinates
     pub fn vector_surface_to_model(&self, point: Vector<2>) -> Vector<3> {
         match self {
-            Self::Plane { origin: _, v, w } => {
+            Self::Plane(Plane { origin: _, v, w }) => {
                 // This method doesn't support any rotated planes yet.
                 assert_eq!(v, &vector![1., 0., 0.]);
                 assert_eq!(w, &vector![0., 1., 0.]);
@@ -122,20 +92,54 @@ impl Surface {
     }
 }
 
+/// A plane
+///
+/// For the time being, only planes parallel to the x-y plane are supported.
+/// Making this code more flexible to support all planes is subject of an
+/// ongoing effort.
+#[derive(Clone, Debug, PartialEq)]
+pub struct Plane {
+    /// The origin point of the plane
+    ///
+    /// The point on the plane that is the origin of the 2-dimensional
+    /// surface coordinate system.
+    pub origin: Point<3>,
+
+    /// First direction that defines the plane orientation
+    ///
+    /// It might be most reasonable, if this were a unit vector that is
+    /// orthogonal to `v`. As an experiment, this isn't required right now,
+    /// to allow for the definition of interesting coordinate systems. It's
+    /// unclear how well all algorithms will handle those though.
+    ///
+    /// Must not be parallel to `w`.
+    pub v: Vector<3>,
+
+    /// Second direction that defines the plane orientation
+    ///
+    /// It might be most reasonable, if this were a unit vector that is
+    /// orthogonal to `w`. As an experiment, this isn't required right now,
+    /// to allow for the definition of interesting coordinate systems. It's
+    /// unclear how well all algorithms will handle those though.
+    ///
+    /// Must not be parallel to `v`.
+    pub w: Vector<3>,
+}
+
 #[cfg(test)]
 mod tests {
     use nalgebra::{point, vector, UnitQuaternion};
     use parry3d_f64::math::{Isometry, Translation};
 
-    use super::Surface;
+    use super::{Plane, Surface};
 
     #[test]
     fn test_transform() {
-        let mut plane = Surface::Plane {
+        let mut plane = Surface::Plane(Plane {
             origin: point![1., 2., 3.],
             v: vector![1., 0., 0.],
             w: vector![0., 1., 0.],
-        };
+        });
 
         plane.transform(&Isometry::from_parts(
             Translation::from([2., 4., 6.]),
@@ -144,21 +148,21 @@ mod tests {
 
         assert_eq!(
             plane,
-            Surface::Plane {
+            Surface::Plane(Plane {
                 origin: point![3., 6., 9.],
                 v: vector![1., 0., 0.],
                 w: vector![0., 1., 0.],
-            }
+            })
         );
     }
 
     #[test]
     fn test_model_to_surface_point_conversion() {
-        let plane = Surface::Plane {
+        let plane = Surface::Plane(Plane {
             origin: point![1., 2., 3.],
             v: vector![1., 0., 0.],
             w: vector![0., 1., 0.],
-        };
+        });
 
         let valid_model_point = point![2., 4., 3.];
         let invalid_model_point = point![2., 4., 6.];
@@ -172,11 +176,11 @@ mod tests {
 
     #[test]
     fn test_surface_to_model_point_conversion() {
-        let plane = Surface::Plane {
+        let plane = Surface::Plane(Plane {
             origin: point![1., 2., 3.],
             v: vector![1., 0., 0.],
             w: vector![0., 1., 0.],
-        };
+        });
 
         assert_eq!(
             plane.point_surface_to_model(point![2., 4.]),
@@ -186,11 +190,11 @@ mod tests {
 
     #[test]
     fn test_surface_to_model_vector_conversion() {
-        let plane = Surface::Plane {
+        let plane = Surface::Plane(Plane {
             origin: point![1., 2., 3.],
             v: vector![1., 0., 0.],
             w: vector![0., 1., 0.],
-        };
+        });
 
         assert_eq!(
             plane.vector_surface_to_model(vector![2., 4.]),
