@@ -31,12 +31,12 @@ impl Surface {
     ///
     /// Returns an error, if the provided point is not in the surface.
     ///
-    /// # Note
+    /// # Implementation note
     ///
-    /// This method is expected to only be temporary, until the generation of
-    /// approximations has been cleaned up. As of this writing, approximations
-    /// are generated in 3D, but then converted to 2D (using this method) for
-    /// their primary use case.
+    /// This method is expected to only exist temporarily, until approximations
+    /// have been cleaned up. As of this writing, approximations are generated
+    /// in 3D, but then converted to 2D (using this method) for their primary
+    /// use case.
     ///
     /// If similar functionality is needed in the future, projecting a point
     /// into a surface would probably be a better and more robust solution.
