@@ -153,15 +153,15 @@ mod tests {
     use nalgebra::{point, vector, UnitQuaternion};
     use parry3d_f64::math::{Isometry, Translation};
 
-    use super::{Plane, Surface};
+    use super::Plane;
 
     #[test]
     fn test_transform() {
-        let mut plane = Surface::Plane(Plane {
+        let mut plane = Plane {
             origin: point![1., 2., 3.],
             v: vector![1., 0., 0.],
             w: vector![0., 1., 0.],
-        });
+        };
 
         plane.transform(&Isometry::from_parts(
             Translation::from([2., 4., 6.]),
@@ -170,21 +170,21 @@ mod tests {
 
         assert_eq!(
             plane,
-            Surface::Plane(Plane {
+            Plane {
                 origin: point![3., 6., 9.],
                 v: vector![1., 0., 0.],
                 w: vector![0., 1., 0.],
-            })
+            }
         );
     }
 
     #[test]
     fn test_model_to_surface_point_conversion() {
-        let plane = Surface::Plane(Plane {
+        let plane = Plane {
             origin: point![1., 2., 3.],
             v: vector![1., 0., 0.],
             w: vector![0., 1., 0.],
-        });
+        };
 
         let valid_model_point = point![2., 4., 3.];
         let invalid_model_point = point![2., 4., 6.];
@@ -198,11 +198,11 @@ mod tests {
 
     #[test]
     fn test_surface_to_model_point_conversion() {
-        let plane = Surface::Plane(Plane {
+        let plane = Plane {
             origin: point![1., 2., 3.],
             v: vector![1., 0., 0.],
             w: vector![0., 1., 0.],
-        });
+        };
 
         assert_eq!(
             plane.point_surface_to_model(point![2., 4.]),
@@ -212,11 +212,11 @@ mod tests {
 
     #[test]
     fn test_surface_to_model_vector_conversion() {
-        let plane = Surface::Plane(Plane {
+        let plane = Plane {
             origin: point![1., 2., 3.],
             v: vector![1., 0., 0.],
             w: vector![0., 1., 0.],
-        });
+        };
 
         assert_eq!(
             plane.vector_surface_to_model(vector![2., 4.]),
