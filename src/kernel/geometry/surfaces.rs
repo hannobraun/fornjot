@@ -117,15 +117,27 @@ impl Plane {
         &self,
         point: Point<3>,
     ) -> Result<Point<2>, ()> {
-        // This method doesn't support any rotated planes yet.
-        assert_eq!(self.v, vector![1., 0., 0.]);
-        assert_eq!(self.w, vector![0., 1., 0.]);
+        let normal = self.v.cross(&self.w);
 
-        if point.z != self.origin.z {
+        let a = normal.x;
+        let b = normal.y;
+        let c = normal.z;
+        let d = -(a * self.origin.x + b * self.origin.y + c * self.origin.z);
+
+        let distance = (a * point.x + b * point.y + c * point.z + d).abs()
+            / (a * a + b * b + c * c).sqrt();
+
+        if distance > <f64 as AbsDiffEq>::default_epsilon() {
             return Err(());
         }
 
-        Ok(point.xy() - self.origin.xy().coords)
+        let p = point - self.origin;
+
+        // scalar projection
+        let s = p.dot(&self.v.normalize());
+        let t = p.dot(&self.w.normalize());
+
+        Ok(point![s, t])
     }
 
     /// Convert a point in surface coordinates to model coordinates
@@ -200,16 +212,16 @@ mod tests {
     fn test_model_to_surface_point_conversion() {
         let plane = Plane {
             origin: point![1., 2., 3.],
-            v: vector![1., 0., 0.],
-            w: vector![0., 1., 0.],
+            v: vector![0., 1., 0.],
+            w: vector![0., 0., 1.],
         };
 
-        let valid_model_point = point![2., 4., 3.];
+        let valid_model_point = point![1., 4., 6.];
         let invalid_model_point = point![2., 4., 6.];
 
         assert_eq!(
             plane.point_model_to_surface(valid_model_point),
-            Ok(point![1., 2.]),
+            Ok(point![2., 3.]),
         );
         assert_eq!(plane.point_model_to_surface(invalid_model_point), Err(()));
     }
