@@ -22,10 +22,9 @@ impl Shape for fj::Sweep {
     fn faces(&self, tolerance: f64, debug_info: &mut DebugInfo) -> Faces {
         let original_faces = self.shape.faces(tolerance, debug_info);
 
-        // TASK: This assumes that a 2-dimensional shape only consists of one
-        //       face. I don't know if this is a reasonable assumption in
-        //       general, but it certainly doesn't reflect the data structures,
-        //       which allow an arbitrary number of faces in any shape.
+        // This will only work correctly, if the original shape consists of one
+        // face. If there are more, this will throw them together into some kind
+        // of single face chimera.
         let mut original_face_triangles = Vec::new();
         original_faces.triangles(
             tolerance,
