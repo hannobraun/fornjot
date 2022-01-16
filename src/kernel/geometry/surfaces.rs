@@ -1,3 +1,4 @@
+use approx::AbsDiffEq;
 use nalgebra::{point, vector, UnitQuaternion};
 use parry3d_f64::math::Isometry;
 
@@ -145,6 +146,20 @@ impl Plane {
         assert_eq!(self.w, vector![0., 1., 0.]);
 
         Vector::from([vector.x, vector.y, 0.])
+    }
+}
+
+impl AbsDiffEq for Plane {
+    type Epsilon = <f64 as AbsDiffEq>::Epsilon;
+
+    fn default_epsilon() -> Self::Epsilon {
+        f64::default_epsilon()
+    }
+
+    fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
+        self.origin.abs_diff_eq(&other.origin, epsilon)
+            && self.v.abs_diff_eq(&other.v, epsilon)
+            && self.w.abs_diff_eq(&other.w, epsilon)
     }
 }
 
