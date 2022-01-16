@@ -142,7 +142,7 @@ impl Plane {
 
     /// Convert a point in surface coordinates to model coordinates
     pub fn point_surface_to_model(&self, point: Point<2>) -> Point<3> {
-        self.origin + point.x * self.u + point.y * self.v
+        self.origin + self.vector_surface_to_model(point.coords)
     }
 
     /// Convert a vector in surface coordinates to model coordinates
