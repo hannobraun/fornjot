@@ -59,13 +59,7 @@ impl Surface {
     /// Convert a vector in surface coordinates to model coordinates
     pub fn vector_surface_to_model(&self, vector: Vector<2>) -> Vector<3> {
         match self {
-            Self::Plane(Plane { origin: _, v, w }) => {
-                // This method doesn't support any rotated planes yet.
-                assert_eq!(v, &vector![1., 0., 0.]);
-                assert_eq!(w, &vector![0., 1., 0.]);
-
-                Vector::from([vector.x, vector.y, 0.])
-            }
+            Self::Plane(plane) => plane.vector_surface_to_model(vector),
         }
     }
 }
@@ -142,6 +136,15 @@ impl Plane {
         assert_eq!(self.w, vector![0., 1., 0.]);
 
         point![point.x, point.y, 0.] + self.origin.coords
+    }
+
+    /// Convert a vector in surface coordinates to model coordinates
+    pub fn vector_surface_to_model(&self, vector: Vector<2>) -> Vector<3> {
+        // This method doesn't support any rotated planes yet.
+        assert_eq!(self.v, vector![1., 0., 0.]);
+        assert_eq!(self.w, vector![0., 1., 0.]);
+
+        Vector::from([vector.x, vector.y, 0.])
     }
 }
 
