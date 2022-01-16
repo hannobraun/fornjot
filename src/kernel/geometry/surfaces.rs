@@ -1,5 +1,5 @@
 use approx::AbsDiffEq;
-use nalgebra::{point, vector, UnitQuaternion};
+use nalgebra::{point, vector};
 use parry3d_f64::math::Isometry;
 
 use crate::math::{Point, Vector};
@@ -102,11 +102,9 @@ pub struct Plane {
 impl Plane {
     /// Transform the plane
     pub fn transform(&mut self, transform: &Isometry<f64>) {
-        // The plane representation is still too limited to support
-        // rotations.
-        assert!(transform.rotation == UnitQuaternion::identity());
-
         self.origin = transform.transform_point(&self.origin);
+        self.v = transform.transform_vector(&self.v);
+        self.w = transform.transform_vector(&self.w);
     }
 
     /// Convert a point in model coordinates to surface coordinates
@@ -165,8 +163,13 @@ impl AbsDiffEq for Plane {
 
 #[cfg(test)]
 mod tests {
+    use std::f64::consts::FRAC_PI_2;
+
+    use approx::assert_abs_diff_eq;
     use nalgebra::{point, vector, UnitQuaternion};
     use parry3d_f64::math::{Isometry, Translation};
+
+    use crate::math::Vector;
 
     use super::Plane;
 
@@ -180,15 +183,15 @@ mod tests {
 
         plane.transform(&Isometry::from_parts(
             Translation::from([2., 4., 6.]),
-            UnitQuaternion::identity(),
+            UnitQuaternion::from_axis_angle(&Vector::z_axis(), FRAC_PI_2),
         ));
 
-        assert_eq!(
+        assert_abs_diff_eq!(
             plane,
             Plane {
-                origin: point![3., 6., 9.],
-                v: vector![1., 0., 0.],
-                w: vector![0., 1., 0.],
+                origin: point![0., 5., 9.],
+                v: vector![0., 1., 0.],
+                w: vector![-1., 0., 0.],
             }
         );
     }
