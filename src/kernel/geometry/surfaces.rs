@@ -17,7 +17,7 @@ impl Surface {
         Self::Plane(Plane {
             origin: Point::origin(),
             u: vector![1., 0., 0.],
-            w: vector![0., 1., 0.],
+            v: vector![0., 1., 0.],
         })
     }
 
@@ -96,7 +96,7 @@ pub struct Plane {
     /// unclear how well all algorithms will handle those though.
     ///
     /// Must not be parallel to `v`.
-    pub w: Vector<3>,
+    pub v: Vector<3>,
 }
 
 impl Plane {
@@ -104,7 +104,7 @@ impl Plane {
     pub fn transform(&mut self, transform: &Isometry<f64>) {
         self.origin = transform.transform_point(&self.origin);
         self.u = transform.transform_vector(&self.u);
-        self.w = transform.transform_vector(&self.w);
+        self.v = transform.transform_vector(&self.v);
     }
 
     /// Convert a point in model coordinates to surface coordinates
@@ -117,7 +117,7 @@ impl Plane {
         &self,
         point: Point<3>,
     ) -> Result<Point<2>, ()> {
-        let normal = self.u.cross(&self.w);
+        let normal = self.u.cross(&self.v);
 
         let a = normal.x;
         let b = normal.y;
@@ -135,7 +135,7 @@ impl Plane {
 
         // scalar projection
         let s = p.dot(&self.u.normalize());
-        let t = p.dot(&self.w.normalize());
+        let t = p.dot(&self.v.normalize());
 
         Ok(point![s, t])
     }
@@ -144,7 +144,7 @@ impl Plane {
     pub fn point_surface_to_model(&self, point: Point<2>) -> Point<3> {
         // This method doesn't support any rotated planes yet.
         assert_eq!(self.u, vector![1., 0., 0.]);
-        assert_eq!(self.w, vector![0., 1., 0.]);
+        assert_eq!(self.v, vector![0., 1., 0.]);
 
         point![point.x, point.y, 0.] + self.origin.coords
     }
@@ -153,7 +153,7 @@ impl Plane {
     pub fn vector_surface_to_model(&self, vector: Vector<2>) -> Vector<3> {
         // This method doesn't support any rotated planes yet.
         assert_eq!(self.u, vector![1., 0., 0.]);
-        assert_eq!(self.w, vector![0., 1., 0.]);
+        assert_eq!(self.v, vector![0., 1., 0.]);
 
         Vector::from([vector.x, vector.y, 0.])
     }
@@ -169,7 +169,7 @@ impl AbsDiffEq for Plane {
     fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
         self.origin.abs_diff_eq(&other.origin, epsilon)
             && self.u.abs_diff_eq(&other.u, epsilon)
-            && self.w.abs_diff_eq(&other.w, epsilon)
+            && self.v.abs_diff_eq(&other.v, epsilon)
     }
 }
 
@@ -190,7 +190,7 @@ mod tests {
         let mut plane = Plane {
             origin: point![1., 2., 3.],
             u: vector![1., 0., 0.],
-            w: vector![0., 1., 0.],
+            v: vector![0., 1., 0.],
         };
 
         plane.transform(&Isometry::from_parts(
@@ -203,7 +203,7 @@ mod tests {
             Plane {
                 origin: point![0., 5., 9.],
                 u: vector![0., 1., 0.],
-                w: vector![-1., 0., 0.],
+                v: vector![-1., 0., 0.],
             }
         );
     }
@@ -213,7 +213,7 @@ mod tests {
         let plane = Plane {
             origin: point![1., 2., 3.],
             u: vector![0., 1., 0.],
-            w: vector![0., 0., 1.],
+            v: vector![0., 0., 1.],
         };
 
         let valid_model_point = point![1., 4., 6.];
@@ -231,7 +231,7 @@ mod tests {
         let plane = Plane {
             origin: point![1., 2., 3.],
             u: vector![1., 0., 0.],
-            w: vector![0., 1., 0.],
+            v: vector![0., 1., 0.],
         };
 
         assert_eq!(
@@ -245,7 +245,7 @@ mod tests {
         let plane = Plane {
             origin: point![1., 2., 3.],
             u: vector![1., 0., 0.],
-            w: vector![0., 1., 0.],
+            v: vector![0., 1., 0.],
         };
 
         assert_eq!(
