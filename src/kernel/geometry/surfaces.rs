@@ -23,13 +23,7 @@ impl Surface {
     /// Transform the surface
     pub fn transform(&mut self, transform: &Isometry<f64>) {
         match self {
-            Self::Plane(Plane { origin, v: _, w: _ }) => {
-                // The plane representation is still too limited to support
-                // rotations.
-                assert!(transform.rotation == UnitQuaternion::identity());
-
-                *origin = transform.transform_point(origin);
-            }
+            Self::Plane(plane) => plane.transform(transform),
         }
     }
 
@@ -124,6 +118,17 @@ pub struct Plane {
     ///
     /// Must not be parallel to `v`.
     pub w: Vector<3>,
+}
+
+impl Plane {
+    /// Transform the plane
+    pub fn transform(&mut self, transform: &Isometry<f64>) {
+        // The plane representation is still too limited to support
+        // rotations.
+        assert!(transform.rotation == UnitQuaternion::identity());
+
+        self.origin = transform.transform_point(&self.origin);
+    }
 }
 
 #[cfg(test)]
