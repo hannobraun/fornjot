@@ -45,17 +45,7 @@ impl Surface {
         point: Point<3>,
     ) -> Result<Point<2>, ()> {
         match self {
-            Self::Plane(Plane { origin, v, w }) => {
-                // This method doesn't support any rotated planes yet.
-                assert_eq!(v, &vector![1., 0., 0.]);
-                assert_eq!(w, &vector![0., 1., 0.]);
-
-                if point.z != origin.z {
-                    return Err(());
-                }
-
-                Ok(point.xy() - origin.xy().coords)
-            }
+            Self::Plane(plane) => plane.point_model_to_surface(point),
         }
     }
 
@@ -128,6 +118,27 @@ impl Plane {
         assert!(transform.rotation == UnitQuaternion::identity());
 
         self.origin = transform.transform_point(&self.origin);
+    }
+
+    /// Convert a point in model coordinates to surface coordinates
+    ///
+    /// # Implementation note
+    ///
+    /// This method only exists to support `Surface::point_model_to_surface`. It
+    /// should be removed, once no longer needed there.
+    pub fn point_model_to_surface(
+        &self,
+        point: Point<3>,
+    ) -> Result<Point<2>, ()> {
+        // This method doesn't support any rotated planes yet.
+        assert_eq!(self.v, vector![1., 0., 0.]);
+        assert_eq!(self.w, vector![0., 1., 0.]);
+
+        if point.z != self.origin.z {
+            return Err(());
+        }
+
+        Ok(point.xy() - self.origin.xy().coords)
     }
 }
 
