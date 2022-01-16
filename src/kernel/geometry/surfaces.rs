@@ -16,7 +16,7 @@ impl Surface {
     pub fn x_y_plane() -> Self {
         Self::Plane(Plane {
             origin: Point::origin(),
-            v: vector![1., 0., 0.],
+            u: vector![1., 0., 0.],
             w: vector![0., 1., 0.],
         })
     }
@@ -86,7 +86,7 @@ pub struct Plane {
     /// unclear how well all algorithms will handle those though.
     ///
     /// Must not be parallel to `w`.
-    pub v: Vector<3>,
+    pub u: Vector<3>,
 
     /// Second direction that defines the plane orientation
     ///
@@ -103,7 +103,7 @@ impl Plane {
     /// Transform the plane
     pub fn transform(&mut self, transform: &Isometry<f64>) {
         self.origin = transform.transform_point(&self.origin);
-        self.v = transform.transform_vector(&self.v);
+        self.u = transform.transform_vector(&self.u);
         self.w = transform.transform_vector(&self.w);
     }
 
@@ -117,7 +117,7 @@ impl Plane {
         &self,
         point: Point<3>,
     ) -> Result<Point<2>, ()> {
-        let normal = self.v.cross(&self.w);
+        let normal = self.u.cross(&self.w);
 
         let a = normal.x;
         let b = normal.y;
@@ -134,7 +134,7 @@ impl Plane {
         let p = point - self.origin;
 
         // scalar projection
-        let s = p.dot(&self.v.normalize());
+        let s = p.dot(&self.u.normalize());
         let t = p.dot(&self.w.normalize());
 
         Ok(point![s, t])
@@ -143,7 +143,7 @@ impl Plane {
     /// Convert a point in surface coordinates to model coordinates
     pub fn point_surface_to_model(&self, point: Point<2>) -> Point<3> {
         // This method doesn't support any rotated planes yet.
-        assert_eq!(self.v, vector![1., 0., 0.]);
+        assert_eq!(self.u, vector![1., 0., 0.]);
         assert_eq!(self.w, vector![0., 1., 0.]);
 
         point![point.x, point.y, 0.] + self.origin.coords
@@ -152,7 +152,7 @@ impl Plane {
     /// Convert a vector in surface coordinates to model coordinates
     pub fn vector_surface_to_model(&self, vector: Vector<2>) -> Vector<3> {
         // This method doesn't support any rotated planes yet.
-        assert_eq!(self.v, vector![1., 0., 0.]);
+        assert_eq!(self.u, vector![1., 0., 0.]);
         assert_eq!(self.w, vector![0., 1., 0.]);
 
         Vector::from([vector.x, vector.y, 0.])
@@ -168,7 +168,7 @@ impl AbsDiffEq for Plane {
 
     fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
         self.origin.abs_diff_eq(&other.origin, epsilon)
-            && self.v.abs_diff_eq(&other.v, epsilon)
+            && self.u.abs_diff_eq(&other.u, epsilon)
             && self.w.abs_diff_eq(&other.w, epsilon)
     }
 }
@@ -189,7 +189,7 @@ mod tests {
     fn test_transform() {
         let mut plane = Plane {
             origin: point![1., 2., 3.],
-            v: vector![1., 0., 0.],
+            u: vector![1., 0., 0.],
             w: vector![0., 1., 0.],
         };
 
@@ -202,7 +202,7 @@ mod tests {
             plane,
             Plane {
                 origin: point![0., 5., 9.],
-                v: vector![0., 1., 0.],
+                u: vector![0., 1., 0.],
                 w: vector![-1., 0., 0.],
             }
         );
@@ -212,7 +212,7 @@ mod tests {
     fn test_model_to_surface_point_conversion() {
         let plane = Plane {
             origin: point![1., 2., 3.],
-            v: vector![0., 1., 0.],
+            u: vector![0., 1., 0.],
             w: vector![0., 0., 1.],
         };
 
@@ -230,7 +230,7 @@ mod tests {
     fn test_surface_to_model_point_conversion() {
         let plane = Plane {
             origin: point![1., 2., 3.],
-            v: vector![1., 0., 0.],
+            u: vector![1., 0., 0.],
             w: vector![0., 1., 0.],
         };
 
@@ -244,7 +244,7 @@ mod tests {
     fn test_surface_to_model_vector_conversion() {
         let plane = Plane {
             origin: point![1., 2., 3.],
-            v: vector![1., 0., 0.],
+            u: vector![1., 0., 0.],
             w: vector![0., 1., 0.],
         };
 
