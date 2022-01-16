@@ -142,11 +142,7 @@ impl Plane {
 
     /// Convert a point in surface coordinates to model coordinates
     pub fn point_surface_to_model(&self, point: Point<2>) -> Point<3> {
-        // This method doesn't support any rotated planes yet.
-        assert_eq!(self.u, vector![1., 0., 0.]);
-        assert_eq!(self.v, vector![0., 1., 0.]);
-
-        point![point.x, point.y, 0.] + self.origin.coords
+        self.origin + point.x * self.u + point.y * self.v
     }
 
     /// Convert a vector in surface coordinates to model coordinates
@@ -230,13 +226,13 @@ mod tests {
     fn test_surface_to_model_point_conversion() {
         let plane = Plane {
             origin: point![1., 2., 3.],
-            u: vector![1., 0., 0.],
-            v: vector![0., 1., 0.],
+            u: vector![0., 1., 0.],
+            v: vector![0., 0., 1.],
         };
 
         assert_eq!(
             plane.point_surface_to_model(point![2., 4.]),
-            point![3., 6., 3.],
+            point![1., 4., 7.],
         );
     }
 
