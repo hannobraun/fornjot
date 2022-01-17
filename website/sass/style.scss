@@ -2,9 +2,15 @@ $color-normal: #333333;
 $color-strong: #222222;
 $color-titles: #111111;
 $color-links:  #0880e8;
+$color-bg:     #f4f4f4;
 
-$width-content: 42rem;
-$margin-wide:   3rem;
+$width-content:  42rem;
+$width-narrow:   30rem;
+$margin-default: 1rem;
+$margin-wide:    3rem;
+$margin-narrow:  0.25rem;
+
+$border-radius: 0.25rem;
 
 body {
     font-family: Arial, sans-serif;
@@ -49,4 +55,44 @@ strong {
 a {
     color:       $color-links;
     font-weight: bold;
+}
+
+form.newsletter {
+    max-width: $width-narrow;
+    margin:    $margin-wide auto;
+
+    border-radius:    $border-radius;
+    background-color: $color-bg;
+
+    padding: $margin-default;
+
+    h2 {
+        margin-top: 0;
+    }
+
+    input {
+        margin: $margin-narrow * 2 0;
+    }
+
+    input[type=email] {
+        width:      100%;
+        box-sizing: border-box
+    }
+
+    div.submit {
+        text-align: center;
+
+        input[type=submit] {
+            margin: 0;
+            border: 0 none;
+
+            border-radius: $border-radius;
+            padding:       $margin-narrow * 2 $margin-default;
+
+            font-weight: bold;
+
+            color:            #ffffff;
+            background-color: #444444;
+        }
+    }
 }
