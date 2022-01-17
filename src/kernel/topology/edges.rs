@@ -199,7 +199,10 @@ impl Edge {
     /// are supported.
     pub fn arc(radius: f64) -> Self {
         Self {
-            curve: Curve::Circle(Circle { radius }),
+            curve: Curve::Circle(Circle {
+                center: Point::origin(),
+                radius,
+            }),
             reverse: false,
             closed: true,
         }

@@ -15,12 +15,22 @@ use crate::math::Point;
 /// the "zero" point on the circumference.
 #[derive(Clone, Debug)]
 pub struct Circle {
+    /// The center point of the circle
+    pub center: Point<3>,
+
     /// The radius of the circle
     pub radius: f64,
 }
 
 impl Circle {
     pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
+        if self.center != Point::origin() {
+            todo!(
+                "Support for circles not centered at the origin is still \
+                limited."
+            )
+        }
+
         let angle_to_point = |angle: f64| {
             let (sin, cos) = angle.sin_cos();
 
