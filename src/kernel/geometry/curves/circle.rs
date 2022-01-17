@@ -1,5 +1,7 @@
 use std::f64::consts::PI;
 
+use nalgebra::vector;
+
 use crate::math::Point;
 
 /// A circle
@@ -24,13 +26,6 @@ pub struct Circle {
 
 impl Circle {
     pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
-        if self.center != Point::origin() {
-            todo!(
-                "Support for circles not centered at the origin is still \
-                limited."
-            )
-        }
-
         // To approximate the circle, we use a regular polygon for which
         // the circle is the circumscribed circle. The `tolerance`
         // parameter is the maximum allowed distance between the polygon
@@ -64,7 +59,7 @@ impl Circle {
             let x = cos * self.radius;
             let y = sin * self.radius;
 
-            let point = [x, y, 0.].into();
+            let point = self.center + vector![x, y, 0.];
 
             out.push(point);
         }
