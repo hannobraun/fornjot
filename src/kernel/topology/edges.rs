@@ -1,3 +1,5 @@
+use std::f64::consts::PI;
+
 use nalgebra::vector;
 use parry2d_f64::shape::Segment as Segment2;
 use parry3d_f64::{math::Isometry, shape::Segment as Segment3};
@@ -186,6 +188,9 @@ pub struct Edge {
     /// would be the two points that define the line, for example.
     pub curve: Curve,
 
+    /// The vertices that bound this edge on the curve, in curve coordinates
+    pub vertices: [f64; 2],
+
     /// Indicates whether the curve's direction is reversed
     pub reverse: bool,
 
@@ -204,6 +209,7 @@ impl Edge {
                 center: Point::origin(),
                 radius: vector![radius, 0., 0.],
             }),
+            vertices: [0., PI], // full circle
             reverse: false,
             closed: true,
         }
@@ -216,6 +222,7 @@ impl Edge {
                 origin: start,
                 dir: end - start,
             }),
+            vertices: [0., 1.],
             reverse: false,
             closed: false,
         }
