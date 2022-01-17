@@ -3,13 +3,14 @@ $color-strong: #222222;
 $color-titles: #111111;
 $color-links:  #0880e8;
 
-$margin-wide: 3rem;
+$width-content: 42rem;
+$margin-wide:   3rem;
 
 body {
     font-family: Arial, sans-serif;
     color: $color-normal;
 
-    max-width: 42rem;
+    max-width: $width-content;
     margin: 0 auto;
 
     > header {
