@@ -9,6 +9,8 @@ mod mesh;
 mod model;
 mod window;
 
+use std::collections::HashSet;
+use std::ffi::OsStr;
 use std::{collections::HashMap, sync::mpsc, time::Instant};
 
 use futures::executor::block_on;
@@ -139,6 +141,24 @@ fn main() -> anyhow::Result<()> {
                 notify::event::DataChange::Content,
             )) = event.kind
             {
+                let file_ext = event
+                    .paths
+                    .get(0)
+                    .expect("File path missing in watch event")
+                    .extension();
+
+                let black_list = HashSet::from([
+                    OsStr::new("swp"),
+                    OsStr::new("tmp"),
+                    OsStr::new("swx"),
+                ]);
+
+                if let Some(ext) = file_ext {
+                    if black_list.contains(ext) {
+                        return;
+                    }
+                }
+
                 let shape = match model.load(&parameters) {
                     Ok(shape) => shape,
                     Err(model::Error::Compile) => {
