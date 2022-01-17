@@ -67,7 +67,8 @@ impl Circle {
 
         for i in 0..n {
             let angle = 2. * PI / n as f64 * i as f64;
-            out.push(angle_to_point(angle));
+            let point = angle_to_point(angle);
+            out.push(point);
         }
     }
 }
