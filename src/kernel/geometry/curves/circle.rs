@@ -2,7 +2,7 @@ use std::f64::consts::PI;
 
 use nalgebra::vector;
 
-use crate::math::Point;
+use crate::math::{Point, Vector};
 
 /// A circle
 ///
@@ -21,11 +21,17 @@ pub struct Circle {
     pub center: Point<3>,
 
     /// The radius of the circle
-    pub radius: f64,
+    ///
+    /// The radius is represented by a vector that points from the center to the
+    /// circumference. The point on the circumference that it points to defines
+    /// the origin of the circle's 1-dimensional curve coordinate system.
+    pub radius: Vector<3>,
 }
 
 impl Circle {
     pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
+        let radius = self.radius.magnitude();
+
         // To approximate the circle, we use a regular polygon for which
         // the circle is the circumscribed circle. The `tolerance`
         // parameter is the maximum allowed distance between the polygon
@@ -37,8 +43,8 @@ impl Circle {
         // is less than or equal to the tolerance.
         let mut n = 3;
         loop {
-            let incircle_radius = self.radius * (PI / n as f64).cos();
-            let maximum_error = self.radius - incircle_radius;
+            let incircle_radius = radius * (PI / n as f64).cos();
+            let maximum_error = radius - incircle_radius;
 
             if maximum_error <= tolerance {
                 break;
@@ -56,8 +62,8 @@ impl Circle {
 
             let (sin, cos) = angle.sin_cos();
 
-            let x = cos * self.radius;
-            let y = sin * self.radius;
+            let x = cos * radius;
+            let y = sin * radius;
 
             let point = self.center + vector![x, y, 0.];
 

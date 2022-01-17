@@ -1,3 +1,4 @@
+use nalgebra::vector;
 use parry2d_f64::shape::Segment as Segment2;
 use parry3d_f64::{math::Isometry, shape::Segment as Segment3};
 
@@ -201,7 +202,7 @@ impl Edge {
         Self {
             curve: Curve::Circle(Circle {
                 center: Point::origin(),
-                radius,
+                radius: vector![radius, 0., 0.],
             }),
             reverse: false,
             closed: true,
