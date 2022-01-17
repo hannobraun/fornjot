@@ -1,6 +1,7 @@
 use std::f64::consts::PI;
 
 use nalgebra::vector;
+use parry3d_f64::math::Isometry;
 
 use crate::math::{Point, Vector};
 
@@ -19,6 +20,11 @@ pub struct Circle {
 }
 
 impl Circle {
+    pub fn transform(&mut self, transform: &Isometry<f64>) {
+        self.center = transform.transform_point(&self.center);
+        self.radius = transform.transform_vector(&self.radius);
+    }
+
     pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
         let radius = self.radius.magnitude();
 
