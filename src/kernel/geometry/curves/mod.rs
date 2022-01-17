@@ -35,6 +35,7 @@ impl Curve {
             Self::Line(line) => line.transform(transform),
         }
     }
+
     pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
         match self {
             Self::Circle(circle) => circle.approx_vertices(tolerance, out),
