@@ -1,7 +1,12 @@
+$color-normal: #333333;
+$color-strong: #222222;
+$color-titles: #111111;
+
 $margin-wide: 3rem;
 
 body {
     font-family: Arial, sans-serif;
+    color: $color-normal;
 
     max-width: 42rem;
     margin: 0 auto;
@@ -29,6 +34,14 @@ body {
         flex-direction: column;
         align-items: center;
     }
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: $color-titles;
+}
+
+strong {
+    color: $color-strong;
 }
 
 a {
