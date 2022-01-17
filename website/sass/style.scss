@@ -8,22 +8,22 @@ $margin-wide:   3rem;
 
 body {
     font-family: Arial, sans-serif;
-    color: $color-normal;
+    color:       $color-normal;
 
     max-width: $width-content;
-    margin: 0 auto;
+    margin:    0 auto;
 
     > header {
         margin-bottom: $margin-wide;
 
         h1 {
             margin-bottom: 0;
-            font-size: 250%;
+            font-size:     250%;
         }
 
         h2 {
             margin-top: 0;
-            font-size: 100%;
+            font-size:  100%;
         }
     }
 
@@ -32,9 +32,9 @@ body {
 
         font-size: 80%;
 
-        display: flex;
+        display:        flex;
         flex-direction: column;
-        align-items: center;
+        align-items:    center;
     }
 }
 
@@ -47,6 +47,6 @@ strong {
 }
 
 a {
-    color: $color-links;
+    color:       $color-links;
     font-weight: bold;
 }
