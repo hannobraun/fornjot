@@ -1,6 +1,7 @@
 $color-normal: #333333;
 $color-strong: #222222;
 $color-titles: #111111;
+$color-links:  #0880e8;
 
 $margin-wide: 3rem;
 
@@ -45,6 +46,6 @@ strong {
 }
 
 a {
-    color: #0880e8;
+    color: $color-links;
     font-weight: bold;
 }
