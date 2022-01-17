@@ -1,4 +1,7 @@
-use parry3d_f64::{bounding_volume::AABB, math::Isometry, shape::Triangle};
+use std::f64::consts::PI;
+
+use nalgebra::vector;
+use parry3d_f64::{bounding_volume::AABB, math::Isometry};
 
 use crate::{
     debug::DebugInfo,
@@ -22,24 +25,8 @@ impl Shape for fj::Sweep {
     fn faces(&self, tolerance: f64, debug_info: &mut DebugInfo) -> Faces {
         let original_faces = self.shape.faces(tolerance, debug_info);
 
-        // This will only work correctly, if the original shape consists of one
-        // face. If there are more, this will throw them together into some kind
-        // of single face chimera.
-        let mut original_face_triangles = Vec::new();
-        original_faces.triangles(
-            tolerance,
-            &mut original_face_triangles,
-            debug_info,
-        );
-
-        let bottom_face = original_face_triangles
-            .iter()
-            .map(|triangle| {
-                // Change triangle direction, as the bottom of the sweep points
-                // down, while the original face pointed up.
-                Triangle::new(triangle.a, triangle.c, triangle.b)
-            })
-            .collect();
+        let mut bottom_faces = original_faces.clone();
+        bottom_faces.transform(&Isometry::rotation(vector![PI, 0., 0.]));
 
         let mut top_faces = original_faces.clone();
         top_faces.transform(&Isometry::translation(0.0, 0.0, self.length));
@@ -75,7 +62,7 @@ impl Shape for fj::Sweep {
         }
 
         let mut faces = Vec::new();
-        faces.push(Face::Triangles(bottom_face));
+        faces.extend(bottom_faces.0);
         faces.extend(top_faces.0);
         faces.push(Face::Triangles(side_face));
 
