@@ -264,7 +264,10 @@ impl Edge {
     pub fn approx_segments(&self, tolerance: f64, out: &mut Vec<Segment3>) {
         let mut vertices = self.approx_vertices(tolerance);
 
-        if self.closed {
+        if self.vertices.is_none() {
+            // The edge has no vertices, which means it connects to itself. We
+            // need to reflect that in the approximation.
+
             if let Some(&vertex) = vertices.first() {
                 vertices.push(vertex);
             }
