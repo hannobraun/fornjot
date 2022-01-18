@@ -1,5 +1,3 @@
-**Please consider supporting Fornjot's development by [sponsoring @hannobraun](https://github.com/sponsors/hannobraun).**
-
 # Fornjot
 
 ## About
