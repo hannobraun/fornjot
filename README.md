@@ -18,6 +18,13 @@ Fornjot's development follows the following principles:
 At some point, I'd like to add **high-performance** to this list, but for now this takes a backseat to adding more features.
 
 
+## Sponsors
+
+Fornjot is supported by [@lthiery](https://github.com/lthiery), [@Yatekii](https://github.com/Yatekii), [@ahdinosaur](https://github.com/ahdinosaur), and [@jessebraham](https://github.com/jessebraham).
+
+Please consider [supporting me too](https://github.com/sponsors/hannobraun), to make Fornjot sustainable long-term.
+
+
 ## Status
 
 Fornjot is **under active development, but still experimental**. Efforts are currently focused on incrementally expanding features, to support more kinds of CAD models, and plugging holes in the algorithms used, to solidify the existing functionality. Right now, there still many such holes, as many of the algorithms make simplifying assumptions that might not be true for your model.
