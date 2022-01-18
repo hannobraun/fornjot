@@ -188,9 +188,6 @@ pub struct Edge {
 
     /// Indicates whether the curve's direction is reversed
     pub reverse: bool,
-
-    /// Indicates whether the start and end of this edge are connected
-    pub closed: bool,
 }
 
 impl Edge {
@@ -206,7 +203,6 @@ impl Edge {
             }),
             vertices: None,
             reverse: false,
-            closed: true,
         }
     }
 
@@ -219,7 +215,6 @@ impl Edge {
             }),
             vertices: Some([0., 1.]),
             reverse: false,
-            closed: false,
         }
     }
 
