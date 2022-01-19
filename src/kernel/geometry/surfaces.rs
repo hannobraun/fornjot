@@ -1,4 +1,3 @@
-use approx::{AbsDiffEq, RelativeEq};
 use nalgebra::{point, vector};
 use parry3d_f64::math::Isometry;
 
@@ -127,7 +126,7 @@ impl Plane {
         let distance = (a * point.x + b * point.y + c * point.z + d).abs()
             / (a * a + b * b + c * c).sqrt();
 
-        if distance > <f64 as AbsDiffEq>::default_epsilon() {
+        if distance > <f64 as approx::AbsDiffEq>::default_epsilon() {
             return Err(());
         }
 
@@ -151,8 +150,8 @@ impl Plane {
     }
 }
 
-impl AbsDiffEq for Plane {
-    type Epsilon = <f64 as AbsDiffEq>::Epsilon;
+impl approx::AbsDiffEq for Plane {
+    type Epsilon = <f64 as approx::AbsDiffEq>::Epsilon;
 
     fn default_epsilon() -> Self::Epsilon {
         // For some reason, the Windows test runner of our GitHub Actions based
@@ -175,7 +174,7 @@ impl AbsDiffEq for Plane {
     }
 }
 
-impl RelativeEq for Plane {
+impl approx::RelativeEq for Plane {
     fn default_max_relative() -> Self::Epsilon {
         f64::default_max_relative()
     }
