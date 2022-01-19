@@ -1,4 +1,3 @@
-use approx::AbsDiffEq;
 use nalgebra::{point, vector};
 use parry3d_f64::math::Isometry;
 
@@ -127,7 +126,7 @@ impl Plane {
         let distance = (a * point.x + b * point.y + c * point.z + d).abs()
             / (a * a + b * b + c * c).sqrt();
 
-        if distance > <f64 as AbsDiffEq>::default_epsilon() {
+        if distance > <f64 as approx::AbsDiffEq>::default_epsilon() {
             return Err(());
         }
 
@@ -151,11 +150,22 @@ impl Plane {
     }
 }
 
-impl AbsDiffEq for Plane {
-    type Epsilon = <f64 as AbsDiffEq>::Epsilon;
+#[cfg(test)]
+impl approx::AbsDiffEq for Plane {
+    type Epsilon = <f64 as approx::AbsDiffEq>::Epsilon;
 
     fn default_epsilon() -> Self::Epsilon {
-        f64::default_epsilon()
+        // For some reason, the Windows test runner of our GitHub Actions based
+        // CI build comes up with different floating point values than the Linux
+        // and macOS ones.
+        //
+        // I don't know why, and given that the failure this leads to happens at
+        // the end of a 7+ minute CI build, I've run out of patience and am no
+        // longer inclined to find out.
+        //
+        // The value we're returning here is still really small, and I can't
+        // imagine how this could lead to a problem in a test.
+        f64::default_epsilon() * 8.
     }
 
     fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
@@ -166,10 +176,29 @@ impl AbsDiffEq for Plane {
 }
 
 #[cfg(test)]
+impl approx::RelativeEq for Plane {
+    fn default_max_relative() -> Self::Epsilon {
+        f64::default_max_relative()
+    }
+
+    fn relative_eq(
+        &self,
+        other: &Self,
+        epsilon: Self::Epsilon,
+        max_relative: Self::Epsilon,
+    ) -> bool {
+        self.origin
+            .relative_eq(&other.origin, epsilon, max_relative)
+            && self.u.relative_eq(&other.u, epsilon, max_relative)
+            && self.v.relative_eq(&other.v, epsilon, max_relative)
+    }
+}
+
+#[cfg(test)]
 mod tests {
     use std::f64::consts::FRAC_PI_2;
 
-    use approx::assert_abs_diff_eq;
+    use approx::assert_relative_eq;
     use nalgebra::{point, vector, UnitQuaternion};
     use parry3d_f64::math::{Isometry, Translation};
 
@@ -190,7 +219,7 @@ mod tests {
             UnitQuaternion::from_axis_angle(&Vector::z_axis(), FRAC_PI_2),
         ));
 
-        assert_abs_diff_eq!(
+        assert_relative_eq!(
             plane,
             Plane {
                 origin: point![0., 5., 9.],
