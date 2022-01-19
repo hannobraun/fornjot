@@ -1,4 +1,4 @@
-use approx::AbsDiffEq;
+use approx::{AbsDiffEq, RelativeEq};
 use nalgebra::{point, vector};
 use parry3d_f64::math::Isometry;
 
@@ -162,6 +162,24 @@ impl AbsDiffEq for Plane {
         self.origin.abs_diff_eq(&other.origin, epsilon)
             && self.u.abs_diff_eq(&other.u, epsilon)
             && self.v.abs_diff_eq(&other.v, epsilon)
+    }
+}
+
+impl RelativeEq for Plane {
+    fn default_max_relative() -> Self::Epsilon {
+        f64::default_max_relative()
+    }
+
+    fn relative_eq(
+        &self,
+        other: &Self,
+        epsilon: Self::Epsilon,
+        max_relative: Self::Epsilon,
+    ) -> bool {
+        self.origin
+            .relative_eq(&other.origin, epsilon, max_relative)
+            && self.u.relative_eq(&other.u, epsilon, max_relative)
+            && self.v.relative_eq(&other.v, epsilon, max_relative)
     }
 }
 
