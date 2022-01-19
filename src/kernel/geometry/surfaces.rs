@@ -150,6 +150,7 @@ impl Plane {
     }
 }
 
+#[cfg(test)]
 impl approx::AbsDiffEq for Plane {
     type Epsilon = <f64 as approx::AbsDiffEq>::Epsilon;
 
@@ -174,6 +175,7 @@ impl approx::AbsDiffEq for Plane {
     }
 }
 
+#[cfg(test)]
 impl approx::RelativeEq for Plane {
     fn default_max_relative() -> Self::Epsilon {
         f64::default_max_relative()
