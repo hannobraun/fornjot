@@ -33,6 +33,10 @@ body {
         }
     }
 
+    > main img {
+        max-width: 100%;
+    }
+
     > footer {
         margin-top: $margin-wide;
 
