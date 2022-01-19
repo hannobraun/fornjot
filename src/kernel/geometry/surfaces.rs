@@ -187,7 +187,7 @@ impl RelativeEq for Plane {
 mod tests {
     use std::f64::consts::FRAC_PI_2;
 
-    use approx::assert_abs_diff_eq;
+    use approx::assert_relative_eq;
     use nalgebra::{point, vector, UnitQuaternion};
     use parry3d_f64::math::{Isometry, Translation};
 
@@ -208,7 +208,7 @@ mod tests {
             UnitQuaternion::from_axis_angle(&Vector::z_axis(), FRAC_PI_2),
         ));
 
-        assert_abs_diff_eq!(
+        assert_relative_eq!(
             plane,
             Plane {
                 origin: point![0., 5., 9.],
