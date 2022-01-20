@@ -5,6 +5,7 @@ use parry2d_f64::{
     bounding_volume::AABB,
     query::{Ray as Ray2, RayCast as _},
     shape::Triangle as Triangle2,
+    utils::point_in_triangle::{corner_direction, Orientation},
 };
 use parry3d_f64::{
     math::Isometry, query::Ray as Ray3, shape::Triangle as Triangle3,
@@ -216,7 +217,22 @@ pub fn triangulate(vertices: &[Point<2>]) -> Vec<Triangle2> {
         let i1 = triangle[1];
         let i2 = triangle[2];
 
-        triangles.push([vertices[i0], vertices[i2], vertices[i1]].into());
+        let v0 = vertices[i0];
+        let v1 = vertices[i1];
+        let v2 = vertices[i2];
+
+        let triangle = match corner_direction(&v0, &v1, &v2) {
+            Orientation::Ccw => [v0, v1, v2].into(),
+            Orientation::Cw => [v0, v2, v1].into(),
+            Orientation::None => {
+                panic!(
+                    "Triangle returned from triangulation isn't actually a\
+                    triangle"
+                );
+            }
+        };
+
+        triangles.push(triangle);
     }
 
     triangles
