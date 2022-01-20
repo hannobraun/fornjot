@@ -1,0 +1,4 @@
+# This causes review requests to be automatically sent to @hannobraun for all
+# non-draft pull requests. It also enables configuration that requires a code
+# owner to be specified, for example certain branch protection rules.
+* @hannobraun
