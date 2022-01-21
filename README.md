@@ -129,6 +129,18 @@ cargo run -- -m spacer --arguments outer=8.0 inner=5.0
 ```
 
 
+## Community
+
+If you have questions or feedback about Fornjot, please don't hold back!
+
+Public channels:
+
+- Chat: [`#fornjot:braun-odw.eu` on Matrix](https://matrix.to/#/#fornjot:braun-odw.eu)
+- Forum: [Discussions on GitHub](https://github.com/hannobraun/Fornjot/discussions)
+
+If you don't want to post publicly, please feel free to [contact me directly](https://hanno.braun-odw.eu/contact/).
+
+
 ## License
 
 This project is open source, licensed under the terms of the [Zero Clause BSD License] (0BSD, for short). This basically means you can do anything with it, without any restrictions, but you can't hold the authors liable for problems.
