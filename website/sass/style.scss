@@ -22,14 +22,18 @@ body {
     > header {
         margin-bottom: $margin-wide;
 
-        h1 {
-            margin-bottom: 0;
-            font-size:     250%;
-        }
+        a.title {
+            text-decoration: none;
 
-        h2 {
-            margin-top: 0;
-            font-size:  100%;
+            h1 {
+                margin-bottom: 0;
+                font-size:     250%;
+            }
+
+            h2 {
+                margin-top: 0;
+                font-size:  100%;
+            }
         }
     }
 
