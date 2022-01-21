@@ -20,16 +20,59 @@ body {
     margin:    0 auto;
 
     > header {
+        display: flex;
+
+        justify-content: space-between;
+        align-items:     flex-end;
+
         margin-bottom: $margin-wide;
 
-        h1 {
-            margin-bottom: 0;
-            font-size:     250%;
+        a.title {
+            text-decoration: none;
+
+            h1 {
+                margin-bottom: 0;
+                font-size:     250%;
+            }
+
+            h2 {
+                margin-top: 0;
+                font-size:  100%;
+            }
         }
 
-        h2 {
-            margin-top: 0;
-            font-size:  100%;
+        nav ul {
+            list-style-type: none;
+
+            li {
+                display: inline;
+
+                a {
+                    text-decoration: none;
+
+                    color: $color-strong;
+                }
+            }
+
+            li:not(:last-child)::after {
+                // That `\A` here, which inserts a line break on the left side
+                // of the middle dot, is a really dirty trick.
+                //
+                // It's not actually rendered as a line break, but it is
+                // rendered as whitespace with a certain width. This is done to
+                // to counter-act whitespace on the right side of the middle
+                // dot, which stems from the markup and which I can't get rid of
+                // easily.
+                //
+                // Looks like there are CSS features in the pipeline that could
+                // help me solve this in a sane way[1], but we aren't there yet.
+                //
+                // [1]: `text-space-collapse: discard` on the parent should do
+                //      the trick, once available.
+                content: "\A·";
+
+                margin: $margin-narrow;
+            }
         }
     }
 
