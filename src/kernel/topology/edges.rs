@@ -155,7 +155,25 @@ impl Cycle {
 
         // As this is a cycle, the last vertex of an edge could be identical to
         // the first vertex of the next. Let's remove those duplicates.
-        out.dedup();
+        out.dedup_by(|a, b| {
+            // We can't just compare those vertices directly, because vertices
+            // that are supposed to be the same could be slightly different due
+            // to floating point accuracy.
+            //
+            // So what we're doing here is to choose a somewhat arbitrary
+            // epsilon value that is some orders of magnitude larger than the
+            // inaccuracies I've been seeing, while still being smaller than
+            // any value we might reasonably see in a CAD model.
+            //
+            // This is hack-ish and might come back to bite us at some point.
+            // I'm fine with it for now, as I'm planning major changes to the
+            // architecture of the whole CAD kernel that will prevent these
+            // kinds of problems outright.
+            //
+            // - @hannobraun
+            let epsilon = 1e-12;
+            (*a - *b).magnitude() < epsilon
+        });
     }
 
     /// Compute segments to approximate the edges of this cycle
