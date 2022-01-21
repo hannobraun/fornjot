@@ -1,5 +1,7 @@
 # Fornjot
 
+[**Website**](https://hannobraun.github.io/Fornjot/) | [**Matrix channel**](https://matrix.to/#/#fornjot:braun-odw.eu) | [**Discussions**](https://github.com/hannobraun/Fornjot/discussions)
+
 ## About
 
 Fornjot is an attempt at creating a **next-generation Code-CAD application**. Because [**the world needs another CAD program**](https://github.com/sponsors/hannobraun).
