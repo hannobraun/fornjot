@@ -12,7 +12,7 @@ categories  = ["mathematics", "rendering"]
 
 
 [dependencies]
-anyhow      = "1.0.52"
+anyhow      = "1.0.53"
 approx      = "0.5.0"
 bytemuck    = "1.7.3"
 decorum     = "0.3.1"
