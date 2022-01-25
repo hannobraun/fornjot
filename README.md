@@ -17,6 +17,8 @@ Fornjot's development follows the following principles:
 
 At some point, I'd like to add **high-performance** to this list, but for now this takes a backseat to adding more features.
 
+This is Fornjot's main repository. The [website is maintained in a separate repository](https://github.com/hannobraun/www.fornjot.app).
+
 
 ## Sponsors
 
