@@ -531,11 +531,11 @@ dependencies = [
 
 [[package]]
 name = "fj"
-version = "0.4.0"
+version = "0.5.0"
 
 [[package]]
 name = "fj-host"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "anyhow",
  "approx 0.5.1",
