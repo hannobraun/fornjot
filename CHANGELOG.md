@@ -10,6 +10,7 @@
 - Add traits to provide simplified syntax for various operations. These traits can be accessed through a `use fj::prelude::*;`.
 - Rename `fj::Difference` to `fj::Difference2d` to make room for a 3D difference operation.
 - Add `fj::Difference` to express difference operation in 3D. This is not supported by the host application yet.
+- Improve documentation ([#86])
 
 
 ### Host Application
@@ -19,11 +20,22 @@
 - Add support for concave 2D sketches.
 - Add debug info visualization mechanism to help debug internal algorithms. So far, it just outputs lines to visualize the triangulation algorithm.
 - Fix bug in 2D difference operation, that would create an internal pseudo-face within the model, if the 2D difference was swept into a 3D model.
+- Add blacklist to avoid multiple rebuilds on model changes ([#39]; special thanks to first-time contributor, [@mxdamien](https://github.com/mxdamien))
+- Fix triangulation bugs that would cause errors in some models ([#61], [#74], [#81])
+
+
+- Add star model to repository ([#50])
 - Lots of internal clean-ups, to enable more features in the future.
 
 [#22]: https://github.com/hannobraun/fornjot/pull/22
 [#23]: https://github.com/hannobraun/fornjot/pull/23
 [#28]: https://github.com/hannobraun/fornjot/pull/28
+[#39]: https://github.com/hannobraun/fornjot/pull/39
+[#50]: https://github.com/hannobraun/fornjot/pull/50
+[#61]: https://github.com/hannobraun/fornjot/pull/61
+[#74]: https://github.com/hannobraun/fornjot/pull/74
+[#81]: https://github.com/hannobraun/fornjot/pull/81
+[#86]: https://github.com/hannobraun/fornjot/pull/86
 
 
 ## v0.4.0 (2021-12-07)
