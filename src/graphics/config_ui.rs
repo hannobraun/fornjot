@@ -65,7 +65,11 @@ impl ConfigUi {
         self.glyph_brush.queue(section);
         self.glyph_brush.draw_queued(
             device,
-            // TASK: Put more thought into the staging belt's buffer size.
+            // I haven't put any thought into the staging belt's buffer size.
+            // 1024 just seemed like a good number, and so far it hasn't caused
+            // any problems.
+            //
+            // - @hannobraun
             &mut StagingBelt::new(1024),
             encoder,
             &view,
