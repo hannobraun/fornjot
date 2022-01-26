@@ -21,9 +21,8 @@ impl Shape for fj::Difference2d {
     }
 
     fn faces(&self, tolerance: f64, debug_info: &mut DebugInfo) -> Faces {
-        // TASK: This method assumes that `b` is fully contained within `a`. As
-        //       long as this precondition exists, it should at least be
-        //       checked.
+        // This method assumes that `b` is fully contained within `a`:
+        // https://github.com/hannobraun/Fornjot/issues/92
 
         let mut a = self.a.faces(tolerance, debug_info);
         let mut b = self.b.faces(tolerance, debug_info);
@@ -70,9 +69,8 @@ impl Shape for fj::Difference2d {
     }
 
     fn edges(&self) -> Edges {
-        // TASK: This method assumes that `b` is fully contained within `a`. As
-        //       long as this precondition exists, it should at least be
-        //       checked.
+        // This method assumes that `b` is fully contained within `a`:
+        // https://github.com/hannobraun/Fornjot/issues/92
 
         let mut a = self.a.edges();
         let mut b = self.b.edges();
