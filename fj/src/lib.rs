@@ -1,3 +1,15 @@
+//! Fornjot modeling library
+//!
+//! The purpose of this library is to support Fornjot models, which are just
+//! Rust libraries. Models depend on this library and use the primitives defined
+//! here to define a CAD model.
+//!
+//! To actually display the CAD model, or export it to another file format, you
+//! need the host application. Please refer to the [Fornjot repository] for
+//! usage examples.
+//!
+//! [Fornjot repository]: https://github.com/hannobraun/Fornjot
+
 mod shape_2d;
 mod shape_3d;
 mod syntax;
