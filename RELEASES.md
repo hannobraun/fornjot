@@ -1,0 +1,78 @@
+# Release Procedure
+
+This document explains the release procedure. It is only relevant for maintainers.
+
+
+## 1. Create release branch: `git switch -c v0.1.2`
+
+Replace `0.1.2` in that command with the actual version.
+
+
+## 2. Update changelog
+
+Add a changelog entry for the new version. Use the entry for the previous version as a template. Remember to thank first-time contributors.
+
+The list of pull request since the last release is available here:
+https://github.com/hannobraun/Fornjot/pulls?q=is%3Apr+is%3Aclosed+merged%3A%3E2022-01-27
+
+Replace `2022-01-27` at the end of that URL with the day before the previous release.
+
+For the version after `0.5.0`, add the following to the changelog:
+- Replace "Host Application" title with crate name: `fj-host`
+- Convert title of each crate section into link to crate on crates.io.
+- Add one-sentence description of the respective crate to each section.
+
+Update these instructions, once this has been done.
+
+Commit these changes: `git commit -m "Update changelog"`
+
+
+## 3. Write release announcement
+
+Use the previous release announcement as a template. Once finished, publish it on the website, such that it is reachable under the correct URL, but not listed on the Blog page.
+
+Figure out how to do that, document it here.
+
+Remember to thank everyone who contributed to the release.
+
+
+## 4. Update versions
+
+In the release branch, update the version numbers in the `Cargo.toml` files of all crates to the new version. Also update the version numbers of the dependencies between the crates.
+
+
+## 5. Publish the release
+
+Push the release branch and create a pull request. Once the CI build completed successfully, publish the release by running `cargo publish` for each crate.
+
+Once everything has been published successfully, merge the pull request.
+
+
+## 6. Tag the release: `git tag v0.1.2`
+
+Replace `0.1.2` in that command with the actual version.
+
+Push the tag to the repository: `git push origin --tag`
+
+
+## 7. Create release on GitHub
+
+Use the previous release as a template.
+
+Make the following changes, compared to the release for version `0.5.0`:
+- Link to release announcement on the website at the top. Mention that people can subscribe there.
+- Copy the full content of the release announcement.
+
+Once this has been done, update these instructions.
+
+
+## 8. Finish publishing release announcement
+
+Make it so that is appears on the Blog page.
+
+Figure out how to do that, then publish the instructions here.
+
+
+## 9. Improve release procedure
+
+You are done. Figure out what didn't go optimally, and update this release procedure accordingly.
