@@ -1,9 +1,9 @@
-use nalgebra::{point, vector};
+use nalgebra::vector;
 use parry2d_f64::shape::Segment as Segment2;
 use parry3d_f64::{math::Isometry, shape::Segment as Segment3};
 
 use crate::{
-    kernel::geometry::{Circle, Curve, Line, Surface},
+    kernel::geometry::{Circle, Curve, Surface},
     math::Point,
 };
 
@@ -231,16 +231,6 @@ impl Edge {
             vertices: None,
             reverse: false,
         }
-    }
-
-    /// Create a line segment
-    pub fn line_segment(start: Point<3>, end: Point<3>) -> Self {
-        let curve = Curve::Line(Line {
-            origin: start,
-            dir: end - start,
-        });
-
-        Self::new(curve, point![0.], point![1.])
     }
 
     /// Reverse the edge
