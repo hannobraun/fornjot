@@ -53,8 +53,9 @@ impl Shape for fj::Sketch {
                 origin: start,
                 dir: end - start,
             });
+            let edge = Edge::new(line, point![0.], point![1.]);
 
-            edges.push(Edge::new(line, point![0.], point![1.]));
+            edges.push(edge);
         }
 
         Edges::single_cycle(edges)
