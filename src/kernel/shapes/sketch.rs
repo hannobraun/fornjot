@@ -46,9 +46,9 @@ impl Shape for fj::Sketch {
             //
             // Can be cleaned up, once `array_windows` is stable.
             let start = window[0];
-            let b = window[1];
+            let end = window[1];
 
-            edges.push(Edge::line_segment(start, b));
+            edges.push(Edge::line_segment(start, end));
         }
 
         Edges::single_cycle(edges)
