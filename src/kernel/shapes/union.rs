@@ -21,8 +21,11 @@ impl Shape for fj::Union {
         let a = self.a.faces(tolerance, debug_info);
         let b = self.b.faces(tolerance, debug_info);
 
-        // TASK: This doesn't create a true union, as it doesn't eliminate,
-        //       merge, or split faces.
+        // This doesn't create a true union, as it doesn't eliminate, merge, or
+        // split faces.
+        //
+        // See issue:
+        // https://github.com/hannobraun/Fornjot/issues/42
         let mut faces = Vec::new();
         faces.extend(a.0);
         faces.extend(b.0);
@@ -31,12 +34,10 @@ impl Shape for fj::Union {
     }
 
     fn edges(&self) -> Edges {
-        // TASK: Implement.
         todo!()
     }
 
     fn vertices(&self) -> Vec<Point<3>> {
-        // TASK: Implement.
         todo!()
     }
 }

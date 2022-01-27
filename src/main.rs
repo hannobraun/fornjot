@@ -128,8 +128,8 @@ fn main() -> anyhow::Result<()> {
     let watch_path = model.src_path();
     let mut watcher = notify::recommended_watcher(
         move |event: notify::Result<notify::Event>| {
-            // TASK: Figure out when this error can happen, find a better way to
-            //       handle it.
+            // Unfortunately the `notify` documentation doesn't say when this
+            // might happen, so no idea if it needs to be handled.
             let event = event.expect("Error handling watch event");
 
             //Various acceptable ModifyKind kinds. Varies across platforms (e.g. MacOs vs. Windows10)

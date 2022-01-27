@@ -50,8 +50,22 @@ impl Model {
             return Err(Error::Compile);
         }
 
-        // TASK: Read up why those calls are unsafe. Make sure calling them is
-        //       sound, and document why that is.
+        // So, strictly speaking this is all unsound:
+        // - `Library::new` requires us to abide by the arbitrary requirements
+        //   of any library initialization or termination routines.
+        // - `Library::get` requires us to specify the correct type for the
+        //   model function.
+        // - The model function itself is `unsafe`, because it is a function
+        //   from across an FFI interface.
+        //
+        // Typical models won't have initialization or termination routines (I
+        // think), should abide by the `ModelFn` signature, and might not do
+        // anything unsafe. But we have no way to know that the library the user
+        // told us to load actually does (I think).
+        //
+        // I don't know of a way to fix this. We should take this as motivation
+        // to switch to a better technique:
+        // https://github.com/hannobraun/Fornjot/issues/71
         let shape = unsafe {
             let lib = libloading::Library::new(self.lib_path())?;
             let model: libloading::Symbol<ModelFn> = lib.get(b"model")?;

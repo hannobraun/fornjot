@@ -21,9 +21,8 @@ impl Shape for fj::Difference2d {
     }
 
     fn faces(&self, tolerance: f64, debug_info: &mut DebugInfo) -> Faces {
-        // TASK: This method assumes that `b` is fully contained within `a`. As
-        //       long as this precondition exists, it should at least be
-        //       checked.
+        // This method assumes that `b` is fully contained within `a`:
+        // https://github.com/hannobraun/Fornjot/issues/92
 
         let mut a = self.a.faces(tolerance, debug_info);
         let mut b = self.b.faces(tolerance, debug_info);
@@ -32,7 +31,8 @@ impl Shape for fj::Difference2d {
             // Can't panic. We just checked that length of `a` and `b` is 1.
             (a.0.pop().unwrap(), b.0.pop().unwrap())
         } else {
-            // TASK: Open issue, link it in the error message.
+            // See issue:
+            // https://github.com/hannobraun/Fornjot/issues/95
             todo!(
                 "The 2-dimensional difference operation only supports one face \
                 in each operand."
@@ -70,9 +70,8 @@ impl Shape for fj::Difference2d {
     }
 
     fn edges(&self) -> Edges {
-        // TASK: This method assumes that `b` is fully contained within `a`. As
-        //       long as this precondition exists, it should at least be
-        //       checked.
+        // This method assumes that `b` is fully contained within `a`:
+        // https://github.com/hannobraun/Fornjot/issues/92
 
         let mut a = self.a.edges();
         let mut b = self.b.edges();
@@ -80,7 +79,8 @@ impl Shape for fj::Difference2d {
         let (a, mut b) = if a.cycles.len() == 1 && b.cycles.len() == 1 {
             (a.cycles.pop().unwrap(), b.cycles.pop().unwrap())
         } else {
-            // TASK: Open issue, link it in the error message.
+            // See issue:
+            // https://github.com/hannobraun/Fornjot/issues/95
             todo!(
                 "The 2-dimensional difference operation only supports one \
                 cycle in each operand."
@@ -95,7 +95,6 @@ impl Shape for fj::Difference2d {
     }
 
     fn vertices(&self) -> Vec<Point<3>> {
-        // TASK: Implement.
         todo!()
     }
 }

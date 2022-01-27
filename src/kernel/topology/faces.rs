@@ -176,10 +176,6 @@ impl Face {
                                 edge.cast_local_ray(&ray, f64::INFINITY, true);
 
                             if let Some(t) = intersection {
-                                // TASK: If the ray goes through an edge that is
-                                //       parallel to it, then this code will
-                                //       count that as two hits.
-
                                 // Due to slight inaccuracies, we might get
                                 // different values for the same intersections.
                                 // Let's round `t` before using it.

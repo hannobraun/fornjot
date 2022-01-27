@@ -48,9 +48,16 @@ impl Circle {
 
             n += 1;
 
-            // TASK: Log a warning, if `n` is becoming unreasonably large. This
-            //       is either a bug, or the consequence of an unreasonably low
-            //       value for `tolerance`.
+            // If `n` is too large, due to an unreasonably low `tolerance`
+            // value, this loop might take a long time, and the program will
+            // just hang.
+            //
+            // Logging a warning or adding an `assert!` isn't really a solution,
+            // since we can only speculate what is reasonable for a specific use
+            // case.
+            //
+            // We can probably do away with this loop completely:
+            // https://github.com/hannobraun/Fornjot/issues/91
         }
 
         for i in 0..n {

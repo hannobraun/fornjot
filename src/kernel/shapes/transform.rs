@@ -26,12 +26,10 @@ impl Shape for fj::Transform {
     }
 
     fn edges(&self) -> Edges {
-        // TASK: Implement.
         todo!()
     }
 
     fn vertices(&self) -> Vec<Point<3>> {
-        // TASK: Implement.
         todo!()
     }
 }
