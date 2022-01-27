@@ -1,9 +1,9 @@
-use nalgebra::{point, vector};
+use nalgebra::vector;
 use parry2d_f64::shape::Segment as Segment2;
 use parry3d_f64::{math::Isometry, shape::Segment as Segment3};
 
 use crate::{
-    kernel::geometry::{Circle, Curve, Line, Surface},
+    kernel::geometry::{Circle, Curve, Surface},
     math::Point,
 };
 
@@ -209,6 +209,15 @@ pub struct Edge {
 }
 
 impl Edge {
+    /// Construct an edge
+    pub fn new(curve: Curve, start: Point<1>, end: Point<1>) -> Self {
+        Self {
+            curve,
+            vertices: Some([start, end]),
+            reverse: false,
+        }
+    }
+
     /// Create an arc
     ///
     /// So far, the name of this method is a bit ambitious, as only full circles
@@ -220,18 +229,6 @@ impl Edge {
                 radius: vector![radius, 0., 0.],
             }),
             vertices: None,
-            reverse: false,
-        }
-    }
-
-    /// Create a line segment
-    pub fn line_segment(start: Point<3>, end: Point<3>) -> Self {
-        Self {
-            curve: Curve::Line(Line {
-                origin: start,
-                dir: end - start,
-            }),
-            vertices: Some([point![0.], point![1.]]),
             reverse: false,
         }
     }

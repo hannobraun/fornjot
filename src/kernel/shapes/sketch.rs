@@ -1,9 +1,10 @@
+use nalgebra::point;
 use parry3d_f64::bounding_volume::AABB;
 
 use crate::{
     debug::DebugInfo,
     kernel::{
-        geometry::Surface,
+        geometry::{Curve, Line, Surface},
         topology::{
             edges::{Edge, Edges},
             faces::{Face, Faces},
@@ -45,10 +46,16 @@ impl Shape for fj::Sketch {
             // Can't panic, we passed `2` to `windows`.
             //
             // Can be cleaned up, once `array_windows` is stable.
-            let a = window[0];
-            let b = window[1];
+            let start = window[0];
+            let end = window[1];
 
-            edges.push(Edge::line_segment(a, b));
+            let line = Curve::Line(Line {
+                origin: start,
+                dir: end - start,
+            });
+            let edge = Edge::new(line, point![0.], point![1.]);
+
+            edges.push(edge);
         }
 
         Edges::single_cycle(edges)
