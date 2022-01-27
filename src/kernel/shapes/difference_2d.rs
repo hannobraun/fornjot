@@ -31,7 +31,8 @@ impl Shape for fj::Difference2d {
             // Can't panic. We just checked that length of `a` and `b` is 1.
             (a.0.pop().unwrap(), b.0.pop().unwrap())
         } else {
-            // TASK: Open issue, link it in the error message.
+            // See issue:
+            // https://github.com/hannobraun/Fornjot/issues/95
             todo!(
                 "The 2-dimensional difference operation only supports one face \
                 in each operand."
@@ -78,7 +79,8 @@ impl Shape for fj::Difference2d {
         let (a, mut b) = if a.cycles.len() == 1 && b.cycles.len() == 1 {
             (a.cycles.pop().unwrap(), b.cycles.pop().unwrap())
         } else {
-            // TASK: Open issue, link it in the error message.
+            // See issue:
+            // https://github.com/hannobraun/Fornjot/issues/95
             todo!(
                 "The 2-dimensional difference operation only supports one \
                 cycle in each operand."
