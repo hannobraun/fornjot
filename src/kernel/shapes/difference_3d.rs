@@ -18,17 +18,14 @@ impl Shape for fj::Difference {
     }
 
     fn faces(&self, _tolerance: f64, _: &mut DebugInfo) -> Faces {
-        // TASK: Implement.
         todo!()
     }
 
     fn edges(&self) -> Edges {
-        // TASK: Implement.
         todo!()
     }
 
     fn vertices(&self) -> Vec<Point<3>> {
-        // TASK: Implement.
         todo!()
     }
 }

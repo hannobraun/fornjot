@@ -31,12 +31,10 @@ impl Shape for fj::Union {
     }
 
     fn edges(&self) -> Edges {
-        // TASK: Implement.
         todo!()
     }
 
     fn vertices(&self) -> Vec<Point<3>> {
-        // TASK: Implement.
         todo!()
     }
 }
