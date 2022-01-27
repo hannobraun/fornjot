@@ -209,6 +209,15 @@ pub struct Edge {
 }
 
 impl Edge {
+    /// Construct an edge
+    pub fn new(curve: Curve, start: Point<1>, end: Point<1>) -> Self {
+        Self {
+            curve,
+            vertices: Some([start, end]),
+            reverse: false,
+        }
+    }
+
     /// Create an arc
     ///
     /// So far, the name of this method is a bit ambitious, as only full circles
@@ -226,14 +235,12 @@ impl Edge {
 
     /// Create a line segment
     pub fn line_segment(start: Point<3>, end: Point<3>) -> Self {
-        Self {
-            curve: Curve::Line(Line {
-                origin: start,
-                dir: end - start,
-            }),
-            vertices: Some([point![0.], point![1.]]),
-            reverse: false,
-        }
+        let curve = Curve::Line(Line {
+            origin: start,
+            dir: end - start,
+        });
+
+        Self::new(curve, point![0.], point![1.])
     }
 
     /// Reverse the edge
