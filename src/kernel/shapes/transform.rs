@@ -26,7 +26,7 @@ impl Shape for fj::Transform {
             .transform(&isometry(self))
     }
 
-    fn edges(&self) -> Edges {
+    fn edges(&self, _: &mut geometry::Cache) -> Edges {
         todo!()
     }
 

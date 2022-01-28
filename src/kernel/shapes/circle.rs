@@ -35,7 +35,7 @@ impl Shape for fj::Circle {
         }])
     }
 
-    fn edges(&self) -> Edges {
+    fn edges(&self, _: &mut geometry::Cache) -> Edges {
         Edges::single_cycle([Edge::arc(self.radius)])
     }
 

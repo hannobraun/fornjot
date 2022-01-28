@@ -75,12 +75,12 @@ impl Shape for fj::Difference2d {
         Faces(vec![Face::Face { edges, surface }])
     }
 
-    fn edges(&self) -> Edges {
+    fn edges(&self, cache: &mut geometry::Cache) -> Edges {
         // This method assumes that `b` is fully contained within `a`:
         // https://github.com/hannobraun/Fornjot/issues/92
 
-        let mut a = self.a.edges();
-        let mut b = self.b.edges();
+        let mut a = self.a.edges(cache);
+        let mut b = self.b.edges(cache);
 
         let (a, mut b) = if a.cycles.len() == 1 && b.cycles.len() == 1 {
             (a.cycles.pop().unwrap(), b.cycles.pop().unwrap())

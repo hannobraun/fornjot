@@ -6,11 +6,12 @@ use parry3d_f64::{bounding_volume::AABB, math::Isometry};
 use crate::{
     debug::DebugInfo,
     kernel::{
+        geometry,
         topology::{
             edges::Edges,
             faces::{Face, Faces},
         },
-        Shape, geometry,
+        Shape,
     },
     math::Point,
 };
@@ -47,7 +48,9 @@ impl Shape for fj::Sweep {
         // It'll be even worse, if the original shape consists of multiple
         // faces.
         let mut segments = Vec::new();
-        self.shape.edges().approx_segments(tolerance, &mut segments);
+        self.shape
+            .edges(cache)
+            .approx_segments(tolerance, &mut segments);
 
         let mut quads = Vec::new();
         for segment in segments {
@@ -78,7 +81,7 @@ impl Shape for fj::Sweep {
         Faces(faces)
     }
 
-    fn edges(&self) -> Edges {
+    fn edges(&self, _: &mut geometry::Cache) -> Edges {
         todo!()
     }
 

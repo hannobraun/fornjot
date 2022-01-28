@@ -39,7 +39,7 @@ impl Shape for fj::Union {
         Faces(faces)
     }
 
-    fn edges(&self) -> Edges {
+    fn edges(&self, _: &mut geometry::Cache) -> Edges {
         todo!()
     }
 

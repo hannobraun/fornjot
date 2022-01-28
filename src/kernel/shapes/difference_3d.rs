@@ -27,7 +27,7 @@ impl Shape for fj::Difference {
         todo!()
     }
 
-    fn edges(&self) -> Edges {
+    fn edges(&self, _: &mut geometry::Cache) -> Edges {
         todo!()
     }
 

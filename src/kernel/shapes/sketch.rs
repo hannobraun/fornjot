@@ -22,10 +22,10 @@ impl Shape for fj::Sketch {
     fn faces(
         &self,
         _: f64,
-        _: &mut geometry::Cache,
+        cache: &mut geometry::Cache,
         _: &mut DebugInfo,
     ) -> Faces {
-        let edges = self.edges();
+        let edges = self.edges(cache);
         let face = Face::Face {
             edges,
             surface: Surface::x_y_plane(),
@@ -33,7 +33,7 @@ impl Shape for fj::Sketch {
         Faces(vec![face])
     }
 
-    fn edges(&self) -> Edges {
+    fn edges(&self, _: &mut geometry::Cache) -> Edges {
         let v = match self.vertices() {
             vertices if vertices.is_empty() => vertices,
             mut vertices => {

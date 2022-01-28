@@ -31,7 +31,7 @@ pub trait Shape {
     ) -> Faces;
 
     /// Access the edges of the shape
-    fn edges(&self) -> Edges;
+    fn edges(&self, cache: &mut geometry::Cache) -> Edges;
 
     /// Return the shape's vertices
     fn vertices(&self) -> Vec<Point<3>>;
@@ -84,6 +84,8 @@ dispatch! {
         cache: &mut geometry::Cache,
         debug: &mut DebugInfo,
     ) -> Faces;
-    edges() -> Edges;
+    edges(
+        cache: &mut geometry::Cache,
+    ) -> Edges;
     vertices() -> Vec<Point<3>>;
 }
