@@ -24,7 +24,7 @@ This is Fornjot's main repository. The [website is maintained in a separate repo
 
 Fornjot is supported by [@lthiery](https://github.com/lthiery), [@Yatekii](https://github.com/Yatekii), [@ahdinosaur](https://github.com/ahdinosaur), and [@jessebraham](https://github.com/jessebraham).
 
-Please consider [supporting me too](https://github.com/sponsors/hannobraun), to make Fornjot sustainable long-term.
+**Please consider [supporting me too](https://github.com/sponsors/hannobraun), to make Fornjot sustainable long-term.**
 
 
 ## Status
