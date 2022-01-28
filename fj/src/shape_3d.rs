@@ -29,6 +29,9 @@ impl From<Shape3d> for Shape {
 ///
 /// This operation is not supported right now. Using it in a model, will result
 /// in the host application crashing.
+///
+/// See issue:
+/// https://github.com/hannobraun/Fornjot/issues/43
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Difference {
@@ -57,6 +60,9 @@ impl From<Difference> for Shape3d {
 ///
 /// Transformations are currently limited to a rotation, followed by a
 /// translation.
+///
+/// See issue:
+/// https://github.com/hannobraun/Fornjot/issues/101
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Transform {
@@ -119,6 +125,9 @@ impl From<Sweep> for Shape3d {
 /// This means, for example, that generating the triangle mesh of the union does
 /// not result in a proper triangle mesh, but rather the two, possibly
 /// intersecting, triangle meshes of the original shapes.
+///
+/// See issue:
+/// https://github.com/hannobraun/Fornjot/issues/42
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Union {
