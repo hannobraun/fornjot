@@ -18,3 +18,10 @@
 /// The alternative would be to be really careful, everywhere, and plug holes as
 /// they are found.
 pub struct Cache;
+
+impl Cache {
+    /// Construct a new instance of the geometry cache
+    pub fn new() -> Self {
+        Self
+    }
+}

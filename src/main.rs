@@ -84,7 +84,7 @@ fn main() -> anyhow::Result<()> {
         tolerance
     };
 
-    let mut geometry_cache = geometry::Cache;
+    let mut geometry_cache = geometry::Cache::new();
     let mut debug_info = DebugInfo::new();
     let faces = shape.faces(tolerance, &mut geometry_cache, &mut debug_info);
 
