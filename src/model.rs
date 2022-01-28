@@ -25,15 +25,16 @@ impl Model {
 
     pub fn lib_path(&self) -> String {
         let path = format!("{}/target/debug/", self.path(),);
-        let file: String;
-        if cfg!(windows) {
-            file = format!("{}.dll", self.name())
+
+        let file = if cfg!(windows) {
+            format!("{}.dll", self.name())
         } else if cfg!(target_os = "macos") {
-            file = format!("lib{}.dylib", self.name())
+            format!("lib{}.dylib", self.name())
         } else {
             //Unix
-            file = format!("lib{}.so", self.name())
-        }
+            format!("lib{}.so", self.name())
+        };
+
         format!("{}{}", path, file)
     }
 
