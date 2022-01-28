@@ -14,6 +14,7 @@ use std::ffi::OsStr;
 use std::{collections::HashMap, sync::mpsc, time::Instant};
 
 use futures::executor::block_on;
+use kernel::geometry;
 use notify::Watcher as _;
 use tracing::trace;
 use winit::{
@@ -83,8 +84,9 @@ fn main() -> anyhow::Result<()> {
         tolerance
     };
 
+    let mut geometry_cache = geometry::Cache;
     let mut debug_info = DebugInfo::new();
-    let faces = shape.faces(tolerance, &mut debug_info);
+    let faces = shape.faces(tolerance, &mut geometry_cache, &mut debug_info);
 
     let mut triangles = Vec::new();
     faces.triangles(tolerance, &mut triangles, &mut debug_info);
@@ -210,7 +212,11 @@ fn main() -> anyhow::Result<()> {
                 debug_info.clear();
                 triangles.clear();
 
-                let faces = shape.faces(tolerance, &mut debug_info);
+                let faces = shape.faces(
+                    tolerance,
+                    &mut geometry_cache,
+                    &mut debug_info,
+                );
 
                 aabb = shape.bounding_volume();
                 faces.triangles(tolerance, &mut triangles, &mut debug_info);

@@ -3,6 +3,7 @@ use parry3d_f64::bounding_volume::{BoundingVolume as _, AABB};
 use crate::{
     debug::DebugInfo,
     kernel::{
+        geometry,
         topology::{edges::Edges, faces::Faces},
         Shape,
     },
@@ -17,9 +18,14 @@ impl Shape for fj::Union {
         a.merged(&b)
     }
 
-    fn faces(&self, tolerance: f64, debug_info: &mut DebugInfo) -> Faces {
-        let a = self.a.faces(tolerance, debug_info);
-        let b = self.b.faces(tolerance, debug_info);
+    fn faces(
+        &self,
+        tolerance: f64,
+        cache: &mut geometry::Cache,
+        debug_info: &mut DebugInfo,
+    ) -> Faces {
+        let a = self.a.faces(tolerance, cache, debug_info);
+        let b = self.b.faces(tolerance, cache, debug_info);
 
         // This doesn't create a true union, as it doesn't eliminate, merge, or
         // split faces.

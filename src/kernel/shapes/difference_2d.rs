@@ -3,6 +3,7 @@ use parry3d_f64::bounding_volume::AABB;
 use crate::{
     debug::DebugInfo,
     kernel::{
+        geometry,
         topology::{
             edges::Edges,
             faces::{Face, Faces},
@@ -20,12 +21,17 @@ impl Shape for fj::Difference2d {
         self.a.bounding_volume()
     }
 
-    fn faces(&self, tolerance: f64, debug_info: &mut DebugInfo) -> Faces {
+    fn faces(
+        &self,
+        tolerance: f64,
+        cache: &mut geometry::Cache,
+        debug_info: &mut DebugInfo,
+    ) -> Faces {
         // This method assumes that `b` is fully contained within `a`:
         // https://github.com/hannobraun/Fornjot/issues/92
 
-        let mut a = self.a.faces(tolerance, debug_info);
-        let mut b = self.b.faces(tolerance, debug_info);
+        let mut a = self.a.faces(tolerance, cache, debug_info);
+        let mut b = self.b.faces(tolerance, cache, debug_info);
 
         let (a, b) = if a.0.len() == 1 && b.0.len() == 1 {
             // Can't panic. We just checked that length of `a` and `b` is 1.

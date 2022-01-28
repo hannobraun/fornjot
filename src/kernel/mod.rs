@@ -23,7 +23,12 @@ pub trait Shape {
     ///
     /// `tolerance` defines by how far this triangulation is allowed to deviate
     /// from the faces' actual dimensions.
-    fn faces(&self, tolerance: f64, debug: &mut DebugInfo) -> Faces;
+    fn faces(
+        &self,
+        tolerance: f64,
+        cache: &mut geometry::Cache,
+        debug: &mut DebugInfo,
+    ) -> Faces;
 
     /// Access the edges of the shape
     fn edges(&self) -> Edges;
@@ -76,6 +81,7 @@ dispatch! {
     bounding_volume() -> AABB;
     faces(
         tolerance: f64,
+        cache: &mut geometry::Cache,
         debug: &mut DebugInfo,
     ) -> Faces;
     edges() -> Edges;

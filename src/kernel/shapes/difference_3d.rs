@@ -3,6 +3,7 @@ use parry3d_f64::bounding_volume::AABB;
 use crate::{
     debug::DebugInfo,
     kernel::{
+        geometry,
         topology::{edges::Edges, faces::Faces},
         Shape,
     },
@@ -17,7 +18,12 @@ impl Shape for fj::Difference {
         self.a.bounding_volume()
     }
 
-    fn faces(&self, _tolerance: f64, _: &mut DebugInfo) -> Faces {
+    fn faces(
+        &self,
+        _tolerance: f64,
+        _: &mut geometry::Cache,
+        _: &mut DebugInfo,
+    ) -> Faces {
         todo!()
     }
 
