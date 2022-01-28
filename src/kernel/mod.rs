@@ -74,7 +74,10 @@ macro_rules! dispatch {
 
 dispatch! {
     bounding_volume() -> AABB;
-    faces(tolerance: f64, debug: &mut DebugInfo,) -> Faces;
+    faces(
+        tolerance: f64,
+        debug: &mut DebugInfo,
+    ) -> Faces;
     edges() -> Edges;
     vertices() -> Vec<Point<3>>;
 }
