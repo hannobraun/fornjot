@@ -28,7 +28,7 @@ impl From<Shape3d> for Shape {
 /// # Limitations
 ///
 /// This operation is not supported right now. Using it in a model, will result
-/// in the host application to crash.
+/// in the host application crashing.
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Difference {
