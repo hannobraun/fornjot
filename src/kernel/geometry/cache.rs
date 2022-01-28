@@ -17,5 +17,4 @@
 ///
 /// The alternative would be to be really careful, everywhere, and plug holes as
 /// they are found.
-#[allow(unused)]
 pub struct Cache;
