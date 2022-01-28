@@ -34,31 +34,7 @@ impl Circle {
         // and the circle. This is the same as the difference between
         // the circumscribed circle and the incircle.
         //
-        // Let's figure which regular polygon we need to use, by just
-        // trying out some of them until we find one whose maximum error
-        // is less than or equal to the tolerance.
-        let mut n = 3;
-        loop {
-            let incircle_radius = radius * (PI / n as f64).cos();
-            let maximum_error = radius - incircle_radius;
-
-            if maximum_error <= tolerance {
-                break;
-            }
-
-            n += 1;
-
-            // If `n` is too large, due to an unreasonably low `tolerance`
-            // value, this loop might take a long time, and the program will
-            // just hang.
-            //
-            // Logging a warning or adding an `assert!` isn't really a solution,
-            // since we can only speculate what is reasonable for a specific use
-            // case.
-            //
-            // We can probably do away with this loop completely:
-            // https://github.com/hannobraun/Fornjot/issues/91
-        }
+        let n = self.number_of_vertices(tolerance, radius);
 
         for i in 0..n {
             let angle = 2. * PI / n as f64 * i as f64;
@@ -71,6 +47,48 @@ impl Circle {
             let point = self.center + vector![x, y, 0.];
 
             out.push(point);
+        }
+    }
+
+    fn number_of_vertices(&self, tolerance: f64, radius: f64) -> i64 {
+        assert!(tolerance > 0.);
+        if tolerance > radius / 2. {
+            3
+        } else {
+            (PI / (1. - (tolerance / radius)).acos()).ceil() as i64
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::math::Point;
+    use nalgebra::vector;
+    use std::f64::consts::PI;
+
+    use super::Circle;
+
+    #[test]
+    fn test_vertices_counting() {
+        verify_result(50., 100., 3);
+        verify_result(10., 100., 7);
+        verify_result(1., 100., 23);
+    }
+
+    fn calculate_error(radius: f64, n: i64) -> f64 {
+        radius - radius * (PI / n as f64).cos()
+    }
+
+    fn verify_result(tolerance: f64, radius: f64, n: i64) {
+        let circle = Circle {
+            center: Point::origin(),
+            radius: vector![100., 0., 0.],
+        };
+        assert_eq!(n, circle.number_of_vertices(tolerance, radius));
+
+        assert!(calculate_error(radius, n) <= tolerance);
+        if n > 3 {
+            assert!(calculate_error(radius, n - 1) >= tolerance);
         }
     }
 }
