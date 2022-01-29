@@ -33,8 +33,8 @@ impl Circle {
         // parameter is the maximum allowed distance between the polygon
         // and the circle. This is the same as the difference between
         // the circumscribed circle and the incircle.
-        //
-        let n = self.number_of_vertices(tolerance, radius);
+
+        let n = Circle::number_of_vertices(tolerance, radius);
 
         for i in 0..n {
             let angle = 2. * PI / n as f64 * i as f64;
@@ -50,20 +50,18 @@ impl Circle {
         }
     }
 
-    fn number_of_vertices(&self, tolerance: f64, radius: f64) -> i64 {
+    fn number_of_vertices(tolerance: f64, radius: f64) -> u64 {
         assert!(tolerance > 0.);
         if tolerance > radius / 2. {
             3
         } else {
-            (PI / (1. - (tolerance / radius)).acos()).ceil() as i64
+            (PI / (1. - (tolerance / radius)).acos()).ceil() as u64
         }
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::math::Point;
-    use nalgebra::vector;
     use std::f64::consts::PI;
 
     use super::Circle;
@@ -75,16 +73,12 @@ mod tests {
         verify_result(1., 100., 23);
     }
 
-    fn calculate_error(radius: f64, n: i64) -> f64 {
+    fn calculate_error(radius: f64, n: u64) -> f64 {
         radius - radius * (PI / n as f64).cos()
     }
 
-    fn verify_result(tolerance: f64, radius: f64, n: i64) {
-        let circle = Circle {
-            center: Point::origin(),
-            radius: vector![100., 0., 0.],
-        };
-        assert_eq!(n, circle.number_of_vertices(tolerance, radius));
+    fn verify_result(tolerance: f64, radius: f64, n: u64) {
+        assert_eq!(n, Circle::number_of_vertices(tolerance, radius));
 
         assert!(calculate_error(radius, n) <= tolerance);
         if n > 3 {
