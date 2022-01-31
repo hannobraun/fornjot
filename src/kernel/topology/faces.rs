@@ -83,9 +83,9 @@ pub enum Face {
 impl Face {
     pub fn transform(self, transform: &Isometry<f64>) -> Self {
         match self {
-            Self::Face { edges, mut surface } => {
+            Self::Face { edges, surface } => {
                 let edges = edges.transform(transform);
-                surface.transform(transform);
+                let surface = surface.transform(transform);
 
                 Self::Face { edges, surface }
             }

@@ -21,9 +21,12 @@ impl Surface {
     }
 
     /// Transform the surface
-    pub fn transform(&mut self, transform: &Isometry<f64>) {
+    pub fn transform(self, transform: &Isometry<f64>) -> Self {
         match self {
-            Self::Plane(plane) => plane.transform(transform),
+            Self::Plane(mut plane) => {
+                plane.transform(transform);
+                Self::Plane(plane)
+            }
         }
     }
 
