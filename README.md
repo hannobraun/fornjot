@@ -23,7 +23,7 @@ This is Fornjot's main repository. The [website is maintained in a separate repo
 
 ## Sponsors
 
-Fornjot is supported by [@lthiery](https://github.com/lthiery), [@Yatekii](https://github.com/Yatekii), [@ahdinosaur](https://github.com/ahdinosaur), and [@jessebraham](https://github.com/jessebraham).
+Fornjot is supported by [@lthiery](https://github.com/lthiery), [@Yatekii](https://github.com/Yatekii), [@ahdinosaur](https://github.com/ahdinosaur), [@jessebraham](https://github.com/jessebraham), and [@Kethku](https://github.com/Kethku).
 
 **Please consider [supporting me too](https://github.com/sponsors/hannobraun), to make Fornjot sustainable long-term.**
 
