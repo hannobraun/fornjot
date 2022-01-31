@@ -19,6 +19,7 @@ pub struct Line {
 
 impl Line {
     /// Transform the line
+    #[must_use]
     pub fn transform(self, transform: &Isometry<f64>) -> Self {
         Self {
             a: transform.transform_point(&self.a),

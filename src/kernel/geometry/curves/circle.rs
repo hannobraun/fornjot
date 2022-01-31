@@ -20,6 +20,7 @@ pub struct Circle {
 }
 
 impl Circle {
+    #[must_use]
     pub fn transform(self, transform: &Isometry<f64>) -> Self {
         Self {
             center: transform.transform_point(&self.center),

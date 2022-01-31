@@ -21,6 +21,7 @@ impl Surface {
     }
 
     /// Transform the surface
+    #[must_use]
     pub fn transform(self, transform: &Isometry<f64>) -> Self {
         match self {
             Self::Plane(plane) => Self::Plane(plane.transform(transform)),
@@ -100,6 +101,7 @@ pub struct Plane {
 
 impl Plane {
     /// Transform the plane
+    #[must_use]
     pub fn transform(self, transform: &Isometry<f64>) -> Self {
         Self {
             origin: transform.transform_point(&self.origin),
