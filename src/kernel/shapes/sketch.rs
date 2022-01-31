@@ -47,12 +47,9 @@ impl Shape for fj::Sketch {
             //
             // Can be cleaned up, once `array_windows` is stable.
             let start = window[0];
-            let end = window[1];
+            let b = window[1];
 
-            let line = Curve::Line(Line {
-                origin: start,
-                b: end,
-            });
+            let line = Curve::Line(Line { origin: start, b });
             let edge = Edge::new(line, point![0.], point![1.]);
 
             edges.push(edge);
