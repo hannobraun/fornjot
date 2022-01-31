@@ -24,6 +24,7 @@ use super::edges::Edges;
 pub struct Faces(pub Vec<Face>);
 
 impl Faces {
+    /// Transform all the faces
     #[must_use]
     pub fn transform(self, transform: &Isometry<f64>) -> Self {
         let faces = self
@@ -82,6 +83,7 @@ pub enum Face {
 }
 
 impl Face {
+    /// Transform the face
     #[must_use]
     pub fn transform(self, transform: &Isometry<f64>) -> Self {
         match self {
