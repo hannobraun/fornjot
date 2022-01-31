@@ -31,9 +31,8 @@ pub enum Curve {
 impl Curve {
     pub fn transform(self, transform: &Isometry<f64>) -> Self {
         match self {
-            Self::Circle(mut circle) => {
-                circle.transform(transform);
-                Self::Circle(circle)
+            Self::Circle(circle) => {
+                Self::Circle(circle.transform(transform))
             }
             Self::Line(mut line) => {
                 line.transform(transform);

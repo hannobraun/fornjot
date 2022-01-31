@@ -20,9 +20,11 @@ pub struct Circle {
 }
 
 impl Circle {
-    pub fn transform(&mut self, transform: &Isometry<f64>) {
-        self.center = transform.transform_point(&self.center);
-        self.radius = transform.transform_vector(&self.radius);
+    pub fn transform(self, transform: &Isometry<f64>) -> Self {
+        Self {
+            center: transform.transform_point(&self.center),
+            radius: transform.transform_vector(&self.radius),
+        }
     }
 
     pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
