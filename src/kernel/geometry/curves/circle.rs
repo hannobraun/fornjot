@@ -6,7 +6,7 @@ use parry3d_f64::math::Isometry;
 use crate::math::{Point, Vector};
 
 /// A circle
-#[derive(Clone, Debug)]
+#[derive(Clone, Copy, Debug)]
 pub struct Circle {
     /// The center point of the circle
     pub center: Point<3>,

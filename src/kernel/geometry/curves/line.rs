@@ -8,7 +8,7 @@ use crate::math::Point;
 /// The points that define the line also define the line's 1-dimensional curve
 /// coordinate system. `a` defines the origin (`0.0`), `b` defines coordinate
 /// `1.0`.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Line {
     /// The first point that defines the line
     pub a: Point<3>,
