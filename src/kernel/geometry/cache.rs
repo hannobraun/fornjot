@@ -1,4 +1,6 @@
-use std::{hash::Hash, marker::PhantomData};
+use std::{collections::HashMap, hash::Hash, marker::PhantomData};
+
+use crate::math::Point;
 
 /// The geometry cache
 ///
@@ -19,12 +21,32 @@ use std::{hash::Hash, marker::PhantomData};
 ///
 /// The alternative would be to be really careful, everywhere, and plug holes as
 /// they are found.
-pub struct Cache;
+pub struct Cache {
+    points_1d: HashMap<Handle<Point<1>>, Point<1>>,
+    next_handle: u64,
+}
 
 impl Cache {
     /// Construct a new instance of the geometry cache
     pub fn new() -> Self {
-        Self
+        Self {
+            points_1d: HashMap::new(),
+            next_handle: 0,
+        }
+    }
+
+    /// Insert an object into the cache
+    ///
+    /// Returns a handle that can henceforth be used to refer to that object.
+    #[allow(unused)]
+    pub fn insert(&mut self, value: Point<1>) -> Handle<Point<1>> {
+        let handle = self.next_handle;
+        let handle = Handle(handle, PhantomData);
+        self.next_handle += 1;
+
+        self.points_1d.insert(handle, value);
+
+        handle
     }
 }
 
