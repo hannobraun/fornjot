@@ -46,10 +46,10 @@ impl Shape for fj::Sketch {
             // Can't panic, we passed `2` to `windows`.
             //
             // Can be cleaned up, once `array_windows` is stable.
-            let start = window[0];
+            let a = window[0];
             let b = window[1];
 
-            let line = Curve::Line(Line { a: start, b });
+            let line = Curve::Line(Line { a, b });
             let edge = Edge::new(line, point![0.], point![1.]);
 
             edges.push(edge);
