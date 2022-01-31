@@ -67,7 +67,8 @@ mod tests {
             Line {
                 a: point![1., 3., 3.],
                 b: point![0., 3., 3.],
-            }
+            },
+            epsilon = 1e-8,
         );
     }
 }
