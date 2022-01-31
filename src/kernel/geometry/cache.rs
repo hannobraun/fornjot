@@ -38,7 +38,6 @@ impl Cache {
     /// Insert an object into the cache
     ///
     /// Returns a handle that can henceforth be used to refer to that object.
-    #[allow(unused)]
     pub fn insert(&mut self, value: Point<1>) -> Handle<Point<1>> {
         let handle = self.next_handle;
         let handle = Handle(handle, PhantomData);
