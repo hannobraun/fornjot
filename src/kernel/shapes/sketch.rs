@@ -33,7 +33,7 @@ impl Shape for fj::Sketch {
         Faces(vec![face])
     }
 
-    fn edges(&self, _: &mut geometry::Cache) -> Edges {
+    fn edges(&self, cache: &mut geometry::Cache) -> Edges {
         let v = match self.vertices() {
             vertices if vertices.is_empty() => vertices,
             mut vertices => {
@@ -55,7 +55,11 @@ impl Shape for fj::Sketch {
             let b = window[1];
 
             let line = Curve::Line(Line { a, b });
-            let edge = Edge::new(line, point![0.], point![1.]);
+
+            let a = cache.insert(point![0.]);
+            let b = cache.insert(point![1.]);
+
+            let edge = Edge::new(line, a, b);
 
             edges.push(edge);
         }

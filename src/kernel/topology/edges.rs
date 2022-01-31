@@ -3,7 +3,7 @@ use parry2d_f64::shape::Segment as Segment2;
 use parry3d_f64::{math::Isometry, shape::Segment as Segment3};
 
 use crate::{
-    kernel::geometry::{Circle, Curve, Surface},
+    kernel::geometry::{Circle, Curve, Handle, Surface},
     math::Point,
 };
 
@@ -205,7 +205,7 @@ pub struct Edge {
     ///
     /// If there are no such vertices, that means the edge is connected to
     /// itself (like a full circle, for example).
-    pub vertices: Option<[Point<1>; 2]>,
+    pub vertices: Option<[Handle<Point<1>>; 2]>,
 
     /// Indicates whether the curve's direction is reversed
     pub reverse: bool,
@@ -213,7 +213,11 @@ pub struct Edge {
 
 impl Edge {
     /// Construct an edge
-    pub fn new(curve: Curve, start: Point<1>, end: Point<1>) -> Self {
+    pub fn new(
+        curve: Curve,
+        start: Handle<Point<1>>,
+        end: Handle<Point<1>>,
+    ) -> Self {
         Self {
             curve,
             vertices: Some([start, end]),
