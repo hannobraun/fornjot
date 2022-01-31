@@ -1,3 +1,5 @@
+use std::{hash::Hash, marker::PhantomData};
+
 /// The geometry cache
 ///
 /// Due to floating point accuracy issues, it is error-prone to refer to
@@ -23,5 +25,24 @@ impl Cache {
     /// Construct a new instance of the geometry cache
     pub fn new() -> Self {
         Self
+    }
+}
+
+/// An handle that refers to a geometric object
+///
+/// Instances of this struct are constructed when an object is added to
+/// [`Cache`]. It can afterwards be used to retrieved the geometrical
+/// representation of that object from the cache.
+///
+/// This struct must be the only way that objects are referenced. See the
+/// documentation of [`Cache`] for more information.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct Handle<T>(u64, PhantomData<T>);
+
+impl<T> Eq for Handle<T> where T: PartialEq {}
+
+impl<T> Hash for Handle<T> {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.0.hash(state);
     }
 }
