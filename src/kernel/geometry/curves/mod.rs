@@ -19,7 +19,7 @@ use crate::math::Point;
 ///
 /// This distinction is not observed here, but moving things into that direction
 /// is the intention.
-#[derive(Clone, Debug)]
+#[derive(Clone, Copy, Debug)]
 pub enum Curve {
     /// A circle
     Circle(Circle),
@@ -29,10 +29,11 @@ pub enum Curve {
 }
 
 impl Curve {
-    pub fn transform(&mut self, transform: &Isometry<f64>) {
+    #[must_use]
+    pub fn transform(self, transform: &Isometry<f64>) -> Self {
         match self {
-            Self::Circle(circle) => circle.transform(transform),
-            Self::Line(line) => line.transform(transform),
+            Self::Circle(circle) => Self::Circle(circle.transform(transform)),
+            Self::Line(line) => Self::Line(line.transform(transform)),
         }
     }
 

@@ -21,9 +21,10 @@ impl Surface {
     }
 
     /// Transform the surface
-    pub fn transform(&mut self, transform: &Isometry<f64>) {
+    #[must_use]
+    pub fn transform(self, transform: &Isometry<f64>) -> Self {
         match self {
-            Self::Plane(plane) => plane.transform(transform),
+            Self::Plane(plane) => Self::Plane(plane.transform(transform)),
         }
     }
 
@@ -100,10 +101,13 @@ pub struct Plane {
 
 impl Plane {
     /// Transform the plane
-    pub fn transform(&mut self, transform: &Isometry<f64>) {
-        self.origin = transform.transform_point(&self.origin);
-        self.u = transform.transform_vector(&self.u);
-        self.v = transform.transform_vector(&self.v);
+    #[must_use]
+    pub fn transform(self, transform: &Isometry<f64>) -> Self {
+        Self {
+            origin: transform.transform_point(&self.origin),
+            u: transform.transform_vector(&self.u),
+            v: transform.transform_vector(&self.v),
+        }
     }
 
     /// Convert a point in model coordinates to surface coordinates
@@ -208,13 +212,13 @@ mod tests {
 
     #[test]
     fn test_transform() {
-        let mut plane = Plane {
+        let plane = Plane {
             origin: point![1., 2., 3.],
             u: vector![1., 0., 0.],
             v: vector![0., 1., 0.],
         };
 
-        plane.transform(&Isometry::from_parts(
+        let plane = plane.transform(&Isometry::from_parts(
             Translation::from([2., 4., 6.]),
             UnitQuaternion::from_axis_angle(&Vector::z_axis(), FRAC_PI_2),
         ));

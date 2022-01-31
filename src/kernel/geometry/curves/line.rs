@@ -8,7 +8,7 @@ use crate::math::Point;
 /// The points that define the line also define the line's 1-dimensional curve
 /// coordinate system. `a` defines the origin (`0.0`), `b` defines coordinate
 /// `1.0`.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Line {
     /// The first point that defines the line
     pub a: Point<3>,
@@ -19,9 +19,12 @@ pub struct Line {
 
 impl Line {
     /// Transform the line
-    pub fn transform(&mut self, transform: &Isometry<f64>) {
-        self.a = transform.transform_point(&self.a);
-        self.b = transform.transform_point(&self.b);
+    #[must_use]
+    pub fn transform(self, transform: &Isometry<f64>) -> Self {
+        Self {
+            a: transform.transform_point(&self.a),
+            b: transform.transform_point(&self.b),
+        }
     }
 }
 
@@ -52,12 +55,12 @@ mod tests {
 
     #[test]
     fn test_transform() {
-        let mut line = Line {
+        let line = Line {
             a: point![1., 0., 0.],
             b: point![1., 1., 0.],
         };
 
-        line.transform(&Isometry::from_parts(
+        let line = line.transform(&Isometry::from_parts(
             Translation::from([1., 2., 3.]),
             UnitQuaternion::from_axis_angle(&Vector::z_axis(), FRAC_PI_2),
         ));

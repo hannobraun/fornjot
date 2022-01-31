@@ -25,11 +25,15 @@ impl Shape for fj::Sweep {
     fn faces(&self, tolerance: f64, debug_info: &mut DebugInfo) -> Faces {
         let original_faces = self.shape.faces(tolerance, debug_info);
 
-        let mut bottom_faces = original_faces.clone();
-        bottom_faces.transform(&Isometry::rotation(vector![PI, 0., 0.]));
+        let bottom_faces = original_faces
+            .clone()
+            .transform(&Isometry::rotation(vector![PI, 0., 0.]));
 
-        let mut top_faces = original_faces.clone();
-        top_faces.transform(&Isometry::translation(0.0, 0.0, self.length));
+        let top_faces = original_faces.transform(&Isometry::translation(
+            0.0,
+            0.0,
+            self.length,
+        ));
 
         // This will only work correctly, if the original shape consists of one
         // edge. If there are more, this will create some kind of weird face

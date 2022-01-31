@@ -24,10 +24,16 @@ use super::edges::Edges;
 pub struct Faces(pub Vec<Face>);
 
 impl Faces {
-    pub fn transform(&mut self, transform: &Isometry<f64>) {
-        for face in &mut self.0 {
-            face.transform(transform);
-        }
+    /// Transform all the faces
+    #[must_use]
+    pub fn transform(self, transform: &Isometry<f64>) -> Self {
+        let faces = self
+            .0
+            .into_iter()
+            .map(|face| face.transform(transform))
+            .collect();
+
+        Self(faces)
     }
 
     pub fn triangles(
@@ -77,16 +83,20 @@ pub enum Face {
 }
 
 impl Face {
-    pub fn transform(&mut self, transform: &Isometry<f64>) {
+    /// Transform the face
+    #[must_use]
+    pub fn transform(self, transform: &Isometry<f64>) -> Self {
         match self {
-            Self::Face { edges, surface } => {
-                edges.transform(transform);
-                surface.transform(transform);
-            }
-            Self::Triangles(triangles) => {
-                for triangle in triangles {
+            Self::Face { edges, surface } => Self::Face {
+                edges: edges.transform(transform),
+                surface: surface.transform(transform),
+            },
+            Self::Triangles(mut triangles) => {
+                for triangle in &mut triangles {
                     *triangle = triangle.transformed(transform);
                 }
+
+                Self::Triangles(triangles)
             }
         }
     }

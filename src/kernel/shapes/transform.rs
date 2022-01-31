@@ -15,14 +15,9 @@ impl Shape for fj::Transform {
     }
 
     fn faces(&self, tolerance: f64, debug_info: &mut DebugInfo) -> Faces {
-        let mut faces = self.shape.faces(tolerance, debug_info);
-        let isometry = isometry(self);
-
-        for face in &mut faces.0 {
-            face.transform(&isometry);
-        }
-
-        faces
+        self.shape
+            .faces(tolerance, debug_info)
+            .transform(&isometry(self))
     }
 
     fn edges(&self) -> Edges {

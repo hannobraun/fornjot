@@ -6,7 +6,7 @@ use parry3d_f64::math::Isometry;
 use crate::math::{Point, Vector};
 
 /// A circle
-#[derive(Clone, Debug)]
+#[derive(Clone, Copy, Debug)]
 pub struct Circle {
     /// The center point of the circle
     pub center: Point<3>,
@@ -20,9 +20,12 @@ pub struct Circle {
 }
 
 impl Circle {
-    pub fn transform(&mut self, transform: &Isometry<f64>) {
-        self.center = transform.transform_point(&self.center);
-        self.radius = transform.transform_vector(&self.radius);
+    #[must_use]
+    pub fn transform(self, transform: &Isometry<f64>) -> Self {
+        Self {
+            center: transform.transform_point(&self.center),
+            radius: transform.transform_vector(&self.radius),
+        }
     }
 
     pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
