@@ -39,7 +39,7 @@ impl Curve {
     pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
         match self {
             Self::Circle(circle) => circle.approx_vertices(tolerance, out),
-            Self::Line(Line { a: origin, b }) => out.extend([*origin, *b]),
+            Self::Line(Line { a, b }) => out.extend([*a, *b]),
         }
     }
 }
