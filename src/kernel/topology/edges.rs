@@ -34,7 +34,7 @@ impl Edges {
     pub fn transform(mut self, transform: &Isometry<f64>) -> Self {
         for cycle in &mut self.cycles {
             for edge in &mut cycle.edges {
-                edge.curve.transform(transform);
+                edge.curve = edge.curve.transform(transform);
             }
         }
 
