@@ -4,12 +4,13 @@ use parry3d_f64::math::Isometry;
 use crate::math::Point;
 
 /// A line, defined by two points
+///
+/// The points that define the line also define the line's 1-dimensional curve
+/// coordinate system. `a` defines the origin (`0.0`), `b` defines coordinate
+/// `1.0`.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Line {
-    /// The origin point of the line
-    ///
-    /// The point on the plane that is the origin of the 1-dimensional curve
-    /// coordinate system.
+    /// The first point that defines the line
     pub a: Point<3>,
 
     /// The second point that defines the line
