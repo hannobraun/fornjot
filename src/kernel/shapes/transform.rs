@@ -18,9 +18,7 @@ impl Shape for fj::Transform {
         let mut faces = self.shape.faces(tolerance, debug_info);
         let isometry = isometry(self);
 
-        for face in &mut faces.0 {
-            face.transform(&isometry);
-        }
+        faces.transform(&isometry);
 
         faces
     }
