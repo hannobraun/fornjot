@@ -24,10 +24,12 @@ use super::edges::Edges;
 pub struct Faces(pub Vec<Face>);
 
 impl Faces {
-    pub fn transform(&mut self, transform: &Isometry<f64>) {
+    pub fn transform(mut self, transform: &Isometry<f64>) -> Self {
         for face in &mut self.0 {
             face.transform(transform);
         }
+
+        self
     }
 
     pub fn triangles(
