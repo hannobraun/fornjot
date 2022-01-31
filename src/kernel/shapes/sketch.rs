@@ -49,7 +49,7 @@ impl Shape for fj::Sketch {
             let start = window[0];
             let b = window[1];
 
-            let line = Curve::Line(Line { origin: start, b });
+            let line = Curve::Line(Line { a: start, b });
             let edge = Edge::new(line, point![0.], point![1.]);
 
             edges.push(edge);

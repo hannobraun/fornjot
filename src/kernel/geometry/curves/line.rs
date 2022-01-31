@@ -10,7 +10,7 @@ pub struct Line {
     ///
     /// The point on the plane that is the origin of the 1-dimensional curve
     /// coordinate system.
-    pub origin: Point<3>,
+    pub a: Point<3>,
 
     /// The second point that defines the line
     pub b: Point<3>,
@@ -19,7 +19,7 @@ pub struct Line {
 impl Line {
     /// Transform the line
     pub fn transform(&mut self, transform: &Isometry<f64>) {
-        self.origin = transform.transform_point(&self.origin);
+        self.a = transform.transform_point(&self.a);
         self.b = transform.transform_point(&self.b);
     }
 }
@@ -32,7 +32,7 @@ impl AbsDiffEq for Line {
     }
 
     fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
-        self.origin.abs_diff_eq(&other.origin, epsilon)
+        self.a.abs_diff_eq(&other.a, epsilon)
             && self.b.abs_diff_eq(&other.b, epsilon)
     }
 }
@@ -52,7 +52,7 @@ mod tests {
     #[test]
     fn test_transform() {
         let mut line = Line {
-            origin: point![1., 0., 0.],
+            a: point![1., 0., 0.],
             b: point![1., 1., 0.],
         };
 
@@ -64,7 +64,7 @@ mod tests {
         assert_abs_diff_eq!(
             line,
             Line {
-                origin: point![1., 3., 3.],
+                a: point![1., 3., 3.],
                 b: point![0., 3., 3.],
             }
         );
