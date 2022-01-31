@@ -16,6 +16,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    
+    - uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+    - uses: Swatinem/rust-cache@v1
+    
     - name: Build
       run: cargo build --verbose
     - name: Run tests
@@ -27,6 +34,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    
+    - uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+    - uses: Swatinem/rust-cache@v1
+    
     - name: Build
       run: cargo build --verbose
     - name: Run tests
@@ -38,6 +52,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    
+    - uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+    - uses: Swatinem/rust-cache@v1
+    
     - name: Build
       run: cargo build --verbose
     - name: Run tests
