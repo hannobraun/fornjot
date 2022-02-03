@@ -31,7 +31,8 @@ Commit these changes: `git commit -m "Update changelog"`
 
 Use the previous release announcement as a template. Once finished, publish it on the website, such that it is reachable under the correct URL, but not listed on the Blog page.
 
-Figure out how to do that, document it here.
+- Figure out how to do that, document it here.
+- In addition to what's in the last release announcement, add a call to report bugs near the top, right below the summary.
 
 Remember to thank everyone who contributed to the release.
 
