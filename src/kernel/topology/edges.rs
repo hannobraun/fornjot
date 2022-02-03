@@ -213,6 +213,10 @@ pub struct Edge {
     pub vertices: Option<[(); 2]>,
 
     /// Indicates whether the curve's direction is reversed
+    ///
+    /// Once this struct keeps track of the vertices that bound the edge, this
+    /// field can probably be made redundant. The order of the bounding points
+    /// will simply define the direction of the curve.
     pub reverse: bool,
 }
 
