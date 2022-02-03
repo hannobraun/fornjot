@@ -1,4 +1,3 @@
-use nalgebra::point;
 use parry3d_f64::bounding_volume::AABB;
 
 use crate::{
@@ -50,7 +49,7 @@ impl Shape for fj::Sketch {
             let b = window[1];
 
             let line = Curve::Line(Line { a, b });
-            let edge = Edge::new(line, point![0.], point![1.]);
+            let edge = Edge::new(line);
 
             edges.push(edge);
         }

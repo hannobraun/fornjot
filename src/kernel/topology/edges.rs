@@ -205,18 +205,27 @@ pub struct Edge {
     ///
     /// If there are no such vertices, that means the edge is connected to
     /// itself (like a full circle, for example).
-    pub vertices: Option<[Point<1>; 2]>,
+    ///
+    /// This field is a placeholder. Eventually, there will be actual vertices
+    /// here. For now, this field just tracks whether there are such bounding
+    /// vertices or not. If there are, they are implicitly assumed to be the
+    /// points with the curve coordinates `0` and `1`.
+    pub vertices: Option<[(); 2]>,
 
     /// Indicates whether the curve's direction is reversed
+    ///
+    /// Once this struct keeps track of the vertices that bound the edge, this
+    /// field can probably be made redundant. The order of the bounding points
+    /// will simply define the direction of the curve.
     pub reverse: bool,
 }
 
 impl Edge {
     /// Construct an edge
-    pub fn new(curve: Curve, start: Point<1>, end: Point<1>) -> Self {
+    pub fn new(curve: Curve) -> Self {
         Self {
             curve,
-            vertices: Some([start, end]),
+            vertices: Some([(), ()]),
             reverse: false,
         }
     }
