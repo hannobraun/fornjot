@@ -53,7 +53,7 @@ impl Faces {
 pub enum Face {
     /// A face of a shape
     ///
-    /// A face is a section of a surface, bounded by edges that lie in that
+    /// A face is defined by a surface, and is bounded by edges that lie in that
     /// surface.
     Face {
         /// The edges that bound the face
@@ -68,7 +68,7 @@ pub enum Face {
         /// surface coordinates.
         edges: Edges,
 
-        /// The surface that this face is a section of
+        /// The surface that defines this face
         surface: Surface,
     },
 
