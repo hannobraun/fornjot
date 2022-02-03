@@ -222,7 +222,7 @@ pub struct Edge {
 
 impl Edge {
     /// Construct an edge
-    pub fn new(curve: Curve, _start: Point<1>, _end: Point<1>) -> Self {
+    pub fn new(curve: Curve) -> Self {
         Self {
             curve,
             vertices: Some([(), ()]),
