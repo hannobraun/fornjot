@@ -54,8 +54,13 @@ impl Shape for fj::Sketch {
             let a = window[0];
             let b = window[1];
 
+            // TASK: Insert `a` and `b` into cache.
+            // TASK: Provides handles to `Line` here instead of the points
+            //       themselves.
             let line = Curve::Line(Line { a, b });
 
+            // TASK: Add these as alternative representations of previously
+            //       created 3D points.
             let a = cache.insert(point![0.]);
             let b = cache.insert(point![1.]);
 
@@ -67,6 +72,13 @@ impl Shape for fj::Sketch {
         Edges::single_cycle(edges)
     }
 
+    // TASK: This isn't right. We have 2-dimensional points, but here we return
+    //       3-dimensional points. In the approximations, we started going back
+    //       to lower dimensions.
+    //
+    //       Because for triangulation, we want to operate in surface
+    //       coordinates again. That was required to make the triangulation
+    //       simple/flexible enough to support transformations of b-rep faces.
     fn vertices(&self) -> Vec<Point<3>> {
         self.to_points()
             .into_iter()

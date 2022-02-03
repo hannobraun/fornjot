@@ -35,6 +35,11 @@ impl Cache {
         }
     }
 
+    // TASK: Make this generic over the value inserted. The easiest way to do
+    //       that is to add a `Value` enum.
+    // TASK: Rename to signify that this is the first insertion of the value,
+    //       not the subsequent addition of another representation of the same
+    //       value, using the same handle. `create`?
     /// Insert an object into the cache
     ///
     /// Returns a handle that can henceforth be used to refer to that object.
@@ -47,8 +52,21 @@ impl Cache {
 
         handle
     }
+
+    // TASK: Add method that allows for adding another representation to an
+    //       existing value by providing its handle. `add`? `append`?
+
+    // TASK: Document.
+    // TASK: Un-suppress warning.
+    #[allow(unused)]
+    pub fn get<T>(&self, handle: Handle<T>) -> T {
+        // TASK: Implement.
+        todo!()
+    }
 }
 
+// TASK: Making `Handle` strongly typed is too ambitious for a first stab at the
+//       problem. Just remove the `T`. Maybe we can add it back later.
 /// An handle that refers to a geometric object
 ///
 /// Instances of this struct are constructed when an object is added to
