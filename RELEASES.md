@@ -74,6 +74,17 @@ Make it so that is appears on the Blog page.
 Figure out how to do that, then publish the instructions here.
 
 
-## 9. Improve release procedure
+## 9. Promote release announcement
+
+Post the release announcement on the following sites:
+
+- /r/rust: https://www.reddit.com/r/rust/
+- Rust Users: https://users.rust-lang.org/
+- This Week in Rust: https://github.com/rust-lang/this-week-in-rust
+
+Use the previous release announcement posted there as a template.
+
+
+## 10. Improve release procedure
 
 You are done. Figure out what didn't go optimally, and update this release procedure accordingly.
