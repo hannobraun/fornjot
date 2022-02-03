@@ -31,7 +31,8 @@ Commit these changes: `git commit -m "Update changelog"`
 
 Use the previous release announcement as a template. Once finished, publish it on the website, such that it is reachable under the correct URL, but not listed on the Blog page.
 
-Figure out how to do that, document it here.
+- Figure out how to do that, document it here.
+- In addition to what's in the last release announcement, add a call to report bugs near the top, right below the summary.
 
 Remember to thank everyone who contributed to the release.
 
@@ -73,6 +74,17 @@ Make it so that is appears on the Blog page.
 Figure out how to do that, then publish the instructions here.
 
 
-## 9. Improve release procedure
+## 9. Promote release announcement
+
+Post the release announcement on the following sites:
+
+- /r/rust: https://www.reddit.com/r/rust/
+- Rust Users: https://users.rust-lang.org/
+- This Week in Rust: https://github.com/rust-lang/this-week-in-rust
+
+Use the previous release announcement posted there as a template.
+
+
+## 10. Improve release procedure
 
 You are done. Figure out what didn't go optimally, and update this release procedure accordingly.
