@@ -173,7 +173,12 @@ impl Edge {
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual edge.
     pub fn approx(&self, tolerance: f64) -> Approx {
-        let vertices = self.approx_vertices(tolerance);
+        let mut vertices = Vec::new();
+        self.curve.approx_vertices(tolerance, &mut vertices);
+
+        if self.reverse {
+            vertices.reverse()
+        }
 
         let mut segment_vertices = vertices.clone();
         if self.vertices.is_none() {
@@ -194,35 +199,6 @@ impl Edge {
         }
 
         Approx { vertices, segments }
-    }
-
-    /// Compute vertices to approximate the edge
-    ///
-    /// `tolerance` defines how far the implicit line segments between those
-    /// vertices are allowed to deviate from the actual edge.
-    pub fn approx_vertices(&self, tolerance: f64) -> Vec<Point<3>> {
-        // This method doesn't follow the style of the other methods that return
-        // approximate vertices, allocating its output `Vec` itself, instead of
-        // using one passed into it as a mutable reference.
-        //
-        // I initially intended to convert all these methods to the new style
-        // (i.e. the pass `&mut Vec` style), until I hit this one. The problem
-        // here is the `reverse` below. Doing that on a passed in `Vec` would
-        // be disruptive to callers and keeping track of the slice to call the
-        // `reverse` on would be additional complexity.
-        //
-        // I don't know what to do about that, but I think leaving things as
-        // they are and writing this comment to explain that is a good enough
-        // solution.
-
-        let mut out = Vec::new();
-        self.curve.approx_vertices(tolerance, &mut out);
-
-        if self.reverse {
-            out.reverse()
-        }
-
-        out
     }
 }
 
