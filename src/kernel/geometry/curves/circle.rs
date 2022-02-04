@@ -28,7 +28,7 @@ impl Circle {
         }
     }
 
-    pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
+    pub fn approx(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
         let radius = self.radius.magnitude();
 
         // To approximate the circle, we use a regular polygon for which
