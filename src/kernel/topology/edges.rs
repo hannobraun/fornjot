@@ -175,8 +175,23 @@ impl Edge {
     pub fn approx(&self, tolerance: f64) -> Approx {
         let vertices = self.approx_vertices(tolerance);
 
+        let mut segment_vertices = vertices.clone();
+        if self.vertices.is_none() {
+            // The edge has no vertices, which means it connects to itself. We
+            // need to reflect that in the approximation.
+
+            if let Some(&vertex) = vertices.first() {
+                segment_vertices.push(vertex);
+            }
+        }
+
         let mut segments = Vec::new();
-        self.approx_segments(tolerance, &mut segments);
+        for segment in segment_vertices.windows(2) {
+            let v0 = segment[0];
+            let v1 = segment[1];
+
+            segments.push([v0, v1].into());
+        }
 
         Approx { vertices, segments }
     }
@@ -208,30 +223,6 @@ impl Edge {
         }
 
         out
-    }
-
-    /// Compute segments to approximate the edge
-    ///
-    /// `tolerance` defines how far the implicit line segments between those
-    /// segments are allowed to deviate from the actual edge.
-    pub fn approx_segments(&self, tolerance: f64, out: &mut Vec<Segment3>) {
-        let mut vertices = self.approx_vertices(tolerance);
-
-        if self.vertices.is_none() {
-            // The edge has no vertices, which means it connects to itself. We
-            // need to reflect that in the approximation.
-
-            if let Some(&vertex) = vertices.first() {
-                vertices.push(vertex);
-            }
-        }
-
-        for segment in vertices.windows(2) {
-            let v0 = segment[0];
-            let v1 = segment[1];
-
-            out.push([v0, v1].into());
-        }
     }
 }
 
