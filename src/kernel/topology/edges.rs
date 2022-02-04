@@ -64,15 +64,13 @@ impl Edges {
     /// problems.
     pub fn approx(&self, tolerance: f64) -> Approx {
         let mut vertices = Vec::new();
-        for cycle in &self.cycles {
-            cycle.approx_vertices(tolerance, &mut vertices);
-        }
-
-        // This needlessly calls `self.approx_vertices` again, internally. The
-        // vertices are already computed, so they can just be removed.
         let mut segments = Vec::new();
+
         for cycle in &self.cycles {
-            cycle.approx_segments(tolerance, &mut segments);
+            let approx = cycle.approx(tolerance);
+
+            vertices.extend(approx.vertices);
+            segments.extend(approx.segments);
         }
 
         Approx { vertices, segments }
@@ -90,6 +88,20 @@ pub struct Cycle {
 }
 
 impl Cycle {
+    /// Compute an approximation of the cycle
+    ///
+    /// `tolerance` defines how far the approximation is allowed to deviate from
+    /// the actual cycle.
+    pub fn approx(&self, tolerance: f64) -> Approx {
+        let mut vertices = Vec::new();
+        self.approx_vertices(tolerance, &mut vertices);
+
+        let mut segments = Vec::new();
+        self.approx_segments(tolerance, &mut segments);
+
+        Approx { vertices, segments }
+    }
+
     /// Compute vertices to approximate the edges of this cycle
     ///
     /// `tolerance` defines how far these vertices are allowed to deviate from
