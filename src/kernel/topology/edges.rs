@@ -174,7 +174,7 @@ impl Edge {
     /// the actual edge.
     pub fn approx(&self, tolerance: f64) -> Approx {
         let mut vertices = Vec::new();
-        self.curve.approx_vertices(tolerance, &mut vertices);
+        self.curve.approx(tolerance, &mut vertices);
 
         if self.reverse {
             vertices.reverse()
