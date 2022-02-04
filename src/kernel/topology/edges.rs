@@ -103,22 +103,11 @@ impl Cycle {
         vertices.dedup();
 
         let mut segments = Vec::new();
-        self.approx_segments(tolerance, &mut segments);
+        for edge in &self.edges {
+            edge.approx_segments(tolerance, &mut segments);
+        }
 
         Approx { vertices, segments }
-    }
-
-    /// Compute segments to approximate the edges of this cycle
-    ///
-    /// `tolerance` defines how far these segments are allowed to deviate from
-    /// the actual edges of the shape.
-    ///
-    /// No assumptions must be made about already existing contents of `out`, as
-    /// this method might modify them.
-    pub fn approx_segments(&self, tolerance: f64, out: &mut Vec<Segment3>) {
-        for edge in &self.edges {
-            edge.approx_segments(tolerance, out);
-        }
     }
 }
 
