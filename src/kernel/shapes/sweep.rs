@@ -41,11 +41,10 @@ impl Shape for fj::Sweep {
         //
         // It'll be even worse, if the original shape consists of multiple
         // faces.
-        let mut segments = Vec::new();
-        self.shape.edges().approx_segments(tolerance, &mut segments);
+        let approx = self.shape.edges().approx(tolerance);
 
         let mut quads = Vec::new();
-        for segment in segments {
+        for segment in approx.segments {
             let [v0, v1] = [segment.a, segment.b];
             let [v3, v2] = {
                 let segment = segment.transformed(&Isometry::translation(

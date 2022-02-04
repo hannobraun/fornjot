@@ -37,9 +37,25 @@ impl Curve {
         }
     }
 
-    pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
+    /// Compute an approximation of the curve
+    ///
+    /// `tolerance` defines how far the approximation is allowed to deviate from
+    /// the actual edge.
+    ///
+    /// # Implementation Note
+    ///
+    /// This only works as it is, because edges are severely limited and don't
+    /// define which section of the curve they inhabit. Once they do that, we
+    /// need an `approximate_between(a, b)` method instead, where `a` and `b`
+    /// are the vertices that bound the edge on the curve.
+    ///
+    /// The `approx` methods of the curves then need to make sure to return
+    /// those exact vertices as part of the approximation, and not accidentally
+    /// compute some almost but not quite identical points for those vertices
+    /// instead.
+    pub fn approx(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
         match self {
-            Self::Circle(circle) => circle.approx_vertices(tolerance, out),
+            Self::Circle(circle) => circle.approx(tolerance, out),
             Self::Line(Line { a, b }) => out.extend([*a, *b]),
         }
     }

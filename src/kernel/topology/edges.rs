@@ -1,9 +1,8 @@
 use nalgebra::vector;
-use parry2d_f64::shape::Segment as Segment2;
-use parry3d_f64::{math::Isometry, shape::Segment as Segment3};
+use parry3d_f64::{math::Isometry, shape::Segment};
 
 use crate::{
-    kernel::geometry::{Circle, Curve, Surface},
+    kernel::geometry::{Circle, Curve},
     math::Point,
 };
 
@@ -63,48 +62,18 @@ impl Edges {
     /// Only approximating an edge once, and then referring to that
     /// approximation from then on where needed, would take care of these two
     /// problems.
-    pub fn approx(&self, tolerance: f64, surface: &Surface) -> Approx {
+    pub fn approx(&self, tolerance: f64) -> Approx {
         let mut vertices = Vec::new();
-        for cycle in &self.cycles {
-            cycle.approx_vertices(tolerance, &mut vertices);
-        }
-
-        // This needlessly calls `self.approx_vertices` again, internally. The
-        // vertices are already computed, so they can just be removed.
         let mut segments = Vec::new();
-        self.approx_segments(tolerance, &mut segments);
 
-        let vertices = vertices
-            .into_iter()
-            .map(|vertex| {
-                // Can't panic, unless the approximation wrongfully generates
-                // points that are not in the surface.
-                surface.point_model_to_surface(vertex).unwrap()
-            })
-            .collect();
-        let segments = segments
-            .into_iter()
-            .map(|Segment3 { a, b }| {
-                // Can't panic, unless the approximation wrongfully generates
-                // points that are not in the surface.
-                let a = surface.point_model_to_surface(a).unwrap();
-                let b = surface.point_model_to_surface(b).unwrap();
+        for cycle in &self.cycles {
+            let approx = cycle.approx(tolerance);
 
-                Segment2 { a, b }
-            })
-            .collect();
+            vertices.extend(approx.vertices);
+            segments.extend(approx.segments);
+        }
 
         Approx { vertices, segments }
-    }
-
-    /// Compute line segments to approximate the edges
-    ///
-    /// `tolerance` defines how far these line segments are allowed to deviate
-    /// from the actual edges of the shape.
-    pub fn approx_segments(&self, tolerance: f64, out: &mut Vec<Segment3>) {
-        for cycle in &self.cycles {
-            cycle.approx_segments(tolerance, out);
-        }
     }
 }
 
@@ -119,34 +88,26 @@ pub struct Cycle {
 }
 
 impl Cycle {
-    /// Compute vertices to approximate the edges of this cycle
+    /// Compute an approximation of the cycle
     ///
-    /// `tolerance` defines how far these vertices are allowed to deviate from
-    /// the actual edges of the shape.
-    ///
-    /// No assumptions must be made about already existing contents of `out`, as
-    /// this method might modify them.
-    pub fn approx_vertices(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
+    /// `tolerance` defines how far the approximation is allowed to deviate from
+    /// the actual cycle.
+    pub fn approx(&self, tolerance: f64) -> Approx {
+        let mut vertices = Vec::new();
+        let mut segments = Vec::new();
+
         for edge in &self.edges {
-            out.extend(edge.approx_vertices(tolerance));
+            let approx = edge.approx(tolerance);
+
+            vertices.extend(approx.vertices);
+            segments.extend(approx.segments);
         }
 
         // As this is a cycle, the last vertex of an edge could be identical to
         // the first vertex of the next. Let's remove those duplicates.
-        out.dedup();
-    }
+        vertices.dedup();
 
-    /// Compute segments to approximate the edges of this cycle
-    ///
-    /// `tolerance` defines how far these segments are allowed to deviate from
-    /// the actual edges of the shape.
-    ///
-    /// No assumptions must be made about already existing contents of `out`, as
-    /// this method might modify them.
-    pub fn approx_segments(&self, tolerance: f64, out: &mut Vec<Segment3>) {
-        for edge in &self.edges {
-            edge.approx_segments(tolerance, out);
-        }
+        Approx { vertices, segments }
     }
 }
 
@@ -207,62 +168,42 @@ impl Edge {
         self.reverse = !self.reverse;
     }
 
-    /// Compute vertices to approximate the edge
+    /// Compute an approximation of the edge
     ///
-    /// `tolerance` defines how far the implicit line segments between those
-    /// vertices are allowed to deviate from the actual edge.
-    pub fn approx_vertices(&self, tolerance: f64) -> Vec<Point<3>> {
-        // This method doesn't follow the style of the other methods that return
-        // approximate vertices, allocating its output `Vec` itself, instead of
-        // using one passed into it as a mutable reference.
-        //
-        // I initially intended to convert all these methods to the new style
-        // (i.e. the pass `&mut Vec` style), until I hit this one. The problem
-        // here is the `reverse` below. Doing that on a passed in `Vec` would
-        // be disruptive to callers and keeping track of the slice to call the
-        // `reverse` on would be additional complexity.
-        //
-        // I don't know what to do about that, but I think leaving things as
-        // they are and writing this comment to explain that is a good enough
-        // solution.
-
-        let mut out = Vec::new();
-        self.curve.approx_vertices(tolerance, &mut out);
+    /// `tolerance` defines how far the approximation is allowed to deviate from
+    /// the actual edge.
+    pub fn approx(&self, tolerance: f64) -> Approx {
+        let mut vertices = Vec::new();
+        self.curve.approx(tolerance, &mut vertices);
 
         if self.reverse {
-            out.reverse()
+            vertices.reverse()
         }
 
-        out
-    }
-
-    /// Compute segments to approximate the edge
-    ///
-    /// `tolerance` defines how far the implicit line segments between those
-    /// segments are allowed to deviate from the actual edge.
-    pub fn approx_segments(&self, tolerance: f64, out: &mut Vec<Segment3>) {
-        let mut vertices = self.approx_vertices(tolerance);
-
+        let mut segment_vertices = vertices.clone();
         if self.vertices.is_none() {
             // The edge has no vertices, which means it connects to itself. We
             // need to reflect that in the approximation.
 
             if let Some(&vertex) = vertices.first() {
-                vertices.push(vertex);
+                segment_vertices.push(vertex);
             }
         }
 
-        for segment in vertices.windows(2) {
+        let mut segments = Vec::new();
+        for segment in segment_vertices.windows(2) {
             let v0 = segment[0];
             let v1 = segment[1];
 
-            out.push([v0, v1].into());
+            segments.push([v0, v1].into());
         }
+
+        Approx { vertices, segments }
     }
 }
 
 /// An approximation of one or more edges
 pub struct Approx {
-    pub vertices: Vec<Point<2>>,
-    pub segments: Vec<Segment2>,
+    pub vertices: Vec<Point<3>>,
+    pub segments: Vec<Segment>,
 }
