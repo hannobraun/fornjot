@@ -4,19 +4,11 @@
 
 ## About
 
-Fornjot is a project to create a **next-generation Code-CAD application**. Because [**the world needs another CAD program**](https://github.com/sponsors/hannobraun).
+Fornjot is an **early-stage project** to create a **next-generation Code-CAD application**. Because [**the world needs another CAD program**](https://github.com/sponsors/hannobraun).
 
-![Screenshot of the star model](https://github.com/hannobraun/fornjot/blob/main/models/star/star.png)
+![Screenshot of Fornjot](models/star/star.png)
 
-Fornjot is working towards a long-term vision, following these principles:
-
-- **Write code to create flexible models:** CAD models in Fornjot are defined as code. Rust is supported as the modeling language, but Fornjot is architected to be language-agnostic.
-- **Avoid repetitive work:** With the power of a programming language at your disposal, there's no reason to repeat yourself. Creating intricate models doesn't have to be a monotonous chore.
-- **The right tool for your job:** Many other Code-CAD applications come with a limited feature set. At this early stage, Fornjot is even worse, but it is built from the ground up to be able to support even advanced CAD features.
-- **Getting out of your way:** Fornjot's job is to assist you, by being available where you need it (with planned support for all major desktop and mobile platforms, and the web), being convenient to use, and having the performance to support your workflow.
-- **Free and open source**: Fornjot is open source software, available under a permissive license. Try it out for free, with no strings attached. Modify it to your needs. If it's useful to you, decide for yourself how you want to support its further development.
-
-It's still early days, and it will take a long time before Fornjot can truly achieve this vision. Please consider supporting the project, by [helping out yourself](CONTRIBUTING.md) or [contributing financially](https://github.com/sponsors/hannobraun).
+For an introduction of what the project aims to achieve, [please check out the website](https://www.fornjot.app/).
 
 This is Fornjot's main repository. The [website is maintained in a separate repository](https://github.com/hannobraun/www.fornjot.app).
 
@@ -170,7 +162,7 @@ To join the Fornjot project as a developer, please fork one of the GitHub reposi
 - [Main Fornjot repository](https://github.com/hannobraun/Fornjot)
 - [Website repository](https://github.com/hannobraun/www.fornjot.app)
 
-If you need some guidance, check out the [contribution guide](https://github.com/hannobraun/Fornjot/blob/main/CONTRIBUTING.md).
+If you need some guidance, check out the [contribution guide](CONTRIBUTING.md).
 
 
 ## License
@@ -181,4 +173,4 @@ See [LICENSE.md] for full details.
 
 [`fj`]: https://crates.io/crates/fj
 [Zero Clause BSD License]: https://opensource.org/licenses/0BSD
-[LICENSE.md]: https://github.com/hannobraun/fornjot/blob/main/LICENSE.md
+[LICENSE.md]: LICENSE.md
