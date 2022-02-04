@@ -4,7 +4,7 @@
 
 ## About
 
-Fornjot is a project to create a **next-generation Code-CAD application**. Because [**the world needs another CAD program**](https://github.com/sponsors/hannobraun).
+Fornjot is an **early-stage project** to create a **next-generation Code-CAD application**. Because [**the world needs another CAD program**](https://github.com/sponsors/hannobraun).
 
 ![Screenshot of the star model](https://github.com/hannobraun/fornjot/blob/main/models/star/star.png)
 
