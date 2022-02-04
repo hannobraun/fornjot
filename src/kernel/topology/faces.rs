@@ -4,11 +4,13 @@ use decorum::R64;
 use parry2d_f64::{
     bounding_volume::AABB,
     query::{Ray as Ray2, RayCast as _},
-    shape::Triangle as Triangle2,
+    shape::{Segment as Segment2, Triangle as Triangle2},
     utils::point_in_triangle::{corner_direction, Orientation},
 };
 use parry3d_f64::{
-    math::Isometry, query::Ray as Ray3, shape::Triangle as Triangle3,
+    math::Isometry,
+    query::Ray as Ray3,
+    shape::{Segment as Segment3, Triangle as Triangle3},
 };
 
 use crate::{
@@ -120,8 +122,21 @@ impl Face {
                     })
                     .collect();
 
+                let segments: Vec<_> = approx
+                    .segments
+                    .into_iter()
+                    .map(|Segment3 { a, b }| {
+                        // Can't panic, unless the approximation wrongfully
+                        // generates points that are not in the surface.
+                        let a = surface.point_model_to_surface(a).unwrap();
+                        let b = surface.point_model_to_surface(b).unwrap();
+
+                        Segment2 { a, b }
+                    })
+                    .collect();
+
                 let mut triangles = triangulate(&vertices);
-                let face_as_polygon = approx.segments;
+                let face_as_polygon = segments;
 
                 // We're also going to need a point outside of the polygon.
                 let aabb = AABB::from_points(&vertices);

@@ -1,5 +1,4 @@
 use nalgebra::vector;
-use parry2d_f64::shape::Segment as Segment2;
 use parry3d_f64::{math::Isometry, shape::Segment as Segment3};
 
 use crate::{
@@ -63,7 +62,7 @@ impl Edges {
     /// Only approximating an edge once, and then referring to that
     /// approximation from then on where needed, would take care of these two
     /// problems.
-    pub fn approx(&self, tolerance: f64, surface: &Surface) -> Approx {
+    pub fn approx(&self, tolerance: f64, _surface: &Surface) -> Approx {
         let mut vertices = Vec::new();
         for cycle in &self.cycles {
             cycle.approx_vertices(tolerance, &mut vertices);
@@ -73,18 +72,6 @@ impl Edges {
         // vertices are already computed, so they can just be removed.
         let mut segments = Vec::new();
         self.approx_segments(tolerance, &mut segments);
-
-        let segments = segments
-            .into_iter()
-            .map(|Segment3 { a, b }| {
-                // Can't panic, unless the approximation wrongfully generates
-                // points that are not in the surface.
-                let a = surface.point_model_to_surface(a).unwrap();
-                let b = surface.point_model_to_surface(b).unwrap();
-
-                Segment2 { a, b }
-            })
-            .collect();
 
         Approx { vertices, segments }
     }
@@ -256,5 +243,5 @@ impl Edge {
 /// An approximation of one or more edges
 pub struct Approx {
     pub vertices: Vec<Point<3>>,
-    pub segments: Vec<Segment2>,
+    pub segments: Vec<Segment3>,
 }
