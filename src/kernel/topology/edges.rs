@@ -74,14 +74,6 @@ impl Edges {
         let mut segments = Vec::new();
         self.approx_segments(tolerance, &mut segments);
 
-        let vertices = vertices
-            .into_iter()
-            .map(|vertex| {
-                // Can't panic, unless the approximation wrongfully generates
-                // points that are not in the surface.
-                surface.point_model_to_surface(vertex).unwrap()
-            })
-            .collect();
         let segments = segments
             .into_iter()
             .map(|Segment3 { a, b }| {
@@ -263,6 +255,6 @@ impl Edge {
 
 /// An approximation of one or more edges
 pub struct Approx {
-    pub vertices: Vec<Point<2>>,
+    pub vertices: Vec<Point<3>>,
     pub segments: Vec<Segment2>,
 }

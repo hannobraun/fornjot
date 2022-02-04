@@ -109,11 +109,22 @@ impl Face {
         match self {
             Self::Face { edges, surface } => {
                 let approx = edges.approx(tolerance, surface);
-                let mut triangles = triangulate(&approx.vertices);
+
+                let vertices: Vec<_> = approx
+                    .vertices
+                    .into_iter()
+                    .map(|vertex| {
+                        // Can't panic, unless the approximation wrongfully
+                        // generates points that are not in the surface.
+                        surface.point_model_to_surface(vertex).unwrap()
+                    })
+                    .collect();
+
+                let mut triangles = triangulate(&vertices);
                 let face_as_polygon = approx.segments;
 
                 // We're also going to need a point outside of the polygon.
-                let aabb = AABB::from_points(&approx.vertices);
+                let aabb = AABB::from_points(&vertices);
                 let outside = aabb.maxs * 2.;
 
                 triangles.retain(|triangle| {
