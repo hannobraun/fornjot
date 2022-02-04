@@ -110,7 +110,7 @@ impl Face {
     ) {
         match self {
             Self::Face { edges, surface } => {
-                let approx = edges.approx(tolerance, surface);
+                let approx = edges.approx(tolerance);
 
                 let vertices: Vec<_> = approx
                     .vertices

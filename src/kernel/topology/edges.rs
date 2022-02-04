@@ -2,7 +2,7 @@ use nalgebra::vector;
 use parry3d_f64::{math::Isometry, shape::Segment as Segment3};
 
 use crate::{
-    kernel::geometry::{Circle, Curve, Surface},
+    kernel::geometry::{Circle, Curve},
     math::Point,
 };
 
@@ -62,7 +62,7 @@ impl Edges {
     /// Only approximating an edge once, and then referring to that
     /// approximation from then on where needed, would take care of these two
     /// problems.
-    pub fn approx(&self, tolerance: f64, _surface: &Surface) -> Approx {
+    pub fn approx(&self, tolerance: f64) -> Approx {
         let mut vertices = Vec::new();
         for cycle in &self.cycles {
             cycle.approx_vertices(tolerance, &mut vertices);
