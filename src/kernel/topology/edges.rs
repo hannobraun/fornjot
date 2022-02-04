@@ -94,18 +94,18 @@ impl Cycle {
     /// the actual cycle.
     pub fn approx(&self, tolerance: f64) -> Approx {
         let mut vertices = Vec::new();
+        let mut segments = Vec::new();
+
         for edge in &self.edges {
-            vertices.extend(edge.approx_vertices(tolerance));
+            let approx = edge.approx(tolerance);
+
+            vertices.extend(approx.vertices);
+            segments.extend(approx.segments);
         }
 
         // As this is a cycle, the last vertex of an edge could be identical to
         // the first vertex of the next. Let's remove those duplicates.
         vertices.dedup();
-
-        let mut segments = Vec::new();
-        for edge in &self.edges {
-            edge.approx_segments(tolerance, &mut segments);
-        }
 
         Approx { vertices, segments }
     }
@@ -166,6 +166,19 @@ impl Edge {
     /// Reverse the edge
     pub fn reverse(&mut self) {
         self.reverse = !self.reverse;
+    }
+
+    /// Compute an approximation of the edge
+    ///
+    /// `tolerance` defines how far the approximation is allowed to deviate from
+    /// the actual edge.
+    pub fn approx(&self, tolerance: f64) -> Approx {
+        let vertices = self.approx_vertices(tolerance);
+
+        let mut segments = Vec::new();
+        self.approx_segments(tolerance, &mut segments);
+
+        Approx { vertices, segments }
     }
 
     /// Compute vertices to approximate the edge
