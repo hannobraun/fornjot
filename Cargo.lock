@@ -482,15 +482,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "delaunator"
-version = "1.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8e32042579f09a195d194307fdb2f7db196a960f33f0ceb6f00af11c306cb6c2"
-dependencies = [
- "robust",
-]
-
-[[package]]
 name = "dispatch"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -542,7 +533,6 @@ dependencies = [
  "bytemuck",
  "clap",
  "decorum",
- "delaunator",
  "fj",
  "futures",
  "libloading",
