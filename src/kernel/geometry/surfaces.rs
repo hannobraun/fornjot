@@ -31,16 +31,6 @@ impl Surface {
     /// Convert a point in model coordinates to surface coordinates
     ///
     /// Returns an error, if the provided point is not in the surface.
-    ///
-    /// # Implementation note
-    ///
-    /// This method is expected to only exist temporarily, until approximations
-    /// have been cleaned up. As of this writing, approximations are generated
-    /// in 3D, but then converted to 2D (using this method) for their primary
-    /// use case.
-    ///
-    /// If similar functionality is needed in the future, projecting a point
-    /// into a surface would probably be a better and more robust solution.
     pub fn point_model_to_surface(
         &self,
         point: Point<3>,
@@ -111,11 +101,6 @@ impl Plane {
     }
 
     /// Convert a point in model coordinates to surface coordinates
-    ///
-    /// # Implementation note
-    ///
-    /// This method only exists to support `Surface::point_model_to_surface`. It
-    /// should be removed, once no longer needed there.
     pub fn point_model_to_surface(
         &self,
         point: Point<3>,
