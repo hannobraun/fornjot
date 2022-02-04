@@ -119,7 +119,7 @@ impl Face {
                     .map(|vertex| {
                         // Can't panic, unless the approximation wrongfully
                         // generates points that are not in the surface.
-                        surface.point_model_to_surface(vertex).unwrap()
+                        surface.point_model_to_surface(vertex).unwrap().value
                     })
                     .collect();
 
@@ -129,8 +129,10 @@ impl Face {
                     .map(|Segment3 { a, b }| {
                         // Can't panic, unless the approximation wrongfully
                         // generates points that are not in the surface.
-                        let a = surface.point_model_to_surface(a).unwrap();
-                        let b = surface.point_model_to_surface(b).unwrap();
+                        let a =
+                            surface.point_model_to_surface(a).unwrap().value;
+                        let b =
+                            surface.point_model_to_surface(b).unwrap().value;
 
                         Segment2 { a, b }
                     })
