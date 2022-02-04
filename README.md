@@ -6,7 +6,7 @@
 
 Fornjot is an **early-stage project** to create a **next-generation Code-CAD application**. Because [**the world needs another CAD program**](https://github.com/sponsors/hannobraun).
 
-![Screenshot of the star model](https://github.com/hannobraun/fornjot/blob/main/models/star/star.png)
+![Screenshot of the star model](models/star/star.png)
 
 Fornjot is working towards a long-term vision, following these principles:
 
@@ -170,7 +170,7 @@ To join the Fornjot project as a developer, please fork one of the GitHub reposi
 - [Main Fornjot repository](https://github.com/hannobraun/Fornjot)
 - [Website repository](https://github.com/hannobraun/www.fornjot.app)
 
-If you need some guidance, check out the [contribution guide](https://github.com/hannobraun/Fornjot/blob/main/CONTRIBUTING.md).
+If you need some guidance, check out the [contribution guide](CONTRIBUTING.md).
 
 
 ## License
@@ -181,4 +181,4 @@ See [LICENSE.md] for full details.
 
 [`fj`]: https://crates.io/crates/fj
 [Zero Clause BSD License]: https://opensource.org/licenses/0BSD
-[LICENSE.md]: https://github.com/hannobraun/fornjot/blob/main/LICENSE.md
+[LICENSE.md]: LICENSE.md
