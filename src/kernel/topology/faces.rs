@@ -144,41 +144,16 @@ impl Face {
                 let outside = aabb.maxs * 2.;
 
                 triangles.retain(|triangle| {
-                    'outer: for segment in triangle.edges() {
+                    for segment in triangle.edges() {
                         let mut inverted_segment = segment;
                         inverted_segment.swap();
 
                         // If the segment is an edge of the face, we don't need
                         // to take a closer look.
-                        //
-                        // We can't use `contains` here, as that compares the
-                        // segments directly, without taking floating point
-                        // accuracy into account.
-                        //
-                        // This is not great. See this issue:
-                        // https://github.com/hannobraun/Fornjot/issues/78
-                        for s in &face_as_polygon {
-                            // This epsilon value is small enough to not mistake
-                            // different vertices as equal, for common use
-                            // cases, while still being a few orders of
-                            // magnitude larger than the differences between
-                            // equal vertices that I've seen so far.
-                            let eps = 1e-12;
-
-                            let aa = (s.a - segment.a).magnitude();
-                            let bb = (s.b - segment.b).magnitude();
-                            let ab = (s.a - segment.b).magnitude();
-                            let ba = (s.b - segment.a).magnitude();
-
-                            let segment_is_face_edge = aa < eps && bb < eps;
-                            let segment_is_inverted_face_edge =
-                                ab < eps && ba < eps;
-
-                            if segment_is_face_edge
-                                || segment_is_inverted_face_edge
-                            {
-                                continue 'outer;
-                            }
+                        if face_as_polygon.contains(&segment)
+                            || face_as_polygon.contains(&inverted_segment)
+                        {
+                            continue;
                         }
 
                         // To determine if the edge is within the polygon, we
