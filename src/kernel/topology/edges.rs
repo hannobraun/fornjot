@@ -63,31 +63,6 @@ impl Edges {
     /// Only approximating an edge once, and then referring to that
     /// approximation from then on where needed, would take care of these two
     /// problems.
-    ///
-    /// To achieve this, some infrastructure improvements would have to be made:
-    ///
-    /// 1. Edges would need to be identified by a unique ID, and the
-    ///    approximations in the data structure returned here would need to be
-    ///    associated with that ID, to allow for retrieval.
-    /// 2. Edges would need to be approximated in curve coordinates.
-    ///    - As of this writing, they are computed in model coordinates, then
-    ///      converted to surface coordinates, which is just a nuisance.
-    ///    - Directly computing them in surface coordinates would be an
-    ///      improvement, but would obviously not allow for the reuse of results
-    ///      that is imagined here.
-    ///    - Hence computing the approximation in curve coordinates, then
-    ///      converting it to surface coordinates for the triangulation, seems
-    ///      to be the prudent choice.
-    ///
-    /// In addition, it should be noted that edge approximations in curve
-    /// coordinates could be reused even for different edges, as long as those
-    /// edges are distance-preserving transformations (isometries) of the
-    /// approximated edge.
-    ///
-    /// To realize all this, it is probably best to have a single, big
-    /// `EdgeApprox` struct with an `approximate_edge` method that takes a
-    /// `&Edges` and returns the approximation for the edge. Either directly
-    /// from the cache, or computing it first.
     pub fn approx(&self, tolerance: f64, surface: &Surface) -> Approx {
         let mut vertices = Vec::new();
         for cycle in &self.cycles {
