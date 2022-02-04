@@ -1,5 +1,5 @@
 use nalgebra::vector;
-use parry3d_f64::{math::Isometry, shape::Segment as Segment3};
+use parry3d_f64::{math::Isometry, shape::Segment};
 
 use crate::{
     kernel::geometry::{Circle, Curve},
@@ -205,5 +205,5 @@ impl Edge {
 /// An approximation of one or more edges
 pub struct Approx {
     pub vertices: Vec<Point<3>>,
-    pub segments: Vec<Segment3>,
+    pub segments: Vec<Segment>,
 }
