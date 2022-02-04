@@ -33,10 +33,10 @@ impl Surface {
     /// Returns an error, if the provided point is not in the surface.
     pub fn point_model_to_surface(
         &self,
-        point: Point<3>,
+        point_3d: Point<3>,
     ) -> Result<Point<2>, ()> {
         match self {
-            Self::Plane(plane) => plane.point_model_to_surface(point),
+            Self::Plane(plane) => plane.point_model_to_surface(point_3d),
         }
     }
 
