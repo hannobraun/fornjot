@@ -131,7 +131,7 @@ impl Face {
                         let b =
                             surface.point_model_to_surface(b).unwrap().value;
 
-                        Segment2 { a, b }
+                        [a, b]
                     })
                     .collect();
 
@@ -152,8 +152,11 @@ impl Face {
 
                         // If the segment is an edge of the face, we don't need
                         // to take a closer look.
-                        if face_as_polygon.contains(&segment)
-                            || face_as_polygon.contains(&inverted_segment)
+                        if face_as_polygon.contains(&[segment.a, segment.b])
+                            || face_as_polygon.contains(&[
+                                inverted_segment.a,
+                                inverted_segment.b,
+                            ])
                         {
                             continue;
                         }
@@ -184,6 +187,8 @@ impl Face {
                             // the point is not on a polygon edge, due to the
                             // check above. We don't need to handle any edge
                             // cases that would arise from that case.
+
+                            let edge = Segment2::from_array(edge);
 
                             let intersection =
                                 edge.cast_local_ray(&ray, f64::INFINITY, true);
