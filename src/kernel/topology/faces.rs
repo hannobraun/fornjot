@@ -135,7 +135,8 @@ impl Face {
                     })
                     .collect();
 
-                // We're also going to need a point outside of the polygon.
+                // We're also going to need a point outside of the polygon, for
+                // the point-in-polygon tests.
                 let aabb = AABB::from_points(
                     vertices.iter().map(|vertex| &vertex.value),
                 );
