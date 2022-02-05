@@ -3,6 +3,8 @@ use parry3d_f64::math::Isometry;
 
 use crate::math::{Point, Vector};
 
+use super::points::SurfacePoint;
+
 /// A two-dimensional shape
 #[derive(Clone, Debug, PartialEq)]
 pub enum Surface {
@@ -33,11 +35,16 @@ impl Surface {
     /// Returns an error, if the provided point is not in the surface.
     pub fn point_model_to_surface(
         &self,
-        point: Point<3>,
-    ) -> Result<Point<2>, ()> {
-        match self {
-            Self::Plane(plane) => plane.point_model_to_surface(point),
-        }
+        point_3d: Point<3>,
+    ) -> Result<SurfacePoint, ()> {
+        let point_2d = match self {
+            Self::Plane(plane) => plane.point_model_to_surface(point_3d)?,
+        };
+
+        Ok(SurfacePoint {
+            value: point_2d,
+            from: point_3d,
+        })
     }
 
     /// Convert a point in surface coordinates to model coordinates

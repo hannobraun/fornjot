@@ -1,23 +1,20 @@
 use std::collections::BTreeSet;
 
 use decorum::R64;
-use nalgebra::point;
 use parry2d_f64::{
     bounding_volume::AABB,
     query::{Ray as Ray2, RayCast as _},
-    shape::{Segment as Segment2, Triangle as Triangle2},
-    utils::point_in_triangle::{corner_direction, Orientation},
+    shape::Segment as Segment2,
 };
 use parry3d_f64::{
     math::Isometry,
     query::Ray as Ray3,
-    shape::{Segment as Segment3, Triangle as Triangle3},
+    shape::{Segment as Segment3, Triangle},
 };
 
 use crate::{
     debug::{DebugInfo, TriangleEdgeCheck},
-    kernel::geometry::Surface,
-    math::Point,
+    kernel::{geometry::Surface, util::triangulate},
 };
 
 use super::edges::Edges;
@@ -42,7 +39,7 @@ impl Faces {
     pub fn triangles(
         &self,
         tolerance: f64,
-        out: &mut Vec<Triangle3>,
+        out: &mut Vec<Triangle>,
         debug_info: &mut DebugInfo,
     ) {
         for face in &self.0 {
@@ -81,7 +78,7 @@ pub enum Face {
     /// The plan is to eventually represent faces as a geometric surface,
     /// bounded by edges. While the transition is being made, this variant is
     /// still required.
-    Triangles(Vec<Triangle3>),
+    Triangles(Vec<Triangle>),
 }
 
 impl Face {
@@ -106,7 +103,7 @@ impl Face {
     pub fn triangles(
         &self,
         tolerance: f64,
-        out: &mut Vec<Triangle3>,
+        out: &mut Vec<Triangle>,
         debug_info: &mut DebugInfo,
     ) {
         match self {
@@ -132,33 +129,41 @@ impl Face {
                         let a = surface.point_model_to_surface(a).unwrap();
                         let b = surface.point_model_to_surface(b).unwrap();
 
-                        Segment2 { a, b }
+                        [a, b]
                     })
                     .collect();
 
-                let mut triangles = triangulate(&vertices);
-                let face_as_polygon = segments;
-
-                // We're also going to need a point outside of the polygon.
-                let aabb = AABB::from_points(&vertices);
+                // We're also going to need a point outside of the polygon, for
+                // the point-in-polygon tests.
+                let aabb = AABB::from_points(
+                    vertices.iter().map(|vertex| &vertex.value),
+                );
                 let outside = aabb.maxs * 2.;
 
-                triangles.retain(|triangle| {
-                    for segment in triangle.edges() {
-                        let mut inverted_segment = segment;
-                        inverted_segment.swap();
+                let mut triangles = triangulate(vertices);
+                let face_as_polygon = segments;
+
+                triangles.retain(|t| {
+                    for segment in [t[0], t[1], t[2], t[0]].windows(2) {
+                        // This can't panic, as we passed `2` to `windows`. It
+                        // can be cleaned up a bit, once `array_windows` is
+                        // stable.
+                        let segment = [segment[0], segment[1]];
+                        let inverted_segment = [segment[1], segment[0]];
 
                         // If the segment is an edge of the face, we don't need
                         // to take a closer look.
-                        if face_as_polygon.contains(&segment)
-                            || face_as_polygon.contains(&inverted_segment)
-                        {
+                        if face_as_polygon.contains(&segment) {
+                            continue;
+                        }
+                        if face_as_polygon.contains(&inverted_segment) {
                             continue;
                         }
 
                         // To determine if the edge is within the polygon, we
                         // determine if its center point is in the polygon.
-                        let center = segment.a + (segment.b - segment.a) * 0.5;
+                        let center =
+                            segment[0] + (segment[1] - segment[0]) * 0.5;
 
                         let ray = Ray2 {
                             origin: center,
@@ -182,6 +187,9 @@ impl Face {
                             // the point is not on a polygon edge, due to the
                             // check above. We don't need to handle any edge
                             // cases that would arise from that case.
+
+                            let edge =
+                                Segment2::from(edge.map(|point| point.value));
 
                             let intersection =
                                 edge.cast_local_ray(&ray, f64::INFINITY, true);
@@ -214,56 +222,12 @@ impl Face {
                     true
                 });
 
-                out.extend(triangles.into_iter().map(
-                    |Triangle2 { a, b, c }| {
-                        let a = surface.point_surface_to_model(a);
-                        let b = surface.point_surface_to_model(b);
-                        let c = surface.point_surface_to_model(c);
-
-                        Triangle3 { a, b, c }
-                    },
-                ));
+                out.extend(triangles.into_iter().map(|triangle| {
+                    let [a, b, c] = triangle.map(|point| point.from);
+                    Triangle { a, b, c }
+                }));
             }
             Self::Triangles(triangles) => out.extend(triangles),
         }
     }
-}
-
-/// Create a Delaunay triangulation of all vertices
-pub fn triangulate(vertices: &[Point<2>]) -> Vec<Triangle2> {
-    use spade::Triangulation as _;
-
-    let points: Vec<_> = vertices
-        .iter()
-        .map(|vertex| spade::Point2 {
-            x: vertex.x,
-            y: vertex.y,
-        })
-        .collect();
-
-    let triangulation = spade::DelaunayTriangulation::<_>::bulk_load(points)
-        .expect("Inserted invalid values into triangulation");
-
-    let mut triangles = Vec::new();
-    for triangle in triangulation.inner_faces() {
-        let [v0, v1, v2] = triangle.vertices().map(|vertex| {
-            let pos = vertex.position();
-            point![pos.x, pos.y]
-        });
-
-        let triangle = match corner_direction(&v0, &v1, &v2) {
-            Orientation::Ccw => [v0, v1, v2].into(),
-            Orientation::Cw => [v0, v2, v1].into(),
-            Orientation::None => {
-                panic!(
-                    "Triangle returned from triangulation isn't actually a\
-                    triangle"
-                );
-            }
-        };
-
-        triangles.push(triangle);
-    }
-
-    triangles
 }
