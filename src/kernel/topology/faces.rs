@@ -152,11 +152,11 @@ impl Face {
 
                         // If the segment is an edge of the face, we don't need
                         // to take a closer look.
-                        if face_as_polygon.contains(&[segment.a, segment.b])
-                            || face_as_polygon.contains(&[
-                                inverted_segment.a,
-                                inverted_segment.b,
-                            ])
+                        if face_as_polygon.contains(&[segment.a, segment.b]) {
+                            continue;
+                        }
+                        if face_as_polygon
+                            .contains(&[inverted_segment.a, inverted_segment.b])
                         {
                             continue;
                         }
