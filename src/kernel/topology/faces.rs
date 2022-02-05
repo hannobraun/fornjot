@@ -4,7 +4,7 @@ use decorum::R64;
 use parry2d_f64::{
     bounding_volume::AABB,
     query::{Ray as Ray2, RayCast as _},
-    shape::{Segment as Segment2, Triangle as Triangle2},
+    shape::Segment as Segment2,
 };
 use parry3d_f64::{
     math::Isometry,
@@ -145,25 +145,31 @@ impl Face {
                 let mut triangles = triangulate(vertices);
                 let face_as_polygon = segments;
 
-                triangles.retain(|triangle| {
-                    for segment in triangle.edges() {
-                        let mut inverted_segment = segment;
-                        inverted_segment.swap();
+                triangles.retain(|t| {
+                    for segment in [t[0], t[1], t[2], t[0]].windows(2) {
+                        // This can't panic, as we passed `2` to `windows`. It
+                        // can be cleaned up a bit, once `array_windows` is
+                        // stable.
+                        let segment = [segment[0], segment[1]];
+                        let inverted_segment = [segment[1], segment[0]];
 
                         // If the segment is an edge of the face, we don't need
                         // to take a closer look.
-                        if face_as_polygon.contains(&[segment.a, segment.b]) {
+                        if face_as_polygon
+                            .contains(&segment.map(|point| point.value))
+                        {
                             continue;
                         }
-                        if face_as_polygon
-                            .contains(&[inverted_segment.a, inverted_segment.b])
-                        {
+                        if face_as_polygon.contains(
+                            &inverted_segment.map(|point| point.value),
+                        ) {
                             continue;
                         }
 
                         // To determine if the edge is within the polygon, we
                         // determine if its center point is in the polygon.
-                        let center = segment.a + (segment.b - segment.a) * 0.5;
+                        let center =
+                            segment[0] + (segment[1] - segment[0]) * 0.5;
 
                         let ray = Ray2 {
                             origin: center,
@@ -221,15 +227,13 @@ impl Face {
                     true
                 });
 
-                out.extend(triangles.into_iter().map(
-                    |Triangle2 { a, b, c }| {
-                        let a = surface.point_surface_to_model(a);
-                        let b = surface.point_surface_to_model(b);
-                        let c = surface.point_surface_to_model(c);
+                out.extend(triangles.into_iter().map(|[a, b, c]| {
+                    let a = surface.point_surface_to_model(a.value);
+                    let b = surface.point_surface_to_model(b.value);
+                    let c = surface.point_surface_to_model(c.value);
 
-                        Triangle3 { a, b, c }
-                    },
-                ));
+                    Triangle3 { a, b, c }
+                }));
             }
             Self::Triangles(triangles) => out.extend(triangles),
         }

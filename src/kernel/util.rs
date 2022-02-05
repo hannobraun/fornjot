@@ -1,13 +1,10 @@
-use parry2d_f64::{
-    shape::Triangle,
-    utils::point_in_triangle::{corner_direction, Orientation},
-};
+use parry2d_f64::utils::point_in_triangle::{corner_direction, Orientation};
 use spade::HasPosition;
 
 use super::geometry::points::SurfacePoint;
 
 /// Create a Delaunay triangulation of all points
-pub fn triangulate(points: Vec<SurfacePoint>) -> Vec<Triangle> {
+pub fn triangulate(points: Vec<SurfacePoint>) -> Vec<[SurfacePoint; 3]> {
     use spade::Triangulation as _;
 
     let triangulation = spade::DelaunayTriangulation::<_>::bulk_load(points)
@@ -15,12 +12,11 @@ pub fn triangulate(points: Vec<SurfacePoint>) -> Vec<Triangle> {
 
     let mut triangles = Vec::new();
     for triangle in triangulation.inner_faces() {
-        let [v0, v1, v2] =
-            triangle.vertices().map(|vertex| vertex.data().value);
+        let [v0, v1, v2] = triangle.vertices().map(|vertex| *vertex.data());
 
         let triangle = match corner_direction(&v0, &v1, &v2) {
-            Orientation::Ccw => [v0, v1, v2].into(),
-            Orientation::Cw => [v0, v2, v1].into(),
+            Orientation::Ccw => [v0, v1, v2],
+            Orientation::Cw => [v0, v2, v1],
             Orientation::None => {
                 panic!(
                     "Triangle returned from triangulation isn't actually a\
