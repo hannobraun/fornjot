@@ -222,11 +222,8 @@ impl Face {
                     true
                 });
 
-                out.extend(triangles.into_iter().map(|[a, b, c]| {
-                    let a = a.from;
-                    let b = b.from;
-                    let c = c.from;
-
+                out.extend(triangles.into_iter().map(|triangle| {
+                    let [a, b, c] = triangle.map(|point| point.from);
                     Triangle { a, b, c }
                 }));
             }
