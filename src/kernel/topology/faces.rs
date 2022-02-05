@@ -116,7 +116,7 @@ impl Face {
                     .map(|vertex| {
                         // Can't panic, unless the approximation wrongfully
                         // generates points that are not in the surface.
-                        surface.point_model_to_surface(vertex).unwrap().value
+                        surface.point_model_to_surface(vertex).unwrap()
                     })
                     .collect();
 
@@ -136,10 +136,12 @@ impl Face {
                     .collect();
 
                 // We're also going to need a point outside of the polygon.
-                let aabb = AABB::from_points(&vertices);
+                let aabb = AABB::from_points(
+                    vertices.iter().map(|vertex| &vertex.value),
+                );
                 let outside = aabb.maxs * 2.;
 
-                let mut triangles = triangulate(&vertices);
+                let mut triangles = triangulate(vertices);
                 let face_as_polygon = segments;
 
                 triangles.retain(|triangle| {

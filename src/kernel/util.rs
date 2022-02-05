@@ -5,21 +5,11 @@ use parry2d_f64::{
 };
 use spade::HasPosition;
 
-use crate::math::Point;
-
 use super::geometry::points::SurfacePoint;
 
 /// Create a Delaunay triangulation of all vertices
-pub fn triangulate(vertices: &[Point<2>]) -> Vec<Triangle> {
+pub fn triangulate(points: Vec<SurfacePoint>) -> Vec<Triangle> {
     use spade::Triangulation as _;
-
-    let points: Vec<_> = vertices
-        .iter()
-        .map(|vertex| spade::Point2 {
-            x: vertex.x,
-            y: vertex.y,
-        })
-        .collect();
 
     let triangulation = spade::DelaunayTriangulation::<_>::bulk_load(points)
         .expect("Inserted invalid values into triangulation");
