@@ -1,4 +1,3 @@
-use nalgebra::point;
 use parry2d_f64::{
     shape::Triangle,
     utils::point_in_triangle::{corner_direction, Orientation},
@@ -16,10 +15,8 @@ pub fn triangulate(points: Vec<SurfacePoint>) -> Vec<Triangle> {
 
     let mut triangles = Vec::new();
     for triangle in triangulation.inner_faces() {
-        let [v0, v1, v2] = triangle.vertices().map(|vertex| {
-            let pos = vertex.position();
-            point![pos.x, pos.y]
-        });
+        let [v0, v1, v2] =
+            triangle.vertices().map(|vertex| vertex.data().value);
 
         let triangle = match corner_direction(&v0, &v1, &v2) {
             Orientation::Ccw => [v0, v1, v2].into(),
