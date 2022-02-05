@@ -9,7 +9,7 @@ use parry2d_f64::{
 use parry3d_f64::{
     math::Isometry,
     query::Ray as Ray3,
-    shape::{Segment as Segment3, Triangle as Triangle3},
+    shape::{Segment as Segment3, Triangle},
 };
 
 use crate::{
@@ -39,7 +39,7 @@ impl Faces {
     pub fn triangles(
         &self,
         tolerance: f64,
-        out: &mut Vec<Triangle3>,
+        out: &mut Vec<Triangle>,
         debug_info: &mut DebugInfo,
     ) {
         for face in &self.0 {
@@ -78,7 +78,7 @@ pub enum Face {
     /// The plan is to eventually represent faces as a geometric surface,
     /// bounded by edges. While the transition is being made, this variant is
     /// still required.
-    Triangles(Vec<Triangle3>),
+    Triangles(Vec<Triangle>),
 }
 
 impl Face {
@@ -103,7 +103,7 @@ impl Face {
     pub fn triangles(
         &self,
         tolerance: f64,
-        out: &mut Vec<Triangle3>,
+        out: &mut Vec<Triangle>,
         debug_info: &mut DebugInfo,
     ) {
         match self {
@@ -232,7 +232,7 @@ impl Face {
                     let b = surface.point_surface_to_model(b.value);
                     let c = surface.point_surface_to_model(c.value);
 
-                    Triangle3 { a, b, c }
+                    Triangle { a, b, c }
                 }));
             }
             Self::Triangles(triangles) => out.extend(triangles),
