@@ -223,9 +223,9 @@ impl Face {
                 });
 
                 out.extend(triangles.into_iter().map(|[a, b, c]| {
-                    let a = surface.point_surface_to_model(a.value);
-                    let b = surface.point_surface_to_model(b.value);
-                    let c = surface.point_surface_to_model(c.value);
+                    let a = a.from;
+                    let b = b.from;
+                    let c = c.from;
 
                     Triangle { a, b, c }
                 }));
