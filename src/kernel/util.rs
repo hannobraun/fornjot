@@ -7,7 +7,7 @@ use spade::HasPosition;
 
 use super::geometry::points::SurfacePoint;
 
-/// Create a Delaunay triangulation of all vertices
+/// Create a Delaunay triangulation of all points
 pub fn triangulate(points: Vec<SurfacePoint>) -> Vec<Triangle> {
     use spade::Triangulation as _;
 
