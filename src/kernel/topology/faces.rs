@@ -126,10 +126,8 @@ impl Face {
                     .map(|Segment3 { a, b }| {
                         // Can't panic, unless the approximation wrongfully
                         // generates points that are not in the surface.
-                        let a =
-                            surface.point_model_to_surface(a).unwrap().value;
-                        let b =
-                            surface.point_model_to_surface(b).unwrap().value;
+                        let a = surface.point_model_to_surface(a).unwrap();
+                        let b = surface.point_model_to_surface(b).unwrap();
 
                         [a, b]
                     })
@@ -155,14 +153,10 @@ impl Face {
 
                         // If the segment is an edge of the face, we don't need
                         // to take a closer look.
-                        if face_as_polygon
-                            .contains(&segment.map(|point| point.value))
-                        {
+                        if face_as_polygon.contains(&segment) {
                             continue;
                         }
-                        if face_as_polygon.contains(
-                            &inverted_segment.map(|point| point.value),
-                        ) {
+                        if face_as_polygon.contains(&inverted_segment) {
                             continue;
                         }
 
@@ -194,7 +188,8 @@ impl Face {
                             // check above. We don't need to handle any edge
                             // cases that would arise from that case.
 
-                            let edge = Segment2::from_array(edge);
+                            let edge =
+                                Segment2::from(edge.map(|point| point.value));
 
                             let intersection =
                                 edge.cast_local_ray(&ray, f64::INFINITY, true);
