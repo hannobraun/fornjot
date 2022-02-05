@@ -135,12 +135,12 @@ impl Face {
                     })
                     .collect();
 
-                let mut triangles = triangulate(&vertices);
-                let face_as_polygon = segments;
-
                 // We're also going to need a point outside of the polygon.
                 let aabb = AABB::from_points(&vertices);
                 let outside = aabb.maxs * 2.;
+
+                let mut triangles = triangulate(&vertices);
+                let face_as_polygon = segments;
 
                 triangles.retain(|triangle| {
                     for segment in triangle.edges() {
