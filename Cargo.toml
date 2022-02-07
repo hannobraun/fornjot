@@ -31,7 +31,7 @@ wgpu_glyph  = "0.16.0"
 winit       = "0.26.1"
 
 [dependencies.clap]
-version  = "3.0.13"
+version  = "3.0.14"
 features = ["derive"]
 
 [dependencies.fj]
