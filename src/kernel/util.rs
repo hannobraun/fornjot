@@ -19,7 +19,7 @@ pub fn triangulate(points: Vec<SurfacePoint>) -> Vec<[SurfacePoint; 3]> {
             Orientation::Cw => [v0, v2, v1],
             Orientation::None => {
                 panic!(
-                    "Triangle returned from triangulation isn't actually a\
+                    "Triangle returned from triangulation isn't actually a \
                     triangle"
                 );
             }
