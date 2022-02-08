@@ -19,7 +19,7 @@ use crate::math::Point;
 ///
 /// This distinction is not observed here, but moving things into that direction
 /// is the intention.
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Debug)]
 pub enum Curve {
     /// A circle
     Circle(Circle),
