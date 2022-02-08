@@ -5,6 +5,8 @@ use parry3d_f64::shape::Segment;
 
 use crate::math::Point;
 
+use super::topology::edges::Edge;
+
 /// An approximation of an edge, multiple edges, or a face
 #[derive(Debug, PartialEq)]
 pub struct Approximation {
@@ -26,6 +28,40 @@ pub struct Approximation {
 }
 
 impl Approximation {
+    /// Compute an approximate for an edge
+    ///
+    /// `tolerance` defines how far the approximation is allowed to deviate from
+    /// the actual edge.
+    #[cfg(test)]
+    pub fn for_edge(edge: &Edge, tolerance: f64) -> Self {
+        let mut points = Vec::new();
+        edge.curve.approx(tolerance, &mut points);
+
+        if edge.reverse {
+            points.reverse()
+        }
+
+        let mut segment_points = points.clone();
+        if edge.vertices.is_none() {
+            // The edge has no vertices, which means it connects to itself. We
+            // need to reflect that in the approximation.
+
+            if let Some(&point) = points.first() {
+                segment_points.push(point);
+            }
+        }
+
+        let mut segments = Vec::new();
+        for segment in segment_points.windows(2) {
+            let p0 = segment[0];
+            let p1 = segment[1];
+
+            segments.push([p0, p1].into());
+        }
+
+        Self { points, segments }
+    }
+
     /// Validate the approximation
     ///
     /// Returns an `Err(ValidationError)`, if the validation is not valid. See
@@ -112,7 +148,58 @@ mod tests {
     use nalgebra::point;
     use parry3d_f64::shape::Segment;
 
+    use crate::kernel::{geometry::Curve, topology::edges::Edge};
+
     use super::Approximation;
+
+    #[test]
+    fn test_for_edge() {
+        let tolerance = 1.;
+
+        let a = point![1., 2., 3.];
+        let b = point![3., 5., 8.];
+
+        let curve = Curve::Mock { approx: vec![a, b] };
+
+        let edge_regular = Edge {
+            curve: curve.clone(),
+            vertices: Some([(), ()]),
+            reverse: false,
+        };
+        assert_eq!(
+            Approximation::for_edge(&edge_regular, tolerance),
+            Approximation {
+                points: vec![a, b],
+                segments: vec![Segment { a, b }],
+            }
+        );
+
+        let edge_self_connected = Edge {
+            curve: curve.clone(),
+            vertices: None,
+            reverse: false,
+        };
+        assert_eq!(
+            Approximation::for_edge(&edge_self_connected, tolerance),
+            Approximation {
+                points: vec![a, b],
+                segments: vec![Segment { a, b }, Segment { a: b, b: a }],
+            }
+        );
+
+        let edge_reversed = Edge {
+            curve: curve.clone(),
+            vertices: Some([(), ()]),
+            reverse: true,
+        };
+        assert_eq!(
+            Approximation::for_edge(&edge_reversed, tolerance),
+            Approximation {
+                points: vec![b, a],
+                segments: vec![Segment { a: b, b: a }],
+            }
+        );
+    }
 
     #[test]
     fn test_validate() {
