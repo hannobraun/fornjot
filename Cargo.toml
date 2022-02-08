@@ -37,3 +37,7 @@ features = ["derive"]
 [dependencies.fj]
 version = "0.5.0"
 path    = "fj"
+
+[dependencies.tracing-subscriber]
+version  = "0.3.8"
+features = ["fmt"]
