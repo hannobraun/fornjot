@@ -1,7 +1,7 @@
 pub mod geometry;
 pub mod shapes;
 pub mod topology;
-pub mod util;
+pub mod triangulation;
 
 use parry3d_f64::bounding_volume::AABB;
 

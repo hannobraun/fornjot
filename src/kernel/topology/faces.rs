@@ -14,7 +14,7 @@ use parry3d_f64::{
 
 use crate::{
     debug::{DebugInfo, TriangleEdgeCheck},
-    kernel::{geometry::Surface, util::triangulate},
+    kernel::{geometry::Surface, triangulation::triangulate},
 };
 
 use super::edges::Edges;
