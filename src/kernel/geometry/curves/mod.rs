@@ -29,7 +29,6 @@ pub enum Curve {
 
     /// A mock curve used for testing
     #[cfg(test)]
-    #[allow(unused)]
     Mock { approx: Vec<Point<3>> },
 }
 
