@@ -110,7 +110,7 @@ impl Face {
             Self::Face { edges, surface } => {
                 let approx = edges.approx(tolerance);
 
-                let vertices: Vec<_> = approx
+                let points: Vec<_> = approx
                     .points
                     .into_iter()
                     .map(|vertex| {
@@ -136,11 +136,11 @@ impl Face {
                 // We're also going to need a point outside of the polygon, for
                 // the point-in-polygon tests.
                 let aabb = AABB::from_points(
-                    vertices.iter().map(|vertex| &vertex.value),
+                    points.iter().map(|vertex| &vertex.value),
                 );
                 let outside = aabb.maxs * 2.;
 
-                let mut triangles = triangulate(vertices);
+                let mut triangles = triangulate(points);
                 let face_as_polygon = segments;
 
                 triangles.retain(|t| {
