@@ -1,8 +1,11 @@
 use nalgebra::vector;
-use parry3d_f64::{math::Isometry, shape::Segment};
+use parry3d_f64::math::Isometry;
 
 use crate::{
-    kernel::geometry::{Circle, Curve},
+    kernel::{
+        approximation::Approximation,
+        geometry::{Circle, Curve},
+    },
     math::Point,
 };
 
@@ -62,18 +65,18 @@ impl Edges {
     /// Only approximating an edge once, and then referring to that
     /// approximation from then on where needed, would take care of these two
     /// problems.
-    pub fn approx(&self, tolerance: f64) -> Approx {
-        let mut vertices = Vec::new();
+    pub fn approx(&self, tolerance: f64) -> Approximation {
+        let mut points = Vec::new();
         let mut segments = Vec::new();
 
         for cycle in &self.cycles {
             let approx = cycle.approx(tolerance);
 
-            vertices.extend(approx.vertices);
+            points.extend(approx.points);
             segments.extend(approx.segments);
         }
 
-        Approx { vertices, segments }
+        Approximation { points, segments }
     }
 }
 
@@ -92,22 +95,22 @@ impl Cycle {
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual cycle.
-    pub fn approx(&self, tolerance: f64) -> Approx {
-        let mut vertices = Vec::new();
+    pub fn approx(&self, tolerance: f64) -> Approximation {
+        let mut points = Vec::new();
         let mut segments = Vec::new();
 
         for edge in &self.edges {
             let approx = edge.approx(tolerance);
 
-            vertices.extend(approx.vertices);
+            points.extend(approx.points);
             segments.extend(approx.segments);
         }
 
         // As this is a cycle, the last vertex of an edge could be identical to
         // the first vertex of the next. Let's remove those duplicates.
-        vertices.dedup();
+        points.dedup();
 
-        Approx { vertices, segments }
+        Approximation { points, segments }
     }
 }
 
@@ -172,20 +175,20 @@ impl Edge {
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual edge.
-    pub fn approx(&self, tolerance: f64) -> Approx {
-        let mut vertices = Vec::new();
-        self.curve.approx(tolerance, &mut vertices);
+    pub fn approx(&self, tolerance: f64) -> Approximation {
+        let mut points = Vec::new();
+        self.curve.approx(tolerance, &mut points);
 
         if self.reverse {
-            vertices.reverse()
+            points.reverse()
         }
 
-        let mut segment_vertices = vertices.clone();
+        let mut segment_vertices = points.clone();
         if self.vertices.is_none() {
             // The edge has no vertices, which means it connects to itself. We
             // need to reflect that in the approximation.
 
-            if let Some(&vertex) = vertices.first() {
+            if let Some(&vertex) = points.first() {
                 segment_vertices.push(vertex);
             }
         }
@@ -198,12 +201,6 @@ impl Edge {
             segments.push([v0, v1].into());
         }
 
-        Approx { vertices, segments }
+        Approximation { points, segments }
     }
-}
-
-/// An approximation of one or more edges
-pub struct Approx {
-    pub vertices: Vec<Point<3>>,
-    pub segments: Vec<Segment>,
 }

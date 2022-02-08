@@ -11,6 +11,7 @@ use parry3d_f64::{
     query::Ray as Ray3,
     shape::{Segment as Segment3, Triangle},
 };
+use tracing::warn;
 
 use crate::{
     debug::{DebugInfo, TriangleEdgeCheck},
@@ -110,8 +111,14 @@ impl Face {
             Self::Face { edges, surface } => {
                 let approx = edges.approx(tolerance);
 
-                let vertices: Vec<_> = approx
-                    .vertices
+                // Can't make this a panic, as the current approximation code
+                // actually produces invalid approximations.
+                if let Err(err) = approx.validate() {
+                    warn!("Invalid approximation: {:?}", err);
+                }
+
+                let points: Vec<_> = approx
+                    .points
                     .into_iter()
                     .map(|vertex| {
                         // Can't panic, unless the approximation wrongfully
@@ -136,11 +143,11 @@ impl Face {
                 // We're also going to need a point outside of the polygon, for
                 // the point-in-polygon tests.
                 let aabb = AABB::from_points(
-                    vertices.iter().map(|vertex| &vertex.value),
+                    points.iter().map(|vertex| &vertex.value),
                 );
                 let outside = aabb.maxs * 2.;
 
-                let mut triangles = triangulate(vertices);
+                let mut triangles = triangulate(points);
                 let face_as_polygon = segments;
 
                 triangles.retain(|t| {
