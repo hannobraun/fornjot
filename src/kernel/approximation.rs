@@ -6,6 +6,7 @@ use parry3d_f64::shape::Segment;
 use crate::math::Point;
 
 /// An approximation of an edge, multiple edges, or a face
+#[derive(Debug, PartialEq)]
 pub struct Approximation {
     /// All points that make up the approximation
     ///
