@@ -72,11 +72,14 @@ impl Edges {
         for cycle in &self.cycles {
             let approx = cycle.approx(tolerance);
 
-            vertices.extend(approx.vertices);
+            vertices.extend(approx.points);
             segments.extend(approx.segments);
         }
 
-        Approximation { vertices, segments }
+        Approximation {
+            points: vertices,
+            segments,
+        }
     }
 }
 
@@ -102,7 +105,7 @@ impl Cycle {
         for edge in &self.edges {
             let approx = edge.approx(tolerance);
 
-            vertices.extend(approx.vertices);
+            vertices.extend(approx.points);
             segments.extend(approx.segments);
         }
 
@@ -110,7 +113,10 @@ impl Cycle {
         // the first vertex of the next. Let's remove those duplicates.
         vertices.dedup();
 
-        Approximation { vertices, segments }
+        Approximation {
+            points: vertices,
+            segments,
+        }
     }
 }
 
@@ -201,6 +207,9 @@ impl Edge {
             segments.push([v0, v1].into());
         }
 
-        Approximation { vertices, segments }
+        Approximation {
+            points: vertices,
+            segments,
+        }
     }
 }

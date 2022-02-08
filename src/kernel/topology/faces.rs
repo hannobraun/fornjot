@@ -111,7 +111,7 @@ impl Face {
                 let approx = edges.approx(tolerance);
 
                 let vertices: Vec<_> = approx
-                    .vertices
+                    .points
                     .into_iter()
                     .map(|vertex| {
                         // Can't panic, unless the approximation wrongfully
