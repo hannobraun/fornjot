@@ -26,6 +26,11 @@ pub enum Curve {
 
     /// A line
     Line(Line),
+
+    /// A mock curve used for testing
+    #[cfg(test)]
+    #[allow(unused)]
+    Mock { approx: Vec<Point<3>> },
 }
 
 impl Curve {
@@ -34,6 +39,9 @@ impl Curve {
         match self {
             Self::Circle(circle) => Self::Circle(circle.transform(transform)),
             Self::Line(line) => Self::Line(line.transform(transform)),
+
+            #[cfg(test)]
+            Self::Mock { .. } => todo!(),
         }
     }
 
@@ -57,6 +65,9 @@ impl Curve {
         match self {
             Self::Circle(circle) => circle.approx(tolerance, out),
             Self::Line(Line { a, b }) => out.extend([*a, *b]),
+
+            #[cfg(test)]
+            Self::Mock { approx } => out.extend(approx),
         }
     }
 }
