@@ -66,20 +66,17 @@ impl Edges {
     /// approximation from then on where needed, would take care of these two
     /// problems.
     pub fn approx(&self, tolerance: f64) -> Approximation {
-        let mut vertices = Vec::new();
+        let mut points = Vec::new();
         let mut segments = Vec::new();
 
         for cycle in &self.cycles {
             let approx = cycle.approx(tolerance);
 
-            vertices.extend(approx.points);
+            points.extend(approx.points);
             segments.extend(approx.segments);
         }
 
-        Approximation {
-            points: vertices,
-            segments,
-        }
+        Approximation { points, segments }
     }
 }
 
@@ -99,24 +96,21 @@ impl Cycle {
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual cycle.
     pub fn approx(&self, tolerance: f64) -> Approximation {
-        let mut vertices = Vec::new();
+        let mut points = Vec::new();
         let mut segments = Vec::new();
 
         for edge in &self.edges {
             let approx = edge.approx(tolerance);
 
-            vertices.extend(approx.points);
+            points.extend(approx.points);
             segments.extend(approx.segments);
         }
 
         // As this is a cycle, the last vertex of an edge could be identical to
         // the first vertex of the next. Let's remove those duplicates.
-        vertices.dedup();
+        points.dedup();
 
-        Approximation {
-            points: vertices,
-            segments,
-        }
+        Approximation { points, segments }
     }
 }
 
@@ -182,19 +176,19 @@ impl Edge {
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual edge.
     pub fn approx(&self, tolerance: f64) -> Approximation {
-        let mut vertices = Vec::new();
-        self.curve.approx(tolerance, &mut vertices);
+        let mut points = Vec::new();
+        self.curve.approx(tolerance, &mut points);
 
         if self.reverse {
-            vertices.reverse()
+            points.reverse()
         }
 
-        let mut segment_vertices = vertices.clone();
+        let mut segment_vertices = points.clone();
         if self.vertices.is_none() {
             // The edge has no vertices, which means it connects to itself. We
             // need to reflect that in the approximation.
 
-            if let Some(&vertex) = vertices.first() {
+            if let Some(&vertex) = points.first() {
                 segment_vertices.push(vertex);
             }
         }
@@ -207,9 +201,6 @@ impl Edge {
             segments.push([v0, v1].into());
         }
 
-        Approximation {
-            points: vertices,
-            segments,
-        }
+        Approximation { points, segments }
     }
 }
