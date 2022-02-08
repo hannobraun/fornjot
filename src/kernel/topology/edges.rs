@@ -100,7 +100,7 @@ impl Cycle {
         let mut segments = Vec::new();
 
         for edge in &self.edges {
-            let approx = edge.approx(tolerance);
+            let approx = Approximation::for_edge(&edge, tolerance);
 
             points.extend(approx.points);
             segments.extend(approx.segments);
@@ -169,38 +169,5 @@ impl Edge {
     /// Reverse the edge
     pub fn reverse(&mut self) {
         self.reverse = !self.reverse;
-    }
-
-    /// Compute an approximation of the edge
-    ///
-    /// `tolerance` defines how far the approximation is allowed to deviate from
-    /// the actual edge.
-    pub fn approx(&self, tolerance: f64) -> Approximation {
-        let mut points = Vec::new();
-        self.curve.approx(tolerance, &mut points);
-
-        if self.reverse {
-            points.reverse()
-        }
-
-        let mut segment_vertices = points.clone();
-        if self.vertices.is_none() {
-            // The edge has no vertices, which means it connects to itself. We
-            // need to reflect that in the approximation.
-
-            if let Some(&vertex) = points.first() {
-                segment_vertices.push(vertex);
-            }
-        }
-
-        let mut segments = Vec::new();
-        for segment in segment_vertices.windows(2) {
-            let v0 = segment[0];
-            let v1 = segment[1];
-
-            segments.push([v0, v1].into());
-        }
-
-        Approximation { points, segments }
     }
 }

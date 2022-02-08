@@ -32,7 +32,6 @@ impl Approximation {
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual edge.
-    #[cfg(test)]
     pub fn for_edge(edge: &Edge, tolerance: f64) -> Self {
         let mut points = Vec::new();
         edge.curve.approx(tolerance, &mut points);
