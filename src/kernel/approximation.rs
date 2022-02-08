@@ -1,7 +1,5 @@
-#[cfg(test)]
 use std::collections::HashSet;
 
-#[cfg(test)]
 use decorum::R64;
 use parry3d_f64::shape::Segment;
 
@@ -31,7 +29,6 @@ impl Approximation {
     ///
     /// Returns an `Err(ValidationError)`, if the validation is not valid. See
     /// [`ValidationError`] for the ways that the approximation can be invalid.
-    #[cfg(test)]
     pub fn validate(&self) -> Result<(), ValidationError> {
         let mut duplicate_points = Vec::new();
         let mut duplicate_segments = Vec::new();
@@ -90,7 +87,6 @@ impl Approximation {
 }
 
 /// Error returned by [`Approximation::validate`]
-#[cfg(test)]
 #[derive(Debug)]
 pub struct ValidationError {
     /// Points that are duplicated
@@ -106,7 +102,6 @@ pub struct ValidationError {
     pub segments_with_invalid_points: Vec<Segment>,
 }
 
-#[cfg(test)]
 fn point_to_r64(point: Point<3>) -> [R64; 3] {
     [point.x.into(), point.y.into(), point.z.into()]
 }
