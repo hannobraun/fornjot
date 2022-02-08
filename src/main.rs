@@ -33,6 +33,8 @@ use crate::{
 };
 
 fn main() -> anyhow::Result<()> {
+    tracing_subscriber::fmt::init();
+
     let args = Args::parse();
     let model = Model::new(args.model);
 
