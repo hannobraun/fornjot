@@ -3,7 +3,7 @@ use parry3d_f64::math::Isometry;
 
 use crate::{
     kernel::{
-        approximation::Approx,
+        approximation::Approximation,
         geometry::{Circle, Curve},
     },
     math::Point,
@@ -65,7 +65,7 @@ impl Edges {
     /// Only approximating an edge once, and then referring to that
     /// approximation from then on where needed, would take care of these two
     /// problems.
-    pub fn approx(&self, tolerance: f64) -> Approx {
+    pub fn approx(&self, tolerance: f64) -> Approximation {
         let mut vertices = Vec::new();
         let mut segments = Vec::new();
 
@@ -76,7 +76,7 @@ impl Edges {
             segments.extend(approx.segments);
         }
 
-        Approx { vertices, segments }
+        Approximation { vertices, segments }
     }
 }
 
@@ -95,7 +95,7 @@ impl Cycle {
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual cycle.
-    pub fn approx(&self, tolerance: f64) -> Approx {
+    pub fn approx(&self, tolerance: f64) -> Approximation {
         let mut vertices = Vec::new();
         let mut segments = Vec::new();
 
@@ -110,7 +110,7 @@ impl Cycle {
         // the first vertex of the next. Let's remove those duplicates.
         vertices.dedup();
 
-        Approx { vertices, segments }
+        Approximation { vertices, segments }
     }
 }
 
@@ -175,7 +175,7 @@ impl Edge {
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual edge.
-    pub fn approx(&self, tolerance: f64) -> Approx {
+    pub fn approx(&self, tolerance: f64) -> Approximation {
         let mut vertices = Vec::new();
         self.curve.approx(tolerance, &mut vertices);
 
@@ -201,6 +201,6 @@ impl Edge {
             segments.push([v0, v1].into());
         }
 
-        Approx { vertices, segments }
+        Approximation { vertices, segments }
     }
 }
