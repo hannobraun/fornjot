@@ -1,10 +1,12 @@
-use std::collections::HashSet;
+use std::{cmp::Ordering, collections::HashSet};
 
 use decorum::R64;
 use parry3d_f64::shape::Segment;
 
 use crate::math::Point;
 
+#[cfg(test)]
+use super::topology::edges::Cycle;
 use super::topology::edges::Edge;
 
 /// An approximation of an edge, multiple edges, or a face
@@ -57,6 +59,51 @@ impl Approximation {
 
             segments.push([p0, p1].into());
         }
+
+        Self { points, segments }
+    }
+
+    /// Compute an approximation for a cycle
+    ///
+    /// `tolerance` defines how far the approximation is allowed to deviate from
+    /// the actual cycle.
+    #[cfg(test)]
+    pub fn for_cycle(cycle: &Cycle, tolerance: f64) -> Self {
+        let mut points = Vec::new();
+        let mut segments = Vec::new();
+
+        for edge in &cycle.edges {
+            let approx = Self::for_edge(edge, tolerance);
+
+            points.extend(approx.points);
+            segments.extend(approx.segments);
+        }
+
+        // As this is a cycle, neighboring edges are going to share vertices.
+        // Let's remove all those duplicates.
+        points.sort_by(|a, b| {
+            if a.x < b.x {
+                return Ordering::Less;
+            }
+            if a.x > b.x {
+                return Ordering::Greater;
+            }
+            if a.y < b.y {
+                return Ordering::Less;
+            }
+            if a.y > b.y {
+                return Ordering::Greater;
+            }
+            if a.z < b.z {
+                return Ordering::Less;
+            }
+            if a.z > b.z {
+                return Ordering::Greater;
+            }
+
+            Ordering::Equal
+        });
+        points.dedup();
 
         Self { points, segments }
     }
@@ -147,7 +194,10 @@ mod tests {
     use nalgebra::point;
     use parry3d_f64::shape::Segment;
 
-    use crate::kernel::{geometry::Curve, topology::edges::Edge};
+    use crate::kernel::{
+        geometry::Curve,
+        topology::edges::{Cycle, Edge},
+    };
 
     use super::Approximation;
 
@@ -196,6 +246,47 @@ mod tests {
             Approximation {
                 points: vec![b, a],
                 segments: vec![Segment { a: b, b: a }],
+            }
+        );
+    }
+
+    #[test]
+    fn test_for_cycle() {
+        let tolerance = 1.;
+
+        let a = point![1., 2., 3.];
+        let b = point![2., 3., 5.];
+        let c = point![3., 5., 8.];
+
+        let ab = Edge {
+            curve: Curve::Mock { approx: vec![a, b] },
+            vertices: Some([(), ()]),
+            reverse: false,
+        };
+        let bc = Edge {
+            curve: Curve::Mock { approx: vec![b, c] },
+            vertices: Some([(), ()]),
+            reverse: false,
+        };
+        let ca = Edge {
+            curve: Curve::Mock { approx: vec![c, a] },
+            vertices: Some([(), ()]),
+            reverse: false,
+        };
+
+        let cycle = Cycle {
+            edges: vec![ab, bc, ca],
+        };
+
+        assert_eq!(
+            Approximation::for_cycle(&cycle, tolerance),
+            Approximation {
+                points: vec![a, b, c],
+                segments: vec![
+                    Segment { a: a, b: b },
+                    Segment { a: b, b: c },
+                    Segment { a: c, b: a },
+                ],
             }
         );
     }
