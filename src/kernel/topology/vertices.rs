@@ -1,5 +1,3 @@
-#![allow(unused)]
-
 use crate::math::Point;
 
 /// The vertices of a shape
