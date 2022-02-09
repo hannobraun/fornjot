@@ -28,7 +28,7 @@ impl Shape for fj::Sketch {
     }
 
     fn edges(&self) -> Edges {
-        let v = match self.vertices() {
+        let vertices = match self.vertices() {
             vertices if vertices.is_empty() => vertices,
             mut vertices => {
                 // Add the first vertex at the end again, to close the loop.
@@ -41,7 +41,7 @@ impl Shape for fj::Sketch {
         };
 
         let mut edges = Vec::new();
-        for window in v.windows(2) {
+        for window in vertices.windows(2) {
             // Can't panic, we passed `2` to `windows`.
             //
             // Can be cleaned up, once `array_windows` is stable.
