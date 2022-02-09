@@ -14,7 +14,10 @@ use parry3d_f64::{
 
 use crate::{
     debug::{DebugInfo, TriangleEdgeCheck},
-    kernel::{geometry::Surface, triangulation::triangulate},
+    kernel::{
+        approximation::Approximation, geometry::Surface,
+        triangulation::triangulate,
+    },
 };
 
 use super::edges::Edges;
@@ -108,7 +111,7 @@ impl Face {
     ) {
         match self {
             Self::Face { edges, surface } => {
-                let approx = edges.approx(tolerance);
+                let approx = Approximation::for_edges(&edges, tolerance);
                 approx.validate().expect("Invalid approximation");
 
                 let points: Vec<_> = approx

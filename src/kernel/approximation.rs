@@ -5,7 +5,7 @@ use parry3d_f64::shape::Segment;
 
 use crate::math::Point;
 
-use super::topology::edges::{Cycle, Edge};
+use super::topology::edges::{Cycle, Edge, Edges};
 
 /// An approximation of an edge, multiple edges, or a face
 #[derive(Debug, PartialEq)]
@@ -105,6 +105,24 @@ impl Approximation {
         Self { points, segments }
     }
 
+    /// Compute an approximation for multiple edges
+    ///
+    /// `tolerance` defines how far the approximation is allowed to deviate from
+    /// the actual edges.
+    pub fn for_edges(edges: &Edges, tolerance: f64) -> Self {
+        let mut points = Vec::new();
+        let mut segments = Vec::new();
+
+        for cycle in &edges.cycles {
+            let approx = Self::for_cycle(cycle, tolerance);
+
+            points.extend(approx.points);
+            segments.extend(approx.segments);
+        }
+
+        Self { points, segments }
+    }
+
     /// Validate the approximation
     ///
     /// Returns an `Err(ValidationError)`, if the validation is not valid. See
@@ -193,7 +211,7 @@ mod tests {
 
     use crate::kernel::{
         geometry::Curve,
-        topology::edges::{Cycle, Edge},
+        topology::edges::{Cycle, Edge, Edges},
     };
 
     use super::Approximation;
@@ -283,6 +301,61 @@ mod tests {
                     Segment { a: a, b: b },
                     Segment { a: b, b: c },
                     Segment { a: c, b: a },
+                ],
+            }
+        );
+    }
+
+    #[test]
+    fn test_for_edges() {
+        let tolerance = 1.;
+
+        let a = point![1., 2., 3.];
+        let b = point![2., 3., 5.];
+        let c = point![3., 5., 8.];
+        let d = point![5., 8., 13.];
+
+        let ab = Edge {
+            curve: Curve::Mock { approx: vec![a, b] },
+            vertices: Some([(), ()]),
+            reverse: false,
+        };
+        let ba = Edge {
+            curve: Curve::Mock { approx: vec![b, a] },
+            vertices: Some([(), ()]),
+            reverse: false,
+        };
+        let cd = Edge {
+            curve: Curve::Mock { approx: vec![c, d] },
+            vertices: Some([(), ()]),
+            reverse: false,
+        };
+        let dc = Edge {
+            curve: Curve::Mock { approx: vec![d, c] },
+            vertices: Some([(), ()]),
+            reverse: false,
+        };
+
+        let ab_ba = Cycle {
+            edges: vec![ab, ba],
+        };
+        let cd_dc = Cycle {
+            edges: vec![cd, dc],
+        };
+
+        let edges = Edges {
+            cycles: vec![ab_ba, cd_dc],
+        };
+
+        assert_eq!(
+            Approximation::for_edges(&edges, tolerance),
+            Approximation {
+                points: vec![a, b, c, d],
+                segments: vec![
+                    Segment { a: a, b: b },
+                    Segment { a: b, b: a },
+                    Segment { a: c, b: d },
+                    Segment { a: d, b: c },
                 ],
             }
         );
