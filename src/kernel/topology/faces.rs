@@ -11,7 +11,6 @@ use parry3d_f64::{
     query::Ray as Ray3,
     shape::{Segment as Segment3, Triangle},
 };
-use tracing::warn;
 
 use crate::{
     debug::{DebugInfo, TriangleEdgeCheck},
@@ -110,12 +109,7 @@ impl Face {
         match self {
             Self::Face { edges, surface } => {
                 let approx = edges.approx(tolerance);
-
-                // Can't make this a panic, as the current approximation code
-                // actually produces invalid approximations.
-                if let Err(err) = approx.validate() {
-                    warn!("Invalid approximation: {:?}", err);
-                }
+                approx.validate().expect("Invalid approximation");
 
                 let points: Vec<_> = approx
                     .points
