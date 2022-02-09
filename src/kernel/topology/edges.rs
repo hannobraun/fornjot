@@ -69,6 +69,36 @@ pub struct Edge {
     /// here. For now, this field just tracks whether there are such bounding
     /// vertices or not. If there are, they are implicitly assumed to be the
     /// points with the curve coordinates `0` and `1`.
+    ///
+    /// # Implementation note
+    ///
+    /// Once we add vertices here, we'll need to update the approximation code
+    /// to support that. Down on the curve level, the approximation method must
+    /// not return approximations of the vertices themselves, as those would
+    /// prevent duplicate vertices from being detected reliably, hence
+    /// compromising the the correctness of the whole approximation.
+    ///
+    /// To prevent this, curves must only return approximated points _between_
+    /// the vertices. The following might be a good method signature to achieve
+    /// that:
+    /// ``` rust
+    /// fn approximate_between(&self, vertices: &Option<[Vertex; 2]>)
+    ///     -> Vev<Point<3>>
+    /// {
+    ///     // ...
+    /// }
+    /// ```
+    ///
+    /// When considering how to implement such a method, it becomes obvious that
+    /// passing 3D vertices would be kind of a pain. Not only would those have
+    /// to be converted into 1D curve coordinates to be useful, making the
+    /// implementation cumbersome, it would also make the method fallible,
+    /// exposing the inherent error-proneness of representing points that bound
+    /// a vertex on a curve in 3D.
+    ///
+    /// The logical conclusion is that vertices here should be represented in 1D
+    /// curve coordinates, only being converted into 3D points for the
+    /// approximation.
     pub vertices: Option<[(); 2]>,
 
     /// Indicates whether the curve's direction is reversed
