@@ -5,9 +5,7 @@ use parry3d_f64::shape::Segment;
 
 use crate::math::Point;
 
-#[cfg(test)]
-use super::topology::edges::Edges;
-use super::topology::edges::{Cycle, Edge};
+use super::topology::edges::{Cycle, Edge, Edges};
 
 /// An approximation of an edge, multiple edges, or a face
 #[derive(Debug, PartialEq)]
@@ -111,7 +109,6 @@ impl Approximation {
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual edges.
-    #[cfg(test)]
     pub fn for_edges(edges: &Edges, tolerance: f64) -> Self {
         let mut points = Vec::new();
         let mut segments = Vec::new();

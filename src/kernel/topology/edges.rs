@@ -2,10 +2,7 @@ use nalgebra::vector;
 use parry3d_f64::math::Isometry;
 
 use crate::{
-    kernel::{
-        approximation::Approximation,
-        geometry::{Circle, Curve},
-    },
+    kernel::geometry::{Circle, Curve},
     math::Point,
 };
 
@@ -42,24 +39,6 @@ impl Edges {
         }
 
         self
-    }
-
-    /// Compute an approximation of the edges
-    ///
-    /// `tolerance` defines how far the approximation is allowed to deviate from
-    /// the actual edges.
-    pub fn approx(&self, tolerance: f64) -> Approximation {
-        let mut points = Vec::new();
-        let mut segments = Vec::new();
-
-        for cycle in &self.cycles {
-            let approx = Approximation::for_cycle(cycle, tolerance);
-
-            points.extend(approx.points);
-            segments.extend(approx.segments);
-        }
-
-        Approximation { points, segments }
     }
 }
 
