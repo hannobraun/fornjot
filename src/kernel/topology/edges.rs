@@ -70,7 +70,7 @@ impl Edges {
         let mut segments = Vec::new();
 
         for cycle in &self.cycles {
-            let approx = cycle.approx(tolerance);
+            let approx = Approximation::for_cycle(cycle, tolerance);
 
             points.extend(approx.points);
             segments.extend(approx.segments);
@@ -88,30 +88,6 @@ impl Edges {
 #[derive(Clone)]
 pub struct Cycle {
     pub edges: Vec<Edge>,
-}
-
-impl Cycle {
-    /// Compute an approximation of the cycle
-    ///
-    /// `tolerance` defines how far the approximation is allowed to deviate from
-    /// the actual cycle.
-    pub fn approx(&self, tolerance: f64) -> Approximation {
-        let mut points = Vec::new();
-        let mut segments = Vec::new();
-
-        for edge in &self.edges {
-            let approx = Approximation::for_edge(&edge, tolerance);
-
-            points.extend(approx.points);
-            segments.extend(approx.segments);
-        }
-
-        // As this is a cycle, the last vertex of an edge could be identical to
-        // the first vertex of the next. Let's remove those duplicates.
-        points.dedup();
-
-        Approximation { points, segments }
-    }
 }
 
 /// An edge of a shape
