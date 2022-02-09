@@ -3,10 +3,9 @@ use parry3d_f64::bounding_volume::{BoundingVolume as _, AABB};
 use crate::{
     debug::DebugInfo,
     kernel::{
-        topology::{edges::Edges, faces::Faces},
+        topology::{edges::Edges, faces::Faces, vertices::Vertices},
         Shape,
     },
-    math::Point,
 };
 
 impl Shape for fj::Union {
@@ -37,7 +36,7 @@ impl Shape for fj::Union {
         todo!()
     }
 
-    fn vertices(&self) -> Vec<Point<3>> {
+    fn vertices(&self) -> Vertices {
         todo!()
     }
 }

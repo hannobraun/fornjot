@@ -6,9 +6,9 @@ pub mod triangulation;
 
 use parry3d_f64::bounding_volume::AABB;
 
-use crate::{debug::DebugInfo, math::Point};
+use crate::debug::DebugInfo;
 
-use self::topology::{edges::Edges, faces::Faces};
+use self::topology::{edges::Edges, faces::Faces, vertices::Vertices};
 
 /// Implemented by all shapes
 pub trait Shape {
@@ -31,7 +31,7 @@ pub trait Shape {
     fn edges(&self) -> Edges;
 
     /// Return the shape's vertices
-    fn vertices(&self) -> Vec<Point<3>>;
+    fn vertices(&self) -> Vertices;
 }
 
 macro_rules! dispatch {
@@ -81,5 +81,5 @@ dispatch! {
         debug: &mut DebugInfo,
     ) -> Faces;
     edges() -> Edges;
-    vertices() -> Vec<Point<3>>;
+    vertices() -> Vertices;
 }
