@@ -6,10 +6,10 @@ use crate::{
         topology::{
             edges::Edges,
             faces::{Face, Faces},
+            vertices::Vertices,
         },
         Shape,
     },
-    math::Point,
 };
 
 impl Shape for fj::Difference2d {
@@ -94,7 +94,7 @@ impl Shape for fj::Difference2d {
         Edges { cycles: vec![a, b] }
     }
 
-    fn vertices(&self) -> Vec<Point<3>> {
+    fn vertices(&self) -> Vertices {
         todo!()
     }
 }

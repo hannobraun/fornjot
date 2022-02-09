@@ -10,10 +10,10 @@ use crate::{
         topology::{
             edges::Edges,
             faces::{Face, Faces},
+            vertices::Vertices,
         },
         Shape,
     },
-    math::Point,
 };
 
 impl Shape for fj::Sweep {
@@ -77,7 +77,7 @@ impl Shape for fj::Sweep {
         todo!()
     }
 
-    fn vertices(&self) -> Vec<Point<3>> {
+    fn vertices(&self) -> Vertices {
         todo!()
     }
 }

@@ -7,6 +7,7 @@ use crate::{
         topology::{
             edges::{Edge, Edges},
             faces::{Face, Faces},
+            vertices::{Vertex, Vertices},
         },
         Shape,
     },
@@ -15,7 +16,8 @@ use crate::{
 
 impl Shape for fj::Sketch {
     fn bounding_volume(&self) -> AABB {
-        AABB::from_points(&self.vertices())
+        let vertices = self.vertices();
+        AABB::from_points(vertices.0.iter().map(|vertex| vertex.location()))
     }
 
     fn faces(&self, _: f64, _: &mut DebugInfo) -> Faces {
@@ -28,9 +30,11 @@ impl Shape for fj::Sketch {
     }
 
     fn edges(&self) -> Edges {
-        let v = match self.vertices() {
-            vertices if vertices.is_empty() => vertices,
-            mut vertices => {
+        let vertices = match self.vertices() {
+            vertices if vertices.0.is_empty() => vertices.0,
+            vertices => {
+                let mut vertices = vertices.0;
+
                 // Add the first vertex at the end again, to close the loop.
                 //
                 // This can't panic. This `match` expression makes sure that
@@ -41,14 +45,17 @@ impl Shape for fj::Sketch {
         };
 
         let mut edges = Vec::new();
-        for window in v.windows(2) {
+        for window in vertices.windows(2) {
             // Can't panic, we passed `2` to `windows`.
             //
             // Can be cleaned up, once `array_windows` is stable.
             let a = window[0];
             let b = window[1];
 
-            let line = Curve::Line(Line { a, b });
+            let line = Curve::Line(Line {
+                a: *a.location(),
+                b: *b.location(),
+            });
             let edge = Edge::new(line);
 
             edges.push(edge);
@@ -57,10 +64,15 @@ impl Shape for fj::Sketch {
         Edges::single_cycle(edges)
     }
 
-    fn vertices(&self) -> Vec<Point<3>> {
-        self.to_points()
+    fn vertices(&self) -> Vertices {
+        let vertices = self
+            .to_points()
             .into_iter()
-            .map(|[x, y]| Point::from([x, y, 0.]))
-            .collect()
+            // These calls to `create_at` are valid, since the points of this
+            // sketch come directly from the user and define new vertices of the
+            // shape.
+            .map(|[x, y]| Vertex::create_at(Point::from([x, y, 0.])))
+            .collect();
+        Vertices(vertices)
     }
 }

@@ -3,10 +3,10 @@ use parry3d_f64::{bounding_volume::AABB, math::Isometry};
 use crate::{
     debug::DebugInfo,
     kernel::{
-        topology::{edges::Edges, faces::Faces},
+        topology::{edges::Edges, faces::Faces, vertices::Vertices},
         Shape,
     },
-    math::{Point, Vector},
+    math::Vector,
 };
 
 impl Shape for fj::Transform {
@@ -24,7 +24,7 @@ impl Shape for fj::Transform {
         todo!()
     }
 
-    fn vertices(&self) -> Vec<Point<3>> {
+    fn vertices(&self) -> Vertices {
         todo!()
     }
 }

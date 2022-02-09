@@ -8,10 +8,10 @@ use crate::{
         topology::{
             edges::{Edge, Edges},
             faces::{Face, Faces},
+            vertices::Vertices,
         },
         Shape,
     },
-    math::Point,
 };
 
 impl Shape for fj::Circle {
@@ -34,8 +34,8 @@ impl Shape for fj::Circle {
         Edges::single_cycle([Edge::arc(self.radius)])
     }
 
-    fn vertices(&self) -> Vec<Point<3>> {
+    fn vertices(&self) -> Vertices {
         // Circles have just a single round edge with no vertices.
-        Vec::new()
+        Vertices(Vec::new())
     }
 }
