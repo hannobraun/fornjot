@@ -2,6 +2,9 @@
 
 use crate::math::Point;
 
+/// The vertices of a shape
+pub struct Vertices(pub Vec<Vertex>);
+
 /// A vertex
 ///
 /// This struct exists to distinguish between vertices and points at the type
