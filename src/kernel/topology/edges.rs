@@ -48,23 +48,6 @@ impl Edges {
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual edges.
-    ///
-    /// # Implementation note
-    ///
-    /// As of this writing, each edge is approximated multiple times, for the
-    /// triangulation of each face that it is adjacent to. This might not be
-    /// desirable, for the following reasons:
-    ///
-    /// 1. Efficiency: Approximating an edge once and caching the result might
-    ///    realize a performance gain.
-    /// 2. Correctness: It is conceivable that the same edge is approximated
-    ///    differently for each of its neighboring faces, if the algorithm used
-    ///    is not fully deterministic. If that were to happen, this would result
-    ///    in a triangle mesh where the triangles don't connect.
-    ///
-    /// Only approximating an edge once, and then referring to that
-    /// approximation from then on where needed, would take care of these two
-    /// problems.
     pub fn approx(&self, tolerance: f64) -> Approximation {
         let mut points = Vec::new();
         let mut segments = Vec::new();
