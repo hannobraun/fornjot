@@ -13,7 +13,7 @@ pub struct Vertices(pub Vec<Vertex<3>>);
 /// purposes, without presenting any deeper truth about the shape's structure.
 #[derive(Clone, Copy, Debug)]
 pub struct Vertex<const D: usize> {
-    point: Point<D>,
+    location: Point<D>,
 }
 
 impl Vertex<3> {
@@ -34,13 +34,13 @@ impl Vertex<3> {
     /// This can be prevented outright by never creating a new `Vertex` instance
     /// for an existing vertex. Hence why this is strictly forbidden.
     pub fn create_at(location: Point<3>) -> Self {
-        Self { point: location }
+        Self { location }
     }
 }
 
 impl<const D: usize> Vertex<D> {
     /// Access the location of this vertex
     pub fn location(&self) -> &Point<D> {
-        &self.point
+        &self.location
     }
 }
