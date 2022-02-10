@@ -77,10 +77,6 @@ mod tests {
         verify_result(10., 100., 7);
         verify_result(1., 100., 23);
 
-        fn calculate_error(radius: f64, n: u64) -> f64 {
-            radius - radius * (PI / n as f64).cos()
-        }
-
         fn verify_result(tolerance: f64, radius: f64, n: u64) {
             assert_eq!(n, Circle::number_of_vertices(tolerance, radius));
 
@@ -88,6 +84,10 @@ mod tests {
             if n > 3 {
                 assert!(calculate_error(radius, n - 1) >= tolerance);
             }
+        }
+
+        fn calculate_error(radius: f64, n: u64) -> f64 {
+            radius - radius * (PI / n as f64).cos()
         }
     }
 }
