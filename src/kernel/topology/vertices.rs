@@ -75,7 +75,6 @@ impl<const D: usize> Vertex<D> {
     }
 
     /// Convert the vertex to its canonical form
-    #[allow(unused)]
     pub fn to_canonical(&self) -> Vertex<3> {
         Vertex {
             location: self.canonical,
