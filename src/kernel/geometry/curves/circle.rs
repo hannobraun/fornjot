@@ -1,6 +1,6 @@
 use std::f64::consts::PI;
 
-use nalgebra::vector;
+use nalgebra::{point, vector};
 use parry3d_f64::math::Isometry;
 
 use crate::math::{Point, Vector};
@@ -28,6 +28,25 @@ impl Circle {
             center: transform.transform_point(&self.center),
             radius: transform.transform_vector(&radius).xy(),
         }
+    }
+
+    /// Convert a point in model coordinates to curve coordinates
+    ///
+    /// Converts the provided point into curve coordinates between `0.`
+    /// (inclusive) and `PI * 2.` (exclusive).
+    ///
+    /// Ignores the radius, meaning points that are not on the circle will be
+    /// converted to the curve coordinate of their projection on the circle.
+    ///
+    /// This is done to make this method robust against floating point accuracy
+    /// issues. Callers are advised to be careful about the points they pass, as
+    /// the point not being on the circle, intended or not, will not result in
+    /// an error.
+    pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
+        let v = point - self.center;
+        let atan = f64::atan2(v.y, v.x);
+        let coord = if atan >= 0. { atan } else { atan + PI * 2. };
+        point![coord]
     }
 
     pub fn approx(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
@@ -67,9 +86,36 @@ impl Circle {
 
 #[cfg(test)]
 mod tests {
-    use std::f64::consts::PI;
+    use std::f64::consts::{FRAC_PI_2, PI};
+
+    use nalgebra::{point, vector};
 
     use super::Circle;
+
+    #[test]
+    fn test_point_model_to_curve() {
+        let circle = Circle {
+            center: point![1., 2., 3.],
+            radius: vector![1., 0.],
+        };
+
+        assert_eq!(
+            circle.point_model_to_curve(&point![2., 2., 3.]),
+            point![0.],
+        );
+        assert_eq!(
+            circle.point_model_to_curve(&point![1., 3., 3.]),
+            point![FRAC_PI_2],
+        );
+        assert_eq!(
+            circle.point_model_to_curve(&point![0., 2., 3.]),
+            point![PI],
+        );
+        assert_eq!(
+            circle.point_model_to_curve(&point![1., 1., 3.]),
+            point![FRAC_PI_2 * 3.],
+        );
+    }
 
     #[test]
     fn test_number_of_vertices() {

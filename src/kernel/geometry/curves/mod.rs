@@ -26,7 +26,10 @@ pub enum Curve {
 
     /// A mock curve used for testing
     #[cfg(test)]
-    Mock { approx: Vec<Point<3>> },
+    Mock {
+        approx: Vec<Point<3>>,
+        coords: std::cell::RefCell<Vec<Point<1>>>,
+    },
 }
 
 impl Curve {
@@ -38,6 +41,26 @@ impl Curve {
 
             #[cfg(test)]
             Self::Mock { .. } => todo!(),
+        }
+    }
+
+    /// Convert a point in model coordinates to curve coordinates
+    ///
+    /// Whether the point is actually on the curve or not will be ignored. The
+    /// curve coordinates of the projection of the point on the curve will be
+    /// returned.
+    ///
+    /// This is done to make this method robust against floating point accuracy
+    /// issues. Callers are advised to be careful about the points they pass, as
+    /// the point not being on the curve, intended or not, will not result in an
+    /// error.
+    pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
+        match self {
+            Self::Circle(circle) => circle.point_model_to_curve(point),
+            Self::Line(line) => line.point_model_to_curve(point),
+
+            #[cfg(test)]
+            Self::Mock { coords, .. } => coords.borrow_mut().remove(0),
         }
     }
 
@@ -63,7 +86,7 @@ impl Curve {
             Self::Line(Line { a, b }) => out.extend([*a, *b]),
 
             #[cfg(test)]
-            Self::Mock { approx } => out.extend(approx),
+            Self::Mock { approx, .. } => out.extend(approx),
         }
     }
 }

@@ -1,4 +1,6 @@
-use crate::math::Point;
+use parry3d_f64::math::Isometry;
+
+use crate::{kernel::geometry::Curve, math::Point};
 
 /// The vertices of a shape
 pub struct Vertices(pub Vec<Vertex<3>>);
@@ -14,15 +16,27 @@ pub struct Vertices(pub Vec<Vertex<3>>);
 #[derive(Clone, Copy, Debug)]
 pub struct Vertex<const D: usize> {
     location: Point<D>,
+
+    /// The canonical location of this vertex
+    ///
+    /// The canonical location is always a point in 3D space. If this is a
+    /// `Vertex<3>`, this field is just redundant. If the vertex is of different
+    /// dimensionality, this field allows for loss-free conversion back into the
+    /// canonical representation.
+    canonical: Point<3>,
 }
 
 impl Vertex<3> {
     /// Create a vertex at the given location
     ///
+    /// Only 3-dimensional vertices can be created, as that is the canonical
+    /// representation of a vertex. If you need a vertex of different
+    /// dimensionality, use a conversion method.
+    ///
     /// This method **MUST NOT** be used to construct a new instance of `Vertex`
     /// that represents an already existing vertex. If there already exists a
     /// vertex and you need a `Vertex` instance to refer to it, acquire one by
-    /// copying the existing `Vertex` instance.
+    /// copying or converting the existing `Vertex` instance.
     ///
     /// Every time you create a `Vertex` instance, you might do so using a point
     /// you have computed. When doing this for an existing vertex, you run the
@@ -34,7 +48,23 @@ impl Vertex<3> {
     /// This can be prevented outright by never creating a new `Vertex` instance
     /// for an existing vertex. Hence why this is strictly forbidden.
     pub fn create_at(location: Point<3>) -> Self {
-        Self { location }
+        Self {
+            location,
+            canonical: location,
+        }
+    }
+
+    /// Convert the vertex to a 1-dimensional vertex
+    ///
+    /// Uses to provided curve to convert the vertex into a 1-dimensional vertex
+    /// in the curve's coordinate system.
+    pub fn to_1d(&self, curve: &Curve) -> Vertex<1> {
+        let location = curve.point_model_to_curve(&self.location);
+
+        Vertex {
+            location,
+            canonical: self.canonical,
+        }
     }
 }
 
@@ -42,5 +72,15 @@ impl<const D: usize> Vertex<D> {
     /// Access the location of this vertex
     pub fn location(&self) -> &Point<D> {
         &self.location
+    }
+
+    /// Create a transformed vertex
+    ///
+    /// The transformed vertex has its canonical form transformed by the
+    /// transformation provided, but is otherwise identical.
+    #[must_use]
+    pub fn transform(mut self, transform: &Isometry<f64>) -> Self {
+        self.canonical = transform.transform_point(&self.canonical);
+        self
     }
 }

@@ -6,6 +6,8 @@ use crate::{
     math::Point,
 };
 
+use super::vertices::Vertex;
+
 /// The edges of a shape
 #[derive(Clone)]
 pub struct Edges {
@@ -34,7 +36,7 @@ impl Edges {
     pub fn transform(mut self, transform: &Isometry<f64>) -> Self {
         for cycle in &mut self.cycles {
             for edge in &mut cycle.edges {
-                edge.curve = edge.curve.clone().transform(transform);
+                *edge = edge.clone().transform(transform);
             }
         }
 
@@ -99,7 +101,7 @@ pub struct Edge {
     /// The logical conclusion is that vertices here should be represented in 1D
     /// curve coordinates, only being converted into 3D points for the
     /// approximation.
-    pub vertices: Option<[(); 2]>,
+    pub vertices: Option<[Vertex<1>; 2]>,
 
     /// Indicates whether the curve's direction is reversed
     ///
@@ -111,10 +113,20 @@ pub struct Edge {
 
 impl Edge {
     /// Construct an edge
-    pub fn new(curve: Curve) -> Self {
+    ///
+    /// If vertices are provided in `vertices`, they must be on `curve`.
+    ///
+    /// This constructor will convert the vertices into curve coordinates. If
+    /// they are not on the curve, this will result in their projection being
+    /// converted into curve coordinates, which is likely not the caller's
+    /// intention.
+    pub fn new(curve: Curve, vertices: Option<[Vertex<3>; 2]>) -> Self {
+        let vertices = vertices
+            .map(|vertices| vertices.map(|vertex| vertex.to_1d(&curve)));
+
         Self {
             curve,
-            vertices: Some([(), ()]),
+            vertices,
             reverse: false,
         }
     }
@@ -137,5 +149,16 @@ impl Edge {
     /// Reverse the edge
     pub fn reverse(&mut self) {
         self.reverse = !self.reverse;
+    }
+
+    /// Transform the edge
+    #[must_use]
+    pub fn transform(mut self, transform: &Isometry<f64>) -> Self {
+        self.curve = self.curve.transform(transform);
+        self.vertices = self
+            .vertices
+            .map(|vertices| vertices.map(|vertex| vertex.transform(transform)));
+
+        self
     }
 }
