@@ -11,7 +11,7 @@ pub struct Vertices(pub Vec<Vertex<3>>);
 ///
 /// Points, on the other hand, might be used to approximate a shape for various
 /// purposes, without presenting any deeper truth about the shape's structure.
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub struct Vertex<const D: usize> {
     point: Point<D>,
 }
