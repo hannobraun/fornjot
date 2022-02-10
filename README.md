@@ -10,23 +10,21 @@ Fornjot is an **early-stage project** to create a **next-generation Code-CAD app
 
 For an introduction of what the project aims to achieve, [please check out the website](https://www.fornjot.app/).
 
-This is Fornjot's main repository. The [website is maintained in a separate repository](https://github.com/hannobraun/www.fornjot.app).
-
 
 ## Sponsors
 
 Fornjot is supported by [**@lthiery**](https://github.com/lthiery), [**@Yatekii**](https://github.com/Yatekii), [**@ahdinosaur**](https://github.com/ahdinosaur), [**@jessebraham**](https://github.com/jessebraham), and [**@Kethku**](https://github.com/Kethku). Thank you!
 
-**Please consider [supporting me too](https://github.com/sponsors/hannobraun), to make Fornjot sustainable long-term.**
+**Please consider [supporting me too](https://github.com/sponsors/hannobraun), to help make Fornjot sustainable long-term.**
 
 
 ## Status
 
-Fornjot is **under active development, but still experimental**. Efforts are currently focused on incrementally expanding features, to support more kinds of CAD models, and plugging holes in the algorithms used, to solidify the existing functionality. Right now, there still many such holes, as many of the algorithms make simplifying assumptions that might not be true for your model.
+Fornjot is **under active development, but still experimental**. Efforts are currently focused on creating a [stable set of basic CAD features](https://github.com/hannobraun/Fornjot/milestone/1).
 
-Priorities have recently shifted towards addressing that, but it will take a while to fix everything. If you are interested in Fornjot and are considering to use it, you should fully expect to run into limitation pretty much immediately. Unless you are willing to contribute to its development, it would be better to wait for a year or ten, to let it mature.
+If you are interested in Fornjot and are considering to use it, you should fully expect to run into limitation pretty much immediately. Unless you are willing to contribute to its development, it would be better to wait for a year or ten, to let it mature. For more information on current limitations and improvements that could be implemented in the near future, [check out the open issues](https://github.com/hannobraun/Fornjot/issues).
 
-At this point, performance is not much of a concern. This will change, but for now, ease of development is much more important than scaling to more complex models.
+To learn what the direction is longer-term, refer to the [feature wishlist](https://github.com/hannobraun/Fornjot/discussions/146).
 
 
 ## Features
@@ -136,14 +134,12 @@ cargo run -- -m spacer --arguments outer=8.0 inner=5.0
 
 If you are interested in Fornjot, please consider joining the community. We'd love to have you!
 
-
 ### Questions, Feedback, Discussions
 
 The following venues are best-suited for questions, feedback, or general discussions:
 
 - [Matrix channel](https://matrix.to/#/#fornjot:braun-odw.eu)
 - [GitHub Discussions](https://github.com/hannobraun/Fornjot/discussions)
-
 
 ### Bugs, Feature Requests
 
@@ -155,14 +151,16 @@ If you found a bug or have a specific feature request, please use issues on GitH
 Feel free to check existing issues and add your voice there, if you find one that fits. But if you are unsure or don't have the time for that, don't let that stop you. We'd rather have duplicate issues than not hear about a bug at all.
 
 
-### Development
+## Get Involved
 
-To join the Fornjot project as a developer, please fork one of the GitHub repositories and submit a pull request:
+If you are interested in helping out, just fork one of the GitHub repositories and submit a pull request:
 
 - [Main Fornjot repository](https://github.com/hannobraun/Fornjot)
 - [Website repository](https://github.com/hannobraun/www.fornjot.app)
 
-If you need some guidance, check out the [contribution guide](CONTRIBUTING.md).
+If you don't know what to work on, check out the [`good first issues`](https://github.com/hannobraun/Fornjot/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22). To get an overview over current priorities, take a look at the [open milestones](https://github.com/hannobraun/Fornjot/milestones).
+
+If you need some more guidance, check out the [contribution guide](CONTRIBUTING.md), or just ask! See the Community section above, for how to get in touch.
 
 
 ## License
