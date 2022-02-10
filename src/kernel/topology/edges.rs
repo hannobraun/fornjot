@@ -6,6 +6,8 @@ use crate::{
     math::Point,
 };
 
+use super::vertices::Vertex;
+
 /// The edges of a shape
 #[derive(Clone)]
 pub struct Edges {
@@ -99,7 +101,7 @@ pub struct Edge {
     /// The logical conclusion is that vertices here should be represented in 1D
     /// curve coordinates, only being converted into 3D points for the
     /// approximation.
-    pub vertices: Option<[(); 2]>,
+    pub vertices: Option<[Vertex<1>; 2]>,
 
     /// Indicates whether the curve's direction is reversed
     ///
@@ -111,10 +113,13 @@ pub struct Edge {
 
 impl Edge {
     /// Construct an edge
-    pub fn new(curve: Curve) -> Self {
+    pub fn new(curve: Curve, vertices: Option<[Vertex<3>; 2]>) -> Self {
+        let vertices = vertices
+            .map(|vertices| vertices.map(|vertex| vertex.to_1d(&curve)));
+
         Self {
             curve,
-            vertices: Some([(), ()]),
+            vertices,
             reverse: false,
         }
     }

@@ -56,7 +56,7 @@ impl Shape for fj::Sketch {
                 a: *a.location(),
                 b: *b.location(),
             });
-            let edge = Edge::new(line);
+            let edge = Edge::new(line, Some([a, b]));
 
             edges.push(edge);
         }
