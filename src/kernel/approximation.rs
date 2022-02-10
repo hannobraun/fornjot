@@ -263,9 +263,13 @@ mod tests {
         let b = point![2., 3., 5.];
         let c = point![3., 5., 8.];
 
-        let ab = Edge::new(Curve::Mock { approx: vec![a, b] });
-        let bc = Edge::new(Curve::Mock { approx: vec![b, c] });
-        let ca = Edge::new(Curve::Mock { approx: vec![c, a] });
+        let ab = Curve::Mock { approx: vec![a, b] };
+        let bc = Curve::Mock { approx: vec![b, c] };
+        let ca = Curve::Mock { approx: vec![c, a] };
+
+        let ab = Edge::new(ab);
+        let bc = Edge::new(bc);
+        let ca = Edge::new(ca);
 
         let cycle = Cycle {
             edges: vec![ab, bc, ca],
@@ -293,10 +297,15 @@ mod tests {
         let c = point![3., 5., 8.];
         let d = point![5., 8., 13.];
 
-        let ab = Edge::new(Curve::Mock { approx: vec![a, b] });
-        let ba = Edge::new(Curve::Mock { approx: vec![b, a] });
-        let cd = Edge::new(Curve::Mock { approx: vec![c, d] });
-        let dc = Edge::new(Curve::Mock { approx: vec![d, c] });
+        let ab = Curve::Mock { approx: vec![a, b] };
+        let ba = Curve::Mock { approx: vec![b, a] };
+        let cd = Curve::Mock { approx: vec![c, d] };
+        let dc = Curve::Mock { approx: vec![d, c] };
+
+        let ab = Edge::new(ab);
+        let ba = Edge::new(ba);
+        let cd = Edge::new(cd);
+        let dc = Edge::new(dc);
 
         let ab_ba = Cycle {
             edges: vec![ab, ba],
