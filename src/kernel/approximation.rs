@@ -225,11 +225,7 @@ mod tests {
 
         let curve = Curve::Mock { approx: vec![a, b] };
 
-        let edge_regular = Edge {
-            curve: curve.clone(),
-            vertices: Some([(), ()]),
-            reverse: false,
-        };
+        let edge_regular = Edge::new(curve.clone());
         assert_eq!(
             Approximation::for_edge(&edge_regular, tolerance),
             Approximation {
@@ -238,11 +234,8 @@ mod tests {
             }
         );
 
-        let edge_self_connected = Edge {
-            curve: curve.clone(),
-            vertices: None,
-            reverse: false,
-        };
+        let mut edge_self_connected = Edge::new(curve.clone());
+        edge_self_connected.vertices = None;
         assert_eq!(
             Approximation::for_edge(&edge_self_connected, tolerance),
             Approximation {
@@ -251,11 +244,8 @@ mod tests {
             }
         );
 
-        let edge_reversed = Edge {
-            curve: curve.clone(),
-            vertices: Some([(), ()]),
-            reverse: true,
-        };
+        let mut edge_reversed = Edge::new(curve.clone());
+        edge_reversed.reverse();
         assert_eq!(
             Approximation::for_edge(&edge_reversed, tolerance),
             Approximation {
@@ -273,21 +263,13 @@ mod tests {
         let b = point![2., 3., 5.];
         let c = point![3., 5., 8.];
 
-        let ab = Edge {
-            curve: Curve::Mock { approx: vec![a, b] },
-            vertices: Some([(), ()]),
-            reverse: false,
-        };
-        let bc = Edge {
-            curve: Curve::Mock { approx: vec![b, c] },
-            vertices: Some([(), ()]),
-            reverse: false,
-        };
-        let ca = Edge {
-            curve: Curve::Mock { approx: vec![c, a] },
-            vertices: Some([(), ()]),
-            reverse: false,
-        };
+        let ab = Curve::Mock { approx: vec![a, b] };
+        let bc = Curve::Mock { approx: vec![b, c] };
+        let ca = Curve::Mock { approx: vec![c, a] };
+
+        let ab = Edge::new(ab);
+        let bc = Edge::new(bc);
+        let ca = Edge::new(ca);
 
         let cycle = Cycle {
             edges: vec![ab, bc, ca],
@@ -315,26 +297,15 @@ mod tests {
         let c = point![3., 5., 8.];
         let d = point![5., 8., 13.];
 
-        let ab = Edge {
-            curve: Curve::Mock { approx: vec![a, b] },
-            vertices: Some([(), ()]),
-            reverse: false,
-        };
-        let ba = Edge {
-            curve: Curve::Mock { approx: vec![b, a] },
-            vertices: Some([(), ()]),
-            reverse: false,
-        };
-        let cd = Edge {
-            curve: Curve::Mock { approx: vec![c, d] },
-            vertices: Some([(), ()]),
-            reverse: false,
-        };
-        let dc = Edge {
-            curve: Curve::Mock { approx: vec![d, c] },
-            vertices: Some([(), ()]),
-            reverse: false,
-        };
+        let ab = Curve::Mock { approx: vec![a, b] };
+        let ba = Curve::Mock { approx: vec![b, a] };
+        let cd = Curve::Mock { approx: vec![c, d] };
+        let dc = Curve::Mock { approx: vec![d, c] };
+
+        let ab = Edge::new(ab);
+        let ba = Edge::new(ba);
+        let cd = Edge::new(cd);
+        let dc = Edge::new(dc);
 
         let ab_ba = Cycle {
             edges: vec![ab, ba],
