@@ -36,7 +36,7 @@ impl Edges {
     pub fn transform(mut self, transform: &Isometry<f64>) -> Self {
         for cycle in &mut self.cycles {
             for edge in &mut cycle.edges {
-                edge.curve = edge.curve.clone().transform(transform);
+                *edge = edge.clone().transform(transform);
             }
         }
 
@@ -149,5 +149,12 @@ impl Edge {
     /// Reverse the edge
     pub fn reverse(&mut self) {
         self.reverse = !self.reverse;
+    }
+
+    /// Transform the edge
+    #[must_use]
+    pub fn transform(mut self, transform: &Isometry<f64>) -> Self {
+        self.curve = self.curve.transform(transform);
+        self
     }
 }
