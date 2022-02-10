@@ -10,8 +10,6 @@ Fornjot is an **early-stage project** to create a **next-generation Code-CAD app
 
 For an introduction of what the project aims to achieve, [please check out the website](https://www.fornjot.app/).
 
-This is Fornjot's main repository. The [website is maintained in a separate repository](https://github.com/hannobraun/www.fornjot.app).
-
 
 ## Sponsors
 
