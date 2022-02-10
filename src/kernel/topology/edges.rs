@@ -127,7 +127,7 @@ impl Edge {
         Self {
             curve: Curve::Circle(Circle {
                 center: Point::origin(),
-                radius: vector![radius, 0., 0.],
+                radius: vector![radius, 0.],
             }),
             vertices: None,
             reverse: false,

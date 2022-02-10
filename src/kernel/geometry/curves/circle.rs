@@ -16,15 +16,17 @@ pub struct Circle {
     /// The radius is represented by a vector that points from the center to the
     /// circumference. The point on the circumference that it points to defines
     /// the origin of the circle's 1-dimensional curve coordinate system.
-    pub radius: Vector<3>,
+    pub radius: Vector<2>,
 }
 
 impl Circle {
     #[must_use]
     pub fn transform(self, transform: &Isometry<f64>) -> Self {
+        let radius = vector![self.radius.x, self.radius.y, 0.];
+
         Self {
             center: transform.transform_point(&self.center),
-            radius: transform.transform_vector(&self.radius),
+            radius: transform.transform_vector(&radius).xy(),
         }
     }
 
