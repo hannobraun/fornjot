@@ -1,5 +1,4 @@
 use approx::AbsDiffEq;
-#[cfg(test)]
 use nalgebra::point;
 use parry3d_f64::math::Isometry;
 
@@ -39,7 +38,6 @@ impl Line {
     /// issues. Callers are advised to be careful about the points they pass, as
     /// the point not being on the line, intended or not, will not result in an
     /// error.
-    #[cfg(test)]
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
         let p = point - self.a;
         let d = self.b - self.a;

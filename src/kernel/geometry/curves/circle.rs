@@ -1,8 +1,6 @@
 use std::f64::consts::PI;
 
-#[cfg(test)]
-use nalgebra::point;
-use nalgebra::vector;
+use nalgebra::{point, vector};
 use parry3d_f64::math::Isometry;
 
 use crate::math::{Point, Vector};
@@ -44,7 +42,6 @@ impl Circle {
     /// issues. Callers are advised to be careful about the points they pass, as
     /// the point not being on the circle, intended or not, will not result in
     /// an error.
-    #[cfg(test)]
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
         let v = point - self.center;
         let atan = f64::atan2(v.y, v.x);

@@ -1,4 +1,4 @@
-use crate::math::Point;
+use crate::{kernel::geometry::Curve, math::Point};
 
 /// The vertices of a shape
 pub struct Vertices(pub Vec<Vertex<3>>);
@@ -14,6 +14,14 @@ pub struct Vertices(pub Vec<Vertex<3>>);
 #[derive(Clone, Copy, Debug)]
 pub struct Vertex<const D: usize> {
     location: Point<D>,
+
+    /// The canonical location of this vertex
+    ///
+    /// The canonical location is always a point in 3D space. If this is a
+    /// `Vertex<3>`, this field is just redundant. If the vertex is of different
+    /// dimensionality, this field allows for loss-free conversion back into the
+    /// canonical representation.
+    canonical: Point<3>,
 }
 
 impl Vertex<3> {
@@ -34,7 +42,24 @@ impl Vertex<3> {
     /// This can be prevented outright by never creating a new `Vertex` instance
     /// for an existing vertex. Hence why this is strictly forbidden.
     pub fn create_at(location: Point<3>) -> Self {
-        Self { location }
+        Self {
+            location,
+            canonical: location,
+        }
+    }
+
+    /// Convert the vertex to a 1-dimensional vertex
+    ///
+    /// Uses to provided curve to convert the vertex into a 1-dimensional vertex
+    /// in the curve's coordinate system.
+    #[allow(unused)]
+    pub fn to_1d(&self, curve: &Curve) -> Vertex<1> {
+        let location = curve.point_model_to_curve(&self.location);
+
+        Vertex {
+            location,
+            canonical: self.canonical,
+        }
     }
 }
 
