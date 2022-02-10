@@ -82,7 +82,7 @@ impl Curve {
     pub fn approx(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
         match self {
             Self::Circle(circle) => circle.approx(tolerance, out),
-            Self::Line(Line { a, b }) => out.extend([*a, *b]),
+            Self::Line(_) => {}
 
             #[cfg(test)]
             Self::Mock { approx, .. } => out.extend(approx),

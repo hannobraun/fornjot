@@ -40,6 +40,20 @@ impl Approximation {
             points.reverse()
         }
 
+        // Insert the exact vertices of this edge into the approximation. This
+        // means we don't rely on the curve approximation to deliver accurate
+        // representations of these vertices, which they might not be able to
+        // do.
+        //
+        // If we used inaccurate representations of those vertices here, then
+        // that would lead to bugs in the approximation, as points that should
+        // refer to the same vertex would be understood to refer to very close,
+        // but distinct vertices.
+        if let Some([a, b]) = edge.vertices {
+            points.insert(0, *a.to_canonical().location());
+            points.push(*b.to_canonical().location());
+        }
+
         let mut segment_points = points.clone();
         if edge.vertices.is_none() {
             // The edge has no vertices, which means it connects to itself. We
@@ -226,13 +240,15 @@ mod tests {
         let tolerance = 1.;
 
         let a = point![1., 2., 3.];
-        let b = point![3., 5., 8.];
+        let b = point![2., 3., 5.];
+        let c = point![3., 5., 8.];
+        let d = point![5., 8., 13.];
 
         let v1 = Vertex::create_at(a);
-        let v2 = Vertex::create_at(b);
+        let v2 = Vertex::create_at(d);
 
         let curve = Curve::Mock {
-            approx: vec![a, b],
+            approx: vec![b, c],
             coords: RefCell::new(vec![point![0.], point![1.]]),
         };
 
@@ -240,8 +256,12 @@ mod tests {
         assert_eq!(
             Approximation::for_edge(&edge_regular, tolerance),
             Approximation {
-                points: vec![a, b],
-                segments: vec![Segment { a, b }],
+                points: vec![a, b, c, d],
+                segments: vec![
+                    Segment { a: a, b: b },
+                    Segment { a: b, b: c },
+                    Segment { a: c, b: d },
+                ],
             }
         );
 
@@ -249,18 +269,22 @@ mod tests {
         assert_eq!(
             Approximation::for_edge(&edge_self_connected, tolerance),
             Approximation {
-                points: vec![a, b],
-                segments: vec![Segment { a, b }, Segment { a: b, b: a }],
+                points: vec![b, c],
+                segments: vec![Segment { a: b, b: c }, Segment { a: c, b: b }],
             }
         );
 
-        let mut edge_reversed = Edge::new(curve.clone(), Some([v1, v2]));
+        let mut edge_reversed = Edge::new(curve.clone(), Some([v2, v1]));
         edge_reversed.reverse();
         assert_eq!(
             Approximation::for_edge(&edge_reversed, tolerance),
             Approximation {
-                points: vec![b, a],
-                segments: vec![Segment { a: b, b: a }],
+                points: vec![d, c, b, a],
+                segments: vec![
+                    Segment { a: d, b: c },
+                    Segment { a: c, b: b },
+                    Segment { a: b, b: a },
+                ],
             }
         );
     }
@@ -277,22 +301,14 @@ mod tests {
         let v2 = Vertex::create_at(b);
         let v3 = Vertex::create_at(c);
 
-        let ab = Curve::Mock {
-            approx: vec![a, b],
-            coords: RefCell::new(vec![point![0.], point![1.]]),
-        };
-        let bc = Curve::Mock {
-            approx: vec![b, c],
-            coords: RefCell::new(vec![point![0.], point![1.]]),
-        };
-        let ca = Curve::Mock {
-            approx: vec![c, a],
+        let curve = Curve::Mock {
+            approx: Vec::new(),
             coords: RefCell::new(vec![point![0.], point![1.]]),
         };
 
-        let ab = Edge::new(ab, Some([v1, v2]));
-        let bc = Edge::new(bc, Some([v2, v3]));
-        let ca = Edge::new(ca, Some([v3, v1]));
+        let ab = Edge::new(curve.clone(), Some([v1, v2]));
+        let bc = Edge::new(curve.clone(), Some([v2, v3]));
+        let ca = Edge::new(curve.clone(), Some([v3, v1]));
 
         let cycle = Cycle {
             edges: vec![ab, bc, ca],
@@ -325,27 +341,15 @@ mod tests {
         let v3 = Vertex::create_at(c);
         let v4 = Vertex::create_at(d);
 
-        let ab = Curve::Mock {
-            approx: vec![a, b],
-            coords: RefCell::new(vec![point![0.], point![1.]]),
-        };
-        let ba = Curve::Mock {
-            approx: vec![b, a],
-            coords: RefCell::new(vec![point![0.], point![1.]]),
-        };
-        let cd = Curve::Mock {
-            approx: vec![c, d],
-            coords: RefCell::new(vec![point![0.], point![1.]]),
-        };
-        let dc = Curve::Mock {
-            approx: vec![d, c],
+        let curve = Curve::Mock {
+            approx: Vec::new(),
             coords: RefCell::new(vec![point![0.], point![1.]]),
         };
 
-        let ab = Edge::new(ab, Some([v1, v2]));
-        let ba = Edge::new(ba, Some([v2, v1]));
-        let cd = Edge::new(cd, Some([v3, v4]));
-        let dc = Edge::new(dc, Some([v4, v3]));
+        let ab = Edge::new(curve.clone(), Some([v1, v2]));
+        let ba = Edge::new(curve.clone(), Some([v2, v1]));
+        let cd = Edge::new(curve.clone(), Some([v3, v4]));
+        let dc = Edge::new(curve.clone(), Some([v4, v3]));
 
         let ab_ba = Cycle {
             edges: vec![ab, ba],

@@ -74,6 +74,14 @@ impl<const D: usize> Vertex<D> {
         &self.location
     }
 
+    /// Convert the vertex to its canonical form
+    pub fn to_canonical(&self) -> Vertex<3> {
+        Vertex {
+            location: self.canonical,
+            canonical: self.canonical,
+        }
+    }
+
     /// Create a transformed vertex
     ///
     /// The transformed vertex has its canonical form transformed by the
