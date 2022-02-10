@@ -15,7 +15,7 @@ For an introduction of what the project aims to achieve, [please check out the w
 
 Fornjot is supported by [**@lthiery**](https://github.com/lthiery), [**@Yatekii**](https://github.com/Yatekii), [**@ahdinosaur**](https://github.com/ahdinosaur), [**@jessebraham**](https://github.com/jessebraham), and [**@Kethku**](https://github.com/Kethku). Thank you!
 
-**Please consider [supporting me too](https://github.com/sponsors/hannobraun), to make Fornjot sustainable long-term.**
+**Please consider [supporting me too](https://github.com/sponsors/hannobraun), to help make Fornjot sustainable long-term.**
 
 
 ## Status
