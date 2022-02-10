@@ -20,11 +20,11 @@ Fornjot is supported by [**@lthiery**](https://github.com/lthiery), [**@Yatekii*
 
 ## Status
 
-Fornjot is **under active development, but still experimental**. Efforts are currently focused on incrementally expanding features, to support more kinds of CAD models, and plugging holes in the algorithms used, to solidify the existing functionality. Right now, there still many such holes, as many of the algorithms make simplifying assumptions that might not be true for your model.
+Fornjot is **under active development, but still experimental**. Efforts are currently focused on creating a [stable set of basic CAD features](https://github.com/hannobraun/Fornjot/milestone/1).
 
-Priorities have recently shifted towards addressing that, but it will take a while to fix everything. If you are interested in Fornjot and are considering to use it, you should fully expect to run into limitation pretty much immediately. Unless you are willing to contribute to its development, it would be better to wait for a year or ten, to let it mature.
+If you are interested in Fornjot and are considering to use it, you should fully expect to run into limitation pretty much immediately. Unless you are willing to contribute to its development, it would be better to wait for a year or ten, to let it mature. For more information on current limitations and improvements that could be implemented in the near future, [check out the open issues](https://github.com/hannobraun/Fornjot/issues).
 
-At this point, performance is not much of a concern. This will change, but for now, ease of development is much more important than scaling to more complex models.
+To learn what the direction is longer-term, refer to the [feature wishlist](https://github.com/hannobraun/Fornjot/discussions/146).
 
 
 ## Features
