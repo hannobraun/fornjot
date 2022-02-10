@@ -56,7 +56,6 @@ impl Vertex<3> {
     ///
     /// Uses to provided curve to convert the vertex into a 1-dimensional vertex
     /// in the curve's coordinate system.
-    #[allow(unused)]
     pub fn to_1d(&self, curve: &Curve) -> Vertex<1> {
         let location = curve.point_model_to_curve(&self.location);
 
