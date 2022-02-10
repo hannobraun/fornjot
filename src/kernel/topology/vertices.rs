@@ -27,10 +27,14 @@ pub struct Vertex<const D: usize> {
 impl Vertex<3> {
     /// Create a vertex at the given location
     ///
+    /// Only 3-dimensional vertices can be created, as that is the canonical
+    /// representation of a vertex. If you need a vertex of different
+    /// dimensionality, use a conversion method.
+    ///
     /// This method **MUST NOT** be used to construct a new instance of `Vertex`
     /// that represents an already existing vertex. If there already exists a
     /// vertex and you need a `Vertex` instance to refer to it, acquire one by
-    /// copying the existing `Vertex` instance.
+    /// copying or converting the existing `Vertex` instance.
     ///
     /// Every time you create a `Vertex` instance, you might do so using a point
     /// you have computed. When doing this for an existing vertex, you run the
