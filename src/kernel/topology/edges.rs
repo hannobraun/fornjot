@@ -113,6 +113,13 @@ pub struct Edge {
 
 impl Edge {
     /// Construct an edge
+    ///
+    /// If vertices are provided in `vertices`, they must be on `curve`.
+    ///
+    /// This constructor will convert the vertices into curve coordinates. If
+    /// they are not on the curve, this will result in their projection being
+    /// converted into curve coordinates, which is likely not the caller's
+    /// intention.
     pub fn new(curve: Curve, vertices: Option<[Vertex<3>; 2]>) -> Self {
         let vertices = vertices
             .map(|vertices| vertices.map(|vertex| vertex.to_1d(&curve)));
