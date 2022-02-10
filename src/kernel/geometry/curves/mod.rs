@@ -76,10 +76,9 @@ impl Curve {
     /// need an `approximate_between(a, b)` method instead, where `a` and `b`
     /// are the vertices that bound the edge on the curve.
     ///
-    /// The `approx` methods of the curves then need to make sure to return
-    /// those exact vertices as part of the approximation, and not accidentally
-    /// compute some almost but not quite identical points for those vertices
-    /// instead.
+    /// The `approximate_between` methods of the curves then need to make sure
+    /// to only return points in between those vertices, not the vertices
+    /// themselves.
     pub fn approx(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
         match self {
             Self::Circle(circle) => circle.approx(tolerance, out),
