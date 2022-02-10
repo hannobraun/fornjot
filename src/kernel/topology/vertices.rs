@@ -1,7 +1,7 @@
 use crate::math::Point;
 
 /// The vertices of a shape
-pub struct Vertices(pub Vec<Vertex>);
+pub struct Vertices(pub Vec<Vertex<3>>);
 
 /// A vertex
 ///
@@ -11,12 +11,12 @@ pub struct Vertices(pub Vec<Vertex>);
 ///
 /// Points, on the other hand, might be used to approximate a shape for various
 /// purposes, without presenting any deeper truth about the shape's structure.
-#[derive(Clone, Copy)]
-pub struct Vertex {
-    point: Point<3>,
+#[derive(Clone, Copy, Debug)]
+pub struct Vertex<const D: usize> {
+    location: Point<D>,
 }
 
-impl Vertex {
+impl Vertex<3> {
     /// Create a vertex at the given location
     ///
     /// This method **MUST NOT** be used to construct a new instance of `Vertex`
@@ -34,11 +34,13 @@ impl Vertex {
     /// This can be prevented outright by never creating a new `Vertex` instance
     /// for an existing vertex. Hence why this is strictly forbidden.
     pub fn create_at(location: Point<3>) -> Self {
-        Self { point: location }
+        Self { location }
     }
+}
 
+impl<const D: usize> Vertex<D> {
     /// Access the location of this vertex
-    pub fn location(&self) -> &Point<3> {
-        &self.point
+    pub fn location(&self) -> &Point<D> {
+        &self.location
     }
 }
