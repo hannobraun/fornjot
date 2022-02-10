@@ -1,3 +1,5 @@
+use parry3d_f64::math::Isometry;
+
 use crate::{kernel::geometry::Curve, math::Point};
 
 /// The vertices of a shape
@@ -70,5 +72,15 @@ impl<const D: usize> Vertex<D> {
     /// Access the location of this vertex
     pub fn location(&self) -> &Point<D> {
         &self.location
+    }
+
+    /// Create a transformed vertex
+    ///
+    /// The transformed vertex has its canonical form transformed by the
+    /// transformation provided, but is otherwise identical.
+    #[must_use]
+    pub fn transform(mut self, transform: &Isometry<f64>) -> Self {
+        self.canonical = transform.transform_point(&self.canonical);
+        self
     }
 }

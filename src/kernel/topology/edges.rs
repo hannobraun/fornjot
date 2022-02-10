@@ -155,6 +155,10 @@ impl Edge {
     #[must_use]
     pub fn transform(mut self, transform: &Isometry<f64>) -> Self {
         self.curve = self.curve.transform(transform);
+        self.vertices = self
+            .vertices
+            .map(|vertices| vertices.map(|vertex| vertex.transform(transform)));
+
         self
     }
 }
