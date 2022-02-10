@@ -206,6 +206,8 @@ fn point_to_r64(point: Point<3>) -> [R64; 3] {
 
 #[cfg(test)]
 mod tests {
+    use std::cell::RefCell;
+
     use nalgebra::point;
     use parry3d_f64::shape::Segment;
 
@@ -223,7 +225,10 @@ mod tests {
         let a = point![1., 2., 3.];
         let b = point![3., 5., 8.];
 
-        let curve = Curve::Mock { approx: vec![a, b] };
+        let curve = Curve::Mock {
+            approx: vec![a, b],
+            coords: RefCell::new(Vec::new()),
+        };
 
         let edge_regular = Edge::new(curve.clone());
         assert_eq!(
@@ -263,9 +268,18 @@ mod tests {
         let b = point![2., 3., 5.];
         let c = point![3., 5., 8.];
 
-        let ab = Curve::Mock { approx: vec![a, b] };
-        let bc = Curve::Mock { approx: vec![b, c] };
-        let ca = Curve::Mock { approx: vec![c, a] };
+        let ab = Curve::Mock {
+            approx: vec![a, b],
+            coords: RefCell::new(Vec::new()),
+        };
+        let bc = Curve::Mock {
+            approx: vec![b, c],
+            coords: RefCell::new(Vec::new()),
+        };
+        let ca = Curve::Mock {
+            approx: vec![c, a],
+            coords: RefCell::new(Vec::new()),
+        };
 
         let ab = Edge::new(ab);
         let bc = Edge::new(bc);
@@ -297,10 +311,22 @@ mod tests {
         let c = point![3., 5., 8.];
         let d = point![5., 8., 13.];
 
-        let ab = Curve::Mock { approx: vec![a, b] };
-        let ba = Curve::Mock { approx: vec![b, a] };
-        let cd = Curve::Mock { approx: vec![c, d] };
-        let dc = Curve::Mock { approx: vec![d, c] };
+        let ab = Curve::Mock {
+            approx: vec![a, b],
+            coords: RefCell::new(Vec::new()),
+        };
+        let ba = Curve::Mock {
+            approx: vec![b, a],
+            coords: RefCell::new(Vec::new()),
+        };
+        let cd = Curve::Mock {
+            approx: vec![c, d],
+            coords: RefCell::new(Vec::new()),
+        };
+        let dc = Curve::Mock {
+            approx: vec![d, c],
+            coords: RefCell::new(Vec::new()),
+        };
 
         let ab = Edge::new(ab);
         let ba = Edge::new(ba);

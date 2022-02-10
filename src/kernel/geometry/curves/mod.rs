@@ -26,7 +26,10 @@ pub enum Curve {
 
     /// A mock curve used for testing
     #[cfg(test)]
-    Mock { approx: Vec<Point<3>> },
+    Mock {
+        approx: Vec<Point<3>>,
+        coords: std::cell::RefCell<Vec<Point<1>>>,
+    },
 }
 
 impl Curve {
@@ -59,7 +62,7 @@ impl Curve {
             Self::Line(line) => line.point_model_to_curve(point),
 
             #[cfg(test)]
-            Self::Mock { .. } => todo!(),
+            Self::Mock { coords, .. } => coords.borrow_mut().remove(0),
         }
     }
 
@@ -85,7 +88,7 @@ impl Curve {
             Self::Line(Line { a, b }) => out.extend([*a, *b]),
 
             #[cfg(test)]
-            Self::Mock { approx } => out.extend(approx),
+            Self::Mock { approx, .. } => out.extend(approx),
         }
     }
 }
