@@ -150,14 +150,17 @@ If you found a bug or have a specific feature request, please use issues on GitH
 
 Feel free to check existing issues and add your voice there, if you find one that fits. But if you are unsure or don't have the time for that, don't let that stop you. We'd rather have duplicate issues than not hear about a bug at all.
 
-### Development
 
-To join the Fornjot project as a developer, please fork one of the GitHub repositories and submit a pull request:
+## Get Involved
+
+If you are interested in helping out, just fork one of the GitHub repositories and submit a pull request:
 
 - [Main Fornjot repository](https://github.com/hannobraun/Fornjot)
 - [Website repository](https://github.com/hannobraun/www.fornjot.app)
 
-If you need some guidance, check out the [contribution guide](CONTRIBUTING.md).
+If you don't know what to work on, check out the [`good first issues`](https://github.com/hannobraun/Fornjot/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22). To get an overview over current priorities, take a look at the [open milestones](https://github.com/hannobraun/Fornjot/milestones).
+
+If you need some more guidance, check out the [contribution guide](CONTRIBUTING.md), or just ask! See the Community section above, for how to get in touch.
 
 
 ## License
