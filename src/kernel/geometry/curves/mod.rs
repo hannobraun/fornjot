@@ -54,7 +54,6 @@ impl Curve {
     /// issues. Callers are advised to be careful about the points they pass, as
     /// the point not being on the curve, intended or not, will not result in an
     /// error.
-    #[allow(unused)]
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
         match self {
             Self::Circle(circle) => circle.point_model_to_curve(point),
