@@ -16,9 +16,6 @@ use crate::math::Point;
 /// The nomenclature is inspired by Boundary Representation Modelling Techniques
 /// by Ian Stroud. "Curve" refers to unbounded one-dimensional geometry, while
 /// while edges are bounded portions of curves.
-///
-/// This distinction is not observed here, but moving things into that direction
-/// is the intention.
 #[derive(Clone, Debug)]
 pub enum Curve {
     /// A circle
