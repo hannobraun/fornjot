@@ -56,6 +56,7 @@ jobs:
           use-cross: ${{ matrix.cross }}
 
       - name: Compress
+        shell: bash
         run: |
           cd target/${{ matrix.target }}/release
           case "${RUNNER_OS}" in
