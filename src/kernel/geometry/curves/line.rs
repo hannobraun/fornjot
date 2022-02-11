@@ -11,7 +11,7 @@ use crate::math::Point;
 /// `1.0`.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Line {
-    /// The first point that defines the line
+    /// The origin of the line's coordinate system
     pub origin: Point<3>,
 
     /// The second point that defines the line
