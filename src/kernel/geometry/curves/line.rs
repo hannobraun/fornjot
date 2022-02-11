@@ -12,7 +12,7 @@ use crate::math::Point;
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Line {
     /// The first point that defines the line
-    pub a: Point<3>,
+    pub origin: Point<3>,
 
     /// The second point that defines the line
     pub b: Point<3>,
@@ -23,7 +23,7 @@ impl Line {
     #[must_use]
     pub fn transform(self, transform: &Isometry<f64>) -> Self {
         Self {
-            a: transform.transform_point(&self.a),
+            origin: transform.transform_point(&self.origin),
             b: transform.transform_point(&self.b),
         }
     }
@@ -39,8 +39,8 @@ impl Line {
     /// the point not being on the line, intended or not, will not result in an
     /// error.
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
-        let p = point - self.a;
-        let d = self.b - self.a;
+        let p = point - self.origin;
+        let d = self.b - self.origin;
 
         // scalar projection
         let t = p.dot(&d.normalize());
@@ -57,7 +57,7 @@ impl AbsDiffEq for Line {
     }
 
     fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
-        self.a.abs_diff_eq(&other.a, epsilon)
+        self.origin.abs_diff_eq(&other.origin, epsilon)
             && self.b.abs_diff_eq(&other.b, epsilon)
     }
 }
@@ -77,7 +77,7 @@ mod tests {
     #[test]
     fn test_transform() {
         let line = Line {
-            a: point![1., 0., 0.],
+            origin: point![1., 0., 0.],
             b: point![1., 1., 0.],
         };
 
@@ -89,7 +89,7 @@ mod tests {
         assert_abs_diff_eq!(
             line,
             Line {
-                a: point![1., 3., 3.],
+                origin: point![1., 3., 3.],
                 b: point![0., 3., 3.],
             },
             epsilon = 1e-8,
@@ -99,7 +99,7 @@ mod tests {
     #[test]
     fn test_point_model_to_curve() {
         let line = Line {
-            a: point![1., 0., 0.],
+            origin: point![1., 0., 0.],
             b: point![2., 0., 0.],
         };
 
