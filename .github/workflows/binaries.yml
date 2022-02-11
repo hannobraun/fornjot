@@ -2,7 +2,7 @@ name: Binaries
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, '#57_provide-major-os-binaries-for-every-commit-to-main' ]
 
 env:
   CARGO_TERM_COLOR: always
