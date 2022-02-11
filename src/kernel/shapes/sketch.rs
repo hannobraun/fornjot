@@ -53,8 +53,8 @@ impl Shape for fj::Sketch {
             let b = window[1];
 
             let line = Curve::Line(Line {
-                a: *a.location(),
-                b: *b.location(),
+                origin: *a.location(),
+                direction: *b.location() - *a.location(),
             });
             let edge = Edge::new(line, Some([a, b]));
 

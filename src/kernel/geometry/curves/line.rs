@@ -2,20 +2,20 @@ use approx::AbsDiffEq;
 use nalgebra::point;
 use parry3d_f64::math::Isometry;
 
-use crate::math::Point;
+use crate::math::{Point, Vector};
 
-/// A line, defined by two points
-///
-/// The points that define the line also define the line's 1-dimensional curve
-/// coordinate system. `a` defines the origin (`0.0`), `b` defines coordinate
-/// `1.0`.
+/// A line, defined by a point and a vector
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Line {
-    /// The first point that defines the line
-    pub a: Point<3>,
+    /// The origin of the line's coordinate system
+    pub origin: Point<3>,
 
-    /// The second point that defines the line
-    pub b: Point<3>,
+    /// The direction of the line
+    ///
+    /// The length of this vector defines the unit of the line's curve
+    /// coordinate system. The coordinate `1.` is always were the direction
+    /// vector points, from `origin`.
+    pub direction: Vector<3>,
 }
 
 impl Line {
@@ -23,8 +23,8 @@ impl Line {
     #[must_use]
     pub fn transform(self, transform: &Isometry<f64>) -> Self {
         Self {
-            a: transform.transform_point(&self.a),
-            b: transform.transform_point(&self.b),
+            origin: transform.transform_point(&self.origin),
+            direction: transform.transform_vector(&self.direction),
         }
     }
 
@@ -39,11 +39,10 @@ impl Line {
     /// the point not being on the line, intended or not, will not result in an
     /// error.
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
-        let p = point - self.a;
-        let d = self.b - self.a;
+        let p = point - self.origin;
 
         // scalar projection
-        let t = p.dot(&d.normalize());
+        let t = p.dot(&self.direction.normalize());
 
         point![t]
     }
@@ -57,8 +56,8 @@ impl AbsDiffEq for Line {
     }
 
     fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
-        self.a.abs_diff_eq(&other.a, epsilon)
-            && self.b.abs_diff_eq(&other.b, epsilon)
+        self.origin.abs_diff_eq(&other.origin, epsilon)
+            && self.direction.abs_diff_eq(&other.direction, epsilon)
     }
 }
 
@@ -67,7 +66,7 @@ mod tests {
     use std::f64::consts::FRAC_PI_2;
 
     use approx::assert_abs_diff_eq;
-    use nalgebra::{point, UnitQuaternion};
+    use nalgebra::{point, vector, UnitQuaternion};
     use parry3d_f64::math::{Isometry, Translation};
 
     use crate::math::Vector;
@@ -77,8 +76,8 @@ mod tests {
     #[test]
     fn test_transform() {
         let line = Line {
-            a: point![1., 0., 0.],
-            b: point![1., 1., 0.],
+            origin: point![1., 0., 0.],
+            direction: vector![0., 1., 0.],
         };
 
         let line = line.transform(&Isometry::from_parts(
@@ -89,8 +88,8 @@ mod tests {
         assert_abs_diff_eq!(
             line,
             Line {
-                a: point![1., 3., 3.],
-                b: point![0., 3., 3.],
+                origin: point![1., 3., 3.],
+                direction: vector![-1., 0., 0.],
             },
             epsilon = 1e-8,
         );
@@ -99,8 +98,8 @@ mod tests {
     #[test]
     fn test_point_model_to_curve() {
         let line = Line {
-            a: point![1., 0., 0.],
-            b: point![2., 0., 0.],
+            origin: point![1., 0., 0.],
+            direction: vector![1., 0., 0.],
         };
 
         assert_eq!(line.point_model_to_curve(&point![0., 0., 0.]), point![-1.]);
