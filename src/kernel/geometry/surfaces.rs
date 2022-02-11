@@ -129,10 +129,10 @@ impl Plane {
         let p = point - self.origin;
 
         // scalar projection
-        let s = p.dot(&self.u.normalize());
-        let t = p.dot(&self.v.normalize());
+        let u = p.dot(&self.u.normalize());
+        let v = p.dot(&self.v.normalize());
 
-        Ok(point![s, t])
+        Ok(point![u, v])
     }
 
     /// Convert a point in surface coordinates to model coordinates
