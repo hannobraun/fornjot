@@ -71,8 +71,16 @@ jobs:
           mv -v "${src}" "${dst}"
           chmod -v +x "${dst}"
 
-      - name: Upload
+      - name: Upload Unix
+        if: runner.os != 'Windows'
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.PROJ_NAME }}-${{ matrix.target }}
           path: ${{ env.PROJ_NAME }}-${{ matrix.target }}
+
+      - name: Upload Windows
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.PROJ_NAME }}-${{ matrix.target }}.exe
+          path: ${{ env.PROJ_NAME }}-${{ matrix.target }}.exe
