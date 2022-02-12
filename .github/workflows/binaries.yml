@@ -2,7 +2,7 @@ name: Compile Binaries
 
 on:
   push:
-    branches: [ main, '#57_do-not-compress-binaries' ]
+    branches: [ main ]
 
 env:
   CARGO_TERM_COLOR: always
