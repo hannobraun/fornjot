@@ -58,8 +58,13 @@ jobs:
       - name: Prepare Upload
         shell: bash
         run: |
-          mv \
+          # Include compile target in binary name
+          
+          mv --verbose \
             "target/${{ matrix.target }}/release/${PROJ_NAME}" \
+            "${GITHUB_WORKSPACE}/${PROJ_NAME}-${{ matrix.target }}"
+          
+          chmod --changes +x \
             "${GITHUB_WORKSPACE}/${PROJ_NAME}-${{ matrix.target }}"
 
       - name: Upload
