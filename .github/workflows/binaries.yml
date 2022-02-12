@@ -59,13 +59,17 @@ jobs:
         shell: bash
         run: |
           # Include compile target in binary name
-          
-          mv -v \
-            "target/${{ matrix.target }}/release/${PROJ_NAME}" \
-            "${GITHUB_WORKSPACE}/${PROJ_NAME}-${{ matrix.target }}"
-          
-          chmod -v +x \
-            "${GITHUB_WORKSPACE}/${PROJ_NAME}-${{ matrix.target }}"
+
+          src="target/${{ matrix.target }}/release/${PROJ_NAME}"
+          dst="${GITHUB_WORKSPACE}/${PROJ_NAME}-${{ matrix.target }}"
+
+          if [[ "${RUNNER_OS}" == "Windows" ]]; then
+            src="${src}.exe"
+            dst="${dst}.exe"
+          fi
+
+          mv -v "${src}" "${dst}"
+          chmod -v +x "${dst}"
 
       - name: Upload
         uses: actions/upload-artifact@v2
