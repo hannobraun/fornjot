@@ -64,7 +64,7 @@ jobs:
             "target/${{ matrix.target }}/release/${PROJ_NAME}" \
             "${GITHUB_WORKSPACE}/${PROJ_NAME}-${{ matrix.target }}"
           
-          chmod -c +x \
+          chmod -v +x \
             "${GITHUB_WORKSPACE}/${PROJ_NAME}-${{ matrix.target }}"
 
       - name: Upload
