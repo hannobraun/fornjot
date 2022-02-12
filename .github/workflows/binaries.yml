@@ -8,7 +8,7 @@ env:
   CARGO_TERM_COLOR: always
 
   # Name of the crate from Cargo.toml
-  # used to package up the binaries on disk
+  # used to rename and upload the binaries
   PROJ_NAME: fj-host
 
 jobs:
