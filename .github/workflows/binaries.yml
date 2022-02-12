@@ -55,37 +55,15 @@ jobs:
           command: build
           use-cross: ${{ matrix.cross }}
 
-      - name: Compress
+      - name: Prepare Upload
         shell: bash
         run: |
-          cd target/${{ matrix.target }}/release
-          case "${RUNNER_OS}" in
-            Linux)
-              tar czvf "${GITHUB_WORKSPACE}/${PROJ_NAME}-${{ matrix.target }}.tar.gz" "${PROJ_NAME}"
-              ;;
-            macOS)
-              # gh docs say gtar is aliased to tar, but it failed
-              gtar czvf "${GITHUB_WORKSPACE}/${PROJ_NAME}-${{ matrix.target }}.tar.gz" "${PROJ_NAME}"
-              ;;
-            Windows)
-              7z a "${GITHUB_WORKSPACE}/${PROJ_NAME}-${{ matrix.target }}.zip" "${PROJ_NAME}.exe"
-              ;;
-            *)
-              echo "[ERROR] unsupported OS: ${RUNNER_OS}"
-              exit 1
-          esac
-          cd -
+          mv \
+            "target/${{ matrix.target }}/release/${PROJ_NAME}" \
+            "${GITHUB_WORKSPACE}/${PROJ_NAME}-${{ matrix.target }}"
 
-      - name: Upload Unix
-        if: runner.os != 'Windows'
+      - name: Upload
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.PROJ_NAME }}-${{ matrix.target }}.tar.gz
-          path: ${{ env.PROJ_NAME }}-${{ matrix.target }}.tar.gz
-
-      - name: Upload Windows
-        if: runner.os == 'Windows'
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ env.PROJ_NAME }}-${{ matrix.target }}.zip
-          path: ${{ env.PROJ_NAME }}-${{ matrix.target }}.zip
+          name: ${{ env.PROJ_NAME }}-${{ matrix.target }}
+          path: ${{ env.PROJ_NAME }}-${{ matrix.target }}
