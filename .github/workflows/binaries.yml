@@ -60,11 +60,11 @@ jobs:
         run: |
           # Include compile target in binary name
           
-          mv --verbose \
+          mv -v \
             "target/${{ matrix.target }}/release/${PROJ_NAME}" \
             "${GITHUB_WORKSPACE}/${PROJ_NAME}-${{ matrix.target }}"
           
-          chmod --changes +x \
+          chmod -c +x \
             "${GITHUB_WORKSPACE}/${PROJ_NAME}-${{ matrix.target }}"
 
       - name: Upload
