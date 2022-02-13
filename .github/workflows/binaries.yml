@@ -1,4 +1,4 @@
-name: Binaries
+name: Compile Binaries
 
 on:
   push:
@@ -8,7 +8,7 @@ env:
   CARGO_TERM_COLOR: always
 
   # Name of the crate from Cargo.toml
-  # used to package up the binaries on disk
+  # used to rename and upload the binaries
   PROJ_NAME: fj-host
 
 jobs:
@@ -29,7 +29,7 @@ jobs:
           - { target: x86_64-apple-darwin, os: macOS-latest, cross: false }
           - { target: aarch64-apple-darwin, os: macOS-latest, cross: false }
 
-          # Windows works
+          # Windows targets
           - { target: x86_64-pc-windows-msvc, os: windows-latest, cross: false }
 
     runs-on: ${{matrix.os}}
@@ -55,37 +55,32 @@ jobs:
           command: build
           use-cross: ${{ matrix.cross }}
 
-      - name: Compress
+      - name: Prepare Upload
         shell: bash
         run: |
-          cd target/${{ matrix.target }}/release
-          case "${RUNNER_OS}" in
-            Linux)
-              tar czvf "${GITHUB_WORKSPACE}/${PROJ_NAME}-${{ matrix.target }}.tar.gz" "${PROJ_NAME}"
-              ;;
-            macOS)
-              # gh docs say gtar is aliased to tar, but it failed
-              gtar czvf "${GITHUB_WORKSPACE}/${PROJ_NAME}-${{ matrix.target }}.tar.gz" "${PROJ_NAME}"
-              ;;
-            Windows)
-              7z a "${GITHUB_WORKSPACE}/${PROJ_NAME}-${{ matrix.target }}.zip" "${PROJ_NAME}.exe"
-              ;;
-            *)
-              echo "[ERROR] unsupported OS: ${RUNNER_OS}"
-              exit 1
-          esac
-          cd -
+          # Include compile target in binary name
+
+          src="target/${{ matrix.target }}/release/${PROJ_NAME}"
+          dst="${GITHUB_WORKSPACE}/${PROJ_NAME}-${{ matrix.target }}"
+
+          if [[ "${RUNNER_OS}" == "Windows" ]]; then
+            src="${src}.exe"
+            dst="${dst}.exe"
+          fi
+
+          mv -v "${src}" "${dst}"
+          chmod -v +x "${dst}"
 
       - name: Upload Unix
         if: runner.os != 'Windows'
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.PROJ_NAME }}-${{ matrix.target }}.tar.gz
-          path: ${{ env.PROJ_NAME }}-${{ matrix.target }}.tar.gz
+          name: ${{ env.PROJ_NAME }}-${{ matrix.target }}
+          path: ${{ env.PROJ_NAME }}-${{ matrix.target }}
 
       - name: Upload Windows
         if: runner.os == 'Windows'
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.PROJ_NAME }}-${{ matrix.target }}.zip
-          path: ${{ env.PROJ_NAME }}-${{ matrix.target }}.zip
+          name: ${{ env.PROJ_NAME }}-${{ matrix.target }}.exe
+          path: ${{ env.PROJ_NAME }}-${{ matrix.target }}.exe
