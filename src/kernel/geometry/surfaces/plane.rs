@@ -94,17 +94,7 @@ impl approx::AbsDiffEq for Plane {
     type Epsilon = <f64 as approx::AbsDiffEq>::Epsilon;
 
     fn default_epsilon() -> Self::Epsilon {
-        // For some reason, the Windows test runner of our GitHub Actions based
-        // CI build comes up with different floating point values than the Linux
-        // and macOS ones.
-        //
-        // I don't know why, and given that the failure this leads to happens at
-        // the end of a 7+ minute CI build, I've run out of patience and am no
-        // longer inclined to find out.
-        //
-        // The value we're returning here is still really small, and I can't
-        // imagine how this could lead to a problem in a test.
-        f64::default_epsilon() * 8.
+        f64::default_epsilon()
     }
 
     fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
@@ -146,7 +136,7 @@ mod tests {
     use super::Plane;
 
     #[test]
-    fn test_transform() {
+    fn transform() {
         let plane = Plane {
             origin: point![1., 2., 3.],
             u: vector![1., 0., 0.],
@@ -164,12 +154,13 @@ mod tests {
                 origin: point![0., 5., 9.],
                 u: vector![0., 1., 0.],
                 v: vector![-1., 0., 0.],
-            }
+            },
+            epsilon = 1e-8,
         );
     }
 
     #[test]
-    fn test_model_to_surface_point_conversion() {
+    fn point_model_to_surface() {
         let plane = Plane {
             origin: point![1., 2., 3.],
             u: vector![0., 2., 0.],
@@ -190,7 +181,7 @@ mod tests {
     }
 
     #[test]
-    fn test_surface_to_model_point_conversion() {
+    fn point_surface_to_model() {
         let plane = Plane {
             origin: point![1., 2., 3.],
             u: vector![0., 1., 0.],
@@ -204,7 +195,7 @@ mod tests {
     }
 
     #[test]
-    fn test_surface_to_model_vector_conversion() {
+    fn vector_surface_to_model() {
         let plane = Plane {
             origin: point![1., 2., 3.],
             u: vector![0., 1., 0.],
