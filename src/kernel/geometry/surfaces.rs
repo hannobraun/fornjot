@@ -232,6 +232,9 @@ mod tests {
             v: vector![0., 0., 1.],
         };
 
+        verify(&plane, point![-1., -1.]);
+        verify(&plane, point![0., 0.]);
+        verify(&plane, point![1., 1.]);
         verify(&plane, point![2., 3.]);
 
         fn verify(plane: &Plane, surface_point: Point<2>) {
