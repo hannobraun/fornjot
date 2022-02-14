@@ -174,7 +174,7 @@ impl Face {
                             dir: outside - center,
                         };
                         let mut check = TriangleEdgeCheck::new(Ray3 {
-                            origin: surface.point_surface_to_model(ray.origin),
+                            origin: surface.point_surface_to_model(&ray.origin),
                             dir: surface.vector_surface_to_model(&ray.dir),
                         });
 
