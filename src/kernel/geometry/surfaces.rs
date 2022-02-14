@@ -38,7 +38,7 @@ impl Surface {
         point_3d: Point<3>,
     ) -> Result<SurfacePoint, ()> {
         let point_2d = match self {
-            Self::Plane(plane) => plane.point_model_to_surface(point_3d)?,
+            Self::Plane(plane) => plane.point_model_to_surface(point_3d),
         };
 
         Ok(SurfacePoint {
@@ -108,10 +108,7 @@ impl Plane {
     }
 
     /// Convert a point in model coordinates to surface coordinates
-    pub fn point_model_to_surface(
-        &self,
-        point: Point<3>,
-    ) -> Result<Point<2>, ()> {
+    pub fn point_model_to_surface(&self, point: Point<3>) -> Point<2> {
         let normal = self.u.cross(&self.v);
 
         let a = normal.x;
@@ -122,8 +119,13 @@ impl Plane {
         let distance = (a * point.x + b * point.y + c * point.z + d).abs()
             / (a * a + b * b + c * c).sqrt();
 
+        // I'm not sure about this. That epsilon is going to be either to small
+        // or too large, depending on use case. Maybe it's better to just define
+        // that model points are projected into the plane before conversion,
+        // like curves do it.
+        // - @hannobraun
         if distance > <f64 as approx::AbsDiffEq>::default_epsilon() {
-            return Err(());
+            panic!("Model point is not in surface");
         }
 
         let p = point - self.origin;
@@ -132,7 +134,7 @@ impl Plane {
         let u = p.dot(&self.u.normalize());
         let v = p.dot(&self.v.normalize());
 
-        Ok(point![u, v])
+        point![u, v]
     }
 
     /// Convert a point in surface coordinates to model coordinates
@@ -234,13 +236,11 @@ mod tests {
         };
 
         let valid_model_point = point![1., 4., 6.];
-        let invalid_model_point = point![2., 4., 6.];
 
         assert_eq!(
             plane.point_model_to_surface(valid_model_point),
-            Ok(point![2., 3.]),
+            point![2., 3.],
         );
-        assert_eq!(plane.point_model_to_surface(invalid_model_point), Err(()));
     }
 
     #[test]
