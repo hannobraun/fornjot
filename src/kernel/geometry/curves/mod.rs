@@ -1,9 +1,9 @@
 mod circle;
 mod line;
 
-use parry3d_f64::math::Isometry;
-
 pub use self::{circle::Circle, line::Line};
+
+use parry3d_f64::math::Isometry;
 
 use crate::math::Point;
 
