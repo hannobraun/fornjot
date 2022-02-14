@@ -128,8 +128,8 @@ impl Plane {
         let p = point - self.origin;
 
         // scalar projection
-        let u = p.dot(&self.u.normalize());
-        let v = p.dot(&self.v.normalize());
+        let u = p.dot(&self.u.normalize()) / self.u.magnitude();
+        let v = p.dot(&self.v.normalize()) / self.v.magnitude();
 
         point![u, v]
     }
@@ -228,8 +228,8 @@ mod tests {
     fn test_model_to_surface_point_conversion() {
         let plane = Plane {
             origin: point![1., 2., 3.],
-            u: vector![0., 1., 0.],
-            v: vector![0., 0., 1.],
+            u: vector![0., 2., 0.],
+            v: vector![0., 0., 3.],
         };
 
         verify(&plane, point![-1., -1.]);
