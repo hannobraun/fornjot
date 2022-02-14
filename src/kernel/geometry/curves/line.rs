@@ -42,7 +42,7 @@ impl Line {
         let p = point - self.origin;
 
         // scalar projection
-        let t = p.dot(&self.direction.normalize());
+        let t = p.dot(&self.direction.normalize()) / self.direction.magnitude();
 
         point![t]
     }
@@ -99,7 +99,7 @@ mod tests {
     fn test_point_model_to_curve() {
         let line = Line {
             origin: point![1., 0., 0.],
-            direction: vector![1., 0., 0.],
+            direction: vector![2., 0., 0.],
         };
 
         verify(line, -1.);
