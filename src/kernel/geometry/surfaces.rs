@@ -33,18 +33,15 @@ impl Surface {
     /// Convert a point in model coordinates to surface coordinates
     ///
     /// Returns an error, if the provided point is not in the surface.
-    pub fn point_model_to_surface(
-        &self,
-        point_3d: Point<3>,
-    ) -> Result<SurfacePoint, ()> {
+    pub fn point_model_to_surface(&self, point_3d: Point<3>) -> SurfacePoint {
         let point_2d = match self {
             Self::Plane(plane) => plane.point_model_to_surface(point_3d),
         };
 
-        Ok(SurfacePoint {
+        SurfacePoint {
             value: point_2d,
             from: point_3d,
-        })
+        }
     }
 
     /// Convert a point in surface coordinates to model coordinates
