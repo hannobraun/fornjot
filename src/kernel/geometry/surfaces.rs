@@ -52,7 +52,7 @@ impl Surface {
     }
 
     /// Convert a vector in surface coordinates to model coordinates
-    pub fn vector_surface_to_model(&self, vector: Vector<2>) -> Vector<3> {
+    pub fn vector_surface_to_model(&self, vector: &Vector<2>) -> Vector<3> {
         match self {
             Self::Plane(plane) => plane.vector_surface_to_model(vector),
         }
@@ -136,11 +136,11 @@ impl Plane {
 
     /// Convert a point in surface coordinates to model coordinates
     pub fn point_surface_to_model(&self, point: Point<2>) -> Point<3> {
-        self.origin + self.vector_surface_to_model(point.coords)
+        self.origin + self.vector_surface_to_model(&point.coords)
     }
 
     /// Convert a vector in surface coordinates to model coordinates
-    pub fn vector_surface_to_model(&self, vector: Vector<2>) -> Vector<3> {
+    pub fn vector_surface_to_model(&self, vector: &Vector<2>) -> Vector<3> {
         vector.x * self.u + vector.y * self.v
     }
 }
@@ -263,7 +263,7 @@ mod tests {
         };
 
         assert_eq!(
-            plane.vector_surface_to_model(vector![2., 4.]),
+            plane.vector_surface_to_model(&vector![2., 4.]),
             vector![0., 2., 4.],
         );
     }
