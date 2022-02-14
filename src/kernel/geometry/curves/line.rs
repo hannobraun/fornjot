@@ -102,9 +102,16 @@ mod tests {
             direction: vector![1., 0., 0.],
         };
 
-        assert_eq!(line.point_model_to_curve(&point![0., 0., 0.]), point![-1.]);
-        assert_eq!(line.point_model_to_curve(&point![1., 0., 0.]), point![0.]);
-        assert_eq!(line.point_model_to_curve(&point![2., 0., 0.]), point![1.]);
-        assert_eq!(line.point_model_to_curve(&point![3., 0., 0.]), point![2.]);
+        verify(line, -1.);
+        verify(line, 0.);
+        verify(line, 1.);
+        verify(line, 2.);
+
+        fn verify(line: Line, t: f64) {
+            let point = line.origin + line.direction * t;
+            let t_result = line.point_model_to_curve(&point);
+
+            assert_eq!(point![t], t_result);
+        }
     }
 }
