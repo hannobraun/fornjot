@@ -30,7 +30,7 @@ impl Surface {
     #[must_use]
     pub fn transform(self, transform: &Isometry<f64>) -> Self {
         match self {
-            Self::Plane(plane) => Self::Plane(plane.transform(transform)),
+            Self::Plane(surface) => Self::Plane(surface.transform(transform)),
         }
     }
 
@@ -39,7 +39,7 @@ impl Surface {
     /// Returns an error, if the provided point is not in the surface.
     pub fn point_model_to_surface(&self, point_3d: Point<3>) -> SurfacePoint {
         let point_2d = match self {
-            Self::Plane(plane) => plane.point_model_to_surface(point_3d),
+            Self::Plane(surface) => surface.point_model_to_surface(point_3d),
         };
 
         SurfacePoint {
@@ -51,14 +51,14 @@ impl Surface {
     /// Convert a point in surface coordinates to model coordinates
     pub fn point_surface_to_model(&self, point: &Point<2>) -> Point<3> {
         match self {
-            Self::Plane(plane) => plane.point_surface_to_model(point),
+            Self::Plane(surface) => surface.point_surface_to_model(point),
         }
     }
 
     /// Convert a vector in surface coordinates to model coordinates
     pub fn vector_surface_to_model(&self, vector: &Vector<2>) -> Vector<3> {
         match self {
-            Self::Plane(plane) => plane.vector_surface_to_model(vector),
+            Self::Plane(surface) => surface.vector_surface_to_model(vector),
         }
     }
 }
