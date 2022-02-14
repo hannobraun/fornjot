@@ -33,29 +33,26 @@ impl Surface {
     /// Convert a point in model coordinates to surface coordinates
     ///
     /// Returns an error, if the provided point is not in the surface.
-    pub fn point_model_to_surface(
-        &self,
-        point_3d: Point<3>,
-    ) -> Result<SurfacePoint, ()> {
+    pub fn point_model_to_surface(&self, point_3d: Point<3>) -> SurfacePoint {
         let point_2d = match self {
-            Self::Plane(plane) => plane.point_model_to_surface(point_3d)?,
+            Self::Plane(plane) => plane.point_model_to_surface(point_3d),
         };
 
-        Ok(SurfacePoint {
+        SurfacePoint {
             value: point_2d,
             from: point_3d,
-        })
+        }
     }
 
     /// Convert a point in surface coordinates to model coordinates
-    pub fn point_surface_to_model(&self, point: Point<2>) -> Point<3> {
+    pub fn point_surface_to_model(&self, point: &Point<2>) -> Point<3> {
         match self {
             Self::Plane(plane) => plane.point_surface_to_model(point),
         }
     }
 
     /// Convert a vector in surface coordinates to model coordinates
-    pub fn vector_surface_to_model(&self, vector: Vector<2>) -> Vector<3> {
+    pub fn vector_surface_to_model(&self, vector: &Vector<2>) -> Vector<3> {
         match self {
             Self::Plane(plane) => plane.vector_surface_to_model(vector),
         }
@@ -108,10 +105,7 @@ impl Plane {
     }
 
     /// Convert a point in model coordinates to surface coordinates
-    pub fn point_model_to_surface(
-        &self,
-        point: Point<3>,
-    ) -> Result<Point<2>, ()> {
+    pub fn point_model_to_surface(&self, point: Point<3>) -> Point<2> {
         let normal = self.u.cross(&self.v);
 
         let a = normal.x;
@@ -122,26 +116,31 @@ impl Plane {
         let distance = (a * point.x + b * point.y + c * point.z + d).abs()
             / (a * a + b * b + c * c).sqrt();
 
+        // I'm not sure about this. That epsilon is going to be either to small
+        // or too large, depending on use case. Maybe it's better to just define
+        // that model points are projected into the plane before conversion,
+        // like curves do it.
+        // - @hannobraun
         if distance > <f64 as approx::AbsDiffEq>::default_epsilon() {
-            return Err(());
+            panic!("Model point is not in surface");
         }
 
         let p = point - self.origin;
 
         // scalar projection
-        let u = p.dot(&self.u.normalize());
-        let v = p.dot(&self.v.normalize());
+        let u = p.dot(&self.u.normalize()) / self.u.magnitude();
+        let v = p.dot(&self.v.normalize()) / self.v.magnitude();
 
-        Ok(point![u, v])
+        point![u, v]
     }
 
     /// Convert a point in surface coordinates to model coordinates
-    pub fn point_surface_to_model(&self, point: Point<2>) -> Point<3> {
-        self.origin + self.vector_surface_to_model(point.coords)
+    pub fn point_surface_to_model(&self, point: &Point<2>) -> Point<3> {
+        self.origin + self.vector_surface_to_model(&point.coords)
     }
 
     /// Convert a vector in surface coordinates to model coordinates
-    pub fn vector_surface_to_model(&self, vector: Vector<2>) -> Vector<3> {
+    pub fn vector_surface_to_model(&self, vector: &Vector<2>) -> Vector<3> {
         vector.x * self.u + vector.y * self.v
     }
 }
@@ -198,7 +197,7 @@ mod tests {
     use nalgebra::{point, vector, UnitQuaternion};
     use parry3d_f64::math::{Isometry, Translation};
 
-    use crate::math::Vector;
+    use crate::math::{Point, Vector};
 
     use super::Plane;
 
@@ -229,18 +228,21 @@ mod tests {
     fn test_model_to_surface_point_conversion() {
         let plane = Plane {
             origin: point![1., 2., 3.],
-            u: vector![0., 1., 0.],
-            v: vector![0., 0., 1.],
+            u: vector![0., 2., 0.],
+            v: vector![0., 0., 3.],
         };
 
-        let valid_model_point = point![1., 4., 6.];
-        let invalid_model_point = point![2., 4., 6.];
+        verify(&plane, point![-1., -1.]);
+        verify(&plane, point![0., 0.]);
+        verify(&plane, point![1., 1.]);
+        verify(&plane, point![2., 3.]);
 
-        assert_eq!(
-            plane.point_model_to_surface(valid_model_point),
-            Ok(point![2., 3.]),
-        );
-        assert_eq!(plane.point_model_to_surface(invalid_model_point), Err(()));
+        fn verify(plane: &Plane, surface_point: Point<2>) {
+            let point = plane.point_surface_to_model(&surface_point);
+            let result = plane.point_model_to_surface(point);
+
+            assert_eq!(result, surface_point);
+        }
     }
 
     #[test]
@@ -252,7 +254,7 @@ mod tests {
         };
 
         assert_eq!(
-            plane.point_surface_to_model(point![2., 4.]),
+            plane.point_surface_to_model(&point![2., 4.]),
             point![1., 4., 7.],
         );
     }
@@ -266,7 +268,7 @@ mod tests {
         };
 
         assert_eq!(
-            plane.vector_surface_to_model(vector![2., 4.]),
+            plane.vector_surface_to_model(&vector![2., 4.]),
             vector![0., 2., 4.],
         );
     }
