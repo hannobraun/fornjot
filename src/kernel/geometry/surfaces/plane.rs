@@ -136,7 +136,7 @@ mod tests {
     use super::Plane;
 
     #[test]
-    fn test_transform() {
+    fn transform() {
         let plane = Plane {
             origin: point![1., 2., 3.],
             u: vector![1., 0., 0.],
@@ -160,7 +160,7 @@ mod tests {
     }
 
     #[test]
-    fn test_model_to_surface_point_conversion() {
+    fn point_model_to_surface() {
         let plane = Plane {
             origin: point![1., 2., 3.],
             u: vector![0., 2., 0.],
@@ -181,7 +181,7 @@ mod tests {
     }
 
     #[test]
-    fn test_surface_to_model_point_conversion() {
+    fn point_surface_to_model() {
         let plane = Plane {
             origin: point![1., 2., 3.],
             u: vector![0., 1., 0.],
@@ -195,7 +195,7 @@ mod tests {
     }
 
     #[test]
-    fn test_surface_to_model_vector_conversion() {
+    fn vector_surface_to_model() {
         let plane = Plane {
             origin: point![1., 2., 3.],
             u: vector![0., 1., 0.],
