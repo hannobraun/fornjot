@@ -197,7 +197,7 @@ mod tests {
     use nalgebra::{point, vector, UnitQuaternion};
     use parry3d_f64::math::{Isometry, Translation};
 
-    use crate::math::Vector;
+    use crate::math::{Point, Vector};
 
     use super::Plane;
 
@@ -232,12 +232,14 @@ mod tests {
             v: vector![0., 0., 1.],
         };
 
-        let valid_model_point = point![1., 4., 6.];
+        verify(&plane, point![2., 3.]);
 
-        assert_eq!(
-            plane.point_model_to_surface(valid_model_point),
-            point![2., 3.],
-        );
+        fn verify(plane: &Plane, surface_point: Point<2>) {
+            let point = plane.point_surface_to_model(&surface_point);
+            let result = plane.point_model_to_surface(point);
+
+            assert_eq!(result, surface_point);
+        }
     }
 
     #[test]
