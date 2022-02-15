@@ -47,13 +47,11 @@ impl Line {
     }
 
     /// Convert a point on the curve into model coordinates
-    #[cfg(test)]
     pub fn point_curve_to_model(&self, point: &Point<1>) -> Point<3> {
         self.origin + self.vector_curve_to_model(&point.coords)
     }
 
     /// Convert a vector on the curve into model coordinates
-    #[cfg(test)]
     pub fn vector_curve_to_model(&self, point: &Vector<1>) -> Vector<3> {
         let t = point.x;
         self.direction * t

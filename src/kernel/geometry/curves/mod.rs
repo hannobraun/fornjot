@@ -63,6 +63,18 @@ impl Curve {
         }
     }
 
+    /// Convert a point on the curve into model coordinates
+    #[allow(unused)]
+    pub fn point_curve_to_model(&self, point: &Point<1>) -> Point<3> {
+        match self {
+            Self::Circle(curve) => curve.point_curve_to_model(point),
+            Self::Line(curve) => curve.point_curve_to_model(point),
+
+            #[cfg(test)]
+            Self::Mock { .. } => todo!(),
+        }
+    }
+
     /// Compute an approximation of the curve
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
