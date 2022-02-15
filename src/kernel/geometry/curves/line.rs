@@ -30,13 +30,12 @@ impl Line {
 
     /// Convert a point in model coordinates to curve coordinates
     ///
-    /// Ignores the distance of the point to the line, meaning points on the
-    /// line will be converted to the curve coordinates of their projection on
-    /// the line.
+    /// Projects the point onto the line before computing curve coordinate. This
+    /// is done to make this method robust against floating point accuracy
+    /// issues.
     ///
-    /// This is done to make this method robust against floating point accuracy
-    /// issues. Callers are advised to be careful about the points they pass, as
-    /// the point not being on the line, intended or not, will not result in an
+    /// Callers are advised to be careful about the points they pass, as the
+    /// point not being on the line, intentional or not, will never result in an
     /// error.
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
         let p = point - self.origin;

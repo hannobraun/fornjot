@@ -35,13 +35,13 @@ impl Circle {
     /// Converts the provided point into curve coordinates between `0.`
     /// (inclusive) and `PI * 2.` (exclusive).
     ///
-    /// Ignores the radius, meaning points that are not on the circle will be
-    /// converted to the curve coordinate of their projection on the circle.
+    /// Projects the point onto the circle before computing curve coordinate,
+    /// ignoring the radius. This is done to make this method robust against
+    /// floating point accuracy issues.
     ///
-    /// This is done to make this method robust against floating point accuracy
-    /// issues. Callers are advised to be careful about the points they pass, as
-    /// the point not being on the circle, intended or not, will not result in
-    /// an error.
+    /// Callers are advised to be careful about the points they pass, as the
+    /// point not being on the curve, intentional or not, will not result in an
+    /// error.
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
         let v = point - self.center;
         let atan = f64::atan2(v.y, v.x);
