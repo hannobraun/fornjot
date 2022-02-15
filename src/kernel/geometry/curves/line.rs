@@ -74,7 +74,7 @@ mod tests {
     use super::Line;
 
     #[test]
-    fn test_transform() {
+    fn transform() {
         let line = Line {
             origin: point![1., 0., 0.],
             direction: vector![0., 1., 0.],
@@ -96,7 +96,7 @@ mod tests {
     }
 
     #[test]
-    fn test_point_model_to_curve() {
+    fn point_model_to_curve() {
         let line = Line {
             origin: point![1., 0., 0.],
             direction: vector![2., 0., 0.],

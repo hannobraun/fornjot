@@ -93,7 +93,7 @@ mod tests {
     use super::Circle;
 
     #[test]
-    fn test_point_model_to_curve() {
+    fn point_model_to_curve() {
         let circle = Circle {
             center: point![1., 2., 3.],
             radius: vector![1., 0.],
@@ -118,7 +118,7 @@ mod tests {
     }
 
     #[test]
-    fn test_number_of_vertices() {
+    fn number_of_vertices() {
         verify_result(50., 100., 3);
         verify_result(10., 100., 7);
         verify_result(1., 100., 23);
