@@ -20,6 +20,11 @@ pub struct Circle {
 }
 
 impl Circle {
+    /// Access the origin of the curve's coordinate system
+    pub fn origin(&self) -> Point<3> {
+        self.center
+    }
+
     #[must_use]
     pub fn transform(self, transform: &Isometry<f64>) -> Self {
         let radius = vector![self.radius.x, self.radius.y, 0.];

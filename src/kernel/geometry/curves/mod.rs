@@ -5,7 +5,7 @@ pub use self::{circle::Circle, line::Line};
 
 use parry3d_f64::math::Isometry;
 
-use crate::math::Point;
+use crate::math::{Point, Vector};
 
 /// A one-dimensional shape
 ///
@@ -33,6 +33,17 @@ pub enum Curve {
 }
 
 impl Curve {
+    /// Access the origin of the curve's coordinate system
+    pub fn origin(&self) -> Point<3> {
+        match self {
+            Self::Circle(curve) => curve.origin(),
+            Self::Line(curve) => curve.origin(),
+
+            #[cfg(test)]
+            Self::Mock { .. } => todo!(),
+        }
+    }
+
     #[must_use]
     pub fn transform(self, transform: &Isometry<f64>) -> Self {
         match self {
@@ -60,6 +71,28 @@ impl Curve {
 
             #[cfg(test)]
             Self::Mock { coords, .. } => coords.borrow_mut().remove(0),
+        }
+    }
+
+    /// Convert a point on the curve into model coordinates
+    pub fn point_curve_to_model(&self, point: &Point<1>) -> Point<3> {
+        match self {
+            Self::Circle(curve) => curve.point_curve_to_model(point),
+            Self::Line(curve) => curve.point_curve_to_model(point),
+
+            #[cfg(test)]
+            Self::Mock { .. } => todo!(),
+        }
+    }
+
+    /// Convert a vector on the curve into model coordinates
+    pub fn vector_curve_to_model(&self, point: &Vector<1>) -> Vector<3> {
+        match self {
+            Self::Circle(curve) => curve.vector_curve_to_model(point),
+            Self::Line(curve) => curve.vector_curve_to_model(point),
+
+            #[cfg(test)]
+            Self::Mock { .. } => todo!(),
         }
     }
 

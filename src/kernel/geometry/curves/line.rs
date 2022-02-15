@@ -19,6 +19,11 @@ pub struct Line {
 }
 
 impl Line {
+    /// Access the origin of the curve's coordinate system
+    pub fn origin(&self) -> Point<3> {
+        self.origin
+    }
+
     /// Transform the line
     #[must_use]
     pub fn transform(self, transform: &Isometry<f64>) -> Self {
@@ -47,13 +52,11 @@ impl Line {
     }
 
     /// Convert a point on the curve into model coordinates
-    #[cfg(test)]
     pub fn point_curve_to_model(&self, point: &Point<1>) -> Point<3> {
         self.origin + self.vector_curve_to_model(&point.coords)
     }
 
     /// Convert a vector on the curve into model coordinates
-    #[cfg(test)]
     pub fn vector_curve_to_model(&self, point: &Vector<1>) -> Vector<3> {
         let t = point.x;
         self.direction * t
