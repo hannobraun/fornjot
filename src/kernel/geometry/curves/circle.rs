@@ -51,6 +51,11 @@ impl Circle {
 
     /// Convert a point on the curve into model coordinates
     pub fn point_curve_to_model(&self, point: &Point<1>) -> Point<3> {
+        self.center + self.vector_curve_to_model(&point.coords)
+    }
+
+    /// Convert a vector on the curve into model coordinates
+    pub fn vector_curve_to_model(&self, point: &Vector<1>) -> Vector<3> {
         let radius = self.radius.magnitude();
         let angle = point.x;
 
@@ -59,7 +64,7 @@ impl Circle {
         let x = cos * radius;
         let y = sin * radius;
 
-        self.center + vector![x, y, 0.]
+        vector![x, y, 0.]
     }
 
     pub fn approx(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
