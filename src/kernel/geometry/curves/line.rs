@@ -45,6 +45,13 @@ impl Line {
 
         point![t]
     }
+
+    /// Convert a point on the curve into model coordinates
+    #[cfg(test)]
+    pub fn point_curve_to_model(&self, point: &Point<1>) -> Point<3> {
+        let t = point.x;
+        self.origin + self.direction * t
+    }
 }
 
 impl AbsDiffEq for Line {
@@ -107,7 +114,7 @@ mod tests {
         verify(line, 2.);
 
         fn verify(line: Line, t: f64) {
-            let point = line.origin + line.direction * t;
+            let point = line.point_curve_to_model(&point![t]);
             let t_result = line.point_model_to_curve(&point);
 
             assert_eq!(point![t], t_result);
