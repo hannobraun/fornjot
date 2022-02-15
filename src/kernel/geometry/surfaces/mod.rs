@@ -8,7 +8,7 @@ use parry3d_f64::math::Isometry;
 
 use crate::math::{Point, Vector};
 
-use super::points::SurfacePoint;
+use super::{points::SurfacePoint, Curve, Line};
 
 /// A two-dimensional shape
 #[derive(Clone, Debug, PartialEq)]
@@ -24,10 +24,12 @@ pub enum Surface {
 impl Surface {
     /// Construct a `Surface` that represents the x-y plane
     pub fn x_y_plane() -> Self {
-        Self::Plane(Plane {
-            origin: Point::origin(),
-            u: vector![1., 0., 0.],
-            v: vector![0., 1., 0.],
+        Self::Swept(Swept {
+            curve: Curve::Line(Line {
+                origin: Point::origin(),
+                direction: vector![1., 0., 0.],
+            }),
+            path: vector![0., 1., 0.],
         })
     }
 
