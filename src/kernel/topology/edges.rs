@@ -66,11 +66,6 @@ pub struct Edge {
     ///
     /// If there are no such vertices, that means the edge is connected to
     /// itself (like a full circle, for example).
-    ///
-    /// This field is a placeholder. Eventually, there will be actual vertices
-    /// here. For now, this field just tracks whether there are such bounding
-    /// vertices or not. If there are, they are implicitly assumed to be the
-    /// points with the curve coordinates `0` and `1`.
     pub vertices: Option<[Vertex<1>; 2]>,
 
     /// Indicates whether the curve's direction is reversed
