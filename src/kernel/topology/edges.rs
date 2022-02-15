@@ -131,10 +131,7 @@ impl Edge {
         }
     }
 
-    /// Create an arc
-    ///
-    /// So far, the name of this method is a bit ambitious, as only full circles
-    /// are supported.
+    /// Create a circle
     pub fn circle(radius: f64) -> Self {
         Self {
             curve: Curve::Circle(Circle {
