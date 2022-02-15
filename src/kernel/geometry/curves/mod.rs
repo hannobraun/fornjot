@@ -5,7 +5,7 @@ pub use self::{circle::Circle, line::Line};
 
 use parry3d_f64::math::Isometry;
 
-use crate::math::Point;
+use crate::math::{Point, Vector};
 
 /// A one-dimensional shape
 ///
@@ -69,6 +69,18 @@ impl Curve {
         match self {
             Self::Circle(curve) => curve.point_curve_to_model(point),
             Self::Line(curve) => curve.point_curve_to_model(point),
+
+            #[cfg(test)]
+            Self::Mock { .. } => todo!(),
+        }
+    }
+
+    /// Convert a vector on the curve into model coordinates
+    #[allow(unused)]
+    pub fn vector_curve_to_model(&self, point: &Vector<1>) -> Vector<3> {
+        match self {
+            Self::Circle(curve) => curve.vector_curve_to_model(point),
+            Self::Line(curve) => curve.vector_curve_to_model(point),
 
             #[cfg(test)]
             Self::Mock { .. } => todo!(),
