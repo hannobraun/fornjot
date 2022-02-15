@@ -33,6 +33,18 @@ pub enum Curve {
 }
 
 impl Curve {
+    /// Access the origin of the curve's coordinate system
+    #[allow(unused)]
+    pub fn origin(&self) -> Point<3> {
+        match self {
+            Self::Circle(curve) => curve.origin(),
+            Self::Line(curve) => curve.origin(),
+
+            #[cfg(test)]
+            Self::Mock { .. } => todo!(),
+        }
+    }
+
     #[must_use]
     pub fn transform(self, transform: &Isometry<f64>) -> Self {
         match self {

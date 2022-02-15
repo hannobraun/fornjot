@@ -19,6 +19,11 @@ pub struct Line {
 }
 
 impl Line {
+    /// Access the origin of the curve's coordinate system
+    pub fn origin(&self) -> Point<3> {
+        self.origin
+    }
+
     /// Transform the line
     #[must_use]
     pub fn transform(self, transform: &Isometry<f64>) -> Self {
