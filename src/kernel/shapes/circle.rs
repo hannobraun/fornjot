@@ -23,7 +23,7 @@ impl Shape for fj::Circle {
     }
 
     fn faces(&self, _: f64, _: &mut DebugInfo) -> Faces {
-        let edges = Edges::single_cycle([Edge::arc(self.radius)]);
+        let edges = Edges::single_cycle([Edge::circle(self.radius)]);
         Faces(vec![Face::Face {
             edges,
             surface: Surface::x_y_plane(),
@@ -31,7 +31,7 @@ impl Shape for fj::Circle {
     }
 
     fn edges(&self) -> Edges {
-        Edges::single_cycle([Edge::arc(self.radius)])
+        Edges::single_cycle([Edge::circle(self.radius)])
     }
 
     fn vertices(&self) -> Vertices {
