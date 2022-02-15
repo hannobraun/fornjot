@@ -36,8 +36,8 @@ impl Curve {
     #[must_use]
     pub fn transform(self, transform: &Isometry<f64>) -> Self {
         match self {
-            Self::Circle(circle) => Self::Circle(circle.transform(transform)),
-            Self::Line(line) => Self::Line(line.transform(transform)),
+            Self::Circle(curve) => Self::Circle(curve.transform(transform)),
+            Self::Line(curve) => Self::Line(curve.transform(transform)),
 
             #[cfg(test)]
             Self::Mock { .. } => todo!(),
@@ -55,8 +55,8 @@ impl Curve {
     /// an error.
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
         match self {
-            Self::Circle(circle) => circle.point_model_to_curve(point),
-            Self::Line(line) => line.point_model_to_curve(point),
+            Self::Circle(curve) => curve.point_model_to_curve(point),
+            Self::Line(curve) => curve.point_model_to_curve(point),
 
             #[cfg(test)]
             Self::Mock { coords, .. } => coords.borrow_mut().remove(0),
