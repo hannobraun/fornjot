@@ -49,6 +49,19 @@ impl Circle {
         point![coord]
     }
 
+    /// Convert a point on the curve into model coordinates
+    pub fn point_curve_to_model(&self, point: &Point<1>) -> Point<3> {
+        let radius = self.radius.magnitude();
+        let angle = point.x;
+
+        let (sin, cos) = angle.sin_cos();
+
+        let x = cos * radius;
+        let y = sin * radius;
+
+        self.center + vector![x, y, 0.]
+    }
+
     pub fn approx(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
         let radius = self.radius.magnitude();
 
@@ -62,14 +75,7 @@ impl Circle {
 
         for i in 0..n {
             let angle = 2. * PI / n as f64 * i as f64;
-
-            let (sin, cos) = angle.sin_cos();
-
-            let x = cos * radius;
-            let y = sin * radius;
-
-            let point = self.center + vector![x, y, 0.];
-
+            let point = self.point_curve_to_model(&point![angle]);
             out.push(point);
         }
     }
