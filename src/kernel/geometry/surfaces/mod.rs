@@ -17,7 +17,6 @@ pub enum Surface {
     Plane(Plane),
 
     /// A swept curve
-    #[allow(unused)]
     Swept(Swept),
 }
 
