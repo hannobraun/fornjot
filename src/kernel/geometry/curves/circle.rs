@@ -35,18 +35,36 @@ impl Circle {
     /// Converts the provided point into curve coordinates between `0.`
     /// (inclusive) and `PI * 2.` (exclusive).
     ///
-    /// Ignores the radius, meaning points that are not on the circle will be
-    /// converted to the curve coordinate of their projection on the circle.
+    /// Projects the point onto the circle before computing curve coordinate,
+    /// ignoring the radius. This is done to make this method robust against
+    /// floating point accuracy issues.
     ///
-    /// This is done to make this method robust against floating point accuracy
-    /// issues. Callers are advised to be careful about the points they pass, as
-    /// the point not being on the circle, intended or not, will not result in
-    /// an error.
+    /// Callers are advised to be careful about the points they pass, as the
+    /// point not being on the curve, intentional or not, will not result in an
+    /// error.
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
         let v = point - self.center;
         let atan = f64::atan2(v.y, v.x);
         let coord = if atan >= 0. { atan } else { atan + PI * 2. };
         point![coord]
+    }
+
+    /// Convert a point on the curve into model coordinates
+    pub fn point_curve_to_model(&self, point: &Point<1>) -> Point<3> {
+        self.center + self.vector_curve_to_model(&point.coords)
+    }
+
+    /// Convert a vector on the curve into model coordinates
+    pub fn vector_curve_to_model(&self, point: &Vector<1>) -> Vector<3> {
+        let radius = self.radius.magnitude();
+        let angle = point.x;
+
+        let (sin, cos) = angle.sin_cos();
+
+        let x = cos * radius;
+        let y = sin * radius;
+
+        vector![x, y, 0.]
     }
 
     pub fn approx(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
@@ -62,14 +80,7 @@ impl Circle {
 
         for i in 0..n {
             let angle = 2. * PI / n as f64 * i as f64;
-
-            let (sin, cos) = angle.sin_cos();
-
-            let x = cos * radius;
-            let y = sin * radius;
-
-            let point = self.center + vector![x, y, 0.];
-
+            let point = self.point_curve_to_model(&point![angle]);
             out.push(point);
         }
     }
@@ -93,7 +104,7 @@ mod tests {
     use super::Circle;
 
     #[test]
-    fn test_point_model_to_curve() {
+    fn point_model_to_curve() {
         let circle = Circle {
             center: point![1., 2., 3.],
             radius: vector![1., 0.],
@@ -118,7 +129,7 @@ mod tests {
     }
 
     #[test]
-    fn test_number_of_vertices() {
+    fn number_of_vertices() {
         verify_result(50., 100., 3);
         verify_result(10., 100., 7);
         verify_result(1., 100., 23);

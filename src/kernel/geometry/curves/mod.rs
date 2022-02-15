@@ -36,8 +36,8 @@ impl Curve {
     #[must_use]
     pub fn transform(self, transform: &Isometry<f64>) -> Self {
         match self {
-            Self::Circle(circle) => Self::Circle(circle.transform(transform)),
-            Self::Line(line) => Self::Line(line.transform(transform)),
+            Self::Circle(curve) => Self::Circle(curve.transform(transform)),
+            Self::Line(curve) => Self::Line(curve.transform(transform)),
 
             #[cfg(test)]
             Self::Mock { .. } => todo!(),
@@ -46,18 +46,17 @@ impl Curve {
 
     /// Convert a point in model coordinates to curve coordinates
     ///
-    /// Whether the point is actually on the curve or not will be ignored. The
-    /// curve coordinates of the projection of the point on the curve will be
-    /// returned.
-    ///
+    /// Projects the point onto the curve before computing curve coordinate.
     /// This is done to make this method robust against floating point accuracy
-    /// issues. Callers are advised to be careful about the points they pass, as
-    /// the point not being on the curve, intended or not, will not result in an
-    /// error.
+    /// issues.
+    ///
+    /// Callers are advised to be careful about the points they pass, as the
+    /// point not being on the curve, intentional or not, will never result in
+    /// an error.
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
         match self {
-            Self::Circle(circle) => circle.point_model_to_curve(point),
-            Self::Line(line) => line.point_model_to_curve(point),
+            Self::Circle(curve) => curve.point_model_to_curve(point),
+            Self::Line(curve) => curve.point_model_to_curve(point),
 
             #[cfg(test)]
             Self::Mock { coords, .. } => coords.borrow_mut().remove(0),

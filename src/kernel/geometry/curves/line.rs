@@ -30,13 +30,12 @@ impl Line {
 
     /// Convert a point in model coordinates to curve coordinates
     ///
-    /// Ignores the distance of the point to the line, meaning points on the
-    /// line will be converted to the curve coordinates of their projection on
-    /// the line.
+    /// Projects the point onto the line before computing curve coordinate. This
+    /// is done to make this method robust against floating point accuracy
+    /// issues.
     ///
-    /// This is done to make this method robust against floating point accuracy
-    /// issues. Callers are advised to be careful about the points they pass, as
-    /// the point not being on the line, intended or not, will not result in an
+    /// Callers are advised to be careful about the points they pass, as the
+    /// point not being on the line, intentional or not, will never result in an
     /// error.
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
         let p = point - self.origin;
@@ -45,6 +44,19 @@ impl Line {
         let t = p.dot(&self.direction.normalize()) / self.direction.magnitude();
 
         point![t]
+    }
+
+    /// Convert a point on the curve into model coordinates
+    #[cfg(test)]
+    pub fn point_curve_to_model(&self, point: &Point<1>) -> Point<3> {
+        self.origin + self.vector_curve_to_model(&point.coords)
+    }
+
+    /// Convert a vector on the curve into model coordinates
+    #[cfg(test)]
+    pub fn vector_curve_to_model(&self, point: &Vector<1>) -> Vector<3> {
+        let t = point.x;
+        self.direction * t
     }
 }
 
@@ -74,7 +86,7 @@ mod tests {
     use super::Line;
 
     #[test]
-    fn test_transform() {
+    fn transform() {
         let line = Line {
             origin: point![1., 0., 0.],
             direction: vector![0., 1., 0.],
@@ -96,7 +108,7 @@ mod tests {
     }
 
     #[test]
-    fn test_point_model_to_curve() {
+    fn point_model_to_curve() {
         let line = Line {
             origin: point![1., 0., 0.],
             direction: vector![2., 0., 0.],
@@ -108,7 +120,7 @@ mod tests {
         verify(line, 2.);
 
         fn verify(line: Line, t: f64) {
-            let point = line.origin + line.direction * t;
+            let point = line.point_curve_to_model(&point![t]);
             let t_result = line.point_model_to_curve(&point);
 
             assert_eq!(point![t], t_result);
