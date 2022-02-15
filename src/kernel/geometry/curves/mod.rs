@@ -34,7 +34,6 @@ pub enum Curve {
 
 impl Curve {
     /// Access the origin of the curve's coordinate system
-    #[allow(unused)]
     pub fn origin(&self) -> Point<3> {
         match self {
             Self::Circle(curve) => curve.origin(),
@@ -76,7 +75,6 @@ impl Curve {
     }
 
     /// Convert a point on the curve into model coordinates
-    #[allow(unused)]
     pub fn point_curve_to_model(&self, point: &Point<1>) -> Point<3> {
         match self {
             Self::Circle(curve) => curve.point_curve_to_model(point),
@@ -88,7 +86,6 @@ impl Curve {
     }
 
     /// Convert a vector on the curve into model coordinates
-    #[allow(unused)]
     pub fn vector_curve_to_model(&self, point: &Vector<1>) -> Vector<3> {
         match self {
             Self::Circle(curve) => curve.vector_curve_to_model(point),
