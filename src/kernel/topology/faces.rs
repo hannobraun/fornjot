@@ -7,7 +7,6 @@ use parry2d_f64::{
     shape::Segment as Segment2,
 };
 use parry3d_f64::{
-    math::Isometry,
     query::Ray as Ray3,
     shape::{Segment as Segment3, Triangle},
 };
@@ -15,7 +14,7 @@ use parry3d_f64::{
 use crate::{
     debug::{DebugInfo, TriangleEdgeCheck},
     kernel::{
-        approximation::Approximation, geometry::Surface,
+        approximation::Approximation, geometry::Surface, math::Transform,
         triangulation::triangulate,
     },
 };
@@ -29,7 +28,7 @@ pub struct Faces(pub Vec<Face>);
 impl Faces {
     /// Transform all the faces
     #[must_use]
-    pub fn transform(self, transform: &Isometry<f64>) -> Self {
+    pub fn transform(self, transform: &Transform) -> Self {
         let faces = self
             .0
             .into_iter()
@@ -87,7 +86,7 @@ pub enum Face {
 impl Face {
     /// Transform the face
     #[must_use]
-    pub fn transform(self, transform: &Isometry<f64>) -> Self {
+    pub fn transform(self, transform: &Transform) -> Self {
         match self {
             Self::Face { edges, surface } => Self::Face {
                 edges: edges.transform(transform),
@@ -95,7 +94,7 @@ impl Face {
             },
             Self::Triangles(mut triangles) => {
                 for triangle in &mut triangles {
-                    *triangle = triangle.transformed(transform);
+                    *triangle = triangle.transformed(&transform.into());
                 }
 
                 Self::Triangles(triangles)

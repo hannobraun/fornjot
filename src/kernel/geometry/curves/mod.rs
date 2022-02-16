@@ -1,11 +1,9 @@
 mod circle;
 mod line;
 
-use crate::kernel::math::{Point, Vector};
+use crate::kernel::math::{Point, Transform, Vector};
 
 pub use self::{circle::Circle, line::Line};
-
-use parry3d_f64::math::Isometry;
 
 /// A one-dimensional shape
 ///
@@ -45,7 +43,7 @@ impl Curve {
     }
 
     #[must_use]
-    pub fn transform(self, transform: &Isometry<f64>) -> Self {
+    pub fn transform(self, transform: &Transform) -> Self {
         match self {
             Self::Circle(curve) => Self::Circle(curve.transform(transform)),
             Self::Line(curve) => Self::Line(curve.transform(transform)),

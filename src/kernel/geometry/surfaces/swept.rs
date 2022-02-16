@@ -1,9 +1,8 @@
 use nalgebra::{point, vector};
-use parry3d_f64::math::Isometry;
 
 use crate::kernel::{
     geometry::Curve,
-    math::{Point, Vector},
+    math::{Point, Transform, Vector},
 };
 
 /// A surface that was swept from a curve
@@ -19,7 +18,7 @@ pub struct Swept {
 impl Swept {
     /// Transform the surface
     #[must_use]
-    pub fn transform(mut self, transform: &Isometry<f64>) -> Self {
+    pub fn transform(mut self, transform: &Transform) -> Self {
         self.curve = self.curve.transform(transform);
         self.path = transform.transform_vector(&self.path);
         self

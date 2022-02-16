@@ -1,8 +1,7 @@
 use approx::AbsDiffEq;
 use nalgebra::point;
-use parry3d_f64::math::Isometry;
 
-use crate::kernel::math::{Point, Vector};
+use crate::kernel::math::{Point, Transform, Vector};
 
 /// A line, defined by a point and a vector
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -26,7 +25,7 @@ impl Line {
 
     /// Transform the line
     #[must_use]
-    pub fn transform(self, transform: &Isometry<f64>) -> Self {
+    pub fn transform(self, transform: &Transform) -> Self {
         Self {
             origin: transform.transform_point(&self.origin),
             direction: transform.transform_vector(&self.direction),
@@ -95,10 +94,13 @@ mod tests {
             direction: vector![0., 1., 0.],
         };
 
-        let line = line.transform(&Isometry::from_parts(
-            Translation::from([1., 2., 3.]),
-            UnitQuaternion::from_axis_angle(&Vector::z_axis(), FRAC_PI_2),
-        ));
+        let line = line.transform(
+            &Isometry::from_parts(
+                Translation::from([1., 2., 3.]),
+                UnitQuaternion::from_axis_angle(&Vector::z_axis(), FRAC_PI_2),
+            )
+            .into(),
+        );
 
         assert_abs_diff_eq!(
             line,

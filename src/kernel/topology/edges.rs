@@ -1,9 +1,8 @@
 use nalgebra::vector;
-use parry3d_f64::math::Isometry;
 
 use crate::kernel::{
     geometry::{Circle, Curve},
-    math::Point,
+    math::{Point, Transform},
 };
 
 use super::vertices::Vertex;
@@ -33,7 +32,7 @@ impl Edges {
 
     /// Transform the edges
     #[must_use]
-    pub fn transform(mut self, transform: &Isometry<f64>) -> Self {
+    pub fn transform(mut self, transform: &Transform) -> Self {
         for cycle in &mut self.cycles {
             for edge in &mut cycle.edges {
                 *edge = edge.clone().transform(transform);
@@ -115,7 +114,7 @@ impl Edge {
 
     /// Transform the edge
     #[must_use]
-    pub fn transform(mut self, transform: &Isometry<f64>) -> Self {
+    pub fn transform(mut self, transform: &Transform) -> Self {
         self.curve = self.curve.transform(transform);
         self.vertices = self
             .vertices

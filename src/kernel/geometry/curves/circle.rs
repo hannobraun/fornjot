@@ -1,9 +1,8 @@
 use std::f64::consts::PI;
 
 use nalgebra::{point, vector};
-use parry3d_f64::math::Isometry;
 
-use crate::kernel::math::{Point, Vector};
+use crate::kernel::math::{Point, Transform, Vector};
 
 /// A circle
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -26,7 +25,7 @@ impl Circle {
     }
 
     #[must_use]
-    pub fn transform(self, transform: &Isometry<f64>) -> Self {
+    pub fn transform(self, transform: &Transform) -> Self {
         let radius = vector![self.radius.x, self.radius.y, 0.];
 
         Self {
