@@ -1,10 +1,9 @@
 use bytemuck::{Pod, Zeroable};
-use nalgebra::vector;
+use nalgebra::{vector, Point};
 use parry3d_f64::shape::Triangle;
 
 use crate::{
     debug::DebugInfo,
-    math::Point,
     mesh::{HashVector, Index, MeshMaker},
 };
 
@@ -32,7 +31,7 @@ impl Vertices {
 
     pub fn push_line(
         &mut self,
-        line: [Point<3>; 2],
+        line: [Point<f64, 3>; 2],
         normal: [f32; 3],
         color: [f32; 4],
     ) {
