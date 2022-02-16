@@ -3,7 +3,7 @@ use std::f64::consts::PI;
 use nalgebra::{point, vector};
 use parry3d_f64::math::Isometry;
 
-use crate::math::{Point, Vector};
+use crate::kernel::math::{Point, Vector};
 
 /// A circle
 #[derive(Clone, Copy, Debug, PartialEq)]

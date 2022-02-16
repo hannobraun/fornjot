@@ -4,6 +4,7 @@ use crate::{
     debug::DebugInfo,
     kernel::{
         geometry::{Curve, Line, Surface},
+        math::Point,
         topology::{
             edges::{Edge, Edges},
             faces::{Face, Faces},
@@ -11,7 +12,6 @@ use crate::{
         },
         Shape,
     },
-    math::Point,
 };
 
 impl Shape for fj::Sketch {

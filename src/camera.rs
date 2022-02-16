@@ -1,6 +1,6 @@
 use std::f64::consts::FRAC_PI_2;
 
-use nalgebra::{TAffine, Transform, Translation};
+use nalgebra::{Point, TAffine, Transform, Translation, Vector};
 use parry3d_f64::{
     bounding_volume::AABB,
     query::{Ray, RayCast as _},
@@ -8,10 +8,7 @@ use parry3d_f64::{
 };
 use winit::dpi::PhysicalPosition;
 
-use crate::{
-    math::{Point, Vector},
-    window::Window,
-};
+use crate::window::Window;
 
 /// The camera abstraction
 ///
@@ -107,7 +104,7 @@ impl Camera {
         Self::INITIAL_FIELD_OF_VIEW_IN_X
     }
 
-    pub fn position(&self) -> Point<3> {
+    pub fn position(&self) -> Point<f64, 3> {
         self.camera_to_model()
             .inverse_transform_point(&Point::origin())
     }
@@ -117,7 +114,7 @@ impl Camera {
         &self,
         cursor: PhysicalPosition<f64>,
         window: &Window,
-    ) -> Point<3> {
+    ) -> Point<f64, 3> {
         let width = window.width() as f64;
         let height = window.height() as f64;
         let aspect_ratio = width / height;
@@ -230,7 +227,7 @@ impl Camera {
 ///
 /// Such a point might or might not exist, depending on whether the cursor is
 /// pointing at the model or not.
-pub struct FocusPoint(pub Option<Point<3>>);
+pub struct FocusPoint(pub Option<Point<f64, 3>>);
 
 impl FocusPoint {
     /// Construct the "none" instance of `FocusPoint`

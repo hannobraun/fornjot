@@ -1,6 +1,6 @@
 use parry3d_f64::math::Isometry;
 
-use crate::{kernel::geometry::Curve, math::Point};
+use crate::kernel::{geometry::Curve, math::Point};
 
 /// The vertices of a shape
 pub struct Vertices(pub Vec<Vertex<3>>);

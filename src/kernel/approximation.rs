@@ -3,9 +3,10 @@ use std::{cmp::Ordering, collections::HashSet};
 use decorum::R64;
 use parry3d_f64::shape::Segment;
 
-use crate::math::Point;
-
-use super::topology::edges::{Cycle, Edge, Edges};
+use super::{
+    math::Point,
+    topology::edges::{Cycle, Edge, Edges},
+};
 
 /// An approximation of an edge, multiple edges, or a face
 #[derive(Debug, PartialEq)]

@@ -1,8 +1,8 @@
 use nalgebra::vector;
 use parry3d_f64::math::Isometry;
 
-use crate::{
-    kernel::geometry::{Circle, Curve},
+use crate::kernel::{
+    geometry::{Circle, Curve},
     math::Point,
 };
 
