@@ -14,7 +14,7 @@ pub struct Movement {
 impl Movement {
     pub fn new() -> Self {
         Self {
-            focus_point: FocusPoint(None),
+            focus_point: FocusPoint::none(),
             cursor: None,
         }
     }
@@ -29,7 +29,7 @@ impl Movement {
     }
 
     pub fn stop(&mut self) {
-        self.focus_point = FocusPoint(None);
+        self.focus_point = FocusPoint::none();
     }
 
     pub fn apply(

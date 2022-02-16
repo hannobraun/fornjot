@@ -144,7 +144,7 @@ impl Camera {
     ) -> FocusPoint {
         let cursor = match cursor {
             Some(cursor) => cursor,
-            None => return FocusPoint(None),
+            None => return FocusPoint::none(),
         };
 
         // Transform camera and cursor positions to model space.
@@ -231,3 +231,12 @@ impl Camera {
 /// Such a point might or might not exist, depending on whether the cursor is
 /// pointing at the model or not.
 pub struct FocusPoint(pub Option<Point<3>>);
+
+impl FocusPoint {
+    /// Construct the "none" instance of `FocusPoint`
+    ///
+    /// This instance represents the case that no focus point exists.
+    pub fn none() -> Self {
+        Self(None)
+    }
+}

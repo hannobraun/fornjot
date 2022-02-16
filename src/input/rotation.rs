@@ -12,7 +12,7 @@ pub struct Rotation {
 impl Rotation {
     pub fn new() -> Self {
         Self {
-            focus_point: FocusPoint(None),
+            focus_point: FocusPoint::none(),
         }
     }
 
@@ -21,7 +21,7 @@ impl Rotation {
     }
 
     pub fn stop(&mut self) {
-        self.focus_point = FocusPoint(None);
+        self.focus_point = FocusPoint::none();
     }
 
     pub fn apply(&self, diff_x: f64, diff_y: f64, camera: &mut Camera) {
