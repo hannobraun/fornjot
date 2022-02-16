@@ -94,10 +94,13 @@ mod tests {
             direction: vector![0., 1., 0.],
         };
 
-        let line = line.transform(&Isometry::from_parts(
-            Translation::from([1., 2., 3.]),
-            UnitQuaternion::from_axis_angle(&Vector::z_axis(), FRAC_PI_2),
-        ));
+        let line = line.transform(
+            &Isometry::from_parts(
+                Translation::from([1., 2., 3.]),
+                UnitQuaternion::from_axis_angle(&Vector::z_axis(), FRAC_PI_2),
+            )
+            .into(),
+        );
 
         assert_abs_diff_eq!(
             line,

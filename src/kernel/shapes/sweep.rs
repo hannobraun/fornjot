@@ -28,13 +28,10 @@ impl Shape for fj::Sweep {
 
         let bottom_faces = original_faces
             .clone()
-            .transform(&Isometry::rotation(vector![PI, 0., 0.]));
+            .transform(&Isometry::rotation(vector![PI, 0., 0.]).into());
 
-        let top_faces = original_faces.transform(&Isometry::translation(
-            0.0,
-            0.0,
-            self.length,
-        ));
+        let top_faces = original_faces
+            .transform(&Isometry::translation(0.0, 0.0, self.length).into());
 
         // This will only work correctly, if the original shape consists of one
         // edge. If there are more, this will create some kind of weird face

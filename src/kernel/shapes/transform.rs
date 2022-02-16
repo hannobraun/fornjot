@@ -11,7 +11,9 @@ use crate::{
 
 impl Shape for fj::Transform {
     fn bounding_volume(&self) -> AABB {
-        self.shape.bounding_volume().transform_by(&isometry(self))
+        self.shape
+            .bounding_volume()
+            .transform_by(&isometry(self).into())
     }
 
     fn faces(&self, tolerance: f64, debug_info: &mut DebugInfo) -> Faces {
@@ -31,5 +33,5 @@ impl Shape for fj::Transform {
 
 fn isometry(transform: &fj::Transform) -> Transform {
     let axis = Vector::from(transform.axis).normalize();
-    Isometry::new(Vector::from(transform.offset), axis * transform.angle)
+    Isometry::new(Vector::from(transform.offset), axis * transform.angle).into()
 }

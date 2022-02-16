@@ -94,7 +94,7 @@ impl Face {
             },
             Self::Triangles(mut triangles) => {
                 for triangle in &mut triangles {
-                    *triangle = triangle.transformed(transform);
+                    *triangle = triangle.transformed(&transform.into());
                 }
 
                 Self::Triangles(triangles)
