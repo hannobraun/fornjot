@@ -26,11 +26,13 @@ impl Circle {
 
     #[must_use]
     pub fn transform(self, transform: &Transform) -> Self {
-        let radius = vector![self.radius.x, self.radius.y, 0.];
+        let radius = vector![self.radius.x(), self.radius.y(), 0.].into();
+        let radius = transform.transform_vector(&radius);
+        let radius = vector![radius.x(), radius.y()].into();
 
         Self {
             center: transform.transform_point(&self.center),
-            radius: transform.transform_vector(&radius).xy(),
+            radius,
         }
     }
 
@@ -55,20 +57,20 @@ impl Circle {
 
     /// Convert a point on the curve into model coordinates
     pub fn point_curve_to_model(&self, point: &Point<1>) -> Point<3> {
-        self.center + self.vector_curve_to_model(&point.coords)
+        self.center + self.vector_curve_to_model(&point.coords.into())
     }
 
     /// Convert a vector on the curve into model coordinates
     pub fn vector_curve_to_model(&self, point: &Vector<1>) -> Vector<3> {
         let radius = self.radius.magnitude();
-        let angle = point.x;
+        let angle = point.x();
 
         let (sin, cos) = angle.sin_cos();
 
         let x = cos * radius;
         let y = sin * radius;
 
-        vector![x, y, 0.]
+        vector![x, y, 0.].into()
     }
 
     pub fn approx(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
@@ -111,7 +113,7 @@ mod tests {
     fn point_model_to_curve() {
         let circle = Circle {
             center: point![1., 2., 3.],
-            radius: vector![1., 0.],
+            radius: vector![1., 0.].into(),
         };
 
         assert_eq!(

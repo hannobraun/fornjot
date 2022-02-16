@@ -174,7 +174,9 @@ impl Face {
                         };
                         let mut check = TriangleEdgeCheck::new(Ray3 {
                             origin: surface.point_surface_to_model(&ray.origin),
-                            dir: surface.vector_surface_to_model(&ray.dir),
+                            dir: surface
+                                .vector_surface_to_model(&ray.dir.into())
+                                .to_na(),
                         });
 
                         // We need to keep track of where our ray hits the

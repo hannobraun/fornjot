@@ -11,7 +11,7 @@ impl Transform {
 
     /// Transform the given vector
     pub fn transform_vector(&self, vector: &Vector<3>) -> Vector<3> {
-        self.0.transform_vector(vector)
+        self.0.transform_vector(&vector.to_na()).into()
     }
 }
 

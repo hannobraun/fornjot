@@ -49,7 +49,7 @@ impl Sub<Self> for SurfacePoint {
     type Output = Vector<2>;
 
     fn sub(self, rhs: Self) -> Self::Output {
-        self.value.sub(rhs.value)
+        self.value.sub(rhs.value).into()
     }
 }
 
@@ -57,6 +57,6 @@ impl Sub<Point<2>> for SurfacePoint {
     type Output = Vector<2>;
 
     fn sub(self, rhs: Point<2>) -> Self::Output {
-        self.value.sub(rhs)
+        self.value.sub(rhs).into()
     }
 }
