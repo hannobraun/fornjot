@@ -1,24 +1,27 @@
 use nalgebra::distance;
 use winit::dpi::PhysicalPosition;
 
-use crate::{camera::Camera, math::Point, window::Window};
+use crate::{
+    camera::{Camera, FocusPoint},
+    window::Window,
+};
 
 pub struct Movement {
-    focus_point: Option<Point<3>>,
+    focus_point: FocusPoint,
     cursor: Option<PhysicalPosition<f64>>,
 }
 
 impl Movement {
     pub fn new() -> Self {
         Self {
-            focus_point: None,
+            focus_point: FocusPoint(None),
             cursor: None,
         }
     }
 
     pub fn start(
         &mut self,
-        focus_point: Option<Point<3>>,
+        focus_point: FocusPoint,
         cursor: Option<PhysicalPosition<f64>>,
     ) {
         self.focus_point = focus_point;
@@ -26,7 +29,7 @@ impl Movement {
     }
 
     pub fn stop(&mut self) {
-        self.focus_point = None;
+        self.focus_point = FocusPoint(None);
     }
 
     pub fn apply(
@@ -39,7 +42,7 @@ impl Movement {
             let previous = camera.cursor_to_model_space(previous, window);
             let cursor = camera.cursor_to_model_space(cursor, window);
 
-            if let Some(focus_point) = self.focus_point {
+            if let Some(focus_point) = self.focus_point.0 {
                 let d1 = distance(&camera.position(), &cursor);
                 let d2 = distance(&camera.position(), &focus_point);
 

@@ -9,7 +9,10 @@ use winit::{
     },
 };
 
-use crate::{camera::Camera, math::Point, window::Window};
+use crate::{
+    camera::{Camera, FocusPoint},
+    window::Window,
+};
 
 use super::{movement::Movement, rotation::Rotation, zoom::Zoom};
 
@@ -80,7 +83,7 @@ impl Handler {
         &mut self,
         button: MouseButton,
         state: ElementState,
-        focus_point: Option<Point<3>>,
+        focus_point: FocusPoint,
     ) {
         match (button, state) {
             (MouseButton::Left, ElementState::Pressed) => {

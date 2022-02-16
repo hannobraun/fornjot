@@ -141,8 +141,11 @@ impl Camera {
         window: &Window,
         cursor: Option<PhysicalPosition<f64>>,
         triangles: &Vec<Triangle>,
-    ) -> Option<Point<3>> {
-        let cursor = cursor?;
+    ) -> FocusPoint {
+        let cursor = match cursor {
+            Some(cursor) => cursor,
+            None => return FocusPoint(None),
+        };
 
         // Transform camera and cursor positions to model space.
         let origin = self.position();
@@ -163,7 +166,7 @@ impl Camera {
             }
         }
 
-        min_t.map(|t| ray.point_at(t))
+        FocusPoint(min_t.map(|t| ray.point_at(t)))
     }
 
     /// Access the transform from camera to model space
@@ -222,3 +225,9 @@ impl Camera {
         };
     }
 }
+
+/// The point on the model that the cursor is currently pointing at
+///
+/// Such a point might or might not exist, depending on whether the cursor is
+/// pointing at the model or not.
+pub struct FocusPoint(pub Option<Point<3>>);

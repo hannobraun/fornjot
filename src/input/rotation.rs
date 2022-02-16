@@ -1,29 +1,31 @@
 use nalgebra::{Rotation3, Translation};
 
 use crate::{
-    camera::Camera,
-    math::{Point, Vector},
+    camera::{Camera, FocusPoint},
+    math::Vector,
 };
 
 pub struct Rotation {
-    focus_point: Option<Point<3>>,
+    focus_point: FocusPoint,
 }
 
 impl Rotation {
     pub fn new() -> Self {
-        Self { focus_point: None }
+        Self {
+            focus_point: FocusPoint(None),
+        }
     }
 
-    pub fn start(&mut self, focus_point: Option<Point<3>>) {
+    pub fn start(&mut self, focus_point: FocusPoint) {
         self.focus_point = focus_point;
     }
 
     pub fn stop(&mut self) {
-        self.focus_point = None;
+        self.focus_point = FocusPoint(None);
     }
 
     pub fn apply(&self, diff_x: f64, diff_y: f64, camera: &mut Camera) {
-        if let Some(focus_point) = self.focus_point {
+        if let Some(focus_point) = self.focus_point.0 {
             let f = 0.005;
 
             let angle_x = diff_y * f;
