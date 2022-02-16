@@ -1,9 +1,6 @@
-use nalgebra::{Rotation3, Translation};
+use nalgebra::{Rotation3, Translation, Vector};
 
-use crate::{
-    camera::{Camera, FocusPoint},
-    math::Vector,
-};
+use crate::camera::{Camera, FocusPoint};
 
 pub struct Rotation {
     focus_point: FocusPoint,
