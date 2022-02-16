@@ -45,19 +45,20 @@ impl Line {
         let p = point - self.origin;
 
         // scalar projection
-        let t = p.dot(&self.direction.normalize()) / self.direction.magnitude();
+        let t = p.dot(&self.direction.normalize().to_na())
+            / self.direction.magnitude();
 
         point![t]
     }
 
     /// Convert a point on the curve into model coordinates
     pub fn point_curve_to_model(&self, point: &Point<1>) -> Point<3> {
-        self.origin + self.vector_curve_to_model(&point.coords)
+        self.origin + self.vector_curve_to_model(&point.coords.into())
     }
 
     /// Convert a vector on the curve into model coordinates
     pub fn vector_curve_to_model(&self, point: &Vector<1>) -> Vector<3> {
-        let t = point.x;
+        let t = point.x();
         self.direction * t
     }
 }
@@ -83,21 +84,22 @@ mod tests {
     use nalgebra::{point, vector, UnitQuaternion};
     use parry3d_f64::math::{Isometry, Translation};
 
-    use crate::kernel::math::Vector;
-
     use super::Line;
 
     #[test]
     fn transform() {
         let line = Line {
             origin: point![1., 0., 0.],
-            direction: vector![0., 1., 0.],
+            direction: vector![0., 1., 0.].into(),
         };
 
         let line = line.transform(
             &Isometry::from_parts(
                 Translation::from([1., 2., 3.]),
-                UnitQuaternion::from_axis_angle(&Vector::z_axis(), FRAC_PI_2),
+                UnitQuaternion::from_axis_angle(
+                    &nalgebra::Vector::z_axis(),
+                    FRAC_PI_2,
+                ),
             )
             .into(),
         );
@@ -106,7 +108,7 @@ mod tests {
             line,
             Line {
                 origin: point![1., 3., 3.],
-                direction: vector![-1., 0., 0.],
+                direction: vector![-1., 0., 0.].into(),
             },
             epsilon = 1e-8,
         );
@@ -116,7 +118,7 @@ mod tests {
     fn point_model_to_curve() {
         let line = Line {
             origin: point![1., 0., 0.],
-            direction: vector![2., 0., 0.],
+            direction: vector![2., 0., 0.].into(),
         };
 
         verify(line, -1.);

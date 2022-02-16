@@ -3,7 +3,7 @@ use parry3d_f64::{bounding_volume::AABB, math::Isometry};
 use crate::{
     debug::DebugInfo,
     kernel::{
-        math::{Transform, Vector},
+        math::Transform,
         topology::{edges::Edges, faces::Faces, vertices::Vertices},
         Shape,
     },
@@ -32,6 +32,10 @@ impl Shape for fj::Transform {
 }
 
 fn transform(transform: &fj::Transform) -> Transform {
-    let axis = Vector::from(transform.axis).normalize();
-    Isometry::new(Vector::from(transform.offset), axis * transform.angle).into()
+    let axis = nalgebra::Vector::from(transform.axis).normalize();
+    Isometry::new(
+        nalgebra::Vector::from(transform.offset),
+        axis * transform.angle,
+    )
+    .into()
 }

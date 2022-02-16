@@ -1,5 +1,4 @@
-pub type Point<const D: usize> = nalgebra::Point<f64, D>;
-pub type Vector<const D: usize> = nalgebra::SVector<f64, D>;
+use super::{Point, Vector};
 
 /// A transform
 pub struct Transform(parry3d_f64::math::Isometry<f64>);
@@ -12,7 +11,7 @@ impl Transform {
 
     /// Transform the given vector
     pub fn transform_vector(&self, vector: &Vector<3>) -> Vector<3> {
-        self.0.transform_vector(vector)
+        self.0.transform_vector(&vector.to_na()).into()
     }
 }
 

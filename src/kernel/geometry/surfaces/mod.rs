@@ -21,9 +21,9 @@ impl Surface {
         Self::Swept(Swept {
             curve: Curve::Line(Line {
                 origin: Point::origin(),
-                direction: vector![1., 0., 0.],
+                direction: vector![1., 0., 0.].into(),
             }),
-            path: vector![0., 1., 0.],
+            path: vector![0., 1., 0.].into(),
         })
     }
 

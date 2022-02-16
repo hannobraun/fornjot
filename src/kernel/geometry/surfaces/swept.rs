@@ -29,7 +29,7 @@ impl Swept {
         let p = point - self.curve.origin();
 
         let u = self.curve.point_model_to_curve(point).x;
-        let v = p.dot(&self.path.normalize()) / self.path.magnitude();
+        let v = p.dot(&self.path.normalize().to_na()) / self.path.magnitude();
 
         point![u, v]
     }
@@ -44,10 +44,10 @@ impl Swept {
 
     /// Convert a vector in surface coordinates to model coordinates
     pub fn vector_surface_to_model(&self, vector: &Vector<2>) -> Vector<3> {
-        let u = vector.x;
-        let v = vector.y;
+        let u = vector.x();
+        let v = vector.y();
 
-        self.curve.vector_curve_to_model(&vector![u]) + self.path * v
+        self.curve.vector_curve_to_model(&vector![u].into()) + self.path * v
     }
 }
 
@@ -67,9 +67,9 @@ mod tests {
         let swept = Swept {
             curve: Curve::Line(Line {
                 origin: point![1., 0., 0.],
-                direction: vector![0., 2., 0.],
+                direction: vector![0., 2., 0.].into(),
             }),
-            path: vector![0., 0., 2.],
+            path: vector![0., 0., 2.].into(),
         };
 
         verify(&swept, point![-1., -1.]);
@@ -90,9 +90,9 @@ mod tests {
         let swept = Swept {
             curve: Curve::Line(Line {
                 origin: point![1., 0., 0.],
-                direction: vector![0., 2., 0.],
+                direction: vector![0., 2., 0.].into(),
             }),
-            path: vector![0., 0., 2.],
+            path: vector![0., 0., 2.].into(),
         };
 
         assert_eq!(
@@ -106,14 +106,14 @@ mod tests {
         let swept = Swept {
             curve: Curve::Line(Line {
                 origin: point![1., 0., 0.],
-                direction: vector![0., 2., 0.],
+                direction: vector![0., 2., 0.].into(),
             }),
-            path: vector![0., 0., 2.],
+            path: vector![0., 0., 2.].into(),
         };
 
         assert_eq!(
-            swept.vector_surface_to_model(&vector![2., 4.]),
-            vector![0., 4., 8.],
+            swept.vector_surface_to_model(&vector![2., 4.].into()),
+            vector![0., 4., 8.].into(),
         );
     }
 }
