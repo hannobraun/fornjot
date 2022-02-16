@@ -4,7 +4,6 @@ mod debug;
 mod graphics;
 mod input;
 mod kernel;
-mod math;
 mod mesh;
 mod model;
 mod window;

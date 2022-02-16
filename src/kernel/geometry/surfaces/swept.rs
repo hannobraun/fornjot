@@ -1,8 +1,8 @@
 use nalgebra::{point, vector};
 use parry3d_f64::math::Isometry;
 
-use crate::{
-    kernel::geometry::Curve,
+use crate::kernel::{
+    geometry::Curve,
     math::{Point, Vector},
 };
 
@@ -56,8 +56,8 @@ impl Swept {
 mod tests {
     use nalgebra::{point, vector};
 
-    use crate::{
-        kernel::geometry::{Curve, Line},
+    use crate::kernel::{
+        geometry::{Curve, Line},
         math::Point,
     };
 

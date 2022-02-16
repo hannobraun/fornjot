@@ -5,7 +5,7 @@ pub use self::swept::Swept;
 use nalgebra::vector;
 use parry3d_f64::math::Isometry;
 
-use crate::math::{Point, Vector};
+use crate::kernel::math::{Point, Vector};
 
 use super::{points::SurfacePoint, Curve, Line};
 

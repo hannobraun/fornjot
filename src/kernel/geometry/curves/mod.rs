@@ -1,11 +1,11 @@
 mod circle;
 mod line;
 
+use crate::kernel::math::{Point, Vector};
+
 pub use self::{circle::Circle, line::Line};
 
 use parry3d_f64::math::Isometry;
-
-use crate::math::{Point, Vector};
 
 /// A one-dimensional shape
 ///
