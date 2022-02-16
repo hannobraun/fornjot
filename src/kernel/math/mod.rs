@@ -1,6 +1,6 @@
 pub mod transform;
+pub mod vector;
 
-pub use self::transform::Transform;
+pub use self::{transform::Transform, vector::Vector};
 
 pub type Point<const D: usize> = nalgebra::Point<f64, D>;
-pub type Vector<const D: usize> = nalgebra::SVector<f64, D>;
