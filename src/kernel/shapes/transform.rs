@@ -13,13 +13,13 @@ impl Shape for fj::Transform {
     fn bounding_volume(&self) -> AABB {
         self.shape
             .bounding_volume()
-            .transform_by(&isometry(self).into())
+            .transform_by(&transform(self).into())
     }
 
     fn faces(&self, tolerance: f64, debug_info: &mut DebugInfo) -> Faces {
         self.shape
             .faces(tolerance, debug_info)
-            .transform(&isometry(self))
+            .transform(&transform(self))
     }
 
     fn edges(&self) -> Edges {
@@ -31,7 +31,7 @@ impl Shape for fj::Transform {
     }
 }
 
-fn isometry(transform: &fj::Transform) -> Transform {
+fn transform(transform: &fj::Transform) -> Transform {
     let axis = Vector::from(transform.axis).normalize();
     Isometry::new(Vector::from(transform.offset), axis * transform.angle).into()
 }
