@@ -3,9 +3,8 @@ pub mod swept;
 pub use self::swept::Swept;
 
 use nalgebra::vector;
-use parry3d_f64::math::Isometry;
 
-use crate::kernel::math::{Point, Vector};
+use crate::kernel::math::{Point, Transform, Vector};
 
 use super::{points::SurfacePoint, Curve, Line};
 
@@ -30,7 +29,7 @@ impl Surface {
 
     /// Transform the surface
     #[must_use]
-    pub fn transform(self, transform: &Isometry<f64>) -> Self {
+    pub fn transform(self, transform: &Transform) -> Self {
         match self {
             Self::Swept(surface) => Self::Swept(surface.transform(transform)),
         }

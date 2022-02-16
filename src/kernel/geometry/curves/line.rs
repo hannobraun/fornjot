@@ -1,8 +1,7 @@
 use approx::AbsDiffEq;
 use nalgebra::point;
-use parry3d_f64::math::Isometry;
 
-use crate::kernel::math::{Point, Vector};
+use crate::kernel::math::{Point, Transform, Vector};
 
 /// A line, defined by a point and a vector
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -26,7 +25,7 @@ impl Line {
 
     /// Transform the line
     #[must_use]
-    pub fn transform(self, transform: &Isometry<f64>) -> Self {
+    pub fn transform(self, transform: &Transform) -> Self {
         Self {
             origin: transform.transform_point(&self.origin),
             direction: transform.transform_vector(&self.direction),
