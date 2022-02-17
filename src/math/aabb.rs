@@ -3,7 +3,7 @@ use parry3d_f64::bounding_volume::BoundingVolume as _;
 use super::{Point, Vector};
 
 /// An axis-aligned bounding box (AABB)
-pub struct AABB {
+pub struct Aabb {
     /// The minimum coordinates of the AABB
     pub mins: Point<3>,
 
@@ -11,7 +11,7 @@ pub struct AABB {
     pub maxs: Point<3>,
 }
 
-impl AABB {
+impl Aabb {
     /// Construct an AABB from a list of points
     ///
     /// The resulting AABB will contain all the points.
@@ -52,12 +52,12 @@ impl AABB {
     }
 
     /// Merge this AABB with another
-    pub fn merged(&self, other: &AABB) -> AABB {
+    pub fn merged(&self, other: &Aabb) -> Aabb {
         self.to_parry().merged(&other.to_parry()).into()
     }
 }
 
-impl From<parry3d_f64::bounding_volume::AABB> for AABB {
+impl From<parry3d_f64::bounding_volume::AABB> for Aabb {
     fn from(aabb: parry3d_f64::bounding_volume::AABB) -> Self {
         Self::from_parry(aabb)
     }

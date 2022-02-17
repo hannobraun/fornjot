@@ -6,6 +6,6 @@ pub mod triangle;
 pub mod vector;
 
 pub use self::{
-    aabb::AABB, point::Point, segment::Segment, transform::Transform,
+    aabb::Aabb, point::Point, segment::Segment, transform::Transform,
     triangle::Triangle, vector::Vector,
 };

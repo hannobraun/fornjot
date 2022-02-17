@@ -9,13 +9,13 @@ use crate::{
         },
         Shape,
     },
-    math::{Point, Vector, AABB},
+    math::{Aabb, Point, Vector},
 };
 
 impl Shape for fj::Sketch {
-    fn bounding_volume(&self) -> AABB {
+    fn bounding_volume(&self) -> Aabb {
         let vertices = self.vertices();
-        AABB::from_points(vertices.0.iter().map(|vertex| *vertex.location()))
+        Aabb::from_points(vertices.0.iter().map(|vertex| *vertex.location()))
     }
 
     fn faces(&self, _: f64, _: &mut DebugInfo) -> Faces {

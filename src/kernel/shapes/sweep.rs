@@ -14,11 +14,11 @@ use crate::{
         },
         Shape,
     },
-    math::AABB,
+    math::Aabb,
 };
 
 impl Shape for fj::Sweep {
-    fn bounding_volume(&self) -> AABB {
+    fn bounding_volume(&self) -> Aabb {
         let mut aabb = self.shape.bounding_volume();
         aabb.maxs.z = self.length;
         aabb

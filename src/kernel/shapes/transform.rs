@@ -6,11 +6,11 @@ use crate::{
         topology::{edges::Edges, faces::Faces, vertices::Vertices},
         Shape,
     },
-    math::{Transform, AABB},
+    math::{Aabb, Transform},
 };
 
 impl Shape for fj::Transform {
-    fn bounding_volume(&self) -> AABB {
+    fn bounding_volume(&self) -> Aabb {
         transform(self).transform_aabb(&self.shape.bounding_volume())
     }
 

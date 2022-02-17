@@ -4,11 +4,11 @@ use crate::{
         topology::{edges::Edges, faces::Faces, vertices::Vertices},
         Shape,
     },
-    math::AABB,
+    math::Aabb,
 };
 
 impl Shape for fj::Union {
-    fn bounding_volume(&self) -> AABB {
+    fn bounding_volume(&self) -> Aabb {
         let a = self.a.bounding_volume();
         let b = self.b.bounding_volume();
 
