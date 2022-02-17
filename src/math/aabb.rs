@@ -47,7 +47,7 @@ impl Aabb {
     }
 
     /// Compute the size of the AABB
-    pub fn extents(&self) -> Vector<3> {
+    pub fn size(&self) -> Vector<3> {
         self.to_parry().extents().into()
     }
 
