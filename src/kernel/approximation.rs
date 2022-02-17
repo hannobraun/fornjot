@@ -1,10 +1,9 @@
 use std::{cmp::Ordering, collections::HashSet};
 
 use decorum::R64;
-use parry3d_f64::shape::Segment;
 
 use super::{
-    math::Point,
+    math::{Point, Segment},
     topology::edges::{Cycle, Edge, Edges},
 };
 
@@ -70,7 +69,7 @@ impl Approximation {
             let p0 = segment[0];
             let p1 = segment[1];
 
-            segments.push([p0, p1].into());
+            segments.push(Segment::from([p0, p1]));
         }
 
         Self { points, segments }
@@ -224,10 +223,10 @@ mod tests {
     use std::cell::RefCell;
 
     use nalgebra::point;
-    use parry3d_f64::shape::Segment;
 
     use crate::kernel::{
         geometry::Curve,
+        math::Segment,
         topology::{
             edges::{Cycle, Edge, Edges},
             vertices::Vertex,
