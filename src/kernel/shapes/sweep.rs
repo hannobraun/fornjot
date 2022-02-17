@@ -1,7 +1,7 @@
 use std::f64::consts::PI;
 
 use nalgebra::vector;
-use parry3d_f64::{bounding_volume::AABB, math::Isometry};
+use parry3d_f64::math::Isometry;
 
 use crate::{
     debug::DebugInfo,
@@ -14,12 +14,13 @@ use crate::{
         },
         Shape,
     },
+    math::Aabb,
 };
 
 impl Shape for fj::Sweep {
-    fn bounding_volume(&self) -> AABB {
+    fn bounding_volume(&self) -> Aabb {
         let mut aabb = self.shape.bounding_volume();
-        aabb.maxs.z = self.length;
+        aabb.max.z = self.length;
         aabb
     }
 

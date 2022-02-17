@@ -1,5 +1,4 @@
 use nalgebra::point;
-use parry3d_f64::bounding_volume::AABB;
 
 use crate::{
     debug::DebugInfo,
@@ -12,13 +11,14 @@ use crate::{
         },
         Shape,
     },
+    math::Aabb,
 };
 
 impl Shape for fj::Circle {
-    fn bounding_volume(&self) -> AABB {
-        AABB {
-            mins: point![-self.radius, -self.radius, 0.0],
-            maxs: point![self.radius, self.radius, 0.0],
+    fn bounding_volume(&self) -> Aabb {
+        Aabb {
+            min: point![-self.radius, -self.radius, 0.0],
+            max: point![self.radius, self.radius, 0.0],
         }
     }
 

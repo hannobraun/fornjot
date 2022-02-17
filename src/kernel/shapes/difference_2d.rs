@@ -1,5 +1,3 @@
-use parry3d_f64::bounding_volume::AABB;
-
 use crate::{
     debug::DebugInfo,
     kernel::{
@@ -10,10 +8,11 @@ use crate::{
         },
         Shape,
     },
+    math::Aabb,
 };
 
 impl Shape for fj::Difference2d {
-    fn bounding_volume(&self) -> AABB {
+    fn bounding_volume(&self) -> Aabb {
         // This is a conservative estimate of the bounding box: It's never going
         // to be bigger than the bounding box of the original shape that another
         // is being subtracted from.
