@@ -5,10 +5,10 @@ use super::{Point, Vector};
 /// An axis-aligned bounding box (AABB)
 pub struct Aabb {
     /// The minimum coordinates of the AABB
-    pub mins: Point<3>,
+    pub min: Point<3>,
 
     /// The maximum coordinates of the AABB
-    pub maxs: Point<3>,
+    pub max: Point<3>,
 }
 
 impl Aabb {
@@ -23,16 +23,16 @@ impl Aabb {
     /// Construct an AABB from a Parry AABB
     pub fn from_parry(aabb: parry3d_f64::bounding_volume::AABB) -> Self {
         Self {
-            mins: aabb.mins.into(),
-            maxs: aabb.maxs.into(),
+            min: aabb.mins.into(),
+            max: aabb.maxs.into(),
         }
     }
 
     /// Convert the AABB to a Parry AABB
     pub fn to_parry(&self) -> parry3d_f64::bounding_volume::AABB {
         parry3d_f64::bounding_volume::AABB {
-            mins: self.mins,
-            maxs: self.maxs,
+            mins: self.min,
+            maxs: self.max,
         }
     }
 
