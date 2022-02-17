@@ -11,11 +11,10 @@ use parry3d_f64::{query::Ray as Ray3, shape::Triangle};
 use crate::{
     debug::{DebugInfo, TriangleEdgeCheck},
     kernel::{
-        approximation::Approximation,
-        geometry::Surface,
-        math::{Segment, Transform},
+        approximation::Approximation, geometry::Surface,
         triangulation::triangulate,
     },
+    math::{Segment, Transform},
 };
 
 use super::edges::Edges;

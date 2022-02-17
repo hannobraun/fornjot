@@ -4,7 +4,7 @@ pub use self::swept::Swept;
 
 use nalgebra::vector;
 
-use crate::kernel::math::{Point, Transform, Vector};
+use crate::math::{Point, Transform, Vector};
 
 use super::{points::SurfacePoint, Curve, Line};
 

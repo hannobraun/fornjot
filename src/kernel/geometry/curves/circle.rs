@@ -2,7 +2,7 @@ use std::f64::consts::PI;
 
 use nalgebra::point;
 
-use crate::kernel::math::{Point, Transform, Vector};
+use crate::math::{Point, Transform, Vector};
 
 /// A circle
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -107,7 +107,7 @@ mod tests {
 
     use nalgebra::point;
 
-    use crate::kernel::math::Vector;
+    use crate::math::Vector;
 
     use super::Circle;
 

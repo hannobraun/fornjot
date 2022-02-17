@@ -1,6 +1,6 @@
 use std::ops::{Add, Deref, DerefMut, Sub};
 
-use crate::kernel::math::{Point, Vector};
+use crate::math::{Point, Vector};
 
 /// A point on a surface
 ///

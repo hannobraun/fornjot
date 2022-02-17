@@ -1,7 +1,7 @@
 mod circle;
 mod line;
 
-use crate::kernel::math::{Point, Transform, Vector};
+use crate::math::{Point, Transform, Vector};
 
 pub use self::{circle::Circle, line::Line};
 
