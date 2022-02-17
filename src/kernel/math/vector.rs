@@ -14,6 +14,11 @@ use approx::AbsDiffEq;
 pub struct Vector<const D: usize>([f64; D]);
 
 impl<const D: usize> Vector<D> {
+    /// Construct a `Vector` from an nalgebra vector
+    pub fn from_na(vector: nalgebra::SVector<f64, D>) -> Self {
+        Self(vector.into())
+    }
+
     /// Convert the vector into an nalgebra vector
     pub fn to_na(&self) -> nalgebra::SVector<f64, D> {
         self.0.into()
@@ -42,7 +47,7 @@ impl<const D: usize> Vector<D> {
 
 impl<const D: usize> From<nalgebra::SVector<f64, D>> for Vector<D> {
     fn from(v: nalgebra::SVector<f64, D>) -> Self {
-        Self(v.into())
+        Self::from_na(v)
     }
 }
 
