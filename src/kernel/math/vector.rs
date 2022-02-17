@@ -70,8 +70,8 @@ impl Vector<2> {
     }
 
     /// Extend a 2-dimensional vector into a 3-dimensional one
-    pub fn to_xyz(&self, scalar: f64) -> Vector<3> {
-        Vector::from([self.u(), self.v(), scalar])
+    pub fn to_xyz(&self, z: f64) -> Vector<3> {
+        Vector::from([self.u(), self.v(), z])
     }
 }
 
