@@ -1,5 +1,3 @@
-#![allow(unused)]
-
 use super::Point;
 
 #[derive(Clone, Copy)]
