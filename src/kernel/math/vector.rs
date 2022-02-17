@@ -66,6 +66,13 @@ impl<const D: usize> Vector<D> {
     }
 }
 
+impl Vector<1> {
+    /// Access the curve vector's t coordinate
+    pub fn t(&self) -> f64 {
+        self.0[0]
+    }
+}
+
 impl Vector<2> {
     /// Access the surface vector's u coordinate
     pub fn u(&self) -> f64 {
