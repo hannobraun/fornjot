@@ -29,7 +29,8 @@ impl Swept {
         let p = point - self.curve.origin();
 
         let u = self.curve.point_model_to_curve(point).x;
-        let v = p.dot(&self.path.normalize().to_na()) / self.path.magnitude();
+        let v = Vector::from_na(p).dot(&self.path.normalize())
+            / self.path.magnitude();
 
         point![u, v]
     }

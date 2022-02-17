@@ -59,6 +59,11 @@ impl<const D: usize> Vector<D> {
     pub fn normalize(&self) -> Self {
         self.to_na().normalize().into()
     }
+
+    /// Compute the dot product with another vector
+    pub fn dot(&self, other: &Self) -> f64 {
+        self.to_na().dot(&other.to_na())
+    }
 }
 
 impl Vector<2> {

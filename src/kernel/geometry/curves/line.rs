@@ -45,7 +45,7 @@ impl Line {
         let p = point - self.origin;
 
         // scalar projection
-        let t = p.dot(&self.direction.normalize().to_na())
+        let t = Vector::from_na(p).dot(&self.direction.normalize())
             / self.direction.magnitude();
 
         point![t]
