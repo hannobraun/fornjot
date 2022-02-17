@@ -26,10 +26,9 @@ impl Swept {
 
     /// Convert a point in model coordinates to surface coordinates
     pub fn point_model_to_surface(&self, point: &Point<3>) -> Point<2> {
-        let p = point - self.curve.origin();
-
         let u = self.curve.point_model_to_curve(point).x;
-        let v = Vector::from_na(p).dot(&self.path.normalize())
+        let v = Vector::from_na(point - self.curve.origin())
+            .dot(&self.path.normalize())
             / self.path.magnitude();
 
         point![u, v]

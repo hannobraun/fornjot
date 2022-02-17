@@ -42,10 +42,9 @@ impl Line {
     /// point not being on the line, intentional or not, will never result in an
     /// error.
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
-        let p = point - self.origin;
-
         // scalar projection
-        let t = Vector::from_na(p).dot(&self.direction.normalize())
+        let t = Vector::from_na(point - self.origin)
+            .dot(&self.direction.normalize())
             / self.direction.magnitude();
 
         point![t]
