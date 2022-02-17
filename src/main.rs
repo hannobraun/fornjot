@@ -61,7 +61,7 @@ fn main() -> anyhow::Result<()> {
     // This can't be addressed with the current structure, since the watcher
     // closure takes ownership of the model.
     //
-    // This big is tracked in the following issues:
+    // This is being tracked in the following issue:
     // https://github.com/hannobraun/fornjot/issues/32
     let shape = model.load(&parameters)?;
 
