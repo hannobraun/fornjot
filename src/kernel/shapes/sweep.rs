@@ -14,7 +14,7 @@ use crate::{
         },
         Shape,
     },
-    math::Aabb,
+    math::{Aabb, Transform},
 };
 
 impl Shape for fj::Sweep {
@@ -46,9 +46,8 @@ impl Shape for fj::Sweep {
         for segment in approx.segments {
             let [v0, v1] = [segment.a, segment.b];
             let [v3, v2] = {
-                let segment = segment
-                    .to_parry()
-                    .transformed(&Isometry::translation(0.0, 0.0, self.length));
+                let segment = Transform::translation(0., 0., self.length)
+                    .transform_segment(&segment);
                 [segment.a, segment.b]
             };
 
