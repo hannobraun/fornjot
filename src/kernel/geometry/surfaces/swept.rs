@@ -44,10 +44,9 @@ impl Swept {
 
     /// Convert a vector in surface coordinates to model coordinates
     pub fn vector_surface_to_model(&self, vector: &Vector<2>) -> Vector<3> {
-        let u = vector.x();
-        let v = vector.y();
-
-        self.curve.vector_curve_to_model(&Vector::from([u])) + self.path * v
+        self.curve
+            .vector_curve_to_model(&Vector::from([vector.u()]))
+            + self.path * vector.v()
     }
 }
 

@@ -57,8 +57,7 @@ impl Line {
 
     /// Convert a vector on the curve into model coordinates
     pub fn vector_curve_to_model(&self, point: &Vector<1>) -> Vector<3> {
-        let t = point.x();
-        self.direction * t
+        self.direction * point.t()
     }
 }
 

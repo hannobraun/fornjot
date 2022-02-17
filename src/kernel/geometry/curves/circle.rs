@@ -26,7 +26,7 @@ impl Circle {
 
     #[must_use]
     pub fn transform(self, transform: &Transform) -> Self {
-        let radius = self.radius.extend(0.);
+        let radius = self.radius.to_xyz(0.);
         let radius = transform.transform_vector(&radius);
         let radius = radius.xy();
 
@@ -63,7 +63,7 @@ impl Circle {
     /// Convert a vector on the curve into model coordinates
     pub fn vector_curve_to_model(&self, point: &Vector<1>) -> Vector<3> {
         let radius = self.radius.magnitude();
-        let angle = point.x();
+        let angle = point.t();
 
         let (sin, cos) = angle.sin_cos();
 

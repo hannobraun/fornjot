@@ -35,21 +35,6 @@ impl<const D: usize> Vector<D> {
         self.0.into()
     }
 
-    /// Access the vector's x coordinate
-    pub fn x(&self) -> f64 {
-        self.0[0]
-    }
-
-    /// Access the vector's y coordinate
-    pub fn y(&self) -> f64 {
-        self.0[1]
-    }
-
-    /// Construct a new vector from this vector's x and y components
-    pub fn xy(&self) -> Vector<2> {
-        Vector::from([self.x(), self.y()])
-    }
-
     /// Compute the magnitude of the vector
     pub fn magnitude(&self) -> f64 {
         self.to_na().magnitude()
@@ -66,10 +51,44 @@ impl<const D: usize> Vector<D> {
     }
 }
 
+impl Vector<1> {
+    /// Access the curve vector's t coordinate
+    pub fn t(&self) -> f64 {
+        self.0[0]
+    }
+}
+
 impl Vector<2> {
+    /// Access the surface vector's u coordinate
+    pub fn u(&self) -> f64 {
+        self.0[0]
+    }
+
+    /// Access the surface vector's v coordinate
+    pub fn v(&self) -> f64 {
+        self.0[1]
+    }
+
     /// Extend a 2-dimensional vector into a 3-dimensional one
-    pub fn extend(&self, scalar: f64) -> Vector<3> {
-        Vector::from([self.x(), self.y(), scalar])
+    pub fn to_xyz(&self, z: f64) -> Vector<3> {
+        Vector::from([self.u(), self.v(), z])
+    }
+}
+
+impl Vector<3> {
+    /// Access the vector's x coordinate
+    pub fn x(&self) -> f64 {
+        self.0[0]
+    }
+
+    /// Access the vector's y coordinate
+    pub fn y(&self) -> f64 {
+        self.0[1]
+    }
+
+    /// Construct a new vector from this vector's x and y components
+    pub fn xy(&self) -> Vector<2> {
+        Vector::from([self.x(), self.y()])
     }
 }
 
