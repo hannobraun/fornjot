@@ -50,6 +50,11 @@ impl<const D: usize> Vector<D> {
         self.to_na().dot(&other.to_na())
     }
 
+    /// Compute the cross product with another vector
+    pub fn cross(&self, other: &Self) -> Self {
+        self.to_na().cross(&other.to_na()).into()
+    }
+
     /// Access an iterator over the vector's components
     pub fn components(&self) -> [f64; D] {
         self.0
