@@ -14,9 +14,20 @@ use approx::AbsDiffEq;
 pub struct Vector<const D: usize>([f64; D]);
 
 impl<const D: usize> Vector<D> {
+    /// Construct a `Vector` from an array
+    ///
+    /// # Implementation Note
+    ///
+    /// All vector construction functions should call this method internally. At
+    /// some point, this will become the place where validate the floating point
+    /// numbers before constructing the vector instance.
+    pub fn from_array(array: [f64; D]) -> Self {
+        Self(array)
+    }
+
     /// Construct a `Vector` from an nalgebra vector
     pub fn from_na(vector: nalgebra::SVector<f64, D>) -> Self {
-        Self(vector.into())
+        Self::from_array(vector.into())
     }
 
     /// Convert the vector into an nalgebra vector
