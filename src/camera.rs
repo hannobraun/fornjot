@@ -4,11 +4,10 @@ use nalgebra::{Point, TAffine, Transform, Translation, Vector};
 use parry3d_f64::{
     bounding_volume::AABB,
     query::{Ray, RayCast as _},
-    shape::Triangle,
 };
 use winit::dpi::PhysicalPosition;
 
-use crate::window::Window;
+use crate::{math::Triangle, window::Window};
 
 /// The camera abstraction
 ///
@@ -154,7 +153,10 @@ impl Camera {
         let mut min_t = None;
 
         for triangle in triangles {
-            let t = triangle.cast_local_ray(&ray, f64::INFINITY, true);
+            let t =
+                triangle
+                    .to_parry()
+                    .cast_local_ray(&ray, f64::INFINITY, true);
 
             if let Some(t) = t {
                 if t <= min_t.unwrap_or(t) {

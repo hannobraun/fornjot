@@ -6,7 +6,7 @@ use parry2d_f64::{
     query::{Ray as Ray2, RayCast as _},
     shape::Segment as Segment2,
 };
-use parry3d_f64::{query::Ray as Ray3, shape::Triangle};
+use parry3d_f64::query::Ray as Ray3;
 
 use crate::{
     debug::{DebugInfo, TriangleEdgeCheck},
@@ -14,7 +14,7 @@ use crate::{
         approximation::Approximation, geometry::Surface,
         triangulation::triangulate,
     },
-    math::{Segment, Transform},
+    math::{Segment, Transform, Triangle},
 };
 
 use super::edges::Edges;
@@ -92,7 +92,7 @@ impl Face {
             },
             Self::Triangles(mut triangles) => {
                 for triangle in &mut triangles {
-                    *triangle = triangle.transformed(&transform.into());
+                    *triangle = transform.transform_triangle(triangle);
                 }
 
                 Self::Triangles(triangles)

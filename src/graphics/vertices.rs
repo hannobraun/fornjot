@@ -1,9 +1,9 @@
 use bytemuck::{Pod, Zeroable};
 use nalgebra::{vector, Point};
-use parry3d_f64::shape::Triangle;
 
 use crate::{
     debug::DebugInfo,
+    math::Triangle,
     mesh::{HashVector, Index, MeshMaker},
 };
 
@@ -57,9 +57,9 @@ impl From<&Vec<Triangle>> for Vertices {
 
             let normal = (b - a).cross(&(c - a)).normalize();
 
-            let a = HashVector::from(a);
-            let b = HashVector::from(b);
-            let c = HashVector::from(c);
+            let a = HashVector::from(&a);
+            let b = HashVector::from(&b);
+            let c = HashVector::from(&c);
 
             let normal = HashVector::from(&normal);
 

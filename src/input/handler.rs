@@ -1,6 +1,5 @@
 use std::time::Instant;
 
-use parry3d_f64::shape::Triangle;
 use winit::{
     dpi::PhysicalPosition,
     event::{
@@ -11,6 +10,7 @@ use winit::{
 
 use crate::{
     camera::{Camera, FocusPoint},
+    math::Triangle,
     window::Window,
 };
 
