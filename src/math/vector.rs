@@ -49,6 +49,11 @@ impl<const D: usize> Vector<D> {
     pub fn dot(&self, other: &Self) -> f64 {
         self.to_na().dot(&other.to_na())
     }
+
+    /// Access an iterator over the vector's components
+    pub fn iter(&self) -> impl Iterator<Item = &f64> {
+        self.0.iter()
+    }
 }
 
 impl Vector<1> {
