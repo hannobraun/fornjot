@@ -162,14 +162,14 @@ impl Face {
                         let center =
                             segment[0] + (segment[1] - segment[0]) * 0.5;
 
-                        let ray = Ray2 {
-                            origin: center,
-                            dir: outside - center,
-                        };
+                        let origin = center;
+                        let dir = outside - center;
+                        let ray = Ray2 { origin, dir };
+
                         let mut check = TriangleEdgeCheck::new(Ray3 {
-                            origin: surface.point_surface_to_model(&ray.origin),
+                            origin: surface.point_surface_to_model(&origin),
                             dir: surface
-                                .vector_surface_to_model(&ray.dir.into())
+                                .vector_surface_to_model(&dir.into())
                                 .to_na(),
                         });
 
