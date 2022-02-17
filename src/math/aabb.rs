@@ -52,7 +52,7 @@ impl Aabb {
     }
 
     /// Merge this AABB with another
-    pub fn merged(&self, other: &Aabb) -> Aabb {
+    pub fn merged(&self, other: &Self) -> Self {
         self.to_parry().merged(&other.to_parry()).into()
     }
 }
