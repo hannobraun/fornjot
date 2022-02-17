@@ -3,10 +3,10 @@ use parry3d_f64::{bounding_volume::AABB, math::Isometry};
 use crate::{
     debug::DebugInfo,
     kernel::{
-        math::Transform,
         topology::{edges::Edges, faces::Faces, vertices::Vertices},
         Shape,
     },
+    math::Transform,
 };
 
 impl Shape for fj::Transform {

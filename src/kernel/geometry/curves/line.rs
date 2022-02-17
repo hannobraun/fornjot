@@ -1,7 +1,7 @@
 use approx::AbsDiffEq;
 use nalgebra::point;
 
-use crate::kernel::math::{Point, Transform, Vector};
+use crate::math::{Point, Transform, Vector};
 
 /// A line, defined by a point and a vector
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -82,7 +82,7 @@ mod tests {
     use nalgebra::{point, UnitQuaternion};
     use parry3d_f64::math::{Isometry, Translation};
 
-    use crate::kernel::math::Vector;
+    use crate::math::Vector;
 
     use super::Line;
 

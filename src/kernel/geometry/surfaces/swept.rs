@@ -1,7 +1,7 @@
 use nalgebra::point;
 
-use crate::kernel::{
-    geometry::Curve,
+use crate::{
+    kernel::geometry::Curve,
     math::{Point, Transform, Vector},
 };
 
@@ -54,8 +54,8 @@ impl Swept {
 mod tests {
     use nalgebra::point;
 
-    use crate::kernel::{
-        geometry::{Curve, Line},
+    use crate::{
+        kernel::geometry::{Curve, Line},
         math::{Point, Vector},
     };
 

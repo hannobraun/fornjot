@@ -2,10 +2,9 @@ use std::{cmp::Ordering, collections::HashSet};
 
 use decorum::R64;
 
-use super::{
-    math::{Point, Segment},
-    topology::edges::{Cycle, Edge, Edges},
-};
+use crate::math::{Point, Segment};
+
+use super::topology::edges::{Cycle, Edge, Edges};
 
 /// An approximation of an edge, multiple edges, or a face
 #[derive(Debug, PartialEq)]
@@ -224,13 +223,15 @@ mod tests {
 
     use nalgebra::point;
 
-    use crate::kernel::{
-        geometry::Curve,
-        math::Segment,
-        topology::{
-            edges::{Cycle, Edge, Edges},
-            vertices::Vertex,
+    use crate::{
+        kernel::{
+            geometry::Curve,
+            topology::{
+                edges::{Cycle, Edge, Edges},
+                vertices::Vertex,
+            },
         },
+        math::Segment,
     };
 
     use super::Approximation;

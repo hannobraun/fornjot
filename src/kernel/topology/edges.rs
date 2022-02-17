@@ -1,5 +1,5 @@
-use crate::kernel::{
-    geometry::{Circle, Curve},
+use crate::{
+    kernel::geometry::{Circle, Curve},
     math::{Point, Transform, Vector},
 };
 
