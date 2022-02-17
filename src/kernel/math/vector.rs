@@ -45,6 +45,11 @@ impl<const D: usize> Vector<D> {
         self.0[1]
     }
 
+    /// Construct a new vector from this vector's x and y components
+    pub fn xy(&self) -> Vector<2> {
+        Vector::from([self.x(), self.y()])
+    }
+
     /// Compute the magnitude of the vector
     pub fn magnitude(&self) -> f64 {
         self.to_na().magnitude()
