@@ -1,5 +1,4 @@
 use nalgebra::point;
-use parry3d_f64::bounding_volume::AABB;
 
 use crate::{
     debug::DebugInfo,
@@ -12,6 +11,7 @@ use crate::{
         },
         Shape,
     },
+    math::AABB,
 };
 
 impl Shape for fj::Circle {

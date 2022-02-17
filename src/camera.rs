@@ -1,13 +1,13 @@
 use std::f64::consts::FRAC_PI_2;
 
 use nalgebra::{Point, TAffine, Transform, Translation, Vector};
-use parry3d_f64::{
-    bounding_volume::AABB,
-    query::{Ray, RayCast as _},
-};
+use parry3d_f64::query::{Ray, RayCast as _};
 use winit::dpi::PhysicalPosition;
 
-use crate::{math::Triangle, window::Window};
+use crate::{
+    math::{Triangle, AABB},
+    window::Window,
+};
 
 /// The camera abstraction
 ///

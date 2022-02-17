@@ -4,9 +4,7 @@ pub mod shapes;
 pub mod topology;
 pub mod triangulation;
 
-use parry3d_f64::bounding_volume::AABB;
-
-use crate::debug::DebugInfo;
+use crate::{debug::DebugInfo, math::AABB};
 
 use self::topology::{edges::Edges, faces::Faces, vertices::Vertices};
 

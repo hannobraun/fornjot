@@ -1,5 +1,3 @@
-use parry3d_f64::bounding_volume::AABB;
-
 use crate::{
     debug::DebugInfo,
     kernel::{
@@ -10,6 +8,7 @@ use crate::{
         },
         Shape,
     },
+    math::AABB,
 };
 
 impl Shape for fj::Difference2d {

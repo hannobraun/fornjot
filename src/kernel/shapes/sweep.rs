@@ -1,7 +1,7 @@
 use std::f64::consts::PI;
 
 use nalgebra::vector;
-use parry3d_f64::{bounding_volume::AABB, math::Isometry};
+use parry3d_f64::math::Isometry;
 
 use crate::{
     debug::DebugInfo,
@@ -14,6 +14,7 @@ use crate::{
         },
         Shape,
     },
+    math::AABB,
 };
 
 impl Shape for fj::Sweep {

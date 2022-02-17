@@ -1,4 +1,4 @@
-use parry3d_f64::{bounding_volume::AABB, math::Isometry};
+use parry3d_f64::math::Isometry;
 
 use crate::{
     debug::DebugInfo,
@@ -6,14 +6,12 @@ use crate::{
         topology::{edges::Edges, faces::Faces, vertices::Vertices},
         Shape,
     },
-    math::Transform,
+    math::{Transform, AABB},
 };
 
 impl Shape for fj::Transform {
     fn bounding_volume(&self) -> AABB {
-        self.shape
-            .bounding_volume()
-            .transform_by(&transform(self).into())
+        transform(self).transform_aabb(&self.shape.bounding_volume())
     }
 
     fn faces(&self, tolerance: f64, debug_info: &mut DebugInfo) -> Faces {
