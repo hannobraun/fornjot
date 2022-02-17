@@ -1,8 +1,6 @@
-use nalgebra::vector;
-
 use crate::kernel::{
     geometry::{Circle, Curve},
-    math::{Point, Transform},
+    math::{Point, Transform, Vector},
 };
 
 use super::vertices::Vertex;
@@ -100,7 +98,7 @@ impl Edge {
         Self {
             curve: Curve::Circle(Circle {
                 center: Point::origin(),
-                radius: vector![radius, 0.].into(),
+                radius: Vector::from([radius, 0.]),
             }),
             vertices: None,
             reverse: false,
