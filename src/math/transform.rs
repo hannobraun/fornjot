@@ -1,4 +1,4 @@
-use super::{Point, Triangle, Vector};
+use super::{Point, Triangle, Vector, AABB};
 
 /// A transform
 pub struct Transform(parry3d_f64::math::Isometry<f64>);
@@ -20,6 +20,14 @@ impl Transform {
             a: self.transform_point(&triangle.a),
             b: self.transform_point(&triangle.b),
             c: self.transform_point(&triangle.c),
+        }
+    }
+
+    /// Transform the given axis-aligned bounding box
+    pub fn transform_aabb(&self, aabb: &AABB) -> AABB {
+        AABB {
+            mins: self.transform_point(&aabb.mins),
+            maxs: self.transform_point(&aabb.maxs),
         }
     }
 }
