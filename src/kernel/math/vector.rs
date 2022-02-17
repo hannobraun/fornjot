@@ -56,6 +56,13 @@ impl<const D: usize> Vector<D> {
     }
 }
 
+impl Vector<2> {
+    /// Extend a 2-dimensional vector into a 3-dimensional one
+    pub fn extend(&self, scalar: f64) -> Vector<3> {
+        Vector::from([self.x(), self.y(), scalar])
+    }
+}
+
 impl<const D: usize> From<[f64; D]> for Vector<D> {
     fn from(array: [f64; D]) -> Self {
         Self::from_array(array)
