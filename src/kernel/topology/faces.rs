@@ -6,15 +6,14 @@ use parry2d_f64::{
     query::{Ray as Ray2, RayCast as _},
     shape::Segment as Segment2,
 };
-use parry3d_f64::{
-    query::Ray as Ray3,
-    shape::{Segment as Segment3, Triangle},
-};
+use parry3d_f64::{query::Ray as Ray3, shape::Triangle};
 
 use crate::{
     debug::{DebugInfo, TriangleEdgeCheck},
     kernel::{
-        approximation::Approximation, geometry::Surface, math::Transform,
+        approximation::Approximation,
+        geometry::Surface,
+        math::{Segment, Transform},
         triangulation::triangulate,
     },
 };
@@ -126,7 +125,7 @@ impl Face {
                 let segments: Vec<_> = approx
                     .segments
                     .into_iter()
-                    .map(|Segment3 { a, b }| {
+                    .map(|Segment { a, b }| {
                         // Can't panic, unless the approximation wrongfully
                         // generates points that are not in the surface.
                         let a = surface.point_model_to_surface(a);

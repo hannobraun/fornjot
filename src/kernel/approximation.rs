@@ -1,10 +1,9 @@
 use std::{cmp::Ordering, collections::HashSet};
 
 use decorum::R64;
-use parry3d_f64::shape::Segment;
 
 use super::{
-    math::Point,
+    math::{Point, Segment},
     topology::edges::{Cycle, Edge, Edges},
 };
 
@@ -224,10 +223,10 @@ mod tests {
     use std::cell::RefCell;
 
     use nalgebra::point;
-    use parry3d_f64::shape::Segment;
 
     use crate::kernel::{
         geometry::Curve,
+        math::Segment,
         topology::{
             edges::{Cycle, Edge, Edges},
             vertices::Vertex,
