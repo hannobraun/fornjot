@@ -1,4 +1,4 @@
-use super::{Aabb, Point, Triangle, Vector};
+use super::{Aabb, Point, Segment, Triangle, Vector};
 
 /// A transform
 pub struct Transform(parry3d_f64::math::Isometry<f64>);
@@ -17,6 +17,14 @@ impl Transform {
     /// Transform the given vector
     pub fn transform_vector(&self, vector: &Vector<3>) -> Vector<3> {
         Vector::from(self.0.transform_vector(&vector.to_na()))
+    }
+
+    /// Transform the given segment
+    pub fn transform_segment(&self, segment: &Segment) -> Segment {
+        Segment {
+            a: self.transform_point(&segment.a),
+            b: self.transform_point(&segment.b),
+        }
     }
 
     /// Transform the given triangle
