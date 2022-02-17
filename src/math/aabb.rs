@@ -1,5 +1,3 @@
-#![allow(unused)]
-
 use parry3d_f64::bounding_volume::BoundingVolume as _;
 
 use super::{Point, Vector};
