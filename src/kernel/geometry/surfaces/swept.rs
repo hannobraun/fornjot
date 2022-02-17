@@ -1,4 +1,4 @@
-use nalgebra::{point, vector};
+use nalgebra::point;
 
 use crate::kernel::{
     geometry::Curve,
@@ -26,10 +26,10 @@ impl Swept {
 
     /// Convert a point in model coordinates to surface coordinates
     pub fn point_model_to_surface(&self, point: &Point<3>) -> Point<2> {
-        let p = point - self.curve.origin();
-
         let u = self.curve.point_model_to_curve(point).x;
-        let v = p.dot(&self.path.normalize().to_na()) / self.path.magnitude();
+        let v = Vector::from_na(point - self.curve.origin())
+            .dot(&self.path.normalize())
+            / self.path.magnitude();
 
         point![u, v]
     }
@@ -47,17 +47,17 @@ impl Swept {
         let u = vector.x();
         let v = vector.y();
 
-        self.curve.vector_curve_to_model(&vector![u].into()) + self.path * v
+        self.curve.vector_curve_to_model(&Vector::from([u])) + self.path * v
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use nalgebra::{point, vector};
+    use nalgebra::point;
 
     use crate::kernel::{
         geometry::{Curve, Line},
-        math::Point,
+        math::{Point, Vector},
     };
 
     use super::Swept;
@@ -67,9 +67,9 @@ mod tests {
         let swept = Swept {
             curve: Curve::Line(Line {
                 origin: point![1., 0., 0.],
-                direction: vector![0., 2., 0.].into(),
+                direction: Vector::from([0., 2., 0.]),
             }),
-            path: vector![0., 0., 2.].into(),
+            path: Vector::from([0., 0., 2.]),
         };
 
         verify(&swept, point![-1., -1.]);
@@ -90,9 +90,9 @@ mod tests {
         let swept = Swept {
             curve: Curve::Line(Line {
                 origin: point![1., 0., 0.],
-                direction: vector![0., 2., 0.].into(),
+                direction: Vector::from([0., 2., 0.]),
             }),
-            path: vector![0., 0., 2.].into(),
+            path: Vector::from([0., 0., 2.]),
         };
 
         assert_eq!(
@@ -106,14 +106,14 @@ mod tests {
         let swept = Swept {
             curve: Curve::Line(Line {
                 origin: point![1., 0., 0.],
-                direction: vector![0., 2., 0.].into(),
+                direction: Vector::from([0., 2., 0.]),
             }),
-            path: vector![0., 0., 2.].into(),
+            path: Vector::from([0., 0., 2.]),
         };
 
         assert_eq!(
-            swept.vector_surface_to_model(&vector![2., 4.].into()),
-            vector![0., 4., 8.].into(),
+            swept.vector_surface_to_model(&Vector::from([2., 4.])),
+            Vector::from([0., 4., 8.]),
         );
     }
 }

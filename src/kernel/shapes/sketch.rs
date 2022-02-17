@@ -4,7 +4,7 @@ use crate::{
     debug::DebugInfo,
     kernel::{
         geometry::{Curve, Line, Surface},
-        math::Point,
+        math::{Point, Vector},
         topology::{
             edges::{Edge, Edges},
             faces::{Face, Faces},
@@ -54,7 +54,7 @@ impl Shape for fj::Sketch {
 
             let line = Curve::Line(Line {
                 origin: *a.location(),
-                direction: (*b.location() - *a.location()).into(),
+                direction: Vector::from(*b.location() - *a.location()),
             });
             let edge = Edge::new(line, Some([a, b]));
 

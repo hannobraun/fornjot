@@ -1,6 +1,6 @@
 use std::f64::consts::PI;
 
-use nalgebra::{point, vector};
+use nalgebra::point;
 
 use crate::kernel::math::{Point, Transform, Vector};
 
@@ -26,9 +26,9 @@ impl Circle {
 
     #[must_use]
     pub fn transform(self, transform: &Transform) -> Self {
-        let radius = vector![self.radius.x(), self.radius.y(), 0.].into();
+        let radius = self.radius.extend(0.);
         let radius = transform.transform_vector(&radius);
-        let radius = vector![radius.x(), radius.y()].into();
+        let radius = radius.xy();
 
         Self {
             center: transform.transform_point(&self.center),
@@ -70,7 +70,7 @@ impl Circle {
         let x = cos * radius;
         let y = sin * radius;
 
-        vector![x, y, 0.].into()
+        Vector::from([x, y, 0.])
     }
 
     pub fn approx(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
@@ -105,7 +105,9 @@ impl Circle {
 mod tests {
     use std::f64::consts::{FRAC_PI_2, PI};
 
-    use nalgebra::{point, vector};
+    use nalgebra::point;
+
+    use crate::kernel::math::Vector;
 
     use super::Circle;
 
@@ -113,7 +115,7 @@ mod tests {
     fn point_model_to_curve() {
         let circle = Circle {
             center: point![1., 2., 3.],
-            radius: vector![1., 0.].into(),
+            radius: Vector::from([1., 0.]),
         };
 
         assert_eq!(

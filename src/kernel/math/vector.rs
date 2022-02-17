@@ -14,6 +14,22 @@ use approx::AbsDiffEq;
 pub struct Vector<const D: usize>([f64; D]);
 
 impl<const D: usize> Vector<D> {
+    /// Construct a `Vector` from an array
+    ///
+    /// # Implementation Note
+    ///
+    /// All vector construction functions should call this method internally. At
+    /// some point, this will become the place where validate the floating point
+    /// numbers before constructing the vector instance.
+    pub fn from_array(array: [f64; D]) -> Self {
+        Self(array)
+    }
+
+    /// Construct a `Vector` from an nalgebra vector
+    pub fn from_na(vector: nalgebra::SVector<f64, D>) -> Self {
+        Self::from_array(vector.into())
+    }
+
     /// Convert the vector into an nalgebra vector
     pub fn to_na(&self) -> nalgebra::SVector<f64, D> {
         self.0.into()
@@ -29,6 +45,11 @@ impl<const D: usize> Vector<D> {
         self.0[1]
     }
 
+    /// Construct a new vector from this vector's x and y components
+    pub fn xy(&self) -> Vector<2> {
+        Vector::from([self.x(), self.y()])
+    }
+
     /// Compute the magnitude of the vector
     pub fn magnitude(&self) -> f64 {
         self.to_na().magnitude()
@@ -38,11 +59,29 @@ impl<const D: usize> Vector<D> {
     pub fn normalize(&self) -> Self {
         self.to_na().normalize().into()
     }
+
+    /// Compute the dot product with another vector
+    pub fn dot(&self, other: &Self) -> f64 {
+        self.to_na().dot(&other.to_na())
+    }
+}
+
+impl Vector<2> {
+    /// Extend a 2-dimensional vector into a 3-dimensional one
+    pub fn extend(&self, scalar: f64) -> Vector<3> {
+        Vector::from([self.x(), self.y(), scalar])
+    }
+}
+
+impl<const D: usize> From<[f64; D]> for Vector<D> {
+    fn from(array: [f64; D]) -> Self {
+        Self::from_array(array)
+    }
 }
 
 impl<const D: usize> From<nalgebra::SVector<f64, D>> for Vector<D> {
-    fn from(v: nalgebra::SVector<f64, D>) -> Self {
-        Self(v.into())
+    fn from(vector: nalgebra::SVector<f64, D>) -> Self {
+        Self::from_na(vector)
     }
 }
 

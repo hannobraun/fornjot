@@ -42,10 +42,9 @@ impl Line {
     /// point not being on the line, intentional or not, will never result in an
     /// error.
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
-        let p = point - self.origin;
-
         // scalar projection
-        let t = p.dot(&self.direction.normalize().to_na())
+        let t = Vector::from_na(point - self.origin)
+            .dot(&self.direction.normalize())
             / self.direction.magnitude();
 
         point![t]
@@ -81,8 +80,10 @@ mod tests {
     use std::f64::consts::FRAC_PI_2;
 
     use approx::assert_abs_diff_eq;
-    use nalgebra::{point, vector, UnitQuaternion};
+    use nalgebra::{point, UnitQuaternion};
     use parry3d_f64::math::{Isometry, Translation};
+
+    use crate::kernel::math::Vector;
 
     use super::Line;
 
@@ -90,7 +91,7 @@ mod tests {
     fn transform() {
         let line = Line {
             origin: point![1., 0., 0.],
-            direction: vector![0., 1., 0.].into(),
+            direction: Vector::from([0., 1., 0.]),
         };
 
         let line = line.transform(
@@ -108,7 +109,7 @@ mod tests {
             line,
             Line {
                 origin: point![1., 3., 3.],
-                direction: vector![-1., 0., 0.].into(),
+                direction: Vector::from([-1., 0., 0.]),
             },
             epsilon = 1e-8,
         );
@@ -118,7 +119,7 @@ mod tests {
     fn point_model_to_curve() {
         let line = Line {
             origin: point![1., 0., 0.],
-            direction: vector![2., 0., 0.].into(),
+            direction: Vector::from([2., 0., 0.]),
         };
 
         verify(line, -1.);
