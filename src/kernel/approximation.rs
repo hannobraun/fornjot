@@ -69,7 +69,7 @@ impl Approximation {
             let p0 = segment[0];
             let p1 = segment[1];
 
-            segments.push([p0, p1].into());
+            segments.push(Segment::from([p0, p1]));
         }
 
         Self { points, segments }
