@@ -51,8 +51,8 @@ impl<const D: usize> Vector<D> {
     }
 
     /// Access an iterator over the vector's components
-    pub fn components(&self) -> impl Iterator<Item = &f64> {
-        self.0.iter()
+    pub fn components(&self) -> [f64; D] {
+        self.0
     }
 }
 

@@ -72,7 +72,7 @@ fn main() -> anyhow::Result<()> {
     // by some value.
     let tolerance = {
         let mut min_extent = f64::MAX;
-        for &extent in aabb.size().components() {
+        for extent in aabb.size().components() {
             if extent > 0. && extent < min_extent {
                 min_extent = extent;
             }
