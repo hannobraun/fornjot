@@ -46,8 +46,8 @@ impl<const D: usize> Vector<D> {
 }
 
 impl<const D: usize> From<nalgebra::SVector<f64, D>> for Vector<D> {
-    fn from(v: nalgebra::SVector<f64, D>) -> Self {
-        Self::from_na(v)
+    fn from(vector: nalgebra::SVector<f64, D>) -> Self {
+        Self::from_na(vector)
     }
 }
 
