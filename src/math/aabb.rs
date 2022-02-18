@@ -30,7 +30,7 @@ impl Aabb<3> {
         parry3d_f64::bounding_volume::AABB::from_points(&points).into()
     }
 
-    /// Construct an AABB from a Parry AABB
+    /// Construct a 3-dimensional AABB from a Parry AABB
     pub fn from_parry(aabb: parry3d_f64::bounding_volume::AABB) -> Self {
         Self {
             min: aabb.mins.into(),
