@@ -37,7 +37,7 @@ impl<const D: usize> Vector<D> {
 
     /// Convert to a 1-dimensional vector
     pub fn to_t(&self) -> Vector<1> {
-        Vector::from([self.0[0]])
+        Vector([self.0[0]])
     }
 
     /// Compute the magnitude of the vector
