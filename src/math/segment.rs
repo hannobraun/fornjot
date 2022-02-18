@@ -16,7 +16,7 @@ impl Segment<2> {
 }
 
 impl Segment<3> {
-    /// Convert the segment to a Parry segment
+    /// Convert the 3-dimensional segment to a Parry segment
     pub fn to_parry(&self) -> parry3d_f64::shape::Segment {
         [self.a, self.b].into()
     }
