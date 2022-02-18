@@ -23,17 +23,17 @@ impl<const D: usize> Point<D> {
 
     /// Construct a `Point` from an array
     pub fn from_array(array: [f64; D]) -> Self {
-        Self(array)
+        Self(array.map(Scalar::from_f64))
     }
 
     /// Construct a `Point` from an nalgebra vector
     pub fn from_na(point: nalgebra::Point<f64, D>) -> Self {
-        Self::from_array(point.into())
+        Self(point.coords.data.0[0].map(Scalar::from_f64))
     }
 
     /// Convert the point into an nalgebra point
     pub fn to_na(&self) -> nalgebra::Point<f64, D> {
-        self.0.into()
+        self.0.map(Scalar::into_f64).into()
     }
 
     /// Convert to a 1-dimensional point
@@ -85,6 +85,12 @@ impl Point<3> {
     /// Access the point's z coordinate
     pub fn z(&self) -> Scalar {
         self.0[2]
+    }
+}
+
+impl<const D: usize> From<[Scalar; D]> for Point<D> {
+    fn from(array: [Scalar; D]) -> Self {
+        Self(array)
     }
 }
 

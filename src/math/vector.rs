@@ -18,7 +18,7 @@ pub struct Vector<const D: usize>([Scalar; D]);
 impl<const D: usize> Vector<D> {
     /// Construct a `Vector` from an array
     pub fn from_array(array: [f64; D]) -> Self {
-        Self(array)
+        Self(array.map(Scalar::from_f64))
     }
 
     /// Construct a `Vector` from an nalgebra vector
@@ -28,7 +28,7 @@ impl<const D: usize> Vector<D> {
 
     /// Convert the vector into an nalgebra vector
     pub fn to_na(&self) -> nalgebra::SVector<f64, D> {
-        self.0.into()
+        self.0.map(Scalar::into_f64).into()
     }
 
     /// Convert to a 1-dimensional vector
@@ -38,7 +38,7 @@ impl<const D: usize> Vector<D> {
 
     /// Compute the magnitude of the vector
     pub fn magnitude(&self) -> Scalar {
-        self.to_na().magnitude()
+        self.to_na().magnitude().into()
     }
 
     /// Compute a normalized version of the vector
@@ -48,7 +48,7 @@ impl<const D: usize> Vector<D> {
 
     /// Compute the dot product with another vector
     pub fn dot(&self, other: &Self) -> Scalar {
-        self.to_na().dot(&other.to_na())
+        self.to_na().dot(&other.to_na()).into()
     }
 
     /// Compute the cross product with another vector
@@ -103,6 +103,12 @@ impl Vector<3> {
     }
 }
 
+impl<const D: usize> From<[Scalar; D]> for Vector<D> {
+    fn from(array: [Scalar; D]) -> Self {
+        Self(array)
+    }
+}
+
 impl<const D: usize> From<[f64; D]> for Vector<D> {
     fn from(array: [f64; D]) -> Self {
         Self::from_array(array)
@@ -127,7 +133,7 @@ impl<const D: usize> ops::Mul<Scalar> for Vector<D> {
     type Output = Self;
 
     fn mul(self, rhs: Scalar) -> Self::Output {
-        self.to_na().mul(rhs).into()
+        self.to_na().mul(rhs.into_f64()).into()
     }
 }
 
@@ -135,7 +141,7 @@ impl<const D: usize> ops::Div<Scalar> for Vector<D> {
     type Output = Self;
 
     fn div(self, rhs: Scalar) -> Self::Output {
-        self.to_na().div(rhs).into()
+        self.to_na().div(rhs.into_f64()).into()
     }
 }
 

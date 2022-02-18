@@ -74,7 +74,7 @@ impl Camera {
 
         let initial_offset = {
             let mut offset = aabb.center();
-            *offset.z_mut() = 0.;
+            *offset.z_mut() = Scalar::ZERO;
             -offset
         };
 
@@ -84,9 +84,9 @@ impl Camera {
 
             rotation: Transform::identity(),
             translation: Translation::from([
-                initial_offset.x(),
-                initial_offset.y(),
-                -initial_distance,
+                initial_offset.x().into_f64(),
+                initial_offset.y().into_f64(),
+                -initial_distance.into_f64(),
             ]),
         }
     }

@@ -159,8 +159,8 @@ impl Face {
 
                         // To determine if the edge is within the polygon, we
                         // determine if its center point is in the polygon.
-                        let center =
-                            segment[0] + (segment[1] - segment[0]) * 0.5;
+                        let center = segment[0]
+                            + (segment[1] - segment[0]) / Scalar::TWO;
 
                         let origin = center;
                         let dir = outside - center;

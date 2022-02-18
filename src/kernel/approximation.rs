@@ -214,7 +214,11 @@ pub struct ValidationError {
 }
 
 fn point_to_r64(point: Point<3>) -> [R64; 3] {
-    [point.x().into(), point.y().into(), point.z().into()]
+    [
+        point.x().into_f64().into(),
+        point.y().into_f64().into(),
+        point.z().into_f64().into(),
+    ]
 }
 
 #[cfg(test)]
@@ -229,14 +233,14 @@ mod tests {
                 vertices::Vertex,
             },
         },
-        math::{Point, Segment},
+        math::{Point, Scalar, Segment},
     };
 
     use super::Approximation;
 
     #[test]
     fn test_for_edge() {
-        let tolerance = 1.;
+        let tolerance = Scalar::ONE;
 
         let a = Point::from([1., 2., 3.]);
         let b = Point::from([2., 3., 5.]);
@@ -290,7 +294,7 @@ mod tests {
 
     #[test]
     fn test_for_cycle() {
-        let tolerance = 1.;
+        let tolerance = Scalar::ONE;
 
         let a = Point::from([1., 2., 3.]);
         let b = Point::from([2., 3., 5.]);
@@ -328,7 +332,7 @@ mod tests {
 
     #[test]
     fn test_for_edges() {
-        let tolerance = 1.;
+        let tolerance = Scalar::ONE;
 
         let a = Point::from([1., 2., 3.]);
         let b = Point::from([2., 3., 5.]);

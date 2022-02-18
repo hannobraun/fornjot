@@ -74,14 +74,14 @@ fn main() -> anyhow::Result<()> {
     let tolerance = {
         let mut min_extent = Scalar::MAX;
         for extent in aabb.size().components() {
-            if extent > 0. && extent < min_extent {
+            if extent > Scalar::ZERO && extent < min_extent {
                 min_extent = extent;
             }
         }
 
         // `tolerance` must not be zero, or we'll run into trouble.
-        let tolerance = min_extent / 1000.;
-        assert!(tolerance > 0.);
+        let tolerance = min_extent / Scalar::from_f64(1000.);
+        assert!(tolerance > Scalar::ZERO);
 
         tolerance
     };
