@@ -14,7 +14,7 @@ pub trait Shape {
     ///
     /// If a shape is empty, its [`Aabb`]'s `min` and `max` points must be equal
     /// (but are otherwise not specified).
-    fn bounding_volume(&self) -> Aabb;
+    fn bounding_volume(&self) -> Aabb<3>;
 
     /// Compute triangles to approximate the shape's faces
     ///
@@ -73,7 +73,7 @@ macro_rules! dispatch {
 }
 
 dispatch! {
-    bounding_volume() -> Aabb;
+    bounding_volume() -> Aabb<3>;
     faces(
         tolerance: f64,
         debug: &mut DebugInfo,

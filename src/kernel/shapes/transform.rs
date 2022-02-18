@@ -10,7 +10,7 @@ use crate::{
 };
 
 impl Shape for fj::Transform {
-    fn bounding_volume(&self) -> Aabb {
+    fn bounding_volume(&self) -> Aabb<3> {
         transform(self).transform_aabb(&self.shape.bounding_volume())
     }
 

@@ -8,7 +8,7 @@ use crate::{
 };
 
 impl Shape for fj::Union {
-    fn bounding_volume(&self) -> Aabb {
+    fn bounding_volume(&self) -> Aabb<3> {
         let a = self.a.bounding_volume();
         let b = self.b.bounding_volume();
 

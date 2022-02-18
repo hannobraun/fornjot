@@ -15,7 +15,7 @@ use crate::{
 };
 
 impl Shape for fj::Circle {
-    fn bounding_volume(&self) -> Aabb {
+    fn bounding_volume(&self) -> Aabb<3> {
         Aabb {
             min: point![-self.radius, -self.radius, 0.0],
             max: point![self.radius, self.radius, 0.0],

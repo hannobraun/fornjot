@@ -2,7 +2,6 @@ use std::collections::BTreeSet;
 
 use decorum::R64;
 use parry2d_f64::{
-    bounding_volume::AABB,
     query::{Ray as Ray2, RayCast as _},
     shape::Segment as Segment2,
 };
@@ -14,7 +13,7 @@ use crate::{
         approximation::Approximation, geometry::Surface,
         triangulation::triangulate,
     },
-    math::{Segment, Transform, Triangle},
+    math::{Aabb, Segment, Transform, Triangle},
 };
 
 use super::edges::Edges;
@@ -136,10 +135,10 @@ impl Face {
 
                 // We're also going to need a point outside of the polygon, for
                 // the point-in-polygon tests.
-                let aabb = AABB::from_points(
-                    points.iter().map(|vertex| &vertex.value),
+                let aabb = Aabb::<2>::from_points(
+                    points.iter().map(|vertex| vertex.value),
                 );
-                let outside = aabb.maxs * 2.;
+                let outside = aabb.max * 2.;
 
                 let mut triangles = triangulate(points);
                 let face_as_polygon = segments;
