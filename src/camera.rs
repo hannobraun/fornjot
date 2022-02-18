@@ -53,7 +53,7 @@ impl Camera {
                 aabb.max.y(),
             ]
             .into_iter()
-            .reduce(|a, b| Scalar::max(a, b))
+            .reduce(Scalar::max)
             // `reduce` can only return `None`, if there are no items in
             // the iterator. And since we're creating an array full of
             // items above, we know this can't panic.
