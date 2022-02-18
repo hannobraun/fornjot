@@ -1,4 +1,4 @@
-name: Compile Binaries
+name: Continuous Deployment
 
 on:
   push:
