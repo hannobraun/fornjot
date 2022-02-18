@@ -13,7 +13,7 @@ use crate::{
 };
 
 impl Shape for fj::Sketch {
-    fn bounding_volume(&self) -> Aabb {
+    fn bounding_volume(&self) -> Aabb<3> {
         let vertices = self.vertices();
         Aabb::from_points(vertices.0.iter().map(|vertex| *vertex.location()))
     }

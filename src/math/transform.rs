@@ -24,7 +24,7 @@ impl Transform {
     }
 
     /// Transform the given axis-aligned bounding box
-    pub fn transform_aabb(&self, aabb: &Aabb) -> Aabb {
+    pub fn transform_aabb(&self, aabb: &Aabb<3>) -> Aabb<3> {
         Aabb {
             min: self.transform_point(&aabb.min),
             max: self.transform_point(&aabb.max),

@@ -3,15 +3,15 @@ use parry3d_f64::bounding_volume::BoundingVolume as _;
 use super::{Point, Vector};
 
 /// An axis-aligned bounding box (AABB)
-pub struct Aabb {
+pub struct Aabb<const D: usize> {
     /// The minimum coordinates of the AABB
-    pub min: Point<3>,
+    pub min: Point<D>,
 
     /// The maximum coordinates of the AABB
-    pub max: Point<3>,
+    pub max: Point<D>,
 }
 
-impl Aabb {
+impl Aabb<3> {
     /// Construct an AABB from a list of points
     ///
     /// The resulting AABB will contain all the points.
@@ -57,7 +57,7 @@ impl Aabb {
     }
 }
 
-impl From<parry3d_f64::bounding_volume::AABB> for Aabb {
+impl From<parry3d_f64::bounding_volume::AABB> for Aabb<3> {
     fn from(aabb: parry3d_f64::bounding_volume::AABB) -> Self {
         Self::from_parry(aabb)
     }
