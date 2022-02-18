@@ -547,6 +547,7 @@ dependencies = [
  "libloading",
  "nalgebra",
  "notify",
+ "num-traits",
  "parry2d-f64",
  "parry3d-f64",
  "spade",
