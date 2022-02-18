@@ -1,10 +1,7 @@
 use std::collections::BTreeSet;
 
 use decorum::R64;
-use parry2d_f64::{
-    query::{Ray as Ray2, RayCast as _},
-    shape::Segment as Segment2,
-};
+use parry2d_f64::query::{Ray as Ray2, RayCast as _};
 use parry3d_f64::query::Ray as Ray3;
 
 use crate::{
@@ -191,10 +188,13 @@ impl Face {
                             // cases that would arise from that case.
 
                             let edge =
-                                Segment2::from(edge.map(|point| point.value));
+                                Segment::from(edge.map(|point| point.value));
 
-                            let intersection =
-                                edge.cast_local_ray(&ray, f64::INFINITY, true);
+                            let intersection = edge.to_parry().cast_local_ray(
+                                &ray,
+                                f64::INFINITY,
+                                true,
+                            );
 
                             if let Some(t) = intersection {
                                 // Due to slight inaccuracies, we might get
