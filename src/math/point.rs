@@ -22,12 +22,6 @@ impl<const D: usize> Point<D> {
     }
 
     /// Construct a `Point` from an array
-    ///
-    /// # Implementation Note
-    ///
-    /// All point construction functions should call this method internally. At
-    /// some point, this will become the place where validate the floating point
-    /// numbers before constructing the point instance.
     pub fn from_array(array: [f64; D]) -> Self {
         Self(array)
     }
