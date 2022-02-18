@@ -12,6 +12,14 @@ pub struct Aabb<const D: usize> {
 }
 
 impl Aabb<2> {
+    /// Construct a 2-dimensional AABB from a list of points
+    ///
+    /// The resulting AABB will contain all the points.
+    pub fn from_points(points: impl IntoIterator<Item = Point<2>>) -> Self {
+        let points: Vec<_> = points.into_iter().collect();
+        parry2d_f64::bounding_volume::AABB::from_points(&points).into()
+    }
+
     /// Construct a 2-dimensional AABB from a Parry AABB
     pub fn from_parry(aabb: parry2d_f64::bounding_volume::AABB) -> Self {
         Self {
