@@ -9,7 +9,6 @@ pub struct Segment<const D: usize> {
 
 impl Segment<2> {
     /// Convert the 2-dimensional segment to a Parry segment
-    #[allow(unused)]
     pub fn to_parry(&self) -> parry2d_f64::shape::Segment {
         [self.a, self.b].into()
     }
