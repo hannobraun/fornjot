@@ -1,9 +1,6 @@
-use nalgebra::vector;
-use parry3d_f64::math::Isometry;
-
 use crate::{
     kernel::geometry::{Circle, Curve},
-    math::Point,
+    math::{Point, Transform, Vector},
 };
 
 use super::vertices::Vertex;
@@ -33,7 +30,7 @@ impl Edges {
 
     /// Transform the edges
     #[must_use]
-    pub fn transform(mut self, transform: &Isometry<f64>) -> Self {
+    pub fn transform(mut self, transform: &Transform) -> Self {
         for cycle in &mut self.cycles {
             for edge in &mut cycle.edges {
                 *edge = edge.clone().transform(transform);
@@ -66,41 +63,6 @@ pub struct Edge {
     ///
     /// If there are no such vertices, that means the edge is connected to
     /// itself (like a full circle, for example).
-    ///
-    /// This field is a placeholder. Eventually, there will be actual vertices
-    /// here. For now, this field just tracks whether there are such bounding
-    /// vertices or not. If there are, they are implicitly assumed to be the
-    /// points with the curve coordinates `0` and `1`.
-    ///
-    /// # Implementation note
-    ///
-    /// Once we add vertices here, we'll need to update the approximation code
-    /// to support that. Down on the curve level, the approximation method must
-    /// not return approximations of the vertices themselves, as those would
-    /// prevent duplicate vertices from being detected reliably, hence
-    /// compromising the the correctness of the whole approximation.
-    ///
-    /// To prevent this, curves must only return approximated points _between_
-    /// the vertices. The following might be a good method signature to achieve
-    /// that:
-    /// ``` rust
-    /// fn approximate_between(&self, vertices: &Option<[Vertex; 2]>)
-    ///     -> Vev<Point<3>>
-    /// {
-    ///     // ...
-    /// }
-    /// ```
-    ///
-    /// When considering how to implement such a method, it becomes obvious that
-    /// passing 3D vertices would be kind of a pain. Not only would those have
-    /// to be converted into 1D curve coordinates to be useful, making the
-    /// implementation cumbersome, it would also make the method fallible,
-    /// exposing the inherent error-proneness of representing points that bound
-    /// a vertex on a curve in 3D.
-    ///
-    /// The logical conclusion is that vertices here should be represented in 1D
-    /// curve coordinates, only being converted into 3D points for the
-    /// approximation.
     pub vertices: Option<[Vertex<1>; 2]>,
 
     /// Indicates whether the curve's direction is reversed
@@ -131,15 +93,12 @@ impl Edge {
         }
     }
 
-    /// Create an arc
-    ///
-    /// So far, the name of this method is a bit ambitious, as only full circles
-    /// are supported.
-    pub fn arc(radius: f64) -> Self {
+    /// Create a circle
+    pub fn circle(radius: f64) -> Self {
         Self {
             curve: Curve::Circle(Circle {
                 center: Point::origin(),
-                radius: vector![radius, 0.],
+                radius: Vector::from([radius, 0.]),
             }),
             vertices: None,
             reverse: false,
@@ -153,7 +112,7 @@ impl Edge {
 
     /// Transform the edge
     #[must_use]
-    pub fn transform(mut self, transform: &Isometry<f64>) -> Self {
+    pub fn transform(mut self, transform: &Transform) -> Self {
         self.curve = self.curve.transform(transform);
         self.vertices = self
             .vertices

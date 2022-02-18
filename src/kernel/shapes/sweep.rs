@@ -1,7 +1,7 @@
 use std::f64::consts::PI;
 
 use nalgebra::vector;
-use parry3d_f64::{bounding_volume::AABB, math::Isometry};
+use parry3d_f64::math::Isometry;
 
 use crate::{
     debug::DebugInfo,
@@ -14,12 +14,13 @@ use crate::{
         },
         Shape,
     },
+    math::Aabb,
 };
 
 impl Shape for fj::Sweep {
-    fn bounding_volume(&self) -> AABB {
+    fn bounding_volume(&self) -> Aabb {
         let mut aabb = self.shape.bounding_volume();
-        aabb.maxs.z = self.length;
+        aabb.max.z = self.length;
         aabb
     }
 
@@ -28,13 +29,10 @@ impl Shape for fj::Sweep {
 
         let bottom_faces = original_faces
             .clone()
-            .transform(&Isometry::rotation(vector![PI, 0., 0.]));
+            .transform(&Isometry::rotation(vector![PI, 0., 0.]).into());
 
-        let top_faces = original_faces.transform(&Isometry::translation(
-            0.0,
-            0.0,
-            self.length,
-        ));
+        let top_faces = original_faces
+            .transform(&Isometry::translation(0.0, 0.0, self.length).into());
 
         // This will only work correctly, if the original shape consists of one
         // edge. If there are more, this will create some kind of weird face
@@ -48,11 +46,9 @@ impl Shape for fj::Sweep {
         for segment in approx.segments {
             let [v0, v1] = [segment.a, segment.b];
             let [v3, v2] = {
-                let segment = segment.transformed(&Isometry::translation(
-                    0.0,
-                    0.0,
-                    self.length,
-                ));
+                let segment = segment
+                    .to_parry()
+                    .transformed(&Isometry::translation(0.0, 0.0, self.length));
                 [segment.a, segment.b]
             };
 

@@ -1,15 +1,11 @@
 use std::f64::consts::FRAC_PI_2;
 
-use nalgebra::{TAffine, Transform, Translation};
-use parry3d_f64::{
-    bounding_volume::AABB,
-    query::{Ray, RayCast as _},
-    shape::Triangle,
-};
+use nalgebra::{Point, TAffine, Transform, Translation, Vector};
+use parry3d_f64::query::{Ray, RayCast as _};
 use winit::dpi::PhysicalPosition;
 
 use crate::{
-    math::{Point, Vector},
+    math::{Aabb, Triangle},
     window::Window,
 };
 
@@ -42,19 +38,19 @@ impl Camera {
 
     const INITIAL_FIELD_OF_VIEW_IN_X: f64 = FRAC_PI_2; // 90 degrees
 
-    pub fn new(aabb: &AABB) -> Self {
+    pub fn new(aabb: &Aabb) -> Self {
         let initial_distance = {
             // Let's make sure we choose a distance, so that the model fills
             // most of the screen.
             //
             // To do that, first compute the model's highest point, as well as
             // the furthest point from the origin, in x and y.
-            let highest_point = aabb.maxs.z;
+            let highest_point = aabb.max.z;
             let furthest_point = [
-                aabb.mins.x.abs(),
-                aabb.maxs.x,
-                aabb.mins.y.abs(),
-                aabb.maxs.y,
+                aabb.min.x.abs(),
+                aabb.max.x,
+                aabb.min.y.abs(),
+                aabb.max.y,
             ]
             .into_iter()
             .reduce(|a, b| f64::max(a, b))
@@ -107,7 +103,7 @@ impl Camera {
         Self::INITIAL_FIELD_OF_VIEW_IN_X
     }
 
-    pub fn position(&self) -> Point<3> {
+    pub fn position(&self) -> Point<f64, 3> {
         self.camera_to_model()
             .inverse_transform_point(&Point::origin())
     }
@@ -117,7 +113,7 @@ impl Camera {
         &self,
         cursor: PhysicalPosition<f64>,
         window: &Window,
-    ) -> Point<3> {
+    ) -> Point<f64, 3> {
         let width = window.width() as f64;
         let height = window.height() as f64;
         let aspect_ratio = width / height;
@@ -141,8 +137,11 @@ impl Camera {
         window: &Window,
         cursor: Option<PhysicalPosition<f64>>,
         triangles: &Vec<Triangle>,
-    ) -> Option<Point<3>> {
-        let cursor = cursor?;
+    ) -> FocusPoint {
+        let cursor = match cursor {
+            Some(cursor) => cursor,
+            None => return FocusPoint::none(),
+        };
 
         // Transform camera and cursor positions to model space.
         let origin = self.position();
@@ -154,7 +153,10 @@ impl Camera {
         let mut min_t = None;
 
         for triangle in triangles {
-            let t = triangle.cast_local_ray(&ray, f64::INFINITY, true);
+            let t =
+                triangle
+                    .to_parry()
+                    .cast_local_ray(&ray, f64::INFINITY, true);
 
             if let Some(t) = t {
                 if t <= min_t.unwrap_or(t) {
@@ -163,7 +165,7 @@ impl Camera {
             }
         }
 
-        min_t.map(|t| ray.point_at(t))
+        FocusPoint(min_t.map(|t| ray.point_at(t)))
     }
 
     /// Access the transform from camera to model space
@@ -178,7 +180,7 @@ impl Camera {
         transform
     }
 
-    pub fn update_planes(&mut self, aabb: &AABB) {
+    pub fn update_planes(&mut self, aabb: &Aabb) {
         let view_transform = self.camera_to_model();
         let view_direction = Vector::from([0., 0., -1.]);
 
@@ -220,5 +222,20 @@ impl Camera {
         } else {
             Self::DEFAULT_FAR_PLANE
         };
+    }
+}
+
+/// The point on the model that the cursor is currently pointing at
+///
+/// Such a point might or might not exist, depending on whether the cursor is
+/// pointing at the model or not.
+pub struct FocusPoint(pub Option<Point<f64, 3>>);
+
+impl FocusPoint {
+    /// Construct the "none" instance of `FocusPoint`
+    ///
+    /// This instance represents the case that no focus point exists.
+    pub fn none() -> Self {
+        Self(None)
     }
 }

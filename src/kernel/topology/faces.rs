@@ -6,11 +6,7 @@ use parry2d_f64::{
     query::{Ray as Ray2, RayCast as _},
     shape::Segment as Segment2,
 };
-use parry3d_f64::{
-    math::Isometry,
-    query::Ray as Ray3,
-    shape::{Segment as Segment3, Triangle},
-};
+use parry3d_f64::query::Ray as Ray3;
 
 use crate::{
     debug::{DebugInfo, TriangleEdgeCheck},
@@ -18,6 +14,7 @@ use crate::{
         approximation::Approximation, geometry::Surface,
         triangulation::triangulate,
     },
+    math::{Segment, Transform, Triangle},
 };
 
 use super::edges::Edges;
@@ -29,7 +26,7 @@ pub struct Faces(pub Vec<Face>);
 impl Faces {
     /// Transform all the faces
     #[must_use]
-    pub fn transform(self, transform: &Isometry<f64>) -> Self {
+    pub fn transform(self, transform: &Transform) -> Self {
         let faces = self
             .0
             .into_iter()
@@ -87,7 +84,7 @@ pub enum Face {
 impl Face {
     /// Transform the face
     #[must_use]
-    pub fn transform(self, transform: &Isometry<f64>) -> Self {
+    pub fn transform(self, transform: &Transform) -> Self {
         match self {
             Self::Face { edges, surface } => Self::Face {
                 edges: edges.transform(transform),
@@ -95,7 +92,7 @@ impl Face {
             },
             Self::Triangles(mut triangles) => {
                 for triangle in &mut triangles {
-                    *triangle = triangle.transformed(transform);
+                    *triangle = transform.transform_triangle(triangle);
                 }
 
                 Self::Triangles(triangles)
@@ -120,18 +117,18 @@ impl Face {
                     .map(|vertex| {
                         // Can't panic, unless the approximation wrongfully
                         // generates points that are not in the surface.
-                        surface.point_model_to_surface(vertex).unwrap()
+                        surface.point_model_to_surface(vertex)
                     })
                     .collect();
 
                 let segments: Vec<_> = approx
                     .segments
                     .into_iter()
-                    .map(|Segment3 { a, b }| {
+                    .map(|Segment { a, b }| {
                         // Can't panic, unless the approximation wrongfully
                         // generates points that are not in the surface.
-                        let a = surface.point_model_to_surface(a).unwrap();
-                        let b = surface.point_model_to_surface(b).unwrap();
+                        let a = surface.point_model_to_surface(a);
+                        let b = surface.point_model_to_surface(b);
 
                         [a, b]
                     })
@@ -174,8 +171,10 @@ impl Face {
                             dir: outside - center,
                         };
                         let mut check = TriangleEdgeCheck::new(Ray3 {
-                            origin: surface.point_surface_to_model(ray.origin),
-                            dir: surface.vector_surface_to_model(ray.dir),
+                            origin: surface.point_surface_to_model(&ray.origin),
+                            dir: surface
+                                .vector_surface_to_model(&ray.dir.into())
+                                .to_na(),
                         });
 
                         // We need to keep track of where our ray hits the

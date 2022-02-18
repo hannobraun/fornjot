@@ -4,9 +4,7 @@ pub mod shapes;
 pub mod topology;
 pub mod triangulation;
 
-use parry3d_f64::bounding_volume::AABB;
-
-use crate::debug::DebugInfo;
+use crate::{debug::DebugInfo, math::Aabb};
 
 use self::topology::{edges::Edges, faces::Faces, vertices::Vertices};
 
@@ -16,7 +14,7 @@ pub trait Shape {
     ///
     /// If a shape is empty, its [`Aabb`]'s `min` and `max` points must be equal
     /// (but are otherwise not specified).
-    fn bounding_volume(&self) -> AABB;
+    fn bounding_volume(&self) -> Aabb;
 
     /// Compute triangles to approximate the shape's faces
     ///
@@ -75,7 +73,7 @@ macro_rules! dispatch {
 }
 
 dispatch! {
-    bounding_volume() -> AABB;
+    bounding_volume() -> Aabb;
     faces(
         tolerance: f64,
         debug: &mut DebugInfo,

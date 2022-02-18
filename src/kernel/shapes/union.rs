@@ -1,15 +1,14 @@
-use parry3d_f64::bounding_volume::{BoundingVolume as _, AABB};
-
 use crate::{
     debug::DebugInfo,
     kernel::{
         topology::{edges::Edges, faces::Faces, vertices::Vertices},
         Shape,
     },
+    math::Aabb,
 };
 
 impl Shape for fj::Union {
-    fn bounding_volume(&self) -> AABB {
+    fn bounding_volume(&self) -> Aabb {
         let a = self.a.bounding_volume();
         let b = self.b.bounding_volume();
 

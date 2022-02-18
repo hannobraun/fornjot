@@ -1,8 +1,7 @@
 use std::{collections::HashMap, hash::Hash};
 
 use decorum::R64;
-
-use crate::math::{Point, Vector};
+use nalgebra::{Point, SVector};
 
 /// API for creating a mesh
 pub struct MeshMaker<V> {
@@ -52,14 +51,14 @@ where
 #[derive(Clone, Copy, Eq, Hash, PartialEq)]
 pub struct HashVector(pub [R64; 3]);
 
-impl From<&Point<3>> for HashVector {
-    fn from(point: &Point<3>) -> Self {
+impl From<&Point<f64, 3>> for HashVector {
+    fn from(point: &Point<f64, 3>) -> Self {
         Self([R64::from(point.x), R64::from(point.y), R64::from(point.z)])
     }
 }
 
-impl From<&Vector<3>> for HashVector {
-    fn from(vector: &Vector<3>) -> Self {
+impl From<&SVector<f64, 3>> for HashVector {
+    fn from(vector: &SVector<f64, 3>) -> Self {
         Self([
             R64::from(vector.x),
             R64::from(vector.y),

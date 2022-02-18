@@ -5,7 +5,7 @@ use std::{
 
 use nalgebra::distance;
 
-use crate::{camera::Camera, math::Point};
+use crate::camera::{Camera, FocusPoint};
 
 pub struct Zoom {
     events: VecDeque<(Instant, f64)>,
@@ -76,7 +76,7 @@ impl Zoom {
         &mut self,
         now: Instant,
         delta_t: f64,
-        focus_point: Option<Point<3>>,
+        focus_point: FocusPoint,
         camera: &Camera,
     ) {
         self.target_speed = self.events.iter().map(|(_, event)| event).sum();
@@ -109,7 +109,7 @@ impl Zoom {
         self.last_direction = Direction::from(self.current_speed);
 
         // Limit current speed, if close to focus point and zooming in.
-        if let Some(focus_point) = focus_point {
+        if let Some(focus_point) = focus_point.0 {
             if self.last_direction == Direction::In {
                 let d = distance(&focus_point, &camera.position());
                 self.current_speed = -f64::min(-self.current_speed, d / 8.);

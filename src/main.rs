@@ -61,7 +61,7 @@ fn main() -> anyhow::Result<()> {
     // This can't be addressed with the current structure, since the watcher
     // closure takes ownership of the model.
     //
-    // This big is tracked in the following issues:
+    // This is being tracked in the following issue:
     // https://github.com/hannobraun/fornjot/issues/32
     let shape = model.load(&parameters)?;
 
@@ -72,7 +72,7 @@ fn main() -> anyhow::Result<()> {
     // by some value.
     let tolerance = {
         let mut min_extent = f64::MAX;
-        for &extent in aabb.extents().iter() {
+        for extent in aabb.size().components() {
             if extent > 0. && extent < min_extent {
                 min_extent = extent;
             }
@@ -96,7 +96,7 @@ fn main() -> anyhow::Result<()> {
 
         for triangle in triangles {
             for vertex in triangle.vertices() {
-                mesh_maker.push(HashVector::from(vertex));
+                mesh_maker.push(HashVector::from(&vertex));
             }
         }
 

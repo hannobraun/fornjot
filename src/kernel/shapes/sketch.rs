@@ -1,5 +1,3 @@
-use parry3d_f64::bounding_volume::AABB;
-
 use crate::{
     debug::DebugInfo,
     kernel::{
@@ -11,13 +9,13 @@ use crate::{
         },
         Shape,
     },
-    math::Point,
+    math::{Aabb, Point, Vector},
 };
 
 impl Shape for fj::Sketch {
-    fn bounding_volume(&self) -> AABB {
+    fn bounding_volume(&self) -> Aabb {
         let vertices = self.vertices();
-        AABB::from_points(vertices.0.iter().map(|vertex| vertex.location()))
+        Aabb::from_points(vertices.0.iter().map(|vertex| *vertex.location()))
     }
 
     fn faces(&self, _: f64, _: &mut DebugInfo) -> Faces {
@@ -54,7 +52,7 @@ impl Shape for fj::Sketch {
 
             let line = Curve::Line(Line {
                 origin: *a.location(),
-                direction: *b.location() - *a.location(),
+                direction: Vector::from(*b.location() - *a.location()),
             });
             let edge = Edge::new(line, Some([a, b]));
 

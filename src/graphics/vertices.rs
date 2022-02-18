@@ -1,10 +1,9 @@
 use bytemuck::{Pod, Zeroable};
-use nalgebra::vector;
-use parry3d_f64::shape::Triangle;
+use nalgebra::{vector, Point};
 
 use crate::{
     debug::DebugInfo,
-    math::Point,
+    math::Triangle,
     mesh::{HashVector, Index, MeshMaker},
 };
 
@@ -32,7 +31,7 @@ impl Vertices {
 
     pub fn push_line(
         &mut self,
-        line: [Point<3>; 2],
+        line: [Point<f64, 3>; 2],
         normal: [f32; 3],
         color: [f32; 4],
     ) {
@@ -58,9 +57,9 @@ impl From<&Vec<Triangle>> for Vertices {
 
             let normal = (b - a).cross(&(c - a)).normalize();
 
-            let a = HashVector::from(a);
-            let b = HashVector::from(b);
-            let c = HashVector::from(c);
+            let a = HashVector::from(&a);
+            let b = HashVector::from(&b);
+            let c = HashVector::from(&c);
 
             let normal = HashVector::from(&normal);
 

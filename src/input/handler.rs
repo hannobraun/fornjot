@@ -1,6 +1,5 @@
 use std::time::Instant;
 
-use parry3d_f64::shape::Triangle;
 use winit::{
     dpi::PhysicalPosition,
     event::{
@@ -9,7 +8,11 @@ use winit::{
     },
 };
 
-use crate::{camera::Camera, math::Point, window::Window};
+use crate::{
+    camera::{Camera, FocusPoint},
+    math::Triangle,
+    window::Window,
+};
 
 use super::{movement::Movement, rotation::Rotation, zoom::Zoom};
 
@@ -80,7 +83,7 @@ impl Handler {
         &mut self,
         button: MouseButton,
         state: ElementState,
-        focus_point: Option<Point<3>>,
+        focus_point: FocusPoint,
     ) {
         match (button, state) {
             (MouseButton::Left, ElementState::Pressed) => {

@@ -1,11 +1,9 @@
 mod circle;
 mod line;
 
-use parry3d_f64::math::Isometry;
+use crate::math::{Point, Transform, Vector};
 
 pub use self::{circle::Circle, line::Line};
-
-use crate::math::Point;
 
 /// A one-dimensional shape
 ///
@@ -16,7 +14,7 @@ use crate::math::Point;
 /// The nomenclature is inspired by Boundary Representation Modelling Techniques
 /// by Ian Stroud. "Curve" refers to unbounded one-dimensional geometry, while
 /// while edges are bounded portions of curves.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum Curve {
     /// A circle
     Circle(Circle),
@@ -33,11 +31,22 @@ pub enum Curve {
 }
 
 impl Curve {
-    #[must_use]
-    pub fn transform(self, transform: &Isometry<f64>) -> Self {
+    /// Access the origin of the curve's coordinate system
+    pub fn origin(&self) -> Point<3> {
         match self {
-            Self::Circle(circle) => Self::Circle(circle.transform(transform)),
-            Self::Line(line) => Self::Line(line.transform(transform)),
+            Self::Circle(curve) => curve.origin(),
+            Self::Line(curve) => curve.origin(),
+
+            #[cfg(test)]
+            Self::Mock { .. } => todo!(),
+        }
+    }
+
+    #[must_use]
+    pub fn transform(self, transform: &Transform) -> Self {
+        match self {
+            Self::Circle(curve) => Self::Circle(curve.transform(transform)),
+            Self::Line(curve) => Self::Line(curve.transform(transform)),
 
             #[cfg(test)]
             Self::Mock { .. } => todo!(),
@@ -46,21 +55,42 @@ impl Curve {
 
     /// Convert a point in model coordinates to curve coordinates
     ///
-    /// Whether the point is actually on the curve or not will be ignored. The
-    /// curve coordinates of the projection of the point on the curve will be
-    /// returned.
-    ///
+    /// Projects the point onto the curve before computing curve coordinate.
     /// This is done to make this method robust against floating point accuracy
-    /// issues. Callers are advised to be careful about the points they pass, as
-    /// the point not being on the curve, intended or not, will not result in an
-    /// error.
+    /// issues.
+    ///
+    /// Callers are advised to be careful about the points they pass, as the
+    /// point not being on the curve, intentional or not, will never result in
+    /// an error.
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
         match self {
-            Self::Circle(circle) => circle.point_model_to_curve(point),
-            Self::Line(line) => line.point_model_to_curve(point),
+            Self::Circle(curve) => curve.point_model_to_curve(point),
+            Self::Line(curve) => curve.point_model_to_curve(point),
 
             #[cfg(test)]
             Self::Mock { coords, .. } => coords.borrow_mut().remove(0),
+        }
+    }
+
+    /// Convert a point on the curve into model coordinates
+    pub fn point_curve_to_model(&self, point: &Point<1>) -> Point<3> {
+        match self {
+            Self::Circle(curve) => curve.point_curve_to_model(point),
+            Self::Line(curve) => curve.point_curve_to_model(point),
+
+            #[cfg(test)]
+            Self::Mock { .. } => todo!(),
+        }
+    }
+
+    /// Convert a vector on the curve into model coordinates
+    pub fn vector_curve_to_model(&self, point: &Vector<1>) -> Vector<3> {
+        match self {
+            Self::Circle(curve) => curve.vector_curve_to_model(point),
+            Self::Line(curve) => curve.vector_curve_to_model(point),
+
+            #[cfg(test)]
+            Self::Mock { .. } => todo!(),
         }
     }
 
