@@ -10,14 +10,14 @@ pub struct Segment<const D: usize> {
 impl Segment<2> {
     /// Convert the 2-dimensional segment to a Parry segment
     pub fn to_parry(&self) -> parry2d_f64::shape::Segment {
-        [self.a, self.b].into()
+        [self.a.to_na(), self.b.to_na()].into()
     }
 }
 
 impl Segment<3> {
     /// Convert the 3-dimensional segment to a Parry segment
     pub fn to_parry(&self) -> parry3d_f64::shape::Segment {
-        [self.a, self.b].into()
+        [self.a.to_na(), self.b.to_na()].into()
     }
 }
 

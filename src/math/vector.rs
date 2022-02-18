@@ -35,6 +35,11 @@ impl<const D: usize> Vector<D> {
         self.0.into()
     }
 
+    /// Convert to a 1-dimensional vector
+    pub fn to_t(&self) -> Vector<1> {
+        Vector::from([self.0[0]])
+    }
+
     /// Compute the magnitude of the vector
     pub fn magnitude(&self) -> f64 {
         self.to_na().magnitude()
@@ -48,6 +53,11 @@ impl<const D: usize> Vector<D> {
     /// Compute the dot product with another vector
     pub fn dot(&self, other: &Self) -> f64 {
         self.to_na().dot(&other.to_na())
+    }
+
+    /// Compute the cross product with another vector
+    pub fn cross(&self, other: &Self) -> Self {
+        self.to_na().cross(&other.to_na()).into()
     }
 
     /// Access an iterator over the vector's components

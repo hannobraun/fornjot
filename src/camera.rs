@@ -45,15 +45,19 @@ impl Camera {
             //
             // To do that, first compute the model's highest point, as well as
             // the furthest point from the origin, in x and y.
-            let highest_point = aabb.max.z;
-            let furthest_point =
-                [aabb.min.x.abs(), aabb.max.x, aabb.min.y.abs(), aabb.max.y]
-                    .into_iter()
-                    .reduce(|a, b| f64::max(a, b))
-                    // `reduce` can only return `None`, if there are no items in
-                    // the iterator. And since we're creating an array full of
-                    // items above, we know this can't panic.
-                    .unwrap();
+            let highest_point = aabb.max.z();
+            let furthest_point = [
+                aabb.min.x().abs(),
+                aabb.max.x(),
+                aabb.min.y().abs(),
+                aabb.max.y(),
+            ]
+            .into_iter()
+            .reduce(|a, b| f64::max(a, b))
+            // `reduce` can only return `None`, if there are no items in
+            // the iterator. And since we're creating an array full of
+            // items above, we know this can't panic.
+            .unwrap();
 
             // The actual furthest point is not far enough. We don't want the
             // model to fill the whole screen.
@@ -70,7 +74,7 @@ impl Camera {
 
         let initial_offset = {
             let mut offset = aabb.center();
-            offset.z = 0.;
+            *offset.z_mut() = 0.;
             -offset
         };
 
@@ -80,8 +84,8 @@ impl Camera {
 
             rotation: Transform::identity(),
             translation: Translation::from([
-                initial_offset.x,
-                initial_offset.y,
+                initial_offset.x(),
+                initial_offset.y(),
                 -initial_distance,
             ]),
         }
@@ -184,7 +188,7 @@ impl Camera {
         let mut dist_max = f64::NEG_INFINITY;
 
         for vertex in aabb.vertices() {
-            let point = view_transform.transform_point(&vertex);
+            let point = view_transform.transform_point(&vertex.to_na());
 
             // Project `point` onto `view_direction`. See this Wikipedia page:
             // https://en.wikipedia.org/wiki/Vector_projection

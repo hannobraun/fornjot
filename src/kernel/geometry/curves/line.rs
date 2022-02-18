@@ -1,5 +1,4 @@
 use approx::AbsDiffEq;
-use nalgebra::point;
 
 use crate::math::{Point, Transform, Vector};
 
@@ -43,16 +42,15 @@ impl Line {
     /// error.
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
         // scalar projection
-        let t = Vector::from_na(point - self.origin)
-            .dot(&self.direction.normalize())
+        let t = (point - self.origin).dot(&self.direction.normalize())
             / self.direction.magnitude();
 
-        point![t]
+        Point::from([t])
     }
 
     /// Convert a point on the curve into model coordinates
     pub fn point_curve_to_model(&self, point: &Point<1>) -> Point<3> {
-        self.origin + self.vector_curve_to_model(&point.coords.into())
+        self.origin + self.vector_curve_to_model(&point.coords())
     }
 
     /// Convert a vector on the curve into model coordinates
@@ -79,17 +77,17 @@ mod tests {
     use std::f64::consts::FRAC_PI_2;
 
     use approx::assert_abs_diff_eq;
-    use nalgebra::{point, UnitQuaternion};
+    use nalgebra::UnitQuaternion;
     use parry3d_f64::math::{Isometry, Translation};
 
-    use crate::math::Vector;
+    use crate::math::{Point, Vector};
 
     use super::Line;
 
     #[test]
     fn transform() {
         let line = Line {
-            origin: point![1., 0., 0.],
+            origin: Point::from([1., 0., 0.]),
             direction: Vector::from([0., 1., 0.]),
         };
 
@@ -107,7 +105,7 @@ mod tests {
         assert_abs_diff_eq!(
             line,
             Line {
-                origin: point![1., 3., 3.],
+                origin: Point::from([1., 3., 3.]),
                 direction: Vector::from([-1., 0., 0.]),
             },
             epsilon = 1e-8,
@@ -117,7 +115,7 @@ mod tests {
     #[test]
     fn point_model_to_curve() {
         let line = Line {
-            origin: point![1., 0., 0.],
+            origin: Point::from([1., 0., 0.]),
             direction: Vector::from([2., 0., 0.]),
         };
 
@@ -127,10 +125,10 @@ mod tests {
         verify(line, 2.);
 
         fn verify(line: Line, t: f64) {
-            let point = line.point_curve_to_model(&point![t]);
+            let point = line.point_curve_to_model(&Point::from([t]));
             let t_result = line.point_model_to_curve(&point);
 
-            assert_eq!(point![t], t_result);
+            assert_eq!(Point::from([t]), t_result);
         }
     }
 }

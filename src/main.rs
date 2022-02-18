@@ -96,7 +96,7 @@ fn main() -> anyhow::Result<()> {
 
         for triangle in triangles {
             for vertex in triangle.vertices() {
-                mesh_maker.push(HashVector::from(&vertex));
+                mesh_maker.push(HashVector::from(&vertex.to_na()));
             }
         }
 

@@ -92,22 +92,22 @@ impl Approximation {
         // As this is a cycle, neighboring edges are going to share vertices.
         // Let's remove all those duplicates.
         points.sort_by(|a, b| {
-            if a.x < b.x {
+            if a.x() < b.x() {
                 return Ordering::Less;
             }
-            if a.x > b.x {
+            if a.x() > b.x() {
                 return Ordering::Greater;
             }
-            if a.y < b.y {
+            if a.y() < b.y() {
                 return Ordering::Less;
             }
-            if a.y > b.y {
+            if a.y() > b.y() {
                 return Ordering::Greater;
             }
-            if a.z < b.z {
+            if a.z() < b.z() {
                 return Ordering::Less;
             }
-            if a.z > b.z {
+            if a.z() > b.z() {
                 return Ordering::Greater;
             }
 
@@ -214,14 +214,12 @@ pub struct ValidationError {
 }
 
 fn point_to_r64(point: Point<3>) -> [R64; 3] {
-    [point.x.into(), point.y.into(), point.z.into()]
+    [point.x().into(), point.y().into(), point.z().into()]
 }
 
 #[cfg(test)]
 mod tests {
     use std::cell::RefCell;
-
-    use nalgebra::point;
 
     use crate::{
         kernel::{
@@ -231,7 +229,7 @@ mod tests {
                 vertices::Vertex,
             },
         },
-        math::Segment,
+        math::{Segment, Point},
     };
 
     use super::Approximation;
@@ -240,17 +238,17 @@ mod tests {
     fn test_for_edge() {
         let tolerance = 1.;
 
-        let a = point![1., 2., 3.];
-        let b = point![2., 3., 5.];
-        let c = point![3., 5., 8.];
-        let d = point![5., 8., 13.];
+        let a = Point::from([1., 2., 3.]);
+        let b = Point::from([2., 3., 5.]);
+        let c = Point::from([3., 5., 8.]);
+        let d = Point::from([5., 8., 13.]);
 
         let v1 = Vertex::create_at(a);
         let v2 = Vertex::create_at(d);
 
         let curve = Curve::Mock {
             approx: vec![b, c],
-            coords: RefCell::new(vec![point![0.], point![1.]]),
+            coords: RefCell::new(vec![Point::from([0.]), Point::from([1.])]),
         };
 
         let edge_regular = Edge::new(curve.clone(), Some([v1, v2]));
@@ -294,9 +292,9 @@ mod tests {
     fn test_for_cycle() {
         let tolerance = 1.;
 
-        let a = point![1., 2., 3.];
-        let b = point![2., 3., 5.];
-        let c = point![3., 5., 8.];
+        let a = Point::from([1., 2., 3.]);
+        let b = Point::from([2., 3., 5.]);
+        let c = Point::from([3., 5., 8.]);
 
         let v1 = Vertex::create_at(a);
         let v2 = Vertex::create_at(b);
@@ -304,7 +302,7 @@ mod tests {
 
         let curve = Curve::Mock {
             approx: Vec::new(),
-            coords: RefCell::new(vec![point![0.], point![1.]]),
+            coords: RefCell::new(vec![Point::from([0.]), Point::from([1.])]),
         };
 
         let ab = Edge::new(curve.clone(), Some([v1, v2]));
@@ -332,10 +330,10 @@ mod tests {
     fn test_for_edges() {
         let tolerance = 1.;
 
-        let a = point![1., 2., 3.];
-        let b = point![2., 3., 5.];
-        let c = point![3., 5., 8.];
-        let d = point![5., 8., 13.];
+        let a = Point::from([1., 2., 3.]);
+        let b = Point::from([2., 3., 5.]);
+        let c = Point::from([3., 5., 8.]);
+        let d = Point::from([5., 8., 13.]);
 
         let v1 = Vertex::create_at(a);
         let v2 = Vertex::create_at(b);
@@ -344,7 +342,7 @@ mod tests {
 
         let curve = Curve::Mock {
             approx: Vec::new(),
-            coords: RefCell::new(vec![point![0.], point![1.]]),
+            coords: RefCell::new(vec![Point::from([0.]), Point::from([1.])]),
         };
 
         let ab = Edge::new(curve.clone(), Some([v1, v2]));
@@ -379,9 +377,9 @@ mod tests {
 
     #[test]
     fn test_validate() {
-        let a = point![0., 1., 2.];
-        let b = point![1., 2., 3.];
-        let c = point![3., 5., 8.];
+        let a = Point::from([0., 1., 2.]);
+        let b = Point::from([1., 2., 3.]);
+        let c = Point::from([3., 5., 8.]);
 
         let valid = Approximation {
             points: vec![a, b, c],

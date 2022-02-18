@@ -1,7 +1,5 @@
 use std::f64::consts::PI;
 
-use nalgebra::point;
-
 use crate::math::{Point, Transform, Vector};
 
 /// A circle
@@ -50,14 +48,14 @@ impl Circle {
     /// error.
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
         let v = point - self.center;
-        let atan = f64::atan2(v.y, v.x);
+        let atan = f64::atan2(v.y(), v.x());
         let coord = if atan >= 0. { atan } else { atan + PI * 2. };
-        point![coord]
+        Point::from([coord])
     }
 
     /// Convert a point on the curve into model coordinates
     pub fn point_curve_to_model(&self, point: &Point<1>) -> Point<3> {
-        self.center + self.vector_curve_to_model(&point.coords.into())
+        self.center + self.vector_curve_to_model(&point.coords())
     }
 
     /// Convert a vector on the curve into model coordinates
@@ -86,7 +84,7 @@ impl Circle {
 
         for i in 0..n {
             let angle = 2. * PI / n as f64 * i as f64;
-            let point = self.point_curve_to_model(&point![angle]);
+            let point = self.point_curve_to_model(&Point::from([angle]));
             out.push(point);
         }
     }
@@ -105,34 +103,32 @@ impl Circle {
 mod tests {
     use std::f64::consts::{FRAC_PI_2, PI};
 
-    use nalgebra::point;
-
-    use crate::math::Vector;
+    use crate::math::{Point, Vector};
 
     use super::Circle;
 
     #[test]
     fn point_model_to_curve() {
         let circle = Circle {
-            center: point![1., 2., 3.],
+            center: Point::from([1., 2., 3.]),
             radius: Vector::from([1., 0.]),
         };
 
         assert_eq!(
-            circle.point_model_to_curve(&point![2., 2., 3.]),
-            point![0.],
+            circle.point_model_to_curve(&Point::from([2., 2., 3.])),
+            Point::from([0.]),
         );
         assert_eq!(
-            circle.point_model_to_curve(&point![1., 3., 3.]),
-            point![FRAC_PI_2],
+            circle.point_model_to_curve(&Point::from([1., 3., 3.])),
+            Point::from([FRAC_PI_2]),
         );
         assert_eq!(
-            circle.point_model_to_curve(&point![0., 2., 3.]),
-            point![PI],
+            circle.point_model_to_curve(&Point::from([0., 2., 3.])),
+            Point::from([PI]),
         );
         assert_eq!(
-            circle.point_model_to_curve(&point![1., 1., 3.]),
-            point![FRAC_PI_2 * 3.],
+            circle.point_model_to_curve(&Point::from([1., 1., 3.])),
+            Point::from([FRAC_PI_2 * 3.]),
         );
     }
 
