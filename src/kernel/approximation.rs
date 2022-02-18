@@ -23,7 +23,7 @@ pub struct Approximation {
     /// All the points of these segments will also be available in the `points`
     /// field of this struct. This can be verified by calling
     /// [`Approximation::validate`].
-    pub segments: Vec<Segment>,
+    pub segments: Vec<Segment<3>>,
 }
 
 impl Approximation {
@@ -204,13 +204,13 @@ pub struct ValidationError {
     pub duplicate_points: Vec<Point<3>>,
 
     /// Segments that are duplicated
-    pub duplicate_segments: Vec<Segment>,
+    pub duplicate_segments: Vec<Segment<3>>,
 
     /// Segments that have two equal points
-    pub invalid_segments: Vec<Segment>,
+    pub invalid_segments: Vec<Segment<3>>,
 
     /// Segments that do not refer to points from the approximation
-    pub segments_with_invalid_points: Vec<Segment>,
+    pub segments_with_invalid_points: Vec<Segment<3>>,
 }
 
 fn point_to_r64(point: Point<3>) -> [R64; 3] {
