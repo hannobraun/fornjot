@@ -42,21 +42,6 @@ impl<const D: usize> Point<D> {
         self.0.into()
     }
 
-    /// Access the point's x coordinate
-    pub fn x(&self) -> f64 {
-        self.0[0]
-    }
-
-    /// Access the point's y coordinate
-    pub fn y(&self) -> f64 {
-        self.0[1]
-    }
-
-    /// Access the point's z coordinate
-    pub fn z(&self) -> f64 {
-        self.0[2]
-    }
-
     /// Access a mutable reference to the point's z coordinate
     pub fn z_mut(&mut self) -> &mut f64 {
         &mut self.0[2]
@@ -84,6 +69,23 @@ impl Point<2> {
     /// Access the point's y coordinate
     pub fn v(&self) -> f64 {
         self.0[1]
+    }
+}
+
+impl Point<3> {
+    /// Access the point's x coordinate
+    pub fn x(&self) -> f64 {
+        self.0[0]
+    }
+
+    /// Access the point's y coordinate
+    pub fn y(&self) -> f64 {
+        self.0[1]
+    }
+
+    /// Access the point's z coordinate
+    pub fn z(&self) -> f64 {
+        self.0[2]
     }
 }
 
