@@ -75,6 +75,18 @@ impl Point<1> {
     }
 }
 
+impl Point<2> {
+    /// Access the point's x coordinate
+    pub fn u(&self) -> f64 {
+        self.0[0]
+    }
+
+    /// Access the point's y coordinate
+    pub fn v(&self) -> f64 {
+        self.0[1]
+    }
+}
+
 impl<const D: usize> From<[f64; D]> for Point<D> {
     fn from(array: [f64; D]) -> Self {
         Self::from_array(array)

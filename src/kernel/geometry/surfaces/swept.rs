@@ -33,8 +33,8 @@ impl Swept {
 
     /// Convert a point in surface coordinates to model coordinates
     pub fn point_surface_to_model(&self, point: &Point<2>) -> Point<3> {
-        let u = point.x();
-        let v = point.y();
+        let u = point.u();
+        let v = point.v();
 
         self.curve.point_curve_to_model(&Point::from([u])) + self.path * v
     }

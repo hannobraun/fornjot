@@ -38,8 +38,8 @@ impl HasPosition for SurfacePoint {
 
     fn position(&self) -> spade::Point2<Self::Scalar> {
         spade::Point2 {
-            x: self.value.x(),
-            y: self.value.y(),
+            x: self.value.u(),
+            y: self.value.v(),
         }
     }
 }
