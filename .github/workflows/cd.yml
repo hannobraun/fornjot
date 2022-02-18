@@ -1,4 +1,4 @@
-name: Compile Binaries
+name: CD
 
 on:
   push:
