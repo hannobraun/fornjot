@@ -1,5 +1,3 @@
-use nalgebra::point;
-
 use crate::{
     debug::DebugInfo,
     kernel::{
@@ -11,14 +9,14 @@ use crate::{
         },
         Shape,
     },
-    math::Aabb,
+    math::{Aabb, Point},
 };
 
 impl Shape for fj::Circle {
     fn bounding_volume(&self) -> Aabb<3> {
         Aabb {
-            min: point![-self.radius, -self.radius, 0.0],
-            max: point![self.radius, self.radius, 0.0],
+            min: Point::from([-self.radius, -self.radius, 0.0]),
+            max: Point::from([self.radius, self.radius, 0.0]),
         }
     }
 

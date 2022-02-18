@@ -57,11 +57,11 @@ impl From<&Vec<Triangle>> for Vertices {
 
             let normal = (b - a).cross(&(c - a)).normalize();
 
-            let a = HashVector::from(&a);
-            let b = HashVector::from(&b);
-            let c = HashVector::from(&c);
+            let a = HashVector::from(&a.to_na());
+            let b = HashVector::from(&b.to_na());
+            let c = HashVector::from(&c.to_na());
 
-            let normal = HashVector::from(&normal);
+            let normal = HashVector::from(&normal.to_na());
 
             mesh.push((a, normal));
             mesh.push((b, normal));

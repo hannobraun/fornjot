@@ -164,13 +164,16 @@ impl Face {
 
                         let origin = center;
                         let dir = outside - center;
-                        let ray = Ray2 { origin, dir };
+                        let ray = Ray2 {
+                            origin: origin.to_na(),
+                            dir: dir.to_na(),
+                        };
 
                         let mut check = TriangleEdgeCheck::new(Ray3 {
-                            origin: surface.point_surface_to_model(&origin),
-                            dir: surface
-                                .vector_surface_to_model(&dir.into())
+                            origin: surface
+                                .point_surface_to_model(&origin)
                                 .to_na(),
+                            dir: surface.vector_surface_to_model(&dir).to_na(),
                         });
 
                         // We need to keep track of where our ray hits the

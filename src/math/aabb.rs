@@ -16,7 +16,8 @@ impl Aabb<2> {
     ///
     /// The resulting AABB will contain all the points.
     pub fn from_points(points: impl IntoIterator<Item = Point<2>>) -> Self {
-        let points: Vec<_> = points.into_iter().collect();
+        let points: Vec<_> =
+            points.into_iter().map(|point| point.to_na()).collect();
         parry2d_f64::bounding_volume::AABB::from_points(&points).into()
     }
 
@@ -34,7 +35,8 @@ impl Aabb<3> {
     ///
     /// The resulting AABB will contain all the points.
     pub fn from_points(points: impl IntoIterator<Item = Point<3>>) -> Self {
-        let points: Vec<_> = points.into_iter().collect();
+        let points: Vec<_> =
+            points.into_iter().map(|point| point.to_na()).collect();
         parry3d_f64::bounding_volume::AABB::from_points(&points).into()
     }
 
@@ -49,19 +51,19 @@ impl Aabb<3> {
     /// Convert the AABB to a Parry AABB
     pub fn to_parry(&self) -> parry3d_f64::bounding_volume::AABB {
         parry3d_f64::bounding_volume::AABB {
-            mins: self.min,
-            maxs: self.max,
+            mins: self.min.to_na(),
+            maxs: self.max.to_na(),
         }
     }
 
     /// Access the vertices of the AABB
     pub fn vertices(&self) -> [Point<3>; 8] {
-        self.to_parry().vertices()
+        self.to_parry().vertices().map(|vertex| vertex.into())
     }
 
     /// Compute the center point of the AABB
     pub fn center(&self) -> Point<3> {
-        self.to_parry().center()
+        self.to_parry().center().into()
     }
 
     /// Compute the size of the AABB

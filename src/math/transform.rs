@@ -11,7 +11,7 @@ impl Transform {
 
     /// Transform the given point
     pub fn transform_point(&self, point: &Point<3>) -> Point<3> {
-        self.0.transform_point(point)
+        Point::from(self.0.transform_point(&point.to_na()))
     }
 
     /// Transform the given vector
@@ -20,7 +20,7 @@ impl Transform {
     }
 
     /// Transform the given segment
-    pub fn transform_segment(&self, segment: &Segment) -> Segment {
+    pub fn transform_segment(&self, segment: &Segment<3>) -> Segment<3> {
         Segment {
             a: self.transform_point(&segment.a),
             b: self.transform_point(&segment.b),
