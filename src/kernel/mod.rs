@@ -4,7 +4,10 @@ pub mod shapes;
 pub mod topology;
 pub mod triangulation;
 
-use crate::{debug::DebugInfo, math::Aabb};
+use crate::{
+    debug::DebugInfo,
+    math::{Aabb, Scalar},
+};
 
 use self::topology::{edges::Edges, faces::Faces, vertices::Vertices};
 
@@ -14,7 +17,7 @@ pub trait Shape {
     ///
     /// If a shape is empty, its [`Aabb`]'s `min` and `max` points must be equal
     /// (but are otherwise not specified).
-    fn bounding_volume(&self) -> Aabb;
+    fn bounding_volume(&self) -> Aabb<3>;
 
     /// Compute triangles to approximate the shape's faces
     ///
@@ -23,7 +26,7 @@ pub trait Shape {
     ///
     /// `tolerance` defines by how far this triangulation is allowed to deviate
     /// from the faces' actual dimensions.
-    fn faces(&self, tolerance: f64, debug: &mut DebugInfo) -> Faces;
+    fn faces(&self, tolerance: Scalar, debug: &mut DebugInfo) -> Faces;
 
     /// Access the edges of the shape
     fn edges(&self) -> Edges;
@@ -73,9 +76,9 @@ macro_rules! dispatch {
 }
 
 dispatch! {
-    bounding_volume() -> Aabb;
+    bounding_volume() -> Aabb<3>;
     faces(
-        tolerance: f64,
+        tolerance: Scalar,
         debug: &mut DebugInfo,
     ) -> Faces;
     edges() -> Edges;

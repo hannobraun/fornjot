@@ -14,17 +14,17 @@ use crate::{
         },
         Shape,
     },
-    math::Aabb,
+    math::{Aabb, Scalar, Transform},
 };
 
 impl Shape for fj::Sweep {
-    fn bounding_volume(&self) -> Aabb {
+    fn bounding_volume(&self) -> Aabb<3> {
         let mut aabb = self.shape.bounding_volume();
-        aabb.max.z = self.length;
+        *aabb.max.z_mut() = self.length.into();
         aabb
     }
 
-    fn faces(&self, tolerance: f64, debug_info: &mut DebugInfo) -> Faces {
+    fn faces(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Faces {
         let original_faces = self.shape.faces(tolerance, debug_info);
 
         let bottom_faces = original_faces
@@ -46,9 +46,8 @@ impl Shape for fj::Sweep {
         for segment in approx.segments {
             let [v0, v1] = [segment.a, segment.b];
             let [v3, v2] = {
-                let segment = segment
-                    .to_parry()
-                    .transformed(&Isometry::translation(0.0, 0.0, self.length));
+                let segment = Transform::translation(0., 0., self.length)
+                    .transform_segment(&segment);
                 [segment.a, segment.b]
             };
 

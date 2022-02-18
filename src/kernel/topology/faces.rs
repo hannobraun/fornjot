@@ -1,11 +1,7 @@
 use std::collections::BTreeSet;
 
 use decorum::R64;
-use parry2d_f64::{
-    bounding_volume::AABB,
-    query::{Ray as Ray2, RayCast as _},
-    shape::Segment as Segment2,
-};
+use parry2d_f64::query::{Ray as Ray2, RayCast as _};
 use parry3d_f64::query::Ray as Ray3;
 
 use crate::{
@@ -14,7 +10,7 @@ use crate::{
         approximation::Approximation, geometry::Surface,
         triangulation::triangulate,
     },
-    math::{Segment, Transform, Triangle},
+    math::{Aabb, Scalar, Segment, Transform, Triangle},
 };
 
 use super::edges::Edges;
@@ -38,7 +34,7 @@ impl Faces {
 
     pub fn triangles(
         &self,
-        tolerance: f64,
+        tolerance: Scalar,
         out: &mut Vec<Triangle>,
         debug_info: &mut DebugInfo,
     ) {
@@ -102,7 +98,7 @@ impl Face {
 
     pub fn triangles(
         &self,
-        tolerance: f64,
+        tolerance: Scalar,
         out: &mut Vec<Triangle>,
         debug_info: &mut DebugInfo,
     ) {
@@ -136,10 +132,10 @@ impl Face {
 
                 // We're also going to need a point outside of the polygon, for
                 // the point-in-polygon tests.
-                let aabb = AABB::from_points(
-                    points.iter().map(|vertex| &vertex.value),
+                let aabb = Aabb::<2>::from_points(
+                    points.iter().map(|vertex| vertex.value),
                 );
-                let outside = aabb.maxs * 2.;
+                let outside = aabb.max * 2.;
 
                 let mut triangles = triangulate(points);
                 let face_as_polygon = segments;
@@ -163,18 +159,21 @@ impl Face {
 
                         // To determine if the edge is within the polygon, we
                         // determine if its center point is in the polygon.
-                        let center =
-                            segment[0] + (segment[1] - segment[0]) * 0.5;
+                        let center = segment[0]
+                            + (segment[1] - segment[0]) / Scalar::TWO;
 
+                        let origin = center;
+                        let dir = outside - center;
                         let ray = Ray2 {
-                            origin: center,
-                            dir: outside - center,
+                            origin: origin.to_na(),
+                            dir: dir.to_na(),
                         };
+
                         let mut check = TriangleEdgeCheck::new(Ray3 {
-                            origin: surface.point_surface_to_model(&ray.origin),
-                            dir: surface
-                                .vector_surface_to_model(&ray.dir.into())
+                            origin: surface
+                                .point_surface_to_model(&origin)
                                 .to_na(),
+                            dir: surface.vector_surface_to_model(&dir).to_na(),
                         });
 
                         // We need to keep track of where our ray hits the
@@ -192,10 +191,13 @@ impl Face {
                             // cases that would arise from that case.
 
                             let edge =
-                                Segment2::from(edge.map(|point| point.value));
+                                Segment::from(edge.map(|point| point.value));
 
-                            let intersection =
-                                edge.cast_local_ray(&ray, f64::INFINITY, true);
+                            let intersection = edge.to_parry().cast_local_ray(
+                                &ray,
+                                f64::INFINITY,
+                                true,
+                            );
 
                             if let Some(t) = intersection {
                                 // Due to slight inaccuracies, we might get

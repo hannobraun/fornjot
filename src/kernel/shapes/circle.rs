@@ -1,5 +1,3 @@
-use nalgebra::point;
-
 use crate::{
     debug::DebugInfo,
     kernel::{
@@ -11,18 +9,18 @@ use crate::{
         },
         Shape,
     },
-    math::Aabb,
+    math::{Aabb, Point, Scalar},
 };
 
 impl Shape for fj::Circle {
-    fn bounding_volume(&self) -> Aabb {
+    fn bounding_volume(&self) -> Aabb<3> {
         Aabb {
-            min: point![-self.radius, -self.radius, 0.0],
-            max: point![self.radius, self.radius, 0.0],
+            min: Point::from([-self.radius, -self.radius, 0.0]),
+            max: Point::from([self.radius, self.radius, 0.0]),
         }
     }
 
-    fn faces(&self, _: f64, _: &mut DebugInfo) -> Faces {
+    fn faces(&self, _: Scalar, _: &mut DebugInfo) -> Faces {
         let edges = Edges::single_cycle([Edge::circle(self.radius)]);
         Faces(vec![Face::Face {
             edges,

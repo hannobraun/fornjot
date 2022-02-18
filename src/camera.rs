@@ -5,7 +5,7 @@ use parry3d_f64::query::{Ray, RayCast as _};
 use winit::dpi::PhysicalPosition;
 
 use crate::{
-    math::{Aabb, Triangle},
+    math::{Aabb, Scalar, Triangle},
     window::Window,
 };
 
@@ -38,22 +38,22 @@ impl Camera {
 
     const INITIAL_FIELD_OF_VIEW_IN_X: f64 = FRAC_PI_2; // 90 degrees
 
-    pub fn new(aabb: &Aabb) -> Self {
+    pub fn new(aabb: &Aabb<3>) -> Self {
         let initial_distance = {
             // Let's make sure we choose a distance, so that the model fills
             // most of the screen.
             //
             // To do that, first compute the model's highest point, as well as
             // the furthest point from the origin, in x and y.
-            let highest_point = aabb.max.z;
+            let highest_point = aabb.max.z();
             let furthest_point = [
-                aabb.min.x.abs(),
-                aabb.max.x,
-                aabb.min.y.abs(),
-                aabb.max.y,
+                aabb.min.x().abs(),
+                aabb.max.x(),
+                aabb.min.y().abs(),
+                aabb.max.y(),
             ]
             .into_iter()
-            .reduce(|a, b| f64::max(a, b))
+            .reduce(Scalar::max)
             // `reduce` can only return `None`, if there are no items in
             // the iterator. And since we're creating an array full of
             // items above, we know this can't panic.
@@ -74,7 +74,7 @@ impl Camera {
 
         let initial_offset = {
             let mut offset = aabb.center();
-            offset.z = 0.;
+            *offset.z_mut() = Scalar::ZERO;
             -offset
         };
 
@@ -84,9 +84,9 @@ impl Camera {
 
             rotation: Transform::identity(),
             translation: Translation::from([
-                initial_offset.x,
-                initial_offset.y,
-                -initial_distance,
+                initial_offset.x().into_f64(),
+                initial_offset.y().into_f64(),
+                -initial_distance.into_f64(),
             ]),
         }
     }
@@ -180,7 +180,7 @@ impl Camera {
         transform
     }
 
-    pub fn update_planes(&mut self, aabb: &Aabb) {
+    pub fn update_planes(&mut self, aabb: &Aabb<3>) {
         let view_transform = self.camera_to_model();
         let view_direction = Vector::from([0., 0., -1.]);
 
@@ -188,7 +188,7 @@ impl Camera {
         let mut dist_max = f64::NEG_INFINITY;
 
         for vertex in aabb.vertices() {
-            let point = view_transform.transform_point(&vertex);
+            let point = view_transform.transform_point(&vertex.to_na());
 
             // Project `point` onto `view_direction`. See this Wikipedia page:
             // https://en.wikipedia.org/wiki/Vector_projection

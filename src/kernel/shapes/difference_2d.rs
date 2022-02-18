@@ -8,18 +8,18 @@ use crate::{
         },
         Shape,
     },
-    math::Aabb,
+    math::{Aabb, Scalar},
 };
 
 impl Shape for fj::Difference2d {
-    fn bounding_volume(&self) -> Aabb {
+    fn bounding_volume(&self) -> Aabb<3> {
         // This is a conservative estimate of the bounding box: It's never going
         // to be bigger than the bounding box of the original shape that another
         // is being subtracted from.
         self.a.bounding_volume()
     }
 
-    fn faces(&self, tolerance: f64, debug_info: &mut DebugInfo) -> Faces {
+    fn faces(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Faces {
         // This method assumes that `b` is fully contained within `a`:
         // https://github.com/hannobraun/Fornjot/issues/92
 

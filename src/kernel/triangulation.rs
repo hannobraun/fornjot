@@ -1,6 +1,8 @@
 use parry2d_f64::utils::point_in_triangle::{corner_direction, Orientation};
 use spade::HasPosition;
 
+use crate::math::Scalar;
+
 use super::geometry::points::SurfacePoint;
 
 /// Create a Delaunay triangulation of all points
@@ -14,16 +16,17 @@ pub fn triangulate(points: Vec<SurfacePoint>) -> Vec<[SurfacePoint; 3]> {
     for triangle in triangulation.inner_faces() {
         let [v0, v1, v2] = triangle.vertices().map(|vertex| *vertex.data());
 
-        let triangle = match corner_direction(&v0, &v1, &v2) {
-            Orientation::Ccw => [v0, v1, v2],
-            Orientation::Cw => [v0, v2, v1],
-            Orientation::None => {
-                panic!(
+        let triangle =
+            match corner_direction(&v0.to_na(), &v1.to_na(), &v2.to_na()) {
+                Orientation::Ccw => [v0, v1, v2],
+                Orientation::Cw => [v0, v2, v1],
+                Orientation::None => {
+                    panic!(
                     "Triangle returned from triangulation isn't actually a \
                     triangle"
                 );
-            }
-        };
+                }
+            };
 
         triangles.push(triangle);
     }
@@ -33,12 +36,12 @@ pub fn triangulate(points: Vec<SurfacePoint>) -> Vec<[SurfacePoint; 3]> {
 
 // Enables the use of `SurfacePoint` in the triangulation.
 impl HasPosition for SurfacePoint {
-    type Scalar = f64;
+    type Scalar = Scalar;
 
     fn position(&self) -> spade::Point2<Self::Scalar> {
         spade::Point2 {
-            x: self.value.x,
-            y: self.value.y,
+            x: self.value.u(),
+            y: self.value.v(),
         }
     }
 }
