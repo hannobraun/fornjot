@@ -42,6 +42,11 @@ impl<const D: usize> Point<D> {
         self.0.into()
     }
 
+    /// Convert to a 1-dimensional point
+    pub fn to_t(&self) -> Point<1> {
+        Point::from([self.0[0]])
+    }
+
     /// Access a mutable reference to the point's z coordinate
     pub fn z_mut(&mut self) -> &mut f64 {
         &mut self.0[2]
