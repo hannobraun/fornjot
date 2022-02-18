@@ -7,6 +7,14 @@ pub struct Segment<const D: usize> {
     pub b: Point<D>,
 }
 
+impl Segment<2> {
+    /// Convert the 2-dimensional segment to a Parry segment
+    #[allow(unused)]
+    pub fn to_parry(&self) -> parry2d_f64::shape::Segment {
+        [self.a, self.b].into()
+    }
+}
+
 impl Segment<3> {
     /// Convert the segment to a Parry segment
     pub fn to_parry(&self) -> parry3d_f64::shape::Segment {
