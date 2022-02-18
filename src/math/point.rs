@@ -68,6 +68,13 @@ impl<const D: usize> Point<D> {
     }
 }
 
+impl Point<1> {
+    /// Access the curve point's t coordinate
+    pub fn t(&self) -> f64 {
+        self.0[0]
+    }
+}
+
 impl<const D: usize> From<[f64; D]> for Point<D> {
     fn from(array: [f64; D]) -> Self {
         Self::from_array(array)
