@@ -30,7 +30,7 @@ impl Aabb<2> {
 }
 
 impl Aabb<3> {
-    /// Construct an AABB from a list of points
+    /// Construct a 3-dimensional AABB from a list of points
     ///
     /// The resulting AABB will contain all the points.
     pub fn from_points(points: impl IntoIterator<Item = Point<3>>) -> Self {
