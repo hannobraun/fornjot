@@ -10,7 +10,7 @@ use crate::{
         approximation::Approximation, geometry::Surface,
         triangulation::triangulate,
     },
-    math::{Aabb, Segment, Transform, Triangle},
+    math::{Aabb, Scalar, Segment, Transform, Triangle},
 };
 
 use super::edges::Edges;
@@ -34,7 +34,7 @@ impl Faces {
 
     pub fn triangles(
         &self,
-        tolerance: f64,
+        tolerance: Scalar,
         out: &mut Vec<Triangle>,
         debug_info: &mut DebugInfo,
     ) {
@@ -98,7 +98,7 @@ impl Face {
 
     pub fn triangles(
         &self,
-        tolerance: f64,
+        tolerance: Scalar,
         out: &mut Vec<Triangle>,
         debug_info: &mut DebugInfo,
     ) {

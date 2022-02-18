@@ -1,7 +1,7 @@
 mod circle;
 mod line;
 
-use crate::math::{Point, Transform, Vector};
+use crate::math::{Point, Scalar, Transform, Vector};
 
 pub use self::{circle::Circle, line::Line};
 
@@ -109,7 +109,7 @@ impl Curve {
     /// The `approximate_between` methods of the curves then need to make sure
     /// to only return points in between those vertices, not the vertices
     /// themselves.
-    pub fn approx(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
+    pub fn approx(&self, tolerance: Scalar, out: &mut Vec<Point<3>>) {
         match self {
             Self::Circle(circle) => circle.approx(tolerance, out),
             Self::Line(_) => {}

@@ -2,6 +2,8 @@ use std::ops;
 
 use approx::AbsDiffEq;
 
+use super::Scalar;
+
 /// An n-dimensional vector
 ///
 /// The dimensionality is defined by the const generic argument `D`.
@@ -11,7 +13,7 @@ use approx::AbsDiffEq;
 /// The goal of this type is to eventually implement `Eq` and `Hash`, making it
 /// easier to work with vectors. This is a work in progress.
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Vector<const D: usize>([f64; D]);
+pub struct Vector<const D: usize>([Scalar; D]);
 
 impl<const D: usize> Vector<D> {
     /// Construct a `Vector` from an array
@@ -35,7 +37,7 @@ impl<const D: usize> Vector<D> {
     }
 
     /// Compute the magnitude of the vector
-    pub fn magnitude(&self) -> f64 {
+    pub fn magnitude(&self) -> Scalar {
         self.to_na().magnitude()
     }
 
@@ -45,7 +47,7 @@ impl<const D: usize> Vector<D> {
     }
 
     /// Compute the dot product with another vector
-    pub fn dot(&self, other: &Self) -> f64 {
+    pub fn dot(&self, other: &Self) -> Scalar {
         self.to_na().dot(&other.to_na())
     }
 
@@ -55,43 +57,43 @@ impl<const D: usize> Vector<D> {
     }
 
     /// Access an iterator over the vector's components
-    pub fn components(&self) -> [f64; D] {
+    pub fn components(&self) -> [Scalar; D] {
         self.0
     }
 }
 
 impl Vector<1> {
     /// Access the curve vector's t coordinate
-    pub fn t(&self) -> f64 {
+    pub fn t(&self) -> Scalar {
         self.0[0]
     }
 }
 
 impl Vector<2> {
     /// Access the surface vector's u coordinate
-    pub fn u(&self) -> f64 {
+    pub fn u(&self) -> Scalar {
         self.0[0]
     }
 
     /// Access the surface vector's v coordinate
-    pub fn v(&self) -> f64 {
+    pub fn v(&self) -> Scalar {
         self.0[1]
     }
 
     /// Extend a 2-dimensional vector into a 3-dimensional one
-    pub fn to_xyz(&self, z: f64) -> Vector<3> {
+    pub fn to_xyz(&self, z: Scalar) -> Vector<3> {
         Vector::from([self.u(), self.v(), z])
     }
 }
 
 impl Vector<3> {
     /// Access the vector's x coordinate
-    pub fn x(&self) -> f64 {
+    pub fn x(&self) -> Scalar {
         self.0[0]
     }
 
     /// Access the vector's y coordinate
-    pub fn y(&self) -> f64 {
+    pub fn y(&self) -> Scalar {
         self.0[1]
     }
 
@@ -121,11 +123,19 @@ impl<const D: usize> ops::Add<Self> for Vector<D> {
     }
 }
 
-impl<const D: usize> ops::Mul<f64> for Vector<D> {
+impl<const D: usize> ops::Mul<Scalar> for Vector<D> {
     type Output = Self;
 
-    fn mul(self, rhs: f64) -> Self::Output {
+    fn mul(self, rhs: Scalar) -> Self::Output {
         self.to_na().mul(rhs).into()
+    }
+}
+
+impl<const D: usize> ops::Div<Scalar> for Vector<D> {
+    type Output = Self;
+
+    fn div(self, rhs: Scalar) -> Self::Output {
+        self.to_na().div(rhs).into()
     }
 }
 

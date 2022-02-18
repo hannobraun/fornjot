@@ -2,7 +2,7 @@ use std::{cmp::Ordering, collections::HashSet};
 
 use decorum::R64;
 
-use crate::math::{Point, Segment};
+use crate::math::{Point, Scalar, Segment};
 
 use super::topology::edges::{Cycle, Edge, Edges};
 
@@ -31,7 +31,7 @@ impl Approximation {
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual edge.
-    pub fn for_edge(edge: &Edge, tolerance: f64) -> Self {
+    pub fn for_edge(edge: &Edge, tolerance: Scalar) -> Self {
         let mut points = Vec::new();
         edge.curve.approx(tolerance, &mut points);
 
@@ -78,7 +78,7 @@ impl Approximation {
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual cycle.
-    pub fn for_cycle(cycle: &Cycle, tolerance: f64) -> Self {
+    pub fn for_cycle(cycle: &Cycle, tolerance: Scalar) -> Self {
         let mut points = Vec::new();
         let mut segments = Vec::new();
 
@@ -122,7 +122,7 @@ impl Approximation {
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual edges.
-    pub fn for_edges(edges: &Edges, tolerance: f64) -> Self {
+    pub fn for_edges(edges: &Edges, tolerance: Scalar) -> Self {
         let mut points = Vec::new();
         let mut segments = Vec::new();
 
@@ -229,7 +229,7 @@ mod tests {
                 vertices::Vertex,
             },
         },
-        math::{Segment, Point},
+        math::{Point, Segment},
     };
 
     use super::Approximation;

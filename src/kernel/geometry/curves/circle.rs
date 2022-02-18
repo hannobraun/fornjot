@@ -1,6 +1,6 @@
 use std::f64::consts::PI;
 
-use crate::math::{Point, Transform, Vector};
+use crate::math::{Point, Scalar, Transform, Vector};
 
 /// A circle
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -48,7 +48,7 @@ impl Circle {
     /// error.
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
         let v = point - self.center;
-        let atan = f64::atan2(v.y(), v.x());
+        let atan = Scalar::atan2(v.y(), v.x());
         let coord = if atan >= 0. { atan } else { atan + PI * 2. };
         Point::from([coord])
     }
@@ -71,7 +71,7 @@ impl Circle {
         Vector::from([x, y, 0.])
     }
 
-    pub fn approx(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
+    pub fn approx(&self, tolerance: Scalar, out: &mut Vec<Point<3>>) {
         let radius = self.radius.magnitude();
 
         // To approximate the circle, we use a regular polygon for which
@@ -103,7 +103,7 @@ impl Circle {
 mod tests {
     use std::f64::consts::{FRAC_PI_2, PI};
 
-    use crate::math::{Point, Vector};
+    use crate::math::{Point, Scalar, Vector};
 
     use super::Circle;
 
@@ -147,7 +147,7 @@ mod tests {
             }
         }
 
-        fn calculate_error(radius: f64, n: u64) -> f64 {
+        fn calculate_error(radius: Scalar, n: u64) -> Scalar {
             radius - radius * (PI / n as f64).cos()
         }
     }

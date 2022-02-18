@@ -21,6 +21,7 @@ use winit::{
     event_loop::{ControlFlow, EventLoop},
 };
 
+use crate::math::Scalar;
 use crate::{
     args::Args,
     camera::Camera,
@@ -71,7 +72,7 @@ fn main() -> anyhow::Result<()> {
     // look at the smallest non-zero extent of the bounding box and divide that
     // by some value.
     let tolerance = {
-        let mut min_extent = f64::MAX;
+        let mut min_extent = Scalar::MAX;
         for extent in aabb.size().components() {
             if extent > 0. && extent < min_extent {
                 min_extent = extent;

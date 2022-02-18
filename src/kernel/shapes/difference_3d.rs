@@ -4,7 +4,7 @@ use crate::{
         topology::{edges::Edges, faces::Faces, vertices::Vertices},
         Shape,
     },
-    math::Aabb,
+    math::{Aabb, Scalar},
 };
 
 impl Shape for fj::Difference {
@@ -15,7 +15,7 @@ impl Shape for fj::Difference {
         self.a.bounding_volume()
     }
 
-    fn faces(&self, _tolerance: f64, _: &mut DebugInfo) -> Faces {
+    fn faces(&self, _tolerance: Scalar, _: &mut DebugInfo) -> Faces {
         todo!()
     }
 

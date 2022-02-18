@@ -9,7 +9,7 @@ use crate::{
         },
         Shape,
     },
-    math::{Aabb, Point, Vector},
+    math::{Aabb, Point, Scalar, Vector},
 };
 
 impl Shape for fj::Sketch {
@@ -20,7 +20,7 @@ impl Shape for fj::Sketch {
         )
     }
 
-    fn faces(&self, _: f64, _: &mut DebugInfo) -> Faces {
+    fn faces(&self, _: Scalar, _: &mut DebugInfo) -> Faces {
         let edges = self.edges();
         let face = Face::Face {
             edges,

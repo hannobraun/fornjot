@@ -5,7 +5,7 @@ use parry3d_f64::query::{Ray, RayCast as _};
 use winit::dpi::PhysicalPosition;
 
 use crate::{
-    math::{Aabb, Triangle},
+    math::{Aabb, Scalar, Triangle},
     window::Window,
 };
 
@@ -53,7 +53,7 @@ impl Camera {
                 aabb.max.y(),
             ]
             .into_iter()
-            .reduce(|a, b| f64::max(a, b))
+            .reduce(|a, b| Scalar::max(a, b))
             // `reduce` can only return `None`, if there are no items in
             // the iterator. And since we're creating an array full of
             // items above, we know this can't panic.

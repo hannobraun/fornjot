@@ -6,7 +6,7 @@ use crate::{
         topology::{edges::Edges, faces::Faces, vertices::Vertices},
         Shape,
     },
-    math::{Aabb, Transform},
+    math::{Aabb, Scalar, Transform},
 };
 
 impl Shape for fj::Transform {
@@ -14,7 +14,7 @@ impl Shape for fj::Transform {
         transform(self).transform_aabb(&self.shape.bounding_volume())
     }
 
-    fn faces(&self, tolerance: f64, debug_info: &mut DebugInfo) -> Faces {
+    fn faces(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Faces {
         self.shape
             .faces(tolerance, debug_info)
             .transform(&transform(self))
