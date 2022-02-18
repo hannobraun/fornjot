@@ -11,6 +11,16 @@ pub struct Aabb<const D: usize> {
     pub max: Point<D>,
 }
 
+impl Aabb<2> {
+    /// Construct a 2-dimensional AABB from a Parry AABB
+    pub fn from_parry(aabb: parry2d_f64::bounding_volume::AABB) -> Self {
+        Self {
+            min: aabb.mins.into(),
+            max: aabb.maxs.into(),
+        }
+    }
+}
+
 impl Aabb<3> {
     /// Construct an AABB from a list of points
     ///
@@ -54,6 +64,12 @@ impl Aabb<3> {
     /// Merge this AABB with another
     pub fn merged(&self, other: &Self) -> Self {
         self.to_parry().merged(&other.to_parry()).into()
+    }
+}
+
+impl From<parry2d_f64::bounding_volume::AABB> for Aabb<2> {
+    fn from(aabb: parry2d_f64::bounding_volume::AABB) -> Self {
+        Self::from_parry(aabb)
     }
 }
 
