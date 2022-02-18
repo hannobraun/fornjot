@@ -1,6 +1,6 @@
 use std::f64::consts::PI;
 
-use crate::math::{Point, Transform, Vector};
+use crate::math::{Point, Scalar, Transform, Vector};
 
 /// A circle
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -24,7 +24,7 @@ impl Circle {
 
     #[must_use]
     pub fn transform(self, transform: &Transform) -> Self {
-        let radius = self.radius.to_xyz(0.);
+        let radius = self.radius.to_xyz(Scalar::ZERO);
         let radius = transform.transform_vector(&radius);
         let radius = radius.xy();
 
@@ -48,8 +48,12 @@ impl Circle {
     /// error.
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
         let v = point - self.center;
-        let atan = f64::atan2(v.y(), v.x());
-        let coord = if atan >= 0. { atan } else { atan + PI * 2. };
+        let atan = Scalar::atan2(v.y(), v.x());
+        let coord = if atan >= Scalar::ZERO {
+            atan
+        } else {
+            atan + Scalar::PI * 2.
+        };
         Point::from([coord])
     }
 
@@ -68,10 +72,10 @@ impl Circle {
         let x = cos * radius;
         let y = sin * radius;
 
-        Vector::from([x, y, 0.])
+        Vector::from([x, y, Scalar::ZERO])
     }
 
-    pub fn approx(&self, tolerance: f64, out: &mut Vec<Point<3>>) {
+    pub fn approx(&self, tolerance: Scalar, out: &mut Vec<Point<3>>) {
         let radius = self.radius.magnitude();
 
         // To approximate the circle, we use a regular polygon for which
@@ -89,12 +93,14 @@ impl Circle {
         }
     }
 
-    fn number_of_vertices(tolerance: f64, radius: f64) -> u64 {
-        assert!(tolerance > 0.);
-        if tolerance > radius / 2. {
+    fn number_of_vertices(tolerance: Scalar, radius: Scalar) -> u64 {
+        assert!(tolerance > Scalar::ZERO);
+        if tolerance > radius / Scalar::TWO {
             3
         } else {
-            (PI / (1. - (tolerance / radius)).acos()).ceil() as u64
+            (Scalar::PI / (Scalar::ONE - (tolerance / radius)).acos())
+                .ceil()
+                .into_u64()
         }
     }
 }
@@ -103,7 +109,7 @@ impl Circle {
 mod tests {
     use std::f64::consts::{FRAC_PI_2, PI};
 
-    use crate::math::{Point, Vector};
+    use crate::math::{Point, Scalar, Vector};
 
     use super::Circle;
 
@@ -138,7 +144,14 @@ mod tests {
         verify_result(10., 100., 7);
         verify_result(1., 100., 23);
 
-        fn verify_result(tolerance: f64, radius: f64, n: u64) {
+        fn verify_result(
+            tolerance: impl Into<Scalar>,
+            radius: impl Into<Scalar>,
+            n: u64,
+        ) {
+            let tolerance = tolerance.into();
+            let radius = radius.into();
+
             assert_eq!(n, Circle::number_of_vertices(tolerance, radius));
 
             assert!(calculate_error(radius, n) <= tolerance);
@@ -147,8 +160,8 @@ mod tests {
             }
         }
 
-        fn calculate_error(radius: f64, n: u64) -> f64 {
-            radius - radius * (PI / n as f64).cos()
+        fn calculate_error(radius: Scalar, n: u64) -> Scalar {
+            radius - radius * (Scalar::PI / Scalar::from_u64(n)).cos()
         }
     }
 }

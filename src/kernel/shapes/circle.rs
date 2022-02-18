@@ -9,7 +9,7 @@ use crate::{
         },
         Shape,
     },
-    math::{Aabb, Point},
+    math::{Aabb, Point, Scalar},
 };
 
 impl Shape for fj::Circle {
@@ -20,7 +20,7 @@ impl Shape for fj::Circle {
         }
     }
 
-    fn faces(&self, _: f64, _: &mut DebugInfo) -> Faces {
+    fn faces(&self, _: Scalar, _: &mut DebugInfo) -> Faces {
         let edges = Edges::single_cycle([Edge::circle(self.radius)]);
         Faces(vec![Face::Face {
             edges,

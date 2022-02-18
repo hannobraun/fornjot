@@ -5,7 +5,7 @@ use parry3d_f64::query::{Ray, RayCast as _};
 use winit::dpi::PhysicalPosition;
 
 use crate::{
-    math::{Aabb, Triangle},
+    math::{Aabb, Scalar, Triangle},
     window::Window,
 };
 
@@ -53,7 +53,7 @@ impl Camera {
                 aabb.max.y(),
             ]
             .into_iter()
-            .reduce(|a, b| f64::max(a, b))
+            .reduce(Scalar::max)
             // `reduce` can only return `None`, if there are no items in
             // the iterator. And since we're creating an array full of
             // items above, we know this can't panic.
@@ -74,7 +74,7 @@ impl Camera {
 
         let initial_offset = {
             let mut offset = aabb.center();
-            *offset.z_mut() = 0.;
+            *offset.z_mut() = Scalar::ZERO;
             -offset
         };
 
@@ -84,9 +84,9 @@ impl Camera {
 
             rotation: Transform::identity(),
             translation: Translation::from([
-                initial_offset.x(),
-                initial_offset.y(),
-                -initial_distance,
+                initial_offset.x().into_f64(),
+                initial_offset.y().into_f64(),
+                -initial_distance.into_f64(),
             ]),
         }
     }

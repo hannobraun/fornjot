@@ -2,7 +2,7 @@ use std::{cmp::Ordering, collections::HashSet};
 
 use decorum::R64;
 
-use crate::math::{Point, Segment};
+use crate::math::{Point, Scalar, Segment};
 
 use super::topology::edges::{Cycle, Edge, Edges};
 
@@ -31,7 +31,7 @@ impl Approximation {
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual edge.
-    pub fn for_edge(edge: &Edge, tolerance: f64) -> Self {
+    pub fn for_edge(edge: &Edge, tolerance: Scalar) -> Self {
         let mut points = Vec::new();
         edge.curve.approx(tolerance, &mut points);
 
@@ -78,7 +78,7 @@ impl Approximation {
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual cycle.
-    pub fn for_cycle(cycle: &Cycle, tolerance: f64) -> Self {
+    pub fn for_cycle(cycle: &Cycle, tolerance: Scalar) -> Self {
         let mut points = Vec::new();
         let mut segments = Vec::new();
 
@@ -122,7 +122,7 @@ impl Approximation {
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual edges.
-    pub fn for_edges(edges: &Edges, tolerance: f64) -> Self {
+    pub fn for_edges(edges: &Edges, tolerance: Scalar) -> Self {
         let mut points = Vec::new();
         let mut segments = Vec::new();
 
@@ -214,7 +214,11 @@ pub struct ValidationError {
 }
 
 fn point_to_r64(point: Point<3>) -> [R64; 3] {
-    [point.x().into(), point.y().into(), point.z().into()]
+    [
+        point.x().into_f64().into(),
+        point.y().into_f64().into(),
+        point.z().into_f64().into(),
+    ]
 }
 
 #[cfg(test)]
@@ -229,14 +233,14 @@ mod tests {
                 vertices::Vertex,
             },
         },
-        math::{Segment, Point},
+        math::{Point, Scalar, Segment},
     };
 
     use super::Approximation;
 
     #[test]
     fn test_for_edge() {
-        let tolerance = 1.;
+        let tolerance = Scalar::ONE;
 
         let a = Point::from([1., 2., 3.]);
         let b = Point::from([2., 3., 5.]);
@@ -290,7 +294,7 @@ mod tests {
 
     #[test]
     fn test_for_cycle() {
-        let tolerance = 1.;
+        let tolerance = Scalar::ONE;
 
         let a = Point::from([1., 2., 3.]);
         let b = Point::from([2., 3., 5.]);
@@ -328,7 +332,7 @@ mod tests {
 
     #[test]
     fn test_for_edges() {
-        let tolerance = 1.;
+        let tolerance = Scalar::ONE;
 
         let a = Point::from([1., 2., 3.]);
         let b = Point::from([2., 3., 5.]);

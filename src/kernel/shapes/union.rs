@@ -4,7 +4,7 @@ use crate::{
         topology::{edges::Edges, faces::Faces, vertices::Vertices},
         Shape,
     },
-    math::Aabb,
+    math::{Aabb, Scalar},
 };
 
 impl Shape for fj::Union {
@@ -15,7 +15,7 @@ impl Shape for fj::Union {
         a.merged(&b)
     }
 
-    fn faces(&self, tolerance: f64, debug_info: &mut DebugInfo) -> Faces {
+    fn faces(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Faces {
         let a = self.a.faces(tolerance, debug_info);
         let b = self.b.faces(tolerance, debug_info);
 

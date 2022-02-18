@@ -14,17 +14,17 @@ use crate::{
         },
         Shape,
     },
-    math::{Aabb, Transform},
+    math::{Aabb, Scalar, Transform},
 };
 
 impl Shape for fj::Sweep {
     fn bounding_volume(&self) -> Aabb<3> {
         let mut aabb = self.shape.bounding_volume();
-        *aabb.max.z_mut() = self.length;
+        *aabb.max.z_mut() = self.length.into();
         aabb
     }
 
-    fn faces(&self, tolerance: f64, debug_info: &mut DebugInfo) -> Faces {
+    fn faces(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Faces {
         let original_faces = self.shape.faces(tolerance, debug_info);
 
         let bottom_faces = original_faces

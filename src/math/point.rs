@@ -2,7 +2,7 @@ use std::ops;
 
 use approx::AbsDiffEq;
 
-use super::Vector;
+use super::{Scalar, Vector};
 
 /// An n-dimensional point
 ///
@@ -13,7 +13,7 @@ use super::Vector;
 /// The goal of this type is to eventually implement `Eq` and `Hash`, making it
 /// easier to work with vectors. This is a work in progress.
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Point<const D: usize>([f64; D]);
+pub struct Point<const D: usize>([Scalar; D]);
 
 impl<const D: usize> Point<D> {
     /// Construct a `Point` at the origin of the coordinate system
@@ -22,33 +22,27 @@ impl<const D: usize> Point<D> {
     }
 
     /// Construct a `Point` from an array
-    ///
-    /// # Implementation Note
-    ///
-    /// All point construction functions should call this method internally. At
-    /// some point, this will become the place where validate the floating point
-    /// numbers before constructing the point instance.
     pub fn from_array(array: [f64; D]) -> Self {
-        Self(array)
+        Self(array.map(Scalar::from_f64))
     }
 
     /// Construct a `Point` from an nalgebra vector
     pub fn from_na(point: nalgebra::Point<f64, D>) -> Self {
-        Self::from_array(point.into())
+        Self(point.coords.data.0[0].map(Scalar::from_f64))
     }
 
     /// Convert the point into an nalgebra point
     pub fn to_na(&self) -> nalgebra::Point<f64, D> {
-        self.0.into()
+        self.0.map(Scalar::into_f64).into()
     }
 
     /// Convert to a 1-dimensional point
     pub fn to_t(&self) -> Point<1> {
-        Point::from([self.0[0]])
+        Point([self.0[0]])
     }
 
     /// Access a mutable reference to the point's z coordinate
-    pub fn z_mut(&mut self) -> &mut f64 {
+    pub fn z_mut(&mut self) -> &mut Scalar {
         &mut self.0[2]
     }
 
@@ -60,37 +54,43 @@ impl<const D: usize> Point<D> {
 
 impl Point<1> {
     /// Access the curve point's t coordinate
-    pub fn t(&self) -> f64 {
+    pub fn t(&self) -> Scalar {
         self.0[0]
     }
 }
 
 impl Point<2> {
     /// Access the point's x coordinate
-    pub fn u(&self) -> f64 {
+    pub fn u(&self) -> Scalar {
         self.0[0]
     }
 
     /// Access the point's y coordinate
-    pub fn v(&self) -> f64 {
+    pub fn v(&self) -> Scalar {
         self.0[1]
     }
 }
 
 impl Point<3> {
     /// Access the point's x coordinate
-    pub fn x(&self) -> f64 {
+    pub fn x(&self) -> Scalar {
         self.0[0]
     }
 
     /// Access the point's y coordinate
-    pub fn y(&self) -> f64 {
+    pub fn y(&self) -> Scalar {
         self.0[1]
     }
 
     /// Access the point's z coordinate
-    pub fn z(&self) -> f64 {
+    pub fn z(&self) -> Scalar {
         self.0[2]
+    }
+}
+
+impl<const D: usize> From<[Scalar; D]> for Point<D> {
+    fn from(array: [Scalar; D]) -> Self {
+        Self(array)
     }
 }
 
