@@ -1,0 +1,102 @@
+---
+# Source: https://github.com/hendrikmaus/rust-workflows
+#
+# Continuous Integration Workflow For Rust
+name: CI
+
+# Define the triggers; usually merges to the repository
+# default branch and pull-requests
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths-ignore:
+      - "docs/**"
+      - "**.md"
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+    paths-ignore:
+      - "docs/**"
+      - "**.md"
+  # The following makes this workflow re-usable by other repositories
+  # without having to copy the entire thing.
+  #
+  # See https://docs.github.com/en/actions/learn-github-actions/reusing-workflows
+  workflow_call: {}
+
+env:
+  CARGO_TERM_COLOR: always
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
+      - uses: actions-rs/toolchain@568dc894a7f9e32ffd9bb7d7a6cebb784cdaa2b0
+        with:
+          profile: minimal
+      - uses: Swatinem/rust-cache@1232abb8968faf344409165de17cbf9e7f340fd8
+      - uses: actions-rs/cargo@4ff6ec2846f6e7217c1a9b0b503506665f134c4b
+        with:
+          command: check
+
+  fmt:
+    name: Format
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
+      - uses: actions-rs/toolchain@568dc894a7f9e32ffd9bb7d7a6cebb784cdaa2b0
+        with:
+          components: rustfmt
+          profile: minimal
+      - uses: actions-rs/cargo@4ff6ec2846f6e7217c1a9b0b503506665f134c4b
+        with:
+          command: fmt
+          args: --all -- --check
+
+  test:
+    name: Test
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macOS-latest
+          - windows-latest
+    runs-on: ${{matrix.os}}
+    steps:
+      - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
+      - uses: actions-rs/toolchain@568dc894a7f9e32ffd9bb7d7a6cebb784cdaa2b0
+      - uses: Swatinem/rust-cache@1232abb8968faf344409165de17cbf9e7f340fd8
+      - uses: actions-rs/cargo@4ff6ec2846f6e7217c1a9b0b503506665f134c4b
+        with:
+          command: test
+
+  clippy:
+    name: Clippy Check
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macOS-latest
+          - windows-latest
+    runs-on: ${{matrix.os}}
+    steps:
+      - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
+      - uses: actions-rs/toolchain@568dc894a7f9e32ffd9bb7d7a6cebb784cdaa2b0
+        with:
+          profile: minimal
+      - run: rustup component add clippy
+      - uses: Swatinem/rust-cache@1232abb8968faf344409165de17cbf9e7f340fd8
+      - uses: actions-rs/clippy-check@9d09632661e31982c0be8af59aeb96b680641bc4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all-features
