@@ -1,4 +1,4 @@
-use std::{cmp, f64::consts::PI, ops};
+use std::{cmp, f64::consts::PI, hash::Hash, ops};
 
 use approx::AbsDiffEq;
 
@@ -81,6 +81,22 @@ impl Scalar {
     /// Compute the four-quadrant arctangent
     pub fn atan2(self, other: Self) -> Self {
         self.0.atan2(other.0).into()
+    }
+}
+
+impl Eq for Scalar {}
+
+impl Ord for Scalar {
+    fn cmp(&self, other: &Self) -> cmp::Ordering {
+        // Should never panic, as `from_f64` checks that the wrapped value is
+        // finite.
+        self.partial_cmp(&other).unwrap()
+    }
+}
+
+impl Hash for Scalar {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.0.to_bits().hash(state);
     }
 }
 
