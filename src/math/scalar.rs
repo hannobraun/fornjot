@@ -24,7 +24,12 @@ impl Scalar {
 
     /// Construct a `Scalar` from an `f64`
     pub fn from_f64(scalar: f64) -> Self {
-        Self(scalar)
+        if scalar.is_finite() {
+            // `scalar` is neither infinite, nor NaN
+            Self(scalar)
+        } else {
+            panic!("Invalid scalar value: {scalar}");
+        }
     }
 
     /// Construct a `Scalar` from a `u64`
