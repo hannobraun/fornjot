@@ -1,7 +1,7 @@
 use super::Point;
 
 /// A line segment, defined by its two end points
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, Ord, PartialOrd)]
 pub struct Segment<const D: usize> {
     pub a: Point<D>,
     pub b: Point<D>,
