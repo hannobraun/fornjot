@@ -2,7 +2,30 @@ use std::{cmp, f64::consts::PI, hash::Hash, ops};
 
 use approx::AbsDiffEq;
 
-/// A scalar
+/// A rational, finite scalar value
+///
+/// This is a wrapper around `f64`. On construction, it checks that the `f64`
+/// value is neither infinite nor NaN. This allows `Scalar` to provide
+/// implementations of [`Eq`], [`Ord`], and [`Hash`], enabling `Scalar` (and
+/// types built on top of it), to be used as keys in hash maps, hash sets, and
+/// similar types.
+///
+/// # Failing `From`/`Into` implementations
+///
+/// Please note that the [`From`]/[`Into`] implementation that convert floating
+/// point numbers into `Scalar` can panic. These conversions call
+/// [`Scalar::from_f64`] internally and panic under the same conditions.
+///
+/// This explicitly goes against the mandate of [`From`]/[`Into`], whose
+/// documentation mandate that implementations must not fail. This is a
+/// deliberate design decision. The intended use case of `Scalar` is math code
+/// that considers non-finite floating point values a bug, not a recoverable
+/// error.
+///
+/// For this use case, having easy conversions available is an advantage, and
+/// explicit `unwrap`/`expect` calls would add nothing. In addition, the mandate
+/// not to fail is not motivated in any way, in the [`From`]/[`Into`]
+/// documentation.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Scalar(f64);
 
@@ -23,6 +46,8 @@ impl Scalar {
     pub const PI: Self = Self(PI);
 
     /// Construct a `Scalar` from an `f64`
+    ///
+    /// Panics, if `scalar` is infinite or NaN.
     pub fn from_f64(scalar: f64) -> Self {
         if scalar.is_finite() {
             // `scalar` is neither infinite, nor NaN
