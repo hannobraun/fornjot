@@ -1,7 +1,7 @@
 use super::Point;
 
 /// A triangle
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct Triangle {
     pub a: Point<3>,
     pub b: Point<3>,

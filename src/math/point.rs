@@ -12,7 +12,7 @@ use super::{Scalar, Vector};
 ///
 /// The goal of this type is to eventually implement `Eq` and `Hash`, making it
 /// easier to work with vectors. This is a work in progress.
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct Point<const D: usize>([Scalar; D]);
 
 impl<const D: usize> Point<D> {

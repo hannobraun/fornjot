@@ -1,8 +1,31 @@
-use std::{cmp, f64::consts::PI, ops};
+use std::{cmp, f64::consts::PI, hash::Hash, ops};
 
 use approx::AbsDiffEq;
 
-/// A scalar
+/// A rational, finite scalar value
+///
+/// This is a wrapper around `f64`. On construction, it checks that the `f64`
+/// value is neither infinite nor NaN. This allows `Scalar` to provide
+/// implementations of [`Eq`], [`Ord`], and [`Hash`], enabling `Scalar` (and
+/// types built on top of it), to be used as keys in hash maps, hash sets, and
+/// similar types.
+///
+/// # Failing `From`/`Into` implementations
+///
+/// Please note that the [`From`]/[`Into`] implementation that convert floating
+/// point numbers into `Scalar` can panic. These conversions call
+/// [`Scalar::from_f64`] internally and panic under the same conditions.
+///
+/// This explicitly goes against the mandate of [`From`]/[`Into`], whose
+/// documentation mandate that implementations must not fail. This is a
+/// deliberate design decision. The intended use case of `Scalar` is math code
+/// that considers non-finite floating point values a bug, not a recoverable
+/// error.
+///
+/// For this use case, having easy conversions available is an advantage, and
+/// explicit `unwrap`/`expect` calls would add nothing. In addition, the mandate
+/// not to fail is not motivated in any way, in the [`From`]/[`Into`]
+/// documentation.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Scalar(f64);
 
@@ -23,8 +46,15 @@ impl Scalar {
     pub const PI: Self = Self(PI);
 
     /// Construct a `Scalar` from an `f64`
+    ///
+    /// Panics, if `scalar` is infinite or NaN.
     pub fn from_f64(scalar: f64) -> Self {
-        Self(scalar)
+        if scalar.is_finite() {
+            // `scalar` is neither infinite, nor NaN
+            Self(scalar)
+        } else {
+            panic!("Invalid scalar value: {scalar}");
+        }
     }
 
     /// Construct a `Scalar` from a `u64`
@@ -76,6 +106,22 @@ impl Scalar {
     /// Compute the four-quadrant arctangent
     pub fn atan2(self, other: Self) -> Self {
         self.0.atan2(other.0).into()
+    }
+}
+
+impl Eq for Scalar {}
+
+impl Ord for Scalar {
+    fn cmp(&self, other: &Self) -> cmp::Ordering {
+        // Should never panic, as `from_f64` checks that the wrapped value is
+        // finite.
+        self.partial_cmp(&other).unwrap()
+    }
+}
+
+impl Hash for Scalar {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.0.to_bits().hash(state);
     }
 }
 
