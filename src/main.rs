@@ -196,7 +196,7 @@ fn main() -> anyhow::Result<()> {
     let mut input_handler = input::Handler::new(previous_time);
     let mut renderer = block_on(Renderer::new(&window))?;
 
-    renderer.update_geometry((&triangles).into(), (&debug_info).into());
+    renderer.update_geometry((&triangles).into(), (&debug_info).into(), aabb);
 
     let mut draw_config = DrawConfig::default();
     let mut camera = Camera::new(&aabb);
@@ -218,8 +218,11 @@ fn main() -> anyhow::Result<()> {
                 aabb = shape.bounding_volume();
                 faces.triangles(tolerance, &mut triangles, &mut debug_info);
 
-                renderer
-                    .update_geometry((&triangles).into(), (&debug_info).into());
+                renderer.update_geometry(
+                    (&triangles).into(),
+                    (&debug_info).into(),
+                    aabb,
+                );
             }
             Err(mpsc::TryRecvError::Empty) => {
                 // Nothing to receive from the channel. We don't care.

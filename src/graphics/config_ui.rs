@@ -6,6 +6,8 @@ use wgpu_glyph::{
     GlyphBrush, GlyphBrushBuilder, Section, Text,
 };
 
+use crate::math::Aabb;
+
 use super::{draw_config::DrawConfig, COLOR_FORMAT};
 
 #[derive(Debug)]
@@ -45,6 +47,7 @@ impl ConfigUi {
         encoder: &mut wgpu::CommandEncoder,
         view: &wgpu::TextureView,
         surface_config: &wgpu::SurfaceConfiguration,
+        aabb: &Aabb<3>,
         draw_config: &DrawConfig,
     ) -> Result<(), String> {
         let mut section = Section::new().with_screen_position((50.0, 50.0));
@@ -61,6 +64,19 @@ impl ConfigUi {
 
             section = section.add_text(text);
         }
+
+        /* Render size of model bounding box */
+        let bbsize = aabb.size().components();
+        let info = format!(
+            "Model bounding box size: {:0.1} {:0.1} {:0.1}",
+            bbsize[0].into_f32(),
+            bbsize[1].into_f32(),
+            bbsize[2].into_f32()
+        );
+        let text = Text::new(&info)
+            .with_color([0.0, 0.0, 0.0, 1.0])
+            .with_scale(50.0);
+        section = section.add_text(text);
 
         self.glyph_brush.queue(section);
         self.glyph_brush.draw_queued(

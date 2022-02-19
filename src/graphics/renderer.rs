@@ -6,7 +6,7 @@ use wgpu::util::DeviceExt as _;
 use wgpu_glyph::ab_glyph::InvalidFont;
 use winit::dpi::PhysicalSize;
 
-use crate::{camera::Camera, window::Window};
+use crate::{camera::Camera, math::Aabb, math::Point, window::Window};
 
 use super::{
     config_ui::ConfigUi, draw_config::DrawConfig, drawables::Drawables,
@@ -114,8 +114,15 @@ impl Renderer {
             label: None,
         });
 
-        let geometries =
-            Geometries::new(&device, &Vertices::empty(), &Vertices::empty());
+        let geometries = Geometries::new(
+            &device,
+            &Vertices::empty(),
+            &Vertices::empty(),
+            Aabb {
+                min: Point::from([0.0, 0.0, 0.0]),
+                max: Point::from([0.0, 0.0, 0.0]),
+            },
+        );
         let pipelines = Pipelines::new(&device, &bind_group_layout);
 
         let config_ui = ConfigUi::new(&device)?;
@@ -138,8 +145,13 @@ impl Renderer {
         })
     }
 
-    pub fn update_geometry(&mut self, mesh: Vertices, lines: Vertices) {
-        self.geometries = Geometries::new(&self.device, &mesh, &lines);
+    pub fn update_geometry(
+        &mut self,
+        mesh: Vertices,
+        lines: Vertices,
+        aabb: Aabb<3>,
+    ) {
+        self.geometries = Geometries::new(&self.device, &mesh, &lines, aabb);
     }
 
     pub fn handle_resize(&mut self, size: PhysicalSize<u32>) {
@@ -216,6 +228,7 @@ impl Renderer {
                 &mut encoder,
                 &color_view,
                 &self.surface_config,
+                &self.geometries.aabb,
                 config,
             )
             .map_err(|err| DrawError::Text(err))?;
