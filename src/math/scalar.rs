@@ -87,6 +87,11 @@ impl Scalar {
         self.0.ceil().into()
     }
 
+    /// Round the scalar
+    pub fn round(self) -> Self {
+        self.0.round().into()
+    }
+
     /// Compute the cosine
     pub fn cos(self) -> Self {
         self.0.cos().into()
