@@ -62,6 +62,11 @@ impl Scalar {
         Self::from_f64(scalar as f64)
     }
 
+    /// Convert the scalar into an `f32`
+    pub fn into_f32(self) -> f32 {
+        self.0 as f32
+    }
+
     /// Convert the scalar into a `f64`
     pub fn into_f64(self) -> f64 {
         self.0

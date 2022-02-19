@@ -121,6 +121,12 @@ impl<const D: usize> From<nalgebra::SVector<f64, D>> for Vector<D> {
     }
 }
 
+impl<const D: usize> From<Vector<D>> for [f32; D] {
+    fn from(vector: Vector<D>) -> Self {
+        vector.0.map(|scalar| scalar.into_f32())
+    }
+}
+
 impl<const D: usize> ops::Add<Self> for Vector<D> {
     type Output = Self;
 
