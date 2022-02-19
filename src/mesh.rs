@@ -1,8 +1,5 @@
 use std::{collections::HashMap, hash::Hash};
 
-use decorum::R64;
-use nalgebra::{Point, SVector};
-
 /// API for creating a mesh
 pub struct MeshMaker<V> {
     vertices: Vec<V>,
@@ -44,38 +41,6 @@ where
     /// Access the indices of the mesh
     pub fn indices(&self) -> impl Iterator<Item = Index> + '_ {
         self.indices.iter().copied()
-    }
-}
-
-/// A point/vector type that can be used as a [`HashMap`] key
-#[derive(Clone, Copy, Eq, Hash, PartialEq)]
-pub struct HashVector(pub [R64; 3]);
-
-impl From<&Point<f64, 3>> for HashVector {
-    fn from(point: &Point<f64, 3>) -> Self {
-        Self([R64::from(point.x), R64::from(point.y), R64::from(point.z)])
-    }
-}
-
-impl From<&SVector<f64, 3>> for HashVector {
-    fn from(vector: &SVector<f64, 3>) -> Self {
-        Self([
-            R64::from(vector.x),
-            R64::from(vector.y),
-            R64::from(vector.z),
-        ])
-    }
-}
-
-impl From<HashVector> for [f32; 3] {
-    fn from(hash_vector: HashVector) -> Self {
-        hash_vector.0.map(|coord| coord.into_inner() as f32)
-    }
-}
-
-impl From<HashVector> for [f64; 3] {
-    fn from(hash_vector: HashVector) -> Self {
-        hash_vector.0.map(|coord| coord.into_inner())
     }
 }
 

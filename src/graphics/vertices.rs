@@ -4,7 +4,7 @@ use nalgebra::{vector, Point};
 use crate::{
     debug::DebugInfo,
     math::Triangle,
-    mesh::{HashVector, Index, MeshMaker},
+    mesh::{Index, MeshMaker},
 };
 
 #[derive(Debug)]
@@ -56,12 +56,6 @@ impl From<&Vec<Triangle>> for Vertices {
             let [a, b, c] = triangle.vertices();
 
             let normal = (b - a).cross(&(c - a)).normalize();
-
-            let a = HashVector::from(&a.to_na());
-            let b = HashVector::from(&b.to_na());
-            let c = HashVector::from(&c.to_na());
-
-            let normal = HashVector::from(&normal.to_na());
 
             mesh.push((a, normal));
             mesh.push((b, normal));

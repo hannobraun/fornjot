@@ -28,7 +28,7 @@ use crate::{
     debug::DebugInfo,
     graphics::{DrawConfig, Renderer},
     kernel::Shape as _,
-    mesh::{HashVector, MeshMaker},
+    mesh::MeshMaker,
     model::Model,
     window::Window,
 };
@@ -97,7 +97,7 @@ fn main() -> anyhow::Result<()> {
 
         for triangle in triangles {
             for vertex in triangle.vertices() {
-                mesh_maker.push(HashVector::from(&vertex.to_na()));
+                mesh_maker.push(vertex);
             }
         }
 

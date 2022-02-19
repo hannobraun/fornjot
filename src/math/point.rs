@@ -106,6 +106,18 @@ impl<const D: usize> From<nalgebra::Point<f64, D>> for Point<D> {
     }
 }
 
+impl<const D: usize> From<Point<D>> for [f32; D] {
+    fn from(point: Point<D>) -> Self {
+        point.0.map(|scalar| scalar.into_f32())
+    }
+}
+
+impl<const D: usize> From<Point<D>> for [f64; D] {
+    fn from(point: Point<D>) -> Self {
+        point.0.map(|scalar| scalar.into_f64())
+    }
+}
+
 impl<const D: usize> ops::Neg for Point<D> {
     type Output = Self;
 

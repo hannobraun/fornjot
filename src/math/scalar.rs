@@ -62,7 +62,12 @@ impl Scalar {
         Self::from_f64(scalar as f64)
     }
 
-    /// Convert the scalar into a `f64`
+    /// Convert the scalar into an `f32`
+    pub fn into_f32(self) -> f32 {
+        self.0 as f32
+    }
+
+    /// Convert the scalar into an `f64`
     pub fn into_f64(self) -> f64 {
         self.0
     }
@@ -85,6 +90,11 @@ impl Scalar {
     /// Compute the smallest integer larger than or equal to this scalar
     pub fn ceil(self) -> Self {
         self.0.ceil().into()
+    }
+
+    /// Round the scalar
+    pub fn round(self) -> Self {
+        self.0.round().into()
     }
 
     /// Compute the cosine

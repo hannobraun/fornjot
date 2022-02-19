@@ -1,6 +1,5 @@
 use std::collections::BTreeSet;
 
-use decorum::R64;
 use parry2d_f64::query::{Ray as Ray2, RayCast as _};
 use parry3d_f64::query::Ray as Ray3;
 
@@ -193,11 +192,10 @@ impl Face {
                             let edge =
                                 Segment::from(edge.map(|point| point.value));
 
-                            let intersection = edge.to_parry().cast_local_ray(
-                                &ray,
-                                f64::INFINITY,
-                                true,
-                            );
+                            let intersection = edge
+                                .to_parry()
+                                .cast_local_ray(&ray, f64::INFINITY, true)
+                                .map(|t| Scalar::from_f64(t));
 
                             if let Some(t) = intersection {
                                 // Due to slight inaccuracies, we might get
@@ -206,9 +204,8 @@ impl Face {
                                 let eps = 1_000_000.0;
                                 let t = (t * eps).round() / eps;
 
-                                let t_r64: R64 = t.into();
-                                if hits.insert(t_r64) {
-                                    check.hits.push(t);
+                                if hits.insert(t) {
+                                    check.hits.push(t.into_f64());
                                 }
                             }
                         }
