@@ -1,7 +1,5 @@
 use std::{cmp::Ordering, collections::HashSet};
 
-use decorum::R64;
-
 use crate::math::{Point, Scalar, Segment};
 
 use super::topology::edges::{Cycle, Edge, Edges};
@@ -149,20 +147,18 @@ impl Approximation {
         // Verify that there are no duplicate points
         let mut points = HashSet::new();
         for &point in &self.points {
-            let point_r64 = point_to_r64(point);
-
-            if points.contains(&point_r64) {
+            if points.contains(&point) {
                 duplicate_points.push(point);
             }
 
-            points.insert(point_r64);
+            points.insert(point);
         }
 
         let mut segments = HashSet::new();
         for &segment @ Segment { a, b } in &self.segments {
             // Verify that there are no duplicate segments
-            let ab = [point_to_r64(a), point_to_r64(b)];
-            let ba = [point_to_r64(b), point_to_r64(a)];
+            let ab = [a, b];
+            let ba = [b, a];
             if segments.contains(&ab) {
                 duplicate_segments.push(segment);
             }
@@ -211,14 +207,6 @@ pub struct ValidationError {
 
     /// Segments that do not refer to points from the approximation
     pub segments_with_invalid_points: Vec<Segment<3>>,
-}
-
-fn point_to_r64(point: Point<3>) -> [R64; 3] {
-    [
-        point.x().into_f64().into(),
-        point.y().into_f64().into(),
-        point.z().into_f64().into(),
-    ]
 }
 
 #[cfg(test)]
