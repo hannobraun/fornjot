@@ -71,19 +71,9 @@ impl Vector<1> {
 }
 
 impl Vector<2> {
-    /// Access the surface vector's u coordinate
-    pub fn u(&self) -> Scalar {
-        self.0[0]
-    }
-
-    /// Access the surface vector's v coordinate
-    pub fn v(&self) -> Scalar {
-        self.0[1]
-    }
-
     /// Extend a 2-dimensional vector into a 3-dimensional one
     pub fn to_xyz(&self, z: Scalar) -> Vector<3> {
-        Vector::from([self.u(), self.v(), z])
+        Vector::from([self.u, self.v, z])
     }
 }
 
