@@ -1,6 +1,9 @@
 use std::ops;
 
-use super::{Scalar, Vector};
+use super::{
+    coordinates::{Uv, Xyz, T},
+    Scalar, Vector,
+};
 
 /// An n-dimensional point
 ///
@@ -88,6 +91,48 @@ impl Point<3> {
     /// Access the point's z coordinate
     pub fn z(&self) -> Scalar {
         self.coords.z
+    }
+}
+
+impl ops::Deref for Point<1> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        self.coords.deref()
+    }
+}
+
+impl ops::Deref for Point<2> {
+    type Target = Uv;
+
+    fn deref(&self) -> &Self::Target {
+        self.coords.deref()
+    }
+}
+
+impl ops::Deref for Point<3> {
+    type Target = Xyz;
+
+    fn deref(&self) -> &Self::Target {
+        self.coords.deref()
+    }
+}
+
+impl ops::DerefMut for Point<1> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        self.coords.deref_mut()
+    }
+}
+
+impl ops::DerefMut for Point<2> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        self.coords.deref_mut()
+    }
+}
+
+impl ops::DerefMut for Point<3> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        self.coords.deref_mut()
     }
 }
 
