@@ -58,7 +58,7 @@ impl<const D: usize> Point<D> {
 impl Point<1> {
     /// Access the curve point's t coordinate
     pub fn t(&self) -> Scalar {
-        self.coords.t()
+        self.coords.t
     }
 }
 

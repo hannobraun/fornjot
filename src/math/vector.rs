@@ -63,13 +63,6 @@ impl<const D: usize> Vector<D> {
     }
 }
 
-impl Vector<1> {
-    /// Access the curve vector's t coordinate
-    pub fn t(&self) -> Scalar {
-        self.0[0]
-    }
-}
-
 impl Vector<2> {
     /// Extend a 2-dimensional vector into a 3-dimensional one
     pub fn to_xyz(&self, z: Scalar) -> Vector<3> {
