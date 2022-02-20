@@ -60,18 +60,6 @@ impl Point<1> {
     }
 }
 
-impl Point<2> {
-    /// Access the point's x coordinate
-    pub fn u(&self) -> Scalar {
-        self.coords.u
-    }
-
-    /// Access the point's y coordinate
-    pub fn v(&self) -> Scalar {
-        self.coords.v
-    }
-}
-
 impl ops::Deref for Point<1> {
     type Target = T;
 
