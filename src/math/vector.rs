@@ -1,6 +1,9 @@
 use std::ops;
 
-use super::Scalar;
+use super::{
+    coordinates::{Uv, Xyz, T},
+    Scalar,
+};
 
 /// An n-dimensional vector
 ///
@@ -103,6 +106,72 @@ impl Vector<3> {
     /// Construct a new vector from this vector's x and y components
     pub fn xy(&self) -> Vector<2> {
         Vector::from([self.x(), self.y()])
+    }
+}
+
+impl ops::Deref for Vector<1> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        let ptr = self.0.as_ptr() as *const Self::Target;
+
+        // This is sound. We've created this pointer from a valid instance, that
+        // has the same size and layout as the target.
+        unsafe { &*ptr }
+    }
+}
+
+impl ops::Deref for Vector<2> {
+    type Target = Uv;
+
+    fn deref(&self) -> &Self::Target {
+        let ptr = self.0.as_ptr() as *const Self::Target;
+
+        // This is sound. We've created this pointer from a valid instance, that
+        // has the same size and layout as the target.
+        unsafe { &*ptr }
+    }
+}
+
+impl ops::Deref for Vector<3> {
+    type Target = Xyz;
+
+    fn deref(&self) -> &Self::Target {
+        let ptr = self.0.as_ptr() as *const Self::Target;
+
+        // This is sound. We've created this pointer from a valid instance, that
+        // has the same size and layout as the target.
+        unsafe { &*ptr }
+    }
+}
+
+impl ops::DerefMut for Vector<1> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        let ptr = self.0.as_mut_ptr() as *mut Self::Target;
+
+        // This is sound. We've created this pointer from a valid instance, that
+        // has the same size and layout as the target.
+        unsafe { &mut *ptr }
+    }
+}
+
+impl ops::DerefMut for Vector<2> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        let ptr = self.0.as_mut_ptr() as *mut Self::Target;
+
+        // This is sound. We've created this pointer from a valid instance, that
+        // has the same size and layout as the target.
+        unsafe { &mut *ptr }
+    }
+}
+
+impl ops::DerefMut for Vector<3> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        let ptr = self.0.as_mut_ptr() as *mut Self::Target;
+
+        // This is sound. We've created this pointer from a valid instance, that
+        // has the same size and layout as the target.
+        unsafe { &mut *ptr }
     }
 }
 
