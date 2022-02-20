@@ -59,7 +59,7 @@ impl Circle {
 
     /// Convert a point on the curve into model coordinates
     pub fn point_curve_to_model(&self, point: &Point<1>) -> Point<3> {
-        self.center + self.vector_curve_to_model(&point.coords())
+        self.center + self.vector_curve_to_model(&point.coords)
     }
 
     /// Convert a vector on the curve into model coordinates

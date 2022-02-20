@@ -55,11 +55,6 @@ impl<const D: usize> Point<D> {
     pub fn z_mut(&mut self) -> &mut Scalar {
         &mut self.coords.0[2]
     }
-
-    /// Access the point's coordinates as a vector
-    pub fn coords(&self) -> Vector<D> {
-        self.coords
-    }
 }
 
 impl Point<1> {
