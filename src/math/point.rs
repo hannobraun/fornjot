@@ -53,13 +53,6 @@ impl<const D: usize> Point<D> {
     }
 }
 
-impl Point<1> {
-    /// Access the curve point's t coordinate
-    pub fn t(&self) -> Scalar {
-        self.coords.t
-    }
-}
-
 impl ops::Deref for Point<1> {
     type Target = T;
 
