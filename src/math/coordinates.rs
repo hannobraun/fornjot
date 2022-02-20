@@ -1,5 +1,3 @@
-#![allow(unused)]
-
 use super::Scalar;
 
 /// 1-dimensional curve coordinates
