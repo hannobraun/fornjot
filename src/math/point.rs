@@ -13,7 +13,7 @@ use super::{Scalar, Vector};
 /// The goal of this type is to eventually implement `Eq` and `Hash`, making it
 /// easier to work with vectors. This is a work in progress.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, Ord, PartialOrd)]
-pub struct Point<const D: usize>([Scalar; D]);
+pub struct Point<const D: usize>(pub [Scalar; D]);
 
 impl<const D: usize> Point<D> {
     /// Construct a `Point` at the origin of the coordinate system
