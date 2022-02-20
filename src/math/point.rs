@@ -13,7 +13,9 @@ use super::{Scalar, Vector};
 /// The goal of this type is to eventually implement `Eq` and `Hash`, making it
 /// easier to work with vectors. This is a work in progress.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, Ord, PartialOrd)]
-pub struct Point<const D: usize>(pub [Scalar; D]);
+pub struct Point<const D: usize> {
+    pub coords: Vector<D>,
+}
 
 impl<const D: usize> Point<D> {
     /// Construct a `Point` at the origin of the coordinate system
@@ -23,74 +25,84 @@ impl<const D: usize> Point<D> {
 
     /// Construct a `Point` from an array
     pub fn from_array(array: [f64; D]) -> Self {
-        Self(array.map(Scalar::from_f64))
+        Self {
+            coords: array.map(Scalar::from_f64).into(),
+        }
     }
 
     /// Construct a `Point` from an nalgebra vector
     pub fn from_na(point: nalgebra::Point<f64, D>) -> Self {
-        Self(point.coords.data.0[0].map(Scalar::from_f64))
+        Self {
+            coords: point.coords.into(),
+        }
     }
 
     /// Convert the point into an nalgebra point
     pub fn to_na(&self) -> nalgebra::Point<f64, D> {
-        self.0.map(Scalar::into_f64).into()
+        nalgebra::Point {
+            coords: self.coords.into(),
+        }
     }
 
     /// Convert to a 1-dimensional point
     pub fn to_t(&self) -> Point<1> {
-        Point([self.0[0]])
+        Point {
+            coords: self.coords.to_t(),
+        }
     }
 
     /// Access a mutable reference to the point's z coordinate
     pub fn z_mut(&mut self) -> &mut Scalar {
-        &mut self.0[2]
+        &mut self.coords.0[2]
     }
 
     /// Access the point's coordinates as a vector
     pub fn coords(&self) -> Vector<D> {
-        Vector::from(self.0)
+        self.coords
     }
 }
 
 impl Point<1> {
     /// Access the curve point's t coordinate
     pub fn t(&self) -> Scalar {
-        self.0[0]
+        self.coords.t()
     }
 }
 
 impl Point<2> {
     /// Access the point's x coordinate
     pub fn u(&self) -> Scalar {
-        self.0[0]
+        self.coords.u()
     }
 
     /// Access the point's y coordinate
     pub fn v(&self) -> Scalar {
-        self.0[1]
+        self.coords.v()
     }
 }
 
 impl Point<3> {
     /// Access the point's x coordinate
     pub fn x(&self) -> Scalar {
-        self.0[0]
+        self.coords.x()
     }
 
     /// Access the point's y coordinate
     pub fn y(&self) -> Scalar {
-        self.0[1]
+        self.coords.y()
     }
 
     /// Access the point's z coordinate
     pub fn z(&self) -> Scalar {
-        self.0[2]
+        self.coords.z()
     }
 }
 
 impl<const D: usize> From<[Scalar; D]> for Point<D> {
     fn from(array: [Scalar; D]) -> Self {
-        Self(array)
+        Self {
+            coords: array.into(),
+        }
     }
 }
 
@@ -108,13 +120,13 @@ impl<const D: usize> From<nalgebra::Point<f64, D>> for Point<D> {
 
 impl<const D: usize> From<Point<D>> for [f32; D] {
     fn from(point: Point<D>) -> Self {
-        point.0.map(|scalar| scalar.into_f32())
+        point.coords.into()
     }
 }
 
 impl<const D: usize> From<Point<D>> for [f64; D] {
     fn from(point: Point<D>) -> Self {
-        point.0.map(|scalar| scalar.into_f64())
+        point.coords.into()
     }
 }
 
@@ -166,6 +178,6 @@ impl<const D: usize> AbsDiffEq for Point<D> {
     }
 
     fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
-        self.0.abs_diff_eq(&other.0, epsilon)
+        self.coords.abs_diff_eq(&other.coords, epsilon)
     }
 }
