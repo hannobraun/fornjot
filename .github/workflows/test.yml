@@ -21,11 +21,6 @@ on:
     paths-ignore:
       - "docs/**"
       - "**.md"
-  # The following makes this workflow re-usable by other repositories
-  # without having to copy the entire thing.
-  #
-  # See https://docs.github.com/en/actions/learn-github-actions/reusing-workflows
-  workflow_call: {}
 
 env:
   CARGO_TERM_COLOR: always
