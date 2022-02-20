@@ -1,7 +1,5 @@
 use std::ops;
 
-use approx::AbsDiffEq;
-
 use super::Scalar;
 
 /// An n-dimensional vector
@@ -168,8 +166,8 @@ impl<const D: usize> ops::Div<Scalar> for Vector<D> {
     }
 }
 
-impl<const D: usize> AbsDiffEq for Vector<D> {
-    type Epsilon = <Scalar as AbsDiffEq>::Epsilon;
+impl<const D: usize> approx::AbsDiffEq for Vector<D> {
+    type Epsilon = <Scalar as approx::AbsDiffEq>::Epsilon;
 
     fn default_epsilon() -> Self::Epsilon {
         f64::default_epsilon()

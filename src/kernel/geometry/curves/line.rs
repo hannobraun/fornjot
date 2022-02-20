@@ -1,5 +1,3 @@
-use approx::AbsDiffEq;
-
 use crate::math::{Point, Transform, Vector};
 
 /// A line, defined by a point and a vector
@@ -59,8 +57,8 @@ impl Line {
     }
 }
 
-impl AbsDiffEq for Line {
-    type Epsilon = <f64 as AbsDiffEq>::Epsilon;
+impl approx::AbsDiffEq for Line {
+    type Epsilon = <f64 as approx::AbsDiffEq>::Epsilon;
 
     fn default_epsilon() -> Self::Epsilon {
         f64::default_epsilon()

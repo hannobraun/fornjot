@@ -1,7 +1,5 @@
 use std::ops;
 
-use approx::AbsDiffEq;
-
 use super::{Scalar, Vector};
 
 /// An n-dimensional point
@@ -165,8 +163,8 @@ impl<const D: usize> ops::Mul<f64> for Point<D> {
     }
 }
 
-impl<const D: usize> AbsDiffEq for Point<D> {
-    type Epsilon = <Vector<D> as AbsDiffEq>::Epsilon;
+impl<const D: usize> approx::AbsDiffEq for Point<D> {
+    type Epsilon = <Vector<D> as approx::AbsDiffEq>::Epsilon;
 
     fn default_epsilon() -> Self::Epsilon {
         f64::default_epsilon()

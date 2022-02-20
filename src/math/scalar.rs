@@ -1,7 +1,5 @@
 use std::{cmp, f64::consts::PI, hash::Hash, ops};
 
-use approx::AbsDiffEq;
-
 /// A rational, finite scalar value
 ///
 /// This is a wrapper around `f64`. On construction, it checks that the `f64`
@@ -272,8 +270,8 @@ impl num_traits::Signed for Scalar {
     }
 }
 
-impl AbsDiffEq for Scalar {
-    type Epsilon = <f64 as AbsDiffEq>::Epsilon;
+impl approx::AbsDiffEq for Scalar {
+    type Epsilon = <f64 as approx::AbsDiffEq>::Epsilon;
 
     fn default_epsilon() -> Self::Epsilon {
         f64::default_epsilon()
