@@ -1,3 +1,4 @@
+use crate::math::Aabb;
 use std::convert::TryInto;
 
 use wgpu::util::DeviceExt;
@@ -8,6 +9,7 @@ use super::vertices::{Vertex, Vertices};
 pub struct Geometries {
     pub mesh: Geometry,
     pub lines: Geometry,
+    pub aabb: Aabb<3>,
 }
 
 impl Geometries {
@@ -15,12 +17,13 @@ impl Geometries {
         device: &wgpu::Device,
         mesh: &Vertices,
         debug_info: &Vertices,
+        aabb: Aabb<3>,
     ) -> Self {
         let mesh = Geometry::new(device, mesh.vertices(), mesh.indices());
         let lines =
             Geometry::new(device, debug_info.vertices(), debug_info.indices());
 
-        Self { mesh, lines }
+        Self { mesh, lines, aabb }
     }
 }
 
