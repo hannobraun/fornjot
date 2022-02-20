@@ -90,22 +90,22 @@ impl Approximation {
         // As this is a cycle, neighboring edges are going to share vertices.
         // Let's remove all those duplicates.
         points.sort_by(|a, b| {
-            if a.x() < b.x() {
+            if a.x < b.x {
                 return Ordering::Less;
             }
-            if a.x() > b.x() {
+            if a.x > b.x {
                 return Ordering::Greater;
             }
-            if a.y() < b.y() {
+            if a.y < b.y {
                 return Ordering::Less;
             }
-            if a.y() > b.y() {
+            if a.y > b.y {
                 return Ordering::Greater;
             }
-            if a.z() < b.z() {
+            if a.z < b.z {
                 return Ordering::Less;
             }
-            if a.z() > b.z() {
+            if a.z > b.z {
                 return Ordering::Greater;
             }
 

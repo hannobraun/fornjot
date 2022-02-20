@@ -24,7 +24,7 @@ impl Swept {
 
     /// Convert a point in model coordinates to surface coordinates
     pub fn point_model_to_surface(&self, point: &Point<3>) -> Point<2> {
-        let u = self.curve.point_model_to_curve(point).t();
+        let u = self.curve.point_model_to_curve(point).t;
         let v = (point - self.curve.origin()).dot(&self.path.normalize())
             / self.path.magnitude();
 
@@ -33,13 +33,12 @@ impl Swept {
 
     /// Convert a point in surface coordinates to model coordinates
     pub fn point_surface_to_model(&self, point: &Point<2>) -> Point<3> {
-        self.curve.point_curve_to_model(&point.to_t()) + self.path * point.v()
+        self.curve.point_curve_to_model(&point.to_t()) + self.path * point.v
     }
 
     /// Convert a vector in surface coordinates to model coordinates
     pub fn vector_surface_to_model(&self, vector: &Vector<2>) -> Vector<3> {
-        self.curve.vector_curve_to_model(&vector.to_t())
-            + self.path * vector.v()
+        self.curve.vector_curve_to_model(&vector.to_t()) + self.path * vector.v
     }
 }
 

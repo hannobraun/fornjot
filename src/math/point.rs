@@ -1,8 +1,9 @@
 use std::ops;
 
-use approx::AbsDiffEq;
-
-use super::{Scalar, Vector};
+use super::{
+    coordinates::{Uv, Xyz, T},
+    Scalar, Vector,
+};
 
 /// An n-dimensional point
 ///
@@ -13,7 +14,9 @@ use super::{Scalar, Vector};
 /// The goal of this type is to eventually implement `Eq` and `Hash`, making it
 /// easier to work with vectors. This is a work in progress.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, Ord, PartialOrd)]
-pub struct Point<const D: usize>([Scalar; D]);
+pub struct Point<const D: usize> {
+    pub coords: Vector<D>,
+}
 
 impl<const D: usize> Point<D> {
     /// Construct a `Point` at the origin of the coordinate system
@@ -23,74 +26,80 @@ impl<const D: usize> Point<D> {
 
     /// Construct a `Point` from an array
     pub fn from_array(array: [f64; D]) -> Self {
-        Self(array.map(Scalar::from_f64))
+        Self {
+            coords: array.map(Scalar::from_f64).into(),
+        }
     }
 
     /// Construct a `Point` from an nalgebra vector
     pub fn from_na(point: nalgebra::Point<f64, D>) -> Self {
-        Self(point.coords.data.0[0].map(Scalar::from_f64))
+        Self {
+            coords: point.coords.into(),
+        }
     }
 
     /// Convert the point into an nalgebra point
     pub fn to_na(&self) -> nalgebra::Point<f64, D> {
-        self.0.map(Scalar::into_f64).into()
+        nalgebra::Point {
+            coords: self.coords.into(),
+        }
     }
 
     /// Convert to a 1-dimensional point
     pub fn to_t(&self) -> Point<1> {
-        Point([self.0[0]])
-    }
-
-    /// Access a mutable reference to the point's z coordinate
-    pub fn z_mut(&mut self) -> &mut Scalar {
-        &mut self.0[2]
-    }
-
-    /// Access the point's coordinates as a vector
-    pub fn coords(&self) -> Vector<D> {
-        Vector::from(self.0)
+        Point {
+            coords: self.coords.to_t(),
+        }
     }
 }
 
-impl Point<1> {
-    /// Access the curve point's t coordinate
-    pub fn t(&self) -> Scalar {
-        self.0[0]
+impl ops::Deref for Point<1> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        self.coords.deref()
     }
 }
 
-impl Point<2> {
-    /// Access the point's x coordinate
-    pub fn u(&self) -> Scalar {
-        self.0[0]
-    }
+impl ops::Deref for Point<2> {
+    type Target = Uv;
 
-    /// Access the point's y coordinate
-    pub fn v(&self) -> Scalar {
-        self.0[1]
+    fn deref(&self) -> &Self::Target {
+        self.coords.deref()
     }
 }
 
-impl Point<3> {
-    /// Access the point's x coordinate
-    pub fn x(&self) -> Scalar {
-        self.0[0]
-    }
+impl ops::Deref for Point<3> {
+    type Target = Xyz;
 
-    /// Access the point's y coordinate
-    pub fn y(&self) -> Scalar {
-        self.0[1]
+    fn deref(&self) -> &Self::Target {
+        self.coords.deref()
     }
+}
 
-    /// Access the point's z coordinate
-    pub fn z(&self) -> Scalar {
-        self.0[2]
+impl ops::DerefMut for Point<1> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        self.coords.deref_mut()
+    }
+}
+
+impl ops::DerefMut for Point<2> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        self.coords.deref_mut()
+    }
+}
+
+impl ops::DerefMut for Point<3> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        self.coords.deref_mut()
     }
 }
 
 impl<const D: usize> From<[Scalar; D]> for Point<D> {
     fn from(array: [Scalar; D]) -> Self {
-        Self(array)
+        Self {
+            coords: array.into(),
+        }
     }
 }
 
@@ -108,13 +117,13 @@ impl<const D: usize> From<nalgebra::Point<f64, D>> for Point<D> {
 
 impl<const D: usize> From<Point<D>> for [f32; D] {
     fn from(point: Point<D>) -> Self {
-        point.0.map(|scalar| scalar.into_f32())
+        point.coords.into()
     }
 }
 
 impl<const D: usize> From<Point<D>> for [f64; D] {
     fn from(point: Point<D>) -> Self {
-        point.0.map(|scalar| scalar.into_f64())
+        point.coords.into()
     }
 }
 
@@ -158,14 +167,14 @@ impl<const D: usize> ops::Mul<f64> for Point<D> {
     }
 }
 
-impl<const D: usize> AbsDiffEq for Point<D> {
-    type Epsilon = <f64 as AbsDiffEq>::Epsilon;
+impl<const D: usize> approx::AbsDiffEq for Point<D> {
+    type Epsilon = <Vector<D> as approx::AbsDiffEq>::Epsilon;
 
     fn default_epsilon() -> Self::Epsilon {
         f64::default_epsilon()
     }
 
     fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
-        self.0.abs_diff_eq(&other.0, epsilon)
+        self.coords.abs_diff_eq(&other.coords, epsilon)
     }
 }

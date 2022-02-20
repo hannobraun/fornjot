@@ -1,8 +1,9 @@
 use std::ops;
 
-use approx::AbsDiffEq;
-
-use super::Scalar;
+use super::{
+    coordinates::{Uv, Xyz, T},
+    Scalar,
+};
 
 /// An n-dimensional vector
 ///
@@ -13,7 +14,7 @@ use super::Scalar;
 /// The goal of this type is to eventually implement `Eq` and `Hash`, making it
 /// easier to work with vectors. This is a work in progress.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, Ord, PartialOrd)]
-pub struct Vector<const D: usize>([Scalar; D]);
+pub struct Vector<const D: usize>(pub [Scalar; D]);
 
 impl<const D: usize> Vector<D> {
     /// Construct a `Vector` from an array
@@ -62,44 +63,83 @@ impl<const D: usize> Vector<D> {
     }
 }
 
-impl Vector<1> {
-    /// Access the curve vector's t coordinate
-    pub fn t(&self) -> Scalar {
-        self.0[0]
-    }
-}
-
 impl Vector<2> {
-    /// Access the surface vector's u coordinate
-    pub fn u(&self) -> Scalar {
-        self.0[0]
-    }
-
-    /// Access the surface vector's v coordinate
-    pub fn v(&self) -> Scalar {
-        self.0[1]
-    }
-
     /// Extend a 2-dimensional vector into a 3-dimensional one
     pub fn to_xyz(&self, z: Scalar) -> Vector<3> {
-        Vector::from([self.u(), self.v(), z])
+        Vector::from([self.u, self.v, z])
     }
 }
 
 impl Vector<3> {
-    /// Access the vector's x coordinate
-    pub fn x(&self) -> Scalar {
-        self.0[0]
-    }
-
-    /// Access the vector's y coordinate
-    pub fn y(&self) -> Scalar {
-        self.0[1]
-    }
-
     /// Construct a new vector from this vector's x and y components
     pub fn xy(&self) -> Vector<2> {
-        Vector::from([self.x(), self.y()])
+        Vector::from([self.x, self.y])
+    }
+}
+
+impl ops::Deref for Vector<1> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        let ptr = self.0.as_ptr() as *const Self::Target;
+
+        // This is sound. We've created this pointer from a valid instance, that
+        // has the same size and layout as the target.
+        unsafe { &*ptr }
+    }
+}
+
+impl ops::Deref for Vector<2> {
+    type Target = Uv;
+
+    fn deref(&self) -> &Self::Target {
+        let ptr = self.0.as_ptr() as *const Self::Target;
+
+        // This is sound. We've created this pointer from a valid instance, that
+        // has the same size and layout as the target.
+        unsafe { &*ptr }
+    }
+}
+
+impl ops::Deref for Vector<3> {
+    type Target = Xyz;
+
+    fn deref(&self) -> &Self::Target {
+        let ptr = self.0.as_ptr() as *const Self::Target;
+
+        // This is sound. We've created this pointer from a valid instance, that
+        // has the same size and layout as the target.
+        unsafe { &*ptr }
+    }
+}
+
+impl ops::DerefMut for Vector<1> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        let ptr = self.0.as_mut_ptr() as *mut Self::Target;
+
+        // This is sound. We've created this pointer from a valid instance, that
+        // has the same size and layout as the target.
+        unsafe { &mut *ptr }
+    }
+}
+
+impl ops::DerefMut for Vector<2> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        let ptr = self.0.as_mut_ptr() as *mut Self::Target;
+
+        // This is sound. We've created this pointer from a valid instance, that
+        // has the same size and layout as the target.
+        unsafe { &mut *ptr }
+    }
+}
+
+impl ops::DerefMut for Vector<3> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        let ptr = self.0.as_mut_ptr() as *mut Self::Target;
+
+        // This is sound. We've created this pointer from a valid instance, that
+        // has the same size and layout as the target.
+        unsafe { &mut *ptr }
     }
 }
 
@@ -127,6 +167,18 @@ impl<const D: usize> From<Vector<D>> for [f32; D] {
     }
 }
 
+impl<const D: usize> From<Vector<D>> for [f64; D] {
+    fn from(vector: Vector<D>) -> Self {
+        vector.0.map(|scalar| scalar.into_f64())
+    }
+}
+
+impl<const D: usize> From<Vector<D>> for nalgebra::SVector<f64, D> {
+    fn from(vector: Vector<D>) -> Self {
+        vector.to_na()
+    }
+}
+
 impl<const D: usize> ops::Add<Self> for Vector<D> {
     type Output = Self;
 
@@ -151,8 +203,8 @@ impl<const D: usize> ops::Div<Scalar> for Vector<D> {
     }
 }
 
-impl<const D: usize> AbsDiffEq for Vector<D> {
-    type Epsilon = <f64 as AbsDiffEq>::Epsilon;
+impl<const D: usize> approx::AbsDiffEq for Vector<D> {
+    type Epsilon = <Scalar as approx::AbsDiffEq>::Epsilon;
 
     fn default_epsilon() -> Self::Epsilon {
         f64::default_epsilon()

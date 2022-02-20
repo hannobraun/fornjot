@@ -48,7 +48,7 @@ impl Circle {
     /// error.
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
         let v = point - self.center;
-        let atan = Scalar::atan2(v.y(), v.x());
+        let atan = Scalar::atan2(v.y, v.x);
         let coord = if atan >= Scalar::ZERO {
             atan
         } else {
@@ -59,13 +59,13 @@ impl Circle {
 
     /// Convert a point on the curve into model coordinates
     pub fn point_curve_to_model(&self, point: &Point<1>) -> Point<3> {
-        self.center + self.vector_curve_to_model(&point.coords())
+        self.center + self.vector_curve_to_model(&point.coords)
     }
 
     /// Convert a vector on the curve into model coordinates
-    pub fn vector_curve_to_model(&self, point: &Vector<1>) -> Vector<3> {
+    pub fn vector_curve_to_model(&self, vector: &Vector<1>) -> Vector<3> {
         let radius = self.radius.magnitude();
-        let angle = point.t();
+        let angle = vector.t;
 
         let (sin, cos) = angle.sin_cos();
 

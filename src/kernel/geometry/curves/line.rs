@@ -1,5 +1,3 @@
-use approx::AbsDiffEq;
-
 use crate::math::{Point, Transform, Vector};
 
 /// A line, defined by a point and a vector
@@ -50,17 +48,17 @@ impl Line {
 
     /// Convert a point on the curve into model coordinates
     pub fn point_curve_to_model(&self, point: &Point<1>) -> Point<3> {
-        self.origin + self.vector_curve_to_model(&point.coords())
+        self.origin + self.vector_curve_to_model(&point.coords)
     }
 
     /// Convert a vector on the curve into model coordinates
-    pub fn vector_curve_to_model(&self, point: &Vector<1>) -> Vector<3> {
-        self.direction * point.t()
+    pub fn vector_curve_to_model(&self, vector: &Vector<1>) -> Vector<3> {
+        self.direction * vector.t
     }
 }
 
-impl AbsDiffEq for Line {
-    type Epsilon = <f64 as AbsDiffEq>::Epsilon;
+impl approx::AbsDiffEq for Line {
+    type Epsilon = <f64 as approx::AbsDiffEq>::Epsilon;
 
     fn default_epsilon() -> Self::Epsilon {
         f64::default_epsilon()
