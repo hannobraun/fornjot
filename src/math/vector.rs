@@ -169,7 +169,7 @@ impl<const D: usize> ops::Div<Scalar> for Vector<D> {
 }
 
 impl<const D: usize> AbsDiffEq for Vector<D> {
-    type Epsilon = <f64 as AbsDiffEq>::Epsilon;
+    type Epsilon = <Scalar as AbsDiffEq>::Epsilon;
 
     fn default_epsilon() -> Self::Epsilon {
         f64::default_epsilon()

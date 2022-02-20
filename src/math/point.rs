@@ -166,7 +166,7 @@ impl<const D: usize> ops::Mul<f64> for Point<D> {
 }
 
 impl<const D: usize> AbsDiffEq for Point<D> {
-    type Epsilon = <f64 as AbsDiffEq>::Epsilon;
+    type Epsilon = <Vector<D> as AbsDiffEq>::Epsilon;
 
     fn default_epsilon() -> Self::Epsilon {
         f64::default_epsilon()
