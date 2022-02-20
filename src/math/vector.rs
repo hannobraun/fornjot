@@ -97,6 +97,11 @@ impl Vector<3> {
         self.0[1]
     }
 
+    /// Access the vector's z coordinate
+    pub fn z(&self) -> Scalar {
+        self.0[2]
+    }
+
     /// Construct a new vector from this vector's x and y components
     pub fn xy(&self) -> Vector<2> {
         Vector::from([self.x(), self.y()])
