@@ -1,4 +1,5 @@
 pub mod aabb;
+pub mod coordinates;
 pub mod point;
 pub mod scalar;
 pub mod segment;
