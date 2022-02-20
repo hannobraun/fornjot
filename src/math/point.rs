@@ -51,11 +51,6 @@ impl<const D: usize> Point<D> {
             coords: self.coords.to_t(),
         }
     }
-
-    /// Access a mutable reference to the point's z coordinate
-    pub fn z_mut(&mut self) -> &mut Scalar {
-        &mut self.coords.0[2]
-    }
 }
 
 impl Point<1> {
@@ -74,23 +69,6 @@ impl Point<2> {
     /// Access the point's y coordinate
     pub fn v(&self) -> Scalar {
         self.coords.v
-    }
-}
-
-impl Point<3> {
-    /// Access the point's x coordinate
-    pub fn x(&self) -> Scalar {
-        self.coords.x
-    }
-
-    /// Access the point's y coordinate
-    pub fn y(&self) -> Scalar {
-        self.coords.y
-    }
-
-    /// Access the point's z coordinate
-    pub fn z(&self) -> Scalar {
-        self.coords.z
     }
 }
 
