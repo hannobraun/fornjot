@@ -77,17 +77,17 @@ impl Point<2> {
 impl Point<3> {
     /// Access the point's x coordinate
     pub fn x(&self) -> Scalar {
-        self.coords.x()
+        self.coords.x
     }
 
     /// Access the point's y coordinate
     pub fn y(&self) -> Scalar {
-        self.coords.y()
+        self.coords.y
     }
 
     /// Access the point's z coordinate
     pub fn z(&self) -> Scalar {
-        self.coords.z()
+        self.coords.z
     }
 }
 

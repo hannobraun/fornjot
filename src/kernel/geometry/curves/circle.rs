@@ -48,7 +48,7 @@ impl Circle {
     /// error.
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
         let v = point - self.center;
-        let atan = Scalar::atan2(v.y(), v.x());
+        let atan = Scalar::atan2(v.y, v.x);
         let coord = if atan >= Scalar::ZERO {
             atan
         } else {
