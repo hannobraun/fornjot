@@ -132,7 +132,7 @@ impl Camera {
         &self,
         window: &Window,
         cursor: Option<PhysicalPosition<f64>>,
-        triangles: &Vec<Triangle>,
+        triangles: &[Triangle],
     ) -> FocusPoint {
         let cursor = match cursor {
             Some(cursor) => cursor,

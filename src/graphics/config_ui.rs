@@ -88,7 +88,7 @@ impl ConfigUi {
             // - @hannobraun
             &mut StagingBelt::new(1024),
             encoder,
-            &view,
+            view,
             surface_config.width,
             surface_config.height,
         )?;

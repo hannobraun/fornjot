@@ -121,7 +121,7 @@ impl Handler {
         now: Instant,
         camera: &mut Camera,
         window: &Window,
-        triangles: &Vec<Triangle>,
+        triangles: &[Triangle],
     ) {
         let focus_point = camera.focus_point(window, self.cursor, triangles);
 
