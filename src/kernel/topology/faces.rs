@@ -51,6 +51,9 @@ pub enum Face {
     /// A face is defined by a surface, and is bounded by edges that lie in that
     /// surface.
     Face {
+        /// The surface that defines this face
+        surface: Surface,
+
         /// The edges that bound the face
         ///
         /// # Implementation Note
@@ -62,9 +65,6 @@ pub enum Face {
         /// more specialized data structure here, that specifies the edges in
         /// surface coordinates.
         edges: Edges,
-
-        /// The surface that defines this face
-        surface: Surface,
     },
 
     /// The triangles of the face
