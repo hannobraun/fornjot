@@ -39,5 +39,5 @@ version = "0.5.0"
 path    = "fj"
 
 [dependencies.tracing-subscriber]
-version  = "0.3.8"
+version  = "0.3.9"
 features = ["fmt"]
