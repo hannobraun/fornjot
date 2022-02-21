@@ -69,6 +69,18 @@ impl Vertex<3> {
     }
 }
 
+impl Vertex<1> {
+    /// Create a transformed vertex
+    ///
+    /// The transformed vertex has its canonical form transformed by the
+    /// transformation provided, but is otherwise identical.
+    #[must_use]
+    pub fn transform(mut self, transform: &Transform) -> Self {
+        self.canonical = transform.transform_point(&self.canonical);
+        self
+    }
+}
+
 impl<const D: usize> Vertex<D> {
     /// Access the location of this vertex
     pub fn location(&self) -> &Point<D> {
@@ -81,15 +93,5 @@ impl<const D: usize> Vertex<D> {
             location: self.canonical,
             canonical: self.canonical,
         }
-    }
-
-    /// Create a transformed vertex
-    ///
-    /// The transformed vertex has its canonical form transformed by the
-    /// transformation provided, but is otherwise identical.
-    #[must_use]
-    pub fn transform(mut self, transform: &Transform) -> Self {
-        self.canonical = transform.transform_point(&self.canonical);
-        self
     }
 }
