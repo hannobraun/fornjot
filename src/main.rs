@@ -41,7 +41,7 @@ fn main() -> anyhow::Result<()> {
 
     let mut parameters = HashMap::new();
     for parameter in args.parameters {
-        let mut parameter = parameter.splitn(2, "=");
+        let mut parameter = parameter.splitn(2, '=');
 
         let key = parameter
             .next()

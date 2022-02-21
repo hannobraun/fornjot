@@ -175,7 +175,6 @@ impl Renderer {
         let uniforms = Uniforms {
             transform: Transform::for_vertices(camera, aspect_ratio),
             transform_normals: Transform::for_normals(camera),
-            ..Uniforms::default()
         };
 
         self.queue.write_buffer(
@@ -231,7 +230,7 @@ impl Renderer {
                 &self.geometries.aabb,
                 config,
             )
-            .map_err(|err| DrawError::Text(err))?;
+            .map_err(DrawError::Text)?;
 
         let command_buffer = encoder.finish();
         self.queue.submit(Some(command_buffer));
@@ -261,9 +260,7 @@ impl Renderer {
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
         });
 
-        let view = texture.create_view(&wgpu::TextureViewDescriptor::default());
-
-        view
+        texture.create_view(&wgpu::TextureViewDescriptor::default())
     }
 
     fn clear_views(

@@ -103,7 +103,7 @@ impl Face {
     ) {
         match self {
             Self::Face { edges, surface } => {
-                let approx = Approximation::for_edges(&edges, tolerance);
+                let approx = Approximation::for_edges(edges, tolerance);
                 approx.validate().expect("Invalid approximation");
 
                 let points: Vec<_> = approx
@@ -195,7 +195,7 @@ impl Face {
                             let intersection = edge
                                 .to_parry()
                                 .cast_local_ray(&ray, f64::INFINITY, true)
-                                .map(|t| Scalar::from_f64(t));
+                                .map(Scalar::from_f64);
 
                             if let Some(t) = intersection {
                                 // Due to slight inaccuracies, we might get

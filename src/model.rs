@@ -70,7 +70,7 @@ impl Model {
         let shape = unsafe {
             let lib = libloading::Library::new(self.lib_path())?;
             let model: libloading::Symbol<ModelFn> = lib.get(b"model")?;
-            model(&arguments)
+            model(arguments)
         };
 
         Ok(shape)

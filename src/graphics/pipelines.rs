@@ -87,7 +87,7 @@ impl Pipeline {
                     front_face: wgpu::FrontFace::Ccw,
                     cull_mode: None,
                     unclipped_depth: false,
-                    polygon_mode: polygon_mode,
+                    polygon_mode,
                     conservative: false,
                 },
                 depth_stencil: Some(wgpu::DepthStencilState {
