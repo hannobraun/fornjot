@@ -72,8 +72,13 @@ impl Vertex<3> {
 impl Vertex<1> {
     /// Create a transformed vertex
     ///
-    /// The transformed vertex has its canonical form transformed by the
-    /// transformation provided, but is otherwise identical.
+    /// This is a 3D transformation that transforms the canonical form of the
+    /// vertex, but leaves the location untouched. Since `self` is a
+    /// 1-dimensional vertex, transforming the location is not possible.
+    ///
+    /// And, presumably, also not necessary, as this is likely part of a larger
+    /// transformation that also transforms the curve the vertex is on. Making
+    /// sure this is the case, is the responsibility of the caller.
     #[must_use]
     pub fn transform(mut self, transform: &Transform) -> Self {
         self.canonical = transform.transform_point(&self.canonical);
