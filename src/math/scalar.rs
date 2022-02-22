@@ -26,7 +26,7 @@ use decorum::R64;
 /// explicit `unwrap`/`expect` calls would add nothing. In addition, the mandate
 /// not to fail is not motivated in any way, in the [`From`]/[`Into`]
 /// documentation.
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, PartialEq, PartialOrd)]
 pub struct Scalar(f64);
 
 impl Scalar {
@@ -150,12 +150,6 @@ impl From<f64> for Scalar {
 impl From<Scalar> for f64 {
     fn from(scalar: Scalar) -> Self {
         scalar.into_f64()
-    }
-}
-
-impl cmp::PartialOrd for Scalar {
-    fn partial_cmp(&self, other: &Self) -> Option<cmp::Ordering> {
-        self.0.partial_cmp(&other.0)
     }
 }
 
