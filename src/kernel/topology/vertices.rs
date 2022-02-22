@@ -77,6 +77,10 @@ impl Vertex<3> {
 impl Vertex<1> {
     /// Create a transformed vertex
     ///
+    /// You **MUST NOT** use this method to construct a new instance of `Vertex`
+    /// that represents an already existing vertex. See documentation of
+    /// [`Vertex`] for more information.
+    ///
     /// This is a 3D transformation that transforms the canonical form of the
     /// vertex, but leaves the location untouched. Since `self` is a
     /// 1-dimensional vertex, transforming the location is not possible.
