@@ -1,4 +1,4 @@
-use std::ops;
+use std::{fmt, ops};
 
 use super::{
     coordinates::{Uv, Xyz, T},
@@ -13,7 +13,7 @@ use super::{
 ///
 /// The goal of this type is to eventually implement `Eq` and `Hash`, making it
 /// easier to work with vectors. This is a work in progress.
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, Ord, PartialOrd)]
+#[derive(Clone, Copy, Eq, Hash, PartialEq, Ord, PartialOrd)]
 pub struct Point<const D: usize> {
     pub coords: Vector<D>,
 }
@@ -164,6 +164,12 @@ impl<const D: usize> ops::Mul<f64> for Point<D> {
 
     fn mul(self, rhs: f64) -> Self::Output {
         self.to_na().mul(rhs).into()
+    }
+}
+
+impl<const D: usize> fmt::Debug for Point<D> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.coords.fmt(f)
     }
 }
 

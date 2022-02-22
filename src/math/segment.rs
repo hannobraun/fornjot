@@ -1,7 +1,9 @@
+use std::fmt;
+
 use super::Point;
 
 /// A line segment, defined by its two end points
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, Ord, PartialOrd)]
+#[derive(Clone, Copy, Eq, Hash, PartialEq, Ord, PartialOrd)]
 pub struct Segment<const D: usize> {
     pub a: Point<D>,
     pub b: Point<D>,
@@ -36,5 +38,11 @@ impl From<[Point<3>; 2]> for Segment<3> {
             a: points[0],
             b: points[1],
         }
+    }
+}
+
+impl<const D: usize> fmt::Debug for Segment<D> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "[{:?} -> {:?}]", self.a, self.b)
     }
 }

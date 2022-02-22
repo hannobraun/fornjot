@@ -1,4 +1,4 @@
-use std::{cmp, f64::consts::PI, hash::Hash, ops};
+use std::{cmp, f64::consts::PI, fmt, hash::Hash, ops};
 
 use decorum::R64;
 
@@ -26,7 +26,7 @@ use decorum::R64;
 /// explicit `unwrap`/`expect` calls would add nothing. In addition, the mandate
 /// not to fail is not motivated in any way, in the [`From`]/[`Into`]
 /// documentation.
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, PartialEq)]
 pub struct Scalar(f64);
 
 impl Scalar {
@@ -269,6 +269,12 @@ impl num_traits::Signed for Scalar {
 
     fn is_negative(&self) -> bool {
         <f64 as num_traits::Signed>::is_negative(&self.0)
+    }
+}
+
+impl fmt::Debug for Scalar {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.0.fmt(f)
     }
 }
 
