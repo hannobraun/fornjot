@@ -110,7 +110,14 @@ impl Edge {
         self.reverse = !self.reverse;
     }
 
-    /// Transform the edge
+    /// Create a transformed edge
+    ///
+    /// This method constructs new instances of [`Vertex`], by calling
+    /// [`Vertex::transform`].
+    ///
+    /// You **MUST NOT** use this method to construct a new instance of `Vertex`
+    /// that represents an already existing vertex. See documentation of
+    /// [`Vertex`] for more information.
     #[must_use]
     pub fn transform(mut self, transform: &Transform) -> Self {
         self.curve = self.curve.transform(transform);
