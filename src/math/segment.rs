@@ -5,8 +5,8 @@ use super::Point;
 /// A line segment, defined by its two end points
 #[derive(Clone, Copy, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Segment<const D: usize> {
-    pub a: Point<D>,
-    pub b: Point<D>,
+    a: Point<D>,
+    b: Point<D>,
 }
 
 impl Segment<2> {
@@ -14,12 +14,20 @@ impl Segment<2> {
     pub fn to_parry(&self) -> parry2d_f64::shape::Segment {
         [self.a.to_na(), self.b.to_na()].into()
     }
+
+    pub fn points(&self) -> [Point<2>; 2] {
+        [self.a, self.b]
+    }
 }
 
 impl Segment<3> {
     /// Convert the 3-dimensional segment to a Parry segment
     pub fn to_parry(&self) -> parry3d_f64::shape::Segment {
         [self.a.to_na(), self.b.to_na()].into()
+    }
+
+    pub fn points(&self) -> [Point<3>; 2] {
+        [self.a, self.b]
     }
 }
 

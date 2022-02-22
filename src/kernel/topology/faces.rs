@@ -119,7 +119,9 @@ impl Face {
                 let segments: Vec<_> = approx
                     .segments
                     .into_iter()
-                    .map(|Segment { a, b }| {
+                    .map(|segment| {
+                        let [a, b] = segment.points();
+
                         // Can't panic, unless the approximation wrongfully
                         // generates points that are not in the surface.
                         let a = surface.point_model_to_surface(a);

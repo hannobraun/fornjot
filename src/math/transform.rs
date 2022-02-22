@@ -21,10 +21,8 @@ impl Transform {
 
     /// Transform the given segment
     pub fn transform_segment(&self, segment: &Segment<3>) -> Segment<3> {
-        Segment {
-            a: self.transform_point(&segment.a),
-            b: self.transform_point(&segment.b),
-        }
+        let [a, b] = &segment.points();
+        Segment::from([self.transform_point(a), self.transform_point(b)])
     }
 
     /// Transform the given triangle

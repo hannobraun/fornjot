@@ -155,7 +155,8 @@ impl Approximation {
         }
 
         let mut segments = HashSet::new();
-        for &segment @ Segment { a, b } in &self.segments {
+        for &segment in &self.segments {
+            let [a, b] = segment.points();
             // Verify that there are no duplicate segments
             let ab = [a, b];
             let ba = [b, a];
@@ -249,9 +250,9 @@ mod tests {
             Approximation {
                 points: vec![a, b, c, d],
                 segments: vec![
-                    Segment { a: a, b: b },
-                    Segment { a: b, b: c },
-                    Segment { a: c, b: d },
+                    Segment::from([a, b]),
+                    Segment::from([b, c]),
+                    Segment::from([c, d]),
                 ],
             }
         );
@@ -261,7 +262,7 @@ mod tests {
             Approximation::for_edge(&edge_self_connected, tolerance),
             Approximation {
                 points: vec![b, c],
-                segments: vec![Segment { a: b, b: c }, Segment { a: c, b: b }],
+                segments: vec![Segment::from([b, c]), Segment::from([c, b])],
             }
         );
 
@@ -272,9 +273,9 @@ mod tests {
             Approximation {
                 points: vec![d, c, b, a],
                 segments: vec![
-                    Segment { a: d, b: c },
-                    Segment { a: c, b: b },
-                    Segment { a: b, b: a },
+                    Segment::from([d, c]),
+                    Segment::from([c, b]),
+                    Segment::from([b, a]),
                 ],
             }
         );
@@ -310,9 +311,9 @@ mod tests {
             Approximation {
                 points: vec![a, b, c],
                 segments: vec![
-                    Segment { a: a, b: b },
-                    Segment { a: b, b: c },
-                    Segment { a: c, b: a },
+                    Segment::from([a, b]),
+                    Segment::from([b, c]),
+                    Segment::from([c, a]),
                 ],
             }
         );
@@ -358,10 +359,10 @@ mod tests {
             Approximation {
                 points: vec![a, b, c, d],
                 segments: vec![
-                    Segment { a: a, b: b },
-                    Segment { a: b, b: a },
-                    Segment { a: c, b: d },
-                    Segment { a: d, b: c },
+                    Segment::from([a, b]),
+                    Segment::from([b, a]),
+                    Segment::from([c, d]),
+                    Segment::from([d, c]),
                 ],
             }
         );
@@ -375,37 +376,37 @@ mod tests {
 
         let valid = Approximation {
             points: vec![a, b, c],
-            segments: vec![Segment { a, b }],
+            segments: vec![Segment::from([a, b])],
         };
         assert!(valid.validate().is_ok());
 
         let duplicate_points = Approximation {
             points: vec![a, b, c, b],
-            segments: vec![Segment { a, b }],
+            segments: vec![Segment::from([a, b])],
         };
         assert!(duplicate_points.validate().is_err());
 
         let duplicate_segments = Approximation {
             points: vec![a, b, c],
-            segments: vec![Segment { a, b }, Segment { a, b }],
+            segments: vec![Segment::from([a, b]), Segment::from([a, b])],
         };
         assert!(duplicate_segments.validate().is_err());
 
         let duplicate_segments_inverted = Approximation {
             points: vec![a, b, c],
-            segments: vec![Segment { a, b }, Segment { a: b, b: a }],
+            segments: vec![Segment::from([a, b]), Segment::from([b, a])],
         };
         assert!(duplicate_segments_inverted.validate().is_err());
 
         let invalid_segment = Approximation {
             points: vec![a, b, c],
-            segments: vec![Segment { a, b: a }],
+            segments: vec![Segment::from([a, a])],
         };
         assert!(invalid_segment.validate().is_err());
 
         let segment_with_invalid_point = Approximation {
             points: vec![a, c],
-            segments: vec![Segment { a, b }],
+            segments: vec![Segment::from([a, b])],
         };
         assert!(segment_with_invalid_point.validate().is_err());
     }

@@ -44,11 +44,11 @@ impl Shape for fj::Sweep {
 
         let mut quads = Vec::new();
         for segment in approx.segments {
-            let [v0, v1] = [segment.a, segment.b];
+            let [v0, v1] = segment.points();
             let [v3, v2] = {
                 let segment = Transform::translation(0., 0., self.length)
                     .transform_segment(&segment);
-                [segment.a, segment.b]
+                segment.points()
             };
 
             quads.push([v0, v1, v2, v3]);
