@@ -46,13 +46,13 @@ pub struct Vertex<const D: usize> {
 impl Vertex<3> {
     /// Create a vertex at the given location
     ///
-    /// Only 3-dimensional vertices can be created, as that is the canonical
-    /// representation of a vertex. If you need a vertex of different
-    /// dimensionality, use a conversion method.
-    ///
     /// You **MUST NOT** use this method to construct a new instance of `Vertex`
     /// that represents an already existing vertex. See documentation of
     /// [`Vertex`] for more information.
+    ///
+    /// Only 3-dimensional vertices can be created, as that is the canonical
+    /// representation of a vertex. If you need a vertex of different
+    /// dimensionality, use a conversion method.
     pub fn create_at(location: Point<3>) -> Self {
         Self {
             location,
