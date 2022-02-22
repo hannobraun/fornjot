@@ -1,5 +1,7 @@
 use std::{cmp, f64::consts::PI, hash::Hash, ops};
 
+use decorum::R64;
+
 /// A rational, finite scalar value
 ///
 /// This is a wrapper around `f64`. On construction, it checks that the `f64`
@@ -129,7 +131,7 @@ impl Ord for Scalar {
 
 impl Hash for Scalar {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.0.to_bits().hash(state);
+        R64::from_inner(self.0).hash(state);
     }
 }
 
