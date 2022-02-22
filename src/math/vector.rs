@@ -13,7 +13,7 @@ use super::{
 ///
 /// The goal of this type is to eventually implement `Eq` and `Hash`, making it
 /// easier to work with vectors. This is a work in progress.
-#[derive(Clone, Copy, Eq, Hash, PartialEq, Ord, PartialOrd)]
+#[derive(Clone, Copy, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Vector<const D: usize>(pub [Scalar; D]);
 
 impl<const D: usize> Vector<D> {

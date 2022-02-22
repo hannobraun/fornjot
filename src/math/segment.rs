@@ -3,7 +3,7 @@ use std::fmt;
 use super::Point;
 
 /// A line segment, defined by its two end points
-#[derive(Clone, Copy, Eq, Hash, PartialEq, Ord, PartialOrd)]
+#[derive(Clone, Copy, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Segment<const D: usize> {
     pub a: Point<D>,
     pub b: Point<D>,
