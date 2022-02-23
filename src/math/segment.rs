@@ -30,17 +30,8 @@ impl Segment<3> {
     }
 }
 
-impl From<[Point<2>; 2]> for Segment<2> {
-    fn from(points: [Point<2>; 2]) -> Self {
-        Self {
-            a: points[0],
-            b: points[1],
-        }
-    }
-}
-
-impl From<[Point<3>; 2]> for Segment<3> {
-    fn from(points: [Point<3>; 2]) -> Self {
+impl<const D: usize> From<[Point<D>; 2]> for Segment<D> {
+    fn from(points: [Point<D>; 2]) -> Self {
         Self {
             a: points[0],
             b: points[1],
