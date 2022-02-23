@@ -75,7 +75,7 @@ impl Shape for fj::Difference2d {
         let mut a = self.a.edges();
         let mut b = self.b.edges();
 
-        let (a, mut b) = if a.cycles.len() == 1 && b.cycles.len() == 1 {
+        let (a, b) = if a.cycles.len() == 1 && b.cycles.len() == 1 {
             (a.cycles.pop().unwrap(), b.cycles.pop().unwrap())
         } else {
             // See issue:
@@ -85,10 +85,6 @@ impl Shape for fj::Difference2d {
                 cycle in each operand."
             );
         };
-
-        for edge in &mut b.edges {
-            edge.reverse();
-        }
 
         Edges { cycles: vec![a, b] }
     }
