@@ -2,7 +2,10 @@ use std::collections::HashSet;
 
 use crate::math::{Point, Scalar, Segment};
 
-use super::topology::edges::{Cycle, Edge, Edges};
+use super::topology::{
+    edges::{Cycle, Edge, Edges},
+    faces::Face,
+};
 
 /// An approximation of an edge, multiple edges, or a face
 #[derive(Debug, PartialEq)]
@@ -106,6 +109,36 @@ impl Approximation {
 
         Self { points, segments }
     }
+
+    /// Compute an approximation for a face
+    ///
+    /// `tolerance` defines how far the approximation is allowed to deviate from
+    /// the actual edges.
+    #[allow(unused)]
+    pub fn for_face(face: &Face, tolerance: Scalar) -> Self {
+        // Curved faces whose curvature is not fully defined by their edges
+        // are not supported yet. For that reason, we can fully ignore `face`'s
+        // `surface` field and just pass the edges to `Self::for_edges`.
+        //
+        // An example of a curved face that is supported, is the cylinder. Its
+        // curvature is fully defined be the edges (circles) that border it. The
+        // circle approximations are sufficient to triangulate the surface.
+        //
+        // An example of a curved face that is currently not supported, and thus
+        // doesn't need to be handled here, is a sphere. A spherical face would
+        // would need to provide its own approximation, as the edges that bound
+        // it have nothing to do with its curvature.
+        match face {
+            Face::Face { surface: _, edges } => {
+                Self::for_edges(edges, tolerance)
+            }
+            _ => {
+                // No code that still uses triangle representation calls this
+                // method.
+                unreachable!()
+            }
+        }
+    }
 }
 
 #[cfg(test)]
@@ -116,9 +149,10 @@ mod tests {
 
     use crate::{
         kernel::{
-            geometry::Curve,
+            geometry::{Curve, Surface},
             topology::{
                 edges::{Cycle, Edge, Edges},
+                faces::Face,
                 vertices::Vertex,
             },
         },
@@ -249,6 +283,57 @@ mod tests {
                     Segment::from([b, a]),
                     Segment::from([c, d]),
                     Segment::from([d, c]),
+                ],
+            }
+        );
+    }
+
+    #[test]
+    fn for_face_closed() {
+        // Test a closed face, i.e. one that is completely encircled by edges.
+
+        let tolerance = Scalar::ONE;
+
+        let a = Point::from([1., 2., 3.]);
+        let b = Point::from([2., 3., 5.]);
+        let c = Point::from([3., 5., 8.]);
+        let d = Point::from([5., 8., 13.]);
+
+        let v1 = Vertex::create_at(a);
+        let v2 = Vertex::create_at(b);
+        let v3 = Vertex::create_at(c);
+        let v4 = Vertex::create_at(d);
+
+        let curve = Curve::Mock {
+            approx: Vec::new(),
+            coords: RefCell::new(vec![Point::from([0.]), Point::from([1.])]),
+        };
+
+        let ab = Edge::new(curve.clone(), Some([v1, v2]));
+        let bc = Edge::new(curve.clone(), Some([v2, v3]));
+        let cd = Edge::new(curve.clone(), Some([v3, v4]));
+        let da = Edge::new(curve.clone(), Some([v4, v1]));
+
+        let abcd = Cycle {
+            edges: vec![ab, bc, cd, da],
+        };
+
+        let edges = Edges { cycles: vec![abcd] };
+
+        let face = Face::Face {
+            surface: Surface::x_y_plane(),
+            edges,
+        };
+
+        assert_eq!(
+            Approximation::for_face(&face, tolerance),
+            Approximation {
+                points: set![a, b, c, d],
+                segments: set![
+                    Segment::from([a, b]),
+                    Segment::from([b, c]),
+                    Segment::from([c, d]),
+                    Segment::from([d, a]),
                 ],
             }
         );
