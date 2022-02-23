@@ -14,7 +14,7 @@ impl Triangle {
         self.points().map(|vertex| vertex.to_na()).into()
     }
 
-    /// Access the triangle's vertices as an array
+    /// Access the triangle's points
     pub fn points(&self) -> [Point<3>; 3] {
         [self.a, self.b, self.c]
     }
