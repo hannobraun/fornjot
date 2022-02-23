@@ -112,16 +112,10 @@ impl Approximation {
     /// Returns an `Err(ValidationError)`, if the validation is not valid. See
     /// [`ValidationError`] for the ways that the approximation can be invalid.
     pub fn validate(&self) -> Result<(), ValidationError> {
-        let mut invalid_segments = Vec::new();
         let mut segments_with_invalid_points = Vec::new();
 
         for &segment in &self.segments {
             let [a, b] = segment.points();
-
-            // Verify that segments are actually segments
-            if a == b {
-                invalid_segments.push(segment);
-            }
 
             // Verify that segments refer to valid points
             if !(self.points.contains(&a) && self.points.contains(&b)) {
@@ -129,11 +123,8 @@ impl Approximation {
             }
         }
 
-        if !(invalid_segments.is_empty()
-            && segments_with_invalid_points.is_empty())
-        {
+        if !(segments_with_invalid_points.is_empty()) {
             return Err(ValidationError {
-                invalid_segments,
                 segments_with_invalid_points,
             });
         }
@@ -145,9 +136,6 @@ impl Approximation {
 /// Error returned by [`Approximation::validate`]
 #[derive(Debug)]
 pub struct ValidationError {
-    /// Segments that have two equal points
-    pub invalid_segments: Vec<Segment<3>>,
-
     /// Segments that do not refer to points from the approximation
     pub segments_with_invalid_points: Vec<Segment<3>>,
 }
