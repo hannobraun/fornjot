@@ -224,7 +224,7 @@ mod tests {
     use super::Approximation;
 
     #[test]
-    fn test_for_edge() {
+    fn for_edge() {
         let tolerance = Scalar::ONE;
 
         let a = Point::from([1., 2., 3.]);
@@ -264,7 +264,7 @@ mod tests {
     }
 
     #[test]
-    fn test_for_cycle() {
+    fn for_cycle() {
         let tolerance = Scalar::ONE;
 
         let a = Point::from([1., 2., 3.]);
@@ -302,7 +302,7 @@ mod tests {
     }
 
     #[test]
-    fn test_for_edges() {
+    fn for_edges() {
         let tolerance = Scalar::ONE;
 
         let a = Point::from([1., 2., 3.]);
@@ -351,7 +351,7 @@ mod tests {
     }
 
     #[test]
-    fn test_validate() {
+    fn validate() {
         let a = Point::from([0., 1., 2.]);
         let b = Point::from([1., 2., 3.]);
         let c = Point::from([3., 5., 8.]);
