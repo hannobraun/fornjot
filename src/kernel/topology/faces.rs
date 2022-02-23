@@ -104,7 +104,6 @@ impl Face {
         match self {
             Self::Face { edges, surface } => {
                 let approx = Approximation::for_edges(edges, tolerance);
-                approx.validate().expect("Invalid approximation");
 
                 let points: Vec<_> = approx
                     .points
