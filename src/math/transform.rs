@@ -29,11 +29,12 @@ impl Transform {
 
     /// Transform the given triangle
     pub fn transform_triangle(&self, triangle: &Triangle) -> Triangle {
-        Triangle {
-            a: self.transform_point(&triangle.a),
-            b: self.transform_point(&triangle.b),
-            c: self.transform_point(&triangle.c),
-        }
+        let [a, b, c] = &triangle.vertices();
+        Triangle::from([
+            self.transform_point(a),
+            self.transform_point(b),
+            self.transform_point(c),
+        ])
     }
 
     /// Transform the given axis-aligned bounding box

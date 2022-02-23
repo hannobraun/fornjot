@@ -226,7 +226,7 @@ impl Face {
 
                 out.extend(triangles.into_iter().map(|triangle| {
                     let [a, b, c] = triangle.map(|point| point.from);
-                    Triangle { a, b, c }
+                    Triangle::from([a, b, c])
                 }));
             }
             Self::Triangles(triangles) => out.extend(triangles),

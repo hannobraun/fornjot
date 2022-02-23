@@ -3,9 +3,9 @@ use super::Point;
 /// A triangle
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Triangle {
-    pub a: Point<3>,
-    pub b: Point<3>,
-    pub c: Point<3>,
+    a: Point<3>,
+    b: Point<3>,
+    c: Point<3>,
 }
 
 impl Triangle {
