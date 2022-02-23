@@ -545,6 +545,7 @@ dependencies = [
  "fj",
  "futures",
  "libloading",
+ "map-macro",
  "nalgebra",
  "notify",
  "num-traits",
@@ -990,6 +991,12 @@ checksum = "62bb907fe88d54d8d9ce32a3cceab4218ed2f6b7d35617cafe9adf84e43919cb"
 dependencies = [
  "libc",
 ]
+
+[[package]]
+name = "map-macro"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b3dec3b229449b1a54bd96dc32108086263d6830624e576dc0e6c80e619a0130"
 
 [[package]]
 name = "matrixmultiply"
