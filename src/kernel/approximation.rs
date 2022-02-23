@@ -21,7 +21,7 @@ pub struct Approximation {
     /// All the points of these segments will also be available in the `points`
     /// field of this struct. This can be verified by calling
     /// [`Approximation::validate`].
-    pub segments: Vec<Segment<3>>,
+    pub segments: HashSet<Segment<3>>,
 }
 
 impl Approximation {
@@ -57,12 +57,12 @@ impl Approximation {
             }
         }
 
-        let mut segments = Vec::new();
+        let mut segments = HashSet::new();
         for segment in segment_points.windows(2) {
             let p0 = segment[0];
             let p1 = segment[1];
 
-            segments.push(Segment::from([p0, p1]));
+            segments.insert(Segment::from([p0, p1]));
         }
 
         Self {
@@ -77,7 +77,7 @@ impl Approximation {
     /// the actual cycle.
     pub fn for_cycle(cycle: &Cycle, tolerance: Scalar) -> Self {
         let mut points = HashSet::new();
-        let mut segments = Vec::new();
+        let mut segments = HashSet::new();
 
         for edge in &cycle.edges {
             let approx = Self::for_edge(edge, tolerance);
@@ -95,7 +95,7 @@ impl Approximation {
     /// the actual edges.
     pub fn for_edges(edges: &Edges, tolerance: Scalar) -> Self {
         let mut points = HashSet::new();
-        let mut segments = Vec::new();
+        let mut segments = HashSet::new();
 
         for cycle in &edges.cycles {
             let approx = Self::for_cycle(cycle, tolerance);
@@ -112,21 +112,11 @@ impl Approximation {
     /// Returns an `Err(ValidationError)`, if the validation is not valid. See
     /// [`ValidationError`] for the ways that the approximation can be invalid.
     pub fn validate(&self) -> Result<(), ValidationError> {
-        let mut duplicate_segments = Vec::new();
         let mut invalid_segments = Vec::new();
         let mut segments_with_invalid_points = Vec::new();
 
-        let mut segments = HashSet::new();
         for &segment in &self.segments {
             let [a, b] = segment.points();
-            // Verify that there are no duplicate segments
-            let ab = [a, b];
-            let ba = [b, a];
-            if segments.contains(&ab) {
-                duplicate_segments.push(segment);
-            }
-            segments.insert(ab);
-            segments.insert(ba);
 
             // Verify that segments are actually segments
             if a == b {
@@ -139,12 +129,10 @@ impl Approximation {
             }
         }
 
-        if !(duplicate_segments.is_empty()
-            && invalid_segments.is_empty()
+        if !(invalid_segments.is_empty()
             && segments_with_invalid_points.is_empty())
         {
             return Err(ValidationError {
-                duplicate_segments,
                 invalid_segments,
                 segments_with_invalid_points,
             });
@@ -157,9 +145,6 @@ impl Approximation {
 /// Error returned by [`Approximation::validate`]
 #[derive(Debug)]
 pub struct ValidationError {
-    /// Segments that are duplicated
-    pub duplicate_segments: Vec<Segment<3>>,
-
     /// Segments that have two equal points
     pub invalid_segments: Vec<Segment<3>>,
 
@@ -208,7 +193,7 @@ mod tests {
             Approximation::for_edge(&edge_regular, tolerance),
             Approximation {
                 points: set![a, b, c, d],
-                segments: vec![
+                segments: set![
                     Segment::from([a, b]),
                     Segment::from([b, c]),
                     Segment::from([c, d]),
@@ -221,7 +206,7 @@ mod tests {
             Approximation::for_edge(&edge_self_connected, tolerance),
             Approximation {
                 points: set![b, c],
-                segments: vec![Segment::from([b, c]), Segment::from([c, b])],
+                segments: set![Segment::from([b, c]), Segment::from([c, b])],
             }
         );
     }
@@ -255,7 +240,7 @@ mod tests {
             Approximation::for_cycle(&cycle, tolerance),
             Approximation {
                 points: set![a, b, c],
-                segments: vec![
+                segments: set![
                     Segment::from([a, b]),
                     Segment::from([b, c]),
                     Segment::from([c, a]),
@@ -303,7 +288,7 @@ mod tests {
             Approximation::for_edges(&edges, tolerance),
             Approximation {
                 points: set![a, b, c, d],
-                segments: vec![
+                segments: set![
                     Segment::from([a, b]),
                     Segment::from([b, a]),
                     Segment::from([c, d]),
@@ -321,31 +306,19 @@ mod tests {
 
         let valid = Approximation {
             points: set![a, b, c],
-            segments: vec![Segment::from([a, b])],
+            segments: set![Segment::from([a, b])],
         };
         assert!(valid.validate().is_ok());
 
-        let duplicate_segments = Approximation {
-            points: set![a, b, c],
-            segments: vec![Segment::from([a, b]), Segment::from([a, b])],
-        };
-        assert!(duplicate_segments.validate().is_err());
-
-        let duplicate_segments_inverted = Approximation {
-            points: set![a, b, c],
-            segments: vec![Segment::from([a, b]), Segment::from([b, a])],
-        };
-        assert!(duplicate_segments_inverted.validate().is_err());
-
         let invalid_segment = Approximation {
             points: set![a, b, c],
-            segments: vec![Segment::from([a, a])],
+            segments: set![Segment::from([a, a])],
         };
         assert!(invalid_segment.validate().is_err());
 
         let segment_with_invalid_point = Approximation {
             points: set![a, c],
-            segments: vec![Segment::from([a, b])],
+            segments: set![Segment::from([a, b])],
         };
         assert!(segment_with_invalid_point.validate().is_err());
     }
