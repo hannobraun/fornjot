@@ -10,6 +10,7 @@ pub struct Segment<const D: usize> {
 }
 
 impl<const D: usize> Segment<D> {
+    /// Access the points of the segment
     pub fn points(&self) -> [Point<D>; 2] {
         [self.a, self.b]
     }
