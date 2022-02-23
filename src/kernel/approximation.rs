@@ -310,12 +310,6 @@ mod tests {
         };
         assert!(valid.validate().is_ok());
 
-        let invalid_segment = Approximation {
-            points: set![a, b, c],
-            segments: set![Segment::from([a, a])],
-        };
-        assert!(invalid_segment.validate().is_err());
-
         let segment_with_invalid_point = Approximation {
             points: set![a, c],
             segments: set![Segment::from([a, b])],
