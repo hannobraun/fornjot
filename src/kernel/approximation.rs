@@ -106,38 +106,6 @@ impl Approximation {
 
         Self { points, segments }
     }
-
-    /// Validate the approximation
-    ///
-    /// Returns an `Err(ValidationError)`, if the validation is not valid. See
-    /// [`ValidationError`] for the ways that the approximation can be invalid.
-    pub fn validate(&self) -> Result<(), ValidationError> {
-        let mut segments_with_invalid_points = Vec::new();
-
-        for &segment in &self.segments {
-            let [a, b] = segment.points();
-
-            // Verify that segments refer to valid points
-            if !(self.points.contains(&a) && self.points.contains(&b)) {
-                segments_with_invalid_points.push(segment);
-            }
-        }
-
-        if !(segments_with_invalid_points.is_empty()) {
-            return Err(ValidationError {
-                segments_with_invalid_points,
-            });
-        }
-
-        Ok(())
-    }
-}
-
-/// Error returned by [`Approximation::validate`]
-#[derive(Debug)]
-pub struct ValidationError {
-    /// Segments that do not refer to points from the approximation
-    pub segments_with_invalid_points: Vec<Segment<3>>,
 }
 
 #[cfg(test)]
@@ -284,24 +252,5 @@ mod tests {
                 ],
             }
         );
-    }
-
-    #[test]
-    fn validate() {
-        let a = Point::from([0., 1., 2.]);
-        let b = Point::from([1., 2., 3.]);
-        let c = Point::from([3., 5., 8.]);
-
-        let valid = Approximation {
-            points: set![a, b, c],
-            segments: set![Segment::from([a, b])],
-        };
-        assert!(valid.validate().is_ok());
-
-        let segment_with_invalid_point = Approximation {
-            points: set![a, c],
-            segments: set![Segment::from([a, b])],
-        };
-        assert!(segment_with_invalid_point.validate().is_err());
     }
 }
