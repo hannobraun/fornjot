@@ -33,10 +33,6 @@ impl Approximation {
         let mut points = Vec::new();
         edge.curve.approx(tolerance, &mut points);
 
-        if edge.reverse {
-            points.reverse()
-        }
-
         // Insert the exact vertices of this edge into the approximation. This
         // means we don't rely on the curve approximation to deliver accurate
         // representations of these vertices, which they might not be able to
@@ -263,20 +259,6 @@ mod tests {
             Approximation {
                 points: vec![b, c],
                 segments: vec![Segment::from([b, c]), Segment::from([c, b])],
-            }
-        );
-
-        let mut edge_reversed = Edge::new(curve.clone(), Some([v2, v1]));
-        edge_reversed.reverse();
-        assert_eq!(
-            Approximation::for_edge(&edge_reversed, tolerance),
-            Approximation {
-                points: vec![d, c, b, a],
-                segments: vec![
-                    Segment::from([d, c]),
-                    Segment::from([c, b]),
-                    Segment::from([b, a]),
-                ],
             }
         );
     }

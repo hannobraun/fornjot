@@ -64,13 +64,6 @@ pub struct Edge {
     /// If there are no such vertices, that means the edge is connected to
     /// itself (like a full circle, for example).
     pub vertices: Option<[Vertex<1>; 2]>,
-
-    /// Indicates whether the curve's direction is reversed
-    ///
-    /// Once this struct keeps track of the vertices that bound the edge, this
-    /// field can probably be made redundant. The order of the bounding points
-    /// will simply define the direction of the curve.
-    pub reverse: bool,
 }
 
 impl Edge {
@@ -86,11 +79,7 @@ impl Edge {
         let vertices = vertices
             .map(|vertices| vertices.map(|vertex| vertex.to_1d(&curve)));
 
-        Self {
-            curve,
-            vertices,
-            reverse: false,
-        }
+        Self { curve, vertices }
     }
 
     /// Create a circle
@@ -101,13 +90,7 @@ impl Edge {
                 radius: Vector::from([radius, 0.]),
             }),
             vertices: None,
-            reverse: false,
         }
-    }
-
-    /// Reverse the edge
-    pub fn reverse(&mut self) {
-        self.reverse = !self.reverse;
     }
 
     /// Create a transformed edge
