@@ -48,12 +48,12 @@ impl Vertices {
     }
 }
 
-impl From<&Vec<Triangle>> for Vertices {
-    fn from(triangles: &Vec<Triangle>) -> Self {
+impl From<&Vec<Triangle<3>>> for Vertices {
+    fn from(triangles: &Vec<Triangle<3>>) -> Self {
         let mut mesh = MeshMaker::new();
 
         for triangle in triangles {
-            let [a, b, c] = triangle.vertices();
+            let [a, b, c] = triangle.points();
 
             let normal = (b - a).cross(&(c - a)).normalize();
 

@@ -2,26 +2,28 @@ use super::Point;
 
 /// A triangle
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Triangle {
-    a: Point<3>,
-    b: Point<3>,
-    c: Point<3>,
+pub struct Triangle<const D: usize> {
+    a: Point<D>,
+    b: Point<D>,
+    c: Point<D>,
 }
 
-impl Triangle {
-    /// Convert the triangle to a Parry triangle
-    pub fn to_parry(&self) -> parry3d_f64::shape::Triangle {
-        self.vertices().map(|vertex| vertex.to_na()).into()
-    }
-
-    /// Access the triangle's vertices as an array
-    pub fn vertices(&self) -> [Point<3>; 3] {
+impl<const D: usize> Triangle<D> {
+    /// Access the triangle's points
+    pub fn points(&self) -> [Point<D>; 3] {
         [self.a, self.b, self.c]
     }
 }
 
-impl From<[Point<3>; 3]> for Triangle {
-    fn from(points: [Point<3>; 3]) -> Self {
+impl Triangle<3> {
+    /// Convert the triangle to a Parry triangle
+    pub fn to_parry(&self) -> parry3d_f64::shape::Triangle {
+        self.points().map(|vertex| vertex.to_na()).into()
+    }
+}
+
+impl<const D: usize> From<[Point<D>; 3]> for Triangle<D> {
+    fn from(points: [Point<D>; 3]) -> Self {
         Self {
             a: points[0],
             b: points[1],

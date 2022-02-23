@@ -9,14 +9,17 @@ pub struct Segment<const D: usize> {
     b: Point<D>,
 }
 
+impl<const D: usize> Segment<D> {
+    /// Access the points of the segment
+    pub fn points(&self) -> [Point<D>; 2] {
+        [self.a, self.b]
+    }
+}
+
 impl Segment<2> {
     /// Convert the 2-dimensional segment to a Parry segment
     pub fn to_parry(&self) -> parry2d_f64::shape::Segment {
         [self.a.to_na(), self.b.to_na()].into()
-    }
-
-    pub fn points(&self) -> [Point<2>; 2] {
-        [self.a, self.b]
     }
 }
 
@@ -25,23 +28,10 @@ impl Segment<3> {
     pub fn to_parry(&self) -> parry3d_f64::shape::Segment {
         [self.a.to_na(), self.b.to_na()].into()
     }
-
-    pub fn points(&self) -> [Point<3>; 2] {
-        [self.a, self.b]
-    }
 }
 
-impl From<[Point<2>; 2]> for Segment<2> {
-    fn from(points: [Point<2>; 2]) -> Self {
-        Self {
-            a: points[0],
-            b: points[1],
-        }
-    }
-}
-
-impl From<[Point<3>; 2]> for Segment<3> {
-    fn from(points: [Point<3>; 2]) -> Self {
+impl<const D: usize> From<[Point<D>; 2]> for Segment<D> {
+    fn from(points: [Point<D>; 2]) -> Self {
         Self {
             a: points[0],
             b: points[1],
