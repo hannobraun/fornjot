@@ -96,7 +96,7 @@ fn main() -> anyhow::Result<()> {
         let mut mesh_maker = MeshMaker::new();
 
         for triangle in triangles {
-            for vertex in triangle.vertices() {
+            for vertex in triangle.points() {
                 mesh_maker.push(vertex);
             }
         }

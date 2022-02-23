@@ -53,7 +53,7 @@ impl From<&Vec<Triangle>> for Vertices {
         let mut mesh = MeshMaker::new();
 
         for triangle in triangles {
-            let [a, b, c] = triangle.vertices();
+            let [a, b, c] = triangle.points();
 
             let normal = (b - a).cross(&(c - a)).normalize();
 

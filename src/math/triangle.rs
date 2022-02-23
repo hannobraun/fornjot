@@ -11,11 +11,11 @@ pub struct Triangle {
 impl Triangle {
     /// Convert the triangle to a Parry triangle
     pub fn to_parry(&self) -> parry3d_f64::shape::Triangle {
-        self.vertices().map(|vertex| vertex.to_na()).into()
+        self.points().map(|vertex| vertex.to_na()).into()
     }
 
     /// Access the triangle's vertices as an array
-    pub fn vertices(&self) -> [Point<3>; 3] {
+    pub fn points(&self) -> [Point<3>; 3] {
         [self.a, self.b, self.c]
     }
 }
