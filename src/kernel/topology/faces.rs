@@ -34,7 +34,7 @@ impl Faces {
     pub fn triangles(
         &self,
         tolerance: Scalar,
-        out: &mut Vec<Triangle>,
+        out: &mut Vec<Triangle<3>>,
         debug_info: &mut DebugInfo,
     ) {
         for face in &self.0 {
@@ -73,7 +73,7 @@ pub enum Face {
     /// The plan is to eventually represent faces as a geometric surface,
     /// bounded by edges. While the transition is being made, this variant is
     /// still required.
-    Triangles(Vec<Triangle>),
+    Triangles(Vec<Triangle<3>>),
 }
 
 impl Face {
@@ -98,7 +98,7 @@ impl Face {
     pub fn triangles(
         &self,
         tolerance: Scalar,
-        out: &mut Vec<Triangle>,
+        out: &mut Vec<Triangle<3>>,
         debug_info: &mut DebugInfo,
     ) {
         match self {
