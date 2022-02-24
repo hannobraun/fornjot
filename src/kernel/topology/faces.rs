@@ -102,8 +102,8 @@ impl Face {
         debug_info: &mut DebugInfo,
     ) {
         match self {
-            Self::Face { edges, surface } => {
-                let approx = Approximation::for_edges(edges, tolerance);
+            Self::Face { surface, .. } => {
+                let approx = Approximation::for_face(self, tolerance);
 
                 let points: Vec<_> = approx
                     .points
