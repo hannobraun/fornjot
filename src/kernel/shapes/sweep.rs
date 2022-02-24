@@ -25,45 +25,56 @@ impl Shape for fj::Sweep {
     }
 
     fn faces(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Faces {
+        let rotation = Isometry::rotation(vector![PI, 0., 0.]).into();
+        let translation = Isometry::translation(0.0, 0.0, self.length).into();
+
+        let mut bottom_faces = Vec::new();
+        let mut top_faces = Vec::new();
+        let mut side_faces = Vec::new();
+
         let original_faces = self.shape.faces(tolerance, debug_info);
+        for face in original_faces.0 {
+            // This only works for faces that are symmetric to the x-axis.
+            //
+            // See issue:
+            // https://github.com/hannobraun/Fornjot/issues/230
+            bottom_faces.push(face.clone().transform(&rotation));
 
-        let bottom_faces = original_faces
-            .clone()
-            .transform(&Isometry::rotation(vector![PI, 0., 0.]).into());
-
-        let top_faces = original_faces
-            .transform(&Isometry::translation(0.0, 0.0, self.length).into());
-
-        // This will only work correctly, if the original shape consists of one
-        // edge. If there are more, this will create some kind of weird face
-        // chimera, a single face to represent all the side faces.
-        //
-        // It'll be even worse, if the original shape consists of multiple
-        // faces.
-        let approx = Approximation::for_edges(&self.shape.edges(), tolerance);
-
-        let mut quads = Vec::new();
-        for segment in approx.segments {
-            let [v0, v1] = segment.points();
-            let [v3, v2] = {
-                let segment = Transform::translation(0., 0., self.length)
-                    .transform_segment(&segment);
-                segment.points()
-            };
-
-            quads.push([v0, v1, v2, v3]);
+            top_faces.push(face.transform(&translation));
         }
 
-        let mut side_face = Vec::new();
-        for [v0, v1, v2, v3] in quads {
-            side_face.push([v0, v1, v2].into());
-            side_face.push([v0, v2, v3].into());
+        for cycle in self.shape.edges().cycles {
+            let approx = Approximation::for_cycle(&cycle, tolerance);
+
+            // This will only work correctly, if the cycle consists of one edge.
+            // If there are more, this will create some kind of weird face
+            // chimera, a single face to represent all the side faces.
+
+            let mut quads = Vec::new();
+            for segment in approx.segments {
+                let [v0, v1] = segment.points();
+                let [v3, v2] = {
+                    let segment = Transform::translation(0., 0., self.length)
+                        .transform_segment(&segment);
+                    segment.points()
+                };
+
+                quads.push([v0, v1, v2, v3]);
+            }
+
+            let mut side_face = Vec::new();
+            for [v0, v1, v2, v3] in quads {
+                side_face.push([v0, v1, v2].into());
+                side_face.push([v0, v2, v3].into());
+            }
+
+            side_faces.push(Face::Triangles(side_face));
         }
 
         let mut faces = Vec::new();
-        faces.extend(bottom_faces.0);
-        faces.extend(top_faces.0);
-        faces.push(Face::Triangles(side_face));
+        faces.extend(bottom_faces);
+        faces.extend(top_faces);
+        faces.extend(side_faces);
 
         Faces(faces)
     }
