@@ -25,14 +25,14 @@ impl Shape for fj::Sweep {
     }
 
     fn faces(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Faces {
+        let rotation = Isometry::rotation(vector![PI, 0., 0.]).into();
+        let translation = Isometry::translation(0.0, 0.0, self.length).into();
+
         let original_faces = self.shape.faces(tolerance, debug_info);
 
-        let bottom_faces = original_faces
-            .clone()
-            .transform(&Isometry::rotation(vector![PI, 0., 0.]).into());
+        let bottom_faces = original_faces.clone().transform(&rotation);
 
-        let top_faces = original_faces
-            .transform(&Isometry::translation(0.0, 0.0, self.length).into());
+        let top_faces = original_faces.transform(&translation);
 
         let mut side_faces = Vec::new();
         for cycle in self.shape.edges().cycles {
