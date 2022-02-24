@@ -30,6 +30,10 @@ impl Shape for fj::Sweep {
 
         let original_faces = self.shape.faces(tolerance, debug_info);
 
+        // This only works for faces that are symmetric to the x-axis.
+        //
+        // See issue:
+        // https://github.com/hannobraun/Fornjot/issues/230
         let bottom_faces = original_faces.clone().transform(&rotation);
 
         let top_faces = original_faces.transform(&translation);
