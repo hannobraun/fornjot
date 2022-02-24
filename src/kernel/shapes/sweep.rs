@@ -30,6 +30,7 @@ impl Shape for fj::Sweep {
 
         let mut bottom_faces = Vec::new();
         let mut top_faces = Vec::new();
+        let mut side_faces = Vec::new();
 
         let original_faces = self.shape.faces(tolerance, debug_info);
         for face in original_faces.0 {
@@ -42,7 +43,6 @@ impl Shape for fj::Sweep {
             top_faces.push(face.transform(&translation));
         }
 
-        let mut side_faces = Vec::new();
         for cycle in self.shape.edges().cycles {
             let approx = Approximation::for_cycle(&cycle, tolerance);
 
