@@ -28,15 +28,19 @@ impl Shape for fj::Sweep {
         let rotation = Isometry::rotation(vector![PI, 0., 0.]).into();
         let translation = Isometry::translation(0.0, 0.0, self.length).into();
 
+        let mut bottom_faces = Vec::new();
+        let mut top_faces = Vec::new();
+
         let original_faces = self.shape.faces(tolerance, debug_info);
+        for face in original_faces.0 {
+            // This only works for faces that are symmetric to the x-axis.
+            //
+            // See issue:
+            // https://github.com/hannobraun/Fornjot/issues/230
+            bottom_faces.push(face.clone().transform(&rotation));
 
-        // This only works for faces that are symmetric to the x-axis.
-        //
-        // See issue:
-        // https://github.com/hannobraun/Fornjot/issues/230
-        let bottom_faces = original_faces.clone().transform(&rotation);
-
-        let top_faces = original_faces.transform(&translation);
+            top_faces.push(face.transform(&translation));
+        }
 
         let mut side_faces = Vec::new();
         for cycle in self.shape.edges().cycles {
@@ -68,8 +72,8 @@ impl Shape for fj::Sweep {
         }
 
         let mut faces = Vec::new();
-        faces.extend(bottom_faces.0);
-        faces.extend(top_faces.0);
+        faces.extend(bottom_faces);
+        faces.extend(top_faces);
         faces.extend(side_faces);
 
         Faces(faces)
