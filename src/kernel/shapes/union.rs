@@ -1,12 +1,16 @@
 use crate::{
     debug::DebugInfo,
-    kernel::topology::{edges::Edges, faces::Faces, vertices::Vertices},
+    kernel::topology::{edges::Edges, faces::Faces, vertices::Vertices, Shape},
     math::{Aabb, Scalar},
 };
 
 use super::ToShape;
 
 impl ToShape for fj::Union {
+    fn to_shape(&self, _: Scalar, _: &mut DebugInfo) -> Shape {
+        Shape
+    }
+
     fn bounding_volume(&self) -> Aabb<3> {
         let a = self.a.bounding_volume();
         let b = self.b.bounding_volume();

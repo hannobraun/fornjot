@@ -11,6 +11,7 @@ use crate::{
             edges::Edges,
             faces::{Face, Faces},
             vertices::Vertices,
+            Shape,
         },
     },
     math::{Aabb, Scalar, Transform},
@@ -19,6 +20,10 @@ use crate::{
 use super::ToShape;
 
 impl ToShape for fj::Sweep {
+    fn to_shape(&self, _: Scalar, _: &mut DebugInfo) -> Shape {
+        Shape
+    }
+
     fn bounding_volume(&self) -> Aabb<3> {
         let mut aabb = self.shape.bounding_volume();
         aabb.max.z = self.length.into();

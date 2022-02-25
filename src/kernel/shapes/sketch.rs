@@ -6,6 +6,7 @@ use crate::{
             edges::{Edge, Edges},
             faces::{Face, Faces},
             vertices::{Vertex, Vertices},
+            Shape,
         },
     },
     math::{Aabb, Point, Scalar, Vector},
@@ -14,6 +15,10 @@ use crate::{
 use super::ToShape;
 
 impl ToShape for fj::Sketch {
+    fn to_shape(&self, _: Scalar, _: &mut DebugInfo) -> Shape {
+        Shape
+    }
+
     fn bounding_volume(&self) -> Aabb<3> {
         let vertices = self.vertices();
         Aabb::<3>::from_points(

@@ -11,10 +11,13 @@ use crate::{
     math::{Aabb, Scalar},
 };
 
-use super::topology::{edges::Edges, faces::Faces, vertices::Vertices};
+use super::topology::{edges::Edges, faces::Faces, vertices::Vertices, Shape};
 
 /// Implemented by all shapes
 pub trait ToShape {
+    /// Compute the boundary representation of the shape
+    fn to_shape(&self, tolerance: Scalar, debug: &mut DebugInfo) -> Shape;
+
     /// Access the axis-aligned bounding box of a shape
     ///
     /// If a shape is empty, its [`Aabb`]'s `min` and `max` points must be equal
@@ -78,6 +81,10 @@ macro_rules! dispatch {
 }
 
 dispatch! {
+    to_shape(
+        tolerance: Scalar,
+        debug: &mut DebugInfo,
+    ) -> Shape;
     bounding_volume() -> Aabb<3>;
     faces(
         tolerance: Scalar,

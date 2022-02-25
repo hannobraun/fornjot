@@ -4,6 +4,7 @@ use crate::{
         edges::Edges,
         faces::{Face, Faces},
         vertices::Vertices,
+        Shape,
     },
     math::{Aabb, Scalar},
 };
@@ -11,6 +12,10 @@ use crate::{
 use super::ToShape;
 
 impl ToShape for fj::Difference2d {
+    fn to_shape(&self, _: Scalar, _: &mut DebugInfo) -> Shape {
+        Shape
+    }
+
     fn bounding_volume(&self) -> Aabb<3> {
         // This is a conservative estimate of the bounding box: It's never going
         // to be bigger than the bounding box of the original shape that another

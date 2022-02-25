@@ -6,6 +6,7 @@ use crate::{
             edges::{Edge, Edges},
             faces::{Face, Faces},
             vertices::Vertices,
+            Shape,
         },
     },
     math::{Aabb, Point, Scalar},
@@ -14,6 +15,10 @@ use crate::{
 use super::ToShape;
 
 impl ToShape for fj::Circle {
+    fn to_shape(&self, _: Scalar, _: &mut DebugInfo) -> Shape {
+        Shape
+    }
+
     fn bounding_volume(&self) -> Aabb<3> {
         Aabb {
             min: Point::from([-self.radius, -self.radius, 0.0]),
