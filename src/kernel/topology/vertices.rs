@@ -4,6 +4,7 @@ use crate::{
 };
 
 /// The vertices of a shape
+#[derive(Clone)]
 pub struct Vertices(pub Vec<Vertex<3>>);
 
 /// A vertex

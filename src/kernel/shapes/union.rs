@@ -1,23 +1,15 @@
 use crate::{
     debug::DebugInfo,
-    kernel::{
-        topology::{edges::Edges, faces::Faces, vertices::Vertices},
-        Shape,
-    },
+    kernel::topology::{edges::Edges, faces::Faces, vertices::Vertices, Shape},
     math::{Aabb, Scalar},
 };
 
-impl Shape for fj::Union {
-    fn bounding_volume(&self) -> Aabb<3> {
-        let a = self.a.bounding_volume();
-        let b = self.b.bounding_volume();
+use super::ToShape;
 
-        a.merged(&b)
-    }
-
-    fn faces(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Faces {
-        let a = self.a.faces(tolerance, debug_info);
-        let b = self.b.faces(tolerance, debug_info);
+impl ToShape for fj::Union {
+    fn to_shape(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Shape {
+        let a = self.a.to_shape(tolerance, debug_info).faces;
+        let b = self.b.to_shape(tolerance, debug_info).faces;
 
         // This doesn't create a true union, as it doesn't eliminate, merge, or
         // split faces.
@@ -28,14 +20,19 @@ impl Shape for fj::Union {
         faces.extend(a.0);
         faces.extend(b.0);
 
-        Faces(faces)
+        let faces = Faces(faces);
+
+        Shape {
+            vertices: Vertices(Vec::new()),
+            edges: Edges { cycles: Vec::new() },
+            faces,
+        }
     }
 
-    fn edges(&self) -> Edges {
-        todo!()
-    }
+    fn bounding_volume(&self) -> Aabb<3> {
+        let a = self.a.bounding_volume();
+        let b = self.b.bounding_volume();
 
-    fn vertices(&self) -> Vertices {
-        todo!()
+        a.merged(&b)
     }
 }
