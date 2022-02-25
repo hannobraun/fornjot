@@ -24,7 +24,7 @@ impl Circle {
 
     #[must_use]
     pub fn transform(self, transform: &Transform) -> Self {
-        let radius = self.radius.to_xyz(Scalar::ZERO);
+        let radius = self.radius.to_xyz();
         let radius = transform.transform_vector(&radius);
         let radius = radius.xy();
 

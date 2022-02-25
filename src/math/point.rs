@@ -51,6 +51,15 @@ impl<const D: usize> Point<D> {
             coords: self.coords.to_t(),
         }
     }
+
+    /// Convert to a 3-dimensional point
+    ///
+    /// See [`Vector::to_xyz`] for details. This method follows the same rules.
+    pub fn to_xyz(self) -> Point<3> {
+        Point {
+            coords: self.coords.to_xyz(),
+        }
+    }
 }
 
 impl ops::Deref for Point<1> {
