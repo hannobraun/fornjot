@@ -16,7 +16,7 @@ use super::ToShape;
 
 impl ToShape for fj::Circle {
     fn to_shape(&self, _: Scalar, _: &mut DebugInfo) -> Shape {
-        let edges = Edges::single_cycle([Edge::circle(self.radius)]);
+        let edges = self.edges();
         let faces = Faces(vec![Face::Face {
             edges,
             surface: Surface::x_y_plane(),
