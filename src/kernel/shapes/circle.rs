@@ -16,13 +16,14 @@ use super::ToShape;
 
 impl ToShape for fj::Circle {
     fn to_shape(&self, _: Scalar, _: &mut DebugInfo) -> Shape {
-        let edges = self.edges();
+        let edges = Edges::single_cycle([Edge::circle(self.radius)]);
+
         let faces = Faces(vec![Face::Face {
-            edges,
+            edges: edges.clone(),
             surface: Surface::x_y_plane(),
         }]);
 
-        Shape { faces }
+        Shape { edges, faces }
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
@@ -30,10 +31,6 @@ impl ToShape for fj::Circle {
             min: Point::from([-self.radius, -self.radius, 0.0]),
             max: Point::from([self.radius, self.radius, 0.0]),
         }
-    }
-
-    fn edges(&self) -> Edges {
-        Edges::single_cycle([Edge::circle(self.radius)])
     }
 
     fn vertices(&self) -> Vertices {

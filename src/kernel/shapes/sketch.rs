@@ -16,24 +16,6 @@ use super::ToShape;
 
 impl ToShape for fj::Sketch {
     fn to_shape(&self, _: Scalar, _: &mut DebugInfo) -> Shape {
-        let edges = self.edges();
-        let face = Face::Face {
-            edges,
-            surface: Surface::x_y_plane(),
-        };
-        let faces = Faces(vec![face]);
-
-        Shape { faces }
-    }
-
-    fn bounding_volume(&self) -> Aabb<3> {
-        let vertices = self.vertices();
-        Aabb::<3>::from_points(
-            vertices.0.iter().map(|vertex| *vertex.location()),
-        )
-    }
-
-    fn edges(&self) -> Edges {
         let vertices = match self.vertices() {
             vertices if vertices.0.is_empty() => vertices.0,
             vertices => {
@@ -65,7 +47,22 @@ impl ToShape for fj::Sketch {
             edges.push(edge);
         }
 
-        Edges::single_cycle(edges)
+        let edges = Edges::single_cycle(edges);
+
+        let face = Face::Face {
+            edges: edges.clone(),
+            surface: Surface::x_y_plane(),
+        };
+        let faces = Faces(vec![face]);
+
+        Shape { edges, faces }
+    }
+
+    fn bounding_volume(&self) -> Aabb<3> {
+        let vertices = self.vertices();
+        Aabb::<3>::from_points(
+            vertices.0.iter().map(|vertex| *vertex.location()),
+        )
     }
 
     fn vertices(&self) -> Vertices {

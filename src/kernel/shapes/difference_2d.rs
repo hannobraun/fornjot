@@ -19,6 +19,23 @@ impl ToShape for fj::Difference2d {
         let mut a = self.a.to_shape(tolerance, debug_info);
         let mut b = self.b.to_shape(tolerance, debug_info);
 
+        let edges = {
+            let (a, b) = if a.edges.cycles.len() == 1
+                && b.edges.cycles.len() == 1
+            {
+                (a.edges.cycles.pop().unwrap(), b.edges.cycles.pop().unwrap())
+            } else {
+                // See issue:
+                // https://github.com/hannobraun/Fornjot/issues/95
+                todo!(
+                    "The 2-dimensional difference operation only supports one \
+                    cycle in each operand."
+                );
+            };
+
+            Edges { cycles: vec![a, b] }
+        };
+
         let faces = {
             let (a, b) = if a.faces.0.len() == 1 && b.faces.0.len() == 1 {
                 // Can't panic. We just checked that length of `a` and `b` is 1.
@@ -62,7 +79,7 @@ impl ToShape for fj::Difference2d {
             Faces(vec![Face::Face { edges, surface }])
         };
 
-        Shape { faces }
+        Shape { edges, faces }
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
@@ -70,27 +87,6 @@ impl ToShape for fj::Difference2d {
         // to be bigger than the bounding box of the original shape that another
         // is being subtracted from.
         self.a.bounding_volume()
-    }
-
-    fn edges(&self) -> Edges {
-        // This method assumes that `b` is fully contained within `a`:
-        // https://github.com/hannobraun/Fornjot/issues/92
-
-        let mut a = self.a.edges();
-        let mut b = self.b.edges();
-
-        let (a, b) = if a.cycles.len() == 1 && b.cycles.len() == 1 {
-            (a.cycles.pop().unwrap(), b.cycles.pop().unwrap())
-        } else {
-            // See issue:
-            // https://github.com/hannobraun/Fornjot/issues/95
-            todo!(
-                "The 2-dimensional difference operation only supports one \
-                cycle in each operand."
-            );
-        };
-
-        Edges { cycles: vec![a, b] }
     }
 
     fn vertices(&self) -> Vertices {

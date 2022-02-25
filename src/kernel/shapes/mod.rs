@@ -11,7 +11,7 @@ use crate::{
     math::{Aabb, Scalar},
 };
 
-use super::topology::{edges::Edges, vertices::Vertices, Shape};
+use super::topology::{vertices::Vertices, Shape};
 
 /// Implemented by all shapes
 pub trait ToShape {
@@ -23,9 +23,6 @@ pub trait ToShape {
     /// If a shape is empty, its [`Aabb`]'s `min` and `max` points must be equal
     /// (but are otherwise not specified).
     fn bounding_volume(&self) -> Aabb<3>;
-
-    /// Access the edges of the shape
-    fn edges(&self) -> Edges;
 
     /// Return the shape's vertices
     fn vertices(&self) -> Vertices;
@@ -77,6 +74,5 @@ dispatch! {
         debug: &mut DebugInfo,
     ) -> Shape;
     bounding_volume() -> Aabb<3>;
-    edges() -> Edges;
     vertices() -> Vertices;
 }

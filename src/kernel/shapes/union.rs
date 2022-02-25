@@ -22,7 +22,10 @@ impl ToShape for fj::Union {
 
         let faces = Faces(faces);
 
-        Shape { faces }
+        Shape {
+            edges: Edges { cycles: Vec::new() },
+            faces,
+        }
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
@@ -30,10 +33,6 @@ impl ToShape for fj::Union {
         let b = self.b.bounding_volume();
 
         a.merged(&b)
-    }
-
-    fn edges(&self) -> Edges {
-        todo!()
     }
 
     fn vertices(&self) -> Vertices {

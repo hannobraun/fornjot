@@ -9,6 +9,7 @@ use super::ToShape;
 impl ToShape for fj::Difference {
     fn to_shape(&self, _: Scalar, _: &mut DebugInfo) -> Shape {
         Shape {
+            edges: Edges { cycles: Vec::new() },
             faces: Faces(Vec::new()),
         }
     }
@@ -18,10 +19,6 @@ impl ToShape for fj::Difference {
         // to be bigger than the bounding box of the original shape that another
         // is being subtracted from.
         self.a.bounding_volume()
-    }
-
-    fn edges(&self) -> Edges {
-        todo!()
     }
 
     fn vertices(&self) -> Vertices {

@@ -40,7 +40,7 @@ impl ToShape for fj::Sweep {
             top_faces.push(face.transform(&translation));
         }
 
-        for cycle in self.shape.edges().cycles {
+        for cycle in original_shape.edges.cycles {
             let approx = Approximation::for_cycle(&cycle, tolerance);
 
             // This will only work correctly, if the cycle consists of one edge.
@@ -75,17 +75,16 @@ impl ToShape for fj::Sweep {
 
         let faces = Faces(faces);
 
-        Shape { faces }
+        Shape {
+            edges: Edges { cycles: Vec::new() },
+            faces,
+        }
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
         let mut aabb = self.shape.bounding_volume();
         aabb.max.z = self.length.into();
         aabb
-    }
-
-    fn edges(&self) -> Edges {
-        todo!()
     }
 
     fn vertices(&self) -> Vertices {
