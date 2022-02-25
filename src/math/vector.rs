@@ -72,11 +72,6 @@ impl<const D: usize> Vector<D> {
         self.to_na().dot(&other.to_na()).into()
     }
 
-    /// Compute the cross product with another vector
-    pub fn cross(&self, other: &Self) -> Self {
-        self.to_na().cross(&other.to_na()).into()
-    }
-
     /// Access an iterator over the vector's components
     pub fn components(&self) -> [Scalar; D] {
         self.0
@@ -84,6 +79,11 @@ impl<const D: usize> Vector<D> {
 }
 
 impl Vector<3> {
+    /// Compute the cross product with another vector
+    pub fn cross(&self, other: &Self) -> Self {
+        self.to_na().cross(&other.to_na()).into()
+    }
+
     /// Construct a new vector from this vector's x and y components
     pub fn xy(&self) -> Vector<2> {
         Vector::from([self.x, self.y])
