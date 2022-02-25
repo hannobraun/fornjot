@@ -21,6 +21,8 @@ use super::ToShape;
 
 impl ToShape for fj::Sweep {
     fn to_shape(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Shape {
+        let original_shape = self.shape.to_shape(tolerance, debug_info);
+
         let rotation = Isometry::rotation(vector![PI, 0., 0.]).into();
         let translation = Isometry::translation(0.0, 0.0, self.length).into();
 
@@ -28,7 +30,7 @@ impl ToShape for fj::Sweep {
         let mut top_faces = Vec::new();
         let mut side_faces = Vec::new();
 
-        let original_faces = self.shape.to_shape(tolerance, debug_info).faces;
+        let original_faces = original_shape.faces;
         for face in original_faces.0 {
             // This only works for faces that are symmetric to the x-axis.
             //
