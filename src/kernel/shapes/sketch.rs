@@ -61,9 +61,11 @@ impl ToShape for fj::Sketch {
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
-        let vertices = self.vertices();
         Aabb::<3>::from_points(
-            vertices.0.iter().map(|vertex| *vertex.location()),
+            self.to_points()
+                .into_iter()
+                .map(Point::from)
+                .map(Point::to_xyz),
         )
     }
 
