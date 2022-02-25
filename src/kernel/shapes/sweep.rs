@@ -30,8 +30,7 @@ impl ToShape for fj::Sweep {
         let mut top_faces = Vec::new();
         let mut side_faces = Vec::new();
 
-        let original_faces = original_shape.faces;
-        for face in original_faces.0 {
+        for face in original_shape.faces.0 {
             // This only works for faces that are symmetric to the x-axis.
             //
             // See issue:
