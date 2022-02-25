@@ -79,7 +79,11 @@ impl ToShape for fj::Difference2d {
             Faces(vec![Face::Face { edges, surface }])
         };
 
-        Shape { edges, faces }
+        Shape {
+            vertices: Vertices(Vec::new()),
+            edges,
+            faces,
+        }
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
@@ -87,9 +91,5 @@ impl ToShape for fj::Difference2d {
         // to be bigger than the bounding box of the original shape that another
         // is being subtracted from.
         self.a.bounding_volume()
-    }
-
-    fn vertices(&self) -> Vertices {
-        todo!()
     }
 }

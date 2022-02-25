@@ -17,6 +17,7 @@ impl ToShape for fj::Transform {
             .transform(&transform(self));
 
         Shape {
+            vertices: Vertices(Vec::new()),
             edges: Edges { cycles: Vec::new() },
             faces,
         }
@@ -24,10 +25,6 @@ impl ToShape for fj::Transform {
 
     fn bounding_volume(&self) -> Aabb<3> {
         transform(self).transform_aabb(&self.shape.bounding_volume())
-    }
-
-    fn vertices(&self) -> Vertices {
-        todo!()
     }
 }
 

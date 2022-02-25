@@ -76,6 +76,7 @@ impl ToShape for fj::Sweep {
         let faces = Faces(faces);
 
         Shape {
+            vertices: Vertices(Vec::new()),
             edges: Edges { cycles: Vec::new() },
             faces,
         }
@@ -85,9 +86,5 @@ impl ToShape for fj::Sweep {
         let mut aabb = self.shape.bounding_volume();
         aabb.max.z = self.length.into();
         aabb
-    }
-
-    fn vertices(&self) -> Vertices {
-        todo!()
     }
 }

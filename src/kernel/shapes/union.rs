@@ -23,6 +23,7 @@ impl ToShape for fj::Union {
         let faces = Faces(faces);
 
         Shape {
+            vertices: Vertices(Vec::new()),
             edges: Edges { cycles: Vec::new() },
             faces,
         }
@@ -33,9 +34,5 @@ impl ToShape for fj::Union {
         let b = self.b.bounding_volume();
 
         a.merged(&b)
-    }
-
-    fn vertices(&self) -> Vertices {
-        todo!()
     }
 }

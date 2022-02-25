@@ -16,8 +16,32 @@ use super::ToShape;
 
 impl ToShape for fj::Sketch {
     fn to_shape(&self, _: Scalar, _: &mut DebugInfo) -> Shape {
+        let vertices = self
+            .to_points()
+            .into_iter()
+            // These calls to `Vertex::create_at` don't follow the rules that
+            // the documentation of `create_at` lays out. This method can be
+            // called by an outside caller, and is additionally called by other
+            // methods in this trait implementation, either directly or
+            // indirectly.
+            //
+            // This means the same vertices are re-created multiple times, which
+            // is forbidden. I don't think this is causing any actual problems,
+            // since these `Vertex` instances are created from points that come
+            // directly from the user, and aren't being computed here.
+            //
+            // But still, this rule exists for a reason: to prevent subtle bugs
+            // from creeping in. We should follow it, here and everywhere.
+            //
+            // Please refer to this issue for more context on the problem, as
+            // well as a proposed solution:
+            // https://github.com/hannobraun/Fornjot/issues/176
+            .map(|[x, y]| Vertex::create_at(Point::from([x, y, 0.])))
+            .collect();
+        let vertices = Vertices(vertices);
+
         let edges = {
-            let vertices = match self.vertices() {
+            let vertices = match vertices.clone() {
                 vertices if vertices.0.is_empty() => vertices.0,
                 vertices => {
                     let mut vertices = vertices.0;
@@ -57,7 +81,11 @@ impl ToShape for fj::Sketch {
         };
         let faces = Faces(vec![face]);
 
-        Shape { edges, faces }
+        Shape {
+            vertices,
+            edges,
+            faces,
+        }
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
@@ -67,31 +95,5 @@ impl ToShape for fj::Sketch {
                 .map(Point::from)
                 .map(Point::to_xyz),
         )
-    }
-
-    fn vertices(&self) -> Vertices {
-        let vertices = self
-            .to_points()
-            .into_iter()
-            // These calls to `Vertex::create_at` don't follow the rules that
-            // the documentation of `create_at` lays out. This method can be
-            // called by an outside caller, and is additionally called by other
-            // methods in this trait implementation, either directly or
-            // indirectly.
-            //
-            // This means the same vertices are re-created multiple times, which
-            // is forbidden. I don't think this is causing any actual problems,
-            // since these `Vertex` instances are created from points that come
-            // directly from the user, and aren't being computed here.
-            //
-            // But still, this rule exists for a reason: to prevent subtle bugs
-            // from creeping in. We should follow it, here and everywhere.
-            //
-            // Please refer to this issue for more context on the problem, as
-            // well as a proposed solution:
-            // https://github.com/hannobraun/Fornjot/issues/176
-            .map(|[x, y]| Vertex::create_at(Point::from([x, y, 0.])))
-            .collect();
-        Vertices(vertices)
     }
 }
