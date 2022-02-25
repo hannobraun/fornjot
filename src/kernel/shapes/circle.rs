@@ -11,9 +11,9 @@ use crate::{
     math::{Aabb, Point, Scalar},
 };
 
-use super::Shape;
+use super::ToShape;
 
-impl Shape for fj::Circle {
+impl ToShape for fj::Circle {
     fn bounding_volume(&self) -> Aabb<3> {
         Aabb {
             min: Point::from([-self.radius, -self.radius, 0.0]),

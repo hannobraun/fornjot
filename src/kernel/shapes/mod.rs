@@ -14,7 +14,7 @@ use crate::{
 use super::topology::{edges::Edges, faces::Faces, vertices::Vertices};
 
 /// Implemented by all shapes
-pub trait Shape {
+pub trait ToShape {
     /// Access the axis-aligned bounding box of a shape
     ///
     /// If a shape is empty, its [`Aabb`]'s `min` and `max` points must be equal
@@ -39,7 +39,7 @@ pub trait Shape {
 
 macro_rules! dispatch {
     ($($method:ident($($arg_name:ident: $arg_ty:ty,)*) -> $ret:ty;)*) => {
-        impl Shape for fj::Shape {
+        impl ToShape for fj::Shape {
             $(
                 fn $method(&self, $($arg_name: $arg_ty,)*) -> $ret {
                     match self {
@@ -50,7 +50,7 @@ macro_rules! dispatch {
             )*
         }
 
-        impl Shape for fj::Shape2d {
+        impl ToShape for fj::Shape2d {
             $(
                 fn $method(&self, $($arg_name: $arg_ty,)*) -> $ret {
                     match self {
@@ -62,7 +62,7 @@ macro_rules! dispatch {
             )*
         }
 
-        impl Shape for fj::Shape3d {
+        impl ToShape for fj::Shape3d {
             $(
                 fn $method(&self, $($arg_name: $arg_ty,)*) -> $ret {
                     match self {

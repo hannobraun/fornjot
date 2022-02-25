@@ -16,9 +16,9 @@ use crate::{
     math::{Aabb, Scalar, Transform},
 };
 
-use super::Shape;
+use super::ToShape;
 
-impl Shape for fj::Sweep {
+impl ToShape for fj::Sweep {
     fn bounding_volume(&self) -> Aabb<3> {
         let mut aabb = self.shape.bounding_volume();
         aabb.max.z = self.length.into();

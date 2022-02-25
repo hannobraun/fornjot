@@ -4,9 +4,9 @@ use crate::{
     math::{Aabb, Scalar},
 };
 
-use super::Shape;
+use super::ToShape;
 
-impl Shape for fj::Difference {
+impl ToShape for fj::Difference {
     fn bounding_volume(&self) -> Aabb<3> {
         // This is a conservative estimate of the bounding box: It's never going
         // to be bigger than the bounding box of the original shape that another

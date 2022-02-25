@@ -6,9 +6,9 @@ use crate::{
     math::{Aabb, Scalar, Transform},
 };
 
-use super::Shape;
+use super::ToShape;
 
-impl Shape for fj::Transform {
+impl ToShape for fj::Transform {
     fn bounding_volume(&self) -> Aabb<3> {
         transform(self).transform_aabb(&self.shape.bounding_volume())
     }

@@ -4,9 +4,9 @@ use crate::{
     math::{Aabb, Scalar},
 };
 
-use super::Shape;
+use super::ToShape;
 
-impl Shape for fj::Union {
+impl ToShape for fj::Union {
     fn bounding_volume(&self) -> Aabb<3> {
         let a = self.a.bounding_volume();
         let b = self.b.bounding_volume();

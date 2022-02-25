@@ -11,9 +11,9 @@ use crate::{
     math::{Aabb, Point, Scalar, Vector},
 };
 
-use super::Shape;
+use super::ToShape;
 
-impl Shape for fj::Sketch {
+impl ToShape for fj::Sketch {
     fn bounding_volume(&self) -> Aabb<3> {
         let vertices = self.vertices();
         Aabb::<3>::from_points(
