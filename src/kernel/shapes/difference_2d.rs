@@ -12,27 +12,16 @@ use crate::{
 use super::ToShape;
 
 impl ToShape for fj::Difference2d {
-    fn to_shape(&self, _: Scalar, _: &mut DebugInfo) -> Shape {
-        Shape
-    }
-
-    fn bounding_volume(&self) -> Aabb<3> {
-        // This is a conservative estimate of the bounding box: It's never going
-        // to be bigger than the bounding box of the original shape that another
-        // is being subtracted from.
-        self.a.bounding_volume()
-    }
-
-    fn faces(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Faces {
+    fn to_shape(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Shape {
         // This method assumes that `b` is fully contained within `a`:
         // https://github.com/hannobraun/Fornjot/issues/92
 
-        let mut a = self.a.faces(tolerance, debug_info);
-        let mut b = self.b.faces(tolerance, debug_info);
+        let mut a = self.a.to_shape(tolerance, debug_info);
+        let mut b = self.b.to_shape(tolerance, debug_info);
 
-        let (a, b) = if a.0.len() == 1 && b.0.len() == 1 {
+        let (a, b) = if a.faces.0.len() == 1 && b.faces.0.len() == 1 {
             // Can't panic. We just checked that length of `a` and `b` is 1.
-            (a.0.pop().unwrap(), b.0.pop().unwrap())
+            (a.faces.0.pop().unwrap(), b.faces.0.pop().unwrap())
         } else {
             // See issue:
             // https://github.com/hannobraun/Fornjot/issues/95
@@ -69,7 +58,16 @@ impl ToShape for fj::Difference2d {
         let mut edges = a;
         edges.cycles.extend(b.cycles);
 
-        Faces(vec![Face::Face { edges, surface }])
+        let faces = Faces(vec![Face::Face { edges, surface }]);
+
+        Shape { faces }
+    }
+
+    fn bounding_volume(&self) -> Aabb<3> {
+        // This is a conservative estimate of the bounding box: It's never going
+        // to be bigger than the bounding box of the original shape that another
+        // is being subtracted from.
+        self.a.bounding_volume()
     }
 
     fn edges(&self) -> Edges {

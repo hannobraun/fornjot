@@ -87,7 +87,7 @@ fn main() -> anyhow::Result<()> {
     };
 
     let mut debug_info = DebugInfo::new();
-    let faces = shape.faces(tolerance, &mut debug_info);
+    let faces = shape.to_shape(tolerance, &mut debug_info).faces;
 
     let mut triangles = Vec::new();
     faces.triangles(tolerance, &mut triangles, &mut debug_info);
@@ -213,7 +213,7 @@ fn main() -> anyhow::Result<()> {
                 debug_info.clear();
                 triangles.clear();
 
-                let faces = shape.faces(tolerance, &mut debug_info);
+                let faces = shape.to_shape(tolerance, &mut debug_info).faces;
 
                 aabb = shape.bounding_volume();
                 faces.triangles(tolerance, &mut triangles, &mut debug_info);

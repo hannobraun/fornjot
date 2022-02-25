@@ -7,20 +7,9 @@ use crate::{
 use super::ToShape;
 
 impl ToShape for fj::Union {
-    fn to_shape(&self, _: Scalar, _: &mut DebugInfo) -> Shape {
-        Shape
-    }
-
-    fn bounding_volume(&self) -> Aabb<3> {
-        let a = self.a.bounding_volume();
-        let b = self.b.bounding_volume();
-
-        a.merged(&b)
-    }
-
-    fn faces(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Faces {
-        let a = self.a.faces(tolerance, debug_info);
-        let b = self.b.faces(tolerance, debug_info);
+    fn to_shape(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Shape {
+        let a = self.a.to_shape(tolerance, debug_info).faces;
+        let b = self.b.to_shape(tolerance, debug_info).faces;
 
         // This doesn't create a true union, as it doesn't eliminate, merge, or
         // split faces.
@@ -31,7 +20,16 @@ impl ToShape for fj::Union {
         faces.extend(a.0);
         faces.extend(b.0);
 
-        Faces(faces)
+        let faces = Faces(faces);
+
+        Shape { faces }
+    }
+
+    fn bounding_volume(&self) -> Aabb<3> {
+        let a = self.a.bounding_volume();
+        let b = self.b.bounding_volume();
+
+        a.merged(&b)
     }
 
     fn edges(&self) -> Edges {

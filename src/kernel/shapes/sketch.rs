@@ -16,7 +16,14 @@ use super::ToShape;
 
 impl ToShape for fj::Sketch {
     fn to_shape(&self, _: Scalar, _: &mut DebugInfo) -> Shape {
-        Shape
+        let edges = self.edges();
+        let face = Face::Face {
+            edges,
+            surface: Surface::x_y_plane(),
+        };
+        let faces = Faces(vec![face]);
+
+        Shape { faces }
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
@@ -24,15 +31,6 @@ impl ToShape for fj::Sketch {
         Aabb::<3>::from_points(
             vertices.0.iter().map(|vertex| *vertex.location()),
         )
-    }
-
-    fn faces(&self, _: Scalar, _: &mut DebugInfo) -> Faces {
-        let edges = self.edges();
-        let face = Face::Face {
-            edges,
-            surface: Surface::x_y_plane(),
-        };
-        Faces(vec![face])
     }
 
     fn edges(&self) -> Edges {

@@ -20,17 +20,7 @@ use crate::{
 use super::ToShape;
 
 impl ToShape for fj::Sweep {
-    fn to_shape(&self, _: Scalar, _: &mut DebugInfo) -> Shape {
-        Shape
-    }
-
-    fn bounding_volume(&self) -> Aabb<3> {
-        let mut aabb = self.shape.bounding_volume();
-        aabb.max.z = self.length.into();
-        aabb
-    }
-
-    fn faces(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Faces {
+    fn to_shape(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Shape {
         let rotation = Isometry::rotation(vector![PI, 0., 0.]).into();
         let translation = Isometry::translation(0.0, 0.0, self.length).into();
 
@@ -38,7 +28,7 @@ impl ToShape for fj::Sweep {
         let mut top_faces = Vec::new();
         let mut side_faces = Vec::new();
 
-        let original_faces = self.shape.faces(tolerance, debug_info);
+        let original_faces = self.shape.to_shape(tolerance, debug_info).faces;
         for face in original_faces.0 {
             // This only works for faces that are symmetric to the x-axis.
             //
@@ -82,7 +72,15 @@ impl ToShape for fj::Sweep {
         faces.extend(top_faces);
         faces.extend(side_faces);
 
-        Faces(faces)
+        let faces = Faces(faces);
+
+        Shape { faces }
+    }
+
+    fn bounding_volume(&self) -> Aabb<3> {
+        let mut aabb = self.shape.bounding_volume();
+        aabb.max.z = self.length.into();
+        aabb
     }
 
     fn edges(&self) -> Edges {
