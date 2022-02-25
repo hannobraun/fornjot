@@ -37,6 +37,26 @@ impl<const D: usize> Vector<D> {
         Vector([self.0[0]])
     }
 
+    /// Convert the vector into a 3-dimensional vector
+    ///
+    /// If the vector is 0-, 1-, or 2-dimensional, the missing components will
+    /// be initialized to zero.
+    ///
+    /// If the vector has higher dimensionality than three, the superfluous
+    /// components will be discarded.
+    pub fn to_xyz(&self) -> Vector<3> {
+        let zero = Scalar::ZERO;
+
+        let components = match self.0.as_slice() {
+            [] => [zero, zero, zero],
+            &[t] => [t, zero, zero],
+            &[u, v] => [u, v, zero],
+            &[x, y, z, ..] => [x, y, z],
+        };
+
+        Vector(components)
+    }
+
     /// Compute the magnitude of the vector
     pub fn magnitude(&self) -> Scalar {
         self.to_na().magnitude().into()
@@ -60,13 +80,6 @@ impl<const D: usize> Vector<D> {
     /// Access an iterator over the vector's components
     pub fn components(&self) -> [Scalar; D] {
         self.0
-    }
-}
-
-impl Vector<2> {
-    /// Extend a 2-dimensional vector into a 3-dimensional one
-    pub fn to_xyz(&self) -> Vector<3> {
-        Vector::from([self.u, self.v, Scalar::ZERO])
     }
 }
 
@@ -218,5 +231,22 @@ impl<const D: usize> approx::AbsDiffEq for Vector<D> {
 
     fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
         self.0.abs_diff_eq(&other.0, epsilon)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::math::Vector;
+
+    #[test]
+    fn to_xyz() {
+        let d0: [f64; 0] = [];
+        assert_eq!(Vector::from(d0).to_xyz(), Vector::from([0., 0., 0.]));
+        assert_eq!(Vector::from([1.]).to_xyz(), Vector::from([1., 0., 0.]));
+        assert_eq!(Vector::from([1., 2.]).to_xyz(), Vector::from([1., 2., 0.]));
+        assert_eq!(
+            Vector::from([1., 2., 3.]).to_xyz(),
+            Vector::from([1., 2., 3.]),
+        );
     }
 }
