@@ -1,11 +1,10 @@
 use crate::{
     debug::DebugInfo,
-    kernel::{
-        topology::{edges::Edges, faces::Faces, vertices::Vertices},
-        Shape,
-    },
+    kernel::topology::{edges::Edges, faces::Faces, vertices::Vertices},
     math::{Aabb, Scalar},
 };
+
+use super::Shape;
 
 impl Shape for fj::Union {
     fn bounding_volume(&self) -> Aabb<3> {

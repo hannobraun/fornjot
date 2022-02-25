@@ -7,10 +7,11 @@ use crate::{
             faces::{Face, Faces},
             vertices::Vertices,
         },
-        Shape,
     },
     math::{Aabb, Point, Scalar},
 };
+
+use super::Shape;
 
 impl Shape for fj::Circle {
     fn bounding_volume(&self) -> Aabb<3> {

@@ -12,10 +12,11 @@ use crate::{
             faces::{Face, Faces},
             vertices::Vertices,
         },
-        Shape,
     },
     math::{Aabb, Scalar, Transform},
 };
+
+use super::Shape;
 
 impl Shape for fj::Sweep {
     fn bounding_volume(&self) -> Aabb<3> {

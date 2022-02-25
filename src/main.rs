@@ -27,7 +27,7 @@ use crate::{
     camera::Camera,
     debug::DebugInfo,
     graphics::{DrawConfig, Renderer},
-    kernel::Shape as _,
+    kernel::shapes::Shape as _,
     mesh::MeshMaker,
     model::Model,
     window::Window,
