@@ -24,11 +24,14 @@ impl Triangle<3> {
 
 impl<const D: usize> From<[Point<D>; 3]> for Triangle<D> {
     fn from(points: [Point<D>; 3]) -> Self {
-        let a = points[0];
-        let b = points[1];
-        let c = points[2];
+        let area = {
+            let [a, b, c] = points.map(Point::to_xyz);
+            (b - a).cross(&(c - a)).magnitude()
+        };
+
         // A triangle is not valid if it doesn't span any area
-        if (b - a).cross(&(c - a)).magnitude() != Scalar::from(0.0) {
+        if area != Scalar::from(0.0) {
+            let [a, b, c] = points;
             Self { a, b, c }
         } else {
             panic!("Invalid Triangle specified");
@@ -40,6 +43,14 @@ impl<const D: usize> From<[Point<D>; 3]> for Triangle<D> {
 mod tests {
     use super::Triangle;
     use crate::math::Point;
+
+    #[test]
+    fn valid_triangle_2d() {
+        let a = Point::from([0.0, 0.0]);
+        let b = Point::from([1.0, 1.0]);
+        let c = Point::from([1.0, 2.0]);
+        let _triangle = Triangle::from([a, b, c]);
+    }
 
     #[test]
     fn valid_triangle_3d() {
