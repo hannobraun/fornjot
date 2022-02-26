@@ -1,6 +1,6 @@
 use std::ops::{Add, Deref, DerefMut, Sub};
 
-use crate::math::{Point, Vector};
+use crate::math::{self, Vector};
 
 /// A point that can be losslessly converted into its canonical form
 ///
@@ -13,7 +13,7 @@ pub struct SurfacePoint {
     /// The native form of the point is its representation in its native
     /// coordinate system. This could be a 1-dimensional curve, 2-dimensional
     /// surface, or 3-dimensional model coordinate system.
-    pub value: Point<2>,
+    pub value: math::Point<2>,
 
     /// The canonical form of the point
     ///
@@ -21,11 +21,11 @@ pub struct SurfacePoint {
     /// kept here, unchanged, as the point is converted into other coordinate
     /// systems, it allows for a lossless conversion back into 3D coordinates,
     /// unaffected by floating point accuracy issues.
-    pub from: Point<3>,
+    pub from: math::Point<3>,
 }
 
 impl Deref for SurfacePoint {
-    type Target = Point<2>;
+    type Target = math::Point<2>;
 
     fn deref(&self) -> &Self::Target {
         &self.value
@@ -42,7 +42,7 @@ impl DerefMut for SurfacePoint {
 // `SurfacePoint`, or the conversion back to 3D would be broken.
 
 impl Add<Vector<2>> for SurfacePoint {
-    type Output = Point<2>;
+    type Output = math::Point<2>;
 
     fn add(self, rhs: Vector<2>) -> Self::Output {
         self.value.add(rhs)
@@ -57,10 +57,10 @@ impl Sub<Self> for SurfacePoint {
     }
 }
 
-impl Sub<Point<2>> for SurfacePoint {
+impl Sub<math::Point<2>> for SurfacePoint {
     type Output = Vector<2>;
 
-    fn sub(self, rhs: Point<2>) -> Self::Output {
+    fn sub(self, rhs: math::Point<2>) -> Self::Output {
         Vector::from(self.value.sub(rhs))
     }
 }
