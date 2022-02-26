@@ -1,6 +1,6 @@
 use crate::{
     kernel::geometry::Curve,
-    math::{Point, Transform},
+    math::{self, Transform},
 };
 
 /// The vertices of a shape
@@ -33,7 +33,7 @@ pub struct Vertices(pub Vec<Vertex<3>>);
 /// for an existing vertex. Hence why this is strictly forbidden.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, Ord, PartialOrd)]
 pub struct Vertex<const D: usize> {
-    location: Point<D>,
+    location: math::Point<D>,
 
     /// The canonical location of this vertex
     ///
@@ -41,7 +41,7 @@ pub struct Vertex<const D: usize> {
     /// `Vertex<3>`, this field is just redundant. If the vertex is of different
     /// dimensionality, this field allows for loss-free conversion back into the
     /// canonical representation.
-    canonical: Point<3>,
+    canonical: math::Point<3>,
 }
 
 impl Vertex<3> {
@@ -54,7 +54,7 @@ impl Vertex<3> {
     /// Only 3-dimensional vertices can be created, as that is the canonical
     /// representation of a vertex. If you need a vertex of different
     /// dimensionality, use a conversion method.
-    pub fn create_at(location: Point<3>) -> Self {
+    pub fn create_at(location: math::Point<3>) -> Self {
         Self {
             location,
             canonical: location,
@@ -98,7 +98,7 @@ impl Vertex<1> {
 
 impl<const D: usize> Vertex<D> {
     /// Access the location of this vertex
-    pub fn location(&self) -> &Point<D> {
+    pub fn location(&self) -> &math::Point<D> {
         &self.location
     }
 
