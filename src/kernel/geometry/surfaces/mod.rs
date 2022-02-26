@@ -42,7 +42,7 @@ impl Surface {
     pub fn point_model_to_surface(
         &self,
         point_3d: Point<3>,
-    ) -> geometry::Point {
+    ) -> geometry::Point<2> {
         let point_2d = match self {
             Self::Swept(surface) => surface.point_model_to_surface(&point_3d),
         };

@@ -7,13 +7,13 @@ use crate::math::{self, Vector};
 /// The canonical form is always the 3D representation. It needs to be provided
 /// when constructing the point, along with the point's native form.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Point {
+pub struct Point<const D: usize> {
     /// This point's native form
     ///
     /// The native form of the point is its representation in its native
     /// coordinate system. This could be a 1-dimensional curve, 2-dimensional
     /// surface, or 3-dimensional model coordinate system.
-    pub native: math::Point<2>,
+    pub native: math::Point<D>,
 
     /// The canonical form of the point
     ///
@@ -24,15 +24,15 @@ pub struct Point {
     pub canonical: math::Point<3>,
 }
 
-impl Deref for Point {
-    type Target = math::Point<2>;
+impl<const D: usize> Deref for Point<D> {
+    type Target = math::Point<D>;
 
     fn deref(&self) -> &Self::Target {
         &self.native
     }
 }
 
-impl DerefMut for Point {
+impl<const D: usize> DerefMut for Point<D> {
     fn deref_mut(&mut self) -> &mut Self::Target {
         &mut self.native
     }
@@ -41,26 +41,26 @@ impl DerefMut for Point {
 // Some math operations for convenience. Obviously those can never return a new
 // `Point`, or the conversion back to 3D would be broken.
 
-impl Add<Vector<2>> for Point {
-    type Output = math::Point<2>;
+impl<const D: usize> Add<Vector<D>> for Point<D> {
+    type Output = math::Point<D>;
 
-    fn add(self, rhs: Vector<2>) -> Self::Output {
+    fn add(self, rhs: Vector<D>) -> Self::Output {
         self.native.add(rhs)
     }
 }
 
-impl Sub<Self> for Point {
-    type Output = Vector<2>;
+impl<const D: usize> Sub<Self> for Point<D> {
+    type Output = Vector<D>;
 
     fn sub(self, rhs: Self) -> Self::Output {
         Vector::from(self.native.sub(rhs.native))
     }
 }
 
-impl Sub<math::Point<2>> for Point {
-    type Output = Vector<2>;
+impl<const D: usize> Sub<math::Point<D>> for Point<D> {
+    type Output = Vector<D>;
 
-    fn sub(self, rhs: math::Point<2>) -> Self::Output {
+    fn sub(self, rhs: math::Point<D>) -> Self::Output {
         Vector::from(self.native.sub(rhs))
     }
 }
