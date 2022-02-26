@@ -1,10 +1,11 @@
 use std::collections::HashSet;
 
-use crate::math::{Point, Scalar, Segment};
-
-use super::topology::{
-    edges::{Cycle, Edge, Edges},
-    faces::Face,
+use crate::{
+    kernel::topology::{
+        edges::{Cycle, Edge, Edges},
+        faces::Face,
+    },
+    math::{Point, Scalar, Segment},
 };
 
 /// An approximation of an edge, multiple edges, or a face

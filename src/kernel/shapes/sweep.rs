@@ -6,7 +6,7 @@ use parry3d_f64::math::Isometry;
 use crate::{
     debug::DebugInfo,
     kernel::{
-        approximation::Approximation,
+        algorithms::approximation::Approximation,
         topology::{
             edges::Edges,
             faces::{Face, Faces},
