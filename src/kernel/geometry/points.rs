@@ -24,6 +24,16 @@ pub struct Point<const D: usize> {
     pub canonical: math::Point<3>,
 }
 
+impl<const D: usize> Point<D> {
+    /// Construct a new instance
+    ///
+    /// Both the native and the canonical form must be provide. The caller must
+    /// guarantee that both of them match.
+    pub fn new(native: math::Point<D>, canonical: math::Point<3>) -> Self {
+        Self { native, canonical }
+    }
+}
+
 impl<const D: usize> Deref for Point<D> {
     type Target = math::Point<D>;
 

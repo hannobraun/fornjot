@@ -47,10 +47,7 @@ impl Surface {
             Self::Swept(surface) => surface.point_model_to_surface(&point_3d),
         };
 
-        geometry::Point {
-            native: point_2d,
-            canonical: point_3d,
-        }
+        geometry::Point::new(point_2d, point_3d)
     }
 
     /// Convert a point in surface coordinates to model coordinates
