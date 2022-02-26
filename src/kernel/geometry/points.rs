@@ -7,7 +7,7 @@ use crate::math::{Point, Vector};
 /// This type is used for algorithms that need to deal with 2D points in surface
 /// coordinates. It can be converted back to the 3D point it originates from
 /// without loss from floating point accuracy issues.
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct SurfacePoint {
     /// The surface coordinates of this point
     pub value: Point<2>,
