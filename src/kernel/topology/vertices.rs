@@ -31,7 +31,7 @@ pub struct Vertices(pub Vec<Vertex<3>>);
 ///
 /// This can be prevented outright by never creating a new `Vertex` instance
 /// for an existing vertex. Hence why this is strictly forbidden.
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, Ord, PartialOrd)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Vertex<const D: usize>(geometry::Point<D>);
 
 impl Vertex<3> {
