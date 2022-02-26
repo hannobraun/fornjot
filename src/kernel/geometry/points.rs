@@ -37,6 +37,11 @@ impl<const D: usize> Point<D> {
     pub fn native(&self) -> math::Point<D> {
         self.native
     }
+
+    /// Access the point's canonical form
+    pub fn canonical(&self) -> math::Point<3> {
+        self.canonical
+    }
 }
 
 impl<const D: usize> Deref for Point<D> {
