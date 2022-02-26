@@ -3,10 +3,12 @@ use spade::HasPosition;
 
 use crate::math::Scalar;
 
-use super::geometry::points::SurfacePoint;
+use super::geometry;
 
 /// Create a Delaunay triangulation of all points
-pub fn triangulate(points: Vec<SurfacePoint>) -> Vec<[SurfacePoint; 3]> {
+pub fn triangulate(
+    points: Vec<geometry::Point<2>>,
+) -> Vec<[geometry::Point<2>; 3]> {
     use spade::Triangulation as _;
 
     let triangulation = spade::DelaunayTriangulation::<_>::bulk_load(points)
@@ -35,13 +37,13 @@ pub fn triangulate(points: Vec<SurfacePoint>) -> Vec<[SurfacePoint; 3]> {
 }
 
 // Enables the use of `SurfacePoint` in the triangulation.
-impl HasPosition for SurfacePoint {
+impl HasPosition for geometry::Point<2> {
     type Scalar = Scalar;
 
     fn position(&self) -> spade::Point2<Self::Scalar> {
         spade::Point2 {
-            x: self.value.u,
-            y: self.value.v,
+            x: self.native().u,
+            y: self.native().v,
         }
     }
 }

@@ -4,9 +4,12 @@ pub use self::swept::Swept;
 
 use nalgebra::vector;
 
-use crate::math::{Point, Transform, Vector};
+use crate::{
+    kernel::geometry,
+    math::{Point, Transform, Vector},
+};
 
-use super::{points::SurfacePoint, Curve, Line};
+use super::{Curve, Line};
 
 /// A two-dimensional shape
 #[derive(Clone, Debug, PartialEq)]
@@ -36,15 +39,15 @@ impl Surface {
     }
 
     /// Convert a point in model coordinates to surface coordinates
-    pub fn point_model_to_surface(&self, point_3d: Point<3>) -> SurfacePoint {
+    pub fn point_model_to_surface(
+        &self,
+        point_3d: Point<3>,
+    ) -> geometry::Point<2> {
         let point_2d = match self {
             Self::Swept(surface) => surface.point_model_to_surface(&point_3d),
         };
 
-        SurfacePoint {
-            value: point_2d,
-            from: point_3d,
-        }
+        geometry::Point::new(point_2d, point_3d)
     }
 
     /// Convert a point in surface coordinates to model coordinates

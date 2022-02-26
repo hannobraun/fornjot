@@ -1,62 +1,86 @@
 use std::ops::{Add, Deref, DerefMut, Sub};
 
-use crate::math::{Point, Vector};
+use crate::math::{self, Vector};
 
-/// A point on a surface
+/// A point that can be losslessly converted into its canonical form
 ///
-/// This type is used for algorithms that need to deal with 2D points in surface
-/// coordinates. It can be converted back to the 3D point it originates from
-/// without loss from floating point accuracy issues.
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct SurfacePoint {
-    /// The surface coordinates of this point
-    pub value: Point<2>,
-
-    /// The 3D point this surface point was converted from
+/// The canonical form is always the 3D representation. It needs to be provided
+/// when constructing the point, along with the point's native form.
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct Point<const D: usize> {
+    /// This point's native form
     ///
-    /// Keeping this point around allows for the conversion back to a 3D point
-    /// to be unaffected by floating point accuracy issues, which avoids a whole
-    /// host of possible issues.
-    pub from: Point<3>,
+    /// The native form of the point is its representation in its native
+    /// coordinate system. This could be a 1-dimensional curve, 2-dimensional
+    /// surface, or 3-dimensional model coordinate system.
+    native: math::Point<D>,
+
+    /// The canonical form of the point
+    ///
+    /// This is always the 3D representation of the point. Since this is always
+    /// kept here, unchanged, as the point is converted into other coordinate
+    /// systems, it allows for a lossless conversion back into 3D coordinates,
+    /// unaffected by floating point accuracy issues.
+    canonical: math::Point<3>,
 }
 
-impl Deref for SurfacePoint {
-    type Target = Point<2>;
+impl<const D: usize> Point<D> {
+    /// Construct a new instance
+    ///
+    /// Both the native and the canonical form must be provide. The caller must
+    /// guarantee that both of them match.
+    pub fn new(native: math::Point<D>, canonical: math::Point<3>) -> Self {
+        Self { native, canonical }
+    }
 
-    fn deref(&self) -> &Self::Target {
-        &self.value
+    /// Access the point's native form
+    pub fn native(&self) -> math::Point<D> {
+        self.native
+    }
+
+    /// Access the point's canonical form
+    pub fn canonical(&self) -> math::Point<3> {
+        self.canonical
     }
 }
 
-impl DerefMut for SurfacePoint {
+impl<const D: usize> Deref for Point<D> {
+    type Target = math::Point<D>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.native
+    }
+}
+
+impl<const D: usize> DerefMut for Point<D> {
     fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.value
+        &mut self.native
     }
 }
 
 // Some math operations for convenience. Obviously those can never return a new
-// `SurfacePoint`, or the conversion back to 3D would be broken.
+// `Point`, or the conversion back to 3D would be broken.
 
-impl Add<Vector<2>> for SurfacePoint {
-    type Output = Point<2>;
+impl<const D: usize> Add<Vector<D>> for Point<D> {
+    type Output = math::Point<D>;
 
-    fn add(self, rhs: Vector<2>) -> Self::Output {
-        self.value.add(rhs)
+    fn add(self, rhs: Vector<D>) -> Self::Output {
+        self.native.add(rhs)
     }
 }
 
-impl Sub<Self> for SurfacePoint {
-    type Output = Vector<2>;
+impl<const D: usize> Sub<Self> for Point<D> {
+    type Output = Vector<D>;
 
     fn sub(self, rhs: Self) -> Self::Output {
-        Vector::from(self.value.sub(rhs.value))
+        Vector::from(self.native.sub(rhs.native))
     }
 }
 
-impl Sub<Point<2>> for SurfacePoint {
-    type Output = Vector<2>;
+impl<const D: usize> Sub<math::Point<D>> for Point<D> {
+    type Output = Vector<D>;
 
-    fn sub(self, rhs: Point<2>) -> Self::Output {
-        Vector::from(self.value.sub(rhs))
+    fn sub(self, rhs: math::Point<D>) -> Self::Output {
+        Vector::from(self.native.sub(rhs))
     }
 }
