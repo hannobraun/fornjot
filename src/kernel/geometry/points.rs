@@ -2,21 +2,25 @@ use std::ops::{Add, Deref, DerefMut, Sub};
 
 use crate::math::{Point, Vector};
 
-/// A point on a surface
+/// A point that can be losslessly converted into its canonical form
 ///
-/// This type is used for algorithms that need to deal with 2D points in surface
-/// coordinates. It can be converted back to the 3D point it originates from
-/// without loss from floating point accuracy issues.
+/// The canonical form is always the 3D representation. It needs to be provided
+/// when constructing the point, along with the point's native form.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct SurfacePoint {
-    /// The surface coordinates of this point
+    /// This point's native form
+    ///
+    /// The native form of the point is its representation in its native
+    /// coordinate system. This could be a 1-dimensional curve, 2-dimensional
+    /// surface, or 3-dimensional model coordinate system.
     pub value: Point<2>,
 
-    /// The 3D point this surface point was converted from
+    /// The canonical form of the point
     ///
-    /// Keeping this point around allows for the conversion back to a 3D point
-    /// to be unaffected by floating point accuracy issues, which avoids a whole
-    /// host of possible issues.
+    /// This is always the 3D representation of the point. Since this is always
+    /// kept here, unchanged, as the point is converted into other coordinate
+    /// systems, it allows for a lossless conversion back into 3D coordinates,
+    /// unaffected by floating point accuracy issues.
     pub from: Point<3>,
 }
 
