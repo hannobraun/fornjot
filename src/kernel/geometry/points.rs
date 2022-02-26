@@ -7,7 +7,7 @@ use crate::math::{self, Vector};
 /// The canonical form is always the 3D representation. It needs to be provided
 /// when constructing the point, along with the point's native form.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct SurfacePoint {
+pub struct Point {
     /// This point's native form
     ///
     /// The native form of the point is its representation in its native
@@ -24,7 +24,7 @@ pub struct SurfacePoint {
     pub from: math::Point<3>,
 }
 
-impl Deref for SurfacePoint {
+impl Deref for Point {
     type Target = math::Point<2>;
 
     fn deref(&self) -> &Self::Target {
@@ -32,16 +32,16 @@ impl Deref for SurfacePoint {
     }
 }
 
-impl DerefMut for SurfacePoint {
+impl DerefMut for Point {
     fn deref_mut(&mut self) -> &mut Self::Target {
         &mut self.value
     }
 }
 
 // Some math operations for convenience. Obviously those can never return a new
-// `SurfacePoint`, or the conversion back to 3D would be broken.
+// `Point`, or the conversion back to 3D would be broken.
 
-impl Add<Vector<2>> for SurfacePoint {
+impl Add<Vector<2>> for Point {
     type Output = math::Point<2>;
 
     fn add(self, rhs: Vector<2>) -> Self::Output {
@@ -49,7 +49,7 @@ impl Add<Vector<2>> for SurfacePoint {
     }
 }
 
-impl Sub<Self> for SurfacePoint {
+impl Sub<Self> for Point {
     type Output = Vector<2>;
 
     fn sub(self, rhs: Self) -> Self::Output {
@@ -57,7 +57,7 @@ impl Sub<Self> for SurfacePoint {
     }
 }
 
-impl Sub<math::Point<2>> for SurfacePoint {
+impl Sub<math::Point<2>> for Point {
     type Output = Vector<2>;
 
     fn sub(self, rhs: math::Point<2>) -> Self::Output {
