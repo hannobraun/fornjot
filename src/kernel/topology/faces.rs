@@ -6,8 +6,10 @@ use parry3d_f64::query::Ray as Ray3;
 use crate::{
     debug::{DebugInfo, TriangleEdgeCheck},
     kernel::{
-        approximation::Approximation, geometry::Surface,
-        triangulation::triangulate,
+        algorithms::{
+            approximation::Approximation, triangulation::triangulate,
+        },
+        geometry::Surface,
     },
     math::{Aabb, Scalar, Segment, Transform, Triangle},
 };
