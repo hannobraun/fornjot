@@ -1,5 +1,5 @@
 use crate::{
-    kernel::geometry::Curve,
+    kernel::geometry::{self, Curve},
     math::{self, Transform},
 };
 
@@ -33,15 +33,7 @@ pub struct Vertices(pub Vec<Vertex<3>>);
 /// for an existing vertex. Hence why this is strictly forbidden.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, Ord, PartialOrd)]
 pub struct Vertex<const D: usize> {
-    location: math::Point<D>,
-
-    /// The canonical location of this vertex
-    ///
-    /// The canonical location is always a point in 3D space. If this is a
-    /// `Vertex<3>`, this field is just redundant. If the vertex is of different
-    /// dimensionality, this field allows for loss-free conversion back into the
-    /// canonical representation.
-    canonical: math::Point<3>,
+    location: geometry::Point<D>,
 }
 
 impl Vertex<3> {
@@ -56,8 +48,7 @@ impl Vertex<3> {
     /// dimensionality, use a conversion method.
     pub fn create_at(location: math::Point<3>) -> Self {
         Self {
-            location,
-            canonical: location,
+            location: geometry::Point::new(location, location),
         }
     }
 
@@ -69,8 +60,7 @@ impl Vertex<3> {
         let location = curve.point_model_to_curve(&self.location);
 
         Vertex {
-            location,
-            canonical: self.canonical,
+            location: geometry::Point::new(location, self.location.canonical()),
         }
     }
 }
@@ -91,7 +81,10 @@ impl Vertex<1> {
     /// sure this is the case, is the responsibility of the caller.
     #[must_use]
     pub fn transform(mut self, transform: &Transform) -> Self {
-        self.canonical = transform.transform_point(&self.canonical);
+        self.location = geometry::Point::new(
+            self.location.native(),
+            transform.transform_point(&self.location.canonical()),
+        );
         self
     }
 }
@@ -105,8 +98,10 @@ impl<const D: usize> Vertex<D> {
     /// Convert the vertex to its canonical form
     pub fn to_canonical(&self) -> Vertex<3> {
         Vertex {
-            location: self.canonical,
-            canonical: self.canonical,
+            location: geometry::Point::new(
+                self.location.canonical(),
+                self.location.canonical(),
+            ),
         }
     }
 }
