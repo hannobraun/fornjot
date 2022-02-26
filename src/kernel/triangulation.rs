@@ -42,8 +42,8 @@ impl HasPosition for geometry::Point<2> {
 
     fn position(&self) -> spade::Point2<Self::Scalar> {
         spade::Point2 {
-            x: self.native.u,
-            y: self.native.v,
+            x: self.native().u,
+            y: self.native().v,
         }
     }
 }

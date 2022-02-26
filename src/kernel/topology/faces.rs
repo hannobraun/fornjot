@@ -133,7 +133,7 @@ impl Face {
                 // We're also going to need a point outside of the polygon, for
                 // the point-in-polygon tests.
                 let aabb = Aabb::<2>::from_points(
-                    points.iter().map(|vertex| vertex.native),
+                    points.iter().map(|vertex| vertex.native()),
                 );
                 let outside = aabb.max * 2.;
 
@@ -191,7 +191,7 @@ impl Face {
                             // cases that would arise from that case.
 
                             let edge =
-                                Segment::from(edge.map(|point| point.native));
+                                Segment::from(edge.map(|point| point.native()));
 
                             let intersection = edge
                                 .to_parry()
