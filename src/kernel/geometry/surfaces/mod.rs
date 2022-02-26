@@ -48,7 +48,7 @@ impl Surface {
         };
 
         geometry::Point {
-            value: point_2d,
+            native: point_2d,
             from: point_3d,
         }
     }

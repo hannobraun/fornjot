@@ -13,7 +13,7 @@ pub struct Point {
     /// The native form of the point is its representation in its native
     /// coordinate system. This could be a 1-dimensional curve, 2-dimensional
     /// surface, or 3-dimensional model coordinate system.
-    pub value: math::Point<2>,
+    pub native: math::Point<2>,
 
     /// The canonical form of the point
     ///
@@ -28,13 +28,13 @@ impl Deref for Point {
     type Target = math::Point<2>;
 
     fn deref(&self) -> &Self::Target {
-        &self.value
+        &self.native
     }
 }
 
 impl DerefMut for Point {
     fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.value
+        &mut self.native
     }
 }
 
@@ -45,7 +45,7 @@ impl Add<Vector<2>> for Point {
     type Output = math::Point<2>;
 
     fn add(self, rhs: Vector<2>) -> Self::Output {
-        self.value.add(rhs)
+        self.native.add(rhs)
     }
 }
 
@@ -53,7 +53,7 @@ impl Sub<Self> for Point {
     type Output = Vector<2>;
 
     fn sub(self, rhs: Self) -> Self::Output {
-        Vector::from(self.value.sub(rhs.value))
+        Vector::from(self.native.sub(rhs.native))
     }
 }
 
@@ -61,6 +61,6 @@ impl Sub<math::Point<2>> for Point {
     type Output = Vector<2>;
 
     fn sub(self, rhs: math::Point<2>) -> Self::Output {
-        Vector::from(self.value.sub(rhs))
+        Vector::from(self.native.sub(rhs))
     }
 }
