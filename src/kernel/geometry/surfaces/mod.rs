@@ -49,7 +49,7 @@ impl Surface {
 
         geometry::Point {
             native: point_2d,
-            from: point_3d,
+            canonical: point_3d,
         }
     }
 

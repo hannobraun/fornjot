@@ -21,7 +21,7 @@ pub struct Point {
     /// kept here, unchanged, as the point is converted into other coordinate
     /// systems, it allows for a lossless conversion back into 3D coordinates,
     /// unaffected by floating point accuracy issues.
-    pub from: math::Point<3>,
+    pub canonical: math::Point<3>,
 }
 
 impl Deref for Point {

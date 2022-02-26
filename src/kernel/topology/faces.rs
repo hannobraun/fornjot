@@ -226,7 +226,7 @@ impl Face {
                 });
 
                 out.extend(triangles.into_iter().map(|triangle| {
-                    let [a, b, c] = triangle.map(|point| point.from);
+                    let [a, b, c] = triangle.map(|point| point.canonical);
                     Triangle::from([a, b, c])
                 }));
             }
