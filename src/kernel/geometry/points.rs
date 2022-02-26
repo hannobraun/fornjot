@@ -13,7 +13,7 @@ pub struct Point<const D: usize> {
     /// The native form of the point is its representation in its native
     /// coordinate system. This could be a 1-dimensional curve, 2-dimensional
     /// surface, or 3-dimensional model coordinate system.
-    pub native: math::Point<D>,
+    native: math::Point<D>,
 
     /// The canonical form of the point
     ///
@@ -21,7 +21,7 @@ pub struct Point<const D: usize> {
     /// kept here, unchanged, as the point is converted into other coordinate
     /// systems, it allows for a lossless conversion back into 3D coordinates,
     /// unaffected by floating point accuracy issues.
-    pub canonical: math::Point<3>,
+    canonical: math::Point<3>,
 }
 
 impl<const D: usize> Point<D> {
