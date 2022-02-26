@@ -32,9 +32,7 @@ pub struct Vertices(pub Vec<Vertex<3>>);
 /// This can be prevented outright by never creating a new `Vertex` instance
 /// for an existing vertex. Hence why this is strictly forbidden.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, Ord, PartialOrd)]
-pub struct Vertex<const D: usize> {
-    location: geometry::Point<D>,
-}
+pub struct Vertex<const D: usize>(geometry::Point<D>);
 
 impl Vertex<3> {
     /// Create a vertex at the given location
@@ -47,9 +45,7 @@ impl Vertex<3> {
     /// representation of a vertex. If you need a vertex of different
     /// dimensionality, use a conversion method.
     pub fn create_at(location: math::Point<3>) -> Self {
-        Self {
-            location: geometry::Point::new(location, location),
-        }
+        Self(geometry::Point::new(location, location))
     }
 
     /// Convert the vertex to a 1-dimensional vertex
@@ -57,11 +53,9 @@ impl Vertex<3> {
     /// Uses to provided curve to convert the vertex into a 1-dimensional vertex
     /// in the curve's coordinate system.
     pub fn to_1d(&self, curve: &Curve) -> Vertex<1> {
-        let location = curve.point_model_to_curve(&self.location);
+        let location = curve.point_model_to_curve(&self.0);
 
-        Vertex {
-            location: geometry::Point::new(location, self.location.canonical()),
-        }
+        Vertex(geometry::Point::new(location, self.0.canonical()))
     }
 }
 
@@ -81,9 +75,9 @@ impl Vertex<1> {
     /// sure this is the case, is the responsibility of the caller.
     #[must_use]
     pub fn transform(mut self, transform: &Transform) -> Self {
-        self.location = geometry::Point::new(
-            self.location.native(),
-            transform.transform_point(&self.location.canonical()),
+        self.0 = geometry::Point::new(
+            self.0.native(),
+            transform.transform_point(&self.0.canonical()),
         );
         self
     }
@@ -92,16 +86,11 @@ impl Vertex<1> {
 impl<const D: usize> Vertex<D> {
     /// Access the location of this vertex
     pub fn location(&self) -> &math::Point<D> {
-        &self.location
+        &self.0
     }
 
     /// Convert the vertex to its canonical form
     pub fn to_canonical(&self) -> Vertex<3> {
-        Vertex {
-            location: geometry::Point::new(
-                self.location.canonical(),
-                self.location.canonical(),
-            ),
-        }
+        Vertex(geometry::Point::new(self.0.canonical(), self.0.canonical()))
     }
 }
