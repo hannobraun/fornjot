@@ -62,6 +62,9 @@ jobs:
       - uses: Swatinem/rust-cache@1232abb8968faf344409165de17cbf9e7f340fd8
       - uses: actions-rs/cargo@4ff6ec2846f6e7217c1a9b0b503506665f134c4b
         with:
+          command: build
+      - uses: actions-rs/cargo@4ff6ec2846f6e7217c1a9b0b503506665f134c4b
+        with:
           command: test
 
   clippy:
