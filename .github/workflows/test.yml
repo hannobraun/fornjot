@@ -11,7 +11,7 @@ on:
     branches:
       - main
     paths-ignore:
-      - "docs/**"
+      - ".vscode/**"
       - "**.md"
   pull_request:
     types:
@@ -19,7 +19,7 @@ on:
       - reopened
       - synchronize
     paths-ignore:
-      - "docs/**"
+      - ".vscode/**"
       - "**.md"
 
 env:
