@@ -141,6 +141,7 @@ enum Direction {
 
 impl Direction {
     fn is_opposite(&self, other: &Self) -> bool {
+        #[allow(clippy::match_like_matches_macro)]
         match (self, other) {
             (Self::Out, Self::In) => true,
             (Self::In, Self::Out) => true,
