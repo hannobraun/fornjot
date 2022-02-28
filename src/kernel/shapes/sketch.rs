@@ -5,7 +5,6 @@ use crate::{
         topology::{
             edges::{Edge, Edges},
             faces::{Face, Faces},
-            vertices::{Vertex, Vertices},
             Shape,
         },
     },
@@ -18,12 +17,9 @@ impl ToShape for fj::Sketch {
     fn to_shape(&self, _: Scalar, _: &mut DebugInfo) -> Shape {
         let mut shape = Shape::new();
 
-        shape.vertices = Vertices(
-            self.to_points()
-                .into_iter()
-                .map(|[x, y]| Vertex::new(Point::from([x, y, 0.])))
-                .collect(),
-        );
+        for [x, y] in self.to_points() {
+            shape.vertices.create(Point::from([x, y, 0.]));
+        }
 
         shape.edges = {
             let vertices = match shape.vertices.clone() {
