@@ -80,8 +80,8 @@ impl Vertex<3> {
     /// Only 3-dimensional vertices can be created, as that is the canonical
     /// representation of a vertex. If you need a vertex of different
     /// dimensionality, use a conversion method.
-    pub fn create_at(location: math::Point<3>) -> Self {
-        Self(geometry::Point::new(location, location))
+    pub fn create_at(location: impl Into<geometry::Point<3>>) -> Self {
+        Self(location.into())
     }
 
     /// Convert the vertex to a 1-dimensional vertex
