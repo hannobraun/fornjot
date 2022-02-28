@@ -19,7 +19,7 @@ impl ToShape for fj::Sketch {
         let vertices = Vertices(
             self.to_points()
                 .into_iter()
-                .map(|[x, y]| Vertex::create_at(Point::from([x, y, 0.])))
+                .map(|[x, y]| Vertex::new(Point::from([x, y, 0.])))
                 .collect(),
         );
 

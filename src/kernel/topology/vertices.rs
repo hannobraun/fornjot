@@ -40,7 +40,7 @@ impl<const D: usize> Vertex<D> {
     /// You **MUST NOT** use this method to construct a new instance of `Vertex`
     /// that represents an already existing vertex. See documentation of
     /// [`Vertex`] for more information.
-    pub fn create_at(point: impl Into<geometry::Point<D>>) -> Self {
+    pub fn new(point: impl Into<geometry::Point<D>>) -> Self {
         Self(point.into())
     }
 

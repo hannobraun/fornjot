@@ -170,8 +170,8 @@ mod tests {
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = Vertex::create_at(a);
-        let v2 = Vertex::create_at(d);
+        let v1 = Vertex::new(a);
+        let v2 = Vertex::new(d);
 
         let curve = Curve::Mock {
             approx: vec![b, c],
@@ -209,9 +209,9 @@ mod tests {
         let b = Point::from([2., 3., 5.]);
         let c = Point::from([3., 5., 8.]);
 
-        let v1 = Vertex::create_at(a);
-        let v2 = Vertex::create_at(b);
-        let v3 = Vertex::create_at(c);
+        let v1 = Vertex::new(a);
+        let v2 = Vertex::new(b);
+        let v3 = Vertex::new(c);
 
         let curve = Curve::Mock {
             approx: Vec::new(),
@@ -248,10 +248,10 @@ mod tests {
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = Vertex::create_at(a);
-        let v2 = Vertex::create_at(b);
-        let v3 = Vertex::create_at(c);
-        let v4 = Vertex::create_at(d);
+        let v1 = Vertex::new(a);
+        let v2 = Vertex::new(b);
+        let v3 = Vertex::new(c);
+        let v4 = Vertex::new(d);
 
         let curve = Curve::Mock {
             approx: Vec::new(),
@@ -299,10 +299,10 @@ mod tests {
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = Vertex::create_at(a);
-        let v2 = Vertex::create_at(b);
-        let v3 = Vertex::create_at(c);
-        let v4 = Vertex::create_at(d);
+        let v1 = Vertex::new(a);
+        let v2 = Vertex::new(b);
+        let v3 = Vertex::new(c);
+        let v4 = Vertex::new(d);
 
         let curve = Curve::Mock {
             approx: Vec::new(),
