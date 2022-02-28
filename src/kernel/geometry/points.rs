@@ -58,6 +58,12 @@ impl<const D: usize> DerefMut for Point<D> {
     }
 }
 
+impl From<math::Point<3>> for Point<3> {
+    fn from(point: math::Point<3>) -> Self {
+        Self::new(point, point)
+    }
+}
+
 // Some math operations for convenience. Obviously those can never return a new
 // `Point`, or the conversion back to 3D would be broken.
 
