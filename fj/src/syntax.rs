@@ -34,27 +34,6 @@ where
     }
 }
 
-pub trait Difference {
-    fn difference<Other>(&self, other: &Other) -> crate::Difference
-    where
-        Other: Clone + Into<crate::Shape3d>;
-}
-
-impl<T> Difference for T
-where
-    T: Clone + Into<crate::Shape3d>,
-{
-    fn difference<Other>(&self, other: &Other) -> crate::Difference
-    where
-        Other: Clone + Into<crate::Shape3d>,
-    {
-        let a = self.clone().into();
-        let b = other.clone().into();
-
-        crate::Difference { a, b }
-    }
-}
-
 pub trait Sweep {
     fn sweep(&self, length: f64) -> crate::Sweep;
 }
