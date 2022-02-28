@@ -28,12 +28,12 @@ impl<const D: usize> Vector<D> {
     }
 
     /// Convert the vector into an nalgebra vector
-    pub fn to_na(&self) -> nalgebra::SVector<f64, D> {
+    pub fn to_na(self) -> nalgebra::SVector<f64, D> {
         self.0.map(Scalar::into_f64).into()
     }
 
     /// Convert to a 1-dimensional vector
-    pub fn to_t(&self) -> Vector<1> {
+    pub fn to_t(self) -> Vector<1> {
         Vector([self.0[0]])
     }
 
@@ -44,7 +44,7 @@ impl<const D: usize> Vector<D> {
     ///
     /// If the vector has higher dimensionality than three, the superfluous
     /// components will be discarded.
-    pub fn to_xyz(&self) -> Vector<3> {
+    pub fn to_xyz(self) -> Vector<3> {
         let zero = Scalar::ZERO;
 
         let components = match self.0.as_slice() {

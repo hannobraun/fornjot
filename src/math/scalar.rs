@@ -26,7 +26,7 @@ use decorum::R64;
 /// explicit `unwrap`/`expect` calls would add nothing. In addition, the mandate
 /// not to fail is not motivated in any way, in the [`From`]/[`Into`]
 /// documentation.
-#[derive(Clone, Copy, PartialEq, PartialOrd)]
+#[derive(Clone, Copy)]
 pub struct Scalar(f64);
 
 impl Scalar {
@@ -121,6 +121,12 @@ impl Scalar {
 
 impl Eq for Scalar {}
 
+impl PartialOrd for Scalar {
+    fn partial_cmp(&self, other: &Self) -> Option<cmp::Ordering> {
+        self.0.partial_cmp(&other.0)
+    }
+}
+
 impl Ord for Scalar {
     fn cmp(&self, other: &Self) -> cmp::Ordering {
         // Should never panic, as `from_f64` checks that the wrapped value is
@@ -129,8 +135,16 @@ impl Ord for Scalar {
     }
 }
 
+impl PartialEq for Scalar {
+    fn eq(&self, other: &Self) -> bool {
+        self.0 == other.0
+    }
+}
+
 impl Hash for Scalar {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        // To the best of my knowledge, this matches the `PartialEq`
+        // implementation.
         R64::from_inner(self.0).hash(state);
     }
 }

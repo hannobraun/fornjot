@@ -3,5 +3,6 @@
     "editor.formatOnPaste": true,
     "rust-analyzer.diagnostics.disabled": [
         "mismatched-arg-count"
-    ]
+    ],
+    "rust-analyzer.checkOnSave.command": "clippy"
 }
