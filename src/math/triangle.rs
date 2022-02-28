@@ -13,7 +13,7 @@ impl<const D: usize> Triangle<D> {
 
 impl Triangle<3> {
     /// Convert the triangle to a Parry triangle
-    pub fn to_parry(&self) -> parry3d_f64::shape::Triangle {
+    pub fn to_parry(self) -> parry3d_f64::shape::Triangle {
         self.points().map(|vertex| vertex.to_na()).into()
     }
 }

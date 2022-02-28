@@ -50,7 +50,7 @@ impl Aabb<3> {
     }
 
     /// Convert the AABB to a Parry AABB
-    pub fn to_parry(&self) -> parry3d_f64::bounding_volume::AABB {
+    pub fn to_parry(self) -> parry3d_f64::bounding_volume::AABB {
         parry3d_f64::bounding_volume::AABB {
             mins: self.min.to_na(),
             maxs: self.max.to_na(),

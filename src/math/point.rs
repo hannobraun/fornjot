@@ -39,14 +39,14 @@ impl<const D: usize> Point<D> {
     }
 
     /// Convert the point into an nalgebra point
-    pub fn to_na(&self) -> nalgebra::Point<f64, D> {
+    pub fn to_na(self) -> nalgebra::Point<f64, D> {
         nalgebra::Point {
             coords: self.coords.into(),
         }
     }
 
     /// Convert to a 1-dimensional point
-    pub fn to_t(&self) -> Point<1> {
+    pub fn to_t(self) -> Point<1> {
         Point {
             coords: self.coords.to_t(),
         }
