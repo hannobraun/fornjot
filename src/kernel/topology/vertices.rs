@@ -35,7 +35,7 @@ pub struct Vertices(pub Vec<Vertex<3>>);
 pub struct Vertex<const D: usize>(geometry::Point<D>);
 
 impl<const D: usize> Vertex<D> {
-    /// Create a vertex at the given location
+    /// Construct a new vertex
     ///
     /// You **MUST NOT** use this method to construct a new instance of `Vertex`
     /// that represents an already existing vertex. See documentation of
@@ -44,7 +44,7 @@ impl<const D: usize> Vertex<D> {
         Self(point.into())
     }
 
-    /// Access the location of this vertex
+    /// Access the point that defines this vertex
     pub fn point(&self) -> &math::Point<D> {
         &self.0
     }
@@ -63,8 +63,8 @@ impl Vertex<1> {
     /// [`Vertex`] for more information.
     ///
     /// This is a 3D transformation that transforms the canonical form of the
-    /// vertex, but leaves the location untouched. Since `self` is a
-    /// 1-dimensional vertex, transforming the location is not possible.
+    /// vertex, but leaves the native form untouched. Since `self` is a
+    /// 1-dimensional vertex, transforming the native form is not possible.
     ///
     /// And, presumably, also not necessary, as this is likely part of a larger
     /// transformation that also transforms the curve the vertex is on. Making
