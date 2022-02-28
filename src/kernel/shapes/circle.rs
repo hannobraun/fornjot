@@ -5,7 +5,6 @@ use crate::{
         topology::{
             edges::{Edge, Edges},
             faces::{Face, Faces},
-            vertices::Vertices,
             Shape,
         },
     },
@@ -16,21 +15,19 @@ use super::ToShape;
 
 impl ToShape for fj::Circle {
     fn to_shape(&self, _: Scalar, _: &mut DebugInfo) -> Shape {
-        // Circles have just a single round edge with no vertices.
-        let vertices = Vertices(Vec::new());
+        let mut shape = Shape::new();
 
-        let edges = Edges::single_cycle([Edge::circle(self.radius)]);
+        // Circles have just a single round edge with no vertices. So none need
+        // to be added here.
 
-        let faces = Faces(vec![Face::Face {
-            edges: edges.clone(),
+        shape.edges = Edges::single_cycle([Edge::circle(self.radius)]);
+
+        shape.faces = Faces(vec![Face::Face {
+            edges: shape.edges.clone(),
             surface: Surface::x_y_plane(),
         }]);
 
-        Shape {
-            vertices,
-            edges,
-            faces,
-        }
+        shape
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

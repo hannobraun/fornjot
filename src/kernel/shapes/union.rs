@@ -1,6 +1,6 @@
 use crate::{
     debug::DebugInfo,
-    kernel::topology::{edges::Edges, faces::Faces, vertices::Vertices, Shape},
+    kernel::topology::{faces::Faces, Shape},
     math::{Aabb, Scalar},
 };
 
@@ -8,6 +8,8 @@ use super::ToShape;
 
 impl ToShape for fj::Union {
     fn to_shape(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Shape {
+        let mut shape = Shape::new();
+
         let a = self.a.to_shape(tolerance, debug_info).faces;
         let b = self.b.to_shape(tolerance, debug_info).faces;
 
@@ -20,13 +22,9 @@ impl ToShape for fj::Union {
         faces.extend(a.0);
         faces.extend(b.0);
 
-        let faces = Faces(faces);
+        shape.faces = Faces(faces);
 
-        Shape {
-            vertices: Vertices(Vec::new()),
-            edges: Edges { cycles: Vec::new() },
-            faces,
-        }
+        shape
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
