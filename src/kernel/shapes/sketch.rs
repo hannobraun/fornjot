@@ -16,12 +16,12 @@ use super::ToShape;
 
 impl ToShape for fj::Sketch {
     fn to_shape(&self, _: Scalar, _: &mut DebugInfo) -> Shape {
-        let vertices = self
-            .to_points()
-            .into_iter()
-            .map(|[x, y]| Vertex::create_at(Point::from([x, y, 0.])))
-            .collect();
-        let vertices = Vertices(vertices);
+        let vertices = Vertices(
+            self.to_points()
+                .into_iter()
+                .map(|[x, y]| Vertex::new(Point::from([x, y, 0.])))
+                .collect(),
+        );
 
         let edges = {
             let vertices = match vertices.clone() {
@@ -47,8 +47,8 @@ impl ToShape for fj::Sketch {
                 let b = window[1];
 
                 let line = Curve::Line(Line {
-                    origin: *a.location(),
-                    direction: *b.location() - *a.location(),
+                    origin: *a.point(),
+                    direction: *b.point() - *a.point(),
                 });
                 let edge = Edge::new(line, Some([a, b]));
 
