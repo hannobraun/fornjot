@@ -34,28 +34,15 @@ pub struct Vertices(pub Vec<Vertex<3>>);
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Vertex<const D: usize>(geometry::Point<D>);
 
-impl Vertex<3> {
-    /// Create a vertex at the given location
-    ///
-    /// You **MUST NOT** use this method to construct a new instance of `Vertex`
-    /// that represents an already existing vertex. See documentation of
-    /// [`Vertex`] for more information.
-    ///
-    /// Only 3-dimensional vertices can be created, as that is the canonical
-    /// representation of a vertex. If you need a vertex of different
-    /// dimensionality, use a conversion method.
-    pub fn create_at(location: math::Point<3>) -> Self {
-        Self(geometry::Point::new(location, location))
+impl<const D: usize> Vertex<D> {
+    /// Access the location of this vertex
+    pub fn location(&self) -> &math::Point<D> {
+        &self.0
     }
 
-    /// Convert the vertex to a 1-dimensional vertex
-    ///
-    /// Uses to provided curve to convert the vertex into a 1-dimensional vertex
-    /// in the curve's coordinate system.
-    pub fn to_1d(self, curve: &Curve) -> Vertex<1> {
-        let location = curve.point_model_to_curve(&self.0);
-
-        Vertex(geometry::Point::new(location, self.0.canonical()))
+    /// Convert the vertex to its canonical form
+    pub fn to_canonical(self) -> Vertex<3> {
+        Vertex(geometry::Point::new(self.0.canonical(), self.0.canonical()))
     }
 }
 
@@ -83,14 +70,27 @@ impl Vertex<1> {
     }
 }
 
-impl<const D: usize> Vertex<D> {
-    /// Access the location of this vertex
-    pub fn location(&self) -> &math::Point<D> {
-        &self.0
+impl Vertex<3> {
+    /// Create a vertex at the given location
+    ///
+    /// You **MUST NOT** use this method to construct a new instance of `Vertex`
+    /// that represents an already existing vertex. See documentation of
+    /// [`Vertex`] for more information.
+    ///
+    /// Only 3-dimensional vertices can be created, as that is the canonical
+    /// representation of a vertex. If you need a vertex of different
+    /// dimensionality, use a conversion method.
+    pub fn create_at(location: math::Point<3>) -> Self {
+        Self(geometry::Point::new(location, location))
     }
 
-    /// Convert the vertex to its canonical form
-    pub fn to_canonical(self) -> Vertex<3> {
-        Vertex(geometry::Point::new(self.0.canonical(), self.0.canonical()))
+    /// Convert the vertex to a 1-dimensional vertex
+    ///
+    /// Uses to provided curve to convert the vertex into a 1-dimensional vertex
+    /// in the curve's coordinate system.
+    pub fn to_1d(self, curve: &Curve) -> Vertex<1> {
+        let location = curve.point_model_to_curve(&self.0);
+
+        Vertex(geometry::Point::new(location, self.0.canonical()))
     }
 }
