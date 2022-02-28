@@ -59,9 +59,8 @@ pub struct Vertex<const D: usize>(geometry::Point<D>);
 impl<const D: usize> Vertex<D> {
     /// Construct a new vertex
     ///
-    /// You **MUST NOT** use this method to construct a new instance of `Vertex`
-    /// that represents an already existing vertex. See documentation of
-    /// [`Vertex`] for more information.
+    /// This method is only intended for unit tests. All other code should call
+    /// [`Vertices::create`].
     #[cfg(test)]
     pub fn new(point: impl Into<geometry::Point<D>>) -> Self {
         Self(point.into())
