@@ -73,7 +73,7 @@ impl<const D: usize> Sub<Self> for Point<D> {
     type Output = Vector<D>;
 
     fn sub(self, rhs: Self) -> Self::Output {
-        Vector::from(self.native.sub(rhs.native))
+        self.native.sub(rhs.native)
     }
 }
 
@@ -81,6 +81,6 @@ impl<const D: usize> Sub<math::Point<D>> for Point<D> {
     type Output = Vector<D>;
 
     fn sub(self, rhs: math::Point<D>) -> Self::Output {
-        Vector::from(self.native.sub(rhs))
+        self.native.sub(rhs)
     }
 }

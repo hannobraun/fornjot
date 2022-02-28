@@ -9,7 +9,7 @@ use crate::{
             Shape,
         },
     },
-    math::{Aabb, Point, Scalar, Vector},
+    math::{Aabb, Point, Scalar},
 };
 
 use super::ToShape;
@@ -48,7 +48,7 @@ impl ToShape for fj::Sketch {
 
                 let line = Curve::Line(Line {
                     origin: *a.location(),
-                    direction: Vector::from(*b.location() - *a.location()),
+                    direction: *b.location() - *a.location(),
                 });
                 let edge = Edge::new(line, Some([a, b]));
 
