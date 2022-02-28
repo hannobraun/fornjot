@@ -7,6 +7,28 @@ use crate::{
 #[derive(Clone)]
 pub struct Vertices(pub Vec<Vertex<3>>);
 
+impl Vertices {
+    /// Create a vertex
+    ///
+    /// The caller must make sure to uphold all rules regarding vertex
+    /// uniqueness.
+    ///
+    /// # Implementation note
+    ///
+    /// This method is intended to be the only means to create `Vertex`
+    /// instances, outside of unit tests. We're not quite there yet, but once we
+    /// are, this method is in a great position to enforce vertex uniqueness
+    /// rules, instead of requiring the user to uphold those.
+    pub fn create(
+        &mut self,
+        point: impl Into<geometry::Point<3>>,
+    ) -> Vertex<3> {
+        let vertex = Vertex(point.into());
+        self.0.push(vertex);
+        vertex
+    }
+}
+
 /// A vertex
 ///
 /// This struct exists to distinguish between vertices and points at the type
@@ -37,9 +59,9 @@ pub struct Vertex<const D: usize>(geometry::Point<D>);
 impl<const D: usize> Vertex<D> {
     /// Construct a new vertex
     ///
-    /// You **MUST NOT** use this method to construct a new instance of `Vertex`
-    /// that represents an already existing vertex. See documentation of
-    /// [`Vertex`] for more information.
+    /// This method is only intended for unit tests. All other code should call
+    /// [`Vertices::create`].
+    #[cfg(test)]
     pub fn new(point: impl Into<geometry::Point<D>>) -> Self {
         Self(point.into())
     }

@@ -8,9 +8,7 @@ use crate::{
     kernel::{
         algorithms::approximation::Approximation,
         topology::{
-            edges::Edges,
             faces::{Face, Faces},
-            vertices::Vertices,
             Shape,
         },
     },
@@ -21,6 +19,8 @@ use super::ToShape;
 
 impl ToShape for fj::Sweep {
     fn to_shape(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Shape {
+        let mut shape = Shape::new();
+
         let original_shape = self.shape.to_shape(tolerance, debug_info);
 
         let rotation = Isometry::rotation(vector![PI, 0., 0.]).into();
@@ -73,13 +73,9 @@ impl ToShape for fj::Sweep {
         faces.extend(top_faces);
         faces.extend(side_faces);
 
-        let faces = Faces(faces);
+        shape.faces = Faces(faces);
 
-        Shape {
-            vertices: Vertices(Vec::new()),
-            edges: Edges { cycles: Vec::new() },
-            faces,
-        }
+        shape
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
