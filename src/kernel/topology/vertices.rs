@@ -35,6 +35,15 @@ pub struct Vertices(pub Vec<Vertex<3>>);
 pub struct Vertex<const D: usize>(geometry::Point<D>);
 
 impl<const D: usize> Vertex<D> {
+    /// Create a vertex at the given location
+    ///
+    /// You **MUST NOT** use this method to construct a new instance of `Vertex`
+    /// that represents an already existing vertex. See documentation of
+    /// [`Vertex`] for more information.
+    pub fn create_at(location: impl Into<geometry::Point<D>>) -> Self {
+        Self(location.into())
+    }
+
     /// Access the location of this vertex
     pub fn location(&self) -> &math::Point<D> {
         &self.0
@@ -71,19 +80,6 @@ impl Vertex<1> {
 }
 
 impl Vertex<3> {
-    /// Create a vertex at the given location
-    ///
-    /// You **MUST NOT** use this method to construct a new instance of `Vertex`
-    /// that represents an already existing vertex. See documentation of
-    /// [`Vertex`] for more information.
-    ///
-    /// Only 3-dimensional vertices can be created, as that is the canonical
-    /// representation of a vertex. If you need a vertex of different
-    /// dimensionality, use a conversion method.
-    pub fn create_at(location: impl Into<geometry::Point<3>>) -> Self {
-        Self(location.into())
-    }
-
     /// Convert the vertex to a 1-dimensional vertex
     ///
     /// Uses to provided curve to convert the vertex into a 1-dimensional vertex
