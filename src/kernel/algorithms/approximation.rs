@@ -47,8 +47,8 @@ impl Approximation {
         // refer to the same vertex would be understood to refer to very close,
         // but distinct vertices.
         if let Some([a, b]) = edge.vertices {
-            points.insert(0, *a.to_canonical().location());
-            points.push(*b.to_canonical().location());
+            points.insert(0, *a.to_canonical().point());
+            points.push(*b.to_canonical().point());
         }
 
         let mut segment_points = points.clone();

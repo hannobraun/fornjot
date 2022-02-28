@@ -45,7 +45,7 @@ impl<const D: usize> Vertex<D> {
     }
 
     /// Access the location of this vertex
-    pub fn location(&self) -> &math::Point<D> {
+    pub fn point(&self) -> &math::Point<D> {
         &self.0
     }
 
