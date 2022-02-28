@@ -191,7 +191,7 @@ mod tests {
             }
         );
 
-        let edge_self_connected = Edge::new(curve.clone(), None);
+        let edge_self_connected = Edge::new(curve, None);
         assert_eq!(
             Approximation::for_edge(&edge_self_connected, tolerance),
             Approximation {
@@ -220,7 +220,7 @@ mod tests {
 
         let ab = Edge::new(curve.clone(), Some([v1, v2]));
         let bc = Edge::new(curve.clone(), Some([v2, v3]));
-        let ca = Edge::new(curve.clone(), Some([v3, v1]));
+        let ca = Edge::new(curve, Some([v3, v1]));
 
         let cycle = Cycle {
             edges: vec![ab, bc, ca],
@@ -261,7 +261,7 @@ mod tests {
         let ab = Edge::new(curve.clone(), Some([v1, v2]));
         let ba = Edge::new(curve.clone(), Some([v2, v1]));
         let cd = Edge::new(curve.clone(), Some([v3, v4]));
-        let dc = Edge::new(curve.clone(), Some([v4, v3]));
+        let dc = Edge::new(curve, Some([v4, v3]));
 
         let ab_ba = Cycle {
             edges: vec![ab, ba],
@@ -312,7 +312,7 @@ mod tests {
         let ab = Edge::new(curve.clone(), Some([v1, v2]));
         let bc = Edge::new(curve.clone(), Some([v2, v3]));
         let cd = Edge::new(curve.clone(), Some([v3, v4]));
-        let da = Edge::new(curve.clone(), Some([v4, v1]));
+        let da = Edge::new(curve, Some([v4, v1]));
 
         let abcd = Cycle {
             edges: vec![ab, bc, cd, da],
