@@ -67,8 +67,8 @@ impl<const D: usize> Vertex<D> {
     }
 
     /// Access the point that defines this vertex
-    pub fn point(&self) -> &geometry::Point<D> {
-        &self.0
+    pub fn point(&self) -> geometry::Point<D> {
+        self.0
     }
 
     /// Convert the vertex to its canonical form
