@@ -23,8 +23,7 @@ pub struct Approximation {
     /// approximated by these segments.
     ///
     /// All the points of these segments will also be available in the `points`
-    /// field of this struct. This can be verified by calling
-    /// [`Approximation::validate`].
+    /// field of this struct.
     pub segments: HashSet<Segment<3>>,
 }
 

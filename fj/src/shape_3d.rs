@@ -28,7 +28,7 @@ impl From<Shape3d> for Shape {
 /// translation.
 ///
 /// See issue:
-/// https://github.com/hannobraun/Fornjot/issues/101
+/// <https://github.com/hannobraun/Fornjot/issues/101>
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Transform {
@@ -93,7 +93,7 @@ impl From<Sweep> for Shape3d {
 /// intersecting, triangle meshes of the original shapes.
 ///
 /// See issue:
-/// https://github.com/hannobraun/Fornjot/issues/42
+/// <https://github.com/hannobraun/Fornjot/issues/42>
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Union {
