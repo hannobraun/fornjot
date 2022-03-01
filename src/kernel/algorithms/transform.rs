@@ -1,4 +1,7 @@
-use crate::{kernel::topology::Shape, math::Transform};
+use crate::{
+    kernel::topology::{faces::Face, Shape},
+    math::Transform,
+};
 
 /// Create a new shape that is a transformed version of an existing one
 ///
@@ -14,9 +17,26 @@ pub fn transform_shape(original: &Shape, transform: &Transform) -> Shape {
     let mut transformed = Shape::new();
 
     for face in &original.faces.0 {
-        let face = face.clone().transform(transform);
+        let face = transform_face(face, transform);
         transformed.faces.0.push(face);
     }
 
     transformed
+}
+
+/// Create a new face that is a transformed version of an existing one
+pub fn transform_face(original: &Face, transform: &Transform) -> Face {
+    match original.clone() {
+        Face::Face { edges, surface } => Face::Face {
+            edges: edges.transform(transform),
+            surface: surface.transform(transform),
+        },
+        Face::Triangles(mut triangles) => {
+            for triangle in &mut triangles {
+                *triangle = transform.transform_triangle(triangle);
+            }
+
+            Face::Triangles(triangles)
+        }
+    }
 }

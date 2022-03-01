@@ -6,7 +6,7 @@ use parry3d_f64::math::Isometry;
 use crate::{
     debug::DebugInfo,
     kernel::{
-        algorithms::approximation::Approximation,
+        algorithms::{approximation::Approximation, transform::transform_face},
         topology::{
             faces::{Face, Faces},
             Shape,
@@ -35,9 +35,9 @@ impl ToShape for fj::Sweep {
             //
             // See issue:
             // https://github.com/hannobraun/Fornjot/issues/230
-            bottom_faces.push(face.clone().transform(&rotation));
+            bottom_faces.push(transform_face(&face, &rotation));
 
-            top_faces.push(face.transform(&translation));
+            top_faces.push(transform_face(&face, &translation));
         }
 
         for cycle in original_shape.edges.cycles {
