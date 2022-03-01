@@ -21,18 +21,6 @@ use super::edges::Edges;
 pub struct Faces(pub Vec<Face>);
 
 impl Faces {
-    /// Transform all the faces
-    #[must_use]
-    pub fn transform(self, transform: &Transform) -> Self {
-        let faces = self
-            .0
-            .into_iter()
-            .map(|face| face.transform(transform))
-            .collect();
-
-        Self(faces)
-    }
-
     pub fn triangles(
         &self,
         tolerance: Scalar,

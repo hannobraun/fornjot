@@ -12,6 +12,11 @@ use crate::{kernel::topology::Shape, math::Transform};
 /// except as a side effect of addressing the shortcomings of `Shape`.
 pub fn transform_shape(original: &Shape, transform: &Transform) -> Shape {
     let mut transformed = Shape::new();
-    transformed.faces = original.faces.clone().transform(transform);
+
+    for face in &original.faces.0 {
+        let face = face.clone().transform(transform);
+        transformed.faces.0.push(face);
+    }
+
     transformed
 }
