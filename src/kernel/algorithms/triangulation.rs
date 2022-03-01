@@ -15,8 +15,11 @@ pub fn triangulate(
     let mut triangles = Vec::new();
     for triangle in triangulation.inner_faces() {
         let [v0, v1, v2] = triangle.vertices().map(|vertex| *vertex.data());
-        let orientation =
-            corner_direction(&v0.to_na(), &v1.to_na(), &v2.to_na());
+        let orientation = corner_direction(
+            &v0.native().to_na(),
+            &v1.native().to_na(),
+            &v2.native().to_na(),
+        );
 
         let triangle = match orientation {
             Orientation::Ccw => [v0, v1, v2],

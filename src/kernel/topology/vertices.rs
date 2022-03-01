@@ -108,7 +108,7 @@ impl Vertex<3> {
     /// in the curve's coordinate system.
     pub fn to_1d(self, curve: &Curve) -> Vertex<1> {
         Vertex(geometry::Point::new(
-            curve.point_model_to_curve(&self.0),
+            curve.point_model_to_curve(&self.0.native()),
             self.0.canonical(),
         ))
     }

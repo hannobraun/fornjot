@@ -1,4 +1,4 @@
-use std::ops::{Add, Deref, DerefMut, Sub};
+use std::ops::{Add, Sub};
 
 use crate::math::{self, Vector};
 
@@ -41,20 +41,6 @@ impl<const D: usize> Point<D> {
     /// Access the point's canonical form
     pub fn canonical(&self) -> math::Point<3> {
         self.canonical
-    }
-}
-
-impl<const D: usize> Deref for Point<D> {
-    type Target = math::Point<D>;
-
-    fn deref(&self) -> &Self::Target {
-        &self.native
-    }
-}
-
-impl<const D: usize> DerefMut for Point<D> {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.native
     }
 }
 
