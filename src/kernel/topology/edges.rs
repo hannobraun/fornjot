@@ -27,18 +27,6 @@ impl Edges {
             cycles: vec![cycle],
         }
     }
-
-    /// Transform the edges
-    #[must_use]
-    pub fn transform(mut self, transform: &Transform) -> Self {
-        for cycle in &mut self.cycles {
-            for edge in &mut cycle.edges {
-                *edge = edge.clone().transform(transform);
-            }
-        }
-
-        self
-    }
 }
 
 /// A cycle of connected edges

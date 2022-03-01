@@ -1,5 +1,9 @@
 use crate::{
-    kernel::topology::{faces::Face, Shape},
+    kernel::topology::{
+        edges::{Cycle, Edges},
+        faces::Face,
+        Shape,
+    },
     math::Transform,
 };
 
@@ -28,10 +32,21 @@ pub fn transform_shape(original: &Shape, transform: &Transform) -> Shape {
 pub fn transform_face(original: &Face, transform: &Transform) -> Face {
     match original.clone() {
         Face::Face { edges, surface } => {
-            let edges = edges.transform(transform);
+            let mut cycles = Vec::new();
+
+            for cycle in edges.cycles {
+                let mut edges = Vec::new();
+
+                for edge in cycle.edges {
+                    let edge = edge.clone().transform(transform);
+                    edges.push(edge);
+                }
+
+                cycles.push(Cycle { edges });
+            }
 
             Face::Face {
-                edges,
+                edges: Edges { cycles },
                 surface: surface.transform(transform),
             }
         }
