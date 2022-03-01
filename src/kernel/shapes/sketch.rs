@@ -45,7 +45,7 @@ impl ToShape for fj::Sketch {
                 let b = window[1];
 
                 let line = Curve::Line(Line {
-                    origin: *a.point(),
+                    origin: a.point().native(),
                     direction: *b.point() - *a.point(),
                 });
                 let edge = Edge::new(line, Some([a, b]));

@@ -1,6 +1,6 @@
 use crate::{
     kernel::geometry::{self, Curve},
-    math::{self, Transform},
+    math::Transform,
 };
 
 /// The vertices of a shape
@@ -67,7 +67,7 @@ impl<const D: usize> Vertex<D> {
     }
 
     /// Access the point that defines this vertex
-    pub fn point(&self) -> &math::Point<D> {
+    pub fn point(&self) -> &geometry::Point<D> {
         &self.0
     }
 
