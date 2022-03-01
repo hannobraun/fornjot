@@ -59,7 +59,7 @@ impl Zoom {
 
     /// Discard zoom events that fall out of the zoom input time window
     ///
-    /// See [`ZOOM_INPUT_WINDOW`].
+    /// See [`INPUT_WINDOW`].
     pub fn discard_old_events(&mut self, now: Instant) {
         while let Some((time, _)) = self.events.front() {
             if now.duration_since(*time) > INPUT_WINDOW {
