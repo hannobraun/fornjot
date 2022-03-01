@@ -27,10 +27,14 @@ pub fn transform_shape(original: &Shape, transform: &Transform) -> Shape {
 /// Create a new face that is a transformed version of an existing one
 pub fn transform_face(original: &Face, transform: &Transform) -> Face {
     match original.clone() {
-        Face::Face { edges, surface } => Face::Face {
-            edges: edges.transform(transform),
-            surface: surface.transform(transform),
-        },
+        Face::Face { edges, surface } => {
+            let edges = edges.transform(transform);
+
+            Face::Face {
+                edges,
+                surface: surface.transform(transform),
+            }
+        }
         Face::Triangles(mut triangles) => {
             for triangle in &mut triangles {
                 *triangle = transform.transform_triangle(triangle);
