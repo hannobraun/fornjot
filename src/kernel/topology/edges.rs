@@ -1,6 +1,6 @@
 use crate::{
     kernel::geometry::{Circle, Curve},
-    math::{Point, Transform, Vector},
+    math::{Point, Vector},
 };
 
 use super::vertices::Vertex;
@@ -79,23 +79,5 @@ impl Edge {
             }),
             vertices: None,
         }
-    }
-
-    /// Create a transformed edge
-    ///
-    /// This method constructs new instances of [`Vertex`], by calling
-    /// [`Vertex::transform`].
-    ///
-    /// You **MUST NOT** use this method to construct a new instance of `Vertex`
-    /// that represents an already existing vertex. See documentation of
-    /// [`Vertex`] for more information.
-    #[must_use]
-    pub fn transform(mut self, transform: &Transform) -> Self {
-        self.curve = self.curve.transform(transform);
-        self.vertices = self
-            .vertices
-            .map(|vertices| vertices.map(|vertex| vertex.transform(transform)));
-
-        self
     }
 }

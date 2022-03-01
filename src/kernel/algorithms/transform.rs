@@ -1,6 +1,6 @@
 use crate::{
     kernel::topology::{
-        edges::{Cycle, Edges},
+        edges::{Cycle, Edge, Edges},
         faces::Face,
         Shape,
     },
@@ -38,8 +38,14 @@ pub fn transform_face(original: &Face, transform: &Transform) -> Face {
                 let mut edges = Vec::new();
 
                 for edge in cycle.edges {
-                    let edge = edge.clone().transform(transform);
-                    edges.push(edge);
+                    let vertices = edge.vertices.map(|vertices| {
+                        vertices.map(|vertex| vertex.transform(transform))
+                    });
+
+                    edges.push(Edge {
+                        curve: edge.curve.transform(transform),
+                        vertices,
+                    });
                 }
 
                 cycles.push(Cycle { edges });
