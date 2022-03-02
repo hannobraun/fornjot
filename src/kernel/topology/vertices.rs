@@ -5,7 +5,7 @@ use crate::{
 
 /// The vertices of a shape
 #[derive(Clone)]
-pub struct Vertices(pub Vec<Vertex<3>>);
+pub struct Vertices(Vec<Vertex<3>>);
 
 impl Vertices {
     /// Construct a new instance of `Vertices`
