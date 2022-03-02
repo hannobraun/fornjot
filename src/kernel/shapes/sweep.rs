@@ -1,7 +1,7 @@
 use crate::{
     debug::DebugInfo,
     kernel::{algorithms::sweep::sweep_shape, topology::Shape},
-    math::{Aabb, Scalar},
+    math::{Aabb, Scalar, Vector},
 };
 
 use super::ToShape;
@@ -10,7 +10,7 @@ impl ToShape for fj::Sweep {
     fn to_shape(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Shape {
         sweep_shape(
             &self.shape.to_shape(tolerance, debug_info),
-            self.length,
+            Vector::from([0., 0., self.length]),
             tolerance,
         )
     }

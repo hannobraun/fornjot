@@ -14,11 +14,15 @@ use crate::{
 use super::{approximation::Approximation, transform::transform_face};
 
 /// Create a new shape by sweeping an existing one
-pub fn sweep_shape(original: &Shape, path: f64, tolerance: Scalar) -> Shape {
+pub fn sweep_shape(
+    original: &Shape,
+    path: Vector<3>,
+    tolerance: Scalar,
+) -> Shape {
     let mut shape = Shape::new();
 
     let rotation = Isometry::rotation(vector![PI, 0., 0.]).into();
-    let translation = Transform::translation(Vector::from([0.0, 0.0, path]));
+    let translation = Transform::translation(path);
 
     let mut bottom_faces = Vec::new();
     let mut top_faces = Vec::new();
@@ -46,8 +50,7 @@ pub fn sweep_shape(original: &Shape, path: f64, tolerance: Scalar) -> Shape {
             let [v0, v1] = segment.points();
             let [v3, v2] = {
                 let segment =
-                    Transform::translation(Vector::from([0., 0., path]))
-                        .transform_segment(&segment);
+                    Transform::translation(path).transform_segment(&segment);
                 segment.points()
             };
 
