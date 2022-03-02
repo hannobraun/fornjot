@@ -18,7 +18,7 @@ pub fn sweep_shape(original: &Shape, path: f64, tolerance: Scalar) -> Shape {
     let mut shape = Shape::new();
 
     let rotation = Isometry::rotation(vector![PI, 0., 0.]).into();
-    let translation = Isometry::translation(0.0, 0.0, path).into();
+    let translation = Transform::translation(Vector::from([0.0, 0.0, path]));
 
     let mut bottom_faces = Vec::new();
     let mut top_faces = Vec::new();
