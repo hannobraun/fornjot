@@ -5,8 +5,12 @@ pub struct Transform(parry3d_f64::math::Isometry<f64>);
 
 impl Transform {
     /// Construct a translation
-    pub fn translation(x: f64, y: f64, z: f64) -> Self {
-        Self(parry3d_f64::math::Isometry::translation(x, y, z))
+    pub fn translation(vector: Vector<3>) -> Self {
+        Self(parry3d_f64::math::Isometry::translation(
+            vector.x.into_f64(),
+            vector.y.into_f64(),
+            vector.z.into_f64(),
+        ))
     }
 
     /// Transform the given point
