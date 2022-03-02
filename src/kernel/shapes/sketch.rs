@@ -22,19 +22,15 @@ impl ToShape for fj::Sketch {
         }
 
         shape.edges = {
-            let vertices = match shape.vertices.clone() {
-                vertices if vertices.0.is_empty() => vertices.0,
-                vertices => {
-                    let mut vertices = vertices.0;
+            let mut vertices: Vec<_> = shape.vertices.iter().collect();
 
-                    // Add the first vertex at the end again, to close the loop.
-                    //
-                    // This can't panic. This `match` expression makes sure that
-                    // there are vertices.
-                    vertices.push(vertices[0]);
-                    vertices
-                }
-            };
+            if !vertices.is_empty() {
+                // Add the first vertex at the end again, to close the loop.
+                //
+                // This can't panic. We just checked that `vertices` is not
+                // empty.
+                vertices.push(vertices[0]);
+            }
 
             let mut edges = Vec::new();
             for window in vertices.windows(2) {

@@ -1,13 +1,18 @@
 use crate::{
     kernel::geometry::{self, Curve},
-    math::Transform,
+    math::{Point, Transform},
 };
 
 /// The vertices of a shape
 #[derive(Clone)]
-pub struct Vertices(pub Vec<Vertex<3>>);
+pub struct Vertices(Vec<Point<3>>);
 
 impl Vertices {
+    /// Construct a new instance of `Vertices`
+    pub fn new() -> Self {
+        Self(Vec::new())
+    }
+
     /// Create a vertex
     ///
     /// The caller must make sure to uphold all rules regarding vertex
@@ -19,13 +24,21 @@ impl Vertices {
     /// instances, outside of unit tests. We're not quite there yet, but once we
     /// are, this method is in a great position to enforce vertex uniqueness
     /// rules, instead of requiring the user to uphold those.
-    pub fn create(
+    pub fn create<const D: usize>(
         &mut self,
-        point: impl Into<geometry::Point<3>>,
-    ) -> Vertex<3> {
-        let vertex = Vertex(point.into());
-        self.0.push(vertex);
-        vertex
+        point: impl Into<geometry::Point<D>>,
+    ) -> Vertex<D> {
+        let point = point.into();
+        self.0.push(point.canonical());
+        Vertex(point)
+    }
+
+    /// Access an iterator over all vertices
+    pub fn iter(&self) -> impl Iterator<Item = Vertex<3>> + '_ {
+        self.0
+            .iter()
+            .copied()
+            .map(|point| Vertex(geometry::Point::new(point, point)))
     }
 }
 
