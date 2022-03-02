@@ -136,6 +136,12 @@ impl<const D: usize> From<Point<D>> for [f64; D] {
     }
 }
 
+impl<const D: usize> From<Point<D>> for [Scalar; D] {
+    fn from(point: Point<D>) -> Self {
+        point.coords.into()
+    }
+}
+
 impl<const D: usize> ops::Neg for Point<D> {
     type Output = Self;
 
