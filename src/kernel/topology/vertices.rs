@@ -27,14 +27,6 @@ impl Vertices<'_> {
         self.vertices.push(point.canonical());
         Vertex(point)
     }
-
-    /// Access an iterator over all vertices
-    pub fn iter(&self) -> impl Iterator<Item = Vertex<3>> + '_ {
-        self.vertices
-            .iter()
-            .copied()
-            .map(|point| Vertex(geometry::Point::new(point, point)))
-    }
 }
 
 /// A vertex
