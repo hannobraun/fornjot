@@ -254,7 +254,7 @@ impl num_traits::Num for Scalar {
         str: &str,
         radix: u32,
     ) -> Result<Self, Self::FromStrRadixErr> {
-        f64::from_str_radix(str, radix).map(Scalar::from_f64)
+        f64::from_str_radix(str, radix).map(Self::from_f64)
     }
 }
 
