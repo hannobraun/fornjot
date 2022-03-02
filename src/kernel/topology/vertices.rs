@@ -5,12 +5,16 @@ use crate::{
 
 /// The vertices of a shape
 #[derive(Clone)]
-pub struct Vertices(Vec<Point<3>>);
+pub struct Vertices {
+    vertices: Vec<Point<3>>,
+}
 
 impl Vertices {
     /// Construct a new instance of `Vertices`
     pub fn new() -> Self {
-        Self(Vec::new())
+        Self {
+            vertices: Vec::new(),
+        }
     }
 
     /// Create a vertex
@@ -28,13 +32,13 @@ impl Vertices {
         point: impl Into<geometry::Point<D>>,
     ) -> Vertex<D> {
         let point = point.into();
-        self.0.push(point.canonical());
+        self.vertices.push(point.canonical());
         Vertex(point)
     }
 
     /// Access an iterator over all vertices
     pub fn iter(&self) -> impl Iterator<Item = Vertex<3>> + '_ {
-        self.0
+        self.vertices
             .iter()
             .copied()
             .map(|point| Vertex(geometry::Point::new(point, point)))
