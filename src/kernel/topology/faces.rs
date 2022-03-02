@@ -11,7 +11,7 @@ use crate::{
         },
         geometry::Surface,
     },
-    math::{Aabb, Scalar, Segment, Transform, Triangle},
+    math::{Aabb, Scalar, Segment, Triangle},
 };
 
 use super::edges::Edges;
@@ -21,18 +21,6 @@ use super::edges::Edges;
 pub struct Faces(pub Vec<Face>);
 
 impl Faces {
-    /// Transform all the faces
-    #[must_use]
-    pub fn transform(self, transform: &Transform) -> Self {
-        let faces = self
-            .0
-            .into_iter()
-            .map(|face| face.transform(transform))
-            .collect();
-
-        Self(faces)
-    }
-
     pub fn triangles(
         &self,
         tolerance: Scalar,
@@ -79,24 +67,6 @@ pub enum Face {
 }
 
 impl Face {
-    /// Transform the face
-    #[must_use]
-    pub fn transform(self, transform: &Transform) -> Self {
-        match self {
-            Self::Face { edges, surface } => Self::Face {
-                edges: edges.transform(transform),
-                surface: surface.transform(transform),
-            },
-            Self::Triangles(mut triangles) => {
-                for triangle in &mut triangles {
-                    *triangle = transform.transform_triangle(triangle);
-                }
-
-                Self::Triangles(triangles)
-            }
-        }
-    }
-
     pub fn triangles(
         &self,
         tolerance: Scalar,

@@ -1,6 +1,6 @@
 use crate::{
     kernel::geometry::{self, Curve},
-    math::{Point, Transform},
+    math::Point,
 };
 
 /// The vertices of a shape
@@ -20,10 +20,9 @@ impl Vertices {
     ///
     /// # Implementation note
     ///
-    /// This method is intended to be the only means to create `Vertex`
-    /// instances, outside of unit tests. We're not quite there yet, but once we
-    /// are, this method is in a great position to enforce vertex uniqueness
-    /// rules, instead of requiring the user to uphold those.
+    /// This method is the only means to create `Vertex` instances, outside of
+    /// unit tests. That puts this method is in a great position to enforce
+    /// vertex uniqueness rules, instead of requiring the user to uphold those.
     pub fn create<const D: usize>(
         &mut self,
         point: impl Into<geometry::Point<D>>,
@@ -87,30 +86,6 @@ impl<const D: usize> Vertex<D> {
     /// Convert the vertex to its canonical form
     pub fn to_canonical(self) -> Vertex<3> {
         Vertex(geometry::Point::new(self.0.canonical(), self.0.canonical()))
-    }
-}
-
-impl Vertex<1> {
-    /// Create a transformed vertex
-    ///
-    /// You **MUST NOT** use this method to construct a new instance of `Vertex`
-    /// that represents an already existing vertex. See documentation of
-    /// [`Vertex`] for more information.
-    ///
-    /// This is a 3D transformation that transforms the canonical form of the
-    /// vertex, but leaves the native form untouched. Since `self` is a
-    /// 1-dimensional vertex, transforming the native form is not possible.
-    ///
-    /// And, presumably, also not necessary, as this is likely part of a larger
-    /// transformation that also transforms the curve the vertex is on. Making
-    /// sure this is the case, is the responsibility of the caller.
-    #[must_use]
-    pub fn transform(mut self, transform: &Transform) -> Self {
-        self.0 = geometry::Point::new(
-            self.0.native(),
-            transform.transform_point(&self.0.canonical()),
-        );
-        self
     }
 }
 
