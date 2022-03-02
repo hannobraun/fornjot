@@ -20,10 +20,9 @@ impl Vertices {
     ///
     /// # Implementation note
     ///
-    /// This method is intended to be the only means to create `Vertex`
-    /// instances, outside of unit tests. We're not quite there yet, but once we
-    /// are, this method is in a great position to enforce vertex uniqueness
-    /// rules, instead of requiring the user to uphold those.
+    /// This method is the only means to create `Vertex` instances, outside of
+    /// unit tests. That puts this method is in a great position to enforce
+    /// vertex uniqueness rules, instead of requiring the user to uphold those.
     pub fn create<const D: usize>(
         &mut self,
         point: impl Into<geometry::Point<D>>,
