@@ -8,7 +8,7 @@ use crate::{
         faces::{Face, Faces},
         Shape,
     },
-    math::{Scalar, Transform},
+    math::{Scalar, Transform, Vector},
 };
 
 use super::{approximation::Approximation, transform::transform_face};
@@ -45,8 +45,9 @@ pub fn sweep_shape(original: &Shape, path: f64, tolerance: Scalar) -> Shape {
         for segment in approx.segments {
             let [v0, v1] = segment.points();
             let [v3, v2] = {
-                let segment = Transform::translation(0., 0., path)
-                    .transform_segment(&segment);
+                let segment =
+                    Transform::translation(Vector::from([0., 0., path]))
+                        .transform_segment(&segment);
                 segment.points()
             };
 
