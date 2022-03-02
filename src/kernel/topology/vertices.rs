@@ -1,11 +1,10 @@
-use crate::{
-    kernel::geometry::{self, Curve},
-    math::Point,
-};
+use crate::kernel::geometry::{self, Curve};
+
+use super::VerticesInner;
 
 /// The vertices of a shape
 pub struct Vertices<'r> {
-    pub(super) vertices: &'r mut Vec<Point<3>>,
+    pub(super) vertices: &'r mut VerticesInner,
 }
 
 impl Vertices<'_> {

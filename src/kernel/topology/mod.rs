@@ -14,7 +14,7 @@ use self::{edges::Edges, faces::Faces, vertices::Vertices};
 /// provides. Steps have been made in that direction, but right now, the API is
 /// still full of holes, forcing callers to just be careful for the time being.
 pub struct Shape {
-    vertices: Vec<Point<3>>,
+    vertices: VerticesInner,
 
     pub edges: Edges,
     pub faces: Faces,
@@ -24,7 +24,7 @@ impl Shape {
     /// Construct a new shape
     pub fn new() -> Self {
         Self {
-            vertices: Vec::new(),
+            vertices: VerticesInner::new(),
             edges: Edges { cycles: Vec::new() },
             faces: Faces(Vec::new()),
         }
@@ -37,3 +37,5 @@ impl Shape {
         }
     }
 }
+
+type VerticesInner = Vec<Point<3>>;
