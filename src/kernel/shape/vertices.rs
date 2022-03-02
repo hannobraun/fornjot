@@ -17,14 +17,23 @@ pub struct Vertices<'r> {
 impl Vertices<'_> {
     /// Create a vertex
     ///
-    /// The caller must make sure to uphold all rules regarding vertex
-    /// uniqueness.
+    /// Logs a warning, if the vertex is not unique, meaning if another vertex
+    /// defined by the same point already exists.
+    ///
+    /// In the context of of vertex uniqueness, points that are close to each
+    /// other are considered identical. The minimum distance between distinct
+    /// vertices can be configured using [`Shape::with_minimum_distance`].
     ///
     /// # Implementation note
     ///
-    /// This method is the only means to create `Vertex` instances, outside of
-    /// unit tests. That puts this method is in a great position to enforce
-    /// vertex uniqueness rules, instead of requiring the user to uphold those.
+    /// This method is intended to actually validate vertex uniqueness: To
+    /// panic, if duplicate vertices are found. This is currently not possible,
+    /// as the presence of bugs in the sweep and transform code would basically
+    /// break ever model, due to validation errors.
+    ///
+    /// In the future, this method is likely to validate more than just vertex
+    /// uniqueness. See documentation of [`crate::kernel`] for some context on
+    /// that.
     pub fn create(&mut self, point: Point<3>) -> Vertex {
         let handle = Handle::new(point);
 
