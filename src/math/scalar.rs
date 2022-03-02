@@ -5,10 +5,9 @@ use decorum::R64;
 /// A rational, finite scalar value
 ///
 /// This is a wrapper around `f64`. On construction, it checks that the `f64`
-/// value is neither infinite nor NaN. This allows `Scalar` to provide
-/// implementations of [`Eq`], [`Ord`], and [`Hash`], enabling `Scalar` (and
-/// types built on top of it), to be used as keys in hash maps, hash sets, and
-/// similar types.
+/// value is not NaN. This allows `Scalar` to provide implementations of [`Eq`],
+/// [`Ord`], and [`Hash`], enabling `Scalar` (and types built on top of it), to
+/// be used as keys in hash maps, hash sets, and similar types.
 ///
 /// # Failing `From`/`Into` implementations
 ///
@@ -47,7 +46,7 @@ impl Scalar {
 
     /// Construct a `Scalar` from an `f64`
     ///
-    /// Panics, if `scalar` is infinite or NaN.
+    /// Panics, if `scalar` is NaN.
     pub fn from_f64(scalar: f64) -> Self {
         if scalar.is_nan() {
             panic!("Invalid scalar value: {scalar}");
