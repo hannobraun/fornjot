@@ -45,6 +45,21 @@ impl Shape {
         }
     }
 
+    /// Override the minimum distance for this shape
+    ///
+    /// # Implementation note
+    ///
+    /// This functionality should be exposed to models, eventually. For now it's
+    /// just used in unit tests.
+    #[cfg(test)]
+    pub fn with_min_distance(
+        mut self,
+        min_distance: impl Into<Scalar>,
+    ) -> Self {
+        self.min_distance = min_distance.into();
+        self
+    }
+
     /// Access the shape's vertices
     pub fn vertices(&mut self) -> Vertices {
         Vertices {
