@@ -15,7 +15,7 @@ impl Shape {
     /// Construct a new shape
     pub fn new() -> Self {
         Self {
-            vertices: Vertices(Vec::new()),
+            vertices: Vertices::new(),
             edges: Edges { cycles: Vec::new() },
             faces: Faces(Vec::new()),
         }

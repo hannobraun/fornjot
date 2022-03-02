@@ -8,6 +8,11 @@ use crate::{
 pub struct Vertices(pub Vec<Vertex<3>>);
 
 impl Vertices {
+    /// Construct a new instance of `Vertices`
+    pub fn new() -> Self {
+        Self(Vec::new())
+    }
+
     /// Create a vertex
     ///
     /// The caller must make sure to uphold all rules regarding vertex
