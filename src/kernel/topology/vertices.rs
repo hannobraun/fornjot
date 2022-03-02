@@ -1,6 +1,6 @@
 use crate::{
     kernel::geometry::{self, Curve},
-    math::{self, Transform},
+    math::Transform,
 };
 
 /// The vertices of a shape
@@ -67,8 +67,8 @@ impl<const D: usize> Vertex<D> {
     }
 
     /// Access the point that defines this vertex
-    pub fn point(&self) -> &math::Point<D> {
-        &self.0
+    pub fn point(&self) -> geometry::Point<D> {
+        self.0
     }
 
     /// Convert the vertex to its canonical form
@@ -108,7 +108,7 @@ impl Vertex<3> {
     /// in the curve's coordinate system.
     pub fn to_1d(self, curve: &Curve) -> Vertex<1> {
         Vertex(geometry::Point::new(
-            curve.point_model_to_curve(&self.0),
+            curve.point_model_to_curve(&self.0.native()),
             self.0.canonical(),
         ))
     }
