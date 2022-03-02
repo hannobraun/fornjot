@@ -1,11 +1,11 @@
 use crate::{
     kernel::geometry::{self, Curve},
-    math::Transform,
+    math::{Point, Transform},
 };
 
 /// The vertices of a shape
 #[derive(Clone)]
-pub struct Vertices(Vec<Vertex<3>>);
+pub struct Vertices(Vec<Point<3>>);
 
 impl Vertices {
     /// Construct a new instance of `Vertices`
@@ -28,14 +28,17 @@ impl Vertices {
         &mut self,
         point: impl Into<geometry::Point<3>>,
     ) -> Vertex<3> {
-        let vertex = Vertex(point.into());
-        self.0.push(vertex);
-        vertex
+        let point = point.into();
+        self.0.push(point.canonical());
+        Vertex(point)
     }
 
     /// Access an iterator over all vertices
     pub fn iter(&self) -> impl Iterator<Item = Vertex<3>> + '_ {
-        self.0.iter().copied()
+        self.0
+            .iter()
+            .copied()
+            .map(|point| Vertex(geometry::Point::new(point, point)))
     }
 }
 
