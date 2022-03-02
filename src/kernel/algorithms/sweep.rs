@@ -14,11 +14,7 @@ use crate::{
 use super::{approximation::Approximation, transform::transform_face};
 
 /// Create a new shape by sweeping an existing one
-pub fn sweep_shape(
-    original_shape: &Shape,
-    length: f64,
-    tolerance: Scalar,
-) -> Shape {
+pub fn sweep_shape(original: &Shape, length: f64, tolerance: Scalar) -> Shape {
     let mut shape = Shape::new();
 
     let rotation = Isometry::rotation(vector![PI, 0., 0.]).into();
@@ -28,7 +24,7 @@ pub fn sweep_shape(
     let mut top_faces = Vec::new();
     let mut side_faces = Vec::new();
 
-    for face in &original_shape.faces.0 {
+    for face in &original.faces.0 {
         // This only works for faces that are symmetric to the x-axis.
         //
         // See issue:
@@ -38,7 +34,7 @@ pub fn sweep_shape(
         top_faces.push(transform_face(face, &translation, &mut shape));
     }
 
-    for cycle in &original_shape.edges.cycles {
+    for cycle in &original.edges.cycles {
         let approx = Approximation::for_cycle(cycle, tolerance);
 
         // This will only work correctly, if the cycle consists of one edge. If
