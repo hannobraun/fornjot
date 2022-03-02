@@ -1,4 +1,10 @@
-use crate::{kernel::topology::vertices::Vertex, math::Point};
+use kiddo::distance::squared_euclidean;
+use tracing::warn;
+
+use crate::{
+    kernel::topology::vertices::Vertex,
+    math::{Point, Scalar},
+};
 
 use super::{handle::Handle, VerticesInner};
 
@@ -21,10 +27,58 @@ impl Vertices<'_> {
     pub fn create(&mut self, point: Point<3>) -> Vertex {
         let handle = Handle::new(point);
 
+        // Make sure the new vertex is a minimum distance away from all existing
+        // vertices. This minimum distance is defined to be half a µm, which
+        // should provide more than enough precision for common use cases, while
+        // being large enough to catch all invalid cases.
+        let min_distance = Scalar::from_f64(0.0000005);
+        match self.vertices.nearest_one(&point.into(), &squared_euclidean) {
+            Ok((distance_squared, existing)) => {
+                if distance_squared < min_distance * min_distance {
+                    let existing = existing.get();
+
+                    warn!(
+                        "Invalid vertex: {point:?}; \
+                        identical vertex at {existing:?}",
+                    );
+                }
+            }
+            Err(kiddo::ErrorKind::Empty) => {
+                // No other vertices means no change of the new one being
+                // invalid.
+            }
+            Err(err) => {
+                panic!("Error during vertex validation: {err:?}");
+            }
+        }
+
         self.vertices
             .add(&point.into(), handle.inner())
             .expect("Error adding vertex");
 
         Vertex(handle)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{kernel::shape::Shape, math::Point};
+
+    #[test]
+    fn create_valid() {
+        let mut shape = Shape::new();
+
+        shape.vertices().create(Point::from([0., 0., 0.]));
+        shape.vertices().create(Point::from([5e-6, 0., 0.]));
+    }
+
+    #[test]
+    #[ignore]
+    #[should_panic]
+    fn create_invalid() {
+        let mut shape = Shape::new();
+
+        shape.vertices().create(Point::from([0., 0., 0.]));
+        shape.vertices().create(Point::from([5e-8, 0., 0.]));
     }
 }
