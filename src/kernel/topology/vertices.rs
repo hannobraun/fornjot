@@ -24,10 +24,10 @@ impl Vertices {
     /// instances, outside of unit tests. We're not quite there yet, but once we
     /// are, this method is in a great position to enforce vertex uniqueness
     /// rules, instead of requiring the user to uphold those.
-    pub fn create(
+    pub fn create<const D: usize>(
         &mut self,
-        point: impl Into<geometry::Point<3>>,
-    ) -> Vertex<3> {
+        point: impl Into<geometry::Point<D>>,
+    ) -> Vertex<D> {
         let point = point.into();
         self.0.push(point.canonical());
         Vertex(point)
