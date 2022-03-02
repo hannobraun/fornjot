@@ -4,18 +4,11 @@ use crate::{
 };
 
 /// The vertices of a shape
-pub struct Vertices {
-    vertices: Vec<Point<3>>,
+pub struct Vertices<'r> {
+    pub(super) vertices: &'r mut Vec<Point<3>>,
 }
 
-impl Vertices {
-    /// Construct a new instance of `Vertices`
-    pub fn new() -> Self {
-        Self {
-            vertices: Vec::new(),
-        }
-    }
-
+impl Vertices<'_> {
     /// Create a vertex
     ///
     /// The caller must make sure to uphold all rules regarding vertex
