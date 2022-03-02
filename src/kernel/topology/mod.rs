@@ -20,4 +20,9 @@ impl Shape {
             faces: Faces(Vec::new()),
         }
     }
+
+    /// Access and modify the shape's vertices
+    pub fn vertices(&mut self) -> &mut Vertices {
+        &mut self.vertices
+    }
 }

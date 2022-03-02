@@ -58,7 +58,7 @@ pub fn transform_face(
                                 transform.transform_point(&point.canonical());
 
                             shape
-                                .vertices
+                                .vertices()
                                 .create(geometry::Point::new(native, canonical))
                         })
                     });
