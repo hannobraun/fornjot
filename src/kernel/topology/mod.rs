@@ -2,7 +2,9 @@ pub mod edges;
 pub mod faces;
 pub mod vertices;
 
-use crate::math::Point;
+use kiddo::KdTree;
+
+use crate::math::{Point, Scalar};
 
 use self::{edges::Edges, faces::Faces, vertices::Vertices};
 
@@ -38,4 +40,4 @@ impl Shape {
     }
 }
 
-type VerticesInner = Vec<Point<3>>;
+type VerticesInner = KdTree<Scalar, Point<3>, 3>;

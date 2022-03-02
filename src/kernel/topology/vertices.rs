@@ -23,7 +23,9 @@ impl Vertices<'_> {
         point: impl Into<geometry::Point<D>>,
     ) -> Vertex<D> {
         let point = point.into();
-        self.vertices.push(point.canonical());
+        self.vertices
+            .add(&point.canonical().into(), point.canonical())
+            .expect("Error adding vertex");
         Vertex(point)
     }
 }
