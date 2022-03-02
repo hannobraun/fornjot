@@ -32,6 +32,11 @@ impl Vertices {
         self.0.push(vertex);
         vertex
     }
+
+    /// Access an iterator over all vertices
+    pub fn iter(&self) -> impl Iterator<Item = Vertex<3>> + '_ {
+        self.0.iter().copied()
+    }
 }
 
 /// A vertex

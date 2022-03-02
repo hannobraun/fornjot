@@ -22,7 +22,7 @@ impl ToShape for fj::Sketch {
         }
 
         shape.edges = {
-            let mut vertices = shape.vertices.0.clone();
+            let mut vertices: Vec<_> = shape.vertices.iter().collect();
 
             if !vertices.is_empty() {
                 // Add the first vertex at the end again, to close the loop.
