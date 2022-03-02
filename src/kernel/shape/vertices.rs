@@ -10,6 +10,7 @@ use super::{handle::Handle, VerticesInner};
 
 /// The vertices of a shape
 pub struct Vertices<'r> {
+    pub(super) min_distance: Scalar,
     pub(super) vertices: &'r mut VerticesInner,
 }
 
@@ -31,10 +32,9 @@ impl Vertices<'_> {
         // vertices. This minimum distance is defined to be half a µm, which
         // should provide more than enough precision for common use cases, while
         // being large enough to catch all invalid cases.
-        let min_distance = Scalar::from_f64(0.0000005);
         match self.vertices.nearest_one(&point.into(), &squared_euclidean) {
             Ok((distance_squared, existing)) => {
-                if distance_squared < min_distance * min_distance {
+                if distance_squared < self.min_distance * self.min_distance {
                     let existing = existing.get();
 
                     warn!(
