@@ -16,14 +16,14 @@ use super::ToShape;
 impl ToShape for fj::Sketch {
     fn to_shape(&self, _: Scalar, _: &mut DebugInfo) -> Shape {
         let mut shape = Shape::new();
+        let mut vertices = Vec::new();
 
         for [x, y] in self.to_points() {
-            shape.vertices().create(Point::from([x, y, 0.]));
+            let vertex = shape.vertices().create(Point::from([x, y, 0.]));
+            vertices.push(vertex);
         }
 
         shape.edges = {
-            let mut vertices: Vec<_> = shape.vertices().iter().collect();
-
             if !vertices.is_empty() {
                 // Add the first vertex at the end again, to close the loop.
                 //

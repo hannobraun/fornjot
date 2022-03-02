@@ -1,11 +1,10 @@
-use crate::{
-    kernel::geometry::{self, Curve},
-    math::Point,
-};
+use crate::kernel::geometry::{self, Curve};
+
+use super::VerticesInner;
 
 /// The vertices of a shape
 pub struct Vertices<'r> {
-    pub(super) vertices: &'r mut Vec<Point<3>>,
+    pub(super) vertices: &'r mut VerticesInner,
 }
 
 impl Vertices<'_> {
@@ -24,16 +23,10 @@ impl Vertices<'_> {
         point: impl Into<geometry::Point<D>>,
     ) -> Vertex<D> {
         let point = point.into();
-        self.vertices.push(point.canonical());
-        Vertex(point)
-    }
-
-    /// Access an iterator over all vertices
-    pub fn iter(&self) -> impl Iterator<Item = Vertex<3>> + '_ {
         self.vertices
-            .iter()
-            .copied()
-            .map(|point| Vertex(geometry::Point::new(point, point)))
+            .add(&point.canonical().into(), point.canonical())
+            .expect("Error adding vertex");
+        Vertex(point)
     }
 }
 

@@ -186,6 +186,12 @@ impl<const D: usize> From<Vector<D>> for [f64; D] {
     }
 }
 
+impl<const D: usize> From<Vector<D>> for [Scalar; D] {
+    fn from(vector: Vector<D>) -> Self {
+        vector.0
+    }
+}
+
 impl<const D: usize> From<Vector<D>> for nalgebra::SVector<f64, D> {
     fn from(vector: Vector<D>) -> Self {
         vector.to_na()
