@@ -2,11 +2,20 @@ pub mod edges;
 pub mod faces;
 pub mod vertices;
 
+use crate::math::Point;
+
 use self::{edges::Edges, faces::Faces, vertices::Vertices};
 
 /// The boundary representation of a shape
+///
+/// # Implementation note
+///
+/// The goal for `Shape` is to enforce full self-consistency, through the API it
+/// provides. Steps have been made in that direction, but right now, the API is
+/// still full of holes, forcing callers to just be careful for the time being.
 pub struct Shape {
-    pub vertices: Vertices,
+    vertices: Vec<Point<3>>,
+
     pub edges: Edges,
     pub faces: Faces,
 }
@@ -15,9 +24,16 @@ impl Shape {
     /// Construct a new shape
     pub fn new() -> Self {
         Self {
-            vertices: Vertices::new(),
+            vertices: Vec::new(),
             edges: Edges { cycles: Vec::new() },
             faces: Faces(Vec::new()),
+        }
+    }
+
+    /// Access and modify the shape's vertices
+    pub fn vertices(&mut self) -> Vertices {
+        Vertices {
+            vertices: &mut self.vertices,
         }
     }
 }
