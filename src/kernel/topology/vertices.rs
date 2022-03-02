@@ -1,6 +1,6 @@
 use crate::{
     kernel::geometry::{self, Curve},
-    math::{Point, Transform},
+    math::Point,
 };
 
 /// The vertices of a shape
@@ -87,30 +87,6 @@ impl<const D: usize> Vertex<D> {
     /// Convert the vertex to its canonical form
     pub fn to_canonical(self) -> Vertex<3> {
         Vertex(geometry::Point::new(self.0.canonical(), self.0.canonical()))
-    }
-}
-
-impl Vertex<1> {
-    /// Create a transformed vertex
-    ///
-    /// You **MUST NOT** use this method to construct a new instance of `Vertex`
-    /// that represents an already existing vertex. See documentation of
-    /// [`Vertex`] for more information.
-    ///
-    /// This is a 3D transformation that transforms the canonical form of the
-    /// vertex, but leaves the native form untouched. Since `self` is a
-    /// 1-dimensional vertex, transforming the native form is not possible.
-    ///
-    /// And, presumably, also not necessary, as this is likely part of a larger
-    /// transformation that also transforms the curve the vertex is on. Making
-    /// sure this is the case, is the responsibility of the caller.
-    #[must_use]
-    pub fn transform(mut self, transform: &Transform) -> Self {
-        self.0 = geometry::Point::new(
-            self.0.native(),
-            transform.transform_point(&self.0.canonical()),
-        );
-        self
     }
 }
 

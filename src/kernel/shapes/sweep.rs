@@ -35,9 +35,9 @@ impl ToShape for fj::Sweep {
             //
             // See issue:
             // https://github.com/hannobraun/Fornjot/issues/230
-            bottom_faces.push(transform_face(&face, &rotation));
+            bottom_faces.push(transform_face(&face, &rotation, &mut shape));
 
-            top_faces.push(transform_face(&face, &translation));
+            top_faces.push(transform_face(&face, &translation, &mut shape));
         }
 
         for cycle in original_shape.edges.cycles {
