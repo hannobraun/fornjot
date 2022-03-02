@@ -49,11 +49,10 @@ impl Scalar {
     ///
     /// Panics, if `scalar` is infinite or NaN.
     pub fn from_f64(scalar: f64) -> Self {
-        if scalar.is_finite() {
-            // `scalar` is neither infinite, nor NaN
-            Self(scalar)
-        } else {
+        if scalar.is_nan() {
             panic!("Invalid scalar value: {scalar}");
+        } else {
+            Self(scalar)
         }
     }
 
