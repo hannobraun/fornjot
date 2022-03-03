@@ -4,6 +4,7 @@ use crate::{
     kernel::topology::{
         edges::{Cycle, Edge, Edges},
         faces::Face,
+        vertices::Vertex,
     },
     math::{Point, Scalar, Segment},
 };
@@ -36,42 +37,7 @@ impl Approximation {
         let mut points = Vec::new();
         edge.curve.approx(tolerance, &mut points);
 
-        // Insert the exact vertices of this edge into the approximation. This
-        // means we don't rely on the curve approximation to deliver accurate
-        // representations of these vertices, which they might not be able to
-        // do.
-        //
-        // If we used inaccurate representations of those vertices here, then
-        // that would lead to bugs in the approximation, as points that should
-        // refer to the same vertex would be understood to refer to very close,
-        // but distinct vertices.
-        if let Some([a, b]) = edge.vertices {
-            points.insert(0, a.to_canonical().point().native());
-            points.push(b.to_canonical().point().native());
-        }
-
-        let mut segment_points = points.clone();
-        if edge.vertices.is_none() {
-            // The edge has no vertices, which means it connects to itself. We
-            // need to reflect that in the approximation.
-
-            if let Some(&point) = points.first() {
-                segment_points.push(point);
-            }
-        }
-
-        let mut segments = HashSet::new();
-        for segment in segment_points.windows(2) {
-            let p0 = segment[0];
-            let p1 = segment[1];
-
-            segments.insert(Segment::from([p0, p1]));
-        }
-
-        Self {
-            points: points.into_iter().collect(),
-            segments,
-        }
+        approximate_edge(points, edge.vertices)
     }
 
     /// Compute an approximation for a cycle
@@ -140,15 +106,54 @@ impl Approximation {
     }
 }
 
+fn approximate_edge(
+    mut points: Vec<Point<3>>,
+    vertices: Option<[Vertex<1>; 2]>,
+) -> Approximation {
+    // Insert the exact vertices of this edge into the approximation. This means
+    // we don't rely on the curve approximation to deliver accurate
+    // representations of these vertices, which they might not be able to do.
+    //
+    // If we used inaccurate representations of those vertices here, then that
+    // would lead to bugs in the approximation, as points that should refer to
+    // the same vertex would be understood to refer to very close, but distinct
+    // vertices.
+    if let Some([a, b]) = vertices {
+        points.insert(0, a.to_canonical().point().native());
+        points.push(b.to_canonical().point().native());
+    }
+
+    let mut segment_points = points.clone();
+    if vertices.is_none() {
+        // The edge has no vertices, which means it connects to itself. We need
+        // to reflect that in the approximation.
+
+        if let Some(&point) = points.first() {
+            segment_points.push(point);
+        }
+    }
+
+    let mut segments = HashSet::new();
+    for segment in segment_points.windows(2) {
+        let p0 = segment[0];
+        let p1 = segment[1];
+
+        segments.insert(Segment::from([p0, p1]));
+    }
+
+    Approximation {
+        points: points.into_iter().collect(),
+        segments,
+    }
+}
+
 #[cfg(test)]
 mod tests {
-    use std::cell::RefCell;
-
     use map_macro::set;
 
     use crate::{
         kernel::{
-            geometry::{Curve, Surface},
+            geometry::{self, Surface},
             topology::{
                 edges::{Cycle, Edge, Edges},
                 faces::Face,
@@ -158,28 +163,26 @@ mod tests {
         math::{Point, Scalar, Segment},
     };
 
-    use super::Approximation;
+    use super::{approximate_edge, Approximation};
 
     #[test]
     fn for_edge() {
-        let tolerance = Scalar::ONE;
+        // Doesn't test `Approximation::for_edge` directly, but that method only
+        // contains a bit of additional glue code that is not critical.
 
         let a = Point::from([1., 2., 3.]);
         let b = Point::from([2., 3., 5.]);
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = Vertex::new(a);
-        let v2 = Vertex::new(d);
+        let v1 = Vertex::new(geometry::Point::new(Point::from([0.]), a));
+        let v2 = Vertex::new(geometry::Point::new(Point::from([1.]), d));
 
-        let curve = Curve::Mock {
-            approx: vec![b, c],
-            coords: RefCell::new(vec![Point::from([0.]), Point::from([1.])]),
-        };
+        let points = vec![b, c];
 
-        let edge_regular = Edge::new(curve.clone(), Some([v1, v2]));
+        // Regular edge
         assert_eq!(
-            Approximation::for_edge(&edge_regular, tolerance),
+            approximate_edge(points.clone(), Some([v1, v2])),
             Approximation {
                 points: set![a, b, c, d],
                 segments: set![
@@ -190,9 +193,9 @@ mod tests {
             }
         );
 
-        let edge_self_connected = Edge::new(curve, None);
+        // Continuous edge
         assert_eq!(
-            Approximation::for_edge(&edge_self_connected, tolerance),
+            approximate_edge(points, None),
             Approximation {
                 points: set![b, c],
                 segments: set![Segment::from([b, c]), Segment::from([c, b])],
@@ -212,14 +215,9 @@ mod tests {
         let v2 = Vertex::new(b);
         let v3 = Vertex::new(c);
 
-        let curve = Curve::Mock {
-            approx: Vec::new(),
-            coords: RefCell::new(vec![Point::from([0.]), Point::from([1.])]),
-        };
-
-        let ab = Edge::new(curve.clone(), Some([v1, v2]));
-        let bc = Edge::new(curve.clone(), Some([v2, v3]));
-        let ca = Edge::new(curve, Some([v3, v1]));
+        let ab = Edge::line_segment([v1, v2]);
+        let bc = Edge::line_segment([v2, v3]);
+        let ca = Edge::line_segment([v3, v1]);
 
         let cycle = Cycle {
             edges: vec![ab, bc, ca],
@@ -252,15 +250,10 @@ mod tests {
         let v3 = Vertex::new(c);
         let v4 = Vertex::new(d);
 
-        let curve = Curve::Mock {
-            approx: Vec::new(),
-            coords: RefCell::new(vec![Point::from([0.]), Point::from([1.])]),
-        };
-
-        let ab = Edge::new(curve.clone(), Some([v1, v2]));
-        let ba = Edge::new(curve.clone(), Some([v2, v1]));
-        let cd = Edge::new(curve.clone(), Some([v3, v4]));
-        let dc = Edge::new(curve, Some([v4, v3]));
+        let ab = Edge::line_segment([v1, v2]);
+        let ba = Edge::line_segment([v2, v1]);
+        let cd = Edge::line_segment([v3, v4]);
+        let dc = Edge::line_segment([v4, v3]);
 
         let ab_ba = Cycle {
             edges: vec![ab, ba],
@@ -303,15 +296,10 @@ mod tests {
         let v3 = Vertex::new(c);
         let v4 = Vertex::new(d);
 
-        let curve = Curve::Mock {
-            approx: Vec::new(),
-            coords: RefCell::new(vec![Point::from([0.]), Point::from([1.])]),
-        };
-
-        let ab = Edge::new(curve.clone(), Some([v1, v2]));
-        let bc = Edge::new(curve.clone(), Some([v2, v3]));
-        let cd = Edge::new(curve.clone(), Some([v3, v4]));
-        let da = Edge::new(curve, Some([v4, v1]));
+        let ab = Edge::line_segment([v1, v2]);
+        let bc = Edge::line_segment([v2, v3]);
+        let cd = Edge::line_segment([v3, v4]);
+        let da = Edge::line_segment([v4, v1]);
 
         let abcd = Cycle {
             edges: vec![ab, bc, cd, da],
