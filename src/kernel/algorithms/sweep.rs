@@ -1,8 +1,3 @@
-use std::f64::consts::PI;
-
-use nalgebra::vector;
-use parry3d_f64::math::Isometry;
-
 use crate::{
     kernel::topology::{
         faces::{Face, Faces},
@@ -21,7 +16,6 @@ pub fn sweep_shape(
 ) -> Shape {
     let mut shape = Shape::new();
 
-    let rotation = Isometry::rotation(vector![PI, 0., 0.]).into();
     let translation = Transform::translation(path);
 
     let mut bottom_faces = Vec::new();
@@ -29,12 +23,7 @@ pub fn sweep_shape(
     let mut side_faces = Vec::new();
 
     for face in &original.faces.0 {
-        // This only works for faces that are symmetric to the x-axis.
-        //
-        // See issue:
-        // https://github.com/hannobraun/Fornjot/issues/230
-        bottom_faces.push(transform_face(face, &rotation, &mut shape));
-
+        bottom_faces.push(face.clone());
         top_faces.push(transform_face(face, &translation, &mut shape));
     }
 
@@ -74,4 +63,49 @@ pub fn sweep_shape(
     shape.faces = Faces(faces);
 
     shape
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{
+        kernel::{
+            geometry::Surface,
+            topology::{
+                edges::{Edge, Edges},
+                faces::Face,
+                Shape,
+            },
+        },
+        math::{Point, Scalar, Vector},
+    };
+
+    use super::sweep_shape;
+
+    #[test]
+    fn bottom_face() {
+        let mut original = Shape::new();
+
+        let a = original.vertices().create(Point::from([0., 0., 0.]));
+        let b = original.vertices().create(Point::from([1., 0., 0.]));
+        let c = original.vertices().create(Point::from([0., 1., 0.]));
+
+        let ab = Edge::line_segment([a, b]);
+        let bc = Edge::line_segment([b, c]);
+        let ca = Edge::line_segment([c, a]);
+
+        let face = Face::Face {
+            surface: Surface::x_y_plane(),
+            edges: Edges::single_cycle([ab, bc, ca]),
+        };
+
+        original.faces.0.push(face.clone());
+
+        let swept = sweep_shape(
+            &original,
+            Vector::from([0., 0., 1.]),
+            Scalar::from_f64(0.),
+        );
+
+        assert!(swept.faces.0.contains(&face));
+    }
 }
