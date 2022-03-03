@@ -15,6 +15,7 @@ use self::{edges::Edges, faces::Faces, vertices::Vertices};
 /// The goal for `Shape` is to enforce full self-consistency, through the API it
 /// provides. Steps have been made in that direction, but right now, the API is
 /// still full of holes, forcing callers to just be careful for the time being.
+#[derive(Clone, Debug)]
 pub struct Shape {
     vertices: VerticesInner,
 
