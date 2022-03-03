@@ -1,5 +1,5 @@
 use crate::{
-    kernel::geometry::{Circle, Curve},
+    kernel::geometry::{Circle, Curve, Line},
     math::{Point, Vector},
 };
 
@@ -68,6 +68,16 @@ impl Edge {
             .map(|vertices| vertices.map(|vertex| vertex.to_1d(&curve)));
 
         Self { curve, vertices }
+    }
+
+    /// Construct an edge that is a line segment
+    pub fn line_segment(vertices: [Vertex<3>; 2]) -> Self {
+        Self::new(
+            Curve::Line(Line::from_points(
+                vertices.map(|vertex| vertex.point().canonical()),
+            )),
+            Some(vertices),
+        )
     }
 
     /// Create a circle
