@@ -69,7 +69,7 @@ pub fn sweep_shape(
 mod tests {
     use crate::{
         kernel::{
-            geometry::Surface,
+            geometry::{surfaces::Swept, Surface},
             topology::{
                 edges::{Edge, Edges},
                 faces::Face,
@@ -83,29 +83,44 @@ mod tests {
 
     #[test]
     fn bottom_face() {
-        let mut sketch = Shape::new();
-
-        let a = sketch.vertices().create(Point::from([0., 0., 0.]));
-        let b = sketch.vertices().create(Point::from([1., 0., 0.]));
-        let c = sketch.vertices().create(Point::from([0., 1., 0.]));
-
-        let ab = Edge::line_segment([a, b]);
-        let bc = Edge::line_segment([b, c]);
-        let ca = Edge::line_segment([c, a]);
-
-        let abc = Face::Face {
-            surface: Surface::x_y_plane(),
-            edges: Edges::single_cycle([ab, bc, ca]),
-        };
-
-        sketch.faces.0.push(abc.clone());
+        let sketch = Triangle::new([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]]);
 
         let swept = sweep_shape(
-            &sketch,
+            &sketch.shape,
             Vector::from([0., 0., 1.]),
             Scalar::from_f64(0.),
         );
 
-        assert!(swept.faces.0.contains(&abc));
+        assert!(swept.faces.0.contains(&sketch.face));
+    }
+
+    pub struct Triangle {
+        shape: Shape,
+        face: Face,
+    }
+
+    impl Triangle {
+        fn new([a, b, c]: [impl Into<Point<3>>; 3]) -> Self {
+            let mut shape = Shape::new();
+
+            let a = shape.vertices().create(a.into());
+            let b = shape.vertices().create(b.into());
+            let c = shape.vertices().create(c.into());
+
+            let ab = Edge::line_segment([a, b]);
+            let bc = Edge::line_segment([b, c]);
+            let ca = Edge::line_segment([c, a]);
+
+            let abc = Face::Face {
+                surface: Surface::Swept(Swept::plane_from_points(
+                    [a, b, c].map(|vertex| vertex.point().canonical()),
+                )),
+                edges: Edges::single_cycle([ab, bc, ca]),
+            };
+
+            shape.faces.0.push(abc.clone());
+
+            Self { shape, face: abc }
+        }
     }
 }
