@@ -10,7 +10,7 @@ use super::{approximation::Approximation, transform::transform_face};
 
 /// Create a new shape by sweeping an existing one
 pub fn sweep_shape(
-    original: &Shape,
+    original: Shape,
     path: Vector<3>,
     tolerance: Scalar,
 ) -> Shape {
@@ -83,7 +83,7 @@ mod tests {
         let sketch = Triangle::new([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]]);
 
         let swept = sweep_shape(
-            &sketch.shape,
+            sketch.shape,
             Vector::from([0., 0., 1.]),
             Scalar::from_f64(0.),
         );
