@@ -155,7 +155,7 @@ mod tests {
 
     use crate::{
         kernel::{
-            geometry::{Curve, Surface},
+            geometry::{self, Curve, Surface},
             topology::{
                 edges::{Cycle, Edge, Edges},
                 faces::Face,
@@ -165,28 +165,26 @@ mod tests {
         math::{Point, Scalar, Segment},
     };
 
-    use super::Approximation;
+    use super::{approximate_edge, Approximation};
 
     #[test]
     fn for_edge() {
-        let tolerance = Scalar::ONE;
+        // Doesn't test `Approximation::for_edge` directly, but that method only
+        // contains a bit of additional glue code that is not critical.
 
         let a = Point::from([1., 2., 3.]);
         let b = Point::from([2., 3., 5.]);
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = Vertex::new(a);
-        let v2 = Vertex::new(d);
+        let v1 = Vertex::new(geometry::Point::new(Point::from([0.]), a));
+        let v2 = Vertex::new(geometry::Point::new(Point::from([1.]), d));
 
-        let curve = Curve::Mock {
-            approx: vec![b, c],
-            coords: RefCell::new(vec![Point::from([0.]), Point::from([1.])]),
-        };
+        let points = vec![b, c];
 
-        let edge_regular = Edge::new(curve.clone(), Some([v1, v2]));
+        // Regular edge
         assert_eq!(
-            Approximation::for_edge(&edge_regular, tolerance),
+            approximate_edge(points.clone(), Some([v1, v2])),
             Approximation {
                 points: set![a, b, c, d],
                 segments: set![
@@ -197,9 +195,9 @@ mod tests {
             }
         );
 
-        let edge_self_connected = Edge::new(curve, None);
+        // Continuous edge
         assert_eq!(
-            Approximation::for_edge(&edge_self_connected, tolerance),
+            approximate_edge(points, None),
             Approximation {
                 points: set![b, c],
                 segments: set![Segment::from([b, c]), Segment::from([c, b])],
