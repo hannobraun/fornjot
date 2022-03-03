@@ -14,6 +14,17 @@ pub struct Swept {
 }
 
 impl Swept {
+    /// Construct a plane from 3 points
+    #[cfg(test)]
+    pub fn plane_from_points([a, b, c]: [Point<3>; 3]) -> Swept {
+        use crate::kernel::geometry::Line;
+
+        let curve = Curve::Line(Line::from_points([a, b]));
+        let path = c - a;
+
+        Self { curve, path }
+    }
+
     /// Transform the surface
     #[must_use]
     pub fn transform(mut self, transform: &Transform) -> Self {

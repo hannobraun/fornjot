@@ -69,7 +69,7 @@ pub fn sweep_shape(
 mod tests {
     use crate::{
         kernel::{
-            geometry::Surface,
+            geometry::{surfaces::Swept, Surface},
             topology::{
                 edges::{Edge, Edges},
                 faces::Face,
@@ -82,30 +82,53 @@ mod tests {
     use super::sweep_shape;
 
     #[test]
-    fn bottom_face() {
-        let mut original = Shape::new();
-
-        let a = original.vertices().create(Point::from([0., 0., 0.]));
-        let b = original.vertices().create(Point::from([1., 0., 0.]));
-        let c = original.vertices().create(Point::from([0., 1., 0.]));
-
-        let ab = Edge::line_segment([a, b]);
-        let bc = Edge::line_segment([b, c]);
-        let ca = Edge::line_segment([c, a]);
-
-        let face = Face::Face {
-            surface: Surface::x_y_plane(),
-            edges: Edges::single_cycle([ab, bc, ca]),
-        };
-
-        original.faces.0.push(face.clone());
+    fn sweep() {
+        let sketch = Triangle::new([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]]);
 
         let swept = sweep_shape(
-            &original,
+            &sketch.shape,
             Vector::from([0., 0., 1.]),
             Scalar::from_f64(0.),
         );
 
-        assert!(swept.faces.0.contains(&face));
+        let bottom_face = sketch.face;
+        let top_face =
+            Triangle::new([[0., 0., 1.], [1., 0., 1.], [0., 1., 1.]]).face;
+
+        assert!(swept.faces.0.contains(&bottom_face));
+        assert!(swept.faces.0.contains(&top_face));
+
+        // Side faces are not tested, as those use triangle representation. The
+        // plan is to start testing them, as they are transitioned to b-rep.
+    }
+
+    pub struct Triangle {
+        shape: Shape,
+        face: Face,
+    }
+
+    impl Triangle {
+        fn new([a, b, c]: [impl Into<Point<3>>; 3]) -> Self {
+            let mut shape = Shape::new();
+
+            let a = shape.vertices().create(a.into());
+            let b = shape.vertices().create(b.into());
+            let c = shape.vertices().create(c.into());
+
+            let ab = Edge::line_segment([a, b]);
+            let bc = Edge::line_segment([b, c]);
+            let ca = Edge::line_segment([c, a]);
+
+            let abc = Face::Face {
+                surface: Surface::Swept(Swept::plane_from_points(
+                    [a, b, c].map(|vertex| vertex.point().canonical()),
+                )),
+                edges: Edges::single_cycle([ab, bc, ca]),
+            };
+
+            shape.faces.0.push(abc.clone());
+
+            Self { shape, face: abc }
+        }
     }
 }
