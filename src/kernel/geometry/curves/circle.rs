@@ -3,7 +3,7 @@ use std::f64::consts::PI;
 use crate::math::{Point, Scalar, Transform, Vector};
 
 /// A circle
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Circle {
     /// The center point of the circle
     pub center: Point<3>,

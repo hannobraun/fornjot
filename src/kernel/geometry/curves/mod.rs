@@ -14,7 +14,7 @@ pub use self::{circle::Circle, line::Line};
 /// The nomenclature is inspired by Boundary Representation Modelling Techniques
 /// by Ian Stroud. "Curve" refers to unbounded one-dimensional geometry, while
 /// while edges are bounded portions of curves.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum Curve {
     /// A circle
     Circle(Circle),
