@@ -12,7 +12,7 @@ use crate::{
 use super::{Curve, Line};
 
 /// A two-dimensional shape
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum Surface {
     /// A swept curve
     Swept(Swept),

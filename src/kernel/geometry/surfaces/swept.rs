@@ -4,7 +4,7 @@ use crate::{
 };
 
 /// A surface that was swept from a curve
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Swept {
     /// The curve that this surface was swept from
     pub curve: Curve,
