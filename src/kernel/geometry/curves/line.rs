@@ -15,6 +15,14 @@ pub struct Line {
 }
 
 impl Line {
+    /// Create a line from two points
+    pub fn from_points([a, b]: [Point<3>; 2]) -> Self {
+        Line {
+            origin: a,
+            direction: b - a,
+        }
+    }
+
     /// Access the origin of the curve's coordinate system
     pub fn origin(&self) -> Point<3> {
         self.origin

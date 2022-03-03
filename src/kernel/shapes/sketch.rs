@@ -40,10 +40,9 @@ impl ToShape for fj::Sketch {
                 let a = window[0];
                 let b = window[1];
 
-                let line = Curve::Line(Line {
-                    origin: a.point().native(),
-                    direction: b.point() - a.point(),
-                });
+                let line = Curve::Line(Line::from_points(
+                    [a, b].map(|vertex| vertex.point().canonical()),
+                ));
                 let edge = Edge::new(line, Some([a, b]));
 
                 edges.push(edge);
