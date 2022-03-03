@@ -149,13 +149,11 @@ fn approximate_edge(
 
 #[cfg(test)]
 mod tests {
-    use std::cell::RefCell;
-
     use map_macro::set;
 
     use crate::{
         kernel::{
-            geometry::{self, Curve, Surface},
+            geometry::{self, Surface},
             topology::{
                 edges::{Cycle, Edge, Edges},
                 faces::Face,
@@ -217,14 +215,9 @@ mod tests {
         let v2 = Vertex::new(b);
         let v3 = Vertex::new(c);
 
-        let curve = Curve::Mock {
-            approx: Vec::new(),
-            coords: RefCell::new(vec![Point::from([0.]), Point::from([1.])]),
-        };
-
-        let ab = Edge::new(curve.clone(), Some([v1, v2]));
-        let bc = Edge::new(curve.clone(), Some([v2, v3]));
-        let ca = Edge::new(curve, Some([v3, v1]));
+        let ab = Edge::line_segment([v1, v2]);
+        let bc = Edge::line_segment([v2, v3]);
+        let ca = Edge::line_segment([v3, v1]);
 
         let cycle = Cycle {
             edges: vec![ab, bc, ca],
@@ -257,15 +250,10 @@ mod tests {
         let v3 = Vertex::new(c);
         let v4 = Vertex::new(d);
 
-        let curve = Curve::Mock {
-            approx: Vec::new(),
-            coords: RefCell::new(vec![Point::from([0.]), Point::from([1.])]),
-        };
-
-        let ab = Edge::new(curve.clone(), Some([v1, v2]));
-        let ba = Edge::new(curve.clone(), Some([v2, v1]));
-        let cd = Edge::new(curve.clone(), Some([v3, v4]));
-        let dc = Edge::new(curve, Some([v4, v3]));
+        let ab = Edge::line_segment([v1, v2]);
+        let ba = Edge::line_segment([v2, v1]);
+        let cd = Edge::line_segment([v3, v4]);
+        let dc = Edge::line_segment([v4, v3]);
 
         let ab_ba = Cycle {
             edges: vec![ab, ba],
@@ -308,15 +296,10 @@ mod tests {
         let v3 = Vertex::new(c);
         let v4 = Vertex::new(d);
 
-        let curve = Curve::Mock {
-            approx: Vec::new(),
-            coords: RefCell::new(vec![Point::from([0.]), Point::from([1.])]),
-        };
-
-        let ab = Edge::new(curve.clone(), Some([v1, v2]));
-        let bc = Edge::new(curve.clone(), Some([v2, v3]));
-        let cd = Edge::new(curve.clone(), Some([v3, v4]));
-        let da = Edge::new(curve, Some([v4, v1]));
+        let ab = Edge::line_segment([v1, v2]);
+        let bc = Edge::line_segment([v2, v3]);
+        let cd = Edge::line_segment([v3, v4]);
+        let da = Edge::line_segment([v4, v1]);
 
         let abcd = Cycle {
             edges: vec![ab, bc, cd, da],

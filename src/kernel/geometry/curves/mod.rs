@@ -21,13 +21,6 @@ pub enum Curve {
 
     /// A line
     Line(Line),
-
-    /// A mock curve used for testing
-    #[cfg(test)]
-    Mock {
-        approx: Vec<Point<3>>,
-        coords: std::cell::RefCell<Vec<Point<1>>>,
-    },
 }
 
 impl Curve {
@@ -36,9 +29,6 @@ impl Curve {
         match self {
             Self::Circle(curve) => curve.origin(),
             Self::Line(curve) => curve.origin(),
-
-            #[cfg(test)]
-            Self::Mock { .. } => todo!(),
         }
     }
 
@@ -47,9 +37,6 @@ impl Curve {
         match self {
             Self::Circle(curve) => Self::Circle(curve.transform(transform)),
             Self::Line(curve) => Self::Line(curve.transform(transform)),
-
-            #[cfg(test)]
-            Self::Mock { .. } => todo!(),
         }
     }
 
@@ -66,9 +53,6 @@ impl Curve {
         match self {
             Self::Circle(curve) => curve.point_model_to_curve(point),
             Self::Line(curve) => curve.point_model_to_curve(point),
-
-            #[cfg(test)]
-            Self::Mock { coords, .. } => coords.borrow_mut().remove(0),
         }
     }
 
@@ -77,9 +61,6 @@ impl Curve {
         match self {
             Self::Circle(curve) => curve.point_curve_to_model(point),
             Self::Line(curve) => curve.point_curve_to_model(point),
-
-            #[cfg(test)]
-            Self::Mock { .. } => todo!(),
         }
     }
 
@@ -88,9 +69,6 @@ impl Curve {
         match self {
             Self::Circle(curve) => curve.vector_curve_to_model(point),
             Self::Line(curve) => curve.vector_curve_to_model(point),
-
-            #[cfg(test)]
-            Self::Mock { .. } => todo!(),
         }
     }
 
@@ -113,9 +91,6 @@ impl Curve {
         match self {
             Self::Circle(circle) => circle.approx(tolerance, out),
             Self::Line(_) => {}
-
-            #[cfg(test)]
-            Self::Mock { approx, .. } => out.extend(approx),
         }
     }
 }
