@@ -91,7 +91,9 @@ mod tests {
             Scalar::from_f64(0.),
         );
 
-        assert!(swept.faces.0.contains(&sketch.face));
+        let bottom_face = sketch.face;
+
+        assert!(swept.faces.0.contains(&bottom_face));
     }
 
     pub struct Triangle {
