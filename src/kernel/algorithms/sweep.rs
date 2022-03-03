@@ -82,7 +82,7 @@ mod tests {
     use super::sweep_shape;
 
     #[test]
-    fn bottom_face() {
+    fn sweep() {
         let sketch = Triangle::new([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]]);
 
         let swept = sweep_shape(
