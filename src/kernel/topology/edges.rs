@@ -6,7 +6,7 @@ use crate::{
 use super::vertices::Vertex;
 
 /// The edges of a shape
-#[derive(Clone)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edges {
     /// The cycles that the edges of the shape form
     ///
@@ -34,13 +34,13 @@ impl Edges {
 /// The end of each edge in the cycle must connect to the beginning of the next
 /// edge. The end of the last edge must connect to the beginning of the first
 /// one.
-#[derive(Clone)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
     pub edges: Vec<Edge>,
 }
 
 /// An edge of a shape
-#[derive(Clone, Debug)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edge {
     /// The curve that defines the edge's geometry
     ///
