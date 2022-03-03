@@ -83,11 +83,11 @@ mod tests {
 
     #[test]
     fn bottom_face() {
-        let mut original = Shape::new();
+        let mut sketch = Shape::new();
 
-        let a = original.vertices().create(Point::from([0., 0., 0.]));
-        let b = original.vertices().create(Point::from([1., 0., 0.]));
-        let c = original.vertices().create(Point::from([0., 1., 0.]));
+        let a = sketch.vertices().create(Point::from([0., 0., 0.]));
+        let b = sketch.vertices().create(Point::from([1., 0., 0.]));
+        let c = sketch.vertices().create(Point::from([0., 1., 0.]));
 
         let ab = Edge::line_segment([a, b]);
         let bc = Edge::line_segment([b, c]);
@@ -98,10 +98,10 @@ mod tests {
             edges: Edges::single_cycle([ab, bc, ca]),
         };
 
-        original.faces.0.push(abc.clone());
+        sketch.faces.0.push(abc.clone());
 
         let swept = sweep_shape(
-            &original,
+            &sketch,
             Vector::from([0., 0., 1.]),
             Scalar::from_f64(0.),
         );
