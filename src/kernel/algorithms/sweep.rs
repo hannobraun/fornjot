@@ -93,12 +93,12 @@ mod tests {
         let bc = Edge::line_segment([b, c]);
         let ca = Edge::line_segment([c, a]);
 
-        let face = Face::Face {
+        let abc = Face::Face {
             surface: Surface::x_y_plane(),
             edges: Edges::single_cycle([ab, bc, ca]),
         };
 
-        original.faces.0.push(face.clone());
+        original.faces.0.push(abc.clone());
 
         let swept = sweep_shape(
             &original,
@@ -106,6 +106,6 @@ mod tests {
             Scalar::from_f64(0.),
         );
 
-        assert!(swept.faces.0.contains(&face));
+        assert!(swept.faces.0.contains(&abc));
     }
 }
