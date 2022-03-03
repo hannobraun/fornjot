@@ -4,6 +4,7 @@ use crate::{
     kernel::topology::{
         edges::{Cycle, Edge, Edges},
         faces::Face,
+        vertices::Vertex,
     },
     math::{Point, Scalar, Segment},
 };
@@ -36,42 +37,7 @@ impl Approximation {
         let mut points = Vec::new();
         edge.curve.approx(tolerance, &mut points);
 
-        // Insert the exact vertices of this edge into the approximation. This
-        // means we don't rely on the curve approximation to deliver accurate
-        // representations of these vertices, which they might not be able to
-        // do.
-        //
-        // If we used inaccurate representations of those vertices here, then
-        // that would lead to bugs in the approximation, as points that should
-        // refer to the same vertex would be understood to refer to very close,
-        // but distinct vertices.
-        if let Some([a, b]) = edge.vertices {
-            points.insert(0, a.to_canonical().point().native());
-            points.push(b.to_canonical().point().native());
-        }
-
-        let mut segment_points = points.clone();
-        if edge.vertices.is_none() {
-            // The edge has no vertices, which means it connects to itself. We
-            // need to reflect that in the approximation.
-
-            if let Some(&point) = points.first() {
-                segment_points.push(point);
-            }
-        }
-
-        let mut segments = HashSet::new();
-        for segment in segment_points.windows(2) {
-            let p0 = segment[0];
-            let p1 = segment[1];
-
-            segments.insert(Segment::from([p0, p1]));
-        }
-
-        Self {
-            points: points.into_iter().collect(),
-            segments,
-        }
+        approximate_edge(points, edge.vertices)
     }
 
     /// Compute an approximation for a cycle
@@ -137,6 +103,47 @@ impl Approximation {
                 unreachable!()
             }
         }
+    }
+}
+
+fn approximate_edge(
+    mut points: Vec<Point<3>>,
+    vertices: Option<[Vertex<1>; 2]>,
+) -> Approximation {
+    // Insert the exact vertices of this edge into the approximation. This means
+    // we don't rely on the curve approximation to deliver accurate
+    // representations of these vertices, which they might not be able to do.
+    //
+    // If we used inaccurate representations of those vertices here, then that
+    // would lead to bugs in the approximation, as points that should refer to
+    // the same vertex would be understood to refer to very close, but distinct
+    // vertices.
+    if let Some([a, b]) = vertices {
+        points.insert(0, a.to_canonical().point().native());
+        points.push(b.to_canonical().point().native());
+    }
+
+    let mut segment_points = points.clone();
+    if vertices.is_none() {
+        // The edge has no vertices, which means it connects to itself. We need
+        // to reflect that in the approximation.
+
+        if let Some(&point) = points.first() {
+            segment_points.push(point);
+        }
+    }
+
+    let mut segments = HashSet::new();
+    for segment in segment_points.windows(2) {
+        let p0 = segment[0];
+        let p1 = segment[1];
+
+        segments.insert(Segment::from([p0, p1]));
+    }
+
+    Approximation {
+        points: points.into_iter().collect(),
+        segments,
     }
 }
 
