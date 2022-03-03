@@ -1,7 +1,7 @@
 use crate::{
     debug::DebugInfo,
     kernel::{
-        geometry::{Curve, Line, Surface},
+        geometry::Surface,
         topology::{
             edges::{Edge, Edges},
             faces::{Face, Faces},
@@ -40,12 +40,7 @@ impl ToShape for fj::Sketch {
                 let a = window[0];
                 let b = window[1];
 
-                let line = Curve::Line(Line {
-                    origin: a.point().native(),
-                    direction: b.point() - a.point(),
-                });
-                let edge = Edge::new(line, Some([a, b]));
-
+                let edge = Edge::line_segment([a, b]);
                 edges.push(edge);
             }
 
