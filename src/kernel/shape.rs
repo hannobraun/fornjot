@@ -39,7 +39,7 @@ impl Shape {
 
 /// The vertices of a shape
 pub struct Vertices<'r> {
-    pub(super) vertices: &'r mut VerticesInner,
+    vertices: &'r mut VerticesInner,
 }
 
 impl Vertices<'_> {
