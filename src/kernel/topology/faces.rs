@@ -48,8 +48,8 @@ pub enum Face {
         ///
         /// # Implementation Note
         ///
-        /// Since these edges bound the face, they must lie in the face. We're
-        /// using [`Edges`] here, however, which has no such limitation.
+        /// Since these edges bound the face, they must lie in the surface.
+        /// We're using [`Edges`] here, however, which has no such limitation.
         ///
         /// It might be less error-prone, and possibly more efficient, to use a
         /// more specialized data structure here, that specifies the edges in
