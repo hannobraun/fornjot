@@ -119,8 +119,8 @@ fn approximate_edge(
     // the same vertex would be understood to refer to very close, but distinct
     // vertices.
     if let Some([a, b]) = vertices {
-        points.insert(0, a.point().canonical());
-        points.push(b.point().canonical());
+        points.insert(0, a.point());
+        points.push(b.point());
     }
 
     let mut segment_points = points.clone();

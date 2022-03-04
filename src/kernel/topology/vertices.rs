@@ -1,4 +1,4 @@
-use crate::{kernel::geometry, math::Point};
+use crate::math::Point;
 
 use super::VerticesInner;
 
@@ -22,7 +22,7 @@ impl Vertices<'_> {
         self.vertices
             .add(&point.into(), point)
             .expect("Error adding vertex");
-        Vertex(point.into())
+        Vertex(point)
     }
 }
 
@@ -51,11 +51,11 @@ impl Vertices<'_> {
 /// This can be prevented outright by never creating a new `Vertex` instance
 /// for an existing vertex. Hence why this is strictly forbidden.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Vertex(geometry::Point<3>);
+pub struct Vertex(Point<3>);
 
 impl Vertex {
     /// Access the point that defines this vertex
-    pub fn point(&self) -> geometry::Point<3> {
+    pub fn point(&self) -> Point<3> {
         self.0
     }
 }

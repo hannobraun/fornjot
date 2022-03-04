@@ -44,12 +44,10 @@ pub fn transform_face(
                 for edge in cycle.edges {
                     let vertices = edge.vertices.map(|vertices| {
                         vertices.map(|vertex| {
-                            let point = vertex.point();
+                            let point =
+                                transform.transform_point(&vertex.point());
 
-                            let canonical =
-                                transform.transform_point(&point.canonical());
-
-                            shape.vertices().create(canonical)
+                            shape.vertices().create(point)
                         })
                     });
 
