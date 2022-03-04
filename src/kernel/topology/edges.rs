@@ -40,7 +40,7 @@ pub struct Cycle {
 }
 
 /// An edge of a shape
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edge {
     /// The curve that defines the edge's geometry
     ///
@@ -51,7 +51,17 @@ pub struct Edge {
     ///
     /// If there are no such vertices, that means the edge is connected to
     /// itself (like a full circle, for example).
-    pub vertices: Option<[Vertex<1>; 2]>,
+    ///
+    /// # Implementation note
+    ///
+    /// Since these vertices bound the edge, they must lie on the curve. This
+    /// isn't enforced at all, however. It would make sense to store 1D vertices
+    /// here, and indeed, this was the case in the past.
+    ///
+    /// It got in the way of some work, however, so it made sense to simplify
+    /// it by storing 3D vertices. It will probably make sense to revert this
+    /// and store 1D vertices again, at some point.
+    pub vertices: Option<[Vertex; 2]>,
 }
 
 impl Edge {
@@ -63,18 +73,15 @@ impl Edge {
     /// they are not on the curve, this will result in their projection being
     /// converted into curve coordinates, which is likely not the caller's
     /// intention.
-    pub fn new(curve: Curve, vertices: Option<[Vertex<3>; 2]>) -> Self {
-        let vertices = vertices
-            .map(|vertices| vertices.map(|vertex| vertex.to_1d(&curve)));
-
+    pub fn new(curve: Curve, vertices: Option<[Vertex; 2]>) -> Self {
         Self { curve, vertices }
     }
 
     /// Construct an edge that is a line segment
-    pub fn line_segment(vertices: [Vertex<3>; 2]) -> Self {
+    pub fn line_segment(vertices: [Vertex; 2]) -> Self {
         Self::new(
             Curve::Line(Line::from_points(
-                vertices.map(|vertex| vertex.point().canonical()),
+                vertices.clone().map(|vertex| vertex.point()),
             )),
             Some(vertices),
         )

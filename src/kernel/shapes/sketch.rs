@@ -29,7 +29,7 @@ impl ToShape for fj::Sketch {
                 //
                 // This can't panic. We just checked that `vertices` is not
                 // empty.
-                vertices.push(vertices[0]);
+                vertices.push(vertices[0].clone());
             }
 
             let mut edges = Vec::new();
@@ -37,8 +37,8 @@ impl ToShape for fj::Sketch {
                 // Can't panic, we passed `2` to `windows`.
                 //
                 // Can be cleaned up, once `array_windows` is stable.
-                let a = window[0];
-                let b = window[1];
+                let a = window[0].clone();
+                let b = window[1].clone();
 
                 let edge = Edge::line_segment([a, b]);
                 edges.push(edge);

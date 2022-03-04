@@ -1,11 +1,8 @@
 use crate::{
-    kernel::{
-        geometry,
-        topology::{
-            edges::{Cycle, Edge, Edges},
-            faces::Face,
-            Shape,
-        },
+    kernel::topology::{
+        edges::{Cycle, Edge, Edges},
+        faces::Face,
+        Shape,
     },
     math::Transform,
 };
@@ -47,19 +44,10 @@ pub fn transform_face(
                 for edge in cycle.edges {
                     let vertices = edge.vertices.map(|vertices| {
                         vertices.map(|vertex| {
-                            let point = vertex.point();
+                            let point =
+                                transform.transform_point(&vertex.point());
 
-                            // Transform the canonical form, but leave the
-                            // native form untouched. We're also transforming
-                            // the curve here, so the vertex doesn't move
-                            // relative to it.
-                            let native = point.native();
-                            let canonical =
-                                transform.transform_point(&point.canonical());
-
-                            shape
-                                .vertices()
-                                .create(geometry::Point::new(native, canonical))
+                            shape.vertices().create(point)
                         })
                     });
 

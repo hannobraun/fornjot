@@ -1,4 +1,4 @@
-use crate::kernel::geometry::{self, Curve};
+use crate::math::Point;
 
 use super::VerticesInner;
 
@@ -18,13 +18,9 @@ impl Vertices<'_> {
     /// This method is the only means to create `Vertex` instances, outside of
     /// unit tests. That puts this method is in a great position to enforce
     /// vertex uniqueness rules, instead of requiring the user to uphold those.
-    pub fn create<const D: usize>(
-        &mut self,
-        point: impl Into<geometry::Point<D>>,
-    ) -> Vertex<D> {
-        let point = point.into();
+    pub fn create(&mut self, point: Point<3>) -> Vertex {
         self.vertices
-            .add(&point.canonical().into(), point.canonical())
+            .add(&point.into(), point)
             .expect("Error adding vertex");
         Vertex(point)
     }
@@ -54,39 +50,12 @@ impl Vertices<'_> {
 ///
 /// This can be prevented outright by never creating a new `Vertex` instance
 /// for an existing vertex. Hence why this is strictly forbidden.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Vertex<const D: usize>(geometry::Point<D>);
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct Vertex(Point<3>);
 
-impl<const D: usize> Vertex<D> {
-    /// Construct a new vertex
-    ///
-    /// This method is only intended for unit tests. All other code should call
-    /// [`Vertices::create`].
-    #[cfg(test)]
-    pub fn new(point: impl Into<geometry::Point<D>>) -> Self {
-        Self(point.into())
-    }
-
+impl Vertex {
     /// Access the point that defines this vertex
-    pub fn point(&self) -> geometry::Point<D> {
+    pub fn point(&self) -> Point<3> {
         self.0
-    }
-
-    /// Convert the vertex to its canonical form
-    pub fn to_canonical(self) -> Vertex<3> {
-        Vertex(geometry::Point::new(self.0.canonical(), self.0.canonical()))
-    }
-}
-
-impl Vertex<3> {
-    /// Convert the vertex to a 1-dimensional vertex
-    ///
-    /// Uses to provided curve to convert the vertex into a 1-dimensional vertex
-    /// in the curve's coordinate system.
-    pub fn to_1d(self, curve: &Curve) -> Vertex<1> {
-        Vertex(geometry::Point::new(
-            curve.point_model_to_curve(&self.0.native()),
-            self.0.canonical(),
-        ))
     }
 }

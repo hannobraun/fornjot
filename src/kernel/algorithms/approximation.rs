@@ -37,7 +37,7 @@ impl Approximation {
         let mut points = Vec::new();
         edge.curve.approx(tolerance, &mut points);
 
-        approximate_edge(points, edge.vertices)
+        approximate_edge(points, edge.vertices.as_ref())
     }
 
     /// Compute an approximation for a cycle
@@ -108,7 +108,7 @@ impl Approximation {
 
 fn approximate_edge(
     mut points: Vec<Point<3>>,
-    vertices: Option<[Vertex<1>; 2]>,
+    vertices: Option<&[Vertex; 2]>,
 ) -> Approximation {
     // Insert the exact vertices of this edge into the approximation. This means
     // we don't rely on the curve approximation to deliver accurate
@@ -119,8 +119,8 @@ fn approximate_edge(
     // the same vertex would be understood to refer to very close, but distinct
     // vertices.
     if let Some([a, b]) = vertices {
-        points.insert(0, a.to_canonical().point().native());
-        points.push(b.to_canonical().point().native());
+        points.insert(0, a.point());
+        points.push(b.point());
     }
 
     let mut segment_points = points.clone();
@@ -153,11 +153,11 @@ mod tests {
 
     use crate::{
         kernel::{
-            geometry::{self, Surface},
+            geometry::Surface,
             topology::{
                 edges::{Cycle, Edge, Edges},
                 faces::Face,
-                vertices::Vertex,
+                Shape,
             },
         },
         math::{Point, Scalar, Segment},
@@ -170,19 +170,21 @@ mod tests {
         // Doesn't test `Approximation::for_edge` directly, but that method only
         // contains a bit of additional glue code that is not critical.
 
+        let mut shape = Shape::new();
+
         let a = Point::from([1., 2., 3.]);
         let b = Point::from([2., 3., 5.]);
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = Vertex::new(geometry::Point::new(Point::from([0.]), a));
-        let v2 = Vertex::new(geometry::Point::new(Point::from([1.]), d));
+        let v1 = shape.vertices().create(a);
+        let v2 = shape.vertices().create(d);
 
         let points = vec![b, c];
 
         // Regular edge
         assert_eq!(
-            approximate_edge(points.clone(), Some([v1, v2])),
+            approximate_edge(points.clone(), Some(&[v1, v2])),
             Approximation {
                 points: set![a, b, c, d],
                 segments: set![
@@ -207,16 +209,18 @@ mod tests {
     fn for_cycle() {
         let tolerance = Scalar::ONE;
 
+        let mut shape = Shape::new();
+
         let a = Point::from([1., 2., 3.]);
         let b = Point::from([2., 3., 5.]);
         let c = Point::from([3., 5., 8.]);
 
-        let v1 = Vertex::new(a);
-        let v2 = Vertex::new(b);
-        let v3 = Vertex::new(c);
+        let v1 = shape.vertices().create(a);
+        let v2 = shape.vertices().create(b);
+        let v3 = shape.vertices().create(c);
 
-        let ab = Edge::line_segment([v1, v2]);
-        let bc = Edge::line_segment([v2, v3]);
+        let ab = Edge::line_segment([v1.clone(), v2.clone()]);
+        let bc = Edge::line_segment([v2, v3.clone()]);
         let ca = Edge::line_segment([v3, v1]);
 
         let cycle = Cycle {
@@ -240,19 +244,21 @@ mod tests {
     fn for_edges() {
         let tolerance = Scalar::ONE;
 
+        let mut shape = Shape::new();
+
         let a = Point::from([1., 2., 3.]);
         let b = Point::from([2., 3., 5.]);
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = Vertex::new(a);
-        let v2 = Vertex::new(b);
-        let v3 = Vertex::new(c);
-        let v4 = Vertex::new(d);
+        let v1 = shape.vertices().create(a);
+        let v2 = shape.vertices().create(b);
+        let v3 = shape.vertices().create(c);
+        let v4 = shape.vertices().create(d);
 
-        let ab = Edge::line_segment([v1, v2]);
+        let ab = Edge::line_segment([v1.clone(), v2.clone()]);
         let ba = Edge::line_segment([v2, v1]);
-        let cd = Edge::line_segment([v3, v4]);
+        let cd = Edge::line_segment([v3.clone(), v4.clone()]);
         let dc = Edge::line_segment([v4, v3]);
 
         let ab_ba = Cycle {
@@ -286,19 +292,21 @@ mod tests {
 
         let tolerance = Scalar::ONE;
 
+        let mut shape = Shape::new();
+
         let a = Point::from([1., 2., 3.]);
         let b = Point::from([2., 3., 5.]);
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = Vertex::new(a);
-        let v2 = Vertex::new(b);
-        let v3 = Vertex::new(c);
-        let v4 = Vertex::new(d);
+        let v1 = shape.vertices().create(a);
+        let v2 = shape.vertices().create(b);
+        let v3 = shape.vertices().create(c);
+        let v4 = shape.vertices().create(d);
 
-        let ab = Edge::line_segment([v1, v2]);
-        let bc = Edge::line_segment([v2, v3]);
-        let cd = Edge::line_segment([v3, v4]);
+        let ab = Edge::line_segment([v1.clone(), v2.clone()]);
+        let bc = Edge::line_segment([v2, v3.clone()]);
+        let cd = Edge::line_segment([v3, v4.clone()]);
         let da = Edge::line_segment([v4, v1]);
 
         let abcd = Cycle {
