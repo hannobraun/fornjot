@@ -51,7 +51,7 @@ pub struct Edge {
     ///
     /// If there are no such vertices, that means the edge is connected to
     /// itself (like a full circle, for example).
-    pub vertices: Option<[Vertex<1>; 2]>,
+    pub vertices: Option<[Vertex<3>; 2]>,
 }
 
 impl Edge {
@@ -64,9 +64,6 @@ impl Edge {
     /// converted into curve coordinates, which is likely not the caller's
     /// intention.
     pub fn new(curve: Curve, vertices: Option<[Vertex<3>; 2]>) -> Self {
-        let vertices = vertices
-            .map(|vertices| vertices.map(|vertex| vertex.to_1d(&curve)));
-
         Self { curve, vertices }
     }
 

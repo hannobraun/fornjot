@@ -49,11 +49,8 @@ pub fn transform_face(
                         vertices.map(|vertex| {
                             let point = vertex.point();
 
-                            // Transform the canonical form, but leave the
-                            // native form untouched. We're also transforming
-                            // the curve here, so the vertex doesn't move
-                            // relative to it.
-                            let native = point.native();
+                            let native =
+                                transform.transform_point(&point.native());
                             let canonical =
                                 transform.transform_point(&point.canonical());
 

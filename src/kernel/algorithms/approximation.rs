@@ -108,7 +108,7 @@ impl Approximation {
 
 fn approximate_edge(
     mut points: Vec<Point<3>>,
-    vertices: Option<&[Vertex<1>; 2]>,
+    vertices: Option<&[Vertex<3>; 2]>,
 ) -> Approximation {
     // Insert the exact vertices of this edge into the approximation. This means
     // we don't rely on the curve approximation to deliver accurate
@@ -153,7 +153,7 @@ mod tests {
 
     use crate::{
         kernel::{
-            geometry::{self, Surface},
+            geometry::Surface,
             topology::{
                 edges::{Cycle, Edge, Edges},
                 faces::Face,
@@ -177,12 +177,8 @@ mod tests {
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = shape
-            .vertices()
-            .create(geometry::Point::new(Point::from([0.]), a));
-        let v2 = shape
-            .vertices()
-            .create(geometry::Point::new(Point::from([1.]), d));
+        let v1 = shape.vertices().create(a);
+        let v2 = shape.vertices().create(d);
 
         let points = vec![b, c];
 

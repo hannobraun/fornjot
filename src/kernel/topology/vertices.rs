@@ -1,4 +1,4 @@
-use crate::kernel::geometry::{self, Curve};
+use crate::kernel::geometry;
 
 use super::VerticesInner;
 
@@ -61,18 +61,5 @@ impl<const D: usize> Vertex<D> {
     /// Access the point that defines this vertex
     pub fn point(&self) -> geometry::Point<D> {
         self.0
-    }
-}
-
-impl Vertex<3> {
-    /// Convert the vertex to a 1-dimensional vertex
-    ///
-    /// Uses to provided curve to convert the vertex into a 1-dimensional vertex
-    /// in the curve's coordinate system.
-    pub fn to_1d(&self, curve: &Curve) -> Vertex<1> {
-        Vertex(geometry::Point::new(
-            curve.point_model_to_curve(&self.0.native()),
-            self.0.canonical(),
-        ))
     }
 }
