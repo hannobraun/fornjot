@@ -58,15 +58,6 @@ impl Vertices<'_> {
 pub struct Vertex<const D: usize>(geometry::Point<D>);
 
 impl<const D: usize> Vertex<D> {
-    /// Construct a new vertex
-    ///
-    /// This method is only intended for unit tests. All other code should call
-    /// [`Vertices::create`].
-    #[cfg(test)]
-    pub fn new(point: impl Into<geometry::Point<D>>) -> Self {
-        Self(point.into())
-    }
-
     /// Access the point that defines this vertex
     pub fn point(&self) -> geometry::Point<D> {
         self.0

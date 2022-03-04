@@ -157,7 +157,7 @@ mod tests {
             topology::{
                 edges::{Cycle, Edge, Edges},
                 faces::Face,
-                vertices::Vertex,
+                Shape,
             },
         },
         math::{Point, Scalar, Segment},
@@ -170,13 +170,19 @@ mod tests {
         // Doesn't test `Approximation::for_edge` directly, but that method only
         // contains a bit of additional glue code that is not critical.
 
+        let mut shape = Shape::new();
+
         let a = Point::from([1., 2., 3.]);
         let b = Point::from([2., 3., 5.]);
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = Vertex::new(geometry::Point::new(Point::from([0.]), a));
-        let v2 = Vertex::new(geometry::Point::new(Point::from([1.]), d));
+        let v1 = shape
+            .vertices()
+            .create(geometry::Point::new(Point::from([0.]), a));
+        let v2 = shape
+            .vertices()
+            .create(geometry::Point::new(Point::from([1.]), d));
 
         let points = vec![b, c];
 
@@ -207,13 +213,15 @@ mod tests {
     fn for_cycle() {
         let tolerance = Scalar::ONE;
 
+        let mut shape = Shape::new();
+
         let a = Point::from([1., 2., 3.]);
         let b = Point::from([2., 3., 5.]);
         let c = Point::from([3., 5., 8.]);
 
-        let v1 = Vertex::new(a);
-        let v2 = Vertex::new(b);
-        let v3 = Vertex::new(c);
+        let v1 = shape.vertices().create(a);
+        let v2 = shape.vertices().create(b);
+        let v3 = shape.vertices().create(c);
 
         let ab = Edge::line_segment([v1.clone(), v2.clone()]);
         let bc = Edge::line_segment([v2, v3.clone()]);
@@ -240,15 +248,17 @@ mod tests {
     fn for_edges() {
         let tolerance = Scalar::ONE;
 
+        let mut shape = Shape::new();
+
         let a = Point::from([1., 2., 3.]);
         let b = Point::from([2., 3., 5.]);
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = Vertex::new(a);
-        let v2 = Vertex::new(b);
-        let v3 = Vertex::new(c);
-        let v4 = Vertex::new(d);
+        let v1 = shape.vertices().create(a);
+        let v2 = shape.vertices().create(b);
+        let v3 = shape.vertices().create(c);
+        let v4 = shape.vertices().create(d);
 
         let ab = Edge::line_segment([v1.clone(), v2.clone()]);
         let ba = Edge::line_segment([v2, v1]);
@@ -286,15 +296,17 @@ mod tests {
 
         let tolerance = Scalar::ONE;
 
+        let mut shape = Shape::new();
+
         let a = Point::from([1., 2., 3.]);
         let b = Point::from([2., 3., 5.]);
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = Vertex::new(a);
-        let v2 = Vertex::new(b);
-        let v3 = Vertex::new(c);
-        let v4 = Vertex::new(d);
+        let v1 = shape.vertices().create(a);
+        let v2 = shape.vertices().create(b);
+        let v3 = shape.vertices().create(c);
+        let v4 = shape.vertices().create(d);
 
         let ab = Edge::line_segment([v1.clone(), v2.clone()]);
         let bc = Edge::line_segment([v2, v3.clone()]);
