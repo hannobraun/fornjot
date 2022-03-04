@@ -115,9 +115,9 @@ mod tests {
             let b = shape.vertices().create(b.into());
             let c = shape.vertices().create(c.into());
 
-            let ab = Edge::line_segment([a, b]);
-            let bc = Edge::line_segment([b, c]);
-            let ca = Edge::line_segment([c, a]);
+            let ab = Edge::line_segment([a.clone(), b.clone()]);
+            let bc = Edge::line_segment([b.clone(), c.clone()]);
+            let ca = Edge::line_segment([c.clone(), a.clone()]);
 
             let abc = Face::Face {
                 surface: Surface::Swept(Swept::plane_from_points(

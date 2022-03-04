@@ -54,7 +54,7 @@ impl Vertices<'_> {
 ///
 /// This can be prevented outright by never creating a new `Vertex` instance
 /// for an existing vertex. Hence why this is strictly forbidden.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Vertex<const D: usize>(geometry::Point<D>);
 
 impl<const D: usize> Vertex<D> {
@@ -73,7 +73,7 @@ impl<const D: usize> Vertex<D> {
     }
 
     /// Convert the vertex to its canonical form
-    pub fn to_canonical(self) -> Vertex<3> {
+    pub fn to_canonical(&self) -> Vertex<3> {
         Vertex(geometry::Point::new(self.0.canonical(), self.0.canonical()))
     }
 }
@@ -83,7 +83,7 @@ impl Vertex<3> {
     ///
     /// Uses to provided curve to convert the vertex into a 1-dimensional vertex
     /// in the curve's coordinate system.
-    pub fn to_1d(self, curve: &Curve) -> Vertex<1> {
+    pub fn to_1d(&self, curve: &Curve) -> Vertex<1> {
         Vertex(geometry::Point::new(
             curve.point_model_to_curve(&self.0.native()),
             self.0.canonical(),

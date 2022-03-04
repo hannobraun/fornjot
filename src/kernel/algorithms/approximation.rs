@@ -215,8 +215,8 @@ mod tests {
         let v2 = Vertex::new(b);
         let v3 = Vertex::new(c);
 
-        let ab = Edge::line_segment([v1, v2]);
-        let bc = Edge::line_segment([v2, v3]);
+        let ab = Edge::line_segment([v1.clone(), v2.clone()]);
+        let bc = Edge::line_segment([v2, v3.clone()]);
         let ca = Edge::line_segment([v3, v1]);
 
         let cycle = Cycle {
@@ -250,9 +250,9 @@ mod tests {
         let v3 = Vertex::new(c);
         let v4 = Vertex::new(d);
 
-        let ab = Edge::line_segment([v1, v2]);
+        let ab = Edge::line_segment([v1.clone(), v2.clone()]);
         let ba = Edge::line_segment([v2, v1]);
-        let cd = Edge::line_segment([v3, v4]);
+        let cd = Edge::line_segment([v3.clone(), v4.clone()]);
         let dc = Edge::line_segment([v4, v3]);
 
         let ab_ba = Cycle {
@@ -296,9 +296,9 @@ mod tests {
         let v3 = Vertex::new(c);
         let v4 = Vertex::new(d);
 
-        let ab = Edge::line_segment([v1, v2]);
-        let bc = Edge::line_segment([v2, v3]);
-        let cd = Edge::line_segment([v3, v4]);
+        let ab = Edge::line_segment([v1.clone(), v2.clone()]);
+        let bc = Edge::line_segment([v2, v3.clone()]);
+        let cd = Edge::line_segment([v3, v4.clone()]);
         let da = Edge::line_segment([v4, v1]);
 
         let abcd = Cycle {

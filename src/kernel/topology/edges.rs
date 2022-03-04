@@ -74,7 +74,7 @@ impl Edge {
     pub fn line_segment(vertices: [Vertex<3>; 2]) -> Self {
         Self::new(
             Curve::Line(Line::from_points(
-                vertices.map(|vertex| vertex.point().canonical()),
+                vertices.clone().map(|vertex| vertex.point().canonical()),
             )),
             Some(vertices),
         )
