@@ -1,7 +1,7 @@
 use crate::{
-    kernel::topology::{
-        faces::{Face, Faces},
-        Shape,
+    kernel::{
+        shape::Shape,
+        topology::faces::{Face, Faces},
     },
     math::{Scalar, Transform, Vector},
 };
@@ -70,10 +70,10 @@ mod tests {
     use crate::{
         kernel::{
             geometry::{surfaces::Swept, Surface},
+            shape::Shape,
             topology::{
                 edges::{Edge, Edges},
                 faces::Face,
-                Shape,
             },
         },
         math::{Point, Scalar, Vector},

@@ -1,6 +1,6 @@
 use crate::{
     debug::DebugInfo,
-    kernel::{algorithms::sweep::sweep_shape, topology::Shape},
+    kernel::{algorithms::sweep::sweep_shape, shape::Shape},
     math::{Aabb, Scalar, Vector},
 };
 

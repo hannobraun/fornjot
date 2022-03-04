@@ -1,31 +1,5 @@
 use crate::math::Point;
 
-use super::VerticesInner;
-
-/// The vertices of a shape
-pub struct Vertices<'r> {
-    pub(super) vertices: &'r mut VerticesInner,
-}
-
-impl Vertices<'_> {
-    /// Create a vertex
-    ///
-    /// The caller must make sure to uphold all rules regarding vertex
-    /// uniqueness.
-    ///
-    /// # Implementation note
-    ///
-    /// This method is the only means to create `Vertex` instances, outside of
-    /// unit tests. That puts this method is in a great position to enforce
-    /// vertex uniqueness rules, instead of requiring the user to uphold those.
-    pub fn create(&mut self, point: Point<3>) -> Vertex {
-        self.vertices
-            .add(&point.into(), point)
-            .expect("Error adding vertex");
-        Vertex(point)
-    }
-}
-
 /// A vertex
 ///
 /// This struct exists to distinguish between vertices and points at the type
@@ -51,7 +25,7 @@ impl Vertices<'_> {
 /// This can be prevented outright by never creating a new `Vertex` instance
 /// for an existing vertex. Hence why this is strictly forbidden.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Vertex(Point<3>);
+pub struct Vertex(pub(crate) Point<3>);
 
 impl Vertex {
     /// Access the point that defines this vertex

@@ -2,7 +2,7 @@ use parry3d_f64::math::Isometry;
 
 use crate::{
     debug::DebugInfo,
-    kernel::{algorithms::transform::transform_shape, topology::Shape},
+    kernel::{algorithms::transform::transform_shape, shape::Shape},
     math::{Aabb, Scalar, Transform},
 };
 

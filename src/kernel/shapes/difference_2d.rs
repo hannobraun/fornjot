@@ -1,9 +1,11 @@
 use crate::{
     debug::DebugInfo,
-    kernel::topology::{
-        edges::Edges,
-        faces::{Face, Faces},
-        Shape,
+    kernel::{
+        shape::Shape,
+        topology::{
+            edges::Edges,
+            faces::{Face, Faces},
+        },
     },
     math::{Aabb, Scalar},
 };
