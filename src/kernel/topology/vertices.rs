@@ -1,4 +1,4 @@
-use crate::kernel::geometry;
+use crate::{kernel::geometry, math::Point};
 
 use super::VerticesInner;
 
@@ -18,12 +18,11 @@ impl Vertices<'_> {
     /// This method is the only means to create `Vertex` instances, outside of
     /// unit tests. That puts this method is in a great position to enforce
     /// vertex uniqueness rules, instead of requiring the user to uphold those.
-    pub fn create(&mut self, point: impl Into<geometry::Point<3>>) -> Vertex {
-        let point = point.into();
+    pub fn create(&mut self, point: Point<3>) -> Vertex {
         self.vertices
-            .add(&point.canonical().into(), point.canonical())
+            .add(&point.into(), point)
             .expect("Error adding vertex");
-        Vertex(point)
+        Vertex(point.into())
     }
 }
 

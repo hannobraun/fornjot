@@ -1,11 +1,8 @@
 use crate::{
-    kernel::{
-        geometry,
-        topology::{
-            edges::{Cycle, Edge, Edges},
-            faces::Face,
-            Shape,
-        },
+    kernel::topology::{
+        edges::{Cycle, Edge, Edges},
+        faces::Face,
+        Shape,
     },
     math::Transform,
 };
@@ -49,14 +46,10 @@ pub fn transform_face(
                         vertices.map(|vertex| {
                             let point = vertex.point();
 
-                            let native =
-                                transform.transform_point(&point.native());
                             let canonical =
                                 transform.transform_point(&point.canonical());
 
-                            shape
-                                .vertices()
-                                .create(geometry::Point::new(native, canonical))
+                            shape.vertices().create(canonical)
                         })
                     });
 
