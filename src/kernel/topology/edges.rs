@@ -40,7 +40,7 @@ pub struct Cycle {
 }
 
 /// An edge of a shape
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edge {
     /// The curve that defines the edge's geometry
     ///
