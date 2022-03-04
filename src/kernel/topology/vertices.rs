@@ -62,11 +62,6 @@ impl<const D: usize> Vertex<D> {
     pub fn point(&self) -> geometry::Point<D> {
         self.0
     }
-
-    /// Convert the vertex to its canonical form
-    pub fn to_canonical(&self) -> Vertex<3> {
-        Vertex(geometry::Point::new(self.0.canonical(), self.0.canonical()))
-    }
 }
 
 impl Vertex<3> {
