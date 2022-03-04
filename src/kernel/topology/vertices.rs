@@ -18,10 +18,10 @@ impl Vertices<'_> {
     /// This method is the only means to create `Vertex` instances, outside of
     /// unit tests. That puts this method is in a great position to enforce
     /// vertex uniqueness rules, instead of requiring the user to uphold those.
-    pub fn create<const D: usize>(
+    pub fn create(
         &mut self,
-        point: impl Into<geometry::Point<D>>,
-    ) -> Vertex<D> {
+        point: impl Into<geometry::Point<3>>,
+    ) -> Vertex<3> {
         let point = point.into();
         self.vertices
             .add(&point.canonical().into(), point.canonical())
