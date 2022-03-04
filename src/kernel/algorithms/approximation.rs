@@ -37,7 +37,7 @@ impl Approximation {
         let mut points = Vec::new();
         edge.curve.approx(tolerance, &mut points);
 
-        approximate_edge(points, edge.vertices)
+        approximate_edge(points, edge.vertices.as_ref())
     }
 
     /// Compute an approximation for a cycle
@@ -108,7 +108,7 @@ impl Approximation {
 
 fn approximate_edge(
     mut points: Vec<Point<3>>,
-    vertices: Option<[Vertex<1>; 2]>,
+    vertices: Option<&[Vertex<1>; 2]>,
 ) -> Approximation {
     // Insert the exact vertices of this edge into the approximation. This means
     // we don't rely on the curve approximation to deliver accurate
@@ -182,7 +182,7 @@ mod tests {
 
         // Regular edge
         assert_eq!(
-            approximate_edge(points.clone(), Some([v1, v2])),
+            approximate_edge(points.clone(), Some(&[v1, v2])),
             Approximation {
                 points: set![a, b, c, d],
                 segments: set![
