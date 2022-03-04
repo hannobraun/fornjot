@@ -1,8 +1,10 @@
 use crate::{
-    kernel::topology::{
-        edges::{Cycle, Edge, Edges},
-        faces::Face,
-        Shape,
+    kernel::{
+        shape::Shape,
+        topology::{
+            edges::{Cycle, Edge, Edges},
+            faces::Face,
+        },
     },
     math::Transform,
 };

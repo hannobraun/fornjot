@@ -154,10 +154,10 @@ mod tests {
     use crate::{
         kernel::{
             geometry::Surface,
+            shape::Shape,
             topology::{
                 edges::{Cycle, Edge, Edges},
                 faces::Face,
-                Shape,
             },
         },
         math::{Point, Scalar, Segment},

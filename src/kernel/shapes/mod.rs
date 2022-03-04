@@ -10,7 +10,7 @@ use crate::{
     math::{Aabb, Scalar},
 };
 
-use super::topology::Shape;
+use super::shape::Shape;
 
 /// Implemented by all shapes
 pub trait ToShape {
