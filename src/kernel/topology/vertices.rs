@@ -18,10 +18,7 @@ impl Vertices<'_> {
     /// This method is the only means to create `Vertex` instances, outside of
     /// unit tests. That puts this method is in a great position to enforce
     /// vertex uniqueness rules, instead of requiring the user to uphold those.
-    pub fn create(
-        &mut self,
-        point: impl Into<geometry::Point<3>>,
-    ) -> Vertex<3> {
+    pub fn create(&mut self, point: impl Into<geometry::Point<3>>) -> Vertex {
         let point = point.into();
         self.vertices
             .add(&point.canonical().into(), point.canonical())
@@ -55,11 +52,11 @@ impl Vertices<'_> {
 /// This can be prevented outright by never creating a new `Vertex` instance
 /// for an existing vertex. Hence why this is strictly forbidden.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Vertex<const D: usize>(geometry::Point<D>);
+pub struct Vertex(geometry::Point<3>);
 
-impl<const D: usize> Vertex<D> {
+impl Vertex {
     /// Access the point that defines this vertex
-    pub fn point(&self) -> geometry::Point<D> {
+    pub fn point(&self) -> geometry::Point<3> {
         self.0
     }
 }

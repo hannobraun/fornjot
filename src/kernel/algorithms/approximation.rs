@@ -108,7 +108,7 @@ impl Approximation {
 
 fn approximate_edge(
     mut points: Vec<Point<3>>,
-    vertices: Option<&[Vertex<3>; 2]>,
+    vertices: Option<&[Vertex; 2]>,
 ) -> Approximation {
     // Insert the exact vertices of this edge into the approximation. This means
     // we don't rely on the curve approximation to deliver accurate

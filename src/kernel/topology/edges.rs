@@ -61,7 +61,7 @@ pub struct Edge {
     /// It got in the way of some work, however, so it made sense to simplify
     /// it by storing 3D vertices. It will probably make sense to revert this
     /// and store 1D vertices again, at some point.
-    pub vertices: Option<[Vertex<3>; 2]>,
+    pub vertices: Option<[Vertex; 2]>,
 }
 
 impl Edge {
@@ -73,12 +73,12 @@ impl Edge {
     /// they are not on the curve, this will result in their projection being
     /// converted into curve coordinates, which is likely not the caller's
     /// intention.
-    pub fn new(curve: Curve, vertices: Option<[Vertex<3>; 2]>) -> Self {
+    pub fn new(curve: Curve, vertices: Option<[Vertex; 2]>) -> Self {
         Self { curve, vertices }
     }
 
     /// Construct an edge that is a line segment
-    pub fn line_segment(vertices: [Vertex<3>; 2]) -> Self {
+    pub fn line_segment(vertices: [Vertex; 2]) -> Self {
         Self::new(
             Curve::Line(Line::from_points(
                 vertices.clone().map(|vertex| vertex.point().canonical()),
