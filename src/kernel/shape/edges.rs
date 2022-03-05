@@ -6,7 +6,7 @@ use crate::{
             vertices::Vertex,
         },
     },
-    math::{Point, Vector},
+    math::{Point, Scalar, Vector},
 };
 
 /// The edges of a shape
@@ -59,11 +59,11 @@ impl Edges {
     }
 
     /// Create a circle
-    pub fn create_circle(&mut self, radius: f64) -> Edge {
+    pub fn create_circle(&mut self, radius: Scalar) -> Edge {
         self.create(
             Curve::Circle(Circle {
                 center: Point::origin(),
-                radius: Vector::from([radius, 0.]),
+                radius: Vector::from([radius, Scalar::ZERO]),
             }),
             None,
         )
