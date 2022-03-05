@@ -47,13 +47,13 @@ impl Edge {
 
     /// Create a circle
     pub fn circle(radius: f64) -> Self {
-        Self {
-            curve: Curve::Circle(Circle {
+        Self::new(
+            Curve::Circle(Circle {
                 center: Point::origin(),
                 radius: Vector::from([radius, 0.]),
             }),
-            vertices: None,
-        }
+            None,
+        )
     }
 
     /// Access the curve that defines the edge's geometry
