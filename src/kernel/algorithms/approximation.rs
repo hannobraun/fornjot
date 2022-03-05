@@ -1,13 +1,10 @@
 use std::collections::HashSet;
 
 use crate::{
-    kernel::{
-        shape::edges::Edges,
-        topology::{
-            edges::{Cycle, Edge},
-            faces::Face,
-            vertices::Vertex,
-        },
+    kernel::topology::{
+        edges::{Cycle, Edge},
+        faces::Face,
+        vertices::Vertex,
     },
     math::{Point, Scalar, Segment},
 };
@@ -61,24 +58,6 @@ impl Approximation {
         Self { points, segments }
     }
 
-    /// Compute an approximation for multiple edges
-    ///
-    /// `tolerance` defines how far the approximation is allowed to deviate from
-    /// the actual edges.
-    pub fn for_edges(edges: &Edges, tolerance: Scalar) -> Self {
-        let mut points = HashSet::new();
-        let mut segments = HashSet::new();
-
-        for cycle in &edges.cycles {
-            let approx = Self::for_cycle(cycle, tolerance);
-
-            points.extend(approx.points);
-            segments.extend(approx.segments);
-        }
-
-        Self { points, segments }
-    }
-
     /// Compute an approximation for a face
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
@@ -98,7 +77,17 @@ impl Approximation {
         // it have nothing to do with its curvature.
         match face {
             Face::Face { surface: _, edges } => {
-                Self::for_edges(edges, tolerance)
+                let mut points = HashSet::new();
+                let mut segments = HashSet::new();
+
+                for cycle in &edges.cycles {
+                    let approx = Self::for_cycle(cycle, tolerance);
+
+                    points.extend(approx.points);
+                    segments.extend(approx.segments);
+                }
+
+                Self { points, segments }
             }
             _ => {
                 // No code that still uses triangle representation calls this
