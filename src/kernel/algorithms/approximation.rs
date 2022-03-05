@@ -244,52 +244,6 @@ mod tests {
     }
 
     #[test]
-    fn for_edges() {
-        let tolerance = Scalar::ONE;
-
-        let mut shape = Shape::new();
-
-        let a = Point::from([1., 2., 3.]);
-        let b = Point::from([2., 3., 5.]);
-        let c = Point::from([3., 5., 8.]);
-        let d = Point::from([5., 8., 13.]);
-
-        let v1 = shape.vertices().create(a);
-        let v2 = shape.vertices().create(b);
-        let v3 = shape.vertices().create(c);
-        let v4 = shape.vertices().create(d);
-
-        let ab = Edge::line_segment([v1.clone(), v2.clone()]);
-        let ba = Edge::line_segment([v2, v1]);
-        let cd = Edge::line_segment([v3.clone(), v4.clone()]);
-        let dc = Edge::line_segment([v4, v3]);
-
-        let ab_ba = Cycle {
-            edges: vec![ab, ba],
-        };
-        let cd_dc = Cycle {
-            edges: vec![cd, dc],
-        };
-
-        let edges = Edges {
-            cycles: vec![ab_ba, cd_dc],
-        };
-
-        assert_eq!(
-            Approximation::for_edges(&edges, tolerance),
-            Approximation {
-                points: set![a, b, c, d],
-                segments: set![
-                    Segment::from([a, b]),
-                    Segment::from([b, a]),
-                    Segment::from([c, d]),
-                    Segment::from([d, c]),
-                ],
-            }
-        );
-    }
-
-    #[test]
     fn for_face_closed() {
         // Test a closed face, i.e. one that is completely encircled by edges.
 
