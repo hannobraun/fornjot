@@ -1,3 +1,4 @@
+pub mod handle;
 pub mod vertices;
 
 use kiddo::KdTree;
@@ -6,7 +7,7 @@ use crate::math::{Point, Scalar};
 
 use super::topology::{edges::Edges, faces::Faces};
 
-use self::vertices::Vertices;
+use self::{handle::HandleInner, vertices::Vertices};
 
 /// The boundary representation of a shape
 ///
@@ -41,4 +42,4 @@ impl Shape {
     }
 }
 
-type VerticesInner = KdTree<Scalar, Point<3>, 3>;
+type VerticesInner = KdTree<Scalar, HandleInner<Point<3>>, 3>;

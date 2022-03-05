@@ -1,6 +1,6 @@
 use crate::{kernel::topology::vertices::Vertex, math::Point};
 
-use super::VerticesInner;
+use super::{handle::Handle, VerticesInner};
 
 /// The vertices of a shape
 pub struct Vertices<'r> {
@@ -19,9 +19,12 @@ impl Vertices<'_> {
     /// unit tests. That puts this method is in a great position to enforce
     /// vertex uniqueness rules, instead of requiring the user to uphold those.
     pub fn create(&mut self, point: Point<3>) -> Vertex {
+        let handle = Handle::new(point);
+
         self.vertices
-            .add(&point.into(), point)
+            .add(&point.into(), handle.inner())
             .expect("Error adding vertex");
-        Vertex(point)
+
+        Vertex(handle)
     }
 }
