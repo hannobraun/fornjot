@@ -1,7 +1,4 @@
-use crate::{
-    kernel::geometry::{Circle, Curve, Line},
-    math::{Point, Vector},
-};
+use crate::kernel::geometry::{Curve, Line};
 
 use super::vertices::Vertex;
 
@@ -42,17 +39,6 @@ impl Edge {
                 vertices.clone().map(|vertex| vertex.point()),
             )),
             Some(vertices),
-        )
-    }
-
-    /// Create a circle
-    pub fn circle(radius: f64) -> Self {
-        Self::new(
-            Curve::Circle(Circle {
-                center: Point::origin(),
-                radius: Vector::from([radius, 0.]),
-            }),
-            None,
         )
     }
 

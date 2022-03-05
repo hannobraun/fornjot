@@ -1,4 +1,10 @@
-use crate::kernel::topology::edges::{Cycle, Edge};
+use crate::{
+    kernel::{
+        geometry::{Circle, Curve},
+        topology::edges::{Cycle, Edge},
+    },
+    math::{Point, Vector},
+};
 
 /// The edges of a shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -21,5 +27,16 @@ impl Edges {
         Self {
             cycles: vec![cycle],
         }
+    }
+
+    /// Create a circle
+    pub fn create_circle(&mut self, radius: f64) -> Edge {
+        Edge::new(
+            Curve::Circle(Circle {
+                center: Point::origin(),
+                radius: Vector::from([radius, 0.]),
+            }),
+            None,
+        )
     }
 }
