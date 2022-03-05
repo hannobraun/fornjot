@@ -20,13 +20,15 @@ pub struct Cycle {
 pub struct Edge {
     /// The curve that defines the edge's geometry
     ///
-    /// The edge is a segment of the curve that is bounded by two vertices.
+    /// The edge can be a segment of the curve that is bounded by two vertices,
+    /// or if the curve is continuous (i.e. connects to itself), the edge could
+    /// be defined by the whole curve, and have no bounding vertices.
     pub curve: Curve,
 
-    /// The vertices that bound this edge on the curve, in curve coordinates
+    /// The vertices that bound the edge on the curve
     ///
-    /// If there are no such vertices, that means the edge is connected to
-    /// itself (like a full circle, for example).
+    /// If there are no such vertices, that means that both the curve and the
+    /// edge are continuous (i.e. connected to themselves).
     ///
     /// # Implementation note
     ///
