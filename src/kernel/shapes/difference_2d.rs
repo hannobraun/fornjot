@@ -1,11 +1,8 @@
 use crate::{
     debug::DebugInfo,
     kernel::{
-        shape::Shape,
-        topology::{
-            edges::Edges,
-            faces::{Face, Faces},
-        },
+        shape::{edges::Edges, Shape},
+        topology::faces::{Face, Faces},
     },
     math::{Aabb, Scalar},
 };
@@ -22,19 +19,21 @@ impl ToShape for fj::Difference2d {
         let mut a = self.a.to_shape(tolerance, debug_info);
         let mut b = self.b.to_shape(tolerance, debug_info);
 
-        shape.edges = {
-            let (a, b) = if a.edges.cycles.len() == 1
-                && b.edges.cycles.len() == 1
-            {
-                (a.edges.cycles.pop().unwrap(), b.edges.cycles.pop().unwrap())
-            } else {
-                // See issue:
-                // https://github.com/hannobraun/Fornjot/issues/95
-                todo!(
+        *shape.edges() = {
+            let (a, b) =
+                if a.edges().cycles.len() == 1 && b.edges().cycles.len() == 1 {
+                    (
+                        a.edges().cycles.pop().unwrap(),
+                        b.edges().cycles.pop().unwrap(),
+                    )
+                } else {
+                    // See issue:
+                    // https://github.com/hannobraun/Fornjot/issues/95
+                    todo!(
                     "The 2-dimensional difference operation only supports one \
                     cycle in each operand."
                 );
-            };
+                };
 
             Edges { cycles: vec![a, b] }
         };

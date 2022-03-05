@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use crate::{
     kernel::topology::{
-        edges::{Cycle, Edge, Edges},
+        edges::{Cycle, Edge},
         faces::Face,
         vertices::Vertex,
     },
@@ -35,9 +35,9 @@ impl Approximation {
     /// the actual edge.
     pub fn for_edge(edge: &Edge, tolerance: Scalar) -> Self {
         let mut points = Vec::new();
-        edge.curve.approx(tolerance, &mut points);
+        edge.curve().approx(tolerance, &mut points);
 
-        approximate_edge(points, edge.vertices.as_ref())
+        approximate_edge(points, edge.vertices().as_ref())
     }
 
     /// Compute an approximation for a cycle
@@ -50,24 +50,6 @@ impl Approximation {
 
         for edge in &cycle.edges {
             let approx = Self::for_edge(edge, tolerance);
-
-            points.extend(approx.points);
-            segments.extend(approx.segments);
-        }
-
-        Self { points, segments }
-    }
-
-    /// Compute an approximation for multiple edges
-    ///
-    /// `tolerance` defines how far the approximation is allowed to deviate from
-    /// the actual edges.
-    pub fn for_edges(edges: &Edges, tolerance: Scalar) -> Self {
-        let mut points = HashSet::new();
-        let mut segments = HashSet::new();
-
-        for cycle in &edges.cycles {
-            let approx = Self::for_cycle(cycle, tolerance);
 
             points.extend(approx.points);
             segments.extend(approx.segments);
@@ -95,7 +77,17 @@ impl Approximation {
         // it have nothing to do with its curvature.
         match face {
             Face::Face { surface: _, edges } => {
-                Self::for_edges(edges, tolerance)
+                let mut points = HashSet::new();
+                let mut segments = HashSet::new();
+
+                for cycle in &edges.cycles {
+                    let approx = Self::for_cycle(cycle, tolerance);
+
+                    points.extend(approx.points);
+                    segments.extend(approx.segments);
+                }
+
+                Self { points, segments }
             }
             _ => {
                 // No code that still uses triangle representation calls this
@@ -154,11 +146,8 @@ mod tests {
     use crate::{
         kernel::{
             geometry::Surface,
-            shape::Shape,
-            topology::{
-                edges::{Cycle, Edge, Edges},
-                faces::Face,
-            },
+            shape::{edges::Edges, Shape},
+            topology::{edges::Cycle, faces::Face},
         },
         math::{Point, Scalar, Segment},
     };
@@ -219,9 +208,9 @@ mod tests {
         let v2 = shape.vertices().create(b);
         let v3 = shape.vertices().create(c);
 
-        let ab = Edge::line_segment([v1.clone(), v2.clone()]);
-        let bc = Edge::line_segment([v2, v3.clone()]);
-        let ca = Edge::line_segment([v3, v1]);
+        let ab = shape.edges().create_line_segment([v1.clone(), v2.clone()]);
+        let bc = shape.edges().create_line_segment([v2, v3.clone()]);
+        let ca = shape.edges().create_line_segment([v3, v1]);
 
         let cycle = Cycle {
             edges: vec![ab, bc, ca],
@@ -235,52 +224,6 @@ mod tests {
                     Segment::from([a, b]),
                     Segment::from([b, c]),
                     Segment::from([c, a]),
-                ],
-            }
-        );
-    }
-
-    #[test]
-    fn for_edges() {
-        let tolerance = Scalar::ONE;
-
-        let mut shape = Shape::new();
-
-        let a = Point::from([1., 2., 3.]);
-        let b = Point::from([2., 3., 5.]);
-        let c = Point::from([3., 5., 8.]);
-        let d = Point::from([5., 8., 13.]);
-
-        let v1 = shape.vertices().create(a);
-        let v2 = shape.vertices().create(b);
-        let v3 = shape.vertices().create(c);
-        let v4 = shape.vertices().create(d);
-
-        let ab = Edge::line_segment([v1.clone(), v2.clone()]);
-        let ba = Edge::line_segment([v2, v1]);
-        let cd = Edge::line_segment([v3.clone(), v4.clone()]);
-        let dc = Edge::line_segment([v4, v3]);
-
-        let ab_ba = Cycle {
-            edges: vec![ab, ba],
-        };
-        let cd_dc = Cycle {
-            edges: vec![cd, dc],
-        };
-
-        let edges = Edges {
-            cycles: vec![ab_ba, cd_dc],
-        };
-
-        assert_eq!(
-            Approximation::for_edges(&edges, tolerance),
-            Approximation {
-                points: set![a, b, c, d],
-                segments: set![
-                    Segment::from([a, b]),
-                    Segment::from([b, a]),
-                    Segment::from([c, d]),
-                    Segment::from([d, c]),
                 ],
             }
         );
@@ -304,10 +247,10 @@ mod tests {
         let v3 = shape.vertices().create(c);
         let v4 = shape.vertices().create(d);
 
-        let ab = Edge::line_segment([v1.clone(), v2.clone()]);
-        let bc = Edge::line_segment([v2, v3.clone()]);
-        let cd = Edge::line_segment([v3, v4.clone()]);
-        let da = Edge::line_segment([v4, v1]);
+        let ab = shape.edges().create_line_segment([v1.clone(), v2.clone()]);
+        let bc = shape.edges().create_line_segment([v2, v3.clone()]);
+        let cd = shape.edges().create_line_segment([v3, v4.clone()]);
+        let da = shape.edges().create_line_segment([v4, v1]);
 
         let abcd = Cycle {
             edges: vec![ab, bc, cd, da],

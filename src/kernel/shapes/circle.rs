@@ -2,11 +2,8 @@ use crate::{
     debug::DebugInfo,
     kernel::{
         geometry::Surface,
-        shape::Shape,
-        topology::{
-            edges::{Edge, Edges},
-            faces::{Face, Faces},
-        },
+        shape::{edges::Edges, Shape},
+        topology::faces::{Face, Faces},
     },
     math::{Aabb, Point, Scalar},
 };
@@ -20,10 +17,12 @@ impl ToShape for fj::Circle {
         // Circles have just a single round edge with no vertices. So none need
         // to be added here.
 
-        shape.edges = Edges::single_cycle([Edge::circle(self.radius)]);
+        *shape.edges() = Edges::single_cycle([shape
+            .edges()
+            .create_circle(Scalar::from_f64(self.radius))]);
 
         shape.faces = Faces(vec![Face::Face {
-            edges: shape.edges.clone(),
+            edges: shape.edges().clone(),
             surface: Surface::x_y_plane(),
         }]);
 

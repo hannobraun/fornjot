@@ -10,7 +10,7 @@ use super::{approximation::Approximation, transform::transform_face};
 
 /// Create a new shape by sweeping an existing one
 pub fn sweep_shape(
-    original: &Shape,
+    mut original: Shape,
     path: Vector<3>,
     tolerance: Scalar,
 ) -> Shape {
@@ -27,7 +27,7 @@ pub fn sweep_shape(
         top_faces.push(transform_face(face, &translation, &mut shape));
     }
 
-    for cycle in &original.edges.cycles {
+    for cycle in &original.edges().cycles {
         let approx = Approximation::for_cycle(cycle, tolerance);
 
         // This will only work correctly, if the cycle consists of one edge. If
@@ -70,11 +70,8 @@ mod tests {
     use crate::{
         kernel::{
             geometry::{surfaces::Swept, Surface},
-            shape::Shape,
-            topology::{
-                edges::{Edge, Edges},
-                faces::Face,
-            },
+            shape::{edges::Edges, Shape},
+            topology::faces::Face,
         },
         math::{Point, Scalar, Vector},
     };
@@ -86,7 +83,7 @@ mod tests {
         let sketch = Triangle::new([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]]);
 
         let swept = sweep_shape(
-            &sketch.shape,
+            sketch.shape,
             Vector::from([0., 0., 1.]),
             Scalar::from_f64(0.),
         );
@@ -115,9 +112,9 @@ mod tests {
             let b = shape.vertices().create(b.into());
             let c = shape.vertices().create(c.into());
 
-            let ab = Edge::line_segment([a.clone(), b.clone()]);
-            let bc = Edge::line_segment([b.clone(), c.clone()]);
-            let ca = Edge::line_segment([c.clone(), a.clone()]);
+            let ab = shape.edges().create_line_segment([a.clone(), b.clone()]);
+            let bc = shape.edges().create_line_segment([b.clone(), c.clone()]);
+            let ca = shape.edges().create_line_segment([c.clone(), a.clone()]);
 
             let abc = Face::Face {
                 surface: Surface::Swept(Swept::plane_from_points(

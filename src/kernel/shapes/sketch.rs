@@ -2,11 +2,8 @@ use crate::{
     debug::DebugInfo,
     kernel::{
         geometry::Surface,
-        shape::Shape,
-        topology::{
-            edges::{Edge, Edges},
-            faces::{Face, Faces},
-        },
+        shape::{edges::Edges, Shape},
+        topology::faces::{Face, Faces},
     },
     math::{Aabb, Point, Scalar},
 };
@@ -23,7 +20,7 @@ impl ToShape for fj::Sketch {
             vertices.push(vertex);
         }
 
-        shape.edges = {
+        *shape.edges() = {
             if !vertices.is_empty() {
                 // Add the first vertex at the end again, to close the loop.
                 //
@@ -40,7 +37,7 @@ impl ToShape for fj::Sketch {
                 let a = window[0].clone();
                 let b = window[1].clone();
 
-                let edge = Edge::line_segment([a, b]);
+                let edge = shape.edges().create_line_segment([a, b]);
                 edges.push(edge);
             }
 
@@ -48,7 +45,7 @@ impl ToShape for fj::Sketch {
         };
 
         let face = Face::Face {
-            edges: shape.edges.clone(),
+            edges: shape.edges().clone(),
             surface: Surface::x_y_plane(),
         };
         shape.faces = Faces(vec![face]);

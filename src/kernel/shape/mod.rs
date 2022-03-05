@@ -1,3 +1,4 @@
+pub mod edges;
 pub mod handle;
 pub mod vertices;
 
@@ -5,9 +6,9 @@ use kiddo::KdTree;
 
 use crate::math::{Point, Scalar};
 
-use super::topology::{edges::Edges, faces::Faces};
+use super::topology::faces::Faces;
 
-use self::{handle::HandleInner, vertices::Vertices};
+use self::{edges::Edges, handle::HandleInner, vertices::Vertices};
 
 /// The boundary representation of a shape
 ///
@@ -19,8 +20,8 @@ use self::{handle::HandleInner, vertices::Vertices};
 #[derive(Clone, Debug)]
 pub struct Shape {
     vertices: VerticesInner,
+    edges: Edges,
 
-    pub edges: Edges,
     pub faces: Faces,
 }
 
@@ -34,11 +35,16 @@ impl Shape {
         }
     }
 
-    /// Access and modify the shape's vertices
+    /// Access the shape's vertices
     pub fn vertices(&mut self) -> Vertices {
         Vertices {
             vertices: &mut self.vertices,
         }
+    }
+
+    /// Access the shape's edges
+    pub fn edges(&mut self) -> &mut Edges {
+        &mut self.edges
     }
 }
 
