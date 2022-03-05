@@ -1,8 +1,13 @@
+pub mod handle;
+pub mod vertices;
+
 use kiddo::KdTree;
 
 use crate::math::{Point, Scalar};
 
-use super::topology::{edges::Edges, faces::Faces, vertices::Vertex};
+use super::topology::{edges::Edges, faces::Faces};
+
+use self::{handle::HandleInner, vertices::Vertices};
 
 /// The boundary representation of a shape
 ///
@@ -37,28 +42,4 @@ impl Shape {
     }
 }
 
-/// The vertices of a shape
-pub struct Vertices<'r> {
-    vertices: &'r mut VerticesInner,
-}
-
-impl Vertices<'_> {
-    /// Create a vertex
-    ///
-    /// The caller must make sure to uphold all rules regarding vertex
-    /// uniqueness.
-    ///
-    /// # Implementation note
-    ///
-    /// This method is the only means to create `Vertex` instances, outside of
-    /// unit tests. That puts this method is in a great position to enforce
-    /// vertex uniqueness rules, instead of requiring the user to uphold those.
-    pub fn create(&mut self, point: Point<3>) -> Vertex {
-        self.vertices
-            .add(&point.into(), point)
-            .expect("Error adding vertex");
-        Vertex(point)
-    }
-}
-
-type VerticesInner = KdTree<Scalar, Point<3>, 3>;
+type VerticesInner = KdTree<Scalar, HandleInner<Point<3>>, 3>;
