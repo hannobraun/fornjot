@@ -54,7 +54,7 @@ pub fn transform_face(
                     });
 
                     edges.push(Edge::new(
-                        edge.curve.transform(transform),
+                        edge.curve().transform(transform),
                         vertices,
                     ));
                 }

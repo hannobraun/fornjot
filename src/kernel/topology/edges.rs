@@ -76,6 +76,15 @@ impl Edge {
         }
     }
 
+    /// Access the curve that defines the edge's geometry
+    ///
+    /// The edge can be a segment of the curve that is bounded by two vertices,
+    /// or if the curve is continuous (i.e. connects to itself), the edge could
+    /// be defined by the whole curve, and have no bounding vertices.
+    pub fn curve(&self) -> Curve {
+        self.curve
+    }
+
     /// Access the vertices that bound the edge on the curve
     ///
     /// If there are no such vertices, that means that both the curve and the
