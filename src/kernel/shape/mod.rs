@@ -41,6 +41,11 @@ impl Shape {
             vertices: &mut self.vertices,
         }
     }
+
+    /// Access the shape's edges
+    pub fn edges(&mut self) -> &mut Edges {
+        &mut self.edges
+    }
 }
 
 type VerticesInner = KdTree<Scalar, HandleInner<Point<3>>, 3>;

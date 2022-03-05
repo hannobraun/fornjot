@@ -23,7 +23,7 @@ impl ToShape for fj::Sketch {
             vertices.push(vertex);
         }
 
-        shape.edges = {
+        *shape.edges() = {
             if !vertices.is_empty() {
                 // Add the first vertex at the end again, to close the loop.
                 //
@@ -48,7 +48,7 @@ impl ToShape for fj::Sketch {
         };
 
         let face = Face::Face {
-            edges: shape.edges.clone(),
+            edges: shape.edges().clone(),
             surface: Surface::x_y_plane(),
         };
         shape.faces = Faces(vec![face]);
