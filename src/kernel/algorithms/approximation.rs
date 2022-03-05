@@ -37,7 +37,7 @@ impl Approximation {
         let mut points = Vec::new();
         edge.curve.approx(tolerance, &mut points);
 
-        approximate_edge(points, edge.vertices.as_ref())
+        approximate_edge(points, edge.vertices().as_ref())
     }
 
     /// Compute an approximation for a cycle

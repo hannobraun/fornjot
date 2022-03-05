@@ -44,7 +44,7 @@ pub fn transform_face(
                 let mut edges = Vec::new();
 
                 for edge in cycle.edges {
-                    let vertices = edge.vertices.map(|vertices| {
+                    let vertices = edge.vertices().map(|vertices| {
                         vertices.map(|vertex| {
                             let point =
                                 transform.transform_point(&vertex.point());
