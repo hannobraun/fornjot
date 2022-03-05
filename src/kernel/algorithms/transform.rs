@@ -53,10 +53,10 @@ pub fn transform_face(
                         })
                     });
 
-                    edges.push(Edge {
-                        curve: edge.curve.transform(transform),
+                    edges.push(Edge::new(
+                        edge.curve.transform(transform),
                         vertices,
-                    });
+                    ));
                 }
 
                 cycles.push(Cycle { edges });
