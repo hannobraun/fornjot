@@ -32,9 +32,25 @@ impl Edges {
         }
     }
 
+    /// Construct an edge
+    ///
+    /// If vertices are provided in `vertices`, they must be on `curve`.
+    ///
+    /// This constructor will convert the vertices into curve coordinates. If
+    /// they are not on the curve, this will result in their projection being
+    /// converted into curve coordinates, which is likely not the caller's
+    /// intention.
+    pub fn create(
+        &mut self,
+        curve: Curve,
+        vertices: Option<[Vertex; 2]>,
+    ) -> Edge {
+        Edge { curve, vertices }
+    }
+
     /// Construct an edge that is a line segment
     pub fn create_line_segment(&mut self, vertices: [Vertex; 2]) -> Edge {
-        Edge::new(
+        self.create(
             Curve::Line(Line::from_points(
                 vertices.clone().map(|vertex| vertex.point()),
             )),
@@ -44,7 +60,7 @@ impl Edges {
 
     /// Create a circle
     pub fn create_circle(&mut self, radius: f64) -> Edge {
-        Edge::new(
+        self.create(
             Curve::Circle(Circle {
                 center: Point::origin(),
                 radius: Vector::from([radius, 0.]),

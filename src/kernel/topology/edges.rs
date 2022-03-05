@@ -15,23 +15,11 @@ pub struct Cycle {
 /// An edge of a shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edge {
-    curve: Curve,
-    vertices: Option<[Vertex; 2]>,
+    pub(crate) curve: Curve,
+    pub(crate) vertices: Option<[Vertex; 2]>,
 }
 
 impl Edge {
-    /// Construct an edge
-    ///
-    /// If vertices are provided in `vertices`, they must be on `curve`.
-    ///
-    /// This constructor will convert the vertices into curve coordinates. If
-    /// they are not on the curve, this will result in their projection being
-    /// converted into curve coordinates, which is likely not the caller's
-    /// intention.
-    pub fn new(curve: Curve, vertices: Option<[Vertex; 2]>) -> Self {
-        Self { curve, vertices }
-    }
-
     /// Access the curve that defines the edge's geometry
     ///
     /// The edge can be a segment of the curve that is bounded by two vertices,
