@@ -18,28 +18,8 @@ pub struct Cycle {
 /// An edge of a shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edge {
-    /// The curve that defines the edge's geometry
-    ///
-    /// The edge can be a segment of the curve that is bounded by two vertices,
-    /// or if the curve is continuous (i.e. connects to itself), the edge could
-    /// be defined by the whole curve, and have no bounding vertices.
-    pub curve: Curve,
-
-    /// The vertices that bound the edge on the curve
-    ///
-    /// If there are no such vertices, that means that both the curve and the
-    /// edge are continuous (i.e. connected to themselves).
-    ///
-    /// # Implementation note
-    ///
-    /// Since these vertices bound the edge, they must lie on the curve. This
-    /// isn't enforced at all, however. It would make sense to store 1D vertices
-    /// here, and indeed, this was the case in the past.
-    ///
-    /// It got in the way of some work, however, so it made sense to simplify
-    /// it by storing 3D vertices. It will probably make sense to revert this
-    /// and store 1D vertices again, at some point.
-    pub vertices: Option<[Vertex; 2]>,
+    curve: Curve,
+    vertices: Option<[Vertex; 2]>,
 }
 
 impl Edge {
