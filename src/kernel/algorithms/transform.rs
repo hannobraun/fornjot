@@ -1,8 +1,8 @@
 use crate::{
     kernel::{
-        shape::Shape,
+        shape::{edges::Edges, Shape},
         topology::{
-            edges::{Cycle, Edge, Edges},
+            edges::{Cycle, Edge},
             faces::Face,
         },
     },

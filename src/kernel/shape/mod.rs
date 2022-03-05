@@ -1,3 +1,4 @@
+pub mod edges;
 pub mod handle;
 pub mod vertices;
 
@@ -5,9 +6,9 @@ use kiddo::KdTree;
 
 use crate::math::{Point, Scalar};
 
-use super::topology::{edges::Edges, faces::Faces};
+use super::topology::faces::Faces;
 
-use self::{handle::HandleInner, vertices::Vertices};
+use self::{edges::Edges, handle::HandleInner, vertices::Vertices};
 
 /// The boundary representation of a shape
 ///

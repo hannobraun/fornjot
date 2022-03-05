@@ -1,10 +1,13 @@
 use std::collections::HashSet;
 
 use crate::{
-    kernel::topology::{
-        edges::{Cycle, Edge, Edges},
-        faces::Face,
-        vertices::Vertex,
+    kernel::{
+        shape::edges::Edges,
+        topology::{
+            edges::{Cycle, Edge},
+            faces::Face,
+            vertices::Vertex,
+        },
     },
     math::{Point, Scalar, Segment},
 };
@@ -154,9 +157,9 @@ mod tests {
     use crate::{
         kernel::{
             geometry::Surface,
-            shape::Shape,
+            shape::{edges::Edges, Shape},
             topology::{
-                edges::{Cycle, Edge, Edges},
+                edges::{Cycle, Edge},
                 faces::Face,
             },
         },

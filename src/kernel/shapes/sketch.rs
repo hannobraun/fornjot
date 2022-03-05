@@ -2,9 +2,9 @@ use crate::{
     debug::DebugInfo,
     kernel::{
         geometry::Surface,
-        shape::Shape,
+        shape::{edges::Edges, Shape},
         topology::{
-            edges::{Edge, Edges},
+            edges::Edge,
             faces::{Face, Faces},
         },
     },

@@ -10,11 +10,10 @@ use crate::{
             approximation::Approximation, triangulation::triangulate,
         },
         geometry::Surface,
+        shape::edges::Edges,
     },
     math::{Aabb, Scalar, Segment, Triangle},
 };
-
-use super::edges::Edges;
 
 /// The faces of a shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]

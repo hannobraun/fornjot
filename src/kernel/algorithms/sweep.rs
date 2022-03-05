@@ -70,11 +70,8 @@ mod tests {
     use crate::{
         kernel::{
             geometry::{surfaces::Swept, Surface},
-            shape::Shape,
-            topology::{
-                edges::{Edge, Edges},
-                faces::Face,
-            },
+            shape::{edges::Edges, Shape},
+            topology::{edges::Edge, faces::Face},
         },
         math::{Point, Scalar, Vector},
     };
