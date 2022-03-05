@@ -20,8 +20,8 @@ use self::{edges::Edges, handle::HandleInner, vertices::Vertices};
 #[derive(Clone, Debug)]
 pub struct Shape {
     vertices: VerticesInner,
+    edges: Edges,
 
-    pub edges: Edges,
     pub faces: Faces,
 }
 
