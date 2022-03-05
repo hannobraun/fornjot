@@ -35,7 +35,7 @@ impl Shape {
         }
     }
 
-    /// Access and modify the shape's vertices
+    /// Access the shape's vertices
     pub fn vertices(&mut self) -> Vertices {
         Vertices {
             vertices: &mut self.vertices,
