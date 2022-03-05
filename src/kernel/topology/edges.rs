@@ -1,4 +1,4 @@
-use crate::kernel::geometry::{Curve, Line};
+use crate::kernel::geometry::Curve;
 
 use super::vertices::Vertex;
 
@@ -30,16 +30,6 @@ impl Edge {
     /// intention.
     pub fn new(curve: Curve, vertices: Option<[Vertex; 2]>) -> Self {
         Self { curve, vertices }
-    }
-
-    /// Construct an edge that is a line segment
-    pub fn line_segment(vertices: [Vertex; 2]) -> Self {
-        Self::new(
-            Curve::Line(Line::from_points(
-                vertices.clone().map(|vertex| vertex.point()),
-            )),
-            Some(vertices),
-        )
     }
 
     /// Access the curve that defines the edge's geometry

@@ -1,7 +1,10 @@
 use crate::{
     kernel::{
-        geometry::{Circle, Curve},
-        topology::edges::{Cycle, Edge},
+        geometry::{Circle, Curve, Line},
+        topology::{
+            edges::{Cycle, Edge},
+            vertices::Vertex,
+        },
     },
     math::{Point, Vector},
 };
@@ -27,6 +30,16 @@ impl Edges {
         Self {
             cycles: vec![cycle],
         }
+    }
+
+    /// Construct an edge that is a line segment
+    pub fn create_line_segment(&mut self, vertices: [Vertex; 2]) -> Edge {
+        Edge::new(
+            Curve::Line(Line::from_points(
+                vertices.clone().map(|vertex| vertex.point()),
+            )),
+            Some(vertices),
+        )
     }
 
     /// Create a circle
