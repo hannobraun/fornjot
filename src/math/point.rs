@@ -158,10 +158,10 @@ impl<const D: usize> ops::Add<Vector<D>> for Point<D> {
     }
 }
 
-impl<const D: usize> ops::Sub<Point<D>> for Point<D> {
+impl<const D: usize> ops::Sub<Self> for Point<D> {
     type Output = Vector<D>;
 
-    fn sub(self, rhs: Point<D>) -> Self::Output {
+    fn sub(self, rhs: Self) -> Self::Output {
         self.to_na().sub(rhs.to_na()).into()
     }
 }

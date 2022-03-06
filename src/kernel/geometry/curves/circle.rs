@@ -84,7 +84,7 @@ impl Circle {
         // and the circle. This is the same as the difference between
         // the circumscribed circle and the incircle.
 
-        let n = Circle::number_of_vertices(tolerance, radius);
+        let n = Self::number_of_vertices(tolerance, radius);
 
         for i in 0..n {
             let angle = 2. * PI / n as f64 * i as f64;
