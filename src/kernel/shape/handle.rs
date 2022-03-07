@@ -1,4 +1,4 @@
-use std::{hash::Hash, rc::Rc};
+use std::{hash::Hash, ops::Deref, rc::Rc};
 
 #[derive(Clone, Debug, Eq, Ord, PartialOrd)]
 pub struct Handle<T>(HandleInner<T>);
@@ -11,9 +11,13 @@ impl<T> Handle<T> {
     pub(super) fn inner(&self) -> HandleInner<T> {
         self.0.clone()
     }
+}
 
-    pub fn get(&self) -> &T {
-        &*self.0
+impl<T> Deref for Handle<T> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        self.0.deref()
     }
 }
 
