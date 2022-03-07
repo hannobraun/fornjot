@@ -12,8 +12,8 @@ impl<T: Copy> Handle<T> {
         self.0.clone()
     }
 
-    pub fn get(&self) -> T {
-        *self.0
+    pub fn get(&self) -> &T {
+        &*self.0
     }
 }
 
@@ -22,7 +22,7 @@ where
     T: PartialEq,
 {
     fn eq(&self, other: &Self) -> bool {
-        self.get().eq(&other.get())
+        self.get().eq(other.get())
     }
 }
 
