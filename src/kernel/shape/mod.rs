@@ -7,9 +7,7 @@ use crate::math::Scalar;
 
 use super::topology::{edges::Cycle, faces::Faces, vertices::Vertex};
 
-use self::{
-    cycles::Cycles, edges::Edges, handle::HandleInner, vertices::Vertices,
-};
+use self::{cycles::Cycles, edges::Edges, handle::Storage, vertices::Vertices};
 
 /// The boundary representation of a shape
 ///
@@ -82,5 +80,5 @@ impl Shape {
     }
 }
 
-type VerticesInner = Vec<HandleInner<Vertex>>;
+type VerticesInner = Vec<Storage<Vertex>>;
 type CyclesInner = Vec<Cycle>;

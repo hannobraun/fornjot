@@ -2,7 +2,10 @@ use tracing::warn;
 
 use crate::{kernel::topology::vertices::Vertex, math::Scalar};
 
-use super::{handle::Handle, VerticesInner};
+use super::{
+    handle::{Handle, Storage},
+    VerticesInner,
+};
 
 /// The vertices of a shape
 pub struct Vertices<'r> {
@@ -48,8 +51,9 @@ impl Vertices<'_> {
             }
         }
 
-        let handle = Handle::new(vertex);
-        self.vertices.push(handle.inner());
+        let storage = Storage::new(vertex);
+        let handle = storage.handle();
+        self.vertices.push(storage);
 
         handle
     }
