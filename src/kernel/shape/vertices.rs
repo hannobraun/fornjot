@@ -1,4 +1,3 @@
-use kiddo::distance::squared_euclidean;
 use tracing::warn;
 
 use crate::{
@@ -41,29 +40,18 @@ impl Vertices<'_> {
         // vertices. This minimum distance is defined to be half a µm, which
         // should provide more than enough precision for common use cases, while
         // being large enough to catch all invalid cases.
-        match self.vertices.nearest_one(&point.into(), &squared_euclidean) {
-            Ok((distance_squared, existing)) => {
-                if distance_squared < self.min_distance * self.min_distance {
-                    let existing = existing.get();
+        for existing in &*self.vertices {
+            let existing = existing.get();
 
-                    warn!(
-                        "Invalid vertex: {point:?}; \
-                        identical vertex at {existing:?}",
-                    );
-                }
-            }
-            Err(kiddo::ErrorKind::Empty) => {
-                // No other vertices means no change of the new one being
-                // invalid.
-            }
-            Err(err) => {
-                panic!("Error during vertex validation: {err:?}");
+            if (existing - point).magnitude() < self.min_distance {
+                warn!(
+                    "Invalid vertex: {point:?}; \
+                    identical vertex at {existing:?}",
+                );
             }
         }
 
-        self.vertices
-            .add(&point.into(), handle.inner())
-            .expect("Error adding vertex");
+        self.vertices.push(handle.inner());
 
         Vertex(handle)
     }
