@@ -3,9 +3,9 @@ pub mod edges;
 pub mod handle;
 pub mod vertices;
 
-use crate::math::{Point, Scalar};
+use crate::math::Scalar;
 
-use super::topology::{edges::Cycle, faces::Faces};
+use super::topology::{edges::Cycle, faces::Faces, vertices::Vertex};
 
 use self::{
     cycles::Cycles, edges::Edges, handle::HandleInner, vertices::Vertices,
@@ -82,5 +82,5 @@ impl Shape {
     }
 }
 
-type VerticesInner = Vec<HandleInner<Point<3>>>;
+type VerticesInner = Vec<HandleInner<Vertex>>;
 type CyclesInner = Vec<Cycle>;

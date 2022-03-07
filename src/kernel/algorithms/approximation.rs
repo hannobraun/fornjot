@@ -1,10 +1,13 @@
 use std::collections::HashSet;
 
 use crate::{
-    kernel::topology::{
-        edges::{Cycle, Edge},
-        faces::Face,
-        vertices::Vertex,
+    kernel::{
+        shape::handle::Handle,
+        topology::{
+            edges::{Cycle, Edge},
+            faces::Face,
+            vertices::Vertex,
+        },
     },
     math::{Point, Scalar, Segment},
 };
@@ -100,7 +103,7 @@ impl Approximation {
 
 fn approximate_edge(
     mut points: Vec<Point<3>>,
-    vertices: Option<&[Vertex; 2]>,
+    vertices: Option<&[Handle<Vertex>; 2]>,
 ) -> Approximation {
     // Insert the exact vertices of this edge into the approximation. This means
     // we don't rely on the curve approximation to deliver accurate
@@ -111,8 +114,8 @@ fn approximate_edge(
     // the same vertex would be understood to refer to very close, but distinct
     // vertices.
     if let Some([a, b]) = vertices {
-        points.insert(0, a.point());
-        points.push(b.point());
+        points.insert(0, a.get().point());
+        points.push(b.get().point());
     }
 
     let mut segment_points = points.clone();

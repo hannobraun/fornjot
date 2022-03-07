@@ -1,4 +1,4 @@
-use crate::kernel::geometry::Curve;
+use crate::kernel::{geometry::Curve, shape::handle::Handle};
 
 use super::vertices::Vertex;
 
@@ -16,7 +16,7 @@ pub struct Cycle {
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edge {
     pub(crate) curve: Curve,
-    pub(crate) vertices: Option<[Vertex; 2]>,
+    pub(crate) vertices: Option<[Handle<Vertex>; 2]>,
 }
 
 impl Edge {
@@ -43,7 +43,7 @@ impl Edge {
     /// It got in the way of some work, however, so it made sense to simplify
     /// it by storing 3D vertices. It will probably make sense to revert this
     /// and store 1D vertices again, at some point.
-    pub fn vertices(&self) -> Option<[Vertex; 2]> {
+    pub fn vertices(&self) -> Option<[Handle<Vertex>; 2]> {
         self.vertices.clone()
     }
 }

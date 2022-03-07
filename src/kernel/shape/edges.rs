@@ -6,6 +6,8 @@ use crate::{
     math::{Point, Scalar, Vector},
 };
 
+use super::handle::Handle;
+
 /// The edges of a shape
 pub struct Edges;
 
@@ -27,7 +29,7 @@ impl Edges {
     pub fn create(
         &mut self,
         curve: Curve,
-        vertices: Option<[Vertex; 2]>,
+        vertices: Option<[Handle<Vertex>; 2]>,
     ) -> Edge {
         Edge { curve, vertices }
     }
@@ -36,10 +38,13 @@ impl Edges {
     ///
     /// Calls [`Edges::create`] internally, and inherits its limitations and
     /// requirements.
-    pub fn create_line_segment(&mut self, vertices: [Vertex; 2]) -> Edge {
+    pub fn create_line_segment(
+        &mut self,
+        vertices: [Handle<Vertex>; 2],
+    ) -> Edge {
         self.create(
             Curve::Line(Line::from_points(
-                vertices.clone().map(|vertex| vertex.point()),
+                vertices.clone().map(|vertex| vertex.get().point()),
             )),
             Some(vertices),
         )
