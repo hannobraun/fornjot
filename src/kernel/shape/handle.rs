@@ -1,11 +1,11 @@
-use std::{cell::Cell, hash::Hash, rc::Rc};
+use std::{hash::Hash, rc::Rc};
 
 #[derive(Clone, Debug, Eq, Ord, PartialOrd)]
 pub struct Handle<T: Copy>(HandleInner<T>);
 
 impl<T: Copy> Handle<T> {
     pub(super) fn new(value: T) -> Self {
-        Self(Rc::new(Cell::new(value)))
+        Self(Rc::new(value))
     }
 
     pub(super) fn inner(&self) -> HandleInner<T> {
@@ -13,7 +13,7 @@ impl<T: Copy> Handle<T> {
     }
 
     pub fn get(&self) -> T {
-        self.0.get()
+        *self.0
     }
 }
 
@@ -35,4 +35,4 @@ where
     }
 }
 
-pub(super) type HandleInner<T> = Rc<Cell<T>>;
+pub(super) type HandleInner<T> = Rc<T>;

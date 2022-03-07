@@ -38,8 +38,7 @@ impl Vertices<'_> {
         // should provide more than enough precision for common use cases, while
         // being large enough to catch all invalid cases.
         for existing in &*self.vertices {
-            let distance =
-                (existing.get().point() - vertex.point()).magnitude();
+            let distance = (existing.point() - vertex.point()).magnitude();
 
             if distance < self.min_distance {
                 warn!(
