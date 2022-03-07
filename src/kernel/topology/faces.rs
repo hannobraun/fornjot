@@ -44,16 +44,16 @@ pub enum Face {
         /// The surface that defines this face
         surface: Surface,
 
-        /// The edges that bound the face
+        /// The cycles that bound the face
         ///
         /// # Implementation Note
         ///
-        /// Since these edges bound the face, they must lie in the surface.
-        /// We're using [`Edges`] here, however, which has no such limitation.
+        /// Since these cycles bound the face, the edges they consist of must
+        /// lie in the surface. The data we're using here is 3-dimensional
+        /// though, so no such limitation is enforced.
         ///
-        /// It might be less error-prone, and possibly more efficient, to use a
-        /// more specialized data structure here, that specifies the edges in
-        /// surface coordinates.
+        /// It might be less error-prone to specify the edges in surface
+        /// coordinates.
         cycles: Vec<Cycle>,
     },
 
