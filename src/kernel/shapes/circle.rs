@@ -17,9 +17,8 @@ impl ToShape for fj::Circle {
         // Circles have just a single round edge with no vertices. So none need
         // to be added here.
 
-        *shape.edges() = Edges::single_cycle([shape
-            .edges()
-            .create_circle(Scalar::from_f64(self.radius))]);
+        let edge = shape.edges().create_circle(Scalar::from_f64(self.radius));
+        *shape.edges() = Edges::single_cycle([edge]);
 
         shape.faces = Faces(vec![Face::Face {
             cycles: shape.cycles().all().collect(),
