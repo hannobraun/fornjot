@@ -45,7 +45,7 @@ impl ToShape for fj::Sketch {
         };
 
         let face = Face::Face {
-            cycles: shape.edges().cycles.clone(),
+            cycles: shape.cycles().all().collect(),
             surface: Surface::x_y_plane(),
         };
         shape.faces = Faces(vec![face]);
