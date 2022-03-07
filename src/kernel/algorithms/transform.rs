@@ -50,11 +50,11 @@ pub fn transform_face(
                         })
                     });
 
-                    edges.push(
-                        shape
-                            .edges()
-                            .create(edge.curve.transform(transform), vertices),
-                    );
+                    let edge = shape
+                        .edges()
+                        .create(edge.curve.transform(transform), vertices);
+
+                    edges.push(edge);
                 }
 
                 cycles_trans.push(Cycle { edges });
