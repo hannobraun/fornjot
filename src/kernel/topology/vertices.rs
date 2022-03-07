@@ -25,7 +25,7 @@ use crate::math::Point;
 /// This can be prevented outright by never creating a new `Vertex` instance
 /// for an existing vertex. Hence why this is strictly forbidden.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Vertex(pub(crate) Point<3>);
+pub struct Vertex(Point<3>);
 
 impl Vertex {
     pub fn new(point: Point<3>) -> Self {
