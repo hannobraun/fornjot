@@ -87,6 +87,9 @@ mod tests {
     #[ignore]
     #[should_panic]
     fn create_invalid() {
+        // Test is ignored, until vertex validation can be enabled for real.
+        // See implementation note on `Vertices::create`.
+
         let mut shape = Shape::new().with_min_distance(MIN_DISTANCE);
 
         shape.vertices().create(Point::from([0., 0., 0.]));
