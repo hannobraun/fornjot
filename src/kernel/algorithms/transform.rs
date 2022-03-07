@@ -57,7 +57,7 @@ pub fn transform_face(
                         curve: edge.curve.transform(transform),
                         vertices,
                     };
-                    let edge = shape.edges().create(edge);
+                    let edge = shape.edges().add(edge);
 
                     edges.push(edge);
                 }
