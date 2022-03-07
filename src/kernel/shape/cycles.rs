@@ -1,6 +1,9 @@
 use crate::kernel::topology::edges::{Cycle, Edge};
 
-use super::{handle::Handle, CyclesInner};
+use super::{
+    handle::{Handle, Storage},
+    CyclesInner,
+};
 
 /// The cycles of a shape
 pub struct Cycles<'r> {
@@ -20,14 +23,15 @@ impl Cycles<'_> {
     pub fn create(
         &mut self,
         edges: impl IntoIterator<Item = Handle<Edge>>,
-    ) -> Cycle {
+    ) -> Handle<Cycle> {
         let cycle = Cycle {
             edges: edges.into_iter().collect(),
         };
 
         self.cycles.push(cycle.clone());
 
-        cycle
+        let storage = Storage::new(cycle);
+        storage.handle()
     }
 
     /// Access an iterator over all cycles
