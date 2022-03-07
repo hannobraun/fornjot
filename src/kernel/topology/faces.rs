@@ -54,7 +54,7 @@ pub enum Face {
         /// It might be less error-prone, and possibly more efficient, to use a
         /// more specialized data structure here, that specifies the edges in
         /// surface coordinates.
-        edges: Vec<Cycle>,
+        cycles: Vec<Cycle>,
     },
 
     /// The triangles of the face

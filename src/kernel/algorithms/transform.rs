@@ -34,7 +34,10 @@ pub fn transform_face(
     shape: &mut Shape,
 ) -> Face {
     match original.clone() {
-        Face::Face { edges, surface } => {
+        Face::Face {
+            cycles: edges,
+            surface,
+        } => {
             let mut cycles = Vec::new();
 
             for cycle in edges {
@@ -62,7 +65,7 @@ pub fn transform_face(
             }
 
             Face::Face {
-                edges: cycles,
+                cycles,
                 surface: surface.transform(transform),
             }
         }

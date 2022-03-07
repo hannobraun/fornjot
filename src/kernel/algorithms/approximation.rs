@@ -76,7 +76,10 @@ impl Approximation {
         // would need to provide its own approximation, as the edges that bound
         // it have nothing to do with its curvature.
         match face {
-            Face::Face { surface: _, edges } => {
+            Face::Face {
+                surface: _,
+                cycles: edges,
+            } => {
                 let mut points = HashSet::new();
                 let mut segments = HashSet::new();
 
@@ -258,7 +261,7 @@ mod tests {
 
         let face = Face::Face {
             surface: Surface::x_y_plane(),
-            edges: vec![abcd],
+            cycles: vec![abcd],
         };
 
         assert_eq!(

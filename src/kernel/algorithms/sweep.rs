@@ -120,7 +120,7 @@ mod tests {
                 surface: Surface::Swept(Swept::plane_from_points(
                     [a, b, c].map(|vertex| vertex.point()),
                 )),
-                edges: vec![Cycle {
+                cycles: vec![Cycle {
                     edges: vec![ab, bc, ca],
                 }],
             };
