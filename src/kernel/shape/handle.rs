@@ -22,7 +22,7 @@ where
     T: PartialEq,
 {
     fn eq(&self, other: &Self) -> bool {
-        self.get().eq(other.get())
+        self.0.eq(&other.0)
     }
 }
 
@@ -31,7 +31,7 @@ where
     T: Hash,
 {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.get().hash(state)
+        self.0.hash(state)
     }
 }
 
