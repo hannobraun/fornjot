@@ -44,7 +44,7 @@ impl Vertices<'_> {
 
             if distance < self.min_distance {
                 warn!(
-                    "Invalid vertex: {point:?}; \
+                    "Invalid vertex: {vertex:?}; \
                     identical vertex at {existing:?}",
                 );
             }
