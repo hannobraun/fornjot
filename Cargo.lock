@@ -544,7 +544,6 @@ dependencies = [
  "decorum",
  "fj",
  "futures",
- "kiddo",
  "libloading",
  "map-macro",
  "nalgebra",
@@ -910,15 +909,6 @@ checksum = "8c2352bd1d0bceb871cb9d40f24360c8133c11d7486b68b5381c1dd1a32015e3"
 dependencies = [
  "libc",
  "libloading",
-]
-
-[[package]]
-name = "kiddo"
-version = "0.2.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a80945b2ef694667ebf4da98b6c582fe4c102ff7c1284c8ce2538bfbdabb66d4"
-dependencies = [
- "num-traits",
 ]
 
 [[package]]
