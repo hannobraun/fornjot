@@ -80,7 +80,7 @@ impl Approximation {
                 let mut points = HashSet::new();
                 let mut segments = HashSet::new();
 
-                for cycle in &edges.cycles {
+                for cycle in edges {
                     let approx = Self::for_cycle(cycle, tolerance);
 
                     points.extend(approx.points);
@@ -146,7 +146,7 @@ mod tests {
     use crate::{
         kernel::{
             geometry::Surface,
-            shape::{edges::Edges, Shape},
+            shape::Shape,
             topology::{edges::Cycle, faces::Face},
         },
         math::{Point, Scalar, Segment},
@@ -256,11 +256,9 @@ mod tests {
             edges: vec![ab, bc, cd, da],
         };
 
-        let edges = Edges { cycles: vec![abcd] };
-
         let face = Face::Face {
             surface: Surface::x_y_plane(),
-            edges,
+            edges: vec![abcd],
         };
 
         assert_eq!(

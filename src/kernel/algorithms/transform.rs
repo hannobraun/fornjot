@@ -1,6 +1,6 @@
 use crate::{
     kernel::{
-        shape::{edges::Edges, Shape},
+        shape::Shape,
         topology::{edges::Cycle, faces::Face},
     },
     math::Transform,
@@ -37,7 +37,7 @@ pub fn transform_face(
         Face::Face { edges, surface } => {
             let mut cycles = Vec::new();
 
-            for cycle in edges.cycles {
+            for cycle in edges {
                 let mut edges = Vec::new();
 
                 for edge in cycle.edges {
@@ -62,7 +62,7 @@ pub fn transform_face(
             }
 
             Face::Face {
-                edges: Edges { cycles },
+                edges: cycles,
                 surface: surface.transform(transform),
             }
         }

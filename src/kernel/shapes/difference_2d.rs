@@ -77,7 +77,7 @@ impl ToShape for fj::Difference2d {
             let surface = surface_a;
 
             let mut edges = a;
-            edges.cycles.extend(b.cycles);
+            edges.extend(b);
 
             Faces(vec![Face::Face { edges, surface }])
         };

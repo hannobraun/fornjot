@@ -22,7 +22,7 @@ impl ToShape for fj::Circle {
             .create_circle(Scalar::from_f64(self.radius))]);
 
         shape.faces = Faces(vec![Face::Face {
-            edges: shape.edges().clone(),
+            edges: shape.edges().cycles.clone(),
             surface: Surface::x_y_plane(),
         }]);
 

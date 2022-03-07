@@ -10,10 +10,11 @@ use crate::{
             approximation::Approximation, triangulation::triangulate,
         },
         geometry::Surface,
-        shape::edges::Edges,
     },
     math::{Aabb, Scalar, Segment, Triangle},
 };
+
+use super::edges::Cycle;
 
 /// The faces of a shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -53,7 +54,7 @@ pub enum Face {
         /// It might be less error-prone, and possibly more efficient, to use a
         /// more specialized data structure here, that specifies the edges in
         /// surface coordinates.
-        edges: Edges,
+        edges: Vec<Cycle>,
     },
 
     /// The triangles of the face
