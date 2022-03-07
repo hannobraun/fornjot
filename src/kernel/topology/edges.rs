@@ -15,19 +15,12 @@ pub struct Cycle {
 /// An edge of a shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edge {
-    pub(crate) curve: Curve,
-    pub(crate) vertices: Option<[Handle<Vertex>; 2]>,
-}
-
-impl Edge {
     /// Access the curve that defines the edge's geometry
     ///
     /// The edge can be a segment of the curve that is bounded by two vertices,
     /// or if the curve is continuous (i.e. connects to itself), the edge could
     /// be defined by the whole curve, and have no bounding vertices.
-    pub fn curve(&self) -> Curve {
-        self.curve
-    }
+    pub curve: Curve,
 
     /// Access the vertices that bound the edge on the curve
     ///
@@ -43,7 +36,5 @@ impl Edge {
     /// It got in the way of some work, however, so it made sense to simplify
     /// it by storing 3D vertices. It will probably make sense to revert this
     /// and store 1D vertices again, at some point.
-    pub fn vertices(&self) -> Option<[Handle<Vertex>; 2]> {
-        self.vertices.clone()
-    }
+    pub vertices: Option<[Handle<Vertex>; 2]>,
 }
