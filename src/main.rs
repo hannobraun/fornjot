@@ -16,6 +16,7 @@ use std::{collections::HashMap, sync::mpsc, time::Instant};
 use futures::executor::block_on;
 use notify::Watcher as _;
 use tracing::trace;
+use tracing_subscriber::fmt::format;
 use tracing_subscriber::EnvFilter;
 use winit::{
     event::{Event, WindowEvent},
@@ -37,6 +38,7 @@ use crate::{
 fn main() -> anyhow::Result<()> {
     tracing_subscriber::fmt()
         .with_env_filter(EnvFilter::from_default_env())
+        .event_format(format().pretty())
         .init();
 
     let args = Args::parse();
