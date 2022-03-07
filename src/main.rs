@@ -16,6 +16,7 @@ use std::{collections::HashMap, sync::mpsc, time::Instant};
 use futures::executor::block_on;
 use notify::Watcher as _;
 use tracing::trace;
+use tracing_subscriber::EnvFilter;
 use winit::{
     event::{Event, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
@@ -34,7 +35,9 @@ use crate::{
 };
 
 fn main() -> anyhow::Result<()> {
-    tracing_subscriber::fmt::init();
+    tracing_subscriber::fmt()
+        .with_env_filter(EnvFilter::from_default_env())
+        .init();
 
     let args = Args::parse();
     let model = Model::new(args.model);
