@@ -6,7 +6,7 @@ use super::handle::{Handle, Storage};
 pub struct Edges;
 
 impl Edges {
-    /// Create an edge
+    /// Add an edge to the shape
     ///
     /// If vertices are provided in `vertices`, they must be on `curve`.
     ///

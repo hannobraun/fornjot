@@ -11,7 +11,7 @@ pub struct Cycles<'r> {
 }
 
 impl Cycles<'_> {
-    /// Create a cycle
+    /// Add a cycle to the shape
     ///
     /// # Implementation note
     ///
