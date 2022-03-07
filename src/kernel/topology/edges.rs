@@ -9,7 +9,7 @@ use super::vertices::Vertex;
 /// one.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
-    pub edges: Vec<Edge>,
+    pub edges: Vec<Handle<Edge>>,
 }
 
 /// An edge of a shape

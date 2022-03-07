@@ -1,6 +1,6 @@
 use crate::kernel::topology::edges::{Cycle, Edge};
 
-use super::CyclesInner;
+use super::{handle::Handle, CyclesInner};
 
 /// The cycles of a shape
 pub struct Cycles<'r> {
@@ -17,7 +17,10 @@ impl Cycles<'_> {
     /// - That those edges form a cycle.
     /// - That the cycle is not self-overlapping.
     /// - That there exists no duplicate cycle, with the same edges.
-    pub fn create(&mut self, edges: impl IntoIterator<Item = Edge>) -> Cycle {
+    pub fn create(
+        &mut self,
+        edges: impl IntoIterator<Item = Handle<Edge>>,
+    ) -> Cycle {
         let cycle = Cycle {
             edges: edges.into_iter().collect(),
         };
