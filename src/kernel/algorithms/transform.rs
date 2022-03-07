@@ -43,8 +43,8 @@ pub fn transform_face(
                 for edge in cycle.edges {
                     let vertices = edge.vertices().map(|vertices| {
                         vertices.map(|vertex| {
-                            let point =
-                                transform.transform_point(&vertex.point());
+                            let point = transform
+                                .transform_point(&vertex.get().point());
 
                             shape.vertices().create(point)
                         })

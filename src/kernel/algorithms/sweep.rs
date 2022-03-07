@@ -118,7 +118,7 @@ mod tests {
 
             let abc = Face::Face {
                 surface: Surface::Swept(Swept::plane_from_points(
-                    [a, b, c].map(|vertex| vertex.point()),
+                    [a, b, c].map(|vertex| vertex.get().point()),
                 )),
                 cycles: vec![Cycle {
                     edges: vec![ab, bc, ca],

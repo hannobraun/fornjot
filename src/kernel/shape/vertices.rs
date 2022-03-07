@@ -33,7 +33,7 @@ impl Vertices<'_> {
     /// In the future, this method is likely to validate more than just vertex
     /// uniqueness. See documentation of [`crate::kernel`] for some context on
     /// that.
-    pub fn create(&mut self, point: Point<3>) -> Vertex {
+    pub fn create(&mut self, point: Point<3>) -> Handle<Vertex> {
         let handle = Handle::new(point);
 
         // Make sure the new vertex is a minimum distance away from all existing
@@ -53,7 +53,7 @@ impl Vertices<'_> {
 
         self.vertices.push(handle.inner());
 
-        Vertex(handle)
+        Handle::new(Vertex(point))
     }
 }
 

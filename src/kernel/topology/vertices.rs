@@ -1,4 +1,4 @@
-use crate::{kernel::shape::handle::Handle, math::Point};
+use crate::math::Point;
 
 /// A vertex
 ///
@@ -24,12 +24,12 @@ use crate::{kernel::shape::handle::Handle, math::Point};
 ///
 /// This can be prevented outright by never creating a new `Vertex` instance
 /// for an existing vertex. Hence why this is strictly forbidden.
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Vertex(pub(crate) Handle<Point<3>>);
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct Vertex(pub(crate) Point<3>);
 
 impl Vertex {
     /// Access the point that defines this vertex
     pub fn point(&self) -> Point<3> {
-        self.0.get()
+        self.0
     }
 }
