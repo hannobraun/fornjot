@@ -1,7 +1,7 @@
 use crate::{
     kernel::{
-        geometry::{Circle, Curve, Line},
-        topology::{edges::Edge, vertices::Vertex},
+        geometry::{Circle, Curve},
+        topology::edges::Edge,
     },
     math::{Point, Scalar, Vector},
 };
@@ -28,22 +28,6 @@ impl Edges {
     /// and validate any constraints that apply to edge creation.
     pub fn add(&mut self, edge: Edge) -> Handle<Edge> {
         Storage::new(edge).handle()
-    }
-
-    /// Create a line segment
-    ///
-    /// Calls [`Edges::create`] internally, and inherits its limitations and
-    /// requirements.
-    pub fn create_line_segment(
-        &mut self,
-        vertices: [Handle<Vertex>; 2],
-    ) -> Handle<Edge> {
-        self.add(Edge {
-            curve: Curve::Line(Line::from_points(
-                vertices.clone().map(|vertex| vertex.point()),
-            )),
-            vertices: Some(vertices),
-        })
     }
 
     /// Create a circle

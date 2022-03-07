@@ -1,4 +1,7 @@
-use crate::kernel::{geometry::Curve, shape::handle::Handle};
+use crate::kernel::{
+    geometry::{Curve, Line},
+    shape::handle::Handle,
+};
 
 use super::vertices::Vertex;
 
@@ -37,4 +40,16 @@ pub struct Edge {
     /// it by storing 3D vertices. It will probably make sense to revert this
     /// and store 1D vertices again, at some point.
     pub vertices: Option<[Handle<Vertex>; 2]>,
+}
+
+impl Edge {
+    /// Create a line segment
+    pub fn line_segment(vertices: [Handle<Vertex>; 2]) -> Self {
+        Edge {
+            curve: Curve::Line(Line::from_points(
+                vertices.clone().map(|vertex| vertex.point()),
+            )),
+            vertices: Some(vertices),
+        }
+    }
 }

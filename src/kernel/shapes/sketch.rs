@@ -3,7 +3,10 @@ use crate::{
     kernel::{
         geometry::Surface,
         shape::Shape,
-        topology::faces::{Face, Faces},
+        topology::{
+            edges::Edge,
+            faces::{Face, Faces},
+        },
     },
     math::{Aabb, Point, Scalar},
 };
@@ -37,7 +40,7 @@ impl ToShape for fj::Sketch {
                 let a = window[0].clone();
                 let b = window[1].clone();
 
-                let edge = shape.edges().create_line_segment([a, b]);
+                let edge = shape.edges().add(Edge::line_segment([a, b]));
                 edges.push(edge);
             }
 

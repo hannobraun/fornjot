@@ -71,7 +71,10 @@ mod tests {
         kernel::{
             geometry::{surfaces::Swept, Surface},
             shape::Shape,
-            topology::{edges::Cycle, faces::Face},
+            topology::{
+                edges::{Cycle, Edge},
+                faces::Face,
+            },
         },
         math::{Point, Scalar, Vector},
     };
@@ -112,9 +115,15 @@ mod tests {
             let b = shape.vertices().add(b.into());
             let c = shape.vertices().add(c.into());
 
-            let ab = shape.edges().create_line_segment([a.clone(), b.clone()]);
-            let bc = shape.edges().create_line_segment([b.clone(), c.clone()]);
-            let ca = shape.edges().create_line_segment([c.clone(), a.clone()]);
+            let ab = shape
+                .edges()
+                .add(Edge::line_segment([a.clone(), b.clone()]));
+            let bc = shape
+                .edges()
+                .add(Edge::line_segment([b.clone(), c.clone()]));
+            let ca = shape
+                .edges()
+                .add(Edge::line_segment([c.clone(), a.clone()]));
 
             let abc = Face::Face {
                 surface: Surface::Swept(Swept::plane_from_points(
