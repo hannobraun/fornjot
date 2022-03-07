@@ -26,12 +26,7 @@ impl Edges {
     /// Right now this is just an overly complicated constructor for `Edge`. In
     /// the future, it can add the edge to the proper internal data structures,
     /// and validate any constraints that apply to edge creation.
-    pub fn create(
-        &mut self,
-        curve: Curve,
-        vertices: Option<[Handle<Vertex>; 2]>,
-    ) -> Handle<Edge> {
-        let edge = Edge { curve, vertices };
+    pub fn create(&mut self, edge: Edge) -> Handle<Edge> {
         Storage::new(edge).handle()
     }
 
@@ -43,12 +38,12 @@ impl Edges {
         &mut self,
         vertices: [Handle<Vertex>; 2],
     ) -> Handle<Edge> {
-        self.create(
-            Curve::Line(Line::from_points(
+        self.create(Edge {
+            curve: Curve::Line(Line::from_points(
                 vertices.clone().map(|vertex| vertex.point()),
             )),
-            Some(vertices),
-        )
+            vertices: Some(vertices),
+        })
     }
 
     /// Create a circle
@@ -56,12 +51,12 @@ impl Edges {
     /// Calls [`Edges::create`] internally, and inherits its limitations and
     /// requirements.
     pub fn create_circle(&mut self, radius: Scalar) -> Handle<Edge> {
-        self.create(
-            Curve::Circle(Circle {
+        self.create(Edge {
+            curve: Curve::Circle(Circle {
                 center: Point::origin(),
                 radius: Vector::from([radius, Scalar::ZERO]),
             }),
-            None,
-        )
+            vertices: None,
+        })
     }
 }

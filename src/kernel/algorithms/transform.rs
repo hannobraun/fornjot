@@ -1,7 +1,10 @@
 use crate::{
     kernel::{
         shape::Shape,
-        topology::{edges::Cycle, faces::Face},
+        topology::{
+            edges::{Cycle, Edge},
+            faces::Face,
+        },
     },
     math::Transform,
 };
@@ -50,9 +53,11 @@ pub fn transform_face(
                         })
                     });
 
-                    let edge = shape
-                        .edges()
-                        .create(edge.curve.transform(transform), vertices);
+                    let edge = Edge {
+                        curve: edge.curve.transform(transform),
+                        vertices,
+                    };
+                    let edge = shape.edges().create(edge);
 
                     edges.push(edge);
                 }
