@@ -54,11 +54,11 @@ impl ToShape for fj::Difference2d {
             let (a, b, surface_a, surface_b) = match (a, b) {
                 (
                     Face::Face {
-                        edges: a,
+                        cycles: a,
                         surface: surface_a,
                     },
                     Face::Face {
-                        edges: b,
+                        cycles: b,
                         surface: surface_b,
                     },
                 ) => (a, b, surface_a, surface_b),
@@ -76,10 +76,10 @@ impl ToShape for fj::Difference2d {
             );
             let surface = surface_a;
 
-            let mut edges = a;
-            edges.cycles.extend(b.cycles);
+            let mut cycles = a;
+            cycles.extend(b);
 
-            Faces(vec![Face::Face { edges, surface }])
+            Faces(vec![Face::Face { cycles, surface }])
         };
 
         shape

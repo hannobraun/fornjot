@@ -70,8 +70,8 @@ mod tests {
     use crate::{
         kernel::{
             geometry::{surfaces::Swept, Surface},
-            shape::{edges::Edges, Shape},
-            topology::faces::Face,
+            shape::Shape,
+            topology::{edges::Cycle, faces::Face},
         },
         math::{Point, Scalar, Vector},
     };
@@ -120,7 +120,9 @@ mod tests {
                 surface: Surface::Swept(Swept::plane_from_points(
                     [a, b, c].map(|vertex| vertex.point()),
                 )),
-                edges: Edges::single_cycle([ab, bc, ca]),
+                cycles: vec![Cycle {
+                    edges: vec![ab, bc, ca],
+                }],
             };
 
             shape.faces.0.push(abc.clone());
