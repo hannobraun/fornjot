@@ -23,8 +23,8 @@ impl ToShape for fj::Difference2d {
             let a = a.cycles().all().next().unwrap();
             let b = b.cycles().all().next().unwrap();
 
-            shape.cycles().create(a.edges);
-            shape.cycles().create(b.edges);
+            shape.cycles().create(a.edges.clone());
+            shape.cycles().create(b.edges.clone());
         } else {
             // See issue:
             // https://github.com/hannobraun/Fornjot/issues/95

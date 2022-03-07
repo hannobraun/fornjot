@@ -26,7 +26,11 @@ impl ToShape for fj::Circle {
         shape.cycles().create([edge]);
 
         shape.faces = Faces(vec![Face::Face {
-            cycles: shape.cycles().all().collect(),
+            cycles: shape
+                .cycles()
+                .all()
+                .map(|handle| (*handle).clone())
+                .collect(),
             surface: Surface::x_y_plane(),
         }]);
 
