@@ -34,9 +34,7 @@ impl<const D: usize> From<[Point<D>; 2]> for Segment<D> {
     fn from(points: [Point<D>; 2]) -> Self {
         let [a, b] = points;
 
-        if a == b {
-            panic!("Invalid segment; both points are identical {a:?}");
-        }
+        assert!(a != b, "Invalid segment; both points are identical {a:?}");
 
         Self {
             a: points[0],

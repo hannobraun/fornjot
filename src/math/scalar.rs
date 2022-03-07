@@ -76,7 +76,7 @@ impl Scalar {
     }
 
     /// Compute the absolute value of the scalar
-    pub fn abs(self) -> Scalar {
+    pub fn abs(self) -> Self {
         self.0.abs().into()
     }
 
@@ -189,10 +189,10 @@ impl ops::Sub<Self> for Scalar {
     }
 }
 
-impl ops::Mul<Scalar> for Scalar {
+impl ops::Mul<Self> for Scalar {
     type Output = Self;
 
-    fn mul(self, rhs: Scalar) -> Self::Output {
+    fn mul(self, rhs: Self) -> Self::Output {
         self.0.mul(rhs.0).into()
     }
 }
@@ -205,10 +205,10 @@ impl ops::Mul<f64> for Scalar {
     }
 }
 
-impl ops::Div<Scalar> for Scalar {
+impl ops::Div<Self> for Scalar {
     type Output = Self;
 
-    fn div(self, rhs: Scalar) -> Self::Output {
+    fn div(self, rhs: Self) -> Self::Output {
         self.0.div(rhs.0).into()
     }
 }

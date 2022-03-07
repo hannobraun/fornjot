@@ -24,7 +24,7 @@ impl Model {
     }
 
     pub fn lib_path(&self) -> String {
-        let name = self.name().replace("-", "_");
+        let name = self.name().replace('-', "_");
 
         let file = if cfg!(windows) {
             format!("{}.dll", name)

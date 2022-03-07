@@ -17,7 +17,7 @@ pub struct Line {
 impl Line {
     /// Create a line from two points
     pub fn from_points([a, b]: [Point<3>; 2]) -> Self {
-        Line {
+        Self {
             origin: a,
             direction: b - a,
         }
