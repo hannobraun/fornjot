@@ -20,13 +20,11 @@ impl ToShape for fj::Difference2d {
         let mut b = self.b.to_shape(tolerance, debug_info);
 
         *shape.edges() = {
-            let (a, b) = if a.cycles().all().count() == 1
-                && b.cycles().all().count() == 1
-            {
-                (
-                    a.cycles().all().next().unwrap(),
-                    b.cycles().all().next().unwrap(),
-                )
+            if a.cycles().all().count() == 1 && b.cycles().all().count() == 1 {
+                let a = a.cycles().all().next().unwrap();
+                let b = b.cycles().all().next().unwrap();
+
+                Edges { cycles: vec![a, b] }
             } else {
                 // See issue:
                 // https://github.com/hannobraun/Fornjot/issues/95
@@ -34,9 +32,7 @@ impl ToShape for fj::Difference2d {
                     "The 2-dimensional difference operation only supports one \
                     cycle in each operand."
                 );
-            };
-
-            Edges { cycles: vec![a, b] }
+            }
         };
 
         shape.faces = {
