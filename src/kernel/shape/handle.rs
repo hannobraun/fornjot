@@ -1,9 +1,9 @@
 use std::{hash::Hash, rc::Rc};
 
 #[derive(Clone, Debug, Eq, Ord, PartialOrd)]
-pub struct Handle<T: Copy>(HandleInner<T>);
+pub struct Handle<T>(HandleInner<T>);
 
-impl<T: Copy> Handle<T> {
+impl<T> Handle<T> {
     pub(super) fn new(value: T) -> Self {
         Self(Rc::new(value))
     }
@@ -17,7 +17,7 @@ impl<T: Copy> Handle<T> {
     }
 }
 
-impl<T: Copy> PartialEq for Handle<T>
+impl<T> PartialEq for Handle<T>
 where
     T: PartialEq,
 {
@@ -26,7 +26,7 @@ where
     }
 }
 
-impl<T: Copy> Hash for Handle<T>
+impl<T> Hash for Handle<T>
 where
     T: Hash,
 {
