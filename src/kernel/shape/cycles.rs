@@ -1,8 +1,10 @@
 use crate::kernel::topology::edges::{Cycle, Edge};
 
+use super::CyclesInner;
+
 /// The cycles of a shape
 pub struct Cycles<'r> {
-    pub(super) cycles: &'r mut Vec<Cycle>,
+    pub(super) cycles: &'r mut CyclesInner,
 }
 
 impl Cycles<'_> {

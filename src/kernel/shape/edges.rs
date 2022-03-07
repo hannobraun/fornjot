@@ -1,18 +1,17 @@
 use crate::{
     kernel::{
         geometry::{Circle, Curve, Line},
-        topology::{
-            edges::{Cycle, Edge},
-            vertices::Vertex,
-        },
+        topology::{edges::Edge, vertices::Vertex},
     },
     math::{Point, Scalar, Vector},
 };
 
+use super::CyclesInner;
+
 /// The edges of a shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edges {
-    pub(super) cycles: Vec<Cycle>,
+    pub(super) cycles: CyclesInner,
 }
 
 impl Edges {

@@ -5,7 +5,7 @@ pub mod vertices;
 
 use crate::math::{Point, Scalar};
 
-use super::topology::faces::Faces;
+use super::topology::{edges::Cycle, faces::Faces};
 
 use self::{
     cycles::Cycles, edges::Edges, handle::HandleInner, vertices::Vertices,
@@ -83,3 +83,4 @@ impl Shape {
 }
 
 type VerticesInner = Vec<HandleInner<Point<3>>>;
+type CyclesInner = Vec<Cycle>;
