@@ -38,7 +38,7 @@ pub fn transform_face(
             cycles: edges,
             surface,
         } => {
-            let mut cycles = Vec::new();
+            let mut cycles_trans = Vec::new();
 
             for cycle in edges {
                 let mut edges = Vec::new();
@@ -61,11 +61,11 @@ pub fn transform_face(
                     );
                 }
 
-                cycles.push(Cycle { edges });
+                cycles_trans.push(Cycle { edges });
             }
 
             Face::Face {
-                cycles,
+                cycles: cycles_trans,
                 surface: surface.transform(transform),
             }
         }
