@@ -14,7 +14,7 @@ pub struct Vertices<'r> {
 }
 
 impl Vertices<'_> {
-    /// Create a vertex
+    /// Add a vertex to the shape
     ///
     /// Logs a warning, if the vertex is not unique, meaning if another vertex
     /// defined by the same point already exists.
