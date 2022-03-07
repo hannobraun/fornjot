@@ -36,8 +36,16 @@ use crate::{
 };
 
 fn main() -> anyhow::Result<()> {
+    // Respect `RUST_LOG`. If that's not defined or erroneous, log warnings and
+    // above.
+    //
+    // It would be better to fail, if `RUST_LOG` is erroneous, but I don't know
+    // how to distinguish between that and the "not defined" case.
     tracing_subscriber::fmt()
-        .with_env_filter(EnvFilter::from_default_env())
+        .with_env_filter(
+            EnvFilter::try_from_default_env()
+                .unwrap_or_else(|_| EnvFilter::new("WARN")),
+        )
         .event_format(format().pretty())
         .init();
 
