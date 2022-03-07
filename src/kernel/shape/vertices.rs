@@ -32,7 +32,6 @@ impl Vertices<'_> {
     /// that.
     pub fn create(&mut self, vertex: impl Into<Vertex>) -> Handle<Vertex> {
         let vertex = vertex.into();
-        let point = vertex.point();
         let handle = Handle::new(vertex);
 
         // Make sure the new vertex is a minimum distance away from all existing
@@ -40,7 +39,8 @@ impl Vertices<'_> {
         // should provide more than enough precision for common use cases, while
         // being large enough to catch all invalid cases.
         for existing in &*self.vertices {
-            let distance = (existing.get().point() - point).magnitude();
+            let distance =
+                (existing.get().point() - vertex.point()).magnitude();
 
             if distance < self.min_distance {
                 warn!(
