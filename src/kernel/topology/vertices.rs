@@ -28,8 +28,18 @@ use crate::math::Point;
 pub struct Vertex(pub(crate) Point<3>);
 
 impl Vertex {
+    pub fn new(point: Point<3>) -> Self {
+        Self(point)
+    }
+
     /// Access the point that defines this vertex
     pub fn point(&self) -> Point<3> {
         self.0
+    }
+}
+
+impl From<Point<3>> for Vertex {
+    fn from(point: Point<3>) -> Self {
+        Self::new(point)
     }
 }
