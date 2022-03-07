@@ -1,10 +1,4 @@
-use crate::{
-    kernel::{
-        geometry::{Circle, Curve},
-        topology::edges::Edge,
-    },
-    math::{Point, Scalar, Vector},
-};
+use crate::kernel::topology::edges::Edge;
 
 use super::handle::{Handle, Storage};
 
@@ -28,19 +22,5 @@ impl Edges {
     /// and validate any constraints that apply to edge creation.
     pub fn add(&mut self, edge: Edge) -> Handle<Edge> {
         Storage::new(edge).handle()
-    }
-
-    /// Create a circle
-    ///
-    /// Calls [`Edges::create`] internally, and inherits its limitations and
-    /// requirements.
-    pub fn create_circle(&mut self, radius: Scalar) -> Handle<Edge> {
-        self.add(Edge {
-            curve: Curve::Circle(Circle {
-                center: Point::origin(),
-                radius: Vector::from([radius, Scalar::ZERO]),
-            }),
-            vertices: None,
-        })
     }
 }
