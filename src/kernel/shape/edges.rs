@@ -7,7 +7,6 @@ use crate::{
 };
 
 /// The edges of a shape
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edges;
 
 impl Edges {
