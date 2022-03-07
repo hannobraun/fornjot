@@ -16,17 +16,6 @@ pub struct Edges {
 }
 
 impl Edges {
-    /// Construct a new instance of `Edges`, with a single cycle
-    pub fn single_cycle(edges: impl IntoIterator<Item = Edge>) -> Self {
-        let cycle = Cycle {
-            edges: edges.into_iter().collect(),
-        };
-
-        Self {
-            cycles: vec![cycle],
-        }
-    }
-
     /// Create an edge
     ///
     /// If vertices are provided in `vertices`, they must be on `curve`.

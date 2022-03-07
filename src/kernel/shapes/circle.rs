@@ -2,7 +2,7 @@ use crate::{
     debug::DebugInfo,
     kernel::{
         geometry::Surface,
-        shape::{edges::Edges, Shape},
+        shape::Shape,
         topology::faces::{Face, Faces},
     },
     math::{Aabb, Point, Scalar},
@@ -18,7 +18,7 @@ impl ToShape for fj::Circle {
         // to be added here.
 
         let edge = shape.edges().create_circle(Scalar::from_f64(self.radius));
-        *shape.edges() = Edges::single_cycle([edge]);
+        shape.cycles().create([edge]);
 
         shape.faces = Faces(vec![Face::Face {
             cycles: shape.cycles().all().collect(),
