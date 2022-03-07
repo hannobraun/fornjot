@@ -28,17 +28,15 @@ impl Cycles<'_> {
             edges: edges.into_iter().collect(),
         };
 
-        self.cycles.push(cycle.clone());
-
         let storage = Storage::new(cycle);
-        storage.handle()
+        let handle = storage.handle();
+        self.cycles.push(storage);
+
+        handle
     }
 
     /// Access an iterator over all cycles
-    pub fn all(&self) -> impl Iterator<Item = Handle<Cycle>> + '_ {
-        self.cycles
-            .iter()
-            .cloned()
-            .map(|cycle| Storage::new(cycle).handle())
+    pub fn all(&self) -> impl Iterator<Item = Storage<Cycle>> + '_ {
+        self.cycles.iter().cloned()
     }
 }

@@ -81,4 +81,4 @@ impl Shape {
 }
 
 type VerticesInner = Vec<Storage<Vertex>>;
-type CyclesInner = Vec<Cycle>;
+type CyclesInner = Vec<Storage<Cycle>>;
