@@ -43,4 +43,4 @@ path    = "fj"
 
 [dependencies.tracing-subscriber]
 version  = "0.3.9"
-features = ["fmt"]
+features = ["env-filter", "fmt"]
