@@ -46,7 +46,7 @@ pub fn transform_face(
                             let point =
                                 transform.transform_point(&vertex.point());
 
-                            shape.vertices().create(point)
+                            shape.vertices().add(point)
                         })
                     });
 

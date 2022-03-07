@@ -33,7 +33,7 @@ impl Vertices<'_> {
     /// In the future, this method is likely to validate more than just vertex
     /// uniqueness. See documentation of [`crate::kernel`] for some context on
     /// that.
-    pub fn create(&mut self, vertex: impl Into<Vertex>) -> Handle<Vertex> {
+    pub fn add(&mut self, vertex: impl Into<Vertex>) -> Handle<Vertex> {
         let vertex = vertex.into();
 
         // Make sure the new vertex is a minimum distance away from all existing
@@ -69,8 +69,8 @@ mod tests {
     fn create_valid() {
         let mut shape = Shape::new().with_min_distance(MIN_DISTANCE);
 
-        shape.vertices().create(Point::from([0., 0., 0.]));
-        shape.vertices().create(Point::from([5e-6, 0., 0.]));
+        shape.vertices().add(Point::from([0., 0., 0.]));
+        shape.vertices().add(Point::from([5e-6, 0., 0.]));
     }
 
     #[test]
@@ -82,7 +82,7 @@ mod tests {
 
         let mut shape = Shape::new().with_min_distance(MIN_DISTANCE);
 
-        shape.vertices().create(Point::from([0., 0., 0.]));
-        shape.vertices().create(Point::from([5e-8, 0., 0.]));
+        shape.vertices().add(Point::from([0., 0., 0.]));
+        shape.vertices().add(Point::from([5e-8, 0., 0.]));
     }
 }
