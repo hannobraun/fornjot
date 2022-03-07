@@ -1,18 +1,12 @@
-use crate::{
-    kernel::{
-        geometry::{Circle, Curve, Line},
-        topology::{edges::Edge, vertices::Vertex},
-    },
-    math::{Point, Scalar, Vector},
-};
+use crate::kernel::topology::edges::Edge;
 
-use super::handle::Handle;
+use super::handle::{Handle, Storage};
 
 /// The edges of a shape
 pub struct Edges;
 
 impl Edges {
-    /// Create an edge
+    /// Add an edge to the shape
     ///
     /// If vertices are provided in `vertices`, they must be on `curve`.
     ///
@@ -26,41 +20,7 @@ impl Edges {
     /// Right now this is just an overly complicated constructor for `Edge`. In
     /// the future, it can add the edge to the proper internal data structures,
     /// and validate any constraints that apply to edge creation.
-    pub fn create(
-        &mut self,
-        curve: Curve,
-        vertices: Option<[Handle<Vertex>; 2]>,
-    ) -> Edge {
-        Edge { curve, vertices }
-    }
-
-    /// Create a line segment
-    ///
-    /// Calls [`Edges::create`] internally, and inherits its limitations and
-    /// requirements.
-    pub fn create_line_segment(
-        &mut self,
-        vertices: [Handle<Vertex>; 2],
-    ) -> Edge {
-        self.create(
-            Curve::Line(Line::from_points(
-                vertices.clone().map(|vertex| vertex.point()),
-            )),
-            Some(vertices),
-        )
-    }
-
-    /// Create a circle
-    ///
-    /// Calls [`Edges::create`] internally, and inherits its limitations and
-    /// requirements.
-    pub fn create_circle(&mut self, radius: Scalar) -> Edge {
-        self.create(
-            Curve::Circle(Circle {
-                center: Point::origin(),
-                radius: Vector::from([radius, Scalar::ZERO]),
-            }),
-            None,
-        )
+    pub fn add(&mut self, edge: Edge) -> Handle<Edge> {
+        Storage::new(edge).handle()
     }
 }

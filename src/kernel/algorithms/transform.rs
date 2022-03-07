@@ -1,7 +1,10 @@
 use crate::{
     kernel::{
         shape::Shape,
-        topology::{edges::Cycle, faces::Face},
+        topology::{
+            edges::{Cycle, Edge},
+            faces::Face,
+        },
     },
     math::Transform,
 };
@@ -41,21 +44,22 @@ pub fn transform_face(
                 let mut edges = Vec::new();
 
                 for edge in cycle.edges {
-                    let vertices = edge.vertices().map(|vertices| {
+                    let vertices = edge.vertices.clone().map(|vertices| {
                         vertices.map(|vertex| {
                             let point =
                                 transform.transform_point(&vertex.point());
 
-                            shape.vertices().create(point)
+                            shape.vertices().add(point)
                         })
                     });
 
-                    edges.push(
-                        shape.edges().create(
-                            edge.curve().transform(transform),
-                            vertices,
-                        ),
-                    );
+                    let edge = Edge {
+                        curve: edge.curve.transform(transform),
+                        vertices,
+                    };
+                    let edge = shape.edges().add(edge);
+
+                    edges.push(edge);
                 }
 
                 cycles_trans.push(Cycle { edges });

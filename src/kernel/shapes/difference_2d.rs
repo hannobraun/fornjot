@@ -2,7 +2,10 @@ use crate::{
     debug::DebugInfo,
     kernel::{
         shape::Shape,
-        topology::faces::{Face, Faces},
+        topology::{
+            edges::Cycle,
+            faces::{Face, Faces},
+        },
     },
     math::{Aabb, Scalar},
 };
@@ -23,8 +26,12 @@ impl ToShape for fj::Difference2d {
             let a = a.cycles().all().next().unwrap();
             let b = b.cycles().all().next().unwrap();
 
-            shape.cycles().create(a.edges);
-            shape.cycles().create(b.edges);
+            shape.cycles().add(Cycle {
+                edges: a.edges.clone(),
+            });
+            shape.cycles().add(Cycle {
+                edges: b.edges.clone(),
+            });
         } else {
             // See issue:
             // https://github.com/hannobraun/Fornjot/issues/95

@@ -71,7 +71,10 @@ mod tests {
         kernel::{
             geometry::{surfaces::Swept, Surface},
             shape::Shape,
-            topology::{edges::Cycle, faces::Face},
+            topology::{
+                edges::{Cycle, Edge},
+                faces::Face,
+            },
         },
         math::{Point, Scalar, Vector},
     };
@@ -108,13 +111,19 @@ mod tests {
         fn new([a, b, c]: [impl Into<Point<3>>; 3]) -> Self {
             let mut shape = Shape::new();
 
-            let a = shape.vertices().create(a.into());
-            let b = shape.vertices().create(b.into());
-            let c = shape.vertices().create(c.into());
+            let a = shape.vertices().add(a.into());
+            let b = shape.vertices().add(b.into());
+            let c = shape.vertices().add(c.into());
 
-            let ab = shape.edges().create_line_segment([a.clone(), b.clone()]);
-            let bc = shape.edges().create_line_segment([b.clone(), c.clone()]);
-            let ca = shape.edges().create_line_segment([c.clone(), a.clone()]);
+            let ab = shape
+                .edges()
+                .add(Edge::line_segment([a.clone(), b.clone()]));
+            let bc = shape
+                .edges()
+                .add(Edge::line_segment([b.clone(), c.clone()]));
+            let ca = shape
+                .edges()
+                .add(Edge::line_segment([c.clone(), a.clone()]));
 
             let abc = Face::Face {
                 surface: Surface::Swept(Swept::plane_from_points(

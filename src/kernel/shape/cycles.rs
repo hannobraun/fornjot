@@ -1,6 +1,9 @@
-use crate::kernel::topology::edges::{Cycle, Edge};
+use crate::kernel::topology::edges::Cycle;
 
-use super::CyclesInner;
+use super::{
+    handle::{Handle, Storage},
+    CyclesInner,
+};
 
 /// The cycles of a shape
 pub struct Cycles<'r> {
@@ -8,7 +11,7 @@ pub struct Cycles<'r> {
 }
 
 impl Cycles<'_> {
-    /// Create a cycle
+    /// Add a cycle to the shape
     ///
     /// # Implementation note
     ///
@@ -17,18 +20,16 @@ impl Cycles<'_> {
     /// - That those edges form a cycle.
     /// - That the cycle is not self-overlapping.
     /// - That there exists no duplicate cycle, with the same edges.
-    pub fn create(&mut self, edges: impl IntoIterator<Item = Edge>) -> Cycle {
-        let cycle = Cycle {
-            edges: edges.into_iter().collect(),
-        };
+    pub fn add(&mut self, cycle: Cycle) -> Handle<Cycle> {
+        let storage = Storage::new(cycle);
+        let handle = storage.handle();
+        self.cycles.push(storage);
 
-        self.cycles.push(cycle.clone());
-
-        cycle
+        handle
     }
 
     /// Access an iterator over all cycles
-    pub fn all(&self) -> impl Iterator<Item = Cycle> + '_ {
+    pub fn all(&self) -> impl Iterator<Item = Storage<Cycle>> + '_ {
         self.cycles.iter().cloned()
     }
 }
