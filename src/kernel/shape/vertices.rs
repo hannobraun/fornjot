@@ -32,7 +32,6 @@ impl Vertices<'_> {
     /// that.
     pub fn create(&mut self, vertex: impl Into<Vertex>) -> Handle<Vertex> {
         let vertex = vertex.into();
-        let handle = Handle::new(vertex);
 
         // Make sure the new vertex is a minimum distance away from all existing
         // vertices. This minimum distance is defined to be half a µm, which
@@ -50,6 +49,7 @@ impl Vertices<'_> {
             }
         }
 
+        let handle = Handle::new(vertex);
         self.vertices.push(handle.inner());
 
         handle
