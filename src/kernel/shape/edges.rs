@@ -12,12 +12,7 @@ use crate::{
 /// The edges of a shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edges {
-    /// The cycles that the edges of the shape form
-    ///
-    /// Code reading this field generally assumes that cycles do not overlap.
-    /// This precondition is currently not checked, and must be upheld by all
-    /// code writing to this field.
-    pub cycles: Vec<Cycle>,
+    pub(super) cycles: Vec<Cycle>,
 }
 
 impl Edges {
