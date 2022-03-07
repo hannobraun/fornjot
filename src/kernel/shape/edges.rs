@@ -44,7 +44,7 @@ impl Edges {
     ) -> Edge {
         self.create(
             Curve::Line(Line::from_points(
-                vertices.clone().map(|vertex| vertex.get().point()),
+                vertices.clone().map(|vertex| vertex.point()),
             )),
             Some(vertices),
         )

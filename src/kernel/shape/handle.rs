@@ -1,38 +1,39 @@
-use std::{cell::Cell, hash::Hash, rc::Rc};
+use std::{hash::Hash, ops::Deref, rc::Rc};
 
-#[derive(Clone, Debug, Eq, Ord, PartialOrd)]
-pub struct Handle<T: Copy>(HandleInner<T>);
+#[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct Storage<T>(Rc<T>);
 
-impl<T: Copy> Handle<T> {
+impl<T> Storage<T> {
     pub(super) fn new(value: T) -> Self {
-        Self(Rc::new(Cell::new(value)))
+        Self(Rc::new(value))
     }
 
-    pub(super) fn inner(&self) -> HandleInner<T> {
-        self.0.clone()
-    }
-
-    pub fn get(&self) -> T {
-        self.0.get()
+    pub(super) fn handle(&self) -> Handle<T> {
+        Handle(self.clone())
     }
 }
 
-impl<T: Copy> PartialEq for Handle<T>
-where
-    T: PartialEq,
-{
-    fn eq(&self, other: &Self) -> bool {
-        self.get().eq(&other.get())
+impl<T> Deref for Storage<T> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        self.0.deref()
     }
 }
 
-impl<T: Copy> Hash for Handle<T>
-where
-    T: Hash,
-{
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.get().hash(state)
+impl<T> Clone for Storage<T> {
+    fn clone(&self) -> Self {
+        Self(self.0.clone())
     }
 }
 
-pub(super) type HandleInner<T> = Rc<Cell<T>>;
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct Handle<T>(Storage<T>);
+
+impl<T> Deref for Handle<T> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        self.0.deref()
+    }
+}

@@ -2,7 +2,10 @@ use tracing::warn;
 
 use crate::{kernel::topology::vertices::Vertex, math::Scalar};
 
-use super::{handle::Handle, VerticesInner};
+use super::{
+    handle::{Handle, Storage},
+    VerticesInner,
+};
 
 /// The vertices of a shape
 pub struct Vertices<'r> {
@@ -38,8 +41,7 @@ impl Vertices<'_> {
         // should provide more than enough precision for common use cases, while
         // being large enough to catch all invalid cases.
         for existing in &*self.vertices {
-            let distance =
-                (existing.get().point() - vertex.point()).magnitude();
+            let distance = (existing.point() - vertex.point()).magnitude();
 
             if distance < self.min_distance {
                 warn!(
@@ -49,8 +51,9 @@ impl Vertices<'_> {
             }
         }
 
-        let handle = Handle::new(vertex);
-        self.vertices.push(handle.inner());
+        let storage = Storage::new(vertex);
+        let handle = storage.handle();
+        self.vertices.push(storage);
 
         handle
     }
