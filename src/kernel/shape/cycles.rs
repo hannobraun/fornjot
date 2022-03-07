@@ -20,7 +20,7 @@ impl Cycles<'_> {
     /// - That those edges form a cycle.
     /// - That the cycle is not self-overlapping.
     /// - That there exists no duplicate cycle, with the same edges.
-    pub fn create(&mut self, cycle: Cycle) -> Handle<Cycle> {
+    pub fn add(&mut self, cycle: Cycle) -> Handle<Cycle> {
         let storage = Storage::new(cycle);
         let handle = storage.handle();
         self.cycles.push(storage);

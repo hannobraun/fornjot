@@ -44,7 +44,7 @@ impl ToShape for fj::Sketch {
                 edges.push(edge);
             }
 
-            shape.cycles().create(Cycle { edges });
+            shape.cycles().add(Cycle { edges });
         };
 
         let face = Face::Face {

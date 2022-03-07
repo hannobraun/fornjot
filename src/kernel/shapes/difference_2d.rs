@@ -26,10 +26,10 @@ impl ToShape for fj::Difference2d {
             let a = a.cycles().all().next().unwrap();
             let b = b.cycles().all().next().unwrap();
 
-            shape.cycles().create(Cycle {
+            shape.cycles().add(Cycle {
                 edges: a.edges.clone(),
             });
-            shape.cycles().create(Cycle {
+            shape.cycles().add(Cycle {
                 edges: b.edges.clone(),
             });
         } else {
