@@ -40,9 +40,9 @@ impl Vertices<'_> {
         // should provide more than enough precision for common use cases, while
         // being large enough to catch all invalid cases.
         for existing in &*self.vertices {
-            let existing = existing.get();
+            let distance = (existing.get().point() - point).magnitude();
 
-            if (existing.point() - point).magnitude() < self.min_distance {
+            if distance < self.min_distance {
                 warn!(
                     "Invalid vertex: {point:?}; \
                     identical vertex at {existing:?}",
