@@ -1,9 +1,6 @@
 use tracing::warn;
 
-use crate::{
-    kernel::topology::vertices::Vertex,
-    math::{Point, Scalar},
-};
+use crate::{kernel::topology::vertices::Vertex, math::Scalar};
 
 use super::{handle::Handle, VerticesInner};
 
@@ -33,7 +30,9 @@ impl Vertices<'_> {
     /// In the future, this method is likely to validate more than just vertex
     /// uniqueness. See documentation of [`crate::kernel`] for some context on
     /// that.
-    pub fn create(&mut self, point: Point<3>) -> Handle<Vertex> {
+    pub fn create(&mut self, vertex: impl Into<Vertex>) -> Handle<Vertex> {
+        let vertex = vertex.into();
+        let point = vertex.point();
         let handle = Handle::new(point);
 
         // Make sure the new vertex is a minimum distance away from all existing
@@ -53,7 +52,7 @@ impl Vertices<'_> {
 
         self.vertices.push(handle.inner());
 
-        Handle::new(Vertex(point))
+        Handle::new(vertex)
     }
 }
 
