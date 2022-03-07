@@ -16,6 +16,8 @@ use std::{collections::HashMap, sync::mpsc, time::Instant};
 use futures::executor::block_on;
 use notify::Watcher as _;
 use tracing::trace;
+use tracing_subscriber::fmt::format;
+use tracing_subscriber::EnvFilter;
 use winit::{
     event::{Event, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
@@ -34,7 +36,18 @@ use crate::{
 };
 
 fn main() -> anyhow::Result<()> {
-    tracing_subscriber::fmt::init();
+    // Respect `RUST_LOG`. If that's not defined or erroneous, log warnings and
+    // above.
+    //
+    // It would be better to fail, if `RUST_LOG` is erroneous, but I don't know
+    // how to distinguish between that and the "not defined" case.
+    tracing_subscriber::fmt()
+        .with_env_filter(
+            EnvFilter::try_from_default_env()
+                .unwrap_or_else(|_| EnvFilter::new("WARN")),
+        )
+        .event_format(format().pretty())
+        .init();
 
     let args = Args::parse();
     let model = Model::new(args.model);
