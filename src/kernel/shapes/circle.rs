@@ -4,7 +4,7 @@ use crate::{
         geometry::Surface,
         shape::Shape,
         topology::{
-            edges::Edge,
+            edges::{Cycle, Edge},
             faces::{Face, Faces},
         },
     },
@@ -23,7 +23,7 @@ impl ToShape for fj::Circle {
         let edge = shape
             .edges()
             .add(Edge::circle(Scalar::from_f64(self.radius)));
-        shape.cycles().create([edge]);
+        shape.cycles().create(Cycle { edges: vec![edge] });
 
         shape.faces = Faces(vec![Face::Face {
             cycles: shape

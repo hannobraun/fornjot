@@ -1,4 +1,4 @@
-use crate::kernel::topology::edges::{Cycle, Edge};
+use crate::kernel::topology::edges::Cycle;
 
 use super::{
     handle::{Handle, Storage},
@@ -20,14 +20,7 @@ impl Cycles<'_> {
     /// - That those edges form a cycle.
     /// - That the cycle is not self-overlapping.
     /// - That there exists no duplicate cycle, with the same edges.
-    pub fn create(
-        &mut self,
-        edges: impl IntoIterator<Item = Handle<Edge>>,
-    ) -> Handle<Cycle> {
-        let cycle = Cycle {
-            edges: edges.into_iter().collect(),
-        };
-
+    pub fn create(&mut self, cycle: Cycle) -> Handle<Cycle> {
         let storage = Storage::new(cycle);
         let handle = storage.handle();
         self.cycles.push(storage);

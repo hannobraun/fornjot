@@ -4,7 +4,7 @@ use crate::{
         geometry::Surface,
         shape::Shape,
         topology::{
-            edges::Edge,
+            edges::{Cycle, Edge},
             faces::{Face, Faces},
         },
     },
@@ -44,7 +44,7 @@ impl ToShape for fj::Sketch {
                 edges.push(edge);
             }
 
-            shape.cycles().create(edges);
+            shape.cycles().create(Cycle { edges });
         };
 
         let face = Face::Face {
