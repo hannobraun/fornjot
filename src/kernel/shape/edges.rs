@@ -6,13 +6,9 @@ use crate::{
     math::{Point, Scalar, Vector},
 };
 
-use super::CyclesInner;
-
 /// The edges of a shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Edges {
-    pub(super) cycles: CyclesInner,
-}
+pub struct Edges;
 
 impl Edges {
     /// Create an edge

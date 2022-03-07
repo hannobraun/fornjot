@@ -27,6 +27,7 @@ pub struct Shape {
 
     vertices: VerticesInner,
     edges: Edges,
+    cycles: CyclesInner,
 
     pub faces: Faces,
 }
@@ -41,7 +42,8 @@ impl Shape {
             min_distance: Scalar::from_f64(5e-7), // 0.5 µm
 
             vertices: VerticesInner::new(),
-            edges: Edges { cycles: Vec::new() },
+            edges: Edges,
+            cycles: CyclesInner::new(),
             faces: Faces(Vec::new()),
         }
     }
@@ -77,7 +79,7 @@ impl Shape {
     /// Access the shape's cycles
     pub fn cycles(&mut self) -> Cycles {
         Cycles {
-            cycles: &mut self.edges.cycles,
+            cycles: &mut self.cycles,
         }
     }
 }
