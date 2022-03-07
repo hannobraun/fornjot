@@ -1,12 +1,15 @@
+pub mod cycles;
 pub mod edges;
 pub mod handle;
 pub mod vertices;
 
 use crate::math::{Point, Scalar};
 
-use super::topology::faces::Faces;
+use super::topology::{edges::Cycle, faces::Faces};
 
-use self::{edges::Edges, handle::HandleInner, vertices::Vertices};
+use self::{
+    cycles::Cycles, edges::Edges, handle::HandleInner, vertices::Vertices,
+};
 
 /// The boundary representation of a shape
 ///
@@ -23,7 +26,7 @@ pub struct Shape {
     min_distance: Scalar,
 
     vertices: VerticesInner,
-    edges: Edges,
+    cycles: CyclesInner,
 
     pub faces: Faces,
 }
@@ -38,7 +41,7 @@ impl Shape {
             min_distance: Scalar::from_f64(5e-7), // 0.5 µm
 
             vertices: VerticesInner::new(),
-            edges: Edges { cycles: Vec::new() },
+            cycles: CyclesInner::new(),
             faces: Faces(Vec::new()),
         }
     }
@@ -67,9 +70,17 @@ impl Shape {
     }
 
     /// Access the shape's edges
-    pub fn edges(&mut self) -> &mut Edges {
-        &mut self.edges
+    pub fn edges(&mut self) -> Edges {
+        Edges
+    }
+
+    /// Access the shape's cycles
+    pub fn cycles(&mut self) -> Cycles {
+        Cycles {
+            cycles: &mut self.cycles,
+        }
     }
 }
 
 type VerticesInner = Vec<HandleInner<Point<3>>>;
+type CyclesInner = Vec<Cycle>;

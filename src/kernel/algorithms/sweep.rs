@@ -27,8 +27,8 @@ pub fn sweep_shape(
         top_faces.push(transform_face(face, &translation, &mut shape));
     }
 
-    for cycle in &original.edges().cycles {
-        let approx = Approximation::for_cycle(cycle, tolerance);
+    for cycle in original.cycles().all() {
+        let approx = Approximation::for_cycle(&cycle, tolerance);
 
         // This will only work correctly, if the cycle consists of one edge. If
         // there are more, this will create some kind of weird face chimera, a
