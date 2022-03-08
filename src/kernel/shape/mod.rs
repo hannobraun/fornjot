@@ -1,3 +1,4 @@
+pub mod curves;
 pub mod cycles;
 pub mod edges;
 pub mod faces;
@@ -10,8 +11,8 @@ use crate::math::Scalar;
 use super::topology::{edges::Cycle, faces::Face, vertices::Vertex};
 
 use self::{
-    cycles::Cycles, edges::Edges, faces::Faces, handle::Storage,
-    surfaces::Surfaces, vertices::Vertices,
+    curves::Curves, cycles::Cycles, edges::Edges, faces::Faces,
+    handle::Storage, surfaces::Surfaces, vertices::Vertices,
 };
 
 /// The boundary representation of a shape
@@ -57,6 +58,11 @@ impl Shape {
         self
     }
 
+    /// Access the shape's curves
+    pub fn curves(&mut self) -> Curves {
+        Curves
+    }
+
     /// Access the shape's surfaces
     pub fn surfaces(&mut self) -> Surfaces {
         Surfaces
@@ -72,7 +78,7 @@ impl Shape {
 
     /// Access the shape's edges
     pub fn edges(&mut self) -> Edges {
-        Edges
+        Edges { curves: Curves }
     }
 
     /// Access the shape's cycles
