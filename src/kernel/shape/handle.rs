@@ -30,6 +30,16 @@ impl<T> Clone for Storage<T> {
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Handle<T>(Storage<T>);
 
+impl<T> Handle<T> {
+    /// Access the object that the handle references
+    ///
+    /// `Handle` also implements `Deref`, but as that can be inconvenient to use
+    /// in some cases, this method is an inherent proxy for that.
+    pub fn get(&self) -> &T {
+        self.0.deref()
+    }
+}
+
 impl<T> Deref for Handle<T> {
     type Target = T;
 

@@ -53,7 +53,7 @@ impl ToShape for fj::Difference2d {
             [&mut a, &mut b].map(|shape| shape.faces().all().next().unwrap());
 
         let (cycles_a, cycles_b, surface_a, surface_b) =
-            match ((*face_a).clone(), (*face_b).clone()) {
+            match (face_a.get().clone(), face_b.get().clone()) {
                 (
                     Face::Face {
                         cycles: a,
