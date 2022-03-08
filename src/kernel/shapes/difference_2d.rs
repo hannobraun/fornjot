@@ -16,78 +16,70 @@ impl ToShape for fj::Difference2d {
 
         let mut shape = Shape::new();
 
-        let mut a = self.a.to_shape(tolerance, debug_info);
-        let mut b = self.b.to_shape(tolerance, debug_info);
+        let [mut a, mut b] = [&self.a, &self.b]
+            .map(|shape| shape.to_shape(tolerance, debug_info));
 
-        if a.cycles().all().count() == 1 && b.cycles().all().count() == 1 {
-            let a = a.cycles().all().next().unwrap();
-            let b = b.cycles().all().next().unwrap();
-
-            shape.cycles().add(Cycle {
-                edges: a.edges.clone(),
-            });
-            shape.cycles().add(Cycle {
-                edges: b.edges.clone(),
-            });
-        } else {
-            // See issue:
-            // https://github.com/hannobraun/Fornjot/issues/95
-            todo!(
-                "The 2-dimensional difference operation only supports one \
-                cycle in each operand."
-            );
-        }
-
-        {
-            let (a, b) = if a.faces().all().count() == 1
-                && b.faces().all().count() == 1
-            {
-                // Can't panic. We just checked that length of `a` and `b` is 1.
-                (
-                    a.faces().all().next().unwrap(),
-                    b.faces().all().next().unwrap(),
-                )
-            } else {
+        for shape in [&mut a, &mut b] {
+            if shape.cycles().all().count() != 1 {
+                // See issue:
+                // https://github.com/hannobraun/Fornjot/issues/95
+                todo!(
+                    "The 2-dimensional difference operation only supports one \
+                    cycle in each operand."
+                );
+            }
+            if shape.faces().all().count() != 1 {
                 // See issue:
                 // https://github.com/hannobraun/Fornjot/issues/95
                 todo!(
                     "The 2-dimensional difference operation only supports one \
                     face in each operand."
                 );
+            }
+        }
+
+        // Can't panic, as we just verified that both shapes have one cycle.
+        let cycles =
+            [&mut a, &mut b].map(|shape| shape.cycles().all().next().unwrap());
+
+        for cycle in cycles {
+            shape.cycles().add(Cycle {
+                edges: cycle.edges.clone(),
+            });
+        }
+
+        // Can't panic, as we just verified that both shapes have one face.
+        let [face_a, face_b] =
+            [&mut a, &mut b].map(|shape| shape.faces().all().next().unwrap());
+
+        let (cycles_a, cycles_b, surface_a, surface_b) =
+            match ((*face_a).clone(), (*face_b).clone()) {
+                (
+                    Face::Face {
+                        cycles: a,
+                        surface: surface_a,
+                    },
+                    Face::Face {
+                        cycles: b,
+                        surface: surface_b,
+                    },
+                ) => (a, b, surface_a, surface_b),
+                _ => {
+                    // None of the 2D types still use triangle representation.
+                    unreachable!()
+                }
             };
 
-            let (a, b, surface_a, surface_b) =
-                match ((*a).clone(), (*b).clone()) {
-                    (
-                        Face::Face {
-                            cycles: a,
-                            surface: surface_a,
-                        },
-                        Face::Face {
-                            cycles: b,
-                            surface: surface_b,
-                        },
-                    ) => (a, b, surface_a, surface_b),
-                    _ => {
-                        // None of the 2D types still use triangle
-                        // representation.
-                        unreachable!()
-                    }
-                };
+        assert!(
+            surface_a == surface_b,
+            "Trying to subtract sketches with different surfaces."
+        );
+        let surface = surface_a;
 
-            assert!(
-                surface_a == surface_b,
-                // Panicking is not great, but as long as we don't have a real
-                // error handling mechanism, it will do.
-                "Trying to subtract sketches with different surfaces."
-            );
-            let surface = surface_a;
+        let mut cycles = cycles_a;
+        cycles.extend(cycles_b);
 
-            let mut cycles = a;
-            cycles.extend(b);
-
-            shape.faces().add(Face::Face { cycles, surface });
-        };
+        shape.faces().add(Face::Face { cycles, surface });
 
         shape
     }
