@@ -1,35 +1,5 @@
 use std::{hash::Hash, ops::Deref, rc::Rc};
 
-#[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Storage<T>(Rc<T>);
-
-impl<T> Storage<T> {
-    pub(super) fn new(value: T) -> Self {
-        Self(Rc::new(value))
-    }
-
-    pub(super) fn handle(&self) -> Handle<T> {
-        Handle(self.clone())
-    }
-}
-
-impl<T> Deref for Storage<T> {
-    type Target = T;
-
-    fn deref(&self) -> &Self::Target {
-        self.0.deref()
-    }
-}
-
-// Deriving `Clone` would only derive `Clone` where `T: Clone`. This
-// implementation doesn't have that limitation, providing `Clone` for all
-// `Handle`s instead.
-impl<T> Clone for Storage<T> {
-    fn clone(&self) -> Self {
-        Self(self.0.clone())
-    }
-}
-
 /// A handle to an object stored within [`Shape`]
 ///
 /// If an object of type `T` (this could be `Curve`, `Vertex`, etc.) is added to
@@ -65,5 +35,35 @@ impl<T> Deref for Handle<T> {
 
     fn deref(&self) -> &Self::Target {
         self.0.deref()
+    }
+}
+
+#[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct Storage<T>(Rc<T>);
+
+impl<T> Storage<T> {
+    pub(super) fn new(value: T) -> Self {
+        Self(Rc::new(value))
+    }
+
+    pub(super) fn handle(&self) -> Handle<T> {
+        Handle(self.clone())
+    }
+}
+
+impl<T> Deref for Storage<T> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        self.0.deref()
+    }
+}
+
+// Deriving `Clone` would only derive `Clone` where `T: Clone`. This
+// implementation doesn't have that limitation, providing `Clone` for all
+// `Handle`s instead.
+impl<T> Clone for Storage<T> {
+    fn clone(&self) -> Self {
+        Self(self.0.clone())
     }
 }
