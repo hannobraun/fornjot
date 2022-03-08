@@ -48,41 +48,38 @@ impl ToShape for fj::Difference2d {
             });
         }
 
-        {
-            // Can't panic, as we just verified that both shapes have one face.
-            let [face_a, face_b] = [&mut a, &mut b]
-                .map(|shape| shape.faces().all().next().unwrap());
+        // Can't panic, as we just verified that both shapes have one face.
+        let [face_a, face_b] =
+            [&mut a, &mut b].map(|shape| shape.faces().all().next().unwrap());
 
-            let (cycles_a, cycles_b, surface_a, surface_b) =
-                match ((*face_a).clone(), (*face_b).clone()) {
-                    (
-                        Face::Face {
-                            cycles: a,
-                            surface: surface_a,
-                        },
-                        Face::Face {
-                            cycles: b,
-                            surface: surface_b,
-                        },
-                    ) => (a, b, surface_a, surface_b),
-                    _ => {
-                        // None of the 2D types still use triangle
-                        // representation.
-                        unreachable!()
-                    }
-                };
+        let (cycles_a, cycles_b, surface_a, surface_b) =
+            match ((*face_a).clone(), (*face_b).clone()) {
+                (
+                    Face::Face {
+                        cycles: a,
+                        surface: surface_a,
+                    },
+                    Face::Face {
+                        cycles: b,
+                        surface: surface_b,
+                    },
+                ) => (a, b, surface_a, surface_b),
+                _ => {
+                    // None of the 2D types still use triangle representation.
+                    unreachable!()
+                }
+            };
 
-            assert!(
-                surface_a == surface_b,
-                "Trying to subtract sketches with different surfaces."
-            );
-            let surface = surface_a;
+        assert!(
+            surface_a == surface_b,
+            "Trying to subtract sketches with different surfaces."
+        );
+        let surface = surface_a;
 
-            let mut cycles = cycles_a;
-            cycles.extend(cycles_b);
+        let mut cycles = cycles_a;
+        cycles.extend(cycles_b);
 
-            shape.faces().add(Face::Face { cycles, surface });
-        };
+        shape.faces().add(Face::Face { cycles, surface });
 
         shape
     }
