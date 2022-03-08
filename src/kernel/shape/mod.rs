@@ -93,6 +93,7 @@ impl Shape {
     /// Access the shape's cycles
     pub fn cycles(&mut self) -> Cycles {
         Cycles {
+            edges: &mut self.edges,
             cycles: &mut self.cycles,
         }
     }
