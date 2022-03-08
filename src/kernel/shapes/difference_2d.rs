@@ -30,16 +30,14 @@ impl ToShape for fj::Difference2d {
             }
         }
 
-        {
-            // Can't panic, as we just verified that both shapes have one cycle.
-            let cycles = [&mut a, &mut b]
-                .map(|shape| shape.cycles().all().next().unwrap());
+        // Can't panic, as we just verified that both shapes have one cycle.
+        let cycles =
+            [&mut a, &mut b].map(|shape| shape.cycles().all().next().unwrap());
 
-            for cycle in cycles {
-                shape.cycles().add(Cycle {
-                    edges: cycle.edges.clone(),
-                });
-            }
+        for cycle in cycles {
+            shape.cycles().add(Cycle {
+                edges: cycle.edges.clone(),
+            });
         }
 
         {
