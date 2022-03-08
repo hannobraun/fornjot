@@ -262,9 +262,9 @@ mod tests {
         let cd = shape.edges().add(Edge::line_segment([v3, v4.clone()]));
         let da = shape.edges().add(Edge::line_segment([v4, v1]));
 
-        let abcd = Cycle {
+        let abcd = shape.cycles().add(Cycle {
             edges: vec![ab, bc, cd, da],
-        };
+        });
 
         let face = Face::Face {
             surface: Surface::x_y_plane(),

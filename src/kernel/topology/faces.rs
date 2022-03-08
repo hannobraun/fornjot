@@ -10,6 +10,7 @@ use crate::{
             approximation::Approximation, triangulation::triangulate,
         },
         geometry::Surface,
+        shape::handle::Handle,
     },
     math::{Aabb, Scalar, Segment, Triangle},
 };
@@ -37,7 +38,7 @@ pub enum Face {
         ///
         /// It might be less error-prone to specify the edges in surface
         /// coordinates.
-        cycles: Vec<Cycle>,
+        cycles: Vec<Handle<Cycle>>,
     },
 
     /// The triangles of the face

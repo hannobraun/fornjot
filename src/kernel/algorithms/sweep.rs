@@ -125,9 +125,9 @@ mod tests {
                 .edges()
                 .add(Edge::line_segment([c.clone(), a.clone()]));
 
-            let cycles = Cycle {
+            let cycles = shape.cycles().add(Cycle {
                 edges: vec![ab, bc, ca],
-            };
+            });
 
             let abc = Face::Face {
                 surface: Surface::Swept(Swept::plane_from_points(
