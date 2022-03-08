@@ -22,9 +22,9 @@ pub fn sweep_shape(
     let mut top_faces = Vec::new();
     let mut side_faces = Vec::new();
 
-    for face in &original.faces().0 {
+    for face in original.faces().all() {
         bottom_faces.push(face.clone());
-        top_faces.push(transform_face(face, &translation, &mut shape));
+        top_faces.push(transform_face(&face, &translation, &mut shape));
     }
 
     for cycle in original.cycles().all() {

@@ -9,6 +9,11 @@ use crate::{
 pub struct Faces(pub Vec<Face>);
 
 impl Faces {
+    /// Access an iterator over all faces
+    pub fn all(&self) -> impl Iterator<Item = Face> + '_ {
+        self.0.iter().cloned()
+    }
+
     pub fn triangles(
         &self,
         tolerance: Scalar,

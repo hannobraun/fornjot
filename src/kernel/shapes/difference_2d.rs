@@ -39,9 +39,14 @@ impl ToShape for fj::Difference2d {
         }
 
         *shape.faces() = {
-            let (a, b) = if a.faces().0.len() == 1 && b.faces().0.len() == 1 {
+            let (a, b) = if a.faces().all().count() == 1
+                && b.faces().all().count() == 1
+            {
                 // Can't panic. We just checked that length of `a` and `b` is 1.
-                (a.faces().0.pop().unwrap(), b.faces().0.pop().unwrap())
+                (
+                    a.faces().all().next().unwrap(),
+                    b.faces().all().next().unwrap(),
+                )
             } else {
                 // See issue:
                 // https://github.com/hannobraun/Fornjot/issues/95

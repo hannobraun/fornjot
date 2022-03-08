@@ -22,8 +22,8 @@ use crate::{
 pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
     let mut transformed = Shape::new();
 
-    for face in &original.faces().0 {
-        let face = transform_face(face, transform, &mut transformed);
+    for face in original.faces().all() {
+        let face = transform_face(&face, transform, &mut transformed);
         transformed.faces().0.push(face);
     }
 

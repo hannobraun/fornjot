@@ -19,8 +19,8 @@ impl ToShape for fj::Union {
         // See issue:
         // https://github.com/hannobraun/Fornjot/issues/42
         let mut faces = Vec::new();
-        faces.extend(a.faces().0.clone());
-        faces.extend(b.faces().0.clone());
+        faces.extend(a.faces().all());
+        faces.extend(b.faces().all());
 
         *shape.faces() = Faces(faces);
 
