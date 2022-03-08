@@ -12,7 +12,7 @@ impl ToShape for fj::Transform {
     fn to_shape(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Shape {
         let shape = self.shape.to_shape(tolerance, debug_info);
         let transform = transform(self);
-        transform_shape(&shape, &transform)
+        transform_shape(shape, &transform)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
