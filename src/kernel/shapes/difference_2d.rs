@@ -74,8 +74,6 @@ impl ToShape for fj::Difference2d {
 
             assert!(
                 surface_a == surface_b,
-                // Panicking is not great, but as long as we don't have a real
-                // error handling mechanism, it will do.
                 "Trying to subtract sketches with different surfaces."
             );
             let surface = surface_a;
