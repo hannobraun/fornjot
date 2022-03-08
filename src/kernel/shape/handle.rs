@@ -39,7 +39,7 @@ impl<T> Deref for Handle<T> {
 }
 
 #[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Storage<T>(Rc<T>);
+pub(super) struct Storage<T>(Rc<T>);
 
 impl<T> Storage<T> {
     pub(super) fn new(value: T) -> Self {
