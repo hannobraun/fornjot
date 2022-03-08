@@ -29,8 +29,7 @@ pub struct Shape {
 
     vertices: VerticesInner,
     cycles: CyclesInner,
-
-    pub faces: Faces,
+    faces: Faces,
 }
 
 impl Shape {
