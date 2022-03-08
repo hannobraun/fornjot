@@ -8,7 +8,7 @@ use super::handle::{Handle, Storage};
 
 /// The faces of a shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Faces(pub Vec<Face>);
+pub struct Faces(pub(super) Vec<Face>);
 
 impl Faces {
     /// Add a face to the shape
