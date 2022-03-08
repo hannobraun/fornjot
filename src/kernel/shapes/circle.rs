@@ -3,10 +3,7 @@ use crate::{
     kernel::{
         geometry::Surface,
         shape::Shape,
-        topology::{
-            edges::{Cycle, Edge},
-            faces::Face,
-        },
+        topology::{edges::Cycle, faces::Face},
     },
     math::{Aabb, Point, Scalar},
 };
@@ -20,9 +17,7 @@ impl ToShape for fj::Circle {
         // Circles have just a single round edge with no vertices. So none need
         // to be added here.
 
-        let edge = shape
-            .edges()
-            .add(Edge::circle(Scalar::from_f64(self.radius)));
+        let edge = shape.edges().add_circle(Scalar::from_f64(self.radius));
         shape.cycles().add(Cycle { edges: vec![edge] });
 
         let cycles = shape.cycles().all().collect();

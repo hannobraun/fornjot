@@ -1,10 +1,4 @@
-use crate::{
-    kernel::{
-        geometry::{Circle, Curve},
-        shape::handle::Handle,
-    },
-    math::{Point, Scalar, Vector},
-};
+use crate::kernel::{geometry::Curve, shape::handle::Handle};
 
 use super::vertices::Vertex;
 
@@ -43,17 +37,4 @@ pub struct Edge {
     /// it by storing 3D vertices. It will probably make sense to revert this
     /// and store 1D vertices again, at some point.
     pub vertices: Option<[Handle<Vertex>; 2]>,
-}
-
-impl Edge {
-    /// Create a circle
-    pub fn circle(radius: Scalar) -> Self {
-        Edge {
-            curve: Curve::Circle(Circle {
-                center: Point::origin(),
-                radius: Vector::from([radius, Scalar::ZERO]),
-            }),
-            vertices: None,
-        }
-    }
 }
