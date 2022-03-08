@@ -1,6 +1,6 @@
 use crate::{
     debug::DebugInfo,
-    kernel::{shape::Shape, topology::faces::Faces},
+    kernel::shape::{faces::Faces, Shape},
     math::{Aabb, Scalar},
 };
 

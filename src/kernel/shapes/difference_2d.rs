@@ -1,11 +1,8 @@
 use crate::{
     debug::DebugInfo,
     kernel::{
-        shape::Shape,
-        topology::{
-            edges::Cycle,
-            faces::{Face, Faces},
-        },
+        shape::{faces::Faces, Shape},
+        topology::{edges::Cycle, faces::Face},
     },
     math::{Aabb, Scalar},
 };

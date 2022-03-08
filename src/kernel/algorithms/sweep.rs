@@ -1,7 +1,7 @@
 use crate::{
     kernel::{
-        shape::Shape,
-        topology::faces::{Face, Faces},
+        shape::{faces::Faces, Shape},
+        topology::faces::Face,
     },
     math::{Scalar, Transform, Vector},
 };

@@ -1,13 +1,17 @@
 pub mod cycles;
 pub mod edges;
+pub mod faces;
 pub mod handle;
 pub mod vertices;
 
 use crate::math::Scalar;
 
-use super::topology::{edges::Cycle, faces::Faces, vertices::Vertex};
+use super::topology::{edges::Cycle, vertices::Vertex};
 
-use self::{cycles::Cycles, edges::Edges, handle::Storage, vertices::Vertices};
+use self::{
+    cycles::Cycles, edges::Edges, faces::Faces, handle::Storage,
+    vertices::Vertices,
+};
 
 /// The boundary representation of a shape
 ///

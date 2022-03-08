@@ -2,10 +2,10 @@ use crate::{
     debug::DebugInfo,
     kernel::{
         geometry::Surface,
-        shape::Shape,
+        shape::{faces::Faces, Shape},
         topology::{
             edges::{Cycle, Edge},
-            faces::{Face, Faces},
+            faces::Face,
         },
     },
     math::{Aabb, Point, Scalar},
