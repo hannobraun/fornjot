@@ -21,6 +21,9 @@ impl<T> Deref for Storage<T> {
     }
 }
 
+// Deriving `Clone` would only derive `Clone` where `T: Clone`. This
+// implementation doesn't have that limitation, providing `Clone` for all
+// `Handle`s instead.
 impl<T> Clone for Storage<T> {
     fn clone(&self) -> Self {
         Self(self.0.clone())
