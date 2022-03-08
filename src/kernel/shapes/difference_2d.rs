@@ -2,10 +2,7 @@ use crate::{
     debug::DebugInfo,
     kernel::{
         shape::Shape,
-        topology::{
-            edges::Cycle,
-            faces::{Face, Faces},
-        },
+        topology::{edges::Cycle, faces::Face},
     },
     math::{Aabb, Scalar},
 };
@@ -41,10 +38,15 @@ impl ToShape for fj::Difference2d {
             );
         }
 
-        shape.faces = {
-            let (a, b) = if a.faces.0.len() == 1 && b.faces.0.len() == 1 {
+        {
+            let (a, b) = if a.faces().all().count() == 1
+                && b.faces().all().count() == 1
+            {
                 // Can't panic. We just checked that length of `a` and `b` is 1.
-                (a.faces.0.pop().unwrap(), b.faces.0.pop().unwrap())
+                (
+                    a.faces().all().next().unwrap(),
+                    b.faces().all().next().unwrap(),
+                )
             } else {
                 // See issue:
                 // https://github.com/hannobraun/Fornjot/issues/95
@@ -54,22 +56,24 @@ impl ToShape for fj::Difference2d {
                 );
             };
 
-            let (a, b, surface_a, surface_b) = match (a, b) {
-                (
-                    Face::Face {
-                        cycles: a,
-                        surface: surface_a,
-                    },
-                    Face::Face {
-                        cycles: b,
-                        surface: surface_b,
-                    },
-                ) => (a, b, surface_a, surface_b),
-                _ => {
-                    // None of the 2D types still use the triangles representation.
-                    unreachable!()
-                }
-            };
+            let (a, b, surface_a, surface_b) =
+                match ((*a).clone(), (*b).clone()) {
+                    (
+                        Face::Face {
+                            cycles: a,
+                            surface: surface_a,
+                        },
+                        Face::Face {
+                            cycles: b,
+                            surface: surface_b,
+                        },
+                    ) => (a, b, surface_a, surface_b),
+                    _ => {
+                        // None of the 2D types still use triangle
+                        // representation.
+                        unreachable!()
+                    }
+                };
 
             assert!(
                 surface_a == surface_b,
@@ -82,7 +86,7 @@ impl ToShape for fj::Difference2d {
             let mut cycles = a;
             cycles.extend(b);
 
-            Faces(vec![Face::Face { cycles, surface }])
+            shape.faces().add(Face::Face { cycles, surface });
         };
 
         shape

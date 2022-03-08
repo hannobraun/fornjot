@@ -1,21 +1,19 @@
 pub mod cycles;
 pub mod edges;
+pub mod faces;
 pub mod handle;
 pub mod vertices;
 
 use crate::math::Scalar;
 
-use super::topology::{edges::Cycle, faces::Faces, vertices::Vertex};
+use super::topology::{edges::Cycle, faces::Face, vertices::Vertex};
 
-use self::{cycles::Cycles, edges::Edges, handle::Storage, vertices::Vertices};
+use self::{
+    cycles::Cycles, edges::Edges, faces::Faces, handle::Storage,
+    vertices::Vertices,
+};
 
 /// The boundary representation of a shape
-///
-/// # Implementation note
-///
-/// The goal for `Shape` is to enforce full self-consistency, through the API it
-/// provides. Steps have been made in that direction, but right now, the API is
-/// still full of holes, forcing callers to just be careful for the time being.
 #[derive(Clone, Debug)]
 pub struct Shape {
     /// The minimum distance between two vertices
@@ -25,8 +23,7 @@ pub struct Shape {
 
     vertices: VerticesInner,
     cycles: CyclesInner,
-
-    pub faces: Faces,
+    faces: FacesInner,
 }
 
 impl Shape {
@@ -40,7 +37,7 @@ impl Shape {
 
             vertices: VerticesInner::new(),
             cycles: CyclesInner::new(),
-            faces: Faces(Vec::new()),
+            faces: FacesInner::new(),
         }
     }
 
@@ -78,7 +75,15 @@ impl Shape {
             cycles: &mut self.cycles,
         }
     }
+
+    /// Access the shape's faces
+    pub fn faces(&mut self) -> Faces {
+        Faces {
+            faces: &mut self.faces,
+        }
+    }
 }
 
 type VerticesInner = Vec<Storage<Vertex>>;
 type CyclesInner = Vec<Storage<Cycle>>;
+type FacesInner = Vec<Storage<Face>>;

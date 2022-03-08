@@ -29,7 +29,7 @@ impl Cycles<'_> {
     }
 
     /// Access an iterator over all cycles
-    pub fn all(&self) -> impl Iterator<Item = Storage<Cycle>> + '_ {
-        self.cycles.iter().cloned()
+    pub fn all(&self) -> impl Iterator<Item = Handle<Cycle>> + '_ {
+        self.cycles.iter().map(|storage| storage.handle())
     }
 }

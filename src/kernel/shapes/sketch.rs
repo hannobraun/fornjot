@@ -5,7 +5,7 @@ use crate::{
         shape::Shape,
         topology::{
             edges::{Cycle, Edge},
-            faces::{Face, Faces},
+            faces::Face,
         },
     },
     math::{Aabb, Point, Scalar},
@@ -55,7 +55,7 @@ impl ToShape for fj::Sketch {
                 .collect(),
             surface: Surface::x_y_plane(),
         };
-        shape.faces = Faces(vec![face]);
+        shape.faces().add(face);
 
         shape
     }

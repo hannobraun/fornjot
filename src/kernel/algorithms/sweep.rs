@@ -1,8 +1,5 @@
 use crate::{
-    kernel::{
-        shape::Shape,
-        topology::faces::{Face, Faces},
-    },
+    kernel::{shape::Shape, topology::faces::Face},
     math::{Scalar, Transform, Vector},
 };
 
@@ -22,9 +19,9 @@ pub fn sweep_shape(
     let mut top_faces = Vec::new();
     let mut side_faces = Vec::new();
 
-    for face in &original.faces.0 {
+    for face in original.faces().all() {
         bottom_faces.push(face.clone());
-        top_faces.push(transform_face(face, &translation, &mut shape));
+        top_faces.push(transform_face(&face, &translation, &mut shape));
     }
 
     for cycle in original.cycles().all() {
@@ -55,12 +52,15 @@ pub fn sweep_shape(
         side_faces.push(Face::Triangles(side_face));
     }
 
-    let mut faces = Vec::new();
-    faces.extend(bottom_faces);
-    faces.extend(top_faces);
-    faces.extend(side_faces);
-
-    shape.faces = Faces(faces);
+    for face in bottom_faces {
+        shape.faces().add((*face).clone());
+    }
+    for face in top_faces {
+        shape.faces().add(face);
+    }
+    for face in side_faces {
+        shape.faces().add(face);
+    }
 
     shape
 }
@@ -70,7 +70,7 @@ mod tests {
     use crate::{
         kernel::{
             geometry::{surfaces::Swept, Surface},
-            shape::Shape,
+            shape::{handle::Handle, Shape},
             topology::{
                 edges::{Cycle, Edge},
                 faces::Face,
@@ -85,7 +85,7 @@ mod tests {
     fn sweep() {
         let sketch = Triangle::new([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]]);
 
-        let swept = sweep_shape(
+        let mut swept = sweep_shape(
             sketch.shape,
             Vector::from([0., 0., 1.]),
             Scalar::from_f64(0.),
@@ -95,8 +95,8 @@ mod tests {
         let top_face =
             Triangle::new([[0., 0., 1.], [1., 0., 1.], [0., 1., 1.]]).face;
 
-        assert!(swept.faces.0.contains(&bottom_face));
-        assert!(swept.faces.0.contains(&top_face));
+        assert!(swept.faces().contains(&bottom_face));
+        assert!(swept.faces().contains(&top_face));
 
         // Side faces are not tested, as those use triangle representation. The
         // plan is to start testing them, as they are transitioned to b-rep.
@@ -104,7 +104,7 @@ mod tests {
 
     pub struct Triangle {
         shape: Shape,
-        face: Face,
+        face: Handle<Face>,
     }
 
     impl Triangle {
@@ -134,9 +134,9 @@ mod tests {
                 }],
             };
 
-            shape.faces.0.push(abc.clone());
+            let face = shape.faces().add(abc);
 
-            Self { shape, face: abc }
+            Self { shape, face }
         }
     }
 }
