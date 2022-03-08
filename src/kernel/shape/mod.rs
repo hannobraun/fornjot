@@ -82,6 +82,11 @@ impl Shape {
             cycles: &mut self.cycles,
         }
     }
+
+    /// Access the shape's faces
+    pub fn faces(&mut self) -> &mut Faces {
+        &mut self.faces
+    }
 }
 
 type VerticesInner = Vec<Storage<Vertex>>;

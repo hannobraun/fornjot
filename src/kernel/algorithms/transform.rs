@@ -19,12 +19,12 @@ use crate::{
 ///
 /// Addressing the shortcomings in this method probably doesn't make sense,
 /// except as a side effect of addressing the shortcomings of `Shape`.
-pub fn transform_shape(original: Shape, transform: &Transform) -> Shape {
+pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
     let mut transformed = Shape::new();
 
-    for face in &original.faces.0 {
+    for face in &original.faces().0 {
         let face = transform_face(face, transform, &mut transformed);
-        transformed.faces.0.push(face);
+        transformed.faces().0.push(face);
     }
 
     transformed

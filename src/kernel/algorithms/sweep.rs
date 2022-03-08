@@ -22,7 +22,7 @@ pub fn sweep_shape(
     let mut top_faces = Vec::new();
     let mut side_faces = Vec::new();
 
-    for face in &original.faces.0 {
+    for face in &original.faces().0 {
         bottom_faces.push(face.clone());
         top_faces.push(transform_face(face, &translation, &mut shape));
     }
@@ -60,7 +60,7 @@ pub fn sweep_shape(
     faces.extend(top_faces);
     faces.extend(side_faces);
 
-    shape.faces = Faces(faces);
+    *shape.faces() = Faces(faces);
 
     shape
 }
@@ -85,7 +85,7 @@ mod tests {
     fn sweep() {
         let sketch = Triangle::new([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]]);
 
-        let swept = sweep_shape(
+        let mut swept = sweep_shape(
             sketch.shape,
             Vector::from([0., 0., 1.]),
             Scalar::from_f64(0.),
@@ -95,8 +95,8 @@ mod tests {
         let top_face =
             Triangle::new([[0., 0., 1.], [1., 0., 1.], [0., 1., 1.]]).face;
 
-        assert!(swept.faces.0.contains(&bottom_face));
-        assert!(swept.faces.0.contains(&top_face));
+        assert!(swept.faces().0.contains(&bottom_face));
+        assert!(swept.faces().0.contains(&top_face));
 
         // Side faces are not tested, as those use triangle representation. The
         // plan is to start testing them, as they are transitioned to b-rep.
@@ -134,7 +134,7 @@ mod tests {
                 }],
             };
 
-            shape.faces.0.push(abc.clone());
+            shape.faces().0.push(abc.clone());
 
             Self { shape, face: abc }
         }

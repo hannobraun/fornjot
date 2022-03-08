@@ -25,7 +25,7 @@ impl ToShape for fj::Circle {
             .add(Edge::circle(Scalar::from_f64(self.radius)));
         shape.cycles().add(Cycle { edges: vec![edge] });
 
-        shape.faces = Faces(vec![Face::Face {
+        *shape.faces() = Faces(vec![Face::Face {
             cycles: shape
                 .cycles()
                 .all()

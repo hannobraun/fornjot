@@ -101,11 +101,10 @@ fn main() -> anyhow::Result<()> {
 
     let mut debug_info = DebugInfo::new();
     let mut triangles = Vec::new();
-    shape.to_shape(tolerance, &mut debug_info).faces.triangles(
-        tolerance,
-        &mut triangles,
-        &mut debug_info,
-    );
+    shape
+        .to_shape(tolerance, &mut debug_info)
+        .faces()
+        .triangles(tolerance, &mut triangles, &mut debug_info);
 
     if let Some(path) = args.export {
         let mut mesh_maker = MeshMaker::new();
@@ -229,11 +228,10 @@ fn main() -> anyhow::Result<()> {
                 triangles.clear();
 
                 aabb = shape.bounding_volume();
-                shape.to_shape(tolerance, &mut debug_info).faces.triangles(
-                    tolerance,
-                    &mut triangles,
-                    &mut debug_info,
-                );
+                shape
+                    .to_shape(tolerance, &mut debug_info)
+                    .faces()
+                    .triangles(tolerance, &mut triangles, &mut debug_info);
 
                 renderer.update_geometry(
                     (&triangles).into(),

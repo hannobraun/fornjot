@@ -55,7 +55,7 @@ impl ToShape for fj::Sketch {
                 .collect(),
             surface: Surface::x_y_plane(),
         };
-        shape.faces = Faces(vec![face]);
+        *shape.faces() = Faces(vec![face]);
 
         shape
     }
