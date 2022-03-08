@@ -10,8 +10,8 @@ impl ToShape for fj::Union {
     fn to_shape(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Shape {
         let mut shape = Shape::new();
 
-        let a = self.a.to_shape(tolerance, debug_info).faces().0.clone();
-        let b = self.b.to_shape(tolerance, debug_info).faces().0.clone();
+        let mut a = self.a.to_shape(tolerance, debug_info);
+        let mut b = self.b.to_shape(tolerance, debug_info);
 
         // This doesn't create a true union, as it doesn't eliminate, merge, or
         // split faces.
@@ -19,8 +19,8 @@ impl ToShape for fj::Union {
         // See issue:
         // https://github.com/hannobraun/Fornjot/issues/42
         let mut faces = Vec::new();
-        faces.extend(a);
-        faces.extend(b);
+        faces.extend(a.faces().0.clone());
+        faces.extend(b.faces().0.clone());
 
         *shape.faces() = Faces(faces);
 
