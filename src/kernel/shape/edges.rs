@@ -9,14 +9,16 @@ use crate::{
 use super::{
     curves::Curves,
     handle::{Handle, Storage},
+    EdgesInner,
 };
 
 /// The edges of a shape
-pub struct Edges {
+pub struct Edges<'r> {
     pub(super) curves: Curves,
+    pub(super) edges: &'r mut EdgesInner,
 }
 
-impl Edges {
+impl Edges<'_> {
     /// Add an edge to the shape
     ///
     /// If vertices are provided in `vertices`, they must be on `curve`.
@@ -32,7 +34,12 @@ impl Edges {
     /// the future, it can add the edge to the proper internal data structures,
     /// and validate any constraints that apply to edge creation.
     pub fn add(&mut self, edge: Edge) -> Handle<Edge> {
-        Storage::new(edge).handle()
+        let storage = Storage::new(edge);
+        let handle = storage.handle();
+
+        self.edges.push(storage);
+
+        handle
     }
 
     /// Add a circle to the shape
