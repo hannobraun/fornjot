@@ -1,8 +1,5 @@
 use crate::{
-    kernel::{
-        shape::{faces::Faces, Shape},
-        topology::faces::Face,
-    },
+    kernel::{shape::Shape, topology::faces::Face},
     math::{Scalar, Transform, Vector},
 };
 
@@ -55,12 +52,15 @@ pub fn sweep_shape(
         side_faces.push(Face::Triangles(side_face));
     }
 
-    let mut faces = Vec::new();
-    faces.extend(bottom_faces);
-    faces.extend(top_faces);
-    faces.extend(side_faces);
-
-    *shape.faces() = Faces(faces);
+    for face in bottom_faces {
+        shape.faces().add(face);
+    }
+    for face in top_faces {
+        shape.faces().add(face);
+    }
+    for face in side_faces {
+        shape.faces().add(face);
+    }
 
     shape
 }
@@ -134,7 +134,7 @@ mod tests {
                 }],
             };
 
-            shape.faces().0.push(abc.clone());
+            shape.faces().add(abc.clone());
 
             Self { shape, face: abc }
         }

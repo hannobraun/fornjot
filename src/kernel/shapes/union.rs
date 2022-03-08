@@ -1,6 +1,6 @@
 use crate::{
     debug::DebugInfo,
-    kernel::shape::{faces::Faces, Shape},
+    kernel::shape::Shape,
     math::{Aabb, Scalar},
 };
 
@@ -18,11 +18,12 @@ impl ToShape for fj::Union {
         //
         // See issue:
         // https://github.com/hannobraun/Fornjot/issues/42
-        let mut faces = Vec::new();
-        faces.extend(a.faces().all());
-        faces.extend(b.faces().all());
-
-        *shape.faces() = Faces(faces);
+        for face in a.faces().all() {
+            shape.faces().add(face);
+        }
+        for face in b.faces().all() {
+            shape.faces().add(face);
+        }
 
         shape
     }

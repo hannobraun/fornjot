@@ -4,11 +4,19 @@ use crate::{
     math::{Scalar, Triangle},
 };
 
+use super::handle::{Handle, Storage};
+
 /// The faces of a shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Faces(pub Vec<Face>);
 
 impl Faces {
+    /// Add a face to the shape
+    pub fn add(&mut self, face: Face) -> Handle<Face> {
+        self.0.push(face.clone());
+        Storage::new(face).handle()
+    }
+
     /// Access an iterator over all faces
     pub fn all(&self) -> impl Iterator<Item = Face> + '_ {
         self.0.iter().cloned()

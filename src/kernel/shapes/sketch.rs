@@ -2,7 +2,7 @@ use crate::{
     debug::DebugInfo,
     kernel::{
         geometry::Surface,
-        shape::{faces::Faces, Shape},
+        shape::Shape,
         topology::{
             edges::{Cycle, Edge},
             faces::Face,
@@ -55,7 +55,7 @@ impl ToShape for fj::Sketch {
                 .collect(),
             surface: Surface::x_y_plane(),
         };
-        *shape.faces() = Faces(vec![face]);
+        shape.faces().add(face);
 
         shape
     }

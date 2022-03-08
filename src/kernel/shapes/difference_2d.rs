@@ -1,7 +1,7 @@
 use crate::{
     debug::DebugInfo,
     kernel::{
-        shape::{faces::Faces, Shape},
+        shape::Shape,
         topology::{edges::Cycle, faces::Face},
     },
     math::{Aabb, Scalar},
@@ -38,7 +38,7 @@ impl ToShape for fj::Difference2d {
             );
         }
 
-        *shape.faces() = {
+        {
             let (a, b) = if a.faces().all().count() == 1
                 && b.faces().all().count() == 1
             {
@@ -84,7 +84,7 @@ impl ToShape for fj::Difference2d {
             let mut cycles = a;
             cycles.extend(b);
 
-            Faces(vec![Face::Face { cycles, surface }])
+            shape.faces().add(Face::Face { cycles, surface });
         };
 
         shape

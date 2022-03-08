@@ -2,7 +2,7 @@ use crate::{
     debug::DebugInfo,
     kernel::{
         geometry::Surface,
-        shape::{faces::Faces, Shape},
+        shape::Shape,
         topology::{
             edges::{Cycle, Edge},
             faces::Face,
@@ -30,10 +30,10 @@ impl ToShape for fj::Circle {
             .all()
             .map(|handle| (*handle).clone())
             .collect();
-        *shape.faces() = Faces(vec![Face::Face {
+        shape.faces().add(Face::Face {
             cycles,
             surface: Surface::x_y_plane(),
-        }]);
+        });
 
         shape
     }

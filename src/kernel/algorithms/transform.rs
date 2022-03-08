@@ -24,7 +24,7 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
 
     for face in original.faces().all() {
         let face = transform_face(&face, transform, &mut transformed);
-        transformed.faces().0.push(face);
+        transformed.faces().add(face);
     }
 
     transformed
