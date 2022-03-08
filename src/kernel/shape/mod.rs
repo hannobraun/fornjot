@@ -6,7 +6,7 @@ pub mod vertices;
 
 use crate::math::Scalar;
 
-use super::topology::{edges::Cycle, vertices::Vertex};
+use super::topology::{edges::Cycle, faces::Face, vertices::Vertex};
 
 use self::{
     cycles::Cycles, edges::Edges, faces::Faces, handle::Storage,
@@ -90,3 +90,4 @@ impl Shape {
 
 type VerticesInner = Vec<Storage<Vertex>>;
 type CyclesInner = Vec<Storage<Cycle>>;
+type FacesInner = Vec<Face>;

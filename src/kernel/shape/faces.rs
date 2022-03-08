@@ -4,12 +4,15 @@ use crate::{
     math::{Scalar, Triangle},
 };
 
-use super::handle::{Handle, Storage};
+use super::{
+    handle::{Handle, Storage},
+    FacesInner,
+};
 
 /// The faces of a shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Faces {
-    pub(super) faces: Vec<Face>,
+    pub(super) faces: FacesInner,
 }
 
 impl Faces {
