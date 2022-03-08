@@ -1,4 +1,7 @@
-use crate::kernel::topology::edges::Edge;
+use crate::kernel::{
+    geometry::{Curve, Line},
+    topology::{edges::Edge, vertices::Vertex},
+};
 
 use super::handle::{Handle, Storage};
 
@@ -22,5 +25,21 @@ impl Edges {
     /// and validate any constraints that apply to edge creation.
     pub fn add(&mut self, edge: Edge) -> Handle<Edge> {
         Storage::new(edge).handle()
+    }
+
+    /// Add a line segment to the shape
+    ///
+    /// Calls [`Edges::add`] internally, and is subject to the same
+    /// restrictions.
+    pub fn add_line_segment(
+        &mut self,
+        vertices: [Handle<Vertex>; 2],
+    ) -> Handle<Edge> {
+        self.add(Edge {
+            curve: Curve::Line(Line::from_points(
+                vertices.clone().map(|vertex| vertex.point()),
+            )),
+            vertices: Some(vertices),
+        })
     }
 }

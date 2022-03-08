@@ -1,6 +1,6 @@
 use crate::{
     kernel::{
-        geometry::{Circle, Curve, Line},
+        geometry::{Circle, Curve},
         shape::handle::Handle,
     },
     math::{Point, Scalar, Vector},
@@ -46,16 +46,6 @@ pub struct Edge {
 }
 
 impl Edge {
-    /// Create a line segment
-    pub fn line_segment(vertices: [Handle<Vertex>; 2]) -> Self {
-        Edge {
-            curve: Curve::Line(Line::from_points(
-                vertices.clone().map(|vertex| vertex.point()),
-            )),
-            vertices: Some(vertices),
-        }
-    }
-
     /// Create a circle
     pub fn circle(radius: Scalar) -> Self {
         Edge {
