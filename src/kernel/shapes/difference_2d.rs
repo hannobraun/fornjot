@@ -28,6 +28,14 @@ impl ToShape for fj::Difference2d {
                     cycle in each operand."
                 );
             }
+            if shape.faces().all().count() != 1 {
+                // See issue:
+                // https://github.com/hannobraun/Fornjot/issues/95
+                todo!(
+                    "The 2-dimensional difference operation only supports one \
+                    face in each operand."
+                );
+            }
         }
 
         // Can't panic, as we just verified that both shapes have one cycle.
@@ -41,22 +49,11 @@ impl ToShape for fj::Difference2d {
         }
 
         {
-            let (a, b) = if a.faces().all().count() == 1
-                && b.faces().all().count() == 1
-            {
-                // Can't panic. We just checked that length of `a` and `b` is 1.
-                (
-                    a.faces().all().next().unwrap(),
-                    b.faces().all().next().unwrap(),
-                )
-            } else {
-                // See issue:
-                // https://github.com/hannobraun/Fornjot/issues/95
-                todo!(
-                    "The 2-dimensional difference operation only supports one \
-                    face in each operand."
-                );
-            };
+            // Can't panic, as we just verified that both shapes have one face.
+            let (a, b) = (
+                a.faces().all().next().unwrap(),
+                b.faces().all().next().unwrap(),
+            );
 
             let (a, b, surface_a, surface_b) =
                 match ((*a).clone(), (*b).clone()) {
