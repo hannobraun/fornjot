@@ -25,12 +25,13 @@ impl ToShape for fj::Circle {
             .add(Edge::circle(Scalar::from_f64(self.radius)));
         shape.cycles().add(Cycle { edges: vec![edge] });
 
+        let cycles = shape
+            .cycles()
+            .all()
+            .map(|handle| (*handle).clone())
+            .collect();
         *shape.faces() = Faces(vec![Face::Face {
-            cycles: shape
-                .cycles()
-                .all()
-                .map(|handle| (*handle).clone())
-                .collect(),
+            cycles,
             surface: Surface::x_y_plane(),
         }]);
 
