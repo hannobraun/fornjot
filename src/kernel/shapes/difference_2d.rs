@@ -50,11 +50,11 @@ impl ToShape for fj::Difference2d {
 
         {
             // Can't panic, as we just verified that both shapes have one face.
-            let [a, b] = [&mut a, &mut b]
+            let [face_a, face_b] = [&mut a, &mut b]
                 .map(|shape| shape.faces().all().next().unwrap());
 
             let (a, b, surface_a, surface_b) =
-                match ((*a).clone(), (*b).clone()) {
+                match ((*face_a).clone(), (*face_b).clone()) {
                     (
                         Face::Face {
                             cycles: a,
