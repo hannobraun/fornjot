@@ -70,7 +70,7 @@ mod tests {
     use crate::{
         kernel::{
             geometry::{surfaces::Swept, Surface},
-            shape::Shape,
+            shape::{handle::Handle, Shape},
             topology::{
                 edges::{Cycle, Edge},
                 faces::Face,
@@ -104,7 +104,7 @@ mod tests {
 
     pub struct Triangle {
         shape: Shape,
-        face: Face,
+        face: Handle<Face>,
     }
 
     impl Triangle {
@@ -134,9 +134,9 @@ mod tests {
                 }],
             };
 
-            shape.faces().add(abc.clone());
+            let face = shape.faces().add(abc);
 
-            Self { shape, face: abc }
+            Self { shape, face }
         }
     }
 }
