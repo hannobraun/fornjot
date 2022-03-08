@@ -38,14 +38,17 @@ impl<T> Deref for Handle<T> {
     }
 }
 
+/// Internal type used in collections within [`Shape`]
 #[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub(super) struct Storage<T>(Rc<T>);
 
 impl<T> Storage<T> {
+    /// Create a [`Storage`] instance that wraps the provided object
     pub(super) fn new(value: T) -> Self {
         Self(Rc::new(value))
     }
 
+    /// Create a handle that refers to this [`Storage`] instance
     pub(super) fn handle(&self) -> Handle<T> {
         Handle(self.clone())
     }
