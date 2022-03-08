@@ -56,22 +56,23 @@ impl ToShape for fj::Difference2d {
                 );
             };
 
-            let (a, b, surface_a, surface_b) = match (a, b) {
-                (
-                    Face::Face {
-                        cycles: a,
-                        surface: surface_a,
-                    },
-                    Face::Face {
-                        cycles: b,
-                        surface: surface_b,
-                    },
-                ) => (a, b, surface_a, surface_b),
-                _ => {
-                    // None of the 2D types still use the triangles representation.
-                    unreachable!()
-                }
-            };
+            let (a, b, surface_a, surface_b) =
+                match ((*a).clone(), (*b).clone()) {
+                    (
+                        Face::Face {
+                            cycles: a,
+                            surface: surface_a,
+                        },
+                        Face::Face {
+                            cycles: b,
+                            surface: surface_b,
+                        },
+                    ) => (a, b, surface_a, surface_b),
+                    _ => {
+                        // None of the 2D types still use the triangles representation.
+                        unreachable!()
+                    }
+                };
 
             assert!(
                 surface_a == surface_b,

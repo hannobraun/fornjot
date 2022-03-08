@@ -92,4 +92,4 @@ impl Shape {
 
 type VerticesInner = Vec<Storage<Vertex>>;
 type CyclesInner = Vec<Storage<Cycle>>;
-type FacesInner = Vec<Face>;
+type FacesInner = Vec<Storage<Face>>;

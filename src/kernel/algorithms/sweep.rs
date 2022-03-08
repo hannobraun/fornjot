@@ -53,7 +53,7 @@ pub fn sweep_shape(
     }
 
     for face in bottom_faces {
-        shape.faces().add(face);
+        shape.faces().add((*face).clone());
     }
     for face in top_faces {
         shape.faces().add(face);

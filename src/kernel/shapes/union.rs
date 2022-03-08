@@ -19,10 +19,10 @@ impl ToShape for fj::Union {
         // See issue:
         // https://github.com/hannobraun/Fornjot/issues/42
         for face in a.faces().all() {
-            shape.faces().add(face);
+            shape.faces().add((*face).clone());
         }
         for face in b.faces().all() {
-            shape.faces().add(face);
+            shape.faces().add((*face).clone());
         }
 
         shape

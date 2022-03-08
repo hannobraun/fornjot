@@ -17,19 +17,23 @@ pub struct Faces<'r> {
 impl Faces<'_> {
     /// Add a face to the shape
     pub fn add(&mut self, face: Face) -> Handle<Face> {
-        self.faces.push(face.clone());
-        Storage::new(face).handle()
+        let storage = Storage::new(face);
+        let handle = storage.handle();
+
+        self.faces.push(storage);
+
+        handle
     }
 
     /// Check whether the shape contains a specific face
     #[cfg(test)]
     pub fn contains(&self, face: &Face) -> bool {
-        self.faces.contains(face)
+        self.faces.contains(&Storage::new(face.clone()))
     }
 
     /// Access an iterator over all faces
-    pub fn all(&self) -> impl Iterator<Item = Face> + '_ {
-        self.faces.iter().cloned()
+    pub fn all(&self) -> impl Iterator<Item = Handle<Face>> + '_ {
+        self.faces.iter().map(|storage| storage.handle())
     }
 
     pub fn triangles(
