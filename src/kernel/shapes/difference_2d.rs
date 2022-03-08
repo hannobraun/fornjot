@@ -16,8 +16,8 @@ impl ToShape for fj::Difference2d {
 
         let mut shape = Shape::new();
 
-        let mut a = self.a.to_shape(tolerance, debug_info);
-        let mut b = self.b.to_shape(tolerance, debug_info);
+        let [mut a, mut b] = [&self.a, &self.b]
+            .map(|shape| shape.to_shape(tolerance, debug_info));
 
         if a.cycles().all().count() == 1 && b.cycles().all().count() == 1 {
             let a = a.cycles().all().next().unwrap();
