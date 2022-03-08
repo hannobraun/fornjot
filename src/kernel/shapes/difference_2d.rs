@@ -69,7 +69,8 @@ impl ToShape for fj::Difference2d {
                         },
                     ) => (a, b, surface_a, surface_b),
                     _ => {
-                        // None of the 2D types still use the triangles representation.
+                        // None of the 2D types still use triangle
+                        // representation.
                         unreachable!()
                     }
                 };
