@@ -43,7 +43,7 @@ pub fn transform_face(
             for cycle in cycles {
                 let mut edges = Vec::new();
 
-                for edge in cycle.edges {
+                for edge in &cycle.edges {
                     let vertices = edge.vertices.clone().map(|vertices| {
                         vertices.map(|vertex| {
                             let point =
@@ -62,7 +62,7 @@ pub fn transform_face(
                     edges.push(edge);
                 }
 
-                cycles_trans.push(Cycle { edges });
+                cycles_trans.push(shape.cycles().add(Cycle { edges }));
             }
 
             Face::Face {
