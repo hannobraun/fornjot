@@ -14,10 +14,13 @@ pub struct Cycles<'r> {
 impl Cycles<'_> {
     /// Add a cycle to the shape
     ///
+    /// # Panics
+    ///
+    /// Panics, if the edges of the cycles are not part of this shape.
+    ///
     /// # Implementation note
     ///
-    /// This method should at some point validate the cycle:
-    /// - That it refers to valid edges that are part of `Shape`.
+    /// The validation of the cycle should be extended to cover more cases:
     /// - That those edges form a cycle.
     /// - That the cycle is not self-overlapping.
     /// - That there exists no duplicate cycle, with the same edges.
