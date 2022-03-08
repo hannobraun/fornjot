@@ -44,6 +44,9 @@ pub fn transform_face(
                 let mut edges = Vec::new();
 
                 for edge in &cycle.edges {
+                    let curve =
+                        shape.curves().add(edge.curve.transform(transform));
+
                     let vertices = edge.vertices.clone().map(|vertices| {
                         vertices.map(|vertex| {
                             let point =
@@ -53,10 +56,7 @@ pub fn transform_face(
                         })
                     });
 
-                    let edge = Edge {
-                        curve: edge.curve.transform(transform),
-                        vertices,
-                    };
+                    let edge = Edge { curve, vertices };
                     let edge = shape.edges().add(edge);
 
                     edges.push(edge);
@@ -65,9 +65,11 @@ pub fn transform_face(
                 cycles_trans.push(shape.cycles().add(Cycle { edges }));
             }
 
+            let surface = shape.surfaces().add(surface.transform(transform));
+
             Face::Face {
                 cycles: cycles_trans,
-                surface: surface.transform(transform),
+                surface,
             }
         }
         Face::Triangles(mut triangles) => {

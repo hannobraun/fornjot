@@ -26,7 +26,7 @@ pub enum Face {
     /// surface.
     Face {
         /// The surface that defines this face
-        surface: Surface,
+        surface: Handle<Surface>,
 
         /// The cycles that bound the face
         ///

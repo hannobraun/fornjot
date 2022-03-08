@@ -71,10 +71,7 @@ mod tests {
         kernel::{
             geometry::{surfaces::Swept, Surface},
             shape::{handle::Handle, Shape},
-            topology::{
-                edges::{Cycle, Edge},
-                faces::Face,
-            },
+            topology::{edges::Cycle, faces::Face},
         },
         math::{Point, Scalar, Vector},
     };
@@ -115,24 +112,22 @@ mod tests {
             let b = shape.vertices().add(b.into());
             let c = shape.vertices().add(c.into());
 
-            let ab = shape
-                .edges()
-                .add(Edge::line_segment([a.clone(), b.clone()]));
-            let bc = shape
-                .edges()
-                .add(Edge::line_segment([b.clone(), c.clone()]));
-            let ca = shape
-                .edges()
-                .add(Edge::line_segment([c.clone(), a.clone()]));
+            let ab = shape.edges().add_line_segment([a.clone(), b.clone()]);
+            let bc = shape.edges().add_line_segment([b.clone(), c.clone()]);
+            let ca = shape.edges().add_line_segment([c.clone(), a.clone()]);
 
             let cycles = shape.cycles().add(Cycle {
                 edges: vec![ab, bc, ca],
             });
 
+            let surface =
+                shape
+                    .surfaces()
+                    .add(Surface::Swept(Swept::plane_from_points(
+                        [a, b, c].map(|vertex| vertex.point()),
+                    )));
             let abc = Face::Face {
-                surface: Surface::Swept(Swept::plane_from_points(
-                    [a, b, c].map(|vertex| vertex.point()),
-                )),
+                surface,
                 cycles: vec![cycles],
             };
 

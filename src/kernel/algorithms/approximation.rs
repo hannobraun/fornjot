@@ -150,10 +150,7 @@ mod tests {
         kernel::{
             geometry::Surface,
             shape::Shape,
-            topology::{
-                edges::{Cycle, Edge},
-                faces::Face,
-            },
+            topology::{edges::Cycle, faces::Face},
         },
         math::{Point, Scalar, Segment},
     };
@@ -214,11 +211,9 @@ mod tests {
         let v2 = shape.vertices().add(b);
         let v3 = shape.vertices().add(c);
 
-        let ab = shape
-            .edges()
-            .add(Edge::line_segment([v1.clone(), v2.clone()]));
-        let bc = shape.edges().add(Edge::line_segment([v2, v3.clone()]));
-        let ca = shape.edges().add(Edge::line_segment([v3, v1]));
+        let ab = shape.edges().add_line_segment([v1.clone(), v2.clone()]);
+        let bc = shape.edges().add_line_segment([v2, v3.clone()]);
+        let ca = shape.edges().add_line_segment([v3, v1]);
 
         let cycle = Cycle {
             edges: vec![ab, bc, ca],
@@ -255,19 +250,18 @@ mod tests {
         let v3 = shape.vertices().add(c);
         let v4 = shape.vertices().add(d);
 
-        let ab = shape
-            .edges()
-            .add(Edge::line_segment([v1.clone(), v2.clone()]));
-        let bc = shape.edges().add(Edge::line_segment([v2, v3.clone()]));
-        let cd = shape.edges().add(Edge::line_segment([v3, v4.clone()]));
-        let da = shape.edges().add(Edge::line_segment([v4, v1]));
+        let ab = shape.edges().add_line_segment([v1.clone(), v2.clone()]);
+        let bc = shape.edges().add_line_segment([v2, v3.clone()]);
+        let cd = shape.edges().add_line_segment([v3, v4.clone()]);
+        let da = shape.edges().add_line_segment([v4, v1]);
 
         let abcd = shape.cycles().add(Cycle {
             edges: vec![ab, bc, cd, da],
         });
 
+        let surface = shape.surfaces().add(Surface::x_y_plane());
         let face = Face::Face {
-            surface: Surface::x_y_plane(),
+            surface,
             cycles: vec![abcd],
         };
 

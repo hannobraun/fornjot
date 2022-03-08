@@ -1,10 +1,4 @@
-use crate::{
-    kernel::{
-        geometry::{Circle, Curve, Line},
-        shape::handle::Handle,
-    },
-    math::{Point, Scalar, Vector},
-};
+use crate::kernel::{geometry::Curve, shape::handle::Handle};
 
 use super::vertices::Vertex;
 
@@ -26,7 +20,7 @@ pub struct Edge {
     /// The edge can be a segment of the curve that is bounded by two vertices,
     /// or if the curve is continuous (i.e. connects to itself), the edge could
     /// be defined by the whole curve, and have no bounding vertices.
-    pub curve: Curve,
+    pub curve: Handle<Curve>,
 
     /// Access the vertices that bound the edge on the curve
     ///
@@ -43,27 +37,4 @@ pub struct Edge {
     /// it by storing 3D vertices. It will probably make sense to revert this
     /// and store 1D vertices again, at some point.
     pub vertices: Option<[Handle<Vertex>; 2]>,
-}
-
-impl Edge {
-    /// Create a line segment
-    pub fn line_segment(vertices: [Handle<Vertex>; 2]) -> Self {
-        Edge {
-            curve: Curve::Line(Line::from_points(
-                vertices.clone().map(|vertex| vertex.point()),
-            )),
-            vertices: Some(vertices),
-        }
-    }
-
-    /// Create a circle
-    pub fn circle(radius: Scalar) -> Self {
-        Edge {
-            curve: Curve::Circle(Circle {
-                center: Point::origin(),
-                radius: Vector::from([radius, Scalar::ZERO]),
-            }),
-            vertices: None,
-        }
-    }
 }
