@@ -43,7 +43,7 @@ impl Shape {
 
             vertices: VerticesInner::new(),
             cycles: CyclesInner::new(),
-            faces: Faces(Vec::new()),
+            faces: Faces { faces: Vec::new() },
         }
     }
 

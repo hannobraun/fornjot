@@ -8,24 +8,26 @@ use super::handle::{Handle, Storage};
 
 /// The faces of a shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Faces(pub(super) Vec<Face>);
+pub struct Faces {
+    pub(super) faces: Vec<Face>,
+}
 
 impl Faces {
     /// Add a face to the shape
     pub fn add(&mut self, face: Face) -> Handle<Face> {
-        self.0.push(face.clone());
+        self.faces.push(face.clone());
         Storage::new(face).handle()
     }
 
     /// Check whether the shape contains a specific face
     #[cfg(test)]
     pub fn contains(&self, face: &Face) -> bool {
-        self.0.contains(face)
+        self.faces.contains(face)
     }
 
     /// Access an iterator over all faces
     pub fn all(&self) -> impl Iterator<Item = Face> + '_ {
-        self.0.iter().cloned()
+        self.faces.iter().cloned()
     }
 
     pub fn triangles(
@@ -34,7 +36,7 @@ impl Faces {
         out: &mut Vec<Triangle<3>>,
         debug_info: &mut DebugInfo,
     ) {
-        for face in &self.0 {
+        for face in &self.faces {
             face.triangles(tolerance, out, debug_info);
         }
     }
