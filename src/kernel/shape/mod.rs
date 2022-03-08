@@ -29,7 +29,7 @@ pub struct Shape {
 
     vertices: VerticesInner,
     cycles: CyclesInner,
-    faces: Faces,
+    faces: FacesInner,
 }
 
 impl Shape {
@@ -43,7 +43,7 @@ impl Shape {
 
             vertices: VerticesInner::new(),
             cycles: CyclesInner::new(),
-            faces: Faces { faces: Vec::new() },
+            faces: FacesInner::new(),
         }
     }
 
@@ -83,8 +83,10 @@ impl Shape {
     }
 
     /// Access the shape's faces
-    pub fn faces(&mut self) -> &mut Faces {
-        &mut self.faces
+    pub fn faces(&mut self) -> Faces {
+        Faces {
+            faces: &mut self.faces,
+        }
     }
 }
 
