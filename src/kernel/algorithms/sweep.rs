@@ -95,8 +95,8 @@ mod tests {
         let top_face =
             Triangle::new([[0., 0., 1.], [1., 0., 1.], [0., 1., 1.]]).face;
 
-        assert!(swept.faces().0.contains(&bottom_face));
-        assert!(swept.faces().0.contains(&top_face));
+        assert!(swept.faces().contains(&bottom_face));
+        assert!(swept.faces().contains(&top_face));
 
         // Side faces are not tested, as those use triangle representation. The
         // plan is to start testing them, as they are transitioned to b-rep.
