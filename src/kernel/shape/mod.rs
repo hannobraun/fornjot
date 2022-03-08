@@ -86,6 +86,7 @@ impl Shape {
     pub fn edges(&mut self) -> Edges {
         Edges {
             curves: Curves,
+            vertices: &mut self.vertices,
             edges: &mut self.edges,
         }
     }
