@@ -19,7 +19,19 @@ impl ToShape for fj::Difference2d {
         let [mut a, mut b] = [&self.a, &self.b]
             .map(|shape| shape.to_shape(tolerance, debug_info));
 
-        if a.cycles().all().count() == 1 && b.cycles().all().count() == 1 {
+        for shape in [&mut a, &mut b] {
+            if shape.cycles().all().count() != 1 {
+                // See issue:
+                // https://github.com/hannobraun/Fornjot/issues/95
+                todo!(
+                    "The 2-dimensional difference operation only supports one \
+                    cycle in each operand."
+                );
+            }
+        }
+
+        {
+            // Can't panic, as we just verified that both shapes have one cycle.
             let a = a.cycles().all().next().unwrap();
             let b = b.cycles().all().next().unwrap();
 
@@ -29,13 +41,6 @@ impl ToShape for fj::Difference2d {
             shape.cycles().add(Cycle {
                 edges: b.edges.clone(),
             });
-        } else {
-            // See issue:
-            // https://github.com/hannobraun/Fornjot/issues/95
-            todo!(
-                "The 2-dimensional difference operation only supports one \
-                cycle in each operand."
-            );
         }
 
         {
