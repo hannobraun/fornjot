@@ -2,6 +2,7 @@ pub mod cycles;
 pub mod edges;
 pub mod faces;
 pub mod handle;
+pub mod surfaces;
 pub mod vertices;
 
 use crate::math::Scalar;
@@ -10,7 +11,7 @@ use super::topology::{edges::Cycle, faces::Face, vertices::Vertex};
 
 use self::{
     cycles::Cycles, edges::Edges, faces::Faces, handle::Storage,
-    vertices::Vertices,
+    surfaces::Surfaces, vertices::Vertices,
 };
 
 /// The boundary representation of a shape
@@ -54,6 +55,11 @@ impl Shape {
     ) -> Self {
         self.min_distance = min_distance.into();
         self
+    }
+
+    /// Access the shape's surfaces
+    pub fn surfaces(&mut self) -> Surfaces {
+        Surfaces
     }
 
     /// Access the shape's vertices

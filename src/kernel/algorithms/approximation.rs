@@ -266,8 +266,9 @@ mod tests {
             edges: vec![ab, bc, cd, da],
         });
 
+        let surface = shape.surfaces().add(Surface::x_y_plane());
         let face = Face::Face {
-            surface: Surface::x_y_plane(),
+            surface,
             cycles: vec![abcd],
         };
 
