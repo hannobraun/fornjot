@@ -3,7 +3,7 @@ use crate::{
         shape::Shape,
         topology::{
             edges::{Cycle, Edge},
-            faces::Face,
+            faces::Face, vertices::Vertex,
         },
     },
     math::Transform,
@@ -40,7 +40,7 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
                                 let point =
                                     transform.transform_point(&vertex.point);
 
-                                transformed.vertices().add(point)
+                                transformed.vertices().add(Vertex { point })
                             })
                         });
 

@@ -68,7 +68,10 @@ impl Vertices<'_> {
 
 #[cfg(test)]
 mod tests {
-    use crate::{kernel::shape::Shape, math::Point};
+    use crate::{
+        kernel::{shape::Shape, topology::vertices::Vertex},
+        math::Point,
+    };
 
     const MIN_DISTANCE: f64 = 5e-7;
 
@@ -79,8 +82,8 @@ mod tests {
         let a = Point::from([0., 0., 0.]);
         let b = Point::from([5e-6, 0., 0.]);
 
-        shape.vertices().add(a);
-        shape.vertices().add(b);
+        shape.vertices().add(Vertex { point: a });
+        shape.vertices().add(Vertex { point: b });
     }
 
     #[test]
@@ -95,7 +98,7 @@ mod tests {
         let a = Point::from([0., 0., 0.]);
         let b = Point::from([5e-8, 0., 0.]);
 
-        shape.vertices().add(a);
-        shape.vertices().add(b);
+        shape.vertices().add(Vertex { point: a });
+        shape.vertices().add(Vertex { point: b });
     }
 }

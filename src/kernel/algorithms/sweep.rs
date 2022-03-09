@@ -6,6 +6,7 @@ use crate::{
         topology::{
             edges::{Cycle, Edge},
             faces::Face,
+            vertices::Vertex,
         },
     },
     math::{Scalar, Transform, Vector},
@@ -29,7 +30,7 @@ pub fn sweep_shape(
     let mut vertices = HashMap::new();
     for vertex_orig in shape_orig.vertices().all() {
         let point = vertex_orig.point + path;
-        let vertex = shape.vertices().add(point);
+        let vertex = shape.vertices().add(Vertex { point });
         vertices.insert(vertex_orig, vertex);
     }
 
@@ -140,7 +141,7 @@ mod tests {
         kernel::{
             geometry::{surfaces::Swept, Surface},
             shape::{handle::Handle, Shape},
-            topology::{edges::Cycle, faces::Face},
+            topology::{edges::Cycle, faces::Face, vertices::Vertex},
         },
         math::{Point, Scalar, Vector},
     };
@@ -177,9 +178,9 @@ mod tests {
         fn new([a, b, c]: [impl Into<Point<3>>; 3]) -> Self {
             let mut shape = Shape::new();
 
-            let a = shape.vertices().add(a.into());
-            let b = shape.vertices().add(b.into());
-            let c = shape.vertices().add(c.into());
+            let a = shape.vertices().add(Vertex { point: a.into() });
+            let b = shape.vertices().add(Vertex { point: b.into() });
+            let c = shape.vertices().add(Vertex { point: c.into() });
 
             let ab = shape.edges().add_line_segment([a.clone(), b.clone()]);
             let bc = shape.edges().add_line_segment([b.clone(), c.clone()]);

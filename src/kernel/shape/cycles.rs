@@ -48,7 +48,10 @@ impl Cycles<'_> {
 #[cfg(test)]
 mod tests {
     use crate::{
-        kernel::{shape::Shape, topology::edges::Cycle},
+        kernel::{
+            shape::Shape,
+            topology::{edges::Cycle, vertices::Vertex},
+        },
         math::Point,
     };
 
@@ -59,8 +62,8 @@ mod tests {
         let a = Point::from([0., 0., 0.]);
         let b = Point::from([1., 0., 0.]);
 
-        let a = shape.vertices().add(a);
-        let b = shape.vertices().add(b);
+        let a = shape.vertices().add(Vertex { point: a });
+        let b = shape.vertices().add(Vertex { point: b });
 
         let edge = shape.edges().add_line_segment([a, b]);
 
@@ -76,8 +79,8 @@ mod tests {
         let a = Point::from([0., 0., 0.]);
         let b = Point::from([1., 0., 0.]);
 
-        let a = other.vertices().add(a);
-        let b = other.vertices().add(b);
+        let a = other.vertices().add(Vertex { point: a });
+        let b = other.vertices().add(Vertex { point: b });
 
         let edge = other.edges().add_line_segment([a, b]);
 

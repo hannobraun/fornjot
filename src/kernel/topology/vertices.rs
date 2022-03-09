@@ -12,9 +12,3 @@ use crate::math::Point;
 pub struct Vertex {
     pub point: Point<3>,
 }
-
-impl From<Point<3>> for Vertex {
-    fn from(point: Point<3>) -> Self {
-        Self { point }
-    }
-}

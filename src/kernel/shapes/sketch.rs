@@ -3,7 +3,7 @@ use crate::{
     kernel::{
         geometry::Surface,
         shape::Shape,
-        topology::{edges::Cycle, faces::Face},
+        topology::{edges::Cycle, faces::Face, vertices::Vertex},
     },
     math::{Aabb, Point, Scalar},
 };
@@ -17,7 +17,7 @@ impl ToShape for fj::Sketch {
 
         for [x, y] in self.to_points() {
             let point = Point::from([x, y, 0.]);
-            let vertex = shape.vertices().add(point);
+            let vertex = shape.vertices().add(Vertex { point });
             vertices.push(vertex);
         }
 

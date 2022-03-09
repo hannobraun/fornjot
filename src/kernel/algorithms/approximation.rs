@@ -150,7 +150,7 @@ mod tests {
         kernel::{
             geometry::Surface,
             shape::Shape,
-            topology::{edges::Cycle, faces::Face},
+            topology::{edges::Cycle, faces::Face, vertices::Vertex},
         },
         math::{Point, Scalar, Segment},
     };
@@ -169,8 +169,8 @@ mod tests {
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = shape.vertices().add(a);
-        let v2 = shape.vertices().add(d);
+        let v1 = shape.vertices().add(Vertex { point: a });
+        let v2 = shape.vertices().add(Vertex { point: d });
 
         let points = vec![b, c];
 
@@ -207,9 +207,9 @@ mod tests {
         let b = Point::from([2., 3., 5.]);
         let c = Point::from([3., 5., 8.]);
 
-        let v1 = shape.vertices().add(a);
-        let v2 = shape.vertices().add(b);
-        let v3 = shape.vertices().add(c);
+        let v1 = shape.vertices().add(Vertex { point: a });
+        let v2 = shape.vertices().add(Vertex { point: b });
+        let v3 = shape.vertices().add(Vertex { point: c });
 
         let ab = shape.edges().add_line_segment([v1.clone(), v2.clone()]);
         let bc = shape.edges().add_line_segment([v2, v3.clone()]);
@@ -245,10 +245,10 @@ mod tests {
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = shape.vertices().add(a);
-        let v2 = shape.vertices().add(b);
-        let v3 = shape.vertices().add(c);
-        let v4 = shape.vertices().add(d);
+        let v1 = shape.vertices().add(Vertex { point: a });
+        let v2 = shape.vertices().add(Vertex { point: b });
+        let v3 = shape.vertices().add(Vertex { point: c });
+        let v4 = shape.vertices().add(Vertex { point: d });
 
         let ab = shape.edges().add_line_segment([v1.clone(), v2.clone()]);
         let bc = shape.edges().add_line_segment([v2, v3.clone()]);
