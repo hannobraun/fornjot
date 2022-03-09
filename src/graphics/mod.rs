@@ -14,5 +14,4 @@ pub use self::{
     renderer::{DrawError, Renderer},
 };
 
-const COLOR_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Bgra8UnormSrgb;
 const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth32Float;

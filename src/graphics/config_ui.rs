@@ -8,7 +8,7 @@ use wgpu_glyph::{
 
 use crate::math::Aabb;
 
-use super::{draw_config::DrawConfig, COLOR_FORMAT};
+use super::draw_config::DrawConfig;
 
 #[derive(Debug)]
 pub struct ConfigUi {
@@ -17,11 +17,14 @@ pub struct ConfigUi {
 }
 
 impl ConfigUi {
-    pub fn new(device: &wgpu::Device) -> Result<Self, InvalidFont> {
+    pub fn new(
+        device: &wgpu::Device,
+        color_format: wgpu::TextureFormat,
+    ) -> Result<Self, InvalidFont> {
         let font =
             FontArc::try_from_slice(include_bytes!("fonts/B612-Bold.ttf"))?;
         let glyph_brush =
-            GlyphBrushBuilder::using_font(font).build(device, COLOR_FORMAT);
+            GlyphBrushBuilder::using_font(font).build(device, color_format);
 
         let mut texts = HashMap::new();
         for element in Element::elements() {
