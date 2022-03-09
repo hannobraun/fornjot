@@ -33,15 +33,13 @@ impl Vertices<'_> {
     /// In the future, this method is likely to validate more than just vertex
     /// uniqueness. See documentation of [`crate::kernel`] for some context on
     /// that.
-    pub fn add(&mut self, vertex: impl Into<Vertex>) -> Handle<Vertex> {
-        let vertex = vertex.into();
-
+    pub fn add(&mut self, vertex: Vertex) -> Handle<Vertex> {
         // Make sure the new vertex is a minimum distance away from all existing
         // vertices. This minimum distance is defined to be half a µm, which
         // should provide more than enough precision for common use cases, while
         // being large enough to catch all invalid cases.
         for existing in &*self.vertices {
-            let distance = (existing.point - vertex.point).magnitude();
+            let distance = (existing.point() - vertex.point()).magnitude();
 
             if distance < self.min_distance {
                 warn!(
@@ -68,7 +66,10 @@ impl Vertices<'_> {
 
 #[cfg(test)]
 mod tests {
-    use crate::{kernel::shape::Shape, math::Point};
+    use crate::{
+        kernel::{shape::Shape, topology::vertices::Vertex},
+        math::Point,
+    };
 
     const MIN_DISTANCE: f64 = 5e-7;
 
@@ -76,8 +77,11 @@ mod tests {
     fn add_valid() {
         let mut shape = Shape::new().with_min_distance(MIN_DISTANCE);
 
-        shape.vertices().add(Point::from([0., 0., 0.]));
-        shape.vertices().add(Point::from([5e-6, 0., 0.]));
+        let a = shape.geometry().add_point(Point::from([0., 0., 0.]));
+        let b = shape.geometry().add_point(Point::from([5e-6, 0., 0.]));
+
+        shape.vertices().add(Vertex { point: a });
+        shape.vertices().add(Vertex { point: b });
     }
 
     #[test]
@@ -89,7 +93,10 @@ mod tests {
 
         let mut shape = Shape::new().with_min_distance(MIN_DISTANCE);
 
-        shape.vertices().add(Point::from([0., 0., 0.]));
-        shape.vertices().add(Point::from([5e-8, 0., 0.]));
+        let a = shape.geometry().add_point(Point::from([0., 0., 0.]));
+        let b = shape.geometry().add_point(Point::from([5e-8, 0., 0.]));
+
+        shape.vertices().add(Vertex { point: a });
+        shape.vertices().add(Vertex { point: b });
     }
 }

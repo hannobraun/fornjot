@@ -76,7 +76,7 @@ impl Edges<'_> {
         vertices: [Handle<Vertex>; 2],
     ) -> Handle<Edge> {
         let curve = self.geometry.add_curve(Curve::Line(Line::from_points(
-            vertices.clone().map(|vertex| vertex.point),
+            vertices.clone().map(|vertex| vertex.point()),
         )));
         self.add(Edge {
             curve,
@@ -94,14 +94,20 @@ impl Edges<'_> {
 
 #[cfg(test)]
 mod tests {
-    use crate::{kernel::shape::Shape, math::Point};
+    use crate::{
+        kernel::{shape::Shape, topology::vertices::Vertex},
+        math::Point,
+    };
 
     #[test]
     fn add_valid() {
         let mut shape = Shape::new();
 
-        let a = shape.vertices().add(Point::from([0., 0., 0.]));
-        let b = shape.vertices().add(Point::from([1., 0., 0.]));
+        let a = shape.geometry().add_point(Point::from([0., 0., 0.]));
+        let b = shape.geometry().add_point(Point::from([1., 0., 0.]));
+
+        let a = shape.vertices().add(Vertex { point: a });
+        let b = shape.vertices().add(Vertex { point: b });
 
         shape.edges().add_line_segment([a, b]);
     }
@@ -112,8 +118,11 @@ mod tests {
         let mut shape = Shape::new();
         let mut other = Shape::new();
 
-        let a = other.vertices().add(Point::from([0., 0., 0.]));
-        let b = other.vertices().add(Point::from([1., 0., 0.]));
+        let a = shape.geometry().add_point(Point::from([0., 0., 0.]));
+        let b = shape.geometry().add_point(Point::from([1., 0., 0.]));
+
+        let a = other.vertices().add(Vertex { point: a });
+        let b = other.vertices().add(Vertex { point: b });
 
         shape.edges().add_line_segment([a, b]);
     }

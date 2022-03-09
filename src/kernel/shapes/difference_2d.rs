@@ -55,9 +55,9 @@ impl ToShape for fj::Difference2d {
 
                 let vertices = edge.vertices.clone().map(|vs| {
                     vs.map(|vertex| {
-                        let vertex = *vertex.get();
+                        let vertex = vertex.get().clone();
                         vertices
-                            .entry(vertex)
+                            .entry(vertex.clone())
                             .or_insert_with(|| shape.vertices().add(vertex))
                             .clone()
                     })

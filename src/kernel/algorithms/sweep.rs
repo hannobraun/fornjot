@@ -6,6 +6,7 @@ use crate::{
         topology::{
             edges::{Cycle, Edge},
             faces::Face,
+            vertices::Vertex,
         },
     },
     math::{Scalar, Transform, Vector},
@@ -28,7 +29,8 @@ pub fn sweep_shape(
     // Create the new vertices.
     let mut vertices = HashMap::new();
     for vertex_orig in shape_orig.vertices().all() {
-        let vertex = shape.vertices().add(vertex_orig.point + path);
+        let point = shape.geometry().add_point(vertex_orig.point() + path);
+        let vertex = shape.vertices().add(Vertex { point });
         vertices.insert(vertex_orig, vertex);
     }
 
@@ -139,7 +141,7 @@ mod tests {
         kernel::{
             geometry::{surfaces::Swept, Surface},
             shape::{handle::Handle, Shape},
-            topology::{edges::Cycle, faces::Face},
+            topology::{edges::Cycle, faces::Face, vertices::Vertex},
         },
         math::{Point, Scalar, Vector},
     };
@@ -176,9 +178,13 @@ mod tests {
         fn new([a, b, c]: [impl Into<Point<3>>; 3]) -> Self {
             let mut shape = Shape::new();
 
-            let a = shape.vertices().add(a.into());
-            let b = shape.vertices().add(b.into());
-            let c = shape.vertices().add(c.into());
+            let a = shape.geometry().add_point(a.into());
+            let b = shape.geometry().add_point(b.into());
+            let c = shape.geometry().add_point(c.into());
+
+            let a = shape.vertices().add(Vertex { point: a });
+            let b = shape.vertices().add(Vertex { point: b });
+            let c = shape.vertices().add(Vertex { point: c });
 
             let ab = shape.edges().add_line_segment([a.clone(), b.clone()]);
             let bc = shape.edges().add_line_segment([b.clone(), c.clone()]);
@@ -189,7 +195,9 @@ mod tests {
             });
 
             let surface = shape.geometry().add_surface(Surface::Swept(
-                Swept::plane_from_points([a, b, c].map(|vertex| vertex.point)),
+                Swept::plane_from_points(
+                    [a, b, c].map(|vertex| vertex.point()),
+                ),
             ));
             let abc = Face::Face {
                 surface,

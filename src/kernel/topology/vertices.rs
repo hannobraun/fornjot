@@ -1,4 +1,4 @@
-use crate::math::Point;
+use crate::{kernel::shape::handle::Handle, math::Point};
 
 /// A vertex
 ///
@@ -8,13 +8,17 @@ use crate::math::Point;
 ///
 /// Points, on the other hand, might be used to approximate a shape for various
 /// purposes, without presenting any deeper truth about the shape's structure.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Vertex {
-    pub point: Point<3>,
+    pub point: Handle<Point<3>>,
 }
 
-impl From<Point<3>> for Vertex {
-    fn from(point: Point<3>) -> Self {
-        Self { point }
+impl Vertex {
+    /// Access the point that the vertex refers to
+    ///
+    /// This is a convenience method that saves the caller from dealing with the
+    /// `Handle`.
+    pub fn point(&self) -> Point<3> {
+        *self.point.get()
     }
 }
