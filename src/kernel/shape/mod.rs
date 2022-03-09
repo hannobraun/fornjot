@@ -15,7 +15,7 @@ use super::topology::{
 };
 
 use self::{
-    curves::Curves, cycles::Cycles, edges::Edges, faces::Faces,
+    curves::Geometry, cycles::Cycles, edges::Edges, faces::Faces,
     handle::Storage, surfaces::Surfaces, vertices::Vertices,
 };
 
@@ -65,8 +65,8 @@ impl Shape {
     }
 
     /// Access the shape's curves
-    pub fn curves(&mut self) -> Curves {
-        Curves
+    pub fn curves(&mut self) -> Geometry {
+        Geometry
     }
 
     /// Access the shape's surfaces
@@ -85,7 +85,7 @@ impl Shape {
     /// Access the shape's edges
     pub fn edges(&mut self) -> Edges {
         Edges {
-            curves: Curves,
+            curves: Geometry,
             vertices: &mut self.vertices,
             edges: &mut self.edges,
         }

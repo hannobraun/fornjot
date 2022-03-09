@@ -7,14 +7,14 @@ use crate::{
 };
 
 use super::{
-    curves::Curves,
+    curves::Geometry,
     handle::{Handle, Storage},
     EdgesInner, VerticesInner,
 };
 
 /// The edges of a shape
 pub struct Edges<'r> {
-    pub(super) curves: Curves,
+    pub(super) curves: Geometry,
     pub(super) vertices: &'r mut VerticesInner,
     pub(super) edges: &'r mut EdgesInner,
 }
