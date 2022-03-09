@@ -28,7 +28,8 @@ pub fn sweep_shape(
     // Create the new vertices.
     let mut vertices = HashMap::new();
     for vertex_orig in shape_orig.vertices().all() {
-        let vertex = shape.vertices().add(vertex_orig.point + path);
+        let point = vertex_orig.point + path;
+        let vertex = shape.vertices().add(point);
         vertices.insert(vertex_orig, vertex);
     }
 
