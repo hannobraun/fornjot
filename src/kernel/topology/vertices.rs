@@ -9,16 +9,18 @@ use crate::math::Point;
 /// Points, on the other hand, might be used to approximate a shape for various
 /// purposes, without presenting any deeper truth about the shape's structure.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Vertex(Point<3>);
+pub struct Vertex {
+    point: Point<3>,
+}
 
 impl Vertex {
     pub fn new(point: Point<3>) -> Self {
-        Self(point)
+        Self { point }
     }
 
     /// Access the point that defines this vertex
     pub fn point(&self) -> Point<3> {
-        self.0
+        self.point
     }
 }
 
