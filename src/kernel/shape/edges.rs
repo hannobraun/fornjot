@@ -83,6 +83,13 @@ impl Edges<'_> {
             vertices: Some(vertices),
         })
     }
+
+    /// Access iterator over all edges
+    ///
+    /// The caller must not make any assumptions about the order of edges.
+    pub fn all(&self) -> impl Iterator<Item = Handle<Edge>> + '_ {
+        self.edges.iter().map(|storage| storage.handle())
+    }
 }
 
 #[cfg(test)]

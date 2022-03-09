@@ -1,30 +1,101 @@
+use std::collections::HashMap;
+
 use crate::{
-    kernel::{shape::Shape, topology::faces::Face},
+    kernel::{
+        shape::Shape,
+        topology::{
+            edges::{Cycle, Edge},
+            faces::Face,
+        },
+    },
     math::{Scalar, Transform, Vector},
 };
 
-use super::{approximation::Approximation, transform::transform_face};
+use super::approximation::Approximation;
 
 /// Create a new shape by sweeping an existing one
 pub fn sweep_shape(
-    mut original: Shape,
+    mut shape_orig: Shape,
     path: Vector<3>,
     tolerance: Scalar,
 ) -> Shape {
-    let mut shape = Shape::new();
+    let mut shape = shape_orig.clone();
 
     let translation = Transform::translation(path);
 
-    let mut bottom_faces = Vec::new();
-    let mut top_faces = Vec::new();
     let mut side_faces = Vec::new();
 
-    for face in original.faces().all() {
-        bottom_faces.push(face.clone());
-        top_faces.push(transform_face(&face, &translation, &mut shape));
+    // Create the new vertices.
+    let mut vertices = HashMap::new();
+    for vertex_orig in shape_orig.vertices().all() {
+        let vertex = shape.vertices().add(vertex_orig.point() + path);
+        vertices.insert(vertex_orig, vertex);
     }
 
-    for cycle in original.cycles().all() {
+    // Create the new edges.
+    let mut edges = HashMap::new();
+    for edge_orig in shape_orig.edges().all() {
+        let curve = shape.curves().add(edge_orig.curve.transform(&translation));
+
+        let vertices = edge_orig.vertices.clone().map(|vs| {
+            vs.map(|vertex_orig| {
+                // Can't panic, as long as the original shape is valid. We've
+                // added all its vertices to `vertices`.
+                vertices.get(&vertex_orig).unwrap().clone()
+            })
+        });
+
+        let edge = shape.edges().add(Edge { curve, vertices });
+        edges.insert(edge_orig, edge);
+    }
+
+    // Create the new cycles.
+    let mut cycles = HashMap::new();
+    for cycle_orig in shape_orig.cycles().all() {
+        let edges = cycle_orig
+            .edges
+            .iter()
+            .map(|edge_orig| {
+                // Can't panic, as long as the original shape is valid. We've
+                // added all its edges to `edges`.
+                edges.get(edge_orig).unwrap().clone()
+            })
+            .collect();
+
+        let cycle = shape.cycles().add(Cycle { edges });
+        cycles.insert(cycle_orig, cycle);
+    }
+
+    // Create top faces.
+    for face_orig in shape_orig.faces().all() {
+        let (surface_orig, cycles_orig) = match &*face_orig {
+            Face::Face { surface, cycles } => (surface, cycles),
+            _ => {
+                // Sketches are created using boundary representation, so this
+                // case can't happen.
+                unreachable!()
+            }
+        };
+
+        let surface =
+            shape.surfaces().add(surface_orig.transform(&translation));
+
+        let cycles = cycles_orig
+            .iter()
+            .map(|cycle_orig| {
+                // Can't panic, as long as the original shape is valid. We've
+                // added all its cycles to `cycles`.
+                cycles.get(cycle_orig).unwrap().clone()
+            })
+            .collect();
+
+        shape.faces().add(Face::Face { surface, cycles });
+    }
+
+    // We could use `vertices` to create the side edges and faces here, but the
+    // side walls are created below, in triangle representation.
+
+    for cycle in shape_orig.cycles().all() {
         let approx = Approximation::for_cycle(&cycle, tolerance);
 
         // This will only work correctly, if the cycle consists of one edge. If
@@ -52,12 +123,6 @@ pub fn sweep_shape(
         side_faces.push(Face::Triangles(side_face));
     }
 
-    for face in bottom_faces {
-        shape.faces().add((*face).clone());
-    }
-    for face in top_faces {
-        shape.faces().add(face);
-    }
     for face in side_faces {
         shape.faces().add(face);
     }
