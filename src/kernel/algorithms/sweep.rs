@@ -80,7 +80,7 @@ pub fn sweep_shape(
         };
 
         let surface = shape
-            .surfaces()
+            .geometry()
             .add_surface(surface_orig.transform(&translation));
 
         let cycles = cycles_orig
@@ -188,7 +188,7 @@ mod tests {
                 edges: vec![ab, bc, ca],
             });
 
-            let surface = shape.surfaces().add_surface(Surface::Swept(
+            let surface = shape.geometry().add_surface(Surface::Swept(
                 Swept::plane_from_points([a, b, c].map(|vertex| vertex.point)),
             ));
             let abc = Face::Face {

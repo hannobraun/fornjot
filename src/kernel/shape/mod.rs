@@ -3,7 +3,6 @@ pub mod edges;
 pub mod faces;
 pub mod geometry;
 pub mod handle;
-pub mod surfaces;
 pub mod vertices;
 
 use crate::math::Scalar;
@@ -16,7 +15,7 @@ use super::topology::{
 
 use self::{
     cycles::Cycles, edges::Edges, faces::Faces, geometry::Geometry,
-    handle::Storage, surfaces::Surfaces, vertices::Vertices,
+    handle::Storage, vertices::Vertices,
 };
 
 /// The boundary representation of a shape
@@ -67,11 +66,6 @@ impl Shape {
     /// Access the shape's curves
     pub fn geometry(&mut self) -> Geometry {
         Geometry
-    }
-
-    /// Access the shape's surfaces
-    pub fn surfaces(&mut self) -> Surfaces {
-        Surfaces
     }
 
     /// Access the shape's vertices

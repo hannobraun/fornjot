@@ -55,7 +55,7 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
                 }
 
                 let surface = transformed
-                    .surfaces()
+                    .geometry()
                     .add_surface(surface.transform(transform));
 
                 Face::Face {
