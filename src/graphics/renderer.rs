@@ -11,7 +11,7 @@ use crate::{camera::Camera, math::Aabb, math::Point, window::Window};
 use super::{
     config_ui::ConfigUi, draw_config::DrawConfig, drawables::Drawables,
     geometries::Geometries, pipelines::Pipelines, transform::Transform,
-    uniforms::Uniforms, vertices::Vertices, COLOR_FORMAT, DEPTH_FORMAT,
+    uniforms::Uniforms, vertices::Vertices, DEPTH_FORMAT,
 };
 
 #[derive(Debug)]
@@ -65,9 +65,13 @@ impl Renderer {
             )
             .await?;
 
+        let color_format = surface
+            .get_preferred_format(&adapter)
+            .expect("Error determining preferred color format");
+
         let surface_config = wgpu::SurfaceConfiguration {
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
-            format: COLOR_FORMAT,
+            format: color_format,
             width: window.width(),
             height: window.height(),
             present_mode: wgpu::PresentMode::Fifo,
@@ -123,9 +127,10 @@ impl Renderer {
                 max: Point::from([0.0, 0.0, 0.0]),
             },
         );
-        let pipelines = Pipelines::new(&device, &bind_group_layout);
+        let pipelines =
+            Pipelines::new(&device, &bind_group_layout, color_format);
 
-        let config_ui = ConfigUi::new(&device)?;
+        let config_ui = ConfigUi::new(&device, color_format)?;
 
         Ok(Self {
             surface,

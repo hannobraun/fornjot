@@ -3,7 +3,7 @@ use std::mem::size_of;
 use super::{
     shaders::{Shader, Shaders},
     vertices::Vertex,
-    COLOR_FORMAT, DEPTH_FORMAT,
+    DEPTH_FORMAT,
 };
 
 #[derive(Debug)]
@@ -17,6 +17,7 @@ impl Pipelines {
     pub fn new(
         device: &wgpu::Device,
         bind_group_layout: &wgpu::BindGroupLayout,
+        color_format: wgpu::TextureFormat,
     ) -> Self {
         let pipeline_layout =
             device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
@@ -34,6 +35,7 @@ impl Pipelines {
                 shaders.model(),
                 wgpu::PrimitiveTopology::TriangleList,
                 wgpu::PolygonMode::Fill,
+                color_format,
             ),
             mesh: Pipeline::new(
                 device,
@@ -41,6 +43,7 @@ impl Pipelines {
                 shaders.mesh(),
                 wgpu::PrimitiveTopology::TriangleList,
                 wgpu::PolygonMode::Line,
+                color_format,
             ),
             lines: Pipeline::new(
                 device,
@@ -48,6 +51,7 @@ impl Pipelines {
                 shaders.lines(),
                 wgpu::PrimitiveTopology::LineList,
                 wgpu::PolygonMode::Line,
+                color_format,
             ),
         }
     }
@@ -63,6 +67,7 @@ impl Pipeline {
         shader: Shader,
         topology: wgpu::PrimitiveTopology,
         polygon_mode: wgpu::PolygonMode,
+        color_format: wgpu::TextureFormat,
     ) -> Self {
         let pipeline =
             device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
@@ -111,7 +116,7 @@ impl Pipeline {
                     module: shader.module,
                     entry_point: shader.frag_entry,
                     targets: &[wgpu::ColorTargetState {
-                        format: COLOR_FORMAT,
+                        format: color_format,
                         blend: Some(
                             wgpu::BlendState::PREMULTIPLIED_ALPHA_BLENDING,
                         ),
