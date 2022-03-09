@@ -28,7 +28,7 @@ pub fn sweep_shape(
     // Create the new vertices.
     let mut vertices = HashMap::new();
     for vertex_orig in shape_orig.vertices().all() {
-        let vertex = shape.vertices().add(vertex_orig.point() + path);
+        let vertex = shape.vertices().add(vertex_orig.point + path);
         vertices.insert(vertex_orig, vertex);
     }
 
@@ -189,7 +189,7 @@ mod tests {
                 shape
                     .surfaces()
                     .add(Surface::Swept(Swept::plane_from_points(
-                        [a, b, c].map(|vertex| vertex.point()),
+                        [a, b, c].map(|vertex| vertex.point),
                     )));
             let abc = Face::Face {
                 surface,
