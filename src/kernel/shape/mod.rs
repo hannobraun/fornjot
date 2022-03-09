@@ -85,7 +85,7 @@ impl Shape {
     /// Access the shape's edges
     pub fn edges(&mut self) -> Edges {
         Edges {
-            curves: Geometry,
+            geometry: Geometry,
             vertices: &mut self.vertices,
             edges: &mut self.edges,
         }
