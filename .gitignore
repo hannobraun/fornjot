@@ -7,3 +7,6 @@
 
 # Zola
 /website/public
+
+# IntelliJ IDEA
+/.idea
