@@ -7,7 +7,7 @@ pub struct Curves;
 
 impl Curves {
     /// Add a curve to the shape
-    pub fn add(&mut self, curve: Curve) -> Handle<Curve> {
+    pub fn add_curve(&mut self, curve: Curve) -> Handle<Curve> {
         Storage::new(curve).handle()
     }
 }

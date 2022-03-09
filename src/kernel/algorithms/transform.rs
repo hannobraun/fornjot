@@ -33,7 +33,7 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
                     for edge in &cycle.edges {
                         let curve = transformed
                             .curves()
-                            .add(edge.curve.transform(transform));
+                            .add_curve(edge.curve.transform(transform));
 
                         let vertices = edge.vertices.clone().map(|vertices| {
                             vertices.map(|vertex| {

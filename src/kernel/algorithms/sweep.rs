@@ -35,7 +35,9 @@ pub fn sweep_shape(
     // Create the new edges.
     let mut edges = HashMap::new();
     for edge_orig in shape_orig.edges().all() {
-        let curve = shape.curves().add(edge_orig.curve.transform(&translation));
+        let curve = shape
+            .curves()
+            .add_curve(edge_orig.curve.transform(&translation));
 
         let vertices = edge_orig.vertices.clone().map(|vs| {
             vs.map(|vertex_orig| {

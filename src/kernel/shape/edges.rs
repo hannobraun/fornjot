@@ -57,7 +57,7 @@ impl Edges<'_> {
     /// Calls [`Edges::add`] internally, and is subject to the same
     /// restrictions.
     pub fn add_circle(&mut self, radius: Scalar) -> Handle<Edge> {
-        let curve = self.curves.add(Curve::Circle(Circle {
+        let curve = self.curves.add_curve(Curve::Circle(Circle {
             center: Point::origin(),
             radius: Vector::from([radius, Scalar::ZERO]),
         }));
@@ -75,7 +75,7 @@ impl Edges<'_> {
         &mut self,
         vertices: [Handle<Vertex>; 2],
     ) -> Handle<Edge> {
-        let curve = self.curves.add(Curve::Line(Line::from_points(
+        let curve = self.curves.add_curve(Curve::Line(Line::from_points(
             vertices.clone().map(|vertex| vertex.point),
         )));
         self.add(Edge {
