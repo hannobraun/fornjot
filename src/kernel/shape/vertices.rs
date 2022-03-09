@@ -66,7 +66,7 @@ mod tests {
     const MIN_DISTANCE: f64 = 5e-7;
 
     #[test]
-    fn create_valid() {
+    fn add_valid() {
         let mut shape = Shape::new().with_min_distance(MIN_DISTANCE);
 
         shape.vertices().add(Point::from([0., 0., 0.]));
@@ -76,7 +76,7 @@ mod tests {
     #[test]
     #[ignore]
     #[should_panic]
-    fn create_invalid() {
+    fn add_invalid() {
         // Test is ignored, until vertex validation can be enabled for real.
         // See implementation note on `Vertices::create`.
 
