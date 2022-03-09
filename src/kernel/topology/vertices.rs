@@ -13,14 +13,8 @@ pub struct Vertex {
     pub point: Point<3>,
 }
 
-impl Vertex {
-    pub fn new(point: Point<3>) -> Self {
-        Self { point }
-    }
-}
-
 impl From<Point<3>> for Vertex {
     fn from(point: Point<3>) -> Self {
-        Self::new(point)
+        Self { point }
     }
 }
