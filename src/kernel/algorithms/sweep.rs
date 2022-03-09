@@ -29,7 +29,7 @@ pub fn sweep_shape(
     // Create the new vertices.
     let mut vertices = HashMap::new();
     for vertex_orig in shape_orig.vertices().all() {
-        let point = vertex_orig.point() + path;
+        let point = shape.geometry().add_point(vertex_orig.point() + path);
         let vertex = shape.vertices().add(Vertex { point });
         vertices.insert(vertex_orig, vertex);
     }
@@ -178,9 +178,13 @@ mod tests {
         fn new([a, b, c]: [impl Into<Point<3>>; 3]) -> Self {
             let mut shape = Shape::new();
 
-            let a = shape.vertices().add(Vertex { point: a.into() });
-            let b = shape.vertices().add(Vertex { point: b.into() });
-            let c = shape.vertices().add(Vertex { point: c.into() });
+            let a = shape.geometry().add_point(a.into());
+            let b = shape.geometry().add_point(b.into());
+            let c = shape.geometry().add_point(c.into());
+
+            let a = shape.vertices().add(Vertex { point: a });
+            let b = shape.vertices().add(Vertex { point: b });
+            let c = shape.vertices().add(Vertex { point: c });
 
             let ab = shape.edges().add_line_segment([a.clone(), b.clone()]);
             let bc = shape.edges().add_line_segment([b.clone(), c.clone()]);

@@ -1,4 +1,4 @@
-use crate::math::Point;
+use crate::{kernel::shape::handle::Handle, math::Point};
 
 /// A vertex
 ///
@@ -10,12 +10,12 @@ use crate::math::Point;
 /// purposes, without presenting any deeper truth about the shape's structure.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Vertex {
-    pub point: Point<3>,
+    pub point: Handle<Point<3>>,
 }
 
 impl Vertex {
     /// Access the point of the vertex
     pub fn point(&self) -> Point<3> {
-        self.point
+        *self.point.get()
     }
 }

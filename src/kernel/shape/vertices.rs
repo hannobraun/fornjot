@@ -77,8 +77,8 @@ mod tests {
     fn add_valid() {
         let mut shape = Shape::new().with_min_distance(MIN_DISTANCE);
 
-        let a = Point::from([0., 0., 0.]);
-        let b = Point::from([5e-6, 0., 0.]);
+        let a = shape.geometry().add_point(Point::from([0., 0., 0.]));
+        let b = shape.geometry().add_point(Point::from([5e-6, 0., 0.]));
 
         shape.vertices().add(Vertex { point: a });
         shape.vertices().add(Vertex { point: b });
@@ -93,8 +93,8 @@ mod tests {
 
         let mut shape = Shape::new().with_min_distance(MIN_DISTANCE);
 
-        let a = Point::from([0., 0., 0.]);
-        let b = Point::from([5e-8, 0., 0.]);
+        let a = shape.geometry().add_point(Point::from([0., 0., 0.]));
+        let b = shape.geometry().add_point(Point::from([5e-8, 0., 0.]));
 
         shape.vertices().add(Vertex { point: a });
         shape.vertices().add(Vertex { point: b });
