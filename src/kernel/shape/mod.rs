@@ -8,7 +8,11 @@ pub mod vertices;
 
 use crate::math::Scalar;
 
-use super::topology::{edges::Cycle, faces::Face, vertices::Vertex};
+use super::topology::{
+    edges::{Cycle, Edge},
+    faces::Face,
+    vertices::Vertex,
+};
 
 use self::{
     curves::Curves, cycles::Cycles, edges::Edges, faces::Faces,
@@ -24,6 +28,7 @@ pub struct Shape {
     min_distance: Scalar,
 
     vertices: VerticesInner,
+    edges: EdgesInner,
     cycles: CyclesInner,
     faces: FacesInner,
 }
@@ -38,6 +43,7 @@ impl Shape {
             min_distance: Scalar::from_f64(5e-7), // 0.5 µm
 
             vertices: VerticesInner::new(),
+            edges: EdgesInner::new(),
             cycles: CyclesInner::new(),
             faces: FacesInner::new(),
         }
@@ -78,12 +84,17 @@ impl Shape {
 
     /// Access the shape's edges
     pub fn edges(&mut self) -> Edges {
-        Edges { curves: Curves }
+        Edges {
+            curves: Curves,
+            vertices: &mut self.vertices,
+            edges: &mut self.edges,
+        }
     }
 
     /// Access the shape's cycles
     pub fn cycles(&mut self) -> Cycles {
         Cycles {
+            edges: &mut self.edges,
             cycles: &mut self.cycles,
         }
     }
@@ -97,5 +108,6 @@ impl Shape {
 }
 
 type VerticesInner = Vec<Storage<Vertex>>;
+type EdgesInner = Vec<Storage<Edge>>;
 type CyclesInner = Vec<Storage<Cycle>>;
 type FacesInner = Vec<Storage<Face>>;

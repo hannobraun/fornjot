@@ -9,14 +9,17 @@ use crate::{
 use super::{
     curves::Curves,
     handle::{Handle, Storage},
+    EdgesInner, VerticesInner,
 };
 
 /// The edges of a shape
-pub struct Edges {
+pub struct Edges<'r> {
     pub(super) curves: Curves,
+    pub(super) vertices: &'r mut VerticesInner,
+    pub(super) edges: &'r mut EdgesInner,
 }
 
-impl Edges {
+impl Edges<'_> {
     /// Add an edge to the shape
     ///
     /// If vertices are provided in `vertices`, they must be on `curve`.
@@ -32,7 +35,21 @@ impl Edges {
     /// the future, it can add the edge to the proper internal data structures,
     /// and validate any constraints that apply to edge creation.
     pub fn add(&mut self, edge: Edge) -> Handle<Edge> {
-        Storage::new(edge).handle()
+        for vertices in &edge.vertices {
+            for vertex in vertices {
+                assert!(
+                    self.vertices.contains(vertex.storage()),
+                    "Edge validation failed: {vertex:?} is not part of shape",
+                );
+            }
+        }
+
+        let storage = Storage::new(edge);
+        let handle = storage.handle();
+
+        self.edges.push(storage);
+
+        handle
     }
 
     /// Add a circle to the shape
@@ -65,5 +82,32 @@ impl Edges {
             curve,
             vertices: Some(vertices),
         })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{kernel::shape::Shape, math::Point};
+
+    #[test]
+    fn add_valid() {
+        let mut shape = Shape::new();
+
+        let a = shape.vertices().add(Point::from([0., 0., 0.]));
+        let b = shape.vertices().add(Point::from([1., 0., 0.]));
+
+        shape.edges().add_line_segment([a, b]);
+    }
+
+    #[test]
+    #[should_panic]
+    fn add_invalid() {
+        let mut shape = Shape::new();
+        let mut other = Shape::new();
+
+        let a = other.vertices().add(Point::from([0., 0., 0.]));
+        let b = other.vertices().add(Point::from([1., 0., 0.]));
+
+        shape.edges().add_line_segment([a, b]);
     }
 }

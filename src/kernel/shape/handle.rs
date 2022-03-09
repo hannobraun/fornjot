@@ -28,6 +28,11 @@ impl<T> Handle<T> {
     pub fn get(&self) -> &T {
         self.0.deref()
     }
+
+    /// Internal method to access the [`Storage`] this handle refers to
+    pub(super) fn storage(&self) -> &Storage<T> {
+        &self.0
+    }
 }
 
 impl<T> Deref for Handle<T> {
