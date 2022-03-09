@@ -87,7 +87,6 @@ impl Edges<'_> {
     /// Access iterator over all edges
     ///
     /// The caller must not make any assumptions about the order of edges.
-    #[allow(unused)]
     pub fn all(&self) -> impl Iterator<Item = Handle<Edge>> + '_ {
         self.edges.iter().map(|storage| storage.handle())
     }
