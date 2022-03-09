@@ -1,8 +1,13 @@
+use std::collections::HashMap;
+
 use crate::{
     debug::DebugInfo,
     kernel::{
         shape::Shape,
-        topology::{edges::Cycle, faces::Face},
+        topology::{
+            edges::{Cycle, Edge},
+            faces::Face,
+        },
     },
     math::{Aabb, Scalar},
 };
@@ -42,10 +47,23 @@ impl ToShape for fj::Difference2d {
         let cycles =
             [&mut a, &mut b].map(|shape| shape.cycles().all().next().unwrap());
 
+        let mut vertices = HashMap::new();
         for cycle in cycles {
             let mut edges = Vec::new();
             for edge in &cycle.edges {
-                let edge = shape.edges().add(edge.get().clone());
+                let curve = shape.curves().add(*edge.curve.get());
+
+                let vertices = edge.vertices.clone().map(|vs| {
+                    vs.map(|vertex| {
+                        let vertex = *vertex.get();
+                        vertices
+                            .entry(vertex)
+                            .or_insert_with(|| shape.vertices().add(vertex))
+                            .clone()
+                    })
+                });
+
+                let edge = shape.edges().add(Edge { curve, vertices });
                 edges.push(edge);
             }
 
