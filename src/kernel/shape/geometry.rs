@@ -2,7 +2,7 @@ use crate::kernel::geometry::Curve;
 
 use super::handle::{Handle, Storage};
 
-/// API to access the curves of a shape
+/// API to access a shape's geometry
 pub struct Geometry;
 
 impl Geometry {
