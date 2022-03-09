@@ -7,7 +7,7 @@ pub struct Surfaces;
 
 impl Surfaces {
     /// Add a surface to the shape
-    pub fn add(&mut self, surface: Surface) -> Handle<Surface> {
+    pub fn add_surface(&mut self, surface: Surface) -> Handle<Surface> {
         Storage::new(surface).handle()
     }
 }

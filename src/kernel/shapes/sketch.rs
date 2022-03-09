@@ -44,7 +44,7 @@ impl ToShape for fj::Sketch {
             shape.cycles().add(Cycle { edges });
         };
 
-        let surface = shape.surfaces().add(Surface::x_y_plane());
+        let surface = shape.surfaces().add_surface(Surface::x_y_plane());
         let face = Face::Face {
             cycles: shape.cycles().all().collect(),
             surface,

@@ -54,8 +54,9 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
                         .push(transformed.cycles().add(Cycle { edges }));
                 }
 
-                let surface =
-                    transformed.surfaces().add(surface.transform(transform));
+                let surface = transformed
+                    .surfaces()
+                    .add_surface(surface.transform(transform));
 
                 Face::Face {
                     cycles: cycles_trans,
