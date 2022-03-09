@@ -63,7 +63,7 @@ impl Shape {
         self
     }
 
-    /// Access the shape's curves
+    /// Access the shape's geometry
     pub fn geometry(&mut self) -> Geometry {
         Geometry
     }
