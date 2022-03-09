@@ -34,7 +34,7 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
 pub fn transform_face(
     original: &Face,
     transform: &Transform,
-    shape: &mut Shape,
+    transformed: &mut Shape,
 ) -> Face {
     match original.clone() {
         Face::Face { cycles, surface } => {
@@ -44,28 +44,30 @@ pub fn transform_face(
                 let mut edges = Vec::new();
 
                 for edge in &cycle.edges {
-                    let curve =
-                        shape.curves().add(edge.curve.transform(transform));
+                    let curve = transformed
+                        .curves()
+                        .add(edge.curve.transform(transform));
 
                     let vertices = edge.vertices.clone().map(|vertices| {
                         vertices.map(|vertex| {
                             let point =
                                 transform.transform_point(&vertex.point());
 
-                            shape.vertices().add(point)
+                            transformed.vertices().add(point)
                         })
                     });
 
                     let edge = Edge { curve, vertices };
-                    let edge = shape.edges().add(edge);
+                    let edge = transformed.edges().add(edge);
 
                     edges.push(edge);
                 }
 
-                cycles_trans.push(shape.cycles().add(Cycle { edges }));
+                cycles_trans.push(transformed.cycles().add(Cycle { edges }));
             }
 
-            let surface = shape.surfaces().add(surface.transform(transform));
+            let surface =
+                transformed.surfaces().add(surface.transform(transform));
 
             Face::Face {
                 cycles: cycles_trans,
