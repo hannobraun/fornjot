@@ -33,9 +33,7 @@ impl Vertices<'_> {
     /// In the future, this method is likely to validate more than just vertex
     /// uniqueness. See documentation of [`crate::kernel`] for some context on
     /// that.
-    pub fn add(&mut self, vertex: impl Into<Vertex>) -> Handle<Vertex> {
-        let vertex = vertex.into();
-
+    pub fn add(&mut self, vertex: Vertex) -> Handle<Vertex> {
         // Make sure the new vertex is a minimum distance away from all existing
         // vertices. This minimum distance is defined to be half a µm, which
         // should provide more than enough precision for common use cases, while
