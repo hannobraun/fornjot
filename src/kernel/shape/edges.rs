@@ -7,7 +7,7 @@ use crate::{
 };
 
 use super::{
-    curves::Geometry,
+    geometry::Geometry,
     handle::{Handle, Storage},
     EdgesInner, VerticesInner,
 };

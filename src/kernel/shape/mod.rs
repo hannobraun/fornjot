@@ -1,7 +1,7 @@
-pub mod curves;
 pub mod cycles;
 pub mod edges;
 pub mod faces;
+pub mod geometry;
 pub mod handle;
 pub mod surfaces;
 pub mod vertices;
@@ -15,7 +15,7 @@ use super::topology::{
 };
 
 use self::{
-    curves::Geometry, cycles::Cycles, edges::Edges, faces::Faces,
+    cycles::Cycles, edges::Edges, faces::Faces, geometry::Geometry,
     handle::Storage, surfaces::Surfaces, vertices::Vertices,
 };
 
