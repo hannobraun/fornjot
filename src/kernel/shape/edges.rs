@@ -76,7 +76,7 @@ impl Edges<'_> {
         vertices: [Handle<Vertex>; 2],
     ) -> Handle<Edge> {
         let curve = self.geometry.add_curve(Curve::Line(Line::from_points(
-            vertices.clone().map(|vertex| vertex.point),
+            vertices.clone().map(|vertex| vertex.point()),
         )));
         self.add(Edge {
             curve,

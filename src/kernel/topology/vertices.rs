@@ -12,3 +12,10 @@ use crate::math::Point;
 pub struct Vertex {
     pub point: Point<3>,
 }
+
+impl Vertex {
+    /// Access the point of the vertex
+    pub fn point(&self) -> Point<3> {
+        self.point
+    }
+}
