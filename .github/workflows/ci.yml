@@ -10,9 +10,6 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - ".vscode/**"
-      - "**.md"
   pull_request:
     types:
       - opened
