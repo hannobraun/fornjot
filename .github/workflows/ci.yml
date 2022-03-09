@@ -15,9 +15,6 @@ on:
       - opened
       - reopened
       - synchronize
-    paths-ignore:
-      - ".vscode/**"
-      - "**.md"
 
 env:
   CARGO_TERM_COLOR: always
