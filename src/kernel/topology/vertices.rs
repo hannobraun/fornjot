@@ -10,17 +10,12 @@ use crate::math::Point;
 /// purposes, without presenting any deeper truth about the shape's structure.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Vertex {
-    point: Point<3>,
+    pub point: Point<3>,
 }
 
 impl Vertex {
     pub fn new(point: Point<3>) -> Self {
         Self { point }
-    }
-
-    /// Access the point that defines this vertex
-    pub fn point(&self) -> Point<3> {
-        self.point
     }
 }
 

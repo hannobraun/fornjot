@@ -38,7 +38,7 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
                         let vertices = edge.vertices.clone().map(|vertices| {
                             vertices.map(|vertex| {
                                 let point =
-                                    transform.transform_point(&vertex.point());
+                                    transform.transform_point(&vertex.point);
 
                                 transformed.vertices().add(point)
                             })
