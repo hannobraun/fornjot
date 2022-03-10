@@ -58,7 +58,7 @@ mod tests {
     };
 
     #[test]
-    fn add() -> anyhow::Result<()> {
+    fn add_cycle() -> anyhow::Result<()> {
         struct TestShape {
             inner: Shape,
             edge: Handle<Edge>,
