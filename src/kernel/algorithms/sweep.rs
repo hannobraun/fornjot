@@ -158,12 +158,29 @@ mod tests {
             Scalar::from_f64(0.),
         );
 
-        let bottom_face = sketch.face;
+        let bottom_face = sketch.face.get().clone();
         let top_face =
-            Triangle::new([[0., 0., 1.], [1., 0., 1.], [0., 1., 1.]]).face;
+            Triangle::new([[0., 0., 1.], [1., 0., 1.], [0., 1., 1.]])
+                .face
+                .get()
+                .clone();
 
-        assert!(swept.faces().contains(&bottom_face));
-        assert!(swept.faces().contains(&top_face));
+        let mut contains_bottom_face = false;
+        let mut contains_top_face = false;
+
+        for face in swept.faces().all() {
+            if matches!(face.get(), Face::Face { .. }) {
+                if face.get().clone() == bottom_face {
+                    contains_bottom_face = true;
+                }
+                if face.get().clone() == top_face {
+                    contains_top_face = true;
+                }
+            }
+        }
+
+        assert!(contains_bottom_face);
+        assert!(contains_top_face);
 
         // Side faces are not tested, as those use triangle representation. The
         // plan is to start testing them, as they are transitioned to b-rep.

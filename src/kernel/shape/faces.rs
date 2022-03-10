@@ -25,12 +25,6 @@ impl Faces<'_> {
         handle
     }
 
-    /// Check whether the shape contains a specific face
-    #[cfg(test)]
-    pub fn contains(&self, face: &Face) -> bool {
-        self.faces.contains(&Storage::new(face.clone()))
-    }
-
     /// Access an iterator over all faces
     pub fn all(&self) -> impl Iterator<Item = Handle<Face>> + '_ {
         self.faces.iter().map(|storage| storage.handle())
