@@ -51,6 +51,38 @@ pub enum Face {
 }
 
 impl Face {
+    /// Access the surface that the face refers to
+    ///
+    /// This is a convenience method that saves the caller from dealing with the
+    /// [`Handle`].
+    pub fn surface(&self) -> Surface {
+        match self {
+            Self::Face { surface, .. } => *surface.get(),
+            _ => {
+                // No code that still uses triangle representation is calling
+                // this method.
+                unreachable!()
+            }
+        }
+    }
+
+    /// Access the cycles that the face refers to
+    ///
+    /// This is a convenience method that saves the caller from dealing with the
+    /// [`Handle`]s.
+    pub fn cycles(&self) -> impl Iterator<Item = Cycle> + '_ {
+        match self {
+            Self::Face { cycles, .. } => {
+                cycles.iter().map(|handle| handle.get().clone())
+            }
+            _ => {
+                // No code that still uses triangle representation is calling
+                // this method.
+                unreachable!()
+            }
+        }
+    }
+
     pub fn triangles(
         &self,
         tolerance: Scalar,

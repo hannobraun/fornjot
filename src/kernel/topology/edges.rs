@@ -12,6 +12,16 @@ pub struct Cycle {
     pub edges: Vec<Handle<Edge>>,
 }
 
+impl Cycle {
+    /// Access the edges that this cycle refers to
+    ///
+    /// This is a convenience method that saves the caller from dealing with the
+    /// [`Handle`]s.
+    pub fn edges(&self) -> impl Iterator<Item = Edge> + '_ {
+        self.edges.iter().map(|handle| handle.get().clone())
+    }
+}
+
 /// An edge of a shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edge {
@@ -37,4 +47,24 @@ pub struct Edge {
     /// it by storing 3D vertices. It will probably make sense to revert this
     /// and store 1D vertices again, at some point.
     pub vertices: Option<[Handle<Vertex>; 2]>,
+}
+
+impl Edge {
+    /// Access the curve that the edge refers to
+    ///
+    /// This is a convenience method that saves the caller from dealing with the
+    /// [`Handle`].
+    pub fn curve(&self) -> Curve {
+        *self.curve.get()
+    }
+
+    /// Access the vertices that the edge refers to
+    ///
+    /// This is a convenience method that saves the caller from dealing with the
+    /// [`Handle`]s.
+    pub fn vertices(&self) -> Option<[Vertex; 2]> {
+        self.vertices
+            .as_ref()
+            .map(|[a, b]| [a.get().clone(), b.get().clone()])
+    }
 }

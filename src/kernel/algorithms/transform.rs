@@ -34,17 +34,21 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
                     for edge in &cycle.edges {
                         let curve = transformed
                             .geometry()
-                            .add_curve(edge.curve.transform(transform));
+                            .add_curve(edge.curve().transform(transform));
 
-                        let vertices = edge.vertices.clone().map(|vertices| {
-                            vertices.map(|vertex| {
-                                let point = transformed.geometry().add_point(
-                                    transform.transform_point(&vertex.point()),
-                                );
+                        let vertices =
+                            edge.vertices().clone().map(|vertices| {
+                                vertices.map(|vertex| {
+                                    let point =
+                                        transformed.geometry().add_point(
+                                            transform.transform_point(
+                                                &vertex.point(),
+                                            ),
+                                        );
 
-                                transformed.vertices().add(Vertex { point })
-                            })
-                        });
+                                    transformed.vertices().add(Vertex { point })
+                                })
+                            });
 
                         let edge = Edge { curve, vertices };
                         let edge = transformed.edges().add(edge);
