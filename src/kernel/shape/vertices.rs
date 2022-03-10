@@ -4,7 +4,7 @@ use crate::{kernel::topology::vertices::Vertex, math::Scalar};
 
 use super::{
     handle::{Handle, Storage},
-    VerticesInner,
+    ValidationResult, VerticesInner,
 };
 
 /// The vertices of a shape
@@ -33,7 +33,7 @@ impl Vertices<'_> {
     /// In the future, this method is likely to validate more than just vertex
     /// uniqueness. See documentation of [`crate::kernel`] for some context on
     /// that.
-    pub fn add(&mut self, vertex: Vertex) -> Handle<Vertex> {
+    pub fn add(&mut self, vertex: Vertex) -> ValidationResult<Vertex> {
         // Make sure the new vertex is a minimum distance away from all existing
         // vertices. This minimum distance is defined to be half a µm, which
         // should provide more than enough precision for common use cases, while
@@ -53,7 +53,7 @@ impl Vertices<'_> {
         let handle = storage.handle();
         self.vertices.push(storage);
 
-        handle
+        Ok(handle)
     }
 
     /// Access iterator over all vertices
@@ -74,29 +74,23 @@ mod tests {
     const MIN_DISTANCE: f64 = 5e-7;
 
     #[test]
-    fn add_valid() {
+    fn add() -> anyhow::Result<()> {
         let mut shape = Shape::new().with_min_distance(MIN_DISTANCE);
 
-        let a = shape.geometry().add_point(Point::from([0., 0., 0.]));
-        let b = shape.geometry().add_point(Point::from([5e-6, 0., 0.]));
+        let point = shape.geometry().add_point(Point::from([0., 0., 0.]))?;
+        shape.vertices().add(Vertex { point })?;
 
-        shape.vertices().add(Vertex { point: a });
-        shape.vertices().add(Vertex { point: b });
-    }
+        // `point` is too close to the original point. `assert!` is commented,
+        // because that only causes a warning to be logged right now.
+        let point = shape.geometry().add_point(Point::from([5e-6, 0., 0.]))?;
+        let _result = shape.vertices().add(Vertex { point });
+        // assert!(matches!(result, Err(ValidationError::Uniqueness)));
 
-    #[test]
-    #[ignore]
-    #[should_panic]
-    fn add_invalid() {
-        // Test is ignored, until vertex validation can be enabled for real.
-        // See implementation note on `Vertices::create`.
+        // `point` is farther than `MIN_DISTANCE` away from original point.
+        // Should work.
+        let point = shape.geometry().add_point(Point::from([5e-6, 0., 0.]))?;
+        shape.vertices().add(Vertex { point })?;
 
-        let mut shape = Shape::new().with_min_distance(MIN_DISTANCE);
-
-        let a = shape.geometry().add_point(Point::from([0., 0., 0.]));
-        let b = shape.geometry().add_point(Point::from([5e-8, 0., 0.]));
-
-        shape.vertices().add(Vertex { point: a });
-        shape.vertices().add(Vertex { point: b });
+        Ok(())
     }
 }

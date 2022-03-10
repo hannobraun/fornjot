@@ -157,11 +157,11 @@ mod tests {
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = shape.geometry().add_point(a);
-        let v2 = shape.geometry().add_point(d);
+        let v1 = shape.geometry().add_point(a).unwrap();
+        let v2 = shape.geometry().add_point(d).unwrap();
 
-        let v1 = shape.vertices().add(Vertex { point: v1 });
-        let v2 = shape.vertices().add(Vertex { point: v2 });
+        let v1 = shape.vertices().add(Vertex { point: v1 }).unwrap();
+        let v2 = shape.vertices().add(Vertex { point: v2 }).unwrap();
 
         let points = vec![b, c];
 
@@ -201,17 +201,20 @@ mod tests {
         let b = Point::from([2., 3., 5.]);
         let c = Point::from([3., 5., 8.]);
 
-        let v1 = shape.geometry().add_point(a);
-        let v2 = shape.geometry().add_point(b);
-        let v3 = shape.geometry().add_point(c);
+        let v1 = shape.geometry().add_point(a).unwrap();
+        let v2 = shape.geometry().add_point(b).unwrap();
+        let v3 = shape.geometry().add_point(c).unwrap();
 
-        let v1 = shape.vertices().add(Vertex { point: v1 });
-        let v2 = shape.vertices().add(Vertex { point: v2 });
-        let v3 = shape.vertices().add(Vertex { point: v3 });
+        let v1 = shape.vertices().add(Vertex { point: v1 }).unwrap();
+        let v2 = shape.vertices().add(Vertex { point: v2 }).unwrap();
+        let v3 = shape.vertices().add(Vertex { point: v3 }).unwrap();
 
-        let ab = shape.edges().add_line_segment([v1.clone(), v2.clone()]);
-        let bc = shape.edges().add_line_segment([v2, v3.clone()]);
-        let ca = shape.edges().add_line_segment([v3, v1]);
+        let ab = shape
+            .edges()
+            .add_line_segment([v1.clone(), v2.clone()])
+            .unwrap();
+        let bc = shape.edges().add_line_segment([v2, v3.clone()]).unwrap();
+        let ca = shape.edges().add_line_segment([v3, v1]).unwrap();
 
         let cycle = Cycle {
             edges: vec![ab, bc, ca],
@@ -243,26 +246,33 @@ mod tests {
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = shape.geometry().add_point(a);
-        let v2 = shape.geometry().add_point(b);
-        let v3 = shape.geometry().add_point(c);
-        let v4 = shape.geometry().add_point(d);
+        let v1 = shape.geometry().add_point(a).unwrap();
+        let v2 = shape.geometry().add_point(b).unwrap();
+        let v3 = shape.geometry().add_point(c).unwrap();
+        let v4 = shape.geometry().add_point(d).unwrap();
 
-        let v1 = shape.vertices().add(Vertex { point: v1 });
-        let v2 = shape.vertices().add(Vertex { point: v2 });
-        let v3 = shape.vertices().add(Vertex { point: v3 });
-        let v4 = shape.vertices().add(Vertex { point: v4 });
+        let v1 = shape.vertices().add(Vertex { point: v1 }).unwrap();
+        let v2 = shape.vertices().add(Vertex { point: v2 }).unwrap();
+        let v3 = shape.vertices().add(Vertex { point: v3 }).unwrap();
+        let v4 = shape.vertices().add(Vertex { point: v4 }).unwrap();
 
-        let ab = shape.edges().add_line_segment([v1.clone(), v2.clone()]);
-        let bc = shape.edges().add_line_segment([v2, v3.clone()]);
-        let cd = shape.edges().add_line_segment([v3, v4.clone()]);
-        let da = shape.edges().add_line_segment([v4, v1]);
+        let ab = shape
+            .edges()
+            .add_line_segment([v1.clone(), v2.clone()])
+            .unwrap();
+        let bc = shape.edges().add_line_segment([v2, v3.clone()]).unwrap();
+        let cd = shape.edges().add_line_segment([v3, v4.clone()]).unwrap();
+        let da = shape.edges().add_line_segment([v4, v1]).unwrap();
 
-        let abcd = shape.cycles().add(Cycle {
-            edges: vec![ab, bc, cd, da],
-        });
+        let abcd = shape
+            .cycles()
+            .add(Cycle {
+                edges: vec![ab, bc, cd, da],
+            })
+            .unwrap();
 
-        let surface = shape.geometry().add_surface(Surface::x_y_plane());
+        let surface =
+            shape.geometry().add_surface(Surface::x_y_plane()).unwrap();
         let face = Face::Face {
             surface,
             cycles: vec![abcd],

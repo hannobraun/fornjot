@@ -9,7 +9,7 @@ use crate::{
 use super::{
     geometry::Geometry,
     handle::{Handle, Storage},
-    EdgesInner, VerticesInner,
+    EdgesInner, ValidationError, ValidationResult, VerticesInner,
 };
 
 /// The edges of a shape
@@ -34,13 +34,12 @@ impl Edges<'_> {
     /// Right now this is just an overly complicated constructor for `Edge`. In
     /// the future, it can add the edge to the proper internal data structures,
     /// and validate any constraints that apply to edge creation.
-    pub fn add(&mut self, edge: Edge) -> Handle<Edge> {
+    pub fn add(&mut self, edge: Edge) -> ValidationResult<Edge> {
         for vertices in &edge.vertices {
             for vertex in vertices {
-                assert!(
-                    self.vertices.contains(vertex.storage()),
-                    "Edge validation failed: {vertex:?} is not part of shape",
-                );
+                if !self.vertices.contains(vertex.storage()) {
+                    return Err(ValidationError::Structural);
+                }
             }
         }
 
@@ -49,18 +48,18 @@ impl Edges<'_> {
 
         self.edges.push(storage);
 
-        handle
+        Ok(handle)
     }
 
     /// Add a circle to the shape
     ///
     /// Calls [`Edges::add`] internally, and is subject to the same
     /// restrictions.
-    pub fn add_circle(&mut self, radius: Scalar) -> Handle<Edge> {
+    pub fn add_circle(&mut self, radius: Scalar) -> ValidationResult<Edge> {
         let curve = self.geometry.add_curve(Curve::Circle(Circle {
             center: Point::origin(),
             radius: Vector::from([radius, Scalar::ZERO]),
-        }));
+        }))?;
         self.add(Edge {
             curve,
             vertices: None,
@@ -74,10 +73,10 @@ impl Edges<'_> {
     pub fn add_line_segment(
         &mut self,
         vertices: [Handle<Vertex>; 2],
-    ) -> Handle<Edge> {
+    ) -> ValidationResult<Edge> {
         let curve = self.geometry.add_curve(Curve::Line(Line::from_points(
             vertices.clone().map(|vertex| vertex.point()),
-        )));
+        )))?;
         self.add(Edge {
             curve,
             vertices: Some(vertices),
@@ -95,35 +94,41 @@ impl Edges<'_> {
 #[cfg(test)]
 mod tests {
     use crate::{
-        kernel::{shape::Shape, topology::vertices::Vertex},
+        kernel::{
+            shape::{Shape, ValidationError},
+            topology::vertices::Vertex,
+        },
         math::Point,
     };
 
     #[test]
-    fn add_valid() {
-        let mut shape = Shape::new();
-
-        let a = shape.geometry().add_point(Point::from([0., 0., 0.]));
-        let b = shape.geometry().add_point(Point::from([1., 0., 0.]));
-
-        let a = shape.vertices().add(Vertex { point: a });
-        let b = shape.vertices().add(Vertex { point: b });
-
-        shape.edges().add_line_segment([a, b]);
-    }
-
-    #[test]
-    #[should_panic]
-    fn add_invalid() {
+    fn add() -> anyhow::Result<()> {
         let mut shape = Shape::new();
         let mut other = Shape::new();
 
-        let a = shape.geometry().add_point(Point::from([0., 0., 0.]));
-        let b = shape.geometry().add_point(Point::from([1., 0., 0.]));
+        let a = other.geometry().add_point(Point::from([0., 0., 0.]))?;
+        let b = other.geometry().add_point(Point::from([1., 0., 0.]))?;
 
-        let a = other.vertices().add(Vertex { point: a });
-        let b = other.vertices().add(Vertex { point: b });
+        let a = other.vertices().add(Vertex { point: a })?;
+        let b = other.vertices().add(Vertex { point: b })?;
 
-        shape.edges().add_line_segment([a, b]);
+        // Shouldn't work. None of the vertices have been added to `shape`.
+        let result = shape.edges().add_line_segment([a.clone(), b.clone()]);
+        assert!(matches!(result, Err(ValidationError::Structural)));
+
+        let a = shape.geometry().add_point(a.point())?;
+        let a = shape.vertices().add(Vertex { point: a })?;
+
+        // Shouldn't work. Only `a` has been added to `shape`.
+        let result = shape.edges().add_line_segment([a.clone(), b.clone()]);
+        assert!(matches!(result, Err(ValidationError::Structural)));
+
+        let b = shape.geometry().add_point(b.point())?;
+        let b = shape.vertices().add(Vertex { point: b })?;
+
+        // Both `a` and `b` have been added to `shape`. Should work!
+        shape.edges().add_line_segment([a, b])?;
+
+        Ok(())
     }
 }

@@ -29,8 +29,11 @@ pub fn sweep_shape(
     // Create the new vertices.
     let mut vertices = HashMap::new();
     for vertex_orig in shape_orig.vertices().all() {
-        let point = shape.geometry().add_point(vertex_orig.point() + path);
-        let vertex = shape.vertices().add(Vertex { point });
+        let point = shape
+            .geometry()
+            .add_point(vertex_orig.point() + path)
+            .unwrap();
+        let vertex = shape.vertices().add(Vertex { point }).unwrap();
         vertices.insert(vertex_orig, vertex);
     }
 
@@ -39,7 +42,8 @@ pub fn sweep_shape(
     for edge_orig in shape_orig.edges().all() {
         let curve = shape
             .geometry()
-            .add_curve(edge_orig.curve().transform(&translation));
+            .add_curve(edge_orig.curve().transform(&translation))
+            .unwrap();
 
         let vertices = edge_orig.vertices.clone().map(|vs| {
             vs.map(|vertex_orig| {
@@ -49,7 +53,7 @@ pub fn sweep_shape(
             })
         });
 
-        let edge = shape.edges().add(Edge { curve, vertices });
+        let edge = shape.edges().add(Edge { curve, vertices }).unwrap();
         edges.insert(edge_orig, edge);
     }
 
@@ -66,7 +70,7 @@ pub fn sweep_shape(
             })
             .collect();
 
-        let cycle = shape.cycles().add(Cycle { edges });
+        let cycle = shape.cycles().add(Cycle { edges }).unwrap();
         cycles.insert(cycle_orig, cycle);
     }
 
@@ -83,7 +87,8 @@ pub fn sweep_shape(
 
         let surface = shape
             .geometry()
-            .add_surface(face_orig.surface().transform(&translation));
+            .add_surface(face_orig.surface().transform(&translation))
+            .unwrap();
 
         let cycles = cycles_orig
             .iter()
@@ -94,7 +99,7 @@ pub fn sweep_shape(
             })
             .collect();
 
-        shape.faces().add(Face::Face { surface, cycles });
+        shape.faces().add(Face::Face { surface, cycles }).unwrap();
     }
 
     // We could use `vertices` to create the side edges and faces here, but the
@@ -129,7 +134,7 @@ pub fn sweep_shape(
     }
 
     for face in side_faces {
-        shape.faces().add(face);
+        shape.faces().add(face).unwrap();
     }
 
     shape
@@ -195,33 +200,46 @@ mod tests {
         fn new([a, b, c]: [impl Into<Point<3>>; 3]) -> Self {
             let mut shape = Shape::new();
 
-            let a = shape.geometry().add_point(a.into());
-            let b = shape.geometry().add_point(b.into());
-            let c = shape.geometry().add_point(c.into());
+            let a = shape.geometry().add_point(a.into()).unwrap();
+            let b = shape.geometry().add_point(b.into()).unwrap();
+            let c = shape.geometry().add_point(c.into()).unwrap();
 
-            let a = shape.vertices().add(Vertex { point: a });
-            let b = shape.vertices().add(Vertex { point: b });
-            let c = shape.vertices().add(Vertex { point: c });
+            let a = shape.vertices().add(Vertex { point: a }).unwrap();
+            let b = shape.vertices().add(Vertex { point: b }).unwrap();
+            let c = shape.vertices().add(Vertex { point: c }).unwrap();
 
-            let ab = shape.edges().add_line_segment([a.clone(), b.clone()]);
-            let bc = shape.edges().add_line_segment([b.clone(), c.clone()]);
-            let ca = shape.edges().add_line_segment([c.clone(), a.clone()]);
+            let ab = shape
+                .edges()
+                .add_line_segment([a.clone(), b.clone()])
+                .unwrap();
+            let bc = shape
+                .edges()
+                .add_line_segment([b.clone(), c.clone()])
+                .unwrap();
+            let ca = shape
+                .edges()
+                .add_line_segment([c.clone(), a.clone()])
+                .unwrap();
 
-            let cycles = shape.cycles().add(Cycle {
-                edges: vec![ab, bc, ca],
-            });
+            let cycles = shape
+                .cycles()
+                .add(Cycle {
+                    edges: vec![ab, bc, ca],
+                })
+                .unwrap();
 
-            let surface = shape.geometry().add_surface(Surface::Swept(
-                Swept::plane_from_points(
+            let surface = shape
+                .geometry()
+                .add_surface(Surface::Swept(Swept::plane_from_points(
                     [a, b, c].map(|vertex| vertex.point()),
-                ),
-            ));
+                )))
+                .unwrap();
             let abc = Face::Face {
                 surface,
                 cycles: vec![cycles],
             };
 
-            let face = shape.faces().add(abc);
+            let face = shape.faces().add(abc).unwrap();
 
             Self { shape, face }
         }
