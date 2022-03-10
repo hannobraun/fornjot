@@ -2,7 +2,7 @@ pub mod edges;
 pub mod faces;
 pub mod geometry;
 pub mod handle;
-pub mod vertices;
+pub mod topology;
 
 use crate::math::Scalar;
 
@@ -17,7 +17,7 @@ use self::{
     faces::Faces,
     geometry::Geometry,
     handle::{Handle, Storage},
-    vertices::Topology,
+    topology::Topology,
 };
 
 /// The boundary representation of a shape
