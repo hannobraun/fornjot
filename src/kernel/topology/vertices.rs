@@ -10,6 +10,11 @@ use crate::{kernel::shape::handle::Handle, math::Point};
 ///
 /// Points, on the other hand, might be used to approximate a shape for various
 /// purposes, without presenting any deeper truth about the shape's structure.
+///
+/// # Equality
+///
+/// Please refer to [`crate::kernel::topology`] for documentation on the
+/// equality of topological objects.
 #[derive(Clone, Debug, Eq, Ord, PartialOrd)]
 pub struct Vertex {
     pub point: Handle<Point<3>>,

@@ -9,6 +9,11 @@ use super::vertices::Vertex;
 /// The end of each edge in the cycle must connect to the beginning of the next
 /// edge. The end of the last edge must connect to the beginning of the first
 /// one.
+///
+/// # Equality
+///
+/// Please refer to [`crate::kernel::topology`] for documentation on the
+/// equality of topological objects.
 #[derive(Clone, Debug, Eq, Ord, PartialOrd)]
 pub struct Cycle {
     pub edges: Vec<Handle<Edge>>,
@@ -39,6 +44,11 @@ impl Hash for Cycle {
 }
 
 /// An edge of a shape
+///
+/// # Equality
+///
+/// Please refer to [`crate::kernel::topology`] for documentation on the
+/// equality of topological objects.
 #[derive(Clone, Debug, Eq, Ord, PartialOrd)]
 pub struct Edge {
     /// Access the curve that defines the edge's geometry

@@ -21,6 +21,11 @@ use crate::{
 use super::edges::Cycle;
 
 /// A face of a shape
+///
+/// # Equality
+///
+/// Please refer to [`crate::kernel::topology`] for documentation on the
+/// equality of topological objects.
 #[derive(Clone, Debug, Eq, Ord, PartialOrd)]
 pub enum Face {
     /// A face of a shape
