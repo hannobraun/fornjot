@@ -100,22 +100,18 @@ mod tests {
     };
 
     #[test]
-    fn add_valid() {
+    fn add_valid() -> anyhow::Result<()> {
         let mut shape = Shape::new();
 
-        let a = shape
-            .geometry()
-            .add_point(Point::from([0., 0., 0.]))
-            .unwrap();
-        let b = shape
-            .geometry()
-            .add_point(Point::from([1., 0., 0.]))
-            .unwrap();
+        let a = shape.geometry().add_point(Point::from([0., 0., 0.]))?;
+        let b = shape.geometry().add_point(Point::from([1., 0., 0.]))?;
 
-        let a = shape.vertices().add(Vertex { point: a }).unwrap();
-        let b = shape.vertices().add(Vertex { point: b }).unwrap();
+        let a = shape.vertices().add(Vertex { point: a })?;
+        let b = shape.vertices().add(Vertex { point: b })?;
 
-        shape.edges().add_line_segment([a, b]).unwrap();
+        shape.edges().add_line_segment([a, b])?;
+
+        Ok(())
     }
 
     #[test]

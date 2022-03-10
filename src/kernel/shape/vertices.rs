@@ -74,20 +74,16 @@ mod tests {
     const MIN_DISTANCE: f64 = 5e-7;
 
     #[test]
-    fn add_valid() {
+    fn add_valid() -> anyhow::Result<()> {
         let mut shape = Shape::new().with_min_distance(MIN_DISTANCE);
 
-        let a = shape
-            .geometry()
-            .add_point(Point::from([0., 0., 0.]))
-            .unwrap();
-        let b = shape
-            .geometry()
-            .add_point(Point::from([5e-6, 0., 0.]))
-            .unwrap();
+        let a = shape.geometry().add_point(Point::from([0., 0., 0.]))?;
+        let b = shape.geometry().add_point(Point::from([5e-6, 0., 0.]))?;
 
-        shape.vertices().add(Vertex { point: a }).unwrap();
-        shape.vertices().add(Vertex { point: b }).unwrap();
+        shape.vertices().add(Vertex { point: a })?;
+        shape.vertices().add(Vertex { point: b })?;
+
+        Ok(())
     }
 
     #[test]
