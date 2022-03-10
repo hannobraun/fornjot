@@ -102,7 +102,7 @@ mod tests {
     };
 
     #[test]
-    fn add() -> anyhow::Result<()> {
+    fn add_edge() -> anyhow::Result<()> {
         let mut shape = Shape::new();
         let mut other = Shape::new();
 
