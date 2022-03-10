@@ -16,8 +16,7 @@ use crate::{
 use super::{
     geometry::Geometry,
     handle::{Handle, Storage},
-    CyclesInner, EdgesInner, FacesInner, ValidationError, ValidationResult,
-    VerticesInner,
+    Cycles, Edges, Faces, ValidationError, ValidationResult, Vertices,
 };
 
 /// The vertices of a shape
@@ -26,10 +25,10 @@ pub struct Topology<'r> {
 
     pub(super) geometry: Geometry,
 
-    pub(super) vertices: &'r mut VerticesInner,
-    pub(super) edges: &'r mut EdgesInner,
-    pub(super) cycles: &'r mut CyclesInner,
-    pub(super) faces: &'r mut FacesInner,
+    pub(super) vertices: &'r mut Vertices,
+    pub(super) edges: &'r mut Edges,
+    pub(super) cycles: &'r mut Cycles,
+    pub(super) faces: &'r mut Faces,
 }
 
 impl Topology<'_> {

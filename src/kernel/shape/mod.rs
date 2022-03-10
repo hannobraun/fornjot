@@ -24,10 +24,10 @@ pub struct Shape {
     /// Use for vertex validation, to determine whether vertices are unique.
     min_distance: Scalar,
 
-    vertices: VerticesInner,
-    edges: EdgesInner,
-    cycles: CyclesInner,
-    faces: FacesInner,
+    vertices: Vertices,
+    edges: Edges,
+    cycles: Cycles,
+    faces: Faces,
 }
 
 impl Shape {
@@ -39,10 +39,10 @@ impl Shape {
             // be `const` yet.
             min_distance: Scalar::from_f64(5e-7), // 0.5 µm
 
-            vertices: VerticesInner::new(),
-            edges: EdgesInner::new(),
-            cycles: CyclesInner::new(),
-            faces: FacesInner::new(),
+            vertices: Vertices::new(),
+            edges: Edges::new(),
+            cycles: Cycles::new(),
+            faces: Faces::new(),
         }
     }
 
@@ -113,7 +113,7 @@ pub enum ValidationError {
     Geometric,
 }
 
-type VerticesInner = Vec<Storage<Vertex>>;
-type EdgesInner = Vec<Storage<Edge>>;
-type CyclesInner = Vec<Storage<Cycle>>;
-type FacesInner = Vec<Storage<Face>>;
+type Vertices = Vec<Storage<Vertex>>;
+type Edges = Vec<Storage<Edge>>;
+type Cycles = Vec<Storage<Cycle>>;
+type Faces = Vec<Storage<Face>>;
