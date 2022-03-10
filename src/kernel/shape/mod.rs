@@ -116,7 +116,6 @@ pub enum ValidationError {
     /// Structural validation verifies, that all the object that an object
     /// refers to are already part of the shape.
     #[error("Structural validation failed")]
-    #[allow(unused)]
     Structural,
 
     /// Uniqueness validation failed
