@@ -73,7 +73,7 @@ impl Shape {
     }
 
     /// Access the shape's vertices
-    pub fn vertices(&mut self) -> Topology {
+    pub fn topology(&mut self) -> Topology {
         Topology {
             min_distance: self.min_distance,
             vertices: &mut self.vertices,

@@ -73,8 +73,8 @@ mod tests {
                 let b =
                     inner.geometry().add_point(Point::from([1., 0., 0.]))?;
 
-                let a = inner.vertices().add_vertex(Vertex { point: a })?;
-                let b = inner.vertices().add_vertex(Vertex { point: b })?;
+                let a = inner.topology().add_vertex(Vertex { point: a })?;
+                let b = inner.topology().add_vertex(Vertex { point: b })?;
 
                 let edge = inner.edges().add_line_segment([a, b])?;
 

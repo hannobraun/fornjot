@@ -160,8 +160,8 @@ mod tests {
         let v1 = shape.geometry().add_point(a).unwrap();
         let v2 = shape.geometry().add_point(d).unwrap();
 
-        let v1 = shape.vertices().add_vertex(Vertex { point: v1 }).unwrap();
-        let v2 = shape.vertices().add_vertex(Vertex { point: v2 }).unwrap();
+        let v1 = shape.topology().add_vertex(Vertex { point: v1 }).unwrap();
+        let v2 = shape.topology().add_vertex(Vertex { point: v2 }).unwrap();
 
         let points = vec![b, c];
 
@@ -205,9 +205,9 @@ mod tests {
         let v2 = shape.geometry().add_point(b).unwrap();
         let v3 = shape.geometry().add_point(c).unwrap();
 
-        let v1 = shape.vertices().add_vertex(Vertex { point: v1 }).unwrap();
-        let v2 = shape.vertices().add_vertex(Vertex { point: v2 }).unwrap();
-        let v3 = shape.vertices().add_vertex(Vertex { point: v3 }).unwrap();
+        let v1 = shape.topology().add_vertex(Vertex { point: v1 }).unwrap();
+        let v2 = shape.topology().add_vertex(Vertex { point: v2 }).unwrap();
+        let v3 = shape.topology().add_vertex(Vertex { point: v3 }).unwrap();
 
         let ab = shape
             .edges()
@@ -251,10 +251,10 @@ mod tests {
         let v3 = shape.geometry().add_point(c).unwrap();
         let v4 = shape.geometry().add_point(d).unwrap();
 
-        let v1 = shape.vertices().add_vertex(Vertex { point: v1 }).unwrap();
-        let v2 = shape.vertices().add_vertex(Vertex { point: v2 }).unwrap();
-        let v3 = shape.vertices().add_vertex(Vertex { point: v3 }).unwrap();
-        let v4 = shape.vertices().add_vertex(Vertex { point: v4 }).unwrap();
+        let v1 = shape.topology().add_vertex(Vertex { point: v1 }).unwrap();
+        let v2 = shape.topology().add_vertex(Vertex { point: v2 }).unwrap();
+        let v3 = shape.topology().add_vertex(Vertex { point: v3 }).unwrap();
+        let v4 = shape.topology().add_vertex(Vertex { point: v4 }).unwrap();
 
         let ab = shape
             .edges()

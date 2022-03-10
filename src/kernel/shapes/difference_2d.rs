@@ -60,7 +60,7 @@ impl ToShape for fj::Difference2d {
                         vertices
                             .entry(vertex.clone())
                             .or_insert_with(|| {
-                                shape.vertices().add_vertex(vertex).unwrap()
+                                shape.topology().add_vertex(vertex).unwrap()
                             })
                             .clone()
                     })

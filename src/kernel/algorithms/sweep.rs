@@ -28,12 +28,12 @@ pub fn sweep_shape(
 
     // Create the new vertices.
     let mut vertices = HashMap::new();
-    for vertex_orig in shape_orig.vertices().vertices() {
+    for vertex_orig in shape_orig.topology().vertices() {
         let point = shape
             .geometry()
             .add_point(vertex_orig.point() + path)
             .unwrap();
-        let vertex = shape.vertices().add_vertex(Vertex { point }).unwrap();
+        let vertex = shape.topology().add_vertex(Vertex { point }).unwrap();
         vertices.insert(vertex_orig, vertex);
     }
 
@@ -204,9 +204,9 @@ mod tests {
             let b = shape.geometry().add_point(b.into()).unwrap();
             let c = shape.geometry().add_point(c.into()).unwrap();
 
-            let a = shape.vertices().add_vertex(Vertex { point: a }).unwrap();
-            let b = shape.vertices().add_vertex(Vertex { point: b }).unwrap();
-            let c = shape.vertices().add_vertex(Vertex { point: c }).unwrap();
+            let a = shape.topology().add_vertex(Vertex { point: a }).unwrap();
+            let b = shape.topology().add_vertex(Vertex { point: b }).unwrap();
+            let c = shape.topology().add_vertex(Vertex { point: c }).unwrap();
 
             let ab = shape
                 .edges()

@@ -50,7 +50,7 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
                                         .unwrap();
 
                                     transformed
-                                        .vertices()
+                                        .topology()
                                         .add_vertex(Vertex { point })
                                         .unwrap()
                                 })
