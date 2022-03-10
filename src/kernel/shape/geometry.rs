@@ -3,7 +3,10 @@ use crate::{
     math::Point,
 };
 
-use super::handle::{Handle, Storage};
+use super::{
+    handle::{Handle, Storage},
+    Curves, Points, Surfaces,
+};
 
 /// API to access a shape's geometry
 ///
@@ -20,21 +23,40 @@ use super::handle::{Handle, Storage};
 /// - Geometric validation doesn't apply either. It simply doesn't matter, if
 ///   curves or surfaces intersect, for example, as long as they don't do that
 ///   where an edge or face is defined.
-pub struct Geometry;
+pub struct Geometry<'r> {
+    pub(super) points: &'r mut Points,
+    pub(super) curves: &'r mut Curves,
+    pub(super) surfaces: &'r mut Surfaces,
+}
 
-impl Geometry {
+impl Geometry<'_> {
     /// Add a point to the shape
     pub fn add_point(&mut self, point: Point<3>) -> Handle<Point<3>> {
-        Storage::new(point).handle()
+        let storage = Storage::new(point);
+        let handle = storage.handle();
+
+        self.points.push(storage);
+
+        handle
     }
 
     /// Add a curve to the shape
     pub fn add_curve(&mut self, curve: Curve) -> Handle<Curve> {
-        Storage::new(curve).handle()
+        let storage = Storage::new(curve);
+        let handle = storage.handle();
+
+        self.curves.push(storage);
+
+        handle
     }
 
     /// Add a surface to the shape
     pub fn add_surface(&mut self, surface: Surface) -> Handle<Surface> {
-        Storage::new(surface).handle()
+        let storage = Storage::new(surface);
+        let handle = storage.handle();
+
+        self.surfaces.push(storage);
+
+        handle
     }
 }

@@ -25,7 +25,7 @@ use super::{
 pub struct Topology<'r> {
     pub(super) min_distance: Scalar,
 
-    pub(super) geometry: Geometry,
+    pub(super) geometry: Geometry<'r>,
 
     pub(super) vertices: &'r mut Vertices,
     pub(super) edges: &'r mut Edges,
