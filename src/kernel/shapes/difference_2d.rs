@@ -95,7 +95,10 @@ impl ToShape for fj::Difference2d {
         );
         let surface = surface_a;
 
-        shape.faces().add(Face::Face { cycles, surface }).unwrap();
+        shape
+            .faces()
+            .add_face(Face::Face { cycles, surface })
+            .unwrap();
 
         shape
     }

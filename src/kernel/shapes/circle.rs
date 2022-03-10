@@ -29,7 +29,10 @@ impl ToShape for fj::Circle {
         let cycles = shape.topology().cycles().collect();
         let surface =
             shape.geometry().add_surface(Surface::x_y_plane()).unwrap();
-        shape.faces().add(Face::Face { cycles, surface }).unwrap();
+        shape
+            .faces()
+            .add_face(Face::Face { cycles, surface })
+            .unwrap();
 
         shape
     }

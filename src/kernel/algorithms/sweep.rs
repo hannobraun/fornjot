@@ -99,7 +99,10 @@ pub fn sweep_shape(
             })
             .collect();
 
-        shape.faces().add(Face::Face { surface, cycles }).unwrap();
+        shape
+            .faces()
+            .add_face(Face::Face { surface, cycles })
+            .unwrap();
     }
 
     // We could use `vertices` to create the side edges and faces here, but the
@@ -134,7 +137,7 @@ pub fn sweep_shape(
     }
 
     for face in side_faces {
-        shape.faces().add(face).unwrap();
+        shape.faces().add_face(face).unwrap();
     }
 
     shape
@@ -239,7 +242,7 @@ mod tests {
                 cycles: vec![cycles],
             };
 
-            let face = shape.faces().add(abc).unwrap();
+            let face = shape.faces().add_face(abc).unwrap();
 
             Self { shape, face }
         }

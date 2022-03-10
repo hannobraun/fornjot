@@ -90,7 +90,7 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
             }
         };
 
-        transformed.faces().add(face).unwrap();
+        transformed.faces().add_face(face).unwrap();
     }
 
     transformed

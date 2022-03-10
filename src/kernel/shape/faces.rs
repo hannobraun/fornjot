@@ -16,7 +16,7 @@ pub struct Faces<'r> {
 
 impl Faces<'_> {
     /// Add a face to the shape
-    pub fn add(&mut self, face: Face) -> ValidationResult<Face> {
+    pub fn add_face(&mut self, face: Face) -> ValidationResult<Face> {
         let storage = Storage::new(face);
         let handle = storage.handle();
 
