@@ -57,4 +57,14 @@ impl Edge {
     pub fn curve(&self) -> Curve {
         *self.curve.get()
     }
+
+    /// Access the vertices that the edge refers to
+    ///
+    /// This is a convenience method that saves the caller from dealing with the
+    /// [`Handle`]s.
+    pub fn vertices(&self) -> Option<[Vertex; 2]> {
+        self.vertices
+            .as_ref()
+            .map(|[a, b]| [a.get().clone(), b.get().clone()])
+    }
 }
