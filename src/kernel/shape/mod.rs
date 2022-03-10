@@ -70,7 +70,7 @@ impl Shape {
         Geometry
     }
 
-    /// Access the shape's vertices
+    /// Access the shape's topology
     pub fn topology(&mut self) -> Topology {
         Topology {
             min_distance: self.min_distance,
