@@ -59,7 +59,7 @@ pub fn sweep_shape(
 
     // Create the new cycles.
     let mut cycles = HashMap::new();
-    for cycle_orig in shape_orig.cycles().all() {
+    for cycle_orig in shape_orig.cycles().cycles() {
         let edges = cycle_orig
             .edges
             .iter()
@@ -105,7 +105,7 @@ pub fn sweep_shape(
     // We could use `vertices` to create the side edges and faces here, but the
     // side walls are created below, in triangle representation.
 
-    for cycle in shape_orig.cycles().all() {
+    for cycle in shape_orig.cycles().cycles() {
         let approx = Approximation::for_cycle(&cycle, tolerance);
 
         // This will only work correctly, if the cycle consists of one edge. If

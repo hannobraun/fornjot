@@ -49,7 +49,7 @@ impl ToShape for fj::Sketch {
         let surface =
             shape.geometry().add_surface(Surface::x_y_plane()).unwrap();
         let face = Face::Face {
-            cycles: shape.cycles().all().collect(),
+            cycles: shape.cycles().cycles().collect(),
             surface,
         };
         shape.faces().add(face).unwrap();
