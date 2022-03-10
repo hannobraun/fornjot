@@ -26,7 +26,7 @@ impl Faces<'_> {
     }
 
     /// Access an iterator over all faces
-    pub fn all(&self) -> impl Iterator<Item = Handle<Face>> + '_ {
+    pub fn faces(&self) -> impl Iterator<Item = Handle<Face>> + '_ {
         self.faces.iter().map(|storage| storage.handle())
     }
 

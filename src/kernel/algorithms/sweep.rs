@@ -75,7 +75,7 @@ pub fn sweep_shape(
     }
 
     // Create top faces.
-    for face_orig in shape_orig.faces().all() {
+    for face_orig in shape_orig.faces().faces() {
         let cycles_orig = match &*face_orig {
             Face::Face { cycles, .. } => cycles,
             _ => {
@@ -176,7 +176,7 @@ mod tests {
         let mut contains_bottom_face = false;
         let mut contains_top_face = false;
 
-        for face in swept.faces().all() {
+        for face in swept.faces().faces() {
             if matches!(face.get(), Face::Face { .. }) {
                 if face.get().clone() == bottom_face {
                     contains_bottom_face = true;
