@@ -1,4 +1,8 @@
-use std::{hash::Hash, ops::Deref, rc::Rc};
+use std::{
+    hash::{Hash, Hasher},
+    ops::Deref,
+    rc::Rc,
+};
 
 /// A handle to an object stored within [`Shape`]
 ///
@@ -44,7 +48,7 @@ impl<T> Deref for Handle<T> {
 }
 
 /// Internal type used in collections within [`Shape`]
-#[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Debug, Eq, Ord, PartialOrd)]
 pub(super) struct Storage<T>(Rc<T>);
 
 impl<T> Storage<T> {
@@ -73,5 +77,17 @@ impl<T> Deref for Storage<T> {
 impl<T> Clone for Storage<T> {
     fn clone(&self) -> Self {
         Self(self.0.clone())
+    }
+}
+
+impl<T> PartialEq for Storage<T> {
+    fn eq(&self, other: &Self) -> bool {
+        Rc::ptr_eq(&self.0, &other.0)
+    }
+}
+
+impl<T> Hash for Storage<T> {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        Rc::as_ptr(&self.0).hash(state);
     }
 }
