@@ -77,34 +77,20 @@ mod tests {
     fn add() -> anyhow::Result<()> {
         let mut shape = Shape::new().with_min_distance(MIN_DISTANCE);
 
-        let a = shape.geometry().add_point(Point::from([0., 0., 0.]))?;
-        let b = shape.geometry().add_point(Point::from([5e-6, 0., 0.]))?;
+        let point = shape.geometry().add_point(Point::from([0., 0., 0.]))?;
+        shape.vertices().add(Vertex { point })?;
 
-        shape.vertices().add(Vertex { point: a })?;
-        shape.vertices().add(Vertex { point: b })?;
+        // `point` is too close to the original point. `assert!` is commented,
+        // because that only causes a warning to be logged right now.
+        let point = shape.geometry().add_point(Point::from([5e-6, 0., 0.]))?;
+        let _result = shape.vertices().add(Vertex { point });
+        // assert!(matches!(result, Err(ValidationError::Uniqueness)));
+
+        // `point` is farther than `MIN_DISTANCE` away from original point.
+        // Should work.
+        let point = shape.geometry().add_point(Point::from([5e-6, 0., 0.]))?;
+        shape.vertices().add(Vertex { point })?;
 
         Ok(())
-    }
-
-    #[test]
-    #[ignore]
-    #[should_panic]
-    fn add_invalid() {
-        // Test is ignored, until vertex validation can be enabled for real.
-        // See implementation note on `Vertices::create`.
-
-        let mut shape = Shape::new().with_min_distance(MIN_DISTANCE);
-
-        let a = shape
-            .geometry()
-            .add_point(Point::from([0., 0., 0.]))
-            .unwrap();
-        let b = shape
-            .geometry()
-            .add_point(Point::from([5e-8, 0., 0.]))
-            .unwrap();
-
-        shape.vertices().add(Vertex { point: a }).unwrap();
-        shape.vertices().add(Vertex { point: b }).unwrap();
     }
 }
