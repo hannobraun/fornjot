@@ -1,13 +1,10 @@
 use std::collections::HashSet;
 
 use crate::{
-    kernel::{
-        shape::handle::Handle,
-        topology::{
-            edges::{Cycle, Edge},
-            faces::Face,
-            vertices::Vertex,
-        },
+    kernel::topology::{
+        edges::{Cycle, Edge},
+        faces::Face,
+        vertices::Vertex,
     },
     math::{Point, Scalar, Segment},
 };
@@ -40,7 +37,7 @@ impl Approximation {
         let mut points = Vec::new();
         edge.curve().approx(tolerance, &mut points);
 
-        approximate_edge(points, edge.vertices.as_ref())
+        approximate_edge(points, edge.vertices())
     }
 
     /// Compute an approximation for a cycle
@@ -103,7 +100,7 @@ impl Approximation {
 
 fn approximate_edge(
     mut points: Vec<Point<3>>,
-    vertices: Option<&[Handle<Vertex>; 2]>,
+    vertices: Option<[Vertex; 2]>,
 ) -> Approximation {
     // Insert the exact vertices of this edge into the approximation. This means
     // we don't rely on the curve approximation to deliver accurate
@@ -113,7 +110,7 @@ fn approximate_edge(
     // would lead to bugs in the approximation, as points that should refer to
     // the same vertex would be understood to refer to very close, but distinct
     // vertices.
-    if let Some([a, b]) = vertices {
+    if let Some([a, b]) = &vertices {
         points.insert(0, a.point());
         points.push(b.point());
     }
@@ -179,7 +176,10 @@ mod tests {
 
         // Regular edge
         assert_eq!(
-            approximate_edge(points.clone(), Some(&[v1, v2])),
+            approximate_edge(
+                points.clone(),
+                Some([v1.get().clone(), v2.get().clone()])
+            ),
             Approximation {
                 points: set![a, b, c, d],
                 segments: set![
