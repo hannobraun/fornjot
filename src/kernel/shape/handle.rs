@@ -1,4 +1,5 @@
 use std::{
+    fmt,
     hash::{Hash, Hasher},
     ops::Deref,
     rc::Rc,
@@ -27,7 +28,7 @@ use std::{
 /// The equality of [`Handle`] is very strictly defined in terms of identity.
 /// Two [`Handle`]s are considered equal, if they refer to objects in the same
 /// memory location.
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Handle<T>(Storage<T>);
 
 impl<T> Handle<T> {
@@ -50,6 +51,15 @@ impl<T> Deref for Handle<T> {
 
     fn deref(&self) -> &Self::Target {
         self.0.deref()
+    }
+}
+
+impl<T> fmt::Debug for Handle<T>
+where
+    T: fmt::Debug,
+{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{:?}: {:?}", self.0.ptr(), self.get())
     }
 }
 
