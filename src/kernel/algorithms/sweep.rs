@@ -53,7 +53,7 @@ pub fn sweep_shape(
             })
         });
 
-        let edge = shape.edges().add(Edge { curve, vertices }).unwrap();
+        let edge = shape.edges().add_edge(Edge { curve, vertices }).unwrap();
         edges.insert(edge_orig, edge);
     }
 

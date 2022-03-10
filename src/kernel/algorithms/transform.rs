@@ -57,7 +57,7 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
                             });
 
                         let edge = Edge { curve, vertices };
-                        let edge = transformed.edges().add(edge).unwrap();
+                        let edge = transformed.edges().add_edge(edge).unwrap();
 
                         edges.push(edge);
                     }

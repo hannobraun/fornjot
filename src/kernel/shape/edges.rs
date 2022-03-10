@@ -34,7 +34,7 @@ impl Edges<'_> {
     /// Right now this is just an overly complicated constructor for `Edge`. In
     /// the future, it can add the edge to the proper internal data structures,
     /// and validate any constraints that apply to edge creation.
-    pub fn add(&mut self, edge: Edge) -> ValidationResult<Edge> {
+    pub fn add_edge(&mut self, edge: Edge) -> ValidationResult<Edge> {
         for vertices in &edge.vertices {
             for vertex in vertices {
                 if !self.vertices.contains(vertex.storage()) {
@@ -60,7 +60,7 @@ impl Edges<'_> {
             center: Point::origin(),
             radius: Vector::from([radius, Scalar::ZERO]),
         }))?;
-        self.add(Edge {
+        self.add_edge(Edge {
             curve,
             vertices: None,
         })
@@ -77,7 +77,7 @@ impl Edges<'_> {
         let curve = self.geometry.add_curve(Curve::Line(Line::from_points(
             vertices.clone().map(|vertex| vertex.point()),
         )))?;
-        self.add(Edge {
+        self.add_edge(Edge {
             curve,
             vertices: Some(vertices),
         })
