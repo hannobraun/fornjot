@@ -51,7 +51,7 @@ impl ToShape for fj::Difference2d {
         for cycle in cycles {
             let mut edges = Vec::new();
             for edge in &cycle.edges {
-                let curve = shape.geometry().add_curve(*edge.curve.get());
+                let curve = shape.geometry().add_curve(edge.curve());
 
                 let vertices = edge.vertices.clone().map(|vs| {
                     vs.map(|vertex| {

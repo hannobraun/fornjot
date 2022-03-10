@@ -39,7 +39,7 @@ pub fn sweep_shape(
     for edge_orig in shape_orig.edges().all() {
         let curve = shape
             .geometry()
-            .add_curve(edge_orig.curve.transform(&translation));
+            .add_curve(edge_orig.curve().transform(&translation));
 
         let vertices = edge_orig.vertices.clone().map(|vs| {
             vs.map(|vertex_orig| {

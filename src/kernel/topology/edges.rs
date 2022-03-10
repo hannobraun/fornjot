@@ -48,3 +48,13 @@ pub struct Edge {
     /// and store 1D vertices again, at some point.
     pub vertices: Option<[Handle<Vertex>; 2]>,
 }
+
+impl Edge {
+    /// Access the curve that the edge refers to
+    ///
+    /// This is a convenience method that saves the caller from dealing with the
+    /// [`Handle`].
+    pub fn curve(&self) -> Curve {
+        *self.curve.get()
+    }
+}
