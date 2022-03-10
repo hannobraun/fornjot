@@ -33,7 +33,7 @@ impl ToShape for fj::Difference2d {
                     cycle in each operand."
                 );
             }
-            if shape.faces().faces().count() != 1 {
+            if shape.topology().faces().count() != 1 {
                 // See issue:
                 // https://github.com/hannobraun/Fornjot/issues/95
                 todo!(
@@ -78,8 +78,8 @@ impl ToShape for fj::Difference2d {
         }
 
         // Can't panic, as we just verified that both shapes have one face.
-        let [face_a, face_b] =
-            [&mut a, &mut b].map(|shape| shape.faces().faces().next().unwrap());
+        let [face_a, face_b] = [&mut a, &mut b]
+            .map(|shape| shape.topology().faces().next().unwrap());
 
         let surface_a = match (face_a.get().clone(), face_b.get().clone()) {
             (Face::Face { surface, .. }, Face::Face { .. }) => surface,
@@ -96,7 +96,7 @@ impl ToShape for fj::Difference2d {
         let surface = surface_a;
 
         shape
-            .faces()
+            .topology()
             .add_face(Face::Face { cycles, surface })
             .unwrap();
 

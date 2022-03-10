@@ -23,7 +23,7 @@ use crate::{
 pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
     let mut transformed = Shape::new();
 
-    for face in original.faces().faces() {
+    for face in original.topology().faces() {
         let face = match face.get().clone() {
             Face::Face { cycles, surface } => {
                 let mut cycles_trans = Vec::new();
@@ -90,7 +90,7 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
             }
         };
 
-        transformed.faces().add_face(face).unwrap();
+        transformed.topology().add_face(face).unwrap();
     }
 
     transformed

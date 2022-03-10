@@ -52,7 +52,7 @@ impl ToShape for fj::Sketch {
             cycles: shape.topology().cycles().collect(),
             surface,
         };
-        shape.faces().add_face(face).unwrap();
+        shape.topology().add_face(face).unwrap();
 
         shape
     }

@@ -1,4 +1,3 @@
-pub mod faces;
 pub mod geometry;
 pub mod handle;
 pub mod topology;
@@ -12,7 +11,6 @@ use super::topology::{
 };
 
 use self::{
-    faces::Faces,
     geometry::Geometry,
     handle::{Handle, Storage},
     topology::Topology,
@@ -78,12 +76,6 @@ impl Shape {
             vertices: &mut self.vertices,
             edges: &mut self.edges,
             cycles: &mut self.cycles,
-        }
-    }
-
-    /// Access the shape's faces
-    pub fn faces(&mut self) -> Faces {
-        Faces {
             faces: &mut self.faces,
         }
     }

@@ -75,7 +75,7 @@ pub fn sweep_shape(
     }
 
     // Create top faces.
-    for face_orig in shape_orig.faces().faces() {
+    for face_orig in shape_orig.topology().faces() {
         let cycles_orig = match &*face_orig {
             Face::Face { cycles, .. } => cycles,
             _ => {
@@ -100,7 +100,7 @@ pub fn sweep_shape(
             .collect();
 
         shape
-            .faces()
+            .topology()
             .add_face(Face::Face { surface, cycles })
             .unwrap();
     }
@@ -137,7 +137,7 @@ pub fn sweep_shape(
     }
 
     for face in side_faces {
-        shape.faces().add_face(face).unwrap();
+        shape.topology().add_face(face).unwrap();
     }
 
     shape
@@ -176,7 +176,7 @@ mod tests {
         let mut contains_bottom_face = false;
         let mut contains_top_face = false;
 
-        for face in swept.faces().faces() {
+        for face in swept.topology().faces() {
             if matches!(face.get(), Face::Face { .. }) {
                 if face.get().clone() == bottom_face {
                     contains_bottom_face = true;
@@ -242,7 +242,7 @@ mod tests {
                 cycles: vec![cycles],
             };
 
-            let face = shape.faces().add_face(abc).unwrap();
+            let face = shape.topology().add_face(abc).unwrap();
 
             Self { shape, face }
         }

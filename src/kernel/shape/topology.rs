@@ -1,20 +1,23 @@
 use tracing::warn;
 
 use crate::{
+    debug::DebugInfo,
     kernel::{
         geometry::{Circle, Curve, Line},
         topology::{
             edges::{Cycle, Edge},
+            faces::Face,
             vertices::Vertex,
         },
     },
-    math::{Point, Scalar, Vector},
+    math::{Point, Scalar, Triangle, Vector},
 };
 
 use super::{
     geometry::Geometry,
     handle::{Handle, Storage},
-    CyclesInner, EdgesInner, ValidationError, ValidationResult, VerticesInner,
+    CyclesInner, EdgesInner, FacesInner, ValidationError, ValidationResult,
+    VerticesInner,
 };
 
 /// The vertices of a shape
@@ -26,6 +29,7 @@ pub struct Topology<'r> {
     pub(super) vertices: &'r mut VerticesInner,
     pub(super) edges: &'r mut EdgesInner,
     pub(super) cycles: &'r mut CyclesInner,
+    pub(super) faces: &'r mut FacesInner,
 }
 
 impl Topology<'_> {
@@ -177,6 +181,32 @@ impl Topology<'_> {
     /// Access an iterator over all cycles
     pub fn cycles(&self) -> impl Iterator<Item = Handle<Cycle>> + '_ {
         self.cycles.iter().map(|storage| storage.handle())
+    }
+
+    /// Add a face to the shape
+    pub fn add_face(&mut self, face: Face) -> ValidationResult<Face> {
+        let storage = Storage::new(face);
+        let handle = storage.handle();
+
+        self.faces.push(storage);
+
+        Ok(handle)
+    }
+
+    /// Access an iterator over all faces
+    pub fn faces(&self) -> impl Iterator<Item = Handle<Face>> + '_ {
+        self.faces.iter().map(|storage| storage.handle())
+    }
+
+    pub fn triangles(
+        &self,
+        tolerance: Scalar,
+        out: &mut Vec<Triangle<3>>,
+        debug_info: &mut DebugInfo,
+    ) {
+        for face in &*self.faces {
+            face.triangles(tolerance, out, debug_info);
+        }
     }
 }
 
