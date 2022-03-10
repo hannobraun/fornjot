@@ -1,4 +1,3 @@
-pub mod cycles;
 pub mod edges;
 pub mod faces;
 pub mod geometry;
@@ -14,7 +13,6 @@ use super::topology::{
 };
 
 use self::{
-    cycles::Cycles,
     edges::Edges,
     faces::Faces,
     geometry::Geometry,
@@ -77,6 +75,8 @@ impl Shape {
         Topology {
             min_distance: self.min_distance,
             vertices: &mut self.vertices,
+            edges: &mut self.edges,
+            cycles: &mut self.cycles,
         }
     }
 
@@ -86,14 +86,6 @@ impl Shape {
             geometry: Geometry,
             vertices: &mut self.vertices,
             edges: &mut self.edges,
-        }
-    }
-
-    /// Access the shape's cycles
-    pub fn cycles(&mut self) -> Cycles {
-        Cycles {
-            edges: &mut self.edges,
-            cycles: &mut self.cycles,
         }
     }
 

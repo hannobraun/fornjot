@@ -265,7 +265,7 @@ mod tests {
         let da = shape.edges().add_line_segment([v4, v1]).unwrap();
 
         let abcd = shape
-            .cycles()
+            .topology()
             .add_cycle(Cycle {
                 edges: vec![ab, bc, cd, da],
             })

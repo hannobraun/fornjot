@@ -25,7 +25,7 @@ impl ToShape for fj::Difference2d {
             .map(|shape| shape.to_shape(tolerance, debug_info));
 
         for shape in [&mut a, &mut b] {
-            if shape.cycles().cycles().count() != 1 {
+            if shape.topology().cycles().count() != 1 {
                 // See issue:
                 // https://github.com/hannobraun/Fornjot/issues/95
                 todo!(
@@ -45,7 +45,7 @@ impl ToShape for fj::Difference2d {
 
         // Can't panic, as we just verified that both shapes have one cycle.
         let cycles_orig = [&mut a, &mut b]
-            .map(|shape| shape.cycles().cycles().next().unwrap());
+            .map(|shape| shape.topology().cycles().next().unwrap());
 
         let mut vertices = HashMap::new();
         let mut cycles = Vec::new();
@@ -70,7 +70,7 @@ impl ToShape for fj::Difference2d {
                 edges.push(edge);
             }
 
-            let cycle = shape.cycles().add_cycle(Cycle { edges }).unwrap();
+            let cycle = shape.topology().add_cycle(Cycle { edges }).unwrap();
             cycles.push(cycle);
         }
 

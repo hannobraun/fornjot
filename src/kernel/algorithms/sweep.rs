@@ -59,7 +59,7 @@ pub fn sweep_shape(
 
     // Create the new cycles.
     let mut cycles = HashMap::new();
-    for cycle_orig in shape_orig.cycles().cycles() {
+    for cycle_orig in shape_orig.topology().cycles() {
         let edges = cycle_orig
             .edges
             .iter()
@@ -70,7 +70,7 @@ pub fn sweep_shape(
             })
             .collect();
 
-        let cycle = shape.cycles().add_cycle(Cycle { edges }).unwrap();
+        let cycle = shape.topology().add_cycle(Cycle { edges }).unwrap();
         cycles.insert(cycle_orig, cycle);
     }
 
@@ -105,7 +105,7 @@ pub fn sweep_shape(
     // We could use `vertices` to create the side edges and faces here, but the
     // side walls are created below, in triangle representation.
 
-    for cycle in shape_orig.cycles().cycles() {
+    for cycle in shape_orig.topology().cycles() {
         let approx = Approximation::for_cycle(&cycle, tolerance);
 
         // This will only work correctly, if the cycle consists of one edge. If
@@ -222,7 +222,7 @@ mod tests {
                 .unwrap();
 
             let cycles = shape
-                .cycles()
+                .topology()
                 .add_cycle(Cycle {
                     edges: vec![ab, bc, ca],
                 })

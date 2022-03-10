@@ -43,13 +43,13 @@ impl ToShape for fj::Sketch {
                 edges.push(edge);
             }
 
-            shape.cycles().add_cycle(Cycle { edges }).unwrap();
+            shape.topology().add_cycle(Cycle { edges }).unwrap();
         };
 
         let surface =
             shape.geometry().add_surface(Surface::x_y_plane()).unwrap();
         let face = Face::Face {
-            cycles: shape.cycles().cycles().collect(),
+            cycles: shape.topology().cycles().collect(),
             surface,
         };
         shape.faces().add(face).unwrap();
