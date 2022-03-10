@@ -8,12 +8,12 @@ use super::{
 };
 
 /// The vertices of a shape
-pub struct Vertices<'r> {
+pub struct Topology<'r> {
     pub(super) min_distance: Scalar,
     pub(super) vertices: &'r mut VerticesInner,
 }
 
-impl Vertices<'_> {
+impl Topology<'_> {
     /// Add a vertex to the shape
     ///
     /// Logs a warning, if the vertex is not unique, meaning if another vertex
