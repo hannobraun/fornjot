@@ -59,7 +59,7 @@ impl Vertices<'_> {
     /// Access iterator over all vertices
     ///
     /// The caller must not make any assumptions about the order of vertices.
-    pub fn all(&self) -> impl Iterator<Item = Handle<Vertex>> + '_ {
+    pub fn vertices(&self) -> impl Iterator<Item = Handle<Vertex>> + '_ {
         self.vertices.iter().map(|storage| storage.handle())
     }
 }

@@ -28,7 +28,7 @@ pub fn sweep_shape(
 
     // Create the new vertices.
     let mut vertices = HashMap::new();
-    for vertex_orig in shape_orig.vertices().all() {
+    for vertex_orig in shape_orig.vertices().vertices() {
         let point = shape
             .geometry()
             .add_point(vertex_orig.point() + path)
