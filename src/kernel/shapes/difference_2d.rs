@@ -44,11 +44,11 @@ impl ToShape for fj::Difference2d {
         }
 
         // Can't panic, as we just verified that both shapes have one cycle.
-        let cycles =
+        let cycles_orig =
             [&mut a, &mut b].map(|shape| shape.cycles().all().next().unwrap());
 
         let mut vertices = HashMap::new();
-        for cycle in cycles {
+        for cycle in cycles_orig {
             let mut edges = Vec::new();
             for edge in &cycle.edges {
                 let curve = shape.geometry().add_curve(edge.curve());
