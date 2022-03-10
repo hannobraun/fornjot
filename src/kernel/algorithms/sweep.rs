@@ -39,7 +39,7 @@ pub fn sweep_shape(
 
     // Create the new edges.
     let mut edges = HashMap::new();
-    for edge_orig in shape_orig.edges().all() {
+    for edge_orig in shape_orig.edges().edges() {
         let curve = shape
             .geometry()
             .add_curve(edge_orig.curve().transform(&translation))
