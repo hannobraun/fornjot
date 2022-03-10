@@ -33,7 +33,7 @@ impl Vertices<'_> {
     /// In the future, this method is likely to validate more than just vertex
     /// uniqueness. See documentation of [`crate::kernel`] for some context on
     /// that.
-    pub fn add(&mut self, vertex: Vertex) -> ValidationResult<Vertex> {
+    pub fn add_vertex(&mut self, vertex: Vertex) -> ValidationResult<Vertex> {
         // Make sure the new vertex is a minimum distance away from all existing
         // vertices. This minimum distance is defined to be half a µm, which
         // should provide more than enough precision for common use cases, while
@@ -78,18 +78,18 @@ mod tests {
         let mut shape = Shape::new().with_min_distance(MIN_DISTANCE);
 
         let point = shape.geometry().add_point(Point::from([0., 0., 0.]))?;
-        shape.vertices().add(Vertex { point })?;
+        shape.vertices().add_vertex(Vertex { point })?;
 
         // `point` is too close to the original point. `assert!` is commented,
         // because that only causes a warning to be logged right now.
         let point = shape.geometry().add_point(Point::from([5e-6, 0., 0.]))?;
-        let _result = shape.vertices().add(Vertex { point });
+        let _result = shape.vertices().add_vertex(Vertex { point });
         // assert!(matches!(result, Err(ValidationError::Uniqueness)));
 
         // `point` is farther than `MIN_DISTANCE` away from original point.
         // Should work.
         let point = shape.geometry().add_point(Point::from([5e-6, 0., 0.]))?;
-        shape.vertices().add(Vertex { point })?;
+        shape.vertices().add_vertex(Vertex { point })?;
 
         Ok(())
     }

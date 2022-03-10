@@ -18,7 +18,7 @@ impl ToShape for fj::Sketch {
         for [x, y] in self.to_points() {
             let point =
                 shape.geometry().add_point(Point::from([x, y, 0.])).unwrap();
-            let vertex = shape.vertices().add(Vertex { point }).unwrap();
+            let vertex = shape.vertices().add_vertex(Vertex { point }).unwrap();
             vertices.push(vertex);
         }
 
