@@ -72,8 +72,8 @@ pub fn sweep_shape(
 
     // Create top faces.
     for face_orig in shape_orig.faces().all() {
-        let (surface_orig, cycles_orig) = match &*face_orig {
-            Face::Face { surface, cycles } => (surface, cycles),
+        let cycles_orig = match &*face_orig {
+            Face::Face { cycles, .. } => cycles,
             _ => {
                 // Sketches are created using boundary representation, so this
                 // case can't happen.
@@ -83,7 +83,7 @@ pub fn sweep_shape(
 
         let surface = shape
             .geometry()
-            .add_surface(surface_orig.transform(&translation));
+            .add_surface(face_orig.surface().transform(&translation));
 
         let cycles = cycles_orig
             .iter()
