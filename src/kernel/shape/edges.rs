@@ -9,7 +9,7 @@ use crate::{
 use super::{
     geometry::Geometry,
     handle::{Handle, Storage},
-    EdgesInner, VerticesInner,
+    EdgesInner, ValidationResult, VerticesInner,
 };
 
 /// The edges of a shape
@@ -34,7 +34,7 @@ impl Edges<'_> {
     /// Right now this is just an overly complicated constructor for `Edge`. In
     /// the future, it can add the edge to the proper internal data structures,
     /// and validate any constraints that apply to edge creation.
-    pub fn add(&mut self, edge: Edge) -> Handle<Edge> {
+    pub fn add(&mut self, edge: Edge) -> ValidationResult<Edge> {
         for vertices in &edge.vertices {
             for vertex in vertices {
                 assert!(
@@ -49,18 +49,18 @@ impl Edges<'_> {
 
         self.edges.push(storage);
 
-        handle
+        Ok(handle)
     }
 
     /// Add a circle to the shape
     ///
     /// Calls [`Edges::add`] internally, and is subject to the same
     /// restrictions.
-    pub fn add_circle(&mut self, radius: Scalar) -> Handle<Edge> {
+    pub fn add_circle(&mut self, radius: Scalar) -> ValidationResult<Edge> {
         let curve = self.geometry.add_curve(Curve::Circle(Circle {
             center: Point::origin(),
             radius: Vector::from([radius, Scalar::ZERO]),
-        }));
+        }))?;
         self.add(Edge {
             curve,
             vertices: None,
@@ -74,10 +74,10 @@ impl Edges<'_> {
     pub fn add_line_segment(
         &mut self,
         vertices: [Handle<Vertex>; 2],
-    ) -> Handle<Edge> {
+    ) -> ValidationResult<Edge> {
         let curve = self.geometry.add_curve(Curve::Line(Line::from_points(
             vertices.clone().map(|vertex| vertex.point()),
-        )));
+        )))?;
         self.add(Edge {
             curve,
             vertices: Some(vertices),
@@ -103,13 +103,19 @@ mod tests {
     fn add_valid() {
         let mut shape = Shape::new();
 
-        let a = shape.geometry().add_point(Point::from([0., 0., 0.]));
-        let b = shape.geometry().add_point(Point::from([1., 0., 0.]));
+        let a = shape
+            .geometry()
+            .add_point(Point::from([0., 0., 0.]))
+            .unwrap();
+        let b = shape
+            .geometry()
+            .add_point(Point::from([1., 0., 0.]))
+            .unwrap();
 
-        let a = shape.vertices().add(Vertex { point: a });
-        let b = shape.vertices().add(Vertex { point: b });
+        let a = shape.vertices().add(Vertex { point: a }).unwrap();
+        let b = shape.vertices().add(Vertex { point: b }).unwrap();
 
-        shape.edges().add_line_segment([a, b]);
+        shape.edges().add_line_segment([a, b]).unwrap();
     }
 
     #[test]
@@ -118,12 +124,18 @@ mod tests {
         let mut shape = Shape::new();
         let mut other = Shape::new();
 
-        let a = shape.geometry().add_point(Point::from([0., 0., 0.]));
-        let b = shape.geometry().add_point(Point::from([1., 0., 0.]));
+        let a = shape
+            .geometry()
+            .add_point(Point::from([0., 0., 0.]))
+            .unwrap();
+        let b = shape
+            .geometry()
+            .add_point(Point::from([1., 0., 0.]))
+            .unwrap();
 
-        let a = other.vertices().add(Vertex { point: a });
-        let b = other.vertices().add(Vertex { point: b });
+        let a = other.vertices().add(Vertex { point: a }).unwrap();
+        let b = other.vertices().add(Vertex { point: b }).unwrap();
 
-        shape.edges().add_line_segment([a, b]);
+        shape.edges().add_line_segment([a, b]).unwrap();
     }
 }

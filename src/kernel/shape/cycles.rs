@@ -2,7 +2,7 @@ use crate::kernel::topology::edges::Cycle;
 
 use super::{
     handle::{Handle, Storage},
-    CyclesInner, EdgesInner,
+    CyclesInner, EdgesInner, ValidationResult,
 };
 
 /// The cycles of a shape
@@ -24,7 +24,7 @@ impl Cycles<'_> {
     /// - That those edges form a cycle.
     /// - That the cycle is not self-overlapping.
     /// - That there exists no duplicate cycle, with the same edges.
-    pub fn add(&mut self, cycle: Cycle) -> Handle<Cycle> {
+    pub fn add(&mut self, cycle: Cycle) -> ValidationResult<Cycle> {
         for edge in &cycle.edges {
             assert!(
                 self.edges.contains(edge.storage()),
@@ -36,7 +36,7 @@ impl Cycles<'_> {
         let handle = storage.handle();
         self.cycles.push(storage);
 
-        handle
+        Ok(handle)
     }
 
     /// Access an iterator over all cycles
@@ -59,15 +59,21 @@ mod tests {
     fn add_valid() {
         let mut shape = Shape::new();
 
-        let a = shape.geometry().add_point(Point::from([0., 0., 0.]));
-        let b = shape.geometry().add_point(Point::from([1., 0., 0.]));
+        let a = shape
+            .geometry()
+            .add_point(Point::from([0., 0., 0.]))
+            .unwrap();
+        let b = shape
+            .geometry()
+            .add_point(Point::from([1., 0., 0.]))
+            .unwrap();
 
-        let a = shape.vertices().add(Vertex { point: a });
-        let b = shape.vertices().add(Vertex { point: b });
+        let a = shape.vertices().add(Vertex { point: a }).unwrap();
+        let b = shape.vertices().add(Vertex { point: b }).unwrap();
 
-        let edge = shape.edges().add_line_segment([a, b]);
+        let edge = shape.edges().add_line_segment([a, b]).unwrap();
 
-        shape.cycles().add(Cycle { edges: vec![edge] });
+        shape.cycles().add(Cycle { edges: vec![edge] }).unwrap();
     }
 
     #[test]
@@ -76,14 +82,20 @@ mod tests {
         let mut shape = Shape::new();
         let mut other = Shape::new();
 
-        let a = shape.geometry().add_point(Point::from([0., 0., 0.]));
-        let b = shape.geometry().add_point(Point::from([1., 0., 0.]));
+        let a = shape
+            .geometry()
+            .add_point(Point::from([0., 0., 0.]))
+            .unwrap();
+        let b = shape
+            .geometry()
+            .add_point(Point::from([1., 0., 0.]))
+            .unwrap();
 
-        let a = other.vertices().add(Vertex { point: a });
-        let b = other.vertices().add(Vertex { point: b });
+        let a = other.vertices().add(Vertex { point: a }).unwrap();
+        let b = other.vertices().add(Vertex { point: b }).unwrap();
 
-        let edge = other.edges().add_line_segment([a, b]);
+        let edge = other.edges().add_line_segment([a, b]).unwrap();
 
-        shape.cycles().add(Cycle { edges: vec![edge] });
+        shape.cycles().add(Cycle { edges: vec![edge] }).unwrap();
     }
 }

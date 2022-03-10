@@ -34,35 +34,43 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
                     for edge in &cycle.edges {
                         let curve = transformed
                             .geometry()
-                            .add_curve(edge.curve().transform(transform));
+                            .add_curve(edge.curve().transform(transform))
+                            .unwrap();
 
                         let vertices =
                             edge.vertices().clone().map(|vertices| {
                                 vertices.map(|vertex| {
-                                    let point =
-                                        transformed.geometry().add_point(
+                                    let point = transformed
+                                        .geometry()
+                                        .add_point(
                                             transform.transform_point(
                                                 &vertex.point(),
                                             ),
-                                        );
+                                        )
+                                        .unwrap();
 
-                                    transformed.vertices().add(Vertex { point })
+                                    transformed
+                                        .vertices()
+                                        .add(Vertex { point })
+                                        .unwrap()
                                 })
                             });
 
                         let edge = Edge { curve, vertices };
-                        let edge = transformed.edges().add(edge);
+                        let edge = transformed.edges().add(edge).unwrap();
 
                         edges.push(edge);
                     }
 
-                    cycles_trans
-                        .push(transformed.cycles().add(Cycle { edges }));
+                    cycles_trans.push(
+                        transformed.cycles().add(Cycle { edges }).unwrap(),
+                    );
                 }
 
                 let surface = transformed
                     .geometry()
-                    .add_surface(surface.transform(transform));
+                    .add_surface(surface.transform(transform))
+                    .unwrap();
 
                 Face::Face {
                     cycles: cycles_trans,
@@ -78,7 +86,7 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
             }
         };
 
-        transformed.faces().add(face);
+        transformed.faces().add(face).unwrap();
     }
 
     transformed

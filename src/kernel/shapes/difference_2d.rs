@@ -53,22 +53,24 @@ impl ToShape for fj::Difference2d {
         for cycle in cycles_orig {
             let mut edges = Vec::new();
             for edge in &cycle.edges {
-                let curve = shape.geometry().add_curve(edge.curve());
+                let curve = shape.geometry().add_curve(edge.curve()).unwrap();
 
                 let vertices = edge.vertices().clone().map(|vs| {
                     vs.map(|vertex| {
                         vertices
                             .entry(vertex.clone())
-                            .or_insert_with(|| shape.vertices().add(vertex))
+                            .or_insert_with(|| {
+                                shape.vertices().add(vertex).unwrap()
+                            })
                             .clone()
                     })
                 });
 
-                let edge = shape.edges().add(Edge { curve, vertices });
+                let edge = shape.edges().add(Edge { curve, vertices }).unwrap();
                 edges.push(edge);
             }
 
-            let cycle = shape.cycles().add(Cycle { edges });
+            let cycle = shape.cycles().add(Cycle { edges }).unwrap();
             cycles.push(cycle);
         }
 
@@ -90,7 +92,7 @@ impl ToShape for fj::Difference2d {
         );
         let surface = surface_a;
 
-        shape.faces().add(Face::Face { cycles, surface });
+        shape.faces().add(Face::Face { cycles, surface }).unwrap();
 
         shape
     }

@@ -6,7 +6,7 @@ use crate::{
 
 use super::{
     handle::{Handle, Storage},
-    FacesInner,
+    FacesInner, ValidationResult,
 };
 
 /// The faces of a shape
@@ -16,13 +16,13 @@ pub struct Faces<'r> {
 
 impl Faces<'_> {
     /// Add a face to the shape
-    pub fn add(&mut self, face: Face) -> Handle<Face> {
+    pub fn add(&mut self, face: Face) -> ValidationResult<Face> {
         let storage = Storage::new(face);
         let handle = storage.handle();
 
         self.faces.push(storage);
 
-        handle
+        Ok(handle)
     }
 
     /// Access an iterator over all faces

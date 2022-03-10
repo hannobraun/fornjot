@@ -17,12 +17,16 @@ impl ToShape for fj::Circle {
         // Circles have just a single round edge with no vertices. So none need
         // to be added here.
 
-        let edge = shape.edges().add_circle(Scalar::from_f64(self.radius));
-        shape.cycles().add(Cycle { edges: vec![edge] });
+        let edge = shape
+            .edges()
+            .add_circle(Scalar::from_f64(self.radius))
+            .unwrap();
+        shape.cycles().add(Cycle { edges: vec![edge] }).unwrap();
 
         let cycles = shape.cycles().all().collect();
-        let surface = shape.geometry().add_surface(Surface::x_y_plane());
-        shape.faces().add(Face::Face { cycles, surface });
+        let surface =
+            shape.geometry().add_surface(Surface::x_y_plane()).unwrap();
+        shape.faces().add(Face::Face { cycles, surface }).unwrap();
 
         shape
     }
