@@ -21,7 +21,10 @@ impl ToShape for fj::Circle {
             .edges()
             .add_circle(Scalar::from_f64(self.radius))
             .unwrap();
-        shape.cycles().add(Cycle { edges: vec![edge] }).unwrap();
+        shape
+            .cycles()
+            .add_cycle(Cycle { edges: vec![edge] })
+            .unwrap();
 
         let cycles = shape.cycles().all().collect();
         let surface =

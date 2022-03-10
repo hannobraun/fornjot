@@ -63,7 +63,10 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
                     }
 
                     cycles_trans.push(
-                        transformed.cycles().add(Cycle { edges }).unwrap(),
+                        transformed
+                            .cycles()
+                            .add_cycle(Cycle { edges })
+                            .unwrap(),
                     );
                 }
 

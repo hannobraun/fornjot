@@ -266,7 +266,7 @@ mod tests {
 
         let abcd = shape
             .cycles()
-            .add(Cycle {
+            .add_cycle(Cycle {
                 edges: vec![ab, bc, cd, da],
             })
             .unwrap();

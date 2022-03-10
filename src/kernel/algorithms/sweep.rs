@@ -70,7 +70,7 @@ pub fn sweep_shape(
             })
             .collect();
 
-        let cycle = shape.cycles().add(Cycle { edges }).unwrap();
+        let cycle = shape.cycles().add_cycle(Cycle { edges }).unwrap();
         cycles.insert(cycle_orig, cycle);
     }
 
@@ -223,7 +223,7 @@ mod tests {
 
             let cycles = shape
                 .cycles()
-                .add(Cycle {
+                .add_cycle(Cycle {
                     edges: vec![ab, bc, ca],
                 })
                 .unwrap();

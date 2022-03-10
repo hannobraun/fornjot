@@ -24,7 +24,7 @@ impl Cycles<'_> {
     /// - That those edges form a cycle.
     /// - That the cycle is not self-overlapping.
     /// - That there exists no duplicate cycle, with the same edges.
-    pub fn add(&mut self, cycle: Cycle) -> ValidationResult<Cycle> {
+    pub fn add_cycle(&mut self, cycle: Cycle) -> ValidationResult<Cycle> {
         for edge in &cycle.edges {
             if !self.edges.contains(edge.storage()) {
                 return Err(ValidationError::Structural);
@@ -86,13 +86,13 @@ mod tests {
         let other = TestShape::new()?;
 
         // Trying to refer to edge that is not from the same shape. Should fail.
-        let result = shape.inner.cycles().add(Cycle {
+        let result = shape.inner.cycles().add_cycle(Cycle {
             edges: vec![other.edge],
         });
         assert!(matches!(result, Err(ValidationError::Structural)));
 
         // Referring to edge that *is* from the same shape. Should work.
-        shape.inner.cycles().add(Cycle {
+        shape.inner.cycles().add_cycle(Cycle {
             edges: vec![shape.edge],
         })?;
 

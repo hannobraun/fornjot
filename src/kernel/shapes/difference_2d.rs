@@ -70,7 +70,7 @@ impl ToShape for fj::Difference2d {
                 edges.push(edge);
             }
 
-            let cycle = shape.cycles().add(Cycle { edges }).unwrap();
+            let cycle = shape.cycles().add_cycle(Cycle { edges }).unwrap();
             cycles.push(cycle);
         }
 
