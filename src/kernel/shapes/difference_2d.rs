@@ -76,24 +76,16 @@ impl ToShape for fj::Difference2d {
         let [face_a, face_b] =
             [&mut a, &mut b].map(|shape| shape.faces().all().next().unwrap());
 
-        let (surface_a, surface_b) =
-            match (face_a.get().clone(), face_b.get().clone()) {
-                (
-                    Face::Face {
-                        surface: surface_a, ..
-                    },
-                    Face::Face {
-                        surface: surface_b, ..
-                    },
-                ) => (surface_a, surface_b),
-                _ => {
-                    // None of the 2D types still use triangle representation.
-                    unreachable!()
-                }
-            };
+        let surface_a = match (face_a.get().clone(), face_b.get().clone()) {
+            (Face::Face { surface, .. }, Face::Face { .. }) => surface,
+            _ => {
+                // None of the 2D types still use triangle representation.
+                unreachable!()
+            }
+        };
 
         assert!(
-            surface_a == surface_b,
+            face_a.surface() == face_b.surface(),
             "Trying to subtract sketches with different surfaces."
         );
         let surface = surface_a;

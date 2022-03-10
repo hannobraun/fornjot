@@ -1,3 +1,5 @@
+use std::hash::{Hash, Hasher};
+
 use crate::kernel::{geometry::Curve, shape::handle::Handle};
 
 use super::vertices::Vertex;
@@ -7,7 +9,12 @@ use super::vertices::Vertex;
 /// The end of each edge in the cycle must connect to the beginning of the next
 /// edge. The end of the last edge must connect to the beginning of the first
 /// one.
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+///
+/// # Equality
+///
+/// Please refer to [`crate::kernel::topology`] for documentation on the
+/// equality of topological objects.
+#[derive(Clone, Debug, Eq, Ord, PartialOrd)]
 pub struct Cycle {
     pub edges: Vec<Handle<Edge>>,
 }
@@ -22,8 +29,27 @@ impl Cycle {
     }
 }
 
+impl PartialEq for Cycle {
+    fn eq(&self, other: &Self) -> bool {
+        self.edges().eq(other.edges())
+    }
+}
+
+impl Hash for Cycle {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        for edge in self.edges() {
+            edge.hash(state);
+        }
+    }
+}
+
 /// An edge of a shape
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+///
+/// # Equality
+///
+/// Please refer to [`crate::kernel::topology`] for documentation on the
+/// equality of topological objects.
+#[derive(Clone, Debug, Eq, Ord, PartialOrd)]
 pub struct Edge {
     /// Access the curve that defines the edge's geometry
     ///
@@ -66,5 +92,18 @@ impl Edge {
         self.vertices
             .as_ref()
             .map(|[a, b]| [a.get().clone(), b.get().clone()])
+    }
+}
+
+impl PartialEq for Edge {
+    fn eq(&self, other: &Self) -> bool {
+        self.curve() == other.curve() && self.vertices() == other.vertices()
+    }
+}
+
+impl Hash for Edge {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.curve().hash(state);
+        self.vertices().hash(state);
     }
 }

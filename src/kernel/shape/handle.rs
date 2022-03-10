@@ -1,4 +1,9 @@
-use std::{hash::Hash, ops::Deref, rc::Rc};
+use std::{
+    fmt,
+    hash::{Hash, Hasher},
+    ops::Deref,
+    rc::Rc,
+};
 
 /// A handle to an object stored within [`Shape`]
 ///
@@ -17,7 +22,13 @@ use std::{hash::Hash, ops::Deref, rc::Rc};
 ///    any other way. This means that if the `Shape` needs to be modified, any
 ///    objects can be updated once, without requiring an update of all the other
 ///    objects that reference it.
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+///
+/// # Equality
+///
+/// The equality of [`Handle`] is very strictly defined in terms of identity.
+/// Two [`Handle`]s are considered equal, if they refer to objects in the same
+/// memory location.
+#[derive(Clone, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Handle<T>(Storage<T>);
 
 impl<T> Handle<T> {
@@ -43,8 +54,17 @@ impl<T> Deref for Handle<T> {
     }
 }
 
+impl<T> fmt::Debug for Handle<T>
+where
+    T: fmt::Debug,
+{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{:?}: {:?}", self.0.ptr(), self.get())
+    }
+}
+
 /// Internal type used in collections within [`Shape`]
-#[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Debug, Eq, Ord, PartialOrd)]
 pub(super) struct Storage<T>(Rc<T>);
 
 impl<T> Storage<T> {
@@ -56,6 +76,10 @@ impl<T> Storage<T> {
     /// Create a handle that refers to this [`Storage`] instance
     pub(super) fn handle(&self) -> Handle<T> {
         Handle(self.clone())
+    }
+
+    fn ptr(&self) -> *const T {
+        Rc::as_ptr(&self.0)
     }
 }
 
@@ -73,5 +97,17 @@ impl<T> Deref for Storage<T> {
 impl<T> Clone for Storage<T> {
     fn clone(&self) -> Self {
         Self(self.0.clone())
+    }
+}
+
+impl<T> PartialEq for Storage<T> {
+    fn eq(&self, other: &Self) -> bool {
+        Rc::ptr_eq(&self.0, &other.0)
+    }
+}
+
+impl<T> Hash for Storage<T> {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.ptr().hash(state);
     }
 }

@@ -1,4 +1,7 @@
-use std::collections::BTreeSet;
+use std::{
+    collections::BTreeSet,
+    hash::{Hash, Hasher},
+};
 
 use parry2d_f64::query::{Ray as Ray2, RayCast as _};
 use parry3d_f64::query::Ray as Ray3;
@@ -18,7 +21,12 @@ use crate::{
 use super::edges::Cycle;
 
 /// A face of a shape
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+///
+/// # Equality
+///
+/// Please refer to [`crate::kernel::topology`] for documentation on the
+/// equality of topological objects.
+#[derive(Clone, Debug, Eq, Ord, PartialOrd)]
 pub enum Face {
     /// A face of a shape
     ///
@@ -219,6 +227,21 @@ impl Face {
                 }));
             }
             Self::Triangles(triangles) => out.extend(triangles),
+        }
+    }
+}
+
+impl PartialEq for Face {
+    fn eq(&self, other: &Self) -> bool {
+        self.surface() == other.surface() && self.cycles().eq(other.cycles())
+    }
+}
+
+impl Hash for Face {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.surface().hash(state);
+        for cycle in self.cycles() {
+            cycle.hash(state);
         }
     }
 }
