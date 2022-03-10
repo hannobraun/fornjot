@@ -18,7 +18,7 @@ impl ToShape for fj::Circle {
         // to be added here.
 
         let edge = shape
-            .edges()
+            .topology()
             .add_circle(Scalar::from_f64(self.radius))
             .unwrap();
         shape

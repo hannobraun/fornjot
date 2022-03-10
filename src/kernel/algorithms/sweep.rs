@@ -39,7 +39,7 @@ pub fn sweep_shape(
 
     // Create the new edges.
     let mut edges = HashMap::new();
-    for edge_orig in shape_orig.edges().edges() {
+    for edge_orig in shape_orig.topology().edges() {
         let curve = shape
             .geometry()
             .add_curve(edge_orig.curve().transform(&translation))
@@ -53,7 +53,7 @@ pub fn sweep_shape(
             })
         });
 
-        let edge = shape.edges().add_edge(Edge { curve, vertices }).unwrap();
+        let edge = shape.topology().add_edge(Edge { curve, vertices }).unwrap();
         edges.insert(edge_orig, edge);
     }
 
@@ -209,15 +209,15 @@ mod tests {
             let c = shape.topology().add_vertex(Vertex { point: c }).unwrap();
 
             let ab = shape
-                .edges()
+                .topology()
                 .add_line_segment([a.clone(), b.clone()])
                 .unwrap();
             let bc = shape
-                .edges()
+                .topology()
                 .add_line_segment([b.clone(), c.clone()])
                 .unwrap();
             let ca = shape
-                .edges()
+                .topology()
                 .add_line_segment([c.clone(), a.clone()])
                 .unwrap();
 

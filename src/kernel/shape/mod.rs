@@ -1,4 +1,3 @@
-pub mod edges;
 pub mod faces;
 pub mod geometry;
 pub mod handle;
@@ -13,7 +12,6 @@ use super::topology::{
 };
 
 use self::{
-    edges::Edges,
     faces::Faces,
     geometry::Geometry,
     handle::{Handle, Storage},
@@ -74,18 +72,12 @@ impl Shape {
     pub fn topology(&mut self) -> Topology {
         Topology {
             min_distance: self.min_distance,
+
+            geometry: Geometry,
+
             vertices: &mut self.vertices,
             edges: &mut self.edges,
             cycles: &mut self.cycles,
-        }
-    }
-
-    /// Access the shape's edges
-    pub fn edges(&mut self) -> Edges {
-        Edges {
-            geometry: Geometry,
-            vertices: &mut self.vertices,
-            edges: &mut self.edges,
         }
     }
 

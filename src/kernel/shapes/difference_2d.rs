@@ -66,8 +66,10 @@ impl ToShape for fj::Difference2d {
                     })
                 });
 
-                let edge =
-                    shape.edges().add_edge(Edge { curve, vertices }).unwrap();
+                let edge = shape
+                    .topology()
+                    .add_edge(Edge { curve, vertices })
+                    .unwrap();
                 edges.push(edge);
             }
 
