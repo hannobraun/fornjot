@@ -75,26 +75,17 @@ impl Approximation {
         // doesn't need to be handled here, is a sphere. A spherical face would
         // would need to provide its own approximation, as the edges that bound
         // it have nothing to do with its curvature.
-        match face {
-            Face::Face { surface: _, cycles } => {
-                let mut points = HashSet::new();
-                let mut segments = HashSet::new();
+        let mut points = HashSet::new();
+        let mut segments = HashSet::new();
 
-                for cycle in cycles {
-                    let approx = Self::for_cycle(cycle, tolerance);
+        for cycle in face.cycles() {
+            let approx = Self::for_cycle(&cycle, tolerance);
 
-                    points.extend(approx.points);
-                    segments.extend(approx.segments);
-                }
-
-                Self { points, segments }
-            }
-            _ => {
-                // No code that still uses triangle representation calls this
-                // method.
-                unreachable!()
-            }
+            points.extend(approx.points);
+            segments.extend(approx.segments);
         }
+
+        Self { points, segments }
     }
 }
 
