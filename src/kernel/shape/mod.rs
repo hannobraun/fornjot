@@ -106,7 +106,6 @@ impl Shape {
 }
 
 /// Returned by the various `add_` methods of the [`Shape`] API
-#[allow(unused)]
 pub type ValidationResult<T> = Result<Handle<T>, ValidationError>;
 
 /// An error that can occur during a validation
