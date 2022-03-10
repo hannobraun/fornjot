@@ -12,6 +12,16 @@ pub struct Cycle {
     pub edges: Vec<Handle<Edge>>,
 }
 
+impl Cycle {
+    /// Access the edges that this cycle refers to
+    ///
+    /// This is a convenience method that saves the caller from dealing with the
+    /// [`Handle`]s.
+    pub fn edges(&self) -> impl Iterator<Item = Edge> + '_ {
+        self.edges.iter().map(|handle| handle.get().clone())
+    }
+}
+
 /// An edge of a shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edge {

@@ -51,8 +51,8 @@ impl Approximation {
         let mut points = HashSet::new();
         let mut segments = HashSet::new();
 
-        for edge in &cycle.edges {
-            let approx = Self::for_edge(edge, tolerance);
+        for edge in cycle.edges() {
+            let approx = Self::for_edge(&edge, tolerance);
 
             points.extend(approx.points);
             segments.extend(approx.segments);
