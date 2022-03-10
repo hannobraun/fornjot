@@ -21,6 +21,7 @@ For the version after `0.5.0`, add the following to the changelog:
 - Replace "Host Application" title with crate name: `fj-host`
 - Convert title of each crate section into link to crate on crates.io.
 - Add one-sentence description of the respective crate to each section.
+- Link to all Weekly Dev Logs that cover the release.
 
 Update these instructions, once this has been done.
 
