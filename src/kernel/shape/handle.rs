@@ -21,6 +21,12 @@ use std::{
 ///    any other way. This means that if the `Shape` needs to be modified, any
 ///    objects can be updated once, without requiring an update of all the other
 ///    objects that reference it.
+///
+/// # Equality
+///
+/// The equality of [`Handle`] is very strictly defined in terms of identity.
+/// Two [`Handle`]s are considered equal, if they refer to objects in the same
+/// memory location.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Handle<T>(Storage<T>);
 
