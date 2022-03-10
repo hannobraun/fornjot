@@ -160,8 +160,8 @@ mod tests {
         let v1 = shape.geometry().add_point(a).unwrap();
         let v2 = shape.geometry().add_point(d).unwrap();
 
-        let v1 = shape.vertices().add(Vertex { point: v1 }).unwrap();
-        let v2 = shape.vertices().add(Vertex { point: v2 }).unwrap();
+        let v1 = shape.topology().add_vertex(Vertex { point: v1 }).unwrap();
+        let v2 = shape.topology().add_vertex(Vertex { point: v2 }).unwrap();
 
         let points = vec![b, c];
 
@@ -205,16 +205,16 @@ mod tests {
         let v2 = shape.geometry().add_point(b).unwrap();
         let v3 = shape.geometry().add_point(c).unwrap();
 
-        let v1 = shape.vertices().add(Vertex { point: v1 }).unwrap();
-        let v2 = shape.vertices().add(Vertex { point: v2 }).unwrap();
-        let v3 = shape.vertices().add(Vertex { point: v3 }).unwrap();
+        let v1 = shape.topology().add_vertex(Vertex { point: v1 }).unwrap();
+        let v2 = shape.topology().add_vertex(Vertex { point: v2 }).unwrap();
+        let v3 = shape.topology().add_vertex(Vertex { point: v3 }).unwrap();
 
         let ab = shape
-            .edges()
+            .topology()
             .add_line_segment([v1.clone(), v2.clone()])
             .unwrap();
-        let bc = shape.edges().add_line_segment([v2, v3.clone()]).unwrap();
-        let ca = shape.edges().add_line_segment([v3, v1]).unwrap();
+        let bc = shape.topology().add_line_segment([v2, v3.clone()]).unwrap();
+        let ca = shape.topology().add_line_segment([v3, v1]).unwrap();
 
         let cycle = Cycle {
             edges: vec![ab, bc, ca],
@@ -251,22 +251,22 @@ mod tests {
         let v3 = shape.geometry().add_point(c).unwrap();
         let v4 = shape.geometry().add_point(d).unwrap();
 
-        let v1 = shape.vertices().add(Vertex { point: v1 }).unwrap();
-        let v2 = shape.vertices().add(Vertex { point: v2 }).unwrap();
-        let v3 = shape.vertices().add(Vertex { point: v3 }).unwrap();
-        let v4 = shape.vertices().add(Vertex { point: v4 }).unwrap();
+        let v1 = shape.topology().add_vertex(Vertex { point: v1 }).unwrap();
+        let v2 = shape.topology().add_vertex(Vertex { point: v2 }).unwrap();
+        let v3 = shape.topology().add_vertex(Vertex { point: v3 }).unwrap();
+        let v4 = shape.topology().add_vertex(Vertex { point: v4 }).unwrap();
 
         let ab = shape
-            .edges()
+            .topology()
             .add_line_segment([v1.clone(), v2.clone()])
             .unwrap();
-        let bc = shape.edges().add_line_segment([v2, v3.clone()]).unwrap();
-        let cd = shape.edges().add_line_segment([v3, v4.clone()]).unwrap();
-        let da = shape.edges().add_line_segment([v4, v1]).unwrap();
+        let bc = shape.topology().add_line_segment([v2, v3.clone()]).unwrap();
+        let cd = shape.topology().add_line_segment([v3, v4.clone()]).unwrap();
+        let da = shape.topology().add_line_segment([v4, v1]).unwrap();
 
         let abcd = shape
-            .cycles()
-            .add(Cycle {
+            .topology()
+            .add_cycle(Cycle {
                 edges: vec![ab, bc, cd, da],
             })
             .unwrap();

@@ -18,11 +18,11 @@ impl ToShape for fj::Union {
         //
         // See issue:
         // https://github.com/hannobraun/Fornjot/issues/42
-        for face in a.faces().all() {
-            shape.faces().add(face.get().clone()).unwrap();
+        for face in a.topology().faces() {
+            shape.topology().add_face(face.get().clone()).unwrap();
         }
-        for face in b.faces().all() {
-            shape.faces().add(face.get().clone()).unwrap();
+        for face in b.topology().faces() {
+            shape.topology().add_face(face.get().clone()).unwrap();
         }
 
         shape

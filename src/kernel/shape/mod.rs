@@ -1,9 +1,6 @@
-pub mod cycles;
-pub mod edges;
-pub mod faces;
 pub mod geometry;
 pub mod handle;
-pub mod vertices;
+pub mod topology;
 
 use crate::math::Scalar;
 
@@ -14,12 +11,9 @@ use super::topology::{
 };
 
 use self::{
-    cycles::Cycles,
-    edges::Edges,
-    faces::Faces,
     geometry::Geometry,
     handle::{Handle, Storage},
-    vertices::Vertices,
+    topology::Topology,
 };
 
 /// The boundary representation of a shape
@@ -30,10 +24,10 @@ pub struct Shape {
     /// Use for vertex validation, to determine whether vertices are unique.
     min_distance: Scalar,
 
-    vertices: VerticesInner,
-    edges: EdgesInner,
-    cycles: CyclesInner,
-    faces: FacesInner,
+    vertices: Vertices,
+    edges: Edges,
+    cycles: Cycles,
+    faces: Faces,
 }
 
 impl Shape {
@@ -45,10 +39,10 @@ impl Shape {
             // be `const` yet.
             min_distance: Scalar::from_f64(5e-7), // 0.5 µm
 
-            vertices: VerticesInner::new(),
-            edges: EdgesInner::new(),
-            cycles: CyclesInner::new(),
-            faces: FacesInner::new(),
+            vertices: Vertices::new(),
+            edges: Edges::new(),
+            cycles: Cycles::new(),
+            faces: Faces::new(),
         }
     }
 
@@ -72,34 +66,16 @@ impl Shape {
         Geometry
     }
 
-    /// Access the shape's vertices
-    pub fn vertices(&mut self) -> Vertices {
-        Vertices {
+    /// Access the shape's topology
+    pub fn topology(&mut self) -> Topology {
+        Topology {
             min_distance: self.min_distance,
-            vertices: &mut self.vertices,
-        }
-    }
 
-    /// Access the shape's edges
-    pub fn edges(&mut self) -> Edges {
-        Edges {
             geometry: Geometry,
-            vertices: &mut self.vertices,
-            edges: &mut self.edges,
-        }
-    }
 
-    /// Access the shape's cycles
-    pub fn cycles(&mut self) -> Cycles {
-        Cycles {
+            vertices: &mut self.vertices,
             edges: &mut self.edges,
             cycles: &mut self.cycles,
-        }
-    }
-
-    /// Access the shape's faces
-    pub fn faces(&mut self) -> Faces {
-        Faces {
             faces: &mut self.faces,
         }
     }
@@ -137,7 +113,7 @@ pub enum ValidationError {
     Geometric,
 }
 
-type VerticesInner = Vec<Storage<Vertex>>;
-type EdgesInner = Vec<Storage<Edge>>;
-type CyclesInner = Vec<Storage<Cycle>>;
-type FacesInner = Vec<Storage<Face>>;
+type Vertices = Vec<Storage<Vertex>>;
+type Edges = Vec<Storage<Edge>>;
+type Cycles = Vec<Storage<Cycle>>;
+type Faces = Vec<Storage<Face>>;

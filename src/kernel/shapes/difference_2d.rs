@@ -25,7 +25,7 @@ impl ToShape for fj::Difference2d {
             .map(|shape| shape.to_shape(tolerance, debug_info));
 
         for shape in [&mut a, &mut b] {
-            if shape.cycles().all().count() != 1 {
+            if shape.topology().cycles().count() != 1 {
                 // See issue:
                 // https://github.com/hannobraun/Fornjot/issues/95
                 todo!(
@@ -33,7 +33,7 @@ impl ToShape for fj::Difference2d {
                     cycle in each operand."
                 );
             }
-            if shape.faces().all().count() != 1 {
+            if shape.topology().faces().count() != 1 {
                 // See issue:
                 // https://github.com/hannobraun/Fornjot/issues/95
                 todo!(
@@ -44,8 +44,8 @@ impl ToShape for fj::Difference2d {
         }
 
         // Can't panic, as we just verified that both shapes have one cycle.
-        let cycles_orig =
-            [&mut a, &mut b].map(|shape| shape.cycles().all().next().unwrap());
+        let cycles_orig = [&mut a, &mut b]
+            .map(|shape| shape.topology().cycles().next().unwrap());
 
         let mut vertices = HashMap::new();
         let mut cycles = Vec::new();
@@ -60,23 +60,26 @@ impl ToShape for fj::Difference2d {
                         vertices
                             .entry(vertex.clone())
                             .or_insert_with(|| {
-                                shape.vertices().add(vertex).unwrap()
+                                shape.topology().add_vertex(vertex).unwrap()
                             })
                             .clone()
                     })
                 });
 
-                let edge = shape.edges().add(Edge { curve, vertices }).unwrap();
+                let edge = shape
+                    .topology()
+                    .add_edge(Edge { curve, vertices })
+                    .unwrap();
                 edges.push(edge);
             }
 
-            let cycle = shape.cycles().add(Cycle { edges }).unwrap();
+            let cycle = shape.topology().add_cycle(Cycle { edges }).unwrap();
             cycles.push(cycle);
         }
 
         // Can't panic, as we just verified that both shapes have one face.
-        let [face_a, face_b] =
-            [&mut a, &mut b].map(|shape| shape.faces().all().next().unwrap());
+        let [face_a, face_b] = [&mut a, &mut b]
+            .map(|shape| shape.topology().faces().next().unwrap());
 
         let surface_a = match (face_a.get().clone(), face_b.get().clone()) {
             (Face::Face { surface, .. }, Face::Face { .. }) => surface,
@@ -92,7 +95,10 @@ impl ToShape for fj::Difference2d {
         );
         let surface = surface_a;
 
-        shape.faces().add(Face::Face { cycles, surface }).unwrap();
+        shape
+            .topology()
+            .add_face(Face::Face { cycles, surface })
+            .unwrap();
 
         shape
     }

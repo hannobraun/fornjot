@@ -28,18 +28,18 @@ pub fn sweep_shape(
 
     // Create the new vertices.
     let mut vertices = HashMap::new();
-    for vertex_orig in shape_orig.vertices().all() {
+    for vertex_orig in shape_orig.topology().vertices() {
         let point = shape
             .geometry()
             .add_point(vertex_orig.point() + path)
             .unwrap();
-        let vertex = shape.vertices().add(Vertex { point }).unwrap();
+        let vertex = shape.topology().add_vertex(Vertex { point }).unwrap();
         vertices.insert(vertex_orig, vertex);
     }
 
     // Create the new edges.
     let mut edges = HashMap::new();
-    for edge_orig in shape_orig.edges().all() {
+    for edge_orig in shape_orig.topology().edges() {
         let curve = shape
             .geometry()
             .add_curve(edge_orig.curve().transform(&translation))
@@ -53,13 +53,13 @@ pub fn sweep_shape(
             })
         });
 
-        let edge = shape.edges().add(Edge { curve, vertices }).unwrap();
+        let edge = shape.topology().add_edge(Edge { curve, vertices }).unwrap();
         edges.insert(edge_orig, edge);
     }
 
     // Create the new cycles.
     let mut cycles = HashMap::new();
-    for cycle_orig in shape_orig.cycles().all() {
+    for cycle_orig in shape_orig.topology().cycles() {
         let edges = cycle_orig
             .edges
             .iter()
@@ -70,12 +70,12 @@ pub fn sweep_shape(
             })
             .collect();
 
-        let cycle = shape.cycles().add(Cycle { edges }).unwrap();
+        let cycle = shape.topology().add_cycle(Cycle { edges }).unwrap();
         cycles.insert(cycle_orig, cycle);
     }
 
     // Create top faces.
-    for face_orig in shape_orig.faces().all() {
+    for face_orig in shape_orig.topology().faces() {
         let cycles_orig = match &*face_orig {
             Face::Face { cycles, .. } => cycles,
             _ => {
@@ -99,13 +99,16 @@ pub fn sweep_shape(
             })
             .collect();
 
-        shape.faces().add(Face::Face { surface, cycles }).unwrap();
+        shape
+            .topology()
+            .add_face(Face::Face { surface, cycles })
+            .unwrap();
     }
 
     // We could use `vertices` to create the side edges and faces here, but the
     // side walls are created below, in triangle representation.
 
-    for cycle in shape_orig.cycles().all() {
+    for cycle in shape_orig.topology().cycles() {
         let approx = Approximation::for_cycle(&cycle, tolerance);
 
         // This will only work correctly, if the cycle consists of one edge. If
@@ -134,7 +137,7 @@ pub fn sweep_shape(
     }
 
     for face in side_faces {
-        shape.faces().add(face).unwrap();
+        shape.topology().add_face(face).unwrap();
     }
 
     shape
@@ -173,7 +176,7 @@ mod tests {
         let mut contains_bottom_face = false;
         let mut contains_top_face = false;
 
-        for face in swept.faces().all() {
+        for face in swept.topology().faces() {
             if matches!(face.get(), Face::Face { .. }) {
                 if face.get().clone() == bottom_face {
                     contains_bottom_face = true;
@@ -204,26 +207,26 @@ mod tests {
             let b = shape.geometry().add_point(b.into()).unwrap();
             let c = shape.geometry().add_point(c.into()).unwrap();
 
-            let a = shape.vertices().add(Vertex { point: a }).unwrap();
-            let b = shape.vertices().add(Vertex { point: b }).unwrap();
-            let c = shape.vertices().add(Vertex { point: c }).unwrap();
+            let a = shape.topology().add_vertex(Vertex { point: a }).unwrap();
+            let b = shape.topology().add_vertex(Vertex { point: b }).unwrap();
+            let c = shape.topology().add_vertex(Vertex { point: c }).unwrap();
 
             let ab = shape
-                .edges()
+                .topology()
                 .add_line_segment([a.clone(), b.clone()])
                 .unwrap();
             let bc = shape
-                .edges()
+                .topology()
                 .add_line_segment([b.clone(), c.clone()])
                 .unwrap();
             let ca = shape
-                .edges()
+                .topology()
                 .add_line_segment([c.clone(), a.clone()])
                 .unwrap();
 
             let cycles = shape
-                .cycles()
-                .add(Cycle {
+                .topology()
+                .add_cycle(Cycle {
                     edges: vec![ab, bc, ca],
                 })
                 .unwrap();
@@ -239,7 +242,7 @@ mod tests {
                 cycles: vec![cycles],
             };
 
-            let face = shape.faces().add(abc).unwrap();
+            let face = shape.topology().add_face(abc).unwrap();
 
             Self { shape, face }
         }

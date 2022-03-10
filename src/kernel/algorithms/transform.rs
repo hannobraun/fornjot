@@ -23,7 +23,7 @@ use crate::{
 pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
     let mut transformed = Shape::new();
 
-    for face in original.faces().all() {
+    for face in original.topology().faces() {
         let face = match face.get().clone() {
             Face::Face { cycles, surface } => {
                 let mut cycles_trans = Vec::new();
@@ -50,20 +50,24 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
                                         .unwrap();
 
                                     transformed
-                                        .vertices()
-                                        .add(Vertex { point })
+                                        .topology()
+                                        .add_vertex(Vertex { point })
                                         .unwrap()
                                 })
                             });
 
                         let edge = Edge { curve, vertices };
-                        let edge = transformed.edges().add(edge).unwrap();
+                        let edge =
+                            transformed.topology().add_edge(edge).unwrap();
 
                         edges.push(edge);
                     }
 
                     cycles_trans.push(
-                        transformed.cycles().add(Cycle { edges }).unwrap(),
+                        transformed
+                            .topology()
+                            .add_cycle(Cycle { edges })
+                            .unwrap(),
                     );
                 }
 
@@ -86,7 +90,7 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
             }
         };
 
-        transformed.faces().add(face).unwrap();
+        transformed.topology().add_face(face).unwrap();
     }
 
     transformed
