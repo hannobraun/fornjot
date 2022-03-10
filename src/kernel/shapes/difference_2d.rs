@@ -48,6 +48,8 @@ impl ToShape for fj::Difference2d {
             [&mut a, &mut b].map(|shape| shape.cycles().all().next().unwrap());
 
         let mut vertices = HashMap::new();
+        let mut cycles = Vec::new();
+
         for cycle in cycles_orig {
             let mut edges = Vec::new();
             for edge in &cycle.edges {
@@ -66,25 +68,24 @@ impl ToShape for fj::Difference2d {
                 edges.push(edge);
             }
 
-            shape.cycles().add(Cycle { edges });
+            let cycle = shape.cycles().add(Cycle { edges });
+            cycles.push(cycle);
         }
 
         // Can't panic, as we just verified that both shapes have one face.
         let [face_a, face_b] =
             [&mut a, &mut b].map(|shape| shape.faces().all().next().unwrap());
 
-        let (cycles_a, cycles_b, surface_a, surface_b) =
+        let (surface_a, surface_b) =
             match (face_a.get().clone(), face_b.get().clone()) {
                 (
                     Face::Face {
-                        cycles: a,
-                        surface: surface_a,
+                        surface: surface_a, ..
                     },
                     Face::Face {
-                        cycles: b,
-                        surface: surface_b,
+                        surface: surface_b, ..
                     },
-                ) => (a, b, surface_a, surface_b),
+                ) => (surface_a, surface_b),
                 _ => {
                     // None of the 2D types still use triangle representation.
                     unreachable!()
@@ -96,9 +97,6 @@ impl ToShape for fj::Difference2d {
             "Trying to subtract sketches with different surfaces."
         );
         let surface = surface_a;
-
-        let mut cycles = cycles_a;
-        cycles.extend(cycles_b);
 
         shape.faces().add(Face::Face { cycles, surface });
 
