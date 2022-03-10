@@ -67,6 +67,10 @@ impl<T> Storage<T> {
     pub(super) fn handle(&self) -> Handle<T> {
         Handle(self.clone())
     }
+
+    fn ptr(&self) -> *const T {
+        Rc::as_ptr(&self.0)
+    }
 }
 
 impl<T> Deref for Storage<T> {
@@ -94,6 +98,6 @@ impl<T> PartialEq for Storage<T> {
 
 impl<T> Hash for Storage<T> {
     fn hash<H: Hasher>(&self, state: &mut H) {
-        Rc::as_ptr(&self.0).hash(state);
+        self.ptr().hash(state);
     }
 }
