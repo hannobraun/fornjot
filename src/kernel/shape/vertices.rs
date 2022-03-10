@@ -74,7 +74,7 @@ mod tests {
     const MIN_DISTANCE: f64 = 5e-7;
 
     #[test]
-    fn add_valid() -> anyhow::Result<()> {
+    fn add() -> anyhow::Result<()> {
         let mut shape = Shape::new().with_min_distance(MIN_DISTANCE);
 
         let a = shape.geometry().add_point(Point::from([0., 0., 0.]))?;

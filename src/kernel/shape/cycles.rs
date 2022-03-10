@@ -56,7 +56,7 @@ mod tests {
     };
 
     #[test]
-    fn add_valid() -> anyhow::Result<()> {
+    fn add() -> anyhow::Result<()> {
         let mut shape = Shape::new();
 
         let a = shape.geometry().add_point(Point::from([0., 0., 0.]))?;
