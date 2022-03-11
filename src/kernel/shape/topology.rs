@@ -120,7 +120,7 @@ impl Topology<'_> {
         let curve = self.geometry.add_curve(Curve::Circle(Circle {
             center: Point::origin(),
             radius: Vector::from([radius, Scalar::ZERO]),
-        }))?;
+        }));
         self.add_edge(Edge {
             curve,
             vertices: None,
@@ -137,7 +137,7 @@ impl Topology<'_> {
     ) -> ValidationResult<Edge> {
         let curve = self.geometry.add_curve(Curve::Line(Line::from_points(
             vertices.clone().map(|vertex| vertex.point()),
-        )))?;
+        )));
         self.add_edge(Edge {
             curve,
             vertices: Some(vertices),
@@ -228,18 +228,18 @@ mod tests {
     fn add_vertex() -> anyhow::Result<()> {
         let mut shape = Shape::new().with_min_distance(MIN_DISTANCE);
 
-        let point = shape.geometry().add_point(Point::from([0., 0., 0.]))?;
+        let point = shape.geometry().add_point(Point::from([0., 0., 0.]));
         shape.topology().add_vertex(Vertex { point })?;
 
         // `point` is too close to the original point. `assert!` is commented,
         // because that only causes a warning to be logged right now.
-        let point = shape.geometry().add_point(Point::from([5e-6, 0., 0.]))?;
+        let point = shape.geometry().add_point(Point::from([5e-6, 0., 0.]));
         let _result = shape.topology().add_vertex(Vertex { point });
         // assert!(matches!(result, Err(ValidationError::Uniqueness)));
 
         // `point` is farther than `MIN_DISTANCE` away from original point.
         // Should work.
-        let point = shape.geometry().add_point(Point::from([5e-6, 0., 0.]))?;
+        let point = shape.geometry().add_point(Point::from([5e-6, 0., 0.]));
         shape.topology().add_vertex(Vertex { point })?;
 
         Ok(())
@@ -250,8 +250,8 @@ mod tests {
         let mut shape = Shape::new();
         let mut other = Shape::new();
 
-        let a = other.geometry().add_point(Point::from([0., 0., 0.]))?;
-        let b = other.geometry().add_point(Point::from([1., 0., 0.]))?;
+        let a = other.geometry().add_point(Point::from([0., 0., 0.]));
+        let b = other.geometry().add_point(Point::from([1., 0., 0.]));
 
         let a = other.topology().add_vertex(Vertex { point: a })?;
         let b = other.topology().add_vertex(Vertex { point: b })?;
@@ -260,14 +260,14 @@ mod tests {
         let result = shape.topology().add_line_segment([a.clone(), b.clone()]);
         assert!(matches!(result, Err(ValidationError::Structural)));
 
-        let a = shape.geometry().add_point(a.point())?;
+        let a = shape.geometry().add_point(a.point());
         let a = shape.topology().add_vertex(Vertex { point: a })?;
 
         // Shouldn't work. Only `a` has been added to `shape`.
         let result = shape.topology().add_line_segment([a.clone(), b.clone()]);
         assert!(matches!(result, Err(ValidationError::Structural)));
 
-        let b = shape.geometry().add_point(b.point())?;
+        let b = shape.geometry().add_point(b.point());
         let b = shape.topology().add_vertex(Vertex { point: b })?;
 
         // Both `a` and `b` have been added to `shape`. Should work!
@@ -287,10 +287,8 @@ mod tests {
             fn new() -> anyhow::Result<Self> {
                 let mut inner = Shape::new();
 
-                let a =
-                    inner.geometry().add_point(Point::from([0., 0., 0.]))?;
-                let b =
-                    inner.geometry().add_point(Point::from([1., 0., 0.]))?;
+                let a = inner.geometry().add_point(Point::from([0., 0., 0.]));
+                let b = inner.geometry().add_point(Point::from([1., 0., 0.]));
 
                 let a = inner.topology().add_vertex(Vertex { point: a })?;
                 let b = inner.topology().add_vertex(Vertex { point: b })?;
