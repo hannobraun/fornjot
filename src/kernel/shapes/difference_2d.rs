@@ -7,6 +7,7 @@ use crate::{
         topology::{
             edges::{Cycle, Edge},
             faces::Face,
+            vertices::Vertex,
         },
     },
     math::{Aabb, Scalar},
@@ -60,7 +61,12 @@ impl ToShape for fj::Difference2d {
                         vertices
                             .entry(vertex.clone())
                             .or_insert_with(|| {
-                                shape.topology().add_vertex(vertex).unwrap()
+                                let point =
+                                    shape.geometry().add_point(vertex.point());
+                                shape
+                                    .topology()
+                                    .add_vertex(Vertex { point })
+                                    .unwrap()
                             })
                             .clone()
                     })
