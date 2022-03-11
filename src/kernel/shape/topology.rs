@@ -280,16 +280,16 @@ mod tests {
 
     #[test]
     fn add_cycle() -> anyhow::Result<()> {
-        let (mut shape, edge) = TestShape::new()?;
-        let (_, other_edge) = TestShape::new()?;
+        let mut shape = TestShape::new();
+        let mut other = TestShape::new();
 
         // Trying to refer to edge that is not from the same shape. Should fail.
-        let result = shape.topology().add_cycle(Cycle {
-            edges: vec![other_edge],
-        });
+        let edge = other.add_edge()?;
+        let result = shape.topology().add_cycle(Cycle { edges: vec![edge] });
         assert!(matches!(result, Err(ValidationError::Structural)));
 
         // Referring to edge that *is* from the same shape. Should work.
+        let edge = shape.add_edge()?;
         shape.topology().add_cycle(Cycle { edges: vec![edge] })?;
 
         Ok(())
@@ -301,15 +301,11 @@ mod tests {
     }
 
     impl TestShape {
-        fn new() -> anyhow::Result<(Self, Handle<Edge>)> {
-            let mut self_ = Self {
+        fn new() -> Self {
+            Self {
                 inner: Shape::new(),
                 next_point: Point::from([0., 0., 0.]),
-            };
-
-            let edge = self_.add_edge()?;
-
-            Ok((self_, edge))
+            }
         }
 
         fn add_vertex(&mut self) -> anyhow::Result<Handle<Vertex>> {
