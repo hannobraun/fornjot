@@ -249,28 +249,23 @@ mod tests {
 
     #[test]
     fn add_edge() -> anyhow::Result<()> {
-        let mut shape = Shape::new();
-        let mut other = Shape::new();
+        let mut shape = TestShape::new();
+        let mut other = TestShape::new();
 
-        let a = other.geometry().add_point(Point::from([0., 0., 0.]));
-        let b = other.geometry().add_point(Point::from([1., 0., 0.]));
-
-        let a = other.topology().add_vertex(Vertex { point: a })?;
-        let b = other.topology().add_vertex(Vertex { point: b })?;
+        let a = other.add_vertex()?;
+        let b = other.add_vertex()?;
 
         // Shouldn't work. None of the vertices have been added to `shape`.
         let result = shape.topology().add_line_segment([a.clone(), b.clone()]);
         assert!(matches!(result, Err(ValidationError::Structural)));
 
-        let a = shape.geometry().add_point(a.point());
-        let a = shape.topology().add_vertex(Vertex { point: a })?;
+        let a = shape.add_vertex()?;
 
         // Shouldn't work. Only `a` has been added to `shape`.
         let result = shape.topology().add_line_segment([a.clone(), b.clone()]);
         assert!(matches!(result, Err(ValidationError::Structural)));
 
-        let b = shape.geometry().add_point(b.point());
-        let b = shape.topology().add_vertex(Vertex { point: b })?;
+        let b = shape.add_vertex()?;
 
         // Both `a` and `b` have been added to `shape`. Should work!
         shape.topology().add_line_segment([a, b])?;
