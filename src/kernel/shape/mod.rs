@@ -5,12 +5,15 @@ pub mod validate;
 
 pub use self::validate::{ValidationError, ValidationResult};
 
-use crate::math::Scalar;
+use crate::math::{Point, Scalar};
 
-use super::topology::{
-    edges::{Cycle, Edge},
-    faces::Face,
-    vertices::Vertex,
+use super::{
+    geometry::{Curve, Surface},
+    topology::{
+        edges::{Cycle, Edge},
+        faces::Face,
+        vertices::Vertex,
+    },
 };
 
 use self::{geometry::Geometry, handle::Storage, topology::Topology};
@@ -22,6 +25,10 @@ pub struct Shape {
     ///
     /// Use for vertex validation, to determine whether vertices are unique.
     min_distance: Scalar,
+
+    points: Points,
+    curves: Curves,
+    surfaces: Surfaces,
 
     vertices: Vertices,
     edges: Edges,
@@ -37,6 +44,10 @@ impl Shape {
             // similarly named constant. Unfortunately `Scalar::from_f64` can't
             // be `const` yet.
             min_distance: Scalar::from_f64(5e-7), // 0.5 µm
+
+            points: Points::new(),
+            curves: Curves::new(),
+            surfaces: Surfaces::new(),
 
             vertices: Vertices::new(),
             edges: Edges::new(),
@@ -62,7 +73,11 @@ impl Shape {
 
     /// Access the shape's geometry
     pub fn geometry(&mut self) -> Geometry {
-        Geometry
+        Geometry {
+            points: &mut self.points,
+            curves: &mut self.curves,
+            surfaces: &mut self.surfaces,
+        }
     }
 
     /// Access the shape's topology
@@ -70,7 +85,11 @@ impl Shape {
         Topology {
             min_distance: self.min_distance,
 
-            geometry: Geometry,
+            geometry: Geometry {
+                points: &mut self.points,
+                curves: &mut self.curves,
+                surfaces: &mut self.surfaces,
+            },
 
             vertices: &mut self.vertices,
             edges: &mut self.edges,
@@ -79,6 +98,10 @@ impl Shape {
         }
     }
 }
+
+type Points = Vec<Storage<Point<3>>>;
+type Curves = Vec<Storage<Curve>>;
+type Surfaces = Vec<Storage<Surface>>;
 
 type Vertices = Vec<Storage<Vertex>>;
 type Edges = Vec<Storage<Edge>>;

@@ -7,6 +7,7 @@ use crate::{
         topology::{
             edges::{Cycle, Edge},
             faces::Face,
+            vertices::Vertex,
         },
     },
     math::{Aabb, Scalar},
@@ -60,7 +61,12 @@ impl ToShape for fj::Difference2d {
                         vertices
                             .entry(vertex.clone())
                             .or_insert_with(|| {
-                                shape.topology().add_vertex(vertex).unwrap()
+                                let point =
+                                    shape.geometry().add_point(vertex.point());
+                                shape
+                                    .topology()
+                                    .add_vertex(Vertex { point })
+                                    .unwrap()
                             })
                             .clone()
                     })
@@ -81,19 +87,11 @@ impl ToShape for fj::Difference2d {
         let [face_a, face_b] = [&mut a, &mut b]
             .map(|shape| shape.topology().faces().next().unwrap());
 
-        let surface_a = match (face_a.get().clone(), face_b.get().clone()) {
-            (Face::Face { surface, .. }, Face::Face { .. }) => surface,
-            _ => {
-                // None of the 2D types still use triangle representation.
-                unreachable!()
-            }
-        };
-
         assert!(
             face_a.surface() == face_b.surface(),
             "Trying to subtract sketches with different surfaces."
         );
-        let surface = surface_a;
+        let surface = shape.geometry().add_surface(face_a.surface());
 
         shape
             .topology()
