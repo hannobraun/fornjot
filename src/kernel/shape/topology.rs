@@ -211,6 +211,8 @@ impl Topology<'_> {
 
 #[cfg(test)]
 mod tests {
+    use std::ops::{Deref, DerefMut};
+
     use crate::{
         kernel::{
             shape::{handle::Handle, Shape, ValidationError},
@@ -282,16 +284,13 @@ mod tests {
         let (_, other_edge) = TestShape::new()?;
 
         // Trying to refer to edge that is not from the same shape. Should fail.
-        let result = shape.inner.topology().add_cycle(Cycle {
+        let result = shape.topology().add_cycle(Cycle {
             edges: vec![other_edge],
         });
         assert!(matches!(result, Err(ValidationError::Structural)));
 
         // Referring to edge that *is* from the same shape. Should work.
-        shape
-            .inner
-            .topology()
-            .add_cycle(Cycle { edges: vec![edge] })?;
+        shape.topology().add_cycle(Cycle { edges: vec![edge] })?;
 
         Ok(())
     }
@@ -313,6 +312,20 @@ mod tests {
             let edge = inner.topology().add_line_segment([a, b])?;
 
             Ok((Self { inner }, edge))
+        }
+    }
+
+    impl Deref for TestShape {
+        type Target = Shape;
+
+        fn deref(&self) -> &Self::Target {
+            &self.inner
+        }
+    }
+
+    impl DerefMut for TestShape {
+        fn deref_mut(&mut self) -> &mut Self::Target {
+            &mut self.inner
         }
     }
 }
