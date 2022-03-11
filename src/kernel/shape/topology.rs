@@ -78,13 +78,6 @@ impl Topology<'_> {
         Ok(handle)
     }
 
-    /// Access iterator over all vertices
-    ///
-    /// The caller must not make any assumptions about the order of vertices.
-    pub fn vertices(&self) -> impl Iterator<Item = Handle<Vertex>> + '_ {
-        self.vertices.iter().map(|storage| storage.handle())
-    }
-
     /// Add an edge to the shape
     ///
     /// Validates that the edge is structurally sound (i.e. the curve and
@@ -161,13 +154,6 @@ impl Topology<'_> {
         })
     }
 
-    /// Access iterator over all edges
-    ///
-    /// The caller must not make any assumptions about the order of edges.
-    pub fn edges(&self) -> impl Iterator<Item = Handle<Edge>> + '_ {
-        self.edges.iter().map(|storage| storage.handle())
-    }
-
     /// Add a cycle to the shape
     ///
     /// Validates that the cycle is structurally sound (i.e. the edges it refers
@@ -196,11 +182,6 @@ impl Topology<'_> {
         self.cycles.push(storage);
 
         Ok(handle)
-    }
-
-    /// Access an iterator over all cycles
-    pub fn cycles(&self) -> impl Iterator<Item = Handle<Cycle>> + '_ {
-        self.cycles.iter().map(|storage| storage.handle())
     }
 
     /// Add a face to the shape
@@ -236,6 +217,25 @@ impl Topology<'_> {
         self.faces.push(storage);
 
         Ok(handle)
+    }
+
+    /// Access iterator over all vertices
+    ///
+    /// The caller must not make any assumptions about the order of vertices.
+    pub fn vertices(&self) -> impl Iterator<Item = Handle<Vertex>> + '_ {
+        self.vertices.iter().map(|storage| storage.handle())
+    }
+
+    /// Access iterator over all edges
+    ///
+    /// The caller must not make any assumptions about the order of edges.
+    pub fn edges(&self) -> impl Iterator<Item = Handle<Edge>> + '_ {
+        self.edges.iter().map(|storage| storage.handle())
+    }
+
+    /// Access an iterator over all cycles
+    pub fn cycles(&self) -> impl Iterator<Item = Handle<Cycle>> + '_ {
+        self.cycles.iter().map(|storage| storage.handle())
     }
 
     /// Access an iterator over all faces
