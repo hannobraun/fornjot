@@ -34,20 +34,17 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
                     for edge in &cycle.edges {
                         let curve = transformed
                             .geometry()
-                            .add_curve(edge.curve().transform(transform))
-                            .unwrap();
+                            .add_curve(edge.curve().transform(transform));
 
                         let vertices =
                             edge.vertices().clone().map(|vertices| {
                                 vertices.map(|vertex| {
-                                    let point = transformed
-                                        .geometry()
-                                        .add_point(
+                                    let point =
+                                        transformed.geometry().add_point(
                                             transform.transform_point(
                                                 &vertex.point(),
                                             ),
-                                        )
-                                        .unwrap();
+                                        );
 
                                     transformed
                                         .topology()
@@ -73,8 +70,7 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
 
                 let surface = transformed
                     .geometry()
-                    .add_surface(surface.transform(transform))
-                    .unwrap();
+                    .add_surface(surface.transform(transform));
 
                 Face::Face {
                     cycles: cycles_trans,

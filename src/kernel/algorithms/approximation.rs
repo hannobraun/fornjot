@@ -157,8 +157,8 @@ mod tests {
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = shape.geometry().add_point(a).unwrap();
-        let v2 = shape.geometry().add_point(d).unwrap();
+        let v1 = shape.geometry().add_point(a);
+        let v2 = shape.geometry().add_point(d);
 
         let v1 = shape.topology().add_vertex(Vertex { point: v1 }).unwrap();
         let v2 = shape.topology().add_vertex(Vertex { point: v2 }).unwrap();
@@ -201,9 +201,9 @@ mod tests {
         let b = Point::from([2., 3., 5.]);
         let c = Point::from([3., 5., 8.]);
 
-        let v1 = shape.geometry().add_point(a).unwrap();
-        let v2 = shape.geometry().add_point(b).unwrap();
-        let v3 = shape.geometry().add_point(c).unwrap();
+        let v1 = shape.geometry().add_point(a);
+        let v2 = shape.geometry().add_point(b);
+        let v3 = shape.geometry().add_point(c);
 
         let v1 = shape.topology().add_vertex(Vertex { point: v1 }).unwrap();
         let v2 = shape.topology().add_vertex(Vertex { point: v2 }).unwrap();
@@ -246,10 +246,10 @@ mod tests {
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = shape.geometry().add_point(a).unwrap();
-        let v2 = shape.geometry().add_point(b).unwrap();
-        let v3 = shape.geometry().add_point(c).unwrap();
-        let v4 = shape.geometry().add_point(d).unwrap();
+        let v1 = shape.geometry().add_point(a);
+        let v2 = shape.geometry().add_point(b);
+        let v3 = shape.geometry().add_point(c);
+        let v4 = shape.geometry().add_point(d);
 
         let v1 = shape.topology().add_vertex(Vertex { point: v1 }).unwrap();
         let v2 = shape.topology().add_vertex(Vertex { point: v2 }).unwrap();
@@ -271,8 +271,7 @@ mod tests {
             })
             .unwrap();
 
-        let surface =
-            shape.geometry().add_surface(Surface::x_y_plane()).unwrap();
+        let surface = shape.geometry().add_surface(Surface::x_y_plane());
         let face = Face::Face {
             surface,
             cycles: vec![abcd],
