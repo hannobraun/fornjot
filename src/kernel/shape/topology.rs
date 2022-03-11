@@ -54,6 +54,9 @@ impl Topology<'_> {
     /// uniqueness. See documentation of [`crate::kernel`] for some context on
     /// that.
     pub fn add_vertex(&mut self, vertex: Vertex) -> ValidationResult<Vertex> {
+        if !self.geometry.points.contains(vertex.point.storage()) {
+            return Err(ValidationError::Structural(()));
+        }
         for existing in &*self.vertices {
             let distance = (existing.point() - vertex.point()).magnitude();
 
@@ -223,7 +226,7 @@ mod tests {
 
     use crate::{
         kernel::{
-            shape::{handle::Handle, Shape},
+            shape::{handle::Handle, Shape, ValidationError},
             topology::{
                 edges::{Cycle, Edge},
                 vertices::Vertex,
@@ -237,9 +240,15 @@ mod tests {
     #[test]
     fn add_vertex() -> anyhow::Result<()> {
         let mut shape = Shape::new().with_min_distance(MIN_DISTANCE);
+        let mut other = Shape::new();
 
         let point = shape.geometry().add_point(Point::from([0., 0., 0.]));
         shape.topology().add_vertex(Vertex { point })?;
+
+        // Should fail, as `point` is not part of the shape.
+        let point = other.geometry().add_point(Point::from([1., 0., 0.]));
+        let result = shape.topology().add_vertex(Vertex { point });
+        assert!(matches!(result, Err(ValidationError::Structural(()))));
 
         // `point` is too close to the original point. `assert!` is commented,
         // because that only causes a warning to be logged right now.
