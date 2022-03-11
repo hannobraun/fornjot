@@ -59,4 +59,19 @@ impl Geometry<'_> {
 
         handle
     }
+
+    /// Access an iterator over all points
+    pub fn points(&self) -> impl Iterator<Item = Handle<Point<3>>> + '_ {
+        self.points.iter().map(|storage| storage.handle())
+    }
+
+    /// Access an iterator over all curves
+    pub fn curves(&self) -> impl Iterator<Item = Handle<Curve>> + '_ {
+        self.curves.iter().map(|storage| storage.handle())
+    }
+
+    /// Access an iterator over all surfaces
+    pub fn surfaces(&self) -> impl Iterator<Item = Handle<Surface>> + '_ {
+        self.surfaces.iter().map(|storage| storage.handle())
+    }
 }
