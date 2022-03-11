@@ -99,7 +99,7 @@ impl Topology<'_> {
         for vertices in &edge.vertices {
             for vertex in vertices {
                 if !self.vertices.contains(vertex.storage()) {
-                    return Err(ValidationError::Structural);
+                    return Err(ValidationError::Structural(()));
                 }
             }
         }
@@ -166,7 +166,7 @@ impl Topology<'_> {
     pub fn add_cycle(&mut self, cycle: Cycle) -> ValidationResult<Cycle> {
         for edge in &cycle.edges {
             if !self.edges.contains(edge.storage()) {
-                return Err(ValidationError::Structural);
+                return Err(ValidationError::Structural(()));
             }
         }
 
@@ -257,13 +257,13 @@ mod tests {
 
         // Shouldn't work. None of the vertices have been added to `shape`.
         let result = shape.topology().add_line_segment([a.clone(), b.clone()]);
-        assert!(matches!(result, Err(ValidationError::Structural)));
+        assert!(matches!(result, Err(ValidationError::Structural(_))));
 
         let a = shape.add_vertex()?;
 
         // Shouldn't work. Only `a` has been added to `shape`.
         let result = shape.topology().add_line_segment([a.clone(), b.clone()]);
-        assert!(matches!(result, Err(ValidationError::Structural)));
+        assert!(matches!(result, Err(ValidationError::Structural(_))));
 
         let b = shape.add_vertex()?;
 
@@ -281,7 +281,7 @@ mod tests {
         // Trying to refer to edge that is not from the same shape. Should fail.
         let edge = other.add_edge()?;
         let result = shape.topology().add_cycle(Cycle { edges: vec![edge] });
-        assert!(matches!(result, Err(ValidationError::Structural)));
+        assert!(matches!(result, Err(ValidationError::Structural(_))));
 
         // Referring to edge that *is* from the same shape. Should work.
         let edge = shape.add_edge()?;
