@@ -54,10 +54,6 @@ impl Topology<'_> {
     /// uniqueness. See documentation of [`crate::kernel`] for some context on
     /// that.
     pub fn add_vertex(&mut self, vertex: Vertex) -> ValidationResult<Vertex> {
-        // Make sure the new vertex is a minimum distance away from all existing
-        // vertices. This minimum distance is defined to be half a µm, which
-        // should provide more than enough precision for common use cases, while
-        // being large enough to catch all invalid cases.
         for existing in &*self.vertices {
             let distance = (existing.point() - vertex.point()).magnitude();
 
