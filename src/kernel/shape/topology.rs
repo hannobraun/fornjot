@@ -171,10 +171,15 @@ impl Topology<'_> {
     /// - That the cycle is not self-overlapping.
     /// - That there exists no duplicate cycle, with the same edges.
     pub fn add_cycle(&mut self, cycle: Cycle) -> ValidationResult<Cycle> {
+        let mut missing_edges = HashSet::new();
         for edge in &cycle.edges {
             if !self.edges.contains(edge.storage()) {
-                return Err(ValidationError::Structural(()));
+                missing_edges.insert(edge.clone());
             }
+        }
+
+        if !missing_edges.is_empty() {
+            return Err(ValidationError::Structural(missing_edges));
         }
 
         let storage = Storage::new(cycle);
@@ -222,7 +227,7 @@ mod tests {
 
     use crate::{
         kernel::{
-            shape::{handle::Handle, Shape, ValidationError},
+            shape::{handle::Handle, Shape},
             topology::{
                 edges::{Cycle, Edge},
                 vertices::Vertex,
@@ -286,8 +291,13 @@ mod tests {
 
         // Trying to refer to edge that is not from the same shape. Should fail.
         let edge = other.add_edge()?;
-        let result = shape.topology().add_cycle(Cycle { edges: vec![edge] });
-        assert!(matches!(result, Err(ValidationError::Structural(_))));
+        let err = shape
+            .topology()
+            .add_cycle(Cycle {
+                edges: vec![edge.clone()],
+            })
+            .unwrap_err();
+        assert!(err.missing_edge(&edge));
 
         // Referring to edge that *is* from the same shape. Should work.
         let edge = shape.add_edge()?;

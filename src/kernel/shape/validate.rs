@@ -52,6 +52,18 @@ impl ValidationError<Edge> {
     }
 }
 
+impl ValidationError<Cycle> {
+    /// Indicate whether validation found a missing edge
+    #[cfg(test)]
+    pub fn missing_edge(&self, vertex: &Handle<Edge>) -> bool {
+        if let Self::Structural(missing) = self {
+            return missing.contains(vertex);
+        }
+
+        false
+    }
+}
+
 /// Implemented for topological types, which can be validated
 ///
 /// Used by [`ValidationError`] to provide context on how validation failed.
@@ -68,7 +80,7 @@ impl Validatable for Edge {
 }
 
 impl Validatable for Cycle {
-    type Structural = ();
+    type Structural = HashSet<Handle<Edge>>;
 }
 
 impl Validatable for Face {
