@@ -2,7 +2,7 @@ use std::{
     fmt,
     hash::{Hash, Hasher},
     ops::Deref,
-    rc::Rc,
+    sync::Arc,
 };
 
 /// A handle to an object stored within [`Shape`]
@@ -65,12 +65,12 @@ where
 
 /// Internal type used in collections within [`Shape`]
 #[derive(Debug, Eq, Ord, PartialOrd)]
-pub(super) struct Storage<T>(Rc<T>);
+pub(super) struct Storage<T>(Arc<T>);
 
 impl<T> Storage<T> {
     /// Create a [`Storage`] instance that wraps the provided object
     pub(super) fn new(value: T) -> Self {
-        Self(Rc::new(value))
+        Self(Arc::new(value))
     }
 
     /// Create a handle that refers to this [`Storage`] instance
@@ -79,7 +79,7 @@ impl<T> Storage<T> {
     }
 
     fn ptr(&self) -> *const T {
-        Rc::as_ptr(&self.0)
+        Arc::as_ptr(&self.0)
     }
 }
 
@@ -102,7 +102,7 @@ impl<T> Clone for Storage<T> {
 
 impl<T> PartialEq for Storage<T> {
     fn eq(&self, other: &Self) -> bool {
-        Rc::ptr_eq(&self.0, &other.0)
+        Arc::ptr_eq(&self.0, &other.0)
     }
 }
 
