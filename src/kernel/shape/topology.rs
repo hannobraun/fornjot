@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use tracing::warn;
 
 use crate::{
@@ -96,12 +98,17 @@ impl Topology<'_> {
     /// the future, it can add the edge to the proper internal data structures,
     /// and validate any constraints that apply to edge creation.
     pub fn add_edge(&mut self, edge: Edge) -> ValidationResult<Edge> {
+        let mut missing_vertices = HashSet::new();
         for vertices in &edge.vertices {
             for vertex in vertices {
                 if !self.vertices.contains(vertex.storage()) {
-                    return Err(ValidationError::Structural);
+                    missing_vertices.insert(vertex.clone());
                 }
             }
+        }
+
+        if !missing_vertices.is_empty() {
+            return Err(ValidationError::Structural(missing_vertices));
         }
 
         let storage = Storage::new(edge);
@@ -164,10 +171,15 @@ impl Topology<'_> {
     /// - That the cycle is not self-overlapping.
     /// - That there exists no duplicate cycle, with the same edges.
     pub fn add_cycle(&mut self, cycle: Cycle) -> ValidationResult<Cycle> {
+        let mut missing_edges = HashSet::new();
         for edge in &cycle.edges {
             if !self.edges.contains(edge.storage()) {
-                return Err(ValidationError::Structural);
+                missing_edges.insert(edge.clone());
             }
+        }
+
+        if !missing_edges.is_empty() {
+            return Err(ValidationError::Structural(missing_edges));
         }
 
         let storage = Storage::new(cycle);
@@ -215,7 +227,7 @@ mod tests {
 
     use crate::{
         kernel::{
-            shape::{handle::Handle, Shape, ValidationError},
+            shape::{handle::Handle, Shape},
             topology::{
                 edges::{Cycle, Edge},
                 vertices::Vertex,
@@ -256,15 +268,14 @@ mod tests {
         let b = other.add_vertex()?;
 
         // Shouldn't work. None of the vertices have been added to `shape`.
-        let result = shape.topology().add_line_segment([a.clone(), b.clone()]);
-        assert!(matches!(result, Err(ValidationError::Structural)));
+        let err = shape
+            .topology()
+            .add_line_segment([a.clone(), b.clone()])
+            .unwrap_err();
+        assert!(err.missing_vertex(&a));
+        assert!(err.missing_vertex(&b));
 
         let a = shape.add_vertex()?;
-
-        // Shouldn't work. Only `a` has been added to `shape`.
-        let result = shape.topology().add_line_segment([a.clone(), b.clone()]);
-        assert!(matches!(result, Err(ValidationError::Structural)));
-
         let b = shape.add_vertex()?;
 
         // Both `a` and `b` have been added to `shape`. Should work!
@@ -280,8 +291,13 @@ mod tests {
 
         // Trying to refer to edge that is not from the same shape. Should fail.
         let edge = other.add_edge()?;
-        let result = shape.topology().add_cycle(Cycle { edges: vec![edge] });
-        assert!(matches!(result, Err(ValidationError::Structural)));
+        let err = shape
+            .topology()
+            .add_cycle(Cycle {
+                edges: vec![edge.clone()],
+            })
+            .unwrap_err();
+        assert!(err.missing_edge(&edge));
 
         // Referring to edge that *is* from the same shape. Should work.
         let edge = shape.add_edge()?;
