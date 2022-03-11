@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use tracing::warn;
 
 use crate::{
@@ -96,12 +98,17 @@ impl Topology<'_> {
     /// the future, it can add the edge to the proper internal data structures,
     /// and validate any constraints that apply to edge creation.
     pub fn add_edge(&mut self, edge: Edge) -> ValidationResult<Edge> {
+        let mut missing_vertices = HashSet::new();
         for vertices in &edge.vertices {
             for vertex in vertices {
                 if !self.vertices.contains(vertex.storage()) {
-                    return Err(ValidationError::Structural(()));
+                    missing_vertices.insert(vertex.clone());
                 }
             }
+        }
+
+        if !missing_vertices.is_empty() {
+            return Err(ValidationError::Structural(missing_vertices));
         }
 
         let storage = Storage::new(edge);
@@ -256,15 +263,14 @@ mod tests {
         let b = other.add_vertex()?;
 
         // Shouldn't work. None of the vertices have been added to `shape`.
-        let result = shape.topology().add_line_segment([a.clone(), b.clone()]);
-        assert!(matches!(result, Err(ValidationError::Structural(_))));
+        let err = shape
+            .topology()
+            .add_line_segment([a.clone(), b.clone()])
+            .unwrap_err();
+        assert!(err.missing_vertex(&a));
+        assert!(err.missing_vertex(&b));
 
         let a = shape.add_vertex()?;
-
-        // Shouldn't work. Only `a` has been added to `shape`.
-        let result = shape.topology().add_line_segment([a.clone(), b.clone()]);
-        assert!(matches!(result, Err(ValidationError::Structural(_))));
-
         let b = shape.add_vertex()?;
 
         // Both `a` and `b` have been added to `shape`. Should work!

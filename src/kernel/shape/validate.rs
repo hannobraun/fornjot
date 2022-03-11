@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use crate::kernel::topology::{
     edges::{Cycle, Edge},
     faces::Face,
@@ -38,6 +40,18 @@ pub enum ValidationError<T: Validatable> {
     Geometric,
 }
 
+impl ValidationError<Edge> {
+    /// Indicate whether validation found a missing vertex
+    #[cfg(test)]
+    pub fn missing_vertex(&self, vertex: &Handle<Vertex>) -> bool {
+        if let Self::Structural(missing) = self {
+            return missing.contains(vertex);
+        }
+
+        false
+    }
+}
+
 /// Implemented for topological types, which can be validated
 ///
 /// Used by [`ValidationError`] to provide context on how validation failed.
@@ -50,7 +64,7 @@ impl Validatable for Vertex {
 }
 
 impl Validatable for Edge {
-    type Structural = ();
+    type Structural = HashSet<Handle<Vertex>>;
 }
 
 impl Validatable for Cycle {
