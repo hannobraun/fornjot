@@ -221,7 +221,7 @@ mod tests {
                 vertices::Vertex,
             },
         },
-        math::Point,
+        math::{Point, Scalar},
     };
 
     const MIN_DISTANCE: f64 = 5e-7;
@@ -297,23 +297,32 @@ mod tests {
 
     struct TestShape {
         inner: Shape,
+        next_point: Point<3>,
     }
 
     impl TestShape {
         fn new() -> anyhow::Result<(Self, Handle<Edge>)> {
             let mut self_ = Self {
                 inner: Shape::new(),
+                next_point: Point::from([0., 0., 0.]),
             };
 
-            let a = self_.geometry().add_point(Point::from([0., 0., 0.]));
-            let b = self_.geometry().add_point(Point::from([1., 0., 0.]));
-
-            let a = self_.topology().add_vertex(Vertex { point: a })?;
-            let b = self_.topology().add_vertex(Vertex { point: b })?;
+            let a = self_.add_vertex()?;
+            let b = self_.add_vertex()?;
 
             let edge = self_.topology().add_line_segment([a, b])?;
 
             Ok((self_, edge))
+        }
+
+        fn add_vertex(&mut self) -> anyhow::Result<Handle<Vertex>> {
+            let point = self.next_point;
+            self.next_point.x += Scalar::ONE;
+
+            let point = self.geometry().add_point(point);
+            let vertex = self.topology().add_vertex(Vertex { point })?;
+
+            Ok(vertex)
         }
     }
 
