@@ -36,6 +36,10 @@ pub struct Topology<'r> {
 impl Topology<'_> {
     /// Add a vertex to the shape
     ///
+    /// Validates that the vertex is structurally sound (i.e. the point it
+    /// refers to is part of the shape). Returns an error, if that is not the
+    /// case.
+    ///
     /// Logs a warning, if the vertex is not unique, meaning if another vertex
     /// defined by the same point already exists.
     ///
@@ -50,9 +54,8 @@ impl Topology<'_> {
     /// as the presence of bugs in the sweep and transform code would basically
     /// break ever model, due to validation errors.
     ///
-    /// In the future, this method is likely to validate more than just vertex
-    /// uniqueness. See documentation of [`crate::kernel`] for some context on
-    /// that.
+    /// In the future, this method is likely to validate more than it already
+    /// does. See documentation of [`crate::kernel`] for some context on that.
     pub fn add_vertex(&mut self, vertex: Vertex) -> ValidationResult<Vertex> {
         if !self.geometry.points.contains(vertex.point.storage()) {
             return Err(ValidationError::Structural(()));
@@ -84,18 +87,18 @@ impl Topology<'_> {
 
     /// Add an edge to the shape
     ///
+    /// Validates that the edge is structurally sound (i.e. the curve and
+    /// vertices it refers to are part of the shape). Returns an error, if that
+    /// is not the case.
+    ///
+    /// # Vertices
+    ///
     /// If vertices are provided in `vertices`, they must be on `curve`.
     ///
     /// This constructor will convert the vertices into curve coordinates. If
     /// they are not on the curve, this will result in their projection being
     /// converted into curve coordinates, which is likely not the caller's
     /// intention.
-    ///
-    /// # Implementation notes
-    ///
-    /// Right now this is just an overly complicated constructor for `Edge`. In
-    /// the future, it can add the edge to the proper internal data structures,
-    /// and validate any constraints that apply to edge creation.
     pub fn add_edge(&mut self, edge: Edge) -> ValidationResult<Edge> {
         let mut missing_curve = None;
         let mut missing_vertices = HashSet::new();
@@ -167,9 +170,8 @@ impl Topology<'_> {
 
     /// Add a cycle to the shape
     ///
-    /// # Panics
-    ///
-    /// Panics, if the edges of the cycles are not part of this shape.
+    /// Validates that the cycle is structurally sound (i.e. the edges it refers
+    /// to are part of the shape). Returns an error, if that is not the case.
     ///
     /// # Implementation note
     ///
@@ -202,6 +204,10 @@ impl Topology<'_> {
     }
 
     /// Add a face to the shape
+    ///
+    /// Validates that the face is structurally sound (i.e. the surface and
+    /// cycles it refers to are part of the shape). Returns an error, if that is
+    /// not the case.
     pub fn add_face(&mut self, face: Face) -> ValidationResult<Face> {
         if let Face::Face { surface, cycles } = &face {
             let mut missing_surface = None;
