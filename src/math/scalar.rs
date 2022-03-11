@@ -181,6 +181,13 @@ impl ops::Add<Self> for Scalar {
     }
 }
 
+impl ops::AddAssign<Self> for Scalar {
+    fn add_assign(&mut self, rhs: Self) {
+        self.0.add_assign(rhs.0);
+        *self = Self::from_f64(self.0);
+    }
+}
+
 impl ops::Sub<Self> for Scalar {
     type Output = Self;
 

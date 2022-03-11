@@ -211,6 +211,8 @@ impl Topology<'_> {
 
 #[cfg(test)]
 mod tests {
+    use std::ops::{Deref, DerefMut};
+
     use crate::{
         kernel::{
             shape::{handle::Handle, Shape, ValidationError},
@@ -219,7 +221,7 @@ mod tests {
                 vertices::Vertex,
             },
         },
-        math::Point,
+        math::{Point, Scalar},
     };
 
     const MIN_DISTANCE: f64 = 5e-7;
@@ -247,28 +249,23 @@ mod tests {
 
     #[test]
     fn add_edge() -> anyhow::Result<()> {
-        let mut shape = Shape::new();
-        let mut other = Shape::new();
+        let mut shape = TestShape::new();
+        let mut other = TestShape::new();
 
-        let a = other.geometry().add_point(Point::from([0., 0., 0.]));
-        let b = other.geometry().add_point(Point::from([1., 0., 0.]));
-
-        let a = other.topology().add_vertex(Vertex { point: a })?;
-        let b = other.topology().add_vertex(Vertex { point: b })?;
+        let a = other.add_vertex()?;
+        let b = other.add_vertex()?;
 
         // Shouldn't work. None of the vertices have been added to `shape`.
         let result = shape.topology().add_line_segment([a.clone(), b.clone()]);
         assert!(matches!(result, Err(ValidationError::Structural)));
 
-        let a = shape.geometry().add_point(a.point());
-        let a = shape.topology().add_vertex(Vertex { point: a })?;
+        let a = shape.add_vertex()?;
 
         // Shouldn't work. Only `a` has been added to `shape`.
         let result = shape.topology().add_line_segment([a.clone(), b.clone()]);
         assert!(matches!(result, Err(ValidationError::Structural)));
 
-        let b = shape.geometry().add_point(b.point());
-        let b = shape.topology().add_vertex(Vertex { point: b })?;
+        let b = shape.add_vertex()?;
 
         // Both `a` and `b` have been added to `shape`. Should work!
         shape.topology().add_line_segment([a, b])?;
@@ -278,41 +275,62 @@ mod tests {
 
     #[test]
     fn add_cycle() -> anyhow::Result<()> {
-        struct TestShape {
-            inner: Shape,
-            edge: Handle<Edge>,
-        }
-
-        impl TestShape {
-            fn new() -> anyhow::Result<Self> {
-                let mut inner = Shape::new();
-
-                let a = inner.geometry().add_point(Point::from([0., 0., 0.]));
-                let b = inner.geometry().add_point(Point::from([1., 0., 0.]));
-
-                let a = inner.topology().add_vertex(Vertex { point: a })?;
-                let b = inner.topology().add_vertex(Vertex { point: b })?;
-
-                let edge = inner.topology().add_line_segment([a, b])?;
-
-                Ok(Self { inner, edge })
-            }
-        }
-
-        let mut shape = TestShape::new()?;
-        let other = TestShape::new()?;
+        let mut shape = TestShape::new();
+        let mut other = TestShape::new();
 
         // Trying to refer to edge that is not from the same shape. Should fail.
-        let result = shape.inner.topology().add_cycle(Cycle {
-            edges: vec![other.edge],
-        });
+        let edge = other.add_edge()?;
+        let result = shape.topology().add_cycle(Cycle { edges: vec![edge] });
         assert!(matches!(result, Err(ValidationError::Structural)));
 
         // Referring to edge that *is* from the same shape. Should work.
-        shape.inner.topology().add_cycle(Cycle {
-            edges: vec![shape.edge],
-        })?;
+        let edge = shape.add_edge()?;
+        shape.topology().add_cycle(Cycle { edges: vec![edge] })?;
 
         Ok(())
+    }
+
+    struct TestShape {
+        inner: Shape,
+        next_point: Point<3>,
+    }
+
+    impl TestShape {
+        fn new() -> Self {
+            Self {
+                inner: Shape::new(),
+                next_point: Point::from([0., 0., 0.]),
+            }
+        }
+
+        fn add_vertex(&mut self) -> anyhow::Result<Handle<Vertex>> {
+            let point = self.next_point;
+            self.next_point.x += Scalar::ONE;
+
+            let point = self.geometry().add_point(point);
+            let vertex = self.topology().add_vertex(Vertex { point })?;
+
+            Ok(vertex)
+        }
+
+        fn add_edge(&mut self) -> anyhow::Result<Handle<Edge>> {
+            let vertices = [(); 2].map(|()| self.add_vertex().unwrap());
+            let edge = self.topology().add_line_segment(vertices)?;
+            Ok(edge)
+        }
+    }
+
+    impl Deref for TestShape {
+        type Target = Shape;
+
+        fn deref(&self) -> &Self::Target {
+            &self.inner
+        }
+    }
+
+    impl DerefMut for TestShape {
+        fn deref_mut(&mut self) -> &mut Self::Target {
+            &mut self.inner
+        }
     }
 }
