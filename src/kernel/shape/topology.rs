@@ -278,27 +278,6 @@ mod tests {
 
     #[test]
     fn add_cycle() -> anyhow::Result<()> {
-        struct TestShape {
-            inner: Shape,
-            edge: Handle<Edge>,
-        }
-
-        impl TestShape {
-            fn new() -> anyhow::Result<Self> {
-                let mut inner = Shape::new();
-
-                let a = inner.geometry().add_point(Point::from([0., 0., 0.]));
-                let b = inner.geometry().add_point(Point::from([1., 0., 0.]));
-
-                let a = inner.topology().add_vertex(Vertex { point: a })?;
-                let b = inner.topology().add_vertex(Vertex { point: b })?;
-
-                let edge = inner.topology().add_line_segment([a, b])?;
-
-                Ok(Self { inner, edge })
-            }
-        }
-
         let mut shape = TestShape::new()?;
         let other = TestShape::new()?;
 
@@ -314,5 +293,26 @@ mod tests {
         })?;
 
         Ok(())
+    }
+
+    struct TestShape {
+        inner: Shape,
+        edge: Handle<Edge>,
+    }
+
+    impl TestShape {
+        fn new() -> anyhow::Result<Self> {
+            let mut inner = Shape::new();
+
+            let a = inner.geometry().add_point(Point::from([0., 0., 0.]));
+            let b = inner.geometry().add_point(Point::from([1., 0., 0.]));
+
+            let a = inner.topology().add_vertex(Vertex { point: a })?;
+            let b = inner.topology().add_vertex(Vertex { point: b })?;
+
+            let edge = inner.topology().add_line_segment([a, b])?;
+
+            Ok(Self { inner, edge })
+        }
     }
 }
