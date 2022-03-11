@@ -1,9 +1,12 @@
 use std::collections::HashSet;
 
-use crate::kernel::topology::{
-    edges::{Cycle, Edge},
-    faces::Face,
-    vertices::Vertex,
+use crate::kernel::{
+    geometry::Curve,
+    topology::{
+        edges::{Cycle, Edge},
+        faces::Face,
+        vertices::Vertex,
+    },
 };
 
 use super::handle::Handle;
@@ -41,11 +44,21 @@ pub enum ValidationError<T: Validatable> {
 }
 
 impl ValidationError<Edge> {
+    /// Indicate whether validation found a missing curve
+    #[cfg(test)]
+    pub fn missing_curve(&self, curve: &Handle<Curve>) -> bool {
+        if let Self::Structural(missing) = self {
+            return missing.0.as_ref() == Some(curve);
+        }
+
+        false
+    }
+
     /// Indicate whether validation found a missing vertex
     #[cfg(test)]
     pub fn missing_vertex(&self, vertex: &Handle<Vertex>) -> bool {
         if let Self::Structural(missing) = self {
-            return missing.contains(vertex);
+            return missing.1.contains(vertex);
         }
 
         false
@@ -76,7 +89,7 @@ impl Validatable for Vertex {
 }
 
 impl Validatable for Edge {
-    type Structural = HashSet<Handle<Vertex>>;
+    type Structural = (Option<Handle<Curve>>, HashSet<Handle<Vertex>>);
 }
 
 impl Validatable for Cycle {

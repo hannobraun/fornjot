@@ -97,7 +97,12 @@ impl Topology<'_> {
     /// the future, it can add the edge to the proper internal data structures,
     /// and validate any constraints that apply to edge creation.
     pub fn add_edge(&mut self, edge: Edge) -> ValidationResult<Edge> {
+        let mut missing_curve = None;
         let mut missing_vertices = HashSet::new();
+
+        if !self.geometry.curves.contains(edge.curve.storage()) {
+            missing_curve = Some(edge.curve.clone());
+        }
         for vertices in &edge.vertices {
             for vertex in vertices {
                 if !self.vertices.contains(vertex.storage()) {
@@ -106,8 +111,11 @@ impl Topology<'_> {
             }
         }
 
-        if !missing_vertices.is_empty() {
-            return Err(ValidationError::Structural(missing_vertices));
+        if missing_curve.is_some() || !missing_vertices.is_empty() {
+            return Err(ValidationError::Structural((
+                missing_curve,
+                missing_vertices,
+            )));
         }
 
         let storage = Storage::new(edge);
@@ -226,6 +234,7 @@ mod tests {
 
     use crate::{
         kernel::{
+            geometry::{Curve, Line},
             shape::{handle::Handle, Shape, ValidationError},
             topology::{
                 edges::{Cycle, Edge},
@@ -269,22 +278,31 @@ mod tests {
         let mut shape = TestShape::new();
         let mut other = TestShape::new();
 
+        let curve = other.add_curve();
         let a = other.add_vertex()?;
         let b = other.add_vertex()?;
 
-        // Shouldn't work. None of the vertices have been added to `shape`.
+        // Shouldn't work. Nothing has been added to `shape`.
         let err = shape
             .topology()
-            .add_line_segment([a.clone(), b.clone()])
+            .add_edge(Edge {
+                curve: curve.clone(),
+                vertices: Some([a.clone(), b.clone()]),
+            })
             .unwrap_err();
+        assert!(err.missing_curve(&curve));
         assert!(err.missing_vertex(&a));
         assert!(err.missing_vertex(&b));
 
+        let curve = shape.add_curve();
         let a = shape.add_vertex()?;
         let b = shape.add_vertex()?;
 
-        // Both `a` and `b` have been added to `shape`. Should work!
-        shape.topology().add_line_segment([a, b])?;
+        // Everything has been added to `shape` now. Should work!
+        shape.topology().add_edge(Edge {
+            curve,
+            vertices: Some([a, b]),
+        })?;
 
         Ok(())
     }
@@ -322,6 +340,13 @@ mod tests {
                 inner: Shape::new(),
                 next_point: Point::from([0., 0., 0.]),
             }
+        }
+
+        fn add_curve(&mut self) -> Handle<Curve> {
+            self.geometry().add_curve(Curve::Line(Line::from_points([
+                Point::from([0., 0., 0.]),
+                Point::from([1., 0., 0.]),
+            ])))
         }
 
         fn add_vertex(&mut self) -> anyhow::Result<Handle<Vertex>> {
