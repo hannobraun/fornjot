@@ -203,6 +203,27 @@ impl Topology<'_> {
 
     /// Add a face to the shape
     pub fn add_face(&mut self, face: Face) -> ValidationResult<Face> {
+        if let Face::Face { surface, cycles } = &face {
+            let mut missing_surface = None;
+            let mut missing_cycles = HashSet::new();
+
+            if !self.geometry.surfaces.contains(surface.storage()) {
+                missing_surface = Some(surface.clone());
+            }
+            for cycle in cycles {
+                if !self.cycles.contains(cycle.storage()) {
+                    missing_cycles.insert(cycle.clone());
+                }
+            }
+
+            if missing_surface.is_some() || !missing_cycles.is_empty() {
+                return Err(ValidationError::Structural((
+                    missing_surface,
+                    missing_cycles,
+                )));
+            }
+        }
+
         let storage = Storage::new(face);
         let handle = storage.handle();
 
@@ -234,10 +255,11 @@ mod tests {
 
     use crate::{
         kernel::{
-            geometry::{Curve, Line},
+            geometry::{Curve, Line, Surface},
             shape::{handle::Handle, Shape, ValidationError},
             topology::{
                 edges::{Cycle, Edge},
+                faces::Face,
                 vertices::Vertex,
             },
         },
@@ -329,6 +351,37 @@ mod tests {
         Ok(())
     }
 
+    #[test]
+    fn add_face() -> anyhow::Result<()> {
+        let mut shape = TestShape::new();
+        let mut other = TestShape::new();
+
+        let surface = other.add_surface();
+        let cycle = other.add_cycle()?;
+
+        // Nothing has been added to `shape`. Should fail.
+        let err = shape
+            .topology()
+            .add_face(Face::Face {
+                surface: surface.clone(),
+                cycles: vec![cycle.clone()],
+            })
+            .unwrap_err();
+        assert!(err.missing_surface(&surface));
+        assert!(err.missing_cycle(&cycle));
+
+        let surface = shape.add_surface();
+        let cycle = shape.add_cycle()?;
+
+        // Everything has been added to `shape` now. Should work!
+        shape.topology().add_face(Face::Face {
+            surface,
+            cycles: vec![cycle],
+        })?;
+
+        Ok(())
+    }
+
     struct TestShape {
         inner: Shape,
         next_point: Point<3>,
@@ -349,6 +402,10 @@ mod tests {
             ])))
         }
 
+        fn add_surface(&mut self) -> Handle<Surface> {
+            self.geometry().add_surface(Surface::x_y_plane())
+        }
+
         fn add_vertex(&mut self) -> anyhow::Result<Handle<Vertex>> {
             let point = self.next_point;
             self.next_point.x += Scalar::ONE;
@@ -363,6 +420,13 @@ mod tests {
             let vertices = [(); 2].map(|()| self.add_vertex().unwrap());
             let edge = self.topology().add_line_segment(vertices)?;
             Ok(edge)
+        }
+
+        fn add_cycle(&mut self) -> anyhow::Result<Handle<Cycle>> {
+            let edge = self.add_edge()?;
+            let cycle =
+                self.topology().add_cycle(Cycle { edges: vec![edge] })?;
+            Ok(cycle)
         }
     }
 

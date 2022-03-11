@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 
 use crate::kernel::{
-    geometry::Curve,
+    geometry::{Curve, Surface},
     topology::{
         edges::{Cycle, Edge},
         faces::Face,
@@ -77,6 +77,28 @@ impl ValidationError<Cycle> {
     }
 }
 
+impl ValidationError<Face> {
+    /// Indicate whether validation found a missing surface
+    #[cfg(test)]
+    pub fn missing_surface(&self, surface: &Handle<Surface>) -> bool {
+        if let Self::Structural(missing) = self {
+            return missing.0.as_ref() == Some(surface);
+        }
+
+        false
+    }
+
+    /// Indicate whether validation found a missing cycle
+    #[cfg(test)]
+    pub fn missing_cycle(&self, cycle: &Handle<Cycle>) -> bool {
+        if let Self::Structural(missing) = self {
+            return missing.1.contains(cycle);
+        }
+
+        false
+    }
+}
+
 /// Implemented for topological types, which can be validated
 ///
 /// Used by [`ValidationError`] to provide context on how validation failed.
@@ -97,5 +119,5 @@ impl Validatable for Cycle {
 }
 
 impl Validatable for Face {
-    type Structural = ();
+    type Structural = (Option<Handle<Surface>>, HashSet<Handle<Cycle>>);
 }
