@@ -307,10 +307,7 @@ mod tests {
                 next_point: Point::from([0., 0., 0.]),
             };
 
-            let a = self_.add_vertex()?;
-            let b = self_.add_vertex()?;
-
-            let edge = self_.topology().add_line_segment([a, b])?;
+            let edge = self_.add_edge()?;
 
             Ok((self_, edge))
         }
@@ -323,6 +320,12 @@ mod tests {
             let vertex = self.topology().add_vertex(Vertex { point })?;
 
             Ok(vertex)
+        }
+
+        fn add_edge(&mut self) -> anyhow::Result<Handle<Edge>> {
+            let vertices = [(); 2].map(|()| self.add_vertex().unwrap());
+            let edge = self.topology().add_line_segment(vertices)?;
+            Ok(edge)
         }
     }
 
