@@ -41,15 +41,29 @@ impl From<Circle> for Shape2d {
 #[repr(C)]
 pub struct Difference2d {
     /// The original shape
-    pub a: Shape2d,
+    a: Shape2d,
 
     /// The shape being subtracted
-    pub b: Shape2d,
+    b: Shape2d,
+}
+
+impl Difference2d {
+    pub fn from_objects(a: Shape2d, b: Shape2d) -> Self {
+        Self { a, b }
+    }
+
+    pub fn a(&self) -> &Shape2d {
+        &self.a
+    }
+
+    pub fn b(&self) -> &Shape2d {
+        &self.b
+    }
 }
 
 impl From<Difference2d> for Shape {
     fn from(shape: Difference2d) -> Self {
-        Self::Shape2d(Shape2d::Difference(Box::new(shape)))
+        Self::Shape2d(shape.into())
     }
 }
 
