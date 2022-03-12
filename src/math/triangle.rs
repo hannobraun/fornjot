@@ -17,6 +17,11 @@ impl<const D: usize> Triangle<D> {
     pub fn color(&self) -> [u8; 4] {
         self.color
     }
+
+    /// Set a new color for the particular triangle
+    pub fn set_color(&mut self, color: [u8; 4]) {
+        self.color = color;
+    }
 }
 
 impl Triangle<3> {
@@ -91,5 +96,15 @@ mod tests {
         let c = Point::from([1.0, 2.0]);
         let triangle = Triangle::from([a, b, c]);
         assert_eq!(triangle.color(), [255, 0, 0, 255]);
+    }
+
+    #[test]
+    fn triangle_set_color() {
+        let a = Point::from([0.0, 0.0]);
+        let b = Point::from([1.0, 1.0]);
+        let c = Point::from([1.0, 2.0]);
+        let mut triangle = Triangle::from([a, b, c]);
+        triangle.set_color([1, 2, 3, 4]);
+        assert_eq!(triangle.color(), [1, 2, 3, 4]);
     }
 }
