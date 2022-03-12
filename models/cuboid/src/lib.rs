@@ -14,10 +14,7 @@ pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
         [-x / 2.,  y / 2.],
     ]);
 
-    let cuboid = fj::Sweep {
-        shape: rectangle.into(),
-        length: z,
-    };
+    let cuboid = fj::Sweep::from_shape_and_length(rectangle.into(), z);
 
     cuboid.into()
 }

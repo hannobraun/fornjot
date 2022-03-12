@@ -62,15 +62,29 @@ impl From<Transform> for Shape3d {
 #[repr(C)]
 pub struct Sweep {
     /// The 2-dimensional shape being swept
-    pub shape: Shape2d,
+    shape: Shape2d,
 
     /// The length of the sweep
-    pub length: f64,
+    length: f64,
+}
+
+impl Sweep {
+    pub fn from_shape_and_length(shape: Shape2d, length: f64) -> Self {
+        Self { shape, length }
+    }
+
+    pub fn shape(&self) -> &Shape2d {
+        &self.shape
+    }
+
+    pub fn length(&self) -> f64 {
+        self.length
+    }
 }
 
 impl From<Sweep> for Shape {
     fn from(shape: Sweep) -> Self {
-        Self::Shape3d(Shape3d::Sweep(shape))
+        Self::Shape3d(shape.into())
     }
 }
 

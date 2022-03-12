@@ -23,10 +23,7 @@ pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
 
     let footprint = fj::Difference2d::from_objects(outer_edge.into(), inner_edge.into());
 
-    let spacer = fj::Sweep {
-        shape: footprint.into(),
-        length: height,
-    };
+    let spacer = fj::Sweep::from_shape_and_length(footprint.into(), height);
 
     spacer.into()
 }
