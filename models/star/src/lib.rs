@@ -58,10 +58,7 @@ pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
         b: inner.into(),
     };
 
-    let star = fj::Sweep {
-        shape: footprint.into(),
-        length: h,
-    };
+    let star = fj::Sweep::from_shape_and_length(footprint.into(), h);
 
     star.into()
 }

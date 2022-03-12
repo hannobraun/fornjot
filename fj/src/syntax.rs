@@ -44,7 +44,7 @@ where
 {
     fn sweep(&self, length: f64) -> crate::Sweep {
         let shape = self.clone().into();
-        crate::Sweep { shape, length }
+        crate::Sweep::from_shape_and_length(shape, length)
     }
 }
 
