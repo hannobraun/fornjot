@@ -21,7 +21,17 @@ pub enum Shape2d {
 #[repr(C)]
 pub struct Circle {
     /// The radius of the circle
-    pub radius: f64,
+    radius: f64,
+}
+
+impl Circle {
+    pub fn from_radius(radius: f64) -> Self {
+        Self { radius }
+    }
+
+    pub fn radius(&self) -> f64 {
+        self.radius
+    }
 }
 
 impl From<Circle> for Shape {

@@ -19,7 +19,7 @@ impl ToShape for fj::Circle {
 
         let edge = shape
             .topology()
-            .add_circle(Scalar::from_f64(self.radius))
+            .add_circle(Scalar::from_f64(self.radius()))
             .unwrap();
         shape
             .topology()
@@ -38,8 +38,8 @@ impl ToShape for fj::Circle {
 
     fn bounding_volume(&self) -> Aabb<3> {
         Aabb {
-            min: Point::from([-self.radius, -self.radius, 0.0]),
-            max: Point::from([self.radius, self.radius, 0.0]),
+            min: Point::from([-self.radius(), -self.radius(), 0.0]),
+            max: Point::from([self.radius(), self.radius(), 0.0]),
         }
     }
 }
