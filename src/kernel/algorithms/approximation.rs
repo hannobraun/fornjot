@@ -275,6 +275,7 @@ mod tests {
         let face = Face::Face {
             surface,
             cycles: vec![abcd],
+            color: [255, 0, 0, 255],
         };
 
         assert_eq!(

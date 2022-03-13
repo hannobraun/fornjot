@@ -12,6 +12,7 @@ impl ToShape for fj::Sweep {
             self.shape().to_shape(tolerance, debug_info),
             Vector::from([0., 0., self.length()]),
             tolerance,
+            self.color(),
         )
     }
 

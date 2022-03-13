@@ -16,27 +16,60 @@ pub enum Shape2d {
     Sketch(Sketch),
 }
 
+impl Shape2d {
+    /// Get the rendering color of the larger object in RGBA
+    pub fn color(&self) -> [u8; 4] {
+        match &self {
+            Shape2d::Circle(c) => c.color(),
+            Shape2d::Sketch(s) => s.color(),
+            Shape2d::Difference(d) => d.color(),
+        }
+    }
+}
+
 /// A circle
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Circle {
     /// The radius of the circle
     radius: f64,
+    // The color of the circle in RGBA
+    color: [u8; 4],
 }
 
 impl Circle {
+    /// Construct a new circle with a specific radius
     pub fn from_radius(radius: f64) -> Self {
-        Self { radius }
+        Self {
+            radius,
+            color: [255, 0, 0, 255],
+        }
     }
 
     pub fn radius(&self) -> f64 {
         self.radius
     }
+
+    /// Set the rendering color of the circle in RGBA
+    pub fn with_color(mut self, color: [u8; 4]) -> Self {
+        self.color = color;
+        self
+    }
+
+    /// Set the rendering color of the circle in RGBA
+    pub fn set_color(&mut self, color: [u8; 4]) {
+        self.color = color;
+    }
+
+    /// Get the rendering color of the circle in RGBA
+    pub fn color(&self) -> [u8; 4] {
+        self.color
+    }
 }
 
 impl From<Circle> for Shape {
     fn from(shape: Circle) -> Self {
-        Self::Shape2d(Shape2d::Circle(shape))
+        Self::Shape2d(shape.into())
     }
 }
 
@@ -60,6 +93,11 @@ pub struct Difference2d {
 impl Difference2d {
     pub fn from_objects(a: Shape2d, b: Shape2d) -> Self {
         Self { a, b }
+    }
+
+    /// Get the rendering color of the larger object in RGBA
+    pub fn color(&self) -> [u8; 4] {
+        self.a.color()
     }
 
     pub fn a(&self) -> &Shape2d {
@@ -100,6 +138,8 @@ pub struct Sketch {
     ptr: *mut [f64; 2],
     length: usize,
     capacity: usize,
+    // The color of the sketch in RGBA
+    color: [u8; 4],
 }
 
 impl Sketch {
@@ -118,6 +158,7 @@ impl Sketch {
             ptr,
             length,
             capacity,
+            color: [255, 0, 0, 255],
         }
     }
 
@@ -141,17 +182,33 @@ impl Sketch {
 
         ret
     }
+
+    /// Set the rendering color of the sketch in RGBA
+    pub fn with_color(mut self, color: [u8; 4]) -> Self {
+        self.color = color;
+        self
+    }
+
+    /// Set the rendering color of the sketch in RGBA
+    pub fn set_color(&mut self, color: [u8; 4]) {
+        self.color = color;
+    }
+
+    /// Get the rendering color of the sketch in RGBA
+    pub fn color(&self) -> [u8; 4] {
+        self.color
+    }
 }
 
 impl From<Sketch> for Shape {
     fn from(shape: Sketch) -> Self {
-        Self::Shape2d(Shape2d::Sketch(shape))
+        Self::Shape2d(shape.into())
     }
 }
 
 impl From<Sketch> for Shape2d {
     fn from(shape: Sketch) -> Self {
-        Self::Sketch(shape)
+        Shape2d::Sketch(shape)
     }
 }
 

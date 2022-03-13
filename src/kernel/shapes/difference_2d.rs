@@ -95,7 +95,11 @@ impl ToShape for fj::Difference2d {
 
         shape
             .topology()
-            .add_face(Face::Face { cycles, surface })
+            .add_face(Face::Face {
+                cycles,
+                surface,
+                color: self.color(),
+            })
             .unwrap();
 
         shape

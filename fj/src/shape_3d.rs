@@ -80,6 +80,10 @@ impl Sweep {
     pub fn length(&self) -> f64 {
         self.length
     }
+
+    pub fn color(&self) -> [u8; 4] {
+        self.shape().color()
+    }
 }
 
 impl From<Sweep> for Shape {

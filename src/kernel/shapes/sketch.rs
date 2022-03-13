@@ -49,6 +49,7 @@ impl ToShape for fj::Sketch {
         let face = Face::Face {
             cycles: shape.topology().cycles().collect(),
             surface,
+            color: self.color(),
         };
         shape.topology().add_face(face).unwrap();
 
