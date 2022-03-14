@@ -56,18 +56,19 @@ impl From<&Vec<Triangle<3>>> for Vertices {
             let [a, b, c] = triangle.points();
 
             let normal = (b - a).cross(&(c - a)).normalize();
+            let color = triangle.color();
 
-            mesh.push((a, normal));
-            mesh.push((b, normal));
-            mesh.push((c, normal));
+            mesh.push((a, normal, color));
+            mesh.push((b, normal, color));
+            mesh.push((c, normal, color));
         }
 
         let vertices = mesh
             .vertices()
-            .map(|(vertex, normal)| Vertex {
+            .map(|(vertex, normal, color)| Vertex {
                 position: vertex.into(),
                 normal: normal.into(),
-                color: [1.0, 0.0, 0.0, 1.0],
+                color: color.map(|v| f32::from(v) / 255.0),
             })
             .collect();
 
