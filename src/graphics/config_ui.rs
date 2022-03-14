@@ -23,8 +23,9 @@ impl ConfigUi {
     ) -> Result<Self, InvalidFont> {
         let font =
             FontArc::try_from_slice(include_bytes!("fonts/B612-Bold.ttf"))?;
-        let glyph_brush =
-            GlyphBrushBuilder::using_font(font).build(device, color_format);
+        let glyph_brush = GlyphBrushBuilder::using_font(font)
+            .initial_cache_size((512, 512))
+            .build(device, color_format);
 
         let mut texts = HashMap::new();
         for element in Element::elements() {
