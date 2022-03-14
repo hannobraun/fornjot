@@ -190,7 +190,10 @@ impl Topology<'_> {
     /// cycles it refers to are part of the shape). Returns an error, if that is
     /// not the case.
     pub fn add_face(&mut self, face: Face) -> ValidationResult<Face> {
-        if let Face::Face { surface, cycles } = &face {
+        if let Face::Face {
+            surface, cycles, ..
+        } = &face
+        {
             let mut missing_surface = None;
             let mut missing_cycles = HashSet::new();
 
@@ -371,6 +374,7 @@ mod tests {
             .add_face(Face::Face {
                 surface: surface.clone(),
                 cycles: vec![cycle.clone()],
+                color: [255, 0, 0, 255],
             })
             .unwrap_err();
         assert!(err.missing_surface(&surface));
@@ -383,6 +387,7 @@ mod tests {
         shape.topology().add_face(Face::Face {
             surface,
             cycles: vec![cycle],
+            color: [255, 0, 0, 255],
         })?;
 
         Ok(())

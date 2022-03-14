@@ -47,6 +47,7 @@ pub enum Face {
         /// It might be less error-prone to specify the edges in surface
         /// coordinates.
         cycles: Vec<Handle<Cycle>>,
+        color: [u8; 4],
     },
 
     /// The triangles of the face
@@ -98,7 +99,7 @@ impl Face {
         debug_info: &mut DebugInfo,
     ) {
         match self {
-            Self::Face { surface, .. } => {
+            Self::Face { surface, color, .. } => {
                 let approx = Approximation::for_face(self, tolerance);
 
                 let points: Vec<_> = approx
@@ -223,7 +224,9 @@ impl Face {
 
                 out.extend(triangles.into_iter().map(|triangle| {
                     let [a, b, c] = triangle.map(|point| point.canonical());
-                    Triangle::from([a, b, c])
+                    let mut t = Triangle::from([a, b, c]);
+                    t.set_color(*color);
+                    t
                 }));
             }
             Self::Triangles(triangles) => out.extend(triangles),

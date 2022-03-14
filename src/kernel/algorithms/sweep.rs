@@ -9,7 +9,7 @@ use crate::{
             vertices::Vertex,
         },
     },
-    math::{Scalar, Transform, Vector},
+    math::{Scalar, Transform, Triangle, Vector},
 };
 
 use super::approximation::Approximation;
@@ -19,6 +19,7 @@ pub fn sweep_shape(
     mut shape_orig: Shape,
     path: Vector<3>,
     tolerance: Scalar,
+    color: [u8; 4],
 ) -> Shape {
     let mut shape = shape_orig.clone();
 
@@ -96,7 +97,11 @@ pub fn sweep_shape(
 
         shape
             .topology()
-            .add_face(Face::Face { surface, cycles })
+            .add_face(Face::Face {
+                surface,
+                cycles,
+                color,
+            })
             .unwrap();
     }
 
@@ -122,10 +127,16 @@ pub fn sweep_shape(
             quads.push([v0, v1, v2, v3]);
         }
 
-        let mut side_face = Vec::new();
+        let mut side_face: Vec<Triangle<3>> = Vec::new();
         for [v0, v1, v2, v3] in quads {
             side_face.push([v0, v1, v2].into());
             side_face.push([v0, v2, v3].into());
+        }
+
+        // FIXME: We probably want to allow the use of custom colors for the "walls" of the swept
+        // object.
+        for s in side_face.iter_mut() {
+            s.set_color(color);
         }
 
         side_faces.push(Face::Triangles(side_face));
@@ -159,6 +170,7 @@ mod tests {
             sketch.shape,
             Vector::from([0., 0., 1.]),
             Scalar::from_f64(0.),
+            [255, 0, 0, 255],
         );
 
         let bottom_face = sketch.face.get().clone();
@@ -234,6 +246,7 @@ mod tests {
             let abc = Face::Face {
                 surface,
                 cycles: vec![cycles],
+                color: [255, 0, 0, 255],
             };
 
             let face = shape.topology().add_face(abc).unwrap();

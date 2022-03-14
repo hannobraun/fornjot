@@ -103,6 +103,7 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
             Face::Face {
                 surface,
                 cycles: cs,
+                color,
             } => {
                 target
                     .topology()
@@ -112,6 +113,7 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
                             .iter()
                             .map(|cycle| cycles[cycle].clone())
                             .collect(),
+                        color: *color,
                     })
                     .unwrap();
             }

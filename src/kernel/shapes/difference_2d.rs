@@ -22,7 +22,7 @@ impl ToShape for fj::Difference2d {
 
         let mut shape = Shape::new();
 
-        let [mut a, mut b] = [&self.a, &self.b]
+        let [mut a, mut b] = [&self.a(), &self.b()]
             .map(|shape| shape.to_shape(tolerance, debug_info));
 
         for shape in [&mut a, &mut b] {
@@ -95,7 +95,11 @@ impl ToShape for fj::Difference2d {
 
         shape
             .topology()
-            .add_face(Face::Face { cycles, surface })
+            .add_face(Face::Face {
+                cycles,
+                surface,
+                color: self.color(),
+            })
             .unwrap();
 
         shape
@@ -105,6 +109,6 @@ impl ToShape for fj::Difference2d {
         // This is a conservative estimate of the bounding box: It's never going
         // to be bigger than the bounding box of the original shape that another
         // is being subtracted from.
-        self.a.bounding_volume()
+        self.a().bounding_volume()
     }
 }

@@ -25,7 +25,11 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
 
     for face in original.topology().faces() {
         let face = match face.get().clone() {
-            Face::Face { cycles, surface } => {
+            Face::Face {
+                cycles,
+                surface,
+                color,
+            } => {
                 let mut cycles_trans = Vec::new();
 
                 for cycle in cycles {
@@ -75,6 +79,7 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
                 Face::Face {
                     cycles: cycles_trans,
                     surface,
+                    color,
                 }
             }
             Face::Triangles(mut triangles) => {
