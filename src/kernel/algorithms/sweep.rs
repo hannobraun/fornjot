@@ -53,14 +53,14 @@ pub fn sweep_shape(
             })
         });
 
-        let edge = target
+        let edge_top = target
             .topology()
             .add_edge(Edge {
                 curve: curve_top,
                 vertices: vertices_top,
             })
             .unwrap();
-        source_to_top.edges.insert(edge_source, edge);
+        source_to_top.edges.insert(edge_source, edge_top);
     }
 
     // Create the new cycles.
