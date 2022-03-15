@@ -11,6 +11,15 @@ Detect when a release pull-request is merged.
 [^1]: In GitHub Actions, `gh` is present and the default `GITHUB_TOKEN` fulfills all requirements to access Fornjot's repository
 [^2]: The release operator is tailored to run within the context of GitHub Actions. While it can be executed locally, it wouldn't have any effects.
 
+## Usage
+
+```shell
+# release-operator/
+cargo run -- --sha <commit-sha> --label <release-label>
+```
+
+Where `<commit-sha>` can be set using `GITHUB_SHA` (present by default in GitHub Actions), and `<release-label>` can be set using `RELEASE_LABEL` (defaults to `autorelease`).
+
 ## Logging
 
 The log level is set on the environment using `RUST_LOG` _(see [docs.rs/env_logger])
