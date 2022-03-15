@@ -91,14 +91,6 @@ impl<T> Storage<T> {
     }
 }
 
-impl<T> Deref for Storage<T> {
-    type Target = T;
-
-    fn deref(&self) -> &Self::Target {
-        self.0.deref()
-    }
-}
-
 // Deriving `Clone` would only derive `Clone` where `T: Clone`. This
 // implementation doesn't have that limitation, providing `Clone` for all
 // `Handle`s instead.
