@@ -186,7 +186,7 @@ mod tests {
         let mut contains_top_face = false;
 
         for face in swept.topology().faces() {
-            if matches!(face.get(), Face::Face { .. }) {
+            if matches!(&*face.get(), Face::Face { .. }) {
                 if face.get().clone() == bottom_face {
                     contains_bottom_face = true;
                 }

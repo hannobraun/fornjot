@@ -33,8 +33,8 @@ pub struct Handle<T>(Storage<T>);
 
 impl<T> Handle<T> {
     /// Access the object that the handle references
-    pub fn get(&self) -> &T {
-        self.0.deref()
+    pub fn get(&self) -> Ref<T> {
+        Ref(self.0.deref())
     }
 
     /// Internal method to access the [`Storage`] this handle refers to
@@ -48,7 +48,18 @@ where
     T: fmt::Debug,
 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{:?}: {:?}", self.0.ptr(), self.get())
+        write!(f, "{:?}: {:?}", self.0.ptr(), &*self.get())
+    }
+}
+
+/// Returned by [`Handle::get`]
+pub struct Ref<'r, T>(&'r T);
+
+impl<T> Deref for Ref<'_, T> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        self.0
     }
 }
 
