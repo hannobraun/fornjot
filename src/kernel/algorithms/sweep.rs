@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::{
     kernel::{
-        shape::Shape,
+        shape::{Handle, Shape},
         topology::{
             edges::{Cycle, Edge},
             faces::Face,
@@ -25,17 +25,17 @@ pub fn sweep_shape(
 
     let translation = Transform::translation(path);
 
+    let mut orig_to_top = Relation::new();
+
     // Create the new vertices.
-    let mut vertices = HashMap::new();
     for vertex_orig in shape_orig.topology().vertices() {
         let point =
             shape.geometry().add_point(vertex_orig.get().point() + path);
         let vertex = shape.topology().add_vertex(Vertex { point }).unwrap();
-        vertices.insert(vertex_orig, vertex);
+        orig_to_top.vertices.insert(vertex_orig, vertex);
     }
 
     // Create the new edges.
-    let mut edges = HashMap::new();
     for edge_orig in shape_orig.topology().edges() {
         let curve = shape
             .geometry()
@@ -45,16 +45,15 @@ pub fn sweep_shape(
             vs.map(|vertex_orig| {
                 // Can't panic, as long as the original shape is valid. We've
                 // added all its vertices to `vertices`.
-                vertices.get(&vertex_orig).unwrap().clone()
+                orig_to_top.vertices.get(&vertex_orig).unwrap().clone()
             })
         });
 
         let edge = shape.topology().add_edge(Edge { curve, vertices }).unwrap();
-        edges.insert(edge_orig, edge);
+        orig_to_top.edges.insert(edge_orig, edge);
     }
 
     // Create the new cycles.
-    let mut cycles = HashMap::new();
     for cycle_orig in shape_orig.topology().cycles() {
         let edges = cycle_orig
             .get()
@@ -63,12 +62,12 @@ pub fn sweep_shape(
             .map(|edge_orig| {
                 // Can't panic, as long as the original shape is valid. We've
                 // added all its edges to `edges`.
-                edges.get(edge_orig).unwrap().clone()
+                orig_to_top.edges.get(edge_orig).unwrap().clone()
             })
             .collect();
 
         let cycle = shape.topology().add_cycle(Cycle { edges }).unwrap();
-        cycles.insert(cycle_orig, cycle);
+        orig_to_top.cycles.insert(cycle_orig, cycle);
     }
 
     // Create top faces.
@@ -91,7 +90,7 @@ pub fn sweep_shape(
             .map(|cycle_orig| {
                 // Can't panic, as long as the original shape is valid. We've
                 // added all its cycles to `cycles`.
-                cycles.get(cycle_orig).unwrap().clone()
+                orig_to_top.cycles.get(cycle_orig).unwrap().clone()
             })
             .collect();
 
@@ -146,6 +145,22 @@ pub fn sweep_shape(
     }
 
     shape
+}
+
+struct Relation {
+    vertices: HashMap<Handle<Vertex>, Handle<Vertex>>,
+    edges: HashMap<Handle<Edge>, Handle<Edge>>,
+    cycles: HashMap<Handle<Cycle>, Handle<Cycle>>,
+}
+
+impl Relation {
+    fn new() -> Self {
+        Self {
+            vertices: HashMap::new(),
+            edges: HashMap::new(),
+            cycles: HashMap::new(),
+        }
+    }
 }
 
 #[cfg(test)]
