@@ -104,11 +104,13 @@ impl Shape {
     }
 }
 
-type Points = Vec<Storage<Point<3>>>;
-type Curves = Vec<Storage<Curve>>;
-type Surfaces = Vec<Storage<Surface>>;
+type Points = Store<Point<3>>;
+type Curves = Store<Curve>;
+type Surfaces = Store<Surface>;
 
-type Vertices = Vec<Storage<Vertex>>;
-type Edges = Vec<Storage<Edge>>;
-type Cycles = Vec<Storage<Cycle>>;
-type Faces = Vec<Storage<Face>>;
+type Vertices = Store<Vertex>;
+type Edges = Store<Edge>;
+type Cycles = Store<Cycle>;
+type Faces = Store<Face>;
+
+type Store<T> = Vec<Storage<T>>;
