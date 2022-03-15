@@ -76,7 +76,7 @@ pub fn sweep_shape(
 
     // Create top faces.
     for face_source in source.topology().faces().values() {
-        let cycles_orig = match &face_source {
+        let cycles_source = match &face_source {
             Face::Face { cycles, .. } => cycles,
             _ => {
                 // Sketches are created using boundary representation, so this
@@ -89,7 +89,7 @@ pub fn sweep_shape(
             .geometry()
             .add_surface(face_source.surface().transform(&translation));
 
-        let cycles = cycles_orig
+        let cycles = cycles_source
             .iter()
             .map(|cycle_orig| {
                 // Can't panic, as long as the original shape is valid. We've
