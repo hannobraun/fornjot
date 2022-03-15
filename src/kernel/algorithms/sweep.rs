@@ -25,8 +25,6 @@ pub fn sweep_shape(
 
     let translation = Transform::translation(path);
 
-    let mut side_faces = Vec::new();
-
     // Create the new vertices.
     let mut vertices = HashMap::new();
     for vertex_orig in shape_orig.topology().vertices() {
@@ -141,11 +139,10 @@ pub fn sweep_shape(
             s.set_color(color);
         }
 
-        side_faces.push(Face::Triangles(side_face));
-    }
-
-    for face in side_faces {
-        shape.topology().add_face(face).unwrap();
+        shape
+            .topology()
+            .add_face(Face::Triangles(side_face))
+            .unwrap();
     }
 
     shape
