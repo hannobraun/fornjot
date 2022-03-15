@@ -63,10 +63,10 @@ pub fn sweep_shape(
             .get()
             .edges
             .iter()
-            .map(|edge_orig| {
+            .map(|edge_source| {
                 // Can't panic, as long as the original shape is valid. We've
                 // added all its edges to `edges`.
-                source_to_top.edges.get(edge_orig).unwrap().clone()
+                source_to_top.edges.get(edge_source).unwrap().clone()
             })
             .collect();
 
