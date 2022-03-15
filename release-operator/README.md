@@ -45,8 +45,8 @@ _The "Actions" participant does a lot more which has been left out for the sake 
 
 As seen above, the release operator requires the maintainer to:
 
-a) label the release pull-request with `<release-label>` (value decided upon later)
-b) include the semver version to release in the first line of the merge commit message
+- label the release pull-request with `<release-label>` (value decided upon later)
+- include the semver version to release in the first line of the merge commit message
 
 [release process]: ../RELEASES.md
 
