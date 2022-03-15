@@ -2,7 +2,7 @@ use parry3d_f64::math::Isometry;
 
 use crate::{
     debug::DebugInfo,
-    kernel::{algorithms::transform::transform_shape, shape::Shape},
+    kernel::shape::Shape,
     math::{Aabb, Scalar, Transform},
 };
 
@@ -10,9 +10,12 @@ use super::ToShape;
 
 impl ToShape for fj::Transform {
     fn to_shape(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Shape {
-        let shape = self.shape.to_shape(tolerance, debug_info);
+        let mut shape = self.shape.to_shape(tolerance, debug_info);
         let transform = transform(self);
-        transform_shape(shape, &transform)
+
+        shape.geometry().transform(&transform);
+
+        shape
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
