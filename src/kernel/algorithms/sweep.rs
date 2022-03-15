@@ -16,19 +16,19 @@ use super::approximation::Approximation;
 
 /// Create a new shape by sweeping an existing one
 pub fn sweep_shape(
-    mut shape_orig: Shape,
+    mut source: Shape,
     path: Vector<3>,
     tolerance: Scalar,
     color: [u8; 4],
 ) -> Shape {
-    let mut shape = shape_orig.clone();
+    let mut shape = source.clone();
 
     let translation = Transform::translation(path);
 
     let mut orig_to_top = Relation::new();
 
     // Create the new vertices.
-    for vertex_orig in shape_orig.topology().vertices() {
+    for vertex_orig in source.topology().vertices() {
         let point =
             shape.geometry().add_point(vertex_orig.get().point() + path);
         let vertex = shape.topology().add_vertex(Vertex { point }).unwrap();
@@ -36,7 +36,7 @@ pub fn sweep_shape(
     }
 
     // Create the new edges.
-    for edge_orig in shape_orig.topology().edges() {
+    for edge_orig in source.topology().edges() {
         let curve = shape
             .geometry()
             .add_curve(edge_orig.get().curve().transform(&translation));
@@ -54,7 +54,7 @@ pub fn sweep_shape(
     }
 
     // Create the new cycles.
-    for cycle_orig in shape_orig.topology().cycles() {
+    for cycle_orig in source.topology().cycles() {
         let edges = cycle_orig
             .get()
             .edges
@@ -71,7 +71,7 @@ pub fn sweep_shape(
     }
 
     // Create top faces.
-    for face_orig in shape_orig.topology().faces().values() {
+    for face_orig in source.topology().faces().values() {
         let cycles_orig = match &face_orig {
             Face::Face { cycles, .. } => cycles,
             _ => {
@@ -107,7 +107,7 @@ pub fn sweep_shape(
     // We could use `vertices` to create the side edges and faces here, but the
     // side walls are created below, in triangle representation.
 
-    for cycle in shape_orig.topology().cycles().values() {
+    for cycle in source.topology().cycles().values() {
         let approx = Approximation::for_cycle(&cycle, tolerance);
 
         // This will only work correctly, if the cycle consists of one edge. If
