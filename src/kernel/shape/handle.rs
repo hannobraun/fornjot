@@ -29,17 +29,19 @@ use std::{
 /// Two [`Handle`]s are considered equal, if they refer to objects in the same
 /// memory location.
 #[derive(Clone, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Handle<T>(Storage<T>);
+pub struct Handle<T> {
+    storage: Storage<T>,
+}
 
 impl<T> Handle<T> {
     /// Access the object that the handle references
     pub fn get(&self) -> Ref<T> {
-        Ref(self.0.deref())
+        Ref(self.storage.deref())
     }
 
     /// Internal method to access the [`Storage`] this handle refers to
     pub(super) fn storage(&self) -> &Storage<T> {
-        &self.0
+        &self.storage
     }
 }
 
@@ -48,7 +50,7 @@ where
     T: fmt::Debug,
 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{:?}: {:?}", self.0.ptr(), &*self.get())
+        write!(f, "{:?}: {:?}", self.storage.ptr(), &*self.get())
     }
 }
 
@@ -75,7 +77,9 @@ impl<T> Storage<T> {
 
     /// Create a handle that refers to this [`Storage`] instance
     pub(super) fn handle(&self) -> Handle<T> {
-        Handle(self.clone())
+        Handle {
+            storage: self.clone(),
+        }
     }
 
     fn ptr(&self) -> *const () {
