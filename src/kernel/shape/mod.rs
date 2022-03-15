@@ -1,11 +1,13 @@
 pub mod geometry;
 pub mod handle;
+pub mod iter;
 pub mod topology;
 pub mod validate;
 
 pub use self::{
     geometry::Geometry,
     handle::Handle,
+    iter::Iter,
     topology::Topology,
     validate::{ValidationError, ValidationResult},
 };
