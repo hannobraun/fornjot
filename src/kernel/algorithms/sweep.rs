@@ -21,7 +21,7 @@ pub fn sweep_shape(
     tolerance: Scalar,
     color: [u8; 4],
 ) -> Shape {
-    let mut shape = source.clone();
+    let mut target = source.clone();
 
     let translation = Transform::translation(path);
 
@@ -29,15 +29,16 @@ pub fn sweep_shape(
 
     // Create the new vertices.
     for vertex_orig in source.topology().vertices() {
-        let point =
-            shape.geometry().add_point(vertex_orig.get().point() + path);
-        let vertex = shape.topology().add_vertex(Vertex { point }).unwrap();
+        let point = target
+            .geometry()
+            .add_point(vertex_orig.get().point() + path);
+        let vertex = target.topology().add_vertex(Vertex { point }).unwrap();
         orig_to_top.vertices.insert(vertex_orig, vertex);
     }
 
     // Create the new edges.
     for edge_orig in source.topology().edges() {
-        let curve = shape
+        let curve = target
             .geometry()
             .add_curve(edge_orig.get().curve().transform(&translation));
 
@@ -49,7 +50,10 @@ pub fn sweep_shape(
             })
         });
 
-        let edge = shape.topology().add_edge(Edge { curve, vertices }).unwrap();
+        let edge = target
+            .topology()
+            .add_edge(Edge { curve, vertices })
+            .unwrap();
         orig_to_top.edges.insert(edge_orig, edge);
     }
 
@@ -66,7 +70,7 @@ pub fn sweep_shape(
             })
             .collect();
 
-        let cycle = shape.topology().add_cycle(Cycle { edges }).unwrap();
+        let cycle = target.topology().add_cycle(Cycle { edges }).unwrap();
         orig_to_top.cycles.insert(cycle_orig, cycle);
     }
 
@@ -81,7 +85,7 @@ pub fn sweep_shape(
             }
         };
 
-        let surface = shape
+        let surface = target
             .geometry()
             .add_surface(face_orig.surface().transform(&translation));
 
@@ -94,7 +98,7 @@ pub fn sweep_shape(
             })
             .collect();
 
-        shape
+        target
             .topology()
             .add_face(Face::Face {
                 surface,
@@ -138,13 +142,13 @@ pub fn sweep_shape(
             s.set_color(color);
         }
 
-        shape
+        target
             .topology()
             .add_face(Face::Triangles(side_face))
             .unwrap();
     }
 
-    shape
+    target
 }
 
 struct Relation {
