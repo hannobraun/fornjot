@@ -81,22 +81,32 @@ fn main() -> anyhow::Result<()> {
 
     let mut aabb = shape.bounding_volume();
 
-    // Compute a reasonable default for the tolerance value. To do this, we just
-    // look at the smallest non-zero extent of the bounding box and divide that
-    // by some value.
-    let tolerance = {
-        let mut min_extent = Scalar::MAX;
-        for extent in aabb.size().components() {
-            if extent > Scalar::ZERO && extent < min_extent {
-                min_extent = extent;
+    let tolerance = match args.tolerance {
+        None => {
+            // Compute a reasonable default for the tolerance value. To do this, we just
+            // look at the smallest non-zero extent of the bounding box and divide that
+            // by some value.
+            let mut min_extent = Scalar::MAX;
+            for extent in aabb.size().components() {
+                if extent > Scalar::ZERO && extent < min_extent {
+                    min_extent = extent;
+                }
+            }
+
+            // `tolerance` must not be zero, or we'll run into trouble.
+            let tolerance = min_extent / Scalar::from_f64(1000.);
+            assert!(tolerance > Scalar::ZERO);
+
+            tolerance
+        }
+        Some(user_defined_tolerance) => {
+            if user_defined_tolerance > 0.0 {
+                Scalar::from_f64(user_defined_tolerance)
+            } else {
+                anyhow::bail!("Invalid user defined model deviation tolerance: {}. Tolerance must be larger than zero", 
+                user_defined_tolerance)
             }
         }
-
-        // `tolerance` must not be zero, or we'll run into trouble.
-        let tolerance = min_extent / Scalar::from_f64(1000.);
-        assert!(tolerance > Scalar::ZERO);
-
-        tolerance
     };
 
     let mut debug_info = DebugInfo::new();
