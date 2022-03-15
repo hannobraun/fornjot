@@ -21,32 +21,54 @@ pub fn sweep_shape(
     tolerance: Scalar,
     color: [u8; 4],
 ) -> Shape {
-    let mut target = source.clone();
+    let mut target = Shape::new();
 
     let translation = Transform::translation(path);
 
+    let mut source_to_bottom = Relation::new();
     let mut source_to_top = Relation::new();
 
     // Create the new vertices.
     for vertex_source in source.topology().vertices() {
-        let point_top = target
-            .geometry()
-            .add_point(vertex_source.get().point() + path);
+        let point_bottom =
+            target.geometry().add_point(vertex_source.get().point());
+        let point_top = target.geometry().add_point(*point_bottom.get() + path);
+
+        let vertex_bottom = target
+            .topology()
+            .add_vertex(Vertex {
+                point: point_bottom,
+            })
+            .unwrap();
         let vertex_top = target
             .topology()
             .add_vertex(Vertex { point: point_top })
             .unwrap();
+
+        source_to_bottom
+            .vertices
+            .insert(vertex_source.clone(), vertex_bottom);
         source_to_top.vertices.insert(vertex_source, vertex_top);
     }
 
     // Create the new edges.
     for edge_source in source.topology().edges() {
+        let curve_bottom =
+            target.geometry().add_curve(edge_source.get().curve());
         let curve_top = target
             .geometry()
-            .add_curve(edge_source.get().curve().transform(&translation));
+            .add_curve(curve_bottom.get().transform(&translation));
 
+        let vertices_bottom = source_to_bottom.vertices_for_edge(&edge_source);
         let vertices_top = source_to_top.vertices_for_edge(&edge_source);
 
+        let edge_bottom = target
+            .topology()
+            .add_edge(Edge {
+                curve: curve_bottom,
+                vertices: vertices_bottom,
+            })
+            .unwrap();
         let edge_top = target
             .topology()
             .add_edge(Edge {
@@ -54,28 +76,54 @@ pub fn sweep_shape(
                 vertices: vertices_top,
             })
             .unwrap();
+
+        source_to_bottom
+            .edges
+            .insert(edge_source.clone(), edge_bottom);
         source_to_top.edges.insert(edge_source, edge_top);
     }
 
     // Create the new cycles.
     for cycle_source in source.topology().cycles() {
+        let edges_bottom = source_to_bottom.edges_for_cycle(&cycle_source);
         let edges_top = source_to_top.edges_for_cycle(&cycle_source);
 
+        let cycle_bottom = target
+            .topology()
+            .add_cycle(Cycle {
+                edges: edges_bottom,
+            })
+            .unwrap();
         let cycle_top = target
             .topology()
             .add_cycle(Cycle { edges: edges_top })
             .unwrap();
+
+        source_to_bottom
+            .cycles
+            .insert(cycle_source.clone(), cycle_bottom);
         source_to_top.cycles.insert(cycle_source, cycle_top);
     }
 
     // Create top faces.
     for face_source in source.topology().faces().values() {
+        let surface_bottom =
+            target.geometry().add_surface(face_source.surface());
         let surface_top = target
             .geometry()
-            .add_surface(face_source.surface().transform(&translation));
+            .add_surface(surface_bottom.get().transform(&translation));
 
+        let cycles_bottom = source_to_bottom.cycles_for_face(&face_source);
         let cycles_top = source_to_top.cycles_for_face(&face_source);
 
+        target
+            .topology()
+            .add_face(Face::Face {
+                surface: surface_bottom,
+                cycles: cycles_bottom,
+                color,
+            })
+            .unwrap();
         target
             .topology()
             .add_face(Face::Face {
