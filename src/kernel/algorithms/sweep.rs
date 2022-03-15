@@ -70,27 +70,11 @@ pub fn sweep_shape(
 
     // Create top faces.
     for face_source in source.topology().faces().values() {
-        let cycles_source = match &face_source {
-            Face::Face { cycles, .. } => cycles,
-            _ => {
-                // Sketches are created using boundary representation, so this
-                // case can't happen.
-                unreachable!()
-            }
-        };
-
         let surface_top = target
             .geometry()
             .add_surface(face_source.surface().transform(&translation));
 
-        let cycles_top = cycles_source
-            .iter()
-            .map(|cycle_source| {
-                // Can't panic, as long as the source shape is valid. We've
-                // added all its cycles to the relation.
-                source_to_top.cycles.get(cycle_source).unwrap().clone()
-            })
-            .collect();
+        let cycles_top = source_to_top.cycles_for_face(&face_source);
 
         target
             .topology()
@@ -175,6 +159,22 @@ impl Relation {
             .edges
             .iter()
             .map(|edge| self.edges.get(edge).unwrap().clone())
+            .collect()
+    }
+
+    fn cycles_for_face(&self, face: &Face) -> Vec<Handle<Cycle>> {
+        let cycles = match face {
+            Face::Face { cycles, .. } => cycles,
+            _ => {
+                // Sketches are created using boundary representation, so this
+                // case can't happen.
+                unreachable!()
+            }
+        };
+
+        cycles
+            .iter()
+            .map(|cycle| self.cycles.get(cycle).unwrap().clone())
             .collect()
     }
 }
