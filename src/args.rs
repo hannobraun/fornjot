@@ -14,6 +14,10 @@ pub struct Args {
     /// Parameters for the model, each in the form `key=value`
     #[clap(short, long)]
     pub parameters: Vec<String>,
+
+    // Model deviation tolerance
+    #[clap[short, long]]
+    pub tolerance: Option<f64>,
 }
 
 impl Args {
