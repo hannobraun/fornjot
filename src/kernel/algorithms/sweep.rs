@@ -72,8 +72,8 @@ pub fn sweep_shape(
     }
 
     // Create top faces.
-    for face_orig in shape_orig.topology().faces() {
-        let cycles_orig = match &*face_orig {
+    for face_orig in shape_orig.topology().faces().values() {
+        let cycles_orig = match &face_orig {
             Face::Face { cycles, .. } => cycles,
             _ => {
                 // Sketches are created using boundary representation, so this
@@ -108,7 +108,7 @@ pub fn sweep_shape(
     // We could use `vertices` to create the side edges and faces here, but the
     // side walls are created below, in triangle representation.
 
-    for cycle in shape_orig.topology().cycles() {
+    for cycle in shape_orig.topology().cycles().values() {
         let approx = Approximation::for_cycle(&cycle, tolerance);
 
         // This will only work correctly, if the cycle consists of one edge. If

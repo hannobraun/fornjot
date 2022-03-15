@@ -15,6 +15,16 @@ impl<'r, T> Iter<'r, T> {
         let inner = store.iter().map(handle);
         Self { inner }
     }
+
+    /// Convert this iterator over handles into an iterator over values
+    ///
+    /// This is a convenience method, for cases where no `Handle` is needed.
+    pub fn values(self) -> impl Iterator<Item = T> + 'r
+    where
+        T: Clone,
+    {
+        self.inner.map(|handle| handle.get().clone())
+    }
 }
 
 impl<T> Iterator for Iter<'_, T> {

@@ -85,7 +85,7 @@ impl ToShape for fj::Difference2d {
 
         // Can't panic, as we just verified that both shapes have one face.
         let [face_a, face_b] = [&mut a, &mut b]
-            .map(|shape| shape.topology().faces().next().unwrap());
+            .map(|shape| shape.topology().faces().values().next().unwrap());
 
         assert!(
             face_a.surface() == face_b.surface(),
