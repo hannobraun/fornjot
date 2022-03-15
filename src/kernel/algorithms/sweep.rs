@@ -2,7 +2,8 @@ use std::collections::HashMap;
 
 use crate::{
     kernel::{
-        shape::Shape,
+        geometry::{surfaces::Swept, Surface},
+        shape::{Handle, Shape},
         topology::{
             edges::{Cycle, Edge},
             faces::Face,
@@ -16,66 +17,294 @@ use super::approximation::Approximation;
 
 /// Create a new shape by sweeping an existing one
 pub fn sweep_shape(
-    mut shape_orig: Shape,
+    mut source: Shape,
     path: Vector<3>,
     tolerance: Scalar,
     color: [u8; 4],
 ) -> Shape {
-    let mut shape = shape_orig.clone();
+    let mut target = Shape::new();
 
     let translation = Transform::translation(path);
 
-    let mut side_faces = Vec::new();
+    let mut source_to_bottom = Relation::new();
+    let mut source_to_top = Relation::new();
 
     // Create the new vertices.
-    let mut vertices = HashMap::new();
-    for vertex_orig in shape_orig.topology().vertices() {
-        let point =
-            shape.geometry().add_point(vertex_orig.get().point() + path);
-        let vertex = shape.topology().add_vertex(Vertex { point }).unwrap();
-        vertices.insert(vertex_orig, vertex);
+    for vertex_source in source.topology().vertices() {
+        let point_bottom =
+            target.geometry().add_point(vertex_source.get().point());
+        let point_top = target.geometry().add_point(*point_bottom.get() + path);
+
+        let vertex_bottom = target
+            .topology()
+            .add_vertex(Vertex {
+                point: point_bottom,
+            })
+            .unwrap();
+        let vertex_top = target
+            .topology()
+            .add_vertex(Vertex { point: point_top })
+            .unwrap();
+
+        source_to_bottom
+            .vertices
+            .insert(vertex_source.clone(), vertex_bottom);
+        source_to_top.vertices.insert(vertex_source, vertex_top);
     }
 
     // Create the new edges.
-    let mut edges = HashMap::new();
-    for edge_orig in shape_orig.topology().edges() {
-        let curve = shape
+    for edge_source in source.topology().edges() {
+        let curve_bottom =
+            target.geometry().add_curve(edge_source.get().curve());
+        let curve_top = target
             .geometry()
-            .add_curve(edge_orig.get().curve().transform(&translation));
+            .add_curve(curve_bottom.get().transform(&translation));
 
-        let vertices = edge_orig.get().vertices.clone().map(|vs| {
-            vs.map(|vertex_orig| {
-                // Can't panic, as long as the original shape is valid. We've
-                // added all its vertices to `vertices`.
-                vertices.get(&vertex_orig).unwrap().clone()
+        let vertices_bottom = source_to_bottom.vertices_for_edge(&edge_source);
+        let vertices_top = source_to_top.vertices_for_edge(&edge_source);
+
+        let edge_bottom = target
+            .topology()
+            .add_edge(Edge {
+                curve: curve_bottom,
+                vertices: vertices_bottom,
             })
-        });
+            .unwrap();
+        let edge_top = target
+            .topology()
+            .add_edge(Edge {
+                curve: curve_top,
+                vertices: vertices_top,
+            })
+            .unwrap();
 
-        let edge = shape.topology().add_edge(Edge { curve, vertices }).unwrap();
-        edges.insert(edge_orig, edge);
+        source_to_bottom
+            .edges
+            .insert(edge_source.clone(), edge_bottom);
+        source_to_top.edges.insert(edge_source, edge_top);
     }
 
     // Create the new cycles.
-    let mut cycles = HashMap::new();
-    for cycle_orig in shape_orig.topology().cycles() {
-        let edges = cycle_orig
-            .get()
-            .edges
-            .iter()
-            .map(|edge_orig| {
-                // Can't panic, as long as the original shape is valid. We've
-                // added all its edges to `edges`.
-                edges.get(edge_orig).unwrap().clone()
-            })
-            .collect();
+    for cycle_source in source.topology().cycles() {
+        let edges_bottom = source_to_bottom.edges_for_cycle(&cycle_source);
+        let edges_top = source_to_top.edges_for_cycle(&cycle_source);
 
-        let cycle = shape.topology().add_cycle(Cycle { edges }).unwrap();
-        cycles.insert(cycle_orig, cycle);
+        let cycle_bottom = target
+            .topology()
+            .add_cycle(Cycle {
+                edges: edges_bottom,
+            })
+            .unwrap();
+        let cycle_top = target
+            .topology()
+            .add_cycle(Cycle { edges: edges_top })
+            .unwrap();
+
+        source_to_bottom
+            .cycles
+            .insert(cycle_source.clone(), cycle_bottom);
+        source_to_top.cycles.insert(cycle_source, cycle_top);
     }
 
     // Create top faces.
-    for face_orig in shape_orig.topology().faces().values() {
-        let cycles_orig = match &face_orig {
+    for face_source in source.topology().faces().values() {
+        let surface_bottom =
+            target.geometry().add_surface(face_source.surface());
+        let surface_top = target
+            .geometry()
+            .add_surface(surface_bottom.get().transform(&translation));
+
+        let cycles_bottom = source_to_bottom.cycles_for_face(&face_source);
+        let cycles_top = source_to_top.cycles_for_face(&face_source);
+
+        target
+            .topology()
+            .add_face(Face::Face {
+                surface: surface_bottom,
+                cycles: cycles_bottom,
+                color,
+            })
+            .unwrap();
+        target
+            .topology()
+            .add_face(Face::Face {
+                surface: surface_top,
+                cycles: cycles_top,
+                color,
+            })
+            .unwrap();
+    }
+
+    for cycle_source in source.topology().cycles() {
+        if cycle_source.get().edges.len() == 1 {
+            // If there's only one edge in the cycle, it must be a continuous
+            // edge that connects to itself. By sweeping that, we create a
+            // continuous face.
+            //
+            // Continuous faces aren't currently supported by the approximation
+            // code, and hence can't be triangulated. To address that, we fall
+            // back to the old and almost obsolete triangle representation to
+            // create the face.
+            //
+            // This is the last piece of code that still uses the triangle
+            // representation.
+
+            let approx =
+                Approximation::for_cycle(&cycle_source.get(), tolerance);
+
+            let mut quads = Vec::new();
+            for segment in approx.segments {
+                let [v0, v1] = segment.points();
+                let [v3, v2] = {
+                    let segment = Transform::translation(path)
+                        .transform_segment(&segment);
+                    segment.points()
+                };
+
+                quads.push([v0, v1, v2, v3]);
+            }
+
+            let mut side_face: Vec<Triangle<3>> = Vec::new();
+            for [v0, v1, v2, v3] in quads {
+                side_face.push([v0, v1, v2].into());
+                side_face.push([v0, v2, v3].into());
+            }
+
+            // FIXME: We probably want to allow the use of custom colors for the
+            // "walls" of the swept object.
+            for s in side_face.iter_mut() {
+                s.set_color(color);
+            }
+
+            target
+                .topology()
+                .add_face(Face::Triangles(side_face))
+                .unwrap();
+        } else {
+            // If there's no continuous edge, we can create the non-
+            // continuous faces using boundary representation.
+
+            let mut vertex_bottom_to_edge = HashMap::new();
+
+            for edge_source in &cycle_source.get().edges {
+                // Can't panic. We already ruled out the continuous edge case
+                // above, so this edge must have vertices.
+                let vertices_source =
+                    edge_source.get().vertices.clone().unwrap();
+
+                // Create (or retrieve from the cache, `vertex_bottom_to_edge`)
+                // side edges from the vertices of this source/bottom edge.
+                let [side_edge_a, side_edge_b] =
+                    vertices_source.map(|vertex_source| {
+                        let vertex_bottom = source_to_bottom
+                            .vertices
+                            .get(&vertex_source)
+                            .unwrap()
+                            .clone();
+
+                        vertex_bottom_to_edge
+                            .entry(vertex_bottom.clone())
+                            .or_insert_with(|| {
+                                let curve = target
+                                    .geometry()
+                                    .add_curve(edge_source.get().curve());
+
+                                let vertex_top = source_to_top
+                                    .vertices
+                                    .get(&vertex_source)
+                                    .unwrap()
+                                    .clone();
+
+                                target
+                                    .topology()
+                                    .add_edge(Edge {
+                                        curve,
+                                        vertices: Some([
+                                            vertex_bottom,
+                                            vertex_top,
+                                        ]),
+                                    })
+                                    .unwrap()
+                            })
+                            .clone()
+                    });
+
+                // Now we have everything we need to create the side face from
+                // this source/bottom edge.
+
+                let bottom_edge =
+                    source_to_bottom.edges.get(edge_source).unwrap().clone();
+                let top_edge =
+                    source_to_top.edges.get(edge_source).unwrap().clone();
+
+                let surface =
+                    target.geometry().add_surface(Surface::Swept(Swept {
+                        curve: bottom_edge.get().curve(),
+                        path,
+                    }));
+
+                let cycle = target
+                    .topology()
+                    .add_cycle(Cycle {
+                        edges: vec![
+                            bottom_edge,
+                            top_edge,
+                            side_edge_a,
+                            side_edge_b,
+                        ],
+                    })
+                    .unwrap();
+
+                target
+                    .topology()
+                    .add_face(Face::Face {
+                        surface,
+                        cycles: vec![cycle],
+                        color,
+                    })
+                    .unwrap();
+            }
+        }
+    }
+
+    target
+}
+
+struct Relation {
+    vertices: HashMap<Handle<Vertex>, Handle<Vertex>>,
+    edges: HashMap<Handle<Edge>, Handle<Edge>>,
+    cycles: HashMap<Handle<Cycle>, Handle<Cycle>>,
+}
+
+impl Relation {
+    fn new() -> Self {
+        Self {
+            vertices: HashMap::new(),
+            edges: HashMap::new(),
+            cycles: HashMap::new(),
+        }
+    }
+
+    fn vertices_for_edge(
+        &self,
+        edge: &Handle<Edge>,
+    ) -> Option<[Handle<Vertex>; 2]> {
+        edge.get().vertices.clone().map(|vertices| {
+            vertices.map(|vertex| self.vertices.get(&vertex).unwrap().clone())
+        })
+    }
+
+    fn edges_for_cycle(&self, cycle: &Handle<Cycle>) -> Vec<Handle<Edge>> {
+        cycle
+            .get()
+            .edges
+            .iter()
+            .map(|edge| self.edges.get(edge).unwrap().clone())
+            .collect()
+    }
+
+    fn cycles_for_face(&self, face: &Face) -> Vec<Handle<Cycle>> {
+        let cycles = match face {
             Face::Face { cycles, .. } => cycles,
             _ => {
                 // Sketches are created using boundary representation, so this
@@ -84,71 +313,11 @@ pub fn sweep_shape(
             }
         };
 
-        let surface = shape
-            .geometry()
-            .add_surface(face_orig.surface().transform(&translation));
-
-        let cycles = cycles_orig
+        cycles
             .iter()
-            .map(|cycle_orig| {
-                // Can't panic, as long as the original shape is valid. We've
-                // added all its cycles to `cycles`.
-                cycles.get(cycle_orig).unwrap().clone()
-            })
-            .collect();
-
-        shape
-            .topology()
-            .add_face(Face::Face {
-                surface,
-                cycles,
-                color,
-            })
-            .unwrap();
+            .map(|cycle| self.cycles.get(cycle).unwrap().clone())
+            .collect()
     }
-
-    // We could use `vertices` to create the side edges and faces here, but the
-    // side walls are created below, in triangle representation.
-
-    for cycle in shape_orig.topology().cycles().values() {
-        let approx = Approximation::for_cycle(&cycle, tolerance);
-
-        // This will only work correctly, if the cycle consists of one edge. If
-        // there are more, this will create some kind of weird face chimera, a
-        // single face to represent all the side faces.
-
-        let mut quads = Vec::new();
-        for segment in approx.segments {
-            let [v0, v1] = segment.points();
-            let [v3, v2] = {
-                let segment =
-                    Transform::translation(path).transform_segment(&segment);
-                segment.points()
-            };
-
-            quads.push([v0, v1, v2, v3]);
-        }
-
-        let mut side_face: Vec<Triangle<3>> = Vec::new();
-        for [v0, v1, v2, v3] in quads {
-            side_face.push([v0, v1, v2].into());
-            side_face.push([v0, v2, v3].into());
-        }
-
-        // FIXME: We probably want to allow the use of custom colors for the "walls" of the swept
-        // object.
-        for s in side_face.iter_mut() {
-            s.set_color(color);
-        }
-
-        side_faces.push(Face::Triangles(side_face));
-    }
-
-    for face in side_faces {
-        shape.topology().add_face(face).unwrap();
-    }
-
-    shape
 }
 
 #[cfg(test)]
