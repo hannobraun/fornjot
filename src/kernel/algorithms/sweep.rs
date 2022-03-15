@@ -9,7 +9,7 @@ use crate::{
             vertices::Vertex,
         },
     },
-    math::{Scalar, Transform, Vector},
+    math::{Scalar, Transform, Triangle, Vector},
 };
 
 use super::approximation::Approximation;
@@ -19,6 +19,7 @@ pub fn sweep_shape(
     mut shape_orig: Shape,
     path: Vector<3>,
     tolerance: Scalar,
+    color: [u8; 4],
 ) -> Shape {
     let mut shape = shape_orig.clone();
 
@@ -28,18 +29,18 @@ pub fn sweep_shape(
 
     // Create the new vertices.
     let mut vertices = HashMap::new();
-    for vertex_orig in shape_orig.vertices().all() {
+    for vertex_orig in shape_orig.topology().vertices() {
         let point = shape.geometry().add_point(vertex_orig.point() + path);
-        let vertex = shape.vertices().add(Vertex { point });
+        let vertex = shape.topology().add_vertex(Vertex { point }).unwrap();
         vertices.insert(vertex_orig, vertex);
     }
 
     // Create the new edges.
     let mut edges = HashMap::new();
-    for edge_orig in shape_orig.edges().all() {
+    for edge_orig in shape_orig.topology().edges() {
         let curve = shape
             .geometry()
-            .add_curve(edge_orig.curve.transform(&translation));
+            .add_curve(edge_orig.curve().transform(&translation));
 
         let vertices = edge_orig.vertices.clone().map(|vs| {
             vs.map(|vertex_orig| {
@@ -49,13 +50,13 @@ pub fn sweep_shape(
             })
         });
 
-        let edge = shape.edges().add(Edge { curve, vertices });
+        let edge = shape.topology().add_edge(Edge { curve, vertices }).unwrap();
         edges.insert(edge_orig, edge);
     }
 
     // Create the new cycles.
     let mut cycles = HashMap::new();
-    for cycle_orig in shape_orig.cycles().all() {
+    for cycle_orig in shape_orig.topology().cycles() {
         let edges = cycle_orig
             .edges
             .iter()
@@ -66,14 +67,14 @@ pub fn sweep_shape(
             })
             .collect();
 
-        let cycle = shape.cycles().add(Cycle { edges });
+        let cycle = shape.topology().add_cycle(Cycle { edges }).unwrap();
         cycles.insert(cycle_orig, cycle);
     }
 
     // Create top faces.
-    for face_orig in shape_orig.faces().all() {
-        let (surface_orig, cycles_orig) = match &*face_orig {
-            Face::Face { surface, cycles } => (surface, cycles),
+    for face_orig in shape_orig.topology().faces() {
+        let cycles_orig = match &*face_orig {
+            Face::Face { cycles, .. } => cycles,
             _ => {
                 // Sketches are created using boundary representation, so this
                 // case can't happen.
@@ -83,7 +84,7 @@ pub fn sweep_shape(
 
         let surface = shape
             .geometry()
-            .add_surface(surface_orig.transform(&translation));
+            .add_surface(face_orig.surface().transform(&translation));
 
         let cycles = cycles_orig
             .iter()
@@ -94,13 +95,20 @@ pub fn sweep_shape(
             })
             .collect();
 
-        shape.faces().add(Face::Face { surface, cycles });
+        shape
+            .topology()
+            .add_face(Face::Face {
+                surface,
+                cycles,
+                color,
+            })
+            .unwrap();
     }
 
     // We could use `vertices` to create the side edges and faces here, but the
     // side walls are created below, in triangle representation.
 
-    for cycle in shape_orig.cycles().all() {
+    for cycle in shape_orig.topology().cycles() {
         let approx = Approximation::for_cycle(&cycle, tolerance);
 
         // This will only work correctly, if the cycle consists of one edge. If
@@ -119,17 +127,23 @@ pub fn sweep_shape(
             quads.push([v0, v1, v2, v3]);
         }
 
-        let mut side_face = Vec::new();
+        let mut side_face: Vec<Triangle<3>> = Vec::new();
         for [v0, v1, v2, v3] in quads {
             side_face.push([v0, v1, v2].into());
             side_face.push([v0, v2, v3].into());
+        }
+
+        // FIXME: We probably want to allow the use of custom colors for the "walls" of the swept
+        // object.
+        for s in side_face.iter_mut() {
+            s.set_color(color);
         }
 
         side_faces.push(Face::Triangles(side_face));
     }
 
     for face in side_faces {
-        shape.faces().add(face);
+        shape.topology().add_face(face).unwrap();
     }
 
     shape
@@ -156,14 +170,32 @@ mod tests {
             sketch.shape,
             Vector::from([0., 0., 1.]),
             Scalar::from_f64(0.),
+            [255, 0, 0, 255],
         );
 
-        let bottom_face = sketch.face;
+        let bottom_face = sketch.face.get().clone();
         let top_face =
-            Triangle::new([[0., 0., 1.], [1., 0., 1.], [0., 1., 1.]]).face;
+            Triangle::new([[0., 0., 1.], [1., 0., 1.], [0., 1., 1.]])
+                .face
+                .get()
+                .clone();
 
-        assert!(swept.faces().contains(&bottom_face));
-        assert!(swept.faces().contains(&top_face));
+        let mut contains_bottom_face = false;
+        let mut contains_top_face = false;
+
+        for face in swept.topology().faces() {
+            if matches!(face.get(), Face::Face { .. }) {
+                if face.get().clone() == bottom_face {
+                    contains_bottom_face = true;
+                }
+                if face.get().clone() == top_face {
+                    contains_top_face = true;
+                }
+            }
+        }
+
+        assert!(contains_bottom_face);
+        assert!(contains_top_face);
 
         // Side faces are not tested, as those use triangle representation. The
         // plan is to start testing them, as they are transitioned to b-rep.
@@ -182,17 +214,29 @@ mod tests {
             let b = shape.geometry().add_point(b.into());
             let c = shape.geometry().add_point(c.into());
 
-            let a = shape.vertices().add(Vertex { point: a });
-            let b = shape.vertices().add(Vertex { point: b });
-            let c = shape.vertices().add(Vertex { point: c });
+            let a = shape.topology().add_vertex(Vertex { point: a }).unwrap();
+            let b = shape.topology().add_vertex(Vertex { point: b }).unwrap();
+            let c = shape.topology().add_vertex(Vertex { point: c }).unwrap();
 
-            let ab = shape.edges().add_line_segment([a.clone(), b.clone()]);
-            let bc = shape.edges().add_line_segment([b.clone(), c.clone()]);
-            let ca = shape.edges().add_line_segment([c.clone(), a.clone()]);
+            let ab = shape
+                .topology()
+                .add_line_segment([a.clone(), b.clone()])
+                .unwrap();
+            let bc = shape
+                .topology()
+                .add_line_segment([b.clone(), c.clone()])
+                .unwrap();
+            let ca = shape
+                .topology()
+                .add_line_segment([c.clone(), a.clone()])
+                .unwrap();
 
-            let cycles = shape.cycles().add(Cycle {
-                edges: vec![ab, bc, ca],
-            });
+            let cycles = shape
+                .topology()
+                .add_cycle(Cycle {
+                    edges: vec![ab, bc, ca],
+                })
+                .unwrap();
 
             let surface = shape.geometry().add_surface(Surface::Swept(
                 Swept::plane_from_points(
@@ -202,9 +246,10 @@ mod tests {
             let abc = Face::Face {
                 surface,
                 cycles: vec![cycles],
+                color: [255, 0, 0, 255],
             };
 
-            let face = shape.faces().add(abc);
+            let face = shape.topology().add_face(abc).unwrap();
 
             Self { shape, face }
         }

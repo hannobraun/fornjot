@@ -1,13 +1,10 @@
 use std::collections::HashSet;
 
 use crate::{
-    kernel::{
-        shape::handle::Handle,
-        topology::{
-            edges::{Cycle, Edge},
-            faces::Face,
-            vertices::Vertex,
-        },
+    kernel::topology::{
+        edges::{Cycle, Edge},
+        faces::Face,
+        vertices::Vertex,
     },
     math::{Point, Scalar, Segment},
 };
@@ -38,9 +35,9 @@ impl Approximation {
     /// the actual edge.
     pub fn for_edge(edge: &Edge, tolerance: Scalar) -> Self {
         let mut points = Vec::new();
-        edge.curve.approx(tolerance, &mut points);
+        edge.curve().approx(tolerance, &mut points);
 
-        approximate_edge(points, edge.vertices.as_ref())
+        approximate_edge(points, edge.vertices())
     }
 
     /// Compute an approximation for a cycle
@@ -51,8 +48,8 @@ impl Approximation {
         let mut points = HashSet::new();
         let mut segments = HashSet::new();
 
-        for edge in &cycle.edges {
-            let approx = Self::for_edge(edge, tolerance);
+        for edge in cycle.edges() {
+            let approx = Self::for_edge(&edge, tolerance);
 
             points.extend(approx.points);
             segments.extend(approx.segments);
@@ -78,32 +75,23 @@ impl Approximation {
         // doesn't need to be handled here, is a sphere. A spherical face would
         // would need to provide its own approximation, as the edges that bound
         // it have nothing to do with its curvature.
-        match face {
-            Face::Face { surface: _, cycles } => {
-                let mut points = HashSet::new();
-                let mut segments = HashSet::new();
+        let mut points = HashSet::new();
+        let mut segments = HashSet::new();
 
-                for cycle in cycles {
-                    let approx = Self::for_cycle(cycle, tolerance);
+        for cycle in face.cycles() {
+            let approx = Self::for_cycle(&cycle, tolerance);
 
-                    points.extend(approx.points);
-                    segments.extend(approx.segments);
-                }
-
-                Self { points, segments }
-            }
-            _ => {
-                // No code that still uses triangle representation calls this
-                // method.
-                unreachable!()
-            }
+            points.extend(approx.points);
+            segments.extend(approx.segments);
         }
+
+        Self { points, segments }
     }
 }
 
 fn approximate_edge(
     mut points: Vec<Point<3>>,
-    vertices: Option<&[Handle<Vertex>; 2]>,
+    vertices: Option<[Vertex; 2]>,
 ) -> Approximation {
     // Insert the exact vertices of this edge into the approximation. This means
     // we don't rely on the curve approximation to deliver accurate
@@ -113,7 +101,7 @@ fn approximate_edge(
     // would lead to bugs in the approximation, as points that should refer to
     // the same vertex would be understood to refer to very close, but distinct
     // vertices.
-    if let Some([a, b]) = vertices {
+    if let Some([a, b]) = &vertices {
         points.insert(0, a.point());
         points.push(b.point());
     }
@@ -172,14 +160,17 @@ mod tests {
         let v1 = shape.geometry().add_point(a);
         let v2 = shape.geometry().add_point(d);
 
-        let v1 = shape.vertices().add(Vertex { point: v1 });
-        let v2 = shape.vertices().add(Vertex { point: v2 });
+        let v1 = shape.topology().add_vertex(Vertex { point: v1 }).unwrap();
+        let v2 = shape.topology().add_vertex(Vertex { point: v2 }).unwrap();
 
         let points = vec![b, c];
 
         // Regular edge
         assert_eq!(
-            approximate_edge(points.clone(), Some(&[v1, v2])),
+            approximate_edge(
+                points.clone(),
+                Some([v1.get().clone(), v2.get().clone()])
+            ),
             Approximation {
                 points: set![a, b, c, d],
                 segments: set![
@@ -214,13 +205,16 @@ mod tests {
         let v2 = shape.geometry().add_point(b);
         let v3 = shape.geometry().add_point(c);
 
-        let v1 = shape.vertices().add(Vertex { point: v1 });
-        let v2 = shape.vertices().add(Vertex { point: v2 });
-        let v3 = shape.vertices().add(Vertex { point: v3 });
+        let v1 = shape.topology().add_vertex(Vertex { point: v1 }).unwrap();
+        let v2 = shape.topology().add_vertex(Vertex { point: v2 }).unwrap();
+        let v3 = shape.topology().add_vertex(Vertex { point: v3 }).unwrap();
 
-        let ab = shape.edges().add_line_segment([v1.clone(), v2.clone()]);
-        let bc = shape.edges().add_line_segment([v2, v3.clone()]);
-        let ca = shape.edges().add_line_segment([v3, v1]);
+        let ab = shape
+            .topology()
+            .add_line_segment([v1.clone(), v2.clone()])
+            .unwrap();
+        let bc = shape.topology().add_line_segment([v2, v3.clone()]).unwrap();
+        let ca = shape.topology().add_line_segment([v3, v1]).unwrap();
 
         let cycle = Cycle {
             edges: vec![ab, bc, ca],
@@ -257,24 +251,31 @@ mod tests {
         let v3 = shape.geometry().add_point(c);
         let v4 = shape.geometry().add_point(d);
 
-        let v1 = shape.vertices().add(Vertex { point: v1 });
-        let v2 = shape.vertices().add(Vertex { point: v2 });
-        let v3 = shape.vertices().add(Vertex { point: v3 });
-        let v4 = shape.vertices().add(Vertex { point: v4 });
+        let v1 = shape.topology().add_vertex(Vertex { point: v1 }).unwrap();
+        let v2 = shape.topology().add_vertex(Vertex { point: v2 }).unwrap();
+        let v3 = shape.topology().add_vertex(Vertex { point: v3 }).unwrap();
+        let v4 = shape.topology().add_vertex(Vertex { point: v4 }).unwrap();
 
-        let ab = shape.edges().add_line_segment([v1.clone(), v2.clone()]);
-        let bc = shape.edges().add_line_segment([v2, v3.clone()]);
-        let cd = shape.edges().add_line_segment([v3, v4.clone()]);
-        let da = shape.edges().add_line_segment([v4, v1]);
+        let ab = shape
+            .topology()
+            .add_line_segment([v1.clone(), v2.clone()])
+            .unwrap();
+        let bc = shape.topology().add_line_segment([v2, v3.clone()]).unwrap();
+        let cd = shape.topology().add_line_segment([v3, v4.clone()]).unwrap();
+        let da = shape.topology().add_line_segment([v4, v1]).unwrap();
 
-        let abcd = shape.cycles().add(Cycle {
-            edges: vec![ab, bc, cd, da],
-        });
+        let abcd = shape
+            .topology()
+            .add_cycle(Cycle {
+                edges: vec![ab, bc, cd, da],
+            })
+            .unwrap();
 
         let surface = shape.geometry().add_surface(Surface::x_y_plane());
         let face = Face::Face {
             surface,
             cycles: vec![abcd],
+            color: [255, 0, 0, 255],
         };
 
         assert_eq!(

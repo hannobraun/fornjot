@@ -23,9 +23,13 @@ use crate::{
 pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
     let mut transformed = Shape::new();
 
-    for face in original.faces().all() {
+    for face in original.topology().faces() {
         let face = match face.get().clone() {
-            Face::Face { cycles, surface } => {
+            Face::Face {
+                cycles,
+                surface,
+                color,
+            } => {
                 let mut cycles_trans = Vec::new();
 
                 for cycle in cycles {
@@ -34,26 +38,38 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
                     for edge in &cycle.edges {
                         let curve = transformed
                             .geometry()
-                            .add_curve(edge.curve.transform(transform));
+                            .add_curve(edge.curve().transform(transform));
 
-                        let vertices = edge.vertices.clone().map(|vertices| {
-                            vertices.map(|vertex| {
-                                let point = transformed.geometry().add_point(
-                                    transform.transform_point(&vertex.point()),
-                                );
+                        let vertices =
+                            edge.vertices().clone().map(|vertices| {
+                                vertices.map(|vertex| {
+                                    let point =
+                                        transformed.geometry().add_point(
+                                            transform.transform_point(
+                                                &vertex.point(),
+                                            ),
+                                        );
 
-                                transformed.vertices().add(Vertex { point })
-                            })
-                        });
+                                    transformed
+                                        .topology()
+                                        .add_vertex(Vertex { point })
+                                        .unwrap()
+                                })
+                            });
 
                         let edge = Edge { curve, vertices };
-                        let edge = transformed.edges().add(edge);
+                        let edge =
+                            transformed.topology().add_edge(edge).unwrap();
 
                         edges.push(edge);
                     }
 
-                    cycles_trans
-                        .push(transformed.cycles().add(Cycle { edges }));
+                    cycles_trans.push(
+                        transformed
+                            .topology()
+                            .add_cycle(Cycle { edges })
+                            .unwrap(),
+                    );
                 }
 
                 let surface = transformed
@@ -63,6 +79,7 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
                 Face::Face {
                     cycles: cycles_trans,
                     surface,
+                    color,
                 }
             }
             Face::Triangles(mut triangles) => {
@@ -74,7 +91,7 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
             }
         };
 
-        transformed.faces().add(face);
+        transformed.topology().add_face(face).unwrap();
     }
 
     transformed

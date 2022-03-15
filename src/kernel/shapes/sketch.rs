@@ -17,7 +17,7 @@ impl ToShape for fj::Sketch {
 
         for [x, y] in self.to_points() {
             let point = shape.geometry().add_point(Point::from([x, y, 0.]));
-            let vertex = shape.vertices().add(Vertex { point });
+            let vertex = shape.topology().add_vertex(Vertex { point }).unwrap();
             vertices.push(vertex);
         }
 
@@ -38,19 +38,20 @@ impl ToShape for fj::Sketch {
                 let a = window[0].clone();
                 let b = window[1].clone();
 
-                let edge = shape.edges().add_line_segment([a, b]);
+                let edge = shape.topology().add_line_segment([a, b]).unwrap();
                 edges.push(edge);
             }
 
-            shape.cycles().add(Cycle { edges });
+            shape.topology().add_cycle(Cycle { edges }).unwrap();
         };
 
         let surface = shape.geometry().add_surface(Surface::x_y_plane());
         let face = Face::Face {
-            cycles: shape.cycles().all().collect(),
+            cycles: shape.topology().cycles().collect(),
             surface,
+            color: self.color(),
         };
-        shape.faces().add(face);
+        shape.topology().add_face(face).unwrap();
 
         shape
     }

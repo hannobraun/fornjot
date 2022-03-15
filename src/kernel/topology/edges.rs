@@ -1,3 +1,5 @@
+use std::hash::{Hash, Hasher};
+
 use crate::kernel::{geometry::Curve, shape::handle::Handle};
 
 use super::vertices::Vertex;
@@ -7,13 +9,47 @@ use super::vertices::Vertex;
 /// The end of each edge in the cycle must connect to the beginning of the next
 /// edge. The end of the last edge must connect to the beginning of the first
 /// one.
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+///
+/// # Equality
+///
+/// Please refer to [`crate::kernel::topology`] for documentation on the
+/// equality of topological objects.
+#[derive(Clone, Debug, Eq, Ord, PartialOrd)]
 pub struct Cycle {
     pub edges: Vec<Handle<Edge>>,
 }
 
+impl Cycle {
+    /// Access the edges that this cycle refers to
+    ///
+    /// This is a convenience method that saves the caller from dealing with the
+    /// [`Handle`]s.
+    pub fn edges(&self) -> impl Iterator<Item = Edge> + '_ {
+        self.edges.iter().map(|handle| handle.get().clone())
+    }
+}
+
+impl PartialEq for Cycle {
+    fn eq(&self, other: &Self) -> bool {
+        self.edges().eq(other.edges())
+    }
+}
+
+impl Hash for Cycle {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        for edge in self.edges() {
+            edge.hash(state);
+        }
+    }
+}
+
 /// An edge of a shape
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+///
+/// # Equality
+///
+/// Please refer to [`crate::kernel::topology`] for documentation on the
+/// equality of topological objects.
+#[derive(Clone, Debug, Eq, Ord, PartialOrd)]
 pub struct Edge {
     /// Access the curve that defines the edge's geometry
     ///
@@ -37,4 +73,37 @@ pub struct Edge {
     /// it by storing 3D vertices. It will probably make sense to revert this
     /// and store 1D vertices again, at some point.
     pub vertices: Option<[Handle<Vertex>; 2]>,
+}
+
+impl Edge {
+    /// Access the curve that the edge refers to
+    ///
+    /// This is a convenience method that saves the caller from dealing with the
+    /// [`Handle`].
+    pub fn curve(&self) -> Curve {
+        *self.curve.get()
+    }
+
+    /// Access the vertices that the edge refers to
+    ///
+    /// This is a convenience method that saves the caller from dealing with the
+    /// [`Handle`]s.
+    pub fn vertices(&self) -> Option<[Vertex; 2]> {
+        self.vertices
+            .as_ref()
+            .map(|[a, b]| [a.get().clone(), b.get().clone()])
+    }
+}
+
+impl PartialEq for Edge {
+    fn eq(&self, other: &Self) -> bool {
+        self.curve() == other.curve() && self.vertices() == other.vertices()
+    }
+}
+
+impl Hash for Edge {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.curve().hash(state);
+        self.vertices().hash(state);
+    }
 }

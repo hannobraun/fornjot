@@ -103,7 +103,7 @@ fn main() -> anyhow::Result<()> {
     let mut triangles = Vec::new();
     shape
         .to_shape(tolerance, &mut debug_info)
-        .faces()
+        .topology()
         .triangles(tolerance, &mut triangles, &mut debug_info);
 
     if let Some(path) = args.export {
@@ -230,7 +230,7 @@ fn main() -> anyhow::Result<()> {
                 aabb = shape.bounding_volume();
                 shape
                     .to_shape(tolerance, &mut debug_info)
-                    .faces()
+                    .topology()
                     .triangles(tolerance, &mut triangles, &mut debug_info);
 
                 renderer.update_geometry(

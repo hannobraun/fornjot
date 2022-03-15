@@ -17,20 +17,33 @@ impl ToShape for fj::Circle {
         // Circles have just a single round edge with no vertices. So none need
         // to be added here.
 
-        let edge = shape.edges().add_circle(Scalar::from_f64(self.radius));
-        shape.cycles().add(Cycle { edges: vec![edge] });
+        let edge = shape
+            .topology()
+            .add_circle(Scalar::from_f64(self.radius()))
+            .unwrap();
+        shape
+            .topology()
+            .add_cycle(Cycle { edges: vec![edge] })
+            .unwrap();
 
-        let cycles = shape.cycles().all().collect();
+        let cycles = shape.topology().cycles().collect();
         let surface = shape.geometry().add_surface(Surface::x_y_plane());
-        shape.faces().add(Face::Face { cycles, surface });
+        shape
+            .topology()
+            .add_face(Face::Face {
+                cycles,
+                surface,
+                color: self.color(),
+            })
+            .unwrap();
 
         shape
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
         Aabb {
-            min: Point::from([-self.radius, -self.radius, 0.0]),
-            max: Point::from([self.radius, self.radius, 0.0]),
+            min: Point::from([-self.radius(), -self.radius(), 0.0]),
+            max: Point::from([self.radius(), self.radius(), 0.0]),
         }
     }
 }

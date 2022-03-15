@@ -13,7 +13,7 @@ For an introduction of what the project aims to achieve, [please check out the w
 
 ## Sponsors
 
-Fornjot is supported by [**@webtrax-oz**](https://github.com/webtrax-oz), [**@lthiery**](https://github.com/lthiery), [**@Yatekii**](https://github.com/Yatekii), [**@martindederer**](https://github.com/martindederer), [**@ahdinosaur**](https://github.com/ahdinosaur), [**@jessebraham**](https://github.com/jessebraham), [**@Kethku**](https://github.com/Kethku), [**@sanxiyn**](https://github.com/sanxiyn), and my other awesome sponsors. Thank you!
+Fornjot is supported by [**@webtrax-oz**](https://github.com/webtrax-oz), [**@lthiery**](https://github.com/lthiery), [**@Yatekii**](https://github.com/Yatekii), [**@martindederer**](https://github.com/martindederer), [**@nullstyle**](https://github.com/nullstyle), [**@ahdinosaur**](https://github.com/ahdinosaur), [**@jessebraham**](https://github.com/jessebraham), [**@Kethku**](https://github.com/Kethku), [**@sanxiyn**](https://github.com/sanxiyn), [**@seigel**](https://github.com/seigel), and my other awesome sponsors. Thank you!
 
 **Please consider [supporting me too](https://github.com/sponsors/hannobraun), to help make Fornjot sustainable long-term.**
 
@@ -54,18 +54,12 @@ pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
         .parse()
         .unwrap();
 
-    let outer_edge = fj::Circle { radius: outer };
-    let inner_edge = fj::Circle { radius: inner };
+    let outer_edge = fj::Circle::from_radius(outer);
+    let inner_edge = fj::Circle::from_radius(inner);
 
-    let footprint = fj::Difference {
-        a: outer_edge.into(),
-        b: inner_edge.into(),
-    };
+    let footprint = fj::Difference2d::from_objects(outer_edge.into(), inner_edge.into());
 
-    let spacer = fj::Sweep {
-        shape: footprint.into(),
-        length: height,
-    };
+    let spacer = fj::Sweep::from_shape_and_length(footprint.into(), height);
 
     spacer.into()
 }
