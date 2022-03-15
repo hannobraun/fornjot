@@ -61,7 +61,8 @@ impl Topology<'_> {
             return Err(ValidationError::Structural(()));
         }
         for existing in &*self.vertices {
-            let distance = (existing.point() - vertex.point()).magnitude();
+            let distance =
+                (existing.get().point() - vertex.point()).magnitude();
 
             if distance < self.min_distance {
                 warn!(
@@ -257,7 +258,7 @@ impl Topology<'_> {
         debug_info: &mut DebugInfo,
     ) {
         for face in &*self.faces {
-            face.triangles(tolerance, out, debug_info);
+            face.get().triangles(tolerance, out, debug_info);
         }
     }
 }

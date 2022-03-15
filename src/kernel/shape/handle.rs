@@ -36,7 +36,7 @@ pub struct Handle<T> {
 impl<T> Handle<T> {
     /// Access the object that the handle references
     pub fn get(&self) -> Ref<T> {
-        Ref(self.storage.deref())
+        Ref(self.storage.get())
     }
 
     /// Internal method to access the [`Storage`] this handle refers to
@@ -80,6 +80,10 @@ impl<T> Storage<T> {
         Handle {
             storage: self.clone(),
         }
+    }
+
+    pub(super) fn get(&self) -> &T {
+        self.0.deref()
     }
 
     fn ptr(&self) -> *const () {
