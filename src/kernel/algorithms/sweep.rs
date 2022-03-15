@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use crate::{
     kernel::{
+        geometry::{surfaces::Swept, Surface},
         shape::{Handle, Shape},
         topology::{
             edges::{Cycle, Edge},
@@ -134,44 +135,136 @@ pub fn sweep_shape(
             .unwrap();
     }
 
-    // We could use `vertices` to create the side edges and faces here, but the
-    // side walls are created below, in triangle representation.
+    for cycle_source in source.topology().cycles() {
+        if cycle_source.get().edges.len() == 1 {
+            // If there's only one edge in the cycle, it must be a continuous
+            // edge that connects to itself. By sweeping that, we create a
+            // continuous face.
+            //
+            // Continuous faces aren't currently supported by the approximation
+            // code, and hence can't be triangulated. To address that, we fall
+            // back to the old and almost obsolete triangle representation to
+            // create the face.
+            //
+            // This is the last piece of code that still uses the triangle
+            // representation.
 
-    for cycle in source.topology().cycles().values() {
-        let approx = Approximation::for_cycle(&cycle, tolerance);
+            let approx =
+                Approximation::for_cycle(&cycle_source.get(), tolerance);
 
-        // This will only work correctly, if the cycle consists of one edge. If
-        // there are more, this will create some kind of weird face chimera, a
-        // single face to represent all the side faces.
+            let mut quads = Vec::new();
+            for segment in approx.segments {
+                let [v0, v1] = segment.points();
+                let [v3, v2] = {
+                    let segment = Transform::translation(path)
+                        .transform_segment(&segment);
+                    segment.points()
+                };
 
-        let mut quads = Vec::new();
-        for segment in approx.segments {
-            let [v0, v1] = segment.points();
-            let [v3, v2] = {
-                let segment =
-                    Transform::translation(path).transform_segment(&segment);
-                segment.points()
-            };
+                quads.push([v0, v1, v2, v3]);
+            }
 
-            quads.push([v0, v1, v2, v3]);
+            let mut side_face: Vec<Triangle<3>> = Vec::new();
+            for [v0, v1, v2, v3] in quads {
+                side_face.push([v0, v1, v2].into());
+                side_face.push([v0, v2, v3].into());
+            }
+
+            // FIXME: We probably want to allow the use of custom colors for the
+            // "walls" of the swept object.
+            for s in side_face.iter_mut() {
+                s.set_color(color);
+            }
+
+            target
+                .topology()
+                .add_face(Face::Triangles(side_face))
+                .unwrap();
+        } else {
+            // If there's no continuous edge, we can create the non-
+            // continuous faces using boundary representation.
+
+            let mut vertex_bottom_to_edge = HashMap::new();
+
+            for edge_source in &cycle_source.get().edges {
+                // Can't panic. We already ruled out the continuous edge case
+                // above, so this edge must have vertices.
+                let vertices_source =
+                    edge_source.get().vertices.clone().unwrap();
+
+                // Create (or retrieve from the cache, `vertex_bottom_to_edge`)
+                // side edges from the vertices of this source/bottom edge.
+                let [side_edge_a, side_edge_b] =
+                    vertices_source.map(|vertex_source| {
+                        let vertex_bottom = source_to_bottom
+                            .vertices
+                            .get(&vertex_source)
+                            .unwrap()
+                            .clone();
+
+                        vertex_bottom_to_edge
+                            .entry(vertex_bottom.clone())
+                            .or_insert_with(|| {
+                                let curve = target
+                                    .geometry()
+                                    .add_curve(edge_source.get().curve());
+
+                                let vertex_top = source_to_top
+                                    .vertices
+                                    .get(&vertex_source)
+                                    .unwrap()
+                                    .clone();
+
+                                target
+                                    .topology()
+                                    .add_edge(Edge {
+                                        curve,
+                                        vertices: Some([
+                                            vertex_bottom,
+                                            vertex_top,
+                                        ]),
+                                    })
+                                    .unwrap()
+                            })
+                            .clone()
+                    });
+
+                // Now we have everything we need to create the side face from
+                // this source/bottom edge.
+
+                let bottom_edge =
+                    source_to_bottom.edges.get(edge_source).unwrap().clone();
+                let top_edge =
+                    source_to_top.edges.get(edge_source).unwrap().clone();
+
+                let surface =
+                    target.geometry().add_surface(Surface::Swept(Swept {
+                        curve: bottom_edge.get().curve(),
+                        path,
+                    }));
+
+                let cycle = target
+                    .topology()
+                    .add_cycle(Cycle {
+                        edges: vec![
+                            bottom_edge,
+                            top_edge,
+                            side_edge_a,
+                            side_edge_b,
+                        ],
+                    })
+                    .unwrap();
+
+                target
+                    .topology()
+                    .add_face(Face::Face {
+                        surface,
+                        cycles: vec![cycle],
+                        color,
+                    })
+                    .unwrap();
+            }
         }
-
-        let mut side_face: Vec<Triangle<3>> = Vec::new();
-        for [v0, v1, v2, v3] in quads {
-            side_face.push([v0, v1, v2].into());
-            side_face.push([v0, v2, v3].into());
-        }
-
-        // FIXME: We probably want to allow the use of custom colors for the "walls" of the swept
-        // object.
-        for s in side_face.iter_mut() {
-            s.set_color(color);
-        }
-
-        target
-            .topology()
-            .add_face(Face::Triangles(side_face))
-            .unwrap();
     }
 
     target
