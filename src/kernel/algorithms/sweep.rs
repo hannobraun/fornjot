@@ -65,7 +65,7 @@ pub fn sweep_shape(
 
     // Create the new cycles.
     for cycle_source in source.topology().cycles() {
-        let edges = cycle_source
+        let edges_top = cycle_source
             .get()
             .edges
             .iter()
@@ -76,7 +76,10 @@ pub fn sweep_shape(
             })
             .collect();
 
-        let cycle = target.topology().add_cycle(Cycle { edges }).unwrap();
+        let cycle = target
+            .topology()
+            .add_cycle(Cycle { edges: edges_top })
+            .unwrap();
         source_to_top.cycles.insert(cycle_source, cycle);
     }
 
