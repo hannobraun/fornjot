@@ -11,6 +11,36 @@ Detect when a release pull-request is merged.
 [^1]: In GitHub Actions, `gh` is present and the default `GITHUB_TOKEN` fulfills all requirements to access Fornjot's repository
 [^2]: The release operator is tailored to run within the context of GitHub Actions. While it can be executed locally, it wouldn't have any effects.
 
+## Process Overview
+
+A high-level overview of the process and the role of the release-operator.
+
+```mermaid
+sequenceDiagram
+  actor U as Maintainer
+  participant GitHub
+  participant Actions
+  participant RO as Release Operator
+
+  U->>GitHub: create pull-request
+  activate U
+  U-->>GitHub: set <release-label>
+  U-->>GitHub: update repo contents
+  U->>GitHub: merge
+  deactivate U
+
+  GitHub->>Actions: run CD workflow
+  activate GitHub
+  Actions->>RO: detect release
+  RO->>Actions: set output values
+  Actions->>GitHub: create release
+  deactivate GitHub
+```
+
+_The "Actions" participant does a lot more which has been left out for the sake of simplicity. See the [release process] for all details._
+
+[release process]: ../RELEASES.md
+
 ## Usage
 
 ```shell
