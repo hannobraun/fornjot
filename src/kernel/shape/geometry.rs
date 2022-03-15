@@ -1,11 +1,14 @@
 use crate::{
-    kernel::geometry::{Curve, Surface},
-    math::Point,
+    kernel::{
+        geometry::{Curve, Surface},
+        topology::faces::Face,
+    },
+    math::{Point, Transform},
 };
 
 use super::{
     handle::{Handle, Storage},
-    Curves, Iter, Points, Surfaces,
+    Curves, Faces, Iter, Points, Surfaces,
 };
 
 /// API to access a shape's geometry
@@ -27,6 +30,15 @@ pub struct Geometry<'r> {
     pub(super) points: &'r mut Points,
     pub(super) curves: &'r mut Curves,
     pub(super) surfaces: &'r mut Surfaces,
+
+    // This is needed here for a weird workaround, which in turn is necessary
+    // because triangle representation still exists. Once triangle
+    // representation is no longer a thing, this field can be moved to
+    // `Topology`, where it belongs.
+    //
+    // This issue has some context on triangle representation:
+    // https://github.com/hannobraun/Fornjot/issues/97
+    pub(super) faces: &'r mut Faces,
 }
 
 impl Geometry<'_> {
@@ -58,6 +70,45 @@ impl Geometry<'_> {
         self.surfaces.push(storage);
 
         handle
+    }
+
+    /// Transform the geometry of the shape
+    ///
+    /// Since the topological types refer to geometry, and don't contain any
+    /// geometry themselves, this transforms the whole shape.
+    pub fn transform(&mut self, transform: &Transform) {
+        for point in self.points.iter_mut() {
+            let trans = {
+                let point = point.get();
+                transform.transform_point(&point)
+            };
+            *point.get_mut() = trans;
+        }
+        for curve in self.curves.iter_mut() {
+            let trans = {
+                let curve = curve.get();
+                curve.transform(transform)
+            };
+            *curve.get_mut() = trans;
+        }
+        for surface in self.surfaces.iter_mut() {
+            let trans = {
+                let surface = surface.get();
+                surface.transform(transform)
+            };
+            *surface.get_mut() = trans;
+        }
+
+        // While some faces use triangle representation, we need this weird
+        // workaround here.
+        for face in self.faces.iter_mut() {
+            use std::ops::DerefMut as _;
+            if let Face::Triangles(triangles) = face.get_mut().deref_mut() {
+                for triangle in triangles {
+                    *triangle = transform.transform_triangle(triangle);
+                }
+            }
+        }
     }
 
     /// Access an iterator over all points

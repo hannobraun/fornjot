@@ -5,6 +5,8 @@ use std::{
     sync::Arc,
 };
 
+use parking_lot::{RwLock, RwLockReadGuard, RwLockWriteGuard};
+
 /// A handle to an object stored within [`Shape`]
 ///
 /// If an object of type `T` (this could be `Curve`, `Vertex`, etc.) is added to
@@ -29,17 +31,19 @@ use std::{
 /// Two [`Handle`]s are considered equal, if they refer to objects in the same
 /// memory location.
 #[derive(Clone, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Handle<T>(Storage<T>);
+pub struct Handle<T> {
+    storage: Storage<T>,
+}
 
 impl<T> Handle<T> {
     /// Access the object that the handle references
-    pub fn get(&self) -> &T {
-        self.0.deref()
+    pub fn get(&self) -> Ref<T> {
+        self.storage.get()
     }
 
     /// Internal method to access the [`Storage`] this handle refers to
     pub(super) fn storage(&self) -> &Storage<T> {
-        &self.0
+        &self.storage
     }
 }
 
@@ -48,35 +52,48 @@ where
     T: fmt::Debug,
 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{:?}: {:?}", self.0.ptr(), self.get())
+        write!(f, "{:?}: {:?}", self.storage.ptr(), &*self.get())
     }
 }
 
-/// Internal type used in collections within [`Shape`]
-#[derive(Debug, Eq, Ord, PartialOrd)]
-pub struct Storage<T>(Arc<T>);
+/// Returned by [`Handle::get`]
+pub struct Ref<'r, T>(RwLockReadGuard<'r, T>);
 
-impl<T> Storage<T> {
-    /// Create a [`Storage`] instance that wraps the provided object
-    pub(super) fn new(value: T) -> Self {
-        Self(Arc::new(value))
-    }
-
-    /// Create a handle that refers to this [`Storage`] instance
-    pub(super) fn handle(&self) -> Handle<T> {
-        Handle(self.clone())
-    }
-
-    fn ptr(&self) -> *const T {
-        Arc::as_ptr(&self.0)
-    }
-}
-
-impl<T> Deref for Storage<T> {
+impl<T> Deref for Ref<'_, T> {
     type Target = T;
 
     fn deref(&self) -> &Self::Target {
         self.0.deref()
+    }
+}
+
+/// Internal type used in collections within [`Shape`]
+#[derive(Debug)]
+pub struct Storage<T>(Arc<RwLock<T>>);
+
+impl<T> Storage<T> {
+    /// Create a [`Storage`] instance that wraps the provided object
+    pub(super) fn new(value: T) -> Self {
+        Self(Arc::new(RwLock::new(value)))
+    }
+
+    /// Create a handle that refers to this [`Storage`] instance
+    pub(super) fn handle(&self) -> Handle<T> {
+        Handle {
+            storage: self.clone(),
+        }
+    }
+
+    pub(super) fn get(&self) -> Ref<T> {
+        Ref(self.0.read())
+    }
+
+    pub(super) fn get_mut(&self) -> RwLockWriteGuard<T> {
+        self.0.write()
+    }
+
+    fn ptr(&self) -> *const () {
+        Arc::as_ptr(&self.0) as _
     }
 }
 
@@ -92,6 +109,20 @@ impl<T> Clone for Storage<T> {
 impl<T> PartialEq for Storage<T> {
     fn eq(&self, other: &Self) -> bool {
         Arc::ptr_eq(&self.0, &other.0)
+    }
+}
+
+impl<T> Eq for Storage<T> {}
+
+impl<T> Ord for Storage<T> {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.ptr().cmp(&other.ptr())
+    }
+}
+
+impl<T> PartialOrd for Storage<T> {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
     }
 }
 

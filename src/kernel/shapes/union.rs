@@ -100,7 +100,7 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
     }
 
     for face_orig in orig.topology().faces() {
-        match face_orig.get() {
+        match &*face_orig.get() {
             Face::Face {
                 surface,
                 cycles: cs,
