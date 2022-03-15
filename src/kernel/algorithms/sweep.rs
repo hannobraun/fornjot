@@ -45,13 +45,7 @@ pub fn sweep_shape(
             .geometry()
             .add_curve(edge_source.get().curve().transform(&translation));
 
-        let vertices_top = edge_source.get().vertices.clone().map(|vs| {
-            vs.map(|vertex_source| {
-                // Can't panic, as long as the source shape is valid. We've
-                // added all its vertices to the relation.
-                source_to_top.vertices.get(&vertex_source).unwrap().clone()
-            })
-        });
+        let vertices_top = source_to_top.vertices_for_edge(&edge_source);
 
         let edge_top = target
             .topology()
@@ -173,6 +167,15 @@ impl Relation {
             edges: HashMap::new(),
             cycles: HashMap::new(),
         }
+    }
+
+    fn vertices_for_edge(
+        &self,
+        edge: &Handle<Edge>,
+    ) -> Option<[Handle<Vertex>; 2]> {
+        edge.get().vertices.clone().map(|vertices| {
+            vertices.map(|vertex| self.vertices.get(&vertex).unwrap().clone())
+        })
     }
 }
 
