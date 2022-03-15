@@ -30,16 +30,23 @@ sequenceDiagram
   U-->>GitHub: update repo contents
   U->>GitHub: merge
   deactivate U
+  Note over U: commit msg: v1.42.0 
 
   GitHub->>Actions: run CD workflow
   activate GitHub
   Actions->>RO: detect release
   RO->>Actions: set output values
+  Note right of RO: tag-name=v1.42.0<br>derived from commit msg
   Actions->>GitHub: create release
   deactivate GitHub
 ```
 
 _The "Actions" participant does a lot more which has been left out for the sake of simplicity. See the [release process] for all details._
+
+As seen above, the release operator requires the maintainer to:
+
+a) label the release pull-request with `<release-label>` (value decided upon later)
+b) include the semver version to release in the first line of the merge commit message
 
 [release process]: ../RELEASES.md
 
