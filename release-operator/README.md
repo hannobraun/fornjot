@@ -30,13 +30,13 @@ sequenceDiagram
   U-->>GitHub: update repo contents
   U->>GitHub: merge
   deactivate U
-  Note over U: commit msg: v1.42.0 
+  Note over U: commit msg:<br>Release v1.42.0 
 
   GitHub->>Actions: run CD workflow
   activate GitHub
   Actions->>RO: detect release
   RO->>Actions: set output values
-  Note right of RO: tag-name=v1.42.0<br>derived from commit msg
+  Note right of RO: tag-name=v1.42.0<br>derived from<br>commit msg
   Actions->>GitHub: create release
   deactivate GitHub
 ```
