@@ -237,11 +237,15 @@ impl Topology<'_> {
     }
 
     /// Access an iterator over all cycles
+    ///
+    /// The caller must not make any assumptions about the order of cycles.
     pub fn cycles(&self) -> Iter<Cycle> {
         Iter::new(self.cycles)
     }
 
     /// Access an iterator over all faces
+    ///
+    /// The caller must not make any assumptions about the order of faces.
     pub fn faces(&self) -> Iter<Face> {
         Iter::new(self.faces)
     }
