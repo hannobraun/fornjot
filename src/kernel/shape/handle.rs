@@ -78,8 +78,8 @@ impl<T> Storage<T> {
         Handle(self.clone())
     }
 
-    fn ptr(&self) -> *const T {
-        Arc::as_ptr(&self.0)
+    fn ptr(&self) -> *const () {
+        Arc::as_ptr(&self.0) as _
     }
 }
 
