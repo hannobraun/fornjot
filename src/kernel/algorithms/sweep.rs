@@ -45,7 +45,7 @@ pub fn sweep_shape(
             .geometry()
             .add_curve(edge_source.get().curve().transform(&translation));
 
-        let vertices = edge_source.get().vertices.clone().map(|vs| {
+        let vertices_top = edge_source.get().vertices.clone().map(|vs| {
             vs.map(|vertex_source| {
                 // Can't panic, as long as the source shape is valid. We've
                 // added all its vertices to the relation.
@@ -57,7 +57,7 @@ pub fn sweep_shape(
             .topology()
             .add_edge(Edge {
                 curve: curve_top,
-                vertices,
+                vertices: vertices_top,
             })
             .unwrap();
         source_to_top.edges.insert(edge_source, edge);
