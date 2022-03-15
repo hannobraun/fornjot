@@ -7,6 +7,7 @@ use crate::release::Release;
 use clap::Parser;
 
 #[derive(Parser, Debug)]
+#[clap(version)]
 struct Cmd {
     /// Commit sha to work on
     #[clap(short, long, env = "GITHUB_SHA")]
