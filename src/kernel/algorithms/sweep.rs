@@ -25,7 +25,7 @@ pub fn sweep_shape(
 
     let translation = Transform::translation(path);
 
-    let mut orig_to_top = Relation::new();
+    let mut source_to_top = Relation::new();
 
     // Create the new vertices.
     for vertex_orig in source.topology().vertices() {
@@ -33,7 +33,7 @@ pub fn sweep_shape(
             .geometry()
             .add_point(vertex_orig.get().point() + path);
         let vertex = target.topology().add_vertex(Vertex { point }).unwrap();
-        orig_to_top.vertices.insert(vertex_orig, vertex);
+        source_to_top.vertices.insert(vertex_orig, vertex);
     }
 
     // Create the new edges.
@@ -46,7 +46,7 @@ pub fn sweep_shape(
             vs.map(|vertex_orig| {
                 // Can't panic, as long as the original shape is valid. We've
                 // added all its vertices to `vertices`.
-                orig_to_top.vertices.get(&vertex_orig).unwrap().clone()
+                source_to_top.vertices.get(&vertex_orig).unwrap().clone()
             })
         });
 
@@ -54,7 +54,7 @@ pub fn sweep_shape(
             .topology()
             .add_edge(Edge { curve, vertices })
             .unwrap();
-        orig_to_top.edges.insert(edge_orig, edge);
+        source_to_top.edges.insert(edge_orig, edge);
     }
 
     // Create the new cycles.
@@ -66,12 +66,12 @@ pub fn sweep_shape(
             .map(|edge_orig| {
                 // Can't panic, as long as the original shape is valid. We've
                 // added all its edges to `edges`.
-                orig_to_top.edges.get(edge_orig).unwrap().clone()
+                source_to_top.edges.get(edge_orig).unwrap().clone()
             })
             .collect();
 
         let cycle = target.topology().add_cycle(Cycle { edges }).unwrap();
-        orig_to_top.cycles.insert(cycle_orig, cycle);
+        source_to_top.cycles.insert(cycle_orig, cycle);
     }
 
     // Create top faces.
@@ -94,7 +94,7 @@ pub fn sweep_shape(
             .map(|cycle_orig| {
                 // Can't panic, as long as the original shape is valid. We've
                 // added all its cycles to `cycles`.
-                orig_to_top.cycles.get(cycle_orig).unwrap().clone()
+                source_to_top.cycles.get(cycle_orig).unwrap().clone()
             })
             .collect();
 
