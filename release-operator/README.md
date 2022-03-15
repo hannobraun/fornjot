@@ -15,6 +15,8 @@ Detect when a release pull-request is merged.
 
 A high-level overview of the process and the role of the release-operator.
 
+<!-- The following is a mermaid sequence diagram https://mermaid-js.github.io/mermaid/#/sequenceDiagram -->
+
 ```mermaid
 sequenceDiagram
   actor U as Maintainer
