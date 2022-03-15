@@ -2,6 +2,7 @@
 /target
 /fj/Cargo.lock
 /fj/target
+/release-operator/target
 /models/*/Cargo.lock
 /models/*/target
 
