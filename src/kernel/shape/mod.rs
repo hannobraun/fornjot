@@ -5,6 +5,7 @@ pub mod validate;
 
 pub use self::{
     geometry::Geometry,
+    handle::Handle,
     topology::Topology,
     validate::{ValidationError, ValidationResult},
 };
