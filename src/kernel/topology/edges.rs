@@ -1,6 +1,6 @@
 use std::hash::{Hash, Hasher};
 
-use crate::kernel::{geometry::Curve, shape::handle::Handle};
+use crate::kernel::{geometry::Curve, shape::Handle};
 
 use super::vertices::Vertex;
 

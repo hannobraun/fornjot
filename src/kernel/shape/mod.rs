@@ -3,7 +3,12 @@ pub mod handle;
 pub mod topology;
 pub mod validate;
 
-pub use self::validate::{ValidationError, ValidationResult};
+pub use self::{
+    geometry::Geometry,
+    handle::Handle,
+    topology::Topology,
+    validate::{ValidationError, ValidationResult},
+};
 
 use crate::math::{Point, Scalar};
 
@@ -16,7 +21,7 @@ use super::{
     },
 };
 
-use self::{geometry::Geometry, handle::Storage, topology::Topology};
+use self::handle::Storage;
 
 /// The boundary representation of a shape
 #[derive(Clone, Debug)]

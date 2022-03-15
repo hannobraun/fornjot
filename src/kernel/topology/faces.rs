@@ -13,7 +13,7 @@ use crate::{
             approximation::Approximation, triangulation::triangulate,
         },
         geometry::Surface,
-        shape::handle::Handle,
+        shape::Handle,
     },
     math::{Aabb, Scalar, Segment, Triangle},
 };

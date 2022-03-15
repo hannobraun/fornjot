@@ -154,7 +154,7 @@ mod tests {
     use crate::{
         kernel::{
             geometry::{surfaces::Swept, Surface},
-            shape::{handle::Handle, Shape},
+            shape::{Handle, Shape},
             topology::{edges::Cycle, faces::Face, vertices::Vertex},
         },
         math::{Point, Scalar, Vector},

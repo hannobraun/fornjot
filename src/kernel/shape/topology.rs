@@ -16,9 +16,9 @@ use crate::{
 };
 
 use super::{
-    geometry::Geometry,
     handle::{Handle, Storage},
-    Cycles, Edges, Faces, ValidationError, ValidationResult, Vertices,
+    Cycles, Edges, Faces, Geometry, ValidationError, ValidationResult,
+    Vertices,
 };
 
 /// The vertices of a shape

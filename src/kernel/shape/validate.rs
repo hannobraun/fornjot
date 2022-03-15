@@ -9,7 +9,7 @@ use crate::kernel::{
     },
 };
 
-use super::handle::Handle;
+use super::Handle;
 
 /// Returned by the various `add_` methods of the [`Shape`] API
 pub type ValidationResult<T> = Result<Handle<T>, ValidationError<T>>;
