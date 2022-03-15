@@ -5,7 +5,7 @@ use crate::{
 
 use super::{
     handle::{Handle, Storage},
-    Curves, Iter, Points, Surfaces,
+    Curves, Faces, Iter, Points, Surfaces,
 };
 
 /// API to access a shape's geometry
@@ -27,6 +27,15 @@ pub struct Geometry<'r> {
     pub(super) points: &'r mut Points,
     pub(super) curves: &'r mut Curves,
     pub(super) surfaces: &'r mut Surfaces,
+
+    // This is needed here for a weird workaround, which in turn is necessary
+    // because triangle representation still exists. Once triangle
+    // representation is no longer a thing, this field can be moved to
+    // `Topology`, where it belongs.
+    //
+    // This issue has some context on triangle representation:
+    // https://github.com/hannobraun/Fornjot/issues/97
+    pub(super) faces: &'r mut Faces,
 }
 
 impl Geometry<'_> {

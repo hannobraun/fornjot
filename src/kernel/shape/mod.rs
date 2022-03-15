@@ -84,6 +84,8 @@ impl Shape {
             points: &mut self.points,
             curves: &mut self.curves,
             surfaces: &mut self.surfaces,
+
+            faces: &mut self.faces,
         }
     }
 
@@ -96,12 +98,13 @@ impl Shape {
                 points: &mut self.points,
                 curves: &mut self.curves,
                 surfaces: &mut self.surfaces,
+
+                faces: &mut self.faces,
             },
 
             vertices: &mut self.vertices,
             edges: &mut self.edges,
             cycles: &mut self.cycles,
-            faces: &mut self.faces,
         }
     }
 }

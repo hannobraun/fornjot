@@ -17,8 +17,7 @@ use crate::{
 
 use super::{
     handle::{Handle, Storage},
-    Cycles, Edges, Faces, Geometry, Iter, ValidationError, ValidationResult,
-    Vertices,
+    Cycles, Edges, Geometry, Iter, ValidationError, ValidationResult, Vertices,
 };
 
 /// The vertices of a shape
@@ -30,7 +29,6 @@ pub struct Topology<'r> {
     pub(super) vertices: &'r mut Vertices,
     pub(super) edges: &'r mut Edges,
     pub(super) cycles: &'r mut Cycles,
-    pub(super) faces: &'r mut Faces,
 }
 
 impl Topology<'_> {
@@ -218,7 +216,7 @@ impl Topology<'_> {
         let storage = Storage::new(face);
         let handle = storage.handle();
 
-        self.faces.push(storage);
+        self.geometry.faces.push(storage);
 
         Ok(handle)
     }
@@ -248,7 +246,7 @@ impl Topology<'_> {
     ///
     /// The caller must not make any assumptions about the order of faces.
     pub fn faces(&self) -> Iter<Face> {
-        Iter::new(self.faces)
+        Iter::new(self.geometry.faces)
     }
 
     pub fn triangles(
@@ -257,7 +255,7 @@ impl Topology<'_> {
         out: &mut Vec<Triangle<3>>,
         debug_info: &mut DebugInfo,
     ) {
-        for face in &*self.faces {
+        for face in &*self.geometry.faces {
             face.get().triangles(tolerance, out, debug_info);
         }
     }
