@@ -59,16 +59,7 @@ pub fn sweep_shape(
 
     // Create the new cycles.
     for cycle_source in source.topology().cycles() {
-        let edges_top = cycle_source
-            .get()
-            .edges
-            .iter()
-            .map(|edge_source| {
-                // Can't panic, as long as the source shape is valid. We've
-                // added all its edges to the relation.
-                source_to_top.edges.get(edge_source).unwrap().clone()
-            })
-            .collect();
+        let edges_top = source_to_top.edges_for_cycle(&cycle_source);
 
         let cycle_top = target
             .topology()
@@ -176,6 +167,15 @@ impl Relation {
         edge.get().vertices.clone().map(|vertices| {
             vertices.map(|vertex| self.vertices.get(&vertex).unwrap().clone())
         })
+    }
+
+    fn edges_for_cycle(&self, cycle: &Handle<Cycle>) -> Vec<Handle<Edge>> {
+        cycle
+            .get()
+            .edges
+            .iter()
+            .map(|edge| self.edges.get(edge).unwrap().clone())
+            .collect()
     }
 }
 
