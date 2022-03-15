@@ -28,12 +28,12 @@ pub fn sweep_shape(
     let mut source_to_top = Relation::new();
 
     // Create the new vertices.
-    for vertex_orig in source.topology().vertices() {
+    for vertex_source in source.topology().vertices() {
         let point = target
             .geometry()
-            .add_point(vertex_orig.get().point() + path);
+            .add_point(vertex_source.get().point() + path);
         let vertex = target.topology().add_vertex(Vertex { point }).unwrap();
-        source_to_top.vertices.insert(vertex_orig, vertex);
+        source_to_top.vertices.insert(vertex_source, vertex);
     }
 
     // Create the new edges.
