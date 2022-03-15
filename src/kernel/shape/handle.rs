@@ -46,14 +46,6 @@ impl<T> Handle<T> {
     }
 }
 
-impl<T> Deref for Handle<T> {
-    type Target = T;
-
-    fn deref(&self) -> &Self::Target {
-        self.0.deref()
-    }
-}
-
 impl<T> fmt::Debug for Handle<T>
 where
     T: fmt::Debug,

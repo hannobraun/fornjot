@@ -146,7 +146,7 @@ impl Topology<'_> {
         vertices: [Handle<Vertex>; 2],
     ) -> ValidationResult<Edge> {
         let curve = self.geometry.add_curve(Curve::Line(Line::from_points(
-            vertices.clone().map(|vertex| vertex.point()),
+            vertices.clone().map(|vertex| vertex.get().point()),
         )));
         self.add_edge(Edge {
             curve,

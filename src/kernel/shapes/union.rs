@@ -67,7 +67,7 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
         let vertex = target
             .topology()
             .add_vertex(Vertex {
-                point: points[&vertex_orig.point].clone(),
+                point: points[&vertex_orig.get().point].clone(),
             })
             .unwrap();
         vertices.insert(vertex_orig, vertex);
@@ -76,8 +76,8 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
         let edge = target
             .topology()
             .add_edge(Edge {
-                curve: curves[&edge_orig.curve].clone(),
-                vertices: edge_orig.vertices.as_ref().map(|vs| {
+                curve: curves[&edge_orig.get().curve].clone(),
+                vertices: edge_orig.get().vertices.as_ref().map(|vs| {
                     vs.clone().map(|vertex| vertices[&vertex].clone())
                 }),
             })
@@ -89,6 +89,7 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
             .topology()
             .add_cycle(Cycle {
                 edges: cycle_orig
+                    .get()
                     .edges
                     .iter()
                     .map(|edge| edges[edge].clone())

@@ -35,7 +35,9 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
                 for cycle in cycles {
                     let mut edges = Vec::new();
 
-                    for edge in &cycle.edges {
+                    for edge in &cycle.get().edges {
+                        let edge = edge.get();
+
                         let curve = transformed
                             .geometry()
                             .add_curve(edge.curve().transform(transform));
@@ -74,7 +76,7 @@ pub fn transform_shape(mut original: Shape, transform: &Transform) -> Shape {
 
                 let surface = transformed
                     .geometry()
-                    .add_surface(surface.transform(transform));
+                    .add_surface(surface.get().transform(transform));
 
                 Face::Face {
                     cycles: cycles_trans,
