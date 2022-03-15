@@ -43,10 +43,10 @@ pub fn sweep_shape(
             .add_curve(edge_source.get().curve().transform(&translation));
 
         let vertices = edge_source.get().vertices.clone().map(|vs| {
-            vs.map(|vertex_orig| {
+            vs.map(|vertex_source| {
                 // Can't panic, as long as the original shape is valid. We've
                 // added all its vertices to `vertices`.
-                source_to_top.vertices.get(&vertex_orig).unwrap().clone()
+                source_to_top.vertices.get(&vertex_source).unwrap().clone()
             })
         });
 
