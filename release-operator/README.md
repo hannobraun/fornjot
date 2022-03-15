@@ -2,6 +2,15 @@
 
 Detect when a release pull-request is merged.
 
+## Dependencies
+
+- [`gh`](https://github.com/cli/cli) and a `GITHUB_TOKEN`[^1]
+- [`git`](https://git-scm.org)
+- GitHub Actions [^2]
+
+[^1]: In GitHub Actions, `gh` is present and the default `GITHUB_TOKEN` fulfills all requirements to access Fornjot's repository
+[^2]: The release operator is tailored to run within the context of GitHub Actions. While it can be executed locally, it wouldn't have any effects.
+
 ## Logging
 
 The log level is set on the environment using `RUST_LOG` _(see [docs.rs/env_logger])
