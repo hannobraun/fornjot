@@ -13,6 +13,7 @@ The log level is set on the environment using `RUST_LOG` _(see [docs.rs/env_logg
 
 [docs.rs/env_logger]: https://docs.rs/env_logger/latest/env_logger/#enabling-logging
 
-## Related Issues
+## Related Issues & Resources
 
 - https://github.com/hannobraun/Fornjot/issues/104
+- [Case Study](https://github.com/hendrikmaus/rust-pr-based-release-workflow)
