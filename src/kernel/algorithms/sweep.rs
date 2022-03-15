@@ -29,10 +29,13 @@ pub fn sweep_shape(
 
     // Create the new vertices.
     for vertex_source in source.topology().vertices() {
-        let point = target
+        let point_top = target
             .geometry()
             .add_point(vertex_source.get().point() + path);
-        let vertex = target.topology().add_vertex(Vertex { point }).unwrap();
+        let vertex = target
+            .topology()
+            .add_vertex(Vertex { point: point_top })
+            .unwrap();
         source_to_top.vertices.insert(vertex_source, vertex);
     }
 
