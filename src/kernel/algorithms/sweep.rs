@@ -76,11 +76,11 @@ pub fn sweep_shape(
             })
             .collect();
 
-        let cycle = target
+        let cycle_top = target
             .topology()
             .add_cycle(Cycle { edges: edges_top })
             .unwrap();
-        source_to_top.cycles.insert(cycle_source, cycle);
+        source_to_top.cycles.insert(cycle_source, cycle_top);
     }
 
     // Create top faces.
