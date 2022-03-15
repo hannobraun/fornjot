@@ -98,7 +98,7 @@ pub fn sweep_shape(
             .geometry()
             .add_surface(face_source.surface().transform(&translation));
 
-        let cycles = cycles_source
+        let cycles_top = cycles_source
             .iter()
             .map(|cycle_source| {
                 // Can't panic, as long as the source shape is valid. We've
@@ -111,7 +111,7 @@ pub fn sweep_shape(
             .topology()
             .add_face(Face::Face {
                 surface: surface_top,
-                cycles,
+                cycles: cycles_top,
                 color,
             })
             .unwrap();
