@@ -37,12 +37,12 @@ pub fn sweep_shape(
     }
 
     // Create the new edges.
-    for edge_orig in source.topology().edges() {
+    for edge_source in source.topology().edges() {
         let curve = target
             .geometry()
-            .add_curve(edge_orig.get().curve().transform(&translation));
+            .add_curve(edge_source.get().curve().transform(&translation));
 
-        let vertices = edge_orig.get().vertices.clone().map(|vs| {
+        let vertices = edge_source.get().vertices.clone().map(|vs| {
             vs.map(|vertex_orig| {
                 // Can't panic, as long as the original shape is valid. We've
                 // added all its vertices to `vertices`.
@@ -54,7 +54,7 @@ pub fn sweep_shape(
             .topology()
             .add_edge(Edge { curve, vertices })
             .unwrap();
-        source_to_top.edges.insert(edge_orig, edge);
+        source_to_top.edges.insert(edge_source, edge);
     }
 
     // Create the new cycles.
