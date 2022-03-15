@@ -91,10 +91,10 @@ pub fn sweep_shape(
 
         let cycles = cycles_source
             .iter()
-            .map(|cycle_orig| {
+            .map(|cycle_source| {
                 // Can't panic, as long as the original shape is valid. We've
                 // added all its cycles to `cycles`.
-                source_to_top.cycles.get(cycle_orig).unwrap().clone()
+                source_to_top.cycles.get(cycle_source).unwrap().clone()
             })
             .collect();
 
