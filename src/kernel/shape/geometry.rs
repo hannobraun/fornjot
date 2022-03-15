@@ -76,7 +76,6 @@ impl Geometry<'_> {
     ///
     /// Since the topological types refer to geometry, and don't contain any
     /// geometry themselves, this transforms the whole shape.
-    #[allow(unused)]
     pub fn transform(&mut self, transform: &Transform) {
         for point in self.points.iter_mut() {
             let trans = {
