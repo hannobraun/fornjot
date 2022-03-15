@@ -53,7 +53,9 @@ impl ToShape for fj::Difference2d {
 
         for cycle in cycles_orig {
             let mut edges = Vec::new();
-            for edge in &cycle.edges {
+            for edge in &cycle.get().edges {
+                let edge = edge.get();
+
                 let curve = shape.geometry().add_curve(edge.curve());
 
                 let vertices = edge.vertices().clone().map(|vs| {
@@ -85,7 +87,7 @@ impl ToShape for fj::Difference2d {
 
         // Can't panic, as we just verified that both shapes have one face.
         let [face_a, face_b] = [&mut a, &mut b]
-            .map(|shape| shape.topology().faces().next().unwrap());
+            .map(|shape| shape.topology().faces().values().next().unwrap());
 
         assert!(
             face_a.surface() == face_b.surface(),

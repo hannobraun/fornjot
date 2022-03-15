@@ -33,9 +33,6 @@ pub struct Handle<T>(Storage<T>);
 
 impl<T> Handle<T> {
     /// Access the object that the handle references
-    ///
-    /// `Handle` also implements `Deref`, but as that can be inconvenient to use
-    /// in some cases, this method is an inherent proxy for that.
     pub fn get(&self) -> &T {
         self.0.deref()
     }
@@ -43,14 +40,6 @@ impl<T> Handle<T> {
     /// Internal method to access the [`Storage`] this handle refers to
     pub(super) fn storage(&self) -> &Storage<T> {
         &self.0
-    }
-}
-
-impl<T> Deref for Handle<T> {
-    type Target = T;
-
-    fn deref(&self) -> &Self::Target {
-        self.0.deref()
     }
 }
 
@@ -65,7 +54,7 @@ where
 
 /// Internal type used in collections within [`Shape`]
 #[derive(Debug, Eq, Ord, PartialOrd)]
-pub(super) struct Storage<T>(Arc<T>);
+pub struct Storage<T>(Arc<T>);
 
 impl<T> Storage<T> {
     /// Create a [`Storage`] instance that wraps the provided object

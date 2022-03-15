@@ -17,7 +17,7 @@ use crate::{
 
 use super::{
     handle::{Handle, Storage},
-    Cycles, Edges, Faces, Geometry, ValidationError, ValidationResult,
+    Cycles, Edges, Faces, Geometry, Iter, ValidationError, ValidationResult,
     Vertices,
 };
 
@@ -146,7 +146,7 @@ impl Topology<'_> {
         vertices: [Handle<Vertex>; 2],
     ) -> ValidationResult<Edge> {
         let curve = self.geometry.add_curve(Curve::Line(Line::from_points(
-            vertices.clone().map(|vertex| vertex.point()),
+            vertices.clone().map(|vertex| vertex.get().point()),
         )));
         self.add_edge(Edge {
             curve,
@@ -225,25 +225,29 @@ impl Topology<'_> {
     /// Access iterator over all vertices
     ///
     /// The caller must not make any assumptions about the order of vertices.
-    pub fn vertices(&self) -> impl Iterator<Item = Handle<Vertex>> + '_ {
-        self.vertices.iter().map(|storage| storage.handle())
+    pub fn vertices(&self) -> Iter<Vertex> {
+        Iter::new(self.vertices)
     }
 
     /// Access iterator over all edges
     ///
     /// The caller must not make any assumptions about the order of edges.
-    pub fn edges(&self) -> impl Iterator<Item = Handle<Edge>> + '_ {
-        self.edges.iter().map(|storage| storage.handle())
+    pub fn edges(&self) -> Iter<Edge> {
+        Iter::new(self.edges)
     }
 
     /// Access an iterator over all cycles
-    pub fn cycles(&self) -> impl Iterator<Item = Handle<Cycle>> + '_ {
-        self.cycles.iter().map(|storage| storage.handle())
+    ///
+    /// The caller must not make any assumptions about the order of cycles.
+    pub fn cycles(&self) -> Iter<Cycle> {
+        Iter::new(self.cycles)
     }
 
     /// Access an iterator over all faces
-    pub fn faces(&self) -> impl Iterator<Item = Handle<Face>> + '_ {
-        self.faces.iter().map(|storage| storage.handle())
+    ///
+    /// The caller must not make any assumptions about the order of faces.
+    pub fn faces(&self) -> Iter<Face> {
+        Iter::new(self.faces)
     }
 
     pub fn triangles(

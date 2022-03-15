@@ -30,7 +30,8 @@ pub fn sweep_shape(
     // Create the new vertices.
     let mut vertices = HashMap::new();
     for vertex_orig in shape_orig.topology().vertices() {
-        let point = shape.geometry().add_point(vertex_orig.point() + path);
+        let point =
+            shape.geometry().add_point(vertex_orig.get().point() + path);
         let vertex = shape.topology().add_vertex(Vertex { point }).unwrap();
         vertices.insert(vertex_orig, vertex);
     }
@@ -40,9 +41,9 @@ pub fn sweep_shape(
     for edge_orig in shape_orig.topology().edges() {
         let curve = shape
             .geometry()
-            .add_curve(edge_orig.curve().transform(&translation));
+            .add_curve(edge_orig.get().curve().transform(&translation));
 
-        let vertices = edge_orig.vertices.clone().map(|vs| {
+        let vertices = edge_orig.get().vertices.clone().map(|vs| {
             vs.map(|vertex_orig| {
                 // Can't panic, as long as the original shape is valid. We've
                 // added all its vertices to `vertices`.
@@ -58,6 +59,7 @@ pub fn sweep_shape(
     let mut cycles = HashMap::new();
     for cycle_orig in shape_orig.topology().cycles() {
         let edges = cycle_orig
+            .get()
             .edges
             .iter()
             .map(|edge_orig| {
@@ -72,8 +74,8 @@ pub fn sweep_shape(
     }
 
     // Create top faces.
-    for face_orig in shape_orig.topology().faces() {
-        let cycles_orig = match &*face_orig {
+    for face_orig in shape_orig.topology().faces().values() {
+        let cycles_orig = match &face_orig {
             Face::Face { cycles, .. } => cycles,
             _ => {
                 // Sketches are created using boundary representation, so this
@@ -108,7 +110,7 @@ pub fn sweep_shape(
     // We could use `vertices` to create the side edges and faces here, but the
     // side walls are created below, in triangle representation.
 
-    for cycle in shape_orig.topology().cycles() {
+    for cycle in shape_orig.topology().cycles().values() {
         let approx = Approximation::for_cycle(&cycle, tolerance);
 
         // This will only work correctly, if the cycle consists of one edge. If
@@ -240,7 +242,7 @@ mod tests {
 
             let surface = shape.geometry().add_surface(Surface::Swept(
                 Swept::plane_from_points(
-                    [a, b, c].map(|vertex| vertex.point()),
+                    [a, b, c].map(|vertex| vertex.get().point()),
                 ),
             ));
             let abc = Face::Face {

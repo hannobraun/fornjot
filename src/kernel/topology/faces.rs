@@ -100,6 +100,7 @@ impl Face {
     ) {
         match self {
             Self::Face { surface, color, .. } => {
+                let surface = surface.get();
                 let approx = Approximation::for_face(self, tolerance);
 
                 let points: Vec<_> = approx

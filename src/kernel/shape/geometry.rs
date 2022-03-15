@@ -5,7 +5,7 @@ use crate::{
 
 use super::{
     handle::{Handle, Storage},
-    Curves, Points, Surfaces,
+    Curves, Iter, Points, Surfaces,
 };
 
 /// API to access a shape's geometry
@@ -61,17 +61,23 @@ impl Geometry<'_> {
     }
 
     /// Access an iterator over all points
-    pub fn points(&self) -> impl Iterator<Item = Handle<Point<3>>> + '_ {
-        self.points.iter().map(|storage| storage.handle())
+    ///
+    /// The caller must not make any assumptions about the order of points.
+    pub fn points(&self) -> Iter<Point<3>> {
+        Iter::new(self.points)
     }
 
     /// Access an iterator over all curves
-    pub fn curves(&self) -> impl Iterator<Item = Handle<Curve>> + '_ {
-        self.curves.iter().map(|storage| storage.handle())
+    ///
+    /// The caller must not make any assumptions about the order of curves.
+    pub fn curves(&self) -> Iter<Curve> {
+        Iter::new(self.curves)
     }
 
     /// Access an iterator over all surfaces
-    pub fn surfaces(&self) -> impl Iterator<Item = Handle<Surface>> + '_ {
-        self.surfaces.iter().map(|storage| storage.handle())
+    ///
+    /// The caller must not make any assumptions about the order of surfaces.
+    pub fn surfaces(&self) -> Iter<Surface> {
+        Iter::new(self.surfaces)
     }
 }
