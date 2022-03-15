@@ -32,11 +32,11 @@ pub fn sweep_shape(
         let point_top = target
             .geometry()
             .add_point(vertex_source.get().point() + path);
-        let vertex = target
+        let vertex_top = target
             .topology()
             .add_vertex(Vertex { point: point_top })
             .unwrap();
-        source_to_top.vertices.insert(vertex_source, vertex);
+        source_to_top.vertices.insert(vertex_source, vertex_top);
     }
 
     // Create the new edges.
