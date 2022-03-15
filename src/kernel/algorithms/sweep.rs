@@ -44,8 +44,8 @@ pub fn sweep_shape(
 
         let vertices = edge_source.get().vertices.clone().map(|vs| {
             vs.map(|vertex_source| {
-                // Can't panic, as long as the original shape is valid. We've
-                // added all its vertices to `vertices`.
+                // Can't panic, as long as the source shape is valid. We've
+                // added all its vertices to the relation.
                 source_to_top.vertices.get(&vertex_source).unwrap().clone()
             })
         });
@@ -64,8 +64,8 @@ pub fn sweep_shape(
             .edges
             .iter()
             .map(|edge_source| {
-                // Can't panic, as long as the original shape is valid. We've
-                // added all its edges to `edges`.
+                // Can't panic, as long as the source shape is valid. We've
+                // added all its edges to the relation.
                 source_to_top.edges.get(edge_source).unwrap().clone()
             })
             .collect();
@@ -92,8 +92,8 @@ pub fn sweep_shape(
         let cycles = cycles_source
             .iter()
             .map(|cycle_source| {
-                // Can't panic, as long as the original shape is valid. We've
-                // added all its cycles to `cycles`.
+                // Can't panic, as long as the source shape is valid. We've
+                // added all its cycles to the relation.
                 source_to_top.cycles.get(cycle_source).unwrap().clone()
             })
             .collect();
