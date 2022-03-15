@@ -1,7 +1,5 @@
 use std::collections::HashSet;
 
-use tracing::warn;
-
 use crate::{
     debug::DebugInfo,
     kernel::{
@@ -63,10 +61,7 @@ impl Topology<'_> {
                 (existing.get().point() - vertex.point()).magnitude();
 
             if distance < self.min_distance {
-                warn!(
-                    "Invalid vertex: {vertex:?}; \
-                    identical vertex at {existing:?}",
-                );
+                return Err(ValidationError::Uniqueness);
             }
         }
 
@@ -295,9 +290,9 @@ mod tests {
 
         // `point` is too close to the original point. `assert!` is commented,
         // because that only causes a warning to be logged right now.
-        let point = shape.geometry().add_point(Point::from([5e-6, 0., 0.]));
-        let _result = shape.topology().add_vertex(Vertex { point });
-        // assert!(matches!(result, Err(ValidationError::Uniqueness)));
+        let point = shape.geometry().add_point(Point::from([5e-8, 0., 0.]));
+        let result = shape.topology().add_vertex(Vertex { point });
+        assert!(matches!(result, Err(ValidationError::Uniqueness)));
 
         // `point` is farther than `MIN_DISTANCE` away from original point.
         // Should work.
