@@ -5,6 +5,8 @@ use std::{
     sync::Arc,
 };
 
+use parking_lot::{RwLock, RwLockReadGuard};
+
 /// A handle to an object stored within [`Shape`]
 ///
 /// If an object of type `T` (this could be `Curve`, `Vertex`, etc.) is added to
@@ -36,7 +38,7 @@ pub struct Handle<T> {
 impl<T> Handle<T> {
     /// Access the object that the handle references
     pub fn get(&self) -> Ref<T> {
-        Ref(self.storage.get())
+        self.storage.get()
     }
 
     /// Internal method to access the [`Storage`] this handle refers to
@@ -55,24 +57,24 @@ where
 }
 
 /// Returned by [`Handle::get`]
-pub struct Ref<'r, T>(&'r T);
+pub struct Ref<'r, T>(RwLockReadGuard<'r, T>);
 
 impl<T> Deref for Ref<'_, T> {
     type Target = T;
 
     fn deref(&self) -> &Self::Target {
-        self.0
+        self.0.deref()
     }
 }
 
 /// Internal type used in collections within [`Shape`]
-#[derive(Debug, Eq, Ord, PartialOrd)]
-pub struct Storage<T>(Arc<T>);
+#[derive(Debug)]
+pub struct Storage<T>(Arc<RwLock<T>>);
 
 impl<T> Storage<T> {
     /// Create a [`Storage`] instance that wraps the provided object
     pub(super) fn new(value: T) -> Self {
-        Self(Arc::new(value))
+        Self(Arc::new(RwLock::new(value)))
     }
 
     /// Create a handle that refers to this [`Storage`] instance
@@ -82,8 +84,8 @@ impl<T> Storage<T> {
         }
     }
 
-    pub(super) fn get(&self) -> &T {
-        self.0.deref()
+    pub(super) fn get(&self) -> Ref<T> {
+        Ref(self.0.read())
     }
 
     fn ptr(&self) -> *const () {
@@ -103,6 +105,20 @@ impl<T> Clone for Storage<T> {
 impl<T> PartialEq for Storage<T> {
     fn eq(&self, other: &Self) -> bool {
         Arc::ptr_eq(&self.0, &other.0)
+    }
+}
+
+impl<T> Eq for Storage<T> {}
+
+impl<T> Ord for Storage<T> {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.ptr().cmp(&other.ptr())
+    }
+}
+
+impl<T> PartialOrd for Storage<T> {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
     }
 }
 
