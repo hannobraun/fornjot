@@ -59,6 +59,55 @@ cargo run -- --sha <commit-sha> --label <release-label>
 
 Where `<commit-sha>` can be set using `GITHUB_SHA` (present by default in GitHub Actions), and `<release-label>` can be set using `RELEASE_LABEL` (defaults to `autorelease`).
 
+## GitHub Actions
+
+To embed the operator in a workflow, include these steps _before_ anything related to the project's source code:
+
+```yaml
+# Checkout the source code, this is done first in any case.
+- uses: actions/checkout@v3
+
+# Set up the rust toolchain.
+# The operator uses the same toolchain as the project,
+# hence this doesn't need to be done again later.
+- uses: actions-rs/toolchain@v1
+  with:
+    toolchain: stable
+    override: true
+    profile: minimal
+
+# Restore the cache of the release operator.
+# The cache is kept separate from the project's cache using a dedicated cache key.
+# Also mind the working directory.
+- uses: Swatinem/rust-cache@v1
+  with:
+    key: release-rs-01
+    working-directory: ./release-rs
+
+# Run the release operator on `GITHUB_SHA` (set by Actions).
+# Pass along `GITHUB_TOKEN` for the usage of `gh`, as well as the release label to look for.
+# Please mind the working directory.
+- id: release
+  working-directory: release-rs
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    RELEASE_LABEL: autorelease
+  run: |
+    # release operator
+    cargo run
+
+# Subsequent steps can use:
+#   if: ${{ steps.release.outputs.release-detected == 'true' }}
+# to determine if they shall execute.
+```
+
+## Outputs
+
+The release operator defines "outputs" which can be read by subsequent steps within a GitHub Actions workflow:
+
+- `release-detected` (string `"true"|"false"`) this output is always set to indicate if a release was detected or not
+- `tag-name` (string) set to the tag name, if a release was detected
+
 ## Logging
 
 The log level is set on the environment using `RUST_LOG` _(see [docs.rs/env_logger])
