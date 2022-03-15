@@ -65,7 +65,7 @@ where
 
 /// Internal type used in collections within [`Shape`]
 #[derive(Debug, Eq, Ord, PartialOrd)]
-pub(super) struct Storage<T>(Arc<T>);
+pub struct Storage<T>(Arc<T>);
 
 impl<T> Storage<T> {
     /// Create a [`Storage`] instance that wraps the provided object
