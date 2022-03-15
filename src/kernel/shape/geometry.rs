@@ -1,6 +1,9 @@
 use crate::{
-    kernel::geometry::{Curve, Surface},
-    math::Point,
+    kernel::{
+        geometry::{Curve, Surface},
+        topology::faces::Face,
+    },
+    math::{Point, Transform},
 };
 
 use super::{
@@ -67,6 +70,46 @@ impl Geometry<'_> {
         self.surfaces.push(storage);
 
         handle
+    }
+
+    /// Transform the geometry of the shape
+    ///
+    /// Since the topological types refer to geometry, and don't contain any
+    /// geometry themselves, this transforms the whole shape.
+    #[allow(unused)]
+    pub fn transform(&mut self, transform: &Transform) {
+        for point in self.points.iter_mut() {
+            let trans = {
+                let point = point.get();
+                transform.transform_point(&point)
+            };
+            *point.get_mut() = trans;
+        }
+        for curve in self.curves.iter_mut() {
+            let trans = {
+                let curve = curve.get();
+                curve.transform(transform)
+            };
+            *curve.get_mut() = trans;
+        }
+        for surface in self.surfaces.iter_mut() {
+            let trans = {
+                let surface = surface.get();
+                surface.transform(transform)
+            };
+            *surface.get_mut() = trans;
+        }
+
+        // While some faces use triangle representation, we need this weird
+        // workaround here.
+        for face in self.faces.iter_mut() {
+            use std::ops::DerefMut as _;
+            if let Face::Triangles(triangles) = face.get_mut().deref_mut() {
+                for triangle in triangles {
+                    *triangle = transform.transform_triangle(triangle);
+                }
+            }
+        }
     }
 
     /// Access an iterator over all points

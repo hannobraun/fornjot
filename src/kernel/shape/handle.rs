@@ -5,7 +5,7 @@ use std::{
     sync::Arc,
 };
 
-use parking_lot::{RwLock, RwLockReadGuard};
+use parking_lot::{RwLock, RwLockReadGuard, RwLockWriteGuard};
 
 /// A handle to an object stored within [`Shape`]
 ///
@@ -86,6 +86,10 @@ impl<T> Storage<T> {
 
     pub(super) fn get(&self) -> Ref<T> {
         Ref(self.0.read())
+    }
+
+    pub(super) fn get_mut(&self) -> RwLockWriteGuard<T> {
+        self.0.write()
     }
 
     fn ptr(&self) -> *const () {
