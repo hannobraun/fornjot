@@ -94,7 +94,7 @@ pub fn sweep_shape(
             }
         };
 
-        let surface = target
+        let surface_top = target
             .geometry()
             .add_surface(face_source.surface().transform(&translation));
 
@@ -110,7 +110,7 @@ pub fn sweep_shape(
         target
             .topology()
             .add_face(Face::Face {
-                surface,
+                surface: surface_top,
                 cycles,
                 color,
             })
