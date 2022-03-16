@@ -53,7 +53,7 @@ fn main() -> anyhow::Result<()> {
 
     let args = Args::parse();
     let config = Config::load()?;
-    let model = Model::new(
+    let model = Model::from_path(
         config.default_path,
         args.model.unwrap_or(config.default_model),
     );
