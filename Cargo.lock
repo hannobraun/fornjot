@@ -442,6 +442,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b365fabc795046672053e29c954733ec3b05e4be654ab130fe8f1f94d7051f35"
 
 [[package]]
+name = "cuboid"
+version = "0.1.0"
+dependencies = [
+ "fj",
+]
+
+[[package]]
 name = "d3d12"
 version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -826,6 +833,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "363e3677e55ad168fef68cf9de3a4a310b53124c5e784c53a1d70e92d23f2126"
 dependencies = [
  "bitflags",
+]
+
+[[package]]
+name = "group"
+version = "0.1.0"
+dependencies = [
+ "fj",
 ]
 
 [[package]]
@@ -1871,6 +1885,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "spacer"
+version = "0.1.0"
+dependencies = [
+ "fj",
+]
+
+[[package]]
 name = "spade"
 version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1890,6 +1911,13 @@ checksum = "246bfa38fe3db3f1dfc8ca5a2cdeb7348c78be2112740cc0ec8ef18b6d94f830"
 dependencies = [
  "bitflags",
  "num-traits",
+]
+
+[[package]]
+name = "star"
+version = "0.1.0"
+dependencies = [
+ "fj",
 ]
 
 [[package]]

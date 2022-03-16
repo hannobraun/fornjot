@@ -2,11 +2,6 @@
 resolver = "2"
 members = [
     "fj-app",
-]
-
-# This is temporary, to not change too much stuff at once, when adding the
-# workspace.
-exclude = [
     "models/cuboid",
     "models/group",
     "models/spacer",
