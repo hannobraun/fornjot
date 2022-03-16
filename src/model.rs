@@ -9,7 +9,7 @@ pub struct Model {
 }
 
 impl Model {
-    pub fn from_path(path: PathBuf) -> Result<Self, io::Error> {
+    pub fn from_path(path: PathBuf) -> io::Result<Self> {
         let name = {
             // Can't panic. It only would, if the path ends with "..", and we
             // are canonicalizing it here to prevent that.
