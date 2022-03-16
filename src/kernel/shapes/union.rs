@@ -15,7 +15,7 @@ use crate::{
 
 use super::ToShape;
 
-impl ToShape for fj::Union {
+impl ToShape for fj::Group {
     fn to_shape(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Shape {
         let mut shape = Shape::new();
 

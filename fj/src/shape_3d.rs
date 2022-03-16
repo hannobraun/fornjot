@@ -11,7 +11,7 @@ pub enum Shape3d {
     Transform(Box<Transform>),
 
     /// The union of two 3-dimensional shapes
-    Union(Box<Union>),
+    Union(Box<Group>),
 }
 
 impl From<Shape3d> for Shape {
@@ -114,7 +114,7 @@ impl From<Sweep> for Shape3d {
 /// <https://github.com/hannobraun/Fornjot/issues/42>
 #[derive(Clone, Debug)]
 #[repr(C)]
-pub struct Union {
+pub struct Group {
     /// The first of the shapes
     pub a: Shape3d,
 
@@ -122,14 +122,14 @@ pub struct Union {
     pub b: Shape3d,
 }
 
-impl From<Union> for Shape {
-    fn from(shape: Union) -> Self {
+impl From<Group> for Shape {
+    fn from(shape: Group) -> Self {
         Self::Shape3d(Shape3d::Union(Box::new(shape)))
     }
 }
 
-impl From<Union> for Shape3d {
-    fn from(shape: Union) -> Self {
+impl From<Group> for Shape3d {
+    fn from(shape: Group) -> Self {
         Self::Union(Box::new(shape))
     }
 }
