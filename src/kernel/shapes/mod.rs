@@ -1,9 +1,9 @@
 pub mod circle;
 pub mod difference_2d;
+pub mod group;
 pub mod sketch;
 pub mod sweep;
 pub mod transform;
-pub mod union;
 
 use crate::{
     debug::DebugInfo,
