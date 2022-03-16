@@ -57,7 +57,7 @@ fn main() -> anyhow::Result<()> {
     let mut path = config.default_path;
     path.push(args.model.unwrap_or(config.default_model));
 
-    let model = Model::from_path(path);
+    let model = Model::from_path(path)?;
 
     let mut parameters = HashMap::new();
     for parameter in args.parameters {

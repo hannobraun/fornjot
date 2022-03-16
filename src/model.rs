@@ -1,60 +1,57 @@
-use std::{
-    collections::HashMap,
-    io,
-    path::{Path, PathBuf},
-    process::Command,
-};
+use std::{collections::HashMap, io, path::PathBuf, process::Command};
 
 use thiserror::Error;
 
 pub struct Model {
-    path: PathBuf,
+    src_path: PathBuf,
+    lib_path: PathBuf,
+    manifest_path: PathBuf,
 }
 
 impl Model {
-    pub fn from_path(path: PathBuf) -> Self {
-        Self { path }
-    }
+    pub fn from_path(path: PathBuf) -> Result<Self, io::Error> {
+        let name = {
+            // Can't panic. It only would, if the path ends with "..", and we
+            // are canonicalizing it here to prevent that.
+            let canonical = path.canonicalize()?;
+            let file_name = canonical.file_name().unwrap();
 
-    pub fn name(&self) -> Result<String, io::Error> {
-        let canonical = self.path.canonicalize()?;
+            file_name.to_string_lossy().replace('-', "_")
+        };
 
-        // Can't panic. It only would, if the path ends with "..", and we just
-        // canonicalized it.
-        let file_name = canonical.file_name().unwrap();
+        let src_path = path.join("src");
 
-        Ok(file_name.to_string_lossy().into_owned())
-    }
+        let lib_path = {
+            let file = if cfg!(windows) {
+                format!("{}.dll", name)
+            } else if cfg!(target_os = "macos") {
+                format!("lib{}.dylib", name)
+            } else {
+                //Unix
+                format!("lib{}.so", name)
+            };
 
-    pub fn path(&self) -> &Path {
-        &self.path
+            path.join("target/debug").join(file)
+        };
+
+        let manifest_path = path.join("Cargo.toml");
+
+        Ok(Self {
+            src_path,
+            lib_path,
+            manifest_path,
+        })
     }
 
     pub fn src_path(&self) -> PathBuf {
-        self.path().join("src")
-    }
-
-    pub fn lib_path(&self) -> Result<PathBuf, io::Error> {
-        let name = self.name()?.replace('-', "_");
-
-        let file = if cfg!(windows) {
-            format!("{}.dll", name)
-        } else if cfg!(target_os = "macos") {
-            format!("lib{}.dylib", name)
-        } else {
-            //Unix
-            format!("lib{}.so", name)
-        };
-
-        Ok(self.path().join("target/debug").join(file))
+        self.src_path.clone()
     }
 
     pub fn load(
         &self,
         arguments: &HashMap<String, String>,
     ) -> Result<fj::Shape, Error> {
-        let manifest_path =
-            self.path().join("Cargo.toml").display().to_string();
+        let manifest_path = self.manifest_path.display().to_string();
 
         let status = Command::new("cargo")
             .arg("build")
@@ -82,7 +79,7 @@ impl Model {
         // to switch to a better technique:
         // https://github.com/hannobraun/Fornjot/issues/71
         let shape = unsafe {
-            let lib = libloading::Library::new(self.lib_path()?)?;
+            let lib = libloading::Library::new(&self.lib_path)?;
             let model: libloading::Symbol<ModelFn> = lib.get(b"model")?;
             model(arguments)
         };
