@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-/// Fornjot - Experimental CAD System - Host Application
+/// Fornjot - Experimental CAD System
 #[derive(clap::Parser)]
 pub struct Args {
     /// The model to open
