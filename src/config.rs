@@ -9,8 +9,8 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 pub struct Config {
-    pub default_path: PathBuf,
-    pub default_model: PathBuf,
+    pub default_path: Option<PathBuf>,
+    pub default_model: Option<PathBuf>,
 }
 
 impl Config {

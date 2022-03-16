@@ -12,6 +12,7 @@ mod window;
 
 use std::collections::HashSet;
 use std::ffi::OsStr;
+use std::path::PathBuf;
 use std::{collections::HashMap, sync::mpsc, time::Instant};
 
 use futures::executor::block_on;
@@ -54,8 +55,18 @@ fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     let config = Config::load()?;
 
-    let mut path = config.default_path;
-    path.push(args.model.unwrap_or(config.default_model));
+    let mut path = config.default_path.unwrap_or_else(|| PathBuf::from(""));
+    match args.model.or(config.default_model) {
+        Some(model) => {
+            path.push(model);
+        }
+        None => {
+            anyhow::bail!(
+                "No model specified, and no default model configured.\n\
+                Specify a model by passing `--model path/to/model`."
+            );
+        }
+    }
 
     let model = Model::from_path(path)?;
 
