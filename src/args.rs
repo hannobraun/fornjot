@@ -5,7 +5,7 @@ use std::path::PathBuf;
 pub struct Args {
     /// The model to open
     #[clap(short, long, default_value = "cuboid")]
-    pub model: String,
+    pub model: PathBuf,
 
     /// Export model to this path
     #[clap(short, long)]

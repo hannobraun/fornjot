@@ -1,30 +1,44 @@
-use std::{collections::HashMap, io, path::PathBuf, process::Command};
+use std::{
+    collections::HashMap,
+    io,
+    path::{Path, PathBuf},
+    process::Command,
+};
 
 use thiserror::Error;
 
 pub struct Model {
-    name: String,
+    path: PathBuf,
 }
 
 impl Model {
-    pub fn new(name: String) -> Self {
-        Self { name }
+    pub fn new(rel_path: PathBuf) -> Self {
+        let mut path = PathBuf::from("models");
+        path.push(rel_path);
+
+        Self { path }
     }
 
-    pub fn name(&self) -> &str {
-        &self.name
+    pub fn name(&self) -> Result<String, io::Error> {
+        let canonical = self.path.canonicalize()?;
+
+        // Can't panic. It only would, if the path ends with "..", and we just
+        // canonicalized it.
+        let file_name = canonical.file_name().unwrap();
+
+        Ok(file_name.to_string_lossy().into_owned())
     }
 
-    pub fn path(&self) -> String {
-        format!("models/{}", self.name)
+    pub fn path(&self) -> &Path {
+        &self.path
     }
 
     pub fn src_path(&self) -> PathBuf {
-        format!("{}/src", self.path()).into()
+        self.path().join("src")
     }
 
-    pub fn lib_path(&self) -> String {
-        let name = self.name().replace('-', "_");
+    pub fn lib_path(&self) -> Result<PathBuf, io::Error> {
+        let name = self.name()?.replace('-', "_");
 
         let file = if cfg!(windows) {
             format!("{}.dll", name)
@@ -35,16 +49,19 @@ impl Model {
             format!("lib{}.so", name)
         };
 
-        format!("{}/target/debug/{}", self.path(), file)
+        Ok(self.path().join("target/debug").join(file))
     }
 
     pub fn load(
         &self,
         arguments: &HashMap<String, String>,
     ) -> Result<fj::Shape, Error> {
+        let manifest_path =
+            self.path().join("Cargo.toml").display().to_string();
+
         let status = Command::new("cargo")
             .arg("build")
-            .args(["--manifest-path", &format!("{}/Cargo.toml", self.path())])
+            .args(["--manifest-path", &manifest_path])
             .status()?;
 
         if !status.success() {
@@ -68,7 +85,7 @@ impl Model {
         // to switch to a better technique:
         // https://github.com/hannobraun/Fornjot/issues/71
         let shape = unsafe {
-            let lib = libloading::Library::new(self.lib_path())?;
+            let lib = libloading::Library::new(self.lib_path()?)?;
             let model: libloading::Symbol<ModelFn> = lib.get(b"model")?;
             model(arguments)
         };
