@@ -71,7 +71,7 @@ where
 }
 
 pub trait Union {
-    fn union<Other>(&self, other: &Other) -> crate::Group
+    fn group<Other>(&self, other: &Other) -> crate::Group
     where
         Other: Clone + Into<crate::Shape3d>;
 }
@@ -80,7 +80,7 @@ impl<T> Union for T
 where
     T: Clone + Into<crate::Shape3d>,
 {
-    fn union<Other>(&self, other: &Other) -> crate::Group
+    fn group<Other>(&self, other: &Other) -> crate::Group
     where
         Other: Clone + Into<crate::Shape3d>,
     {
