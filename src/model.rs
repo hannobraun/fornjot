@@ -25,7 +25,7 @@ impl Model {
         src_path
     }
 
-    pub fn lib_path(&self) -> String {
+    pub fn lib_path(&self) -> PathBuf {
         let name = self.name().replace('-', "_");
 
         let file = if cfg!(windows) {
@@ -37,7 +37,11 @@ impl Model {
             format!("lib{}.so", name)
         };
 
-        format!("{}/target/debug/{}", self.path(), file)
+        let mut lib_path = PathBuf::from(self.path());
+        lib_path.push("target/debug");
+        lib_path.push(file);
+
+        lib_path
     }
 
     pub fn load(
