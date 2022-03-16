@@ -4,7 +4,7 @@ use crate::{Shape, Shape2d};
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub enum Shape3d {
-    /// The union of two 3-dimensional shapes
+    /// A group of two 3-dimensional shapes
     Group(Box<Group>),
 
     /// A sweep of 2-dimensional shape along the z-axis
