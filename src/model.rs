@@ -15,14 +15,14 @@ impl Model {
         &self.name
     }
 
-    pub fn path(&self) -> String {
-        format!("models/{}", self.name)
+    pub fn path(&self) -> PathBuf {
+        let mut path = PathBuf::from("models");
+        path.push(self.name());
+        path
     }
 
     pub fn src_path(&self) -> PathBuf {
-        let mut src_path = PathBuf::from(self.path());
-        src_path.push("src");
-        src_path
+        self.path().join("src")
     }
 
     pub fn lib_path(&self) -> PathBuf {
@@ -37,18 +37,15 @@ impl Model {
             format!("lib{}.so", name)
         };
 
-        let mut lib_path = PathBuf::from(self.path());
-        lib_path.push("target/debug");
-        lib_path.push(file);
-
-        lib_path
+        self.path().join("target/debug").join(file)
     }
 
     pub fn load(
         &self,
         arguments: &HashMap<String, String>,
     ) -> Result<fj::Shape, Error> {
-        let manifest_path = format!("{}/Cargo.toml", self.path());
+        let manifest_path =
+            self.path().join("Cargo.toml").display().to_string();
 
         let status = Command::new("cargo")
             .arg("build")
