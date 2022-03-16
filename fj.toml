@@ -1,0 +1,7 @@
+# The default path that models are loaded from. If the `--model` argument is a
+# relative path, it is assumed to be relative to `default_path`.
+default_path = "models"
+
+# The default models that is loaded, if none is specified. If this is a relative
+# path, it should be relative to `default_path`.
+default_model = "star"
