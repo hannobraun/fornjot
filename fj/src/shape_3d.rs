@@ -4,14 +4,14 @@ use crate::{Shape, Shape2d};
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub enum Shape3d {
+    /// The union of two 3-dimensional shapes
+    Group(Box<Group>),
+
     /// A sweep of 2-dimensional shape along the z-axis
     Sweep(Sweep),
 
     /// A transformed 3-dimensional shape
     Transform(Box<Transform>),
-
-    /// The union of two 3-dimensional shapes
-    Union(Box<Group>),
 }
 
 impl From<Shape3d> for Shape {
@@ -40,13 +40,13 @@ pub struct Group {
 
 impl From<Group> for Shape {
     fn from(shape: Group) -> Self {
-        Self::Shape3d(Shape3d::Union(Box::new(shape)))
+        Self::Shape3d(Shape3d::Group(Box::new(shape)))
     }
 }
 
 impl From<Group> for Shape3d {
     fn from(shape: Group) -> Self {
-        Self::Union(Box::new(shape))
+        Self::Group(Box::new(shape))
     }
 }
 
