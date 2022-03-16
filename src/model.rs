@@ -20,7 +20,9 @@ impl Model {
     }
 
     pub fn src_path(&self) -> PathBuf {
-        format!("{}/src", self.path()).into()
+        let mut src_path = PathBuf::from(self.path());
+        src_path.push("src");
+        src_path
     }
 
     pub fn lib_path(&self) -> String {
