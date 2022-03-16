@@ -1,12 +1,11 @@
 use std::collections::HashSet;
 
-use crate::{
-    kernel::topology::{
-        edges::{Cycle, Edge},
-        faces::Face,
-        vertices::Vertex,
-    },
-    math::{Point, Scalar, Segment},
+use fj_math::{Point, Scalar, Segment};
+
+use crate::kernel::topology::{
+    edges::{Cycle, Edge},
+    faces::Face,
+    vertices::Vertex,
 };
 
 /// An approximation of an edge, multiple edges, or a face
@@ -132,15 +131,13 @@ fn approximate_edge(
 
 #[cfg(test)]
 mod tests {
+    use fj_math::{Point, Scalar, Segment};
     use map_macro::set;
 
-    use crate::{
-        kernel::{
-            geometry::Surface,
-            shape::Shape,
-            topology::{edges::Cycle, faces::Face, vertices::Vertex},
-        },
-        math::{Point, Scalar, Segment},
+    use crate::kernel::{
+        geometry::Surface,
+        shape::Shape,
+        topology::{edges::Cycle, faces::Face, vertices::Vertex},
     };
 
     use super::{approximate_edge, Approximation};

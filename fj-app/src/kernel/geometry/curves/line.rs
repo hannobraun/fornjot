@@ -1,4 +1,4 @@
-use crate::math::{Point, Transform, Vector};
+use fj_math::{Point, Transform, Vector};
 
 /// A line, defined by a point and a vector
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -83,10 +83,9 @@ mod tests {
     use std::f64::consts::FRAC_PI_2;
 
     use approx::assert_abs_diff_eq;
+    use fj_math::{Point, Vector};
     use nalgebra::UnitQuaternion;
     use parry3d_f64::math::{Isometry, Translation};
-
-    use crate::math::{Point, Vector};
 
     use super::Line;
 

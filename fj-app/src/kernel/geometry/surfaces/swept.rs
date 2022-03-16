@@ -1,7 +1,6 @@
-use crate::{
-    kernel::geometry::Curve,
-    math::{Point, Transform, Vector},
-};
+use fj_math::{Point, Transform, Vector};
+
+use crate::kernel::geometry::Curve;
 
 /// A surface that was swept from a curve
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -56,10 +55,9 @@ impl Swept {
 #[cfg(test)]
 mod tests {
 
-    use crate::{
-        kernel::geometry::{Curve, Line},
-        math::{Point, Vector},
-    };
+    use fj_math::{Point, Vector};
+
+    use crate::kernel::geometry::{Curve, Line};
 
     use super::Swept;
 

@@ -1,6 +1,6 @@
 use std::f64::consts::PI;
 
-use crate::math::{Point, Scalar, Transform, Vector};
+use fj_math::{Point, Scalar, Transform, Vector};
 
 /// A circle
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -109,7 +109,7 @@ impl Circle {
 mod tests {
     use std::f64::consts::{FRAC_PI_2, PI};
 
-    use crate::math::{Point, Scalar, Vector};
+    use fj_math::{Point, Scalar, Vector};
 
     use super::Circle;
 

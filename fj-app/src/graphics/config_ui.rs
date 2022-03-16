@@ -1,12 +1,11 @@
 use std::collections::HashMap;
 
+use fj_math::Aabb;
 use wgpu::util::StagingBelt;
 use wgpu_glyph::{
     ab_glyph::{FontArc, InvalidFont},
     GlyphBrush, GlyphBrushBuilder, Section, Text,
 };
-
-use crate::math::Aabb;
 
 use super::draw_config::DrawConfig;
 

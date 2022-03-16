@@ -1,9 +1,8 @@
-use crate::{
-    kernel::{
-        geometry::{Curve, Surface},
-        topology::faces::Face,
-    },
-    math::{Point, Transform},
+use fj_math::{Point, Transform};
+
+use crate::kernel::{
+    geometry::{Curve, Surface},
+    topology::faces::Face,
 };
 
 use super::{

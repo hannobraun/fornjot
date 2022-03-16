@@ -1,16 +1,15 @@
 use std::collections::HashMap;
 
-use crate::{
-    kernel::{
-        geometry::{surfaces::Swept, Surface},
-        shape::{Handle, Shape},
-        topology::{
-            edges::{Cycle, Edge},
-            faces::Face,
-            vertices::Vertex,
-        },
+use fj_math::{Scalar, Transform, Triangle, Vector};
+
+use crate::kernel::{
+    geometry::{surfaces::Swept, Surface},
+    shape::{Handle, Shape},
+    topology::{
+        edges::{Cycle, Edge},
+        faces::Face,
+        vertices::Vertex,
     },
-    math::{Scalar, Transform, Triangle, Vector},
 };
 
 use super::approximation::Approximation;
@@ -322,13 +321,12 @@ impl Relation {
 
 #[cfg(test)]
 mod tests {
-    use crate::{
-        kernel::{
-            geometry::{surfaces::Swept, Surface},
-            shape::{Handle, Shape},
-            topology::{edges::Cycle, faces::Face, vertices::Vertex},
-        },
-        math::{Point, Scalar, Vector},
+    use fj_math::{Point, Scalar, Vector};
+
+    use crate::kernel::{
+        geometry::{surfaces::Swept, Surface},
+        shape::{Handle, Shape},
+        topology::{edges::Cycle, faces::Face, vertices::Vertex},
     };
 
     use super::sweep_shape;

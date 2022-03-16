@@ -1,5 +1,7 @@
 use std::collections::HashSet;
 
+use fj_math::{Point, Scalar, Triangle, Vector};
+
 use crate::{
     debug::DebugInfo,
     kernel::{
@@ -10,7 +12,6 @@ use crate::{
             vertices::Vertex,
         },
     },
-    math::{Point, Scalar, Triangle, Vector},
 };
 
 use super::{
@@ -260,17 +261,16 @@ impl Topology<'_> {
 mod tests {
     use std::ops::{Deref, DerefMut};
 
-    use crate::{
-        kernel::{
-            geometry::{Curve, Line, Surface},
-            shape::{handle::Handle, Shape, ValidationError},
-            topology::{
-                edges::{Cycle, Edge},
-                faces::Face,
-                vertices::Vertex,
-            },
+    use fj_math::{Point, Scalar};
+
+    use crate::kernel::{
+        geometry::{Curve, Line, Surface},
+        shape::{handle::Handle, Shape, ValidationError},
+        topology::{
+            edges::{Cycle, Edge},
+            faces::Face,
+            vertices::Vertex,
         },
-        math::{Point, Scalar},
     };
 
     const MIN_DISTANCE: f64 = 5e-7;

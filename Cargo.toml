@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     "fj",
     "fj-app",
+    "fj-math",
 
     "models/cuboid",
     "models/group",
@@ -11,4 +12,7 @@ members = [
 
     "release-operator",
 ]
-default-members = ["fj-app"]
+default-members = [
+    "fj-app",
+    "fj-math",
+]

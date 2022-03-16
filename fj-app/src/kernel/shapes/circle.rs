@@ -1,3 +1,5 @@
+use fj_math::{Aabb, Point, Scalar};
+
 use crate::{
     debug::DebugInfo,
     kernel::{
@@ -5,7 +7,6 @@ use crate::{
         shape::Shape,
         topology::{edges::Cycle, faces::Face},
     },
-    math::{Aabb, Point, Scalar},
 };
 
 use super::ToShape;

@@ -629,15 +629,14 @@ dependencies = [
  "approx 0.5.1",
  "bytemuck",
  "clap",
- "decorum",
  "figment",
  "fj",
+ "fj-math",
  "futures",
  "libloading",
  "map-macro",
  "nalgebra",
  "notify",
- "num-traits",
  "parking_lot 0.12.0",
  "parry2d-f64",
  "parry3d-f64",
@@ -650,6 +649,18 @@ dependencies = [
  "wgpu",
  "wgpu_glyph",
  "winit",
+]
+
+[[package]]
+name = "fj-math"
+version = "0.5.0"
+dependencies = [
+ "approx 0.5.1",
+ "decorum",
+ "nalgebra",
+ "num-traits",
+ "parry2d-f64",
+ "parry3d-f64",
 ]
 
 [[package]]

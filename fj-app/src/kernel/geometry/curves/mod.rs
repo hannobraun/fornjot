@@ -1,7 +1,7 @@
 mod circle;
 mod line;
 
-use crate::math::{Point, Scalar, Transform, Vector};
+use fj_math::{Point, Scalar, Transform, Vector};
 
 pub use self::{circle::Circle, line::Line};
 

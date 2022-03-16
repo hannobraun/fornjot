@@ -1,12 +1,13 @@
 use std::{io, mem::size_of};
 
+use fj_math::{Aabb, Point};
 use thiserror::Error;
 use tracing::debug;
 use wgpu::util::DeviceExt as _;
 use wgpu_glyph::ab_glyph::InvalidFont;
 use winit::dpi::PhysicalSize;
 
-use crate::{camera::Camera, math::Aabb, math::Point, window::Window};
+use crate::{camera::Camera, window::Window};
 
 use super::{
     config_ui::ConfigUi, draw_config::DrawConfig, drawables::Drawables,

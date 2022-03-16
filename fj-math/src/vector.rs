@@ -242,7 +242,7 @@ impl<const D: usize> approx::AbsDiffEq for Vector<D> {
 
 #[cfg(test)]
 mod tests {
-    use crate::math::Vector;
+    use crate::Vector;
 
     #[test]
     fn to_xyz() {

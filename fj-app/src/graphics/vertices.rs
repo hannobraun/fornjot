@@ -1,9 +1,9 @@
 use bytemuck::{Pod, Zeroable};
+use fj_math::Triangle;
 use nalgebra::{vector, Point};
 
 use crate::{
     debug::DebugInfo,
-    math::Triangle,
     mesh::{Index, MeshMaker},
 };
 

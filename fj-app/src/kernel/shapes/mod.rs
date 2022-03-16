@@ -5,10 +5,9 @@ pub mod sketch;
 pub mod sweep;
 pub mod transform;
 
-use crate::{
-    debug::DebugInfo,
-    math::{Aabb, Scalar},
-};
+use fj_math::{Aabb, Scalar};
+
+use crate::debug::DebugInfo;
 
 use super::shape::Shape;
 

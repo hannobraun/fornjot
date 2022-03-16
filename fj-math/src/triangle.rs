@@ -52,8 +52,9 @@ impl<const D: usize> From<[Point<D>; 3]> for Triangle<D> {
 
 #[cfg(test)]
 mod tests {
+    use crate::Point;
+
     use super::Triangle;
-    use crate::math::Point;
 
     #[test]
     fn valid_triangle_2d() {

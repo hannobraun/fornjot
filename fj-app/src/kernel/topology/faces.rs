@@ -3,6 +3,7 @@ use std::{
     hash::{Hash, Hasher},
 };
 
+use fj_math::{Aabb, Scalar, Segment, Triangle};
 use parry2d_f64::query::{Ray as Ray2, RayCast as _};
 use parry3d_f64::query::Ray as Ray3;
 
@@ -15,7 +16,6 @@ use crate::{
         geometry::Surface,
         shape::Handle,
     },
-    math::{Aabb, Scalar, Segment, Triangle},
 };
 
 use super::edges::Cycle;
