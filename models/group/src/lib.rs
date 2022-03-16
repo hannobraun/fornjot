@@ -15,7 +15,7 @@ pub extern "C" fn model(_: &HashMap<String, String>) -> fj::Shape {
     let cube_a = fj::Sketch::from_points(vertices).sweep(1.0);
     let cube_b = cube_a.clone().translate([1.5, 0., 0.5]);
 
-    let disjoint_union = cube_a.union(&cube_b);
+    let group = cube_a.group(&cube_b);
 
-    disjoint_union.into()
+    group.into()
 }

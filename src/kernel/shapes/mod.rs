@@ -1,9 +1,9 @@
 pub mod circle;
 pub mod difference_2d;
+pub mod group;
 pub mod sketch;
 pub mod sweep;
 pub mod transform;
-pub mod union;
 
 use crate::{
     debug::DebugInfo,
@@ -53,9 +53,9 @@ macro_rules! dispatch {
             $(
                 fn $method(&self, $($arg_name: $arg_ty,)*) -> $ret {
                     match self {
+                        Self::Group(shape) => shape.$method($($arg_name,)*),
                         Self::Sweep(shape) => shape.$method($($arg_name,)*),
                         Self::Transform(shape) => shape.$method($($arg_name,)*),
-                        Self::Union(shape) => shape.$method($($arg_name,)*),
                     }
                 }
             )*

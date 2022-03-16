@@ -4,19 +4,49 @@ use crate::{Shape, Shape2d};
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub enum Shape3d {
+    /// A group of two 3-dimensional shapes
+    Group(Box<Group>),
+
     /// A sweep of 2-dimensional shape along the z-axis
     Sweep(Sweep),
 
     /// A transformed 3-dimensional shape
     Transform(Box<Transform>),
-
-    /// The union of two 3-dimensional shapes
-    Union(Box<Union>),
 }
 
 impl From<Shape3d> for Shape {
     fn from(shape: Shape3d) -> Self {
         Self::Shape3d(shape.into())
+    }
+}
+
+/// A group of two 3-dimensional shapes
+///
+/// A group is a collection of disjoint shapes. It is not a union, in that the
+/// shapes in the group are not allowed to touch or overlap.
+///
+/// # Limitations
+///
+/// Whether the shapes in the group touch or overlap is not currently checked.
+#[derive(Clone, Debug)]
+#[repr(C)]
+pub struct Group {
+    /// The first of the shapes
+    pub a: Shape3d,
+
+    /// The second of the shapes
+    pub b: Shape3d,
+}
+
+impl From<Group> for Shape {
+    fn from(shape: Group) -> Self {
+        Self::Shape3d(Shape3d::Group(Box::new(shape)))
+    }
+}
+
+impl From<Group> for Shape3d {
+    fn from(shape: Group) -> Self {
+        Self::Group(Box::new(shape))
     }
 }
 
@@ -95,41 +125,5 @@ impl From<Sweep> for Shape {
 impl From<Sweep> for Shape3d {
     fn from(shape: Sweep) -> Self {
         Self::Sweep(shape)
-    }
-}
-
-/// The union of two 3-dimensional shapes
-///
-/// # Limitations
-///
-/// Support for unions is somewhat limited right now. A union of 2 distinct
-/// shapes doesn't really create a new shape, but just an aggregation of the
-/// two original shapes.
-///
-/// This means, for example, that generating the triangle mesh of the union does
-/// not result in a proper triangle mesh, but rather the two, possibly
-/// intersecting, triangle meshes of the original shapes.
-///
-/// See issue:
-/// <https://github.com/hannobraun/Fornjot/issues/42>
-#[derive(Clone, Debug)]
-#[repr(C)]
-pub struct Union {
-    /// The first of the shapes
-    pub a: Shape3d,
-
-    /// The second of the shapes
-    pub b: Shape3d,
-}
-
-impl From<Union> for Shape {
-    fn from(shape: Union) -> Self {
-        Self::Shape3d(Shape3d::Union(Box::new(shape)))
-    }
-}
-
-impl From<Union> for Shape3d {
-    fn from(shape: Union) -> Self {
-        Self::Union(Box::new(shape))
     }
 }
