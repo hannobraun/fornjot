@@ -1,8 +1,5 @@
 # Cargo
 /target
 
-# Zola
-/website/public
-
 # IntelliJ IDEA
 /.idea
