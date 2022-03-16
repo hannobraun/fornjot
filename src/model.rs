@@ -12,10 +12,7 @@ pub struct Model {
 }
 
 impl Model {
-    pub fn from_path(base_path: PathBuf, rel_path: PathBuf) -> Self {
-        let mut path = base_path;
-        path.push(rel_path);
-
+    pub fn from_path(path: PathBuf) -> Self {
         Self { path }
     }
 
