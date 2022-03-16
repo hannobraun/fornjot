@@ -18,7 +18,7 @@ https://github.com/hannobraun/Fornjot/pulls?q=is%3Apr+is%3Aclosed+merged%3A%3E20
 Replace `2022-01-27` at the end of that URL with the day before the previous release.
 
 For the version after `0.5.0`, add the following to the changelog:
-- Replace "Host Application" title with crate name: `fj-host`
+- Replace "Host Application" title with crate name: `fj-app`
 - Convert title of each crate section into link to crate on crates.io.
 - Add one-sentence description of the respective crate to each section.
 - Link to all Weekly Dev Logs that cover the release.

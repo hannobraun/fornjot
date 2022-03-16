@@ -11,11 +11,11 @@
             "cargo": {
                 "args": [
                     "build",
-                    "--bin=fj-host",
-                    "--package=fj-host"
+                    "--bin=fj-app",
+                    "--package=fj-app"
                 ],
                 "filter": {
-                    "name": "fj-host",
+                    "name": "fj-app",
                     "kind": "bin"
                 }
             },
@@ -30,11 +30,11 @@
                 "args": [
                     "test",
                     "--no-run",
-                    "--bin=fj-host",
-                    "--package=fj-host"
+                    "--bin=fj-app",
+                    "--package=fj-app"
                 ],
                 "filter": {
-                    "name": "fj-host",
+                    "name": "fj-app",
                     "kind": "bin"
                 }
             },

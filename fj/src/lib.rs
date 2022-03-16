@@ -5,8 +5,8 @@
 //! here to define a CAD model.
 //!
 //! To actually display the CAD model, or export it to another file format, you
-//! need the host application. Please refer to the [Fornjot repository] for
-//! usage examples.
+//! need the Fornjot app. Please refer to the [Fornjot repository] for usage
+//! examples.
 //!
 //! [Fornjot repository]: https://github.com/hannobraun/Fornjot
 
