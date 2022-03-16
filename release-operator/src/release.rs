@@ -21,7 +21,8 @@ impl Release {
             return self.miss();
         }
 
-        let commit: String = cmd_lib::run_fun!(git log --oneline -n 1 "${sha}")?;
+        let commit: String =
+            cmd_lib::run_fun!(git log --oneline -n 1 "${sha}")?;
 
         // A release commits need to contain a semver version number.
         let version = Regex::new(r"(v?\d+.\d+.\d+)")?
@@ -30,7 +31,7 @@ impl Release {
 
         match version {
             Some(v) => self.hit(v.as_str()),
-            None => self.miss()
+            None => self.miss(),
         }
     }
 
