@@ -4,8 +4,8 @@ use std::path::PathBuf;
 #[derive(clap::Parser)]
 pub struct Args {
     /// The model to open
-    #[clap(short, long, default_value = "cuboid")]
-    pub model: PathBuf,
+    #[clap(short, long)]
+    pub model: Option<PathBuf>,
 
     /// Export model to this path
     #[clap(short, long)]

@@ -16,7 +16,7 @@ use std::{collections::HashMap, sync::mpsc, time::Instant};
 
 use futures::executor::block_on;
 use notify::Watcher as _;
-use tracing::{debug, trace};
+use tracing::trace;
 use tracing_subscriber::fmt::format;
 use tracing_subscriber::EnvFilter;
 use winit::{
@@ -53,9 +53,7 @@ fn main() -> anyhow::Result<()> {
 
     let args = Args::parse();
     let config = Config::load()?;
-    let model = Model::new(args.model);
-
-    debug!("Configuration: {:?}", config);
+    let model = Model::new(args.model.unwrap_or(config.default_model));
 
     let mut parameters = HashMap::new();
     for parameter in args.parameters {
