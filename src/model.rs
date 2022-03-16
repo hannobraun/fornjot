@@ -1,4 +1,9 @@
-use std::{collections::HashMap, io, path::PathBuf, process::Command};
+use std::{
+    collections::HashMap,
+    io,
+    path::{Path, PathBuf},
+    process::Command,
+};
 
 use thiserror::Error;
 
@@ -24,8 +29,8 @@ impl Model {
         Ok(file_name.to_string_lossy().into_owned())
     }
 
-    pub fn path(&self) -> PathBuf {
-        self.path.clone()
+    pub fn path(&self) -> &Path {
+        &self.path
     }
 
     pub fn src_path(&self) -> PathBuf {
