@@ -9,7 +9,7 @@ env:
 
   # Name of the crate from Cargo.toml
   # used to rename and upload the binaries
-  PROJ_NAME: fj-host
+  PROJ_NAME: fj-app
 
 jobs:
   binaries:
