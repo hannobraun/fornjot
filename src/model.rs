@@ -12,8 +12,8 @@ pub struct Model {
 }
 
 impl Model {
-    pub fn new(rel_path: PathBuf) -> Self {
-        let mut path = PathBuf::from("models");
+    pub fn new(base_path: PathBuf, rel_path: PathBuf) -> Self {
+        let mut path = base_path;
         path.push(rel_path);
 
         Self { path }

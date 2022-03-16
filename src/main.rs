@@ -1,5 +1,6 @@
 mod args;
 mod camera;
+mod config;
 mod debug;
 mod graphics;
 mod input;
@@ -27,6 +28,7 @@ use crate::math::Scalar;
 use crate::{
     args::Args,
     camera::Camera,
+    config::Config,
     debug::DebugInfo,
     graphics::{DrawConfig, Renderer},
     kernel::shapes::ToShape as _,
@@ -50,7 +52,11 @@ fn main() -> anyhow::Result<()> {
         .init();
 
     let args = Args::parse();
-    let model = Model::new(args.model);
+    let config = Config::load()?;
+    let model = Model::new(
+        config.default_path,
+        args.model.unwrap_or(config.default_model),
+    );
 
     let mut parameters = HashMap::new();
     for parameter in args.parameters {
