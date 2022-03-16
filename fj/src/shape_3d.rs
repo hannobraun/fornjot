@@ -20,6 +20,36 @@ impl From<Shape3d> for Shape {
     }
 }
 
+/// A group of two 3-dimensional shapes
+///
+/// A group is a collection of disjoint shapes. It is not a union, in that the
+/// shapes in the group are not allowed to touch or overlap.
+///
+/// # Limitations
+///
+/// Whether the shapes in the group touch or overlap is not currently checked.
+#[derive(Clone, Debug)]
+#[repr(C)]
+pub struct Group {
+    /// The first of the shapes
+    pub a: Shape3d,
+
+    /// The second of the shapes
+    pub b: Shape3d,
+}
+
+impl From<Group> for Shape {
+    fn from(shape: Group) -> Self {
+        Self::Shape3d(Shape3d::Union(Box::new(shape)))
+    }
+}
+
+impl From<Group> for Shape3d {
+    fn from(shape: Group) -> Self {
+        Self::Union(Box::new(shape))
+    }
+}
+
 /// A transformed 3-dimensional shape
 ///
 /// # Limitations
@@ -95,35 +125,5 @@ impl From<Sweep> for Shape {
 impl From<Sweep> for Shape3d {
     fn from(shape: Sweep) -> Self {
         Self::Sweep(shape)
-    }
-}
-
-/// A group of two 3-dimensional shapes
-///
-/// A group is a collection of disjoint shapes. It is not a union, in that the
-/// shapes in the group are not allowed to touch or overlap.
-///
-/// # Limitations
-///
-/// Whether the shapes in the group touch or overlap is not currently checked.
-#[derive(Clone, Debug)]
-#[repr(C)]
-pub struct Group {
-    /// The first of the shapes
-    pub a: Shape3d,
-
-    /// The second of the shapes
-    pub b: Shape3d,
-}
-
-impl From<Group> for Shape {
-    fn from(shape: Group) -> Self {
-        Self::Shape3d(Shape3d::Union(Box::new(shape)))
-    }
-}
-
-impl From<Group> for Shape3d {
-    fn from(shape: Group) -> Self {
-        Self::Union(Box::new(shape))
     }
 }
