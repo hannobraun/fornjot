@@ -1,5 +1,6 @@
 mod args;
 mod camera;
+mod config;
 mod debug;
 mod graphics;
 mod input;
@@ -15,7 +16,7 @@ use std::{collections::HashMap, sync::mpsc, time::Instant};
 
 use futures::executor::block_on;
 use notify::Watcher as _;
-use tracing::trace;
+use tracing::{debug, trace};
 use tracing_subscriber::fmt::format;
 use tracing_subscriber::EnvFilter;
 use winit::{
@@ -27,6 +28,7 @@ use crate::math::Scalar;
 use crate::{
     args::Args,
     camera::Camera,
+    config::Config,
     debug::DebugInfo,
     graphics::{DrawConfig, Renderer},
     kernel::shapes::ToShape as _,
@@ -50,7 +52,10 @@ fn main() -> anyhow::Result<()> {
         .init();
 
     let args = Args::parse();
+    let config = Config::load()?;
     let model = Model::new(args.model);
+
+    debug!("Configuration: {:?}", config);
 
     let mut parameters = HashMap::new();
     for parameter in args.parameters {
