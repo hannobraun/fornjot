@@ -53,7 +53,10 @@ fn main() -> anyhow::Result<()> {
 
     let args = Args::parse();
     let config = Config::load()?;
-    let model = Model::new(args.model.unwrap_or(config.default_model));
+    let model = Model::new(
+        config.default_path,
+        args.model.unwrap_or(config.default_model),
+    );
 
     let mut parameters = HashMap::new();
     for parameter in args.parameters {
