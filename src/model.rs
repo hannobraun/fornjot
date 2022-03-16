@@ -3,30 +3,37 @@ use std::{collections::HashMap, io, path::PathBuf, process::Command};
 use thiserror::Error;
 
 pub struct Model {
-    name: String,
+    path: PathBuf,
 }
 
 impl Model {
-    pub fn new(name: String) -> Self {
-        Self { name }
+    pub fn new(rel_path: PathBuf) -> Self {
+        let mut path = PathBuf::from("models");
+        path.push(rel_path);
+
+        Self { path }
     }
 
-    pub fn name(&self) -> String {
-        self.name.clone()
+    pub fn name(&self) -> Result<String, io::Error> {
+        let canonical = self.path.canonicalize()?;
+
+        // Can't panic. It only would, if the path ends with "..", and we just
+        // canonicalized it.
+        let file_name = canonical.file_name().unwrap();
+
+        Ok(file_name.to_string_lossy().into_owned())
     }
 
     pub fn path(&self) -> PathBuf {
-        let mut path = PathBuf::from("models");
-        path.push(self.name());
-        path
+        self.path.clone()
     }
 
     pub fn src_path(&self) -> PathBuf {
         self.path().join("src")
     }
 
-    pub fn lib_path(&self) -> PathBuf {
-        let name = self.name().replace('-', "_");
+    pub fn lib_path(&self) -> Result<PathBuf, io::Error> {
+        let name = self.name()?.replace('-', "_");
 
         let file = if cfg!(windows) {
             format!("{}.dll", name)
@@ -37,7 +44,7 @@ impl Model {
             format!("lib{}.so", name)
         };
 
-        self.path().join("target/debug").join(file)
+        Ok(self.path().join("target/debug").join(file))
     }
 
     pub fn load(
@@ -73,7 +80,7 @@ impl Model {
         // to switch to a better technique:
         // https://github.com/hannobraun/Fornjot/issues/71
         let shape = unsafe {
-            let lib = libloading::Library::new(self.lib_path())?;
+            let lib = libloading::Library::new(self.lib_path()?)?;
             let model: libloading::Symbol<ModelFn> = lib.get(b"model")?;
             model(arguments)
         };
