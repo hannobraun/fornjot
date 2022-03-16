@@ -37,6 +37,10 @@ winit       = "0.26.1"
 version  = "3.1.6"
 features = ["derive"]
 
+[dependencies.figment]
+version  = "0.10.6"
+features = ["env", "toml"]
+
 [dependencies.fj]
 version = "0.5.0"
 path    = "fj"
