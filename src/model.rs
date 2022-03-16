@@ -11,8 +11,8 @@ impl Model {
         Self { name }
     }
 
-    pub fn name(&self) -> &str {
-        &self.name
+    pub fn name(&self) -> String {
+        self.name.clone()
     }
 
     pub fn path(&self) -> PathBuf {
