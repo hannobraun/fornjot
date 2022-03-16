@@ -48,9 +48,11 @@ impl Model {
         &self,
         arguments: &HashMap<String, String>,
     ) -> Result<fj::Shape, Error> {
+        let manifest_path = format!("{}/Cargo.toml", self.path());
+
         let status = Command::new("cargo")
             .arg("build")
-            .args(["--manifest-path", &format!("{}/Cargo.toml", self.path())])
+            .args(["--manifest-path", &manifest_path])
             .status()?;
 
         if !status.success() {
