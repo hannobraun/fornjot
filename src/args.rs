@@ -15,7 +15,7 @@ pub struct Args {
     #[clap(short, long)]
     pub parameters: Vec<String>,
 
-    // Model deviation tolerance
+    /// Model deviation tolerance
     #[clap[short, long]]
     pub tolerance: Option<f64>,
 }
