@@ -98,20 +98,14 @@ impl From<Sweep> for Shape3d {
     }
 }
 
-/// The union of two 3-dimensional shapes
+/// A group of two 3-dimensional shapes
+///
+/// A group is a collection of disjoint shapes. It is not a union, in that the
+/// shapes in the group are not allowed to touch or overlap.
 ///
 /// # Limitations
 ///
-/// Support for unions is somewhat limited right now. A union of 2 distinct
-/// shapes doesn't really create a new shape, but just an aggregation of the
-/// two original shapes.
-///
-/// This means, for example, that generating the triangle mesh of the union does
-/// not result in a proper triangle mesh, but rather the two, possibly
-/// intersecting, triangle meshes of the original shapes.
-///
-/// See issue:
-/// <https://github.com/hannobraun/Fornjot/issues/42>
+/// Whether the shapes in the group touch or overlap is not currently checked.
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Group {
