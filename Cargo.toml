@@ -3,8 +3,11 @@ resolver = "2"
 members = [
     "fj",
     "fj-app",
+
     "models/cuboid",
     "models/group",
     "models/spacer",
     "models/star",
+
+    "release-operator",
 ]
