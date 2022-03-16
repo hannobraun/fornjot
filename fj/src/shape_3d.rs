@@ -16,7 +16,7 @@ pub enum Shape3d {
 
 impl From<Shape3d> for Shape {
     fn from(shape: Shape3d) -> Self {
-        Self::Shape3d(shape.into())
+        Self::Shape3d(shape)
     }
 }
 

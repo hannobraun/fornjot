@@ -1,15 +1,5 @@
 # Cargo
 /target
-/fj/Cargo.lock
-/fj/target
-/fj-host/Cargo.lock
-/fj-host/target
-/release-operator/target
-/models/*/Cargo.lock
-/models/*/target
-
-# Zola
-/website/public
 
 # IntelliJ IDEA
 /.idea

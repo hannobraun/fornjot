@@ -33,7 +33,10 @@ fn main() -> anyhow::Result<()> {
 
     Release::new(args.sha, args.label).detect()?;
 
-    log::trace!("finished release-operator process, took {:?}", start.elapsed());
+    log::trace!(
+        "finished release-operator process, took {:?}",
+        start.elapsed()
+    );
 
     Ok(())
 }

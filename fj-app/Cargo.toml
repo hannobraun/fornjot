@@ -1,0 +1,54 @@
+[package]
+name    = "fj-app"
+version = "0.5.0"
+edition = "2021"
+
+description = "The world needs another CAD program."
+readme      = "README.md"
+repository  = "https://github.com/hannobraun/fornjot"
+license     = "0BSD"
+keywords    = ["cad", "programmatic", "code-cad"]
+categories  = ["mathematics", "rendering"]
+
+
+[dependencies]
+anyhow      = "1.0.56"
+approx      = "0.5.1"
+bytemuck    = "1.8.0"
+decorum     = "0.3.1"
+futures     = "0.3.21"
+libloading  = "0.7.2"
+map-macro   = "0.2.0"
+nalgebra    = "0.30.0"
+notify      = "5.0.0-pre.14"
+num-traits  = "0.2.14"
+parking_lot = "0.12.0"
+parry2d-f64 = "0.8.0"
+parry3d-f64 = "0.8.0"
+spade       = "2.0.0"
+thiserror   = "1.0.30"
+threemf     = "0.2.0"
+tracing     = "0.1.32"
+wgpu        = "0.12.0"
+wgpu_glyph  = "0.16.0"
+winit       = "0.26.1"
+
+[dependencies.clap]
+version  = "3.1.6"
+features = ["derive"]
+
+[dependencies.figment]
+version  = "0.10.6"
+features = ["env", "toml"]
+
+[dependencies.fj]
+version = "0.5.0"
+path    = "../fj"
+
+[dependencies.serde]
+version  = "1.0.136"
+features = ["derive"]
+
+[dependencies.tracing-subscriber]
+version  = "0.3.9"
+features = ["env-filter", "fmt"]
