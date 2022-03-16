@@ -56,7 +56,17 @@ fn main() -> anyhow::Result<()> {
     let config = Config::load()?;
 
     let mut path = config.default_path.unwrap_or_else(|| PathBuf::from(""));
-    path.push(args.model.unwrap_or(config.default_model));
+    match args.model.or(config.default_model) {
+        Some(model) => {
+            path.push(model);
+        }
+        None => {
+            anyhow::bail!(
+                "No model specified, and no default model configured.\n\
+                Specify a model by passing `--model path/to/model`."
+            );
+        }
+    }
 
     let model = Model::from_path(path)?;
 
