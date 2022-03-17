@@ -11,6 +11,7 @@ use serde::Deserialize;
 pub struct Config {
     pub default_path: Option<PathBuf>,
     pub default_model: Option<PathBuf>,
+    pub target_dir: Option<PathBuf>,
 }
 
 impl Config {

@@ -9,7 +9,10 @@ pub struct Model {
 }
 
 impl Model {
-    pub fn from_path(path: PathBuf) -> io::Result<Self> {
+    pub fn from_path(
+        path: PathBuf,
+        target_dir: Option<PathBuf>,
+    ) -> io::Result<Self> {
         let name = {
             // Can't panic. It only would, if the path ends with "..", and we
             // are canonicalizing it here to prevent that.
@@ -31,7 +34,8 @@ impl Model {
                 format!("lib{}.so", name)
             };
 
-            path.join("target/debug").join(file)
+            let target_dir = target_dir.unwrap_or_else(|| path.join("target"));
+            target_dir.join("debug").join(file)
         };
 
         let manifest_path = path.join("Cargo.toml");
