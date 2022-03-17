@@ -1,3 +1,9 @@
+//! Connection between the Fornjot kernel and Fornjot models
+//!
+//! Fornjot models use the [`fj`] crate to define a shape. This crate provides
+//! the connection between [`fj`] and the Fornjot kernel. It translates those
+//! operations into terms the kernel can understand.
+
 mod circle;
 mod difference_2d;
 mod group;
@@ -9,7 +15,7 @@ use fj_debug::DebugInfo;
 use fj_kernel::shape::Shape;
 use fj_math::{Aabb, Scalar};
 
-/// Implemented by all shapes
+/// Implemented for all operations from the [`fj`] crate
 pub trait ToShape {
     /// Compute the boundary representation of the shape
     fn to_shape(&self, tolerance: Scalar, debug: &mut DebugInfo) -> Shape;
