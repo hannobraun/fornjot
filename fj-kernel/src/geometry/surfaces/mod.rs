@@ -1,6 +1,6 @@
 pub mod swept;
 
-pub use self::swept::Swept;
+pub use self::swept::SweptCurve;
 
 use fj_math::{Point, Transform, Vector};
 use nalgebra::vector;
@@ -13,13 +13,13 @@ use super::{Curve, Line};
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum Surface {
     /// A swept curve
-    Swept(Swept),
+    Swept(SweptCurve),
 }
 
 impl Surface {
     /// Construct a `Surface` that represents the x-y plane
     pub fn x_y_plane() -> Self {
-        Self::Swept(Swept {
+        Self::Swept(SweptCurve {
             curve: Curve::Line(Line {
                 origin: Point::origin(),
                 direction: vector![1., 0., 0.].into(),

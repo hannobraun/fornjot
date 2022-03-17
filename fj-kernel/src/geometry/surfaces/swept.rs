@@ -4,7 +4,7 @@ use crate::geometry::Curve;
 
 /// A surface that was swept from a curve
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Swept {
+pub struct SweptCurve {
     /// The curve that this surface was swept from
     pub curve: Curve,
 
@@ -12,7 +12,7 @@ pub struct Swept {
     pub path: Vector<3>,
 }
 
-impl Swept {
+impl SweptCurve {
     /// Construct a plane from 3 points
     #[cfg(test)]
     pub fn plane_from_points([a, b, c]: [Point<3>; 3]) -> Self {
@@ -59,11 +59,11 @@ mod tests {
 
     use crate::geometry::{Curve, Line};
 
-    use super::Swept;
+    use super::SweptCurve;
 
     #[test]
     fn point_model_to_surface() {
-        let swept = Swept {
+        let swept = SweptCurve {
             curve: Curve::Line(Line {
                 origin: Point::from([1., 0., 0.]),
                 direction: Vector::from([0., 2., 0.]),
@@ -76,7 +76,7 @@ mod tests {
         verify(&swept, Point::from([1., 1.]));
         verify(&swept, Point::from([2., 3.]));
 
-        fn verify(swept: &Swept, surface_point: Point<2>) {
+        fn verify(swept: &SweptCurve, surface_point: Point<2>) {
             let point = swept.point_surface_to_model(&surface_point);
             let result = swept.point_model_to_surface(&point);
 
@@ -86,7 +86,7 @@ mod tests {
 
     #[test]
     fn point_surface_to_model() {
-        let swept = Swept {
+        let swept = SweptCurve {
             curve: Curve::Line(Line {
                 origin: Point::from([1., 0., 0.]),
                 direction: Vector::from([0., 2., 0.]),
@@ -102,7 +102,7 @@ mod tests {
 
     #[test]
     fn vector_surface_to_model() {
-        let swept = Swept {
+        let swept = SweptCurve {
             curve: Curve::Line(Line {
                 origin: Point::from([1., 0., 0.]),
                 direction: Vector::from([0., 2., 0.]),

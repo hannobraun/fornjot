@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use fj_math::{Scalar, Transform, Triangle, Vector};
 
 use crate::{
-    geometry::{surfaces::Swept, Surface},
+    geometry::{surfaces::SweptCurve, Surface},
     shape::{Handle, Shape},
     topology::{
         edges::{Cycle, Edge},
@@ -237,7 +237,7 @@ pub fn sweep_shape(
                     source_to_top.edges.get(edge_source).unwrap().clone();
 
                 let surface =
-                    target.geometry().add_surface(Surface::Swept(Swept {
+                    target.geometry().add_surface(Surface::Swept(SweptCurve {
                         curve: bottom_edge.get().curve(),
                         path,
                     }));
@@ -324,7 +324,7 @@ mod tests {
     use fj_math::{Point, Scalar, Vector};
 
     use crate::{
-        geometry::{surfaces::Swept, Surface},
+        geometry::{surfaces::SweptCurve, Surface},
         shape::{Handle, Shape},
         topology::{edges::Cycle, faces::Face, vertices::Vertex},
     };
@@ -408,7 +408,7 @@ mod tests {
                 .unwrap();
 
             let surface = shape.geometry().add_surface(Surface::Swept(
-                Swept::plane_from_points(
+                SweptCurve::plane_from_points(
                     [a, b, c].map(|vertex| vertex.get().point()),
                 ),
             ));
