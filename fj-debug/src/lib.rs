@@ -3,6 +3,7 @@ use parry3d_f64::query::Ray;
 /// Debug info from the CAD kernel that can be visualized
 ///
 /// At this point, this is a placeholder that will be filled with life later.
+#[derive(Default)]
 pub struct DebugInfo {
     /// Rays being used during face triangulation
     pub triangle_edge_checks: Vec<TriangleEdgeCheck>,
@@ -10,9 +11,7 @@ pub struct DebugInfo {
 
 impl DebugInfo {
     pub fn new() -> Self {
-        Self {
-            triangle_edge_checks: Vec::new(),
-        }
+        Self::default()
     }
 
     pub fn clear(&mut self) {
