@@ -9,6 +9,7 @@ use decorum::R64;
 /// [`Ord`], and [`Hash`], enabling `Scalar` (and types built on top of it), to
 /// be used as keys in hash maps, hash sets, and similar types.
 #[derive(Clone, Copy)]
+#[repr(C)]
 pub struct Scalar(f64);
 
 impl Scalar {

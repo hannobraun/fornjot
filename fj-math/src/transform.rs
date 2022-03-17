@@ -1,6 +1,7 @@
 use super::{Aabb, Point, Segment, Triangle, Vector};
 
 /// A transform
+#[repr(C)]
 pub struct Transform(parry3d_f64::math::Isometry<f64>);
 
 impl Transform {

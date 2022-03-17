@@ -4,6 +4,7 @@ use super::{Point, Vector};
 
 /// An axis-aligned bounding box (AABB)
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[repr(C)]
 pub struct Aabb<const D: usize> {
     /// The minimum coordinates of the AABB
     pub min: Point<D>,

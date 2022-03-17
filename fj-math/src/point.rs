@@ -10,6 +10,7 @@ use super::{
 /// The dimensionality of the point is defined by the const generic `D`
 /// parameter.
 #[derive(Clone, Copy, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[repr(C)]
 pub struct Point<const D: usize> {
     /// The coordinates of the point
     pub coords: Vector<D>,

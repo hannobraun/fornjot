@@ -5,6 +5,7 @@ use super::{Point, Scalar};
 /// The dimensionality of the triangle is defined by the const generic `D`
 /// parameter.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[repr(C)]
 pub struct Triangle<const D: usize> {
     points: [Point<D>; 3],
     color: [u8; 4],
