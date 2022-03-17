@@ -16,9 +16,9 @@ pub struct Vector<const D: usize> {
 
 impl<const D: usize> Vector<D> {
     /// Construct a `Vector` from an array
-    pub fn from_components_f64(array: [f64; D]) -> Self {
+    pub fn from_components_f64(components: [f64; D]) -> Self {
         Self {
-            components: array.map(Scalar::from_f64),
+            components: components.map(Scalar::from_f64),
         }
     }
 
