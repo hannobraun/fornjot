@@ -5,6 +5,8 @@
 //! but they define an interface that other crates use to communicate between
 //! each other.
 
+#![deny(missing_docs)]
+
 use parry3d_f64::query::Ray;
 
 /// Debug info from the CAD kernel that can be visualized
