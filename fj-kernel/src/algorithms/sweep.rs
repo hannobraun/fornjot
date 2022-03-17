@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use fj_math::{Scalar, Transform, Triangle, Vector};
 
 use crate::{
-    geometry::{surfaces::SweptCurve, Surface},
+    geometry::{Surface, SweptCurve},
     shape::{Handle, Shape},
     topology::{
         edges::{Cycle, Edge},
@@ -325,7 +325,7 @@ mod tests {
     use fj_math::{Point, Scalar, Vector};
 
     use crate::{
-        geometry::{surfaces::SweptCurve, Surface},
+        geometry::{Surface, SweptCurve},
         shape::{Handle, Shape},
         topology::{edges::Cycle, faces::Face, vertices::Vertex},
     };
