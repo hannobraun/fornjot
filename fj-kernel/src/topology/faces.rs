@@ -9,7 +9,7 @@ use parry2d_f64::query::{Ray as Ray2, RayCast as _};
 use parry3d_f64::query::Ray as Ray3;
 
 use crate::{
-    algorithms::{approximation::Approximation, triangulation::triangulate},
+    algorithms::{triangulate, Approximation},
     geometry::Surface,
     shape::Handle,
 };

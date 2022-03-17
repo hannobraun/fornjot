@@ -1,5 +1,5 @@
 use fj_debug::DebugInfo;
-use fj_kernel::{algorithms::sweep::sweep_shape, shape::Shape};
+use fj_kernel::{algorithms::sweep_shape, shape::Shape};
 use fj_math::{Aabb, Scalar, Vector};
 
 use super::ToShape;
