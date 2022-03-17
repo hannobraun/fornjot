@@ -109,6 +109,12 @@ impl Shape {
     }
 }
 
+impl Default for Shape {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 type Points = Store<Point<3>>;
 type Curves = Store<Curve>;
 type Surfaces = Store<Surface>;
