@@ -1,6 +1,8 @@
 use std::hash::Hash;
 
-use crate::{kernel::shape::Handle, math::Point};
+use fj_math::Point;
+
+use crate::kernel::shape::Handle;
 
 /// A vertex
 ///

@@ -1,12 +1,11 @@
 use std::collections::HashMap;
 
+use fj_math::Aabb;
 use wgpu::util::StagingBelt;
 use wgpu_glyph::{
     ab_glyph::{FontArc, InvalidFont},
     GlyphBrush, GlyphBrushBuilder, Section, Text,
 };
-
-use crate::math::Aabb;
 
 use super::draw_config::DrawConfig;
 
@@ -70,7 +69,7 @@ impl ConfigUi {
         }
 
         /* Render size of model bounding box */
-        let bbsize = aabb.size().components();
+        let bbsize = aabb.size().components;
         let info = format!(
             "Model bounding box size: {:0.1} {:0.1} {:0.1}",
             bbsize[0].into_f32(),

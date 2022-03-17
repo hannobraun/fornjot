@@ -1,6 +1,6 @@
-use crate::math::Aabb;
 use std::convert::TryInto;
 
+use fj_math::Aabb;
 use wgpu::util::DeviceExt;
 
 use super::vertices::{Vertex, Vertices};

@@ -2,12 +2,10 @@ pub mod swept;
 
 pub use self::swept::Swept;
 
+use fj_math::{Point, Transform, Vector};
 use nalgebra::vector;
 
-use crate::{
-    kernel::geometry,
-    math::{Point, Transform, Vector},
-};
+use crate::kernel::geometry;
 
 use super::{Curve, Line};
 

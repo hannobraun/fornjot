@@ -1,10 +1,7 @@
+use fj_math::{Aabb, Scalar, Transform};
 use parry3d_f64::math::Isometry;
 
-use crate::{
-    debug::DebugInfo,
-    kernel::shape::Shape,
-    math::{Aabb, Scalar, Transform},
-};
+use crate::{debug::DebugInfo, kernel::shape::Shape};
 
 use super::ToShape;
 

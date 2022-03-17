@@ -1,5 +1,6 @@
 use std::time::Instant;
 
+use fj_math::Triangle;
 use winit::{
     dpi::PhysicalPosition,
     event::{
@@ -10,7 +11,6 @@ use winit::{
 
 use crate::{
     camera::{Camera, FocusPoint},
-    math::Triangle,
     window::Window,
 };
 

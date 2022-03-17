@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use fj_math::{Aabb, Scalar};
+
 use crate::{
     debug::DebugInfo,
     kernel::{
@@ -10,7 +12,6 @@ use crate::{
             vertices::Vertex,
         },
     },
-    math::{Aabb, Scalar},
 };
 
 use super::ToShape;

@@ -7,34 +7,42 @@ use super::{
 
 /// An n-dimensional vector
 ///
-/// The dimensionality is defined by the const generic argument `D`.
-///
-/// # Implementation Note
-///
-/// The goal of this type is to eventually implement `Eq` and `Hash`, making it
-/// easier to work with vectors. This is a work in progress.
+/// The dimensionality of the vector is defined by the const generic `D`
+/// parameter.
 #[derive(Clone, Copy, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Vector<const D: usize>(pub [Scalar; D]);
+pub struct Vector<const D: usize> {
+    /// The vector components
+    pub components: [Scalar; D],
+}
 
 impl<const D: usize> Vector<D> {
-    /// Construct a `Vector` from an array
-    pub fn from_array(array: [f64; D]) -> Self {
-        Self(array.map(Scalar::from_f64))
+    /// Construct a `Vector` from `f64` components
+    ///
+    /// # Panics
+    ///
+    /// Panics, if the components can not be converted to [`Scalar`]. See
+    /// [`Scalar::from_f64`], which this method uses internally.
+    pub fn from_components_f64(components: [f64; D]) -> Self {
+        Self {
+            components: components.map(Scalar::from_f64),
+        }
     }
 
     /// Construct a `Vector` from an nalgebra vector
     pub fn from_na(vector: nalgebra::SVector<f64, D>) -> Self {
-        Self::from_array(vector.into())
+        Self::from_components_f64(vector.into())
     }
 
     /// Convert the vector into an nalgebra vector
     pub fn to_na(self) -> nalgebra::SVector<f64, D> {
-        self.0.map(Scalar::into_f64).into()
+        self.components.map(Scalar::into_f64).into()
     }
 
     /// Convert to a 1-dimensional vector
     pub fn to_t(self) -> Vector<1> {
-        Vector([self.0[0]])
+        Vector {
+            components: [self.components[0]],
+        }
     }
 
     /// Convert the vector into a 3-dimensional vector
@@ -47,14 +55,14 @@ impl<const D: usize> Vector<D> {
     pub fn to_xyz(self) -> Vector<3> {
         let zero = Scalar::ZERO;
 
-        let components = match self.0.as_slice() {
+        let components = match self.components.as_slice() {
             [] => [zero, zero, zero],
             &[t] => [t, zero, zero],
             &[u, v] => [u, v, zero],
             &[x, y, z, ..] => [x, y, z],
         };
 
-        Vector(components)
+        Vector { components }
     }
 
     /// Compute the magnitude of the vector
@@ -70,11 +78,6 @@ impl<const D: usize> Vector<D> {
     /// Compute the dot product with another vector
     pub fn dot(&self, other: &Self) -> Scalar {
         self.to_na().dot(&other.to_na()).into()
-    }
-
-    /// Access an iterator over the vector's components
-    pub fn components(&self) -> [Scalar; D] {
-        self.0
     }
 }
 
@@ -94,7 +97,7 @@ impl ops::Deref for Vector<1> {
     type Target = T;
 
     fn deref(&self) -> &Self::Target {
-        let ptr = self.0.as_ptr() as *const Self::Target;
+        let ptr = self.components.as_ptr() as *const Self::Target;
 
         // This is sound. We've created this pointer from a valid instance, that
         // has the same size and layout as the target.
@@ -106,7 +109,7 @@ impl ops::Deref for Vector<2> {
     type Target = Uv;
 
     fn deref(&self) -> &Self::Target {
-        let ptr = self.0.as_ptr() as *const Self::Target;
+        let ptr = self.components.as_ptr() as *const Self::Target;
 
         // This is sound. We've created this pointer from a valid instance, that
         // has the same size and layout as the target.
@@ -118,7 +121,7 @@ impl ops::Deref for Vector<3> {
     type Target = Xyz;
 
     fn deref(&self) -> &Self::Target {
-        let ptr = self.0.as_ptr() as *const Self::Target;
+        let ptr = self.components.as_ptr() as *const Self::Target;
 
         // This is sound. We've created this pointer from a valid instance, that
         // has the same size and layout as the target.
@@ -128,7 +131,7 @@ impl ops::Deref for Vector<3> {
 
 impl ops::DerefMut for Vector<1> {
     fn deref_mut(&mut self) -> &mut Self::Target {
-        let ptr = self.0.as_mut_ptr() as *mut Self::Target;
+        let ptr = self.components.as_mut_ptr() as *mut Self::Target;
 
         // This is sound. We've created this pointer from a valid instance, that
         // has the same size and layout as the target.
@@ -138,7 +141,7 @@ impl ops::DerefMut for Vector<1> {
 
 impl ops::DerefMut for Vector<2> {
     fn deref_mut(&mut self) -> &mut Self::Target {
-        let ptr = self.0.as_mut_ptr() as *mut Self::Target;
+        let ptr = self.components.as_mut_ptr() as *mut Self::Target;
 
         // This is sound. We've created this pointer from a valid instance, that
         // has the same size and layout as the target.
@@ -148,7 +151,7 @@ impl ops::DerefMut for Vector<2> {
 
 impl ops::DerefMut for Vector<3> {
     fn deref_mut(&mut self) -> &mut Self::Target {
-        let ptr = self.0.as_mut_ptr() as *mut Self::Target;
+        let ptr = self.components.as_mut_ptr() as *mut Self::Target;
 
         // This is sound. We've created this pointer from a valid instance, that
         // has the same size and layout as the target.
@@ -157,14 +160,14 @@ impl ops::DerefMut for Vector<3> {
 }
 
 impl<const D: usize> From<[Scalar; D]> for Vector<D> {
-    fn from(array: [Scalar; D]) -> Self {
-        Self(array)
+    fn from(components: [Scalar; D]) -> Self {
+        Self { components }
     }
 }
 
 impl<const D: usize> From<[f64; D]> for Vector<D> {
-    fn from(array: [f64; D]) -> Self {
-        Self::from_array(array)
+    fn from(components: [f64; D]) -> Self {
+        Self::from_components_f64(components)
     }
 }
 
@@ -176,19 +179,19 @@ impl<const D: usize> From<nalgebra::SVector<f64, D>> for Vector<D> {
 
 impl<const D: usize> From<Vector<D>> for [f32; D] {
     fn from(vector: Vector<D>) -> Self {
-        vector.0.map(|scalar| scalar.into_f32())
+        vector.components.map(|scalar| scalar.into_f32())
     }
 }
 
 impl<const D: usize> From<Vector<D>> for [f64; D] {
     fn from(vector: Vector<D>) -> Self {
-        vector.0.map(|scalar| scalar.into_f64())
+        vector.components.map(|scalar| scalar.into_f64())
     }
 }
 
 impl<const D: usize> From<Vector<D>> for [Scalar; D] {
     fn from(vector: Vector<D>) -> Self {
-        vector.0
+        vector.components
     }
 }
 
@@ -224,7 +227,7 @@ impl<const D: usize> ops::Div<Scalar> for Vector<D> {
 
 impl<const D: usize> fmt::Debug for Vector<D> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        self.0.fmt(f)
+        self.components.fmt(f)
     }
 }
 
@@ -236,13 +239,13 @@ impl<const D: usize> approx::AbsDiffEq for Vector<D> {
     }
 
     fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
-        self.0.abs_diff_eq(&other.0, epsilon)
+        self.components.abs_diff_eq(&other.components, epsilon)
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::math::Vector;
+    use crate::Vector;
 
     #[test]
     fn to_xyz() {

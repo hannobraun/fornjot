@@ -1,6 +1,6 @@
 use std::ops::{Add, Sub};
 
-use crate::math::{self, Vector};
+use fj_math::Vector;
 
 /// A point that can be losslessly converted into its canonical form
 ///
@@ -13,7 +13,7 @@ pub struct Point<const D: usize> {
     /// The native form of the point is its representation in its native
     /// coordinate system. This could be a 1-dimensional curve, 2-dimensional
     /// surface, or 3-dimensional model coordinate system.
-    native: math::Point<D>,
+    native: fj_math::Point<D>,
 
     /// The canonical form of the point
     ///
@@ -21,7 +21,7 @@ pub struct Point<const D: usize> {
     /// kept here, unchanged, as the point is converted into other coordinate
     /// systems, it allows for a lossless conversion back into 3D coordinates,
     /// unaffected by floating point accuracy issues.
-    canonical: math::Point<3>,
+    canonical: fj_math::Point<3>,
 }
 
 impl<const D: usize> Point<D> {
@@ -29,23 +29,26 @@ impl<const D: usize> Point<D> {
     ///
     /// Both the native and the canonical form must be provide. The caller must
     /// guarantee that both of them match.
-    pub fn new(native: math::Point<D>, canonical: math::Point<3>) -> Self {
+    pub fn new(
+        native: fj_math::Point<D>,
+        canonical: fj_math::Point<3>,
+    ) -> Self {
         Self { native, canonical }
     }
 
     /// Access the point's native form
-    pub fn native(&self) -> math::Point<D> {
+    pub fn native(&self) -> fj_math::Point<D> {
         self.native
     }
 
     /// Access the point's canonical form
-    pub fn canonical(&self) -> math::Point<3> {
+    pub fn canonical(&self) -> fj_math::Point<3> {
         self.canonical
     }
 }
 
-impl From<math::Point<3>> for Point<3> {
-    fn from(point: math::Point<3>) -> Self {
+impl From<fj_math::Point<3>> for Point<3> {
+    fn from(point: fj_math::Point<3>) -> Self {
         Self::new(point, point)
     }
 }
@@ -54,7 +57,7 @@ impl From<math::Point<3>> for Point<3> {
 // `Point`, or the conversion back to 3D would be broken.
 
 impl<const D: usize> Add<Vector<D>> for Point<D> {
-    type Output = math::Point<D>;
+    type Output = fj_math::Point<D>;
 
     fn add(self, rhs: Vector<D>) -> Self::Output {
         self.native.add(rhs)
@@ -69,10 +72,10 @@ impl<const D: usize> Sub<Self> for Point<D> {
     }
 }
 
-impl<const D: usize> Sub<math::Point<D>> for Point<D> {
+impl<const D: usize> Sub<fj_math::Point<D>> for Point<D> {
     type Output = Vector<D>;
 
-    fn sub(self, rhs: math::Point<D>) -> Self::Output {
+    fn sub(self, rhs: fj_math::Point<D>) -> Self::Output {
         self.native.sub(rhs)
     }
 }

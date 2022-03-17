@@ -1,6 +1,9 @@
 use super::{Point, Scalar};
 
 /// A triangle
+///
+/// The dimensionality of the triangle is defined by the const generic `D`
+/// parameter.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Triangle<const D: usize> {
     points: [Point<D>; 3],
@@ -8,6 +11,28 @@ pub struct Triangle<const D: usize> {
 }
 
 impl<const D: usize> Triangle<D> {
+    /// Construct a triangle from three points
+    ///
+    /// # Panics
+    ///
+    /// Panics, if the points don't form a triangle.
+    pub fn from_points(points: [Point<D>; 3]) -> Self {
+        let area = {
+            let [a, b, c] = points.map(Point::to_xyz);
+            (b - a).cross(&(c - a)).magnitude()
+        };
+
+        // A triangle is not valid if it doesn't span any area
+        if area != Scalar::from(0.0) {
+            Self {
+                points,
+                color: [255, 0, 0, 255],
+            }
+        } else {
+            panic!("Invalid Triangle specified");
+        }
+    }
+
     /// Access the triangle's points
     pub fn points(&self) -> [Point<D>; 3] {
         self.points
@@ -33,27 +58,15 @@ impl Triangle<3> {
 
 impl<const D: usize> From<[Point<D>; 3]> for Triangle<D> {
     fn from(points: [Point<D>; 3]) -> Self {
-        let area = {
-            let [a, b, c] = points.map(Point::to_xyz);
-            (b - a).cross(&(c - a)).magnitude()
-        };
-
-        // A triangle is not valid if it doesn't span any area
-        if area != Scalar::from(0.0) {
-            Self {
-                points,
-                color: [255, 0, 0, 255],
-            }
-        } else {
-            panic!("Invalid Triangle specified");
-        }
+        Self::from_points(points)
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use crate::Point;
+
     use super::Triangle;
-    use crate::math::Point;
 
     #[test]
     fn valid_triangle_2d() {

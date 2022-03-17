@@ -5,7 +5,6 @@ mod debug;
 mod graphics;
 mod input;
 mod kernel;
-mod math;
 mod mesh;
 mod model;
 mod window;
@@ -15,6 +14,7 @@ use std::ffi::OsStr;
 use std::path::PathBuf;
 use std::{collections::HashMap, sync::mpsc, time::Instant};
 
+use fj_math::Scalar;
 use futures::executor::block_on;
 use notify::Watcher as _;
 use tracing::trace;
@@ -25,7 +25,6 @@ use winit::{
     event_loop::{ControlFlow, EventLoop},
 };
 
-use crate::math::Scalar;
 use crate::{
     args::Args,
     camera::Camera,
@@ -105,7 +104,7 @@ fn main() -> anyhow::Result<()> {
             // look at the smallest non-zero extent of the bounding box and divide that
             // by some value.
             let mut min_extent = Scalar::MAX;
-            for extent in aabb.size().components() {
+            for extent in aabb.size().components {
                 if extent > Scalar::ZERO && extent < min_extent {
                     min_extent = extent;
                 }

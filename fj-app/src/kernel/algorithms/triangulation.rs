@@ -1,7 +1,8 @@
+use fj_math::Scalar;
 use parry2d_f64::utils::point_in_triangle::{corner_direction, Orientation};
 use spade::HasPosition;
 
-use crate::{kernel::geometry, math::Scalar};
+use crate::kernel::geometry;
 
 /// Create a Delaunay triangulation of all points
 pub fn triangulate(

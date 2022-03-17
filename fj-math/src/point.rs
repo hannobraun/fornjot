@@ -7,14 +7,11 @@ use super::{
 
 /// An n-dimensional point
 ///
-/// The dimensionality is defined by the const generic argument `D`.
-///
-/// # Implementation Note
-///
-/// The goal of this type is to eventually implement `Eq` and `Hash`, making it
-/// easier to work with vectors. This is a work in progress.
+/// The dimensionality of the point is defined by the const generic `D`
+/// parameter.
 #[derive(Clone, Copy, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Point<const D: usize> {
+    /// The coordinates of the point
     pub coords: Vector<D>,
 }
 

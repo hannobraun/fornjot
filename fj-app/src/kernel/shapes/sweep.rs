@@ -1,7 +1,8 @@
+use fj_math::{Aabb, Scalar, Vector};
+
 use crate::{
     debug::DebugInfo,
     kernel::{algorithms::sweep::sweep_shape, shape::Shape},
-    math::{Aabb, Scalar, Vector},
 };
 
 use super::ToShape;
