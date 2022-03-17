@@ -4,6 +4,8 @@
 //! the connection between [`fj`] and the Fornjot kernel. It translates those
 //! operations into terms the kernel can understand.
 
+#![deny(missing_docs)]
+
 mod circle;
 mod difference_2d;
 mod group;
