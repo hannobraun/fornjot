@@ -76,6 +76,8 @@
 //! on a per-shape basis. Forcing the user to deal with these issues up-front
 //! should lead to less work overall.
 
+#![deny(missing_docs)]
+
 pub mod algorithms;
 pub mod geometry;
 pub mod shape;
