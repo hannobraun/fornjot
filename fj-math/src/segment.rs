@@ -3,6 +3,9 @@ use std::fmt;
 use super::Point;
 
 /// A line segment, defined by its two end points
+///
+/// The dimensionality of the segment is defined by the const generic `D`
+/// parameter.
 #[derive(Clone, Copy, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Segment<const D: usize> {
     a: Point<D>,

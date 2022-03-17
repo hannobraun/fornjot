@@ -7,7 +7,8 @@ use super::{
 
 /// An n-dimensional vector
 ///
-/// The dimensionality is defined by the const generic argument `D`.
+/// The dimensionality of the vector is defined by the const generic `D`
+/// parameter.
 #[derive(Clone, Copy, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Vector<const D: usize> {
     /// The vector components
@@ -15,7 +16,12 @@ pub struct Vector<const D: usize> {
 }
 
 impl<const D: usize> Vector<D> {
-    /// Construct a `Vector` from an array
+    /// Construct a `Vector` from `f64` components
+    ///
+    /// # Panics
+    ///
+    /// Panics, if the components can not be converted to [`Scalar`]. See
+    /// [`Scalar::from_f64`], which this method uses internally.
     pub fn from_components_f64(components: [f64; D]) -> Self {
         Self {
             components: components.map(Scalar::from_f64),

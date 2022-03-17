@@ -7,9 +7,11 @@ use super::{
 
 /// An n-dimensional point
 ///
-/// The dimensionality is defined by the const generic argument `D`.
+/// The dimensionality of the point is defined by the const generic `D`
+/// parameter.
 #[derive(Clone, Copy, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Point<const D: usize> {
+    /// The coordinates of the point
     pub coords: Vector<D>,
 }
 
