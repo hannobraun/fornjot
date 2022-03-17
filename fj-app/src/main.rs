@@ -3,7 +3,6 @@ mod camera;
 mod config;
 mod graphics;
 mod input;
-mod kernel;
 mod mesh;
 mod model;
 mod operations;

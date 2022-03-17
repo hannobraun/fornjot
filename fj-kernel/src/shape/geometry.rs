@@ -1,6 +1,6 @@
 use fj_math::{Point, Transform};
 
-use crate::kernel::{
+use crate::{
     geometry::{Curve, Surface},
     topology::faces::Face,
 };

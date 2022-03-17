@@ -4,6 +4,7 @@ members = [
     "fj",
     "fj-app",
     "fj-debug",
+    "fj-kernel",
     "fj-math",
 
     "models/cuboid",
@@ -16,5 +17,6 @@ members = [
 default-members = [
     "fj-app",
     "fj-debug",
+    "fj-kernel",
     "fj-math",
 ]

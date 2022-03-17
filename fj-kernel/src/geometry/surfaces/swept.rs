@@ -1,6 +1,6 @@
 use fj_math::{Point, Transform, Vector};
 
-use crate::kernel::geometry::Curve;
+use crate::geometry::Curve;
 
 /// A surface that was swept from a curve
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -16,7 +16,7 @@ impl Swept {
     /// Construct a plane from 3 points
     #[cfg(test)]
     pub fn plane_from_points([a, b, c]: [Point<3>; 3]) -> Self {
-        use crate::kernel::geometry::Line;
+        use crate::geometry::Line;
 
         let curve = Curve::Line(Line::from_points([a, b]));
         let path = c - a;
@@ -57,7 +57,7 @@ mod tests {
 
     use fj_math::{Point, Vector};
 
-    use crate::kernel::geometry::{Curve, Line};
+    use crate::geometry::{Curve, Line};
 
     use super::Swept;
 

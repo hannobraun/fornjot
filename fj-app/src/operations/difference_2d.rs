@@ -1,9 +1,7 @@
 use std::collections::HashMap;
 
 use fj_debug::DebugInfo;
-use fj_math::{Aabb, Scalar};
-
-use crate::kernel::{
+use fj_kernel::{
     shape::Shape,
     topology::{
         edges::{Cycle, Edge},
@@ -11,6 +9,7 @@ use crate::kernel::{
         vertices::Vertex,
     },
 };
+use fj_math::{Aabb, Scalar};
 
 use super::ToShape;
 

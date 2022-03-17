@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use crate::kernel::{
+use crate::{
     geometry::{Curve, Surface},
     topology::{
         edges::{Cycle, Edge},

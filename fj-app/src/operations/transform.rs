@@ -1,8 +1,7 @@
 use fj_debug::DebugInfo;
+use fj_kernel::shape::Shape;
 use fj_math::{Aabb, Scalar, Transform};
 use parry3d_f64::math::Isometry;
-
-use crate::kernel::shape::Shape;
 
 use super::ToShape;
 

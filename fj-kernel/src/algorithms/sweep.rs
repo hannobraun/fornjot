@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use fj_math::{Scalar, Transform, Triangle, Vector};
 
-use crate::kernel::{
+use crate::{
     geometry::{surfaces::Swept, Surface},
     shape::{Handle, Shape},
     topology::{
@@ -323,7 +323,7 @@ impl Relation {
 mod tests {
     use fj_math::{Point, Scalar, Vector};
 
-    use crate::kernel::{
+    use crate::{
         geometry::{surfaces::Swept, Surface},
         shape::{Handle, Shape},
         topology::{edges::Cycle, faces::Face, vertices::Vertex},

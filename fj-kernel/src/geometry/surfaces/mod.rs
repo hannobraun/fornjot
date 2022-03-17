@@ -5,7 +5,7 @@ pub use self::swept::Swept;
 use fj_math::{Point, Transform, Vector};
 use nalgebra::vector;
 
-use crate::kernel::geometry;
+use crate::geometry;
 
 use super::{Curve, Line};
 

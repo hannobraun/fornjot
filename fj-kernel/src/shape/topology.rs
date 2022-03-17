@@ -3,7 +3,7 @@ use std::collections::HashSet;
 use fj_debug::DebugInfo;
 use fj_math::{Point, Scalar, Triangle, Vector};
 
-use crate::kernel::{
+use crate::{
     geometry::{Circle, Curve, Line},
     topology::{
         edges::{Cycle, Edge},
@@ -261,7 +261,7 @@ mod tests {
 
     use fj_math::{Point, Scalar};
 
-    use crate::kernel::{
+    use crate::{
         geometry::{Curve, Line, Surface},
         shape::{handle::Handle, Shape, ValidationError},
         topology::{

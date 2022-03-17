@@ -6,9 +6,8 @@ pub mod sweep;
 pub mod transform;
 
 use fj_debug::DebugInfo;
+use fj_kernel::shape::Shape;
 use fj_math::{Aabb, Scalar};
-
-use crate::kernel::shape::Shape;
 
 /// Implemented by all shapes
 pub trait ToShape {

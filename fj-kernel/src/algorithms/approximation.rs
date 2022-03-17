@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use fj_math::{Point, Scalar, Segment};
 
-use crate::kernel::topology::{
+use crate::topology::{
     edges::{Cycle, Edge},
     faces::Face,
     vertices::Vertex,
@@ -134,7 +134,7 @@ mod tests {
     use fj_math::{Point, Scalar, Segment};
     use map_macro::set;
 
-    use crate::kernel::{
+    use crate::{
         geometry::Surface,
         shape::Shape,
         topology::{edges::Cycle, faces::Face, vertices::Vertex},
