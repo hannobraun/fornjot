@@ -11,3 +11,4 @@ members = [
 
     "release-operator",
 ]
+default-members = ["fj-app"]
