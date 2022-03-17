@@ -236,11 +236,12 @@ pub fn sweep_shape(
                 let top_edge =
                     source_to_top.edges.get(edge_source).unwrap().clone();
 
-                let surface =
-                    target.geometry().add_surface(Surface::Swept(SweptCurve {
+                let surface = target.geometry().add_surface(
+                    Surface::SweptCurve(SweptCurve {
                         curve: bottom_edge.get().curve(),
                         path,
-                    }));
+                    }),
+                );
 
                 let cycle = target
                     .topology()
@@ -407,7 +408,7 @@ mod tests {
                 })
                 .unwrap();
 
-            let surface = shape.geometry().add_surface(Surface::Swept(
+            let surface = shape.geometry().add_surface(Surface::SweptCurve(
                 SweptCurve::plane_from_points(
                     [a, b, c].map(|vertex| vertex.get().point()),
                 ),
