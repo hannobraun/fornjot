@@ -626,23 +626,19 @@ name = "fj-app"
 version = "0.5.0"
 dependencies = [
  "anyhow",
- "approx 0.5.1",
  "bytemuck",
  "clap",
  "figment",
  "fj",
  "fj-debug",
+ "fj-kernel",
  "fj-math",
  "futures",
  "libloading",
- "map-macro",
  "nalgebra",
  "notify",
- "parking_lot 0.12.0",
- "parry2d-f64",
  "parry3d-f64",
  "serde",
- "spade",
  "thiserror",
  "threemf",
  "tracing",
@@ -657,6 +653,23 @@ name = "fj-debug"
 version = "0.5.0"
 dependencies = [
  "parry3d-f64",
+]
+
+[[package]]
+name = "fj-kernel"
+version = "0.5.0"
+dependencies = [
+ "anyhow",
+ "approx 0.5.1",
+ "fj-debug",
+ "fj-math",
+ "map-macro",
+ "nalgebra",
+ "parking_lot 0.12.0",
+ "parry2d-f64",
+ "parry3d-f64",
+ "spade",
+ "thiserror",
 ]
 
 [[package]]
@@ -1129,9 +1142,9 @@ dependencies = [
 
 [[package]]
 name = "map-macro"
-version = "0.2.0"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b3dec3b229449b1a54bd96dc32108086263d6830624e576dc0e6c80e619a0130"
+checksum = "9d5b0858fc6e216d2d6222d661021d9b184550acd757fbd80a8f86224069422c"
 
 [[package]]
 name = "matchers"

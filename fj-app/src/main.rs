@@ -3,9 +3,9 @@ mod camera;
 mod config;
 mod graphics;
 mod input;
-mod kernel;
 mod mesh;
 mod model;
+mod operations;
 mod window;
 
 use std::collections::HashSet;
@@ -30,9 +30,9 @@ use crate::{
     camera::Camera,
     config::Config,
     graphics::{DrawConfig, Renderer},
-    kernel::shapes::ToShape as _,
     mesh::MeshMaker,
     model::Model,
+    operations::ToShape as _,
     window::Window,
 };
 
