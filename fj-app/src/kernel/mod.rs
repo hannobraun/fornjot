@@ -78,6 +78,6 @@
 
 pub mod algorithms;
 pub mod geometry;
+pub mod operations;
 pub mod shape;
-pub mod shapes;
 pub mod topology;

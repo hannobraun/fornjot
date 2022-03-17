@@ -30,7 +30,7 @@ use crate::{
     camera::Camera,
     config::Config,
     graphics::{DrawConfig, Renderer},
-    kernel::shapes::ToShape as _,
+    kernel::operations::ToShape as _,
     mesh::MeshMaker,
     model::Model,
     window::Window,
