@@ -69,7 +69,7 @@ impl ConfigUi {
         }
 
         /* Render size of model bounding box */
-        let bbsize = aabb.size().components();
+        let bbsize = aabb.size().components;
         let info = format!(
             "Model bounding box size: {:0.1} {:0.1} {:0.1}",
             bbsize[0].into_f32(),

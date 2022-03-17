@@ -79,11 +79,6 @@ impl<const D: usize> Vector<D> {
     pub fn dot(&self, other: &Self) -> Scalar {
         self.to_na().dot(&other.to_na()).into()
     }
-
-    /// Access an iterator over the vector's components
-    pub fn components(&self) -> [Scalar; D] {
-        self.components
-    }
 }
 
 impl Vector<3> {
