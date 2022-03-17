@@ -6,6 +6,7 @@ members = [
     "fj-debug",
     "fj-kernel",
     "fj-math",
+    "fj-operations",
 
     "models/cuboid",
     "models/group",
@@ -19,4 +20,5 @@ default-members = [
     "fj-debug",
     "fj-kernel",
     "fj-math",
+    "fj-operations",
 ]

@@ -5,7 +5,6 @@ mod graphics;
 mod input;
 mod mesh;
 mod model;
-mod operations;
 mod window;
 
 use std::collections::HashSet;
@@ -15,6 +14,7 @@ use std::{collections::HashMap, sync::mpsc, time::Instant};
 
 use fj_debug::DebugInfo;
 use fj_math::Scalar;
+use fj_operations::ToShape as _;
 use futures::executor::block_on;
 use notify::Watcher as _;
 use tracing::trace;
@@ -32,7 +32,6 @@ use crate::{
     graphics::{DrawConfig, Renderer},
     mesh::MeshMaker,
     model::Model,
-    operations::ToShape as _,
     window::Window,
 };
 
