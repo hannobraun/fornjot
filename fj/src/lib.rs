@@ -16,7 +16,8 @@ mod syntax;
 
 pub mod prelude {
     pub use crate::syntax::{
-        Group as _, Rotate as _, Sketch as _, Sweep as _, Translate as _,
+        Difference as _, Group as _, Rotate as _, Sketch as _, Sweep as _,
+        Translate as _,
     };
 }
 
