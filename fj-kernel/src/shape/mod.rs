@@ -4,8 +4,6 @@ pub mod iter;
 pub mod topology;
 pub mod validate;
 
-use fj_math::{Point, Scalar};
-
 pub use self::{
     geometry::Geometry,
     handle::Handle,
@@ -13,6 +11,8 @@ pub use self::{
     topology::Topology,
     validate::{ValidationError, ValidationResult},
 };
+
+use fj_math::{Point, Scalar};
 
 use super::{
     geometry::{Curve, Surface},

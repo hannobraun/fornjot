@@ -1,9 +1,9 @@
 mod circle;
 mod line;
 
-use fj_math::{Point, Scalar, Transform, Vector};
-
 pub use self::{circle::Circle, line::Line};
+
+use fj_math::{Point, Scalar, Transform, Vector};
 
 /// A one-dimensional shape
 ///
