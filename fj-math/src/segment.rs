@@ -12,6 +12,19 @@ pub struct Segment<const D: usize> {
 }
 
 impl<const D: usize> Segment<D> {
+    /// Construct a segment from two points
+    ///
+    /// # Panics
+    ///
+    /// Panics, if the points are coincident.
+    pub fn from_points(points: [Point<D>; 2]) -> Self {
+        let [a, b] = points;
+
+        assert!(a != b, "Invalid segment; both points are identical {a:?}");
+
+        Self { points }
+    }
+
     /// Access the points of the segment
     pub fn points(&self) -> [Point<D>; 2] {
         self.points
@@ -34,11 +47,7 @@ impl Segment<3> {
 
 impl<const D: usize> From<[Point<D>; 2]> for Segment<D> {
     fn from(points: [Point<D>; 2]) -> Self {
-        let [a, b] = points;
-
-        assert!(a != b, "Invalid segment; both points are identical {a:?}");
-
-        Self { points }
+        Self::from_points(points)
     }
 }
 
