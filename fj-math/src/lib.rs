@@ -25,6 +25,8 @@
 //! [nalgebra]: https://nalgebra.org/
 //! [Parry]: https://www.parry.rs/
 
+#![deny(missing_docs)]
+
 mod aabb;
 mod coordinates;
 mod point;
