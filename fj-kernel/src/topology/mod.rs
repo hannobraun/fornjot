@@ -11,9 +11,9 @@
 //! definition of identity. Two [`Handle`]s are only considered equal, if they
 //! refer to objects in the same memory location.
 
-pub mod edges;
-pub mod faces;
-pub mod vertices;
+mod edges;
+mod faces;
+mod vertices;
 
 pub use self::{
     edges::{Cycle, Edge},
