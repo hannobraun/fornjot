@@ -1,16 +1,14 @@
 use std::collections::HashSet;
 
+use fj_debug::DebugInfo;
 use fj_math::{Point, Scalar, Triangle, Vector};
 
-use crate::{
-    debug::DebugInfo,
-    kernel::{
-        geometry::{Circle, Curve, Line},
-        topology::{
-            edges::{Cycle, Edge},
-            faces::Face,
-            vertices::Vertex,
-        },
+use crate::kernel::{
+    geometry::{Circle, Curve, Line},
+    topology::{
+        edges::{Cycle, Edge},
+        faces::Face,
+        vertices::Vertex,
     },
 };
 

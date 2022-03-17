@@ -1,12 +1,10 @@
+use fj_debug::DebugInfo;
 use fj_math::{Aabb, Point, Scalar};
 
-use crate::{
-    debug::DebugInfo,
-    kernel::{
-        geometry::Surface,
-        shape::Shape,
-        topology::{edges::Cycle, faces::Face},
-    },
+use crate::kernel::{
+    geometry::Surface,
+    shape::Shape,
+    topology::{edges::Cycle, faces::Face},
 };
 
 use super::ToShape;
