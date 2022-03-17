@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use fj::prelude::*;
+
 #[no_mangle]
 pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
     let outer = args
@@ -22,10 +24,8 @@ pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
         fj::Circle::from_radius(outer).with_color([0, 0, 255, 255]);
     let inner_edge = fj::Circle::from_radius(inner);
 
-    let footprint =
-        fj::Difference2d::from_objects(outer_edge.into(), inner_edge.into());
-
-    let spacer = fj::Sweep::from_shape_and_length(footprint.into(), height);
+    let footprint = outer_edge.difference(&inner_edge);
+    let spacer = footprint.sweep(height);
 
     spacer.into()
 }

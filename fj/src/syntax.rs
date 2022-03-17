@@ -1,3 +1,45 @@
+pub trait Difference {
+    fn difference<Other>(&self, other: &Other) -> crate::Difference2d
+    where
+        Other: Clone + Into<crate::Shape2d>;
+}
+
+impl<T> Difference for T
+where
+    T: Clone + Into<crate::Shape2d>,
+{
+    fn difference<Other>(&self, other: &Other) -> crate::Difference2d
+    where
+        Other: Clone + Into<crate::Shape2d>,
+    {
+        let a = self.clone().into();
+        let b = other.clone().into();
+
+        crate::Difference2d::from_objects(a, b)
+    }
+}
+
+pub trait Group {
+    fn group<Other>(&self, other: &Other) -> crate::Group
+    where
+        Other: Clone + Into<crate::Shape3d>;
+}
+
+impl<T> Group for T
+where
+    T: Clone + Into<crate::Shape3d>,
+{
+    fn group<Other>(&self, other: &Other) -> crate::Group
+    where
+        Other: Clone + Into<crate::Shape3d>,
+    {
+        let a = self.clone().into();
+        let b = other.clone().into();
+
+        crate::Group { a, b }
+    }
+}
+
 pub trait Rotate {
     /// Create a rotation
     ///
@@ -67,26 +109,5 @@ where
             angle: 0.,
             offset,
         }
-    }
-}
-
-pub trait Group {
-    fn group<Other>(&self, other: &Other) -> crate::Group
-    where
-        Other: Clone + Into<crate::Shape3d>;
-}
-
-impl<T> Group for T
-where
-    T: Clone + Into<crate::Shape3d>,
-{
-    fn group<Other>(&self, other: &Other) -> crate::Group
-    where
-        Other: Clone + Into<crate::Shape3d>,
-    {
-        let a = self.clone().into();
-        let b = other.clone().into();
-
-        crate::Group { a, b }
     }
 }
