@@ -43,6 +43,10 @@ features = ["env", "toml"]
 version = "0.5.0"
 path    = "../fj"
 
+[dependencies.fj-debug]
+version = "0.5.0"
+path    = "../fj-debug"
+
 [dependencies.fj-math]
 version = "0.5.0"
 path    = "../fj-math"

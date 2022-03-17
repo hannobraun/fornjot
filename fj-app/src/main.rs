@@ -1,7 +1,6 @@
 mod args;
 mod camera;
 mod config;
-mod debug;
 mod graphics;
 mod input;
 mod kernel;
@@ -14,6 +13,7 @@ use std::ffi::OsStr;
 use std::path::PathBuf;
 use std::{collections::HashMap, sync::mpsc, time::Instant};
 
+use fj_debug::DebugInfo;
 use fj_math::Scalar;
 use futures::executor::block_on;
 use notify::Watcher as _;
@@ -29,7 +29,6 @@ use crate::{
     args::Args,
     camera::Camera,
     config::Config,
-    debug::DebugInfo,
     graphics::{DrawConfig, Renderer},
     kernel::shapes::ToShape as _,
     mesh::MeshMaker,

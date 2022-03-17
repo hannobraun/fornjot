@@ -1,16 +1,14 @@
 use std::collections::HashMap;
 
+use fj_debug::DebugInfo;
 use fj_math::{Aabb, Scalar};
 
-use crate::{
-    debug::DebugInfo,
-    kernel::{
-        shape::Shape,
-        topology::{
-            edges::{Cycle, Edge},
-            faces::Face,
-            vertices::Vertex,
-        },
+use crate::kernel::{
+    shape::Shape,
+    topology::{
+        edges::{Cycle, Edge},
+        faces::Face,
+        vertices::Vertex,
     },
 };
 
