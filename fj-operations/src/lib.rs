@@ -1,9 +1,9 @@
-pub mod circle;
-pub mod difference_2d;
-pub mod group;
-pub mod sketch;
-pub mod sweep;
-pub mod transform;
+mod circle;
+mod difference_2d;
+mod group;
+mod sketch;
+mod sweep;
+mod transform;
 
 use fj_debug::DebugInfo;
 use fj_kernel::shape::Shape;
