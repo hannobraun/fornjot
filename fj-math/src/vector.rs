@@ -160,14 +160,14 @@ impl ops::DerefMut for Vector<3> {
 }
 
 impl<const D: usize> From<[Scalar; D]> for Vector<D> {
-    fn from(array: [Scalar; D]) -> Self {
-        Self { components: array }
+    fn from(components: [Scalar; D]) -> Self {
+        Self { components }
     }
 }
 
 impl<const D: usize> From<[f64; D]> for Vector<D> {
-    fn from(array: [f64; D]) -> Self {
-        Self::from_components_f64(array)
+    fn from(components: [f64; D]) -> Self {
+        Self::from_components_f64(components)
     }
 }
 
