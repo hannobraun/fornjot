@@ -1,8 +1,8 @@
-pub mod geometry;
-pub mod handle;
-pub mod iter;
-pub mod topology;
-pub mod validate;
+mod geometry;
+mod handle;
+mod iter;
+mod topology;
+mod validate;
 
 pub use self::{
     geometry::Geometry,
