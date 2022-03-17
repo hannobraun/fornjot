@@ -8,7 +8,7 @@ pub mod transform;
 use fj_debug::DebugInfo;
 use fj_math::{Aabb, Scalar};
 
-use super::shape::Shape;
+use crate::kernel::shape::Shape;
 
 /// Implemented by all shapes
 pub trait ToShape {
