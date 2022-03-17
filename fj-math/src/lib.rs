@@ -1,11 +1,11 @@
-pub mod aabb;
-pub mod coordinates;
-pub mod point;
-pub mod scalar;
-pub mod segment;
-pub mod transform;
-pub mod triangle;
-pub mod vector;
+mod aabb;
+mod coordinates;
+mod point;
+mod scalar;
+mod segment;
+mod transform;
+mod triangle;
+mod vector;
 
 pub use self::{
     aabb::Aabb, point::Point, scalar::Scalar, segment::Segment,
