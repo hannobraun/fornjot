@@ -1,3 +1,10 @@
+//! Debug information definitions for the Fornjot ecosystem
+//!
+//! This crate contains debug information that is used by other crates within
+//! the Fornjot ecosystem. The types in here aren't very useful in themselves,
+//! but they define an interface that other crates use to communicate between
+//! each other.
+
 use parry3d_f64::query::Ray;
 
 /// Debug info from the CAD kernel that can be visualized
@@ -10,10 +17,16 @@ pub struct DebugInfo {
 }
 
 impl DebugInfo {
+    /// Construct an empty instance of `DebugInfo`
     pub fn new() -> Self {
         Self::default()
     }
 
+    /// Clear all information within this instance
+    ///
+    /// The resulting instance is the same, as if created by [`DebugInfo::new`],
+    /// but calling `clear` might be more efficient in regard to heap
+    /// allocations.
     pub fn clear(&mut self) {
         self.triangle_edge_checks.clear();
     }
@@ -21,11 +34,15 @@ impl DebugInfo {
 
 /// Record of a check to determine if a triangle edge is within a face
 pub struct TriangleEdgeCheck {
+    /// The ray used to perform the check
     pub ray: Ray,
+
+    /// Where the ray hit any edges of the face
     pub hits: Vec<f64>,
 }
 
 impl TriangleEdgeCheck {
+    /// Construct a new instance
     pub fn new(ray: Ray) -> Self {
         Self {
             ray,
