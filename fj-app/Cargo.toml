@@ -42,13 +42,13 @@ path    = "../fj"
 version = "0.5.0"
 path    = "../fj-debug"
 
-[dependencies.fj-kernel]
-version = "0.5.0"
-path    = "../fj-kernel"
-
 [dependencies.fj-math]
 version = "0.5.0"
 path    = "../fj-math"
+
+[dependencies.fj-operations]
+version = "0.5.0"
+path    = "../fj-operations"
 
 [dependencies.serde]
 version  = "1.0.136"

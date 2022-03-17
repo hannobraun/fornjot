@@ -631,8 +631,8 @@ dependencies = [
  "figment",
  "fj",
  "fj-debug",
- "fj-kernel",
  "fj-math",
+ "fj-operations",
  "futures",
  "libloading",
  "nalgebra",
@@ -681,6 +681,18 @@ dependencies = [
  "nalgebra",
  "num-traits",
  "parry2d-f64",
+ "parry3d-f64",
+]
+
+[[package]]
+name = "fj-operations"
+version = "0.5.0"
+dependencies = [
+ "fj",
+ "fj-debug",
+ "fj-kernel",
+ "fj-math",
+ "nalgebra",
  "parry3d-f64",
 ]
 
