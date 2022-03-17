@@ -3,11 +3,7 @@ use std::collections::HashMap;
 use fj_debug::DebugInfo;
 use fj_kernel::{
     shape::Shape,
-    topology::{
-        edges::{Cycle, Edge},
-        faces::Face,
-        vertices::Vertex,
-    },
+    topology::{Cycle, Edge, Face, Vertex},
 };
 use fj_math::{Aabb, Scalar};
 

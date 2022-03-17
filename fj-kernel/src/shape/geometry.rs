@@ -2,7 +2,7 @@ use fj_math::{Point, Transform};
 
 use crate::{
     geometry::{Curve, Surface},
-    topology::faces::Face,
+    topology::Face,
 };
 
 use super::{

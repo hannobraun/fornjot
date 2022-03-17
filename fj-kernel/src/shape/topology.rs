@@ -5,11 +5,7 @@ use fj_math::{Point, Scalar, Triangle, Vector};
 
 use crate::{
     geometry::{Circle, Curve, Line},
-    topology::{
-        edges::{Cycle, Edge},
-        faces::Face,
-        vertices::Vertex,
-    },
+    topology::{Cycle, Edge, Face, Vertex},
 };
 
 use super::{
@@ -264,11 +260,7 @@ mod tests {
     use crate::{
         geometry::{Curve, Line, Surface},
         shape::{handle::Handle, Shape, ValidationError},
-        topology::{
-            edges::{Cycle, Edge},
-            faces::Face,
-            vertices::Vertex,
-        },
+        topology::{Cycle, Edge, Face, Vertex},
     };
 
     const MIN_DISTANCE: f64 = 5e-7;

@@ -16,11 +16,7 @@ use fj_math::{Point, Scalar};
 
 use super::{
     geometry::{Curve, Surface},
-    topology::{
-        edges::{Cycle, Edge},
-        faces::Face,
-        vertices::Vertex,
-    },
+    topology::{Cycle, Edge, Face, Vertex},
 };
 
 use self::handle::Storage;

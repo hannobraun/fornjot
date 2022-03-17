@@ -5,11 +5,7 @@ use fj_math::{Scalar, Transform, Triangle, Vector};
 use crate::{
     geometry::{Surface, SweptCurve},
     shape::{Handle, Shape},
-    topology::{
-        edges::{Cycle, Edge},
-        faces::Face,
-        vertices::Vertex,
-    },
+    topology::{Cycle, Edge, Face, Vertex},
 };
 
 use super::approximation::Approximation;
@@ -327,7 +323,7 @@ mod tests {
     use crate::{
         geometry::{Surface, SweptCurve},
         shape::{Handle, Shape},
-        topology::{edges::Cycle, faces::Face, vertices::Vertex},
+        topology::{Cycle, Face, Vertex},
     };
 
     use super::sweep_shape;

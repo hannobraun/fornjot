@@ -2,11 +2,7 @@ use std::collections::HashSet;
 
 use fj_math::{Point, Scalar, Segment};
 
-use crate::topology::{
-    edges::{Cycle, Edge},
-    faces::Face,
-    vertices::Vertex,
-};
+use crate::topology::{Cycle, Edge, Face, Vertex};
 
 /// An approximation of an edge, multiple edges, or a face
 #[derive(Debug, PartialEq)]
@@ -137,7 +133,7 @@ mod tests {
     use crate::{
         geometry::Surface,
         shape::Shape,
-        topology::{edges::Cycle, faces::Face, vertices::Vertex},
+        topology::{Cycle, Face, Vertex},
     };
 
     use super::{approximate_edge, Approximation};

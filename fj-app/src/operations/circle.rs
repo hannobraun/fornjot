@@ -2,7 +2,7 @@ use fj_debug::DebugInfo;
 use fj_kernel::{
     geometry::Surface,
     shape::Shape,
-    topology::{edges::Cycle, faces::Face},
+    topology::{Cycle, Face},
 };
 use fj_math::{Aabb, Point, Scalar};
 

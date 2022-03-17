@@ -2,11 +2,7 @@ use std::collections::HashSet;
 
 use crate::{
     geometry::{Curve, Surface},
-    topology::{
-        edges::{Cycle, Edge},
-        faces::Face,
-        vertices::Vertex,
-    },
+    topology::{Cycle, Edge, Face, Vertex},
 };
 
 use super::Handle;

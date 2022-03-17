@@ -14,3 +14,9 @@
 pub mod edges;
 pub mod faces;
 pub mod vertices;
+
+pub use self::{
+    edges::{Cycle, Edge},
+    faces::Face,
+    vertices::Vertex,
+};
