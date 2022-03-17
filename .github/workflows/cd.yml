@@ -17,20 +17,10 @@ jobs:
     strategy:
       matrix:
         include:
-          # Supported `cross` targets:
-          #   https://github.com/rust-embedded/cross#supported-targets
-
-          # Linux targets
-          - { target: x86_64-unknown-linux-gnu, os: ubuntu-latest, cross: false }
-          - { target: x86_64-unknown-linux-musl, os: ubuntu-latest, cross: true }
-          - { target: aarch64-unknown-linux-musl, os: ubuntu-latest, cross: true }
-
-          # macOS targets
-          - { target: x86_64-apple-darwin, os: macOS-latest, cross: false }
-          - { target: aarch64-apple-darwin, os: macOS-latest, cross: false }
-
-          # Windows targets
-          - { target: x86_64-pc-windows-msvc, os: windows-latest, cross: false }
+          - { target: x86_64-unknown-linux-gnu, os: ubuntu-latest }
+          - { target: x86_64-apple-darwin, os: macOS-latest }
+          - { target: aarch64-apple-darwin, os: macOS-latest }
+          - { target: x86_64-pc-windows-msvc, os: windows-latest }
 
     runs-on: ${{matrix.os}}
     steps:
@@ -53,7 +43,6 @@ jobs:
         with:
           args: --release --target ${{ matrix.target }}
           command: build
-          use-cross: ${{ matrix.cross }}
 
       - name: Prepare Upload
         shell: bash
