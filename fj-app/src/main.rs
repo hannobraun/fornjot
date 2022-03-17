@@ -68,7 +68,7 @@ fn main() -> anyhow::Result<()> {
         }
     }
 
-    let model = Model::from_path(path)?;
+    let model = Model::from_path(path, None)?;
 
     let mut parameters = HashMap::new();
     for parameter in args.parameters {
