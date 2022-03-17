@@ -43,6 +43,8 @@ pub enum Face {
         /// It might be less error-prone to specify the edges in surface
         /// coordinates.
         cycles: Vec<Handle<Cycle>>,
+
+        /// The color of the face
         color: [u8; 4],
     },
 
@@ -88,6 +90,7 @@ impl Face {
         }
     }
 
+    /// Triangulate the face
     pub fn triangles(
         &self,
         tolerance: Scalar,

@@ -5,6 +5,9 @@ use super::{
     Store,
 };
 
+/// An iterator over geometric or topological objects
+///
+/// Returned by various methods of the [`Shape`] API.
 pub struct Iter<'r, T> {
     inner: Inner<'r, T>,
 }

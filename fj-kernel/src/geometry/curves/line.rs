@@ -28,7 +28,7 @@ impl Line {
         self.origin
     }
 
-    /// Transform the line
+    /// Create a new instance that is transformed by `transform`
     #[must_use]
     pub fn transform(self, transform: &Transform) -> Self {
         Self {

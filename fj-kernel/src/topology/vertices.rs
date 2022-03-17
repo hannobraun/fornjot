@@ -19,6 +19,7 @@ use crate::shape::Handle;
 /// equality of topological objects.
 #[derive(Clone, Debug, Eq, Ord, PartialOrd)]
 pub struct Vertex {
+    /// The point that defines the location of the vertex
     pub point: Handle<Point<3>>,
 }
 

@@ -1,5 +1,10 @@
 //! Topological objects
 //!
+//! Simplifying a bit, topology is responsible for defining how objects are
+//! related, as opposed to geometry, which is responsible for where things are.
+//!
+//! The types in this module use the types from [`crate::geometry`].
+//!
 //! # Equality
 //!
 //! Equality of topological objects is defined in terms of the geometry they

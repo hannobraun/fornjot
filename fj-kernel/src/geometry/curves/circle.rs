@@ -22,6 +22,7 @@ impl Circle {
         self.center
     }
 
+    /// Create a new instance that is transformed by `transform`
     #[must_use]
     pub fn transform(self, transform: &Transform) -> Self {
         let radius = self.radius.to_xyz();
@@ -75,6 +76,10 @@ impl Circle {
         Vector::from([x, y, Scalar::ZERO])
     }
 
+    /// Approximate the circle
+    ///
+    /// `tolerance` specifies how much the approximation is allowed to deviate
+    /// from the circle.
     pub fn approx(&self, tolerance: Scalar, out: &mut Vec<Point<3>>) {
         let radius = self.radius.magnitude();
 

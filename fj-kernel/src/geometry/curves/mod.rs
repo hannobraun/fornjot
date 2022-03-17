@@ -32,6 +32,7 @@ impl Curve {
         }
     }
 
+    /// Create a new instance that is transformed by `transform`
     #[must_use]
     pub fn transform(self, transform: &Transform) -> Self {
         match self {

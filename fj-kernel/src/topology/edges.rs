@@ -16,6 +16,7 @@ use super::vertices::Vertex;
 /// equality of topological objects.
 #[derive(Clone, Debug, Eq, Ord, PartialOrd)]
 pub struct Cycle {
+    /// The edges that make up the cycle
     pub edges: Vec<Handle<Edge>>,
 }
 

@@ -239,6 +239,7 @@ impl Topology<'_> {
         Iter::new(self.geometry.faces)
     }
 
+    /// Triangulate the shape
     pub fn triangles(
         &self,
         tolerance: Scalar,
