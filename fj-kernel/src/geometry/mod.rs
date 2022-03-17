@@ -1,6 +1,6 @@
-pub mod curves;
-pub mod points;
-pub mod surfaces;
+mod curves;
+mod points;
+mod surfaces;
 
 pub use self::{
     curves::{Circle, Curve, Line},
