@@ -15,9 +15,7 @@ categories  = ["mathematics", "rendering"]
 anyhow      = "1.0.56"
 bytemuck    = "1.8.0"
 futures     = "0.3.21"
-libloading  = "0.7.2"
 nalgebra    = "0.30.0"
-notify      = "5.0.0-pre.14"
 parry3d-f64 = "0.8.0"
 thiserror   = "1.0.30"
 threemf     = "0.2.0"
@@ -41,6 +39,10 @@ path    = "../fj"
 [dependencies.fj-debug]
 version = "0.5.0"
 path    = "../fj-debug"
+
+[dependencies.fj-host]
+version = "0.5.0"
+path    = "../fj-host"
 
 [dependencies.fj-math]
 version = "0.5.0"

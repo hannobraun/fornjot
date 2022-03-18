@@ -631,12 +631,11 @@ dependencies = [
  "figment",
  "fj",
  "fj-debug",
+ "fj-host",
  "fj-math",
  "fj-operations",
  "futures",
- "libloading",
  "nalgebra",
- "notify",
  "parry3d-f64",
  "serde",
  "thiserror",
@@ -653,6 +652,16 @@ name = "fj-debug"
 version = "0.5.0"
 dependencies = [
  "parry3d-f64",
+]
+
+[[package]]
+name = "fj-host"
+version = "0.5.0"
+dependencies = [
+ "fj",
+ "libloading",
+ "notify",
+ "thiserror",
 ]
 
 [[package]]
