@@ -142,27 +142,13 @@ impl Model {
                         }
                     }
 
-                    let shape = match self.load(&parameters) {
-                        Ok(shape) => shape,
-                        Err(Error::Compile) => {
-                            // It would be better to display an error in the UI,
-                            // where the user can actually see it. Issue:
-                            // https://github.com/hannobraun/fornjot/issues/30
-                            println!("Error compiling model");
-                            return;
-                        }
-                        Err(err) => {
-                            panic!("Error reloading model: {:?}", err);
-                        }
-                    };
-
                     // This will panic, if the other end is disconnected, which
                     // is probably the result of a panic on that thread, or the
                     // application is being shut down.
                     //
                     // Either way, not much we can do about it here, except
                     // maybe to provide a better error message in the future.
-                    tx.send(shape).unwrap();
+                    tx.send(()).unwrap();
                 }
             },
         )?;
@@ -172,19 +158,39 @@ impl Model {
         Ok(Watcher {
             _watcher: Box::new(watcher),
             channel: rx,
+            model: self,
+            parameters,
         })
     }
 }
 
 pub struct Watcher {
     _watcher: Box<dyn notify::Watcher>,
-    channel: mpsc::Receiver<fj::Shape>,
+    channel: mpsc::Receiver<()>,
+    model: Model,
+    parameters: HashMap<String, String>,
 }
 
 impl Watcher {
     pub fn receive(&self) -> Option<fj::Shape> {
         match self.channel.try_recv() {
-            Ok(shape) => Some(shape),
+            Ok(()) => {
+                let shape = match self.model.load(&self.parameters) {
+                    Ok(shape) => shape,
+                    Err(Error::Compile) => {
+                        // It would be better to display an error in the UI,
+                        // where the user can actually see it. Issue:
+                        // https://github.com/hannobraun/fornjot/issues/30
+                        println!("Error compiling model");
+                        return None;
+                    }
+                    Err(err) => {
+                        panic!("Error reloading model: {:?}", err);
+                    }
+                };
+
+                Some(shape)
+            }
             Err(mpsc::TryRecvError::Empty) => {
                 // Nothing to receive from the channel.
                 None
