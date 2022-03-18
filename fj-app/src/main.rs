@@ -201,11 +201,7 @@ fn main() -> anyhow::Result<()> {
     let mut input_handler = input::Handler::new(previous_time);
     let mut renderer = block_on(Renderer::new(&window))?;
 
-    renderer.update_geometry(
-        (&processed_shape.triangles).into(),
-        (&processed_shape.debug_info).into(),
-        processed_shape.aabb,
-    );
+    processed_shape.update_geometry(&mut renderer);
 
     let mut draw_config = DrawConfig::default();
     let mut camera = Camera::new(&processed_shape.aabb);
@@ -220,12 +216,7 @@ fn main() -> anyhow::Result<()> {
         match watcher_rx.try_recv() {
             Ok(shape) => {
                 processed_shape = shape_processor.process(&shape);
-
-                renderer.update_geometry(
-                    (&processed_shape.triangles).into(),
-                    (&processed_shape.debug_info).into(),
-                    processed_shape.aabb,
-                );
+                processed_shape.update_geometry(&mut renderer);
             }
             Err(mpsc::TryRecvError::Empty) => {
                 // Nothing to receive from the channel. We don't care.
@@ -391,4 +382,14 @@ struct ProcessedShape {
     aabb: Aabb<3>,
     triangles: Vec<Triangle<3>>,
     debug_info: DebugInfo,
+}
+
+impl ProcessedShape {
+    fn update_geometry(&self, renderer: &mut Renderer) {
+        renderer.update_geometry(
+            (&self.triangles).into(),
+            (&self.debug_info).into(),
+            self.aabb,
+        );
+    }
 }
