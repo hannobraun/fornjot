@@ -1,3 +1,8 @@
+//! Plugin host for Fornjot models
+//!
+//! Fornjot models are loaded into the Fornjot application as plugins. This
+//! crate contains the code required to host plugins.
+
 use std::{
     collections::{HashMap, HashSet},
     ffi::OsStr,
@@ -11,6 +16,7 @@ use std::{
 use notify::Watcher as _;
 use thiserror::Error;
 
+/// Represents a Fornjot model
 pub struct Model {
     src_path: PathBuf,
     lib_path: PathBuf,
@@ -18,6 +24,11 @@ pub struct Model {
 }
 
 impl Model {
+    /// Initialize the model from a path
+    ///
+    /// Optionally, the target directory where plugin files are compiled to can
+    /// be provided. If it is not provided, the target directory is assumed to
+    /// be located within the model path.
     pub fn from_path(
         path: PathBuf,
         target_dir: Option<PathBuf>,
@@ -56,6 +67,13 @@ impl Model {
         })
     }
 
+    /// Load the model once
+    ///
+    /// The passed arguments are provided to the model. Returns the shape that
+    /// the model returns.
+    ///
+    /// Please refer to [`Model::load_and_watch`], if you want to watch the
+    /// model for changes, reloading it continually.
     pub fn load_once(
         &self,
         arguments: &HashMap<String, String>,
@@ -96,6 +114,12 @@ impl Model {
         Ok(shape)
     }
 
+    /// Load the model, then watch it for changes
+    ///
+    /// Whenever a change is detected, the model is being reloaded.
+    ///
+    /// Consumes this instance of `Model` and returns a [`Watcher`], which can
+    /// be queried for changes to the model.
     pub fn load_and_watch(
         self,
         parameters: HashMap<String, String>,
@@ -175,6 +199,7 @@ impl Model {
     }
 }
 
+/// Watches a model for changes, reloading it continually
 pub struct Watcher {
     _watcher: Box<dyn notify::Watcher>,
     channel: mpsc::Receiver<()>,
@@ -183,6 +208,10 @@ pub struct Watcher {
 }
 
 impl Watcher {
+    /// Receive an updated shape that the reloaded model created
+    ///
+    /// Returns `None`, if the model has not changed since the last time this
+    /// method was called.
     pub fn receive(&self) -> Option<fj::Shape> {
         match self.channel.try_recv() {
             Ok(()) => {
@@ -216,17 +245,22 @@ impl Watcher {
     }
 }
 
+/// An error that can occur when loading or reloading a model
 #[derive(Debug, Error)]
 pub enum Error {
+    /// Model failed to compile
     #[error("Error compiling model")]
     Compile,
 
+    /// I/O error while loading the model
     #[error("I/O error while loading model")]
     Io(#[from] io::Error),
 
+    /// Failed to load the model's dynamic library
     #[error("Error loading model from dynamic library")]
     LibLoading(#[from] libloading::Error),
 
+    /// Error while watching the model code for changes
     #[error("Error watching model for changes")]
     Notify(#[from] notify::Error),
 }
