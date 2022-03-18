@@ -4,13 +4,13 @@ mod config;
 mod graphics;
 mod input;
 mod mesh;
-mod model;
 mod window;
 
 use std::path::PathBuf;
 use std::{collections::HashMap, time::Instant};
 
 use fj_debug::DebugInfo;
+use fj_host::Model;
 use fj_math::{Aabb, Scalar, Triangle};
 use fj_operations::ToShape as _;
 use futures::executor::block_on;
@@ -28,7 +28,6 @@ use crate::{
     config::Config,
     graphics::{DrawConfig, Renderer},
     mesh::MeshMaker,
-    model::Model,
     window::Window,
 };
 

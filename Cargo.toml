@@ -4,6 +4,7 @@ members = [
     "fj",
     "fj-app",
     "fj-debug",
+    "fj-host",
     "fj-kernel",
     "fj-math",
     "fj-operations",
@@ -18,6 +19,7 @@ members = [
 default-members = [
     "fj-app",
     "fj-debug",
+    "fj-host",
     "fj-kernel",
     "fj-math",
     "fj-operations",
