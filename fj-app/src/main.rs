@@ -83,7 +83,7 @@ fn main() -> anyhow::Result<()> {
     let shape_processor = ShapeProcessor::new(args.tolerance)?;
 
     if let Some(path) = args.export {
-        let shape = model.load(&parameters)?;
+        let shape = model.load_once(&parameters)?;
         let shape = shape_processor.process(&shape);
 
         let mut mesh_maker = MeshMaker::new();

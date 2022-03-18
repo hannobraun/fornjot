@@ -56,7 +56,7 @@ impl Model {
         })
     }
 
-    pub fn load(
+    pub fn load_once(
         &self,
         arguments: &HashMap<String, String>,
     ) -> Result<fj::Shape, Error> {
@@ -186,7 +186,7 @@ impl Watcher {
     pub fn receive(&self) -> Option<fj::Shape> {
         match self.channel.try_recv() {
             Ok(()) => {
-                let shape = match self.model.load(&self.parameters) {
+                let shape = match self.model.load_once(&self.parameters) {
                     Ok(shape) => shape,
                     Err(Error::Compile) => {
                         // It would be better to display an error in the UI,
