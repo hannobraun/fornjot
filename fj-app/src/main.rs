@@ -129,9 +129,9 @@ fn main() -> anyhow::Result<()> {
     let mut input_handler = input::Handler::new(previous_time);
     let mut renderer = block_on(Renderer::new(&window))?;
 
-    let mut processed_shape = None;
-
     let mut draw_config = DrawConfig::default();
+
+    let mut processed_shape = None;
     let mut camera = None;
 
     event_loop.run(move |event, _, control_flow| {
