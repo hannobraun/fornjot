@@ -96,7 +96,7 @@ impl Model {
         Ok(shape)
     }
 
-    pub fn watch(
+    pub fn load_and_watch(
         self,
         parameters: HashMap<String, String>,
     ) -> Result<Watcher, Error> {

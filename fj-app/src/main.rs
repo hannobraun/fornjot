@@ -119,7 +119,7 @@ fn main() -> anyhow::Result<()> {
         return Ok(());
     }
 
-    let watcher = model.watch(parameters)?;
+    let watcher = model.load_and_watch(parameters)?;
 
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop);
