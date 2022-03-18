@@ -1,5 +1,13 @@
-use std::{collections::HashMap, io, path::PathBuf, process::Command};
+use std::{
+    collections::{HashMap, HashSet},
+    ffi::OsStr,
+    io,
+    path::PathBuf,
+    process::Command,
+    sync::mpsc,
+};
 
+use notify::Watcher as _;
 use thiserror::Error;
 
 pub struct Model {
@@ -89,6 +97,83 @@ impl Model {
         };
 
         Ok(shape)
+    }
+
+    pub fn watch(
+        self,
+        tx: mpsc::SyncSender<fj::Shape>,
+        parameters: HashMap<String, String>,
+    ) -> notify::Result<impl notify::Watcher> {
+        let watch_path = self.src_path();
+
+        let mut watcher = notify::recommended_watcher(
+            move |event: notify::Result<notify::Event>| {
+                // Unfortunately the `notify` documentation doesn't say when
+                // this might happen, so no idea if it needs to be handled.
+                let event = event.expect("Error handling watch event");
+
+                // Various acceptable ModifyKind kinds. Varies across platforms
+                // (e.g. MacOs vs. Windows10)
+                if let notify::EventKind::Modify(
+                    notify::event::ModifyKind::Any,
+                )
+                | notify::EventKind::Modify(
+                    notify::event::ModifyKind::Data(
+                        notify::event::DataChange::Any,
+                    ),
+                )
+                | notify::EventKind::Modify(
+                    notify::event::ModifyKind::Data(
+                        notify::event::DataChange::Content,
+                    ),
+                ) = event.kind
+                {
+                    let file_ext = event
+                        .paths
+                        .get(0)
+                        .expect("File path missing in watch event")
+                        .extension();
+
+                    let black_list = HashSet::from([
+                        OsStr::new("swp"),
+                        OsStr::new("tmp"),
+                        OsStr::new("swx"),
+                    ]);
+
+                    if let Some(ext) = file_ext {
+                        if black_list.contains(ext) {
+                            return;
+                        }
+                    }
+
+                    let shape = match self.load(&parameters) {
+                        Ok(shape) => shape,
+                        Err(Error::Compile) => {
+                            // It would be better to display an error in the UI,
+                            // where the user can actually see it. Issue:
+                            // https://github.com/hannobraun/fornjot/issues/30
+                            println!("Error compiling model");
+                            return;
+                        }
+                        Err(err) => {
+                            panic!("Error reloading model: {:?}", err);
+                        }
+                    };
+
+                    // This will panic, if the other end is disconnected, which
+                    // is probably the result of a panic on that thread, or the
+                    // application is being shut down.
+                    //
+                    // Either way, not much we can do about it here, except
+                    // maybe to provide a better error message in the future.
+                    tx.send(shape).unwrap();
+                }
+            },
+        )?;
+
+        watcher.watch(&watch_path, notify::RecursiveMode::Recursive)?;
+
+        Ok(watcher)
     }
 }
 

@@ -7,8 +7,6 @@ mod mesh;
 mod model;
 mod window;
 
-use std::collections::HashSet;
-use std::ffi::OsStr;
 use std::path::PathBuf;
 use std::{collections::HashMap, sync::mpsc, time::Instant};
 
@@ -16,7 +14,6 @@ use fj_debug::DebugInfo;
 use fj_math::{Aabb, Scalar, Triangle};
 use fj_operations::ToShape as _;
 use futures::executor::block_on;
-use notify::Watcher as _;
 use tracing::trace;
 use tracing_subscriber::fmt::format;
 use tracing_subscriber::EnvFilter;
@@ -132,66 +129,7 @@ fn main() -> anyhow::Result<()> {
     }
 
     let (watcher_tx, watcher_rx) = mpsc::sync_channel(0);
-
-    let watch_path = model.src_path();
-    let mut watcher = notify::recommended_watcher(
-        move |event: notify::Result<notify::Event>| {
-            // Unfortunately the `notify` documentation doesn't say when this
-            // might happen, so no idea if it needs to be handled.
-            let event = event.expect("Error handling watch event");
-
-            //Various acceptable ModifyKind kinds. Varies across platforms (e.g. MacOs vs. Windows10)
-            if let notify::EventKind::Modify(notify::event::ModifyKind::Any)
-            | notify::EventKind::Modify(notify::event::ModifyKind::Data(
-                notify::event::DataChange::Any,
-            ))
-            | notify::EventKind::Modify(notify::event::ModifyKind::Data(
-                notify::event::DataChange::Content,
-            )) = event.kind
-            {
-                let file_ext = event
-                    .paths
-                    .get(0)
-                    .expect("File path missing in watch event")
-                    .extension();
-
-                let black_list = HashSet::from([
-                    OsStr::new("swp"),
-                    OsStr::new("tmp"),
-                    OsStr::new("swx"),
-                ]);
-
-                if let Some(ext) = file_ext {
-                    if black_list.contains(ext) {
-                        return;
-                    }
-                }
-
-                let shape = match model.load(&parameters) {
-                    Ok(shape) => shape,
-                    Err(model::Error::Compile) => {
-                        // It would be better to display an error in the UI,
-                        // where the user can actually see it. Issue:
-                        // https://github.com/hannobraun/fornjot/issues/30
-                        println!("Error compiling model");
-                        return;
-                    }
-                    Err(err) => {
-                        panic!("Error reloading model: {:?}", err);
-                    }
-                };
-
-                // This will panic, if the other end is disconnected, which is
-                // probably the result of a panic on that thread, or the
-                // application is being shut down.
-                //
-                // Either way, not much we can do about it here, except maybe to
-                // provide a better error message in the future.
-                watcher_tx.send(shape).unwrap();
-            }
-        },
-    )?;
-    watcher.watch(&watch_path, notify::RecursiveMode::Recursive)?;
+    let _watcher = model.watch(watcher_tx, parameters)?;
 
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop);
