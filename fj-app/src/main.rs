@@ -13,7 +13,7 @@ use std::path::PathBuf;
 use std::{collections::HashMap, sync::mpsc, time::Instant};
 
 use fj_debug::DebugInfo;
-use fj_math::Scalar;
+use fj_math::{Aabb, Scalar, Triangle};
 use fj_operations::ToShape as _;
 use futures::executor::block_on;
 use notify::Watcher as _;
@@ -94,42 +94,11 @@ fn main() -> anyhow::Result<()> {
     // https://github.com/hannobraun/fornjot/issues/32
     let shape = model.load(&parameters)?;
 
-    let mut aabb = shape.bounding_volume();
-
-    let tolerance = match args.tolerance {
-        None => {
-            // Compute a reasonable default for the tolerance value. To do this, we just
-            // look at the smallest non-zero extent of the bounding box and divide that
-            // by some value.
-            let mut min_extent = Scalar::MAX;
-            for extent in aabb.size().components {
-                if extent > Scalar::ZERO && extent < min_extent {
-                    min_extent = extent;
-                }
-            }
-
-            // `tolerance` must not be zero, or we'll run into trouble.
-            let tolerance = min_extent / Scalar::from_f64(1000.);
-            assert!(tolerance > Scalar::ZERO);
-
-            tolerance
-        }
-        Some(user_defined_tolerance) => {
-            if user_defined_tolerance > 0.0 {
-                Scalar::from_f64(user_defined_tolerance)
-            } else {
-                anyhow::bail!("Invalid user defined model deviation tolerance: {}. Tolerance must be larger than zero", 
-                user_defined_tolerance)
-            }
-        }
+    let shape_processor = ShapeProcessor {
+        tolerance: args.tolerance,
     };
-
-    let mut debug_info = DebugInfo::new();
-    let mut triangles = Vec::new();
-    shape
-        .to_shape(tolerance, &mut debug_info)
-        .topology()
-        .triangles(tolerance, &mut triangles, &mut debug_info);
+    let (tolerance, mut aabb, mut triangles, mut debug_info) =
+        shape_processor.process(&shape)?;
 
     if let Some(path) = args.export {
         let mut mesh_maker = MeshMaker::new();
@@ -362,4 +331,57 @@ fn main() -> anyhow::Result<()> {
             draw_config.draw_debug = !draw_config.draw_debug;
         }
     });
+}
+
+struct ShapeProcessor {
+    tolerance: Option<f64>,
+}
+
+impl ShapeProcessor {
+    fn process(
+        &self,
+        shape: &fj::Shape,
+    ) -> anyhow::Result<(Scalar, Aabb<3>, Vec<Triangle<3>>, DebugInfo)> {
+        let aabb = shape.bounding_volume();
+
+        let tolerance = match self.tolerance {
+            None => {
+                // Compute a reasonable default for the tolerance value. To do
+                // this, we just look at the smallest non-zero extent of the
+                // bounding box and divide that by some value.
+                let mut min_extent = Scalar::MAX;
+                for extent in aabb.size().components {
+                    if extent > Scalar::ZERO && extent < min_extent {
+                        min_extent = extent;
+                    }
+                }
+
+                // `tolerance` must not be zero, or we'll run into trouble.
+                let tolerance = min_extent / Scalar::from_f64(1000.);
+                assert!(tolerance > Scalar::ZERO);
+
+                tolerance
+            }
+            Some(user_defined_tolerance) => {
+                if user_defined_tolerance > 0.0 {
+                    Scalar::from_f64(user_defined_tolerance)
+                } else {
+                    anyhow::bail!(
+                        "Invalid user defined model deviation tolerance: {}.\n\
+                        Tolerance must be larger than zero",
+                        user_defined_tolerance
+                    )
+                }
+            }
+        };
+
+        let mut debug_info = DebugInfo::new();
+        let mut triangles = Vec::new();
+        shape
+            .to_shape(tolerance, &mut debug_info)
+            .topology()
+            .triangles(tolerance, &mut triangles, &mut debug_info);
+
+        Ok((tolerance, aabb, triangles, debug_info))
+    }
 }
