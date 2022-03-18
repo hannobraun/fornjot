@@ -131,7 +131,7 @@ fn main() -> anyhow::Result<()> {
 
     let mut draw_config = DrawConfig::default();
 
-    let mut processed_shape = None;
+    let mut shape = None;
     let mut camera = None;
 
     event_loop.run(move |event, _, control_flow| {
@@ -149,7 +149,7 @@ fn main() -> anyhow::Result<()> {
                 camera = Some(Camera::new(&new_shape.aabb));
             }
 
-            processed_shape = Some(new_shape);
+            shape = Some(new_shape);
         }
 
         match event {
@@ -184,8 +184,7 @@ fn main() -> anyhow::Result<()> {
                 event: WindowEvent::MouseInput { state, button, .. },
                 ..
             } => {
-                if let (Some(shape), Some(camera)) = (&processed_shape, &camera)
-                {
+                if let (Some(shape), Some(camera)) = (&shape, &camera) {
                     let focus_point = camera.focus_point(
                         &window,
                         input_handler.cursor(),
@@ -209,9 +208,7 @@ fn main() -> anyhow::Result<()> {
                 let delta_t = now.duration_since(previous_time);
                 previous_time = now;
 
-                if let (Some(shape), Some(camera)) =
-                    (&processed_shape, &mut camera)
-                {
+                if let (Some(shape), Some(camera)) = (&shape, &mut camera) {
                     input_handler.update(
                         delta_t.as_secs_f64(),
                         now,
@@ -224,9 +221,7 @@ fn main() -> anyhow::Result<()> {
                 window.inner().request_redraw();
             }
             Event::RedrawRequested(_) => {
-                if let (Some(shape), Some(camera)) =
-                    (&processed_shape, &mut camera)
-                {
+                if let (Some(shape), Some(camera)) = (&shape, &mut camera) {
                     camera.update_planes(&shape.aabb);
 
                     match renderer.draw(camera, &draw_config) {
