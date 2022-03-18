@@ -144,7 +144,7 @@ fn main() -> anyhow::Result<()> {
     processed_shape.update_geometry(&mut renderer);
 
     let mut draw_config = DrawConfig::default();
-    let mut camera = Camera::new(&processed_shape.aabb);
+    let mut camera = Some(Camera::new(&processed_shape.aabb));
 
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
@@ -181,23 +181,28 @@ fn main() -> anyhow::Result<()> {
                 event: WindowEvent::CursorMoved { position, .. },
                 ..
             } => {
-                input_handler.handle_cursor_moved(
-                    position,
-                    &mut camera,
-                    &window,
-                );
+                if let Some(camera) = &mut camera {
+                    input_handler
+                        .handle_cursor_moved(position, camera, &window);
+                }
             }
             Event::WindowEvent {
                 event: WindowEvent::MouseInput { state, button, .. },
                 ..
             } => {
-                let focus_point = camera.focus_point(
-                    &window,
-                    input_handler.cursor(),
-                    &processed_shape.triangles,
-                );
+                if let Some(camera) = &camera {
+                    let focus_point = camera.focus_point(
+                        &window,
+                        input_handler.cursor(),
+                        &processed_shape.triangles,
+                    );
 
-                input_handler.handle_mouse_input(button, state, focus_point);
+                    input_handler.handle_mouse_input(
+                        button,
+                        state,
+                        focus_point,
+                    );
+                }
             }
             Event::WindowEvent {
                 event: WindowEvent::MouseWheel { delta, .. },
@@ -209,23 +214,27 @@ fn main() -> anyhow::Result<()> {
                 let delta_t = now.duration_since(previous_time);
                 previous_time = now;
 
-                input_handler.update(
-                    delta_t.as_secs_f64(),
-                    now,
-                    &mut camera,
-                    &window,
-                    &processed_shape.triangles,
-                );
+                if let Some(camera) = &mut camera {
+                    input_handler.update(
+                        delta_t.as_secs_f64(),
+                        now,
+                        camera,
+                        &window,
+                        &processed_shape.triangles,
+                    );
+                }
 
                 window.inner().request_redraw();
             }
             Event::RedrawRequested(_) => {
-                camera.update_planes(&processed_shape.aabb);
+                if let Some(camera) = &mut camera {
+                    camera.update_planes(&processed_shape.aabb);
 
-                match renderer.draw(&camera, &draw_config) {
-                    Ok(()) => {}
-                    Err(err) => {
-                        panic!("Draw error: {}", err);
+                    match renderer.draw(camera, &draw_config) {
+                        Ok(()) => {}
+                        Err(err) => {
+                            panic!("Draw error: {}", err);
+                        }
                     }
                 }
             }
