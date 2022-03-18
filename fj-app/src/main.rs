@@ -141,8 +141,8 @@ fn main() -> anyhow::Result<()> {
 
         let now = Instant::now();
 
-        if let Some(shape) = watcher.receive() {
-            let new_shape = shape_processor.process(&shape);
+        if let Some(new_shape) = watcher.receive() {
+            let new_shape = shape_processor.process(&new_shape);
             new_shape.update_geometry(&mut renderer);
 
             if camera.is_none() {
