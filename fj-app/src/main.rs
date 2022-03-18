@@ -135,7 +135,7 @@ fn main() -> anyhow::Result<()> {
     processed_shape.update_geometry(&mut renderer);
 
     let mut draw_config = DrawConfig::default();
-    let mut camera = Some(Camera::new(&processed_shape.aabb));
+    let mut camera = None;
 
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
@@ -147,6 +147,10 @@ fn main() -> anyhow::Result<()> {
         if let Some(shape) = watcher.receive() {
             processed_shape = shape_processor.process(&shape);
             processed_shape.update_geometry(&mut renderer);
+
+            if camera.is_none() {
+                camera = Some(Camera::new(&processed_shape.aabb));
+            }
         }
 
         match event {
