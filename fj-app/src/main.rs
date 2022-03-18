@@ -142,14 +142,14 @@ fn main() -> anyhow::Result<()> {
         let now = Instant::now();
 
         if let Some(shape) = watcher.receive() {
-            let shape = shape_processor.process(&shape);
-            shape.update_geometry(&mut renderer);
+            let new_shape = shape_processor.process(&shape);
+            new_shape.update_geometry(&mut renderer);
 
             if camera.is_none() {
-                camera = Some(Camera::new(&shape.aabb));
+                camera = Some(Camera::new(&new_shape.aabb));
             }
 
-            processed_shape = Some(shape);
+            processed_shape = Some(new_shape);
         }
 
         match event {
