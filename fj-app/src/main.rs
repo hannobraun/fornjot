@@ -95,11 +95,11 @@ fn main() -> anyhow::Result<()> {
 
     if let Some(path) = args.export {
         let shape = model.load(&parameters)?;
-        let processed_shape = shape_processor.process(&shape);
+        let shape = shape_processor.process(&shape);
 
         let mut mesh_maker = MeshMaker::new();
 
-        for triangle in processed_shape.triangles {
+        for triangle in shape.triangles {
             for vertex in triangle.points() {
                 mesh_maker.push(vertex);
             }
