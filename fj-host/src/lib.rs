@@ -3,6 +3,8 @@
 //! Fornjot models are loaded into the Fornjot application as plugins. This
 //! crate contains the code required to host plugins.
 
+#![deny(missing_docs)]
+
 use std::{
     collections::{HashMap, HashSet},
     ffi::OsStr,
