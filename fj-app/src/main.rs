@@ -97,13 +97,12 @@ fn main() -> anyhow::Result<()> {
     let shape_processor = ShapeProcessor {
         tolerance: args.tolerance,
     };
-    let (tolerance, mut aabb, mut triangles, mut debug_info) =
-        shape_processor.process(&shape)?;
+    let mut processed_shape = shape_processor.process(&shape)?;
 
     if let Some(path) = args.export {
         let mut mesh_maker = MeshMaker::new();
 
-        for triangle in triangles {
+        for triangle in processed_shape.triangles {
             for vertex in triangle.points() {
                 mesh_maker.push(vertex);
             }
@@ -204,10 +203,14 @@ fn main() -> anyhow::Result<()> {
     let mut input_handler = input::Handler::new(previous_time);
     let mut renderer = block_on(Renderer::new(&window))?;
 
-    renderer.update_geometry((&triangles).into(), (&debug_info).into(), aabb);
+    renderer.update_geometry(
+        (&processed_shape.triangles).into(),
+        (&processed_shape.debug_info).into(),
+        processed_shape.aabb,
+    );
 
     let mut draw_config = DrawConfig::default();
-    let mut camera = Camera::new(&aabb);
+    let mut camera = Camera::new(&processed_shape.aabb);
 
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
@@ -218,19 +221,26 @@ fn main() -> anyhow::Result<()> {
 
         match watcher_rx.try_recv() {
             Ok(shape) => {
-                debug_info.clear();
-                triangles.clear();
+                processed_shape.debug_info.clear();
+                processed_shape.triangles.clear();
 
-                aabb = shape.bounding_volume();
+                processed_shape.aabb = shape.bounding_volume();
                 shape
-                    .to_shape(tolerance, &mut debug_info)
+                    .to_shape(
+                        processed_shape.tolerance,
+                        &mut processed_shape.debug_info,
+                    )
                     .topology()
-                    .triangles(tolerance, &mut triangles, &mut debug_info);
+                    .triangles(
+                        processed_shape.tolerance,
+                        &mut processed_shape.triangles,
+                        &mut processed_shape.debug_info,
+                    );
 
                 renderer.update_geometry(
-                    (&triangles).into(),
-                    (&debug_info).into(),
-                    aabb,
+                    (&processed_shape.triangles).into(),
+                    (&processed_shape.debug_info).into(),
+                    processed_shape.aabb,
                 );
             }
             Err(mpsc::TryRecvError::Empty) => {
@@ -280,7 +290,7 @@ fn main() -> anyhow::Result<()> {
                 let focus_point = camera.focus_point(
                     &window,
                     input_handler.cursor(),
-                    &triangles,
+                    &processed_shape.triangles,
                 );
 
                 input_handler.handle_mouse_input(button, state, focus_point);
@@ -300,13 +310,13 @@ fn main() -> anyhow::Result<()> {
                     now,
                     &mut camera,
                     &window,
-                    &triangles,
+                    &processed_shape.triangles,
                 );
 
                 window.inner().request_redraw();
             }
             Event::RedrawRequested(_) => {
-                camera.update_planes(&aabb);
+                camera.update_planes(&processed_shape.aabb);
 
                 match renderer.draw(&camera, &draw_config) {
                     Ok(()) => {}
@@ -338,10 +348,7 @@ struct ShapeProcessor {
 }
 
 impl ShapeProcessor {
-    fn process(
-        &self,
-        shape: &fj::Shape,
-    ) -> anyhow::Result<(Scalar, Aabb<3>, Vec<Triangle<3>>, DebugInfo)> {
+    fn process(&self, shape: &fj::Shape) -> anyhow::Result<ProcessedShape> {
         let aabb = shape.bounding_volume();
 
         let tolerance = match self.tolerance {
@@ -382,6 +389,18 @@ impl ShapeProcessor {
             .topology()
             .triangles(tolerance, &mut triangles, &mut debug_info);
 
-        Ok((tolerance, aabb, triangles, debug_info))
+        Ok(ProcessedShape {
+            tolerance,
+            aabb,
+            triangles,
+            debug_info,
+        })
     }
+}
+
+struct ProcessedShape {
+    tolerance: Scalar,
+    aabb: Aabb<3>,
+    triangles: Vec<Triangle<3>>,
+    debug_info: DebugInfo,
 }
