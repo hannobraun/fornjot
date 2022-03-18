@@ -219,21 +219,7 @@ fn main() -> anyhow::Result<()> {
 
         match watcher_rx.try_recv() {
             Ok(shape) => {
-                processed_shape.debug_info.clear();
-                processed_shape.triangles.clear();
-
-                processed_shape.aabb = shape.bounding_volume();
-                shape
-                    .to_shape(
-                        processed_shape.tolerance,
-                        &mut processed_shape.debug_info,
-                    )
-                    .topology()
-                    .triangles(
-                        processed_shape.tolerance,
-                        &mut processed_shape.triangles,
-                        &mut processed_shape.debug_info,
-                    );
+                processed_shape = shape_processor.process(&shape);
 
                 renderer.update_geometry(
                     (&processed_shape.triangles).into(),
@@ -394,7 +380,6 @@ impl ShapeProcessor {
             .triangles(tolerance, &mut triangles, &mut debug_info);
 
         ProcessedShape {
-            tolerance,
             aabb,
             triangles,
             debug_info,
@@ -403,7 +388,6 @@ impl ShapeProcessor {
 }
 
 struct ProcessedShape {
-    tolerance: Scalar,
     aabb: Aabb<3>,
     triangles: Vec<Triangle<3>>,
     debug_info: DebugInfo,
