@@ -80,8 +80,6 @@ fn main() -> anyhow::Result<()> {
         parameters.insert(key, value);
     }
 
-    let shape = model.load(&parameters)?;
-
     let shape_processor = ShapeProcessor::new(args.tolerance)?;
 
     if let Some(path) = args.export {
@@ -131,8 +129,7 @@ fn main() -> anyhow::Result<()> {
     let mut input_handler = input::Handler::new(previous_time);
     let mut renderer = block_on(Renderer::new(&window))?;
 
-    let mut processed_shape = shape_processor.process(&shape);
-    processed_shape.update_geometry(&mut renderer);
+    let mut processed_shape = None;
 
     let mut draw_config = DrawConfig::default();
     let mut camera = None;
@@ -145,12 +142,14 @@ fn main() -> anyhow::Result<()> {
         let now = Instant::now();
 
         if let Some(shape) = watcher.receive() {
-            processed_shape = shape_processor.process(&shape);
-            processed_shape.update_geometry(&mut renderer);
+            let shape = shape_processor.process(&shape);
+            shape.update_geometry(&mut renderer);
 
             if camera.is_none() {
-                camera = Some(Camera::new(&processed_shape.aabb));
+                camera = Some(Camera::new(&shape.aabb));
             }
+
+            processed_shape = Some(shape);
         }
 
         match event {
@@ -185,11 +184,12 @@ fn main() -> anyhow::Result<()> {
                 event: WindowEvent::MouseInput { state, button, .. },
                 ..
             } => {
-                if let Some(camera) = &camera {
+                if let (Some(shape), Some(camera)) = (&processed_shape, &camera)
+                {
                     let focus_point = camera.focus_point(
                         &window,
                         input_handler.cursor(),
-                        &processed_shape.triangles,
+                        &shape.triangles,
                     );
 
                     input_handler.handle_mouse_input(
@@ -209,21 +209,25 @@ fn main() -> anyhow::Result<()> {
                 let delta_t = now.duration_since(previous_time);
                 previous_time = now;
 
-                if let Some(camera) = &mut camera {
+                if let (Some(shape), Some(camera)) =
+                    (&processed_shape, &mut camera)
+                {
                     input_handler.update(
                         delta_t.as_secs_f64(),
                         now,
                         camera,
                         &window,
-                        &processed_shape.triangles,
+                        &shape.triangles,
                     );
                 }
 
                 window.inner().request_redraw();
             }
             Event::RedrawRequested(_) => {
-                if let Some(camera) = &mut camera {
-                    camera.update_planes(&processed_shape.aabb);
+                if let (Some(shape), Some(camera)) =
+                    (&processed_shape, &mut camera)
+                {
+                    camera.update_planes(&shape.aabb);
 
                     match renderer.draw(camera, &draw_config) {
                         Ok(()) => {}
