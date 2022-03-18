@@ -13,7 +13,7 @@ use std::path::PathBuf;
 use std::{collections::HashMap, sync::mpsc, time::Instant};
 
 use fj_debug::DebugInfo;
-use fj_math::Scalar;
+use fj_math::{Aabb, Scalar, Triangle};
 use fj_operations::ToShape as _;
 use futures::executor::block_on;
 use notify::Watcher as _;
@@ -94,47 +94,13 @@ fn main() -> anyhow::Result<()> {
     // https://github.com/hannobraun/fornjot/issues/32
     let shape = model.load(&parameters)?;
 
-    let mut aabb = shape.bounding_volume();
-
-    let tolerance = match args.tolerance {
-        None => {
-            // Compute a reasonable default for the tolerance value. To do this, we just
-            // look at the smallest non-zero extent of the bounding box and divide that
-            // by some value.
-            let mut min_extent = Scalar::MAX;
-            for extent in aabb.size().components {
-                if extent > Scalar::ZERO && extent < min_extent {
-                    min_extent = extent;
-                }
-            }
-
-            // `tolerance` must not be zero, or we'll run into trouble.
-            let tolerance = min_extent / Scalar::from_f64(1000.);
-            assert!(tolerance > Scalar::ZERO);
-
-            tolerance
-        }
-        Some(user_defined_tolerance) => {
-            if user_defined_tolerance > 0.0 {
-                Scalar::from_f64(user_defined_tolerance)
-            } else {
-                anyhow::bail!("Invalid user defined model deviation tolerance: {}. Tolerance must be larger than zero", 
-                user_defined_tolerance)
-            }
-        }
-    };
-
-    let mut debug_info = DebugInfo::new();
-    let mut triangles = Vec::new();
-    shape
-        .to_shape(tolerance, &mut debug_info)
-        .topology()
-        .triangles(tolerance, &mut triangles, &mut debug_info);
+    let shape_processor = ShapeProcessor::new(args.tolerance)?;
+    let mut processed_shape = shape_processor.process(&shape);
 
     if let Some(path) = args.export {
         let mut mesh_maker = MeshMaker::new();
 
-        for triangle in triangles {
+        for triangle in processed_shape.triangles {
             for vertex in triangle.points() {
                 mesh_maker.push(vertex);
             }
@@ -235,10 +201,10 @@ fn main() -> anyhow::Result<()> {
     let mut input_handler = input::Handler::new(previous_time);
     let mut renderer = block_on(Renderer::new(&window))?;
 
-    renderer.update_geometry((&triangles).into(), (&debug_info).into(), aabb);
+    processed_shape.update_geometry(&mut renderer);
 
     let mut draw_config = DrawConfig::default();
-    let mut camera = Camera::new(&aabb);
+    let mut camera = Camera::new(&processed_shape.aabb);
 
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
@@ -249,20 +215,8 @@ fn main() -> anyhow::Result<()> {
 
         match watcher_rx.try_recv() {
             Ok(shape) => {
-                debug_info.clear();
-                triangles.clear();
-
-                aabb = shape.bounding_volume();
-                shape
-                    .to_shape(tolerance, &mut debug_info)
-                    .topology()
-                    .triangles(tolerance, &mut triangles, &mut debug_info);
-
-                renderer.update_geometry(
-                    (&triangles).into(),
-                    (&debug_info).into(),
-                    aabb,
-                );
+                processed_shape = shape_processor.process(&shape);
+                processed_shape.update_geometry(&mut renderer);
             }
             Err(mpsc::TryRecvError::Empty) => {
                 // Nothing to receive from the channel. We don't care.
@@ -311,7 +265,7 @@ fn main() -> anyhow::Result<()> {
                 let focus_point = camera.focus_point(
                     &window,
                     input_handler.cursor(),
-                    &triangles,
+                    &processed_shape.triangles,
                 );
 
                 input_handler.handle_mouse_input(button, state, focus_point);
@@ -331,13 +285,13 @@ fn main() -> anyhow::Result<()> {
                     now,
                     &mut camera,
                     &window,
-                    &triangles,
+                    &processed_shape.triangles,
                 );
 
                 window.inner().request_redraw();
             }
             Event::RedrawRequested(_) => {
-                camera.update_planes(&aabb);
+                camera.update_planes(&processed_shape.aabb);
 
                 match renderer.draw(&camera, &draw_config) {
                     Ok(()) => {}
@@ -362,4 +316,80 @@ fn main() -> anyhow::Result<()> {
             draw_config.draw_debug = !draw_config.draw_debug;
         }
     });
+}
+
+struct ShapeProcessor {
+    tolerance: Option<Scalar>,
+}
+
+impl ShapeProcessor {
+    fn new(tolerance: Option<f64>) -> anyhow::Result<Self> {
+        if let Some(tolerance) = tolerance {
+            if tolerance <= 0. {
+                anyhow::bail!(
+                    "Invalid user defined model deviation tolerance: {}.\n\
+                    Tolerance must be larger than zero",
+                    tolerance
+                );
+            }
+        }
+
+        let tolerance = tolerance.map(Scalar::from_f64);
+
+        Ok(Self { tolerance })
+    }
+
+    fn process(&self, shape: &fj::Shape) -> ProcessedShape {
+        let aabb = shape.bounding_volume();
+
+        let tolerance = match self.tolerance {
+            None => {
+                // Compute a reasonable default for the tolerance value. To do
+                // this, we just look at the smallest non-zero extent of the
+                // bounding box and divide that by some value.
+                let mut min_extent = Scalar::MAX;
+                for extent in aabb.size().components {
+                    if extent > Scalar::ZERO && extent < min_extent {
+                        min_extent = extent;
+                    }
+                }
+
+                // `tolerance` must not be zero, or we'll run into trouble.
+                let tolerance = min_extent / Scalar::from_f64(1000.);
+                assert!(tolerance > Scalar::ZERO);
+
+                tolerance
+            }
+            Some(user_defined_tolerance) => user_defined_tolerance,
+        };
+
+        let mut debug_info = DebugInfo::new();
+        let mut triangles = Vec::new();
+        shape
+            .to_shape(tolerance, &mut debug_info)
+            .topology()
+            .triangles(tolerance, &mut triangles, &mut debug_info);
+
+        ProcessedShape {
+            aabb,
+            triangles,
+            debug_info,
+        }
+    }
+}
+
+struct ProcessedShape {
+    aabb: Aabb<3>,
+    triangles: Vec<Triangle<3>>,
+    debug_info: DebugInfo,
+}
+
+impl ProcessedShape {
+    fn update_geometry(&self, renderer: &mut Renderer) {
+        renderer.update_geometry(
+            (&self.triangles).into(),
+            (&self.debug_info).into(),
+            self.aabb,
+        );
+    }
 }
