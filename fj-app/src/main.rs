@@ -94,9 +94,7 @@ fn main() -> anyhow::Result<()> {
     // https://github.com/hannobraun/fornjot/issues/32
     let shape = model.load(&parameters)?;
 
-    let shape_processor = ShapeProcessor {
-        tolerance: args.tolerance,
-    };
+    let shape_processor = ShapeProcessor::new(args.tolerance)?;
     let mut processed_shape = shape_processor.process(&shape)?;
 
     if let Some(path) = args.export {
@@ -344,10 +342,26 @@ fn main() -> anyhow::Result<()> {
 }
 
 struct ShapeProcessor {
-    tolerance: Option<f64>,
+    tolerance: Option<Scalar>,
 }
 
 impl ShapeProcessor {
+    fn new(tolerance: Option<f64>) -> anyhow::Result<Self> {
+        if let Some(tolerance) = tolerance {
+            if tolerance <= 0. {
+                anyhow::bail!(
+                    "Invalid user defined model deviation tolerance: {}.\n\
+                    Tolerance must be larger than zero",
+                    tolerance
+                );
+            }
+        }
+
+        let tolerance = tolerance.map(Scalar::from_f64);
+
+        Ok(Self { tolerance })
+    }
+
     fn process(&self, shape: &fj::Shape) -> anyhow::Result<ProcessedShape> {
         let aabb = shape.bounding_volume();
 
@@ -369,17 +383,7 @@ impl ShapeProcessor {
 
                 tolerance
             }
-            Some(user_defined_tolerance) => {
-                if user_defined_tolerance > 0.0 {
-                    Scalar::from_f64(user_defined_tolerance)
-                } else {
-                    anyhow::bail!(
-                        "Invalid user defined model deviation tolerance: {}.\n\
-                        Tolerance must be larger than zero",
-                        user_defined_tolerance
-                    )
-                }
-            }
+            Some(user_defined_tolerance) => user_defined_tolerance,
         };
 
         let mut debug_info = DebugInfo::new();
