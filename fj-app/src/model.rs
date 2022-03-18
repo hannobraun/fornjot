@@ -1,5 +1,14 @@
-use std::{collections::HashMap, io, path::PathBuf, process::Command};
+use std::{
+    collections::{HashMap, HashSet},
+    ffi::OsStr,
+    io,
+    path::PathBuf,
+    process::Command,
+    sync::mpsc,
+    thread,
+};
 
+use notify::Watcher as _;
 use thiserror::Error;
 
 pub struct Model {
@@ -47,11 +56,7 @@ impl Model {
         })
     }
 
-    pub fn src_path(&self) -> PathBuf {
-        self.src_path.clone()
-    }
-
-    pub fn load(
+    pub fn load_once(
         &self,
         arguments: &HashMap<String, String>,
     ) -> Result<fj::Shape, Error> {
@@ -90,6 +95,125 @@ impl Model {
 
         Ok(shape)
     }
+
+    pub fn load_and_watch(
+        self,
+        parameters: HashMap<String, String>,
+    ) -> Result<Watcher, Error> {
+        let (tx, rx) = mpsc::sync_channel(0);
+        let tx2 = tx.clone();
+
+        let watch_path = self.src_path.clone();
+
+        let mut watcher = notify::recommended_watcher(
+            move |event: notify::Result<notify::Event>| {
+                // Unfortunately the `notify` documentation doesn't say when
+                // this might happen, so no idea if it needs to be handled.
+                let event = event.expect("Error handling watch event");
+
+                // Various acceptable ModifyKind kinds. Varies across platforms
+                // (e.g. MacOs vs. Windows10)
+                if let notify::EventKind::Modify(
+                    notify::event::ModifyKind::Any,
+                )
+                | notify::EventKind::Modify(
+                    notify::event::ModifyKind::Data(
+                        notify::event::DataChange::Any,
+                    ),
+                )
+                | notify::EventKind::Modify(
+                    notify::event::ModifyKind::Data(
+                        notify::event::DataChange::Content,
+                    ),
+                ) = event.kind
+                {
+                    let file_ext = event
+                        .paths
+                        .get(0)
+                        .expect("File path missing in watch event")
+                        .extension();
+
+                    let black_list = HashSet::from([
+                        OsStr::new("swp"),
+                        OsStr::new("tmp"),
+                        OsStr::new("swx"),
+                    ]);
+
+                    if let Some(ext) = file_ext {
+                        if black_list.contains(ext) {
+                            return;
+                        }
+                    }
+
+                    // This will panic, if the other end is disconnected, which
+                    // is probably the result of a panic on that thread, or the
+                    // application is being shut down.
+                    //
+                    // Either way, not much we can do about it here, except
+                    // maybe to provide a better error message in the future.
+                    tx.send(()).unwrap();
+                }
+            },
+        )?;
+
+        watcher.watch(&watch_path, notify::RecursiveMode::Recursive)?;
+
+        // To prevent a race condition between the initial load and the start of
+        // watching, we'll trigger the initial load here, after having started
+        // watching.
+        //
+        // Will panic, if the receiving end has panicked. Not much we can do
+        // about that, if it happened.
+        thread::spawn(move || tx2.send(()).unwrap());
+
+        Ok(Watcher {
+            _watcher: Box::new(watcher),
+            channel: rx,
+            model: self,
+            parameters,
+        })
+    }
+}
+
+pub struct Watcher {
+    _watcher: Box<dyn notify::Watcher>,
+    channel: mpsc::Receiver<()>,
+    model: Model,
+    parameters: HashMap<String, String>,
+}
+
+impl Watcher {
+    pub fn receive(&self) -> Option<fj::Shape> {
+        match self.channel.try_recv() {
+            Ok(()) => {
+                let shape = match self.model.load_once(&self.parameters) {
+                    Ok(shape) => shape,
+                    Err(Error::Compile) => {
+                        // It would be better to display an error in the UI,
+                        // where the user can actually see it. Issue:
+                        // https://github.com/hannobraun/fornjot/issues/30
+                        println!("Error compiling model");
+                        return None;
+                    }
+                    Err(err) => {
+                        panic!("Error reloading model: {:?}", err);
+                    }
+                };
+
+                Some(shape)
+            }
+            Err(mpsc::TryRecvError::Empty) => {
+                // Nothing to receive from the channel.
+                None
+            }
+            Err(mpsc::TryRecvError::Disconnected) => {
+                // The other end has disconnected. This is probably the result
+                // of a panic on the other thread, or a program shutdown in
+                // progress. In any case, not much we can do here.
+                panic!();
+            }
+        }
+    }
 }
 
 #[derive(Debug, Error)]
@@ -102,6 +226,9 @@ pub enum Error {
 
     #[error("Error loading model from dynamic library")]
     LibLoading(#[from] libloading::Error),
+
+    #[error("Error watching model for changes")]
+    Notify(#[from] notify::Error),
 }
 
 type ModelFn =

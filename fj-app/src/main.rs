@@ -7,16 +7,13 @@ mod mesh;
 mod model;
 mod window;
 
-use std::collections::HashSet;
-use std::ffi::OsStr;
 use std::path::PathBuf;
-use std::{collections::HashMap, sync::mpsc, time::Instant};
+use std::{collections::HashMap, time::Instant};
 
 use fj_debug::DebugInfo;
 use fj_math::{Aabb, Scalar, Triangle};
 use fj_operations::ToShape as _;
 use futures::executor::block_on;
-use notify::Watcher as _;
 use tracing::trace;
 use tracing_subscriber::fmt::format;
 use tracing_subscriber::EnvFilter;
@@ -83,24 +80,15 @@ fn main() -> anyhow::Result<()> {
         parameters.insert(key, value);
     }
 
-    // Since we're loading the model before setting up the watcher below,
-    // there's a race condition, and a modification could be missed between
-    // those two events.
-    //
-    // This can't be addressed with the current structure, since the watcher
-    // closure takes ownership of the model.
-    //
-    // This is being tracked in the following issue:
-    // https://github.com/hannobraun/fornjot/issues/32
-    let shape = model.load(&parameters)?;
-
     let shape_processor = ShapeProcessor::new(args.tolerance)?;
-    let mut processed_shape = shape_processor.process(&shape);
 
     if let Some(path) = args.export {
+        let shape = model.load_once(&parameters)?;
+        let shape = shape_processor.process(&shape);
+
         let mut mesh_maker = MeshMaker::new();
 
-        for triangle in processed_shape.triangles {
+        for triangle in shape.triangles {
             for vertex in triangle.points() {
                 mesh_maker.push(vertex);
             }
@@ -131,67 +119,7 @@ fn main() -> anyhow::Result<()> {
         return Ok(());
     }
 
-    let (watcher_tx, watcher_rx) = mpsc::sync_channel(0);
-
-    let watch_path = model.src_path();
-    let mut watcher = notify::recommended_watcher(
-        move |event: notify::Result<notify::Event>| {
-            // Unfortunately the `notify` documentation doesn't say when this
-            // might happen, so no idea if it needs to be handled.
-            let event = event.expect("Error handling watch event");
-
-            //Various acceptable ModifyKind kinds. Varies across platforms (e.g. MacOs vs. Windows10)
-            if let notify::EventKind::Modify(notify::event::ModifyKind::Any)
-            | notify::EventKind::Modify(notify::event::ModifyKind::Data(
-                notify::event::DataChange::Any,
-            ))
-            | notify::EventKind::Modify(notify::event::ModifyKind::Data(
-                notify::event::DataChange::Content,
-            )) = event.kind
-            {
-                let file_ext = event
-                    .paths
-                    .get(0)
-                    .expect("File path missing in watch event")
-                    .extension();
-
-                let black_list = HashSet::from([
-                    OsStr::new("swp"),
-                    OsStr::new("tmp"),
-                    OsStr::new("swx"),
-                ]);
-
-                if let Some(ext) = file_ext {
-                    if black_list.contains(ext) {
-                        return;
-                    }
-                }
-
-                let shape = match model.load(&parameters) {
-                    Ok(shape) => shape,
-                    Err(model::Error::Compile) => {
-                        // It would be better to display an error in the UI,
-                        // where the user can actually see it. Issue:
-                        // https://github.com/hannobraun/fornjot/issues/30
-                        println!("Error compiling model");
-                        return;
-                    }
-                    Err(err) => {
-                        panic!("Error reloading model: {:?}", err);
-                    }
-                };
-
-                // This will panic, if the other end is disconnected, which is
-                // probably the result of a panic on that thread, or the
-                // application is being shut down.
-                //
-                // Either way, not much we can do about it here, except maybe to
-                // provide a better error message in the future.
-                watcher_tx.send(shape).unwrap();
-            }
-        },
-    )?;
-    watcher.watch(&watch_path, notify::RecursiveMode::Recursive)?;
+    let watcher = model.load_and_watch(parameters)?;
 
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop);
@@ -201,10 +129,10 @@ fn main() -> anyhow::Result<()> {
     let mut input_handler = input::Handler::new(previous_time);
     let mut renderer = block_on(Renderer::new(&window))?;
 
-    processed_shape.update_geometry(&mut renderer);
-
     let mut draw_config = DrawConfig::default();
-    let mut camera = Camera::new(&processed_shape.aabb);
+
+    let mut shape = None;
+    let mut camera = None;
 
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
@@ -213,20 +141,15 @@ fn main() -> anyhow::Result<()> {
 
         let now = Instant::now();
 
-        match watcher_rx.try_recv() {
-            Ok(shape) => {
-                processed_shape = shape_processor.process(&shape);
-                processed_shape.update_geometry(&mut renderer);
+        if let Some(new_shape) = watcher.receive() {
+            let new_shape = shape_processor.process(&new_shape);
+            new_shape.update_geometry(&mut renderer);
+
+            if camera.is_none() {
+                camera = Some(Camera::new(&new_shape.aabb));
             }
-            Err(mpsc::TryRecvError::Empty) => {
-                // Nothing to receive from the channel. We don't care.
-            }
-            Err(mpsc::TryRecvError::Disconnected) => {
-                // The other end has disconnected. This is probably the result
-                // of a panic on the other thread, or a program shutdown in
-                // progress. In any case, not much we can do here.
-                panic!();
-            }
+
+            shape = Some(new_shape);
         }
 
         match event {
@@ -252,23 +175,28 @@ fn main() -> anyhow::Result<()> {
                 event: WindowEvent::CursorMoved { position, .. },
                 ..
             } => {
-                input_handler.handle_cursor_moved(
-                    position,
-                    &mut camera,
-                    &window,
-                );
+                if let Some(camera) = &mut camera {
+                    input_handler
+                        .handle_cursor_moved(position, camera, &window);
+                }
             }
             Event::WindowEvent {
                 event: WindowEvent::MouseInput { state, button, .. },
                 ..
             } => {
-                let focus_point = camera.focus_point(
-                    &window,
-                    input_handler.cursor(),
-                    &processed_shape.triangles,
-                );
+                if let (Some(shape), Some(camera)) = (&shape, &camera) {
+                    let focus_point = camera.focus_point(
+                        &window,
+                        input_handler.cursor(),
+                        &shape.triangles,
+                    );
 
-                input_handler.handle_mouse_input(button, state, focus_point);
+                    input_handler.handle_mouse_input(
+                        button,
+                        state,
+                        focus_point,
+                    );
+                }
             }
             Event::WindowEvent {
                 event: WindowEvent::MouseWheel { delta, .. },
@@ -280,23 +208,27 @@ fn main() -> anyhow::Result<()> {
                 let delta_t = now.duration_since(previous_time);
                 previous_time = now;
 
-                input_handler.update(
-                    delta_t.as_secs_f64(),
-                    now,
-                    &mut camera,
-                    &window,
-                    &processed_shape.triangles,
-                );
+                if let (Some(shape), Some(camera)) = (&shape, &mut camera) {
+                    input_handler.update(
+                        delta_t.as_secs_f64(),
+                        now,
+                        camera,
+                        &window,
+                        &shape.triangles,
+                    );
+                }
 
                 window.inner().request_redraw();
             }
             Event::RedrawRequested(_) => {
-                camera.update_planes(&processed_shape.aabb);
+                if let (Some(shape), Some(camera)) = (&shape, &mut camera) {
+                    camera.update_planes(&shape.aabb);
 
-                match renderer.draw(&camera, &draw_config) {
-                    Ok(()) => {}
-                    Err(err) => {
-                        panic!("Draw error: {}", err);
+                    match renderer.draw(camera, &draw_config) {
+                        Ok(()) => {}
+                        Err(err) => {
+                            panic!("Draw error: {}", err);
+                        }
                     }
                 }
             }
