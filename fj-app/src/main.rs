@@ -92,9 +92,11 @@ fn main() -> anyhow::Result<()> {
     let shape = model.load(&parameters)?;
 
     let shape_processor = ShapeProcessor::new(args.tolerance)?;
-    let mut processed_shape = shape_processor.process(&shape);
 
     if let Some(path) = args.export {
+        let shape = model.load(&parameters)?;
+        let processed_shape = shape_processor.process(&shape);
+
         let mut mesh_maker = MeshMaker::new();
 
         for triangle in processed_shape.triangles {
@@ -139,6 +141,7 @@ fn main() -> anyhow::Result<()> {
     let mut input_handler = input::Handler::new(previous_time);
     let mut renderer = block_on(Renderer::new(&window))?;
 
+    let mut processed_shape = shape_processor.process(&shape);
     processed_shape.update_geometry(&mut renderer);
 
     let mut draw_config = DrawConfig::default();
