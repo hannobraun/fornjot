@@ -80,15 +80,6 @@ fn main() -> anyhow::Result<()> {
         parameters.insert(key, value);
     }
 
-    // Since we're loading the model before setting up the watcher below,
-    // there's a race condition, and a modification could be missed between
-    // those two events.
-    //
-    // This can't be addressed with the current structure, since the watcher
-    // closure takes ownership of the model.
-    //
-    // This is being tracked in the following issue:
-    // https://github.com/hannobraun/fornjot/issues/32
     let shape = model.load(&parameters)?;
 
     let shape_processor = ShapeProcessor::new(args.tolerance)?;

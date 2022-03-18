@@ -5,6 +5,7 @@ use std::{
     path::PathBuf,
     process::Command,
     sync::mpsc,
+    thread,
 };
 
 use notify::Watcher as _;
@@ -100,6 +101,8 @@ impl Model {
         parameters: HashMap<String, String>,
     ) -> Result<Watcher, Error> {
         let (tx, rx) = mpsc::sync_channel(0);
+        let tx2 = tx.clone();
+
         let watch_path = self.src_path.clone();
 
         let mut watcher = notify::recommended_watcher(
@@ -154,6 +157,14 @@ impl Model {
         )?;
 
         watcher.watch(&watch_path, notify::RecursiveMode::Recursive)?;
+
+        // To prevent a race condition between the initial load and the start of
+        // watching, we'll trigger the initial load here, after having started
+        // watching.
+        //
+        // Will panic, if the receiving end has panicked. Not much we can do
+        // about that, if it happened.
+        thread::spawn(move || tx2.send(()).unwrap());
 
         Ok(Watcher {
             _watcher: Box::new(watcher),
