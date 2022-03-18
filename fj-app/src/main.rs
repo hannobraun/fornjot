@@ -95,7 +95,7 @@ fn main() -> anyhow::Result<()> {
     let shape = model.load(&parameters)?;
 
     let shape_processor = ShapeProcessor::new(args.tolerance)?;
-    let mut processed_shape = shape_processor.process(&shape)?;
+    let mut processed_shape = shape_processor.process(&shape);
 
     if let Some(path) = args.export {
         let mut mesh_maker = MeshMaker::new();
@@ -362,7 +362,7 @@ impl ShapeProcessor {
         Ok(Self { tolerance })
     }
 
-    fn process(&self, shape: &fj::Shape) -> anyhow::Result<ProcessedShape> {
+    fn process(&self, shape: &fj::Shape) -> ProcessedShape {
         let aabb = shape.bounding_volume();
 
         let tolerance = match self.tolerance {
@@ -393,12 +393,12 @@ impl ShapeProcessor {
             .topology()
             .triangles(tolerance, &mut triangles, &mut debug_info);
 
-        Ok(ProcessedShape {
+        ProcessedShape {
             tolerance,
             aabb,
             triangles,
             debug_info,
-        })
+        }
     }
 }
 
