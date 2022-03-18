@@ -99,7 +99,7 @@ impl Model {
         self,
         tx: mpsc::SyncSender<fj::Shape>,
         parameters: HashMap<String, String>,
-    ) -> notify::Result<impl notify::Watcher> {
+    ) -> Result<impl notify::Watcher, Error> {
         let watch_path = self.src_path.clone();
 
         let mut watcher = notify::recommended_watcher(
@@ -183,6 +183,9 @@ pub enum Error {
 
     #[error("Error loading model from dynamic library")]
     LibLoading(#[from] libloading::Error),
+
+    #[error("Error watching model for changes")]
+    Notify(#[from] notify::Error),
 }
 
 type ModelFn =
