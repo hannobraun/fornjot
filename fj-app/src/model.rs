@@ -97,9 +97,9 @@ impl Model {
 
     pub fn watch(
         self,
-        tx: mpsc::SyncSender<fj::Shape>,
         parameters: HashMap<String, String>,
-    ) -> Result<impl notify::Watcher, Error> {
+    ) -> Result<Watcher, Error> {
+        let (tx, rx) = mpsc::sync_channel(0);
         let watch_path = self.src_path.clone();
 
         let mut watcher = notify::recommended_watcher(
@@ -169,7 +169,33 @@ impl Model {
 
         watcher.watch(&watch_path, notify::RecursiveMode::Recursive)?;
 
-        Ok(watcher)
+        Ok(Watcher {
+            _watcher: Box::new(watcher),
+            channel: rx,
+        })
+    }
+}
+
+pub struct Watcher {
+    _watcher: Box<dyn notify::Watcher>,
+    channel: mpsc::Receiver<fj::Shape>,
+}
+
+impl Watcher {
+    pub fn receive(&self) -> Option<fj::Shape> {
+        match self.channel.try_recv() {
+            Ok(shape) => Some(shape),
+            Err(mpsc::TryRecvError::Empty) => {
+                // Nothing to receive from the channel.
+                None
+            }
+            Err(mpsc::TryRecvError::Disconnected) => {
+                // The other end has disconnected. This is probably the result
+                // of a panic on the other thread, or a program shutdown in
+                // progress. In any case, not much we can do here.
+                panic!();
+            }
+        }
     }
 }
 

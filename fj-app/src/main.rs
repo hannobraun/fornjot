@@ -8,7 +8,7 @@ mod model;
 mod window;
 
 use std::path::PathBuf;
-use std::{collections::HashMap, sync::mpsc, time::Instant};
+use std::{collections::HashMap, time::Instant};
 
 use fj_debug::DebugInfo;
 use fj_math::{Aabb, Scalar, Triangle};
@@ -130,8 +130,7 @@ fn main() -> anyhow::Result<()> {
         return Ok(());
     }
 
-    let (watcher_tx, watcher_rx) = mpsc::sync_channel(0);
-    let _watcher = model.watch(watcher_tx, parameters)?;
+    let watcher = model.watch(parameters)?;
 
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop);
@@ -154,20 +153,9 @@ fn main() -> anyhow::Result<()> {
 
         let now = Instant::now();
 
-        match watcher_rx.try_recv() {
-            Ok(shape) => {
-                processed_shape = shape_processor.process(&shape);
-                processed_shape.update_geometry(&mut renderer);
-            }
-            Err(mpsc::TryRecvError::Empty) => {
-                // Nothing to receive from the channel. We don't care.
-            }
-            Err(mpsc::TryRecvError::Disconnected) => {
-                // The other end has disconnected. This is probably the result
-                // of a panic on the other thread, or a program shutdown in
-                // progress. In any case, not much we can do here.
-                panic!();
-            }
+        if let Some(shape) = watcher.receive() {
+            processed_shape = shape_processor.process(&shape);
+            processed_shape.update_geometry(&mut renderer);
         }
 
         match event {
