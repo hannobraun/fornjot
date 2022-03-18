@@ -55,10 +55,6 @@ impl Model {
         })
     }
 
-    pub fn src_path(&self) -> PathBuf {
-        self.src_path.clone()
-    }
-
     pub fn load(
         &self,
         arguments: &HashMap<String, String>,
@@ -104,7 +100,7 @@ impl Model {
         tx: mpsc::SyncSender<fj::Shape>,
         parameters: HashMap<String, String>,
     ) -> notify::Result<impl notify::Watcher> {
-        let watch_path = self.src_path();
+        let watch_path = self.src_path.clone();
 
         let mut watcher = notify::recommended_watcher(
             move |event: notify::Result<notify::Event>| {
