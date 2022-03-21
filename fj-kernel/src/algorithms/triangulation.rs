@@ -39,7 +39,7 @@ pub fn triangulate(
     triangles
 }
 
-// Enables the use of `SurfacePoint` in the triangulation.
+// Enables the use of `geometry::Point` in the triangulation.
 impl HasPosition for geometry::Point<2> {
     type Scalar = Scalar;
 
