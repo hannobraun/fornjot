@@ -5,6 +5,8 @@
 
 #![deny(missing_docs)]
 
+mod platform;
+
 use std::{
     collections::{HashMap, HashSet},
     ffi::OsStr,
@@ -17,6 +19,8 @@ use std::{
 
 use notify::Watcher as _;
 use thiserror::Error;
+
+use self::platform::HostPlatform;
 
 /// Represents a Fornjot model
 pub struct Model {
@@ -47,15 +51,7 @@ impl Model {
         let src_path = path.join("src");
 
         let lib_path = {
-            let file = if cfg!(windows) {
-                format!("{}.dll", name)
-            } else if cfg!(target_os = "macos") {
-                format!("lib{}.dylib", name)
-            } else {
-                //Unix
-                format!("lib{}.so", name)
-            };
-
+            let file = HostPlatform::host_file_name(&name);
             let target_dir = target_dir.unwrap_or_else(|| path.join("target"));
             target_dir.join("debug").join(file)
         };
