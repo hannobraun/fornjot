@@ -1,9 +1,9 @@
 // Represents platform trait
-trait Platform {
-    fn file_name(name: &str) -> String;
+pub trait Platform {
+    fn model_lib_file_name(&self, name: &str) -> String;
 }
 
-// Represents all platforms supported
+// Represents all supported platforms
 
 // Mac OS
 struct Macos;
@@ -13,17 +13,19 @@ struct Windows;
 struct Unix;
 
 impl Platform for Windows {
-    fn file_name(name: &str) -> String {
+    fn model_lib_file_name(&self, name: &str) -> String {
         format!("{}.dll", name)
     }
 }
+
 impl Platform for Macos {
-    fn file_name(name: &str) -> String {
+    fn model_lib_file_name(&self, name: &str) -> String {
         format!("lib{}.dylib", name)
     }
 }
+
 impl Platform for Unix {
-    fn file_name(name: &str) -> String {
+    fn model_lib_file_name(&self, name: &str) -> String {
         format!("lib{}.so", name)
     }
 }
@@ -32,14 +34,17 @@ impl Platform for Unix {
 pub struct HostPlatform;
 
 impl HostPlatform {
-    pub fn host_file_name(name: &str) -> String {
+    pub fn get_os() -> Box<dyn Platform> {
         if cfg!(windows) {
-            Windows::file_name(name)
+            Box::new(Windows)
         } else if cfg!(target_os = "macos") {
-            Macos::file_name(name)
+            Box::new(Macos)
         } else {
-            //Unix
-            Unix::file_name(name)
+            Box::new(Unix)
         }
+    }
+
+    pub fn lib_file_name(name: &str) -> String {
+        Self::get_os().model_lib_file_name(name)
     }
 }

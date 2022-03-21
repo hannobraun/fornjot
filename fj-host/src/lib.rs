@@ -51,7 +51,7 @@ impl Model {
         let src_path = path.join("src");
 
         let lib_path = {
-            let file = HostPlatform::host_file_name(&name);
+            let file = HostPlatform::lib_file_name(&name);
             let target_dir = target_dir.unwrap_or_else(|| path.join("target"));
             target_dir.join("debug").join(file)
         };
