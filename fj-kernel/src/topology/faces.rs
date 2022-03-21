@@ -9,7 +9,7 @@ use parry2d_f64::query::{Ray as Ray2, RayCast as _};
 use parry3d_f64::query::Ray as Ray3;
 
 use crate::{
-    algorithms::{triangulate, Approximation},
+    algorithms::{delaunay, Approximation},
     geometry::Surface,
     shape::Handle,
 };
@@ -134,7 +134,7 @@ impl Face {
                 );
                 let outside = aabb.max * 2.;
 
-                let mut triangles = triangulate(points);
+                let mut triangles = delaunay(points);
                 let face_as_polygon = segments;
 
                 triangles.retain(|t| {

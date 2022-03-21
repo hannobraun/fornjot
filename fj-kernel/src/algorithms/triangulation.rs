@@ -5,7 +5,7 @@ use spade::HasPosition;
 use crate::geometry;
 
 /// Create a Delaunay triangulation of all points
-pub fn triangulate(
+pub fn delaunay(
     points: Vec<geometry::Point<2>>,
 ) -> Vec<[geometry::Point<2>; 3]> {
     use spade::Triangulation as _;
