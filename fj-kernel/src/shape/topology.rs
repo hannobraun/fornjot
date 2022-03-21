@@ -1,7 +1,6 @@
 use std::collections::HashSet;
 
-use fj_debug::DebugInfo;
-use fj_math::{Point, Scalar, Triangle, Vector};
+use fj_math::{Point, Scalar, Vector};
 
 use crate::{
     geometry::{Circle, Curve, Line},
@@ -237,18 +236,6 @@ impl Topology<'_> {
     /// The caller must not make any assumptions about the order of faces.
     pub fn faces(&self) -> Iter<Face> {
         Iter::new(self.geometry.faces)
-    }
-
-    /// Triangulate the shape
-    pub fn triangles(
-        &self,
-        tolerance: Scalar,
-        out: &mut Vec<Triangle<3>>,
-        debug_info: &mut DebugInfo,
-    ) {
-        for face in &*self.geometry.faces {
-            face.get().triangles(tolerance, out, debug_info);
-        }
     }
 }
 

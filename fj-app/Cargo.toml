@@ -44,6 +44,10 @@ path    = "../fj-debug"
 version = "0.5.0"
 path    = "../fj-host"
 
+[dependencies.fj-kernel]
+version = "0.5.0"
+path    = "../fj-kernel"
+
 [dependencies.fj-math]
 version = "0.5.0"
 path    = "../fj-math"
