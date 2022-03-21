@@ -11,6 +11,7 @@ use std::{collections::HashMap, time::Instant};
 
 use fj_debug::DebugInfo;
 use fj_host::Model;
+use fj_kernel::algorithms::triangulate;
 use fj_math::{Aabb, Scalar, Triangle};
 use fj_operations::ToShape as _;
 use futures::executor::block_on;
@@ -296,10 +297,12 @@ impl ShapeProcessor {
 
         let mut debug_info = DebugInfo::new();
         let mut triangles = Vec::new();
-        shape
-            .to_shape(tolerance, &mut debug_info)
-            .topology()
-            .triangles(tolerance, &mut triangles, &mut debug_info);
+        triangulate(
+            shape.to_shape(tolerance, &mut debug_info),
+            tolerance,
+            &mut triangles,
+            &mut debug_info,
+        );
 
         ProcessedShape {
             aabb,

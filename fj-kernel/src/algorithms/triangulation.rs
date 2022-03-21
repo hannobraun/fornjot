@@ -1,8 +1,21 @@
-use fj_math::Scalar;
+use fj_debug::DebugInfo;
+use fj_math::{Scalar, Triangle};
 use parry2d_f64::utils::point_in_triangle::{corner_direction, Orientation};
 use spade::HasPosition;
 
-use crate::geometry;
+use crate::{geometry, shape::Shape};
+
+/// Triangulate a shape
+pub fn triangulate(
+    mut shape: Shape,
+    tolerance: Scalar,
+    out: &mut Vec<Triangle<3>>,
+    debug_info: &mut DebugInfo,
+) {
+    for face in shape.topology().faces() {
+        face.get().triangles(tolerance, out, debug_info);
+    }
+}
 
 /// Create a Delaunay triangulation of all points
 pub fn delaunay(
