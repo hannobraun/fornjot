@@ -5,11 +5,6 @@ updates:
     schedule:
       interval: "weekly"
 
-  - package-ecosystem: cargo
-    directory: "/release-operator"
-    schedule:
-      interval: "weekly"
-
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
