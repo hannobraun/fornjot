@@ -160,9 +160,7 @@ pub fn triangulate(
 }
 
 /// Create a Delaunay triangulation of all points
-pub fn delaunay(
-    points: Vec<geometry::Point<2>>,
-) -> Vec<[geometry::Point<2>; 3]> {
+fn delaunay(points: Vec<geometry::Point<2>>) -> Vec<[geometry::Point<2>; 3]> {
     use spade::Triangulation as _;
 
     let triangulation = spade::DelaunayTriangulation::<_>::bulk_load(points)
