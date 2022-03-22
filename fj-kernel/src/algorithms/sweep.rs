@@ -8,7 +8,7 @@ use crate::{
     topology::{Cycle, Edge, Face, Vertex},
 };
 
-use super::approximation::Approximation;
+use super::approximation::approximate_cycle;
 
 /// Create a new shape by sweeping an existing one
 pub fn sweep_shape(
@@ -144,8 +144,7 @@ pub fn sweep_shape(
             // This is the last piece of code that still uses the triangle
             // representation.
 
-            let approx =
-                Approximation::for_cycle(&cycle_source.get(), tolerance);
+            let approx = approximate_cycle(&cycle_source.get(), tolerance);
 
             let mut quads = Vec::new();
             for segment in approx.segments {
