@@ -73,18 +73,17 @@ fn approximate_edge(
         points.push(b.point());
     }
 
-    let mut segment_points = points.clone();
     if vertices.is_none() {
         // The edge has no vertices, which means it connects to itself. We need
         // to reflect that in the approximation.
 
         if let Some(&point) = points.first() {
-            segment_points.push(point);
+            points.push(point);
         }
     }
 
     let mut segments = HashSet::new();
-    for segment in segment_points.windows(2) {
+    for segment in points.windows(2) {
         let p0 = segment[0];
         let p1 = segment[1];
 
