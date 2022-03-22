@@ -2,9 +2,9 @@ use std::collections::HashSet;
 
 use fj_math::{Point, Scalar, Segment};
 
-use crate::topology::{Cycle, Edge, Face, Vertex};
+use crate::topology::{Cycle, Face, Vertex};
 
-/// An approximation of an edge, multiple edges, or a face
+/// The approximation of a face
 #[derive(Debug, PartialEq)]
 pub struct Approximation {
     /// All points that make up the approximation
@@ -24,40 +24,11 @@ pub struct Approximation {
 }
 
 impl Approximation {
-    /// Compute an approximate for an edge
+    /// Compute the approximation of a face
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
-    /// the actual edge.
-    pub fn for_edge(edge: &Edge, tolerance: Scalar) -> Self {
-        let mut points = Vec::new();
-        edge.curve().approx(tolerance, &mut points);
-
-        approximate_edge(points, edge.vertices())
-    }
-
-    /// Compute an approximation for a cycle
-    ///
-    /// `tolerance` defines how far the approximation is allowed to deviate from
-    /// the actual cycle.
-    pub fn for_cycle(cycle: &Cycle, tolerance: Scalar) -> Self {
-        let mut points = HashSet::new();
-        let mut segments = HashSet::new();
-
-        for edge in cycle.edges() {
-            let approx = Self::for_edge(&edge, tolerance);
-
-            points.extend(approx.points);
-            segments.extend(approx.segments);
-        }
-
-        Self { points, segments }
-    }
-
-    /// Compute an approximation for a face
-    ///
-    /// `tolerance` defines how far the approximation is allowed to deviate from
-    /// the actual edges.
-    pub fn for_face(face: &Face, tolerance: Scalar) -> Self {
+    /// the actual face.
+    pub fn new(face: &Face, tolerance: Scalar) -> Self {
         // Curved faces whose curvature is not fully defined by their edges
         // are not supported yet. For that reason, we can fully ignore `face`'s
         // `surface` field and just pass the edges to `Self::for_edges`.
@@ -70,14 +41,23 @@ impl Approximation {
         // doesn't need to be handled here, is a sphere. A spherical face would
         // would need to provide its own approximation, as the edges that bound
         // it have nothing to do with its curvature.
+
         let mut points = HashSet::new();
         let mut segments = HashSet::new();
 
         for cycle in face.cycles() {
-            let approx = Self::for_cycle(&cycle, tolerance);
+            let cycle_points = approximate_cycle(&cycle, tolerance);
 
-            points.extend(approx.points);
-            segments.extend(approx.segments);
+            let mut cycle_segments = Vec::new();
+            for segment in cycle_points.windows(2) {
+                let p0 = segment[0];
+                let p1 = segment[1];
+
+                cycle_segments.push(Segment::from([p0, p1]));
+            }
+
+            points.extend(cycle_points);
+            segments.extend(cycle_segments);
         }
 
         Self { points, segments }
@@ -87,7 +67,7 @@ impl Approximation {
 fn approximate_edge(
     mut points: Vec<Point<3>>,
     vertices: Option<[Vertex; 2]>,
-) -> Approximation {
+) -> Vec<Point<3>> {
     // Insert the exact vertices of this edge into the approximation. This means
     // we don't rely on the curve approximation to deliver accurate
     // representations of these vertices, which they might not be able to do.
@@ -101,28 +81,35 @@ fn approximate_edge(
         points.push(b.point());
     }
 
-    let mut segment_points = points.clone();
     if vertices.is_none() {
         // The edge has no vertices, which means it connects to itself. We need
         // to reflect that in the approximation.
 
         if let Some(&point) = points.first() {
-            segment_points.push(point);
+            points.push(point);
         }
     }
 
-    let mut segments = HashSet::new();
-    for segment in segment_points.windows(2) {
-        let p0 = segment[0];
-        let p1 = segment[1];
+    points
+}
 
-        segments.insert(Segment::from([p0, p1]));
+/// Compute an approximation for a cycle
+///
+/// `tolerance` defines how far the approximation is allowed to deviate from the
+/// actual cycle.
+pub fn approximate_cycle(cycle: &Cycle, tolerance: Scalar) -> Vec<Point<3>> {
+    let mut points = Vec::new();
+
+    for edge in cycle.edges() {
+        let mut edge_points = Vec::new();
+        edge.curve().approx(tolerance, &mut edge_points);
+
+        points.extend(approximate_edge(edge_points, edge.vertices()));
     }
 
-    Approximation {
-        points: points.into_iter().collect(),
-        segments,
-    }
+    points.dedup();
+
+    points
 }
 
 #[cfg(test)]
@@ -136,13 +123,10 @@ mod tests {
         topology::{Cycle, Face, Vertex},
     };
 
-    use super::{approximate_edge, Approximation};
+    use super::Approximation;
 
     #[test]
-    fn for_edge() {
-        // Doesn't test `Approximation::for_edge` directly, but that method only
-        // contains a bit of additional glue code that is not critical.
-
+    fn approximate_edge() {
         let mut shape = Shape::new();
 
         let a = Point::from([1., 2., 3.]);
@@ -160,70 +144,15 @@ mod tests {
 
         // Regular edge
         assert_eq!(
-            approximate_edge(
+            super::approximate_edge(
                 points.clone(),
                 Some([v1.get().clone(), v2.get().clone()])
             ),
-            Approximation {
-                points: set![a, b, c, d],
-                segments: set![
-                    Segment::from([a, b]),
-                    Segment::from([b, c]),
-                    Segment::from([c, d]),
-                ],
-            }
+            vec![a, b, c, d],
         );
 
         // Continuous edge
-        assert_eq!(
-            approximate_edge(points, None),
-            Approximation {
-                points: set![b, c],
-                segments: set![Segment::from([b, c]), Segment::from([c, b])],
-            }
-        );
-    }
-
-    #[test]
-    fn for_cycle() {
-        let tolerance = Scalar::ONE;
-
-        let mut shape = Shape::new();
-
-        let a = Point::from([1., 2., 3.]);
-        let b = Point::from([2., 3., 5.]);
-        let c = Point::from([3., 5., 8.]);
-
-        let v1 = shape.geometry().add_point(a);
-        let v2 = shape.geometry().add_point(b);
-        let v3 = shape.geometry().add_point(c);
-
-        let v1 = shape.topology().add_vertex(Vertex { point: v1 }).unwrap();
-        let v2 = shape.topology().add_vertex(Vertex { point: v2 }).unwrap();
-        let v3 = shape.topology().add_vertex(Vertex { point: v3 }).unwrap();
-
-        let ab = shape
-            .topology()
-            .add_line_segment([v1.clone(), v2.clone()])
-            .unwrap();
-        let bc = shape.topology().add_line_segment([v2, v3.clone()]).unwrap();
-        let ca = shape.topology().add_line_segment([v3, v1]).unwrap();
-
-        let cycle = Cycle {
-            edges: vec![ab, bc, ca],
-        };
-
-        assert_eq!(
-            Approximation::for_cycle(&cycle, tolerance),
-            Approximation {
-                points: set![a, b, c],
-                segments: set![
-                    Segment::from([a, b]),
-                    Segment::from([b, c]),
-                    Segment::from([c, a]),
-                ],
-            }
-        );
+        assert_eq!(super::approximate_edge(points, None), vec![b, c, b],);
     }
 
     #[test]
@@ -272,7 +201,7 @@ mod tests {
         };
 
         assert_eq!(
-            Approximation::for_face(&face, tolerance),
+            Approximation::new(&face, tolerance),
             Approximation {
                 points: set![a, b, c, d],
                 segments: set![

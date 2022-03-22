@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use fj_math::{Scalar, Transform, Triangle, Vector};
+use fj_math::{Scalar, Segment, Transform, Triangle, Vector};
 
 use crate::{
     geometry::{Surface, SweptCurve},
@@ -8,7 +8,7 @@ use crate::{
     topology::{Cycle, Edge, Face, Vertex},
 };
 
-use super::approximation::Approximation;
+use super::approximation::approximate_cycle;
 
 /// Create a new shape by sweeping an existing one
 pub fn sweep_shape(
@@ -144,11 +144,12 @@ pub fn sweep_shape(
             // This is the last piece of code that still uses the triangle
             // representation.
 
-            let approx =
-                Approximation::for_cycle(&cycle_source.get(), tolerance);
+            let approx = approximate_cycle(&cycle_source.get(), tolerance);
 
             let mut quads = Vec::new();
-            for segment in approx.segments {
+            for segment in approx.windows(2) {
+                let segment = Segment::from_points([segment[0], segment[1]]);
+
                 let [v0, v1] = segment.points();
                 let [v3, v2] = {
                     let segment = Transform::translation(path)
