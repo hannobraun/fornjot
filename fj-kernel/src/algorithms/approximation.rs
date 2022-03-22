@@ -46,10 +46,18 @@ impl Approximation {
         let mut segments = HashSet::new();
 
         for cycle in face.cycles() {
-            let approx = approximate_cycle(&cycle, tolerance);
+            let cycle_points = approximate_cycle(&cycle, tolerance);
 
-            points.extend(approx.points);
-            segments.extend(approx.segments);
+            let mut cycle_segments = Vec::new();
+            for segment in cycle_points.windows(2) {
+                let p0 = segment[0];
+                let p1 = segment[1];
+
+                cycle_segments.push(Segment::from([p0, p1]));
+            }
+
+            points.extend(cycle_points);
+            segments.extend(cycle_segments);
         }
 
         Self { points, segments }
@@ -89,9 +97,8 @@ fn approximate_edge(
 ///
 /// `tolerance` defines how far the approximation is allowed to deviate from the
 /// actual cycle.
-pub fn approximate_cycle(cycle: &Cycle, tolerance: Scalar) -> Approximation {
-    let mut points = HashSet::new();
-    let mut segments = HashSet::new();
+pub fn approximate_cycle(cycle: &Cycle, tolerance: Scalar) -> Vec<Point<3>> {
+    let mut points = Vec::new();
 
     for edge in cycle.edges() {
         let mut edge_points = Vec::new();
@@ -99,19 +106,12 @@ pub fn approximate_cycle(cycle: &Cycle, tolerance: Scalar) -> Approximation {
 
         let edge_points = approximate_edge(edge_points, edge.vertices());
 
-        let mut edge_segments = Vec::new();
-        for segment in edge_points.windows(2) {
-            let p0 = segment[0];
-            let p1 = segment[1];
-
-            edge_segments.push(Segment::from([p0, p1]));
-        }
-
         points.extend(edge_points);
-        segments.extend(edge_segments);
     }
 
-    Approximation { points, segments }
+    points.dedup();
+
+    points
 }
 
 #[cfg(test)]
