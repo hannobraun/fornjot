@@ -1,5 +1,8 @@
 # Cargo
 /target
 
+# ignore models target
+/models/*/target
+
 # IntelliJ IDEA
 /.idea
