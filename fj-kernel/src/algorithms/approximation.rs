@@ -70,6 +70,7 @@ impl Approximation {
         // doesn't need to be handled here, is a sphere. A spherical face would
         // would need to provide its own approximation, as the edges that bound
         // it have nothing to do with its curvature.
+
         let mut points = HashSet::new();
         let mut segments = HashSet::new();
 
