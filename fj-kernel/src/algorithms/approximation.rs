@@ -59,7 +59,7 @@ impl Approximation {
 fn approximate_edge(
     mut points: Vec<Point<3>>,
     vertices: Option<[Vertex; 2]>,
-) -> Approximation {
+) -> Vec<Point<3>> {
     // Insert the exact vertices of this edge into the approximation. This means
     // we don't rely on the curve approximation to deliver accurate
     // representations of these vertices, which they might not be able to do.
@@ -82,18 +82,7 @@ fn approximate_edge(
         }
     }
 
-    let mut segments = HashSet::new();
-    for segment in points.windows(2) {
-        let p0 = segment[0];
-        let p1 = segment[1];
-
-        segments.insert(Segment::from([p0, p1]));
-    }
-
-    Approximation {
-        points: points.into_iter().collect(),
-        segments,
-    }
+    points
 }
 
 /// Compute an approximation for a cycle
@@ -108,10 +97,18 @@ pub fn approximate_cycle(cycle: &Cycle, tolerance: Scalar) -> Approximation {
         let mut edge_points = Vec::new();
         edge.curve().approx(tolerance, &mut edge_points);
 
-        let approx = approximate_edge(edge_points, edge.vertices());
+        let edge_points = approximate_edge(edge_points, edge.vertices());
 
-        points.extend(approx.points);
-        segments.extend(approx.segments);
+        let mut edge_segments = Vec::new();
+        for segment in edge_points.windows(2) {
+            let p0 = segment[0];
+            let p1 = segment[1];
+
+            edge_segments.push(Segment::from([p0, p1]));
+        }
+
+        points.extend(edge_points);
+        segments.extend(edge_segments);
     }
 
     Approximation { points, segments }
@@ -153,24 +150,11 @@ mod tests {
                 points.clone(),
                 Some([v1.get().clone(), v2.get().clone()])
             ),
-            Approximation {
-                points: set![a, b, c, d],
-                segments: set![
-                    Segment::from([a, b]),
-                    Segment::from([b, c]),
-                    Segment::from([c, d]),
-                ],
-            }
+            vec![a, b, c, d],
         );
 
         // Continuous edge
-        assert_eq!(
-            super::approximate_edge(points, None),
-            Approximation {
-                points: set![b, c],
-                segments: set![Segment::from([b, c]), Segment::from([c, b])],
-            }
-        );
+        assert_eq!(super::approximate_edge(points, None), vec![b, c, b],);
     }
 
     #[test]
