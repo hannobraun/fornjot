@@ -175,48 +175,6 @@ mod tests {
     }
 
     #[test]
-    fn for_cycle() {
-        let tolerance = Scalar::ONE;
-
-        let mut shape = Shape::new();
-
-        let a = Point::from([1., 2., 3.]);
-        let b = Point::from([2., 3., 5.]);
-        let c = Point::from([3., 5., 8.]);
-
-        let v1 = shape.geometry().add_point(a);
-        let v2 = shape.geometry().add_point(b);
-        let v3 = shape.geometry().add_point(c);
-
-        let v1 = shape.topology().add_vertex(Vertex { point: v1 }).unwrap();
-        let v2 = shape.topology().add_vertex(Vertex { point: v2 }).unwrap();
-        let v3 = shape.topology().add_vertex(Vertex { point: v3 }).unwrap();
-
-        let ab = shape
-            .topology()
-            .add_line_segment([v1.clone(), v2.clone()])
-            .unwrap();
-        let bc = shape.topology().add_line_segment([v2, v3.clone()]).unwrap();
-        let ca = shape.topology().add_line_segment([v3, v1]).unwrap();
-
-        let cycle = Cycle {
-            edges: vec![ab, bc, ca],
-        };
-
-        assert_eq!(
-            Approximation::for_cycle(&cycle, tolerance),
-            Approximation {
-                points: set![a, b, c],
-                segments: set![
-                    Segment::from([a, b]),
-                    Segment::from([b, c]),
-                    Segment::from([c, a]),
-                ],
-            }
-        );
-    }
-
-    #[test]
     fn for_face_closed() {
         // Test a closed face, i.e. one that is completely encircled by edges.
 
