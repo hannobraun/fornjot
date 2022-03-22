@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use fj_math::{Point, Scalar, Segment};
 
-use crate::topology::{Cycle, Edge, Face, Vertex};
+use crate::topology::{Cycle, Face, Vertex};
 
 /// An approximation of an edge, multiple edges, or a face
 #[derive(Debug, PartialEq)]
@@ -24,17 +24,6 @@ pub struct Approximation {
 }
 
 impl Approximation {
-    /// Compute an approximate for an edge
-    ///
-    /// `tolerance` defines how far the approximation is allowed to deviate from
-    /// the actual edge.
-    pub fn for_edge(edge: &Edge, tolerance: Scalar) -> Self {
-        let mut points = Vec::new();
-        edge.curve().approx(tolerance, &mut points);
-
-        approximate_edge(points, edge.vertices())
-    }
-
     /// Compute an approximation for a cycle
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
@@ -44,7 +33,10 @@ impl Approximation {
         let mut segments = HashSet::new();
 
         for edge in cycle.edges() {
-            let approx = Self::for_edge(&edge, tolerance);
+            let mut edge_points = Vec::new();
+            edge.curve().approx(tolerance, &mut edge_points);
+
+            let approx = approximate_edge(edge_points, edge.vertices());
 
             points.extend(approx.points);
             segments.extend(approx.segments);
