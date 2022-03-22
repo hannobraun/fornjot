@@ -28,7 +28,7 @@ impl Approximation {
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual edges.
-    pub fn for_face(face: &Face, tolerance: Scalar) -> Self {
+    pub fn new(face: &Face, tolerance: Scalar) -> Self {
         // Curved faces whose curvature is not fully defined by their edges
         // are not supported yet. For that reason, we can fully ignore `face`'s
         // `surface` field and just pass the edges to `Self::for_edges`.
@@ -203,7 +203,7 @@ mod tests {
         };
 
         assert_eq!(
-            Approximation::for_face(&face, tolerance),
+            Approximation::new(&face, tolerance),
             Approximation {
                 points: set![a, b, c, d],
                 segments: set![

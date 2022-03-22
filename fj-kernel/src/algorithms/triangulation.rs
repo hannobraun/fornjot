@@ -25,7 +25,7 @@ pub fn triangulate(
         match &*face {
             Face::Face { surface, color, .. } => {
                 let surface = surface.get();
-                let approx = Approximation::for_face(&face, tolerance);
+                let approx = Approximation::new(&face, tolerance);
 
                 let points: Vec<_> = approx
                     .points
