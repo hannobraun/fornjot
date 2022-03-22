@@ -132,7 +132,7 @@ mod tests {
     use super::Approximation;
 
     #[test]
-    fn for_edge() {
+    fn approximate_edge() {
         // Doesn't test `Approximation::for_edge` directly, but that method only
         // contains a bit of additional glue code that is not critical.
 
