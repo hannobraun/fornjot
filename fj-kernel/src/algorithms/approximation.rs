@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar, Segment};
 
 use crate::topology::{Cycle, Face, Vertex};
 
-/// An approximation of an edge, multiple edges, or a face
+/// The approximation of a face
 #[derive(Debug, PartialEq)]
 pub struct Approximation {
     /// All points that make up the approximation
@@ -24,10 +24,10 @@ pub struct Approximation {
 }
 
 impl Approximation {
-    /// Compute an approximation for a face
+    /// Compute the approximation of a face
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
-    /// the actual edges.
+    /// the actual face.
     pub fn new(face: &Face, tolerance: Scalar) -> Self {
         // Curved faces whose curvature is not fully defined by their edges
         // are not supported yet. For that reason, we can fully ignore `face`'s
