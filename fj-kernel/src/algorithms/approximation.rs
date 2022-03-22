@@ -133,9 +133,6 @@ mod tests {
 
     #[test]
     fn approximate_edge() {
-        // Doesn't test `Approximation::for_edge` directly, but that method only
-        // contains a bit of additional glue code that is not critical.
-
         let mut shape = Shape::new();
 
         let a = Point::from([1., 2., 3.]);
