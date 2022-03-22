@@ -129,7 +129,7 @@ mod tests {
         topology::{Cycle, Face, Vertex},
     };
 
-    use super::{approximate_edge, Approximation};
+    use super::Approximation;
 
     #[test]
     fn for_edge() {
@@ -153,7 +153,7 @@ mod tests {
 
         // Regular edge
         assert_eq!(
-            approximate_edge(
+            super::approximate_edge(
                 points.clone(),
                 Some([v1.get().clone(), v2.get().clone()])
             ),
@@ -169,7 +169,7 @@ mod tests {
 
         // Continuous edge
         assert_eq!(
-            approximate_edge(points, None),
+            super::approximate_edge(points, None),
             Approximation {
                 points: set![b, c],
                 segments: set![Segment::from([b, c]), Segment::from([c, b])],
