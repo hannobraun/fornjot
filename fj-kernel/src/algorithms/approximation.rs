@@ -104,9 +104,7 @@ pub fn approximate_cycle(cycle: &Cycle, tolerance: Scalar) -> Vec<Point<3>> {
         let mut edge_points = Vec::new();
         edge.curve().approx(tolerance, &mut edge_points);
 
-        let edge_points = approximate_edge(edge_points, edge.vertices());
-
-        points.extend(edge_points);
+        points.extend(approximate_edge(edge_points, edge.vertices()));
     }
 
     points.dedup();
