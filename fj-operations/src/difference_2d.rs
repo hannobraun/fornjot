@@ -19,18 +19,18 @@ impl ToShape for fj::Difference2d {
         let [mut a, mut b] = [&self.a(), &self.b()]
             .map(|shape| shape.to_shape(tolerance, debug_info));
 
+        // Check preconditions.
+        //
+        // See issue:
+        // https://github.com/hannobraun/Fornjot/issues/95
         for shape in [&mut a, &mut b] {
             if shape.topology().cycles().count() != 1 {
-                // See issue:
-                // https://github.com/hannobraun/Fornjot/issues/95
                 todo!(
                     "The 2-dimensional difference operation only supports one \
                     cycle in each operand."
                 );
             }
             if shape.topology().faces().count() != 1 {
-                // See issue:
-                // https://github.com/hannobraun/Fornjot/issues/95
                 todo!(
                     "The 2-dimensional difference operation only supports one \
                     face in each operand."
