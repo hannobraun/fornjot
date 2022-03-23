@@ -246,7 +246,7 @@ mod tests {
     use fj_math::{Point, Scalar};
 
     use crate::{
-        geometry::{Curve, Line, Surface},
+        geometry::{Curve, Surface},
         shape::{handle::Handle, Shape, ValidationError},
         topology::{Cycle, Edge, Face, Vertex},
     };
@@ -383,10 +383,7 @@ mod tests {
         }
 
         fn add_curve(&mut self) -> Handle<Curve> {
-            self.geometry().add_curve(Curve::Line(Line::from_points([
-                Point::from([0., 0., 0.]),
-                Point::from([1., 0., 0.]),
-            ])))
+            self.geometry().add_curve(Curve::x_axis())
         }
 
         fn add_surface(&mut self) -> Handle<Surface> {

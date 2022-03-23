@@ -6,7 +6,7 @@ use fj_math::{Point, Transform, Vector};
 
 use crate::geometry;
 
-use super::{Curve, Line};
+use super::Curve;
 
 /// A two-dimensional shape
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -19,10 +19,7 @@ impl Surface {
     /// Construct a `Surface` that represents the x-y plane
     pub fn x_y_plane() -> Self {
         Self::SweptCurve(SweptCurve {
-            curve: Curve::Line(Line {
-                origin: Point::origin(),
-                direction: Vector::unit_x(),
-            }),
+            curve: Curve::x_axis(),
             path: Vector::unit_y(),
         })
     }
