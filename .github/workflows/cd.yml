@@ -38,14 +38,13 @@ jobs:
       - name: Cache
         uses: Swatinem/rust-cache@v1
 
-      - name: Compile
+      - name: Binaries | Compile
         uses: actions-rs/cargo@v1
         with:
           args: --release --target ${{ matrix.target }}
           command: build
 
-      - name: Prepare Upload
-        shell: bash
+      - name: Binaries | Prepare upload
         run: |
           # Include compile target in binary name
 
@@ -60,16 +59,8 @@ jobs:
           mv -v "${src}" "${dst}"
           chmod -v +x "${dst}"
 
-      - name: Upload Unix
-        if: runner.os != 'Windows'
-        uses: actions/upload-artifact@v2
+      - name: Binaries | Upload
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ env.PROJ_NAME }}-${{ matrix.target }}
-          path: ${{ env.PROJ_NAME }}-${{ matrix.target }}
-
-      - name: Upload Windows
-        if: runner.os == 'Windows'
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ env.PROJ_NAME }}-${{ matrix.target }}.exe
-          path: ${{ env.PROJ_NAME }}-${{ matrix.target }}.exe
+          path: ${{ env.PROJ_NAME }}-*
