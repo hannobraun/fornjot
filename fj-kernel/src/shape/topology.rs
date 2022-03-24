@@ -3,14 +3,13 @@ use std::collections::HashSet;
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    geometry::{Circle, Curve, Line},
+    geometry::{Circle, Curve},
     topology::{Cycle, Edge, Face, Vertex},
 };
 
 use super::{
-    handle::{Handle, Storage},
-    Cycles, Edges, Geometry, Iter, StructuralIssues, ValidationError,
-    ValidationResult, Vertices,
+    handle::Storage, Cycles, Edges, Geometry, Iter, StructuralIssues,
+    ValidationError, ValidationResult, Vertices,
 };
 
 /// The vertices of a shape
@@ -125,23 +124,6 @@ impl Topology<'_> {
         self.add_edge(Edge {
             curve,
             vertices: None,
-        })
-    }
-
-    /// Add a line segment to the shape
-    ///
-    /// Calls [`Edges::add`] internally, and is subject to the same
-    /// restrictions.
-    pub fn add_line_segment(
-        &mut self,
-        vertices: [Handle<Vertex>; 2],
-    ) -> ValidationResult<Edge> {
-        let curve = self.geometry.add_curve(Curve::Line(Line::from_points(
-            vertices.clone().map(|vertex| vertex.get().point()),
-        )));
-        self.add_edge(Edge {
-            curve,
-            vertices: Some(vertices),
         })
     }
 
@@ -412,7 +394,8 @@ mod tests {
                 let point = self.geometry().add_point(point);
                 self.topology().add_vertex(Vertex { point }).unwrap()
             });
-            let edge = self.topology().add_line_segment(vertices)?;
+            let edge = Edge::build(&mut self.inner)
+                .line_segment_from_vertices(vertices)?;
 
             Ok(edge)
         }

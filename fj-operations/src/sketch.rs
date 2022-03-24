@@ -2,7 +2,7 @@ use fj_debug::DebugInfo;
 use fj_kernel::{
     geometry::Surface,
     shape::Shape,
-    topology::{Cycle, Face, Vertex},
+    topology::{Cycle, Edge, Face, Vertex},
 };
 use fj_math::{Aabb, Point, Scalar};
 
@@ -36,7 +36,9 @@ impl ToShape for fj::Sketch {
                 let a = window[0].clone();
                 let b = window[1].clone();
 
-                let edge = shape.topology().add_line_segment([a, b]).unwrap();
+                let edge = Edge::build(&mut shape)
+                    .line_segment_from_vertices([a, b])
+                    .unwrap();
                 edges.push(edge);
             }
 

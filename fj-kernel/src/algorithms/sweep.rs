@@ -347,7 +347,7 @@ mod tests {
     use crate::{
         geometry::{Surface, SweptCurve},
         shape::{Handle, Shape},
-        topology::{Cycle, Face, Vertex},
+        topology::{Cycle, Edge, Face, Vertex},
     };
 
     use super::sweep_shape;
@@ -410,12 +410,12 @@ mod tests {
             let b = shape.topology().add_vertex(Vertex { point: b })?;
             let c = shape.topology().add_vertex(Vertex { point: c })?;
 
-            let ab =
-                shape.topology().add_line_segment([a.clone(), b.clone()])?;
-            let bc =
-                shape.topology().add_line_segment([b.clone(), c.clone()])?;
-            let ca =
-                shape.topology().add_line_segment([c.clone(), a.clone()])?;
+            let ab = Edge::build(&mut shape)
+                .line_segment_from_vertices([a.clone(), b.clone()])?;
+            let bc = Edge::build(&mut shape)
+                .line_segment_from_vertices([b.clone(), c.clone()])?;
+            let ca = Edge::build(&mut shape)
+                .line_segment_from_vertices([c.clone(), a.clone()])?;
 
             let cycles = shape.topology().add_cycle(Cycle {
                 edges: vec![ab, bc, ca],
