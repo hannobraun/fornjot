@@ -1,11 +1,8 @@
 use std::collections::HashSet;
 
-use fj_math::{Point, Scalar, Vector};
+use fj_math::Scalar;
 
-use crate::{
-    geometry::{Circle, Curve},
-    topology::{Cycle, Edge, Face, Vertex},
-};
+use crate::topology::{Cycle, Edge, Face, Vertex};
 
 use super::{
     handle::Storage, Cycles, Edges, Geometry, Iter, StructuralIssues,
@@ -110,21 +107,6 @@ impl Topology<'_> {
         self.edges.push(storage);
 
         Ok(handle)
-    }
-
-    /// Add a circle to the shape
-    ///
-    /// Calls [`Edges::add`] internally, and is subject to the same
-    /// restrictions.
-    pub fn add_circle(&mut self, radius: Scalar) -> ValidationResult<Edge> {
-        let curve = self.geometry.add_curve(Curve::Circle(Circle {
-            center: Point::origin(),
-            radius: Vector::from([radius, Scalar::ZERO]),
-        }));
-        self.add_edge(Edge {
-            curve,
-            vertices: None,
-        })
     }
 
     /// Add a cycle to the shape

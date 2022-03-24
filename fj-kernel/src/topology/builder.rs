@@ -1,7 +1,7 @@
-use fj_math::Point;
+use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    geometry::{Curve, Line},
+    geometry::{Circle, Curve, Line},
     shape::{Handle, Shape, ValidationResult},
 };
 
@@ -39,6 +39,20 @@ impl<'r> EdgeBuilder<'r> {
     /// Construct a new instance of `EdgeBuilder`
     pub fn new(shape: &'r mut Shape) -> Self {
         Self { shape }
+    }
+
+    /// Build a circle from a radius
+    pub fn circle(self, radius: Scalar) -> ValidationResult<Edge> {
+        let curve = self.shape.geometry().add_curve(Curve::Circle(Circle {
+            center: Point::origin(),
+            radius: Vector::from([radius, Scalar::ZERO]),
+        }));
+        let edge = self.shape.topology().add_edge(Edge {
+            curve,
+            vertices: None,
+        })?;
+
+        Ok(edge)
     }
 
     /// Build a line segment from two vertices

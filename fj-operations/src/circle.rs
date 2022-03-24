@@ -2,7 +2,7 @@ use fj_debug::DebugInfo;
 use fj_kernel::{
     geometry::Surface,
     shape::Shape,
-    topology::{Cycle, Face},
+    topology::{Cycle, Edge, Face},
 };
 use fj_math::{Aabb, Point, Scalar};
 
@@ -15,9 +15,8 @@ impl ToShape for fj::Circle {
         // Circles have just a single round edge with no vertices. So none need
         // to be added here.
 
-        let edge = shape
-            .topology()
-            .add_circle(Scalar::from_f64(self.radius()))
+        let edge = Edge::build(&mut shape)
+            .circle(Scalar::from_f64(self.radius()))
             .unwrap();
         shape
             .topology()
