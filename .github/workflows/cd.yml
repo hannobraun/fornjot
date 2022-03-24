@@ -28,15 +28,18 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Setup Toolchain
-        uses: actions-rs/toolchain@v1
+        uses: oxidecomputer/actions-rs_toolchain@oxide/master
+        # see https://github.com/actions-rs/toolchain/pull/209
+        # uses: actions-rs/toolchain@v1
         with:
           override: true
           profile: minimal
           target: ${{ matrix.target }}
-          toolchain: stable
 
       - name: Cache
         uses: Swatinem/rust-cache@v1
+        with:
+          key: ${{ matrix.target }}
 
       - name: Compile
         uses: actions-rs/cargo@v1
