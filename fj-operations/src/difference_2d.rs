@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use fj_debug::DebugInfo;
 use fj_kernel::{
-    shape::Shape,
+    shape::{Handle, Shape},
     topology::{Cycle, Edge, Face, Vertex},
 };
 use fj_math::{Aabb, Scalar};
@@ -46,34 +46,7 @@ impl ToShape for fj::Difference2d {
         let mut cycles = Vec::new();
 
         for cycle in cycles_orig {
-            let mut edges = Vec::new();
-            for edge in cycle.get().edges() {
-                let curve = shape.geometry().add_curve(edge.curve());
-
-                let vertices = edge.vertices().clone().map(|vs| {
-                    vs.map(|vertex| {
-                        vertices
-                            .entry(vertex.clone())
-                            .or_insert_with(|| {
-                                let point =
-                                    shape.geometry().add_point(vertex.point());
-                                shape
-                                    .topology()
-                                    .add_vertex(Vertex { point })
-                                    .unwrap()
-                            })
-                            .clone()
-                    })
-                });
-
-                let edge = shape
-                    .topology()
-                    .add_edge(Edge { curve, vertices })
-                    .unwrap();
-                edges.push(edge);
-            }
-
-            let cycle = shape.topology().add_cycle(Cycle { edges }).unwrap();
+            let cycle = add_cycle(cycle, &mut vertices, &mut shape);
             cycles.push(cycle);
         }
 
@@ -105,4 +78,32 @@ impl ToShape for fj::Difference2d {
         // is being subtracted from.
         self.a().bounding_volume()
     }
+}
+
+fn add_cycle(
+    cycle: Handle<Cycle>,
+    vertices: &mut HashMap<Vertex, Handle<Vertex>>,
+    shape: &mut Shape,
+) -> Handle<Cycle> {
+    let mut edges = Vec::new();
+    for edge in cycle.get().edges() {
+        let curve = shape.geometry().add_curve(edge.curve());
+
+        let vertices = edge.vertices().clone().map(|vs| {
+            vs.map(|vertex| {
+                vertices
+                    .entry(vertex.clone())
+                    .or_insert_with(|| {
+                        let point = shape.geometry().add_point(vertex.point());
+                        shape.topology().add_vertex(Vertex { point }).unwrap()
+                    })
+                    .clone()
+            })
+        });
+
+        let edge = shape.topology().add_edge(Edge { curve, vertices }).unwrap();
+        edges.push(edge);
+    }
+
+    shape.topology().add_cycle(Cycle { edges }).unwrap()
 }
