@@ -9,7 +9,8 @@ use crate::{
 
 use super::{
     handle::{Handle, Storage},
-    Cycles, Edges, Geometry, Iter, ValidationError, ValidationResult, Vertices,
+    Cycles, Edges, Geometry, Iter, StructuralIssues, ValidationError,
+    ValidationResult, Vertices,
 };
 
 /// The vertices of a shape
@@ -48,7 +49,7 @@ impl Topology<'_> {
     /// does. See documentation of [`crate::kernel`] for some context on that.
     pub fn add_vertex(&mut self, vertex: Vertex) -> ValidationResult<Vertex> {
         if !self.geometry.points.contains(vertex.point.storage()) {
-            return Err(ValidationError::Structural(()));
+            return Err(StructuralIssues::default().into());
         }
         for existing in &*self.vertices {
             let distance =
@@ -96,10 +97,12 @@ impl Topology<'_> {
         }
 
         if missing_curve.is_some() || !missing_vertices.is_empty() {
-            return Err(ValidationError::Structural((
+            return Err(StructuralIssues {
                 missing_curve,
                 missing_vertices,
-            )));
+                ..StructuralIssues::default()
+            }
+            .into());
         }
 
         let storage = Storage::new(edge);
@@ -162,7 +165,11 @@ impl Topology<'_> {
         }
 
         if !missing_edges.is_empty() {
-            return Err(ValidationError::Structural(missing_edges));
+            return Err(StructuralIssues {
+                missing_edges,
+                ..StructuralIssues::default()
+            }
+            .into());
         }
 
         let storage = Storage::new(cycle);
@@ -198,10 +205,12 @@ impl Topology<'_> {
             }
 
             if missing_surface.is_some() || !missing_cycles.is_empty() {
-                return Err(ValidationError::Structural((
+                return Err(StructuralIssues {
                     missing_surface,
                     missing_cycles,
-                )));
+                    ..StructuralIssues::default()
+                }
+                .into());
             }
         }
 
@@ -267,7 +276,7 @@ mod tests {
         // Should fail, as `point` is not part of the shape.
         let point = other.geometry().add_point(Point::from([1., 0., 0.]));
         let result = shape.topology().add_vertex(Vertex { point });
-        assert!(matches!(result, Err(ValidationError::Structural(()))));
+        assert!(matches!(result, Err(ValidationError::Structural(_))));
 
         // `point` is too close to the original point. `assert!` is commented,
         // because that only causes a warning to be logged right now.

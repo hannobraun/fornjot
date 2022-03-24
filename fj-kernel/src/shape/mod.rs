@@ -13,7 +13,7 @@ pub use self::{
     handle::Handle,
     iter::Iter,
     topology::Topology,
-    validate::{ValidationError, ValidationResult},
+    validate::{StructuralIssues, ValidationError, ValidationResult},
 };
 
 use fj_math::{Point, Scalar};
