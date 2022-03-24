@@ -28,15 +28,18 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Setup Toolchain
-        uses: actions-rs/toolchain@v1
+        uses: oxidecomputer/actions-rs_toolchain@oxide/master
+        # see https://github.com/actions-rs/toolchain/pull/209
+        # uses: actions-rs/toolchain@v1
         with:
           override: true
           profile: minimal
           target: ${{ matrix.target }}
-          toolchain: stable
 
       - name: Cache
         uses: Swatinem/rust-cache@v1
+        with:
+          key: ${{ matrix.target }}
 
       - name: Binaries | Compile
         uses: actions-rs/cargo@v1
@@ -64,3 +67,59 @@ jobs:
         with:
           name: ${{ env.PROJ_NAME }}-${{ matrix.target }}
           path: ${{ env.PROJ_NAME }}-*
+
+  release:
+    name: Release
+    needs: binaries
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Toolchain
+        uses: oxidecomputer/actions-rs_toolchain@oxide/master
+        # see https://github.com/actions-rs/toolchain/pull/209
+        # uses: actions-rs/toolchain@v1
+        with:
+          override: true
+          profile: minimal
+          target: ${{ matrix.target }}
+
+      - name: Operator | Cache
+        uses: Swatinem/rust-cache@v1
+        with:
+          key: release-operator-01
+          working-directory: ./release-operator
+
+      - name: Operator | Deduce
+        id: release
+        working-directory: ./release-operator
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_LABEL: release
+          RUST_LOG: info
+        run: |
+          # Run release operator
+          cargo run
+
+      - name: Binaries | Download
+        if: ${{ steps.release.outputs.release-detected == 'true' }}
+        uses: actions/download-artifact@v3
+
+      - name: Binaries | Checksums
+        if: ${{ steps.release.outputs.release-detected == 'true' }}
+        run: |
+          # Build binary checksums
+          for file in "${PROJ_NAME}"-*/"${PROJ_NAME}"-*; do
+            echo "Calculating checksum for: $(basename "${file}")"
+            openssl dgst -sha256 -r "${file}" \
+              | awk '{print $1}' > "${file}.sha256"
+          done
+
+      - name: Create GitHub Release
+        if: ${{ steps.release.outputs.release-detected == 'true' }}
+        uses: softprops/action-gh-release@v0.1.14
+        with:
+          tag_name: ${{ steps.release.outputs.tag-name }}
+          name: ${{ steps.release.outputs.tag-name }}
+          files: ${{ env.PROJ_NAME }}-*/${{ env.PROJ_NAME }}-*
