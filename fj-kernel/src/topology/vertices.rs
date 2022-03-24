@@ -2,7 +2,9 @@ use std::hash::Hash;
 
 use fj_math::Point;
 
-use crate::shape::Handle;
+use crate::shape::{Handle, Shape};
+
+use super::VertexBuilder;
 
 /// A vertex
 ///
@@ -24,6 +26,11 @@ pub struct Vertex {
 }
 
 impl Vertex {
+    /// Build a vertex using the [`VertexBuilder`] API
+    pub fn build(shape: &mut Shape) -> VertexBuilder {
+        VertexBuilder::new(shape)
+    }
+
     /// Access the point that the vertex refers to
     ///
     /// This is a convenience method that saves the caller from dealing with the
