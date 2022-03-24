@@ -134,11 +134,8 @@ mod tests {
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = shape.geometry().add_point(a);
-        let v2 = shape.geometry().add_point(d);
-
-        let v1 = shape.topology().add_vertex(Vertex { point: v1 })?;
-        let v2 = shape.topology().add_vertex(Vertex { point: v2 })?;
+        let v1 = Vertex::build(&mut shape).from_point(a)?;
+        let v2 = Vertex::build(&mut shape).from_point(d)?;
 
         let points = vec![b, c];
 
@@ -170,15 +167,10 @@ mod tests {
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = shape.geometry().add_point(a);
-        let v2 = shape.geometry().add_point(b);
-        let v3 = shape.geometry().add_point(c);
-        let v4 = shape.geometry().add_point(d);
-
-        let v1 = shape.topology().add_vertex(Vertex { point: v1 })?;
-        let v2 = shape.topology().add_vertex(Vertex { point: v2 })?;
-        let v3 = shape.topology().add_vertex(Vertex { point: v3 })?;
-        let v4 = shape.topology().add_vertex(Vertex { point: v4 })?;
+        let v1 = Vertex::build(&mut shape).from_point(a)?;
+        let v2 = Vertex::build(&mut shape).from_point(b)?;
+        let v3 = Vertex::build(&mut shape).from_point(c)?;
+        let v4 = Vertex::build(&mut shape).from_point(d)?;
 
         let ab = shape
             .topology()
