@@ -58,6 +58,25 @@ impl<'r> EdgeBuilder<'r> {
         Ok(edge)
     }
 
+    /// Build a line segment from two points
+    pub fn line_segment_from_points(
+        self,
+        vertices: [impl Into<Point<3>>; 2],
+    ) -> ValidationResult<Edge> {
+        // Can be cleaned up with `try_map`, once that is stable:
+        // https://doc.rust-lang.org/std/primitive.array.html#method.try_map
+        let vertices =
+            vertices.map(|point| Vertex::build(self.shape).from_point(point));
+        let vertices = match vertices {
+            [Ok(a), Ok(b)] => Ok([a, b]),
+            [Err(err), _] | [_, Err(err)] => Err(err),
+        }?;
+
+        let edge = self.line_segment_from_vertices(vertices)?;
+
+        Ok(edge)
+    }
+
     /// Build a line segment from two vertices
     pub fn line_segment_from_vertices(
         self,
