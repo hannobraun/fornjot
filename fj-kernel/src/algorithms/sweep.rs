@@ -308,7 +308,7 @@ impl Relation {
     }
 
     fn exteriors_for_face(&self, face: &Face) -> Vec<Handle<Cycle>> {
-        let cycles = match face {
+        let exteriors = match face {
             Face::Face { exteriors, .. } => exteriors,
             _ => {
                 // Sketches are created using boundary representation, so this
@@ -317,14 +317,14 @@ impl Relation {
             }
         };
 
-        cycles
+        exteriors
             .iter()
             .map(|cycle| self.cycles.get(cycle).unwrap().clone())
             .collect()
     }
 
     fn interiors_for_face(&self, face: &Face) -> Vec<Handle<Cycle>> {
-        let cycles = match face {
+        let interiors = match face {
             Face::Face { interiors, .. } => interiors,
             _ => {
                 // Sketches are created using boundary representation, so this
@@ -333,7 +333,7 @@ impl Relation {
             }
         };
 
-        cycles
+        interiors
             .iter()
             .map(|cycle| self.cycles.get(cycle).unwrap().clone())
             .collect()
