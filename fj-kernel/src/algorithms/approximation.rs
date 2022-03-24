@@ -126,7 +126,7 @@ mod tests {
     use super::Approximation;
 
     #[test]
-    fn approximate_edge() {
+    fn approximate_edge() -> anyhow::Result<()> {
         let mut shape = Shape::new();
 
         let a = Point::from([1., 2., 3.]);
@@ -137,8 +137,8 @@ mod tests {
         let v1 = shape.geometry().add_point(a);
         let v2 = shape.geometry().add_point(d);
 
-        let v1 = shape.topology().add_vertex(Vertex { point: v1 }).unwrap();
-        let v2 = shape.topology().add_vertex(Vertex { point: v2 }).unwrap();
+        let v1 = shape.topology().add_vertex(Vertex { point: v1 })?;
+        let v2 = shape.topology().add_vertex(Vertex { point: v2 })?;
 
         let points = vec![b, c];
 
@@ -153,10 +153,12 @@ mod tests {
 
         // Continuous edge
         assert_eq!(super::approximate_edge(points, None), vec![b, c, b],);
+
+        Ok(())
     }
 
     #[test]
-    fn for_face_closed() {
+    fn for_face_closed() -> anyhow::Result<()> {
         // Test a closed face, i.e. one that is completely encircled by edges.
 
         let tolerance = Scalar::ONE;
@@ -173,25 +175,21 @@ mod tests {
         let v3 = shape.geometry().add_point(c);
         let v4 = shape.geometry().add_point(d);
 
-        let v1 = shape.topology().add_vertex(Vertex { point: v1 }).unwrap();
-        let v2 = shape.topology().add_vertex(Vertex { point: v2 }).unwrap();
-        let v3 = shape.topology().add_vertex(Vertex { point: v3 }).unwrap();
-        let v4 = shape.topology().add_vertex(Vertex { point: v4 }).unwrap();
+        let v1 = shape.topology().add_vertex(Vertex { point: v1 })?;
+        let v2 = shape.topology().add_vertex(Vertex { point: v2 })?;
+        let v3 = shape.topology().add_vertex(Vertex { point: v3 })?;
+        let v4 = shape.topology().add_vertex(Vertex { point: v4 })?;
 
         let ab = shape
             .topology()
-            .add_line_segment([v1.clone(), v2.clone()])
-            .unwrap();
-        let bc = shape.topology().add_line_segment([v2, v3.clone()]).unwrap();
-        let cd = shape.topology().add_line_segment([v3, v4.clone()]).unwrap();
-        let da = shape.topology().add_line_segment([v4, v1]).unwrap();
+            .add_line_segment([v1.clone(), v2.clone()])?;
+        let bc = shape.topology().add_line_segment([v2, v3.clone()])?;
+        let cd = shape.topology().add_line_segment([v3, v4.clone()])?;
+        let da = shape.topology().add_line_segment([v4, v1])?;
 
-        let abcd = shape
-            .topology()
-            .add_cycle(Cycle {
-                edges: vec![ab, bc, cd, da],
-            })
-            .unwrap();
+        let abcd = shape.topology().add_cycle(Cycle {
+            edges: vec![ab, bc, cd, da],
+        })?;
 
         let surface = shape.geometry().add_surface(Surface::x_y_plane());
         let face = Face::Face {
@@ -213,5 +211,7 @@ mod tests {
                 ],
             }
         );
+
+        Ok(())
     }
 }
