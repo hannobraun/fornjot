@@ -9,10 +9,19 @@ use wgpu_glyph::{
 
 use super::draw_config::DrawConfig;
 
-#[derive(Debug)]
 pub struct ConfigUi {
     glyph_brush: GlyphBrush<()>,
     texts: HashMap<(Element, bool), String>,
+    staging_belt: StagingBelt,
+}
+
+impl std::fmt::Debug for ConfigUi {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ConfigUi")
+            .field("glyph_brush", &self.glyph_brush)
+            .field("texts", &self.texts)
+            .finish()
+    }
 }
 
 impl ConfigUi {
@@ -41,7 +50,18 @@ impl ConfigUi {
             }
         }
 
-        Ok(Self { glyph_brush, texts })
+        // I haven't put any thought into the staging belt's buffer size.
+        // 1024 just seemed like a good number, and so far it hasn't caused
+        // any problems.
+        //
+        // - @hannobraun
+        let staging_belt = StagingBelt::new(1024);
+
+        Ok(Self {
+            glyph_brush,
+            texts,
+            staging_belt,
+        })
     }
 
     pub fn draw(
@@ -84,17 +104,14 @@ impl ConfigUi {
         self.glyph_brush.queue(section);
         self.glyph_brush.draw_queued(
             device,
-            // I haven't put any thought into the staging belt's buffer size.
-            // 1024 just seemed like a good number, and so far it hasn't caused
-            // any problems.
-            //
-            // - @hannobraun
-            &mut StagingBelt::new(1024),
+            &mut self.staging_belt,
             encoder,
             view,
             surface_config.width,
             surface_config.height,
         )?;
+
+        self.staging_belt.finish();
 
         Ok(())
     }
