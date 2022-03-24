@@ -64,9 +64,9 @@ impl ValidationError<Edge> {
 impl ValidationError<Cycle> {
     /// Indicate whether validation found a missing edge
     #[cfg(test)]
-    pub fn missing_edge(&self, vertex: &Handle<Edge>) -> bool {
+    pub fn missing_edge(&self, edge: &Handle<Edge>) -> bool {
         if let Self::Structural(missing) = self {
-            return missing.contains(vertex);
+            return missing.contains(edge);
         }
 
         false
