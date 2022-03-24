@@ -1,16 +1,12 @@
 use std::collections::HashSet;
 
-use fj_math::{Point, Scalar, Vector};
+use fj_math::Scalar;
 
-use crate::{
-    geometry::{Circle, Curve, Line},
-    topology::{Cycle, Edge, Face, Vertex},
-};
+use crate::topology::{Cycle, Edge, Face, Vertex};
 
 use super::{
-    handle::{Handle, Storage},
-    Cycles, Edges, Geometry, Iter, StructuralIssues, ValidationError,
-    ValidationResult, Vertices,
+    handle::Storage, Cycles, Edges, Geometry, Iter, StructuralIssues,
+    ValidationError, ValidationResult, Vertices,
 };
 
 /// The vertices of a shape
@@ -111,38 +107,6 @@ impl Topology<'_> {
         self.edges.push(storage);
 
         Ok(handle)
-    }
-
-    /// Add a circle to the shape
-    ///
-    /// Calls [`Edges::add`] internally, and is subject to the same
-    /// restrictions.
-    pub fn add_circle(&mut self, radius: Scalar) -> ValidationResult<Edge> {
-        let curve = self.geometry.add_curve(Curve::Circle(Circle {
-            center: Point::origin(),
-            radius: Vector::from([radius, Scalar::ZERO]),
-        }));
-        self.add_edge(Edge {
-            curve,
-            vertices: None,
-        })
-    }
-
-    /// Add a line segment to the shape
-    ///
-    /// Calls [`Edges::add`] internally, and is subject to the same
-    /// restrictions.
-    pub fn add_line_segment(
-        &mut self,
-        vertices: [Handle<Vertex>; 2],
-    ) -> ValidationResult<Edge> {
-        let curve = self.geometry.add_curve(Curve::Line(Line::from_points(
-            vertices.clone().map(|vertex| vertex.get().point()),
-        )));
-        self.add_edge(Edge {
-            curve,
-            vertices: Some(vertices),
-        })
     }
 
     /// Add a cycle to the shape
@@ -298,8 +262,8 @@ mod tests {
         let mut other = TestShape::new();
 
         let curve = other.add_curve();
-        let a = other.add_vertex()?;
-        let b = other.add_vertex()?;
+        let a = Vertex::build(&mut other).from_point([1., 0., 0.])?;
+        let b = Vertex::build(&mut other).from_point([2., 0., 0.])?;
 
         // Shouldn't work. Nothing has been added to `shape`.
         let err = shape
@@ -314,8 +278,8 @@ mod tests {
         assert!(err.missing_vertex(&b));
 
         let curve = shape.add_curve();
-        let a = shape.add_vertex()?;
-        let b = shape.add_vertex()?;
+        let a = Vertex::build(&mut shape).from_point([1., 0., 0.])?;
+        let b = Vertex::build(&mut shape).from_point([2., 0., 0.])?;
 
         // Everything has been added to `shape` now. Should work!
         shape.topology().add_edge(Edge {
@@ -404,19 +368,17 @@ mod tests {
             self.geometry().add_surface(Surface::x_y_plane())
         }
 
-        fn add_vertex(&mut self) -> anyhow::Result<Handle<Vertex>> {
-            let point = self.next_point;
-            self.next_point.x += Scalar::ONE;
-
-            let point = self.geometry().add_point(point);
-            let vertex = self.topology().add_vertex(Vertex { point })?;
-
-            Ok(vertex)
-        }
-
         fn add_edge(&mut self) -> anyhow::Result<Handle<Edge>> {
-            let vertices = [(); 2].map(|()| self.add_vertex().unwrap());
-            let edge = self.topology().add_line_segment(vertices)?;
+            let vertices = [(); 2].map(|()| {
+                let point = self.next_point;
+                self.next_point.x += Scalar::ONE;
+
+                let point = self.geometry().add_point(point);
+                self.topology().add_vertex(Vertex { point }).unwrap()
+            });
+            let edge = Edge::build(&mut self.inner)
+                .line_segment_from_vertices(vertices)?;
+
             Ok(edge)
         }
 

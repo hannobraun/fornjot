@@ -347,14 +347,14 @@ mod tests {
     use crate::{
         geometry::{Surface, SweptCurve},
         shape::{Handle, Shape},
-        topology::{Cycle, Face, Vertex},
+        topology::{Cycle, Edge, Face, Vertex},
     };
 
     use super::sweep_shape;
 
     #[test]
-    fn sweep() {
-        let sketch = Triangle::new([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]]);
+    fn sweep() -> anyhow::Result<()> {
+        let sketch = Triangle::new([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]])?;
 
         let mut swept = sweep_shape(
             sketch.shape,
@@ -365,7 +365,7 @@ mod tests {
 
         let bottom_face = sketch.face.get().clone();
         let top_face =
-            Triangle::new([[0., 0., 1.], [1., 0., 1.], [0., 1., 1.]])
+            Triangle::new([[0., 0., 1.], [1., 0., 1.], [0., 1., 1.]])?
                 .face
                 .get()
                 .clone();
@@ -389,6 +389,8 @@ mod tests {
 
         // Side faces are not tested, as those use triangle representation. The
         // plan is to start testing them, as they are transitioned to b-rep.
+
+        Ok(())
     }
 
     pub struct Triangle {
@@ -397,36 +399,27 @@ mod tests {
     }
 
     impl Triangle {
-        fn new([a, b, c]: [impl Into<Point<3>>; 3]) -> Self {
+        fn new([a, b, c]: [impl Into<Point<3>>; 3]) -> anyhow::Result<Self> {
             let mut shape = Shape::new();
 
             let a = shape.geometry().add_point(a.into());
             let b = shape.geometry().add_point(b.into());
             let c = shape.geometry().add_point(c.into());
 
-            let a = shape.topology().add_vertex(Vertex { point: a }).unwrap();
-            let b = shape.topology().add_vertex(Vertex { point: b }).unwrap();
-            let c = shape.topology().add_vertex(Vertex { point: c }).unwrap();
+            let a = shape.topology().add_vertex(Vertex { point: a })?;
+            let b = shape.topology().add_vertex(Vertex { point: b })?;
+            let c = shape.topology().add_vertex(Vertex { point: c })?;
 
-            let ab = shape
-                .topology()
-                .add_line_segment([a.clone(), b.clone()])
-                .unwrap();
-            let bc = shape
-                .topology()
-                .add_line_segment([b.clone(), c.clone()])
-                .unwrap();
-            let ca = shape
-                .topology()
-                .add_line_segment([c.clone(), a.clone()])
-                .unwrap();
+            let ab = Edge::build(&mut shape)
+                .line_segment_from_vertices([a.clone(), b.clone()])?;
+            let bc = Edge::build(&mut shape)
+                .line_segment_from_vertices([b.clone(), c.clone()])?;
+            let ca = Edge::build(&mut shape)
+                .line_segment_from_vertices([c.clone(), a.clone()])?;
 
-            let cycles = shape
-                .topology()
-                .add_cycle(Cycle {
-                    edges: vec![ab, bc, ca],
-                })
-                .unwrap();
+            let cycles = shape.topology().add_cycle(Cycle {
+                edges: vec![ab, bc, ca],
+            })?;
 
             let surface = shape.geometry().add_surface(Surface::SweptCurve(
                 SweptCurve::plane_from_points(
@@ -440,9 +433,9 @@ mod tests {
                 color: [255, 0, 0, 255],
             };
 
-            let face = shape.topology().add_face(abc).unwrap();
+            let face = shape.topology().add_face(abc)?;
 
-            Self { shape, face }
+            Ok(Self { shape, face })
         }
     }
 }

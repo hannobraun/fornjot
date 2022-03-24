@@ -16,11 +16,13 @@
 //! definition of identity. Two [`Handle`]s are only considered equal, if they
 //! refer to objects in the same memory location.
 
+mod builder;
 mod edges;
 mod faces;
 mod vertices;
 
 pub use self::{
+    builder::{EdgeBuilder, VertexBuilder},
     edges::{Cycle, Edge},
     faces::Face,
     vertices::Vertex,
