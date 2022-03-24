@@ -109,14 +109,19 @@ pub fn sweep_shape(
             .geometry()
             .add_surface(surface_bottom.get().transform(&translation));
 
-        let cycles_bottom = source_to_bottom.cycles_for_face(&face_source);
-        let cycles_top = source_to_top.cycles_for_face(&face_source);
+        let exteriors_bottom =
+            source_to_bottom.exteriors_for_face(&face_source);
+        let interiors_bottom =
+            source_to_bottom.interiors_for_face(&face_source);
+        let exteriors_top = source_to_top.exteriors_for_face(&face_source);
+        let interiors_top = source_to_top.interiors_for_face(&face_source);
 
         target
             .topology()
             .add_face(Face::Face {
                 surface: surface_bottom,
-                cycles: cycles_bottom,
+                exteriors: exteriors_bottom,
+                interiors: interiors_bottom,
                 color,
             })
             .unwrap();
@@ -124,7 +129,8 @@ pub fn sweep_shape(
             .topology()
             .add_face(Face::Face {
                 surface: surface_top,
-                cycles: cycles_top,
+                exteriors: exteriors_top,
+                interiors: interiors_top,
                 color,
             })
             .unwrap();
@@ -256,7 +262,8 @@ pub fn sweep_shape(
                     .topology()
                     .add_face(Face::Face {
                         surface,
-                        cycles: vec![cycle],
+                        exteriors: vec![cycle],
+                        interiors: Vec::new(),
                         color,
                     })
                     .unwrap();
@@ -300,9 +307,25 @@ impl Relation {
             .collect()
     }
 
-    fn cycles_for_face(&self, face: &Face) -> Vec<Handle<Cycle>> {
+    fn exteriors_for_face(&self, face: &Face) -> Vec<Handle<Cycle>> {
         let cycles = match face {
-            Face::Face { cycles, .. } => cycles,
+            Face::Face { exteriors, .. } => exteriors,
+            _ => {
+                // Sketches are created using boundary representation, so this
+                // case can't happen.
+                unreachable!()
+            }
+        };
+
+        cycles
+            .iter()
+            .map(|cycle| self.cycles.get(cycle).unwrap().clone())
+            .collect()
+    }
+
+    fn interiors_for_face(&self, face: &Face) -> Vec<Handle<Cycle>> {
+        let cycles = match face {
+            Face::Face { interiors, .. } => interiors,
             _ => {
                 // Sketches are created using boundary representation, so this
                 // case can't happen.
@@ -412,7 +435,8 @@ mod tests {
             ));
             let abc = Face::Face {
                 surface,
-                cycles: vec![cycles],
+                exteriors: vec![cycles],
+                interiors: Vec::new(),
                 color: [255, 0, 0, 255],
             };
 

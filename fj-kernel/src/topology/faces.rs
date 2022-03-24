@@ -22,7 +22,7 @@ pub enum Face {
         /// The surface that defines this face
         surface: Handle<Surface>,
 
-        /// The cycles that bound the face
+        /// The cycles that bound the face on the outside
         ///
         /// # Implementation Note
         ///
@@ -32,7 +32,16 @@ pub enum Face {
         ///
         /// It might be less error-prone to specify the edges in surface
         /// coordinates.
-        cycles: Vec<Handle<Cycle>>,
+        exteriors: Vec<Handle<Cycle>>,
+
+        /// The cycles that bound the face on the inside
+        ///
+        /// Each of these cycles defines a hole in the face.
+        ///
+        /// # Implementation note
+        ///
+        /// See note on `exterior` field.
+        interiors: Vec<Handle<Cycle>>,
 
         /// The color of the face
         color: [u8; 4],
@@ -63,14 +72,31 @@ impl Face {
         }
     }
 
-    /// Access the cycles that the face refers to
+    /// Access the exterior cycles that the face refers to
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn cycles(&self) -> impl Iterator<Item = Cycle> + '_ {
+    pub fn exteriors(&self) -> impl Iterator<Item = Cycle> + '_ {
         match self {
-            Self::Face { cycles, .. } => {
-                cycles.iter().map(|handle| handle.get().clone())
+            Self::Face { exteriors, .. } => {
+                exteriors.iter().map(|handle| handle.get().clone())
+            }
+            _ => {
+                // No code that still uses triangle representation is calling
+                // this method.
+                unreachable!()
+            }
+        }
+    }
+
+    /// Access the interior cycles that the face refers to
+    ///
+    /// This is a convenience method that saves the caller from dealing with the
+    /// [`Handle`]s.
+    pub fn interiors(&self) -> impl Iterator<Item = Cycle> + '_ {
+        match self {
+            Self::Face { interiors, .. } => {
+                interiors.iter().map(|handle| handle.get().clone())
             }
             _ => {
                 // No code that still uses triangle representation is calling
@@ -83,14 +109,19 @@ impl Face {
 
 impl PartialEq for Face {
     fn eq(&self, other: &Self) -> bool {
-        self.surface() == other.surface() && self.cycles().eq(other.cycles())
+        self.surface() == other.surface()
+            && self.exteriors().eq(other.exteriors())
+            && self.interiors().eq(other.interiors())
     }
 }
 
 impl Hash for Face {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.surface().hash(state);
-        for cycle in self.cycles() {
+        for cycle in self.exteriors() {
+            cycle.hash(state);
+        }
+        for cycle in self.interiors() {
             cycle.hash(state);
         }
     }

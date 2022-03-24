@@ -39,16 +39,15 @@ impl ToShape for fj::Difference2d {
         }
 
         // Can't panic, as we just verified that both shapes have one cycle.
-        let cycles_orig = [&mut a, &mut b]
+        let [cycle_a, cycle_b] = [&mut a, &mut b]
             .map(|shape| shape.topology().cycles().next().unwrap());
 
         let mut vertices = HashMap::new();
-        let mut cycles = Vec::new();
+        let mut exteriors = Vec::new();
+        let mut interiors = Vec::new();
 
-        for cycle in cycles_orig {
-            let cycle = add_cycle(cycle, &mut vertices, &mut shape);
-            cycles.push(cycle);
-        }
+        exteriors.push(add_cycle(cycle_a, &mut vertices, &mut shape));
+        interiors.push(add_cycle(cycle_b, &mut vertices, &mut shape));
 
         // Can't panic, as we just verified that both shapes have one face.
         let [face_a, face_b] = [&mut a, &mut b]
@@ -63,8 +62,9 @@ impl ToShape for fj::Difference2d {
         shape
             .topology()
             .add_face(Face::Face {
-                cycles,
                 surface,
+                exteriors,
+                interiors,
                 color: self.color(),
             })
             .unwrap();

@@ -179,7 +179,10 @@ impl Topology<'_> {
     /// not the case.
     pub fn add_face(&mut self, face: Face) -> ValidationResult<Face> {
         if let Face::Face {
-            surface, cycles, ..
+            surface,
+            exteriors,
+            interiors,
+            ..
         } = &face
         {
             let mut missing_surface = None;
@@ -188,7 +191,7 @@ impl Topology<'_> {
             if !self.geometry.surfaces.contains(surface.storage()) {
                 missing_surface = Some(surface.clone());
             }
-            for cycle in cycles {
+            for cycle in exteriors.iter().chain(interiors) {
                 if !self.cycles.contains(cycle.storage()) {
                     missing_cycles.insert(cycle.clone());
                 }
@@ -349,7 +352,8 @@ mod tests {
             .topology()
             .add_face(Face::Face {
                 surface: surface.clone(),
-                cycles: vec![cycle.clone()],
+                exteriors: vec![cycle.clone()],
+                interiors: Vec::new(),
                 color: [255, 0, 0, 255],
             })
             .unwrap_err();
@@ -362,7 +366,8 @@ mod tests {
         // Everything has been added to `shape` now. Should work!
         shape.topology().add_face(Face::Face {
             surface,
-            cycles: vec![cycle],
+            exteriors: vec![cycle],
+            interiors: Vec::new(),
             color: [255, 0, 0, 255],
         })?;
 

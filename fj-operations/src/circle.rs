@@ -29,7 +29,8 @@ impl ToShape for fj::Circle {
         shape
             .topology()
             .add_face(Face::Face {
-                cycles,
+                exteriors: cycles,
+                interiors: Vec::new(),
                 surface,
                 color: self.color(),
             })

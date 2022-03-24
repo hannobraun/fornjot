@@ -45,7 +45,7 @@ impl Approximation {
         let mut points = HashSet::new();
         let mut segments = HashSet::new();
 
-        for cycle in face.cycles() {
+        for cycle in face.exteriors().chain(face.interiors()) {
             let cycle_points = approximate_cycle(&cycle, tolerance);
 
             let mut cycle_segments = Vec::new();
@@ -196,7 +196,8 @@ mod tests {
         let surface = shape.geometry().add_surface(Surface::x_y_plane());
         let face = Face::Face {
             surface,
-            cycles: vec![abcd],
+            exteriors: vec![abcd],
+            interiors: Vec::new(),
             color: [255, 0, 0, 255],
         };
 
