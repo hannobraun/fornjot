@@ -3,7 +3,6 @@ pub mod swept;
 pub use self::swept::SweptCurve;
 
 use fj_math::{Point, Transform, Vector};
-use nalgebra::vector;
 
 use crate::geometry;
 
@@ -22,9 +21,9 @@ impl Surface {
         Self::SweptCurve(SweptCurve {
             curve: Curve::Line(Line {
                 origin: Point::origin(),
-                direction: vector![1., 0., 0.].into(),
+                direction: Vector::unit_x(),
             }),
-            path: vector![0., 1., 0.].into(),
+            path: Vector::unit_y(),
         })
     }
 
