@@ -19,6 +19,9 @@ impl<'r> VertexBuilder<'r> {
     }
 
     /// Build a [`Vertex`] from a point
+    ///
+    /// If an identical point or vertex are already part of the shape, those
+    /// objects are re-used.
     pub fn from_point(
         self,
         point: impl Into<Point<3>>,
