@@ -2,23 +2,23 @@ use std::collections::HashSet;
 
 use crate::{
     geometry::{Curve, Surface},
-    topology::{Cycle, Edge, Face, Vertex},
+    topology::{Cycle, Edge, Vertex},
 };
 
 use super::Handle;
 
 /// Returned by the various `add_` methods of the [`Shape`] API
-pub type ValidationResult<T> = Result<Handle<T>, ValidationError<T>>;
+pub type ValidationResult<T> = Result<Handle<T>, ValidationError>;
 
 /// An error that can occur during a validation
 #[derive(Debug, thiserror::Error)]
-pub enum ValidationError<T: Validatable> {
+pub enum ValidationError {
     /// Structural validation failed
     ///
     /// Structural validation verifies, that all the object that an object
     /// refers to are already part of the shape.
     #[error("Structural validation failed")]
-    Structural(T::Structural),
+    Structural(StructuralIssues),
 
     /// Uniqueness validation failed
     ///
@@ -39,12 +39,12 @@ pub enum ValidationError<T: Validatable> {
     Geometric,
 }
 
-impl ValidationError<Edge> {
+impl ValidationError {
     /// Indicate whether validation found a missing curve
     #[cfg(test)]
     pub fn missing_curve(&self, curve: &Handle<Curve>) -> bool {
-        if let Self::Structural(missing) = self {
-            return missing.0.as_ref() == Some(curve);
+        if let Self::Structural(StructuralIssues { missing_curve, .. }) = self {
+            return missing_curve.as_ref() == Some(curve);
         }
 
         false
@@ -53,32 +53,34 @@ impl ValidationError<Edge> {
     /// Indicate whether validation found a missing vertex
     #[cfg(test)]
     pub fn missing_vertex(&self, vertex: &Handle<Vertex>) -> bool {
-        if let Self::Structural(missing) = self {
-            return missing.1.contains(vertex);
+        if let Self::Structural(StructuralIssues {
+            missing_vertices, ..
+        }) = self
+        {
+            return missing_vertices.contains(vertex);
         }
 
         false
     }
-}
 
-impl ValidationError<Cycle> {
     /// Indicate whether validation found a missing edge
     #[cfg(test)]
-    pub fn missing_edge(&self, vertex: &Handle<Edge>) -> bool {
-        if let Self::Structural(missing) = self {
-            return missing.contains(vertex);
+    pub fn missing_edge(&self, edge: &Handle<Edge>) -> bool {
+        if let Self::Structural(StructuralIssues { missing_edges, .. }) = self {
+            return missing_edges.contains(edge);
         }
 
         false
     }
-}
 
-impl ValidationError<Face> {
     /// Indicate whether validation found a missing surface
     #[cfg(test)]
     pub fn missing_surface(&self, surface: &Handle<Surface>) -> bool {
-        if let Self::Structural(missing) = self {
-            return missing.0.as_ref() == Some(surface);
+        if let Self::Structural(StructuralIssues {
+            missing_surface, ..
+        }) = self
+        {
+            return missing_surface.as_ref() == Some(surface);
         }
 
         false
@@ -87,33 +89,38 @@ impl ValidationError<Face> {
     /// Indicate whether validation found a missing cycle
     #[cfg(test)]
     pub fn missing_cycle(&self, cycle: &Handle<Cycle>) -> bool {
-        if let Self::Structural(missing) = self {
-            return missing.1.contains(cycle);
+        if let Self::Structural(StructuralIssues { missing_cycles, .. }) = self
+        {
+            return missing_cycles.contains(cycle);
         }
 
         false
     }
 }
 
-/// Implemented for topological types, which can be validated
+impl From<StructuralIssues> for ValidationError {
+    fn from(issues: StructuralIssues) -> Self {
+        Self::Structural(issues)
+    }
+}
+
+/// Structural issues found during validation
 ///
-/// Used by [`ValidationError`] to provide context on how validation failed.
-pub trait Validatable {
-    type Structural;
-}
+/// Used by [`ValidationError`].
+#[derive(Debug, Default)]
+pub struct StructuralIssues {
+    /// Missing curve found in edge validation
+    pub missing_curve: Option<Handle<Curve>>,
 
-impl Validatable for Vertex {
-    type Structural = ();
-}
+    /// Missing vertices found in edge validation
+    pub missing_vertices: HashSet<Handle<Vertex>>,
 
-impl Validatable for Edge {
-    type Structural = (Option<Handle<Curve>>, HashSet<Handle<Vertex>>);
-}
+    /// Missing edges found in cycle validation
+    pub missing_edges: HashSet<Handle<Edge>>,
 
-impl Validatable for Cycle {
-    type Structural = HashSet<Handle<Edge>>;
-}
+    /// Missing surface found in face validation
+    pub missing_surface: Option<Handle<Surface>>,
 
-impl Validatable for Face {
-    type Structural = (Option<Handle<Surface>>, HashSet<Handle<Cycle>>);
+    /// Missing cycles found in cycle validation
+    pub missing_cycles: HashSet<Handle<Cycle>>,
 }
