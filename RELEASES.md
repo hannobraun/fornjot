@@ -45,21 +45,16 @@ In the release branch, update the version numbers in the `Cargo.toml` files of a
 
 ## 5. Publish the release
 
-Push the release branch and create a pull request. Once the CI build completed successfully, publish the release by running `cargo publish` for each crate.
+Push the release branch and create a pull request and label it as `release`. Once the CI build completed successfully, merge the pull-request and mention the new version in the commit, e.g. `Release v0.1.2`.
 
-Once everything has been published successfully, merge the pull request.
+The [release-operator](./release-operator) will run in the scope of GitHub Actions' [CD](./.github/workflows/cd.yml) workflow. It will yield a set of compiled binaries, their checksums and a new GitHub Release with all artifacts attached.
 
-
-## 6. Tag the release: `git tag v0.1.2`
-
-Replace `0.1.2` in that command with the actual version.
-
-Push the tag to the repository: `git push origin --tag`
+Next, publish the release by running `cargo publish` for each crate.
 
 
-## 7. Create release on GitHub
+## 6. Update release on GitHub
 
-Use the previous release as a template.
+The GitHub Release has been created by automation in the previous step. Use the previous release as a template to populate its body.
 
 Make the following changes, compared to the release for version `0.5.0`:
 - Link to release announcement on the website at the top. Mention that people can subscribe there.
@@ -68,14 +63,14 @@ Make the following changes, compared to the release for version `0.5.0`:
 Once this has been done, update these instructions.
 
 
-## 8. Finish publishing release announcement
+## 7. Finish publishing release announcement
 
 Make it so that is appears on the Blog page.
 
 Figure out how to do that, then publish the instructions here.
 
 
-## 9. Promote release announcement
+## 8. Promote release announcement
 
 Post the release announcement on the following sites:
 
@@ -86,6 +81,6 @@ Post the release announcement on the following sites:
 Use the previous release announcement posted there as a template.
 
 
-## 10. Improve release procedure
+## 9. Improve release procedure
 
 You are done. Figure out what didn't go optimally, and update this release procedure accordingly.
