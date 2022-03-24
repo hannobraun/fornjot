@@ -11,6 +11,10 @@ env:
   # used to rename and upload the binaries
   PROJ_NAME: fj-app
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   binaries:
     name: Binaries
