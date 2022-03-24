@@ -24,6 +24,14 @@ pub enum Curve {
 }
 
 impl Curve {
+    /// Construct a `Curve` that represents the x-axis
+    pub fn x_axis() -> Self {
+        Self::Line(Line {
+            origin: Point::origin(),
+            direction: Vector::unit_x(),
+        })
+    }
+
     /// Access the origin of the curve's coordinate system
     pub fn origin(&self) -> Point<3> {
         match self {
