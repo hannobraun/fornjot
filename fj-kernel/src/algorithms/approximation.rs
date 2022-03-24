@@ -137,19 +137,17 @@ mod tests {
         let v1 = Vertex::build(&mut shape).from_point(a)?;
         let v2 = Vertex::build(&mut shape).from_point(d)?;
 
-        let points = vec![b, c];
-
         // Regular edge
         assert_eq!(
             super::approximate_edge(
-                points.clone(),
+                vec![b, c],
                 Some([v1.get().clone(), v2.get().clone()])
             ),
             vec![a, b, c, d],
         );
 
         // Continuous edge
-        assert_eq!(super::approximate_edge(points, None), vec![b, c, b],);
+        assert_eq!(super::approximate_edge(vec![b, c], None), vec![b, c, b],);
 
         Ok(())
     }
