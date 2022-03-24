@@ -404,19 +404,16 @@ mod tests {
             self.geometry().add_surface(Surface::x_y_plane())
         }
 
-        fn add_vertex(&mut self) -> anyhow::Result<Handle<Vertex>> {
-            let point = self.next_point;
-            self.next_point.x += Scalar::ONE;
-
-            let point = self.geometry().add_point(point);
-            let vertex = self.topology().add_vertex(Vertex { point })?;
-
-            Ok(vertex)
-        }
-
         fn add_edge(&mut self) -> anyhow::Result<Handle<Edge>> {
-            let vertices = [(); 2].map(|()| self.add_vertex().unwrap());
+            let vertices = [(); 2].map(|()| {
+                let point = self.next_point;
+                self.next_point.x += Scalar::ONE;
+
+                let point = self.geometry().add_point(point);
+                self.topology().add_vertex(Vertex { point }).unwrap()
+            });
             let edge = self.topology().add_line_segment(vertices)?;
+
             Ok(edge)
         }
 
