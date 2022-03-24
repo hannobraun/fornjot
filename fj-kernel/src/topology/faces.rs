@@ -105,6 +105,14 @@ impl Face {
             }
         }
     }
+
+    /// Access all cycles that the face refers to
+    ///
+    /// This is equivalent to chaining the iterators returned by
+    /// [`Face::exteriors`] and [`Face::interiors`].
+    pub fn all_cycles(&self) -> impl Iterator<Item = Cycle> + '_ {
+        self.exteriors().chain(self.interiors())
+    }
 }
 
 impl PartialEq for Face {
@@ -118,10 +126,7 @@ impl PartialEq for Face {
 impl Hash for Face {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.surface().hash(state);
-        for cycle in self.exteriors() {
-            cycle.hash(state);
-        }
-        for cycle in self.interiors() {
+        for cycle in self.all_cycles() {
             cycle.hash(state);
         }
     }

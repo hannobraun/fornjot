@@ -45,7 +45,7 @@ impl Approximation {
         let mut points = HashSet::new();
         let mut segments = HashSet::new();
 
-        for cycle in face.exteriors().chain(face.interiors()) {
+        for cycle in face.all_cycles() {
             let cycle_points = approximate_cycle(&cycle, tolerance);
 
             let mut cycle_segments = Vec::new();
