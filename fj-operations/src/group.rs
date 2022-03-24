@@ -92,14 +92,19 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
         match &*face_orig.get() {
             Face::Face {
                 surface,
-                cycles: cs,
+                exteriors,
+                interiors,
                 color,
             } => {
                 target
                     .topology()
                     .add_face(Face::Face {
                         surface: surfaces[surface].clone(),
-                        cycles: cs
+                        exteriors: exteriors
+                            .iter()
+                            .map(|cycle| cycles[cycle].clone())
+                            .collect(),
+                        interiors: interiors
                             .iter()
                             .map(|cycle| cycles[cycle].clone())
                             .collect(),
