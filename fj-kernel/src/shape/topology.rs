@@ -298,8 +298,8 @@ mod tests {
         let mut other = TestShape::new();
 
         let curve = other.add_curve();
-        let a = other.add_vertex()?;
-        let b = other.add_vertex()?;
+        let a = Vertex::build(&mut other).from_point([1., 0., 0.])?;
+        let b = Vertex::build(&mut other).from_point([2., 0., 0.])?;
 
         // Shouldn't work. Nothing has been added to `shape`.
         let err = shape
@@ -314,8 +314,8 @@ mod tests {
         assert!(err.missing_vertex(&b));
 
         let curve = shape.add_curve();
-        let a = shape.add_vertex()?;
-        let b = shape.add_vertex()?;
+        let a = Vertex::build(&mut shape).from_point([1., 0., 0.])?;
+        let b = Vertex::build(&mut shape).from_point([2., 0., 0.])?;
 
         // Everything has been added to `shape` now. Should work!
         shape.topology().add_edge(Edge {
