@@ -1,8 +1,11 @@
 use fj_math::Point;
 
-use crate::shape::{Shape, ValidationResult};
+use crate::{
+    geometry::{Curve, Line},
+    shape::{Handle, Shape, ValidationResult},
+};
 
-use super::Vertex;
+use super::{Edge, Vertex};
 
 /// API for building a [`Vertex`]
 pub struct VertexBuilder<'r> {
@@ -24,5 +27,36 @@ impl<'r> VertexBuilder<'r> {
         let vertex = self.shape.topology().add_vertex(Vertex { point })?;
 
         Ok(vertex)
+    }
+}
+
+/// API for building an [`Edge`]
+pub struct EdgeBuilder<'r> {
+    shape: &'r mut Shape,
+}
+
+impl<'r> EdgeBuilder<'r> {
+    /// Construct a new instance of `EdgeBuilder`
+    pub fn new(shape: &'r mut Shape) -> Self {
+        Self { shape }
+    }
+
+    /// Build a line segment from two vertices
+    pub fn line_segment_from_vertices(
+        self,
+        vertices: [Handle<Vertex>; 2],
+    ) -> ValidationResult<Edge> {
+        let curve =
+            self.shape
+                .geometry()
+                .add_curve(Curve::Line(Line::from_points(
+                    vertices.clone().map(|vertex| vertex.get().point()),
+                )));
+        let edge = self.shape.topology().add_edge(Edge {
+            curve,
+            vertices: Some(vertices),
+        })?;
+
+        Ok(edge)
     }
 }

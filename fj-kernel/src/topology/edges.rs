@@ -1,8 +1,11 @@
 use std::hash::{Hash, Hasher};
 
-use crate::{geometry::Curve, shape::Handle};
+use crate::{
+    geometry::Curve,
+    shape::{Handle, Shape},
+};
 
-use super::vertices::Vertex;
+use super::{vertices::Vertex, EdgeBuilder};
 
 /// A cycle of connected edges
 ///
@@ -77,6 +80,11 @@ pub struct Edge {
 }
 
 impl Edge {
+    /// Build an edge using the [`EdgeBuilder`] API
+    pub fn build(shape: &mut Shape) -> EdgeBuilder {
+        EdgeBuilder::new(shape)
+    }
+
     /// Access the curve that the edge refers to
     ///
     /// This is a convenience method that saves the caller from dealing with the
