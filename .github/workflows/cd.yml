@@ -38,6 +38,8 @@ jobs:
 
       - name: Cache
         uses: Swatinem/rust-cache@v1
+        with:
+          key: ${{ matrix.target }}
 
       - name: Compile
         uses: actions-rs/cargo@v1
