@@ -28,8 +28,8 @@ impl<T> Store<T> {
         Self { inner: Vec::new() }
     }
 
-    pub fn contains(&self, storage: &Storage<T>) -> bool {
-        self.inner.contains(storage)
+    pub fn contains(&self, object: &Handle<T>) -> bool {
+        self.inner.contains(object.storage())
     }
 
     pub fn add(&mut self, object: T) -> Handle<T> {
