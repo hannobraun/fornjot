@@ -5,7 +5,6 @@
 mod api;
 mod geometry;
 mod handle;
-mod iter;
 mod stores;
 mod topology;
 mod validate;
@@ -14,7 +13,7 @@ pub use self::{
     api::Shape,
     geometry::Geometry,
     handle::Handle,
-    iter::Iter,
+    stores::Iter,
     topology::Topology,
     validate::{StructuralIssues, ValidationError, ValidationResult},
 };

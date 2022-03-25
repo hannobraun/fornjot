@@ -176,28 +176,28 @@ impl Topology<'_> {
     ///
     /// The caller must not make any assumptions about the order of vertices.
     pub fn vertices(&self) -> Iter<Vertex> {
-        Iter::new(self.vertices)
+        self.vertices.iter()
     }
 
     /// Access iterator over all edges
     ///
     /// The caller must not make any assumptions about the order of edges.
     pub fn edges(&self) -> Iter<Edge> {
-        Iter::new(self.edges)
+        self.edges.iter()
     }
 
     /// Access an iterator over all cycles
     ///
     /// The caller must not make any assumptions about the order of cycles.
     pub fn cycles(&self) -> Iter<Cycle> {
-        Iter::new(self.cycles)
+        self.cycles.iter()
     }
 
     /// Access an iterator over all faces
     ///
     /// The caller must not make any assumptions about the order of faces.
     pub fn faces(&self) -> Iter<Face> {
-        Iter::new(self.geometry.faces)
+        self.geometry.faces.iter()
     }
 }
 

@@ -88,20 +88,20 @@ impl Geometry<'_> {
     ///
     /// The caller must not make any assumptions about the order of points.
     pub fn points(&self) -> Iter<Point<3>> {
-        Iter::new(self.points)
+        self.points.iter()
     }
 
     /// Access an iterator over all curves
     ///
     /// The caller must not make any assumptions about the order of curves.
     pub fn curves(&self) -> Iter<Curve> {
-        Iter::new(self.curves)
+        self.curves.iter()
     }
 
     /// Access an iterator over all surfaces
     ///
     /// The caller must not make any assumptions about the order of surfaces.
     pub fn surfaces(&self) -> Iter<Surface> {
-        Iter::new(self.surfaces)
+        self.surfaces.iter()
     }
 }
