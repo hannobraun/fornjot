@@ -7,7 +7,10 @@ use crate::{
     topology::{Cycle, Edge, Face, Vertex},
 };
 
-use super::{handle::Storage, Handle};
+use super::{
+    handle::{RefMut, Storage},
+    Handle,
+};
 
 pub type Points = Store<Point<3>>;
 pub type Curves = Store<Curve>;
@@ -46,10 +49,11 @@ impl<T> Store<T> {
     }
 
     pub fn iter_mut(&mut self) -> IterMut<T> {
-        self.inner.iter_mut()
+        self.inner.iter_mut().map(|storage| storage.get_mut())
     }
 }
 
 pub type Iter<'r, T> =
     iter::Map<slice::Iter<'r, Storage<T>>, fn(&Storage<T>) -> Handle<T>>;
-pub type IterMut<'r, T> = slice::IterMut<'r, Storage<T>>;
+pub type IterMut<'r, T> =
+    iter::Map<slice::IterMut<'r, Storage<T>>, fn(&mut Storage<T>) -> RefMut<T>>;
