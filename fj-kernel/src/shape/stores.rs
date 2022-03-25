@@ -23,33 +23,35 @@ pub type Faces = Store<Face>;
 
 #[derive(Clone, Debug)]
 pub struct Store<T> {
-    inner: Vec<Storage<T>>,
+    objects: Vec<Storage<T>>,
 }
 
 impl<T> Store<T> {
     pub fn new() -> Self {
-        Self { inner: Vec::new() }
+        Self {
+            objects: Vec::new(),
+        }
     }
 
     pub fn contains(&self, object: &Handle<T>) -> bool {
-        self.inner.contains(object.storage())
+        self.objects.contains(object.storage())
     }
 
     pub fn add(&mut self, object: T) -> Handle<T> {
         let storage = Storage::new(object);
         let handle = storage.handle();
 
-        self.inner.push(storage);
+        self.objects.push(storage);
 
         handle
     }
 
     pub fn iter(&self) -> Iter<T> {
-        self.inner.iter().map(|storage| storage.handle())
+        self.objects.iter().map(|storage| storage.handle())
     }
 
     pub fn iter_mut(&mut self) -> IterMut<T> {
-        self.inner.iter_mut().map(|storage| storage.get_mut())
+        self.objects.iter_mut().map(|storage| storage.get_mut())
     }
 }
 
