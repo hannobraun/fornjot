@@ -1,3 +1,5 @@
+use std::slice;
+
 use fj_math::Point;
 
 use crate::{
@@ -16,4 +18,29 @@ pub type Edges = Store<Edge>;
 pub type Cycles = Store<Cycle>;
 pub type Faces = Store<Face>;
 
-pub type Store<T> = Vec<Storage<T>>;
+#[derive(Clone, Debug)]
+pub struct Store<T> {
+    inner: Vec<Storage<T>>,
+}
+
+impl<T> Store<T> {
+    pub fn new() -> Self {
+        Self { inner: Vec::new() }
+    }
+
+    pub fn contains(&self, storage: &Storage<T>) -> bool {
+        self.inner.contains(storage)
+    }
+
+    pub fn push(&mut self, storage: Storage<T>) {
+        self.inner.push(storage)
+    }
+
+    pub fn iter(&self) -> slice::Iter<Storage<T>> {
+        self.inner.iter()
+    }
+
+    pub fn iter_mut(&mut self) -> slice::IterMut<Storage<T>> {
+        self.inner.iter_mut()
+    }
+}
