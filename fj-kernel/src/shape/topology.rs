@@ -48,7 +48,7 @@ impl Topology<'_> {
         if !self.geometry.points.contains(vertex.point.storage()) {
             return Err(StructuralIssues::default().into());
         }
-        for existing in &*self.vertices {
+        for existing in self.vertices.iter() {
             let distance =
                 (existing.get().point() - vertex.point()).magnitude();
 
