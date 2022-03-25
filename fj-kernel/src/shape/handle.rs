@@ -56,17 +56,6 @@ where
     }
 }
 
-/// Returned by [`Handle::get`]
-pub struct Ref<'r, T>(RwLockReadGuard<'r, T>);
-
-impl<T> Deref for Ref<'_, T> {
-    type Target = T;
-
-    fn deref(&self) -> &Self::Target {
-        self.0.deref()
-    }
-}
-
 /// Internal type used in collections within [`Shape`]
 #[derive(Debug)]
 pub struct Storage<T>(Arc<RwLock<T>>);
@@ -129,5 +118,16 @@ impl<T> PartialOrd for Storage<T> {
 impl<T> Hash for Storage<T> {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.ptr().hash(state);
+    }
+}
+
+/// Returned by [`Handle::get`]
+pub struct Ref<'r, T>(RwLockReadGuard<'r, T>);
+
+impl<T> Deref for Ref<'_, T> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        self.0.deref()
     }
 }
