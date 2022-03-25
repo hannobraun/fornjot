@@ -1,5 +1,3 @@
-use std::{iter, slice};
-
 use fj_math::Point;
 
 use crate::{
@@ -7,10 +5,7 @@ use crate::{
     topology::{Cycle, Edge, Face, Vertex},
 };
 
-use super::{
-    handle::{RefMut, Storage},
-    Handle,
-};
+use super::{handle::Storage, Handle};
 
 pub type Points = Store<Point<3>>;
 pub type Curves = Store<Curve>;
@@ -60,8 +55,13 @@ impl<T> Store<T> {
         }
     }
 
-    pub fn iter_mut(&mut self) -> IterMut<T> {
-        self.objects.iter_mut().map(|storage| storage.get_mut())
+    pub fn update<F>(&mut self, mut f: F)
+    where
+        F: FnMut(&mut T),
+    {
+        for storage in self.objects.iter_mut() {
+            f(&mut storage.get_mut());
+        }
     }
 }
 
@@ -91,6 +91,3 @@ impl<T> Iterator for Iter<T> {
         self.elements.pop()
     }
 }
-
-pub type IterMut<'r, T> =
-    iter::Map<slice::IterMut<'r, Storage<T>>, fn(&mut Storage<T>) -> RefMut<T>>;
