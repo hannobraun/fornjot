@@ -1,5 +1,4 @@
 use std::{
-    fmt,
     hash::{Hash, Hasher},
     ops::{Deref, DerefMut},
     sync::Arc,
@@ -30,7 +29,7 @@ use parking_lot::{RwLock, RwLockReadGuard, RwLockWriteGuard};
 /// The equality of [`Handle`] is very strictly defined in terms of identity.
 /// Two [`Handle`]s are considered equal, if they refer to objects in the same
 /// memory location.
-#[derive(Clone, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Handle<T> {
     storage: Storage<T>,
 }
@@ -44,15 +43,6 @@ impl<T> Handle<T> {
     /// Internal method to access the [`Storage`] this handle refers to
     pub(super) fn storage(&self) -> &Storage<T> {
         &self.storage
-    }
-}
-
-impl<T> fmt::Debug for Handle<T>
-where
-    T: fmt::Debug,
-{
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{:?}: {:?}", self.storage.ptr(), &*self.get())
     }
 }
 
