@@ -5,7 +5,6 @@ use fj_math::Scalar;
 use crate::topology::{Cycle, Edge, Face, Vertex};
 
 use super::{
-    handle::Storage,
     stores::{Cycles, Edges, Vertices},
     Geometry, Iter, StructuralIssues, ValidationError, ValidationResult,
 };
@@ -57,10 +56,7 @@ impl Topology<'_> {
             }
         }
 
-        let storage = Storage::new(vertex);
-        let handle = storage.handle();
-        self.vertices.push(storage);
-
+        let handle = self.vertices.push(vertex);
         Ok(handle)
     }
 
@@ -102,11 +98,7 @@ impl Topology<'_> {
             .into());
         }
 
-        let storage = Storage::new(edge);
-        let handle = storage.handle();
-
-        self.edges.push(storage);
-
+        let handle = self.edges.push(edge);
         Ok(handle)
     }
 
@@ -137,10 +129,7 @@ impl Topology<'_> {
             .into());
         }
 
-        let storage = Storage::new(cycle);
-        let handle = storage.handle();
-        self.cycles.push(storage);
-
+        let handle = self.cycles.push(cycle);
         Ok(handle)
     }
 
@@ -179,11 +168,7 @@ impl Topology<'_> {
             }
         }
 
-        let storage = Storage::new(face);
-        let handle = storage.handle();
-
-        self.geometry.faces.push(storage);
-
+        let handle = self.geometry.faces.push(face);
         Ok(handle)
     }
 

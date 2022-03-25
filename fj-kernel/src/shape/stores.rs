@@ -7,7 +7,7 @@ use crate::{
     topology::{Cycle, Edge, Face, Vertex},
 };
 
-use super::handle::Storage;
+use super::{handle::Storage, Handle};
 
 pub type Points = Store<Point<3>>;
 pub type Curves = Store<Curve>;
@@ -32,8 +32,13 @@ impl<T> Store<T> {
         self.inner.contains(storage)
     }
 
-    pub fn push(&mut self, storage: Storage<T>) {
-        self.inner.push(storage)
+    pub fn push(&mut self, object: T) -> Handle<T> {
+        let storage = Storage::new(object);
+        let handle = storage.handle();
+
+        self.inner.push(storage);
+
+        handle
     }
 
     pub fn iter(&self) -> slice::Iter<Storage<T>> {

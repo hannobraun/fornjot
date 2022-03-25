@@ -6,7 +6,7 @@ use crate::{
 };
 
 use super::{
-    handle::{Handle, Storage},
+    handle::Handle,
     stores::{Curves, Faces, Points, Surfaces},
     Iter,
 };
@@ -44,32 +44,17 @@ pub struct Geometry<'r> {
 impl Geometry<'_> {
     /// Add a point to the shape
     pub fn add_point(&mut self, point: Point<3>) -> Handle<Point<3>> {
-        let storage = Storage::new(point);
-        let handle = storage.handle();
-
-        self.points.push(storage);
-
-        handle
+        self.points.push(point)
     }
 
     /// Add a curve to the shape
     pub fn add_curve(&mut self, curve: Curve) -> Handle<Curve> {
-        let storage = Storage::new(curve);
-        let handle = storage.handle();
-
-        self.curves.push(storage);
-
-        handle
+        self.curves.push(curve)
     }
 
     /// Add a surface to the shape
     pub fn add_surface(&mut self, surface: Surface) -> Handle<Surface> {
-        let storage = Storage::new(surface);
-        let handle = storage.handle();
-
-        self.surfaces.push(storage);
-
-        handle
+        self.surfaces.push(surface)
     }
 
     /// Transform the geometry of the shape
