@@ -41,11 +41,14 @@ impl<T> Store<T> {
         handle
     }
 
-    pub fn iter(&self) -> slice::Iter<Storage<T>> {
+    pub fn iter(&self) -> Iter<T> {
         self.inner.iter()
     }
 
-    pub fn iter_mut(&mut self) -> slice::IterMut<Storage<T>> {
+    pub fn iter_mut(&mut self) -> IterMut<T> {
         self.inner.iter_mut()
     }
 }
+
+pub type Iter<'r, T> = slice::Iter<'r, Storage<T>>;
+pub type IterMut<'r, T> = slice::IterMut<'r, Storage<T>>;
