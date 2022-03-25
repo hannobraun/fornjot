@@ -1,22 +1,20 @@
-use std::{iter, slice};
-
 use super::{
-    handle::{Handle, Storage},
-    stores::Store,
+    handle::Handle,
+    stores::{self, Store},
 };
 
 /// An iterator over geometric or topological objects
 ///
 /// Returned by various methods of the [`Shape`] API.
 pub struct Iter<'r, T> {
-    inner: Inner<'r, T>,
+    inner: stores::Iter<'r, T>,
 }
 
 impl<'r, T> Iter<'r, T> {
     pub(super) fn new(store: &'r Store<T>) -> Self {
-        let handle: fn(&Storage<T>) -> Handle<T> = |storage| storage.handle();
-        let inner = store.iter().map(handle);
-        Self { inner }
+        Self {
+            inner: store.iter(),
+        }
     }
 
     /// Convert this iterator over handles into an iterator over values
@@ -37,6 +35,3 @@ impl<T> Iterator for Iter<'_, T> {
         self.inner.next()
     }
 }
-
-type Inner<'r, T> =
-    iter::Map<slice::Iter<'r, Storage<T>>, fn(&Storage<T>) -> Handle<T>>;

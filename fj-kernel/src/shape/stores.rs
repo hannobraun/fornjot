@@ -1,4 +1,4 @@
-use std::slice;
+use std::{iter, slice};
 
 use fj_math::Point;
 
@@ -42,7 +42,7 @@ impl<T> Store<T> {
     }
 
     pub fn iter(&self) -> Iter<T> {
-        self.inner.iter()
+        self.inner.iter().map(|storage| storage.handle())
     }
 
     pub fn iter_mut(&mut self) -> IterMut<T> {
@@ -50,5 +50,6 @@ impl<T> Store<T> {
     }
 }
 
-pub type Iter<'r, T> = slice::Iter<'r, Storage<T>>;
+pub type Iter<'r, T> =
+    iter::Map<slice::Iter<'r, Storage<T>>, fn(&Storage<T>) -> Handle<T>>;
 pub type IterMut<'r, T> = slice::IterMut<'r, Storage<T>>;
