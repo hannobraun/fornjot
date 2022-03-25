@@ -1,7 +1,7 @@
 use std::{
     fmt,
     hash::{Hash, Hasher},
-    ops::Deref,
+    ops::{Deref, DerefMut},
     sync::Arc,
 };
 
@@ -77,8 +77,8 @@ impl<T> Storage<T> {
         Ref(self.0.read())
     }
 
-    pub(super) fn get_mut(&self) -> RwLockWriteGuard<T> {
-        self.0.write()
+    pub(super) fn get_mut(&self) -> RefMut<T> {
+        RefMut(self.0.write())
     }
 
     fn ptr(&self) -> *const () {
@@ -129,5 +129,21 @@ impl<T> Deref for Ref<'_, T> {
 
     fn deref(&self) -> &Self::Target {
         self.0.deref()
+    }
+}
+
+pub struct RefMut<'r, T>(RwLockWriteGuard<'r, T>);
+
+impl<T> Deref for RefMut<'_, T> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        self.0.deref()
+    }
+}
+
+impl<T> DerefMut for RefMut<'_, T> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        self.0.deref_mut()
     }
 }
