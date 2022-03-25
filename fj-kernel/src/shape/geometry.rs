@@ -7,7 +7,8 @@ use crate::{
 
 use super::{
     handle::{Handle, Storage},
-    Curves, Faces, Iter, Points, Surfaces,
+    stores::{Curves, Faces, Points, Surfaces},
+    Iter,
 };
 
 /// API to access a shape's geometry

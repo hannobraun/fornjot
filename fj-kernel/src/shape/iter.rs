@@ -2,7 +2,7 @@ use std::{iter, slice};
 
 use super::{
     handle::{Handle, Storage},
-    Store,
+    stores::Store,
 };
 
 /// An iterator over geometric or topological objects

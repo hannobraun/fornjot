@@ -5,8 +5,9 @@ use fj_math::Scalar;
 use crate::topology::{Cycle, Edge, Face, Vertex};
 
 use super::{
-    handle::Storage, Cycles, Edges, Geometry, Iter, StructuralIssues,
-    ValidationError, ValidationResult, Vertices,
+    handle::Storage,
+    stores::{Cycles, Edges, Vertices},
+    Geometry, Iter, StructuralIssues, ValidationError, ValidationResult,
 };
 
 /// The vertices of a shape

@@ -5,6 +5,7 @@
 mod geometry;
 mod handle;
 mod iter;
+mod stores;
 mod topology;
 mod validate;
 
@@ -16,14 +17,9 @@ pub use self::{
     validate::{StructuralIssues, ValidationError, ValidationResult},
 };
 
-use fj_math::{Point, Scalar};
+use fj_math::Scalar;
 
-use super::{
-    geometry::{Curve, Surface},
-    topology::{Cycle, Edge, Face, Vertex},
-};
-
-use self::handle::Storage;
+use self::stores::{Curves, Cycles, Edges, Faces, Points, Surfaces, Vertices};
 
 /// The boundary representation of a shape
 #[derive(Clone, Debug)]
@@ -114,14 +110,3 @@ impl Default for Shape {
         Self::new()
     }
 }
-
-type Points = Store<Point<3>>;
-type Curves = Store<Curve>;
-type Surfaces = Store<Surface>;
-
-type Vertices = Store<Vertex>;
-type Edges = Store<Edge>;
-type Cycles = Store<Cycle>;
-type Faces = Store<Face>;
-
-type Store<T> = Vec<Storage<T>>;
