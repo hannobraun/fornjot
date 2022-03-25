@@ -1,7 +1,7 @@
 use std::{
     fmt,
     hash::{Hash, Hasher},
-    ops::Deref,
+    ops::{Deref, DerefMut},
     sync::Arc,
 };
 
@@ -56,17 +56,6 @@ where
     }
 }
 
-/// Returned by [`Handle::get`]
-pub struct Ref<'r, T>(RwLockReadGuard<'r, T>);
-
-impl<T> Deref for Ref<'_, T> {
-    type Target = T;
-
-    fn deref(&self) -> &Self::Target {
-        self.0.deref()
-    }
-}
-
 /// Internal type used in collections within [`Shape`]
 #[derive(Debug)]
 pub struct Storage<T>(Arc<RwLock<T>>);
@@ -88,8 +77,8 @@ impl<T> Storage<T> {
         Ref(self.0.read())
     }
 
-    pub(super) fn get_mut(&self) -> RwLockWriteGuard<T> {
-        self.0.write()
+    pub(super) fn get_mut(&self) -> RefMut<T> {
+        RefMut(self.0.write())
     }
 
     fn ptr(&self) -> *const () {
@@ -129,5 +118,32 @@ impl<T> PartialOrd for Storage<T> {
 impl<T> Hash for Storage<T> {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.ptr().hash(state);
+    }
+}
+
+/// Returned by [`Handle::get`]
+pub struct Ref<'r, T>(RwLockReadGuard<'r, T>);
+
+impl<T> Deref for Ref<'_, T> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        self.0.deref()
+    }
+}
+
+pub struct RefMut<'r, T>(RwLockWriteGuard<'r, T>);
+
+impl<T> Deref for RefMut<'_, T> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        self.0.deref()
+    }
+}
+
+impl<T> DerefMut for RefMut<'_, T> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        self.0.deref_mut()
     }
 }

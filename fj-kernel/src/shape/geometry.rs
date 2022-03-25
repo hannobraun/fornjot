@@ -6,8 +6,9 @@ use crate::{
 };
 
 use super::{
-    handle::{Handle, Storage},
-    Curves, Faces, Iter, Points, Surfaces,
+    handle::Handle,
+    stores::{Curves, Faces, Points, Surfaces},
+    Iter,
 };
 
 /// API to access a shape's geometry
@@ -43,32 +44,17 @@ pub struct Geometry<'r> {
 impl Geometry<'_> {
     /// Add a point to the shape
     pub fn add_point(&mut self, point: Point<3>) -> Handle<Point<3>> {
-        let storage = Storage::new(point);
-        let handle = storage.handle();
-
-        self.points.push(storage);
-
-        handle
+        self.points.add(point)
     }
 
     /// Add a curve to the shape
     pub fn add_curve(&mut self, curve: Curve) -> Handle<Curve> {
-        let storage = Storage::new(curve);
-        let handle = storage.handle();
-
-        self.curves.push(storage);
-
-        handle
+        self.curves.add(curve)
     }
 
     /// Add a surface to the shape
     pub fn add_surface(&mut self, surface: Surface) -> Handle<Surface> {
-        let storage = Storage::new(surface);
-        let handle = storage.handle();
-
-        self.surfaces.push(storage);
-
-        handle
+        self.surfaces.add(surface)
     }
 
     /// Transform the geometry of the shape
@@ -76,33 +62,21 @@ impl Geometry<'_> {
     /// Since the topological types refer to geometry, and don't contain any
     /// geometry themselves, this transforms the whole shape.
     pub fn transform(&mut self, transform: &Transform) {
-        for point in self.points.iter_mut() {
-            let trans = {
-                let point = point.get();
-                transform.transform_point(&point)
-            };
-            *point.get_mut() = trans;
+        for mut point in self.points.iter_mut() {
+            *point = transform.transform_point(&point);
         }
-        for curve in self.curves.iter_mut() {
-            let trans = {
-                let curve = curve.get();
-                curve.transform(transform)
-            };
-            *curve.get_mut() = trans;
+        for mut curve in self.curves.iter_mut() {
+            *curve = curve.transform(transform);
         }
-        for surface in self.surfaces.iter_mut() {
-            let trans = {
-                let surface = surface.get();
-                surface.transform(transform)
-            };
-            *surface.get_mut() = trans;
+        for mut surface in self.surfaces.iter_mut() {
+            *surface = surface.transform(transform);
         }
 
         // While some faces use triangle representation, we need this weird
         // workaround here.
-        for face in self.faces.iter_mut() {
+        for mut face in self.faces.iter_mut() {
             use std::ops::DerefMut as _;
-            if let Face::Triangles(triangles) = face.get_mut().deref_mut() {
+            if let Face::Triangles(triangles) = face.deref_mut() {
                 for triangle in triangles {
                     *triangle = transform.transform_triangle(triangle);
                 }

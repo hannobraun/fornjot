@@ -5,8 +5,8 @@ use fj_math::Scalar;
 use crate::topology::{Cycle, Edge, Face, Vertex};
 
 use super::{
-    handle::Storage, Cycles, Edges, Geometry, Iter, StructuralIssues,
-    ValidationError, ValidationResult, Vertices,
+    stores::{Cycles, Edges, Vertices},
+    Geometry, Iter, StructuralIssues, ValidationError, ValidationResult,
 };
 
 /// The vertices of a shape
@@ -44,10 +44,10 @@ impl Topology<'_> {
     /// In the future, this method is likely to validate more than it already
     /// does. See documentation of [`crate::kernel`] for some context on that.
     pub fn add_vertex(&mut self, vertex: Vertex) -> ValidationResult<Vertex> {
-        if !self.geometry.points.contains(vertex.point.storage()) {
+        if !self.geometry.points.contains(&vertex.point) {
             return Err(StructuralIssues::default().into());
         }
-        for existing in &*self.vertices {
+        for existing in self.vertices.iter() {
             let distance =
                 (existing.get().point() - vertex.point()).magnitude();
 
@@ -56,10 +56,7 @@ impl Topology<'_> {
             }
         }
 
-        let storage = Storage::new(vertex);
-        let handle = storage.handle();
-        self.vertices.push(storage);
-
+        let handle = self.vertices.add(vertex);
         Ok(handle)
     }
 
@@ -81,12 +78,12 @@ impl Topology<'_> {
         let mut missing_curve = None;
         let mut missing_vertices = HashSet::new();
 
-        if !self.geometry.curves.contains(edge.curve.storage()) {
+        if !self.geometry.curves.contains(&edge.curve) {
             missing_curve = Some(edge.curve.clone());
         }
         for vertices in &edge.vertices {
             for vertex in vertices {
-                if !self.vertices.contains(vertex.storage()) {
+                if !self.vertices.contains(vertex) {
                     missing_vertices.insert(vertex.clone());
                 }
             }
@@ -101,11 +98,7 @@ impl Topology<'_> {
             .into());
         }
 
-        let storage = Storage::new(edge);
-        let handle = storage.handle();
-
-        self.edges.push(storage);
-
+        let handle = self.edges.add(edge);
         Ok(handle)
     }
 
@@ -123,7 +116,7 @@ impl Topology<'_> {
     pub fn add_cycle(&mut self, cycle: Cycle) -> ValidationResult<Cycle> {
         let mut missing_edges = HashSet::new();
         for edge in &cycle.edges {
-            if !self.edges.contains(edge.storage()) {
+            if !self.edges.contains(edge) {
                 missing_edges.insert(edge.clone());
             }
         }
@@ -136,10 +129,7 @@ impl Topology<'_> {
             .into());
         }
 
-        let storage = Storage::new(cycle);
-        let handle = storage.handle();
-        self.cycles.push(storage);
-
+        let handle = self.cycles.add(cycle);
         Ok(handle)
     }
 
@@ -159,11 +149,11 @@ impl Topology<'_> {
             let mut missing_surface = None;
             let mut missing_cycles = HashSet::new();
 
-            if !self.geometry.surfaces.contains(surface.storage()) {
+            if !self.geometry.surfaces.contains(surface) {
                 missing_surface = Some(surface.clone());
             }
             for cycle in exteriors.iter().chain(interiors) {
-                if !self.cycles.contains(cycle.storage()) {
+                if !self.cycles.contains(cycle) {
                     missing_cycles.insert(cycle.clone());
                 }
             }
@@ -178,11 +168,7 @@ impl Topology<'_> {
             }
         }
 
-        let storage = Storage::new(face);
-        let handle = storage.handle();
-
-        self.geometry.faces.push(storage);
-
+        let handle = self.geometry.faces.add(face);
         Ok(handle)
     }
 
