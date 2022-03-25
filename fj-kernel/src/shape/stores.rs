@@ -32,7 +32,7 @@ impl<T> Store<T> {
         self.inner.contains(storage)
     }
 
-    pub fn push(&mut self, object: T) -> Handle<T> {
+    pub fn add(&mut self, object: T) -> Handle<T> {
         let storage = Storage::new(object);
         let handle = storage.handle();
 

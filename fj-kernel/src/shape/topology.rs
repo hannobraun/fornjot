@@ -56,7 +56,7 @@ impl Topology<'_> {
             }
         }
 
-        let handle = self.vertices.push(vertex);
+        let handle = self.vertices.add(vertex);
         Ok(handle)
     }
 
@@ -98,7 +98,7 @@ impl Topology<'_> {
             .into());
         }
 
-        let handle = self.edges.push(edge);
+        let handle = self.edges.add(edge);
         Ok(handle)
     }
 
@@ -129,7 +129,7 @@ impl Topology<'_> {
             .into());
         }
 
-        let handle = self.cycles.push(cycle);
+        let handle = self.cycles.add(cycle);
         Ok(handle)
     }
 
@@ -168,7 +168,7 @@ impl Topology<'_> {
             }
         }
 
-        let handle = self.geometry.faces.push(face);
+        let handle = self.geometry.faces.add(face);
         Ok(handle)
     }
 
