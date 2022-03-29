@@ -1,9 +1,24 @@
+use std::fmt::{Display, Formatter};
 use crate::{Actions, GitHub};
 use regex::Regex;
 
 pub struct Release {
     sha: String,
     label: String,
+}
+
+pub enum Outputs {
+    ReleaseDetected,
+    TagName,
+}
+
+impl Display for Outputs {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match &self {
+            Outputs::ReleaseDetected => write!(f, "release-detected"),
+            Outputs::TagName => write!(f, "tag-name"),
+        }
+    }
 }
 
 impl Release {
@@ -37,14 +52,14 @@ impl Release {
 
     fn hit(&self, tag: &str) -> anyhow::Result<()> {
         log::info!("detected release of {tag}");
-        Actions::set_output("release-detected", "true");
-        Actions::set_output("tag-name", tag);
+        Actions::set_output(Outputs::ReleaseDetected, "true");
+        Actions::set_output(Outputs::TagName, tag);
         Ok(())
     }
 
     fn miss(&self) -> anyhow::Result<()> {
         log::info!("no release detected");
-        Actions::set_output("release-created", "false");
+        Actions::set_output(Outputs::ReleaseDetected, "false");
         Ok(())
     }
 }

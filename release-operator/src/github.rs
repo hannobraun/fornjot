@@ -1,5 +1,6 @@
 use cmd_lib::run_fun;
 use serde::Deserialize;
+use crate::release::Outputs;
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct PullRequest {
@@ -68,7 +69,7 @@ pub struct Actions;
 
 impl Actions {
     // Set an "output" in GitHub Actions
-    pub fn set_output(key: &str, value: &str) {
+    pub fn set_output(key: Outputs, value: &str) {
         log::debug!("setting output name={key} value={value}");
         println!("::set-output name={key}::{value}");
     }
