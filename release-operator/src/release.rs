@@ -1,6 +1,6 @@
-use std::fmt::{Display, Formatter};
 use crate::{Actions, GitHub};
 use regex::Regex;
+use std::fmt::{Display, Formatter};
 
 pub struct Release {
     sha: String,

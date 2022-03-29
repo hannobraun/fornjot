@@ -1,6 +1,6 @@
+use crate::release::Outputs;
 use cmd_lib::run_fun;
 use serde::Deserialize;
-use crate::release::Outputs;
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct PullRequest {
