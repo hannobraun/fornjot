@@ -10,6 +10,8 @@
 //!
 //! [Fornjot repository]: https://github.com/hannobraun/Fornjot
 
+#![deny(missing_docs)]
+
 pub mod syntax;
 
 mod shape_2d;
