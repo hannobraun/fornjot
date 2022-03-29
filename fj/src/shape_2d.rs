@@ -93,7 +93,7 @@ pub struct Difference2d {
 
 impl Difference2d {
     /// Create a `Difference2d` from two shapes
-    pub fn from_objects(a: Shape2d, b: Shape2d) -> Self {
+    pub fn from_shapes(a: Shape2d, b: Shape2d) -> Self {
         Self { a, b }
     }
 

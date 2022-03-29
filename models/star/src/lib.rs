@@ -53,7 +53,7 @@ pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
     let outer = fj::Sketch::from_points(outer).with_color([0, 255, 0, 200]);
     let inner = fj::Sketch::from_points(inner);
 
-    let footprint = fj::Difference2d::from_objects(outer.into(), inner.into());
+    let footprint = fj::Difference2d::from_shapes(outer.into(), inner.into());
 
     let star = fj::Sweep::from_shape_and_length(footprint.into(), h);
 
