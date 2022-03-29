@@ -43,9 +43,9 @@ fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
 
     match &cli.command {
-        Commands::Detect(opts) => {
-            log::debug!("got arguments: {opts:#?}");
-            Release::new(opts.sha.to_owned(), opts.label.to_owned()).detect()?;
+        Commands::Detect(args) => {
+            log::debug!("got arguments: {args:#?}");
+            Release::new(args.sha.to_owned(), args.label.to_owned()).detect()?;
         }
     }
 
