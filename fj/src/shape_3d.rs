@@ -99,18 +99,22 @@ pub struct Sweep {
 }
 
 impl Sweep {
+    /// Create a `Sweep` from a shape and a length
     pub fn from_shape_and_length(shape: Shape2d, length: f64) -> Self {
         Self { shape, length }
     }
 
+    /// Access the shape being swept
     pub fn shape(&self) -> &Shape2d {
         &self.shape
     }
 
+    /// Access the length of the sweep
     pub fn length(&self) -> f64 {
         self.length
     }
 
+    /// Access the color of the shape being swept
     pub fn color(&self) -> [u8; 4] {
         self.shape().color()
     }

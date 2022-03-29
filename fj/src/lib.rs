@@ -21,6 +21,9 @@ pub use self::{shape_2d::*, shape_3d::*};
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub enum Shape {
+    /// A 2D shape
     Shape2d(Shape2d),
+
+    /// A 3D shape
     Shape3d(Shape3d),
 }
