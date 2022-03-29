@@ -84,32 +84,23 @@ impl From<Circle> for Shape2d {
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Difference2d {
-    /// The original shape
-    a: Shape2d,
-
-    /// The shape being subtracted
-    b: Shape2d,
+    shapes: [Shape2d; 2],
 }
 
 impl Difference2d {
     /// Create a `Difference2d` from two shapes
-    pub fn from_objects(a: Shape2d, b: Shape2d) -> Self {
-        Self { a, b }
+    pub fn from_shapes(shapes: [Shape2d; 2]) -> Self {
+        Self { shapes }
     }
 
     /// Get the rendering color of the larger object in RGBA
     pub fn color(&self) -> [u8; 4] {
-        self.a.color()
+        self.shapes[0].color()
     }
 
-    /// Access the original shape
-    pub fn a(&self) -> &Shape2d {
-        &self.a
-    }
-
-    /// Access the shape being subtracted
-    pub fn b(&self) -> &Shape2d {
-        &self.b
+    /// Access the shapes that make up the difference
+    pub fn shapes(&self) -> &[Shape2d; 2] {
+        &self.shapes
     }
 }
 

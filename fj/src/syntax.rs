@@ -24,7 +24,7 @@ where
         let a = self.clone().into();
         let b = other.clone().into();
 
-        crate::Difference2d::from_objects(a, b)
+        crate::Difference2d::from_shapes([a, b])
     }
 }
 
@@ -50,32 +50,6 @@ where
         let b = other.clone().into();
 
         crate::Group { a, b }
-    }
-}
-
-/// Convenient syntax to create an [`fj::Transform`]
-///
-/// [`fj::Transform`]: crate::Transform
-pub trait Rotate {
-    /// Create a rotation
-    ///
-    /// Create a rotation that rotates `shape` by `angle` around an axis defined
-    /// by `axis`.
-    fn rotate(&self, axis: [f64; 3], angle: f64) -> crate::Transform;
-}
-
-impl<T> Rotate for T
-where
-    T: Clone + Into<crate::Shape3d>,
-{
-    fn rotate(&self, axis: [f64; 3], angle: f64) -> crate::Transform {
-        let shape = self.clone().into();
-        crate::Transform {
-            shape,
-            axis,
-            angle,
-            offset: [0.; 3],
-        }
     }
 }
 
@@ -120,17 +94,33 @@ where
 /// Convenient syntax to create an [`fj::Transform`]
 ///
 /// [`fj::Transform`]: crate::Transform
-pub trait Translate {
+pub trait Transform {
+    /// Create a rotation
+    ///
+    /// Create a rotation that rotates `shape` by `angle` around an axis defined
+    /// by `axis`.
+    fn rotate(&self, axis: [f64; 3], angle: f64) -> crate::Transform;
+
     /// Create a translation
     ///
     /// Create a translation that translates `shape` by `offset`.
     fn translate(&self, offset: [f64; 3]) -> crate::Transform;
 }
 
-impl<T> Translate for T
+impl<T> Transform for T
 where
     T: Clone + Into<crate::Shape3d>,
 {
+    fn rotate(&self, axis: [f64; 3], angle: f64) -> crate::Transform {
+        let shape = self.clone().into();
+        crate::Transform {
+            shape,
+            axis,
+            angle,
+            offset: [0.; 3],
+        }
+    }
+
     fn translate(&self, offset: [f64; 3]) -> crate::Transform {
         let shape = self.clone().into();
         crate::Transform {
