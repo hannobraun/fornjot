@@ -15,7 +15,7 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    /// Detect a release and sets respective Action outputs
+    /// Detect a release and set respective Action outputs
     Detect(DetectArgs),
 }
 
