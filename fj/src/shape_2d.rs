@@ -98,14 +98,9 @@ impl Difference2d {
         self.shapes[0].color()
     }
 
-    /// Access the original shape
-    pub fn a(&self) -> &Shape2d {
-        &self.shapes[0]
-    }
-
-    /// Access the shape being subtracted
-    pub fn b(&self) -> &Shape2d {
-        &self.shapes[1]
+    /// Access the shapes that make up the difference
+    pub fn shapes(&self) -> &[Shape2d; 2] {
+        &self.shapes
     }
 }
 

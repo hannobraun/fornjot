@@ -16,8 +16,12 @@ impl ToShape for fj::Difference2d {
 
         let mut shape = Shape::new();
 
-        let [mut a, mut b] = [&self.a(), &self.b()]
-            .map(|shape| shape.to_shape(tolerance, debug_info));
+        // Can be cleaned up, once `each_ref` is stable:
+        // https://doc.rust-lang.org/std/primitive.array.html#method.each_ref
+        let [a, b] = self.shapes();
+        let shapes = [&a, &b];
+        let [mut a, mut b] =
+            shapes.map(|shape| shape.to_shape(tolerance, debug_info));
 
         // Check preconditions.
         //
@@ -76,7 +80,7 @@ impl ToShape for fj::Difference2d {
         // This is a conservative estimate of the bounding box: It's never going
         // to be bigger than the bounding box of the original shape that another
         // is being subtracted from.
-        self.a().bounding_volume()
+        self.shapes()[0].bounding_volume()
     }
 }
 
