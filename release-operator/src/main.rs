@@ -8,7 +8,7 @@ use clap::Parser;
 
 #[derive(Parser, Debug)]
 #[clap(version)]
-struct Cmd {
+struct Cli {
     /// Commit sha to work on
     #[clap(short, long, env = "GITHUB_SHA")]
     sha: String,
@@ -28,10 +28,10 @@ fn main() -> anyhow::Result<()> {
     let start = std::time::Instant::now();
     log::trace!("starting release-operator process");
 
-    let args = Cmd::parse();
+    let cli = Cli::parse();
     log::debug!("got arguments: {args:#?}");
 
-    Release::new(args.sha, args.label).detect()?;
+    Release::new(cli.sha, cli.label).detect()?;
 
     log::trace!(
         "finished release-operator process, took {:?}",
