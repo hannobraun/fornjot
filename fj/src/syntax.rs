@@ -1,4 +1,13 @@
+//! Convenient syntax for `fj` operations
+//!
+//! This model defines extension traits, which provide convenient syntax for
+//! the various operations defined in this trait.
+
+/// Convenient syntax to create an [`fj::Difference2d`]
+///
+/// [`fj::Difference2d`]: crate::Difference2d
 pub trait Difference {
+    /// Create a difference between `self` and `other`
     fn difference<Other>(&self, other: &Other) -> crate::Difference2d
     where
         Other: Clone + Into<crate::Shape2d>;
@@ -19,7 +28,11 @@ where
     }
 }
 
+/// Convenient syntax to create an [`fj::Group`]
+///
+/// [`fj::Group`]: crate::Group
 pub trait Group {
+    /// Create a group with `self` and `other`
     fn group<Other>(&self, other: &Other) -> crate::Group
     where
         Other: Clone + Into<crate::Shape3d>;
@@ -40,6 +53,9 @@ where
     }
 }
 
+/// Convenient syntax to create an [`fj::Transform`]
+///
+/// [`fj::Transform`]: crate::Transform
 pub trait Rotate {
     /// Create a rotation
     ///
@@ -63,7 +79,14 @@ where
     }
 }
 
+/// Convenient syntax to create an [`fj::Sketch`]
+///
+/// [`fj::Sketch`]: crate::Sketch
 pub trait Sketch {
+    /// Create a sketch from `self`
+    ///
+    /// Can be called on any type that implements `AsRef<[[f64; 2]]`, which is
+    /// implemented for types like slices, arrays, or `Vec`.
     fn sketch(&self) -> crate::Sketch;
 }
 
@@ -76,7 +99,11 @@ where
     }
 }
 
+/// Convenient syntax to create an [`fj::Sweep`]
+///
+/// [`fj::Sweep`]: crate::Sweep
 pub trait Sweep {
+    /// Sweep `self` along the z-axis by `length`
     fn sweep(&self, length: f64) -> crate::Sweep;
 }
 
@@ -90,6 +117,9 @@ where
     }
 }
 
+/// Convenient syntax to create an [`fj::Transform`]
+///
+/// [`fj::Transform`]: crate::Transform
 pub trait Translate {
     /// Create a translation
     ///

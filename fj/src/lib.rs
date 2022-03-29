@@ -10,16 +10,12 @@
 //!
 //! [Fornjot repository]: https://github.com/hannobraun/Fornjot
 
+#![deny(missing_docs)]
+
+pub mod syntax;
+
 mod shape_2d;
 mod shape_3d;
-mod syntax;
-
-pub mod prelude {
-    pub use crate::syntax::{
-        Difference as _, Group as _, Rotate as _, Sketch as _, Sweep as _,
-        Translate as _,
-    };
-}
 
 pub use self::{shape_2d::*, shape_3d::*};
 
@@ -27,6 +23,9 @@ pub use self::{shape_2d::*, shape_3d::*};
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub enum Shape {
+    /// A 2D shape
     Shape2d(Shape2d),
+
+    /// A 3D shape
     Shape3d(Shape3d),
 }

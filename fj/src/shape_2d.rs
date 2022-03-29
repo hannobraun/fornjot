@@ -46,6 +46,7 @@ impl Circle {
         }
     }
 
+    /// Access the circle's radius
     pub fn radius(&self) -> f64 {
         self.radius
     }
@@ -91,6 +92,7 @@ pub struct Difference2d {
 }
 
 impl Difference2d {
+    /// Create a `Difference2d` from two shapes
     pub fn from_objects(a: Shape2d, b: Shape2d) -> Self {
         Self { a, b }
     }
@@ -100,10 +102,12 @@ impl Difference2d {
         self.a.color()
     }
 
+    /// Access the original shape
     pub fn a(&self) -> &Shape2d {
         &self.a
     }
 
+    /// Access the shape being subtracted
     pub fn b(&self) -> &Shape2d {
         &self.b
     }
