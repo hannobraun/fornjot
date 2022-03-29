@@ -89,8 +89,8 @@ pub struct Difference2d {
 
 impl Difference2d {
     /// Create a `Difference2d` from two shapes
-    pub fn from_shapes(a: Shape2d, b: Shape2d) -> Self {
-        Self { shapes: [a, b] }
+    pub fn from_shapes(shapes: [Shape2d; 2]) -> Self {
+        Self { shapes }
     }
 
     /// Get the rendering color of the larger object in RGBA

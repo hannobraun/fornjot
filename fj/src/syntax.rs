@@ -24,7 +24,7 @@ where
         let a = self.clone().into();
         let b = other.clone().into();
 
-        crate::Difference2d::from_shapes(a, b)
+        crate::Difference2d::from_shapes([a, b])
     }
 }
 
