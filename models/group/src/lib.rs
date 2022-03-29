@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use fj::prelude::*;
+use fj::syntax::*;
 
 #[no_mangle]
 pub extern "C" fn model(_: &HashMap<String, String>) -> fj::Shape {

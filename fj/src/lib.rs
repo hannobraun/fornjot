@@ -15,13 +15,6 @@ pub mod syntax;
 mod shape_2d;
 mod shape_3d;
 
-pub mod prelude {
-    pub use crate::syntax::{
-        Difference as _, Group as _, Rotate as _, Sketch as _, Sweep as _,
-        Translate as _,
-    };
-}
-
 pub use self::{shape_2d::*, shape_3d::*};
 
 /// A shape
