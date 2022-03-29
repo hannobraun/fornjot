@@ -54,7 +54,7 @@ As seen above, the release operator requires the maintainer to:
 
 ```shell
 # release-operator/
-cargo run -- --sha <commit-sha> --label <release-label>
+cargo run -- detect --sha <commit-sha> --label <release-label>
 ```
 
 Where `<commit-sha>` can be set using `GITHUB_SHA` (present by default in GitHub Actions), and `<release-label>` can be set using `RELEASE_LABEL` (defaults to `autorelease`).
@@ -94,7 +94,7 @@ To embed the operator in a workflow, include these steps _before_ anything relat
     RELEASE_LABEL: autorelease
   run: |
     # release operator
-    cargo run
+    cargo run -- detect
 
 # Subsequent steps can use:
 #   if: ${{ steps.release.outputs.release-detected == 'true' }}

@@ -104,7 +104,7 @@ jobs:
           RUST_LOG: info
         run: |
           # Run release operator
-          cargo run
+          cargo run -- detect
 
       - name: Binaries | Download
         if: ${{ steps.release.outputs.release-detected == 'true' }}
