@@ -45,7 +45,8 @@ fn main() -> anyhow::Result<()> {
     match &cli.command {
         Commands::Detect(args) => {
             log::debug!("got arguments: {args:#?}");
-            Release::new(args.sha.to_owned(), args.label.to_owned()).detect()?;
+            Release::new(args.sha.to_owned(), args.label.to_owned())
+                .detect()?;
         }
     }
 
