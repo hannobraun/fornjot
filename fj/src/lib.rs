@@ -10,9 +10,10 @@
 //!
 //! [Fornjot repository]: https://github.com/hannobraun/Fornjot
 
+pub mod syntax;
+
 mod shape_2d;
 mod shape_3d;
-mod syntax;
 
 pub mod prelude {
     pub use crate::syntax::{
