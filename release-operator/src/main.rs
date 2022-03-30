@@ -3,9 +3,8 @@ mod registry;
 mod release;
 
 use crate::github::{Actions, GitHub};
-use std::path::PathBuf;
 
-use crate::registry::Registry;
+use crate::registry::{Crate, Registry};
 use crate::release::Release;
 use clap::{Args, Parser, Subcommand};
 use secstr::SecStr;
@@ -36,9 +35,6 @@ struct DetectArgs {
     #[clap(short, long, env = "RELEASE_LABEL", default_value = "autorelease")]
     label: String,
 }
-
-/// Represent a crate to process
-type Crate = PathBuf;
 
 #[derive(Args, Debug)]
 struct PublishArgs {
