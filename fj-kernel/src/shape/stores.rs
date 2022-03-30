@@ -19,7 +19,7 @@ pub type Edges = Store<Edge>;
 pub type Cycles = Store<Cycle>;
 pub type Faces = Store<Face>;
 
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub struct Store<T> {
     objects: Arc<RwLock<Vec<Storage<T>>>>,
 }
@@ -65,6 +65,17 @@ impl<T> Store<T> {
     {
         for storage in self.objects.write().iter_mut() {
             f(&mut storage.get_mut());
+        }
+    }
+}
+
+// Deriving `Clone` would only derive `Clone` where `T: Clone`. This
+// implementation doesn't have that limitation, providing `Clone` for all
+// `Store`s instead.
+impl<T> Clone for Store<T> {
+    fn clone(&self) -> Self {
+        Self {
+            objects: self.objects.clone(),
         }
     }
 }
