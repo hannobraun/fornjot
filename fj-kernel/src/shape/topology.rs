@@ -209,7 +209,7 @@ mod tests {
 
     use crate::{
         geometry::{Curve, Surface},
-        shape::{handle::Handle, Shape, ValidationError},
+        shape::{Handle, Shape, ValidationError},
         topology::{Cycle, Edge, Face, Vertex},
     };
 

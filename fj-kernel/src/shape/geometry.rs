@@ -6,9 +6,8 @@ use crate::{
 };
 
 use super::{
-    handle::Handle,
     stores::{Curves, Faces, Points, Surfaces},
-    Iter,
+    Handle, Iter,
 };
 
 /// API to access a shape's geometry
