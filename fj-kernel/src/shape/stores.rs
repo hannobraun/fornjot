@@ -1,4 +1,7 @@
+use std::sync::Arc;
+
 use fj_math::Point;
+use parking_lot::RwLock;
 
 use crate::{
     geometry::{Curve, Surface},
@@ -18,25 +21,25 @@ pub type Faces = Store<Face>;
 
 #[derive(Clone, Debug)]
 pub struct Store<T> {
-    objects: Vec<Storage<T>>,
+    objects: Arc<RwLock<Vec<Storage<T>>>>,
 }
 
 impl<T> Store<T> {
     pub fn new() -> Self {
         Self {
-            objects: Vec::new(),
+            objects: Arc::new(RwLock::new(Vec::new())),
         }
     }
 
     pub fn contains(&self, object: &Handle<T>) -> bool {
-        self.objects.contains(object.storage())
+        self.objects.read().contains(object.storage())
     }
 
     pub fn add(&mut self, object: T) -> Handle<T> {
         let storage = Storage::new(object);
         let handle = storage.handle();
 
-        self.objects.push(storage);
+        self.objects.write().push(storage);
 
         handle
     }
@@ -49,6 +52,7 @@ impl<T> Store<T> {
         Iter {
             elements: self
                 .objects
+                .read()
                 .iter()
                 .map(|storage| storage.handle())
                 .collect(),
@@ -59,7 +63,7 @@ impl<T> Store<T> {
     where
         F: FnMut(&mut T),
     {
-        for storage in self.objects.iter_mut() {
+        for storage in self.objects.write().iter_mut() {
             f(&mut storage.get_mut());
         }
     }
