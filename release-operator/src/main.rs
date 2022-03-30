@@ -17,6 +17,9 @@ struct Cli {
 enum Commands {
     /// Detect a release and set respective Action outputs
     Detect(DetectArgs),
+
+    /// Publish a list of crates to crates.io
+    Publish(PublishArgs),
 }
 
 #[derive(Args, Debug)]
@@ -28,6 +31,11 @@ struct DetectArgs {
     /// Marker label to look for
     #[clap(short, long, env = "RELEASE_LABEL", default_value = "autorelease")]
     label: String,
+}
+
+#[derive(Args, Debug)]
+struct PublishArgs {
+
 }
 
 fn main() -> anyhow::Result<()> {
@@ -47,6 +55,9 @@ fn main() -> anyhow::Result<()> {
             log::debug!("got arguments: {args:#?}");
             Release::new(args.sha.to_owned(), args.label.to_owned())
                 .detect()?;
+        },
+        Commands::Publish(args) => {
+            log::debug!("got arguments: {args:#?}");
         }
     }
 
