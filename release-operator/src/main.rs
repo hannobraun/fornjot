@@ -10,14 +10,14 @@ use crate::release::Release;
 use clap::{Args, Parser, Subcommand};
 use secstr::SecStr;
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[clap(version, propagate_version = true)]
 struct Cli {
     #[clap(subcommand)]
     command: Commands,
 }
 
-#[derive(Subcommand)]
+#[derive(Subcommand, Debug)]
 enum Commands {
     /// Detect a release and set respective Action outputs
     Detect(DetectArgs),
@@ -62,15 +62,14 @@ fn main() -> anyhow::Result<()> {
     log::trace!("starting release-operator process");
 
     let cli = Cli::parse();
+    log::debug!("got arguments: {cli:#?}");
 
     match &cli.command {
         Commands::Detect(args) => {
-            log::debug!("got arguments: {args:#?}");
             Release::new(args.sha.to_owned(), args.label.to_owned())
                 .detect()?;
         }
         Commands::Publish(args) => {
-            log::debug!("got arguments: {args:#?}");
             Registry::new(&args.token, &args.crates).publish()?;
         }
     }
