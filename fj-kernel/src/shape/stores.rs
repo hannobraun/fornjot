@@ -21,7 +21,7 @@ pub type Faces = Store<Face>;
 
 #[derive(Debug)]
 pub struct Store<T> {
-    objects: Arc<RwLock<Vec<Storage<T>>>>,
+    objects: Arc<RwLock<Objects<T>>>,
 }
 
 impl<T> Store<T> {
@@ -79,6 +79,8 @@ impl<T> Clone for Store<T> {
         }
     }
 }
+
+pub type Objects<T> = Vec<Storage<T>>;
 
 /// An iterator over geometric or topological objects
 ///
