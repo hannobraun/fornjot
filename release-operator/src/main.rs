@@ -1,10 +1,14 @@
 mod github;
+mod registry;
 mod release;
 
 use crate::github::{Actions, GitHub};
+use std::path::PathBuf;
 
+use crate::registry::Registry;
 use crate::release::Release;
 use clap::{Args, Parser, Subcommand};
+use secstr::SecStr;
 
 #[derive(Parser)]
 #[clap(version, propagate_version = true)]
@@ -33,9 +37,18 @@ struct DetectArgs {
     label: String,
 }
 
+/// Represent a crate to process
+type Crate = PathBuf;
+
 #[derive(Args, Debug)]
 struct PublishArgs {
+    /// Token to access crates.io for publishing
+    #[clap(short, long, env = "CARGO_REGISTRY_TOKEN")]
+    token: SecStr,
 
+    /// Repeatable option to provide a list of paths to crates
+    #[clap(short, long = "crate")]
+    crates: Vec<Crate>,
 }
 
 fn main() -> anyhow::Result<()> {
@@ -55,9 +68,10 @@ fn main() -> anyhow::Result<()> {
             log::debug!("got arguments: {args:#?}");
             Release::new(args.sha.to_owned(), args.label.to_owned())
                 .detect()?;
-        },
+        }
         Commands::Publish(args) => {
             log::debug!("got arguments: {args:#?}");
+            Registry::new(&args.token, &args.crates).publish()?;
         }
     }
 
