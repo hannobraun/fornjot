@@ -139,10 +139,7 @@ mod tests {
 
         // Regular edge
         assert_eq!(
-            super::approximate_edge(
-                vec![b, c],
-                Some([v1.get().clone(), v2.get().clone()])
-            ),
+            super::approximate_edge(vec![b, c], Some([v1.get(), v2.get()])),
             vec![a, b, c, d],
         );
 

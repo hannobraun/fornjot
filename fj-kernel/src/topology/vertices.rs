@@ -36,7 +36,7 @@ impl Vertex {
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`].
     pub fn point(&self) -> Point<3> {
-        *self.point.get()
+        self.point.get()
     }
 }
 

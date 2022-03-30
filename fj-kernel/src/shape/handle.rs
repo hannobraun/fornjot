@@ -4,7 +4,7 @@ use std::{
     sync::Arc,
 };
 
-use parking_lot::{RwLock, RwLockReadGuard, RwLockWriteGuard};
+use parking_lot::{RwLock, RwLockWriteGuard};
 
 /// A handle to an object stored within [`Shape`]
 ///
@@ -36,7 +36,10 @@ pub struct Handle<T> {
 
 impl<T> Handle<T> {
     /// Access the object that the handle references
-    pub fn get(&self) -> Ref<T> {
+    pub fn get(&self) -> T
+    where
+        T: Clone,
+    {
         self.storage.get()
     }
 
@@ -63,8 +66,11 @@ impl<T> Storage<T> {
         }
     }
 
-    pub(super) fn get(&self) -> Ref<T> {
-        Ref(self.0.read())
+    pub(super) fn get(&self) -> T
+    where
+        T: Clone,
+    {
+        self.0.read().clone()
     }
 
     pub(super) fn get_mut(&self) -> RefMut<T> {
@@ -108,17 +114,6 @@ impl<T> PartialOrd for Storage<T> {
 impl<T> Hash for Storage<T> {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.ptr().hash(state);
-    }
-}
-
-/// Returned by [`Handle::get`]
-pub struct Ref<'r, T>(RwLockReadGuard<'r, T>);
-
-impl<T> Deref for Ref<'_, T> {
-    type Target = T;
-
-    fn deref(&self) -> &Self::Target {
-        self.0.deref()
     }
 }
 
