@@ -4,14 +4,15 @@ use std::{
 };
 
 use fj_math::Point;
-use parking_lot::RwLock;
+use parking_lot::{RwLock, RwLockReadGuard};
+use slotmap::{DefaultKey, SlotMap};
 
 use crate::{
     geometry::{Curve, Surface},
     topology::{Cycle, Edge, Face, Vertex},
 };
 
-use super::{handle::Storage, Handle};
+use super::Handle;
 
 pub type Points = Store<Point<3>>;
 pub type Curves = Store<Curve>;
@@ -30,21 +31,21 @@ pub struct Store<T> {
 impl<T> Store<T> {
     pub fn new() -> Self {
         Self {
-            objects: Arc::new(RwLock::new(Vec::new())),
+            objects: Arc::new(RwLock::new(SlotMap::new())),
         }
     }
 
     pub fn contains(&self, object: &Handle<T>) -> bool {
-        self.objects.read().contains(object.storage())
+        object.store() == self && self.objects.read().contains_key(object.key())
     }
 
     pub fn add(&mut self, object: T) -> Handle<T> {
-        let storage = Storage::new(object);
-        let handle = storage.handle();
+        let key = self.objects.write().insert(object);
+        Handle::new(key, self.clone())
+    }
 
-        self.objects.write().push(storage);
-
-        handle
+    pub fn read(&self) -> RwLockReadGuard<Objects<T>> {
+        self.objects.read()
     }
 
     pub fn iter(&self) -> Iter<T> {
@@ -57,7 +58,7 @@ impl<T> Store<T> {
                 .objects
                 .read()
                 .iter()
-                .map(|storage| storage.handle())
+                .map(|(key, _)| Handle::new(key, self.clone()))
                 .collect(),
         }
     }
@@ -66,8 +67,8 @@ impl<T> Store<T> {
     where
         F: FnMut(&mut T),
     {
-        for storage in self.objects.write().iter_mut() {
-            f(&mut storage.get_mut());
+        for (_, object) in self.objects.write().iter_mut() {
+            f(object);
         }
     }
 
@@ -113,7 +114,7 @@ impl<T> Hash for Store<T> {
     }
 }
 
-pub type Objects<T> = Vec<Storage<T>>;
+pub type Objects<T> = SlotMap<DefaultKey, T>;
 
 /// An iterator over geometric or topological objects
 ///

@@ -1,10 +1,8 @@
-use std::{
-    hash::{Hash, Hasher},
-    ops::{Deref, DerefMut},
-    sync::Arc,
-};
+use std::hash::Hash;
 
-use parking_lot::{RwLock, RwLockWriteGuard};
+use slotmap::DefaultKey;
+
+use super::stores::Store;
 
 /// A handle to an object stored within [`Shape`]
 ///
@@ -31,104 +29,35 @@ use parking_lot::{RwLock, RwLockWriteGuard};
 /// memory location.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Handle<T> {
-    storage: Storage<T>,
+    key: DefaultKey,
+    store: Store<T>,
 }
 
 impl<T> Handle<T> {
+    pub(super) fn new(key: DefaultKey, store: Store<T>) -> Self {
+        Self { key, store }
+    }
+
+    pub(super) fn key(&self) -> DefaultKey {
+        self.key
+    }
+
+    pub(super) fn store(&self) -> &Store<T> {
+        &self.store
+    }
+
     /// Access the object that the handle references
     pub fn get(&self) -> T
     where
         T: Clone,
     {
-        self.storage.get()
-    }
-
-    /// Internal method to access the [`Storage`] this handle refers to
-    pub(super) fn storage(&self) -> &Storage<T> {
-        &self.storage
-    }
-}
-
-/// Internal type used in collections within [`Shape`]
-#[derive(Debug)]
-pub struct Storage<T>(Arc<RwLock<T>>);
-
-impl<T> Storage<T> {
-    /// Create a [`Storage`] instance that wraps the provided object
-    pub(super) fn new(value: T) -> Self {
-        Self(Arc::new(RwLock::new(value)))
-    }
-
-    /// Create a handle that refers to this [`Storage`] instance
-    pub(super) fn handle(&self) -> Handle<T> {
-        Handle {
-            storage: self.clone(),
-        }
-    }
-
-    pub(super) fn get(&self) -> T
-    where
-        T: Clone,
-    {
-        self.0.read().clone()
-    }
-
-    pub(super) fn get_mut(&self) -> RefMut<T> {
-        RefMut(self.0.write())
-    }
-
-    fn ptr(&self) -> *const () {
-        Arc::as_ptr(&self.0) as _
-    }
-}
-
-// Deriving `Clone` would only derive `Clone` where `T: Clone`. This
-// implementation doesn't have that limitation, providing `Clone` for all
-// `Handle`s instead.
-impl<T> Clone for Storage<T> {
-    fn clone(&self) -> Self {
-        Self(self.0.clone())
-    }
-}
-
-impl<T> PartialEq for Storage<T> {
-    fn eq(&self, other: &Self) -> bool {
-        Arc::ptr_eq(&self.0, &other.0)
-    }
-}
-
-impl<T> Eq for Storage<T> {}
-
-impl<T> Ord for Storage<T> {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.ptr().cmp(&other.ptr())
-    }
-}
-
-impl<T> PartialOrd for Storage<T> {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.cmp(other))
-    }
-}
-
-impl<T> Hash for Storage<T> {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        self.ptr().hash(state);
-    }
-}
-
-pub struct RefMut<'r, T>(RwLockWriteGuard<'r, T>);
-
-impl<T> Deref for RefMut<'_, T> {
-    type Target = T;
-
-    fn deref(&self) -> &Self::Target {
-        self.0.deref()
-    }
-}
-
-impl<T> DerefMut for RefMut<'_, T> {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        self.0.deref_mut()
+        self.store
+            .read()
+            .get(self.key)
+            // Can't panic, unless the handle was invalid in the first place.
+            // Objects are never removed from `Store`, so if we have a handle
+            // pointing to it, it should be there.
+            .unwrap()
+            .clone()
     }
 }
