@@ -1,4 +1,7 @@
-use std::sync::Arc;
+use std::{
+    hash::{Hash, Hasher},
+    sync::Arc,
+};
 
 use fj_math::Point;
 use parking_lot::RwLock;
@@ -67,6 +70,10 @@ impl<T> Store<T> {
             f(&mut storage.get_mut());
         }
     }
+
+    fn ptr(&self) -> *const () {
+        Arc::as_ptr(&self.objects) as _
+    }
 }
 
 // Deriving `Clone` would only derive `Clone` where `T: Clone`. This
@@ -77,6 +84,32 @@ impl<T> Clone for Store<T> {
         Self {
             objects: self.objects.clone(),
         }
+    }
+}
+
+impl<T> PartialEq for Store<T> {
+    fn eq(&self, other: &Self) -> bool {
+        self.ptr().eq(&other.ptr())
+    }
+}
+
+impl<T> Eq for Store<T> {}
+
+impl<T> Ord for Store<T> {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.ptr().cmp(&other.ptr())
+    }
+}
+
+impl<T> PartialOrd for Store<T> {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl<T> Hash for Store<T> {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.ptr().hash(state);
     }
 }
 
