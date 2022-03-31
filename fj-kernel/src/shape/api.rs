@@ -12,9 +12,6 @@ use super::{
 /// The boundary representation of a shape
 #[derive(Clone, Debug)]
 pub struct Shape {
-    /// The minimum distance between two vertices
-    ///
-    /// Use for vertex validation, to determine whether vertices are unique.
     min_distance: Scalar,
 
     points: Points,
@@ -48,6 +45,8 @@ impl Shape {
     }
 
     /// Override the minimum distance for this shape
+    ///
+    /// Used for vertex validation, to determine whether vertices are unique.
     ///
     /// # Implementation note
     ///
