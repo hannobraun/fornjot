@@ -12,6 +12,18 @@ use crate::{
     topology::{Cycle, Edge, Face, Vertex},
 };
 
+#[derive(Clone, Debug)]
+pub struct Stores {
+    pub points: Points,
+    pub curves: Curves,
+    pub surfaces: Surfaces,
+
+    pub vertices: Vertices,
+    pub edges: Edges,
+    pub cycles: Cycles,
+    pub faces: Faces,
+}
+
 pub type Points = Store<Point<3>>;
 pub type Curves = Store<Curve>;
 pub type Surfaces = Store<Surface>;

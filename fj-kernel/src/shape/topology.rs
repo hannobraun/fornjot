@@ -1,26 +1,18 @@
-use std::collections::HashSet;
+use std::{collections::HashSet, marker::PhantomData};
 
 use fj_math::Scalar;
 
 use crate::topology::{Cycle, Edge, Face, Vertex};
 
 use super::{
-    stores::{Curves, Cycles, Edges, Faces, Points, Surfaces, Vertices},
-    Iter, StructuralIssues, ValidationError, ValidationResult,
+    stores::Stores, Iter, StructuralIssues, ValidationError, ValidationResult,
 };
 
 /// The vertices of a shape
 pub struct Topology<'r> {
     pub(super) min_distance: Scalar,
-
-    pub(super) points: &'r mut Points,
-    pub(super) curves: &'r mut Curves,
-    pub(super) surfaces: &'r mut Surfaces,
-
-    pub(super) vertices: &'r mut Vertices,
-    pub(super) edges: &'r mut Edges,
-    pub(super) cycles: &'r mut Cycles,
-    pub(super) faces: &'r mut Faces,
+    pub(super) stores: Stores,
+    pub(super) _lifetime: PhantomData<&'r ()>,
 }
 
 impl Topology<'_> {
@@ -47,10 +39,10 @@ impl Topology<'_> {
     /// In the future, this method is likely to validate more than it already
     /// does. See documentation of [`crate::kernel`] for some context on that.
     pub fn add_vertex(&mut self, vertex: Vertex) -> ValidationResult<Vertex> {
-        if !self.points.contains(&vertex.point) {
+        if !self.stores.points.contains(&vertex.point) {
             return Err(StructuralIssues::default().into());
         }
-        for existing in self.vertices.iter() {
+        for existing in self.stores.vertices.iter() {
             let distance =
                 (existing.get().point() - vertex.point()).magnitude();
 
@@ -59,7 +51,7 @@ impl Topology<'_> {
             }
         }
 
-        let handle = self.vertices.insert(vertex);
+        let handle = self.stores.vertices.insert(vertex);
         Ok(handle)
     }
 
@@ -81,12 +73,12 @@ impl Topology<'_> {
         let mut missing_curve = None;
         let mut missing_vertices = HashSet::new();
 
-        if !self.curves.contains(&edge.curve) {
+        if !self.stores.curves.contains(&edge.curve) {
             missing_curve = Some(edge.curve.clone());
         }
         for vertices in &edge.vertices {
             for vertex in vertices {
-                if !self.vertices.contains(vertex) {
+                if !self.stores.vertices.contains(vertex) {
                     missing_vertices.insert(vertex.clone());
                 }
             }
@@ -101,7 +93,7 @@ impl Topology<'_> {
             .into());
         }
 
-        let handle = self.edges.insert(edge);
+        let handle = self.stores.edges.insert(edge);
         Ok(handle)
     }
 
@@ -119,7 +111,7 @@ impl Topology<'_> {
     pub fn add_cycle(&mut self, cycle: Cycle) -> ValidationResult<Cycle> {
         let mut missing_edges = HashSet::new();
         for edge in &cycle.edges {
-            if !self.edges.contains(edge) {
+            if !self.stores.edges.contains(edge) {
                 missing_edges.insert(edge.clone());
             }
         }
@@ -132,7 +124,7 @@ impl Topology<'_> {
             .into());
         }
 
-        let handle = self.cycles.insert(cycle);
+        let handle = self.stores.cycles.insert(cycle);
         Ok(handle)
     }
 
@@ -152,11 +144,11 @@ impl Topology<'_> {
             let mut missing_surface = None;
             let mut missing_cycles = HashSet::new();
 
-            if !self.surfaces.contains(surface) {
+            if !self.stores.surfaces.contains(surface) {
                 missing_surface = Some(surface.clone());
             }
             for cycle in exteriors.iter().chain(interiors) {
-                if !self.cycles.contains(cycle) {
+                if !self.stores.cycles.contains(cycle) {
                     missing_cycles.insert(cycle.clone());
                 }
             }
@@ -171,7 +163,7 @@ impl Topology<'_> {
             }
         }
 
-        let handle = self.faces.insert(face);
+        let handle = self.stores.faces.insert(face);
         Ok(handle)
     }
 
@@ -179,28 +171,28 @@ impl Topology<'_> {
     ///
     /// The caller must not make any assumptions about the order of vertices.
     pub fn vertices(&self) -> Iter<Vertex> {
-        self.vertices.iter()
+        self.stores.vertices.iter()
     }
 
     /// Access iterator over all edges
     ///
     /// The caller must not make any assumptions about the order of edges.
     pub fn edges(&self) -> Iter<Edge> {
-        self.edges.iter()
+        self.stores.edges.iter()
     }
 
     /// Access an iterator over all cycles
     ///
     /// The caller must not make any assumptions about the order of cycles.
     pub fn cycles(&self) -> Iter<Cycle> {
-        self.cycles.iter()
+        self.stores.cycles.iter()
     }
 
     /// Access an iterator over all faces
     ///
     /// The caller must not make any assumptions about the order of faces.
     pub fn faces(&self) -> Iter<Face> {
-        self.faces.iter()
+        self.stores.faces.iter()
     }
 }
 

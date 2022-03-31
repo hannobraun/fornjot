@@ -1,7 +1,11 @@
+use std::marker::PhantomData;
+
 use fj_math::Scalar;
 
 use super::{
-    stores::{Curves, Cycles, Edges, Faces, Points, Surfaces, Vertices},
+    stores::{
+        Curves, Cycles, Edges, Faces, Points, Stores, Surfaces, Vertices,
+    },
     Geometry, Topology,
 };
 
@@ -73,15 +77,17 @@ impl Shape {
     pub fn topology(&mut self) -> Topology {
         Topology {
             min_distance: self.min_distance,
+            stores: Stores {
+                points: self.points.clone(),
+                curves: self.curves.clone(),
+                surfaces: self.surfaces.clone(),
 
-            points: &mut self.points,
-            curves: &mut self.curves,
-            surfaces: &mut self.surfaces,
-
-            vertices: &mut self.vertices,
-            edges: &mut self.edges,
-            cycles: &mut self.cycles,
-            faces: &mut self.faces,
+                vertices: self.vertices.clone(),
+                edges: self.edges.clone(),
+                cycles: self.cycles.clone(),
+                faces: self.faces.clone(),
+            },
+            _lifetime: PhantomData,
         }
     }
 }
