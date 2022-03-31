@@ -12,6 +12,18 @@ use crate::{
     topology::{Cycle, Edge, Face, Vertex},
 };
 
+#[derive(Clone, Debug)]
+pub struct Stores {
+    pub points: Points,
+    pub curves: Curves,
+    pub surfaces: Surfaces,
+
+    pub vertices: Vertices,
+    pub edges: Edges,
+    pub cycles: Cycles,
+    pub faces: Faces,
+}
+
 pub type Points = Store<Point<3>>;
 pub type Curves = Store<Curve>;
 pub type Surfaces = Store<Surface>;
@@ -33,13 +45,13 @@ impl<T> Store<T> {
         }
     }
 
-    pub fn contains(&self, object: &Handle<T>) -> bool {
-        object.store() == self && self.objects.read().contains_key(object.key())
-    }
-
-    pub fn add(&mut self, object: T) -> Handle<T> {
+    pub fn insert(&mut self, object: T) -> Handle<T> {
         let key = self.objects.write().insert(object);
         Handle::new(key, self.clone())
+    }
+
+    pub fn contains(&self, object: &Handle<T>) -> bool {
+        object.store() == self && self.objects.read().contains_key(object.key())
     }
 
     pub fn read(&self) -> RwLockReadGuard<Objects<T>> {

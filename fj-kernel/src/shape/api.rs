@@ -1,26 +1,19 @@
+use std::marker::PhantomData;
+
 use fj_math::Scalar;
 
 use super::{
-    stores::{Curves, Cycles, Edges, Faces, Points, Surfaces, Vertices},
+    stores::{
+        Curves, Cycles, Edges, Faces, Points, Stores, Surfaces, Vertices,
+    },
     Geometry, Topology,
 };
 
 /// The boundary representation of a shape
 #[derive(Clone, Debug)]
 pub struct Shape {
-    /// The minimum distance between two vertices
-    ///
-    /// Use for vertex validation, to determine whether vertices are unique.
     min_distance: Scalar,
-
-    points: Points,
-    curves: Curves,
-    surfaces: Surfaces,
-
-    vertices: Vertices,
-    edges: Edges,
-    cycles: Cycles,
-    faces: Faces,
+    stores: Stores,
 }
 
 impl Shape {
@@ -32,18 +25,22 @@ impl Shape {
             // be `const` yet.
             min_distance: Scalar::from_f64(5e-7), // 0.5 µm
 
-            points: Points::new(),
-            curves: Curves::new(),
-            surfaces: Surfaces::new(),
+            stores: Stores {
+                points: Points::new(),
+                curves: Curves::new(),
+                surfaces: Surfaces::new(),
 
-            vertices: Vertices::new(),
-            edges: Edges::new(),
-            cycles: Cycles::new(),
-            faces: Faces::new(),
+                vertices: Vertices::new(),
+                edges: Edges::new(),
+                cycles: Cycles::new(),
+                faces: Faces::new(),
+            },
         }
     }
 
     /// Override the minimum distance for this shape
+    ///
+    /// Used for vertex validation, to determine whether vertices are unique.
     ///
     /// # Implementation note
     ///
@@ -61,11 +58,11 @@ impl Shape {
     /// Access the shape's geometry
     pub fn geometry(&mut self) -> Geometry {
         Geometry {
-            points: &mut self.points,
-            curves: &mut self.curves,
-            surfaces: &mut self.surfaces,
+            points: &mut self.stores.points,
+            curves: &mut self.stores.curves,
+            surfaces: &mut self.stores.surfaces,
 
-            faces: &mut self.faces,
+            faces: &mut self.stores.faces,
         }
     }
 
@@ -73,18 +70,8 @@ impl Shape {
     pub fn topology(&mut self) -> Topology {
         Topology {
             min_distance: self.min_distance,
-
-            geometry: Geometry {
-                points: &mut self.points,
-                curves: &mut self.curves,
-                surfaces: &mut self.surfaces,
-
-                faces: &mut self.faces,
-            },
-
-            vertices: &mut self.vertices,
-            edges: &mut self.edges,
-            cycles: &mut self.cycles,
+            stores: self.stores.clone(),
+            _lifetime: PhantomData,
         }
     }
 }

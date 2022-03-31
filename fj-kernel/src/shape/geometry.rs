@@ -43,17 +43,17 @@ pub struct Geometry<'r> {
 impl Geometry<'_> {
     /// Add a point to the shape
     pub fn add_point(&mut self, point: Point<3>) -> Handle<Point<3>> {
-        self.points.add(point)
+        self.points.insert(point)
     }
 
     /// Add a curve to the shape
     pub fn add_curve(&mut self, curve: Curve) -> Handle<Curve> {
-        self.curves.add(curve)
+        self.curves.insert(curve)
     }
 
     /// Add a surface to the shape
     pub fn add_surface(&mut self, surface: Surface) -> Handle<Surface> {
-        self.surfaces.add(surface)
+        self.surfaces.insert(surface)
     }
 
     /// Transform the geometry of the shape

@@ -1,23 +1,16 @@
-use std::collections::HashSet;
+use std::marker::PhantomData;
 
 use fj_math::Scalar;
 
 use crate::topology::{Cycle, Edge, Face, Vertex};
 
-use super::{
-    stores::{Cycles, Edges, Vertices},
-    Geometry, Iter, StructuralIssues, ValidationError, ValidationResult,
-};
+use super::{stores::Stores, validate::Validate as _, Iter, ValidationResult};
 
 /// The vertices of a shape
 pub struct Topology<'r> {
     pub(super) min_distance: Scalar,
-
-    pub(super) geometry: Geometry<'r>,
-
-    pub(super) vertices: &'r mut Vertices,
-    pub(super) edges: &'r mut Edges,
-    pub(super) cycles: &'r mut Cycles,
+    pub(super) stores: Stores,
+    pub(super) _lifetime: PhantomData<&'r ()>,
 }
 
 impl Topology<'_> {
@@ -44,19 +37,8 @@ impl Topology<'_> {
     /// In the future, this method is likely to validate more than it already
     /// does. See documentation of [`crate::kernel`] for some context on that.
     pub fn add_vertex(&mut self, vertex: Vertex) -> ValidationResult<Vertex> {
-        if !self.geometry.points.contains(&vertex.point) {
-            return Err(StructuralIssues::default().into());
-        }
-        for existing in self.vertices.iter() {
-            let distance =
-                (existing.get().point() - vertex.point()).magnitude();
-
-            if distance < self.min_distance {
-                return Err(ValidationError::Uniqueness);
-            }
-        }
-
-        let handle = self.vertices.add(vertex);
+        vertex.validate(self.min_distance, &self.stores)?;
+        let handle = self.stores.vertices.insert(vertex);
         Ok(handle)
     }
 
@@ -75,30 +57,8 @@ impl Topology<'_> {
     /// converted into curve coordinates, which is likely not the caller's
     /// intention.
     pub fn add_edge(&mut self, edge: Edge) -> ValidationResult<Edge> {
-        let mut missing_curve = None;
-        let mut missing_vertices = HashSet::new();
-
-        if !self.geometry.curves.contains(&edge.curve) {
-            missing_curve = Some(edge.curve.clone());
-        }
-        for vertices in &edge.vertices {
-            for vertex in vertices {
-                if !self.vertices.contains(vertex) {
-                    missing_vertices.insert(vertex.clone());
-                }
-            }
-        }
-
-        if missing_curve.is_some() || !missing_vertices.is_empty() {
-            return Err(StructuralIssues {
-                missing_curve,
-                missing_vertices,
-                ..StructuralIssues::default()
-            }
-            .into());
-        }
-
-        let handle = self.edges.add(edge);
+        edge.validate(self.min_distance, &self.stores)?;
+        let handle = self.stores.edges.insert(edge);
         Ok(handle)
     }
 
@@ -114,22 +74,8 @@ impl Topology<'_> {
     /// - That the cycle is not self-overlapping.
     /// - That there exists no duplicate cycle, with the same edges.
     pub fn add_cycle(&mut self, cycle: Cycle) -> ValidationResult<Cycle> {
-        let mut missing_edges = HashSet::new();
-        for edge in &cycle.edges {
-            if !self.edges.contains(edge) {
-                missing_edges.insert(edge.clone());
-            }
-        }
-
-        if !missing_edges.is_empty() {
-            return Err(StructuralIssues {
-                missing_edges,
-                ..StructuralIssues::default()
-            }
-            .into());
-        }
-
-        let handle = self.cycles.add(cycle);
+        cycle.validate(self.min_distance, &self.stores)?;
+        let handle = self.stores.cycles.insert(cycle);
         Ok(handle)
     }
 
@@ -139,36 +85,8 @@ impl Topology<'_> {
     /// cycles it refers to are part of the shape). Returns an error, if that is
     /// not the case.
     pub fn add_face(&mut self, face: Face) -> ValidationResult<Face> {
-        if let Face::Face {
-            surface,
-            exteriors,
-            interiors,
-            ..
-        } = &face
-        {
-            let mut missing_surface = None;
-            let mut missing_cycles = HashSet::new();
-
-            if !self.geometry.surfaces.contains(surface) {
-                missing_surface = Some(surface.clone());
-            }
-            for cycle in exteriors.iter().chain(interiors) {
-                if !self.cycles.contains(cycle) {
-                    missing_cycles.insert(cycle.clone());
-                }
-            }
-
-            if missing_surface.is_some() || !missing_cycles.is_empty() {
-                return Err(StructuralIssues {
-                    missing_surface,
-                    missing_cycles,
-                    ..StructuralIssues::default()
-                }
-                .into());
-            }
-        }
-
-        let handle = self.geometry.faces.add(face);
+        face.validate(self.min_distance, &self.stores)?;
+        let handle = self.stores.faces.insert(face);
         Ok(handle)
     }
 
@@ -176,28 +94,28 @@ impl Topology<'_> {
     ///
     /// The caller must not make any assumptions about the order of vertices.
     pub fn vertices(&self) -> Iter<Vertex> {
-        self.vertices.iter()
+        self.stores.vertices.iter()
     }
 
     /// Access iterator over all edges
     ///
     /// The caller must not make any assumptions about the order of edges.
     pub fn edges(&self) -> Iter<Edge> {
-        self.edges.iter()
+        self.stores.edges.iter()
     }
 
     /// Access an iterator over all cycles
     ///
     /// The caller must not make any assumptions about the order of cycles.
     pub fn cycles(&self) -> Iter<Cycle> {
-        self.cycles.iter()
+        self.stores.cycles.iter()
     }
 
     /// Access an iterator over all faces
     ///
     /// The caller must not make any assumptions about the order of faces.
     pub fn faces(&self) -> Iter<Face> {
-        self.geometry.faces.iter()
+        self.stores.faces.iter()
     }
 }
 
