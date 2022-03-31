@@ -33,13 +33,13 @@ impl<T> Store<T> {
         }
     }
 
-    pub fn contains(&self, object: &Handle<T>) -> bool {
-        object.store() == self && self.objects.read().contains_key(object.key())
-    }
-
     pub fn insert(&mut self, object: T) -> Handle<T> {
         let key = self.objects.write().insert(object);
         Handle::new(key, self.clone())
+    }
+
+    pub fn contains(&self, object: &Handle<T>) -> bool {
+        object.store() == self && self.objects.read().contains_key(object.key())
     }
 
     pub fn read(&self) -> RwLockReadGuard<Objects<T>> {
