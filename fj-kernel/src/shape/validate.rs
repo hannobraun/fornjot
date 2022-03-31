@@ -1,11 +1,139 @@
 use std::collections::HashSet;
 
+use fj_math::Scalar;
+
 use crate::{
     geometry::{Curve, Surface},
-    topology::{Cycle, Edge, Vertex},
+    topology::{Cycle, Edge, Face, Vertex},
 };
 
-use super::Handle;
+use super::{stores::Stores, Handle};
+
+pub trait Validate {
+    fn validate(
+        &self,
+        min_distance: Scalar,
+        stores: &Stores,
+    ) -> Result<(), ValidationError>;
+}
+
+impl Validate for Vertex {
+    fn validate(
+        &self,
+        min_distance: Scalar,
+        stores: &Stores,
+    ) -> Result<(), ValidationError> {
+        if !stores.points.contains(&self.point) {
+            return Err(StructuralIssues::default().into());
+        }
+        for existing in stores.vertices.iter() {
+            let distance = (existing.get().point() - self.point()).magnitude();
+
+            if distance < min_distance {
+                return Err(ValidationError::Uniqueness);
+            }
+        }
+
+        Ok(())
+    }
+}
+
+impl Validate for Edge {
+    fn validate(
+        &self,
+        _: Scalar,
+        stores: &Stores,
+    ) -> Result<(), ValidationError> {
+        let mut missing_curve = None;
+        let mut missing_vertices = HashSet::new();
+
+        if !stores.curves.contains(&self.curve) {
+            missing_curve = Some(self.curve.clone());
+        }
+        for vertices in &self.vertices {
+            for vertex in vertices {
+                if !stores.vertices.contains(vertex) {
+                    missing_vertices.insert(vertex.clone());
+                }
+            }
+        }
+
+        if missing_curve.is_some() || !missing_vertices.is_empty() {
+            return Err(StructuralIssues {
+                missing_curve,
+                missing_vertices,
+                ..StructuralIssues::default()
+            }
+            .into());
+        }
+
+        Ok(())
+    }
+}
+
+impl Validate for Cycle {
+    fn validate(
+        &self,
+        _: Scalar,
+        stores: &Stores,
+    ) -> Result<(), ValidationError> {
+        let mut missing_edges = HashSet::new();
+        for edge in &self.edges {
+            if !stores.edges.contains(edge) {
+                missing_edges.insert(edge.clone());
+            }
+        }
+
+        if !missing_edges.is_empty() {
+            return Err(StructuralIssues {
+                missing_edges,
+                ..StructuralIssues::default()
+            }
+            .into());
+        }
+
+        Ok(())
+    }
+}
+
+impl Validate for Face {
+    fn validate(
+        &self,
+        _: Scalar,
+        stores: &Stores,
+    ) -> Result<(), ValidationError> {
+        if let Face::Face {
+            surface,
+            exteriors,
+            interiors,
+            ..
+        } = self
+        {
+            let mut missing_surface = None;
+            let mut missing_cycles = HashSet::new();
+
+            if !stores.surfaces.contains(surface) {
+                missing_surface = Some(surface.clone());
+            }
+            for cycle in exteriors.iter().chain(interiors) {
+                if !stores.cycles.contains(cycle) {
+                    missing_cycles.insert(cycle.clone());
+                }
+            }
+
+            if missing_surface.is_some() || !missing_cycles.is_empty() {
+                return Err(StructuralIssues {
+                    missing_surface,
+                    missing_cycles,
+                    ..StructuralIssues::default()
+                }
+                .into());
+            }
+        }
+
+        Ok(())
+    }
+}
 
 /// Returned by the various `add_` methods of the [`Shape`] API
 pub type ValidationResult<T> = Result<Handle<T>, ValidationError>;

@@ -1,12 +1,10 @@
-use std::{collections::HashSet, marker::PhantomData};
+use std::marker::PhantomData;
 
 use fj_math::Scalar;
 
 use crate::topology::{Cycle, Edge, Face, Vertex};
 
-use super::{
-    stores::Stores, Iter, StructuralIssues, ValidationError, ValidationResult,
-};
+use super::{stores::Stores, validate::Validate as _, Iter, ValidationResult};
 
 /// The vertices of a shape
 pub struct Topology<'r> {
@@ -39,18 +37,7 @@ impl Topology<'_> {
     /// In the future, this method is likely to validate more than it already
     /// does. See documentation of [`crate::kernel`] for some context on that.
     pub fn add_vertex(&mut self, vertex: Vertex) -> ValidationResult<Vertex> {
-        if !self.stores.points.contains(&vertex.point) {
-            return Err(StructuralIssues::default().into());
-        }
-        for existing in self.stores.vertices.iter() {
-            let distance =
-                (existing.get().point() - vertex.point()).magnitude();
-
-            if distance < self.min_distance {
-                return Err(ValidationError::Uniqueness);
-            }
-        }
-
+        vertex.validate(self.min_distance, &self.stores)?;
         let handle = self.stores.vertices.insert(vertex);
         Ok(handle)
     }
@@ -70,29 +57,7 @@ impl Topology<'_> {
     /// converted into curve coordinates, which is likely not the caller's
     /// intention.
     pub fn add_edge(&mut self, edge: Edge) -> ValidationResult<Edge> {
-        let mut missing_curve = None;
-        let mut missing_vertices = HashSet::new();
-
-        if !self.stores.curves.contains(&edge.curve) {
-            missing_curve = Some(edge.curve.clone());
-        }
-        for vertices in &edge.vertices {
-            for vertex in vertices {
-                if !self.stores.vertices.contains(vertex) {
-                    missing_vertices.insert(vertex.clone());
-                }
-            }
-        }
-
-        if missing_curve.is_some() || !missing_vertices.is_empty() {
-            return Err(StructuralIssues {
-                missing_curve,
-                missing_vertices,
-                ..StructuralIssues::default()
-            }
-            .into());
-        }
-
+        edge.validate(self.min_distance, &self.stores)?;
         let handle = self.stores.edges.insert(edge);
         Ok(handle)
     }
@@ -109,21 +74,7 @@ impl Topology<'_> {
     /// - That the cycle is not self-overlapping.
     /// - That there exists no duplicate cycle, with the same edges.
     pub fn add_cycle(&mut self, cycle: Cycle) -> ValidationResult<Cycle> {
-        let mut missing_edges = HashSet::new();
-        for edge in &cycle.edges {
-            if !self.stores.edges.contains(edge) {
-                missing_edges.insert(edge.clone());
-            }
-        }
-
-        if !missing_edges.is_empty() {
-            return Err(StructuralIssues {
-                missing_edges,
-                ..StructuralIssues::default()
-            }
-            .into());
-        }
-
+        cycle.validate(self.min_distance, &self.stores)?;
         let handle = self.stores.cycles.insert(cycle);
         Ok(handle)
     }
@@ -134,35 +85,7 @@ impl Topology<'_> {
     /// cycles it refers to are part of the shape). Returns an error, if that is
     /// not the case.
     pub fn add_face(&mut self, face: Face) -> ValidationResult<Face> {
-        if let Face::Face {
-            surface,
-            exteriors,
-            interiors,
-            ..
-        } = &face
-        {
-            let mut missing_surface = None;
-            let mut missing_cycles = HashSet::new();
-
-            if !self.stores.surfaces.contains(surface) {
-                missing_surface = Some(surface.clone());
-            }
-            for cycle in exteriors.iter().chain(interiors) {
-                if !self.stores.cycles.contains(cycle) {
-                    missing_cycles.insert(cycle.clone());
-                }
-            }
-
-            if missing_surface.is_some() || !missing_cycles.is_empty() {
-                return Err(StructuralIssues {
-                    missing_surface,
-                    missing_cycles,
-                    ..StructuralIssues::default()
-                }
-                .into());
-            }
-        }
-
+        face.validate(self.min_distance, &self.stores)?;
         let handle = self.stores.faces.insert(face);
         Ok(handle)
     }
