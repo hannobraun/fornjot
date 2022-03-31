@@ -13,15 +13,7 @@ use super::{
 #[derive(Clone, Debug)]
 pub struct Shape {
     min_distance: Scalar,
-
-    points: Points,
-    curves: Curves,
-    surfaces: Surfaces,
-
-    vertices: Vertices,
-    edges: Edges,
-    cycles: Cycles,
-    faces: Faces,
+    stores: Stores,
 }
 
 impl Shape {
@@ -33,14 +25,16 @@ impl Shape {
             // be `const` yet.
             min_distance: Scalar::from_f64(5e-7), // 0.5 µm
 
-            points: Points::new(),
-            curves: Curves::new(),
-            surfaces: Surfaces::new(),
+            stores: Stores {
+                points: Points::new(),
+                curves: Curves::new(),
+                surfaces: Surfaces::new(),
 
-            vertices: Vertices::new(),
-            edges: Edges::new(),
-            cycles: Cycles::new(),
-            faces: Faces::new(),
+                vertices: Vertices::new(),
+                edges: Edges::new(),
+                cycles: Cycles::new(),
+                faces: Faces::new(),
+            },
         }
     }
 
@@ -64,11 +58,11 @@ impl Shape {
     /// Access the shape's geometry
     pub fn geometry(&mut self) -> Geometry {
         Geometry {
-            points: &mut self.points,
-            curves: &mut self.curves,
-            surfaces: &mut self.surfaces,
+            points: &mut self.stores.points,
+            curves: &mut self.stores.curves,
+            surfaces: &mut self.stores.surfaces,
 
-            faces: &mut self.faces,
+            faces: &mut self.stores.faces,
         }
     }
 
@@ -76,16 +70,7 @@ impl Shape {
     pub fn topology(&mut self) -> Topology {
         Topology {
             min_distance: self.min_distance,
-            stores: Stores {
-                points: self.points.clone(),
-                curves: self.curves.clone(),
-                surfaces: self.surfaces.clone(),
-
-                vertices: self.vertices.clone(),
-                edges: self.edges.clone(),
-                cycles: self.cycles.clone(),
-                faces: self.faces.clone(),
-            },
+            stores: self.stores.clone(),
             _lifetime: PhantomData,
         }
     }
