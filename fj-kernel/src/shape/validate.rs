@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use fj_math::Scalar;
+use fj_math::{Point, Scalar};
 
 use crate::{
     geometry::{Curve, Surface},
@@ -15,6 +15,24 @@ pub trait Validate {
         min_distance: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError>;
+}
+
+impl Validate for Point<3> {
+    fn validate(&self, _: Scalar, _: &Stores) -> Result<(), ValidationError> {
+        Ok(())
+    }
+}
+
+impl Validate for Curve {
+    fn validate(&self, _: Scalar, _: &Stores) -> Result<(), ValidationError> {
+        Ok(())
+    }
+}
+
+impl Validate for Surface {
+    fn validate(&self, _: Scalar, _: &Stores) -> Result<(), ValidationError> {
+        Ok(())
+    }
 }
 
 impl Validate for Vertex {
