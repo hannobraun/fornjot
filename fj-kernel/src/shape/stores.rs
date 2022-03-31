@@ -37,7 +37,7 @@ impl<T> Store<T> {
         object.store() == self && self.objects.read().contains_key(object.key())
     }
 
-    pub fn add(&mut self, object: T) -> Handle<T> {
+    pub fn insert(&mut self, object: T) -> Handle<T> {
         let key = self.objects.write().insert(object);
         Handle::new(key, self.clone())
     }
