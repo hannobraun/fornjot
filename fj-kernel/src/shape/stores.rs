@@ -98,6 +98,12 @@ impl<T> Clone for Store<T> {
     }
 }
 
+impl<T> Default for Store<T> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl<T> PartialEq for Store<T> {
     fn eq(&self, other: &Self) -> bool {
         self.ptr().eq(&other.ptr())
