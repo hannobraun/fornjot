@@ -1,4 +1,5 @@
 use secstr::SecStr;
+use std::fmt::{Display, Formatter};
 use std::path::PathBuf;
 use std::str::FromStr;
 
@@ -55,5 +56,14 @@ impl FromStr for Crate {
         Ok(Crate {
             path: PathBuf::from(s),
         })
+    }
+}
+
+impl Display for Crate {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        if let Some(name) = self.path.file_name() {
+            return write!(f, "{}", name.to_string_lossy());
+        }
+        write!(f, "{:?}", self.path)
     }
 }
