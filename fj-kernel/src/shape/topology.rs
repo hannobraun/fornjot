@@ -5,19 +5,22 @@ use fj_math::Scalar;
 use crate::topology::{Cycle, Edge, Face, Vertex};
 
 use super::{
-    stores::{Cycles, Edges, Vertices},
-    Geometry, Iter, StructuralIssues, ValidationError, ValidationResult,
+    stores::{Curves, Cycles, Edges, Faces, Points, Surfaces, Vertices},
+    Iter, StructuralIssues, ValidationError, ValidationResult,
 };
 
 /// The vertices of a shape
 pub struct Topology<'r> {
     pub(super) min_distance: Scalar,
 
-    pub(super) geometry: Geometry<'r>,
+    pub(super) points: &'r mut Points,
+    pub(super) curves: &'r mut Curves,
+    pub(super) surfaces: &'r mut Surfaces,
 
     pub(super) vertices: &'r mut Vertices,
     pub(super) edges: &'r mut Edges,
     pub(super) cycles: &'r mut Cycles,
+    pub(super) faces: &'r mut Faces,
 }
 
 impl Topology<'_> {
@@ -44,7 +47,7 @@ impl Topology<'_> {
     /// In the future, this method is likely to validate more than it already
     /// does. See documentation of [`crate::kernel`] for some context on that.
     pub fn add_vertex(&mut self, vertex: Vertex) -> ValidationResult<Vertex> {
-        if !self.geometry.points.contains(&vertex.point) {
+        if !self.points.contains(&vertex.point) {
             return Err(StructuralIssues::default().into());
         }
         for existing in self.vertices.iter() {
@@ -78,7 +81,7 @@ impl Topology<'_> {
         let mut missing_curve = None;
         let mut missing_vertices = HashSet::new();
 
-        if !self.geometry.curves.contains(&edge.curve) {
+        if !self.curves.contains(&edge.curve) {
             missing_curve = Some(edge.curve.clone());
         }
         for vertices in &edge.vertices {
@@ -149,7 +152,7 @@ impl Topology<'_> {
             let mut missing_surface = None;
             let mut missing_cycles = HashSet::new();
 
-            if !self.geometry.surfaces.contains(surface) {
+            if !self.surfaces.contains(surface) {
                 missing_surface = Some(surface.clone());
             }
             for cycle in exteriors.iter().chain(interiors) {
@@ -168,7 +171,7 @@ impl Topology<'_> {
             }
         }
 
-        let handle = self.geometry.faces.insert(face);
+        let handle = self.faces.insert(face);
         Ok(handle)
     }
 
@@ -197,7 +200,7 @@ impl Topology<'_> {
     ///
     /// The caller must not make any assumptions about the order of faces.
     pub fn faces(&self) -> Iter<Face> {
-        self.geometry.faces.iter()
+        self.faces.iter()
     }
 }
 

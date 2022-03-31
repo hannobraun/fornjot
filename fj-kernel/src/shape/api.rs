@@ -74,17 +74,14 @@ impl Shape {
         Topology {
             min_distance: self.min_distance,
 
-            geometry: Geometry {
-                points: &mut self.points,
-                curves: &mut self.curves,
-                surfaces: &mut self.surfaces,
-
-                faces: &mut self.faces,
-            },
+            points: &mut self.points,
+            curves: &mut self.curves,
+            surfaces: &mut self.surfaces,
 
             vertices: &mut self.vertices,
             edges: &mut self.edges,
             cycles: &mut self.cycles,
+            faces: &mut self.faces,
         }
     }
 }
