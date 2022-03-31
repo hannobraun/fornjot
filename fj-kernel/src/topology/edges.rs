@@ -29,7 +29,7 @@ impl Cycle {
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
     pub fn edges(&self) -> impl Iterator<Item = Edge> + '_ {
-        self.edges.iter().map(|handle| handle.get().clone())
+        self.edges.iter().map(|handle| handle.get())
     }
 }
 
@@ -90,7 +90,7 @@ impl Edge {
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`].
     pub fn curve(&self) -> Curve {
-        *self.curve.get()
+        self.curve.get()
     }
 
     /// Access the vertices that the edge refers to
@@ -98,9 +98,7 @@ impl Edge {
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
     pub fn vertices(&self) -> Option<[Vertex; 2]> {
-        self.vertices
-            .as_ref()
-            .map(|[a, b]| [a.get().clone(), b.get().clone()])
+        self.vertices.as_ref().map(|[a, b]| [a.get(), b.get()])
     }
 }
 

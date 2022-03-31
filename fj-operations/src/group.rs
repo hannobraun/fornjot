@@ -40,15 +40,15 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
     let mut cycles = HashMap::new();
 
     for point_orig in orig.geometry().points() {
-        let point = target.geometry().add_point(*point_orig.get());
+        let point = target.geometry().add_point(point_orig.get());
         points.insert(point_orig, point);
     }
     for curve_orig in orig.geometry().curves() {
-        let curve = target.geometry().add_curve(*curve_orig.get());
+        let curve = target.geometry().add_curve(curve_orig.get());
         curves.insert(curve_orig, curve);
     }
     for surface_orig in orig.geometry().surfaces() {
-        let surface = target.geometry().add_surface(*surface_orig.get());
+        let surface = target.geometry().add_surface(surface_orig.get());
         surfaces.insert(surface_orig, surface);
     }
 
@@ -89,7 +89,7 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
     }
 
     for face_orig in orig.topology().faces() {
-        match &*face_orig.get() {
+        match face_orig.get() {
             Face::Face {
                 surface,
                 exteriors,
@@ -99,7 +99,7 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
                 target
                     .topology()
                     .add_face(Face::Face {
-                        surface: surfaces[surface].clone(),
+                        surface: surfaces[&surface].clone(),
                         exteriors: exteriors
                             .iter()
                             .map(|cycle| cycles[cycle].clone())
@@ -108,7 +108,7 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
                             .iter()
                             .map(|cycle| cycles[cycle].clone())
                             .collect(),
-                        color: *color,
+                        color,
                     })
                     .unwrap();
             }

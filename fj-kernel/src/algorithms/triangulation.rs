@@ -22,7 +22,7 @@ pub fn triangulate(
 ) {
     for face in shape.topology().faces() {
         let face = face.get();
-        match &*face {
+        match &face {
             Face::Face { surface, color, .. } => {
                 let surface = surface.get();
                 let approx = Approximation::new(&face, tolerance);

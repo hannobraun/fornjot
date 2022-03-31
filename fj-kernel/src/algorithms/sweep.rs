@@ -28,7 +28,7 @@ pub fn sweep_shape(
     for vertex_source in source.topology().vertices() {
         let point_bottom =
             target.geometry().add_point(vertex_source.get().point());
-        let point_top = target.geometry().add_point(*point_bottom.get() + path);
+        let point_top = target.geometry().add_point(point_bottom.get() + path);
 
         let vertex_bottom = target
             .topology()
@@ -293,7 +293,7 @@ impl Relation {
         &self,
         edge: &Handle<Edge>,
     ) -> Option<[Handle<Vertex>; 2]> {
-        edge.get().vertices.clone().map(|vertices| {
+        edge.get().vertices.map(|vertices| {
             vertices.map(|vertex| self.vertices.get(&vertex).unwrap().clone())
         })
     }
@@ -363,18 +363,17 @@ mod tests {
             [255, 0, 0, 255],
         );
 
-        let bottom_face = sketch.face.get().clone();
+        let bottom_face = sketch.face.get();
         let top_face =
             Triangle::new([[0., 0., 1.], [1., 0., 1.], [0., 1., 1.]])?
                 .face
-                .get()
-                .clone();
+                .get();
 
         let mut contains_bottom_face = false;
         let mut contains_top_face = false;
 
         for face in swept.topology().faces() {
-            if matches!(&*face.get(), Face::Face { .. }) {
+            if matches!(face.get(), Face::Face { .. }) {
                 if face.get().clone() == bottom_face {
                     contains_bottom_face = true;
                 }
