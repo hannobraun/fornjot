@@ -1,3 +1,4 @@
+use anyhow::anyhow;
 use secstr::SecStr;
 use std::fmt::{Display, Formatter};
 use std::path::PathBuf;
@@ -32,9 +33,12 @@ impl Registry {
 
 impl Crate {
     fn validate(&self) -> anyhow::Result<&Self> {
-        // todo check if the path is readable
-        // todo check if there is a Cargo.toml
-        Ok(self)
+        match self.path.exists() {
+            true => Ok(self),
+            false => Err(anyhow!(
+                "given path to the '{self}' crate is either not readable or does not exist"
+            )),
+        }
     }
 
     fn preflight(&self) -> anyhow::Result<&Self> {
