@@ -19,6 +19,7 @@ nalgebra    = "0.30.0"
 parking_lot = "0.12.0"
 parry2d-f64 = "0.8.0"
 parry3d-f64 = "0.8.0"
+slotmap     = "1.0.6"
 spade       = "2.0.0"
 thiserror   = "1.0.30"
 
