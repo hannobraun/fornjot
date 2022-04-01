@@ -6,7 +6,7 @@ use super::{
     stores::{
         Curves, Cycles, Edges, Faces, Points, Stores, Surfaces, Vertices,
     },
-    Geometry, Topology,
+    Geometry, Object, Topology, ValidationResult,
 };
 
 /// The boundary representation of a shape
@@ -53,6 +53,19 @@ impl Shape {
     ) -> Self {
         self.min_distance = min_distance.into();
         self
+    }
+
+    /// Insert an object into the shape
+    ///
+    /// Validates the object, and returns an error if it is not valid. See the
+    /// documentation of each object for validation requirements.
+    pub fn insert<T>(&mut self, object: T) -> ValidationResult<T>
+    where
+        T: Object,
+    {
+        object.validate(self.min_distance, &self.stores)?;
+        let handle = self.stores.get::<T>().insert(object);
+        Ok(handle)
     }
 
     /// Access the shape's geometry
