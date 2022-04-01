@@ -105,7 +105,7 @@ fn add_cycle(
             })
         });
 
-        let edge = shape.topology().add_edge(Edge { curve, vertices }).unwrap();
+        let edge = shape.insert(Edge { curve, vertices }).unwrap();
         edges.push(edge);
     }
 

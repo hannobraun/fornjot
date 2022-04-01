@@ -62,8 +62,7 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
     }
     for edge_orig in orig.topology().edges() {
         let edge = target
-            .topology()
-            .add_edge(Edge {
+            .insert(Edge {
                 curve: curves[&edge_orig.get().curve].clone(),
                 vertices: edge_orig.get().vertices.as_ref().map(|vs| {
                     vs.clone().map(|vertex| vertices[&vertex].clone())

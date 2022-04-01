@@ -47,7 +47,7 @@ impl<'r> EdgeBuilder<'r> {
             center: Point::origin(),
             radius: Vector::from([radius, Scalar::ZERO]),
         }))?;
-        let edge = self.shape.topology().add_edge(Edge {
+        let edge = self.shape.insert(Edge {
             curve,
             vertices: None,
         })?;
@@ -63,7 +63,7 @@ impl<'r> EdgeBuilder<'r> {
         let curve = self.shape.insert(Curve::Line(Line::from_points(
             vertices.clone().map(|vertex| vertex.get().point()),
         )))?;
-        let edge = self.shape.topology().add_edge(Edge {
+        let edge = self.shape.insert(Edge {
             curve,
             vertices: Some(vertices),
         })?;

@@ -53,15 +53,13 @@ pub fn sweep_shape(
         let vertices_top = source_to_top.vertices_for_edge(&edge_source);
 
         let edge_bottom = target
-            .topology()
-            .add_edge(Edge {
+            .insert(Edge {
                 curve: curve_bottom,
                 vertices: vertices_bottom,
             })
             .unwrap();
         let edge_top = target
-            .topology()
-            .add_edge(Edge {
+            .insert(Edge {
                 curve: curve_top,
                 vertices: vertices_top,
             })
@@ -211,8 +209,7 @@ pub fn sweep_shape(
                                     .clone();
 
                                 target
-                                    .topology()
-                                    .add_edge(Edge {
+                                    .insert(Edge {
                                         curve,
                                         vertices: Some([
                                             vertex_bottom,

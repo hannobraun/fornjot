@@ -14,26 +14,6 @@ pub struct Topology<'r> {
 }
 
 impl Topology<'_> {
-    /// Add an edge to the shape
-    ///
-    /// Validates that the edge is structurally sound (i.e. the curve and
-    /// vertices it refers to are part of the shape). Returns an error, if that
-    /// is not the case.
-    ///
-    /// # Vertices
-    ///
-    /// If vertices are provided in `vertices`, they must be on `curve`.
-    ///
-    /// This constructor will convert the vertices into curve coordinates. If
-    /// they are not on the curve, this will result in their projection being
-    /// converted into curve coordinates, which is likely not the caller's
-    /// intention.
-    pub fn add_edge(&mut self, edge: Edge) -> ValidationResult<Edge> {
-        edge.validate(self.min_distance, &self.stores)?;
-        let handle = self.stores.edges.insert(edge);
-        Ok(handle)
-    }
-
     /// Add a cycle to the shape
     ///
     /// Validates that the cycle is structurally sound (i.e. the edges it refers
@@ -143,8 +123,7 @@ mod tests {
 
         // Shouldn't work. Nothing has been added to `shape`.
         let err = shape
-            .topology()
-            .add_edge(Edge {
+            .insert(Edge {
                 curve: curve.clone(),
                 vertices: Some([a.clone(), b.clone()]),
             })
@@ -158,7 +137,7 @@ mod tests {
         let b = Vertex::build(&mut shape).from_point([2., 0., 0.])?;
 
         // Everything has been added to `shape` now. Should work!
-        shape.topology().add_edge(Edge {
+        shape.insert(Edge {
             curve,
             vertices: Some([a, b]),
         })?;
