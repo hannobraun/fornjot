@@ -28,7 +28,7 @@ pub struct Stores {
 }
 
 impl Stores {
-    pub fn get<T>(&mut self) -> Store<T>
+    pub fn get<T>(&self) -> Store<T>
     where
         T: Object,
     {

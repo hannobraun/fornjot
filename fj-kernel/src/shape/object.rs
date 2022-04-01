@@ -8,7 +8,10 @@ use crate::{
 use super::validate::Validate;
 
 /// Marker trait for geometric and topological objects
-pub trait Object: 'static + Validate + private::Sealed {}
+pub trait Object:
+    'static + Clone + PartialEq + Validate + private::Sealed
+{
+}
 
 impl private::Sealed for Point<3> {}
 impl private::Sealed for Curve {}
