@@ -12,6 +12,11 @@ use super::edges::Cycle;
 ///
 /// Please refer to [`crate::kernel::topology`] for documentation on the
 /// equality of topological objects.
+///
+/// # Validation
+///
+/// A face that is part of a [`Shape`] must be structurally sound. That means
+/// the surface and any cycles it refers to, must be part of the same shape.
 #[derive(Clone, Debug, Eq, Ord, PartialOrd)]
 pub enum Face {
     /// A face of a shape

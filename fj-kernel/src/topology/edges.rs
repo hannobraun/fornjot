@@ -17,6 +17,11 @@ use super::{vertices::Vertex, EdgeBuilder};
 ///
 /// Please refer to [`crate::kernel::topology`] for documentation on the
 /// equality of topological objects.
+///
+/// # Validation
+///
+/// A cycle that is part of a [`Shape`] must be structurally sound. That means
+/// the edges it refers to, must be part of the same shape.
 #[derive(Clone, Debug, Eq, Ord, PartialOrd)]
 pub struct Cycle {
     /// The edges that make up the cycle
@@ -53,6 +58,12 @@ impl Hash for Cycle {
 ///
 /// Please refer to [`crate::kernel::topology`] for documentation on the
 /// equality of topological objects.
+///
+/// # Validation
+///
+/// An edge that is part of a [`Shape`] must be structurally sound. That means
+/// the curve and any vertices that it refers to, must be part of the same
+/// shape.
 #[derive(Clone, Debug, Eq, Ord, PartialOrd)]
 pub struct Edge {
     /// Access the curve that defines the edge's geometry
