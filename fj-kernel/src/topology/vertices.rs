@@ -19,6 +19,17 @@ use super::VertexBuilder;
 ///
 /// Please refer to [`crate::kernel::topology`] for documentation on the
 /// equality of topological objects.
+///
+/// # Validation
+///
+/// A vertex that is part of a [`Shape`] must be structurally sound. That means
+/// the point it refers to must be part of the same shape.
+///
+/// Vertices must be unique within a shape, meaning another vertex defined by
+/// the same shape must not exist. In the context of vertex uniqueness, points
+/// that are close to each other are considered identical. The minimum distance
+/// between distinct vertices can be configured using
+/// [`Shape::with_minimum_distance`].
 #[derive(Clone, Debug, Eq, Ord, PartialOrd)]
 pub struct Vertex {
     /// The point that defines the location of the vertex

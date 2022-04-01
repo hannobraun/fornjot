@@ -61,11 +61,10 @@ impl ToShape for fj::Difference2d {
             face_a.surface() == face_b.surface(),
             "Trying to subtract sketches with different surfaces."
         );
-        let surface = shape.geometry().add_surface(face_a.surface());
+        let surface = shape.insert(face_a.surface()).unwrap();
 
         shape
-            .topology()
-            .add_face(Face::Face {
+            .insert(Face::Face {
                 surface,
                 exteriors,
                 interiors,
@@ -91,23 +90,23 @@ fn add_cycle(
 ) -> Handle<Cycle> {
     let mut edges = Vec::new();
     for edge in cycle.get().edges() {
-        let curve = shape.geometry().add_curve(edge.curve());
+        let curve = shape.insert(edge.curve()).unwrap();
 
         let vertices = edge.vertices().clone().map(|vs| {
             vs.map(|vertex| {
                 vertices
                     .entry(vertex.clone())
                     .or_insert_with(|| {
-                        let point = shape.geometry().add_point(vertex.point());
-                        shape.topology().add_vertex(Vertex { point }).unwrap()
+                        let point = shape.insert(vertex.point()).unwrap();
+                        shape.insert(Vertex { point }).unwrap()
                     })
                     .clone()
             })
         });
 
-        let edge = shape.topology().add_edge(Edge { curve, vertices }).unwrap();
+        let edge = shape.insert(Edge { curve, vertices }).unwrap();
         edges.push(edge);
     }
 
-    shape.topology().add_cycle(Cycle { edges }).unwrap()
+    shape.insert(Cycle { edges }).unwrap()
 }

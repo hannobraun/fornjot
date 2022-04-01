@@ -18,16 +18,12 @@ impl ToShape for fj::Circle {
         let edge = Edge::build(&mut shape)
             .circle(Scalar::from_f64(self.radius()))
             .unwrap();
-        shape
-            .topology()
-            .add_cycle(Cycle { edges: vec![edge] })
-            .unwrap();
+        shape.insert(Cycle { edges: vec![edge] }).unwrap();
 
         let cycles = shape.topology().cycles().collect();
-        let surface = shape.geometry().add_surface(Surface::x_y_plane());
+        let surface = shape.insert(Surface::x_y_plane()).unwrap();
         shape
-            .topology()
-            .add_face(Face::Face {
+            .insert(Face::Face {
                 exteriors: cycles,
                 interiors: Vec::new(),
                 surface,

@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use fj_math::Scalar;
+use fj_math::{Point, Scalar};
 
 use crate::{
     geometry::{Curve, Surface},
@@ -17,7 +17,31 @@ pub trait Validate {
     ) -> Result<(), ValidationError>;
 }
 
+impl Validate for Point<3> {
+    fn validate(&self, _: Scalar, _: &Stores) -> Result<(), ValidationError> {
+        Ok(())
+    }
+}
+
+impl Validate for Curve {
+    fn validate(&self, _: Scalar, _: &Stores) -> Result<(), ValidationError> {
+        Ok(())
+    }
+}
+
+impl Validate for Surface {
+    fn validate(&self, _: Scalar, _: &Stores) -> Result<(), ValidationError> {
+        Ok(())
+    }
+}
+
 impl Validate for Vertex {
+    /// Validate the vertex
+    ///
+    /// # Implementation note
+    ///
+    /// In the future, this method is likely to validate more than it already
+    /// does. See documentation of [`crate::kernel`] for some context on that.
     fn validate(
         &self,
         min_distance: Scalar,
@@ -72,6 +96,14 @@ impl Validate for Edge {
 }
 
 impl Validate for Cycle {
+    /// Validate the cycle
+    ///
+    /// # Implementation note
+    ///
+    /// The validation of the cycle should be extended to cover more cases:
+    /// - That those edges form a cycle.
+    /// - That the cycle is not self-overlapping.
+    /// - That there exists no duplicate cycle, with the same edges.
     fn validate(
         &self,
         _: Scalar,

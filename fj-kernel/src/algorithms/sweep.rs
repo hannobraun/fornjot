@@ -26,20 +26,15 @@ pub fn sweep_shape(
 
     // Create the new vertices.
     for vertex_source in source.topology().vertices() {
-        let point_bottom =
-            target.geometry().add_point(vertex_source.get().point());
-        let point_top = target.geometry().add_point(point_bottom.get() + path);
+        let point_bottom = target.insert(vertex_source.get().point()).unwrap();
+        let point_top = target.insert(point_bottom.get() + path).unwrap();
 
         let vertex_bottom = target
-            .topology()
-            .add_vertex(Vertex {
+            .insert(Vertex {
                 point: point_bottom,
             })
             .unwrap();
-        let vertex_top = target
-            .topology()
-            .add_vertex(Vertex { point: point_top })
-            .unwrap();
+        let vertex_top = target.insert(Vertex { point: point_top }).unwrap();
 
         source_to_bottom
             .vertices
@@ -49,25 +44,22 @@ pub fn sweep_shape(
 
     // Create the new edges.
     for edge_source in source.topology().edges() {
-        let curve_bottom =
-            target.geometry().add_curve(edge_source.get().curve());
+        let curve_bottom = target.insert(edge_source.get().curve()).unwrap();
         let curve_top = target
-            .geometry()
-            .add_curve(curve_bottom.get().transform(&translation));
+            .insert(curve_bottom.get().transform(&translation))
+            .unwrap();
 
         let vertices_bottom = source_to_bottom.vertices_for_edge(&edge_source);
         let vertices_top = source_to_top.vertices_for_edge(&edge_source);
 
         let edge_bottom = target
-            .topology()
-            .add_edge(Edge {
+            .insert(Edge {
                 curve: curve_bottom,
                 vertices: vertices_bottom,
             })
             .unwrap();
         let edge_top = target
-            .topology()
-            .add_edge(Edge {
+            .insert(Edge {
                 curve: curve_top,
                 vertices: vertices_top,
             })
@@ -85,15 +77,11 @@ pub fn sweep_shape(
         let edges_top = source_to_top.edges_for_cycle(&cycle_source);
 
         let cycle_bottom = target
-            .topology()
-            .add_cycle(Cycle {
+            .insert(Cycle {
                 edges: edges_bottom,
             })
             .unwrap();
-        let cycle_top = target
-            .topology()
-            .add_cycle(Cycle { edges: edges_top })
-            .unwrap();
+        let cycle_top = target.insert(Cycle { edges: edges_top }).unwrap();
 
         source_to_bottom
             .cycles
@@ -103,11 +91,10 @@ pub fn sweep_shape(
 
     // Create top faces.
     for face_source in source.topology().faces().values() {
-        let surface_bottom =
-            target.geometry().add_surface(face_source.surface());
+        let surface_bottom = target.insert(face_source.surface()).unwrap();
         let surface_top = target
-            .geometry()
-            .add_surface(surface_bottom.get().transform(&translation));
+            .insert(surface_bottom.get().transform(&translation))
+            .unwrap();
 
         let exteriors_bottom =
             source_to_bottom.exteriors_for_face(&face_source);
@@ -117,8 +104,7 @@ pub fn sweep_shape(
         let interiors_top = source_to_top.interiors_for_face(&face_source);
 
         target
-            .topology()
-            .add_face(Face::Face {
+            .insert(Face::Face {
                 surface: surface_bottom,
                 exteriors: exteriors_bottom,
                 interiors: interiors_bottom,
@@ -126,8 +112,7 @@ pub fn sweep_shape(
             })
             .unwrap();
         target
-            .topology()
-            .add_face(Face::Face {
+            .insert(Face::Face {
                 surface: surface_top,
                 exteriors: exteriors_top,
                 interiors: interiors_top,
@@ -178,10 +163,7 @@ pub fn sweep_shape(
                 s.set_color(color);
             }
 
-            target
-                .topology()
-                .add_face(Face::Triangles(side_face))
-                .unwrap();
+            target.insert(Face::Triangles(side_face)).unwrap();
         } else {
             // If there's no continuous edge, we can create the non-
             // continuous faces using boundary representation.
@@ -208,8 +190,8 @@ pub fn sweep_shape(
                             .entry(vertex_bottom.clone())
                             .or_insert_with(|| {
                                 let curve = target
-                                    .geometry()
-                                    .add_curve(edge_source.get().curve());
+                                    .insert(edge_source.get().curve())
+                                    .unwrap();
 
                                 let vertex_top = source_to_top
                                     .vertices
@@ -218,8 +200,7 @@ pub fn sweep_shape(
                                     .clone();
 
                                 target
-                                    .topology()
-                                    .add_edge(Edge {
+                                    .insert(Edge {
                                         curve,
                                         vertices: Some([
                                             vertex_bottom,
@@ -239,16 +220,15 @@ pub fn sweep_shape(
                 let top_edge =
                     source_to_top.edges.get(edge_source).unwrap().clone();
 
-                let surface = target.geometry().add_surface(
-                    Surface::SweptCurve(SweptCurve {
+                let surface = target
+                    .insert(Surface::SweptCurve(SweptCurve {
                         curve: bottom_edge.get().curve(),
                         path,
-                    }),
-                );
+                    }))
+                    .unwrap();
 
                 let cycle = target
-                    .topology()
-                    .add_cycle(Cycle {
+                    .insert(Cycle {
                         edges: vec![
                             bottom_edge,
                             top_edge,
@@ -259,8 +239,7 @@ pub fn sweep_shape(
                     .unwrap();
 
                 target
-                    .topology()
-                    .add_face(Face::Face {
+                    .insert(Face::Face {
                         surface,
                         exteriors: vec![cycle],
                         interiors: Vec::new(),
@@ -401,13 +380,13 @@ mod tests {
         fn new([a, b, c]: [impl Into<Point<3>>; 3]) -> anyhow::Result<Self> {
             let mut shape = Shape::new();
 
-            let a = shape.geometry().add_point(a.into());
-            let b = shape.geometry().add_point(b.into());
-            let c = shape.geometry().add_point(c.into());
+            let a = shape.insert(a.into())?;
+            let b = shape.insert(b.into())?;
+            let c = shape.insert(c.into())?;
 
-            let a = shape.topology().add_vertex(Vertex { point: a })?;
-            let b = shape.topology().add_vertex(Vertex { point: b })?;
-            let c = shape.topology().add_vertex(Vertex { point: c })?;
+            let a = shape.insert(Vertex { point: a })?;
+            let b = shape.insert(Vertex { point: b })?;
+            let c = shape.insert(Vertex { point: c })?;
 
             let ab = Edge::build(&mut shape)
                 .line_segment_from_vertices([a.clone(), b.clone()])?;
@@ -416,15 +395,15 @@ mod tests {
             let ca = Edge::build(&mut shape)
                 .line_segment_from_vertices([c.clone(), a.clone()])?;
 
-            let cycles = shape.topology().add_cycle(Cycle {
+            let cycles = shape.insert(Cycle {
                 edges: vec![ab, bc, ca],
             })?;
 
-            let surface = shape.geometry().add_surface(Surface::SweptCurve(
+            let surface = shape.insert(Surface::SweptCurve(
                 SweptCurve::plane_from_points(
                     [a, b, c].map(|vertex| vertex.get().point()),
                 ),
-            ));
+            ))?;
             let abc = Face::Face {
                 surface,
                 exteriors: vec![cycles],
@@ -432,7 +411,7 @@ mod tests {
                 color: [255, 0, 0, 255],
             };
 
-            let face = shape.topology().add_face(abc)?;
+            let face = shape.insert(abc)?;
 
             Ok(Self { shape, face })
         }

@@ -3,6 +3,7 @@ use std::{
     sync::Arc,
 };
 
+use anymap::AnyMap;
 use fj_math::Point;
 use parking_lot::{RwLock, RwLockReadGuard};
 use slotmap::{DefaultKey, SlotMap};
@@ -11,6 +12,8 @@ use crate::{
     geometry::{Curve, Surface},
     topology::{Cycle, Edge, Face, Vertex},
 };
+
+use super::Object;
 
 #[derive(Clone, Debug)]
 pub struct Stores {
@@ -22,6 +25,30 @@ pub struct Stores {
     pub edges: Edges,
     pub cycles: Cycles,
     pub faces: Faces,
+}
+
+impl Stores {
+    pub fn get<T>(&mut self) -> Store<T>
+    where
+        T: Object,
+    {
+        let mut stores = AnyMap::new();
+
+        stores.insert(self.points.clone());
+        stores.insert(self.curves.clone());
+        stores.insert(self.surfaces.clone());
+
+        stores.insert(self.vertices.clone());
+        stores.insert(self.edges.clone());
+        stores.insert(self.cycles.clone());
+        stores.insert(self.faces.clone());
+
+        stores
+            .remove::<Store<T>>()
+            // Can't panic, as `T` is bound by `Object`, and we added the stores
+            // for all types of objects above.
+            .expect("Invalid object type")
+    }
 }
 
 pub type Points = Store<Point<3>>;
@@ -95,6 +122,12 @@ impl<T> Clone for Store<T> {
         Self {
             objects: self.objects.clone(),
         }
+    }
+}
+
+impl<T> Default for Store<T> {
+    fn default() -> Self {
+        Self::new()
     }
 }
 

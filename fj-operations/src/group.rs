@@ -40,22 +40,21 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
     let mut cycles = HashMap::new();
 
     for point_orig in orig.geometry().points() {
-        let point = target.geometry().add_point(point_orig.get());
+        let point = target.insert(point_orig.get()).unwrap();
         points.insert(point_orig, point);
     }
     for curve_orig in orig.geometry().curves() {
-        let curve = target.geometry().add_curve(curve_orig.get());
+        let curve = target.insert(curve_orig.get()).unwrap();
         curves.insert(curve_orig, curve);
     }
     for surface_orig in orig.geometry().surfaces() {
-        let surface = target.geometry().add_surface(surface_orig.get());
+        let surface = target.insert(surface_orig.get()).unwrap();
         surfaces.insert(surface_orig, surface);
     }
 
     for vertex_orig in orig.topology().vertices() {
         let vertex = target
-            .topology()
-            .add_vertex(Vertex {
+            .insert(Vertex {
                 point: points[&vertex_orig.get().point].clone(),
             })
             .unwrap();
@@ -63,8 +62,7 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
     }
     for edge_orig in orig.topology().edges() {
         let edge = target
-            .topology()
-            .add_edge(Edge {
+            .insert(Edge {
                 curve: curves[&edge_orig.get().curve].clone(),
                 vertices: edge_orig.get().vertices.as_ref().map(|vs| {
                     vs.clone().map(|vertex| vertices[&vertex].clone())
@@ -75,8 +73,7 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
     }
     for cycle_orig in orig.topology().cycles() {
         let cycle = target
-            .topology()
-            .add_cycle(Cycle {
+            .insert(Cycle {
                 edges: cycle_orig
                     .get()
                     .edges
@@ -97,8 +94,7 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
                 color,
             } => {
                 target
-                    .topology()
-                    .add_face(Face::Face {
+                    .insert(Face::Face {
                         surface: surfaces[&surface].clone(),
                         exteriors: exteriors
                             .iter()
@@ -113,7 +109,7 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
                     .unwrap();
             }
             face @ Face::Triangles(_) => {
-                target.topology().add_face(face.clone()).unwrap();
+                target.insert(face.clone()).unwrap();
             }
         }
     }

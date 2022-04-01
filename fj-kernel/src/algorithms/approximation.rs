@@ -176,11 +176,11 @@ mod tests {
         let da =
             Edge::build(&mut shape).line_segment_from_vertices([v4, v1])?;
 
-        let abcd = shape.topology().add_cycle(Cycle {
+        let abcd = shape.insert(Cycle {
             edges: vec![ab, bc, cd, da],
         })?;
 
-        let surface = shape.geometry().add_surface(Surface::x_y_plane());
+        let surface = shape.insert(Surface::x_y_plane())?;
         let face = Face::Face {
             surface,
             exteriors: vec![abcd],

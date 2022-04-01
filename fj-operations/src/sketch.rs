@@ -14,8 +14,8 @@ impl ToShape for fj::Sketch {
         let mut vertices = Vec::new();
 
         for [x, y] in self.to_points() {
-            let point = shape.geometry().add_point(Point::from([x, y, 0.]));
-            let vertex = shape.topology().add_vertex(Vertex { point }).unwrap();
+            let point = shape.insert(Point::from([x, y, 0.])).unwrap();
+            let vertex = shape.insert(Vertex { point }).unwrap();
             vertices.push(vertex);
         }
 
@@ -42,17 +42,17 @@ impl ToShape for fj::Sketch {
                 edges.push(edge);
             }
 
-            shape.topology().add_cycle(Cycle { edges }).unwrap();
+            shape.insert(Cycle { edges }).unwrap();
         };
 
-        let surface = shape.geometry().add_surface(Surface::x_y_plane());
+        let surface = shape.insert(Surface::x_y_plane()).unwrap();
         let face = Face::Face {
             exteriors: shape.topology().cycles().collect(),
             interiors: Vec::new(),
             surface,
             color: self.color(),
         };
-        shape.topology().add_face(face).unwrap();
+        shape.insert(face).unwrap();
 
         shape
     }

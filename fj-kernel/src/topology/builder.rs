@@ -23,8 +23,8 @@ impl<'r> VertexBuilder<'r> {
         self,
         point: impl Into<Point<3>>,
     ) -> ValidationResult<Vertex> {
-        let point = self.shape.geometry().add_point(point.into());
-        let vertex = self.shape.topology().add_vertex(Vertex { point })?;
+        let point = self.shape.insert(point.into())?;
+        let vertex = self.shape.insert(Vertex { point })?;
 
         Ok(vertex)
     }
@@ -43,11 +43,11 @@ impl<'r> EdgeBuilder<'r> {
 
     /// Build a circle from a radius
     pub fn circle(self, radius: Scalar) -> ValidationResult<Edge> {
-        let curve = self.shape.geometry().add_curve(Curve::Circle(Circle {
+        let curve = self.shape.insert(Curve::Circle(Circle {
             center: Point::origin(),
             radius: Vector::from([radius, Scalar::ZERO]),
-        }));
-        let edge = self.shape.topology().add_edge(Edge {
+        }))?;
+        let edge = self.shape.insert(Edge {
             curve,
             vertices: None,
         })?;
@@ -60,13 +60,10 @@ impl<'r> EdgeBuilder<'r> {
         self,
         vertices: [Handle<Vertex>; 2],
     ) -> ValidationResult<Edge> {
-        let curve =
-            self.shape
-                .geometry()
-                .add_curve(Curve::Line(Line::from_points(
-                    vertices.clone().map(|vertex| vertex.get().point()),
-                )));
-        let edge = self.shape.topology().add_edge(Edge {
+        let curve = self.shape.insert(Curve::Line(Line::from_points(
+            vertices.clone().map(|vertex| vertex.get().point()),
+        )))?;
+        let edge = self.shape.insert(Edge {
             curve,
             vertices: Some(vertices),
         })?;

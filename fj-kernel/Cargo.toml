@@ -13,6 +13,7 @@ categories  = ["mathematics"]
 
 [dependencies]
 anyhow      = "1.0.56"
+anymap      = "1.0.0-beta.2"
 approx      = "0.5.1"
 map-macro   = "0.2.0"
 nalgebra    = "0.30.0"
