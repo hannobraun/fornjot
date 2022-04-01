@@ -82,7 +82,6 @@ impl Shape {
     /// Access the shape's topology
     pub fn topology(&mut self) -> Topology {
         Topology {
-            min_distance: self.min_distance,
             stores: self.stores.clone(),
             _lifetime: PhantomData,
         }

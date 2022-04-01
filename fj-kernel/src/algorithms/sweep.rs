@@ -104,8 +104,7 @@ pub fn sweep_shape(
         let interiors_top = source_to_top.interiors_for_face(&face_source);
 
         target
-            .topology()
-            .add_face(Face::Face {
+            .insert(Face::Face {
                 surface: surface_bottom,
                 exteriors: exteriors_bottom,
                 interiors: interiors_bottom,
@@ -113,8 +112,7 @@ pub fn sweep_shape(
             })
             .unwrap();
         target
-            .topology()
-            .add_face(Face::Face {
+            .insert(Face::Face {
                 surface: surface_top,
                 exteriors: exteriors_top,
                 interiors: interiors_top,
@@ -165,10 +163,7 @@ pub fn sweep_shape(
                 s.set_color(color);
             }
 
-            target
-                .topology()
-                .add_face(Face::Triangles(side_face))
-                .unwrap();
+            target.insert(Face::Triangles(side_face)).unwrap();
         } else {
             // If there's no continuous edge, we can create the non-
             // continuous faces using boundary representation.
@@ -244,8 +239,7 @@ pub fn sweep_shape(
                     .unwrap();
 
                 target
-                    .topology()
-                    .add_face(Face::Face {
+                    .insert(Face::Face {
                         surface,
                         exteriors: vec![cycle],
                         interiors: Vec::new(),
@@ -417,7 +411,7 @@ mod tests {
                 color: [255, 0, 0, 255],
             };
 
-            let face = shape.topology().add_face(abc)?;
+            let face = shape.insert(abc)?;
 
             Ok(Self { shape, face })
         }

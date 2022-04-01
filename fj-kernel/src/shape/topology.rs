@@ -1,30 +1,16 @@
 use std::marker::PhantomData;
 
-use fj_math::Scalar;
-
 use crate::topology::{Cycle, Edge, Face, Vertex};
 
-use super::{stores::Stores, validate::Validate as _, Iter, ValidationResult};
+use super::{stores::Stores, Iter};
 
 /// The vertices of a shape
 pub struct Topology<'r> {
-    pub(super) min_distance: Scalar,
     pub(super) stores: Stores,
     pub(super) _lifetime: PhantomData<&'r ()>,
 }
 
 impl Topology<'_> {
-    /// Add a face to the shape
-    ///
-    /// Validates that the face is structurally sound (i.e. the surface and
-    /// cycles it refers to are part of the shape). Returns an error, if that is
-    /// not the case.
-    pub fn add_face(&mut self, face: Face) -> ValidationResult<Face> {
-        face.validate(self.min_distance, &self.stores)?;
-        let handle = self.stores.faces.insert(face);
-        Ok(handle)
-    }
-
     /// Access iterator over all vertices
     ///
     /// The caller must not make any assumptions about the order of vertices.
@@ -159,8 +145,7 @@ mod tests {
 
         // Nothing has been added to `shape`. Should fail.
         let err = shape
-            .topology()
-            .add_face(Face::Face {
+            .insert(Face::Face {
                 surface: surface.clone(),
                 exteriors: vec![cycle.clone()],
                 interiors: Vec::new(),
@@ -174,7 +159,7 @@ mod tests {
         let cycle = shape.add_cycle()?;
 
         // Everything has been added to `shape` now. Should work!
-        shape.topology().add_face(Face::Face {
+        shape.insert(Face::Face {
             surface,
             exteriors: vec![cycle],
             interiors: Vec::new(),

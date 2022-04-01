@@ -94,8 +94,7 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
                 color,
             } => {
                 target
-                    .topology()
-                    .add_face(Face::Face {
+                    .insert(Face::Face {
                         surface: surfaces[&surface].clone(),
                         exteriors: exteriors
                             .iter()
@@ -110,7 +109,7 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
                     .unwrap();
             }
             face @ Face::Triangles(_) => {
-                target.topology().add_face(face.clone()).unwrap();
+                target.insert(face.clone()).unwrap();
             }
         }
     }

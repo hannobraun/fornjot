@@ -52,7 +52,7 @@ impl ToShape for fj::Sketch {
             surface,
             color: self.color(),
         };
-        shape.topology().add_face(face).unwrap();
+        shape.insert(face).unwrap();
 
         shape
     }

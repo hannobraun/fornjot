@@ -64,8 +64,7 @@ impl ToShape for fj::Difference2d {
         let surface = shape.insert(face_a.surface()).unwrap();
 
         shape
-            .topology()
-            .add_face(Face::Face {
+            .insert(Face::Face {
                 surface,
                 exteriors,
                 interiors,
