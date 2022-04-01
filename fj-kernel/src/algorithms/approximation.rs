@@ -120,7 +120,7 @@ mod tests {
     use crate::{
         geometry::Surface,
         shape::Shape,
-        topology::{Cycle, Edge, Face, Vertex},
+        topology::{Cycle, Face, Vertex},
     };
 
     use super::Approximation;
@@ -162,14 +162,7 @@ mod tests {
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let ab = Edge::build(&mut shape).line_segment_from_points([a, b])?;
-        let bc = Edge::build(&mut shape).line_segment_from_points([b, c])?;
-        let cd = Edge::build(&mut shape).line_segment_from_points([c, d])?;
-        let da = Edge::build(&mut shape).line_segment_from_points([d, a])?;
-
-        let abcd = shape.insert(Cycle {
-            edges: vec![ab, bc, cd, da],
-        })?;
+        let abcd = Cycle::build(&mut shape).polygon([a, b, c, d])?;
 
         let surface = shape.insert(Surface::x_y_plane())?;
         let face = Face::Face {
