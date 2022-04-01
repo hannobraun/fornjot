@@ -7,7 +7,7 @@ use crate::{
 
 use super::{
     stores::{Curves, Faces, Points, Surfaces},
-    Handle, Iter,
+    Iter,
 };
 
 /// API to access a shape's geometry
@@ -41,11 +41,6 @@ pub struct Geometry<'r> {
 }
 
 impl Geometry<'_> {
-    /// Add a surface to the shape
-    pub fn add_surface(&mut self, surface: Surface) -> Handle<Surface> {
-        self.surfaces.insert(surface)
-    }
-
     /// Transform the geometry of the shape
     ///
     /// Since the topological types refer to geometry, and don't contain any

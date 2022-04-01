@@ -48,7 +48,7 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
         curves.insert(curve_orig, curve);
     }
     for surface_orig in orig.geometry().surfaces() {
-        let surface = target.geometry().add_surface(surface_orig.get());
+        let surface = target.insert(surface_orig.get()).unwrap();
         surfaces.insert(surface_orig, surface);
     }
 

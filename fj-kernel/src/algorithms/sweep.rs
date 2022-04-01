@@ -101,11 +101,10 @@ pub fn sweep_shape(
 
     // Create top faces.
     for face_source in source.topology().faces().values() {
-        let surface_bottom =
-            target.geometry().add_surface(face_source.surface());
+        let surface_bottom = target.insert(face_source.surface()).unwrap();
         let surface_top = target
-            .geometry()
-            .add_surface(surface_bottom.get().transform(&translation));
+            .insert(surface_bottom.get().transform(&translation))
+            .unwrap();
 
         let exteriors_bottom =
             source_to_bottom.exteriors_for_face(&face_source);
@@ -237,12 +236,12 @@ pub fn sweep_shape(
                 let top_edge =
                     source_to_top.edges.get(edge_source).unwrap().clone();
 
-                let surface = target.geometry().add_surface(
-                    Surface::SweptCurve(SweptCurve {
+                let surface = target
+                    .insert(Surface::SweptCurve(SweptCurve {
                         curve: bottom_edge.get().curve(),
                         path,
-                    }),
-                );
+                    }))
+                    .unwrap();
 
                 let cycle = target
                     .topology()
@@ -418,11 +417,11 @@ mod tests {
                 edges: vec![ab, bc, ca],
             })?;
 
-            let surface = shape.geometry().add_surface(Surface::SweptCurve(
+            let surface = shape.insert(Surface::SweptCurve(
                 SweptCurve::plane_from_points(
                     [a, b, c].map(|vertex| vertex.get().point()),
                 ),
-            ));
+            ))?;
             let abc = Face::Face {
                 surface,
                 exteriors: vec![cycles],

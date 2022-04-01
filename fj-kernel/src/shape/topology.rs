@@ -269,7 +269,7 @@ mod tests {
         }
 
         fn add_surface(&mut self) -> Handle<Surface> {
-            self.geometry().add_surface(Surface::x_y_plane())
+            self.insert(Surface::x_y_plane()).unwrap()
         }
 
         fn add_edge(&mut self) -> anyhow::Result<Handle<Edge>> {

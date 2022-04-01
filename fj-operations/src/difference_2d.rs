@@ -61,7 +61,7 @@ impl ToShape for fj::Difference2d {
             face_a.surface() == face_b.surface(),
             "Trying to subtract sketches with different surfaces."
         );
-        let surface = shape.geometry().add_surface(face_a.surface());
+        let surface = shape.insert(face_a.surface()).unwrap();
 
         shape
             .topology()
