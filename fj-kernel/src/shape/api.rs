@@ -92,6 +92,21 @@ impl Shape {
             .find(|obj| &obj.get() == object)
     }
 
+    /// Get handle of an identical object, if it exists, or add the object
+    ///
+    /// In any case, returns a handle that refers to an object that is identical
+    /// to the provided object.
+    pub fn get_handle_or_insert<T>(&mut self, object: T) -> ValidationResult<T>
+    where
+        T: Object,
+    {
+        if let Some(handle) = self.get_handle(&object) {
+            return Ok(handle);
+        }
+
+        self.insert(object)
+    }
+
     /// Access the shape's geometry
     pub fn geometry(&mut self) -> Geometry {
         Geometry {
