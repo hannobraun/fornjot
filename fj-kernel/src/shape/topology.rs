@@ -138,23 +138,23 @@ mod tests {
         let mut shape = Shape::new().with_min_distance(MIN_DISTANCE);
         let mut other = Shape::new();
 
-        let point = shape.geometry().add_point(Point::from([0., 0., 0.]));
+        let point = shape.insert(Point::from([0., 0., 0.]))?;
         shape.topology().add_vertex(Vertex { point })?;
 
         // Should fail, as `point` is not part of the shape.
-        let point = other.geometry().add_point(Point::from([1., 0., 0.]));
+        let point = other.insert(Point::from([1., 0., 0.]))?;
         let result = shape.topology().add_vertex(Vertex { point });
         assert!(matches!(result, Err(ValidationError::Structural(_))));
 
         // `point` is too close to the original point. `assert!` is commented,
         // because that only causes a warning to be logged right now.
-        let point = shape.geometry().add_point(Point::from([5e-8, 0., 0.]));
+        let point = shape.insert(Point::from([5e-8, 0., 0.]))?;
         let result = shape.topology().add_vertex(Vertex { point });
         assert!(matches!(result, Err(ValidationError::Uniqueness)));
 
         // `point` is farther than `MIN_DISTANCE` away from original point.
         // Should work.
-        let point = shape.geometry().add_point(Point::from([5e-6, 0., 0.]));
+        let point = shape.insert(Point::from([5e-6, 0., 0.]))?;
         shape.topology().add_vertex(Vertex { point })?;
 
         Ok(())
@@ -277,7 +277,7 @@ mod tests {
                 let point = self.next_point;
                 self.next_point.x += Scalar::ONE;
 
-                let point = self.geometry().add_point(point);
+                let point = self.insert(point).unwrap();
                 self.topology().add_vertex(Vertex { point }).unwrap()
             });
             let edge = Edge::build(&mut self.inner)

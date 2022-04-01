@@ -23,7 +23,7 @@ impl<'r> VertexBuilder<'r> {
         self,
         point: impl Into<Point<3>>,
     ) -> ValidationResult<Vertex> {
-        let point = self.shape.geometry().add_point(point.into());
+        let point = self.shape.insert(point.into())?;
         let vertex = self.shape.topology().add_vertex(Vertex { point })?;
 
         Ok(vertex)

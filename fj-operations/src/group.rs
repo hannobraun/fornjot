@@ -40,7 +40,7 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
     let mut cycles = HashMap::new();
 
     for point_orig in orig.geometry().points() {
-        let point = target.geometry().add_point(point_orig.get());
+        let point = target.insert(point_orig.get()).unwrap();
         points.insert(point_orig, point);
     }
     for curve_orig in orig.geometry().curves() {

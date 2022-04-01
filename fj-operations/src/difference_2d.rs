@@ -98,7 +98,7 @@ fn add_cycle(
                 vertices
                     .entry(vertex.clone())
                     .or_insert_with(|| {
-                        let point = shape.geometry().add_point(vertex.point());
+                        let point = shape.insert(vertex.point()).unwrap();
                         shape.topology().add_vertex(Vertex { point }).unwrap()
                     })
                     .clone()

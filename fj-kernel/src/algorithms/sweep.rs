@@ -26,9 +26,8 @@ pub fn sweep_shape(
 
     // Create the new vertices.
     for vertex_source in source.topology().vertices() {
-        let point_bottom =
-            target.geometry().add_point(vertex_source.get().point());
-        let point_top = target.geometry().add_point(point_bottom.get() + path);
+        let point_bottom = target.insert(vertex_source.get().point()).unwrap();
+        let point_top = target.insert(point_bottom.get() + path).unwrap();
 
         let vertex_bottom = target
             .topology()
@@ -401,9 +400,9 @@ mod tests {
         fn new([a, b, c]: [impl Into<Point<3>>; 3]) -> anyhow::Result<Self> {
             let mut shape = Shape::new();
 
-            let a = shape.geometry().add_point(a.into());
-            let b = shape.geometry().add_point(b.into());
-            let c = shape.geometry().add_point(c.into());
+            let a = shape.insert(a.into())?;
+            let b = shape.insert(b.into())?;
+            let c = shape.insert(c.into())?;
 
             let a = shape.topology().add_vertex(Vertex { point: a })?;
             let b = shape.topology().add_vertex(Vertex { point: b })?;
