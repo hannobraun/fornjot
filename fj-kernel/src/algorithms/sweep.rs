@@ -30,15 +30,11 @@ pub fn sweep_shape(
         let point_top = target.insert(point_bottom.get() + path).unwrap();
 
         let vertex_bottom = target
-            .topology()
-            .add_vertex(Vertex {
+            .insert(Vertex {
                 point: point_bottom,
             })
             .unwrap();
-        let vertex_top = target
-            .topology()
-            .add_vertex(Vertex { point: point_top })
-            .unwrap();
+        let vertex_top = target.insert(Vertex { point: point_top }).unwrap();
 
         source_to_bottom
             .vertices
@@ -402,9 +398,9 @@ mod tests {
             let b = shape.insert(b.into())?;
             let c = shape.insert(c.into())?;
 
-            let a = shape.topology().add_vertex(Vertex { point: a })?;
-            let b = shape.topology().add_vertex(Vertex { point: b })?;
-            let c = shape.topology().add_vertex(Vertex { point: c })?;
+            let a = shape.insert(Vertex { point: a })?;
+            let b = shape.insert(Vertex { point: b })?;
+            let c = shape.insert(Vertex { point: c })?;
 
             let ab = Edge::build(&mut shape)
                 .line_segment_from_vertices([a.clone(), b.clone()])?;

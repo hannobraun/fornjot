@@ -14,34 +14,6 @@ pub struct Topology<'r> {
 }
 
 impl Topology<'_> {
-    /// Add a vertex to the shape
-    ///
-    /// Validates that the vertex is structurally sound (i.e. the point it
-    /// refers to is part of the shape). Returns an error, if that is not the
-    /// case.
-    ///
-    /// Logs a warning, if the vertex is not unique, meaning if another vertex
-    /// defined by the same point already exists.
-    ///
-    /// In the context of of vertex uniqueness, points that are close to each
-    /// other are considered identical. The minimum distance between distinct
-    /// vertices can be configured using [`Shape::with_minimum_distance`].
-    ///
-    /// # Implementation note
-    ///
-    /// This method is intended to actually validate vertex uniqueness: To
-    /// panic, if duplicate vertices are found. This is currently not possible,
-    /// as the presence of bugs in the sweep and transform code would basically
-    /// break ever model, due to validation errors.
-    ///
-    /// In the future, this method is likely to validate more than it already
-    /// does. See documentation of [`crate::kernel`] for some context on that.
-    pub fn add_vertex(&mut self, vertex: Vertex) -> ValidationResult<Vertex> {
-        vertex.validate(self.min_distance, &self.stores)?;
-        let handle = self.stores.vertices.insert(vertex);
-        Ok(handle)
-    }
-
     /// Add an edge to the shape
     ///
     /// Validates that the edge is structurally sound (i.e. the curve and
@@ -139,23 +111,23 @@ mod tests {
         let mut other = Shape::new();
 
         let point = shape.insert(Point::from([0., 0., 0.]))?;
-        shape.topology().add_vertex(Vertex { point })?;
+        shape.insert(Vertex { point })?;
 
         // Should fail, as `point` is not part of the shape.
         let point = other.insert(Point::from([1., 0., 0.]))?;
-        let result = shape.topology().add_vertex(Vertex { point });
+        let result = shape.insert(Vertex { point });
         assert!(matches!(result, Err(ValidationError::Structural(_))));
 
         // `point` is too close to the original point. `assert!` is commented,
         // because that only causes a warning to be logged right now.
         let point = shape.insert(Point::from([5e-8, 0., 0.]))?;
-        let result = shape.topology().add_vertex(Vertex { point });
+        let result = shape.insert(Vertex { point });
         assert!(matches!(result, Err(ValidationError::Uniqueness)));
 
         // `point` is farther than `MIN_DISTANCE` away from original point.
         // Should work.
         let point = shape.insert(Point::from([5e-6, 0., 0.]))?;
-        shape.topology().add_vertex(Vertex { point })?;
+        shape.insert(Vertex { point })?;
 
         Ok(())
     }
@@ -278,7 +250,7 @@ mod tests {
                 self.next_point.x += Scalar::ONE;
 
                 let point = self.insert(point).unwrap();
-                self.topology().add_vertex(Vertex { point }).unwrap()
+                self.insert(Vertex { point }).unwrap()
             });
             let edge = Edge::build(&mut self.inner)
                 .line_segment_from_vertices(vertices)?;

@@ -54,8 +54,7 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
 
     for vertex_orig in orig.topology().vertices() {
         let vertex = target
-            .topology()
-            .add_vertex(Vertex {
+            .insert(Vertex {
                 point: points[&vertex_orig.get().point].clone(),
             })
             .unwrap();
