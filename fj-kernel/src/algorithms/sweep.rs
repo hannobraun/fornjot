@@ -326,7 +326,7 @@ mod tests {
     use crate::{
         geometry::{Surface, SweptCurve},
         shape::{Handle, Shape},
-        topology::{Cycle, Edge, Face, Vertex},
+        topology::{Cycle, Edge, Face},
     };
 
     use super::sweep_shape;
@@ -377,32 +377,24 @@ mod tests {
     }
 
     impl Triangle {
-        fn new([a, b, c]: [impl Into<Point<3>>; 3]) -> anyhow::Result<Self> {
+        fn new(points: [impl Into<Point<3>>; 3]) -> anyhow::Result<Self> {
             let mut shape = Shape::new();
 
-            let a = shape.insert(a.into())?;
-            let b = shape.insert(b.into())?;
-            let c = shape.insert(c.into())?;
+            let [a, b, c] = points.map(|point| point.into());
 
-            let a = shape.insert(Vertex { point: a })?;
-            let b = shape.insert(Vertex { point: b })?;
-            let c = shape.insert(Vertex { point: c })?;
-
-            let ab = Edge::build(&mut shape)
-                .line_segment_from_vertices([a.clone(), b.clone()])?;
-            let bc = Edge::build(&mut shape)
-                .line_segment_from_vertices([b.clone(), c.clone()])?;
-            let ca = Edge::build(&mut shape)
-                .line_segment_from_vertices([c.clone(), a.clone()])?;
+            let ab =
+                Edge::build(&mut shape).line_segment_from_points([a, b])?;
+            let bc =
+                Edge::build(&mut shape).line_segment_from_points([b, c])?;
+            let ca =
+                Edge::build(&mut shape).line_segment_from_points([c, a])?;
 
             let cycles = shape.insert(Cycle {
                 edges: vec![ab, bc, ca],
             })?;
 
             let surface = shape.insert(Surface::SweptCurve(
-                SweptCurve::plane_from_points(
-                    [a, b, c].map(|vertex| vertex.get().point()),
-                ),
+                SweptCurve::plane_from_points([a, b, c]),
             ))?;
             let abc = Face::Face {
                 surface,
