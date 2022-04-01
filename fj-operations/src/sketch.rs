@@ -42,7 +42,7 @@ impl ToShape for fj::Sketch {
                 edges.push(edge);
             }
 
-            shape.topology().add_cycle(Cycle { edges }).unwrap();
+            shape.insert(Cycle { edges }).unwrap();
         };
 
         let surface = shape.insert(Surface::x_y_plane()).unwrap();

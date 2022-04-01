@@ -14,23 +14,6 @@ pub struct Topology<'r> {
 }
 
 impl Topology<'_> {
-    /// Add a cycle to the shape
-    ///
-    /// Validates that the cycle is structurally sound (i.e. the edges it refers
-    /// to are part of the shape). Returns an error, if that is not the case.
-    ///
-    /// # Implementation note
-    ///
-    /// The validation of the cycle should be extended to cover more cases:
-    /// - That those edges form a cycle.
-    /// - That the cycle is not self-overlapping.
-    /// - That there exists no duplicate cycle, with the same edges.
-    pub fn add_cycle(&mut self, cycle: Cycle) -> ValidationResult<Cycle> {
-        cycle.validate(self.min_distance, &self.stores)?;
-        let handle = self.stores.cycles.insert(cycle);
-        Ok(handle)
-    }
-
     /// Add a face to the shape
     ///
     /// Validates that the face is structurally sound (i.e. the surface and
@@ -153,8 +136,7 @@ mod tests {
         // Trying to refer to edge that is not from the same shape. Should fail.
         let edge = other.add_edge()?;
         let err = shape
-            .topology()
-            .add_cycle(Cycle {
+            .insert(Cycle {
                 edges: vec![edge.clone()],
             })
             .unwrap_err();
@@ -162,7 +144,7 @@ mod tests {
 
         // Referring to edge that *is* from the same shape. Should work.
         let edge = shape.add_edge()?;
-        shape.topology().add_cycle(Cycle { edges: vec![edge] })?;
+        shape.insert(Cycle { edges: vec![edge] })?;
 
         Ok(())
     }
@@ -239,8 +221,7 @@ mod tests {
 
         fn add_cycle(&mut self) -> anyhow::Result<Handle<Cycle>> {
             let edge = self.add_edge()?;
-            let cycle =
-                self.topology().add_cycle(Cycle { edges: vec![edge] })?;
+            let cycle = self.insert(Cycle { edges: vec![edge] })?;
             Ok(cycle)
         }
     }

@@ -176,7 +176,7 @@ mod tests {
         let da =
             Edge::build(&mut shape).line_segment_from_vertices([v4, v1])?;
 
-        let abcd = shape.topology().add_cycle(Cycle {
+        let abcd = shape.insert(Cycle {
             edges: vec![ab, bc, cd, da],
         })?;
 

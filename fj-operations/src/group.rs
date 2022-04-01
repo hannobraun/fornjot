@@ -73,8 +73,7 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
     }
     for cycle_orig in orig.topology().cycles() {
         let cycle = target
-            .topology()
-            .add_cycle(Cycle {
+            .insert(Cycle {
                 edges: cycle_orig
                     .get()
                     .edges

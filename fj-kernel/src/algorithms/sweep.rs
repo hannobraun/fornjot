@@ -77,15 +77,11 @@ pub fn sweep_shape(
         let edges_top = source_to_top.edges_for_cycle(&cycle_source);
 
         let cycle_bottom = target
-            .topology()
-            .add_cycle(Cycle {
+            .insert(Cycle {
                 edges: edges_bottom,
             })
             .unwrap();
-        let cycle_top = target
-            .topology()
-            .add_cycle(Cycle { edges: edges_top })
-            .unwrap();
+        let cycle_top = target.insert(Cycle { edges: edges_top }).unwrap();
 
         source_to_bottom
             .cycles
@@ -237,8 +233,7 @@ pub fn sweep_shape(
                     .unwrap();
 
                 let cycle = target
-                    .topology()
-                    .add_cycle(Cycle {
+                    .insert(Cycle {
                         edges: vec![
                             bottom_edge,
                             top_edge,
@@ -406,7 +401,7 @@ mod tests {
             let ca = Edge::build(&mut shape)
                 .line_segment_from_vertices([c.clone(), a.clone()])?;
 
-            let cycles = shape.topology().add_cycle(Cycle {
+            let cycles = shape.insert(Cycle {
                 edges: vec![ab, bc, ca],
             })?;
 

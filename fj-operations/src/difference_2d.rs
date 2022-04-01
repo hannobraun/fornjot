@@ -109,5 +109,5 @@ fn add_cycle(
         edges.push(edge);
     }
 
-    shape.topology().add_cycle(Cycle { edges }).unwrap()
+    shape.insert(Cycle { edges }).unwrap()
 }
