@@ -5,7 +5,7 @@ use crate::{
     shape::{Handle, Shape},
 };
 
-use super::{vertices::Vertex, EdgeBuilder};
+use super::{builder::CycleBuilder, vertices::Vertex, EdgeBuilder};
 
 /// A cycle of connected edges
 ///
@@ -29,6 +29,11 @@ pub struct Cycle {
 }
 
 impl Cycle {
+    /// Build a cycle using the [`CycleBuilder`] API
+    pub fn build(shape: &mut Shape) -> CycleBuilder {
+        CycleBuilder::new(shape)
+    }
+
     /// Access the edges that this cycle refers to
     ///
     /// This is a convenience method that saves the caller from dealing with the
