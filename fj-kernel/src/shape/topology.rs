@@ -191,13 +191,13 @@ mod tests {
         }
 
         fn add_edge(&mut self) -> anyhow::Result<Handle<Edge>> {
-            let vertices = [(); 2].map(|()| {
+            let points = [(); 2].map(|()| {
                 let point = self.next_point;
                 self.next_point.x += Scalar::ONE;
                 point
             });
             let edge = Edge::build(&mut self.inner)
-                .line_segment_from_points(vertices)?;
+                .line_segment_from_points(points)?;
 
             Ok(edge)
         }
