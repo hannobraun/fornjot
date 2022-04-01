@@ -48,11 +48,10 @@ pub fn sweep_shape(
 
     // Create the new edges.
     for edge_source in source.topology().edges() {
-        let curve_bottom =
-            target.geometry().add_curve(edge_source.get().curve());
+        let curve_bottom = target.insert(edge_source.get().curve()).unwrap();
         let curve_top = target
-            .geometry()
-            .add_curve(curve_bottom.get().transform(&translation));
+            .insert(curve_bottom.get().transform(&translation))
+            .unwrap();
 
         let vertices_bottom = source_to_bottom.vertices_for_edge(&edge_source);
         let vertices_top = source_to_top.vertices_for_edge(&edge_source);
@@ -207,8 +206,8 @@ pub fn sweep_shape(
                             .entry(vertex_bottom.clone())
                             .or_insert_with(|| {
                                 let curve = target
-                                    .geometry()
-                                    .add_curve(edge_source.get().curve());
+                                    .insert(edge_source.get().curve())
+                                    .unwrap();
 
                                 let vertex_top = source_to_top
                                     .vertices

@@ -265,7 +265,7 @@ mod tests {
         }
 
         fn add_curve(&mut self) -> Handle<Curve> {
-            self.geometry().add_curve(Curve::x_axis())
+            self.insert(Curve::x_axis()).unwrap()
         }
 
         fn add_surface(&mut self) -> Handle<Surface> {

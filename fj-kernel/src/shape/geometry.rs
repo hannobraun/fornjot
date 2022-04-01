@@ -41,11 +41,6 @@ pub struct Geometry<'r> {
 }
 
 impl Geometry<'_> {
-    /// Add a curve to the shape
-    pub fn add_curve(&mut self, curve: Curve) -> Handle<Curve> {
-        self.curves.insert(curve)
-    }
-
     /// Add a surface to the shape
     pub fn add_surface(&mut self, surface: Surface) -> Handle<Surface> {
         self.surfaces.insert(surface)

@@ -43,10 +43,10 @@ impl<'r> EdgeBuilder<'r> {
 
     /// Build a circle from a radius
     pub fn circle(self, radius: Scalar) -> ValidationResult<Edge> {
-        let curve = self.shape.geometry().add_curve(Curve::Circle(Circle {
+        let curve = self.shape.insert(Curve::Circle(Circle {
             center: Point::origin(),
             radius: Vector::from([radius, Scalar::ZERO]),
-        }));
+        }))?;
         let edge = self.shape.topology().add_edge(Edge {
             curve,
             vertices: None,
@@ -60,12 +60,9 @@ impl<'r> EdgeBuilder<'r> {
         self,
         vertices: [Handle<Vertex>; 2],
     ) -> ValidationResult<Edge> {
-        let curve =
-            self.shape
-                .geometry()
-                .add_curve(Curve::Line(Line::from_points(
-                    vertices.clone().map(|vertex| vertex.get().point()),
-                )));
+        let curve = self.shape.insert(Curve::Line(Line::from_points(
+            vertices.clone().map(|vertex| vertex.get().point()),
+        )))?;
         let edge = self.shape.topology().add_edge(Edge {
             curve,
             vertices: Some(vertices),
