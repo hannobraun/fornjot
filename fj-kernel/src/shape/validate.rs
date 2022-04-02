@@ -281,6 +281,6 @@ pub struct StructuralIssues {
     /// Missing surface found in face validation
     pub missing_surface: Option<Handle<Surface>>,
 
-    /// Missing cycles found in cycle validation
+    /// Missing cycles found in face validation
     pub missing_cycles: HashSet<Handle<Cycle>>,
 }
