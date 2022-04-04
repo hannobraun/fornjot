@@ -1,11 +1,11 @@
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    geometry::{Circle, Curve, Line},
+    geometry::{Circle, Curve, Line, Surface},
     shape::{Handle, Shape, ValidationResult},
 };
 
-use super::{Cycle, Edge, Vertex};
+use super::{Cycle, Edge, Face, Vertex};
 
 /// API for building a [`Vertex`]
 pub struct VertexBuilder<'r> {
@@ -130,5 +130,58 @@ impl<'r> CycleBuilder<'r> {
         }
 
         self.shape.insert(Cycle { edges })
+    }
+}
+
+/// API for building a [`Face`]
+pub struct FaceBuilder<'r> {
+    surface: Surface,
+    exterior: Option<Vec<Point<3>>>,
+
+    shape: &'r mut Shape,
+}
+
+impl<'r> FaceBuilder<'r> {
+    /// Construct a new instance of `FaceBuilder`
+    pub fn new(surface: Surface, shape: &'r mut Shape) -> Self {
+        Self {
+            surface,
+            exterior: None,
+
+            shape,
+        }
+    }
+
+    /// Make the exterior or the face a polygon
+    pub fn with_exterior_polygon(
+        self,
+        points: impl IntoIterator<Item = impl Into<Point<3>>>,
+    ) -> Self {
+        Self {
+            surface: self.surface,
+            exterior: Some(points.into_iter().map(Into::into).collect()),
+
+            shape: self.shape,
+        }
+    }
+
+    /// Build the face
+    pub fn build(self) -> ValidationResult<Face> {
+        let surface = self.shape.insert(self.surface)?;
+
+        let exteriors = match self.exterior {
+            Some(points) => {
+                let cycle = Cycle::builder(self.shape).build_polygon(points)?;
+                vec![cycle]
+            }
+            None => Vec::new(),
+        };
+
+        self.shape.insert(Face::Face {
+            surface,
+            exteriors,
+            interiors: Vec::new(),
+            color: [255, 0, 0, 255],
+        })
     }
 }
