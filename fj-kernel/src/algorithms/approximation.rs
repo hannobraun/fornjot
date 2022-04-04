@@ -13,14 +13,8 @@ pub struct FaceApprox {
     /// an edge, or points that approximate a face.
     pub points: HashSet<Point<3>>,
 
-    /// Segments that approximate edges
-    ///
-    /// Every approximation will involve edges, typically, and these are
-    /// approximated by these segments.
-    ///
-    /// All the points of these segments will also be available in the `points`
-    /// field of this struct.
-    pub segments: HashSet<Segment<3>>,
+    /// The approximation of the face's cycles
+    pub cycles: HashSet<CycleApprox>,
 }
 
 impl FaceApprox {
@@ -43,16 +37,16 @@ impl FaceApprox {
         // it have nothing to do with its curvature.
 
         let mut points = HashSet::new();
-        let mut segments = HashSet::new();
+        let mut cycles = HashSet::new();
 
         for cycle in face.all_cycles() {
             let cycle = CycleApprox::new(&cycle, tolerance);
 
-            segments.extend(cycle.segments());
-            points.extend(cycle.points);
+            points.extend(cycle.points.iter().copied());
+            cycles.insert(cycle);
         }
 
-        Self { points, segments }
+        Self { points, cycles }
     }
 }
 
@@ -131,7 +125,7 @@ fn approximate_edge(
 
 #[cfg(test)]
 mod tests {
-    use fj_math::{Point, Scalar, Segment};
+    use fj_math::{Point, Scalar};
     use map_macro::set;
 
     use crate::{
@@ -140,7 +134,7 @@ mod tests {
         topology::{Face, Vertex},
     };
 
-    use super::FaceApprox;
+    use super::{CycleApprox, FaceApprox};
 
     #[test]
     fn approximate_edge() -> anyhow::Result<()> {
@@ -187,12 +181,9 @@ mod tests {
             FaceApprox::new(&face.get(), tolerance),
             FaceApprox {
                 points: set![a, b, c, d],
-                segments: set![
-                    Segment::from([a, b]),
-                    Segment::from([b, c]),
-                    Segment::from([c, d]),
-                    Segment::from([d, a]),
-                ],
+                cycles: set![CycleApprox {
+                    points: vec![a, b, c, d, a],
+                }],
             }
         );
 

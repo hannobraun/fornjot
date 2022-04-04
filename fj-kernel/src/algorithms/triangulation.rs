@@ -38,8 +38,10 @@ pub fn triangulate(
                     .collect();
 
                 let segments: Vec<_> = approx
-                    .segments
+                    .cycles
                     .into_iter()
+                    .map(|cycle| cycle.segments())
+                    .flatten()
                     .map(|segment| {
                         let [a, b] = segment.points();
 
