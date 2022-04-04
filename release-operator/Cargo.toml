@@ -19,6 +19,6 @@ version  = "1.0.136"
 features = ["derive"]
 
 [dependencies.clap]
-version  = "3.1.6"
+version  = "3.1.8"
 features = ["std", "derive", "env"]
 default_features = false
