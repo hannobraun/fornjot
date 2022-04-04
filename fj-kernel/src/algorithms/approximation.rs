@@ -168,10 +168,10 @@ mod tests {
 
         let mut shape = Shape::new();
 
-        let a = Point::from([1., 2., 3.]);
-        let b = Point::from([2., 3., 5.]);
-        let c = Point::from([3., 5., 8.]);
-        let d = Point::from([5., 8., 13.]);
+        let a = Point::from([0., 0., 0.]);
+        let b = Point::from([3., 0., 0.]);
+        let c = Point::from([3., 3., 0.]);
+        let d = Point::from([0., 3., 0.]);
 
         let face = Face::builder(Surface::x_y_plane(), &mut shape)
             .with_exterior_polygon([a, b, c, d])
