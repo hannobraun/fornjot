@@ -4,26 +4,20 @@ use fj_math::{Point, Scalar, Segment};
 
 use crate::topology::{Cycle, Face, Vertex};
 
-/// The approximation of a face
+/// An approximation of a [`Face`]
 #[derive(Debug, PartialEq)]
-pub struct Approximation {
+pub struct FaceApprox {
     /// All points that make up the approximation
     ///
     /// These could be actual vertices from the model, points that approximate
     /// an edge, or points that approximate a face.
     pub points: HashSet<Point<3>>,
 
-    /// Segments that approximate edges
-    ///
-    /// Every approximation will involve edges, typically, and these are
-    /// approximated by these segments.
-    ///
-    /// All the points of these segments will also be available in the `points`
-    /// field of this struct.
-    pub segments: HashSet<Segment<3>>,
+    /// The approximation of the face's cycles
+    pub cycles: HashSet<CycleApprox>,
 }
 
-impl Approximation {
+impl FaceApprox {
     /// Compute the approximation of a face
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
@@ -43,24 +37,60 @@ impl Approximation {
         // it have nothing to do with its curvature.
 
         let mut points = HashSet::new();
-        let mut segments = HashSet::new();
+        let mut cycles = HashSet::new();
 
         for cycle in face.all_cycles() {
-            let cycle_points = approximate_cycle(&cycle, tolerance);
+            let cycle = CycleApprox::new(&cycle, tolerance);
 
-            let mut cycle_segments = Vec::new();
-            for segment in cycle_points.windows(2) {
-                let p0 = segment[0];
-                let p1 = segment[1];
-
-                cycle_segments.push(Segment::from([p0, p1]));
-            }
-
-            points.extend(cycle_points);
-            segments.extend(cycle_segments);
+            points.extend(cycle.points.iter().copied());
+            cycles.insert(cycle);
         }
 
-        Self { points, segments }
+        Self { points, cycles }
+    }
+}
+
+/// An approximation of a [`Cycle`]
+#[derive(Debug, Eq, PartialEq, Hash)]
+pub struct CycleApprox {
+    /// The points that approximate the cycle
+    pub points: Vec<Point<3>>,
+}
+
+impl CycleApprox {
+    /// Compute the approximation of a cycle
+    ///
+    /// `tolerance` defines how far the approximation is allowed to deviate from
+    /// the actual face.
+    pub fn new(cycle: &Cycle, tolerance: Scalar) -> Self {
+        let mut points = Vec::new();
+
+        for edge in cycle.edges() {
+            let mut edge_points = Vec::new();
+            edge.curve().approx(tolerance, &mut edge_points);
+
+            points.extend(approximate_edge(edge_points, edge.vertices()));
+        }
+
+        points.dedup();
+
+        Self { points }
+    }
+
+    /// Construct the segments that approximate the cycle
+    pub fn segments(&self) -> Vec<Segment<3>> {
+        let mut segments = Vec::new();
+
+        for segment in self.points.windows(2) {
+            // This can't panic, as we passed `2` to `windows`. Can be cleaned
+            // up, once `array_windows` is stable.
+            let p0 = segment[0];
+            let p1 = segment[1];
+
+            segments.push(Segment::from([p0, p1]));
+        }
+
+        segments
     }
 }
 
@@ -93,28 +123,9 @@ fn approximate_edge(
     points
 }
 
-/// Compute an approximation for a cycle
-///
-/// `tolerance` defines how far the approximation is allowed to deviate from the
-/// actual cycle.
-pub fn approximate_cycle(cycle: &Cycle, tolerance: Scalar) -> Vec<Point<3>> {
-    let mut points = Vec::new();
-
-    for edge in cycle.edges() {
-        let mut edge_points = Vec::new();
-        edge.curve().approx(tolerance, &mut edge_points);
-
-        points.extend(approximate_edge(edge_points, edge.vertices()));
-    }
-
-    points.dedup();
-
-    points
-}
-
 #[cfg(test)]
 mod tests {
-    use fj_math::{Point, Scalar, Segment};
+    use fj_math::{Point, Scalar};
     use map_macro::set;
 
     use crate::{
@@ -123,7 +134,7 @@ mod tests {
         topology::{Face, Vertex},
     };
 
-    use super::Approximation;
+    use super::{CycleApprox, FaceApprox};
 
     #[test]
     fn approximate_edge() -> anyhow::Result<()> {
@@ -167,15 +178,12 @@ mod tests {
             .build()?;
 
         assert_eq!(
-            Approximation::new(&face.get(), tolerance),
-            Approximation {
+            FaceApprox::new(&face.get(), tolerance),
+            FaceApprox {
                 points: set![a, b, c, d],
-                segments: set![
-                    Segment::from([a, b]),
-                    Segment::from([b, c]),
-                    Segment::from([c, d]),
-                    Segment::from([d, a]),
-                ],
+                cycles: set![CycleApprox {
+                    points: vec![a, b, c, d, a],
+                }],
             }
         );
 
