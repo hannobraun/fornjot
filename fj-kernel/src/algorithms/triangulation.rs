@@ -11,7 +11,7 @@ use spade::HasPosition;
 
 use crate::{geometry, shape::Shape, topology::Face};
 
-use super::Approximation;
+use super::FaceApprox;
 
 /// Triangulate a shape
 pub fn triangulate(
@@ -25,7 +25,7 @@ pub fn triangulate(
         match &face {
             Face::Face { surface, color, .. } => {
                 let surface = surface.get();
-                let approx = Approximation::new(&face, tolerance);
+                let approx = FaceApprox::new(&face, tolerance);
 
                 let points: Vec<_> = approx
                     .points

@@ -6,7 +6,7 @@ use crate::topology::{Cycle, Face, Vertex};
 
 /// The approximation of a face
 #[derive(Debug, PartialEq)]
-pub struct Approximation {
+pub struct FaceApprox {
     /// All points that make up the approximation
     ///
     /// These could be actual vertices from the model, points that approximate
@@ -23,7 +23,7 @@ pub struct Approximation {
     pub segments: HashSet<Segment<3>>,
 }
 
-impl Approximation {
+impl FaceApprox {
     /// Compute the approximation of a face
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
@@ -123,7 +123,7 @@ mod tests {
         topology::{Face, Vertex},
     };
 
-    use super::Approximation;
+    use super::FaceApprox;
 
     #[test]
     fn approximate_edge() -> anyhow::Result<()> {
@@ -167,8 +167,8 @@ mod tests {
             .build()?;
 
         assert_eq!(
-            Approximation::new(&face.get(), tolerance),
-            Approximation {
+            FaceApprox::new(&face.get(), tolerance),
+            FaceApprox {
                 points: set![a, b, c, d],
                 segments: set![
                     Segment::from([a, b]),
