@@ -137,6 +137,7 @@ impl<'r> CycleBuilder<'r> {
 pub struct FaceBuilder<'r> {
     surface: Surface,
     exterior: Option<Vec<Point<3>>>,
+    interiors: Vec<Vec<Point<3>>>,
 
     shape: &'r mut Shape,
 }
@@ -147,6 +148,7 @@ impl<'r> FaceBuilder<'r> {
         Self {
             surface,
             exterior: None,
+            interiors: Vec::new(),
 
             shape,
         }
@@ -165,6 +167,19 @@ impl<'r> FaceBuilder<'r> {
         }
     }
 
+    /// Add an interior polygon to the face
+    pub fn with_interior_polygon(
+        self,
+        points: impl IntoIterator<Item = impl Into<Point<3>>>,
+    ) -> Self {
+        let points = points.into_iter().map(Into::into).collect();
+
+        let mut interiors = self.interiors;
+        interiors.push(points);
+
+        Self { interiors, ..self }
+    }
+
     /// Build the face
     pub fn build(self) -> ValidationResult<Face> {
         let surface = self.shape.insert(self.surface)?;
@@ -177,10 +192,16 @@ impl<'r> FaceBuilder<'r> {
             None => Vec::new(),
         };
 
+        let mut interiors = Vec::new();
+        for points in self.interiors {
+            let cycle = Cycle::builder(self.shape).build_polygon(points)?;
+            interiors.push(cycle);
+        }
+
         self.shape.insert(Face::Face {
             surface,
             exteriors,
-            interiors: Vec::new(),
+            interiors,
             color: [255, 0, 0, 255],
         })
     }
