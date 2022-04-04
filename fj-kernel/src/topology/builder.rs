@@ -160,10 +160,8 @@ impl<'r> FaceBuilder<'r> {
         let points = points.into_iter().map(Into::into).collect();
 
         Self {
-            surface: self.surface,
             exterior: Some(points),
-
-            shape: self.shape,
+            ..self
         }
     }
 
