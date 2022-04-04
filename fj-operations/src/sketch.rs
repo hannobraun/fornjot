@@ -37,7 +37,7 @@ impl ToShape for fj::Sketch {
                 let b = window[1].clone();
 
                 let edge = Edge::builder(&mut shape)
-                    .line_segment_from_vertices([a, b])
+                    .build_line_segment_from_vertices([a, b])
                     .unwrap();
                 edges.push(edge);
             }

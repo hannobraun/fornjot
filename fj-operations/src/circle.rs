@@ -16,7 +16,7 @@ impl ToShape for fj::Circle {
         // to be added here.
 
         let edge = Edge::builder(&mut shape)
-            .circle(Scalar::from_f64(self.radius()))
+            .build_circle(Scalar::from_f64(self.radius()))
             .unwrap();
         shape.insert(Cycle { edges: vec![edge] }).unwrap();
 
