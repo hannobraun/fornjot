@@ -38,7 +38,7 @@ pub struct Vertex {
 
 impl Vertex {
     /// Build a vertex using the [`VertexBuilder`] API
-    pub fn build(shape: &mut Shape) -> VertexBuilder {
+    pub fn builder(shape: &mut Shape) -> VertexBuilder {
         VertexBuilder::new(shape)
     }
 

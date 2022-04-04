@@ -30,7 +30,7 @@ pub struct Cycle {
 
 impl Cycle {
     /// Build a cycle using the [`CycleBuilder`] API
-    pub fn build(shape: &mut Shape) -> CycleBuilder {
+    pub fn builder(shape: &mut Shape) -> CycleBuilder {
         CycleBuilder::new(shape)
     }
 
@@ -97,7 +97,7 @@ pub struct Edge {
 
 impl Edge {
     /// Build an edge using the [`EdgeBuilder`] API
-    pub fn build(shape: &mut Shape) -> EdgeBuilder {
+    pub fn builder(shape: &mut Shape) -> EdgeBuilder {
         EdgeBuilder::new(shape)
     }
 

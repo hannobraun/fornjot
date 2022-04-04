@@ -87,8 +87,8 @@ mod tests {
         let mut other = TestShape::new();
 
         let curve = other.add_curve();
-        let a = Vertex::build(&mut other).from_point([1., 0., 0.])?;
-        let b = Vertex::build(&mut other).from_point([2., 0., 0.])?;
+        let a = Vertex::builder(&mut other).from_point([1., 0., 0.])?;
+        let b = Vertex::builder(&mut other).from_point([2., 0., 0.])?;
 
         // Shouldn't work. Nothing has been added to `shape`.
         let err = shape
@@ -102,8 +102,8 @@ mod tests {
         assert!(err.missing_vertex(&b));
 
         let curve = shape.add_curve();
-        let a = Vertex::build(&mut shape).from_point([1., 0., 0.])?;
-        let b = Vertex::build(&mut shape).from_point([2., 0., 0.])?;
+        let a = Vertex::builder(&mut shape).from_point([1., 0., 0.])?;
+        let b = Vertex::builder(&mut shape).from_point([2., 0., 0.])?;
 
         // Everything has been added to `shape` now. Should work!
         shape.insert(Edge {
@@ -196,7 +196,7 @@ mod tests {
                 self.next_point.x += Scalar::ONE;
                 point
             });
-            let edge = Edge::build(&mut self.inner)
+            let edge = Edge::builder(&mut self.inner)
                 .line_segment_from_points(points)?;
 
             Ok(edge)

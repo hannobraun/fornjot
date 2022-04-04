@@ -66,7 +66,7 @@ impl<'r> EdgeBuilder<'r> {
         // Can be cleaned up with `try_map`, once that is stable:
         // https://doc.rust-lang.org/std/primitive.array.html#method.try_map
         let vertices =
-            vertices.map(|point| Vertex::build(self.shape).from_point(point));
+            vertices.map(|point| Vertex::builder(self.shape).from_point(point));
         let vertices = match vertices {
             [Ok(a), Ok(b)] => Ok([a, b]),
             [Err(err), _] | [_, Err(err)] => Err(err),
@@ -125,7 +125,7 @@ impl<'r> CycleBuilder<'r> {
             let points = [ab[0], ab[1]];
 
             let edge =
-                Edge::build(self.shape).line_segment_from_points(points)?;
+                Edge::builder(self.shape).line_segment_from_points(points)?;
             edges.push(edge);
         }
 

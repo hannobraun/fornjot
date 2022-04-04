@@ -134,8 +134,8 @@ mod tests {
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = Vertex::build(&mut shape).from_point(a)?;
-        let v2 = Vertex::build(&mut shape).from_point(d)?;
+        let v1 = Vertex::builder(&mut shape).from_point(a)?;
+        let v2 = Vertex::builder(&mut shape).from_point(d)?;
 
         // Regular edge
         assert_eq!(
@@ -162,7 +162,7 @@ mod tests {
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let abcd = Cycle::build(&mut shape).polygon([a, b, c, d])?;
+        let abcd = Cycle::builder(&mut shape).polygon([a, b, c, d])?;
 
         let surface = shape.insert(Surface::x_y_plane())?;
         let face = Face::Face {
