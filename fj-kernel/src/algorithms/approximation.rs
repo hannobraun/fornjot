@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar, Segment};
 
 use crate::topology::{Cycle, Face, Vertex};
 
-/// The approximation of a face
+/// An approximation of a [`Face`]
 #[derive(Debug, PartialEq)]
 pub struct FaceApprox {
     /// All points that make up the approximation
