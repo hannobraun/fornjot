@@ -8,5 +8,7 @@ mod sweep;
 mod triangulation;
 
 pub use self::{
-    approximation::FaceApprox, sweep::sweep_shape, triangulation::triangulate,
+    approximation::{CycleApprox, FaceApprox},
+    sweep::sweep_shape,
+    triangulation::triangulate,
 };

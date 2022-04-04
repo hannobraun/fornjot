@@ -46,21 +46,49 @@ impl FaceApprox {
         let mut segments = HashSet::new();
 
         for cycle in face.all_cycles() {
-            let cycle_points = approximate_cycle(&cycle, tolerance);
+            let cycle = CycleApprox::new(&cycle, tolerance);
 
             let mut cycle_segments = Vec::new();
-            for segment in cycle_points.windows(2) {
+            for segment in cycle.points.windows(2) {
                 let p0 = segment[0];
                 let p1 = segment[1];
 
                 cycle_segments.push(Segment::from([p0, p1]));
             }
 
-            points.extend(cycle_points);
+            points.extend(cycle.points);
             segments.extend(cycle_segments);
         }
 
         Self { points, segments }
+    }
+}
+
+/// An approximation of a [`Cycle`]
+#[derive(Debug, Eq, PartialEq, Hash)]
+pub struct CycleApprox {
+    /// The points that approximate the cycle
+    pub points: Vec<Point<3>>,
+}
+
+impl CycleApprox {
+    /// Compute the approximation of a cycle
+    ///
+    /// `tolerance` defines how far the approximation is allowed to deviate from
+    /// the actual face.
+    pub fn new(cycle: &Cycle, tolerance: Scalar) -> Self {
+        let mut points = Vec::new();
+
+        for edge in cycle.edges() {
+            let mut edge_points = Vec::new();
+            edge.curve().approx(tolerance, &mut edge_points);
+
+            points.extend(approximate_edge(edge_points, edge.vertices()));
+        }
+
+        points.dedup();
+
+        Self { points }
     }
 }
 
@@ -89,25 +117,6 @@ fn approximate_edge(
             points.push(point);
         }
     }
-
-    points
-}
-
-/// Compute an approximation for a cycle
-///
-/// `tolerance` defines how far the approximation is allowed to deviate from the
-/// actual cycle.
-pub fn approximate_cycle(cycle: &Cycle, tolerance: Scalar) -> Vec<Point<3>> {
-    let mut points = Vec::new();
-
-    for edge in cycle.edges() {
-        let mut edge_points = Vec::new();
-        edge.curve().approx(tolerance, &mut edge_points);
-
-        points.extend(approximate_edge(edge_points, edge.vertices()));
-    }
-
-    points.dedup();
 
     points
 }
