@@ -13,8 +13,11 @@ pub struct FaceApprox {
     /// an edge, or points that approximate a face.
     pub points: HashSet<Point<3>>,
 
-    /// The approximation of the face's cycles
-    pub cycles: HashSet<CycleApprox>,
+    /// Approximations of the exterior cycles
+    pub exteriors: Vec<CycleApprox>,
+
+    /// Approximations of the interior cycles
+    pub interiors: Vec<CycleApprox>,
 }
 
 impl FaceApprox {
@@ -37,16 +40,27 @@ impl FaceApprox {
         // it have nothing to do with its curvature.
 
         let mut points = HashSet::new();
-        let mut cycles = HashSet::new();
+        let mut exteriors = Vec::new();
+        let mut interiors = Vec::new();
 
-        for cycle in face.all_cycles() {
+        for cycle in face.exteriors() {
             let cycle = CycleApprox::new(&cycle, tolerance);
 
             points.extend(cycle.points.iter().copied());
-            cycles.insert(cycle);
+            exteriors.push(cycle);
+        }
+        for cycle in face.interiors() {
+            let cycle = CycleApprox::new(&cycle, tolerance);
+
+            points.extend(cycle.points.iter().copied());
+            interiors.push(cycle);
         }
 
-        Self { points, cycles }
+        Self {
+            points,
+            exteriors,
+            interiors,
+        }
     }
 }
 
@@ -168,21 +182,30 @@ mod tests {
 
         let mut shape = Shape::new();
 
-        let a = Point::from([1., 2., 3.]);
-        let b = Point::from([2., 3., 5.]);
-        let c = Point::from([3., 5., 8.]);
-        let d = Point::from([5., 8., 13.]);
+        let a = Point::from([0., 0., 0.]);
+        let b = Point::from([3., 0., 0.]);
+        let c = Point::from([3., 3., 0.]);
+        let d = Point::from([0., 3., 0.]);
+
+        let e = Point::from([1., 1., 0.]);
+        let f = Point::from([2., 1., 0.]);
+        let g = Point::from([2., 2., 0.]);
+        let h = Point::from([1., 2., 0.]);
 
         let face = Face::builder(Surface::x_y_plane(), &mut shape)
             .with_exterior_polygon([a, b, c, d])
+            .with_interior_polygon([e, f, g, h])
             .build()?;
 
         assert_eq!(
             FaceApprox::new(&face.get(), tolerance),
             FaceApprox {
-                points: set![a, b, c, d],
-                cycles: set![CycleApprox {
+                points: set![a, b, c, d, e, f, g, h],
+                exteriors: vec![CycleApprox {
                     points: vec![a, b, c, d, a],
+                }],
+                interiors: vec![CycleApprox {
+                    points: vec![e, f, g, h, e],
                 }],
             }
         );
