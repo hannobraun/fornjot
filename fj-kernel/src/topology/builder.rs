@@ -157,9 +157,11 @@ impl<'r> FaceBuilder<'r> {
         self,
         points: impl IntoIterator<Item = impl Into<Point<3>>>,
     ) -> Self {
+        let points = points.into_iter().map(Into::into).collect();
+
         Self {
             surface: self.surface,
-            exterior: Some(points.into_iter().map(Into::into).collect()),
+            exterior: Some(points),
 
             shape: self.shape,
         }
