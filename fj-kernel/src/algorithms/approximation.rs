@@ -48,16 +48,8 @@ impl FaceApprox {
         for cycle in face.all_cycles() {
             let cycle = CycleApprox::new(&cycle, tolerance);
 
-            let mut cycle_segments = Vec::new();
-            for segment in cycle.points.windows(2) {
-                let p0 = segment[0];
-                let p1 = segment[1];
-
-                cycle_segments.push(Segment::from([p0, p1]));
-            }
-
+            segments.extend(cycle.segments());
             points.extend(cycle.points);
-            segments.extend(cycle_segments);
         }
 
         Self { points, segments }
@@ -89,6 +81,22 @@ impl CycleApprox {
         points.dedup();
 
         Self { points }
+    }
+
+    /// Construct the segments that approximate the cycle
+    pub fn segments(&self) -> Vec<Segment<3>> {
+        let mut segments = Vec::new();
+
+        for segment in self.points.windows(2) {
+            // This can't panic, as we passed `2` to `windows`. Can be cleaned
+            // up, once `array_windows` is stable.
+            let p0 = segment[0];
+            let p1 = segment[1];
+
+            segments.push(Segment::from([p0, p1]));
+        }
+
+        segments
     }
 }
 
