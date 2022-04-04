@@ -382,12 +382,12 @@ mod tests {
 
             let [a, b, c] = points.map(|point| point.into());
 
-            let ab =
-                Edge::build(&mut shape).line_segment_from_points([a, b])?;
-            let bc =
-                Edge::build(&mut shape).line_segment_from_points([b, c])?;
-            let ca =
-                Edge::build(&mut shape).line_segment_from_points([c, a])?;
+            let ab = Edge::builder(&mut shape)
+                .build_line_segment_from_points([a, b])?;
+            let bc = Edge::builder(&mut shape)
+                .build_line_segment_from_points([b, c])?;
+            let ca = Edge::builder(&mut shape)
+                .build_line_segment_from_points([c, a])?;
 
             let cycles = shape.insert(Cycle {
                 edges: vec![ab, bc, ca],

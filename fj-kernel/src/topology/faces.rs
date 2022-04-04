@@ -2,9 +2,12 @@ use std::hash::{Hash, Hasher};
 
 use fj_math::Triangle;
 
-use crate::{geometry::Surface, shape::Handle};
+use crate::{
+    geometry::Surface,
+    shape::{Handle, Shape},
+};
 
-use super::edges::Cycle;
+use super::{builder::FaceBuilder, edges::Cycle};
 
 /// A face of a shape
 ///
@@ -62,6 +65,11 @@ pub enum Face {
 }
 
 impl Face {
+    /// Build a face using the [`FaceBuilder`] API
+    pub fn builder(surface: Surface, shape: &mut Shape) -> FaceBuilder {
+        FaceBuilder::new(surface, shape)
+    }
+
     /// Access the surface that the face refers to
     ///
     /// This is a convenience method that saves the caller from dealing with the
