@@ -17,7 +17,7 @@ pub struct FaceApprox {
     pub exterior: CycleApprox,
 
     /// Approximations of the interior cycles
-    pub interiors: Vec<CycleApprox>,
+    pub interiors: HashSet<CycleApprox>,
 }
 
 impl FaceApprox {
@@ -41,7 +41,7 @@ impl FaceApprox {
 
         let mut points = HashSet::new();
         let mut exteriors = Vec::new();
-        let mut interiors = Vec::new();
+        let mut interiors = HashSet::new();
 
         for cycle in face.exteriors() {
             let cycle = CycleApprox::new(&cycle, tolerance);
@@ -53,7 +53,7 @@ impl FaceApprox {
             let cycle = CycleApprox::new(&cycle, tolerance);
 
             points.extend(cycle.points.iter().copied());
-            interiors.push(cycle);
+            interiors.insert(cycle);
         }
 
         // Only polygon with exactly one exterior cycle are supported.
@@ -216,7 +216,7 @@ mod tests {
                 exterior: CycleApprox {
                     points: vec![a, b, c, d, a],
                 },
-                interiors: vec![CycleApprox {
+                interiors: set![CycleApprox {
                     points: vec![e, f, g, h, e],
                 }],
             }
