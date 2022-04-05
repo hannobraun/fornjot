@@ -44,6 +44,19 @@ impl<const D: usize> Triangle<D> {
         self.color
     }
 
+    /// Normalize the triangle
+    ///
+    /// Returns a new `Triangle` instance with the same points, but the points
+    /// ordered such that they are ordered according to their `Ord`/`PartialOrd`
+    /// implementation.
+    ///
+    /// This is useful for comparing triangles, where the order of points is not
+    /// important.
+    pub fn normalize(mut self) -> Self {
+        self.points.sort();
+        self
+    }
+
     /// Set a new color for the particular triangle
     pub fn set_color(&mut self, color: [u8; 4]) {
         self.color = color;
