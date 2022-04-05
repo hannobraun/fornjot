@@ -1,3 +1,5 @@
+mod polygon;
+
 use std::collections::BTreeSet;
 
 use fj_debug::{DebugInfo, TriangleEdgeCheck};
@@ -10,6 +12,8 @@ use parry3d_f64::query::Ray as Ray3;
 use spade::HasPosition;
 
 use crate::{geometry, shape::Shape, topology::Face};
+
+use self::polygon::Polygon;
 
 use super::FaceApprox;
 
@@ -37,29 +41,8 @@ pub fn triangulate(
                     })
                     .collect();
 
-                let segments: Vec<_> = approx
-                    .exterior
-                    .segments()
-                    .into_iter()
-                    .chain(
-                        approx
-                            .interiors
-                            .into_iter()
-                            .map(|cycle_approx| cycle_approx.segments())
-                            .flatten(),
-                    )
-                    .into_iter()
-                    .map(|segment| {
-                        let [a, b] = segment.points();
-
-                        // Can't panic, unless the approximation wrongfully
-                        // generates points that are not in the surface.
-                        let a = surface.point_model_to_surface(a);
-                        let b = surface.point_model_to_surface(b);
-
-                        [a, b]
-                    })
-                    .collect();
+                let face_as_polygon =
+                    Polygon::new(approx.exterior, approx.interiors, surface);
 
                 // We're also going to need a point outside of the polygon, for
                 // the point-in-polygon tests.
@@ -69,7 +52,6 @@ pub fn triangulate(
                 let outside = aabb.max * 2.;
 
                 let mut triangles = delaunay(points);
-                let face_as_polygon = segments;
 
                 triangles.retain(|t| {
                     for segment in [t[0], t[1], t[2], t[0]].windows(2) {
@@ -81,10 +63,11 @@ pub fn triangulate(
 
                         // If the segment is an edge of the face, we don't need
                         // to take a closer look.
-                        if face_as_polygon.contains(&segment) {
+                        if face_as_polygon.segments.contains(&segment) {
                             continue;
                         }
-                        if face_as_polygon.contains(&inverted_segment) {
+                        if face_as_polygon.segments.contains(&inverted_segment)
+                        {
                             continue;
                         }
 
@@ -115,7 +98,7 @@ pub fn triangulate(
 
                         // Use ray-casting to determine if `center` is within
                         // the face-polygon.
-                        for edge in &face_as_polygon {
+                        for edge in &face_as_polygon.segments {
                             // Please note that we if we get to this point, then
                             // the point is not on a polygon edge, due to the
                             // check above. We don't need to handle any edge
