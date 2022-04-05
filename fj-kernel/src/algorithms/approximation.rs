@@ -13,8 +13,8 @@ pub struct FaceApprox {
     /// an edge, or points that approximate a face.
     pub points: HashSet<Point<3>>,
 
-    /// Approximations of the exterior cycles
-    pub exteriors: Vec<CycleApprox>,
+    /// Approximation of the exterior cycle
+    pub exterior: CycleApprox,
 
     /// Approximations of the interior cycles
     pub interiors: Vec<CycleApprox>,
@@ -56,9 +56,21 @@ impl FaceApprox {
             interiors.push(cycle);
         }
 
+        // Only polygon with exactly one exterior cycle are supported.
+        //
+        // See this issue for some background:
+        // https://github.com/hannobraun/Fornjot/issues/250
+        let exterior = exteriors
+            .pop()
+            .expect("Can't approximate face without exterior cycle");
+        assert!(
+            exteriors.is_empty(),
+            "Approximation only supports faces with one exterior cycle",
+        );
+
         Self {
             points,
-            exteriors,
+            exterior,
             interiors,
         }
     }
@@ -201,9 +213,9 @@ mod tests {
             FaceApprox::new(&face.get(), tolerance),
             FaceApprox {
                 points: set![a, b, c, d, e, f, g, h],
-                exteriors: vec![CycleApprox {
+                exterior: CycleApprox {
                     points: vec![a, b, c, d, a],
-                }],
+                },
                 interiors: vec![CycleApprox {
                     points: vec![e, f, g, h, e],
                 }],
