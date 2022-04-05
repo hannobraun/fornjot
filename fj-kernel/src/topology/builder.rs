@@ -8,6 +8,7 @@ use crate::{
 use super::{Cycle, Edge, Face, Vertex};
 
 /// API for building a [`Vertex`]
+#[must_use]
 pub struct VertexBuilder<'r> {
     shape: &'r mut Shape,
 }
@@ -34,6 +35,7 @@ impl<'r> VertexBuilder<'r> {
 }
 
 /// API for building an [`Edge`]
+#[must_use]
 pub struct EdgeBuilder<'r> {
     shape: &'r mut Shape,
 }
@@ -95,6 +97,7 @@ impl<'r> EdgeBuilder<'r> {
 }
 
 /// API for building a [`Cycle`]
+#[must_use]
 pub struct CycleBuilder<'r> {
     shape: &'r mut Shape,
 }
@@ -134,6 +137,7 @@ impl<'r> CycleBuilder<'r> {
 }
 
 /// API for building a [`Face`]
+#[must_use]
 pub struct FaceBuilder<'r> {
     surface: Surface,
     exterior: Option<Vec<Point<3>>>,
