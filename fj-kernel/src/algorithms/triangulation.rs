@@ -242,6 +242,41 @@ mod tests {
         Ok(())
     }
 
+    #[test]
+    fn simple_hole() -> anyhow::Result<()> {
+        let mut shape = Shape::new();
+
+        let a = [0., 0., 0.];
+        let b = [4., 0., 0.];
+        let c = [4., 4., 0.];
+        let d = [0., 4., 0.];
+
+        let e = [1., 1., 0.];
+        let f = [3., 1., 0.];
+        let g = [3., 3., 0.];
+        let h = [1., 2., 0.];
+
+        Face::builder(Surface::x_y_plane(), &mut shape)
+            .with_exterior_polygon([a, b, c, d])
+            .with_interior_polygon([e, f, g, h])
+            .build()?;
+
+        let triangles = triangulate(shape);
+
+        // Should contain some triangles from the polygon. Don't need to test
+        // them all.
+        assert!(triangles.contains([a, e, h]));
+        assert!(triangles.contains([a, d, h]));
+
+        // Shouldn't contain any possible triangle from the hole.
+        assert!(!triangles.contains([e, f, g]));
+        assert!(!triangles.contains([e, g, h]));
+        assert!(!triangles.contains([e, f, h]));
+        assert!(!triangles.contains([f, g, h]));
+
+        Ok(())
+    }
+
     fn triangulate(shape: Shape) -> Triangles {
         let tolerance = Scalar::ONE;
 
