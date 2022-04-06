@@ -70,8 +70,12 @@ impl Triangle<3> {
     }
 }
 
-impl<const D: usize> From<[Point<D>; 3]> for Triangle<D> {
-    fn from(points: [Point<D>; 3]) -> Self {
+impl<P, const D: usize> From<[P; 3]> for Triangle<D>
+where
+    P: Into<Point<D>>,
+{
+    fn from(points: [P; 3]) -> Self {
+        let points = points.map(Into::into);
         Self::from_points(points)
     }
 }
