@@ -35,4 +35,8 @@ impl Polygon {
 
         Self { segments }
     }
+
+    pub fn contains_segment(&self, &[a, b]: &[geometry::Point<2>; 2]) -> bool {
+        self.segments.contains(&[a, b]) || self.segments.contains(&[b, a])
+    }
 }

@@ -59,15 +59,10 @@ pub fn triangulate(
                         // can be cleaned up a bit, once `array_windows` is
                         // stable.
                         let segment = [segment[0], segment[1]];
-                        let inverted_segment = [segment[1], segment[0]];
 
                         // If the segment is an edge of the face, we don't need
                         // to take a closer look.
-                        if face_as_polygon.segments.contains(&segment) {
-                            continue;
-                        }
-                        if face_as_polygon.segments.contains(&inverted_segment)
-                        {
+                        if face_as_polygon.contains_segment(&segment) {
                             continue;
                         }
 
