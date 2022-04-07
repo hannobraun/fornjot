@@ -75,7 +75,7 @@ impl Renderer {
             format: color_format,
             width: window.width(),
             height: window.height(),
-            present_mode: wgpu::PresentMode::Fifo,
+            present_mode: wgpu::PresentMode::Mailbox,
         };
         surface.configure(&device, &surface_config);
 
@@ -300,24 +300,24 @@ impl Renderer {
 
 #[derive(Error, Debug)]
 pub enum InitError {
-    #[error("I/O error")]
+    #[error("I/O error: {0}")]
     Io(#[from] io::Error),
 
     #[error("Error request adapter")]
     RequestAdapter,
 
-    #[error("Error requesting device")]
+    #[error("Error requesting device: {0}")]
     RequestDevice(#[from] wgpu::RequestDeviceError),
 
-    #[error("Error loading font")]
+    #[error("Error loading font: {0}")]
     InvalidFont(#[from] InvalidFont),
 }
 
 #[derive(Error, Debug)]
 pub enum DrawError {
-    #[error("Error acquiring output surface")]
+    #[error("Error acquiring output surface: {0}")]
     Surface(#[from] wgpu::SurfaceError),
 
-    #[error("Error drawing text")]
+    #[error("Error drawing text: {0}")]
     Text(String),
 }
