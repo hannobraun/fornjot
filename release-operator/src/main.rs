@@ -63,6 +63,8 @@ fn main() -> anyhow::Result<()> {
     log::trace!("starting release-operator process");
 
     let cli = Cli::parse();
+    // Please mind: this operation is safe due to the usage of `secstr::SecStr`
+    // which will redact any secrets, like the crates.io token.
     log::debug!("got arguments: {cli:#?}");
 
     match &cli.command {
