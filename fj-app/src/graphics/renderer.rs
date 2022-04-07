@@ -75,7 +75,7 @@ impl Renderer {
             format: color_format,
             width: window.width(),
             height: window.height(),
-            present_mode: wgpu::PresentMode::Fifo,
+            present_mode: wgpu::PresentMode::Mailbox,
         };
         surface.configure(&device, &surface_config);
 
