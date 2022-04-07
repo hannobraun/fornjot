@@ -224,11 +224,8 @@ fn main() -> anyhow::Result<()> {
                 if let (Some(shape), Some(camera)) = (&shape, &mut camera) {
                     camera.update_planes(&shape.aabb);
 
-                    match renderer.draw(camera, &draw_config) {
-                        Ok(()) => {}
-                        Err(err) => {
-                            warn!("Draw error: {}", err);
-                        }
+                    if let Err(err) = renderer.draw(camera, &draw_config) {
+                        warn!("Draw error: {}", err);
                     }
                 }
             }
