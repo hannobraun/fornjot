@@ -54,6 +54,11 @@ fn main() -> anyhow::Result<()> {
     );
     env_logger::init();
 
+    if log::log_enabled!(log::Level::Trace) {
+        // see https://docs.rs/cmd_lib/latest/cmd_lib/fn.set_debug.html
+        std::env::set_var("CMD_LIB_DEBUG", "1");
+    }
+
     let start = std::time::Instant::now();
     log::trace!("starting release-operator process");
 
