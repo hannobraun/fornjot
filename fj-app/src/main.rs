@@ -15,7 +15,7 @@ use fj_kernel::algorithms::triangulate;
 use fj_math::{Aabb, Scalar, Triangle};
 use fj_operations::ToShape as _;
 use futures::executor::block_on;
-use tracing::trace;
+use tracing::{trace, warn};
 use tracing_subscriber::fmt::format;
 use tracing_subscriber::EnvFilter;
 use winit::{
@@ -227,7 +227,7 @@ fn main() -> anyhow::Result<()> {
                     match renderer.draw(camera, &draw_config) {
                         Ok(()) => {}
                         Err(err) => {
-                            panic!("Draw error: {}", err);
+                            warn!("Draw error: {}", err);
                         }
                     }
                 }
