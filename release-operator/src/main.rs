@@ -71,7 +71,7 @@ fn main() -> anyhow::Result<()> {
                 .detect()?;
         }
         Commands::Publish(args) => {
-            Registry::new(&args.token, &args.crates).publish()?;
+            Registry::new(&args.token, &args.crates).publish_crates()?;
         }
     }
 
