@@ -149,6 +149,17 @@ fn approximate_edge(
     points
 }
 
+impl<T, P> From<T> for CycleApprox
+where
+    T: IntoIterator<Item = P>,
+    P: Into<Point<3>>,
+{
+    fn from(points: T) -> Self {
+        let points = points.into_iter().map(Into::into).collect();
+        Self { points }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use fj_math::{Point, Scalar};
