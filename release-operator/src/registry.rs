@@ -108,6 +108,8 @@ impl Crate {
     }
 
     fn submit(&self, token: &SecStr, dry_run: bool) -> anyhow::Result<&Self> {
+        log::info!("{self} publishing new version");
+
         std::env::set_current_dir(&self.path)
             .context("switch working directory to the crate in scope")?;
 
