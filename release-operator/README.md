@@ -122,7 +122,7 @@ cargo run -- publish \
 
 The `--token` can also be set using on the environment using `CARGO_REGISTRY_TOKEN`.
 
-The `--crate` option should be repeated for every crate to publish. Since the example is called from the `release-operator` sub0directory, all paths are relative to that location. The order matters; the crates are published top to bottom.
+The `--crate` option should be repeated for every crate to publish. Since the example is called from the `release-operator` subdirectory, all paths are relative to that location. The order matters; the crates are published top to bottom.
 
 There is an option `--dry-run` flag, which defaults to `false`. Set it to run the entire process without uploading any artifacts.
 
