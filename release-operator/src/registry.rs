@@ -91,10 +91,10 @@ impl Crate {
 
         if ours == theirs {
             log::info!("{self} has already been published as {ours}");
-            return Ok(false);
+            return Ok(true);
         }
 
-        Ok(true)
+        Ok(false)
     }
 
     fn submit(&self, token: &SecStr) -> anyhow::Result<&Self> {
