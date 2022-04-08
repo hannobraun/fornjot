@@ -12,7 +12,7 @@ use crate::{
 
 pub struct Polygon {
     surface: Surface,
-    pub segments: HashSet<[geometry::Point<2>; 2]>,
+    segments: HashSet<[geometry::Point<2>; 2]>,
 }
 
 impl Polygon {
