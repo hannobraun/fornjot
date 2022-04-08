@@ -16,6 +16,12 @@ pub struct Crate {
     path: PathBuf,
 }
 
+enum CrateState {
+    Published,
+    Unknown,
+    Outdated,
+}
+
 impl Registry {
     pub fn new(token: &SecStr, crates: &[Crate], dry_run: bool) -> Self {
         Self {
@@ -29,11 +35,12 @@ impl Registry {
         for c in &self.crates {
             c.validate()?;
 
-            if c.already_published()? {
-                continue;
+            match c.already_published()? {
+                CrateState::Published => continue,
+                CrateState::Unknown | CrateState::Outdated => {
+                    c.submit(&self.token, self.dry_run)?;
+                }
             }
-
-            c.submit(&self.token, self.dry_run)?;
         }
 
         Ok(())
@@ -50,7 +57,7 @@ impl Crate {
         }
     }
 
-    fn already_published(&self) -> anyhow::Result<bool> {
+    fn already_published(&self) -> anyhow::Result<CrateState> {
         let theirs = {
             let name = format!("{self}");
             let search_result = cmd_lib::run_fun!(cargo search "${name}")
@@ -58,7 +65,7 @@ impl Crate {
 
             if search_result.is_empty() {
                 log::info!("{self} has not been published yet");
-                return Ok(true);
+                return Ok(CrateState::Unknown);
             }
 
             let version = cmd_lib::run_fun!(cargo search "${name}" | head -n1 | awk r#"{print $3}"# | tr -d '"')
@@ -94,10 +101,10 @@ impl Crate {
 
         if ours == theirs {
             log::info!("{self} has already been published as {ours}");
-            return Ok(true);
+            return Ok(CrateState::Published);
         }
 
-        Ok(false)
+        Ok(CrateState::Outdated)
     }
 
     fn submit(&self, token: &SecStr, dry_run: bool) -> anyhow::Result<&Self> {
