@@ -1,7 +1,7 @@
 mod polygon;
 
 use fj_debug::DebugInfo;
-use fj_math::{Aabb, Scalar, Triangle};
+use fj_math::{Scalar, Triangle};
 use parry2d_f64::utils::point_in_triangle::{corner_direction, Orientation};
 use spade::HasPosition;
 
@@ -37,19 +37,10 @@ pub fn triangulate(
 
                 let face_as_polygon =
                     Polygon::new(approx.exterior, approx.interiors, surface);
-
-                // We're also going to need a point outside of the polygon, for
-                // the point-in-polygon tests.
-                let aabb = Aabb::<2>::from_points(
-                    points.iter().map(|vertex| vertex.native()),
-                );
-                let outside = aabb.max * 2.;
-
                 let mut triangles = delaunay(points);
 
                 triangles.retain(|triangle| {
-                    face_as_polygon
-                        .contains_triangle(triangle, outside, debug_info)
+                    face_as_polygon.contains_triangle(triangle, debug_info)
                 });
 
                 out.extend(triangles.into_iter().map(|triangle| {

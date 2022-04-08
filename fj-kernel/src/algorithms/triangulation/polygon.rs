@@ -13,6 +13,7 @@ use crate::{
 pub struct Polygon {
     surface: Surface,
     segments: HashSet<[geometry::Point<2>; 2]>,
+    outside: Point<2>,
 }
 
 impl Polygon {
@@ -21,6 +22,8 @@ impl Polygon {
         interiors: impl IntoIterator<Item = CycleApprox>,
         surface: Surface,
     ) -> Self {
+        let mut max = Point::origin();
+
         let segments = exterior
             .segments()
             .into_iter()
@@ -34,18 +37,29 @@ impl Polygon {
                 segment.points().map(|point| {
                     // Can't panic, unless the approximation wrongfully
                     // generates points that are not in the surface.
-                    surface.point_model_to_surface(point)
+                    let point = surface.point_model_to_surface(point);
+
+                    if point.native() > max {
+                        max = point.native();
+                    }
+
+                    point
                 })
             })
             .collect();
 
-        Self { surface, segments }
+        let outside = max * 2.;
+
+        Self {
+            surface,
+            segments,
+            outside,
+        }
     }
 
     pub fn contains_triangle(
         &self,
         &[a, b, c]: &[geometry::Point<2>; 3],
-        outside: Point<2>,
         debug_info: &mut DebugInfo,
     ) -> bool {
         for segment in [a, b, c, a].windows(2) {
@@ -62,7 +76,7 @@ impl Polygon {
             // To determine if the edge is within the polygon, we determine if
             // its center point is in the polygon.
             let center = segment[0] + (segment[1] - segment[0]) / Scalar::TWO;
-            if !self.contains_point(center, outside, debug_info) {
+            if !self.contains_point(center, debug_info) {
                 // The segment is outside of the face. This means we can throw
                 // away the whole triangle.
                 return false;
@@ -81,10 +95,9 @@ impl Polygon {
     pub fn contains_point(
         &self,
         point: Point<2>,
-        outside: Point<2>,
         debug_info: &mut DebugInfo,
     ) -> bool {
-        let dir = outside - point;
+        let dir = self.outside - point;
         let ray = Ray2 {
             origin: point.to_na(),
             dir: dir.to_na(),
