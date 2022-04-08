@@ -1,6 +1,7 @@
 use anyhow::{anyhow, Context};
 use secstr::SecStr;
 use std::fmt::{Display, Formatter};
+use std::io::{BufRead, BufReader};
 use std::path::PathBuf;
 use std::str::FromStr;
 
@@ -100,10 +101,29 @@ impl Crate {
     }
 
     fn submit(&self, token: &SecStr, dry_run: bool) -> anyhow::Result<&Self> {
-        // todo run `cargo publish`
-        // todo support a dry-run mode
-        let _ = token;
-        let _ = dry_run;
+        std::env::set_current_dir(&self.path)
+            .context("switch working directory to the crate in scope")?;
+
+        let cmd = {
+            let token = token.to_string();
+            let mut cmd = vec!["cargo", "publish", "--token", &token];
+
+            if dry_run {
+                cmd.push("--dry-run");
+            }
+
+            cmd.join(" ")
+        };
+
+        cmd_lib::spawn_with_output!(bash -c $cmd)?.wait_with_pipe(
+            &mut |pipe| {
+                BufReader::new(pipe)
+                    .lines()
+                    .flatten()
+                    .for_each(|line| println!("{}", line));
+            },
+        )?;
+
         Ok(self)
     }
 }
