@@ -63,7 +63,7 @@ impl Crate {
 
             let version = cmd_lib::run_fun!(cargo search "${name}" | head -n1 | awk r#"{print $3}"# | tr -d '"')
                 .context("search crates.io for published crate version")?;
-            log::trace!("{self} found as {version} on their side");
+            log::debug!("{self} found as {version} on their side");
 
             version
         };
@@ -87,7 +87,7 @@ impl Crate {
                 .ok_or_else(|| anyhow!("could not find package"))?;
 
             let version = package.version.to_string();
-            log::trace!("{self} found as {version} on our side");
+            log::debug!("{self} found as {version} on our side");
 
             version
         };
