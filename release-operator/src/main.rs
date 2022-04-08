@@ -45,6 +45,10 @@ struct PublishArgs {
     /// Repeatable option to provide a list of paths to crates
     #[clap(short, long = "crate")]
     crates: Vec<Crate>,
+
+    /// Perform all checks without uploading
+    #[clap(long)]
+    dry_run: bool,
 }
 
 fn main() -> anyhow::Result<()> {
@@ -73,7 +77,8 @@ fn main() -> anyhow::Result<()> {
                 .detect()?;
         }
         Commands::Publish(args) => {
-            Registry::new(&args.token, &args.crates).publish_crates()?;
+            Registry::new(&args.token, &args.crates, args.dry_run)
+                .publish_crates()?;
         }
     }
 

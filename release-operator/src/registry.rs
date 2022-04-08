@@ -7,6 +7,7 @@ use std::str::FromStr;
 pub struct Registry {
     token: SecStr,
     crates: Vec<Crate>,
+    dry_run: bool,
 }
 
 #[derive(Clone, Debug)]
@@ -15,10 +16,11 @@ pub struct Crate {
 }
 
 impl Registry {
-    pub fn new(token: &SecStr, crates: &[Crate]) -> Self {
+    pub fn new(token: &SecStr, crates: &[Crate], dry_run: bool) -> Self {
         Self {
             token: token.to_owned(),
             crates: crates.to_vec(),
+            dry_run,
         }
     }
 
@@ -30,7 +32,7 @@ impl Registry {
                 continue;
             }
 
-            c.submit(&self.token)?;
+            c.submit(&self.token, self.dry_run)?;
         }
 
         Ok(())
@@ -97,10 +99,11 @@ impl Crate {
         Ok(false)
     }
 
-    fn submit(&self, token: &SecStr) -> anyhow::Result<&Self> {
+    fn submit(&self, token: &SecStr, dry_run: bool) -> anyhow::Result<&Self> {
         // todo run `cargo publish`
         // todo support a dry-run mode
         let _ = token;
+        let _ = dry_run;
         Ok(self)
     }
 }
