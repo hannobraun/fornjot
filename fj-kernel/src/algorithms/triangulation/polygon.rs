@@ -17,42 +17,47 @@ pub struct Polygon {
 }
 
 impl Polygon {
-    pub fn new(
-        exterior: CycleApprox,
-        interiors: impl IntoIterator<Item = CycleApprox>,
-        surface: Surface,
-    ) -> Self {
-        let mut max = Point::origin();
-
-        let segments = exterior
-            .segments()
-            .into_iter()
-            .chain(
-                interiors
-                    .into_iter()
-                    .flat_map(|cycle_approx| cycle_approx.segments()),
-            )
-            .into_iter()
-            .map(|segment| {
-                segment.points().map(|point| {
-                    // Can't panic, unless the approximation wrongfully
-                    // generates points that are not in the surface.
-                    let point = surface.point_model_to_surface(point);
-
-                    if point.native() > max {
-                        max = point.native();
-                    }
-
-                    point
-                })
-            })
-            .collect();
-
+    pub fn new(surface: Surface) -> Self {
         Self {
             surface,
-            segments,
-            max,
+            segments: HashSet::new(),
+            max: Point::origin(),
         }
+    }
+
+    pub fn with_exterior(self, exterior: CycleApprox) -> Self {
+        self.with_approx(exterior)
+    }
+
+    pub fn with_interiors(
+        mut self,
+        interiors: impl IntoIterator<Item = CycleApprox>,
+    ) -> Self {
+        for interior in interiors {
+            self = self.with_approx(interior);
+        }
+
+        self
+    }
+
+    fn with_approx(mut self, approx: CycleApprox) -> Self {
+        for segment in approx.segments() {
+            let segment = segment.points().map(|point| {
+                // Can't panic, unless the approximation wrongfully generates
+                // points that are not in the surface.
+                let point = self.surface.point_model_to_surface(point);
+
+                if point.native() > self.max {
+                    self.max = point.native();
+                }
+
+                point
+            });
+
+            self.segments.insert(segment);
+        }
+
+        self
     }
 
     pub fn contains_triangle(

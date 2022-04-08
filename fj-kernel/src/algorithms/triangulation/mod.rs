@@ -34,8 +34,9 @@ pub fn triangulate(
                         surface.point_model_to_surface(vertex)
                     })
                     .collect();
-                let face_as_polygon =
-                    Polygon::new(approx.exterior, approx.interiors, surface);
+                let face_as_polygon = Polygon::new(surface)
+                    .with_exterior(approx.exterior)
+                    .with_interiors(approx.interiors);
 
                 let mut triangles = delaunay(points);
                 triangles.retain(|triangle| {
