@@ -47,8 +47,9 @@ pub fn triangulate(
 
                 let mut triangles = delaunay(points);
 
-                triangles.retain(|t| {
-                    face_as_polygon.contains_triangle(t, outside, debug_info)
+                triangles.retain(|triangle| {
+                    face_as_polygon
+                        .contains_triangle(triangle, outside, debug_info)
                 });
 
                 out.extend(triangles.into_iter().map(|triangle| {
