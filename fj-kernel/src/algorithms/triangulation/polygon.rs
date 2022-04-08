@@ -25,13 +25,13 @@ impl Polygon {
         }
     }
 
-    pub fn with_exterior(self, exterior: CycleApprox) -> Self {
+    pub fn with_exterior(self, exterior: impl Into<CycleApprox>) -> Self {
         self.with_approx(exterior)
     }
 
     pub fn with_interiors(
         mut self,
-        interiors: impl IntoIterator<Item = CycleApprox>,
+        interiors: impl IntoIterator<Item = impl Into<CycleApprox>>,
     ) -> Self {
         for interior in interiors {
             self = self.with_approx(interior);
@@ -40,8 +40,8 @@ impl Polygon {
         self
     }
 
-    fn with_approx(mut self, approx: CycleApprox) -> Self {
-        for segment in approx.segments() {
+    fn with_approx(mut self, approx: impl Into<CycleApprox>) -> Self {
+        for segment in approx.into().segments() {
             let segment = segment.points().map(|point| {
                 // Can't panic, unless the approximation wrongfully generates
                 // points that are not in the surface.
@@ -97,9 +97,10 @@ impl Polygon {
 
     pub fn contains_point(
         &self,
-        point: Point<2>,
+        point: impl Into<Point<2>>,
         debug_info: &mut DebugInfo,
     ) -> bool {
+        let point = point.into();
         let outside = self.max * 2.;
 
         let dir = outside - point;
