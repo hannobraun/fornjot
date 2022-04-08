@@ -1,4 +1,5 @@
 mod polygon;
+mod ray;
 
 use fj_debug::DebugInfo;
 use fj_math::{Scalar, Triangle};
