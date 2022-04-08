@@ -35,7 +35,7 @@ impl Registry {
         for c in &self.crates {
             c.validate()?;
 
-            match c.already_published()? {
+            match c.determine_state()? {
                 CrateState::Published => continue,
                 CrateState::Unknown | CrateState::Outdated => {
                     c.submit(&self.token, self.dry_run)?;
@@ -57,7 +57,7 @@ impl Crate {
         }
     }
 
-    fn already_published(&self) -> anyhow::Result<CrateState> {
+    fn determine_state(&self) -> anyhow::Result<CrateState> {
         let theirs = {
             let name = format!("{self}");
             let search_result = cmd_lib::run_fun!(cargo search "${name}")
