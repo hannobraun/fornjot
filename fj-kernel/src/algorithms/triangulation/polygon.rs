@@ -1,4 +1,4 @@
-use std::collections::{BTreeSet, HashSet};
+use std::collections::BTreeSet;
 
 use fj_debug::{DebugInfo, TriangleEdgeCheck};
 use fj_math::{Point, Scalar, Segment};
@@ -12,7 +12,7 @@ use crate::{
 
 pub struct Polygon {
     surface: Surface,
-    segments: HashSet<[geometry::Point<2>; 2]>,
+    segments: Vec<[geometry::Point<2>; 2]>,
     max: Point<2>,
 }
 
@@ -20,7 +20,7 @@ impl Polygon {
     pub fn new(surface: Surface) -> Self {
         Self {
             surface,
-            segments: HashSet::new(),
+            segments: Vec::new(),
             max: Point::origin(),
         }
     }
@@ -54,7 +54,7 @@ impl Polygon {
                 point
             });
 
-            self.segments.insert(segment);
+            self.segments.push(segment);
         }
 
         self
