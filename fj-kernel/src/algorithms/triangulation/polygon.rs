@@ -13,7 +13,7 @@ use crate::{
 pub struct Polygon {
     surface: Surface,
     segments: HashSet<[geometry::Point<2>; 2]>,
-    outside: Point<2>,
+    max: Point<2>,
 }
 
 impl Polygon {
@@ -48,12 +48,10 @@ impl Polygon {
             })
             .collect();
 
-        let outside = max * 2.;
-
         Self {
             surface,
             segments,
-            outside,
+            max,
         }
     }
 
@@ -97,7 +95,9 @@ impl Polygon {
         point: Point<2>,
         debug_info: &mut DebugInfo,
     ) -> bool {
-        let dir = self.outside - point;
+        let outside = self.max * 2.;
+
+        let dir = outside - point;
         let ray = Ray2 {
             origin: point.to_na(),
             dir: dir.to_na(),
