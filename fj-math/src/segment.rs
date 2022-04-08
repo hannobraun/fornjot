@@ -18,7 +18,8 @@ impl<const D: usize> Segment<D> {
     /// # Panics
     ///
     /// Panics, if the points are coincident.
-    pub fn from_points(points: [Point<D>; 2]) -> Self {
+    pub fn from_points(points: [impl Into<Point<D>>; 2]) -> Self {
+        let points = points.map(Into::into);
         let [a, b] = points;
 
         assert!(a != b, "Invalid segment; both points are identical {a:?}");
@@ -46,8 +47,11 @@ impl Segment<3> {
     }
 }
 
-impl<const D: usize> From<[Point<D>; 2]> for Segment<D> {
-    fn from(points: [Point<D>; 2]) -> Self {
+impl<P, const D: usize> From<[P; 2]> for Segment<D>
+where
+    P: Into<Point<D>>,
+{
+    fn from(points: [P; 2]) -> Self {
         Self::from_points(points)
     }
 }
