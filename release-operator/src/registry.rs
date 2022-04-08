@@ -107,7 +107,7 @@ impl Crate {
         Ok(CrateState::Outdated)
     }
 
-    fn submit(&self, token: &SecStr, dry_run: bool) -> anyhow::Result<&Self> {
+    fn submit(&self, token: &SecStr, dry_run: bool) -> anyhow::Result<()> {
         log::info!("{self} publishing new version");
 
         std::env::set_current_dir(&self.path)
@@ -133,7 +133,7 @@ impl Crate {
             },
         )?;
 
-        Ok(self)
+        Ok(())
     }
 }
 
