@@ -52,6 +52,8 @@ As seen above, the release operator requires the maintainer to:
 
 ## Usage
 
+### Detect a Release
+
 ```shell
 # release-operator/
 cargo run -- detect --sha <commit-sha> --label <release-label>
@@ -59,7 +61,7 @@ cargo run -- detect --sha <commit-sha> --label <release-label>
 
 Where `<commit-sha>` can be set using `GITHUB_SHA` (present by default in GitHub Actions), and `<release-label>` can be set using `RELEASE_LABEL` (defaults to `autorelease`).
 
-## GitHub Actions
+#### GitHub Actions
 
 To embed the operator in a workflow, include these steps _before_ anything related to the project's source code:
 
@@ -101,12 +103,28 @@ To embed the operator in a workflow, include these steps _before_ anything relat
 # to determine if they shall execute.
 ```
 
-## Outputs
+#### Outputs
 
 The release operator defines "outputs" which can be read by subsequent steps within a GitHub Actions workflow:
 
 - `release-detected` (string `"true"|"false"`) this output is always set to indicate if a release was detected or not
 - `tag-name` (string) set to the tag name, if a release was detected
+
+### Publish a List of Crates
+
+```shell
+# release-operator/
+cargo run -- publish \
+  --token <crates.io-token> \
+  --crate ../fj \
+  --crate ../fj-host
+```
+
+The `--token` can also be set using on the environment using `CARGO_REGISTRY_TOKEN`.
+
+The `--crate` option should be repeated for every crate to publish. Since the example is called from the `release-operator` sub0directory, all paths are relative to that location. The order matters; the crates are published top to bottom.
+
+There is an option `--dry-run` flag, which defaults to `false`. Set it to run the entire process without uploading any artifacts.
 
 ## Logging
 
