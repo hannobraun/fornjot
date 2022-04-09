@@ -7,22 +7,21 @@ use super::ray::{Hit, HorizontalRayToTheRight};
 
 pub struct Polygon {
     surface: Surface,
-    edges: Vec<Segment<2>>,
+    exterior: PolyChain<2>,
+    interiors: Vec<PolyChain<2>>,
 }
 
 impl Polygon {
     pub fn new(surface: Surface) -> Self {
         Self {
             surface,
-            edges: Vec::new(),
+            exterior: PolyChain::new(),
+            interiors: Vec::new(),
         }
     }
 
     pub fn with_exterior(mut self, exterior: impl Into<PolyChain<2>>) -> Self {
-        for segment in exterior.into().segments() {
-            self.edges.push(segment);
-        }
-
+        self.exterior = exterior.into();
         self
     }
 
@@ -30,18 +29,18 @@ impl Polygon {
         mut self,
         interiors: impl IntoIterator<Item = impl Into<PolyChain<2>>>,
     ) -> Self {
-        for interior in interiors {
-            for segment in interior.into().segments() {
-                self.edges.push(segment);
-            }
-        }
-
+        self.interiors.extend(interiors.into_iter().map(Into::into));
         self
     }
 
     #[cfg(test)]
     pub fn invert_winding(mut self) -> Self {
-        self.edges.reverse();
+        self.exterior = self.exterior.reverse();
+
+        for interior in &mut self.interiors {
+            *interior = interior.clone().reverse();
+        }
+
         self
     }
 
@@ -76,7 +75,14 @@ impl Polygon {
     }
 
     pub fn contains_edge(&self, edge: Segment<2>) -> bool {
-        self.edges.contains(&edge) || self.edges.contains(&edge.reverse())
+        let mut contains = false;
+
+        for chain in Some(&self.exterior).into_iter().chain(&self.interiors) {
+            contains |= chain.segments().contains(&edge);
+            contains |= chain.segments().contains(&edge.reverse());
+        }
+
+        contains
     }
 
     pub fn contains_point(
@@ -94,66 +100,69 @@ impl Polygon {
 
         let mut num_hits = 0;
 
-        // We need to properly detect the ray passing the boundary at the "seam"
-        // of the polygon, i.e. the vertex between the last and the first
-        // segment. The logic in the loop properly takes care of that, as long
-        // as we initialize the `previous_hit` variable with the result of the
-        // last segment.
-        let mut previous_hit = self
-            .edges
-            .last()
-            .copied()
-            .and_then(|edge| ray.hits_segment(edge));
+        for chain in Some(&self.exterior).into_iter().chain(&self.interiors) {
+            let edges = chain.segments();
 
-        for &edge in &self.edges {
-            let hit = ray.hits_segment(edge);
+            // We need to properly detect the ray passing the boundary at the
+            // "seam" of the polygon, i.e. the vertex between the last and the
+            // first segment. The logic in the loop properly takes care of that,
+            // as long as we initialize the `previous_hit` variable with the
+            // result of the last segment.
+            let mut previous_hit = edges
+                .last()
+                .copied()
+                .and_then(|edge| ray.hits_segment(edge));
 
-            let count_hit = match (hit, previous_hit) {
-                (Some(Hit::Segment), _) => {
-                    // We're hitting a segment right-on. Clear case.
-                    true
-                }
-                (Some(Hit::UpperVertex), Some(Hit::LowerVertex))
-                | (Some(Hit::LowerVertex), Some(Hit::UpperVertex)) => {
-                    // If we're hitting a vertex, only count it if we've hit the
-                    // other kind of vertex right before.
-                    //
-                    // That means, we're passing through the polygon boundary
-                    // at where two edges touch. Depending on the order in which
-                    // edges are checked, we're seeing this as a hit to one
-                    // edge's lower/upper vertex, then the other edge's opposite
-                    // vertex.
-                    //
-                    // If we're seeing two of the same vertices in a row, we're
-                    // not actually passing through the polygon boundary. Then
-                    // we're just touching a vertex without passing through
-                    // anything.
-                    true
-                }
-                (Some(Hit::Parallel), _) => {
-                    // A parallel edge must be completely ignored. Its presence
-                    // won't change anything, so we can treat it as if it
-                    // wasn't there, and its neighbors were connected to each
-                    // other.
-                    continue;
-                }
-                _ => {
-                    // Any other case is not a valid hit.
-                    false
-                }
-            };
+            for edge in edges {
+                let hit = ray.hits_segment(edge);
 
-            if count_hit {
-                num_hits += 1;
+                let count_hit = match (hit, previous_hit) {
+                    (Some(Hit::Segment), _) => {
+                        // We're hitting a segment right-on. Clear case.
+                        true
+                    }
+                    (Some(Hit::UpperVertex), Some(Hit::LowerVertex))
+                    | (Some(Hit::LowerVertex), Some(Hit::UpperVertex)) => {
+                        // If we're hitting a vertex, only count it if we've hit the
+                        // other kind of vertex right before.
+                        //
+                        // That means, we're passing through the polygon boundary
+                        // at where two edges touch. Depending on the order in which
+                        // edges are checked, we're seeing this as a hit to one
+                        // edge's lower/upper vertex, then the other edge's opposite
+                        // vertex.
+                        //
+                        // If we're seeing two of the same vertices in a row, we're
+                        // not actually passing through the polygon boundary. Then
+                        // we're just touching a vertex without passing through
+                        // anything.
+                        true
+                    }
+                    (Some(Hit::Parallel), _) => {
+                        // A parallel edge must be completely ignored. Its presence
+                        // won't change anything, so we can treat it as if it
+                        // wasn't there, and its neighbors were connected to each
+                        // other.
+                        continue;
+                    }
+                    _ => {
+                        // Any other case is not a valid hit.
+                        false
+                    }
+                };
 
-                let edge =
-                    Segment::from_points(edge.points().map(|point| {
-                        self.surface.point_surface_to_model(&point)
-                    }));
-                check.hits.push(edge);
+                if count_hit {
+                    num_hits += 1;
+
+                    let edge =
+                        Segment::from_points(edge.points().map(|point| {
+                            self.surface.point_surface_to_model(&point)
+                        }));
+                    check.hits.push(edge);
+                }
+
+                previous_hit = hit;
             }
-
-            previous_hit = hit;
         }
 
         debug_info.triangle_edge_checks.push(check);
@@ -185,14 +194,19 @@ mod tests {
 
     #[test]
     fn contains_point_ray_hits_vertex_at_polygon_seam() {
-        let a = [2., 1.];
-        let b = [0., 2.];
+        let a = [4., 2.];
+        let b = [0., 4.];
         let c = [0., 0.];
 
-        let polygon = Polygon::new(Surface::x_y_plane())
-            .with_exterior(PolyChain::from([a, b, c]).close());
+        let d = [1., 1.];
+        let e = [2., 1.];
+        let f = [1., 3.];
 
-        assert_contains_point(polygon, [1., 1.]);
+        let polygon = Polygon::new(Surface::x_y_plane())
+            .with_exterior(PolyChain::from([a, b, c]).close())
+            .with_interiors([PolyChain::from([d, e, f]).close()]);
+
+        assert_contains_point(polygon, [1., 2.]);
     }
 
     #[test]
