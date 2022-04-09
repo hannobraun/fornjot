@@ -5,14 +5,11 @@ use fj_math::{Point, Scalar, Segment};
 use parry2d_f64::query::{Ray as Ray2, RayCast as _};
 use parry3d_f64::query::Ray as Ray3;
 
-use crate::{
-    algorithms::CycleApprox,
-    geometry::{self, Surface},
-};
+use crate::{algorithms::CycleApprox, geometry::Surface};
 
 pub struct Polygon {
     surface: Surface,
-    segments: Vec<[geometry::Point<2>; 2]>,
+    edges: Vec<Segment<2>>,
     max: Point<2>,
 }
 
@@ -20,7 +17,7 @@ impl Polygon {
     pub fn new(surface: Surface) -> Self {
         Self {
             surface,
-            segments: Vec::new(),
+            edges: Vec::new(),
             max: Point::origin(),
         }
     }
@@ -51,10 +48,11 @@ impl Polygon {
                     self.max = point.native();
                 }
 
-                point
+                point.native()
             });
 
-            self.segments.push(segment);
+            let edge = Segment::from(segment);
+            self.edges.push(edge);
         }
 
         self
@@ -62,24 +60,23 @@ impl Polygon {
 
     pub fn contains_triangle(
         &self,
-        &[a, b, c]: &[geometry::Point<2>; 3],
+        &[a, b, c]: &[Point<2>; 3],
         debug_info: &mut DebugInfo,
     ) -> bool {
-        for segment in [a, b, c, a].windows(2) {
+        for edge in [a, b, c, a].windows(2) {
             // This can't panic, as we passed `2` to `windows`. It can be
             // cleaned up a bit, once `array_windows` is stable.
-            let segment = [segment[0], segment[1]];
+            let edge = Segment::from([edge[0], edge[1]]);
 
             // If the segment is an edge of the face, we don't need to take a
             // closer look.
-            if self.contains_segment(&segment) {
+            if self.contains_edge(edge) {
                 continue;
             }
 
             // To determine if the edge is within the polygon, we determine if
             // its center point is in the polygon.
-            let center = segment[0] + (segment[1] - segment[0]) / Scalar::TWO;
-            if !self.contains_point(center, debug_info) {
+            if !self.contains_point(edge.center(), debug_info) {
                 // The segment is outside of the face. This means we can throw
                 // away the whole triangle.
                 return false;
@@ -91,8 +88,8 @@ impl Polygon {
         true
     }
 
-    pub fn contains_segment(&self, &[a, b]: &[geometry::Point<2>; 2]) -> bool {
-        self.segments.contains(&[a, b]) || self.segments.contains(&[b, a])
+    pub fn contains_edge(&self, edge: Segment<2>) -> bool {
+        self.edges.contains(&edge) || self.edges.contains(&edge.reverse())
     }
 
     pub fn contains_point(
@@ -120,12 +117,10 @@ impl Polygon {
         let mut hits = BTreeSet::new();
 
         // Use ray-casting to determine if `center` is within the face-polygon.
-        for edge in &self.segments {
+        for &edge in &self.edges {
             // Please note that we if we get to this point, then the point is
             // not on a polygon edge, due to the check above. We don't need to
             // handle any edge cases that would arise from that case.
-
-            let edge = Segment::from(edge.map(|point| point.native()));
 
             let intersection = edge
                 .to_parry()
