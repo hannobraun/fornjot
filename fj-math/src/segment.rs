@@ -1,5 +1,7 @@
 use std::fmt;
 
+use crate::Scalar;
+
 use super::Point;
 
 /// A line segment, defined by its two end points
@@ -30,6 +32,12 @@ impl<const D: usize> Segment<D> {
     /// Access the points of the segment
     pub fn points(&self) -> [Point<D>; 2] {
         self.points
+    }
+
+    /// Compute the center point of the segment
+    pub fn center(&self) -> Point<D> {
+        let [a, b] = self.points();
+        a + (b - a) / Scalar::TWO
     }
 
     /// Create a segment with the same points in the opposite order
