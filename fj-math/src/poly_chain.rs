@@ -11,6 +11,11 @@ pub struct PolyChain<const D: usize> {
 }
 
 impl<const D: usize> PolyChain<D> {
+    /// Create an empty `PolyChain`
+    pub fn new() -> Self {
+        Self { points: Vec::new() }
+    }
+
     /// Construct a polygonal chain from a number of points
     pub fn from_points(
         points: impl IntoIterator<Item = impl Into<Point<D>>>,
@@ -45,6 +50,18 @@ impl<const D: usize> PolyChain<D> {
         }
 
         self
+    }
+
+    /// Reverse the order of points in the `PolyChain`
+    pub fn reverse(mut self) -> Self {
+        self.points.reverse();
+        self
+    }
+}
+
+impl<const D: usize> Default for PolyChain<D> {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
