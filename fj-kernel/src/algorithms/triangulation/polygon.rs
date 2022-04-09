@@ -5,14 +5,11 @@ use fj_math::{Point, Scalar, Segment};
 use parry2d_f64::query::{Ray as Ray2, RayCast as _};
 use parry3d_f64::query::Ray as Ray3;
 
-use crate::{
-    algorithms::CycleApprox,
-    geometry::{self, Surface},
-};
+use crate::{algorithms::CycleApprox, geometry::Surface};
 
 pub struct Polygon {
     surface: Surface,
-    segments: Vec<[geometry::Point<2>; 2]>,
+    segments: Vec<[Point<2>; 2]>,
     max: Point<2>,
 }
 
@@ -51,7 +48,7 @@ impl Polygon {
                     self.max = point.native();
                 }
 
-                point
+                point.native()
             });
 
             self.segments.push(segment);
@@ -62,7 +59,7 @@ impl Polygon {
 
     pub fn contains_triangle(
         &self,
-        &[a, b, c]: &[geometry::Point<2>; 3],
+        &[a, b, c]: &[Point<2>; 3],
         debug_info: &mut DebugInfo,
     ) -> bool {
         for segment in [a, b, c, a].windows(2) {
@@ -91,7 +88,7 @@ impl Polygon {
         true
     }
 
-    pub fn contains_segment(&self, &[a, b]: &[geometry::Point<2>; 2]) -> bool {
+    pub fn contains_segment(&self, &[a, b]: &[Point<2>; 2]) -> bool {
         self.segments.contains(&[a, b]) || self.segments.contains(&[b, a])
     }
 
@@ -120,12 +117,12 @@ impl Polygon {
         let mut hits = BTreeSet::new();
 
         // Use ray-casting to determine if `center` is within the face-polygon.
-        for edge in &self.segments {
+        for &edge in &self.segments {
             // Please note that we if we get to this point, then the point is
             // not on a polygon edge, due to the check above. We don't need to
             // handle any edge cases that would arise from that case.
 
-            let edge = Segment::from(edge.map(|point| point.native()));
+            let edge = Segment::from(edge);
 
             let intersection = edge
                 .to_parry()
