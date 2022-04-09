@@ -10,8 +10,6 @@
 use fj_math::{Point, Segment};
 
 /// Debug info from the CAD kernel that can be visualized
-///
-/// At this point, this is a placeholder that will be filled with life later.
 #[derive(Default)]
 pub struct DebugInfo {
     /// Rays being used during face triangulation
