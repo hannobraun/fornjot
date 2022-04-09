@@ -9,7 +9,7 @@ use crate::{algorithms::CycleApprox, geometry::Surface};
 
 pub struct Polygon {
     surface: Surface,
-    segments: Vec<[Point<2>; 2]>,
+    segments: Vec<Segment<2>>,
     max: Point<2>,
 }
 
@@ -51,6 +51,7 @@ impl Polygon {
                 point.native()
             });
 
+            let segment = Segment::from(segment);
             self.segments.push(segment);
         }
 
@@ -65,18 +66,17 @@ impl Polygon {
         for segment in [a, b, c, a].windows(2) {
             // This can't panic, as we passed `2` to `windows`. It can be
             // cleaned up a bit, once `array_windows` is stable.
-            let segment = [segment[0], segment[1]];
+            let segment = Segment::from([segment[0], segment[1]]);
 
             // If the segment is an edge of the face, we don't need to take a
             // closer look.
-            if self.contains_segment(&segment) {
+            if self.contains_segment(segment) {
                 continue;
             }
 
             // To determine if the edge is within the polygon, we determine if
             // its center point is in the polygon.
-            let center = segment[0] + (segment[1] - segment[0]) / Scalar::TWO;
-            if !self.contains_point(center, debug_info) {
+            if !self.contains_point(segment.center(), debug_info) {
                 // The segment is outside of the face. This means we can throw
                 // away the whole triangle.
                 return false;
@@ -88,8 +88,9 @@ impl Polygon {
         true
     }
 
-    pub fn contains_segment(&self, &[a, b]: &[Point<2>; 2]) -> bool {
-        self.segments.contains(&[a, b]) || self.segments.contains(&[b, a])
+    pub fn contains_segment(&self, segment: Segment<2>) -> bool {
+        self.segments.contains(&segment)
+            || self.segments.contains(&segment.reverse())
     }
 
     pub fn contains_point(
@@ -121,8 +122,6 @@ impl Polygon {
             // Please note that we if we get to this point, then the point is
             // not on a polygon edge, due to the check above. We don't need to
             // handle any edge cases that would arise from that case.
-
-            let edge = Segment::from(edge);
 
             let intersection = edge
                 .to_parry()
