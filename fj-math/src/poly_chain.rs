@@ -51,6 +51,12 @@ impl<const D: usize> PolyChain<D> {
 
         self
     }
+
+    /// Reverse the order of points in the `PolyChain`
+    pub fn reverse(mut self) -> Self {
+        self.points.reverse();
+        self
+    }
 }
 
 impl<const D: usize> Default for PolyChain<D> {
