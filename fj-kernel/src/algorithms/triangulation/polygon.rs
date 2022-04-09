@@ -9,7 +9,7 @@ use crate::{algorithms::CycleApprox, geometry::Surface};
 
 pub struct Polygon {
     surface: Surface,
-    segments: Vec<Segment<2>>,
+    edges: Vec<Segment<2>>,
     max: Point<2>,
 }
 
@@ -17,7 +17,7 @@ impl Polygon {
     pub fn new(surface: Surface) -> Self {
         Self {
             surface,
-            segments: Vec::new(),
+            edges: Vec::new(),
             max: Point::origin(),
         }
     }
@@ -52,7 +52,7 @@ impl Polygon {
             });
 
             let segment = Segment::from(segment);
-            self.segments.push(segment);
+            self.edges.push(segment);
         }
 
         self
@@ -89,8 +89,7 @@ impl Polygon {
     }
 
     pub fn contains_segment(&self, segment: Segment<2>) -> bool {
-        self.segments.contains(&segment)
-            || self.segments.contains(&segment.reverse())
+        self.edges.contains(&segment) || self.edges.contains(&segment.reverse())
     }
 
     pub fn contains_point(
@@ -118,7 +117,7 @@ impl Polygon {
         let mut hits = BTreeSet::new();
 
         // Use ray-casting to determine if `center` is within the face-polygon.
-        for &edge in &self.segments {
+        for &edge in &self.edges {
             // Please note that we if we get to this point, then the point is
             // not on a polygon edge, due to the check above. We don't need to
             // handle any edge cases that would arise from that case.
