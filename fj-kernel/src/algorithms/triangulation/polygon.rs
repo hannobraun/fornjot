@@ -63,20 +63,20 @@ impl Polygon {
         &[a, b, c]: &[Point<2>; 3],
         debug_info: &mut DebugInfo,
     ) -> bool {
-        for segment in [a, b, c, a].windows(2) {
+        for edge in [a, b, c, a].windows(2) {
             // This can't panic, as we passed `2` to `windows`. It can be
             // cleaned up a bit, once `array_windows` is stable.
-            let segment = Segment::from([segment[0], segment[1]]);
+            let edge = Segment::from([edge[0], edge[1]]);
 
             // If the segment is an edge of the face, we don't need to take a
             // closer look.
-            if self.contains_edge(segment) {
+            if self.contains_edge(edge) {
                 continue;
             }
 
             // To determine if the edge is within the polygon, we determine if
             // its center point is in the polygon.
-            if !self.contains_point(segment.center(), debug_info) {
+            if !self.contains_point(edge.center(), debug_info) {
                 // The segment is outside of the face. This means we can throw
                 // away the whole triangle.
                 return false;
