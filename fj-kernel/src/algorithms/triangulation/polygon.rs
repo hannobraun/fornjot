@@ -1,4 +1,4 @@
-use std::collections::{BTreeSet, HashSet};
+use std::collections::BTreeSet;
 
 use fj_debug::{DebugInfo, TriangleEdgeCheck};
 use fj_math::{Point, Scalar, Segment};
@@ -12,49 +12,52 @@ use crate::{
 
 pub struct Polygon {
     surface: Surface,
-    segments: HashSet<[geometry::Point<2>; 2]>,
-    outside: Point<2>,
+    segments: Vec<[geometry::Point<2>; 2]>,
+    max: Point<2>,
 }
 
 impl Polygon {
-    pub fn new(
-        exterior: CycleApprox,
-        interiors: impl IntoIterator<Item = CycleApprox>,
-        surface: Surface,
-    ) -> Self {
-        let mut max = Point::origin();
-
-        let segments = exterior
-            .segments()
-            .into_iter()
-            .chain(
-                interiors
-                    .into_iter()
-                    .flat_map(|cycle_approx| cycle_approx.segments()),
-            )
-            .into_iter()
-            .map(|segment| {
-                segment.points().map(|point| {
-                    // Can't panic, unless the approximation wrongfully
-                    // generates points that are not in the surface.
-                    let point = surface.point_model_to_surface(point);
-
-                    if point.native() > max {
-                        max = point.native();
-                    }
-
-                    point
-                })
-            })
-            .collect();
-
-        let outside = max * 2.;
-
+    pub fn new(surface: Surface) -> Self {
         Self {
             surface,
-            segments,
-            outside,
+            segments: Vec::new(),
+            max: Point::origin(),
         }
+    }
+
+    pub fn with_exterior(self, exterior: impl Into<CycleApprox>) -> Self {
+        self.with_approx(exterior)
+    }
+
+    pub fn with_interiors(
+        mut self,
+        interiors: impl IntoIterator<Item = impl Into<CycleApprox>>,
+    ) -> Self {
+        for interior in interiors {
+            self = self.with_approx(interior);
+        }
+
+        self
+    }
+
+    fn with_approx(mut self, approx: impl Into<CycleApprox>) -> Self {
+        for segment in approx.into().segments() {
+            let segment = segment.points().map(|point| {
+                // Can't panic, unless the approximation wrongfully generates
+                // points that are not in the surface.
+                let point = self.surface.point_model_to_surface(point);
+
+                if point.native() > self.max {
+                    self.max = point.native();
+                }
+
+                point
+            });
+
+            self.segments.push(segment);
+        }
+
+        self
     }
 
     pub fn contains_triangle(
@@ -94,10 +97,13 @@ impl Polygon {
 
     pub fn contains_point(
         &self,
-        point: Point<2>,
+        point: impl Into<Point<2>>,
         debug_info: &mut DebugInfo,
     ) -> bool {
-        let dir = self.outside - point;
+        let point = point.into();
+        let outside = self.max * 2.;
+
+        let dir = outside - point;
         let ray = Ray2 {
             origin: point.to_na(),
             dir: dir.to_na(),
