@@ -1,15 +1,13 @@
-use std::collections::BTreeSet;
-
 use fj_debug::{DebugInfo, TriangleEdgeCheck};
-use fj_math::{Point, PolyChain, Scalar, Segment};
-use parry2d_f64::query::{Ray as Ray2, RayCast as _};
+use fj_math::{Point, PolyChain, Segment};
 
 use crate::geometry::Surface;
+
+use super::ray::{Hit, HorizontalRayToTheRight};
 
 pub struct Polygon {
     surface: Surface,
     edges: Vec<Segment<2>>,
-    max: Point<2>,
 }
 
 impl Polygon {
@@ -17,7 +15,6 @@ impl Polygon {
         Self {
             surface,
             edges: Vec::new(),
-            max: Point::origin(),
         }
     }
 
@@ -38,18 +35,15 @@ impl Polygon {
 
     fn with_approx(mut self, approx: impl Into<PolyChain<2>>) -> Self {
         for segment in approx.into().segments() {
-            let segment = segment.points().map(|point| {
-                if point > self.max {
-                    self.max = point;
-                }
-
-                point
-            });
-
-            let edge = Segment::from(segment);
-            self.edges.push(edge);
+            self.edges.push(segment);
         }
 
+        self
+    }
+
+    #[cfg(test)]
+    pub fn invert_winding(mut self) -> Self {
+        self.edges.reverse();
         self
     }
 
@@ -92,52 +86,158 @@ impl Polygon {
         point: impl Into<Point<2>>,
         debug_info: &mut DebugInfo,
     ) -> bool {
-        let point = point.into();
-        let outside = self.max * 2.;
-
-        let dir = outside - point;
-        let ray = Ray2 {
-            origin: point.to_na(),
-            dir: dir.to_na(),
+        let ray = HorizontalRayToTheRight {
+            origin: point.into(),
         };
 
-        let mut check =
-            TriangleEdgeCheck::new(self.surface.point_surface_to_model(&point));
+        let mut check = TriangleEdgeCheck::new(
+            self.surface.point_surface_to_model(&ray.origin),
+        );
 
-        // We need to keep track of where our ray hits the edges. Otherwise, if
-        // the ray hits a vertex, we might count that hit twice, as every vertex
-        // is attached to two edges.
-        let mut hits = BTreeSet::new();
+        let mut num_hits = 0;
 
-        // Use ray-casting to determine if `center` is within the face-polygon.
+        // We need to properly detect the ray passing the boundary at the "seam"
+        // of the polygon, i.e. the vertex between the last and the first
+        // segment. The logic in the loop properly takes care of that, as long
+        // as we initialize the `previous_hit` variable with the result of the
+        // last segment.
+        let mut previous_hit = self
+            .edges
+            .last()
+            .copied()
+            .and_then(|edge| ray.hits_segment(edge));
+
         for &edge in &self.edges {
-            // Please note that we if we get to this point, then the point is
-            // not on a polygon edge, due to the check above. We don't need to
-            // handle any edge cases that would arise from that case.
+            let hit = ray.hits_segment(edge);
 
-            let intersection = edge
-                .to_parry()
-                .cast_local_ray(&ray, f64::INFINITY, true)
-                .map(Scalar::from_f64);
-
-            if let Some(t) = intersection {
-                // Due to slight inaccuracies, we might get different values for
-                // the same intersections. Let's round `t` before using it.
-                let eps = 1_000_000.0;
-                let t = (t * eps).round() / eps;
-
-                if hits.insert(t) {
-                    let edge =
-                        Segment::from_points(edge.points().map(|point| {
-                            self.surface.point_surface_to_model(&point)
-                        }));
-                    check.hits.push(edge);
+            let count_hit = match (hit, previous_hit) {
+                (Some(Hit::Segment), _) => {
+                    // We're hitting a segment right-on. Clear case.
+                    true
                 }
+                (Some(Hit::UpperVertex), Some(Hit::LowerVertex))
+                | (Some(Hit::LowerVertex), Some(Hit::UpperVertex)) => {
+                    // If we're hitting a vertex, only count it if we've hit the
+                    // other kind of vertex right before.
+                    //
+                    // That means, we're passing through the polygon boundary
+                    // at where two edges touch. Depending on the order in which
+                    // edges are checked, we're seeing this as a hit to one
+                    // edge's lower/upper vertex, then the other edge's opposite
+                    // vertex.
+                    //
+                    // If we're seeing two of the same vertices in a row, we're
+                    // not actually passing through the polygon boundary. Then
+                    // we're just touching a vertex without passing through
+                    // anything.
+                    true
+                }
+                (Some(Hit::Parallel), _) => {
+                    // A parallel edge must be completely ignored. Its presence
+                    // won't change anything, so we can treat it as if it
+                    // wasn't there, and its neighbors were connected to each
+                    // other.
+                    continue;
+                }
+                _ => {
+                    // Any other case is not a valid hit.
+                    false
+                }
+            };
+
+            if count_hit {
+                num_hits += 1;
+
+                let edge =
+                    Segment::from_points(edge.points().map(|point| {
+                        self.surface.point_surface_to_model(&point)
+                    }));
+                check.hits.push(edge);
             }
+
+            previous_hit = hit;
         }
 
         debug_info.triangle_edge_checks.push(check);
 
-        hits.len() % 2 == 1
+        num_hits % 2 == 1
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use fj_debug::DebugInfo;
+    use fj_math::{Point, PolyChain};
+
+    use crate::geometry::Surface;
+
+    use super::Polygon;
+
+    #[test]
+    fn contains_point_ray_hits_vertex_while_passing_outside() {
+        let a = [0., 0.];
+        let b = [2., 1.];
+        let c = [0., 2.];
+
+        let polygon = Polygon::new(Surface::x_y_plane())
+            .with_exterior(PolyChain::from([a, b, c]).close());
+
+        assert_contains_point(polygon, [1., 1.]);
+    }
+
+    #[test]
+    fn contains_point_ray_hits_vertex_at_polygon_seam() {
+        let a = [2., 1.];
+        let b = [0., 2.];
+        let c = [0., 0.];
+
+        let polygon = Polygon::new(Surface::x_y_plane())
+            .with_exterior(PolyChain::from([a, b, c]).close());
+
+        assert_contains_point(polygon, [1., 1.]);
+    }
+
+    #[test]
+    fn contains_point_ray_hits_vertex_while_staying_inside() {
+        let a = [0., 0.];
+        let b = [2., 1.];
+        let c = [3., 0.];
+        let d = [3., 4.];
+
+        let polygon = Polygon::new(Surface::x_y_plane())
+            .with_exterior(PolyChain::from([a, b, c, d]).close());
+
+        assert_contains_point(polygon, [1., 1.]);
+    }
+
+    #[test]
+    fn contains_ray_hits_parallel_edge() {
+        // Ray passes polygon boundary at a vertex.
+        let a = [0., 0.];
+        let b = [2., 1.];
+        let c = [3., 1.];
+        let d = [0., 2.];
+        let polygon = Polygon::new(Surface::x_y_plane())
+            .with_exterior(PolyChain::from([a, b, c, d]).close());
+        assert_contains_point(polygon, [1., 1.]);
+
+        // Ray hits a vertex, but doesn't pass polygon boundary there.
+        let a = [0., 0.];
+        let b = [2., 1.];
+        let c = [3., 1.];
+        let d = [4., 0.];
+        let e = [4., 5.];
+        let polygon = Polygon::new(Surface::x_y_plane())
+            .with_exterior(PolyChain::from([a, b, c, d, e]).close());
+        assert_contains_point(polygon, [1., 1.]);
+    }
+
+    fn assert_contains_point(polygon: Polygon, point: impl Into<Point<2>>) {
+        let point = point.into();
+
+        assert!(polygon.contains_point(point, &mut DebugInfo::new()));
+        assert!(polygon
+            .invert_winding()
+            .contains_point(point, &mut DebugInfo::new()));
     }
 }

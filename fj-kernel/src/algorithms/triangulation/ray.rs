@@ -1,5 +1,3 @@
-#![cfg(test)]
-
 use fj_math::{Point, Segment};
 
 pub struct HorizontalRayToTheRight {
