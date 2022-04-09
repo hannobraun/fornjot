@@ -44,6 +44,26 @@ impl Vertices {
         self.indices.push(self.indices.len() as u32);
         self.indices.push(self.indices.len() as u32);
     }
+
+    pub fn push_cross(
+        &mut self,
+        position: Point<f64, 3>,
+        normal: [f32; 3],
+        color: [f32; 4],
+    ) {
+        let d = 0.05;
+
+        self.push_line(
+            [position - vector![d, 0., 0.], position + vector![d, 0., 0.]],
+            normal,
+            color,
+        );
+        self.push_line(
+            [position - vector![0., d, 0.], position + vector![0., d, 0.]],
+            normal,
+            color,
+        );
+    }
 }
 
 impl From<&Vec<Triangle<3>>> for Vertices {
@@ -104,20 +124,9 @@ impl From<&DebugInfo> for Vertices {
 
             for &hit in &triangle_edge_check.hits {
                 let point = triangle_edge_check.ray.point_at(hit);
-
-                let d = 0.05;
                 let color = [0., 0., 0., 1.];
 
-                self_.push_line(
-                    [point - vector![d, 0., 0.], point + vector![d, 0., 0.]],
-                    normal,
-                    color,
-                );
-                self_.push_line(
-                    [point - vector![0., d, 0.], point + vector![0., d, 0.]],
-                    normal,
-                    color,
-                );
+                self_.push_cross(point, normal, color);
             }
         }
 
