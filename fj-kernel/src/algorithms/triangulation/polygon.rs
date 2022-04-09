@@ -88,8 +88,8 @@ impl Polygon {
         true
     }
 
-    pub fn contains_edge(&self, segment: Segment<2>) -> bool {
-        self.edges.contains(&segment) || self.edges.contains(&segment.reverse())
+    pub fn contains_edge(&self, edge: Segment<2>) -> bool {
+        self.edges.contains(&edge) || self.edges.contains(&edge.reverse())
     }
 
     pub fn contains_point(
