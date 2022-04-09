@@ -35,8 +35,13 @@ pub fn triangulate(
                     })
                     .collect();
                 let face_as_polygon = Polygon::new(surface)
-                    .with_exterior(approx.exterior)
-                    .with_interiors(approx.interiors);
+                    .with_exterior(approx.exterior.points)
+                    .with_interiors(
+                        approx
+                            .interiors
+                            .into_iter()
+                            .map(|interior| interior.points),
+                    );
 
                 let mut triangles = delaunay(points);
                 triangles.retain(|triangle| {
