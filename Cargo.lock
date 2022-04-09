@@ -717,6 +717,7 @@ dependencies = [
  "parking_lot 0.12.0",
  "parry2d-f64",
  "parry3d-f64",
+ "robust",
  "slotmap",
  "spade",
  "thiserror",
