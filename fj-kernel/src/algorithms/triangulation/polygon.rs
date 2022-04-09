@@ -1,11 +1,11 @@
 use std::collections::BTreeSet;
 
 use fj_debug::{DebugInfo, TriangleEdgeCheck};
-use fj_math::{Point, Scalar, Segment};
+use fj_math::{Point, PolyChain, Scalar, Segment};
 use parry2d_f64::query::{Ray as Ray2, RayCast as _};
 use parry3d_f64::query::Ray as Ray3;
 
-use crate::{algorithms::CycleApprox, geometry::Surface};
+use crate::geometry::Surface;
 
 pub struct Polygon {
     surface: Surface,
@@ -22,13 +22,13 @@ impl Polygon {
         }
     }
 
-    pub fn with_exterior(self, exterior: impl Into<CycleApprox>) -> Self {
+    pub fn with_exterior(self, exterior: impl Into<PolyChain<2>>) -> Self {
         self.with_approx(exterior)
     }
 
     pub fn with_interiors(
         mut self,
-        interiors: impl IntoIterator<Item = impl Into<CycleApprox>>,
+        interiors: impl IntoIterator<Item = impl Into<PolyChain<2>>>,
     ) -> Self {
         for interior in interiors {
             self = self.with_approx(interior);
@@ -37,18 +37,14 @@ impl Polygon {
         self
     }
 
-    fn with_approx(mut self, approx: impl Into<CycleApprox>) -> Self {
+    fn with_approx(mut self, approx: impl Into<PolyChain<2>>) -> Self {
         for segment in approx.into().segments() {
             let segment = segment.points().map(|point| {
-                // Can't panic, unless the approximation wrongfully generates
-                // points that are not in the surface.
-                let point = self.surface.point_model_to_surface(point);
-
-                if point.native() > self.max {
-                    self.max = point.native();
+                if point > self.max {
+                    self.max = point;
                 }
 
-                point.native()
+                point
             });
 
             let edge = Segment::from(segment);
