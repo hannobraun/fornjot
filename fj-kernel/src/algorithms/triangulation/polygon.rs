@@ -3,7 +3,6 @@ use std::collections::BTreeSet;
 use fj_debug::{DebugInfo, TriangleEdgeCheck};
 use fj_math::{Point, PolyChain, Scalar, Segment};
 use parry2d_f64::query::{Ray as Ray2, RayCast as _};
-use parry3d_f64::query::Ray as Ray3;
 
 use crate::geometry::Surface;
 
@@ -102,10 +101,8 @@ impl Polygon {
             dir: dir.to_na(),
         };
 
-        let mut check = TriangleEdgeCheck::new(Ray3 {
-            origin: self.surface.point_surface_to_model(&point).to_na(),
-            dir: self.surface.vector_surface_to_model(&dir).to_na(),
-        });
+        let mut check =
+            TriangleEdgeCheck::new(self.surface.point_surface_to_model(&point));
 
         // We need to keep track of where our ray hits the edges. Otherwise, if
         // the ray hits a vertex, we might count that hit twice, as every vertex
@@ -130,7 +127,11 @@ impl Polygon {
                 let t = (t * eps).round() / eps;
 
                 if hits.insert(t) {
-                    check.hits.push(t.into_f64());
+                    let edge =
+                        Segment::from_points(edge.points().map(|point| {
+                            self.surface.point_surface_to_model(&point)
+                        }));
+                    check.hits.push(edge);
                 }
             }
         }

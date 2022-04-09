@@ -690,7 +690,7 @@ dependencies = [
 name = "fj-debug"
 version = "0.5.0"
 dependencies = [
- "parry3d-f64",
+ "fj-math",
 ]
 
 [[package]]

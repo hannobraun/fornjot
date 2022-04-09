@@ -7,11 +7,9 @@
 
 #![deny(missing_docs)]
 
-use parry3d_f64::query::Ray;
+use fj_math::{Point, Segment};
 
 /// Debug info from the CAD kernel that can be visualized
-///
-/// At this point, this is a placeholder that will be filled with life later.
 #[derive(Default)]
 pub struct DebugInfo {
     /// Rays being used during face triangulation
@@ -36,18 +34,18 @@ impl DebugInfo {
 
 /// Record of a check to determine if a triangle edge is within a face
 pub struct TriangleEdgeCheck {
-    /// The ray used to perform the check
-    pub ray: Ray,
+    /// The origin of the ray used to perform the check
+    pub origin: Point<3>,
 
-    /// Where the ray hit any edges of the face
-    pub hits: Vec<f64>,
+    /// The points where the ray hit edges of the face
+    pub hits: Vec<Segment<3>>,
 }
 
 impl TriangleEdgeCheck {
     /// Construct a new instance
-    pub fn new(ray: Ray) -> Self {
+    pub fn new(origin: Point<3>) -> Self {
         Self {
-            ray,
+            origin,
             hits: Vec::new(),
         }
     }
