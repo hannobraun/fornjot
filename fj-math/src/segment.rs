@@ -31,6 +31,12 @@ impl<const D: usize> Segment<D> {
     pub fn points(&self) -> [Point<D>; 2] {
         self.points
     }
+
+    /// Create a segment with the same points in the opposite order
+    pub fn reverse(mut self) -> Self {
+        self.points.reverse();
+        self
+    }
 }
 
 impl Segment<2> {
