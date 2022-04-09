@@ -10,9 +10,6 @@ license     = "0BSD"
 keywords    = ["cad", "programmatic", "code-cad"]
 
 
-[dependencies]
-parry3d-f64 = "0.8.0"
-
 [dependencies.fj-math]
 path    = "../fj-math"
 version = "0.5.0"

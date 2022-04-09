@@ -691,7 +691,6 @@ name = "fj-debug"
 version = "0.5.0"
 dependencies = [
  "fj-math",
- "parry3d-f64",
 ]
 
 [[package]]
