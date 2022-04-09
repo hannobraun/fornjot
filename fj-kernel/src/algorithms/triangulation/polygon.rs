@@ -22,13 +22,13 @@ impl Polygon {
         }
     }
 
-    pub fn with_exterior(self, exterior: impl Into<PolyChain<3>>) -> Self {
+    pub fn with_exterior(self, exterior: impl Into<PolyChain<2>>) -> Self {
         self.with_approx(exterior)
     }
 
     pub fn with_interiors(
         mut self,
-        interiors: impl IntoIterator<Item = impl Into<PolyChain<3>>>,
+        interiors: impl IntoIterator<Item = impl Into<PolyChain<2>>>,
     ) -> Self {
         for interior in interiors {
             self = self.with_approx(interior);
@@ -37,18 +37,14 @@ impl Polygon {
         self
     }
 
-    fn with_approx(mut self, approx: impl Into<PolyChain<3>>) -> Self {
+    fn with_approx(mut self, approx: impl Into<PolyChain<2>>) -> Self {
         for segment in approx.into().segments() {
             let segment = segment.points().map(|point| {
-                // Can't panic, unless the approximation wrongfully generates
-                // points that are not in the surface.
-                let point = self.surface.point_model_to_surface(point);
-
-                if point.native() > self.max {
-                    self.max = point.native();
+                if point > self.max {
+                    self.max = point;
                 }
 
-                point.native()
+                point
             });
 
             let edge = Segment::from(segment);
