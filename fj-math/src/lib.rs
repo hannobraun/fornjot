@@ -30,6 +30,7 @@
 mod aabb;
 mod coordinates;
 mod point;
+mod poly_chain;
 mod scalar;
 mod segment;
 mod transform;
@@ -40,6 +41,7 @@ pub use self::{
     aabb::Aabb,
     coordinates::{Uv, Xyz, T},
     point::Point,
+    poly_chain::PolyChain,
     scalar::Scalar,
     segment::Segment,
     transform::Transform,
