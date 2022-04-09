@@ -112,21 +112,13 @@ impl From<&DebugInfo> for Vertices {
                 green
             };
 
-            self_.push_line(
-                [
-                    triangle_edge_check.ray.origin,
-                    triangle_edge_check.ray.origin
-                        + triangle_edge_check.ray.dir,
-                ],
-                normal,
-                color,
-            );
+            self_.push_cross(triangle_edge_check.origin.to_na(), normal, color);
 
             for &hit in &triangle_edge_check.hits {
-                let point = triangle_edge_check.ray.point_at(hit);
+                let line = hit.points().map(|point| point.to_na());
                 let color = [0., 0., 0., 1.];
 
-                self_.push_cross(point, normal, color);
+                self_.push_line(line, normal, color);
             }
         }
 
