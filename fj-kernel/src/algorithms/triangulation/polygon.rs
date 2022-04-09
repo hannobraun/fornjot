@@ -51,8 +51,8 @@ impl Polygon {
                 point.native()
             });
 
-            let segment = Segment::from(segment);
-            self.edges.push(segment);
+            let edge = Segment::from(segment);
+            self.edges.push(edge);
         }
 
         self
