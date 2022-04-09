@@ -18,8 +18,12 @@ impl Polygon {
         }
     }
 
-    pub fn with_exterior(self, exterior: impl Into<PolyChain<2>>) -> Self {
-        self.with_approx(exterior)
+    pub fn with_exterior(mut self, exterior: impl Into<PolyChain<2>>) -> Self {
+        for segment in exterior.into().segments() {
+            self.edges.push(segment);
+        }
+
+        self
     }
 
     pub fn with_interiors(
@@ -27,15 +31,9 @@ impl Polygon {
         interiors: impl IntoIterator<Item = impl Into<PolyChain<2>>>,
     ) -> Self {
         for interior in interiors {
-            self = self.with_approx(interior);
-        }
-
-        self
-    }
-
-    fn with_approx(mut self, approx: impl Into<PolyChain<2>>) -> Self {
-        for segment in approx.into().segments() {
-            self.edges.push(segment);
+            for segment in interior.into().segments() {
+                self.edges.push(segment);
+            }
         }
 
         self
