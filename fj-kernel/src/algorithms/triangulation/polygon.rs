@@ -70,7 +70,7 @@ impl Polygon {
 
             // If the segment is an edge of the face, we don't need to take a
             // closer look.
-            if self.contains_segment(segment) {
+            if self.contains_edge(segment) {
                 continue;
             }
 
@@ -88,7 +88,7 @@ impl Polygon {
         true
     }
 
-    pub fn contains_segment(&self, segment: Segment<2>) -> bool {
+    pub fn contains_edge(&self, segment: Segment<2>) -> bool {
         self.edges.contains(&segment) || self.edges.contains(&segment.reverse())
     }
 
