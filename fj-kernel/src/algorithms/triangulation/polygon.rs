@@ -123,26 +123,26 @@ impl Polygon {
                     }
                     (Some(Hit::UpperVertex), Some(Hit::LowerVertex))
                     | (Some(Hit::LowerVertex), Some(Hit::UpperVertex)) => {
-                        // If we're hitting a vertex, only count it if we've hit the
-                        // other kind of vertex right before.
+                        // If we're hitting a vertex, only count it if we've hit
+                        // the other kind of vertex right before.
                         //
-                        // That means, we're passing through the polygon boundary
-                        // at where two edges touch. Depending on the order in which
-                        // edges are checked, we're seeing this as a hit to one
-                        // edge's lower/upper vertex, then the other edge's opposite
-                        // vertex.
+                        // That means, we're passing through the polygon
+                        // boundary at where two edges touch. Depending on the
+                        // order in which edges are checked, we're seeing this
+                        // as a hit to one edge's lower/upper vertex, then the
+                        // other edge's opposite vertex.
                         //
-                        // If we're seeing two of the same vertices in a row, we're
-                        // not actually passing through the polygon boundary. Then
-                        // we're just touching a vertex without passing through
-                        // anything.
+                        // If we're seeing two of the same vertices in a row,
+                        // we're not actually passing through the polygon
+                        // boundary. Then we're just touching a vertex without
+                        // passing through anything.
                         true
                     }
                     (Some(Hit::Parallel), _) => {
-                        // A parallel edge must be completely ignored. Its presence
-                        // won't change anything, so we can treat it as if it
-                        // wasn't there, and its neighbors were connected to each
-                        // other.
+                        // A parallel edge must be completely ignored. Its
+                        // presence won't change anything, so we can treat it as
+                        // if it wasn't there, and its neighbors were connected
+                        // to each other.
                         continue;
                     }
                     _ => {
