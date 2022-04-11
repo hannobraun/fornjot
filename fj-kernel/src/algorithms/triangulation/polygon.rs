@@ -61,9 +61,13 @@ impl Polygon {
 
     pub fn contains_triangle(
         &self,
-        [a, b, c]: [Point<2>; 3],
+        triangle: [impl Into<Point<2>>; 3],
         debug_info: &mut DebugInfo,
     ) -> bool {
+        let [a, b, c] = triangle.map(Into::into);
+
+        let mut might_be_hole = true;
+
         for edge in [a, b, c, a].windows(2) {
             // This can't panic, as we passed `2` to `windows`. It can be
             // cleaned up a bit, once `array_windows` is stable.
@@ -71,6 +75,13 @@ impl Polygon {
 
             let is_exterior_edge = self.contains_exterior_edge(edge);
             let is_interior_edge = self.contains_interior_edge(edge);
+
+            // If the triangle edge is not an interior edge of the polygon, we
+            // can rule out that the triangle is identical with a hole in the
+            // polygon.
+            if !is_interior_edge {
+                might_be_hole = false;
+            }
 
             // If the triangle edge is an edge of the face, we don't need to
             // take a closer look.
@@ -90,6 +101,12 @@ impl Polygon {
                 // away the whole triangle.
                 return false;
             }
+        }
+
+        // We haven't rules out that the triangle is a polygon hole. Since we
+        // checked all its edges, this means we now know for certain that is is.
+        if might_be_hole {
+            return false;
         }
 
         // If we didn't throw away the triangle up till now, this means all its
@@ -207,6 +224,23 @@ mod tests {
     use crate::geometry::Surface;
 
     use super::Polygon;
+
+    #[test]
+    fn contains_triangle_with_triangular_hole() {
+        let a = [0., 0.];
+        let b = [3., 0.];
+        let c = [0., 3.];
+
+        let d = [1., 1.];
+        let e = [2., 1.];
+        let f = [1., 2.];
+
+        let polygon = Polygon::new(Surface::x_y_plane())
+            .with_exterior(PolyChain::from([a, b, c]).close())
+            .with_interiors([PolyChain::from([d, e, f]).close()]);
+
+        assert!(!polygon.contains_triangle([d, e, f], &mut DebugInfo::new()));
+    }
 
     #[test]
     fn contains_point_ray_hits_vertex_while_passing_outside() {
