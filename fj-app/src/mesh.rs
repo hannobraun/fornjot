@@ -1,6 +1,6 @@
 use std::{collections::HashMap, hash::Hash};
 
-/// API for creating a mesh
+/// A triangle mesh
 pub struct Mesh<V> {
     vertices: Vec<V>,
     indices: Vec<Index>,
@@ -12,7 +12,7 @@ impl<V> Mesh<V>
 where
     V: Copy + Eq + Hash,
 {
-    /// Create a new instance of `MeshMaker`
+    /// Construct a new instance of `Mesh`
     pub fn new() -> Self {
         Self {
             vertices: Vec::new(),
