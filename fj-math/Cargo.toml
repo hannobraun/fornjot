@@ -1,19 +1,19 @@
 [package]
-name    = "fj-math"
+name = "fj-math"
 version = "0.5.0"
 edition = "2021"
 
 description = "The world needs another CAD program."
-readme      = "../README.md"
-repository  = "https://github.com/hannobraun/fornjot"
-license     = "0BSD"
-keywords    = ["cad", "programmatic", "code-cad"]
-categories  = ["mathematics"]
+readme = "../README.md"
+repository = "https://github.com/hannobraun/fornjot"
+license = "0BSD"
+keywords = ["cad", "programmatic", "code-cad"]
+categories = ["mathematics"]
 
 [dependencies]
-approx      = "0.5.1"
-decorum     = "0.3.1"
-nalgebra    = "0.30.0"
-num-traits  = "0.2.14"
+approx = "0.5.1"
+decorum = "0.3.1"
+nalgebra = "0.30.0"
+num-traits = "0.2.14"
 parry2d-f64 = "0.8.0"
 parry3d-f64 = "0.8.0"

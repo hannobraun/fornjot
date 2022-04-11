@@ -1,4 +1,4 @@
-use fj_debug::{DebugInfo, TriangleEdgeCheck};
+use fj_interop::debug::{DebugInfo, TriangleEdgeCheck};
 use fj_math::{Point, PolyChain, Segment};
 
 use crate::geometry::Surface;
@@ -218,7 +218,7 @@ impl Polygon {
 
 #[cfg(test)]
 mod tests {
-    use fj_debug::DebugInfo;
+    use fj_interop::debug::DebugInfo;
     use fj_math::{Point, PolyChain};
 
     use crate::geometry::Surface;

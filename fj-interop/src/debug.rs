@@ -1,11 +1,8 @@
 //! Debug information definitions for the Fornjot ecosystem
 //!
-//! This crate contains debug information that is used by other crates within
-//! the Fornjot ecosystem. The types in here aren't very useful in themselves,
-//! but they define an interface that other crates use to communicate between
-//! each other.
-
-#![deny(missing_docs)]
+//! Defines debug information that is used by other crates within the Fornjot
+//! ecosystem. The types in here aren't very useful in themselves, but they
+//! define an interface that other crates use to communicate between each other.
 
 use fj_math::{Point, Segment};
 

@@ -1,4 +1,4 @@
-use fj_debug::DebugInfo;
+use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     geometry::Surface,
     shape::Shape,

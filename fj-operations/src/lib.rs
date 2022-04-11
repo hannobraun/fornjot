@@ -13,7 +13,7 @@ mod sketch;
 mod sweep;
 mod transform;
 
-use fj_debug::DebugInfo;
+use fj_interop::debug::DebugInfo;
 use fj_kernel::shape::Shape;
 use fj_math::{Aabb, Scalar};
 

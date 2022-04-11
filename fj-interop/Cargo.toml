@@ -1,5 +1,5 @@
 [package]
-name = "fj-host"
+name = "fj-interop"
 version = "0.5.0"
 edition = "2021"
 
@@ -10,11 +10,6 @@ license = "0BSD"
 keywords = ["cad", "programmatic", "code-cad"]
 
 
-[dependencies]
-libloading = "0.7.2"
-notify = "5.0.0-pre.14"
-thiserror = "1.0.30"
-
-[dependencies.fj]
+[dependencies.fj-math]
+path = "../fj-math"
 version = "0.5.0"
-path = "../fj"
