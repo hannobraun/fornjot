@@ -25,9 +25,9 @@ slotmap = "1.0.6"
 spade = "2.0.0"
 thiserror = "1.0.30"
 
-[dependencies.fj-debug]
+[dependencies.fj-interop]
 version = "0.5.0"
-path = "../fj-debug"
+path = "../fj-interop"
 
 [dependencies.fj-math]
 version = "0.5.0"

@@ -1,7 +1,7 @@
 mod polygon;
 mod ray;
 
-use fj_debug::DebugInfo;
+use fj_interop::DebugInfo;
 use fj_math::{Scalar, Triangle};
 use parry2d_f64::utils::point_in_triangle::{corner_direction, Orientation};
 use spade::HasPosition;
@@ -121,7 +121,7 @@ impl HasPosition for geometry::Point<2> {
 
 #[cfg(test)]
 mod tests {
-    use fj_debug::DebugInfo;
+    use fj_interop::DebugInfo;
     use fj_math::{Scalar, Triangle};
 
     use crate::{geometry::Surface, shape::Shape, topology::Face};

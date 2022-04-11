@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use fj_debug::DebugInfo;
+use fj_interop::DebugInfo;
 use fj_kernel::{
     shape::Shape,
     topology::{Cycle, Edge, Face, Vertex},

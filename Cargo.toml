@@ -3,8 +3,8 @@ resolver = "2"
 members = [
     "fj",
     "fj-app",
-    "fj-debug",
     "fj-host",
+    "fj-interop",
     "fj-kernel",
     "fj-math",
     "fj-operations",
@@ -18,8 +18,8 @@ members = [
 ]
 default-members = [
     "fj-app",
-    "fj-debug",
     "fj-host",
+    "fj-interop",
     "fj-kernel",
     "fj-math",
     "fj-operations",

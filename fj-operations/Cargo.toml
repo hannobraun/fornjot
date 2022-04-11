@@ -23,9 +23,9 @@ path = "../fj"
 version = "0.5.0"
 path = "../fj-math"
 
-[dependencies.fj-debug]
+[dependencies.fj-interop]
 version = "0.5.0"
-path = "../fj-debug"
+path = "../fj-interop"
 
 [dependencies.fj-kernel]
 version = "0.5.0"

@@ -1,5 +1,5 @@
 [package]
-name = "fj-debug"
+name = "fj-interop"
 version = "0.5.0"
 edition = "2021"
 
