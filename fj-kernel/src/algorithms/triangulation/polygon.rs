@@ -72,14 +72,19 @@ impl Polygon {
             let is_exterior_edge = self.contains_exterior_edge(edge);
             let is_interior_edge = self.contains_interior_edge(edge);
 
-            // If the segment is an edge of the face, we don't need to take a
-            // closer look.
+            // If the triangle edge is an edge of the face, we don't need to
+            // take a closer look.
             if is_exterior_edge || is_interior_edge {
                 continue;
             }
 
             // To determine if the edge is within the polygon, we determine if
             // its center point is in the polygon.
+            //
+            // Since we already checked above, whether the triangle edge is a
+            // polygon edge (and if we reached this point, it isn't), we don't
+            // need to care about the distinction between "inside the polygon"
+            // and "on the polygon boundary".
             if !self.contains_point(edge.center(), debug_info) {
                 // The segment is outside of the face. This means we can throw
                 // away the whole triangle.
