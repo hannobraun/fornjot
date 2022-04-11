@@ -1,34 +1,34 @@
 [package]
-name    = "fj-kernel"
+name = "fj-kernel"
 version = "0.5.0"
 edition = "2021"
 
 description = "The world needs another CAD program."
-readme      = "../README.md"
-repository  = "https://github.com/hannobraun/fornjot"
-license     = "0BSD"
-keywords    = ["cad", "programmatic", "code-cad"]
-categories  = ["mathematics"]
+readme = "../README.md"
+repository = "https://github.com/hannobraun/fornjot"
+license = "0BSD"
+keywords = ["cad", "programmatic", "code-cad"]
+categories = ["mathematics"]
 
 
 [dependencies]
-anyhow      = "1.0.56"
-anymap      = "1.0.0-beta.2"
-approx      = "0.5.1"
-map-macro   = "0.2.0"
-nalgebra    = "0.30.0"
+anyhow = "1.0.56"
+anymap = "1.0.0-beta.2"
+approx = "0.5.1"
+map-macro = "0.2.0"
+nalgebra = "0.30.0"
 parking_lot = "0.12.0"
 parry2d-f64 = "0.8.0"
 parry3d-f64 = "0.8.0"
-robust      = "0.2.3"
-slotmap     = "1.0.6"
-spade       = "2.0.0"
-thiserror   = "1.0.30"
+robust = "0.2.3"
+slotmap = "1.0.6"
+spade = "2.0.0"
+thiserror = "1.0.30"
 
 [dependencies.fj-debug]
 version = "0.5.0"
-path    = "../fj-debug"
+path = "../fj-debug"
 
 [dependencies.fj-math]
 version = "0.5.0"
-path    = "../fj-math"
+path = "../fj-math"
