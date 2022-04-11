@@ -56,3 +56,26 @@ impl<V> Default for Mesh<V> {
 
 /// An index that refers to a vertex in a mesh
 pub type Index = u32;
+
+/// A triangle
+///
+/// Extension of [`fj_math::Triangle`] that also includes a color.
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
+pub struct Triangle {
+    /// The non-color part of the triangle
+    pub inner: fj_math::Triangle<3>,
+
+    /// The color of the triangle
+    pub color: Color,
+}
+
+impl Triangle {
+    /// Construct a new instance of `Triangle`
+    pub fn new(inner: impl Into<fj_math::Triangle<3>>, color: Color) -> Self {
+        let inner = inner.into();
+        Self { inner, color }
+    }
+}
+
+/// RGBA color
+pub type Color = [u8; 4];
