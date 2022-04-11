@@ -76,9 +76,9 @@ impl From<&Vec<Triangle>> for Vertices {
             let normal = (b - a).cross(&(c - a)).normalize();
             let color = triangle.color;
 
-            mesh.push((a, normal, color));
-            mesh.push((b, normal, color));
-            mesh.push((c, normal, color));
+            mesh.push_vertex((a, normal, color));
+            mesh.push_vertex((b, normal, color));
+            mesh.push_vertex((c, normal, color));
         }
 
         let vertices = mesh

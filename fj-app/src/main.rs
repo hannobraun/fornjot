@@ -89,7 +89,7 @@ fn main() -> anyhow::Result<()> {
 
         for triangle in shape.triangles {
             for vertex in triangle.inner.points() {
-                mesh_maker.push(vertex);
+                mesh_maker.push_vertex(vertex);
             }
         }
 

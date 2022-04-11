@@ -20,7 +20,7 @@ where
     }
 
     /// Add a vertex to the mesh
-    pub fn push(&mut self, vertex: V) {
+    pub fn push_vertex(&mut self, vertex: V) {
         let index =
             *self.indices_by_vertex.entry(vertex).or_insert_with(|| {
                 let index = self.vertices.len();
