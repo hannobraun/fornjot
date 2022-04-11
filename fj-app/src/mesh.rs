@@ -1,14 +1,14 @@
 use std::{collections::HashMap, hash::Hash};
 
 /// API for creating a mesh
-pub struct MeshMaker<V> {
+pub struct Mesh<V> {
     vertices: Vec<V>,
     indices: Vec<Index>,
 
     indices_by_vertex: HashMap<V, Index>,
 }
 
-impl<V> MeshMaker<V>
+impl<V> Mesh<V>
 where
     V: Copy + Eq + Hash,
 {

@@ -28,7 +28,7 @@ use crate::{
     camera::Camera,
     config::Config,
     graphics::{DrawConfig, Renderer},
-    mesh::MeshMaker,
+    mesh::Mesh,
     window::Window,
 };
 
@@ -86,7 +86,7 @@ fn main() -> anyhow::Result<()> {
         let shape = model.load_once(&parameters)?;
         let shape = shape_processor.process(&shape);
 
-        let mut mesh_maker = MeshMaker::new();
+        let mut mesh_maker = Mesh::new();
 
         for triangle in shape.triangles {
             for vertex in triangle.points() {
