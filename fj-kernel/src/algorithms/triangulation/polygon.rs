@@ -12,6 +12,21 @@ pub struct Polygon {
 }
 
 impl Polygon {
+    /// Construct an instance of `Polygon`
+    ///
+    /// # Implementation note
+    ///
+    /// This method takes a `Surface`, but `Polygon` only uses that for
+    /// generating debug info. It might be better, if `Polygon` had a field
+    /// where it stored debug info specific to its algorithm. Then code using
+    /// `Polygon` could access that `Polygon`-specific debug info and translate
+    /// that into `DebugInfo`, as necessary.
+    ///
+    /// This would have the advantage of removing this dependency on `Surface`.
+    /// It would also make the test code a bit cleaner, as it wouldn't have to
+    /// bother with the `DebugInfo` anymore. Also, the `Polygon`-specific debug
+    /// info could potentially be more useful in test code, as a debugging tool
+    /// there.
     pub fn new(surface: Surface) -> Self {
         Self {
             surface,
