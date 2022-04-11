@@ -1,9 +1,10 @@
 use bytemuck::{Pod, Zeroable};
-use fj_interop::debug::DebugInfo;
+use fj_interop::{
+    debug::DebugInfo,
+    mesh::{Index, Mesh},
+};
 use fj_math::Triangle;
 use nalgebra::{vector, Point};
-
-use crate::mesh::{Index, Mesh};
 
 #[derive(Debug)]
 pub struct Vertices {
