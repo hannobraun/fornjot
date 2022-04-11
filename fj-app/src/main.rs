@@ -10,7 +10,7 @@ use std::path::PathBuf;
 use std::{collections::HashMap, time::Instant};
 
 use fj_host::Model;
-use fj_interop::DebugInfo;
+use fj_interop::debug::DebugInfo;
 use fj_kernel::algorithms::triangulate;
 use fj_math::{Aabb, Scalar, Triangle};
 use fj_operations::ToShape as _;

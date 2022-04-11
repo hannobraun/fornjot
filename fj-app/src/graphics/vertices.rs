@@ -1,5 +1,5 @@
 use bytemuck::{Pod, Zeroable};
-use fj_interop::DebugInfo;
+use fj_interop::debug::DebugInfo;
 use fj_math::Triangle;
 use nalgebra::{vector, Point};
 
