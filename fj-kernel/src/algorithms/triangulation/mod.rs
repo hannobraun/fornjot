@@ -53,7 +53,7 @@ pub fn triangulate(
                         },
                     ));
 
-                let mut triangles = delaunay::delaunay(points);
+                let mut triangles = delaunay::triangulate(points);
                 triangles.retain(|triangle| {
                     face_as_polygon.contains_triangle(
                         triangle.map(|point| point.native()),
