@@ -1,24 +1,22 @@
+//! A triangle mesh
+
 use std::{collections::HashMap, hash::Hash};
 
-/// API for creating a mesh
-pub struct MeshMaker<V> {
+/// A triangle mesh
+pub struct Mesh<V> {
     vertices: Vec<V>,
     indices: Vec<Index>,
 
     indices_by_vertex: HashMap<V, Index>,
 }
 
-impl<V> MeshMaker<V>
+impl<V> Mesh<V>
 where
     V: Copy + Eq + Hash,
 {
-    /// Create a new instance of `MeshMaker`
+    /// Construct a new instance of `Mesh`
     pub fn new() -> Self {
-        Self {
-            vertices: Vec::new(),
-            indices: Vec::new(),
-            indices_by_vertex: HashMap::new(),
-        }
+        Self::default()
     }
 
     /// Add a vertex to the mesh
@@ -41,6 +39,18 @@ where
     /// Access the indices of the mesh
     pub fn indices(&self) -> impl Iterator<Item = Index> + '_ {
         self.indices.iter().copied()
+    }
+}
+
+// This needs to be a manual implementation. Deriving `Default` would require
+// `V` to be `Default` as well, even though that is not necessary.
+impl<V> Default for Mesh<V> {
+    fn default() -> Self {
+        Self {
+            vertices: Default::default(),
+            indices: Default::default(),
+            indices_by_vertex: Default::default(),
+        }
     }
 }
 

@@ -1,9 +1,10 @@
 use bytemuck::{Pod, Zeroable};
-use fj_interop::debug::DebugInfo;
+use fj_interop::{
+    debug::DebugInfo,
+    mesh::{Index, Mesh},
+};
 use fj_math::Triangle;
 use nalgebra::{vector, Point};
-
-use crate::mesh::{Index, MeshMaker};
 
 #[derive(Debug)]
 pub struct Vertices {
@@ -68,7 +69,7 @@ impl Vertices {
 
 impl From<&Vec<Triangle<3>>> for Vertices {
     fn from(triangles: &Vec<Triangle<3>>) -> Self {
-        let mut mesh = MeshMaker::new();
+        let mut mesh = Mesh::new();
 
         for triangle in triangles {
             let [a, b, c] = triangle.points();
