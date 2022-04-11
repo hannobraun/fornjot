@@ -61,7 +61,7 @@ impl Polygon {
 
     pub fn contains_triangle(
         &self,
-        &[a, b, c]: &[Point<2>; 3],
+        [a, b, c]: [Point<2>; 3],
         debug_info: &mut DebugInfo,
     ) -> bool {
         for edge in [a, b, c, a].windows(2) {
