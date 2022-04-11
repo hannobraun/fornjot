@@ -15,9 +15,10 @@ use super::FaceApprox;
 pub fn triangulate(
     mut shape: Shape,
     tolerance: Scalar,
-    out: &mut Vec<Triangle>,
     debug_info: &mut DebugInfo,
-) {
+) -> Vec<Triangle> {
+    let mut out = Vec::new();
+
     for face in shape.topology().faces() {
         let face = face.get();
         match &face {
@@ -69,6 +70,8 @@ pub fn triangulate(
             Face::Triangles(triangles) => out.extend(triangles),
         }
     }
+
+    out
 }
 
 #[cfg(test)]
@@ -138,10 +141,10 @@ mod tests {
     fn triangulate(shape: Shape) -> Triangles {
         let tolerance = Scalar::ONE;
 
-        let mut triangles = Vec::new();
         let mut debug_info = DebugInfo::new();
 
-        super::triangulate(shape, tolerance, &mut triangles, &mut debug_info);
+        let mut triangles =
+            super::triangulate(shape, tolerance, &mut debug_info);
 
         for triangle in &mut triangles {
             *triangle = Triangle {

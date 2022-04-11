@@ -292,11 +292,9 @@ impl ShapeProcessor {
         };
 
         let mut debug_info = DebugInfo::new();
-        let mut triangles = Vec::new();
-        triangulate(
+        let triangles = triangulate(
             shape.to_shape(tolerance, &mut debug_info),
             tolerance,
-            &mut triangles,
             &mut debug_info,
         );
 
