@@ -69,9 +69,12 @@ impl Polygon {
             // cleaned up a bit, once `array_windows` is stable.
             let edge = Segment::from([edge[0], edge[1]]);
 
+            let is_exterior_edge = self.contains_exterior_edge(edge);
+            let is_interior_edge = self.contains_interior_edge(edge);
+
             // If the segment is an edge of the face, we don't need to take a
             // closer look.
-            if self.contains_edge(edge) {
+            if is_exterior_edge || is_interior_edge {
                 continue;
             }
 
@@ -89,10 +92,15 @@ impl Polygon {
         true
     }
 
-    pub fn contains_edge(&self, edge: Segment<2>) -> bool {
+    pub fn contains_exterior_edge(&self, edge: Segment<2>) -> bool {
+        self.exterior.segments().contains(&edge)
+            || self.exterior.segments().contains(&edge.reverse())
+    }
+
+    pub fn contains_interior_edge(&self, edge: Segment<2>) -> bool {
         let mut contains = false;
 
-        for chain in Some(&self.exterior).into_iter().chain(&self.interiors) {
+        for chain in &self.interiors {
             contains |= chain.segments().contains(&edge);
             contains |= chain.segments().contains(&edge.reverse());
         }
