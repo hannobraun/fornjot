@@ -14,11 +14,7 @@ where
 {
     /// Construct a new instance of `Mesh`
     pub fn new() -> Self {
-        Self {
-            vertices: Vec::new(),
-            indices: Vec::new(),
-            indices_by_vertex: HashMap::new(),
-        }
+        Self::default()
     }
 
     /// Add a vertex to the mesh
@@ -41,6 +37,18 @@ where
     /// Access the indices of the mesh
     pub fn indices(&self) -> impl Iterator<Item = Index> + '_ {
         self.indices.iter().copied()
+    }
+}
+
+// This needs to be a manual implementation. Deriving `Default` would require
+// `V` to be `Default` as well, even though that is not necessary.
+impl<V> Default for Mesh<V> {
+    fn default() -> Self {
+        Self {
+            vertices: Default::default(),
+            indices: Default::default(),
+            indices_by_vertex: Default::default(),
+        }
     }
 }
 
