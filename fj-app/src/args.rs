@@ -1,5 +1,7 @@
 use std::{path::PathBuf, str::FromStr as _};
 
+use anyhow::anyhow;
+use fj_host::Parameters;
 use fj_kernel::algorithms::Tolerance;
 use fj_math::Scalar;
 
@@ -15,8 +17,8 @@ pub struct Args {
     pub export: Option<PathBuf>,
 
     /// Parameters for the model, each in the form `key=value`
-    #[clap(short, long)]
-    pub parameters: Vec<String>,
+    #[clap(short, long, parse(try_from_str = parse_parameters))]
+    pub parameters: Option<Parameters>,
 
     /// Model deviation tolerance
     #[clap[short, long, parse(try_from_str = parse_tolerance)]]
@@ -31,6 +33,27 @@ impl Args {
     pub fn parse() -> Self {
         <Self as clap::Parser>::parse()
     }
+}
+
+fn parse_parameters(input: &str) -> anyhow::Result<Parameters> {
+    let mut parameters = Parameters::empty();
+
+    for parameter in input.split(',') {
+        let mut parameter = parameter.splitn(2, '=');
+
+        let key = parameter
+            .next()
+            .ok_or_else(|| anyhow!("Expected model parameter key"))?
+            .to_owned();
+        let value = parameter
+            .next()
+            .ok_or_else(|| anyhow!("Expected model parameter value"))?
+            .to_owned();
+
+        parameters.0.insert(key, value);
+    }
+
+    Ok(parameters)
 }
 
 fn parse_tolerance(input: &str) -> anyhow::Result<Tolerance> {
