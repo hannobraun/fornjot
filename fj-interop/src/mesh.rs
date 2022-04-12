@@ -83,7 +83,10 @@ impl Mesh<Point<3>> {
             self.push_vertex(point);
         }
 
-        self.triangles.push(Triangle::new(triangle, color));
+        self.triangles.push(Triangle {
+            points: triangle.points(),
+            color,
+        });
     }
 }
 
@@ -113,14 +116,6 @@ pub struct Triangle {
 
     /// The color of the triangle
     pub color: Color,
-}
-
-impl Triangle {
-    /// Construct a new instance of `Triangle`
-    pub fn new(inner: impl Into<fj_math::Triangle<3>>, color: Color) -> Self {
-        let points = inner.into().points();
-        Self { points, color }
-    }
 }
 
 /// RGBA color
