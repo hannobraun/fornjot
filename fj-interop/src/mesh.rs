@@ -72,15 +72,12 @@ where
 
 impl Mesh<Point<3>> {
     /// Add a triangle to the mesh
-    pub fn push_triangle(&mut self, triangle: [Point<3>; 3], color: Color) {
-        for point in triangle {
+    pub fn push_triangle(&mut self, points: [Point<3>; 3], color: Color) {
+        for point in points {
             self.push_vertex(point);
         }
 
-        self.triangles.push(Triangle {
-            points: triangle,
-            color,
-        });
+        self.triangles.push(Triangle { points, color });
     }
 }
 
