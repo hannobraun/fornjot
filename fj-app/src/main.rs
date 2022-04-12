@@ -8,6 +8,7 @@ mod window;
 use std::path::PathBuf;
 use std::time::Instant;
 
+use anyhow::anyhow;
 use fj_host::{Model, Parameters};
 use fj_interop::{debug::DebugInfo, mesh::Mesh};
 use fj_kernel::algorithms::{triangulate, Tolerance};
@@ -48,17 +49,13 @@ fn main() -> anyhow::Result<()> {
     let config = Config::load()?;
 
     let mut path = config.default_path.unwrap_or_else(|| PathBuf::from(""));
-    match args.model.or(config.default_model) {
-        Some(model) => {
-            path.push(model);
-        }
-        None => {
-            anyhow::bail!(
-                "No model specified, and no default model configured.\n\
+    let model = args.model.or(config.default_model).ok_or_else(|| {
+        anyhow!(
+            "No model specified, and no default model configured.\n\
                 Specify a model by passing `--model path/to/model`."
-            );
-        }
-    }
+        )
+    })?;
+    path.push(model);
 
     let model = Model::from_path(path, config.target_dir)?;
     let parameters = args.parameters.unwrap_or_else(Parameters::empty);
