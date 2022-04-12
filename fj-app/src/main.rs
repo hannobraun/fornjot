@@ -8,7 +8,7 @@ mod window;
 use std::path::PathBuf;
 use std::{collections::HashMap, time::Instant};
 
-use fj_host::Model;
+use fj_host::{Model, Parameters};
 use fj_interop::{debug::DebugInfo, mesh::Mesh};
 use fj_kernel::algorithms::{triangulate, Tolerance};
 use fj_math::{Aabb, Point, Scalar};
@@ -83,7 +83,7 @@ fn main() -> anyhow::Result<()> {
     };
 
     if let Some(path) = args.export {
-        let shape = model.load_once(&parameters)?;
+        let shape = model.load_once(&Parameters(parameters))?;
         let shape = shape_processor.process(&shape);
 
         let vertices =
@@ -111,7 +111,7 @@ fn main() -> anyhow::Result<()> {
         return Ok(());
     }
 
-    let watcher = model.load_and_watch(parameters)?;
+    let watcher = model.load_and_watch(Parameters(parameters))?;
 
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop);

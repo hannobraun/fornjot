@@ -74,7 +74,7 @@ impl Model {
     /// model for changes, reloading it continually.
     pub fn load_once(
         &self,
-        arguments: &HashMap<String, String>,
+        arguments: &Parameters,
     ) -> Result<fj::Shape, Error> {
         let manifest_path = self.manifest_path.display().to_string();
 
@@ -120,7 +120,7 @@ impl Model {
     /// be queried for changes to the model.
     pub fn load_and_watch(
         self,
-        parameters: HashMap<String, String>,
+        parameters: Parameters,
     ) -> Result<Watcher, Error> {
         let (tx, rx) = mpsc::sync_channel(0);
         let tx2 = tx.clone();
@@ -202,7 +202,7 @@ pub struct Watcher {
     _watcher: Box<dyn notify::Watcher>,
     channel: mpsc::Receiver<()>,
     model: Model,
-    parameters: HashMap<String, String>,
+    parameters: Parameters,
 }
 
 impl Watcher {
@@ -243,6 +243,16 @@ impl Watcher {
     }
 }
 
+/// Parameters that are passed to a model
+pub struct Parameters(pub HashMap<String, String>);
+
+impl Parameters {
+    /// Construct an empty instance of `Parameters`
+    pub fn empty() -> Self {
+        Self(HashMap::new())
+    }
+}
+
 /// An error that can occur when loading or reloading a model
 #[derive(Debug, Error)]
 pub enum Error {
@@ -263,5 +273,4 @@ pub enum Error {
     Notify(#[from] notify::Error),
 }
 
-type ModelFn =
-    unsafe extern "C" fn(args: &HashMap<String, String>) -> fj::Shape;
+type ModelFn = unsafe extern "C" fn(args: &Parameters) -> fj::Shape;
