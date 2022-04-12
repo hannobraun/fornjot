@@ -10,10 +10,7 @@ use std::time::Instant;
 
 use anyhow::anyhow;
 use fj_host::{Model, Parameters};
-use fj_interop::{debug::DebugInfo, mesh::Mesh};
-use fj_kernel::algorithms::{triangulate, Tolerance};
-use fj_math::{Aabb, Point, Scalar};
-use fj_operations::ToShape as _;
+use fj_operations::shape_processor::ShapeProcessor;
 use futures::executor::block_on;
 use tracing::{trace, warn};
 use tracing_subscriber::fmt::format;
@@ -117,7 +114,11 @@ fn main() -> anyhow::Result<()> {
 
         if let Some(new_shape) = watcher.receive() {
             let new_shape = shape_processor.process(&new_shape);
-            new_shape.update_geometry(&mut renderer);
+            renderer.update_geometry(
+                (&new_shape.mesh).into(),
+                (&new_shape.debug_info).into(),
+                new_shape.aabb,
+            );
 
             if camera.is_none() {
                 camera = Some(Camera::new(&new_shape.aabb));
@@ -219,61 +220,4 @@ fn main() -> anyhow::Result<()> {
             draw_config.draw_debug = !draw_config.draw_debug;
         }
     });
-}
-
-struct ShapeProcessor {
-    tolerance: Option<Tolerance>,
-}
-
-impl ShapeProcessor {
-    fn process(&self, shape: &fj::Shape) -> ProcessedShape {
-        let aabb = shape.bounding_volume();
-
-        let tolerance = match self.tolerance {
-            None => {
-                // Compute a reasonable default for the tolerance value. To do
-                // this, we just look at the smallest non-zero extent of the
-                // bounding box and divide that by some value.
-                let mut min_extent = Scalar::MAX;
-                for extent in aabb.size().components {
-                    if extent > Scalar::ZERO && extent < min_extent {
-                        min_extent = extent;
-                    }
-                }
-
-                let tolerance = min_extent / Scalar::from_f64(1000.);
-                Tolerance::from_scalar(tolerance).unwrap()
-            }
-            Some(user_defined_tolerance) => user_defined_tolerance,
-        };
-
-        let mut debug_info = DebugInfo::new();
-        let mesh = triangulate(
-            shape.to_shape(tolerance, &mut debug_info),
-            tolerance,
-            &mut debug_info,
-        );
-
-        ProcessedShape {
-            aabb,
-            mesh,
-            debug_info,
-        }
-    }
-}
-
-struct ProcessedShape {
-    aabb: Aabb<3>,
-    mesh: Mesh<Point<3>>,
-    debug_info: DebugInfo,
-}
-
-impl ProcessedShape {
-    fn update_geometry(&self, renderer: &mut Renderer) {
-        renderer.update_geometry(
-            (&self.mesh).into(),
-            (&self.debug_info).into(),
-            self.aabb,
-        );
-    }
 }

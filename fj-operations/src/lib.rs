@@ -6,6 +6,8 @@
 
 #![deny(missing_docs)]
 
+pub mod shape_processor;
+
 mod circle;
 mod difference_2d;
 mod group;
