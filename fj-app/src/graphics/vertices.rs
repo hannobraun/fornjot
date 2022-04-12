@@ -67,10 +67,10 @@ impl Vertices {
 }
 
 impl From<&Mesh<fj_math::Point<3>>> for Vertices {
-    fn from(triangles: &Mesh<fj_math::Point<3>>) -> Self {
+    fn from(mesh: &Mesh<fj_math::Point<3>>) -> Self {
         let mut m = Mesh::new();
 
-        for triangle in triangles.triangles() {
+        for triangle in mesh.triangles() {
             let [a, b, c] = triangle.inner.points();
 
             let normal = (b - a).cross(&(c - a)).normalize();
