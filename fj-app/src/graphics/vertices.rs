@@ -68,7 +68,7 @@ impl Vertices {
 
 impl From<&Mesh<fj_math::Point<3>>> for Vertices {
     fn from(triangles: &Mesh<fj_math::Point<3>>) -> Self {
-        let mut mesh = Mesh::new();
+        let mut m = Mesh::new();
 
         for triangle in triangles.triangles() {
             let [a, b, c] = triangle.inner.points();
@@ -76,12 +76,12 @@ impl From<&Mesh<fj_math::Point<3>>> for Vertices {
             let normal = (b - a).cross(&(c - a)).normalize();
             let color = triangle.color;
 
-            mesh.push_vertex((a, normal, color));
-            mesh.push_vertex((b, normal, color));
-            mesh.push_vertex((c, normal, color));
+            m.push_vertex((a, normal, color));
+            m.push_vertex((b, normal, color));
+            m.push_vertex((c, normal, color));
         }
 
-        let vertices = mesh
+        let vertices = m
             .vertices()
             .map(|(vertex, normal, color)| Vertex {
                 position: vertex.into(),
@@ -90,7 +90,7 @@ impl From<&Mesh<fj_math::Point<3>>> for Vertices {
             })
             .collect();
 
-        let indices = mesh.indices().collect();
+        let indices = m.indices().collect();
 
         Self { vertices, indices }
     }
