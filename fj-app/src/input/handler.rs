@@ -122,9 +122,9 @@ impl Handler {
         now: Instant,
         camera: &mut Camera,
         window: &Window,
-        triangles: &Mesh<Point<3>>,
+        mesh: &Mesh<Point<3>>,
     ) {
-        let focus_point = camera.focus_point(window, self.cursor, triangles);
+        let focus_point = camera.focus_point(window, self.cursor, mesh);
 
         self.zoom.discard_old_events(now);
         self.zoom.update_speed(now, delta_t, focus_point, camera);
