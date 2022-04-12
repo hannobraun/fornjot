@@ -158,6 +158,7 @@ mod tests {
         Triangles(triangles)
     }
 
+    #[derive(Debug)]
     struct Triangles(Vec<Triangle<3>>);
 
     impl Triangles {
