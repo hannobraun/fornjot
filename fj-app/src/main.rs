@@ -253,8 +253,10 @@ impl ShapeProcessor {
             }
         }
 
-        let tolerance =
-            tolerance.map(Scalar::from_f64).map(Tolerance::from_scalar);
+        let tolerance = tolerance
+            .map(Scalar::from_f64)
+            .map(Tolerance::from_scalar)
+            .map(|result| result.unwrap());
 
         Ok(Self { tolerance })
     }
@@ -278,7 +280,7 @@ impl ShapeProcessor {
                 let tolerance = min_extent / Scalar::from_f64(1000.);
                 assert!(tolerance > Scalar::ZERO);
 
-                Tolerance::from_scalar(tolerance)
+                Tolerance::from_scalar(tolerance).unwrap()
             }
             Some(user_defined_tolerance) => user_defined_tolerance,
         };

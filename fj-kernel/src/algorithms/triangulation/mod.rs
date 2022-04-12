@@ -83,7 +83,9 @@ mod tests {
     use fj_interop::{debug::DebugInfo, mesh::Mesh};
     use fj_math::{Point, Scalar};
 
-    use crate::{geometry::Surface, shape::Shape, topology::Face, algorithms::Tolerance};
+    use crate::{
+        algorithms::Tolerance, geometry::Surface, shape::Shape, topology::Face,
+    };
 
     #[test]
     fn simple() -> anyhow::Result<()> {
@@ -143,7 +145,7 @@ mod tests {
     }
 
     fn triangulate(shape: Shape) -> Mesh<Point<3>> {
-        let tolerance = Tolerance::from_scalar(Scalar::ONE);
+        let tolerance = Tolerance::from_scalar(Scalar::ONE).unwrap();
 
         let mut debug_info = DebugInfo::new();
         super::triangulate(shape, tolerance, &mut debug_info)

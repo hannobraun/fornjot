@@ -169,8 +169,14 @@ pub struct Tolerance(Scalar);
 
 impl Tolerance {
     /// Construct a `Tolerance` from a [`Scalar`]
-    pub fn from_scalar(scalar: impl Into<Scalar>) -> Self {
-        Self(scalar.into())
+    pub fn from_scalar(scalar: impl Into<Scalar>) -> Result<Self, Scalar> {
+        let scalar = scalar.into();
+
+        if scalar <= Scalar::ZERO {
+            return Err(scalar);
+        }
+
+        Ok(Self(scalar))
     }
 
     /// Return the [`Scalar`] that defines the tolerance
@@ -184,7 +190,7 @@ where
     S: Into<Scalar>,
 {
     fn from(scalar: S) -> Self {
-        Self::from_scalar(scalar)
+        Self::from_scalar(scalar).unwrap()
     }
 }
 
@@ -229,7 +235,7 @@ mod tests {
     fn for_face_closed() -> anyhow::Result<()> {
         // Test a closed face, i.e. one that is completely encircled by edges.
 
-        let tolerance = Tolerance::from_scalar(Scalar::ONE);
+        let tolerance = Tolerance::from_scalar(Scalar::ONE).unwrap();
 
         let mut shape = Shape::new();
 

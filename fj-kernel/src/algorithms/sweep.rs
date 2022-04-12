@@ -326,7 +326,7 @@ mod tests {
 
     #[test]
     fn sweep() -> anyhow::Result<()> {
-        let tolerance = Tolerance::from_scalar(Scalar::ONE);
+        let tolerance = Tolerance::from_scalar(Scalar::ONE).unwrap();
 
         let sketch = Triangle::new([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]])?;
 
