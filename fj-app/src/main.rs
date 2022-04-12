@@ -117,7 +117,11 @@ fn main() -> anyhow::Result<()> {
 
         if let Some(new_shape) = watcher.receive() {
             let new_shape = shape_processor.process(&new_shape);
-            new_shape.update_geometry(&mut renderer);
+            renderer.update_geometry(
+                (&new_shape.mesh).into(),
+                (&new_shape.debug_info).into(),
+                new_shape.aabb,
+            );
 
             if camera.is_none() {
                 camera = Some(Camera::new(&new_shape.aabb));
@@ -266,14 +270,4 @@ struct ProcessedShape {
     aabb: Aabb<3>,
     mesh: Mesh<Point<3>>,
     debug_info: DebugInfo,
-}
-
-impl ProcessedShape {
-    fn update_geometry(&self, renderer: &mut Renderer) {
-        renderer.update_geometry(
-            (&self.mesh).into(),
-            (&self.debug_info).into(),
-            self.aabb,
-        );
-    }
 }
