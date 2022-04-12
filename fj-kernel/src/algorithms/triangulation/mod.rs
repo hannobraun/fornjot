@@ -68,7 +68,13 @@ pub fn triangulate(
                     t
                 }));
             }
-            Face::Triangles(triangles) => out.extend(triangles),
+            Face::Triangles(triangles) => {
+                out.extend(triangles.iter().map(|triangle| {
+                    let mut t = triangle.inner;
+                    t.set_color(triangle.color);
+                    t
+                }))
+            }
         }
     }
 }
