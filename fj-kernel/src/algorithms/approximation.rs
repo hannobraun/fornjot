@@ -184,11 +184,13 @@ impl Tolerance {
     /// Construct a `Tolerance` from a [`Scalar`]
     ///
     /// Returns an error, if the passed scalar is not larger than zero.
-    pub fn from_scalar(scalar: impl Into<Scalar>) -> Result<Self, Scalar> {
+    pub fn from_scalar(
+        scalar: impl Into<Scalar>,
+    ) -> Result<Self, InvalidTolerance> {
         let scalar = scalar.into();
 
         if scalar <= Scalar::ZERO {
-            return Err(scalar);
+            return Err(InvalidTolerance(scalar));
         }
 
         Ok(Self(scalar))
@@ -208,6 +210,10 @@ where
         Self::from_scalar(scalar).unwrap()
     }
 }
+
+#[derive(Debug, thiserror::Error)]
+#[error("Invalid tolerance ({0}); must be above zero")]
+pub struct InvalidTolerance(Scalar);
 
 #[cfg(test)]
 mod tests {
