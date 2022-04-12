@@ -6,7 +6,7 @@ mod input;
 mod window;
 
 use std::path::PathBuf;
-use std::{collections::HashMap, time::Instant};
+use std::time::Instant;
 
 use fj_host::{Model, Parameters};
 use fj_interop::{debug::DebugInfo, mesh::Mesh};
@@ -61,29 +61,14 @@ fn main() -> anyhow::Result<()> {
     }
 
     let model = Model::from_path(path, config.target_dir)?;
-
-    let mut parameters = HashMap::new();
-    for parameter in args.parameters {
-        let mut parameter = parameter.splitn(2, '=');
-
-        let key = parameter
-            .next()
-            .expect("model parameter: key not found")
-            .to_owned();
-        let value = parameter
-            .next()
-            .expect("model parameter: value not found")
-            .to_owned();
-
-        parameters.insert(key, value);
-    }
+    let parameters = args.parameters.unwrap_or_else(Parameters::empty);
 
     let shape_processor = ShapeProcessor {
         tolerance: args.tolerance,
     };
 
     if let Some(path) = args.export {
-        let shape = model.load_once(&Parameters(parameters))?;
+        let shape = model.load_once(&parameters)?;
         let shape = shape_processor.process(&shape);
 
         let vertices =
@@ -111,7 +96,7 @@ fn main() -> anyhow::Result<()> {
         return Ok(());
     }
 
-    let watcher = model.load_and_watch(Parameters(parameters))?;
+    let watcher = model.load_and_watch(parameters)?;
 
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop);
