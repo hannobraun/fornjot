@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
-use fj_math::{Scalar, Transform, Triangle, Vector};
+use fj_interop::mesh::Triangle;
+use fj_math::{Scalar, Transform, Vector};
 
 use crate::{
     geometry::{Surface, SweptCurve},
@@ -149,16 +150,10 @@ pub fn sweep_shape(
                 quads.push([v0, v1, v2, v3]);
             }
 
-            let mut side_face: Vec<Triangle<3>> = Vec::new();
+            let mut side_face: Vec<Triangle> = Vec::new();
             for [v0, v1, v2, v3] in quads {
-                side_face.push([v0, v1, v2].into());
-                side_face.push([v0, v2, v3].into());
-            }
-
-            // FIXME: We probably want to allow the use of custom colors for the
-            // "walls" of the swept object.
-            for s in side_face.iter_mut() {
-                s.set_color(color);
+                side_face.push(Triangle::new([v0, v1, v2], color));
+                side_face.push(Triangle::new([v0, v2, v3], color));
             }
 
             target.insert(Face::Triangles(side_face)).unwrap();

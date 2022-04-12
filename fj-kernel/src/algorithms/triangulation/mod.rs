@@ -2,8 +2,8 @@ mod delaunay;
 mod polygon;
 mod ray;
 
-use fj_interop::debug::DebugInfo;
-use fj_math::{Scalar, Triangle};
+use fj_interop::{debug::DebugInfo, mesh::Triangle};
+use fj_math::Scalar;
 
 use crate::{shape::Shape, topology::Face};
 
@@ -15,7 +15,7 @@ use super::FaceApprox;
 pub fn triangulate(
     mut shape: Shape,
     tolerance: Scalar,
-    out: &mut Vec<Triangle<3>>,
+    out: &mut Vec<Triangle>,
     debug_info: &mut DebugInfo,
 ) {
     for face in shape.topology().faces() {
@@ -62,10 +62,8 @@ pub fn triangulate(
                 });
 
                 out.extend(triangles.into_iter().map(|triangle| {
-                    let [a, b, c] = triangle.map(|point| point.canonical());
-                    let mut t = Triangle::from([a, b, c]);
-                    t.set_color(*color);
-                    t
+                    let points = triangle.map(|point| point.canonical());
+                    Triangle::new(points, *color)
                 }));
             }
             Face::Triangles(triangles) => out.extend(triangles),
@@ -75,8 +73,8 @@ pub fn triangulate(
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::debug::DebugInfo;
-    use fj_math::{Scalar, Triangle};
+    use fj_interop::{debug::DebugInfo, mesh::Triangle};
+    use fj_math::Scalar;
 
     use crate::{geometry::Surface, shape::Shape, topology::Face};
 
@@ -146,17 +144,22 @@ mod tests {
         super::triangulate(shape, tolerance, &mut triangles, &mut debug_info);
 
         for triangle in &mut triangles {
-            *triangle = triangle.normalize();
+            *triangle = Triangle {
+                inner: triangle.inner.normalize(),
+                ..*triangle
+            };
         }
 
         Triangles(triangles)
     }
 
-    struct Triangles(Vec<Triangle<3>>);
+    #[derive(Debug)]
+    struct Triangles(Vec<Triangle>);
 
     impl Triangles {
-        fn contains(&self, triangle: impl Into<Triangle<3>>) -> bool {
-            let triangle = triangle.into().normalize();
+        fn contains(&self, triangle: impl Into<fj_math::Triangle<3>>) -> bool {
+            let triangle =
+                Triangle::new(triangle.into().normalize(), [255, 0, 0, 255]);
             self.0.contains(&triangle)
         }
     }
