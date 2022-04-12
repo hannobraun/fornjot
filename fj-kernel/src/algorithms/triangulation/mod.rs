@@ -68,8 +68,8 @@ pub fn triangulate(
                 }
             }
             Face::Triangles(triangles) => {
-                for triangle in triangles {
-                    mesh.push_triangle(triangle.inner, triangle.color);
+                for &(triangle, color) in triangles {
+                    mesh.push_triangle(triangle, color);
                 }
             }
         }

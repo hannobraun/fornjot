@@ -1,4 +1,3 @@
-use fj_interop::mesh::Triangle;
 use fj_math::{Point, Transform};
 
 use crate::{
@@ -45,11 +44,8 @@ impl Geometry<'_> {
         self.faces.update(|mut face| {
             use std::ops::DerefMut as _;
             if let Face::Triangles(triangles) = face.deref_mut() {
-                for triangle in triangles {
-                    *triangle = Triangle {
-                        inner: transform.transform_triangle(&triangle.inner),
-                        ..*triangle
-                    };
+                for (triangle, _) in triangles {
+                    *triangle = transform.transform_triangle(triangle);
                 }
             }
         });

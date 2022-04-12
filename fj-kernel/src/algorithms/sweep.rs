@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
-use fj_interop::mesh::Triangle;
-use fj_math::{Scalar, Transform, Vector};
+use fj_math::{Scalar, Transform, Triangle, Vector};
 
 use crate::{
     geometry::{Surface, SweptCurve},
@@ -150,10 +149,10 @@ pub fn sweep_shape(
                 quads.push([v0, v1, v2, v3]);
             }
 
-            let mut side_face: Vec<Triangle> = Vec::new();
+            let mut side_face: Vec<(Triangle<3>, _)> = Vec::new();
             for [v0, v1, v2, v3] in quads {
-                side_face.push(Triangle::new([v0, v1, v2], color));
-                side_face.push(Triangle::new([v0, v2, v3], color));
+                side_face.push(([v0, v1, v2].into(), color));
+                side_face.push(([v0, v2, v3].into(), color));
             }
 
             target.insert(Face::Triangles(side_face)).unwrap();

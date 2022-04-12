@@ -1,6 +1,7 @@
 use std::hash::{Hash, Hasher};
 
-use fj_interop::mesh::Triangle;
+use fj_interop::mesh::Color;
+use fj_math::Triangle;
 
 use crate::{
     geometry::Surface,
@@ -61,7 +62,7 @@ pub enum Face {
     /// The plan is to eventually represent faces as a geometric surface,
     /// bounded by edges. While the transition is being made, this variant is
     /// still required.
-    Triangles(Vec<Triangle>),
+    Triangles(Vec<(Triangle<3>, Color)>),
 }
 
 impl Face {
