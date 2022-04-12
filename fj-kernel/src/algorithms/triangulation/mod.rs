@@ -62,8 +62,8 @@ pub fn triangulate(
                 });
 
                 out.extend(triangles.into_iter().map(|triangle| {
-                    let [a, b, c] = triangle.map(|point| point.canonical());
-                    let mut t = Triangle::from([a, b, c]);
+                    let points = triangle.map(|point| point.canonical());
+                    let mut t = Triangle::from(points);
                     t.set_color(*color);
                     t
                 }));
