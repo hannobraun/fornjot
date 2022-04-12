@@ -1,7 +1,7 @@
 use std::f64::consts::FRAC_PI_2;
 
 use fj_interop::mesh::Mesh;
-use fj_math::{Aabb, Scalar};
+use fj_math::{Aabb, Scalar, Triangle};
 use nalgebra::{Point, TAffine, Transform, Translation, Vector};
 use parry3d_f64::query::{Ray, RayCast as _};
 use winit::dpi::PhysicalPosition;
@@ -148,11 +148,9 @@ impl Camera {
         let mut min_t = None;
 
         for triangle in mesh.triangles() {
-            let t = triangle.inner.to_parry().cast_local_ray(
-                &ray,
-                f64::INFINITY,
-                true,
-            );
+            let t = Triangle::from_points(triangle.points)
+                .to_parry()
+                .cast_local_ray(&ray, f64::INFINITY, true);
 
             if let Some(t) = t {
                 if t <= min_t.unwrap_or(t) {

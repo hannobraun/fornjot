@@ -45,7 +45,8 @@ where
         let triangle = triangle.into().normalize();
 
         for t in &self.triangles {
-            if triangle == t.inner.normalize() {
+            let t = fj_math::Triangle::from_points(t.points).normalize();
+            if triangle == t {
                 return true;
             }
         }
@@ -107,8 +108,8 @@ pub type Index = u32;
 /// Extension of [`fj_math::Triangle`] that also includes a color.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct Triangle {
-    /// The non-color part of the triangle
-    pub inner: fj_math::Triangle<3>,
+    /// The points of the triangle
+    pub points: [Point<3>; 3],
 
     /// The color of the triangle
     pub color: Color,
@@ -117,8 +118,8 @@ pub struct Triangle {
 impl Triangle {
     /// Construct a new instance of `Triangle`
     pub fn new(inner: impl Into<fj_math::Triangle<3>>, color: Color) -> Self {
-        let inner = inner.into();
-        Self { inner, color }
+        let points = inner.into().points();
+        Self { points, color }
     }
 }
 
