@@ -2,12 +2,15 @@
 
 use std::{collections::HashMap, hash::Hash};
 
+use fj_math::Point;
+
 /// A triangle mesh
 pub struct Mesh<V> {
     vertices: Vec<V>,
     indices: Vec<Index>,
 
     indices_by_vertex: HashMap<V, Index>,
+    triangles: Vec<Triangle>,
 }
 
 impl<V> Mesh<V>
@@ -31,6 +34,25 @@ where
         self.indices.push(index);
     }
 
+    /// Determine whether the mesh contains the provided triangle
+    ///
+    /// Returns true, if a triangle with any combination of the points of the
+    /// provided triangle is part of the mesh.
+    pub fn contains_triangle(
+        &self,
+        triangle: impl Into<fj_math::Triangle<3>>,
+    ) -> bool {
+        let triangle = triangle.into().normalize();
+
+        for t in &self.triangles {
+            if triangle == t.inner.normalize() {
+                return true;
+            }
+        }
+
+        false
+    }
+
     /// Access the vertices of the mesh
     pub fn vertices(&self) -> impl Iterator<Item = V> + '_ {
         self.vertices.iter().copied()
@@ -39,6 +61,28 @@ where
     /// Access the indices of the mesh
     pub fn indices(&self) -> impl Iterator<Item = Index> + '_ {
         self.indices.iter().copied()
+    }
+
+    /// Access the triangles of the mesh
+    pub fn triangles(&self) -> impl Iterator<Item = Triangle> + '_ {
+        self.triangles.iter().copied()
+    }
+}
+
+impl Mesh<Point<3>> {
+    /// Add a triangle to the mesh
+    pub fn push_triangle(
+        &mut self,
+        triangle: impl Into<fj_math::Triangle<3>>,
+        color: Color,
+    ) {
+        let triangle = triangle.into();
+
+        for point in triangle.points() {
+            self.push_vertex(point);
+        }
+
+        self.triangles.push(Triangle::new(triangle, color));
     }
 }
 
@@ -50,6 +94,7 @@ impl<V> Default for Mesh<V> {
             vertices: Default::default(),
             indices: Default::default(),
             indices_by_vertex: Default::default(),
+            triangles: Default::default(),
         }
     }
 }
