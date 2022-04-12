@@ -17,7 +17,7 @@ pub fn triangulate(
     tolerance: Scalar,
     debug_info: &mut DebugInfo,
 ) -> Mesh<Point<3>> {
-    let mut out = Mesh::new();
+    let mut mesh = Mesh::new();
 
     for face in shape.topology().faces() {
         let face = face.get();
@@ -64,18 +64,18 @@ pub fn triangulate(
 
                 for triangle in triangles {
                     let points = triangle.map(|point| point.canonical());
-                    out.push_triangle(points, *color);
+                    mesh.push_triangle(points, *color);
                 }
             }
             Face::Triangles(triangles) => {
                 for triangle in triangles {
-                    out.push_triangle(triangle.inner, triangle.color);
+                    mesh.push_triangle(triangle.inner, triangle.color);
                 }
             }
         }
     }
 
-    out
+    mesh
 }
 
 #[cfg(test)]
