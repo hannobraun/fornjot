@@ -1,6 +1,7 @@
 use std::time::Instant;
 
-use fj_interop::mesh::Triangle;
+use fj_interop::mesh::Mesh;
+use fj_math::Point;
 use winit::{
     dpi::PhysicalPosition,
     event::{
@@ -121,9 +122,9 @@ impl Handler {
         now: Instant,
         camera: &mut Camera,
         window: &Window,
-        triangles: &[Triangle],
+        mesh: &Mesh<Point<3>>,
     ) {
-        let focus_point = camera.focus_point(window, self.cursor, triangles);
+        let focus_point = camera.focus_point(window, self.cursor, mesh);
 
         self.zoom.discard_old_events(now);
         self.zoom.update_speed(now, delta_t, focus_point, camera);

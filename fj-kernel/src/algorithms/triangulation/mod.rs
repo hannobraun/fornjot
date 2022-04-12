@@ -2,8 +2,8 @@ mod delaunay;
 mod polygon;
 mod ray;
 
-use fj_interop::{debug::DebugInfo, mesh::Triangle};
-use fj_math::Scalar;
+use fj_interop::{debug::DebugInfo, mesh::Mesh};
+use fj_math::{Point, Scalar};
 
 use crate::{shape::Shape, topology::Face};
 
@@ -15,9 +15,10 @@ use super::FaceApprox;
 pub fn triangulate(
     mut shape: Shape,
     tolerance: Scalar,
-    out: &mut Vec<Triangle>,
     debug_info: &mut DebugInfo,
-) {
+) -> Mesh<Point<3>> {
+    let mut mesh = Mesh::new();
+
     for face in shape.topology().faces() {
         let face = face.get();
         match &face {
@@ -61,20 +62,26 @@ pub fn triangulate(
                     )
                 });
 
-                out.extend(triangles.into_iter().map(|triangle| {
+                for triangle in triangles {
                     let points = triangle.map(|point| point.canonical());
-                    Triangle::new(points, *color)
-                }));
+                    mesh.push_triangle(points, *color);
+                }
             }
-            Face::Triangles(triangles) => out.extend(triangles),
+            Face::Triangles(triangles) => {
+                for triangle in triangles {
+                    mesh.push_triangle(triangle.inner, triangle.color);
+                }
+            }
         }
     }
+
+    mesh
 }
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::{debug::DebugInfo, mesh::Triangle};
-    use fj_math::Scalar;
+    use fj_interop::{debug::DebugInfo, mesh::Mesh};
+    use fj_math::{Point, Scalar};
 
     use crate::{geometry::Surface, shape::Shape, topology::Face};
 
@@ -92,10 +99,10 @@ mod tests {
             .build()?;
 
         let triangles = triangulate(shape);
-        assert!(triangles.contains([a, b, d]));
-        assert!(triangles.contains([b, c, d]));
-        assert!(!triangles.contains([a, b, c]));
-        assert!(!triangles.contains([a, c, d]));
+        assert!(triangles.contains_triangle([a, b, d]));
+        assert!(triangles.contains_triangle([b, c, d]));
+        assert!(!triangles.contains_triangle([a, b, c]));
+        assert!(!triangles.contains_triangle([a, c, d]));
 
         Ok(())
     }
@@ -123,44 +130,22 @@ mod tests {
 
         // Should contain some triangles from the polygon. Don't need to test
         // them all.
-        assert!(triangles.contains([a, e, h]));
-        assert!(triangles.contains([a, d, h]));
+        assert!(triangles.contains_triangle([a, e, h]));
+        assert!(triangles.contains_triangle([a, d, h]));
 
         // Shouldn't contain any possible triangle from the hole.
-        assert!(!triangles.contains([e, f, g]));
-        assert!(!triangles.contains([e, g, h]));
-        assert!(!triangles.contains([e, f, h]));
-        assert!(!triangles.contains([f, g, h]));
+        assert!(!triangles.contains_triangle([e, f, g]));
+        assert!(!triangles.contains_triangle([e, g, h]));
+        assert!(!triangles.contains_triangle([e, f, h]));
+        assert!(!triangles.contains_triangle([f, g, h]));
 
         Ok(())
     }
 
-    fn triangulate(shape: Shape) -> Triangles {
+    fn triangulate(shape: Shape) -> Mesh<Point<3>> {
         let tolerance = Scalar::ONE;
 
-        let mut triangles = Vec::new();
         let mut debug_info = DebugInfo::new();
-
-        super::triangulate(shape, tolerance, &mut triangles, &mut debug_info);
-
-        for triangle in &mut triangles {
-            *triangle = Triangle {
-                inner: triangle.inner.normalize(),
-                ..*triangle
-            };
-        }
-
-        Triangles(triangles)
-    }
-
-    #[derive(Debug)]
-    struct Triangles(Vec<Triangle>);
-
-    impl Triangles {
-        fn contains(&self, triangle: impl Into<fj_math::Triangle<3>>) -> bool {
-            let triangle =
-                Triangle::new(triangle.into().normalize(), [255, 0, 0, 255]);
-            self.0.contains(&triangle)
-        }
+        super::triangulate(shape, tolerance, &mut debug_info)
     }
 }

@@ -9,10 +9,9 @@ use std::path::PathBuf;
 use std::{collections::HashMap, time::Instant};
 
 use fj_host::Model;
-use fj_interop::mesh::Triangle;
 use fj_interop::{debug::DebugInfo, mesh::Mesh};
 use fj_kernel::algorithms::triangulate;
-use fj_math::{Aabb, Scalar};
+use fj_math::{Aabb, Point, Scalar};
 use fj_operations::ToShape as _;
 use futures::executor::block_on;
 use tracing::{trace, warn};
@@ -85,18 +84,10 @@ fn main() -> anyhow::Result<()> {
         let shape = model.load_once(&parameters)?;
         let shape = shape_processor.process(&shape);
 
-        let mut mesh_maker = Mesh::new();
-
-        for triangle in shape.triangles {
-            for vertex in triangle.inner.points() {
-                mesh_maker.push(vertex);
-            }
-        }
-
         let vertices =
-            mesh_maker.vertices().map(|vertex| vertex.into()).collect();
+            shape.mesh.vertices().map(|vertex| vertex.into()).collect();
 
-        let indices: Vec<_> = mesh_maker.indices().collect();
+        let indices: Vec<_> = shape.mesh.indices().collect();
         let triangles = indices
             .chunks(3)
             .map(|triangle| {
@@ -187,7 +178,7 @@ fn main() -> anyhow::Result<()> {
                     let focus_point = camera.focus_point(
                         &window,
                         input_handler.cursor(),
-                        &shape.triangles,
+                        &shape.mesh,
                     );
 
                     input_handler.handle_mouse_input(
@@ -213,7 +204,7 @@ fn main() -> anyhow::Result<()> {
                         now,
                         camera,
                         &window,
-                        &shape.triangles,
+                        &shape.mesh,
                     );
                 }
 
@@ -292,17 +283,15 @@ impl ShapeProcessor {
         };
 
         let mut debug_info = DebugInfo::new();
-        let mut triangles = Vec::new();
-        triangulate(
+        let mesh = triangulate(
             shape.to_shape(tolerance, &mut debug_info),
             tolerance,
-            &mut triangles,
             &mut debug_info,
         );
 
         ProcessedShape {
             aabb,
-            triangles,
+            mesh,
             debug_info,
         }
     }
@@ -310,14 +299,14 @@ impl ShapeProcessor {
 
 struct ProcessedShape {
     aabb: Aabb<3>,
-    triangles: Vec<Triangle>,
+    mesh: Mesh<Point<3>>,
     debug_info: DebugInfo,
 }
 
 impl ProcessedShape {
     fn update_geometry(&self, renderer: &mut Renderer) {
         renderer.update_geometry(
-            (&self.triangles).into(),
+            (&self.mesh).into(),
             (&self.debug_info).into(),
             self.aabb,
         );

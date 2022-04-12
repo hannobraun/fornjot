@@ -1,6 +1,6 @@
 use std::f64::consts::FRAC_PI_2;
 
-use fj_interop::mesh::Triangle;
+use fj_interop::mesh::Mesh;
 use fj_math::{Aabb, Scalar};
 use nalgebra::{Point, TAffine, Transform, Translation, Vector};
 use parry3d_f64::query::{Ray, RayCast as _};
@@ -131,7 +131,7 @@ impl Camera {
         &self,
         window: &Window,
         cursor: Option<PhysicalPosition<f64>>,
-        triangles: &[Triangle],
+        mesh: &Mesh<fj_math::Point<3>>,
     ) -> FocusPoint {
         let cursor = match cursor {
             Some(cursor) => cursor,
@@ -147,7 +147,7 @@ impl Camera {
 
         let mut min_t = None;
 
-        for triangle in triangles {
+        for triangle in mesh.triangles() {
             let t = triangle.inner.to_parry().cast_local_ray(
                 &ray,
                 f64::INFINITY,
