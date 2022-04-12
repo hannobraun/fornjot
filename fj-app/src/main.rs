@@ -283,7 +283,7 @@ impl ShapeProcessor {
         };
 
         let mut debug_info = DebugInfo::new();
-        let triangles = triangulate(
+        let mesh = triangulate(
             shape.to_shape(tolerance, &mut debug_info),
             tolerance,
             &mut debug_info,
@@ -291,7 +291,7 @@ impl ShapeProcessor {
 
         ProcessedShape {
             aabb,
-            mesh: triangles,
+            mesh,
             debug_info,
         }
     }
