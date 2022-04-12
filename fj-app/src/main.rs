@@ -78,7 +78,9 @@ fn main() -> anyhow::Result<()> {
         parameters.insert(key, value);
     }
 
-    let shape_processor = ShapeProcessor::new(args.tolerance)?;
+    let shape_processor = ShapeProcessor {
+        tolerance: args.tolerance,
+    };
 
     if let Some(path) = args.export {
         let shape = model.load_once(&parameters)?;
@@ -242,10 +244,6 @@ struct ShapeProcessor {
 }
 
 impl ShapeProcessor {
-    fn new(tolerance: Option<Tolerance>) -> anyhow::Result<Self> {
-        Ok(Self { tolerance })
-    }
-
     fn process(&self, shape: &fj::Shape) -> ProcessedShape {
         let aabb = shape.bounding_volume();
 
