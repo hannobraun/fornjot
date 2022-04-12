@@ -326,12 +326,14 @@ mod tests {
 
     #[test]
     fn sweep() -> anyhow::Result<()> {
+        let tolerance = Tolerance::from_scalar(Scalar::from_f64(0.));
+
         let sketch = Triangle::new([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]])?;
 
         let mut swept = sweep_shape(
             sketch.shape,
             Vector::from([0., 0., 1.]),
-            Tolerance::from_scalar(Scalar::from_f64(0.)),
+            tolerance,
             [255, 0, 0, 255],
         );
 
