@@ -242,22 +242,7 @@ struct ShapeProcessor {
 }
 
 impl ShapeProcessor {
-    fn new(tolerance: Option<f64>) -> anyhow::Result<Self> {
-        if let Some(tolerance) = tolerance {
-            if tolerance <= 0. {
-                anyhow::bail!(
-                    "Invalid user defined model deviation tolerance: {}.\n\
-                    Tolerance must be larger than zero",
-                    tolerance
-                );
-            }
-        }
-
-        let tolerance = tolerance
-            .map(Scalar::from_f64)
-            .map(Tolerance::from_scalar)
-            .map(|result| result.unwrap());
-
+    fn new(tolerance: Option<Tolerance>) -> anyhow::Result<Self> {
         Ok(Self { tolerance })
     }
 
