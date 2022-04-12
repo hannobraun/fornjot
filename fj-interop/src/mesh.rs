@@ -40,9 +40,9 @@ where
     /// provided triangle is part of the mesh.
     pub fn contains_triangle(
         &self,
-        triangle: impl Into<fj_math::Triangle<3>>,
+        triangle: [impl Into<Point<3>>; 3],
     ) -> bool {
-        let triangle = triangle.into().normalize();
+        let triangle = fj_math::Triangle::from_points(triangle).normalize();
 
         for t in &self.triangles {
             let t = fj_math::Triangle::from_points(t.points).normalize();
