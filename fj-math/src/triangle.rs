@@ -16,7 +16,9 @@ impl<const D: usize> Triangle<D> {
     /// # Panics
     ///
     /// Panics, if the points don't form a triangle.
-    pub fn from_points(points: [Point<D>; 3]) -> Self {
+    pub fn from_points(points: [impl Into<Point<D>>; 3]) -> Self {
+        let points = points.map(Into::into);
+
         let area = {
             let [a, b, c] = points.map(Point::to_xyz);
             (b - a).cross(&(c - a)).magnitude()
