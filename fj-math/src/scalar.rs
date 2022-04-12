@@ -512,6 +512,12 @@ impl fmt::Debug for Scalar {
     }
 }
 
+impl fmt::Display for Scalar {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
 impl approx::AbsDiffEq for Scalar {
     type Epsilon = <f64 as approx::AbsDiffEq>::Epsilon;
 
