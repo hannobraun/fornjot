@@ -8,7 +8,6 @@ use super::{Point, Scalar};
 #[repr(C)]
 pub struct Triangle<const D: usize> {
     points: [Point<D>; 3],
-    color: [u8; 4],
 }
 
 impl<const D: usize> Triangle<D> {
@@ -25,10 +24,7 @@ impl<const D: usize> Triangle<D> {
 
         // A triangle is not valid if it doesn't span any area
         if area != Scalar::from(0.0) {
-            Self {
-                points,
-                color: [255, 0, 0, 255],
-            }
+            Self { points }
         } else {
             panic!("Invalid Triangle specified");
         }
@@ -37,11 +33,6 @@ impl<const D: usize> Triangle<D> {
     /// Access the triangle's points
     pub fn points(&self) -> [Point<D>; 3] {
         self.points
-    }
-
-    /// Return the specified color of the triangle in RGBA
-    pub fn color(&self) -> [u8; 4] {
-        self.color
     }
 
     /// Normalize the triangle
@@ -55,11 +46,6 @@ impl<const D: usize> Triangle<D> {
     pub fn normalize(mut self) -> Self {
         self.points.sort();
         self
-    }
-
-    /// Set a new color for the particular triangle
-    pub fn set_color(&mut self, color: [u8; 4]) {
-        self.color = color;
     }
 }
 
@@ -118,24 +104,5 @@ mod tests {
         let b = Point::from([1.0, 1.0, 1.0]);
         let c = Point::from([2.0, 2.0, 2.0]);
         let _triangle = Triangle::from([a, b, c]);
-    }
-
-    #[test]
-    fn triangle_default_color() {
-        let a = Point::from([0.0, 0.0]);
-        let b = Point::from([1.0, 1.0]);
-        let c = Point::from([1.0, 2.0]);
-        let triangle = Triangle::from([a, b, c]);
-        assert_eq!(triangle.color(), [255, 0, 0, 255]);
-    }
-
-    #[test]
-    fn triangle_set_color() {
-        let a = Point::from([0.0, 0.0]);
-        let b = Point::from([1.0, 1.0]);
-        let c = Point::from([1.0, 2.0]);
-        let mut triangle = Triangle::from([a, b, c]);
-        triangle.set_color([1, 2, 3, 4]);
-        assert_eq!(triangle.color(), [1, 2, 3, 4]);
     }
 }
