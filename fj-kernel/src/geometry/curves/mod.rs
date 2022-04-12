@@ -1,9 +1,11 @@
 mod circle;
 mod line;
 
+use crate::algorithms::Tolerance;
+
 pub use self::{circle::Circle, line::Line};
 
-use fj_math::{Point, Scalar, Transform, Vector};
+use fj_math::{Point, Transform, Vector};
 
 /// A one-dimensional shape
 ///
@@ -96,7 +98,7 @@ impl Curve {
     /// The `approximate_between` methods of the curves then need to make sure
     /// to only return points in between those vertices, not the vertices
     /// themselves.
-    pub fn approx(&self, tolerance: Scalar, out: &mut Vec<Point<3>>) {
+    pub fn approx(&self, tolerance: Tolerance, out: &mut Vec<Point<3>>) {
         match self {
             Self::Circle(circle) => circle.approx(tolerance, out),
             Self::Line(_) => {}

@@ -10,7 +10,7 @@ use std::{collections::HashMap, time::Instant};
 
 use fj_host::Model;
 use fj_interop::{debug::DebugInfo, mesh::Mesh};
-use fj_kernel::algorithms::triangulate;
+use fj_kernel::algorithms::{triangulate, Tolerance};
 use fj_math::{Aabb, Point, Scalar};
 use fj_operations::ToShape as _;
 use futures::executor::block_on;
@@ -78,7 +78,9 @@ fn main() -> anyhow::Result<()> {
         parameters.insert(key, value);
     }
 
-    let shape_processor = ShapeProcessor::new(args.tolerance)?;
+    let shape_processor = ShapeProcessor {
+        tolerance: args.tolerance,
+    };
 
     if let Some(path) = args.export {
         let shape = model.load_once(&parameters)?;
@@ -238,26 +240,10 @@ fn main() -> anyhow::Result<()> {
 }
 
 struct ShapeProcessor {
-    tolerance: Option<Scalar>,
+    tolerance: Option<Tolerance>,
 }
 
 impl ShapeProcessor {
-    fn new(tolerance: Option<f64>) -> anyhow::Result<Self> {
-        if let Some(tolerance) = tolerance {
-            if tolerance <= 0. {
-                anyhow::bail!(
-                    "Invalid user defined model deviation tolerance: {}.\n\
-                    Tolerance must be larger than zero",
-                    tolerance
-                );
-            }
-        }
-
-        let tolerance = tolerance.map(Scalar::from_f64);
-
-        Ok(Self { tolerance })
-    }
-
     fn process(&self, shape: &fj::Shape) -> ProcessedShape {
         let aabb = shape.bounding_volume();
 
@@ -273,11 +259,8 @@ impl ShapeProcessor {
                     }
                 }
 
-                // `tolerance` must not be zero, or we'll run into trouble.
                 let tolerance = min_extent / Scalar::from_f64(1000.);
-                assert!(tolerance > Scalar::ZERO);
-
-                tolerance
+                Tolerance::from_scalar(tolerance).unwrap()
             }
             Some(user_defined_tolerance) => user_defined_tolerance,
         };

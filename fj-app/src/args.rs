@@ -1,4 +1,7 @@
-use std::path::PathBuf;
+use std::{path::PathBuf, str::FromStr as _};
+
+use fj_kernel::algorithms::Tolerance;
+use fj_math::Scalar;
 
 /// Fornjot - Experimental CAD System
 #[derive(clap::Parser)]
@@ -16,8 +19,8 @@ pub struct Args {
     pub parameters: Vec<String>,
 
     /// Model deviation tolerance
-    #[clap[short, long]]
-    pub tolerance: Option<f64>,
+    #[clap[short, long, parse(try_from_str = parse_tolerance)]]
+    pub tolerance: Option<Tolerance>,
 }
 
 impl Args {
@@ -28,4 +31,12 @@ impl Args {
     pub fn parse() -> Self {
         <Self as clap::Parser>::parse()
     }
+}
+
+fn parse_tolerance(input: &str) -> anyhow::Result<Tolerance> {
+    let tolerance = f64::from_str(input)?;
+    let tolerance = Scalar::from_f64(tolerance);
+    let tolerance = Tolerance::from_scalar(tolerance)?;
+
+    Ok(tolerance)
 }

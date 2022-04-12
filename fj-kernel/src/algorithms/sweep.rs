@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use fj_math::{Scalar, Transform, Triangle, Vector};
+use fj_math::{Transform, Triangle, Vector};
 
 use crate::{
     geometry::{Surface, SweptCurve},
@@ -8,13 +8,13 @@ use crate::{
     topology::{Cycle, Edge, Face, Vertex},
 };
 
-use super::CycleApprox;
+use super::{CycleApprox, Tolerance};
 
 /// Create a new shape by sweeping an existing one
 pub fn sweep_shape(
     mut source: Shape,
     path: Vector<3>,
-    tolerance: Scalar,
+    tolerance: Tolerance,
     color: [u8; 4],
 ) -> Shape {
     let mut target = Shape::new();
@@ -316,6 +316,7 @@ mod tests {
     use fj_math::{Point, Scalar, Vector};
 
     use crate::{
+        algorithms::Tolerance,
         geometry::{Surface, SweptCurve},
         shape::{Handle, Shape},
         topology::{Cycle, Edge, Face},
@@ -325,12 +326,14 @@ mod tests {
 
     #[test]
     fn sweep() -> anyhow::Result<()> {
+        let tolerance = Tolerance::from_scalar(Scalar::ONE).unwrap();
+
         let sketch = Triangle::new([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]])?;
 
         let mut swept = sweep_shape(
             sketch.shape,
             Vector::from([0., 0., 1.]),
-            Scalar::from_f64(0.),
+            tolerance,
             [255, 0, 0, 255],
         );
 

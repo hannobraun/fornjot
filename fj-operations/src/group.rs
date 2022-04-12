@@ -2,15 +2,20 @@ use std::collections::HashMap;
 
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
+    algorithms::Tolerance,
     shape::Shape,
     topology::{Cycle, Edge, Face, Vertex},
 };
-use fj_math::{Aabb, Scalar};
+use fj_math::Aabb;
 
 use super::ToShape;
 
 impl ToShape for fj::Group {
-    fn to_shape(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Shape {
+    fn to_shape(
+        &self,
+        tolerance: Tolerance,
+        debug_info: &mut DebugInfo,
+    ) -> Shape {
         let mut shape = Shape::new();
 
         let a = self.a.to_shape(tolerance, debug_info);
