@@ -69,7 +69,7 @@ pub fn triangulate(
             }
             Face::Triangles(triangles) => {
                 for &(triangle, color) in triangles {
-                    mesh.push_triangle(triangle, color);
+                    mesh.push_triangle(triangle.points(), color);
                 }
             }
         }

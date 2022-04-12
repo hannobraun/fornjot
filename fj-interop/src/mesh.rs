@@ -36,16 +36,14 @@ where
 
     /// Determine whether the mesh contains the provided triangle
     ///
-    /// Returns true, if a triangle with any combination of the points of the
-    /// provided triangle is part of the mesh.
-    pub fn contains_triangle(
-        &self,
-        triangle: impl Into<fj_math::Triangle<3>>,
-    ) -> bool {
-        let triangle = triangle.into().normalize();
+    /// Returns true, if a triangle with any combination of the provided points
+    /// is part of the mesh.
+    pub fn contains_triangle(&self, points: [impl Into<Point<3>>; 3]) -> bool {
+        let triangle = fj_math::Triangle::from_points(points).normalize();
 
         for t in &self.triangles {
-            if triangle == t.inner.normalize() {
+            let t = fj_math::Triangle::from_points(t.points).normalize();
+            if triangle == t {
                 return true;
             }
         }
@@ -71,18 +69,12 @@ where
 
 impl Mesh<Point<3>> {
     /// Add a triangle to the mesh
-    pub fn push_triangle(
-        &mut self,
-        triangle: impl Into<fj_math::Triangle<3>>,
-        color: Color,
-    ) {
-        let triangle = triangle.into();
-
-        for point in triangle.points() {
+    pub fn push_triangle(&mut self, points: [Point<3>; 3], color: Color) {
+        for point in points {
             self.push_vertex(point);
         }
 
-        self.triangles.push(Triangle::new(triangle, color));
+        self.triangles.push(Triangle { points, color });
     }
 }
 
@@ -107,19 +99,11 @@ pub type Index = u32;
 /// Extension of [`fj_math::Triangle`] that also includes a color.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct Triangle {
-    /// The non-color part of the triangle
-    pub inner: fj_math::Triangle<3>,
+    /// The points of the triangle
+    pub points: [Point<3>; 3],
 
     /// The color of the triangle
     pub color: Color,
-}
-
-impl Triangle {
-    /// Construct a new instance of `Triangle`
-    pub fn new(inner: impl Into<fj_math::Triangle<3>>, color: Color) -> Self {
-        let inner = inner.into();
-        Self { inner, color }
-    }
 }
 
 /// RGBA color
