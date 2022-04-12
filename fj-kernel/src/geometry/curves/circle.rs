@@ -2,6 +2,8 @@ use std::f64::consts::PI;
 
 use fj_math::{Point, Scalar, Transform, Vector};
 
+use crate::algorithms::Tolerance;
+
 /// A circle
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Circle {
@@ -80,7 +82,7 @@ impl Circle {
     ///
     /// `tolerance` specifies how much the approximation is allowed to deviate
     /// from the circle.
-    pub fn approx(&self, tolerance: Scalar, out: &mut Vec<Point<3>>) {
+    pub fn approx(&self, tolerance: Tolerance, out: &mut Vec<Point<3>>) {
         let radius = self.radius.magnitude();
 
         // To approximate the circle, we use a regular polygon for which
@@ -98,12 +100,12 @@ impl Circle {
         }
     }
 
-    fn number_of_vertices(tolerance: Scalar, radius: Scalar) -> u64 {
-        assert!(tolerance > Scalar::ZERO);
-        if tolerance > radius / Scalar::TWO {
+    fn number_of_vertices(tolerance: Tolerance, radius: Scalar) -> u64 {
+        assert!(tolerance.inner() > Scalar::ZERO);
+        if tolerance.inner() > radius / Scalar::TWO {
             3
         } else {
-            (Scalar::PI / (Scalar::ONE - (tolerance / radius)).acos())
+            (Scalar::PI / (Scalar::ONE - (tolerance.inner() / radius)).acos())
                 .ceil()
                 .into_u64()
         }
@@ -115,6 +117,8 @@ mod tests {
     use std::f64::consts::{FRAC_PI_2, PI};
 
     use fj_math::{Point, Scalar, Vector};
+
+    use crate::algorithms::Tolerance;
 
     use super::Circle;
 
@@ -150,7 +154,7 @@ mod tests {
         verify_result(1., 100., 23);
 
         fn verify_result(
-            tolerance: impl Into<Scalar>,
+            tolerance: impl Into<Tolerance>,
             radius: impl Into<Scalar>,
             n: u64,
         ) {
@@ -159,9 +163,9 @@ mod tests {
 
             assert_eq!(n, Circle::number_of_vertices(tolerance, radius));
 
-            assert!(calculate_error(radius, n) <= tolerance);
+            assert!(calculate_error(radius, n) <= tolerance.inner());
             if n > 3 {
-                assert!(calculate_error(radius, n - 1) >= tolerance);
+                assert!(calculate_error(radius, n - 1) >= tolerance.inner());
             }
         }
 

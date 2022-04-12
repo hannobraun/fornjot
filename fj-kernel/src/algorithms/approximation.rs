@@ -25,7 +25,7 @@ impl FaceApprox {
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual face.
-    pub fn new(face: &Face, tolerance: Scalar) -> Self {
+    pub fn new(face: &Face, tolerance: Tolerance) -> Self {
         // Curved faces whose curvature is not fully defined by their edges
         // are not supported yet. For that reason, we can fully ignore `face`'s
         // `surface` field and just pass the edges to `Self::for_edges`.
@@ -88,7 +88,7 @@ impl CycleApprox {
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual face.
-    pub fn new(cycle: &Cycle, tolerance: Scalar) -> Self {
+    pub fn new(cycle: &Cycle, tolerance: Tolerance) -> Self {
         let mut points = Vec::new();
 
         for edge in cycle.edges() {
@@ -160,6 +160,34 @@ where
     }
 }
 
+/// A tolerance value
+///
+/// A tolerance value is used during approximation. It defines the maximum
+/// allowed deviation of the approximation from the actual shape.
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct Tolerance(Scalar);
+
+impl Tolerance {
+    /// Construct a `Tolerance` from a [`Scalar`]
+    pub fn from_scalar(scalar: impl Into<Scalar>) -> Self {
+        Self(scalar.into())
+    }
+
+    /// Return the [`Scalar`] that defines the tolerance
+    pub fn inner(&self) -> Scalar {
+        self.0
+    }
+}
+
+impl<S> From<S> for Tolerance
+where
+    S: Into<Scalar>,
+{
+    fn from(scalar: S) -> Self {
+        Self::from_scalar(scalar)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use fj_math::{Point, Scalar};
@@ -171,7 +199,7 @@ mod tests {
         topology::{Face, Vertex},
     };
 
-    use super::{CycleApprox, FaceApprox};
+    use super::{CycleApprox, FaceApprox, Tolerance};
 
     #[test]
     fn approximate_edge() -> anyhow::Result<()> {
@@ -201,7 +229,7 @@ mod tests {
     fn for_face_closed() -> anyhow::Result<()> {
         // Test a closed face, i.e. one that is completely encircled by edges.
 
-        let tolerance = Scalar::ONE;
+        let tolerance = Tolerance::from_scalar(Scalar::ONE);
 
         let mut shape = Shape::new();
 

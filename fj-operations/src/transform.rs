@@ -1,12 +1,16 @@
 use fj_interop::debug::DebugInfo;
-use fj_kernel::shape::Shape;
-use fj_math::{Aabb, Scalar, Transform};
+use fj_kernel::{algorithms::Tolerance, shape::Shape};
+use fj_math::{Aabb, Transform};
 use parry3d_f64::math::Isometry;
 
 use super::ToShape;
 
 impl ToShape for fj::Transform {
-    fn to_shape(&self, tolerance: Scalar, debug_info: &mut DebugInfo) -> Shape {
+    fn to_shape(
+        &self,
+        tolerance: Tolerance,
+        debug_info: &mut DebugInfo,
+    ) -> Shape {
         let mut shape = self.shape.to_shape(tolerance, debug_info);
         let transform = transform(self);
 

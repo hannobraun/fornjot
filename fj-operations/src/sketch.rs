@@ -1,15 +1,16 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
+    algorithms::Tolerance,
     geometry::Surface,
     shape::Shape,
     topology::{Cycle, Edge, Face, Vertex},
 };
-use fj_math::{Aabb, Point, Scalar};
+use fj_math::{Aabb, Point};
 
 use super::ToShape;
 
 impl ToShape for fj::Sketch {
-    fn to_shape(&self, _: Scalar, _: &mut DebugInfo) -> Shape {
+    fn to_shape(&self, _: Tolerance, _: &mut DebugInfo) -> Shape {
         let mut shape = Shape::new();
         let mut vertices = Vec::new();
 

@@ -3,18 +3,18 @@ mod polygon;
 mod ray;
 
 use fj_interop::{debug::DebugInfo, mesh::Mesh};
-use fj_math::{Point, Scalar};
+use fj_math::Point;
 
 use crate::{shape::Shape, topology::Face};
 
 use self::polygon::Polygon;
 
-use super::FaceApprox;
+use super::{FaceApprox, Tolerance};
 
 /// Triangulate a shape
 pub fn triangulate(
     mut shape: Shape,
-    tolerance: Scalar,
+    tolerance: Tolerance,
     debug_info: &mut DebugInfo,
 ) -> Mesh<Point<3>> {
     let mut mesh = Mesh::new();
@@ -83,7 +83,7 @@ mod tests {
     use fj_interop::{debug::DebugInfo, mesh::Mesh};
     use fj_math::{Point, Scalar};
 
-    use crate::{geometry::Surface, shape::Shape, topology::Face};
+    use crate::{geometry::Surface, shape::Shape, topology::Face, algorithms::Tolerance};
 
     #[test]
     fn simple() -> anyhow::Result<()> {
@@ -143,7 +143,7 @@ mod tests {
     }
 
     fn triangulate(shape: Shape) -> Mesh<Point<3>> {
-        let tolerance = Scalar::ONE;
+        let tolerance = Tolerance::from_scalar(Scalar::ONE);
 
         let mut debug_info = DebugInfo::new();
         super::triangulate(shape, tolerance, &mut debug_info)

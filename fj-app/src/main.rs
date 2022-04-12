@@ -10,7 +10,7 @@ use std::{collections::HashMap, time::Instant};
 
 use fj_host::Model;
 use fj_interop::{debug::DebugInfo, mesh::Mesh};
-use fj_kernel::algorithms::triangulate;
+use fj_kernel::algorithms::{triangulate, Tolerance};
 use fj_math::{Aabb, Point, Scalar};
 use fj_operations::ToShape as _;
 use futures::executor::block_on;
@@ -238,7 +238,7 @@ fn main() -> anyhow::Result<()> {
 }
 
 struct ShapeProcessor {
-    tolerance: Option<Scalar>,
+    tolerance: Option<Tolerance>,
 }
 
 impl ShapeProcessor {
@@ -253,7 +253,8 @@ impl ShapeProcessor {
             }
         }
 
-        let tolerance = tolerance.map(Scalar::from_f64);
+        let tolerance =
+            tolerance.map(Scalar::from_f64).map(Tolerance::from_scalar);
 
         Ok(Self { tolerance })
     }
@@ -277,7 +278,7 @@ impl ShapeProcessor {
                 let tolerance = min_extent / Scalar::from_f64(1000.);
                 assert!(tolerance > Scalar::ZERO);
 
-                tolerance
+                Tolerance::from_scalar(tolerance)
             }
             Some(user_defined_tolerance) => user_defined_tolerance,
         };
