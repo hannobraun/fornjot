@@ -2,8 +2,8 @@ mod delaunay;
 mod polygon;
 mod ray;
 
-use fj_interop::{debug::DebugInfo, mesh::Triangle};
-use fj_math::Scalar;
+use fj_interop::{debug::DebugInfo, mesh::Mesh};
+use fj_math::{Point, Scalar};
 
 use crate::{shape::Shape, topology::Face};
 
@@ -16,8 +16,8 @@ pub fn triangulate(
     mut shape: Shape,
     tolerance: Scalar,
     debug_info: &mut DebugInfo,
-) -> Vec<Triangle> {
-    let mut out = Vec::new();
+) -> Mesh<Point<3>> {
+    let mut out = Mesh::new();
 
     for face in shape.topology().faces() {
         let face = face.get();
@@ -62,12 +62,16 @@ pub fn triangulate(
                     )
                 });
 
-                out.extend(triangles.into_iter().map(|triangle| {
+                for triangle in triangles {
                     let points = triangle.map(|point| point.canonical());
-                    Triangle::new(points, *color)
-                }));
+                    out.push_triangle(points, *color);
+                }
             }
-            Face::Triangles(triangles) => out.extend(triangles),
+            Face::Triangles(triangles) => {
+                for triangle in triangles {
+                    out.push_triangle(triangle.inner, triangle.color);
+                }
+            }
         }
     }
 
@@ -76,8 +80,8 @@ pub fn triangulate(
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::{debug::DebugInfo, mesh::Triangle};
-    use fj_math::Scalar;
+    use fj_interop::{debug::DebugInfo, mesh::Mesh};
+    use fj_math::{Point, Scalar};
 
     use crate::{geometry::Surface, shape::Shape, topology::Face};
 
@@ -138,35 +142,10 @@ mod tests {
         Ok(())
     }
 
-    fn triangulate(shape: Shape) -> Triangles {
+    fn triangulate(shape: Shape) -> Mesh<Point<3>> {
         let tolerance = Scalar::ONE;
 
         let mut debug_info = DebugInfo::new();
-
-        let mut triangles =
-            super::triangulate(shape, tolerance, &mut debug_info);
-
-        for triangle in &mut triangles {
-            *triangle = Triangle {
-                inner: triangle.inner.normalize(),
-                ..*triangle
-            };
-        }
-
-        Triangles(triangles)
-    }
-
-    #[derive(Debug)]
-    struct Triangles(Vec<Triangle>);
-
-    impl Triangles {
-        fn contains_triangle(
-            &self,
-            triangle: impl Into<fj_math::Triangle<3>>,
-        ) -> bool {
-            let triangle =
-                Triangle::new(triangle.into().normalize(), [255, 0, 0, 255]);
-            self.0.contains(&triangle)
-        }
+        super::triangulate(shape, tolerance, &mut debug_info)
     }
 }

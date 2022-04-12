@@ -9,10 +9,9 @@ use std::path::PathBuf;
 use std::{collections::HashMap, time::Instant};
 
 use fj_host::Model;
-use fj_interop::mesh::Triangle;
 use fj_interop::{debug::DebugInfo, mesh::Mesh};
 use fj_kernel::algorithms::triangulate;
-use fj_math::{Aabb, Scalar};
+use fj_math::{Aabb, Point, Scalar};
 use fj_operations::ToShape as _;
 use futures::executor::block_on;
 use tracing::{trace, warn};
@@ -85,18 +84,13 @@ fn main() -> anyhow::Result<()> {
         let shape = model.load_once(&parameters)?;
         let shape = shape_processor.process(&shape);
 
-        let mut mesh_maker = Mesh::new();
+        let vertices = shape
+            .triangles
+            .vertices()
+            .map(|vertex| vertex.into())
+            .collect();
 
-        for triangle in shape.triangles {
-            for vertex in triangle.inner.points() {
-                mesh_maker.push_vertex(vertex);
-            }
-        }
-
-        let vertices =
-            mesh_maker.vertices().map(|vertex| vertex.into()).collect();
-
-        let indices: Vec<_> = mesh_maker.indices().collect();
+        let indices: Vec<_> = shape.triangles.indices().collect();
         let triangles = indices
             .chunks(3)
             .map(|triangle| {
@@ -308,7 +302,7 @@ impl ShapeProcessor {
 
 struct ProcessedShape {
     aabb: Aabb<3>,
-    triangles: Vec<Triangle>,
+    triangles: Mesh<Point<3>>,
     debug_info: DebugInfo,
 }
 

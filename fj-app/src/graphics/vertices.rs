@@ -1,7 +1,7 @@
 use bytemuck::{Pod, Zeroable};
 use fj_interop::{
     debug::DebugInfo,
-    mesh::{Index, Mesh, Triangle},
+    mesh::{Index, Mesh},
 };
 use nalgebra::{vector, Point};
 
@@ -66,11 +66,11 @@ impl Vertices {
     }
 }
 
-impl From<&Vec<Triangle>> for Vertices {
-    fn from(triangles: &Vec<Triangle>) -> Self {
+impl From<&Mesh<fj_math::Point<3>>> for Vertices {
+    fn from(triangles: &Mesh<fj_math::Point<3>>) -> Self {
         let mut mesh = Mesh::new();
 
-        for triangle in triangles {
+        for triangle in triangles.triangles() {
             let [a, b, c] = triangle.inner.points();
 
             let normal = (b - a).cross(&(c - a)).normalize();
