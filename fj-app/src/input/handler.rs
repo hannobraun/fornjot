@@ -1,6 +1,6 @@
 use std::time::Instant;
 
-use fj_math::Triangle;
+use fj_interop::mesh::Triangle;
 use winit::{
     dpi::PhysicalPosition,
     event::{
@@ -121,7 +121,7 @@ impl Handler {
         now: Instant,
         camera: &mut Camera,
         window: &Window,
-        triangles: &[Triangle<3>],
+        triangles: &[Triangle],
     ) {
         let focus_point = camera.focus_point(window, self.cursor, triangles);
 
