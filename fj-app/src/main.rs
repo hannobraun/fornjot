@@ -84,13 +84,10 @@ fn main() -> anyhow::Result<()> {
         let shape = model.load_once(&parameters)?;
         let shape = shape_processor.process(&shape);
 
-        let vertices = shape
-            .triangles
-            .vertices()
-            .map(|vertex| vertex.into())
-            .collect();
+        let vertices =
+            shape.mesh.vertices().map(|vertex| vertex.into()).collect();
 
-        let indices: Vec<_> = shape.triangles.indices().collect();
+        let indices: Vec<_> = shape.mesh.indices().collect();
         let triangles = indices
             .chunks(3)
             .map(|triangle| {
@@ -181,7 +178,7 @@ fn main() -> anyhow::Result<()> {
                     let focus_point = camera.focus_point(
                         &window,
                         input_handler.cursor(),
-                        &shape.triangles,
+                        &shape.mesh,
                     );
 
                     input_handler.handle_mouse_input(
@@ -207,7 +204,7 @@ fn main() -> anyhow::Result<()> {
                         now,
                         camera,
                         &window,
-                        &shape.triangles,
+                        &shape.mesh,
                     );
                 }
 
@@ -294,7 +291,7 @@ impl ShapeProcessor {
 
         ProcessedShape {
             aabb,
-            triangles,
+            mesh: triangles,
             debug_info,
         }
     }
@@ -302,14 +299,14 @@ impl ShapeProcessor {
 
 struct ProcessedShape {
     aabb: Aabb<3>,
-    triangles: Mesh<Point<3>>,
+    mesh: Mesh<Point<3>>,
     debug_info: DebugInfo,
 }
 
 impl ProcessedShape {
     fn update_geometry(&self, renderer: &mut Renderer) {
         renderer.update_geometry(
-            (&self.triangles).into(),
+            (&self.mesh).into(),
             (&self.debug_info).into(),
             self.aabb,
         );
