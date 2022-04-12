@@ -10,10 +10,7 @@ use std::time::Instant;
 
 use anyhow::anyhow;
 use fj_host::{Model, Parameters};
-use fj_interop::{debug::DebugInfo, mesh::Mesh};
-use fj_kernel::algorithms::{triangulate, Tolerance};
-use fj_math::{Aabb, Point, Scalar};
-use fj_operations::ToShape as _;
+use fj_operations::shape_processor::ShapeProcessor;
 use futures::executor::block_on;
 use tracing::{trace, warn};
 use tracing_subscriber::fmt::format;
@@ -223,51 +220,4 @@ fn main() -> anyhow::Result<()> {
             draw_config.draw_debug = !draw_config.draw_debug;
         }
     });
-}
-
-struct ShapeProcessor {
-    tolerance: Option<Tolerance>,
-}
-
-impl ShapeProcessor {
-    fn process(&self, shape: &fj::Shape) -> ProcessedShape {
-        let aabb = shape.bounding_volume();
-
-        let tolerance = match self.tolerance {
-            None => {
-                // Compute a reasonable default for the tolerance value. To do
-                // this, we just look at the smallest non-zero extent of the
-                // bounding box and divide that by some value.
-                let mut min_extent = Scalar::MAX;
-                for extent in aabb.size().components {
-                    if extent > Scalar::ZERO && extent < min_extent {
-                        min_extent = extent;
-                    }
-                }
-
-                let tolerance = min_extent / Scalar::from_f64(1000.);
-                Tolerance::from_scalar(tolerance).unwrap()
-            }
-            Some(user_defined_tolerance) => user_defined_tolerance,
-        };
-
-        let mut debug_info = DebugInfo::new();
-        let mesh = triangulate(
-            shape.to_shape(tolerance, &mut debug_info),
-            tolerance,
-            &mut debug_info,
-        );
-
-        ProcessedShape {
-            aabb,
-            mesh,
-            debug_info,
-        }
-    }
-}
-
-struct ProcessedShape {
-    aabb: Aabb<3>,
-    mesh: Mesh<Point<3>>,
-    debug_info: DebugInfo,
 }
