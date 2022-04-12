@@ -131,7 +131,7 @@ impl Camera {
         &self,
         window: &Window,
         cursor: Option<PhysicalPosition<f64>>,
-        triangles: &Mesh<fj_math::Point<3>>,
+        mesh: &Mesh<fj_math::Point<3>>,
     ) -> FocusPoint {
         let cursor = match cursor {
             Some(cursor) => cursor,
@@ -147,7 +147,7 @@ impl Camera {
 
         let mut min_t = None;
 
-        for triangle in triangles.triangles() {
+        for triangle in mesh.triangles() {
             let t = triangle.inner.to_parry().cast_local_ray(
                 &ray,
                 f64::INFINITY,
