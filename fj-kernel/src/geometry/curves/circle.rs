@@ -101,7 +101,6 @@ impl Circle {
     }
 
     fn number_of_vertices(tolerance: Tolerance, radius: Scalar) -> u64 {
-        assert!(tolerance.inner() > Scalar::ZERO);
         if tolerance.inner() > radius / Scalar::TWO {
             3
         } else {

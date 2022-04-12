@@ -276,10 +276,7 @@ impl ShapeProcessor {
                     }
                 }
 
-                // `tolerance` must not be zero, or we'll run into trouble.
                 let tolerance = min_extent / Scalar::from_f64(1000.);
-                assert!(tolerance > Scalar::ZERO);
-
                 Tolerance::from_scalar(tolerance).unwrap()
             }
             Some(user_defined_tolerance) => user_defined_tolerance,
