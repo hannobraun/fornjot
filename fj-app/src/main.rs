@@ -1,6 +1,7 @@
 mod args;
 mod camera;
 mod config;
+mod export;
 mod graphics;
 mod input;
 mod window;
@@ -24,6 +25,7 @@ use crate::{
     args::Args,
     camera::Camera,
     config::Config,
+    export::export,
     graphics::{DrawConfig, Renderer},
     window::Window,
 };
@@ -65,27 +67,7 @@ fn main() -> anyhow::Result<()> {
         let shape = model.load_once(&parameters)?;
         let shape = shape_processor.process(&shape);
 
-        let vertices =
-            shape.mesh.vertices().map(|vertex| vertex.into()).collect();
-
-        let indices: Vec<_> = shape.mesh.indices().collect();
-        let triangles = indices
-            .chunks(3)
-            .map(|triangle| {
-                [
-                    triangle[0] as usize,
-                    triangle[1] as usize,
-                    triangle[2] as usize,
-                ]
-            })
-            .collect();
-
-        let mesh = threemf::TriangleMesh {
-            vertices,
-            triangles,
-        };
-
-        threemf::write(&path, &mesh)?;
+        export(&shape.mesh, &path)?;
 
         return Ok(());
     }
