@@ -1,8 +1,16 @@
+//! Exporting Fornjot models to external files
+
+#![deny(missing_docs)]
+
 use std::path::Path;
 
 use fj_interop::mesh::Mesh;
 use fj_math::Point;
 
+/// Export the provided mesh to the file at the given path
+///
+/// Currently only 3MF is supported as an export format. The file extension of
+/// the provided path is ignored.
 pub fn export(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
     let vertices = mesh.vertices().map(|vertex| vertex.into()).collect();
 
