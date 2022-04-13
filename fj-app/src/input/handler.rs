@@ -133,6 +133,7 @@ impl Handler {
     }
 }
 
+#[derive(Default)]
 pub struct Actions {
     pub exit: bool,
 
@@ -143,12 +144,6 @@ pub struct Actions {
 
 impl Actions {
     pub fn new() -> Self {
-        Self {
-            exit: false,
-
-            toggle_model: false,
-            toggle_mesh: false,
-            toggle_debug: false,
-        }
+        Self::default()
     }
 }
