@@ -120,10 +120,27 @@ jobs:
               | awk '{print $1}' > "${file}.sha256"
           done
 
-      - name: Create GitHub Release
+      - name: Release | GitHub
         if: ${{ steps.release.outputs.release-detected == 'true' }}
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.release.outputs.tag-name }}
           name: ${{ steps.release.outputs.tag-name }}
           files: ${{ env.PROJ_NAME }}-*/${{ env.PROJ_NAME }}-*
+
+      - name: Release | Crates.io
+        if: ${{ steps.release.outputs.release-detected == 'true' }}
+        working-directory: ./release-operator
+        env:
+          RUST_LOG: info
+        run: |
+          # Publish to crates.io
+          cargo run -- publish \
+            --token ${{ secrets.CARGO_REGISTRY_TOKEN }} \
+            --crate ../fj-app \
+            --crate ../fj-host \
+            --crate ../fj-interop \
+            --crate ../fj-kernel \
+            --crate ../fj-math \
+            --crate ../fj-operations \
+            --crate ../fj
