@@ -55,7 +55,7 @@ As seen above, the release operator requires the maintainer to:
 ### Detect a Release
 
 ```shell
-# release-operator/
+# tools/release-operator/
 cargo run -- detect --sha <commit-sha> --label <release-label>
 ```
 
@@ -113,7 +113,7 @@ The release operator defines "outputs" which can be read by subsequent steps wit
 ### Publish a List of Crates
 
 ```shell
-# release-operator/
+# tools/release-operator/
 cargo run -- publish \
   --token <crates.io-token> \
   --crate ../fj \
