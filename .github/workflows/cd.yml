@@ -138,6 +138,7 @@ jobs:
           cargo run -- publish \
             --token ${{ secrets.CARGO_REGISTRY_TOKEN }} \
             --crate ../fj-app \
+            --crate ../fj-export \
             --crate ../fj-host \
             --crate ../fj-interop \
             --crate ../fj-kernel \
