@@ -11,7 +11,7 @@ mod vertices;
 
 pub use self::{
     draw_config::DrawConfig,
-    renderer::{DrawError, Renderer},
+    renderer::{DrawError, InitError, Renderer},
 };
 
 const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth32Float;
