@@ -77,7 +77,8 @@ impl Crate {
                 .context("search crates.io for published crate version")?;
             log::debug!("{self} found as {version} on their side");
 
-            semver::Version::from_str(&version).context("parse their version")?
+            semver::Version::from_str(&version)
+                .context("parse their version")?
         };
 
         let ours = {
@@ -111,7 +112,7 @@ impl Crate {
 
         if ours < theirs {
             log::warn!("{self} has already been published as {ours}, which is a newer version");
-            return Ok(CrateState::Behind)
+            return Ok(CrateState::Behind);
         }
 
         Ok(CrateState::Ahead)
