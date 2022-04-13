@@ -1,7 +1,6 @@
 mod args;
 mod camera;
 mod config;
-mod export;
 mod graphics;
 mod input;
 mod window;
@@ -10,6 +9,7 @@ use std::path::PathBuf;
 use std::time::Instant;
 
 use anyhow::anyhow;
+use fj_export::export;
 use fj_host::{Model, Parameters};
 use fj_operations::shape_processor::ShapeProcessor;
 use futures::executor::block_on;
@@ -25,7 +25,6 @@ use crate::{
     args::Args,
     camera::Camera,
     config::Config,
-    export::export,
     graphics::{DrawConfig, Renderer},
     window::Window,
 };

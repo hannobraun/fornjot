@@ -698,6 +698,7 @@ dependencies = [
  "clap",
  "figment",
  "fj",
+ "fj-export",
  "fj-host",
  "fj-interop",
  "fj-kernel",
@@ -708,12 +709,20 @@ dependencies = [
  "parry3d-f64",
  "serde",
  "thiserror",
- "threemf",
  "tracing",
  "tracing-subscriber",
  "wgpu",
  "wgpu_glyph",
  "winit",
+]
+
+[[package]]
+name = "fj-export"
+version = "0.5.0"
+dependencies = [
+ "fj-interop",
+ "fj-math",
+ "threemf",
 ]
 
 [[package]]
