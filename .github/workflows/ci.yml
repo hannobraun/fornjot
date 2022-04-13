@@ -42,6 +42,26 @@ jobs:
           command: fmt
           args: --all -- --check
 
+  clippy:
+    name: Clippy Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Toolchain
+        uses: oxidecomputer/actions-rs_toolchain@oxide/master
+        # see https://github.com/actions-rs/toolchain/pull/209
+        # uses: actions-rs/toolchain@v1
+        with:
+          override: true
+          profile: minimal
+          target: ${{ matrix.target }}
+      - run: rustup component add clippy
+      - uses: Swatinem/rust-cache@1232abb8968faf344409165de17cbf9e7f340fd8
+      - uses: actions-rs/clippy-check@9d09632661e31982c0be8af59aeb96b680641bc4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all-features
+
   test:
     name: Test
     strategy:
@@ -84,23 +104,3 @@ jobs:
         with:
           command: run
           args: -- --model star --export star.3mf
-
-  clippy:
-    name: Clippy Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup Toolchain
-        uses: oxidecomputer/actions-rs_toolchain@oxide/master
-        # see https://github.com/actions-rs/toolchain/pull/209
-        # uses: actions-rs/toolchain@v1
-        with:
-          override: true
-          profile: minimal
-          target: ${{ matrix.target }}
-      - run: rustup component add clippy
-      - uses: Swatinem/rust-cache@1232abb8968faf344409165de17cbf9e7f340fd8
-      - uses: actions-rs/clippy-check@9d09632661e31982c0be8af59aeb96b680641bc4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all-features
