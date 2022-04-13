@@ -144,4 +144,5 @@ jobs:
             --crate ../fj-kernel \
             --crate ../fj-math \
             --crate ../fj-operations \
+            --crate ../fj-viewer \
             --crate ../fj
