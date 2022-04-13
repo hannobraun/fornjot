@@ -9,6 +9,7 @@ use std::path::PathBuf;
 use std::time::Instant;
 
 use anyhow::anyhow;
+use fj_export::export;
 use fj_host::{Model, Parameters};
 use fj_operations::shape_processor::ShapeProcessor;
 use futures::executor::block_on;
@@ -65,27 +66,7 @@ fn main() -> anyhow::Result<()> {
         let shape = model.load_once(&parameters)?;
         let shape = shape_processor.process(&shape);
 
-        let vertices =
-            shape.mesh.vertices().map(|vertex| vertex.into()).collect();
-
-        let indices: Vec<_> = shape.mesh.indices().collect();
-        let triangles = indices
-            .chunks(3)
-            .map(|triangle| {
-                [
-                    triangle[0] as usize,
-                    triangle[1] as usize,
-                    triangle[2] as usize,
-                ]
-            })
-            .collect();
-
-        let mesh = threemf::TriangleMesh {
-            vertices,
-            triangles,
-        };
-
-        threemf::write(path, &mesh)?;
+        export(&shape.mesh, &path)?;
 
         return Ok(());
     }

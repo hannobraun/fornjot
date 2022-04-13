@@ -18,7 +18,6 @@ futures = "0.3.21"
 nalgebra = "0.30.0"
 parry3d-f64 = "0.8.0"
 thiserror = "1.0.30"
-threemf = "0.2.0"
 tracing = "0.1.33"
 wgpu = "0.12.0"
 wgpu_glyph = "0.16.0"
@@ -35,6 +34,10 @@ features = ["env", "toml"]
 [dependencies.fj]
 version = "0.5.0"
 path = "../fj"
+
+[dependencies.fj-export]
+version = "0.5.0"
+path = "../fj-export"
 
 [dependencies.fj-host]
 version = "0.5.0"
