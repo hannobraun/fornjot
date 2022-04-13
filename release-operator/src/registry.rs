@@ -1,5 +1,6 @@
 use anyhow::{anyhow, Context};
 use secstr::SecStr;
+use serde::Deserialize;
 use std::fmt::{Display, Formatter};
 use std::io::{BufRead, BufReader};
 use std::path::PathBuf;
@@ -64,21 +65,51 @@ impl Crate {
 
     fn determine_state(&self) -> anyhow::Result<CrateState> {
         let theirs = {
-            let name = format!("{self}");
-            let search_result = cmd_lib::run_fun!(cargo search "${name}")
-                .context("search for crate on crates.io")?;
+            #[derive(Deserialize)]
+            struct CrateVersions {
+                versions: Vec<CrateVersion>,
+            }
 
-            if search_result.is_empty() {
+            #[derive(Deserialize)]
+            struct CrateVersion {
+                #[serde(rename = "num")]
+                version: semver::Version,
+            }
+
+            let client = reqwest::blocking::ClientBuilder::new()
+                .user_agent(concat!(
+                    env!("CARGO_PKG_NAME"),
+                    "/",
+                    env!("CARGO_PKG_VERSION")
+                ))
+                .build()
+                .context("build http client")?;
+
+            let resp = client
+                .get(format!("https://crates.io/api/v1/crates/{self}"))
+                .send()
+                .context("fetching crate versions from the registry")?;
+
+            if resp.status() == reqwest::StatusCode::NOT_FOUND {
                 log::info!("{self} has not been published yet");
                 return Ok(CrateState::Unknown);
             }
 
-            let version = cmd_lib::run_fun!(cargo search "${name}" | head -n1 | awk r#"{print $3}"# | tr -d '"')
-                .context("search crates.io for published crate version")?;
-            log::debug!("{self} found as {version} on their side");
+            if resp.status() != reqwest::StatusCode::OK {
+                return Err(anyhow!(
+                    "{self} request to crates.io failed with {} '{}'",
+                    resp.status(),
+                    resp.text().unwrap_or_else(|_| {
+                        "[response body could not be read]".to_string()
+                    })
+                ));
+            }
 
-            semver::Version::from_str(&version)
-                .context("parse their version")?
+            let versions =
+                serde_json::from_str::<CrateVersions>(resp.text()?.as_str())
+                    .context("deserializing crates.io response")?;
+
+            versions.versions.get(0).unwrap().version.to_owned()
         };
 
         let ours = {
