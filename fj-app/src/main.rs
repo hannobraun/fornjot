@@ -85,7 +85,7 @@ fn main() -> anyhow::Result<()> {
             triangles,
         };
 
-        threemf::write(path, &mesh)?;
+        threemf::write(&path, &mesh)?;
 
         return Ok(());
     }
