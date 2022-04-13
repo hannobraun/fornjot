@@ -17,9 +17,14 @@ pub struct Crate {
 }
 
 enum CrateState {
+    /// Our crate version is ahead of the registry and should be published
+    Ahead,
+    /// Our crate version is behind the registry; you'll be warned about this
+    Behind,
+    /// Our crate version matches the registry version
     Published,
+    /// We encountered an unknown state while processing the crate
     Unknown,
-    Outdated,
 }
 
 impl Registry {
@@ -36,8 +41,8 @@ impl Registry {
             c.validate()?;
 
             match c.determine_state()? {
-                CrateState::Published => continue,
-                CrateState::Unknown | CrateState::Outdated => {
+                CrateState::Published | CrateState::Behind => continue,
+                CrateState::Unknown | CrateState::Ahead => {
                     c.submit(&self.token, self.dry_run)?;
                 }
             }
@@ -72,7 +77,7 @@ impl Crate {
                 .context("search crates.io for published crate version")?;
             log::debug!("{self} found as {version} on their side");
 
-            version
+            semver::Version::from_str(&version).context("parse their version")?
         };
 
         let ours = {
@@ -93,7 +98,7 @@ impl Crate {
                 .find(|p| p.name == name)
                 .ok_or_else(|| anyhow!("could not find package"))?;
 
-            let version = package.version.to_string();
+            let version = package.version.to_owned();
             log::debug!("{self} found as {version} on our side");
 
             version
@@ -104,7 +109,12 @@ impl Crate {
             return Ok(CrateState::Published);
         }
 
-        Ok(CrateState::Outdated)
+        if ours < theirs {
+            log::warn!("{self} has already been published as {ours}, which is a newer version");
+            return Ok(CrateState::Behind)
+        }
+
+        Ok(CrateState::Ahead)
     }
 
     fn submit(&self, token: &SecStr, dry_run: bool) -> anyhow::Result<()> {
