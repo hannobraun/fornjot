@@ -1,15 +1,15 @@
 [workspace]
 resolver = "2"
 members = [
-    "fj",
-    "fj-app",
-    "fj-export",
-    "fj-host",
-    "fj-interop",
-    "fj-kernel",
-    "fj-math",
-    "fj-operations",
-    "fj-viewer",
+    "crates/fj",
+    "crates/fj-app",
+    "crates/fj-export",
+    "crates/fj-host",
+    "crates/fj-interop",
+    "crates/fj-kernel",
+    "crates/fj-math",
+    "crates/fj-operations",
+    "crates/fj-viewer",
 
     "models/cuboid",
     "models/group",
@@ -19,12 +19,12 @@ members = [
     "release-operator",
 ]
 default-members = [
-    "fj-app",
-    "fj-export",
-    "fj-host",
-    "fj-interop",
-    "fj-kernel",
-    "fj-math",
-    "fj-operations",
-    "fj-viewer",
+    "crates/fj-app",
+    "crates/fj-export",
+    "crates/fj-host",
+    "crates/fj-interop",
+    "crates/fj-kernel",
+    "crates/fj-math",
+    "crates/fj-operations",
+    "crates/fj-viewer",
 ]
