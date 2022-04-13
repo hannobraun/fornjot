@@ -4,5 +4,9 @@ version = "0.1.0"
 edition = "2021"
 publish = false
 
+
 [dependencies]
+anyhow = "1.0.56"
+
+[build-dependencies]
 anyhow = "1.0.56"
