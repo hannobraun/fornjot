@@ -47,7 +47,7 @@ In the release branch, update the version numbers in the `Cargo.toml` files of a
 
 Push the release branch and create a pull request and label it as `release`. Once the CI build completed successfully, merge the pull-request and mention the new version in the commit, e.g. `Release v0.1.2`.
 
-The [release-operator](./release-operator) will run in the scope of GitHub Actions' [CD](./.github/workflows/cd.yml) workflow. It will yield a set of compiled binaries, their checksums and a new GitHub Release with all artifacts attached.
+The [release-operator](./tools/release-operator) will run in the scope of GitHub Actions' [CD](./.github/workflows/cd.yml) workflow. It will yield a set of compiled binaries, their checksums and a new GitHub Release with all artifacts attached.
 
 Next, publish the release by running `cargo publish` for each crate.
 
