@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     "fj",
     "fj-app",
+    "fj-export",
     "fj-host",
     "fj-interop",
     "fj-kernel",
@@ -18,6 +19,7 @@ members = [
 ]
 default-members = [
     "fj-app",
+    "fj-export",
     "fj-host",
     "fj-interop",
     "fj-kernel",
