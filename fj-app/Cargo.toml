@@ -13,15 +13,6 @@ categories = ["mathematics", "rendering"]
 
 [dependencies]
 anyhow = "1.0.56"
-bytemuck = "1.9.1"
-futures = "0.3.21"
-nalgebra = "0.30.0"
-parry3d-f64 = "0.8.0"
-thiserror = "1.0.30"
-tracing = "0.1.33"
-wgpu = "0.12.0"
-wgpu_glyph = "0.16.0"
-winit = "0.26.1"
 
 [dependencies.clap]
 version = "3.1.8"
@@ -43,10 +34,6 @@ path = "../fj-export"
 version = "0.5.0"
 path = "../fj-host"
 
-[dependencies.fj-interop]
-version = "0.5.0"
-path = "../fj-interop"
-
 [dependencies.fj-kernel]
 version = "0.5.0"
 path = "../fj-kernel"
@@ -58,6 +45,10 @@ path = "../fj-math"
 [dependencies.fj-operations]
 version = "0.5.0"
 path = "../fj-operations"
+
+[dependencies.fj-viewer]
+version = "0.5.0"
+path = "../fj-viewer"
 
 [dependencies.serde]
 version = "1.0.136"

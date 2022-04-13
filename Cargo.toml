@@ -9,6 +9,7 @@ members = [
     "fj-kernel",
     "fj-math",
     "fj-operations",
+    "fj-viewer",
 
     "models/cuboid",
     "models/group",
@@ -25,4 +26,5 @@ default-members = [
     "fj-kernel",
     "fj-math",
     "fj-operations",
+    "fj-viewer",
 ]

@@ -1,10 +1,5 @@
 mod args;
-mod camera;
 mod config;
-mod graphics;
-mod input;
-mod run;
-mod window;
 
 use std::path::PathBuf;
 
@@ -12,10 +7,11 @@ use anyhow::anyhow;
 use fj_export::export;
 use fj_host::{Model, Parameters};
 use fj_operations::shape_processor::ShapeProcessor;
+use fj_viewer::run::run;
 use tracing_subscriber::fmt::format;
 use tracing_subscriber::EnvFilter;
 
-use crate::{args::Args, config::Config, run::run};
+use crate::{args::Args, config::Config};
 
 fn main() -> anyhow::Result<()> {
     // Respect `RUST_LOG`. If that's not defined or erroneous, log warnings and
