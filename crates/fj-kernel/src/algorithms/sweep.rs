@@ -91,10 +91,11 @@ pub fn sweep_shape(
 
     // Create top faces.
     for face_source in source.topology().faces().values() {
-        let surface_bottom = target.insert(face_source.surface()).unwrap();
-        let surface_top = target
-            .insert(surface_bottom.get().transform(&translation))
-            .unwrap();
+        let surface = face_source.surface();
+
+        let surface_bottom = target.insert(surface).unwrap();
+        let surface_top =
+            target.insert(surface.transform(&translation)).unwrap();
 
         let exteriors_bottom =
             source_to_bottom.exteriors_for_face(&face_source);
