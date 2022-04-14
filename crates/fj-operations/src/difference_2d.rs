@@ -52,11 +52,15 @@ impl ToShape for fj::Difference2d {
             .map(|shape| shape.topology().cycles().next().unwrap());
 
         let mut vertices = HashMap::new();
+
+        let cycle_a = add_cycle(cycle_a, &mut vertices, &mut shape, false);
+        let cycle_b = add_cycle(cycle_b, &mut vertices, &mut shape, true);
+
         let mut exteriors = Vec::new();
         let mut interiors = Vec::new();
 
-        exteriors.push(add_cycle(cycle_a, &mut vertices, &mut shape));
-        interiors.push(add_cycle(cycle_b, &mut vertices, &mut shape));
+        exteriors.push(cycle_a);
+        interiors.push(cycle_b);
 
         // Can't panic, as we just verified that both shapes have one face.
         let [face_a, face_b] = [&mut a, &mut b]
@@ -92,13 +96,16 @@ fn add_cycle(
     cycle: Handle<Cycle>,
     vertices: &mut HashMap<Vertex, Handle<Vertex>>,
     shape: &mut Shape,
+    reverse: bool,
 ) -> Handle<Cycle> {
     let mut edges = Vec::new();
     for edge in cycle.get().edges() {
-        let curve = shape.insert(edge.curve()).unwrap();
+        let curve = edge.curve();
+        let curve = if reverse { curve.reverse() } else { curve };
+        let curve = shape.insert(curve).unwrap();
 
         let vertices = edge.vertices().clone().map(|vs| {
-            vs.map(|vertex| {
+            let mut vs = vs.map(|vertex| {
                 vertices
                     .entry(vertex.clone())
                     .or_insert_with(|| {
@@ -106,11 +113,21 @@ fn add_cycle(
                         shape.insert(Vertex { point }).unwrap()
                     })
                     .clone()
-            })
+            });
+
+            if reverse {
+                vs.reverse();
+            }
+
+            vs
         });
 
         let edge = shape.insert(Edge { curve, vertices }).unwrap();
         edges.push(edge);
+    }
+
+    if reverse {
+        edges.reverse();
     }
 
     shape.insert(Cycle { edges }).unwrap()

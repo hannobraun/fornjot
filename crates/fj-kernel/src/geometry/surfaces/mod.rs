@@ -24,6 +24,14 @@ impl Surface {
         })
     }
 
+    /// Create a new instance that is reversed
+    #[must_use]
+    pub fn reverse(self) -> Self {
+        match self {
+            Self::SweptCurve(surface) => Self::SweptCurve(surface.reverse()),
+        }
+    }
+
     /// Transform the surface
     #[must_use]
     pub fn transform(self, transform: &Transform) -> Self {

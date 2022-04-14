@@ -24,6 +24,13 @@ impl SweptCurve {
         Self { curve, path }
     }
 
+    /// Create a new instance that is reversed
+    #[must_use]
+    pub fn reverse(mut self) -> Self {
+        self.curve = self.curve.reverse();
+        self
+    }
+
     /// Transform the surface
     #[must_use]
     pub fn transform(mut self, transform: &Transform) -> Self {
