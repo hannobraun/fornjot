@@ -1,5 +1,5 @@
 [package]
-name = "validator"
+name = "export-validator"
 version = "0.1.0"
 edition = "2021"
 publish = false
