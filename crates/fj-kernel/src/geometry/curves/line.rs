@@ -28,6 +28,13 @@ impl Line {
         self.origin
     }
 
+    /// Create a new instance that is reversed
+    #[must_use]
+    pub fn reverse(mut self) -> Self {
+        self.direction = -self.direction;
+        self
+    }
+
     /// Create a new instance that is transformed by `transform`
     #[must_use]
     pub fn transform(self, transform: &Transform) -> Self {

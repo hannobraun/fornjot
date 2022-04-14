@@ -42,6 +42,15 @@ impl Curve {
         }
     }
 
+    /// Create a new instance that is reversed
+    #[must_use]
+    pub fn reverse(self) -> Self {
+        match self {
+            Self::Arc(curve) => Self::Arc(curve.reverse()),
+            Self::Line(curve) => Self::Line(curve.reverse()),
+        }
+    }
+
     /// Create a new instance that is transformed by `transform`
     #[must_use]
     pub fn transform(self, transform: &Transform) -> Self {

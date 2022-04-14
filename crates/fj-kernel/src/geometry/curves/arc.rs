@@ -30,6 +30,13 @@ impl Arc {
         self.center
     }
 
+    /// Create a new instance that is reversed
+    #[must_use]
+    pub fn reverse(mut self) -> Self {
+        self.length = -self.length;
+        self
+    }
+
     /// Create a new instance that is transformed by `transform`
     #[must_use]
     pub fn transform(self, transform: &Transform) -> Self {
