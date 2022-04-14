@@ -52,11 +52,15 @@ impl ToShape for fj::Difference2d {
             .map(|shape| shape.topology().cycles().next().unwrap());
 
         let mut vertices = HashMap::new();
+
+        let cycle_a = add_cycle(cycle_a, &mut vertices, &mut shape);
+        let cycle_b = add_cycle(cycle_b, &mut vertices, &mut shape);
+
         let mut exteriors = Vec::new();
         let mut interiors = Vec::new();
 
-        exteriors.push(add_cycle(cycle_a, &mut vertices, &mut shape));
-        interiors.push(add_cycle(cycle_b, &mut vertices, &mut shape));
+        exteriors.push(cycle_a);
+        interiors.push(cycle_b);
 
         // Can't panic, as we just verified that both shapes have one face.
         let [face_a, face_b] = [&mut a, &mut b]
