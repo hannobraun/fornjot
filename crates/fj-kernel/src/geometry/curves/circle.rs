@@ -4,17 +4,17 @@ use fj_math::{Point, Scalar, Transform, Vector};
 
 use crate::algorithms::Tolerance;
 
-/// A circle
+/// An arc
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Arc {
-    /// The center point of the circle
+    /// The center point of the circle the arc is on
     pub center: Point<3>,
 
-    /// The radius of the circle
+    /// The radius of the circle the arc is on
     ///
     /// The radius is represented by a vector that points from the center to the
     /// circumference. The point on the circumference that it points to defines
-    /// the origin of the circle's 1-dimensional curve coordinate system.
+    /// the origin of the arc's 1-dimensional curve coordinate system.
     pub radius: Vector<2>,
 
     /// The length of the arc in radians
@@ -85,10 +85,10 @@ impl Arc {
         Vector::from([x, y, Scalar::ZERO])
     }
 
-    /// Approximate the circle
+    /// Approximate the arc
     ///
     /// `tolerance` specifies how much the approximation is allowed to deviate
-    /// from the circle.
+    /// from the arc.
     pub fn approx(&self, tolerance: Tolerance, out: &mut Vec<Point<3>>) {
         let radius = self.radius.magnitude();
 
