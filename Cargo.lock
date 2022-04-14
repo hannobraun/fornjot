@@ -640,6 +640,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "export-validator"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+]
+
+[[package]]
 name = "faccess"
 version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2787,13 +2794,6 @@ dependencies = [
  "idna",
  "matches",
  "percent-encoding",
-]
-
-[[package]]
-name = "validator"
-version = "0.1.0"
-dependencies = [
- "anyhow",
 ]
 
 [[package]]
