@@ -389,9 +389,10 @@ mod tests {
                 edges: vec![ab, bc, ca],
             })?;
 
-            let surface = shape.insert(Surface::SweptCurve(
-                SweptCurve::plane_from_points([a, b, c]),
-            ))?;
+            let surface =
+                Surface::SweptCurve(SweptCurve::plane_from_points([a, b, c]));
+            let surface = shape.insert(surface)?;
+
             let abc = Face::Face {
                 surface,
                 exteriors: vec![cycles],
