@@ -19,7 +19,10 @@ fn main() -> anyhow::Result<()> {
             .status()?;
 
         if !exit_status.success() {
-            bail!("Exporting model failed with error status: {}", exit_status);
+            bail!(
+                "Exporting model `{model}` failed with error code:\
+                {exit_status}"
+            );
         }
     }
 
