@@ -100,7 +100,7 @@ impl Curve {
     /// themselves.
     pub fn approx(&self, tolerance: Tolerance, out: &mut Vec<Point<3>>) {
         match self {
-            Self::Arc(circle) => circle.approx(tolerance, out),
+            Self::Arc(curve) => curve.approx(tolerance, out),
             Self::Line(_) => {}
         }
     }
