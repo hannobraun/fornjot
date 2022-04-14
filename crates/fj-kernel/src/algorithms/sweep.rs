@@ -93,7 +93,7 @@ pub fn sweep_shape(
     for face_source in source.topology().faces().values() {
         let surface = face_source.surface();
 
-        let surface_bottom = target.insert(surface).unwrap();
+        let surface_bottom = target.insert(surface.reverse()).unwrap();
         let surface_top =
             target.insert(surface.transform(&translation)).unwrap();
 
@@ -329,7 +329,8 @@ mod tests {
     fn sweep() -> anyhow::Result<()> {
         let tolerance = Tolerance::from_scalar(Scalar::ONE).unwrap();
 
-        let sketch = Triangle::new([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]])?;
+        let sketch =
+            Triangle::new([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]], false)?;
 
         let mut swept = sweep_shape(
             sketch.shape,
@@ -338,9 +339,12 @@ mod tests {
             [255, 0, 0, 255],
         );
 
-        let bottom_face = sketch.face.get();
+        let bottom_face =
+            Triangle::new([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]], true)?
+                .face
+                .get();
         let top_face =
-            Triangle::new([[0., 0., 1.], [1., 0., 1.], [0., 1., 1.]])?
+            Triangle::new([[0., 0., 1.], [1., 0., 1.], [0., 1., 1.]], false)?
                 .face
                 .get();
 
@@ -373,7 +377,10 @@ mod tests {
     }
 
     impl Triangle {
-        fn new(points: [impl Into<Point<3>>; 3]) -> anyhow::Result<Self> {
+        fn new(
+            points: [impl Into<Point<3>>; 3],
+            reverse: bool,
+        ) -> anyhow::Result<Self> {
             let mut shape = Shape::new();
 
             let [a, b, c] = points.map(|point| point.into());
@@ -391,6 +398,7 @@ mod tests {
 
             let surface =
                 Surface::SweptCurve(SweptCurve::plane_from_points([a, b, c]));
+            let surface = if reverse { surface.reverse() } else { surface };
             let surface = shape.insert(surface)?;
 
             let abc = Face::Face {
