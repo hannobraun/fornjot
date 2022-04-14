@@ -16,8 +16,8 @@ members = [
     "models/spacer",
     "models/star",
 
+    "tools/export-validator",
     "tools/release-operator",
-    "tools/validator",
 ]
 default-members = [
     "crates/fj-app",
