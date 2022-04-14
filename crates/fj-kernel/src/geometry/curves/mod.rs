@@ -18,7 +18,7 @@ use fj_math::{Point, Transform, Vector};
 /// while edges are bounded portions of curves.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum Curve {
-    /// A circle
+    /// An arc
     Arc(Arc),
 
     /// A line
