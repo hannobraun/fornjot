@@ -6,7 +6,7 @@ use crate::algorithms::Tolerance;
 
 /// A circle
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Circle {
+pub struct Arc {
     /// The center point of the circle
     pub center: Point<3>,
 
@@ -18,7 +18,7 @@ pub struct Circle {
     pub radius: Vector<2>,
 }
 
-impl Circle {
+impl Arc {
     /// Access the origin of the curve's coordinate system
     pub fn origin(&self) -> Point<3> {
         self.center
@@ -119,11 +119,11 @@ mod tests {
 
     use crate::algorithms::Tolerance;
 
-    use super::Circle;
+    use super::Arc;
 
     #[test]
     fn point_model_to_curve() {
-        let circle = Circle {
+        let circle = Arc {
             center: Point::from([1., 2., 3.]),
             radius: Vector::from([1., 0.]),
         };
@@ -160,7 +160,7 @@ mod tests {
             let tolerance = tolerance.into();
             let radius = radius.into();
 
-            assert_eq!(n, Circle::number_of_vertices(tolerance, radius));
+            assert_eq!(n, Arc::number_of_vertices(tolerance, radius));
 
             assert!(calculate_error(radius, n) <= tolerance.inner());
             if n > 3 {
