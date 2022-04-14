@@ -236,6 +236,14 @@ impl<const D: usize> From<Vector<D>> for nalgebra::SVector<f64, D> {
     }
 }
 
+impl<const D: usize> ops::Neg for Vector<D> {
+    type Output = Self;
+
+    fn neg(self) -> Self::Output {
+        self.to_na().neg().into()
+    }
+}
+
 impl<const D: usize> ops::Add<Self> for Vector<D> {
     type Output = Self;
 
