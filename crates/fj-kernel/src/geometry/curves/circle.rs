@@ -1,4 +1,4 @@
-use std::f64::consts::PI;
+use std::{cmp::max, f64::consts::PI};
 
 use fj_math::{Point, Scalar, Transform, Vector};
 
@@ -101,13 +101,12 @@ impl Arc {
     }
 
     fn number_of_vertices(tolerance: Tolerance, radius: Scalar) -> u64 {
-        if tolerance.inner() > radius / Scalar::TWO {
-            3
-        } else {
-            (Scalar::PI / (Scalar::ONE - (tolerance.inner() / radius)).acos())
-                .ceil()
-                .into_u64()
-        }
+        let n = (Scalar::PI
+            / (Scalar::ONE - (tolerance.inner() / radius)).acos())
+        .ceil()
+        .into_u64();
+
+        max(n, 3)
     }
 }
 
