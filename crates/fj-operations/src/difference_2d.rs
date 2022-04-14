@@ -99,7 +99,8 @@ fn add_cycle(
 ) -> Handle<Cycle> {
     let mut edges = Vec::new();
     for edge in cycle.get().edges() {
-        let curve = shape.insert(edge.curve()).unwrap();
+        let curve = edge.curve();
+        let curve = shape.insert(curve).unwrap();
 
         let vertices = edge.vertices().clone().map(|vs| {
             vs.map(|vertex| {
