@@ -1,3 +1,7 @@
+//! Fornjot Model Viewer
+//!
+//! A model viewer which allows basic navigation and rendering of generated models.
+
 pub mod camera;
 pub mod graphics;
 pub mod input;
