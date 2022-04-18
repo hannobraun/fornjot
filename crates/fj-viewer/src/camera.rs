@@ -1,3 +1,4 @@
+//! Viewer camera module
 use std::f64::consts::FRAC_PI_2;
 
 use fj_interop::mesh::Mesh;
@@ -28,6 +29,7 @@ pub struct Camera {
     /// point, which means they must include a translational component.
     pub rotation: Transform<f64, TAffine, 3>,
 
+    /// The locational part of the transform
     pub translation: Translation<f64, 3>,
 }
 
@@ -37,6 +39,7 @@ impl Camera {
 
     const INITIAL_FIELD_OF_VIEW_IN_X: f64 = FRAC_PI_2; // 90 degrees
 
+    /// Returns a new camera aligned for viewing a bounding box
     pub fn new(aabb: &Aabb<3>) -> Self {
         let initial_distance = {
             // Let's make sure we choose a distance, so that the model fills
@@ -63,7 +66,7 @@ impl Camera {
             let distance_from_model =
                 furthest_point / (Self::INITIAL_FIELD_OF_VIEW_IN_X / 2.).atan();
 
-            // An finally, the distance from the origin is trivial now.
+            // And finally, the distance from the origin is trivial now.
             highest_point + distance_from_model
         };
 
@@ -86,18 +89,22 @@ impl Camera {
         }
     }
 
+    /// Returns the distance between the camera and the minimum distance for rendering.
     pub fn near_plane(&self) -> f64 {
         self.near_plane
     }
 
+    /// Returns the distance between the camera and the maximum distance for rendering..
     pub fn far_plane(&self) -> f64 {
         self.far_plane
     }
 
+    /// Returns the horizontal field of view of the camera.
     pub fn field_of_view_in_x(&self) -> f64 {
         Self::INITIAL_FIELD_OF_VIEW_IN_X
     }
 
+    /// Returns the position of the camera in world space.
     pub fn position(&self) -> Point<f64, 3> {
         self.camera_to_model()
             .inverse_transform_point(&Point::origin())
@@ -174,6 +181,7 @@ impl Camera {
         transform
     }
 
+    /// Update the max and minimum rendering distance for this camera.
     pub fn update_planes(&mut self, aabb: &Aabb<3>) {
         let view_transform = self.camera_to_model();
         let view_direction = Vector::from([0., 0., -1.]);
