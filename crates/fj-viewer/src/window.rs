@@ -9,7 +9,7 @@ impl Window {
     /// Returns a new window with the given `EventLoop`.
     ///
     /// # Examples
-    /// ```rust
+    /// ```rust no_run
     /// let event_loop = winit::event_loop::EventLoop::new();
     /// let window = fj_viewer::window::Window::new(&event_loop);
     /// ```
