@@ -18,6 +18,10 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  # A list of flags to pass to rustc when executing clippy.
+  #
+  # Used at check time to enforce quality of pull requests.
+  CLIPPY_RUSTC_FLAGS: "-D missing-docs"
 
 defaults:
   run:
@@ -66,7 +70,7 @@ jobs:
         uses: actions-rs/clippy-check@9d09632661e31982c0be8af59aeb96b680641bc4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all-features
+          args: --all-features -- $CLIPPY_RUSTC_FLAGS
 
   export:
     name: Validate 3MF Export
