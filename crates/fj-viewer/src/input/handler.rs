@@ -17,6 +17,9 @@ use crate::{
 
 use super::{movement::Movement, rotation::Rotation, zoom::Zoom};
 
+/// Input handling abstraction.
+///
+/// Takes user input and applies them to application state.
 pub struct Handler {
     cursor: Option<PhysicalPosition<f64>>,
 
@@ -26,6 +29,14 @@ pub struct Handler {
 }
 
 impl Handler {
+    /// Returns a new Handler.
+    ///
+    /// # Examples
+    /// ```rust
+    /// // Store initialization time for camera zoom calculations
+    /// let instant = std::time::Instant::now();
+    /// let input_handler = fj_viewer::input::Handler::new(instant);
+    /// ````
     pub fn new(now: Instant) -> Self {
         Self {
             cursor: None,
@@ -36,10 +47,12 @@ impl Handler {
         }
     }
 
+    /// Returns the state of the cursor position.
     pub fn cursor(&self) -> Option<PhysicalPosition<f64>> {
         self.cursor
     }
 
+    /// Applies user input to `actions`.
     pub fn handle_keyboard_input(
         &mut self,
         input: KeyboardInput,
@@ -63,6 +76,7 @@ impl Handler {
         }
     }
 
+    /// Applies cursor movement to `camera`.
     pub fn handle_cursor_moved(
         &mut self,
         cursor: PhysicalPosition<f64>,
@@ -80,6 +94,7 @@ impl Handler {
         self.cursor = Some(cursor);
     }
 
+    /// Updates `state` and `focus_point` when mouse is clickled.
     pub fn handle_mouse_input(
         &mut self,
         button: MouseButton,
@@ -103,6 +118,7 @@ impl Handler {
         }
     }
 
+    /// Updates zoom state from the scroll wheel.
     pub fn handle_mouse_wheel(
         &mut self,
         delta: MouseScrollDelta,
@@ -116,6 +132,7 @@ impl Handler {
         self.zoom.push_input_delta(delta, now);
     }
 
+    /// Update application state from user input.
     pub fn update(
         &mut self,
         delta_t: f64,
@@ -134,15 +151,21 @@ impl Handler {
 }
 
 #[derive(Default)]
+/// Hight level application state container.
 pub struct Actions {
+    /// Application exit state.
     pub exit: bool,
 
+    /// Toggle for the shaded display of the model.
     pub toggle_model: bool,
+    /// Toggle for the model's wireframe.
     pub toggle_mesh: bool,
+    /// Toggle for debug information.
     pub toggle_debug: bool,
 }
 
 impl Actions {
+    /// Returns a new `Actions`.
     pub fn new() -> Self {
         Self::default()
     }
