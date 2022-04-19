@@ -1,3 +1,5 @@
+//! Rendering primitives, routines, and and structures.
+
 mod config_ui;
 mod draw_config;
 mod drawables;
