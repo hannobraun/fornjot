@@ -15,8 +15,8 @@ use super::{
     uniforms::Uniforms, vertices::Vertices, DEPTH_FORMAT,
 };
 
+/// Graphics rendering state and target abstraction
 #[derive(Debug)]
-/// Graphics rendering state and target abstraction.
 pub struct Renderer {
     surface: wgpu::Surface,
     device: wgpu::Device,
@@ -35,7 +35,7 @@ pub struct Renderer {
 }
 
 impl Renderer {
-    /// Returns a new `Renderer`
+    /// Returns a new `Renderer`.
     ///
     /// # Arguments
     /// - `window` - a `crate::window::Window` with a surface to render onto.
@@ -178,7 +178,7 @@ impl Renderer {
         self.geometries = Geometries::new(&self.device, &mesh, &lines, aabb);
     }
 
-    /// Resizes the render surface
+    /// Resizes the render surface.
     ///
     /// # Arguments
     /// - `size`: The target size for the render surface.
@@ -321,8 +321,8 @@ impl Renderer {
     }
 }
 
+/// Error describing the set of render surface initialization errors
 #[derive(Error, Debug)]
-/// Error describing the set of render surface initialization errors.
 pub enum InitError {
     #[error("I/O error: {0}")]
     /// General IO error
@@ -347,10 +347,10 @@ pub enum InitError {
     InvalidFont(#[from] InvalidFont),
 }
 
-#[derive(Error, Debug)]
-/// Graphics rendering error.
+/// Graphics rendering error
 ///
 /// Describes errors related to non intialization graphics errors.
+#[derive(Error, Debug)]
 pub enum DrawError {
     #[error("Error acquiring output surface: {0}")]
     /// Surface drawing error.
