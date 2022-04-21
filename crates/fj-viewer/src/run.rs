@@ -1,4 +1,4 @@
-//! Model viewer initialization and event processing.
+//! Model viewer initialization and event processing
 //!
 //! Provides the functionality to create a window and perform basic viewing
 //! with programmed models.
