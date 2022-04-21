@@ -1,13 +1,13 @@
-//! High level configuration for graphics rendering.
+//! High level configuration for graphics rendering
 
+/// High level configuration for rendering the active model
 #[derive(Debug)]
-/// High level configuration for rendering the active model.
 pub struct DrawConfig {
-    /// Toggle for displaying the shaded model.
+    /// Toggle for displaying the shaded model
     pub draw_model: bool,
-    /// Toggle for displaying the wireframe model.
+    /// Toggle for displaying the wireframe model
     pub draw_mesh: bool,
-    /// Toggle for displaying model debug information.
+    /// Toggle for displaying model debug information
     pub draw_debug: bool,
 }
 
