@@ -38,7 +38,7 @@ impl Renderer {
     /// Returns a new `Renderer`
     ///
     /// # Arguments
-    /// - `window` - a `winit::Window` with a surface to render onto.
+    /// - `window` - a `crate::window::Window` with a surface to render onto.
     ///
     /// # Examples
     /// ```rust no_run
