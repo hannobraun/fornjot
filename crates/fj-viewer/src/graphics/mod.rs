@@ -1,4 +1,4 @@
-//! Rendering primitives, routines, and and structures.
+//! Rendering primitives, routines, and structures.
 
 mod config_ui;
 mod draw_config;

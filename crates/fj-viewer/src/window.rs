@@ -1,4 +1,4 @@
-//! Cad viewer utility windowing abstraction
+//! CAD viewer utility windowing abstraction
 
 use winit::{event_loop::EventLoop, window::WindowBuilder};
 

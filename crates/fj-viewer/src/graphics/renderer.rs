@@ -330,8 +330,6 @@ pub enum InitError {
 
     #[error("Error request adapter")]
     /// Graphics accelerator acquisition error
-    ///
-    /// TODO Document when this occurs
     RequestAdapter,
 
     #[error("Error requesting device: {0}")]

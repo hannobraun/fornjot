@@ -36,7 +36,7 @@ impl Handler {
     /// // Store initialization time for camera zoom calculations
     /// let instant = std::time::Instant::now();
     /// let input_handler = fj_viewer::input::Handler::new(instant);
-    /// ````
+    /// ```
     pub fn new(now: Instant) -> Self {
         Self {
             cursor: None,
