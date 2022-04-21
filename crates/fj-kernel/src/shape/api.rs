@@ -6,7 +6,7 @@ use super::{
     stores::{
         Curves, Cycles, Edges, Faces, Points, Stores, Surfaces, Vertices,
     },
-    Geometry, Handle, Object, Topology, ValidationResult,
+    Geometry, Handle, Object, Topology, ValidationError, ValidationResult,
 };
 
 /// The boundary representation of a shape
@@ -66,6 +66,22 @@ impl Shape {
         object.validate(self.min_distance, &self.stores)?;
         let handle = self.stores.get::<T>().insert(object);
         Ok(handle)
+    }
+
+    /// Merge the provided objects into the shape
+    ///
+    /// TASK: Document.
+    pub fn merge<T>(
+        &mut self,
+        // TASK: Does this need to be a single object, so we can return a
+        //       handle?
+        object: T,
+    ) -> Result<(), ValidationError>
+    where
+        T: Object,
+    {
+        object.merge_into(self)?;
+        Ok(())
     }
 
     /// Access the handle of an object
@@ -142,6 +158,12 @@ mod tests {
         shape::Shape,
         topology::{Cycle, Edge, Face, Vertex},
     };
+
+    #[test]
+    fn merge() -> anyhow::Result<()> {
+        // TASK: Implement.
+        todo!()
+    }
 
     #[test]
 
