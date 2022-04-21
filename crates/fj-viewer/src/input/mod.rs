@@ -1,3 +1,5 @@
+//! User input parsing and propagation.
+
 mod handler;
 mod movement;
 mod rotation;

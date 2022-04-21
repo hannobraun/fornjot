@@ -15,6 +15,7 @@ use super::{
     uniforms::Uniforms, vertices::Vertices, DEPTH_FORMAT,
 };
 
+/// Graphics rendering state and target abstraction
 #[derive(Debug)]
 pub struct Renderer {
     surface: wgpu::Surface,
@@ -34,6 +35,22 @@ pub struct Renderer {
 }
 
 impl Renderer {
+    /// Returns a new `Renderer`.
+    ///
+    /// # Arguments
+    /// - `window` - a `crate::window::Window` with a surface to render onto.
+    ///
+    /// # Examples
+    /// ```rust no_run
+    /// use fj_viewer::{graphics, window};
+    ///
+    /// // Create window
+    /// let event_loop = winit::event_loop::EventLoop::new();
+    /// let window = window::Window::new(&event_loop);
+    ///
+    /// // Attach renderer to the window
+    /// let mut renderer = graphics::Renderer::new(&window);
+    /// ```
     pub async fn new(window: &Window) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::PRIMARY);
 
@@ -151,6 +168,7 @@ impl Renderer {
         })
     }
 
+    /// Updates the geometry of the model being rendered.
     pub fn update_geometry(
         &mut self,
         mesh: Vertices,
@@ -160,6 +178,10 @@ impl Renderer {
         self.geometries = Geometries::new(&self.device, &mesh, &lines, aabb);
     }
 
+    /// Resizes the render surface.
+    ///
+    /// # Arguments
+    /// - `size`: The target size for the render surface.
     pub fn handle_resize(&mut self, size: PhysicalSize<u32>) {
         self.surface_config.width = size.width;
         self.surface_config.height = size.height;
@@ -171,6 +193,7 @@ impl Renderer {
         self.depth_view = depth_view;
     }
 
+    /// Draws the renderer, camera, and config state to the window.
     pub fn draw(
         &mut self,
         camera: &Camera,
@@ -298,26 +321,42 @@ impl Renderer {
     }
 }
 
+/// Error describing the set of render surface initialization errors
 #[derive(Error, Debug)]
 pub enum InitError {
     #[error("I/O error: {0}")]
+    /// General IO error
     Io(#[from] io::Error),
 
     #[error("Error request adapter")]
+    /// Graphics accelerator acquisition error
     RequestAdapter,
 
     #[error("Error requesting device: {0}")]
+    /// Device request errors
+    ///
+    /// See: [wgpu::RequestDeviceError](https://docs.rs/wgpu/latest/wgpu/struct.RequestDeviceError.html)
     RequestDevice(#[from] wgpu::RequestDeviceError),
 
     #[error("Error loading font: {0}")]
+    /// Error loading font
+    ///
+    /// See: [ab_glyph::InvalidFont](https://docs.rs/ab_glyph/latest/ab_glyph/struct.InvalidFont.html)
     InvalidFont(#[from] InvalidFont),
 }
 
+/// Graphics rendering error
+///
+/// Describes errors related to non intialization graphics errors.
 #[derive(Error, Debug)]
 pub enum DrawError {
     #[error("Error acquiring output surface: {0}")]
+    /// Surface drawing error.
+    ///
+    /// See - [wgpu::SurfaceError](https://docs.rs/wgpu/latest/wgpu/enum.SurfaceError.html)
     Surface(#[from] wgpu::SurfaceError),
 
     #[error("Error drawing text: {0}")]
+    /// Text rasterisation error.
     Text(String),
 }

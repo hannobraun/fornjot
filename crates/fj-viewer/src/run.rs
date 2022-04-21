@@ -1,3 +1,8 @@
+//! Model viewer initialization and event processing
+//!
+//! Provides the functionality to create a window and perform basic viewing
+//! with programmed models.
+
 use std::time::Instant;
 
 use fj_host::Watcher;
@@ -16,6 +21,7 @@ use crate::{
     window::Window,
 };
 
+/// Initializes a model viewer for a given model and enters its process loop.
 pub fn run(
     watcher: Watcher,
     shape_processor: ShapeProcessor,
