@@ -17,7 +17,7 @@ use crate::{
 
 use super::{movement::Movement, rotation::Rotation, zoom::Zoom};
 
-/// Input handling abstraction.
+/// Input handling abstraction
 ///
 /// Takes user input and applies them to application state.
 pub struct Handler {
@@ -150,8 +150,10 @@ impl Handler {
     }
 }
 
+/// Intermediate input state container
+///
+/// Used as a per frame state container for sending application state to `winit`.
 #[derive(Default)]
-/// Hight level application state container.
 pub struct Actions {
     /// Application exit state.
     pub exit: bool,
