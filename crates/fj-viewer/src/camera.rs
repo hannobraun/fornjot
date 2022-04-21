@@ -110,7 +110,7 @@ impl Camera {
             .inverse_transform_point(&Point::origin())
     }
 
-    /// Transform the position of the cursor on the near plane to model space
+    /// Transform the position of the cursor on the near plane to model space.
     pub fn cursor_to_model_space(
         &self,
         cursor: PhysicalPosition<f64>,
@@ -133,7 +133,7 @@ impl Camera {
         self.camera_to_model().inverse_transform_point(&cursor)
     }
 
-    /// Compute the point on the model, that the cursor currently points to
+    /// Compute the point on the model, that the cursor currently points to.
     pub fn focus_point(
         &self,
         window: &Window,
@@ -169,7 +169,7 @@ impl Camera {
         FocusPoint(min_t.map(|t| ray.point_at(t)))
     }
 
-    /// Access the transform from camera to model space
+    /// Access the transform from camera to model space.
     pub fn camera_to_model(&self) -> Transform<f64, TAffine, 3> {
         // Using a mutable variable cleanly takes care of any type inference
         // problems that this operation would otherwise have.
@@ -227,7 +227,7 @@ impl Camera {
     }
 }
 
-/// The point on the model that the cursor is currently pointing at
+/// The point on the model that the cursor is currently pointing at.
 ///
 /// Such a point might or might not exist, depending on whether the cursor is
 /// pointing at the model or not.
