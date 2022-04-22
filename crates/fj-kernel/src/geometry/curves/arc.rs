@@ -22,12 +22,6 @@ pub struct Arc {
     /// be perpendicular to it. Code working with circles might assume that
     /// these conditions are met.
     pub b: Vector<3>,
-
-    /// The length of the arc in radians
-    ///
-    /// If the length is positive, the arc is oriented counter-clockwise. If it
-    /// is negative, the arc is oriented clockwise.
-    pub length: Scalar,
 }
 
 impl Arc {
@@ -50,7 +44,6 @@ impl Arc {
             center: transform.transform_point(&self.center),
             a: transform.transform_vector(&self.a),
             b: transform.transform_vector(&self.b),
-            length: self.length,
         }
     }
 
@@ -103,32 +96,22 @@ impl Arc {
         // and the circle. This is the same as the difference between
         // the circumscribed circle and the incircle.
 
-        let n = Self::number_of_vertices(tolerance, radius, self.length);
+        let n = Self::number_of_vertices(tolerance, radius);
 
         for i in 0..n {
-            let angle = self.length / n as f64 * i as f64;
+            let angle = Scalar::PI * 2. / n as f64 * i as f64;
             let point = self.point_curve_to_model(&Point::from([angle]));
             out.push(point);
         }
     }
 
-    fn number_of_vertices(
-        tolerance: Tolerance,
-        radius: Scalar,
-        length: Scalar,
-    ) -> u64 {
-        let length = length.abs();
+    fn number_of_vertices(tolerance: Tolerance, radius: Scalar) -> u64 {
+        let n = (Scalar::PI
+            / (Scalar::ONE - (tolerance.inner() / radius)).acos())
+        .ceil()
+        .into_u64();
 
-        let n =
-            (length / 2. / (Scalar::ONE - (tolerance.inner() / radius)).acos())
-                .ceil()
-                .into_u64();
-
-        if length >= Scalar::PI * 2. {
-            max(n, 3)
-        } else {
-            max(n, 2)
-        }
+        max(n, 3)
     }
 }
 
@@ -148,7 +131,6 @@ mod tests {
             center: Point::from([1., 2., 3.]),
             a: Vector::from([1., 0., 0.]),
             b: Vector::from([0., 1., 0.]),
-            length: Scalar::PI * 2.,
         };
 
         assert_eq!(
@@ -171,37 +153,28 @@ mod tests {
 
     #[test]
     fn number_of_vertices() {
-        // full circle
-        verify_result(50., 100., Scalar::PI * 2., 3);
-        verify_result(10., 100., Scalar::PI * 2., 7);
-        verify_result(1., 100., Scalar::PI * 2., 23);
-
-        // half circle
-        verify_result(50., 100., Scalar::PI, 2);
-        verify_result(10., 100., Scalar::PI, 4);
-        verify_result(1., 100., Scalar::PI, 12);
+        verify_result(50., 100., 3);
+        verify_result(10., 100., 7);
+        verify_result(1., 100., 23);
 
         fn verify_result(
             tolerance: impl Into<Tolerance>,
             radius: impl Into<Scalar>,
-            length: Scalar,
             n: u64,
         ) {
             let tolerance = tolerance.into();
             let radius = radius.into();
 
-            assert_eq!(n, Arc::number_of_vertices(tolerance, radius, length));
+            assert_eq!(n, Arc::number_of_vertices(tolerance, radius));
 
-            assert!(calculate_error(radius, length, n) <= tolerance.inner());
+            assert!(calculate_error(radius, n) <= tolerance.inner());
             if n > 3 {
-                assert!(
-                    calculate_error(radius, length, n - 1) >= tolerance.inner()
-                );
+                assert!(calculate_error(radius, n - 1) >= tolerance.inner());
             }
         }
 
-        fn calculate_error(radius: Scalar, length: Scalar, n: u64) -> Scalar {
-            radius - radius * (length / 2. / Scalar::from_u64(n)).cos()
+        fn calculate_error(radius: Scalar, n: u64) -> Scalar {
+            radius - radius * (Scalar::PI / Scalar::from_u64(n)).cos()
         }
     }
 }

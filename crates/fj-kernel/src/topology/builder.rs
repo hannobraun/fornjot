@@ -52,7 +52,6 @@ impl<'r> EdgeBuilder<'r> {
             center: Point::origin(),
             a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
             b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
-            length: Scalar::PI * 2.,
         }))?;
         let edge = self.shape.insert(Edge {
             curve,
