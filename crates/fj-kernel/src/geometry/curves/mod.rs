@@ -1,8 +1,6 @@
 mod circle;
 mod line;
 
-use crate::algorithms::Tolerance;
-
 pub use self::{circle::Circle, line::Line};
 
 use fj_math::{Point, Transform, Vector};
@@ -89,28 +87,6 @@ impl Curve {
         match self {
             Self::Circle(curve) => curve.vector_curve_to_model(point),
             Self::Line(curve) => curve.vector_curve_to_model(point),
-        }
-    }
-
-    /// Compute an approximation of the curve
-    ///
-    /// `tolerance` defines how far the approximation is allowed to deviate from
-    /// the actual edge.
-    ///
-    /// # Implementation Note
-    ///
-    /// This only works as it is, because edges are severely limited and don't
-    /// define which section of the curve they inhabit. Once they do that, we
-    /// need an `approximate_between(a, b)` method instead, where `a` and `b`
-    /// are the vertices that bound the edge on the curve.
-    ///
-    /// The `approximate_between` methods of the curves then need to make sure
-    /// to only return points in between those vertices, not the vertices
-    /// themselves.
-    pub fn approx(&self, tolerance: Tolerance, out: &mut Vec<Point<3>>) {
-        match self {
-            Self::Circle(curve) => curve.approx(tolerance, out),
-            Self::Line(_) => {}
         }
     }
 }
