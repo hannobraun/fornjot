@@ -3,7 +3,7 @@ mod line;
 
 use crate::algorithms::Tolerance;
 
-pub use self::{arc::Arc, line::Line};
+pub use self::{arc::Circle, line::Line};
 
 use fj_math::{Point, Transform, Vector};
 
@@ -19,7 +19,7 @@ use fj_math::{Point, Transform, Vector};
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum Curve {
     /// An arc
-    Arc(Arc),
+    Arc(Circle),
 
     /// A line
     Line(Line),
