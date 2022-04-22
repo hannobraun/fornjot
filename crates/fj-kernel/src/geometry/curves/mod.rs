@@ -1,9 +1,9 @@
-mod arc;
+mod circle;
 mod line;
 
 use crate::algorithms::Tolerance;
 
-pub use self::{arc::Circle, line::Line};
+pub use self::{circle::Circle, line::Line};
 
 use fj_math::{Point, Transform, Vector};
 
