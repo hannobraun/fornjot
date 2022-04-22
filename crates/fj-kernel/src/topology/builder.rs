@@ -48,7 +48,7 @@ impl<'r> EdgeBuilder<'r> {
 
     /// Build a circle from a radius
     pub fn build_circle(self, radius: Scalar) -> ValidationResult<Edge> {
-        let curve = self.shape.insert(Curve::Arc(Circle {
+        let curve = self.shape.insert(Curve::Circle(Circle {
             center: Point::origin(),
             a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
             b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),

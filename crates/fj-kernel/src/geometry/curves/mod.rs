@@ -19,7 +19,7 @@ use fj_math::{Point, Transform, Vector};
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum Curve {
     /// An arc
-    Arc(Circle),
+    Circle(Circle),
 
     /// A line
     Line(Line),
@@ -37,7 +37,7 @@ impl Curve {
     /// Access the origin of the curve's coordinate system
     pub fn origin(&self) -> Point<3> {
         match self {
-            Self::Arc(curve) => curve.origin(),
+            Self::Circle(curve) => curve.origin(),
             Self::Line(curve) => curve.origin(),
         }
     }
@@ -46,7 +46,7 @@ impl Curve {
     #[must_use]
     pub fn reverse(self) -> Self {
         match self {
-            Self::Arc(curve) => Self::Arc(curve.reverse()),
+            Self::Circle(curve) => Self::Circle(curve.reverse()),
             Self::Line(curve) => Self::Line(curve.reverse()),
         }
     }
@@ -55,7 +55,7 @@ impl Curve {
     #[must_use]
     pub fn transform(self, transform: &Transform) -> Self {
         match self {
-            Self::Arc(curve) => Self::Arc(curve.transform(transform)),
+            Self::Circle(curve) => Self::Circle(curve.transform(transform)),
             Self::Line(curve) => Self::Line(curve.transform(transform)),
         }
     }
@@ -71,7 +71,7 @@ impl Curve {
     /// an error.
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
         match self {
-            Self::Arc(curve) => curve.point_model_to_curve(point),
+            Self::Circle(curve) => curve.point_model_to_curve(point),
             Self::Line(curve) => curve.point_model_to_curve(point),
         }
     }
@@ -79,7 +79,7 @@ impl Curve {
     /// Convert a point on the curve into model coordinates
     pub fn point_curve_to_model(&self, point: &Point<1>) -> Point<3> {
         match self {
-            Self::Arc(curve) => curve.point_curve_to_model(point),
+            Self::Circle(curve) => curve.point_curve_to_model(point),
             Self::Line(curve) => curve.point_curve_to_model(point),
         }
     }
@@ -87,7 +87,7 @@ impl Curve {
     /// Convert a vector on the curve into model coordinates
     pub fn vector_curve_to_model(&self, point: &Vector<1>) -> Vector<3> {
         match self {
-            Self::Arc(curve) => curve.vector_curve_to_model(point),
+            Self::Circle(curve) => curve.vector_curve_to_model(point),
             Self::Line(curve) => curve.vector_curve_to_model(point),
         }
     }
@@ -109,7 +109,7 @@ impl Curve {
     /// themselves.
     pub fn approx(&self, tolerance: Tolerance, out: &mut Vec<Point<3>>) {
         match self {
-            Self::Arc(curve) => curve.approx(tolerance, out),
+            Self::Circle(curve) => curve.approx(tolerance, out),
             Self::Line(_) => {}
         }
     }
