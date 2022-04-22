@@ -10,12 +10,18 @@ pub struct Arc {
     /// The center point of the circle the arc is on
     pub center: Point<3>,
 
-    /// The radius of the circle the arc is on
+    /// A vector from the center to the starting point of the circle
     ///
-    /// The radius is represented by a vector that points from the center to the
-    /// circumference. The point on the circumference that it points to defines
-    /// the origin of the arc's 1-dimensional curve coordinate system.
-    pub radius: Vector<2>,
+    /// The length of this vector defines the circle radius. Please also refer
+    /// to the documentation of `b`.
+    pub a: Vector<3>,
+
+    /// A second vector that defines the plane of the circle
+    ///
+    /// The vector must be of equal length to `a` (the circle radius) and must
+    /// be perpendicular to it. Code working with circles might assume that
+    /// these conditions are met.
+    pub b: Vector<3>,
 
     /// The length of the arc in radians
     ///
@@ -33,20 +39,17 @@ impl Arc {
     /// Create a new instance that is reversed
     #[must_use]
     pub fn reverse(mut self) -> Self {
-        self.length = -self.length;
+        self.b = -self.b;
         self
     }
 
     /// Create a new instance that is transformed by `transform`
     #[must_use]
     pub fn transform(self, transform: &Transform) -> Self {
-        let radius = self.radius.to_xyz();
-        let radius = transform.transform_vector(&radius);
-        let radius = radius.xy();
-
         Self {
             center: transform.transform_point(&self.center),
-            radius,
+            a: transform.transform_vector(&self.a),
+            b: transform.transform_vector(&self.b),
             length: self.length,
         }
     }
@@ -81,15 +84,10 @@ impl Arc {
 
     /// Convert a vector on the curve into model coordinates
     pub fn vector_curve_to_model(&self, vector: &Vector<1>) -> Vector<3> {
-        let radius = self.radius.magnitude();
         let angle = vector.t;
-
         let (sin, cos) = angle.sin_cos();
 
-        let x = cos * radius;
-        let y = sin * radius;
-
-        Vector::from([x, y, Scalar::ZERO])
+        self.a * cos + self.b * sin
     }
 
     /// Approximate the arc
@@ -97,7 +95,7 @@ impl Arc {
     /// `tolerance` specifies how much the approximation is allowed to deviate
     /// from the arc.
     pub fn approx(&self, tolerance: Tolerance, out: &mut Vec<Point<3>>) {
-        let radius = self.radius.magnitude();
+        let radius = self.a.magnitude();
 
         // To approximate the circle, we use a regular polygon for which
         // the circle is the circumscribed circle. The `tolerance`
@@ -148,7 +146,8 @@ mod tests {
     fn point_model_to_curve() {
         let circle = Arc {
             center: Point::from([1., 2., 3.]),
-            radius: Vector::from([1., 0.]),
+            a: Vector::from([1., 0., 0.]),
+            b: Vector::from([0., 1., 0.]),
             length: Scalar::PI * 2.,
         };
 
