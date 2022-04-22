@@ -4,10 +4,10 @@ use fj_math::{Point, Scalar, Transform, Vector};
 
 use crate::algorithms::Tolerance;
 
-/// An arc
+/// A circle
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Circle {
-    /// The center point of the circle the arc is on
+    /// The center point of the circle
     pub center: Point<3>,
 
     /// A vector from the center to the starting point of the circle
@@ -83,10 +83,10 @@ impl Circle {
         self.a * cos + self.b * sin
     }
 
-    /// Approximate the arc
+    /// Approximate the circle
     ///
     /// `tolerance` specifies how much the approximation is allowed to deviate
-    /// from the arc.
+    /// from the circle.
     pub fn approx(&self, tolerance: Tolerance, out: &mut Vec<Point<3>>) {
         let radius = self.a.magnitude();
 
