@@ -1,7 +1,7 @@
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    geometry::{Arc, Curve, Line, Surface},
+    geometry::{Circle, Curve, Line, Surface},
     shape::{Handle, Shape, ValidationResult},
 };
 
@@ -48,10 +48,10 @@ impl<'r> EdgeBuilder<'r> {
 
     /// Build a circle from a radius
     pub fn build_circle(self, radius: Scalar) -> ValidationResult<Edge> {
-        let curve = self.shape.insert(Curve::Arc(Arc {
+        let curve = self.shape.insert(Curve::Circle(Circle {
             center: Point::origin(),
-            radius: Vector::from([radius, Scalar::ZERO]),
-            length: Scalar::PI * 2.,
+            a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
+            b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
         }))?;
         let edge = self.shape.insert(Edge {
             curve,
