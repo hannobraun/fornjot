@@ -51,7 +51,9 @@ impl Renderer {
     /// // Attach renderer to the window
     /// let mut renderer = graphics::Renderer::new(&window);
     /// ```
-    pub async fn new(window: &Window) -> Result<Self, InitError> {
+    pub async fn new(
+        window: &Window<winit::window::Window>,
+    ) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::PRIMARY);
 
         // This is sound, as `window` is an object to create a surface upon.

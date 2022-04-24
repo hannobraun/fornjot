@@ -3,9 +3,15 @@
 use winit::{event_loop::EventLoop, window::WindowBuilder};
 
 /// Window abstraction providing details such as the width or height and easing initialization.
-pub struct Window(winit::window::Window);
+///
+/// See: [Rust Newtype: Rust by Example](https://doc.rust-lang.org/rust-by-example/generics/new_types.html)
+#[repr(transparent)]
+#[derive(Debug)]
+pub struct Window<T> {
+    window: T,
+}
 
-impl Window {
+impl Window<winit::window::Window> {
     /// Returns a new window with the given `EventLoop`.
     ///
     /// # Examples
@@ -22,21 +28,21 @@ impl Window {
             .build(event_loop)
             .unwrap();
 
-        Self(window)
+        Self { window }
     }
 
     /// Returns a shared reference to the wrapped window
     pub fn inner(&self) -> &winit::window::Window {
-        &self.0
+        &self.window
     }
 
     /// Returns the width of the window
     pub fn width(&self) -> u32 {
-        self.0.inner_size().width
+        self.window.inner_size().width
     }
 
     /// Returns the height of the window
     pub fn height(&self) -> u32 {
-        self.0.inner_size().height
+        self.window.inner_size().height
     }
 }

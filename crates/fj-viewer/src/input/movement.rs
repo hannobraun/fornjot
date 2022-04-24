@@ -36,7 +36,7 @@ impl Movement {
         &mut self,
         cursor: Option<PhysicalPosition<f64>>,
         camera: &mut Camera,
-        window: &Window,
+        window: &Window<winit::window::Window>,
     ) {
         if let (Some(previous), Some(cursor)) = (self.cursor, cursor) {
             let previous = camera.cursor_to_model_space(previous, window);

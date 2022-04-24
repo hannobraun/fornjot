@@ -114,7 +114,7 @@ impl Camera {
     pub fn cursor_to_model_space(
         &self,
         cursor: PhysicalPosition<f64>,
-        window: &Window,
+        window: &Window<winit::window::Window>,
     ) -> Point<f64, 3> {
         let width = window.width() as f64;
         let height = window.height() as f64;
@@ -136,7 +136,7 @@ impl Camera {
     /// Compute the point on the model, that the cursor currently points to.
     pub fn focus_point(
         &self,
-        window: &Window,
+        window: &Window<winit::window::Window>,
         cursor: Option<PhysicalPosition<f64>>,
         mesh: &Mesh<fj_math::Point<3>>,
     ) -> FocusPoint {

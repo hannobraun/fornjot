@@ -81,7 +81,7 @@ impl Handler {
         &mut self,
         cursor: PhysicalPosition<f64>,
         camera: &mut Camera,
-        window: &Window,
+        window: &Window<winit::window::Window>,
     ) {
         if let Some(previous) = self.cursor {
             let diff_x = cursor.x - previous.x;
@@ -138,7 +138,7 @@ impl Handler {
         delta_t: f64,
         now: Instant,
         camera: &mut Camera,
-        window: &Window,
+        window: &Window<winit::window::Window>,
         mesh: &Mesh<Point<3>>,
     ) {
         let focus_point = camera.focus_point(window, self.cursor, mesh);
