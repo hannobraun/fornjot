@@ -13,6 +13,7 @@ use winit::{
 use crate::{
     camera::{Camera, FocusPoint},
     window::Window,
+    Winit,
 };
 
 use super::{movement::Movement, rotation::Rotation, zoom::Zoom};
@@ -20,15 +21,17 @@ use super::{movement::Movement, rotation::Rotation, zoom::Zoom};
 /// Input handling abstraction
 ///
 /// Takes user input and applies them to application state.
-pub struct Handler {
+pub struct Handler<T> {
     cursor: Option<PhysicalPosition<f64>>,
 
     movement: Movement,
     rotation: Rotation,
     zoom: Zoom,
+
+    backend: std::marker::PhantomData<T>,
 }
 
-impl Handler {
+impl Handler<Winit> {
     /// Returns a new Handler.
     ///
     /// # Examples
@@ -44,6 +47,8 @@ impl Handler {
             movement: Movement::new(),
             rotation: Rotation::new(),
             zoom: Zoom::new(now),
+
+            backend: std::marker::PhantomData,
         }
     }
 

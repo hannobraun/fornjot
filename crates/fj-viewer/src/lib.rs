@@ -9,3 +9,8 @@ pub mod graphics;
 pub mod input;
 pub mod run;
 pub mod window;
+
+/// Marker describing types implemted with winit.
+///
+/// See: [Rust by Example: Phantom Types](https://doc.rust-lang.org/stable/rust-by-example/generics/phantom.html)
+pub struct Winit();
