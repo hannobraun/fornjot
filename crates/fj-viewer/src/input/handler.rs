@@ -94,7 +94,7 @@ impl Handler {
         self.cursor = Some(cursor);
     }
 
-    /// Updates `state` and `focus_point` when mouse is clickled.
+    /// Updates `state` and `focus_point` when mouse is clicked.
     pub fn handle_mouse_input(
         &mut self,
         button: MouseButton,
