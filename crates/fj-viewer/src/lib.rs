@@ -10,7 +10,7 @@ pub mod input;
 pub mod run;
 pub mod window;
 
-/// Marker describing types implemented with winit.
+/// Marker type describing types implemented with `winit`.
 ///
-/// See: [Rust by Example: Phantom Types](https://doc.rust-lang.org/stable/rust-by-example/generics/phantom.html)
+#[doc = include_str!("../docs/phantom_type.md")]
 pub struct Winit();

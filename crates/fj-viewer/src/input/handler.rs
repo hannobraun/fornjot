@@ -21,6 +21,8 @@ use super::{movement::Movement, rotation::Rotation, zoom::Zoom};
 /// Input handling abstraction
 ///
 /// Takes user input and applies them to application state.
+///
+#[doc = include_str!("../../docs/phantom_type.md")]
 pub struct Handler<T> {
     cursor: Option<PhysicalPosition<f64>>,
 
