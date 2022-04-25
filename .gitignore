@@ -1,5 +1,6 @@
 # Cargo
 /target
 
-# IntelliJ IDEA
-/.idea
+# IDE Configurations
+**/.vs/
+**/.idea/
