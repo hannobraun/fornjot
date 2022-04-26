@@ -73,6 +73,14 @@ impl Aabb<3> {
         self.to_parry().extents().into()
     }
 
+    /// Compute an AABB that includes an additional point
+    pub fn include_point(self, point: &Point<3>) -> Self {
+        let mut aabb = self.to_parry();
+        aabb.take_point(point.to_na());
+
+        Self::from_parry(aabb)
+    }
+
     /// Merge this AABB with another
     pub fn merged(&self, other: &Self) -> Self {
         self.to_parry().merged(&other.to_parry()).into()
