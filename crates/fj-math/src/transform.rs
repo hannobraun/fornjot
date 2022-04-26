@@ -16,6 +16,16 @@ impl Transform {
         ))
     }
 
+    /// Construct a rotation
+    ///
+    /// The direction of the vector defines the rotation axis. Its length
+    /// defines the angle of the rotation.
+    pub fn rotation(axis_angle: impl Into<Vector<3>>) -> Self {
+        Self(parry3d_f64::math::Isometry::rotation(
+            axis_angle.into().to_na(),
+        ))
+    }
+
     /// Transform the given point
     pub fn transform_point(&self, point: &Point<3>) -> Point<3> {
         Point::from(self.0.transform_point(&point.to_na()))
