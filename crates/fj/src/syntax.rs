@@ -78,16 +78,16 @@ where
 /// [`fj::Sweep`]: crate::Sweep
 pub trait Sweep {
     /// Sweep `self` along the z-axis by `length`
-    fn sweep(&self, length: f64) -> crate::Sweep;
+    fn sweep(&self, path: [f64; 3]) -> crate::Sweep;
 }
 
 impl<T> Sweep for T
 where
     T: Clone + Into<crate::Shape2d>,
 {
-    fn sweep(&self, length: f64) -> crate::Sweep {
+    fn sweep(&self, path: [f64; 3]) -> crate::Sweep {
         let shape = self.clone().into();
-        crate::Sweep::from_shape_and_length(shape, length)
+        crate::Sweep::from_path(shape, path)
     }
 }
 

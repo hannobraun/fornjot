@@ -14,7 +14,7 @@ pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
         [-x / 2.,  y / 2.],
     ]).with_color([100,255,0,200]);
 
-    let cuboid = fj::Sweep::from_shape_and_length(rectangle.into(), z);
+    let cuboid = fj::Sweep::from_path(rectangle.into(), [0., 0., z]);
 
     cuboid.into()
 }

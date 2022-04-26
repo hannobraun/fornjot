@@ -25,7 +25,7 @@ pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
     let inner_edge = fj::Circle::from_radius(inner);
 
     let footprint = outer_edge.difference(&inner_edge);
-    let spacer = footprint.sweep(height);
+    let spacer = footprint.sweep([0., 0., height]);
 
     spacer.into()
 }
