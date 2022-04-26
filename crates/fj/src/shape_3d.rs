@@ -62,7 +62,7 @@ impl From<Group> for Shape3d {
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Transform {
-    /// The shape being rotated
+    /// The shape being transformed
     pub shape: Shape3d,
 
     /// The axis of the rotation
