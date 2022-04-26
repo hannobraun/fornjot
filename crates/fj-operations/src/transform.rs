@@ -1,7 +1,6 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{algorithms::Tolerance, shape::Shape};
-use fj_math::{Aabb, Transform};
-use parry3d_f64::math::Isometry;
+use fj_math::{Aabb, Transform, Vector};
 
 use super::ToShape;
 
@@ -25,10 +24,7 @@ impl ToShape for fj::Transform {
 }
 
 fn transform(transform: &fj::Transform) -> Transform {
-    let axis = nalgebra::Vector::from(transform.axis).normalize();
-    Isometry::new(
-        nalgebra::Vector::from(transform.offset),
-        axis * transform.angle,
-    )
-    .into()
+    let axis = Vector::from(transform.axis).normalize();
+    Transform::translation(transform.offset)
+        * Transform::rotation(axis * transform.angle)
 }
