@@ -1,3 +1,5 @@
+use std::ops;
+
 use super::{Aabb, Point, Segment, Triangle, Vector};
 
 /// A transform
@@ -76,5 +78,13 @@ impl From<Transform> for parry3d_f64::math::Isometry<f64> {
 impl<'r> From<&'r Transform> for parry3d_f64::math::Isometry<f64> {
     fn from(transform: &Transform) -> Self {
         transform.0
+    }
+}
+
+impl ops::Mul<Self> for Transform {
+    type Output = Self;
+
+    fn mul(self, rhs: Self) -> Self::Output {
+        Self(self.0.mul(rhs.0))
     }
 }
