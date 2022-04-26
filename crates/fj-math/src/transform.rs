@@ -1,16 +1,32 @@
+use std::ops;
+
 use super::{Aabb, Point, Segment, Triangle, Vector};
 
 /// A transform
 #[repr(C)]
-pub struct Transform(parry3d_f64::math::Isometry<f64>);
+pub struct Transform(nalgebra::Transform<f64, nalgebra::TGeneral, 3>);
 
 impl Transform {
     /// Construct a translation
-    pub fn translation(vector: Vector<3>) -> Self {
-        Self(parry3d_f64::math::Isometry::translation(
-            vector.x.into_f64(),
-            vector.y.into_f64(),
-            vector.z.into_f64(),
+    pub fn translation(vector: impl Into<Vector<3>>) -> Self {
+        let vector = vector.into();
+
+        Self(nalgebra::Transform::from_matrix_unchecked(
+            nalgebra::OMatrix::new_translation(&vector.to_na()),
+        ))
+    }
+
+    /// Construct a rotation
+    ///
+    /// The direction of the vector defines the rotation axis. Its length
+    /// defines the angle of the rotation.
+    pub fn rotation(axis_angle: impl Into<Vector<3>>) -> Self {
+        let axis_angle = axis_angle.into();
+
+        Self(nalgebra::Transform::from_matrix_unchecked(
+            nalgebra::OMatrix::<_, nalgebra::Const<4>, _>::new_rotation(
+                axis_angle.to_na(),
+            ),
         ))
     }
 
@@ -49,20 +65,10 @@ impl Transform {
     }
 }
 
-impl From<parry3d_f64::math::Isometry<f64>> for Transform {
-    fn from(isometry: parry3d_f64::math::Isometry<f64>) -> Self {
-        Self(isometry)
-    }
-}
+impl ops::Mul<Self> for Transform {
+    type Output = Self;
 
-impl From<Transform> for parry3d_f64::math::Isometry<f64> {
-    fn from(transform: Transform) -> Self {
-        transform.0
-    }
-}
-
-impl<'r> From<&'r Transform> for parry3d_f64::math::Isometry<f64> {
-    fn from(transform: &Transform) -> Self {
-        transform.0
+    fn mul(self, rhs: Self) -> Self::Output {
+        Self(self.0.mul(rhs.0))
     }
 }

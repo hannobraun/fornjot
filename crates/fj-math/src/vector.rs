@@ -252,19 +252,25 @@ impl<const D: usize> ops::Add<Self> for Vector<D> {
     }
 }
 
-impl<const D: usize> ops::Mul<Scalar> for Vector<D> {
+impl<S, const D: usize> ops::Mul<S> for Vector<D>
+where
+    S: Into<Scalar>,
+{
     type Output = Self;
 
-    fn mul(self, rhs: Scalar) -> Self::Output {
-        self.to_na().mul(rhs.into_f64()).into()
+    fn mul(self, rhs: S) -> Self::Output {
+        self.to_na().mul(rhs.into().into_f64()).into()
     }
 }
 
-impl<const D: usize> ops::Div<Scalar> for Vector<D> {
+impl<S, const D: usize> ops::Div<S> for Vector<D>
+where
+    S: Into<Scalar>,
+{
     type Output = Self;
 
-    fn div(self, rhs: Scalar) -> Self::Output {
-        self.to_na().div(rhs.into_f64()).into()
+    fn div(self, rhs: S) -> Self::Output {
+        self.to_na().div(rhs.into().into_f64()).into()
     }
 }
 
