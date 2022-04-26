@@ -87,12 +87,8 @@ impl approx::AbsDiffEq for Line {
 
 #[cfg(test)]
 mod tests {
-    use std::f64::consts::FRAC_PI_2;
-
     use approx::assert_abs_diff_eq;
-    use fj_math::{Point, Vector};
-    use nalgebra::UnitQuaternion;
-    use parry3d_f64::math::{Isometry, Translation};
+    use fj_math::{Point, Scalar, Transform, Vector};
 
     use super::Line;
 
@@ -103,16 +99,9 @@ mod tests {
             direction: Vector::from([0., 1., 0.]),
         };
 
-        let line = line.transform(
-            &Isometry::from_parts(
-                Translation::from([1., 2., 3.]),
-                UnitQuaternion::from_axis_angle(
-                    &nalgebra::Vector::z_axis(),
-                    FRAC_PI_2,
-                ),
-            )
-            .into(),
-        );
+        let transform = Transform::translation([1., 2., 3.])
+            * Transform::rotation(Vector::unit_z() * (Scalar::PI / 2.));
+        let line = line.transform(&transform);
 
         assert_abs_diff_eq!(
             line,
