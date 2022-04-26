@@ -148,11 +148,14 @@ impl<const D: usize> ops::Neg for Point<D> {
     }
 }
 
-impl<const D: usize> ops::Add<Vector<D>> for Point<D> {
+impl<V, const D: usize> ops::Add<V> for Point<D>
+where
+    V: Into<Vector<D>>,
+{
     type Output = Self;
 
-    fn add(self, rhs: Vector<D>) -> Self::Output {
-        self.to_na().add(rhs.to_na()).into()
+    fn add(self, rhs: V) -> Self::Output {
+        self.to_na().add(rhs.into().to_na()).into()
     }
 }
 

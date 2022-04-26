@@ -244,11 +244,14 @@ impl<const D: usize> ops::Neg for Vector<D> {
     }
 }
 
-impl<const D: usize> ops::Add<Self> for Vector<D> {
+impl<V, const D: usize> ops::Add<V> for Vector<D>
+where
+    V: Into<Self>,
+{
     type Output = Self;
 
-    fn add(self, rhs: Self) -> Self::Output {
-        self.to_na().add(rhs.to_na()).into()
+    fn add(self, rhs: V) -> Self::Output {
+        self.to_na().add(rhs.into().to_na()).into()
     }
 }
 
