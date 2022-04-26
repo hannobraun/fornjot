@@ -77,7 +77,7 @@ where
 ///
 /// [`fj::Sweep`]: crate::Sweep
 pub trait Sweep {
-    /// Sweep `self` along the z-axis by `length`
+    /// Sweep `self` along a straight path
     fn sweep(&self, path: [f64; 3]) -> crate::Sweep;
 }
 
