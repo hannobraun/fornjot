@@ -63,24 +63,6 @@ impl Transform {
     }
 }
 
-impl From<parry3d_f64::math::Isometry<f64>> for Transform {
-    fn from(isometry: parry3d_f64::math::Isometry<f64>) -> Self {
-        Self(isometry)
-    }
-}
-
-impl From<Transform> for parry3d_f64::math::Isometry<f64> {
-    fn from(transform: Transform) -> Self {
-        transform.0
-    }
-}
-
-impl<'r> From<&'r Transform> for parry3d_f64::math::Isometry<f64> {
-    fn from(transform: &Transform) -> Self {
-        transform.0
-    }
-}
-
 impl ops::Mul<Self> for Transform {
     type Output = Self;
 
