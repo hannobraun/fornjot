@@ -4,17 +4,15 @@ use super::{Aabb, Point, Segment, Triangle, Vector};
 
 /// A transform
 #[repr(C)]
-pub struct Transform(parry3d_f64::math::Isometry<f64>);
+pub struct Transform(nalgebra::Transform<f64, nalgebra::TGeneral, 3>);
 
 impl Transform {
     /// Construct a translation
     pub fn translation(vector: impl Into<Vector<3>>) -> Self {
         let vector = vector.into();
 
-        Self(parry3d_f64::math::Isometry::translation(
-            vector.x.into_f64(),
-            vector.y.into_f64(),
-            vector.z.into_f64(),
+        Self(nalgebra::Transform::from_matrix_unchecked(
+            nalgebra::OMatrix::new_translation(&vector.to_na()),
         ))
     }
 
@@ -23,8 +21,12 @@ impl Transform {
     /// The direction of the vector defines the rotation axis. Its length
     /// defines the angle of the rotation.
     pub fn rotation(axis_angle: impl Into<Vector<3>>) -> Self {
-        Self(parry3d_f64::math::Isometry::rotation(
-            axis_angle.into().to_na(),
+        let axis_angle = axis_angle.into();
+
+        Self(nalgebra::Transform::from_matrix_unchecked(
+            nalgebra::OMatrix::<_, nalgebra::Const<4>, _>::new_rotation(
+                axis_angle.to_na(),
+            ),
         ))
     }
 
