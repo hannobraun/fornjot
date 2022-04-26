@@ -87,21 +87,21 @@ impl From<Transform> for Shape3d {
     }
 }
 
-/// A sweep of a 2-dimensional shape along the z-axis
+/// A sweep of a 2-dimensional shape along straight path
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Sweep {
     /// The 2-dimensional shape being swept
     shape: Shape2d,
 
-    /// The length of the sweep
-    length: f64,
+    /// The length and direction of the sweep
+    path: [f64; 3],
 }
 
 impl Sweep {
-    /// Create a `Sweep` from a shape and a length
-    pub fn from_shape_and_length(shape: Shape2d, length: f64) -> Self {
-        Self { shape, length }
+    /// Create a `Sweep` along a straight path
+    pub fn from_path(shape: Shape2d, path: [f64; 3]) -> Self {
+        Self { shape, path }
     }
 
     /// Access the shape being swept
@@ -109,9 +109,9 @@ impl Sweep {
         &self.shape
     }
 
-    /// Access the length of the sweep
-    pub fn length(&self) -> f64 {
-        self.length
+    /// Access the path of the sweep
+    pub fn path(&self) -> [f64; 3] {
+        self.path
     }
 }
 
