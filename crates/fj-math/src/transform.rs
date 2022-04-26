@@ -6,7 +6,9 @@ pub struct Transform(parry3d_f64::math::Isometry<f64>);
 
 impl Transform {
     /// Construct a translation
-    pub fn translation(vector: Vector<3>) -> Self {
+    pub fn translation(vector: impl Into<Vector<3>>) -> Self {
+        let vector = vector.into();
+
         Self(parry3d_f64::math::Isometry::translation(
             vector.x.into_f64(),
             vector.y.into_f64(),
