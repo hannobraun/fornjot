@@ -28,8 +28,9 @@ jobs:
     name: Format
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup Toolchain
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - name: Set up toolchain
         uses: oxidecomputer/actions-rs_toolchain@oxide/master
         # see https://github.com/actions-rs/toolchain/pull/209
         # uses: actions-rs/toolchain@v1
@@ -37,17 +38,19 @@ jobs:
           override: true
           profile: minimal
           target: ${{ matrix.target }}
-      - uses: actions-rs/cargo@4ff6ec2846f6e7217c1a9b0b503506665f134c4b
+      - name: Run `cargo fmt`
+        uses: actions-rs/cargo@4ff6ec2846f6e7217c1a9b0b503506665f134c4b
         with:
           command: fmt
           args: --all -- --check
 
   clippy:
-    name: Clippy Check
+    name: Clippy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup Toolchain
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - name: Set up toolchain
         uses: oxidecomputer/actions-rs_toolchain@oxide/master
         # see https://github.com/actions-rs/toolchain/pull/209
         # uses: actions-rs/toolchain@v1
@@ -55,9 +58,12 @@ jobs:
           override: true
           profile: minimal
           target: ${{ matrix.target }}
-      - run: rustup component add clippy
-      - uses: Swatinem/rust-cache@1232abb8968faf344409165de17cbf9e7f340fd8
-      - uses: actions-rs/clippy-check@9d09632661e31982c0be8af59aeb96b680641bc4
+      - name: Install Clippy
+        run: rustup component add clippy
+      - name: Set up Rust cache
+        uses: Swatinem/rust-cache@1232abb8968faf344409165de17cbf9e7f340fd8
+      - name: Run `cargo clippy`
+        uses: actions-rs/clippy-check@9d09632661e31982c0be8af59aeb96b680641bc4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           args: --all-features
@@ -94,8 +100,9 @@ jobs:
           - windows-latest
     runs-on: ${{matrix.os}}
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup Toolchain
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - name: Set up toolchain
         uses: oxidecomputer/actions-rs_toolchain@oxide/master
         # see https://github.com/actions-rs/toolchain/pull/209
         # uses: actions-rs/toolchain@v1
@@ -103,10 +110,13 @@ jobs:
           override: true
           profile: minimal
           target: ${{ matrix.target }}
-      - uses: Swatinem/rust-cache@1232abb8968faf344409165de17cbf9e7f340fd8
-      - uses: actions-rs/cargo@4ff6ec2846f6e7217c1a9b0b503506665f134c4b
+      - name: Set up Rust cache
+        uses: Swatinem/rust-cache@1232abb8968faf344409165de17cbf9e7f340fd8
+      - name: Run `cargo build`
+        uses: actions-rs/cargo@4ff6ec2846f6e7217c1a9b0b503506665f134c4b
         with:
           command: build
-      - uses: actions-rs/cargo@4ff6ec2846f6e7217c1a9b0b503506665f134c4b
+      - name: Run `cargo test`
+        uses: actions-rs/cargo@4ff6ec2846f6e7217c1a9b0b503506665f134c4b
         with:
           command: test
