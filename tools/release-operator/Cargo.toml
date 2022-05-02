@@ -15,7 +15,7 @@ log = "0.4.16"
 regex = "1.5.5"
 secstr = "0.5.0"
 semver = "1.0.9"
-serde_json = "1.0.79"
+serde_json = "1.0.80"
 
 [dependencies.reqwest]
 version = "0.11.10"
