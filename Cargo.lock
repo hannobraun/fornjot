@@ -1514,9 +1514,9 @@ dependencies = [
 
 [[package]]
 name = "nalgebra"
-version = "0.30.1"
+version = "0.31.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4fb2d0de08694bed883320212c18ee3008576bfe8c306f4c3c4a58b4876998be"
+checksum = "18a89248335f688e4bd994e6d030fd7e185eb41769b8c435395075425e100ac6"
 dependencies = [
  "approx 0.5.1",
  "matrixmultiply",
@@ -1890,9 +1890,9 @@ dependencies = [
 
 [[package]]
 name = "parry2d-f64"
-version = "0.8.0"
+version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e96040e0f10b65df992e8367983b7c3ac779046cd6d9a4a7cd1496e8c6b6ef51"
+checksum = "54a90c7ec8458eea1d7034c49feebff0998424506f72c2ea3cab7494d8c6acf3"
 dependencies = [
  "approx 0.5.1",
  "arrayvec",
@@ -1906,15 +1906,17 @@ dependencies = [
  "simba",
  "slab",
  "smallvec",
+ "spade",
 ]
 
 [[package]]
 name = "parry3d-f64"
-version = "0.8.0"
+version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "760c93194acb2bda0c4d0696b0350c143da072c8f8dbe01b38fe1d1aa3a154e0"
+checksum = "76afcd47906fbc4a5d7e6914fec1577b582f59b579187c9a2a6b381f17c40995"
 dependencies = [
  "approx 0.5.1",
+ "arrayvec",
  "bitflags",
  "downcast-rs",
  "either",
@@ -1925,6 +1927,7 @@ dependencies = [
  "simba",
  "slab",
  "smallvec",
+ "spade",
 ]
 
 [[package]]
