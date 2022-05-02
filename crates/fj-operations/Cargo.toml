@@ -11,10 +11,6 @@ keywords = ["cad", "programmatic", "code-cad"]
 categories = ["mathematics"]
 
 
-[dependencies]
-nalgebra = "0.30.0"
-parry3d-f64 = "0.8.0"
-
 [dependencies.fj]
 version = "0.5.0"
 path = "../fj"
