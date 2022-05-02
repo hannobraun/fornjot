@@ -13,7 +13,7 @@ For an introduction of what the project aims to achieve, [please check out the w
 
 ## Sponsors
 
-Fornjot is supported by [**@webtrax-oz**](https://github.com/webtrax-oz), [**@lthiery**](https://github.com/lthiery), [**@Yatekii**](https://github.com/Yatekii), [**@martindederer**](https://github.com/martindederer), [**@hobofan**](https://github.com/hobofan), [**@nullstyle**](https://github.com/nullstyle), [**@ahdinosaur**](https://github.com/ahdinosaur), [**@jessebraham**](https://github.com/jessebraham), [**@Kethku**](https://github.com/Kethku), [**@sanxiyn**](https://github.com/sanxiyn), [**@seigel**](https://github.com/seigel), [**@seanjensengrey**](https://github.com/seanjensengrey), and my other awesome sponsors. Thank you!
+Fornjot is supported by [**@webtrax-oz**](https://github.com/webtrax-oz), [**@lthiery**](https://github.com/lthiery), [**@Yatekii**](https://github.com/Yatekii), [**@martindederer**](https://github.com/martindederer), [**@hobofan**](https://github.com/hobofan), [**@ahdinosaur**](https://github.com/ahdinosaur), [**@thawkins**](https://github.com/thawkins), [**@nullstyle**](https://github.com/nullstyle), [**@jessebraham**](https://github.com/jessebraham), [**@Kethku**](https://github.com/Kethku), [**@sanxiyn**](https://github.com/sanxiyn), [**@seigel**](https://github.com/seigel), [**@seanjensengrey**](https://github.com/seanjensengrey), [**@jacobrosenthal**](https://github.com/jacobrosenthal), [**@MattOslin**](https://github.com/MattOslin), [**@benwis**](https://github.com/benwis), and my other awesome sponsors. Thank you!
 
 **Please consider [supporting me too](https://github.com/sponsors/hannobraun), to help make Fornjot sustainable long-term.**
 
