@@ -23,7 +23,7 @@ parry3d-f64 = "0.8.0"
 robust = "0.2.3"
 slotmap = "1.0.6"
 spade = "2.0.0"
-thiserror = "1.0.30"
+thiserror = "1.0.31"
 
 [dependencies.fj-interop]
 version = "0.5.0"
