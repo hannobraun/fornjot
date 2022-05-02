@@ -14,7 +14,7 @@ categories = ["rendering"]
 [dependencies]
 bytemuck = "1.9.1"
 futures = "0.3.21"
-nalgebra = "0.30.0"
+nalgebra = "0.31.0"
 parry3d-f64 = "0.8.0"
 thiserror = "1.0.31"
 tracing = "0.1.34"
