@@ -759,10 +759,8 @@ dependencies = [
  "fj-interop",
  "fj-math",
  "map-macro",
- "nalgebra",
  "parking_lot 0.12.0",
  "parry2d-f64",
- "parry3d-f64",
  "robust",
  "slotmap",
  "spade",
@@ -789,8 +787,6 @@ dependencies = [
  "fj-interop",
  "fj-kernel",
  "fj-math",
- "nalgebra",
- "parry3d-f64",
 ]
 
 [[package]]
