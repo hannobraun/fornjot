@@ -1,5 +1,12 @@
 //! # Fornjot CAD Kernel
 //!
+//! This library is part of the [Fornjot] ecosystem. Fornjot is an open-source,
+//! code-first CAD application; and collection of libraries that make up the CAD
+//! application, but can be used independently.
+//!
+//! This library is an internal component of Fornjot. It is not relevant to end
+//! users that just want to create CAD models.
+//!
 //! The CAD kernel is the core of Fornjot: the geometry, the topology, and the
 //! algorithms that handle them. It is separate from the CAD application, and
 //! could be used in other applications.
@@ -39,7 +46,7 @@
 //!
 //! Choosing an epsilon value that is suitable for *most* use cases is possible,
 //! at the cost of non-standard use cases breaking in unexpected and non-obvious
-//! ways. Fornjot has chosen another approach.
+//! ways. Fornjot has chosen a different approach.
 //!
 //! ### Explicitness
 //!
@@ -50,7 +57,7 @@
 //!
 //! If vertex instances that refer to the same point are used in different
 //! places (for example, in two neighboring edges that share a vertex), then
-//! those vertex instance must be known by the system to refer to the same
+//! those vertex instances must be known by the system to refer to the same
 //! vertex. If a vertex lies on an edge or in a surface, then it must be defined
 //! in terms of its position on that edge or surface.
 //!
@@ -75,6 +82,8 @@
 //! If the user does something non-standard, they can override the epsilon value
 //! on a per-shape basis. Forcing the user to deal with these issues up-front
 //! should lead to less work overall.
+//!
+//! [Fornjot]: https://www.fornjot.app/
 
 #![deny(missing_docs)]
 
