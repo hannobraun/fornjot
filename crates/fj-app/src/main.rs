@@ -1,3 +1,17 @@
+//! # Fornjot Application
+//!
+//! This library is part of the [Fornjot] ecosystem. Fornjot is an open-source,
+//! code-first CAD application; and collection of libraries that make up the CAD
+//! application, but can be used independently.
+//!
+//! Together with the [`fj`] library, this application forms the part of Fornjot
+//! that is relevant to end users. Please refer to the [Fornjot repository] for
+//! usage examples.
+//!
+//! [Fornjot]: https://www.fornjot.app/
+//! [`fj`]: https://crates.io/crates/fj
+//! [Fornjot repository]: https://github.com/hannobraun/Fornjot
+
 mod args;
 mod config;
 
