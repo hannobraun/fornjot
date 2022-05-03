@@ -8,6 +8,7 @@ readme = "../README.md"
 repository = "https://github.com/hannobraun/fornjot"
 license = "0BSD"
 keywords = ["cad", "programmatic", "code-cad"]
+categories = ["encoding", "mathematics", "rendering"]
 
 
 [dependencies.fj-math]
