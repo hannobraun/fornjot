@@ -1,8 +1,18 @@
-//! Connection between the Fornjot kernel and Fornjot models
+//! # Fornjot CAD Operations
+//!
+//! This library is part of the [Fornjot] ecosystem. Fornjot is an open-source,
+//! code-first CAD application; and collection of libraries that make up the CAD
+//! application, but can be used independently.
+//!
+//! This library is an internal component of Fornjot. It is not relevant to end
+//! users that just want to create CAD models.
 //!
 //! Fornjot models use the [`fj`] crate to define a shape. This crate provides
 //! the connection between [`fj`] and the Fornjot kernel. It translates those
 //! operations into terms the kernel can understand.
+//!
+//! [Fornjot]: https://www.fornjot.app/
+//! [`fj`]: https://crates.io/crates/fj
 
 #![deny(missing_docs)]
 

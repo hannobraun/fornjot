@@ -1,10 +1,17 @@
-//! Math primitives for the Fornjot ecosystem
+//! # Fornjot Math Library
+//!
+//! This library is part of the [Fornjot] ecosystem. Fornjot is an open-source,
+//! code-first CAD application; and collection of libraries that make up the CAD
+//! application, but can be used independently.
+//!
+//! This library is an internal component of Fornjot. It is not relevant to end
+//! users that just want to create CAD models.
 //!
 //! This crates provides basic math types for the Fornjot ecosystem. It is built
 //! on [nalgebra] and [Parry], but provides an interface that is specifically
 //! tailored to the needs of Fornjot.
 //!
-//! # Failing [`From`]/[`Into`] implementations
+//! ## Failing [`From`]/[`Into`] implementations
 //!
 //! Please note that any [`From`]/[`Into`] implementation that convert floating
 //! point numbers into [`Scalar`] can panic. These conversions call
@@ -22,6 +29,7 @@
 //! [`From`]/[`Into`] documentation fails to provide any reasons for its
 //! mandate.
 //!
+//! [Fornjot]: https://www.fornjot.app/
 //! [nalgebra]: https://nalgebra.org/
 //! [Parry]: https://www.parry.rs/
 

@@ -1,13 +1,19 @@
-//! Fornjot modeling library
+//! # Fornjot Modeling Library
+//!
+//! This library is part of the [Fornjot] ecosystem. Fornjot is an open-source,
+//! code-first CAD application; and collection of libraries that make up the CAD
+//! application, but can be used independently.
 //!
 //! The purpose of this library is to support Fornjot models, which are just
 //! Rust libraries. Models depend on this library and use the primitives defined
-//! here to define a CAD model.
+//! here to define a CAD model. Together with the Fornjot application, this
+//! library forms the part of Fornjot that is relevant to end users.
 //!
-//! To actually display the CAD model, or export it to another file format, you
-//! need the Fornjot app. Please refer to the [Fornjot repository] for usage
-//! examples.
+//! To display the created CAD model, or export it to another file format, you
+//! need the Fornjot application. Please refer to the [Fornjot repository] for
+//! usage examples.
 //!
+//! [Fornjot]: https://www.fornjot.app/
 //! [Fornjot repository]: https://github.com/hannobraun/Fornjot
 
 #![deny(missing_docs)]
