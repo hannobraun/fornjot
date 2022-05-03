@@ -27,6 +27,23 @@ If you are interested in Fornjot and are considering to use it, you should fully
 To learn what the direction is longer-term, refer to the [feature wishlist](https://github.com/hannobraun/Fornjot/discussions/146).
 
 
+## Overview
+
+Fornjot is both an application, as well as an ecosystem of components that make up this application, but can be used independently. All those components are located in the `crates/` directory within the repository.
+
+Here's an overview over all of the crates, with a short description of what they do:
+
+- `fj-math`: Math primitives used by the rest of the Fornjot ecosystem.
+- `fj-interop`: Basic types that allow other crates to interoperate, without depending on each other.
+- `fj-kernel`: CAD kernel of Fornjot. Defines geometric and topological primitives, and algorithms that operate on those primitives.
+- `fj-operations`: CAD operations, built on top of `fj-kernel`. Link between the kernel, and the API that users use to define models.
+- `fj-export`: Exports Fornjot models to external data formats.
+- `fj-host`: Loads Fornjot models and watches them for changes.
+- `fj-viewer`: Displays Fornjot models.
+- `fj-app`: The Fornjot CAD application.
+- `fj`: End-user API for defining Fornjot models.
+
+
 ## Features
 
 ### Code-CAD in Rust
