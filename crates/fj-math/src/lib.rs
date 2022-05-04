@@ -53,6 +53,6 @@ pub use self::{
     scalar::Scalar,
     segment::Segment,
     transform::Transform,
-    triangle::Triangle,
+    triangle::{Triangle, Winding},
     vector::Vector,
 };

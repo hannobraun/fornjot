@@ -1,5 +1,27 @@
 use super::{Point, Scalar};
 
+use parry2d_f64::utils::point_in_triangle::{corner_direction, Orientation};
+
+/// Winding direction of a triangle.
+pub enum Winding {
+    /// Counter-clockwise
+    Ccw,
+    /// Clockwise
+    Cw,
+    /// Neither (straight lines)
+    None,
+}
+
+impl From<Orientation> for Winding {
+    fn from(o: Orientation) -> Self {
+        match o {
+            Orientation::Ccw => Winding::Ccw,
+            Orientation::Cw => Winding::Cw,
+            Orientation::None => Winding::None,
+        }
+    }
+}
+
 /// A triangle
 ///
 /// The dimensionality of the triangle is defined by the const generic `D`
@@ -48,6 +70,14 @@ impl<const D: usize> Triangle<D> {
     pub fn normalize(mut self) -> Self {
         self.points.sort();
         self
+    }
+}
+
+impl Triangle<2> {
+    /// Returns the direction of the line through the points of the triangle.
+    pub fn winding_direction(&self) -> Winding {
+        let [v0, v1, v2] = self.points;
+        corner_direction(&v0.to_na(), &v1.to_na(), &v2.to_na()).into()
     }
 }
 

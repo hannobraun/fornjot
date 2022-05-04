@@ -1,5 +1,4 @@
-use fj_math::Scalar;
-use parry2d_f64::utils::point_in_triangle::{corner_direction, Orientation};
+use fj_math::{Scalar, Triangle, Winding};
 use spade::HasPosition;
 
 use crate::geometry;
@@ -16,16 +15,14 @@ pub fn triangulate(
     let mut triangles = Vec::new();
     for triangle in triangulation.inner_faces() {
         let [v0, v1, v2] = triangle.vertices().map(|vertex| *vertex.data());
-        let orientation = corner_direction(
-            &v0.native().to_na(),
-            &v1.native().to_na(),
-            &v2.native().to_na(),
-        );
+        let orientation =
+            Triangle::<2>::from_points([v0.native(), v1.native(), v2.native()])
+                .winding_direction();
 
         let triangle = match orientation {
-            Orientation::Ccw => [v0, v1, v2],
-            Orientation::Cw => [v0, v2, v1],
-            Orientation::None => {
+            Winding::Ccw => [v0, v1, v2],
+            Winding::Cw => [v0, v2, v1],
+            Winding::None => {
                 panic!(
                     "Triangle returned from triangulation isn't actually a \
                     triangle"
