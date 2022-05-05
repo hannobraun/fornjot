@@ -45,7 +45,23 @@ impl Release {
         // A release commits need to contain a semver version number.
         let version = Regex::new(r"(v?\d+.\d+.\d+)")?
             .find_iter(&commit)
-            .find(|m| semver::Version::parse(m.as_str()).is_ok());
+            .inspect(|version| {
+                log::info!(
+                    "Found candidate for version in commit message: {}",
+                    version.as_str(),
+                );
+            })
+            .find(|m| {
+                let confirmed = semver::Version::parse(m.as_str()).is_ok();
+
+                if confirmed {
+                    log::info!("Candidate confirmed.");
+                } else {
+                    log::info!("Candidate not confirmed.");
+                }
+
+                confirmed
+            });
 
         match version {
             Some(v) => self.hit(v.as_str()),
