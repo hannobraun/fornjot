@@ -1,6 +1,6 @@
 [package]
 name = "fj-viewer"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2021"
 
 description = "The world needs another CAD program."
@@ -22,17 +22,17 @@ wgpu_glyph = "0.16.0"
 winit = "0.26.1"
 
 [dependencies.fj-host]
-version = "0.5.0"
+version = "0.6.0"
 path = "../fj-host"
 
 [dependencies.fj-interop]
-version = "0.5.0"
+version = "0.6.0"
 path = "../fj-interop"
 
 [dependencies.fj-math]
-version = "0.5.0"
+version = "0.6.0"
 path = "../fj-math"
 
 [dependencies.fj-operations]
-version = "0.5.0"
+version = "0.6.0"
 path = "../fj-operations"
