@@ -43,7 +43,7 @@ impl Release {
         let commit: String = cmd_lib::run_fun!(git log -n 1 "${sha}")?;
 
         // A release commits need to contain a semver version number.
-        let version = Regex::new(r"(\d+.\d+.\d+)")?
+        let version = Regex::new(r"(\d+\.\d+\.\d+)")?
             .find_iter(&commit)
             .inspect(|version| {
                 log::info!(
