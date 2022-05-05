@@ -1,6 +1,9 @@
+use crate::Vector;
+
 use super::{Point, Scalar};
 
 use parry2d_f64::utils::point_in_triangle::{corner_direction, Orientation};
+use parry3d_f64::query::{Ray, RayCast as _};
 
 /// Winding direction of a triangle.
 pub enum Winding {
@@ -85,6 +88,22 @@ impl Triangle<3> {
     /// Convert the triangle to a Parry triangle
     pub fn to_parry(self) -> parry3d_f64::shape::Triangle {
         self.points().map(|vertex| vertex.to_na()).into()
+    }
+
+    /// Cast a ray against the Triangle
+    pub fn cast_local_ray(
+        &self,
+        origin: Point<3>,
+        dir: Vector<3>,
+        max_toi: f64,
+        solid: bool,
+    ) -> Option<f64> {
+        let ray = Ray {
+            origin: origin.to_na(),
+            dir: dir.to_na(),
+        };
+
+        self.to_parry().cast_local_ray(&ray, max_toi, solid)
     }
 }
 
