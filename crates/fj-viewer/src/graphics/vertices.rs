@@ -3,7 +3,7 @@ use fj_interop::{
     debug::DebugInfo,
     mesh::{Index, Mesh},
 };
-use nalgebra::{vector, Point};
+use fj_math::Point;
 
 #[derive(Debug)]
 pub struct Vertices {
@@ -29,12 +29,16 @@ impl Vertices {
 
     pub fn push_line(
         &mut self,
-        line: [Point<f64, 3>; 2],
+        line: [Point<3>; 2],
         normal: [f32; 3],
         color: [f32; 4],
     ) {
         let line = line.into_iter().map(|point| Vertex {
-            position: [point.x as f32, point.y as f32, point.z as f32],
+            position: [
+                point.x.into_f32(),
+                point.y.into_f32(),
+                point.z.into_f32(),
+            ],
             normal,
             color,
         });
@@ -47,19 +51,41 @@ impl Vertices {
 
     pub fn push_cross(
         &mut self,
-        position: Point<f64, 3>,
+        position: Point<3>,
         normal: [f32; 3],
         color: [f32; 4],
     ) {
         let d = 0.05;
 
         self.push_line(
-            [position - vector![d, 0., 0.], position + vector![d, 0., 0.]],
+            [
+                Point::from_array([
+                    position.x.into_f64() - d,
+                    position.y.into_f64(),
+                    position.z.into_f64(),
+                ]),
+                Point::from_array([
+                    position.x.into_f64() + d,
+                    position.y.into_f64(),
+                    position.z.into_f64(),
+                ]),
+            ],
             normal,
             color,
         );
         self.push_line(
-            [position - vector![0., d, 0.], position + vector![0., d, 0.]],
+            [
+                Point::from_array([
+                    position.x.into_f64(),
+                    position.y.into_f64() - d,
+                    position.z.into_f64(),
+                ]),
+                Point::from_array([
+                    position.x.into_f64(),
+                    position.y.into_f64() + d,
+                    position.z.into_f64(),
+                ]),
+            ],
             normal,
             color,
         );
@@ -112,10 +138,10 @@ impl From<&DebugInfo> for Vertices {
                 green
             };
 
-            self_.push_cross(triangle_edge_check.origin.to_na(), normal, color);
+            self_.push_cross(triangle_edge_check.origin, normal, color);
 
             for &hit in &triangle_edge_check.hits {
-                let line = hit.points().map(|point| point.to_na());
+                let line = hit.points();
                 let color = [0., 0., 0., 1.];
 
                 self_.push_line(line, normal, color);

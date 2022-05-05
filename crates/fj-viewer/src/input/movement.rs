@@ -1,4 +1,4 @@
-use nalgebra::distance;
+use fj_math::{Point, Transform, Vector};
 use winit::dpi::PhysicalPosition;
 
 use crate::{
@@ -43,14 +43,17 @@ impl Movement {
             let cursor = camera.cursor_to_model_space(cursor, window);
 
             if let Some(focus_point) = self.focus_point.0 {
-                let d1 = distance(&camera.position(), &cursor);
-                let d2 = distance(&camera.position(), &focus_point);
+                let d1 = Point::distance(&camera.position(), &cursor);
+                let d2 = Point::distance(&camera.position(), &focus_point);
 
                 let diff = (cursor - previous) * d2 / d1;
                 let offset = camera.camera_to_model().transform_vector(&diff);
 
-                camera.translation.x += offset.x;
-                camera.translation.y += offset.y;
+                camera.translation =
+                    camera.translation
+                        * Transform::translation(Vector::from_components_f64(
+                            [offset.x.into(), offset.y.into(), 0.0],
+                        ));
             }
         }
 

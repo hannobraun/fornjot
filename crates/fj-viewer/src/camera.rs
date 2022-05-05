@@ -2,9 +2,7 @@
 use std::f64::consts::FRAC_PI_2;
 
 use fj_interop::mesh::Mesh;
-use fj_math::{Aabb, Scalar, Triangle};
-use nalgebra::{Point, TAffine, Transform, Translation, Vector};
-use parry3d_f64::query::{Ray, RayCast as _};
+use fj_math::{Aabb, Point, Scalar, Transform, Triangle, Vector};
 use winit::dpi::PhysicalPosition;
 
 use crate::window::Window;
@@ -24,13 +22,10 @@ pub struct Camera {
     far_plane: f64,
 
     /// The rotational part of the transform
-    ///
-    /// This is not an `nalgebra::Rotation`, as rotations happen around a center
-    /// point, which means they must include a translational component.
-    pub rotation: Transform<f64, TAffine, 3>,
+    pub rotation: Transform,
 
     /// The locational part of the transform
-    pub translation: Translation<f64, 3>,
+    pub translation: Transform,
 }
 
 impl Camera {
@@ -81,11 +76,11 @@ impl Camera {
             far_plane: Self::DEFAULT_FAR_PLANE,
 
             rotation: Transform::identity(),
-            translation: Translation::from([
+            translation: Transform::translation(Vector::from_components_f64([
                 initial_offset.x.into_f64(),
                 initial_offset.y.into_f64(),
                 -initial_distance.into_f64(),
-            ]),
+            ])),
         }
     }
 
@@ -105,9 +100,9 @@ impl Camera {
     }
 
     /// Returns the position of the camera in world space.
-    pub fn position(&self) -> Point<f64, 3> {
+    pub fn position(&self) -> Point<3> {
         self.camera_to_model()
-            .inverse_transform_point(&Point::origin())
+            .inverse_transform_point(&Point::<3>::origin())
     }
 
     /// Transform the position of the cursor on the near plane to model space.
@@ -115,7 +110,7 @@ impl Camera {
         &self,
         cursor: PhysicalPosition<f64>,
         window: &Window,
-    ) -> Point<f64, 3> {
+    ) -> Point<3> {
         let width = window.width() as f64;
         let height = window.height() as f64;
         let aspect_ratio = width / height;
@@ -150,14 +145,15 @@ impl Camera {
         let cursor = self.cursor_to_model_space(cursor, window);
         let dir = (cursor - origin).normalize();
 
-        let ray = Ray { origin, dir };
-
         let mut min_t = None;
 
         for triangle in mesh.triangles() {
-            let t = Triangle::from_points(triangle.points)
-                .to_parry()
-                .cast_local_ray(&ray, f64::INFINITY, true);
+            let t = Triangle::from_points(triangle.points).cast_local_ray(
+                origin,
+                dir,
+                f64::INFINITY,
+                true,
+            );
 
             if let Some(t) = t {
                 if t <= min_t.unwrap_or(t) {
@@ -166,17 +162,17 @@ impl Camera {
             }
         }
 
-        FocusPoint(min_t.map(|t| ray.point_at(t)))
+        FocusPoint(min_t.map(|t| origin + dir * t))
     }
 
     /// Access the transform from camera to model space.
-    pub fn camera_to_model(&self) -> Transform<f64, TAffine, 3> {
+    pub fn camera_to_model(&self) -> Transform {
         // Using a mutable variable cleanly takes care of any type inference
         // problems that this operation would otherwise have.
         let mut transform = Transform::identity();
 
-        transform *= self.translation;
-        transform *= self.rotation;
+        transform = transform * self.translation;
+        transform = transform * self.rotation;
 
         transform
     }
@@ -190,7 +186,7 @@ impl Camera {
         let mut dist_max = f64::NEG_INFINITY;
 
         for vertex in aabb.vertices() {
-            let point = view_transform.transform_point(&vertex.to_na());
+            let point = view_transform.transform_point(&vertex);
 
             // Project `point` onto `view_direction`. See this Wikipedia page:
             // https://en.wikipedia.org/wiki/Vector_projection
@@ -198,9 +194,9 @@ impl Camera {
             // Let's rename the variables first, so they fit the names in that
             // page.
             let (a, b) = (point.coords, view_direction);
-            let a1 = a.dot(&b) / b.dot(&b) * b;
+            let a1 = b * a.dot(&b) / b.dot(&b);
 
-            let dist = a1.magnitude();
+            let dist = a1.magnitude().into_f64();
 
             if dist < dist_min {
                 dist_min = dist;
@@ -231,7 +227,7 @@ impl Camera {
 ///
 /// Such a point might or might not exist, depending on whether the cursor is
 /// pointing at the model or not.
-pub struct FocusPoint(pub Option<Point<f64, 3>>);
+pub struct FocusPoint(pub Option<Point<3>>);
 
 impl FocusPoint {
     /// Construct the "none" instance of `FocusPoint`
