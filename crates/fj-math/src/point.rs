@@ -58,6 +58,11 @@ impl<const D: usize> Point<D> {
             coords: self.coords.to_xyz(),
         }
     }
+
+    /// Gives the distance between two Points.
+    pub fn distance(p1: &Point<D>, p2: &Point<D>) -> Scalar {
+        (p1.coords - p2.coords).magnitude()
+    }
 }
 
 impl ops::Deref for Point<1> {

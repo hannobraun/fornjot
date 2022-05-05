@@ -1,4 +1,4 @@
-use nalgebra::{Point, Rotation3, Translation, Vector};
+use fj_math::{Point, Transform, Vector};
 
 use crate::camera::{Camera, FocusPoint};
 
@@ -26,21 +26,24 @@ impl Rotation {
 
     pub fn apply(&self, diff_x: f64, diff_y: f64, camera: &mut Camera) {
         if self.active {
-            let rotate_around =
-                self.focus_point.0.unwrap_or_else(Point::origin);
+            let rotate_around: Vector<3> =
+                self.focus_point.0.unwrap_or_else(Point::origin).coords;
 
             let f = 0.005;
 
             let angle_x = diff_y * f;
             let angle_y = diff_x * f;
 
-            let trans = Translation::from(rotate_around);
+            let trans = Transform::translation(rotate_around);
 
-            let rot_x = Rotation3::from_axis_angle(&Vector::x_axis(), angle_x);
-            let rot_y = Rotation3::from_axis_angle(&Vector::y_axis(), angle_y);
+            let aa_x = Vector::unit_x() * angle_x;
+            let aa_y = Vector::unit_y() * angle_y;
+            let rot_x = Transform::rotation(aa_x);
+            let rot_y = Transform::rotation(aa_y);
 
-            camera.rotation =
-                trans * rot_y * rot_x * trans.inverse() * camera.rotation;
+            let inv = trans.inverse();
+
+            camera.rotation = trans * rot_y * rot_x * inv * camera.rotation;
         }
     }
 }

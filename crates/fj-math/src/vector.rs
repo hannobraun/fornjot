@@ -255,6 +255,17 @@ where
     }
 }
 
+impl<V, const D: usize> ops::Sub<V> for Vector<D>
+where
+    V: Into<Self>,
+{
+    type Output = Self;
+
+    fn sub(self, rhs: V) -> Self::Output {
+        self.to_na().sub(rhs.into().to_na()).into()
+    }
+}
+
 impl<S, const D: usize> ops::Mul<S> for Vector<D>
 where
     S: Into<Scalar>,

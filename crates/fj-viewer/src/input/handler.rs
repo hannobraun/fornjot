@@ -1,7 +1,7 @@
 use std::time::Instant;
 
 use fj_interop::mesh::Mesh;
-use fj_math::Point;
+use fj_math::{Point, Transform, Vector};
 use winit::{
     dpi::PhysicalPosition,
     event::{
@@ -146,7 +146,12 @@ impl Handler {
         self.zoom.discard_old_events(now);
         self.zoom.update_speed(now, delta_t, focus_point, camera);
 
-        camera.translation.z -= self.zoom.speed();
+        camera.translation = camera.translation
+            * Transform::translation(Vector::from([
+                0.0,
+                0.0,
+                -self.zoom.speed(),
+            ]));
     }
 }
 
