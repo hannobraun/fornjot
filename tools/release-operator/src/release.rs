@@ -51,7 +51,8 @@ impl Release {
             Some(v) => self.hit(v.as_str()),
             None => {
                 log::info!(
-                    "Commit message is missing version number: {commit}",
+                    "Commit message is missing version number:\n\
+                    {commit}",
                 );
                 self.miss()
             }
