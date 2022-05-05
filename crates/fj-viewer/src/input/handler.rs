@@ -147,10 +147,10 @@ impl Handler {
         self.zoom.update_speed(now, delta_t, focus_point, camera);
 
         camera.translation = camera.translation
-            * Transform::translation(Vector::from_components_f64([
+            * Transform::translation(Vector::from([
                 0.0,
                 0.0,
-                self.zoom.speed(),
+                -self.zoom.speed(),
             ]));
     }
 }
