@@ -33,6 +33,10 @@ impl Release {
         // Try and find the pull-request that the commit was part of to examine it.
         // A release can only ever be triggered by a pull-request being merged.
         if GitHub::find_pull_request_by(sha, label)?.is_none() {
+            log::info!(
+                "Could not find a pull request with hash {sha} and label \
+                {label}",
+            );
             return self.miss();
         }
 
@@ -46,7 +50,12 @@ impl Release {
 
         match version {
             Some(v) => self.hit(v.as_str()),
-            None => self.miss(),
+            None => {
+                log::info!(
+                    "Commit message is missing version number: {commit}",
+                );
+                self.miss()
+            }
         }
     }
 
