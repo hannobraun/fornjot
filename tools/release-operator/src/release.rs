@@ -76,9 +76,12 @@ impl Release {
     }
 
     fn hit(&self, tag: &str) -> anyhow::Result<()> {
+        let tag = format!("v{tag}");
         log::info!("detected release of {tag}");
+
         Actions::set_output(Outputs::ReleaseDetected, "true");
-        Actions::set_output(Outputs::TagName, tag);
+        Actions::set_output(Outputs::TagName, &tag);
+
         Ok(())
     }
 
