@@ -77,13 +77,15 @@ impl Triangle<3> {
         dir: Vector<3>,
         max_toi: f64,
         solid: bool,
-    ) -> Option<f64> {
+    ) -> Option<Scalar> {
         let ray = Ray {
             origin: origin.to_na(),
             dir: dir.to_na(),
         };
 
-        self.to_parry().cast_local_ray(&ray, max_toi, solid)
+        self.to_parry()
+            .cast_local_ray(&ray, max_toi, solid)
+            .map(|f| f.into())
     }
 }
 

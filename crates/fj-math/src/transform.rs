@@ -2,6 +2,8 @@ use std::ops;
 
 use nalgebra::Perspective3;
 
+use crate::Scalar;
+
 use super::{Aabb, Point, Segment, Triangle, Vector};
 
 /// An affine transform
@@ -89,13 +91,16 @@ impl Transform {
         fovy: f64,
         znear: f64,
         zfar: f64,
-    ) -> [f64; 16] {
+    ) -> [Scalar; 16] {
         let projection = Perspective3::new(aspect_ratio, fovy, znear, zfar);
-        let mut res = [0f64; 16];
-        res.copy_from_slice(
-            (projection.to_projective() * self.0).matrix().as_slice(),
-        );
-        res
+        (projection.to_projective() * self.0)
+            .matrix()
+            .as_slice()
+            .iter()
+            .map(|f| Scalar::from(*f))
+            .collect::<Vec<Scalar>>()
+            .try_into()
+            .unwrap()
     }
 
     /// Transform the given axis-aligned bounding box
