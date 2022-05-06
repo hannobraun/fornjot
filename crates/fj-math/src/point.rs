@@ -164,6 +164,17 @@ where
     }
 }
 
+impl<V, const D: usize> ops::Sub<V> for Point<D>
+where
+    V: Into<Vector<D>>,
+{
+    type Output = Self;
+
+    fn sub(self, rhs: V) -> Self::Output {
+        self.to_na().sub(rhs.into().to_na()).into()
+    }
+}
+
 impl<const D: usize> ops::Sub<Self> for Point<D> {
     type Output = Vector<D>;
 
