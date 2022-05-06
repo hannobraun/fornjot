@@ -59,8 +59,8 @@ impl<const D: usize> Triangle<D> {
 impl Triangle<2> {
     /// Returns the direction of the line through the points of the triangle.
     pub fn winding_direction(&self) -> Winding {
-        let [v0, v1, v2] = self.points;
-        corner_direction(&v0.to_na(), &v1.to_na(), &v2.to_na()).into()
+        let [v0, v1, v2] = self.points.map(|point| point.to_na());
+        corner_direction(&v0, &v1, &v2).into()
     }
 }
 
