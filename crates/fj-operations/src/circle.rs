@@ -21,7 +21,7 @@ impl ToShape for fj::Circle {
             .unwrap();
         shape.insert(Cycle { edges: vec![edge] }).unwrap();
 
-        let cycles = shape.topology().cycles().collect();
+        let cycles = shape.cycles().collect();
         let surface = shape.insert(Surface::x_y_plane()).unwrap();
         shape
             .insert(Face::Face {

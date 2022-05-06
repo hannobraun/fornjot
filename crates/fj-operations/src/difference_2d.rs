@@ -32,13 +32,13 @@ impl ToShape for fj::Difference2d {
         // See issue:
         // https://github.com/hannobraun/Fornjot/issues/95
         for shape in [&mut a, &mut b] {
-            if shape.topology().cycles().count() != 1 {
+            if shape.cycles().count() != 1 {
                 todo!(
                     "The 2-dimensional difference operation only supports one \
                     cycle in each operand."
                 );
             }
-            if shape.topology().faces().count() != 1 {
+            if shape.faces().count() != 1 {
                 todo!(
                     "The 2-dimensional difference operation only supports one \
                     face in each operand."
@@ -47,8 +47,8 @@ impl ToShape for fj::Difference2d {
         }
 
         // Can't panic, as we just verified that both shapes have one cycle.
-        let [cycle_a, cycle_b] = [&mut a, &mut b]
-            .map(|shape| shape.topology().cycles().next().unwrap());
+        let [cycle_a, cycle_b] =
+            [&mut a, &mut b].map(|shape| shape.cycles().next().unwrap());
 
         let mut vertices = HashMap::new();
 
@@ -63,7 +63,7 @@ impl ToShape for fj::Difference2d {
 
         // Can't panic, as we just verified that both shapes have one face.
         let [face_a, face_b] = [&mut a, &mut b]
-            .map(|shape| shape.topology().faces().values().next().unwrap());
+            .map(|shape| shape.faces().values().next().unwrap());
 
         assert!(
             face_a.surface() == face_b.surface(),

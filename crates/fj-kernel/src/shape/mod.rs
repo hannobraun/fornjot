@@ -12,6 +12,5 @@ pub use self::{
     api::Shape,
     object::Object,
     stores::{Handle, Iter},
-    topology::Topology,
     validate::{StructuralIssues, ValidationError, ValidationResult},
 };

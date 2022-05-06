@@ -13,13 +13,13 @@ use super::{FaceApprox, Tolerance};
 
 /// Triangulate a shape
 pub fn triangulate(
-    mut shape: Shape,
+    shape: Shape,
     tolerance: Tolerance,
     debug_info: &mut DebugInfo,
 ) -> Mesh<Point<3>> {
     let mut mesh = Mesh::new();
 
-    for face in shape.topology().faces() {
+    for face in shape.faces() {
         let face = face.get();
         match &face {
             Face::Face { surface, color, .. } => {
