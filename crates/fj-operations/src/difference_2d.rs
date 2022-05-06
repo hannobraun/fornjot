@@ -24,9 +24,8 @@ impl ToShape for fj::Difference2d {
         // Can be cleaned up, once `each_ref` is stable:
         // https://doc.rust-lang.org/std/primitive.array.html#method.each_ref
         let [a, b] = self.shapes();
-        let shapes = [&a, &b];
         let [mut a, mut b] =
-            shapes.map(|shape| shape.to_shape(tolerance, debug_info));
+            [a, b].map(|shape| shape.to_shape(tolerance, debug_info));
 
         // Check preconditions.
         //
