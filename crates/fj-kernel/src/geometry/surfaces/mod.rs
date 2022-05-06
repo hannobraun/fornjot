@@ -16,11 +16,27 @@ pub enum Surface {
 }
 
 impl Surface {
-    /// Construct a `Surface` that represents the x-y plane
-    pub fn x_y_plane() -> Self {
+    /// Construct a `Surface` that represents the xy-plane
+    pub fn xy_plane() -> Self {
         Self::SweptCurve(SweptCurve {
             curve: Curve::x_axis(),
             path: Vector::unit_y(),
+        })
+    }
+
+    /// Construct a `Surface` that represents the xz-plane
+    pub fn xz_plane() -> Self {
+        Self::SweptCurve(SweptCurve {
+            curve: Curve::x_axis(),
+            path: Vector::unit_z(),
+        })
+    }
+
+    /// Construct a `Surface` that represents the yz-plane
+    pub fn yz_plane() -> Self {
+        Self::SweptCurve(SweptCurve {
+            curve: Curve::y_axis(),
+            path: Vector::unit_z(),
         })
     }
 

@@ -46,7 +46,7 @@ impl ToShape for fj::Sketch {
             shape.insert(Cycle { edges }).unwrap();
         };
 
-        let surface = shape.insert(Surface::x_y_plane()).unwrap();
+        let surface = shape.insert(Surface::xy_plane()).unwrap();
         let face = Face::Face {
             exteriors: shape.cycles().collect(),
             interiors: Vec::new(),

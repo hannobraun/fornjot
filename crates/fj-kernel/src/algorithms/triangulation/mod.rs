@@ -96,7 +96,7 @@ mod tests {
         let c = [2., 2., 0.];
         let d = [0., 1., 0.];
 
-        Face::builder(Surface::x_y_plane(), &mut shape)
+        Face::builder(Surface::xy_plane(), &mut shape)
             .with_exterior_polygon([a, b, c, d])
             .build()?;
 
@@ -123,7 +123,7 @@ mod tests {
         let g = [3., 3., 0.];
         let h = [1., 2., 0.];
 
-        Face::builder(Surface::x_y_plane(), &mut shape)
+        Face::builder(Surface::xy_plane(), &mut shape)
             .with_exterior_polygon([a, b, c, d])
             .with_interior_polygon([e, f, g, h])
             .build()?;
