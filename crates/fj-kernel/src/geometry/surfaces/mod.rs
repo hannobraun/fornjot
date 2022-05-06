@@ -24,6 +24,22 @@ impl Surface {
         })
     }
 
+    /// Construct a `Surface` that represents the xz-plane
+    pub fn xz_plane() -> Self {
+        Self::SweptCurve(SweptCurve {
+            curve: Curve::x_axis(),
+            path: Vector::unit_z(),
+        })
+    }
+
+    /// Construct a `Surface` that represents the yz-plane
+    pub fn yz_plane() -> Self {
+        Self::SweptCurve(SweptCurve {
+            curve: Curve::y_axis(),
+            path: Vector::unit_z(),
+        })
+    }
+
     /// Create a new instance that is reversed
     #[must_use]
     pub fn reverse(self) -> Self {
