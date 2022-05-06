@@ -32,7 +32,11 @@ use fj_math::Aabb;
 /// Implemented for all operations from the [`fj`] crate
 pub trait ToShape {
     /// Compute the boundary representation of the shape
-    fn to_shape(&self, tolerance: Tolerance, debug: &mut DebugInfo) -> Shape;
+    fn to_shape(
+        &self,
+        tolerance: Tolerance,
+        debug_info: &mut DebugInfo,
+    ) -> Shape;
 
     /// Access the axis-aligned bounding box of a shape
     ///
@@ -83,7 +87,7 @@ macro_rules! dispatch {
 dispatch! {
     to_shape(
         tolerance: Tolerance,
-        debug: &mut DebugInfo,
+        debug_info: &mut DebugInfo,
     ) -> Shape;
     bounding_volume() -> Aabb<3>;
 }
