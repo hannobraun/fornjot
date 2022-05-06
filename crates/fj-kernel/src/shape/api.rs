@@ -1,6 +1,8 @@
 use std::marker::PhantomData;
 
-use fj_math::Scalar;
+use fj_math::{Scalar, Transform};
+
+use crate::topology::Face;
 
 use super::{
     stores::{
@@ -107,14 +109,39 @@ impl Shape {
         self.insert(object)
     }
 
+    /// Transform the geometry of the shape
+    ///
+    /// Since the topological types refer to geometry, and don't contain any
+    /// geometry themselves, this transforms the whole shape.
+    pub fn transform(&mut self, transform: &Transform) {
+        self.stores
+            .points
+            .update(|point| *point = transform.transform_point(point));
+        self.stores
+            .curves
+            .update(|curve| *curve = curve.transform(transform));
+        self.stores
+            .surfaces
+            .update(|surface| *surface = surface.transform(transform));
+
+        // While some faces use triangle representation, we need this weird
+        // workaround here.
+        self.stores.faces.update(|mut face| {
+            use std::ops::DerefMut as _;
+            if let Face::Triangles(triangles) = face.deref_mut() {
+                for (triangle, _) in triangles {
+                    *triangle = transform.transform_triangle(triangle);
+                }
+            }
+        });
+    }
+
     /// Access the shape's geometry
     pub fn geometry(&mut self) -> Geometry {
         Geometry {
             points: &mut self.stores.points,
             curves: &mut self.stores.curves,
             surfaces: &mut self.stores.surfaces,
-
-            faces: &mut self.stores.faces,
         }
     }
 
