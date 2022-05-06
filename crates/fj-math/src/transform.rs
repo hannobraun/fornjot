@@ -4,7 +4,7 @@ use nalgebra::Perspective3;
 
 use super::{Aabb, Point, Segment, Triangle, Vector};
 
-/// A transform
+/// An affine transform
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct Transform(nalgebra::Transform<f64, nalgebra::TAffine, 3>);
@@ -81,9 +81,9 @@ impl Transform {
         ))
     }
 
-    /// Project transform according to camera specfication, return data as a slice.
+    /// Project transform according to camera specfication, return data as an array.
     /// Used primarily for graphics code.
-    pub fn project_to_slice(
+    pub fn project_to_array(
         &self,
         aspect_ratio: f64,
         fovy: f64,

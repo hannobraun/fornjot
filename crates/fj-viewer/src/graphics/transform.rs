@@ -18,7 +18,7 @@ impl Transform {
     pub fn for_vertices(camera: &Camera, aspect_ratio: f64) -> Self {
         let field_of_view_in_y = camera.field_of_view_in_x() / aspect_ratio;
 
-        let transform = camera.camera_to_model().project_to_slice(
+        let transform = camera.camera_to_model().project_to_array(
             aspect_ratio,
             field_of_view_in_y,
             camera.near_plane(),
