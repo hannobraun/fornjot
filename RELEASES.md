@@ -75,7 +75,12 @@ Deploy the announcement to the website.
 
 ## 8. Promote release announcement
 
-Post the release announcement on the following sites:
+Post the release announcement in the official Fornjot channels:
+
+- Matrix channel
+- Mailing list
+
+Post it on the following sites:
 
 - /r/rust: https://www.reddit.com/r/rust/
 - Rust Users: https://users.rust-lang.org/
