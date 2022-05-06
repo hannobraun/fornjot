@@ -59,7 +59,7 @@ impl<const D: usize> Point<D> {
         }
     }
 
-    /// Gives the distance between two Points.
+    /// Gives the distance between two points.
     pub fn distance(p1: &Point<D>, p2: &Point<D>) -> Scalar {
         (p1.coords - p2.coords).magnitude()
     }
