@@ -235,7 +235,7 @@ mod tests {
         let e = [2., 1.];
         let f = [1., 2.];
 
-        let polygon = Polygon::new(Surface::x_y_plane())
+        let polygon = Polygon::new(Surface::xy_plane())
             .with_exterior(PolyChain::from([a, b, c]).close())
             .with_interiors([PolyChain::from([d, e, f]).close()]);
 
@@ -248,7 +248,7 @@ mod tests {
         let b = [2., 1.];
         let c = [0., 2.];
 
-        let polygon = Polygon::new(Surface::x_y_plane())
+        let polygon = Polygon::new(Surface::xy_plane())
             .with_exterior(PolyChain::from([a, b, c]).close());
 
         assert_contains_point(polygon, [1., 1.]);
@@ -264,7 +264,7 @@ mod tests {
         let e = [2., 1.];
         let f = [1., 3.];
 
-        let polygon = Polygon::new(Surface::x_y_plane())
+        let polygon = Polygon::new(Surface::xy_plane())
             .with_exterior(PolyChain::from([a, b, c]).close())
             .with_interiors([PolyChain::from([d, e, f]).close()]);
 
@@ -278,7 +278,7 @@ mod tests {
         let c = [3., 0.];
         let d = [3., 4.];
 
-        let polygon = Polygon::new(Surface::x_y_plane())
+        let polygon = Polygon::new(Surface::xy_plane())
             .with_exterior(PolyChain::from([a, b, c, d]).close());
 
         assert_contains_point(polygon, [1., 1.]);
@@ -291,7 +291,7 @@ mod tests {
         let b = [2., 1.];
         let c = [3., 1.];
         let d = [0., 2.];
-        let polygon = Polygon::new(Surface::x_y_plane())
+        let polygon = Polygon::new(Surface::xy_plane())
             .with_exterior(PolyChain::from([a, b, c, d]).close());
         assert_contains_point(polygon, [1., 1.]);
 
@@ -301,7 +301,7 @@ mod tests {
         let c = [3., 1.];
         let d = [4., 0.];
         let e = [4., 5.];
-        let polygon = Polygon::new(Surface::x_y_plane())
+        let polygon = Polygon::new(Surface::xy_plane())
             .with_exterior(PolyChain::from([a, b, c, d, e]).close());
         assert_contains_point(polygon, [1., 1.]);
     }

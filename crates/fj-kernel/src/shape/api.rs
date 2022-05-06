@@ -214,7 +214,7 @@ mod tests {
 
         let point = Point::from([1., 0., 0.]);
         let curve = Curve::x_axis();
-        let surface = Surface::x_y_plane();
+        let surface = Surface::xy_plane();
 
         assert!(shape.get_handle(&point).is_none());
         assert!(shape.get_handle(&curve).is_none());
@@ -396,7 +396,7 @@ mod tests {
         }
 
         fn add_surface(&mut self) -> Handle<Surface> {
-            self.insert(Surface::x_y_plane()).unwrap()
+            self.insert(Surface::xy_plane()).unwrap()
         }
 
         fn add_edge(&mut self) -> anyhow::Result<Handle<Edge>> {

@@ -22,7 +22,7 @@ impl ToShape for fj::Circle {
         shape.insert(Cycle { edges: vec![edge] }).unwrap();
 
         let cycles = shape.cycles().collect();
-        let surface = shape.insert(Surface::x_y_plane()).unwrap();
+        let surface = shape.insert(Surface::xy_plane()).unwrap();
         shape
             .insert(Face::Face {
                 exteriors: cycles,
