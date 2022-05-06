@@ -20,6 +20,7 @@ pub mod shape_processor;
 
 mod circle;
 mod difference_2d;
+mod difference_3d;
 mod group;
 mod sketch;
 mod sweep;
@@ -74,6 +75,8 @@ macro_rules! dispatch {
             $(
                 fn $method(&self, $($arg_name: $arg_ty,)*) -> $ret {
                     match self {
+                        Self::Difference(shape) =>
+                            shape.$method($($arg_name,)*),
                         Self::Group(shape) => shape.$method($($arg_name,)*),
                         Self::Sweep(shape) => shape.$method($($arg_name,)*),
                         Self::Transform(shape) => shape.$method($($arg_name,)*),

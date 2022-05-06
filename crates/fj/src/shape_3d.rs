@@ -4,6 +4,9 @@ use crate::{Shape, Shape2d};
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub enum Shape3d {
+    /// A difference between two shapes
+    Difference(Box<Difference3d>),
+
     /// A group of two 3-dimensional shapes
     Group(Box<Group>),
 
@@ -17,6 +20,37 @@ pub enum Shape3d {
 impl From<Shape3d> for Shape {
     fn from(shape: Shape3d) -> Self {
         Self::Shape3d(shape)
+    }
+}
+
+/// A difference between two shapes
+#[derive(Clone, Debug)]
+#[repr(C)]
+pub struct Difference3d {
+    shapes: [Shape3d; 2],
+}
+
+impl Difference3d {
+    /// Create a `Difference3d` from two shapes
+    pub fn from_shapes(shapes: [Shape3d; 2]) -> Self {
+        Self { shapes }
+    }
+
+    /// Access the shapes that make up the difference
+    pub fn shapes(&self) -> &[Shape3d; 2] {
+        &self.shapes
+    }
+}
+
+impl From<Difference3d> for Shape {
+    fn from(shape: Difference3d) -> Self {
+        Self::Shape3d(shape.into())
+    }
+}
+
+impl From<Difference3d> for Shape3d {
+    fn from(shape: Difference3d) -> Self {
+        Self::Difference(Box::new(shape))
     }
 }
 
