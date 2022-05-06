@@ -1,29 +1,9 @@
-use crate::Vector;
-
-use super::{Point, Scalar};
-
 use parry2d_f64::utils::point_in_triangle::{corner_direction, Orientation};
 use parry3d_f64::query::{Ray, RayCast as _};
 
-/// Winding direction of a triangle.
-pub enum Winding {
-    /// Counter-clockwise
-    Ccw,
-    /// Clockwise
-    Cw,
-    /// Neither (straight lines)
-    None,
-}
+use crate::Vector;
 
-impl From<Orientation> for Winding {
-    fn from(o: Orientation) -> Self {
-        match o {
-            Orientation::Ccw => Winding::Ccw,
-            Orientation::Cw => Winding::Cw,
-            Orientation::None => Winding::None,
-        }
-    }
-}
+use super::{Point, Scalar};
 
 /// A triangle
 ///
@@ -113,6 +93,24 @@ where
 {
     fn from(points: [P; 3]) -> Self {
         Self::from_points(points)
+    }
+}
+
+/// Winding direction of a triangle.
+pub enum Winding {
+    /// Counter-clockwise
+    Ccw,
+    /// Clockwise
+    Cw,
+}
+
+impl From<Orientation> for Winding {
+    fn from(o: Orientation) -> Self {
+        match o {
+            Orientation::Ccw => Winding::Ccw,
+            Orientation::Cw => Winding::Cw,
+            Orientation::None => unreachable!("not a triangle"),
+        }
     }
 }
 
