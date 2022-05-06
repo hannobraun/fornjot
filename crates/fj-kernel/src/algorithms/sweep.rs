@@ -12,7 +12,7 @@ use super::{CycleApprox, Tolerance};
 
 /// Create a new shape by sweeping an existing one
 pub fn sweep_shape(
-    mut source: Shape,
+    source: Shape,
     path: Vector<3>,
     tolerance: Tolerance,
     color: [u8; 4],
@@ -25,7 +25,7 @@ pub fn sweep_shape(
     let mut source_to_top = Relation::new();
 
     // Create the new vertices.
-    for vertex_source in source.topology().vertices() {
+    for vertex_source in source.vertices() {
         let point_bottom = target.insert(vertex_source.get().point()).unwrap();
         let point_top = target.insert(point_bottom.get() + path).unwrap();
 
@@ -43,7 +43,7 @@ pub fn sweep_shape(
     }
 
     // Create the new edges.
-    for edge_source in source.topology().edges() {
+    for edge_source in source.edges() {
         let curve_bottom = target.insert(edge_source.get().curve()).unwrap();
         let curve_top = target
             .insert(curve_bottom.get().transform(&translation))
@@ -72,7 +72,7 @@ pub fn sweep_shape(
     }
 
     // Create the new cycles.
-    for cycle_source in source.topology().cycles() {
+    for cycle_source in source.cycles() {
         let edges_bottom = source_to_bottom.edges_for_cycle(&cycle_source);
         let edges_top = source_to_top.edges_for_cycle(&cycle_source);
 
@@ -90,7 +90,7 @@ pub fn sweep_shape(
     }
 
     // Create top faces.
-    for face_source in source.topology().faces().values() {
+    for face_source in source.faces().values() {
         let surface = face_source.surface();
 
         let surface_bottom = target.insert(surface.reverse()).unwrap();
@@ -122,7 +122,7 @@ pub fn sweep_shape(
             .unwrap();
     }
 
-    for cycle_source in source.topology().cycles() {
+    for cycle_source in source.cycles() {
         if cycle_source.get().edges.len() == 1 {
             // If there's only one edge in the cycle, it must be a continuous
             // edge that connects to itself. By sweeping that, we create a
@@ -332,7 +332,7 @@ mod tests {
         let sketch =
             Triangle::new([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]], false)?;
 
-        let mut swept = sweep_shape(
+        let swept = sweep_shape(
             sketch.shape,
             Vector::from([0., 0., 1.]),
             tolerance,
@@ -351,7 +351,7 @@ mod tests {
         let mut contains_bottom_face = false;
         let mut contains_top_face = false;
 
-        for face in swept.topology().faces() {
+        for face in swept.faces() {
             if matches!(face.get(), Face::Face { .. }) {
                 if face.get().clone() == bottom_face {
                     contains_bottom_face = true;

@@ -35,7 +35,7 @@ impl ToShape for fj::Group {
     }
 }
 
-fn copy_shape(mut orig: Shape, target: &mut Shape) {
+fn copy_shape(orig: Shape, target: &mut Shape) {
     let mut points = HashMap::new();
     let mut curves = HashMap::new();
     let mut surfaces = HashMap::new();
@@ -44,20 +44,20 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
     let mut edges = HashMap::new();
     let mut cycles = HashMap::new();
 
-    for point_orig in orig.geometry().points() {
+    for point_orig in orig.points() {
         let point = target.insert(point_orig.get()).unwrap();
         points.insert(point_orig, point);
     }
-    for curve_orig in orig.geometry().curves() {
+    for curve_orig in orig.curves() {
         let curve = target.insert(curve_orig.get()).unwrap();
         curves.insert(curve_orig, curve);
     }
-    for surface_orig in orig.geometry().surfaces() {
+    for surface_orig in orig.surfaces() {
         let surface = target.insert(surface_orig.get()).unwrap();
         surfaces.insert(surface_orig, surface);
     }
 
-    for vertex_orig in orig.topology().vertices() {
+    for vertex_orig in orig.vertices() {
         let vertex = target
             .insert(Vertex {
                 point: points[&vertex_orig.get().point].clone(),
@@ -65,7 +65,7 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
             .unwrap();
         vertices.insert(vertex_orig, vertex);
     }
-    for edge_orig in orig.topology().edges() {
+    for edge_orig in orig.edges() {
         let edge = target
             .insert(Edge {
                 curve: curves[&edge_orig.get().curve].clone(),
@@ -76,7 +76,7 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
             .unwrap();
         edges.insert(edge_orig, edge);
     }
-    for cycle_orig in orig.topology().cycles() {
+    for cycle_orig in orig.cycles() {
         let cycle = target
             .insert(Cycle {
                 edges: cycle_orig
@@ -90,7 +90,7 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
         cycles.insert(cycle_orig, cycle);
     }
 
-    for face_orig in orig.topology().faces() {
+    for face_orig in orig.faces() {
         match face_orig.get() {
             Face::Face {
                 surface,

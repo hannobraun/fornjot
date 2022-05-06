@@ -13,7 +13,7 @@ impl ToShape for fj::Transform {
         let mut shape = self.shape.to_shape(tolerance, debug_info);
         let transform = transform(self);
 
-        shape.geometry().transform(&transform);
+        shape.transform(&transform);
 
         shape
     }
