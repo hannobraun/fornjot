@@ -5,7 +5,6 @@
 mod api;
 mod object;
 mod stores;
-mod topology;
 mod validate;
 
 pub use self::{
