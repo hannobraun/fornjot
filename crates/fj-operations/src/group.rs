@@ -44,15 +44,15 @@ fn copy_shape(mut orig: Shape, target: &mut Shape) {
     let mut edges = HashMap::new();
     let mut cycles = HashMap::new();
 
-    for point_orig in orig.geometry().points() {
+    for point_orig in orig.points() {
         let point = target.insert(point_orig.get()).unwrap();
         points.insert(point_orig, point);
     }
-    for curve_orig in orig.geometry().curves() {
+    for curve_orig in orig.curves() {
         let curve = target.insert(curve_orig.get()).unwrap();
         curves.insert(curve_orig, curve);
     }
-    for surface_orig in orig.geometry().surfaces() {
+    for surface_orig in orig.surfaces() {
         let surface = target.insert(surface_orig.get()).unwrap();
         surfaces.insert(surface_orig, surface);
     }

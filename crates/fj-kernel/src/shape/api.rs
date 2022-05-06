@@ -1,14 +1,17 @@
 use std::marker::PhantomData;
 
-use fj_math::{Scalar, Transform};
+use fj_math::{Point, Scalar, Transform};
 
-use crate::topology::Face;
+use crate::{
+    geometry::{Curve, Surface},
+    topology::Face,
+};
 
 use super::{
     stores::{
         Curves, Cycles, Edges, Faces, Points, Stores, Surfaces, Vertices,
     },
-    Geometry, Handle, Object, Topology, ValidationResult,
+    Handle, Iter, Object, Topology, ValidationResult,
 };
 
 /// The boundary representation of a shape
@@ -136,13 +139,25 @@ impl Shape {
         });
     }
 
-    /// Access the shape's geometry
-    pub fn geometry(&mut self) -> Geometry {
-        Geometry {
-            points: &mut self.stores.points,
-            curves: &mut self.stores.curves,
-            surfaces: &mut self.stores.surfaces,
-        }
+    /// Access an iterator over all points
+    ///
+    /// The caller must not make any assumptions about the order of points.
+    pub fn points(&self) -> Iter<Point<3>> {
+        self.stores.points.iter()
+    }
+
+    /// Access an iterator over all curves
+    ///
+    /// The caller must not make any assumptions about the order of curves.
+    pub fn curves(&self) -> Iter<Curve> {
+        self.stores.curves.iter()
+    }
+
+    /// Access an iterator over all surfaces
+    ///
+    /// The caller must not make any assumptions about the order of surfaces.
+    pub fn surfaces(&self) -> Iter<Surface> {
+        self.stores.surfaces.iter()
     }
 
     /// Access the shape's topology
