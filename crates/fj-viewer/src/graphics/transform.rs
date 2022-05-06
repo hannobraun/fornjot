@@ -1,7 +1,6 @@
 use bytemuck::{Pod, Zeroable};
 
 use crate::camera::Camera;
-use fj_math::Transform as fjTransform;
 
 #[derive(Clone, Copy, Pod, Zeroable)]
 #[repr(transparent)]
@@ -9,7 +8,7 @@ pub struct Transform(pub [f32; 16]);
 
 impl Transform {
     pub fn identity() -> Self {
-        Self::from(&fjTransform::identity())
+        Self::from(&fj_math::Transform::identity())
     }
 
     /// Compute transform used for vertices
@@ -39,8 +38,8 @@ impl Transform {
     }
 }
 
-impl From<&fjTransform> for Transform {
-    fn from(other: &fjTransform) -> Self {
+impl From<&fj_math::Transform> for Transform {
+    fn from(other: &fj_math::Transform) -> Self {
         let mut native = [0.0; 16];
         native.copy_from_slice(other.data());
 
