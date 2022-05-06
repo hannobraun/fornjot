@@ -34,11 +34,7 @@ impl Vertices {
         color: [f32; 4],
     ) {
         let line = line.into_iter().map(|point| Vertex {
-            position: [
-                point.x.into_f32(),
-                point.y.into_f32(),
-                point.z.into_f32(),
-            ],
+            position: point.coords.components.map(|scalar| scalar.into_f32()),
             normal,
             color,
         });

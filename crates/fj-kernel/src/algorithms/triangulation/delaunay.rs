@@ -22,12 +22,6 @@ pub fn triangulate(
         let triangle = match orientation {
             Winding::Ccw => [v0, v1, v2],
             Winding::Cw => [v0, v2, v1],
-            Winding::None => {
-                panic!(
-                    "Triangle returned from triangulation isn't actually a \
-                    triangle"
-                );
-            }
         };
 
         triangles.push(triangle);

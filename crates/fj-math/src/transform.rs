@@ -2,9 +2,11 @@ use std::ops;
 
 use nalgebra::Perspective3;
 
+use crate::Scalar;
+
 use super::{Aabb, Point, Segment, Triangle, Vector};
 
-/// A transform
+/// An affine transform
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct Transform(nalgebra::Transform<f64, nalgebra::TAffine, 3>);
@@ -81,21 +83,24 @@ impl Transform {
         ))
     }
 
-    /// Project transform according to camera specfication, return data as a slice.
+    /// Project transform according to camera specfication, return data as an array.
     /// Used primarily for graphics code.
-    pub fn project_to_slice(
+    pub fn project_to_array(
         &self,
         aspect_ratio: f64,
         fovy: f64,
         znear: f64,
         zfar: f64,
-    ) -> [f64; 16] {
+    ) -> [Scalar; 16] {
         let projection = Perspective3::new(aspect_ratio, fovy, znear, zfar);
-        let mut res = [0f64; 16];
-        res.copy_from_slice(
-            (projection.to_projective() * self.0).matrix().as_slice(),
-        );
-        res
+        (projection.to_projective() * self.0)
+            .matrix()
+            .as_slice()
+            .iter()
+            .map(|f| Scalar::from(*f))
+            .collect::<Vec<Scalar>>()
+            .try_into()
+            .unwrap()
     }
 
     /// Transform the given axis-aligned bounding box

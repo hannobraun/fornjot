@@ -76,11 +76,11 @@ impl Camera {
             far_plane: Self::DEFAULT_FAR_PLANE,
 
             rotation: Transform::identity(),
-            translation: Transform::translation(Vector::from_components_f64([
-                initial_offset.x.into_f64(),
-                initial_offset.y.into_f64(),
-                -initial_distance.into_f64(),
-            ])),
+            translation: Transform::translation([
+                initial_offset.x,
+                initial_offset.y,
+                -initial_distance,
+            ]),
         }
     }
 

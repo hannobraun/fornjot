@@ -1,29 +1,9 @@
-use crate::Vector;
-
-use super::{Point, Scalar};
-
 use parry2d_f64::utils::point_in_triangle::{corner_direction, Orientation};
 use parry3d_f64::query::{Ray, RayCast as _};
 
-/// Winding direction of a triangle.
-pub enum Winding {
-    /// Counter-clockwise
-    Ccw,
-    /// Clockwise
-    Cw,
-    /// Neither (straight lines)
-    None,
-}
+use crate::Vector;
 
-impl From<Orientation> for Winding {
-    fn from(o: Orientation) -> Self {
-        match o {
-            Orientation::Ccw => Winding::Ccw,
-            Orientation::Cw => Winding::Cw,
-            Orientation::None => Winding::None,
-        }
-    }
-}
+use super::{Point, Scalar};
 
 /// A triangle
 ///
@@ -79,8 +59,8 @@ impl<const D: usize> Triangle<D> {
 impl Triangle<2> {
     /// Returns the direction of the line through the points of the triangle.
     pub fn winding_direction(&self) -> Winding {
-        let [v0, v1, v2] = self.points;
-        corner_direction(&v0.to_na(), &v1.to_na(), &v2.to_na()).into()
+        let [v0, v1, v2] = self.points.map(|point| point.to_na());
+        corner_direction(&v0, &v1, &v2).into()
     }
 }
 
@@ -97,13 +77,15 @@ impl Triangle<3> {
         dir: Vector<3>,
         max_toi: f64,
         solid: bool,
-    ) -> Option<f64> {
+    ) -> Option<Scalar> {
         let ray = Ray {
             origin: origin.to_na(),
             dir: dir.to_na(),
         };
 
-        self.to_parry().cast_local_ray(&ray, max_toi, solid)
+        self.to_parry()
+            .cast_local_ray(&ray, max_toi, solid)
+            .map(|f| f.into())
     }
 }
 
@@ -113,6 +95,24 @@ where
 {
     fn from(points: [P; 3]) -> Self {
         Self::from_points(points)
+    }
+}
+
+/// Winding direction of a triangle.
+pub enum Winding {
+    /// Counter-clockwise
+    Ccw,
+    /// Clockwise
+    Cw,
+}
+
+impl From<Orientation> for Winding {
+    fn from(o: Orientation) -> Self {
+        match o {
+            Orientation::Ccw => Winding::Ccw,
+            Orientation::Cw => Winding::Cw,
+            Orientation::None => unreachable!("not a triangle"),
+        }
     }
 }
 

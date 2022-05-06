@@ -1,4 +1,4 @@
-use fj_math::{Point, Transform, Vector};
+use fj_math::{Point, Scalar, Transform, Vector};
 use winit::dpi::PhysicalPosition;
 
 use crate::{
@@ -49,11 +49,12 @@ impl Movement {
                 let diff = (cursor - previous) * d2 / d1;
                 let offset = camera.camera_to_model().transform_vector(&diff);
 
-                camera.translation =
-                    camera.translation
-                        * Transform::translation(Vector::from_components_f64(
-                            [offset.x.into(), offset.y.into(), 0.0],
-                        ));
+                camera.translation = camera.translation
+                    * Transform::translation(Vector::from([
+                        offset.x,
+                        offset.y,
+                        Scalar::ZERO,
+                    ]));
             }
         }
 
