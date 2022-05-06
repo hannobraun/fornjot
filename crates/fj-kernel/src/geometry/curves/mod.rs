@@ -32,6 +32,22 @@ impl Curve {
         })
     }
 
+    /// Construct a `Curve` that represents the y-axis
+    pub fn y_axis() -> Self {
+        Self::Line(Line {
+            origin: Point::origin(),
+            direction: Vector::unit_y(),
+        })
+    }
+
+    /// Construct a `Curve` that represents the z-axis
+    pub fn z_axis() -> Self {
+        Self::Line(Line {
+            origin: Point::origin(),
+            direction: Vector::unit_z(),
+        })
+    }
+
     /// Access the origin of the curve's coordinate system
     pub fn origin(&self) -> Point<3> {
         match self {
