@@ -3,7 +3,7 @@ use fj_interop::{
     debug::DebugInfo,
     mesh::{Index, Mesh},
 };
-use fj_math::Point;
+use fj_math::{Point, Vector};
 
 #[derive(Debug)]
 pub struct Vertices {
@@ -55,32 +55,16 @@ impl Vertices {
 
         self.push_line(
             [
-                Point::from_array([
-                    position.x.into_f64() - d,
-                    position.y.into_f64(),
-                    position.z.into_f64(),
-                ]),
-                Point::from_array([
-                    position.x.into_f64() + d,
-                    position.y.into_f64(),
-                    position.z.into_f64(),
-                ]),
+                position - Vector::from([d, 0., 0.]),
+                position + Vector::from([d, 0., 0.]),
             ],
             normal,
             color,
         );
         self.push_line(
             [
-                Point::from_array([
-                    position.x.into_f64(),
-                    position.y.into_f64() - d,
-                    position.z.into_f64(),
-                ]),
-                Point::from_array([
-                    position.x.into_f64(),
-                    position.y.into_f64() + d,
-                    position.z.into_f64(),
-                ]),
+                position - Vector::from([0., d, 0.]),
+                position + Vector::from([0., d, 0.]),
             ],
             normal,
             color,
