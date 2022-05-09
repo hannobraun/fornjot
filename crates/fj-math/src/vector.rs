@@ -80,6 +80,11 @@ impl<const D: usize> Vector<D> {
     pub fn dot(&self, other: &Self) -> Scalar {
         self.to_na().dot(&other.to_na()).into()
     }
+
+    /// Compute the scalar project of this vector onto another
+    pub fn scalar_projection_onto(&self, other: &Self) -> Scalar {
+        self.dot(&other.normalize())
+    }
 }
 
 impl Vector<1> {
@@ -308,7 +313,7 @@ impl<const D: usize> approx::AbsDiffEq for Vector<D> {
 
 #[cfg(test)]
 mod tests {
-    use crate::Vector;
+    use crate::{Scalar, Vector};
 
     #[test]
     fn to_xyz() {
@@ -320,5 +325,18 @@ mod tests {
             Vector::from([1., 2., 3.]).to_xyz(),
             Vector::from([1., 2., 3.]),
         );
+    }
+
+    #[test]
+    fn scalar_projection_onto() {
+        let v = Vector::from([1., 2., 3.]);
+
+        let x = Vector::unit_x() * 3.;
+        let y = Vector::unit_y() * 2.;
+        let z = Vector::unit_z() * 1.;
+
+        assert_eq!(v.scalar_projection_onto(&x), Scalar::from(1.));
+        assert_eq!(v.scalar_projection_onto(&y), Scalar::from(2.));
+        assert_eq!(v.scalar_projection_onto(&z), Scalar::from(3.));
     }
 }
