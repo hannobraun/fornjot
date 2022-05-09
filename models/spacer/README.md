@@ -4,7 +4,7 @@ A simple spacer model that demonstrates the circle primitive, the difference ope
 
 To display this model, run the following from the repository root (model parameters are optional):
 ``` sh
-cargo run -- --model spacer --parameters outer=1.0 inner=0.5 height=1.0
+cargo run -- --model spacer --parameters outer=1.0,inner=0.5,height=1.0
 ```
 
 ![Screenshot of the spacer model](spacer.png)
