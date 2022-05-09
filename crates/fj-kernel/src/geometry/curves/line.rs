@@ -54,10 +54,8 @@ impl Line {
     /// point not being on the line, intentional or not, will never result in an
     /// error.
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
-        // scalar projection
-        let t = (point - self.origin).dot(&self.direction.normalize())
+        let t = (point - self.origin).scalar_projection_onto(&self.direction)
             / self.direction.magnitude();
-
         Point::from([t])
     }
 
