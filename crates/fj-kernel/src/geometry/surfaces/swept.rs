@@ -40,7 +40,10 @@ impl SweptCurve {
     }
 
     /// Convert a point in model coordinates to surface coordinates
-    pub fn point_model_to_surface(&self, point: &Point<3>) -> Point<2> {
+    pub fn convert_point_to_surface_coords(
+        &self,
+        point: &Point<3>,
+    ) -> Point<2> {
         let u = self.curve.point_model_to_curve(point).t;
         let v = (point - self.curve.origin())
             .scalar_projection_onto(&self.path)
@@ -86,7 +89,7 @@ mod tests {
 
         fn verify(swept: &SweptCurve, surface_point: Point<2>) {
             let point = swept.point_surface_to_model(&surface_point);
-            let result = swept.point_model_to_surface(&point);
+            let result = swept.convert_point_to_surface_coords(&point);
 
             assert_eq!(result, surface_point);
         }
