@@ -2,7 +2,7 @@ use std::ops;
 
 use nalgebra::Perspective3;
 
-use crate::Scalar;
+use crate::{Line, Scalar};
 
 use super::{Aabb, Point, Segment, Triangle, Vector};
 
@@ -53,6 +53,14 @@ impl Transform {
     /// Transform the given vector
     pub fn transform_vector(&self, vector: &Vector<3>) -> Vector<3> {
         Vector::from(self.0.transform_vector(&vector.to_na()))
+    }
+
+    /// Transform the given line
+    pub fn transform_line(&self, line: &Line<3>) -> Line<3> {
+        Line {
+            origin: self.transform_point(&line.origin),
+            direction: self.transform_vector(&line.direction),
+        }
     }
 
     /// Transform the given segment
@@ -122,5 +130,35 @@ impl ops::Mul<Self> for Transform {
 
     fn mul(self, rhs: Self) -> Self::Output {
         Self(self.0.mul(rhs.0))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use approx::assert_abs_diff_eq;
+
+    use crate::{Line, Point, Scalar, Vector};
+
+    use super::Transform;
+
+    #[test]
+    fn transform() {
+        let line = Line {
+            origin: Point::from([1., 0., 0.]),
+            direction: Vector::from([0., 1., 0.]),
+        };
+
+        let transform = Transform::translation([1., 2., 3.])
+            * Transform::rotation(Vector::unit_z() * (Scalar::PI / 2.));
+        let line = transform.transform_line(&line);
+
+        assert_abs_diff_eq!(
+            line,
+            Line {
+                origin: Point::from([1., 3., 3.]),
+                direction: Vector::from([-1., 0., 0.]),
+            },
+            epsilon = 1e-8,
+        );
     }
 }
