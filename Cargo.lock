@@ -755,7 +755,6 @@ version = "0.6.0"
 dependencies = [
  "anyhow",
  "anymap",
- "approx 0.5.1",
  "fj-interop",
  "fj-math",
  "map-macro",
