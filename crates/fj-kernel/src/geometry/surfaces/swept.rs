@@ -88,7 +88,7 @@ mod tests {
                 origin: Point::from([1., 0., 0.]),
                 direction: Vector::from([0., 2., 0.]),
             }),
-            path: Vector::from([0., 0., 2.]),
+            path: Vector::from([0., 0., 3.]),
         };
 
         verify(&swept, Point::from([-1., -1.]));
