@@ -59,13 +59,13 @@ impl Surface {
     }
 
     /// Convert a point in model coordinates to surface coordinates
-    pub fn point_model_to_surface(
+    pub fn convert_point_to_surface_coords(
         &self,
         point_3d: Point<3>,
     ) -> geometry::Point<2> {
         let point_2d = match self {
             Self::SweptCurve(surface) => {
-                surface.point_model_to_surface(&point_3d)
+                surface.convert_point_to_surface_coords(&point_3d)
             }
         };
 
@@ -73,17 +73,25 @@ impl Surface {
     }
 
     /// Convert a point in surface coordinates to model coordinates
-    pub fn point_surface_to_model(&self, point: &Point<2>) -> Point<3> {
+    pub fn convert_point_from_surface_coords(
+        &self,
+        point: &Point<2>,
+    ) -> Point<3> {
         match self {
-            Self::SweptCurve(surface) => surface.point_surface_to_model(point),
+            Self::SweptCurve(surface) => {
+                surface.convert_point_from_surface_coords(point)
+            }
         }
     }
 
     /// Convert a vector in surface coordinates to model coordinates
-    pub fn vector_surface_to_model(&self, vector: &Vector<2>) -> Vector<3> {
+    pub fn convert_vector_from_surface_coords(
+        &self,
+        vector: &Vector<2>,
+    ) -> Vector<3> {
         match self {
             Self::SweptCurve(surface) => {
-                surface.vector_surface_to_model(vector)
+                surface.convert_vector_from_surface_coords(vector)
             }
         }
     }
