@@ -53,7 +53,10 @@ impl SweptCurve {
     }
 
     /// Convert a point in surface coordinates to model coordinates
-    pub fn point_surface_to_model(&self, point: &Point<2>) -> Point<3> {
+    pub fn convert_point_from_surface_coords(
+        &self,
+        point: &Point<2>,
+    ) -> Point<3> {
         self.curve.point_curve_to_model(&point.to_t()) + self.path * point.v
     }
 
@@ -88,7 +91,7 @@ mod tests {
         verify(&swept, Point::from([2., 3.]));
 
         fn verify(swept: &SweptCurve, surface_point: Point<2>) {
-            let point = swept.point_surface_to_model(&surface_point);
+            let point = swept.convert_point_from_surface_coords(&surface_point);
             let result = swept.convert_point_to_surface_coords(&point);
 
             assert_eq!(result, surface_point);
@@ -106,7 +109,7 @@ mod tests {
         };
 
         assert_eq!(
-            swept.point_surface_to_model(&Point::from([2., 4.])),
+            swept.convert_point_from_surface_coords(&Point::from([2., 4.])),
             Point::from([1., 4., 8.]),
         );
     }
