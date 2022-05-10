@@ -16,7 +16,7 @@ impl SweptCurve {
     /// Construct a plane from 3 points
     #[cfg(test)]
     pub fn plane_from_points([a, b, c]: [Point<3>; 3]) -> Self {
-        use crate::geometry::Line;
+        use fj_math::Line;
 
         let curve = Curve::Line(Line::from_points([a, b]));
         let path = c - a;
@@ -63,9 +63,9 @@ impl SweptCurve {
 #[cfg(test)]
 mod tests {
 
-    use fj_math::{Point, Vector};
+    use fj_math::{Line, Point, Vector};
 
-    use crate::geometry::{Curve, Line};
+    use crate::geometry::Curve;
 
     use super::SweptCurve;
 

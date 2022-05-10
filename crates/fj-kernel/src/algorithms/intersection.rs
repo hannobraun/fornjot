@@ -1,8 +1,8 @@
 //! Intersection algorithms
 
-use fj_math::{Point, Scalar, Vector};
+use fj_math::{Line, Point, Scalar, Vector};
 
-use crate::geometry::{Curve, Line, Surface};
+use crate::geometry::{Curve, Surface};
 
 /// Test intersection between two surfaces
 pub fn surface(a: &Surface, b: &Surface) -> Option<Curve> {
