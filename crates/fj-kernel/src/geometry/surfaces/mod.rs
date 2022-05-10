@@ -85,7 +85,7 @@ impl Surface {
     pub fn vector_surface_to_model(&self, vector: &Vector<2>) -> Vector<3> {
         match self {
             Self::SweptCurve(surface) => {
-                surface.vector_surface_to_model(vector)
+                surface.convert_vector_from_surface_coords(vector)
             }
         }
     }

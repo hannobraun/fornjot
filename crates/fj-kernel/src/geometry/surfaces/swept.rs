@@ -61,7 +61,10 @@ impl SweptCurve {
     }
 
     /// Convert a vector in surface coordinates to model coordinates
-    pub fn vector_surface_to_model(&self, vector: &Vector<2>) -> Vector<3> {
+    pub fn convert_vector_from_surface_coords(
+        &self,
+        vector: &Vector<2>,
+    ) -> Vector<3> {
         self.curve.vector_curve_to_model(&vector.to_t()) + self.path * vector.v
     }
 }
@@ -125,7 +128,7 @@ mod tests {
         };
 
         assert_eq!(
-            swept.vector_surface_to_model(&Vector::from([2., 4.])),
+            swept.convert_vector_from_surface_coords(&Vector::from([2., 4.])),
             Vector::from([0., 4., 8.]),
         );
     }
