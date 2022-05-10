@@ -24,7 +24,7 @@ impl<const D: usize> Segment<D> {
         let points = points.map(Into::into);
         let [a, b] = points;
 
-        assert!(a != b, "Invalid segment; both points are identical {a:?}");
+        assert!(a != b, "Invalid segment; both points are identical: {a:?}");
 
         Self { points }
     }
