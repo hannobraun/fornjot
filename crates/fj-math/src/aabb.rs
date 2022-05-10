@@ -13,6 +13,39 @@ pub struct Aabb<const D: usize> {
     pub max: Point<D>,
 }
 
+impl<const D: usize> Aabb<D> {
+    /// Determine whether the AABB contains a given point
+    pub fn contains(&self, point: impl Into<Point<D>>) -> bool {
+        let point = point.into();
+
+        let min = self
+            .min
+            .coords
+            .components
+            .into_iter()
+            .zip(point.coords.components);
+        for (min, p) in min {
+            if min > p {
+                return false;
+            }
+        }
+
+        let max = self
+            .max
+            .coords
+            .components
+            .into_iter()
+            .zip(point.coords.components);
+        for (max, p) in max {
+            if max < p {
+                return false;
+            }
+        }
+
+        true
+    }
+}
+
 impl Aabb<2> {
     /// Construct a 2-dimensional AABB from a list of points
     ///
@@ -104,5 +137,27 @@ impl From<parry2d_f64::bounding_volume::AABB> for Aabb<2> {
 impl From<parry3d_f64::bounding_volume::AABB> for Aabb<3> {
     fn from(aabb: parry3d_f64::bounding_volume::AABB) -> Self {
         Self::from_parry(aabb)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Aabb;
+
+    #[test]
+    fn contains() {
+        let aabb = Aabb::<2>::from_points([[1., 1.], [3., 3.]]);
+
+        assert!(aabb.contains([2., 2.]));
+
+        assert!(!aabb.contains([0., 0.]));
+        assert!(!aabb.contains([4., 0.]));
+        assert!(!aabb.contains([4., 4.]));
+        assert!(!aabb.contains([0., 4.]));
+
+        assert!(!aabb.contains([2., 0.]));
+        assert!(!aabb.contains([2., 4.]));
+        assert!(!aabb.contains([0., 2.]));
+        assert!(!aabb.contains([4., 2.]));
     }
 }
