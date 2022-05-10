@@ -1,9 +1,8 @@
 mod circle;
-mod line;
 
-pub use self::{circle::Circle, line::Line};
+pub use self::circle::Circle;
 
-use fj_math::{Point, Transform, Vector};
+use fj_math::{Line, Point, Transform, Vector};
 
 /// A one-dimensional shape
 ///
@@ -20,7 +19,7 @@ pub enum Curve {
     Circle(Circle),
 
     /// A line
-    Line(Line),
+    Line(Line<3>),
 }
 
 impl Curve {
@@ -52,7 +51,7 @@ impl Curve {
     pub fn origin(&self) -> Point<3> {
         match self {
             Self::Circle(curve) => curve.origin(),
-            Self::Line(curve) => curve.origin(),
+            Self::Line(curve) => curve.origin,
         }
     }
 
@@ -70,7 +69,7 @@ impl Curve {
     pub fn transform(self, transform: &Transform) -> Self {
         match self {
             Self::Circle(curve) => Self::Circle(curve.transform(transform)),
-            Self::Line(curve) => Self::Line(curve.transform(transform)),
+            Self::Line(curve) => Self::Line(transform.transform_line(&curve)),
         }
     }
 
@@ -86,7 +85,7 @@ impl Curve {
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
         match self {
             Self::Circle(curve) => curve.point_model_to_curve(point),
-            Self::Line(curve) => curve.point_model_to_curve(point),
+            Self::Line(curve) => curve.convert_point_to_line_coords(point),
         }
     }
 
@@ -94,7 +93,7 @@ impl Curve {
     pub fn point_curve_to_model(&self, point: &Point<1>) -> Point<3> {
         match self {
             Self::Circle(curve) => curve.point_curve_to_model(point),
-            Self::Line(curve) => curve.point_curve_to_model(point),
+            Self::Line(curve) => curve.convert_point_from_line_coords(point),
         }
     }
 
@@ -102,7 +101,7 @@ impl Curve {
     pub fn vector_curve_to_model(&self, point: &Vector<1>) -> Vector<3> {
         match self {
             Self::Circle(curve) => curve.vector_curve_to_model(point),
-            Self::Line(curve) => curve.vector_curve_to_model(point),
+            Self::Line(curve) => curve.convert_vector_from_line_coords(point),
         }
     }
 }

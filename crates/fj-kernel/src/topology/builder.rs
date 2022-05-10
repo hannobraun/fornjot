@@ -1,7 +1,7 @@
-use fj_math::{Point, Scalar, Vector};
+use fj_math::{Line, Point, Scalar, Vector};
 
 use crate::{
-    geometry::{Circle, Curve, Line, Surface},
+    geometry::{Circle, Curve, Surface},
     shape::{Handle, Shape, ValidationResult},
 };
 
