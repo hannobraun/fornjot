@@ -39,7 +39,7 @@ pub enum Face {
         /// lie in the surface. The data we're using here is 3-dimensional
         /// though, so no such limitation is enforced.
         ///
-        /// It might be less error-prone to specify the edges in surface
+        /// It might be less error-prone to specify the cycles in surface
         /// coordinates.
         exteriors: Vec<Handle<Cycle>>,
 

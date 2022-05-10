@@ -1,5 +1,3 @@
-//! Intersection algorithms
-
 use fj_math::{Line, Point, Scalar, Vector};
 
 use crate::geometry::{Curve, Surface};
