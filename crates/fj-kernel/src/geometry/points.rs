@@ -54,7 +54,7 @@ impl From<fj_math::Point<3>> for Point<3> {
 }
 
 // Some math operations for convenience. Obviously those can never return a new
-// `Point`, or the conversion back to 3D would be broken.
+// `self::Point`, or the conversion back to 3D would be broken.
 
 impl<const D: usize> Add<Vector<D>> for Point<D> {
     type Output = fj_math::Point<D>;
