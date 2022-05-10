@@ -73,7 +73,10 @@ impl Surface {
     }
 
     /// Convert a point in surface coordinates to model coordinates
-    pub fn point_surface_to_model(&self, point: &Point<2>) -> Point<3> {
+    pub fn convert_point_from_surface_coords(
+        &self,
+        point: &Point<2>,
+    ) -> Point<3> {
         match self {
             Self::SweptCurve(surface) => {
                 surface.convert_point_from_surface_coords(point)
