@@ -37,6 +37,7 @@
 
 mod aabb;
 mod coordinates;
+mod line;
 mod point;
 mod poly_chain;
 mod scalar;
@@ -48,6 +49,7 @@ mod vector;
 pub use self::{
     aabb::Aabb,
     coordinates::{Uv, Xyz, T},
+    line::Line,
     point::Point,
     poly_chain::PolyChain,
     scalar::Scalar,
