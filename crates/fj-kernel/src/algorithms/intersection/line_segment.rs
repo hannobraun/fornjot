@@ -1,4 +1,4 @@
-use fj_math::{Aabb, Line, Point, Scalar, Segment, Vector};
+use fj_math::{Aabb, Line, Scalar, Segment, Vector};
 
 /// Determine the intersection between a [`Line`] and a [`Segment`]
 pub fn line_segment(
@@ -34,7 +34,7 @@ pub fn line_segment(
     let t = n_dot_origin / n_dot_direction;
 
     let point_is_on_segment = Aabb::<2>::from_points(segment.points())
-        .contains(line.point_from_line_coords(&Point::from([t])));
+        .contains(line.point_from_line_coords([t]));
     if !point_is_on_segment {
         return None;
     }

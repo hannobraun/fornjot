@@ -49,7 +49,7 @@ impl SweptCurve {
                 direction: self.path,
             };
 
-            line.point_to_line_coords(point).t
+            line.point_to_line_coords(*point).t
         };
 
         Point::from([u, v])
