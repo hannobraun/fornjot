@@ -56,7 +56,8 @@ impl SweptCurve {
         point: impl Into<Point<2>>,
     ) -> Point<3> {
         let point = point.into();
-        self.curve.point_from_curve_coords([point.u]) + self.path * point.v
+        self.curve.point_from_curve_coords([point.u])
+            + self.path_to_line().vector_from_line_coords([point.v])
     }
 
     /// Convert a vector in surface coordinates to model coordinates
@@ -65,7 +66,8 @@ impl SweptCurve {
         vector: impl Into<Vector<2>>,
     ) -> Vector<3> {
         let vector = vector.into();
-        self.curve.vector_from_curve_coords([vector.u]) + self.path * vector.v
+        self.curve.vector_from_curve_coords([vector.u])
+            + self.path_to_line().vector_from_line_coords([vector.v])
     }
 
     fn path_to_line(&self) -> Line<3> {
