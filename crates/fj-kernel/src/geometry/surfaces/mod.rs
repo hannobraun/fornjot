@@ -59,7 +59,7 @@ impl Surface {
     }
 
     /// Convert a point in model coordinates to surface coordinates
-    pub fn convert_point_to_surface_coords(
+    pub fn point_to_surface_coords(
         &self,
         point_3d: impl Into<Point<3>>,
     ) -> geometry::Point<2> {
@@ -75,7 +75,7 @@ impl Surface {
     }
 
     /// Convert a point in surface coordinates to model coordinates
-    pub fn convert_point_from_surface_coords(
+    pub fn point_from_surface_coords(
         &self,
         point: impl Into<Point<2>>,
     ) -> Point<3> {
@@ -87,7 +87,7 @@ impl Surface {
     }
 
     /// Convert a vector in surface coordinates to model coordinates
-    pub fn convert_vector_from_surface_coords(
+    pub fn vector_from_surface_coords(
         &self,
         vector: impl Into<Vector<2>>,
     ) -> Vector<3> {
