@@ -60,7 +60,7 @@ impl SweptCurve {
         &self,
         point: &Point<2>,
     ) -> Point<3> {
-        self.curve.point_curve_to_model(&point.to_t()) + self.path * point.v
+        self.curve.point_from_curve_coords(&point.to_t()) + self.path * point.v
     }
 
     /// Convert a vector in surface coordinates to model coordinates
