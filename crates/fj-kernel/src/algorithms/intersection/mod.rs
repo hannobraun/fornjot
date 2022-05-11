@@ -5,5 +5,5 @@ mod surface;
 
 pub use self::{
     line_segment::{line_segment, LineSegmentIntersection},
-    surface::surface,
+    surface::surface_surface,
 };
