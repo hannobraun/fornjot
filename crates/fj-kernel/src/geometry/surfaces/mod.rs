@@ -65,7 +65,7 @@ impl Surface {
     ) -> geometry::Point<2> {
         let point_2d = match self {
             Self::SweptCurve(surface) => {
-                surface.convert_point_to_surface_coords(point_3d)
+                surface.point_to_surface_coords(point_3d)
             }
         };
 
@@ -79,7 +79,7 @@ impl Surface {
     ) -> Point<3> {
         match self {
             Self::SweptCurve(surface) => {
-                surface.convert_point_from_surface_coords(*point)
+                surface.point_from_surface_coords(*point)
             }
         }
     }
@@ -91,7 +91,7 @@ impl Surface {
     ) -> Vector<3> {
         match self {
             Self::SweptCurve(surface) => {
-                surface.convert_vector_from_surface_coords(*vector)
+                surface.vector_from_surface_coords(*vector)
             }
         }
     }
