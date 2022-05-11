@@ -82,7 +82,7 @@ impl Curve {
     /// Callers are advised to be careful about the points they pass, as the
     /// point not being on the curve, intentional or not, will never result in
     /// an error.
-    pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
+    pub fn point_to_curve_coords(&self, point: &Point<3>) -> Point<1> {
         match self {
             Self::Circle(curve) => curve.point_to_circle_coords(*point),
             Self::Line(curve) => curve.point_to_line_coords(*point),

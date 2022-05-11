@@ -42,7 +42,7 @@ impl SweptCurve {
         &self,
         point: &Point<3>,
     ) -> Point<2> {
-        let u = self.curve.point_model_to_curve(point).t;
+        let u = self.curve.point_to_curve_coords(point).t;
         let v = {
             let line = Line {
                 origin: self.curve.origin(),
