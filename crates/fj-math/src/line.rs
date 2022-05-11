@@ -46,33 +46,36 @@ impl<const D: usize> Line<D> {
     /// Callers are advised to be careful about the points they pass, as the
     /// point not being on the line, intentional or not, will never result in an
     /// error.
-    pub fn convert_point_to_line_coords(&self, point: &Point<D>) -> Point<1> {
+    pub fn point_to_line_coords(&self, point: impl Into<Point<D>>) -> Point<1> {
         Point {
-            coords: self.convert_vector_to_line_coords(&(point - self.origin)),
+            coords: self.vector_to_line_coords(point.into() - self.origin),
         }
     }
 
     /// Convert a `D`-dimensional vector to line coordinates
-    pub fn convert_vector_to_line_coords(
+    pub fn vector_to_line_coords(
         &self,
-        vector: &Vector<D>,
+        vector: impl Into<Vector<D>>,
     ) -> Vector<1> {
-        let t = vector.scalar_projection_onto(&self.direction)
+        let t = vector.into().scalar_projection_onto(&self.direction)
             / self.direction.magnitude();
         Vector::from([t])
     }
 
     /// Convert a point in line coordinates into a `D`-dimensional point
-    pub fn convert_point_from_line_coords(&self, point: &Point<1>) -> Point<D> {
-        self.origin + self.convert_vector_from_line_coords(&point.coords)
+    pub fn point_from_line_coords(
+        &self,
+        point: impl Into<Point<1>>,
+    ) -> Point<D> {
+        self.origin + self.vector_from_line_coords(point.into().coords)
     }
 
     /// Convert a vector in line coordinates into a `D`-dimensional vector
-    pub fn convert_vector_from_line_coords(
+    pub fn vector_from_line_coords(
         &self,
-        vector: &Vector<1>,
+        vector: impl Into<Vector<1>>,
     ) -> Vector<D> {
-        self.direction * vector.t
+        self.direction * vector.into().t
     }
 }
 
@@ -108,8 +111,8 @@ mod tests {
         verify(line, 2.);
 
         fn verify(line: Line<3>, t: f64) {
-            let point = line.convert_point_from_line_coords(&Point::from([t]));
-            let t_result = line.convert_point_to_line_coords(&point);
+            let point = line.point_from_line_coords([t]);
+            let t_result = line.point_to_line_coords(point);
 
             assert_eq!(Point::from([t]), t_result);
         }

@@ -85,7 +85,7 @@ impl Curve {
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
         match self {
             Self::Circle(curve) => curve.point_model_to_curve(point),
-            Self::Line(curve) => curve.convert_point_to_line_coords(point),
+            Self::Line(curve) => curve.point_to_line_coords(*point),
         }
     }
 
@@ -93,7 +93,7 @@ impl Curve {
     pub fn point_curve_to_model(&self, point: &Point<1>) -> Point<3> {
         match self {
             Self::Circle(curve) => curve.point_curve_to_model(point),
-            Self::Line(curve) => curve.convert_point_from_line_coords(point),
+            Self::Line(curve) => curve.point_from_line_coords(*point),
         }
     }
 
@@ -101,7 +101,7 @@ impl Curve {
     pub fn vector_curve_to_model(&self, point: &Vector<1>) -> Vector<3> {
         match self {
             Self::Circle(curve) => curve.vector_curve_to_model(point),
-            Self::Line(curve) => curve.convert_vector_from_line_coords(point),
+            Self::Line(curve) => curve.vector_from_line_coords(*point),
         }
     }
 }
