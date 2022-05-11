@@ -42,7 +42,7 @@ impl SweptCurve {
         &self,
         point: &Point<3>,
     ) -> Point<2> {
-        let u = self.curve.point_to_curve_coords(point).t;
+        let u = self.curve.point_to_curve_coords(*point).t;
         let v = {
             let line = Line {
                 origin: self.curve.origin(),
@@ -60,7 +60,7 @@ impl SweptCurve {
         &self,
         point: &Point<2>,
     ) -> Point<3> {
-        self.curve.point_from_curve_coords(&point.to_t()) + self.path * point.v
+        self.curve.point_from_curve_coords([point.u]) + self.path * point.v
     }
 
     /// Convert a vector in surface coordinates to model coordinates
@@ -68,8 +68,7 @@ impl SweptCurve {
         &self,
         vector: &Vector<2>,
     ) -> Vector<3> {
-        self.curve.vector_from_curve_coords(&vector.to_t())
-            + self.path * vector.v
+        self.curve.vector_from_curve_coords([vector.u]) + self.path * vector.v
     }
 }
 
