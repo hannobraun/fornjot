@@ -94,6 +94,8 @@ impl<const D: usize> approx::AbsDiffEq for Line<D> {
 
 #[cfg(test)]
 mod tests {
+    use approx::assert_abs_diff_eq;
+
     use crate::{Point, Vector};
 
     use super::Line;
@@ -101,8 +103,8 @@ mod tests {
     #[test]
     fn convert_point_to_line_coords() {
         let line = Line {
-            origin: Point::from([1., 0., 0.]),
-            direction: Vector::from([2., 0., 0.]),
+            origin: Point::from([1., 2., 3.]),
+            direction: Vector::from([2., 3., 5.]),
         };
 
         verify(line, -1.);
@@ -114,7 +116,7 @@ mod tests {
             let point = line.point_from_line_coords([t]);
             let t_result = line.point_to_line_coords(point);
 
-            assert_eq!(Point::from([t]), t_result);
+            assert_abs_diff_eq!(Point::from([t]), t_result, epsilon = 1e-8);
         }
     }
 }
