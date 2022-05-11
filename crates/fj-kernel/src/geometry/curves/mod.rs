@@ -98,7 +98,7 @@ impl Curve {
     }
 
     /// Convert a vector on the curve into model coordinates
-    pub fn vector_curve_to_model(&self, point: &Vector<1>) -> Vector<3> {
+    pub fn vector_from_curve_coords(&self, point: &Vector<1>) -> Vector<3> {
         match self {
             Self::Circle(curve) => curve.vector_from_circle_coords(*point),
             Self::Line(curve) => curve.vector_from_line_coords(*point),

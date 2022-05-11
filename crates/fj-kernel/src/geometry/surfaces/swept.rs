@@ -68,7 +68,8 @@ impl SweptCurve {
         &self,
         vector: &Vector<2>,
     ) -> Vector<3> {
-        self.curve.vector_curve_to_model(&vector.to_t()) + self.path * vector.v
+        self.curve.vector_from_curve_coords(&vector.to_t())
+            + self.path * vector.v
     }
 }
 
