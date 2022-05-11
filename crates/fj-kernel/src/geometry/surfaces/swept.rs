@@ -88,7 +88,7 @@ mod tests {
     use super::SweptCurve;
 
     #[test]
-    fn convert_point_to_surface_coords() {
+    fn point_to_surface_coords() {
         let swept = SweptCurve {
             curve: Curve::Line(Line {
                 origin: Point::from([1., 0., 0.]),
@@ -111,7 +111,7 @@ mod tests {
     }
 
     #[test]
-    fn convert_point_from_surface_coords() {
+    fn point_from_surface_coords() {
         let swept = SweptCurve {
             curve: Curve::Line(Line {
                 origin: Point::from([1., 1., 1.]),
@@ -127,7 +127,7 @@ mod tests {
     }
 
     #[test]
-    fn convert_vector_from_surface_coords() {
+    fn vector_from_surface_coords() {
         let swept = SweptCurve {
             curve: Curve::Line(Line {
                 origin: Point::from([1., 0., 0.]),
