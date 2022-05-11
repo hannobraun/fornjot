@@ -82,26 +82,35 @@ impl Curve {
     /// Callers are advised to be careful about the points they pass, as the
     /// point not being on the curve, intentional or not, will never result in
     /// an error.
-    pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
+    pub fn point_to_curve_coords(
+        &self,
+        point: impl Into<Point<3>>,
+    ) -> Point<1> {
         match self {
-            Self::Circle(curve) => curve.point_model_to_curve(point),
-            Self::Line(curve) => curve.point_to_line_coords(*point),
+            Self::Circle(curve) => curve.point_to_circle_coords(point),
+            Self::Line(curve) => curve.point_to_line_coords(point),
         }
     }
 
     /// Convert a point on the curve into model coordinates
-    pub fn point_curve_to_model(&self, point: &Point<1>) -> Point<3> {
+    pub fn point_from_curve_coords(
+        &self,
+        point: impl Into<Point<1>>,
+    ) -> Point<3> {
         match self {
-            Self::Circle(curve) => curve.point_curve_to_model(point),
-            Self::Line(curve) => curve.point_from_line_coords(*point),
+            Self::Circle(curve) => curve.point_from_circle_coords(point),
+            Self::Line(curve) => curve.point_from_line_coords(point),
         }
     }
 
     /// Convert a vector on the curve into model coordinates
-    pub fn vector_curve_to_model(&self, point: &Vector<1>) -> Vector<3> {
+    pub fn vector_from_curve_coords(
+        &self,
+        point: impl Into<Vector<1>>,
+    ) -> Vector<3> {
         match self {
-            Self::Circle(curve) => curve.vector_curve_to_model(point),
-            Self::Line(curve) => curve.vector_from_line_coords(*point),
+            Self::Circle(curve) => curve.vector_from_circle_coords(point),
+            Self::Line(curve) => curve.vector_from_line_coords(point),
         }
     }
 }

@@ -140,7 +140,7 @@ impl Polygon {
         };
 
         let mut check = TriangleEdgeCheck::new(
-            self.surface.convert_point_from_surface_coords(&ray.origin),
+            self.surface.point_from_surface_coords(ray.origin),
         );
 
         let mut num_hits = 0;
@@ -201,8 +201,7 @@ impl Polygon {
 
                     let edge =
                         Segment::from_points(edge.points().map(|point| {
-                            self.surface
-                                .convert_point_from_surface_coords(&point)
+                            self.surface.point_from_surface_coords(point)
                         }));
                     check.hits.push(edge);
                 }
