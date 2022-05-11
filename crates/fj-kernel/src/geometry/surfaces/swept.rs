@@ -89,7 +89,7 @@ mod tests {
 
     #[test]
     fn point_to_surface_coords() {
-        let swept = SweptCurve {
+        let plane = SweptCurve {
             curve: Curve::Line(Line {
                 origin: Point::from([1., 0., 0.]),
                 direction: Vector::from([0., 2., 0.]),
@@ -97,10 +97,10 @@ mod tests {
             path: Vector::from([0., 0., 3.]),
         };
 
-        verify(&swept, Point::from([-1., -1.]));
-        verify(&swept, Point::from([0., 0.]));
-        verify(&swept, Point::from([1., 1.]));
-        verify(&swept, Point::from([2., 3.]));
+        verify(&plane, Point::from([-1., -1.]));
+        verify(&plane, Point::from([0., 0.]));
+        verify(&plane, Point::from([1., 1.]));
+        verify(&plane, Point::from([2., 3.]));
 
         fn verify(swept: &SweptCurve, surface_point: Point<2>) {
             let point = swept.point_from_surface_coords(surface_point);
