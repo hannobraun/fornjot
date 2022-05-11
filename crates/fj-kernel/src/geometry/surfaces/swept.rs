@@ -40,16 +40,18 @@ impl SweptCurve {
     /// Convert a point in model coordinates to surface coordinates
     pub fn convert_point_to_surface_coords(
         &self,
-        point: &Point<3>,
+        point: impl Into<Point<3>>,
     ) -> Point<2> {
-        let u = self.curve.point_to_curve_coords(*point).t;
+        let point = point.into();
+
+        let u = self.curve.point_to_curve_coords(point).t;
         let v = {
             let line = Line {
                 origin: self.curve.origin(),
                 direction: self.path,
             };
 
-            line.point_to_line_coords(*point).t
+            line.point_to_line_coords(point).t
         };
 
         Point::from([u, v])
@@ -58,16 +60,18 @@ impl SweptCurve {
     /// Convert a point in surface coordinates to model coordinates
     pub fn convert_point_from_surface_coords(
         &self,
-        point: &Point<2>,
+        point: impl Into<Point<2>>,
     ) -> Point<3> {
+        let point = point.into();
         self.curve.point_from_curve_coords([point.u]) + self.path * point.v
     }
 
     /// Convert a vector in surface coordinates to model coordinates
     pub fn convert_vector_from_surface_coords(
         &self,
-        vector: &Vector<2>,
+        vector: impl Into<Vector<2>>,
     ) -> Vector<3> {
+        let vector = vector.into();
         self.curve.vector_from_curve_coords([vector.u]) + self.path * vector.v
     }
 }
@@ -97,8 +101,8 @@ mod tests {
         verify(&swept, Point::from([2., 3.]));
 
         fn verify(swept: &SweptCurve, surface_point: Point<2>) {
-            let point = swept.convert_point_from_surface_coords(&surface_point);
-            let result = swept.convert_point_to_surface_coords(&point);
+            let point = swept.convert_point_from_surface_coords(surface_point);
+            let result = swept.convert_point_to_surface_coords(point);
 
             assert_eq!(result, surface_point);
         }
@@ -115,7 +119,7 @@ mod tests {
         };
 
         assert_eq!(
-            swept.convert_point_from_surface_coords(&Point::from([2., 4.])),
+            swept.convert_point_from_surface_coords([2., 4.]),
             Point::from([1., 4., 8.]),
         );
     }
@@ -131,7 +135,7 @@ mod tests {
         };
 
         assert_eq!(
-            swept.convert_vector_from_surface_coords(&Vector::from([2., 4.])),
+            swept.convert_vector_from_surface_coords([2., 4.]),
             Vector::from([0., 4., 8.]),
         );
     }
