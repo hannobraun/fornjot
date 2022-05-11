@@ -52,7 +52,7 @@ pub fn approx_circle(
 
     for i in 0..n {
         let angle = Scalar::PI * 2. / n as f64 * i as f64;
-        let point = circle.point_from_circle_coords(&Point::from([angle]));
+        let point = circle.point_from_circle_coords([angle]);
         out.push(point);
     }
 }

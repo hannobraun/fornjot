@@ -55,8 +55,11 @@ impl Circle {
     /// Callers are advised to be careful about the points they pass, as the
     /// point not being on the curve, intentional or not, will not result in an
     /// error.
-    pub fn point_to_circle_coords(&self, point: &Point<3>) -> Point<1> {
-        let v = point - self.center;
+    pub fn point_to_circle_coords(
+        &self,
+        point: impl Into<Point<3>>,
+    ) -> Point<1> {
+        let v = point.into() - self.center;
         let atan = Scalar::atan2(v.y, v.x);
         let coord = if atan >= Scalar::ZERO {
             atan
@@ -67,13 +70,19 @@ impl Circle {
     }
 
     /// Convert a point on the curve into model coordinates
-    pub fn point_from_circle_coords(&self, point: &Point<1>) -> Point<3> {
-        self.center + self.vector_from_circle_coords(&point.coords)
+    pub fn point_from_circle_coords(
+        &self,
+        point: impl Into<Point<1>>,
+    ) -> Point<3> {
+        self.center + self.vector_from_circle_coords(point.into().coords)
     }
 
     /// Convert a vector on the curve into model coordinates
-    pub fn vector_from_circle_coords(&self, vector: &Vector<1>) -> Vector<3> {
-        let angle = vector.t;
+    pub fn vector_from_circle_coords(
+        &self,
+        vector: impl Into<Vector<1>>,
+    ) -> Vector<3> {
+        let angle = vector.into().t;
         let (sin, cos) = angle.sin_cos();
 
         self.a * cos + self.b * sin
@@ -97,19 +106,19 @@ mod tests {
         };
 
         assert_eq!(
-            circle.point_to_circle_coords(&Point::from([2., 2., 3.])),
+            circle.point_to_circle_coords([2., 2., 3.]),
             Point::from([0.]),
         );
         assert_eq!(
-            circle.point_to_circle_coords(&Point::from([1., 3., 3.])),
+            circle.point_to_circle_coords([1., 3., 3.]),
             Point::from([FRAC_PI_2]),
         );
         assert_eq!(
-            circle.point_to_circle_coords(&Point::from([0., 2., 3.])),
+            circle.point_to_circle_coords([0., 2., 3.]),
             Point::from([PI]),
         );
         assert_eq!(
-            circle.point_to_circle_coords(&Point::from([1., 1., 3.])),
+            circle.point_to_circle_coords([1., 1., 3.]),
             Point::from([FRAC_PI_2 * 3.]),
         );
     }
