@@ -15,7 +15,7 @@ impl ToShape for fj::Sketch {
             .to_points()
             .into_iter()
             .map(Point::from)
-            .map(|point| surface.convert_point_from_surface_coords(&point));
+            .map(|point| surface.convert_point_from_surface_coords(point));
 
         Face::builder(surface, &mut shape)
             .with_exterior_polygon(points)
