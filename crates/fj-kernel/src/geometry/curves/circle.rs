@@ -55,7 +55,7 @@ impl Circle {
     /// Callers are advised to be careful about the points they pass, as the
     /// point not being on the curve, intentional or not, will not result in an
     /// error.
-    pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
+    pub fn point_to_circle_coords(&self, point: &Point<3>) -> Point<1> {
         let v = point - self.center;
         let atan = Scalar::atan2(v.y, v.x);
         let coord = if atan >= Scalar::ZERO {
@@ -97,19 +97,19 @@ mod tests {
         };
 
         assert_eq!(
-            circle.point_model_to_curve(&Point::from([2., 2., 3.])),
+            circle.point_to_circle_coords(&Point::from([2., 2., 3.])),
             Point::from([0.]),
         );
         assert_eq!(
-            circle.point_model_to_curve(&Point::from([1., 3., 3.])),
+            circle.point_to_circle_coords(&Point::from([1., 3., 3.])),
             Point::from([FRAC_PI_2]),
         );
         assert_eq!(
-            circle.point_model_to_curve(&Point::from([0., 2., 3.])),
+            circle.point_to_circle_coords(&Point::from([0., 2., 3.])),
             Point::from([PI]),
         );
         assert_eq!(
-            circle.point_model_to_curve(&Point::from([1., 1., 3.])),
+            circle.point_to_circle_coords(&Point::from([1., 1., 3.])),
             Point::from([FRAC_PI_2 * 3.]),
         );
     }

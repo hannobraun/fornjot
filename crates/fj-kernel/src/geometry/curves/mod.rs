@@ -84,7 +84,7 @@ impl Curve {
     /// an error.
     pub fn point_model_to_curve(&self, point: &Point<3>) -> Point<1> {
         match self {
-            Self::Circle(curve) => curve.point_model_to_curve(point),
+            Self::Circle(curve) => curve.point_to_circle_coords(point),
             Self::Line(curve) => curve.point_to_line_coords(*point),
         }
     }
