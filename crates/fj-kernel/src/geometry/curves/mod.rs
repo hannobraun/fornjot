@@ -92,7 +92,7 @@ impl Curve {
     /// Convert a point on the curve into model coordinates
     pub fn point_curve_to_model(&self, point: &Point<1>) -> Point<3> {
         match self {
-            Self::Circle(curve) => curve.point_curve_to_model(point),
+            Self::Circle(curve) => curve.point_from_circle_coords(point),
             Self::Line(curve) => curve.point_from_line_coords(*point),
         }
     }
