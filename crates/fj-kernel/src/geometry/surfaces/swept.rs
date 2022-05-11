@@ -45,14 +45,7 @@ impl SweptCurve {
         let point = point.into();
 
         let u = self.curve.point_to_curve_coords(point).t;
-        let v = {
-            let line = Line {
-                origin: self.curve.origin(),
-                direction: self.path,
-            };
-
-            line.point_to_line_coords(point).t
-        };
+        let v = self.path_to_line().point_to_line_coords(point).t;
 
         Point::from([u, v])
     }
@@ -73,6 +66,13 @@ impl SweptCurve {
     ) -> Vector<3> {
         let vector = vector.into();
         self.curve.vector_from_curve_coords([vector.u]) + self.path * vector.v
+    }
+
+    fn path_to_line(&self) -> Line<3> {
+        Line {
+            origin: self.curve.origin(),
+            direction: self.path,
+        }
     }
 }
 
