@@ -68,11 +68,11 @@ impl Circle {
 
     /// Convert a point on the curve into model coordinates
     pub fn point_from_circle_coords(&self, point: &Point<1>) -> Point<3> {
-        self.center + self.vector_curve_to_model(&point.coords)
+        self.center + self.vector_from_circle_coords(&point.coords)
     }
 
     /// Convert a vector on the curve into model coordinates
-    pub fn vector_curve_to_model(&self, vector: &Vector<1>) -> Vector<3> {
+    pub fn vector_from_circle_coords(&self, vector: &Vector<1>) -> Vector<3> {
         let angle = vector.t;
         let (sin, cos) = angle.sin_cos();
 
