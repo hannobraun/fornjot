@@ -43,11 +43,13 @@ CI will kick in automatically when you create a PR. However, to save time you ca
 just build
 ```
 
-You may need to install `just` first:
+You may also need to install `just` first:
 
 ```sh
 cargo install just
 ```
+
+N.B. The justfile is maintained in parallel to the CI configuration. Therefore it's possible they can deviate. Any CI failures not caught by `just build` should be raised as bugs against the justfile. 
 
 Pull requests are always welcome. But of course, there's a risk that yours might not be accepted. Bug fixes and other obvious improvements are usually safe, but new features might be deemed out of scope.
 
