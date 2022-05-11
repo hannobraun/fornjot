@@ -112,7 +112,7 @@ mod tests {
     fn convert_point_from_surface_coords() {
         let swept = SweptCurve {
             curve: Curve::Line(Line {
-                origin: Point::from([1., 0., 0.]),
+                origin: Point::from([1., 1., 1.]),
                 direction: Vector::from([0., 2., 0.]),
             }),
             path: Vector::from([0., 0., 2.]),
@@ -120,7 +120,7 @@ mod tests {
 
         assert_eq!(
             swept.point_from_surface_coords([2., 4.]),
-            Point::from([1., 4., 8.]),
+            Point::from([1., 5., 9.]),
         );
     }
 
