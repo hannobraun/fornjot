@@ -37,6 +37,20 @@ If you think your request is an obvious improvement, open an issue. If want to d
 
 If you want to fix a bug, add a new feature, or improve an existing one, just fork the repository, make your change, and submit a pull request. Once submitted, [@hannobraun] will review the pull request, give feedback and possibly request changes, and once everything is in order, merge it.
 
+CI will kick in automatically when you create a PR. However, to save time you can verify your changes locally by runing the following from the repository root:
+
+``` sh
+just build
+```
+
+You may also need to install `just` first:
+
+```sh
+cargo install just
+```
+
+N.B. The justfile is maintained in parallel to the CI configuration. Therefore it's possible they can deviate. Any CI failures not caught by `just build` should be raised as bugs against the justfile. 
+
 Pull requests are always welcome. But of course, there's a risk that yours might not be accepted. Bug fixes and other obvious improvements are usually safe, but new features might be deemed out of scope.
 
 If you don't want to risk spending time on work that might not be merged, you can start a discussion first. [Matrix] or [Discussions] are the best ways to do that.
