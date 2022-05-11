@@ -45,14 +45,7 @@ impl SweptCurve {
         let point = point.into();
 
         let u = self.curve.point_to_curve_coords(point).t;
-        let v = {
-            let line = Line {
-                origin: self.curve.origin(),
-                direction: self.path,
-            };
-
-            line.point_to_line_coords(point).t
-        };
+        let v = self.path_to_line().point_to_line_coords(point).t;
 
         Point::from([u, v])
     }
@@ -63,7 +56,8 @@ impl SweptCurve {
         point: impl Into<Point<2>>,
     ) -> Point<3> {
         let point = point.into();
-        self.curve.point_from_curve_coords([point.u]) + self.path * point.v
+        self.curve.point_from_curve_coords([point.u])
+            + self.path_to_line().vector_from_line_coords([point.v])
     }
 
     /// Convert a vector in surface coordinates to model coordinates
@@ -72,7 +66,15 @@ impl SweptCurve {
         vector: impl Into<Vector<2>>,
     ) -> Vector<3> {
         let vector = vector.into();
-        self.curve.vector_from_curve_coords([vector.u]) + self.path * vector.v
+        self.curve.vector_from_curve_coords([vector.u])
+            + self.path_to_line().vector_from_line_coords([vector.v])
+    }
+
+    fn path_to_line(&self) -> Line<3> {
+        Line {
+            origin: self.curve.origin(),
+            direction: self.path,
+        }
     }
 }
 
@@ -86,8 +88,8 @@ mod tests {
     use super::SweptCurve;
 
     #[test]
-    fn convert_point_to_surface_coords() {
-        let swept = SweptCurve {
+    fn point_to_surface_coords() {
+        let plane = SweptCurve {
             curve: Curve::Line(Line {
                 origin: Point::from([1., 0., 0.]),
                 direction: Vector::from([0., 2., 0.]),
@@ -95,10 +97,10 @@ mod tests {
             path: Vector::from([0., 0., 3.]),
         };
 
-        verify(&swept, Point::from([-1., -1.]));
-        verify(&swept, Point::from([0., 0.]));
-        verify(&swept, Point::from([1., 1.]));
-        verify(&swept, Point::from([2., 3.]));
+        verify(&plane, Point::from([-1., -1.]));
+        verify(&plane, Point::from([0., 0.]));
+        verify(&plane, Point::from([1., 1.]));
+        verify(&plane, Point::from([2., 3.]));
 
         fn verify(swept: &SweptCurve, surface_point: Point<2>) {
             let point = swept.point_from_surface_coords(surface_point);
@@ -109,10 +111,10 @@ mod tests {
     }
 
     #[test]
-    fn convert_point_from_surface_coords() {
+    fn point_from_surface_coords() {
         let swept = SweptCurve {
             curve: Curve::Line(Line {
-                origin: Point::from([1., 0., 0.]),
+                origin: Point::from([1., 1., 1.]),
                 direction: Vector::from([0., 2., 0.]),
             }),
             path: Vector::from([0., 0., 2.]),
@@ -120,12 +122,12 @@ mod tests {
 
         assert_eq!(
             swept.point_from_surface_coords([2., 4.]),
-            Point::from([1., 4., 8.]),
+            Point::from([1., 5., 9.]),
         );
     }
 
     #[test]
-    fn convert_vector_from_surface_coords() {
+    fn vector_from_surface_coords() {
         let swept = SweptCurve {
             curve: Curve::Line(Line {
                 origin: Point::from([1., 0., 0.]),
