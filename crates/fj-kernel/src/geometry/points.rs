@@ -30,10 +30,13 @@ impl<const D: usize> Point<D> {
     /// Both the native and the canonical form must be provide. The caller must
     /// guarantee that both of them match.
     pub fn new(
-        native: fj_math::Point<D>,
-        canonical: fj_math::Point<3>,
+        native: impl Into<fj_math::Point<D>>,
+        canonical: impl Into<fj_math::Point<3>>,
     ) -> Self {
-        Self { native, canonical }
+        Self {
+            native: native.into(),
+            canonical: canonical.into(),
+        }
     }
 
     /// Access the point's native form
