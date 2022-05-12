@@ -51,6 +51,9 @@ impl Edge {
         curve: Handle<Curve>,
         vertices: Option<[Handle<Vertex>; 2]>,
     ) -> Self {
+        let vertices = vertices
+            .map(|vertices| vertices.map(|handle| EdgeVertex { handle }));
+
         Self { curve, vertices }
     }
 
@@ -72,7 +75,9 @@ impl Edge {
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
     pub fn vertices(&self) -> Option<[Vertex; 2]> {
-        self.vertices.as_ref().map(|[a, b]| [a.get(), b.get()])
+        self.vertices
+            .as_ref()
+            .map(|[a, b]| [a.handle.get(), b.handle.get()])
     }
 }
 
@@ -90,4 +95,8 @@ impl Hash for Edge {
 }
 
 /// A vertex of an edge
-pub type EdgeVertex = Handle<Vertex>;
+#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
+pub struct EdgeVertex {
+    /// The handle to the vertex
+    pub handle: Handle<Vertex>,
+}
