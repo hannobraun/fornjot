@@ -1,5 +1,10 @@
-# Cargo
+# Build Artifacts
 /target
+**/node_modules
+**/.next/
+**/yarn-error.log
+**/dist/
+**/out/
 
 # IDE Configurations
 **/.vs/

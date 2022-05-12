@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "scripts": {
+    "dev:editor-web": "yarn --cwd frontends/editor/ run dev",
+    "build:editor-web": "yarn --cwd frontends/editor/ run build",
+    "export:editor-web": "yarn --cwd frontends/editor/ run export",
+    "start:editor-web": "yarn --cwd frontends/editor/ run start",
+    "build:editor-tauri": "yarn --cwd crates/fj-editor/ run tauri build",
+    "dev:editor-tauri": "yarn --cwd crates/fj-editor/ run tauri dev",
+    "tauri": "tauri"
+  },
+  "workspaces": [
+    "frontends/editor"
+  ],
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.0.0-rc.10"
+  }
+}
