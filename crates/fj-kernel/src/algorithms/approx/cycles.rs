@@ -38,10 +38,9 @@ impl CycleApprox {
         for segment in self.points.windows(2) {
             // This can't panic, as we passed `2` to `windows`. Can be cleaned
             // up, once `array_windows` is stable.
-            let p0 = segment[0];
-            let p1 = segment[1];
+            let segment = [segment[0], segment[1]];
 
-            segments.push(Segment::from([p0, p1]));
+            segments.push(Segment::from(segment));
         }
 
         segments
