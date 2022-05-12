@@ -46,6 +46,14 @@ pub struct Edge {
 }
 
 impl Edge {
+    /// Construct an instance of `Edge`
+    pub fn new(
+        curve: Handle<Curve>,
+        vertices: Option<[Handle<Vertex>; 2]>,
+    ) -> Self {
+        Self { curve, vertices }
+    }
+
     /// Build an edge using the [`EdgeBuilder`] API
     pub fn builder(shape: &mut Shape) -> EdgeBuilder {
         EdgeBuilder::new(shape)
