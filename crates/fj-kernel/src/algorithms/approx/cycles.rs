@@ -1,6 +1,6 @@
-use fj_math::{Point, Segment};
+use fj_math::Segment;
 
-use crate::topology::Cycle;
+use crate::{geometry, topology::Cycle};
 
 use super::{curves::approx_curve, edges::approximate_edge, Tolerance};
 
@@ -8,7 +8,7 @@ use super::{curves::approx_curve, edges::approximate_edge, Tolerance};
 #[derive(Debug, Eq, PartialEq, Hash)]
 pub struct CycleApprox {
     /// The points that approximate the cycle
-    pub points: Vec<Point<3>>,
+    pub points: Vec<geometry::Point<3>>,
 }
 
 impl CycleApprox {
@@ -23,8 +23,15 @@ impl CycleApprox {
             let mut edge_points = Vec::new();
             approx_curve(&edge.curve(), tolerance, &mut edge_points);
 
-            points.extend(approximate_edge(edge_points, edge.vertices()));
+            points.extend(approximate_edge(edge.vertices, edge_points));
         }
+
+        let mut points: Vec<_> = points
+            .into_iter()
+            .map(|point| {
+                geometry::Point::new(point.canonical(), point.canonical())
+            })
+            .collect();
 
         points.dedup();
 
@@ -38,23 +45,12 @@ impl CycleApprox {
         for segment in self.points.windows(2) {
             // This can't panic, as we passed `2` to `windows`. Can be cleaned
             // up, once `array_windows` is stable.
-            let p0 = segment[0];
-            let p1 = segment[1];
+            let segment = [segment[0], segment[1]];
 
-            segments.push(Segment::from([p0, p1]));
+            let segment = segment.map(|point| point.canonical());
+            segments.push(Segment::from(segment));
         }
 
         segments
-    }
-}
-
-impl<T, P> From<T> for CycleApprox
-where
-    T: IntoIterator<Item = P>,
-    P: Into<Point<3>>,
-{
-    fn from(points: T) -> Self {
-        let points = points.into_iter().map(Into::into).collect();
-        Self { points }
     }
 }

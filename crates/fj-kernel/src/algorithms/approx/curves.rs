@@ -1,8 +1,8 @@
 use std::cmp::max;
 
-use fj_math::{Point, Scalar};
+use fj_math::Scalar;
 
-use crate::geometry::{Circle, Curve};
+use crate::geometry::{self, Circle, Curve};
 
 use super::Tolerance;
 
@@ -23,7 +23,7 @@ use super::Tolerance;
 pub fn approx_curve(
     curve: &Curve,
     tolerance: Tolerance,
-    out: &mut Vec<Point<3>>,
+    out: &mut Vec<geometry::Point<1>>,
 ) {
     match curve {
         Curve::Circle(curve) => approx_circle(curve, tolerance, out),
@@ -38,7 +38,7 @@ pub fn approx_curve(
 pub fn approx_circle(
     circle: &Circle,
     tolerance: Tolerance,
-    out: &mut Vec<Point<3>>,
+    out: &mut Vec<geometry::Point<1>>,
 ) {
     let radius = circle.a.magnitude();
 
@@ -53,7 +53,7 @@ pub fn approx_circle(
     for i in 0..n {
         let angle = Scalar::PI * 2. / n as f64 * i as f64;
         let point = circle.point_from_circle_coords([angle]);
-        out.push(point);
+        out.push(geometry::Point::new([angle], point));
     }
 }
 
