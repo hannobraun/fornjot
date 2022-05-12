@@ -1,8 +1,6 @@
 use std::collections::HashSet;
 
-use fj_math::Point;
-
-use crate::topology::Face;
+use crate::{geometry, topology::Face};
 
 use super::{CycleApprox, Tolerance};
 
@@ -13,7 +11,7 @@ pub struct FaceApprox {
     ///
     /// These could be actual vertices from the model, points that approximate
     /// an edge, or points that approximate a face.
-    pub points: HashSet<Point<3>>,
+    pub points: HashSet<geometry::Point<3>>,
 
     /// Approximation of the exterior cycle
     pub exterior: CycleApprox,
@@ -83,7 +81,11 @@ mod tests {
     use fj_math::{Point, Scalar};
     use map_macro::set;
 
-    use crate::{geometry::Surface, shape::Shape, topology::Face};
+    use crate::{
+        geometry::{self, Surface},
+        shape::Shape,
+        topology::Face,
+    };
 
     use super::{CycleApprox, FaceApprox, Tolerance};
 
@@ -109,6 +111,15 @@ mod tests {
             .with_exterior_polygon([a, b, c, d])
             .with_interior_polygon([e, f, g, h])
             .build()?;
+
+        let a = geometry::Point::new(a, a);
+        let b = geometry::Point::new(b, b);
+        let c = geometry::Point::new(c, c);
+        let d = geometry::Point::new(d, d);
+        let e = geometry::Point::new(e, e);
+        let f = geometry::Point::new(f, f);
+        let g = geometry::Point::new(g, g);
+        let h = geometry::Point::new(h, h);
 
         assert_eq!(
             FaceApprox::new(&face.get(), tolerance),
