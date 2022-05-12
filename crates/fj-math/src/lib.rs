@@ -36,6 +36,7 @@
 #![deny(missing_docs)]
 
 mod aabb;
+mod circle;
 mod coordinates;
 mod line;
 mod point;
@@ -48,6 +49,7 @@ mod vector;
 
 pub use self::{
     aabb::Aabb,
+    circle::Circle,
     coordinates::{Uv, Xyz, T},
     line::Line,
     point::Point,
