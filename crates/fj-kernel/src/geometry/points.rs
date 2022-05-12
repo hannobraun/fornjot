@@ -1,7 +1,3 @@
-use std::ops::{Add, Sub};
-
-use fj_math::Vector;
-
 /// A point that can be losslessly converted into its canonical form
 ///
 /// The canonical form is always the 3D representation. It needs to be provided
@@ -47,38 +43,5 @@ impl<const D: usize> Point<D> {
     /// Access the point's canonical form
     pub fn canonical(&self) -> fj_math::Point<3> {
         self.canonical
-    }
-}
-
-impl From<fj_math::Point<3>> for Point<3> {
-    fn from(point: fj_math::Point<3>) -> Self {
-        Self::new(point, point)
-    }
-}
-
-// Some math operations for convenience. Obviously those can never return a new
-// `self::Point`, or the conversion back to 3D would be broken.
-
-impl<const D: usize> Add<Vector<D>> for Point<D> {
-    type Output = fj_math::Point<D>;
-
-    fn add(self, rhs: Vector<D>) -> Self::Output {
-        self.native.add(rhs)
-    }
-}
-
-impl<const D: usize> Sub<Self> for Point<D> {
-    type Output = Vector<D>;
-
-    fn sub(self, rhs: Self) -> Self::Output {
-        self.native.sub(rhs.native)
-    }
-}
-
-impl<const D: usize> Sub<fj_math::Point<D>> for Point<D> {
-    type Output = Vector<D>;
-
-    fn sub(self, rhs: fj_math::Point<D>) -> Self::Output {
-        self.native.sub(rhs)
     }
 }
