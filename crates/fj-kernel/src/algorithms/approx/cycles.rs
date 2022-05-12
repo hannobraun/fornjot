@@ -23,19 +23,15 @@ impl CycleApprox {
             let mut edge_points = Vec::new();
             approx_curve(&edge.curve(), tolerance, &mut edge_points);
 
-            points.extend(approximate_edge(
-                edge.vertices,
-                edge_points
-                    .into_iter()
-                    .map(|point| {
-                        geometry::Point::new(
-                            point.canonical(),
-                            point.canonical(),
-                        )
-                    })
-                    .collect(),
-            ));
+            points.extend(approximate_edge(edge.vertices, edge_points));
         }
+
+        let mut points: Vec<_> = points
+            .into_iter()
+            .map(|point| {
+                geometry::Point::new(point.canonical(), point.canonical())
+            })
+            .collect();
 
         points.dedup();
 

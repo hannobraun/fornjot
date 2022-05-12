@@ -2,8 +2,8 @@ use crate::{geometry, topology::EdgeVertex};
 
 pub fn approximate_edge(
     vertices: Option<[EdgeVertex; 2]>,
-    mut points: Vec<geometry::Point<3>>,
-) -> Vec<geometry::Point<3>> {
+    mut points: Vec<geometry::Point<1>>,
+) -> Vec<geometry::Point<1>> {
     // Insert the exact vertices of this edge into the approximation. This means
     // we don't rely on the curve approximation to deliver accurate
     // representations of these vertices, which they might not be able to do.
@@ -12,12 +12,7 @@ pub fn approximate_edge(
     // would lead to bugs in the approximation, as points that should refer to
     // the same vertex would be understood to refer to very close, but distinct
     // vertices.
-    let vertices = vertices.map(|vertices| {
-        vertices.map(|vertex| {
-            let point = vertex.handle.get().point();
-            geometry::Point::new(point, point)
-        })
-    });
+    let vertices = vertices.map(|vertices| vertices.map(|vertex| vertex.local));
     if let Some([a, b]) = vertices {
         points.insert(0, a);
         points.push(b);
@@ -54,10 +49,10 @@ mod test {
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let a = geometry::Point::new(a, a);
-        let b = geometry::Point::new(b, b);
-        let c = geometry::Point::new(c, c);
-        let d = geometry::Point::new(d, d);
+        let a = geometry::Point::new([0.0], a);
+        let b = geometry::Point::new([0.25], b);
+        let c = geometry::Point::new([0.75], c);
+        let d = geometry::Point::new([1.0], d);
 
         let v1 = Vertex::builder(&mut shape).build_from_point(a.canonical())?;
         let v2 = Vertex::builder(&mut shape).build_from_point(d.canonical())?;
