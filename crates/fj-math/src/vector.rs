@@ -46,6 +46,25 @@ impl<const D: usize> Vector<D> {
         }
     }
 
+    /// Convert the vector into a 2-dimensional vector
+    ///
+    /// If the vector is 0-, or 1-dimensional, the missing components will be
+    /// initialized to zero.
+    ///
+    /// If the vector has higher dimensionality than two, the superfluous
+    /// components will be discarded.
+    pub fn to_uv(self) -> Vector<2> {
+        let zero = Scalar::ZERO;
+
+        let components = match self.components.as_slice() {
+            [] => [zero, zero],
+            &[t] => [t, zero],
+            &[u, v, ..] => [u, v],
+        };
+
+        Vector { components }
+    }
+
     /// Convert the vector into a 3-dimensional vector
     ///
     /// If the vector is 0-, 1-, or 2-dimensional, the missing components will
@@ -314,6 +333,15 @@ impl<const D: usize> approx::AbsDiffEq for Vector<D> {
 #[cfg(test)]
 mod tests {
     use crate::{Scalar, Vector};
+
+    #[test]
+    fn to_uv() {
+        let d0: [f64; 0] = [];
+        assert_eq!(Vector::from(d0).to_uv(), Vector::from([0., 0.]));
+        assert_eq!(Vector::from([1.]).to_uv(), Vector::from([1., 0.]));
+        assert_eq!(Vector::from([1., 2.]).to_uv(), Vector::from([1., 2.]));
+        assert_eq!(Vector::from([1., 2., 3.]).to_uv(), Vector::from([1., 2.]),);
+    }
 
     #[test]
     fn to_xyz() {
