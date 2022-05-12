@@ -8,7 +8,7 @@ use crate::{
     shape::{Handle, Shape},
 };
 
-use super::{edges::Cycle, FaceBuilder};
+use super::{Cycle, FaceBuilder};
 
 /// A face of a shape
 ///
