@@ -121,7 +121,7 @@ fn add_cycle(
             vs
         });
 
-        let edge = shape.insert(Edge { curve, vertices }).unwrap();
+        let edge = shape.insert(Edge::new(curve, vertices)).unwrap();
         edges.push(edge);
     }
 

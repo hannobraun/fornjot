@@ -53,17 +53,10 @@ pub fn sweep_shape(
         let vertices_top = source_to_top.vertices_for_edge(&edge_source);
 
         let edge_bottom = target
-            .insert(Edge {
-                curve: curve_bottom,
-                vertices: vertices_bottom,
-            })
+            .insert(Edge::new(curve_bottom, vertices_bottom))
             .unwrap();
-        let edge_top = target
-            .insert(Edge {
-                curve: curve_top,
-                vertices: vertices_top,
-            })
-            .unwrap();
+        let edge_top =
+            target.insert(Edge::new(curve_top, vertices_top)).unwrap();
 
         source_to_bottom
             .edges
@@ -175,7 +168,7 @@ pub fn sweep_shape(
                     vertices_source.map(|vertex_source| {
                         let vertex_bottom = source_to_bottom
                             .vertices
-                            .get(&vertex_source)
+                            .get(&vertex_source.handle)
                             .unwrap()
                             .clone();
 
@@ -188,18 +181,15 @@ pub fn sweep_shape(
 
                                 let vertex_top = source_to_top
                                     .vertices
-                                    .get(&vertex_source)
+                                    .get(&vertex_source.handle)
                                     .unwrap()
                                     .clone();
 
                                 target
-                                    .insert(Edge {
+                                    .insert(Edge::new(
                                         curve,
-                                        vertices: Some([
-                                            vertex_bottom,
-                                            vertex_top,
-                                        ]),
-                                    })
+                                        Some([vertex_bottom, vertex_top]),
+                                    ))
                                     .unwrap()
                             })
                             .clone()
@@ -266,7 +256,9 @@ impl Relation {
         edge: &Handle<Edge>,
     ) -> Option<[Handle<Vertex>; 2]> {
         edge.get().vertices.map(|vertices| {
-            vertices.map(|vertex| self.vertices.get(&vertex).unwrap().clone())
+            vertices.map(|vertex| {
+                self.vertices.get(&vertex.handle).unwrap().clone()
+            })
         })
     }
 

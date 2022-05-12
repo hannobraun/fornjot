@@ -66,14 +66,12 @@ fn copy_shape(orig: Shape, target: &mut Shape) {
         vertices.insert(vertex_orig, vertex);
     }
     for edge_orig in orig.edges() {
-        let edge = target
-            .insert(Edge {
-                curve: curves[&edge_orig.get().curve].clone(),
-                vertices: edge_orig.get().vertices.as_ref().map(|vs| {
-                    vs.clone().map(|vertex| vertices[&vertex].clone())
-                }),
-            })
-            .unwrap();
+        let curve = curves[&edge_orig.get().curve].clone();
+        let vertices = edge_orig.get().vertices.as_ref().map(|vs| {
+            vs.clone().map(|vertex| vertices[&vertex.handle].clone())
+        });
+
+        let edge = target.insert(Edge::new(curve, vertices)).unwrap();
         edges.insert(edge_orig, edge);
     }
     for cycle_orig in orig.cycles() {
