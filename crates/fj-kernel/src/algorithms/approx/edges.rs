@@ -1,8 +1,8 @@
 use crate::{geometry, topology::EdgeVertex};
 
 pub fn approximate_edge(
-    mut points: Vec<geometry::Point<3>>,
     vertices: Option<[EdgeVertex; 2]>,
+    mut points: Vec<geometry::Point<3>>,
 ) -> Vec<geometry::Point<3>> {
     // Insert the exact vertices of this edge into the approximation. This means
     // we don't rely on the curve approximation to deliver accurate
@@ -75,12 +75,12 @@ mod test {
 
         // Regular edge
         assert_eq!(
-            super::approximate_edge(vec![b, c], Some(vertices)),
+            super::approximate_edge(Some(vertices), vec![b, c]),
             vec![a, b, c, d],
         );
 
         // Continuous edge
-        assert_eq!(super::approximate_edge(vec![b, c], None), vec![b, c, b],);
+        assert_eq!(super::approximate_edge(None, vec![b, c]), vec![b, c, b],);
 
         Ok(())
     }

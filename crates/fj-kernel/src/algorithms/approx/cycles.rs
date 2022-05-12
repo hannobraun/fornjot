@@ -24,6 +24,7 @@ impl CycleApprox {
             approx_curve(&edge.curve(), tolerance, &mut edge_points);
 
             points.extend(approximate_edge(
+                edge.vertices,
                 edge_points
                     .into_iter()
                     .map(|point| {
@@ -33,7 +34,6 @@ impl CycleApprox {
                         )
                     })
                     .collect(),
-                edge.vertices,
             ));
         }
 
