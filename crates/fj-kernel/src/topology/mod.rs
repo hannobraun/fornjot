@@ -22,7 +22,7 @@ mod faces;
 mod vertices;
 
 pub use self::{
-    builder::{EdgeBuilder, VertexBuilder},
+    builder::{CycleBuilder, EdgeBuilder, FaceBuilder, VertexBuilder},
     edges::{Cycle, Edge},
     faces::Face,
     vertices::Vertex,

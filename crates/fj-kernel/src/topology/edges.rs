@@ -5,7 +5,7 @@ use crate::{
     shape::{Handle, Shape},
 };
 
-use super::{builder::CycleBuilder, vertices::Vertex, EdgeBuilder};
+use super::{vertices::Vertex, CycleBuilder, EdgeBuilder};
 
 /// A cycle of connected edges
 ///
