@@ -33,7 +33,7 @@ impl CycleApprox {
                         )
                     })
                     .collect(),
-                edge.vertices(),
+                edge.vertices,
             ));
         }
 

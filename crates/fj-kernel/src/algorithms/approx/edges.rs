@@ -1,8 +1,8 @@
-use crate::{geometry, topology::Vertex};
+use crate::{geometry, topology::EdgeVertex};
 
 pub fn approximate_edge(
     mut points: Vec<geometry::Point<3>>,
-    vertices: Option<[Vertex; 2]>,
+    vertices: Option<[EdgeVertex; 2]>,
 ) -> Vec<geometry::Point<3>> {
     // Insert the exact vertices of this edge into the approximation. This means
     // we don't rely on the curve approximation to deliver accurate
@@ -14,7 +14,7 @@ pub fn approximate_edge(
     // vertices.
     let vertices = vertices.map(|vertices| {
         vertices.map(|vertex| {
-            let point = vertex.point();
+            let point = vertex.handle.get().point();
             geometry::Point::new(point, point)
         })
     });
@@ -39,7 +39,11 @@ pub fn approximate_edge(
 mod test {
     use fj_math::Point;
 
-    use crate::{geometry, shape::Shape, topology::Vertex};
+    use crate::{
+        geometry,
+        shape::Shape,
+        topology::{EdgeVertex, Vertex},
+    };
 
     #[test]
     fn approximate_edge() -> anyhow::Result<()> {
@@ -58,7 +62,16 @@ mod test {
         let v1 = Vertex::builder(&mut shape).build_from_point(a.canonical())?;
         let v2 = Vertex::builder(&mut shape).build_from_point(d.canonical())?;
 
-        let vertices = [v1.get(), v2.get()];
+        let vertices = [
+            EdgeVertex {
+                handle: v1,
+                local: geometry::Point::new([0.], a.canonical()),
+            },
+            EdgeVertex {
+                handle: v2,
+                local: geometry::Point::new([1.], d.canonical()),
+            },
+        ];
 
         // Regular edge
         assert_eq!(
