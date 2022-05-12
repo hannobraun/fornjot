@@ -2,5 +2,6 @@
 /target
 
 # IDE Configurations
-**/.vs/
-**/.idea/
+**/.vs/ # Visual Studio
+**/.idea/ # Intellij
+**/.buildconfig # Gnome Builder
