@@ -121,18 +121,18 @@ mod tests {
         let g = geometry::Point::new(g, g);
         let h = geometry::Point::new(h, h);
 
-        assert_eq!(
-            FaceApprox::new(&face.get(), tolerance),
-            FaceApprox {
-                points: set![a, b, c, d, e, f, g, h],
-                exterior: CycleApprox {
-                    points: vec![a, b, c, d, a],
-                },
-                interiors: set![CycleApprox {
-                    points: vec![e, f, g, h, e],
-                }],
-            }
-        );
+        let approx = FaceApprox::new(&face.get(), tolerance);
+        let expected = FaceApprox {
+            points: set![a, b, c, d, e, f, g, h],
+            exterior: CycleApprox {
+                points: vec![a, b, c, d, a],
+            },
+            interiors: set![CycleApprox {
+                points: vec![e, f, g, h, e],
+            }],
+        };
+
+        assert_eq!(approx, expected);
 
         Ok(())
     }
