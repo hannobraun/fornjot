@@ -42,7 +42,7 @@ pub struct Edge {
     /// It got in the way of some work, however, so it made sense to simplify
     /// it by storing 3D vertices. It will probably make sense to revert this
     /// and store 1D vertices again, at some point.
-    pub vertices: Option<[Handle<Vertex>; 2]>,
+    pub vertices: Option<[EdgeVertex; 2]>,
 }
 
 impl Edge {
@@ -80,3 +80,6 @@ impl Hash for Edge {
         self.vertices().hash(state);
     }
 }
+
+/// A vertex of an edge
+pub type EdgeVertex = Handle<Vertex>;
