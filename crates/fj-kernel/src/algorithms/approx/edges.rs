@@ -58,9 +58,11 @@ mod test {
         let v1 = Vertex::builder(&mut shape).build_from_point(a.canonical())?;
         let v2 = Vertex::builder(&mut shape).build_from_point(d.canonical())?;
 
+        let vertices = [v1.get(), v2.get()];
+
         // Regular edge
         assert_eq!(
-            super::approximate_edge(vec![b, c], Some([v1.get(), v2.get()])),
+            super::approximate_edge(vec![b, c], Some(vertices)),
             vec![a, b, c, d],
         );
 
