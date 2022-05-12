@@ -73,7 +73,7 @@ fn copy_shape(orig: Shape, target: &mut Shape) {
             .as_ref()
             .map(|vs| vs.clone().map(|vertex| vertices[&vertex].clone()));
 
-        let edge = target.insert(Edge { curve, vertices }).unwrap();
+        let edge = target.insert(Edge::new(curve, vertices)).unwrap();
         edges.insert(edge_orig, edge);
     }
     for cycle_orig in orig.cycles() {

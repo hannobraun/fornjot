@@ -88,10 +88,7 @@ impl<'r> EdgeBuilder<'r> {
         let curve = self.shape.insert(Curve::Line(Line::from_points(
             vertices.clone().map(|vertex| vertex.get().point()),
         )))?;
-        let edge = self.shape.insert(Edge {
-            curve,
-            vertices: Some(vertices),
-        })?;
+        let edge = self.shape.insert(Edge::new(curve, Some(vertices)))?;
 
         Ok(edge)
     }
