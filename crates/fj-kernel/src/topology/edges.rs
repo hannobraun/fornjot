@@ -1,7 +1,7 @@
 use std::hash::{Hash, Hasher};
 
 use crate::{
-    geometry::Curve,
+    geometry::{self, Curve},
     shape::{Handle, Shape},
 };
 
@@ -51,8 +51,13 @@ impl Edge {
         curve: Handle<Curve>,
         vertices: Option<[Handle<Vertex>; 2]>,
     ) -> Self {
-        let vertices = vertices
-            .map(|vertices| vertices.map(|handle| EdgeVertex { handle }));
+        let vertices = vertices.map(|vertices| {
+            vertices.map(|handle| {
+                let local =
+                    curve.get().point_to_curve_coords(handle.get().point());
+                EdgeVertex { handle, local }
+            })
+        });
 
         Self { curve, vertices }
     }
@@ -99,4 +104,9 @@ impl Hash for Edge {
 pub struct EdgeVertex {
     /// The handle to the vertex
     pub handle: Handle<Vertex>,
+
+    /// The local representation of the vertex
+    ///
+    /// Represents the vertex in terms of the coordinates of the edge's curve.
+    pub local: geometry::Point<1>,
 }
