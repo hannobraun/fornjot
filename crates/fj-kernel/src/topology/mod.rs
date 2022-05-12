@@ -17,13 +17,15 @@
 //! refer to objects in the same memory location.
 
 mod builder;
+mod cycles;
 mod edges;
 mod faces;
 mod vertices;
 
 pub use self::{
     builder::{CycleBuilder, EdgeBuilder, FaceBuilder, VertexBuilder},
-    edges::{Cycle, Edge},
+    cycles::Cycle,
+    edges::Edge,
     faces::Face,
     vertices::Vertex,
 };
