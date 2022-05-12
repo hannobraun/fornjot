@@ -2,7 +2,7 @@ use std::ops;
 
 use nalgebra::Perspective3;
 
-use crate::{Line, Scalar};
+use crate::{Circle, Line, Scalar};
 
 use super::{Aabb, Point, Segment, Triangle, Vector};
 
@@ -77,6 +77,15 @@ impl Transform {
             self.transform_point(b),
             self.transform_point(c),
         ])
+    }
+
+    /// Transform the given circle
+    pub fn transform_circle(&self, circle: &Circle<3>) -> Circle<3> {
+        Circle {
+            center: self.transform_point(&circle.center),
+            a: self.transform_vector(&circle.a),
+            b: self.transform_vector(&circle.b),
+        }
     }
 
     /// Inverse transform
