@@ -131,8 +131,7 @@ pub fn sweep_shape(
             for segment in approx.segments() {
                 let [v0, v1] = segment.points();
                 let [v3, v2] = {
-                    let segment = Transform::translation(path)
-                        .transform_segment(&segment);
+                    let segment = translation.transform_segment(&segment);
                     segment.points()
                 };
 
