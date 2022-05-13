@@ -26,7 +26,7 @@ pub struct Edge {
     /// The edge can be a segment of the curve that is bounded by two vertices,
     /// or if the curve is continuous (i.e. connects to itself), the edge could
     /// be defined by the whole curve, and have no bounding vertices.
-    pub curve: Handle<Curve>,
+    pub curve: Handle<Curve<3>>,
 
     /// Access the vertices that bound the edge on the curve
     ///
@@ -38,7 +38,7 @@ pub struct Edge {
 impl Edge {
     /// Construct an instance of `Edge`
     pub fn new(
-        curve: Handle<Curve>,
+        curve: Handle<Curve<3>>,
         vertices: Option<[Handle<Vertex>; 2]>,
     ) -> Self {
         let vertices = vertices.map(|vertices| {
@@ -61,7 +61,7 @@ impl Edge {
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`].
-    pub fn curve(&self) -> Curve {
+    pub fn curve(&self) -> Curve<3> {
         self.curve.get()
     }
 

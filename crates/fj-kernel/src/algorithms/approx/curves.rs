@@ -21,7 +21,7 @@ use super::Tolerance;
 /// The `approximate_between` methods of the curves then need to make sure to
 /// only return points in between those vertices, not the vertices themselves.
 pub fn approx_curve(
-    curve: &Curve,
+    curve: &Curve<3>,
     tolerance: Tolerance,
     out: &mut Vec<geometry::Point<1, 3>>,
 ) {

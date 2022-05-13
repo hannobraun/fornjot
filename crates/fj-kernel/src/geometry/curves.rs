@@ -12,15 +12,15 @@ use crate::geometry;
 /// by Ian Stroud. "Curve" refers to unbounded one-dimensional geometry, while
 /// while edges are bounded portions of curves.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub enum Curve {
+pub enum Curve<const D: usize> {
     /// A circle
-    Circle(Circle<3>),
+    Circle(Circle<D>),
 
     /// A line
-    Line(Line<3>),
+    Line(Line<D>),
 }
 
-impl Curve {
+impl Curve<3> {
     /// Construct a `Curve` that represents the x-axis
     pub fn x_axis() -> Self {
         Self::Line(Line {

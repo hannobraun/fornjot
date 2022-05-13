@@ -6,7 +6,7 @@ use crate::geometry::Curve;
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct SweptCurve {
     /// The curve that this surface was swept from
-    pub curve: Curve,
+    pub curve: Curve<3>,
 
     /// The path that the curve was swept along
     pub path: Vector<3>,

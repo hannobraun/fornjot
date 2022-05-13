@@ -23,7 +23,7 @@ impl Validate for Point<3> {
     }
 }
 
-impl Validate for Curve {
+impl Validate for Curve<3> {
     fn validate(&self, _: Scalar, _: &Stores) -> Result<(), ValidationError> {
         Ok(())
     }
@@ -202,7 +202,7 @@ pub enum ValidationError {
 impl ValidationError {
     /// Indicate whether validation found a missing curve
     #[cfg(test)]
-    pub fn missing_curve(&self, curve: &Handle<Curve>) -> bool {
+    pub fn missing_curve(&self, curve: &Handle<Curve<3>>) -> bool {
         if let Self::Structural(StructuralIssues { missing_curve, .. }) = self {
             return missing_curve.as_ref() == Some(curve);
         }
@@ -270,7 +270,7 @@ impl From<StructuralIssues> for ValidationError {
 #[derive(Debug, Default)]
 pub struct StructuralIssues {
     /// Missing curve found in edge validation
-    pub missing_curve: Option<Handle<Curve>>,
+    pub missing_curve: Option<Handle<Curve<3>>>,
 
     /// Missing vertices found in edge validation
     pub missing_vertices: HashSet<Handle<Vertex>>,

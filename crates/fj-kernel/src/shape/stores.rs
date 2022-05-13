@@ -52,7 +52,7 @@ impl Stores {
 }
 
 pub type Points = Store<Point<3>>;
-pub type Curves = Store<Curve>;
+pub type Curves = Store<Curve<3>>;
 pub type Surfaces = Store<Surface>;
 
 pub type Vertices = Store<Vertex>;

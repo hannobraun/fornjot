@@ -147,7 +147,7 @@ impl Shape {
     /// Access an iterator over all curves
     ///
     /// The caller must not make any assumptions about the order of curves.
-    pub fn curves(&self) -> Iter<Curve> {
+    pub fn curves(&self) -> Iter<Curve<3>> {
         self.stores.curves.iter()
     }
 
@@ -385,7 +385,7 @@ mod tests {
             }
         }
 
-        fn add_curve(&mut self) -> Handle<Curve> {
+        fn add_curve(&mut self) -> Handle<Curve<3>> {
             self.insert(Curve::x_axis()).unwrap()
         }
 
