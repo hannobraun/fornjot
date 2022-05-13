@@ -61,11 +61,11 @@ pub type Cycles = Store<Cycle>;
 pub type Faces = Store<Face>;
 
 #[derive(Debug)]
-pub struct Store<T> {
+pub struct Store<T: Object> {
     objects: Arc<RwLock<Objects<T>>>,
 }
 
-impl<T> Store<T> {
+impl<T: Object> Store<T> {
     pub fn new() -> Self {
         Self {
             objects: Arc::new(RwLock::new(SlotMap::new())),
@@ -117,7 +117,7 @@ impl<T> Store<T> {
 // Deriving `Clone` would only derive `Clone` where `T: Clone`. This
 // implementation doesn't have that limitation, providing `Clone` for all
 // `Store`s instead.
-impl<T> Clone for Store<T> {
+impl<T: Object> Clone for Store<T> {
     fn clone(&self) -> Self {
         Self {
             objects: self.objects.clone(),
@@ -125,33 +125,33 @@ impl<T> Clone for Store<T> {
     }
 }
 
-impl<T> Default for Store<T> {
+impl<T: Object> Default for Store<T> {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl<T> PartialEq for Store<T> {
+impl<T: Object> PartialEq for Store<T> {
     fn eq(&self, other: &Self) -> bool {
         self.ptr().eq(&other.ptr())
     }
 }
 
-impl<T> Eq for Store<T> {}
+impl<T: Object> Eq for Store<T> {}
 
-impl<T> Ord for Store<T> {
+impl<T: Object> Ord for Store<T> {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         self.ptr().cmp(&other.ptr())
     }
 }
 
-impl<T> PartialOrd for Store<T> {
+impl<T: Object> PartialOrd for Store<T> {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         Some(self.cmp(other))
     }
 }
 
-impl<T> Hash for Store<T> {
+impl<T: Object> Hash for Store<T> {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.ptr().hash(state);
     }
@@ -183,12 +183,12 @@ pub type Objects<T> = SlotMap<DefaultKey, T>;
 /// Two [`Handle`]s are considered equal, if they refer to objects in the same
 /// memory location.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Handle<T> {
+pub struct Handle<T: Object> {
     key: DefaultKey,
     store: Store<T>,
 }
 
-impl<T> Handle<T> {
+impl<T: Object> Handle<T> {
     pub(super) fn new(key: DefaultKey, store: Store<T>) -> Self {
         Self { key, store }
     }
@@ -220,11 +220,11 @@ impl<T> Handle<T> {
 /// An iterator over geometric or topological objects
 ///
 /// Returned by various methods of the [`Shape`] API.
-pub struct Iter<T> {
+pub struct Iter<T: Object> {
     elements: Vec<Handle<T>>,
 }
 
-impl<T> Iter<T> {
+impl<T: Object> Iter<T> {
     /// Convert this iterator over handles into an iterator over values
     ///
     /// This is a convenience method, for cases where no `Handle` is needed.
@@ -236,7 +236,7 @@ impl<T> Iter<T> {
     }
 }
 
-impl<T> Iterator for Iter<T> {
+impl<T: Object> Iterator for Iter<T> {
     type Item = Handle<T>;
 
     fn next(&mut self) -> Option<Self::Item> {
