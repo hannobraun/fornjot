@@ -86,14 +86,16 @@ impl Curve<3> {
         &self,
         point: impl Into<Point<3>>,
     ) -> geometry::Point<1, 3> {
-        let point_3d = point.into();
+        let point_canonical = point.into();
 
         let point_1d = match self {
-            Self::Circle(curve) => curve.point_to_circle_coords(point_3d),
-            Self::Line(curve) => curve.point_to_line_coords(point_3d),
+            Self::Circle(curve) => {
+                curve.point_to_circle_coords(point_canonical)
+            }
+            Self::Line(curve) => curve.point_to_line_coords(point_canonical),
         };
 
-        geometry::Point::new(point_1d, point_3d)
+        geometry::Point::new(point_1d, point_canonical)
     }
 
     /// Convert a point on the curve into model coordinates
