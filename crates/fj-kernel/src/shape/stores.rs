@@ -56,7 +56,7 @@ pub type Curves = Store<Curve<3>>;
 pub type Surfaces = Store<Surface>;
 
 pub type Vertices = Store<Vertex<3>>;
-pub type Edges = Store<Edge>;
+pub type Edges = Store<Edge<3>>;
 pub type Cycles = Store<Cycle>;
 pub type Faces = Store<Face>;
 

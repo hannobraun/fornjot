@@ -20,7 +20,7 @@ use super::{vertices::Vertex, EdgeBuilder};
 /// the curve and any vertices that it refers to, must be part of the same
 /// shape.
 #[derive(Clone, Debug, Eq, Ord, PartialOrd)]
-pub struct Edge {
+pub struct Edge<const D: usize> {
     /// Access the curve that defines the edge's geometry
     ///
     /// The edge can be a segment of the curve that is bounded by two vertices,
@@ -35,7 +35,7 @@ pub struct Edge {
     pub vertices: Option<[LocalForm<Vertex<1>, Vertex<3>>; 2]>,
 }
 
-impl Edge {
+impl Edge<3> {
     /// Construct an instance of `Edge`
     ///
     /// # Implementation Note
@@ -78,7 +78,9 @@ impl Edge {
     pub fn builder(shape: &mut Shape) -> EdgeBuilder {
         EdgeBuilder::new(shape)
     }
+}
 
+impl<const D: usize> Edge<D> {
     /// Access the curve that the edge refers to
     ///
     /// This is a convenience method that saves the caller from dealing with the
@@ -98,13 +100,13 @@ impl Edge {
     }
 }
 
-impl PartialEq for Edge {
+impl<const D: usize> PartialEq for Edge<D> {
     fn eq(&self, other: &Self) -> bool {
         self.curve() == other.curve() && self.vertices == other.vertices
     }
 }
 
-impl Hash for Edge {
+impl<const D: usize> Hash for Edge<D> {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.curve().hash(state);
         self.vertices.hash(state);

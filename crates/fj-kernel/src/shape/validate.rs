@@ -62,7 +62,7 @@ impl Validate for Vertex<3> {
     }
 }
 
-impl Validate for Edge {
+impl Validate for Edge<3> {
     fn validate(
         &self,
         _: Scalar,
@@ -225,7 +225,7 @@ impl ValidationError {
 
     /// Indicate whether validation found a missing edge
     #[cfg(test)]
-    pub fn missing_edge(&self, edge: &Handle<Edge>) -> bool {
+    pub fn missing_edge(&self, edge: &Handle<Edge<3>>) -> bool {
         if let Self::Structural(StructuralIssues { missing_edges, .. }) = self {
             return missing_edges.contains(edge);
         }
@@ -276,7 +276,7 @@ pub struct StructuralIssues {
     pub missing_vertices: HashSet<Handle<Vertex<3>>>,
 
     /// Missing edges found in cycle validation
-    pub missing_edges: HashSet<Handle<Edge>>,
+    pub missing_edges: HashSet<Handle<Edge<3>>>,
 
     /// Missing surface found in face validation
     pub missing_surface: Option<Handle<Surface>>,

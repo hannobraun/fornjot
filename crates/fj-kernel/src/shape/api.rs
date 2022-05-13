@@ -168,7 +168,7 @@ impl Shape {
     /// Access iterator over all edges
     ///
     /// The caller must not make any assumptions about the order of edges.
-    pub fn edges(&self) -> Iter<Edge> {
+    pub fn edges(&self) -> Iter<Edge<3>> {
         self.stores.edges.iter()
     }
 
@@ -393,7 +393,7 @@ mod tests {
             self.insert(Surface::xy_plane()).unwrap()
         }
 
-        fn add_edge(&mut self) -> anyhow::Result<Handle<Edge>> {
+        fn add_edge(&mut self) -> anyhow::Result<Handle<Edge<3>>> {
             let points = [(); 2].map(|()| {
                 let point = self.next_point;
                 self.next_point.x += Scalar::ONE;
