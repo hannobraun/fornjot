@@ -93,7 +93,7 @@ impl ToShape for fj::Difference2d {
 
 fn add_cycle(
     cycle: Handle<Cycle>,
-    vertices: &mut HashMap<Vertex, Handle<Vertex>>,
+    vertices: &mut HashMap<Vertex<3>, Handle<Vertex<3>>>,
     shape: &mut Shape,
     reverse: bool,
 ) -> Handle<Cycle> {

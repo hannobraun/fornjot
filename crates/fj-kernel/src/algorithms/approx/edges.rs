@@ -1,7 +1,7 @@
 use crate::{geometry, shape::LocalForm, topology::Vertex};
 
 pub fn approximate_edge(
-    vertices: Option<[LocalForm<geometry::Point<1, 3>, Vertex>; 2]>,
+    vertices: Option<[LocalForm<geometry::Point<1, 3>, Vertex<3>>; 2]>,
     mut points: Vec<geometry::Point<1, 3>>,
 ) -> Vec<geometry::Point<1, 3>> {
     // Insert the exact vertices of this edge into the approximation. This means

@@ -233,7 +233,7 @@ pub fn sweep_shape(
 }
 
 struct Relation {
-    vertices: HashMap<Handle<Vertex>, Handle<Vertex>>,
+    vertices: HashMap<Handle<Vertex<3>>, Handle<Vertex<3>>>,
     edges: HashMap<Handle<Edge>, Handle<Edge>>,
     cycles: HashMap<Handle<Cycle>, Handle<Cycle>>,
 }
@@ -250,7 +250,7 @@ impl Relation {
     fn vertices_for_edge(
         &self,
         edge: &Handle<Edge>,
-    ) -> Option<[Handle<Vertex>; 2]> {
+    ) -> Option<[Handle<Vertex<3>>; 2]> {
         edge.get().vertices.map(|vertices| {
             vertices.map(|vertex| {
                 self.vertices.get(&vertex.canonical).unwrap().clone()

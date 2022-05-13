@@ -35,7 +35,7 @@ impl Validate for Surface {
     }
 }
 
-impl Validate for Vertex {
+impl Validate for Vertex<3> {
     /// Validate the vertex
     ///
     /// # Implementation note
@@ -47,7 +47,7 @@ impl Validate for Vertex {
         min_distance: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
-        if !stores.points.contains(&self.point) {
+        if !stores.points.contains(&self.point.canonical) {
             return Err(StructuralIssues::default().into());
         }
         for existing in stores.vertices.iter() {
@@ -212,7 +212,7 @@ impl ValidationError {
 
     /// Indicate whether validation found a missing vertex
     #[cfg(test)]
-    pub fn missing_vertex(&self, vertex: &Handle<Vertex>) -> bool {
+    pub fn missing_vertex(&self, vertex: &Handle<Vertex<3>>) -> bool {
         if let Self::Structural(StructuralIssues {
             missing_vertices, ..
         }) = self
@@ -273,7 +273,7 @@ pub struct StructuralIssues {
     pub missing_curve: Option<Handle<Curve<3>>>,
 
     /// Missing vertices found in edge validation
-    pub missing_vertices: HashSet<Handle<Vertex>>,
+    pub missing_vertices: HashSet<Handle<Vertex<3>>>,
 
     /// Missing edges found in cycle validation
     pub missing_edges: HashSet<Handle<Edge>>,
