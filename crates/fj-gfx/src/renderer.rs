@@ -1,5 +1,6 @@
 use std::{io, mem::size_of};
 
+use fj_gui::window::Window;
 use fj_math::{Aabb, Point};
 use thiserror::Error;
 use tracing::debug;

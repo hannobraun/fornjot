@@ -1,6 +1,7 @@
 use std::time::Instant;
 
 use fj_gfx::camera::{Camera, FocusPoint};
+use fj_gui::window::Window;
 use fj_interop::mesh::Mesh;
 use fj_math::{Point, Transform, Vector};
 use winit::{
@@ -10,8 +11,6 @@ use winit::{
         VirtualKeyCode,
     },
 };
-
-use crate::window::Window;
 
 use super::{movement::Movement, rotation::Rotation, zoom::Zoom};
 

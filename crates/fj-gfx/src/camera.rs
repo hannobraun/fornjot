@@ -1,6 +1,7 @@
 //! Viewer camera module
 use std::f64::consts::FRAC_PI_2;
 
+use fj_gui::window::Window;
 use fj_interop::mesh::Mesh;
 use fj_math::{Aabb, Point, Scalar, Transform, Triangle, Vector};
 use winit::dpi::PhysicalPosition;

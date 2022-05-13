@@ -1,10 +1,8 @@
 use fj_math::{Point, Scalar, Transform, Vector};
 use winit::dpi::PhysicalPosition;
 
-use crate::{
-    camera::{Camera, FocusPoint},
-    window::Window,
-};
+use fj_gfx::camera::{Camera, FocusPoint};
+use fj_gui::window::Window;
 
 pub struct Movement {
     focus_point: FocusPoint,

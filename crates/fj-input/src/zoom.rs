@@ -3,9 +3,8 @@ use std::{
     time::{Duration, Instant},
 };
 
+use fj_gfx::camera::{Camera, FocusPoint};
 use fj_math::Point;
-
-use crate::camera::{Camera, FocusPoint};
 
 pub struct Zoom {
     events: VecDeque<(Instant, f64)>,

@@ -17,6 +17,10 @@ winit = "0.26.1"
 version = "0.6.0"
 path = "../fj-interop"
 
+[dependencies.fj-gui]
+version = "0.6.0"
+path = "../fj-gui"
+
 [dependencies.fj-math]
 version = "0.6.0"
 path = "../fj-math"

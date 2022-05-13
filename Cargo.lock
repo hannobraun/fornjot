@@ -737,12 +737,20 @@ name = "fj-gfx"
 version = "0.6.0"
 dependencies = [
  "bytemuck",
+ "fj-gui",
  "fj-interop",
  "fj-math",
  "thiserror",
  "tracing",
  "wgpu",
  "wgpu_glyph",
+ "winit",
+]
+
+[[package]]
+name = "fj-gui"
+version = "0.6.0"
+dependencies = [
  "winit",
 ]
 
@@ -761,6 +769,7 @@ name = "fj-input"
 version = "0.6.0"
 dependencies = [
  "fj-gfx",
+ "fj-gui",
  "fj-interop",
  "fj-math",
  "winit",
@@ -816,6 +825,7 @@ name = "fj-viewer"
 version = "0.6.0"
 dependencies = [
  "fj-gfx",
+ "fj-gui",
  "fj-host",
  "fj-input",
  "fj-interop",

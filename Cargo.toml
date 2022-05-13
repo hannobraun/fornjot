@@ -8,6 +8,7 @@ members = [
     "crates/fj-host",
     "crates/fj-input",
     "crates/fj-interop",
+    "crates/fj-kernel",
     "crates/fj-math",
     "crates/fj-operations",
     "crates/fj-viewer",

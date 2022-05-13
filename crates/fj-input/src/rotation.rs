@@ -1,6 +1,6 @@
 use fj_math::{Point, Transform, Vector};
 
-use crate::camera::{Camera, FocusPoint};
+use fj_gfx::camera::{Camera, FocusPoint};
 
 pub struct Rotation {
     active: bool,
