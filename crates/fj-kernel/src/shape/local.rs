@@ -28,6 +28,16 @@ impl<Local, Canonical: Object> LocalForm<Local, Canonical> {
     pub fn new(local: Local, canonical: Handle<Canonical>) -> Self {
         Self { local, canonical }
     }
+
+    /// Access the local form of the referenced object
+    pub fn local(&self) -> &Local {
+        &self.local
+    }
+
+    /// Access the canonical form of the referenced object
+    pub fn canonical(&self) -> &Handle<Canonical> {
+        &self.canonical
+    }
 }
 
 impl<Local, Canonical: Object> PartialEq for LocalForm<Local, Canonical>

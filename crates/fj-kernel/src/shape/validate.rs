@@ -47,7 +47,7 @@ impl Validate for Vertex<3> {
         min_distance: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
-        if !stores.points.contains(&self.point.canonical) {
+        if !stores.points.contains(self.point.canonical()) {
             return Err(StructuralIssues::default().into());
         }
         for existing in stores.vertices.iter() {
@@ -76,8 +76,8 @@ impl Validate for Edge {
         }
         for vertices in &self.vertices {
             for vertex in vertices {
-                if !stores.vertices.contains(&vertex.canonical) {
-                    missing_vertices.insert(vertex.canonical.clone());
+                if !stores.vertices.contains(vertex.canonical()) {
+                    missing_vertices.insert(vertex.canonical().clone());
                 }
             }
         }

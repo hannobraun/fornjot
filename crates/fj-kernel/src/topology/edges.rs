@@ -91,7 +91,7 @@ impl Edge {
     pub fn vertices(&self) -> Option<[Vertex<3>; 2]> {
         self.vertices
             .as_ref()
-            .map(|[a, b]| [a.canonical.get(), b.canonical.get()])
+            .map(|[a, b]| [a.canonical().get(), b.canonical().get()])
     }
 }
 
