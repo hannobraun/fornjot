@@ -49,24 +49,24 @@ mod test {
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
+        let v1 = Vertex::builder(&mut shape).build_from_point(a)?;
+        let v2 = Vertex::builder(&mut shape).build_from_point(d)?;
+
+        let vertices = [
+            LocalForm {
+                local: geometry::Point::new([0.], a),
+                canonical: v1,
+            },
+            LocalForm {
+                local: geometry::Point::new([1.], d),
+                canonical: v2,
+            },
+        ];
+
         let a = geometry::Point::new([0.0], a);
         let b = geometry::Point::new([0.25], b);
         let c = geometry::Point::new([0.75], c);
         let d = geometry::Point::new([1.0], d);
-
-        let v1 = Vertex::builder(&mut shape).build_from_point(a.canonical())?;
-        let v2 = Vertex::builder(&mut shape).build_from_point(d.canonical())?;
-
-        let vertices = [
-            LocalForm {
-                local: geometry::Point::new([0.], a.canonical()),
-                canonical: v1,
-            },
-            LocalForm {
-                local: geometry::Point::new([1.], d.canonical()),
-                canonical: v2,
-            },
-        ];
 
         // Regular edge
         assert_eq!(
