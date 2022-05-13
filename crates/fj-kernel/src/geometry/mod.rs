@@ -10,7 +10,7 @@ mod points;
 mod surfaces;
 
 pub use self::{
-    curves::{Circle, Curve},
+    curves::Curve,
     points::Point,
     surfaces::{Surface, SweptCurve},
 };

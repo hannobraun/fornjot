@@ -1,8 +1,8 @@
 use std::cmp::max;
 
-use fj_math::Scalar;
+use fj_math::{Circle, Scalar};
 
-use crate::geometry::{self, Circle, Curve};
+use crate::geometry::{self, Curve};
 
 use super::Tolerance;
 
@@ -36,7 +36,7 @@ pub fn approx_curve(
 /// `tolerance` specifies how much the approximation is allowed to deviate
 /// from the circle.
 pub fn approx_circle(
-    circle: &Circle,
+    circle: &Circle<3>,
     tolerance: Tolerance,
     out: &mut Vec<geometry::Point<1>>,
 ) {
