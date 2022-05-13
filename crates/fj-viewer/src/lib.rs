@@ -14,7 +14,5 @@
 
 #![warn(missing_docs)]
 
-pub mod camera;
-pub mod graphics;
 pub mod run;
 pub mod window;

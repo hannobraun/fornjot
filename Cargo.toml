@@ -4,6 +4,7 @@ members = [
     "crates/fj",
     "crates/fj-app",
     "crates/fj-export",
+    "crates/fj-gfx",
     "crates/fj-host",
     "crates/fj-input",
     "crates/fj-interop",

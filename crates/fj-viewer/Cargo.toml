@@ -13,13 +13,14 @@ categories = ["encoding", "mathematics", "rendering"]
 
 
 [dependencies]
-bytemuck = "1.9.1"
 futures = "0.3.21"
 thiserror = "1.0.31"
 tracing = "0.1.34"
-wgpu = "0.12.0"
-wgpu_glyph = "0.16.0"
 winit = "0.26.1"
+
+[dependencies.fj-gfx]
+version = "0.6.0"
+path = "../fj-gfx"
 
 [dependencies.fj-host]
 version = "0.6.0"
@@ -28,6 +29,7 @@ path = "../fj-host"
 [dependencies.fj-input]
 version = "0.6.0"
 path = "../fj-input"
+
 
 [dependencies.fj-interop]
 version = "0.6.0"

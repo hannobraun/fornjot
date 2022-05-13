@@ -5,8 +5,6 @@ use fj_interop::mesh::Mesh;
 use fj_math::{Aabb, Point, Scalar, Transform, Triangle, Vector};
 use winit::dpi::PhysicalPosition;
 
-use crate::window::Window;
-
 /// The camera abstraction
 ///
 /// Please note that the metaphor we're using (which influences how mouse input

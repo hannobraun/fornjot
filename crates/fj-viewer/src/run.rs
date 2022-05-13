@@ -5,6 +5,7 @@
 
 use std::time::Instant;
 
+use fj_gfx::{self as grahpics, DrawConfig, Renderer};
 use fj_host::Watcher;
 use fj_input as input;
 use fj_operations::shape_processor::ShapeProcessor;
@@ -15,11 +16,7 @@ use winit::{
     event_loop::{ControlFlow, EventLoop},
 };
 
-use crate::{
-    camera::Camera,
-    graphics::{self, DrawConfig, Renderer},
-    window::Window,
-};
+use crate::window::Window;
 
 /// Initializes a model viewer for a given model and enters its process loop.
 pub fn run(

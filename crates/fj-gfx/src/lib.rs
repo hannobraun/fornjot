@@ -1,5 +1,6 @@
 //! Rendering primitives, routines, and structures.
 
+mod camera;
 mod config_ui;
 mod draw_config;
 mod drawables;
