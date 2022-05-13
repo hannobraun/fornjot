@@ -6,6 +6,7 @@
 use std::time::Instant;
 
 use fj_host::Watcher;
+use fj_input as input;
 use fj_operations::shape_processor::ShapeProcessor;
 use futures::executor::block_on;
 use tracing::{trace, warn};
@@ -17,7 +18,6 @@ use winit::{
 use crate::{
     camera::Camera,
     graphics::{self, DrawConfig, Renderer},
-    input,
     window::Window,
 };
 

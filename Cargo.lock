@@ -743,6 +743,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "fj-input"
+version = "0.6.0"
+dependencies = [
+ "fj-interop",
+ "fj-math",
+ "winit",
+]
+
+[[package]]
 name = "fj-interop"
 version = "0.6.0"
 dependencies = [
@@ -793,6 +802,7 @@ version = "0.6.0"
 dependencies = [
  "bytemuck",
  "fj-host",
+ "fj-input",
  "fj-interop",
  "fj-math",
  "fj-operations",

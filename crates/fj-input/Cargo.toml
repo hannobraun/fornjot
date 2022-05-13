@@ -1,0 +1,21 @@
+[package]
+name = "fj-input"
+version = "0.6.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+default = []
+gfx = []
+
+[dependencies]
+winit = "0.26.1"
+
+[dependencies.fj-interop]
+version = "0.6.0"
+path = "../fj-interop"
+
+[dependencies.fj-math]
+version = "0.6.0"
+path = "../fj-math"

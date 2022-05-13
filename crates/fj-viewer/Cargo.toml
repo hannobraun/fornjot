@@ -25,6 +25,10 @@ winit = "0.26.1"
 version = "0.6.0"
 path = "../fj-host"
 
+[dependencies.fj-input]
+version = "0.6.0"
+path = "../fj-input"
+
 [dependencies.fj-interop]
 version = "0.6.0"
 path = "../fj-interop"
