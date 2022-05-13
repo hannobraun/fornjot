@@ -1,30 +1,33 @@
-/// A point that can be losslessly converted into its canonical form
+/// A point that stores a native and a canonical form
 ///
-/// The canonical form is always the 3D representation. It needs to be provided
-/// when constructing the point, along with the point's native form.
+/// The native form of a point is whatever representation is most appropriate in
+/// the current context. The canonical form is the representation that the
+/// native form was created from.
+///
+/// Typically, the canonical form is more general and has higher dimensionality
+/// (for example, a point in a 3D space), while the native form is more specific
+/// and has lower dimensionality (for example, the point in 2D surface
+/// coordinates, on surface within that 3D space).
+///
+/// The purpose of storing both forms is to be able to losslessly convert the
+/// point back to its canonical form. Even if this conversion can be computed on
+/// the fly, such a conversion might not result in the original canonical form,
+/// due to floating point accuracy issues. Hence, such a conversion would not be
+/// lossless, which could result in bugs.
+///
+/// The `N` parameter defines the dimensionality of the native form, while the
+/// `C` parameter defines the dimensionality of the canonical form.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Point<const N: usize, const C: usize> {
-    /// This point's native form
-    ///
-    /// The native form of the point is its representation in its native
-    /// coordinate system. This could be a 1-dimensional curve, 2-dimensional
-    /// surface, or 3-dimensional model coordinate system.
     native: fj_math::Point<N>,
-
-    /// The canonical form of the point
-    ///
-    /// This is always the 3D representation of the point. Since this is always
-    /// kept here, unchanged, as the point is converted into other coordinate
-    /// systems, it allows for a lossless conversion back into 3D coordinates,
-    /// unaffected by floating point accuracy issues.
     canonical: fj_math::Point<C>,
 }
 
 impl<const N: usize, const C: usize> Point<N, C> {
     /// Construct a new instance
     ///
-    /// Both the native and the canonical form must be provide. The caller must
-    /// guarantee that both of them match.
+    /// Both the native and the canonical form must be provided. The caller must
+    /// guarantee that both of them match, i.e. define the same point.
     pub fn new(
         native: impl Into<fj_math::Point<N>>,
         canonical: impl Into<fj_math::Point<C>>,
