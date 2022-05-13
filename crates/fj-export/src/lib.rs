@@ -75,38 +75,49 @@ fn export_stl(mesh: &Mesh<Point<3>>, path: &Path) -> Result<()> {
 
     let vertices = points.iter().map(|points| {
         points.map(|point| {
-            stl_io::Vertex::new([
-                point.x.into_f32(),
-                point.y.into_f32(),
-                point.z.into_f32(),
-            ])
+            [point.x.into_f32(), point.y.into_f32(), point.z.into_f32()]
         })
     });
 
-    let normals = mesh
-        .triangles()
-        .map(|triangle| triangle.points.into())
+    let normals = points
+        .iter()
+        .map(|&points| points.into())
         .map(|triangle: Triangle<3>| triangle.to_parry().normal())
         .collect::<Option<Vec<_>>>()
         .ok_or_else(|| anyhow!("Unable to compute normal"))?;
 
     let normals = normals.iter().map(|vector| vector.into_inner().into()).map(
         |vector: Vector<3>| {
-            stl_io::Normal::new([
+            [
                 vector.x.into_f32(),
                 vector.y.into_f32(),
                 vector.z.into_f32(),
-            ])
+            ]
         },
     );
 
-    let mesh = vertices
+    let triangles = vertices
         .zip(normals)
-        .map(|(vertices, normal)| stl_io::Triangle { normal, vertices });
+        .map(|([v1, v2, v3], normal)| stl::Triangle {
+            normal,
+            v1,
+            v2,
+            v3,
+            attr_byte_count: 0,
+        })
+        .collect::<Vec<_>>();
 
     let mut file = File::create(path)?;
 
-    stl_io::write_stl(&mut file, mesh).unwrap();
+    let binary_stl_file = stl::BinaryStlFile {
+        header: stl::BinaryStlHeader {
+            header: [0u8; 80],
+            num_triangles: triangles.len().try_into()?,
+        },
+        triangles,
+    };
+
+    stl::write_stl(&mut file, &binary_stl_file)?;
 
     Ok(())
 }

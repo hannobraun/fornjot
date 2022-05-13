@@ -15,7 +15,7 @@ categories = ["encoding", "mathematics", "rendering"]
 [dependencies]
 anyhow = "1.0.57"
 threemf = "0.3.0"
-stl_io = "0.6.0"
+stl = "0.2.1"
 
 [dependencies.fj-interop]
 version = "0.6.0"
