@@ -3,7 +3,7 @@
 /// The canonical form is always the 3D representation. It needs to be provided
 /// when constructing the point, along with the point's native form.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Point<const N: usize> {
+pub struct Point<const N: usize, const C: usize> {
     /// This point's native form
     ///
     /// The native form of the point is its representation in its native
@@ -17,17 +17,17 @@ pub struct Point<const N: usize> {
     /// kept here, unchanged, as the point is converted into other coordinate
     /// systems, it allows for a lossless conversion back into 3D coordinates,
     /// unaffected by floating point accuracy issues.
-    canonical: fj_math::Point<3>,
+    canonical: fj_math::Point<C>,
 }
 
-impl<const N: usize> Point<N> {
+impl<const N: usize, const C: usize> Point<N, C> {
     /// Construct a new instance
     ///
     /// Both the native and the canonical form must be provide. The caller must
     /// guarantee that both of them match.
     pub fn new(
         native: impl Into<fj_math::Point<N>>,
-        canonical: impl Into<fj_math::Point<3>>,
+        canonical: impl Into<fj_math::Point<C>>,
     ) -> Self {
         Self {
             native: native.into(),
@@ -41,7 +41,7 @@ impl<const N: usize> Point<N> {
     }
 
     /// Access the point's canonical form
-    pub fn canonical(&self) -> fj_math::Point<3> {
+    pub fn canonical(&self) -> fj_math::Point<C> {
         self.canonical
     }
 }

@@ -2,8 +2,8 @@ use crate::{geometry, topology::EdgeVertex};
 
 pub fn approximate_edge(
     vertices: Option<[EdgeVertex; 2]>,
-    mut points: Vec<geometry::Point<1>>,
-) -> Vec<geometry::Point<1>> {
+    mut points: Vec<geometry::Point<1, 3>>,
+) -> Vec<geometry::Point<1, 3>> {
     // Insert the exact vertices of this edge into the approximation. This means
     // we don't rely on the curve approximation to deliver accurate
     // representations of these vertices, which they might not be able to do.

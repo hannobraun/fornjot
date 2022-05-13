@@ -11,7 +11,7 @@ pub struct FaceApprox {
     ///
     /// These could be actual vertices from the model, points that approximate
     /// an edge, or points that approximate a face.
-    pub points: HashSet<geometry::Point<3>>,
+    pub points: HashSet<geometry::Point<3, 3>>,
 
     /// Approximation of the exterior cycle
     pub exterior: CycleApprox,

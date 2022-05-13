@@ -85,7 +85,7 @@ impl Curve {
     pub fn point_to_curve_coords(
         &self,
         point: impl Into<Point<3>>,
-    ) -> geometry::Point<1> {
+    ) -> geometry::Point<1, 3> {
         let point_3d = point.into();
 
         let point_1d = match self {

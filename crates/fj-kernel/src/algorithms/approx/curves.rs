@@ -23,7 +23,7 @@ use super::Tolerance;
 pub fn approx_curve(
     curve: &Curve,
     tolerance: Tolerance,
-    out: &mut Vec<geometry::Point<1>>,
+    out: &mut Vec<geometry::Point<1, 3>>,
 ) {
     match curve {
         Curve::Circle(curve) => approx_circle(curve, tolerance, out),
@@ -38,7 +38,7 @@ pub fn approx_curve(
 pub fn approx_circle(
     circle: &Circle<3>,
     tolerance: Tolerance,
-    out: &mut Vec<geometry::Point<1>>,
+    out: &mut Vec<geometry::Point<1, 3>>,
 ) {
     let radius = circle.a.magnitude();
 

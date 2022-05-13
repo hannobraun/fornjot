@@ -98,5 +98,5 @@ pub struct EdgeVertex {
     /// The local representation of the vertex
     ///
     /// Represents the vertex in terms of the coordinates of the edge's curve.
-    pub local: geometry::Point<1>,
+    pub local: geometry::Point<1, 3>,
 }
