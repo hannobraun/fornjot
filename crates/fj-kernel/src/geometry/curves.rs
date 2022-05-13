@@ -45,8 +45,21 @@ impl Curve<3> {
         })
     }
 
+    /// Create a new instance that is transformed by `transform`
+    #[must_use]
+    pub fn transform(self, transform: &Transform) -> Self {
+        match self {
+            Self::Circle(curve) => {
+                Self::Circle(transform.transform_circle(&curve))
+            }
+            Self::Line(curve) => Self::Line(transform.transform_line(&curve)),
+        }
+    }
+}
+
+impl<const D: usize> Curve<D> {
     /// Access the origin of the curve's coordinate system
-    pub fn origin(&self) -> Point<3> {
+    pub fn origin(&self) -> Point<D> {
         match self {
             Self::Circle(curve) => curve.center,
             Self::Line(curve) => curve.origin,
@@ -62,17 +75,6 @@ impl Curve<3> {
         }
     }
 
-    /// Create a new instance that is transformed by `transform`
-    #[must_use]
-    pub fn transform(self, transform: &Transform) -> Self {
-        match self {
-            Self::Circle(curve) => {
-                Self::Circle(transform.transform_circle(&curve))
-            }
-            Self::Line(curve) => Self::Line(transform.transform_line(&curve)),
-        }
-    }
-
     /// Convert a point in model coordinates to curve coordinates
     ///
     /// Projects the point onto the curve before computing curve coordinate.
@@ -84,8 +86,8 @@ impl Curve<3> {
     /// an error.
     pub fn point_to_curve_coords(
         &self,
-        point: impl Into<Point<3>>,
-    ) -> geometry::Point<1, 3> {
+        point: impl Into<Point<D>>,
+    ) -> geometry::Point<1, D> {
         let point_canonical = point.into();
 
         let point_native = match self {
@@ -102,7 +104,7 @@ impl Curve<3> {
     pub fn point_from_curve_coords(
         &self,
         point: impl Into<Point<1>>,
-    ) -> Point<3> {
+    ) -> Point<D> {
         match self {
             Self::Circle(curve) => curve.point_from_circle_coords(point),
             Self::Line(curve) => curve.point_from_line_coords(point),
@@ -113,7 +115,7 @@ impl Curve<3> {
     pub fn vector_from_curve_coords(
         &self,
         point: impl Into<Vector<1>>,
-    ) -> Vector<3> {
+    ) -> Vector<D> {
         match self {
             Self::Circle(curve) => curve.vector_from_circle_coords(point),
             Self::Line(curve) => curve.vector_from_line_coords(point),
