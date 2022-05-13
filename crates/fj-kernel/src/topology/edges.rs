@@ -42,13 +42,10 @@ impl Edge {
         vertices: Option<[Handle<Vertex>; 2]>,
     ) -> Self {
         let vertices = vertices.map(|vertices| {
-            vertices.map(|handle| {
+            vertices.map(|canonical| {
                 let local =
-                    curve.get().point_to_curve_coords(handle.get().point());
-                LocalForm {
-                    local,
-                    canonical: handle,
-                }
+                    curve.get().point_to_curve_coords(canonical.get().point());
+                LocalForm { local, canonical }
             })
         });
 
