@@ -11,6 +11,10 @@ use crate::geometry;
 /// The nomenclature is inspired by Boundary Representation Modelling Techniques
 /// by Ian Stroud. "Curve" refers to unbounded one-dimensional geometry, while
 /// while edges are bounded portions of curves.
+///
+/// The `D` parameter defines the dimensions in which the curve is defined.
+/// Typically, only `2` or `3` make sense, which means the curve is defined on
+/// a surface or in a space, respectively.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum Curve<const D: usize> {
     /// A circle
