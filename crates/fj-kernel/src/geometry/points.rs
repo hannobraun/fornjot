@@ -29,11 +29,11 @@ impl<const N: usize, const C: usize> Point<N, C> {
     /// Both the local and the canonical form must be provided. The caller must
     /// guarantee that both of them match, i.e. define the same point.
     pub fn new(
-        native: impl Into<fj_math::Point<N>>,
+        local: impl Into<fj_math::Point<N>>,
         canonical: impl Into<fj_math::Point<C>>,
     ) -> Self {
         Self {
-            local: native.into(),
+            local: local.into(),
             canonical: canonical.into(),
         }
     }
