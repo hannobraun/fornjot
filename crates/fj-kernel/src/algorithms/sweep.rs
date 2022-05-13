@@ -29,12 +29,8 @@ pub fn sweep_shape(
         let point_bottom = target.insert(vertex_source.get().point()).unwrap();
         let point_top = target.insert(point_bottom.get() + path).unwrap();
 
-        let vertex_bottom = target
-            .insert(Vertex {
-                point: point_bottom,
-            })
-            .unwrap();
-        let vertex_top = target.insert(Vertex { point: point_top }).unwrap();
+        let vertex_bottom = target.insert(Vertex::new(point_bottom)).unwrap();
+        let vertex_top = target.insert(Vertex::new(point_top)).unwrap();
 
         source_to_bottom
             .vertices
