@@ -42,7 +42,7 @@ pub fn triangulate(
                             // generates points that are not in the surface.
                             surface
                                 .point_to_surface_coords(point.canonical())
-                                .native()
+                                .local()
                         },
                     ))
                     .with_interiors(approx.interiors.into_iter().map(
@@ -53,7 +53,7 @@ pub fn triangulate(
                                 // the surface.
                                 surface
                                     .point_to_surface_coords(point.canonical())
-                                    .native()
+                                    .local()
                             })
                         },
                     ));
@@ -61,7 +61,7 @@ pub fn triangulate(
                 let mut triangles = delaunay::triangulate(points);
                 triangles.retain(|triangle| {
                     face_as_polygon.contains_triangle(
-                        triangle.map(|point| point.native()),
+                        triangle.map(|point| point.local()),
                         debug_info,
                     )
                 });

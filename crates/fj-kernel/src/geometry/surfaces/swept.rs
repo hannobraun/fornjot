@@ -44,7 +44,7 @@ impl SweptCurve {
     ) -> Point<2> {
         let point = point.into();
 
-        let u = self.curve.point_to_curve_coords(point).native().t;
+        let u = self.curve.point_to_curve_coords(point).local().t;
         let v = self.path_to_line().point_to_line_coords(point).t;
 
         Point::from([u, v])

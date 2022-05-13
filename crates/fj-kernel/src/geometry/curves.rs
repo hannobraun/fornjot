@@ -94,14 +94,14 @@ impl<const D: usize> Curve<D> {
     ) -> geometry::Point<1, D> {
         let point_canonical = point.into();
 
-        let point_native = match self {
+        let point_local = match self {
             Self::Circle(curve) => {
                 curve.point_to_circle_coords(point_canonical)
             }
             Self::Line(curve) => curve.point_to_line_coords(point_canonical),
         };
 
-        geometry::Point::new(point_native, point_canonical)
+        geometry::Point::new(point_local, point_canonical)
     }
 
     /// Convert a point on the curve into model coordinates
