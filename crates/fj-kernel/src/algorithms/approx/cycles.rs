@@ -8,7 +8,7 @@ use super::{curves::approx_curve, edges::approximate_edge, Tolerance};
 #[derive(Debug, Eq, PartialEq, Hash)]
 pub struct CycleApprox {
     /// The points that approximate the cycle
-    pub points: Vec<geometry::Point<3>>,
+    pub points: Vec<geometry::Point<3, 3>>,
 }
 
 impl CycleApprox {

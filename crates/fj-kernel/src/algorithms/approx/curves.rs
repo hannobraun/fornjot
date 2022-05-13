@@ -21,9 +21,9 @@ use super::Tolerance;
 /// The `approximate_between` methods of the curves then need to make sure to
 /// only return points in between those vertices, not the vertices themselves.
 pub fn approx_curve(
-    curve: &Curve,
+    curve: &Curve<3>,
     tolerance: Tolerance,
-    out: &mut Vec<geometry::Point<1>>,
+    out: &mut Vec<geometry::Point<1, 3>>,
 ) {
     match curve {
         Curve::Circle(curve) => approx_circle(curve, tolerance, out),
@@ -38,7 +38,7 @@ pub fn approx_curve(
 pub fn approx_circle(
     circle: &Circle<3>,
     tolerance: Tolerance,
-    out: &mut Vec<geometry::Point<1>>,
+    out: &mut Vec<geometry::Point<1, 3>>,
 ) {
     let radius = circle.a.magnitude();
 

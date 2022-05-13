@@ -11,16 +11,20 @@ use crate::geometry;
 /// The nomenclature is inspired by Boundary Representation Modelling Techniques
 /// by Ian Stroud. "Curve" refers to unbounded one-dimensional geometry, while
 /// while edges are bounded portions of curves.
+///
+/// The `D` parameter defines the dimensions in which the curve is defined.
+/// Typically, only `2` or `3` make sense, which means the curve is defined on
+/// a surface or in a space, respectively.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub enum Curve {
+pub enum Curve<const D: usize> {
     /// A circle
-    Circle(Circle<3>),
+    Circle(Circle<D>),
 
     /// A line
-    Line(Line<3>),
+    Line(Line<D>),
 }
 
-impl Curve {
+impl Curve<3> {
     /// Construct a `Curve` that represents the x-axis
     pub fn x_axis() -> Self {
         Self::Line(Line {
@@ -45,8 +49,21 @@ impl Curve {
         })
     }
 
+    /// Create a new instance that is transformed by `transform`
+    #[must_use]
+    pub fn transform(self, transform: &Transform) -> Self {
+        match self {
+            Self::Circle(curve) => {
+                Self::Circle(transform.transform_circle(&curve))
+            }
+            Self::Line(curve) => Self::Line(transform.transform_line(&curve)),
+        }
+    }
+}
+
+impl<const D: usize> Curve<D> {
     /// Access the origin of the curve's coordinate system
-    pub fn origin(&self) -> Point<3> {
+    pub fn origin(&self) -> Point<D> {
         match self {
             Self::Circle(curve) => curve.center,
             Self::Line(curve) => curve.origin,
@@ -62,17 +79,6 @@ impl Curve {
         }
     }
 
-    /// Create a new instance that is transformed by `transform`
-    #[must_use]
-    pub fn transform(self, transform: &Transform) -> Self {
-        match self {
-            Self::Circle(curve) => {
-                Self::Circle(transform.transform_circle(&curve))
-            }
-            Self::Line(curve) => Self::Line(transform.transform_line(&curve)),
-        }
-    }
-
     /// Convert a point in model coordinates to curve coordinates
     ///
     /// Projects the point onto the curve before computing curve coordinate.
@@ -84,23 +90,25 @@ impl Curve {
     /// an error.
     pub fn point_to_curve_coords(
         &self,
-        point: impl Into<Point<3>>,
-    ) -> geometry::Point<1> {
-        let point_3d = point.into();
+        point: impl Into<Point<D>>,
+    ) -> geometry::Point<1, D> {
+        let point_canonical = point.into();
 
-        let point_1d = match self {
-            Self::Circle(curve) => curve.point_to_circle_coords(point_3d),
-            Self::Line(curve) => curve.point_to_line_coords(point_3d),
+        let point_native = match self {
+            Self::Circle(curve) => {
+                curve.point_to_circle_coords(point_canonical)
+            }
+            Self::Line(curve) => curve.point_to_line_coords(point_canonical),
         };
 
-        geometry::Point::new(point_1d, point_3d)
+        geometry::Point::new(point_native, point_canonical)
     }
 
     /// Convert a point on the curve into model coordinates
     pub fn point_from_curve_coords(
         &self,
         point: impl Into<Point<1>>,
-    ) -> Point<3> {
+    ) -> Point<D> {
         match self {
             Self::Circle(curve) => curve.point_from_circle_coords(point),
             Self::Line(curve) => curve.point_from_line_coords(point),
@@ -111,7 +119,7 @@ impl Curve {
     pub fn vector_from_curve_coords(
         &self,
         point: impl Into<Vector<1>>,
-    ) -> Vector<3> {
+    ) -> Vector<D> {
         match self {
             Self::Circle(curve) => curve.vector_from_circle_coords(point),
             Self::Line(curve) => curve.vector_from_line_coords(point),

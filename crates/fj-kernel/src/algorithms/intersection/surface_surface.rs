@@ -3,7 +3,7 @@ use fj_math::{Line, Point, Scalar, Vector};
 use crate::geometry::{Curve, Surface};
 
 /// Test intersection between two surfaces
-pub fn surface_surface(a: &Surface, b: &Surface) -> Option<Curve> {
+pub fn surface_surface(a: &Surface, b: &Surface) -> Option<Curve<3>> {
     // Algorithm from Real-Time Collision Detection by Christer Ericson. See
     // section 5.4.4, Intersection of Two Planes.
 

@@ -62,7 +62,7 @@ impl Surface {
     pub fn point_to_surface_coords(
         &self,
         point_3d: impl Into<Point<3>>,
-    ) -> geometry::Point<2> {
+    ) -> geometry::Point<2, 3> {
         let point_3d = point_3d.into();
 
         let point_2d = match self {

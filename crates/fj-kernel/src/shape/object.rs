@@ -14,7 +14,7 @@ pub trait Object:
 }
 
 impl private::Sealed for Point<3> {}
-impl private::Sealed for Curve {}
+impl private::Sealed for Curve<3> {}
 impl private::Sealed for Surface {}
 
 impl private::Sealed for Vertex {}
@@ -23,7 +23,7 @@ impl private::Sealed for Cycle {}
 impl private::Sealed for Face {}
 
 impl Object for Point<3> {}
-impl Object for Curve {}
+impl Object for Curve<3> {}
 impl Object for Surface {}
 
 impl Object for Vertex {}
