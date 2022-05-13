@@ -2,8 +2,8 @@ use crate::{geometry, shape::LocalForm, topology::Vertex};
 
 pub fn approximate_edge(
     vertices: Option<[LocalForm<geometry::Point<1, 3>, Vertex<3>>; 2]>,
-    mut points: Vec<geometry::Point<1, 3>>,
-) -> Vec<geometry::Point<1, 3>> {
+    points: &mut Vec<geometry::Point<1, 3>>,
+) {
     // Insert the exact vertices of this edge into the approximation. This means
     // we don't rely on the curve approximation to deliver accurate
     // representations of these vertices, which they might not be able to do.
@@ -27,8 +27,6 @@ pub fn approximate_edge(
             points.push(point);
         }
     }
-
-    points
 }
 
 #[cfg(test)]
@@ -64,13 +62,14 @@ mod test {
         let d = geometry::Point::new([1.0], d);
 
         // Regular edge
-        assert_eq!(
-            super::approximate_edge(Some(vertices), vec![b, c]),
-            vec![a, b, c, d],
-        );
+        let mut points = vec![b, c];
+        super::approximate_edge(Some(vertices), &mut points);
+        assert_eq!(points, vec![a, b, c, d]);
 
         // Continuous edge
-        assert_eq!(super::approximate_edge(None, vec![b, c]), vec![b, c, b],);
+        let mut points = vec![b, c];
+        super::approximate_edge(None, &mut points);
+        assert_eq!(points, vec![b, c, b]);
 
         Ok(())
     }
