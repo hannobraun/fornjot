@@ -19,7 +19,7 @@
 /// `C` parameter defines the dimensionality of the canonical form.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Point<const N: usize, const C: usize> {
-    native: fj_math::Point<N>,
+    local: fj_math::Point<N>,
     canonical: fj_math::Point<C>,
 }
 
@@ -33,14 +33,14 @@ impl<const N: usize, const C: usize> Point<N, C> {
         canonical: impl Into<fj_math::Point<C>>,
     ) -> Self {
         Self {
-            native: native.into(),
+            local: native.into(),
             canonical: canonical.into(),
         }
     }
 
     /// Access the point's local form
     pub fn local(&self) -> fj_math::Point<N> {
-        self.native
+        self.local
     }
 
     /// Access the point's canonical form
