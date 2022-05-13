@@ -2,7 +2,7 @@ use std::hash::{Hash, Hasher};
 
 use crate::{
     geometry::{self, Curve},
-    shape::{Handle, Shape},
+    shape::{Handle, LocalForm, Shape},
 };
 
 use super::{vertices::Vertex, EdgeBuilder};
@@ -32,20 +32,20 @@ pub struct Edge {
     ///
     /// If there are no such vertices, that means that both the curve and the
     /// edge are continuous (i.e. connected to themselves).
-    pub vertices: Option<[EdgeVertex; 2]>,
+    pub vertices: Option<[LocalForm<geometry::Point<1, 3>, Vertex<3>>; 2]>,
 }
 
 impl Edge {
     /// Construct an instance of `Edge`
     pub fn new(
         curve: Handle<Curve<3>>,
-        vertices: Option<[Handle<Vertex>; 2]>,
+        vertices: Option<[Handle<Vertex<3>>; 2]>,
     ) -> Self {
         let vertices = vertices.map(|vertices| {
-            vertices.map(|handle| {
+            vertices.map(|canonical| {
                 let local =
-                    curve.get().point_to_curve_coords(handle.get().point());
-                EdgeVertex { handle, local }
+                    curve.get().point_to_curve_coords(canonical.get().point());
+                LocalForm { local, canonical }
             })
         });
 
@@ -69,10 +69,10 @@ impl Edge {
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn vertices(&self) -> Option<[Vertex; 2]> {
+    pub fn vertices(&self) -> Option<[Vertex<3>; 2]> {
         self.vertices
             .as_ref()
-            .map(|[a, b]| [a.handle.get(), b.handle.get()])
+            .map(|[a, b]| [a.canonical.get(), b.canonical.get()])
     }
 }
 
@@ -87,16 +87,4 @@ impl Hash for Edge {
         self.curve().hash(state);
         self.vertices().hash(state);
     }
-}
-
-/// A vertex of an edge
-#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
-pub struct EdgeVertex {
-    /// The handle to the vertex
-    pub handle: Handle<Vertex>,
-
-    /// The local representation of the vertex
-    ///
-    /// Represents the vertex in terms of the coordinates of the edge's curve.
-    pub local: geometry::Point<1, 3>,
 }

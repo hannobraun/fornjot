@@ -25,7 +25,7 @@ mod vertices;
 pub use self::{
     builder::{CycleBuilder, EdgeBuilder, FaceBuilder, VertexBuilder},
     cycles::Cycle,
-    edges::{Edge, EdgeVertex},
+    edges::Edge,
     faces::Face,
     vertices::Vertex,
 };

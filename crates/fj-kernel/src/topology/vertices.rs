@@ -2,7 +2,7 @@ use std::hash::Hash;
 
 use fj_math::Point;
 
-use crate::shape::{Handle, Shape};
+use crate::shape::{Handle, LocalForm, Shape};
 
 use super::VertexBuilder;
 
@@ -31,12 +31,22 @@ use super::VertexBuilder;
 /// between distinct vertices can be configured using
 /// [`Shape::with_minimum_distance`].
 #[derive(Clone, Debug, Eq, Ord, PartialOrd)]
-pub struct Vertex {
+pub struct Vertex<const D: usize> {
     /// The point that defines the location of the vertex
-    pub point: Handle<Point<3>>,
+    pub point: LocalForm<Point<D>, Point<3>>,
 }
 
-impl Vertex {
+impl Vertex<3> {
+    /// Construct a new instance of `Vertex`
+    pub fn new(point: Handle<Point<3>>) -> Self {
+        Self {
+            point: LocalForm {
+                local: point.get(),
+                canonical: point,
+            },
+        }
+    }
+
     /// Build a vertex using the [`VertexBuilder`] API
     pub fn builder(shape: &mut Shape) -> VertexBuilder {
         VertexBuilder::new(shape)
@@ -47,18 +57,18 @@ impl Vertex {
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`].
     pub fn point(&self) -> Point<3> {
-        self.point.get()
+        self.point.canonical.get()
     }
 }
 
-impl PartialEq for Vertex {
+impl<const D: usize> PartialEq for Vertex<D> {
     fn eq(&self, other: &Self) -> bool {
-        self.point() == other.point()
+        self.point == other.point
     }
 }
 
-impl Hash for Vertex {
+impl<const D: usize> Hash for Vertex<D> {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.point().hash(state);
+        self.point.hash(state);
     }
 }

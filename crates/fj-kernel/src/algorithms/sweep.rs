@@ -29,12 +29,8 @@ pub fn sweep_shape(
         let point_bottom = target.insert(vertex_source.get().point()).unwrap();
         let point_top = target.insert(point_bottom.get() + path).unwrap();
 
-        let vertex_bottom = target
-            .insert(Vertex {
-                point: point_bottom,
-            })
-            .unwrap();
-        let vertex_top = target.insert(Vertex { point: point_top }).unwrap();
+        let vertex_bottom = target.insert(Vertex::new(point_bottom)).unwrap();
+        let vertex_top = target.insert(Vertex::new(point_top)).unwrap();
 
         source_to_bottom
             .vertices
@@ -168,7 +164,7 @@ pub fn sweep_shape(
                     vertices_source.map(|vertex_source| {
                         let vertex_bottom = source_to_bottom
                             .vertices
-                            .get(&vertex_source.handle)
+                            .get(&vertex_source.canonical)
                             .unwrap()
                             .clone();
 
@@ -181,7 +177,7 @@ pub fn sweep_shape(
 
                                 let vertex_top = source_to_top
                                     .vertices
-                                    .get(&vertex_source.handle)
+                                    .get(&vertex_source.canonical)
                                     .unwrap()
                                     .clone();
 
@@ -237,7 +233,7 @@ pub fn sweep_shape(
 }
 
 struct Relation {
-    vertices: HashMap<Handle<Vertex>, Handle<Vertex>>,
+    vertices: HashMap<Handle<Vertex<3>>, Handle<Vertex<3>>>,
     edges: HashMap<Handle<Edge>, Handle<Edge>>,
     cycles: HashMap<Handle<Cycle>, Handle<Cycle>>,
 }
@@ -254,10 +250,10 @@ impl Relation {
     fn vertices_for_edge(
         &self,
         edge: &Handle<Edge>,
-    ) -> Option<[Handle<Vertex>; 2]> {
+    ) -> Option<[Handle<Vertex<3>>; 2]> {
         edge.get().vertices.map(|vertices| {
             vertices.map(|vertex| {
-                self.vertices.get(&vertex.handle).unwrap().clone()
+                self.vertices.get(&vertex.canonical).unwrap().clone()
             })
         })
     }

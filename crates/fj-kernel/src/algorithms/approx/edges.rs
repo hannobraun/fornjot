@@ -1,7 +1,7 @@
-use crate::{geometry, topology::EdgeVertex};
+use crate::{geometry, shape::LocalForm, topology::Vertex};
 
 pub fn approximate_edge(
-    vertices: Option<[EdgeVertex; 2]>,
+    vertices: Option<[LocalForm<geometry::Point<1, 3>, Vertex<3>>; 2]>,
     mut points: Vec<geometry::Point<1, 3>>,
 ) -> Vec<geometry::Point<1, 3>> {
     // Insert the exact vertices of this edge into the approximation. This means
@@ -36,8 +36,8 @@ mod test {
 
     use crate::{
         geometry,
-        shape::Shape,
-        topology::{EdgeVertex, Vertex},
+        shape::{LocalForm, Shape},
+        topology::Vertex,
     };
 
     #[test]
@@ -58,13 +58,13 @@ mod test {
         let v2 = Vertex::builder(&mut shape).build_from_point(d.canonical())?;
 
         let vertices = [
-            EdgeVertex {
-                handle: v1,
+            LocalForm {
                 local: geometry::Point::new([0.], a.canonical()),
+                canonical: v1,
             },
-            EdgeVertex {
-                handle: v2,
+            LocalForm {
                 local: geometry::Point::new([1.], d.canonical()),
+                canonical: v2,
             },
         ];
 

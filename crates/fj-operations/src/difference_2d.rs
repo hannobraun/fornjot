@@ -93,7 +93,7 @@ impl ToShape for fj::Difference2d {
 
 fn add_cycle(
     cycle: Handle<Cycle>,
-    vertices: &mut HashMap<Vertex, Handle<Vertex>>,
+    vertices: &mut HashMap<Vertex<3>, Handle<Vertex<3>>>,
     shape: &mut Shape,
     reverse: bool,
 ) -> Handle<Cycle> {
@@ -109,7 +109,7 @@ fn add_cycle(
                     .entry(vertex.clone())
                     .or_insert_with(|| {
                         let point = shape.insert(vertex.point()).unwrap();
-                        shape.insert(Vertex { point }).unwrap()
+                        shape.insert(Vertex::new(point)).unwrap()
                     })
                     .clone()
             });
