@@ -2,7 +2,7 @@ use std::hash::{Hash, Hasher};
 
 use crate::{
     geometry::{self, Curve},
-    shape::{Handle, Shape},
+    shape::{Handle, LocalForm, Shape},
 };
 
 use super::{vertices::Vertex, EdgeBuilder};
@@ -32,7 +32,7 @@ pub struct Edge {
     ///
     /// If there are no such vertices, that means that both the curve and the
     /// edge are continuous (i.e. connected to themselves).
-    pub vertices: Option<[EdgeVertex; 2]>,
+    pub vertices: Option<[LocalForm<geometry::Point<1, 3>, Vertex>; 2]>,
 }
 
 impl Edge {
@@ -45,7 +45,10 @@ impl Edge {
             vertices.map(|handle| {
                 let local =
                     curve.get().point_to_curve_coords(handle.get().point());
-                EdgeVertex { handle, local }
+                LocalForm {
+                    local,
+                    canonical: handle,
+                }
             })
         });
 
@@ -72,7 +75,7 @@ impl Edge {
     pub fn vertices(&self) -> Option<[Vertex; 2]> {
         self.vertices
             .as_ref()
-            .map(|[a, b]| [a.handle.get(), b.handle.get()])
+            .map(|[a, b]| [a.canonical.get(), b.canonical.get()])
     }
 }
 
@@ -87,16 +90,4 @@ impl Hash for Edge {
         self.curve().hash(state);
         self.vertices().hash(state);
     }
-}
-
-/// A vertex of an edge
-#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
-pub struct EdgeVertex {
-    /// The handle to the vertex
-    pub handle: Handle<Vertex>,
-
-    /// The local representation of the vertex
-    ///
-    /// Represents the vertex in terms of the coordinates of the edge's curve.
-    pub local: geometry::Point<1, 3>,
 }

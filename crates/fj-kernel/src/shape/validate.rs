@@ -76,8 +76,8 @@ impl Validate for Edge {
         }
         for vertices in &self.vertices {
             for vertex in vertices {
-                if !stores.vertices.contains(&vertex.handle) {
-                    missing_vertices.insert(vertex.handle.clone());
+                if !stores.vertices.contains(&vertex.canonical) {
+                    missing_vertices.insert(vertex.canonical.clone());
                 }
             }
         }
