@@ -16,11 +16,8 @@ use super::{Handle, Object};
 /// the handle that refers to the canonical form is disregarded.
 #[derive(Clone, Debug, Eq, Ord, PartialOrd)]
 pub struct LocalForm<Local, Canonical: Object> {
-    /// The local form of the referenced object
-    pub local: Local,
-
-    /// The canonical form of the referenced object
-    pub canonical: Handle<Canonical>,
+    local: Local,
+    canonical: Handle<Canonical>,
 }
 
 impl<Local, Canonical: Object> LocalForm<Local, Canonical> {
