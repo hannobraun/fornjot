@@ -1,8 +1,4 @@
-mod circle;
-
-pub use self::circle::Circle;
-
-use fj_math::{Line, Point, Transform, Vector};
+use fj_math::{Circle, Line, Point, Transform, Vector};
 
 use crate::geometry;
 
@@ -18,7 +14,7 @@ use crate::geometry;
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum Curve {
     /// A circle
-    Circle(Circle),
+    Circle(Circle<3>),
 
     /// A line
     Line(Line<3>),
@@ -52,7 +48,7 @@ impl Curve {
     /// Access the origin of the curve's coordinate system
     pub fn origin(&self) -> Point<3> {
         match self {
-            Self::Circle(curve) => curve.origin(),
+            Self::Circle(curve) => curve.center,
             Self::Line(curve) => curve.origin,
         }
     }
@@ -70,7 +66,9 @@ impl Curve {
     #[must_use]
     pub fn transform(self, transform: &Transform) -> Self {
         match self {
-            Self::Circle(curve) => Self::Circle(curve.transform(transform)),
+            Self::Circle(curve) => {
+                Self::Circle(transform.transform_circle(&curve))
+            }
             Self::Line(curve) => Self::Line(transform.transform_line(&curve)),
         }
     }
