@@ -58,11 +58,8 @@ fn copy_shape(orig: Shape, target: &mut Shape) {
     }
 
     for vertex_orig in orig.vertices() {
-        let vertex = target
-            .insert(Vertex {
-                point: points[&vertex_orig.get().point].clone(),
-            })
-            .unwrap();
+        let point = points[&vertex_orig.get().point].clone();
+        let vertex = target.insert(Vertex { point }).unwrap();
         vertices.insert(vertex_orig, vertex);
     }
     for edge_orig in orig.edges() {
