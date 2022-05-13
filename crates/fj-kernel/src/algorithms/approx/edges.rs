@@ -53,14 +53,8 @@ mod test {
         let v2 = Vertex::builder(&mut shape).build_from_point(d)?;
 
         let vertices = [
-            LocalForm {
-                local: geometry::Point::new([0.], a),
-                canonical: v1,
-            },
-            LocalForm {
-                local: geometry::Point::new([1.], d),
-                canonical: v2,
-            },
+            LocalForm::new(geometry::Point::new([0.], a), v1),
+            LocalForm::new(geometry::Point::new([1.], d), v2),
         ];
 
         let a = geometry::Point::new([0.0], a);

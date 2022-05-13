@@ -40,10 +40,7 @@ impl Vertex<3> {
     /// Construct a new instance of `Vertex`
     pub fn new(point: Handle<Point<3>>) -> Self {
         Self {
-            point: LocalForm {
-                local: point.get(),
-                canonical: point,
-            },
+            point: LocalForm::new(point.get(), point),
         }
     }
 

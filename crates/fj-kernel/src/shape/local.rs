@@ -23,6 +23,13 @@ pub struct LocalForm<Local, Canonical: Object> {
     pub canonical: Handle<Canonical>,
 }
 
+impl<Local, Canonical: Object> LocalForm<Local, Canonical> {
+    /// Construct a new instance of `LocalForm`
+    pub fn new(local: Local, canonical: Handle<Canonical>) -> Self {
+        Self { local, canonical }
+    }
+}
+
 impl<Local, Canonical: Object> PartialEq for LocalForm<Local, Canonical>
 where
     Local: PartialEq,
