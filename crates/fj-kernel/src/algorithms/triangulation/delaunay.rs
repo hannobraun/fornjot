@@ -16,7 +16,7 @@ pub fn triangulate(
     for triangle in triangulation.inner_faces() {
         let [v0, v1, v2] = triangle.vertices().map(|vertex| *vertex.data());
         let orientation =
-            Triangle::<2>::from_points([v0.native(), v1.native(), v2.native()])
+            Triangle::<2>::from_points([v0.local(), v1.local(), v2.local()])
                 .winding_direction();
 
         let triangle = match orientation {
@@ -36,8 +36,8 @@ impl HasPosition for geometry::Point<2, 3> {
 
     fn position(&self) -> spade::Point2<Self::Scalar> {
         spade::Point2 {
-            x: self.native().u,
-            y: self.native().v,
+            x: self.local().u,
+            y: self.local().v,
         }
     }
 }

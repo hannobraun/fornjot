@@ -39,7 +39,7 @@ impl<const N: usize, const C: usize> Point<N, C> {
     }
 
     /// Access the point's local form
-    pub fn native(&self) -> fj_math::Point<N> {
+    pub fn local(&self) -> fj_math::Point<N> {
         self.native
     }
 
