@@ -41,7 +41,7 @@ pub enum Face {
         ///
         /// It might be less error-prone to specify the cycles in surface
         /// coordinates.
-        exteriors: Vec<Handle<Cycle<3>>>,
+        exteriors: CyclesInFace,
 
         /// The cycles that bound the face on the inside
         ///
@@ -50,7 +50,7 @@ pub enum Face {
         /// # Implementation note
         ///
         /// See note on `exterior` field.
-        interiors: Vec<Handle<Cycle<3>>>,
+        interiors: CyclesInFace,
 
         /// The color of the face
         color: [u8; 4],
@@ -145,3 +145,6 @@ impl Hash for Face {
         }
     }
 }
+
+/// A list of cycles, as they are stored in `Face`
+pub type CyclesInFace = Vec<Handle<Cycle<3>>>;
