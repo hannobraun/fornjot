@@ -1,5 +1,3 @@
-use std::hash::{Hash, Hasher};
-
 use crate::{
     geometry::Curve,
     shape::{Handle, LocalForm, Shape},
@@ -19,7 +17,7 @@ use super::{vertices::Vertex, EdgeBuilder};
 /// An edge that is part of a [`Shape`] must be structurally sound. That means
 /// the curve and any vertices that it refers to, must be part of the same
 /// shape.
-#[derive(Clone, Debug, Eq, Ord, PartialOrd)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edge<const D: usize> {
     /// Access the curve that defines the edge's geometry
     ///
@@ -100,18 +98,5 @@ impl<const D: usize> Edge<D> {
         self.vertices
             .as_ref()
             .map(|[a, b]| [a.canonical().get(), b.canonical().get()])
-    }
-}
-
-impl<const D: usize> PartialEq for Edge<D> {
-    fn eq(&self, other: &Self) -> bool {
-        self.curve == other.curve && self.vertices == other.vertices
-    }
-}
-
-impl<const D: usize> Hash for Edge<D> {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        self.curve.hash(state);
-        self.vertices.hash(state);
     }
 }
