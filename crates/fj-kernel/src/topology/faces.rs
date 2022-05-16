@@ -93,7 +93,7 @@ impl Face {
     pub fn exteriors(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
         match self {
             Self::Face { exteriors, .. } => {
-                exteriors.iter().map(|handle| handle.get())
+                exteriors.iter().map(|edge| edge.get())
             }
             _ => {
                 // No code that still uses triangle representation is calling
@@ -110,7 +110,7 @@ impl Face {
     pub fn interiors(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
         match self {
             Self::Face { interiors, .. } => {
-                interiors.iter().map(|handle| handle.get())
+                interiors.iter().map(|edge| edge.get())
             }
             _ => {
                 // No code that still uses triangle representation is calling
