@@ -1,5 +1,3 @@
-use std::hash::{Hash, Hasher};
-
 use crate::shape::{Handle, LocalForm, Shape};
 
 use super::{CycleBuilder, Edge};
@@ -19,7 +17,7 @@ use super::{CycleBuilder, Edge};
 ///
 /// A cycle that is part of a [`Shape`] must be structurally sound. That means
 /// the edges it refers to, must be part of the same shape.
-#[derive(Clone, Debug, Eq, Ord, PartialOrd)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle<const D: usize> {
     /// The edges that make up the cycle
     pub edges: Vec<LocalForm<Edge<D>, Edge<3>>>,
@@ -44,19 +42,5 @@ impl Cycle<3> {
     /// [`Handle`]s.
     pub fn edges(&self) -> impl Iterator<Item = Edge<3>> + '_ {
         self.edges.iter().map(|handle| handle.canonical().get())
-    }
-}
-
-impl<const D: usize> PartialEq for Cycle<D> {
-    fn eq(&self, other: &Self) -> bool {
-        self.edges == other.edges
-    }
-}
-
-impl<const D: usize> Hash for Cycle<D> {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        for edge in &self.edges {
-            edge.hash(state);
-        }
     }
 }
