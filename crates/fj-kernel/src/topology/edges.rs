@@ -100,13 +100,13 @@ impl Edge {
 
 impl PartialEq for Edge {
     fn eq(&self, other: &Self) -> bool {
-        self.curve() == other.curve() && self.vertices() == other.vertices()
+        self.curve() == other.curve() && self.vertices == other.vertices
     }
 }
 
 impl Hash for Edge {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.curve().hash(state);
-        self.vertices().hash(state);
+        self.vertices.hash(state);
     }
 }
