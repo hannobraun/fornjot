@@ -22,6 +22,9 @@ pub struct LocalForm<Local, Canonical: Object> {
 
 impl<Local, Canonical: Object> LocalForm<Local, Canonical> {
     /// Construct a new instance of `LocalForm`
+    ///
+    /// It is the caller's responsibility to make sure that the local and
+    /// canonical forms passed to this method actually match.
     pub fn new(local: Local, canonical: Handle<Canonical>) -> Self {
         Self { local, canonical }
     }
