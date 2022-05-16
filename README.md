@@ -96,9 +96,9 @@ As of this writing, Fornjot runs on Linux, Windows, and macOS. The project is pr
 
 Short- to mid-term, the plan is to add support for the web platform, so Fornjot can run in browsers. Long-term, the plan is to additionally support the major mobile platforms.
 
-### Export to 3MF
+### Export to 3MF & STL
 
-Exporting models to the [3D Manufacturing Format](https://en.wikipedia.org/wiki/3D_Manufacturing_Format) (3MF), which is used in 3D printing, is supported.
+Exporting models to both the [3D Manufacturing Format](https://en.wikipedia.org/wiki/3D_Manufacturing_Format) (3MF), which is used in 3D printing, and STL is supported.
 
 
 ## Usage
@@ -126,11 +126,13 @@ So far, the host application is not published on [crates.io](https://crates.io/)
 
 ### Exporting models
 
-To export a model to a 3MF file, run:
+To export a model to a file, run:
 
 ``` sh
 cargo run -- -m spacer --export spacer.3mf
 ```
+
+The file type is based on the supplied extension. Both 3MF and STL are supported.
 
 ### Model parameters
 
