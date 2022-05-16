@@ -73,8 +73,8 @@ impl Face {
         interiors: impl IntoIterator<Item = Handle<Cycle<3>>>,
         color: [u8; 4],
     ) -> Self {
-        let exteriors = exteriors.into_iter().collect();
-        let interiors = interiors.into_iter().collect();
+        let exteriors = CyclesInFace(exteriors.into_iter().collect());
+        let interiors = CyclesInFace(interiors.into_iter().collect());
 
         Self::Face {
             surface,
@@ -110,7 +110,7 @@ impl Face {
     pub fn exteriors(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
         match self {
             Self::Face { exteriors, .. } => {
-                exteriors.iter().map(|edge| edge.get())
+                exteriors.0.iter().map(|edge| edge.get())
             }
             _ => {
                 // No code that still uses triangle representation is calling
@@ -127,7 +127,7 @@ impl Face {
     pub fn interiors(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
         match self {
             Self::Face { interiors, .. } => {
-                interiors.iter().map(|edge| edge.get())
+                interiors.0.iter().map(|edge| edge.get())
             }
             _ => {
                 // No code that still uses triangle representation is calling
@@ -164,4 +164,5 @@ impl Hash for Face {
 }
 
 /// A list of cycles, as they are stored in `Face`
-pub type CyclesInFace = Vec<Handle<Cycle<3>>>;
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct CyclesInFace(pub Vec<Handle<Cycle<3>>>);
