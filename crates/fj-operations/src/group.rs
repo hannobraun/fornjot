@@ -58,14 +58,15 @@ fn copy_shape(orig: Shape, target: &mut Shape) {
     }
 
     for vertex_orig in orig.vertices() {
-        let point = points[&vertex_orig.get().point.canonical].clone();
+        let point = points[vertex_orig.get().point.canonical()].clone();
         let vertex = target.insert(Vertex::new(point)).unwrap();
         vertices.insert(vertex_orig, vertex);
     }
     for edge_orig in orig.edges() {
         let curve = curves[&edge_orig.get().curve].clone();
         let vertices = edge_orig.get().vertices.as_ref().map(|vs| {
-            vs.clone().map(|vertex| vertices[&vertex.canonical].clone())
+            vs.clone()
+                .map(|vertex| vertices[vertex.canonical()].clone())
         });
 
         let edge = target.insert(Edge::new(curve, vertices)).unwrap();

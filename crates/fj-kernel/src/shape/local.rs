@@ -16,11 +16,28 @@ use super::{Handle, Object};
 /// the handle that refers to the canonical form is disregarded.
 #[derive(Clone, Debug, Eq, Ord, PartialOrd)]
 pub struct LocalForm<Local, Canonical: Object> {
-    /// The local form of the referenced object
-    pub local: Local,
+    local: Local,
+    canonical: Handle<Canonical>,
+}
 
-    /// The canonical form of the referenced object
-    pub canonical: Handle<Canonical>,
+impl<Local, Canonical: Object> LocalForm<Local, Canonical> {
+    /// Construct a new instance of `LocalForm`
+    ///
+    /// It is the caller's responsibility to make sure that the local and
+    /// canonical forms passed to this method actually match.
+    pub fn new(local: Local, canonical: Handle<Canonical>) -> Self {
+        Self { local, canonical }
+    }
+
+    /// Access the local form of the referenced object
+    pub fn local(&self) -> &Local {
+        &self.local
+    }
+
+    /// Access the canonical form of the referenced object
+    pub fn canonical(&self) -> &Handle<Canonical> {
+        &self.canonical
+    }
 }
 
 impl<Local, Canonical: Object> PartialEq for LocalForm<Local, Canonical>

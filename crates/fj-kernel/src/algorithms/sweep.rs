@@ -163,7 +163,7 @@ pub fn sweep_shape(
                     vertices_source.map(|vertex_source| {
                         let vertex_bottom = source_to_bottom
                             .vertices
-                            .get(&vertex_source.canonical)
+                            .get(vertex_source.canonical())
                             .unwrap()
                             .clone();
 
@@ -176,7 +176,7 @@ pub fn sweep_shape(
 
                                 let vertex_top = source_to_top
                                     .vertices
-                                    .get(&vertex_source.canonical)
+                                    .get(vertex_source.canonical())
                                     .unwrap()
                                     .clone();
 
@@ -252,7 +252,7 @@ impl Relation {
     ) -> Option<[Handle<Vertex<3>>; 2]> {
         edge.get().vertices.map(|vertices| {
             vertices.map(|vertex| {
-                self.vertices.get(&vertex.canonical).unwrap().clone()
+                self.vertices.get(vertex.canonical()).unwrap().clone()
             })
         })
     }

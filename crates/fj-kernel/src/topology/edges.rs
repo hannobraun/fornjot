@@ -64,7 +64,7 @@ impl Edge {
             vertices.map(|canonical| {
                 let local =
                     curve.get().point_to_curve_coords(canonical.get().point());
-                LocalForm { local, canonical }
+                LocalForm::new(local, canonical)
             })
         });
 
@@ -91,7 +91,7 @@ impl Edge {
     pub fn vertices(&self) -> Option<[Vertex<3>; 2]> {
         self.vertices
             .as_ref()
-            .map(|[a, b]| [a.canonical.get(), b.canonical.get()])
+            .map(|[a, b]| [a.canonical().get(), b.canonical().get()])
     }
 }
 
