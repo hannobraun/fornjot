@@ -246,12 +246,7 @@ mod tests {
         let cycle = shape.insert(cycle)?;
         assert!(shape.get_handle(&cycle.get()).as_ref() == Some(&cycle));
 
-        let face = Face::Face {
-            surface,
-            exteriors: Vec::new(),
-            interiors: Vec::new(),
-            color: [0, 0, 0, 0],
-        };
+        let face = Face::new(surface, Vec::new(), Vec::new(), [0, 0, 0, 0]);
         assert!(shape.get_handle(&face).is_none());
 
         let face = shape.insert(face)?;
@@ -341,12 +336,12 @@ mod tests {
 
         // Nothing has been added to `shape`. Should fail.
         let err = shape
-            .insert(Face::Face {
-                surface: surface.clone(),
-                exteriors: vec![cycle.clone()],
-                interiors: Vec::new(),
-                color: [255, 0, 0, 255],
-            })
+            .insert(Face::new(
+                surface.clone(),
+                vec![cycle.clone()],
+                Vec::new(),
+                [255, 0, 0, 255],
+            ))
             .unwrap_err();
         assert!(err.missing_surface(&surface));
         assert!(err.missing_cycle(&cycle));
@@ -355,12 +350,12 @@ mod tests {
         let cycle = shape.add_cycle()?;
 
         // Everything has been added to `shape` now. Should work!
-        shape.insert(Face::Face {
+        shape.insert(Face::new(
             surface,
-            exteriors: vec![cycle],
-            interiors: Vec::new(),
-            color: [255, 0, 0, 255],
-        })?;
+            vec![cycle],
+            Vec::new(),
+            [255, 0, 0, 255],
+        ))?;
 
         Ok(())
     }

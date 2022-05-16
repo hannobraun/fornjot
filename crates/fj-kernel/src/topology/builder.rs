@@ -197,11 +197,11 @@ impl<'r> FaceBuilder<'r> {
             interiors.push(cycle);
         }
 
-        self.shape.insert(Face::Face {
+        self.shape.insert(Face::new(
             surface,
             exteriors,
             interiors,
-            color: [255, 0, 0, 255],
-        })
+            [255, 0, 0, 255],
+        ))
     }
 }

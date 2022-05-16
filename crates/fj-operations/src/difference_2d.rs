@@ -72,12 +72,7 @@ impl ToShape for fj::Difference2d {
         let surface = shape.insert(face_a.surface()).unwrap();
 
         shape
-            .insert(Face::Face {
-                surface,
-                exteriors,
-                interiors,
-                color: self.color(),
-            })
+            .insert(Face::new(surface, exteriors, interiors, self.color()))
             .unwrap();
 
         shape

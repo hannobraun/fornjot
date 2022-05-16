@@ -66,6 +66,23 @@ pub enum Face {
 }
 
 impl Face {
+    /// Construct a new instance of `Face`
+    pub fn new(
+        surface: Handle<Surface>,
+        exteriors: impl IntoIterator<Item = Handle<Cycle<3>>>,
+        interiors: impl IntoIterator<Item = Handle<Cycle<3>>>,
+        color: [u8; 4],
+    ) -> Self {
+        let exteriors = exteriors.into_iter().collect();
+        let interiors = interiors.into_iter().collect();
+
+        Self::Face {
+            surface,
+            exteriors,
+            interiors,
+            color,
+        }
+    }
     /// Build a face using the [`FaceBuilder`] API
     pub fn builder(surface: Surface, shape: &mut Shape) -> FaceBuilder {
         FaceBuilder::new(surface, shape)

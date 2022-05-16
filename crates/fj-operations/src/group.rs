@@ -94,18 +94,12 @@ fn copy_shape(orig: Shape, target: &mut Shape) {
                 color,
             } => {
                 target
-                    .insert(Face::Face {
-                        surface: surfaces[&surface].clone(),
-                        exteriors: exteriors
-                            .iter()
-                            .map(|cycle| cycles[cycle].clone())
-                            .collect(),
-                        interiors: interiors
-                            .iter()
-                            .map(|cycle| cycles[cycle].clone())
-                            .collect(),
+                    .insert(Face::new(
+                        surfaces[&surface].clone(),
+                        exteriors.iter().map(|cycle| cycles[cycle].clone()),
+                        interiors.iter().map(|cycle| cycles[cycle].clone()),
                         color,
-                    })
+                    ))
                     .unwrap();
             }
             face @ Face::Triangles(_) => {
