@@ -57,7 +57,7 @@ pub type Surfaces = Store<Surface>;
 
 pub type Vertices = Store<Vertex<3>>;
 pub type Edges = Store<Edge<3>>;
-pub type Cycles = Store<Cycle>;
+pub type Cycles = Store<Cycle<3>>;
 pub type Faces = Store<Face>;
 
 #[derive(Debug)]

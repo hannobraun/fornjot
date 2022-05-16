@@ -65,12 +65,8 @@ pub fn sweep_shape(
         let edges_bottom = source_to_bottom.edges_for_cycle(&cycle_source);
         let edges_top = source_to_top.edges_for_cycle(&cycle_source);
 
-        let cycle_bottom = target
-            .insert(Cycle {
-                edges: edges_bottom,
-            })
-            .unwrap();
-        let cycle_top = target.insert(Cycle { edges: edges_top }).unwrap();
+        let cycle_bottom = target.insert(Cycle::new(edges_bottom)).unwrap();
+        let cycle_top = target.insert(Cycle::new(edges_top)).unwrap();
 
         source_to_bottom
             .cycles
@@ -152,6 +148,8 @@ pub fn sweep_shape(
             let mut vertex_bottom_to_edge = HashMap::new();
 
             for edge_source in &cycle_source.get().edges {
+                let edge_source = edge_source.canonical();
+
                 // Can't panic. We already ruled out the continuous edge case
                 // above, so this edge must have vertices.
                 let vertices_source =
@@ -206,14 +204,12 @@ pub fn sweep_shape(
                     .unwrap();
 
                 let cycle = target
-                    .insert(Cycle {
-                        edges: vec![
-                            bottom_edge,
-                            top_edge,
-                            side_edge_a,
-                            side_edge_b,
-                        ],
-                    })
+                    .insert(Cycle::new(vec![
+                        bottom_edge,
+                        top_edge,
+                        side_edge_a,
+                        side_edge_b,
+                    ]))
                     .unwrap();
 
                 target
@@ -234,7 +230,7 @@ pub fn sweep_shape(
 struct Relation {
     vertices: HashMap<Handle<Vertex<3>>, Handle<Vertex<3>>>,
     edges: HashMap<Handle<Edge<3>>, Handle<Edge<3>>>,
-    cycles: HashMap<Handle<Cycle>, Handle<Cycle>>,
+    cycles: HashMap<Handle<Cycle<3>>, Handle<Cycle<3>>>,
 }
 
 impl Relation {
@@ -257,16 +253,19 @@ impl Relation {
         })
     }
 
-    fn edges_for_cycle(&self, cycle: &Handle<Cycle>) -> Vec<Handle<Edge<3>>> {
+    fn edges_for_cycle(
+        &self,
+        cycle: &Handle<Cycle<3>>,
+    ) -> Vec<Handle<Edge<3>>> {
         cycle
             .get()
             .edges
             .iter()
-            .map(|edge| self.edges.get(edge).unwrap().clone())
+            .map(|edge| self.edges.get(edge.canonical()).unwrap().clone())
             .collect()
     }
 
-    fn exteriors_for_face(&self, face: &Face) -> Vec<Handle<Cycle>> {
+    fn exteriors_for_face(&self, face: &Face) -> Vec<Handle<Cycle<3>>> {
         let exteriors = match face {
             Face::Face { exteriors, .. } => exteriors,
             _ => {
@@ -282,7 +281,7 @@ impl Relation {
             .collect()
     }
 
-    fn interiors_for_face(&self, face: &Face) -> Vec<Handle<Cycle>> {
+    fn interiors_for_face(&self, face: &Face) -> Vec<Handle<Cycle<3>>> {
         let interiors = match face {
             Face::Face { interiors, .. } => interiors,
             _ => {
@@ -379,9 +378,7 @@ mod tests {
             let ca = Edge::builder(&mut shape)
                 .build_line_segment_from_points([c, a])?;
 
-            let cycles = shape.insert(Cycle {
-                edges: vec![ab, bc, ca],
-            })?;
+            let cycles = shape.insert(Cycle::new(vec![ab, bc, ca]))?;
 
             let surface =
                 Surface::SweptCurve(SweptCurve::plane_from_points([a, b, c]));

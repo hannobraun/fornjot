@@ -16,7 +16,7 @@ impl CycleApprox {
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual face.
-    pub fn new(cycle: &Cycle, tolerance: Tolerance) -> Self {
+    pub fn new(cycle: &Cycle<3>, tolerance: Tolerance) -> Self {
         let mut points = Vec::new();
 
         for edge in cycle.edges() {
