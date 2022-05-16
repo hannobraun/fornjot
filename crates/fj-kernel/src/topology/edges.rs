@@ -26,7 +26,7 @@ pub struct Edge<const D: usize> {
     /// The edge can be a segment of the curve that is bounded by two vertices,
     /// or if the curve is continuous (i.e. connects to itself), the edge could
     /// be defined by the whole curve, and have no bounding vertices.
-    pub curve: Handle<Curve<3>>,
+    pub curve: LocalForm<Curve<D>, Curve<3>>,
 
     /// Access the vertices that bound the edge on the curve
     ///
@@ -60,9 +60,12 @@ impl Edge<3> {
         curve: Handle<Curve<3>>,
         vertices: Option<[Handle<Vertex<3>>; 2]>,
     ) -> Self {
+        let curve = LocalForm::canonical_only(curve);
+
         let vertices = vertices.map(|vertices| {
             vertices.map(|canonical| {
                 let local = curve
+                    .canonical()
                     .get()
                     .point_to_curve_coords(canonical.get().point())
                     .local();
@@ -86,7 +89,7 @@ impl<const D: usize> Edge<D> {
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`].
     pub fn curve(&self) -> Curve<3> {
-        self.curve.get()
+        self.curve.canonical().get()
     }
 
     /// Access the vertices that the edge refers to
@@ -102,13 +105,13 @@ impl<const D: usize> Edge<D> {
 
 impl<const D: usize> PartialEq for Edge<D> {
     fn eq(&self, other: &Self) -> bool {
-        self.curve() == other.curve() && self.vertices == other.vertices
+        self.curve == other.curve && self.vertices == other.vertices
     }
 }
 
 impl<const D: usize> Hash for Edge<D> {
     fn hash<H: Hasher>(&self, state: &mut H) {
-        self.curve().hash(state);
+        self.curve.hash(state);
         self.vertices.hash(state);
     }
 }

@@ -71,8 +71,8 @@ impl Validate for Edge<3> {
         let mut missing_curve = None;
         let mut missing_vertices = HashSet::new();
 
-        if !stores.curves.contains(&self.curve) {
-            missing_curve = Some(self.curve.clone());
+        if !stores.curves.contains(self.curve.canonical()) {
+            missing_curve = Some(self.curve.canonical().clone());
         }
         for vertices in &self.vertices {
             for vertex in vertices {
