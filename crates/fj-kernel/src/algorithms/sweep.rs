@@ -266,8 +266,7 @@ impl Relation {
         };
 
         exteriors
-            .0
-            .iter()
+            .as_handle()
             .map(|cycle| self.cycles.get(cycle).unwrap().clone())
             .collect()
     }
@@ -283,8 +282,7 @@ impl Relation {
         };
 
         interiors
-            .0
-            .iter()
+            .as_handle()
             .map(|cycle| self.cycles.get(cycle).unwrap().clone())
             .collect()
     }

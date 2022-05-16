@@ -96,8 +96,12 @@ fn copy_shape(orig: Shape, target: &mut Shape) {
                 target
                     .insert(Face::new(
                         surfaces[&surface].clone(),
-                        exteriors.0.iter().map(|cycle| cycles[cycle].clone()),
-                        interiors.0.iter().map(|cycle| cycles[cycle].clone()),
+                        exteriors
+                            .as_handle()
+                            .map(|cycle| cycles[cycle].clone()),
+                        interiors
+                            .as_handle()
+                            .map(|cycle| cycles[cycle].clone()),
                         color,
                     ))
                     .unwrap();

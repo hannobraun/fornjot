@@ -171,6 +171,11 @@ impl CyclesInFace {
     }
 
     fn as_canonical(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
-        self.0.iter().map(|edge| edge.get())
+        self.as_handle().map(|edge| edge.get())
+    }
+
+    /// Access an iterator over handles to the cycles
+    pub fn as_handle(&self) -> impl Iterator<Item = &'_ Handle<Cycle<3>>> + '_ {
+        self.0.iter()
     }
 }

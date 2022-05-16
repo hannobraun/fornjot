@@ -149,7 +149,7 @@ impl Validate for Face {
             if !stores.surfaces.contains(surface) {
                 missing_surface = Some(surface.clone());
             }
-            for cycle in exteriors.0.iter().chain(&interiors.0) {
+            for cycle in exteriors.as_handle().chain(interiors.as_handle()) {
                 if !stores.cycles.contains(cycle) {
                     missing_cycles.insert(cycle.clone());
                 }
