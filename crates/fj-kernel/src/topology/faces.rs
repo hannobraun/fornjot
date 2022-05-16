@@ -73,8 +73,8 @@ impl Face {
         interiors: impl IntoIterator<Item = Handle<Cycle<3>>>,
         color: [u8; 4],
     ) -> Self {
-        let exteriors = CyclesInFace(exteriors.into_iter().collect());
-        let interiors = CyclesInFace(interiors.into_iter().collect());
+        let exteriors = CyclesInFace::from_canonical(exteriors);
+        let interiors = CyclesInFace::from_canonical(interiors);
 
         Self::Face {
             surface,
@@ -166,3 +166,11 @@ impl Hash for Face {
 /// A list of cycles, as they are stored in `Face`
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct CyclesInFace(pub Vec<Handle<Cycle<3>>>);
+
+impl CyclesInFace {
+    fn from_canonical(
+        cycles: impl IntoIterator<Item = Handle<Cycle<3>>>,
+    ) -> Self {
+        Self(cycles.into_iter().collect())
+    }
+}
