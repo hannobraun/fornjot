@@ -229,10 +229,7 @@ mod tests {
         assert!(shape.get_handle(&surface.get()).as_ref() == Some(&surface));
 
         let vertex = Vertex::new(point);
-        let edge = Edge {
-            curve,
-            vertices: None,
-        };
+        let edge = Edge::new(curve, None);
 
         assert!(shape.get_handle(&vertex).is_none());
         assert!(shape.get_handle(&edge).is_none());
