@@ -1,7 +1,7 @@
 use std::hash::{Hash, Hasher};
 
 use crate::{
-    geometry::{self, Curve},
+    geometry::Curve,
     shape::{Handle, LocalForm, Shape},
 };
 
@@ -32,7 +32,7 @@ pub struct Edge {
     ///
     /// If there are no such vertices, that means that both the curve and the
     /// edge are continuous (i.e. connected to themselves).
-    pub vertices: Option<[LocalForm<geometry::Point<1, 3>, Vertex<3>>; 2]>,
+    pub vertices: Option<[LocalForm<Vertex<1>, Vertex<3>>; 2]>,
 }
 
 impl Edge {
@@ -62,8 +62,11 @@ impl Edge {
     ) -> Self {
         let vertices = vertices.map(|vertices| {
             vertices.map(|canonical| {
-                let local =
-                    curve.get().point_to_curve_coords(canonical.get().point());
+                let local = curve
+                    .get()
+                    .point_to_curve_coords(canonical.get().point())
+                    .local();
+                let local = canonical.get().with_local_form(local);
                 LocalForm::new(local, canonical)
             })
         });

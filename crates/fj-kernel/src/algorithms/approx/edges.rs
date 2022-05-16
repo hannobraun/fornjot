@@ -1,9 +1,9 @@
 use crate::{geometry, shape::LocalForm, topology::Vertex};
 
 pub fn approximate_edge(
-    vertices: Option<[LocalForm<geometry::Point<1, 3>, Vertex<3>>; 2]>,
-    mut points: Vec<geometry::Point<1, 3>>,
-) -> Vec<geometry::Point<1, 3>> {
+    vertices: Option<[LocalForm<Vertex<1>, Vertex<3>>; 2]>,
+    points: &mut Vec<geometry::Point<1, 3>>,
+) {
     // Insert the exact vertices of this edge into the approximation. This means
     // we don't rely on the curve approximation to deliver accurate
     // representations of these vertices, which they might not be able to do.
@@ -12,8 +12,14 @@ pub fn approximate_edge(
     // would lead to bugs in the approximation, as points that should refer to
     // the same vertex would be understood to refer to very close, but distinct
     // vertices.
-    let vertices =
-        vertices.map(|vertices| vertices.map(|vertex| *vertex.local()));
+    let vertices = vertices.map(|vertices| {
+        vertices.map(|vertex| {
+            geometry::Point::new(
+                *vertex.local().point.local(),
+                vertex.canonical().get().point(),
+            )
+        })
+    });
     if let Some([a, b]) = vertices {
         points.insert(0, a);
         points.push(b);
@@ -27,8 +33,6 @@ pub fn approximate_edge(
             points.push(point);
         }
     }
-
-    points
 }
 
 #[cfg(test)]
@@ -54,8 +58,8 @@ mod test {
         let v2 = Vertex::builder(&mut shape).build_from_point(d)?;
 
         let vertices = [
-            LocalForm::new(geometry::Point::new([0.], a), v1),
-            LocalForm::new(geometry::Point::new([1.], d), v2),
+            LocalForm::new(v1.get().with_local_form([0.]), v1),
+            LocalForm::new(v2.get().with_local_form([1.]), v2),
         ];
 
         let a = geometry::Point::new([0.0], a);
@@ -64,13 +68,14 @@ mod test {
         let d = geometry::Point::new([1.0], d);
 
         // Regular edge
-        assert_eq!(
-            super::approximate_edge(Some(vertices), vec![b, c]),
-            vec![a, b, c, d],
-        );
+        let mut points = vec![b, c];
+        super::approximate_edge(Some(vertices), &mut points);
+        assert_eq!(points, vec![a, b, c, d]);
 
         // Continuous edge
-        assert_eq!(super::approximate_edge(None, vec![b, c]), vec![b, c, b],);
+        let mut points = vec![b, c];
+        super::approximate_edge(None, &mut points);
+        assert_eq!(points, vec![b, c, b]);
 
         Ok(())
     }

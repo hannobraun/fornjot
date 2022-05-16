@@ -22,8 +22,9 @@ impl CycleApprox {
         for edge in cycle.edges() {
             let mut edge_points = Vec::new();
             approx_curve(&edge.curve(), tolerance, &mut edge_points);
+            approximate_edge(edge.vertices, &mut edge_points);
 
-            points.extend(approximate_edge(edge.vertices, edge_points));
+            points.extend(edge_points);
         }
 
         let mut points: Vec<_> = points
