@@ -22,7 +22,7 @@ use super::{CycleBuilder, Edge};
 #[derive(Clone, Debug, Eq, Ord, PartialOrd)]
 pub struct Cycle {
     /// The edges that make up the cycle
-    pub edges: Vec<Handle<Edge>>,
+    pub edges: Vec<Handle<Edge<3>>>,
 }
 
 impl Cycle {
@@ -35,7 +35,7 @@ impl Cycle {
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn edges(&self) -> impl Iterator<Item = Edge> + '_ {
+    pub fn edges(&self) -> impl Iterator<Item = Edge<3>> + '_ {
         self.edges.iter().map(|handle| handle.get())
     }
 }

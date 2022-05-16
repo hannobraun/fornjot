@@ -47,16 +47,13 @@ impl<'r> EdgeBuilder<'r> {
     }
 
     /// Build a circle from a radius
-    pub fn build_circle(self, radius: Scalar) -> ValidationResult<Edge> {
+    pub fn build_circle(self, radius: Scalar) -> ValidationResult<Edge<3>> {
         let curve = self.shape.insert(Curve::Circle(Circle {
             center: Point::origin(),
             a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
             b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
         }))?;
-        let edge = self.shape.insert(Edge {
-            curve,
-            vertices: None,
-        })?;
+        let edge = self.shape.insert(Edge::new(curve, None))?;
 
         Ok(edge)
     }
@@ -65,7 +62,7 @@ impl<'r> EdgeBuilder<'r> {
     pub fn build_line_segment_from_points(
         self,
         vertices: [impl Into<Point<3>>; 2],
-    ) -> ValidationResult<Edge> {
+    ) -> ValidationResult<Edge<3>> {
         // Can be cleaned up with `try_map`, once that is stable:
         // https://doc.rust-lang.org/std/primitive.array.html#method.try_map
         let vertices = vertices
@@ -84,7 +81,7 @@ impl<'r> EdgeBuilder<'r> {
     pub fn build_line_segment_from_vertices(
         self,
         vertices: [Handle<Vertex<3>>; 2],
-    ) -> ValidationResult<Edge> {
+    ) -> ValidationResult<Edge<3>> {
         let curve = self.shape.insert(Curve::Line(Line::from_points(
             vertices.clone().map(|vertex| vertex.get().point()),
         )))?;

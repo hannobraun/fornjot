@@ -1,5 +1,3 @@
-use std::hash::{Hash, Hasher};
-
 use crate::{
     geometry::Curve,
     shape::{Handle, LocalForm, Shape},
@@ -19,14 +17,14 @@ use super::{vertices::Vertex, EdgeBuilder};
 /// An edge that is part of a [`Shape`] must be structurally sound. That means
 /// the curve and any vertices that it refers to, must be part of the same
 /// shape.
-#[derive(Clone, Debug, Eq, Ord, PartialOrd)]
-pub struct Edge {
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct Edge<const D: usize> {
     /// Access the curve that defines the edge's geometry
     ///
     /// The edge can be a segment of the curve that is bounded by two vertices,
     /// or if the curve is continuous (i.e. connects to itself), the edge could
     /// be defined by the whole curve, and have no bounding vertices.
-    pub curve: Handle<Curve<3>>,
+    pub curve: LocalForm<Curve<D>, Curve<3>>,
 
     /// Access the vertices that bound the edge on the curve
     ///
@@ -35,7 +33,7 @@ pub struct Edge {
     pub vertices: Option<[LocalForm<Vertex<1>, Vertex<3>>; 2]>,
 }
 
-impl Edge {
+impl Edge<3> {
     /// Construct an instance of `Edge`
     ///
     /// # Implementation Note
@@ -60,9 +58,12 @@ impl Edge {
         curve: Handle<Curve<3>>,
         vertices: Option<[Handle<Vertex<3>>; 2]>,
     ) -> Self {
+        let curve = LocalForm::canonical_only(curve);
+
         let vertices = vertices.map(|vertices| {
             vertices.map(|canonical| {
                 let local = curve
+                    .canonical()
                     .get()
                     .point_to_curve_coords(canonical.get().point())
                     .local();
@@ -78,13 +79,15 @@ impl Edge {
     pub fn builder(shape: &mut Shape) -> EdgeBuilder {
         EdgeBuilder::new(shape)
     }
+}
 
+impl<const D: usize> Edge<D> {
     /// Access the curve that the edge refers to
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`].
     pub fn curve(&self) -> Curve<3> {
-        self.curve.get()
+        self.curve.canonical().get()
     }
 
     /// Access the vertices that the edge refers to
@@ -95,18 +98,5 @@ impl Edge {
         self.vertices
             .as_ref()
             .map(|[a, b]| [a.canonical().get(), b.canonical().get()])
-    }
-}
-
-impl PartialEq for Edge {
-    fn eq(&self, other: &Self) -> bool {
-        self.curve() == other.curve() && self.vertices == other.vertices
-    }
-}
-
-impl Hash for Edge {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        self.curve().hash(state);
-        self.vertices.hash(state);
     }
 }
