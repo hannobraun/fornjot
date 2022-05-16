@@ -95,7 +95,7 @@ impl Validate for Edge<3> {
     }
 }
 
-impl Validate for Cycle {
+impl Validate for Cycle<3> {
     /// Validate the cycle
     ///
     /// # Implementation note
@@ -111,6 +111,8 @@ impl Validate for Cycle {
     ) -> Result<(), ValidationError> {
         let mut missing_edges = HashSet::new();
         for edge in &self.edges {
+            let edge = edge.canonical();
+
             if !stores.edges.contains(edge) {
                 missing_edges.insert(edge.clone());
             }
@@ -248,7 +250,7 @@ impl ValidationError {
 
     /// Indicate whether validation found a missing cycle
     #[cfg(test)]
-    pub fn missing_cycle(&self, cycle: &Handle<Cycle>) -> bool {
+    pub fn missing_cycle(&self, cycle: &Handle<Cycle<3>>) -> bool {
         if let Self::Structural(StructuralIssues { missing_cycles, .. }) = self
         {
             return missing_cycles.contains(cycle);
@@ -282,5 +284,5 @@ pub struct StructuralIssues {
     pub missing_surface: Option<Handle<Surface>>,
 
     /// Missing cycles found in face validation
-    pub missing_cycles: HashSet<Handle<Cycle>>,
+    pub missing_cycles: HashSet<Handle<Cycle<3>>>,
 }

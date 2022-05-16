@@ -175,7 +175,7 @@ impl Shape {
     /// Access an iterator over all cycles
     ///
     /// The caller must not make any assumptions about the order of cycles.
-    pub fn cycles(&self) -> Iter<Cycle> {
+    pub fn cycles(&self) -> Iter<Cycle<3>> {
         self.stores.cycles.iter()
     }
 
@@ -398,7 +398,7 @@ mod tests {
             Ok(edge)
         }
 
-        fn add_cycle(&mut self) -> anyhow::Result<Handle<Cycle>> {
+        fn add_cycle(&mut self) -> anyhow::Result<Handle<Cycle<3>>> {
             let edge = self.add_edge()?;
             let cycle = self.insert(Cycle::new(vec![edge]))?;
             Ok(cycle)

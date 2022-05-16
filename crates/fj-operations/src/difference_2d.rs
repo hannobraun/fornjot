@@ -92,11 +92,11 @@ impl ToShape for fj::Difference2d {
 }
 
 fn add_cycle(
-    cycle: Handle<Cycle>,
+    cycle: Handle<Cycle<3>>,
     vertices: &mut HashMap<Vertex<3>, Handle<Vertex<3>>>,
     shape: &mut Shape,
     reverse: bool,
-) -> Handle<Cycle> {
+) -> Handle<Cycle<3>> {
     let mut edges = Vec::new();
     for edge in cycle.get().edges() {
         let curve = edge.curve();

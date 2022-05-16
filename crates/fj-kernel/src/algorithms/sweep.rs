@@ -148,6 +148,8 @@ pub fn sweep_shape(
             let mut vertex_bottom_to_edge = HashMap::new();
 
             for edge_source in &cycle_source.get().edges {
+                let edge_source = edge_source.canonical();
+
                 // Can't panic. We already ruled out the continuous edge case
                 // above, so this edge must have vertices.
                 let vertices_source =
@@ -228,7 +230,7 @@ pub fn sweep_shape(
 struct Relation {
     vertices: HashMap<Handle<Vertex<3>>, Handle<Vertex<3>>>,
     edges: HashMap<Handle<Edge<3>>, Handle<Edge<3>>>,
-    cycles: HashMap<Handle<Cycle>, Handle<Cycle>>,
+    cycles: HashMap<Handle<Cycle<3>>, Handle<Cycle<3>>>,
 }
 
 impl Relation {
@@ -251,16 +253,19 @@ impl Relation {
         })
     }
 
-    fn edges_for_cycle(&self, cycle: &Handle<Cycle>) -> Vec<Handle<Edge<3>>> {
+    fn edges_for_cycle(
+        &self,
+        cycle: &Handle<Cycle<3>>,
+    ) -> Vec<Handle<Edge<3>>> {
         cycle
             .get()
             .edges
             .iter()
-            .map(|edge| self.edges.get(edge).unwrap().clone())
+            .map(|edge| self.edges.get(edge.canonical()).unwrap().clone())
             .collect()
     }
 
-    fn exteriors_for_face(&self, face: &Face) -> Vec<Handle<Cycle>> {
+    fn exteriors_for_face(&self, face: &Face) -> Vec<Handle<Cycle<3>>> {
         let exteriors = match face {
             Face::Face { exteriors, .. } => exteriors,
             _ => {
@@ -276,7 +281,7 @@ impl Relation {
             .collect()
     }
 
-    fn interiors_for_face(&self, face: &Face) -> Vec<Handle<Cycle>> {
+    fn interiors_for_face(&self, face: &Face) -> Vec<Handle<Cycle<3>>> {
         let interiors = match face {
             Face::Face { interiors, .. } => interiors,
             _ => {

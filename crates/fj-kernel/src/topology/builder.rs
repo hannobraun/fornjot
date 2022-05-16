@@ -107,7 +107,7 @@ impl<'r> CycleBuilder<'r> {
     pub fn build_polygon(
         self,
         points: impl IntoIterator<Item = impl Into<Point<3>>>,
-    ) -> ValidationResult<Cycle> {
+    ) -> ValidationResult<Cycle<3>> {
         // A polygon is closed, so we need to add the first point at the end
         // again, for the next step.
         let mut points: Vec<_> = points.into_iter().map(Into::into).collect();

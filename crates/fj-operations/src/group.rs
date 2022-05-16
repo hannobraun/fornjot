@@ -79,7 +79,7 @@ fn copy_shape(orig: Shape, target: &mut Shape) {
                     .get()
                     .edges
                     .iter()
-                    .map(|edge| edges[edge].clone())
+                    .map(|edge| edges[edge.canonical()].clone()),
             ))
             .unwrap();
         cycles.insert(cycle_orig, cycle);

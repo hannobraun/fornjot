@@ -41,7 +41,7 @@ pub enum Face {
         ///
         /// It might be less error-prone to specify the cycles in surface
         /// coordinates.
-        exteriors: Vec<Handle<Cycle>>,
+        exteriors: Vec<Handle<Cycle<3>>>,
 
         /// The cycles that bound the face on the inside
         ///
@@ -50,7 +50,7 @@ pub enum Face {
         /// # Implementation note
         ///
         /// See note on `exterior` field.
-        interiors: Vec<Handle<Cycle>>,
+        interiors: Vec<Handle<Cycle<3>>>,
 
         /// The color of the face
         color: [u8; 4],
@@ -90,7 +90,7 @@ impl Face {
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn exteriors(&self) -> impl Iterator<Item = Cycle> + '_ {
+    pub fn exteriors(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
         match self {
             Self::Face { exteriors, .. } => {
                 exteriors.iter().map(|handle| handle.get())
@@ -107,7 +107,7 @@ impl Face {
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn interiors(&self) -> impl Iterator<Item = Cycle> + '_ {
+    pub fn interiors(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
         match self {
             Self::Face { interiors, .. } => {
                 interiors.iter().map(|handle| handle.get())
@@ -124,7 +124,7 @@ impl Face {
     ///
     /// This is equivalent to chaining the iterators returned by
     /// [`Face::exteriors`] and [`Face::interiors`].
-    pub fn all_cycles(&self) -> impl Iterator<Item = Cycle> + '_ {
+    pub fn all_cycles(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
         self.exteriors().chain(self.interiors())
     }
 }

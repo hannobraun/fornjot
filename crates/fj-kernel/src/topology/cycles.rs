@@ -1,6 +1,6 @@
 use std::hash::{Hash, Hasher};
 
-use crate::shape::{Handle, Shape};
+use crate::shape::{Handle, LocalForm, Shape};
 
 use super::{CycleBuilder, Edge};
 
@@ -20,15 +20,15 @@ use super::{CycleBuilder, Edge};
 /// A cycle that is part of a [`Shape`] must be structurally sound. That means
 /// the edges it refers to, must be part of the same shape.
 #[derive(Clone, Debug, Eq, Ord, PartialOrd)]
-pub struct Cycle {
+pub struct Cycle<const D: usize> {
     /// The edges that make up the cycle
-    pub edges: Vec<Handle<Edge<3>>>,
+    pub edges: Vec<LocalForm<Edge<D>, Edge<3>>>,
 }
 
-impl Cycle {
+impl Cycle<3> {
     /// Construct a `Cycle`
     pub fn new(edges: impl IntoIterator<Item = Handle<Edge<3>>>) -> Self {
-        let edges = edges.into_iter().collect();
+        let edges = edges.into_iter().map(LocalForm::canonical_only).collect();
 
         Self { edges }
     }
@@ -43,19 +43,19 @@ impl Cycle {
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
     pub fn edges(&self) -> impl Iterator<Item = Edge<3>> + '_ {
-        self.edges.iter().map(|handle| handle.get())
+        self.edges.iter().map(|handle| handle.canonical().get())
     }
 }
 
-impl PartialEq for Cycle {
+impl<const D: usize> PartialEq for Cycle<D> {
     fn eq(&self, other: &Self) -> bool {
-        self.edges().eq(other.edges())
+        self.edges == other.edges
     }
 }
 
-impl Hash for Cycle {
+impl<const D: usize> Hash for Cycle<D> {
     fn hash<H: Hasher>(&self, state: &mut H) {
-        for edge in self.edges() {
+        for edge in &self.edges {
             edge.hash(state);
         }
     }
