@@ -26,6 +26,6 @@ pub use self::{
     builder::{CycleBuilder, EdgeBuilder, FaceBuilder, VertexBuilder},
     cycles::Cycle,
     edges::Edge,
-    faces::Face,
+    faces::{CyclesInFace, Face},
     vertices::Vertex,
 };

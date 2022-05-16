@@ -41,7 +41,7 @@ pub enum Face {
         ///
         /// It might be less error-prone to specify the cycles in surface
         /// coordinates.
-        exteriors: Vec<Handle<Cycle<3>>>,
+        exteriors: CyclesInFace,
 
         /// The cycles that bound the face on the inside
         ///
@@ -50,7 +50,7 @@ pub enum Face {
         /// # Implementation note
         ///
         /// See note on `exterior` field.
-        interiors: Vec<Handle<Cycle<3>>>,
+        interiors: CyclesInFace,
 
         /// The color of the face
         color: [u8; 4],
@@ -66,6 +66,23 @@ pub enum Face {
 }
 
 impl Face {
+    /// Construct a new instance of `Face`
+    pub fn new(
+        surface: Handle<Surface>,
+        exteriors: impl IntoIterator<Item = Handle<Cycle<3>>>,
+        interiors: impl IntoIterator<Item = Handle<Cycle<3>>>,
+        color: [u8; 4],
+    ) -> Self {
+        let exteriors = CyclesInFace::from_canonical(exteriors);
+        let interiors = CyclesInFace::from_canonical(interiors);
+
+        Self::Face {
+            surface,
+            exteriors,
+            interiors,
+            color,
+        }
+    }
     /// Build a face using the [`FaceBuilder`] API
     pub fn builder(surface: Surface, shape: &mut Shape) -> FaceBuilder {
         FaceBuilder::new(surface, shape)
@@ -92,9 +109,7 @@ impl Face {
     /// [`Handle`]s.
     pub fn exteriors(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
         match self {
-            Self::Face { exteriors, .. } => {
-                exteriors.iter().map(|handle| handle.get())
-            }
+            Self::Face { exteriors, .. } => exteriors.as_canonical(),
             _ => {
                 // No code that still uses triangle representation is calling
                 // this method.
@@ -109,9 +124,7 @@ impl Face {
     /// [`Handle`]s.
     pub fn interiors(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
         match self {
-            Self::Face { interiors, .. } => {
-                interiors.iter().map(|handle| handle.get())
-            }
+            Self::Face { interiors, .. } => interiors.as_canonical(),
             _ => {
                 // No code that still uses triangle representation is calling
                 // this method.
@@ -143,5 +156,26 @@ impl Hash for Face {
         for cycle in self.all_cycles() {
             cycle.hash(state);
         }
+    }
+}
+
+/// A list of cycles, as they are stored in `Face`
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct CyclesInFace(Vec<Handle<Cycle<3>>>);
+
+impl CyclesInFace {
+    fn from_canonical(
+        cycles: impl IntoIterator<Item = Handle<Cycle<3>>>,
+    ) -> Self {
+        Self(cycles.into_iter().collect())
+    }
+
+    fn as_canonical(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
+        self.as_handle().map(|edge| edge.get())
+    }
+
+    /// Access an iterator over handles to the cycles
+    pub fn as_handle(&self) -> impl Iterator<Item = &'_ Handle<Cycle<3>>> + '_ {
+        self.0.iter()
     }
 }

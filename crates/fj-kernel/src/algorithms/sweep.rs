@@ -90,20 +90,15 @@ pub fn sweep_shape(
         let interiors_top = source_to_top.interiors_for_face(&face_source);
 
         target
-            .insert(Face::Face {
-                surface: surface_bottom,
-                exteriors: exteriors_bottom,
-                interiors: interiors_bottom,
+            .insert(Face::new(
+                surface_bottom,
+                exteriors_bottom,
+                interiors_bottom,
                 color,
-            })
+            ))
             .unwrap();
         target
-            .insert(Face::Face {
-                surface: surface_top,
-                exteriors: exteriors_top,
-                interiors: interiors_top,
-                color,
-            })
+            .insert(Face::new(surface_top, exteriors_top, interiors_top, color))
             .unwrap();
     }
 
@@ -213,12 +208,7 @@ pub fn sweep_shape(
                     .unwrap();
 
                 target
-                    .insert(Face::Face {
-                        surface,
-                        exteriors: vec![cycle],
-                        interiors: Vec::new(),
-                        color,
-                    })
+                    .insert(Face::new(surface, vec![cycle], Vec::new(), color))
                     .unwrap();
             }
         }
@@ -276,7 +266,7 @@ impl Relation {
         };
 
         exteriors
-            .iter()
+            .as_handle()
             .map(|cycle| self.cycles.get(cycle).unwrap().clone())
             .collect()
     }
@@ -292,7 +282,7 @@ impl Relation {
         };
 
         interiors
-            .iter()
+            .as_handle()
             .map(|cycle| self.cycles.get(cycle).unwrap().clone())
             .collect()
     }
@@ -385,12 +375,8 @@ mod tests {
             let surface = if reverse { surface.reverse() } else { surface };
             let surface = shape.insert(surface)?;
 
-            let abc = Face::Face {
-                surface,
-                exteriors: vec![cycles],
-                interiors: Vec::new(),
-                color: [255, 0, 0, 255],
-            };
+            let abc =
+                Face::new(surface, vec![cycles], Vec::new(), [255, 0, 0, 255]);
 
             let face = shape.insert(abc)?;
 
