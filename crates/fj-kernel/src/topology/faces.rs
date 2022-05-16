@@ -109,9 +109,7 @@ impl Face {
     /// [`Handle`]s.
     pub fn exteriors(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
         match self {
-            Self::Face { exteriors, .. } => {
-                exteriors.0.iter().map(|edge| edge.get())
-            }
+            Self::Face { exteriors, .. } => exteriors.as_canonical(),
             _ => {
                 // No code that still uses triangle representation is calling
                 // this method.
@@ -126,9 +124,7 @@ impl Face {
     /// [`Handle`]s.
     pub fn interiors(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
         match self {
-            Self::Face { interiors, .. } => {
-                interiors.0.iter().map(|edge| edge.get())
-            }
+            Self::Face { interiors, .. } => interiors.as_canonical(),
             _ => {
                 // No code that still uses triangle representation is calling
                 // this method.
@@ -172,5 +168,9 @@ impl CyclesInFace {
         cycles: impl IntoIterator<Item = Handle<Cycle<3>>>,
     ) -> Self {
         Self(cycles.into_iter().collect())
+    }
+
+    fn as_canonical(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
+        self.0.iter().map(|edge| edge.get())
     }
 }
