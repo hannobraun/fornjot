@@ -74,14 +74,13 @@ fn copy_shape(orig: Shape, target: &mut Shape) {
     }
     for cycle_orig in orig.cycles() {
         let cycle = target
-            .insert(Cycle {
-                edges: cycle_orig
+            .insert(Cycle::new(
+                cycle_orig
                     .get()
                     .edges
                     .iter()
                     .map(|edge| edges[edge].clone())
-                    .collect(),
-            })
+            ))
             .unwrap();
         cycles.insert(cycle_orig, cycle);
     }

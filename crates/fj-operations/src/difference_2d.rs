@@ -129,5 +129,5 @@ fn add_cycle(
         edges.reverse();
     }
 
-    shape.insert(Cycle { edges }).unwrap()
+    shape.insert(Cycle::new(edges)).unwrap()
 }

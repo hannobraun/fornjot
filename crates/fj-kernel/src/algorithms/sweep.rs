@@ -65,12 +65,8 @@ pub fn sweep_shape(
         let edges_bottom = source_to_bottom.edges_for_cycle(&cycle_source);
         let edges_top = source_to_top.edges_for_cycle(&cycle_source);
 
-        let cycle_bottom = target
-            .insert(Cycle {
-                edges: edges_bottom,
-            })
-            .unwrap();
-        let cycle_top = target.insert(Cycle { edges: edges_top }).unwrap();
+        let cycle_bottom = target.insert(Cycle::new(edges_bottom)).unwrap();
+        let cycle_top = target.insert(Cycle::new(edges_top)).unwrap();
 
         source_to_bottom
             .cycles
@@ -206,14 +202,12 @@ pub fn sweep_shape(
                     .unwrap();
 
                 let cycle = target
-                    .insert(Cycle {
-                        edges: vec![
-                            bottom_edge,
-                            top_edge,
-                            side_edge_a,
-                            side_edge_b,
-                        ],
-                    })
+                    .insert(Cycle::new(vec![
+                        bottom_edge,
+                        top_edge,
+                        side_edge_a,
+                        side_edge_b,
+                    ]))
                     .unwrap();
 
                 target
@@ -379,9 +373,7 @@ mod tests {
             let ca = Edge::builder(&mut shape)
                 .build_line_segment_from_points([c, a])?;
 
-            let cycles = shape.insert(Cycle {
-                edges: vec![ab, bc, ca],
-            })?;
+            let cycles = shape.insert(Cycle::new(vec![ab, bc, ca]))?;
 
             let surface =
                 Surface::SweptCurve(SweptCurve::plane_from_points([a, b, c]));

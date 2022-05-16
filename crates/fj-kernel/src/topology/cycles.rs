@@ -26,6 +26,13 @@ pub struct Cycle {
 }
 
 impl Cycle {
+    /// Construct a `Cycle`
+    pub fn new(edges: impl IntoIterator<Item = Handle<Edge<3>>>) -> Self {
+        let edges = edges.into_iter().collect();
+
+        Self { edges }
+    }
+
     /// Build a cycle using the [`CycleBuilder`] API
     pub fn builder(shape: &mut Shape) -> CycleBuilder {
         CycleBuilder::new(shape)

@@ -240,7 +240,7 @@ mod tests {
         assert!(shape.get_handle(&vertex.get()).as_ref() == Some(&vertex));
         assert!(shape.get_handle(&edge.get()).as_ref() == Some(&edge));
 
-        let cycle = Cycle { edges: vec![edge] };
+        let cycle = Cycle::new(vec![edge]);
         assert!(shape.get_handle(&cycle).is_none());
 
         let cycle = shape.insert(cycle)?;
@@ -321,16 +321,12 @@ mod tests {
 
         // Trying to refer to edge that is not from the same shape. Should fail.
         let edge = other.add_edge()?;
-        let err = shape
-            .insert(Cycle {
-                edges: vec![edge.clone()],
-            })
-            .unwrap_err();
+        let err = shape.insert(Cycle::new(vec![edge.clone()])).unwrap_err();
         assert!(err.missing_edge(&edge));
 
         // Referring to edge that *is* from the same shape. Should work.
         let edge = shape.add_edge()?;
-        shape.insert(Cycle { edges: vec![edge] })?;
+        shape.insert(Cycle::new(vec![edge]))?;
 
         Ok(())
     }
@@ -404,7 +400,7 @@ mod tests {
 
         fn add_cycle(&mut self) -> anyhow::Result<Handle<Cycle>> {
             let edge = self.add_edge()?;
-            let cycle = self.insert(Cycle { edges: vec![edge] })?;
+            let cycle = self.insert(Cycle::new(vec![edge]))?;
             Ok(cycle)
         }
     }

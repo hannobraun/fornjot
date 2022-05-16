@@ -127,7 +127,7 @@ impl<'r> CycleBuilder<'r> {
             edges.push(edge);
         }
 
-        self.shape.insert(Cycle { edges })
+        self.shape.insert(Cycle::new(edges))
     }
 }
 
