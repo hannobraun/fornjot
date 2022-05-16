@@ -161,7 +161,7 @@ impl Hash for Face {
 
 /// A list of cycles, as they are stored in `Face`
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct CyclesInFace(pub Vec<Handle<Cycle<3>>>);
+pub struct CyclesInFace(Vec<Handle<Cycle<3>>>);
 
 impl CyclesInFace {
     fn from_canonical(
