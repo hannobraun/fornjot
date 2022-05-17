@@ -44,16 +44,6 @@ impl ToShape for fj::Difference2d {
             }
         }
 
-        // Can't panic, as we just verified that both shapes have one cycle.
-        let [cycle_a, cycle_b] =
-            shapes.map(|shape| shape.cycles().next().unwrap());
-
-        let cycle_a = add_cycle(cycle_a, &mut shape, false);
-        let cycle_b = add_cycle(cycle_b, &mut shape, true);
-
-        let exteriors = vec![cycle_a];
-        let interiors = vec![cycle_b];
-
         // Can't panic, as we just verified that both shapes have one face.
         let [face_a, face_b] =
             shapes.map(|shape| shape.faces().values().next().unwrap());
@@ -63,6 +53,16 @@ impl ToShape for fj::Difference2d {
             "Trying to subtract sketches with different surfaces."
         );
         let surface = shape.insert(face_a.surface()).unwrap();
+
+        // Can't panic, as we just verified that both shapes have one cycle.
+        let [cycle_a, cycle_b] =
+            shapes.map(|shape| shape.cycles().next().unwrap());
+
+        let cycle_a = add_cycle(cycle_a, &mut shape, false);
+        let cycle_b = add_cycle(cycle_b, &mut shape, true);
+
+        let exteriors = vec![cycle_a];
+        let interiors = vec![cycle_b];
 
         shape
             .insert(Face::new(surface, exteriors, interiors, self.color()))
