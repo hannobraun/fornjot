@@ -110,6 +110,21 @@ impl Shape {
         self.insert(object)
     }
 
+    /// Merge the provided object into the shape
+    ///
+    /// The provided object is inserted into the shape. Each objects it
+    /// references is either also inserted, or, if the shape already contains an
+    /// object that is identical, the referencing object will reference the
+    /// already present object.
+    ///
+    /// This is done recursively.
+    pub fn merge<T>(&mut self, object: T) -> ValidationResult<T>
+    where
+        T: Object,
+    {
+        object.merge_into(self)
+    }
+
     /// Transform the geometry of the shape
     ///
     /// Since the topological types refer to geometry, and don't contain any
