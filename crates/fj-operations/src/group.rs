@@ -1,11 +1,5 @@
-use std::collections::HashMap;
-
 use fj_interop::debug::DebugInfo;
-use fj_kernel::{
-    algorithms::Tolerance,
-    shape::Shape,
-    topology::{Cycle, Edge, Face, Vertex},
-};
+use fj_kernel::{algorithms::Tolerance, shape::Shape};
 use fj_math::Aabb;
 
 use super::ToShape;
@@ -36,79 +30,7 @@ impl ToShape for fj::Group {
 }
 
 fn copy_shape(orig: Shape, target: &mut Shape) {
-    let mut points = HashMap::new();
-    let mut curves = HashMap::new();
-    let mut surfaces = HashMap::new();
-
-    let mut vertices = HashMap::new();
-    let mut edges = HashMap::new();
-    let mut cycles = HashMap::new();
-
-    for point_orig in orig.points() {
-        let point = target.insert(point_orig.get()).unwrap();
-        points.insert(point_orig, point);
-    }
-    for curve_orig in orig.curves() {
-        let curve = target.insert(curve_orig.get()).unwrap();
-        curves.insert(curve_orig, curve);
-    }
-    for surface_orig in orig.surfaces() {
-        let surface = target.insert(surface_orig.get()).unwrap();
-        surfaces.insert(surface_orig, surface);
-    }
-
-    for vertex_orig in orig.vertices() {
-        let point = points[vertex_orig.get().point.canonical()].clone();
-        let vertex = target.insert(Vertex::new(point)).unwrap();
-        vertices.insert(vertex_orig, vertex);
-    }
-    for edge_orig in orig.edges() {
-        let curve = curves[edge_orig.get().curve.canonical()].clone();
-        let vertices = edge_orig.get().vertices.as_ref().map(|vs| {
-            vs.clone()
-                .map(|vertex| vertices[vertex.canonical()].clone())
-        });
-
-        let edge = target.insert(Edge::new(curve, vertices)).unwrap();
-        edges.insert(edge_orig, edge);
-    }
-    for cycle_orig in orig.cycles() {
-        let cycle = target
-            .insert(Cycle::new(
-                cycle_orig
-                    .get()
-                    .edges
-                    .iter()
-                    .map(|edge| edges[edge.canonical()].clone()),
-            ))
-            .unwrap();
-        cycles.insert(cycle_orig, cycle);
-    }
-
     for face_orig in orig.faces() {
-        match face_orig.get() {
-            Face::Face {
-                surface,
-                exteriors,
-                interiors,
-                color,
-            } => {
-                target
-                    .insert(Face::new(
-                        surfaces[&surface].clone(),
-                        exteriors
-                            .as_handle()
-                            .map(|cycle| cycles[cycle].clone()),
-                        interiors
-                            .as_handle()
-                            .map(|cycle| cycles[cycle].clone()),
-                        color,
-                    ))
-                    .unwrap();
-            }
-            face @ Face::Triangles(_) => {
-                target.insert(face.clone()).unwrap();
-            }
-        }
+        target.merge(face_orig.get()).unwrap();
     }
 }

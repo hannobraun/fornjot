@@ -1,4 +1,5 @@
 use std::{
+    fmt,
     hash::{Hash, Hasher},
     sync::Arc,
 };
@@ -182,7 +183,7 @@ pub type Objects<T> = SlotMap<DefaultKey, T>;
 /// The equality of [`Handle`] is very strictly defined in terms of identity.
 /// Two [`Handle`]s are considered equal, if they refer to objects in the same
 /// memory location.
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Handle<T: Object> {
     key: DefaultKey,
     store: Store<T>,
@@ -214,6 +215,15 @@ impl<T: Object> Handle<T> {
             // pointing to it, it should be there.
             .unwrap()
             .clone()
+    }
+}
+
+impl<T: Object> fmt::Debug for Handle<T>
+where
+    T: fmt::Debug,
+{
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Handle => {:?}", self.get())
     }
 }
 

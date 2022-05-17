@@ -1,10 +1,8 @@
-use std::collections::HashMap;
-
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
     shape::{Handle, Shape},
-    topology::{Cycle, Edge, Face, Vertex},
+    topology::{Cycle, Edge, Face},
 };
 use fj_math::Aabb;
 
@@ -50,10 +48,8 @@ impl ToShape for fj::Difference2d {
         let [cycle_a, cycle_b] =
             [&mut a, &mut b].map(|shape| shape.cycles().next().unwrap());
 
-        let mut vertices = HashMap::new();
-
-        let cycle_a = add_cycle(cycle_a, &mut vertices, &mut shape, false);
-        let cycle_b = add_cycle(cycle_b, &mut vertices, &mut shape, true);
+        let cycle_a = add_cycle(cycle_a, &mut shape, false);
+        let cycle_b = add_cycle(cycle_b, &mut shape, true);
 
         let mut exteriors = Vec::new();
         let mut interiors = Vec::new();
@@ -88,7 +84,6 @@ impl ToShape for fj::Difference2d {
 
 fn add_cycle(
     cycle: Handle<Cycle<3>>,
-    vertices: &mut HashMap<Vertex<3>, Handle<Vertex<3>>>,
     shape: &mut Shape,
     reverse: bool,
 ) -> Handle<Cycle<3>> {
@@ -98,16 +93,8 @@ fn add_cycle(
         let curve = if reverse { curve.reverse() } else { curve };
         let curve = shape.insert(curve).unwrap();
 
-        let vertices = edge.vertices().clone().map(|vs| {
-            let mut vs = vs.map(|vertex| {
-                vertices
-                    .entry(vertex.clone())
-                    .or_insert_with(|| {
-                        let point = shape.insert(vertex.point()).unwrap();
-                        shape.insert(Vertex::new(point)).unwrap()
-                    })
-                    .clone()
-            });
+        let vertices = edge.vertices.clone().map(|vs| {
+            let mut vs = vs.map(|vertex| vertex.canonical().clone());
 
             if reverse {
                 vs.reverse();
@@ -116,7 +103,7 @@ fn add_cycle(
             vs
         });
 
-        let edge = shape.insert(Edge::new(curve, vertices)).unwrap();
+        let edge = shape.merge(Edge::new(curve, vertices)).unwrap();
         edges.push(edge);
     }
 
