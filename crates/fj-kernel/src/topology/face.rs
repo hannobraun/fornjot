@@ -61,19 +61,24 @@ impl Face {
         FaceBuilder::new(surface, shape)
     }
 
-    /// Access the surface that the face refers to
-    ///
-    /// This is a convenience method that saves the caller from dealing with the
-    /// [`Handle`].
-    pub fn surface(&self) -> Surface {
+    /// Access the boundary representation of the face
+    pub fn brep(&self) -> &FaceBRep {
         match self {
-            Self::Face(face) => face.surface(),
+            Self::Face(face) => face,
             _ => {
                 // No code that still uses triangle representation is calling
                 // this method.
                 unreachable!()
             }
         }
+    }
+
+    /// Access the surface that the face refers to
+    ///
+    /// This is a convenience method that saves the caller from dealing with the
+    /// [`Handle`].
+    pub fn surface(&self) -> Surface {
+        self.brep().surface()
     }
 
     /// Access the exterior cycles that the face refers to
@@ -81,14 +86,7 @@ impl Face {
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
     pub fn exteriors(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
-        match self {
-            Self::Face(face) => face.exteriors(),
-            _ => {
-                // No code that still uses triangle representation is calling
-                // this method.
-                unreachable!()
-            }
-        }
+        self.brep().exteriors()
     }
 
     /// Access the interior cycles that the face refers to
@@ -96,14 +94,7 @@ impl Face {
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
     pub fn interiors(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
-        match self {
-            Self::Face(face) => face.interiors(),
-            _ => {
-                // No code that still uses triangle representation is calling
-                // this method.
-                unreachable!()
-            }
-        }
+        self.brep().interiors()
     }
 
     /// Access all cycles that the face refers to

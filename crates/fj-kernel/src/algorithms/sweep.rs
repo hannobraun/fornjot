@@ -256,32 +256,16 @@ impl Relation {
     }
 
     fn exteriors_for_face(&self, face: &Face) -> Vec<Handle<Cycle<3>>> {
-        let exteriors = match face {
-            Face::Face(face) => &face.exteriors,
-            _ => {
-                // Sketches are created using boundary representation, so this
-                // case can't happen.
-                unreachable!()
-            }
-        };
-
-        exteriors
+        face.brep()
+            .exteriors
             .as_handle()
             .map(|cycle| self.cycles.get(cycle).unwrap().clone())
             .collect()
     }
 
     fn interiors_for_face(&self, face: &Face) -> Vec<Handle<Cycle<3>>> {
-        let interiors = match face {
-            Face::Face(face) => &face.interiors,
-            _ => {
-                // Sketches are created using boundary representation, so this
-                // case can't happen.
-                unreachable!()
-            }
-        };
-
-        interiors
+        face.brep()
+            .interiors
             .as_handle()
             .map(|cycle| self.cycles.get(cycle).unwrap().clone())
             .collect()
