@@ -84,28 +84,24 @@ impl Object for Cycle<3> {
 impl Object for Face {
     fn merge_into(self, shape: &mut Shape) -> ValidationResult<Self> {
         match self {
-            Face::Face {
-                surface,
-                exteriors,
-                interiors,
-                color,
-            } => {
-                let surface = surface.get().merge_into(shape)?;
+            Face::Face(face) => {
+                let surface = face.surface.get().merge_into(shape)?;
 
                 let mut exts = Vec::new();
-                for cycle in exteriors.as_canonical() {
+                for cycle in face.exteriors.as_canonical() {
                     let cycle = cycle.merge_into(shape)?;
                     exts.push(cycle);
                 }
 
                 let mut ints = Vec::new();
-                for cycle in interiors.as_canonical() {
+                for cycle in face.interiors.as_canonical() {
                     let cycle = cycle.merge_into(shape)?;
                     ints.push(cycle);
                 }
 
-                shape
-                    .get_handle_or_insert(Face::new(surface, exts, ints, color))
+                shape.get_handle_or_insert(Face::new(
+                    surface, exts, ints, face.color,
+                ))
             }
             Face::Triangles(_) => shape.get_handle_or_insert(self),
         }
