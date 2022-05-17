@@ -19,7 +19,7 @@ use std::{fs::File, path::Path};
 use thiserror::Error;
 
 use fj_interop::mesh::Mesh;
-use fj_math::{Point, Triangle, Vector};
+use fj_math::{Point, Triangle};
 
 /// Export the provided mesh to the file at the given path.
 ///
@@ -74,27 +74,14 @@ fn export_stl(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
         .collect::<Vec<_>>();
 
     let vertices = points.iter().map(|points| {
-        points.map(|point| {
-            [point.x.into_f32(), point.y.into_f32(), point.z.into_f32()]
-        })
+        points.map(|point| point.coords.components.map(|s| s.into_f32()))
     });
 
     let normals = points
         .iter()
         .map(|&points| points.into())
-        .map(|triangle: Triangle<3>| triangle.to_parry().normal())
-        .collect::<Option<Vec<_>>>()
-        .ok_or(ExportError::InvalidTriangle)?;
-
-    let normals = normals.iter().map(|vector| vector.into_inner().into()).map(
-        |vector: Vector<3>| {
-            [
-                vector.x.into_f32(),
-                vector.y.into_f32(),
-                vector.z.into_f32(),
-            ]
-        },
-    );
+        .map(|triangle: Triangle<3>| triangle.normal())
+        .map(|vector| vector.components.map(|s| s.into_f32()));
 
     let triangles = vertices
         .zip(normals)
@@ -135,10 +122,6 @@ pub enum Error {
     /// Unrecognised extension found `{0:?}`
     #[error("unrecognised extension found `{0:?}`")]
     InvalidExtension(Option<String>),
-
-    /// Invalid triangle found when trying to compute normal
-    #[error("invalid triangle found when trying to compute normal")]
-    InvalidTriangle,
 
     /// I/O error whilst exporting to file
     #[error("I/O error whilst exporting to file")]
