@@ -257,7 +257,7 @@ impl Relation {
 
     fn exteriors_for_face(&self, face: &Face) -> Vec<Handle<Cycle<3>>> {
         let exteriors = match face {
-            Face::Face { exteriors, .. } => exteriors,
+            Face::Face(face) => &face.exteriors,
             _ => {
                 // Sketches are created using boundary representation, so this
                 // case can't happen.
@@ -273,7 +273,7 @@ impl Relation {
 
     fn interiors_for_face(&self, face: &Face) -> Vec<Handle<Cycle<3>>> {
         let interiors = match face {
-            Face::Face { interiors, .. } => interiors,
+            Face::Face(face) => &face.interiors,
             _ => {
                 // Sketches are created using boundary representation, so this
                 // case can't happen.

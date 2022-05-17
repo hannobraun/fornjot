@@ -22,8 +22,8 @@ pub fn triangulate(
     for face in shape.faces() {
         let face = face.get();
         match &face {
-            Face::Face { surface, color, .. } => {
-                let surface = surface.get();
+            Face::Face(brep) => {
+                let surface = brep.surface.get();
                 let approx = FaceApprox::new(&face, tolerance);
 
                 let points: Vec<_> = approx
@@ -68,7 +68,7 @@ pub fn triangulate(
 
                 for triangle in triangles {
                     let points = triangle.map(|point| point.canonical());
-                    mesh.push_triangle(points, *color);
+                    mesh.push_triangle(points, brep.color);
                 }
             }
             Face::Triangles(triangles) => {

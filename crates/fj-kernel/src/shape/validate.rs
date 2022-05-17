@@ -136,20 +136,16 @@ impl Validate for Face {
         _: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
-        if let Face::Face {
-            surface,
-            exteriors,
-            interiors,
-            ..
-        } = self
-        {
+        if let Face::Face(face) = self {
             let mut missing_surface = None;
             let mut missing_cycles = HashSet::new();
 
-            if !stores.surfaces.contains(surface) {
-                missing_surface = Some(surface.clone());
+            if !stores.surfaces.contains(&face.surface) {
+                missing_surface = Some(face.surface.clone());
             }
-            for cycle in exteriors.as_handle().chain(interiors.as_handle()) {
+            for cycle in
+                face.exteriors.as_handle().chain(face.interiors.as_handle())
+            {
                 if !stores.cycles.contains(cycle) {
                     missing_cycles.insert(cycle.clone());
                 }
