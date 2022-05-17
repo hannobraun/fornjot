@@ -14,16 +14,35 @@
 
 #![deny(missing_docs)]
 
-use std::path::Path;
+use std::{fs::File, path::Path};
+
+use anyhow::{anyhow, Result};
 
 use fj_interop::mesh::Mesh;
-use fj_math::Point;
+use fj_math::{Point, Triangle, Vector};
 
-/// Export the provided mesh to the file at the given path
+/// Export the provided mesh to the file at the given path.
 ///
-/// Currently only 3MF is supported as an export format. The file extension of
-/// the provided path is ignored.
-pub fn export(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
+/// This function will create a file if it does not exist, and will truncate it if it does.
+///
+/// Currently 3MF & STL file types are supported. The case insensitive file extension of
+/// the provided path is used to switch between supported types.
+pub fn export(mesh: &Mesh<Point<3>>, path: &Path) -> Result<()> {
+    match path.extension() {
+        Some(extension) if extension.to_ascii_uppercase() == "3MF" => {
+            export_3mf(mesh, path)
+        }
+        Some(extension) if extension.to_ascii_uppercase() == "STL" => {
+            export_stl(mesh, path)
+        }
+        Some(extension) => {
+            Err(anyhow!("Extension not recognised, got {:?}", extension))
+        }
+        None => Err(anyhow!("No extension specified")),
+    }
+}
+
+fn export_3mf(mesh: &Mesh<Point<3>>, path: &Path) -> Result<()> {
     let vertices = mesh.vertices().map(|vertex| vertex.into()).collect();
 
     let indices: Vec<_> = mesh.indices().collect();
@@ -48,4 +67,57 @@ pub fn export(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
     Ok(())
 }
 
-pub use threemf::Error;
+fn export_stl(mesh: &Mesh<Point<3>>, path: &Path) -> Result<()> {
+    let points = mesh
+        .triangles()
+        .map(|triangle| triangle.points)
+        .collect::<Vec<_>>();
+
+    let vertices = points.iter().map(|points| {
+        points.map(|point| {
+            [point.x.into_f32(), point.y.into_f32(), point.z.into_f32()]
+        })
+    });
+
+    let normals = points
+        .iter()
+        .map(|&points| points.into())
+        .map(|triangle: Triangle<3>| triangle.to_parry().normal())
+        .collect::<Option<Vec<_>>>()
+        .ok_or_else(|| anyhow!("Unable to compute normal"))?;
+
+    let normals = normals.iter().map(|vector| vector.into_inner().into()).map(
+        |vector: Vector<3>| {
+            [
+                vector.x.into_f32(),
+                vector.y.into_f32(),
+                vector.z.into_f32(),
+            ]
+        },
+    );
+
+    let triangles = vertices
+        .zip(normals)
+        .map(|([v1, v2, v3], normal)| stl::Triangle {
+            normal,
+            v1,
+            v2,
+            v3,
+            attr_byte_count: 0,
+        })
+        .collect::<Vec<_>>();
+
+    let mut file = File::create(path)?;
+
+    let binary_stl_file = stl::BinaryStlFile {
+        header: stl::BinaryStlHeader {
+            header: [0u8; 80],
+            num_triangles: triangles.len().try_into()?,
+        },
+        triangles,
+    };
+
+    stl::write_stl(&mut file, &binary_stl_file)?;
+
+    Ok(())
+}
