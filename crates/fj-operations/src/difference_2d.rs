@@ -102,10 +102,7 @@ fn add_cycle(
             let mut vs = vs.map(|vertex| {
                 vertices
                     .entry(vertex.clone())
-                    .or_insert_with(|| {
-                        let point = shape.insert(vertex.point()).unwrap();
-                        shape.insert(Vertex::new(point)).unwrap()
-                    })
+                    .or_insert_with(|| shape.merge(vertex).unwrap())
                     .clone()
             });
 
