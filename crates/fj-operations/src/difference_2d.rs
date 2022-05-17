@@ -17,7 +17,7 @@ impl ToShape for fj::Difference2d {
         // This method assumes that `b` is fully contained within `a`:
         // https://github.com/hannobraun/Fornjot/issues/92
 
-        let mut shape = Shape::new();
+        let mut difference = Shape::new();
 
         // Can be cleaned up, once `each_ref` is stable:
         // https://doc.rust-lang.org/std/primitive.array.html#method.each_ref
@@ -52,23 +52,23 @@ impl ToShape for fj::Difference2d {
             face_a.surface() == face_b.surface(),
             "Trying to subtract sketches with different surfaces."
         );
-        let surface = shape.insert(face_a.surface()).unwrap();
+        let surface = difference.insert(face_a.surface()).unwrap();
 
         // Can't panic, as we just verified that both shapes have one cycle.
         let [cycle_a, cycle_b] =
             shapes.map(|shape| shape.cycles().next().unwrap());
 
-        let cycle_a = add_cycle(cycle_a, &mut shape, false);
-        let cycle_b = add_cycle(cycle_b, &mut shape, true);
+        let cycle_a = add_cycle(cycle_a, &mut difference, false);
+        let cycle_b = add_cycle(cycle_b, &mut difference, true);
 
         let exteriors = vec![cycle_a];
         let interiors = vec![cycle_b];
 
-        shape
+        difference
             .insert(Face::new(surface, exteriors, interiors, self.color()))
             .unwrap();
 
-        shape
+        difference
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
