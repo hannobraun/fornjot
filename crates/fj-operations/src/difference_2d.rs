@@ -19,54 +19,60 @@ impl ToShape for fj::Difference2d {
 
         let mut difference = Shape::new();
 
+        let mut exteriors = Vec::new();
+        let mut interiors = Vec::new();
+
         // Can be cleaned up, once `each_ref` is stable:
         // https://doc.rust-lang.org/std/primitive.array.html#method.each_ref
         let [a, b] = self.shapes();
         let [a, b] = [a, b].map(|shape| shape.to_shape(tolerance, debug_info));
-        let shapes = [&a, &b];
 
-        // Check preconditions.
-        //
-        // See issue:
-        // https://github.com/hannobraun/Fornjot/issues/95
-        for shape in shapes {
-            if shape.cycles().count() != 1 {
-                todo!(
-                    "The 2-dimensional difference operation only supports one \
-                    cycle in each operand."
+        if let Some(face) = a.faces().next() {
+            // If there's at least one face to subtract from, we can proceed.
+
+            let surface = face.get().brep().surface.clone();
+
+            for face in a.faces() {
+                let face = face.get();
+                let face = face.brep();
+
+                assert_eq!(
+                    surface.get(),
+                    face.surface(),
+                    "Trying to subtract faces with different surfaces.",
                 );
+
+                for cycle in face.exteriors.as_handle() {
+                    let cycle =
+                        add_cycle(cycle.clone(), &mut difference, false);
+                    exteriors.push(cycle);
+                }
+                for cycle in face.interiors.as_handle() {
+                    let cycle = add_cycle(cycle.clone(), &mut difference, true);
+                    interiors.push(cycle);
+                }
             }
-            if shape.faces().count() != 1 {
-                todo!(
-                    "The 2-dimensional difference operation only supports one \
-                    face in each operand."
+
+            for face in b.faces() {
+                let face = face.get();
+                let face = face.brep();
+
+                assert_eq!(
+                    surface.get(),
+                    face.surface(),
+                    "Trying to subtract faces with different surfaces.",
                 );
+
+                for cycle in face.exteriors.as_handle() {
+                    let cycle = add_cycle(cycle.clone(), &mut difference, true);
+                    interiors.push(cycle);
+                }
             }
+
+            difference
+                .merge(Face::new(surface, exteriors, interiors, self.color()))
+                .unwrap();
         }
-
-        // Can't panic, as we just verified that both shapes have one face.
-        let [face_a, face_b] =
-            shapes.map(|shape| shape.faces().values().next().unwrap());
-
-        assert!(
-            face_a.surface() == face_b.surface(),
-            "Trying to subtract sketches with different surfaces."
-        );
-        let surface = difference.insert(face_a.surface()).unwrap();
-
-        // Can't panic, as we just verified that both shapes have one cycle.
-        let [cycle_a, cycle_b] =
-            shapes.map(|shape| shape.cycles().next().unwrap());
-
-        let cycle_a = add_cycle(cycle_a, &mut difference, false);
-        let cycle_b = add_cycle(cycle_b, &mut difference, true);
-
-        let exteriors = vec![cycle_a];
-        let interiors = vec![cycle_b];
-
-        difference
-            .insert(Face::new(surface, exteriors, interiors, self.color()))
-            .unwrap();
 
         difference
     }
