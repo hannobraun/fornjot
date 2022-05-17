@@ -87,6 +87,15 @@ impl Triangle<3> {
             .cast_local_ray(&ray, max_toi, solid)
             .map(|f| f.into())
     }
+
+    /// Compute the triangle's normal
+    pub fn normal(&self) -> Vector<3> {
+        self.to_parry()
+            .normal()
+            .expect("triangle is valid (validated on construction)")
+            .into_inner()
+            .into()
+    }
 }
 
 impl<P, const D: usize> From<[P; 3]> for Triangle<D>
@@ -118,7 +127,7 @@ impl From<Orientation> for Winding {
 
 #[cfg(test)]
 mod tests {
-    use crate::Point;
+    use crate::{Point, Vector};
 
     use super::Triangle;
 
@@ -154,5 +163,12 @@ mod tests {
         let b = Point::from([1.0, 1.0, 1.0]);
         let c = Point::from([2.0, 2.0, 2.0]);
         let _triangle = Triangle::from([a, b, c]);
+    }
+
+    #[test]
+    fn normal() {
+        let triangle =
+            Triangle::from([[0.0, 0.0, 0.0], [2.0, 1.0, 0.0], [2.0, 0.0, 0.0]]);
+        assert_eq!(triangle.normal(), Vector::from([0.0, 0.0, -1.0]));
     }
 }
