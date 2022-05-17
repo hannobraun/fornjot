@@ -17,61 +17,64 @@ impl ToShape for fj::Difference2d {
         // This method assumes that `b` is fully contained within `a`:
         // https://github.com/hannobraun/Fornjot/issues/92
 
-        let mut shape = Shape::new();
-
-        // Can be cleaned up, once `each_ref` is stable:
-        // https://doc.rust-lang.org/std/primitive.array.html#method.each_ref
-        let [a, b] = self.shapes();
-        let [mut a, mut b] =
-            [a, b].map(|shape| shape.to_shape(tolerance, debug_info));
-
-        // Check preconditions.
-        //
-        // See issue:
-        // https://github.com/hannobraun/Fornjot/issues/95
-        for shape in [&mut a, &mut b] {
-            if shape.cycles().count() != 1 {
-                todo!(
-                    "The 2-dimensional difference operation only supports one \
-                    cycle in each operand."
-                );
-            }
-            if shape.faces().count() != 1 {
-                todo!(
-                    "The 2-dimensional difference operation only supports one \
-                    face in each operand."
-                );
-            }
-        }
-
-        // Can't panic, as we just verified that both shapes have one cycle.
-        let [cycle_a, cycle_b] =
-            [&mut a, &mut b].map(|shape| shape.cycles().next().unwrap());
-
-        let cycle_a = add_cycle(cycle_a, &mut shape, false);
-        let cycle_b = add_cycle(cycle_b, &mut shape, true);
+        let mut difference = Shape::new();
 
         let mut exteriors = Vec::new();
         let mut interiors = Vec::new();
 
-        exteriors.push(cycle_a);
-        interiors.push(cycle_b);
+        // Can be cleaned up, once `each_ref` is stable:
+        // https://doc.rust-lang.org/std/primitive.array.html#method.each_ref
+        let [a, b] = self.shapes();
+        let [a, b] = [a, b].map(|shape| shape.to_shape(tolerance, debug_info));
 
-        // Can't panic, as we just verified that both shapes have one face.
-        let [face_a, face_b] = [&mut a, &mut b]
-            .map(|shape| shape.faces().values().next().unwrap());
+        if let Some(face) = a.faces().next() {
+            // If there's at least one face to subtract from, we can proceed.
 
-        assert!(
-            face_a.surface() == face_b.surface(),
-            "Trying to subtract sketches with different surfaces."
-        );
-        let surface = shape.insert(face_a.surface()).unwrap();
+            let surface = face.get().brep().surface.clone();
 
-        shape
-            .insert(Face::new(surface, exteriors, interiors, self.color()))
-            .unwrap();
+            for face in a.faces() {
+                let face = face.get();
+                let face = face.brep();
 
-        shape
+                assert_eq!(
+                    surface.get(),
+                    face.surface(),
+                    "Trying to subtract faces with different surfaces.",
+                );
+
+                for cycle in face.exteriors.as_handle() {
+                    let cycle =
+                        add_cycle(cycle.clone(), &mut difference, false);
+                    exteriors.push(cycle);
+                }
+                for cycle in face.interiors.as_handle() {
+                    let cycle = add_cycle(cycle.clone(), &mut difference, true);
+                    interiors.push(cycle);
+                }
+            }
+
+            for face in b.faces() {
+                let face = face.get();
+                let face = face.brep();
+
+                assert_eq!(
+                    surface.get(),
+                    face.surface(),
+                    "Trying to subtract faces with different surfaces.",
+                );
+
+                for cycle in face.exteriors.as_handle() {
+                    let cycle = add_cycle(cycle.clone(), &mut difference, true);
+                    interiors.push(cycle);
+                }
+            }
+
+            difference
+                .merge(Face::new(surface, exteriors, interiors, self.color()))
+                .unwrap();
+        }
+
+        difference
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
