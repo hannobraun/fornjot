@@ -170,7 +170,8 @@ impl CyclesInFace {
         Self(cycles.into_iter().collect())
     }
 
-    fn as_canonical(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
+    /// Access an iterator over the canonical forms of the cycles
+    pub fn as_canonical(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
         self.as_handle().map(|edge| edge.get())
     }
 
