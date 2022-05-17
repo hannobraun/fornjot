@@ -22,14 +22,14 @@ impl ToShape for fj::Difference2d {
         // Can be cleaned up, once `each_ref` is stable:
         // https://doc.rust-lang.org/std/primitive.array.html#method.each_ref
         let [a, b] = self.shapes();
-        let [mut a, mut b] =
-            [a, b].map(|shape| shape.to_shape(tolerance, debug_info));
+        let [a, b] = [a, b].map(|shape| shape.to_shape(tolerance, debug_info));
+        let shapes = [&a, &b];
 
         // Check preconditions.
         //
         // See issue:
         // https://github.com/hannobraun/Fornjot/issues/95
-        for shape in [&mut a, &mut b] {
+        for shape in shapes {
             if shape.cycles().count() != 1 {
                 todo!(
                     "The 2-dimensional difference operation only supports one \
@@ -46,7 +46,7 @@ impl ToShape for fj::Difference2d {
 
         // Can't panic, as we just verified that both shapes have one cycle.
         let [cycle_a, cycle_b] =
-            [&mut a, &mut b].map(|shape| shape.cycles().next().unwrap());
+            shapes.map(|shape| shape.cycles().next().unwrap());
 
         let cycle_a = add_cycle(cycle_a, &mut shape, false);
         let cycle_b = add_cycle(cycle_b, &mut shape, true);
@@ -58,8 +58,8 @@ impl ToShape for fj::Difference2d {
         interiors.push(cycle_b);
 
         // Can't panic, as we just verified that both shapes have one face.
-        let [face_a, face_b] = [&mut a, &mut b]
-            .map(|shape| shape.faces().values().next().unwrap());
+        let [face_a, face_b] =
+            shapes.map(|shape| shape.faces().values().next().unwrap());
 
         assert!(
             face_a.surface() == face_b.surface(),
