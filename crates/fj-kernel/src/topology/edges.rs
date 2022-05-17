@@ -3,7 +3,7 @@ use crate::{
     shape::{Handle, LocalForm, Shape},
 };
 
-use super::{vertices::Vertex, EdgeBuilder};
+use super::{EdgeBuilder, Vertex};
 
 /// An edge of a shape
 ///
