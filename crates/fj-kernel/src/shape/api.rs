@@ -61,7 +61,7 @@ impl Shape {
     /// Validates the object, and returns an error if it is not valid. See the
     /// documentation of each object for validation requirements.
     pub fn insert<T: Object>(&mut self, object: T) -> ValidationResult<T> {
-        object.validate(self.min_distance, &self.stores)?;
+        object.validate(None, self.min_distance, &self.stores)?;
         let handle = self.stores.get::<T>().insert(object);
         Ok(handle)
     }
