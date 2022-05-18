@@ -62,7 +62,7 @@ impl Validate for Vertex<3> {
     /// does. See documentation of [`crate::kernel`] for some context on that.
     fn validate(
         &self,
-        _: Option<&Handle<Self>>,
+        handle: Option<&Handle<Self>>,
         min_distance: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
@@ -70,6 +70,10 @@ impl Validate for Vertex<3> {
             return Err(StructuralIssues::default().into());
         }
         for existing in stores.vertices.iter() {
+            if Some(&existing) == handle {
+                continue;
+            }
+
             let distance = (existing.get().point() - self.point()).magnitude();
 
             if distance < min_distance {
