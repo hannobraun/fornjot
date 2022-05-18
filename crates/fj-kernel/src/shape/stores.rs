@@ -29,10 +29,7 @@ pub struct Stores {
 }
 
 impl Stores {
-    pub fn get<T>(&self) -> Store<T>
-    where
-        T: Object,
-    {
+    pub fn get<T: Object>(&self) -> Store<T> {
         let mut stores = AnyMap::new();
 
         stores.insert(self.points.clone());
