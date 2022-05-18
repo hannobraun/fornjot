@@ -184,7 +184,6 @@ pub enum ValidationError {
     /// only required for topological objects, as there's no harm in geometric
     /// objects being duplicated.
     #[error("Uniqueness validation failed")]
-    #[allow(unused)]
     Uniqueness,
 
     /// Geometric validation failed
@@ -193,7 +192,6 @@ pub enum ValidationError {
     /// object are upheld. For example, edges or faces might not be allowed to
     /// intersect.
     #[error("Geometric validation failed")]
-    #[allow(unused)]
     Geometric,
 }
 

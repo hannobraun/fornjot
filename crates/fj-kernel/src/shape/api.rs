@@ -6,9 +6,7 @@ use crate::{
 };
 
 use super::{
-    stores::{
-        Curves, Cycles, Edges, Faces, Points, Stores, Surfaces, Vertices,
-    },
+    stores::{Store, Stores},
     Handle, Iter, Object, ValidationResult,
 };
 
@@ -29,14 +27,14 @@ impl Shape {
             min_distance: Scalar::from_f64(5e-7), // 0.5 µm
 
             stores: Stores {
-                points: Points::new(),
-                curves: Curves::new(),
-                surfaces: Surfaces::new(),
+                points: Store::new(),
+                curves: Store::new(),
+                surfaces: Store::new(),
 
-                vertices: Vertices::new(),
-                edges: Edges::new(),
-                cycles: Cycles::new(),
-                faces: Faces::new(),
+                vertices: Store::new(),
+                edges: Store::new(),
+                cycles: Store::new(),
+                faces: Store::new(),
             },
         }
     }
@@ -62,10 +60,7 @@ impl Shape {
     ///
     /// Validates the object, and returns an error if it is not valid. See the
     /// documentation of each object for validation requirements.
-    pub fn insert<T>(&mut self, object: T) -> ValidationResult<T>
-    where
-        T: Object,
-    {
+    pub fn insert<T: Object>(&mut self, object: T) -> ValidationResult<T> {
         object.validate(self.min_distance, &self.stores)?;
         let handle = self.stores.get::<T>().insert(object);
         Ok(handle)
@@ -85,10 +80,7 @@ impl Shape {
     /// This probably isn't worth thinking too much about right now. At some
     /// point, we need smarter and probably more performant object storage
     /// anyway.
-    pub fn get_handle<T>(&self, object: &T) -> Option<Handle<T>>
-    where
-        T: Object,
-    {
+    pub fn get_handle<T: Object>(&self, object: &T) -> Option<Handle<T>> {
         self.stores
             .get::<T>()
             .iter()
@@ -99,10 +91,10 @@ impl Shape {
     ///
     /// In any case, returns a handle that refers to an object that is identical
     /// to the provided object.
-    pub fn get_handle_or_insert<T>(&mut self, object: T) -> ValidationResult<T>
-    where
-        T: Object,
-    {
+    pub fn get_handle_or_insert<T: Object>(
+        &mut self,
+        object: T,
+    ) -> ValidationResult<T> {
         if let Some(handle) = self.get_handle(&object) {
             return Ok(handle);
         }
@@ -118,10 +110,7 @@ impl Shape {
     /// already present object.
     ///
     /// This is done recursively.
-    pub fn merge<T>(&mut self, object: T) -> ValidationResult<T>
-    where
-        T: Object,
-    {
+    pub fn merge<T: Object>(&mut self, object: T) -> ValidationResult<T> {
         object.merge_into(self)
     }
 
