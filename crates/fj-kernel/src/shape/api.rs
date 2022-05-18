@@ -127,26 +127,24 @@ impl Shape {
     /// Since the topological types refer to geometry, and don't contain any
     /// geometry themselves, this transforms the whole shape.
     pub fn transform(&mut self, transform: &Transform) {
-        self.stores
-            .points
-            .update(|point| *point = transform.transform_point(point));
-        self.stores
-            .curves
-            .update(|curve| *curve = curve.transform(transform));
-        self.stores
-            .surfaces
-            .update(|surface| *surface = surface.transform(transform));
-
-        // While some faces use triangle representation, we need this weird
-        // workaround here.
-        self.stores.faces.update(|mut face| {
-            use std::ops::DerefMut as _;
-            if let Face::Triangles(triangles) = face.deref_mut() {
-                for (triangle, _) in triangles {
-                    *triangle = transform.transform_triangle(triangle);
+        self.update()
+            .update_all(|point| *point = transform.transform_point(point))
+            .update_all(|curve: &mut Curve<3>| {
+                *curve = curve.transform(transform)
+            })
+            .update_all(|surface: &mut Surface| {
+                *surface = surface.transform(transform)
+            })
+            .update_all(|mut face: &mut Face| {
+                use std::ops::DerefMut as _;
+                if let Face::Triangles(triangles) = face.deref_mut() {
+                    for (triangle, _) in triangles {
+                        *triangle = transform.transform_triangle(triangle);
+                    }
                 }
-            }
-        });
+            })
+            .validate()
+            .unwrap();
     }
 
     /// Access an iterator over all points
