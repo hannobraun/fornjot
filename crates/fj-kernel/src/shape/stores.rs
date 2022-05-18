@@ -18,14 +18,14 @@ use super::Object;
 
 #[derive(Clone, Debug)]
 pub struct Stores {
-    pub points: Points,
-    pub curves: Curves,
-    pub surfaces: Surfaces,
+    pub points: Store<Point<3>>,
+    pub curves: Store<Curve<3>>,
+    pub surfaces: Store<Surface>,
 
-    pub vertices: Vertices,
-    pub edges: Edges,
-    pub cycles: Cycles,
-    pub faces: Faces,
+    pub vertices: Store<Vertex<3>>,
+    pub edges: Store<Edge<3>>,
+    pub cycles: Store<Cycle<3>>,
+    pub faces: Store<Face>,
 }
 
 impl Stores {
@@ -51,15 +51,6 @@ impl Stores {
             .expect("Invalid object type")
     }
 }
-
-pub type Points = Store<Point<3>>;
-pub type Curves = Store<Curve<3>>;
-pub type Surfaces = Store<Surface>;
-
-pub type Vertices = Store<Vertex<3>>;
-pub type Edges = Store<Edge<3>>;
-pub type Cycles = Store<Cycle<3>>;
-pub type Faces = Store<Face>;
 
 #[derive(Debug)]
 pub struct Store<T: Object> {
