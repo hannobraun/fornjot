@@ -6,6 +6,7 @@ mod api;
 mod local;
 mod object;
 mod stores;
+mod update;
 mod validate;
 
 pub use self::{
@@ -13,5 +14,6 @@ pub use self::{
     local::LocalForm,
     object::Object,
     stores::{Handle, Iter},
+    update::Update,
     validate::{StructuralIssues, ValidationError, ValidationResult},
 };

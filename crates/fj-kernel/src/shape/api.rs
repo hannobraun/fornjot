@@ -7,7 +7,7 @@ use crate::{
 
 use super::{
     stores::{Store, Stores},
-    Handle, Iter, Object, ValidationResult,
+    Handle, Iter, Object, Update, ValidationResult,
 };
 
 /// The boundary representation of a shape
@@ -112,6 +112,14 @@ impl Shape {
     /// This is done recursively.
     pub fn merge<T: Object>(&mut self, object: T) -> ValidationResult<T> {
         object.merge_into(self)
+    }
+
+    /// Update objects in the shape
+    ///
+    /// Returns [`Update`], and API that can be used to update objects in the
+    /// shape.
+    pub fn update(&mut self) -> Update {
+        Update::new(self.min_distance, &mut self.stores)
     }
 
     /// Transform the geometry of the shape
