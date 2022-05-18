@@ -6,9 +6,7 @@ use crate::{
 };
 
 use super::{
-    stores::{
-        Curves, Cycles, Edges, Faces, Points, Stores, Surfaces, Vertices,
-    },
+    stores::{Store, Stores},
     Handle, Iter, Object, ValidationResult,
 };
 
@@ -29,14 +27,14 @@ impl Shape {
             min_distance: Scalar::from_f64(5e-7), // 0.5 µm
 
             stores: Stores {
-                points: Points::new(),
-                curves: Curves::new(),
-                surfaces: Surfaces::new(),
+                points: Store::new(),
+                curves: Store::new(),
+                surfaces: Store::new(),
 
-                vertices: Vertices::new(),
-                edges: Edges::new(),
-                cycles: Cycles::new(),
-                faces: Faces::new(),
+                vertices: Store::new(),
+                edges: Store::new(),
+                cycles: Store::new(),
+                faces: Store::new(),
             },
         }
     }
