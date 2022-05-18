@@ -733,10 +733,10 @@ dependencies = [
 name = "fj-export"
 version = "0.6.0"
 dependencies = [
- "anyhow",
  "fj-interop",
  "fj-math",
  "stl",
+ "thiserror",
  "threemf",
 ]
 
