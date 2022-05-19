@@ -295,7 +295,7 @@ impl From<StructuralIssues> for ValidationError {
 /// Structural issues found during validation
 ///
 /// Used by [`ValidationError`].
-#[derive(Debug, Default)]
+#[derive(Debug, Default, thiserror::Error)]
 pub struct StructuralIssues {
     /// Missing point found in vertex validation
     pub missing_point: Option<Handle<Point<3>>>,
