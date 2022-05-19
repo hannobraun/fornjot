@@ -1,4 +1,4 @@
-use fj_math::{Point, Scalar, Transform};
+use fj_math::{Point, Scalar};
 
 use crate::{
     geometry::{Curve, Surface},
@@ -7,7 +7,7 @@ use crate::{
 
 use super::{
     stores::{Store, Stores},
-    Handle, Iter, Object, ValidationResult,
+    Handle, Iter, Object, Update, ValidationResult,
 };
 
 /// The boundary representation of a shape
@@ -61,7 +61,7 @@ impl Shape {
     /// Validates the object, and returns an error if it is not valid. See the
     /// documentation of each object for validation requirements.
     pub fn insert<T: Object>(&mut self, object: T) -> ValidationResult<T> {
-        object.validate(self.min_distance, &self.stores)?;
+        object.validate(None, self.min_distance, &self.stores)?;
         let handle = self.stores.get::<T>().insert(object);
         Ok(handle)
     }
@@ -114,31 +114,12 @@ impl Shape {
         object.merge_into(self)
     }
 
-    /// Transform the geometry of the shape
+    /// Update objects in the shape
     ///
-    /// Since the topological types refer to geometry, and don't contain any
-    /// geometry themselves, this transforms the whole shape.
-    pub fn transform(&mut self, transform: &Transform) {
-        self.stores
-            .points
-            .update(|point| *point = transform.transform_point(point));
-        self.stores
-            .curves
-            .update(|curve| *curve = curve.transform(transform));
-        self.stores
-            .surfaces
-            .update(|surface| *surface = surface.transform(transform));
-
-        // While some faces use triangle representation, we need this weird
-        // workaround here.
-        self.stores.faces.update(|mut face| {
-            use std::ops::DerefMut as _;
-            if let Face::Triangles(triangles) = face.deref_mut() {
-                for (triangle, _) in triangles {
-                    *triangle = transform.transform_triangle(triangle);
-                }
-            }
-        });
+    /// Returns [`Update`], and API that can be used to update objects in the
+    /// shape.
+    pub fn update(&mut self) -> Update {
+        Update::new(self.min_distance, &mut self.stores)
     }
 
     /// Access an iterator over all points

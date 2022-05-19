@@ -7,30 +7,48 @@ use crate::{
     topology::{Cycle, Edge, Face, Vertex},
 };
 
-use super::{stores::Stores, Handle};
+use super::{stores::Stores, Handle, Object};
 
 pub trait Validate {
     fn validate(
         &self,
+        handle: Option<&Handle<Self>>,
         min_distance: Scalar,
         stores: &Stores,
-    ) -> Result<(), ValidationError>;
+    ) -> Result<(), ValidationError>
+    where
+        Self: Object;
 }
 
 impl Validate for Point<3> {
-    fn validate(&self, _: Scalar, _: &Stores) -> Result<(), ValidationError> {
+    fn validate(
+        &self,
+        _: Option<&Handle<Self>>,
+        _: Scalar,
+        _: &Stores,
+    ) -> Result<(), ValidationError> {
         Ok(())
     }
 }
 
 impl Validate for Curve<3> {
-    fn validate(&self, _: Scalar, _: &Stores) -> Result<(), ValidationError> {
+    fn validate(
+        &self,
+        _: Option<&Handle<Self>>,
+        _: Scalar,
+        _: &Stores,
+    ) -> Result<(), ValidationError> {
         Ok(())
     }
 }
 
 impl Validate for Surface {
-    fn validate(&self, _: Scalar, _: &Stores) -> Result<(), ValidationError> {
+    fn validate(
+        &self,
+        _: Option<&Handle<Self>>,
+        _: Scalar,
+        _: &Stores,
+    ) -> Result<(), ValidationError> {
         Ok(())
     }
 }
@@ -44,6 +62,7 @@ impl Validate for Vertex<3> {
     /// does. See documentation of [`crate::kernel`] for some context on that.
     fn validate(
         &self,
+        handle: Option<&Handle<Self>>,
         min_distance: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
@@ -51,6 +70,10 @@ impl Validate for Vertex<3> {
             return Err(StructuralIssues::default().into());
         }
         for existing in stores.vertices.iter() {
+            if Some(&existing) == handle {
+                continue;
+            }
+
             let distance = (existing.get().point() - self.point()).magnitude();
 
             if distance < min_distance {
@@ -65,6 +88,7 @@ impl Validate for Vertex<3> {
 impl Validate for Edge<3> {
     fn validate(
         &self,
+        _: Option<&Handle<Self>>,
         _: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
@@ -106,6 +130,7 @@ impl Validate for Cycle<3> {
     /// - That there exists no duplicate cycle, with the same edges.
     fn validate(
         &self,
+        _: Option<&Handle<Self>>,
         _: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
@@ -133,6 +158,7 @@ impl Validate for Cycle<3> {
 impl Validate for Face {
     fn validate(
         &self,
+        _: Option<&Handle<Self>>,
         _: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
