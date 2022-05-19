@@ -46,8 +46,8 @@ impl Face {
         interiors: impl IntoIterator<Item = Handle<Cycle<3>>>,
         color: [u8; 4],
     ) -> Self {
-        let exteriors = CyclesInFace::from_canonical(exteriors);
-        let interiors = CyclesInFace::from_canonical(interiors);
+        let exteriors = CyclesInFace::new(exteriors);
+        let interiors = CyclesInFace::new(interiors);
 
         Self::Face(FaceBRep {
             surface,
@@ -197,9 +197,7 @@ impl Hash for FaceBRep {
 pub struct CyclesInFace(Vec<Handle<Cycle<3>>>);
 
 impl CyclesInFace {
-    fn from_canonical(
-        cycles: impl IntoIterator<Item = Handle<Cycle<3>>>,
-    ) -> Self {
+    fn new(cycles: impl IntoIterator<Item = Handle<Cycle<3>>>) -> Self {
         Self(cycles.into_iter().collect())
     }
 
