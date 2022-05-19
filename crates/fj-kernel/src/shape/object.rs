@@ -181,16 +181,16 @@ impl Object for Face {
 
                 let mut exts = Vec::new();
                 for cycle in face.exteriors.as_handle() {
-                    let cycle =
+                    let merged =
                         cycle.get().merge_into(Some(cycle), shape, mapping)?;
-                    exts.push(cycle);
+                    exts.push(merged);
                 }
 
                 let mut ints = Vec::new();
                 for cycle in face.interiors.as_handle() {
-                    let cycle =
+                    let merged =
                         cycle.get().merge_into(Some(cycle), shape, mapping)?;
-                    ints.push(cycle);
+                    ints.push(merged);
                 }
 
                 shape.get_handle_or_insert(Face::new(
