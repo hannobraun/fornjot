@@ -1,3 +1,5 @@
+use std::fmt;
+
 use crate::{
     geometry::Curve,
     shape::{Handle, LocalForm, Shape},
@@ -98,5 +100,21 @@ impl<const D: usize> Edge<D> {
         self.vertices
             .as_ref()
             .map(|[a, b]| [a.canonical().get(), b.canonical().get()])
+    }
+}
+
+impl<const D: usize> fmt::Display for Edge<D> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self.vertices() {
+            Some(vertices) => {
+                let [a, b] = vertices.map(|vertex| vertex.point());
+                write!(f, "edge from {:?} to {:?}", a, b)?
+            }
+            None => write!(f, "continuous edge")?,
+        }
+
+        write!(f, " on {}", self.curve())?;
+
+        Ok(())
     }
 }
