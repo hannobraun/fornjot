@@ -63,7 +63,7 @@ impl Vertex<3> {
         local: impl Into<Point<D>>,
     ) -> Vertex<D> {
         Vertex {
-            point: LocalForm::new(local.into(), self.point.canonical().clone()),
+            point: LocalForm::new(local.into(), self.point.canonical()),
         }
     }
 }

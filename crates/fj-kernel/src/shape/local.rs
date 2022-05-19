@@ -35,8 +35,8 @@ impl<Local, Canonical: Object> LocalForm<Local, Canonical> {
     }
 
     /// Access the canonical form of the referenced object
-    pub fn canonical(&self) -> &Handle<Canonical> {
-        &self.canonical
+    pub fn canonical(&self) -> Handle<Canonical> {
+        self.canonical.clone()
     }
 }
 

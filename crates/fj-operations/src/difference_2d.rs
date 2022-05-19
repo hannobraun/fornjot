@@ -97,7 +97,7 @@ fn add_cycle(
         let curve = shape.insert(curve).unwrap();
 
         let vertices = edge.vertices.clone().map(|vs| {
-            let mut vs = vs.map(|vertex| vertex.canonical().clone());
+            let mut vs = vs.map(|vertex| vertex.canonical());
 
             if reverse {
                 vs.reverse();
