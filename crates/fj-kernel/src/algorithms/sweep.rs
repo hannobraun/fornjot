@@ -4,11 +4,11 @@ use fj_math::{Transform, Triangle, Vector};
 
 use crate::{
     geometry::{Surface, SweptCurve},
-    shape::{Handle, Shape, ValidationError},
-    topology::{Cycle, Edge, Face, Vertex},
+    shape::{Shape, ValidationError},
+    topology::{Cycle, Edge, Face},
 };
 
-use super::{CycleApprox, Tolerance};
+use super::{transform_shape, CycleApprox, Tolerance};
 
 /// Create a new shape by sweeping an existing one
 pub fn sweep_shape(
@@ -17,87 +17,20 @@ pub fn sweep_shape(
     tolerance: Tolerance,
     color: [u8; 4],
 ) -> Result<Shape, ValidationError> {
-    let mut target = Shape::new();
-
     let translation = Transform::translation(path);
 
-    let mut source_to_bottom = Relation::new();
-    let mut source_to_top = Relation::new();
+    let (mut bottom, source_to_bottom) = source.clone_shape();
+    bottom
+        .update()
+        .update_all(|surface: &mut Surface| *surface = surface.reverse())
+        .validate()?;
 
-    // Create the new vertices.
-    for vertex_source in source.vertices() {
-        let point_bottom = target.insert(vertex_source.get().point())?;
-        let point_top = target.insert(point_bottom.get() + path)?;
+    let (mut top, source_to_top) = source.clone_shape();
+    transform_shape(&mut top, &translation);
 
-        let vertex_bottom = target.insert(Vertex::new(point_bottom))?;
-        let vertex_top = target.insert(Vertex::new(point_top))?;
-
-        source_to_bottom
-            .vertices
-            .insert(vertex_source.clone(), vertex_bottom);
-        source_to_top.vertices.insert(vertex_source, vertex_top);
-    }
-
-    // Create the new edges.
-    for edge_source in source.edges() {
-        let curve_bottom = target.insert(edge_source.get().curve())?;
-        let curve_top =
-            target.insert(curve_bottom.get().transform(&translation))?;
-
-        let vertices_bottom = source_to_bottom.vertices_for_edge(&edge_source);
-        let vertices_top = source_to_top.vertices_for_edge(&edge_source);
-
-        let edge_bottom =
-            target.insert(Edge::new(curve_bottom, vertices_bottom))?;
-        let edge_top = target.insert(Edge::new(curve_top, vertices_top))?;
-
-        source_to_bottom
-            .edges
-            .insert(edge_source.clone(), edge_bottom);
-        source_to_top.edges.insert(edge_source, edge_top);
-    }
-
-    // Create the new cycles.
-    for cycle_source in source.cycles() {
-        let edges_bottom = source_to_bottom.edges_for_cycle(&cycle_source);
-        let edges_top = source_to_top.edges_for_cycle(&cycle_source);
-
-        let cycle_bottom = target.insert(Cycle::new(edges_bottom))?;
-        let cycle_top = target.insert(Cycle::new(edges_top))?;
-
-        source_to_bottom
-            .cycles
-            .insert(cycle_source.clone(), cycle_bottom);
-        source_to_top.cycles.insert(cycle_source, cycle_top);
-    }
-
-    // Create top faces.
-    for face_source in source.faces().values() {
-        let surface = face_source.surface();
-
-        let surface_bottom = target.insert(surface.reverse())?;
-        let surface_top = target.insert(surface.transform(&translation))?;
-
-        let exteriors_bottom =
-            source_to_bottom.exteriors_for_face(&face_source);
-        let interiors_bottom =
-            source_to_bottom.interiors_for_face(&face_source);
-        let exteriors_top = source_to_top.exteriors_for_face(&face_source);
-        let interiors_top = source_to_top.interiors_for_face(&face_source);
-
-        target.insert(Face::new(
-            surface_bottom,
-            exteriors_bottom,
-            interiors_bottom,
-            color,
-        ))?;
-        target.insert(Face::new(
-            surface_top,
-            exteriors_top,
-            interiors_top,
-            color,
-        ))?;
-    }
+    let mut target = Shape::new();
+    target.merge_shape(&bottom)?;
+    target.merge_shape(&top)?;
 
     for cycle_source in source.cycles() {
         if cycle_source.get().edges.len() == 1 {
@@ -152,7 +85,7 @@ pub fn sweep_shape(
                 let [side_edge_a, side_edge_b] =
                     vertices_source.map(|vertex_source| {
                         let vertex_bottom = source_to_bottom
-                            .vertices
+                            .vertices()
                             .get(&vertex_source.canonical())
                             .unwrap()
                             .clone();
@@ -165,13 +98,13 @@ pub fn sweep_shape(
                                     .unwrap();
 
                                 let vertex_top = source_to_top
-                                    .vertices
+                                    .vertices()
                                     .get(&vertex_source.canonical())
                                     .unwrap()
                                     .clone();
 
                                 target
-                                    .insert(Edge::new(
+                                    .merge(Edge::new(
                                         curve,
                                         Some([vertex_bottom, vertex_top]),
                                     ))
@@ -184,9 +117,9 @@ pub fn sweep_shape(
                 // this source/bottom edge.
 
                 let bottom_edge =
-                    source_to_bottom.edges.get(&edge_source).unwrap().clone();
+                    source_to_bottom.edges().get(&edge_source).unwrap().clone();
                 let top_edge =
-                    source_to_top.edges.get(&edge_source).unwrap().clone();
+                    source_to_top.edges().get(&edge_source).unwrap().clone();
 
                 let surface =
                     target.insert(Surface::SweptCurve(SweptCurve {
@@ -194,7 +127,7 @@ pub fn sweep_shape(
                         path,
                     }))?;
 
-                let cycle = target.insert(Cycle::new(vec![
+                let cycle = target.merge(Cycle::new(vec![
                     bottom_edge,
                     top_edge,
                     side_edge_a,
@@ -212,61 +145,6 @@ pub fn sweep_shape(
     }
 
     Ok(target)
-}
-
-struct Relation {
-    vertices: HashMap<Handle<Vertex<3>>, Handle<Vertex<3>>>,
-    edges: HashMap<Handle<Edge<3>>, Handle<Edge<3>>>,
-    cycles: HashMap<Handle<Cycle<3>>, Handle<Cycle<3>>>,
-}
-
-impl Relation {
-    fn new() -> Self {
-        Self {
-            vertices: HashMap::new(),
-            edges: HashMap::new(),
-            cycles: HashMap::new(),
-        }
-    }
-
-    fn vertices_for_edge(
-        &self,
-        edge: &Handle<Edge<3>>,
-    ) -> Option<[Handle<Vertex<3>>; 2]> {
-        edge.get().vertices.map(|vertices| {
-            vertices.map(|vertex| {
-                self.vertices.get(&vertex.canonical()).unwrap().clone()
-            })
-        })
-    }
-
-    fn edges_for_cycle(
-        &self,
-        cycle: &Handle<Cycle<3>>,
-    ) -> Vec<Handle<Edge<3>>> {
-        cycle
-            .get()
-            .edges
-            .iter()
-            .map(|edge| self.edges.get(&edge.canonical()).unwrap().clone())
-            .collect()
-    }
-
-    fn exteriors_for_face(&self, face: &Face) -> Vec<Handle<Cycle<3>>> {
-        face.brep()
-            .exteriors
-            .as_handle()
-            .map(|cycle| self.cycles.get(&cycle).unwrap().clone())
-            .collect()
-    }
-
-    fn interiors_for_face(&self, face: &Face) -> Vec<Handle<Cycle<3>>> {
-        face.brep()
-            .interiors
-            .as_handle()
-            .map(|cycle| self.cycles.get(&cycle).unwrap().clone())
-            .collect()
-    }
 }
 
 #[cfg(test)]
