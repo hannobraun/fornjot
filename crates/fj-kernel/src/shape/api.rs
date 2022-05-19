@@ -111,7 +111,7 @@ impl Shape {
     ///
     /// This is done recursively.
     pub fn merge<T: Object>(&mut self, object: T) -> ValidationResult<T> {
-        object.merge_into(self)
+        object.merge_into(None, self)
     }
 
     /// Update objects in the shape
