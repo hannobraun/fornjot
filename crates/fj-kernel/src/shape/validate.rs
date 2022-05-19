@@ -208,7 +208,7 @@ pub enum ValidationError {
     /// Structural validation verifies, that all the object that an object
     /// refers to are already part of the shape.
     #[error("Structural validation failed")]
-    Structural(StructuralIssues),
+    Structural(#[from] StructuralIssues),
 
     /// Uniqueness validation failed
     ///
@@ -283,12 +283,6 @@ impl ValidationError {
         }
 
         false
-    }
-}
-
-impl From<StructuralIssues> for ValidationError {
-    fn from(issues: StructuralIssues) -> Self {
-        Self::Structural(issues)
     }
 }
 
