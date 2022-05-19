@@ -21,6 +21,18 @@ pub struct Mapping {
 }
 
 impl Mapping {
+    pub(super) fn new() -> Self {
+        Self {
+            points: OneMapping::new(),
+            curves: OneMapping::new(),
+            surfaces: OneMapping::new(),
+            vertices: OneMapping::new(),
+            edges: OneMapping::new(),
+            cycles: OneMapping::new(),
+            faces: OneMapping::new(),
+        }
+    }
+
     /// Access iterator over the mapped points
     pub fn points(&self) -> &OneMapping<Point<3>> {
         &self.points

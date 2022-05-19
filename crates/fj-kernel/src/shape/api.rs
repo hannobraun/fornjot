@@ -7,7 +7,7 @@ use crate::{
 
 use super::{
     stores::{Store, Stores},
-    Handle, Iter, Object, Update, ValidationResult,
+    Handle, Iter, Mapping, Object, Update, ValidationError, ValidationResult,
 };
 
 /// The boundary representation of a shape
@@ -120,6 +120,51 @@ impl Shape {
     /// shape.
     pub fn update(&mut self) -> Update {
         Update::new(self.min_distance, &mut self.stores)
+    }
+
+    /// Clone the shape
+    ///
+    /// Returns a [`Mapping`] that maps each object from the original shape to
+    /// the respective object in the cloned shape.
+    pub fn clone_shape(&self) -> (Shape, Mapping) {
+        self.clone_shape_inner()
+            .expect("Clone of valid shape can't be invalid")
+    }
+
+    fn clone_shape_inner(&self) -> Result<(Shape, Mapping), ValidationError> {
+        let mut target = Shape::new();
+        let mut mapping = Mapping::new();
+
+        for original in self.points() {
+            let cloned = target.merge(original.get())?;
+            mapping.points.insert(original, cloned);
+        }
+        for original in self.curves() {
+            let cloned = target.merge(original.get())?;
+            mapping.curves.insert(original, cloned);
+        }
+        for original in self.surfaces() {
+            let cloned = target.merge(original.get())?;
+            mapping.surfaces.insert(original, cloned);
+        }
+        for original in self.vertices() {
+            let cloned = target.merge(original.get())?;
+            mapping.vertices.insert(original, cloned);
+        }
+        for original in self.edges() {
+            let cloned = target.merge(original.get())?;
+            mapping.edges.insert(original, cloned);
+        }
+        for original in self.cycles() {
+            let cloned = target.merge(original.get())?;
+            mapping.cycles.insert(original, cloned);
+        }
+        for original in self.faces() {
+            let cloned = target.merge(original.get())?;
+            mapping.faces.insert(original, cloned);
+        }
+
+        Ok((target, mapping))
     }
 
     /// Access an iterator over all points
