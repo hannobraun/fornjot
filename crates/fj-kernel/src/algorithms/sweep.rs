@@ -4,7 +4,7 @@ use fj_math::{Transform, Triangle, Vector};
 
 use crate::{
     geometry::{Surface, SweptCurve},
-    shape::{Handle, Shape},
+    shape::{Handle, Shape, ValidationError},
     topology::{Cycle, Edge, Face, Vertex},
 };
 
@@ -16,7 +16,7 @@ pub fn sweep_shape(
     path: Vector<3>,
     tolerance: Tolerance,
     color: [u8; 4],
-) -> Shape {
+) -> Result<Shape, ValidationError> {
     let mut target = Shape::new();
 
     let translation = Transform::translation(path);
@@ -26,11 +26,11 @@ pub fn sweep_shape(
 
     // Create the new vertices.
     for vertex_source in source.vertices() {
-        let point_bottom = target.insert(vertex_source.get().point()).unwrap();
-        let point_top = target.insert(point_bottom.get() + path).unwrap();
+        let point_bottom = target.insert(vertex_source.get().point())?;
+        let point_top = target.insert(point_bottom.get() + path)?;
 
-        let vertex_bottom = target.insert(Vertex::new(point_bottom)).unwrap();
-        let vertex_top = target.insert(Vertex::new(point_top)).unwrap();
+        let vertex_bottom = target.insert(Vertex::new(point_bottom))?;
+        let vertex_top = target.insert(Vertex::new(point_top))?;
 
         source_to_bottom
             .vertices
@@ -40,19 +40,16 @@ pub fn sweep_shape(
 
     // Create the new edges.
     for edge_source in source.edges() {
-        let curve_bottom = target.insert(edge_source.get().curve()).unwrap();
-        let curve_top = target
-            .insert(curve_bottom.get().transform(&translation))
-            .unwrap();
+        let curve_bottom = target.insert(edge_source.get().curve())?;
+        let curve_top =
+            target.insert(curve_bottom.get().transform(&translation))?;
 
         let vertices_bottom = source_to_bottom.vertices_for_edge(&edge_source);
         let vertices_top = source_to_top.vertices_for_edge(&edge_source);
 
-        let edge_bottom = target
-            .insert(Edge::new(curve_bottom, vertices_bottom))
-            .unwrap();
-        let edge_top =
-            target.insert(Edge::new(curve_top, vertices_top)).unwrap();
+        let edge_bottom =
+            target.insert(Edge::new(curve_bottom, vertices_bottom))?;
+        let edge_top = target.insert(Edge::new(curve_top, vertices_top))?;
 
         source_to_bottom
             .edges
@@ -65,8 +62,8 @@ pub fn sweep_shape(
         let edges_bottom = source_to_bottom.edges_for_cycle(&cycle_source);
         let edges_top = source_to_top.edges_for_cycle(&cycle_source);
 
-        let cycle_bottom = target.insert(Cycle::new(edges_bottom)).unwrap();
-        let cycle_top = target.insert(Cycle::new(edges_top)).unwrap();
+        let cycle_bottom = target.insert(Cycle::new(edges_bottom))?;
+        let cycle_top = target.insert(Cycle::new(edges_top))?;
 
         source_to_bottom
             .cycles
@@ -78,9 +75,8 @@ pub fn sweep_shape(
     for face_source in source.faces().values() {
         let surface = face_source.surface();
 
-        let surface_bottom = target.insert(surface.reverse()).unwrap();
-        let surface_top =
-            target.insert(surface.transform(&translation)).unwrap();
+        let surface_bottom = target.insert(surface.reverse())?;
+        let surface_top = target.insert(surface.transform(&translation))?;
 
         let exteriors_bottom =
             source_to_bottom.exteriors_for_face(&face_source);
@@ -89,17 +85,18 @@ pub fn sweep_shape(
         let exteriors_top = source_to_top.exteriors_for_face(&face_source);
         let interiors_top = source_to_top.interiors_for_face(&face_source);
 
-        target
-            .insert(Face::new(
-                surface_bottom,
-                exteriors_bottom,
-                interiors_bottom,
-                color,
-            ))
-            .unwrap();
-        target
-            .insert(Face::new(surface_top, exteriors_top, interiors_top, color))
-            .unwrap();
+        target.insert(Face::new(
+            surface_bottom,
+            exteriors_bottom,
+            interiors_bottom,
+            color,
+        ))?;
+        target.insert(Face::new(
+            surface_top,
+            exteriors_top,
+            interiors_top,
+            color,
+        ))?;
     }
 
     for cycle_source in source.cycles() {
@@ -135,7 +132,7 @@ pub fn sweep_shape(
                 side_face.push(([v0, v2, v3].into(), color));
             }
 
-            target.insert(Face::Triangles(side_face)).unwrap();
+            target.insert(Face::Triangles(side_face))?;
         } else {
             // If there's no continuous edge, we can create the non-
             // continuous faces using boundary representation.
@@ -191,30 +188,30 @@ pub fn sweep_shape(
                 let top_edge =
                     source_to_top.edges.get(&edge_source).unwrap().clone();
 
-                let surface = target
-                    .insert(Surface::SweptCurve(SweptCurve {
+                let surface =
+                    target.insert(Surface::SweptCurve(SweptCurve {
                         curve: bottom_edge.get().curve(),
                         path,
-                    }))
-                    .unwrap();
+                    }))?;
 
-                let cycle = target
-                    .insert(Cycle::new(vec![
-                        bottom_edge,
-                        top_edge,
-                        side_edge_a,
-                        side_edge_b,
-                    ]))
-                    .unwrap();
+                let cycle = target.insert(Cycle::new(vec![
+                    bottom_edge,
+                    top_edge,
+                    side_edge_a,
+                    side_edge_b,
+                ]))?;
 
-                target
-                    .insert(Face::new(surface, vec![cycle], Vec::new(), color))
-                    .unwrap();
+                target.insert(Face::new(
+                    surface,
+                    vec![cycle],
+                    Vec::new(),
+                    color,
+                ))?;
             }
         }
     }
 
-    target
+    Ok(target)
 }
 
 struct Relation {
@@ -297,7 +294,7 @@ mod tests {
             Vector::from([0., 0., 1.]),
             tolerance,
             [255, 0, 0, 255],
-        );
+        )?;
 
         let bottom_face =
             Triangle::new([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]], true)?
