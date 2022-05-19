@@ -32,6 +32,7 @@ pub fn sweep_shape(
     target.merge_shape(&bottom)?;
     target.merge_shape(&top)?;
 
+    // Create the side faces.
     for cycle_source in source.cycles() {
         if cycle_source.get().edges.len() == 1 {
             // If there's only one edge in the cycle, it must be a continuous
