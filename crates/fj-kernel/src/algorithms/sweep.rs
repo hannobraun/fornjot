@@ -259,7 +259,7 @@ impl Relation {
         face.brep()
             .exteriors
             .as_handle()
-            .map(|cycle| self.cycles.get(cycle).unwrap().clone())
+            .map(|cycle| self.cycles.get(&cycle).unwrap().clone())
             .collect()
     }
 
@@ -267,7 +267,7 @@ impl Relation {
         face.brep()
             .interiors
             .as_handle()
-            .map(|cycle| self.cycles.get(cycle).unwrap().clone())
+            .map(|cycle| self.cycles.get(&cycle).unwrap().clone())
             .collect()
     }
 }

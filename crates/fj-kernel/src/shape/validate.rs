@@ -172,8 +172,8 @@ impl Validate for Face {
             for cycle in
                 face.exteriors.as_handle().chain(face.interiors.as_handle())
             {
-                if !stores.cycles.contains(cycle) {
-                    missing_cycles.insert(cycle.clone());
+                if !stores.cycles.contains(&cycle) {
+                    missing_cycles.insert(cycle);
                 }
             }
 
