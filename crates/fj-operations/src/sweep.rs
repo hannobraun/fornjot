@@ -19,6 +19,7 @@ impl ToShape for fj::Sweep {
             tolerance,
             self.shape().color(),
         )
+        .unwrap()
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
