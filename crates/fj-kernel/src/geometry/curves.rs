@@ -1,3 +1,5 @@
+use std::fmt;
+
 use fj_math::{Circle, Line, Point, Transform, Vector};
 
 use crate::geometry;
@@ -123,6 +125,15 @@ impl<const D: usize> Curve<D> {
         match self {
             Self::Circle(curve) => curve.vector_from_circle_coords(point),
             Self::Line(curve) => curve.vector_from_line_coords(point),
+        }
+    }
+}
+
+impl<const D: usize> fmt::Display for Curve<D> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Self::Circle(curve) => write!(f, "{:?}", curve),
+            Self::Line(curve) => write!(f, "{:?}", curve),
         }
     }
 }
