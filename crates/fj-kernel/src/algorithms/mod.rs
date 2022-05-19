@@ -5,6 +5,7 @@
 
 mod approx;
 mod sweep;
+mod transform;
 mod triangulation;
 
 pub mod intersection;
@@ -12,5 +13,6 @@ pub mod intersection;
 pub use self::{
     approx::{CycleApprox, FaceApprox, Tolerance},
     sweep::sweep_shape,
+    transform::transform_shape,
     triangulation::triangulate,
 };

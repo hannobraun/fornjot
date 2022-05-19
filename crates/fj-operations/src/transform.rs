@@ -1,5 +1,8 @@
 use fj_interop::debug::DebugInfo;
-use fj_kernel::{algorithms::Tolerance, shape::Shape};
+use fj_kernel::{
+    algorithms::{transform_shape, Tolerance},
+    shape::Shape,
+};
 use fj_math::{Aabb, Transform, Vector};
 
 use super::ToShape;
@@ -13,7 +16,7 @@ impl ToShape for fj::Transform {
         let mut shape = self.shape.to_shape(tolerance, debug_info);
         let transform = transform(self);
 
-        shape.transform(&transform);
+        transform_shape(&mut shape, &transform);
 
         shape
     }
