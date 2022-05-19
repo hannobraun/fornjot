@@ -66,8 +66,14 @@ impl Validate for Vertex<3> {
         min_distance: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
-        if !stores.points.contains(&self.point.canonical()) {
-            return Err(StructuralIssues::default().into());
+        let point = self.point.canonical();
+
+        if !stores.points.contains(&point) {
+            return Err(StructuralIssues {
+                missing_point: Some(point),
+                ..StructuralIssues::default()
+            }
+            .into());
         }
         for existing in stores.vertices.iter() {
             if Some(&existing) == handle {
@@ -291,6 +297,9 @@ impl From<StructuralIssues> for ValidationError {
 /// Used by [`ValidationError`].
 #[derive(Debug, Default)]
 pub struct StructuralIssues {
+    /// Missing point found in vertex validation
+    pub missing_point: Option<Handle<Point<3>>>,
+
     /// Missing curve found in edge validation
     pub missing_curve: Option<Handle<Curve<3>>>,
 
