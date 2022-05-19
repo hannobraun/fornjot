@@ -36,7 +36,7 @@ pub fn export(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
             export_stl(mesh, path)
         }
         Some(extension) => Err(Error::InvalidExtension(
-            extension.to_str().map(|s| s.to_string()),
+            extension.to_string_lossy().into_owned(),
         )),
         None => Err(Error::NoExtension),
     }
@@ -119,9 +119,9 @@ pub enum Error {
     #[error("no extension specified")]
     NoExtension,
 
-    /// Unrecognised extension found `{0:?}`
+    /// Unrecognised extension found
     #[error("unrecognised extension found `{0:?}`")]
-    InvalidExtension(Option<String>),
+    InvalidExtension(String),
 
     /// I/O error whilst exporting to file
     #[error("I/O error whilst exporting to file")]
