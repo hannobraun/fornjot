@@ -4,6 +4,7 @@
 
 mod api;
 mod local;
+mod mapping;
 mod object;
 mod stores;
 mod update;
@@ -12,6 +13,7 @@ mod validate;
 pub use self::{
     api::Shape,
     local::LocalForm,
+    mapping::Mapping,
     object::Object,
     stores::{Handle, Iter},
     update::Update,
