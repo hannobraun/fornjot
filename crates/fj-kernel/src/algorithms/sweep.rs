@@ -156,7 +156,7 @@ pub fn sweep_shape(
                     vertices_source.map(|vertex_source| {
                         let vertex_bottom = source_to_bottom
                             .vertices
-                            .get(vertex_source.canonical())
+                            .get(&vertex_source.canonical())
                             .unwrap()
                             .clone();
 
@@ -169,7 +169,7 @@ pub fn sweep_shape(
 
                                 let vertex_top = source_to_top
                                     .vertices
-                                    .get(vertex_source.canonical())
+                                    .get(&vertex_source.canonical())
                                     .unwrap()
                                     .clone();
 
@@ -187,9 +187,9 @@ pub fn sweep_shape(
                 // this source/bottom edge.
 
                 let bottom_edge =
-                    source_to_bottom.edges.get(edge_source).unwrap().clone();
+                    source_to_bottom.edges.get(&edge_source).unwrap().clone();
                 let top_edge =
-                    source_to_top.edges.get(edge_source).unwrap().clone();
+                    source_to_top.edges.get(&edge_source).unwrap().clone();
 
                 let surface = target
                     .insert(Surface::SweptCurve(SweptCurve {
@@ -238,7 +238,7 @@ impl Relation {
     ) -> Option<[Handle<Vertex<3>>; 2]> {
         edge.get().vertices.map(|vertices| {
             vertices.map(|vertex| {
-                self.vertices.get(vertex.canonical()).unwrap().clone()
+                self.vertices.get(&vertex.canonical()).unwrap().clone()
             })
         })
     }
@@ -251,7 +251,7 @@ impl Relation {
             .get()
             .edges
             .iter()
-            .map(|edge| self.edges.get(edge.canonical()).unwrap().clone())
+            .map(|edge| self.edges.get(&edge.canonical()).unwrap().clone())
             .collect()
     }
 
