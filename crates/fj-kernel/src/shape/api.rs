@@ -114,6 +114,41 @@ impl Shape {
         object.merge_into(None, self, &mut Mapping::new())
     }
 
+    /// Merge the provided shape into this one
+    ///
+    /// Returns a [`Mapping`] that maps each object from the merged shape to the
+    /// merged objects in this shape.
+    pub fn merge_shape(
+        &mut self,
+        other: &Shape,
+    ) -> Result<Mapping, ValidationError> {
+        let mut mapping = Mapping::new();
+
+        for object in other.points() {
+            object.get().merge_into(Some(object), self, &mut mapping)?;
+        }
+        for object in other.curves() {
+            object.get().merge_into(Some(object), self, &mut mapping)?;
+        }
+        for object in other.surfaces() {
+            object.get().merge_into(Some(object), self, &mut mapping)?;
+        }
+        for object in other.vertices() {
+            object.get().merge_into(Some(object), self, &mut mapping)?;
+        }
+        for object in other.edges() {
+            object.get().merge_into(Some(object), self, &mut mapping)?;
+        }
+        for object in other.cycles() {
+            object.get().merge_into(Some(object), self, &mut mapping)?;
+        }
+        for object in other.faces() {
+            object.get().merge_into(Some(object), self, &mut mapping)?;
+        }
+
+        Ok(mapping)
+    }
+
     /// Update objects in the shape
     ///
     /// Returns [`Update`], and API that can be used to update objects in the
