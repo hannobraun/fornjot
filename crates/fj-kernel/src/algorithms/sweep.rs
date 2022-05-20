@@ -184,13 +184,11 @@ mod tests {
         let mut contains_top_face = false;
 
         for face in swept.faces() {
-            if matches!(face.get(), Face::Face { .. }) {
-                if face.get().clone() == bottom_face {
-                    contains_bottom_face = true;
-                }
-                if face.get().clone() == top_face {
-                    contains_top_face = true;
-                }
+            if face.get().clone() == bottom_face {
+                contains_bottom_face = true;
+            }
+            if face.get().clone() == top_face {
+                contains_top_face = true;
             }
         }
 
