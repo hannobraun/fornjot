@@ -13,14 +13,6 @@ pub struct SweptCurve {
 }
 
 impl SweptCurve {
-    /// Construct a plane from 3 points
-    pub fn plane_from_points([a, b, c]: [Point<3>; 3]) -> Self {
-        let curve = Curve::Line(Line::from_points([a, b]));
-        let path = c - a;
-
-        Self { curve, path }
-    }
-
     /// Create a new instance that is reversed
     #[must_use]
     pub fn reverse(mut self) -> Self {
