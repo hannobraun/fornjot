@@ -108,9 +108,10 @@ impl<'r> CycleBuilder<'r> {
         self,
         points: impl IntoIterator<Item = impl Into<Point<3>>>,
     ) -> ValidationResult<Cycle<3>> {
+        let mut points: Vec<_> = points.into_iter().map(Into::into).collect();
+
         // A polygon is closed, so we need to add the first point at the end
         // again, for the next step.
-        let mut points: Vec<_> = points.into_iter().map(Into::into).collect();
         if let Some(point) = points.first().cloned() {
             points.push(point);
         }
