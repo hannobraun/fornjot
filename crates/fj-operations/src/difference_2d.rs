@@ -113,7 +113,7 @@ fn add_cycle(
             vs
         });
 
-        let edge = shape.merge(Edge::new(curve, vertices))?;
+        let edge = shape.merge(Edge::new_obsolete(curve, vertices))?;
         edges.push(edge);
     }
 

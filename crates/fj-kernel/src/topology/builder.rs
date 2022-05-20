@@ -53,7 +53,7 @@ impl<'r> EdgeBuilder<'r> {
             a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
             b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
         }))?;
-        let edge = self.shape.insert(Edge::new(curve, None))?;
+        let edge = self.shape.insert(Edge::new_obsolete(curve, None))?;
 
         Ok(edge)
     }
@@ -85,7 +85,9 @@ impl<'r> EdgeBuilder<'r> {
         let curve = self.shape.insert(Curve::Line(Line::from_points(
             vertices.clone().map(|vertex| vertex.get().point()),
         )))?;
-        let edge = self.shape.insert(Edge::new(curve, Some(vertices)))?;
+        let edge = self
+            .shape
+            .insert(Edge::new_obsolete(curve, Some(vertices)))?;
 
         Ok(edge)
     }

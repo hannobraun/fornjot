@@ -58,7 +58,7 @@ impl Edge<3> {
     /// infrastructure. Here's one such piece of infrastructure, for which an
     /// issue already exists:
     /// <https://github.com/hannobraun/Fornjot/issues/399>
-    pub fn new(
+    pub fn new_obsolete(
         curve: Handle<Curve<3>>,
         vertices: Option<[Handle<Vertex>; 2]>,
     ) -> Self {

@@ -127,7 +127,8 @@ impl Object for Edge<3> {
             None => None,
         };
 
-        let merged = shape.get_handle_or_insert(Edge::new(curve, vertices))?;
+        let merged =
+            shape.get_handle_or_insert(Edge::new_obsolete(curve, vertices))?;
 
         if let Some(handle) = handle {
             mapping.edges.insert(handle, merged.clone());

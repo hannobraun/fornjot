@@ -320,7 +320,7 @@ mod tests {
         assert!(shape.get_handle(&surface.get()).as_ref() == Some(&surface));
 
         let vertex = Vertex { point };
-        let edge = Edge::new(curve, None);
+        let edge = Edge::new_obsolete(curve, None);
 
         assert!(shape.get_handle(&vertex).is_none());
         assert!(shape.get_handle(&edge).is_none());
@@ -384,7 +384,10 @@ mod tests {
 
         // Shouldn't work. Nothing has been added to `shape`.
         let err = shape
-            .insert(Edge::new(curve.clone(), Some([a.clone(), b.clone()])))
+            .insert(Edge::new_obsolete(
+                curve.clone(),
+                Some([a.clone(), b.clone()]),
+            ))
             .unwrap_err();
         assert!(err.missing_curve(&curve));
         assert!(err.missing_vertex(&a));
@@ -395,7 +398,7 @@ mod tests {
         let b = Vertex::builder(&mut shape).build_from_point([2., 0., 0.])?;
 
         // Everything has been added to `shape` now. Should work!
-        shape.insert(Edge::new(curve, Some([a, b])))?;
+        shape.insert(Edge::new_obsolete(curve, Some([a, b])))?;
 
         Ok(())
     }
