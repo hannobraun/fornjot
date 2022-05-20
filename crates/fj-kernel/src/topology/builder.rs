@@ -183,13 +183,11 @@ impl<'r> FaceBuilder<'r> {
     pub fn build(self) -> ValidationResult<Face> {
         let surface = self.shape.insert(self.surface)?;
 
-        let exteriors = match self.exterior {
-            Some(points) => {
-                let cycle = Cycle::builder(self.shape).build_polygon(points)?;
-                vec![cycle]
-            }
-            None => Vec::new(),
-        };
+        let mut exteriors = Vec::new();
+        if let Some(points) = self.exterior {
+            let cycle = Cycle::builder(self.shape).build_polygon(points)?;
+            exteriors.push(cycle);
+        }
 
         let mut interiors = Vec::new();
         for points in self.interiors {
