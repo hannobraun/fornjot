@@ -94,21 +94,17 @@ pub fn sweep_shape(
                         vertex_bottom_to_edge
                             .entry(vertex_bottom.clone())
                             .or_insert_with(|| {
-                                let curve = target
-                                    .insert(edge_source.get().curve())
-                                    .unwrap();
-
                                 let vertex_top = source_to_top
                                     .vertices()
                                     .get(&vertex_source.canonical())
                                     .unwrap()
                                     .clone();
 
-                                target
-                                    .merge(Edge::new(
-                                        curve,
-                                        Some([vertex_bottom, vertex_top]),
-                                    ))
+                                let points = [vertex_bottom, vertex_top]
+                                    .map(|vertex| vertex.get().point());
+
+                                Edge::builder(&mut target)
+                                    .build_line_segment_from_points(points)
                                     .unwrap()
                             })
                             .clone()
