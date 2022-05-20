@@ -41,7 +41,9 @@ impl Surface {
     }
 
     /// Construct a plane from 3 points
-    pub fn plane_from_points([a, b, c]: [Point<3>; 3]) -> Self {
+    pub fn plane_from_points(points: [impl Into<Point<3>>; 3]) -> Self {
+        let [a, b, c] = points.map(Into::into);
+
         let curve = Curve::Line(Line::from_points([a, b]));
         let path = c - a;
 
