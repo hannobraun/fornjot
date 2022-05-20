@@ -454,7 +454,7 @@ mod tests {
         let err = shape
             .insert(Face::new(
                 surface.clone(),
-                vec![cycle.canonical()],
+                vec![cycle.clone()],
                 Vec::new(),
                 [255, 0, 0, 255],
             ))
@@ -469,7 +469,7 @@ mod tests {
         // Everything has been added to `shape` now. Should work!
         shape.insert(Face::new(
             surface,
-            vec![cycle.canonical()],
+            vec![cycle],
             Vec::new(),
             [255, 0, 0, 255],
         ))?;

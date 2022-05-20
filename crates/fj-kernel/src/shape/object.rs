@@ -161,17 +161,23 @@ impl Object for Face {
                 )?;
 
                 let mut exts = Vec::new();
-                for cycle in face.exteriors.as_handle() {
-                    let merged =
-                        cycle.get().merge_into(Some(cycle), shape, mapping)?;
-                    exts.push(merged);
+                for cycle in face.exteriors.as_local_form() {
+                    let merged = cycle.canonical().get().merge_into(
+                        Some(cycle.canonical()),
+                        shape,
+                        mapping,
+                    )?;
+                    exts.push(LocalForm::new(cycle.local().clone(), merged));
                 }
 
                 let mut ints = Vec::new();
-                for cycle in face.interiors.as_handle() {
-                    let merged =
-                        cycle.get().merge_into(Some(cycle), shape, mapping)?;
-                    ints.push(merged);
+                for cycle in face.interiors.as_local_form() {
+                    let merged = cycle.canonical().get().merge_into(
+                        Some(cycle.canonical()),
+                        shape,
+                        mapping,
+                    )?;
+                    ints.push(LocalForm::new(cycle.local().clone(), merged));
                 }
 
                 shape.get_handle_or_insert(Face::new(

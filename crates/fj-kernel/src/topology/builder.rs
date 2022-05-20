@@ -241,14 +241,14 @@ impl<'r> FaceBuilder<'r> {
         if let Some(points) = self.exterior {
             let cycle = Cycle::builder(self.surface, self.shape)
                 .build_polygon(points)?;
-            exteriors.push(cycle.canonical());
+            exteriors.push(cycle);
         }
 
         let mut interiors = Vec::new();
         for points in self.interiors {
             let cycle = Cycle::builder(self.surface, self.shape)
                 .build_polygon(points)?;
-            interiors.push(cycle.canonical());
+            interiors.push(cycle);
         }
 
         let color = self.color.unwrap_or([255, 0, 0, 255]);

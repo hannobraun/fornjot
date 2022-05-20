@@ -24,7 +24,9 @@ pub struct Line<const D: usize> {
 
 impl<const D: usize> Line<D> {
     /// Create a line from two points
-    pub fn from_points([a, b]: [Point<D>; 2]) -> Self {
+    pub fn from_points(points: [impl Into<Point<D>>; 2]) -> Self {
+        let [a, b] = points.map(Into::into);
+
         Self {
             origin: a,
             direction: b - a,
