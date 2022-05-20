@@ -154,7 +154,7 @@ mod tests {
 
     use crate::{
         algorithms::Tolerance,
-        geometry::{Surface, SweptCurve},
+        geometry::Surface,
         shape::{Handle, Shape},
         topology::{Cycle, Edge, Face},
     };
@@ -230,8 +230,7 @@ mod tests {
 
             let cycles = shape.insert(Cycle::new(vec![ab, bc, ca]))?;
 
-            let surface =
-                Surface::SweptCurve(SweptCurve::plane_from_points([a, b, c]));
+            let surface = Surface::plane_from_points([a, b, c]);
             let surface = if reverse { surface.reverse() } else { surface };
             let surface = shape.insert(surface)?;
 

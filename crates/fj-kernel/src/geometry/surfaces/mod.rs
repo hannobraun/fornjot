@@ -2,7 +2,7 @@ pub mod swept;
 
 pub use self::swept::SweptCurve;
 
-use fj_math::{Point, Transform, Vector};
+use fj_math::{Line, Point, Transform, Vector};
 
 use crate::geometry;
 
@@ -38,6 +38,16 @@ impl Surface {
             curve: Curve::y_axis(),
             path: Vector::unit_z(),
         })
+    }
+
+    /// Construct a plane from 3 points
+    pub fn plane_from_points(points: [impl Into<Point<3>>; 3]) -> Self {
+        let [a, b, c] = points.map(Into::into);
+
+        let curve = Curve::Line(Line::from_points([a, b]));
+        let path = c - a;
+
+        Self::SweptCurve(SweptCurve { curve, path })
     }
 
     /// Create a new instance that is reversed
