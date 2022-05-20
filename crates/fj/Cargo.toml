@@ -10,3 +10,10 @@ repository = "https://github.com/hannobraun/fornjot"
 license = "0BSD"
 keywords = ["cad", "programmatic", "code-cad"]
 categories = ["encoding", "mathematics", "rendering"]
+
+[features]
+default = []
+serialization = ["serde"]
+
+[dependencies]
+serde = { version = "1.0.7", optional = true }

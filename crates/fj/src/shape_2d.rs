@@ -4,6 +4,7 @@ use crate::Shape;
 
 /// A 2-dimensional shape
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serialization", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub enum Shape2d {
     /// A circle
@@ -29,6 +30,7 @@ impl Shape2d {
 
 /// A circle
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serialization", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Circle {
     /// The radius of the circle
@@ -82,6 +84,7 @@ impl From<Circle> for Shape2d {
 
 /// A difference between two shapes
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serialization", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Difference2d {
     shapes: [Shape2d; 2],
@@ -126,6 +129,7 @@ impl From<Difference2d> for Shape2d {
 /// that the edges are non-overlapping. If you create a `Sketch` with
 /// overlapping edges, you're on your own.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serialization", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Sketch {
     // The fields are the raw parts of a `Vec`. `Sketch` needs to be FFI-safe,

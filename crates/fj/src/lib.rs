@@ -27,6 +27,7 @@ pub use self::{shape_2d::*, shape_3d::*};
 
 /// A shape
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serialization", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub enum Shape {
     /// A 2D shape
