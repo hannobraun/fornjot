@@ -1,9 +1,9 @@
 use std::collections::HashMap;
 
-use fj_math::{Transform, Triangle, Vector};
+use fj_math::{Line, Transform, Triangle, Vector};
 
 use crate::{
-    geometry::{Surface, SweptCurve},
+    geometry::{Curve, Surface, SweptCurve},
     shape::{Shape, ValidationError},
     topology::{Cycle, Edge, Face},
 };
@@ -94,15 +94,17 @@ pub fn sweep_shape(
                         vertex_bottom_to_edge
                             .entry(vertex_bottom.clone())
                             .or_insert_with(|| {
-                                let curve = target
-                                    .insert(edge_source.get().curve())
-                                    .unwrap();
-
                                 let vertex_top = source_to_top
                                     .vertices()
                                     .get(&vertex_source.canonical())
                                     .unwrap()
                                     .clone();
+
+                                let curve = Curve::Line(Line::from_points([
+                                    vertex_bottom.get().point(),
+                                    vertex_top.get().point(),
+                                ]));
+                                let curve = target.insert(curve).unwrap();
 
                                 target
                                     .merge(Edge::new(
