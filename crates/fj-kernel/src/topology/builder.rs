@@ -102,13 +102,17 @@ impl<'r> EdgeBuilder<'r> {
 /// API for building a [`Cycle`]
 #[must_use]
 pub struct CycleBuilder<'r> {
+    _surface: Surface,
     shape: &'r mut Shape,
 }
 
 impl<'r> CycleBuilder<'r> {
     /// Construct a new instance of `CycleBuilder`
-    pub fn new(shape: &'r mut Shape) -> Self {
-        Self { shape }
+    pub fn new(surface: Surface, shape: &'r mut Shape) -> Self {
+        Self {
+            _surface: surface,
+            shape,
+        }
     }
 
     /// Build a polygon from a list of points
@@ -197,7 +201,8 @@ impl<'r> FaceBuilder<'r> {
             let points = points
                 .into_iter()
                 .map(|point| surface.get().point_from_surface_coords(point));
-            let cycle = Cycle::builder(self.shape).build_polygon(points)?;
+            let cycle = Cycle::builder(self.surface, self.shape)
+                .build_polygon(points)?;
             exteriors.push(cycle);
         }
 
@@ -206,7 +211,8 @@ impl<'r> FaceBuilder<'r> {
             let points = points
                 .into_iter()
                 .map(|point| surface.get().point_from_surface_coords(point));
-            let cycle = Cycle::builder(self.shape).build_polygon(points)?;
+            let cycle = Cycle::builder(self.surface, self.shape)
+                .build_polygon(points)?;
             interiors.push(cycle);
         }
 

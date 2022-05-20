@@ -1,4 +1,7 @@
-use crate::shape::{Handle, LocalForm, Shape};
+use crate::{
+    geometry::Surface,
+    shape::{Handle, LocalForm, Shape},
+};
 
 use super::{CycleBuilder, Edge};
 
@@ -32,8 +35,8 @@ impl Cycle<3> {
     }
 
     /// Build a cycle using the [`CycleBuilder`] API
-    pub fn builder(shape: &mut Shape) -> CycleBuilder {
-        CycleBuilder::new(shape)
+    pub fn builder(surface: Surface, shape: &mut Shape) -> CycleBuilder {
+        CycleBuilder::new(surface, shape)
     }
 
     /// Access the edges that this cycle refers to
