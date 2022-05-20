@@ -118,8 +118,8 @@ impl Object for Edge<3> {
         // https://doc.rust-lang.org/std/primitive.array.html#method.try_map
         let vertices = self.vertices.map(|vertices| {
             vertices.map(|vertex| {
-                let vertex = vertex.canonical();
-                vertex.get().merge_into(Some(vertex), shape, mapping)
+                let canonical = vertex.canonical();
+                canonical.get().merge_into(Some(canonical), shape, mapping)
             })
         });
         let vertices = match vertices {
