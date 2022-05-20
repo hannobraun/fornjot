@@ -95,14 +95,19 @@ mod tests {
     fn simple() -> anyhow::Result<()> {
         let mut shape = Shape::new();
 
-        let a = [0., 0., 0.];
-        let b = [2., 0., 0.];
-        let c = [2., 2., 0.];
-        let d = [0., 1., 0.];
+        let a = [0., 0.];
+        let b = [2., 0.];
+        let c = [2., 2.];
+        let d = [0., 1.];
 
         Face::builder(Surface::xy_plane(), &mut shape)
             .with_exterior_polygon([a, b, c, d])
             .build()?;
+
+        let a = Point::from(a).to_xyz();
+        let b = Point::from(b).to_xyz();
+        let c = Point::from(c).to_xyz();
+        let d = Point::from(d).to_xyz();
 
         let triangles = triangulate(shape)?;
         assert!(triangles.contains_triangle([a, b, d]));
@@ -117,15 +122,15 @@ mod tests {
     fn simple_hole() -> anyhow::Result<()> {
         let mut shape = Shape::new();
 
-        let a = [0., 0., 0.];
-        let b = [4., 0., 0.];
-        let c = [4., 4., 0.];
-        let d = [0., 4., 0.];
+        let a = [0., 0.];
+        let b = [4., 0.];
+        let c = [4., 4.];
+        let d = [0., 4.];
 
-        let e = [1., 1., 0.];
-        let f = [3., 1., 0.];
-        let g = [3., 3., 0.];
-        let h = [1., 2., 0.];
+        let e = [1., 1.];
+        let f = [3., 1.];
+        let g = [3., 3.];
+        let h = [1., 2.];
 
         Face::builder(Surface::xy_plane(), &mut shape)
             .with_exterior_polygon([a, b, c, d])
@@ -133,6 +138,13 @@ mod tests {
             .build()?;
 
         let triangles = triangulate(shape)?;
+
+        let a = Point::from(a).to_xyz();
+        let d = Point::from(d).to_xyz();
+        let e = Point::from(e).to_xyz();
+        let f = Point::from(f).to_xyz();
+        let g = Point::from(g).to_xyz();
+        let h = Point::from(h).to_xyz();
 
         // Should contain some triangles from the polygon. Don't need to test
         // them all.

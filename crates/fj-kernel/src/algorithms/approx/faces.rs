@@ -97,20 +97,29 @@ mod tests {
 
         let mut shape = Shape::new();
 
-        let a = Point::from([0., 0., 0.]);
-        let b = Point::from([3., 0., 0.]);
-        let c = Point::from([3., 3., 0.]);
-        let d = Point::from([0., 3., 0.]);
+        let a = Point::from([0., 0.]);
+        let b = Point::from([3., 0.]);
+        let c = Point::from([3., 3.]);
+        let d = Point::from([0., 3.]);
 
-        let e = Point::from([1., 1., 0.]);
-        let f = Point::from([2., 1., 0.]);
-        let g = Point::from([2., 2., 0.]);
-        let h = Point::from([1., 2., 0.]);
+        let e = Point::from([1., 1.]);
+        let f = Point::from([2., 1.]);
+        let g = Point::from([2., 2.]);
+        let h = Point::from([1., 2.]);
 
         let face = Face::builder(Surface::xy_plane(), &mut shape)
             .with_exterior_polygon([a, b, c, d])
             .with_interior_polygon([e, f, g, h])
             .build()?;
+
+        let a = a.to_xyz();
+        let b = b.to_xyz();
+        let c = c.to_xyz();
+        let d = d.to_xyz();
+        let e = e.to_xyz();
+        let f = f.to_xyz();
+        let g = g.to_xyz();
+        let h = h.to_xyz();
 
         let a = geometry::Point::new(a, a);
         let b = geometry::Point::new(b, b);

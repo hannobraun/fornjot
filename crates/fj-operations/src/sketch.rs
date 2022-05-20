@@ -18,11 +18,7 @@ impl ToShape for fj::Sketch {
         let mut shape = Shape::new();
 
         let surface = Surface::xy_plane();
-        let points = self
-            .to_points()
-            .into_iter()
-            .map(Point::from)
-            .map(|point| surface.point_from_surface_coords(point));
+        let points = self.to_points().into_iter().map(Point::from);
 
         Face::builder(surface, &mut shape)
             .with_exterior_polygon(points)
