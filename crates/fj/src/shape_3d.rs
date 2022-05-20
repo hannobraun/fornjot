@@ -2,6 +2,7 @@ use crate::{Shape, Shape2d};
 
 /// A 3-dimensional shape
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serialization", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub enum Shape3d {
     /// A group of two 3-dimensional shapes
@@ -29,6 +30,7 @@ impl From<Shape3d> for Shape {
 ///
 /// Whether the shapes in the group touch or overlap is not currently checked.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serialization", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Group {
     /// The first of the shapes
@@ -60,6 +62,7 @@ impl From<Group> for Shape3d {
 /// See issue:
 /// <https://github.com/hannobraun/Fornjot/issues/101>
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serialization", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Transform {
     /// The shape being transformed
@@ -89,6 +92,7 @@ impl From<Transform> for Shape3d {
 
 /// A sweep of a 2-dimensional shape along straight path
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serialization", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Sweep {
     /// The 2-dimensional shape being swept
