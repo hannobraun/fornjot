@@ -5,7 +5,10 @@ use crate::{
     topology::{Cycle, Edge, Face, Vertex},
 };
 
-use super::{validate::Validate, Handle, Mapping, Shape, ValidationResult};
+use super::{
+    validate::Validate, Handle, LocalForm, Mapping, Shape, ValidationError,
+    ValidationResult,
+};
 
 /// Marker trait for geometric and topological objects
 pub trait Object:
@@ -116,19 +119,24 @@ impl Object for Edge<3> {
 
         // Can be cleaned up using `try_map`, once that is stable:
         // https://doc.rust-lang.org/std/primitive.array.html#method.try_map
-        let vertices = self.vertices.map(|vertices| {
-            vertices.map(|vertex| {
-                let canonical = vertex.canonical();
-                canonical.get().merge_into(Some(canonical), shape, mapping)
-            })
-        });
+        let vertices: Option<[Result<_, ValidationError>; 2]> =
+            self.vertices.map(|vertices| {
+                vertices.map(|vertex| {
+                    let canonical = vertex.canonical();
+                    let canonical = canonical.get().merge_into(
+                        Some(canonical),
+                        shape,
+                        mapping,
+                    )?;
+                    Ok(LocalForm::new(*vertex.local(), canonical))
+                })
+            });
         let vertices = match vertices {
             Some([a, b]) => Some([a?, b?]),
             None => None,
         };
 
-        let merged =
-            shape.get_handle_or_insert(Edge::new_obsolete(curve, vertices))?;
+        let merged = shape.get_handle_or_insert(Edge::new(curve, vertices))?;
 
         if let Some(handle) = handle {
             mapping.edges.insert(handle, merged.clone());

@@ -2,7 +2,7 @@ use fj_math::{Circle, Line, Point, Scalar, Vector};
 
 use crate::{
     geometry::{Curve, Surface},
-    shape::{Handle, Shape, ValidationResult},
+    shape::{Handle, LocalForm, Shape, ValidationResult},
 };
 
 use super::{Cycle, Edge, Face, Vertex};
@@ -85,9 +85,14 @@ impl<'r> EdgeBuilder<'r> {
         let curve = self.shape.insert(Curve::Line(Line::from_points(
             vertices.clone().map(|vertex| vertex.get().point()),
         )))?;
-        let edge = self
-            .shape
-            .insert(Edge::new_obsolete(curve, Some(vertices)))?;
+
+        let [a, b] = vertices;
+        let vertices = [
+            LocalForm::new(Point::from([0.]), a),
+            LocalForm::new(Point::from([1.]), b),
+        ];
+
+        let edge = self.shape.insert(Edge::new(curve, Some(vertices)))?;
 
         Ok(edge)
     }
