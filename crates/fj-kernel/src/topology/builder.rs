@@ -102,25 +102,25 @@ impl<'r> EdgeBuilder<'r> {
 /// API for building a [`Cycle`]
 #[must_use]
 pub struct CycleBuilder<'r> {
-    _surface: Surface,
+    surface: Surface,
     shape: &'r mut Shape,
 }
 
 impl<'r> CycleBuilder<'r> {
     /// Construct a new instance of `CycleBuilder`
     pub fn new(surface: Surface, shape: &'r mut Shape) -> Self {
-        Self {
-            _surface: surface,
-            shape,
-        }
+        Self { surface, shape }
     }
 
     /// Build a polygon from a list of points
     pub fn build_polygon(
         self,
-        points: impl IntoIterator<Item = impl Into<Point<3>>>,
+        points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> ValidationResult<Cycle<3>> {
-        let mut points: Vec<_> = points.into_iter().map(Into::into).collect();
+        let mut points: Vec<_> = points
+            .into_iter()
+            .map(|point| self.surface.point_from_surface_coords(point))
+            .collect();
 
         // A polygon is closed, so we need to add the first point at the end
         // again, for the next step.
@@ -198,9 +198,6 @@ impl<'r> FaceBuilder<'r> {
 
         let mut exteriors = Vec::new();
         if let Some(points) = self.exterior {
-            let points = points
-                .into_iter()
-                .map(|point| surface.get().point_from_surface_coords(point));
             let cycle = Cycle::builder(self.surface, self.shape)
                 .build_polygon(points)?;
             exteriors.push(cycle);
@@ -208,9 +205,6 @@ impl<'r> FaceBuilder<'r> {
 
         let mut interiors = Vec::new();
         for points in self.interiors {
-            let points = points
-                .into_iter()
-                .map(|point| surface.get().point_from_surface_coords(point));
             let cycle = Cycle::builder(self.surface, self.shape)
                 .build_polygon(points)?;
             interiors.push(cycle);
