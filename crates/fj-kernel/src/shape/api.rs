@@ -39,7 +39,7 @@ impl Shape {
         }
     }
 
-    /// Override the minimum distance for this shape
+    /// Override the minimum distance of distinct objects
     ///
     /// Used for vertex validation, to determine whether vertices are unique.
     ///
