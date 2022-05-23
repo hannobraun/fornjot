@@ -203,6 +203,14 @@ pub type ValidationResult<T> = Result<Handle<T>, ValidationError>;
 /// An error that can occur during a validation
 #[derive(Debug, thiserror::Error)]
 pub enum ValidationError {
+    /// Geometric validation failed
+    ///
+    /// Geometric validation checks, that various geometric constraints of an
+    /// object are upheld. For example, edges or faces might not be allowed to
+    /// intersect.
+    #[error("Geometric validation failed")]
+    Geometric,
+
     /// Structural validation failed
     ///
     /// Structural validation verifies, that all the object that an object
@@ -217,14 +225,6 @@ pub enum ValidationError {
     /// objects being duplicated.
     #[error("Uniqueness validation failed")]
     Uniqueness,
-
-    /// Geometric validation failed
-    ///
-    /// Geometric validation checks, that various geometric constraints of an
-    /// object are upheld. For example, edges or faces might not be allowed to
-    /// intersect.
-    #[error("Geometric validation failed")]
-    Geometric,
 }
 
 impl ValidationError {
