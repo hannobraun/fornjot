@@ -48,7 +48,7 @@ impl Shape {
     /// This functionality should be exposed to models, eventually. For now it's
     /// just used in unit tests.
     #[cfg(test)]
-    pub fn with_min_distance(
+    pub fn with_distinct_min_distance(
         mut self,
         min_distance: impl Into<Scalar>,
     ) -> Self {
@@ -322,7 +322,7 @@ mod tests {
 
     #[test]
     fn add_vertex() -> anyhow::Result<()> {
-        let mut shape = Shape::new().with_min_distance(MIN_DISTANCE);
+        let mut shape = Shape::new().with_distinct_min_distance(MIN_DISTANCE);
         let mut other = Shape::new();
 
         let point = shape.insert(Point::from([0., 0., 0.]))?;
