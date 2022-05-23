@@ -13,7 +13,7 @@ use super::{
 /// The boundary representation of a shape
 #[derive(Clone, Debug)]
 pub struct Shape {
-    min_distance: Scalar,
+    distinct_min_distance: Scalar,
     stores: Stores,
 }
 
@@ -24,7 +24,7 @@ impl Shape {
             // This should really come from `Self::DEFAULT_MIN_DISTANCE`, or a
             // similarly named constant. Unfortunately `Scalar::from_f64` can't
             // be `const` yet.
-            min_distance: Scalar::from_f64(5e-7), // 0.5 µm
+            distinct_min_distance: Scalar::from_f64(5e-7), // 0.5 µm
 
             stores: Stores {
                 points: Store::new(),
@@ -39,7 +39,7 @@ impl Shape {
         }
     }
 
-    /// Override the minimum distance for this shape
+    /// Override the minimum distance of distinct objects
     ///
     /// Used for vertex validation, to determine whether vertices are unique.
     ///
@@ -48,11 +48,11 @@ impl Shape {
     /// This functionality should be exposed to models, eventually. For now it's
     /// just used in unit tests.
     #[cfg(test)]
-    pub fn with_min_distance(
+    pub fn with_distinct_min_distance(
         mut self,
-        min_distance: impl Into<Scalar>,
+        distinct_min_distance: impl Into<Scalar>,
     ) -> Self {
-        self.min_distance = min_distance.into();
+        self.distinct_min_distance = distinct_min_distance.into();
         self
     }
 
@@ -61,7 +61,7 @@ impl Shape {
     /// Validates the object, and returns an error if it is not valid. See the
     /// documentation of each object for validation requirements.
     pub fn insert<T: Object>(&mut self, object: T) -> ValidationResult<T> {
-        object.validate(None, self.min_distance, &self.stores)?;
+        object.validate(None, self.distinct_min_distance, &self.stores)?;
         let handle = self.stores.get::<T>().insert(object);
         Ok(handle)
     }
@@ -154,7 +154,7 @@ impl Shape {
     /// Returns [`Update`], and API that can be used to update objects in the
     /// shape.
     pub fn update(&mut self) -> Update {
-        Update::new(self.min_distance, &mut self.stores)
+        Update::new(self.distinct_min_distance, &mut self.stores)
     }
 
     /// Clone the shape
@@ -322,7 +322,7 @@ mod tests {
 
     #[test]
     fn add_vertex() -> anyhow::Result<()> {
-        let mut shape = Shape::new().with_min_distance(MIN_DISTANCE);
+        let mut shape = Shape::new().with_distinct_min_distance(MIN_DISTANCE);
         let mut other = Shape::new();
 
         let point = shape.insert(Point::from([0., 0., 0.]))?;
