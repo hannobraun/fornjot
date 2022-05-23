@@ -211,7 +211,7 @@ where
     T: fmt::Debug,
 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Handle => {:?}", self.get())
+        f.debug_tuple("Handle").field(&self.get()).finish()
     }
 }
 

@@ -108,9 +108,10 @@ impl<'r> CycleBuilder<'r> {
         self,
         points: impl IntoIterator<Item = impl Into<Point<3>>>,
     ) -> ValidationResult<Cycle<3>> {
+        let mut points: Vec<_> = points.into_iter().map(Into::into).collect();
+
         // A polygon is closed, so we need to add the first point at the end
         // again, for the next step.
-        let mut points: Vec<_> = points.into_iter().map(Into::into).collect();
         if let Some(point) = points.first().cloned() {
             points.push(point);
         }
@@ -183,13 +184,11 @@ impl<'r> FaceBuilder<'r> {
     pub fn build(self) -> ValidationResult<Face> {
         let surface = self.shape.insert(self.surface)?;
 
-        let exteriors = match self.exterior {
-            Some(points) => {
-                let cycle = Cycle::builder(self.shape).build_polygon(points)?;
-                vec![cycle]
-            }
-            None => Vec::new(),
-        };
+        let mut exteriors = Vec::new();
+        if let Some(points) = self.exterior {
+            let cycle = Cycle::builder(self.shape).build_polygon(points)?;
+            exteriors.push(cycle);
+        }
 
         let mut interiors = Vec::new();
         for points in self.interiors {
