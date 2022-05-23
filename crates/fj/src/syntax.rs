@@ -99,7 +99,7 @@ pub trait Transform {
     ///
     /// Create a rotation that rotates `shape` by `angle` around an axis defined
     /// by `axis`.
-    fn rotate(&self, axis: [f64; 3], angle: f64) -> crate::Transform;
+    fn rotate(&self, axis: [f64; 3], angle: crate::Angle) -> crate::Transform;
 
     /// Create a translation
     ///
@@ -111,7 +111,7 @@ impl<T> Transform for T
 where
     T: Clone + Into<crate::Shape3d>,
 {
-    fn rotate(&self, axis: [f64; 3], angle: f64) -> crate::Transform {
+    fn rotate(&self, axis: [f64; 3], angle: crate::Angle) -> crate::Transform {
         let shape = self.clone().into();
         crate::Transform {
             shape,
@@ -126,7 +126,7 @@ where
         crate::Transform {
             shape,
             axis: [1., 0., 0.],
-            angle: 0.,
+            angle: crate::Angle::from_rad(0.),
             offset,
         }
     }
