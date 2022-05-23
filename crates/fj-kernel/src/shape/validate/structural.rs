@@ -4,9 +4,108 @@ use fj_math::Point;
 
 use crate::{
     geometry::{Curve, Surface},
-    shape::Handle,
-    topology::{Cycle, Edge, Vertex},
+    shape::{stores::Stores, Handle},
+    topology::{Cycle, Edge, Face, Vertex},
 };
+
+pub fn validate_vertex(
+    vertex: &Vertex<3>,
+    stores: &Stores,
+) -> Result<(), StructuralIssues> {
+    let point = vertex.point.canonical();
+
+    if !stores.points.contains(&point) {
+        return Err(StructuralIssues {
+            missing_point: Some(point),
+            ..StructuralIssues::default()
+        });
+    }
+
+    Ok(())
+}
+
+pub fn validate_edge(
+    edge: &Edge<3>,
+    stores: &Stores,
+) -> Result<(), StructuralIssues> {
+    let mut missing_curve = None;
+    let mut missing_vertices = HashSet::new();
+
+    if !stores.curves.contains(&edge.curve.canonical()) {
+        missing_curve = Some(edge.curve.canonical());
+    }
+    for vertices in &edge.vertices {
+        for vertex in vertices {
+            if !stores.vertices.contains(&vertex.canonical()) {
+                missing_vertices.insert(vertex.canonical().clone());
+            }
+        }
+    }
+
+    if missing_curve.is_some() || !missing_vertices.is_empty() {
+        return Err(StructuralIssues {
+            missing_curve,
+            missing_vertices,
+            ..StructuralIssues::default()
+        });
+    }
+
+    Ok(())
+}
+
+pub fn validate_cycle(
+    cycle: &Cycle<3>,
+    stores: &Stores,
+) -> Result<(), StructuralIssues> {
+    let mut missing_edges = HashSet::new();
+    for edge in &cycle.edges {
+        let edge = edge.canonical();
+
+        if !stores.edges.contains(&edge) {
+            missing_edges.insert(edge.clone());
+        }
+    }
+
+    if !missing_edges.is_empty() {
+        return Err(StructuralIssues {
+            missing_edges,
+            ..StructuralIssues::default()
+        });
+    }
+
+    Ok(())
+}
+
+pub fn validate_face(
+    face: &Face,
+    stores: &Stores,
+) -> Result<(), StructuralIssues> {
+    if let Face::Face(face) = face {
+        let mut missing_surface = None;
+        let mut missing_cycles = HashSet::new();
+
+        if !stores.surfaces.contains(&face.surface) {
+            missing_surface = Some(face.surface.clone());
+        }
+        for cycle in
+            face.exteriors.as_handle().chain(face.interiors.as_handle())
+        {
+            if !stores.cycles.contains(&cycle) {
+                missing_cycles.insert(cycle);
+            }
+        }
+
+        if missing_surface.is_some() || !missing_cycles.is_empty() {
+            return Err(StructuralIssues {
+                missing_surface,
+                missing_cycles,
+                ..StructuralIssues::default()
+            });
+        }
+    }
+
+    Ok(())
+}
 
 /// Structural issues found during validation
 ///

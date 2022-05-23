@@ -2,8 +2,6 @@ mod structural;
 
 pub use self::structural::StructuralIssues;
 
-use std::collections::HashSet;
-
 use fj_math::{Point, Scalar};
 
 use crate::{
@@ -70,15 +68,8 @@ impl Validate for Vertex<3> {
         min_distance: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
-        let point = self.point.canonical();
+        structural::validate_vertex(self, stores)?;
 
-        if !stores.points.contains(&point) {
-            return Err(StructuralIssues {
-                missing_point: Some(point),
-                ..StructuralIssues::default()
-            }
-            .into());
-        }
         for existing in stores.vertices.iter() {
             if Some(&existing) == handle {
                 continue;
@@ -102,29 +93,7 @@ impl Validate for Edge<3> {
         _: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
-        let mut missing_curve = None;
-        let mut missing_vertices = HashSet::new();
-
-        if !stores.curves.contains(&self.curve.canonical()) {
-            missing_curve = Some(self.curve.canonical());
-        }
-        for vertices in &self.vertices {
-            for vertex in vertices {
-                if !stores.vertices.contains(&vertex.canonical()) {
-                    missing_vertices.insert(vertex.canonical().clone());
-                }
-            }
-        }
-
-        if missing_curve.is_some() || !missing_vertices.is_empty() {
-            return Err(StructuralIssues {
-                missing_curve,
-                missing_vertices,
-                ..StructuralIssues::default()
-            }
-            .into());
-        }
-
+        structural::validate_edge(self, stores)?;
         Ok(())
     }
 }
@@ -144,23 +113,7 @@ impl Validate for Cycle<3> {
         _: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
-        let mut missing_edges = HashSet::new();
-        for edge in &self.edges {
-            let edge = edge.canonical();
-
-            if !stores.edges.contains(&edge) {
-                missing_edges.insert(edge.clone());
-            }
-        }
-
-        if !missing_edges.is_empty() {
-            return Err(StructuralIssues {
-                missing_edges,
-                ..StructuralIssues::default()
-            }
-            .into());
-        }
-
+        structural::validate_cycle(self, stores)?;
         Ok(())
     }
 }
@@ -172,31 +125,7 @@ impl Validate for Face {
         _: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
-        if let Face::Face(face) = self {
-            let mut missing_surface = None;
-            let mut missing_cycles = HashSet::new();
-
-            if !stores.surfaces.contains(&face.surface) {
-                missing_surface = Some(face.surface.clone());
-            }
-            for cycle in
-                face.exteriors.as_handle().chain(face.interiors.as_handle())
-            {
-                if !stores.cycles.contains(&cycle) {
-                    missing_cycles.insert(cycle);
-                }
-            }
-
-            if missing_surface.is_some() || !missing_cycles.is_empty() {
-                return Err(StructuralIssues {
-                    missing_surface,
-                    missing_cycles,
-                    ..StructuralIssues::default()
-                }
-                .into());
-            }
-        }
-
+        structural::validate_face(self, stores)?;
         Ok(())
     }
 }
