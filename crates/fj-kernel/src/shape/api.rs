@@ -337,7 +337,7 @@ mod tests {
         // because that only causes a warning to be logged right now.
         let point = shape.insert(Point::from([5e-8, 0., 0.]))?;
         let result = shape.insert(Vertex::new(point));
-        assert!(matches!(result, Err(ValidationError::Uniqueness)));
+        assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
 
         // `point` is farther than `MIN_DISTANCE` away from original point.
         // Should work.

@@ -1,6 +1,7 @@
 mod structural;
+mod uniqueness;
 
-pub use self::structural::StructuralIssues;
+pub use self::{structural::StructuralIssues, uniqueness::UniquenessIssues};
 
 use fj_math::{Point, Scalar};
 
@@ -78,7 +79,7 @@ impl Validate for Vertex<3> {
             let distance = (existing.get().point() - self.point()).magnitude();
 
             if distance < min_distance {
-                return Err(ValidationError::Uniqueness);
+                return Err(UniquenessIssues.into());
             }
         }
 
@@ -157,7 +158,7 @@ pub enum ValidationError {
     /// only required for topological objects, as there's no harm in geometric
     /// objects being duplicated.
     #[error("Uniqueness validation failed")]
-    Uniqueness,
+    Uniqueness(#[from] UniquenessIssues),
 }
 
 impl ValidationError {
