@@ -15,7 +15,8 @@ impl Transform {
     ///
     /// The returned transform is used for transforming vertices on the GPU.
     pub fn for_vertices(camera: &Camera, aspect_ratio: f64) -> Self {
-        let field_of_view_in_y = camera.field_of_view_in_x() / aspect_ratio;
+        let field_of_view_in_y = 2.
+            * ((camera.field_of_view_in_x() / 2.).tan() / aspect_ratio).atan();
 
         let transform = camera.camera_to_model().project_to_array(
             aspect_ratio,
