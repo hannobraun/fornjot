@@ -32,7 +32,7 @@ impl Angle {
     fn wrap(rad: f64) -> f64 {
         let modulo = rad % (2. * PI);
         if modulo < 0. {
-            modulo * -1.
+            2. * PI + modulo
         } else {
             modulo
         }
