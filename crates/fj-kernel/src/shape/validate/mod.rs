@@ -1,7 +1,11 @@
+mod geometric;
 mod structural;
 mod uniqueness;
 
-pub use self::{structural::StructuralIssues, uniqueness::UniquenessIssues};
+pub use self::{
+    geometric::GeometricIssues, structural::StructuralIssues,
+    uniqueness::UniquenessIssues,
+};
 
 use fj_math::{Point, Scalar};
 
@@ -132,7 +136,7 @@ pub enum ValidationError {
     /// object are upheld. For example, edges or faces might not be allowed to
     /// intersect.
     #[error("Geometric validation failed")]
-    Geometric,
+    Geometric(#[from] GeometricIssues),
 
     /// Structural validation failed
     ///
