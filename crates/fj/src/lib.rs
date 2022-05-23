@@ -20,10 +20,11 @@
 
 pub mod syntax;
 
+mod angle;
 mod shape_2d;
 mod shape_3d;
 
-pub use self::{shape_2d::*, shape_3d::*};
+pub use self::{angle::*, shape_2d::*, shape_3d::*};
 
 /// A shape
 #[derive(Clone, Debug)]

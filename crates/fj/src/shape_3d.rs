@@ -1,4 +1,4 @@
-use crate::{Shape, Shape2d};
+use crate::{Angle, Shape, Shape2d};
 
 /// A 3-dimensional shape
 #[derive(Clone, Debug)]
@@ -72,7 +72,7 @@ pub struct Transform {
     pub axis: [f64; 3],
 
     /// The angle of the rotation
-    pub angle: f64,
+    pub angle: Angle,
 
     /// The offset of the translation
     pub offset: [f64; 3],

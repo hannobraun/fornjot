@@ -29,5 +29,5 @@ impl ToShape for fj::Transform {
 fn transform(transform: &fj::Transform) -> Transform {
     let axis = Vector::from(transform.axis).normalize();
     Transform::translation(transform.offset)
-        * Transform::rotation(axis * transform.angle)
+        * Transform::rotation(axis * transform.angle.rad())
 }

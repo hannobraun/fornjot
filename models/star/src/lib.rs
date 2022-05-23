@@ -1,3 +1,4 @@
+use fj::Angle;
 use std::{collections::HashMap, f64::consts::PI};
 
 #[no_mangle]
@@ -31,7 +32,7 @@ pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
     // gives us the angle and radius for each vertex.
     let num_vertices = num_points * 2;
     let vertex_iter = (0..num_vertices).map(|i| {
-        let angle = 2. * PI / num_vertices as f64 * i as f64;
+        let angle = Angle::from_rad(2. * PI / num_vertices as f64 * i as f64);
         let radius = if i % 2 == 0 { r1 } else { r2 };
         (angle, radius)
     });
@@ -41,7 +42,7 @@ pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
     let mut outer = Vec::new();
     let mut inner = Vec::new();
     for (angle, radius) in vertex_iter {
-        let (sin, cos) = angle.sin_cos();
+        let (sin, cos) = angle.rad().sin_cos();
 
         let x = cos * radius;
         let y = sin * radius;
