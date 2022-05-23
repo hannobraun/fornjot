@@ -17,7 +17,7 @@ impl Angle {
     }
     /// Create a new angle specified in degrees
     pub fn from_deg(deg: f64) -> Self {
-        Self::from_rad(deg * PI / 180.)
+        Self::from_rad(deg.to_radians())
     }
     /// Retrieve value of angle as radians
     pub fn rad(&self) -> f64 {
@@ -25,7 +25,7 @@ impl Angle {
     }
     /// Retrieve value of angle as degrees
     pub fn deg(&self) -> f64 {
-        self.rad / PI * 180.
+        self.rad.to_degrees()
     }
 
     // ensures that the angle is always 0 <= a < 2*pi
