@@ -13,7 +13,7 @@ use super::{
 /// The boundary representation of a shape
 #[derive(Clone, Debug)]
 pub struct Shape {
-    min_distance: Scalar,
+    distinct_min_distance: Scalar,
     stores: Stores,
 }
 
@@ -24,7 +24,7 @@ impl Shape {
             // This should really come from `Self::DEFAULT_MIN_DISTANCE`, or a
             // similarly named constant. Unfortunately `Scalar::from_f64` can't
             // be `const` yet.
-            min_distance: Scalar::from_f64(5e-7), // 0.5 µm
+            distinct_min_distance: Scalar::from_f64(5e-7), // 0.5 µm
 
             stores: Stores {
                 points: Store::new(),
@@ -52,7 +52,7 @@ impl Shape {
         mut self,
         min_distance: impl Into<Scalar>,
     ) -> Self {
-        self.min_distance = min_distance.into();
+        self.distinct_min_distance = min_distance.into();
         self
     }
 
@@ -61,7 +61,7 @@ impl Shape {
     /// Validates the object, and returns an error if it is not valid. See the
     /// documentation of each object for validation requirements.
     pub fn insert<T: Object>(&mut self, object: T) -> ValidationResult<T> {
-        object.validate(None, self.min_distance, &self.stores)?;
+        object.validate(None, self.distinct_min_distance, &self.stores)?;
         let handle = self.stores.get::<T>().insert(object);
         Ok(handle)
     }
@@ -154,7 +154,7 @@ impl Shape {
     /// Returns [`Update`], and API that can be used to update objects in the
     /// shape.
     pub fn update(&mut self) -> Update {
-        Update::new(self.min_distance, &mut self.stores)
+        Update::new(self.distinct_min_distance, &mut self.stores)
     }
 
     /// Clone the shape
