@@ -1,5 +1,32 @@
 use std::fmt;
 
+use fj_math::Scalar;
+
+use crate::{
+    shape::{stores::Stores, Handle},
+    topology::Vertex,
+};
+
+pub fn validate_vertex(
+    vertex: &Vertex<3>,
+    handle: Option<&Handle<Vertex<3>>>,
+    min_distance: Scalar,
+    stores: &Stores,
+) -> Result<(), UniquenessIssues> {
+    for existing in stores.vertices.iter() {
+        if Some(&existing) == handle {
+            continue;
+        }
+
+        let distance = (existing.get().point() - vertex.point()).magnitude();
+        if distance < min_distance {
+            return Err(UniquenessIssues);
+        }
+    }
+
+    Ok(())
+}
+
 /// Uniqueness issues found during validation
 ///
 /// Used by [`ValidationError`].

@@ -70,18 +70,7 @@ impl Validate for Vertex<3> {
         stores: &Stores,
     ) -> Result<(), ValidationError> {
         structural::validate_vertex(self, stores)?;
-
-        for existing in stores.vertices.iter() {
-            if Some(&existing) == handle {
-                continue;
-            }
-
-            let distance = (existing.get().point() - self.point()).magnitude();
-
-            if distance < min_distance {
-                return Err(UniquenessIssues.into());
-            }
-        }
+        uniqueness::validate_vertex(self, handle, min_distance, stores)?;
 
         Ok(())
     }
