@@ -50,9 +50,9 @@ impl Shape {
     #[cfg(test)]
     pub fn with_distinct_min_distance(
         mut self,
-        min_distance: impl Into<Scalar>,
+        distinct_min_distance: impl Into<Scalar>,
     ) -> Self {
-        self.distinct_min_distance = min_distance.into();
+        self.distinct_min_distance = distinct_min_distance.into();
         self
     }
 
