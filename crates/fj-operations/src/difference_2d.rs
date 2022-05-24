@@ -1,7 +1,7 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
-    shape::{Handle, Shape},
+    shape::{Handle, Shape, ValidationError},
     topology::{Cycle, Edge, Face},
 };
 use fj_math::Aabb;
@@ -13,7 +13,7 @@ impl ToShape for fj::Difference2d {
         &self,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
-    ) -> Shape {
+    ) -> Result<Shape, ValidationError> {
         // This method assumes that `b` is fully contained within `a`:
         // https://github.com/hannobraun/Fornjot/issues/92
 
@@ -25,7 +25,8 @@ impl ToShape for fj::Difference2d {
         // Can be cleaned up, once `each_ref` is stable:
         // https://doc.rust-lang.org/std/primitive.array.html#method.each_ref
         let [a, b] = self.shapes();
-        let [a, b] = [a, b].map(|shape| shape.to_shape(tolerance, debug_info));
+        let [a, b] =
+            [a, b].map(|shape| shape.to_shape(tolerance, debug_info).unwrap());
 
         if let Some(face) = a.faces().next() {
             // If there's at least one face to subtract from, we can proceed.
@@ -74,7 +75,7 @@ impl ToShape for fj::Difference2d {
                 .unwrap();
         }
 
-        difference
+        Ok(difference)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

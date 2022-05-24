@@ -26,7 +26,10 @@ mod sweep;
 mod transform;
 
 use fj_interop::debug::DebugInfo;
-use fj_kernel::{algorithms::Tolerance, shape::Shape};
+use fj_kernel::{
+    algorithms::Tolerance,
+    shape::{Shape, ValidationError},
+};
 use fj_math::Aabb;
 
 /// Implemented for all operations from the [`fj`] crate
@@ -36,7 +39,7 @@ pub trait ToShape {
         &self,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
-    ) -> Shape;
+    ) -> Result<Shape, ValidationError>;
 
     /// Access the axis-aligned bounding box of a shape
     ///
@@ -88,6 +91,6 @@ dispatch! {
     to_shape(
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
-    ) -> Shape;
+    ) -> Result<Shape, ValidationError>;
     bounding_volume() -> Aabb<3>;
 }
