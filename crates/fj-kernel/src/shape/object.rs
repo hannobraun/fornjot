@@ -91,7 +91,7 @@ impl Object for Vertex {
     ) -> ValidationResult<Self> {
         let point =
             self.point().merge_into(Some(self.point), shape, mapping)?;
-        let merged = shape.get_handle_or_insert(Vertex::new(point))?;
+        let merged = shape.get_handle_or_insert(Vertex { point })?;
 
         if let Some(handle) = handle {
             mapping.vertices.insert(handle, merged.clone());

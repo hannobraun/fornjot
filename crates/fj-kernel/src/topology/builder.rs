@@ -28,7 +28,7 @@ impl<'r> VertexBuilder<'r> {
         point: impl Into<Point<3>>,
     ) -> ValidationResult<Vertex> {
         let point = self.shape.get_handle_or_insert(point.into())?;
-        let vertex = self.shape.get_handle_or_insert(Vertex::new(point))?;
+        let vertex = self.shape.get_handle_or_insert(Vertex { point })?;
 
         Ok(vertex)
     }

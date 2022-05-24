@@ -293,7 +293,7 @@ mod tests {
         assert!(shape.get_handle(&curve.get()).as_ref() == Some(&curve));
         assert!(shape.get_handle(&surface.get()).as_ref() == Some(&surface));
 
-        let vertex = Vertex::new(point);
+        let vertex = Vertex { point };
         let edge = Edge::new(curve, None);
 
         assert!(shape.get_handle(&vertex).is_none());
@@ -326,23 +326,23 @@ mod tests {
         let mut other = Shape::new();
 
         let point = shape.insert(Point::from([0., 0., 0.]))?;
-        shape.insert(Vertex::new(point))?;
+        shape.insert(Vertex { point })?;
 
         // Should fail, as `point` is not part of the shape.
         let point = other.insert(Point::from([1., 0., 0.]))?;
-        let result = shape.insert(Vertex::new(point));
+        let result = shape.insert(Vertex { point });
         assert!(matches!(result, Err(ValidationError::Structural(_))));
 
         // `point` is too close to the original point. `assert!` is commented,
         // because that only causes a warning to be logged right now.
         let point = shape.insert(Point::from([5e-8, 0., 0.]))?;
-        let result = shape.insert(Vertex::new(point));
+        let result = shape.insert(Vertex { point });
         assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
 
         // `point` is farther than `MIN_DISTANCE` away from original point.
         // Should work.
         let point = shape.insert(Point::from([5e-6, 0., 0.]))?;
-        shape.insert(Vertex::new(point))?;
+        shape.insert(Vertex { point })?;
 
         Ok(())
     }

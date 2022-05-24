@@ -37,11 +37,6 @@ pub struct Vertex {
 }
 
 impl Vertex {
-    /// Construct a new instance of `Vertex`
-    pub fn new(point: Handle<Point<3>>) -> Self {
-        Self { point }
-    }
-
     /// Build a vertex using the [`VertexBuilder`] API
     pub fn builder(shape: &mut Shape) -> VertexBuilder {
         VertexBuilder::new(shape)
