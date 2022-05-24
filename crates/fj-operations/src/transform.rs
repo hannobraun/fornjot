@@ -1,7 +1,7 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::{transform_shape, Tolerance},
-    shape::Shape,
+    shape::{Shape, ValidationError},
 };
 use fj_math::{Aabb, Transform, Vector};
 
@@ -12,13 +12,13 @@ impl ToShape for fj::Transform {
         &self,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
-    ) -> Shape {
-        let mut shape = self.shape.to_shape(tolerance, debug_info);
+    ) -> Result<Shape, ValidationError> {
+        let mut shape = self.shape.to_shape(tolerance, debug_info)?;
         let transform = transform(self);
 
         transform_shape(&mut shape, &transform);
 
-        shape
+        Ok(shape)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

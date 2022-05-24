@@ -2,7 +2,7 @@ use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
     geometry::Surface,
-    shape::Shape,
+    shape::{Shape, ValidationError},
     topology::{Cycle, Edge, Face},
 };
 use fj_math::{Aabb, Point, Scalar};
@@ -10,7 +10,11 @@ use fj_math::{Aabb, Point, Scalar};
 use super::ToShape;
 
 impl ToShape for fj::Circle {
-    fn to_shape(&self, _: Tolerance, _: &mut DebugInfo) -> Shape {
+    fn to_shape(
+        &self,
+        _: Tolerance,
+        _: &mut DebugInfo,
+    ) -> Result<Shape, ValidationError> {
         let mut shape = Shape::new();
 
         // Circles have just a single round edge with no vertices. So none need
@@ -27,7 +31,7 @@ impl ToShape for fj::Circle {
             .insert(Face::new(surface, cycles, Vec::new(), self.color()))
             .unwrap();
 
-        shape
+        Ok(shape)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

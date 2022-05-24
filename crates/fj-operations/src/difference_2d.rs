@@ -1,7 +1,7 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
-    shape::{Handle, Shape},
+    shape::{Handle, Shape, ValidationError, ValidationResult},
     topology::{Cycle, Edge, Face},
 };
 use fj_math::Aabb;
@@ -13,7 +13,7 @@ impl ToShape for fj::Difference2d {
         &self,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
-    ) -> Shape {
+    ) -> Result<Shape, ValidationError> {
         // This method assumes that `b` is fully contained within `a`:
         // https://github.com/hannobraun/Fornjot/issues/92
 
@@ -25,7 +25,8 @@ impl ToShape for fj::Difference2d {
         // Can be cleaned up, once `each_ref` is stable:
         // https://doc.rust-lang.org/std/primitive.array.html#method.each_ref
         let [a, b] = self.shapes();
-        let [a, b] = [a, b].map(|shape| shape.to_shape(tolerance, debug_info));
+        let [a, b] =
+            [a, b].map(|shape| shape.to_shape(tolerance, debug_info).unwrap());
 
         if let Some(face) = a.faces().next() {
             // If there's at least one face to subtract from, we can proceed.
@@ -44,11 +45,12 @@ impl ToShape for fj::Difference2d {
 
                 for cycle in face.exteriors.as_handle() {
                     let cycle =
-                        add_cycle(cycle.clone(), &mut difference, false);
+                        add_cycle(cycle.clone(), &mut difference, false)?;
                     exteriors.push(cycle);
                 }
                 for cycle in face.interiors.as_handle() {
-                    let cycle = add_cycle(cycle.clone(), &mut difference, true);
+                    let cycle =
+                        add_cycle(cycle.clone(), &mut difference, true)?;
                     interiors.push(cycle);
                 }
             }
@@ -64,7 +66,8 @@ impl ToShape for fj::Difference2d {
                 );
 
                 for cycle in face.exteriors.as_handle() {
-                    let cycle = add_cycle(cycle.clone(), &mut difference, true);
+                    let cycle =
+                        add_cycle(cycle.clone(), &mut difference, true)?;
                     interiors.push(cycle);
                 }
             }
@@ -74,7 +77,7 @@ impl ToShape for fj::Difference2d {
                 .unwrap();
         }
 
-        difference
+        Ok(difference)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
@@ -89,12 +92,12 @@ fn add_cycle(
     cycle: Handle<Cycle<3>>,
     shape: &mut Shape,
     reverse: bool,
-) -> Handle<Cycle<3>> {
+) -> ValidationResult<Cycle<3>> {
     let mut edges = Vec::new();
     for edge in cycle.get().edges() {
         let curve = edge.curve();
         let curve = if reverse { curve.reverse() } else { curve };
-        let curve = shape.insert(curve).unwrap();
+        let curve = shape.insert(curve)?;
 
         let vertices = edge.vertices.clone().map(|vs| {
             let mut vs = vs.map(|vertex| vertex.canonical());
@@ -106,7 +109,7 @@ fn add_cycle(
             vs
         });
 
-        let edge = shape.merge(Edge::new(curve, vertices)).unwrap();
+        let edge = shape.merge(Edge::new(curve, vertices))?;
         edges.push(edge);
     }
 
@@ -114,5 +117,7 @@ fn add_cycle(
         edges.reverse();
     }
 
-    shape.insert(Cycle::new(edges)).unwrap()
+    let cycle = shape.insert(Cycle::new(edges))?;
+
+    Ok(cycle)
 }
