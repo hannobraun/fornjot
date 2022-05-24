@@ -100,7 +100,7 @@ impl Transform {
         ))
     }
 
-    /// Project transform according to camera specfication, return data as an array.
+    /// Project transform according to camera specification, return data as an array.
     /// Used primarily for graphics code.
     pub fn project_to_array(
         &self,

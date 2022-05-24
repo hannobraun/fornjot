@@ -347,7 +347,7 @@ pub enum InitError {
 
 /// Graphics rendering error
 ///
-/// Describes errors related to non intialization graphics errors.
+/// Describes errors related to non initialization graphics errors.
 #[derive(Error, Debug)]
 pub enum DrawError {
     #[error("Error acquiring output surface: {0}")]
