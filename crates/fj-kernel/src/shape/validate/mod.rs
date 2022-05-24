@@ -1,7 +1,11 @@
+mod geometric;
 mod structural;
 mod uniqueness;
 
-pub use self::{structural::StructuralIssues, uniqueness::UniquenessIssues};
+pub use self::{
+    geometric::GeometricIssues, structural::StructuralIssues,
+    uniqueness::UniquenessIssues,
+};
 
 use fj_math::{Point, Scalar};
 
@@ -17,6 +21,7 @@ pub trait Validate {
         &self,
         handle: Option<&Handle<Self>>,
         min_distance: Scalar,
+        max_distance: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError>
     where
@@ -27,6 +32,7 @@ impl Validate for Point<3> {
     fn validate(
         &self,
         _: Option<&Handle<Self>>,
+        _: Scalar,
         _: Scalar,
         _: &Stores,
     ) -> Result<(), ValidationError> {
@@ -39,6 +45,7 @@ impl Validate for Curve<3> {
         &self,
         _: Option<&Handle<Self>>,
         _: Scalar,
+        _: Scalar,
         _: &Stores,
     ) -> Result<(), ValidationError> {
         Ok(())
@@ -49,6 +56,7 @@ impl Validate for Surface {
     fn validate(
         &self,
         _: Option<&Handle<Self>>,
+        _: Scalar,
         _: Scalar,
         _: &Stores,
     ) -> Result<(), ValidationError> {
@@ -67,6 +75,7 @@ impl Validate for Vertex {
         &self,
         handle: Option<&Handle<Self>>,
         min_distance: Scalar,
+        _: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
         structural::validate_vertex(self, stores)?;
@@ -81,9 +90,12 @@ impl Validate for Edge<3> {
         &self,
         _: Option<&Handle<Self>>,
         _: Scalar,
+        max_distance: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
+        geometric::validate_edge(self, max_distance)?;
         structural::validate_edge(self, stores)?;
+
         Ok(())
     }
 }
@@ -101,6 +113,7 @@ impl Validate for Cycle<3> {
         &self,
         _: Option<&Handle<Self>>,
         _: Scalar,
+        _: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
         structural::validate_cycle(self, stores)?;
@@ -112,6 +125,7 @@ impl Validate for Face {
     fn validate(
         &self,
         _: Option<&Handle<Self>>,
+        _: Scalar,
         _: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
@@ -132,7 +146,7 @@ pub enum ValidationError {
     /// object are upheld. For example, edges or faces might not be allowed to
     /// intersect.
     #[error("Geometric validation failed")]
-    Geometric,
+    Geometric(#[from] GeometricIssues),
 
     /// Structural validation failed
     ///
