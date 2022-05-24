@@ -66,7 +66,7 @@ jobs:
         uses: actions-rs/clippy-check@9d09632661e31982c0be8af59aeb96b680641bc4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all-features
+          args: --all-features -- -D warnings
 
   export:
     name: Validate 3MF Export

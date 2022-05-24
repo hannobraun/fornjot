@@ -16,7 +16,7 @@
 //! [Fornjot]: https://www.fornjot.app/
 //! [Fornjot repository]: https://github.com/hannobraun/Fornjot
 
-#![deny(missing_docs)]
+#![warn(missing_docs)]
 
 pub mod syntax;
 
