@@ -1,7 +1,9 @@
+use fj_math::Point;
+
 use crate::{geometry, shape::LocalForm, topology::Vertex};
 
 pub fn approximate_edge(
-    vertices: Option<[LocalForm<Vertex<1>, Vertex<3>>; 2]>,
+    vertices: Option<[LocalForm<Point<1>, Vertex>; 2]>,
     points: &mut Vec<geometry::Point<1, 3>>,
 ) {
     // Insert the exact vertices of this edge into the approximation. This means
@@ -15,7 +17,7 @@ pub fn approximate_edge(
     let vertices = vertices.map(|vertices| {
         vertices.map(|vertex| {
             geometry::Point::new(
-                *vertex.local().point.local(),
+                *vertex.local(),
                 vertex.canonical().get().point(),
             )
         })
@@ -58,8 +60,8 @@ mod test {
         let v2 = Vertex::builder(&mut shape).build_from_point(d)?;
 
         let vertices = [
-            LocalForm::new(v1.get().with_local_form([0.]), v1),
-            LocalForm::new(v2.get().with_local_form([1.]), v2),
+            LocalForm::new(Point::from([0.]), v1),
+            LocalForm::new(Point::from([1.]), v2),
         ];
 
         let a = geometry::Point::new([0.0], a);

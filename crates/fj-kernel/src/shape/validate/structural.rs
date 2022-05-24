@@ -9,14 +9,12 @@ use crate::{
 };
 
 pub fn validate_vertex(
-    vertex: &Vertex<3>,
+    vertex: &Vertex,
     stores: &Stores,
 ) -> Result<(), StructuralIssues> {
-    let point = vertex.point.canonical();
-
-    if !stores.points.contains(&point) {
+    if !stores.points.contains(&vertex.point) {
         return Err(StructuralIssues {
-            missing_point: Some(point),
+            missing_point: Some(vertex.point.clone()),
             ..StructuralIssues::default()
         });
     }
@@ -119,7 +117,7 @@ pub struct StructuralIssues {
     pub missing_curve: Option<Handle<Curve<3>>>,
 
     /// Missing vertices found in edge validation
-    pub missing_vertices: HashSet<Handle<Vertex<3>>>,
+    pub missing_vertices: HashSet<Handle<Vertex>>,
 
     /// Missing edges found in cycle validation
     pub missing_edges: HashSet<Handle<Edge<3>>>,

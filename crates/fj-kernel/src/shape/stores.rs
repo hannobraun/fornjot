@@ -22,7 +22,7 @@ pub struct Stores {
     pub curves: Store<Curve<3>>,
     pub surfaces: Store<Surface>,
 
-    pub vertices: Store<Vertex<3>>,
+    pub vertices: Store<Vertex>,
     pub edges: Store<Edge<3>>,
     pub cycles: Store<Cycle<3>>,
     pub faces: Store<Face>,

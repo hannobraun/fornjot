@@ -26,9 +26,9 @@ impl<'r> VertexBuilder<'r> {
     pub fn build_from_point(
         self,
         point: impl Into<Point<3>>,
-    ) -> ValidationResult<Vertex<3>> {
+    ) -> ValidationResult<Vertex> {
         let point = self.shape.get_handle_or_insert(point.into())?;
-        let vertex = self.shape.get_handle_or_insert(Vertex::new(point))?;
+        let vertex = self.shape.get_handle_or_insert(Vertex { point })?;
 
         Ok(vertex)
     }
@@ -80,7 +80,7 @@ impl<'r> EdgeBuilder<'r> {
     /// Build a line segment from two vertices
     pub fn build_line_segment_from_vertices(
         self,
-        vertices: [Handle<Vertex<3>>; 2],
+        vertices: [Handle<Vertex>; 2],
     ) -> ValidationResult<Edge<3>> {
         let curve = self.shape.insert(Curve::Line(Line::from_points(
             vertices.clone().map(|vertex| vertex.get().point()),

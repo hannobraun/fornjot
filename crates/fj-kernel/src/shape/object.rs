@@ -26,7 +26,7 @@ impl private::Sealed for Point<3> {}
 impl private::Sealed for Curve<3> {}
 impl private::Sealed for Surface {}
 
-impl private::Sealed for Vertex<3> {}
+impl private::Sealed for Vertex {}
 impl private::Sealed for Edge<3> {}
 impl private::Sealed for Cycle<3> {}
 impl private::Sealed for Face {}
@@ -82,19 +82,16 @@ impl Object for Surface {
     }
 }
 
-impl Object for Vertex<3> {
+impl Object for Vertex {
     fn merge_into(
         self,
         handle: Option<Handle<Self>>,
         shape: &mut Shape,
         mapping: &mut Mapping,
     ) -> ValidationResult<Self> {
-        let point = self.point().merge_into(
-            Some(self.point.canonical()),
-            shape,
-            mapping,
-        )?;
-        let merged = shape.get_handle_or_insert(Vertex::new(point))?;
+        let point =
+            self.point().merge_into(Some(self.point), shape, mapping)?;
+        let merged = shape.get_handle_or_insert(Vertex { point })?;
 
         if let Some(handle) = handle {
             mapping.vertices.insert(handle, merged.clone());

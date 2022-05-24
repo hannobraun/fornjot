@@ -1,5 +1,7 @@
 use std::fmt;
 
+use fj_math::Point;
+
 use crate::{
     geometry::Curve,
     shape::{Handle, LocalForm, Shape},
@@ -32,7 +34,7 @@ pub struct Edge<const D: usize> {
     ///
     /// If there are no such vertices, that means that both the curve and the
     /// edge are continuous (i.e. connected to themselves).
-    pub vertices: Option<[LocalForm<Vertex<1>, Vertex<3>>; 2]>,
+    pub vertices: Option<[LocalForm<Point<1>, Vertex>; 2]>,
 }
 
 impl Edge<3> {
@@ -58,7 +60,7 @@ impl Edge<3> {
     /// <https://github.com/hannobraun/Fornjot/issues/399>
     pub fn new(
         curve: Handle<Curve<3>>,
-        vertices: Option<[Handle<Vertex<3>>; 2]>,
+        vertices: Option<[Handle<Vertex>; 2]>,
     ) -> Self {
         let curve = LocalForm::canonical_only(curve);
 
@@ -69,7 +71,6 @@ impl Edge<3> {
                     .get()
                     .point_to_curve_coords(canonical.get().point())
                     .local();
-                let local = canonical.get().with_local_form(local);
                 LocalForm::new(local, canonical)
             })
         });
@@ -96,7 +97,7 @@ impl<const D: usize> Edge<D> {
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn vertices(&self) -> Option<[Vertex<3>; 2]> {
+    pub fn vertices(&self) -> Option<[Vertex; 2]> {
         self.vertices
             .as_ref()
             .map(|[a, b]| [a.canonical().get(), b.canonical().get()])
