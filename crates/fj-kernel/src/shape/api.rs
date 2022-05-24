@@ -47,7 +47,6 @@ impl Shape {
     ///
     /// This functionality should be exposed to models, eventually. For now it's
     /// just used in unit tests.
-    #[cfg(test)]
     pub fn with_distinct_min_distance(
         mut self,
         distinct_min_distance: impl Into<Scalar>,
