@@ -33,7 +33,7 @@
 //! [nalgebra]: https://nalgebra.org/
 //! [Parry]: https://www.parry.rs/
 
-#![deny(missing_docs)]
+#![warn(missing_docs)]
 
 mod aabb;
 mod circle;

@@ -12,7 +12,7 @@
 //!
 //! [Fornjot]: https://www.fornjot.app/
 
-#![deny(missing_docs)]
+#![warn(missing_docs)]
 
 use std::{fs::File, path::Path};
 

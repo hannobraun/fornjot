@@ -85,7 +85,7 @@
 //!
 //! [Fornjot]: https://www.fornjot.app/
 
-#![deny(missing_docs)]
+#![warn(missing_docs)]
 
 pub mod algorithms;
 pub mod geometry;

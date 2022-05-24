@@ -14,7 +14,7 @@
 //! [Fornjot]: https://www.fornjot.app/
 //! [`fj`]: https://crates.io/crates/fj
 
-#![deny(missing_docs)]
+#![warn(missing_docs)]
 
 pub mod shape_processor;
 
