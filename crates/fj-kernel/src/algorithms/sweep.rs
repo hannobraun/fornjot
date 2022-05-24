@@ -20,12 +20,18 @@ pub fn sweep_shape(
     let translation = Transform::translation(path);
 
     let (mut bottom, source_to_bottom) = source.clone_shape();
-    bottom
-        .update()
-        .update_all(|surface: &mut Surface| *surface = surface.reverse())
-        .validate()?;
-
     let (mut top, source_to_top) = source.clone_shape();
+
+    if path.dot(&Vector::from([0., 0., 1.])) >= fj_math::Scalar::from_f64(0.) {
+        bottom
+            .update()
+            .update_all(|surface: &mut Surface| *surface = surface.reverse())
+            .validate()?;
+    } else {
+        top.update()
+            .update_all(|surface: &mut Surface| *surface = surface.reverse())
+            .validate()?;
+    }
     transform_shape(&mut top, &translation);
 
     let mut target = Shape::new();
