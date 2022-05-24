@@ -12,11 +12,9 @@ pub fn validate_vertex(
     vertex: &Vertex<3>,
     stores: &Stores,
 ) -> Result<(), StructuralIssues> {
-    let point = vertex.point.canonical();
-
-    if !stores.points.contains(&point) {
+    if !stores.points.contains(&vertex.point) {
         return Err(StructuralIssues {
-            missing_point: Some(point),
+            missing_point: Some(vertex.point.clone()),
             ..StructuralIssues::default()
         });
     }

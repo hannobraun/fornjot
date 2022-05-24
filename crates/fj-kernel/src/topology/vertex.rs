@@ -2,7 +2,7 @@ use std::hash::Hash;
 
 use fj_math::Point;
 
-use crate::shape::{Handle, LocalForm, Shape};
+use crate::shape::{Handle, Shape};
 
 use super::VertexBuilder;
 
@@ -33,15 +33,13 @@ use super::VertexBuilder;
 #[derive(Clone, Debug, Eq, Ord, PartialOrd)]
 pub struct Vertex<const D: usize> {
     /// The point that defines the location of the vertex
-    pub point: LocalForm<Point<D>, Point<3>>,
+    pub point: Handle<Point<3>>,
 }
 
 impl Vertex<3> {
     /// Construct a new instance of `Vertex`
     pub fn new(point: Handle<Point<3>>) -> Self {
-        Self {
-            point: LocalForm::new(point.get(), point),
-        }
+        Self { point }
     }
 
     /// Build a vertex using the [`VertexBuilder`] API
@@ -54,18 +52,18 @@ impl Vertex<3> {
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`].
     pub fn point(&self) -> Point<3> {
-        self.point.canonical().get()
+        self.point.get()
     }
 }
 
 impl<const D: usize> PartialEq for Vertex<D> {
     fn eq(&self, other: &Self) -> bool {
-        self.point == other.point
+        self.point.get() == other.point.get()
     }
 }
 
 impl<const D: usize> Hash for Vertex<D> {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.point.hash(state);
+        self.point.get().hash(state);
     }
 }

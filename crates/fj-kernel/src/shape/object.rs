@@ -89,11 +89,8 @@ impl Object for Vertex<3> {
         shape: &mut Shape,
         mapping: &mut Mapping,
     ) -> ValidationResult<Self> {
-        let point = self.point().merge_into(
-            Some(self.point.canonical()),
-            shape,
-            mapping,
-        )?;
+        let point =
+            self.point().merge_into(Some(self.point), shape, mapping)?;
         let merged = shape.get_handle_or_insert(Vertex::new(point))?;
 
         if let Some(handle) = handle {
