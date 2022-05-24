@@ -63,7 +63,7 @@ fn main() -> anyhow::Result<()> {
 
     if let Some(path) = args.export {
         let shape = model.load_once(&parameters)?;
-        let shape = shape_processor.process(&shape);
+        let shape = shape_processor.process(&shape)?;
 
         export(&shape.mesh, &path)?;
 

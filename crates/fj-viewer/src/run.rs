@@ -47,7 +47,7 @@ pub fn run(
         let now = Instant::now();
 
         if let Some(new_shape) = watcher.receive() {
-            let new_shape = shape_processor.process(&new_shape);
+            let new_shape = shape_processor.process(&new_shape).unwrap();
             renderer.update_geometry(
                 (&new_shape.mesh).into(),
                 (&new_shape.debug_info).into(),

@@ -1,7 +1,10 @@
 //! API for processing shapes
 
 use fj_interop::{debug::DebugInfo, mesh::Mesh};
-use fj_kernel::algorithms::{triangulate, Tolerance};
+use fj_kernel::{
+    algorithms::{triangulate, Tolerance},
+    shape::ValidationError,
+};
 use fj_math::{Aabb, Point, Scalar};
 
 use crate::ToShape as _;
@@ -14,7 +17,10 @@ pub struct ShapeProcessor {
 
 impl ShapeProcessor {
     /// Process an [`fj::Shape`] into [`ProcessedShape`]
-    pub fn process(&self, shape: &fj::Shape) -> ProcessedShape {
+    pub fn process(
+        &self,
+        shape: &fj::Shape,
+    ) -> Result<ProcessedShape, ValidationError> {
         let aabb = shape.bounding_volume();
 
         let tolerance = match self.tolerance {
@@ -37,16 +43,16 @@ impl ShapeProcessor {
 
         let mut debug_info = DebugInfo::new();
         let mesh = triangulate(
-            shape.to_shape(tolerance, &mut debug_info).unwrap(),
+            shape.to_shape(tolerance, &mut debug_info)?,
             tolerance,
             &mut debug_info,
         );
 
-        ProcessedShape {
+        Ok(ProcessedShape {
             aabb,
             mesh,
             debug_info,
-        }
+        })
     }
 }
 
