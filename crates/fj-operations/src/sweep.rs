@@ -3,7 +3,7 @@ use fj_kernel::{
     algorithms::{sweep_shape, Tolerance},
     shape::Shape,
 };
-use fj_math::{Aabb, Point, Vector};
+use fj_math::{Aabb, Vector};
 
 use super::ToShape;
 
