@@ -42,11 +42,6 @@ impl Shape {
     /// Override the minimum distance between distinct objects
     ///
     /// Used for vertex validation, to determine whether vertices are unique.
-    ///
-    /// # Implementation note
-    ///
-    /// This functionality should be exposed to models, eventually. For now it's
-    /// just used in unit tests.
     pub fn with_distinct_min_distance(
         mut self,
         distinct_min_distance: impl Into<Scalar>,
