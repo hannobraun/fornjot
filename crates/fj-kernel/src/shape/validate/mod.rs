@@ -90,10 +90,12 @@ impl Validate for Edge<3> {
         &self,
         _: Option<&Handle<Self>>,
         _: Scalar,
-        _: Scalar,
+        max_distance: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
+        geometric::validate_edge(self, max_distance)?;
         structural::validate_edge(self, stores)?;
+
         Ok(())
     }
 }
