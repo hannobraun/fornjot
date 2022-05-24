@@ -56,16 +56,6 @@ impl Vertex<3> {
     pub fn point(&self) -> Point<3> {
         self.point.canonical().get()
     }
-
-    /// Add a local form of the point to the vertex
-    pub fn with_local_form<const D: usize>(
-        self,
-        local: impl Into<Point<D>>,
-    ) -> Vertex<D> {
-        Vertex {
-            point: LocalForm::new(local.into(), self.point.canonical()),
-        }
-    }
 }
 
 impl<const D: usize> PartialEq for Vertex<D> {
