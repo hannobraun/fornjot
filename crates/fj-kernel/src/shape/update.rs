@@ -8,14 +8,20 @@ use super::{stores::Stores, validate::Validate as _, Object, ValidationError};
 #[must_use]
 pub struct Update<'r> {
     min_distance: Scalar,
+    max_distance: Scalar,
     stores: &'r mut Stores,
     executed: bool,
 }
 
 impl<'r> Update<'r> {
-    pub(super) fn new(min_distance: Scalar, stores: &'r mut Stores) -> Self {
+    pub(super) fn new(
+        min_distance: Scalar,
+        max_distance: Scalar,
+        stores: &'r mut Stores,
+    ) -> Self {
         Self {
             min_distance,
+            max_distance,
             stores,
             executed: false,
         }
@@ -46,6 +52,7 @@ impl<'r> Update<'r> {
                 object.get().validate(
                     Some(&object),
                     self.min_distance,
+                    self.max_distance,
                     self.stores,
                 )?;
             }
@@ -53,6 +60,7 @@ impl<'r> Update<'r> {
                 object.get().validate(
                     Some(&object),
                     self.min_distance,
+                    self.max_distance,
                     self.stores,
                 )?;
             }
@@ -60,6 +68,7 @@ impl<'r> Update<'r> {
                 object.get().validate(
                     Some(&object),
                     self.min_distance,
+                    self.max_distance,
                     self.stores,
                 )?;
             }
@@ -67,6 +76,7 @@ impl<'r> Update<'r> {
                 object.get().validate(
                     Some(&object),
                     self.min_distance,
+                    self.max_distance,
                     self.stores,
                 )?;
             }
@@ -74,6 +84,7 @@ impl<'r> Update<'r> {
                 object.get().validate(
                     Some(&object),
                     self.min_distance,
+                    self.max_distance,
                     self.stores,
                 )?;
             }
@@ -81,6 +92,7 @@ impl<'r> Update<'r> {
                 object.get().validate(
                     Some(&object),
                     self.min_distance,
+                    self.max_distance,
                     self.stores,
                 )?;
             }
@@ -88,6 +100,7 @@ impl<'r> Update<'r> {
                 object.get().validate(
                     Some(&object),
                     self.min_distance,
+                    self.max_distance,
                     self.stores,
                 )?;
             }

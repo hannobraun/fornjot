@@ -21,6 +21,7 @@ pub trait Validate {
         &self,
         handle: Option<&Handle<Self>>,
         min_distance: Scalar,
+        max_distance: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError>
     where
@@ -31,6 +32,7 @@ impl Validate for Point<3> {
     fn validate(
         &self,
         _: Option<&Handle<Self>>,
+        _: Scalar,
         _: Scalar,
         _: &Stores,
     ) -> Result<(), ValidationError> {
@@ -43,6 +45,7 @@ impl Validate for Curve<3> {
         &self,
         _: Option<&Handle<Self>>,
         _: Scalar,
+        _: Scalar,
         _: &Stores,
     ) -> Result<(), ValidationError> {
         Ok(())
@@ -53,6 +56,7 @@ impl Validate for Surface {
     fn validate(
         &self,
         _: Option<&Handle<Self>>,
+        _: Scalar,
         _: Scalar,
         _: &Stores,
     ) -> Result<(), ValidationError> {
@@ -71,6 +75,7 @@ impl Validate for Vertex {
         &self,
         handle: Option<&Handle<Self>>,
         min_distance: Scalar,
+        _: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
         structural::validate_vertex(self, stores)?;
@@ -84,6 +89,7 @@ impl Validate for Edge<3> {
     fn validate(
         &self,
         _: Option<&Handle<Self>>,
+        _: Scalar,
         _: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
@@ -105,6 +111,7 @@ impl Validate for Cycle<3> {
         &self,
         _: Option<&Handle<Self>>,
         _: Scalar,
+        _: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
         structural::validate_cycle(self, stores)?;
@@ -116,6 +123,7 @@ impl Validate for Face {
     fn validate(
         &self,
         _: Option<&Handle<Self>>,
+        _: Scalar,
         _: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
