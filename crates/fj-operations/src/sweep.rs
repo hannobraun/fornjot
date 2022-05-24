@@ -23,7 +23,13 @@ impl ToShape for fj::Sweep {
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
-        let target = Point::origin() + self.path();
-        self.shape().bounding_volume().include_point(&target)
+        self.shape()
+            .bounding_volume()
+            .merged(&Aabb::<3>::from_points(
+                self.shape()
+                    .bounding_volume()
+                    .vertices()
+                    .map(|v| v + self.path()),
+            ))
     }
 }
