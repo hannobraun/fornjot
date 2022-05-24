@@ -8,8 +8,8 @@ use crate::{
 };
 
 pub fn validate_vertex(
-    vertex: &Vertex<3>,
-    handle: Option<&Handle<Vertex<3>>>,
+    vertex: &Vertex,
+    handle: Option<&Handle<Vertex>>,
     min_distance: Scalar,
     stores: &Stores,
 ) -> Result<(), UniquenessIssues> {

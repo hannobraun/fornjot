@@ -14,7 +14,7 @@ pub struct Mapping {
     pub(super) points: OneMapping<Point<3>>,
     pub(super) curves: OneMapping<Curve<3>>,
     pub(super) surfaces: OneMapping<Surface>,
-    pub(super) vertices: OneMapping<Vertex<3>>,
+    pub(super) vertices: OneMapping<Vertex>,
     pub(super) edges: OneMapping<Edge<3>>,
     pub(super) cycles: OneMapping<Cycle<3>>,
     pub(super) faces: OneMapping<Face>,
@@ -49,7 +49,7 @@ impl Mapping {
     }
 
     /// Access iterator over the mapped vertices
-    pub fn vertices(&self) -> &OneMapping<Vertex<3>> {
+    pub fn vertices(&self) -> &OneMapping<Vertex> {
         &self.vertices
     }
 

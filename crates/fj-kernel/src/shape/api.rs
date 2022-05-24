@@ -226,7 +226,7 @@ impl Shape {
     /// Access iterator over all vertices
     ///
     /// The caller must not make any assumptions about the order of vertices.
-    pub fn vertices(&self) -> Iter<Vertex<3>> {
+    pub fn vertices(&self) -> Iter<Vertex> {
         self.stores.vertices.iter()
     }
 

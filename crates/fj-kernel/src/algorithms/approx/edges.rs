@@ -3,7 +3,7 @@ use fj_math::Point;
 use crate::{geometry, shape::LocalForm, topology::Vertex};
 
 pub fn approximate_edge(
-    vertices: Option<[LocalForm<Point<1>, Vertex<3>>; 2]>,
+    vertices: Option<[LocalForm<Point<1>, Vertex>; 2]>,
     points: &mut Vec<geometry::Point<1, 3>>,
 ) {
     // Insert the exact vertices of this edge into the approximation. This means

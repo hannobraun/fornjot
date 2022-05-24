@@ -56,7 +56,7 @@ impl Validate for Surface {
     }
 }
 
-impl Validate for Vertex<3> {
+impl Validate for Vertex {
     /// Validate the vertex
     ///
     /// # Implementation note
@@ -163,7 +163,7 @@ impl ValidationError {
 
     /// Indicate whether validation found a missing vertex
     #[cfg(test)]
-    pub fn missing_vertex(&self, vertex: &Handle<Vertex<3>>) -> bool {
+    pub fn missing_vertex(&self, vertex: &Handle<Vertex>) -> bool {
         if let Self::Structural(StructuralIssues {
             missing_vertices, ..
         }) = self

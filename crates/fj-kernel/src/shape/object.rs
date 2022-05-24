@@ -26,7 +26,7 @@ impl private::Sealed for Point<3> {}
 impl private::Sealed for Curve<3> {}
 impl private::Sealed for Surface {}
 
-impl private::Sealed for Vertex<3> {}
+impl private::Sealed for Vertex {}
 impl private::Sealed for Edge<3> {}
 impl private::Sealed for Cycle<3> {}
 impl private::Sealed for Face {}
@@ -82,7 +82,7 @@ impl Object for Surface {
     }
 }
 
-impl Object for Vertex<3> {
+impl Object for Vertex {
     fn merge_into(
         self,
         handle: Option<Handle<Self>>,

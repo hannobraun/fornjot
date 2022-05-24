@@ -31,12 +31,12 @@ use super::VertexBuilder;
 /// between distinct vertices can be configured using
 /// [`Shape::with_minimum_distance`].
 #[derive(Clone, Debug, Eq, Ord, PartialOrd)]
-pub struct Vertex<const D: usize> {
+pub struct Vertex {
     /// The point that defines the location of the vertex
     pub point: Handle<Point<3>>,
 }
 
-impl Vertex<3> {
+impl Vertex {
     /// Construct a new instance of `Vertex`
     pub fn new(point: Handle<Point<3>>) -> Self {
         Self { point }
@@ -56,14 +56,14 @@ impl Vertex<3> {
     }
 }
 
-impl<const D: usize> PartialEq for Vertex<D> {
+impl PartialEq for Vertex {
     fn eq(&self, other: &Self) -> bool {
-        self.point.get() == other.point.get()
+        self.point() == other.point()
     }
 }
 
-impl<const D: usize> Hash for Vertex<D> {
+impl Hash for Vertex {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.point.get().hash(state);
+        self.point().hash(state);
     }
 }
