@@ -124,11 +124,22 @@ pub fn sweep_shape(
                 let top_edge =
                     source_to_top.edges().get(&edge_source).unwrap().clone();
 
-                let surface =
+                let surface = if path.dot(&Vector::from([0., 0., 1.]))
+                    >= fj_math::Scalar::from_f64(0.)
+                {
                     target.insert(Surface::SweptCurve(SweptCurve {
                         curve: bottom_edge.get().curve(),
                         path,
-                    }))?;
+                    }))?
+                } else {
+                    target.insert(
+                        Surface::SweptCurve(SweptCurve {
+                            curve: bottom_edge.get().curve(),
+                            path,
+                        })
+                        .reverse(), ////////////////////////////////////
+                    )?
+                };
 
                 let cycle = target.merge(Cycle::new(vec![
                     bottom_edge,
