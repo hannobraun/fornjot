@@ -10,6 +10,7 @@ members = [
     "crates/fj-math",
     "crates/fj-operations",
     "crates/fj-viewer",
+    "crates/fj-proc",
 
     "crates/fj-window",
 
