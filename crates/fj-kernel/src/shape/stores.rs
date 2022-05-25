@@ -201,7 +201,7 @@ impl<T: Object> Handle<T> {
             // Can't panic, unless the handle was invalid in the first place.
             // Objects are never removed from `Store`, so if we have a handle
             // pointing to it, it should be there.
-            .unwrap()
+            .expect("Invalid handle")
             .clone()
     }
 }

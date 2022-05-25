@@ -112,6 +112,6 @@ impl<'r> Update<'r> {
 
 impl Drop for Update<'_> {
     fn drop(&mut self) {
-        self.validate_inner().unwrap();
+        self.validate_inner().expect("Dropped invalid update");
     }
 }
