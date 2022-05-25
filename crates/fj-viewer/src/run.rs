@@ -27,7 +27,7 @@ pub fn run(
     shape_processor: ShapeProcessor,
 ) -> Result<(), graphics::InitError> {
     let event_loop = EventLoop::new();
-    let window = Window::new(&event_loop);
+    let window = Window::new(&event_loop).unwrap();
 
     let mut previous_time = Instant::now();
 

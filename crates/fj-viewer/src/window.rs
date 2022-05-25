@@ -13,16 +13,15 @@ impl Window {
     /// let event_loop = winit::event_loop::EventLoop::new();
     /// let window = fj_viewer::window::Window::new(&event_loop);
     /// ```
-    pub fn new(event_loop: &EventLoop<()>) -> Self {
+    pub fn new(event_loop: &EventLoop<()>) -> Result<Self, Error> {
         let window = WindowBuilder::new()
             .with_title("Fornjot")
             .with_maximized(true)
             .with_decorations(true)
             .with_transparent(false)
-            .build(event_loop)
-            .unwrap();
+            .build(event_loop)?;
 
-        Self(window)
+        Ok(Self(window))
     }
 
     /// Returns a shared reference to the wrapped window
@@ -40,3 +39,8 @@ impl Window {
         self.0.inner_size().height
     }
 }
+
+/// Error initializing window
+#[derive(Debug, thiserror::Error)]
+#[error("Error initializing window")]
+pub struct Error(#[from] pub winit::error::OsError);
