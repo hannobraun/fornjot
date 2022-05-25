@@ -47,18 +47,22 @@ pub fn run(
         let now = Instant::now();
 
         if let Some(new_shape) = watcher.receive() {
-            let new_shape = shape_processor.process(&new_shape).unwrap();
-            renderer.update_geometry(
-                (&new_shape.mesh).into(),
-                (&new_shape.debug_info).into(),
-                new_shape.aabb,
-            );
+            match shape_processor.process(&new_shape) {
+                Ok(new_shape) => {
+                    renderer.update_geometry(
+                        (&new_shape.mesh).into(),
+                        (&new_shape.debug_info).into(),
+                        new_shape.aabb,
+                    );
 
-            if camera.is_none() {
-                camera = Some(Camera::new(&new_shape.aabb));
+                    if camera.is_none() {
+                        camera = Some(Camera::new(&new_shape.aabb));
+                    }
+
+                    shape = Some(new_shape);
+                }
+                Err(err) => println!("Shape processing error: {}", err),
             }
-
-            shape = Some(new_shape);
         }
 
         match event {
