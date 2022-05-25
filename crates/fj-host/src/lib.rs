@@ -53,7 +53,9 @@ impl Model {
             // Can't panic. It only would, if the path ends with "..", and we
             // are canonicalizing it here to prevent that.
             let canonical = path.canonicalize()?;
-            let file_name = canonical.file_name().unwrap();
+            let file_name = canonical
+                .file_name()
+                .expect("Expected path to be canonical");
 
             file_name.to_string_lossy().replace('-', "_")
         };
@@ -181,9 +183,8 @@ impl Model {
                     // is probably the result of a panic on that thread, or the
                     // application is being shut down.
                     //
-                    // Either way, not much we can do about it here, except
-                    // maybe to provide a better error message in the future.
-                    tx.send(()).unwrap();
+                    // Either way, not much we can do about it here.
+                    tx.send(()).expect("Channel is disconnected");
                 }
             },
         )?;
@@ -196,7 +197,7 @@ impl Model {
         //
         // Will panic, if the receiving end has panicked. Not much we can do
         // about that, if it happened.
-        thread::spawn(move || tx2.send(()).unwrap());
+        thread::spawn(move || tx2.send(()).expect("Channel is disconnected"));
 
         Ok(Watcher {
             _watcher: Box::new(watcher),
