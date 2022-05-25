@@ -25,7 +25,7 @@ use crate::{
 pub fn run(
     watcher: Watcher,
     shape_processor: ShapeProcessor,
-) -> Result<(), graphics::InitError> {
+) -> Result<(), Error> {
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop).unwrap();
 
@@ -158,4 +158,12 @@ pub fn run(
             draw_config.draw_debug = !draw_config.draw_debug;
         }
     });
+}
+
+/// Error in main loop
+#[derive(Debug, thiserror::Error)]
+pub enum Error {
+    /// Error initializing graphics
+    #[error("Error initializing graphics")]
+    GraphicsInit(#[from] graphics::InitError),
 }
