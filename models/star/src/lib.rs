@@ -54,7 +54,7 @@ pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
         inner.push([x / 2., y / 2.]);
     }
 
-    let outer = fj::Sketch::from_points(outer).with_color([0, 255, 0, 200]);
+    let outer = fj::Sketch::from_points(outer);
     let inner = fj::Sketch::from_points(inner);
 
     let footprint = fj::Difference2d::from_shapes([outer.into(), inner.into()]);

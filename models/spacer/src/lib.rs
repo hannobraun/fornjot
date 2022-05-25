@@ -20,8 +20,7 @@ pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
         .parse()
         .expect("Could not parse parameter `height`");
 
-    let outer_edge =
-        fj::Circle::from_radius(outer).with_color([0, 0, 255, 255]);
+    let outer_edge = fj::Circle::from_radius(outer);
     let inner_edge = fj::Circle::from_radius(inner);
 
     let footprint = outer_edge.difference(&inner_edge);

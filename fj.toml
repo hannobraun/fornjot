@@ -4,7 +4,7 @@ default_path = "models"
 
 # The default models that is loaded, if none is specified. If this is a relative
 # path, it should be relative to `default_path`.
-default_model = "star"
+default_model = "test"
 
 # The `target/` directory, where compiled model libraries are located. By
 # default, this is expected to be in the model directory.
