@@ -15,11 +15,11 @@ pub fn validate_edge(
     // the vertices lie on the curve.
     if let Some(vertices) = &edge.vertices {
         for vertex in vertices {
-            let local_point =
+            let local_3d =
                 edge.curve().point_from_curve_coords(*vertex.local());
 
             let distance =
-                (local_point - vertex.canonical().get().point()).magnitude();
+                (local_3d - vertex.canonical().get().point()).magnitude();
 
             if distance > max_distance {
                 return Err(GeometricIssues);
