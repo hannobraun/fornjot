@@ -18,7 +18,7 @@ use crate::{
     camera::Camera,
     graphics::{self, DrawConfig, Renderer},
     input,
-    window::Window,
+    window::{self, Window},
 };
 
 /// Initializes a model viewer for a given model and enters its process loop.
@@ -27,7 +27,7 @@ pub fn run(
     shape_processor: ShapeProcessor,
 ) -> Result<(), Error> {
     let event_loop = EventLoop::new();
-    let window = Window::new(&event_loop).unwrap();
+    let window = Window::new(&event_loop)?;
 
     let mut previous_time = Instant::now();
 
@@ -163,6 +163,10 @@ pub fn run(
 /// Error in main loop
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
+    /// Error initializing window
+    #[error("Error initializing window")]
+    WindowInit(#[from] window::Error),
+
     /// Error initializing graphics
     #[error("Error initializing graphics")]
     GraphicsInit(#[from] graphics::InitError),
