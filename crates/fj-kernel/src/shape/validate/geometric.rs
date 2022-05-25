@@ -55,7 +55,16 @@ pub struct GeometricIssues {
 
 impl fmt::Display for GeometricIssues {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Geometric issues found")?;
+        writeln!(f, "Geometric issues found:")?;
+
+        if !self.edge_vertex_mismatches.is_empty() {
+            writeln!(f, "- Edge vertex mismatches:")?;
+
+            for mismatch in &self.edge_vertex_mismatches {
+                writeln!(f, "  - {}", mismatch)?;
+            }
+        }
+
         Ok(())
     }
 }
@@ -74,6 +83,16 @@ pub struct EdgeVertexMismatch {
 
     /// The distance between the local and canonical forms
     pub distance: Scalar,
+}
+
+impl fmt::Display for EdgeVertexMismatch {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "local: {:?} (in 3D: {:?}), canonical: {:?}, distance: {}",
+            self.local, self.local_3d, self.canonical, self.distance
+        )
+    }
 }
 
 #[cfg(test)]
