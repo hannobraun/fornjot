@@ -34,7 +34,7 @@ pub fn sweep_shape(
             .update_all(|surface: &mut Surface| *surface = surface.reverse())
             .validate()?;
     }
-    transform_shape(&mut top, &translation);
+    transform_shape(&mut top, &translation)?;
 
     let mut target = Shape::new();
     target.merge_shape(&bottom)?;

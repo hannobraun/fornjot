@@ -16,7 +16,7 @@ impl ToShape for fj::Transform {
         let mut shape = self.shape.to_shape(tolerance, debug_info)?;
         let transform = transform(self);
 
-        transform_shape(&mut shape, &transform);
+        transform_shape(&mut shape, &transform)?;
 
         Ok(shape)
     }
