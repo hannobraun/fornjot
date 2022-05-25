@@ -110,14 +110,13 @@ impl Transform {
         zfar: f64,
     ) -> [Scalar; 16] {
         let projection = Perspective3::new(aspect_ratio, fovy, znear, zfar);
-        (projection.to_projective() * self.0)
-            .matrix()
-            .as_slice()
-            .iter()
-            .map(|f| Scalar::from(*f))
-            .collect::<Vec<Scalar>>()
-            .try_into()
-            .unwrap()
+
+        let mut array = [0.; 16];
+        array.copy_from_slice(
+            (projection.to_projective() * self.0).matrix().as_slice(),
+        );
+
+        array.map(Scalar::from)
     }
 
     /// Transform the given axis-aligned bounding box
