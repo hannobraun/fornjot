@@ -15,7 +15,8 @@ use super::{
     uniforms::Uniforms, vertices::Vertices, DEPTH_FORMAT,
 };
 
-#[derive(Debug)]
+// Temporarily removed due to egui fields not implementing `Debug`.
+/* #[derive(Debug)] */
 pub struct Renderer {
     surface: wgpu::Surface,
     device: wgpu::Device,
