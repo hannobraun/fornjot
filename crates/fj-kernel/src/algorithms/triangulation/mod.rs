@@ -104,7 +104,7 @@ mod tests {
             .with_exterior_polygon([a, b, c, d])
             .build()?;
 
-        let triangles = triangulate(shape);
+        let triangles = triangulate(shape)?;
         assert!(triangles.contains_triangle([a, b, d]));
         assert!(triangles.contains_triangle([b, c, d]));
         assert!(!triangles.contains_triangle([a, b, c]));
@@ -132,7 +132,7 @@ mod tests {
             .with_interior_polygon([e, f, g, h])
             .build()?;
 
-        let triangles = triangulate(shape);
+        let triangles = triangulate(shape)?;
 
         // Should contain some triangles from the polygon. Don't need to test
         // them all.
@@ -148,10 +148,10 @@ mod tests {
         Ok(())
     }
 
-    fn triangulate(shape: Shape) -> Mesh<Point<3>> {
-        let tolerance = Tolerance::from_scalar(Scalar::ONE).unwrap();
+    fn triangulate(shape: Shape) -> anyhow::Result<Mesh<Point<3>>> {
+        let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
 
         let mut debug_info = DebugInfo::new();
-        super::triangulate(shape, tolerance, &mut debug_info)
+        Ok(super::triangulate(shape, tolerance, &mut debug_info))
     }
 }

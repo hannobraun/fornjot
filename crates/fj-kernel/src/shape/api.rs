@@ -292,7 +292,7 @@ mod tests {
 
     use crate::{
         geometry::{Curve, Surface},
-        shape::{Handle, Shape, ValidationError},
+        shape::{Handle, Shape, ValidationError, ValidationResult},
         topology::{Cycle, Edge, Face, Vertex},
     };
 
@@ -378,7 +378,7 @@ mod tests {
         let mut shape = TestShape::new();
         let mut other = TestShape::new();
 
-        let curve = other.add_curve();
+        let curve = other.add_curve()?;
         let a = Vertex::builder(&mut other).build_from_point([1., 0., 0.])?;
         let b = Vertex::builder(&mut other).build_from_point([2., 0., 0.])?;
 
@@ -390,7 +390,7 @@ mod tests {
         assert!(err.missing_vertex(&a));
         assert!(err.missing_vertex(&b));
 
-        let curve = shape.add_curve();
+        let curve = shape.add_curve()?;
         let a = Vertex::builder(&mut shape).build_from_point([1., 0., 0.])?;
         let b = Vertex::builder(&mut shape).build_from_point([2., 0., 0.])?;
 
@@ -422,7 +422,7 @@ mod tests {
         let mut shape = TestShape::new();
         let mut other = TestShape::new();
 
-        let surface = other.add_surface();
+        let surface = other.add_surface()?;
         let cycle = other.add_cycle()?;
 
         // Nothing has been added to `shape`. Should fail.
@@ -437,7 +437,7 @@ mod tests {
         assert!(err.missing_surface(&surface));
         assert!(err.missing_cycle(&cycle));
 
-        let surface = shape.add_surface();
+        let surface = shape.add_surface()?;
         let cycle = shape.add_cycle()?;
 
         // Everything has been added to `shape` now. Should work!
@@ -464,12 +464,12 @@ mod tests {
             }
         }
 
-        fn add_curve(&mut self) -> Handle<Curve<3>> {
-            self.insert(Curve::x_axis()).unwrap()
+        fn add_curve(&mut self) -> ValidationResult<Curve<3>> {
+            self.insert(Curve::x_axis())
         }
 
-        fn add_surface(&mut self) -> Handle<Surface> {
-            self.insert(Surface::xy_plane()).unwrap()
+        fn add_surface(&mut self) -> ValidationResult<Surface> {
+            self.insert(Surface::xy_plane())
         }
 
         fn add_edge(&mut self) -> anyhow::Result<Handle<Edge<3>>> {

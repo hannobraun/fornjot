@@ -115,7 +115,7 @@ impl Ord for Scalar {
     fn cmp(&self, other: &Self) -> cmp::Ordering {
         // Should never panic, as `from_f64` checks that the wrapped value is
         // finite.
-        self.partial_cmp(other).unwrap()
+        self.partial_cmp(other).expect("Invalid `Scalar`")
     }
 }
 

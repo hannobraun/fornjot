@@ -47,7 +47,8 @@ where
     S: Into<Scalar>,
 {
     fn from(scalar: S) -> Self {
-        Self::from_scalar(scalar).unwrap()
+        Self::from_scalar(scalar)
+            .expect("Tried to create `Tolerance` from invalid value")
     }
 }
 

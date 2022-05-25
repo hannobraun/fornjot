@@ -2,7 +2,7 @@ use fj_math::Transform;
 
 use crate::{
     geometry::{Curve, Surface},
-    shape::Shape,
+    shape::{Shape, ValidationError},
     topology::Face,
 };
 
@@ -10,7 +10,10 @@ use crate::{
 ///
 /// Since the topological types refer to geometry, and don't contain any
 /// geometry themselves, this transforms the whole shape.
-pub fn transform_shape(shape: &mut Shape, transform: &Transform) {
+pub fn transform_shape(
+    shape: &mut Shape,
+    transform: &Transform,
+) -> Result<(), ValidationError> {
     shape
         .update()
         .update_all(|point| *point = transform.transform_point(point))
@@ -26,6 +29,7 @@ pub fn transform_shape(shape: &mut Shape, transform: &Transform) {
                 }
             }
         })
-        .validate()
-        .unwrap();
+        .validate()?;
+
+    Ok(())
 }
