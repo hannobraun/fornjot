@@ -93,7 +93,7 @@ mod tests {
     fn for_face_closed() -> anyhow::Result<()> {
         // Test a closed face, i.e. one that is completely encircled by edges.
 
-        let tolerance = Tolerance::from_scalar(Scalar::ONE).unwrap();
+        let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
 
         let mut shape = Shape::new();
 
