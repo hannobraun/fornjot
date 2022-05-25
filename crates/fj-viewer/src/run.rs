@@ -3,7 +3,7 @@
 //! Provides the functionality to create a window and perform basic viewing
 //! with programmed models.
 
-use std::time::Instant;
+use std::{error, time::Instant};
 
 use fj_host::Watcher;
 use fj_operations::shape_processor::ShapeProcessor;
@@ -61,7 +61,21 @@ pub fn run(
 
                     shape = Some(new_shape);
                 }
-                Err(err) => println!("Shape processing error: {}", err),
+                Err(err) => {
+                    // Can be cleaned up, once `Report` is stable:
+                    // https://doc.rust-lang.org/std/error/struct.Report.html
+
+                    println!("Shape processing error: {}", err);
+
+                    let mut current_err = &err as &dyn error::Error;
+                    while let Some(err) = current_err.source() {
+                        println!();
+                        println!("Caused by:");
+                        println!("    {}", err);
+
+                        current_err = err;
+                    }
+                }
             }
         }
 
