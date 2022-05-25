@@ -26,8 +26,7 @@ impl ToShape for fj::Sketch {
 
         Face::builder(surface, &mut shape)
             .with_exterior_polygon(points)
-            .build()
-            .unwrap();
+            .build()?;
 
         Ok(shape)
     }
