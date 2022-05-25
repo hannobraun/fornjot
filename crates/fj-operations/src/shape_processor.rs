@@ -2,7 +2,7 @@
 
 use fj_interop::{debug::DebugInfo, mesh::Mesh};
 use fj_kernel::{
-    algorithms::{triangulate, Tolerance},
+    algorithms::{triangulate, InvalidTolerance, Tolerance},
     shape::ValidationError,
 };
 use fj_math::{Aabb, Point, Scalar};
@@ -33,7 +33,7 @@ impl ShapeProcessor {
                 }
 
                 let tolerance = min_extent / Scalar::from_f64(1000.);
-                Tolerance::from_scalar(tolerance).unwrap()
+                Tolerance::from_scalar(tolerance)?
             }
             Some(user_defined_tolerance) => user_defined_tolerance,
         };
@@ -73,4 +73,8 @@ pub enum Error {
     /// Error converting to shape
     #[error("Error converting to shape")]
     ToShape(#[from] ValidationError),
+
+    /// Model has zero size
+    #[error("Model has an zero size")]
+    Extent(#[from] InvalidTolerance),
 }
