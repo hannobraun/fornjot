@@ -39,42 +39,11 @@ pub struct Edge<const D: usize> {
 
 impl Edge<3> {
     /// Construct an instance of `Edge`
-    ///
-    /// # Implementation Note
-    ///
-    /// This method accepts two `Handle<Vertex>`, and projects them onto the
-    /// curve, to create the local representation that is stored in `Edge`. This
-    /// could lead to incorrect results, as the caller could provide vertices
-    /// that don't actually lie on `curve`.
-    ///
-    /// The good news is, that whole thing seems to be unnecessary. Or rather,
-    /// this whole method seems to be unnecessary. I reviewed all the call
-    /// sites, and in all cases, there seems to be a better way to construct the
-    /// `Edge`, without using this constructor.
-    ///
-    /// Ideally, we'd just fix all those call sites and remove this method, to
-    /// completely avoid the potential for any bugs to occur here. Problem is,
-    /// some of those call sites can't be fixed easily, without building further
-    /// infrastructure. Here's one such piece of infrastructure, for which an
-    /// issue already exists:
-    /// <https://github.com/hannobraun/Fornjot/issues/399>
     pub fn new(
         curve: Handle<Curve<3>>,
-        vertices: Option<[Handle<Vertex>; 2]>,
+        vertices: Option<[LocalForm<Point<1>, Vertex>; 2]>,
     ) -> Self {
         let curve = LocalForm::canonical_only(curve);
-
-        let vertices = vertices.map(|vertices| {
-            vertices.map(|canonical| {
-                let local = curve
-                    .canonical()
-                    .get()
-                    .point_to_curve_coords(canonical.get().point())
-                    .local();
-                LocalForm::new(local, canonical)
-            })
-        });
-
         Self { curve, vertices }
     }
 
