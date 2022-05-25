@@ -51,6 +51,7 @@ where
     }
 }
 
+/// Error converting scalar to tolerance
 #[derive(Debug, thiserror::Error)]
 #[error("Invalid tolerance ({0}); must be above zero")]
 pub struct InvalidTolerance(Scalar);

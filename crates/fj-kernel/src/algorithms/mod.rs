@@ -11,7 +11,7 @@ mod triangulation;
 pub mod intersection;
 
 pub use self::{
-    approx::{CycleApprox, FaceApprox, Tolerance},
+    approx::{CycleApprox, FaceApprox, InvalidTolerance, Tolerance},
     sweep::sweep_shape,
     transform::transform_shape,
     triangulation::triangulate,
