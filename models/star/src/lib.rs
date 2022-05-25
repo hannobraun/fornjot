@@ -9,23 +9,26 @@ pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
     // points, or vertices.
     let num_points: u64 = args
         .get("num_points")
-        .map(|arg| arg.parse().unwrap())
+        .map(|arg| arg.parse().expect("Could not parse parameter `num_points`"))
         .unwrap_or(5);
 
     // Radius of the circle that all the vertices between the pointy ends are on
     let r1: f64 = args
         .get("r1")
-        .map(|arg| arg.parse().unwrap())
+        .map(|arg| arg.parse().expect("Could not parse parameter `r1`"))
         .unwrap_or(1.0);
 
     // Radius of the circle that all the pointy ends are on
     let r2: f64 = args
         .get("r2")
-        .map(|arg| arg.parse().unwrap())
+        .map(|arg| arg.parse().expect("Could not parse parameter `r2`"))
         .unwrap_or(2.0);
 
     // The height of the star
-    let h: f64 = args.get("h").map(|arg| arg.parse().unwrap()).unwrap_or(1.0);
+    let h: f64 = args
+        .get("h")
+        .map(|arg| arg.parse().expect("Could not parse parameter `height`"))
+        .unwrap_or(1.0);
 
     // We need to figure out where to generate vertices, depending on the number
     // of points the star is supposed to have. Let's generate an iterator that

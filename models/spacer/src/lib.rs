@@ -8,17 +8,17 @@ pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
         .get("outer")
         .unwrap_or(&"1.0".to_owned())
         .parse()
-        .unwrap();
+        .expect("Could not parse parameter `outer`");
     let inner = args
         .get("inner")
         .unwrap_or(&"0.5".to_owned())
         .parse()
-        .unwrap();
+        .expect("Could not parse parameter `inner`");
     let height: f64 = args
         .get("height")
         .unwrap_or(&"1.0".to_owned())
         .parse()
-        .unwrap();
+        .expect("Could not parse parameter `height`");
 
     let outer_edge =
         fj::Circle::from_radius(outer).with_color([0, 0, 255, 255]);
