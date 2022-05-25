@@ -10,7 +10,11 @@ members = [
     "crates/fj-math",
     "crates/fj-operations",
     "crates/fj-viewer",
+
     "crates/fj-window",
+
+    "crates/fj-proc",
+
 
     "models/cuboid",
     "models/spacer",
