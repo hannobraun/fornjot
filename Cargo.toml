@@ -12,9 +12,9 @@ members = [
     "crates/fj-viewer",
 
     "models/cuboid",
-    "models/group",
     "models/spacer",
     "models/star",
+    "models/test",
 
     "tools/export-validator",
     "tools/release-operator",
