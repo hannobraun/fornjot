@@ -21,15 +21,12 @@ impl ToShape for fj::Circle {
         // to be added here.
 
         let edge = Edge::builder(&mut shape)
-            .build_circle(Scalar::from_f64(self.radius()))
-            .unwrap();
-        shape.insert(Cycle::new(vec![edge])).unwrap();
+            .build_circle(Scalar::from_f64(self.radius()))?;
+        shape.insert(Cycle::new(vec![edge]))?;
 
         let cycles = shape.cycles();
-        let surface = shape.insert(Surface::xy_plane()).unwrap();
-        shape
-            .insert(Face::new(surface, cycles, Vec::new(), self.color()))
-            .unwrap();
+        let surface = shape.insert(Surface::xy_plane())?;
+        shape.insert(Face::new(surface, cycles, Vec::new(), self.color()))?;
 
         Ok(shape)
     }

@@ -796,6 +796,7 @@ dependencies = [
  "fj-interop",
  "fj-kernel",
  "fj-math",
+ "thiserror",
 ]
 
 [[package]]

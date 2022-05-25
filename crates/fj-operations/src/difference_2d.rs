@@ -22,11 +22,12 @@ impl ToShape for fj::Difference2d {
         let mut exteriors = Vec::new();
         let mut interiors = Vec::new();
 
-        // Can be cleaned up, once `each_ref` is stable:
-        // https://doc.rust-lang.org/std/primitive.array.html#method.each_ref
+        // Can be cleaned up, once `each_ref` and `try_map` are stable:
+        // - https://doc.rust-lang.org/std/primitive.array.html#method.each_ref
+        // - https://doc.rust-lang.org/std/primitive.array.html#method.try_map
         let [a, b] = self.shapes();
-        let [a, b] =
-            [a, b].map(|shape| shape.to_shape(tolerance, debug_info).unwrap());
+        let [a, b] = [a, b].map(|shape| shape.to_shape(tolerance, debug_info));
+        let [a, b] = [a?, b?];
 
         if let Some(face) = a.faces().next() {
             // If there's at least one face to subtract from, we can proceed.
@@ -72,9 +73,12 @@ impl ToShape for fj::Difference2d {
                 }
             }
 
-            difference
-                .merge(Face::new(surface, exteriors, interiors, self.color()))
-                .unwrap();
+            difference.merge(Face::new(
+                surface,
+                exteriors,
+                interiors,
+                self.color(),
+            ))?;
         }
 
         Ok(difference)

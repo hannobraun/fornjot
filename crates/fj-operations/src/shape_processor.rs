@@ -2,7 +2,7 @@
 
 use fj_interop::{debug::DebugInfo, mesh::Mesh};
 use fj_kernel::{
-    algorithms::{triangulate, Tolerance},
+    algorithms::{triangulate, InvalidTolerance, Tolerance},
     shape::ValidationError,
 };
 use fj_math::{Aabb, Point, Scalar};
@@ -17,10 +17,7 @@ pub struct ShapeProcessor {
 
 impl ShapeProcessor {
     /// Process an [`fj::Shape`] into [`ProcessedShape`]
-    pub fn process(
-        &self,
-        shape: &fj::Shape,
-    ) -> Result<ProcessedShape, ValidationError> {
+    pub fn process(&self, shape: &fj::Shape) -> Result<ProcessedShape, Error> {
         let aabb = shape.bounding_volume();
 
         let tolerance = match self.tolerance {
@@ -36,7 +33,7 @@ impl ShapeProcessor {
                 }
 
                 let tolerance = min_extent / Scalar::from_f64(1000.);
-                Tolerance::from_scalar(tolerance).unwrap()
+                Tolerance::from_scalar(tolerance)?
             }
             Some(user_defined_tolerance) => user_defined_tolerance,
         };
@@ -68,4 +65,16 @@ pub struct ProcessedShape {
 
     /// The debug info generated while processing the shape
     pub debug_info: DebugInfo,
+}
+
+/// A shape processing error
+#[derive(Debug, thiserror::Error)]
+pub enum Error {
+    /// Error converting to shape
+    #[error("Error converting to shape")]
+    ToShape(#[from] ValidationError),
+
+    /// Model has zero size
+    #[error("Model has an zero size")]
+    Extent(#[from] InvalidTolerance),
 }

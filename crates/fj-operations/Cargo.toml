@@ -12,6 +12,9 @@ keywords = ["cad", "programmatic", "code-cad"]
 categories = ["encoding", "mathematics", "rendering"]
 
 
+[dependencies]
+thiserror = "1.0.31"
+
 [dependencies.fj]
 version = "0.6.0"
 path = "../fj"
