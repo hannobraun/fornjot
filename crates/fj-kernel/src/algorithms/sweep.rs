@@ -86,26 +86,40 @@ pub fn sweep_shape(
 
                 // Can't panic. We already ruled out the continuous edge case
                 // above, so this edge must have vertices.
-                let vertices_source =
-                    edge_source.get().vertices.clone().unwrap();
+                let vertices_source = edge_source
+                    .get()
+                    .vertices
+                    .clone()
+                    .expect("Expected edge to have vertices");
 
                 // Create (or retrieve from the cache, `vertex_bottom_to_edge`)
                 // side edges from the vertices of this source/bottom edge.
                 let [side_edge_a, side_edge_b] =
                     vertices_source.map(|vertex_source| {
+                        // Can't panic, unless this isn't actually a vertex from
+                        // `source`, we're using the wrong mapping, or the
+                        // mapping doesn't contain this vertex.
+                        //
+                        // All of these would be a bug.
                         let vertex_bottom = source_to_bottom
                             .vertices()
                             .get(&vertex_source.canonical())
-                            .unwrap()
+                            .expect("Could not find vertex in mapping")
                             .clone();
 
                         vertex_bottom_to_edge
                             .entry(vertex_bottom.clone())
                             .or_insert_with(|| {
+                                // Can't panic, unless this isn't actually a
+                                // vertex from `source`, we're using the wrong
+                                // mapping, or the mapping doesn't contain this
+                                // vertex.
+                                //
+                                // All of these would be a bug.
                                 let vertex_top = source_to_top
                                     .vertices()
                                     .get(&vertex_source.canonical())
-                                    .unwrap()
+                                    .expect("Could not find vertex in mapping")
                                     .clone();
 
                                 let points = [vertex_bottom, vertex_top]
@@ -121,10 +135,21 @@ pub fn sweep_shape(
                 // Now we have everything we need to create the side face from
                 // this source/bottom edge.
 
-                let bottom_edge =
-                    source_to_bottom.edges().get(&edge_source).unwrap().clone();
-                let top_edge =
-                    source_to_top.edges().get(&edge_source).unwrap().clone();
+                // Can't panic, unless this isn't actually an edge from
+                // `source`, we're using the wrong mappings, or the mappings
+                // don't contain this edge.
+                //
+                // All of these would be a bug.
+                let bottom_edge = source_to_bottom
+                    .edges()
+                    .get(&edge_source)
+                    .expect("Couldn't find edge in mapping")
+                    .clone();
+                let top_edge = source_to_top
+                    .edges()
+                    .get(&edge_source)
+                    .expect("Couldn't find edge in mapping")
+                    .clone();
 
                 let mut surface = Surface::SweptCurve(SweptCurve {
                     curve: bottom_edge.get().curve(),
