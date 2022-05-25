@@ -17,9 +17,8 @@ pub fn validate_edge(
         for vertex in vertices {
             let local = *vertex.local();
             let local_3d = edge.curve().point_from_curve_coords(local);
-
-            let distance =
-                (local_3d - vertex.canonical().get().point()).magnitude();
+            let canonical = vertex.canonical().get().point();
+            let distance = (local_3d - canonical).magnitude();
 
             if distance > max_distance {
                 return Err(GeometricIssues);
