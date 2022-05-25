@@ -1,38 +1,9 @@
 use fj::Angle;
 use std::{collections::HashMap, f64::consts::PI};
+extern crate fj_proc;
 
-#[no_mangle]
-pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
-    // Number of points of the star
-    //
-    // "Points" in the sense of "pointy ends", not in the sense of geometrical
-    // points, or vertices.
-    let num_points: u64 = args
-        .get("num_points")
-        .map(|arg| arg.parse().expect("Could not parse parameter `num_points`"))
-        .unwrap_or(5);
-
-    // Radius of the circle that all the vertices between the pointy ends are on
-    let r1: f64 = args
-        .get("r1")
-        .map(|arg| arg.parse().expect("Could not parse parameter `r1`"))
-        .unwrap_or(1.0);
-
-    // Radius of the circle that all the pointy ends are on
-    let r2: f64 = args
-        .get("r2")
-        .map(|arg| arg.parse().expect("Could not parse parameter `r2`"))
-        .unwrap_or(2.0);
-
-    // The height of the star
-    let h: f64 = args
-        .get("h")
-        .map(|arg| arg.parse().expect("Could not parse parameter `height`"))
-        .unwrap_or(1.0);
-
-    // We need to figure out where to generate vertices, depending on the number
-    // of points the star is supposed to have. Let's generate an iterator that
-    // gives us the angle and radius for each vertex.
+#[fj_proc::model(5, 1.0, 2.0, 1.0)]
+pub fn model(num_points: u64, r1: f64, r2: f64, h: f64) -> fj::Shape {
     let num_vertices = num_points * 2;
     let vertex_iter = (0..num_vertices).map(|i| {
         let angle = Angle::from_rad(2. * PI / num_vertices as f64 * i as f64);
@@ -59,7 +30,7 @@ pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
 
     let footprint = fj::Difference2d::from_shapes([outer.into(), inner.into()]);
 
-    let star = fj::Sweep::from_path(footprint.into(), [0., 0., h]);
+    let star = fj::Sweep::from_path(footprint.into(), [0., 0., -h]);
 
     star.into()
 }
