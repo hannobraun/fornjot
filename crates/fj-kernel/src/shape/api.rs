@@ -36,7 +36,7 @@ impl Shape {
             // This should be defined in an associated constant, so API users
             // can see what the default is. Unfortunately, `Scalar::from_f64`
             // can't be `const` yet.
-            identical_max_distance: Scalar::from_f64(5e-16),
+            identical_max_distance: Scalar::from_f64(5e-14),
 
             stores: Stores {
                 points: Store::new(),
