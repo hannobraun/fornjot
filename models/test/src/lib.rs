@@ -8,7 +8,7 @@ pub extern "C" fn model(_: &HashMap<String, String>) -> fj::Shape {
     let b = star(5, [255, 0, 0, 255])
         .rotate([1., 1., 1.], Angle::from_deg(45.))
         .translate([3., 3., 1.]);
-    let c = spacer().rotate([1., 1., 1.], Angle::from_deg(90.));
+    let c = spacer().translate([6., 6., 1.]);
 
     let group = a.group(&b).group(&c);
 
