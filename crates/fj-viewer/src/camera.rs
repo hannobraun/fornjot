@@ -50,7 +50,7 @@ impl Camera {
                     // `reduce` can only return `None`, if there are no items in
                     // the iterator. And since we're creating an array full of
                     // items above, we know this can't panic.
-                    .unwrap();
+                    .expect("Array should have contained items");
 
             // The actual furthest point is not far enough. We don't want the
             // model to fill the whole screen.
