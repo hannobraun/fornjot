@@ -17,10 +17,7 @@ pub struct ShapeProcessor {
 
 impl ShapeProcessor {
     /// Process an [`fj::Shape`] into [`ProcessedShape`]
-    pub fn process(
-        &self,
-        shape: &fj::Shape,
-    ) -> Result<ProcessedShape, ValidationError> {
+    pub fn process(&self, shape: &fj::Shape) -> Result<ProcessedShape, Error> {
         let aabb = shape.bounding_volume();
 
         let tolerance = match self.tolerance {
@@ -68,4 +65,12 @@ pub struct ProcessedShape {
 
     /// The debug info generated while processing the shape
     pub debug_info: DebugInfo,
+}
+
+/// A shape processing error
+#[derive(Debug, thiserror::Error)]
+pub enum Error {
+    /// Error converting to shape
+    #[error("Error converting to shape")]
+    ToShape(#[from] ValidationError),
 }
