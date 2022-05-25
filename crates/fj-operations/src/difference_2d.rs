@@ -72,9 +72,12 @@ impl ToShape for fj::Difference2d {
                 }
             }
 
-            difference
-                .merge(Face::new(surface, exteriors, interiors, self.color()))
-                .unwrap();
+            difference.merge(Face::new(
+                surface,
+                exteriors,
+                interiors,
+                self.color(),
+            ))?;
         }
 
         Ok(difference)
