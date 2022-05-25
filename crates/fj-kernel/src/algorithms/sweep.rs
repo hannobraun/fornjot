@@ -21,14 +21,16 @@ pub fn sweep_shape(
 
     let (mut bottom, source_to_bottom) = source.clone_shape();
     let (mut top, source_to_top) = source.clone_shape();
+    let sweep_along_negative_direction =
+        path.dot(&Vector::from([0., 0., 1.])) < fj_math::Scalar::ZERO;
 
-    if path.dot(&Vector::from([0., 0., 1.])) >= fj_math::Scalar::from_f64(0.) {
-        bottom
-            .update()
+    if sweep_along_negative_direction {
+        top.update()
             .update_all(|surface: &mut Surface| *surface = surface.reverse())
             .validate()?;
     } else {
-        top.update()
+        bottom
+            .update()
             .update_all(|surface: &mut Surface| *surface = surface.reverse())
             .validate()?;
     }
@@ -124,22 +126,14 @@ pub fn sweep_shape(
                 let top_edge =
                     source_to_top.edges().get(&edge_source).unwrap().clone();
 
-                let surface = if path.dot(&Vector::from([0., 0., 1.]))
-                    >= fj_math::Scalar::from_f64(0.)
-                {
-                    target.insert(Surface::SweptCurve(SweptCurve {
-                        curve: bottom_edge.get().curve(),
-                        path,
-                    }))?
-                } else {
-                    target.insert(
-                        Surface::SweptCurve(SweptCurve {
-                            curve: bottom_edge.get().curve(),
-                            path,
-                        })
-                        .reverse(), ////////////////////////////////////
-                    )?
-                };
+                let mut surface = Surface::SweptCurve(SweptCurve {
+                    curve: bottom_edge.get().curve(),
+                    path,
+                });
+                if sweep_along_negative_direction {
+                    surface = surface.reverse();
+                }
+                let surface = target.insert(surface)?;
 
                 let cycle = target.merge(Cycle::new(vec![
                     bottom_edge,
