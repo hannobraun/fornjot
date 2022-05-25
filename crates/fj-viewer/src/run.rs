@@ -18,16 +18,16 @@ use crate::{
     camera::Camera,
     graphics::{self, DrawConfig, Renderer},
     input,
-    window::Window,
+    window::{self, Window},
 };
 
 /// Initializes a model viewer for a given model and enters its process loop.
 pub fn run(
     watcher: Watcher,
     shape_processor: ShapeProcessor,
-) -> Result<(), graphics::InitError> {
+) -> Result<(), Error> {
     let event_loop = EventLoop::new();
-    let window = Window::new(&event_loop);
+    let window = Window::new(&event_loop)?;
 
     let mut previous_time = Instant::now();
 
@@ -47,18 +47,22 @@ pub fn run(
         let now = Instant::now();
 
         if let Some(new_shape) = watcher.receive() {
-            let new_shape = shape_processor.process(&new_shape).unwrap();
-            renderer.update_geometry(
-                (&new_shape.mesh).into(),
-                (&new_shape.debug_info).into(),
-                new_shape.aabb,
-            );
+            match shape_processor.process(&new_shape) {
+                Ok(new_shape) => {
+                    renderer.update_geometry(
+                        (&new_shape.mesh).into(),
+                        (&new_shape.debug_info).into(),
+                        new_shape.aabb,
+                    );
 
-            if camera.is_none() {
-                camera = Some(Camera::new(&new_shape.aabb));
+                    if camera.is_none() {
+                        camera = Some(Camera::new(&new_shape.aabb));
+                    }
+
+                    shape = Some(new_shape);
+                }
+                Err(err) => println!("Shape processing error: {}", err),
             }
-
-            shape = Some(new_shape);
         }
 
         match event {
@@ -154,4 +158,16 @@ pub fn run(
             draw_config.draw_debug = !draw_config.draw_debug;
         }
     });
+}
+
+/// Error in main loop
+#[derive(Debug, thiserror::Error)]
+pub enum Error {
+    /// Error initializing window
+    #[error("Error initializing window")]
+    WindowInit(#[from] window::Error),
+
+    /// Error initializing graphics
+    #[error("Error initializing graphics")]
+    GraphicsInit(#[from] graphics::InitError),
 }

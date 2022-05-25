@@ -46,7 +46,7 @@ impl Renderer {
     ///
     /// // Create window
     /// let event_loop = winit::event_loop::EventLoop::new();
-    /// let window = window::Window::new(&event_loop);
+    /// let window = window::Window::new(&event_loop).unwrap();
     ///
     /// // Attach renderer to the window
     /// let mut renderer = graphics::Renderer::new(&window);
@@ -347,7 +347,7 @@ pub enum InitError {
 
 /// Graphics rendering error
 ///
-/// Describes errors related to non intialization graphics errors.
+/// Describes errors related to non initialization graphics errors.
 #[derive(Error, Debug)]
 pub enum DrawError {
     #[error("Error acquiring output surface: {0}")]
