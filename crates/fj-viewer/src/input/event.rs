@@ -7,6 +7,9 @@ pub enum Event {
 
     /// A key has been pressed or released
     Key(Key, KeyState),
+
+    /// The user scrolled
+    Scroll(f64),
 }
 
 /// A keyboard or mouse key

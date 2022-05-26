@@ -2,7 +2,6 @@ use std::time::Instant;
 
 use fj_interop::mesh::Mesh;
 use fj_math::{Point, Transform, Vector};
-use winit::{dpi::PhysicalPosition, event::MouseScrollDelta};
 
 use crate::{
     camera::{Camera, FocusPoint},
@@ -55,6 +54,7 @@ impl Handler {
         event: Event,
         screen_size: Size,
         focus_point: FocusPoint,
+        now: Instant,
         camera: &mut Camera,
         actions: &mut Actions,
     ) {
@@ -95,22 +95,12 @@ impl Handler {
                 self.movement.stop();
             }
 
+            Event::Scroll(delta) => {
+                self.zoom.push_input_delta(delta, now);
+            }
+
             _ => {}
         }
-    }
-
-    /// Updates zoom state from the scroll wheel.
-    pub fn handle_mouse_wheel(
-        &mut self,
-        delta: MouseScrollDelta,
-        now: Instant,
-    ) {
-        let delta = match delta {
-            MouseScrollDelta::LineDelta(_, y) => y as f64 * 10.0,
-            MouseScrollDelta::PixelDelta(PhysicalPosition { y, .. }) => y,
-        };
-
-        self.zoom.push_input_delta(delta, now);
     }
 
     /// Update application state from user input.

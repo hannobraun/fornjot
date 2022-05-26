@@ -10,9 +10,10 @@ use fj_operations::shape_processor::ShapeProcessor;
 use futures::executor::block_on;
 use tracing::{trace, warn};
 use winit::{
+    dpi::PhysicalPosition,
     event::{
-        ElementState, Event, KeyboardInput, MouseButton, VirtualKeyCode,
-        WindowEvent,
+        ElementState, Event, KeyboardInput, MouseButton, MouseScrollDelta,
+        VirtualKeyCode, WindowEvent,
     },
     event_loop::{ControlFlow, EventLoop},
 };
@@ -165,8 +166,14 @@ pub fn run(
                 event: WindowEvent::MouseWheel { delta, .. },
                 ..
             } => {
-                input_handler.handle_mouse_wheel(delta, now);
-                None
+                let delta = match delta {
+                    MouseScrollDelta::LineDelta(_, y) => y as f64 * 10.0,
+                    MouseScrollDelta::PixelDelta(PhysicalPosition {
+                        y,
+                        ..
+                    }) => y,
+                };
+                Some(input::Event::Scroll(delta))
             }
             Event::MainEventsCleared => {
                 let delta_t = now.duration_since(previous_time);
@@ -213,6 +220,7 @@ pub fn run(
                 event,
                 window.size(),
                 focus_point,
+                now,
                 camera,
                 &mut actions,
             );
