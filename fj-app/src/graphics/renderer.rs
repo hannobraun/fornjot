@@ -301,6 +301,11 @@ impl Renderer {
         let egui_input = egui::RawInput::default(); // TODO: Change this to use actual input.
         self.egui_context.begin_frame(egui_input);
 
+        // A simple UI
+        egui::Window::new("Window").show(&self.egui_context, |ui| {
+            ui.label("Hello world!");
+        });
+
         // End the UI frame. We could now handle the output and draw the UI with the backend.
         let egui_output = self.egui_context.end_frame();
         let egui_paint_jobs = self.egui_context.tessellate(egui_output.shapes);
