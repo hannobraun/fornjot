@@ -8,8 +8,7 @@ use wgpu_glyph::ab_glyph::InvalidFont;
 
 use crate::{
     camera::Camera,
-    screen::{Screen as _, Size},
-    window::Window,
+    screen::{Screen, Size},
 };
 
 use super::{
@@ -54,7 +53,7 @@ impl Renderer {
     /// // Attach renderer to the window
     /// let mut renderer = graphics::Renderer::new(&window);
     /// ```
-    pub async fn new(window: &Window) -> Result<Self, InitError> {
+    pub async fn new(window: &impl Screen) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::PRIMARY);
 
         // This is sound, as `window` is an object to create a surface upon.
