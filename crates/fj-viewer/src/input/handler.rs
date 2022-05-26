@@ -12,8 +12,7 @@ use winit::{
 
 use crate::{
     camera::{Camera, FocusPoint},
-    screen::Position,
-    window::Window,
+    screen::{Position, Size},
 };
 
 use super::{movement::Movement, rotation::Rotation, zoom::Zoom};
@@ -82,13 +81,13 @@ impl Handler {
         &mut self,
         cursor: Position,
         camera: &mut Camera,
-        window: &Window,
+        size: Size,
     ) {
         if let Some(previous) = self.cursor {
             let diff_x = cursor.x - previous.x;
             let diff_y = cursor.y - previous.y;
 
-            self.movement.apply(self.cursor, camera, window);
+            self.movement.apply(self.cursor, camera, size);
             self.rotation.apply(diff_x, diff_y, camera);
         }
 
@@ -139,10 +138,10 @@ impl Handler {
         delta_t: f64,
         now: Instant,
         camera: &mut Camera,
-        window: &Window,
+        size: Size,
         mesh: &Mesh<Point<3>>,
     ) {
-        let focus_point = camera.focus_point(window, self.cursor, mesh);
+        let focus_point = camera.focus_point(size, self.cursor, mesh);
 
         self.zoom.discard_old_events(now);
         self.zoom.update_speed(now, delta_t, focus_point, camera);

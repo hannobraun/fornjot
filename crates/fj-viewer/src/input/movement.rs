@@ -2,8 +2,7 @@ use fj_math::{Point, Scalar, Transform, Vector};
 
 use crate::{
     camera::{Camera, FocusPoint},
-    screen::Position,
-    window::Window,
+    screen::{Position, Size},
 };
 
 pub struct Movement {
@@ -32,11 +31,11 @@ impl Movement {
         &mut self,
         cursor: Option<Position>,
         camera: &mut Camera,
-        window: &Window,
+        size: Size,
     ) {
         if let (Some(previous), Some(cursor)) = (self.cursor, cursor) {
-            let previous = camera.cursor_to_model_space(previous, window);
-            let cursor = camera.cursor_to_model_space(cursor, window);
+            let previous = camera.cursor_to_model_space(previous, size);
+            let cursor = camera.cursor_to_model_space(cursor, size);
 
             if let Some(focus_point) = self.focus_point.0 {
                 let d1 = Point::distance(&camera.position(), &cursor);

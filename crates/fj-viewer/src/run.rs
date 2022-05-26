@@ -112,7 +112,11 @@ pub fn run(
                         x: position.x,
                         y: position.y,
                     };
-                    input_handler.handle_cursor_moved(cursor, camera, &window);
+                    input_handler.handle_cursor_moved(
+                        cursor,
+                        camera,
+                        window.size(),
+                    );
                 }
             }
             Event::WindowEvent {
@@ -121,7 +125,7 @@ pub fn run(
             } => {
                 if let (Some(shape), Some(camera)) = (&shape, &camera) {
                     let focus_point = camera.focus_point(
-                        &window,
+                        window.size(),
                         input_handler.cursor(),
                         &shape.mesh,
                     );
@@ -148,7 +152,7 @@ pub fn run(
                         delta_t.as_secs_f64(),
                         now,
                         camera,
-                        &window,
+                        window.size(),
                         &shape.mesh,
                     );
                 }
