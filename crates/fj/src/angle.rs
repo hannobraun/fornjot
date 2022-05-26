@@ -125,3 +125,10 @@ impl std::ops::DivAssign<f64> for Angle {
         self.wrap_assign()
     }
 }
+
+impl std::ops::Div for Angle {
+    type Output = f64;
+    fn div(self, rhs: Angle) -> Self::Output {
+        self.rad / rhs.rad
+    }
+}
