@@ -19,3 +19,10 @@ pub struct Size {
     /// The height of the screen
     pub height: u32,
 }
+
+impl Size {
+    /// Convert size to `f64`
+    pub fn as_f64(&self) -> [f64; 2] {
+        [self.width, self.height].map(Into::into)
+    }
+}
