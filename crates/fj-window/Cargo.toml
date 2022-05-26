@@ -1,5 +1,5 @@
 [package]
-name = "fj-viewer"
+name = "fj-window"
 version = "0.6.0"
 edition = "2021"
 
@@ -13,17 +13,19 @@ categories = ["encoding", "mathematics", "rendering"]
 
 
 [dependencies]
-bytemuck = "1.9.1"
-raw-window-handle = "0.4.3"
+futures = "0.3.21"
 thiserror = "1.0.31"
 tracing = "0.1.34"
-wgpu = "0.12.0"
-wgpu_glyph = "0.16.0"
+winit = "0.26.1"
 
-[dependencies.fj-interop]
+[dependencies.fj-host]
 version = "0.6.0"
-path = "../fj-interop"
+path = "../fj-host"
 
-[dependencies.fj-math]
+[dependencies.fj-operations]
 version = "0.6.0"
-path = "../fj-math"
+path = "../fj-operations"
+
+[dependencies.fj-viewer]
+version = "0.6.0"
+path = "../fj-viewer"

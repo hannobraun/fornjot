@@ -728,6 +728,7 @@ dependencies = [
  "fj-math",
  "fj-operations",
  "fj-viewer",
+ "fj-window",
  "serde",
  "tracing-subscriber",
 ]
@@ -804,15 +805,25 @@ name = "fj-viewer"
 version = "0.6.0"
 dependencies = [
  "bytemuck",
- "fj-host",
  "fj-interop",
  "fj-math",
- "fj-operations",
- "futures",
+ "raw-window-handle",
  "thiserror",
  "tracing",
  "wgpu",
  "wgpu_glyph",
+]
+
+[[package]]
+name = "fj-window"
+version = "0.6.0"
+dependencies = [
+ "fj-host",
+ "fj-operations",
+ "fj-viewer",
+ "futures",
+ "thiserror",
+ "tracing",
  "winit",
 ]
 

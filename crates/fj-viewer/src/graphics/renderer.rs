@@ -5,9 +5,11 @@ use thiserror::Error;
 use tracing::debug;
 use wgpu::util::DeviceExt as _;
 use wgpu_glyph::ab_glyph::InvalidFont;
-use winit::dpi::PhysicalSize;
 
-use crate::{camera::Camera, window::Window};
+use crate::{
+    camera::Camera,
+    screen::{Screen, Size},
+};
 
 use super::{
     config_ui::ConfigUi, draw_config::DrawConfig, drawables::Drawables,
@@ -36,26 +38,11 @@ pub struct Renderer {
 
 impl Renderer {
     /// Returns a new `Renderer`.
-    ///
-    /// # Arguments
-    /// - `window` - a `crate::window::Window` with a surface to render onto.
-    ///
-    /// # Examples
-    /// ```rust no_run
-    /// use fj_viewer::{graphics, window};
-    ///
-    /// // Create window
-    /// let event_loop = winit::event_loop::EventLoop::new();
-    /// let window = window::Window::new(&event_loop).unwrap();
-    ///
-    /// // Attach renderer to the window
-    /// let mut renderer = graphics::Renderer::new(&window);
-    /// ```
-    pub async fn new(window: &Window) -> Result<Self, InitError> {
+    pub async fn new(screen: &impl Screen) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::PRIMARY);
 
         // This is sound, as `window` is an object to create a surface upon.
-        let surface = unsafe { instance.create_surface(window.inner()) };
+        let surface = unsafe { instance.create_surface(screen.window()) };
 
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptions {
@@ -87,11 +74,12 @@ impl Renderer {
             .get_preferred_format(&adapter)
             .expect("Error determining preferred color format");
 
+        let Size { width, height } = screen.size();
         let surface_config = wgpu::SurfaceConfiguration {
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
             format: color_format,
-            width: window.width(),
-            height: window.height(),
+            width,
+            height,
             present_mode: wgpu::PresentMode::Mailbox,
         };
         surface.configure(&device, &surface_config);
@@ -182,7 +170,7 @@ impl Renderer {
     ///
     /// # Arguments
     /// - `size`: The target size for the render surface.
-    pub fn handle_resize(&mut self, size: PhysicalSize<u32>) {
+    pub fn handle_resize(&mut self, size: Size) {
         self.surface_config.width = size.width;
         self.surface_config.height = size.height;
 

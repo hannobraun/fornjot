@@ -7,19 +7,24 @@ use std::{error, time::Instant};
 
 use fj_host::Watcher;
 use fj_operations::shape_processor::ShapeProcessor;
+use fj_viewer::{
+    camera::Camera,
+    graphics::{self, DrawConfig, Renderer},
+    input::{self, KeyState},
+    screen::{Position, Screen as _, Size},
+};
 use futures::executor::block_on;
 use tracing::{trace, warn};
 use winit::{
-    event::{Event, WindowEvent},
+    dpi::PhysicalPosition,
+    event::{
+        ElementState, Event, KeyboardInput, MouseButton, MouseScrollDelta,
+        VirtualKeyCode, WindowEvent,
+    },
     event_loop::{ControlFlow, EventLoop},
 };
 
-use crate::{
-    camera::Camera,
-    graphics::{self, DrawConfig, Renderer},
-    input,
-    window::{self, Window},
-};
+use crate::window::{self, Window};
 
 /// Initializes a model viewer for a given model and enters its process loop.
 pub fn run(
@@ -79,57 +84,96 @@ pub fn run(
             }
         }
 
-        match event {
+        let event = match event {
             Event::WindowEvent {
                 event: WindowEvent::CloseRequested,
                 ..
             } => {
                 *control_flow = ControlFlow::Exit;
+                None
             }
             Event::WindowEvent {
                 event: WindowEvent::Resized(size),
                 ..
             } => {
+                let size = Size {
+                    width: size.width,
+                    height: size.height,
+                };
                 renderer.handle_resize(size);
+
+                None
             }
             Event::WindowEvent {
-                event: WindowEvent::KeyboardInput { input, .. },
+                event:
+                    WindowEvent::KeyboardInput {
+                        input:
+                            KeyboardInput {
+                                state: ElementState::Pressed,
+                                virtual_keycode: Some(virtual_key_code),
+                                ..
+                            },
+                        ..
+                    },
                 ..
-            } => {
-                input_handler.handle_keyboard_input(input, &mut actions);
-            }
+            } => match virtual_key_code {
+                VirtualKeyCode::Escape => Some(input::Event::Key(
+                    input::Key::Escape,
+                    KeyState::Pressed,
+                )),
+                VirtualKeyCode::Key1 => {
+                    Some(input::Event::Key(input::Key::Key1, KeyState::Pressed))
+                }
+                VirtualKeyCode::Key2 => {
+                    Some(input::Event::Key(input::Key::Key2, KeyState::Pressed))
+                }
+                VirtualKeyCode::Key3 => {
+                    Some(input::Event::Key(input::Key::Key3, KeyState::Pressed))
+                }
+
+                _ => None,
+            },
             Event::WindowEvent {
                 event: WindowEvent::CursorMoved { position, .. },
                 ..
             } => {
-                if let Some(camera) = &mut camera {
-                    input_handler
-                        .handle_cursor_moved(position, camera, &window);
-                }
+                let position = Position {
+                    x: position.x,
+                    y: position.y,
+                };
+                Some(input::Event::CursorMoved(position))
             }
             Event::WindowEvent {
                 event: WindowEvent::MouseInput { state, button, .. },
                 ..
             } => {
-                if let (Some(shape), Some(camera)) = (&shape, &camera) {
-                    let focus_point = camera.focus_point(
-                        &window,
-                        input_handler.cursor(),
-                        &shape.mesh,
-                    );
+                let state = match state {
+                    ElementState::Pressed => input::KeyState::Pressed,
+                    ElementState::Released => input::KeyState::Released,
+                };
 
-                    input_handler.handle_mouse_input(
-                        button,
-                        state,
-                        focus_point,
-                    );
+                match button {
+                    MouseButton::Left => {
+                        Some(input::Event::Key(input::Key::MouseLeft, state))
+                    }
+                    MouseButton::Right => {
+                        Some(input::Event::Key(input::Key::MouseRight, state))
+                    }
+                    _ => None,
                 }
             }
             Event::WindowEvent {
                 event: WindowEvent::MouseWheel { delta, .. },
                 ..
             } => {
-                input_handler.handle_mouse_wheel(delta, now);
+                let delta = match delta {
+                    MouseScrollDelta::LineDelta(_, y) => y as f64 * 10.0,
+                    MouseScrollDelta::PixelDelta(PhysicalPosition {
+                        y,
+                        ..
+                    }) => y,
+                };
+                Some(input::Event::Scroll(delta))
             }
             Event::MainEventsCleared => {
                 let delta_t = now.duration_since(previous_time);
@@ -140,12 +184,14 @@ pub fn run(
                         delta_t.as_secs_f64(),
                         now,
                         camera,
-                        &window,
+                        window.size(),
                         &shape.mesh,
                     );
                 }
 
-                window.inner().request_redraw();
+                window.window().request_redraw();
+
+                None
             }
             Event::RedrawRequested(_) => {
                 if let (Some(shape), Some(camera)) = (&shape, &mut camera) {
@@ -155,8 +201,29 @@ pub fn run(
                         warn!("Draw error: {}", err);
                     }
                 }
+
+                None
             }
-            _ => {}
+            _ => None,
+        };
+
+        if let (Some(event), Some(shape), Some(camera)) =
+            (event, &shape, &mut camera)
+        {
+            let focus_point = camera.focus_point(
+                window.size(),
+                input_handler.cursor(),
+                &shape.mesh,
+            );
+
+            input_handler.handle_event(
+                event,
+                window.size(),
+                focus_point,
+                now,
+                camera,
+                &mut actions,
+            );
         }
 
         if actions.exit {

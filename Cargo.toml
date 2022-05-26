@@ -10,6 +10,7 @@ members = [
     "crates/fj-math",
     "crates/fj-operations",
     "crates/fj-viewer",
+    "crates/fj-window",
 
     "models/cuboid",
     "models/spacer",
@@ -28,4 +29,5 @@ default-members = [
     "crates/fj-math",
     "crates/fj-operations",
     "crates/fj-viewer",
+    "crates/fj-window",
 ]

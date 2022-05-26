@@ -51,6 +51,10 @@ path = "../fj-operations"
 version = "0.6.0"
 path = "../fj-viewer"
 
+[dependencies.fj-window]
+version = "0.6.0"
+path = "../fj-window"
+
 [dependencies.serde]
 version = "1.0.137"
 features = ["derive"]

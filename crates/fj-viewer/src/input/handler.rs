@@ -2,26 +2,22 @@ use std::time::Instant;
 
 use fj_interop::mesh::Mesh;
 use fj_math::{Point, Transform, Vector};
-use winit::{
-    dpi::PhysicalPosition,
-    event::{
-        ElementState, KeyboardInput, MouseButton, MouseScrollDelta,
-        VirtualKeyCode,
-    },
-};
 
 use crate::{
     camera::{Camera, FocusPoint},
-    window::Window,
+    screen::{Position, Size},
 };
 
-use super::{movement::Movement, rotation::Rotation, zoom::Zoom};
+use super::{
+    event::KeyState, movement::Movement, rotation::Rotation, zoom::Zoom, Event,
+    Key,
+};
 
 /// Input handling abstraction
 ///
 /// Takes user input and applies them to application state.
 pub struct Handler {
-    cursor: Option<PhysicalPosition<f64>>,
+    cursor: Option<Position>,
 
     movement: Movement,
     rotation: Rotation,
@@ -48,88 +44,63 @@ impl Handler {
     }
 
     /// Returns the state of the cursor position.
-    pub fn cursor(&self) -> Option<PhysicalPosition<f64>> {
+    pub fn cursor(&self) -> Option<Position> {
         self.cursor
     }
 
-    /// Applies user input to `actions`.
-    pub fn handle_keyboard_input(
+    /// Handle an input event
+    pub fn handle_event(
         &mut self,
-        input: KeyboardInput,
+        event: Event,
+        screen_size: Size,
+        focus_point: FocusPoint,
+        now: Instant,
+        camera: &mut Camera,
         actions: &mut Actions,
     ) {
-        if let KeyboardInput {
-            state: ElementState::Pressed,
-            virtual_keycode: Some(virtual_key_code),
-            ..
-        } = input
-        {
-            match virtual_key_code {
-                VirtualKeyCode::Escape => actions.exit = true,
+        match event {
+            Event::CursorMoved(position) => {
+                if let Some(previous) = self.cursor {
+                    let diff_x = position.x - previous.x;
+                    let diff_y = position.y - previous.y;
 
-                VirtualKeyCode::Key1 => actions.toggle_model = true,
-                VirtualKeyCode::Key2 => actions.toggle_mesh = true,
-                VirtualKeyCode::Key3 => actions.toggle_debug = true,
+                    self.movement.apply(self.cursor, camera, screen_size);
+                    self.rotation.apply(diff_x, diff_y, camera);
+                }
 
-                _ => (),
+                self.cursor = Some(position);
             }
-        }
-    }
+            Event::Key(Key::Escape, KeyState::Pressed) => actions.exit = true,
 
-    /// Applies cursor movement to `camera`.
-    pub fn handle_cursor_moved(
-        &mut self,
-        cursor: PhysicalPosition<f64>,
-        camera: &mut Camera,
-        window: &Window,
-    ) {
-        if let Some(previous) = self.cursor {
-            let diff_x = cursor.x - previous.x;
-            let diff_y = cursor.y - previous.y;
+            Event::Key(Key::Key1, KeyState::Pressed) => {
+                actions.toggle_model = true
+            }
+            Event::Key(Key::Key2, KeyState::Pressed) => {
+                actions.toggle_mesh = true
+            }
+            Event::Key(Key::Key3, KeyState::Pressed) => {
+                actions.toggle_debug = true
+            }
 
-            self.movement.apply(self.cursor, camera, window);
-            self.rotation.apply(diff_x, diff_y, camera);
-        }
-
-        self.cursor = Some(cursor);
-    }
-
-    /// Updates `state` and `focus_point` when mouse is clicked.
-    pub fn handle_mouse_input(
-        &mut self,
-        button: MouseButton,
-        state: ElementState,
-        focus_point: FocusPoint,
-    ) {
-        match (button, state) {
-            (MouseButton::Left, ElementState::Pressed) => {
+            Event::Key(Key::MouseLeft, KeyState::Pressed) => {
                 self.rotation.start(focus_point);
             }
-            (MouseButton::Left, ElementState::Released) => {
+            Event::Key(Key::MouseLeft, KeyState::Released) => {
                 self.rotation.stop();
             }
-            (MouseButton::Right, ElementState::Pressed) => {
+            Event::Key(Key::MouseRight, KeyState::Pressed) => {
                 self.movement.start(focus_point, self.cursor);
             }
-            (MouseButton::Right, ElementState::Released) => {
+            Event::Key(Key::MouseRight, KeyState::Released) => {
                 self.movement.stop();
             }
+
+            Event::Scroll(delta) => {
+                self.zoom.push_input_delta(delta, now);
+            }
+
             _ => {}
         }
-    }
-
-    /// Updates zoom state from the scroll wheel.
-    pub fn handle_mouse_wheel(
-        &mut self,
-        delta: MouseScrollDelta,
-        now: Instant,
-    ) {
-        let delta = match delta {
-            MouseScrollDelta::LineDelta(_, y) => y as f64 * 10.0,
-            MouseScrollDelta::PixelDelta(PhysicalPosition { y, .. }) => y,
-        };
-
-        self.zoom.push_input_delta(delta, now);
     }
 
     /// Update application state from user input.
@@ -138,10 +109,10 @@ impl Handler {
         delta_t: f64,
         now: Instant,
         camera: &mut Camera,
-        window: &Window,
+        size: Size,
         mesh: &Mesh<Point<3>>,
     ) {
-        let focus_point = camera.focus_point(window, self.cursor, mesh);
+        let focus_point = camera.focus_point(size, self.cursor, mesh);
 
         self.zoom.discard_old_events(now);
         self.zoom.update_speed(now, delta_t, focus_point, camera);
