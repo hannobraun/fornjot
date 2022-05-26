@@ -65,19 +65,19 @@ impl Handler {
     /// Applies cursor movement to `camera`.
     pub fn handle_cursor_moved(
         &mut self,
-        cursor: Position,
+        position: Position,
         camera: &mut Camera,
         size: Size,
     ) {
         if let Some(previous) = self.cursor {
-            let diff_x = cursor.x - previous.x;
-            let diff_y = cursor.y - previous.y;
+            let diff_x = position.x - previous.x;
+            let diff_y = position.y - previous.y;
 
             self.movement.apply(self.cursor, camera, size);
             self.rotation.apply(diff_x, diff_y, camera);
         }
 
-        self.cursor = Some(cursor);
+        self.cursor = Some(position);
     }
 
     /// Updates `state` and `focus_point` when mouse is clicked.
