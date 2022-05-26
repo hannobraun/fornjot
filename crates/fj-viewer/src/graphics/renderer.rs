@@ -39,9 +39,6 @@ pub struct Renderer {
 impl Renderer {
     /// Returns a new `Renderer`.
     ///
-    /// # Arguments
-    /// - `window` - a `crate::window::Window` with a surface to render onto.
-    ///
     /// # Examples
     /// ```rust no_run
     /// use fj_viewer::{graphics, window};
