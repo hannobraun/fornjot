@@ -2,10 +2,7 @@ use std::time::Instant;
 
 use fj_interop::mesh::Mesh;
 use fj_math::{Point, Transform, Vector};
-use winit::{
-    dpi::PhysicalPosition,
-    event::{ElementState, MouseButton, MouseScrollDelta},
-};
+use winit::{dpi::PhysicalPosition, event::MouseScrollDelta};
 
 use crate::{
     camera::{Camera, FocusPoint},
@@ -57,6 +54,7 @@ impl Handler {
         &mut self,
         event: Event,
         screen_size: Size,
+        focus_point: FocusPoint,
         camera: &mut Camera,
         actions: &mut Actions,
     ) {
@@ -84,30 +82,19 @@ impl Handler {
                 actions.toggle_debug = true
             }
 
-            _ => {}
-        }
-    }
-
-    /// Updates `state` and `focus_point` when mouse is clicked.
-    pub fn handle_mouse_input(
-        &mut self,
-        button: MouseButton,
-        state: ElementState,
-        focus_point: FocusPoint,
-    ) {
-        match (button, state) {
-            (MouseButton::Left, ElementState::Pressed) => {
+            Event::Key(Key::MouseLeft, KeyState::Pressed) => {
                 self.rotation.start(focus_point);
             }
-            (MouseButton::Left, ElementState::Released) => {
+            Event::Key(Key::MouseLeft, KeyState::Released) => {
                 self.rotation.stop();
             }
-            (MouseButton::Right, ElementState::Pressed) => {
+            Event::Key(Key::MouseRight, KeyState::Pressed) => {
                 self.movement.start(focus_point, self.cursor);
             }
-            (MouseButton::Right, ElementState::Released) => {
+            Event::Key(Key::MouseRight, KeyState::Released) => {
                 self.movement.stop();
             }
+
             _ => {}
         }
     }

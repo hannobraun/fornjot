@@ -10,7 +10,10 @@ use fj_operations::shape_processor::ShapeProcessor;
 use futures::executor::block_on;
 use tracing::{trace, warn};
 use winit::{
-    event::{ElementState, Event, KeyboardInput, VirtualKeyCode, WindowEvent},
+    event::{
+        ElementState, Event, KeyboardInput, MouseButton, VirtualKeyCode,
+        WindowEvent,
+    },
     event_loop::{ControlFlow, EventLoop},
 };
 
@@ -143,21 +146,20 @@ pub fn run(
                 event: WindowEvent::MouseInput { state, button, .. },
                 ..
             } => {
-                if let (Some(shape), Some(camera)) = (&shape, &camera) {
-                    let focus_point = camera.focus_point(
-                        window.size(),
-                        input_handler.cursor(),
-                        &shape.mesh,
-                    );
+                let state = match state {
+                    ElementState::Pressed => input::KeyState::Pressed,
+                    ElementState::Released => input::KeyState::Released,
+                };
 
-                    input_handler.handle_mouse_input(
-                        button,
-                        state,
-                        focus_point,
-                    );
+                match button {
+                    MouseButton::Left => {
+                        Some(input::Event::Key(input::Key::MouseLeft, state))
+                    }
+                    MouseButton::Right => {
+                        Some(input::Event::Key(input::Key::MouseRight, state))
+                    }
+                    _ => None,
                 }
-
-                None
             }
             Event::WindowEvent {
                 event: WindowEvent::MouseWheel { delta, .. },
@@ -198,10 +200,19 @@ pub fn run(
             _ => None,
         };
 
-        if let (Some(event), Some(camera)) = (event, &mut camera) {
+        if let (Some(event), Some(shape), Some(camera)) =
+            (event, &shape, &mut camera)
+        {
+            let focus_point = camera.focus_point(
+                window.size(),
+                input_handler.cursor(),
+                &shape.mesh,
+            );
+
             input_handler.handle_event(
                 event,
                 window.size(),
+                focus_point,
                 camera,
                 &mut actions,
             );

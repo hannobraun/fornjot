@@ -22,6 +22,12 @@ pub enum Key {
 
     /// The numerical key `3`
     Key3,
+
+    /// The left mouse key
+    MouseLeft,
+
+    /// The right mouse key
+    MouseRight,
 }
 
 /// Defines the meaning of a key event
