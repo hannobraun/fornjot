@@ -2,6 +2,8 @@
 
 use winit::{event_loop::EventLoop, window::WindowBuilder};
 
+use crate::screen::Size;
+
 /// Window abstraction providing details such as the width or height and easing initialization.
 pub struct Window(winit::window::Window);
 
@@ -29,14 +31,14 @@ impl Window {
         &self.0
     }
 
-    /// Returns the width of the window
-    pub fn width(&self) -> u32 {
-        self.0.inner_size().width
-    }
+    /// Returns the size of the window
+    pub fn size(&self) -> Size {
+        let size = self.0.inner_size();
 
-    /// Returns the height of the window
-    pub fn height(&self) -> u32 {
-        self.0.inner_size().height
+        Size {
+            width: size.width,
+            height: size.height,
+        }
     }
 }
 

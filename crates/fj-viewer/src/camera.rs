@@ -4,7 +4,10 @@ use std::f64::consts::FRAC_PI_2;
 use fj_interop::mesh::Mesh;
 use fj_math::{Aabb, Point, Scalar, Transform, Triangle, Vector};
 
-use crate::{screen::Position, window::Window};
+use crate::{
+    screen::{Position, Size},
+    window::Window,
+};
 
 /// The camera abstraction
 ///
@@ -110,8 +113,9 @@ impl Camera {
         cursor: Position,
         window: &Window,
     ) -> Point<3> {
-        let width = window.width() as f64;
-        let height = window.height() as f64;
+        let Size { width, height } = window.size();
+        let width = width as f64;
+        let height = height as f64;
         let aspect_ratio = width / height;
 
         // Cursor position in normalized coordinates (-1 to +1) with

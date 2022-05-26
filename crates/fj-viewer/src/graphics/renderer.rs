@@ -86,11 +86,12 @@ impl Renderer {
             .get_preferred_format(&adapter)
             .expect("Error determining preferred color format");
 
+        let Size { width, height } = window.size();
         let surface_config = wgpu::SurfaceConfiguration {
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
             format: color_format,
-            width: window.width(),
-            height: window.height(),
+            width,
+            height,
             present_mode: wgpu::PresentMode::Mailbox,
         };
         surface.configure(&device, &surface_config);
