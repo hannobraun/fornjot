@@ -7,6 +7,6 @@ mod rotation;
 mod zoom;
 
 pub use self::{
-    event::{Event, Key},
+    event::{Event, Key, KeyState},
     handler::{Actions, Handler},
 };

@@ -12,7 +12,10 @@ use crate::{
     screen::{Position, Size},
 };
 
-use super::{movement::Movement, rotation::Rotation, zoom::Zoom, Event, Key};
+use super::{
+    event::KeyState, movement::Movement, rotation::Rotation, zoom::Zoom, Event,
+    Key,
+};
 
 /// Input handling abstraction
 ///
@@ -69,13 +72,19 @@ impl Handler {
 
                 self.cursor = Some(position);
             }
-            Event::KeyPressed(key) => match key {
-                Key::Escape => actions.exit = true,
+            Event::Key(Key::Escape, KeyState::Pressed) => actions.exit = true,
 
-                Key::Key1 => actions.toggle_model = true,
-                Key::Key2 => actions.toggle_mesh = true,
-                Key::Key3 => actions.toggle_debug = true,
-            },
+            Event::Key(Key::Key1, KeyState::Pressed) => {
+                actions.toggle_model = true
+            }
+            Event::Key(Key::Key2, KeyState::Pressed) => {
+                actions.toggle_mesh = true
+            }
+            Event::Key(Key::Key3, KeyState::Pressed) => {
+                actions.toggle_debug = true
+            }
+
+            _ => {}
         }
     }
 

@@ -17,7 +17,7 @@ use winit::{
 use crate::{
     camera::Camera,
     graphics::{self, DrawConfig, Renderer},
-    input::{self},
+    input::{self, KeyState},
     screen::{Position, Screen as _, Size},
     window::{self, Window},
 };
@@ -113,17 +113,18 @@ pub fn run(
                     },
                 ..
             } => match virtual_key_code {
-                VirtualKeyCode::Escape => {
-                    Some(input::Event::KeyPressed(input::Key::Escape))
-                }
+                VirtualKeyCode::Escape => Some(input::Event::Key(
+                    input::Key::Escape,
+                    KeyState::Pressed,
+                )),
                 VirtualKeyCode::Key1 => {
-                    Some(input::Event::KeyPressed(input::Key::Key1))
+                    Some(input::Event::Key(input::Key::Key1, KeyState::Pressed))
                 }
                 VirtualKeyCode::Key2 => {
-                    Some(input::Event::KeyPressed(input::Key::Key2))
+                    Some(input::Event::Key(input::Key::Key2, KeyState::Pressed))
                 }
                 VirtualKeyCode::Key3 => {
-                    Some(input::Event::KeyPressed(input::Key::Key3))
+                    Some(input::Event::Key(input::Key::Key3, KeyState::Pressed))
                 }
 
                 _ => None,

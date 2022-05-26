@@ -5,8 +5,8 @@ pub enum Event {
     /// The cursor has moved to another position
     CursorMoved(Position),
 
-    /// A key has been pressed
-    KeyPressed(Key),
+    /// A key has been pressed or released
+    Key(Key, KeyState),
 }
 
 /// A keyboard or mouse key
@@ -22,4 +22,13 @@ pub enum Key {
 
     /// The numerical key `3`
     Key3,
+}
+
+/// Defines the meaning of a key event
+pub enum KeyState {
+    /// A key was pressed
+    Pressed,
+
+    /// A key was released
+    Released,
 }
