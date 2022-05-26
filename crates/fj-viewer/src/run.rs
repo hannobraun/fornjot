@@ -133,12 +133,12 @@ pub fn run(
                 ..
             } => {
                 if let Some(camera) = &mut camera {
-                    let cursor = Position {
+                    let position = Position {
                         x: position.x,
                         y: position.y,
                     };
                     input_handler.handle_cursor_moved(
-                        cursor,
+                        position,
                         camera,
                         window.size(),
                     );
