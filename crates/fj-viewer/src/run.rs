@@ -10,7 +10,7 @@ use fj_operations::shape_processor::ShapeProcessor;
 use futures::executor::block_on;
 use tracing::{trace, warn};
 use winit::{
-    event::{Event, WindowEvent},
+    event::{ElementState, Event, KeyboardInput, VirtualKeyCode, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
 };
 
@@ -98,10 +98,38 @@ pub fn run(
                 renderer.handle_resize(size);
             }
             Event::WindowEvent {
-                event: WindowEvent::KeyboardInput { input, .. },
+                event:
+                    WindowEvent::KeyboardInput {
+                        input:
+                            KeyboardInput {
+                                state: ElementState::Pressed,
+                                virtual_keycode: Some(virtual_key_code),
+                                ..
+                            },
+                        ..
+                    },
                 ..
             } => {
-                input_handler.handle_keyboard_input(input, &mut actions);
+                let event = match virtual_key_code {
+                    VirtualKeyCode::Escape => {
+                        Some(input::Event::KeyPressed(input::Key::Escape))
+                    }
+                    VirtualKeyCode::Key1 => {
+                        Some(input::Event::KeyPressed(input::Key::Key1))
+                    }
+                    VirtualKeyCode::Key2 => {
+                        Some(input::Event::KeyPressed(input::Key::Key2))
+                    }
+                    VirtualKeyCode::Key3 => {
+                        Some(input::Event::KeyPressed(input::Key::Key3))
+                    }
+
+                    _ => None,
+                };
+
+                if let Some(event) = event {
+                    input_handler.handle_event(event, &mut actions);
+                }
             }
             Event::WindowEvent {
                 event: WindowEvent::CursorMoved { position, .. },

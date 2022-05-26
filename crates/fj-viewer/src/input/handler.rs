@@ -4,10 +4,7 @@ use fj_interop::mesh::Mesh;
 use fj_math::{Point, Transform, Vector};
 use winit::{
     dpi::PhysicalPosition,
-    event::{
-        ElementState, KeyboardInput, MouseButton, MouseScrollDelta,
-        VirtualKeyCode,
-    },
+    event::{ElementState, MouseButton, MouseScrollDelta},
 };
 
 use crate::{
@@ -15,7 +12,7 @@ use crate::{
     screen::{Position, Size},
 };
 
-use super::{movement::Movement, rotation::Rotation, zoom::Zoom};
+use super::{movement::Movement, rotation::Rotation, zoom::Zoom, Event, Key};
 
 /// Input handling abstraction
 ///
@@ -52,27 +49,16 @@ impl Handler {
         self.cursor
     }
 
-    /// Applies user input to `actions`.
-    pub fn handle_keyboard_input(
-        &mut self,
-        input: KeyboardInput,
-        actions: &mut Actions,
-    ) {
-        if let KeyboardInput {
-            state: ElementState::Pressed,
-            virtual_keycode: Some(virtual_key_code),
-            ..
-        } = input
-        {
-            match virtual_key_code {
-                VirtualKeyCode::Escape => actions.exit = true,
+    /// Handle an input event
+    pub fn handle_event(&mut self, event: Event, actions: &mut Actions) {
+        match event {
+            Event::KeyPressed(key) => match key {
+                Key::Escape => actions.exit = true,
 
-                VirtualKeyCode::Key1 => actions.toggle_model = true,
-                VirtualKeyCode::Key2 => actions.toggle_mesh = true,
-                VirtualKeyCode::Key3 => actions.toggle_debug = true,
-
-                _ => (),
-            }
+                Key::Key1 => actions.toggle_model = true,
+                Key::Key2 => actions.toggle_mesh = true,
+                Key::Key3 => actions.toggle_debug = true,
+            },
         }
     }
 
