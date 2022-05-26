@@ -6,7 +6,11 @@ use tracing::debug;
 use wgpu::util::DeviceExt as _;
 use wgpu_glyph::ab_glyph::InvalidFont;
 
-use crate::{camera::Camera, screen::Size, window::Window};
+use crate::{
+    camera::Camera,
+    screen::{Screen as _, Size},
+    window::Window,
+};
 
 use super::{
     config_ui::ConfigUi, draw_config::DrawConfig, drawables::Drawables,
@@ -54,7 +58,7 @@ impl Renderer {
         let instance = wgpu::Instance::new(wgpu::Backends::PRIMARY);
 
         // This is sound, as `window` is an object to create a surface upon.
-        let surface = unsafe { instance.create_surface(window.inner()) };
+        let surface = unsafe { instance.create_surface(window.window()) };
 
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptions {

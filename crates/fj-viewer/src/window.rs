@@ -2,7 +2,7 @@
 
 use winit::{event_loop::EventLoop, window::WindowBuilder};
 
-use crate::screen::Size;
+use crate::screen::{Screen, Size};
 
 /// Window abstraction providing details such as the width or height and easing initialization.
 pub struct Window(winit::window::Window);
@@ -25,20 +25,22 @@ impl Window {
 
         Ok(Self(window))
     }
+}
 
-    /// Returns a shared reference to the wrapped window
-    pub fn inner(&self) -> &winit::window::Window {
-        &self.0
-    }
+impl Screen for Window {
+    type Window = winit::window::Window;
 
-    /// Returns the size of the window
-    pub fn size(&self) -> Size {
+    fn size(&self) -> Size {
         let size = self.0.inner_size();
 
         Size {
             width: size.width,
             height: size.height,
         }
+    }
+
+    fn window(&self) -> &winit::window::Window {
+        &self.0
     }
 }
 

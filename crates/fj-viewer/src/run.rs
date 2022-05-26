@@ -18,7 +18,7 @@ use crate::{
     camera::Camera,
     graphics::{self, DrawConfig, Renderer},
     input::{self},
-    screen::{Position, Size},
+    screen::{Position, Screen as _, Size},
     window::{self, Window},
 };
 
@@ -157,7 +157,7 @@ pub fn run(
                     );
                 }
 
-                window.inner().request_redraw();
+                window.window().request_redraw();
             }
             Event::RedrawRequested(_) => {
                 if let (Some(shape), Some(camera)) = (&shape, &mut camera) {
