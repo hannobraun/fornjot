@@ -5,9 +5,8 @@ use thiserror::Error;
 use tracing::debug;
 use wgpu::util::DeviceExt as _;
 use wgpu_glyph::ab_glyph::InvalidFont;
-use winit::dpi::PhysicalSize;
 
-use crate::{camera::Camera, window::Window};
+use crate::{camera::Camera, screen::Size, window::Window};
 
 use super::{
     config_ui::ConfigUi, draw_config::DrawConfig, drawables::Drawables,
@@ -182,7 +181,7 @@ impl Renderer {
     ///
     /// # Arguments
     /// - `size`: The target size for the render surface.
-    pub fn handle_resize(&mut self, size: PhysicalSize<u32>) {
+    pub fn handle_resize(&mut self, size: Size) {
         self.surface_config.width = size.width;
         self.surface_config.height = size.height;
 

@@ -9,3 +9,13 @@ pub struct Position {
     /// The y coordinate of the position
     pub y: f64,
 }
+
+/// The size of the screen
+#[derive(Clone, Copy, Debug)]
+pub struct Size {
+    /// The width of the screen
+    pub width: u32,
+
+    /// The height of the screen
+    pub height: u32,
+}

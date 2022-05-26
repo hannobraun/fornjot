@@ -18,7 +18,7 @@ use crate::{
     camera::Camera,
     graphics::{self, DrawConfig, Renderer},
     input::{self},
-    screen::Position,
+    screen::{Position, Size},
     window::{self, Window},
 };
 
@@ -91,6 +91,10 @@ pub fn run(
                 event: WindowEvent::Resized(size),
                 ..
             } => {
+                let size = Size {
+                    width: size.width,
+                    height: size.height,
+                };
                 renderer.handle_resize(size);
             }
             Event::WindowEvent {
