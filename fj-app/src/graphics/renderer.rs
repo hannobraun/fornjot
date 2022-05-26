@@ -270,6 +270,87 @@ impl Renderer {
             )
             .map_err(DrawError::Text)?;
 
+        //
+
+        //
+        // This integration is basically the result of locating the
+        // `.present()` call in the `egui` example, here:
+        //
+        //     <https://github.com/hasenbanck/egui_example/blob/ca1262a701daf0b20e097ef627fc301ab63339d9/src/main.rs#L177>
+        //
+        // and then the equivalent call in `renderer.rs`, here:
+        //
+        //     <https://github.com/hannobraun/Fornjot/blob/15294c2ca2fa5ac5016bb29853943b28952f2dae/fj-app/src/graphics/renderer.rs#L245>
+        //
+        // Then working backwards from there to merge the functionality.
+        //
+        // In addition, the following examples were also referenced:
+        //
+        //  * "Make the example more like an actual use case #17"
+        //    <https://github.com/hasenbanck/egui_example/pull/17/files>
+        //    This removes some non-essential code from the example
+        //    which helps clarify what's *actually* necessary.
+        //
+        //  * "Update to 0.17, use official winit backend #18"
+        //    <https://github.com/hasenbanck/egui_example/pull/18/files>
+        //    This uses a more up-to-date `egui` version which
+        //    included some API changes.
+        //    It's still not the *latest* `egui` version though.
+        //
+
+        let egui_input = egui::RawInput::default(); // TODO: Change this to use actual input.
+        self.egui_context.begin_frame(egui_input);
+
+        // End the UI frame. We could now handle the output and draw the UI with the backend.
+        let egui_output = self.egui_context.end_frame();
+        let egui_paint_jobs = self.egui_context.tessellate(egui_output.shapes);
+
+        // Upload all resources for the GPU.
+        let egui_screen_descriptor = egui_wgpu_backend::ScreenDescriptor {
+            physical_width: self.surface_config.width,
+            physical_height: self.surface_config.height,
+            scale_factor: 1.0, // TODO: window.scale_factor() as f32,
+        };
+
+        self.egui_rpass
+            .add_textures(
+                &self.device,
+                &self.queue,
+                &egui_output.textures_delta,
+            )
+            .unwrap();
+
+        // TODO: egui_rpass.remove_textures(output.textures_delta).unwrap();
+
+        self.egui_rpass.update_buffers(
+            &self.device,
+            &self.queue,
+            &egui_paint_jobs,
+            &egui_screen_descriptor,
+        );
+
+        tracing::info!("pre-execute (egui_rpass)");
+
+        self.egui_rpass
+            .execute(
+                &mut encoder,
+                &color_view,
+                &egui_paint_jobs,
+                &egui_screen_descriptor,
+                //
+                // "Set this to `None` to overlay the UI on top of what's in the framebuffer"
+                // via <https://github.com/hasenbanck/egui_example/pull/17/files#diff-42cb6807ad74b3e201c5a7ca98b911c5fa08380e942be6e4ac5807f8377f87fcR132>
+                //
+                // Alternatively, for initial testing, you can use a colour without alpha
+                // (e.g. `Some(wgpu::Color {r:0.5, g:0.0, b:0.0, a:1.0})` ) in order
+                // to verify that the renderpass is doing *something*.
+                //
+                None,
+            )
+            .unwrap();
+
+        //
+
         let command_buffer = encoder.finish();
         self.queue.submit(Some(command_buffer));
 
