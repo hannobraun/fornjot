@@ -53,11 +53,11 @@ impl Renderer {
     /// // Attach renderer to the window
     /// let mut renderer = graphics::Renderer::new(&window);
     /// ```
-    pub async fn new(window: &impl Screen) -> Result<Self, InitError> {
+    pub async fn new(screen: &impl Screen) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::PRIMARY);
 
         // This is sound, as `window` is an object to create a surface upon.
-        let surface = unsafe { instance.create_surface(window.window()) };
+        let surface = unsafe { instance.create_surface(screen.window()) };
 
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptions {
@@ -89,7 +89,7 @@ impl Renderer {
             .get_preferred_format(&adapter)
             .expect("Error determining preferred color format");
 
-        let Size { width, height } = window.size();
+        let Size { width, height } = screen.size();
         let surface_config = wgpu::SurfaceConfiguration {
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
             format: color_format,
