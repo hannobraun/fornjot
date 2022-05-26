@@ -1,5 +1,10 @@
+use crate::screen::Position;
+
 /// An input event
 pub enum Event {
+    /// The cursor has moved to another position
+    CursorMoved(Position),
+
     /// A key has been pressed
     KeyPressed(Key),
 }

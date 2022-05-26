@@ -132,19 +132,11 @@ pub fn run(
                 event: WindowEvent::CursorMoved { position, .. },
                 ..
             } => {
-                if let Some(camera) = &mut camera {
-                    let position = Position {
-                        x: position.x,
-                        y: position.y,
-                    };
-                    input_handler.handle_cursor_moved(
-                        position,
-                        camera,
-                        window.size(),
-                    );
-                }
-
-                None
+                let position = Position {
+                    x: position.x,
+                    y: position.y,
+                };
+                Some(input::Event::CursorMoved(position))
             }
             Event::WindowEvent {
                 event: WindowEvent::MouseInput { state, button, .. },
@@ -205,8 +197,13 @@ pub fn run(
             _ => None,
         };
 
-        if let Some(event) = event {
-            input_handler.handle_event(event, &mut actions);
+        if let (Some(event), Some(camera)) = (event, &mut camera) {
+            input_handler.handle_event(
+                event,
+                window.size(),
+                camera,
+                &mut actions,
+            );
         }
 
         if actions.exit {

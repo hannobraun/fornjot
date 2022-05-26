@@ -50,8 +50,25 @@ impl Handler {
     }
 
     /// Handle an input event
-    pub fn handle_event(&mut self, event: Event, actions: &mut Actions) {
+    pub fn handle_event(
+        &mut self,
+        event: Event,
+        screen_size: Size,
+        camera: &mut Camera,
+        actions: &mut Actions,
+    ) {
         match event {
+            Event::CursorMoved(position) => {
+                if let Some(previous) = self.cursor {
+                    let diff_x = position.x - previous.x;
+                    let diff_y = position.y - previous.y;
+
+                    self.movement.apply(self.cursor, camera, screen_size);
+                    self.rotation.apply(diff_x, diff_y, camera);
+                }
+
+                self.cursor = Some(position);
+            }
             Event::KeyPressed(key) => match key {
                 Key::Escape => actions.exit = true,
 
@@ -60,24 +77,6 @@ impl Handler {
                 Key::Key3 => actions.toggle_debug = true,
             },
         }
-    }
-
-    /// Applies cursor movement to `camera`.
-    pub fn handle_cursor_moved(
-        &mut self,
-        position: Position,
-        camera: &mut Camera,
-        screen_size: Size,
-    ) {
-        if let Some(previous) = self.cursor {
-            let diff_x = position.x - previous.x;
-            let diff_y = position.y - previous.y;
-
-            self.movement.apply(self.cursor, camera, screen_size);
-            self.rotation.apply(diff_x, diff_y, camera);
-        }
-
-        self.cursor = Some(position);
     }
 
     /// Updates `state` and `focus_point` when mouse is clicked.
