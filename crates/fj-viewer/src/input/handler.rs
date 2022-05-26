@@ -67,13 +67,13 @@ impl Handler {
         &mut self,
         position: Position,
         camera: &mut Camera,
-        size: Size,
+        screen_size: Size,
     ) {
         if let Some(previous) = self.cursor {
             let diff_x = position.x - previous.x;
             let diff_y = position.y - previous.y;
 
-            self.movement.apply(self.cursor, camera, size);
+            self.movement.apply(self.cursor, camera, screen_size);
             self.rotation.apply(diff_x, diff_y, camera);
         }
 
