@@ -1,4 +1,7 @@
-use std::f64::consts::PI;
+use std::f64::consts::{PI, TAU};
+
+// One gon in radians
+const GON_RAD: f64 = PI / 200.;
 
 /// An angle
 #[derive(Copy, Clone, Debug)]
@@ -19,6 +22,14 @@ impl Angle {
     pub fn from_deg(deg: f64) -> Self {
         Self::from_rad(deg.to_radians())
     }
+    /// Create a new angle specified in [revolutions](https://en.wikipedia.org/wiki/Turn_(angle))
+    pub fn from_rev(rev: f64) -> Self {
+        Self::from_rad(rev * TAU)
+    }
+    /// Create a new angle specified in [gon](https://en.wikipedia.org/wiki/Gradian)
+    pub fn from_gon(gon: f64) -> Self {
+        Self::from_rad(gon * GON_RAD)
+    }
     /// Retrieve value of angle as radians
     pub fn rad(&self) -> f64 {
         self.rad
@@ -27,12 +38,20 @@ impl Angle {
     pub fn deg(&self) -> f64 {
         self.rad.to_degrees()
     }
+    /// Retrieve value of angle as [revolutions](https://en.wikipedia.org/wiki/Turn_(angle))
+    pub fn rev(&self) -> f64 {
+        self.rad / TAU
+    }
+    /// Retrieve value of angle as [gon](https://en.wikipedia.org/wiki/Gradian)
+    pub fn gon(&self) -> f64 {
+        self.rad / GON_RAD
+    }
 
     // ensures that the angle is always 0 <= a < 2*pi
     fn wrap(rad: f64) -> f64 {
-        let modulo = rad % (2. * PI);
+        let modulo = rad % TAU;
         if modulo < 0. {
-            2. * PI + modulo
+            TAU + modulo
         } else {
             modulo
         }
@@ -72,30 +91,37 @@ impl std::ops::SubAssign for Angle {
     }
 }
 
-impl std::ops::Mul for Angle {
+impl std::ops::Mul<f64> for Angle {
     type Output = Angle;
-    fn mul(self, rhs: Self) -> Self::Output {
-        Self::from_rad(self.rad * rhs.rad)
+    fn mul(self, rhs: f64) -> Self::Output {
+        Self::from_rad(self.rad * rhs)
     }
 }
 
-impl std::ops::MulAssign for Angle {
-    fn mul_assign(&mut self, rhs: Self) {
-        self.rad *= rhs.rad;
+impl std::ops::Mul<Angle> for f64 {
+    type Output = Angle;
+    fn mul(self, rhs: Angle) -> Self::Output {
+        rhs * self
+    }
+}
+
+impl std::ops::MulAssign<f64> for Angle {
+    fn mul_assign(&mut self, rhs: f64) {
+        self.rad *= rhs;
         self.wrap_assign()
     }
 }
 
-impl std::ops::Div for Angle {
+impl std::ops::Div<f64> for Angle {
     type Output = Angle;
-    fn div(self, rhs: Self) -> Self::Output {
-        Self::from_rad(self.rad / rhs.rad)
+    fn div(self, rhs: f64) -> Self::Output {
+        Self::from_rad(self.rad / rhs)
     }
 }
 
-impl std::ops::DivAssign for Angle {
-    fn div_assign(&mut self, rhs: Self) {
-        self.rad /= rhs.rad;
+impl std::ops::DivAssign<f64> for Angle {
+    fn div_assign(&mut self, rhs: f64) {
+        self.rad /= rhs;
         self.wrap_assign()
     }
 }
