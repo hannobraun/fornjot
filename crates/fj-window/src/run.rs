@@ -7,6 +7,12 @@ use std::{error, time::Instant};
 
 use fj_host::Watcher;
 use fj_operations::shape_processor::ShapeProcessor;
+use fj_viewer::{
+    camera::Camera,
+    graphics::{self, DrawConfig, Renderer},
+    input::{self, KeyState},
+    screen::{Position, Screen as _, Size},
+};
 use futures::executor::block_on;
 use tracing::{trace, warn};
 use winit::{
@@ -18,13 +24,7 @@ use winit::{
     event_loop::{ControlFlow, EventLoop},
 };
 
-use crate::{
-    camera::Camera,
-    graphics::{self, DrawConfig, Renderer},
-    input::{self, KeyState},
-    screen::{Position, Screen as _, Size},
-    window::{self, Window},
-};
+use crate::window::{self, Window};
 
 /// Initializes a model viewer for a given model and enters its process loop.
 pub fn run(

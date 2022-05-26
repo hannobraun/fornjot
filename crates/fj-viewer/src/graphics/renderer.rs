@@ -38,18 +38,6 @@ pub struct Renderer {
 
 impl Renderer {
     /// Returns a new `Renderer`.
-    ///
-    /// # Examples
-    /// ```rust no_run
-    /// use fj_viewer::{graphics, window};
-    ///
-    /// // Create window
-    /// let event_loop = winit::event_loop::EventLoop::new();
-    /// let window = window::Window::new(&event_loop).unwrap();
-    ///
-    /// // Attach renderer to the window
-    /// let mut renderer = graphics::Renderer::new(&window);
-    /// ```
     pub async fn new(screen: &impl Screen) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::PRIMARY);
 

@@ -1,20 +1,13 @@
 //! CAD viewer utility windowing abstraction
 
+use fj_viewer::screen::{Screen, Size};
 use winit::{event_loop::EventLoop, window::WindowBuilder};
-
-use crate::screen::{Screen, Size};
 
 /// Window abstraction providing details such as the width or height and easing initialization.
 pub struct Window(winit::window::Window);
 
 impl Window {
     /// Returns a new window with the given `EventLoop`.
-    ///
-    /// # Examples
-    /// ```rust no_run
-    /// let event_loop = winit::event_loop::EventLoop::new();
-    /// let window = fj_viewer::window::Window::new(&event_loop);
-    /// ```
     pub fn new(event_loop: &EventLoop<()>) -> Result<Self, Error> {
         let window = WindowBuilder::new()
             .with_title("Fornjot")
