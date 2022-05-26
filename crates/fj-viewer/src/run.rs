@@ -80,12 +80,13 @@ pub fn run(
             }
         }
 
-        match event {
+        let event = match event {
             Event::WindowEvent {
                 event: WindowEvent::CloseRequested,
                 ..
             } => {
                 *control_flow = ControlFlow::Exit;
+                None
             }
             Event::WindowEvent {
                 event: WindowEvent::Resized(size),
@@ -96,6 +97,8 @@ pub fn run(
                     height: size.height,
                 };
                 renderer.handle_resize(size);
+
+                None
             }
             Event::WindowEvent {
                 event:
@@ -109,28 +112,22 @@ pub fn run(
                         ..
                     },
                 ..
-            } => {
-                let event = match virtual_key_code {
-                    VirtualKeyCode::Escape => {
-                        Some(input::Event::KeyPressed(input::Key::Escape))
-                    }
-                    VirtualKeyCode::Key1 => {
-                        Some(input::Event::KeyPressed(input::Key::Key1))
-                    }
-                    VirtualKeyCode::Key2 => {
-                        Some(input::Event::KeyPressed(input::Key::Key2))
-                    }
-                    VirtualKeyCode::Key3 => {
-                        Some(input::Event::KeyPressed(input::Key::Key3))
-                    }
-
-                    _ => None,
-                };
-
-                if let Some(event) = event {
-                    input_handler.handle_event(event, &mut actions);
+            } => match virtual_key_code {
+                VirtualKeyCode::Escape => {
+                    Some(input::Event::KeyPressed(input::Key::Escape))
                 }
-            }
+                VirtualKeyCode::Key1 => {
+                    Some(input::Event::KeyPressed(input::Key::Key1))
+                }
+                VirtualKeyCode::Key2 => {
+                    Some(input::Event::KeyPressed(input::Key::Key2))
+                }
+                VirtualKeyCode::Key3 => {
+                    Some(input::Event::KeyPressed(input::Key::Key3))
+                }
+
+                _ => None,
+            },
             Event::WindowEvent {
                 event: WindowEvent::CursorMoved { position, .. },
                 ..
@@ -146,6 +143,8 @@ pub fn run(
                         window.size(),
                     );
                 }
+
+                None
             }
             Event::WindowEvent {
                 event: WindowEvent::MouseInput { state, button, .. },
@@ -164,12 +163,15 @@ pub fn run(
                         focus_point,
                     );
                 }
+
+                None
             }
             Event::WindowEvent {
                 event: WindowEvent::MouseWheel { delta, .. },
                 ..
             } => {
                 input_handler.handle_mouse_wheel(delta, now);
+                None
             }
             Event::MainEventsCleared => {
                 let delta_t = now.duration_since(previous_time);
@@ -186,6 +188,8 @@ pub fn run(
                 }
 
                 window.window().request_redraw();
+
+                None
             }
             Event::RedrawRequested(_) => {
                 if let (Some(shape), Some(camera)) = (&shape, &mut camera) {
@@ -195,8 +199,14 @@ pub fn run(
                         warn!("Draw error: {}", err);
                     }
                 }
+
+                None
             }
-            _ => {}
+            _ => None,
+        };
+
+        if let Some(event) = event {
+            input_handler.handle_event(event, &mut actions);
         }
 
         if actions.exit {
