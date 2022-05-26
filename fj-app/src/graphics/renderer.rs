@@ -304,6 +304,13 @@ impl Renderer {
         // A simple UI
         egui::Window::new("Window").show(&self.egui_context, |ui| {
             ui.label("Hello world!");
+            ui.label(format!(
+                "{}",
+                std::time::SystemTime::now()
+                    .duration_since(std::time::SystemTime::UNIX_EPOCH)
+                    .unwrap_or_default()
+                    .as_secs()
+            ));
         });
 
         // End the UI frame. We could now handle the output and draw the UI with the backend.
