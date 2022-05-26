@@ -1,5 +1,19 @@
 //! Types that describe aspects of the screen
 
+pub use raw_window_handle::HasRawWindowHandle;
+
+/// Needs to be implemented by types that can serve as a screen to render to
+pub trait Screen {
+    /// The window
+    type Window: HasRawWindowHandle;
+
+    /// Access the size of the screen
+    fn size(&self) -> Size;
+
+    /// Access the window
+    fn window(&self) -> &Self::Window;
+}
+
 /// A position on the screen
 #[derive(Clone, Copy, Debug)]
 pub struct Position {
