@@ -1,14 +1,14 @@
 use fj_math::{Point, Scalar, Transform, Vector};
-use winit::dpi::PhysicalPosition;
 
 use crate::{
     camera::{Camera, FocusPoint},
+    screen::Position,
     window::Window,
 };
 
 pub struct Movement {
     focus_point: FocusPoint,
-    cursor: Option<PhysicalPosition<f64>>,
+    cursor: Option<Position>,
 }
 
 impl Movement {
@@ -19,11 +19,7 @@ impl Movement {
         }
     }
 
-    pub fn start(
-        &mut self,
-        focus_point: FocusPoint,
-        cursor: Option<PhysicalPosition<f64>>,
-    ) {
+    pub fn start(&mut self, focus_point: FocusPoint, cursor: Option<Position>) {
         self.focus_point = focus_point;
         self.cursor = cursor;
     }
@@ -34,7 +30,7 @@ impl Movement {
 
     pub fn apply(
         &mut self,
-        cursor: Option<PhysicalPosition<f64>>,
+        cursor: Option<Position>,
         camera: &mut Camera,
         window: &Window,
     ) {

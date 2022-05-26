@@ -3,9 +3,8 @@ use std::f64::consts::FRAC_PI_2;
 
 use fj_interop::mesh::Mesh;
 use fj_math::{Aabb, Point, Scalar, Transform, Triangle, Vector};
-use winit::dpi::PhysicalPosition;
 
-use crate::window::Window;
+use crate::{screen::Position, window::Window};
 
 /// The camera abstraction
 ///
@@ -108,7 +107,7 @@ impl Camera {
     /// Transform the position of the cursor on the near plane to model space.
     pub fn cursor_to_model_space(
         &self,
-        cursor: PhysicalPosition<f64>,
+        cursor: Position,
         window: &Window,
     ) -> Point<3> {
         let width = window.width() as f64;
@@ -132,7 +131,7 @@ impl Camera {
     pub fn focus_point(
         &self,
         window: &Window,
-        cursor: Option<PhysicalPosition<f64>>,
+        cursor: Option<Position>,
         mesh: &Mesh<fj_math::Point<3>>,
     ) -> FocusPoint {
         let cursor = match cursor {

@@ -17,7 +17,8 @@ use winit::{
 use crate::{
     camera::Camera,
     graphics::{self, DrawConfig, Renderer},
-    input,
+    input::{self},
+    screen::Position,
     window::{self, Window},
 };
 
@@ -103,8 +104,11 @@ pub fn run(
                 ..
             } => {
                 if let Some(camera) = &mut camera {
-                    input_handler
-                        .handle_cursor_moved(position, camera, &window);
+                    let cursor = Position {
+                        x: position.x,
+                        y: position.y,
+                    };
+                    input_handler.handle_cursor_moved(cursor, camera, &window);
                 }
             }
             Event::WindowEvent {

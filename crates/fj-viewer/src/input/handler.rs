@@ -12,6 +12,7 @@ use winit::{
 
 use crate::{
     camera::{Camera, FocusPoint},
+    screen::Position,
     window::Window,
 };
 
@@ -21,7 +22,7 @@ use super::{movement::Movement, rotation::Rotation, zoom::Zoom};
 ///
 /// Takes user input and applies them to application state.
 pub struct Handler {
-    cursor: Option<PhysicalPosition<f64>>,
+    cursor: Option<Position>,
 
     movement: Movement,
     rotation: Rotation,
@@ -48,7 +49,7 @@ impl Handler {
     }
 
     /// Returns the state of the cursor position.
-    pub fn cursor(&self) -> Option<PhysicalPosition<f64>> {
+    pub fn cursor(&self) -> Option<Position> {
         self.cursor
     }
 
@@ -79,7 +80,7 @@ impl Handler {
     /// Applies cursor movement to `camera`.
     pub fn handle_cursor_moved(
         &mut self,
-        cursor: PhysicalPosition<f64>,
+        cursor: Position,
         camera: &mut Camera,
         window: &Window,
     ) {
