@@ -33,8 +33,8 @@ pub struct Renderer {
 
     config_ui: ConfigUi,
 
-    egui_state: egui_winit::State,
-    egui_context: egui::Context,
+    pub(crate) egui_state: egui_winit::State,
+    pub(crate) egui_context: egui::Context,
 
     egui_rpass: egui_wgpu_backend::RenderPass,
 }
