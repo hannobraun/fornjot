@@ -254,7 +254,14 @@ fn main() -> anyhow::Result<()> {
                 if let (Some(shape), Some(camera)) = (&shape, &mut camera) {
                     camera.update_planes(&shape.aabb);
 
-                    match renderer.draw(camera, &draw_config) {
+                    //
+                    // It seems like this should be able to be done without passing the
+                    // window directly--especially given how the value is used
+                    // in `take_egui_input`.
+                    //
+                    // TODO: Revisit this.
+                    //
+                    match renderer.draw(camera, &draw_config, &window.inner()) {
                         Ok(()) => {}
                         Err(err) => {
                             panic!("Draw error: {}", err);

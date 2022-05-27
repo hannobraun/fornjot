@@ -207,6 +207,7 @@ impl Renderer {
         &mut self,
         camera: &Camera,
         config: &DrawConfig,
+        window: &winit::window::Window, // TODO: Handle this better?
     ) -> Result<(), DrawError> {
         let aspect_ratio = self.surface_config.width as f64
             / self.surface_config.height as f64;
@@ -298,7 +299,7 @@ impl Renderer {
         //    It's still not the *latest* `egui` version though.
         //
 
-        let egui_input = egui::RawInput::default(); // TODO: Change this to use actual input.
+        let egui_input = self.egui_state.take_egui_input(window);
         self.egui_context.begin_frame(egui_input);
 
         // A simple UI
