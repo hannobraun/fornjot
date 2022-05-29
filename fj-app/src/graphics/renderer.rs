@@ -302,11 +302,24 @@ impl Renderer {
         let egui_input = self.egui_state.take_egui_input(window);
         self.egui_context.begin_frame(egui_input);
 
+        fn get_bbox_size_text(aabb: &Aabb<3>) -> String {
+            /* Render size of model bounding box */
+            let bbsize = aabb.size().components;
+            let info = format!(
+                "Model bounding box size: {:0.1} {:0.1} {:0.1}",
+                bbsize[0].into_f32(),
+                bbsize[1].into_f32(),
+                bbsize[2].into_f32()
+            );
+            info
+        }
+
         // A simple UI
         egui::Window::new("Fornjot").show(&self.egui_context, |ui| {
             ui.checkbox(&mut config.draw_model, "Render model");
             ui.checkbox(&mut config.draw_mesh, "Render mesh");
             ui.checkbox(&mut config.draw_debug, "Render debug");
+            ui.strong(get_bbox_size_text(&self.geometries.aabb))
         });
 
         // End the UI frame. We could now handle the output and draw the UI with the backend.
