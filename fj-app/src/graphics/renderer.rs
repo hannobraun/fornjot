@@ -333,7 +333,9 @@ impl Renderer {
             )
             .unwrap();
 
-        // TODO: egui_rpass.remove_textures(output.textures_delta).unwrap();
+        self.egui_rpass
+            .remove_textures(egui_output.textures_delta)
+            .unwrap();
 
         self.egui_rpass.update_buffers(
             &self.device,
