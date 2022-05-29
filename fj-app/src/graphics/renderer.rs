@@ -319,6 +319,7 @@ impl Renderer {
             ui.checkbox(&mut config.draw_model, "Render model");
             ui.checkbox(&mut config.draw_mesh, "Render mesh");
             ui.checkbox(&mut config.draw_debug, "Render debug");
+            ui.add_space(16.0);
             ui.strong(get_bbox_size_text(&self.geometries.aabb))
         });
 
