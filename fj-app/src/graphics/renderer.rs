@@ -327,6 +327,10 @@ impl Renderer {
 
         // A simple UI
         egui::SidePanel::left("fj-left-panel").show(&self.egui_context, |ui| {
+            //
+
+            ui.add_space(16.0);
+
             ui.group(|ui| {
                 ui.checkbox(&mut config.draw_model, "Render model")
                     .on_hover_text_at_pointer("Toggle with 1");
