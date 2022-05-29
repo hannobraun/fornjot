@@ -20,6 +20,7 @@ struct EguiOptionsState {
     show_trace: bool,
     show_layout_debug_on_hover: bool,
     show_debug_text_example: bool,
+    show_original_ui: bool,
 }
 
 // Temporarily removed due to egui fields not implementing `Debug`.
@@ -271,16 +272,18 @@ impl Renderer {
             );
         }
 
-        self.config_ui
-            .draw(
-                &self.device,
-                &mut encoder,
-                &color_view,
-                &self.surface_config,
-                &self.geometries.aabb,
-                config,
-            )
-            .map_err(DrawError::Text)?;
+        if self.egui_options.show_original_ui {
+            self.config_ui
+                .draw(
+                    &self.device,
+                    &mut encoder,
+                    &color_view,
+                    &self.surface_config,
+                    &self.geometries.aabb,
+                    config,
+                )
+                .map_err(DrawError::Text)?;
+        }
 
         //
 
@@ -338,6 +341,10 @@ impl Renderer {
                     .on_hover_text_at_pointer("Toggle with 2");
                 ui.checkbox(&mut config.draw_debug, "Render debug")
                     .on_hover_text_at_pointer("Toggle with 3");
+                ui.checkbox(
+                    &mut self.egui_options.show_original_ui,
+                    "Render original UI",
+                );
                 ui.add_space(16.0);
                 ui.strong(get_bbox_size_text(&self.geometries.aabb));
             });
