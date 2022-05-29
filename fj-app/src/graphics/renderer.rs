@@ -304,14 +304,9 @@ impl Renderer {
 
         // A simple UI
         egui::Window::new("Fornjot").show(&self.egui_context, |ui| {
-            ui.label("Hello world!");
-            ui.label(format!(
-                "{}",
-                std::time::SystemTime::now()
-                    .duration_since(std::time::SystemTime::UNIX_EPOCH)
-                    .unwrap_or_default()
-                    .as_secs()
-            ));
+            ui.checkbox(&mut config.draw_model, "Render model");
+            ui.checkbox(&mut config.draw_mesh, "Render mesh");
+            ui.checkbox(&mut config.draw_debug, "Render debug");
         });
 
         // End the UI frame. We could now handle the output and draw the UI with the backend.
