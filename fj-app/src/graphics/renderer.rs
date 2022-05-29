@@ -303,7 +303,7 @@ impl Renderer {
         self.egui_context.begin_frame(egui_input);
 
         // A simple UI
-        egui::Window::new("Window").show(&self.egui_context, |ui| {
+        egui::Window::new("Fornjot").show(&self.egui_context, |ui| {
             ui.label("Hello world!");
             ui.label(format!(
                 "{}",
