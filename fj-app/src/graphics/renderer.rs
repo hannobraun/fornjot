@@ -317,7 +317,7 @@ impl Renderer {
             /* Render size of model bounding box */
             let bbsize = aabb.size().components;
             let info = format!(
-                "Model bounding box size: {:0.1} {:0.1} {:0.1}",
+                "Model bounding box size:\n{:0.1} {:0.1} {:0.1}",
                 bbsize[0].into_f32(),
                 bbsize[1].into_f32(),
                 bbsize[2].into_f32()
