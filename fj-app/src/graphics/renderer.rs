@@ -334,7 +334,11 @@ impl Renderer {
         let egui_screen_descriptor = egui_wgpu_backend::ScreenDescriptor {
             physical_width: self.surface_config.width,
             physical_height: self.surface_config.height,
-            scale_factor: 1.0, // TODO: window.scale_factor() as f32,
+            //
+            // Note: `scale_factor` can be overridden via `WINIT_X11_SCALE_FACTOR` environment variable,
+            //       see: <https://docs.rs/winit/0.26.1/winit/window/struct.Window.html#method.scale_factor>
+            //
+            scale_factor: window.scale_factor() as f32,
         };
 
         // Note: For info about the font texture, see:
