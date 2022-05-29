@@ -399,6 +399,7 @@ impl Renderer {
                 // Demonstration of the `egui` layout debug functionality.
                 //
                 ui.group(|ui| {
+                    //
 
                     if ui
                         .checkbox(
@@ -428,6 +429,7 @@ impl Renderer {
                             "Also show egui trace.",
                         );
 
+                        //
                     });
                 });
             }
