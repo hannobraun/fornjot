@@ -316,9 +316,12 @@ impl Renderer {
 
         // A simple UI
         egui::Window::new("Fornjot").show(&self.egui_context, |ui| {
-            ui.checkbox(&mut config.draw_model, "Render model");
-            ui.checkbox(&mut config.draw_mesh, "Render mesh");
-            ui.checkbox(&mut config.draw_debug, "Render debug");
+            ui.checkbox(&mut config.draw_model, "Render model")
+                .on_hover_text_at_pointer("Toggle with 1");
+            ui.checkbox(&mut config.draw_mesh, "Render mesh")
+                .on_hover_text_at_pointer("Toggle with 2");
+            ui.checkbox(&mut config.draw_debug, "Render debug")
+                .on_hover_text_at_pointer("Toggle with 3");
             ui.add_space(16.0);
             ui.strong(get_bbox_size_text(&self.geometries.aabb))
         });
