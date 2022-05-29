@@ -326,7 +326,7 @@ impl Renderer {
         }
 
         // A simple UI
-        egui::SidePanel::left("Fornjot").show(&self.egui_context, |ui| {
+        egui::SidePanel::left("fj-left-panel").show(&self.egui_context, |ui| {
             ui.checkbox(&mut config.draw_model, "Render model")
                 .on_hover_text_at_pointer("Toggle with 1");
             ui.checkbox(&mut config.draw_mesh, "Render mesh")
