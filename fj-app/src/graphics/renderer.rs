@@ -15,6 +15,11 @@ use super::{
     uniforms::Uniforms, vertices::Vertices, DEPTH_FORMAT,
 };
 
+#[derive(Default)]
+struct EguiOptionsState {
+    show_debug_text_example: bool,
+}
+
 // Temporarily removed due to egui fields not implementing `Debug`.
 /* #[derive(Debug)] */
 pub struct Renderer {
@@ -37,6 +42,8 @@ pub struct Renderer {
     pub(crate) egui_context: egui::Context,
 
     egui_rpass: egui_wgpu_backend::RenderPass,
+
+    egui_options: EguiOptionsState,
 }
 
 impl Renderer {
@@ -180,6 +187,8 @@ impl Renderer {
             egui_state,
 
             egui_rpass,
+
+            egui_options: Default::default(),
         })
     }
 
@@ -324,6 +333,54 @@ impl Renderer {
                 .on_hover_text_at_pointer("Toggle with 3");
             ui.add_space(16.0);
             ui.strong(get_bbox_size_text(&self.geometries.aabb));
+            ui.add_space(16.0);
+
+            {
+                //
+                // Originally this was only meant to be a simple demonstration
+                // of the `egui` `trace!()` macro...
+                //
+                // ...but it seems the trace feature can't be enabled
+                // separately from the layout debug feature, which all
+                // gets a bit messy...
+                //
+                // ...so, this instead shows one possible way to implement
+                // "trace only" style debug text on hover.
+                //
+                ui.group(|ui| {
+                    let label_text = format!(
+                        "Show debug text example.{}",
+                        if self.egui_options.show_debug_text_example {
+                            " (Hover me.)"
+                        } else {
+                            ""
+                        }
+                    );
+
+                    if ui
+                        .checkbox(
+                            &mut self.egui_options.show_debug_text_example,
+                            label_text,
+                        )
+                        .hovered()
+                    {
+                        if self.egui_options.show_debug_text_example {
+                            let hover_pos = ui
+                                .input()
+                                .pointer
+                                .hover_pos()
+                                .unwrap_or_default();
+                            ui.painter().debug_text(
+                                hover_pos,
+                                egui::Align2::LEFT_TOP,
+                                egui::Color32::DEBUG_COLOR,
+                                format!("{:#?}", &config),
+                            );
+                        }
+                    }
+                });
+            }
+
         });
 
         // End the UI frame. We could now handle the output and draw the UI with the backend.
