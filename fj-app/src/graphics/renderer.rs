@@ -206,7 +206,7 @@ impl Renderer {
     pub fn draw(
         &mut self,
         camera: &Camera,
-        config: &DrawConfig,
+        config: &mut DrawConfig,
         window: &winit::window::Window, // TODO: Handle this better?
     ) -> Result<(), DrawError> {
         let aspect_ratio = self.surface_config.width as f64

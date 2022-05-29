@@ -261,7 +261,11 @@ fn main() -> anyhow::Result<()> {
                     //
                     // TODO: Revisit this.
                     //
-                    match renderer.draw(camera, &draw_config, &window.inner()) {
+                    match renderer.draw(
+                        camera,
+                        &mut draw_config,
+                        &window.inner(),
+                    ) {
                         Ok(()) => {}
                         Err(err) => {
                             panic!("Draw error: {}", err);
