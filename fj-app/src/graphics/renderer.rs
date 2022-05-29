@@ -21,6 +21,8 @@ struct EguiOptionsState {
     show_layout_debug_on_hover: bool,
     show_debug_text_example: bool,
     show_original_ui: bool,
+    show_settings_ui: bool,
+    show_inspection_ui: bool,
 }
 
 // Temporarily removed due to egui fields not implementing `Debug`.
@@ -348,6 +350,34 @@ impl Renderer {
                 ui.add_space(16.0);
                 ui.strong(get_bbox_size_text(&self.geometries.aabb));
             });
+
+            ui.add_space(16.0);
+
+            {
+                ui.group(|ui| {
+                    ui.checkbox(
+                        &mut self.egui_options.show_settings_ui,
+                        "Show egui settings UI",
+                    );
+                    if self.egui_options.show_settings_ui {
+                        self.egui_context.settings_ui(ui);
+                    }
+                });
+
+                ui.add_space(16.0);
+
+                ui.group(|ui| {
+                    ui.checkbox(
+                        &mut self.egui_options.show_inspection_ui,
+                        "Show egui inspection UI",
+                    );
+                    if self.egui_options.show_inspection_ui {
+                        ui.indent("indent-inspection-ui", |ui| {
+                            self.egui_context.inspection_ui(ui);
+                        });
+                    }
+                });
+            }
 
             ui.add_space(16.0);
 
