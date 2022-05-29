@@ -359,6 +359,8 @@ impl Renderer {
                         }
                     );
 
+                    ui.style_mut().wrap = Some(false);
+
                     if ui
                         .checkbox(
                             &mut self.egui_options.show_debug_text_example,
