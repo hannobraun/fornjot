@@ -351,7 +351,7 @@ impl Renderer {
                 //
                 ui.group(|ui| {
                     let label_text = format!(
-                        "Show debug text example.{}",
+                        "Show debug text demo.{}",
                         if self.egui_options.show_debug_text_example {
                             " (Hover me.)"
                         } else {
