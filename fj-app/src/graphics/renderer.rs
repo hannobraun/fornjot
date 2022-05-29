@@ -323,7 +323,7 @@ impl Renderer {
             ui.checkbox(&mut config.draw_debug, "Render debug")
                 .on_hover_text_at_pointer("Toggle with 3");
             ui.add_space(16.0);
-            ui.strong(get_bbox_size_text(&self.geometries.aabb))
+            ui.strong(get_bbox_size_text(&self.geometries.aabb));
         });
 
         // End the UI frame. We could now handle the output and draw the UI with the backend.
