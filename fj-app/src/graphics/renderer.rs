@@ -17,6 +17,7 @@ use super::{
 
 #[derive(Default)]
 struct EguiOptionsState {
+    show_layout_debug_on_hover: bool,
     show_debug_text_example: bool,
 }
 
@@ -378,6 +379,29 @@ impl Renderer {
                             );
                         }
                     }
+                });
+            }
+
+            ui.add_space(16.0);
+
+            {
+                //
+                // Demonstration of the `egui` layout debug functionality.
+                //
+                ui.group(|ui| {
+
+                    if ui
+                        .checkbox(
+                            &mut self.egui_options.show_layout_debug_on_hover,
+                            "Show layout debug on hover.",
+                        )
+                        .changed()
+                    {
+                        ui.ctx().set_debug_on_hover(
+                            self.egui_options.show_layout_debug_on_hover,
+                        );
+                    }
+
                 });
             }
 
