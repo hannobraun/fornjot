@@ -43,7 +43,7 @@ impl Rotation {
 
             let inv = trans.inverse();
 
-            camera.rotation = trans * rot_y * rot_x * inv * camera.rotation;
+            camera.rotation = camera.rotation * trans * rot_y * rot_x * inv;
         }
     }
 }
