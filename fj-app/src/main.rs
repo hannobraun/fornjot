@@ -183,6 +183,8 @@ fn main() -> anyhow::Result<()> {
             //
             //        * Use of <https://docs.rs/egui/0.17.0/egui/struct.Context.html#method.wants_keyboard_input>.
             //
+            //        * Rendering model to offscreen texture: <https://docs.rs/egui_wgpu_backend/0.17.0/egui_wgpu_backend/struct.RenderPass.html#method.egui_texture_from_wgpu_texture>
+            //
             // TODO: Revisit this.
             //
             // TODO: Encapsulate the egui state/context access better.

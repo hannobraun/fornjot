@@ -337,6 +337,12 @@ impl Renderer {
             scale_factor: 1.0, // TODO: window.scale_factor() as f32,
         };
 
+        // Note: For info about the font texture, see:
+        //
+        //        * <https://docs.rs/egui/0.17.0/egui/enum.TextureId.html#variant.Managed>
+        //
+        //        * <https://docs.rs/epaint/0.17.0/epaint/textures/struct.TextureManager.html#method.alloc>
+
         self.egui_rpass
             .add_textures(
                 &self.device,
@@ -357,6 +363,10 @@ impl Renderer {
         );
 
         tracing::info!("pre-execute (egui_rpass)");
+
+        // Note: There is also an option to use an existing renderpass.
+        //
+        //       See: <https://docs.rs/egui_wgpu_backend/0.17.0/egui_wgpu_backend/struct.RenderPass.html#method.execute_with_renderpass>
 
         self.egui_rpass
             .execute(
