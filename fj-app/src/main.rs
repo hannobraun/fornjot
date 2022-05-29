@@ -185,6 +185,8 @@ fn main() -> anyhow::Result<()> {
             //
             //        * Rendering model to offscreen texture: <https://docs.rs/egui_wgpu_backend/0.17.0/egui_wgpu_backend/struct.RenderPass.html#method.egui_texture_from_wgpu_texture>
             //
+            //       See also: <https://github.com/hasenbanck/egui_example/blob/ec1fef19f92423e3b1f2f77aa72ff8a7dec0f141/src/main.rs#L181-L201>
+            //
             // TODO: Revisit this.
             //
             // TODO: Encapsulate the egui state/context access better.
@@ -272,6 +274,8 @@ fn main() -> anyhow::Result<()> {
                     // It seems like this should be able to be done without passing the
                     // window directly--especially given how the value is used
                     // in `take_egui_input`.
+                    //
+                    // See also: <https://github.com/hannobraun/Fornjot/blob/6591c6aa8fee8302e721813b28daa87cf28f7874/crates/fj-viewer/src/window.rs#L33-L41>.
                     //
                     // TODO: Revisit this.
                     //
