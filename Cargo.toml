@@ -20,6 +20,7 @@ members = [
     "models/cuboid",
     "models/spacer",
     "models/star",
+    "models/star_attributed_arguments",
     "models/test",
 
     "tools/export-validator",

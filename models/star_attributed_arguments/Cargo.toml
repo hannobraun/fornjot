@@ -1,0 +1,13 @@
+[package]
+name = "star_attributed_arguments"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies.fj]
+path = "../../crates/fj"
+
+[dependencies.fj-proc]
+path = "../../crates/fj-proc"
