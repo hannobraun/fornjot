@@ -171,6 +171,18 @@ fn main() -> anyhow::Result<()> {
             //       a title bar that overlaps the model then both the model & window
             //       get moved.
             //
+            //       We could also consider:
+            //
+            //        * Restricting `egui`'s view of the screen to e.g. 25% of actual window width.
+            //
+            //        * Use of <https://docs.rs/egui/0.17.0/egui/struct.Context.html#method.is_pointer_over_area>.
+            //
+            //        * Use of <https://docs.rs/egui/0.17.0/egui/struct.Context.html#method.wants_pointer_input>.
+            //
+            //        * Use of <https://docs.rs/egui/0.17.0/egui/struct.Context.html#method.is_using_pointer>.
+            //
+            //        * Use of <https://docs.rs/egui/0.17.0/egui/struct.Context.html#method.wants_keyboard_input>.
+            //
             // TODO: Revisit this.
             //
             // TODO: Encapsulate the egui state/context access better.
