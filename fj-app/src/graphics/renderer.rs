@@ -17,6 +17,7 @@ use super::{
 
 #[derive(Default)]
 struct EguiOptionsState {
+    show_trace: bool,
     show_layout_debug_on_hover: bool,
     show_debug_text_example: bool,
 }
@@ -402,8 +403,27 @@ impl Renderer {
                         );
                     }
 
+                    ui.scope(|ui| {
+                        if self.egui_options.show_trace {
+                            egui::trace!(ui, format!("{:?}", &config));
+                        }
+                    });
+
+                    ui.indent("indent-show-trace", |ui| {
+                        ui.set_enabled(
+                            self.egui_options.show_layout_debug_on_hover,
+                        );
+
+                        ui.checkbox(
+                            &mut self.egui_options.show_trace,
+                            "Also show egui trace.",
+                        );
+
+                    });
                 });
             }
+
+            ui.add_space(16.0);
 
         });
 
