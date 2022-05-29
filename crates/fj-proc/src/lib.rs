@@ -2,6 +2,8 @@ use proc_macro::TokenStream;
 use quote::quote;
 use syn::parse_macro_input;
 
+mod attributed_arguments;
+
 #[proc_macro_attribute]
 pub fn model(default_values: TokenStream, input: TokenStream) -> TokenStream {
     let vals: Vec<String> = default_values
@@ -38,6 +40,14 @@ pub fn model(default_values: TokenStream, input: TokenStream) -> TokenStream {
                 #block
             }
         }.into()
+}
+
+#[proc_macro_attribute]
+pub fn attributed_arguments(
+    default_values: TokenStream,
+    input: TokenStream,
+) -> TokenStream {
+    attributed_arguments::attributed_arguments(default_values, input)
 }
 
 // #[fj_proc::model(5, 1.0, 2.0, 1.0)]
