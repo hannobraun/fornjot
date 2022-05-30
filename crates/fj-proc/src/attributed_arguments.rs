@@ -4,14 +4,13 @@ use syn::{
     bracketed, parenthesized, parse::Parse, parse_macro_input, parse_quote,
 };
 
-pub fn attributed_arguments(
-    _default_values: TokenStream,
-    input: TokenStream,
-) -> TokenStream {
+pub fn attributed_arguments(_: TokenStream, input: TokenStream) -> TokenStream {
     let item = parse_macro_input!(input as syn::ItemFn);
     let inputs = item.clone().sig.inputs;
+
     let args: Vec<Argument> =
         inputs.iter().map(|inp| parse_quote!(#inp)).collect();
+
     let mut defaults = Vec::new();
     let mut mins = Vec::new();
     let mut maxs = Vec::new();
@@ -35,24 +34,13 @@ pub fn attributed_arguments(
                 default = Some(value.val.clone());
             }
         }
-        let attr_param = AttributeParameter::new(default, min, max);
-        defaults.push(attr_param.default);
-        mins.push(attr_param.min);
-        maxs.push(attr_param.max);
+        let [default, min, max] = determine_default(default, min, max);
+        defaults.push(default);
+        mins.push(min);
+        maxs.push(max);
     }
     let block = item.block;
-    println!(
-        "{}",
-        quote! {
-            #[no_mangle]
-            pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
-                #(
-                    let #names: #types = args.get(stringify!(#names)).map(|arg| arg.parse().unwrap()).unwrap_or(#defaults);
-                )*
-                #block
-            }
-        }
-    );
+
     quote! {
             #[no_mangle]
             pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
@@ -83,6 +71,9 @@ impl Parse for Argument {
     }
 }
 
+/// Represents all arguments given to the `#[value]` attribute eg:
+/// `#[value(default=3, min=4)]`
+/// `        ^^^^^^^^^^^^^^^^`
 #[derive(Debug, Clone)]
 struct HelperAttribute {
     pub values: syn::punctuated::Punctuated<DefaultParam, syn::Token![,]>,
@@ -115,6 +106,9 @@ impl Parse for HelperAttribute {
     }
 }
 
+/// Represents one argument given to the `#[value]` attribute eg:
+/// `#[value(default=3)]`
+/// `        ^^^^^^^^^----- is parsed as DefaultParam{ ident: Some(default), val: 3 }`
 #[derive(Debug, Clone)]
 struct DefaultParam {
     pub ident: Option<proc_macro2::Ident>,
@@ -139,46 +133,33 @@ impl Parse for DefaultParam {
     }
 }
 
-#[derive(Debug)]
-struct AttributeParameter {
-    pub default: Option<syn::Expr>,
-    pub min: Option<syn::Expr>,
-    pub max: Option<syn::Expr>,
-}
-
-impl AttributeParameter {
-    // TODO: Checking the Options is quite ugly
-    pub fn new(
-        default: Option<syn::Expr>,
-        min: Option<syn::Expr>,
-        max: Option<syn::Expr>,
-    ) -> Self {
-        if let Some(default) = default {
-            let min = if min.is_some() { min } else { None };
-            let max = if max.is_some() { max } else { None };
-            Self {
-                default: Some(default),
-                min,
-                max,
-            }
+/// Checks if a default value is supplied, otherwise applies either the min or max (if specified) as default.
+fn determine_default(
+    default: Option<syn::Expr>,
+    min: Option<syn::Expr>,
+    max: Option<syn::Expr>,
+) -> [Option<syn::Expr>; 3] {
+    if let Some(default) = default {
+        let min = if min.is_some() { min } else { None };
+        let max = if max.is_some() { max } else { None };
+        [Some(default), min, max]
+    } else {
+        let mut default = None;
+        let max = if max.is_some() {
+            default = max.clone();
+            max
         } else {
-            let mut default = None;
-            let max = if max.is_some() {
-                default = max.clone();
-                max
-            } else {
-                None
-            };
+            None
+        };
 
-            let min = if min.is_some() {
-                default = min.clone();
-                min
-            } else {
-                None
-            };
+        let min = if min.is_some() {
+            default = min.clone();
+            min
+        } else {
+            None
+        };
 
-            Self { default, min, max }
-        }
+        [default, min, max]
     }
 }
 
