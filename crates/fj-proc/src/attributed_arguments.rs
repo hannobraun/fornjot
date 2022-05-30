@@ -52,6 +52,11 @@ pub fn attributed_arguments(_: TokenStream, input: TokenStream) -> TokenStream {
         }.into()
 }
 
+/// Represents one parameter given to the `model`
+/// `#[value(default=3, min=4)] num_points: u64`
+/// `^^^^^^^^^^^^^^^^^^^^^^^^^^ ~~~~~~~~~~  ^^^-- ty`
+/// `           |                    |`
+/// `         attr                 ident`
 #[derive(Debug, Clone)]
 struct Argument {
     pub attr: HelperAttribute,
@@ -65,8 +70,8 @@ impl Parse for Argument {
         let ident: proc_macro2::Ident = input.parse()?;
 
         let _: syn::token::Colon = input.parse()?;
+
         let ty: proc_macro2::Ident = input.parse()?;
-        println!("attr: {:?}, ident: {:?}, ty: {:?}\n", attr, ident, ty);
         Ok(Self { attr, ident, ty })
     }
 }
