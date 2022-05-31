@@ -4,7 +4,7 @@ use fj_math::{Scalar, Transform, Triangle, Vector};
 
 use crate::{
     geometry::{Surface, SweptCurve},
-    shape::{Handle, Mapping, Shape, ValidationError},
+    shape::{Handle, Mapping, Shape, ValidationError, ValidationResult},
     topology::{Cycle, Edge, Face, Vertex},
 };
 
@@ -138,12 +138,10 @@ impl Sweep {
 
                 let surface = self.target.insert(surface)?;
 
-                let cycle = self.target.merge(Cycle::new(vec![
-                    edge_bottom,
-                    edge_top,
-                    edge_side_a,
-                    edge_side_b,
-                ]))?;
+                let cycle = create_side_cycle(
+                    self,
+                    [edge_bottom, edge_top, edge_side_a, edge_side_b],
+                )?;
 
                 self.target.insert(Face::new(
                     surface,
@@ -278,6 +276,13 @@ fn create_side_edges(
             })
             .clone()
     })
+}
+
+fn create_side_cycle(
+    sweep: &mut Sweep,
+    edges: [Handle<Edge<3>>; 4],
+) -> ValidationResult<Cycle<3>> {
+    sweep.target.merge(Cycle::new(edges))
 }
 
 #[cfg(test)]
