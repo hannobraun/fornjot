@@ -44,7 +44,7 @@ pub fn sweep_shape(
             //
             // This is the last piece of code that still uses the triangle
             // representation.
-            create_side_faces_obsolete(
+            create_continuous_side_face_fallback(
                 &cycle_source.get(),
                 tolerance,
                 color,
@@ -91,7 +91,7 @@ fn create_top_and_bottom_faces(
     Ok((source_to_bottom, source_to_top))
 }
 
-fn create_side_faces_obsolete(
+fn create_continuous_side_face_fallback(
     cycle_source: &Cycle<3>,
     tolerance: Tolerance,
     color: [u8; 4],
