@@ -133,15 +133,15 @@ impl Sweep {
                     &mut vertex_bottom_to_edge,
                 );
 
-                // Now we have everything we need to create the side face from
-                // this source/bottom edge.
-
-                let surface = self.target.insert(surface)?;
-
                 let cycle = create_side_cycle(
                     self,
                     [edge_bottom, edge_top, edge_side_a, edge_side_b],
                 )?;
+
+                // Now we have everything we need to create the side face from
+                // this source/bottom edge.
+
+                let surface = self.target.insert(surface)?;
 
                 self.target.insert(Face::new(
                     surface,
