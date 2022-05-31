@@ -91,7 +91,7 @@ impl Parse for HelperAttribute {
         let _: syn::token::Pound = input.parse()?;
         bracketed!(attr_content in input);
         let ident: proc_macro2::Ident = attr_content.parse()?;
-        if ident.to_string() != *"value" {
+        if ident != *"value" {
             return Err(syn::Error::new_spanned(
                 ident.clone(),
                 format!(
