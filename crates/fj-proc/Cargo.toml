@@ -1,0 +1,22 @@
+[package]
+name = "fj-proc"
+version = "0.6.0"
+edition = "2021"
+
+description = "The world needs another CAD program."
+readme = "../../README.md"
+homepage = "https://www.fornjot.app/"
+repository = "https://github.com/hannobraun/fornjot"
+license = "0BSD"
+keywords = ["cad", "programmatic", "code-cad"]
+categories = ["encoding", "mathematics", "rendering"]
+
+
+[lib]
+proc-macro = true
+
+[dependencies]
+serde = { version = "1.0.7", optional = true }
+syn={version="1.0",features=["full", "extra-traits"]}
+quote = "1.0"
+proc-macro2 = "1.0"

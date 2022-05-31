@@ -2,8 +2,13 @@ use fj::Angle;
 use std::{collections::HashMap, f64::consts::PI};
 extern crate fj_proc;
 
-#[fj_proc::model(5, 1.0, 2.0, 1.0)]
-pub fn model(num_points: u64, r1: f64, r2: f64, h: f64) -> fj::Shape {
+#[fj_proc::attributed_arguments]
+pub fn model(
+    #[value(default = 5, min = 3, max = 100)] num_points: u64,
+    #[value(default = 1.0, min = 1.0)] r1: f64,
+    #[value(min = 2.0)] r2: f64,
+    #[value(1.0)] h: f64,
+) -> fj::Shape {
     let num_vertices = num_points * 2;
     let vertex_iter = (0..num_vertices).map(|i| {
         let angle = Angle::from_rad(2. * PI / num_vertices as f64 * i as f64);
