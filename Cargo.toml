@@ -9,18 +9,13 @@ members = [
     "crates/fj-kernel",
     "crates/fj-math",
     "crates/fj-operations",
+    "crates/fj-proc",
     "crates/fj-viewer",
-    "crates/fj-proc",
-
     "crates/fj-window",
-
-    "crates/fj-proc",
-
 
     "models/cuboid",
     "models/spacer",
     "models/star",
-    "models/star_attributed_arguments",
     "models/test",
 
     "tools/export-validator",
