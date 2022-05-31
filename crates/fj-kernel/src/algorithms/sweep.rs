@@ -21,10 +21,10 @@ pub fn sweep_shape(
 
     let (mut bottom, source_to_bottom) = source.clone_shape();
     let (mut top, source_to_top) = source.clone_shape();
-    let sweep_along_negative_direction =
+    let is_sweep_along_negative_direction =
         path.dot(&Vector::from([0., 0., 1.])) < Scalar::ZERO;
 
-    if sweep_along_negative_direction {
+    if is_sweep_along_negative_direction {
         reverse_surfaces(&mut top)?;
     } else {
         reverse_surfaces(&mut bottom)?;
@@ -150,7 +150,7 @@ pub fn sweep_shape(
                     curve: bottom_edge.get().curve(),
                     path,
                 });
-                if sweep_along_negative_direction {
+                if is_sweep_along_negative_direction {
                     surface = surface.reverse();
                 }
                 let surface = target.insert(surface)?;
