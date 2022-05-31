@@ -7,7 +7,7 @@ pub fn model(
     #[value(default = 5, min = 3)] num_points: u64,
     #[value(default = 1.0, min = 1.0)] r1: f64,
     #[value(default = 2.0, min = 2.0)] r2: f64,
-    #[value] h: f64,
+    #[value(default = 1.0)] h: f64,
 ) -> fj::Shape {
     let num_vertices = num_points * 2;
     let vertex_iter = (0..num_vertices).map(|i| {
