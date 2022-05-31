@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use fj_math::{Transform, Triangle, Vector};
+use fj_math::{Scalar, Transform, Triangle, Vector};
 
 use crate::{
     geometry::{Surface, SweptCurve},
@@ -22,7 +22,7 @@ pub fn sweep_shape(
     let (mut bottom, source_to_bottom) = source.clone_shape();
     let (mut top, source_to_top) = source.clone_shape();
     let sweep_along_negative_direction =
-        path.dot(&Vector::from([0., 0., 1.])) < fj_math::Scalar::ZERO;
+        path.dot(&Vector::from([0., 0., 1.])) < Scalar::ZERO;
 
     if sweep_along_negative_direction {
         top.update()
