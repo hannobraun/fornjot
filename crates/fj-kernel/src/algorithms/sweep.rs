@@ -18,9 +18,8 @@ pub fn sweep_shape(
     color: [u8; 4],
 ) -> Result<Shape, ValidationError> {
     let mut sweep = Sweep::init(source, path, tolerance, color);
-    let (source_to_bottom, source_to_top) =
-        create_top_and_bottom_faces(&mut sweep)?;
-    create_side_faces(&source_to_bottom, &source_to_top, &mut sweep)?;
+    create_top_and_bottom_faces(&mut sweep)?;
+    create_side_faces(&mut sweep)?;
 
     Ok(sweep.target)
 }
@@ -28,6 +27,12 @@ pub fn sweep_shape(
 struct Sweep {
     source: Shape,
     target: Shape,
+
+    bottom: Shape,
+    top: Shape,
+
+    source_to_bottom: Mapping,
+    source_to_top: Mapping,
 
     path: Vector<3>,
     translation: Transform,
@@ -50,9 +55,18 @@ impl Sweep {
 
         let target = Shape::new();
 
+        let (bottom, source_to_bottom) = source.clone_shape();
+        let (top, source_to_top) = source.clone_shape();
+
         Self {
             source,
             target,
+
+            bottom,
+            top,
+
+            source_to_bottom,
+            source_to_top,
 
             path,
             translation,
@@ -66,28 +80,21 @@ impl Sweep {
 
 fn create_top_and_bottom_faces(
     sweep: &mut Sweep,
-) -> Result<(Mapping, Mapping), ValidationError> {
-    let (mut bottom, source_to_bottom) = sweep.source.clone_shape();
-    let (mut top, source_to_top) = sweep.source.clone_shape();
-
+) -> Result<(), ValidationError> {
     if sweep.is_sweep_along_negative_direction {
-        reverse_surfaces(&mut top)?;
+        reverse_surfaces(&mut sweep.top)?;
     } else {
-        reverse_surfaces(&mut bottom)?;
+        reverse_surfaces(&mut sweep.bottom)?;
     }
-    transform_shape(&mut top, &sweep.translation)?;
+    transform_shape(&mut sweep.top, &sweep.translation)?;
 
-    sweep.target.merge_shape(&bottom)?;
-    sweep.target.merge_shape(&top)?;
+    sweep.target.merge_shape(&sweep.bottom)?;
+    sweep.target.merge_shape(&sweep.top)?;
 
-    Ok((source_to_bottom, source_to_top))
+    Ok(())
 }
 
-fn create_side_faces(
-    source_to_bottom: &Mapping,
-    source_to_top: &Mapping,
-    sweep: &mut Sweep,
-) -> Result<(), ValidationError> {
+fn create_side_faces(sweep: &mut Sweep) -> Result<(), ValidationError> {
     for cycle_source in sweep.source.cycles() {
         if cycle_source.get().edges.len() == 1 {
             // If there's only one edge in the cycle, it must be a continuous
@@ -134,7 +141,8 @@ fn create_side_faces(
                         // mapping doesn't contain this vertex.
                         //
                         // All of these would be a bug.
-                        let vertex_bottom = source_to_bottom
+                        let vertex_bottom = sweep
+                            .source_to_bottom
                             .vertices()
                             .get(&vertex_source.canonical())
                             .expect("Could not find vertex in mapping")
@@ -149,7 +157,8 @@ fn create_side_faces(
                                 // vertex.
                                 //
                                 // All of these would be a bug.
-                                let vertex_top = source_to_top
+                                let vertex_top = sweep
+                                    .source_to_top
                                     .vertices()
                                     .get(&vertex_source.canonical())
                                     .expect("Could not find vertex in mapping")
@@ -173,12 +182,14 @@ fn create_side_faces(
                 // don't contain this edge.
                 //
                 // All of these would be a bug.
-                let bottom_edge = source_to_bottom
+                let bottom_edge = sweep
+                    .source_to_bottom
                     .edges()
                     .get(&edge_source)
                     .expect("Couldn't find edge in mapping")
                     .clone();
-                let top_edge = source_to_top
+                let top_edge = sweep
+                    .source_to_top
                     .edges()
                     .get(&edge_source)
                     .expect("Couldn't find edge in mapping")
