@@ -91,7 +91,13 @@ fn create_side_faces(
             //
             // This is the last piece of code that still uses the triangle
             // representation.
-            create_continuous_side_face_fallback(&cycle_source.get(), sweep)?;
+            create_continuous_side_face_fallback(
+                &cycle_source.get(),
+                &sweep.translation,
+                sweep.tolerance,
+                sweep.color,
+                &mut sweep.target,
+            )?;
         } else {
             // If there's no continuous edge, we can create the non-
             // continuous faces using boundary representation.
@@ -199,15 +205,18 @@ fn create_side_faces(
 
 fn create_continuous_side_face_fallback(
     cycle_source: &Cycle<3>,
-    sweep: &mut Sweep,
+    translation: &Transform,
+    tolerance: Tolerance,
+    color: [u8; 4],
+    target: &mut Shape,
 ) -> Result<(), ValidationError> {
-    let approx = CycleApprox::new(cycle_source, sweep.tolerance);
+    let approx = CycleApprox::new(cycle_source, tolerance);
 
     let mut quads = Vec::new();
     for segment in approx.segments() {
         let [v0, v1] = segment.points();
         let [v3, v2] = {
-            let segment = sweep.translation.transform_segment(&segment);
+            let segment = translation.transform_segment(&segment);
             segment.points()
         };
 
@@ -216,11 +225,11 @@ fn create_continuous_side_face_fallback(
 
     let mut side_face: Vec<(Triangle<3>, _)> = Vec::new();
     for [v0, v1, v2, v3] in quads {
-        side_face.push(([v0, v1, v2].into(), sweep.color));
-        side_face.push(([v0, v2, v3].into(), sweep.color));
+        side_face.push(([v0, v1, v2].into(), color));
+        side_face.push(([v0, v2, v3].into(), color));
     }
 
-    sweep.target.insert(Face::Triangles(side_face))?;
+    target.insert(Face::Triangles(side_face))?;
 
     Ok(())
 }
