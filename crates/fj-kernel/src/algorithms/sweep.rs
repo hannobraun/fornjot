@@ -21,6 +21,8 @@ pub fn sweep_shape(
         path.dot(&Vector::from([0., 0., 1.])) < Scalar::ZERO;
     let translation = Transform::translation(path);
 
+    let mut target = Shape::new();
+
     let (mut bottom, source_to_bottom) = source.clone_shape();
     let (mut top, source_to_top) = source.clone_shape();
 
@@ -31,7 +33,6 @@ pub fn sweep_shape(
     }
     transform_shape(&mut top, &translation)?;
 
-    let mut target = Shape::new();
     target.merge_shape(&bottom)?;
     target.merge_shape(&top)?;
 
