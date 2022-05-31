@@ -17,24 +17,7 @@ pub fn sweep_shape(
     tolerance: Tolerance,
     color: [u8; 4],
 ) -> Result<Shape, ValidationError> {
-    let is_sweep_along_negative_direction =
-        path.dot(&Vector::from([0., 0., 1.])) < Scalar::ZERO;
-    let translation = Transform::translation(path);
-
-    let target = Shape::new();
-
-    let mut sweep = Sweep {
-        source,
-        target,
-
-        path,
-        translation,
-        is_sweep_along_negative_direction,
-
-        tolerance,
-        color,
-    };
-
+    let mut sweep = Sweep::init(source, path, tolerance, color);
     let (source_to_bottom, source_to_top) =
         create_top_and_bottom_faces(&mut sweep)?;
     create_side_faces(&source_to_bottom, &source_to_top, &mut sweep)?;
@@ -52,6 +35,33 @@ struct Sweep {
 
     tolerance: Tolerance,
     color: [u8; 4],
+}
+
+impl Sweep {
+    fn init(
+        source: Shape,
+        path: Vector<3>,
+        tolerance: Tolerance,
+        color: [u8; 4],
+    ) -> Self {
+        let is_sweep_along_negative_direction =
+            path.dot(&Vector::from([0., 0., 1.])) < Scalar::ZERO;
+        let translation = Transform::translation(path);
+
+        let target = Shape::new();
+
+        Self {
+            source,
+            target,
+
+            path,
+            translation,
+            is_sweep_along_negative_direction,
+
+            tolerance,
+            color,
+        }
+    }
 }
 
 fn create_top_and_bottom_faces(
