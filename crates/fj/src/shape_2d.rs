@@ -1,4 +1,5 @@
 use std::mem;
+use std::sync::atomic;
 
 use crate::Shape;
 
@@ -128,7 +129,7 @@ impl From<Difference2d> for Shape2d {
 /// Nothing about these edges is checked right now, but algorithms might assume
 /// that the edges are non-overlapping. If you create a `Sketch` with
 /// overlapping edges, you're on your own.
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 #[cfg_attr(feature = "serialization", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Sketch {
@@ -137,6 +138,10 @@ pub struct Sketch {
     ptr: *mut [f64; 2],
     length: usize,
     capacity: usize,
+    // The `Sketch` can be cloned, so we need to track the number of live
+    // instances, so as to free the buffer behind `ptr` only when the last
+    // one is dropped.
+    rc: *mut atomic::AtomicUsize,
     // The color of the sketch in RGBA
     color: [u8; 4],
 }
@@ -153,10 +158,16 @@ impl Sketch {
         // to deallocate it.
         mem::forget(points);
 
+        // Allocate the reference counter on the heap. It will be reclaimed
+        // alongside `points` when it reaches 0.
+        let rc = Box::new(atomic::AtomicUsize::new(1));
+        let rc = Box::leak(rc) as *mut _;
+
         Self {
             ptr,
             length,
             capacity,
+            rc,
             color: [255, 0, 0, 255],
         }
     }
@@ -196,6 +207,45 @@ impl Sketch {
     /// Get the rendering color of the sketch in RGBA
     pub fn color(&self) -> [u8; 4] {
         self.color
+    }
+}
+
+impl Clone for Sketch {
+    fn clone(&self) -> Self {
+        // Increment the reference counter
+        unsafe {
+            (*self.rc).fetch_add(1, atomic::Ordering::AcqRel);
+        }
+
+        Self {
+            ptr: self.ptr,
+            length: self.length,
+            capacity: self.capacity,
+            rc: self.rc,
+            color: self.color,
+        }
+    }
+}
+
+impl Drop for Sketch {
+    fn drop(&mut self) {
+        // Decrement the reference counter
+        let rc_last =
+            unsafe { (*self.rc).fetch_sub(1, atomic::Ordering::AcqRel) };
+
+        // If the value of the refcount before decrementing was 1,
+        // then this must be the last Drop call. Reclaim all resources
+        // allocated on the heap.
+        if rc_last == 1 {
+            unsafe {
+                let points =
+                    Vec::from_raw_parts(self.ptr, self.length, self.capacity);
+                let rc = Box::from_raw(self.rc);
+
+                drop(points);
+                drop(rc);
+            }
+        }
     }
 }
 
