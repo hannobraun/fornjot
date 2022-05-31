@@ -91,37 +91,6 @@ fn create_top_and_bottom_faces(
     Ok((source_to_bottom, source_to_top))
 }
 
-fn create_continuous_side_face_fallback(
-    cycle_source: &Cycle<3>,
-    tolerance: Tolerance,
-    color: [u8; 4],
-    translation: &Transform,
-    target: &mut Shape,
-) -> Result<(), ValidationError> {
-    let approx = CycleApprox::new(cycle_source, tolerance);
-
-    let mut quads = Vec::new();
-    for segment in approx.segments() {
-        let [v0, v1] = segment.points();
-        let [v3, v2] = {
-            let segment = translation.transform_segment(&segment);
-            segment.points()
-        };
-
-        quads.push([v0, v1, v2, v3]);
-    }
-
-    let mut side_face: Vec<(Triangle<3>, _)> = Vec::new();
-    for [v0, v1, v2, v3] in quads {
-        side_face.push(([v0, v1, v2].into(), color));
-        side_face.push(([v0, v2, v3].into(), color));
-    }
-
-    target.insert(Face::Triangles(side_face))?;
-
-    Ok(())
-}
-
 fn create_side_faces(
     cycle_source: &Cycle<3>,
     source_to_bottom: &Mapping,
@@ -220,6 +189,37 @@ fn create_side_faces(
 
         target.insert(Face::new(surface, vec![cycle], Vec::new(), color))?;
     }
+
+    Ok(())
+}
+
+fn create_continuous_side_face_fallback(
+    cycle_source: &Cycle<3>,
+    tolerance: Tolerance,
+    color: [u8; 4],
+    translation: &Transform,
+    target: &mut Shape,
+) -> Result<(), ValidationError> {
+    let approx = CycleApprox::new(cycle_source, tolerance);
+
+    let mut quads = Vec::new();
+    for segment in approx.segments() {
+        let [v0, v1] = segment.points();
+        let [v3, v2] = {
+            let segment = translation.transform_segment(&segment);
+            segment.points()
+        };
+
+        quads.push([v0, v1, v2, v3]);
+    }
+
+    let mut side_face: Vec<(Triangle<3>, _)> = Vec::new();
+    for [v0, v1, v2, v3] in quads {
+        side_face.push(([v0, v1, v2].into(), color));
+        side_face.push(([v0, v2, v3].into(), color));
+    }
+
+    target.insert(Face::Triangles(side_face))?;
 
     Ok(())
 }
