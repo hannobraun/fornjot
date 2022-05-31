@@ -18,7 +18,7 @@ pub fn sweep_shape(
     color: [u8; 4],
 ) -> Result<Shape, ValidationError> {
     let mut sweep = Sweep::init(source, path, tolerance, color);
-    create_top_and_bottom_faces(&mut sweep)?;
+    sweep.create_top_and_bottom_faces()?;
     create_side_faces(&mut sweep)?;
 
     Ok(sweep.target)
@@ -76,22 +76,20 @@ impl Sweep {
             color,
         }
     }
-}
 
-fn create_top_and_bottom_faces(
-    sweep: &mut Sweep,
-) -> Result<(), ValidationError> {
-    if sweep.is_sweep_along_negative_direction {
-        reverse_surfaces(&mut sweep.top)?;
-    } else {
-        reverse_surfaces(&mut sweep.bottom)?;
+    fn create_top_and_bottom_faces(&mut self) -> Result<(), ValidationError> {
+        if self.is_sweep_along_negative_direction {
+            reverse_surfaces(&mut self.top)?;
+        } else {
+            reverse_surfaces(&mut self.bottom)?;
+        }
+        transform_shape(&mut self.top, &self.translation)?;
+
+        self.target.merge_shape(&self.bottom)?;
+        self.target.merge_shape(&self.top)?;
+
+        Ok(())
     }
-    transform_shape(&mut sweep.top, &sweep.translation)?;
-
-    sweep.target.merge_shape(&sweep.bottom)?;
-    sweep.target.merge_shape(&sweep.top)?;
-
-    Ok(())
 }
 
 fn create_side_faces(sweep: &mut Sweep) -> Result<(), ValidationError> {
