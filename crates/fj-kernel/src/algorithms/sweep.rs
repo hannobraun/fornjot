@@ -17,12 +17,12 @@ pub fn sweep_shape(
     tolerance: Tolerance,
     color: [u8; 4],
 ) -> Result<Shape, ValidationError> {
+    let is_sweep_along_negative_direction =
+        path.dot(&Vector::from([0., 0., 1.])) < Scalar::ZERO;
     let translation = Transform::translation(path);
 
     let (mut bottom, source_to_bottom) = source.clone_shape();
     let (mut top, source_to_top) = source.clone_shape();
-    let is_sweep_along_negative_direction =
-        path.dot(&Vector::from([0., 0., 1.])) < Scalar::ZERO;
 
     if is_sweep_along_negative_direction {
         reverse_surfaces(&mut top)?;
