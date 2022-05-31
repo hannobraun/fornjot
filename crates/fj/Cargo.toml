@@ -17,3 +17,6 @@ serialization = ["serde"]
 
 [dependencies]
 serde = { version = "1.0.7", optional = true }
+
+[dependencies.fj-proc]
+path = "../../crates/fj-proc"
