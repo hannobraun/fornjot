@@ -4,7 +4,7 @@ use fj_math::{Scalar, Transform, Triangle, Vector};
 
 use crate::{
     geometry::{Surface, SweptCurve},
-    shape::{Shape, ValidationError},
+    shape::{Mapping, Shape, ValidationError},
     topology::{Cycle, Edge, Face},
 };
 
@@ -23,18 +23,12 @@ pub fn sweep_shape(
 
     let mut target = Shape::new();
 
-    let (mut bottom, source_to_bottom) = source.clone_shape();
-    let (mut top, source_to_top) = source.clone_shape();
-
-    if is_sweep_along_negative_direction {
-        reverse_surfaces(&mut top)?;
-    } else {
-        reverse_surfaces(&mut bottom)?;
-    }
-    transform_shape(&mut top, &translation)?;
-
-    target.merge_shape(&bottom)?;
-    target.merge_shape(&top)?;
+    let (source_to_bottom, source_to_top) = create_top_and_bottom_faces(
+        &source,
+        is_sweep_along_negative_direction,
+        &translation,
+        &mut target,
+    )?;
 
     // Create the side faces.
     for cycle_source in source.cycles() {
@@ -174,6 +168,28 @@ pub fn sweep_shape(
     }
 
     Ok(target)
+}
+
+fn create_top_and_bottom_faces(
+    source: &Shape,
+    is_sweep_along_negative_direction: bool,
+    translation: &Transform,
+    target: &mut Shape,
+) -> Result<(Mapping, Mapping), ValidationError> {
+    let (mut bottom, source_to_bottom) = source.clone_shape();
+    let (mut top, source_to_top) = source.clone_shape();
+
+    if is_sweep_along_negative_direction {
+        reverse_surfaces(&mut top)?;
+    } else {
+        reverse_surfaces(&mut bottom)?;
+    }
+    transform_shape(&mut top, translation)?;
+
+    target.merge_shape(&bottom)?;
+    target.merge_shape(&top)?;
+
+    Ok((source_to_bottom, source_to_top))
 }
 
 fn reverse_surfaces(shape: &mut Shape) -> Result<(), ValidationError> {
