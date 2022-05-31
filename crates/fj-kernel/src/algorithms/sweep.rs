@@ -4,7 +4,7 @@ use fj_math::{Scalar, Transform, Triangle, Vector};
 
 use crate::{
     geometry::{Surface, SweptCurve},
-    shape::{Mapping, Shape, ValidationError},
+    shape::{Handle, Mapping, Shape, ValidationError},
     topology::{Cycle, Edge, Face},
 };
 
@@ -177,31 +177,8 @@ impl Sweep {
                 // Now we have everything we need to create the side face from
                 // this source/bottom edge.
 
-                // Can't panic, unless this isn't actually an edge from
-                // `source`, we're using the wrong mappings, or the mappings
-                // don't contain this edge.
-                //
-                // All of these would be a bug.
-                let edge_bottom = self
-                    .source_to_bottom
-                    .edges()
-                    .get(&edge_source)
-                    .expect("Couldn't find edge in mapping")
-                    .clone();
-                let edge_top = self
-                    .source_to_top
-                    .edges()
-                    .get(&edge_source)
-                    .expect("Couldn't find edge in mapping")
-                    .clone();
-
-                let mut surface = Surface::SweptCurve(SweptCurve {
-                    curve: edge_bottom.get().curve(),
-                    path: self.path,
-                });
-                if self.is_sweep_along_negative_direction {
-                    surface = surface.reverse();
-                }
+                let (surface, edge_bottom, edge_top) =
+                    create_side_surface(self, &edge_source);
                 let surface = self.target.insert(surface)?;
 
                 let cycle = self.target.merge(Cycle::new(vec![
@@ -260,6 +237,38 @@ fn create_continuous_side_face_fallback(
     target.insert(Face::Triangles(side_face))?;
 
     Ok(())
+}
+
+fn create_side_surface(
+    sweep: &Sweep,
+    edge_source: &Handle<Edge<3>>,
+) -> (Surface, Handle<Edge<3>>, Handle<Edge<3>>) {
+    // Can't panic, unless this isn't actually an edge from `source`, we're
+    // using the wrong mappings, or the mappings don't contain this edge.
+    //
+    // All of these would be a bug.
+    let edge_bottom = sweep
+        .source_to_bottom
+        .edges()
+        .get(edge_source)
+        .expect("Couldn't find edge in mapping")
+        .clone();
+    let edge_top = sweep
+        .source_to_top
+        .edges()
+        .get(edge_source)
+        .expect("Couldn't find edge in mapping")
+        .clone();
+
+    let mut surface = Surface::SweptCurve(SweptCurve {
+        curve: edge_bottom.get().curve(),
+        path: sweep.path,
+    });
+    if sweep.is_sweep_along_negative_direction {
+        surface = surface.reverse();
+    }
+
+    (surface, edge_bottom, edge_top)
 }
 
 #[cfg(test)]
