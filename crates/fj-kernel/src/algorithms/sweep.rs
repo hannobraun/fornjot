@@ -21,14 +21,21 @@ pub fn sweep_shape(
         path.dot(&Vector::from([0., 0., 1.])) < Scalar::ZERO;
     let translation = Transform::translation(path);
 
-    let mut target = Shape::new();
+    let target = Shape::new();
 
-    let (source_to_bottom, source_to_top) = create_top_and_bottom_faces(
-        &source,
+    let mut sweep = Sweep {
+        target,
+
+        path,
+        translation,
         is_sweep_along_negative_direction,
-        &translation,
-        &mut target,
-    )?;
+
+        tolerance,
+        color,
+    };
+
+    let (source_to_bottom, source_to_top) =
+        create_top_and_bottom_faces(&source, &mut sweep)?;
 
     // Create the side faces.
     for cycle_source in source.cycles() {
@@ -46,10 +53,7 @@ pub fn sweep_shape(
             // representation.
             create_continuous_side_face_fallback(
                 &cycle_source.get(),
-                tolerance,
-                color,
-                &translation,
-                &mut target,
+                &mut sweep,
             )?;
         } else {
             // If there's no continuous edge, we can create the non-
@@ -58,35 +62,41 @@ pub fn sweep_shape(
                 &cycle_source.get(),
                 &source_to_bottom,
                 &source_to_top,
-                color,
-                is_sweep_along_negative_direction,
-                path,
-                &mut target,
+                &mut sweep,
             )?;
         }
     }
 
-    Ok(target)
+    Ok(sweep.target)
+}
+
+struct Sweep {
+    target: Shape,
+
+    path: Vector<3>,
+    translation: Transform,
+    is_sweep_along_negative_direction: bool,
+
+    tolerance: Tolerance,
+    color: [u8; 4],
 }
 
 fn create_top_and_bottom_faces(
     source: &Shape,
-    is_sweep_along_negative_direction: bool,
-    translation: &Transform,
-    target: &mut Shape,
+    sweep: &mut Sweep,
 ) -> Result<(Mapping, Mapping), ValidationError> {
     let (mut bottom, source_to_bottom) = source.clone_shape();
     let (mut top, source_to_top) = source.clone_shape();
 
-    if is_sweep_along_negative_direction {
+    if sweep.is_sweep_along_negative_direction {
         reverse_surfaces(&mut top)?;
     } else {
         reverse_surfaces(&mut bottom)?;
     }
-    transform_shape(&mut top, translation)?;
+    transform_shape(&mut top, &sweep.translation)?;
 
-    target.merge_shape(&bottom)?;
-    target.merge_shape(&top)?;
+    sweep.target.merge_shape(&bottom)?;
+    sweep.target.merge_shape(&top)?;
 
     Ok((source_to_bottom, source_to_top))
 }
@@ -95,10 +105,7 @@ fn create_side_faces(
     cycle_source: &Cycle<3>,
     source_to_bottom: &Mapping,
     source_to_top: &Mapping,
-    color: [u8; 4],
-    is_sweep_along_negative_direction: bool,
-    path: Vector<3>,
-    target: &mut Shape,
+    sweep: &mut Sweep,
 ) -> Result<(), ValidationError> {
     let mut vertex_bottom_to_edge = HashMap::new();
 
@@ -145,7 +152,7 @@ fn create_side_faces(
                     let points = [vertex_bottom, vertex_top]
                         .map(|vertex| vertex.get().point());
 
-                    Edge::builder(target)
+                    Edge::builder(&mut sweep.target)
                         .build_line_segment_from_points(points)
                         .unwrap()
                 })
@@ -173,21 +180,26 @@ fn create_side_faces(
 
         let mut surface = Surface::SweptCurve(SweptCurve {
             curve: bottom_edge.get().curve(),
-            path,
+            path: sweep.path,
         });
-        if is_sweep_along_negative_direction {
+        if sweep.is_sweep_along_negative_direction {
             surface = surface.reverse();
         }
-        let surface = target.insert(surface)?;
+        let surface = sweep.target.insert(surface)?;
 
-        let cycle = target.merge(Cycle::new(vec![
+        let cycle = sweep.target.merge(Cycle::new(vec![
             bottom_edge,
             top_edge,
             side_edge_a,
             side_edge_b,
         ]))?;
 
-        target.insert(Face::new(surface, vec![cycle], Vec::new(), color))?;
+        sweep.target.insert(Face::new(
+            surface,
+            vec![cycle],
+            Vec::new(),
+            sweep.color,
+        ))?;
     }
 
     Ok(())
@@ -195,18 +207,15 @@ fn create_side_faces(
 
 fn create_continuous_side_face_fallback(
     cycle_source: &Cycle<3>,
-    tolerance: Tolerance,
-    color: [u8; 4],
-    translation: &Transform,
-    target: &mut Shape,
+    sweep: &mut Sweep,
 ) -> Result<(), ValidationError> {
-    let approx = CycleApprox::new(cycle_source, tolerance);
+    let approx = CycleApprox::new(cycle_source, sweep.tolerance);
 
     let mut quads = Vec::new();
     for segment in approx.segments() {
         let [v0, v1] = segment.points();
         let [v3, v2] = {
-            let segment = translation.transform_segment(&segment);
+            let segment = sweep.translation.transform_segment(&segment);
             segment.points()
         };
 
@@ -215,11 +224,11 @@ fn create_continuous_side_face_fallback(
 
     let mut side_face: Vec<(Triangle<3>, _)> = Vec::new();
     for [v0, v1, v2, v3] in quads {
-        side_face.push(([v0, v1, v2].into(), color));
-        side_face.push(([v0, v2, v3].into(), color));
+        side_face.push(([v0, v1, v2].into(), sweep.color));
+        side_face.push(([v0, v2, v3].into(), sweep.color));
     }
 
-    target.insert(Face::Triangles(side_face))?;
+    sweep.target.insert(Face::Triangles(side_face))?;
 
     Ok(())
 }
