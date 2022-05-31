@@ -49,14 +49,14 @@ impl Sweep {
         tolerance: Tolerance,
         color: [u8; 4],
     ) -> Self {
-        let is_sweep_along_negative_direction =
-            path.dot(&Vector::from([0., 0., 1.])) < Scalar::ZERO;
-        let translation = Transform::translation(path);
-
         let target = Shape::new();
 
         let (bottom, source_to_bottom) = source.clone_shape();
         let (top, source_to_top) = source.clone_shape();
+
+        let translation = Transform::translation(path);
+        let is_sweep_along_negative_direction =
+            path.dot(&Vector::from([0., 0., 1.])) < Scalar::ZERO;
 
         Self {
             source,
