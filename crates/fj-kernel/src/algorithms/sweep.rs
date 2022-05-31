@@ -182,13 +182,13 @@ impl Sweep {
                 // don't contain this edge.
                 //
                 // All of these would be a bug.
-                let bottom_edge = self
+                let edge_bottom = self
                     .source_to_bottom
                     .edges()
                     .get(&edge_source)
                     .expect("Couldn't find edge in mapping")
                     .clone();
-                let top_edge = self
+                let edge_top = self
                     .source_to_top
                     .edges()
                     .get(&edge_source)
@@ -196,7 +196,7 @@ impl Sweep {
                     .clone();
 
                 let mut surface = Surface::SweptCurve(SweptCurve {
-                    curve: bottom_edge.get().curve(),
+                    curve: edge_bottom.get().curve(),
                     path: self.path,
                 });
                 if self.is_sweep_along_negative_direction {
@@ -205,8 +205,8 @@ impl Sweep {
                 let surface = self.target.insert(surface)?;
 
                 let cycle = self.target.merge(Cycle::new(vec![
-                    bottom_edge,
-                    top_edge,
+                    edge_bottom,
+                    edge_top,
                     side_edge_a,
                     side_edge_b,
                 ]))?;
