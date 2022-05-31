@@ -1,10 +1,10 @@
 use std::collections::HashMap;
 
-use fj_math::{Transform, Triangle, Vector};
+use fj_math::{Scalar, Transform, Triangle, Vector};
 
 use crate::{
     geometry::{Surface, SweptCurve},
-    shape::{Shape, ValidationError},
+    shape::{Mapping, Shape, ValidationError},
     topology::{Cycle, Edge, Face},
 };
 
@@ -17,28 +17,18 @@ pub fn sweep_shape(
     tolerance: Tolerance,
     color: [u8; 4],
 ) -> Result<Shape, ValidationError> {
+    let is_sweep_along_negative_direction =
+        path.dot(&Vector::from([0., 0., 1.])) < Scalar::ZERO;
     let translation = Transform::translation(path);
 
-    let (mut bottom, source_to_bottom) = source.clone_shape();
-    let (mut top, source_to_top) = source.clone_shape();
-    let sweep_along_negative_direction =
-        path.dot(&Vector::from([0., 0., 1.])) < fj_math::Scalar::ZERO;
-
-    if sweep_along_negative_direction {
-        top.update()
-            .update_all(|surface: &mut Surface| *surface = surface.reverse())
-            .validate()?;
-    } else {
-        bottom
-            .update()
-            .update_all(|surface: &mut Surface| *surface = surface.reverse())
-            .validate()?;
-    }
-    transform_shape(&mut top, &translation)?;
-
     let mut target = Shape::new();
-    target.merge_shape(&bottom)?;
-    target.merge_shape(&top)?;
+
+    let (source_to_bottom, source_to_top) = create_top_and_bottom_faces(
+        &source,
+        is_sweep_along_negative_direction,
+        &translation,
+        &mut target,
+    )?;
 
     // Create the side faces.
     for cycle_source in source.cycles() {
@@ -54,130 +44,191 @@ pub fn sweep_shape(
             //
             // This is the last piece of code that still uses the triangle
             // representation.
-
-            let approx = CycleApprox::new(&cycle_source.get(), tolerance);
-
-            let mut quads = Vec::new();
-            for segment in approx.segments() {
-                let [v0, v1] = segment.points();
-                let [v3, v2] = {
-                    let segment = translation.transform_segment(&segment);
-                    segment.points()
-                };
-
-                quads.push([v0, v1, v2, v3]);
-            }
-
-            let mut side_face: Vec<(Triangle<3>, _)> = Vec::new();
-            for [v0, v1, v2, v3] in quads {
-                side_face.push(([v0, v1, v2].into(), color));
-                side_face.push(([v0, v2, v3].into(), color));
-            }
-
-            target.insert(Face::Triangles(side_face))?;
+            create_side_faces_obsolete(
+                &cycle_source.get(),
+                tolerance,
+                color,
+                &translation,
+                &mut target,
+            )?;
         } else {
             // If there's no continuous edge, we can create the non-
             // continuous faces using boundary representation.
-
-            let mut vertex_bottom_to_edge = HashMap::new();
-
-            for edge_source in &cycle_source.get().edges {
-                let edge_source = edge_source.canonical();
-
-                // Can't panic. We already ruled out the continuous edge case
-                // above, so this edge must have vertices.
-                let vertices_source = edge_source
-                    .get()
-                    .vertices
-                    .clone()
-                    .expect("Expected edge to have vertices");
-
-                // Create (or retrieve from the cache, `vertex_bottom_to_edge`)
-                // side edges from the vertices of this source/bottom edge.
-                let [side_edge_a, side_edge_b] =
-                    vertices_source.map(|vertex_source| {
-                        // Can't panic, unless this isn't actually a vertex from
-                        // `source`, we're using the wrong mapping, or the
-                        // mapping doesn't contain this vertex.
-                        //
-                        // All of these would be a bug.
-                        let vertex_bottom = source_to_bottom
-                            .vertices()
-                            .get(&vertex_source.canonical())
-                            .expect("Could not find vertex in mapping")
-                            .clone();
-
-                        vertex_bottom_to_edge
-                            .entry(vertex_bottom.clone())
-                            .or_insert_with(|| {
-                                // Can't panic, unless this isn't actually a
-                                // vertex from `source`, we're using the wrong
-                                // mapping, or the mapping doesn't contain this
-                                // vertex.
-                                //
-                                // All of these would be a bug.
-                                let vertex_top = source_to_top
-                                    .vertices()
-                                    .get(&vertex_source.canonical())
-                                    .expect("Could not find vertex in mapping")
-                                    .clone();
-
-                                let points = [vertex_bottom, vertex_top]
-                                    .map(|vertex| vertex.get().point());
-
-                                Edge::builder(&mut target)
-                                    .build_line_segment_from_points(points)
-                                    .unwrap()
-                            })
-                            .clone()
-                    });
-
-                // Now we have everything we need to create the side face from
-                // this source/bottom edge.
-
-                // Can't panic, unless this isn't actually an edge from
-                // `source`, we're using the wrong mappings, or the mappings
-                // don't contain this edge.
-                //
-                // All of these would be a bug.
-                let bottom_edge = source_to_bottom
-                    .edges()
-                    .get(&edge_source)
-                    .expect("Couldn't find edge in mapping")
-                    .clone();
-                let top_edge = source_to_top
-                    .edges()
-                    .get(&edge_source)
-                    .expect("Couldn't find edge in mapping")
-                    .clone();
-
-                let mut surface = Surface::SweptCurve(SweptCurve {
-                    curve: bottom_edge.get().curve(),
-                    path,
-                });
-                if sweep_along_negative_direction {
-                    surface = surface.reverse();
-                }
-                let surface = target.insert(surface)?;
-
-                let cycle = target.merge(Cycle::new(vec![
-                    bottom_edge,
-                    top_edge,
-                    side_edge_a,
-                    side_edge_b,
-                ]))?;
-
-                target.insert(Face::new(
-                    surface,
-                    vec![cycle],
-                    Vec::new(),
-                    color,
-                ))?;
-            }
+            create_side_faces(
+                &cycle_source.get(),
+                &source_to_bottom,
+                &source_to_top,
+                color,
+                is_sweep_along_negative_direction,
+                path,
+                &mut target,
+            )?;
         }
     }
 
     Ok(target)
+}
+
+fn create_top_and_bottom_faces(
+    source: &Shape,
+    is_sweep_along_negative_direction: bool,
+    translation: &Transform,
+    target: &mut Shape,
+) -> Result<(Mapping, Mapping), ValidationError> {
+    let (mut bottom, source_to_bottom) = source.clone_shape();
+    let (mut top, source_to_top) = source.clone_shape();
+
+    if is_sweep_along_negative_direction {
+        reverse_surfaces(&mut top)?;
+    } else {
+        reverse_surfaces(&mut bottom)?;
+    }
+    transform_shape(&mut top, translation)?;
+
+    target.merge_shape(&bottom)?;
+    target.merge_shape(&top)?;
+
+    Ok((source_to_bottom, source_to_top))
+}
+
+fn create_side_faces_obsolete(
+    cycle_source: &Cycle<3>,
+    tolerance: Tolerance,
+    color: [u8; 4],
+    translation: &Transform,
+    target: &mut Shape,
+) -> Result<(), ValidationError> {
+    let approx = CycleApprox::new(cycle_source, tolerance);
+
+    let mut quads = Vec::new();
+    for segment in approx.segments() {
+        let [v0, v1] = segment.points();
+        let [v3, v2] = {
+            let segment = translation.transform_segment(&segment);
+            segment.points()
+        };
+
+        quads.push([v0, v1, v2, v3]);
+    }
+
+    let mut side_face: Vec<(Triangle<3>, _)> = Vec::new();
+    for [v0, v1, v2, v3] in quads {
+        side_face.push(([v0, v1, v2].into(), color));
+        side_face.push(([v0, v2, v3].into(), color));
+    }
+
+    target.insert(Face::Triangles(side_face))?;
+
+    Ok(())
+}
+
+fn create_side_faces(
+    cycle_source: &Cycle<3>,
+    source_to_bottom: &Mapping,
+    source_to_top: &Mapping,
+    color: [u8; 4],
+    is_sweep_along_negative_direction: bool,
+    path: Vector<3>,
+    target: &mut Shape,
+) -> Result<(), ValidationError> {
+    let mut vertex_bottom_to_edge = HashMap::new();
+
+    for edge_source in &cycle_source.edges {
+        let edge_source = edge_source.canonical();
+
+        // Can't panic. We already ruled out the continuous edge case
+        // above, so this edge must have vertices.
+        let vertices_source = edge_source
+            .get()
+            .vertices
+            .clone()
+            .expect("Expected edge to have vertices");
+
+        // Create (or retrieve from the cache, `vertex_bottom_to_edge`)
+        // side edges from the vertices of this source/bottom edge.
+        let [side_edge_a, side_edge_b] = vertices_source.map(|vertex_source| {
+            // Can't panic, unless this isn't actually a vertex from
+            // `source`, we're using the wrong mapping, or the
+            // mapping doesn't contain this vertex.
+            //
+            // All of these would be a bug.
+            let vertex_bottom = source_to_bottom
+                .vertices()
+                .get(&vertex_source.canonical())
+                .expect("Could not find vertex in mapping")
+                .clone();
+
+            vertex_bottom_to_edge
+                .entry(vertex_bottom.clone())
+                .or_insert_with(|| {
+                    // Can't panic, unless this isn't actually a
+                    // vertex from `source`, we're using the wrong
+                    // mapping, or the mapping doesn't contain this
+                    // vertex.
+                    //
+                    // All of these would be a bug.
+                    let vertex_top = source_to_top
+                        .vertices()
+                        .get(&vertex_source.canonical())
+                        .expect("Could not find vertex in mapping")
+                        .clone();
+
+                    let points = [vertex_bottom, vertex_top]
+                        .map(|vertex| vertex.get().point());
+
+                    Edge::builder(target)
+                        .build_line_segment_from_points(points)
+                        .unwrap()
+                })
+                .clone()
+        });
+
+        // Now we have everything we need to create the side face from
+        // this source/bottom edge.
+
+        // Can't panic, unless this isn't actually an edge from
+        // `source`, we're using the wrong mappings, or the mappings
+        // don't contain this edge.
+        //
+        // All of these would be a bug.
+        let bottom_edge = source_to_bottom
+            .edges()
+            .get(&edge_source)
+            .expect("Couldn't find edge in mapping")
+            .clone();
+        let top_edge = source_to_top
+            .edges()
+            .get(&edge_source)
+            .expect("Couldn't find edge in mapping")
+            .clone();
+
+        let mut surface = Surface::SweptCurve(SweptCurve {
+            curve: bottom_edge.get().curve(),
+            path,
+        });
+        if is_sweep_along_negative_direction {
+            surface = surface.reverse();
+        }
+        let surface = target.insert(surface)?;
+
+        let cycle = target.merge(Cycle::new(vec![
+            bottom_edge,
+            top_edge,
+            side_edge_a,
+            side_edge_b,
+        ]))?;
+
+        target.insert(Face::new(surface, vec![cycle], Vec::new(), color))?;
+    }
+
+    Ok(())
+}
+
+fn reverse_surfaces(shape: &mut Shape) -> Result<(), ValidationError> {
+    shape
+        .update()
+        .update_all(|surface: &mut Surface| *surface = surface.reverse())
+        .validate()
 }
 
 #[cfg(test)]
