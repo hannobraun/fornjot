@@ -780,6 +780,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "fj-proc"
+version = "0.6.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "serde",
+ "syn",
+]
+
+[[package]]
 name = "fj-viewer"
 version = "0.6.0"
 dependencies = [
@@ -2470,6 +2480,15 @@ name = "star"
 version = "0.1.0"
 dependencies = [
  "fj",
+ "fj-proc",
+]
+
+[[package]]
+name = "star_attributed_arguments"
+version = "0.1.0"
+dependencies = [
+ "fj",
+ "fj-proc",
 ]
 
 [[package]]
