@@ -8,6 +8,3 @@ crate-type = ["cdylib"]
 
 [dependencies.fj]
 path = "../../crates/fj"
-
-[dependencies.fj-proc]
-path = "../../crates/fj-proc"

@@ -1,9 +1,14 @@
 use fj::Angle;
 use std::{collections::HashMap, f64::consts::PI};
-extern crate fj_proc;
+extern crate fj;
 
-#[fj_proc::model(5, 1.0, 2.0, 1.0)]
-pub fn model(num_points: u64, r1: f64, r2: f64, h: f64) -> fj::Shape {
+#[fj::model]
+pub fn model(
+    #[value(default = 5, min = 3)] num_points: u64,
+    #[value(default = 1.0, min = 1.0)] r1: f64,
+    #[value(default = 2.0, min = 2.0)] r2: f64,
+    #[value] h: f64,
+) -> fj::Shape {
     let num_vertices = num_points * 2;
     let vertex_iter = (0..num_vertices).map(|i| {
         let angle = Angle::from_rad(2. * PI / num_vertices as f64 * i as f64);
@@ -30,7 +35,7 @@ pub fn model(num_points: u64, r1: f64, r2: f64, h: f64) -> fj::Shape {
 
     let footprint = fj::Difference2d::from_shapes([outer.into(), inner.into()]);
 
-    let star = fj::Sweep::from_path(footprint.into(), [0., 0., -h]);
+    let star = fj::Sweep::from_path(footprint.into(), [0., 0., h]);
 
     star.into()
 }
