@@ -224,6 +224,13 @@ impl Sweep {
     }
 }
 
+fn reverse_surfaces(shape: &mut Shape) -> Result<(), ValidationError> {
+    shape
+        .update()
+        .update_all(|surface: &mut Surface| *surface = surface.reverse())
+        .validate()
+}
+
 fn create_continuous_side_face_fallback(
     cycle_source: &Cycle<3>,
     translation: &Transform,
@@ -253,13 +260,6 @@ fn create_continuous_side_face_fallback(
     target.insert(Face::Triangles(side_face))?;
 
     Ok(())
-}
-
-fn reverse_surfaces(shape: &mut Shape) -> Result<(), ValidationError> {
-    shape
-        .update()
-        .update_all(|surface: &mut Surface| *surface = surface.reverse())
-        .validate()
 }
 
 #[cfg(test)]
