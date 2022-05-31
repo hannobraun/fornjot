@@ -124,6 +124,9 @@ impl Sweep {
             for edge_source in &cycle_source.get().edges {
                 let edge_source = edge_source.canonical();
 
+                let (surface, edge_bottom, edge_top) =
+                    create_side_surface(self, &edge_source);
+
                 // Can't panic. We already ruled out the continuous edge case
                 // above, so this edge must have vertices.
                 let vertices_source = edge_source
@@ -177,8 +180,6 @@ impl Sweep {
                 // Now we have everything we need to create the side face from
                 // this source/bottom edge.
 
-                let (surface, edge_bottom, edge_top) =
-                    create_side_surface(self, &edge_source);
                 let surface = self.target.insert(surface)?;
 
                 let cycle = self.target.merge(Cycle::new(vec![
