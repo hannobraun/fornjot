@@ -24,6 +24,7 @@ pub fn sweep_shape(
     let target = Shape::new();
 
     let mut sweep = Sweep {
+        source,
         target,
 
         path,
@@ -35,13 +36,14 @@ pub fn sweep_shape(
     };
 
     let (source_to_bottom, source_to_top) =
-        create_top_and_bottom_faces(&source, &mut sweep)?;
-    create_side_faces(&source, &source_to_bottom, &source_to_top, &mut sweep)?;
+        create_top_and_bottom_faces(&mut sweep)?;
+    create_side_faces(&source_to_bottom, &source_to_top, &mut sweep)?;
 
     Ok(sweep.target)
 }
 
 struct Sweep {
+    source: Shape,
     target: Shape,
 
     path: Vector<3>,
@@ -53,11 +55,10 @@ struct Sweep {
 }
 
 fn create_top_and_bottom_faces(
-    source: &Shape,
     sweep: &mut Sweep,
 ) -> Result<(Mapping, Mapping), ValidationError> {
-    let (mut bottom, source_to_bottom) = source.clone_shape();
-    let (mut top, source_to_top) = source.clone_shape();
+    let (mut bottom, source_to_bottom) = sweep.source.clone_shape();
+    let (mut top, source_to_top) = sweep.source.clone_shape();
 
     if sweep.is_sweep_along_negative_direction {
         reverse_surfaces(&mut top)?;
@@ -73,12 +74,11 @@ fn create_top_and_bottom_faces(
 }
 
 fn create_side_faces(
-    source: &Shape,
     source_to_bottom: &Mapping,
     source_to_top: &Mapping,
     sweep: &mut Sweep,
 ) -> Result<(), ValidationError> {
-    for cycle_source in source.cycles() {
+    for cycle_source in sweep.source.cycles() {
         if cycle_source.get().edges.len() == 1 {
             // If there's only one edge in the cycle, it must be a continuous
             // edge that connects to itself. By sweeping that, we create a
