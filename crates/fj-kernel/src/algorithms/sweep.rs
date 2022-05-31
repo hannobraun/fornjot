@@ -112,112 +112,111 @@ impl Sweep {
                     self.color,
                     &mut self.target,
                 )?;
-            } else {
-                // If there's no continuous edge, we can create the non-
-                // continuous faces using boundary representation.
 
-                let mut vertex_bottom_to_edge = HashMap::new();
+                continue;
+            }
 
-                for edge_source in &cycle_source.get().edges {
-                    let edge_source = edge_source.canonical();
+            // If there's no continuous edge, we can create the non-continuous
+            // faces using boundary representation.
 
-                    // Can't panic. We already ruled out the continuous edge
-                    // case above, so this edge must have vertices.
-                    let vertices_source = edge_source
-                        .get()
-                        .vertices
-                        .clone()
-                        .expect("Expected edge to have vertices");
+            let mut vertex_bottom_to_edge = HashMap::new();
 
-                    // Create (or retrieve from the cache,
-                    // `vertex_bottom_to_edge`) side edges from the vertices of
-                    // this source/bottom edge.
-                    let [side_edge_a, side_edge_b] =
-                        vertices_source.map(|vertex_source| {
-                            // Can't panic, unless this isn't actually a vertex
-                            // from `source`, we're using the wrong mapping, or
-                            // the mapping doesn't contain this vertex.
-                            //
-                            // All of these would be a bug.
-                            let vertex_bottom = self
-                                .source_to_bottom
-                                .vertices()
-                                .get(&vertex_source.canonical())
-                                .expect("Could not find vertex in mapping")
-                                .clone();
+            for edge_source in &cycle_source.get().edges {
+                let edge_source = edge_source.canonical();
 
-                            vertex_bottom_to_edge
-                                .entry(vertex_bottom.clone())
-                                .or_insert_with(|| {
-                                    // Can't panic, unless this isn't actually a
-                                    // vertex from `source`, we're using the
-                                    // wrong mapping, or the mapping doesn't
-                                    // contain this vertex.
-                                    //
-                                    // All of these would be a bug.
-                                    let vertex_top = self
-                                        .source_to_top
-                                        .vertices()
-                                        .get(&vertex_source.canonical())
-                                        .expect(
-                                            "Could not find vertex in mapping",
-                                        )
-                                        .clone();
+                // Can't panic. We already ruled out the continuous edge case
+                // above, so this edge must have vertices.
+                let vertices_source = edge_source
+                    .get()
+                    .vertices
+                    .clone()
+                    .expect("Expected edge to have vertices");
 
-                                    let points = [vertex_bottom, vertex_top]
-                                        .map(|vertex| vertex.get().point());
+                // Create (or retrieve from the cache, `vertex_bottom_to_edge`)
+                // side edges from the vertices of this source/bottom edge.
+                let [side_edge_a, side_edge_b] =
+                    vertices_source.map(|vertex_source| {
+                        // Can't panic, unless this isn't actually a vertex from
+                        // `source`, we're using the wrong mapping, or the
+                        // mapping doesn't contain this vertex.
+                        //
+                        // All of these would be a bug.
+                        let vertex_bottom = self
+                            .source_to_bottom
+                            .vertices()
+                            .get(&vertex_source.canonical())
+                            .expect("Could not find vertex in mapping")
+                            .clone();
 
-                                    Edge::builder(&mut self.target)
-                                        .build_line_segment_from_points(points)
-                                        .unwrap()
-                                })
-                                .clone()
-                        });
+                        vertex_bottom_to_edge
+                            .entry(vertex_bottom.clone())
+                            .or_insert_with(|| {
+                                // Can't panic, unless this isn't actually a
+                                // vertex from `source`, we're using the wrong
+                                // mapping, or the mapping doesn't contain this
+                                // vertex.
+                                //
+                                // All of these would be a bug.
+                                let vertex_top = self
+                                    .source_to_top
+                                    .vertices()
+                                    .get(&vertex_source.canonical())
+                                    .expect("Could not find vertex in mapping")
+                                    .clone();
 
-                    // Now we have everything we need to create the side face
-                    // from this source/bottom edge.
+                                let points = [vertex_bottom, vertex_top]
+                                    .map(|vertex| vertex.get().point());
 
-                    // Can't panic, unless this isn't actually an edge from
-                    // `source`, we're using the wrong mappings, or the mappings
-                    // don't contain this edge.
-                    //
-                    // All of these would be a bug.
-                    let bottom_edge = self
-                        .source_to_bottom
-                        .edges()
-                        .get(&edge_source)
-                        .expect("Couldn't find edge in mapping")
-                        .clone();
-                    let top_edge = self
-                        .source_to_top
-                        .edges()
-                        .get(&edge_source)
-                        .expect("Couldn't find edge in mapping")
-                        .clone();
-
-                    let mut surface = Surface::SweptCurve(SweptCurve {
-                        curve: bottom_edge.get().curve(),
-                        path: self.path,
+                                Edge::builder(&mut self.target)
+                                    .build_line_segment_from_points(points)
+                                    .unwrap()
+                            })
+                            .clone()
                     });
-                    if self.is_sweep_along_negative_direction {
-                        surface = surface.reverse();
-                    }
-                    let surface = self.target.insert(surface)?;
 
-                    let cycle = self.target.merge(Cycle::new(vec![
-                        bottom_edge,
-                        top_edge,
-                        side_edge_a,
-                        side_edge_b,
-                    ]))?;
+                // Now we have everything we need to create the side face from
+                // this source/bottom edge.
 
-                    self.target.insert(Face::new(
-                        surface,
-                        vec![cycle],
-                        Vec::new(),
-                        self.color,
-                    ))?;
+                // Can't panic, unless this isn't actually an edge from
+                // `source`, we're using the wrong mappings, or the mappings
+                // don't contain this edge.
+                //
+                // All of these would be a bug.
+                let bottom_edge = self
+                    .source_to_bottom
+                    .edges()
+                    .get(&edge_source)
+                    .expect("Couldn't find edge in mapping")
+                    .clone();
+                let top_edge = self
+                    .source_to_top
+                    .edges()
+                    .get(&edge_source)
+                    .expect("Couldn't find edge in mapping")
+                    .clone();
+
+                let mut surface = Surface::SweptCurve(SweptCurve {
+                    curve: bottom_edge.get().curve(),
+                    path: self.path,
+                });
+                if self.is_sweep_along_negative_direction {
+                    surface = surface.reverse();
                 }
+                let surface = self.target.insert(surface)?;
+
+                let cycle = self.target.merge(Cycle::new(vec![
+                    bottom_edge,
+                    top_edge,
+                    side_edge_a,
+                    side_edge_b,
+                ]))?;
+
+                self.target.insert(Face::new(
+                    surface,
+                    vec![cycle],
+                    Vec::new(),
+                    self.color,
+                ))?;
             }
         }
 
