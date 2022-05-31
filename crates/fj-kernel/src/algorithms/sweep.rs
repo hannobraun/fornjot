@@ -137,7 +137,7 @@ impl Sweep {
 
                 // Create (or retrieve from the cache, `vertex_bottom_to_edge`)
                 // side edges from the vertices of this source/bottom edge.
-                let [side_edge_a, side_edge_b] =
+                let [edge_side_a, edge_side_b] =
                     vertices_source.map(|vertex_source| {
                         // Can't panic, unless this isn't actually a vertex from
                         // `source`, we're using the wrong mapping, or the
@@ -185,8 +185,8 @@ impl Sweep {
                 let cycle = self.target.merge(Cycle::new(vec![
                     edge_bottom,
                     edge_top,
-                    side_edge_a,
-                    side_edge_b,
+                    edge_side_a,
+                    edge_side_b,
                 ]))?;
 
                 self.target.insert(Face::new(
