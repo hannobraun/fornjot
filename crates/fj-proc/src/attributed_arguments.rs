@@ -11,45 +11,68 @@ pub fn attributed_arguments(_: TokenStream, input: TokenStream) -> TokenStream {
     let args: Vec<Argument> =
         inputs.iter().map(|inp| parse_quote!(#inp)).collect();
 
-    let mut defaults = Vec::new();
-    let mut mins = Vec::new();
-    let mut maxs = Vec::new();
-    let mut names = Vec::new();
-    let mut types = Vec::new();
+    let mut parameter_extraction = Vec::new();
+
+    let mut min_checks = Vec::new();
+    let mut max_checks = Vec::new();
     for arg in args {
-        let mut default = None;
-        let mut min = None;
-        let mut max = None;
-        names.push(arg.ident);
-        types.push(arg.ty);
-        for value in arg.attr.values.clone() {
-            if let Some(ident) = value.ident.clone() {
-                match ident.to_string().as_str() {
-                    "default" => default = Some(value.val.clone()),
-                    "min" => min = Some(value.val.clone()),
-                    "max" => max = Some(value.val.clone()),
-                    _ => {}
-                }
-            } else {
-                default = Some(value.val.clone());
-            }
+        let ident = arg.ident;
+        let ty = arg.ty;
+
+        if let Some(default) = arg.attr.get_default() {
+            let def = default.val;
+            parameter_extraction.push(quote! {
+                let #ident: #ty = args.get(stringify!(#ident))
+                        .map(|arg| arg.parse().unwrap())
+                        .unwrap_or(#def);
+            });
+        } else {
+            parameter_extraction.push(quote! {
+                let #ident: #ty = args.get(stringify!(#ident))
+                        .map(|arg| arg.parse().unwrap())
+                        .expect(format!("A value for `{}` has to be provided since no default is specified",stringify!(#ident)).as_str());
+            });
         }
-        let [default, min, max] = determine_default(default, min, max);
-        defaults.push(default);
-        mins.push(min);
-        maxs.push(max);
+
+        if let Some(minimum) = arg.attr.get_minimum() {
+            let min = minimum.val;
+            min_checks.push(quote! {
+                if #ident < #min {
+                    panic!("Value of `{}` must not be smaller than: {}",stringify!(#ident), #min);
+                }
+            });
+        }
+        if let Some(maximum) = arg.attr.get_maximum() {
+            let max = maximum.val;
+            max_checks.push(quote! {
+                if #ident > #max {
+                    panic!("Value of `{}` must not be larger than: {}", stringify!(#ident), #max);
+                }
+            })
+        }
     }
     let block = item.block;
 
+    let function_boilerplate = quote! {
+        #[no_mangle]
+            pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape
+    };
+
     quote! {
-            #[no_mangle]
-            pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
-                #(
-                    let #names: #types = args.get(stringify!(#names)).map(|arg| arg.parse().unwrap()).unwrap_or(#defaults);
-                )*
-                #block
-            }
-        }.into()
+    #function_boilerplate {
+        #(
+            #parameter_extraction
+        )*
+        #(
+            #min_checks
+        )*
+        #(
+            #max_checks
+        )*
+        #block
+    }
+    }
+    .into()
 }
 
 /// Represents one parameter given to the `model`
@@ -81,7 +104,8 @@ impl Parse for Argument {
 /// `        ^^^^^^^^^^^^^^^^`
 #[derive(Debug, Clone)]
 struct HelperAttribute {
-    pub values: syn::punctuated::Punctuated<DefaultParam, syn::Token![,]>,
+    pub values:
+        Option<syn::punctuated::Punctuated<DefaultParam, syn::Token![,]>>,
 }
 
 impl Parse for HelperAttribute {
@@ -100,14 +124,46 @@ impl Parse for HelperAttribute {
                 ),
             ));
         }
-        parenthesized!(value_content in attr_content);
 
-        Ok(Self {
-            values: syn::punctuated::Punctuated::parse_separated_nonempty_with(
-                &value_content,
-                DefaultParam::parse,
-            )?,
-        })
+        if attr_content.peek(syn::token::Paren) {
+            parenthesized!(value_content in attr_content);
+            if value_content.is_empty() {
+                Ok(Self { values: None })
+            } else {
+                Ok(Self {
+                values: Some(
+                    syn::punctuated::Punctuated::parse_separated_nonempty_with(
+                        &value_content,
+                        DefaultParam::parse,
+                    )?,
+                ),
+            })
+            }
+        } else {
+            Ok(Self { values: None })
+        }
+    }
+}
+
+impl HelperAttribute {
+    fn get_parameter(&self, parameter_name: &str) -> Option<DefaultParam> {
+        if let Some(values) = self.values.clone() {
+            values.into_iter().find(|val| val.ident == *parameter_name)
+        } else {
+            None
+        }
+    }
+
+    pub fn get_default(&self) -> Option<DefaultParam> {
+        self.get_parameter("default")
+    }
+
+    pub fn get_minimum(&self) -> Option<DefaultParam> {
+        self.get_parameter("min")
+    }
+
+    pub fn get_maximum(&self) -> Option<DefaultParam> {
+        self.get_parameter("max")
     }
 }
 
@@ -116,83 +172,23 @@ impl Parse for HelperAttribute {
 /// `        ^^^^^^^^^----- is parsed as DefaultParam{ ident: Some(default), val: 3 }`
 #[derive(Debug, Clone)]
 struct DefaultParam {
-    pub ident: Option<proc_macro2::Ident>,
+    pub ident: proc_macro2::Ident,
     pub val: syn::Expr,
 }
 
 impl Parse for DefaultParam {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
         if input.peek(syn::Ident) {
-            let ident: Option<proc_macro2::Ident> = Some(input.parse()?);
+            let ident: proc_macro2::Ident = input.parse()?;
             let _: syn::token::Eq = input.parse()?;
             Ok(Self {
                 ident,
                 val: input.parse()?,
             })
         } else {
-            Ok(Self {
-                ident: None,
-                val: input.parse()?,
-            })
+            Err(input
+                .parse::<proc_macro2::Ident>()
+                .expect_err("No identifier found"))
         }
     }
 }
-
-/// Checks if a default value is supplied, otherwise applies either the min or max (if specified) as default.
-fn determine_default(
-    default: Option<syn::Expr>,
-    min: Option<syn::Expr>,
-    max: Option<syn::Expr>,
-) -> [Option<syn::Expr>; 3] {
-    if let Some(default) = default {
-        let min = if min.is_some() { min } else { None };
-        let max = if max.is_some() { max } else { None };
-        [Some(default), min, max]
-    } else {
-        let mut default = None;
-        let max = if max.is_some() {
-            default = max.clone();
-            max
-        } else {
-            None
-        };
-
-        let min = if min.is_some() {
-            default = min.clone();
-            min
-        } else {
-            None
-        };
-
-        [default, min, max]
-    }
-}
-
-// #[fj::model]
-// pub fn model(
-//     #[default(5)] num_points: u64,
-//     #[default(1.0)] r1: f64,
-//     #[default(2.0)] r2: f64,
-//     #[default(1.0)] h: f64,
-// ) -> fj::Shape
-
-// #[no_mangle]
-// pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
-//     let num_points: u64 = args
-//         .get("num_points")
-//         .map(|arg| arg.parse().unwrap())
-//         .unwrap_or(5);
-
-//     let r1: f64 = args
-//         .get("r1")
-//         .map(|arg| arg.parse().unwrap())
-//         .unwrap_or(1.0);
-
-//     let r2: f64 = args
-//         .get("r2")
-//         .map(|arg| arg.parse().unwrap())
-//         .unwrap_or(2.0);
-
-//     let h: f64 = args.get("h").map(|arg| arg.parse().unwrap()).unwrap_or(1.0);
-
-// }
