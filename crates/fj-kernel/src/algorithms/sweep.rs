@@ -138,17 +138,7 @@ impl Sweep {
                     [edge_bottom, edge_top, edge_side_a, edge_side_b],
                 )?;
 
-                // Now we have everything we need to create the side face from
-                // this source/bottom edge.
-
-                let surface = self.target.insert(surface)?;
-
-                self.target.insert(Face::new(
-                    surface,
-                    vec![cycle],
-                    Vec::new(),
-                    self.color,
-                ))?;
+                create_side_face(self, surface, cycle)?;
             }
         }
 
@@ -283,6 +273,23 @@ fn create_side_cycle(
     edges: [Handle<Edge<3>>; 4],
 ) -> ValidationResult<Cycle<3>> {
     sweep.target.merge(Cycle::new(edges))
+}
+
+fn create_side_face(
+    sweep: &mut Sweep,
+    surface: Surface,
+    cycle: Handle<Cycle<3>>,
+) -> Result<(), ValidationError> {
+    let surface = sweep.target.insert(surface)?;
+
+    sweep.target.insert(Face::new(
+        surface,
+        vec![cycle],
+        Vec::new(),
+        sweep.color,
+    ))?;
+
+    Ok(())
 }
 
 #[cfg(test)]
