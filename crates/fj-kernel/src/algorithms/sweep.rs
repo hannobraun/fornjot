@@ -25,14 +25,9 @@ pub fn sweep_shape(
         path.dot(&Vector::from([0., 0., 1.])) < Scalar::ZERO;
 
     if sweep_along_negative_direction {
-        top.update()
-            .update_all(|surface: &mut Surface| *surface = surface.reverse())
-            .validate()?;
+        reverse_surfaces(&mut top)?;
     } else {
-        bottom
-            .update()
-            .update_all(|surface: &mut Surface| *surface = surface.reverse())
-            .validate()?;
+        reverse_surfaces(&mut bottom)?;
     }
     transform_shape(&mut top, &translation)?;
 
@@ -178,6 +173,13 @@ pub fn sweep_shape(
     }
 
     Ok(target)
+}
+
+fn reverse_surfaces(shape: &mut Shape) -> Result<(), ValidationError> {
+    shape
+        .update()
+        .update_all(|surface: &mut Surface| *surface = surface.reverse())
+        .validate()
 }
 
 #[cfg(test)]
