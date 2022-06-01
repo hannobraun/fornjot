@@ -242,9 +242,9 @@ fn create_side_edges(
             .expect("Could not find vertex in mapping")
             .clone();
 
-        vertex_bottom_to_edge
-            .entry(vertex_bottom.clone())
-            .or_insert_with(|| {
+        match vertex_bottom_to_edge.get(&vertex_bottom).cloned() {
+            Some(edge) => edge,
+            None => {
                 // Can't panic, unless this isn't actually a vertex from
                 // `source`, we're using the wrong mapping, or the mapping
                 // doesn't contain this vertex.
@@ -257,14 +257,18 @@ fn create_side_edges(
                     .expect("Could not find vertex in mapping")
                     .clone();
 
-                let points = [vertex_bottom, vertex_top]
+                let points = [vertex_bottom.clone(), vertex_top]
                     .map(|vertex| vertex.get().point());
 
-                Edge::builder(&mut sweep.target)
+                let edge = Edge::builder(&mut sweep.target)
                     .build_line_segment_from_points(points)
-                    .unwrap()
-            })
-            .clone()
+                    .unwrap();
+
+                vertex_bottom_to_edge.insert(vertex_bottom, edge.clone());
+
+                edge
+            }
+        }
     })
 }
 
