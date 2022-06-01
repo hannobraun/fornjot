@@ -80,13 +80,14 @@ impl<'r> EdgeBuilder<'r> {
     /// Build a line segment from two vertices
     pub fn build_line_segment_from_vertices(
         self,
-        vertices: [Handle<Vertex>; 2],
+        [a, b]: [Handle<Vertex>; 2],
     ) -> ValidationResult<Edge<3>> {
-        let curve = self.shape.insert(Curve::Line(Line::from_points(
-            vertices.clone().map(|vertex| vertex.get().point()),
-        )))?;
+        let curve = {
+            let points = [&a, &b].map(|vertex| vertex.get().point());
+            let curve = Curve::Line(Line::from_points(points));
+            self.shape.insert(curve)?
+        };
 
-        let [a, b] = vertices;
         let vertices = [
             LocalForm::new(Point::from([0.]), a),
             LocalForm::new(Point::from([1.]), b),
