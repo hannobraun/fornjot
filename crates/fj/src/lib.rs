@@ -25,6 +25,7 @@ mod shape_2d;
 mod shape_3d;
 
 pub use self::{angle::*, shape_2d::*, shape_3d::*};
+pub use fj_proc::*;
 
 /// A shape
 #[derive(Clone, Debug)]

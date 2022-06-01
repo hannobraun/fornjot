@@ -690,6 +690,7 @@ dependencies = [
 name = "fj"
 version = "0.6.0"
 dependencies = [
+ "fj-proc",
  "serde",
 ]
 
@@ -2478,15 +2479,6 @@ name = "star"
 version = "0.1.0"
 dependencies = [
  "fj",
- "fj-proc",
-]
-
-[[package]]
-name = "star_attributed_arguments"
-version = "0.1.0"
-dependencies = [
- "fj",
- "fj-proc",
 ]
 
 [[package]]
