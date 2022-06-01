@@ -18,37 +18,44 @@ pub fn attributed_arguments(_: TokenStream, input: TokenStream) -> TokenStream {
     for arg in args {
         let ident = arg.ident;
         let ty = arg.ty;
-
-        if let Some(default) = arg.attr.get_default() {
-            let def = default.val;
-            parameter_extraction.push(quote! {
+        if let Some(attr) = arg.attr {
+            if let Some(default) = attr.get_default() {
+                let def = default.val;
+                parameter_extraction.push(quote! {
+                    let #ident: #ty = args.get(stringify!(#ident))
+                            .map(|arg| arg.parse().unwrap())
+                            .unwrap_or(#def);
+                });
+            } else {
+                parameter_extraction.push(quote! {
                 let #ident: #ty = args.get(stringify!(#ident))
                         .map(|arg| arg.parse().unwrap())
-                        .unwrap_or(#def);
+                        .expect(format!("A value for `{}` has to be provided since no default is specified",stringify!(#ident)).as_str());
             });
+            }
+
+            if let Some(minimum) = attr.get_minimum() {
+                let min = minimum.val;
+                min_checks.push(quote! {
+                if #ident < #min {
+                    panic!("Value of `{}` must not be smaller than: {}",stringify!(#ident), #min);
+                }
+            });
+            }
+            if let Some(maximum) = attr.get_maximum() {
+                let max = maximum.val;
+                max_checks.push(quote! {
+                if #ident > #max {
+                    panic!("Value of `{}` must not be larger than: {}", stringify!(#ident), #max);
+                }
+            })
+            }
         } else {
             parameter_extraction.push(quote! {
                 let #ident: #ty = args.get(stringify!(#ident))
                         .map(|arg| arg.parse().unwrap())
                         .expect(format!("A value for `{}` has to be provided since no default is specified",stringify!(#ident)).as_str());
             });
-        }
-
-        if let Some(minimum) = arg.attr.get_minimum() {
-            let min = minimum.val;
-            min_checks.push(quote! {
-                if #ident < #min {
-                    panic!("Value of `{}` must not be smaller than: {}",stringify!(#ident), #min);
-                }
-            });
-        }
-        if let Some(maximum) = arg.attr.get_maximum() {
-            let max = maximum.val;
-            max_checks.push(quote! {
-                if #ident > #max {
-                    panic!("Value of `{}` must not be larger than: {}", stringify!(#ident), #max);
-                }
-            })
         }
     }
     let block = item.block;
@@ -82,14 +89,17 @@ pub fn attributed_arguments(_: TokenStream, input: TokenStream) -> TokenStream {
 /// `         attr                 ident`
 #[derive(Debug, Clone)]
 struct Argument {
-    pub attr: HelperAttribute,
+    pub attr: Option<HelperAttribute>,
     pub ident: proc_macro2::Ident,
     pub ty: proc_macro2::Ident,
 }
 
 impl Parse for Argument {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
-        let attr: HelperAttribute = input.parse()?;
+        let mut attr = None;
+        if input.peek(syn::token::Pound) {
+            attr = Some(input.parse()?);
+        }
         let ident: proc_macro2::Ident = input.parse()?;
 
         let _: syn::token::Colon = input.parse()?;

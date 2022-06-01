@@ -2,8 +2,8 @@ use std::{collections::HashMap, f64::consts::PI};
 
 use fj::{syntax::*, Angle};
 
-#[no_mangle]
-pub extern "C" fn model(_: &HashMap<String, String>) -> fj::Shape {
+#[fj::model]
+pub fn model() -> fj::Shape {
     let a = star(4, [0, 255, 0, 200]);
     let b = star(5, [255, 0, 0, 255])
         .rotate([1., 1., 1.], Angle::from_deg(45.))
