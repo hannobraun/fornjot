@@ -131,7 +131,7 @@ impl Sweep {
                     self,
                     &edge_source,
                     &mut vertex_bottom_to_edge,
-                );
+                )?;
 
                 let cycle = create_side_cycle(
                     self,
@@ -220,7 +220,7 @@ fn create_side_edges(
     sweep: &mut Sweep,
     edge_source: &Handle<Edge<3>>,
     vertex_bottom_to_edge: &mut HashMap<Handle<Vertex>, Handle<Edge<3>>>,
-) -> [Handle<Edge<3>>; 2] {
+) -> Result<[Handle<Edge<3>>; 2], ValidationError> {
     // Can't panic. We already ruled out the continuous edge case above, so this
     // edge must have vertices.
     let vertices_source = edge_source
@@ -275,7 +275,9 @@ fn create_side_edges(
         Ok(edge)
     });
     let [a, b]: [Result<_, ValidationError>; 2] = side_edges;
-    [a.unwrap(), b.unwrap()]
+    let side_edges = [a?, b?];
+
+    Ok(side_edges)
 }
 
 fn create_side_cycle(
