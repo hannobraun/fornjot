@@ -131,7 +131,7 @@ impl Sweep {
                     self,
                     &edge_source,
                     &mut vertex_bottom_to_edge,
-                );
+                )?;
 
                 let cycle = create_side_cycle(
                     self,
@@ -220,7 +220,7 @@ fn create_side_edges(
     sweep: &mut Sweep,
     edge_source: &Handle<Edge<3>>,
     vertex_bottom_to_edge: &mut HashMap<Handle<Vertex>, Handle<Edge<3>>>,
-) -> [Handle<Edge<3>>; 2] {
+) -> Result<[Handle<Edge<3>>; 2], ValidationError> {
     // Can't panic. We already ruled out the continuous edge case above, so this
     // edge must have vertices.
     let vertices_source = edge_source
@@ -230,7 +230,10 @@ fn create_side_edges(
 
     // Create (or retrieve from the cache, `vertex_bottom_to_edge`) side edges
     // from the vertices of this source/bottom edge.
-    vertices_source.map(|vertex_source| {
+    //
+    // Can be cleaned up, once `try_map` is stable:
+    // https://doc.rust-lang.org/std/primitive.array.html#method.try_map
+    let side_edges = vertices_source.map(|vertex_source| {
         // Can't panic, unless this isn't actually a vertex from `source`, we're
         // using the wrong mapping, or the mapping doesn't contain this vertex.
         //
@@ -242,9 +245,9 @@ fn create_side_edges(
             .expect("Could not find vertex in mapping")
             .clone();
 
-        vertex_bottom_to_edge
-            .entry(vertex_bottom.clone())
-            .or_insert_with(|| {
+        let edge = match vertex_bottom_to_edge.get(&vertex_bottom).cloned() {
+            Some(edge) => edge,
+            None => {
                 // Can't panic, unless this isn't actually a vertex from
                 // `source`, we're using the wrong mapping, or the mapping
                 // doesn't contain this vertex.
@@ -257,15 +260,24 @@ fn create_side_edges(
                     .expect("Could not find vertex in mapping")
                     .clone();
 
-                let points = [vertex_bottom, vertex_top]
+                let points = [vertex_bottom.clone(), vertex_top]
                     .map(|vertex| vertex.get().point());
 
-                Edge::builder(&mut sweep.target)
-                    .build_line_segment_from_points(points)
-                    .unwrap()
-            })
-            .clone()
-    })
+                let edge = Edge::builder(&mut sweep.target)
+                    .build_line_segment_from_points(points)?;
+
+                vertex_bottom_to_edge.insert(vertex_bottom, edge.clone());
+
+                edge
+            }
+        };
+
+        Ok(edge)
+    });
+    let [a, b]: [Result<_, ValidationError>; 2] = side_edges;
+    let side_edges = [a?, b?];
+
+    Ok(side_edges)
 }
 
 fn create_side_cycle(
