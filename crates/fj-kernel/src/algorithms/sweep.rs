@@ -230,7 +230,10 @@ fn create_side_edges(
 
     // Create (or retrieve from the cache, `vertex_bottom_to_edge`) side edges
     // from the vertices of this source/bottom edge.
-    vertices_source.map(|vertex_source| {
+    //
+    // Can be cleaned up, once `try_map` is stable:
+    // https://doc.rust-lang.org/std/primitive.array.html#method.try_map
+    let side_edges = vertices_source.map(|vertex_source| {
         // Can't panic, unless this isn't actually a vertex from `source`, we're
         // using the wrong mapping, or the mapping doesn't contain this vertex.
         //
@@ -242,7 +245,7 @@ fn create_side_edges(
             .expect("Could not find vertex in mapping")
             .clone();
 
-        match vertex_bottom_to_edge.get(&vertex_bottom).cloned() {
+        let edge = match vertex_bottom_to_edge.get(&vertex_bottom).cloned() {
             Some(edge) => edge,
             None => {
                 // Can't panic, unless this isn't actually a vertex from
@@ -261,15 +264,18 @@ fn create_side_edges(
                     .map(|vertex| vertex.get().point());
 
                 let edge = Edge::builder(&mut sweep.target)
-                    .build_line_segment_from_points(points)
-                    .unwrap();
+                    .build_line_segment_from_points(points)?;
 
                 vertex_bottom_to_edge.insert(vertex_bottom, edge.clone());
 
                 edge
             }
-        }
-    })
+        };
+
+        Ok(edge)
+    });
+    let [a, b]: [Result<_, ValidationError>; 2] = side_edges;
+    [a.unwrap(), b.unwrap()]
 }
 
 fn create_side_cycle(
