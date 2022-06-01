@@ -2,24 +2,12 @@ use std::collections::HashMap;
 
 use fj::syntax::*;
 
-#[no_mangle]
-pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
-    let outer = args
-        .get("outer")
-        .unwrap_or(&"1.0".to_owned())
-        .parse()
-        .expect("Could not parse parameter `outer`");
-    let inner = args
-        .get("inner")
-        .unwrap_or(&"0.5".to_owned())
-        .parse()
-        .expect("Could not parse parameter `inner`");
-    let height: f64 = args
-        .get("height")
-        .unwrap_or(&"1.0".to_owned())
-        .parse()
-        .expect("Could not parse parameter `height`");
-
+#[fj::model]
+pub fn model(
+    #[value(default = 1.0, min = inner * 1.01)] outer: f64,
+    #[value(default = 0.5, max = outer * 0.99)] inner: f64,
+    #[value(default = 1.0)] height: f64,
+) -> fj::Shape {
     let outer_edge = fj::Circle::from_radius(outer);
     let inner_edge = fj::Circle::from_radius(inner);
 
