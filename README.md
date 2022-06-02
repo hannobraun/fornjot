@@ -70,7 +70,7 @@ pub fn model(
 }
 ```
 
-This is the code for the [spacer model](/models/spacer). As you can see, there's still some work to do, to make the process of defining models more convenient.
+This is the code for the [spacer model](/models/spacer).
 
 ### Basic modeling features
 
