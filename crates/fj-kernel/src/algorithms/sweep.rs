@@ -130,7 +130,8 @@ impl Sweep {
 
                 let [edge_side_a, edge_side_b] = create_side_edges(
                     self,
-                    &edge_source,
+                    &edge_bottom,
+                    &edge_top,
                     &mut vertex_bottom_to_edge,
                 )?;
 
@@ -203,38 +204,44 @@ fn create_side_surface(
 
 fn create_side_edges(
     sweep: &mut Sweep,
-    edge_source: &Handle<Edge<3>>,
+    edge_bottom: &Handle<Edge<3>>,
+    edge_top: &Handle<Edge<3>>,
     vertex_bottom_to_edge: &mut HashMap<Handle<Vertex>, Handle<Edge<3>>>,
 ) -> Result<[Handle<Edge<3>>; 2], ValidationError> {
-    // Can't panic. We already ruled out the continuous edge case above, so this
-    // edge must have vertices.
-    let vertices_source = edge_source
-        .get()
-        .vertices
-        .expect("Expected edge to have vertices");
+    // Can't panic. We already ruled out the "continuous edge" case above, so
+    // these edges must have vertices.
+    let [vertices_bottom, vertices_top] = [edge_bottom, edge_top].map(|edge| {
+        edge.get()
+            .vertices
+            .expect("Expected vertices on non-continuous edge")
+    });
+
+    // Can be simplified, once `zip` is stabilized:
+    // https://doc.rust-lang.org/std/primitive.array.html#method.zip
+    let [b_a, b_b] = vertices_bottom;
+    let [t_a, t_b] = vertices_top;
+    let vertices = [(b_a, t_a), (b_b, t_b)];
 
     // Create (or retrieve from the cache, `vertex_bottom_to_edge`) side edges
     // from the vertices of this source/bottom edge.
     //
     // Can be cleaned up, once `try_map` is stable:
     // https://doc.rust-lang.org/std/primitive.array.html#method.try_map
-    let side_edges = vertices_source.map(|vertex_source| {
-        let vertex_bottom =
-            sweep.source_to_bottom.vertex(&vertex_source.canonical());
-
-        let edge = match vertex_bottom_to_edge.get(&vertex_bottom).cloned() {
+    let side_edges = vertices.map(|(vertex_bottom, vertex_top)| {
+        let edge = match vertex_bottom_to_edge
+            .get(&vertex_bottom.canonical())
+            .cloned()
+        {
             Some(edge) => edge,
             None => {
-                let vertex_top =
-                    sweep.source_to_top.vertex(&vertex_source.canonical());
-
                 let points = [vertex_bottom.clone(), vertex_top]
-                    .map(|vertex| vertex.get().point());
+                    .map(|vertex| vertex.canonical().get().point());
 
                 let edge = Edge::builder(&mut sweep.target)
                     .build_line_segment_from_points(points)?;
 
-                vertex_bottom_to_edge.insert(vertex_bottom, edge.clone());
+                vertex_bottom_to_edge
+                    .insert(vertex_bottom.canonical(), edge.clone());
 
                 edge
             }
