@@ -3,7 +3,8 @@ mod structural;
 mod uniqueness;
 
 pub use self::{
-    geometric::GeometricIssues, structural::StructuralIssues,
+    geometric::{EdgeVertexMismatch, GeometricIssues},
+    structural::StructuralIssues,
     uniqueness::UniquenessIssues,
 };
 
