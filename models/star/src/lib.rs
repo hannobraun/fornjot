@@ -1,4 +1,3 @@
-use fj::Angle;
 use std::f64::consts::PI;
 
 #[fj::model]
@@ -10,7 +9,8 @@ pub fn model(
 ) -> fj::Shape {
     let num_vertices = num_points * 2;
     let vertex_iter = (0..num_vertices).map(|i| {
-        let angle = Angle::from_rad(2. * PI / num_vertices as f64 * i as f64);
+        let angle =
+            fj::Angle::from_rad(2. * PI / num_vertices as f64 * i as f64);
         let radius = if i % 2 == 0 { r1 } else { r2 };
         (angle, radius)
     });
