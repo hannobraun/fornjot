@@ -188,22 +188,8 @@ fn create_side_surface(
     sweep: &Sweep,
     edge_source: &Handle<Edge<3>>,
 ) -> (Surface, Handle<Edge<3>>, Handle<Edge<3>>) {
-    // Can't panic, unless this isn't actually an edge from `source`, we're
-    // using the wrong mappings, or the mappings don't contain this edge.
-    //
-    // All of these would be a bug.
-    let edge_bottom = sweep
-        .source_to_bottom
-        .edges()
-        .get(edge_source)
-        .expect("Couldn't find edge in mapping")
-        .clone();
-    let edge_top = sweep
-        .source_to_top
-        .edges()
-        .get(edge_source)
-        .expect("Couldn't find edge in mapping")
-        .clone();
+    let edge_bottom = sweep.source_to_bottom.edge(edge_source);
+    let edge_top = sweep.source_to_top.edge(edge_source);
 
     let mut surface = Surface::SweptCurve(SweptCurve {
         curve: edge_bottom.get().curve(),
@@ -234,31 +220,14 @@ fn create_side_edges(
     // Can be cleaned up, once `try_map` is stable:
     // https://doc.rust-lang.org/std/primitive.array.html#method.try_map
     let side_edges = vertices_source.map(|vertex_source| {
-        // Can't panic, unless this isn't actually a vertex from `source`, we're
-        // using the wrong mapping, or the mapping doesn't contain this vertex.
-        //
-        // All of these would be a bug.
-        let vertex_bottom = sweep
-            .source_to_bottom
-            .vertices()
-            .get(&vertex_source.canonical())
-            .expect("Could not find vertex in mapping")
-            .clone();
+        let vertex_bottom =
+            sweep.source_to_bottom.vertex(&vertex_source.canonical());
 
         let edge = match vertex_bottom_to_edge.get(&vertex_bottom).cloned() {
             Some(edge) => edge,
             None => {
-                // Can't panic, unless this isn't actually a vertex from
-                // `source`, we're using the wrong mapping, or the mapping
-                // doesn't contain this vertex.
-                //
-                // All of these would be a bug.
-                let vertex_top = sweep
-                    .source_to_top
-                    .vertices()
-                    .get(&vertex_source.canonical())
-                    .expect("Could not find vertex in mapping")
-                    .clone();
+                let vertex_top =
+                    sweep.source_to_top.vertex(&vertex_source.canonical());
 
                 let points = [vertex_bottom.clone(), vertex_top]
                     .map(|vertex| vertex.get().point());
