@@ -123,10 +123,10 @@ impl Sweep {
 
             for edge_source in &cycle_source.get().edges {
                 let edge_source = edge_source.canonical();
+                let edge_bottom = self.source_to_bottom.edge(&edge_source);
                 let edge_top = self.source_to_top.edge(&edge_source);
 
-                let (surface, edge_bottom) =
-                    create_side_surface(self, &edge_source);
+                let surface = create_side_surface(self, &edge_bottom);
 
                 let [edge_side_a, edge_side_b] = create_side_edges(
                     self,
@@ -187,10 +187,8 @@ fn create_continuous_side_face_fallback(
 
 fn create_side_surface(
     sweep: &Sweep,
-    edge_source: &Handle<Edge<3>>,
-) -> (Surface, Handle<Edge<3>>) {
-    let edge_bottom = sweep.source_to_bottom.edge(edge_source);
-
+    edge_bottom: &Handle<Edge<3>>,
+) -> Surface {
     let mut surface = Surface::SweptCurve(SweptCurve {
         curve: edge_bottom.get().curve(),
         path: sweep.path,
@@ -199,7 +197,7 @@ fn create_side_surface(
         surface = surface.reverse();
     }
 
-    (surface, edge_bottom)
+    surface
 }
 
 fn create_side_edges(
