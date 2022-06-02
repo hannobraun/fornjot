@@ -20,7 +20,13 @@ pub fn validate_vertex(
 
         let distance = (existing.get().point() - vertex.point()).magnitude();
         if distance < min_distance {
-            return Err(UniquenessIssues);
+            return Err(UniquenessIssues {
+                duplicate_vertex: Some(DuplicateVertex {
+                    existing,
+                    new: vertex.clone(),
+                    distance,
+                }),
+            });
         }
     }
 
@@ -39,11 +45,44 @@ pub fn validate_vertex(
 ///
 /// [`ValidationError`]: super::ValidationError
 #[derive(Debug, Default, thiserror::Error)]
-pub struct UniquenessIssues;
+pub struct UniquenessIssues {
+    /// Duplicate vertex found
+    pub duplicate_vertex: Option<DuplicateVertex>,
+}
 
 impl fmt::Display for UniquenessIssues {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Uniqueness issues found")?;
+        writeln!(f, "Uniqueness issues found:")?;
+
+        if let Some(duplicate_vertex) = &self.duplicate_vertex {
+            writeln!(f, "- Duplicate vertex ({})", duplicate_vertex)?;
+        }
+
         Ok(())
+    }
+}
+
+/// A duplicate vertex
+///
+/// Used in [`UniquenessIssues`].
+#[derive(Debug)]
+pub struct DuplicateVertex {
+    /// The existing vertex
+    pub existing: Handle<Vertex>,
+
+    /// The new vertex
+    pub new: Vertex,
+
+    /// The distance between the vertices
+    pub distance: Scalar,
+}
+
+impl fmt::Display for DuplicateVertex {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "existing: {:?}, new: {:?}, distance: {}",
+            self.existing, self.new, self.distance
+        )
     }
 }

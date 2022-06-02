@@ -5,7 +5,7 @@ mod uniqueness;
 pub use self::{
     geometric::{EdgeVertexMismatch, GeometricIssues},
     structural::StructuralIssues,
-    uniqueness::UniquenessIssues,
+    uniqueness::{DuplicateVertex, UniquenessIssues},
 };
 
 use fj_math::{Point, Scalar};
