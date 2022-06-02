@@ -123,18 +123,20 @@ impl Sweep {
 
             for edge_source in &cycle_source.get().edges {
                 let edge_source = edge_source.canonical();
+                let edge_bottom = self.source_to_bottom.edge(&edge_source);
+                let edge_top = self.source_to_top.edge(&edge_source);
 
-                let (surface, edge_bottom, edge_top) =
-                    create_side_surface(self, &edge_source);
+                let surface = create_side_surface(self, &edge_bottom);
 
                 let [edge_side_a, edge_side_b] = create_side_edges(
-                    self,
-                    &edge_source,
+                    &mut self.target,
+                    &edge_bottom,
+                    &edge_top,
                     &mut vertex_bottom_to_edge,
                 )?;
 
                 let cycle = create_side_cycle(
-                    self,
+                    &mut self.target,
                     [edge_bottom, edge_top, edge_side_a, edge_side_b],
                 )?;
 
@@ -186,60 +188,63 @@ fn create_continuous_side_face_fallback(
 
 fn create_side_surface(
     sweep: &Sweep,
-    edge_source: &Handle<Edge<3>>,
-) -> (Surface, Handle<Edge<3>>, Handle<Edge<3>>) {
-    let edge_bottom = sweep.source_to_bottom.edge(edge_source);
-    let edge_top = sweep.source_to_top.edge(edge_source);
-
+    edge_bottom: &Handle<Edge<3>>,
+) -> Surface {
     let mut surface = Surface::SweptCurve(SweptCurve {
         curve: edge_bottom.get().curve(),
         path: sweep.path,
     });
+
     if sweep.is_sweep_along_negative_direction {
         surface = surface.reverse();
     }
 
-    (surface, edge_bottom, edge_top)
+    surface
 }
 
 fn create_side_edges(
-    sweep: &mut Sweep,
-    edge_source: &Handle<Edge<3>>,
+    target: &mut Shape,
+    edge_bottom: &Handle<Edge<3>>,
+    edge_top: &Handle<Edge<3>>,
     vertex_bottom_to_edge: &mut HashMap<Handle<Vertex>, Handle<Edge<3>>>,
 ) -> Result<[Handle<Edge<3>>; 2], ValidationError> {
-    // Can't panic. We already ruled out the continuous edge case above, so this
-    // edge must have vertices.
-    let vertices_source = edge_source
-        .get()
-        .vertices
-        .expect("Expected edge to have vertices");
+    // Can't panic. We already ruled out the "continuous edge" case above, so
+    // these edges must have vertices.
+    let [vertices_bottom, vertices_top] = [edge_bottom, edge_top].map(|edge| {
+        edge.get()
+            .vertices
+            .expect("Expected vertices on non-continuous edge")
+    });
+
+    // Can be simplified, once `zip` is stabilized:
+    // https://doc.rust-lang.org/std/primitive.array.html#method.zip
+    let [b_a, b_b] = vertices_bottom;
+    let [t_a, t_b] = vertices_top;
+    let vertices = [(b_a, t_a), (b_b, t_b)];
 
     // Create (or retrieve from the cache, `vertex_bottom_to_edge`) side edges
     // from the vertices of this source/bottom edge.
     //
     // Can be cleaned up, once `try_map` is stable:
     // https://doc.rust-lang.org/std/primitive.array.html#method.try_map
-    let side_edges = vertices_source.map(|vertex_source| {
-        let vertex_bottom =
-            sweep.source_to_bottom.vertex(&vertex_source.canonical());
+    let side_edges = vertices.map(|(vertex_bottom, vertex_top)| {
+        // We only need to create the edge, if it hasn't already been created
+        // for a neighboring side face. Let's check our cache, to see if that's
+        // the case.
+        let edge = vertex_bottom_to_edge
+            .get(&vertex_bottom.canonical())
+            .cloned();
+        if let Some(edge) = edge {
+            return Ok(edge);
+        }
 
-        let edge = match vertex_bottom_to_edge.get(&vertex_bottom).cloned() {
-            Some(edge) => edge,
-            None => {
-                let vertex_top =
-                    sweep.source_to_top.vertex(&vertex_source.canonical());
+        let points = [vertex_bottom.clone(), vertex_top]
+            .map(|vertex| vertex.canonical().get().point());
 
-                let points = [vertex_bottom.clone(), vertex_top]
-                    .map(|vertex| vertex.get().point());
+        let edge =
+            Edge::builder(target).build_line_segment_from_points(points)?;
 
-                let edge = Edge::builder(&mut sweep.target)
-                    .build_line_segment_from_points(points)?;
-
-                vertex_bottom_to_edge.insert(vertex_bottom, edge.clone());
-
-                edge
-            }
-        };
+        vertex_bottom_to_edge.insert(vertex_bottom.canonical(), edge.clone());
 
         Ok(edge)
     });
@@ -250,10 +255,10 @@ fn create_side_edges(
 }
 
 fn create_side_cycle(
-    sweep: &mut Sweep,
+    target: &mut Shape,
     edges: [Handle<Edge<3>>; 4],
 ) -> ValidationResult<Cycle<3>> {
-    sweep.target.merge(Cycle::new(edges))
+    target.merge(Cycle::new(edges))
 }
 
 fn create_side_face(
