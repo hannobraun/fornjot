@@ -37,7 +37,6 @@ pub fn validate_point(
 pub fn validate_vertex(
     vertex: &Vertex,
     handle: Option<&Handle<Vertex>>,
-    _min_distance: Scalar,
     vertices: &Store<Vertex>,
 ) -> Result<(), UniquenessIssues> {
     for existing in vertices.iter() {

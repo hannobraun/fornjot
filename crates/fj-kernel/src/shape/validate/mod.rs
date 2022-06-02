@@ -82,17 +82,12 @@ impl Validate for Vertex {
     fn validate(
         &self,
         handle: Option<&Handle<Self>>,
-        min_distance: Scalar,
+        _: Scalar,
         _: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
         structural::validate_vertex(self, stores)?;
-        uniqueness::validate_vertex(
-            self,
-            handle,
-            min_distance,
-            &stores.vertices,
-        )?;
+        uniqueness::validate_vertex(self, handle, &stores.vertices)?;
 
         Ok(())
     }
