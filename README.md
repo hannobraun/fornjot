@@ -47,9 +47,9 @@ Here's an overview over all of the crates, with a short description of what they
 
 ## Features
 
-### Code-CAD in Rust
+### Code-first CAD in Rust
 
-Models are defined as Rust code. To ensure fast compile times, they are compiled separately, and loaded into a host application as a plug-in.
+Models are defined as Rust code. To ensure fast compile times, they are compiled separately, and loaded into the Fornjot application as a plug-in.
 
 ``` rust
 use fj::syntax::*;
