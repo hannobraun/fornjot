@@ -136,7 +136,7 @@ impl Sweep {
                 )?;
 
                 let cycle = create_side_cycle(
-                    self,
+                    &mut self.target,
                     [edge_bottom, edge_top, edge_side_a, edge_side_b],
                 )?;
 
@@ -256,10 +256,10 @@ fn create_side_edges(
 }
 
 fn create_side_cycle(
-    sweep: &mut Sweep,
+    target: &mut Shape,
     edges: [Handle<Edge<3>>; 4],
 ) -> ValidationResult<Cycle<3>> {
-    sweep.target.merge(Cycle::new(edges))
+    target.merge(Cycle::new(edges))
 }
 
 fn create_side_face(
