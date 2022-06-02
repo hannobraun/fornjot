@@ -1,6 +1,5 @@
 use fj::Angle;
 use std::f64::consts::PI;
-extern crate fj;
 
 #[fj::model]
 pub fn model(
