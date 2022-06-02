@@ -214,7 +214,10 @@ where
     T: fmt::Debug,
 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        f.debug_tuple("Handle").field(&self.get()).finish()
+        f.debug_struct("Handle")
+            .field("shape", &self.store.label.as_deref().unwrap_or("unnamed"))
+            .field("object", &self.get())
+            .finish()
     }
 }
 
