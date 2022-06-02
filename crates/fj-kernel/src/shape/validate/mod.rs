@@ -5,7 +5,7 @@ mod uniqueness;
 pub use self::{
     geometric::{EdgeVertexMismatch, GeometricIssues},
     structural::StructuralIssues,
-    uniqueness::{DuplicateVertex, UniquenessIssues},
+    uniqueness::{DuplicatePoint, UniquenessIssues},
 };
 
 use fj_math::{Point, Scalar};
@@ -32,11 +32,18 @@ pub trait Validate {
 impl Validate for Point<3> {
     fn validate(
         &self,
-        _: Option<&Handle<Self>>,
+        handle: Option<&Handle<Self>>,
+        min_distance: Scalar,
         _: Scalar,
-        _: Scalar,
-        _: &Stores,
+        stores: &Stores,
     ) -> Result<(), ValidationError> {
+        uniqueness::validate_point(
+            *self,
+            handle,
+            min_distance,
+            &stores.points,
+        )?;
+
         Ok(())
     }
 }
