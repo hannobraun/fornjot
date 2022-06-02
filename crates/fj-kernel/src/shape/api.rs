@@ -378,6 +378,24 @@ mod tests {
     }
 
     #[test]
+    fn add_vertex_uniqueness() -> anyhow::Result<()> {
+        let mut shape = Shape::new();
+
+        let point = shape.insert(Point::from([0., 0., 0.]))?;
+
+        // Adding a vertex should work.
+        shape.insert(Vertex {
+            point: point.clone(),
+        })?;
+
+        // Adding a second vertex with the same point should fail.
+        let result = shape.insert(Vertex { point });
+        assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
+
+        Ok(())
+    }
+
+    #[test]
     fn add_edge() -> anyhow::Result<()> {
         let mut shape = TestShape::new();
         let mut other = TestShape::new();

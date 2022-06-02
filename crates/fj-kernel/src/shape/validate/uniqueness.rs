@@ -26,6 +26,7 @@ pub fn validate_point(
                     new: point,
                     distance,
                 }),
+                ..UniquenessIssues::default()
             });
         }
     }
@@ -34,14 +35,23 @@ pub fn validate_point(
 }
 
 pub fn validate_vertex(
-    _vertex: &Vertex,
-    _handle: Option<&Handle<Vertex>>,
+    vertex: &Vertex,
+    handle: Option<&Handle<Vertex>>,
     _min_distance: Scalar,
-    _vertices: &Store<Vertex>,
+    vertices: &Store<Vertex>,
 ) -> Result<(), UniquenessIssues> {
-    // This function is a placeholder. It has been replaced by `validate_point`
-    // temporarily, but will soon be extended again, to make sure that vertices
-    // don't share the same points.
+    for existing in vertices.iter() {
+        if Some(&existing) == handle {
+            continue;
+        }
+
+        if existing.get().point == vertex.point {
+            return Err(UniquenessIssues {
+                duplicate_vertex: Some(existing),
+                ..UniquenessIssues::default()
+            });
+        }
+    }
 
     Ok(())
 }
@@ -61,6 +71,9 @@ pub fn validate_vertex(
 pub struct UniquenessIssues {
     /// Duplicate point found
     pub duplicate_point: Option<DuplicatePoint>,
+
+    /// Duplicate vertex found
+    pub duplicate_vertex: Option<Handle<Vertex>>,
 }
 
 impl fmt::Display for UniquenessIssues {
@@ -69,6 +82,10 @@ impl fmt::Display for UniquenessIssues {
 
         if let Some(duplicate_point) = &self.duplicate_point {
             writeln!(f, "- Duplicate point ({})", duplicate_point)?;
+        }
+
+        if let Some(duplicate_vertex) = &self.duplicate_vertex {
+            writeln!(f, "- Duplicate vertex ({:?}", duplicate_vertex)?;
         }
 
         Ok(())
