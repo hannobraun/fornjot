@@ -228,24 +228,20 @@ fn create_side_edges(
     // Can be cleaned up, once `try_map` is stable:
     // https://doc.rust-lang.org/std/primitive.array.html#method.try_map
     let side_edges = vertices.map(|(vertex_bottom, vertex_top)| {
-        let edge = match vertex_bottom_to_edge
+        let edge = vertex_bottom_to_edge
             .get(&vertex_bottom.canonical())
-            .cloned()
-        {
-            Some(edge) => edge,
-            None => {
-                let points = [vertex_bottom.clone(), vertex_top]
-                    .map(|vertex| vertex.canonical().get().point());
+            .cloned();
+        if let Some(edge) = edge {
+            return Ok(edge);
+        }
 
-                let edge = Edge::builder(target)
-                    .build_line_segment_from_points(points)?;
+        let points = [vertex_bottom.clone(), vertex_top]
+            .map(|vertex| vertex.canonical().get().point());
 
-                vertex_bottom_to_edge
-                    .insert(vertex_bottom.canonical(), edge.clone());
+        let edge =
+            Edge::builder(target).build_line_segment_from_points(points)?;
 
-                edge
-            }
-        };
+        vertex_bottom_to_edge.insert(vertex_bottom.canonical(), edge.clone());
 
         Ok(edge)
     });
