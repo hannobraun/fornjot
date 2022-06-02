@@ -118,4 +118,4 @@ impl Mapping {
     }
 }
 
-pub type OneMapping<T> = HashMap<Handle<T>, Handle<T>>;
+type OneMapping<T> = HashMap<Handle<T>, Handle<T>>;
