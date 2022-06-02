@@ -193,6 +193,7 @@ fn create_side_surface(
         curve: edge_bottom.get().curve(),
         path: sweep.path,
     });
+
     if sweep.is_sweep_along_negative_direction {
         surface = surface.reverse();
     }
