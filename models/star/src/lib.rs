@@ -1,5 +1,5 @@
 use fj::Angle;
-use std::{collections::HashMap, f64::consts::PI};
+use std::f64::consts::PI;
 extern crate fj;
 
 #[fj::model]

@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 #[fj::model]
 pub fn model(
     #[value(default = 3.0)] x: f64,
