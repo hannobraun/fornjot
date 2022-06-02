@@ -129,7 +129,7 @@ impl Sweep {
                 let surface = create_side_surface(self, &edge_bottom);
 
                 let [edge_side_a, edge_side_b] = create_side_edges(
-                    self,
+                    &mut self.target,
                     &edge_bottom,
                     &edge_top,
                     &mut vertex_bottom_to_edge,
@@ -203,7 +203,7 @@ fn create_side_surface(
 }
 
 fn create_side_edges(
-    sweep: &mut Sweep,
+    target: &mut Shape,
     edge_bottom: &Handle<Edge<3>>,
     edge_top: &Handle<Edge<3>>,
     vertex_bottom_to_edge: &mut HashMap<Handle<Vertex>, Handle<Edge<3>>>,
@@ -237,7 +237,7 @@ fn create_side_edges(
                 let points = [vertex_bottom.clone(), vertex_top]
                     .map(|vertex| vertex.canonical().get().point());
 
-                let edge = Edge::builder(&mut sweep.target)
+                let edge = Edge::builder(target)
                     .build_line_segment_from_points(points)?;
 
                 vertex_bottom_to_edge
