@@ -3,7 +3,7 @@ use std::fmt;
 use fj_math::Scalar;
 
 use crate::{
-    shape::{stores::Stores, Handle},
+    shape::{stores::Store, Handle},
     topology::Vertex,
 };
 
@@ -11,9 +11,9 @@ pub fn validate_vertex(
     vertex: &Vertex,
     handle: Option<&Handle<Vertex>>,
     min_distance: Scalar,
-    stores: &Stores,
+    vertices: &Store<Vertex>,
 ) -> Result<(), UniquenessIssues> {
-    for existing in stores.vertices.iter() {
+    for existing in vertices.iter() {
         if Some(&existing) == handle {
             continue;
         }
