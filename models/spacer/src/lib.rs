@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use fj::syntax::*;
 
 #[fj::model]

@@ -63,7 +63,9 @@ pub fn model(_: TokenStream, input: TokenStream) -> TokenStream {
 
     let function_boilerplate = quote! {
         #[no_mangle]
-            pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape
+            pub extern "C" fn model(
+                args: &std::collections::HashMap<String, String>
+            ) -> fj::Shape
     };
 
     quote! {
