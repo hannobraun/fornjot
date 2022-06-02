@@ -365,7 +365,7 @@ mod tests {
     }
 
     #[test]
-    fn add_vertex() -> anyhow::Result<()> {
+    fn add_vertex_structural() -> anyhow::Result<()> {
         let mut shape = Shape::new().with_distinct_min_distance(MIN_DISTANCE);
         let mut other = Shape::new();
 
