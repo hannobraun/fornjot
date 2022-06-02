@@ -369,12 +369,8 @@ mod tests {
         let mut shape = Shape::new().with_distinct_min_distance(MIN_DISTANCE);
         let mut other = Shape::new();
 
-        // Should work, as `point` is part of the shape.
-        let point = shape.insert(Point::from([0., 0., 0.]))?;
-        shape.insert(Vertex { point })?;
-
         // Should fail, as `point` is not part of the shape.
-        let point = other.insert(Point::from([1., 0., 0.]))?;
+        let point = other.insert(Point::from([0., 0., 0.]))?;
         let result = shape.insert(Vertex { point });
         assert!(matches!(result, Err(ValidationError::Structural(_))));
 
