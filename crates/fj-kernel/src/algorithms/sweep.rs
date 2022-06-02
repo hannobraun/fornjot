@@ -228,6 +228,9 @@ fn create_side_edges(
     // Can be cleaned up, once `try_map` is stable:
     // https://doc.rust-lang.org/std/primitive.array.html#method.try_map
     let side_edges = vertices.map(|(vertex_bottom, vertex_top)| {
+        // We only need to create the edge, if it hasn't already been created
+        // for a neighboring side face. Let's check our cache, to see if that's
+        // the case.
         let edge = vertex_bottom_to_edge
             .get(&vertex_bottom.canonical())
             .cloned();
