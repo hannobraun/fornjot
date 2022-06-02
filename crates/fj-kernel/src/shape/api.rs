@@ -347,28 +347,50 @@ mod tests {
     }
 
     #[test]
-    fn add_vertex() -> anyhow::Result<()> {
+    fn add_point() -> anyhow::Result<()> {
         let mut shape = Shape::new().with_distinct_min_distance(MIN_DISTANCE);
-        let mut other = Shape::new();
 
-        let point = shape.insert(Point::from([0., 0., 0.]))?;
-        shape.insert(Vertex { point })?;
+        // Add the original point.
+        shape.insert(Point::from([0., 0., 0.]))?;
 
-        // Should fail, as `point` is not part of the shape.
-        let point = other.insert(Point::from([1., 0., 0.]))?;
-        let result = shape.insert(Vertex { point });
-        assert!(matches!(result, Err(ValidationError::Structural(_))));
-
-        // `point` is too close to the original point. `assert!` is commented,
-        // because that only causes a warning to be logged right now.
-        let point = shape.insert(Point::from([5e-8, 0., 0.]))?;
-        let result = shape.insert(Vertex { point });
+        // `point` is too close to the original point.
+        let result = shape.insert(Point::from([5e-8, 0., 0.]));
         assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
 
         // `point` is farther than `MIN_DISTANCE` away from original point.
         // Should work.
-        let point = shape.insert(Point::from([5e-6, 0., 0.]))?;
-        shape.insert(Vertex { point })?;
+        shape.insert(Point::from([5e-6, 0., 0.]))?;
+
+        Ok(())
+    }
+
+    #[test]
+    fn add_vertex_structural() -> anyhow::Result<()> {
+        let mut shape = Shape::new().with_distinct_min_distance(MIN_DISTANCE);
+        let mut other = Shape::new();
+
+        // Should fail, as `point` is not part of the shape.
+        let point = other.insert(Point::from([0., 0., 0.]))?;
+        let result = shape.insert(Vertex { point });
+        assert!(matches!(result, Err(ValidationError::Structural(_))));
+
+        Ok(())
+    }
+
+    #[test]
+    fn add_vertex_uniqueness() -> anyhow::Result<()> {
+        let mut shape = Shape::new();
+
+        let point = shape.insert(Point::from([0., 0., 0.]))?;
+
+        // Adding a vertex should work.
+        shape.insert(Vertex {
+            point: point.clone(),
+        })?;
+
+        // Adding a second vertex with the same point should fail.
+        let result = shape.insert(Vertex { point });
+        assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
 
         Ok(())
     }
