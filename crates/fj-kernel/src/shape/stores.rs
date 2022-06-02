@@ -51,12 +51,14 @@ impl Stores {
 
 #[derive(Debug)]
 pub struct Store<T: Object> {
+    pub(super) label: Option<String>,
     objects: Arc<RwLock<Objects<T>>>,
 }
 
 impl<T: Object> Store<T> {
     pub fn new() -> Self {
         Self {
+            label: None,
             objects: Arc::new(RwLock::new(SlotMap::new())),
         }
     }
@@ -109,6 +111,7 @@ impl<T: Object> Store<T> {
 impl<T: Object> Clone for Store<T> {
     fn clone(&self) -> Self {
         Self {
+            label: self.label.clone().map(|label| format!("{} (clone)", label)),
             objects: self.objects.clone(),
         }
     }
