@@ -134,11 +134,11 @@ impl<'r> CycleBuilder<'r> {
         }
 
         let mut edges = Vec::new();
-        for ab in points.windows(2) {
+        for points in points.windows(2) {
             // Can't panic, as we passed `2` to `windows`.
             //
             // Can be cleaned up, once `array_windows` is stable.
-            let points = [ab[0], ab[1]];
+            let points = [points[0], points[1]];
 
             let edge = Edge::builder(self.shape)
                 .build_line_segment_from_points(points)?;
