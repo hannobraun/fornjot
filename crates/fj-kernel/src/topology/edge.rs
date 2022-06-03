@@ -92,6 +92,11 @@ impl<const D: usize> fmt::Display for Edge<D> {
 pub struct VerticesOfEdge(pub Option<[LocalForm<Point<1>, Vertex>; 2]>);
 
 impl VerticesOfEdge {
+    /// Construct an instance of `VerticesOfEdge` from zero or two vertices
+    pub fn new(vertices: Option<[LocalForm<Point<1>, Vertex>; 2]>) -> Self {
+        Self(vertices)
+    }
+
     /// Construct an instance of `VerticesOfEdge` from two vertices
     pub fn from_vertices(vertices: [LocalForm<Point<1>, Vertex>; 2]) -> Self {
         Self(Some(vertices))

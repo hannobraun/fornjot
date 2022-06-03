@@ -116,7 +116,8 @@ fn add_cycle(
             }
         });
 
-        let edge = shape.merge(Edge::new(curve, VerticesOfEdge(vertices)))?;
+        let edge =
+            shape.merge(Edge::new(curve, VerticesOfEdge::new(vertices)))?;
         edges.push(edge);
     }
 

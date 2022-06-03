@@ -129,8 +129,10 @@ impl Object for Edge<3> {
                     Ok(LocalForm::new(*vertex.local(), canonical))
                 })?;
 
-        let merged = shape
-            .get_handle_or_insert(Edge::new(curve, VerticesOfEdge(vertices)))?;
+        let merged = shape.get_handle_or_insert(Edge::new(
+            curve,
+            VerticesOfEdge::new(vertices),
+        ))?;
 
         if let Some(handle) = handle {
             mapping.edges.insert(handle, merged.clone());
