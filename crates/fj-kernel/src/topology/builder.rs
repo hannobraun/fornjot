@@ -102,21 +102,25 @@ impl<'r> EdgeBuilder<'r> {
 /// API for building a [`Cycle`]
 #[must_use]
 pub struct CycleBuilder<'r> {
+    surface: Surface,
     shape: &'r mut Shape,
 }
 
 impl<'r> CycleBuilder<'r> {
     /// Construct a new instance of `CycleBuilder`
-    pub fn new(shape: &'r mut Shape) -> Self {
-        Self { shape }
+    pub fn new(surface: Surface, shape: &'r mut Shape) -> Self {
+        Self { surface, shape }
     }
 
     /// Build a polygon from a list of points
     pub fn build_polygon(
         self,
-        points: impl IntoIterator<Item = impl Into<Point<3>>>,
+        points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> ValidationResult<Cycle<3>> {
-        let mut points: Vec<_> = points.into_iter().map(Into::into).collect();
+        let mut points: Vec<_> = points
+            .into_iter()
+            .map(|point| self.surface.point_from_surface_coords(point))
+            .collect();
 
         // A polygon is closed, so we need to add the first point at the end
         // again, for the next step.
@@ -144,8 +148,8 @@ impl<'r> CycleBuilder<'r> {
 #[must_use]
 pub struct FaceBuilder<'r> {
     surface: Surface,
-    exterior: Option<Vec<Point<3>>>,
-    interiors: Vec<Vec<Point<3>>>,
+    exterior: Option<Vec<Point<2>>>,
+    interiors: Vec<Vec<Point<2>>>,
 
     shape: &'r mut Shape,
 }
@@ -165,7 +169,7 @@ impl<'r> FaceBuilder<'r> {
     /// Make the exterior or the face a polygon
     pub fn with_exterior_polygon(
         self,
-        points: impl IntoIterator<Item = impl Into<Point<3>>>,
+        points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
         let points = points.into_iter().map(Into::into).collect();
 
@@ -178,7 +182,7 @@ impl<'r> FaceBuilder<'r> {
     /// Add an interior polygon to the face
     pub fn with_interior_polygon(
         self,
-        points: impl IntoIterator<Item = impl Into<Point<3>>>,
+        points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
         let points = points.into_iter().map(Into::into).collect();
 
@@ -194,13 +198,15 @@ impl<'r> FaceBuilder<'r> {
 
         let mut exteriors = Vec::new();
         if let Some(points) = self.exterior {
-            let cycle = Cycle::builder(self.shape).build_polygon(points)?;
+            let cycle = Cycle::builder(self.surface, self.shape)
+                .build_polygon(points)?;
             exteriors.push(cycle);
         }
 
         let mut interiors = Vec::new();
         for points in self.interiors {
-            let cycle = Cycle::builder(self.shape).build_polygon(points)?;
+            let cycle = Cycle::builder(self.surface, self.shape)
+                .build_polygon(points)?;
             interiors.push(cycle);
         }
 
