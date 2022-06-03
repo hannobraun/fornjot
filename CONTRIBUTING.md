@@ -122,12 +122,22 @@ Don't worry about the changelog! It gets updates as part of the release procedur
 
 ### Commits
 
+#### Favor small, focused commits
+
 - Focus each commit on one change. Don't combine multiple changes into the same commit.
 - Don't make commits too large, unless it can't be avoided.
 
 This makes it much easier to review your commits, as many small and focused commits are much easier to review than few large ones.
 
-Ideally, each commit should compile, without warnings or test failures. This isn't critical, but is a huge help when [bisecting](https://git-scm.com/docs/git-bisect).
+#### Each commit should compile
+
+Each single commit should compile, without any errors or test failures, and preferably without warnings. This is a huge help when rummaging around the Git history, especially when [bisecting](https://git-scm.com/docs/git-bisect).
+
+#### Include changes to `Cargo.lock`
+
+When making certain changes to a `Cargo.toml` file, Cargo will automatically update the `Cargo.lock` on the next build. These updates to `Cargo.lock` should be included in the same commit with the changes that triggered them.
+
+If you don't do this, `Cargo.lock` will be updated on the next `cargo build`/`cargo test`/..., which is going to be confusing, and can get in the way when doing a `git bisect`.
 
 ### Commit Messages
 
