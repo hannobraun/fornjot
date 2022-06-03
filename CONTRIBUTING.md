@@ -108,6 +108,14 @@ Once your pull request has been reviewed, but not yet merged, please add any add
 
 If the code you're modifying has changed in the `main` branch, favor `git rebase` over `git merge`, unless there's a good reason not to. `git rebase` will lead to a linear history that is easier to understand.
 
+#### Formatting
+
+All Rust code follows standard formatting using [rustfmt](https://github.com/rust-lang/rustfmt), with some additional configuration in `rustfmt.toml` in the repository root. This is enforced in the CI build, so code that doesn't follow the standard formatting can't be merged.
+
+The best way to deal with that is configuring your IDE such that it automatically formats the code every time you save the file. This often leads to sub-optimal results (compared to carefully considered manual formatting), but it saves so much mental overhead that it's more than worth it.
+
+If you don't have it set up like that, you can run `cargo fmt` manually. Ideally, every commit should be formatted correctly, as that introduces the least friction, but having a dedicated `cargo fmt` commit from time to time is also fine.
+
 #### Changelog
 
 Don't worry about the changelog! It gets updates as part of the release procedure, so making changes there as part of your pull request is not necessary.
