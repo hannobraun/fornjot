@@ -20,6 +20,14 @@ To report a bug, please [open an issue](https://github.com/hannobraun/Fornjot/is
 
 Feel free to first check the [list of open issues][issues], and if you find an existing one for your bug, add your voice there. If you're not sure or don't have the time, **don't worry, just open an issue**. We'd rather deal with duplicate issues than not hear about a bug at all.
 
+### Testing
+
+Aside from setting up a development environment and testing Fornjot using that, you can also download pre-compiled binaries for various platforms.
+
+Every merged pull request will trigger a [*Continuous Deployment* build](https://github.com/hannobraun/Fornjot/actions/workflows/cd.yml), each of which has a number of binaries attached to it.
+
+Please note that these binaries don't have their executable bits set, after you download them. If that is required on your platform, you have to set it manually, before you can launch the binary.
+
 
 ## Suggesting Improvements
 
@@ -37,19 +45,19 @@ If you think your request is an obvious improvement, open an issue. If want to d
 
 If you want to fix a bug, add a new feature, or improve an existing one, just fork the repository, make your change, and submit a pull request. Once submitted, [@hannobraun] will review the pull request, give feedback and possibly request changes, and once everything is in order, merge it.
 
-CI will kick in automatically when you create a PR. However, to save time you can verify your changes locally by runing the following from the repository root:
+CI will kick in automatically when you create a PR. However, to save time you can verify your changes locally by running the following from the repository root:
 
 ``` sh
 just build
 ```
 
-You may also need to install `just` first:
+You may need to install `just` first:
 
 ```sh
 cargo install just
 ```
 
-N.B. The justfile is maintained in parallel to the CI configuration. Therefore it's possible they can deviate. Any CI failures not caught by `just build` should be raised as bugs against the justfile. 
+Please note that the `justfile` is maintained in parallel to the CI configuration. It's possible that they can start to deviate over time. Most CI failures not caught by `just build` should be considered a bug, so please open an issue if you run into that!
 
 Pull requests are always welcome. But of course, there's a risk that yours might not be accepted. Bug fixes and other obvious improvements are usually safe, but new features might be deemed out of scope.
 
@@ -74,9 +82,9 @@ If you're not a programmer or are looking for some variety, you can also work on
 
 ## Additional Guidelines
 
-Let's put one thing up front: The following guidelines are just that, guidelines. **These are not mandatory rules** (well, except for the few that are enforced in the CI build).
+Let's put one thing up front: The following guidelines are just that, guidelines. **These are not mandatory rules** (except for the few that are enforced in the CI build).
 
-If you're not sure about something or think you might forget: **don't worry.** These guidelines are here to help make process as smooth as possible, not hinder anyone's work. Just submit a pull request and we'll figure out together what it takes to get it merged.
+If you're not sure about something or think you might forget, **don't worry.** These guidelines are here to help make the process as smooth as possible, not hinder anyone's work. Just submit a pull request and we'll figure out together what it takes to get it merged.
 
 ### Issues
 
@@ -86,17 +94,17 @@ Before starting to work on an issue, feel free to leave a message there first. M
 
 #### Favor small, incremental changes
 
-If a pull request gets too large or stays open for too long, it'll turn into a pain. Mostly for you, because you have to keep merging in the latest changes. But also for others, because once your pull request is merged, they'll have to deal with one big change at once, which is harder than dealing with multiple small changes over time.
+If a pull request gets too large or stays open for too long, it'll turn into a pain. Mostly for you, because you have to keep merging the latest changes from the `main` branch to stay up-to-date. But also for others, because once your pull request is merged, they'll have to deal with one big change at once, which is harder than dealing with multiple small changes over time.
 
-If you can split a big change into a series of smaller, incremental changes, do so! If some of those smaller changes are self-contained, like cleanup work that's required to implement your main change for example, submit those as separate pull requests, to get them merged right away.
+If you can split a big change into a series of smaller, incremental changes, please do so! If some of those smaller changes are self-contained, like cleanup work that's required to implement your main change for example, submit those as separate pull requests, to get them merged right away.
 
 #### Don't be afraid to change existing code
 
 Fornjot isn't the result of some stringent top-down design process. It grows and changes, based on evolving requirements. If you see something that doesn't seem to make sense, that's probably because it actually doesn't. Maybe it once did, but then things changed around it to create the current situation.
 
-Never be afraid to change code like that! If something is in your way, don't think you have to work around it. Just change the existing code, until your change is easy.
+Never be afraid to change code like that! If something is in your way, don't think you have to work around it. Just modify the existing code, until your change becomes easy.
 
-If you're worried about making a mistake, feel free to just ask. But really, if you make a change that's wrong, and it doesn't trigger a failure in an automated test, *and* gets through review, then that's not your fault at all.
+If you're worried about making a mistake, feel free to just ask. But really, if you make a change that's wrong, and it doesn't trigger a failure in an automated test, *and* gets through review... that's not your fault at all.
 
 #### Pull request lifecycle
 
@@ -108,18 +116,36 @@ Once your pull request has been reviewed, but not yet merged, please add any add
 
 If the code you're modifying has changed in the `main` branch, favor `git rebase` over `git merge`, unless there's a good reason not to. `git rebase` will lead to a linear history that is easier to understand.
 
-#### Miscellaneous
+#### Formatting
 
-Don't worry about the changelog! It will get updates as part of the release procedure, so making changes there as part of your pull request is not necessary.
+All Rust code follows standard formatting using [rustfmt](https://github.com/rust-lang/rustfmt), with some additional configuration in `rustfmt.toml` in the repository root. This is enforced in the CI build, so code that doesn't follow the standard formatting can't be merged.
+
+The best way to deal with that is configuring your IDE such that it automatically formats the code every time you save the file. This often leads to sub-optimal results (compared to carefully considered manual formatting), but it saves so much mental overhead that it's more than worth it.
+
+If you don't have it set up like that, you can run `cargo fmt` manually. Ideally, every commit should be formatted correctly, as that introduces the least friction, but having a dedicated `cargo fmt` commit from time to time is also fine.
+
+#### Changelog
+
+Don't worry about the changelog! It gets updates as part of the release procedure, so making changes there as part of your pull request is not necessary.
 
 ### Commits
+
+#### Favor small, focused commits
 
 - Focus each commit on one change. Don't combine multiple changes into the same commit.
 - Don't make commits too large, unless it can't be avoided.
 
 This makes it much easier to review your commits, as many small and focused commits are much easier to review than few large ones.
 
-Ideally, each commit should compile, without warnings or test failures. This isn't critical, but is a huge help when [bisecting](https://git-scm.com/docs/git-bisect).
+#### Each commit should compile
+
+Each single commit should compile, without any errors or test failures, and preferably without warnings. This is a huge help when rummaging around the Git history, especially when [bisecting](https://git-scm.com/docs/git-bisect).
+
+#### Include changes to `Cargo.lock`
+
+When making certain changes to a `Cargo.toml` file, Cargo will automatically update the `Cargo.lock` on the next build. These updates to `Cargo.lock` should be included in the same commit with the changes that triggered them.
+
+If you don't do this, `Cargo.lock` will be updated on the next `cargo build`/`cargo test`/..., which is going to be confusing, and can get in the way when doing a `git bisect`.
 
 ### Commit Messages
 
@@ -134,15 +160,11 @@ Further, the initial line ideally follows these guidelines:
 - Summarize the change itself and the intent behind it. This is often not possible in the limited space. Second-best is to summarize the change, or even just where it happened, and leave the intent for the rest of the message.
 - Use the imperative mood, i.e. formulate the initial line like a command or request. For example, write "Add a feature" instead of "Added a feature" or "Adding a feature". This is often simplest and most compact, and therefore easiest to read.
 
-The commit as a whole ideally follows these guidelines:
+The commit message as a whole ideally follows these guidelines:
 - First and foremost, document the *intent* behind the change. Explain *why* you did something. Explaining the change itself is secondary.
 - Ideally, the change itself is small and clear enough that it doesn't need explanation, or even a summary. If it does though, that should go into the commit message.
 - Refrain from explaining how code you added or changed works, beyond a short summary. While such explanation is often highly beneficial, it belongs in the code itself, as a comment.
 - If the intent behind a change is relevant to understanding the code after the change, then leave even that out of the commit message, and add it as a comment instead.
-
-### Formatting
-
-We use [rustfmt](https://github.com/rust-lang/rustfmt) for formatting.
 
 
 [issues]: https://github.com/hannobraun/Fornjot/issues
