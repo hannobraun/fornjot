@@ -158,10 +158,6 @@ The commit as a whole ideally follows these guidelines:
 - Refrain from explaining how code you added or changed works, beyond a short summary. While such explanation is often highly beneficial, it belongs in the code itself, as a comment.
 - If the intent behind a change is relevant to understanding the code after the change, then leave even that out of the commit message, and add it as a comment instead.
 
-### Formatting
-
-We use [rustfmt](https://github.com/rust-lang/rustfmt) for formatting.
-
 
 [issues]: https://github.com/hannobraun/Fornjot/issues
 [Matrix]: https://matrix.to/#/#fornjot:braun-odw.eu
