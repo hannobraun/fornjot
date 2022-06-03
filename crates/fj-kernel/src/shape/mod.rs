@@ -18,7 +18,7 @@ pub use self::{
     stores::{Handle, Iter},
     update::Update,
     validate::{
-        DuplicatePoint, EdgeVertexMismatch, GeometricIssues, StructuralIssues,
-        UniquenessIssues, ValidationError, ValidationResult,
+        DuplicateEdge, DuplicatePoint, EdgeVertexMismatch, GeometricIssues,
+        StructuralIssues, UniquenessIssues, ValidationError, ValidationResult,
     },
 };
