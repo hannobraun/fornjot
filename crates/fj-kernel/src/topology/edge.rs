@@ -122,6 +122,14 @@ impl VerticesOfEdge {
         self.0.iter().flatten()
     }
 
+    /// Map each vertex using the provided function
+    pub fn map<F>(self, f: F) -> Self
+    where
+        F: FnMut(LocalForm<Point<1>, Vertex>) -> LocalForm<Point<1>, Vertex>,
+    {
+        Self(self.convert(f))
+    }
+
     /// Convert each vertex using the provided function
     pub fn convert<F, T>(self, f: F) -> Option<[T; 2]>
     where
