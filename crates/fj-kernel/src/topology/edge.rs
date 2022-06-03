@@ -105,4 +105,20 @@ impl VerticesOfEdge {
     {
         self.0.map(|vertices| vertices.map(f))
     }
+
+    /// Convert each vertex using the provided fallible function
+    pub fn try_convert<F, T, E>(self, f: F) -> Result<Option<[T; 2]>, E>
+    where
+        F: FnMut(LocalForm<Point<1>, Vertex>) -> Result<T, E>,
+    {
+        // Can be cleaned up using `try_map`, once that is stable:
+        // https://doc.rust-lang.org/std/primitive.array.html#method.try_map
+        let vertices: Option<[Result<_, E>; 2]> = self.convert(f);
+        let vertices = match vertices {
+            Some([a, b]) => Some([a?, b?]),
+            None => None,
+        };
+
+        Ok(vertices)
+    }
 }

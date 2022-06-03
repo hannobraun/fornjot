@@ -117,22 +117,17 @@ impl Object for Edge<3> {
             mapping,
         )?;
 
-        // Can be cleaned up using `try_map`, once that is stable:
-        // https://doc.rust-lang.org/std/primitive.array.html#method.try_map
-        let vertices: Option<[Result<_, ValidationError>; 2]> =
-            self.vertices.convert(|vertex| {
-                let canonical = vertex.canonical();
-                let canonical = canonical.get().merge_into(
-                    Some(canonical),
-                    shape,
-                    mapping,
-                )?;
-                Ok(LocalForm::new(*vertex.local(), canonical))
-            });
-        let vertices = match vertices {
-            Some([a, b]) => Some([a?, b?]),
-            None => None,
-        };
+        let vertices =
+            self.vertices
+                .try_convert::<_, _, ValidationError>(|vertex| {
+                    let canonical = vertex.canonical();
+                    let canonical = canonical.get().merge_into(
+                        Some(canonical),
+                        shape,
+                        mapping,
+                    )?;
+                    Ok(LocalForm::new(*vertex.local(), canonical))
+                })?;
 
         let merged = shape.get_handle_or_insert(Edge::new(curve, vertices))?;
 
