@@ -34,15 +34,12 @@ pub struct Edge<const D: usize> {
     ///
     /// If there are no such vertices, that means that both the curve and the
     /// edge are continuous (i.e. connected to themselves).
-    pub vertices: Option<[LocalForm<Point<1>, Vertex>; 2]>,
+    pub vertices: VerticesOfEdge,
 }
 
 impl Edge<3> {
     /// Construct an instance of `Edge`
-    pub fn new(
-        curve: Handle<Curve<3>>,
-        vertices: Option<[LocalForm<Point<1>, Vertex>; 2]>,
-    ) -> Self {
+    pub fn new(curve: Handle<Curve<3>>, vertices: VerticesOfEdge) -> Self {
         let curve = LocalForm::canonical_only(curve);
         Self { curve, vertices }
     }
@@ -68,6 +65,7 @@ impl<const D: usize> Edge<D> {
     /// [`Handle`]s.
     pub fn vertices(&self) -> Option<[Vertex; 2]> {
         self.vertices
+            .0
             .as_ref()
             .map(|[a, b]| [a.canonical().get(), b.canonical().get()])
     }
@@ -86,5 +84,84 @@ impl<const D: usize> fmt::Display for Edge<D> {
         write!(f, " on {}", self.curve())?;
 
         Ok(())
+    }
+}
+
+/// The vertices that bound an edge
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct VerticesOfEdge(Option<[LocalForm<Point<1>, Vertex>; 2]>);
+
+impl VerticesOfEdge {
+    /// Construct an instance of `VerticesOfEdge` from zero or two vertices
+    pub fn new(vertices: Option<[LocalForm<Point<1>, Vertex>; 2]>) -> Self {
+        Self(vertices)
+    }
+
+    /// Construct an instance of `VerticesOfEdge` from two vertices
+    pub fn from_vertices(vertices: [LocalForm<Point<1>, Vertex>; 2]) -> Self {
+        Self(Some(vertices))
+    }
+
+    /// Construct an instance of `VerticesOfEdge` without vertices
+    pub fn none() -> Self {
+        Self(None)
+    }
+
+    /// Access the two vertices
+    ///
+    /// # Panics
+    ///
+    /// Panics, if the edge has no vertices.
+    pub fn expect_vertices(self) -> [LocalForm<Point<1>, Vertex>; 2] {
+        self.0.expect("Expected edge to have vertices")
+    }
+
+    /// Iterate over the vertices, if any
+    pub fn iter(&self) -> impl Iterator<Item = &LocalForm<Point<1>, Vertex>> {
+        self.0.iter().flatten()
+    }
+
+    /// Reverse the order of vertices
+    ///
+    /// Makes sure that the local coordinates are still correct.
+    pub fn reverse(self) -> Self {
+        Self(self.0.map(|[a, b]| {
+            [
+                LocalForm::new(-(*b.local()), b.canonical()),
+                LocalForm::new(-(*a.local()), a.canonical()),
+            ]
+        }))
+    }
+
+    /// Map each vertex using the provided function
+    pub fn map<F>(self, f: F) -> Self
+    where
+        F: FnMut(LocalForm<Point<1>, Vertex>) -> LocalForm<Point<1>, Vertex>,
+    {
+        Self(self.convert(f))
+    }
+
+    /// Convert each vertex using the provided function
+    pub fn convert<F, T>(self, f: F) -> Option<[T; 2]>
+    where
+        F: FnMut(LocalForm<Point<1>, Vertex>) -> T,
+    {
+        self.0.map(|vertices| vertices.map(f))
+    }
+
+    /// Convert each vertex using the provided fallible function
+    pub fn try_convert<F, T, E>(self, f: F) -> Result<Option<[T; 2]>, E>
+    where
+        F: FnMut(LocalForm<Point<1>, Vertex>) -> Result<T, E>,
+    {
+        // Can be cleaned up using `try_map`, once that is stable:
+        // https://doc.rust-lang.org/std/primitive.array.html#method.try_map
+        let vertices: Option<[Result<_, E>; 2]> = self.convert(f);
+        let vertices = match vertices {
+            Some([a, b]) => Some([a?, b?]),
+            None => None,
+        };
+
+        Ok(vertices)
     }
 }

@@ -1,7 +1,7 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
-    shape::{Handle, LocalForm, Shape, ValidationError, ValidationResult},
+    shape::{Handle, Shape, ValidationError, ValidationResult},
     topology::{Cycle, Edge, Face},
 };
 use fj_math::Aabb;
@@ -103,18 +103,11 @@ fn add_cycle(
         let curve = if reverse { curve.reverse() } else { curve };
         let curve = shape.insert(curve)?;
 
-        let vertices = edge.vertices.clone().map(|[a, b]| {
-            if reverse {
-                // Switch `a` and `b`, but make sure the local forms are still
-                // correct, after we reversed the curve above.
-                [
-                    LocalForm::new(-(*b.local()), b.canonical()),
-                    LocalForm::new(-(*a.local()), a.canonical()),
-                ]
-            } else {
-                [a, b]
-            }
-        });
+        let vertices = if reverse {
+            edge.vertices.reverse()
+        } else {
+            edge.vertices
+        };
 
         let edge = shape.merge(Edge::new(curve, vertices))?;
         edges.push(edge);
