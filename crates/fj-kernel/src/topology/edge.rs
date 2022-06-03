@@ -103,6 +103,11 @@ impl VerticesOfEdge {
         Self(Some(vertices))
     }
 
+    /// Construct an instance of `VerticesOfEdge` without vertices
+    pub fn none() -> Self {
+        Self(None)
+    }
+
     /// Convert each vertex using the provided function
     pub fn convert<F, T>(self, f: F) -> Option<[T; 2]>
     where

@@ -69,7 +69,7 @@ mod test {
 
         // Continuous edge
         let mut points = vec![b, c];
-        super::approximate_edge(VerticesOfEdge(None), &mut points);
+        super::approximate_edge(VerticesOfEdge::none(), &mut points);
         assert_eq!(points, vec![b, c, b]);
 
         Ok(())
