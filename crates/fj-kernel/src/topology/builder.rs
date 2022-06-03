@@ -122,10 +122,7 @@ impl<'r> CycleBuilder<'r> {
         self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> ValidationResult<Cycle<3>> {
-        let mut points: Vec<_> = points
-            .into_iter()
-            .map(|point| self.surface.point_from_surface_coords(point))
-            .collect();
+        let mut points: Vec<_> = points.into_iter().map(Into::into).collect();
 
         // A polygon is closed, so we need to add the first point at the end
         // again, for the next step.
@@ -140,8 +137,10 @@ impl<'r> CycleBuilder<'r> {
             // Can be cleaned up, once `array_windows` is stable.
             let points = [points[0], points[1]];
 
+            let points_canonical = points
+                .map(|point| self.surface.point_from_surface_coords(point));
             let edge_canonical = Edge::builder(self.shape)
-                .build_line_segment_from_points(points)?;
+                .build_line_segment_from_points(points_canonical)?;
             edges.push(edge_canonical);
         }
 
