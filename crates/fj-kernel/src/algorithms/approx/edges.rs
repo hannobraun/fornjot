@@ -12,13 +12,8 @@ pub fn approximate_edge(
     // would lead to bugs in the approximation, as points that should refer to
     // the same vertex would be understood to refer to very close, but distinct
     // vertices.
-    let vertices = vertices.0.map(|vertices| {
-        vertices.map(|vertex| {
-            geometry::Point::new(
-                *vertex.local(),
-                vertex.canonical().get().point(),
-            )
-        })
+    let vertices = vertices.convert(|vertex| {
+        geometry::Point::new(*vertex.local(), vertex.canonical().get().point())
     });
     if let Some([a, b]) = vertices {
         points.insert(0, a);

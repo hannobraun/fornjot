@@ -116,13 +116,11 @@ mod tests {
             .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])?
             .get();
         let edge = Edge {
-            vertices: VerticesOfEdge(edge.vertices.0.clone().map(|vertices| {
-                vertices.map(|vertex| {
-                    LocalForm::new(
-                        *vertex.local() + [deviation],
-                        vertex.canonical(),
-                    )
-                })
+            vertices: VerticesOfEdge(edge.vertices.convert(|vertex| {
+                LocalForm::new(
+                    *vertex.local() + [deviation],
+                    vertex.canonical(),
+                )
             })),
             ..edge
         };
