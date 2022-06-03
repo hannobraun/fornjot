@@ -121,6 +121,18 @@ impl VerticesOfEdge {
         self.0.iter().flatten()
     }
 
+    /// Reverse the order of vertices
+    ///
+    /// Makes sure that the local coordinates are still correct.
+    pub fn reverse(self) -> Self {
+        Self(self.0.map(|[a, b]| {
+            [
+                LocalForm::new(-(*b.local()), b.canonical()),
+                LocalForm::new(-(*a.local()), a.canonical()),
+            ]
+        }))
+    }
+
     /// Map each vertex using the provided function
     pub fn map<F>(self, f: F) -> Self
     where
