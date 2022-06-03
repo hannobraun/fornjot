@@ -20,6 +20,14 @@ To report a bug, please [open an issue](https://github.com/hannobraun/Fornjot/is
 
 Feel free to first check the [list of open issues][issues], and if you find an existing one for your bug, add your voice there. If you're not sure or don't have the time, **don't worry, just open an issue**. We'd rather deal with duplicate issues than not hear about a bug at all.
 
+### Testing
+
+Aside from setting up a development environment and testing Fornjot using that, you can also download pre-compiled binaries for various platforms.
+
+Every merged pull request will trigger a [*Continuous Deployment* build](https://github.com/hannobraun/Fornjot/actions/workflows/cd.yml), each of which has a number of binaries attached to it.
+
+Please note that these binaries don't have their executable bits set, after you download them. If that is required on your platform, you have to set it manually, before you can launch the binary.
+
 
 ## Suggesting Improvements
 
