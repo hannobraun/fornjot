@@ -39,15 +39,9 @@ pub struct Edge<const D: usize> {
 
 impl Edge<3> {
     /// Construct an instance of `Edge`
-    pub fn new(
-        curve: Handle<Curve<3>>,
-        vertices: Option<[LocalForm<Point<1>, Vertex>; 2]>,
-    ) -> Self {
+    pub fn new(curve: Handle<Curve<3>>, vertices: VerticesOfEdge) -> Self {
         let curve = LocalForm::canonical_only(curve);
-        Self {
-            curve,
-            vertices: VerticesOfEdge(vertices),
-        }
+        Self { curve, vertices }
     }
 
     /// Build an edge using the [`EdgeBuilder`] API

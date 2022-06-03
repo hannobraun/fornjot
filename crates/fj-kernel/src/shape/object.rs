@@ -2,7 +2,7 @@ use fj_math::Point;
 
 use crate::{
     geometry::{Curve, Surface},
-    topology::{Cycle, Edge, Face, Vertex},
+    topology::{Cycle, Edge, Face, Vertex, VerticesOfEdge},
 };
 
 use super::{
@@ -129,7 +129,8 @@ impl Object for Edge<3> {
                     Ok(LocalForm::new(*vertex.local(), canonical))
                 })?;
 
-        let merged = shape.get_handle_or_insert(Edge::new(curve, vertices))?;
+        let merged = shape
+            .get_handle_or_insert(Edge::new(curve, VerticesOfEdge(vertices)))?;
 
         if let Some(handle) = handle {
             mapping.edges.insert(handle, merged.clone());

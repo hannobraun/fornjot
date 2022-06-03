@@ -2,7 +2,7 @@ use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
     shape::{Handle, LocalForm, Shape, ValidationError, ValidationResult},
-    topology::{Cycle, Edge, Face},
+    topology::{Cycle, Edge, Face, VerticesOfEdge},
 };
 use fj_math::Aabb;
 
@@ -116,7 +116,7 @@ fn add_cycle(
             }
         });
 
-        let edge = shape.merge(Edge::new(curve, vertices))?;
+        let edge = shape.merge(Edge::new(curve, VerticesOfEdge(vertices)))?;
         edges.push(edge);
     }
 

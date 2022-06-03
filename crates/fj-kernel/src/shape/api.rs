@@ -313,7 +313,7 @@ mod tests {
     use crate::{
         geometry::{Curve, Surface},
         shape::{Handle, LocalForm, Shape, ValidationError, ValidationResult},
-        topology::{Cycle, Edge, Face, Vertex},
+        topology::{Cycle, Edge, Face, Vertex, VerticesOfEdge},
     };
 
     const MIN_DISTANCE: f64 = 5e-7;
@@ -340,7 +340,7 @@ mod tests {
         assert!(shape.get_handle(&surface.get()).as_ref() == Some(&surface));
 
         let vertex = Vertex { point };
-        let edge = Edge::new(curve, None);
+        let edge = Edge::new(curve, VerticesOfEdge::none());
 
         assert!(shape.get_handle(&vertex).is_none());
         assert!(shape.get_handle(&edge).is_none());
@@ -429,7 +429,10 @@ mod tests {
 
         // Shouldn't work. Nothing has been added to `shape`.
         let err = shape
-            .insert(Edge::new(curve.clone(), Some([a.clone(), b.clone()])))
+            .insert(Edge::new(
+                curve.clone(),
+                VerticesOfEdge::from_vertices([a.clone(), b.clone()]),
+            ))
             .unwrap_err();
         assert!(err.missing_curve(&curve));
         assert!(err.missing_vertex(&a.canonical()));
@@ -443,7 +446,8 @@ mod tests {
         let b = LocalForm::new(Point::from([2.]), b);
 
         // Everything has been added to `shape` now. Should work!
-        shape.insert(Edge::new(curve, Some([a, b])))?;
+        shape
+            .insert(Edge::new(curve, VerticesOfEdge::from_vertices([a, b])))?;
 
         Ok(())
     }

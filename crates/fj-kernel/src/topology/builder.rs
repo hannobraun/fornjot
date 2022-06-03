@@ -5,7 +5,7 @@ use crate::{
     shape::{Handle, LocalForm, Shape, ValidationResult},
 };
 
-use super::{Cycle, Edge, Face, Vertex};
+use super::{Cycle, Edge, Face, Vertex, VerticesOfEdge};
 
 /// API for building a [`Vertex`]
 #[must_use]
@@ -53,7 +53,9 @@ impl<'r> EdgeBuilder<'r> {
             a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
             b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
         }))?;
-        let edge = self.shape.insert(Edge::new(curve, None))?;
+        let edge = self
+            .shape
+            .insert(Edge::new(curve, VerticesOfEdge::none()))?;
 
         Ok(edge)
     }
@@ -93,7 +95,10 @@ impl<'r> EdgeBuilder<'r> {
             LocalForm::new(Point::from([1.]), b),
         ];
 
-        let edge = self.shape.insert(Edge::new(curve, Some(vertices)))?;
+        let edge = self.shape.insert(Edge::new(
+            curve,
+            VerticesOfEdge::from_vertices(vertices),
+        ))?;
 
         Ok(edge)
     }
