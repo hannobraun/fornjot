@@ -210,12 +210,8 @@ fn create_side_edges(
 ) -> Result<[Handle<Edge<3>>; 2], ValidationError> {
     // Can't panic. We already ruled out the "continuous edge" case above, so
     // these edges must have vertices.
-    let [vertices_bottom, vertices_top] = [edge_bottom, edge_top].map(|edge| {
-        edge.get()
-            .vertices
-            .0
-            .expect("Expected vertices on non-continuous edge")
-    });
+    let [vertices_bottom, vertices_top] = [edge_bottom, edge_top]
+        .map(|edge| edge.get().vertices.expect_vertices());
 
     // Can be simplified, once `zip` is stabilized:
     // https://doc.rust-lang.org/std/primitive.array.html#method.zip

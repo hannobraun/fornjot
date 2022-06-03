@@ -108,6 +108,15 @@ impl VerticesOfEdge {
         Self(None)
     }
 
+    /// Access the two vertices
+    ///
+    /// # Panics
+    ///
+    /// Panics, if the edge has no vertices.
+    pub fn expect_vertices(self) -> [LocalForm<Point<1>, Vertex>; 2] {
+        self.0.expect("Expected edge to have vertices")
+    }
+
     /// Convert each vertex using the provided function
     pub fn convert<F, T>(self, f: F) -> Option<[T; 2]>
     where
