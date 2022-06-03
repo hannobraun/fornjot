@@ -89,7 +89,7 @@ impl<const D: usize> fmt::Display for Edge<D> {
 
 /// The vertices that bound an edge
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct VerticesOfEdge(pub Option<[LocalForm<Point<1>, Vertex>; 2]>);
+pub struct VerticesOfEdge(Option<[LocalForm<Point<1>, Vertex>; 2]>);
 
 impl VerticesOfEdge {
     /// Construct an instance of `VerticesOfEdge` from zero or two vertices
