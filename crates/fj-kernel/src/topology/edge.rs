@@ -34,7 +34,7 @@ pub struct Edge<const D: usize> {
     ///
     /// If there are no such vertices, that means that both the curve and the
     /// edge are continuous (i.e. connected to themselves).
-    pub vertices: Option<[LocalForm<Point<1>, Vertex>; 2]>,
+    pub vertices: VerticesOfEdge,
 }
 
 impl Edge<3> {
@@ -44,7 +44,10 @@ impl Edge<3> {
         vertices: Option<[LocalForm<Point<1>, Vertex>; 2]>,
     ) -> Self {
         let curve = LocalForm::canonical_only(curve);
-        Self { curve, vertices }
+        Self {
+            curve,
+            vertices: VerticesOfEdge(vertices),
+        }
     }
 
     /// Build an edge using the [`EdgeBuilder`] API
@@ -68,6 +71,7 @@ impl<const D: usize> Edge<D> {
     /// [`Handle`]s.
     pub fn vertices(&self) -> Option<[Vertex; 2]> {
         self.vertices
+            .0
             .as_ref()
             .map(|[a, b]| [a.canonical().get(), b.canonical().get()])
     }
@@ -88,3 +92,7 @@ impl<const D: usize> fmt::Display for Edge<D> {
         Ok(())
     }
 }
+
+/// The vertices that bound an edge
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct VerticesOfEdge(pub Option<[LocalForm<Point<1>, Vertex>; 2]>);

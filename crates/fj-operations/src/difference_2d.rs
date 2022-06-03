@@ -103,7 +103,7 @@ fn add_cycle(
         let curve = if reverse { curve.reverse() } else { curve };
         let curve = shape.insert(curve)?;
 
-        let vertices = edge.vertices.clone().map(|[a, b]| {
+        let vertices = edge.vertices.0.clone().map(|[a, b]| {
             if reverse {
                 // Switch `a` and `b`, but make sure the local forms are still
                 // correct, after we reversed the curve above.

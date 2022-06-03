@@ -32,7 +32,7 @@ pub fn validate_edge(
     if !stores.curves.contains(&edge.curve.canonical()) {
         missing_curve = Some(edge.curve.canonical());
     }
-    for vertices in &edge.vertices {
+    for vertices in &edge.vertices.0 {
         for vertex in vertices {
             if !stores.vertices.contains(&vertex.canonical()) {
                 missing_vertices.insert(vertex.canonical().clone());

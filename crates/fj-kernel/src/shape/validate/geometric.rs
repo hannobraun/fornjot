@@ -13,7 +13,7 @@ pub fn validate_edge(
     // Validate that the local and canonical forms of the vertices match. As a
     // side effect, this also happens to validate that the canonical forms of
     // the vertices lie on the curve.
-    if let Some(vertices) = &edge.vertices {
+    if let Some(vertices) = &edge.vertices.0 {
         let mut edge_vertex_mismatches = Vec::new();
 
         for vertex in vertices {
@@ -103,7 +103,7 @@ mod tests {
 
     use crate::{
         shape::{LocalForm, Shape},
-        topology::Edge,
+        topology::{Edge, VerticesOfEdge},
     };
 
     #[test]
@@ -116,14 +116,14 @@ mod tests {
             .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])?
             .get();
         let edge = Edge {
-            vertices: edge.vertices.clone().map(|vertices| {
+            vertices: VerticesOfEdge(edge.vertices.0.clone().map(|vertices| {
                 vertices.map(|vertex| {
                     LocalForm::new(
                         *vertex.local() + [deviation],
                         vertex.canonical(),
                     )
                 })
-            }),
+            })),
             ..edge
         };
         assert!(super::validate_edge(&edge, deviation * 2.).is_ok());

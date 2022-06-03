@@ -213,6 +213,7 @@ fn create_side_edges(
     let [vertices_bottom, vertices_top] = [edge_bottom, edge_top].map(|edge| {
         edge.get()
             .vertices
+            .0
             .expect("Expected vertices on non-continuous edge")
     });
 

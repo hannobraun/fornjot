@@ -120,7 +120,7 @@ impl Object for Edge<3> {
         // Can be cleaned up using `try_map`, once that is stable:
         // https://doc.rust-lang.org/std/primitive.array.html#method.try_map
         let vertices: Option<[Result<_, ValidationError>; 2]> =
-            self.vertices.map(|vertices| {
+            self.vertices.0.map(|vertices| {
                 vertices.map(|vertex| {
                     let canonical = vertex.canonical();
                     let canonical = canonical.get().merge_into(
