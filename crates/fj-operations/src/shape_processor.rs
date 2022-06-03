@@ -76,6 +76,6 @@ pub enum Error {
     ToShape(#[from] ValidationError),
 
     /// Model has zero size
-    #[error("Model has an zero size")]
+    #[error("Model has zero size")]
     Extent(#[from] InvalidTolerance),
 }
