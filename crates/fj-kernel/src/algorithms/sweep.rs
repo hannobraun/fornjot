@@ -128,16 +128,11 @@ impl Sweep {
 
                 let surface = create_side_surface(self, &edge_bottom);
 
-                let [edge_side_a, edge_side_b] = create_side_edges(
-                    &mut self.target,
-                    &edge_bottom,
-                    &edge_top,
-                    &mut vertex_bottom_to_edge,
-                )?;
-
                 let cycle = create_side_cycle(
                     &mut self.target,
-                    [edge_bottom, edge_top, edge_side_a, edge_side_b],
+                    edge_bottom,
+                    edge_top,
+                    &mut vertex_bottom_to_edge,
                 )?;
 
                 create_side_face(self, surface, cycle)?;
@@ -202,15 +197,15 @@ fn create_side_surface(
     surface
 }
 
-fn create_side_edges(
+fn create_side_cycle(
     target: &mut Shape,
-    edge_bottom: &Handle<Edge<3>>,
-    edge_top: &Handle<Edge<3>>,
+    edge_bottom: Handle<Edge<3>>,
+    edge_top: Handle<Edge<3>>,
     vertex_bottom_to_edge: &mut HashMap<Handle<Vertex>, Handle<Edge<3>>>,
-) -> Result<[Handle<Edge<3>>; 2], ValidationError> {
+) -> ValidationResult<Cycle<3>> {
     // Can't panic. We already ruled out the "continuous edge" case above, so
     // these edges must have vertices.
-    let [vertices_bottom, vertices_top] = [edge_bottom, edge_top]
+    let [vertices_bottom, vertices_top] = [&edge_bottom, &edge_top]
         .map(|edge| edge.get().vertices.expect_vertices());
 
     // Can be simplified, once `zip` is stabilized:
@@ -246,16 +241,14 @@ fn create_side_edges(
         Ok(edge)
     });
     let [a, b]: [Result<_, ValidationError>; 2] = side_edges;
-    let side_edges = [a?, b?];
+    let [edge_side_a, edge_side_b] = [a?, b?];
 
-    Ok(side_edges)
-}
-
-fn create_side_cycle(
-    target: &mut Shape,
-    edges: [Handle<Edge<3>>; 4],
-) -> ValidationResult<Cycle<3>> {
-    target.merge(Cycle::new(edges))
+    target.merge(Cycle::new([
+        edge_bottom,
+        edge_top,
+        edge_side_a,
+        edge_side_b,
+    ]))
 }
 
 fn create_side_face(
