@@ -13,30 +13,29 @@ pub fn validate_edge(
     // Validate that the local and canonical forms of the vertices match. As a
     // side effect, this also happens to validate that the canonical forms of
     // the vertices lie on the curve.
-    if let Some(vertices) = &edge.vertices.0 {
-        let mut edge_vertex_mismatches = Vec::new();
 
-        for vertex in vertices {
-            let local = *vertex.local();
-            let local_3d = edge.curve().point_from_curve_coords(local);
-            let canonical = vertex.canonical().get().point();
-            let distance = (local_3d - canonical).magnitude();
+    let mut edge_vertex_mismatches = Vec::new();
 
-            if distance > max_distance {
-                edge_vertex_mismatches.push(EdgeVertexMismatch {
-                    local,
-                    local_3d,
-                    canonical,
-                    distance,
-                });
-            }
-        }
+    for vertex in edge.vertices.iter() {
+        let local = *vertex.local();
+        let local_3d = edge.curve().point_from_curve_coords(local);
+        let canonical = vertex.canonical().get().point();
+        let distance = (local_3d - canonical).magnitude();
 
-        if !edge_vertex_mismatches.is_empty() {
-            return Err(GeometricIssues {
-                edge_vertex_mismatches,
+        if distance > max_distance {
+            edge_vertex_mismatches.push(EdgeVertexMismatch {
+                local,
+                local_3d,
+                canonical,
+                distance,
             });
         }
+    }
+
+    if !edge_vertex_mismatches.is_empty() {
+        return Err(GeometricIssues {
+            edge_vertex_mismatches,
+        });
     }
 
     Ok(())

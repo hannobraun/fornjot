@@ -117,6 +117,11 @@ impl VerticesOfEdge {
         self.0.expect("Expected edge to have vertices")
     }
 
+    /// Iterate over the vertices, if any
+    pub fn iter(&self) -> impl Iterator<Item = &LocalForm<Point<1>, Vertex>> {
+        self.0.iter().flatten()
+    }
+
     /// Convert each vertex using the provided function
     pub fn convert<F, T>(self, f: F) -> Option<[T; 2]>
     where
