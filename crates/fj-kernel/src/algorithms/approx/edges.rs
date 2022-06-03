@@ -52,10 +52,10 @@ mod test {
         let v1 = Vertex::builder(&mut shape).build_from_point(a)?;
         let v2 = Vertex::builder(&mut shape).build_from_point(d)?;
 
-        let vertices = VerticesOfEdge(Some([
+        let vertices = VerticesOfEdge::from_vertices([
             LocalForm::new(Point::from([0.]), v1),
             LocalForm::new(Point::from([1.]), v2),
-        ]));
+        ]);
 
         let a = geometry::Point::new([0.0], a);
         let b = geometry::Point::new([0.25], b);
