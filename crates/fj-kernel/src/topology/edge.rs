@@ -107,6 +107,26 @@ impl VerticesOfEdge {
         Self(None)
     }
 
+    /// Determine whether the other instance has the same vertices
+    ///
+    /// The order of vertices is ignored.
+    pub fn are_same(&self, other: &Self) -> bool {
+        if let Some([a, b]) = &self.0 {
+            let [a, b] = [a.canonical(), b.canonical()];
+
+            if let Some(other) = &other.0 {
+                let other = {
+                    let [a, b] = other;
+                    [a.canonical(), b.canonical()]
+                };
+
+                return [a.clone(), b.clone()] == other || [b, a] == other;
+            }
+        }
+
+        false
+    }
+
     /// Access the two vertices
     ///
     /// # Panics

@@ -5,7 +5,7 @@ mod uniqueness;
 pub use self::{
     geometric::{EdgeVertexMismatch, GeometricIssues},
     structural::StructuralIssues,
-    uniqueness::{DuplicatePoint, UniquenessIssues},
+    uniqueness::{DuplicateEdge, DuplicatePoint, UniquenessIssues},
 };
 
 use fj_math::{Point, Scalar};
@@ -96,13 +96,14 @@ impl Validate for Vertex {
 impl Validate for Edge<3> {
     fn validate(
         &self,
-        _: Option<&Handle<Self>>,
+        handle: Option<&Handle<Self>>,
         _: Scalar,
         max_distance: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
         geometric::validate_edge(self, max_distance)?;
         structural::validate_edge(self, stores)?;
+        uniqueness::validate_edge(self, handle, &stores.edges)?;
 
         Ok(())
     }
@@ -146,6 +147,7 @@ impl Validate for Face {
 pub type ValidationResult<T> = Result<Handle<T>, ValidationError>;
 
 /// An error that can occur during a validation
+#[allow(clippy::large_enum_variant)]
 #[derive(Debug, thiserror::Error)]
 pub enum ValidationError {
     /// Geometric validation failed
