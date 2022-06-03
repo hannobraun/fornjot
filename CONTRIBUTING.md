@@ -74,9 +74,9 @@ If you're not a programmer or are looking for some variety, you can also work on
 
 ## Additional Guidelines
 
-Let's put one thing up front: The following guidelines are just that, guidelines. **These are not mandatory rules** (well, except for the few that are enforced in the CI build).
+Let's put one thing up front: The following guidelines are just that, guidelines. **These are not mandatory rules** (except for the few that are enforced in the CI build).
 
-If you're not sure about something or think you might forget: **don't worry.** These guidelines are here to help make process as smooth as possible, not hinder anyone's work. Just submit a pull request and we'll figure out together what it takes to get it merged.
+If you're not sure about something or think you might forget, **don't worry.** These guidelines are here to help make the process as smooth as possible, not hinder anyone's work. Just submit a pull request and we'll figure out together what it takes to get it merged.
 
 ### Issues
 
@@ -86,17 +86,17 @@ Before starting to work on an issue, feel free to leave a message there first. M
 
 #### Favor small, incremental changes
 
-If a pull request gets too large or stays open for too long, it'll turn into a pain. Mostly for you, because you have to keep merging in the latest changes. But also for others, because once your pull request is merged, they'll have to deal with one big change at once, which is harder than dealing with multiple small changes over time.
+If a pull request gets too large or stays open for too long, it'll turn into a pain. Mostly for you, because you have to keep merging the latest changes from the `main` branch to stay up-to-date. But also for others, because once your pull request is merged, they'll have to deal with one big change at once, which is harder than dealing with multiple small changes over time.
 
-If you can split a big change into a series of smaller, incremental changes, do so! If some of those smaller changes are self-contained, like cleanup work that's required to implement your main change for example, submit those as separate pull requests, to get them merged right away.
+If you can split a big change into a series of smaller, incremental changes, please do so! If some of those smaller changes are self-contained, like cleanup work that's required to implement your main change for example, submit those as separate pull requests, to get them merged right away.
 
 #### Don't be afraid to change existing code
 
 Fornjot isn't the result of some stringent top-down design process. It grows and changes, based on evolving requirements. If you see something that doesn't seem to make sense, that's probably because it actually doesn't. Maybe it once did, but then things changed around it to create the current situation.
 
-Never be afraid to change code like that! If something is in your way, don't think you have to work around it. Just change the existing code, until your change is easy.
+Never be afraid to change code like that! If something is in your way, don't think you have to work around it. Just modify the existing code, until your change becomes easy.
 
-If you're worried about making a mistake, feel free to just ask. But really, if you make a change that's wrong, and it doesn't trigger a failure in an automated test, *and* gets through review, then that's not your fault at all.
+If you're worried about making a mistake, feel free to just ask. But really, if you make a change that's wrong, and it doesn't trigger a failure in an automated test, *and* gets through review... that's not your fault at all.
 
 #### Pull request lifecycle
 
@@ -108,9 +108,9 @@ Once your pull request has been reviewed, but not yet merged, please add any add
 
 If the code you're modifying has changed in the `main` branch, favor `git rebase` over `git merge`, unless there's a good reason not to. `git rebase` will lead to a linear history that is easier to understand.
 
-#### Miscellaneous
+#### Changelog
 
-Don't worry about the changelog! It will get updates as part of the release procedure, so making changes there as part of your pull request is not necessary.
+Don't worry about the changelog! It gets updates as part of the release procedure, so making changes there as part of your pull request is not necessary.
 
 ### Commits
 
