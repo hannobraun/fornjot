@@ -140,9 +140,9 @@ impl<'r> CycleBuilder<'r> {
             // Can be cleaned up, once `array_windows` is stable.
             let points = [points[0], points[1]];
 
-            let edge = Edge::builder(self.shape)
+            let edge_canonical = Edge::builder(self.shape)
                 .build_line_segment_from_points(points)?;
-            edges.push(edge);
+            edges.push(edge_canonical);
         }
 
         self.shape.insert(Cycle::new(edges))
