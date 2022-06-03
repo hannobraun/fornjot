@@ -37,7 +37,7 @@ If you think your request is an obvious improvement, open an issue. If want to d
 
 If you want to fix a bug, add a new feature, or improve an existing one, just fork the repository, make your change, and submit a pull request. Once submitted, [@hannobraun] will review the pull request, give feedback and possibly request changes, and once everything is in order, merge it.
 
-CI will kick in automatically when you create a PR. However, to save time you can verify your changes locally by runing the following from the repository root:
+CI will kick in automatically when you create a PR. However, to save time you can verify your changes locally by running the following from the repository root:
 
 ``` sh
 just build
