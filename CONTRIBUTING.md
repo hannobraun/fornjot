@@ -160,7 +160,7 @@ Further, the initial line ideally follows these guidelines:
 - Summarize the change itself and the intent behind it. This is often not possible in the limited space. Second-best is to summarize the change, or even just where it happened, and leave the intent for the rest of the message.
 - Use the imperative mood, i.e. formulate the initial line like a command or request. For example, write "Add a feature" instead of "Added a feature" or "Adding a feature". This is often simplest and most compact, and therefore easiest to read.
 
-The commit as a whole ideally follows these guidelines:
+The commit message as a whole ideally follows these guidelines:
 - First and foremost, document the *intent* behind the change. Explain *why* you did something. Explaining the change itself is secondary.
 - Ideally, the change itself is small and clear enough that it doesn't need explanation, or even a summary. If it does though, that should go into the commit message.
 - Refrain from explaining how code you added or changed works, beyond a short summary. While such explanation is often highly beneficial, it belongs in the code itself, as a comment.
