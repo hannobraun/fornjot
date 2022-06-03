@@ -68,6 +68,7 @@ pub struct ProcessedShape {
 }
 
 /// A shape processing error
+#[allow(clippy::large_enum_variant)]
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     /// Error converting to shape
@@ -75,6 +76,6 @@ pub enum Error {
     ToShape(#[from] ValidationError),
 
     /// Model has zero size
-    #[error("Model has an zero size")]
+    #[error("Model has zero size")]
     Extent(#[from] InvalidTolerance),
 }

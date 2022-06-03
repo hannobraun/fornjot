@@ -51,6 +51,26 @@ impl Shape {
         }
     }
 
+    /// Assign a label to the shape
+    ///
+    /// The assigned label will be part of the `Debug` representation of
+    /// `Handle`s, making it way easier to understand which `Handle`s belong to
+    /// which `Shape`.
+    pub fn with_label(mut self, label: impl Into<String>) -> Self {
+        let label = label.into();
+
+        self.stores.points.label = Some(label.clone());
+        self.stores.curves.label = Some(label.clone());
+        self.stores.surfaces.label = Some(label.clone());
+
+        self.stores.vertices.label = Some(label.clone());
+        self.stores.edges.label = Some(label.clone());
+        self.stores.cycles.label = Some(label.clone());
+        self.stores.faces.label = Some(label);
+
+        self
+    }
+
     /// Override the minimum distance between distinct objects
     ///
     /// Used for vertex validation, to determine whether vertices are unique.
