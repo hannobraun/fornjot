@@ -131,6 +131,18 @@ impl Transform {
     pub fn data(&self) -> &[f64] {
         self.0.matrix().data.as_slice()
     }
+
+    /// Extract the rotation component of this transform
+    pub fn extract_rotation(&self) -> Transform {
+        Self(nalgebra::Transform::from_matrix_unchecked(
+            self.0.matrix().fixed_resize::<3, 3>(0.).to_homogeneous(),
+        ))
+    }
+
+    /// Extract the translation component of this transform
+    pub fn extract_translation(&self) -> Transform {
+        *self * self.extract_rotation().inverse()
+    }
 }
 
 impl ops::Mul<Self> for Transform {
@@ -166,6 +178,37 @@ mod tests {
                 origin: Point::from([1., 3., 3.]),
                 direction: Vector::from([-1., 0., 0.]),
             },
+            epsilon = 1e-8,
+        );
+    }
+
+    #[test]
+    fn extract_rotation_translation() {
+        let rotation =
+            Transform::rotation(Vector::unit_z() * (Scalar::PI / 2.));
+        let translation = Transform::translation([1., 2., 3.]);
+
+        assert_abs_diff_eq!(
+            (translation * rotation).extract_rotation().data(),
+            rotation.data(),
+            epsilon = 1e-8,
+        );
+
+        assert_abs_diff_eq!(
+            (translation * rotation).extract_translation().data(),
+            translation.data(),
+            epsilon = 1e-8,
+        );
+
+        assert_abs_diff_eq!(
+            (rotation * translation).extract_rotation().data(),
+            rotation.data(),
+            epsilon = 1e-8,
+        );
+
+        assert_abs_diff_eq!(
+            (rotation * translation).extract_translation().data(),
+            Transform::translation([-2., 1., 3.]).data(),
             epsilon = 1e-8,
         );
     }
