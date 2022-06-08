@@ -15,7 +15,7 @@ pub fn validate_vertex(
             continue;
         }
 
-        if existing.get().point == vertex.point {
+        if &existing.get() == vertex {
             return Err(UniquenessIssues {
                 duplicate_vertex: Some(existing),
                 ..UniquenessIssues::default()
