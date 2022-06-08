@@ -346,14 +346,14 @@ mod tests {
             let ca = Edge::builder(&mut shape)
                 .build_line_segment_from_points([c, a])?;
 
-            let cycles = shape.insert(Cycle::new(vec![ab, bc, ca]))?;
+            let cycle = shape.insert(Cycle::new(vec![ab, bc, ca]))?;
 
             let surface = Surface::plane_from_points([a, b, c]);
             let surface = if reverse { surface.reverse() } else { surface };
             let surface = shape.insert(surface)?;
 
             let abc =
-                Face::new(surface, vec![cycles], Vec::new(), [255, 0, 0, 255]);
+                Face::new(surface, vec![cycle], Vec::new(), [255, 0, 0, 255]);
 
             let face = shape.insert(abc)?;
 
