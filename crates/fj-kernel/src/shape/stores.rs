@@ -5,7 +5,6 @@ use std::{
 };
 
 use anymap::AnyMap;
-use fj_math::Point;
 use parking_lot::{RwLock, RwLockReadGuard};
 use slotmap::{DefaultKey, SlotMap};
 
@@ -18,7 +17,6 @@ use super::Object;
 
 #[derive(Clone, Debug)]
 pub struct Stores {
-    pub points: Store<Point<3>>,
     pub curves: Store<Curve<3>>,
     pub surfaces: Store<Surface>,
 
@@ -32,7 +30,6 @@ impl Stores {
     pub fn get<T: Object>(&self) -> Store<T> {
         let mut stores = AnyMap::new();
 
-        stores.insert(self.points.clone());
         stores.insert(self.curves.clone());
         stores.insert(self.surfaces.clone());
 

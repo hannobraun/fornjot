@@ -16,7 +16,6 @@ pub fn transform_shape(
 ) -> Result<(), ValidationError> {
     shape
         .update()
-        .update_all(|point| *point = transform.transform_point(point))
         .update_all(|vertex: &mut Vertex| {
             vertex.point = transform.transform_point(&vertex.point)
         })
