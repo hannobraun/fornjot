@@ -41,24 +41,16 @@ impl Vertex {
     pub fn builder(shape: &mut Shape) -> VertexBuilder {
         VertexBuilder::new(shape)
     }
-
-    /// Access the point that the vertex refers to
-    ///
-    /// This is a convenience method that saves the caller from dealing with the
-    /// [`Handle`].
-    pub fn point(&self) -> Point<3> {
-        self.point
-    }
 }
 
 impl PartialEq for Vertex {
     fn eq(&self, other: &Self) -> bool {
-        self.point() == other.point()
+        self.point == other.point
     }
 }
 
 impl Hash for Vertex {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.point().hash(state);
+        self.point.hash(state);
     }
 }

@@ -231,7 +231,7 @@ fn create_side_cycle(
         }
 
         let points = [vertex_bottom.clone(), vertex_top]
-            .map(|vertex| vertex.canonical().get().point());
+            .map(|vertex| vertex.canonical().get().point);
 
         let edge =
             Edge::builder(target).build_line_segment_from_points(points)?;

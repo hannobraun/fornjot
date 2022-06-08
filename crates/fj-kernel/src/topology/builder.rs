@@ -85,7 +85,7 @@ impl<'r> EdgeBuilder<'r> {
         [a, b]: [Handle<Vertex>; 2],
     ) -> ValidationResult<Edge<3>> {
         let curve = {
-            let points = [&a, &b].map(|vertex| vertex.get().point());
+            let points = [&a, &b].map(|vertex| vertex.get().point);
             let curve = Curve::Line(Line::from_points(points));
             self.shape.insert(curve)?
         };
