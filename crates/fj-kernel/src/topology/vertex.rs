@@ -22,9 +22,9 @@ use super::VertexBuilder;
 ///
 /// # Validation
 ///
-/// Vertices must be unique within a shape, meaning another vertex defined by
-/// the same shape must not exist. In the context of vertex uniqueness, points
-/// that are close to each other are considered identical. The minimum distance
+/// Vertices must be unique within a shape, meaning an identical vertex must not
+/// exist in the same shape. In the context of vertex uniqueness, points that
+/// are close to each other are considered identical. The minimum distance
 /// between distinct vertices can be configured using
 /// [`Shape::with_minimum_distance`].
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
