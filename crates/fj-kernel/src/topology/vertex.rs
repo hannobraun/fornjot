@@ -30,7 +30,7 @@ use super::VertexBuilder;
 /// that are close to each other are considered identical. The minimum distance
 /// between distinct vertices can be configured using
 /// [`Shape::with_minimum_distance`].
-#[derive(Clone, Debug, Eq, Ord, PartialOrd)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Vertex {
     /// The point that defines the location of the vertex
     pub point: Point<3>,
@@ -40,17 +40,5 @@ impl Vertex {
     /// Build a vertex using the [`VertexBuilder`] API
     pub fn builder(shape: &mut Shape) -> VertexBuilder {
         VertexBuilder::new(shape)
-    }
-}
-
-impl PartialEq for Vertex {
-    fn eq(&self, other: &Self) -> bool {
-        self.point == other.point
-    }
-}
-
-impl Hash for Vertex {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.point.hash(state);
     }
 }
