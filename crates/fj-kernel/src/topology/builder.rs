@@ -155,6 +155,7 @@ pub struct FaceBuilder<'r> {
     surface: Surface,
     exterior: Option<Vec<Point<2>>>,
     interiors: Vec<Vec<Point<2>>>,
+    color: Option<[u8; 4]>,
 
     shape: &'r mut Shape,
 }
@@ -166,6 +167,7 @@ impl<'r> FaceBuilder<'r> {
             surface,
             exterior: None,
             interiors: Vec::new(),
+            color: None,
 
             shape,
         }
@@ -197,6 +199,12 @@ impl<'r> FaceBuilder<'r> {
         Self { interiors, ..self }
     }
 
+    /// Define the color of the face
+    pub fn with_color(mut self, color: [u8; 4]) -> Self {
+        self.color = Some(color);
+        self
+    }
+
     /// Build the face
     pub fn build(self) -> ValidationResult<Face> {
         let surface = self.shape.insert(self.surface)?;
@@ -215,11 +223,9 @@ impl<'r> FaceBuilder<'r> {
             interiors.push(cycle);
         }
 
-        self.shape.insert(Face::new(
-            surface,
-            exteriors,
-            interiors,
-            [255, 0, 0, 255],
-        ))
+        let color = self.color.unwrap_or([255, 0, 0, 255]);
+
+        self.shape
+            .insert(Face::new(surface, exteriors, interiors, color))
     }
 }
