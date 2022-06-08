@@ -1,26 +1,10 @@
 use std::{collections::HashSet, fmt};
 
-use fj_math::Point;
-
 use crate::{
     geometry::{Curve, Surface},
     shape::{stores::Stores, Handle},
     topology::{Cycle, Edge, Face, Vertex},
 };
-
-pub fn validate_vertex(
-    vertex: &Vertex,
-    stores: &Stores,
-) -> Result<(), StructuralIssues> {
-    if !stores.points.contains(&vertex.point) {
-        return Err(StructuralIssues {
-            missing_point: Some(vertex.point.clone()),
-            ..StructuralIssues::default()
-        });
-    }
-
-    Ok(())
-}
 
 pub fn validate_edge(
     edge: &Edge<3>,
@@ -108,9 +92,6 @@ pub fn validate_face(
 /// Used by [`ValidationError`].
 #[derive(Debug, Default, thiserror::Error)]
 pub struct StructuralIssues {
-    /// Missing point found in vertex validation
-    pub missing_point: Option<Handle<Point<3>>>,
-
     /// Missing curve found in edge validation
     pub missing_curve: Option<Handle<Curve<3>>>,
 
@@ -131,9 +112,6 @@ impl fmt::Display for StructuralIssues {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         writeln!(f, "Structural issues found:")?;
 
-        if let Some(point) = &self.missing_point {
-            writeln!(f, "- Missing point: {:?}", point.get())?;
-        }
         if let Some(curve) = &self.missing_curve {
             writeln!(f, "- Missing curve: {:?}", curve.get())?;
         }

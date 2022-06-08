@@ -1,7 +1,5 @@
 use std::collections::HashMap;
 
-use fj_math::Point;
-
 use crate::{
     geometry::{Curve, Surface},
     topology::{Cycle, Edge, Face, Vertex},
@@ -11,7 +9,6 @@ use super::Handle;
 
 /// A mapping between objects in different shapes
 pub struct Mapping {
-    pub(super) points: OneMapping<Point<3>>,
     pub(super) curves: OneMapping<Curve<3>>,
     pub(super) surfaces: OneMapping<Surface>,
     pub(super) vertices: OneMapping<Vertex>,
@@ -23,7 +20,6 @@ pub struct Mapping {
 impl Mapping {
     pub(super) fn new() -> Self {
         Self {
-            points: OneMapping::new(),
             curves: OneMapping::new(),
             surfaces: OneMapping::new(),
             vertices: OneMapping::new(),
@@ -31,18 +27,6 @@ impl Mapping {
             cycles: OneMapping::new(),
             faces: OneMapping::new(),
         }
-    }
-
-    /// Access the point mapped from the provided point
-    ///
-    /// # Panics
-    ///
-    /// Panics, if `object` can not be found in the mapping.
-    pub fn point(&self, object: &Handle<Point<3>>) -> Handle<Point<3>> {
-        self.points
-            .get(object)
-            .expect("Could not find point in mapping")
-            .clone()
     }
 
     /// Access the curve mapped from the provided curve

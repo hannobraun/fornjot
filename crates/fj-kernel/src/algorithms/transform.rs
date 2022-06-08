@@ -3,7 +3,7 @@ use fj_math::Transform;
 use crate::{
     geometry::{Curve, Surface},
     shape::{Shape, ValidationError},
-    topology::Face,
+    topology::{Face, Vertex},
 };
 
 /// Transform the geometry of the shape
@@ -16,7 +16,9 @@ pub fn transform_shape(
 ) -> Result<(), ValidationError> {
     shape
         .update()
-        .update_all(|point| *point = transform.transform_point(point))
+        .update_all(|vertex: &mut Vertex| {
+            vertex.point = transform.transform_point(&vertex.point)
+        })
         .update_all(|curve: &mut Curve<3>| *curve = curve.transform(transform))
         .update_all(|surface: &mut Surface| {
             *surface = surface.transform(transform)

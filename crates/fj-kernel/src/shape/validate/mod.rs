@@ -5,10 +5,10 @@ mod uniqueness;
 pub use self::{
     geometric::{EdgeVertexMismatch, GeometricIssues},
     structural::StructuralIssues,
-    uniqueness::{DuplicateEdge, DuplicatePoint, UniquenessIssues},
+    uniqueness::{DuplicateEdge, UniquenessIssues},
 };
 
-use fj_math::{Point, Scalar};
+use fj_math::Scalar;
 
 use crate::{
     geometry::{Curve, Surface},
@@ -27,25 +27,6 @@ pub trait Validate {
     ) -> Result<(), ValidationError>
     where
         Self: Object;
-}
-
-impl Validate for Point<3> {
-    fn validate(
-        &self,
-        handle: Option<&Handle<Self>>,
-        min_distance: Scalar,
-        _: Scalar,
-        stores: &Stores,
-    ) -> Result<(), ValidationError> {
-        uniqueness::validate_point(
-            *self,
-            handle,
-            min_distance,
-            &stores.points,
-        )?;
-
-        Ok(())
-    }
 }
 
 impl Validate for Curve<3> {
@@ -86,7 +67,6 @@ impl Validate for Vertex {
         _: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
-        structural::validate_vertex(self, stores)?;
         uniqueness::validate_vertex(self, handle, &stores.vertices)?;
 
         Ok(())

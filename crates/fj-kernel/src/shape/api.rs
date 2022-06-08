@@ -1,4 +1,4 @@
-use fj_math::{Point, Scalar};
+use fj_math::Scalar;
 
 use crate::{
     geometry::{Curve, Surface},
@@ -39,7 +39,6 @@ impl Shape {
             identical_max_distance: Scalar::from_f64(5e-14),
 
             stores: Stores {
-                points: Store::new(),
                 curves: Store::new(),
                 surfaces: Store::new(),
 
@@ -59,7 +58,6 @@ impl Shape {
     pub fn with_label(mut self, label: impl Into<String>) -> Self {
         let label = label.into();
 
-        self.stores.points.label = Some(label.clone());
         self.stores.curves.label = Some(label.clone());
         self.stores.surfaces.label = Some(label.clone());
 
@@ -166,9 +164,6 @@ impl Shape {
     ) -> Result<Mapping, ValidationError> {
         let mut mapping = Mapping::new();
 
-        for object in other.points() {
-            object.get().merge_into(Some(object), self, &mut mapping)?;
-        }
         for object in other.curves() {
             object.get().merge_into(Some(object), self, &mut mapping)?;
         }
@@ -216,10 +211,6 @@ impl Shape {
         let mut target = Shape::new();
         let mut mapping = Mapping::new();
 
-        for original in self.points() {
-            let cloned = target.merge(original.get())?;
-            mapping.points.insert(original, cloned);
-        }
         for original in self.curves() {
             let cloned = target.merge(original.get())?;
             mapping.curves.insert(original, cloned);
@@ -246,13 +237,6 @@ impl Shape {
         }
 
         Ok((target, mapping))
-    }
-
-    /// Access an iterator over all points
-    ///
-    /// The caller must not make any assumptions about the order of points.
-    pub fn points(&self) -> Iter<Point<3>> {
-        self.stores.points.iter()
     }
 
     /// Access an iterator over all curves
@@ -316,8 +300,6 @@ mod tests {
         topology::{Cycle, Edge, Face, Vertex, VerticesOfEdge},
     };
 
-    const MIN_DISTANCE: f64 = 5e-7;
-
     #[test]
 
     fn get_handle() -> anyhow::Result<()> {
@@ -327,15 +309,12 @@ mod tests {
         let curve = Curve::x_axis();
         let surface = Surface::xy_plane();
 
-        assert!(shape.get_handle(&point).is_none());
         assert!(shape.get_handle(&curve).is_none());
         assert!(shape.get_handle(&surface).is_none());
 
-        let point = shape.insert(point)?;
         let curve = shape.insert(curve)?;
         let surface = shape.insert(surface)?;
 
-        assert!(shape.get_handle(&point.get()).as_ref() == Some(&point));
         assert!(shape.get_handle(&curve.get()).as_ref() == Some(&curve));
         assert!(shape.get_handle(&surface.get()).as_ref() == Some(&surface));
 
@@ -367,46 +346,13 @@ mod tests {
     }
 
     #[test]
-    fn add_point() -> anyhow::Result<()> {
-        let mut shape = Shape::new().with_distinct_min_distance(MIN_DISTANCE);
-
-        // Add the original point.
-        shape.insert(Point::from([0., 0., 0.]))?;
-
-        // `point` is too close to the original point.
-        let result = shape.insert(Point::from([5e-8, 0., 0.]));
-        assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
-
-        // `point` is farther than `MIN_DISTANCE` away from original point.
-        // Should work.
-        shape.insert(Point::from([5e-6, 0., 0.]))?;
-
-        Ok(())
-    }
-
-    #[test]
-    fn add_vertex_structural() -> anyhow::Result<()> {
-        let mut shape = Shape::new().with_distinct_min_distance(MIN_DISTANCE);
-        let mut other = Shape::new();
-
-        // Should fail, as `point` is not part of the shape.
-        let point = other.insert(Point::from([0., 0., 0.]))?;
-        let result = shape.insert(Vertex { point });
-        assert!(matches!(result, Err(ValidationError::Structural(_))));
-
-        Ok(())
-    }
-
-    #[test]
-    fn add_vertex_uniqueness() -> anyhow::Result<()> {
+    fn add_vertex() -> anyhow::Result<()> {
         let mut shape = Shape::new();
 
-        let point = shape.insert(Point::from([0., 0., 0.]))?;
+        let point = Point::from([0., 0., 0.]);
 
         // Adding a vertex should work.
-        shape.insert(Vertex {
-            point: point.clone(),
-        })?;
+        shape.insert(Vertex { point })?;
 
         // Adding a second vertex with the same point should fail.
         let result = shape.insert(Vertex { point });

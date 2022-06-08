@@ -27,7 +27,7 @@ impl<'r> VertexBuilder<'r> {
         self,
         point: impl Into<Point<3>>,
     ) -> ValidationResult<Vertex> {
-        let point = self.shape.get_handle_or_insert(point.into())?;
+        let point = point.into();
         let vertex = self.shape.get_handle_or_insert(Vertex { point })?;
 
         Ok(vertex)
@@ -85,7 +85,7 @@ impl<'r> EdgeBuilder<'r> {
         [a, b]: [Handle<Vertex>; 2],
     ) -> ValidationResult<Edge<3>> {
         let curve = {
-            let points = [&a, &b].map(|vertex| vertex.get().point());
+            let points = [&a, &b].map(|vertex| vertex.get().point);
             let curve = Curve::Line(Line::from_points(points));
             self.shape.insert(curve)?
         };

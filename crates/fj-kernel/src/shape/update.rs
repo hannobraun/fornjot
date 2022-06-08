@@ -48,14 +48,6 @@ impl<'r> Update<'r> {
 
             // Validating every single object is certainly not ideal from a
             // performance perspective, but it will do for now.
-            for object in self.stores.points.iter() {
-                object.get().validate(
-                    Some(&object),
-                    self.min_distance,
-                    self.max_distance,
-                    self.stores,
-                )?;
-            }
             for object in self.stores.curves.iter() {
                 object.get().validate(
                     Some(&object),

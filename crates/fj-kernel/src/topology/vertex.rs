@@ -2,7 +2,7 @@ use std::hash::Hash;
 
 use fj_math::Point;
 
-use crate::shape::{Handle, Shape};
+use crate::shape::Shape;
 
 use super::VertexBuilder;
 
@@ -22,43 +22,20 @@ use super::VertexBuilder;
 ///
 /// # Validation
 ///
-/// A vertex that is part of a [`Shape`] must be structurally sound. That means
-/// the point it refers to must be part of the same shape.
-///
-/// Vertices must be unique within a shape, meaning another vertex defined by
-/// the same shape must not exist. In the context of vertex uniqueness, points
-/// that are close to each other are considered identical. The minimum distance
+/// Vertices must be unique within a shape, meaning an identical vertex must not
+/// exist in the same shape. In the context of vertex uniqueness, points that
+/// are close to each other are considered identical. The minimum distance
 /// between distinct vertices can be configured using
 /// [`Shape::with_minimum_distance`].
-#[derive(Clone, Debug, Eq, Ord, PartialOrd)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Vertex {
     /// The point that defines the location of the vertex
-    pub point: Handle<Point<3>>,
+    pub point: Point<3>,
 }
 
 impl Vertex {
     /// Build a vertex using the [`VertexBuilder`] API
     pub fn builder(shape: &mut Shape) -> VertexBuilder {
         VertexBuilder::new(shape)
-    }
-
-    /// Access the point that the vertex refers to
-    ///
-    /// This is a convenience method that saves the caller from dealing with the
-    /// [`Handle`].
-    pub fn point(&self) -> Point<3> {
-        self.point.get()
-    }
-}
-
-impl PartialEq for Vertex {
-    fn eq(&self, other: &Self) -> bool {
-        self.point() == other.point()
-    }
-}
-
-impl Hash for Vertex {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.point().hash(state);
     }
 }

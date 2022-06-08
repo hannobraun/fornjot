@@ -1,5 +1,3 @@
-use fj_math::Point;
-
 use crate::{
     geometry::{Curve, Surface},
     topology::{Cycle, Edge, Face, Vertex, VerticesOfEdge},
@@ -25,7 +23,6 @@ pub trait Object:
     ) -> ValidationResult<Self>;
 }
 
-impl private::Sealed for Point<3> {}
 impl private::Sealed for Curve<3> {}
 impl private::Sealed for Surface {}
 
@@ -33,23 +30,6 @@ impl private::Sealed for Vertex {}
 impl private::Sealed for Edge<3> {}
 impl private::Sealed for Cycle<3> {}
 impl private::Sealed for Face {}
-
-impl Object for Point<3> {
-    fn merge_into(
-        self,
-        handle: Option<Handle<Self>>,
-        shape: &mut Shape,
-        mapping: &mut Mapping,
-    ) -> ValidationResult<Self> {
-        let merged = shape.get_handle_or_insert(self)?;
-
-        if let Some(handle) = handle {
-            mapping.points.insert(handle, merged.clone());
-        }
-
-        Ok(merged)
-    }
-}
 
 impl Object for Curve<3> {
     fn merge_into(
@@ -92,9 +72,8 @@ impl Object for Vertex {
         shape: &mut Shape,
         mapping: &mut Mapping,
     ) -> ValidationResult<Self> {
-        let point =
-            self.point().merge_into(Some(self.point), shape, mapping)?;
-        let merged = shape.get_handle_or_insert(Vertex { point })?;
+        let merged =
+            shape.get_handle_or_insert(Vertex { point: self.point })?;
 
         if let Some(handle) = handle {
             mapping.vertices.insert(handle, merged.clone());
