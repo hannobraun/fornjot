@@ -8,20 +8,6 @@ use crate::{
     topology::{Cycle, Edge, Face, Vertex},
 };
 
-pub fn validate_vertex(
-    vertex: &Vertex,
-    stores: &Stores,
-) -> Result<(), StructuralIssues> {
-    if !stores.points.contains(&vertex.point) {
-        return Err(StructuralIssues {
-            missing_point: Some(vertex.point.clone()),
-            ..StructuralIssues::default()
-        });
-    }
-
-    Ok(())
-}
-
 pub fn validate_edge(
     edge: &Edge<3>,
     stores: &Stores,

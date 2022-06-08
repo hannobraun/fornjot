@@ -86,7 +86,6 @@ impl Validate for Vertex {
         _: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
-        structural::validate_vertex(self, stores)?;
         uniqueness::validate_vertex(self, handle, &stores.vertices)?;
 
         Ok(())

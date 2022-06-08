@@ -2,7 +2,7 @@ use std::hash::Hash;
 
 use fj_math::Point;
 
-use crate::shape::{Handle, Shape};
+use crate::shape::Shape;
 
 use super::VertexBuilder;
 
@@ -33,7 +33,7 @@ use super::VertexBuilder;
 #[derive(Clone, Debug, Eq, Ord, PartialOrd)]
 pub struct Vertex {
     /// The point that defines the location of the vertex
-    pub point: Handle<Point<3>>,
+    pub point: Point<3>,
 }
 
 impl Vertex {
@@ -47,7 +47,7 @@ impl Vertex {
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`].
     pub fn point(&self) -> Point<3> {
-        self.point.get()
+        self.point
     }
 }
 

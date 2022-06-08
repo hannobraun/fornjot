@@ -331,11 +331,9 @@ mod tests {
         assert!(shape.get_handle(&curve).is_none());
         assert!(shape.get_handle(&surface).is_none());
 
-        let point = shape.insert(point)?;
         let curve = shape.insert(curve)?;
         let surface = shape.insert(surface)?;
 
-        assert!(shape.get_handle(&point.get()).as_ref() == Some(&point));
         assert!(shape.get_handle(&curve.get()).as_ref() == Some(&curve));
         assert!(shape.get_handle(&surface.get()).as_ref() == Some(&surface));
 
@@ -385,28 +383,13 @@ mod tests {
     }
 
     #[test]
-    fn add_vertex_structural() -> anyhow::Result<()> {
-        let mut shape = Shape::new().with_distinct_min_distance(MIN_DISTANCE);
-        let mut other = Shape::new();
-
-        // Should fail, as `point` is not part of the shape.
-        let point = other.insert(Point::from([0., 0., 0.]))?;
-        let result = shape.insert(Vertex { point });
-        assert!(matches!(result, Err(ValidationError::Structural(_))));
-
-        Ok(())
-    }
-
-    #[test]
     fn add_vertex_uniqueness() -> anyhow::Result<()> {
         let mut shape = Shape::new();
 
-        let point = shape.insert(Point::from([0., 0., 0.]))?;
+        let point = Point::from([0., 0., 0.]);
 
         // Adding a vertex should work.
-        shape.insert(Vertex {
-            point: point.clone(),
-        })?;
+        shape.insert(Vertex { point })?;
 
         // Adding a second vertex with the same point should fail.
         let result = shape.insert(Vertex { point });
