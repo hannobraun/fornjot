@@ -22,9 +22,6 @@ use super::VertexBuilder;
 ///
 /// # Validation
 ///
-/// A vertex that is part of a [`Shape`] must be structurally sound. That means
-/// the point it refers to must be part of the same shape.
-///
 /// Vertices must be unique within a shape, meaning another vertex defined by
 /// the same shape must not exist. In the context of vertex uniqueness, points
 /// that are close to each other are considered identical. The minimum distance
