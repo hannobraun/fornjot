@@ -135,7 +135,7 @@ pub enum ValidationError {
     /// Coherence validation verifies, that local forms of an objects are
     /// consistent with their canonical forms.
     #[error("Coherence validation failed")]
-    Coherence,
+    Coherence(#[from] GeometricIssues),
 
     /// Geometric validation failed
     ///
@@ -143,7 +143,7 @@ pub enum ValidationError {
     /// object are upheld. For example, edges or faces might not be allowed to
     /// intersect.
     #[error("Geometric validation failed")]
-    Geometric(#[from] GeometricIssues),
+    Geometric,
 
     /// Structural validation failed
     ///
