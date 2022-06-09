@@ -132,7 +132,7 @@ pub type ValidationResult<T> = Result<Handle<T>, ValidationError>;
 pub enum ValidationError {
     /// Geometric validation failed
     ///
-    /// Geometric validation checks, that various geometric constraints of an
+    /// Geometric validation verifies, that various geometric constraints of an
     /// object are upheld. For example, edges or faces might not be allowed to
     /// intersect.
     #[error("Geometric validation failed")]
@@ -147,7 +147,7 @@ pub enum ValidationError {
 
     /// Uniqueness validation failed
     ///
-    /// Uniqueness validation checks, that an object is unique. Uniqueness is
+    /// Uniqueness validation verifies, that an object is unique. Uniqueness is
     /// only required for topological objects, as there's no harm in geometric
     /// objects being duplicated.
     #[error("Uniqueness validation failed")]
