@@ -3,7 +3,7 @@ mod structural;
 mod uniqueness;
 
 pub use self::{
-    geometric::{EdgeVertexMismatch, GeometricIssues},
+    geometric::{CoherenceIssues, EdgeVertexMismatch},
     structural::StructuralIssues,
     uniqueness::{DuplicateEdge, UniquenessIssues},
 };
@@ -135,7 +135,7 @@ pub enum ValidationError {
     /// Coherence validation verifies, that local forms of an objects are
     /// consistent with their canonical forms.
     #[error("Coherence validation failed")]
-    Coherence(#[from] GeometricIssues),
+    Coherence(#[from] CoherenceIssues),
 
     /// Geometric validation failed
     ///
