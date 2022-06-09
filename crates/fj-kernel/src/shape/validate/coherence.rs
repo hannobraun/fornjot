@@ -7,7 +7,7 @@ use crate::topology::Edge;
 pub fn validate_edge(
     edge: &Edge<3>,
     max_distance: impl Into<Scalar>,
-) -> Result<(), GeometricIssues> {
+) -> Result<(), CoherenceIssues> {
     let max_distance = max_distance.into();
 
     // Validate that the local and canonical forms of the vertices match. As a
@@ -33,7 +33,7 @@ pub fn validate_edge(
     }
 
     if !edge_vertex_mismatches.is_empty() {
-        return Err(GeometricIssues {
+        return Err(CoherenceIssues {
             edge_vertex_mismatches,
         });
     }
@@ -47,12 +47,12 @@ pub fn validate_edge(
 ///
 /// [`ValidationError`]: super::ValidationError
 #[derive(Debug, Default, thiserror::Error)]
-pub struct GeometricIssues {
+pub struct CoherenceIssues {
     /// Mismatches between the local and canonical forms of edge vertices
     pub edge_vertex_mismatches: Vec<EdgeVertexMismatch>,
 }
 
-impl fmt::Display for GeometricIssues {
+impl fmt::Display for CoherenceIssues {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         writeln!(f, "Geometric issues found:")?;
 

@@ -1,9 +1,9 @@
-mod geometric;
+mod coherence;
 mod structural;
 mod uniqueness;
 
 pub use self::{
-    geometric::{EdgeVertexMismatch, GeometricIssues},
+    coherence::{CoherenceIssues, EdgeVertexMismatch},
     structural::StructuralIssues,
     uniqueness::{DuplicateEdge, UniquenessIssues},
 };
@@ -81,7 +81,7 @@ impl Validate for Edge<3> {
         max_distance: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
-        geometric::validate_edge(self, max_distance)?;
+        coherence::validate_edge(self, max_distance)?;
         structural::validate_edge(self, stores)?;
         uniqueness::validate_edge(self, handle, &stores.edges)?;
 
@@ -130,13 +130,20 @@ pub type ValidationResult<T> = Result<Handle<T>, ValidationError>;
 #[allow(clippy::large_enum_variant)]
 #[derive(Debug, thiserror::Error)]
 pub enum ValidationError {
+    /// Coherence validation failed
+    ///
+    /// Coherence validation verifies, that local forms of an objects are
+    /// consistent with their canonical forms.
+    #[error("Coherence validation failed")]
+    Coherence(#[from] CoherenceIssues),
+
     /// Geometric validation failed
     ///
-    /// Geometric validation checks, that various geometric constraints of an
+    /// Geometric validation verifies, that various geometric constraints of an
     /// object are upheld. For example, edges or faces might not be allowed to
     /// intersect.
     #[error("Geometric validation failed")]
-    Geometric(#[from] GeometricIssues),
+    Geometric,
 
     /// Structural validation failed
     ///
@@ -147,7 +154,7 @@ pub enum ValidationError {
 
     /// Uniqueness validation failed
     ///
-    /// Uniqueness validation checks, that an object is unique. Uniqueness is
+    /// Uniqueness validation verifies, that an object is unique. Uniqueness is
     /// only required for topological objects, as there's no harm in geometric
     /// objects being duplicated.
     #[error("Uniqueness validation failed")]
