@@ -130,6 +130,13 @@ pub type ValidationResult<T> = Result<Handle<T>, ValidationError>;
 #[allow(clippy::large_enum_variant)]
 #[derive(Debug, thiserror::Error)]
 pub enum ValidationError {
+    /// Coherence validation failed
+    ///
+    /// Coherence validation verifies, that local forms of an objects are
+    /// consistent with their canonical forms.
+    #[error("Coherence validation failed")]
+    Coherence,
+
     /// Geometric validation failed
     ///
     /// Geometric validation verifies, that various geometric constraints of an
