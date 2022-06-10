@@ -22,12 +22,12 @@ impl ToShape for fj::Circle {
 
         let edge = Edge::builder(&mut shape)
             .build_circle(Scalar::from_f64(self.radius()))?;
-        let cycle = shape.insert(Cycle::new(vec![edge]))?;
+        let cycle_canonical = shape.insert(Cycle::new(vec![edge]))?;
 
         let surface = shape.insert(Surface::xy_plane())?;
         shape.insert(Face::new(
             surface,
-            vec![cycle],
+            vec![cycle_canonical],
             Vec::new(),
             self.color(),
         ))?;
