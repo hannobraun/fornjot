@@ -48,14 +48,14 @@ impl<'r> EdgeBuilder<'r> {
 
     /// Build a circle from a radius
     pub fn build_circle(self, radius: Scalar) -> ValidationResult<Edge<3>> {
-        let curve = self.shape.insert(Curve::Circle(Circle {
+        let curve_canonical = self.shape.insert(Curve::Circle(Circle {
             center: Point::origin(),
             a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
             b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
         }))?;
         let edge = self
             .shape
-            .insert(Edge::new(curve, VerticesOfEdge::none()))?;
+            .insert(Edge::new(curve_canonical, VerticesOfEdge::none()))?;
 
         Ok(edge)
     }
