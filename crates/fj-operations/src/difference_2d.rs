@@ -117,7 +117,7 @@ fn add_cycle(
         edges.reverse();
     }
 
-    let cycle = shape.insert(Cycle::new(edges))?;
+    let cycle_canonical = shape.insert(Cycle::new(edges))?;
 
-    Ok(cycle)
+    Ok(cycle_canonical)
 }
