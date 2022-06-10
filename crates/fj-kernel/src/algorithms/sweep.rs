@@ -215,14 +215,14 @@ fn create_side_cycle(
     // https://doc.rust-lang.org/std/primitive.array.html#method.zip
     let [bot_a, bot_b] = vertices_bottom;
     let [top_a, top_b] = vertices_top;
-    let vertices = [(bot_a, top_a), (bot_b, top_b)];
+    let vertices = [[bot_a, top_a], [bot_b, top_b]];
 
     // Create (or retrieve from the cache, `vertex_bottom_to_edge`) side edges
     // from the vertices of this source/bottom edge.
     //
     // Can be cleaned up, once `try_map` is stable:
     // https://doc.rust-lang.org/std/primitive.array.html#method.try_map
-    let side_edges = vertices.map(|(vertex_bottom, vertex_top)| {
+    let side_edges = vertices.map(|[vertex_bottom, vertex_top]| {
         // We only need to create the edge, if it hasn't already been created
         // for a neighboring side face. Let's check our cache, to see if that's
         // the case.
