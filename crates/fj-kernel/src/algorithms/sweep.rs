@@ -92,51 +92,53 @@ impl Sweep {
     }
 
     fn create_side_faces(&mut self) -> Result<(), ValidationError> {
-        for cycle_source in self.source.cycles() {
-            if cycle_source.get().edges.len() == 1 {
-                // If there's only one edge in the cycle, it must be a
-                // continuous edge that connects to itself. By sweeping that, we
-                // create a continuous face.
-                //
-                // Continuous faces aren't currently supported by the
-                // approximation code, and hence can't be triangulated. To
-                // address that, we fall back to the old and almost obsolete
-                // triangle representation to create the face.
-                //
-                // This is the last piece of code that still uses the triangle
-                // representation.
-                create_continuous_side_face_fallback(
-                    &cycle_source.get(),
-                    &self.translation,
-                    self.tolerance,
-                    self.color,
-                    &mut self.target,
-                )?;
+        for face_source in self.source.faces() {
+            for cycle_source in face_source.get().all_cycles() {
+                if cycle_source.edges.len() == 1 {
+                    // If there's only one edge in the cycle, it must be a
+                    // continuous edge that connects to itself. By sweeping
+                    // that, we create a continuous face.
+                    //
+                    // Continuous faces aren't currently supported by the
+                    // approximation code, and hence can't be triangulated. To
+                    // address that, we fall back to the old and almost obsolete
+                    // triangle representation to create the face.
+                    //
+                    // This is the last piece of code that still uses the
+                    // triangle representation.
+                    create_continuous_side_face_fallback(
+                        &cycle_source,
+                        &self.translation,
+                        self.tolerance,
+                        self.color,
+                        &mut self.target,
+                    )?;
 
-                continue;
-            }
+                    continue;
+                }
 
-            // If there's no continuous edge, we can create the non-continuous
-            // faces using boundary representation.
+                // If there's no continuous edge, we can create the non-
+                // continuous faces using boundary representation.
 
-            let mut vertex_bottom_to_edge = HashMap::new();
+                let mut vertex_bottom_to_edge = HashMap::new();
 
-            for edge_source in &cycle_source.get().edges {
-                let edge_bottom =
-                    self.source_to_bottom.edge(&edge_source.canonical());
-                let edge_top =
-                    self.source_to_top.edge(&edge_source.canonical());
+                for edge_source in &cycle_source.edges {
+                    let edge_bottom =
+                        self.source_to_bottom.edge(&edge_source.canonical());
+                    let edge_top =
+                        self.source_to_top.edge(&edge_source.canonical());
 
-                let surface = create_side_surface(self, &edge_bottom);
+                    let surface = create_side_surface(self, &edge_bottom);
 
-                let cycle = create_side_cycle(
-                    &mut self.target,
-                    edge_bottom,
-                    edge_top,
-                    &mut vertex_bottom_to_edge,
-                )?;
+                    let cycle = create_side_cycle(
+                        &mut self.target,
+                        edge_bottom,
+                        edge_top,
+                        &mut vertex_bottom_to_edge,
+                    )?;
 
-                create_side_face(self, surface, cycle)?;
+                    create_side_face(self, surface, cycle)?;
+                }
             }
         }
 
