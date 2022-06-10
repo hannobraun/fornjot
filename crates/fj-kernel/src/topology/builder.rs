@@ -47,17 +47,30 @@ impl<'r> EdgeBuilder<'r> {
     }
 
     /// Build a circle from a radius
-    pub fn build_circle(self, radius: Scalar) -> ValidationResult<Edge<3>> {
+    pub fn build_circle(
+        self,
+        radius: Scalar,
+    ) -> Result<LocalForm<Edge<2>, Edge<3>>, ValidationError> {
+        let curve_local = Curve::Circle(Circle {
+            center: Point::origin(),
+            a: Vector::from([radius, Scalar::ZERO]),
+            b: Vector::from([Scalar::ZERO, radius]),
+        });
         let curve_canonical = self.shape.insert(Curve::Circle(Circle {
             center: Point::origin(),
             a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
             b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
         }))?;
+
+        let edge_local = Edge {
+            curve: LocalForm::new(curve_local, curve_canonical.clone()),
+            vertices: VerticesOfEdge::none(),
+        };
         let edge_canonical = self
             .shape
             .insert(Edge::new(curve_canonical, VerticesOfEdge::none()))?;
 
-        Ok(edge_canonical)
+        Ok(LocalForm::new(edge_local, edge_canonical))
     }
 
     /// Build a line segment from two points
