@@ -213,9 +213,9 @@ fn create_side_cycle(
 
     // Can be simplified, once `zip` is stabilized:
     // https://doc.rust-lang.org/std/primitive.array.html#method.zip
-    let [b_a, b_b] = vertices_bottom;
-    let [t_a, t_b] = vertices_top;
-    let vertices = [(b_a, t_a), (b_b, t_b)];
+    let [bot_a, bot_b] = vertices_bottom;
+    let [top_a, top_b] = vertices_top;
+    let vertices = [(bot_a, top_a), (bot_b, top_b)];
 
     // Create (or retrieve from the cache, `vertex_bottom_to_edge`) side edges
     // from the vertices of this source/bottom edge.
