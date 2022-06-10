@@ -99,9 +99,13 @@ fn add_cycle(
 ) -> ValidationResult<Cycle<3>> {
     let mut edges = Vec::new();
     for edge in cycle.get().edges() {
-        let curve = edge.curve();
-        let curve = if reverse { curve.reverse() } else { curve };
-        let curve = shape.insert(curve)?;
+        let curve_canonical = edge.curve();
+        let curve_canonical = if reverse {
+            curve_canonical.reverse()
+        } else {
+            curve_canonical
+        };
+        let curve_canonical = shape.insert(curve_canonical)?;
 
         let vertices = if reverse {
             edge.vertices.reverse()
@@ -109,7 +113,8 @@ fn add_cycle(
             edge.vertices
         };
 
-        let edge_canonical = shape.merge(Edge::new(curve, vertices))?;
+        let edge_canonical =
+            shape.merge(Edge::new(curve_canonical, vertices))?;
         edges.push(edge_canonical);
     }
 
