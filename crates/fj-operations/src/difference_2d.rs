@@ -109,8 +109,8 @@ fn add_cycle(
             edge.vertices
         };
 
-        let edge = shape.merge(Edge::new(curve, vertices))?;
-        edges.push(edge);
+        let edge_canonical = shape.merge(Edge::new(curve, vertices))?;
+        edges.push(edge_canonical);
     }
 
     if reverse {
