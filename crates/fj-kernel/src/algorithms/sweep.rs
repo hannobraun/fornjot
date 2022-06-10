@@ -233,11 +233,11 @@ fn create_side_cycle(
             return Ok(edge);
         }
 
-        let points = [vertex_bottom.clone(), vertex_top]
+        let points_canonical = [vertex_bottom.clone(), vertex_top]
             .map(|vertex| vertex.canonical().get().point);
 
-        let edge_canonical =
-            Edge::builder(target).build_line_segment_from_points(points)?;
+        let edge_canonical = Edge::builder(target)
+            .build_line_segment_from_points(points_canonical)?;
 
         vertex_bottom_to_edge
             .insert(vertex_bottom.canonical(), edge_canonical.clone());
