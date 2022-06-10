@@ -53,11 +53,11 @@ impl<'r> EdgeBuilder<'r> {
             a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
             b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
         }))?;
-        let edge = self
+        let edge_canonical = self
             .shape
             .insert(Edge::new(curve_canonical, VerticesOfEdge::none()))?;
 
-        Ok(edge)
+        Ok(edge_canonical)
     }
 
     /// Build a line segment from two points
