@@ -270,13 +270,13 @@ fn create_side_face(
 
 #[cfg(test)]
 mod tests {
-    use fj_math::{Point, Scalar, Vector};
+    use fj_math::{Point, Scalar, Transform, Vector};
 
     use crate::{
         algorithms::Tolerance,
         geometry::Surface,
         shape::{Handle, Shape},
-        topology::{Cycle, Edge, Face},
+        topology::Face,
     };
 
     use super::sweep_shape;
@@ -286,7 +286,7 @@ mod tests {
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
 
         let sketch =
-            Triangle::new([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]], false)?;
+            Triangle::new([[0., 0.], [1., 0.], [0., 1.]], 0.0f64, false)?;
 
         let swept = sweep_shape(
             sketch.shape,
@@ -296,11 +296,11 @@ mod tests {
         )?;
 
         let bottom_face =
-            Triangle::new([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]], true)?
+            Triangle::new([[0., 0.], [1., 0.], [0., 1.]], 0.0f64, true)?
                 .face
                 .get();
         let top_face =
-            Triangle::new([[0., 0., 1.], [1., 0., 1.], [0., 1., 1.]], false)?
+            Triangle::new([[0., 0.], [1., 0.], [0., 1.]], 1.0f64, false)?
                 .face
                 .get();
 
@@ -332,30 +332,30 @@ mod tests {
 
     impl Triangle {
         fn new(
-            points: [impl Into<Point<3>>; 3],
+            points: [impl Into<Point<2>>; 3],
+            z_offset: impl Into<Scalar>,
             reverse: bool,
         ) -> anyhow::Result<Self> {
             let mut shape = Shape::new();
 
-            let [a, b, c] = points.map(|point| point.into());
+            let surface =
+                Surface::xy_plane().transform(&Transform::translation([
+                    Scalar::ZERO,
+                    Scalar::ZERO,
+                    z_offset.into(),
+                ]));
+            let face = Face::builder(surface, &mut shape)
+                .with_exterior_polygon(points)
+                .build()?;
 
-            let ab = Edge::builder(&mut shape)
-                .build_line_segment_from_points([a, b])?;
-            let bc = Edge::builder(&mut shape)
-                .build_line_segment_from_points([b, c])?;
-            let ca = Edge::builder(&mut shape)
-                .build_line_segment_from_points([c, a])?;
-
-            let cycle = shape.insert(Cycle::new(vec![ab, bc, ca]))?;
-
-            let surface = Surface::plane_from_points([a, b, c]);
-            let surface = if reverse { surface.reverse() } else { surface };
-            let surface = shape.insert(surface)?;
-
-            let abc =
-                Face::new(surface, vec![cycle], Vec::new(), [255, 0, 0, 255]);
-
-            let face = shape.insert(abc)?;
+            if reverse {
+                shape
+                    .update()
+                    .update_all(|surface: &mut Surface| {
+                        *surface = surface.reverse();
+                    })
+                    .validate()?;
+            }
 
             Ok(Self { shape, face })
         }

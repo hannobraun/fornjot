@@ -2,7 +2,7 @@ use fj_math::{Circle, Line, Point, Scalar, Vector};
 
 use crate::{
     geometry::{Curve, Surface},
-    shape::{Handle, LocalForm, Shape, ValidationResult},
+    shape::{Handle, LocalForm, Shape, ValidationError, ValidationResult},
 };
 
 use super::{Cycle, Edge, Face, Vertex, VerticesOfEdge};
@@ -121,11 +121,8 @@ impl<'r> CycleBuilder<'r> {
     pub fn build_polygon(
         self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> ValidationResult<Cycle<3>> {
-        let mut points: Vec<_> = points
-            .into_iter()
-            .map(|point| self.surface.point_from_surface_coords(point))
-            .collect();
+    ) -> Result<LocalForm<Cycle<2>, Cycle<3>>, ValidationError> {
+        let mut points: Vec<_> = points.into_iter().map(Into::into).collect();
 
         // A polygon is closed, so we need to add the first point at the end
         // again, for the next step.
@@ -134,18 +131,36 @@ impl<'r> CycleBuilder<'r> {
         }
 
         let mut edges = Vec::new();
-        for ab in points.windows(2) {
+        for points in points.windows(2) {
             // Can't panic, as we passed `2` to `windows`.
             //
             // Can be cleaned up, once `array_windows` is stable.
-            let points = [ab[0], ab[1]];
+            let points = [points[0], points[1]];
 
-            let edge = Edge::builder(self.shape)
-                .build_line_segment_from_points(points)?;
-            edges.push(edge);
+            let points_canonical = points
+                .map(|point| self.surface.point_from_surface_coords(point));
+            let edge_canonical = Edge::builder(self.shape)
+                .build_line_segment_from_points(points_canonical)?;
+
+            let edge_local = Edge {
+                curve: LocalForm::new(
+                    Curve::Line(Line::from_points(points)),
+                    edge_canonical.get().curve.canonical(),
+                ),
+                vertices: edge_canonical.get().vertices,
+            };
+
+            edges.push(LocalForm::new(edge_local, edge_canonical));
         }
 
-        self.shape.insert(Cycle::new(edges))
+        let local = Cycle {
+            edges: edges.clone(),
+        };
+
+        let edges_canonical = edges.into_iter().map(|edge| edge.canonical());
+        let canonical = self.shape.insert(Cycle::new(edges_canonical))?;
+
+        Ok(LocalForm::new(local, canonical))
     }
 }
 
@@ -213,14 +228,14 @@ impl<'r> FaceBuilder<'r> {
         if let Some(points) = self.exterior {
             let cycle = Cycle::builder(self.surface, self.shape)
                 .build_polygon(points)?;
-            exteriors.push(cycle);
+            exteriors.push(cycle.canonical());
         }
 
         let mut interiors = Vec::new();
         for points in self.interiors {
             let cycle = Cycle::builder(self.surface, self.shape)
                 .build_polygon(points)?;
-            interiors.push(cycle);
+            interiors.push(cycle.canonical());
         }
 
         let color = self.color.unwrap_or([255, 0, 0, 255]);
