@@ -122,9 +122,10 @@ impl Sweep {
             let mut vertex_bottom_to_edge = HashMap::new();
 
             for edge_source in &cycle_source.get().edges {
-                let edge_source = edge_source.canonical();
-                let edge_bottom = self.source_to_bottom.edge(&edge_source);
-                let edge_top = self.source_to_top.edge(&edge_source);
+                let edge_bottom =
+                    self.source_to_bottom.edge(&edge_source.canonical());
+                let edge_top =
+                    self.source_to_top.edge(&edge_source.canonical());
 
                 let surface = create_side_surface(self, &edge_bottom);
 
