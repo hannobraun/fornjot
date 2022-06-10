@@ -444,28 +444,32 @@ mod tests {
         let mut shape = TestShape::new();
         let mut other = TestShape::new();
 
+        let triangle = [[0., 0.], [1., 0.], [0., 1.]];
+
         let surface = other.add_surface()?;
-        let cycle = other.add_cycle()?;
+        let cycle = Cycle::builder(surface.get(), &mut other)
+            .build_polygon(triangle)?;
 
         // Nothing has been added to `shape`. Should fail.
         let err = shape
             .insert(Face::new(
                 surface.clone(),
-                vec![cycle.clone()],
+                vec![cycle.canonical()],
                 Vec::new(),
                 [255, 0, 0, 255],
             ))
             .unwrap_err();
         assert!(err.missing_surface(&surface));
-        assert!(err.missing_cycle(&cycle));
+        assert!(err.missing_cycle(&cycle.canonical()));
 
         let surface = shape.add_surface()?;
-        let cycle = shape.add_cycle()?;
+        let cycle = Cycle::builder(surface.get(), &mut shape)
+            .build_polygon(triangle)?;
 
         // Everything has been added to `shape` now. Should work!
         shape.insert(Face::new(
             surface,
-            vec![cycle],
+            vec![cycle.canonical()],
             Vec::new(),
             [255, 0, 0, 255],
         ))?;
@@ -504,12 +508,6 @@ mod tests {
                 .build_line_segment_from_points(points)?;
 
             Ok(edge)
-        }
-
-        fn add_cycle(&mut self) -> anyhow::Result<Handle<Cycle<3>>> {
-            let edge = self.add_edge()?;
-            let cycle = self.insert(Cycle::new(vec![edge]))?;
-            Ok(cycle)
         }
     }
 
