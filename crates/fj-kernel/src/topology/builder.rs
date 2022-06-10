@@ -47,17 +47,30 @@ impl<'r> EdgeBuilder<'r> {
     }
 
     /// Build a circle from a radius
-    pub fn build_circle(self, radius: Scalar) -> ValidationResult<Edge<3>> {
-        let curve = self.shape.insert(Curve::Circle(Circle {
+    pub fn build_circle(
+        self,
+        radius: Scalar,
+    ) -> Result<LocalForm<Edge<2>, Edge<3>>, ValidationError> {
+        let curve_local = Curve::Circle(Circle {
+            center: Point::origin(),
+            a: Vector::from([radius, Scalar::ZERO]),
+            b: Vector::from([Scalar::ZERO, radius]),
+        });
+        let curve_canonical = self.shape.insert(Curve::Circle(Circle {
             center: Point::origin(),
             a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
             b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
         }))?;
-        let edge = self
-            .shape
-            .insert(Edge::new(curve, VerticesOfEdge::none()))?;
 
-        Ok(edge)
+        let edge_local = Edge {
+            curve: LocalForm::new(curve_local, curve_canonical.clone()),
+            vertices: VerticesOfEdge::none(),
+        };
+        let edge_canonical = self
+            .shape
+            .insert(Edge::new(curve_canonical, VerticesOfEdge::none()))?;
+
+        Ok(LocalForm::new(edge_local, edge_canonical))
     }
 
     /// Build a line segment from two points
@@ -228,14 +241,14 @@ impl<'r> FaceBuilder<'r> {
         if let Some(points) = self.exterior {
             let cycle = Cycle::builder(self.surface, self.shape)
                 .build_polygon(points)?;
-            exteriors.push(cycle.canonical());
+            exteriors.push(cycle);
         }
 
         let mut interiors = Vec::new();
         for points in self.interiors {
             let cycle = Cycle::builder(self.surface, self.shape)
                 .build_polygon(points)?;
-            interiors.push(cycle.canonical());
+            interiors.push(cycle);
         }
 
         let color = self.color.unwrap_or([255, 0, 0, 255]);

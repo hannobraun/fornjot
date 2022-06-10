@@ -1,7 +1,7 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
-    shape::{Handle, Shape, ValidationError, ValidationResult},
+    shape::{LocalForm, Shape, ValidationError},
     topology::{Cycle, Edge, Face},
 };
 use fj_math::Aabb;
@@ -44,14 +44,12 @@ impl ToShape for fj::Difference2d {
                     "Trying to subtract faces with different surfaces.",
                 );
 
-                for cycle in face.exteriors.as_handle() {
-                    let cycle =
-                        add_cycle(cycle.clone(), &mut difference, false)?;
+                for cycle in face.exteriors.as_local_form().cloned() {
+                    let cycle = add_cycle(cycle, &mut difference, false)?;
                     exteriors.push(cycle);
                 }
-                for cycle in face.interiors.as_handle() {
-                    let cycle =
-                        add_cycle(cycle.clone(), &mut difference, true)?;
+                for cycle in face.interiors.as_local_form().cloned() {
+                    let cycle = add_cycle(cycle, &mut difference, true)?;
                     interiors.push(cycle);
                 }
             }
@@ -66,9 +64,8 @@ impl ToShape for fj::Difference2d {
                     "Trying to subtract faces with different surfaces.",
                 );
 
-                for cycle in face.exteriors.as_handle() {
-                    let cycle =
-                        add_cycle(cycle.clone(), &mut difference, true)?;
+                for cycle in face.exteriors.as_local_form().cloned() {
+                    let cycle = add_cycle(cycle, &mut difference, true)?;
                     interiors.push(cycle);
                 }
             }
@@ -93,31 +90,52 @@ impl ToShape for fj::Difference2d {
 }
 
 fn add_cycle(
-    cycle: Handle<Cycle<3>>,
+    cycle: LocalForm<Cycle<2>, Cycle<3>>,
     shape: &mut Shape,
     reverse: bool,
-) -> ValidationResult<Cycle<3>> {
+) -> Result<LocalForm<Cycle<2>, Cycle<3>>, ValidationError> {
     let mut edges = Vec::new();
-    for edge in cycle.get().edges() {
-        let curve = edge.curve();
-        let curve = if reverse { curve.reverse() } else { curve };
-        let curve = shape.insert(curve)?;
-
-        let vertices = if reverse {
-            edge.vertices.reverse()
+    for edge in cycle.local().edges.clone() {
+        let curve_local = *edge.local().curve.local();
+        let curve_local = if reverse {
+            curve_local.reverse()
         } else {
-            edge.vertices
+            curve_local
         };
 
-        let edge = shape.merge(Edge::new(curve, vertices))?;
-        edges.push(edge);
+        let curve_canonical = edge.canonical().get().curve();
+        let curve_canonical = if reverse {
+            curve_canonical.reverse()
+        } else {
+            curve_canonical
+        };
+        let curve_canonical = shape.insert(curve_canonical)?;
+
+        let vertices = if reverse {
+            edge.local().vertices.clone().reverse()
+        } else {
+            edge.local().vertices.clone()
+        };
+
+        let edge_local = Edge {
+            curve: LocalForm::new(curve_local, curve_canonical.clone()),
+            vertices: vertices.clone(),
+        };
+        let edge_canonical =
+            shape.merge(Edge::new(curve_canonical, vertices))?;
+
+        edges.push(LocalForm::new(edge_local, edge_canonical));
     }
 
     if reverse {
         edges.reverse();
     }
 
-    let cycle = shape.insert(Cycle::new(edges))?;
+    let cycle_local = Cycle {
+        edges: edges.clone(),
+    };
+    let cycle_canonical = shape
+        .insert(Cycle::new(edges.into_iter().map(|edge| edge.canonical())))?;
 
-    Ok(cycle)
+    Ok(LocalForm::new(cycle_local, cycle_canonical))
 }

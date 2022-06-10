@@ -1,10 +1,10 @@
 use std::collections::HashMap;
 
-use fj_math::{Scalar, Transform, Triangle, Vector};
+use fj_math::{Line, Scalar, Transform, Triangle, Vector};
 
 use crate::{
-    geometry::{Surface, SweptCurve},
-    shape::{Handle, Mapping, Shape, ValidationError, ValidationResult},
+    geometry::{Curve, Surface, SweptCurve},
+    shape::{Handle, LocalForm, Mapping, Shape, ValidationError},
     topology::{Cycle, Edge, Face, Vertex},
 };
 
@@ -92,50 +92,77 @@ impl Sweep {
     }
 
     fn create_side_faces(&mut self) -> Result<(), ValidationError> {
-        for cycle_source in self.source.cycles() {
-            if cycle_source.get().edges.len() == 1 {
-                // If there's only one edge in the cycle, it must be a
-                // continuous edge that connects to itself. By sweeping that, we
-                // create a continuous face.
-                //
-                // Continuous faces aren't currently supported by the
-                // approximation code, and hence can't be triangulated. To
-                // address that, we fall back to the old and almost obsolete
-                // triangle representation to create the face.
-                //
-                // This is the last piece of code that still uses the triangle
-                // representation.
-                create_continuous_side_face_fallback(
-                    &cycle_source.get(),
-                    &self.translation,
-                    self.tolerance,
-                    self.color,
-                    &mut self.target,
-                )?;
+        for face_source in self.source.faces() {
+            let face_source = face_source.get();
+            let face_source = face_source.brep();
 
-                continue;
-            }
+            let cycles_source = face_source
+                .exteriors
+                .as_local_form()
+                .chain(face_source.interiors.as_local_form());
 
-            // If there's no continuous edge, we can create the non-continuous
-            // faces using boundary representation.
+            for cycle_source in cycles_source {
+                if cycle_source.canonical().get().edges.len() == 1 {
+                    // If there's only one edge in the cycle, it must be a
+                    // continuous edge that connects to itself. By sweeping
+                    // that, we create a continuous face.
+                    //
+                    // Continuous faces aren't currently supported by the
+                    // approximation code, and hence can't be triangulated. To
+                    // address that, we fall back to the old and almost obsolete
+                    // triangle representation to create the face.
+                    //
+                    // This is the last piece of code that still uses the
+                    // triangle representation.
+                    create_continuous_side_face_fallback(
+                        &cycle_source.canonical().get(),
+                        &self.translation,
+                        self.tolerance,
+                        self.color,
+                        &mut self.target,
+                    )?;
 
-            let mut vertex_bottom_to_edge = HashMap::new();
+                    continue;
+                }
 
-            for edge_source in &cycle_source.get().edges {
-                let edge_source = edge_source.canonical();
-                let edge_bottom = self.source_to_bottom.edge(&edge_source);
-                let edge_top = self.source_to_top.edge(&edge_source);
+                // If there's no continuous edge, we can create the non-
+                // continuous faces using boundary representation.
 
-                let surface = create_side_surface(self, &edge_bottom);
+                let mut vertex_bottom_to_edge = HashMap::new();
 
-                let cycle = create_side_cycle(
-                    &mut self.target,
-                    edge_bottom,
-                    edge_top,
-                    &mut vertex_bottom_to_edge,
-                )?;
+                for edge_source in &cycle_source.local().edges {
+                    let edge_bottom =
+                        self.source_to_bottom.edge(&edge_source.canonical());
+                    let edge_top =
+                        self.source_to_top.edge(&edge_source.canonical());
 
-                create_side_face(self, surface, cycle)?;
+                    let surface = create_side_surface(self, &edge_bottom);
+
+                    let edge_bottom = LocalForm::new(
+                        Edge {
+                            curve: edge_source.local().curve.clone(),
+                            vertices: edge_bottom.get().vertices,
+                        },
+                        edge_bottom,
+                    );
+                    let edge_top = LocalForm::new(
+                        Edge {
+                            curve: edge_source.local().curve.clone(),
+                            vertices: edge_top.get().vertices,
+                        },
+                        edge_top,
+                    );
+
+                    let cycle = create_side_cycle(
+                        &mut self.target,
+                        self.path,
+                        edge_bottom,
+                        edge_top,
+                        &mut vertex_bottom_to_edge,
+                    )?;
+
+                    create_side_face(self, surface, cycle)?;
+                }
             }
         }
 
@@ -199,62 +226,90 @@ fn create_side_surface(
 
 fn create_side_cycle(
     target: &mut Shape,
-    edge_bottom: Handle<Edge<3>>,
-    edge_top: Handle<Edge<3>>,
+    path: Vector<3>,
+    edge_bottom: LocalForm<Edge<2>, Edge<3>>,
+    edge_top: LocalForm<Edge<2>, Edge<3>>,
     vertex_bottom_to_edge: &mut HashMap<Handle<Vertex>, Handle<Edge<3>>>,
-) -> ValidationResult<Cycle<3>> {
+) -> Result<LocalForm<Cycle<2>, Cycle<3>>, ValidationError> {
     // Can't panic. We already ruled out the "continuous edge" case above, so
     // these edges must have vertices.
     let [vertices_bottom, vertices_top] = [&edge_bottom, &edge_top]
-        .map(|edge| edge.get().vertices.expect_vertices());
+        .map(|edge| edge.local().vertices.clone().expect_vertices());
 
     // Can be simplified, once `zip` is stabilized:
     // https://doc.rust-lang.org/std/primitive.array.html#method.zip
-    let [b_a, b_b] = vertices_bottom;
-    let [t_a, t_b] = vertices_top;
-    let vertices = [(b_a, t_a), (b_b, t_b)];
+    let [bot_a, bot_b] = vertices_bottom;
+    let [top_a, top_b] = vertices_top;
+    let vertices = [[bot_a, top_a], [bot_b, top_b]];
 
     // Create (or retrieve from the cache, `vertex_bottom_to_edge`) side edges
     // from the vertices of this source/bottom edge.
     //
     // Can be cleaned up, once `try_map` is stable:
     // https://doc.rust-lang.org/std/primitive.array.html#method.try_map
-    let side_edges = vertices.map(|(vertex_bottom, vertex_top)| {
-        // We only need to create the edge, if it hasn't already been created
-        // for a neighboring side face. Let's check our cache, to see if that's
-        // the case.
-        let edge = vertex_bottom_to_edge
-            .get(&vertex_bottom.canonical())
-            .cloned();
-        if let Some(edge) = edge {
-            return Ok(edge);
-        }
+    let side_edges = vertices.map(|[vertex_bottom, vertex_top]| {
+        let edge_canonical = {
+            // We only need to create the edge, if it hasn't already been
+            // created for a neighboring side face. Let's check our cache, to
+            // see if that's the case.
+            let edge = vertex_bottom_to_edge
+                .get(&vertex_bottom.canonical())
+                .cloned();
+            if let Some(edge) = edge {
+                edge
+            } else {
+                let points_canonical =
+                    [vertex_bottom.clone(), vertex_top.clone()]
+                        .map(|vertex| vertex.canonical().get().point);
 
-        let points = [vertex_bottom.clone(), vertex_top]
-            .map(|vertex| vertex.canonical().get().point);
+                Edge::builder(target)
+                    .build_line_segment_from_points(points_canonical)?
+            }
+        };
 
-        let edge =
-            Edge::builder(target).build_line_segment_from_points(points)?;
+        let vertices = [vertex_bottom.clone(), vertex_top];
+        let mut points_local =
+            vertices.map(|vertex| [vertex.local().t, Scalar::ZERO]);
+        points_local[1][1] = path.magnitude();
 
-        vertex_bottom_to_edge.insert(vertex_bottom.canonical(), edge.clone());
+        let edge_local = Edge {
+            curve: LocalForm::new(
+                Curve::Line(Line::from_points(points_local)),
+                edge_canonical.get().curve.canonical(),
+            ),
+            vertices: edge_canonical.get().vertices,
+        };
 
-        Ok(edge)
+        vertex_bottom_to_edge
+            .insert(vertex_bottom.canonical(), edge_canonical.clone());
+
+        Ok(LocalForm::new(edge_local, edge_canonical))
     });
     let [a, b]: [Result<_, ValidationError>; 2] = side_edges;
     let [edge_side_a, edge_side_b] = [a?, b?];
 
-    target.merge(Cycle::new([
-        edge_bottom,
-        edge_top,
-        edge_side_a,
-        edge_side_b,
-    ]))
+    let local = Cycle {
+        edges: vec![
+            edge_bottom.clone(),
+            edge_top.clone(),
+            edge_side_a.clone(),
+            edge_side_b.clone(),
+        ],
+    };
+    let canonical = target.merge(Cycle::new([
+        edge_bottom.canonical(),
+        edge_top.canonical(),
+        edge_side_a.canonical(),
+        edge_side_b.canonical(),
+    ]))?;
+
+    Ok(LocalForm::new(local, canonical))
 }
 
 fn create_side_face(
     sweep: &mut Sweep,
     surface: Surface,
-    cycle: Handle<Cycle<3>>,
+    cycle: LocalForm<Cycle<2>, Cycle<3>>,
 ) -> Result<(), ValidationError> {
     let surface = sweep.target.insert(surface)?;
 

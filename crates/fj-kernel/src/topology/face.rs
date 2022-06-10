@@ -5,7 +5,7 @@ use fj_math::Triangle;
 
 use crate::{
     geometry::Surface,
-    shape::{Handle, Shape},
+    shape::{Handle, LocalForm, Shape},
 };
 
 use super::{Cycle, FaceBuilder};
@@ -42,8 +42,8 @@ impl Face {
     /// Construct a new instance of `Face`
     pub fn new(
         surface: Handle<Surface>,
-        exteriors: impl IntoIterator<Item = Handle<Cycle<3>>>,
-        interiors: impl IntoIterator<Item = Handle<Cycle<3>>>,
+        exteriors: impl IntoIterator<Item = LocalForm<Cycle<2>, Cycle<3>>>,
+        interiors: impl IntoIterator<Item = LocalForm<Cycle<2>, Cycle<3>>>,
         color: [u8; 4],
     ) -> Self {
         let exteriors = CyclesInFace::new(exteriors);
@@ -194,10 +194,12 @@ impl Hash for FaceBRep {
 
 /// A list of cycles, as they are stored in `Face`
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct CyclesInFace(Vec<Handle<Cycle<3>>>);
+pub struct CyclesInFace(Vec<LocalForm<Cycle<2>, Cycle<3>>>);
 
 impl CyclesInFace {
-    fn new(cycles: impl IntoIterator<Item = Handle<Cycle<3>>>) -> Self {
+    fn new(
+        cycles: impl IntoIterator<Item = LocalForm<Cycle<2>, Cycle<3>>>,
+    ) -> Self {
         Self(cycles.into_iter().collect())
     }
 
@@ -208,6 +210,13 @@ impl CyclesInFace {
 
     /// Access an iterator over handles to the cycles
     pub fn as_handle(&self) -> impl Iterator<Item = Handle<Cycle<3>>> + '_ {
-        self.0.iter().cloned()
+        self.0.iter().map(|cycle| cycle.canonical())
+    }
+
+    /// Access an iterator over local forms of the cycles
+    pub fn as_local_form(
+        &self,
+    ) -> impl Iterator<Item = &'_ LocalForm<Cycle<2>, Cycle<3>>> {
+        self.0.iter()
     }
 }
