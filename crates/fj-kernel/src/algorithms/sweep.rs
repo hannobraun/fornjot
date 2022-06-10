@@ -236,12 +236,13 @@ fn create_side_cycle(
         let points = [vertex_bottom.clone(), vertex_top]
             .map(|vertex| vertex.canonical().get().point);
 
-        let edge =
+        let edge_canonical =
             Edge::builder(target).build_line_segment_from_points(points)?;
 
-        vertex_bottom_to_edge.insert(vertex_bottom.canonical(), edge.clone());
+        vertex_bottom_to_edge
+            .insert(vertex_bottom.canonical(), edge_canonical.clone());
 
-        Ok(edge)
+        Ok(edge_canonical)
     });
     let [a, b]: [Result<_, ValidationError>; 2] = side_edges;
     let [edge_side_a, edge_side_b] = [a?, b?];
