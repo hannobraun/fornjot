@@ -26,6 +26,8 @@ mod shape_3d;
 
 pub use self::{angle::*, shape_2d::*, shape_3d::*};
 pub use fj_proc::*;
+#[cfg(feature = "serialization")]
+use serde::{Deserialize, Serialize};
 
 /// A shape
 #[derive(Clone, Debug)]

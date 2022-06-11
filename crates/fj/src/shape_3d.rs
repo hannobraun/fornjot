@@ -1,4 +1,6 @@
 use crate::{Angle, Shape, Shape2d};
+#[cfg(feature = "serialization")]
+use serde::{Deserialize, Serialize};
 
 /// A 3-dimensional shape
 #[derive(Clone, Debug)]

@@ -1,3 +1,5 @@
+#[cfg(feature = "serialization")]
+use serde::{de, ser, Deserialize, Serialize};
 use std::mem;
 use std::sync::atomic;
 
@@ -130,7 +132,6 @@ impl From<Difference2d> for Shape2d {
 /// that the edges are non-overlapping. If you create a `Sketch` with
 /// overlapping edges, you're on your own.
 #[derive(Debug)]
-#[cfg_attr(feature = "serialization", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Sketch {
     // The fields are the raw parts of a `Vec`. `Sketch` needs to be FFI-safe,
@@ -246,6 +247,52 @@ impl Drop for Sketch {
                 drop(rc);
             }
         }
+    }
+}
+
+/// An owned, non-repr-C Sketch
+///
+/// De/serializing a non-trivial structure with raw pointers is a hassle.
+/// This structure is a simple, owned intermediate form that can use the derive
+/// macros provided by serde. The implementation of the Serialize and Deserialize
+/// traits for Sketch use this type as a stepping stone.
+///
+/// Note that constructing this requires cloning the points behind Sketch. If
+/// de/serialization turns out to be a bottleneck, a more complete implementation
+/// will be required.
+#[cfg(feature = "serialization")]
+#[derive(Serialize, Deserialize)]
+#[serde(rename = "Sketch")]
+struct SerdeSketch {
+    points: Vec<[f64; 2]>,
+    color: [u8; 4],
+}
+
+#[cfg(feature = "serialization")]
+impl ser::Serialize for Sketch {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: ser::Serializer,
+    {
+        let serde_sketch = SerdeSketch {
+            points: self.to_points(),
+            color: self.color,
+        };
+
+        serde_sketch.serialize(serializer)
+    }
+}
+
+#[cfg(feature = "serialization")]
+impl<'de> de::Deserialize<'de> for Sketch {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: de::Deserializer<'de>,
+    {
+        SerdeSketch::deserialize(deserializer).map(|serde_sketch| {
+            Sketch::from_points(serde_sketch.points)
+                .with_color(serde_sketch.color)
+        })
     }
 }
 
