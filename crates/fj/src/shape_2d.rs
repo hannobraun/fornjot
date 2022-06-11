@@ -311,3 +311,61 @@ impl From<Sketch> for Shape2d {
 // `Sketch` can be `Send`, because it encapsulates the raw pointer it contains,
 // making sure memory ownership rules are observed.
 unsafe impl Send for Sketch {}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn test_points() -> Vec<[f64; 2]> {
+        vec![[1.0, 1.0], [2.0, 1.0], [2.0, 2.0], [1.0, 2.0]]
+    }
+
+    #[test]
+    fn test_sketch_preserve_points() {
+        let points = test_points();
+        let sketch = Sketch::from_points(points.clone());
+
+        assert_eq!(sketch.to_points(), points);
+    }
+
+    #[test]
+    fn test_sketch_rc() {
+        let assert_rc = |sketch: &Sketch, expected_rc: usize| {
+            let rc = unsafe { (*sketch.rc).load(atomic::Ordering::Acquire) };
+            assert_eq!(
+                rc, expected_rc,
+                "Sketch has rc = {rc}, expected {expected_rc}"
+            );
+        };
+
+        let sketch = Sketch::from_points(test_points());
+        assert_rc(&sketch, 1);
+
+        let (s2, s3) = (sketch.clone(), sketch.clone());
+        assert_rc(&sketch, 3);
+
+        drop(s2);
+        assert_rc(&sketch, 2);
+
+        drop(s3);
+        assert_rc(&sketch, 1);
+
+        // rc is deallocated after the last drop, so we can't assert that it's 0
+    }
+
+    #[cfg(feature = "serialization")]
+    #[test]
+    fn test_serialize_loopback() {
+        use serde_json::{from_str, to_string};
+
+        let sketch = Sketch::from_points(test_points());
+
+        let json = to_string(&sketch).expect("failed to serialize sketch");
+        let sketch_de: Sketch =
+            from_str(&json).expect("failed to deserialize sketch");
+
+        // ensure same content
+        assert_eq!(sketch.to_points(), sketch_de.to_points());
+        assert_eq!(sketch.color(), sketch_de.color());
+    }
+}
