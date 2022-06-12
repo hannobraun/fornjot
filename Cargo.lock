@@ -692,6 +692,7 @@ version = "0.6.0"
 dependencies = [
  "fj-proc",
  "serde",
+ "serde_json",
 ]
 
 [[package]]

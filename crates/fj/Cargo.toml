@@ -16,7 +16,10 @@ default = []
 serialization = ["serde"]
 
 [dependencies]
-serde = { version = "1.0.7", optional = true }
+serde = { version = "1.0.7", features = ["derive"], optional = true }
+
+[dev-dependencies]
+serde_json = "1.0.81"
 
 [dependencies.fj-proc]
 path = "../../crates/fj-proc"

@@ -1,3 +1,5 @@
+#[cfg(feature = "serialization")]
+use serde::{Deserialize, Serialize};
 use std::f64::consts::{PI, TAU};
 
 // One gon in radians
