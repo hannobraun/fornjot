@@ -92,6 +92,24 @@ impl<const D: usize> Curve<D> {
     }
 }
 
+impl Curve<2> {
+    /// Construct a `Curve` that represents the u-axis
+    pub fn u_axis() -> Self {
+        Self::Line(Line {
+            origin: Point::origin(),
+            direction: Vector::unit_u(),
+        })
+    }
+
+    /// Construct a `Curve` that represents the v-axis
+    pub fn v_axis() -> Self {
+        Self::Line(Line {
+            origin: Point::origin(),
+            direction: Vector::unit_v(),
+        })
+    }
+}
+
 impl Curve<3> {
     /// Construct a `Curve` that represents the x-axis
     pub fn x_axis() -> Self {
