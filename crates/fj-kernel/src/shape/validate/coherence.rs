@@ -27,7 +27,6 @@ pub fn validate_edge(
                 local,
                 local_as_canonical,
                 canonical,
-                distance,
             });
         }
     }
@@ -81,9 +80,6 @@ pub struct CoherenceMismatch<Local, Canonical> {
 
     /// The canonical form of the object
     pub canonical: Canonical,
-
-    /// The distance between the local and canonical forms
-    pub distance: Scalar,
 }
 
 impl<Local, Canonical> fmt::Display for CoherenceMismatch<Local, Canonical>
@@ -94,9 +90,8 @@ where
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
-            "local: {:?} (converted to canonical: {:?}), canonical: {:?},\
-            distance: {}",
-            self.local, self.local_as_canonical, self.canonical, self.distance
+            "local: {:?} (converted to canonical: {:?}), canonical: {:?},",
+            self.local, self.local_as_canonical, self.canonical,
         )
     }
 }
