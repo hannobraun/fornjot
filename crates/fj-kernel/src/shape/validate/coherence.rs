@@ -18,14 +18,14 @@ pub fn validate_edge(
 
     for vertex in edge.vertices.iter() {
         let local = *vertex.local();
-        let local_3d = edge.curve().point_from_curve_coords(local);
+        let local_as_canonical = edge.curve().point_from_curve_coords(local);
         let canonical = vertex.canonical().get().point;
-        let distance = (local_3d - canonical).magnitude();
+        let distance = (local_as_canonical - canonical).magnitude();
 
         if distance > max_distance {
             edge_vertex_mismatches.push(CoherenceMismatch {
                 local,
-                local_as_canonical: local_3d,
+                local_as_canonical,
                 canonical,
                 distance,
             });
