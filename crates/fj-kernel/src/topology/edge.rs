@@ -38,14 +38,6 @@ pub struct Edge<const D: usize> {
 }
 
 impl<const D: usize> Edge<D> {
-    /// Construct an instance of `Edge`
-    pub fn new(
-        curve: LocalForm<Curve<D>, Curve<3>>,
-        vertices: VerticesOfEdge,
-    ) -> Self {
-        Self { curve, vertices }
-    }
-
     /// Access the curve that the edge refers to
     ///
     /// This is a convenience method that saves the caller from dealing with the
