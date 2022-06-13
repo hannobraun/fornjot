@@ -127,7 +127,7 @@ The file type is based on the supplied extension. Both 3MF and STL are supported
 Some models have parameters that can be overridden. For example, to override the inner and outer radii of the spacer model:
 
 ``` sh
-cargo run -- -m spacer --parameters outer=8.0 --parameters inner=5.0
+cargo run -- -m spacer --parameters "outer=8.0,inner=5.0"
 ```
 
 
