@@ -37,19 +37,6 @@ pub struct Edge<const D: usize> {
     pub vertices: VerticesOfEdge,
 }
 
-impl Edge<3> {
-    /// Construct an instance of `Edge`
-    pub fn new(curve: Handle<Curve<3>>, vertices: VerticesOfEdge) -> Self {
-        let curve = LocalForm::canonical_only(curve);
-        Self { curve, vertices }
-    }
-
-    /// Build an edge using the [`EdgeBuilder`] API
-    pub fn builder(shape: &mut Shape) -> EdgeBuilder {
-        EdgeBuilder::new(shape)
-    }
-}
-
 impl<const D: usize> Edge<D> {
     /// Access the curve that the edge refers to
     ///
@@ -68,6 +55,19 @@ impl<const D: usize> Edge<D> {
             .0
             .as_ref()
             .map(|[a, b]| [a.canonical().get(), b.canonical().get()])
+    }
+}
+
+impl Edge<3> {
+    /// Construct an instance of `Edge`
+    pub fn new(curve: Handle<Curve<3>>, vertices: VerticesOfEdge) -> Self {
+        let curve = LocalForm::canonical_only(curve);
+        Self { curve, vertices }
+    }
+
+    /// Build an edge using the [`EdgeBuilder`] API
+    pub fn builder(shape: &mut Shape) -> EdgeBuilder {
+        EdgeBuilder::new(shape)
     }
 }
 
