@@ -4,7 +4,7 @@ use fj_math::Point;
 
 use crate::{
     geometry::Curve,
-    shape::{Handle, LocalForm, Shape},
+    shape::{LocalForm, Shape},
 };
 
 use super::{EdgeBuilder, Vertex};
@@ -38,6 +38,14 @@ pub struct Edge<const D: usize> {
 }
 
 impl<const D: usize> Edge<D> {
+    /// Construct an instance of `Edge`
+    pub fn new(
+        curve: LocalForm<Curve<D>, Curve<3>>,
+        vertices: VerticesOfEdge,
+    ) -> Self {
+        Self { curve, vertices }
+    }
+
     /// Access the curve that the edge refers to
     ///
     /// This is a convenience method that saves the caller from dealing with the
@@ -59,12 +67,6 @@ impl<const D: usize> Edge<D> {
 }
 
 impl Edge<3> {
-    /// Construct an instance of `Edge`
-    pub fn new(curve: Handle<Curve<3>>, vertices: VerticesOfEdge) -> Self {
-        let curve = LocalForm::canonical_only(curve);
-        Self { curve, vertices }
-    }
-
     /// Build an edge using the [`EdgeBuilder`] API
     pub fn builder(shape: &mut Shape) -> EdgeBuilder {
         EdgeBuilder::new(shape)

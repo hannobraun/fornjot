@@ -109,7 +109,7 @@ impl Object for Edge<3> {
                 })?;
 
         let merged = shape.get_handle_or_insert(Edge::new(
-            curve,
+            LocalForm::canonical_only(curve),
             VerticesOfEdge::new(vertices),
         ))?;
 
