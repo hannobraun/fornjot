@@ -26,43 +26,6 @@ pub enum Curve<const D: usize> {
     Line(Line<D>),
 }
 
-impl Curve<3> {
-    /// Construct a `Curve` that represents the x-axis
-    pub fn x_axis() -> Self {
-        Self::Line(Line {
-            origin: Point::origin(),
-            direction: Vector::unit_x(),
-        })
-    }
-
-    /// Construct a `Curve` that represents the y-axis
-    pub fn y_axis() -> Self {
-        Self::Line(Line {
-            origin: Point::origin(),
-            direction: Vector::unit_y(),
-        })
-    }
-
-    /// Construct a `Curve` that represents the z-axis
-    pub fn z_axis() -> Self {
-        Self::Line(Line {
-            origin: Point::origin(),
-            direction: Vector::unit_z(),
-        })
-    }
-
-    /// Create a new instance that is transformed by `transform`
-    #[must_use]
-    pub fn transform(self, transform: &Transform) -> Self {
-        match self {
-            Self::Circle(curve) => {
-                Self::Circle(transform.transform_circle(&curve))
-            }
-            Self::Line(curve) => Self::Line(transform.transform_line(&curve)),
-        }
-    }
-}
-
 impl<const D: usize> Curve<D> {
     /// Access the origin of the curve's coordinate system
     pub fn origin(&self) -> Point<D> {
@@ -125,6 +88,43 @@ impl<const D: usize> Curve<D> {
         match self {
             Self::Circle(curve) => curve.vector_from_circle_coords(point),
             Self::Line(curve) => curve.vector_from_line_coords(point),
+        }
+    }
+}
+
+impl Curve<3> {
+    /// Construct a `Curve` that represents the x-axis
+    pub fn x_axis() -> Self {
+        Self::Line(Line {
+            origin: Point::origin(),
+            direction: Vector::unit_x(),
+        })
+    }
+
+    /// Construct a `Curve` that represents the y-axis
+    pub fn y_axis() -> Self {
+        Self::Line(Line {
+            origin: Point::origin(),
+            direction: Vector::unit_y(),
+        })
+    }
+
+    /// Construct a `Curve` that represents the z-axis
+    pub fn z_axis() -> Self {
+        Self::Line(Line {
+            origin: Point::origin(),
+            direction: Vector::unit_z(),
+        })
+    }
+
+    /// Create a new instance that is transformed by `transform`
+    #[must_use]
+    pub fn transform(self, transform: &Transform) -> Self {
+        match self {
+            Self::Circle(curve) => {
+                Self::Circle(transform.transform_circle(&curve))
+            }
+            Self::Line(curve) => Self::Line(transform.transform_line(&curve)),
         }
     }
 }
