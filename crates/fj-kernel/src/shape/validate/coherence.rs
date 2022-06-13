@@ -25,7 +25,7 @@ pub fn validate_edge(
         if distance > max_distance {
             edge_vertex_mismatches.push(CoherenceMismatch {
                 local,
-                local_3d,
+                local_as_canonical: local_3d,
                 canonical,
                 distance,
             });
@@ -77,7 +77,7 @@ pub struct CoherenceMismatch<Local, Canonical> {
     pub local: Local,
 
     /// The local form of the vertex, converted to 3D
-    pub local_3d: Canonical,
+    pub local_as_canonical: Canonical,
 
     /// The canonical form of the vertex
     pub canonical: Canonical,
@@ -95,7 +95,7 @@ where
         write!(
             f,
             "local: {:?} (in 3D: {:?}), canonical: {:?}, distance: {}",
-            self.local, self.local_3d, self.canonical, self.distance
+            self.local, self.local_as_canonical, self.canonical, self.distance
         )
     }
 }
