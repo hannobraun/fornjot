@@ -23,7 +23,7 @@ pub fn validate_edge(
         let distance = (local_3d - canonical).magnitude();
 
         if distance > max_distance {
-            edge_vertex_mismatches.push(EdgeVertexMismatch {
+            edge_vertex_mismatches.push(CoherenceMismatch {
                 local,
                 local_3d,
                 canonical,
@@ -49,7 +49,7 @@ pub fn validate_edge(
 #[derive(Debug, Default, thiserror::Error)]
 pub struct CoherenceIssues {
     /// Mismatches between the local and canonical forms of edge vertices
-    pub edge_vertex_mismatches: Vec<EdgeVertexMismatch>,
+    pub edge_vertex_mismatches: Vec<CoherenceMismatch>,
 }
 
 impl fmt::Display for CoherenceIssues {
@@ -72,7 +72,7 @@ impl fmt::Display for CoherenceIssues {
 ///
 /// Used in [`CoherenceIssues`].
 #[derive(Debug)]
-pub struct EdgeVertexMismatch {
+pub struct CoherenceMismatch {
     /// The local form of the vertex
     pub local: Point<1>,
 
@@ -86,7 +86,7 @@ pub struct EdgeVertexMismatch {
     pub distance: Scalar,
 }
 
-impl fmt::Display for EdgeVertexMismatch {
+impl fmt::Display for CoherenceMismatch {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,

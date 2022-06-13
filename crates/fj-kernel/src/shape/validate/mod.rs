@@ -3,7 +3,7 @@ mod structural;
 mod uniqueness;
 
 pub use self::{
-    coherence::{CoherenceIssues, EdgeVertexMismatch},
+    coherence::{CoherenceIssues, CoherenceMismatch},
     structural::StructuralIssues,
     uniqueness::{DuplicateEdge, UniquenessIssues},
 };
