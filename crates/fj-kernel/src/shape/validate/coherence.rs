@@ -18,16 +18,15 @@ pub fn validate_edge(
 
     for vertex in edge.vertices.iter() {
         let local = *vertex.local();
-        let local_3d = edge.curve().point_from_curve_coords(local);
+        let local_as_canonical = edge.curve().point_from_curve_coords(local);
         let canonical = vertex.canonical().get().point;
-        let distance = (local_3d - canonical).magnitude();
+        let distance = (local_as_canonical - canonical).magnitude();
 
         if distance > max_distance {
-            edge_vertex_mismatches.push(EdgeVertexMismatch {
+            edge_vertex_mismatches.push(CoherenceMismatch {
                 local,
-                local_3d,
+                local_as_canonical,
                 canonical,
-                distance,
             });
         }
     }
@@ -49,7 +48,7 @@ pub fn validate_edge(
 #[derive(Debug, Default, thiserror::Error)]
 pub struct CoherenceIssues {
     /// Mismatches between the local and canonical forms of edge vertices
-    pub edge_vertex_mismatches: Vec<EdgeVertexMismatch>,
+    pub edge_vertex_mismatches: Vec<CoherenceMismatch<Point<1>, Point<3>>>,
 }
 
 impl fmt::Display for CoherenceIssues {
@@ -68,30 +67,31 @@ impl fmt::Display for CoherenceIssues {
     }
 }
 
-/// A mismatch between the local and canonical forms of an edge vertex
+/// A mismatch between the local and canonical forms of an object
 ///
-/// Used in [`GeometricIssues`].
+/// Used in [`CoherenceIssues`].
 #[derive(Debug)]
-pub struct EdgeVertexMismatch {
-    /// The local form of the vertex
-    pub local: Point<1>,
+pub struct CoherenceMismatch<Local, Canonical> {
+    /// The local form of the object
+    pub local: Local,
 
-    /// The local form of the vertex, converted to 3D
-    pub local_3d: Point<3>,
+    /// The local form of the object, converted into the canonical form
+    pub local_as_canonical: Canonical,
 
-    /// The canonical form of the vertex
-    pub canonical: Point<3>,
-
-    /// The distance between the local and canonical forms
-    pub distance: Scalar,
+    /// The canonical form of the object
+    pub canonical: Canonical,
 }
 
-impl fmt::Display for EdgeVertexMismatch {
+impl<Local, Canonical> fmt::Display for CoherenceMismatch<Local, Canonical>
+where
+    Local: fmt::Debug,
+    Canonical: fmt::Debug,
+{
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
-            "local: {:?} (in 3D: {:?}), canonical: {:?}, distance: {}",
-            self.local, self.local_3d, self.canonical, self.distance
+            "local: {:?} (converted to canonical: {:?}), canonical: {:?},",
+            self.local, self.local_as_canonical, self.canonical,
         )
     }
 }
