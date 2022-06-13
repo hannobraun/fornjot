@@ -70,7 +70,7 @@ impl fmt::Display for CoherenceIssues {
 
 /// A mismatch between the local and canonical forms of an edge vertex
 ///
-/// Used in [`GeometricIssues`].
+/// Used in [`CoherenceIssues`].
 #[derive(Debug)]
 pub struct EdgeVertexMismatch {
     /// The local form of the vertex
