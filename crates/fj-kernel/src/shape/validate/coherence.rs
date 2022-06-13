@@ -49,7 +49,7 @@ pub fn validate_edge(
 #[derive(Debug, Default, thiserror::Error)]
 pub struct CoherenceIssues {
     /// Mismatches between the local and canonical forms of edge vertices
-    pub edge_vertex_mismatches: Vec<CoherenceMismatch>,
+    pub edge_vertex_mismatches: Vec<CoherenceMismatch<Point<1>, Point<3>>>,
 }
 
 impl fmt::Display for CoherenceIssues {
@@ -72,21 +72,25 @@ impl fmt::Display for CoherenceIssues {
 ///
 /// Used in [`CoherenceIssues`].
 #[derive(Debug)]
-pub struct CoherenceMismatch {
+pub struct CoherenceMismatch<Local, Canonical> {
     /// The local form of the vertex
-    pub local: Point<1>,
+    pub local: Local,
 
     /// The local form of the vertex, converted to 3D
-    pub local_3d: Point<3>,
+    pub local_3d: Canonical,
 
     /// The canonical form of the vertex
-    pub canonical: Point<3>,
+    pub canonical: Canonical,
 
     /// The distance between the local and canonical forms
     pub distance: Scalar,
 }
 
-impl fmt::Display for CoherenceMismatch {
+impl<Local, Canonical> fmt::Display for CoherenceMismatch<Local, Canonical>
+where
+    Local: fmt::Debug,
+    Canonical: fmt::Debug,
+{
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
