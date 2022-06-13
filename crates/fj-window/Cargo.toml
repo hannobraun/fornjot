@@ -15,7 +15,7 @@ categories = ["encoding", "mathematics", "rendering"]
 [dependencies]
 futures = "0.3.21"
 thiserror = "1.0.31"
-tracing = "0.1.34"
+tracing = "0.1.35"
 winit = "0.26.1"
 
 [dependencies.fj-host]
