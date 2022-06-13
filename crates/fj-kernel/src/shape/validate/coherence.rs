@@ -68,18 +68,18 @@ impl fmt::Display for CoherenceIssues {
     }
 }
 
-/// A mismatch between the local and canonical forms of an edge vertex
+/// A mismatch between the local and canonical forms of an object
 ///
 /// Used in [`CoherenceIssues`].
 #[derive(Debug)]
 pub struct CoherenceMismatch<Local, Canonical> {
-    /// The local form of the vertex
+    /// The local form of the object
     pub local: Local,
 
-    /// The local form of the vertex, converted to 3D
+    /// The local form of the object, converted into the canonical form
     pub local_as_canonical: Canonical,
 
-    /// The canonical form of the vertex
+    /// The canonical form of the object
     pub canonical: Canonical,
 
     /// The distance between the local and canonical forms
