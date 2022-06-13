@@ -22,6 +22,7 @@ members = [
     "tools/release-operator",
 ]
 default-members = [
+    "crates/fj",
     "crates/fj-app",
     "crates/fj-export",
     "crates/fj-host",
@@ -29,6 +30,7 @@ default-members = [
     "crates/fj-kernel",
     "crates/fj-math",
     "crates/fj-operations",
+    "crates/fj-proc",
     "crates/fj-viewer",
     "crates/fj-window",
 ]
