@@ -1,4 +1,4 @@
-#[cfg(feature = "serialization")]
+#[cfg(feature = "serde")]
 use serde::{de, ser, Deserialize, Serialize};
 use std::mem;
 use std::sync::atomic;
@@ -7,7 +7,7 @@ use crate::Shape;
 
 /// A 2-dimensional shape
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "serialization", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub enum Shape2d {
     /// A circle
@@ -33,7 +33,7 @@ impl Shape2d {
 
 /// A circle
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "serialization", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Circle {
     /// The radius of the circle
@@ -87,7 +87,7 @@ impl From<Circle> for Shape2d {
 
 /// A difference between two shapes
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "serialization", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Difference2d {
     shapes: [Shape2d; 2],
@@ -260,7 +260,7 @@ impl Drop for Sketch {
 /// Note that constructing this requires cloning the points behind Sketch. If
 /// de/serialization turns out to be a bottleneck, a more complete implementation
 /// will be required.
-#[cfg(feature = "serialization")]
+#[cfg(feature = "serde")]
 #[derive(Serialize, Deserialize)]
 #[serde(rename = "Sketch")]
 struct SerdeSketch {
@@ -268,7 +268,7 @@ struct SerdeSketch {
     color: [u8; 4],
 }
 
-#[cfg(feature = "serialization")]
+#[cfg(feature = "serde")]
 impl ser::Serialize for Sketch {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
@@ -283,7 +283,7 @@ impl ser::Serialize for Sketch {
     }
 }
 
-#[cfg(feature = "serialization")]
+#[cfg(feature = "serde")]
 impl<'de> de::Deserialize<'de> for Sketch {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
@@ -353,7 +353,7 @@ mod tests {
         // rc is deallocated after the last drop, so we can't assert that it's 0
     }
 
-    #[cfg(feature = "serialization")]
+    #[cfg(feature = "serde")]
     #[test]
     fn test_serialize_loopback() {
         use serde_json::{from_str, to_string};
