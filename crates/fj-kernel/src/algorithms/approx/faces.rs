@@ -56,7 +56,7 @@ impl FaceApprox {
             interiors.insert(cycle);
         }
 
-        // Only polygon with exactly one exterior cycle are supported.
+        // Only polygons with exactly one exterior cycle are supported.
         //
         // See this issue for some background:
         // https://github.com/hannobraun/Fornjot/issues/250
