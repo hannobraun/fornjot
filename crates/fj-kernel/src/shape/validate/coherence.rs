@@ -94,7 +94,8 @@ where
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
-            "local: {:?} (in 3D: {:?}), canonical: {:?}, distance: {}",
+            "local: {:?} (converted to canonical: {:?}), canonical: {:?},\
+            distance: {}",
             self.local, self.local_as_canonical, self.canonical, self.distance
         )
     }
