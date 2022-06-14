@@ -1,3 +1,5 @@
+//! Convenient API to build objects
+
 use fj_math::{Circle, Line, Point, Scalar, Vector};
 
 use crate::{
