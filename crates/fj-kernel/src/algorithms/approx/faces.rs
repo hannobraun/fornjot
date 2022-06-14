@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use crate::{geometry, topology::Face};
+use crate::{geometry, objects::Face};
 
 use super::{CycleApprox, Tolerance};
 
@@ -83,8 +83,8 @@ mod tests {
 
     use crate::{
         geometry::{self, Surface},
+        objects::Face,
         shape::Shape,
-        topology::Face,
     };
 
     use super::{CycleApprox, FaceApprox, Tolerance};

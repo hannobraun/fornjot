@@ -4,8 +4,8 @@ use fj_math::{Circle, Line, Point, Scalar, Vector};
 
 use crate::{
     geometry::{Curve, Surface},
+    objects::{Cycle, Edge, Face, Vertex, VerticesOfEdge},
     shape::{Handle, LocalForm, Shape, ValidationError, ValidationResult},
-    topology::{Cycle, Edge, Face, Vertex, VerticesOfEdge},
 };
 
 /// API for building a [`Vertex`]

@@ -4,8 +4,8 @@ use fj_math::{Line, Scalar, Transform, Triangle, Vector};
 
 use crate::{
     geometry::{Curve, Surface, SweptCurve},
+    objects::{Cycle, Edge, Face, Vertex},
     shape::{Handle, LocalForm, Mapping, Shape, ValidationError},
-    topology::{Cycle, Edge, Face, Vertex},
 };
 
 use super::{transform_shape, CycleApprox, Tolerance};
@@ -330,8 +330,8 @@ mod tests {
     use crate::{
         algorithms::Tolerance,
         geometry::Surface,
+        objects::Face,
         shape::{Handle, Shape},
-        topology::Face,
     };
 
     use super::sweep_shape;

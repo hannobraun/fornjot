@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::{
     geometry::{Curve, Surface},
-    topology::{Cycle, Edge, Face, Vertex},
+    objects::{Cycle, Edge, Face, Vertex},
 };
 
 use super::Handle;

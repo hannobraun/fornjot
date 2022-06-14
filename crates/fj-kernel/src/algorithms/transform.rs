@@ -2,8 +2,8 @@ use fj_math::Transform;
 
 use crate::{
     geometry::{Curve, Surface},
+    objects::{Face, Vertex},
     shape::{Shape, ValidationError},
-    topology::{Face, Vertex},
 };
 
 /// Transform the geometry of the shape

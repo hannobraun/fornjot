@@ -10,7 +10,7 @@ use slotmap::{DefaultKey, SlotMap};
 
 use crate::{
     geometry::{Curve, Surface},
-    topology::{Cycle, Edge, Face, Vertex},
+    objects::{Cycle, Edge, Face, Vertex},
 };
 
 use super::Object;

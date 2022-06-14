@@ -1,4 +1,4 @@
-use crate::{geometry, topology::VerticesOfEdge};
+use crate::{geometry, objects::VerticesOfEdge};
 
 pub fn approximate_edge(
     vertices: VerticesOfEdge,
@@ -36,8 +36,8 @@ mod test {
 
     use crate::{
         geometry,
+        objects::{Vertex, VerticesOfEdge},
         shape::{LocalForm, Shape},
-        topology::{Vertex, VerticesOfEdge},
     };
 
     #[test]

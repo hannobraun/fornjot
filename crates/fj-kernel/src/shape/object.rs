@@ -1,6 +1,6 @@
 use crate::{
     geometry::{Curve, Surface},
-    topology::{Cycle, Edge, Face, Vertex, VerticesOfEdge},
+    objects::{Cycle, Edge, Face, Vertex, VerticesOfEdge},
 };
 
 use super::{

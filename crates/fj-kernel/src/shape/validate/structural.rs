@@ -2,8 +2,8 @@ use std::{collections::HashSet, fmt};
 
 use crate::{
     geometry::{Curve, Surface},
+    objects::{Cycle, Edge, Face, Vertex},
     shape::{stores::Stores, Handle},
-    topology::{Cycle, Edge, Face, Vertex},
 };
 
 pub fn validate_edge(

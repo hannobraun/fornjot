@@ -2,7 +2,7 @@ use fj_math::Scalar;
 
 use crate::{
     geometry::{Curve, Surface},
-    topology::{Cycle, Edge, Face, Vertex},
+    objects::{Cycle, Edge, Face, Vertex},
 };
 
 use super::{
@@ -296,8 +296,8 @@ mod tests {
 
     use crate::{
         geometry::{Curve, Surface},
+        objects::{Cycle, Edge, Face, Vertex, VerticesOfEdge},
         shape::{Handle, LocalForm, Shape, ValidationError, ValidationResult},
-        topology::{Cycle, Edge, Face, Vertex, VerticesOfEdge},
     };
 
     #[test]
