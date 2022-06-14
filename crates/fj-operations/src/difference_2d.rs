@@ -121,8 +121,10 @@ fn add_cycle(
             curve: LocalForm::new(curve_local, curve_canonical.clone()),
             vertices: vertices.clone(),
         };
-        let edge_canonical =
-            shape.merge(Edge::new(curve_canonical, vertices))?;
+        let edge_canonical = shape.merge(Edge {
+            curve: LocalForm::canonical_only(curve_canonical),
+            vertices,
+        })?;
 
         edges.push(LocalForm::new(edge_local, edge_canonical));
     }

@@ -319,7 +319,10 @@ mod tests {
         assert!(shape.get_handle(&surface.get()).as_ref() == Some(&surface));
 
         let vertex = Vertex { point };
-        let edge = Edge::new(curve, VerticesOfEdge::none());
+        let edge = Edge {
+            curve: LocalForm::canonical_only(curve),
+            vertices: VerticesOfEdge::none(),
+        };
 
         assert!(shape.get_handle(&vertex).is_none());
         assert!(shape.get_handle(&edge).is_none());
@@ -375,10 +378,10 @@ mod tests {
 
         // Shouldn't work. Nothing has been added to `shape`.
         let err = shape
-            .insert(Edge::new(
-                curve.clone(),
-                VerticesOfEdge::from_vertices([a.clone(), b.clone()]),
-            ))
+            .insert(Edge {
+                curve: LocalForm::canonical_only(curve.clone()),
+                vertices: VerticesOfEdge::from_vertices([a.clone(), b.clone()]),
+            })
             .unwrap_err();
         assert!(err.missing_curve(&curve));
         assert!(err.missing_vertex(&a.canonical()));
@@ -392,8 +395,10 @@ mod tests {
         let b = LocalForm::new(Point::from([2.]), b);
 
         // Everything has been added to `shape` now. Should work!
-        shape
-            .insert(Edge::new(curve, VerticesOfEdge::from_vertices([a, b])))?;
+        shape.insert(Edge {
+            curve: LocalForm::canonical_only(curve),
+            vertices: VerticesOfEdge::from_vertices([a, b]),
+        })?;
 
         Ok(())
     }

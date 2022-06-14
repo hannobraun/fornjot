@@ -66,9 +66,10 @@ impl<'r> EdgeBuilder<'r> {
             curve: LocalForm::new(curve_local, curve_canonical.clone()),
             vertices: VerticesOfEdge::none(),
         };
-        let edge_canonical = self
-            .shape
-            .insert(Edge::new(curve_canonical, VerticesOfEdge::none()))?;
+        let edge_canonical = self.shape.insert(Edge {
+            curve: LocalForm::canonical_only(curve_canonical),
+            vertices: VerticesOfEdge::none(),
+        })?;
 
         Ok(LocalForm::new(edge_local, edge_canonical))
     }
@@ -108,10 +109,10 @@ impl<'r> EdgeBuilder<'r> {
             LocalForm::new(Point::from([1.]), b),
         ];
 
-        let edge = self.shape.insert(Edge::new(
-            curve,
-            VerticesOfEdge::from_vertices(vertices),
-        ))?;
+        let edge = self.shape.insert(Edge {
+            curve: LocalForm::canonical_only(curve),
+            vertices: VerticesOfEdge::from_vertices(vertices),
+        })?;
 
         Ok(edge)
     }
