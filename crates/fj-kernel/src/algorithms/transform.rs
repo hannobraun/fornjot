@@ -1,8 +1,7 @@
 use fj_math::Transform;
 
 use crate::{
-    geometry::{Curve, Surface},
-    objects::{Face, Vertex},
+    objects::{Curve, Face, Surface, Vertex},
     shape::{Shape, ValidationError},
 };
 

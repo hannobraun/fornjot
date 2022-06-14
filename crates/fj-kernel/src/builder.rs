@@ -3,8 +3,7 @@
 use fj_math::{Circle, Line, Point, Scalar, Vector};
 
 use crate::{
-    geometry::{Curve, Surface},
-    objects::{Cycle, Edge, Face, Vertex, VerticesOfEdge},
+    objects::{Curve, Cycle, Edge, Face, Surface, Vertex, VerticesOfEdge},
     shape::{Handle, LocalForm, Shape, ValidationError, ValidationResult},
 };
 

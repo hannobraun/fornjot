@@ -88,7 +88,9 @@ mod tests {
     use fj_math::{Point, Scalar};
 
     use crate::{
-        algorithms::Tolerance, geometry::Surface, objects::Face, shape::Shape,
+        algorithms::Tolerance,
+        objects::{Face, Surface},
+        shape::Shape,
     };
 
     #[test]

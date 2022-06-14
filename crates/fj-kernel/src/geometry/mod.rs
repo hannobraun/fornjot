@@ -5,12 +5,6 @@
 //! [`crate::topology`], which are responsible for defining how objects are
 //! related.
 
-mod curves;
 mod points;
-mod surfaces;
 
-pub use self::{
-    curves::Curve,
-    points::Point,
-    surfaces::{Surface, SweptCurve},
-};
+pub use self::points::Point;

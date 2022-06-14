@@ -10,10 +10,7 @@ pub use self::{
 
 use fj_math::Scalar;
 
-use crate::{
-    geometry::{Curve, Surface},
-    objects::{Cycle, Edge, Face, Vertex},
-};
+use crate::objects::{Curve, Cycle, Edge, Face, Surface, Vertex};
 
 use super::{stores::Stores, Handle, Object};
 

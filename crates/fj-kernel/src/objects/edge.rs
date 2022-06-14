@@ -4,11 +4,10 @@ use fj_math::Point;
 
 use crate::{
     builder::EdgeBuilder,
-    geometry::Curve,
     shape::{LocalForm, Shape},
 };
 
-use super::Vertex;
+use super::{Curve, Vertex};
 
 /// An edge of a shape
 ///

@@ -5,11 +5,10 @@ use fj_math::Triangle;
 
 use crate::{
     builder::FaceBuilder,
-    geometry::Surface,
     shape::{Handle, LocalForm, Shape},
 };
 
-use super::Cycle;
+use super::{Cycle, Surface};
 
 /// A face of a shape
 ///

@@ -82,8 +82,8 @@ mod tests {
     use map_macro::set;
 
     use crate::{
-        geometry::{self, Surface},
-        objects::Face,
+        geometry,
+        objects::{Face, Surface},
         shape::Shape,
     };
 

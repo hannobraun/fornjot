@@ -8,10 +8,7 @@ use anymap::AnyMap;
 use parking_lot::{RwLock, RwLockReadGuard};
 use slotmap::{DefaultKey, SlotMap};
 
-use crate::{
-    geometry::{Curve, Surface},
-    objects::{Cycle, Edge, Face, Vertex},
-};
+use crate::objects::{Curve, Cycle, Edge, Face, Surface, Vertex};
 
 use super::Object;
 

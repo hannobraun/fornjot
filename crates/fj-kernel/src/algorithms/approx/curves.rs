@@ -2,7 +2,7 @@ use std::cmp::max;
 
 use fj_math::{Circle, Scalar};
 
-use crate::geometry::{self, Curve};
+use crate::{geometry, objects::Curve};
 
 use super::Tolerance;
 

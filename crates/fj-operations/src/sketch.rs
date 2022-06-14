@@ -1,8 +1,7 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
-    geometry::Surface,
-    objects::Face,
+    objects::{Face, Surface},
     shape::{Shape, ValidationError},
 };
 use fj_math::{Aabb, Point};

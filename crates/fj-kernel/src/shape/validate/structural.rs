@@ -1,8 +1,7 @@
 use std::{collections::HashSet, fmt};
 
 use crate::{
-    geometry::{Curve, Surface},
-    objects::{Cycle, Edge, Face, Vertex},
+    objects::{Curve, Cycle, Edge, Face, Surface, Vertex},
     shape::{stores::Stores, Handle},
 };
 
