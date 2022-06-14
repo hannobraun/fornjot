@@ -13,7 +13,7 @@ pub fn approx_edge(
     // the same vertex would be understood to refer to very close, but distinct
     // vertices.
     let vertices = vertices.convert(|vertex| {
-        geometry::Point::new(*vertex.local(), vertex.canonical().point)
+        geometry::Point::new(*vertex.local(), vertex.canonical().position)
     });
     if let Some([a, b]) = vertices {
         points.insert(0, a);

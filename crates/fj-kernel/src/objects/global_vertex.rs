@@ -21,13 +21,13 @@ use fj_math::Point;
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalVertex {
     /// The point that defines the location of the vertex
-    pub point: Point<3>,
+    pub position: Point<3>,
 }
 
 impl GlobalVertex {
     /// Construct a `Vertex` from a point
     pub fn from_point(point: impl Into<Point<3>>) -> Self {
         let point = point.into();
-        Self { point }
+        Self { position: point }
     }
 }

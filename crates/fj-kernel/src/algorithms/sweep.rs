@@ -95,8 +95,8 @@ fn create_non_continuous_side_face(
 ) {
     let vertices = {
         let vertices_top = vertices_bottom.map(|vertex| {
-            let point = vertex.point + path;
-            GlobalVertex { point }
+            let point = vertex.position + path;
+            GlobalVertex { position: point }
         });
 
         let [[a, b], [c, d]] = [vertices_bottom, vertices_top];
@@ -109,7 +109,7 @@ fn create_non_continuous_side_face(
     };
 
     let surface = {
-        let [a, b, _, c] = vertices.map(|vertex| vertex.point);
+        let [a, b, _, c] = vertices.map(|vertex| vertex.position);
         Surface::plane_from_points([a, b, c])
     };
 
@@ -133,7 +133,7 @@ fn create_non_continuous_side_face(
             let curve = {
                 let local = Curve::line_from_points([a.0, b.0]);
 
-                let global = [a, b].map(|vertex| vertex.1.point);
+                let global = [a, b].map(|vertex| vertex.1.position);
                 let global = Curve::line_from_points(global);
 
                 LocalForm::new(local, global)
