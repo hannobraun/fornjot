@@ -88,6 +88,7 @@
 #![warn(missing_docs)]
 
 pub mod algorithms;
+pub mod builder;
 pub mod geometry;
 pub mod shape;
 pub mod topology;

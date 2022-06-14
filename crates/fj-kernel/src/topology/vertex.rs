@@ -2,9 +2,7 @@ use std::hash::Hash;
 
 use fj_math::Point;
 
-use crate::shape::Shape;
-
-use super::VertexBuilder;
+use crate::{builder::VertexBuilder, shape::Shape};
 
 /// A vertex
 ///

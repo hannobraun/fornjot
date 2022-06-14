@@ -5,9 +5,8 @@ use fj_math::{Circle, Line, Point, Scalar, Vector};
 use crate::{
     geometry::{Curve, Surface},
     shape::{Handle, LocalForm, Shape, ValidationError, ValidationResult},
+    topology::{Cycle, Edge, Face, Vertex, VerticesOfEdge},
 };
-
-use super::{Cycle, Edge, Face, Vertex, VerticesOfEdge};
 
 /// API for building a [`Vertex`]
 #[must_use]
