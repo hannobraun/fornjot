@@ -2,11 +2,11 @@ use std::{collections::HashSet, fmt};
 
 use fj_math::Scalar;
 
-use crate::objects::Vertex;
+use crate::objects::GlobalVertex;
 
 pub fn validate_vertex(
-    vertex: &Vertex,
-    vertices: &HashSet<Vertex>,
+    vertex: &GlobalVertex,
+    vertices: &HashSet<GlobalVertex>,
     min_distance: Scalar,
 ) -> Result<(), UniquenessIssues> {
     for existing in vertices {
@@ -34,7 +34,7 @@ pub fn validate_vertex(
 #[derive(Debug, Default, thiserror::Error)]
 pub struct UniquenessIssues {
     /// Duplicate vertex found
-    pub duplicate_vertex: Option<Vertex>,
+    pub duplicate_vertex: Option<GlobalVertex>,
 }
 
 impl fmt::Display for UniquenessIssues {

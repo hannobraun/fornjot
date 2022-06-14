@@ -17,5 +17,5 @@ pub use self::{
     edge::{Edge, VerticesOfEdge},
     face::{CyclesInFace, Face, FaceBRep},
     surface::{Surface, SweptCurve},
-    vertex::Vertex,
+    vertex::GlobalVertex,
 };

@@ -2,7 +2,7 @@
 
 use std::collections::VecDeque;
 
-use crate::objects::{Curve, Cycle, Edge, Face, Surface, Vertex};
+use crate::objects::{Curve, Cycle, Edge, Face, GlobalVertex, Surface};
 
 /// Access iterators over all objects of a shape, or part of it
 ///
@@ -25,7 +25,7 @@ pub trait ObjectIters {
     fn surface_iter(&self) -> Iter<Surface>;
 
     /// Iterate over all vertices
-    fn vertex_iter(&self) -> Iter<Vertex>;
+    fn vertex_iter(&self) -> Iter<GlobalVertex>;
 }
 
 impl ObjectIters for Curve<3> {
@@ -49,7 +49,7 @@ impl ObjectIters for Curve<3> {
         Iter::empty()
     }
 
-    fn vertex_iter(&self) -> Iter<Vertex> {
+    fn vertex_iter(&self) -> Iter<GlobalVertex> {
         Iter::empty()
     }
 }
@@ -99,7 +99,7 @@ impl ObjectIters for Cycle<3> {
         iter
     }
 
-    fn vertex_iter(&self) -> Iter<Vertex> {
+    fn vertex_iter(&self) -> Iter<GlobalVertex> {
         let mut iter = Iter::empty();
 
         for edge in self.edges() {
@@ -155,7 +155,7 @@ impl ObjectIters for Edge<3> {
         iter
     }
 
-    fn vertex_iter(&self) -> Iter<Vertex> {
+    fn vertex_iter(&self) -> Iter<GlobalVertex> {
         let mut iter = Iter::empty().with(self.curve().vertex_iter());
 
         for vertex in self.vertices().into_iter().flatten() {
@@ -227,7 +227,7 @@ impl ObjectIters for Face {
         Iter::empty()
     }
 
-    fn vertex_iter(&self) -> Iter<Vertex> {
+    fn vertex_iter(&self) -> Iter<GlobalVertex> {
         if let Face::Face(face) = self {
             let mut iter = Iter::empty().with(face.surface().vertex_iter());
 
@@ -263,12 +263,12 @@ impl ObjectIters for Surface {
         Iter::from_object(*self)
     }
 
-    fn vertex_iter(&self) -> Iter<Vertex> {
+    fn vertex_iter(&self) -> Iter<GlobalVertex> {
         Iter::empty()
     }
 }
 
-impl ObjectIters for Vertex {
+impl ObjectIters for GlobalVertex {
     fn curve_iter(&self) -> Iter<Curve<3>> {
         Iter::empty()
     }
@@ -289,7 +289,7 @@ impl ObjectIters for Vertex {
         Iter::empty()
     }
 
-    fn vertex_iter(&self) -> Iter<Vertex> {
+    fn vertex_iter(&self) -> Iter<GlobalVertex> {
         Iter::from_object(*self)
     }
 }
@@ -354,7 +354,7 @@ where
         iter
     }
 
-    fn vertex_iter(&self) -> Iter<Vertex> {
+    fn vertex_iter(&self) -> Iter<GlobalVertex> {
         let mut iter = Iter::empty();
 
         for face in self.into_iter() {
@@ -405,7 +405,7 @@ impl<T> Iterator for Iter<T> {
 
 #[cfg(test)]
 mod tests {
-    use crate::objects::{Curve, Cycle, Edge, Face, Surface, Vertex};
+    use crate::objects::{Curve, Cycle, Edge, Face, GlobalVertex, Surface};
 
     use super::ObjectIters as _;
 
@@ -478,7 +478,7 @@ mod tests {
 
     #[test]
     fn vertex() {
-        let vertex = Vertex::from_point([0., 0., 0.]);
+        let vertex = GlobalVertex::from_point([0., 0., 0.]);
 
         assert_eq!(0, vertex.curve_iter().count());
         assert_eq!(0, vertex.cycle_iter().count());

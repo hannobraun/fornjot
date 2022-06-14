@@ -2,7 +2,9 @@ use fj_math::{Point, Scalar, Transform, Triangle, Vector};
 
 use crate::{
     iter::ObjectIters,
-    objects::{Curve, Cycle, Edge, Face, Surface, Vertex, VerticesOfEdge},
+    objects::{
+        Curve, Cycle, Edge, Face, GlobalVertex, Surface, VerticesOfEdge,
+    },
     shape::LocalForm,
 };
 
@@ -87,14 +89,14 @@ fn create_top_face(
 fn create_non_continuous_side_face(
     path: Vector<3>,
     is_sweep_along_negative_direction: bool,
-    vertices_bottom: [Vertex; 2],
+    vertices_bottom: [GlobalVertex; 2],
     color: [u8; 4],
     target: &mut Vec<Face>,
 ) {
     let vertices = {
         let vertices_top = vertices_bottom.map(|vertex| {
             let point = vertex.point + path;
-            Vertex { point }
+            GlobalVertex { point }
         });
 
         let [[a, b], [c, d]] = [vertices_bottom, vertices_top];

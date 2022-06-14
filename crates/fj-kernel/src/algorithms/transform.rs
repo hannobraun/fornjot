@@ -1,7 +1,7 @@
 use fj_math::Transform;
 
 use crate::{
-    objects::{Cycle, CyclesInFace, Edge, Face, FaceBRep, Vertex},
+    objects::{Cycle, CyclesInFace, Edge, Face, FaceBRep, GlobalVertex},
     shape::LocalForm,
 };
 
@@ -62,7 +62,7 @@ pub fn transform_cycles(
                         let point = transform.transform_point(&point);
 
                         let local = *vertex.local();
-                        let canonical = Vertex { point };
+                        let canonical = GlobalVertex { point };
 
                         LocalForm::new(local, canonical)
                     });
@@ -95,7 +95,7 @@ pub fn transform_cycles(
                     let point = transform.transform_point(&point);
 
                     let local = *vertex.local();
-                    let canonical = Vertex { point };
+                    let canonical = GlobalVertex { point };
 
                     LocalForm::new(local, canonical)
                 });
