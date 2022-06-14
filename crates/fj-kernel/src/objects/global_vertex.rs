@@ -20,7 +20,7 @@ use fj_math::Point;
 /// [`Shape::with_minimum_distance`].
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalVertex {
-    /// The point that defines the location of the vertex
+    /// The position of the vertex
     pub position: Point<3>,
 }
 
