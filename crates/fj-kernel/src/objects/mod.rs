@@ -8,14 +8,14 @@ mod curve;
 mod cycle;
 mod edge;
 mod face;
+mod global_vertex;
 mod surface;
-mod vertex;
 
 pub use self::{
     curve::Curve,
     cycle::Cycle,
     edge::{Edge, VerticesOfEdge},
     face::{CyclesInFace, Face, FaceBRep},
+    global_vertex::GlobalVertex,
     surface::{Surface, SweptCurve},
-    vertex::GlobalVertex,
 };
