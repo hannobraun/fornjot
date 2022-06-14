@@ -4,11 +4,11 @@ use fj_interop::mesh::Color;
 use fj_math::Triangle;
 
 use crate::{
-    geometry::Surface,
+    builder::FaceBuilder,
     shape::{Handle, LocalForm, Shape},
 };
 
-use super::{Cycle, FaceBuilder};
+use super::{Cycle, Surface};
 
 /// A face of a shape
 ///

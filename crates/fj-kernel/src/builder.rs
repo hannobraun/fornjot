@@ -1,11 +1,11 @@
+//! Convenient API to build objects
+
 use fj_math::{Circle, Line, Point, Scalar, Vector};
 
 use crate::{
-    geometry::{Curve, Surface},
+    objects::{Curve, Cycle, Edge, Face, Surface, Vertex, VerticesOfEdge},
     shape::{Handle, LocalForm, Shape, ValidationError, ValidationResult},
 };
-
-use super::{Cycle, Edge, Face, Vertex, VerticesOfEdge};
 
 /// API for building a [`Vertex`]
 #[must_use]

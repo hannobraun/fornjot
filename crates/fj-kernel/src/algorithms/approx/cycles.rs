@@ -1,6 +1,6 @@
 use fj_math::Segment;
 
-use crate::{geometry, topology::Cycle};
+use crate::{geometry, objects::Cycle};
 
 use super::{curves::approx_curve, edges::approximate_edge, Tolerance};
 

@@ -3,9 +3,8 @@ use std::collections::HashMap;
 use fj_math::{Line, Scalar, Transform, Triangle, Vector};
 
 use crate::{
-    geometry::{Curve, Surface, SweptCurve},
+    objects::{Curve, Cycle, Edge, Face, Surface, SweptCurve, Vertex},
     shape::{Handle, LocalForm, Mapping, Shape, ValidationError},
-    topology::{Cycle, Edge, Face, Vertex},
 };
 
 use super::{transform_shape, CycleApprox, Tolerance};
@@ -329,9 +328,8 @@ mod tests {
 
     use crate::{
         algorithms::Tolerance,
-        geometry::Surface,
+        objects::{Face, Surface},
         shape::{Handle, Shape},
-        topology::Face,
     };
 
     use super::sweep_shape;

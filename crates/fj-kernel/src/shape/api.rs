@@ -1,9 +1,6 @@
 use fj_math::Scalar;
 
-use crate::{
-    geometry::{Curve, Surface},
-    topology::{Cycle, Edge, Face, Vertex},
-};
+use crate::objects::{Curve, Cycle, Edge, Face, Surface, Vertex};
 
 use super::{
     stores::{Store, Stores},
@@ -295,9 +292,8 @@ mod tests {
     use fj_math::{Point, Scalar};
 
     use crate::{
-        geometry::{Curve, Surface},
+        objects::{Curve, Cycle, Edge, Face, Surface, Vertex, VerticesOfEdge},
         shape::{Handle, LocalForm, Shape, ValidationError, ValidationResult},
-        topology::{Cycle, Edge, Face, Vertex, VerticesOfEdge},
     };
 
     #[test]

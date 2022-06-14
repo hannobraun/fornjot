@@ -5,7 +5,7 @@ mod ray;
 use fj_interop::{debug::DebugInfo, mesh::Mesh};
 use fj_math::Point;
 
-use crate::{shape::Shape, topology::Face};
+use crate::{objects::Face, shape::Shape};
 
 use self::polygon::Polygon;
 
@@ -88,7 +88,9 @@ mod tests {
     use fj_math::{Point, Scalar};
 
     use crate::{
-        algorithms::Tolerance, geometry::Surface, shape::Shape, topology::Face,
+        algorithms::Tolerance,
+        objects::{Face, Surface},
+        shape::Shape,
     };
 
     #[test]

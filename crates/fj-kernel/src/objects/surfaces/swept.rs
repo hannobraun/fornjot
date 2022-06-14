@@ -1,6 +1,6 @@
 use fj_math::{Line, Point, Transform, Vector};
 
-use crate::geometry::Curve;
+use crate::objects::Curve;
 
 /// A surface that was swept from a curve
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -74,7 +74,7 @@ mod tests {
 
     use fj_math::{Line, Point, Vector};
 
-    use crate::geometry::Curve;
+    use crate::objects::Curve;
 
     use super::SweptCurve;
 

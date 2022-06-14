@@ -2,7 +2,7 @@ use std::fmt;
 
 use fj_math::{Point, Scalar};
 
-use crate::topology::Edge;
+use crate::objects::Edge;
 
 pub fn validate_edge(
     edge: &Edge<3>,
@@ -101,8 +101,8 @@ mod tests {
     use fj_math::Scalar;
 
     use crate::{
+        objects::Edge,
         shape::{LocalForm, Shape},
-        topology::Edge,
     };
 
     #[test]

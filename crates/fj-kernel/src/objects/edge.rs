@@ -3,11 +3,11 @@ use std::fmt;
 use fj_math::Point;
 
 use crate::{
-    geometry::Curve,
+    builder::EdgeBuilder,
     shape::{LocalForm, Shape},
 };
 
-use super::{EdgeBuilder, Vertex};
+use super::{Curve, Vertex};
 
 /// An edge of a shape
 ///

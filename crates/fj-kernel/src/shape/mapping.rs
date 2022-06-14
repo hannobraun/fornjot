@@ -1,9 +1,6 @@
 use std::collections::HashMap;
 
-use crate::{
-    geometry::{Curve, Surface},
-    topology::{Cycle, Edge, Face, Vertex},
-};
+use crate::objects::{Curve, Cycle, Edge, Face, Surface, Vertex};
 
 use super::Handle;
 

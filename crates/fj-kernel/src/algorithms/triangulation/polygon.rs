@@ -1,7 +1,7 @@
 use fj_interop::debug::{DebugInfo, TriangleEdgeCheck};
 use fj_math::{Point, PolyChain, Segment};
 
-use crate::geometry::Surface;
+use crate::objects::Surface;
 
 use super::ray::{Hit, HorizontalRayToTheRight};
 
@@ -221,7 +221,7 @@ mod tests {
     use fj_interop::debug::DebugInfo;
     use fj_math::{Point, PolyChain};
 
-    use crate::geometry::Surface;
+    use crate::objects::Surface;
 
     use super::Polygon;
 

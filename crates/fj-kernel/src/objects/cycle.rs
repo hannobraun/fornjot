@@ -1,9 +1,9 @@
 use crate::{
-    geometry::Surface,
+    builder::CycleBuilder,
     shape::{Handle, LocalForm, Shape},
 };
 
-use super::{CycleBuilder, Edge};
+use super::{Edge, Surface};
 
 /// A cycle of connected edges
 ///

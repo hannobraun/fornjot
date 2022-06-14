@@ -1,8 +1,8 @@
 use std::fmt;
 
 use crate::{
+    objects::{Edge, Vertex},
     shape::{stores::Store, Handle},
-    topology::{Edge, Vertex},
 };
 
 pub fn validate_vertex(
