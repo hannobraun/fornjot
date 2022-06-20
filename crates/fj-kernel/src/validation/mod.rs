@@ -71,6 +71,11 @@ impl Default for Config {
     fn default() -> Self {
         Self {
             distinct_min_distance: Scalar::from_f64(5e-7), // 0.5 µm,
+
+            // This value was chosen pretty arbitrarily. Seems small enough to
+            // catch errors. If it turns out it's too small (because it produces
+            // false positives due to floating-point accuracy issues), we can
+            // adjust it.
             identical_max_distance: Scalar::from_f64(5e-14),
         }
     }
