@@ -92,3 +92,4 @@ pub mod builder;
 pub mod geometry;
 pub mod objects;
 pub mod shape;
+pub mod validation;
