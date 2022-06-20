@@ -39,11 +39,8 @@ impl ShapeProcessor {
         };
 
         let mut debug_info = DebugInfo::new();
-        let mesh = triangulate(
-            shape.to_shape(tolerance, &mut debug_info)?,
-            tolerance,
-            &mut debug_info,
-        );
+        let shape = shape.to_shape(tolerance, &mut debug_info)?;
+        let mesh = triangulate(shape, tolerance, &mut debug_info);
 
         Ok(ProcessedShape {
             aabb,
