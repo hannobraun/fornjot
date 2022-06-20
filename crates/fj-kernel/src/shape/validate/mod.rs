@@ -1,9 +1,7 @@
-mod coherence;
 mod structural;
 mod uniqueness;
 
 pub use self::{
-    coherence::{CoherenceIssues, CoherenceMismatch},
     structural::StructuralIssues,
     uniqueness::{DuplicateEdge, UniquenessIssues},
 };
@@ -78,10 +76,9 @@ impl Validate for Edge<3> {
         &self,
         handle: Option<&Handle<Self>>,
         _: Scalar,
-        max_distance: Scalar,
+        _: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
-        coherence::validate_edge(self, max_distance)?;
         structural::validate_edge(self, stores)?;
         uniqueness::validate_edge(self, handle, &stores.edges)?;
 

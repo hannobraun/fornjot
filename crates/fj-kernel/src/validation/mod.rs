@@ -24,22 +24,28 @@
 //!
 //! [`Shape`]: crate::shape::Shape
 
+mod coherence;
+
+pub use self::coherence::{CoherenceIssues, CoherenceMismatch};
+
 use std::ops::Deref;
 
 use fj_math::Scalar;
 
 use crate::{
     objects::{Curve, Cycle, Edge, Surface, Vertex},
-    shape::{
-        CoherenceIssues, Handle, Shape, StructuralIssues, UniquenessIssues,
-    },
+    shape::{Handle, Shape, StructuralIssues, UniquenessIssues},
 };
 
 /// Validate the given [`Shape`]
 pub fn validate(
     shape: Shape,
-    _: &Config,
+    config: &Config,
 ) -> Result<Validated<Shape>, ValidationError> {
+    for edge in shape.edges() {
+        coherence::validate_edge(&edge.get(), config.identical_max_distance)?;
+    }
+
     Ok(Validated(shape))
 }
 
