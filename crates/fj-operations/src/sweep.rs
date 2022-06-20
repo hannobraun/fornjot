@@ -15,12 +15,11 @@ impl ToShape for fj::Sweep {
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
     ) -> Result<Shape, ValidationError> {
-        sweep_shape(
-            self.shape().to_shape(config, tolerance, debug_info)?,
-            Vector::from(self.path()),
-            tolerance,
-            self.shape().color(),
-        )
+        let shape = self.shape().to_shape(config, tolerance, debug_info)?;
+        let path = Vector::from(self.path());
+        let color = self.shape().color();
+
+        sweep_shape(shape, path, tolerance, color)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
