@@ -2,7 +2,7 @@ use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::{transform_shape, Tolerance},
     shape::Shape,
-    validation::{self, ValidationError},
+    validation::{self, validate, Validated, ValidationError},
 };
 use fj_math::{Aabb, Transform, Vector};
 
@@ -14,11 +14,14 @@ impl ToShape for fj::Transform {
         config: &validation::Config,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
-    ) -> Result<Shape, ValidationError> {
-        let mut shape = self.shape.to_shape(config, tolerance, debug_info)?;
+    ) -> Result<Validated<Shape>, ValidationError> {
+        let shape = self.shape.to_shape(config, tolerance, debug_info)?;
+        let mut shape = shape.into_inner();
+
         let transform = transform(self);
 
         transform_shape(&mut shape, &transform)?;
+        let shape = validate(shape, config)?;
 
         Ok(shape)
     }

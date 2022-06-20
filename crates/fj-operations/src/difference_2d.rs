@@ -3,7 +3,7 @@ use fj_kernel::{
     algorithms::Tolerance,
     objects::{Cycle, Edge, Face},
     shape::{LocalForm, Shape},
-    validation::{self, ValidationError},
+    validation::{self, validate, Validated, ValidationError},
 };
 use fj_math::Aabb;
 
@@ -15,7 +15,7 @@ impl ToShape for fj::Difference2d {
         config: &validation::Config,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
-    ) -> Result<Shape, ValidationError> {
+    ) -> Result<Validated<Shape>, ValidationError> {
         // This method assumes that `b` is fully contained within `a`:
         // https://github.com/hannobraun/Fornjot/issues/92
 
@@ -80,6 +80,8 @@ impl ToShape for fj::Difference2d {
                 self.color(),
             ))?;
         }
+
+        let difference = validate(difference, config)?;
 
         Ok(difference)
     }

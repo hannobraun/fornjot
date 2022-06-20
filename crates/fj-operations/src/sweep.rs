@@ -2,7 +2,7 @@ use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::{sweep_shape, Tolerance},
     shape::Shape,
-    validation::{self, ValidationError},
+    validation::{self, validate, Validated, ValidationError},
 };
 use fj_math::{Aabb, Vector};
 
@@ -14,12 +14,15 @@ impl ToShape for fj::Sweep {
         config: &validation::Config,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
-    ) -> Result<Shape, ValidationError> {
+    ) -> Result<Validated<Shape>, ValidationError> {
         let shape = self.shape().to_shape(config, tolerance, debug_info)?;
         let path = Vector::from(self.path());
         let color = self.shape().color();
 
-        sweep_shape(shape, path, tolerance, color)
+        let swept = sweep_shape(shape.into_inner(), path, tolerance, color)?;
+        let swept = validate(swept, config)?;
+
+        Ok(swept)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

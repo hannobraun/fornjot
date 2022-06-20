@@ -2,7 +2,7 @@ use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
     shape::Shape,
-    validation::{self, ValidationError},
+    validation::{self, validate, Validated, ValidationError},
 };
 use fj_math::Aabb;
 
@@ -14,7 +14,7 @@ impl ToShape for fj::Group {
         config: &validation::Config,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
-    ) -> Result<Shape, ValidationError> {
+    ) -> Result<Validated<Shape>, ValidationError> {
         let mut shape = Shape::new();
 
         let a = self.a.to_shape(config, tolerance, debug_info)?;
@@ -22,6 +22,8 @@ impl ToShape for fj::Group {
 
         shape.merge_shape(&a)?;
         shape.merge_shape(&b)?;
+
+        let shape = validate(shape, config)?;
 
         Ok(shape)
     }

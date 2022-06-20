@@ -29,7 +29,7 @@ use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
     shape::Shape,
-    validation::{self, ValidationError},
+    validation::{self, Validated, ValidationError},
 };
 use fj_math::Aabb;
 
@@ -41,7 +41,7 @@ pub trait ToShape {
         config: &validation::Config,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
-    ) -> Result<Shape, ValidationError>;
+    ) -> Result<Validated<Shape>, ValidationError>;
 
     /// Access the axis-aligned bounding box of a shape
     ///
@@ -94,6 +94,6 @@ dispatch! {
         config: &validation::Config,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
-    ) -> Result<Shape, ValidationError>;
+    ) -> Result<Validated<Shape>, ValidationError>;
     bounding_volume() -> Aabb<3>;
 }
