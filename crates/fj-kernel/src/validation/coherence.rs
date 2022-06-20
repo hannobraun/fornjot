@@ -95,37 +95,3 @@ where
         )
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use fj_math::Scalar;
-
-    use crate::{
-        objects::Edge,
-        shape::{LocalForm, Shape},
-    };
-
-    #[test]
-    fn validate_edge() -> anyhow::Result<()> {
-        let mut shape = Shape::new();
-
-        let deviation = Scalar::from_f64(0.25);
-
-        let edge = Edge::builder(&mut shape)
-            .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])?
-            .get();
-        let edge = Edge {
-            vertices: edge.vertices.map(|vertex| {
-                LocalForm::new(
-                    *vertex.local() + [deviation],
-                    vertex.canonical(),
-                )
-            }),
-            ..edge
-        };
-        assert!(super::validate_edge(&edge, deviation * 2.).is_ok());
-        assert!(super::validate_edge(&edge, deviation / 2.).is_err());
-
-        Ok(())
-    }
-}
