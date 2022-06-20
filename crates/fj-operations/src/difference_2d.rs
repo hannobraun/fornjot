@@ -3,7 +3,7 @@ use fj_kernel::{
     algorithms::Tolerance,
     objects::{Cycle, Edge, Face},
     shape::{LocalForm, Shape},
-    validation::ValidationError,
+    validation::{self, ValidationError},
 };
 use fj_math::Aabb;
 
@@ -12,6 +12,7 @@ use super::ToShape;
 impl ToShape for fj::Difference2d {
     fn to_shape(
         &self,
+        config: &validation::Config,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
     ) -> Result<Shape, ValidationError> {
@@ -27,7 +28,8 @@ impl ToShape for fj::Difference2d {
         // - https://doc.rust-lang.org/std/primitive.array.html#method.each_ref
         // - https://doc.rust-lang.org/std/primitive.array.html#method.try_map
         let [a, b] = self.shapes();
-        let [a, b] = [a, b].map(|shape| shape.to_shape(tolerance, debug_info));
+        let [a, b] =
+            [a, b].map(|shape| shape.to_shape(config, tolerance, debug_info));
         let [a, b] = [a?, b?];
 
         if let Some(face) = a.faces().next() {

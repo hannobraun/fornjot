@@ -2,7 +2,7 @@ use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::{sweep_shape, Tolerance},
     shape::Shape,
-    validation::ValidationError,
+    validation::{self, ValidationError},
 };
 use fj_math::{Aabb, Vector};
 
@@ -11,11 +11,12 @@ use super::ToShape;
 impl ToShape for fj::Sweep {
     fn to_shape(
         &self,
+        config: &validation::Config,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
     ) -> Result<Shape, ValidationError> {
         sweep_shape(
-            self.shape().to_shape(tolerance, debug_info)?,
+            self.shape().to_shape(config, tolerance, debug_info)?,
             Vector::from(self.path()),
             tolerance,
             self.shape().color(),

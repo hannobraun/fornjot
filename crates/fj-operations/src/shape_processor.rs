@@ -3,7 +3,7 @@
 use fj_interop::{debug::DebugInfo, mesh::Mesh};
 use fj_kernel::{
     algorithms::{triangulate, InvalidTolerance, Tolerance},
-    validation::ValidationError,
+    validation::{self, ValidationError},
 };
 use fj_math::{Aabb, Point, Scalar};
 
@@ -38,8 +38,9 @@ impl ShapeProcessor {
             Some(user_defined_tolerance) => user_defined_tolerance,
         };
 
+        let config = validation::Config::default();
         let mut debug_info = DebugInfo::new();
-        let shape = shape.to_shape(tolerance, &mut debug_info)?;
+        let shape = shape.to_shape(&config, tolerance, &mut debug_info)?;
         let mesh = triangulate(shape, tolerance, &mut debug_info);
 
         Ok(ProcessedShape {
