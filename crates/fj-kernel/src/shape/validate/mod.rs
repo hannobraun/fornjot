@@ -128,32 +128,18 @@ pub type ValidationResult<T> = Result<Handle<T>, ValidationError>;
 #[derive(Debug, thiserror::Error)]
 pub enum ValidationError {
     /// Coherence validation failed
-    ///
-    /// Coherence validation verifies, that local forms of an objects are
-    /// consistent with their canonical forms.
     #[error("Coherence validation failed")]
     Coherence(#[from] CoherenceIssues),
 
     /// Geometric validation failed
-    ///
-    /// Geometric validation verifies, that various geometric constraints of an
-    /// object are upheld. For example, edges or faces might not be allowed to
-    /// intersect.
     #[error("Geometric validation failed")]
     Geometric,
 
     /// Structural validation failed
-    ///
-    /// Structural validation verifies, that all the object that an object
-    /// refers to are already part of the shape.
     #[error("Structural validation failed")]
     Structural(#[from] StructuralIssues),
 
     /// Uniqueness validation failed
-    ///
-    /// Uniqueness validation verifies, that an object is unique. Uniqueness is
-    /// only required for topological objects, as there's no harm in geometric
-    /// objects being duplicated.
     #[error("Uniqueness validation failed")]
     Uniqueness(#[from] UniquenessIssues),
 }
