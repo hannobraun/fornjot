@@ -96,12 +96,7 @@ impl Shape {
     /// Validates the object, and returns an error if it is not valid. See the
     /// documentation of each object for validation requirements.
     pub fn insert<T: Object>(&mut self, object: T) -> ValidationResult<T> {
-        object.validate(
-            None,
-            self.distinct_min_distance,
-            self.identical_max_distance,
-            &self.stores,
-        )?;
+        object.validate(None, self.distinct_min_distance, &self.stores)?;
         let handle = self.stores.get::<T>().insert(object);
         Ok(handle)
     }
@@ -191,11 +186,7 @@ impl Shape {
     /// Returns [`Update`], and API that can be used to update objects in the
     /// shape.
     pub fn update(&mut self) -> Update {
-        Update::new(
-            self.distinct_min_distance,
-            self.identical_max_distance,
-            &mut self.stores,
-        )
+        Update::new(self.distinct_min_distance, &mut self.stores)
     }
 
     /// Clone the shape
