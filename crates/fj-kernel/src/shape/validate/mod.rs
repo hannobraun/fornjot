@@ -146,7 +146,6 @@ pub enum ValidationError {
 
 impl ValidationError {
     /// Indicate whether validation found a missing curve
-    #[cfg(test)]
     pub fn missing_curve(&self, curve: &Handle<Curve<3>>) -> bool {
         if let Self::Structural(StructuralIssues { missing_curve, .. }) = self {
             return missing_curve.as_ref() == Some(curve);
@@ -156,7 +155,6 @@ impl ValidationError {
     }
 
     /// Indicate whether validation found a missing vertex
-    #[cfg(test)]
     pub fn missing_vertex(&self, vertex: &Handle<Vertex>) -> bool {
         if let Self::Structural(StructuralIssues {
             missing_vertices, ..
@@ -169,7 +167,6 @@ impl ValidationError {
     }
 
     /// Indicate whether validation found a missing edge
-    #[cfg(test)]
     pub fn missing_edge(&self, edge: &Handle<Edge<3>>) -> bool {
         if let Self::Structural(StructuralIssues { missing_edges, .. }) = self {
             return missing_edges.contains(edge);
@@ -179,7 +176,6 @@ impl ValidationError {
     }
 
     /// Indicate whether validation found a missing surface
-    #[cfg(test)]
     pub fn missing_surface(&self, surface: &Handle<Surface>) -> bool {
         if let Self::Structural(StructuralIssues {
             missing_surface, ..
@@ -192,7 +188,6 @@ impl ValidationError {
     }
 
     /// Indicate whether validation found a missing cycle
-    #[cfg(test)]
     pub fn missing_cycle(&self, cycle: &Handle<Cycle<3>>) -> bool {
         if let Self::Structural(StructuralIssues { missing_cycles, .. }) = self
         {
