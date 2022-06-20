@@ -1,10 +1,10 @@
-use crate::objects::{
-    Curve, Cycle, Edge, Face, Surface, Vertex, VerticesOfEdge,
+use crate::{
+    objects::{Curve, Cycle, Edge, Face, Surface, Vertex, VerticesOfEdge},
+    validation::ValidationError,
 };
 
 use super::{
-    validate::Validate, Handle, LocalForm, Mapping, Shape, ValidationError,
-    ValidationResult,
+    validate::Validate, Handle, LocalForm, Mapping, Shape, ValidationResult,
 };
 
 /// Marker trait for geometric and topological objects

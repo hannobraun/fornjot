@@ -4,7 +4,8 @@ use fj_math::{Line, Scalar, Transform, Triangle, Vector};
 
 use crate::{
     objects::{Curve, Cycle, Edge, Face, Surface, SweptCurve, Vertex},
-    shape::{Handle, LocalForm, Mapping, Shape, ValidationError},
+    shape::{Handle, LocalForm, Mapping, Shape},
+    validation::ValidationError,
 };
 
 use super::{transform_shape, CycleApprox, Tolerance};

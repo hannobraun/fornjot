@@ -2,7 +2,8 @@ use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
     objects::{Face, Surface},
-    shape::{Shape, ValidationError},
+    shape::Shape,
+    validation::{self, validate, Validated, ValidationError},
 };
 use fj_math::{Aabb, Point};
 
@@ -11,9 +12,10 @@ use super::ToShape;
 impl ToShape for fj::Sketch {
     fn to_shape(
         &self,
+        config: &validation::Config,
         _: Tolerance,
         _: &mut DebugInfo,
-    ) -> Result<Shape, ValidationError> {
+    ) -> Result<Validated<Shape>, ValidationError> {
         let mut shape = Shape::new();
 
         let surface = Surface::xy_plane();
@@ -23,6 +25,8 @@ impl ToShape for fj::Sketch {
             .with_exterior_polygon(points)
             .with_color(self.color())
             .build()?;
+
+        let shape = validate(shape, config)?;
 
         Ok(shape)
     }

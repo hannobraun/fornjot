@@ -10,7 +10,10 @@ pub use self::{
 
 use fj_math::Scalar;
 
-use crate::objects::{Curve, Cycle, Edge, Face, Surface, Vertex};
+use crate::{
+    objects::{Curve, Cycle, Edge, Face, Surface, Vertex},
+    validation::ValidationError,
+};
 
 use super::{stores::Stores, Handle, Object};
 
@@ -122,97 +125,3 @@ impl Validate for Face {
 
 /// Returned by the various `add_` methods of the [`Shape`] API
 pub type ValidationResult<T> = Result<Handle<T>, ValidationError>;
-
-/// An error that can occur during a validation
-#[allow(clippy::large_enum_variant)]
-#[derive(Debug, thiserror::Error)]
-pub enum ValidationError {
-    /// Coherence validation failed
-    ///
-    /// Coherence validation verifies, that local forms of an objects are
-    /// consistent with their canonical forms.
-    #[error("Coherence validation failed")]
-    Coherence(#[from] CoherenceIssues),
-
-    /// Geometric validation failed
-    ///
-    /// Geometric validation verifies, that various geometric constraints of an
-    /// object are upheld. For example, edges or faces might not be allowed to
-    /// intersect.
-    #[error("Geometric validation failed")]
-    Geometric,
-
-    /// Structural validation failed
-    ///
-    /// Structural validation verifies, that all the object that an object
-    /// refers to are already part of the shape.
-    #[error("Structural validation failed")]
-    Structural(#[from] StructuralIssues),
-
-    /// Uniqueness validation failed
-    ///
-    /// Uniqueness validation verifies, that an object is unique. Uniqueness is
-    /// only required for topological objects, as there's no harm in geometric
-    /// objects being duplicated.
-    #[error("Uniqueness validation failed")]
-    Uniqueness(#[from] UniquenessIssues),
-}
-
-impl ValidationError {
-    /// Indicate whether validation found a missing curve
-    #[cfg(test)]
-    pub fn missing_curve(&self, curve: &Handle<Curve<3>>) -> bool {
-        if let Self::Structural(StructuralIssues { missing_curve, .. }) = self {
-            return missing_curve.as_ref() == Some(curve);
-        }
-
-        false
-    }
-
-    /// Indicate whether validation found a missing vertex
-    #[cfg(test)]
-    pub fn missing_vertex(&self, vertex: &Handle<Vertex>) -> bool {
-        if let Self::Structural(StructuralIssues {
-            missing_vertices, ..
-        }) = self
-        {
-            return missing_vertices.contains(vertex);
-        }
-
-        false
-    }
-
-    /// Indicate whether validation found a missing edge
-    #[cfg(test)]
-    pub fn missing_edge(&self, edge: &Handle<Edge<3>>) -> bool {
-        if let Self::Structural(StructuralIssues { missing_edges, .. }) = self {
-            return missing_edges.contains(edge);
-        }
-
-        false
-    }
-
-    /// Indicate whether validation found a missing surface
-    #[cfg(test)]
-    pub fn missing_surface(&self, surface: &Handle<Surface>) -> bool {
-        if let Self::Structural(StructuralIssues {
-            missing_surface, ..
-        }) = self
-        {
-            return missing_surface.as_ref() == Some(surface);
-        }
-
-        false
-    }
-
-    /// Indicate whether validation found a missing cycle
-    #[cfg(test)]
-    pub fn missing_cycle(&self, cycle: &Handle<Cycle<3>>) -> bool {
-        if let Self::Structural(StructuralIssues { missing_cycles, .. }) = self
-        {
-            return missing_cycles.contains(cycle);
-        }
-
-        false
-    }
-}
