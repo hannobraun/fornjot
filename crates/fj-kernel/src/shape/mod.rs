@@ -19,6 +19,6 @@ pub use self::{
     update::Update,
     validate::{
         CoherenceIssues, CoherenceMismatch, DuplicateEdge, StructuralIssues,
-        UniquenessIssues, ValidationError, ValidationResult,
+        UniquenessIssues, ValidationResult,
     },
 };

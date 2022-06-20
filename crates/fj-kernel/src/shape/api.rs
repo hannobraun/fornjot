@@ -1,10 +1,13 @@
 use fj_math::Scalar;
 
-use crate::objects::{Curve, Cycle, Edge, Face, Surface, Vertex};
+use crate::{
+    objects::{Curve, Cycle, Edge, Face, Surface, Vertex},
+    validation::ValidationError,
+};
 
 use super::{
     stores::{Store, Stores},
-    Handle, Iter, Mapping, Object, Update, ValidationError, ValidationResult,
+    Handle, Iter, Mapping, Object, Update, ValidationResult,
 };
 
 /// The boundary representation of a shape
@@ -293,7 +296,8 @@ mod tests {
 
     use crate::{
         objects::{Curve, Cycle, Edge, Face, Surface, Vertex, VerticesOfEdge},
-        shape::{Handle, LocalForm, Shape, ValidationError, ValidationResult},
+        shape::{Handle, LocalForm, Shape, ValidationResult},
+        validation::ValidationError,
     };
 
     #[test]

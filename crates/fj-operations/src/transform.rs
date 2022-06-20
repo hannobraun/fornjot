@@ -1,7 +1,8 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::{transform_shape, Tolerance},
-    shape::{Shape, ValidationError},
+    shape::Shape,
+    validation::ValidationError,
 };
 use fj_math::{Aabb, Transform, Vector};
 

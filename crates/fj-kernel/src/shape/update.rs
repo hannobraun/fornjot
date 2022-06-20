@@ -1,6 +1,8 @@
 use fj_math::Scalar;
 
-use super::{stores::Stores, validate::Validate as _, Object, ValidationError};
+use crate::validation::ValidationError;
+
+use super::{stores::Stores, validate::Validate as _, Object};
 
 /// API to update a `Shape`
 ///

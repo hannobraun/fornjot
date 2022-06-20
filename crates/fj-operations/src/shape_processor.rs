@@ -3,7 +3,7 @@
 use fj_interop::{debug::DebugInfo, mesh::Mesh};
 use fj_kernel::{
     algorithms::{triangulate, InvalidTolerance, Tolerance},
-    shape::ValidationError,
+    validation::ValidationError,
 };
 use fj_math::{Aabb, Point, Scalar};
 
