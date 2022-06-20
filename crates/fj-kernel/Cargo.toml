@@ -13,7 +13,7 @@ categories = ["encoding", "mathematics", "rendering"]
 
 
 [dependencies]
-anyhow = "1.0.57"
+anyhow = "1.0.58"
 anymap = "1.0.0-beta.2"
 map-macro = "0.2.0"
 parking_lot = "0.12.0"
