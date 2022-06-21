@@ -203,7 +203,7 @@ fn create_continuous_side_face_fallback(
         side_face.push(([v0, v2, v3].into(), color));
     }
 
-    target.insert(Face::Triangles(side_face))?;
+    target.insert(Face::Triangles(side_face));
 
     Ok(())
 }
@@ -311,14 +311,14 @@ fn create_side_face(
     surface: Surface,
     cycle: LocalForm<Cycle<2>, Cycle<3>>,
 ) -> Result<(), ValidationError> {
-    let surface = sweep.target.insert(surface)?;
+    let surface = sweep.target.insert(surface);
 
     sweep.target.insert(Face::new(
         surface,
         vec![cycle],
         Vec::new(),
         sweep.color,
-    ))?;
+    ));
 
     Ok(())
 }

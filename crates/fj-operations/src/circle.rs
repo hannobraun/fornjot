@@ -27,16 +27,15 @@ impl ToShape for fj::Circle {
         let cycle_local = Cycle {
             edges: vec![edge.clone()],
         };
-        let cycle_canonical =
-            shape.insert(Cycle::new(vec![edge.canonical()]))?;
+        let cycle_canonical = shape.insert(Cycle::new(vec![edge.canonical()]));
 
-        let surface = shape.insert(Surface::xy_plane())?;
+        let surface = shape.insert(Surface::xy_plane());
         shape.insert(Face::new(
             surface,
             vec![LocalForm::new(cycle_local, cycle_canonical)],
             Vec::new(),
             self.color(),
-        ))?;
+        ));
 
         let shape = validate(shape, config)?;
 

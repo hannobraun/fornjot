@@ -73,10 +73,8 @@ impl Shape {
     ///
     /// Validates the object, and returns an error if it is not valid. See the
     /// documentation of each object for validation requirements.
-    pub fn insert<T: Object>(&mut self, object: T) -> ValidationResult<T> {
-        object.validate(None, self.distinct_min_distance, &self.stores)?;
-        let handle = self.stores.get::<T>().insert(object);
-        Ok(handle)
+    pub fn insert<T: Object>(&mut self, object: T) -> Handle<T> {
+        self.stores.get::<T>().insert(object)
     }
 
     /// Access the handle of an object
@@ -104,12 +102,9 @@ impl Shape {
     ///
     /// In any case, returns a handle that refers to an object that is identical
     /// to the provided object.
-    pub fn get_handle_or_insert<T: Object>(
-        &mut self,
-        object: T,
-    ) -> ValidationResult<T> {
+    pub fn get_handle_or_insert<T: Object>(&mut self, object: T) -> Handle<T> {
         if let Some(handle) = self.get_handle(&object) {
-            return Ok(handle);
+            return handle;
         }
 
         self.insert(object)
@@ -278,8 +273,8 @@ mod tests {
         assert!(shape.get_handle(&curve).is_none());
         assert!(shape.get_handle(&surface).is_none());
 
-        let curve = shape.insert(curve)?;
-        let surface = shape.insert(surface)?;
+        let curve = shape.insert(curve);
+        let surface = shape.insert(surface);
 
         assert!(shape.get_handle(&curve.get()).as_ref() == Some(&curve));
         assert!(shape.get_handle(&surface.get()).as_ref() == Some(&surface));
@@ -293,8 +288,8 @@ mod tests {
         assert!(shape.get_handle(&vertex).is_none());
         assert!(shape.get_handle(&edge).is_none());
 
-        let vertex = shape.insert(vertex)?;
-        let edge = shape.insert(edge)?;
+        let vertex = shape.insert(vertex);
+        let edge = shape.insert(edge);
 
         assert!(shape.get_handle(&vertex.get()).as_ref() == Some(&vertex));
         assert!(shape.get_handle(&edge.get()).as_ref() == Some(&edge));
@@ -302,13 +297,13 @@ mod tests {
         let cycle = Cycle::new(vec![edge]);
         assert!(shape.get_handle(&cycle).is_none());
 
-        let cycle = shape.insert(cycle)?;
+        let cycle = shape.insert(cycle);
         assert!(shape.get_handle(&cycle.get()).as_ref() == Some(&cycle));
 
         let face = Face::new(surface, Vec::new(), Vec::new(), [0, 0, 0, 0]);
         assert!(shape.get_handle(&face).is_none());
 
-        let face = shape.insert(face)?;
+        let face = shape.insert(face);
         assert!(shape.get_handle(&face.get()).as_ref() == Some(&face));
 
         Ok(())

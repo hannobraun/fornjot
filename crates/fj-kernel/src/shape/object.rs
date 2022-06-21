@@ -37,7 +37,7 @@ impl Object for Curve<3> {
         shape: &mut Shape,
         mapping: &mut Mapping,
     ) -> ValidationResult<Self> {
-        let merged = shape.get_handle_or_insert(self)?;
+        let merged = shape.get_handle_or_insert(self);
 
         if let Some(handle) = handle {
             mapping.curves.insert(handle, merged.clone());
@@ -54,7 +54,7 @@ impl Object for Surface {
         shape: &mut Shape,
         mapping: &mut Mapping,
     ) -> ValidationResult<Self> {
-        let merged = shape.get_handle_or_insert(self)?;
+        let merged = shape.get_handle_or_insert(self);
 
         if let Some(handle) = handle {
             mapping.surfaces.insert(handle, merged.clone());
@@ -71,8 +71,7 @@ impl Object for Vertex {
         shape: &mut Shape,
         mapping: &mut Mapping,
     ) -> ValidationResult<Self> {
-        let merged =
-            shape.get_handle_or_insert(Vertex { point: self.point })?;
+        let merged = shape.get_handle_or_insert(Vertex { point: self.point });
 
         if let Some(handle) = handle {
             mapping.vertices.insert(handle, merged.clone());
@@ -110,7 +109,7 @@ impl Object for Edge<3> {
         let merged = shape.get_handle_or_insert(Edge {
             curve: LocalForm::canonical_only(curve),
             vertices: VerticesOfEdge::new(vertices),
-        })?;
+        });
 
         if let Some(handle) = handle {
             mapping.edges.insert(handle, merged.clone());
@@ -134,7 +133,7 @@ impl Object for Cycle<3> {
             edges.push(edge);
         }
 
-        let merged = shape.get_handle_or_insert(Cycle::new(edges))?;
+        let merged = shape.get_handle_or_insert(Cycle::new(edges));
 
         if let Some(handle) = handle {
             mapping.cycles.insert(handle, merged.clone());
@@ -181,9 +180,9 @@ impl Object for Face {
 
                 shape.get_handle_or_insert(Face::new(
                     surface, exts, ints, face.color,
-                ))?
+                ))
             }
-            Face::Triangles(_) => shape.get_handle_or_insert(self)?,
+            Face::Triangles(_) => shape.get_handle_or_insert(self),
         };
 
         if let Some(handle) = handle {

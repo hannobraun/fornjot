@@ -29,7 +29,7 @@ impl<'r> VertexBuilder<'r> {
         point: impl Into<Point<3>>,
     ) -> ValidationResult<Vertex> {
         let point = point.into();
-        let vertex = self.shape.get_handle_or_insert(Vertex { point })?;
+        let vertex = self.shape.get_handle_or_insert(Vertex { point });
 
         Ok(vertex)
     }
@@ -61,7 +61,7 @@ impl<'r> EdgeBuilder<'r> {
             center: Point::origin(),
             a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
             b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
-        }))?;
+        }));
 
         let edge_local = Edge {
             curve: LocalForm::new(curve_local, curve_canonical.clone()),
@@ -70,7 +70,7 @@ impl<'r> EdgeBuilder<'r> {
         let edge_canonical = self.shape.insert(Edge {
             curve: LocalForm::canonical_only(curve_canonical),
             vertices: VerticesOfEdge::none(),
-        })?;
+        });
 
         Ok(LocalForm::new(edge_local, edge_canonical))
     }
@@ -102,7 +102,7 @@ impl<'r> EdgeBuilder<'r> {
         let curve = {
             let points = [&a, &b].map(|vertex| vertex.get().point);
             let curve = Curve::Line(Line::from_points(points));
-            self.shape.insert(curve)?
+            self.shape.insert(curve)
         };
 
         let vertices = [
@@ -113,7 +113,7 @@ impl<'r> EdgeBuilder<'r> {
         let edge = self.shape.insert(Edge {
             curve: LocalForm::canonical_only(curve),
             vertices: VerticesOfEdge::from_vertices(vertices),
-        })?;
+        });
 
         Ok(edge)
     }
@@ -173,7 +173,7 @@ impl<'r> CycleBuilder<'r> {
         };
 
         let edges_canonical = edges.into_iter().map(|edge| edge.canonical());
-        let canonical = self.shape.insert(Cycle::new(edges_canonical))?;
+        let canonical = self.shape.insert(Cycle::new(edges_canonical));
 
         Ok(LocalForm::new(local, canonical))
     }
@@ -237,7 +237,7 @@ impl<'r> FaceBuilder<'r> {
 
     /// Build the face
     pub fn build(self) -> ValidationResult<Face> {
-        let surface = self.shape.insert(self.surface)?;
+        let surface = self.shape.insert(self.surface);
 
         let mut exteriors = Vec::new();
         if let Some(points) = self.exterior {
@@ -255,7 +255,8 @@ impl<'r> FaceBuilder<'r> {
 
         let color = self.color.unwrap_or([255, 0, 0, 255]);
 
-        self.shape
-            .insert(Face::new(surface, exteriors, interiors, color))
+        Ok(self
+            .shape
+            .insert(Face::new(surface, exteriors, interiors, color)))
     }
 }
