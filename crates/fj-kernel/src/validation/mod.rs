@@ -223,7 +223,7 @@ mod tests {
     };
 
     #[test]
-    fn coherence_edge() -> anyhow::Result<()> {
+    fn coherence_edge() {
         let mut shape = Shape::new();
         Edge::builder(&mut shape)
             .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])
@@ -261,12 +261,10 @@ mod tests {
             },
         );
         assert!(result.is_err());
-
-        Ok(())
     }
 
     #[test]
-    fn structural_cycle() -> anyhow::Result<()> {
+    fn structural_cycle() {
         let mut shape = Shape::new();
         let mut other = Shape::new();
 
@@ -282,12 +280,10 @@ mod tests {
         let edge = Edge::builder(&mut shape)
             .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]]);
         shape.insert(Cycle::new(vec![edge]));
-
-        Ok(())
     }
 
     #[test]
-    fn structural_edge() -> anyhow::Result<()> {
+    fn structural_edge() {
         let mut shape = Shape::new();
         let mut other = Shape::new();
 
@@ -321,12 +317,10 @@ mod tests {
             curve: LocalForm::canonical_only(curve),
             vertices: VerticesOfEdge::from_vertices([a, b]),
         });
-
-        Ok(())
     }
 
     #[test]
-    fn structural_face() -> anyhow::Result<()> {
+    fn structural_face() {
         let mut shape = Shape::new();
         let mut other = Shape::new();
 
@@ -359,12 +353,10 @@ mod tests {
             Vec::new(),
             [255, 0, 0, 255],
         ));
-
-        Ok(())
     }
 
     #[test]
-    fn uniqueness_edge() -> anyhow::Result<()> {
+    fn uniqueness_edge() {
         let mut shape = Shape::new();
 
         let a = Vertex::builder(&mut shape).build_from_point([0., 0., 0.]);
@@ -384,8 +376,6 @@ mod tests {
         Edge::builder(&mut shape).build_line_segment_from_vertices([b, a]);
         let result = validate(shape, &ValidationConfig::default());
         assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
-
-        Ok(())
     }
 
     #[test]

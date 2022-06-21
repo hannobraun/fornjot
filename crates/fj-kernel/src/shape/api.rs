@@ -252,7 +252,7 @@ mod tests {
 
     #[test]
 
-    fn get_handle() -> anyhow::Result<()> {
+    fn get_handle() {
         let mut shape = Shape::new();
 
         let point = Point::from([1., 0., 0.]);
@@ -294,7 +294,5 @@ mod tests {
 
         let face = shape.insert(face);
         assert!(shape.get_handle(&face.get()).as_ref() == Some(&face));
-
-        Ok(())
     }
 }

@@ -329,7 +329,7 @@ mod tests {
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
 
         let sketch =
-            Triangle::new([[0., 0.], [1., 0.], [0., 1.]], 0.0f64, false)?;
+            Triangle::new([[0., 0.], [1., 0.], [0., 1.]], 0.0f64, false);
 
         let swept = sweep_shape(
             sketch.shape,
@@ -339,11 +339,11 @@ mod tests {
         );
 
         let bottom_face =
-            Triangle::new([[0., 0.], [1., 0.], [0., 1.]], 0.0f64, true)?
+            Triangle::new([[0., 0.], [1., 0.], [0., 1.]], 0.0f64, true)
                 .face
                 .get();
         let top_face =
-            Triangle::new([[0., 0.], [1., 0.], [0., 1.]], 1.0f64, false)?
+            Triangle::new([[0., 0.], [1., 0.], [0., 1.]], 1.0f64, false)
                 .face
                 .get();
 
@@ -378,7 +378,7 @@ mod tests {
             points: [impl Into<Point<2>>; 3],
             z_offset: impl Into<Scalar>,
             reverse: bool,
-        ) -> anyhow::Result<Self> {
+        ) -> Self {
             let mut shape = Shape::new();
 
             let surface =
@@ -397,7 +397,7 @@ mod tests {
                 });
             }
 
-            Ok(Self { shape, face })
+            Self { shape, face }
         }
     }
 }

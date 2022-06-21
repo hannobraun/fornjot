@@ -41,7 +41,7 @@ mod test {
     };
 
     #[test]
-    fn approximate_edge() -> anyhow::Result<()> {
+    fn approximate_edge() {
         let mut shape = Shape::new();
 
         let a = Point::from([1., 2., 3.]);
@@ -71,7 +71,5 @@ mod test {
         let mut points = vec![b, c];
         super::approximate_edge(VerticesOfEdge::none(), &mut points);
         assert_eq!(points, vec![b, c, b]);
-
-        Ok(())
     }
 }
