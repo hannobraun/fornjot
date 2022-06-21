@@ -25,7 +25,7 @@ use crate::{builder::VertexBuilder, shape::Shape};
 /// are close to each other are considered identical. The minimum distance
 /// between distinct vertices can be configured using
 /// [`Shape::with_minimum_distance`].
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Vertex {
     /// The point that defines the location of the vertex
     pub point: Point<3>,
