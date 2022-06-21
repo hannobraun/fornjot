@@ -5,7 +5,6 @@ use fj_math::{Line, Scalar, Transform, Triangle, Vector};
 use crate::{
     objects::{Curve, Cycle, Edge, Face, Surface, SweptCurve, Vertex},
     shape::{Handle, LocalForm, Mapping, Shape},
-    validation::ValidationError,
 };
 
 use super::{transform_shape, CycleApprox, Tolerance};
@@ -16,12 +15,12 @@ pub fn sweep_shape(
     path: Vector<3>,
     tolerance: Tolerance,
     color: [u8; 4],
-) -> Result<Shape, ValidationError> {
+) -> Shape {
     let mut sweep = Sweep::init(source, path, tolerance, color);
-    sweep.create_top_and_bottom_faces()?;
-    sweep.create_side_faces()?;
+    sweep.create_top_and_bottom_faces();
+    sweep.create_side_faces();
 
-    Ok(sweep.target)
+    sweep.target
 }
 
 struct Sweep {
@@ -77,21 +76,19 @@ impl Sweep {
         }
     }
 
-    fn create_top_and_bottom_faces(&mut self) -> Result<(), ValidationError> {
+    fn create_top_and_bottom_faces(&mut self) {
         if self.is_sweep_along_negative_direction {
-            reverse_surfaces(&mut self.top)?;
+            reverse_surfaces(&mut self.top);
         } else {
-            reverse_surfaces(&mut self.bottom)?;
+            reverse_surfaces(&mut self.bottom);
         }
         transform_shape(&mut self.top, &self.translation);
 
         self.target.merge_shape(&self.bottom);
         self.target.merge_shape(&self.top);
-
-        Ok(())
     }
 
-    fn create_side_faces(&mut self) -> Result<(), ValidationError> {
+    fn create_side_faces(&mut self) {
         for face_source in self.source.faces() {
             let face_source = face_source.get();
             let face_source = face_source.brep();
@@ -120,7 +117,7 @@ impl Sweep {
                         self.tolerance,
                         self.color,
                         &mut self.target,
-                    )?;
+                    );
 
                     continue;
                 }
@@ -159,22 +156,19 @@ impl Sweep {
                         edge_bottom,
                         edge_top,
                         &mut vertex_bottom_to_edge,
-                    )?;
+                    );
 
-                    create_side_face(self, surface, cycle)?;
+                    create_side_face(self, surface, cycle);
                 }
             }
         }
-
-        Ok(())
     }
 }
 
-fn reverse_surfaces(shape: &mut Shape) -> Result<(), ValidationError> {
+fn reverse_surfaces(shape: &mut Shape) {
     shape
         .update()
         .update_all(|surface: &mut Surface| *surface = surface.reverse());
-    Ok(())
 }
 
 fn create_continuous_side_face_fallback(
@@ -183,7 +177,7 @@ fn create_continuous_side_face_fallback(
     tolerance: Tolerance,
     color: [u8; 4],
     target: &mut Shape,
-) -> Result<(), ValidationError> {
+) {
     let approx = CycleApprox::new(cycle_source, tolerance);
 
     let mut quads = Vec::new();
@@ -204,8 +198,6 @@ fn create_continuous_side_face_fallback(
     }
 
     target.insert(Face::Triangles(side_face));
-
-    Ok(())
 }
 
 fn create_side_surface(
@@ -230,7 +222,7 @@ fn create_side_cycle(
     edge_bottom: LocalForm<Edge<2>, Edge<3>>,
     edge_top: LocalForm<Edge<2>, Edge<3>>,
     vertex_bottom_to_edge: &mut HashMap<Handle<Vertex>, Handle<Edge<3>>>,
-) -> Result<LocalForm<Cycle<2>, Cycle<3>>, ValidationError> {
+) -> LocalForm<Cycle<2>, Cycle<3>> {
     // Can't panic. We already ruled out the "continuous edge" case above, so
     // these edges must have vertices.
     let [vertices_bottom, vertices_top] = [&edge_bottom, &edge_top]
@@ -283,10 +275,9 @@ fn create_side_cycle(
         vertex_bottom_to_edge
             .insert(vertex_bottom.canonical(), edge_canonical.clone());
 
-        Ok(LocalForm::new(edge_local, edge_canonical))
+        LocalForm::new(edge_local, edge_canonical)
     });
-    let [a, b]: [Result<_, ValidationError>; 2] = side_edges;
-    let [edge_side_a, edge_side_b] = [a?, b?];
+    let [edge_side_a, edge_side_b] = side_edges;
 
     let local = Cycle {
         edges: vec![
@@ -303,14 +294,14 @@ fn create_side_cycle(
         edge_side_b.canonical(),
     ]));
 
-    Ok(LocalForm::new(local, canonical))
+    LocalForm::new(local, canonical)
 }
 
 fn create_side_face(
     sweep: &mut Sweep,
     surface: Surface,
     cycle: LocalForm<Cycle<2>, Cycle<3>>,
-) -> Result<(), ValidationError> {
+) {
     let surface = sweep.target.insert(surface);
 
     sweep.target.insert(Face::new(
@@ -319,8 +310,6 @@ fn create_side_face(
         Vec::new(),
         sweep.color,
     ));
-
-    Ok(())
 }
 
 #[cfg(test)]
@@ -347,7 +336,7 @@ mod tests {
             Vector::from([0., 0., 1.]),
             tolerance,
             [255, 0, 0, 255],
-        )?;
+        );
 
         let bottom_face =
             Triangle::new([[0., 0.], [1., 0.], [0., 1.]], 0.0f64, true)?
