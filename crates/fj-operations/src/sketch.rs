@@ -3,7 +3,7 @@ use fj_kernel::{
     algorithms::Tolerance,
     objects::{Face, Surface},
     shape::Shape,
-    validation::{self, validate, Validated, ValidationError},
+    validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::{Aabb, Point};
 
@@ -12,7 +12,7 @@ use super::ToShape;
 impl ToShape for fj::Sketch {
     fn to_shape(
         &self,
-        config: &validation::Config,
+        config: &ValidationConfig,
         _: Tolerance,
         _: &mut DebugInfo,
     ) -> Result<Validated<Shape>, ValidationError> {
