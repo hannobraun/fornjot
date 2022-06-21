@@ -187,7 +187,7 @@ mod tests {
     };
 
     #[test]
-    fn validate_edge() -> anyhow::Result<()> {
+    fn edge_coherence() -> anyhow::Result<()> {
         let mut shape = Shape::new();
         Edge::builder(&mut shape)
             .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])?
