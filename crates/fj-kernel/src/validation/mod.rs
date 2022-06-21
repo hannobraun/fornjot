@@ -367,7 +367,7 @@ mod tests {
     }
 
     #[test]
-    fn add_edge_uniqueness() -> anyhow::Result<()> {
+    fn uniqueness_edge() -> anyhow::Result<()> {
         let mut shape = Shape::new();
 
         let a = Vertex::builder(&mut shape).build_from_point([0., 0., 0.])?;
@@ -392,7 +392,7 @@ mod tests {
     }
 
     #[test]
-    fn add_vertex() -> anyhow::Result<()> {
+    fn uniqueness_vertex() -> anyhow::Result<()> {
         let mut shape = Shape::new();
 
         let point = Point::from([0., 0., 0.]);
