@@ -265,7 +265,7 @@ mod tests {
 
     use crate::{
         objects::{Curve, Cycle, Edge, Face, Surface, Vertex, VerticesOfEdge},
-        shape::{LocalForm, Shape, ValidationResult},
+        shape::{LocalForm, Shape},
         validation::ValidationError,
     };
 
@@ -338,7 +338,7 @@ mod tests {
         let mut shape = TestShape::new();
         let mut other = TestShape::new();
 
-        let curve = other.add_curve()?;
+        let curve = other.insert(Curve::x_axis())?;
         let a = Vertex::builder(&mut other).build_from_point([1., 0., 0.])?;
         let b = Vertex::builder(&mut other).build_from_point([2., 0., 0.])?;
 
@@ -356,7 +356,7 @@ mod tests {
         assert!(err.missing_vertex(&a.canonical()));
         assert!(err.missing_vertex(&b.canonical()));
 
-        let curve = shape.add_curve()?;
+        let curve = shape.insert(Curve::x_axis())?;
         let a = Vertex::builder(&mut shape).build_from_point([1., 0., 0.])?;
         let b = Vertex::builder(&mut shape).build_from_point([2., 0., 0.])?;
 
@@ -462,10 +462,6 @@ mod tests {
             Self {
                 inner: Shape::new(),
             }
-        }
-
-        fn add_curve(&mut self) -> ValidationResult<Curve<3>> {
-            self.insert(Curve::x_axis())
         }
     }
 
