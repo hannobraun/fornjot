@@ -1,23 +1,18 @@
-use std::fmt;
+use std::{collections::HashSet, fmt};
 
 use crate::{
     objects::{Edge, Vertex},
-    shape::{stores::Store, Handle},
+    shape::Handle,
 };
 
 pub fn validate_vertex(
     vertex: &Vertex,
-    handle: Option<&Handle<Vertex>>,
-    vertices: &Store<Vertex>,
+    vertices: &HashSet<Handle<Vertex>>,
 ) -> Result<(), UniquenessIssues> {
-    for existing in vertices.iter() {
-        if Some(&existing) == handle {
-            continue;
-        }
-
+    for existing in vertices {
         if &existing.get() == vertex {
             return Err(UniquenessIssues {
-                duplicate_vertex: Some(existing),
+                duplicate_vertex: Some(existing.clone()),
                 ..UniquenessIssues::default()
             });
         }
@@ -35,14 +30,9 @@ pub fn validate_vertex(
 /// this code will have to be updated.
 pub fn validate_edge(
     edge: &Edge<3>,
-    handle: Option<&Handle<Edge<3>>>,
-    edges: &Store<Edge<3>>,
+    edges: &HashSet<Handle<Edge<3>>>,
 ) -> Result<(), UniquenessIssues> {
-    for existing in edges.iter() {
-        if Some(&existing) == handle {
-            continue;
-        }
-
+    for existing in edges {
         if existing.get().vertices.are_same(&edge.vertices) {
             return Err(UniquenessIssues {
                 duplicate_edge: Some(DuplicateEdge {

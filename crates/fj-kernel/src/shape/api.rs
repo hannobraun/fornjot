@@ -264,7 +264,6 @@ mod tests {
     use crate::{
         objects::{Curve, Cycle, Edge, Face, Surface, Vertex, VerticesOfEdge},
         shape::{LocalForm, Shape},
-        validation::ValidationError,
     };
 
     #[test]
@@ -311,46 +310,6 @@ mod tests {
 
         let face = shape.insert(face)?;
         assert!(shape.get_handle(&face.get()).as_ref() == Some(&face));
-
-        Ok(())
-    }
-
-    #[test]
-    fn add_vertex() -> anyhow::Result<()> {
-        let mut shape = Shape::new();
-
-        let point = Point::from([0., 0., 0.]);
-
-        // Adding a vertex should work.
-        shape.insert(Vertex { point })?;
-
-        // Adding a second vertex with the same point should fail.
-        let result = shape.insert(Vertex { point });
-        assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
-
-        Ok(())
-    }
-
-    #[test]
-    fn add_edge_uniqueness() -> anyhow::Result<()> {
-        let mut shape = Shape::new();
-
-        let a = Vertex::builder(&mut shape).build_from_point([0., 0., 0.])?;
-        let b = Vertex::builder(&mut shape).build_from_point([1., 0., 0.])?;
-
-        Edge::builder(&mut shape)
-            .build_line_segment_from_vertices([a.clone(), b.clone()])?;
-
-        // Should fail. An edge with the same vertices has already been added.
-        let result = Edge::builder(&mut shape)
-            .build_line_segment_from_vertices([a.clone(), b.clone()]);
-        assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
-
-        // Should fail. An edge with the same vertices has already been added,
-        // just the order is different.
-        let result =
-            Edge::builder(&mut shape).build_line_segment_from_vertices([b, a]);
-        assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
 
         Ok(())
     }
