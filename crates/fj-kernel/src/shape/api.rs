@@ -259,13 +259,11 @@ impl Default for Shape {
 
 #[cfg(test)]
 mod tests {
-    use std::ops::{Deref, DerefMut};
-
-    use fj_math::{Point, Scalar};
+    use fj_math::Point;
 
     use crate::{
         objects::{Curve, Cycle, Edge, Face, Surface, Vertex, VerticesOfEdge},
-        shape::{Handle, LocalForm, Shape, ValidationResult},
+        shape::{LocalForm, Shape},
         validation::ValidationError,
     };
 
@@ -335,10 +333,10 @@ mod tests {
 
     #[test]
     fn add_edge() -> anyhow::Result<()> {
-        let mut shape = TestShape::new();
-        let mut other = TestShape::new();
+        let mut shape = Shape::new();
+        let mut other = Shape::new();
 
-        let curve = other.add_curve()?;
+        let curve = other.insert(Curve::x_axis())?;
         let a = Vertex::builder(&mut other).build_from_point([1., 0., 0.])?;
         let b = Vertex::builder(&mut other).build_from_point([2., 0., 0.])?;
 
@@ -356,7 +354,7 @@ mod tests {
         assert!(err.missing_vertex(&a.canonical()));
         assert!(err.missing_vertex(&b.canonical()));
 
-        let curve = shape.add_curve()?;
+        let curve = shape.insert(Curve::x_axis())?;
         let a = Vertex::builder(&mut shape).build_from_point([1., 0., 0.])?;
         let b = Vertex::builder(&mut shape).build_from_point([2., 0., 0.])?;
 
@@ -398,16 +396,18 @@ mod tests {
 
     #[test]
     fn add_cycle() -> anyhow::Result<()> {
-        let mut shape = TestShape::new();
-        let mut other = TestShape::new();
+        let mut shape = Shape::new();
+        let mut other = Shape::new();
 
         // Trying to refer to edge that is not from the same shape. Should fail.
-        let edge = other.add_edge()?;
+        let edge = Edge::builder(&mut other)
+            .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])?;
         let err = shape.insert(Cycle::new(vec![edge.clone()])).unwrap_err();
         assert!(err.missing_edge(&edge));
 
         // Referring to edge that *is* from the same shape. Should work.
-        let edge = shape.add_edge()?;
+        let edge = Edge::builder(&mut shape)
+            .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])?;
         shape.insert(Cycle::new(vec![edge]))?;
 
         Ok(())
@@ -415,12 +415,12 @@ mod tests {
 
     #[test]
     fn add_face() -> anyhow::Result<()> {
-        let mut shape = TestShape::new();
-        let mut other = TestShape::new();
+        let mut shape = Shape::new();
+        let mut other = Shape::new();
 
         let triangle = [[0., 0.], [1., 0.], [0., 1.]];
 
-        let surface = other.add_surface()?;
+        let surface = other.insert(Surface::xy_plane())?;
         let cycle = Cycle::builder(surface.get(), &mut other)
             .build_polygon(triangle)?;
 
@@ -436,7 +436,7 @@ mod tests {
         assert!(err.missing_surface(&surface));
         assert!(err.missing_cycle(&cycle.canonical()));
 
-        let surface = shape.add_surface()?;
+        let surface = shape.insert(Surface::xy_plane())?;
         let cycle = Cycle::builder(surface.get(), &mut shape)
             .build_polygon(triangle)?;
 
@@ -449,53 +449,5 @@ mod tests {
         ))?;
 
         Ok(())
-    }
-
-    struct TestShape {
-        inner: Shape,
-        next_point: Point<3>,
-    }
-
-    impl TestShape {
-        fn new() -> Self {
-            Self {
-                inner: Shape::new(),
-                next_point: Point::from([0., 0., 0.]),
-            }
-        }
-
-        fn add_curve(&mut self) -> ValidationResult<Curve<3>> {
-            self.insert(Curve::x_axis())
-        }
-
-        fn add_surface(&mut self) -> ValidationResult<Surface> {
-            self.insert(Surface::xy_plane())
-        }
-
-        fn add_edge(&mut self) -> anyhow::Result<Handle<Edge<3>>> {
-            let points = [(); 2].map(|()| {
-                let point = self.next_point;
-                self.next_point.x += Scalar::ONE;
-                point
-            });
-            let edge = Edge::builder(&mut self.inner)
-                .build_line_segment_from_points(points)?;
-
-            Ok(edge)
-        }
-    }
-
-    impl Deref for TestShape {
-        type Target = Shape;
-
-        fn deref(&self) -> &Self::Target {
-            &self.inner
-        }
-    }
-
-    impl DerefMut for TestShape {
-        fn deref_mut(&mut self) -> &mut Self::Target {
-            &mut self.inner
-        }
     }
 }
