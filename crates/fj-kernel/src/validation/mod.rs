@@ -25,16 +25,20 @@
 //! [`Shape`]: crate::shape::Shape
 
 mod coherence;
+mod structural;
 
-pub use self::coherence::{CoherenceIssues, CoherenceMismatch};
+pub use self::{
+    coherence::{CoherenceIssues, CoherenceMismatch},
+    structural::StructuralIssues,
+};
 
-use std::ops::Deref;
+use std::{collections::HashSet, ops::Deref};
 
 use fj_math::Scalar;
 
 use crate::{
     objects::{Curve, Cycle, Edge, Surface, Vertex},
-    shape::{Handle, Shape, StructuralIssues, UniquenessIssues},
+    shape::{Handle, Shape, UniquenessIssues},
 };
 
 /// Validate the given [`Shape`]
@@ -42,8 +46,34 @@ pub fn validate(
     shape: Shape,
     config: &ValidationConfig,
 ) -> Result<Validated<Shape>, ValidationError> {
+    let mut curves = HashSet::new();
+    let mut cycles = HashSet::new();
+    let mut edges = HashSet::new();
+    let mut surfaces = HashSet::new();
+    let mut vertices = HashSet::new();
+
+    for curve in shape.curves() {
+        curves.insert(curve);
+    }
+    for vertex in shape.vertices() {
+        vertices.insert(vertex);
+    }
     for edge in shape.edges() {
         coherence::validate_edge(&edge.get(), config.identical_max_distance)?;
+        structural::validate_edge(&edge.get(), &curves, &vertices)?;
+
+        edges.insert(edge);
+    }
+    for cycle in shape.cycles() {
+        structural::validate_cycle(&cycle.get(), &edges)?;
+
+        cycles.insert(cycle);
+    }
+    for surface in shape.surfaces() {
+        surfaces.insert(surface);
+    }
+    for face in shape.faces() {
+        structural::validate_face(&face.get(), &cycles, &surfaces)?;
     }
 
     Ok(Validated(shape))

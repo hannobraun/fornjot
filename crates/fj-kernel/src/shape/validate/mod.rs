@@ -1,10 +1,6 @@
-mod structural;
 mod uniqueness;
 
-pub use self::{
-    structural::StructuralIssues,
-    uniqueness::{DuplicateEdge, UniquenessIssues},
-};
+pub use self::uniqueness::{DuplicateEdge, UniquenessIssues};
 
 use fj_math::Scalar;
 
@@ -74,7 +70,6 @@ impl Validate for Edge<3> {
         _: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
-        structural::validate_edge(self, stores)?;
         uniqueness::validate_edge(self, handle, &stores.edges)?;
 
         Ok(())
@@ -94,9 +89,8 @@ impl Validate for Cycle<3> {
         &self,
         _: Option<&Handle<Self>>,
         _: Scalar,
-        stores: &Stores,
+        _: &Stores,
     ) -> Result<(), ValidationError> {
-        structural::validate_cycle(self, stores)?;
         Ok(())
     }
 }
@@ -106,9 +100,8 @@ impl Validate for Face {
         &self,
         _: Option<&Handle<Self>>,
         _: Scalar,
-        stores: &Stores,
+        _: &Stores,
     ) -> Result<(), ValidationError> {
-        structural::validate_face(self, stores)?;
         Ok(())
     }
 }

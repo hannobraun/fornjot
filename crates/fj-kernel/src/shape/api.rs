@@ -264,7 +264,7 @@ mod tests {
     use crate::{
         objects::{Curve, Cycle, Edge, Face, Surface, Vertex, VerticesOfEdge},
         shape::{LocalForm, Shape},
-        validation::ValidationError,
+        validation::{validate, ValidationConfig, ValidationError},
     };
 
     #[test]
@@ -344,12 +344,12 @@ mod tests {
         let b = LocalForm::new(Point::from([2.]), b);
 
         // Shouldn't work. Nothing has been added to `shape`.
-        let err = shape
-            .insert(Edge {
-                curve: LocalForm::canonical_only(curve.clone()),
-                vertices: VerticesOfEdge::from_vertices([a.clone(), b.clone()]),
-            })
-            .unwrap_err();
+        shape.insert(Edge {
+            curve: LocalForm::canonical_only(curve.clone()),
+            vertices: VerticesOfEdge::from_vertices([a.clone(), b.clone()]),
+        })?;
+        let err =
+            validate(shape.clone(), &ValidationConfig::default()).unwrap_err();
         assert!(err.missing_curve(&curve));
         assert!(err.missing_vertex(&a.canonical()));
         assert!(err.missing_vertex(&b.canonical()));
@@ -402,7 +402,9 @@ mod tests {
         // Trying to refer to edge that is not from the same shape. Should fail.
         let edge = Edge::builder(&mut other)
             .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])?;
-        let err = shape.insert(Cycle::new(vec![edge.clone()])).unwrap_err();
+        shape.insert(Cycle::new(vec![edge.clone()]))?;
+        let err =
+            validate(shape.clone(), &ValidationConfig::default()).unwrap_err();
         assert!(err.missing_edge(&edge));
 
         // Referring to edge that *is* from the same shape. Should work.
@@ -425,14 +427,14 @@ mod tests {
             .build_polygon(triangle)?;
 
         // Nothing has been added to `shape`. Should fail.
-        let err = shape
-            .insert(Face::new(
-                surface.clone(),
-                vec![cycle.clone()],
-                Vec::new(),
-                [255, 0, 0, 255],
-            ))
-            .unwrap_err();
+        shape.insert(Face::new(
+            surface.clone(),
+            vec![cycle.clone()],
+            Vec::new(),
+            [255, 0, 0, 255],
+        ))?;
+        let err =
+            validate(shape.clone(), &ValidationConfig::default()).unwrap_err();
         assert!(err.missing_surface(&surface));
         assert!(err.missing_cycle(&cycle.canonical()));
 
