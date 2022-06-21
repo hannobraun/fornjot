@@ -1,9 +1,6 @@
 use fj_math::Scalar;
 
-use crate::{
-    objects::{Curve, Cycle, Edge, Face, Surface, Vertex},
-    validation::ValidationError,
-};
+use crate::objects::{Curve, Cycle, Edge, Face, Surface, Vertex};
 
 use super::{
     stores::{Store, Stores},
@@ -164,11 +161,6 @@ impl Shape {
     /// Returns a [`Mapping`] that maps each object from the original shape to
     /// the respective object in the cloned shape.
     pub fn clone_shape(&self) -> (Shape, Mapping) {
-        self.clone_shape_inner()
-            .expect("Clone of valid shape can't be invalid")
-    }
-
-    fn clone_shape_inner(&self) -> Result<(Shape, Mapping), ValidationError> {
         let mut target = Shape::new();
         let mut mapping = Mapping::new();
 
@@ -197,7 +189,7 @@ impl Shape {
             mapping.faces.insert(original, cloned);
         }
 
-        Ok((target, mapping))
+        (target, mapping)
     }
 
     /// Access an iterator over all curves
