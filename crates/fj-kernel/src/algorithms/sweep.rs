@@ -173,8 +173,8 @@ impl Sweep {
 fn reverse_surfaces(shape: &mut Shape) -> Result<(), ValidationError> {
     shape
         .update()
-        .update_all(|surface: &mut Surface| *surface = surface.reverse())
-        .validate()
+        .update_all(|surface: &mut Surface| *surface = surface.reverse());
+    Ok(())
 }
 
 fn create_continuous_side_face_fallback(
@@ -403,12 +403,9 @@ mod tests {
                 .build()?;
 
             if reverse {
-                shape
-                    .update()
-                    .update_all(|surface: &mut Surface| {
-                        *surface = surface.reverse();
-                    })
-                    .validate()?;
+                shape.update().update_all(|surface: &mut Surface| {
+                    *surface = surface.reverse();
+                });
             }
 
             Ok(Self { shape, face })

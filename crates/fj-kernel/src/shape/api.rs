@@ -164,7 +164,7 @@ impl Shape {
     /// Returns [`Update`], and API that can be used to update objects in the
     /// shape.
     pub fn update(&mut self) -> Update {
-        Update::new(self.distinct_min_distance, &mut self.stores)
+        Update::new(&mut self.stores)
     }
 
     /// Clone the shape

@@ -30,8 +30,7 @@ pub fn transform_shape(
                     *triangle = transform.transform_triangle(triangle);
                 }
             }
-        })
-        .validate()?;
+        });
 
     Ok(())
 }

@@ -231,21 +231,18 @@ mod tests {
 
         let deviation = Scalar::from_f64(0.25);
 
-        shape
-            .update()
-            .update_all(|edge: &mut Edge<3>| {
-                let original = edge.clone();
-                *edge = Edge {
-                    vertices: original.vertices.map(|vertex| {
-                        LocalForm::new(
-                            *vertex.local() + [deviation],
-                            vertex.canonical(),
-                        )
-                    }),
-                    ..original
-                }
-            })
-            .validate()?;
+        shape.update().update_all(|edge: &mut Edge<3>| {
+            let original = edge.clone();
+            *edge = Edge {
+                vertices: original.vertices.map(|vertex| {
+                    LocalForm::new(
+                        *vertex.local() + [deviation],
+                        vertex.canonical(),
+                    )
+                }),
+                ..original
+            }
+        });
 
         let result = validate(
             shape.clone(),
