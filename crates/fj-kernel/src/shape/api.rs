@@ -261,11 +261,11 @@ impl Default for Shape {
 mod tests {
     use std::ops::{Deref, DerefMut};
 
-    use fj_math::{Point, Scalar};
+    use fj_math::Point;
 
     use crate::{
         objects::{Curve, Cycle, Edge, Face, Surface, Vertex, VerticesOfEdge},
-        shape::{Handle, LocalForm, Shape, ValidationResult},
+        shape::{LocalForm, Shape, ValidationResult},
         validation::ValidationError,
     };
 
@@ -402,12 +402,14 @@ mod tests {
         let mut other = TestShape::new();
 
         // Trying to refer to edge that is not from the same shape. Should fail.
-        let edge = other.add_edge()?;
+        let edge = Edge::builder(&mut other)
+            .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])?;
         let err = shape.insert(Cycle::new(vec![edge.clone()])).unwrap_err();
         assert!(err.missing_edge(&edge));
 
         // Referring to edge that *is* from the same shape. Should work.
-        let edge = shape.add_edge()?;
+        let edge = Edge::builder(&mut shape)
+            .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])?;
         shape.insert(Cycle::new(vec![edge]))?;
 
         Ok(())
@@ -453,14 +455,12 @@ mod tests {
 
     struct TestShape {
         inner: Shape,
-        next_point: Point<3>,
     }
 
     impl TestShape {
         fn new() -> Self {
             Self {
                 inner: Shape::new(),
-                next_point: Point::from([0., 0., 0.]),
             }
         }
 
@@ -470,18 +470,6 @@ mod tests {
 
         fn add_surface(&mut self) -> ValidationResult<Surface> {
             self.insert(Surface::xy_plane())
-        }
-
-        fn add_edge(&mut self) -> anyhow::Result<Handle<Edge<3>>> {
-            let points = [(); 2].map(|()| {
-                let point = self.next_point;
-                self.next_point.x += Scalar::ONE;
-                point
-            });
-            let edge = Edge::builder(&mut self.inner)
-                .build_line_segment_from_points(points)?;
-
-            Ok(edge)
         }
     }
 
