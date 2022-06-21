@@ -214,7 +214,7 @@ mod tests {
     use crate::{
         objects::Edge,
         shape::{LocalForm, Shape},
-        validation::ValidationConfig,
+        validation::{validate, ValidationConfig},
     };
 
     #[test]
@@ -242,7 +242,7 @@ mod tests {
             })
             .validate()?;
 
-        let result = super::validate(
+        let result = validate(
             shape.clone(),
             &ValidationConfig {
                 identical_max_distance: deviation * 2.,
@@ -251,7 +251,7 @@ mod tests {
         );
         assert!(result.is_ok());
 
-        let result = super::validate(
+        let result = validate(
             shape,
             &ValidationConfig {
                 identical_max_distance: deviation / 2.,
