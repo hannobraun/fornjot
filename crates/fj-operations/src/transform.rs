@@ -20,7 +20,7 @@ impl ToShape for fj::Transform {
 
         let transform = transform(self);
 
-        transform_shape(&mut shape, &transform)?;
+        transform_shape(&mut shape, &transform);
         let shape = validate(shape, config)?;
 
         Ok(shape)

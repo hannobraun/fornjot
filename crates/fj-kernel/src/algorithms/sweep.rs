@@ -83,7 +83,7 @@ impl Sweep {
         } else {
             reverse_surfaces(&mut self.bottom)?;
         }
-        transform_shape(&mut self.top, &self.translation)?;
+        transform_shape(&mut self.top, &self.translation);
 
         self.target.merge_shape(&self.bottom)?;
         self.target.merge_shape(&self.top)?;
