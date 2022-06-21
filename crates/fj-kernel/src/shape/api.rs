@@ -14,7 +14,6 @@ use super::{
 #[derive(Clone, Debug)]
 pub struct Shape {
     distinct_min_distance: Scalar,
-    identical_max_distance: Scalar,
 
     stores: Stores,
 }
@@ -27,16 +26,6 @@ impl Shape {
             // similarly named constant. Unfortunately `Scalar::from_f64` can't
             // be `const` yet.
             distinct_min_distance: Scalar::from_f64(5e-7), // 0.5 µm
-
-            // This value was chosen pretty arbitrarily. Seems small enough to
-            // catch errors. If it turns out it's too small (because it produces
-            // false positives due to floating-point accuracy issues), we can
-            // adjust it.
-            //
-            // This should be defined in an associated constant, so API users
-            // can see what the default is. Unfortunately, `Scalar::from_f64`
-            // can't be `const` yet.
-            identical_max_distance: Scalar::from_f64(5e-14),
 
             stores: Stores {
                 curves: Store::new(),
@@ -80,28 +69,12 @@ impl Shape {
         self
     }
 
-    /// Override the maximum distance between objects considered identical
-    ///
-    /// Used for geometric validation.
-    pub fn with_identical_max_distance(
-        mut self,
-        identical_max_distance: impl Into<Scalar>,
-    ) -> Self {
-        self.identical_max_distance = identical_max_distance.into();
-        self
-    }
-
     /// Insert an object into the shape
     ///
     /// Validates the object, and returns an error if it is not valid. See the
     /// documentation of each object for validation requirements.
     pub fn insert<T: Object>(&mut self, object: T) -> ValidationResult<T> {
-        object.validate(
-            None,
-            self.distinct_min_distance,
-            self.identical_max_distance,
-            &self.stores,
-        )?;
+        object.validate(None, self.distinct_min_distance, &self.stores)?;
         let handle = self.stores.get::<T>().insert(object);
         Ok(handle)
     }
@@ -191,11 +164,7 @@ impl Shape {
     /// Returns [`Update`], and API that can be used to update objects in the
     /// shape.
     pub fn update(&mut self) -> Update {
-        Update::new(
-            self.distinct_min_distance,
-            self.identical_max_distance,
-            &mut self.stores,
-        )
+        Update::new(self.distinct_min_distance, &mut self.stores)
     }
 
     /// Clone the shape

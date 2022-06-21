@@ -1,9 +1,7 @@
-mod coherence;
 mod structural;
 mod uniqueness;
 
 pub use self::{
-    coherence::{CoherenceIssues, CoherenceMismatch},
     structural::StructuralIssues,
     uniqueness::{DuplicateEdge, UniquenessIssues},
 };
@@ -22,7 +20,6 @@ pub trait Validate {
         &self,
         handle: Option<&Handle<Self>>,
         min_distance: Scalar,
-        max_distance: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError>
     where
@@ -34,7 +31,6 @@ impl Validate for Curve<3> {
         &self,
         _: Option<&Handle<Self>>,
         _: Scalar,
-        _: Scalar,
         _: &Stores,
     ) -> Result<(), ValidationError> {
         Ok(())
@@ -45,7 +41,6 @@ impl Validate for Surface {
     fn validate(
         &self,
         _: Option<&Handle<Self>>,
-        _: Scalar,
         _: Scalar,
         _: &Stores,
     ) -> Result<(), ValidationError> {
@@ -64,7 +59,6 @@ impl Validate for Vertex {
         &self,
         handle: Option<&Handle<Self>>,
         _: Scalar,
-        _: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
         uniqueness::validate_vertex(self, handle, &stores.vertices)?;
@@ -78,10 +72,8 @@ impl Validate for Edge<3> {
         &self,
         handle: Option<&Handle<Self>>,
         _: Scalar,
-        max_distance: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
-        coherence::validate_edge(self, max_distance)?;
         structural::validate_edge(self, stores)?;
         uniqueness::validate_edge(self, handle, &stores.edges)?;
 
@@ -102,7 +94,6 @@ impl Validate for Cycle<3> {
         &self,
         _: Option<&Handle<Self>>,
         _: Scalar,
-        _: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {
         structural::validate_cycle(self, stores)?;
@@ -114,7 +105,6 @@ impl Validate for Face {
     fn validate(
         &self,
         _: Option<&Handle<Self>>,
-        _: Scalar,
         _: Scalar,
         stores: &Stores,
     ) -> Result<(), ValidationError> {

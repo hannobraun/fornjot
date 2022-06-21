@@ -24,22 +24,28 @@
 //!
 //! [`Shape`]: crate::shape::Shape
 
+mod coherence;
+
+pub use self::coherence::{CoherenceIssues, CoherenceMismatch};
+
 use std::ops::Deref;
 
 use fj_math::Scalar;
 
 use crate::{
     objects::{Curve, Cycle, Edge, Surface, Vertex},
-    shape::{
-        CoherenceIssues, Handle, Shape, StructuralIssues, UniquenessIssues,
-    },
+    shape::{Handle, Shape, StructuralIssues, UniquenessIssues},
 };
 
 /// Validate the given [`Shape`]
 pub fn validate(
     shape: Shape,
-    _: &Config,
+    config: &Config,
 ) -> Result<Validated<Shape>, ValidationError> {
+    for edge in shape.edges() {
+        coherence::validate_edge(&edge.get(), config.identical_max_distance)?;
+    }
+
     Ok(Validated(shape))
 }
 
@@ -65,6 +71,11 @@ impl Default for Config {
     fn default() -> Self {
         Self {
             distinct_min_distance: Scalar::from_f64(5e-7), // 0.5 µm,
+
+            // This value was chosen pretty arbitrarily. Seems small enough to
+            // catch errors. If it turns out it's too small (because it produces
+            // false positives due to floating-point accuracy issues), we can
+            // adjust it.
             identical_max_distance: Scalar::from_f64(5e-14),
         }
     }
@@ -162,5 +173,62 @@ impl ValidationError {
         }
 
         false
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use fj_math::Scalar;
+
+    use crate::{
+        objects::Edge,
+        shape::{LocalForm, Shape},
+        validation::Config,
+    };
+
+    #[test]
+    fn edge_coherence() -> anyhow::Result<()> {
+        let mut shape = Shape::new();
+        Edge::builder(&mut shape)
+            .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])?
+            .get();
+
+        let deviation = Scalar::from_f64(0.25);
+
+        shape
+            .update()
+            .update_all(|edge: &mut Edge<3>| {
+                let original = edge.clone();
+                *edge = Edge {
+                    vertices: original.vertices.map(|vertex| {
+                        LocalForm::new(
+                            *vertex.local() + [deviation],
+                            vertex.canonical(),
+                        )
+                    }),
+                    ..original
+                }
+            })
+            .validate()?;
+
+        let result = super::validate(
+            shape.clone(),
+            &Config {
+                identical_max_distance: deviation * 2.,
+                ..Config::default()
+            },
+        );
+        assert!(result.is_ok());
+
+        let result = super::validate(
+            shape,
+            &Config {
+                identical_max_distance: deviation / 2.,
+                ..Config::default()
+            },
+        );
+        assert!(result.is_err());
+
+        Ok(())
     }
 }
