@@ -183,28 +183,51 @@ mod tests {
     use crate::{
         objects::Edge,
         shape::{LocalForm, Shape},
+        validation::Config,
     };
 
     #[test]
     fn validate_edge() -> anyhow::Result<()> {
         let mut shape = Shape::new();
+        Edge::builder(&mut shape)
+            .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])?
+            .get();
 
         let deviation = Scalar::from_f64(0.25);
 
-        let edge = Edge::builder(&mut shape)
-            .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])?
-            .get();
-        let edge = Edge {
-            vertices: edge.vertices.map(|vertex| {
-                LocalForm::new(
-                    *vertex.local() + [deviation],
-                    vertex.canonical(),
-                )
-            }),
-            ..edge
-        };
-        assert!(super::coherence::validate_edge(&edge, deviation * 2.).is_ok());
-        assert!(super::coherence::validate_edge(&edge, deviation / 2.).is_err());
+        shape
+            .update()
+            .update_all(|edge: &mut Edge<3>| {
+                let original = edge.clone();
+                *edge = Edge {
+                    vertices: original.vertices.map(|vertex| {
+                        LocalForm::new(
+                            *vertex.local() + [deviation],
+                            vertex.canonical(),
+                        )
+                    }),
+                    ..original
+                }
+            })
+            .validate()?;
+
+        let result = super::validate(
+            shape.clone(),
+            &Config {
+                identical_max_distance: deviation * 2.,
+                ..Config::default()
+            },
+        );
+        assert!(result.is_ok());
+
+        let result = super::validate(
+            shape,
+            &Config {
+                identical_max_distance: deviation / 2.,
+                ..Config::default()
+            },
+        );
+        assert!(result.is_err());
 
         Ok(())
     }
