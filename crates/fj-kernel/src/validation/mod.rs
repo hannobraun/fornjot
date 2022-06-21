@@ -84,6 +84,7 @@ impl Default for ValidationConfig {
 /// Wrapper around an object that indicates the object has been validated
 ///
 /// Returned by implementations of `Validate`.
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Validated<T>(T);
 
 impl<T> Validated<T> {
