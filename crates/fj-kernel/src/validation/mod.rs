@@ -264,7 +264,7 @@ mod tests {
     }
 
     #[test]
-    fn add_cycle() -> anyhow::Result<()> {
+    fn structural_cycle() -> anyhow::Result<()> {
         let mut shape = Shape::new();
         let mut other = Shape::new();
 
@@ -285,7 +285,7 @@ mod tests {
     }
 
     #[test]
-    fn add_edge() -> anyhow::Result<()> {
+    fn structural_edge() -> anyhow::Result<()> {
         let mut shape = Shape::new();
         let mut other = Shape::new();
 
@@ -324,7 +324,7 @@ mod tests {
     }
 
     #[test]
-    fn add_face() -> anyhow::Result<()> {
+    fn structural_face() -> anyhow::Result<()> {
         let mut shape = Shape::new();
         let mut other = Shape::new();
 
