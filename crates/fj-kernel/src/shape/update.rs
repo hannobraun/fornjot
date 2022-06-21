@@ -7,7 +7,6 @@ use super::{stores::Stores, validate::Validate as _, Object};
 /// API to update a `Shape`
 ///
 /// See [`Shape::update`].
-#[must_use]
 pub struct Update<'r> {
     min_distance: Scalar,
     stores: &'r mut Stores,
