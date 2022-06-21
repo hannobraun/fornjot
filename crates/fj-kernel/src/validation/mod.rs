@@ -219,7 +219,7 @@ mod tests {
     use crate::{
         objects::{Curve, Cycle, Edge, Face, Surface, Vertex, VerticesOfEdge},
         shape::{LocalForm, Shape},
-        validation::{validate, ValidationConfig},
+        validation::{validate, ValidationConfig, ValidationError},
     };
 
     #[test]
@@ -362,6 +362,49 @@ mod tests {
             Vec::new(),
             [255, 0, 0, 255],
         ))?;
+
+        Ok(())
+    }
+
+    #[test]
+    fn add_edge_uniqueness() -> anyhow::Result<()> {
+        let mut shape = Shape::new();
+
+        let a = Vertex::builder(&mut shape).build_from_point([0., 0., 0.])?;
+        let b = Vertex::builder(&mut shape).build_from_point([1., 0., 0.])?;
+
+        Edge::builder(&mut shape)
+            .build_line_segment_from_vertices([a.clone(), b.clone()])?;
+
+        // Should fail. An edge with the same vertices has already been added.
+        Edge::builder(&mut shape)
+            .build_line_segment_from_vertices([a.clone(), b.clone()])?;
+        let result = validate(shape.clone(), &ValidationConfig::default());
+        assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
+
+        // Should fail. An edge with the same vertices has already been added,
+        // just the order is different.
+        Edge::builder(&mut shape).build_line_segment_from_vertices([b, a])?;
+        let result = validate(shape, &ValidationConfig::default());
+        assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
+
+        Ok(())
+    }
+
+    #[test]
+    fn add_vertex() -> anyhow::Result<()> {
+        let mut shape = Shape::new();
+
+        let point = Point::from([0., 0., 0.]);
+
+        // Adding a vertex should work.
+        shape.insert(Vertex { point })?;
+        validate(shape.clone(), &ValidationConfig::default())?;
+
+        // Adding a second vertex with the same point should fail.
+        shape.insert(Vertex { point })?;
+        let result = validate(shape, &ValidationConfig::default());
+        assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
 
         Ok(())
     }
