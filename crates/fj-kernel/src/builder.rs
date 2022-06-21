@@ -4,8 +4,7 @@ use fj_math::{Circle, Line, Point, Scalar, Vector};
 
 use crate::{
     objects::{Curve, Cycle, Edge, Face, Surface, Vertex, VerticesOfEdge},
-    shape::{Handle, LocalForm, Shape, ValidationResult},
-    validation::ValidationError,
+    shape::{Handle, LocalForm, Shape},
 };
 
 /// API for building a [`Vertex`]
@@ -27,11 +26,9 @@ impl<'r> VertexBuilder<'r> {
     pub fn build_from_point(
         self,
         point: impl Into<Point<3>>,
-    ) -> ValidationResult<Vertex> {
+    ) -> Handle<Vertex> {
         let point = point.into();
-        let vertex = self.shape.get_handle_or_insert(Vertex { point })?;
-
-        Ok(vertex)
+        self.shape.get_handle_or_insert(Vertex { point })
     }
 }
 
@@ -48,10 +45,7 @@ impl<'r> EdgeBuilder<'r> {
     }
 
     /// Build a circle from a radius
-    pub fn build_circle(
-        self,
-        radius: Scalar,
-    ) -> Result<LocalForm<Edge<2>, Edge<3>>, ValidationError> {
+    pub fn build_circle(self, radius: Scalar) -> LocalForm<Edge<2>, Edge<3>> {
         let curve_local = Curve::Circle(Circle {
             center: Point::origin(),
             a: Vector::from([radius, Scalar::ZERO]),
@@ -61,7 +55,7 @@ impl<'r> EdgeBuilder<'r> {
             center: Point::origin(),
             a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
             b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
-        }))?;
+        }));
 
         let edge_local = Edge {
             curve: LocalForm::new(curve_local, curve_canonical.clone()),
@@ -70,39 +64,33 @@ impl<'r> EdgeBuilder<'r> {
         let edge_canonical = self.shape.insert(Edge {
             curve: LocalForm::canonical_only(curve_canonical),
             vertices: VerticesOfEdge::none(),
-        })?;
+        });
 
-        Ok(LocalForm::new(edge_local, edge_canonical))
+        LocalForm::new(edge_local, edge_canonical)
     }
 
     /// Build a line segment from two points
     pub fn build_line_segment_from_points(
         self,
         vertices: [impl Into<Point<3>>; 2],
-    ) -> ValidationResult<Edge<3>> {
+    ) -> Handle<Edge<3>> {
         // Can be cleaned up with `try_map`, once that is stable:
         // https://doc.rust-lang.org/std/primitive.array.html#method.try_map
         let vertices = vertices
             .map(|point| Vertex::builder(self.shape).build_from_point(point));
-        let vertices = match vertices {
-            [Ok(a), Ok(b)] => Ok([a, b]),
-            [Err(err), _] | [_, Err(err)] => Err(err),
-        }?;
 
-        let edge = self.build_line_segment_from_vertices(vertices)?;
-
-        Ok(edge)
+        self.build_line_segment_from_vertices(vertices)
     }
 
     /// Build a line segment from two vertices
     pub fn build_line_segment_from_vertices(
         self,
         [a, b]: [Handle<Vertex>; 2],
-    ) -> ValidationResult<Edge<3>> {
+    ) -> Handle<Edge<3>> {
         let curve = {
             let points = [&a, &b].map(|vertex| vertex.get().point);
             let curve = Curve::Line(Line::from_points(points));
-            self.shape.insert(curve)?
+            self.shape.insert(curve)
         };
 
         let vertices = [
@@ -110,12 +98,10 @@ impl<'r> EdgeBuilder<'r> {
             LocalForm::new(Point::from([1.]), b),
         ];
 
-        let edge = self.shape.insert(Edge {
+        self.shape.insert(Edge {
             curve: LocalForm::canonical_only(curve),
             vertices: VerticesOfEdge::from_vertices(vertices),
-        })?;
-
-        Ok(edge)
+        })
     }
 }
 
@@ -136,7 +122,7 @@ impl<'r> CycleBuilder<'r> {
     pub fn build_polygon(
         self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Result<LocalForm<Cycle<2>, Cycle<3>>, ValidationError> {
+    ) -> LocalForm<Cycle<2>, Cycle<3>> {
         let mut points: Vec<_> = points.into_iter().map(Into::into).collect();
 
         // A polygon is closed, so we need to add the first point at the end
@@ -155,7 +141,7 @@ impl<'r> CycleBuilder<'r> {
             let points_canonical = points
                 .map(|point| self.surface.point_from_surface_coords(point));
             let edge_canonical = Edge::builder(self.shape)
-                .build_line_segment_from_points(points_canonical)?;
+                .build_line_segment_from_points(points_canonical);
 
             let edge_local = Edge {
                 curve: LocalForm::new(
@@ -173,9 +159,9 @@ impl<'r> CycleBuilder<'r> {
         };
 
         let edges_canonical = edges.into_iter().map(|edge| edge.canonical());
-        let canonical = self.shape.insert(Cycle::new(edges_canonical))?;
+        let canonical = self.shape.insert(Cycle::new(edges_canonical));
 
-        Ok(LocalForm::new(local, canonical))
+        LocalForm::new(local, canonical)
     }
 }
 
@@ -236,20 +222,20 @@ impl<'r> FaceBuilder<'r> {
     }
 
     /// Build the face
-    pub fn build(self) -> ValidationResult<Face> {
-        let surface = self.shape.insert(self.surface)?;
+    pub fn build(self) -> Handle<Face> {
+        let surface = self.shape.insert(self.surface);
 
         let mut exteriors = Vec::new();
         if let Some(points) = self.exterior {
-            let cycle = Cycle::builder(self.surface, self.shape)
-                .build_polygon(points)?;
+            let cycle =
+                Cycle::builder(self.surface, self.shape).build_polygon(points);
             exteriors.push(cycle);
         }
 
         let mut interiors = Vec::new();
         for points in self.interiors {
-            let cycle = Cycle::builder(self.surface, self.shape)
-                .build_polygon(points)?;
+            let cycle =
+                Cycle::builder(self.surface, self.shape).build_polygon(points);
             interiors.push(cycle);
         }
 

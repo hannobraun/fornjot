@@ -20,8 +20,8 @@ impl ToShape for fj::Group {
         let a = self.a.to_shape(config, tolerance, debug_info)?;
         let b = self.b.to_shape(config, tolerance, debug_info)?;
 
-        shape.merge_shape(&a)?;
-        shape.merge_shape(&b)?;
+        shape.merge_shape(&a);
+        shape.merge_shape(&b);
 
         let shape = validate(shape, config)?;
 

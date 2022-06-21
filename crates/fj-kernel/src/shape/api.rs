@@ -1,13 +1,10 @@
 use fj_math::Scalar;
 
-use crate::{
-    objects::{Curve, Cycle, Edge, Face, Surface, Vertex},
-    validation::ValidationError,
-};
+use crate::objects::{Curve, Cycle, Edge, Face, Surface, Vertex};
 
 use super::{
     stores::{Store, Stores},
-    Handle, Iter, Mapping, Object, Update, ValidationResult,
+    Handle, Iter, Mapping, Object, Update,
 };
 
 /// The boundary representation of a shape
@@ -73,10 +70,8 @@ impl Shape {
     ///
     /// Validates the object, and returns an error if it is not valid. See the
     /// documentation of each object for validation requirements.
-    pub fn insert<T: Object>(&mut self, object: T) -> ValidationResult<T> {
-        object.validate(None, self.distinct_min_distance, &self.stores)?;
-        let handle = self.stores.get::<T>().insert(object);
-        Ok(handle)
+    pub fn insert<T: Object>(&mut self, object: T) -> Handle<T> {
+        self.stores.get::<T>().insert(object)
     }
 
     /// Access the handle of an object
@@ -104,12 +99,9 @@ impl Shape {
     ///
     /// In any case, returns a handle that refers to an object that is identical
     /// to the provided object.
-    pub fn get_handle_or_insert<T: Object>(
-        &mut self,
-        object: T,
-    ) -> ValidationResult<T> {
+    pub fn get_handle_or_insert<T: Object>(&mut self, object: T) -> Handle<T> {
         if let Some(handle) = self.get_handle(&object) {
-            return Ok(handle);
+            return handle;
         }
 
         self.insert(object)
@@ -123,7 +115,7 @@ impl Shape {
     /// already present object.
     ///
     /// This is done recursively.
-    pub fn merge<T: Object>(&mut self, object: T) -> ValidationResult<T> {
+    pub fn merge<T: Object>(&mut self, object: T) -> Handle<T> {
         object.merge_into(None, self, &mut Mapping::new())
     }
 
@@ -131,32 +123,29 @@ impl Shape {
     ///
     /// Returns a [`Mapping`] that maps each object from the merged shape to the
     /// merged objects in this shape.
-    pub fn merge_shape(
-        &mut self,
-        other: &Shape,
-    ) -> Result<Mapping, ValidationError> {
+    pub fn merge_shape(&mut self, other: &Shape) -> Mapping {
         let mut mapping = Mapping::new();
 
         for object in other.curves() {
-            object.get().merge_into(Some(object), self, &mut mapping)?;
+            object.get().merge_into(Some(object), self, &mut mapping);
         }
         for object in other.surfaces() {
-            object.get().merge_into(Some(object), self, &mut mapping)?;
+            object.get().merge_into(Some(object), self, &mut mapping);
         }
         for object in other.vertices() {
-            object.get().merge_into(Some(object), self, &mut mapping)?;
+            object.get().merge_into(Some(object), self, &mut mapping);
         }
         for object in other.edges() {
-            object.get().merge_into(Some(object), self, &mut mapping)?;
+            object.get().merge_into(Some(object), self, &mut mapping);
         }
         for object in other.cycles() {
-            object.get().merge_into(Some(object), self, &mut mapping)?;
+            object.get().merge_into(Some(object), self, &mut mapping);
         }
         for object in other.faces() {
-            object.get().merge_into(Some(object), self, &mut mapping)?;
+            object.get().merge_into(Some(object), self, &mut mapping);
         }
 
-        Ok(mapping)
+        mapping
     }
 
     /// Update objects in the shape
@@ -164,7 +153,7 @@ impl Shape {
     /// Returns [`Update`], and API that can be used to update objects in the
     /// shape.
     pub fn update(&mut self) -> Update {
-        Update::new(self.distinct_min_distance, &mut self.stores)
+        Update::new(&mut self.stores)
     }
 
     /// Clone the shape
@@ -172,40 +161,35 @@ impl Shape {
     /// Returns a [`Mapping`] that maps each object from the original shape to
     /// the respective object in the cloned shape.
     pub fn clone_shape(&self) -> (Shape, Mapping) {
-        self.clone_shape_inner()
-            .expect("Clone of valid shape can't be invalid")
-    }
-
-    fn clone_shape_inner(&self) -> Result<(Shape, Mapping), ValidationError> {
         let mut target = Shape::new();
         let mut mapping = Mapping::new();
 
         for original in self.curves() {
-            let cloned = target.merge(original.get())?;
+            let cloned = target.merge(original.get());
             mapping.curves.insert(original, cloned);
         }
         for original in self.surfaces() {
-            let cloned = target.merge(original.get())?;
+            let cloned = target.merge(original.get());
             mapping.surfaces.insert(original, cloned);
         }
         for original in self.vertices() {
-            let cloned = target.merge(original.get())?;
+            let cloned = target.merge(original.get());
             mapping.vertices.insert(original, cloned);
         }
         for original in self.edges() {
-            let cloned = target.merge(original.get())?;
+            let cloned = target.merge(original.get());
             mapping.edges.insert(original, cloned);
         }
         for original in self.cycles() {
-            let cloned = target.merge(original.get())?;
+            let cloned = target.merge(original.get());
             mapping.cycles.insert(original, cloned);
         }
         for original in self.faces() {
-            let cloned = target.merge(original.get())?;
+            let cloned = target.merge(original.get());
             mapping.faces.insert(original, cloned);
         }
 
-        Ok((target, mapping))
+        (target, mapping)
     }
 
     /// Access an iterator over all curves
@@ -268,7 +252,7 @@ mod tests {
 
     #[test]
 
-    fn get_handle() -> anyhow::Result<()> {
+    fn get_handle() {
         let mut shape = Shape::new();
 
         let point = Point::from([1., 0., 0.]);
@@ -278,8 +262,8 @@ mod tests {
         assert!(shape.get_handle(&curve).is_none());
         assert!(shape.get_handle(&surface).is_none());
 
-        let curve = shape.insert(curve)?;
-        let surface = shape.insert(surface)?;
+        let curve = shape.insert(curve);
+        let surface = shape.insert(surface);
 
         assert!(shape.get_handle(&curve.get()).as_ref() == Some(&curve));
         assert!(shape.get_handle(&surface.get()).as_ref() == Some(&surface));
@@ -293,8 +277,8 @@ mod tests {
         assert!(shape.get_handle(&vertex).is_none());
         assert!(shape.get_handle(&edge).is_none());
 
-        let vertex = shape.insert(vertex)?;
-        let edge = shape.insert(edge)?;
+        let vertex = shape.insert(vertex);
+        let edge = shape.insert(edge);
 
         assert!(shape.get_handle(&vertex.get()).as_ref() == Some(&vertex));
         assert!(shape.get_handle(&edge.get()).as_ref() == Some(&edge));
@@ -302,15 +286,13 @@ mod tests {
         let cycle = Cycle::new(vec![edge]);
         assert!(shape.get_handle(&cycle).is_none());
 
-        let cycle = shape.insert(cycle)?;
+        let cycle = shape.insert(cycle);
         assert!(shape.get_handle(&cycle.get()).as_ref() == Some(&cycle));
 
         let face = Face::new(surface, Vec::new(), Vec::new(), [0, 0, 0, 0]);
         assert!(shape.get_handle(&face).is_none());
 
-        let face = shape.insert(face)?;
+        let face = shape.insert(face);
         assert!(shape.get_handle(&face.get()).as_ref() == Some(&face));
-
-        Ok(())
     }
 }

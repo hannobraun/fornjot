@@ -3,17 +3,13 @@ use fj_math::Transform;
 use crate::{
     objects::{Curve, Face, Surface, Vertex},
     shape::Shape,
-    validation::ValidationError,
 };
 
 /// Transform the geometry of the shape
 ///
 /// Since the topological types refer to geometry, and don't contain any
 /// geometry themselves, this transforms the whole shape.
-pub fn transform_shape(
-    shape: &mut Shape,
-    transform: &Transform,
-) -> Result<(), ValidationError> {
+pub fn transform_shape(shape: &mut Shape, transform: &Transform) {
     shape
         .update()
         .update_all(|vertex: &mut Vertex| {
@@ -30,8 +26,5 @@ pub fn transform_shape(
                     *triangle = transform.transform_triangle(triangle);
                 }
             }
-        })
-        .validate()?;
-
-    Ok(())
+        });
 }

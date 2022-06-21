@@ -41,7 +41,7 @@ mod test {
     };
 
     #[test]
-    fn approximate_edge() -> anyhow::Result<()> {
+    fn approximate_edge() {
         let mut shape = Shape::new();
 
         let a = Point::from([1., 2., 3.]);
@@ -49,8 +49,8 @@ mod test {
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = Vertex::builder(&mut shape).build_from_point(a)?;
-        let v2 = Vertex::builder(&mut shape).build_from_point(d)?;
+        let v1 = Vertex::builder(&mut shape).build_from_point(a);
+        let v2 = Vertex::builder(&mut shape).build_from_point(d);
 
         let vertices = VerticesOfEdge::from_vertices([
             LocalForm::new(Point::from([0.]), v1),
@@ -71,7 +71,5 @@ mod test {
         let mut points = vec![b, c];
         super::approximate_edge(VerticesOfEdge::none(), &mut points);
         assert_eq!(points, vec![b, c, b]);
-
-        Ok(())
     }
 }

@@ -19,7 +19,7 @@ impl ToShape for fj::Sweep {
         let path = Vector::from(self.path());
         let color = self.shape().color();
 
-        let swept = sweep_shape(shape.into_inner(), path, tolerance, color)?;
+        let swept = sweep_shape(shape.into_inner(), path, tolerance, color);
         let swept = validate(swept, config)?;
 
         Ok(swept)

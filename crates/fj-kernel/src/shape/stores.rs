@@ -62,10 +62,6 @@ impl<T: Object> Store<T> {
         Handle::new(key, self.clone())
     }
 
-    pub fn contains(&self, object: &Handle<T>) -> bool {
-        object.store() == self && self.objects.read().contains_key(object.key())
-    }
-
     pub fn read(&self) -> RwLockReadGuard<Objects<T>> {
         self.objects.read()
     }
@@ -177,14 +173,6 @@ pub struct Handle<T: Object> {
 impl<T: Object> Handle<T> {
     pub(super) fn new(key: DefaultKey, store: Store<T>) -> Self {
         Self { key, store }
-    }
-
-    pub(super) fn key(&self) -> DefaultKey {
-        self.key
-    }
-
-    pub(super) fn store(&self) -> &Store<T> {
-        &self.store
     }
 
     /// Access the object that the handle references

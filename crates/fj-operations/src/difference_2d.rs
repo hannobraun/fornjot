@@ -48,11 +48,11 @@ impl ToShape for fj::Difference2d {
                 );
 
                 for cycle in face.exteriors.as_local_form().cloned() {
-                    let cycle = add_cycle(cycle, &mut difference, false)?;
+                    let cycle = add_cycle(cycle, &mut difference, false);
                     exteriors.push(cycle);
                 }
                 for cycle in face.interiors.as_local_form().cloned() {
-                    let cycle = add_cycle(cycle, &mut difference, true)?;
+                    let cycle = add_cycle(cycle, &mut difference, true);
                     interiors.push(cycle);
                 }
             }
@@ -68,7 +68,7 @@ impl ToShape for fj::Difference2d {
                 );
 
                 for cycle in face.exteriors.as_local_form().cloned() {
-                    let cycle = add_cycle(cycle, &mut difference, true)?;
+                    let cycle = add_cycle(cycle, &mut difference, true);
                     interiors.push(cycle);
                 }
             }
@@ -78,7 +78,7 @@ impl ToShape for fj::Difference2d {
                 exteriors,
                 interiors,
                 self.color(),
-            ))?;
+            ));
         }
 
         let difference = validate(difference, config)?;
@@ -98,7 +98,7 @@ fn add_cycle(
     cycle: LocalForm<Cycle<2>, Cycle<3>>,
     shape: &mut Shape,
     reverse: bool,
-) -> Result<LocalForm<Cycle<2>, Cycle<3>>, ValidationError> {
+) -> LocalForm<Cycle<2>, Cycle<3>> {
     let mut edges = Vec::new();
     for edge in cycle.local().edges.clone() {
         let curve_local = *edge.local().curve.local();
@@ -114,7 +114,7 @@ fn add_cycle(
         } else {
             curve_canonical
         };
-        let curve_canonical = shape.insert(curve_canonical)?;
+        let curve_canonical = shape.insert(curve_canonical);
 
         let vertices = if reverse {
             edge.local().vertices.clone().reverse()
@@ -129,7 +129,7 @@ fn add_cycle(
         let edge_canonical = shape.merge(Edge {
             curve: LocalForm::canonical_only(curve_canonical),
             vertices,
-        })?;
+        });
 
         edges.push(LocalForm::new(edge_local, edge_canonical));
     }
@@ -142,7 +142,7 @@ fn add_cycle(
         edges: edges.clone(),
     };
     let cycle_canonical = shape
-        .insert(Cycle::new(edges.into_iter().map(|edge| edge.canonical())))?;
+        .insert(Cycle::new(edges.into_iter().map(|edge| edge.canonical())));
 
-    Ok(LocalForm::new(cycle_local, cycle_canonical))
+    LocalForm::new(cycle_local, cycle_canonical)
 }
