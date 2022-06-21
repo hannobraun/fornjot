@@ -263,7 +263,7 @@ fn create_side_cycle(
                         .map(|vertex| vertex.canonical().get().point);
 
                 Edge::builder(target)
-                    .build_line_segment_from_points(points_canonical)?
+                    .build_line_segment_from_points(points_canonical)
             }
         };
 
@@ -400,7 +400,7 @@ mod tests {
                 ]));
             let face = Face::builder(surface, &mut shape)
                 .with_exterior_polygon(points)
-                .build()?;
+                .build();
 
             if reverse {
                 shape.update().update_all(|surface: &mut Surface| {

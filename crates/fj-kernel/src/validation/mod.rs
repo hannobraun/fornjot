@@ -226,7 +226,7 @@ mod tests {
     fn coherence_edge() -> anyhow::Result<()> {
         let mut shape = Shape::new();
         Edge::builder(&mut shape)
-            .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])?
+            .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])
             .get();
 
         let deviation = Scalar::from_f64(0.25);
@@ -272,7 +272,7 @@ mod tests {
 
         // Trying to refer to edge that is not from the same shape. Should fail.
         let edge = Edge::builder(&mut other)
-            .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])?;
+            .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]]);
         shape.insert(Cycle::new(vec![edge.clone()]));
         let err =
             validate(shape.clone(), &ValidationConfig::default()).unwrap_err();
@@ -280,7 +280,7 @@ mod tests {
 
         // Referring to edge that *is* from the same shape. Should work.
         let edge = Edge::builder(&mut shape)
-            .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])?;
+            .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]]);
         shape.insert(Cycle::new(vec![edge]));
 
         Ok(())
@@ -292,8 +292,8 @@ mod tests {
         let mut other = Shape::new();
 
         let curve = other.insert(Curve::x_axis());
-        let a = Vertex::builder(&mut other).build_from_point([1., 0., 0.])?;
-        let b = Vertex::builder(&mut other).build_from_point([2., 0., 0.])?;
+        let a = Vertex::builder(&mut other).build_from_point([1., 0., 0.]);
+        let b = Vertex::builder(&mut other).build_from_point([2., 0., 0.]);
 
         let a = LocalForm::new(Point::from([1.]), a);
         let b = LocalForm::new(Point::from([2.]), b);
@@ -310,8 +310,8 @@ mod tests {
         assert!(err.missing_vertex(&b.canonical()));
 
         let curve = shape.insert(Curve::x_axis());
-        let a = Vertex::builder(&mut shape).build_from_point([1., 0., 0.])?;
-        let b = Vertex::builder(&mut shape).build_from_point([2., 0., 0.])?;
+        let a = Vertex::builder(&mut shape).build_from_point([1., 0., 0.]);
+        let b = Vertex::builder(&mut shape).build_from_point([2., 0., 0.]);
 
         let a = LocalForm::new(Point::from([1.]), a);
         let b = LocalForm::new(Point::from([2.]), b);
@@ -333,8 +333,8 @@ mod tests {
         let triangle = [[0., 0.], [1., 0.], [0., 1.]];
 
         let surface = other.insert(Surface::xy_plane());
-        let cycle = Cycle::builder(surface.get(), &mut other)
-            .build_polygon(triangle)?;
+        let cycle =
+            Cycle::builder(surface.get(), &mut other).build_polygon(triangle);
 
         // Nothing has been added to `shape`. Should fail.
         shape.insert(Face::new(
@@ -349,8 +349,8 @@ mod tests {
         assert!(err.missing_cycle(&cycle.canonical()));
 
         let surface = shape.insert(Surface::xy_plane());
-        let cycle = Cycle::builder(surface.get(), &mut shape)
-            .build_polygon(triangle)?;
+        let cycle =
+            Cycle::builder(surface.get(), &mut shape).build_polygon(triangle);
 
         // Everything has been added to `shape` now. Should work!
         shape.insert(Face::new(
@@ -367,21 +367,21 @@ mod tests {
     fn uniqueness_edge() -> anyhow::Result<()> {
         let mut shape = Shape::new();
 
-        let a = Vertex::builder(&mut shape).build_from_point([0., 0., 0.])?;
-        let b = Vertex::builder(&mut shape).build_from_point([1., 0., 0.])?;
+        let a = Vertex::builder(&mut shape).build_from_point([0., 0., 0.]);
+        let b = Vertex::builder(&mut shape).build_from_point([1., 0., 0.]);
 
         Edge::builder(&mut shape)
-            .build_line_segment_from_vertices([a.clone(), b.clone()])?;
+            .build_line_segment_from_vertices([a.clone(), b.clone()]);
 
         // Should fail. An edge with the same vertices has already been added.
         Edge::builder(&mut shape)
-            .build_line_segment_from_vertices([a.clone(), b.clone()])?;
+            .build_line_segment_from_vertices([a.clone(), b.clone()]);
         let result = validate(shape.clone(), &ValidationConfig::default());
         assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
 
         // Should fail. An edge with the same vertices has already been added,
         // just the order is different.
-        Edge::builder(&mut shape).build_line_segment_from_vertices([b, a])?;
+        Edge::builder(&mut shape).build_line_segment_from_vertices([b, a]);
         let result = validate(shape, &ValidationConfig::default());
         assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
 

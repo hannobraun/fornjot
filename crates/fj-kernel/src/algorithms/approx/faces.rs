@@ -110,7 +110,7 @@ mod tests {
         let face = Face::builder(Surface::xy_plane(), &mut shape)
             .with_exterior_polygon([a, b, c, d])
             .with_interior_polygon([e, f, g, h])
-            .build()?;
+            .build();
 
         let a = a.to_xyz();
         let b = b.to_xyz();

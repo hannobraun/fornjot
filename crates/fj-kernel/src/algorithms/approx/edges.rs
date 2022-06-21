@@ -49,8 +49,8 @@ mod test {
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = Vertex::builder(&mut shape).build_from_point(a)?;
-        let v2 = Vertex::builder(&mut shape).build_from_point(d)?;
+        let v1 = Vertex::builder(&mut shape).build_from_point(a);
+        let v2 = Vertex::builder(&mut shape).build_from_point(d);
 
         let vertices = VerticesOfEdge::from_vertices([
             LocalForm::new(Point::from([0.]), v1),

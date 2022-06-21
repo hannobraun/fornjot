@@ -22,7 +22,7 @@ impl ToShape for fj::Circle {
         // to be added here.
 
         let edge = Edge::builder(&mut shape)
-            .build_circle(Scalar::from_f64(self.radius()))?;
+            .build_circle(Scalar::from_f64(self.radius()));
 
         let cycle_local = Cycle {
             edges: vec![edge.clone()],
