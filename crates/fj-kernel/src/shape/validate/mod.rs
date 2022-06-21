@@ -1,7 +1,3 @@
-mod uniqueness;
-
-pub use self::uniqueness::{DuplicateEdge, UniquenessIssues};
-
 use fj_math::Scalar;
 
 use crate::{
@@ -53,12 +49,10 @@ impl Validate for Vertex {
     /// does. See documentation of [`crate::kernel`] for some context on that.
     fn validate(
         &self,
-        handle: Option<&Handle<Self>>,
+        _: Option<&Handle<Self>>,
         _: Scalar,
-        stores: &Stores,
+        _: &Stores,
     ) -> Result<(), ValidationError> {
-        uniqueness::validate_vertex(self, handle, &stores.vertices)?;
-
         Ok(())
     }
 }
@@ -66,12 +60,10 @@ impl Validate for Vertex {
 impl Validate for Edge<3> {
     fn validate(
         &self,
-        handle: Option<&Handle<Self>>,
+        _: Option<&Handle<Self>>,
         _: Scalar,
-        stores: &Stores,
+        _: &Stores,
     ) -> Result<(), ValidationError> {
-        uniqueness::validate_edge(self, handle, &stores.edges)?;
-
         Ok(())
     }
 }

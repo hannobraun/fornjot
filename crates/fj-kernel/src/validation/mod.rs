@@ -26,10 +26,12 @@
 
 mod coherence;
 mod structural;
+mod uniqueness;
 
 pub use self::{
     coherence::{CoherenceIssues, CoherenceMismatch},
     structural::StructuralIssues,
+    uniqueness::{DuplicateEdge, UniquenessIssues},
 };
 
 use std::{collections::HashSet, ops::Deref};
@@ -38,7 +40,7 @@ use fj_math::Scalar;
 
 use crate::{
     objects::{Curve, Cycle, Edge, Surface, Vertex},
-    shape::{Handle, Shape, UniquenessIssues},
+    shape::{Handle, Shape},
 };
 
 /// Validate the given [`Shape`]
@@ -56,11 +58,14 @@ pub fn validate(
         curves.insert(curve);
     }
     for vertex in shape.vertices() {
+        uniqueness::validate_vertex(&vertex.get(), &vertices)?;
+
         vertices.insert(vertex);
     }
     for edge in shape.edges() {
         coherence::validate_edge(&edge.get(), config.identical_max_distance)?;
         structural::validate_edge(&edge.get(), &curves, &vertices)?;
+        uniqueness::validate_edge(&edge.get(), &edges)?;
 
         edges.insert(edge);
     }
