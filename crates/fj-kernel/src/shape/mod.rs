@@ -17,7 +17,5 @@ pub use self::{
     object::Object,
     stores::{Handle, Iter},
     update::Update,
-    validate::{
-        DuplicateEdge, StructuralIssues, UniquenessIssues, ValidationResult,
-    },
+    validate::{DuplicateEdge, UniquenessIssues, ValidationResult},
 };

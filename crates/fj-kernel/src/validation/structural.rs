@@ -2,21 +2,22 @@ use std::{collections::HashSet, fmt};
 
 use crate::{
     objects::{Curve, Cycle, Edge, Face, Surface, Vertex},
-    shape::{stores::Stores, Handle},
+    shape::Handle,
 };
 
 pub fn validate_edge(
     edge: &Edge<3>,
-    stores: &Stores,
+    curves: &HashSet<Handle<Curve<3>>>,
+    vertices: &HashSet<Handle<Vertex>>,
 ) -> Result<(), StructuralIssues> {
     let mut missing_curve = None;
     let mut missing_vertices = HashSet::new();
 
-    if !stores.curves.contains(&edge.curve.canonical()) {
+    if !curves.contains(&edge.curve.canonical()) {
         missing_curve = Some(edge.curve.canonical());
     }
     for vertex in edge.vertices.iter() {
-        if !stores.vertices.contains(&vertex.canonical()) {
+        if !vertices.contains(&vertex.canonical()) {
             missing_vertices.insert(vertex.canonical().clone());
         }
     }
@@ -34,13 +35,13 @@ pub fn validate_edge(
 
 pub fn validate_cycle(
     cycle: &Cycle<3>,
-    stores: &Stores,
+    edges: &HashSet<Handle<Edge<3>>>,
 ) -> Result<(), StructuralIssues> {
     let mut missing_edges = HashSet::new();
     for edge in &cycle.edges {
         let edge = edge.canonical();
 
-        if !stores.edges.contains(&edge) {
+        if !edges.contains(&edge) {
             missing_edges.insert(edge.clone());
         }
     }
@@ -57,19 +58,20 @@ pub fn validate_cycle(
 
 pub fn validate_face(
     face: &Face,
-    stores: &Stores,
+    cycles: &HashSet<Handle<Cycle<3>>>,
+    surfaces: &HashSet<Handle<Surface>>,
 ) -> Result<(), StructuralIssues> {
     if let Face::Face(face) = face {
         let mut missing_surface = None;
         let mut missing_cycles = HashSet::new();
 
-        if !stores.surfaces.contains(&face.surface) {
+        if !surfaces.contains(&face.surface) {
             missing_surface = Some(face.surface.clone());
         }
         for cycle in
             face.exteriors.as_handle().chain(face.interiors.as_handle())
         {
-            if !stores.cycles.contains(&cycle) {
+            if !cycles.contains(&cycle) {
                 missing_cycles.insert(cycle);
             }
         }

@@ -332,45 +332,6 @@ mod tests {
     }
 
     #[test]
-    fn add_edge() -> anyhow::Result<()> {
-        let mut shape = Shape::new();
-        let mut other = Shape::new();
-
-        let curve = other.insert(Curve::x_axis())?;
-        let a = Vertex::builder(&mut other).build_from_point([1., 0., 0.])?;
-        let b = Vertex::builder(&mut other).build_from_point([2., 0., 0.])?;
-
-        let a = LocalForm::new(Point::from([1.]), a);
-        let b = LocalForm::new(Point::from([2.]), b);
-
-        // Shouldn't work. Nothing has been added to `shape`.
-        let err = shape
-            .insert(Edge {
-                curve: LocalForm::canonical_only(curve.clone()),
-                vertices: VerticesOfEdge::from_vertices([a.clone(), b.clone()]),
-            })
-            .unwrap_err();
-        assert!(err.missing_curve(&curve));
-        assert!(err.missing_vertex(&a.canonical()));
-        assert!(err.missing_vertex(&b.canonical()));
-
-        let curve = shape.insert(Curve::x_axis())?;
-        let a = Vertex::builder(&mut shape).build_from_point([1., 0., 0.])?;
-        let b = Vertex::builder(&mut shape).build_from_point([2., 0., 0.])?;
-
-        let a = LocalForm::new(Point::from([1.]), a);
-        let b = LocalForm::new(Point::from([2.]), b);
-
-        // Everything has been added to `shape` now. Should work!
-        shape.insert(Edge {
-            curve: LocalForm::canonical_only(curve),
-            vertices: VerticesOfEdge::from_vertices([a, b]),
-        })?;
-
-        Ok(())
-    }
-
-    #[test]
     fn add_edge_uniqueness() -> anyhow::Result<()> {
         let mut shape = Shape::new();
 
@@ -390,63 +351,6 @@ mod tests {
         let result =
             Edge::builder(&mut shape).build_line_segment_from_vertices([b, a]);
         assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
-
-        Ok(())
-    }
-
-    #[test]
-    fn add_cycle() -> anyhow::Result<()> {
-        let mut shape = Shape::new();
-        let mut other = Shape::new();
-
-        // Trying to refer to edge that is not from the same shape. Should fail.
-        let edge = Edge::builder(&mut other)
-            .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])?;
-        let err = shape.insert(Cycle::new(vec![edge.clone()])).unwrap_err();
-        assert!(err.missing_edge(&edge));
-
-        // Referring to edge that *is* from the same shape. Should work.
-        let edge = Edge::builder(&mut shape)
-            .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])?;
-        shape.insert(Cycle::new(vec![edge]))?;
-
-        Ok(())
-    }
-
-    #[test]
-    fn add_face() -> anyhow::Result<()> {
-        let mut shape = Shape::new();
-        let mut other = Shape::new();
-
-        let triangle = [[0., 0.], [1., 0.], [0., 1.]];
-
-        let surface = other.insert(Surface::xy_plane())?;
-        let cycle = Cycle::builder(surface.get(), &mut other)
-            .build_polygon(triangle)?;
-
-        // Nothing has been added to `shape`. Should fail.
-        let err = shape
-            .insert(Face::new(
-                surface.clone(),
-                vec![cycle.clone()],
-                Vec::new(),
-                [255, 0, 0, 255],
-            ))
-            .unwrap_err();
-        assert!(err.missing_surface(&surface));
-        assert!(err.missing_cycle(&cycle.canonical()));
-
-        let surface = shape.insert(Surface::xy_plane())?;
-        let cycle = Cycle::builder(surface.get(), &mut shape)
-            .build_polygon(triangle)?;
-
-        // Everything has been added to `shape` now. Should work!
-        shape.insert(Face::new(
-            surface,
-            vec![cycle],
-            Vec::new(),
-            [255, 0, 0, 255],
-        ))?;
 
         Ok(())
     }

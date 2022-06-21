@@ -25,16 +25,20 @@
 //! [`Shape`]: crate::shape::Shape
 
 mod coherence;
+mod structural;
 
-pub use self::coherence::{CoherenceIssues, CoherenceMismatch};
+pub use self::{
+    coherence::{CoherenceIssues, CoherenceMismatch},
+    structural::StructuralIssues,
+};
 
-use std::ops::Deref;
+use std::{collections::HashSet, ops::Deref};
 
 use fj_math::Scalar;
 
 use crate::{
     objects::{Curve, Cycle, Edge, Surface, Vertex},
-    shape::{Handle, Shape, StructuralIssues, UniquenessIssues},
+    shape::{Handle, Shape, UniquenessIssues},
 };
 
 /// Validate the given [`Shape`]
@@ -42,8 +46,34 @@ pub fn validate(
     shape: Shape,
     config: &ValidationConfig,
 ) -> Result<Validated<Shape>, ValidationError> {
+    let mut curves = HashSet::new();
+    let mut cycles = HashSet::new();
+    let mut edges = HashSet::new();
+    let mut surfaces = HashSet::new();
+    let mut vertices = HashSet::new();
+
+    for curve in shape.curves() {
+        curves.insert(curve);
+    }
+    for vertex in shape.vertices() {
+        vertices.insert(vertex);
+    }
     for edge in shape.edges() {
         coherence::validate_edge(&edge.get(), config.identical_max_distance)?;
+        structural::validate_edge(&edge.get(), &curves, &vertices)?;
+
+        edges.insert(edge);
+    }
+    for cycle in shape.cycles() {
+        structural::validate_cycle(&cycle.get(), &edges)?;
+
+        cycles.insert(cycle);
+    }
+    for surface in shape.surfaces() {
+        surfaces.insert(surface);
+    }
+    for face in shape.faces() {
+        structural::validate_face(&face.get(), &cycles, &surfaces)?;
     }
 
     Ok(Validated(shape))
@@ -84,6 +114,7 @@ impl Default for ValidationConfig {
 /// Wrapper around an object that indicates the object has been validated
 ///
 /// Returned by implementations of `Validate`.
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Validated<T>(T);
 
 impl<T> Validated<T> {
@@ -178,16 +209,16 @@ impl ValidationError {
 
 #[cfg(test)]
 mod tests {
-    use fj_math::Scalar;
+    use fj_math::{Point, Scalar};
 
     use crate::{
-        objects::Edge,
+        objects::{Curve, Cycle, Edge, Face, Surface, Vertex, VerticesOfEdge},
         shape::{LocalForm, Shape},
-        validation::ValidationConfig,
+        validation::{validate, ValidationConfig},
     };
 
     #[test]
-    fn edge_coherence() -> anyhow::Result<()> {
+    fn coherence_edge() -> anyhow::Result<()> {
         let mut shape = Shape::new();
         Edge::builder(&mut shape)
             .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])?
@@ -211,7 +242,7 @@ mod tests {
             })
             .validate()?;
 
-        let result = super::validate(
+        let result = validate(
             shape.clone(),
             &ValidationConfig {
                 identical_max_distance: deviation * 2.,
@@ -220,7 +251,7 @@ mod tests {
         );
         assert!(result.is_ok());
 
-        let result = super::validate(
+        let result = validate(
             shape,
             &ValidationConfig {
                 identical_max_distance: deviation / 2.,
@@ -228,6 +259,104 @@ mod tests {
             },
         );
         assert!(result.is_err());
+
+        Ok(())
+    }
+
+    #[test]
+    fn structural_cycle() -> anyhow::Result<()> {
+        let mut shape = Shape::new();
+        let mut other = Shape::new();
+
+        // Trying to refer to edge that is not from the same shape. Should fail.
+        let edge = Edge::builder(&mut other)
+            .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])?;
+        shape.insert(Cycle::new(vec![edge.clone()]))?;
+        let err =
+            validate(shape.clone(), &ValidationConfig::default()).unwrap_err();
+        assert!(err.missing_edge(&edge));
+
+        // Referring to edge that *is* from the same shape. Should work.
+        let edge = Edge::builder(&mut shape)
+            .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])?;
+        shape.insert(Cycle::new(vec![edge]))?;
+
+        Ok(())
+    }
+
+    #[test]
+    fn structural_edge() -> anyhow::Result<()> {
+        let mut shape = Shape::new();
+        let mut other = Shape::new();
+
+        let curve = other.insert(Curve::x_axis())?;
+        let a = Vertex::builder(&mut other).build_from_point([1., 0., 0.])?;
+        let b = Vertex::builder(&mut other).build_from_point([2., 0., 0.])?;
+
+        let a = LocalForm::new(Point::from([1.]), a);
+        let b = LocalForm::new(Point::from([2.]), b);
+
+        // Shouldn't work. Nothing has been added to `shape`.
+        shape.insert(Edge {
+            curve: LocalForm::canonical_only(curve.clone()),
+            vertices: VerticesOfEdge::from_vertices([a.clone(), b.clone()]),
+        })?;
+        let err =
+            validate(shape.clone(), &ValidationConfig::default()).unwrap_err();
+        assert!(err.missing_curve(&curve));
+        assert!(err.missing_vertex(&a.canonical()));
+        assert!(err.missing_vertex(&b.canonical()));
+
+        let curve = shape.insert(Curve::x_axis())?;
+        let a = Vertex::builder(&mut shape).build_from_point([1., 0., 0.])?;
+        let b = Vertex::builder(&mut shape).build_from_point([2., 0., 0.])?;
+
+        let a = LocalForm::new(Point::from([1.]), a);
+        let b = LocalForm::new(Point::from([2.]), b);
+
+        // Everything has been added to `shape` now. Should work!
+        shape.insert(Edge {
+            curve: LocalForm::canonical_only(curve),
+            vertices: VerticesOfEdge::from_vertices([a, b]),
+        })?;
+
+        Ok(())
+    }
+
+    #[test]
+    fn structural_face() -> anyhow::Result<()> {
+        let mut shape = Shape::new();
+        let mut other = Shape::new();
+
+        let triangle = [[0., 0.], [1., 0.], [0., 1.]];
+
+        let surface = other.insert(Surface::xy_plane())?;
+        let cycle = Cycle::builder(surface.get(), &mut other)
+            .build_polygon(triangle)?;
+
+        // Nothing has been added to `shape`. Should fail.
+        shape.insert(Face::new(
+            surface.clone(),
+            vec![cycle.clone()],
+            Vec::new(),
+            [255, 0, 0, 255],
+        ))?;
+        let err =
+            validate(shape.clone(), &ValidationConfig::default()).unwrap_err();
+        assert!(err.missing_surface(&surface));
+        assert!(err.missing_cycle(&cycle.canonical()));
+
+        let surface = shape.insert(Surface::xy_plane())?;
+        let cycle = Cycle::builder(surface.get(), &mut shape)
+            .build_polygon(triangle)?;
+
+        // Everything has been added to `shape` now. Should work!
+        shape.insert(Face::new(
+            surface,
+            vec![cycle],
+            Vec::new(),
+            [255, 0, 0, 255],
+        ))?;
 
         Ok(())
     }
