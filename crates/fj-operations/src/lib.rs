@@ -38,7 +38,7 @@ pub trait ToShape {
     /// Compute the boundary representation of the shape
     fn to_shape(
         &self,
-        config: &validation::Config,
+        config: &validation::ValidationConfig,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Shape>, ValidationError>;
@@ -91,7 +91,7 @@ macro_rules! dispatch {
 
 dispatch! {
     to_shape(
-        config: &validation::Config,
+        config: &validation::ValidationConfig,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Shape>, ValidationError>;

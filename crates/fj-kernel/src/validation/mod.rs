@@ -40,7 +40,7 @@ use crate::{
 /// Validate the given [`Shape`]
 pub fn validate(
     shape: Shape,
-    config: &Config,
+    config: &ValidationConfig,
 ) -> Result<Validated<Shape>, ValidationError> {
     for edge in shape.edges() {
         coherence::validate_edge(&edge.get(), config.identical_max_distance)?;
@@ -51,7 +51,7 @@ pub fn validate(
 
 /// Configuration required for the validation process
 #[derive(Debug, Clone, Copy)]
-pub struct Config {
+pub struct ValidationConfig {
     /// The minimum distance between distinct objects
     ///
     /// Objects whose distance is less than the value defined in this field, are
@@ -67,7 +67,7 @@ pub struct Config {
     pub identical_max_distance: Scalar,
 }
 
-impl Default for Config {
+impl Default for ValidationConfig {
     fn default() -> Self {
         Self {
             distinct_min_distance: Scalar::from_f64(5e-7), // 0.5 µm,
@@ -183,7 +183,7 @@ mod tests {
     use crate::{
         objects::Edge,
         shape::{LocalForm, Shape},
-        validation::Config,
+        validation::ValidationConfig,
     };
 
     #[test]
@@ -213,18 +213,18 @@ mod tests {
 
         let result = super::validate(
             shape.clone(),
-            &Config {
+            &ValidationConfig {
                 identical_max_distance: deviation * 2.,
-                ..Config::default()
+                ..ValidationConfig::default()
             },
         );
         assert!(result.is_ok());
 
         let result = super::validate(
             shape,
-            &Config {
+            &ValidationConfig {
                 identical_max_distance: deviation / 2.,
-                ..Config::default()
+                ..ValidationConfig::default()
             },
         );
         assert!(result.is_err());

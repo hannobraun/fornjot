@@ -38,7 +38,7 @@ impl ShapeProcessor {
             Some(user_defined_tolerance) => user_defined_tolerance,
         };
 
-        let config = validation::Config::default();
+        let config = validation::ValidationConfig::default();
         let mut debug_info = DebugInfo::new();
         let shape = shape.to_shape(&config, tolerance, &mut debug_info)?;
         let mesh = triangulate(shape.into_inner(), tolerance, &mut debug_info);

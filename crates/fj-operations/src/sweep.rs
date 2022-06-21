@@ -11,7 +11,7 @@ use super::ToShape;
 impl ToShape for fj::Sweep {
     fn to_shape(
         &self,
-        config: &validation::Config,
+        config: &validation::ValidationConfig,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Shape>, ValidationError> {

@@ -12,7 +12,7 @@ use super::ToShape;
 impl ToShape for fj::Sketch {
     fn to_shape(
         &self,
-        config: &validation::Config,
+        config: &validation::ValidationConfig,
         _: Tolerance,
         _: &mut DebugInfo,
     ) -> Result<Validated<Shape>, ValidationError> {
