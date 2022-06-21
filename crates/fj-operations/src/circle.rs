@@ -3,7 +3,7 @@ use fj_kernel::{
     algorithms::Tolerance,
     objects::{Cycle, Edge, Face, Surface},
     shape::{LocalForm, Shape},
-    validation::{self, validate, Validated, ValidationError},
+    validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::{Aabb, Point, Scalar};
 
@@ -12,7 +12,7 @@ use super::ToShape;
 impl ToShape for fj::Circle {
     fn to_shape(
         &self,
-        config: &validation::ValidationConfig,
+        config: &ValidationConfig,
         _: Tolerance,
         _: &mut DebugInfo,
     ) -> Result<Validated<Shape>, ValidationError> {

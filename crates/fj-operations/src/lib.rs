@@ -29,7 +29,7 @@ use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
     shape::Shape,
-    validation::{self, Validated, ValidationError},
+    validation::{Validated, ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
 
@@ -38,7 +38,7 @@ pub trait ToShape {
     /// Compute the boundary representation of the shape
     fn to_shape(
         &self,
-        config: &validation::ValidationConfig,
+        config: &ValidationConfig,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Shape>, ValidationError>;
@@ -91,7 +91,7 @@ macro_rules! dispatch {
 
 dispatch! {
     to_shape(
-        config: &validation::ValidationConfig,
+        config: &ValidationConfig,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Shape>, ValidationError>;

@@ -2,7 +2,7 @@ use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::{transform_shape, Tolerance},
     shape::Shape,
-    validation::{self, validate, Validated, ValidationError},
+    validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::{Aabb, Transform, Vector};
 
@@ -11,7 +11,7 @@ use super::ToShape;
 impl ToShape for fj::Transform {
     fn to_shape(
         &self,
-        config: &validation::ValidationConfig,
+        config: &ValidationConfig,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Shape>, ValidationError> {

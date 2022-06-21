@@ -3,7 +3,7 @@ use fj_kernel::{
     algorithms::Tolerance,
     objects::{Cycle, Edge, Face},
     shape::{LocalForm, Shape},
-    validation::{self, validate, Validated, ValidationError},
+    validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
 
@@ -12,7 +12,7 @@ use super::ToShape;
 impl ToShape for fj::Difference2d {
     fn to_shape(
         &self,
-        config: &validation::ValidationConfig,
+        config: &ValidationConfig,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Shape>, ValidationError> {
