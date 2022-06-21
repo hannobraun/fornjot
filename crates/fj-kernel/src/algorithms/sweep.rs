@@ -85,8 +85,8 @@ impl Sweep {
         }
         transform_shape(&mut self.top, &self.translation);
 
-        self.target.merge_shape(&self.bottom)?;
-        self.target.merge_shape(&self.top)?;
+        self.target.merge_shape(&self.bottom);
+        self.target.merge_shape(&self.top);
 
         Ok(())
     }
@@ -301,7 +301,7 @@ fn create_side_cycle(
         edge_top.canonical(),
         edge_side_a.canonical(),
         edge_side_b.canonical(),
-    ]))?;
+    ]));
 
     Ok(LocalForm::new(local, canonical))
 }

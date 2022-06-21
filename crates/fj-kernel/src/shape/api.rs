@@ -7,7 +7,7 @@ use crate::{
 
 use super::{
     stores::{Store, Stores},
-    Handle, Iter, Mapping, Object, Update, ValidationResult,
+    Handle, Iter, Mapping, Object, Update,
 };
 
 /// The boundary representation of a shape
@@ -118,7 +118,7 @@ impl Shape {
     /// already present object.
     ///
     /// This is done recursively.
-    pub fn merge<T: Object>(&mut self, object: T) -> ValidationResult<T> {
+    pub fn merge<T: Object>(&mut self, object: T) -> Handle<T> {
         object.merge_into(None, self, &mut Mapping::new())
     }
 
@@ -126,32 +126,29 @@ impl Shape {
     ///
     /// Returns a [`Mapping`] that maps each object from the merged shape to the
     /// merged objects in this shape.
-    pub fn merge_shape(
-        &mut self,
-        other: &Shape,
-    ) -> Result<Mapping, ValidationError> {
+    pub fn merge_shape(&mut self, other: &Shape) -> Mapping {
         let mut mapping = Mapping::new();
 
         for object in other.curves() {
-            object.get().merge_into(Some(object), self, &mut mapping)?;
+            object.get().merge_into(Some(object), self, &mut mapping);
         }
         for object in other.surfaces() {
-            object.get().merge_into(Some(object), self, &mut mapping)?;
+            object.get().merge_into(Some(object), self, &mut mapping);
         }
         for object in other.vertices() {
-            object.get().merge_into(Some(object), self, &mut mapping)?;
+            object.get().merge_into(Some(object), self, &mut mapping);
         }
         for object in other.edges() {
-            object.get().merge_into(Some(object), self, &mut mapping)?;
+            object.get().merge_into(Some(object), self, &mut mapping);
         }
         for object in other.cycles() {
-            object.get().merge_into(Some(object), self, &mut mapping)?;
+            object.get().merge_into(Some(object), self, &mut mapping);
         }
         for object in other.faces() {
-            object.get().merge_into(Some(object), self, &mut mapping)?;
+            object.get().merge_into(Some(object), self, &mut mapping);
         }
 
-        Ok(mapping)
+        mapping
     }
 
     /// Update objects in the shape
@@ -176,27 +173,27 @@ impl Shape {
         let mut mapping = Mapping::new();
 
         for original in self.curves() {
-            let cloned = target.merge(original.get())?;
+            let cloned = target.merge(original.get());
             mapping.curves.insert(original, cloned);
         }
         for original in self.surfaces() {
-            let cloned = target.merge(original.get())?;
+            let cloned = target.merge(original.get());
             mapping.surfaces.insert(original, cloned);
         }
         for original in self.vertices() {
-            let cloned = target.merge(original.get())?;
+            let cloned = target.merge(original.get());
             mapping.vertices.insert(original, cloned);
         }
         for original in self.edges() {
-            let cloned = target.merge(original.get())?;
+            let cloned = target.merge(original.get());
             mapping.edges.insert(original, cloned);
         }
         for original in self.cycles() {
-            let cloned = target.merge(original.get())?;
+            let cloned = target.merge(original.get());
             mapping.cycles.insert(original, cloned);
         }
         for original in self.faces() {
-            let cloned = target.merge(original.get())?;
+            let cloned = target.merge(original.get());
             mapping.faces.insert(original, cloned);
         }
 

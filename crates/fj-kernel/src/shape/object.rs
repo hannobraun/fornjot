@@ -1,11 +1,8 @@
-use crate::{
-    objects::{Curve, Cycle, Edge, Face, Surface, Vertex, VerticesOfEdge},
-    validation::ValidationError,
+use crate::objects::{
+    Curve, Cycle, Edge, Face, Surface, Vertex, VerticesOfEdge,
 };
 
-use super::{
-    validate::Validate, Handle, LocalForm, Mapping, Shape, ValidationResult,
-};
+use super::{validate::Validate, Handle, LocalForm, Mapping, Shape};
 
 /// Marker trait for geometric and topological objects
 pub trait Object:
@@ -19,7 +16,7 @@ pub trait Object:
         handle: Option<Handle<Self>>,
         shape: &mut Shape,
         mapping: &mut Mapping,
-    ) -> ValidationResult<Self>;
+    ) -> Handle<Self>;
 }
 
 impl private::Sealed for Curve<3> {}
@@ -36,14 +33,14 @@ impl Object for Curve<3> {
         handle: Option<Handle<Self>>,
         shape: &mut Shape,
         mapping: &mut Mapping,
-    ) -> ValidationResult<Self> {
+    ) -> Handle<Self> {
         let merged = shape.get_handle_or_insert(self);
 
         if let Some(handle) = handle {
             mapping.curves.insert(handle, merged.clone());
         }
 
-        Ok(merged)
+        merged
     }
 }
 
@@ -53,14 +50,14 @@ impl Object for Surface {
         handle: Option<Handle<Self>>,
         shape: &mut Shape,
         mapping: &mut Mapping,
-    ) -> ValidationResult<Self> {
+    ) -> Handle<Self> {
         let merged = shape.get_handle_or_insert(self);
 
         if let Some(handle) = handle {
             mapping.surfaces.insert(handle, merged.clone());
         }
 
-        Ok(merged)
+        merged
     }
 }
 
@@ -70,14 +67,14 @@ impl Object for Vertex {
         handle: Option<Handle<Self>>,
         shape: &mut Shape,
         mapping: &mut Mapping,
-    ) -> ValidationResult<Self> {
+    ) -> Handle<Self> {
         let merged = shape.get_handle_or_insert(Vertex { point: self.point });
 
         if let Some(handle) = handle {
             mapping.vertices.insert(handle, merged.clone());
         }
 
-        Ok(merged)
+        merged
     }
 }
 
@@ -87,24 +84,19 @@ impl Object for Edge<3> {
         handle: Option<Handle<Self>>,
         shape: &mut Shape,
         mapping: &mut Mapping,
-    ) -> ValidationResult<Self> {
+    ) -> Handle<Self> {
         let curve = self.curve().merge_into(
             Some(self.curve.canonical()),
             shape,
             mapping,
-        )?;
+        );
 
-        let vertices =
-            self.vertices
-                .try_convert::<_, _, ValidationError>(|vertex| {
-                    let canonical = vertex.canonical();
-                    let canonical = canonical.get().merge_into(
-                        Some(canonical),
-                        shape,
-                        mapping,
-                    )?;
-                    Ok(LocalForm::new(*vertex.local(), canonical))
-                })?;
+        let vertices = self.vertices.convert(|vertex| {
+            let canonical = vertex.canonical();
+            let canonical =
+                canonical.get().merge_into(Some(canonical), shape, mapping);
+            LocalForm::new(*vertex.local(), canonical)
+        });
 
         let merged = shape.get_handle_or_insert(Edge {
             curve: LocalForm::canonical_only(curve),
@@ -115,7 +107,7 @@ impl Object for Edge<3> {
             mapping.edges.insert(handle, merged.clone());
         }
 
-        Ok(merged)
+        merged
     }
 }
 
@@ -125,11 +117,11 @@ impl Object for Cycle<3> {
         handle: Option<Handle<Self>>,
         shape: &mut Shape,
         mapping: &mut Mapping,
-    ) -> ValidationResult<Self> {
+    ) -> Handle<Self> {
         let mut edges = Vec::new();
         for edge in self.edges {
             let edge = edge.canonical();
-            let edge = edge.get().merge_into(Some(edge), shape, mapping)?;
+            let edge = edge.get().merge_into(Some(edge), shape, mapping);
             edges.push(edge);
         }
 
@@ -139,7 +131,7 @@ impl Object for Cycle<3> {
             mapping.cycles.insert(handle, merged.clone());
         }
 
-        Ok(merged)
+        merged
     }
 }
 
@@ -149,14 +141,14 @@ impl Object for Face {
         handle: Option<Handle<Self>>,
         shape: &mut Shape,
         mapping: &mut Mapping,
-    ) -> ValidationResult<Self> {
+    ) -> Handle<Self> {
         let merged = match self {
             Face::Face(face) => {
                 let surface = face.surface.get().merge_into(
                     Some(face.surface),
                     shape,
                     mapping,
-                )?;
+                );
 
                 let mut exts = Vec::new();
                 for cycle in face.exteriors.as_local_form() {
@@ -164,7 +156,7 @@ impl Object for Face {
                         Some(cycle.canonical()),
                         shape,
                         mapping,
-                    )?;
+                    );
                     exts.push(LocalForm::new(cycle.local().clone(), merged));
                 }
 
@@ -174,7 +166,7 @@ impl Object for Face {
                         Some(cycle.canonical()),
                         shape,
                         mapping,
-                    )?;
+                    );
                     ints.push(LocalForm::new(cycle.local().clone(), merged));
                 }
 
@@ -189,7 +181,7 @@ impl Object for Face {
             mapping.faces.insert(handle, merged.clone());
         }
 
-        Ok(merged)
+        merged
     }
 }
 

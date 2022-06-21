@@ -78,7 +78,7 @@ impl ToShape for fj::Difference2d {
                 exteriors,
                 interiors,
                 self.color(),
-            ))?;
+            ));
         }
 
         let difference = validate(difference, config)?;
@@ -129,7 +129,7 @@ fn add_cycle(
         let edge_canonical = shape.merge(Edge {
             curve: LocalForm::canonical_only(curve_canonical),
             vertices,
-        })?;
+        });
 
         edges.push(LocalForm::new(edge_local, edge_canonical));
     }
