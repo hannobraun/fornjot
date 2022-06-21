@@ -259,8 +259,6 @@ impl Default for Shape {
 
 #[cfg(test)]
 mod tests {
-    use std::ops::{Deref, DerefMut};
-
     use fj_math::Point;
 
     use crate::{
@@ -335,8 +333,8 @@ mod tests {
 
     #[test]
     fn add_edge() -> anyhow::Result<()> {
-        let mut shape = TestShape::new();
-        let mut other = TestShape::new();
+        let mut shape = Shape::new();
+        let mut other = Shape::new();
 
         let curve = other.insert(Curve::x_axis())?;
         let a = Vertex::builder(&mut other).build_from_point([1., 0., 0.])?;
@@ -398,8 +396,8 @@ mod tests {
 
     #[test]
     fn add_cycle() -> anyhow::Result<()> {
-        let mut shape = TestShape::new();
-        let mut other = TestShape::new();
+        let mut shape = Shape::new();
+        let mut other = Shape::new();
 
         // Trying to refer to edge that is not from the same shape. Should fail.
         let edge = Edge::builder(&mut other)
@@ -417,8 +415,8 @@ mod tests {
 
     #[test]
     fn add_face() -> anyhow::Result<()> {
-        let mut shape = TestShape::new();
-        let mut other = TestShape::new();
+        let mut shape = Shape::new();
+        let mut other = Shape::new();
 
         let triangle = [[0., 0.], [1., 0.], [0., 1.]];
 
@@ -451,31 +449,5 @@ mod tests {
         ))?;
 
         Ok(())
-    }
-
-    struct TestShape {
-        inner: Shape,
-    }
-
-    impl TestShape {
-        fn new() -> Self {
-            Self {
-                inner: Shape::new(),
-            }
-        }
-    }
-
-    impl Deref for TestShape {
-        type Target = Shape;
-
-        fn deref(&self) -> &Self::Target {
-            &self.inner
-        }
-    }
-
-    impl DerefMut for TestShape {
-        fn deref_mut(&mut self) -> &mut Self::Target {
-            &mut self.inner
-        }
     }
 }
