@@ -2,12 +2,10 @@ use crate::objects::{
     Curve, Cycle, Edge, Face, Surface, Vertex, VerticesOfEdge,
 };
 
-use super::{validate::Validate, Handle, LocalForm, Mapping, Shape};
+use super::{Handle, LocalForm, Mapping, Shape};
 
 /// Marker trait for geometric and topological objects
-pub trait Object:
-    'static + Clone + PartialEq + Validate + private::Sealed
-{
+pub trait Object: 'static + Clone + PartialEq + private::Sealed {
     /// Internal function
     ///
     /// Please consider using [`Shape::merge`] instead.
