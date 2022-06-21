@@ -8,7 +8,6 @@ mod mapping;
 mod object;
 mod stores;
 mod update;
-mod validate;
 
 pub use self::{
     api::Shape,
@@ -17,5 +16,4 @@ pub use self::{
     object::Object,
     stores::{Handle, Iter},
     update::Update,
-    validate::ValidationResult,
 };
