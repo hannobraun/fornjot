@@ -422,7 +422,7 @@ mod tests {
 
         let triangle = [[0., 0.], [1., 0.], [0., 1.]];
 
-        let surface = other.add_surface()?;
+        let surface = other.insert(Surface::xy_plane())?;
         let cycle = Cycle::builder(surface.get(), &mut other)
             .build_polygon(triangle)?;
 
@@ -438,7 +438,7 @@ mod tests {
         assert!(err.missing_surface(&surface));
         assert!(err.missing_cycle(&cycle.canonical()));
 
-        let surface = shape.add_surface()?;
+        let surface = shape.insert(Surface::xy_plane())?;
         let cycle = Cycle::builder(surface.get(), &mut shape)
             .build_polygon(triangle)?;
 
@@ -466,10 +466,6 @@ mod tests {
 
         fn add_curve(&mut self) -> ValidationResult<Curve<3>> {
             self.insert(Curve::x_axis())
-        }
-
-        fn add_surface(&mut self) -> ValidationResult<Surface> {
-            self.insert(Surface::xy_plane())
         }
     }
 
