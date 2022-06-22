@@ -57,11 +57,13 @@ pub fn validate(
     for curve in shape.curves().map(|handle| handle.get()) {
         curves.insert(curve);
     }
+
     for vertex in shape.vertices().map(|handle| handle.get()) {
         uniqueness::validate_vertex(&vertex, &vertices)?;
 
         vertices.insert(vertex);
     }
+
     for edge in shape.edges().map(|handle| handle.get()) {
         coherence::validate_edge(&edge, config.identical_max_distance)?;
         structural::validate_edge(&edge, &curves, &vertices)?;
@@ -69,14 +71,17 @@ pub fn validate(
 
         edges.insert(edge);
     }
+
     for cycle in shape.cycles().map(|handle| handle.get()) {
         structural::validate_cycle(&cycle, &edges)?;
 
         cycles.insert(cycle);
     }
+
     for surface in shape.surfaces().map(|handle| handle.get()) {
         surfaces.insert(surface);
     }
+
     for face in shape.faces().map(|handle| handle.get()) {
         structural::validate_face(&face, &cycles, &surfaces)?;
     }
