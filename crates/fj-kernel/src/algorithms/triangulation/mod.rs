@@ -111,6 +111,7 @@ mod tests {
         let d = Point::from(d).to_xyz();
 
         let triangles = triangulate(shape)?;
+
         assert!(triangles.contains_triangle([a, b, d]));
         assert!(triangles.contains_triangle([b, c, d]));
         assert!(!triangles.contains_triangle([a, b, c]));
