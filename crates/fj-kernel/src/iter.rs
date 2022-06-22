@@ -2,7 +2,10 @@
 
 use std::collections::VecDeque;
 
-use crate::objects::{Curve, Cycle, Edge, Face, Surface, Vertex};
+use crate::{
+    objects::{Curve, Cycle, Edge, Face, Surface, Vertex},
+    shape::Shape,
+};
 
 /// Access iterators over all objects of a shape, or part of it
 ///
@@ -294,6 +297,34 @@ impl ObjectIters for Vertex {
     }
 }
 
+// This implementation exists to ease the transition away from `Shape`. It will
+// likely be removed at some point, together with `Shape`.
+impl ObjectIters for Shape {
+    fn curve_iter(&self) -> Iter<Curve<3>> {
+        Iter::from_iter(self.curves().map(|handle| handle.get()))
+    }
+
+    fn cycle_iter(&self) -> Iter<Cycle<3>> {
+        Iter::from_iter(self.cycles().map(|handle| handle.get()))
+    }
+
+    fn edge_iter(&self) -> Iter<Edge<3>> {
+        Iter::from_iter(self.edges().map(|handle| handle.get()))
+    }
+
+    fn face_iter(&self) -> Iter<Face> {
+        Iter::from_iter(self.faces().map(|handle| handle.get()))
+    }
+
+    fn surface_iter(&self) -> Iter<Surface> {
+        Iter::from_iter(self.surfaces().map(|handle| handle.get()))
+    }
+
+    fn vertex_iter(&self) -> Iter<Vertex> {
+        Iter::from_iter(self.vertices().map(|handle| handle.get()))
+    }
+}
+
 /// An iterator over objects
 ///
 /// See [`ObjectIters`].
@@ -307,6 +338,12 @@ impl<T> Iter<T> {
     fn from_object(object: T) -> Self {
         let mut objects = VecDeque::new();
         objects.push_back(object);
+        Self(objects)
+    }
+
+    fn from_iter(iter: impl IntoIterator<Item = T>) -> Self {
+        let mut objects = VecDeque::new();
+        objects.extend(iter);
         Self(objects)
     }
 
