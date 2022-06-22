@@ -54,31 +54,31 @@ pub fn validate(
     let mut surfaces = HashSet::new();
     let mut vertices = HashSet::new();
 
-    for curve in shape.curves() {
+    for curve in shape.curves().map(|handle| handle.get()) {
         curves.insert(curve);
     }
-    for vertex in shape.vertices() {
-        uniqueness::validate_vertex(&vertex.get(), &vertices)?;
+    for vertex in shape.vertices().map(|handle| handle.get()) {
+        uniqueness::validate_vertex(&vertex, &vertices)?;
 
         vertices.insert(vertex);
     }
-    for edge in shape.edges() {
-        coherence::validate_edge(&edge.get(), config.identical_max_distance)?;
-        structural::validate_edge(&edge.get(), &curves, &vertices)?;
-        uniqueness::validate_edge(&edge.get(), &edges)?;
+    for edge in shape.edges().map(|handle| handle.get()) {
+        coherence::validate_edge(&edge, config.identical_max_distance)?;
+        structural::validate_edge(&edge, &curves, &vertices)?;
+        uniqueness::validate_edge(&edge, &edges)?;
 
         edges.insert(edge);
     }
-    for cycle in shape.cycles() {
-        structural::validate_cycle(&cycle.get(), &edges)?;
+    for cycle in shape.cycles().map(|handle| handle.get()) {
+        structural::validate_cycle(&cycle, &edges)?;
 
         cycles.insert(cycle);
     }
-    for surface in shape.surfaces() {
+    for surface in shape.surfaces().map(|handle| handle.get()) {
         surfaces.insert(surface);
     }
-    for face in shape.faces() {
-        structural::validate_face(&face.get(), &cycles, &surfaces)?;
+    for face in shape.faces().map(|handle| handle.get()) {
+        structural::validate_face(&face, &cycles, &surfaces)?;
     }
 
     Ok(Validated(shape))
