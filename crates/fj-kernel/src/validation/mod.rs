@@ -39,32 +39,35 @@ use std::{collections::HashSet, ops::Deref};
 use fj_math::Scalar;
 
 use crate::{
+    iter::ObjectIters,
     objects::{Curve, Cycle, Edge, Surface, Vertex},
-    shape::Shape,
 };
 
 /// Validate the given [`Shape`]
-pub fn validate(
-    shape: Shape,
+pub fn validate<T>(
+    object: T,
     config: &ValidationConfig,
-) -> Result<Validated<Shape>, ValidationError> {
+) -> Result<Validated<T>, ValidationError>
+where
+    T: ObjectIters,
+{
     let mut curves = HashSet::new();
     let mut cycles = HashSet::new();
     let mut edges = HashSet::new();
     let mut surfaces = HashSet::new();
     let mut vertices = HashSet::new();
 
-    for curve in shape.curves().map(|handle| handle.get()) {
+    for curve in object.curve_iter() {
         curves.insert(curve);
     }
 
-    for vertex in shape.vertices().map(|handle| handle.get()) {
+    for vertex in object.vertex_iter() {
         uniqueness::validate_vertex(&vertex, &vertices)?;
 
         vertices.insert(vertex);
     }
 
-    for edge in shape.edges().map(|handle| handle.get()) {
+    for edge in object.edge_iter() {
         coherence::validate_edge(&edge, config.identical_max_distance)?;
         structural::validate_edge(&edge, &curves, &vertices)?;
         uniqueness::validate_edge(&edge, &edges)?;
@@ -72,21 +75,21 @@ pub fn validate(
         edges.insert(edge);
     }
 
-    for cycle in shape.cycles().map(|handle| handle.get()) {
+    for cycle in object.cycle_iter() {
         structural::validate_cycle(&cycle, &edges)?;
 
         cycles.insert(cycle);
     }
 
-    for surface in shape.surfaces().map(|handle| handle.get()) {
+    for surface in object.surface_iter() {
         surfaces.insert(surface);
     }
 
-    for face in shape.faces().map(|handle| handle.get()) {
+    for face in object.face_iter() {
         structural::validate_face(&face, &cycles, &surfaces)?;
     }
 
-    Ok(Validated(shape))
+    Ok(Validated(object))
 }
 
 /// Configuration required for the validation process
