@@ -14,11 +14,11 @@ pub fn validate_edge(
     let mut missing_vertices = HashSet::new();
 
     if !curves.contains(&edge.curve.canonical()) {
-        missing_curve = Some(edge.curve.canonical());
+        missing_curve = Some(edge.curve.canonical().get());
     }
     for vertex in edge.vertices.iter() {
         if !vertices.contains(&vertex.canonical()) {
-            missing_vertices.insert(vertex.canonical().clone());
+            missing_vertices.insert(vertex.canonical().get());
         }
     }
 
@@ -42,7 +42,7 @@ pub fn validate_cycle(
         let edge = edge.canonical();
 
         if !edges.contains(&edge) {
-            missing_edges.insert(edge.clone());
+            missing_edges.insert(edge.get());
         }
     }
 
@@ -66,13 +66,13 @@ pub fn validate_face(
         let mut missing_cycles = HashSet::new();
 
         if !surfaces.contains(&face.surface) {
-            missing_surface = Some(face.surface.clone());
+            missing_surface = Some(face.surface.get());
         }
         for cycle in
             face.exteriors.as_handle().chain(face.interiors.as_handle())
         {
             if !cycles.contains(&cycle) {
-                missing_cycles.insert(cycle);
+                missing_cycles.insert(cycle.get());
             }
         }
 
@@ -94,19 +94,19 @@ pub fn validate_face(
 #[derive(Debug, Default, thiserror::Error)]
 pub struct StructuralIssues {
     /// Missing curve found in edge validation
-    pub missing_curve: Option<Handle<Curve<3>>>,
+    pub missing_curve: Option<Curve<3>>,
 
     /// Missing vertices found in edge validation
-    pub missing_vertices: HashSet<Handle<Vertex>>,
+    pub missing_vertices: HashSet<Vertex>,
 
     /// Missing edges found in cycle validation
-    pub missing_edges: HashSet<Handle<Edge<3>>>,
+    pub missing_edges: HashSet<Edge<3>>,
 
     /// Missing surface found in face validation
-    pub missing_surface: Option<Handle<Surface>>,
+    pub missing_surface: Option<Surface>,
 
     /// Missing cycles found in face validation
-    pub missing_cycles: HashSet<Handle<Cycle<3>>>,
+    pub missing_cycles: HashSet<Cycle<3>>,
 }
 
 impl fmt::Display for StructuralIssues {
@@ -114,30 +114,30 @@ impl fmt::Display for StructuralIssues {
         writeln!(f, "Structural issues found:")?;
 
         if let Some(curve) = &self.missing_curve {
-            writeln!(f, "- Missing curve: {:?}", curve.get())?;
+            writeln!(f, "- Missing curve: {:?}", curve)?;
         }
         if !self.missing_vertices.is_empty() {
             writeln!(f, "- Missing vertices:")?;
 
             for vertex in &self.missing_vertices {
-                writeln!(f, "  - {:?}", vertex.get())?;
+                writeln!(f, "  - {:?}", vertex)?;
             }
         }
         if !self.missing_edges.is_empty() {
             writeln!(f, "- Missing edges:")?;
 
             for edge in &self.missing_edges {
-                writeln!(f, "  - {}", edge.get())?;
+                writeln!(f, "  - {}", edge)?;
             }
         }
         if let Some(surface) = &self.missing_surface {
-            writeln!(f, "- Missing surface: {:?}", surface.get())?;
+            writeln!(f, "- Missing surface: {:?}", surface)?;
         }
         if !self.missing_cycles.is_empty() {
             writeln!(f, "- Missing cycles:")?;
 
             for cycle in &self.missing_cycles {
-                writeln!(f, "  - {:?}", cycle.get())?;
+                writeln!(f, "  - {:?}", cycle)?;
             }
         }
 

@@ -162,7 +162,7 @@ impl ValidationError {
     /// Indicate whether validation found a missing curve
     pub fn missing_curve(&self, curve: &Handle<Curve<3>>) -> bool {
         if let Self::Structural(StructuralIssues { missing_curve, .. }) = self {
-            return missing_curve.as_ref() == Some(curve);
+            return missing_curve.as_ref() == Some(&curve.get());
         }
 
         false
@@ -174,7 +174,7 @@ impl ValidationError {
             missing_vertices, ..
         }) = self
         {
-            return missing_vertices.contains(vertex);
+            return missing_vertices.contains(&vertex.get());
         }
 
         false
@@ -183,7 +183,7 @@ impl ValidationError {
     /// Indicate whether validation found a missing edge
     pub fn missing_edge(&self, edge: &Handle<Edge<3>>) -> bool {
         if let Self::Structural(StructuralIssues { missing_edges, .. }) = self {
-            return missing_edges.contains(edge);
+            return missing_edges.contains(&edge.get());
         }
 
         false
@@ -195,7 +195,7 @@ impl ValidationError {
             missing_surface, ..
         }) = self
         {
-            return missing_surface.as_ref() == Some(surface);
+            return missing_surface.as_ref() == Some(&surface.get());
         }
 
         false
@@ -205,7 +205,7 @@ impl ValidationError {
     pub fn missing_cycle(&self, cycle: &Handle<Cycle<3>>) -> bool {
         if let Self::Structural(StructuralIssues { missing_cycles, .. }) = self
         {
-            return missing_cycles.contains(cycle);
+            return missing_cycles.contains(&cycle.get());
         }
 
         false
