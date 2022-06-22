@@ -12,7 +12,7 @@ pub fn validate_vertex(
     for existing in vertices {
         if &existing.get() == vertex {
             return Err(UniquenessIssues {
-                duplicate_vertex: Some(existing.clone()),
+                duplicate_vertex: Some(existing.get()),
                 ..UniquenessIssues::default()
             });
         }
@@ -61,7 +61,7 @@ pub fn validate_edge(
 #[derive(Debug, Default, thiserror::Error)]
 pub struct UniquenessIssues {
     /// Duplicate vertex found
-    pub duplicate_vertex: Option<Handle<Vertex>>,
+    pub duplicate_vertex: Option<Vertex>,
 
     /// Duplicate edge found
     pub duplicate_edge: Option<DuplicateEdge>,
