@@ -325,6 +325,74 @@ impl ObjectIters for Shape {
     }
 }
 
+// This implementation exists to paper over the lack of any "top-level" objects
+// that are an entry point into a shape (basically, the lack of `Sketch` and
+// `Solid`).
+impl<T> ObjectIters for T
+where
+    for<'r> &'r T: IntoIterator<Item = &'r Face>,
+{
+    fn curve_iter(&self) -> Iter<Curve<3>> {
+        let mut iter = Iter::empty();
+
+        for face in self.into_iter() {
+            iter = iter.with(face.curve_iter());
+        }
+
+        iter
+    }
+
+    fn cycle_iter(&self) -> Iter<Cycle<3>> {
+        let mut iter = Iter::empty();
+
+        for face in self.into_iter() {
+            iter = iter.with(face.cycle_iter());
+        }
+
+        iter
+    }
+
+    fn edge_iter(&self) -> Iter<Edge<3>> {
+        let mut iter = Iter::empty();
+
+        for face in self.into_iter() {
+            iter = iter.with(face.edge_iter());
+        }
+
+        iter
+    }
+
+    fn face_iter(&self) -> Iter<Face> {
+        let mut iter = Iter::empty();
+
+        for face in self.into_iter() {
+            iter = iter.with(face.face_iter());
+        }
+
+        iter
+    }
+
+    fn surface_iter(&self) -> Iter<Surface> {
+        let mut iter = Iter::empty();
+
+        for face in self.into_iter() {
+            iter = iter.with(face.surface_iter());
+        }
+
+        iter
+    }
+
+    fn vertex_iter(&self) -> Iter<Vertex> {
+        let mut iter = Iter::empty();
+
+        for face in self.into_iter() {
+            iter = iter.with(face.vertex_iter());
+        }
+
+        iter
+    }
+}
+
 /// An iterator over objects
 ///
 /// See [`ObjectIters`].
