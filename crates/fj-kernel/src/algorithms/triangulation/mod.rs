@@ -101,16 +101,17 @@ mod tests {
         let c = [2., 2.];
         let d = [0., 1.];
 
-        Face::builder(Surface::xy_plane(), &mut shape)
+        let face = Face::builder(Surface::xy_plane(), &mut shape)
             .with_exterior_polygon([a, b, c, d])
-            .build();
+            .build()
+            .get();
 
         let a = Point::from(a).to_xyz();
         let b = Point::from(b).to_xyz();
         let c = Point::from(c).to_xyz();
         let d = Point::from(d).to_xyz();
 
-        let triangles = triangulate(shape)?;
+        let triangles = triangulate(face)?;
 
         assert!(triangles.contains_triangle([a, b, d]));
         assert!(triangles.contains_triangle([b, c, d]));
@@ -134,12 +135,13 @@ mod tests {
         let g = [3., 3.];
         let h = [1., 2.];
 
-        Face::builder(Surface::xy_plane(), &mut shape)
+        let face = Face::builder(Surface::xy_plane(), &mut shape)
             .with_exterior_polygon([a, b, c, d])
             .with_interior_polygon([e, f, g, h])
-            .build();
+            .build()
+            .get();
 
-        let triangles = triangulate(shape)?;
+        let triangles = triangulate(face)?;
 
         let a = Point::from(a).to_xyz();
         let d = Point::from(d).to_xyz();
@@ -162,12 +164,10 @@ mod tests {
         Ok(())
     }
 
-    fn triangulate(shape: Shape) -> anyhow::Result<Mesh<Point<3>>> {
-        let faces = shape.faces().map(|handle| handle.get()).collect();
-
+    fn triangulate(face: Face) -> anyhow::Result<Mesh<Point<3>>> {
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
 
         let mut debug_info = DebugInfo::new();
-        Ok(super::triangulate(faces, tolerance, &mut debug_info))
+        Ok(super::triangulate(vec![face], tolerance, &mut debug_info))
     }
 }
