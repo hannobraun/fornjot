@@ -40,7 +40,7 @@ use fj_math::Scalar;
 
 use crate::{
     objects::{Curve, Cycle, Edge, Surface, Vertex},
-    shape::{Handle, Shape},
+    shape::Shape,
 };
 
 /// Validate the given [`Shape`]
@@ -160,52 +160,52 @@ pub enum ValidationError {
 
 impl ValidationError {
     /// Indicate whether validation found a missing curve
-    pub fn missing_curve(&self, curve: &Handle<Curve<3>>) -> bool {
+    pub fn missing_curve(&self, curve: &Curve<3>) -> bool {
         if let Self::Structural(StructuralIssues { missing_curve, .. }) = self {
-            return missing_curve.as_ref() == Some(&curve.get());
+            return missing_curve.as_ref() == Some(curve);
         }
 
         false
     }
 
     /// Indicate whether validation found a missing vertex
-    pub fn missing_vertex(&self, vertex: &Handle<Vertex>) -> bool {
+    pub fn missing_vertex(&self, vertex: &Vertex) -> bool {
         if let Self::Structural(StructuralIssues {
             missing_vertices, ..
         }) = self
         {
-            return missing_vertices.contains(&vertex.get());
+            return missing_vertices.contains(vertex);
         }
 
         false
     }
 
     /// Indicate whether validation found a missing edge
-    pub fn missing_edge(&self, edge: &Handle<Edge<3>>) -> bool {
+    pub fn missing_edge(&self, edge: &Edge<3>) -> bool {
         if let Self::Structural(StructuralIssues { missing_edges, .. }) = self {
-            return missing_edges.contains(&edge.get());
+            return missing_edges.contains(edge);
         }
 
         false
     }
 
     /// Indicate whether validation found a missing surface
-    pub fn missing_surface(&self, surface: &Handle<Surface>) -> bool {
+    pub fn missing_surface(&self, surface: &Surface) -> bool {
         if let Self::Structural(StructuralIssues {
             missing_surface, ..
         }) = self
         {
-            return missing_surface.as_ref() == Some(&surface.get());
+            return missing_surface.as_ref() == Some(surface);
         }
 
         false
     }
 
     /// Indicate whether validation found a missing cycle
-    pub fn missing_cycle(&self, cycle: &Handle<Cycle<3>>) -> bool {
+    pub fn missing_cycle(&self, cycle: &Cycle<3>) -> bool {
         if let Self::Structural(StructuralIssues { missing_cycles, .. }) = self
         {
-            return missing_cycles.contains(&cycle.get());
+            return missing_cycles.contains(cycle);
         }
 
         false
@@ -274,7 +274,7 @@ mod tests {
         shape.insert(Cycle::new(vec![edge.clone()]));
         let err =
             validate(shape.clone(), &ValidationConfig::default()).unwrap_err();
-        assert!(err.missing_edge(&edge));
+        assert!(err.missing_edge(&edge.get()));
 
         // Referring to edge that *is* from the same shape. Should work.
         let edge = Edge::builder(&mut shape)
@@ -301,9 +301,9 @@ mod tests {
         });
         let err =
             validate(shape.clone(), &ValidationConfig::default()).unwrap_err();
-        assert!(err.missing_curve(&curve));
-        assert!(err.missing_vertex(&a.canonical()));
-        assert!(err.missing_vertex(&b.canonical()));
+        assert!(err.missing_curve(&curve.get()));
+        assert!(err.missing_vertex(&a.canonical().get()));
+        assert!(err.missing_vertex(&b.canonical().get()));
 
         let curve = shape.insert(Curve::x_axis());
         let a = Vertex::builder(&mut shape).build_from_point([1., 0., 0.]);
@@ -339,8 +339,8 @@ mod tests {
         ));
         let err =
             validate(shape.clone(), &ValidationConfig::default()).unwrap_err();
-        assert!(err.missing_surface(&surface));
-        assert!(err.missing_cycle(&cycle.canonical()));
+        assert!(err.missing_surface(&surface.get()));
+        assert!(err.missing_cycle(&cycle.canonical().get()));
 
         let surface = shape.insert(Surface::xy_plane());
         let cycle =
