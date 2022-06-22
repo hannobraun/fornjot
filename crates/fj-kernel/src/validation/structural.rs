@@ -1,24 +1,21 @@
 use std::{collections::HashSet, fmt};
 
-use crate::{
-    objects::{Curve, Cycle, Edge, Face, Surface, Vertex},
-    shape::Handle,
-};
+use crate::objects::{Curve, Cycle, Edge, Face, Surface, Vertex};
 
 pub fn validate_edge(
     edge: &Edge<3>,
-    curves: &HashSet<Handle<Curve<3>>>,
-    vertices: &HashSet<Handle<Vertex>>,
+    curves: &HashSet<Curve<3>>,
+    vertices: &HashSet<Vertex>,
 ) -> Result<(), StructuralIssues> {
     let mut missing_curve = None;
     let mut missing_vertices = HashSet::new();
 
-    if !curves.contains(&edge.curve.canonical()) {
-        missing_curve = Some(edge.curve.canonical());
+    if !curves.contains(&edge.curve()) {
+        missing_curve = Some(edge.curve.canonical().get());
     }
-    for vertex in edge.vertices.iter() {
-        if !vertices.contains(&vertex.canonical()) {
-            missing_vertices.insert(vertex.canonical().clone());
+    for vertex in edge.vertices().into_iter().flatten() {
+        if !vertices.contains(&vertex) {
+            missing_vertices.insert(vertex);
         }
     }
 
@@ -35,14 +32,12 @@ pub fn validate_edge(
 
 pub fn validate_cycle(
     cycle: &Cycle<3>,
-    edges: &HashSet<Handle<Edge<3>>>,
+    edges: &HashSet<Edge<3>>,
 ) -> Result<(), StructuralIssues> {
     let mut missing_edges = HashSet::new();
-    for edge in &cycle.edges {
-        let edge = edge.canonical();
-
+    for edge in cycle.edges() {
         if !edges.contains(&edge) {
-            missing_edges.insert(edge.clone());
+            missing_edges.insert(edge);
         }
     }
 
@@ -58,19 +53,17 @@ pub fn validate_cycle(
 
 pub fn validate_face(
     face: &Face,
-    cycles: &HashSet<Handle<Cycle<3>>>,
-    surfaces: &HashSet<Handle<Surface>>,
+    cycles: &HashSet<Cycle<3>>,
+    surfaces: &HashSet<Surface>,
 ) -> Result<(), StructuralIssues> {
     if let Face::Face(face) = face {
         let mut missing_surface = None;
         let mut missing_cycles = HashSet::new();
 
-        if !surfaces.contains(&face.surface) {
-            missing_surface = Some(face.surface.clone());
+        if !surfaces.contains(&face.surface()) {
+            missing_surface = Some(face.surface.get());
         }
-        for cycle in
-            face.exteriors.as_handle().chain(face.interiors.as_handle())
-        {
+        for cycle in face.all_cycles() {
             if !cycles.contains(&cycle) {
                 missing_cycles.insert(cycle);
             }
@@ -94,19 +87,19 @@ pub fn validate_face(
 #[derive(Debug, Default, thiserror::Error)]
 pub struct StructuralIssues {
     /// Missing curve found in edge validation
-    pub missing_curve: Option<Handle<Curve<3>>>,
+    pub missing_curve: Option<Curve<3>>,
 
     /// Missing vertices found in edge validation
-    pub missing_vertices: HashSet<Handle<Vertex>>,
+    pub missing_vertices: HashSet<Vertex>,
 
     /// Missing edges found in cycle validation
-    pub missing_edges: HashSet<Handle<Edge<3>>>,
+    pub missing_edges: HashSet<Edge<3>>,
 
     /// Missing surface found in face validation
-    pub missing_surface: Option<Handle<Surface>>,
+    pub missing_surface: Option<Surface>,
 
     /// Missing cycles found in face validation
-    pub missing_cycles: HashSet<Handle<Cycle<3>>>,
+    pub missing_cycles: HashSet<Cycle<3>>,
 }
 
 impl fmt::Display for StructuralIssues {
@@ -114,30 +107,30 @@ impl fmt::Display for StructuralIssues {
         writeln!(f, "Structural issues found:")?;
 
         if let Some(curve) = &self.missing_curve {
-            writeln!(f, "- Missing curve: {:?}", curve.get())?;
+            writeln!(f, "- Missing curve: {:?}", curve)?;
         }
         if !self.missing_vertices.is_empty() {
             writeln!(f, "- Missing vertices:")?;
 
             for vertex in &self.missing_vertices {
-                writeln!(f, "  - {:?}", vertex.get())?;
+                writeln!(f, "  - {:?}", vertex)?;
             }
         }
         if !self.missing_edges.is_empty() {
             writeln!(f, "- Missing edges:")?;
 
             for edge in &self.missing_edges {
-                writeln!(f, "  - {}", edge.get())?;
+                writeln!(f, "  - {}", edge)?;
             }
         }
         if let Some(surface) = &self.missing_surface {
-            writeln!(f, "- Missing surface: {:?}", surface.get())?;
+            writeln!(f, "- Missing surface: {:?}", surface)?;
         }
         if !self.missing_cycles.is_empty() {
             writeln!(f, "- Missing cycles:")?;
 
             for cycle in &self.missing_cycles {
-                writeln!(f, "  - {:?}", cycle.get())?;
+                writeln!(f, "  - {:?}", cycle)?;
             }
         }
 
