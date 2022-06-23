@@ -39,7 +39,7 @@
 //! [`Handle`]: crate::shape::Handle
 //! [`Shape`]: crate::shape::Shape
 
-mod curves;
+mod curve;
 mod cycle;
 mod edge;
 mod face;
@@ -47,7 +47,7 @@ mod surfaces;
 mod vertex;
 
 pub use self::{
-    curves::Curve,
+    curve::Curve,
     cycle::Cycle,
     edge::{Edge, VerticesOfEdge},
     face::{CyclesInFace, Face},
