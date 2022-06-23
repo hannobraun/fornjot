@@ -15,7 +15,7 @@ pub fn model() -> fj::Shape {
     group.into()
 }
 
-fn star(num_points: u64, h: f64, color: [u8; 4]) -> fj::Shape3d {
+fn star(num_points: u64, height: f64, color: [u8; 4]) -> fj::Shape3d {
     let r1 = 1.;
     let r2 = 2.;
 
@@ -48,7 +48,7 @@ fn star(num_points: u64, h: f64, color: [u8; 4]) -> fj::Shape3d {
 
     let footprint = fj::Difference2d::from_shapes([outer.into(), inner.into()]);
 
-    let star = fj::Sweep::from_path(footprint.into(), [0., 0., h]);
+    let star = fj::Sweep::from_path(footprint.into(), [0., 0., height]);
 
     star.into()
 }
