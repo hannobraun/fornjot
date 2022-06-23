@@ -51,17 +51,18 @@ impl<'r> EdgeBuilder<'r> {
             a: Vector::from([radius, Scalar::ZERO]),
             b: Vector::from([Scalar::ZERO, radius]),
         });
-        let curve_canonical = self.shape.insert(Curve::Circle(Circle {
-            center: Point::origin(),
-            a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
-            b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
-        }));
+        let curve_canonical =
+            self.shape.get_handle_or_insert(Curve::Circle(Circle {
+                center: Point::origin(),
+                a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
+                b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
+            }));
 
         let edge_local = Edge {
             curve: LocalForm::new(curve_local, curve_canonical.clone()),
             vertices: VerticesOfEdge::none(),
         };
-        let edge_canonical = self.shape.insert(Edge {
+        let edge_canonical = self.shape.get_handle_or_insert(Edge {
             curve: LocalForm::canonical_only(curve_canonical),
             vertices: VerticesOfEdge::none(),
         });
@@ -90,7 +91,7 @@ impl<'r> EdgeBuilder<'r> {
         let curve = {
             let points = [&a, &b].map(|vertex| vertex.get().point);
             let curve = Curve::Line(Line::from_points(points));
-            self.shape.insert(curve)
+            self.shape.get_handle_or_insert(curve)
         };
 
         let vertices = [
@@ -98,7 +99,7 @@ impl<'r> EdgeBuilder<'r> {
             LocalForm::new(Point::from([1.]), b),
         ];
 
-        self.shape.insert(Edge {
+        self.shape.get_handle_or_insert(Edge {
             curve: LocalForm::canonical_only(curve),
             vertices: VerticesOfEdge::from_vertices(vertices),
         })
@@ -159,7 +160,8 @@ impl<'r> CycleBuilder<'r> {
         };
 
         let edges_canonical = edges.into_iter().map(|edge| edge.canonical());
-        let canonical = self.shape.insert(Cycle::new(edges_canonical));
+        let canonical =
+            self.shape.get_handle_or_insert(Cycle::new(edges_canonical));
 
         LocalForm::new(local, canonical)
     }
@@ -223,7 +225,7 @@ impl<'r> FaceBuilder<'r> {
 
     /// Build the face
     pub fn build(self) -> Handle<Face> {
-        let surface = self.shape.insert(self.surface);
+        let surface = self.shape.get_handle_or_insert(self.surface);
 
         let mut exteriors = Vec::new();
         if let Some(points) = self.exterior {
@@ -241,7 +243,8 @@ impl<'r> FaceBuilder<'r> {
 
         let color = self.color.unwrap_or([255, 0, 0, 255]);
 
-        self.shape
-            .insert(Face::new(surface, exteriors, interiors, color))
+        self.shape.get_handle_or_insert(Face::new(
+            surface, exteriors, interiors, color,
+        ))
     }
 }
