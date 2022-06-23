@@ -32,7 +32,7 @@ mod uniqueness;
 pub use self::{
     coherence::{CoherenceIssues, CoherenceMismatch},
     structural::StructuralIssues,
-    uniqueness::{DuplicateEdge, UniquenessIssues},
+    uniqueness::UniquenessIssues,
 };
 
 use std::{collections::HashSet, ops::Deref};
@@ -71,7 +71,6 @@ where
     for edge in object.edge_iter() {
         coherence::validate_edge(&edge, config.identical_max_distance)?;
         structural::validate_edge(&edge, &curves, &vertices)?;
-        uniqueness::validate_edge(&edge, &edges)?;
 
         edges.insert(edge);
     }
@@ -362,29 +361,6 @@ mod tests {
             Vec::new(),
             [255, 0, 0, 255],
         ));
-    }
-
-    #[test]
-    fn uniqueness_edge() {
-        let mut shape = Shape::new();
-
-        let a = Vertex::builder(&mut shape).build_from_point([0., 0., 0.]);
-        let b = Vertex::builder(&mut shape).build_from_point([1., 0., 0.]);
-
-        Edge::builder(&mut shape)
-            .build_line_segment_from_vertices([a.clone(), b.clone()]);
-
-        // Should fail. An edge with the same vertices has already been added.
-        Edge::builder(&mut shape)
-            .build_line_segment_from_vertices([a.clone(), b.clone()]);
-        let result = validate(shape.clone(), &ValidationConfig::default());
-        assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
-
-        // Should fail. An edge with the same vertices has already been added,
-        // just the order is different.
-        Edge::builder(&mut shape).build_line_segment_from_vertices([b, a]);
-        let result = validate(shape, &ValidationConfig::default());
-        assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
     }
 
     #[test]
