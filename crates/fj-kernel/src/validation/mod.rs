@@ -20,7 +20,8 @@
 //! simpler data structure:
 //! https://github.com/hannobraun/Fornjot/issues/697
 //!
-//! Once completed, this would make structural and uniqueness validation moot.
+//! Once completed, this would make structural validation moot, and reduce the
+//! scope of uniqueness validation.
 //!
 //! [`Shape`]: crate::shape::Shape
 
