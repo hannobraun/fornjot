@@ -27,6 +27,11 @@ pub enum Curve<const D: usize> {
 }
 
 impl<const D: usize> Curve<D> {
+    /// Construct a line from two points
+    pub fn line_from_points(points: [impl Into<Point<D>>; 2]) -> Self {
+        Self::Line(Line::from_points(points))
+    }
+
     /// Access the origin of the curve's coordinate system
     pub fn origin(&self) -> Point<D> {
         match self {
