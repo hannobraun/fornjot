@@ -43,7 +43,7 @@ mod curve;
 mod cycle;
 mod edge;
 mod face;
-mod surfaces;
+mod surface;
 mod vertex;
 
 pub use self::{
@@ -51,6 +51,6 @@ pub use self::{
     cycle::Cycle,
     edge::{Edge, VerticesOfEdge},
     face::{CyclesInFace, Face},
-    surfaces::{Surface, SweptCurve},
+    surface::{Surface, SweptCurve},
     vertex::Vertex,
 };
