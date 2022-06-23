@@ -41,7 +41,7 @@ mod test {
     };
 
     #[test]
-    fn approximate_edge() {
+    fn approx_edge() {
         let mut shape = Shape::new();
 
         let a = Point::from([1., 2., 3.]);
