@@ -4,8 +4,8 @@ use fj::{syntax::*, Angle};
 
 #[fj::model]
 pub fn model() -> fj::Shape {
-    let a = star(4, [0, 255, 0, 200]);
-    let b = star(5, [255, 0, 0, 255])
+    let a = star(4, 1., [0, 255, 0, 200]);
+    let b = star(5, -1., [255, 0, 0, 255])
         .rotate([1., 1., 1.], Angle::from_deg(45.))
         .translate([3., 3., 1.]);
     let c = spacer().translate([6., 6., 1.]);
@@ -15,10 +15,9 @@ pub fn model() -> fj::Shape {
     group.into()
 }
 
-fn star(num_points: u64, color: [u8; 4]) -> fj::Shape3d {
+fn star(num_points: u64, height: f64, color: [u8; 4]) -> fj::Shape3d {
     let r1 = 1.;
     let r2 = 2.;
-    let h = 1.;
 
     // We need to figure out where to generate vertices, depending on the number
     // of points the star is supposed to have. Let's generate an iterator that
@@ -49,7 +48,7 @@ fn star(num_points: u64, color: [u8; 4]) -> fj::Shape3d {
 
     let footprint = fj::Difference2d::from_shapes([outer.into(), inner.into()]);
 
-    let star = fj::Sweep::from_path(footprint.into(), [0., 0., -h]);
+    let star = fj::Sweep::from_path(footprint.into(), [0., 0., height]);
 
     star.into()
 }
