@@ -1,6 +1,6 @@
 use crate::{geometry, objects::VerticesOfEdge};
 
-pub fn approximate_edge(
+pub fn approx_edge(
     vertices: VerticesOfEdge,
     points: &mut Vec<geometry::Point<1, 3>>,
 ) {
@@ -41,7 +41,7 @@ mod test {
     };
 
     #[test]
-    fn approximate_edge() {
+    fn approx_edge() {
         let mut shape = Shape::new();
 
         let a = Point::from([1., 2., 3.]);
@@ -64,12 +64,12 @@ mod test {
 
         // Regular edge
         let mut points = vec![b, c];
-        super::approximate_edge(vertices, &mut points);
+        super::approx_edge(vertices, &mut points);
         assert_eq!(points, vec![a, b, c, d]);
 
         // Continuous edge
         let mut points = vec![b, c];
-        super::approximate_edge(VerticesOfEdge::none(), &mut points);
+        super::approx_edge(VerticesOfEdge::none(), &mut points);
         assert_eq!(points, vec![b, c, b]);
     }
 }

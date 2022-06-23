@@ -2,7 +2,7 @@ use fj_math::Segment;
 
 use crate::{geometry, objects::Cycle};
 
-use super::{curves::approx_curve, edges::approximate_edge, Tolerance};
+use super::{curves::approx_curve, edges::approx_edge, Tolerance};
 
 /// An approximation of a [`Cycle`]
 #[derive(Debug, Eq, PartialEq, Hash)]
@@ -22,7 +22,7 @@ impl CycleApprox {
         for edge in cycle.edges() {
             let mut edge_points = Vec::new();
             approx_curve(&edge.curve(), tolerance, &mut edge_points);
-            approximate_edge(edge.vertices, &mut edge_points);
+            approx_edge(edge.vertices, &mut edge_points);
 
             points.extend(edge_points);
         }
