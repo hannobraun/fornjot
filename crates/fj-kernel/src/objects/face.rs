@@ -104,6 +104,11 @@ impl Face {
     pub fn all_cycles(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
         self.exteriors().chain(self.interiors())
     }
+
+    /// Access the color of the face
+    pub fn color(&self) -> [u8; 4] {
+        self.brep().color
+    }
 }
 
 /// The boundary representation of a face
