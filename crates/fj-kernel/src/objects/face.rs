@@ -202,7 +202,8 @@ impl Hash for FaceBRep {
 pub struct CyclesInFace(Vec<LocalForm<Cycle<2>, Cycle<3>>>);
 
 impl CyclesInFace {
-    fn new(
+    /// Create a new instance of `CyclesInFace`
+    pub fn new(
         cycles: impl IntoIterator<Item = LocalForm<Cycle<2>, Cycle<3>>>,
     ) -> Self {
         Self(cycles.into_iter().collect())
