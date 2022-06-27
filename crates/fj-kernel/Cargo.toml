@@ -14,7 +14,7 @@ categories = ["encoding", "mathematics", "rendering"]
 
 [dependencies]
 anymap = "1.0.0-beta.2"
-map-macro = "0.2.0"
+map-macro = "0.2.2"
 parking_lot = "0.12.0"
 robust = "0.2.3"
 slotmap = "1.0.6"
