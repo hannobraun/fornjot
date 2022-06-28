@@ -83,13 +83,13 @@ impl<'r> EdgeBuilder<'r> {
 #[must_use]
 pub struct CycleBuilder<'r> {
     surface: Surface,
-    shape: &'r mut Shape,
+    _shape: &'r mut Shape,
 }
 
 impl<'r> CycleBuilder<'r> {
     /// Construct a new instance of `CycleBuilder`
-    pub fn new(surface: Surface, shape: &'r mut Shape) -> Self {
-        Self { surface, shape }
+    pub fn new(surface: Surface, _shape: &'r mut Shape) -> Self {
+        Self { surface, _shape }
     }
 
     /// Build a polygon from a list of points
@@ -114,9 +114,8 @@ impl<'r> CycleBuilder<'r> {
 
             let points_canonical = points
                 .map(|point| self.surface.point_from_surface_coords(point));
-            let edge_canonical = Edge::builder(self.shape)
-                .build_line_segment_from_points(points_canonical)
-                .get();
+            let edge_canonical =
+                Edge::line_segment_from_points(points_canonical);
 
             let edge_local = Edge {
                 curve: LocalForm::new(

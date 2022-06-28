@@ -273,21 +273,16 @@ mod tests {
     #[test]
     fn structural_cycle() {
         let mut shape = Shape::new();
-        let mut other = Shape::new();
 
         // Trying to refer to edge that is not from the same shape. Should fail.
-        let edge = Edge::builder(&mut other)
-            .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])
-            .get();
+        let edge = Edge::line_segment_from_points([[0., 0., 0.], [1., 0., 0.]]);
         shape.insert(Cycle::new(vec![edge.clone()]));
         let err =
             validate(shape.clone(), &ValidationConfig::default()).unwrap_err();
         assert!(err.missing_edge(&edge));
 
         // Referring to edge that *is* from the same shape. Should work.
-        let edge = Edge::builder(&mut shape)
-            .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])
-            .get();
+        let edge = Edge::line_segment_from_points([[0., 0., 0.], [1., 0., 0.]]);
         shape.insert(Cycle::new(vec![edge]));
     }
 

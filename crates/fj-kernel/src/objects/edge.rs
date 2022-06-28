@@ -81,6 +81,18 @@ impl Edge<2> {
 }
 
 impl Edge<3> {
+    /// Create a line segment from two points
+    pub fn line_segment_from_points(
+        vertices: [impl Into<Point<3>>; 2],
+    ) -> Self {
+        let vertices = vertices.map(|point| {
+            let point = point.into();
+            Vertex { point }
+        });
+
+        Self::line_segment_from_vertices(vertices)
+    }
+
     /// Create a line segment from two vertices
     pub fn line_segment_from_vertices([a, b]: [Vertex; 2]) -> Self {
         let curve = {
