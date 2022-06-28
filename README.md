@@ -24,7 +24,7 @@ Fornjot is **under active development, but still experimental**. Efforts are cur
 
 If you are interested in Fornjot and are considering to use it, you should fully expect to run into limitation pretty much immediately. Unless you are willing to contribute to its development, it would be better to wait for a year or ten, to let it mature. For more information on current limitations and improvements that could be implemented in the near future, [check out the open issues](https://github.com/hannobraun/Fornjot/issues).
 
-To learn what the direction is longer-term, refer to the [feature wishlist](https://github.com/hannobraun/Fornjot/discussions/146).
+To learn about the project's longer-term direction, please refer to the [roadmap](https://www.fornjot.app/roadmap/).
 
 
 ## Overview
@@ -33,16 +33,26 @@ Fornjot is both an application, as well as an ecosystem of components that make 
 
 Here's an overview over all of the crates, with a short description of what they do:
 
-- `fj-math`: Math primitives used by the rest of the Fornjot ecosystem.
-- `fj-interop`: Basic types that allow other crates to interoperate, without depending on each other.
-- `fj-kernel`: CAD kernel of Fornjot. Defines geometric and topological primitives, and algorithms that operate on those primitives.
-- `fj-operations`: CAD operations, built on top of `fj-kernel`. Link between the kernel, and the API that users use to define models.
-- `fj-export`: Exports Fornjot models to external data formats.
-- `fj-host`: Loads Fornjot models and watches them for changes.
-- `fj-viewer`: Displays Fornjot models.
-- `fj-window`: Embed `fj-viewer` in a Winit-based window.
-- `fj-app`: The Fornjot CAD application.
-- `fj`: End-user API for defining Fornjot models.
+- [`fj-math`]: Math primitives used by the rest of the Fornjot ecosystem.
+- [`fj-interop`]: Basic types that allow other crates to interoperate, without depending on each other.
+- [`fj-kernel`]: CAD kernel of Fornjot. Defines geometric and topological primitives, and algorithms that operate on those primitives.
+- [`fj-operations`]: CAD operations, built on top of `fj-kernel`. Link between the kernel, and the API that users use to define models.
+- [`fj-export`]: Exports Fornjot models to external data formats.
+- [`fj-host`]: Loads Fornjot models and watches them for changes.
+- [`fj-viewer`]: Displays Fornjot models.
+- `fj-window` (not published yet): Embed `fj-viewer` in a Winit-based window.
+- [`fj-app`]: The Fornjot CAD application.
+- [`fj`]: End-user API for defining Fornjot models.
+
+[`fj`]: https://crates.io/crates/fj
+[`fj-app`]: https://crates.io/crates/fj-app
+[`fj-export`]: https://crates.io/crates/fj-export
+[`fj-host`]: https://crates.io/crates/fj-host
+[`fj-interop`]: https://crates.io/crates/fj-interop
+[`fj-kernel`]: https://crates.io/crates/fj-kernel
+[`fj-math`]: https://crates.io/crates/fj-math
+[`fj-operations`]: https://crates.io/crates/fj-operations
+[`fj-viewer`]: https://crates.io/crates/fj-viewer
 
 
 ## Features
