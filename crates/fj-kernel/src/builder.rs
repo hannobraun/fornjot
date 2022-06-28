@@ -7,31 +7,6 @@ use crate::{
     shape::{Handle, LocalForm, Shape},
 };
 
-/// API for building a [`Vertex`]
-#[must_use]
-pub struct VertexBuilder<'r> {
-    shape: &'r mut Shape,
-}
-
-impl<'r> VertexBuilder<'r> {
-    /// Construct a new instance of `VertexBuilder`
-    pub fn new(shape: &'r mut Shape) -> Self {
-        Self { shape }
-    }
-
-    /// Build a [`Vertex`] from a point
-    ///
-    /// If an identical point or vertex are already part of the shape, those
-    /// objects are re-used.
-    pub fn build_from_point(
-        self,
-        point: impl Into<Point<3>>,
-    ) -> Handle<Vertex> {
-        let point = point.into();
-        self.shape.get_handle_or_insert(Vertex { point })
-    }
-}
-
 /// API for building an [`Edge`]
 #[must_use]
 pub struct EdgeBuilder<'r> {
