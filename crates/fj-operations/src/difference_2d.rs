@@ -16,11 +16,11 @@ impl ToShape for fj::Difference2d {
         config: &ValidationConfig,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
-    ) -> Result<Validated<Shape>, ValidationError> {
+    ) -> Result<Validated<Vec<Face>>, ValidationError> {
         // This method assumes that `b` is fully contained within `a`:
         // https://github.com/hannobraun/Fornjot/issues/92
 
-        let mut difference = Shape::new();
+        let mut difference = Vec::new();
 
         let mut exteriors = Vec::new();
         let mut interiors = Vec::new();
@@ -72,7 +72,7 @@ impl ToShape for fj::Difference2d {
                 }
             }
 
-            difference.merge(Face::new(
+            difference.push(Face::new(
                 surface,
                 exteriors,
                 interiors,

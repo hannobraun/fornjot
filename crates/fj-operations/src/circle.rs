@@ -15,7 +15,7 @@ impl ToShape for fj::Circle {
         config: &ValidationConfig,
         _: Tolerance,
         _: &mut DebugInfo,
-    ) -> Result<Validated<Shape>, ValidationError> {
+    ) -> Result<Validated<Vec<Face>>, ValidationError> {
         let mut shape = Shape::new();
 
         // Circles have just a single round edge with no vertices. So none need
@@ -30,14 +30,16 @@ impl ToShape for fj::Circle {
         let cycle_canonical = shape.insert(Cycle::new(vec![edge.canonical()]));
 
         let surface = shape.insert(Surface::xy_plane());
-        shape.insert(Face::new(
-            surface,
-            vec![LocalForm::new(cycle_local, cycle_canonical)],
-            Vec::new(),
-            self.color(),
-        ));
+        let face = shape
+            .insert(Face::new(
+                surface,
+                vec![LocalForm::new(cycle_local, cycle_canonical)],
+                Vec::new(),
+                self.color(),
+            ))
+            .get();
 
-        let shape = validate(shape, config)?;
+        let shape = validate(vec![face], config)?;
 
         Ok(shape)
     }

@@ -1,7 +1,7 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
-    shape::Shape,
+    objects::Face,
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
@@ -14,14 +14,14 @@ impl ToShape for fj::Group {
         config: &ValidationConfig,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
-    ) -> Result<Validated<Shape>, ValidationError> {
-        let mut shape = Shape::new();
+    ) -> Result<Validated<Vec<Face>>, ValidationError> {
+        let mut shape = Vec::new();
 
         let a = self.a.to_shape(config, tolerance, debug_info)?;
         let b = self.b.to_shape(config, tolerance, debug_info)?;
 
-        shape.merge_shape(&a);
-        shape.merge_shape(&b);
+        shape.extend(a.into_inner());
+        shape.extend(b.into_inner());
 
         let shape = validate(shape, config)?;
 
