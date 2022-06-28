@@ -11,11 +11,6 @@ use super::{Curve, Vertex};
 
 /// An edge of a shape
 ///
-/// # Equality
-///
-/// Please refer to [`crate::kernel::topology`] for documentation on the
-/// equality of topological objects.
-///
 /// # Validation
 ///
 /// An edge that is part of a [`Shape`] must be structurally sound. That means

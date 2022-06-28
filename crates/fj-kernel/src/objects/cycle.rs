@@ -11,11 +11,6 @@ use super::{Edge, Surface};
 /// edge. The end of the last edge must connect to the beginning of the first
 /// one.
 ///
-/// # Equality
-///
-/// Please refer to [`crate::kernel::topology`] for documentation on the
-/// equality of topological objects.
-///
 /// # Validation
 ///
 /// A cycle that is part of a [`Shape`] must be structurally sound. That means

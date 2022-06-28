@@ -5,13 +5,6 @@ use super::Object;
 /// This type is used by topological objects to reference other objects, while
 /// also keeping track of a local representation of that object, which is often
 /// more appropriate for various tasks.
-///
-/// # Equality
-///
-/// Since `LocalForm` is used by topological objects, its equality is defined in
-/// terms that are useful to those objects. Two instances of `LocalForm` are
-/// equal, if both the local and the canonical forms are equal. The equality of
-/// the handle that refers to the canonical form is disregarded.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct LocalForm<Local, Canonical: Object> {
     local: Local,
