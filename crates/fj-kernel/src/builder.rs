@@ -128,13 +128,13 @@ impl<'r> FaceBuilder<'r> {
 
         let mut exteriors = Vec::new();
         if let Some(points) = self.exterior {
-            let cycle = Cycle::builder(self.surface).build_polygon(points);
+            let cycle = Cycle::polygon_from_points(&self.surface, points);
             exteriors.push(cycle);
         }
 
         let mut interiors = Vec::new();
         for points in self.interiors {
-            let cycle = Cycle::builder(self.surface).build_polygon(points);
+            let cycle = Cycle::polygon_from_points(&self.surface, points);
             interiors.push(cycle);
         }
 

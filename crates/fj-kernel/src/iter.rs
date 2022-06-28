@@ -460,9 +460,11 @@ mod tests {
 
     #[test]
     fn cycle() {
-        let cycle = Cycle::builder(Surface::xy_plane())
-            .build_polygon([[0., 0.], [1., 0.], [0., 1.]])
-            .canonical();
+        let cycle = Cycle::polygon_from_points(
+            &Surface::xy_plane(),
+            [[0., 0.], [1., 0.], [0., 1.]],
+        )
+        .canonical();
 
         assert_eq!(3, cycle.curve_iter().count());
         assert_eq!(1, cycle.cycle_iter().count());

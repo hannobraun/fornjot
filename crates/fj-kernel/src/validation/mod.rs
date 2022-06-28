@@ -329,7 +329,7 @@ mod tests {
         let triangle = [[0., 0.], [1., 0.], [0., 1.]];
 
         let surface = Surface::xy_plane();
-        let cycle = Cycle::builder(surface).build_polygon(triangle);
+        let cycle = Cycle::polygon_from_points(&surface, triangle);
 
         // Nothing has been added to `shape`. Should fail.
         shape.insert(Face::new(
@@ -344,7 +344,7 @@ mod tests {
         assert!(err.missing_cycle(&cycle.canonical()));
 
         let surface = Surface::xy_plane();
-        let cycle = Cycle::builder(surface).build_polygon(triangle);
+        let cycle = Cycle::polygon_from_points(&surface, triangle);
 
         // Everything has been added to `shape` now. Should work!
         shape.insert(Face::new(
