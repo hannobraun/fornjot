@@ -1,6 +1,7 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
+    iter::ObjectIters,
     objects::{Cycle, Edge, Face},
     shape::{LocalForm, Shape},
     validation::{validate, Validated, ValidationConfig, ValidationError},
@@ -32,13 +33,12 @@ impl ToShape for fj::Difference2d {
             [a, b].map(|shape| shape.to_shape(config, tolerance, debug_info));
         let [a, b] = [a?, b?];
 
-        if let Some(face) = a.faces().next() {
+        if let Some(face) = a.face_iter().next() {
             // If there's at least one face to subtract from, we can proceed.
 
-            let surface = face.get().brep().surface.clone();
+            let surface = face.brep().surface.clone();
 
-            for face in a.faces() {
-                let face = face.get();
+            for face in a.face_iter() {
                 let face = face.brep();
 
                 assert_eq!(
@@ -57,8 +57,7 @@ impl ToShape for fj::Difference2d {
                 }
             }
 
-            for face in b.faces() {
-                let face = face.get();
+            for face in b.face_iter() {
                 let face = face.brep();
 
                 assert_eq!(
