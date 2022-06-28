@@ -48,11 +48,11 @@ impl ToShape for fj::Difference2d {
                 );
 
                 for cycle in face.exteriors.as_local_form().cloned() {
-                    let cycle = add_cycle(cycle, &mut difference, false);
+                    let cycle = add_cycle(cycle, false);
                     exteriors.push(cycle);
                 }
                 for cycle in face.interiors.as_local_form().cloned() {
-                    let cycle = add_cycle(cycle, &mut difference, true);
+                    let cycle = add_cycle(cycle, true);
                     interiors.push(cycle);
                 }
             }
@@ -67,7 +67,7 @@ impl ToShape for fj::Difference2d {
                 );
 
                 for cycle in face.exteriors.as_local_form().cloned() {
-                    let cycle = add_cycle(cycle, &mut difference, true);
+                    let cycle = add_cycle(cycle, true);
                     interiors.push(cycle);
                 }
             }
@@ -95,9 +95,10 @@ impl ToShape for fj::Difference2d {
 
 fn add_cycle(
     cycle: LocalForm<Cycle<2>, Cycle<3>>,
-    shape: &mut Shape,
     reverse: bool,
 ) -> LocalForm<Cycle<2>, Cycle<3>> {
+    let mut tmp = Shape::new();
+
     let mut edges = Vec::new();
     for edge in cycle.local().edges.clone() {
         let curve_local = *edge.local().curve.local();
@@ -113,7 +114,7 @@ fn add_cycle(
         } else {
             curve_canonical
         };
-        let curve_canonical = shape.insert(curve_canonical);
+        let curve_canonical = tmp.insert(curve_canonical);
 
         let vertices = if reverse {
             edge.local().vertices.clone().reverse()
@@ -125,7 +126,7 @@ fn add_cycle(
             curve: LocalForm::new(curve_local, curve_canonical.clone()),
             vertices: vertices.clone(),
         };
-        let edge_canonical = shape.merge(Edge {
+        let edge_canonical = tmp.merge(Edge {
             curve: LocalForm::canonical_only(curve_canonical),
             vertices,
         });
@@ -140,8 +141,8 @@ fn add_cycle(
     let cycle_local = Cycle {
         edges: edges.clone(),
     };
-    let cycle_canonical = shape
-        .insert(Cycle::new(edges.into_iter().map(|edge| edge.canonical())));
+    let cycle_canonical =
+        tmp.insert(Cycle::new(edges.into_iter().map(|edge| edge.canonical())));
 
     LocalForm::new(cycle_local, cycle_canonical)
 }
