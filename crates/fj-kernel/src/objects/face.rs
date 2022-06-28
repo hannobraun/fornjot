@@ -104,6 +104,11 @@ impl Face {
     pub fn all_cycles(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
         self.exteriors().chain(self.interiors())
     }
+
+    /// Access the color of the face
+    pub fn color(&self) -> [u8; 4] {
+        self.brep().color
+    }
 }
 
 /// The boundary representation of a face
@@ -197,7 +202,8 @@ impl Hash for FaceBRep {
 pub struct CyclesInFace(Vec<LocalForm<Cycle<2>, Cycle<3>>>);
 
 impl CyclesInFace {
-    fn new(
+    /// Create a new instance of `CyclesInFace`
+    pub fn new(
         cycles: impl IntoIterator<Item = LocalForm<Cycle<2>, Cycle<3>>>,
     ) -> Self {
         Self(cycles.into_iter().collect())

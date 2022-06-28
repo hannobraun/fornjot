@@ -12,7 +12,7 @@ pub mod intersection;
 
 pub use self::{
     approx::{CycleApprox, FaceApprox, InvalidTolerance, Tolerance},
-    sweep::sweep_shape,
+    sweep::sweep,
     transform::transform_shape,
     triangulation::triangulate,
 };
