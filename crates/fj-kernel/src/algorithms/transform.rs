@@ -10,7 +10,7 @@ use crate::{
 ///
 /// Since the topological types refer to geometry, and don't contain any
 /// geometry themselves, this transforms the whole shape.
-pub fn transform_shape(shape: &Shape, transform: &Transform) -> Vec<Face> {
+pub fn transform(shape: &Shape, transform: &Transform) -> Vec<Face> {
     let mut target = Vec::new();
 
     for face in shape.face_iter() {
