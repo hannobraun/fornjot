@@ -4,7 +4,7 @@ use crate::objects::{Curve, Cycle, Edge, Face, Surface, Vertex};
 
 use super::{
     stores::{Store, Stores},
-    Handle, Iter, Mapping, Object, Update,
+    Handle, Iter, Object, Update,
 };
 
 /// The boundary representation of a shape
@@ -116,36 +116,32 @@ impl Shape {
     ///
     /// This is done recursively.
     pub fn merge<T: Object>(&mut self, object: T) -> Handle<T> {
-        object.merge_into(None, self, &mut Mapping::new())
+        object.merge_into(self)
     }
 
     /// Merge the provided shape into this one
     ///
     /// Returns a [`Mapping`] that maps each object from the merged shape to the
     /// merged objects in this shape.
-    pub fn merge_shape(&mut self, other: &Shape) -> Mapping {
-        let mut mapping = Mapping::new();
-
+    pub fn merge_shape(&mut self, other: &Shape) {
         for object in other.curves() {
-            object.get().merge_into(Some(object), self, &mut mapping);
+            object.get().merge_into(self);
         }
         for object in other.surfaces() {
-            object.get().merge_into(Some(object), self, &mut mapping);
+            object.get().merge_into(self);
         }
         for object in other.vertices() {
-            object.get().merge_into(Some(object), self, &mut mapping);
+            object.get().merge_into(self);
         }
         for object in other.edges() {
-            object.get().merge_into(Some(object), self, &mut mapping);
+            object.get().merge_into(self);
         }
         for object in other.cycles() {
-            object.get().merge_into(Some(object), self, &mut mapping);
+            object.get().merge_into(self);
         }
         for object in other.faces() {
-            object.get().merge_into(Some(object), self, &mut mapping);
+            object.get().merge_into(self);
         }
-
-        mapping
     }
 
     /// Update objects in the shape
@@ -154,42 +150,6 @@ impl Shape {
     /// shape.
     pub fn update(&mut self) -> Update {
         Update::new(&mut self.stores)
-    }
-
-    /// Clone the shape
-    ///
-    /// Returns a [`Mapping`] that maps each object from the original shape to
-    /// the respective object in the cloned shape.
-    pub fn clone_shape(&self) -> (Shape, Mapping) {
-        let mut target = Shape::new();
-        let mut mapping = Mapping::new();
-
-        for original in self.curves() {
-            let cloned = target.merge(original.get());
-            mapping.curves.insert(original, cloned);
-        }
-        for original in self.surfaces() {
-            let cloned = target.merge(original.get());
-            mapping.surfaces.insert(original, cloned);
-        }
-        for original in self.vertices() {
-            let cloned = target.merge(original.get());
-            mapping.vertices.insert(original, cloned);
-        }
-        for original in self.edges() {
-            let cloned = target.merge(original.get());
-            mapping.edges.insert(original, cloned);
-        }
-        for original in self.cycles() {
-            let cloned = target.merge(original.get());
-            mapping.cycles.insert(original, cloned);
-        }
-        for original in self.faces() {
-            let cloned = target.merge(original.get());
-            mapping.faces.insert(original, cloned);
-        }
-
-        (target, mapping)
     }
 
     /// Access an iterator over all curves

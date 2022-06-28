@@ -2,19 +2,14 @@ use crate::objects::{
     Curve, Cycle, Edge, Face, Surface, Vertex, VerticesOfEdge,
 };
 
-use super::{Handle, LocalForm, Mapping, Shape};
+use super::{Handle, LocalForm, Shape};
 
 /// Marker trait for geometric and topological objects
 pub trait Object: 'static + Clone + PartialEq + private::Sealed {
     /// Internal function
     ///
     /// Please consider using [`Shape::merge`] instead.
-    fn merge_into(
-        self,
-        handle: Option<Handle<Self>>,
-        shape: &mut Shape,
-        mapping: &mut Mapping,
-    ) -> Handle<Self>;
+    fn merge_into(self, shape: &mut Shape) -> Handle<Self>;
 }
 
 impl private::Sealed for Curve<3> {}
@@ -26,145 +21,68 @@ impl private::Sealed for Cycle<3> {}
 impl private::Sealed for Face {}
 
 impl Object for Curve<3> {
-    fn merge_into(
-        self,
-        handle: Option<Handle<Self>>,
-        shape: &mut Shape,
-        mapping: &mut Mapping,
-    ) -> Handle<Self> {
-        let merged = shape.get_handle_or_insert(self);
-
-        if let Some(handle) = handle {
-            mapping.curves.insert(handle, merged.clone());
-        }
-
-        merged
+    fn merge_into(self, shape: &mut Shape) -> Handle<Self> {
+        shape.get_handle_or_insert(self)
     }
 }
 
 impl Object for Surface {
-    fn merge_into(
-        self,
-        handle: Option<Handle<Self>>,
-        shape: &mut Shape,
-        mapping: &mut Mapping,
-    ) -> Handle<Self> {
-        let merged = shape.get_handle_or_insert(self);
-
-        if let Some(handle) = handle {
-            mapping.surfaces.insert(handle, merged.clone());
-        }
-
-        merged
+    fn merge_into(self, shape: &mut Shape) -> Handle<Self> {
+        shape.get_handle_or_insert(self)
     }
 }
 
 impl Object for Vertex {
-    fn merge_into(
-        self,
-        handle: Option<Handle<Self>>,
-        shape: &mut Shape,
-        mapping: &mut Mapping,
-    ) -> Handle<Self> {
-        let merged = shape.get_handle_or_insert(Vertex { point: self.point });
-
-        if let Some(handle) = handle {
-            mapping.vertices.insert(handle, merged.clone());
-        }
-
-        merged
+    fn merge_into(self, shape: &mut Shape) -> Handle<Self> {
+        shape.get_handle_or_insert(Vertex { point: self.point })
     }
 }
 
 impl Object for Edge<3> {
-    fn merge_into(
-        self,
-        handle: Option<Handle<Self>>,
-        shape: &mut Shape,
-        mapping: &mut Mapping,
-    ) -> Handle<Self> {
-        let curve = self.curve().merge_into(
-            Some(self.curve.canonical()),
-            shape,
-            mapping,
-        );
+    fn merge_into(self, shape: &mut Shape) -> Handle<Self> {
+        let curve = self.curve().merge_into(shape);
 
         let vertices = self.vertices.convert(|vertex| {
             let canonical = vertex.canonical();
-            let canonical =
-                canonical.get().merge_into(Some(canonical), shape, mapping);
+            let canonical = canonical.get().merge_into(shape);
             LocalForm::new(*vertex.local(), canonical)
         });
 
-        let merged = shape.get_handle_or_insert(Edge {
+        shape.get_handle_or_insert(Edge {
             curve: LocalForm::canonical_only(curve),
             vertices: VerticesOfEdge::new(vertices),
-        });
-
-        if let Some(handle) = handle {
-            mapping.edges.insert(handle, merged.clone());
-        }
-
-        merged
+        })
     }
 }
 
 impl Object for Cycle<3> {
-    fn merge_into(
-        self,
-        handle: Option<Handle<Self>>,
-        shape: &mut Shape,
-        mapping: &mut Mapping,
-    ) -> Handle<Self> {
+    fn merge_into(self, shape: &mut Shape) -> Handle<Self> {
         let mut edges = Vec::new();
         for edge in self.edges {
             let edge = edge.canonical();
-            let edge = edge.get().merge_into(Some(edge), shape, mapping);
+            let edge = edge.get().merge_into(shape);
             edges.push(edge);
         }
 
-        let merged = shape.get_handle_or_insert(Cycle::new(edges));
-
-        if let Some(handle) = handle {
-            mapping.cycles.insert(handle, merged.clone());
-        }
-
-        merged
+        shape.get_handle_or_insert(Cycle::new(edges))
     }
 }
 
 impl Object for Face {
-    fn merge_into(
-        self,
-        handle: Option<Handle<Self>>,
-        shape: &mut Shape,
-        mapping: &mut Mapping,
-    ) -> Handle<Self> {
-        let merged = match self {
+    fn merge_into(self, shape: &mut Shape) -> Handle<Self> {
+        match self {
             Face::Face(face) => {
-                let surface = face.surface.get().merge_into(
-                    Some(face.surface),
-                    shape,
-                    mapping,
-                );
+                let surface = face.surface.get().merge_into(shape);
 
                 let mut exts = Vec::new();
                 for cycle in face.exteriors.as_local_form() {
-                    let merged = cycle.canonical().get().merge_into(
-                        Some(cycle.canonical()),
-                        shape,
-                        mapping,
-                    );
+                    let merged = cycle.canonical().get().merge_into(shape);
                     exts.push(LocalForm::new(cycle.local().clone(), merged));
                 }
 
                 let mut ints = Vec::new();
                 for cycle in face.interiors.as_local_form() {
-                    let merged = cycle.canonical().get().merge_into(
-                        Some(cycle.canonical()),
-                        shape,
-                        mapping,
-                    );
+                    let merged = cycle.canonical().get().merge_into(shape);
                     ints.push(LocalForm::new(cycle.local().clone(), merged));
                 }
 
@@ -173,13 +91,7 @@ impl Object for Face {
                 ))
             }
             Face::Triangles(_) => shape.get_handle_or_insert(self),
-        };
-
-        if let Some(handle) = handle {
-            mapping.faces.insert(handle, merged.clone());
         }
-
-        merged
     }
 }
 
