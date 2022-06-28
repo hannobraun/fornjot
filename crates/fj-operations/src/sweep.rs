@@ -22,7 +22,13 @@ impl ToShape for fj::Sweep {
 
         let shape = shape.face_iter().collect::<Vec<_>>();
         let swept = sweep(shape, path, tolerance, color);
-        let swept = validate(swept, config)?;
+
+        let mut shape = Shape::new();
+        for face in swept {
+            shape.merge(face);
+        }
+
+        let swept = validate(shape, config)?;
 
         Ok(swept)
     }
