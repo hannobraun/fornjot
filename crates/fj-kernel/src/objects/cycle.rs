@@ -1,6 +1,6 @@
 use fj_math::{Line, Point};
 
-use crate::{builder::CycleBuilder, shape::LocalForm};
+use crate::shape::LocalForm;
 
 use super::{Curve, Edge, Surface};
 
@@ -72,11 +72,6 @@ impl Cycle<3> {
         let canonical = Cycle::new(edges_canonical);
 
         LocalForm::new(local, canonical)
-    }
-
-    /// Build a cycle using the [`CycleBuilder`] API
-    pub fn builder(surface: Surface) -> CycleBuilder {
-        CycleBuilder::new(surface)
     }
 
     /// Access the edges that this cycle refers to
