@@ -518,10 +518,7 @@ mod tests {
 
     #[test]
     fn vertex() {
-        let mut shape = Shape::new();
-        let vertex = Vertex::builder(&mut shape)
-            .build_from_point([0., 0., 0.])
-            .get();
+        let vertex = Vertex::from_point([0., 0., 0.]);
 
         assert_eq!(0, vertex.curve_iter().count());
         assert_eq!(0, vertex.cycle_iter().count());

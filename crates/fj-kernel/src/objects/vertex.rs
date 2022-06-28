@@ -27,6 +27,12 @@ pub struct Vertex {
 }
 
 impl Vertex {
+    /// Construct a `Vertex` from a point
+    pub fn from_point(point: impl Into<Point<3>>) -> Self {
+        let point = point.into();
+        Self { point }
+    }
+
     /// Build a vertex using the [`VertexBuilder`] API
     pub fn builder(shape: &mut Shape) -> VertexBuilder {
         VertexBuilder::new(shape)

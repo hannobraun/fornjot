@@ -294,15 +294,10 @@ mod tests {
     #[test]
     fn structural_edge() {
         let mut shape = Shape::new();
-        let mut other = Shape::new();
 
         let curve = Curve::x_axis();
-        let a = Vertex::builder(&mut other)
-            .build_from_point([1., 0., 0.])
-            .get();
-        let b = Vertex::builder(&mut other)
-            .build_from_point([2., 0., 0.])
-            .get();
+        let a = Vertex::from_point([1., 0., 0.]);
+        let b = Vertex::from_point([2., 0., 0.]);
 
         let a = LocalForm::new(Point::from([1.]), a);
         let b = LocalForm::new(Point::from([2.]), b);
@@ -319,12 +314,8 @@ mod tests {
         assert!(err.missing_vertex(&b.canonical()));
 
         let curve = Curve::x_axis();
-        let a = Vertex::builder(&mut shape)
-            .build_from_point([1., 0., 0.])
-            .get();
-        let b = Vertex::builder(&mut shape)
-            .build_from_point([2., 0., 0.])
-            .get();
+        let a = Vertex::from_point([1., 0., 0.]);
+        let b = Vertex::from_point([2., 0., 0.]);
 
         let a = LocalForm::new(Point::from([1.]), a);
         let b = LocalForm::new(Point::from([2.]), b);
