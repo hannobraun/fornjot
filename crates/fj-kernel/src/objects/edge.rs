@@ -2,10 +2,7 @@ use std::fmt;
 
 use fj_math::{Circle, Line, Point, Scalar, Vector};
 
-use crate::{
-    builder::EdgeBuilder,
-    shape::{LocalForm, Shape},
-};
+use crate::shape::LocalForm;
 
 use super::{Curve, Vertex};
 
@@ -109,11 +106,6 @@ impl Edge<3> {
             curve: LocalForm::canonical_only(curve),
             vertices: VerticesOfEdge::from_vertices(vertices),
         }
-    }
-
-    /// Build an edge using the [`EdgeBuilder`] API
-    pub fn builder(shape: &mut Shape) -> EdgeBuilder {
-        EdgeBuilder::new(shape)
     }
 }
 

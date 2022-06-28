@@ -1,83 +1,11 @@
 //! Convenient API to build objects
 
-use fj_math::{Circle, Line, Point, Scalar, Vector};
+use fj_math::{Line, Point};
 
 use crate::{
-    objects::{Curve, Cycle, Edge, Face, Surface, Vertex, VerticesOfEdge},
+    objects::{Curve, Cycle, Edge, Face, Surface},
     shape::{Handle, LocalForm, Shape},
 };
-
-/// API for building an [`Edge`]
-#[must_use]
-pub struct EdgeBuilder<'r> {
-    shape: &'r mut Shape,
-}
-
-impl<'r> EdgeBuilder<'r> {
-    /// Construct a new instance of `EdgeBuilder`
-    pub fn new(shape: &'r mut Shape) -> Self {
-        Self { shape }
-    }
-
-    /// Build a circle from a radius
-    pub fn build_circle(self, radius: Scalar) -> LocalForm<Edge<2>, Edge<3>> {
-        let curve_local = Curve::Circle(Circle {
-            center: Point::origin(),
-            a: Vector::from([radius, Scalar::ZERO]),
-            b: Vector::from([Scalar::ZERO, radius]),
-        });
-        let curve_canonical = Curve::Circle(Circle {
-            center: Point::origin(),
-            a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
-            b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
-        });
-
-        let edge_local = Edge {
-            curve: LocalForm::new(curve_local, curve_canonical),
-            vertices: VerticesOfEdge::none(),
-        };
-        let edge_canonical = Edge {
-            curve: LocalForm::canonical_only(curve_canonical),
-            vertices: VerticesOfEdge::none(),
-        };
-
-        LocalForm::new(edge_local, edge_canonical)
-    }
-
-    /// Build a line segment from two points
-    pub fn build_line_segment_from_points(
-        self,
-        vertices: [impl Into<Point<3>>; 2],
-    ) -> Handle<Edge<3>> {
-        let vertices = vertices.map(|point| {
-            let point = point.into();
-            Vertex { point }
-        });
-
-        self.build_line_segment_from_vertices(vertices)
-    }
-
-    /// Build a line segment from two vertices
-    pub fn build_line_segment_from_vertices(
-        self,
-        [a, b]: [Vertex; 2],
-    ) -> Handle<Edge<3>> {
-        let curve = {
-            let points = [a, b].map(|vertex| vertex.point);
-            Curve::Line(Line::from_points(points))
-        };
-
-        let vertices = [
-            LocalForm::new(Point::from([0.]), a),
-            LocalForm::new(Point::from([1.]), b),
-        ];
-
-        self.shape.get_handle_or_insert(Edge {
-            curve: LocalForm::canonical_only(curve),
-            vertices: VerticesOfEdge::from_vertices(vertices),
-        })
-    }
-}
 
 /// API for building a [`Cycle`]
 #[must_use]
