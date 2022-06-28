@@ -1,6 +1,6 @@
 use std::fmt;
 
-use fj_math::{Circle, Point, Scalar, Vector};
+use fj_math::{Circle, Line, Point, Scalar, Vector};
 
 use crate::{
     builder::EdgeBuilder,
@@ -81,6 +81,24 @@ impl Edge<2> {
 }
 
 impl Edge<3> {
+    /// Create a line segment from two vertices
+    pub fn line_segment_from_vertices([a, b]: [Vertex; 2]) -> Self {
+        let curve = {
+            let points = [a, b].map(|vertex| vertex.point);
+            Curve::Line(Line::from_points(points))
+        };
+
+        let vertices = [
+            LocalForm::new(Point::from([0.]), a),
+            LocalForm::new(Point::from([1.]), b),
+        ];
+
+        Self {
+            curve: LocalForm::canonical_only(curve),
+            vertices: VerticesOfEdge::from_vertices(vertices),
+        }
+    }
+
     /// Build an edge using the [`EdgeBuilder`] API
     pub fn builder(shape: &mut Shape) -> EdgeBuilder {
         EdgeBuilder::new(shape)
