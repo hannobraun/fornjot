@@ -12,7 +12,7 @@ use super::{CycleApprox, Tolerance};
 
 /// Create a solid by sweeping a sketch
 pub fn sweep(
-    source: Shape,
+    source: Vec<Face>,
     path: impl Into<Vector<3>>,
     tolerance: Tolerance,
     color: [u8; 4],
@@ -455,11 +455,13 @@ mod tests {
 
         let mut shape = Shape::new();
 
-        let _sketch = Face::builder(Surface::xy_plane(), &mut shape)
+        let sketch = Face::builder(Surface::xy_plane(), &mut shape)
             .with_exterior_polygon([[0., 0.], [1., 0.], [0., 1.]])
-            .build();
+            .build()
+            .get();
 
-        let solid = super::sweep(shape, direction, tolerance, [255, 0, 0, 255]);
+        let solid =
+            super::sweep(vec![sketch], direction, tolerance, [255, 0, 0, 255]);
 
         let expected_vertices: Vec<_> = expected_vertices
             .into_iter()
