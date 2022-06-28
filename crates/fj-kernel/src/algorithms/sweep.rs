@@ -8,7 +8,7 @@ use crate::{
     shape::{LocalForm, Shape},
 };
 
-use super::{CycleApprox, Tolerance};
+use super::{transform::transform_cycles, CycleApprox, Tolerance};
 
 /// Create a solid by sweeping a sketch
 pub fn sweep(
@@ -101,9 +101,8 @@ fn create_top_face(
 
     surface = surface.transform(&translation);
 
-    let mut tmp = Shape::new();
-    exteriors = transform_cycle(&exteriors, &translation, &mut tmp);
-    interiors = transform_cycle(&interiors, &translation, &mut tmp);
+    exteriors = transform_cycles(&exteriors, &translation);
+    interiors = transform_cycles(&interiors, &translation);
 
     if is_sweep_along_negative_direction {
         surface = surface.reverse();
@@ -112,6 +111,7 @@ fn create_top_face(
         interiors = reverse_local_coordinates_in_cycle(&interiors);
     };
 
+    let mut tmp = Shape::new();
     let surface = tmp.insert(surface);
 
     let face = Face::new(
@@ -144,84 +144,6 @@ fn reverse_local_coordinates_in_cycle(cycles: &CyclesInFace) -> CyclesInFace {
             .collect();
         let local = Cycle { edges };
         LocalForm::new(local, cycle.canonical())
-    });
-
-    CyclesInFace::new(cycles)
-}
-
-fn transform_cycle(
-    cycles: &CyclesInFace,
-    transform: &Transform,
-    target: &mut Shape,
-) -> CyclesInFace {
-    let cycles = cycles.as_local_form().map(|cycle| {
-        let edges_local = cycle
-            .local()
-            .edges
-            .iter()
-            .map(|edge| {
-                let curve_local = *edge.local().curve.local();
-                let curve_canonical = target
-                    .merge(edge.canonical().get().curve().transform(transform));
-
-                let vertices = edge.canonical().get().vertices.map(|vertex| {
-                    let point = vertex.canonical().get().point;
-                    let point = transform.transform_point(&point);
-
-                    let local = *vertex.local();
-                    let canonical = target.merge(Vertex { point });
-
-                    LocalForm::new(local, canonical)
-                });
-
-                let edge_local = Edge {
-                    curve: LocalForm::new(curve_local, curve_canonical.clone()),
-                    vertices: vertices.clone(),
-                };
-                let edge_canonical = target.merge(Edge {
-                    curve: LocalForm::canonical_only(curve_canonical),
-                    vertices,
-                });
-
-                LocalForm::new(edge_local, edge_canonical)
-            })
-            .collect();
-        let edges_canonical = cycle
-            .canonical()
-            .get()
-            .edges
-            .iter()
-            .map(|edge| {
-                let edge = edge.canonical().get();
-
-                let curve = {
-                    let curve = edge.curve().transform(transform);
-
-                    let curve = target.merge(curve);
-                    LocalForm::canonical_only(curve)
-                };
-                let vertices = edge.vertices.map(|vertex| {
-                    let point = vertex.canonical().get().point;
-                    let point = transform.transform_point(&point);
-
-                    let local = *vertex.local();
-                    let canonical = target.merge(Vertex { point });
-
-                    LocalForm::new(local, canonical)
-                });
-
-                let edge = target.merge(Edge { curve, vertices });
-                LocalForm::canonical_only(edge)
-            })
-            .collect();
-
-        let cycle_local = Cycle { edges: edges_local };
-
-        let cycle_canonical = target.merge(Cycle {
-            edges: edges_canonical,
-        });
-
-        LocalForm::new(cycle_local, cycle_canonical)
     });
 
     CyclesInFace::new(cycles)

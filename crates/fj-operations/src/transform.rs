@@ -1,6 +1,7 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
-    algorithms::{transform_shape, Tolerance},
+    algorithms::{transform, Tolerance},
+    iter::ObjectIters,
     shape::Shape,
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
@@ -16,22 +17,27 @@ impl ToShape for fj::Transform {
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Shape>, ValidationError> {
         let shape = self.shape.to_shape(config, tolerance, debug_info)?;
-        let mut shape = shape.into_inner();
+        let shape = shape.into_inner();
 
-        let transform = transform(self);
+        let shape = shape.face_iter().collect::<Vec<_>>();
+        let faces = transform(&shape, &make_transform(self));
 
-        transform_shape(&mut shape, &transform);
-        let shape = validate(shape, config)?;
+        let mut target = Shape::new();
+        for face in faces {
+            target.merge(face);
+        }
+
+        let shape = validate(target, config)?;
 
         Ok(shape)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
-        transform(self).transform_aabb(&self.shape.bounding_volume())
+        make_transform(self).transform_aabb(&self.shape.bounding_volume())
     }
 }
 
-fn transform(transform: &fj::Transform) -> Transform {
+fn make_transform(transform: &fj::Transform) -> Transform {
     let axis = Vector::from(transform.axis).normalize();
     Transform::translation(transform.offset)
         * Transform::rotation(axis * transform.angle.rad())
