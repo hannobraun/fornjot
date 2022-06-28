@@ -102,8 +102,8 @@ fn create_top_face(
     surface = surface.transform(&translation);
 
     let mut tmp = Shape::new();
-    exteriors = transform_cycle(&exteriors, &translation, &mut tmp);
-    interiors = transform_cycle(&interiors, &translation, &mut tmp);
+    exteriors = transform_cycles(&exteriors, &translation, &mut tmp);
+    interiors = transform_cycles(&interiors, &translation, &mut tmp);
 
     if is_sweep_along_negative_direction {
         surface = surface.reverse();
@@ -149,7 +149,7 @@ fn reverse_local_coordinates_in_cycle(cycles: &CyclesInFace) -> CyclesInFace {
     CyclesInFace::new(cycles)
 }
 
-fn transform_cycle(
+fn transform_cycles(
     cycles: &CyclesInFace,
     transform: &Transform,
     target: &mut Shape,
