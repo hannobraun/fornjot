@@ -81,15 +81,6 @@ impl<T: Object> Store<T> {
         }
     }
 
-    pub fn update<F>(&mut self, mut f: F)
-    where
-        F: FnMut(&mut T),
-    {
-        for (_, object) in self.objects.write().iter_mut() {
-            f(object);
-        }
-    }
-
     fn ptr(&self) -> *const () {
         Arc::as_ptr(&self.objects) as _
     }
