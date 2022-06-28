@@ -30,8 +30,8 @@ impl Cycle<3> {
     }
 
     /// Build a cycle using the [`CycleBuilder`] API
-    pub fn builder(surface: Surface, shape: &mut Shape) -> CycleBuilder {
-        CycleBuilder::new(surface, shape)
+    pub fn builder(surface: Surface, _shape: &mut Shape) -> CycleBuilder {
+        CycleBuilder::new(surface)
     }
 
     /// Access the edges that this cycle refers to

@@ -81,15 +81,14 @@ impl<'r> EdgeBuilder<'r> {
 
 /// API for building a [`Cycle`]
 #[must_use]
-pub struct CycleBuilder<'r> {
+pub struct CycleBuilder {
     surface: Surface,
-    _shape: &'r mut Shape,
 }
 
-impl<'r> CycleBuilder<'r> {
+impl CycleBuilder {
     /// Construct a new instance of `CycleBuilder`
-    pub fn new(surface: Surface, _shape: &'r mut Shape) -> Self {
-        Self { surface, _shape }
+    pub fn new(surface: Surface) -> Self {
+        Self { surface }
     }
 
     /// Build a polygon from a list of points
