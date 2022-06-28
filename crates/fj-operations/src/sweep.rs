@@ -15,11 +15,11 @@ impl ToShape for fj::Sweep {
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Vec<Face>>, ValidationError> {
-        let shape = self.shape().to_shape(config, tolerance, debug_info)?;
+        let sketch = self.shape().to_shape(config, tolerance, debug_info)?;
         let path = Vector::from(self.path());
         let color = self.shape().color();
 
-        let swept = sweep(shape.into_inner(), path, tolerance, color);
+        let swept = sweep(sketch.into_inner(), path, tolerance, color);
 
         validate(swept, config)
     }
