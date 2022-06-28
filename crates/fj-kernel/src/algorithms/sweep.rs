@@ -12,17 +12,17 @@ use super::{CycleApprox, Tolerance};
 
 /// Create a solid by sweeping a sketch
 pub fn sweep(
-    source: Shape,
+    source: Vec<Face>,
     path: impl Into<Vector<3>>,
     tolerance: Tolerance,
     color: [u8; 4],
-) -> Shape {
+) -> Vec<Face> {
     let path = path.into();
 
     let is_sweep_along_negative_direction =
         path.dot(&Vector::from([0., 0., 1.])) < Scalar::ZERO;
 
-    let mut target = Shape::new();
+    let mut target = Vec::new();
 
     for face in source.face_iter() {
         create_bottom_faces(
@@ -59,8 +59,10 @@ pub fn sweep(
 fn create_bottom_faces(
     face: &Face,
     is_sweep_along_negative_direction: bool,
-    target: &mut Shape,
+    target: &mut Vec<Face>,
 ) {
+    let mut tmp = Shape::new();
+
     let mut surface = face.surface();
 
     let mut exteriors = face.brep().exteriors.clone();
@@ -73,7 +75,7 @@ fn create_bottom_faces(
         interiors = reverse_local_coordinates_in_cycle(&interiors);
     };
 
-    let surface = target.insert(surface);
+    let surface = tmp.insert(surface);
 
     let face = Face::new(
         surface,
@@ -81,14 +83,14 @@ fn create_bottom_faces(
         interiors.as_local_form().cloned(),
         face.color(),
     );
-    target.merge(face);
+    target.push(face);
 }
 
 fn create_top_face(
     face: &Face,
     path: Vector<3>,
     is_sweep_along_negative_direction: bool,
-    target: &mut Shape,
+    target: &mut Vec<Face>,
 ) {
     let mut surface = face.surface();
 
@@ -110,7 +112,7 @@ fn create_top_face(
         interiors = reverse_local_coordinates_in_cycle(&interiors);
     };
 
-    let surface = target.insert(surface);
+    let surface = tmp.insert(surface);
 
     let face = Face::new(
         surface,
@@ -118,7 +120,7 @@ fn create_top_face(
         interiors.as_local_form().cloned(),
         face.color(),
     );
-    target.merge(face);
+    target.push(face);
 }
 
 fn reverse_local_coordinates_in_cycle(cycles: &CyclesInFace) -> CyclesInFace {
@@ -230,8 +232,10 @@ fn create_non_continuous_side_face(
     is_sweep_along_negative_direction: bool,
     vertices_bottom: [Vertex; 2],
     color: [u8; 4],
-    target: &mut Shape,
+    target: &mut Vec<Face>,
 ) {
+    let mut tmp = Shape::new();
+
     let vertices = {
         let vertices_top = vertices_bottom.map(|vertex| {
             let point = vertex.point + path;
@@ -246,14 +250,14 @@ fn create_non_continuous_side_face(
             [a, b, d, c]
         };
 
-        vertices.map(|vertex| target.get_handle_or_insert(vertex))
+        vertices.map(|vertex| tmp.get_handle_or_insert(vertex))
     };
 
     let surface = {
         let [a, b, _, c] = vertices.clone().map(|vertex| vertex.get().point);
         Surface::plane_from_points([a, b, c])
     };
-    let surface = target.get_handle_or_insert(surface);
+    let surface = tmp.get_handle_or_insert(surface);
 
     let cycle = {
         let [a, b, c, d] = vertices;
@@ -277,7 +281,7 @@ fn create_non_continuous_side_face(
 
                 let global = [a, b].map(|vertex| vertex.1.get().point);
                 let global = Curve::line_from_points(global);
-                let global = target.get_handle_or_insert(global);
+                let global = tmp.get_handle_or_insert(global);
 
                 LocalForm::new(local, global)
             };
@@ -297,7 +301,7 @@ fn create_non_continuous_side_face(
                     curve: LocalForm::canonical_only(curve.canonical()),
                     vertices,
                 };
-                let global = target.get_handle_or_insert(global);
+                let global = tmp.get_handle_or_insert(global);
 
                 LocalForm::new(local, global)
             };
@@ -310,7 +314,7 @@ fn create_non_continuous_side_face(
 
             let global =
                 Cycle::new(local.edges.iter().map(|edge| edge.canonical()));
-            let global = target.get_handle_or_insert(global);
+            let global = tmp.get_handle_or_insert(global);
 
             LocalForm::new(local, global)
         };
@@ -319,7 +323,7 @@ fn create_non_continuous_side_face(
     };
 
     let face = Face::new(surface, [cycle], [], color);
-    target.get_handle_or_insert(face);
+    target.push(face);
 }
 
 fn create_continuous_side_face(
@@ -327,7 +331,7 @@ fn create_continuous_side_face(
     path: Vector<3>,
     tolerance: Tolerance,
     color: [u8; 4],
-    target: &mut Shape,
+    target: &mut Vec<Face>,
 ) {
     let translation = Transform::translation(path);
 
@@ -353,7 +357,7 @@ fn create_continuous_side_face(
         side_face.push(([v0, v2, v3].into(), color));
     }
 
-    target.insert(Face::Triangles(side_face));
+    target.push(Face::Triangles(side_face));
 }
 
 #[cfg(test)]
@@ -455,11 +459,13 @@ mod tests {
 
         let mut shape = Shape::new();
 
-        let _sketch = Face::builder(Surface::xy_plane(), &mut shape)
+        let sketch = Face::builder(Surface::xy_plane(), &mut shape)
             .with_exterior_polygon([[0., 0.], [1., 0.], [0., 1.]])
-            .build();
+            .build()
+            .get();
 
-        let solid = super::sweep(shape, direction, tolerance, [255, 0, 0, 255]);
+        let solid =
+            super::sweep(vec![sketch], direction, tolerance, [255, 0, 0, 255]);
 
         let expected_vertices: Vec<_> = expected_vertices
             .into_iter()

@@ -1,6 +1,7 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::{sweep, Tolerance},
+    iter::ObjectIters,
     shape::Shape,
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
@@ -19,8 +20,15 @@ impl ToShape for fj::Sweep {
         let path = Vector::from(self.path());
         let color = self.shape().color();
 
-        let swept = sweep(shape.into_inner(), path, tolerance, color);
-        let swept = validate(swept, config)?;
+        let shape = shape.face_iter().collect::<Vec<_>>();
+        let swept = sweep(shape, path, tolerance, color);
+
+        let mut shape = Shape::new();
+        for face in swept {
+            shape.merge(face);
+        }
+
+        let swept = validate(shape, config)?;
 
         Ok(swept)
     }
