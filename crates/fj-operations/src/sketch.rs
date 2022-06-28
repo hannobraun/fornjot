@@ -24,8 +24,7 @@ impl ToShape for fj::Sketch {
         let sketch = Face::builder(surface, &mut tmp)
             .with_exterior_polygon(points)
             .with_color(self.color())
-            .build()
-            .get();
+            .build();
 
         validate(vec![sketch], config)
     }

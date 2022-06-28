@@ -103,8 +103,7 @@ mod tests {
 
         let face = Face::builder(Surface::xy_plane(), &mut shape)
             .with_exterior_polygon([a, b, c, d])
-            .build()
-            .get();
+            .build();
 
         let a = Point::from(a).to_xyz();
         let b = Point::from(b).to_xyz();
@@ -138,8 +137,7 @@ mod tests {
         let face = Face::builder(Surface::xy_plane(), &mut shape)
             .with_exterior_polygon([a, b, c, d])
             .with_interior_polygon([e, f, g, h])
-            .build()
-            .get();
+            .build();
 
         let triangles = triangulate(face)?;
 

@@ -4,7 +4,7 @@ use fj_math::Point;
 
 use crate::{
     objects::{Cycle, Face, Surface},
-    shape::{Handle, Shape},
+    shape::Shape,
 };
 
 /// API for building a [`Face`]
@@ -15,19 +15,19 @@ pub struct FaceBuilder<'r> {
     interiors: Vec<Vec<Point<2>>>,
     color: Option<[u8; 4]>,
 
-    shape: &'r mut Shape,
+    _shape: &'r mut Shape,
 }
 
 impl<'r> FaceBuilder<'r> {
     /// Construct a new instance of `FaceBuilder`
-    pub fn new(surface: Surface, shape: &'r mut Shape) -> Self {
+    pub fn new(surface: Surface, _shape: &'r mut Shape) -> Self {
         Self {
             surface,
             exterior: None,
             interiors: Vec::new(),
             color: None,
 
-            shape,
+            _shape,
         }
     }
 
@@ -64,7 +64,7 @@ impl<'r> FaceBuilder<'r> {
     }
 
     /// Build the face
-    pub fn build(self) -> Handle<Face> {
+    pub fn build(self) -> Face {
         let surface = self.surface;
 
         let mut exteriors = Vec::new();
@@ -81,8 +81,6 @@ impl<'r> FaceBuilder<'r> {
 
         let color = self.color.unwrap_or([255, 0, 0, 255]);
 
-        self.shape.get_handle_or_insert(Face::new(
-            surface, exteriors, interiors, color,
-        ))
+        Face::new(surface, exteriors, interiors, color)
     }
 }

@@ -130,7 +130,7 @@ mod tests {
         let g = geometry::Point::new(g, g);
         let h = geometry::Point::new(h, h);
 
-        let approx = FaceApprox::new(&face.get(), tolerance);
+        let approx = FaceApprox::new(&face, tolerance);
         let expected = FaceApprox {
             points: set![a, b, c, d, e, f, g, h],
             exterior: CycleApprox {

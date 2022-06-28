@@ -491,8 +491,7 @@ mod tests {
         let mut shape = Shape::new();
         let face = Face::builder(Surface::xy_plane(), &mut shape)
             .with_exterior_polygon([[0., 0.], [1., 0.], [0., 1.]])
-            .build()
-            .get();
+            .build();
 
         assert_eq!(3, face.curve_iter().count());
         assert_eq!(1, face.cycle_iter().count());

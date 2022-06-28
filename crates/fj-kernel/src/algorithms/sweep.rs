@@ -366,8 +366,7 @@ mod tests {
 
         let sketch = Face::builder(Surface::xy_plane(), &mut shape)
             .with_exterior_polygon([[0., 0.], [1., 0.], [0., 1.]])
-            .build()
-            .get();
+            .build();
 
         let solid =
             super::sweep(vec![sketch], direction, tolerance, [255, 0, 0, 255]);
@@ -384,7 +383,6 @@ mod tests {
             Face::builder(surface, &mut shape)
                 .with_exterior_polygon(expected_vertices.clone())
                 .build()
-                .get()
         });
 
         for face in faces {
