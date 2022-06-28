@@ -328,9 +328,10 @@ impl ObjectIters for Shape {
 // This implementation exists to paper over the lack of any "top-level" objects
 // that are an entry point into a shape (basically, the lack of `Sketch` and
 // `Solid`).
-impl<T> ObjectIters for T
+impl<T, O> ObjectIters for T
 where
-    for<'r> &'r T: IntoIterator<Item = &'r Face>,
+    for<'r> &'r T: IntoIterator<Item = &'r O>,
+    O: ObjectIters,
 {
     fn curve_iter(&self) -> Iter<Curve<3>> {
         let mut iter = Iter::empty();
