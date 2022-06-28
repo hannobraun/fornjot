@@ -3,7 +3,7 @@ use fj_kernel::{
     algorithms::Tolerance,
     iter::ObjectIters,
     objects::{Cycle, Edge, Face},
-    shape::{LocalForm, Shape},
+    shape::LocalForm,
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
@@ -36,13 +36,13 @@ impl ToShape for fj::Difference2d {
         if let Some(face) = a.face_iter().next() {
             // If there's at least one face to subtract from, we can proceed.
 
-            let surface = face.brep().surface.clone();
+            let surface = face.brep().surface;
 
             for face in a.face_iter() {
                 let face = face.brep();
 
                 assert_eq!(
-                    surface.get(),
+                    surface,
                     face.surface(),
                     "Trying to subtract faces with different surfaces.",
                 );
@@ -61,7 +61,7 @@ impl ToShape for fj::Difference2d {
                 let face = face.brep();
 
                 assert_eq!(
-                    surface.get(),
+                    surface,
                     face.surface(),
                     "Trying to subtract faces with different surfaces.",
                 );
@@ -95,8 +95,6 @@ fn add_cycle(
     cycle: LocalForm<Cycle<2>, Cycle<3>>,
     reverse: bool,
 ) -> LocalForm<Cycle<2>, Cycle<3>> {
-    let mut tmp = Shape::new();
-
     let mut edges = Vec::new();
     for edge in cycle.local().edges.clone() {
         let curve_local = *edge.local().curve.local();
@@ -106,13 +104,12 @@ fn add_cycle(
             curve_local
         };
 
-        let curve_canonical = edge.canonical().get().curve();
+        let curve_canonical = edge.canonical().curve();
         let curve_canonical = if reverse {
             curve_canonical.reverse()
         } else {
             curve_canonical
         };
-        let curve_canonical = tmp.insert(curve_canonical);
 
         let vertices = if reverse {
             edge.local().vertices.clone().reverse()
@@ -121,13 +118,13 @@ fn add_cycle(
         };
 
         let edge_local = Edge {
-            curve: LocalForm::new(curve_local, curve_canonical.clone()),
+            curve: LocalForm::new(curve_local, curve_canonical),
             vertices: vertices.clone(),
         };
-        let edge_canonical = tmp.merge(Edge {
+        let edge_canonical = Edge {
             curve: LocalForm::canonical_only(curve_canonical),
             vertices,
-        });
+        };
 
         edges.push(LocalForm::new(edge_local, edge_canonical));
     }
@@ -140,7 +137,7 @@ fn add_cycle(
         edges: edges.clone(),
     };
     let cycle_canonical =
-        tmp.insert(Cycle::new(edges.into_iter().map(|edge| edge.canonical())));
+        Cycle::new(edges.into_iter().map(|edge| edge.canonical()));
 
     LocalForm::new(cycle_local, cycle_canonical)
 }

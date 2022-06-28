@@ -13,11 +13,6 @@ use crate::{builder::VertexBuilder, shape::Shape};
 /// Points, on the other hand, might be used to approximate a shape for various
 /// purposes, without presenting any deeper truth about the shape's structure.
 ///
-/// # Equality
-///
-/// Please refer to [`crate::kernel::topology`] for documentation on the
-/// equality of topological objects.
-///
 /// # Validation
 ///
 /// Vertices must be unique within a shape, meaning an identical vertex must not

@@ -51,21 +51,20 @@ impl<'r> EdgeBuilder<'r> {
             a: Vector::from([radius, Scalar::ZERO]),
             b: Vector::from([Scalar::ZERO, radius]),
         });
-        let curve_canonical =
-            self.shape.get_handle_or_insert(Curve::Circle(Circle {
-                center: Point::origin(),
-                a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
-                b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
-            }));
+        let curve_canonical = Curve::Circle(Circle {
+            center: Point::origin(),
+            a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
+            b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
+        });
 
         let edge_local = Edge {
-            curve: LocalForm::new(curve_local, curve_canonical.clone()),
+            curve: LocalForm::new(curve_local, curve_canonical),
             vertices: VerticesOfEdge::none(),
         };
-        let edge_canonical = self.shape.get_handle_or_insert(Edge {
+        let edge_canonical = Edge {
             curve: LocalForm::canonical_only(curve_canonical),
             vertices: VerticesOfEdge::none(),
-        });
+        };
 
         LocalForm::new(edge_local, edge_canonical)
     }
@@ -75,10 +74,10 @@ impl<'r> EdgeBuilder<'r> {
         self,
         vertices: [impl Into<Point<3>>; 2],
     ) -> Handle<Edge<3>> {
-        // Can be cleaned up with `try_map`, once that is stable:
-        // https://doc.rust-lang.org/std/primitive.array.html#method.try_map
-        let vertices = vertices
-            .map(|point| Vertex::builder(self.shape).build_from_point(point));
+        let vertices = vertices.map(|point| {
+            let point = point.into();
+            Vertex { point }
+        });
 
         self.build_line_segment_from_vertices(vertices)
     }
@@ -86,12 +85,11 @@ impl<'r> EdgeBuilder<'r> {
     /// Build a line segment from two vertices
     pub fn build_line_segment_from_vertices(
         self,
-        [a, b]: [Handle<Vertex>; 2],
+        [a, b]: [Vertex; 2],
     ) -> Handle<Edge<3>> {
         let curve = {
-            let points = [&a, &b].map(|vertex| vertex.get().point);
-            let curve = Curve::Line(Line::from_points(points));
-            self.shape.get_handle_or_insert(curve)
+            let points = [a, b].map(|vertex| vertex.point);
+            Curve::Line(Line::from_points(points))
         };
 
         let vertices = [
@@ -142,14 +140,15 @@ impl<'r> CycleBuilder<'r> {
             let points_canonical = points
                 .map(|point| self.surface.point_from_surface_coords(point));
             let edge_canonical = Edge::builder(self.shape)
-                .build_line_segment_from_points(points_canonical);
+                .build_line_segment_from_points(points_canonical)
+                .get();
 
             let edge_local = Edge {
                 curve: LocalForm::new(
                     Curve::Line(Line::from_points(points)),
-                    edge_canonical.get().curve.canonical(),
+                    edge_canonical.curve.canonical(),
                 ),
-                vertices: edge_canonical.get().vertices,
+                vertices: edge_canonical.vertices.clone(),
             };
 
             edges.push(LocalForm::new(edge_local, edge_canonical));
@@ -160,8 +159,7 @@ impl<'r> CycleBuilder<'r> {
         };
 
         let edges_canonical = edges.into_iter().map(|edge| edge.canonical());
-        let canonical =
-            self.shape.get_handle_or_insert(Cycle::new(edges_canonical));
+        let canonical = Cycle::new(edges_canonical);
 
         LocalForm::new(local, canonical)
     }
@@ -225,7 +223,7 @@ impl<'r> FaceBuilder<'r> {
 
     /// Build the face
     pub fn build(self) -> Handle<Face> {
-        let surface = self.shape.get_handle_or_insert(self.surface);
+        let surface = self.surface;
 
         let mut exteriors = Vec::new();
         if let Some(points) = self.exterior {

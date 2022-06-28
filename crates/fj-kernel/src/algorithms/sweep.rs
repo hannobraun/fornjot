@@ -5,7 +5,7 @@ use crate::{
     objects::{
         Curve, Cycle, CyclesInFace, Edge, Face, Surface, Vertex, VerticesOfEdge,
     },
-    shape::{LocalForm, Shape},
+    shape::LocalForm,
 };
 
 use super::{transform::transform_cycles, CycleApprox, Tolerance};
@@ -61,8 +61,6 @@ fn create_bottom_faces(
     is_sweep_along_negative_direction: bool,
     target: &mut Vec<Face>,
 ) {
-    let mut tmp = Shape::new();
-
     let mut surface = face.surface();
 
     let mut exteriors = face.brep().exteriors.clone();
@@ -74,8 +72,6 @@ fn create_bottom_faces(
         exteriors = reverse_local_coordinates_in_cycle(&exteriors);
         interiors = reverse_local_coordinates_in_cycle(&interiors);
     };
-
-    let surface = tmp.insert(surface);
 
     let face = Face::new(
         surface,
@@ -110,9 +106,6 @@ fn create_top_face(
         exteriors = reverse_local_coordinates_in_cycle(&exteriors);
         interiors = reverse_local_coordinates_in_cycle(&interiors);
     };
-
-    let mut tmp = Shape::new();
-    let surface = tmp.insert(surface);
 
     let face = Face::new(
         surface,
@@ -156,8 +149,6 @@ fn create_non_continuous_side_face(
     color: [u8; 4],
     target: &mut Vec<Face>,
 ) {
-    let mut tmp = Shape::new();
-
     let vertices = {
         let vertices_top = vertices_bottom.map(|vertex| {
             let point = vertex.point + path;
@@ -166,20 +157,17 @@ fn create_non_continuous_side_face(
 
         let [[a, b], [c, d]] = [vertices_bottom, vertices_top];
 
-        let vertices = if is_sweep_along_negative_direction {
+        if is_sweep_along_negative_direction {
             [b, a, c, d]
         } else {
             [a, b, d, c]
-        };
-
-        vertices.map(|vertex| tmp.get_handle_or_insert(vertex))
+        }
     };
 
     let surface = {
-        let [a, b, _, c] = vertices.clone().map(|vertex| vertex.get().point);
+        let [a, b, _, c] = vertices.map(|vertex| vertex.point);
         Surface::plane_from_points([a, b, c])
     };
-    let surface = tmp.get_handle_or_insert(surface);
 
     let cycle = {
         let [a, b, c, d] = vertices;
@@ -201,16 +189,15 @@ fn create_non_continuous_side_face(
             let curve = {
                 let local = Curve::line_from_points([a.0, b.0]);
 
-                let global = [a, b].map(|vertex| vertex.1.get().point);
+                let global = [a, b].map(|vertex| vertex.1.point);
                 let global = Curve::line_from_points(global);
-                let global = tmp.get_handle_or_insert(global);
 
                 LocalForm::new(local, global)
             };
 
             let vertices = VerticesOfEdge::from_vertices([
-                LocalForm::new(Point::from([0.]), a.1.clone()),
-                LocalForm::new(Point::from([1.]), b.1.clone()),
+                LocalForm::new(Point::from([0.]), a.1),
+                LocalForm::new(Point::from([1.]), b.1),
             ]);
 
             let edge = {
@@ -223,7 +210,6 @@ fn create_non_continuous_side_face(
                     curve: LocalForm::canonical_only(curve.canonical()),
                     vertices,
                 };
-                let global = tmp.get_handle_or_insert(global);
 
                 LocalForm::new(local, global)
             };
@@ -236,7 +222,6 @@ fn create_non_continuous_side_face(
 
             let global =
                 Cycle::new(local.edges.iter().map(|edge| edge.canonical()));
-            let global = tmp.get_handle_or_insert(global);
 
             LocalForm::new(local, global)
         };
@@ -257,8 +242,6 @@ fn create_continuous_side_face(
 ) {
     let translation = Transform::translation(path);
 
-    let mut tmp = Shape::new();
-    let edge = tmp.merge(edge);
     let cycle = Cycle::new(vec![edge]);
     let approx = CycleApprox::new(&cycle, tolerance);
 

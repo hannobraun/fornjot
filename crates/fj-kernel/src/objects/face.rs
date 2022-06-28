@@ -5,7 +5,7 @@ use fj_math::Triangle;
 
 use crate::{
     builder::FaceBuilder,
-    shape::{Handle, LocalForm, Shape},
+    shape::{LocalForm, Shape},
 };
 
 use super::{Cycle, Surface};
@@ -41,7 +41,7 @@ pub enum Face {
 impl Face {
     /// Construct a new instance of `Face`
     pub fn new(
-        surface: Handle<Surface>,
+        surface: Surface,
         exteriors: impl IntoIterator<Item = LocalForm<Cycle<2>, Cycle<3>>>,
         interiors: impl IntoIterator<Item = LocalForm<Cycle<2>, Cycle<3>>>,
         color: [u8; 4],
@@ -119,7 +119,7 @@ impl Face {
 #[derive(Clone, Debug, Eq, Ord, PartialOrd)]
 pub struct FaceBRep {
     /// The surface that defines this face
-    pub surface: Handle<Surface>,
+    pub surface: Surface,
 
     /// The cycles that bound the face on the outside
     ///
@@ -152,7 +152,7 @@ impl FaceBRep {
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`].
     pub fn surface(&self) -> Surface {
-        self.surface.get()
+        self.surface
     }
 
     /// Access the exterior cycles that the face refers to
@@ -211,11 +211,6 @@ impl CyclesInFace {
 
     /// Access an iterator over the canonical forms of the cycles
     pub fn as_canonical(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
-        self.as_handle().map(|cycle| cycle.get())
-    }
-
-    /// Access an iterator over handles to the cycles
-    pub fn as_handle(&self) -> impl Iterator<Item = Handle<Cycle<3>>> + '_ {
         self.0.iter().map(|cycle| cycle.canonical())
     }
 

@@ -11,7 +11,7 @@ pub fn validate_edge(
     let mut missing_vertices = HashSet::new();
 
     if !curves.contains(&edge.curve()) {
-        missing_curve = Some(edge.curve.canonical().get());
+        missing_curve = Some(edge.curve.canonical());
     }
     for vertex in edge.vertices().into_iter().flatten() {
         if !vertices.contains(&vertex) {
@@ -61,7 +61,7 @@ pub fn validate_face(
         let mut missing_cycles = HashSet::new();
 
         if !surfaces.contains(&face.surface()) {
-            missing_surface = Some(face.surface.get());
+            missing_surface = Some(face.surface);
         }
         for cycle in face.all_cycles() {
             if !cycles.contains(&cycle) {
