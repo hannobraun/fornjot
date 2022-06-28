@@ -15,17 +15,6 @@ pub struct Mapping {
 }
 
 impl Mapping {
-    pub(super) fn new() -> Self {
-        Self {
-            curves: OneMapping::new(),
-            surfaces: OneMapping::new(),
-            vertices: OneMapping::new(),
-            edges: OneMapping::new(),
-            cycles: OneMapping::new(),
-            faces: OneMapping::new(),
-        }
-    }
-
     /// Access the curve mapped from the provided curve
     ///
     /// # Panics

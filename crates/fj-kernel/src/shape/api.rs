@@ -4,7 +4,7 @@ use crate::objects::{Curve, Cycle, Edge, Face, Surface, Vertex};
 
 use super::{
     stores::{Store, Stores},
-    Handle, Iter, Mapping, Object, Update,
+    Handle, Iter, Object, Update,
 };
 
 /// The boundary representation of a shape
@@ -116,7 +116,7 @@ impl Shape {
     ///
     /// This is done recursively.
     pub fn merge<T: Object>(&mut self, object: T) -> Handle<T> {
-        object.merge_into(None, self, &mut Mapping::new())
+        object.merge_into(None, self)
     }
 
     /// Merge the provided shape into this one
@@ -124,25 +124,23 @@ impl Shape {
     /// Returns a [`Mapping`] that maps each object from the merged shape to the
     /// merged objects in this shape.
     pub fn merge_shape(&mut self, other: &Shape) {
-        let mut mapping = Mapping::new();
-
         for object in other.curves() {
-            object.get().merge_into(Some(object), self, &mut mapping);
+            object.get().merge_into(Some(object), self);
         }
         for object in other.surfaces() {
-            object.get().merge_into(Some(object), self, &mut mapping);
+            object.get().merge_into(Some(object), self);
         }
         for object in other.vertices() {
-            object.get().merge_into(Some(object), self, &mut mapping);
+            object.get().merge_into(Some(object), self);
         }
         for object in other.edges() {
-            object.get().merge_into(Some(object), self, &mut mapping);
+            object.get().merge_into(Some(object), self);
         }
         for object in other.cycles() {
-            object.get().merge_into(Some(object), self, &mut mapping);
+            object.get().merge_into(Some(object), self);
         }
         for object in other.faces() {
-            object.get().merge_into(Some(object), self, &mut mapping);
+            object.get().merge_into(Some(object), self);
         }
     }
 
