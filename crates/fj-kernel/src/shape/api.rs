@@ -123,7 +123,7 @@ impl Shape {
     ///
     /// Returns a [`Mapping`] that maps each object from the merged shape to the
     /// merged objects in this shape.
-    pub fn merge_shape(&mut self, other: &Shape) -> Mapping {
+    pub fn merge_shape(&mut self, other: &Shape) {
         let mut mapping = Mapping::new();
 
         for object in other.curves() {
@@ -144,8 +144,6 @@ impl Shape {
         for object in other.faces() {
             object.get().merge_into(Some(object), self, &mut mapping);
         }
-
-        mapping
     }
 
     /// Update objects in the shape
