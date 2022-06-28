@@ -1,17 +1,13 @@
-use fj_math::Scalar;
-
 use crate::objects::{Curve, Cycle, Edge, Face, Surface, Vertex};
 
 use super::{
     stores::{Store, Stores},
-    Handle, Iter, Object, Update,
+    Handle, Iter, Object,
 };
 
 /// The boundary representation of a shape
 #[derive(Clone, Debug)]
 pub struct Shape {
-    distinct_min_distance: Scalar,
-
     stores: Stores,
 }
 
@@ -19,11 +15,6 @@ impl Shape {
     /// Construct a new shape
     pub fn new() -> Self {
         Self {
-            // This should really come from `Self::DEFAULT_MIN_DISTANCE`, or a
-            // similarly named constant. Unfortunately `Scalar::from_f64` can't
-            // be `const` yet.
-            distinct_min_distance: Scalar::from_f64(5e-7), // 0.5 µm
-
             stores: Stores {
                 curves: Store::new(),
                 surfaces: Store::new(),
@@ -52,17 +43,6 @@ impl Shape {
         self.stores.cycles.label = Some(label.clone());
         self.stores.faces.label = Some(label);
 
-        self
-    }
-
-    /// Override the minimum distance between distinct objects
-    ///
-    /// Used for vertex validation, to determine whether vertices are unique.
-    pub fn with_distinct_min_distance(
-        mut self,
-        distinct_min_distance: impl Into<Scalar>,
-    ) -> Self {
-        self.distinct_min_distance = distinct_min_distance.into();
         self
     }
 
@@ -117,39 +97,6 @@ impl Shape {
     /// This is done recursively.
     pub fn merge<T: Object>(&mut self, object: T) -> Handle<T> {
         object.merge_into(self)
-    }
-
-    /// Merge the provided shape into this one
-    ///
-    /// Returns a [`Mapping`] that maps each object from the merged shape to the
-    /// merged objects in this shape.
-    pub fn merge_shape(&mut self, other: &Shape) {
-        for object in other.curves() {
-            object.get().merge_into(self);
-        }
-        for object in other.surfaces() {
-            object.get().merge_into(self);
-        }
-        for object in other.vertices() {
-            object.get().merge_into(self);
-        }
-        for object in other.edges() {
-            object.get().merge_into(self);
-        }
-        for object in other.cycles() {
-            object.get().merge_into(self);
-        }
-        for object in other.faces() {
-            object.get().merge_into(self);
-        }
-    }
-
-    /// Update objects in the shape
-    ///
-    /// Returns [`Update`], and API that can be used to update objects in the
-    /// shape.
-    pub fn update(&mut self) -> Update {
-        Update::new(&mut self.stores)
     }
 
     /// Access an iterator over all curves

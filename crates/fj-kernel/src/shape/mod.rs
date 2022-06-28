@@ -6,12 +6,10 @@ mod api;
 mod local;
 mod object;
 mod stores;
-mod update;
 
 pub use self::{
     api::Shape,
     local::LocalForm,
     object::Object,
     stores::{Handle, Iter},
-    update::Update,
 };
