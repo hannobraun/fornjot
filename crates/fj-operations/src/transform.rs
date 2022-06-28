@@ -18,8 +18,7 @@ impl ToShape for fj::Transform {
         let shape = self.shape.to_shape(config, tolerance, debug_info)?;
         let shape = shape.into_inner();
 
-        let transform = make_transform(self);
-        let faces = transform_shape(&shape, &transform);
+        let faces = transform_shape(&shape, &make_transform(self));
 
         let mut target = Shape::new();
         for face in faces {
