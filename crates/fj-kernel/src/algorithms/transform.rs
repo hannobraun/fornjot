@@ -32,8 +32,9 @@ pub fn transform_shape(shape: &mut Shape, transform: &Transform) {
 pub fn transform_cycles(
     cycles: &CyclesInFace,
     transform: &Transform,
-    target: &mut Shape,
 ) -> CyclesInFace {
+    let mut tmp = Shape::new();
+
     let cycles = cycles.as_local_form().map(|cycle| {
         let edges_local = cycle
             .local()
@@ -41,7 +42,7 @@ pub fn transform_cycles(
             .iter()
             .map(|edge| {
                 let curve_local = *edge.local().curve.local();
-                let curve_canonical = target
+                let curve_canonical = tmp
                     .merge(edge.canonical().get().curve().transform(transform));
 
                 let vertices = edge.canonical().get().vertices.map(|vertex| {
@@ -49,7 +50,7 @@ pub fn transform_cycles(
                     let point = transform.transform_point(&point);
 
                     let local = *vertex.local();
-                    let canonical = target.merge(Vertex { point });
+                    let canonical = tmp.merge(Vertex { point });
 
                     LocalForm::new(local, canonical)
                 });
@@ -58,7 +59,7 @@ pub fn transform_cycles(
                     curve: LocalForm::new(curve_local, curve_canonical.clone()),
                     vertices: vertices.clone(),
                 };
-                let edge_canonical = target.merge(Edge {
+                let edge_canonical = tmp.merge(Edge {
                     curve: LocalForm::canonical_only(curve_canonical),
                     vertices,
                 });
@@ -77,7 +78,7 @@ pub fn transform_cycles(
                 let curve = {
                     let curve = edge.curve().transform(transform);
 
-                    let curve = target.merge(curve);
+                    let curve = tmp.merge(curve);
                     LocalForm::canonical_only(curve)
                 };
                 let vertices = edge.vertices.map(|vertex| {
@@ -85,19 +86,19 @@ pub fn transform_cycles(
                     let point = transform.transform_point(&point);
 
                     let local = *vertex.local();
-                    let canonical = target.merge(Vertex { point });
+                    let canonical = tmp.merge(Vertex { point });
 
                     LocalForm::new(local, canonical)
                 });
 
-                let edge = target.merge(Edge { curve, vertices });
+                let edge = tmp.merge(Edge { curve, vertices });
                 LocalForm::canonical_only(edge)
             })
             .collect();
 
         let cycle_local = Cycle { edges: edges_local };
 
-        let cycle_canonical = target.merge(Cycle {
+        let cycle_canonical = tmp.merge(Cycle {
             edges: edges_canonical,
         });
 

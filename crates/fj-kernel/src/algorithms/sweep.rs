@@ -102,8 +102,8 @@ fn create_top_face(
     surface = surface.transform(&translation);
 
     let mut tmp = Shape::new();
-    exteriors = transform_cycles(&exteriors, &translation, &mut tmp);
-    interiors = transform_cycles(&interiors, &translation, &mut tmp);
+    exteriors = transform_cycles(&exteriors, &translation);
+    interiors = transform_cycles(&interiors, &translation);
 
     if is_sweep_along_negative_direction {
         surface = surface.reverse();
