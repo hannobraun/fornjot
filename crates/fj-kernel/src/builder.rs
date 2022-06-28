@@ -89,7 +89,7 @@ impl<'r> EdgeBuilder<'r> {
         [a, b]: [Vertex; 2],
     ) -> Handle<Edge<3>> {
         let curve = {
-            let points = [&a, &b].map(|vertex| vertex.point);
+            let points = [a, b].map(|vertex| vertex.point);
             let curve = Curve::Line(Line::from_points(points));
             self.shape.get_handle_or_insert(curve)
         };
