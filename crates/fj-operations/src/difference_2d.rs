@@ -1,6 +1,7 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
+    iter::ObjectIters,
     objects::{Cycle, Edge, Face},
     shape::{LocalForm, Shape},
     validation::{validate, Validated, ValidationConfig, ValidationError},
@@ -15,11 +16,11 @@ impl ToShape for fj::Difference2d {
         config: &ValidationConfig,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
-    ) -> Result<Validated<Shape>, ValidationError> {
+    ) -> Result<Validated<Vec<Face>>, ValidationError> {
         // This method assumes that `b` is fully contained within `a`:
         // https://github.com/hannobraun/Fornjot/issues/92
 
-        let mut difference = Shape::new();
+        let mut difference = Vec::new();
 
         let mut exteriors = Vec::new();
         let mut interiors = Vec::new();
@@ -32,13 +33,12 @@ impl ToShape for fj::Difference2d {
             [a, b].map(|shape| shape.to_shape(config, tolerance, debug_info));
         let [a, b] = [a?, b?];
 
-        if let Some(face) = a.faces().next() {
+        if let Some(face) = a.face_iter().next() {
             // If there's at least one face to subtract from, we can proceed.
 
-            let surface = face.get().brep().surface.clone();
+            let surface = face.brep().surface.clone();
 
-            for face in a.faces() {
-                let face = face.get();
+            for face in a.face_iter() {
                 let face = face.brep();
 
                 assert_eq!(
@@ -48,17 +48,16 @@ impl ToShape for fj::Difference2d {
                 );
 
                 for cycle in face.exteriors.as_local_form().cloned() {
-                    let cycle = add_cycle(cycle, &mut difference, false);
+                    let cycle = add_cycle(cycle, false);
                     exteriors.push(cycle);
                 }
                 for cycle in face.interiors.as_local_form().cloned() {
-                    let cycle = add_cycle(cycle, &mut difference, true);
+                    let cycle = add_cycle(cycle, true);
                     interiors.push(cycle);
                 }
             }
 
-            for face in b.faces() {
-                let face = face.get();
+            for face in b.face_iter() {
                 let face = face.brep();
 
                 assert_eq!(
@@ -68,12 +67,12 @@ impl ToShape for fj::Difference2d {
                 );
 
                 for cycle in face.exteriors.as_local_form().cloned() {
-                    let cycle = add_cycle(cycle, &mut difference, true);
+                    let cycle = add_cycle(cycle, true);
                     interiors.push(cycle);
                 }
             }
 
-            difference.merge(Face::new(
+            difference.push(Face::new(
                 surface,
                 exteriors,
                 interiors,
@@ -81,9 +80,7 @@ impl ToShape for fj::Difference2d {
             ));
         }
 
-        let difference = validate(difference, config)?;
-
-        Ok(difference)
+        validate(difference, config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
@@ -96,9 +93,10 @@ impl ToShape for fj::Difference2d {
 
 fn add_cycle(
     cycle: LocalForm<Cycle<2>, Cycle<3>>,
-    shape: &mut Shape,
     reverse: bool,
 ) -> LocalForm<Cycle<2>, Cycle<3>> {
+    let mut tmp = Shape::new();
+
     let mut edges = Vec::new();
     for edge in cycle.local().edges.clone() {
         let curve_local = *edge.local().curve.local();
@@ -114,7 +112,7 @@ fn add_cycle(
         } else {
             curve_canonical
         };
-        let curve_canonical = shape.insert(curve_canonical);
+        let curve_canonical = tmp.insert(curve_canonical);
 
         let vertices = if reverse {
             edge.local().vertices.clone().reverse()
@@ -126,7 +124,7 @@ fn add_cycle(
             curve: LocalForm::new(curve_local, curve_canonical.clone()),
             vertices: vertices.clone(),
         };
-        let edge_canonical = shape.merge(Edge {
+        let edge_canonical = tmp.merge(Edge {
             curve: LocalForm::canonical_only(curve_canonical),
             vertices,
         });
@@ -141,8 +139,8 @@ fn add_cycle(
     let cycle_local = Cycle {
         edges: edges.clone(),
     };
-    let cycle_canonical = shape
-        .insert(Cycle::new(edges.into_iter().map(|edge| edge.canonical())));
+    let cycle_canonical =
+        tmp.insert(Cycle::new(edges.into_iter().map(|edge| edge.canonical())));
 
     LocalForm::new(cycle_local, cycle_canonical)
 }

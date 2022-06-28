@@ -15,31 +15,31 @@ impl ToShape for fj::Circle {
         config: &ValidationConfig,
         _: Tolerance,
         _: &mut DebugInfo,
-    ) -> Result<Validated<Shape>, ValidationError> {
-        let mut shape = Shape::new();
+    ) -> Result<Validated<Vec<Face>>, ValidationError> {
+        let mut tmp = Shape::new();
 
         // Circles have just a single round edge with no vertices. So none need
         // to be added here.
 
-        let edge = Edge::builder(&mut shape)
+        let edge = Edge::builder(&mut tmp)
             .build_circle(Scalar::from_f64(self.radius()));
 
         let cycle_local = Cycle {
             edges: vec![edge.clone()],
         };
-        let cycle_canonical = shape.insert(Cycle::new(vec![edge.canonical()]));
+        let cycle_canonical = tmp.insert(Cycle::new(vec![edge.canonical()]));
 
-        let surface = shape.insert(Surface::xy_plane());
-        shape.insert(Face::new(
-            surface,
-            vec![LocalForm::new(cycle_local, cycle_canonical)],
-            Vec::new(),
-            self.color(),
-        ));
+        let surface = tmp.insert(Surface::xy_plane());
+        let face = tmp
+            .insert(Face::new(
+                surface,
+                vec![LocalForm::new(cycle_local, cycle_canonical)],
+                Vec::new(),
+                self.color(),
+            ))
+            .get();
 
-        let shape = validate(shape, config)?;
-
-        Ok(shape)
+        validate(vec![face], config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

@@ -15,20 +15,19 @@ impl ToShape for fj::Sketch {
         config: &ValidationConfig,
         _: Tolerance,
         _: &mut DebugInfo,
-    ) -> Result<Validated<Shape>, ValidationError> {
-        let mut shape = Shape::new();
+    ) -> Result<Validated<Vec<Face>>, ValidationError> {
+        let mut tmp = Shape::new();
 
         let surface = Surface::xy_plane();
         let points = self.to_points().into_iter().map(Point::from);
 
-        Face::builder(surface, &mut shape)
+        let sketch = Face::builder(surface, &mut tmp)
             .with_exterior_polygon(points)
             .with_color(self.color())
-            .build();
+            .build()
+            .get();
 
-        let shape = validate(shape, config)?;
-
-        Ok(shape)
+        validate(vec![sketch], config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
