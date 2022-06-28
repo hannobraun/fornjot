@@ -18,7 +18,7 @@ impl ToShape for fj::Transform {
         let shape = self.shape.to_shape(config, tolerance, debug_info)?;
         let shape = shape.into_inner();
 
-        let transform = transform(self);
+        let transform = make_transform(self);
         let faces = transform_shape(&shape, &transform);
 
         let mut target = Shape::new();
@@ -32,11 +32,11 @@ impl ToShape for fj::Transform {
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
-        transform(self).transform_aabb(&self.shape.bounding_volume())
+        make_transform(self).transform_aabb(&self.shape.bounding_volume())
     }
 }
 
-fn transform(transform: &fj::Transform) -> Transform {
+fn make_transform(transform: &fj::Transform) -> Transform {
     let axis = Vector::from(transform.axis).normalize();
     Transform::translation(transform.offset)
         * Transform::rotation(axis * transform.angle.rad())
