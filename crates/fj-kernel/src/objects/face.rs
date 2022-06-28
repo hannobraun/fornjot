@@ -3,10 +3,7 @@ use std::hash::{Hash, Hasher};
 use fj_interop::mesh::Color;
 use fj_math::Triangle;
 
-use crate::{
-    builder::FaceBuilder,
-    shape::{LocalForm, Shape},
-};
+use crate::{builder::FaceBuilder, shape::LocalForm};
 
 use super::{Cycle, Surface};
 
@@ -57,7 +54,7 @@ impl Face {
         })
     }
     /// Build a face using the [`FaceBuilder`] API
-    pub fn builder(surface: Surface, _shape: &mut Shape) -> FaceBuilder {
+    pub fn builder(surface: Surface) -> FaceBuilder {
         FaceBuilder::new(surface)
     }
 

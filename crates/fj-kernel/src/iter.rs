@@ -439,10 +439,7 @@ impl<T> Iterator for Iter<T> {
 
 #[cfg(test)]
 mod tests {
-    use crate::{
-        objects::{Curve, Cycle, Edge, Face, Surface, Vertex},
-        shape::Shape,
-    };
+    use crate::objects::{Curve, Cycle, Edge, Face, Surface, Vertex};
 
     use super::ObjectIters as _;
 
@@ -488,8 +485,7 @@ mod tests {
 
     #[test]
     fn face() {
-        let mut shape = Shape::new();
-        let face = Face::builder(Surface::xy_plane(), &mut shape)
+        let face = Face::builder(Surface::xy_plane())
             .with_exterior_polygon([[0., 0.], [1., 0.], [0., 1.]])
             .build();
 

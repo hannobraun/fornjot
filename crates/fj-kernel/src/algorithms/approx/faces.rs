@@ -84,7 +84,6 @@ mod tests {
     use crate::{
         geometry,
         objects::{Face, Surface},
-        shape::Shape,
     };
 
     use super::{CycleApprox, FaceApprox, Tolerance};
@@ -94,8 +93,6 @@ mod tests {
         // Test a closed face, i.e. one that is completely encircled by edges.
 
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
-
-        let mut shape = Shape::new();
 
         let a = Point::from([0., 0.]);
         let b = Point::from([3., 0.]);
@@ -107,7 +104,7 @@ mod tests {
         let g = Point::from([2., 2.]);
         let h = Point::from([1., 2.]);
 
-        let face = Face::builder(Surface::xy_plane(), &mut shape)
+        let face = Face::builder(Surface::xy_plane())
             .with_exterior_polygon([a, b, c, d])
             .with_interior_polygon([e, f, g, h])
             .build();

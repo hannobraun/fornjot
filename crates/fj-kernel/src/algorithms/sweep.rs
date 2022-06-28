@@ -273,7 +273,6 @@ mod tests {
         algorithms::Tolerance,
         iter::ObjectIters,
         objects::{Face, Surface},
-        shape::Shape,
     };
 
     #[test]
@@ -362,9 +361,7 @@ mod tests {
     ) -> anyhow::Result<()> {
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
 
-        let mut shape = Shape::new();
-
-        let sketch = Face::builder(Surface::xy_plane(), &mut shape)
+        let sketch = Face::builder(Surface::xy_plane())
             .with_exterior_polygon([[0., 0.], [1., 0.], [0., 1.]])
             .build();
 
@@ -376,11 +373,10 @@ mod tests {
             .map(|vertex| vertex.into())
             .collect();
 
-        let mut shape = Shape::new();
         let faces = expected_surfaces.into_iter().map(|surface| {
             let surface = Surface::plane_from_points(surface);
 
-            Face::builder(surface, &mut shape)
+            Face::builder(surface)
                 .with_exterior_polygon(expected_vertices.clone())
                 .build()
         });
