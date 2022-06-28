@@ -116,7 +116,7 @@ impl Shape {
     ///
     /// This is done recursively.
     pub fn merge<T: Object>(&mut self, object: T) -> Handle<T> {
-        object.merge_into(None, self)
+        object.merge_into(self)
     }
 
     /// Merge the provided shape into this one
@@ -125,22 +125,22 @@ impl Shape {
     /// merged objects in this shape.
     pub fn merge_shape(&mut self, other: &Shape) {
         for object in other.curves() {
-            object.get().merge_into(Some(object), self);
+            object.get().merge_into(self);
         }
         for object in other.surfaces() {
-            object.get().merge_into(Some(object), self);
+            object.get().merge_into(self);
         }
         for object in other.vertices() {
-            object.get().merge_into(Some(object), self);
+            object.get().merge_into(self);
         }
         for object in other.edges() {
-            object.get().merge_into(Some(object), self);
+            object.get().merge_into(self);
         }
         for object in other.cycles() {
-            object.get().merge_into(Some(object), self);
+            object.get().merge_into(self);
         }
         for object in other.faces() {
-            object.get().merge_into(Some(object), self);
+            object.get().merge_into(self);
         }
     }
 
