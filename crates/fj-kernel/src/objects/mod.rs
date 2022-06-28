@@ -50,7 +50,7 @@ pub use self::{
     curve::Curve,
     cycle::Cycle,
     edge::{Edge, VerticesOfEdge},
-    face::{CyclesInFace, Face},
+    face::{CyclesInFace, Face, FaceBRep},
     surface::{Surface, SweptCurve},
     vertex::Vertex,
 };
