@@ -156,42 +156,6 @@ impl Shape {
         Update::new(&mut self.stores)
     }
 
-    /// Clone the shape
-    ///
-    /// Returns a [`Mapping`] that maps each object from the original shape to
-    /// the respective object in the cloned shape.
-    pub fn clone_shape(&self) -> (Shape, Mapping) {
-        let mut target = Shape::new();
-        let mut mapping = Mapping::new();
-
-        for original in self.curves() {
-            let cloned = target.merge(original.get());
-            mapping.curves.insert(original, cloned);
-        }
-        for original in self.surfaces() {
-            let cloned = target.merge(original.get());
-            mapping.surfaces.insert(original, cloned);
-        }
-        for original in self.vertices() {
-            let cloned = target.merge(original.get());
-            mapping.vertices.insert(original, cloned);
-        }
-        for original in self.edges() {
-            let cloned = target.merge(original.get());
-            mapping.edges.insert(original, cloned);
-        }
-        for original in self.cycles() {
-            let cloned = target.merge(original.get());
-            mapping.cycles.insert(original, cloned);
-        }
-        for original in self.faces() {
-            let cloned = target.merge(original.get());
-            mapping.faces.insert(original, cloned);
-        }
-
-        (target, mapping)
-    }
-
     /// Access an iterator over all curves
     ///
     /// The caller must not make any assumptions about the order of curves.
