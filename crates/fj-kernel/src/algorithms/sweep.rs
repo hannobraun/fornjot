@@ -101,7 +101,6 @@ fn create_top_face(
 
     surface = surface.transform(&translation);
 
-    let mut tmp = Shape::new();
     exteriors = transform_cycles(&exteriors, &translation);
     interiors = transform_cycles(&interiors, &translation);
 
@@ -112,6 +111,7 @@ fn create_top_face(
         interiors = reverse_local_coordinates_in_cycle(&interiors);
     };
 
+    let mut tmp = Shape::new();
     let surface = tmp.insert(surface);
 
     let face = Face::new(
