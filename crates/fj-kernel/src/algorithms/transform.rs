@@ -1,16 +1,15 @@
 use fj_math::Transform;
 
 use crate::{
-    iter::ObjectIters,
     objects::{Cycle, CyclesInFace, Edge, Face, FaceBRep, Vertex},
     shape::{LocalForm, Shape},
 };
 
 /// Transform a shape
-pub fn transform(shape: &Shape, transform: &Transform) -> Vec<Face> {
+pub fn transform(shape: &[Face], transform: &Transform) -> Vec<Face> {
     let mut target = Vec::new();
 
-    for face in shape.face_iter() {
+    for face in shape {
         let face = match face {
             Face::Face(face) => {
                 let mut tmp = Shape::new();
@@ -32,7 +31,7 @@ pub fn transform(shape: &Shape, transform: &Transform) -> Vec<Face> {
             Face::Triangles(triangles) => {
                 let mut target = Vec::new();
 
-                for (triangle, color) in triangles {
+                for &(triangle, color) in triangles {
                     let triangle = transform.transform_triangle(&triangle);
                     target.push((triangle, color));
                 }
