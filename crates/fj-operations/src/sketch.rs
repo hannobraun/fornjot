@@ -16,12 +16,12 @@ impl ToShape for fj::Sketch {
         _: Tolerance,
         _: &mut DebugInfo,
     ) -> Result<Validated<Vec<Face>>, ValidationError> {
-        let mut shape = Shape::new();
+        let mut tmp = Shape::new();
 
         let surface = Surface::xy_plane();
         let points = self.to_points().into_iter().map(Point::from);
 
-        let sketch = Face::builder(surface, &mut shape)
+        let sketch = Face::builder(surface, &mut tmp)
             .with_exterior_polygon(points)
             .with_color(self.color())
             .build()
