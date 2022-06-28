@@ -6,10 +6,7 @@ use crate::{
     shape::{LocalForm, Shape},
 };
 
-/// Transform the geometry of the shape
-///
-/// Since the topological types refer to geometry, and don't contain any
-/// geometry themselves, this transforms the whole shape.
+/// Transform a shape
 pub fn transform(shape: &Shape, transform: &Transform) -> Vec<Face> {
     let mut target = Vec::new();
 
