@@ -39,9 +39,7 @@ impl ToShape for fj::Circle {
             ))
             .get();
 
-        let shape = validate(vec![face], config)?;
-
-        Ok(shape)
+        validate(vec![face], config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

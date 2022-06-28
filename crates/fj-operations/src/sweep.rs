@@ -21,9 +21,7 @@ impl ToShape for fj::Sweep {
 
         let swept = sweep(shape.into_inner(), path, tolerance, color);
 
-        let swept = validate(swept, config)?;
-
-        Ok(swept)
+        validate(swept, config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

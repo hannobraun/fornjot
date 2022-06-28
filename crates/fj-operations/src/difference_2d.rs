@@ -80,9 +80,7 @@ impl ToShape for fj::Difference2d {
             ));
         }
 
-        let difference = validate(difference, config)?;
-
-        Ok(difference)
+        validate(difference, config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

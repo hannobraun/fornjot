@@ -27,9 +27,7 @@ impl ToShape for fj::Sketch {
             .build()
             .get();
 
-        let shape = validate(vec![sketch], config)?;
-
-        Ok(shape)
+        validate(vec![sketch], config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

@@ -23,9 +23,7 @@ impl ToShape for fj::Group {
         shape.extend(a.into_inner());
         shape.extend(b.into_inner());
 
-        let shape = validate(shape, config)?;
-
-        Ok(shape)
+        validate(shape, config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
