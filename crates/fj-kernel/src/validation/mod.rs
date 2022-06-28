@@ -232,28 +232,29 @@ mod tests {
 
     #[test]
     fn coherence_edge() {
-        let mut shape = Shape::new();
-        Edge::builder(&mut shape)
-            .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])
-            .get();
+        let mut tmp = Shape::new();
+
+        let a = Point::from([0., 0., 0.]);
+        let b = Point::from([1., 0., 0.]);
+
+        let curve = {
+            let curve = tmp.insert(Curve::line_from_points([a, b]));
+            LocalForm::canonical_only(curve)
+        };
+
+        let a = tmp.insert(Vertex { point: a });
+        let b = tmp.insert(Vertex { point: b });
 
         let deviation = Scalar::from_f64(0.25);
 
-        shape.update().update_all(|edge: &mut Edge<3>| {
-            let original = edge.clone();
-            *edge = Edge {
-                vertices: original.vertices.map(|vertex| {
-                    LocalForm::new(
-                        *vertex.local() + [deviation],
-                        vertex.canonical(),
-                    )
-                }),
-                ..original
-            }
-        });
+        let a = LocalForm::new(Point::from([Scalar::ZERO + deviation]), a);
+        let b = LocalForm::new(Point::from([Scalar::ONE]), b);
+        let vertices = VerticesOfEdge::from_vertices([a, b]);
+
+        let edge = Edge { curve, vertices };
 
         let result = validate(
-            shape.clone(),
+            edge.clone(),
             &ValidationConfig {
                 identical_max_distance: deviation * 2.,
                 ..ValidationConfig::default()
@@ -262,7 +263,7 @@ mod tests {
         assert!(result.is_ok());
 
         let result = validate(
-            shape,
+            edge,
             &ValidationConfig {
                 identical_max_distance: deviation / 2.,
                 ..ValidationConfig::default()
