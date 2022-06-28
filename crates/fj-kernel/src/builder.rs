@@ -75,8 +75,10 @@ impl<'r> EdgeBuilder<'r> {
         self,
         vertices: [impl Into<Point<3>>; 2],
     ) -> Handle<Edge<3>> {
-        let vertices = vertices
-            .map(|point| Vertex::builder(self.shape).build_from_point(point));
+        let vertices = vertices.map(|point| {
+            let point = point.into();
+            Vertex { point }
+        });
 
         self.build_line_segment_from_vertices(vertices)
     }
@@ -84,13 +86,15 @@ impl<'r> EdgeBuilder<'r> {
     /// Build a line segment from two vertices
     pub fn build_line_segment_from_vertices(
         self,
-        [a, b]: [Handle<Vertex>; 2],
+        [a, b]: [Vertex; 2],
     ) -> Handle<Edge<3>> {
         let curve = {
-            let points = [&a, &b].map(|vertex| vertex.get().point);
+            let points = [&a, &b].map(|vertex| vertex.point);
             let curve = Curve::Line(Line::from_points(points));
             self.shape.get_handle_or_insert(curve)
         };
+
+        let [a, b] = [a, b].map(|vertex| self.shape.insert(vertex));
 
         let vertices = [
             LocalForm::new(Point::from([0.]), a),
