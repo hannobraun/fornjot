@@ -75,8 +75,6 @@ impl<'r> EdgeBuilder<'r> {
         self,
         vertices: [impl Into<Point<3>>; 2],
     ) -> Handle<Edge<3>> {
-        // Can be cleaned up with `try_map`, once that is stable:
-        // https://doc.rust-lang.org/std/primitive.array.html#method.try_map
         let vertices = vertices
             .map(|point| Vertex::builder(self.shape).build_from_point(point));
 
