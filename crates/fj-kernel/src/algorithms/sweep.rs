@@ -10,7 +10,7 @@ use crate::{
 use super::{transform_shape, CycleApprox, Tolerance};
 
 /// Create a new shape by sweeping an existing one
-pub fn sweep_shape(
+pub fn sweep(
     source: Shape,
     path: Vector<3>,
     tolerance: Tolerance,
@@ -322,8 +322,6 @@ mod tests {
         shape::{Handle, Shape},
     };
 
-    use super::sweep_shape;
-
     #[test]
     fn sweep() -> anyhow::Result<()> {
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
@@ -331,7 +329,7 @@ mod tests {
         let sketch =
             Triangle::new([[0., 0.], [1., 0.], [0., 1.]], 0.0f64, false);
 
-        let swept = sweep_shape(
+        let swept = super::sweep(
             sketch.shape,
             Vector::from([0., 0., 1.]),
             tolerance,
