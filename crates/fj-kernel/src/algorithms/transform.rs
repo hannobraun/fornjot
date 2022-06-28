@@ -2,7 +2,7 @@ use fj_math::Transform;
 
 use crate::{
     objects::{Cycle, CyclesInFace, Edge, Face, FaceBRep, Vertex},
-    shape::{LocalForm, Shape},
+    shape::LocalForm,
 };
 
 /// Transform a shape
@@ -12,9 +12,7 @@ pub fn transform(faces: &[Face], transform: &Transform) -> Vec<Face> {
     for face in faces {
         let face = match face {
             Face::Face(face) => {
-                let mut tmp = Shape::new();
-                let surface = face.surface.get().transform(transform);
-                let surface = tmp.insert(surface);
+                let surface = face.surface.transform(transform);
 
                 let exteriors = transform_cycles(&face.exteriors, transform);
                 let interiors = transform_cycles(&face.interiors, transform);

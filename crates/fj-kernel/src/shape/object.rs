@@ -72,7 +72,7 @@ impl Object for Face {
     fn merge_into(self, shape: &mut Shape) -> Handle<Self> {
         match self {
             Face::Face(face) => {
-                let surface = face.surface.get().merge_into(shape);
+                let surface = face.surface.merge_into(shape);
 
                 let mut exts = Vec::new();
                 for cycle in face.exteriors.as_local_form() {
@@ -93,7 +93,10 @@ impl Object for Face {
                 }
 
                 shape.get_handle_or_insert(Face::new(
-                    surface, exts, ints, face.color,
+                    surface.get(),
+                    exts,
+                    ints,
+                    face.color,
                 ))
             }
             Face::Triangles(_) => shape.get_handle_or_insert(self),

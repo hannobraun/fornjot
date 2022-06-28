@@ -22,7 +22,7 @@ pub fn triangulate(
     for face in faces {
         match &face {
             Face::Face(brep) => {
-                let surface = brep.surface.get();
+                let surface = brep.surface;
                 let approx = FaceApprox::new(&face, tolerance);
 
                 let points: Vec<_> = approx

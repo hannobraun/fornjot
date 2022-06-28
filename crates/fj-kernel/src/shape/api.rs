@@ -196,7 +196,8 @@ mod tests {
         let cycle = shape.insert(cycle);
         assert!(shape.get_handle(&cycle.get()).as_ref() == Some(&cycle));
 
-        let face = Face::new(surface, Vec::new(), Vec::new(), [0, 0, 0, 0]);
+        let face =
+            Face::new(surface.get(), Vec::new(), Vec::new(), [0, 0, 0, 0]);
         assert!(shape.get_handle(&face).is_none());
 
         let face = shape.insert(face);

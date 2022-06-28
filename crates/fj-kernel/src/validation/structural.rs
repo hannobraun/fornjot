@@ -61,7 +61,7 @@ pub fn validate_face(
         let mut missing_cycles = HashSet::new();
 
         if !surfaces.contains(&face.surface()) {
-            missing_surface = Some(face.surface.get());
+            missing_surface = Some(face.surface);
         }
         for cycle in face.all_cycles() {
             if !cycles.contains(&cycle) {

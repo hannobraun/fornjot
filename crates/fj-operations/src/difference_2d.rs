@@ -36,13 +36,13 @@ impl ToShape for fj::Difference2d {
         if let Some(face) = a.face_iter().next() {
             // If there's at least one face to subtract from, we can proceed.
 
-            let surface = face.brep().surface.clone();
+            let surface = face.brep().surface;
 
             for face in a.face_iter() {
                 let face = face.brep();
 
                 assert_eq!(
-                    surface.get(),
+                    surface,
                     face.surface(),
                     "Trying to subtract faces with different surfaces.",
                 );
@@ -61,7 +61,7 @@ impl ToShape for fj::Difference2d {
                 let face = face.brep();
 
                 assert_eq!(
-                    surface.get(),
+                    surface,
                     face.surface(),
                     "Trying to subtract faces with different surfaces.",
                 );

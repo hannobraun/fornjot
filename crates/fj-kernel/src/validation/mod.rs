@@ -343,25 +343,23 @@ mod tests {
 
         let triangle = [[0., 0.], [1., 0.], [0., 1.]];
 
-        let surface = other.insert(Surface::xy_plane());
-        let cycle =
-            Cycle::builder(surface.get(), &mut other).build_polygon(triangle);
+        let surface = Surface::xy_plane();
+        let cycle = Cycle::builder(surface, &mut other).build_polygon(triangle);
 
         // Nothing has been added to `shape`. Should fail.
         shape.insert(Face::new(
-            surface.clone(),
+            surface,
             vec![cycle.clone()],
             Vec::new(),
             [255, 0, 0, 255],
         ));
         let err =
             validate(shape.clone(), &ValidationConfig::default()).unwrap_err();
-        assert!(err.missing_surface(&surface.get()));
+        assert!(err.missing_surface(&surface));
         assert!(err.missing_cycle(&cycle.canonical()));
 
-        let surface = shape.insert(Surface::xy_plane());
-        let cycle =
-            Cycle::builder(surface.get(), &mut shape).build_polygon(triangle);
+        let surface = Surface::xy_plane();
+        let cycle = Cycle::builder(surface, &mut shape).build_polygon(triangle);
 
         // Everything has been added to `shape` now. Should work!
         shape.insert(Face::new(

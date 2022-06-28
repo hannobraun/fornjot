@@ -29,7 +29,7 @@ impl ToShape for fj::Circle {
         };
         let cycle_canonical = Cycle::new(vec![edge.canonical()]);
 
-        let surface = tmp.insert(Surface::xy_plane());
+        let surface = Surface::xy_plane();
         let face = tmp
             .insert(Face::new(
                 surface,

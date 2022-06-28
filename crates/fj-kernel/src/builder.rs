@@ -223,7 +223,7 @@ impl<'r> FaceBuilder<'r> {
 
     /// Build the face
     pub fn build(self) -> Handle<Face> {
-        let surface = self.shape.get_handle_or_insert(self.surface);
+        let surface = self.surface;
 
         let mut exteriors = Vec::new();
         if let Some(points) = self.exterior {
