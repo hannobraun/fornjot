@@ -8,10 +8,6 @@ pub struct Update<'r> {
 }
 
 impl<'r> Update<'r> {
-    pub(super) fn new(stores: &'r mut Stores) -> Self {
-        Self { stores }
-    }
-
     /// Update all objects of a specific type
     pub fn update_all<T: Object>(self, f: impl FnMut(&mut T)) -> Self {
         self.stores.get::<T>().update(f);

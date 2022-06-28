@@ -4,7 +4,7 @@ use crate::objects::{Curve, Cycle, Edge, Face, Surface, Vertex};
 
 use super::{
     stores::{Store, Stores},
-    Handle, Iter, Object, Update,
+    Handle, Iter, Object,
 };
 
 /// The boundary representation of a shape
@@ -142,14 +142,6 @@ impl Shape {
         for object in other.faces() {
             object.get().merge_into(self);
         }
-    }
-
-    /// Update objects in the shape
-    ///
-    /// Returns [`Update`], and API that can be used to update objects in the
-    /// shape.
-    pub fn update(&mut self) -> Update {
-        Update::new(&mut self.stores)
     }
 
     /// Access an iterator over all curves
