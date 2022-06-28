@@ -19,9 +19,9 @@ impl ToShape for fj::Sweep {
         let path = Vector::from(self.path());
         let color = self.shape().color();
 
-        let swept = sweep(sketch.into_inner(), path, tolerance, color);
+        let solid = sweep(sketch.into_inner(), path, tolerance, color);
 
-        validate(swept, config)
+        validate(solid, config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
