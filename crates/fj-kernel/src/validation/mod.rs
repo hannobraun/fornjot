@@ -325,12 +325,11 @@ mod tests {
     #[test]
     fn structural_face() {
         let mut shape = Shape::new();
-        let mut other = Shape::new();
 
         let triangle = [[0., 0.], [1., 0.], [0., 1.]];
 
         let surface = Surface::xy_plane();
-        let cycle = Cycle::builder(surface, &mut other).build_polygon(triangle);
+        let cycle = Cycle::builder(surface).build_polygon(triangle);
 
         // Nothing has been added to `shape`. Should fail.
         shape.insert(Face::new(
@@ -345,7 +344,7 @@ mod tests {
         assert!(err.missing_cycle(&cycle.canonical()));
 
         let surface = Surface::xy_plane();
-        let cycle = Cycle::builder(surface, &mut shape).build_polygon(triangle);
+        let cycle = Cycle::builder(surface).build_polygon(triangle);
 
         // Everything has been added to `shape` now. Should work!
         shape.insert(Face::new(

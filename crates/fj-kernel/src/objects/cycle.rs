@@ -1,7 +1,4 @@
-use crate::{
-    builder::CycleBuilder,
-    shape::{LocalForm, Shape},
-};
+use crate::{builder::CycleBuilder, shape::LocalForm};
 
 use super::{Edge, Surface};
 
@@ -30,7 +27,7 @@ impl Cycle<3> {
     }
 
     /// Build a cycle using the [`CycleBuilder`] API
-    pub fn builder(surface: Surface, _shape: &mut Shape) -> CycleBuilder {
+    pub fn builder(surface: Surface) -> CycleBuilder {
         CycleBuilder::new(surface)
     }
 
