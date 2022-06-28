@@ -57,8 +57,8 @@ impl Face {
         })
     }
     /// Build a face using the [`FaceBuilder`] API
-    pub fn builder(surface: Surface, shape: &mut Shape) -> FaceBuilder {
-        FaceBuilder::new(surface, shape)
+    pub fn builder(surface: Surface, _shape: &mut Shape) -> FaceBuilder {
+        FaceBuilder::new(surface)
     }
 
     /// Access the boundary representation of the face

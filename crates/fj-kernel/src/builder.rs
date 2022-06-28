@@ -2,32 +2,25 @@
 
 use fj_math::Point;
 
-use crate::{
-    objects::{Cycle, Face, Surface},
-    shape::Shape,
-};
+use crate::objects::{Cycle, Face, Surface};
 
 /// API for building a [`Face`]
 #[must_use]
-pub struct FaceBuilder<'r> {
+pub struct FaceBuilder {
     surface: Surface,
     exterior: Option<Vec<Point<2>>>,
     interiors: Vec<Vec<Point<2>>>,
     color: Option<[u8; 4]>,
-
-    _shape: &'r mut Shape,
 }
 
-impl<'r> FaceBuilder<'r> {
+impl FaceBuilder {
     /// Construct a new instance of `FaceBuilder`
-    pub fn new(surface: Surface, _shape: &'r mut Shape) -> Self {
+    pub fn new(surface: Surface) -> Self {
         Self {
             surface,
             exterior: None,
             interiors: Vec::new(),
             color: None,
-
-            _shape,
         }
     }
 
