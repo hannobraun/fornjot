@@ -1,7 +1,8 @@
 use fj_math::Transform;
 
 use crate::{
-    objects::{Curve, Cycle, CyclesInFace, Edge, Face, Surface, Vertex},
+    iter::ObjectIters,
+    objects::{Cycle, CyclesInFace, Edge, Face, FaceBRep, Vertex},
     shape::{LocalForm, Shape},
 };
 
@@ -9,24 +10,43 @@ use crate::{
 ///
 /// Since the topological types refer to geometry, and don't contain any
 /// geometry themselves, this transforms the whole shape.
-pub fn transform_shape(shape: &mut Shape, transform: &Transform) {
-    shape
-        .update()
-        .update_all(|vertex: &mut Vertex| {
-            vertex.point = transform.transform_point(&vertex.point)
-        })
-        .update_all(|curve: &mut Curve<3>| *curve = curve.transform(transform))
-        .update_all(|surface: &mut Surface| {
-            *surface = surface.transform(transform)
-        })
-        .update_all(|mut face: &mut Face| {
-            use std::ops::DerefMut as _;
-            if let Face::Triangles(triangles) = face.deref_mut() {
-                for (triangle, _) in triangles {
-                    *triangle = transform.transform_triangle(triangle);
-                }
+pub fn transform_shape(shape: &Shape, transform: &Transform) -> Vec<Face> {
+    let mut target = Vec::new();
+
+    for face in shape.face_iter() {
+        let face = match face {
+            Face::Face(face) => {
+                let mut tmp = Shape::new();
+                let surface = face.surface.get().transform(transform);
+                let surface = tmp.insert(surface);
+
+                let exteriors = transform_cycles(&face.exteriors, transform);
+                let interiors = transform_cycles(&face.interiors, transform);
+
+                let color = face.color;
+
+                Face::Face(FaceBRep {
+                    surface,
+                    exteriors,
+                    interiors,
+                    color,
+                })
             }
-        });
+            Face::Triangles(triangles) => {
+                let mut target = Vec::new();
+
+                for (triangle, color) in triangles {
+                    let triangle = transform.transform_triangle(&triangle);
+                    target.push((triangle, color));
+                }
+
+                Face::Triangles(target)
+            }
+        };
+        target.push(face);
+    }
+
+    target
 }
 
 pub fn transform_cycles(

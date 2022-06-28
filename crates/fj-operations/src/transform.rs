@@ -16,12 +16,17 @@ impl ToShape for fj::Transform {
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Shape>, ValidationError> {
         let shape = self.shape.to_shape(config, tolerance, debug_info)?;
-        let mut shape = shape.into_inner();
+        let shape = shape.into_inner();
 
         let transform = transform(self);
+        let faces = transform_shape(&shape, &transform);
 
-        transform_shape(&mut shape, &transform);
-        let shape = validate(shape, config)?;
+        let mut target = Shape::new();
+        for face in faces {
+            target.merge(face);
+        }
+
+        let shape = validate(target, config)?;
 
         Ok(shape)
     }
