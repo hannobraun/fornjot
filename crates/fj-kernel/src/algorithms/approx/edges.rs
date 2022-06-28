@@ -37,20 +37,18 @@ mod test {
     use crate::{
         geometry,
         objects::{Vertex, VerticesOfEdge},
-        shape::{LocalForm, Shape},
+        shape::LocalForm,
     };
 
     #[test]
     fn approx_edge() {
-        let mut shape = Shape::new();
-
         let a = Point::from([1., 2., 3.]);
         let b = Point::from([2., 3., 5.]);
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = Vertex::builder(&mut shape).build_from_point(a).get();
-        let v2 = Vertex::builder(&mut shape).build_from_point(d).get();
+        let v1 = Vertex::from_point(a);
+        let v2 = Vertex::from_point(d);
 
         let vertices = VerticesOfEdge::from_vertices([
             LocalForm::new(Point::from([0.]), v1),

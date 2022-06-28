@@ -273,36 +273,26 @@ mod tests {
     #[test]
     fn structural_cycle() {
         let mut shape = Shape::new();
-        let mut other = Shape::new();
 
         // Trying to refer to edge that is not from the same shape. Should fail.
-        let edge = Edge::builder(&mut other)
-            .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])
-            .get();
+        let edge = Edge::line_segment_from_points([[0., 0., 0.], [1., 0., 0.]]);
         shape.insert(Cycle::new(vec![edge.clone()]));
         let err =
             validate(shape.clone(), &ValidationConfig::default()).unwrap_err();
         assert!(err.missing_edge(&edge));
 
         // Referring to edge that *is* from the same shape. Should work.
-        let edge = Edge::builder(&mut shape)
-            .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])
-            .get();
+        let edge = Edge::line_segment_from_points([[0., 0., 0.], [1., 0., 0.]]);
         shape.insert(Cycle::new(vec![edge]));
     }
 
     #[test]
     fn structural_edge() {
         let mut shape = Shape::new();
-        let mut other = Shape::new();
 
         let curve = Curve::x_axis();
-        let a = Vertex::builder(&mut other)
-            .build_from_point([1., 0., 0.])
-            .get();
-        let b = Vertex::builder(&mut other)
-            .build_from_point([2., 0., 0.])
-            .get();
+        let a = Vertex::from_point([1., 0., 0.]);
+        let b = Vertex::from_point([2., 0., 0.]);
 
         let a = LocalForm::new(Point::from([1.]), a);
         let b = LocalForm::new(Point::from([2.]), b);
@@ -319,12 +309,8 @@ mod tests {
         assert!(err.missing_vertex(&b.canonical()));
 
         let curve = Curve::x_axis();
-        let a = Vertex::builder(&mut shape)
-            .build_from_point([1., 0., 0.])
-            .get();
-        let b = Vertex::builder(&mut shape)
-            .build_from_point([2., 0., 0.])
-            .get();
+        let a = Vertex::from_point([1., 0., 0.]);
+        let b = Vertex::from_point([2., 0., 0.]);
 
         let a = LocalForm::new(Point::from([1.]), a);
         let b = LocalForm::new(Point::from([2.]), b);
@@ -339,12 +325,11 @@ mod tests {
     #[test]
     fn structural_face() {
         let mut shape = Shape::new();
-        let mut other = Shape::new();
 
         let triangle = [[0., 0.], [1., 0.], [0., 1.]];
 
         let surface = Surface::xy_plane();
-        let cycle = Cycle::builder(surface, &mut other).build_polygon(triangle);
+        let cycle = Cycle::polygon_from_points(&surface, triangle);
 
         // Nothing has been added to `shape`. Should fail.
         shape.insert(Face::new(
@@ -359,7 +344,7 @@ mod tests {
         assert!(err.missing_cycle(&cycle.canonical()));
 
         let surface = Surface::xy_plane();
-        let cycle = Cycle::builder(surface, &mut shape).build_polygon(triangle);
+        let cycle = Cycle::polygon_from_points(&surface, triangle);
 
         // Everything has been added to `shape` now. Should work!
         shape.insert(Face::new(

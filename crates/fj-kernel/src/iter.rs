@@ -439,10 +439,7 @@ impl<T> Iterator for Iter<T> {
 
 #[cfg(test)]
 mod tests {
-    use crate::{
-        objects::{Curve, Cycle, Edge, Face, Surface, Vertex},
-        shape::Shape,
-    };
+    use crate::objects::{Curve, Cycle, Edge, Face, Surface, Vertex};
 
     use super::ObjectIters as _;
 
@@ -460,10 +457,11 @@ mod tests {
 
     #[test]
     fn cycle() {
-        let mut shape = Shape::new();
-        let cycle = Cycle::builder(Surface::xy_plane(), &mut shape)
-            .build_polygon([[0., 0.], [1., 0.], [0., 1.]])
-            .canonical();
+        let cycle = Cycle::polygon_from_points(
+            &Surface::xy_plane(),
+            [[0., 0.], [1., 0.], [0., 1.]],
+        )
+        .canonical();
 
         assert_eq!(3, cycle.curve_iter().count());
         assert_eq!(1, cycle.cycle_iter().count());
@@ -475,10 +473,7 @@ mod tests {
 
     #[test]
     fn edge() {
-        let mut shape = Shape::new();
-        let edge = Edge::builder(&mut shape)
-            .build_line_segment_from_points([[0., 0., 0.], [1., 0., 0.]])
-            .get();
+        let edge = Edge::line_segment_from_points([[0., 0., 0.], [1., 0., 0.]]);
 
         assert_eq!(1, edge.curve_iter().count());
         assert_eq!(0, edge.cycle_iter().count());
@@ -490,11 +485,9 @@ mod tests {
 
     #[test]
     fn face() {
-        let mut shape = Shape::new();
-        let face = Face::builder(Surface::xy_plane(), &mut shape)
+        let face = Face::builder(Surface::xy_plane())
             .with_exterior_polygon([[0., 0.], [1., 0.], [0., 1.]])
-            .build()
-            .get();
+            .build();
 
         assert_eq!(3, face.curve_iter().count());
         assert_eq!(1, face.cycle_iter().count());
@@ -518,10 +511,7 @@ mod tests {
 
     #[test]
     fn vertex() {
-        let mut shape = Shape::new();
-        let vertex = Vertex::builder(&mut shape)
-            .build_from_point([0., 0., 0.])
-            .get();
+        let vertex = Vertex::from_point([0., 0., 0.]);
 
         assert_eq!(0, vertex.curve_iter().count());
         assert_eq!(0, vertex.cycle_iter().count());

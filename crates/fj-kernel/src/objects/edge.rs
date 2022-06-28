@@ -1,11 +1,8 @@
 use std::fmt;
 
-use fj_math::Point;
+use fj_math::{Circle, Line, Point, Scalar, Vector};
 
-use crate::{
-    builder::EdgeBuilder,
-    shape::{LocalForm, Shape},
-};
+use crate::shape::LocalForm;
 
 use super::{Curve, Vertex};
 
@@ -53,10 +50,62 @@ impl<const D: usize> Edge<D> {
     }
 }
 
+impl Edge<2> {
+    /// Create a circle from the given radius
+    pub fn circle_from_radius(radius: Scalar) -> LocalForm<Edge<2>, Edge<3>> {
+        let curve_local = Curve::Circle(Circle {
+            center: Point::origin(),
+            a: Vector::from([radius, Scalar::ZERO]),
+            b: Vector::from([Scalar::ZERO, radius]),
+        });
+        let curve_canonical = Curve::Circle(Circle {
+            center: Point::origin(),
+            a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
+            b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
+        });
+
+        let edge_local = Edge {
+            curve: LocalForm::new(curve_local, curve_canonical),
+            vertices: VerticesOfEdge::none(),
+        };
+        let edge_canonical = Edge {
+            curve: LocalForm::canonical_only(curve_canonical),
+            vertices: VerticesOfEdge::none(),
+        };
+
+        LocalForm::new(edge_local, edge_canonical)
+    }
+}
+
 impl Edge<3> {
-    /// Build an edge using the [`EdgeBuilder`] API
-    pub fn builder(shape: &mut Shape) -> EdgeBuilder {
-        EdgeBuilder::new(shape)
+    /// Create a line segment from two points
+    pub fn line_segment_from_points(
+        vertices: [impl Into<Point<3>>; 2],
+    ) -> Self {
+        let vertices = vertices.map(|point| {
+            let point = point.into();
+            Vertex { point }
+        });
+
+        Self::line_segment_from_vertices(vertices)
+    }
+
+    /// Create a line segment from two vertices
+    pub fn line_segment_from_vertices([a, b]: [Vertex; 2]) -> Self {
+        let curve = {
+            let points = [a, b].map(|vertex| vertex.point);
+            Curve::Line(Line::from_points(points))
+        };
+
+        let vertices = [
+            LocalForm::new(Point::from([0.]), a),
+            LocalForm::new(Point::from([1.]), b),
+        ];
+
+        Self {
+            curve: LocalForm::canonical_only(curve),
+            vertices: VerticesOfEdge::from_vertices(vertices),
+        }
     }
 }
 

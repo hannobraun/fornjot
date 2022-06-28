@@ -1,9 +1,8 @@
-use crate::{
-    builder::CycleBuilder,
-    shape::{LocalForm, Shape},
-};
+use fj_math::{Line, Point};
 
-use super::{Edge, Surface};
+use crate::shape::LocalForm;
+
+use super::{Curve, Edge, Surface};
 
 /// A cycle of connected edges
 ///
@@ -29,9 +28,50 @@ impl Cycle<3> {
         Self { edges }
     }
 
-    /// Build a cycle using the [`CycleBuilder`] API
-    pub fn builder(surface: Surface, shape: &mut Shape) -> CycleBuilder {
-        CycleBuilder::new(surface, shape)
+    /// Create a polygon from a list of points
+    pub fn polygon_from_points(
+        surface: &Surface,
+        points: impl IntoIterator<Item = impl Into<Point<2>>>,
+    ) -> LocalForm<Cycle<2>, Cycle<3>> {
+        let mut points: Vec<_> = points.into_iter().map(Into::into).collect();
+
+        // A polygon is closed, so we need to add the first point at the end
+        // again, for the next step.
+        if let Some(point) = points.first().cloned() {
+            points.push(point);
+        }
+
+        let mut edges = Vec::new();
+        for points in points.windows(2) {
+            // Can't panic, as we passed `2` to `windows`.
+            //
+            // Can be cleaned up, once `array_windows` is stable.
+            let points = [points[0], points[1]];
+
+            let points_canonical =
+                points.map(|point| surface.point_from_surface_coords(point));
+            let edge_canonical =
+                Edge::line_segment_from_points(points_canonical);
+
+            let edge_local = Edge {
+                curve: LocalForm::new(
+                    Curve::Line(Line::from_points(points)),
+                    edge_canonical.curve.canonical(),
+                ),
+                vertices: edge_canonical.vertices.clone(),
+            };
+
+            edges.push(LocalForm::new(edge_local, edge_canonical));
+        }
+
+        let local = Cycle {
+            edges: edges.clone(),
+        };
+
+        let edges_canonical = edges.into_iter().map(|edge| edge.canonical());
+        let canonical = Cycle::new(edges_canonical);
+
+        LocalForm::new(local, canonical)
     }
 
     /// Access the edges that this cycle refers to

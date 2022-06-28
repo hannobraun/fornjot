@@ -2,8 +2,6 @@ use std::hash::Hash;
 
 use fj_math::Point;
 
-use crate::{builder::VertexBuilder, shape::Shape};
-
 /// A vertex
 ///
 /// This struct exists to distinguish between vertices and points at the type
@@ -27,8 +25,9 @@ pub struct Vertex {
 }
 
 impl Vertex {
-    /// Build a vertex using the [`VertexBuilder`] API
-    pub fn builder(shape: &mut Shape) -> VertexBuilder {
-        VertexBuilder::new(shape)
+    /// Construct a `Vertex` from a point
+    pub fn from_point(point: impl Into<Point<3>>) -> Self {
+        let point = point.into();
+        Self { point }
     }
 }

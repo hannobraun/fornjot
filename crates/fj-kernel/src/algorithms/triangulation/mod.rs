@@ -89,22 +89,18 @@ mod tests {
     use crate::{
         algorithms::Tolerance,
         objects::{Face, Surface},
-        shape::Shape,
     };
 
     #[test]
     fn simple() -> anyhow::Result<()> {
-        let mut shape = Shape::new();
-
         let a = [0., 0.];
         let b = [2., 0.];
         let c = [2., 2.];
         let d = [0., 1.];
 
-        let face = Face::builder(Surface::xy_plane(), &mut shape)
+        let face = Face::builder(Surface::xy_plane())
             .with_exterior_polygon([a, b, c, d])
-            .build()
-            .get();
+            .build();
 
         let a = Point::from(a).to_xyz();
         let b = Point::from(b).to_xyz();
@@ -123,8 +119,6 @@ mod tests {
 
     #[test]
     fn simple_hole() -> anyhow::Result<()> {
-        let mut shape = Shape::new();
-
         let a = [0., 0.];
         let b = [4., 0.];
         let c = [4., 4.];
@@ -135,11 +129,10 @@ mod tests {
         let g = [3., 3.];
         let h = [1., 2.];
 
-        let face = Face::builder(Surface::xy_plane(), &mut shape)
+        let face = Face::builder(Surface::xy_plane())
             .with_exterior_polygon([a, b, c, d])
             .with_interior_polygon([e, f, g, h])
-            .build()
-            .get();
+            .build();
 
         let triangles = triangulate(face)?;
 
