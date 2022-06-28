@@ -463,8 +463,7 @@ mod tests {
         let mut shape = Shape::new();
         let cycle = Cycle::builder(Surface::xy_plane(), &mut shape)
             .build_polygon([[0., 0.], [1., 0.], [0., 1.]])
-            .canonical()
-            .get();
+            .canonical();
 
         assert_eq!(3, cycle.curve_iter().count());
         assert_eq!(1, cycle.cycle_iter().count());

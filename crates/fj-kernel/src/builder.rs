@@ -51,21 +51,20 @@ impl<'r> EdgeBuilder<'r> {
             a: Vector::from([radius, Scalar::ZERO]),
             b: Vector::from([Scalar::ZERO, radius]),
         });
-        let curve_canonical =
-            self.shape.get_handle_or_insert(Curve::Circle(Circle {
-                center: Point::origin(),
-                a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
-                b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
-            }));
+        let curve_canonical = Curve::Circle(Circle {
+            center: Point::origin(),
+            a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
+            b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
+        });
 
         let edge_local = Edge {
-            curve: LocalForm::new(curve_local, curve_canonical.clone()),
+            curve: LocalForm::new(curve_local, curve_canonical),
             vertices: VerticesOfEdge::none(),
         };
-        let edge_canonical = self.shape.get_handle_or_insert(Edge {
+        let edge_canonical = Edge {
             curve: LocalForm::canonical_only(curve_canonical),
             vertices: VerticesOfEdge::none(),
-        });
+        };
 
         LocalForm::new(edge_local, edge_canonical)
     }
@@ -90,11 +89,8 @@ impl<'r> EdgeBuilder<'r> {
     ) -> Handle<Edge<3>> {
         let curve = {
             let points = [a, b].map(|vertex| vertex.point);
-            let curve = Curve::Line(Line::from_points(points));
-            self.shape.get_handle_or_insert(curve)
+            Curve::Line(Line::from_points(points))
         };
-
-        let [a, b] = [a, b].map(|vertex| self.shape.insert(vertex));
 
         let vertices = [
             LocalForm::new(Point::from([0.]), a),
@@ -144,14 +140,15 @@ impl<'r> CycleBuilder<'r> {
             let points_canonical = points
                 .map(|point| self.surface.point_from_surface_coords(point));
             let edge_canonical = Edge::builder(self.shape)
-                .build_line_segment_from_points(points_canonical);
+                .build_line_segment_from_points(points_canonical)
+                .get();
 
             let edge_local = Edge {
                 curve: LocalForm::new(
                     Curve::Line(Line::from_points(points)),
-                    edge_canonical.get().curve.canonical(),
+                    edge_canonical.curve.canonical(),
                 ),
-                vertices: edge_canonical.get().vertices,
+                vertices: edge_canonical.vertices.clone(),
             };
 
             edges.push(LocalForm::new(edge_local, edge_canonical));
@@ -162,8 +159,7 @@ impl<'r> CycleBuilder<'r> {
         };
 
         let edges_canonical = edges.into_iter().map(|edge| edge.canonical());
-        let canonical =
-            self.shape.get_handle_or_insert(Cycle::new(edges_canonical));
+        let canonical = Cycle::new(edges_canonical);
 
         LocalForm::new(local, canonical)
     }

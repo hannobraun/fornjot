@@ -13,7 +13,7 @@ pub fn approx_edge(
     // the same vertex would be understood to refer to very close, but distinct
     // vertices.
     let vertices = vertices.convert(|vertex| {
-        geometry::Point::new(*vertex.local(), vertex.canonical().get().point)
+        geometry::Point::new(*vertex.local(), vertex.canonical().point)
     });
     if let Some([a, b]) = vertices {
         points.insert(0, a);
@@ -49,8 +49,8 @@ mod test {
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = Vertex::builder(&mut shape).build_from_point(a);
-        let v2 = Vertex::builder(&mut shape).build_from_point(d);
+        let v1 = Vertex::builder(&mut shape).build_from_point(a).get();
+        let v2 = Vertex::builder(&mut shape).build_from_point(d).get();
 
         let vertices = VerticesOfEdge::from_vertices([
             LocalForm::new(Point::from([0.]), v1),

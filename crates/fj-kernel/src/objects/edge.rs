@@ -43,7 +43,7 @@ impl<const D: usize> Edge<D> {
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`].
     pub fn curve(&self) -> Curve<3> {
-        self.curve.canonical().get()
+        self.curve.canonical()
     }
 
     /// Access the vertices that the edge refers to
@@ -54,7 +54,7 @@ impl<const D: usize> Edge<D> {
         self.vertices
             .0
             .as_ref()
-            .map(|[a, b]| [a.canonical().get(), b.canonical().get()])
+            .map(|[a, b]| [a.canonical(), b.canonical()])
     }
 }
 
@@ -114,7 +114,7 @@ impl VerticesOfEdge {
                     [a.canonical(), b.canonical()]
                 };
 
-                return [a.clone(), b.clone()] == other || [b, a] == other;
+                return [a, b] == other || [b, a] == other;
             }
         }
 

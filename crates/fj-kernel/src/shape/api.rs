@@ -177,7 +177,7 @@ mod tests {
 
         let vertex = Vertex { point };
         let edge = Edge {
-            curve: LocalForm::canonical_only(curve),
+            curve: LocalForm::canonical_only(curve.get()),
             vertices: VerticesOfEdge::none(),
         };
 
@@ -190,7 +190,7 @@ mod tests {
         assert!(shape.get_handle(&vertex.get()).as_ref() == Some(&vertex));
         assert!(shape.get_handle(&edge.get()).as_ref() == Some(&edge));
 
-        let cycle = Cycle::new(vec![edge]);
+        let cycle = Cycle::new(vec![edge.get()]);
         assert!(shape.get_handle(&cycle).is_none());
 
         let cycle = shape.insert(cycle);

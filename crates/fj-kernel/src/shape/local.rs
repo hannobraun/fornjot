@@ -1,6 +1,6 @@
 use std::hash::{Hash, Hasher};
 
-use super::{Handle, Object};
+use super::Object;
 
 /// A reference to an object, which includes a local form
 ///
@@ -17,7 +17,7 @@ use super::{Handle, Object};
 #[derive(Clone, Debug, Eq, Ord, PartialOrd)]
 pub struct LocalForm<Local, Canonical: Object> {
     local: Local,
-    canonical: Handle<Canonical>,
+    canonical: Canonical,
 }
 
 impl<Local, Canonical: Object> LocalForm<Local, Canonical> {
@@ -25,7 +25,7 @@ impl<Local, Canonical: Object> LocalForm<Local, Canonical> {
     ///
     /// It is the caller's responsibility to make sure that the local and
     /// canonical forms passed to this method actually match.
-    pub fn new(local: Local, canonical: Handle<Canonical>) -> Self {
+    pub fn new(local: Local, canonical: Canonical) -> Self {
         Self { local, canonical }
     }
 
@@ -35,7 +35,7 @@ impl<Local, Canonical: Object> LocalForm<Local, Canonical> {
     }
 
     /// Access the canonical form of the referenced object
-    pub fn canonical(&self) -> Handle<Canonical> {
+    pub fn canonical(&self) -> Canonical {
         self.canonical.clone()
     }
 }
@@ -46,8 +46,8 @@ impl<Canonical: Object> LocalForm<Canonical, Canonical> {
     /// It's possible that an object's local and canonical forms are the same.
     /// This is a convenience constructor that constructs a `LocalForm` instance
     /// for such a situation.
-    pub fn canonical_only(canonical: Handle<Canonical>) -> Self {
-        Self::new(canonical.get(), canonical)
+    pub fn canonical_only(canonical: Canonical) -> Self {
+        Self::new(canonical.clone(), canonical)
     }
 }
 
@@ -57,8 +57,7 @@ where
     Canonical: PartialEq,
 {
     fn eq(&self, other: &Self) -> bool {
-        self.local == other.local
-            && self.canonical.get() == other.canonical.get()
+        self.local == other.local && self.canonical == other.canonical
     }
 }
 
@@ -69,6 +68,6 @@ where
 {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.local.hash(state);
-        self.canonical.get().hash(state);
+        self.canonical.hash(state);
     }
 }
