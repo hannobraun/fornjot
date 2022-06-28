@@ -1,6 +1,6 @@
 use std::fmt;
 
-use fj_math::Point;
+use fj_math::{Circle, Point, Scalar, Vector};
 
 use crate::{
     builder::EdgeBuilder,
@@ -50,6 +50,33 @@ impl<const D: usize> Edge<D> {
             .0
             .as_ref()
             .map(|[a, b]| [a.canonical(), b.canonical()])
+    }
+}
+
+impl Edge<2> {
+    /// Create a circle from the given radius
+    pub fn circle_from_radius(radius: Scalar) -> LocalForm<Edge<2>, Edge<3>> {
+        let curve_local = Curve::Circle(Circle {
+            center: Point::origin(),
+            a: Vector::from([radius, Scalar::ZERO]),
+            b: Vector::from([Scalar::ZERO, radius]),
+        });
+        let curve_canonical = Curve::Circle(Circle {
+            center: Point::origin(),
+            a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
+            b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
+        });
+
+        let edge_local = Edge {
+            curve: LocalForm::new(curve_local, curve_canonical),
+            vertices: VerticesOfEdge::none(),
+        };
+        let edge_canonical = Edge {
+            curve: LocalForm::canonical_only(curve_canonical),
+            vertices: VerticesOfEdge::none(),
+        };
+
+        LocalForm::new(edge_local, edge_canonical)
     }
 }
 
