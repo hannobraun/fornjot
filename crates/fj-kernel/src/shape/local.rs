@@ -1,5 +1,3 @@
-use std::hash::{Hash, Hasher};
-
 use super::Object;
 
 /// A reference to an object, which includes a local form
@@ -14,7 +12,7 @@ use super::Object;
 /// terms that are useful to those objects. Two instances of `LocalForm` are
 /// equal, if both the local and the canonical forms are equal. The equality of
 /// the handle that refers to the canonical form is disregarded.
-#[derive(Clone, Debug, Eq, Ord, PartialOrd)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct LocalForm<Local, Canonical: Object> {
     local: Local,
     canonical: Canonical,
@@ -48,26 +46,5 @@ impl<Canonical: Object> LocalForm<Canonical, Canonical> {
     /// for such a situation.
     pub fn canonical_only(canonical: Canonical) -> Self {
         Self::new(canonical.clone(), canonical)
-    }
-}
-
-impl<Local, Canonical: Object> PartialEq for LocalForm<Local, Canonical>
-where
-    Local: PartialEq,
-    Canonical: PartialEq,
-{
-    fn eq(&self, other: &Self) -> bool {
-        self.local == other.local && self.canonical == other.canonical
-    }
-}
-
-impl<Local, Canonical: Object> Hash for LocalForm<Local, Canonical>
-where
-    Local: Hash,
-    Canonical: Hash,
-{
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        self.local.hash(state);
-        self.canonical.hash(state);
     }
 }
