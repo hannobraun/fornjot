@@ -24,7 +24,7 @@ Fornjot is **under active development, but still experimental**. Efforts are cur
 
 If you are interested in Fornjot and are considering to use it, you should fully expect to run into limitation pretty much immediately. Unless you are willing to contribute to its development, it would be better to wait for a year or ten, to let it mature. For more information on current limitations and improvements that could be implemented in the near future, [check out the open issues](https://github.com/hannobraun/Fornjot/issues).
 
-To learn what the direction is longer-term, refer to the [feature wishlist](https://github.com/hannobraun/Fornjot/discussions/146).
+To learn about the project's longer-term direction, please refer to the [roadmap](https://www.fornjot.app/roadmap/).
 
 
 ## Overview
