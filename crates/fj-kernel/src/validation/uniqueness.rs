@@ -1,13 +1,16 @@
 use std::{collections::HashSet, fmt};
 
+use fj_math::Scalar;
+
 use crate::objects::Vertex;
 
 pub fn validate_vertex(
     vertex: &Vertex,
     vertices: &HashSet<Vertex>,
+    min_distance: Scalar,
 ) -> Result<(), UniquenessIssues> {
     for existing in vertices {
-        if existing == vertex {
+        if (existing.point - vertex.point).magnitude() < min_distance {
             return Err(UniquenessIssues {
                 duplicate_vertex: Some(*existing),
             });
