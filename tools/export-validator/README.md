@@ -1,3 +1,3 @@
 # Export Validator
 
-Used by the CI build to export (and in the future, validate) 3MF files.
+Used by the CI build to export and validate 3MF files.
