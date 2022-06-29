@@ -8,7 +8,7 @@ use crate::{
     shape::LocalForm,
 };
 
-use super::{transform::transform_cycles, CycleApprox, Tolerance};
+use super::{transform::transform_face, CycleApprox, Tolerance};
 
 /// Create a solid by sweeping a sketch
 pub fn sweep(
@@ -88,17 +88,13 @@ fn create_top_face(
     is_sweep_along_negative_direction: bool,
     target: &mut Vec<Face>,
 ) {
+    let translation = Transform::translation(path);
+    let face = transform_face(face, &translation);
+
     let mut surface = face.surface();
 
     let mut exteriors = face.brep().exteriors.clone();
     let mut interiors = face.brep().interiors.clone();
-
-    let translation = Transform::translation(path);
-
-    surface = surface.transform(&translation);
-
-    exteriors = transform_cycles(&exteriors, &translation);
-    interiors = transform_cycles(&interiors, &translation);
 
     if is_sweep_along_negative_direction {
         surface = surface.reverse();

@@ -6,41 +6,40 @@ use crate::{
 };
 
 /// Transform a shape
-pub fn transform(faces: &[Face], transform: &Transform) -> Vec<Face> {
-    let mut target = Vec::new();
-
+pub fn transform_shape(faces: &mut Vec<Face>, transform: &Transform) {
     for face in faces {
-        let face = match face {
-            Face::Face(face) => {
-                let surface = face.surface.transform(transform);
-
-                let exteriors = transform_cycles(&face.exteriors, transform);
-                let interiors = transform_cycles(&face.interiors, transform);
-
-                let color = face.color;
-
-                Face::Face(FaceBRep {
-                    surface,
-                    exteriors,
-                    interiors,
-                    color,
-                })
-            }
-            Face::Triangles(triangles) => {
-                let mut target = Vec::new();
-
-                for &(triangle, color) in triangles {
-                    let triangle = transform.transform_triangle(&triangle);
-                    target.push((triangle, color));
-                }
-
-                Face::Triangles(target)
-            }
-        };
-        target.push(face);
+        *face = transform_face(face, transform);
     }
+}
 
-    target
+pub fn transform_face(face: &Face, transform: &Transform) -> Face {
+    match face {
+        Face::Face(face) => {
+            let surface = face.surface.transform(transform);
+
+            let exteriors = transform_cycles(&face.exteriors, transform);
+            let interiors = transform_cycles(&face.interiors, transform);
+
+            let color = face.color;
+
+            Face::Face(FaceBRep {
+                surface,
+                exteriors,
+                interiors,
+                color,
+            })
+        }
+        Face::Triangles(triangles) => {
+            let mut target = Vec::new();
+
+            for &(triangle, color) in triangles {
+                let triangle = transform.transform_triangle(&triangle);
+                target.push((triangle, color));
+            }
+
+            Face::Triangles(target)
+        }
+    }
 }
 
 pub fn transform_cycles(
