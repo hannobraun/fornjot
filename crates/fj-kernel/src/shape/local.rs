@@ -1,17 +1,15 @@
-use super::Object;
-
 /// A reference to an object, which includes a local form
 ///
 /// This type is used by topological objects to reference other objects, while
 /// also keeping track of a local representation of that object, which is often
 /// more appropriate for various tasks.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct LocalForm<Local, Canonical: Object> {
+pub struct LocalForm<Local, Canonical> {
     local: Local,
     canonical: Canonical,
 }
 
-impl<Local, Canonical: Object> LocalForm<Local, Canonical> {
+impl<Local, Canonical> LocalForm<Local, Canonical> {
     /// Construct a new instance of `LocalForm`
     ///
     /// It is the caller's responsibility to make sure that the local and
@@ -31,13 +29,16 @@ impl<Local, Canonical: Object> LocalForm<Local, Canonical> {
     }
 }
 
-impl<Canonical: Object> LocalForm<Canonical, Canonical> {
+impl<Canonical> LocalForm<Canonical, Canonical> {
     /// Construct a new instance of `LocalForm` without a local form
     ///
     /// It's possible that an object's local and canonical forms are the same.
     /// This is a convenience constructor that constructs a `LocalForm` instance
     /// for such a situation.
-    pub fn canonical_only(canonical: Canonical) -> Self {
+    pub fn canonical_only(canonical: Canonical) -> Self
+    where
+        Canonical: Clone,
+    {
         Self::new(canonical.clone(), canonical)
     }
 }
