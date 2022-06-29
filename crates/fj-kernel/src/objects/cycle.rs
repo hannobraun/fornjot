@@ -9,11 +9,6 @@ use super::{Curve, Edge, Surface};
 /// The end of each edge in the cycle must connect to the beginning of the next
 /// edge. The end of the last edge must connect to the beginning of the first
 /// one.
-///
-/// # Validation
-///
-/// A cycle that is part of a [`Shape`] must be structurally sound. That means
-/// the edges it refers to, must be part of the same shape.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle<const D: usize> {
     /// The edges that make up the cycle

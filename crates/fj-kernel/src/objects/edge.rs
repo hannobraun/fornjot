@@ -7,12 +7,6 @@ use crate::shape::LocalForm;
 use super::{Curve, Vertex};
 
 /// An edge of a shape
-///
-/// # Validation
-///
-/// An edge that is part of a [`Shape`] must be structurally sound. That means
-/// the curve and any vertices that it refers to, must be part of the same
-/// shape.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edge<const D: usize> {
     /// Access the curve that defines the edge's geometry
