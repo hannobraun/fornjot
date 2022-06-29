@@ -137,7 +137,7 @@ fn add_cycle(
         edges: edges.clone(),
     };
     let cycle_canonical =
-        Cycle::new(edges.into_iter().map(|edge| edge.canonical()));
+        Cycle::new(edges.into_iter().map(|edge| edge.canonical().clone()));
 
     LocalForm::new(cycle_local, cycle_canonical)
 }

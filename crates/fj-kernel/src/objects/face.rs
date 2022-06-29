@@ -208,7 +208,7 @@ impl CyclesInFace {
 
     /// Access an iterator over the canonical forms of the cycles
     pub fn as_canonical(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
-        self.0.iter().map(|cycle| cycle.canonical())
+        self.0.iter().map(|cycle| cycle.canonical().clone())
     }
 
     /// Access an iterator over local forms of the cycles

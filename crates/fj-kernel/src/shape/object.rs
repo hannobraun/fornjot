@@ -59,7 +59,7 @@ impl Object for Cycle<3> {
     fn merge_into(self, shape: &mut Shape) -> Handle<Self> {
         let mut edges = Vec::new();
         for edge in self.edges {
-            let edge = edge.canonical();
+            let edge = edge.canonical().clone();
             let edge = edge.merge_into(shape);
             edges.push(edge.get());
         }
@@ -76,7 +76,7 @@ impl Object for Face {
 
                 let mut exts = Vec::new();
                 for cycle in face.exteriors.as_local_form() {
-                    let merged = cycle.canonical().merge_into(shape);
+                    let merged = cycle.canonical().clone().merge_into(shape);
                     exts.push(LocalForm::new(
                         cycle.local().clone(),
                         merged.get(),
@@ -85,7 +85,7 @@ impl Object for Face {
 
                 let mut ints = Vec::new();
                 for cycle in face.interiors.as_local_form() {
-                    let merged = cycle.canonical().merge_into(shape);
+                    let merged = cycle.canonical().clone().merge_into(shape);
                     ints.push(LocalForm::new(
                         cycle.local().clone(),
                         merged.get(),

@@ -26,7 +26,7 @@ impl ToShape for fj::Circle {
         let cycle_local = Cycle {
             edges: vec![edge.clone()],
         };
-        let cycle_canonical = Cycle::new(vec![edge.canonical()]);
+        let cycle_canonical = Cycle::new(vec![edge.canonical().clone()]);
 
         let surface = Surface::xy_plane();
         let face = tmp

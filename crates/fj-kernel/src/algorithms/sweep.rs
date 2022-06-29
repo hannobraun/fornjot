@@ -149,7 +149,7 @@ fn create_non_continuous_side_face(
                 };
 
                 let global = Edge {
-                    curve: LocalForm::canonical_only(curve.canonical()),
+                    curve: LocalForm::canonical_only(*curve.canonical()),
                     vertices,
                 };
 
@@ -162,8 +162,9 @@ fn create_non_continuous_side_face(
         let cycle = {
             let local = Cycle { edges };
 
-            let global =
-                Cycle::new(local.edges.iter().map(|edge| edge.canonical()));
+            let global = Cycle::new(
+                local.edges.iter().map(|edge| edge.canonical().clone()),
+            );
 
             LocalForm::new(local, global)
         };
