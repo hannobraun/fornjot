@@ -61,24 +61,12 @@ fn create_bottom_faces(
     is_sweep_along_negative_direction: bool,
     target: &mut Vec<Face>,
 ) {
-    let mut surface = face.surface();
-
-    let mut exteriors = face.brep().exteriors.clone();
-    let mut interiors = face.brep().interiors.clone();
-
-    if !is_sweep_along_negative_direction {
-        surface = surface.reverse();
-
-        exteriors = reverse_local_coordinates_in_cycle(&exteriors);
-        interiors = reverse_local_coordinates_in_cycle(&interiors);
+    let face = if is_sweep_along_negative_direction {
+        face.clone()
+    } else {
+        reverse_face(face)
     };
 
-    let face = Face::new(
-        surface,
-        exteriors.as_local_form().cloned(),
-        interiors.as_local_form().cloned(),
-        face.color(),
-    );
     target.push(face);
 }
 
@@ -89,27 +77,34 @@ fn create_top_face(
     target: &mut Vec<Face>,
 ) {
     let translation = Transform::translation(path);
-    let face = transform_face(face, &translation);
-
-    let mut surface = face.surface();
-
-    let mut exteriors = face.brep().exteriors.clone();
-    let mut interiors = face.brep().interiors.clone();
+    let mut face = transform_face(face, &translation);
 
     if is_sweep_along_negative_direction {
-        surface = surface.reverse();
-
-        exteriors = reverse_local_coordinates_in_cycle(&exteriors);
-        interiors = reverse_local_coordinates_in_cycle(&interiors);
+        face = reverse_face(&face);
     };
 
-    let face = Face::new(
+    target.push(face);
+}
+
+fn reverse_face(face: &Face) -> Face {
+    let face = match face {
+        Face::Face(face) => face,
+        Face::Triangles(_) => {
+            panic!("Reversing tri-rep faces is not supported")
+        }
+    };
+
+    let surface = face.surface().reverse();
+
+    let exteriors = reverse_local_coordinates_in_cycle(&face.exteriors);
+    let interiors = reverse_local_coordinates_in_cycle(&face.interiors);
+
+    Face::new(
         surface,
         exteriors.as_local_form().cloned(),
         interiors.as_local_form().cloned(),
-        face.color(),
-    );
-    target.push(face);
+        face.color,
+    )
 }
 
 fn reverse_local_coordinates_in_cycle(cycles: &CyclesInFace) -> CyclesInFace {
