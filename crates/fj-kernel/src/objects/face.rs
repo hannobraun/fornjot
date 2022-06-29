@@ -8,16 +8,6 @@ use crate::{builder::FaceBuilder, shape::LocalForm};
 use super::{Cycle, Surface};
 
 /// A face of a shape
-///
-/// # Equality
-///
-/// Please refer to [`crate::kernel::topology`] for documentation on the
-/// equality of topological objects.
-///
-/// # Validation
-///
-/// A face that is part of a [`Shape`] must be structurally sound. That means
-/// the surface and any cycles it refers to, must be part of the same shape.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum Face {
     /// A face of a shape
