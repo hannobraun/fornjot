@@ -50,7 +50,11 @@ where
     let mut vertices = HashSet::new();
 
     for vertex in object.vertex_iter() {
-        uniqueness::validate_vertex(&vertex, &vertices)?;
+        uniqueness::validate_vertex(
+            &vertex,
+            &vertices,
+            config.distinct_min_distance,
+        )?;
 
         vertices.insert(vertex);
     }
@@ -186,15 +190,25 @@ mod tests {
     fn uniqueness_vertex() -> anyhow::Result<()> {
         let mut shape = Shape::new();
 
-        let point = Point::from([0., 0., 0.]);
+        let deviation = Scalar::from_f64(0.25);
+
+        let a = Point::from([0., 0., 0.]);
+
+        let mut b = a;
+        b.x += deviation;
+
+        let config = ValidationConfig {
+            distinct_min_distance: deviation * 2.,
+            ..ValidationConfig::default()
+        };
 
         // Adding a vertex should work.
-        shape.insert(Vertex { point });
-        validate(shape.clone(), &ValidationConfig::default())?;
+        shape.insert(Vertex { point: a });
+        validate(shape.clone(), &config)?;
 
-        // Adding a second vertex with the same point should fail.
-        shape.insert(Vertex { point });
-        let result = validate(shape, &ValidationConfig::default());
+        // Adding a second vertex that is considered identical should fail.
+        shape.insert(Vertex { point: b });
+        let result = validate(shape, &config);
         assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
 
         Ok(())
