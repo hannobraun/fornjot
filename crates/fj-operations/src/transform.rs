@@ -20,9 +20,9 @@ impl ToShape for fj::Transform {
             .to_shape(config, tolerance, debug_info)?
             .into_inner();
 
-        let faces = transform_shape(&shape, &make_transform(self));
+        let shape = transform_shape(&shape, &make_transform(self));
 
-        validate(faces, config)
+        validate(shape, config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
