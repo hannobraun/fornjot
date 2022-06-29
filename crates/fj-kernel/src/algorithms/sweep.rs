@@ -2,13 +2,11 @@ use fj_math::{Point, Scalar, Transform, Triangle, Vector};
 
 use crate::{
     iter::ObjectIters,
-    objects::{
-        Curve, Cycle, CyclesInFace, Edge, Face, Surface, Vertex, VerticesOfEdge,
-    },
+    objects::{Curve, Cycle, Edge, Face, Surface, Vertex, VerticesOfEdge},
     shape::LocalForm,
 };
 
-use super::{transform::transform_face, CycleApprox, Tolerance};
+use super::{reverse_face, transform::transform_face, CycleApprox, Tolerance};
 
 /// Create a solid by sweeping a sketch
 pub fn sweep(
@@ -61,24 +59,12 @@ fn create_bottom_faces(
     is_sweep_along_negative_direction: bool,
     target: &mut Vec<Face>,
 ) {
-    let mut surface = face.surface();
-
-    let mut exteriors = face.brep().exteriors.clone();
-    let mut interiors = face.brep().interiors.clone();
-
-    if !is_sweep_along_negative_direction {
-        surface = surface.reverse();
-
-        exteriors = reverse_local_coordinates_in_cycle(&exteriors);
-        interiors = reverse_local_coordinates_in_cycle(&interiors);
+    let face = if is_sweep_along_negative_direction {
+        face.clone()
+    } else {
+        reverse_face(face)
     };
 
-    let face = Face::new(
-        surface,
-        exteriors.as_local_form().cloned(),
-        interiors.as_local_form().cloned(),
-        face.color(),
-    );
     target.push(face);
 }
 
@@ -89,61 +75,13 @@ fn create_top_face(
     target: &mut Vec<Face>,
 ) {
     let translation = Transform::translation(path);
-    let face = transform_face(face, &translation);
-
-    let mut surface = face.surface();
-
-    let mut exteriors = face.brep().exteriors.clone();
-    let mut interiors = face.brep().interiors.clone();
+    let mut face = transform_face(face, &translation);
 
     if is_sweep_along_negative_direction {
-        surface = surface.reverse();
-
-        exteriors = reverse_local_coordinates_in_cycle(&exteriors);
-        interiors = reverse_local_coordinates_in_cycle(&interiors);
+        face = reverse_face(&face);
     };
 
-    let face = Face::new(
-        surface,
-        exteriors.as_local_form().cloned(),
-        interiors.as_local_form().cloned(),
-        face.color(),
-    );
     target.push(face);
-}
-
-fn reverse_local_coordinates_in_cycle(cycles: &CyclesInFace) -> CyclesInFace {
-    let cycles = cycles.as_local_form().map(|cycle| {
-        let edges = cycle
-            .local()
-            .edges
-            .iter()
-            .map(|edge| {
-                let curve = LocalForm::new(
-                    // This is wrong. We have reversed the direction of the
-                    // surface, thereby modifying its coordinate system. So we
-                    // can't just use the local form of the curve, which is
-                    // expressed in surface coordinates, as-is.
-                    //
-                    // This is a coherence issue, but since coherence validation
-                    // is not complete, and the whole local form stuff is still
-                    // a work in progress, this doesn't lead to any observable
-                    // bugs.
-                    *edge.local().curve.local(),
-                    edge.local().curve.canonical(),
-                );
-                let vertices = edge.local().vertices.clone().map(|vertex| {
-                    LocalForm::new(*vertex.local(), vertex.canonical())
-                });
-                let local = Edge { curve, vertices };
-                LocalForm::new(local, edge.canonical())
-            })
-            .collect();
-        let local = Cycle { edges };
-        LocalForm::new(local, cycle.canonical())
-    });
-
-    CyclesInFace::new(cycles)
 }
 
 fn create_non_continuous_side_face(
@@ -283,8 +221,8 @@ mod tests {
     fn bottom_positive() -> anyhow::Result<()> {
         test_bottom_top(
             [0., 0., 1.],
-            [[0., 0., 0.], [-1., 0., 0.], [0., 1., 0.]],
-            [[0., 0.], [-1., 0.], [0., 1.]],
+            [[0., 0., 0.], [1., 0., 0.], [0., -1., 0.]],
+            [[0., 0.], [1., 0.], [0., -1.]],
         )
     }
 
@@ -310,8 +248,8 @@ mod tests {
     fn top_negative() -> anyhow::Result<()> {
         test_bottom_top(
             [0., 0., -1.],
-            [[0., 0., -1.], [-1., 0., -1.], [0., 1., -1.]],
-            [[0., 0.], [-1., 0.], [0., 1.]],
+            [[0., 0., -1.], [1., 0., -1.], [0., -1., -1.]],
+            [[0., 0.], [1., 0.], [0., -1.]],
         )
     }
 

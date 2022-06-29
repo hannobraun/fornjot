@@ -119,7 +119,7 @@ impl SweptCurve {
     /// Create a new instance that is reversed
     #[must_use]
     pub fn reverse(mut self) -> Self {
-        self.curve = self.curve.reverse();
+        self.path = -self.path;
         self
     }
 
@@ -174,12 +174,34 @@ impl SweptCurve {
 
 #[cfg(test)]
 mod tests {
-
     use fj_math::{Line, Point, Vector};
+    use pretty_assertions::assert_eq;
 
     use crate::objects::Curve;
 
     use super::SweptCurve;
+
+    #[test]
+    fn reverse() {
+        let original = SweptCurve {
+            curve: Curve::Line(Line {
+                origin: Point::from([1., 0., 0.]),
+                direction: Vector::from([0., 2., 0.]),
+            }),
+            path: Vector::from([0., 0., 3.]),
+        };
+
+        let reversed = original.reverse();
+
+        let expected = SweptCurve {
+            curve: Curve::Line(Line {
+                origin: Point::from([1., 0., 0.]),
+                direction: Vector::from([0., 2., 0.]),
+            }),
+            path: Vector::from([0., 0., -3.]),
+        };
+        assert_eq!(expected, reversed);
+    }
 
     #[test]
     fn point_to_surface_coords() {
