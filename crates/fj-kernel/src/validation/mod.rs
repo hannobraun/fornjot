@@ -142,7 +142,7 @@ mod tests {
 
     use crate::{
         objects::{Curve, Edge, Vertex, VerticesOfEdge},
-        shape::{LocalForm, Shape},
+        shape::LocalForm,
         validation::{validate, ValidationConfig, ValidationError},
     };
 
@@ -188,7 +188,7 @@ mod tests {
 
     #[test]
     fn uniqueness_vertex() -> anyhow::Result<()> {
-        let mut shape = Shape::new();
+        let mut shape = Vec::new();
 
         let deviation = Scalar::from_f64(0.25);
 
@@ -203,11 +203,11 @@ mod tests {
         };
 
         // Adding a vertex should work.
-        shape.insert(Vertex { point: a });
+        shape.push(Vertex { point: a });
         validate(shape.clone(), &config)?;
 
         // Adding a second vertex that is considered identical should fail.
-        shape.insert(Vertex { point: b });
+        shape.push(Vertex { point: b });
         let result = validate(shape, &config);
         assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
 

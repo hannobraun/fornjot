@@ -43,17 +43,17 @@ fn reverse_local_coordinates_in_cycle(cycles: &CyclesInFace) -> CyclesInFace {
                     // a work in progress, this doesn't lead to any observable
                     // bugs.
                     *edge.local().curve.local(),
-                    edge.local().curve.canonical(),
+                    *edge.local().curve.canonical(),
                 );
                 let vertices = edge.local().vertices.clone().map(|vertex| {
-                    LocalForm::new(*vertex.local(), vertex.canonical())
+                    LocalForm::new(*vertex.local(), *vertex.canonical())
                 });
                 let local = Edge { curve, vertices };
-                LocalForm::new(local, edge.canonical())
+                LocalForm::new(local, edge.canonical().clone())
             })
             .collect();
         let local = Cycle { edges };
-        LocalForm::new(local, cycle.canonical())
+        LocalForm::new(local, cycle.canonical().clone())
     });
 
     CyclesInFace::new(cycles)

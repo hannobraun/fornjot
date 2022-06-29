@@ -56,7 +56,7 @@ impl Cycle<3> {
             let edge_local = Edge {
                 curve: LocalForm::new(
                     Curve::Line(Line::from_points(points)),
-                    edge_canonical.curve.canonical(),
+                    *edge_canonical.curve.canonical(),
                 ),
                 vertices: edge_canonical.vertices.clone(),
             };
@@ -68,7 +68,8 @@ impl Cycle<3> {
             edges: edges.clone(),
         };
 
-        let edges_canonical = edges.into_iter().map(|edge| edge.canonical());
+        let edges_canonical =
+            edges.into_iter().map(|edge| edge.canonical().clone());
         let canonical = Cycle::new(edges_canonical);
 
         LocalForm::new(local, canonical)
@@ -79,6 +80,6 @@ impl Cycle<3> {
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
     pub fn edges(&self) -> impl Iterator<Item = Edge<3>> + '_ {
-        self.edges.iter().map(|handle| handle.canonical())
+        self.edges.iter().map(|handle| handle.canonical().clone())
     }
 }

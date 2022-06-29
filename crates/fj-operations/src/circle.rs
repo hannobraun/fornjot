@@ -2,7 +2,7 @@ use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
     objects::{Cycle, Edge, Face, Surface},
-    shape::{LocalForm, Shape},
+    shape::LocalForm,
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::{Aabb, Point, Scalar};
@@ -16,8 +16,6 @@ impl ToShape for fj::Circle {
         _: Tolerance,
         _: &mut DebugInfo,
     ) -> Result<Validated<Vec<Face>>, ValidationError> {
-        let mut tmp = Shape::new();
-
         // Circles have just a single round edge with no vertices. So none need
         // to be added here.
 
@@ -26,17 +24,15 @@ impl ToShape for fj::Circle {
         let cycle_local = Cycle {
             edges: vec![edge.clone()],
         };
-        let cycle_canonical = Cycle::new(vec![edge.canonical()]);
+        let cycle_canonical = Cycle::new(vec![edge.canonical().clone()]);
 
         let surface = Surface::xy_plane();
-        let face = tmp
-            .insert(Face::new(
-                surface,
-                vec![LocalForm::new(cycle_local, cycle_canonical)],
-                Vec::new(),
-                self.color(),
-            ))
-            .get();
+        let face = Face::new(
+            surface,
+            vec![LocalForm::new(cycle_local, cycle_canonical)],
+            Vec::new(),
+            self.color(),
+        );
 
         validate(vec![face], config)
     }

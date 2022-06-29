@@ -2,10 +2,7 @@
 
 use std::collections::VecDeque;
 
-use crate::{
-    objects::{Curve, Cycle, Edge, Face, Surface, Vertex},
-    shape::Shape,
-};
+use crate::objects::{Curve, Cycle, Edge, Face, Surface, Vertex};
 
 /// Access iterators over all objects of a shape, or part of it
 ///
@@ -297,40 +294,15 @@ impl ObjectIters for Vertex {
     }
 }
 
-// This implementation exists to ease the transition away from `Shape`. It will
-// likely be removed at some point, together with `Shape`.
-impl ObjectIters for Shape {
-    fn curve_iter(&self) -> Iter<Curve<3>> {
-        Iter::from_iter(self.curves().map(|handle| handle.get()))
-    }
-
-    fn cycle_iter(&self) -> Iter<Cycle<3>> {
-        Iter::from_iter(self.cycles().map(|handle| handle.get()))
-    }
-
-    fn edge_iter(&self) -> Iter<Edge<3>> {
-        Iter::from_iter(self.edges().map(|handle| handle.get()))
-    }
-
-    fn face_iter(&self) -> Iter<Face> {
-        Iter::from_iter(self.faces().map(|handle| handle.get()))
-    }
-
-    fn surface_iter(&self) -> Iter<Surface> {
-        Iter::from_iter(self.surfaces().map(|handle| handle.get()))
-    }
-
-    fn vertex_iter(&self) -> Iter<Vertex> {
-        Iter::from_iter(self.vertices().map(|handle| handle.get()))
-    }
-}
-
 // This implementation exists to paper over the lack of any "top-level" objects
 // that are an entry point into a shape (basically, the lack of `Sketch` and
 // `Solid`).
-impl<T> ObjectIters for T
+//
+// It is also very useful in test code.
+impl<T, O> ObjectIters for T
 where
-    for<'r> &'r T: IntoIterator<Item = &'r Face>,
+    for<'r> &'r T: IntoIterator<Item = &'r O>,
+    O: ObjectIters,
 {
     fn curve_iter(&self) -> Iter<Curve<3>> {
         let mut iter = Iter::empty();
@@ -409,12 +381,6 @@ impl<T> Iter<T> {
         Self(objects)
     }
 
-    fn from_iter(iter: impl IntoIterator<Item = T>) -> Self {
-        let mut objects = VecDeque::new();
-        objects.extend(iter);
-        Self(objects)
-    }
-
     fn with(mut self, other: Self) -> Self
     where
         T: PartialEq,
@@ -461,7 +427,8 @@ mod tests {
             &Surface::xy_plane(),
             [[0., 0.], [1., 0.], [0., 1.]],
         )
-        .canonical();
+        .canonical()
+        .clone();
 
         assert_eq!(3, cycle.curve_iter().count());
         assert_eq!(1, cycle.cycle_iter().count());
