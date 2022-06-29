@@ -137,7 +137,7 @@ fn reverse_local_coordinates_in_cycle(cycles: &CyclesInFace) -> CyclesInFace {
                     edge.local().curve.canonical(),
                 );
                 let vertices = edge.local().vertices.clone().map(|vertex| {
-                    let local = -(*vertex.local());
+                    let local = *vertex.local();
                     LocalForm::new(local, vertex.canonical())
                 });
                 let local = Edge { curve, vertices };
