@@ -3,6 +3,7 @@ mod ffi;
 use std::{ffi::CString, fs, process::Command, ptr};
 
 use anyhow::{anyhow, bail, Context as _};
+use tempfile::tempdir;
 
 fn main() -> anyhow::Result<()> {
     for model in fs::read_dir("models")? {
@@ -11,13 +12,16 @@ fn main() -> anyhow::Result<()> {
             anyhow!("Failed to convert directory name to `String`: {:?}", err)
         })?;
 
-        let export_file = format!("{model}.3mf");
+        let dir = tempdir()?;
+        let file_name = format!("{model}.3mf");
+        let export_file_path = dir.path().join(file_name);
+        let export_file_path_str = export_file_path.to_str().unwrap();
 
         let exit_status = Command::new("cargo")
             .arg("run")
             .arg("--")
             .args(["--model", &model])
-            .args(["--export", &export_file])
+            .args(["--export", export_file_path_str])
             .status()?;
 
         if !exit_status.success() {
@@ -30,7 +34,7 @@ fn main() -> anyhow::Result<()> {
         // Presumably we're using the library in the way it's intended, so this
         // might be sound?
         unsafe {
-            validate_model(&export_file).with_context(|| {
+            validate_model(export_file_path_str).with_context(|| {
                 format!("Could not validate model `{model}`")
             })?;
         }
