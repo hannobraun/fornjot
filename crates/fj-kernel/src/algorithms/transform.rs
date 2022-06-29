@@ -6,15 +6,10 @@ use crate::{
 };
 
 /// Transform a shape
-pub fn transform_shape(faces: &[Face], transform: &Transform) -> Vec<Face> {
-    let mut target = Vec::new();
-
+pub fn transform_shape(faces: &mut Vec<Face>, transform: &Transform) {
     for face in faces {
-        let face = transform_face(face, transform);
-        target.push(face);
+        *face = transform_face(face, transform);
     }
-
-    target
 }
 
 pub fn transform_face(face: &Face, transform: &Transform) -> Face {

@@ -15,12 +15,12 @@ impl ToShape for fj::Transform {
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Vec<Face>>, ValidationError> {
-        let shape = self
+        let mut shape = self
             .shape
             .to_shape(config, tolerance, debug_info)?
             .into_inner();
 
-        let shape = transform_shape(&shape, &make_transform(self));
+        transform_shape(&mut shape, &make_transform(self));
 
         validate(shape, config)
     }
