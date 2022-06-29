@@ -1,6 +1,6 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
-    algorithms::{transform, Tolerance},
+    algorithms::{transform_shape, Tolerance},
     objects::Face,
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
@@ -16,7 +16,7 @@ impl ToShape for fj::Transform {
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Vec<Face>>, ValidationError> {
         let shape = self.shape.to_shape(config, tolerance, debug_info)?;
-        let faces = transform(&shape.into_inner(), &make_transform(self));
+        let faces = transform_shape(&shape.into_inner(), &make_transform(self));
         validate(faces, config)
     }
 
