@@ -114,12 +114,12 @@ fn add_cycle(cycle: Cycle, reverse: bool) -> Cycle {
             edge.vertices.clone()
         };
 
-        let edge_local = Edge {
+        let edge = Edge {
             curve: LocalForm::new(curve_local, curve_canonical),
             vertices: vertices.clone(),
         };
 
-        edges.push(edge_local);
+        edges.push(edge);
     }
 
     if reverse {
