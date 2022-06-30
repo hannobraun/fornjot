@@ -58,7 +58,7 @@ pub fn transform_cycles(
 
                 let vertices =
                     edge.canonical().clone().vertices.map(|vertex| {
-                        let point = vertex.canonical().position;
+                        let point = vertex.canonical().position();
                         let point = transform.transform_point(&point);
 
                         let local = *vertex.local();
@@ -91,7 +91,7 @@ pub fn transform_cycles(
                     LocalForm::canonical_only(curve)
                 };
                 let vertices = edge.vertices.clone().map(|vertex| {
-                    let point = vertex.canonical().position;
+                    let point = vertex.canonical().position();
                     let point = transform.transform_point(&point);
 
                     let local = *vertex.local();

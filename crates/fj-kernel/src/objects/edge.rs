@@ -87,7 +87,7 @@ impl Edge<3> {
     /// Create a line segment from two vertices
     pub fn line_segment_from_vertices([a, b]: [GlobalVertex; 2]) -> Self {
         let curve = {
-            let points = [a, b].map(|vertex| vertex.position);
+            let points = [a, b].map(|vertex| vertex.position());
             Curve::Line(Line::from_points(points))
         };
 
@@ -107,7 +107,7 @@ impl<const D: usize> fmt::Display for Edge<D> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self.vertices() {
             Some(vertices) => {
-                let [a, b] = vertices.map(|vertex| vertex.position);
+                let [a, b] = vertices.map(|vertex| vertex.position());
                 write!(f, "edge from {:?} to {:?}", a, b)?
             }
             None => write!(f, "continuous edge")?,

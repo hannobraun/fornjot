@@ -20,8 +20,7 @@ use fj_math::Point;
 /// [`Shape::with_minimum_distance`].
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalVertex {
-    /// The position of the vertex
-    pub position: Point<3>,
+    position: Point<3>,
 }
 
 impl GlobalVertex {
@@ -29,5 +28,10 @@ impl GlobalVertex {
     pub fn from_position(position: impl Into<Point<3>>) -> Self {
         let position = position.into();
         Self { position }
+    }
+
+    /// The position of the vertex
+    pub fn position(&self) -> Point<3> {
+        self.position
     }
 }

@@ -10,7 +10,8 @@ pub fn validate_vertex(
     min_distance: Scalar,
 ) -> Result<(), UniquenessIssues> {
     for existing in vertices {
-        if (existing.position - vertex.position).magnitude() < min_distance {
+        if (existing.position() - vertex.position()).magnitude() < min_distance
+        {
             return Err(UniquenessIssues {
                 duplicate_vertex: Some(*existing),
             });
