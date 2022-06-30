@@ -344,6 +344,36 @@ impl ObjectIters for Surface {
     }
 }
 
+impl ObjectIters for Vertex {
+    fn curve_iter(&self) -> Iter<Curve<3>> {
+        Iter::empty()
+    }
+
+    fn cycle_iter(&self) -> Iter<Cycle<3>> {
+        Iter::empty()
+    }
+
+    fn edge_iter(&self) -> Iter<Edge<3>> {
+        Iter::empty()
+    }
+
+    fn face_iter(&self) -> Iter<Face> {
+        Iter::empty()
+    }
+
+    fn global_vertex_iter(&self) -> Iter<GlobalVertex> {
+        Iter::from_object(self.global())
+    }
+
+    fn surface_iter(&self) -> Iter<Surface> {
+        Iter::empty()
+    }
+
+    fn vertex_iter(&self) -> Iter<Vertex> {
+        Iter::from_object(*self)
+    }
+}
+
 // This implementation exists to paper over the lack of any "top-level" objects
 // that are an entry point into a shape (basically, the lack of `Sketch` and
 // `Solid`).
@@ -465,7 +495,9 @@ impl<T> Iterator for Iter<T> {
 
 #[cfg(test)]
 mod tests {
-    use crate::objects::{Curve, Cycle, Edge, Face, GlobalVertex, Surface};
+    use crate::objects::{
+        Curve, Cycle, Edge, Face, GlobalVertex, Surface, Vertex,
+    };
 
     use super::ObjectIters as _;
 
@@ -552,5 +584,19 @@ mod tests {
         assert_eq!(0, surface.global_vertex_iter().count());
         assert_eq!(1, surface.surface_iter().count());
         assert_eq!(0, surface.vertex_iter().count());
+    }
+
+    #[test]
+    fn vertex() {
+        let global_vertex = GlobalVertex::from_position([0., 0., 0.]);
+        let vertex = Vertex::new([0.], global_vertex);
+
+        assert_eq!(0, vertex.curve_iter().count());
+        assert_eq!(0, vertex.cycle_iter().count());
+        assert_eq!(0, vertex.edge_iter().count());
+        assert_eq!(0, vertex.face_iter().count());
+        assert_eq!(1, vertex.global_vertex_iter().count());
+        assert_eq!(0, vertex.surface_iter().count());
+        assert_eq!(1, vertex.vertex_iter().count());
     }
 }
