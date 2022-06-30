@@ -30,11 +30,11 @@ impl<const N: usize, const C: usize> Point<N, C> {
     /// guarantee that both of them match, i.e. define the same point.
     pub fn new(
         local: impl Into<fj_math::Point<N>>,
-        canonical: impl Into<fj_math::Point<C>>,
+        global: impl Into<fj_math::Point<C>>,
     ) -> Self {
         Self {
             local: local.into(),
-            global: canonical.into(),
+            global: global.into(),
         }
     }
 
