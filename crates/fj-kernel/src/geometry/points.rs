@@ -18,12 +18,12 @@
 /// The `N` parameter defines the dimensionality of the local form, while the
 /// `C` parameter defines the dimensionality of the canonical form.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Point<const D: usize> {
+pub struct LocalPoint<const D: usize> {
     local: fj_math::Point<D>,
     global: fj_math::Point<3>,
 }
 
-impl<const D: usize> Point<D> {
+impl<const D: usize> LocalPoint<D> {
     /// Construct a new instance
     ///
     /// Both the local and the canonical form must be provided. The caller must

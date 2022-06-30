@@ -2,7 +2,7 @@ use crate::{geometry, objects::VerticesOfEdge};
 
 pub fn approx_edge(
     vertices: VerticesOfEdge,
-    points: &mut Vec<geometry::Point<1>>,
+    points: &mut Vec<geometry::LocalPoint<1>>,
 ) {
     // Insert the exact vertices of this edge into the approximation. This means
     // we don't rely on the curve approximation to deliver accurate
@@ -13,7 +13,7 @@ pub fn approx_edge(
     // the same vertex would be understood to refer to very close, but distinct
     // vertices.
     let vertices = vertices.convert(|vertex| {
-        geometry::Point::new(vertex.position(), vertex.global().position())
+        geometry::LocalPoint::new(vertex.position(), vertex.global().position())
     });
     if let Some([a, b]) = vertices {
         points.insert(0, a);
@@ -54,10 +54,10 @@ mod test {
             Vertex::new(Point::from([1.]), v2),
         ]);
 
-        let a = geometry::Point::new([0.0], a);
-        let b = geometry::Point::new([0.25], b);
-        let c = geometry::Point::new([0.75], c);
-        let d = geometry::Point::new([1.0], d);
+        let a = geometry::LocalPoint::new([0.0], a);
+        let b = geometry::LocalPoint::new([0.25], b);
+        let c = geometry::LocalPoint::new([0.75], c);
+        let d = geometry::LocalPoint::new([1.0], d);
 
         // Regular edge
         let mut points = vec![b, c];

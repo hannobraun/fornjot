@@ -11,7 +11,7 @@ pub struct FaceApprox {
     ///
     /// These could be actual vertices from the model, points that approximate
     /// an edge, or points that approximate a face.
-    pub points: HashSet<geometry::Point<3>>,
+    pub points: HashSet<geometry::LocalPoint<3>>,
 
     /// Approximation of the exterior cycle
     pub exterior: CycleApprox,
@@ -118,14 +118,14 @@ mod tests {
         let g = g.to_xyz();
         let h = h.to_xyz();
 
-        let a = geometry::Point::new(a, a);
-        let b = geometry::Point::new(b, b);
-        let c = geometry::Point::new(c, c);
-        let d = geometry::Point::new(d, d);
-        let e = geometry::Point::new(e, e);
-        let f = geometry::Point::new(f, f);
-        let g = geometry::Point::new(g, g);
-        let h = geometry::Point::new(h, h);
+        let a = geometry::LocalPoint::new(a, a);
+        let b = geometry::LocalPoint::new(b, b);
+        let c = geometry::LocalPoint::new(c, c);
+        let d = geometry::LocalPoint::new(d, d);
+        let e = geometry::LocalPoint::new(e, e);
+        let f = geometry::LocalPoint::new(f, f);
+        let g = geometry::LocalPoint::new(g, g);
+        let h = geometry::LocalPoint::new(h, h);
 
         let approx = FaceApprox::new(&face, tolerance);
         let expected = FaceApprox {
