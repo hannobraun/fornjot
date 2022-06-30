@@ -51,7 +51,7 @@ pub fn sweep(
                 }
 
                 create_continuous_side_face(
-                    edge.canonical().clone(),
+                    edge.local().clone(),
                     path,
                     tolerance,
                     color,
@@ -187,7 +187,7 @@ fn create_non_continuous_side_face(
 }
 
 fn create_continuous_side_face(
-    edge: Edge<3>,
+    edge: Edge<2>,
     path: Vector<3>,
     tolerance: Tolerance,
     color: [u8; 4],
@@ -195,7 +195,7 @@ fn create_continuous_side_face(
 ) {
     let translation = Transform::translation(path);
 
-    let cycle = Cycle::new(vec![edge]);
+    let cycle = Cycle::new(vec![edge.to_canonical()]);
     let approx = CycleApprox::new(&cycle, tolerance);
 
     let mut quads = Vec::new();
