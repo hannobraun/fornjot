@@ -59,7 +59,7 @@ impl Cycle {
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn edges(&self) -> impl Iterator<Item = Edge<3>> + '_ {
-        self.edges.iter().map(|handle| handle.canonical().clone())
+    pub fn edges(&self) -> impl Iterator<Item = Edge<2>> + '_ {
+        self.edges.iter().map(|handle| handle.local().clone())
     }
 }

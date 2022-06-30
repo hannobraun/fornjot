@@ -66,7 +66,7 @@ impl ObjectIters for Cycle {
         let mut iter = Iter::empty();
 
         for edge in self.edges() {
-            iter = iter.with(edge.curve_iter());
+            iter = iter.with(edge.to_canonical().curve_iter());
         }
 
         iter
@@ -80,7 +80,7 @@ impl ObjectIters for Cycle {
         let mut iter = Iter::empty();
 
         for edge in self.edges() {
-            iter = iter.with(edge.edge_iter());
+            iter = iter.with(edge.to_canonical().edge_iter());
         }
 
         iter
@@ -90,7 +90,7 @@ impl ObjectIters for Cycle {
         let mut iter = Iter::empty();
 
         for edge in self.edges() {
-            iter = iter.with(edge.face_iter());
+            iter = iter.with(edge.to_canonical().face_iter());
         }
 
         iter
@@ -100,7 +100,7 @@ impl ObjectIters for Cycle {
         let mut iter = Iter::empty();
 
         for edge in self.edges() {
-            iter = iter.with(edge.global_vertex_iter());
+            iter = iter.with(edge.to_canonical().global_vertex_iter());
         }
 
         iter
@@ -110,7 +110,7 @@ impl ObjectIters for Cycle {
         let mut iter = Iter::empty();
 
         for edge in self.edges() {
-            iter = iter.with(edge.surface_iter());
+            iter = iter.with(edge.to_canonical().surface_iter());
         }
 
         iter
@@ -120,7 +120,7 @@ impl ObjectIters for Cycle {
         let mut iter = Iter::empty();
 
         for edge in self.edges() {
-            iter = iter.with(edge.vertex_iter());
+            iter = iter.with(edge.to_canonical().vertex_iter());
         }
 
         iter
