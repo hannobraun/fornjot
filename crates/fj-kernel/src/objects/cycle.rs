@@ -15,6 +15,26 @@ pub struct Cycle<const D: usize> {
     pub edges: Vec<LocalForm<Edge<D>, Edge<3>>>,
 }
 
+impl Cycle<2> {
+    /// Temporary utility method to aid refactoring
+    pub fn to_canonical(&self) -> Cycle<3> {
+        let mut edges = Vec::new();
+
+        for edge in &self.edges {
+            let curve = edge.canonical().curve();
+            let curve = LocalForm::canonical_only(curve);
+
+            let vertices = edge.canonical().vertices.clone();
+
+            let edge = Edge { curve, vertices };
+            let edge = LocalForm::canonical_only(edge);
+            edges.push(edge);
+        }
+
+        Cycle { edges }
+    }
+}
+
 impl Cycle<3> {
     /// Construct a `Cycle`
     pub fn new(edges: impl IntoIterator<Item = Edge<3>>) -> Self {
