@@ -27,7 +27,7 @@ pub struct GlobalVertex {
 impl GlobalVertex {
     /// Construct a `Vertex` from a point
     pub fn from_position(position: impl Into<Point<3>>) -> Self {
-        let point = position.into();
-        Self { position: point }
+        let position = position.into();
+        Self { position }
     }
 }
