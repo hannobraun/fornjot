@@ -75,34 +75,8 @@ pub fn transform_cycles(
                 LocalForm::new(edge_local, edge_canonical)
             })
             .collect();
-        let edges_canonical = cycle
-            .to_canonical()
-            .edges
-            .iter()
-            .map(|edge| {
-                let edge = edge.canonical();
 
-                let curve = {
-                    let curve = edge.curve().transform(transform);
-                    LocalForm::canonical_only(curve)
-                };
-                let vertices = edge
-                    .vertices
-                    .clone()
-                    .map(|vertex| transform_vertex(&vertex, transform));
-
-                let edge = Edge { curve, vertices };
-                LocalForm::canonical_only(edge)
-            })
-            .collect();
-
-        let cycle_local = Cycle { edges: edges_local };
-
-        let cycle_canonical = Cycle {
-            edges: edges_canonical,
-        };
-
-        LocalForm::new(cycle_local, cycle_canonical)
+        Cycle { edges: edges_local }
     });
 
     CyclesInFace::new(cycles)

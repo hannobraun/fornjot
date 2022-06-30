@@ -31,6 +31,11 @@ impl Face {
         interiors: impl IntoIterator<Item = LocalForm<Cycle<2>, Cycle<3>>>,
         color: [u8; 4],
     ) -> Self {
+        let exteriors =
+            exteriors.into_iter().map(|cycle| cycle.local().clone());
+        let interiors =
+            interiors.into_iter().map(|cycle| cycle.local().clone());
+
         let exteriors = CyclesInFace::new(exteriors);
         let interiors = CyclesInFace::new(interiors);
 
@@ -171,15 +176,8 @@ pub struct CyclesInFace(Vec<Cycle<2>>);
 
 impl CyclesInFace {
     /// Create a new instance of `CyclesInFace`
-    pub fn new(
-        cycles: impl IntoIterator<Item = LocalForm<Cycle<2>, Cycle<3>>>,
-    ) -> Self {
-        Self(
-            cycles
-                .into_iter()
-                .map(|cycle| cycle.local().clone())
-                .collect(),
-        )
+    pub fn new(cycles: impl IntoIterator<Item = Cycle<2>>) -> Self {
+        Self(cycles.into_iter().collect())
     }
 
     /// Access an iterator over the canonical forms of the cycles
