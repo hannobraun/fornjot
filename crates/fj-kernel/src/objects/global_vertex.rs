@@ -19,15 +19,19 @@ use fj_math::Point;
 /// between distinct vertices can be configured using
 /// [`Shape::with_minimum_distance`].
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Vertex {
-    /// The point that defines the location of the vertex
-    pub point: Point<3>,
+pub struct GlobalVertex {
+    position: Point<3>,
 }
 
-impl Vertex {
+impl GlobalVertex {
     /// Construct a `Vertex` from a point
-    pub fn from_point(point: impl Into<Point<3>>) -> Self {
-        let point = point.into();
-        Self { point }
+    pub fn from_position(position: impl Into<Point<3>>) -> Self {
+        let position = position.into();
+        Self { position }
+    }
+
+    /// The position of the vertex
+    pub fn position(&self) -> Point<3> {
+        self.position
     }
 }

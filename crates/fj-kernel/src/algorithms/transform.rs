@@ -1,7 +1,7 @@
 use fj_math::Transform;
 
 use crate::{
-    objects::{Cycle, CyclesInFace, Edge, Face, FaceBRep, Vertex},
+    objects::{Cycle, CyclesInFace, Edge, Face, FaceBRep, GlobalVertex},
     shape::LocalForm,
 };
 
@@ -58,11 +58,11 @@ pub fn transform_cycles(
 
                 let vertices =
                     edge.canonical().clone().vertices.map(|vertex| {
-                        let point = vertex.canonical().point;
-                        let point = transform.transform_point(&point);
+                        let position = vertex.canonical().position();
+                        let position = transform.transform_point(&position);
 
                         let local = *vertex.local();
-                        let canonical = Vertex { point };
+                        let canonical = GlobalVertex::from_position(position);
 
                         LocalForm::new(local, canonical)
                     });
@@ -91,11 +91,11 @@ pub fn transform_cycles(
                     LocalForm::canonical_only(curve)
                 };
                 let vertices = edge.vertices.clone().map(|vertex| {
-                    let point = vertex.canonical().point;
-                    let point = transform.transform_point(&point);
+                    let position = vertex.canonical().position();
+                    let position = transform.transform_point(&position);
 
                     let local = *vertex.local();
-                    let canonical = Vertex { point };
+                    let canonical = GlobalVertex::from_position(position);
 
                     LocalForm::new(local, canonical)
                 });

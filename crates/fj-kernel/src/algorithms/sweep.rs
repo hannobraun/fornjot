@@ -2,7 +2,9 @@ use fj_math::{Point, Scalar, Transform, Triangle, Vector};
 
 use crate::{
     iter::ObjectIters,
-    objects::{Curve, Cycle, Edge, Face, Surface, Vertex, VerticesOfEdge},
+    objects::{
+        Curve, Cycle, Edge, Face, GlobalVertex, Surface, VerticesOfEdge,
+    },
     shape::LocalForm,
 };
 
@@ -87,14 +89,14 @@ fn create_top_face(
 fn create_non_continuous_side_face(
     path: Vector<3>,
     is_sweep_along_negative_direction: bool,
-    vertices_bottom: [Vertex; 2],
+    vertices_bottom: [GlobalVertex; 2],
     color: [u8; 4],
     target: &mut Vec<Face>,
 ) {
     let vertices = {
         let vertices_top = vertices_bottom.map(|vertex| {
-            let point = vertex.point + path;
-            Vertex { point }
+            let position = vertex.position() + path;
+            GlobalVertex::from_position(position)
         });
 
         let [[a, b], [c, d]] = [vertices_bottom, vertices_top];
@@ -107,7 +109,7 @@ fn create_non_continuous_side_face(
     };
 
     let surface = {
-        let [a, b, _, c] = vertices.map(|vertex| vertex.point);
+        let [a, b, _, c] = vertices.map(|vertex| vertex.position());
         Surface::plane_from_points([a, b, c])
     };
 
@@ -131,7 +133,7 @@ fn create_non_continuous_side_face(
             let curve = {
                 let local = Curve::line_from_points([a.0, b.0]);
 
-                let global = [a, b].map(|vertex| vertex.1.point);
+                let global = [a, b].map(|vertex| vertex.1.position());
                 let global = Curve::line_from_points(global);
 
                 LocalForm::new(local, global)

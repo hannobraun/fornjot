@@ -141,7 +141,7 @@ mod tests {
     use fj_math::{Point, Scalar};
 
     use crate::{
-        objects::{Curve, Edge, Vertex, VerticesOfEdge},
+        objects::{Curve, Edge, GlobalVertex, VerticesOfEdge},
         shape::LocalForm,
         validation::{validate, ValidationConfig, ValidationError},
     };
@@ -156,8 +156,8 @@ mod tests {
             LocalForm::canonical_only(curve)
         };
 
-        let a = Vertex { point: a };
-        let b = Vertex { point: b };
+        let a = GlobalVertex::from_position(a);
+        let b = GlobalVertex::from_position(b);
 
         let deviation = Scalar::from_f64(0.25);
 
@@ -203,11 +203,11 @@ mod tests {
         };
 
         // Adding a vertex should work.
-        shape.push(Vertex { point: a });
+        shape.push(GlobalVertex::from_position(a));
         validate(shape.clone(), &config)?;
 
         // Adding a second vertex that is considered identical should fail.
-        shape.push(Vertex { point: b });
+        shape.push(GlobalVertex::from_position(b));
         let result = validate(shape, &config);
         assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
 

@@ -13,7 +13,7 @@ pub fn approx_edge(
     // the same vertex would be understood to refer to very close, but distinct
     // vertices.
     let vertices = vertices.convert(|vertex| {
-        geometry::Point::new(*vertex.local(), vertex.canonical().point)
+        geometry::Point::new(*vertex.local(), vertex.canonical().position())
     });
     if let Some([a, b]) = vertices {
         points.insert(0, a);
@@ -36,7 +36,7 @@ mod test {
 
     use crate::{
         geometry,
-        objects::{Vertex, VerticesOfEdge},
+        objects::{GlobalVertex, VerticesOfEdge},
         shape::LocalForm,
     };
 
@@ -47,8 +47,8 @@ mod test {
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = Vertex::from_point(a);
-        let v2 = Vertex::from_point(d);
+        let v1 = GlobalVertex::from_position(a);
+        let v2 = GlobalVertex::from_position(d);
 
         let vertices = VerticesOfEdge::from_vertices([
             LocalForm::new(Point::from([0.]), v1),
