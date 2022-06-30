@@ -49,7 +49,7 @@ where
 {
     let mut vertices = HashSet::new();
 
-    for vertex in object.vertex_iter() {
+    for vertex in object.global_vertex_iter() {
         uniqueness::validate_vertex(
             &vertex,
             &vertices,
