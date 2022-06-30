@@ -48,9 +48,8 @@ pub fn transform_cycles(
     cycles: &CyclesInFace,
     transform: &Transform,
 ) -> CyclesInFace {
-    let cycles = cycles.as_local_form().map(|cycle| {
+    let cycles = cycles.as_local().map(|cycle| {
         let edges_local = cycle
-            .local()
             .edges
             .iter()
             .map(|edge| {
@@ -77,7 +76,7 @@ pub fn transform_cycles(
             })
             .collect();
         let edges_canonical = cycle
-            .canonical()
+            .to_canonical()
             .edges
             .iter()
             .map(|edge| {
