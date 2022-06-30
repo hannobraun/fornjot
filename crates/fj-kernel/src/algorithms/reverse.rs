@@ -1,5 +1,7 @@
+use fj_math::{Circle, Line, Point, Vector};
+
 use crate::{
-    objects::{Cycle, CyclesInFace, Edge, Face},
+    objects::{Curve, Cycle, CyclesInFace, Edge, Face},
     shape::LocalForm,
 };
 
@@ -33,16 +35,24 @@ fn reverse_local_coordinates_in_cycle(cycles: &CyclesInFace) -> CyclesInFace {
             .iter()
             .map(|edge| {
                 let curve = {
-                    // This is wrong. We have reversed the direction of the
-                    // surface, thereby modifying its coordinate system. So we
-                    // can't just use the local form of the curve, which is
-                    // expressed in surface coordinates, as-is.
-                    //
-                    // This is a coherence issue, but since coherence validation
-                    // is not complete, and the whole local form stuff is still
-                    // a work in progress, this doesn't lead to any observable
-                    // bugs.
-                    let local = *edge.local().curve.local();
+                    let local = match *edge.local().curve.local() {
+                        Curve::Circle(Circle { center, a, b }) => {
+                            let center = Point::from([center.u, -center.v]);
+
+                            let a = Vector::from([a.u, -a.v]);
+                            let b = Vector::from([b.u, -b.v]);
+
+                            Curve::Circle(Circle { center, a, b })
+                        }
+                        Curve::Line(Line { origin, direction }) => {
+                            let origin = Point::from([origin.u, -origin.v]);
+                            let direction =
+                                Vector::from([direction.u, -direction.v]);
+
+                            Curve::Line(Line { origin, direction })
+                        }
+                    };
+
                     let canonical = *edge.local().curve.canonical();
                     LocalForm::new(local, canonical)
                 };
