@@ -47,11 +47,11 @@ impl ToShape for fj::Difference2d {
                     "Trying to subtract faces with different surfaces.",
                 );
 
-                for cycle in face.exteriors.as_local_form().cloned() {
+                for cycle in face.exteriors.as_local() {
                     let cycle = add_cycle(cycle, false);
                     exteriors.push(cycle);
                 }
-                for cycle in face.interiors.as_local_form().cloned() {
+                for cycle in face.interiors.as_local() {
                     let cycle = add_cycle(cycle, true);
                     interiors.push(cycle);
                 }
@@ -66,7 +66,7 @@ impl ToShape for fj::Difference2d {
                     "Trying to subtract faces with different surfaces.",
                 );
 
-                for cycle in face.exteriors.as_local_form().cloned() {
+                for cycle in face.exteriors.as_local() {
                     let cycle = add_cycle(cycle, true);
                     interiors.push(cycle);
                 }
@@ -91,12 +91,9 @@ impl ToShape for fj::Difference2d {
     }
 }
 
-fn add_cycle(
-    cycle: LocalForm<Cycle<2>, Cycle<3>>,
-    reverse: bool,
-) -> LocalForm<Cycle<2>, Cycle<3>> {
+fn add_cycle(cycle: Cycle<2>, reverse: bool) -> LocalForm<Cycle<2>, Cycle<3>> {
     let mut edges = Vec::new();
-    for edge in cycle.local().edges.clone() {
+    for edge in cycle.edges {
         let curve_local = *edge.local().curve.local();
         let curve_local = if reverse {
             curve_local.reverse()
