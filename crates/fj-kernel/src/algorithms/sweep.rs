@@ -36,21 +36,29 @@ pub fn sweep(
             is_sweep_along_negative_direction,
             &mut target,
         );
-    }
 
-    for edge in source.edge_iter() {
-        if let Some(vertices) = edge.vertices() {
-            create_non_continuous_side_face(
-                path,
-                is_sweep_along_negative_direction,
-                vertices.map(|vertex| vertex.global()),
-                color,
-                &mut target,
-            );
-            continue;
+        for cycle in face.all_cycles() {
+            for edge in cycle.edges {
+                if let Some(vertices) = edge.canonical().vertices() {
+                    create_non_continuous_side_face(
+                        path,
+                        is_sweep_along_negative_direction,
+                        vertices.map(|vertex| vertex.global()),
+                        color,
+                        &mut target,
+                    );
+                    continue;
+                }
+
+                create_continuous_side_face(
+                    edge.canonical().clone(),
+                    path,
+                    tolerance,
+                    color,
+                    &mut target,
+                );
+            }
         }
-
-        create_continuous_side_face(edge, path, tolerance, color, &mut target);
     }
 
     target
