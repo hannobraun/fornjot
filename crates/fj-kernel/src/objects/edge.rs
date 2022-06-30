@@ -43,7 +43,7 @@ impl<const D: usize> Edge<D> {
 
 impl Edge<2> {
     /// Create a circle from the given radius
-    pub fn circle_from_radius(radius: Scalar) -> Edge<2> {
+    pub fn circle_from_radius(radius: Scalar) -> Self {
         let curve_local = Curve::Circle(Circle {
             center: Point::origin(),
             a: Vector::from([radius, Scalar::ZERO]),
