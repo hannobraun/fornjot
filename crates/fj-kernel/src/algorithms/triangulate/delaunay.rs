@@ -28,7 +28,7 @@ pub fn triangulate(points: Vec<LocalPoint<2>>) -> Vec<[LocalPoint<2>; 3]> {
     triangles
 }
 
-// Enables the use of `geometry::Point` in the triangulation.
+// Enables the use of `LocalPoint` in the triangulation.
 impl HasPosition for LocalPoint<2> {
     type Scalar = Scalar;
 
