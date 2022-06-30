@@ -1,6 +1,6 @@
 use fj_math::Segment;
 
-use crate::{geometry, objects::Cycle};
+use crate::{geometry::LocalPoint, objects::Cycle};
 
 use super::{curves::approx_curve, edges::approx_edge, Tolerance};
 
@@ -8,7 +8,7 @@ use super::{curves::approx_curve, edges::approx_edge, Tolerance};
 #[derive(Debug, Eq, PartialEq, Hash)]
 pub struct CycleApprox {
     /// The points that approximate the cycle
-    pub points: Vec<geometry::LocalPoint<3>>,
+    pub points: Vec<LocalPoint<3>>,
 }
 
 impl CycleApprox {
@@ -29,9 +29,7 @@ impl CycleApprox {
 
         let mut points: Vec<_> = points
             .into_iter()
-            .map(|point| {
-                geometry::LocalPoint::new(point.global(), point.global())
-            })
+            .map(|point| LocalPoint::new(point.global(), point.global()))
             .collect();
 
         points.dedup();

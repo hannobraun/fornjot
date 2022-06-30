@@ -1,9 +1,6 @@
-use crate::{geometry, objects::VerticesOfEdge};
+use crate::{geometry::LocalPoint, objects::VerticesOfEdge};
 
-pub fn approx_edge(
-    vertices: VerticesOfEdge,
-    points: &mut Vec<geometry::LocalPoint<1>>,
-) {
+pub fn approx_edge(vertices: VerticesOfEdge, points: &mut Vec<LocalPoint<1>>) {
     // Insert the exact vertices of this edge into the approximation. This means
     // we don't rely on the curve approximation to deliver accurate
     // representations of these vertices, which they might not be able to do.
@@ -13,7 +10,7 @@ pub fn approx_edge(
     // the same vertex would be understood to refer to very close, but distinct
     // vertices.
     let vertices = vertices.convert(|vertex| {
-        geometry::LocalPoint::new(vertex.position(), vertex.global().position())
+        LocalPoint::new(vertex.position(), vertex.global().position())
     });
     if let Some([a, b]) = vertices {
         points.insert(0, a);
@@ -35,7 +32,7 @@ mod test {
     use fj_math::Point;
 
     use crate::{
-        geometry,
+        geometry::LocalPoint,
         objects::{GlobalVertex, Vertex, VerticesOfEdge},
     };
 
@@ -54,10 +51,10 @@ mod test {
             Vertex::new(Point::from([1.]), v2),
         ]);
 
-        let a = geometry::LocalPoint::new([0.0], a);
-        let b = geometry::LocalPoint::new([0.25], b);
-        let c = geometry::LocalPoint::new([0.75], c);
-        let d = geometry::LocalPoint::new([1.0], d);
+        let a = LocalPoint::new([0.0], a);
+        let b = LocalPoint::new([0.25], b);
+        let c = LocalPoint::new([0.75], c);
+        let d = LocalPoint::new([1.0], d);
 
         // Regular edge
         let mut points = vec![b, c];

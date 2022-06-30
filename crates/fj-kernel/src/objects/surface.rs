@@ -1,6 +1,6 @@
 use fj_math::{Line, Point, Transform, Vector};
 
-use crate::geometry;
+use crate::geometry::LocalPoint;
 
 use super::Curve;
 
@@ -68,7 +68,7 @@ impl Surface {
     pub fn point_to_surface_coords(
         &self,
         point_3d: impl Into<Point<3>>,
-    ) -> geometry::LocalPoint<2> {
+    ) -> LocalPoint<2> {
         let point_3d = point_3d.into();
 
         let point_2d = match self {
@@ -77,7 +77,7 @@ impl Surface {
             }
         };
 
-        geometry::LocalPoint::new(point_2d, point_3d)
+        LocalPoint::new(point_2d, point_3d)
     }
 
     /// Convert a point in surface coordinates to model coordinates
