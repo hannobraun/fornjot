@@ -49,7 +49,7 @@ pub fn transform_cycles(
     transform: &Transform,
 ) -> CyclesInFace {
     let cycles = cycles.as_local().map(|cycle| {
-        let edges_local = cycle
+        let edges = cycle
             .edges
             .iter()
             .map(|edge| {
@@ -76,7 +76,7 @@ pub fn transform_cycles(
             })
             .collect();
 
-        Cycle { edges: edges_local }
+        Cycle { edges }
     });
 
     CyclesInFace::new(cycles)
