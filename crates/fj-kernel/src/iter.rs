@@ -13,7 +13,7 @@ pub trait ObjectIters {
     fn curve_iter(&self) -> Iter<Curve<3>>;
 
     /// Iterate over all cycles
-    fn cycle_iter(&self) -> Iter<Cycle<3>>;
+    fn cycle_iter(&self) -> Iter<Cycle>;
 
     /// Iterate over all edges
     fn edge_iter(&self) -> Iter<Edge<3>>;
@@ -36,7 +36,7 @@ impl ObjectIters for Curve<3> {
         Iter::from_object(*self)
     }
 
-    fn cycle_iter(&self) -> Iter<Cycle<3>> {
+    fn cycle_iter(&self) -> Iter<Cycle> {
         Iter::empty()
     }
 
@@ -61,7 +61,7 @@ impl ObjectIters for Curve<3> {
     }
 }
 
-impl ObjectIters for Cycle<3> {
+impl ObjectIters for Cycle {
     fn curve_iter(&self) -> Iter<Curve<3>> {
         let mut iter = Iter::empty();
 
@@ -72,7 +72,7 @@ impl ObjectIters for Cycle<3> {
         iter
     }
 
-    fn cycle_iter(&self) -> Iter<Cycle<3>> {
+    fn cycle_iter(&self) -> Iter<Cycle> {
         Iter::from_object(self.clone())
     }
 
@@ -138,7 +138,7 @@ impl ObjectIters for Edge<3> {
         iter
     }
 
-    fn cycle_iter(&self) -> Iter<Cycle<3>> {
+    fn cycle_iter(&self) -> Iter<Cycle> {
         let mut iter = Iter::empty().with(self.curve().cycle_iter());
 
         for vertex in self.vertices().into_iter().flatten() {
@@ -199,7 +199,7 @@ impl ObjectIters for Face {
             let mut iter = Iter::empty().with(face.surface().curve_iter());
 
             for cycle in face.all_cycles() {
-                iter = iter.with(cycle.to_canonical().curve_iter());
+                iter = iter.with(cycle.curve_iter());
             }
 
             return iter;
@@ -208,12 +208,12 @@ impl ObjectIters for Face {
         Iter::empty()
     }
 
-    fn cycle_iter(&self) -> Iter<Cycle<3>> {
+    fn cycle_iter(&self) -> Iter<Cycle> {
         if let Face::Face(face) = self {
             let mut iter = Iter::empty().with(face.surface().cycle_iter());
 
             for cycle in face.all_cycles() {
-                iter = iter.with(cycle.to_canonical().cycle_iter());
+                iter = iter.with(cycle.cycle_iter());
             }
 
             return iter;
@@ -227,7 +227,7 @@ impl ObjectIters for Face {
             let mut iter = Iter::empty().with(face.surface().edge_iter());
 
             for cycle in face.all_cycles() {
-                iter = iter.with(cycle.to_canonical().edge_iter());
+                iter = iter.with(cycle.edge_iter());
             }
 
             return iter;
@@ -246,7 +246,7 @@ impl ObjectIters for Face {
                 Iter::empty().with(face.surface().global_vertex_iter());
 
             for cycle in face.all_cycles() {
-                iter = iter.with(cycle.to_canonical().global_vertex_iter());
+                iter = iter.with(cycle.global_vertex_iter());
             }
 
             return iter;
@@ -260,7 +260,7 @@ impl ObjectIters for Face {
             let mut iter = Iter::empty().with(face.surface().surface_iter());
 
             for cycle in face.all_cycles() {
-                iter = iter.with(cycle.to_canonical().surface_iter());
+                iter = iter.with(cycle.surface_iter());
             }
 
             return iter;
@@ -274,7 +274,7 @@ impl ObjectIters for Face {
             let mut iter = Iter::empty().with(face.surface().vertex_iter());
 
             for cycle in face.all_cycles() {
-                iter = iter.with(cycle.to_canonical().vertex_iter());
+                iter = iter.with(cycle.vertex_iter());
             }
 
             return iter;
@@ -289,7 +289,7 @@ impl ObjectIters for GlobalVertex {
         Iter::empty()
     }
 
-    fn cycle_iter(&self) -> Iter<Cycle<3>> {
+    fn cycle_iter(&self) -> Iter<Cycle> {
         Iter::empty()
     }
 
@@ -319,7 +319,7 @@ impl ObjectIters for Surface {
         Iter::empty()
     }
 
-    fn cycle_iter(&self) -> Iter<Cycle<3>> {
+    fn cycle_iter(&self) -> Iter<Cycle> {
         Iter::empty()
     }
 
@@ -349,7 +349,7 @@ impl ObjectIters for Vertex {
         Iter::empty()
     }
 
-    fn cycle_iter(&self) -> Iter<Cycle<3>> {
+    fn cycle_iter(&self) -> Iter<Cycle> {
         Iter::empty()
     }
 
@@ -394,7 +394,7 @@ where
         iter
     }
 
-    fn cycle_iter(&self) -> Iter<Cycle<3>> {
+    fn cycle_iter(&self) -> Iter<Cycle> {
         let mut iter = Iter::empty();
 
         for object in self.into_iter() {
@@ -519,8 +519,7 @@ mod tests {
         let cycle = Cycle::polygon_from_points(
             &Surface::xy_plane(),
             [[0., 0.], [1., 0.], [0., 1.]],
-        )
-        .to_canonical();
+        );
 
         assert_eq!(3, cycle.curve_iter().count());
         assert_eq!(1, cycle.cycle_iter().count());

@@ -27,8 +27,8 @@ impl Face {
     /// Construct a new instance of `Face`
     pub fn new(
         surface: Surface,
-        exteriors: impl IntoIterator<Item = Cycle<2>>,
-        interiors: impl IntoIterator<Item = Cycle<2>>,
+        exteriors: impl IntoIterator<Item = Cycle>,
+        interiors: impl IntoIterator<Item = Cycle>,
         color: [u8; 4],
     ) -> Self {
         let exteriors = CyclesInFace::new(exteriors);
@@ -70,7 +70,7 @@ impl Face {
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn exteriors(&self) -> impl Iterator<Item = Cycle<2>> + '_ {
+    pub fn exteriors(&self) -> impl Iterator<Item = Cycle> + '_ {
         self.brep().exteriors()
     }
 
@@ -78,7 +78,7 @@ impl Face {
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn interiors(&self) -> impl Iterator<Item = Cycle<2>> + '_ {
+    pub fn interiors(&self) -> impl Iterator<Item = Cycle> + '_ {
         self.brep().interiors()
     }
 
@@ -86,7 +86,7 @@ impl Face {
     ///
     /// This is equivalent to chaining the iterators returned by
     /// [`Face::exteriors`] and [`Face::interiors`].
-    pub fn all_cycles(&self) -> impl Iterator<Item = Cycle<2>> + '_ {
+    pub fn all_cycles(&self) -> impl Iterator<Item = Cycle> + '_ {
         self.exteriors().chain(self.interiors())
     }
 
@@ -144,7 +144,7 @@ impl FaceBRep {
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn exteriors(&self) -> impl Iterator<Item = Cycle<2>> + '_ {
+    pub fn exteriors(&self) -> impl Iterator<Item = Cycle> + '_ {
         self.exteriors.as_local()
     }
 
@@ -152,7 +152,7 @@ impl FaceBRep {
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn interiors(&self) -> impl Iterator<Item = Cycle<2>> + '_ {
+    pub fn interiors(&self) -> impl Iterator<Item = Cycle> + '_ {
         self.interiors.as_local()
     }
 
@@ -160,23 +160,23 @@ impl FaceBRep {
     ///
     /// This is equivalent to chaining the iterators returned by
     /// [`Face::exteriors`] and [`Face::interiors`].
-    pub fn all_cycles(&self) -> impl Iterator<Item = Cycle<2>> + '_ {
+    pub fn all_cycles(&self) -> impl Iterator<Item = Cycle> + '_ {
         self.exteriors().chain(self.interiors())
     }
 }
 
 /// A list of cycles, as they are stored in `Face`
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct CyclesInFace(Vec<Cycle<2>>);
+pub struct CyclesInFace(Vec<Cycle>);
 
 impl CyclesInFace {
     /// Create a new instance of `CyclesInFace`
-    pub fn new(cycles: impl IntoIterator<Item = Cycle<2>>) -> Self {
+    pub fn new(cycles: impl IntoIterator<Item = Cycle>) -> Self {
         Self(cycles.into_iter().collect())
     }
 
     /// Access an iterator over the canonical forms of the cycles
-    pub fn as_local(&self) -> impl Iterator<Item = Cycle<2>> + '_ {
+    pub fn as_local(&self) -> impl Iterator<Item = Cycle> + '_ {
         self.0.iter().cloned()
     }
 }
