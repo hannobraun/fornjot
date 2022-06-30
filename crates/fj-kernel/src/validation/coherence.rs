@@ -10,9 +10,9 @@ pub fn validate_edge(
 ) -> Result<(), CoherenceIssues> {
     let max_distance = max_distance.into();
 
-    // Validate that the local and canonical forms of the vertices match. As a
-    // side effect, this also happens to validate that the canonical forms of
-    // the vertices lie on the curve.
+    // Validate that the local and global forms of the vertices match. As a side
+    // effect, this also happens to validate that the global forms of the
+    // vertices lie on the curve.
 
     let mut edge_vertex_mismatches = Vec::new();
 
