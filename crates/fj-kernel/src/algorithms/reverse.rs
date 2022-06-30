@@ -24,14 +24,14 @@ pub fn reverse_face(face: &Face) -> Face {
 
 fn reverse_local_coordinates_in_cycle(
     cycles: &CyclesInFace,
-) -> impl Iterator<Item = Cycle<2>> + '_ {
+) -> impl Iterator<Item = Cycle> + '_ {
     let cycles = cycles.as_local().map(|cycle| {
         let edges = cycle
             .edges
             .iter()
             .map(|edge| {
                 let curve = {
-                    let local = match *edge.local().curve.local() {
+                    let local = match *edge.curve.local() {
                         Curve::Circle(Circle { center, a, b }) => {
                             let center = Point::from([center.u, -center.v]);
 
@@ -49,12 +49,12 @@ fn reverse_local_coordinates_in_cycle(
                         }
                     };
 
-                    let canonical = *edge.local().curve.canonical();
+                    let canonical = *edge.curve.canonical();
                     LocalForm::new(local, canonical)
                 };
-                let vertices = edge.local().vertices.clone();
-                let local = Edge { curve, vertices };
-                LocalForm::new(local, edge.canonical().clone())
+                let vertices = edge.vertices.clone();
+
+                Edge { curve, vertices }
             })
             .collect();
 

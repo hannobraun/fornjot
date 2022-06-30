@@ -10,39 +10,17 @@ use super::{Curve, Edge, Surface};
 /// edge. The end of the last edge must connect to the beginning of the first
 /// one.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Cycle<const D: usize> {
+pub struct Cycle {
     /// The edges that make up the cycle
-    pub edges: Vec<LocalForm<Edge<D>, Edge<3>>>,
+    pub edges: Vec<Edge<2>>,
 }
 
-impl Cycle<2> {
-    /// Temporary utility method to aid refactoring
-    pub fn to_canonical(&self) -> Cycle<3> {
-        let mut edges = Vec::new();
-
-        for edge in &self.edges {
-            let edge = edge.local().to_canonical();
-            let edge = LocalForm::canonical_only(edge);
-            edges.push(edge);
-        }
-
-        Cycle { edges }
-    }
-}
-
-impl Cycle<3> {
-    /// Construct a `Cycle`
-    pub fn new(edges: impl IntoIterator<Item = Edge<3>>) -> Self {
-        let edges = edges.into_iter().map(LocalForm::canonical_only).collect();
-
-        Self { edges }
-    }
-
+impl Cycle {
     /// Create a polygon from a list of points
     pub fn polygon_from_points(
         surface: &Surface,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Cycle<2> {
+    ) -> Cycle {
         let mut points: Vec<_> = points.into_iter().map(Into::into).collect();
 
         // A polygon is closed, so we need to add the first point at the end
@@ -71,7 +49,7 @@ impl Cycle<3> {
                 vertices: edge_canonical.vertices.clone(),
             };
 
-            edges.push(LocalForm::new(edge_local, edge_canonical));
+            edges.push(edge_local);
         }
 
         Cycle { edges }
@@ -81,7 +59,7 @@ impl Cycle<3> {
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn edges(&self) -> impl Iterator<Item = Edge<3>> + '_ {
-        self.edges.iter().map(|handle| handle.canonical().clone())
+    pub fn edges(&self) -> impl Iterator<Item = Edge<2>> + '_ {
+        self.edges.iter().cloned()
     }
 }

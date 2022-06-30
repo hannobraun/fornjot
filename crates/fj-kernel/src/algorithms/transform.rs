@@ -53,26 +53,18 @@ pub fn transform_cycles(
             .edges
             .iter()
             .map(|edge| {
-                let curve_local = *edge.local().curve.local();
-                let curve_canonical =
-                    edge.canonical().curve().transform(transform);
+                let curve_local = *edge.curve.local();
+                let curve_canonical = edge.curve().transform(transform);
 
                 let vertices = edge
-                    .canonical()
                     .clone()
                     .vertices
                     .map(|vertex| transform_vertex(&vertex, transform));
 
-                let edge_local = Edge {
+                Edge {
                     curve: LocalForm::new(curve_local, curve_canonical),
-                    vertices: vertices.clone(),
-                };
-                let edge_canonical = Edge {
-                    curve: LocalForm::canonical_only(curve_canonical),
                     vertices,
-                };
-
-                LocalForm::new(edge_local, edge_canonical)
+                }
             })
             .collect();
 

@@ -91,17 +91,17 @@ impl ToShape for fj::Difference2d {
     }
 }
 
-fn add_cycle(cycle: Cycle<2>, reverse: bool) -> Cycle<2> {
+fn add_cycle(cycle: Cycle, reverse: bool) -> Cycle {
     let mut edges = Vec::new();
     for edge in cycle.edges {
-        let curve_local = *edge.local().curve.local();
+        let curve_local = *edge.curve.local();
         let curve_local = if reverse {
             curve_local.reverse()
         } else {
             curve_local
         };
 
-        let curve_canonical = edge.canonical().curve();
+        let curve_canonical = edge.curve();
         let curve_canonical = if reverse {
             curve_canonical.reverse()
         } else {
@@ -109,28 +109,22 @@ fn add_cycle(cycle: Cycle<2>, reverse: bool) -> Cycle<2> {
         };
 
         let vertices = if reverse {
-            edge.local().vertices.clone().reverse()
+            edge.vertices.clone().reverse()
         } else {
-            edge.local().vertices.clone()
+            edge.vertices.clone()
         };
 
-        let edge_local = Edge {
+        let edge = Edge {
             curve: LocalForm::new(curve_local, curve_canonical),
             vertices: vertices.clone(),
         };
-        let edge_canonical = Edge {
-            curve: LocalForm::canonical_only(curve_canonical),
-            vertices,
-        };
 
-        edges.push(LocalForm::new(edge_local, edge_canonical));
+        edges.push(edge);
     }
 
     if reverse {
         edges.reverse();
     }
 
-    Cycle {
-        edges: edges.clone(),
-    }
+    Cycle { edges }
 }

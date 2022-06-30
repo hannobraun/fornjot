@@ -39,7 +39,7 @@ pub fn sweep(
 
         for cycle in face.all_cycles() {
             for edge in cycle.edges {
-                if let Some(vertices) = edge.canonical().vertices() {
+                if let Some(vertices) = edge.vertices() {
                     create_non_continuous_side_face(
                         path,
                         is_sweep_along_negative_direction,
@@ -51,7 +51,7 @@ pub fn sweep(
                 }
 
                 create_continuous_side_face(
-                    edge.local().clone(),
+                    edge.clone(),
                     path,
                     tolerance,
                     color,
@@ -152,18 +152,9 @@ fn create_non_continuous_side_face(
                 Vertex::new(Point::from([1.]), b.1),
             ]);
 
-            let edge = {
-                let local = Edge {
-                    curve: curve.clone(),
-                    vertices: vertices.clone(),
-                };
-
-                let global = Edge {
-                    curve: LocalForm::canonical_only(*curve.canonical()),
-                    vertices,
-                };
-
-                LocalForm::new(local, global)
+            let edge = Edge {
+                curve: curve.clone(),
+                vertices: vertices.clone(),
             };
 
             edges.push(edge);
@@ -185,7 +176,6 @@ fn create_continuous_side_face(
 ) {
     let translation = Transform::translation(path);
 
-    let edge = LocalForm::new(edge.clone(), edge.to_canonical());
     let cycle = Cycle { edges: vec![edge] };
     let approx = CycleApprox::new(&cycle, tolerance);
 
