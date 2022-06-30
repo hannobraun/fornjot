@@ -47,7 +47,7 @@ pub fn validate_edge(
 /// [`ValidationError`]: super::ValidationError
 #[derive(Debug, Default, thiserror::Error)]
 pub struct CoherenceIssues {
-    /// Mismatches between the local and canonical forms of edge vertices
+    /// Mismatches between the local and global forms of edge vertices
     pub edge_vertex_mismatches: Vec<CoherenceMismatch<Point<1>, Point<3>>>,
 }
 
@@ -67,7 +67,7 @@ impl fmt::Display for CoherenceIssues {
     }
 }
 
-/// A mismatch between the local and canonical forms of an object
+/// A mismatch between the local and global forms of an object
 ///
 /// Used in [`CoherenceIssues`].
 #[derive(Debug)]
@@ -75,10 +75,10 @@ pub struct CoherenceMismatch<Local, Global> {
     /// The local form of the object
     pub local: Local,
 
-    /// The local form of the object, converted into the canonical form
+    /// The local form of the object, converted into the global form
     pub local_as_global: Global,
 
-    /// The canonical form of the object
+    /// The global form of the object
     pub global: Global,
 }
 
