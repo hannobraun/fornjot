@@ -467,14 +467,14 @@ mod tests {
 
     #[test]
     fn global_vertex() {
-        let vertex = GlobalVertex::from_position([0., 0., 0.]);
+        let global_vertex = GlobalVertex::from_position([0., 0., 0.]);
 
-        assert_eq!(0, vertex.curve_iter().count());
-        assert_eq!(0, vertex.cycle_iter().count());
-        assert_eq!(0, vertex.edge_iter().count());
-        assert_eq!(0, vertex.face_iter().count());
-        assert_eq!(1, vertex.global_vertex_iter().count());
-        assert_eq!(0, vertex.surface_iter().count());
+        assert_eq!(0, global_vertex.curve_iter().count());
+        assert_eq!(0, global_vertex.cycle_iter().count());
+        assert_eq!(0, global_vertex.edge_iter().count());
+        assert_eq!(0, global_vertex.face_iter().count());
+        assert_eq!(1, global_vertex.global_vertex_iter().count());
+        assert_eq!(0, global_vertex.surface_iter().count());
     }
 
     #[test]
