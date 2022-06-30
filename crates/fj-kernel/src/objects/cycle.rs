@@ -42,7 +42,7 @@ impl Cycle<3> {
     pub fn polygon_from_points(
         surface: &Surface,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> LocalForm<Cycle<2>, Cycle<3>> {
+    ) -> Cycle<2> {
         let mut points: Vec<_> = points.into_iter().map(Into::into).collect();
 
         // A polygon is closed, so we need to add the first point at the end
@@ -74,15 +74,7 @@ impl Cycle<3> {
             edges.push(LocalForm::new(edge_local, edge_canonical));
         }
 
-        let local = Cycle {
-            edges: edges.clone(),
-        };
-
-        let edges_canonical =
-            edges.into_iter().map(|edge| edge.canonical().clone());
-        let canonical = Cycle::new(edges_canonical);
-
-        LocalForm::new(local, canonical)
+        Cycle { edges }
     }
 
     /// Access the edges that this cycle refers to

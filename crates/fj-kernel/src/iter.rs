@@ -520,8 +520,7 @@ mod tests {
             &Surface::xy_plane(),
             [[0., 0.], [1., 0.], [0., 1.]],
         )
-        .canonical()
-        .clone();
+        .to_canonical();
 
         assert_eq!(3, cycle.curve_iter().count());
         assert_eq!(1, cycle.cycle_iter().count());
