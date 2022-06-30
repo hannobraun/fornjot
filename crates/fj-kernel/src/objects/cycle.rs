@@ -31,13 +31,6 @@ impl Cycle<2> {
 }
 
 impl Cycle<3> {
-    /// Construct a `Cycle`
-    pub fn new(edges: impl IntoIterator<Item = Edge<3>>) -> Self {
-        let edges = edges.into_iter().map(LocalForm::canonical_only).collect();
-
-        Self { edges }
-    }
-
     /// Create a polygon from a list of points
     pub fn polygon_from_points(
         surface: &Surface,
