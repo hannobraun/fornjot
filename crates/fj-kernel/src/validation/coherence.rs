@@ -19,14 +19,14 @@ pub fn validate_edge(
     for vertex in edge.vertices.iter() {
         let local = vertex.position();
         let local_as_global = edge.curve().point_from_curve_coords(local);
-        let canonical = vertex.global().position();
-        let distance = (local_as_global - canonical).magnitude();
+        let global = vertex.global().position();
+        let distance = (local_as_global - global).magnitude();
 
         if distance > max_distance {
             edge_vertex_mismatches.push(CoherenceMismatch {
                 local,
                 local_as_global,
-                canonical,
+                global,
             });
         }
     }
@@ -79,7 +79,7 @@ pub struct CoherenceMismatch<Local, Canonical> {
     pub local_as_global: Canonical,
 
     /// The canonical form of the object
-    pub canonical: Canonical,
+    pub global: Canonical,
 }
 
 impl<Local, Canonical> fmt::Display for CoherenceMismatch<Local, Canonical>
@@ -91,7 +91,7 @@ where
         write!(
             f,
             "local: {:?} (converted to canonical: {:?}), canonical: {:?},",
-            self.local, self.local_as_global, self.canonical,
+            self.local, self.local_as_global, self.global,
         )
     }
 }
