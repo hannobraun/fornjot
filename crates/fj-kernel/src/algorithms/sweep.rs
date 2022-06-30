@@ -195,7 +195,8 @@ fn create_continuous_side_face(
 ) {
     let translation = Transform::translation(path);
 
-    let cycle = Cycle::new(vec![edge.to_canonical()]);
+    let edge = LocalForm::new(edge.clone(), edge.to_canonical());
+    let cycle = Cycle { edges: vec![edge] };
     let approx = CycleApprox::new(&cycle, tolerance);
 
     let mut quads = Vec::new();
