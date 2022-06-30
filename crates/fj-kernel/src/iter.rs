@@ -2,7 +2,7 @@
 
 use std::collections::VecDeque;
 
-use crate::objects::{Curve, Cycle, Edge, Face, GlobalVertex, Surface};
+use crate::objects::{Curve, Cycle, Edge, Face, GlobalVertex, Surface, Vertex};
 
 /// Access iterators over all objects of a shape, or part of it
 ///
@@ -26,6 +26,9 @@ pub trait ObjectIters {
 
     /// Iterate over all surfaces
     fn surface_iter(&self) -> Iter<Surface>;
+
+    /// Iterator over all vertices
+    fn vertex_iter(&self) -> Iter<Vertex>;
 }
 
 impl ObjectIters for Curve<3> {
@@ -50,6 +53,10 @@ impl ObjectIters for Curve<3> {
     }
 
     fn surface_iter(&self) -> Iter<Surface> {
+        Iter::empty()
+    }
+
+    fn vertex_iter(&self) -> Iter<Vertex> {
         Iter::empty()
     }
 }
@@ -108,6 +115,16 @@ impl ObjectIters for Cycle<3> {
 
         iter
     }
+
+    fn vertex_iter(&self) -> Iter<Vertex> {
+        let mut iter = Iter::empty();
+
+        for edge in self.edges() {
+            iter = iter.with(edge.vertex_iter());
+        }
+
+        iter
+    }
 }
 
 impl ObjectIters for Edge<3> {
@@ -160,6 +177,16 @@ impl ObjectIters for Edge<3> {
 
         for vertex in self.vertices().into_iter().flatten() {
             iter = iter.with(vertex.surface_iter());
+        }
+
+        iter
+    }
+
+    fn vertex_iter(&self) -> Iter<Vertex> {
+        let mut iter = Iter::empty().with(self.curve().vertex_iter());
+
+        for vertex in self.vertices().into_iter().flatten() {
+            iter = iter.with(vertex.vertex_iter());
         }
 
         iter
@@ -241,6 +268,20 @@ impl ObjectIters for Face {
 
         Iter::empty()
     }
+
+    fn vertex_iter(&self) -> Iter<Vertex> {
+        if let Face::Face(face) = self {
+            let mut iter = Iter::empty().with(face.surface().vertex_iter());
+
+            for cycle in face.all_cycles() {
+                iter = iter.with(cycle.vertex_iter());
+            }
+
+            return iter;
+        }
+
+        Iter::empty()
+    }
 }
 
 impl ObjectIters for GlobalVertex {
@@ -265,6 +306,10 @@ impl ObjectIters for GlobalVertex {
     }
 
     fn surface_iter(&self) -> Iter<Surface> {
+        Iter::empty()
+    }
+
+    fn vertex_iter(&self) -> Iter<Vertex> {
         Iter::empty()
     }
 }
@@ -293,6 +338,40 @@ impl ObjectIters for Surface {
     fn surface_iter(&self) -> Iter<Surface> {
         Iter::from_object(*self)
     }
+
+    fn vertex_iter(&self) -> Iter<Vertex> {
+        Iter::empty()
+    }
+}
+
+impl ObjectIters for Vertex {
+    fn curve_iter(&self) -> Iter<Curve<3>> {
+        Iter::empty()
+    }
+
+    fn cycle_iter(&self) -> Iter<Cycle<3>> {
+        Iter::empty()
+    }
+
+    fn edge_iter(&self) -> Iter<Edge<3>> {
+        Iter::empty()
+    }
+
+    fn face_iter(&self) -> Iter<Face> {
+        Iter::empty()
+    }
+
+    fn global_vertex_iter(&self) -> Iter<GlobalVertex> {
+        Iter::from_object(self.global())
+    }
+
+    fn surface_iter(&self) -> Iter<Surface> {
+        Iter::empty()
+    }
+
+    fn vertex_iter(&self) -> Iter<Vertex> {
+        Iter::from_object(*self)
+    }
 }
 
 // This implementation exists to paper over the lack of any "top-level" objects
@@ -308,8 +387,8 @@ where
     fn curve_iter(&self) -> Iter<Curve<3>> {
         let mut iter = Iter::empty();
 
-        for face in self.into_iter() {
-            iter = iter.with(face.curve_iter());
+        for object in self.into_iter() {
+            iter = iter.with(object.curve_iter());
         }
 
         iter
@@ -318,8 +397,8 @@ where
     fn cycle_iter(&self) -> Iter<Cycle<3>> {
         let mut iter = Iter::empty();
 
-        for face in self.into_iter() {
-            iter = iter.with(face.cycle_iter());
+        for object in self.into_iter() {
+            iter = iter.with(object.cycle_iter());
         }
 
         iter
@@ -328,8 +407,8 @@ where
     fn edge_iter(&self) -> Iter<Edge<3>> {
         let mut iter = Iter::empty();
 
-        for face in self.into_iter() {
-            iter = iter.with(face.edge_iter());
+        for object in self.into_iter() {
+            iter = iter.with(object.edge_iter());
         }
 
         iter
@@ -338,8 +417,8 @@ where
     fn face_iter(&self) -> Iter<Face> {
         let mut iter = Iter::empty();
 
-        for face in self.into_iter() {
-            iter = iter.with(face.face_iter());
+        for object in self.into_iter() {
+            iter = iter.with(object.face_iter());
         }
 
         iter
@@ -348,8 +427,8 @@ where
     fn global_vertex_iter(&self) -> Iter<GlobalVertex> {
         let mut iter = Iter::empty();
 
-        for face in self.into_iter() {
-            iter = iter.with(face.global_vertex_iter());
+        for object in self.into_iter() {
+            iter = iter.with(object.global_vertex_iter());
         }
 
         iter
@@ -358,8 +437,18 @@ where
     fn surface_iter(&self) -> Iter<Surface> {
         let mut iter = Iter::empty();
 
-        for face in self.into_iter() {
-            iter = iter.with(face.surface_iter());
+        for object in self.into_iter() {
+            iter = iter.with(object.surface_iter());
+        }
+
+        iter
+    }
+
+    fn vertex_iter(&self) -> Iter<Vertex> {
+        let mut iter = Iter::empty();
+
+        for object in self.into_iter() {
+            iter = iter.with(object.vertex_iter());
         }
 
         iter
@@ -406,7 +495,9 @@ impl<T> Iterator for Iter<T> {
 
 #[cfg(test)]
 mod tests {
-    use crate::objects::{Curve, Cycle, Edge, Face, GlobalVertex, Surface};
+    use crate::objects::{
+        Curve, Cycle, Edge, Face, GlobalVertex, Surface, Vertex,
+    };
 
     use super::ObjectIters as _;
 
@@ -420,6 +511,7 @@ mod tests {
         assert_eq!(0, curve.face_iter().count());
         assert_eq!(0, curve.global_vertex_iter().count());
         assert_eq!(0, curve.surface_iter().count());
+        assert_eq!(0, curve.vertex_iter().count());
     }
 
     #[test]
@@ -437,6 +529,7 @@ mod tests {
         assert_eq!(0, cycle.face_iter().count());
         assert_eq!(3, cycle.global_vertex_iter().count());
         assert_eq!(0, cycle.surface_iter().count());
+        assert_eq!(6, cycle.vertex_iter().count());
     }
 
     #[test]
@@ -449,6 +542,7 @@ mod tests {
         assert_eq!(0, edge.face_iter().count());
         assert_eq!(2, edge.global_vertex_iter().count());
         assert_eq!(0, edge.surface_iter().count());
+        assert_eq!(2, edge.vertex_iter().count());
     }
 
     #[test]
@@ -463,18 +557,20 @@ mod tests {
         assert_eq!(1, face.face_iter().count());
         assert_eq!(3, face.global_vertex_iter().count());
         assert_eq!(1, face.surface_iter().count());
+        assert_eq!(6, face.vertex_iter().count());
     }
 
     #[test]
     fn global_vertex() {
-        let vertex = GlobalVertex::from_position([0., 0., 0.]);
+        let global_vertex = GlobalVertex::from_position([0., 0., 0.]);
 
-        assert_eq!(0, vertex.curve_iter().count());
-        assert_eq!(0, vertex.cycle_iter().count());
-        assert_eq!(0, vertex.edge_iter().count());
-        assert_eq!(0, vertex.face_iter().count());
-        assert_eq!(1, vertex.global_vertex_iter().count());
-        assert_eq!(0, vertex.surface_iter().count());
+        assert_eq!(0, global_vertex.curve_iter().count());
+        assert_eq!(0, global_vertex.cycle_iter().count());
+        assert_eq!(0, global_vertex.edge_iter().count());
+        assert_eq!(0, global_vertex.face_iter().count());
+        assert_eq!(1, global_vertex.global_vertex_iter().count());
+        assert_eq!(0, global_vertex.surface_iter().count());
+        assert_eq!(0, global_vertex.vertex_iter().count());
     }
 
     #[test]
@@ -487,5 +583,20 @@ mod tests {
         assert_eq!(0, surface.face_iter().count());
         assert_eq!(0, surface.global_vertex_iter().count());
         assert_eq!(1, surface.surface_iter().count());
+        assert_eq!(0, surface.vertex_iter().count());
+    }
+
+    #[test]
+    fn vertex() {
+        let global_vertex = GlobalVertex::from_position([0., 0., 0.]);
+        let vertex = Vertex::new([0.], global_vertex);
+
+        assert_eq!(0, vertex.curve_iter().count());
+        assert_eq!(0, vertex.cycle_iter().count());
+        assert_eq!(0, vertex.edge_iter().count());
+        assert_eq!(0, vertex.face_iter().count());
+        assert_eq!(1, vertex.global_vertex_iter().count());
+        assert_eq!(0, vertex.surface_iter().count());
+        assert_eq!(1, vertex.vertex_iter().count());
     }
 }

@@ -10,23 +10,23 @@ pub fn validate_edge(
 ) -> Result<(), CoherenceIssues> {
     let max_distance = max_distance.into();
 
-    // Validate that the local and canonical forms of the vertices match. As a
-    // side effect, this also happens to validate that the canonical forms of
-    // the vertices lie on the curve.
+    // Validate that the local and global forms of the vertices match. As a side
+    // effect, this also happens to validate that the global forms of the
+    // vertices lie on the curve.
 
     let mut edge_vertex_mismatches = Vec::new();
 
     for vertex in edge.vertices.iter() {
-        let local = *vertex.local();
-        let local_as_canonical = edge.curve().point_from_curve_coords(local);
-        let canonical = vertex.canonical().position();
-        let distance = (local_as_canonical - canonical).magnitude();
+        let local = vertex.position();
+        let local_as_global = edge.curve().point_from_curve_coords(local);
+        let global = vertex.global().position();
+        let distance = (local_as_global - global).magnitude();
 
         if distance > max_distance {
             edge_vertex_mismatches.push(CoherenceMismatch {
                 local,
-                local_as_canonical,
-                canonical,
+                local_as_global,
+                global,
             });
         }
     }
@@ -47,7 +47,7 @@ pub fn validate_edge(
 /// [`ValidationError`]: super::ValidationError
 #[derive(Debug, Default, thiserror::Error)]
 pub struct CoherenceIssues {
-    /// Mismatches between the local and canonical forms of edge vertices
+    /// Mismatches between the local and global forms of edge vertices
     pub edge_vertex_mismatches: Vec<CoherenceMismatch<Point<1>, Point<3>>>,
 }
 
@@ -67,19 +67,19 @@ impl fmt::Display for CoherenceIssues {
     }
 }
 
-/// A mismatch between the local and canonical forms of an object
+/// A mismatch between the local and global forms of an object
 ///
 /// Used in [`CoherenceIssues`].
 #[derive(Debug)]
-pub struct CoherenceMismatch<Local, Canonical> {
+pub struct CoherenceMismatch<Local, Global> {
     /// The local form of the object
     pub local: Local,
 
-    /// The local form of the object, converted into the canonical form
-    pub local_as_canonical: Canonical,
+    /// The local form of the object, converted into the global form
+    pub local_as_global: Global,
 
-    /// The canonical form of the object
-    pub canonical: Canonical,
+    /// The global form of the object
+    pub global: Global,
 }
 
 impl<Local, Canonical> fmt::Display for CoherenceMismatch<Local, Canonical>
@@ -90,8 +90,8 @@ where
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
-            "local: {:?} (converted to canonical: {:?}), canonical: {:?},",
-            self.local, self.local_as_canonical, self.canonical,
+            "local: {:?} (converted to global: {:?}), global: {:?},",
+            self.local, self.local_as_global, self.global,
         )
     }
 }

@@ -1,7 +1,9 @@
 use fj_math::Transform;
 
 use crate::{
-    objects::{Cycle, CyclesInFace, Edge, Face, FaceBRep, GlobalVertex},
+    objects::{
+        Cycle, CyclesInFace, Edge, Face, FaceBRep, GlobalVertex, Vertex,
+    },
     shape::LocalForm,
 };
 
@@ -56,16 +58,11 @@ pub fn transform_cycles(
                 let curve_canonical =
                     edge.canonical().curve().transform(transform);
 
-                let vertices =
-                    edge.canonical().clone().vertices.map(|vertex| {
-                        let position = vertex.canonical().position();
-                        let position = transform.transform_point(&position);
-
-                        let local = *vertex.local();
-                        let canonical = GlobalVertex::from_position(position);
-
-                        LocalForm::new(local, canonical)
-                    });
+                let vertices = edge
+                    .canonical()
+                    .clone()
+                    .vertices
+                    .map(|vertex| transform_vertex(&vertex, transform));
 
                 let edge_local = Edge {
                     curve: LocalForm::new(curve_local, curve_canonical),
@@ -90,15 +87,10 @@ pub fn transform_cycles(
                     let curve = edge.curve().transform(transform);
                     LocalForm::canonical_only(curve)
                 };
-                let vertices = edge.vertices.clone().map(|vertex| {
-                    let position = vertex.canonical().position();
-                    let position = transform.transform_point(&position);
-
-                    let local = *vertex.local();
-                    let canonical = GlobalVertex::from_position(position);
-
-                    LocalForm::new(local, canonical)
-                });
+                let vertices = edge
+                    .vertices
+                    .clone()
+                    .map(|vertex| transform_vertex(&vertex, transform));
 
                 let edge = Edge { curve, vertices };
                 LocalForm::canonical_only(edge)
@@ -115,4 +107,11 @@ pub fn transform_cycles(
     });
 
     CyclesInFace::new(cycles)
+}
+
+pub fn transform_vertex(vertex: &Vertex, transform: &Transform) -> Vertex {
+    let position = transform.transform_point(&vertex.global().position());
+    let global = GlobalVertex::from_position(position);
+
+    Vertex::new(vertex.position(), global)
 }

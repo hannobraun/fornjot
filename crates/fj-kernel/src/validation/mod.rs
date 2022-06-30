@@ -141,7 +141,7 @@ mod tests {
     use fj_math::{Point, Scalar};
 
     use crate::{
-        objects::{Curve, Edge, GlobalVertex, VerticesOfEdge},
+        objects::{Curve, Edge, GlobalVertex, Vertex, VerticesOfEdge},
         shape::LocalForm,
         validation::{validate, ValidationConfig, ValidationError},
     };
@@ -161,8 +161,8 @@ mod tests {
 
         let deviation = Scalar::from_f64(0.25);
 
-        let a = LocalForm::new(Point::from([Scalar::ZERO + deviation]), a);
-        let b = LocalForm::new(Point::from([Scalar::ONE]), b);
+        let a = Vertex::new(Point::from([Scalar::ZERO + deviation]), a);
+        let b = Vertex::new(Point::from([Scalar::ONE]), b);
         let vertices = VerticesOfEdge::from_vertices([a, b]);
 
         let edge = Edge { curve, vertices };
