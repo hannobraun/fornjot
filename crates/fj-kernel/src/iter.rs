@@ -308,8 +308,8 @@ where
     fn curve_iter(&self) -> Iter<Curve<3>> {
         let mut iter = Iter::empty();
 
-        for face in self.into_iter() {
-            iter = iter.with(face.curve_iter());
+        for object in self.into_iter() {
+            iter = iter.with(object.curve_iter());
         }
 
         iter
@@ -318,8 +318,8 @@ where
     fn cycle_iter(&self) -> Iter<Cycle<3>> {
         let mut iter = Iter::empty();
 
-        for face in self.into_iter() {
-            iter = iter.with(face.cycle_iter());
+        for object in self.into_iter() {
+            iter = iter.with(object.cycle_iter());
         }
 
         iter
@@ -328,8 +328,8 @@ where
     fn edge_iter(&self) -> Iter<Edge<3>> {
         let mut iter = Iter::empty();
 
-        for face in self.into_iter() {
-            iter = iter.with(face.edge_iter());
+        for object in self.into_iter() {
+            iter = iter.with(object.edge_iter());
         }
 
         iter
@@ -338,8 +338,8 @@ where
     fn face_iter(&self) -> Iter<Face> {
         let mut iter = Iter::empty();
 
-        for face in self.into_iter() {
-            iter = iter.with(face.face_iter());
+        for object in self.into_iter() {
+            iter = iter.with(object.face_iter());
         }
 
         iter
@@ -348,8 +348,8 @@ where
     fn global_vertex_iter(&self) -> Iter<GlobalVertex> {
         let mut iter = Iter::empty();
 
-        for face in self.into_iter() {
-            iter = iter.with(face.global_vertex_iter());
+        for object in self.into_iter() {
+            iter = iter.with(object.global_vertex_iter());
         }
 
         iter
@@ -358,8 +358,8 @@ where
     fn surface_iter(&self) -> Iter<Surface> {
         let mut iter = Iter::empty();
 
-        for face in self.into_iter() {
-            iter = iter.with(face.surface_iter());
+        for object in self.into_iter() {
+            iter = iter.with(object.surface_iter());
         }
 
         iter
