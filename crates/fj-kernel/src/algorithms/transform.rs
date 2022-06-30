@@ -110,11 +110,8 @@ pub fn transform_cycles(
 }
 
 pub fn transform_vertex(vertex: &Vertex, transform: &Transform) -> Vertex {
-    let position = vertex.global().position();
-    let position = transform.transform_point(&position);
+    let position = transform.transform_point(&vertex.global().position());
+    let global = GlobalVertex::from_position(position);
 
-    let local = vertex.position();
-    let canonical = GlobalVertex::from_position(position);
-
-    Vertex::new(local, canonical)
+    Vertex::new(vertex.position(), global)
 }
