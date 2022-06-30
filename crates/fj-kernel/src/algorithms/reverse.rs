@@ -31,7 +31,7 @@ fn reverse_local_coordinates_in_cycle(
             .iter()
             .map(|edge| {
                 let curve = {
-                    let local = match *edge.local().curve.local() {
+                    let local = match *edge.curve.local() {
                         Curve::Circle(Circle { center, a, b }) => {
                             let center = Point::from([center.u, -center.v]);
 
@@ -49,12 +49,12 @@ fn reverse_local_coordinates_in_cycle(
                         }
                     };
 
-                    let canonical = *edge.local().curve.canonical();
+                    let canonical = *edge.curve.canonical();
                     LocalForm::new(local, canonical)
                 };
-                let vertices = edge.local().vertices.clone();
-                let local = Edge { curve, vertices };
-                LocalForm::new(local, edge.canonical().clone())
+                let vertices = edge.vertices.clone();
+
+                Edge { curve, vertices }
             })
             .collect();
 

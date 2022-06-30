@@ -12,7 +12,7 @@ use super::{Curve, Edge, Surface};
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
     /// The edges that make up the cycle
-    pub edges: Vec<LocalForm<Edge<2>, Edge<3>>>,
+    pub edges: Vec<Edge<2>>,
 }
 
 impl Cycle {
@@ -49,7 +49,7 @@ impl Cycle {
                 vertices: edge_canonical.vertices.clone(),
             };
 
-            edges.push(LocalForm::new(edge_local, edge_canonical));
+            edges.push(edge_local);
         }
 
         Cycle { edges }
@@ -60,6 +60,6 @@ impl Cycle {
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
     pub fn edges(&self) -> impl Iterator<Item = Edge<2>> + '_ {
-        self.edges.iter().map(|handle| handle.local().clone())
+        self.edges.iter().cloned()
     }
 }

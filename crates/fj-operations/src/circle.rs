@@ -2,7 +2,6 @@ use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
     objects::{Cycle, Edge, Face, Surface},
-    shape::LocalForm,
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::{Aabb, Point, Scalar};
@@ -20,7 +19,6 @@ impl ToShape for fj::Circle {
         // to be added here.
 
         let edge = Edge::circle_from_radius(Scalar::from_f64(self.radius()));
-        let edge = LocalForm::new(edge.clone(), edge.to_canonical());
 
         let cycle = Cycle { edges: vec![edge] };
 
