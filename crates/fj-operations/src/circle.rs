@@ -2,7 +2,6 @@ use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
     objects::{Cycle, Edge, Face, Surface},
-    shape::LocalForm,
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::{Aabb, Point, Scalar};
@@ -21,18 +20,11 @@ impl ToShape for fj::Circle {
 
         let edge = Edge::circle_from_radius(Scalar::from_f64(self.radius()));
 
-        let cycle_local = Cycle {
-            edges: vec![edge.clone()],
-        };
-        let cycle_canonical = Cycle::new(vec![edge.canonical().clone()]);
+        let cycle_local = Cycle { edges: vec![edge] };
 
         let surface = Surface::xy_plane();
-        let face = Face::new(
-            surface,
-            vec![LocalForm::new(cycle_local, cycle_canonical)],
-            Vec::new(),
-            self.color(),
-        );
+        let face =
+            Face::new(surface, vec![cycle_local], Vec::new(), self.color());
 
         validate(vec![face], config)
     }

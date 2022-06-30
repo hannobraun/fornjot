@@ -1,7 +1,7 @@
 use fj_interop::mesh::Color;
 use fj_math::Triangle;
 
-use crate::{builder::FaceBuilder, shape::LocalForm};
+use crate::builder::FaceBuilder;
 
 use super::{Cycle, Surface};
 
@@ -27,15 +27,10 @@ impl Face {
     /// Construct a new instance of `Face`
     pub fn new(
         surface: Surface,
-        exteriors: impl IntoIterator<Item = LocalForm<Cycle<2>, Cycle<3>>>,
-        interiors: impl IntoIterator<Item = LocalForm<Cycle<2>, Cycle<3>>>,
+        exteriors: impl IntoIterator<Item = Cycle<2>>,
+        interiors: impl IntoIterator<Item = Cycle<2>>,
         color: [u8; 4],
     ) -> Self {
-        let exteriors =
-            exteriors.into_iter().map(|cycle| cycle.local().clone());
-        let interiors =
-            interiors.into_iter().map(|cycle| cycle.local().clone());
-
         let exteriors = CyclesInFace::new(exteriors);
         let interiors = CyclesInFace::new(interiors);
 

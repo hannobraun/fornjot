@@ -2,10 +2,7 @@
 
 use fj_math::Point;
 
-use crate::{
-    objects::{Cycle, Face, Surface},
-    shape::LocalForm,
-};
+use crate::objects::{Cycle, Face, Surface};
 
 /// API for building a [`Face`]
 #[must_use]
@@ -66,14 +63,12 @@ impl FaceBuilder {
         let mut exteriors = Vec::new();
         if let Some(points) = self.exterior {
             let cycle = Cycle::polygon_from_points(&self.surface, points);
-            let cycle = LocalForm::new(cycle.clone(), cycle.to_canonical());
             exteriors.push(cycle);
         }
 
         let mut interiors = Vec::new();
         for points in self.interiors {
             let cycle = Cycle::polygon_from_points(&self.surface, points);
-            let cycle = LocalForm::new(cycle.clone(), cycle.to_canonical());
             interiors.push(cycle);
         }
 

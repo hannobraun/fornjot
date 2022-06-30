@@ -169,17 +169,7 @@ fn create_non_continuous_side_face(
             edges.push(edge);
         }
 
-        let cycle = {
-            let local = Cycle { edges };
-
-            let global = Cycle::new(
-                local.edges.iter().map(|edge| edge.canonical().clone()),
-            );
-
-            LocalForm::new(local, global)
-        };
-
-        cycle
+        Cycle { edges }
     };
 
     let face = Face::new(surface, [cycle], [], color);

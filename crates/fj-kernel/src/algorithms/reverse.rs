@@ -24,7 +24,7 @@ pub fn reverse_face(face: &Face) -> Face {
 
 fn reverse_local_coordinates_in_cycle(
     cycles: &CyclesInFace,
-) -> impl Iterator<Item = LocalForm<Cycle<2>, Cycle<3>>> + '_ {
+) -> impl Iterator<Item = Cycle<2>> + '_ {
     let cycles = cycles.as_local().map(|cycle| {
         let edges = cycle
             .edges
@@ -57,8 +57,8 @@ fn reverse_local_coordinates_in_cycle(
                 LocalForm::new(local, edge.canonical().clone())
             })
             .collect();
-        let local = Cycle { edges };
-        LocalForm::new(local, cycle.to_canonical())
+
+        Cycle { edges }
     });
 
     cycles
