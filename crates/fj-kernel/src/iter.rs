@@ -24,7 +24,7 @@ pub trait ObjectIters {
     /// Iterate over all surfaces
     fn surface_iter(&self) -> Iter<Surface>;
 
-    /// Iterate over all vertices
+    /// Iterate over all global vertices
     fn global_vertex_iter(&self) -> Iter<GlobalVertex>;
 }
 
