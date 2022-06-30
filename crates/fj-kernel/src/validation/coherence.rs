@@ -71,15 +71,15 @@ impl fmt::Display for CoherenceIssues {
 ///
 /// Used in [`CoherenceIssues`].
 #[derive(Debug)]
-pub struct CoherenceMismatch<Local, Canonical> {
+pub struct CoherenceMismatch<Local, Global> {
     /// The local form of the object
     pub local: Local,
 
     /// The local form of the object, converted into the canonical form
-    pub local_as_global: Canonical,
+    pub local_as_global: Global,
 
     /// The canonical form of the object
-    pub global: Canonical,
+    pub global: Global,
 }
 
 impl<Local, Canonical> fmt::Display for CoherenceMismatch<Local, Canonical>
