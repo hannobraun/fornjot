@@ -466,18 +466,6 @@ mod tests {
     }
 
     #[test]
-    fn surface() {
-        let surface = Surface::xy_plane();
-
-        assert_eq!(0, surface.curve_iter().count());
-        assert_eq!(0, surface.cycle_iter().count());
-        assert_eq!(0, surface.edge_iter().count());
-        assert_eq!(0, surface.face_iter().count());
-        assert_eq!(0, surface.global_vertex_iter().count());
-        assert_eq!(1, surface.surface_iter().count());
-    }
-
-    #[test]
     fn global_vertex() {
         let vertex = GlobalVertex::from_position([0., 0., 0.]);
 
@@ -487,5 +475,17 @@ mod tests {
         assert_eq!(0, vertex.face_iter().count());
         assert_eq!(1, vertex.global_vertex_iter().count());
         assert_eq!(0, vertex.surface_iter().count());
+    }
+
+    #[test]
+    fn surface() {
+        let surface = Surface::xy_plane();
+
+        assert_eq!(0, surface.curve_iter().count());
+        assert_eq!(0, surface.cycle_iter().count());
+        assert_eq!(0, surface.edge_iter().count());
+        assert_eq!(0, surface.face_iter().count());
+        assert_eq!(0, surface.global_vertex_iter().count());
+        assert_eq!(1, surface.surface_iter().count());
     }
 }
