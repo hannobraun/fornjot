@@ -58,11 +58,11 @@ pub fn transform_cycles(
 
                 let vertices =
                     edge.canonical().clone().vertices.map(|vertex| {
-                        let point = vertex.canonical().position();
-                        let point = transform.transform_point(&point);
+                        let position = vertex.canonical().position();
+                        let position = transform.transform_point(&position);
 
                         let local = *vertex.local();
-                        let canonical = GlobalVertex::from_position(point);
+                        let canonical = GlobalVertex::from_position(position);
 
                         LocalForm::new(local, canonical)
                     });
