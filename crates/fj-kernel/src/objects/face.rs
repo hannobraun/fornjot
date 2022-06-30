@@ -1,5 +1,3 @@
-use std::hash::{Hash, Hasher};
-
 use fj_interop::mesh::Color;
 use fj_math::Triangle;
 
@@ -103,7 +101,7 @@ impl Face {
 /// This type exists to ease the handling of faces that use boundary
 /// representation. It will eventually be merged into `Face`, once
 /// `Face::Triangles` can finally be removed.
-#[derive(Clone, Debug, Eq, Ord, PartialOrd)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct FaceBRep {
     /// The surface that defines this face
     pub surface: Surface,
@@ -164,23 +162,6 @@ impl FaceBRep {
     /// [`Face::exteriors`] and [`Face::interiors`].
     pub fn all_cycles(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
         self.exteriors().chain(self.interiors())
-    }
-}
-
-impl PartialEq for FaceBRep {
-    fn eq(&self, other: &Self) -> bool {
-        self.surface() == other.surface()
-            && self.exteriors().eq(other.exteriors())
-            && self.interiors().eq(other.interiors())
-    }
-}
-
-impl Hash for FaceBRep {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        self.surface().hash(state);
-        for cycle in self.all_cycles() {
-            cycle.hash(state);
-        }
     }
 }
 
