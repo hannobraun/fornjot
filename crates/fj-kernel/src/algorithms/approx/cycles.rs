@@ -29,9 +29,7 @@ impl CycleApprox {
 
         let mut points: Vec<_> = points
             .into_iter()
-            .map(|point| {
-                geometry::Point::new(point.canonical(), point.canonical())
-            })
+            .map(|point| geometry::Point::new(point.global(), point.global()))
             .collect();
 
         points.dedup();
@@ -48,7 +46,7 @@ impl CycleApprox {
             // up, once `array_windows` is stable.
             let segment = [segment[0], segment[1]];
 
-            let segment = segment.map(|point| point.canonical());
+            let segment = segment.map(|point| point.global());
             segments.push(Segment::from(segment));
         }
 

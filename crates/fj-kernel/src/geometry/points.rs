@@ -20,7 +20,7 @@
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Point<const N: usize, const C: usize> {
     local: fj_math::Point<N>,
-    canonical: fj_math::Point<C>,
+    global: fj_math::Point<C>,
 }
 
 impl<const N: usize, const C: usize> Point<N, C> {
@@ -34,7 +34,7 @@ impl<const N: usize, const C: usize> Point<N, C> {
     ) -> Self {
         Self {
             local: local.into(),
-            canonical: canonical.into(),
+            global: canonical.into(),
         }
     }
 
@@ -44,7 +44,7 @@ impl<const N: usize, const C: usize> Point<N, C> {
     }
 
     /// Access the point's canonical form
-    pub fn canonical(&self) -> fj_math::Point<C> {
-        self.canonical
+    pub fn global(&self) -> fj_math::Point<C> {
+        self.global
     }
 }
