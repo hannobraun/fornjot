@@ -60,13 +60,11 @@ impl<const D: usize> Curve<D> {
         &self,
         point: impl Into<Point<D>>,
     ) -> Point<1> {
-        let point_canonical = point.into();
+        let point = point.into();
 
         match self {
-            Self::Circle(curve) => {
-                curve.point_to_circle_coords(point_canonical)
-            }
-            Self::Line(curve) => curve.point_to_line_coords(point_canonical),
+            Self::Circle(curve) => curve.point_to_circle_coords(point),
+            Self::Line(curve) => curve.point_to_line_coords(point),
         }
     }
 
