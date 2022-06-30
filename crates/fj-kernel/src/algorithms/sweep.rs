@@ -36,21 +36,29 @@ pub fn sweep(
             is_sweep_along_negative_direction,
             &mut target,
         );
-    }
 
-    for edge in source.edge_iter() {
-        if let Some(vertices) = edge.vertices() {
-            create_non_continuous_side_face(
-                path,
-                is_sweep_along_negative_direction,
-                vertices.map(|vertex| vertex.global()),
-                color,
-                &mut target,
-            );
-            continue;
+        for cycle in face.all_cycles() {
+            for edge in cycle.edges {
+                if let Some(vertices) = edge.canonical().vertices() {
+                    create_non_continuous_side_face(
+                        path,
+                        is_sweep_along_negative_direction,
+                        vertices.map(|vertex| vertex.global()),
+                        color,
+                        &mut target,
+                    );
+                    continue;
+                }
+
+                create_continuous_side_face(
+                    edge.local().clone(),
+                    path,
+                    tolerance,
+                    color,
+                    &mut target,
+                );
+            }
         }
-
-        create_continuous_side_face(edge, path, tolerance, color, &mut target);
     }
 
     target
@@ -161,17 +169,7 @@ fn create_non_continuous_side_face(
             edges.push(edge);
         }
 
-        let cycle = {
-            let local = Cycle { edges };
-
-            let global = Cycle::new(
-                local.edges.iter().map(|edge| edge.canonical().clone()),
-            );
-
-            LocalForm::new(local, global)
-        };
-
-        cycle
+        Cycle { edges }
     };
 
     let face = Face::new(surface, [cycle], [], color);
@@ -179,7 +177,7 @@ fn create_non_continuous_side_face(
 }
 
 fn create_continuous_side_face(
-    edge: Edge<3>,
+    edge: Edge<2>,
     path: Vector<3>,
     tolerance: Tolerance,
     color: [u8; 4],
@@ -187,7 +185,8 @@ fn create_continuous_side_face(
 ) {
     let translation = Transform::translation(path);
 
-    let cycle = Cycle::new(vec![edge]);
+    let edge = LocalForm::new(edge.clone(), edge.to_canonical());
+    let cycle = Cycle { edges: vec![edge] };
     let approx = CycleApprox::new(&cycle, tolerance);
 
     let mut quads = Vec::new();

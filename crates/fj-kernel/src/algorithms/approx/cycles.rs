@@ -16,13 +16,17 @@ impl CycleApprox {
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual face.
-    pub fn new(cycle: &Cycle<3>, tolerance: Tolerance) -> Self {
+    pub fn new(cycle: &Cycle<2>, tolerance: Tolerance) -> Self {
         let mut points = Vec::new();
 
-        for edge in cycle.edges() {
+        for edge in &cycle.edges {
             let mut edge_points = Vec::new();
-            approx_curve(&edge.curve(), tolerance, &mut edge_points);
-            approx_edge(edge.vertices, &mut edge_points);
+            approx_curve(
+                &edge.canonical().curve(),
+                tolerance,
+                &mut edge_points,
+            );
+            approx_edge(edge.canonical().vertices.clone(), &mut edge_points);
 
             points.extend(edge_points);
         }

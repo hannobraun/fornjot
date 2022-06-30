@@ -1,7 +1,7 @@
 use fj_interop::mesh::Color;
 use fj_math::Triangle;
 
-use crate::{builder::FaceBuilder, shape::LocalForm};
+use crate::builder::FaceBuilder;
 
 use super::{Cycle, Surface};
 
@@ -27,8 +27,8 @@ impl Face {
     /// Construct a new instance of `Face`
     pub fn new(
         surface: Surface,
-        exteriors: impl IntoIterator<Item = LocalForm<Cycle<2>, Cycle<3>>>,
-        interiors: impl IntoIterator<Item = LocalForm<Cycle<2>, Cycle<3>>>,
+        exteriors: impl IntoIterator<Item = Cycle<2>>,
+        interiors: impl IntoIterator<Item = Cycle<2>>,
         color: [u8; 4],
     ) -> Self {
         let exteriors = CyclesInFace::new(exteriors);
@@ -70,7 +70,7 @@ impl Face {
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn exteriors(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
+    pub fn exteriors(&self) -> impl Iterator<Item = Cycle<2>> + '_ {
         self.brep().exteriors()
     }
 
@@ -78,7 +78,7 @@ impl Face {
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn interiors(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
+    pub fn interiors(&self) -> impl Iterator<Item = Cycle<2>> + '_ {
         self.brep().interiors()
     }
 
@@ -86,7 +86,7 @@ impl Face {
     ///
     /// This is equivalent to chaining the iterators returned by
     /// [`Face::exteriors`] and [`Face::interiors`].
-    pub fn all_cycles(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
+    pub fn all_cycles(&self) -> impl Iterator<Item = Cycle<2>> + '_ {
         self.exteriors().chain(self.interiors())
     }
 
@@ -144,48 +144,39 @@ impl FaceBRep {
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn exteriors(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
-        self.exteriors.as_canonical()
+    pub fn exteriors(&self) -> impl Iterator<Item = Cycle<2>> + '_ {
+        self.exteriors.as_local()
     }
 
     /// Access the interior cycles that the face refers to
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn interiors(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
-        self.interiors.as_canonical()
+    pub fn interiors(&self) -> impl Iterator<Item = Cycle<2>> + '_ {
+        self.interiors.as_local()
     }
 
     /// Access all cycles that the face refers to
     ///
     /// This is equivalent to chaining the iterators returned by
     /// [`Face::exteriors`] and [`Face::interiors`].
-    pub fn all_cycles(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
+    pub fn all_cycles(&self) -> impl Iterator<Item = Cycle<2>> + '_ {
         self.exteriors().chain(self.interiors())
     }
 }
 
 /// A list of cycles, as they are stored in `Face`
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct CyclesInFace(Vec<LocalForm<Cycle<2>, Cycle<3>>>);
+pub struct CyclesInFace(Vec<Cycle<2>>);
 
 impl CyclesInFace {
     /// Create a new instance of `CyclesInFace`
-    pub fn new(
-        cycles: impl IntoIterator<Item = LocalForm<Cycle<2>, Cycle<3>>>,
-    ) -> Self {
+    pub fn new(cycles: impl IntoIterator<Item = Cycle<2>>) -> Self {
         Self(cycles.into_iter().collect())
     }
 
     /// Access an iterator over the canonical forms of the cycles
-    pub fn as_canonical(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
-        self.0.iter().map(|cycle| cycle.canonical().clone())
-    }
-
-    /// Access an iterator over local forms of the cycles
-    pub fn as_local_form(
-        &self,
-    ) -> impl Iterator<Item = &'_ LocalForm<Cycle<2>, Cycle<3>>> {
-        self.0.iter()
+    pub fn as_local(&self) -> impl Iterator<Item = Cycle<2>> + '_ {
+        self.0.iter().cloned()
     }
 }

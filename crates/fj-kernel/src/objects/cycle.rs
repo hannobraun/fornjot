@@ -15,6 +15,21 @@ pub struct Cycle<const D: usize> {
     pub edges: Vec<LocalForm<Edge<D>, Edge<3>>>,
 }
 
+impl Cycle<2> {
+    /// Temporary utility method to aid refactoring
+    pub fn to_canonical(&self) -> Cycle<3> {
+        let mut edges = Vec::new();
+
+        for edge in &self.edges {
+            let edge = edge.local().to_canonical();
+            let edge = LocalForm::canonical_only(edge);
+            edges.push(edge);
+        }
+
+        Cycle { edges }
+    }
+}
+
 impl Cycle<3> {
     /// Construct a `Cycle`
     pub fn new(edges: impl IntoIterator<Item = Edge<3>>) -> Self {
@@ -27,7 +42,7 @@ impl Cycle<3> {
     pub fn polygon_from_points(
         surface: &Surface,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> LocalForm<Cycle<2>, Cycle<3>> {
+    ) -> Cycle<2> {
         let mut points: Vec<_> = points.into_iter().map(Into::into).collect();
 
         // A polygon is closed, so we need to add the first point at the end
@@ -59,15 +74,7 @@ impl Cycle<3> {
             edges.push(LocalForm::new(edge_local, edge_canonical));
         }
 
-        let local = Cycle {
-            edges: edges.clone(),
-        };
-
-        let edges_canonical =
-            edges.into_iter().map(|edge| edge.canonical().clone());
-        let canonical = Cycle::new(edges_canonical);
-
-        LocalForm::new(local, canonical)
+        Cycle { edges }
     }
 
     /// Access the edges that this cycle refers to
