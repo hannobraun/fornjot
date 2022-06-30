@@ -32,7 +32,7 @@ fn reverse_local_coordinates_in_cycle(cycles: &CyclesInFace) -> CyclesInFace {
             .edges
             .iter()
             .map(|edge| {
-                let curve = LocalForm::new(
+                let curve = {
                     // This is wrong. We have reversed the direction of the
                     // surface, thereby modifying its coordinate system. So we
                     // can't just use the local form of the curve, which is
@@ -42,9 +42,10 @@ fn reverse_local_coordinates_in_cycle(cycles: &CyclesInFace) -> CyclesInFace {
                     // is not complete, and the whole local form stuff is still
                     // a work in progress, this doesn't lead to any observable
                     // bugs.
-                    *edge.local().curve.local(),
-                    *edge.local().curve.canonical(),
-                );
+                    let local = *edge.local().curve.local();
+                    let canonical = *edge.local().curve.canonical();
+                    LocalForm::new(local, canonical)
+                };
                 let vertices = edge.local().vertices.clone();
                 let local = Edge { curve, vertices };
                 LocalForm::new(local, edge.canonical().clone())
