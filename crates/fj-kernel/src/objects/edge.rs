@@ -78,7 +78,7 @@ impl Edge<3> {
     ) -> Self {
         let vertices = vertices.map(|point| {
             let point = point.into();
-            GlobalVertex { position: point }
+            GlobalVertex::from_position(point)
         });
 
         Self::line_segment_from_vertices(vertices)

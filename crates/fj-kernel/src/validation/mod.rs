@@ -156,8 +156,8 @@ mod tests {
             LocalForm::canonical_only(curve)
         };
 
-        let a = GlobalVertex { position: a };
-        let b = GlobalVertex { position: b };
+        let a = GlobalVertex::from_position(a);
+        let b = GlobalVertex::from_position(b);
 
         let deviation = Scalar::from_f64(0.25);
 
@@ -203,11 +203,11 @@ mod tests {
         };
 
         // Adding a vertex should work.
-        shape.push(GlobalVertex { position: a });
+        shape.push(GlobalVertex::from_position(a));
         validate(shape.clone(), &config)?;
 
         // Adding a second vertex that is considered identical should fail.
-        shape.push(GlobalVertex { position: b });
+        shape.push(GlobalVertex::from_position(b));
         let result = validate(shape, &config);
         assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
 

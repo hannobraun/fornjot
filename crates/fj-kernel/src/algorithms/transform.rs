@@ -62,7 +62,7 @@ pub fn transform_cycles(
                         let point = transform.transform_point(&point);
 
                         let local = *vertex.local();
-                        let canonical = GlobalVertex { position: point };
+                        let canonical = GlobalVertex::from_position(point);
 
                         LocalForm::new(local, canonical)
                     });
@@ -95,7 +95,7 @@ pub fn transform_cycles(
                     let point = transform.transform_point(&point);
 
                     let local = *vertex.local();
-                    let canonical = GlobalVertex { position: point };
+                    let canonical = GlobalVertex::from_position(point);
 
                     LocalForm::new(local, canonical)
                 });

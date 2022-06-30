@@ -96,7 +96,7 @@ fn create_non_continuous_side_face(
     let vertices = {
         let vertices_top = vertices_bottom.map(|vertex| {
             let point = vertex.position + path;
-            GlobalVertex { position: point }
+            GlobalVertex::from_position(point)
         });
 
         let [[a, b], [c, d]] = [vertices_bottom, vertices_top];
