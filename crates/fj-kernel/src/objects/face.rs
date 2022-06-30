@@ -167,18 +167,23 @@ impl FaceBRep {
 
 /// A list of cycles, as they are stored in `Face`
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct CyclesInFace(Vec<LocalForm<Cycle<2>, Cycle<3>>>);
+pub struct CyclesInFace(Vec<Cycle<2>>);
 
 impl CyclesInFace {
     /// Create a new instance of `CyclesInFace`
     pub fn new(
         cycles: impl IntoIterator<Item = LocalForm<Cycle<2>, Cycle<3>>>,
     ) -> Self {
-        Self(cycles.into_iter().collect())
+        Self(
+            cycles
+                .into_iter()
+                .map(|cycle| cycle.local().clone())
+                .collect(),
+        )
     }
 
     /// Access an iterator over the canonical forms of the cycles
     pub fn as_local(&self) -> impl Iterator<Item = Cycle<2>> + '_ {
-        self.0.iter().map(|cycle| cycle.local().clone())
+        self.0.iter().cloned()
     }
 }
