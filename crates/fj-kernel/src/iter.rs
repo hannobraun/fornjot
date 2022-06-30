@@ -478,7 +478,7 @@ mod tests {
 
     #[test]
     fn vertex() {
-        let vertex = GlobalVertex::from_point([0., 0., 0.]);
+        let vertex = GlobalVertex::from_position([0., 0., 0.]);
 
         assert_eq!(0, vertex.curve_iter().count());
         assert_eq!(0, vertex.cycle_iter().count());

@@ -47,8 +47,8 @@ mod test {
         let c = Point::from([3., 5., 8.]);
         let d = Point::from([5., 8., 13.]);
 
-        let v1 = GlobalVertex::from_point(a);
-        let v2 = GlobalVertex::from_point(d);
+        let v1 = GlobalVertex::from_position(a);
+        let v2 = GlobalVertex::from_position(d);
 
         let vertices = VerticesOfEdge::from_vertices([
             LocalForm::new(Point::from([0.]), v1),
