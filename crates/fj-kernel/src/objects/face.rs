@@ -181,11 +181,4 @@ impl CyclesInFace {
     pub fn as_local(&self) -> impl Iterator<Item = Cycle<2>> + '_ {
         self.0.iter().map(|cycle| cycle.local().clone())
     }
-
-    /// Access an iterator over local forms of the cycles
-    pub fn as_local_form(
-        &self,
-    ) -> impl Iterator<Item = &'_ LocalForm<Cycle<2>, Cycle<3>>> {
-        self.0.iter()
-    }
 }
