@@ -18,19 +18,19 @@
 /// The `N` parameter defines the dimensionality of the local form, while the
 /// `C` parameter defines the dimensionality of the canonical form.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Point<const N: usize, const C: usize> {
+pub struct Point<const N: usize> {
     local: fj_math::Point<N>,
-    global: fj_math::Point<C>,
+    global: fj_math::Point<3>,
 }
 
-impl<const N: usize, const C: usize> Point<N, C> {
+impl<const N: usize> Point<N> {
     /// Construct a new instance
     ///
     /// Both the local and the canonical form must be provided. The caller must
     /// guarantee that both of them match, i.e. define the same point.
     pub fn new(
         local: impl Into<fj_math::Point<N>>,
-        global: impl Into<fj_math::Point<C>>,
+        global: impl Into<fj_math::Point<3>>,
     ) -> Self {
         Self {
             local: local.into(),
@@ -44,7 +44,7 @@ impl<const N: usize, const C: usize> Point<N, C> {
     }
 
     /// Access the point's canonical form
-    pub fn global(&self) -> fj_math::Point<C> {
+    pub fn global(&self) -> fj_math::Point<3> {
         self.global
     }
 }

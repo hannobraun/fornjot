@@ -5,8 +5,8 @@ use crate::geometry;
 
 /// Create a Delaunay triangulation of all points
 pub fn triangulate(
-    points: Vec<geometry::Point<2, 3>>,
-) -> Vec<[geometry::Point<2, 3>; 3]> {
+    points: Vec<geometry::Point<2>>,
+) -> Vec<[geometry::Point<2>; 3]> {
     use spade::Triangulation as _;
 
     let triangulation = spade::DelaunayTriangulation::<_>::bulk_load(points)
@@ -31,7 +31,7 @@ pub fn triangulate(
 }
 
 // Enables the use of `geometry::Point` in the triangulation.
-impl HasPosition for geometry::Point<2, 3> {
+impl HasPosition for geometry::Point<2> {
     type Scalar = Scalar;
 
     fn position(&self) -> spade::Point2<Self::Scalar> {

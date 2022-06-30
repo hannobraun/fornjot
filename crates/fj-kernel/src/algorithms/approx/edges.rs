@@ -2,7 +2,7 @@ use crate::{geometry, objects::VerticesOfEdge};
 
 pub fn approx_edge(
     vertices: VerticesOfEdge,
-    points: &mut Vec<geometry::Point<1, 3>>,
+    points: &mut Vec<geometry::Point<1>>,
 ) {
     // Insert the exact vertices of this edge into the approximation. This means
     // we don't rely on the curve approximation to deliver accurate
