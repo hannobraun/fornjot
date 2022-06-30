@@ -199,7 +199,7 @@ impl ObjectIters for Face {
             let mut iter = Iter::empty().with(face.surface().curve_iter());
 
             for cycle in face.all_cycles() {
-                iter = iter.with(cycle.curve_iter());
+                iter = iter.with(cycle.to_canonical().curve_iter());
             }
 
             return iter;
@@ -213,7 +213,7 @@ impl ObjectIters for Face {
             let mut iter = Iter::empty().with(face.surface().cycle_iter());
 
             for cycle in face.all_cycles() {
-                iter = iter.with(cycle.cycle_iter());
+                iter = iter.with(cycle.to_canonical().cycle_iter());
             }
 
             return iter;
@@ -227,7 +227,7 @@ impl ObjectIters for Face {
             let mut iter = Iter::empty().with(face.surface().edge_iter());
 
             for cycle in face.all_cycles() {
-                iter = iter.with(cycle.edge_iter());
+                iter = iter.with(cycle.to_canonical().edge_iter());
             }
 
             return iter;
@@ -246,7 +246,7 @@ impl ObjectIters for Face {
                 Iter::empty().with(face.surface().global_vertex_iter());
 
             for cycle in face.all_cycles() {
-                iter = iter.with(cycle.global_vertex_iter());
+                iter = iter.with(cycle.to_canonical().global_vertex_iter());
             }
 
             return iter;
@@ -260,7 +260,7 @@ impl ObjectIters for Face {
             let mut iter = Iter::empty().with(face.surface().surface_iter());
 
             for cycle in face.all_cycles() {
-                iter = iter.with(cycle.surface_iter());
+                iter = iter.with(cycle.to_canonical().surface_iter());
             }
 
             return iter;
@@ -274,7 +274,7 @@ impl ObjectIters for Face {
             let mut iter = Iter::empty().with(face.surface().vertex_iter());
 
             for cycle in face.all_cycles() {
-                iter = iter.with(cycle.vertex_iter());
+                iter = iter.with(cycle.to_canonical().vertex_iter());
             }
 
             return iter;

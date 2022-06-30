@@ -70,7 +70,7 @@ impl Face {
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn exteriors(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
+    pub fn exteriors(&self) -> impl Iterator<Item = Cycle<2>> + '_ {
         self.brep().exteriors()
     }
 
@@ -78,7 +78,7 @@ impl Face {
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn interiors(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
+    pub fn interiors(&self) -> impl Iterator<Item = Cycle<2>> + '_ {
         self.brep().interiors()
     }
 
@@ -86,7 +86,7 @@ impl Face {
     ///
     /// This is equivalent to chaining the iterators returned by
     /// [`Face::exteriors`] and [`Face::interiors`].
-    pub fn all_cycles(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
+    pub fn all_cycles(&self) -> impl Iterator<Item = Cycle<2>> + '_ {
         self.exteriors().chain(self.interiors())
     }
 
@@ -144,23 +144,23 @@ impl FaceBRep {
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn exteriors(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
-        self.exteriors.as_canonical()
+    pub fn exteriors(&self) -> impl Iterator<Item = Cycle<2>> + '_ {
+        self.exteriors.as_local()
     }
 
     /// Access the interior cycles that the face refers to
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn interiors(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
-        self.interiors.as_canonical()
+    pub fn interiors(&self) -> impl Iterator<Item = Cycle<2>> + '_ {
+        self.interiors.as_local()
     }
 
     /// Access all cycles that the face refers to
     ///
     /// This is equivalent to chaining the iterators returned by
     /// [`Face::exteriors`] and [`Face::interiors`].
-    pub fn all_cycles(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
+    pub fn all_cycles(&self) -> impl Iterator<Item = Cycle<2>> + '_ {
         self.exteriors().chain(self.interiors())
     }
 }
@@ -178,8 +178,8 @@ impl CyclesInFace {
     }
 
     /// Access an iterator over the canonical forms of the cycles
-    pub fn as_canonical(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
-        self.0.iter().map(|cycle| cycle.canonical().clone())
+    pub fn as_local(&self) -> impl Iterator<Item = Cycle<2>> + '_ {
+        self.0.iter().map(|cycle| cycle.local().clone())
     }
 
     /// Access an iterator over local forms of the cycles
