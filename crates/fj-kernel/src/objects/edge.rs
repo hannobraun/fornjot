@@ -76,9 +76,9 @@ impl Edge<3> {
     pub fn line_segment_from_points(
         vertices: [impl Into<Point<3>>; 2],
     ) -> Self {
-        let vertices = vertices.map(|point| {
-            let point = point.into();
-            GlobalVertex::from_position(point)
+        let vertices = vertices.map(|position| {
+            let position = position.into();
+            GlobalVertex::from_position(position)
         });
 
         Self::line_segment_from_vertices(vertices)
