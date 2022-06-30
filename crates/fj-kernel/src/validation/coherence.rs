@@ -17,9 +17,9 @@ pub fn validate_edge(
     let mut edge_vertex_mismatches = Vec::new();
 
     for vertex in edge.vertices.iter() {
-        let local = *vertex.local();
+        let local = vertex.position();
         let local_as_canonical = edge.curve().point_from_curve_coords(local);
-        let canonical = vertex.canonical().position();
+        let canonical = vertex.global().position();
         let distance = (local_as_canonical - canonical).magnitude();
 
         if distance > max_distance {

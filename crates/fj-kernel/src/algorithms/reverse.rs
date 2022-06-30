@@ -45,9 +45,7 @@ fn reverse_local_coordinates_in_cycle(cycles: &CyclesInFace) -> CyclesInFace {
                     *edge.local().curve.local(),
                     *edge.local().curve.canonical(),
                 );
-                let vertices = edge.local().vertices.clone().map(|vertex| {
-                    LocalForm::new(*vertex.local(), *vertex.canonical())
-                });
+                let vertices = edge.local().vertices.clone();
                 let local = Edge { curve, vertices };
                 LocalForm::new(local, edge.canonical().clone())
             })

@@ -4,7 +4,7 @@ use fj_math::{Circle, Line, Point, Scalar, Vector};
 
 use crate::shape::LocalForm;
 
-use super::{Curve, GlobalVertex};
+use super::{Curve, GlobalVertex, Vertex};
 
 /// An edge of a shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -36,11 +36,8 @@ impl<const D: usize> Edge<D> {
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn vertices(&self) -> Option<[GlobalVertex; 2]> {
-        self.vertices
-            .0
-            .as_ref()
-            .map(|[a, b]| [*a.canonical(), *b.canonical()])
+    pub fn vertices(&self) -> Option<[Vertex; 2]> {
+        self.vertices.0
     }
 }
 
@@ -92,8 +89,8 @@ impl Edge<3> {
         };
 
         let vertices = [
-            LocalForm::new(Point::from([0.]), a),
-            LocalForm::new(Point::from([1.]), b),
+            Vertex::new(Point::from([0.]), a),
+            Vertex::new(Point::from([1.]), b),
         ];
 
         Self {
@@ -121,20 +118,16 @@ impl<const D: usize> fmt::Display for Edge<D> {
 
 /// The vertices that bound an edge
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct VerticesOfEdge(Option<[LocalForm<Point<1>, GlobalVertex>; 2]>);
+pub struct VerticesOfEdge(Option<[Vertex; 2]>);
 
 impl VerticesOfEdge {
     /// Construct an instance of `VerticesOfEdge` from zero or two vertices
-    pub fn new(
-        vertices: Option<[LocalForm<Point<1>, GlobalVertex>; 2]>,
-    ) -> Self {
+    pub fn new(vertices: Option<[Vertex; 2]>) -> Self {
         Self(vertices)
     }
 
     /// Construct an instance of `VerticesOfEdge` from two vertices
-    pub fn from_vertices(
-        vertices: [LocalForm<Point<1>, GlobalVertex>; 2],
-    ) -> Self {
+    pub fn from_vertices(vertices: [Vertex; 2]) -> Self {
         Self(Some(vertices))
     }
 
@@ -147,15 +140,8 @@ impl VerticesOfEdge {
     ///
     /// The order of vertices is ignored.
     pub fn are_same(&self, other: &Self) -> bool {
-        if let Some([a, b]) = &self.0 {
-            let [a, b] = [a.canonical(), b.canonical()];
-
-            if let Some(other) = &other.0 {
-                let other = {
-                    let [a, b] = other;
-                    [a.canonical(), b.canonical()]
-                };
-
+        if let Some([a, b]) = self.0 {
+            if let Some(other) = other.0 {
                 return [a, b] == other || [b, a] == other;
             }
         }
@@ -168,14 +154,12 @@ impl VerticesOfEdge {
     /// # Panics
     ///
     /// Panics, if the edge has no vertices.
-    pub fn expect_vertices(self) -> [LocalForm<Point<1>, GlobalVertex>; 2] {
+    pub fn expect_vertices(self) -> [Vertex; 2] {
         self.0.expect("Expected edge to have vertices")
     }
 
     /// Iterate over the vertices, if any
-    pub fn iter(
-        &self,
-    ) -> impl Iterator<Item = &LocalForm<Point<1>, GlobalVertex>> {
+    pub fn iter(&self) -> impl Iterator<Item = &Vertex> {
         self.0.iter().flatten()
     }
 
@@ -185,8 +169,8 @@ impl VerticesOfEdge {
     pub fn reverse(self) -> Self {
         Self(self.0.map(|[a, b]| {
             [
-                LocalForm::new(-(*b.local()), *b.canonical()),
-                LocalForm::new(-(*a.local()), *a.canonical()),
+                Vertex::new(-b.position(), b.global()),
+                Vertex::new(-a.position(), a.global()),
             ]
         }))
     }
@@ -194,9 +178,7 @@ impl VerticesOfEdge {
     /// Map each vertex using the provided function
     pub fn map<F>(self, f: F) -> Self
     where
-        F: FnMut(
-            LocalForm<Point<1>, GlobalVertex>,
-        ) -> LocalForm<Point<1>, GlobalVertex>,
+        F: FnMut(Vertex) -> Vertex,
     {
         Self(self.convert(f))
     }
@@ -204,7 +186,7 @@ impl VerticesOfEdge {
     /// Convert each vertex using the provided function
     pub fn convert<F, T>(self, f: F) -> Option<[T; 2]>
     where
-        F: FnMut(LocalForm<Point<1>, GlobalVertex>) -> T,
+        F: FnMut(Vertex) -> T,
     {
         self.0.map(|vertices| vertices.map(f))
     }
@@ -212,7 +194,7 @@ impl VerticesOfEdge {
     /// Convert each vertex using the provided fallible function
     pub fn try_convert<F, T, E>(self, f: F) -> Result<Option<[T; 2]>, E>
     where
-        F: FnMut(LocalForm<Point<1>, GlobalVertex>) -> Result<T, E>,
+        F: FnMut(Vertex) -> Result<T, E>,
     {
         // Can be cleaned up using `try_map`, once that is stable:
         // https://doc.rust-lang.org/std/primitive.array.html#method.try_map

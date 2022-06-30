@@ -3,7 +3,7 @@ use fj_math::{Point, Scalar, Transform, Triangle, Vector};
 use crate::{
     iter::ObjectIters,
     objects::{
-        Curve, Cycle, Edge, Face, GlobalVertex, Surface, VerticesOfEdge,
+        Curve, Cycle, Edge, Face, GlobalVertex, Surface, Vertex, VerticesOfEdge,
     },
     shape::LocalForm,
 };
@@ -43,7 +43,7 @@ pub fn sweep(
             create_non_continuous_side_face(
                 path,
                 is_sweep_along_negative_direction,
-                vertices,
+                vertices.map(|vertex| vertex.global()),
                 color,
                 &mut target,
             );
@@ -140,8 +140,8 @@ fn create_non_continuous_side_face(
             };
 
             let vertices = VerticesOfEdge::from_vertices([
-                LocalForm::new(Point::from([0.]), a.1),
-                LocalForm::new(Point::from([1.]), b.1),
+                Vertex::new(Point::from([0.]), a.1),
+                Vertex::new(Point::from([1.]), b.1),
             ]);
 
             let edge = {

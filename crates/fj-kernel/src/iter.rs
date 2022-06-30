@@ -529,7 +529,7 @@ mod tests {
         assert_eq!(0, cycle.face_iter().count());
         assert_eq!(3, cycle.global_vertex_iter().count());
         assert_eq!(0, cycle.surface_iter().count());
-        assert_eq!(0, cycle.vertex_iter().count());
+        assert_eq!(6, cycle.vertex_iter().count());
     }
 
     #[test]
@@ -542,7 +542,7 @@ mod tests {
         assert_eq!(0, edge.face_iter().count());
         assert_eq!(2, edge.global_vertex_iter().count());
         assert_eq!(0, edge.surface_iter().count());
-        assert_eq!(0, edge.vertex_iter().count());
+        assert_eq!(2, edge.vertex_iter().count());
     }
 
     #[test]
@@ -557,7 +557,7 @@ mod tests {
         assert_eq!(1, face.face_iter().count());
         assert_eq!(3, face.global_vertex_iter().count());
         assert_eq!(1, face.surface_iter().count());
-        assert_eq!(0, face.vertex_iter().count());
+        assert_eq!(6, face.vertex_iter().count());
     }
 
     #[test]
