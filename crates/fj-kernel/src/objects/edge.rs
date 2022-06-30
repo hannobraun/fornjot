@@ -66,6 +66,16 @@ impl Edge<2> {
 
         LocalForm::new(edge_local, edge_canonical)
     }
+
+    /// Temporary utility method to aid refactoring
+    pub fn to_canonical(&self) -> Edge<3> {
+        let curve = *self.curve.canonical();
+        let curve = LocalForm::canonical_only(curve);
+
+        let vertices = self.vertices.clone();
+
+        Edge { curve, vertices }
+    }
 }
 
 impl Edge<3> {

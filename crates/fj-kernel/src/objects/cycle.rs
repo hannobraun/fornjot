@@ -21,12 +21,7 @@ impl Cycle<2> {
         let mut edges = Vec::new();
 
         for edge in &self.edges {
-            let curve = edge.canonical().curve();
-            let curve = LocalForm::canonical_only(curve);
-
-            let vertices = edge.canonical().vertices.clone();
-
-            let edge = Edge { curve, vertices };
+            let edge = edge.local().to_canonical();
             let edge = LocalForm::canonical_only(edge);
             edges.push(edge);
         }
