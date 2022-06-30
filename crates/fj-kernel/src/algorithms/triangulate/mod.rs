@@ -31,7 +31,7 @@ pub fn triangulate(
                     .map(|vertex| {
                         // Can't panic, unless the approximation wrongfully
                         // generates points that are not in the surface.
-                        surface.point_to_surface_coords(vertex.canonical())
+                        surface.point_to_surface_coords(vertex.global())
                     })
                     .collect();
                 let face_as_polygon = Polygon::new(surface)
@@ -40,7 +40,7 @@ pub fn triangulate(
                             // Can't panic, unless the approximation wrongfully
                             // generates points that are not in the surface.
                             surface
-                                .point_to_surface_coords(point.canonical())
+                                .point_to_surface_coords(point.global())
                                 .local()
                         },
                     ))
@@ -51,7 +51,7 @@ pub fn triangulate(
                                 // wrongfully generates points that are not in
                                 // the surface.
                                 surface
-                                    .point_to_surface_coords(point.canonical())
+                                    .point_to_surface_coords(point.global())
                                     .local()
                             })
                         },
@@ -66,7 +66,7 @@ pub fn triangulate(
                 });
 
                 for triangle in triangles {
-                    let points = triangle.map(|point| point.canonical());
+                    let points = triangle.map(|point| point.global());
                     mesh.push_triangle(points, brep.color);
                 }
             }

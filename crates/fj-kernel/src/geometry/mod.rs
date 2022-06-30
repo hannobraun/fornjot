@@ -2,4 +2,4 @@
 
 mod points;
 
-pub use self::points::Point;
+pub use self::points::LocalPoint;

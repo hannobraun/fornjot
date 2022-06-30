@@ -1,50 +1,55 @@
-/// A point that stores a local and a canonical form
+/// A point that stores a local and a global form
 ///
 /// The local form of a point is whatever representation is most appropriate in
-/// the current context. The canonical form is the representation that the
-/// local form was created from.
-///
-/// Typically, the canonical form is more general and has higher dimensionality
-/// (for example, a point in a 3D space), while the local form is more specific
-/// and has lower dimensionality (for example, the point in 2D surface
-/// coordinates, on surface within that 3D space).
+/// the current context, which might be a curve or surface. The global form is
+/// the global 3D form of the same point.
 ///
 /// The purpose of storing both forms is to be able to losslessly convert the
-/// point back to its canonical form. Even if this conversion can be computed on
-/// the fly, such a conversion might not result in the original canonical form,
-/// due to floating point accuracy issues. Hence, such a conversion would not be
+/// point back to its global form. Even if this conversion can be computed on
+/// the fly, such a conversion might not result in the original global form, due
+/// to floating point accuracy issues. Hence, such a conversion would not be
 /// lossless, which could result in bugs.
 ///
-/// The `N` parameter defines the dimensionality of the local form, while the
-/// `C` parameter defines the dimensionality of the canonical form.
+/// The `D` parameter defines the dimensionality of the local form.
+///
+/// # `LocalPoint` and [`Vertex`]
+///
+/// `LocalPoint` is similar to `Vertex`, but there is a key differences:
+/// `Vertex` is an object in the boundary representation of a shape, while
+/// `LocalPoint` can refer to any point. This distinction is important in the
+/// case of approximation, for example, as points might be generated to
+/// approximate a curve or surface, without those generated points referring to
+/// any vertices.
+///
+/// [`Vertex`]: crate::objects::Vertex
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Point<const N: usize, const C: usize> {
-    local: fj_math::Point<N>,
-    canonical: fj_math::Point<C>,
+pub struct LocalPoint<const D: usize> {
+    local: fj_math::Point<D>,
+    global: fj_math::Point<3>,
 }
 
-impl<const N: usize, const C: usize> Point<N, C> {
+impl<const D: usize> LocalPoint<D> {
     /// Construct a new instance
     ///
-    /// Both the local and the canonical form must be provided. The caller must
+    /// Both the local and the global form must be provided. The caller must
     /// guarantee that both of them match, i.e. define the same point.
     pub fn new(
-        local: impl Into<fj_math::Point<N>>,
-        canonical: impl Into<fj_math::Point<C>>,
+        local: impl Into<fj_math::Point<D>>,
+        global: impl Into<fj_math::Point<3>>,
     ) -> Self {
         Self {
             local: local.into(),
-            canonical: canonical.into(),
+            global: global.into(),
         }
     }
 
     /// Access the point's local form
-    pub fn local(&self) -> fj_math::Point<N> {
+    pub fn local(&self) -> fj_math::Point<D> {
         self.local
     }
 
-    /// Access the point's canonical form
-    pub fn canonical(&self) -> fj_math::Point<C> {
-        self.canonical
+    /// Access the point's global form
+    pub fn global(&self) -> fj_math::Point<3> {
+        self.global
     }
 }

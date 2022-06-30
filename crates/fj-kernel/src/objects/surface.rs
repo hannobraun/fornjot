@@ -1,6 +1,6 @@
 use fj_math::{Line, Point, Transform, Vector};
 
-use crate::geometry;
+use crate::geometry::LocalPoint;
 
 use super::Curve;
 
@@ -68,7 +68,7 @@ impl Surface {
     pub fn point_to_surface_coords(
         &self,
         point_3d: impl Into<Point<3>>,
-    ) -> geometry::Point<2, 3> {
+    ) -> LocalPoint<2> {
         let point_3d = point_3d.into();
 
         let point_2d = match self {
@@ -77,7 +77,7 @@ impl Surface {
             }
         };
 
-        geometry::Point::new(point_2d, point_3d)
+        LocalPoint::new(point_2d, point_3d)
     }
 
     /// Convert a point in surface coordinates to model coordinates
@@ -138,7 +138,7 @@ impl SweptCurve {
     ) -> Point<2> {
         let point = point.into();
 
-        let u = self.curve.point_to_curve_coords(point).local().t;
+        let u = self.curve.point_to_curve_coords(point).t;
         let v = self.path_to_line().point_to_line_coords(point).t;
 
         Point::from([u, v])

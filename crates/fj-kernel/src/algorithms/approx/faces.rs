@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use crate::{geometry, objects::Face};
+use crate::{geometry::LocalPoint, objects::Face};
 
 use super::{CycleApprox, Tolerance};
 
@@ -11,7 +11,7 @@ pub struct FaceApprox {
     ///
     /// These could be actual vertices from the model, points that approximate
     /// an edge, or points that approximate a face.
-    pub points: HashSet<geometry::Point<3, 3>>,
+    pub points: HashSet<LocalPoint<3>>,
 
     /// Approximation of the exterior cycle
     pub exterior: CycleApprox,
@@ -82,7 +82,7 @@ mod tests {
     use map_macro::set;
 
     use crate::{
-        geometry,
+        geometry::LocalPoint,
         objects::{Face, Surface},
     };
 
@@ -118,14 +118,14 @@ mod tests {
         let g = g.to_xyz();
         let h = h.to_xyz();
 
-        let a = geometry::Point::new(a, a);
-        let b = geometry::Point::new(b, b);
-        let c = geometry::Point::new(c, c);
-        let d = geometry::Point::new(d, d);
-        let e = geometry::Point::new(e, e);
-        let f = geometry::Point::new(f, f);
-        let g = geometry::Point::new(g, g);
-        let h = geometry::Point::new(h, h);
+        let a = LocalPoint::new(a, a);
+        let b = LocalPoint::new(b, b);
+        let c = LocalPoint::new(c, c);
+        let d = LocalPoint::new(d, d);
+        let e = LocalPoint::new(e, e);
+        let f = LocalPoint::new(f, f);
+        let g = LocalPoint::new(g, g);
+        let h = LocalPoint::new(h, h);
 
         let approx = FaceApprox::new(&face, tolerance);
         let expected = FaceApprox {

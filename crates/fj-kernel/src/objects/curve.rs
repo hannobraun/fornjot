@@ -2,8 +2,6 @@ use std::fmt;
 
 use fj_math::{Circle, Line, Point, Transform, Vector};
 
-use crate::geometry;
-
 /// A one-dimensional shape
 ///
 /// The word "curve" is used as an umbrella term for all one-dimensional shapes,
@@ -61,17 +59,13 @@ impl<const D: usize> Curve<D> {
     pub fn point_to_curve_coords(
         &self,
         point: impl Into<Point<D>>,
-    ) -> geometry::Point<1, D> {
-        let point_canonical = point.into();
+    ) -> Point<1> {
+        let point = point.into();
 
-        let point_local = match self {
-            Self::Circle(curve) => {
-                curve.point_to_circle_coords(point_canonical)
-            }
-            Self::Line(curve) => curve.point_to_line_coords(point_canonical),
-        };
-
-        geometry::Point::new(point_local, point_canonical)
+        match self {
+            Self::Circle(curve) => curve.point_to_circle_coords(point),
+            Self::Line(curve) => curve.point_to_line_coords(point),
+        }
     }
 
     /// Convert a point on the curve into model coordinates
