@@ -537,13 +537,13 @@ mod tests {
             [[0., 0.], [1., 0.]],
         );
 
-        assert_eq!(1, edge.curve_iter().count());
-        assert_eq!(0, edge.cycle_iter().count());
-        assert_eq!(1, edge.edge_iter().count());
-        assert_eq!(0, edge.face_iter().count());
-        assert_eq!(2, edge.global_vertex_iter().count());
-        assert_eq!(0, edge.surface_iter().count());
-        assert_eq!(2, edge.vertex_iter().count());
+        assert_eq!(1, edge.to_canonical().curve_iter().count());
+        assert_eq!(0, edge.to_canonical().cycle_iter().count());
+        assert_eq!(1, edge.to_canonical().edge_iter().count());
+        assert_eq!(0, edge.to_canonical().face_iter().count());
+        assert_eq!(2, edge.to_canonical().global_vertex_iter().count());
+        assert_eq!(0, edge.to_canonical().surface_iter().count());
+        assert_eq!(2, edge.to_canonical().vertex_iter().count());
     }
 
     #[test]

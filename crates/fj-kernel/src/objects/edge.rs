@@ -61,28 +61,19 @@ impl Edge<2> {
         }
     }
 
-    /// Temporary utility method to aid refactoring
-    pub fn to_canonical(&self) -> Edge<3> {
-        let curve = *self.curve.canonical();
-        let curve = LocalForm::canonical_only(curve);
-
-        let vertices = self.vertices.clone();
-
-        Edge { curve, vertices }
-    }
-}
-
-impl Edge<3> {
     /// Create a line segment from two points
     pub fn line_segment_from_points(
         surface: &Surface,
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
+        let points = points.map(Into::into);
+
         let global_vertices = points.map(|position| {
             let position = surface.point_from_surface_coords(position);
             GlobalVertex::from_position(position)
         });
 
+        let curve_local = Curve::Line(Line::from_points(points));
         let curve_canonical = {
             let points =
                 global_vertices.map(|global_vertex| global_vertex.position());
@@ -98,9 +89,19 @@ impl Edge<3> {
         };
 
         Self {
-            curve: LocalForm::canonical_only(curve_canonical),
+            curve: LocalForm::new(curve_local, curve_canonical),
             vertices: VerticesOfEdge::from_vertices(vertices),
         }
+    }
+
+    /// Temporary utility method to aid refactoring
+    pub fn to_canonical(&self) -> Edge<3> {
+        let curve = *self.curve.canonical();
+        let curve = LocalForm::canonical_only(curve);
+
+        let vertices = self.vertices.clone();
+
+        Edge { curve, vertices }
     }
 }
 
