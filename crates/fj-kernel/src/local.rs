@@ -57,3 +57,7 @@ impl LocalForm for Curve<2> {
 impl LocalForm for Point<1> {
     type GlobalForm = Point<3>;
 }
+
+impl LocalForm for Point<2> {
+    type GlobalForm = Point<3>;
+}
