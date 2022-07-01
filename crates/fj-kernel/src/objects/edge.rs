@@ -81,7 +81,8 @@ impl Edge<3> {
         });
 
         let curve = {
-            let points = global_vertices.map(|vertex| vertex.position());
+            let points =
+                global_vertices.map(|global_vertex| global_vertex.position());
             Curve::Line(Line::from_points(points))
         };
 
