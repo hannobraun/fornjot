@@ -1,5 +1,7 @@
 //! Infrastructure for types that have a local and a global form
 
+use crate::objects::Curve;
+
 /// A reference to an object, which includes a local form
 ///
 /// This type is used by topological objects to reference other objects, while
@@ -29,4 +31,16 @@ impl<T, Canonical> Local<T, Canonical> {
     pub fn canonical(&self) -> &Canonical {
         &self.canonical
     }
+}
+
+/// Implemented for types that are the local form of a global type
+///
+/// See [`Local`] for more information.
+pub trait LocalForm {
+    /// The global form of the implementing type
+    type GlobalForm;
+}
+
+impl LocalForm for Curve<2> {
+    type GlobalForm = Curve<3>;
 }
