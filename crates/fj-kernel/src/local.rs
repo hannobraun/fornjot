@@ -8,17 +8,17 @@ use crate::objects::Curve;
 /// also keeping track of a local representation of that object, which is often
 /// more appropriate for various tasks.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Local<T, Canonical> {
+pub struct Local<T: LocalForm> {
     local: T,
-    canonical: Canonical,
+    canonical: T::GlobalForm,
 }
 
-impl<T, Canonical> Local<T, Canonical> {
+impl<T: LocalForm> Local<T> {
     /// Construct a new instance of `LocalForm`
     ///
     /// It is the caller's responsibility to make sure that the local and
     /// canonical forms passed to this method actually match.
-    pub fn new(local: T, canonical: Canonical) -> Self {
+    pub fn new(local: T, canonical: T::GlobalForm) -> Self {
         Self { local, canonical }
     }
 
@@ -28,7 +28,7 @@ impl<T, Canonical> Local<T, Canonical> {
     }
 
     /// Access the canonical form of the referenced object
-    pub fn canonical(&self) -> &Canonical {
+    pub fn canonical(&self) -> &T::GlobalForm {
         &self.canonical
     }
 }
