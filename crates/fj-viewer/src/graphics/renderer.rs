@@ -57,12 +57,20 @@ pub struct Renderer {
     pipelines: Pipelines,
 
     config_ui: ConfigUi,
+
+    /// State required for integration with `egui`.
+    pub egui: EguiState,
 }
 
 impl Renderer {
     /// Returns a new `Renderer`.
-    pub async fn new(screen: &impl Screen) -> Result<Self, InitError> {
+    pub async fn new(
+        screen: &impl Screen<Window = egui_winit::winit::window::Window>,
+      ) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::PRIMARY);
+
+        let egui_winit_state = egui_winit::State::new(4096, screen.window());
+        let egui_context = egui::Context::default();
 
         // This is sound, as `window` is an object to create a surface upon.
         let surface = unsafe { instance.create_surface(screen.window()) };
@@ -161,6 +169,24 @@ impl Renderer {
 
         let config_ui = ConfigUi::new(&device, color_format)?;
 
+        //
+        // Note: We need to hold on to this otherwise (from my memory)
+        //       it causes the egui font texture to get dropped after
+        //       drawing one frame.
+        //
+        //       This then results in an `egui_wgpu_backend` error of
+        //       `BackendError::Internal` with message:
+        //
+        //           "Texture 0 used but not live"
+        //
+        //       See also: <https://github.com/hasenbanck/egui_wgpu_backend/blob/b2d3e7967351690c6425f37cd6d4ffb083a7e8e6/src/lib.rs#L373>
+        //
+        let egui_rpass = egui_wgpu::renderer::RenderPass::new(
+            &device,
+            surface_config.format,
+            1,
+        );
+
         Ok(Self {
             surface,
             device,
@@ -176,6 +202,13 @@ impl Renderer {
             pipelines,
 
             config_ui,
+
+            egui: EguiState {
+                context: egui_context,
+                winit_state: egui_winit_state,
+                rpass: egui_rpass,
+                options: Default::default(),
+            },
         })
     }
 
