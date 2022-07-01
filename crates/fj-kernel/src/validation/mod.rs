@@ -141,8 +141,8 @@ mod tests {
     use fj_math::{Point, Scalar};
 
     use crate::{
+        local::Local,
         objects::{Curve, Edge, GlobalVertex, Vertex, VerticesOfEdge},
-        shape::LocalForm,
         validation::{validate, ValidationConfig, ValidationError},
     };
 
@@ -154,7 +154,7 @@ mod tests {
         let curve = {
             let curve_local = Curve::line_from_points([[0., 0.], [1., 0.]]);
             let curve_canonical = Curve::line_from_points([a, b]);
-            LocalForm::new(curve_local, curve_canonical)
+            Local::new(curve_local, curve_canonical)
         };
 
         let a = GlobalVertex::from_position(a);

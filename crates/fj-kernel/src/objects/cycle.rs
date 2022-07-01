@@ -1,8 +1,6 @@
-use fj_math::{Line, Point};
+use fj_math::Point;
 
-use crate::shape::LocalForm;
-
-use super::{Curve, Edge, Surface};
+use super::{Edge, Surface};
 
 /// A cycle of connected edges
 ///
@@ -36,18 +34,7 @@ impl Cycle {
             // Can be cleaned up, once `array_windows` is stable.
             let points = [points[0], points[1]];
 
-            let edge_canonical =
-                Edge::line_segment_from_points(surface, points);
-
-            let edge_local = Edge {
-                curve: LocalForm::new(
-                    Curve::Line(Line::from_points(points)),
-                    *edge_canonical.curve.canonical(),
-                ),
-                vertices: edge_canonical.vertices.clone(),
-            };
-
-            edges.push(edge_local);
+            edges.push(Edge::line_segment_from_points(surface, points));
         }
 
         Cycle { edges }

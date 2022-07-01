@@ -2,8 +2,8 @@ use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
     iter::ObjectIters,
+    local::Local,
     objects::{Cycle, Edge, Face},
-    shape::LocalForm,
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
@@ -94,7 +94,7 @@ impl ToShape for fj::Difference2d {
 fn add_cycle(cycle: Cycle, reverse: bool) -> Cycle {
     let mut edges = Vec::new();
     for edge in cycle.edges {
-        let curve_local = *edge.curve.local();
+        let curve_local = edge.curve.local();
         let curve_local = if reverse {
             curve_local.reverse()
         } else {
@@ -115,7 +115,7 @@ fn add_cycle(cycle: Cycle, reverse: bool) -> Cycle {
         };
 
         let edge = Edge {
-            curve: LocalForm::new(curve_local, curve_canonical),
+            curve: Local::new(curve_local, curve_canonical),
             vertices: vertices.clone(),
         };
 

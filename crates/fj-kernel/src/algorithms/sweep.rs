@@ -2,10 +2,10 @@ use fj_math::{Point, Scalar, Transform, Triangle, Vector};
 
 use crate::{
     iter::ObjectIters,
+    local::Local,
     objects::{
         Curve, Cycle, Edge, Face, GlobalVertex, Surface, Vertex, VerticesOfEdge,
     },
-    shape::LocalForm,
 };
 
 use super::{reverse_face, transform::transform_face, CycleApprox, Tolerance};
@@ -144,7 +144,7 @@ fn create_non_continuous_side_face(
                 let global = [a, b].map(|vertex| vertex.1.position());
                 let global = Curve::line_from_points(global);
 
-                LocalForm::new(local, global)
+                Local::new(local, global)
             };
 
             let vertices = VerticesOfEdge::from_vertices([
@@ -153,7 +153,7 @@ fn create_non_continuous_side_face(
             ]);
 
             let edge = Edge {
-                curve: curve.clone(),
+                curve,
                 vertices: vertices.clone(),
             };
 

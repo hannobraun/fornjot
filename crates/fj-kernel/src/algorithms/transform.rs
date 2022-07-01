@@ -1,10 +1,10 @@
 use fj_math::Transform;
 
 use crate::{
+    local::Local,
     objects::{
         Cycle, CyclesInFace, Edge, Face, FaceBRep, GlobalVertex, Vertex,
     },
-    shape::LocalForm,
 };
 
 /// Transform a shape
@@ -53,7 +53,7 @@ pub fn transform_cycles(
             .edges
             .iter()
             .map(|edge| {
-                let curve_local = *edge.curve.local();
+                let curve_local = edge.curve.local();
                 let curve_canonical = edge.curve().transform(transform);
 
                 let vertices = edge
@@ -62,7 +62,7 @@ pub fn transform_cycles(
                     .map(|vertex| transform_vertex(&vertex, transform));
 
                 Edge {
-                    curve: LocalForm::new(curve_local, curve_canonical),
+                    curve: Local::new(curve_local, curve_canonical),
                     vertices,
                 }
             })
