@@ -83,7 +83,7 @@ impl Edge<3> {
             GlobalVertex::from_position(position)
         });
 
-        let curve = {
+        let curve_canonical = {
             let points =
                 global_vertices.map(|global_vertex| global_vertex.position());
             Curve::Line(Line::from_points(points))
@@ -98,7 +98,7 @@ impl Edge<3> {
         };
 
         Self {
-            curve: LocalForm::canonical_only(curve),
+            curve: LocalForm::canonical_only(curve_canonical),
             vertices: VerticesOfEdge::from_vertices(vertices),
         }
     }
