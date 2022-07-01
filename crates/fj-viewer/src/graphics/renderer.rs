@@ -295,7 +295,8 @@ impl Renderer {
             );
         }
 
-        self.config_ui
+        if self.egui.options.show_original_ui {
+            self.config_ui
             .draw(
                 &self.device,
                 &mut encoder,
@@ -305,6 +306,7 @@ impl Renderer {
                 config,
             )
             .map_err(DrawError::Text)?;
+        }
 
         let egui_input = self.egui.winit_state.take_egui_input(window);
         self.egui.context.begin_frame(egui_input);
