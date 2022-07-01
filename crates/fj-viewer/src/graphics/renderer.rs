@@ -27,6 +27,19 @@ struct EguiOptionsState {
     show_inspection_ui: bool,
 }
 
+pub struct EguiState {
+    pub winit_state: egui_winit::State,
+    pub context: egui::Context,
+    rpass: egui_wgpu::renderer::RenderPass,
+    options: EguiOptionsState,
+}
+
+impl std::fmt::Debug for EguiState {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("EguiState {}")
+    }
+}
+
 /// Graphics rendering state and target abstraction
 #[derive(Debug)]
 pub struct Renderer {
