@@ -16,7 +16,7 @@ pub trait ObjectIters {
     fn cycle_iter(&self) -> Iter<Cycle>;
 
     /// Iterate over all edges
-    fn edge_iter(&self) -> Iter<Edge<3>>;
+    fn edge_iter(&self) -> Iter<Edge>;
 
     /// Iterate over all faces
     fn face_iter(&self) -> Iter<Face>;
@@ -40,7 +40,7 @@ impl ObjectIters for Curve<3> {
         Iter::empty()
     }
 
-    fn edge_iter(&self) -> Iter<Edge<3>> {
+    fn edge_iter(&self) -> Iter<Edge> {
         Iter::empty()
     }
 
@@ -66,7 +66,7 @@ impl ObjectIters for Cycle {
         let mut iter = Iter::empty();
 
         for edge in self.edges() {
-            iter = iter.with(edge.to_canonical().curve_iter());
+            iter = iter.with(edge.curve_iter());
         }
 
         iter
@@ -76,11 +76,11 @@ impl ObjectIters for Cycle {
         Iter::from_object(self.clone())
     }
 
-    fn edge_iter(&self) -> Iter<Edge<3>> {
+    fn edge_iter(&self) -> Iter<Edge> {
         let mut iter = Iter::empty();
 
         for edge in self.edges() {
-            iter = iter.with(edge.to_canonical().edge_iter());
+            iter = iter.with(edge.edge_iter());
         }
 
         iter
@@ -90,7 +90,7 @@ impl ObjectIters for Cycle {
         let mut iter = Iter::empty();
 
         for edge in self.edges() {
-            iter = iter.with(edge.to_canonical().face_iter());
+            iter = iter.with(edge.face_iter());
         }
 
         iter
@@ -100,7 +100,7 @@ impl ObjectIters for Cycle {
         let mut iter = Iter::empty();
 
         for edge in self.edges() {
-            iter = iter.with(edge.to_canonical().global_vertex_iter());
+            iter = iter.with(edge.global_vertex_iter());
         }
 
         iter
@@ -110,7 +110,7 @@ impl ObjectIters for Cycle {
         let mut iter = Iter::empty();
 
         for edge in self.edges() {
-            iter = iter.with(edge.to_canonical().surface_iter());
+            iter = iter.with(edge.surface_iter());
         }
 
         iter
@@ -120,14 +120,14 @@ impl ObjectIters for Cycle {
         let mut iter = Iter::empty();
 
         for edge in self.edges() {
-            iter = iter.with(edge.to_canonical().vertex_iter());
+            iter = iter.with(edge.vertex_iter());
         }
 
         iter
     }
 }
 
-impl ObjectIters for Edge<3> {
+impl ObjectIters for Edge {
     fn curve_iter(&self) -> Iter<Curve<3>> {
         let mut iter = Iter::empty().with(self.curve().curve_iter());
 
@@ -148,7 +148,7 @@ impl ObjectIters for Edge<3> {
         iter
     }
 
-    fn edge_iter(&self) -> Iter<Edge<3>> {
+    fn edge_iter(&self) -> Iter<Edge> {
         Iter::from_object(self.clone())
     }
 
@@ -222,7 +222,7 @@ impl ObjectIters for Face {
         Iter::empty()
     }
 
-    fn edge_iter(&self) -> Iter<Edge<3>> {
+    fn edge_iter(&self) -> Iter<Edge> {
         if let Face::Face(face) = self {
             let mut iter = Iter::empty().with(face.surface().edge_iter());
 
@@ -293,7 +293,7 @@ impl ObjectIters for GlobalVertex {
         Iter::empty()
     }
 
-    fn edge_iter(&self) -> Iter<Edge<3>> {
+    fn edge_iter(&self) -> Iter<Edge> {
         Iter::empty()
     }
 
@@ -323,7 +323,7 @@ impl ObjectIters for Surface {
         Iter::empty()
     }
 
-    fn edge_iter(&self) -> Iter<Edge<3>> {
+    fn edge_iter(&self) -> Iter<Edge> {
         Iter::empty()
     }
 
@@ -353,7 +353,7 @@ impl ObjectIters for Vertex {
         Iter::empty()
     }
 
-    fn edge_iter(&self) -> Iter<Edge<3>> {
+    fn edge_iter(&self) -> Iter<Edge> {
         Iter::empty()
     }
 
@@ -404,7 +404,7 @@ where
         iter
     }
 
-    fn edge_iter(&self) -> Iter<Edge<3>> {
+    fn edge_iter(&self) -> Iter<Edge> {
         let mut iter = Iter::empty();
 
         for object in self.into_iter() {
@@ -537,13 +537,13 @@ mod tests {
             [[0., 0.], [1., 0.]],
         );
 
-        assert_eq!(1, edge.to_canonical().curve_iter().count());
-        assert_eq!(0, edge.to_canonical().cycle_iter().count());
-        assert_eq!(1, edge.to_canonical().edge_iter().count());
-        assert_eq!(0, edge.to_canonical().face_iter().count());
-        assert_eq!(2, edge.to_canonical().global_vertex_iter().count());
-        assert_eq!(0, edge.to_canonical().surface_iter().count());
-        assert_eq!(2, edge.to_canonical().vertex_iter().count());
+        assert_eq!(1, edge.curve_iter().count());
+        assert_eq!(0, edge.cycle_iter().count());
+        assert_eq!(1, edge.edge_iter().count());
+        assert_eq!(0, edge.face_iter().count());
+        assert_eq!(2, edge.global_vertex_iter().count());
+        assert_eq!(0, edge.surface_iter().count());
+        assert_eq!(2, edge.vertex_iter().count());
     }
 
     #[test]

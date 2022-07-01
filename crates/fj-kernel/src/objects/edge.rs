@@ -8,13 +8,13 @@ use super::{Curve, GlobalVertex, Surface, Vertex};
 
 /// An edge of a shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Edge<const D: usize> {
+pub struct Edge {
     /// Access the curve that defines the edge's geometry
     ///
     /// The edge can be a segment of the curve that is bounded by two vertices,
     /// or if the curve is continuous (i.e. connects to itself), the edge could
     /// be defined by the whole curve, and have no bounding vertices.
-    pub curve: LocalForm<Curve<D>, Curve<3>>,
+    pub curve: LocalForm<Curve<2>, Curve<3>>,
 
     /// Access the vertices that bound the edge on the curve
     ///
@@ -23,7 +23,7 @@ pub struct Edge<const D: usize> {
     pub vertices: VerticesOfEdge,
 }
 
-impl<const D: usize> Edge<D> {
+impl Edge {
     /// Access the curve that the edge refers to
     ///
     /// This is a convenience method that saves the caller from dealing with the
@@ -39,9 +39,7 @@ impl<const D: usize> Edge<D> {
     pub fn vertices(&self) -> Option<[Vertex; 2]> {
         self.vertices.0
     }
-}
 
-impl Edge<2> {
     /// Create a circle from the given radius
     pub fn circle_from_radius(radius: Scalar) -> Self {
         let curve_local = Curve::Circle(Circle {
@@ -93,19 +91,9 @@ impl Edge<2> {
             vertices: VerticesOfEdge::from_vertices(vertices),
         }
     }
-
-    /// Temporary utility method to aid refactoring
-    pub fn to_canonical(&self) -> Edge<3> {
-        let curve = *self.curve.canonical();
-        let curve = LocalForm::canonical_only(curve);
-
-        let vertices = self.vertices.clone();
-
-        Edge { curve, vertices }
-    }
 }
 
-impl<const D: usize> fmt::Display for Edge<D> {
+impl fmt::Display for Edge {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self.vertices() {
             Some(vertices) => {

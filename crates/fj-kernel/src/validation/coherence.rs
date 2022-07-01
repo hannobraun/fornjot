@@ -5,7 +5,7 @@ use fj_math::{Point, Scalar};
 use crate::objects::Edge;
 
 pub fn validate_edge(
-    edge: &Edge<3>,
+    edge: &Edge,
     max_distance: impl Into<Scalar>,
 ) -> Result<(), CoherenceIssues> {
     let max_distance = max_distance.into();
