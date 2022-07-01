@@ -49,7 +49,7 @@ fn reverse_local_coordinates_in_cycle(
                         }
                     };
 
-                    let canonical = *edge.curve.canonical();
+                    let canonical = *edge.curve.global();
                     Local::new(local, canonical)
                 };
                 let vertices = edge.vertices.clone();

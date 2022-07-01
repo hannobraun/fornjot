@@ -81,7 +81,7 @@ impl Edge {
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`].
     pub fn curve(&self) -> Curve<3> {
-        *self.curve.canonical()
+        *self.curve.global()
     }
 
     /// Access the vertices that the edge refers to

@@ -42,7 +42,7 @@ impl Cycle {
             let edge_local = Edge {
                 curve: Local::new(
                     Curve::Line(Line::from_points(points)),
-                    *edge_canonical.curve.canonical(),
+                    *edge_canonical.curve.global(),
                 ),
                 vertices: edge_canonical.vertices.clone(),
             };
