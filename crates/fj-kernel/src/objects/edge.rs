@@ -82,11 +82,6 @@ impl Edge<3> {
             GlobalVertex::from_position(position)
         });
 
-        Self::line_segment_from_vertices(vertices)
-    }
-
-    /// Create a line segment from two vertices
-    pub fn line_segment_from_vertices(vertices: [GlobalVertex; 2]) -> Self {
         let curve = {
             let points = vertices.map(|vertex| vertex.position());
             Curve::Line(Line::from_points(points))
