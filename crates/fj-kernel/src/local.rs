@@ -6,22 +6,22 @@
 /// also keeping track of a local representation of that object, which is often
 /// more appropriate for various tasks.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct LocalForm<Local, Canonical> {
-    local: Local,
+pub struct LocalForm<T, Canonical> {
+    local: T,
     canonical: Canonical,
 }
 
-impl<Local, Canonical> LocalForm<Local, Canonical> {
+impl<T, Canonical> LocalForm<T, Canonical> {
     /// Construct a new instance of `LocalForm`
     ///
     /// It is the caller's responsibility to make sure that the local and
     /// canonical forms passed to this method actually match.
-    pub fn new(local: Local, canonical: Canonical) -> Self {
+    pub fn new(local: T, canonical: Canonical) -> Self {
         Self { local, canonical }
     }
 
     /// Access the local form of the referenced object
-    pub fn local(&self) -> &Local {
+    pub fn local(&self) -> &T {
         &self.local
     }
 
