@@ -69,6 +69,36 @@ impl Renderer {
       ) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::PRIMARY);
 
+        //
+        // NOTE: The implementation of the integration with `egui` is
+        //       likely to need to change "significantly"[0] depending
+        //       on what architecture approach is chosen going
+        //       forward.
+        //
+        //       The current implementation is somewhat complicated by
+        //       virtue of "sitting somewhere in the middle" in
+        //       relation to being neither a standalone integration
+        //       nor fully using `egui` as a framework.
+        //
+        //       This is a result of a combination of the current
+        //       integration being "proof of concept" level; and, using
+        //       `egui-winit` & `egui-wgpu` which are both relatively
+        //       new additions to the core `egui` ecosystem.
+        //
+        //       It is recommended to read the following for additional
+        //       helpful context for choosing an architecture:
+        //
+        //         * <https://github.com/emilk/egui/blob/eeae485629fca24a81a7251739460b671e1420f7/README.md#what-is-the-difference-between-egui-and-eframe>
+        //
+        //         * <https://github.com/emilk/egui/blob/eeae485629fca24a81a7251739460b671e1420f7/README.md#how-do-i-render-3d-stuff-in-an-egui-area>
+        //
+        //       [0] By way of specific example, the recent addition
+        //           of Android support lead to considerable API
+        //           change related to `wgpu` & `winit`, see:
+        //
+        //             * <https://github.com/emilk/egui/commit/a5076d4cc491536b07b16dced1772c7b6bf7cc29>
+        //
+
         let egui_winit_state = egui_winit::State::new(4096, screen.window());
         let egui_context = egui::Context::default();
 
@@ -307,6 +337,41 @@ impl Renderer {
             )
             .map_err(DrawError::Text)?;
         }
+
+        //
+        // NOTE: The following comment was written for the original
+        //       proof-of-concept which targeted older versions of
+        //       Fornjot & `egui`, so some details may be outdated &
+        //       not entirely apply to this updated implementation.
+        //
+        //       It's included here in case it still provides some
+        //       useful context.
+        //
+        //
+        // This integration is basically the result of locating the
+        // `.present()` call in the `egui` example, here:
+        //
+        //     <https://github.com/hasenbanck/egui_example/blob/ca1262a701daf0b20e097ef627fc301ab63339d9/src/main.rs#L177>
+        //
+        // and then the equivalent call in `renderer.rs`, here:
+        //
+        //     <https://github.com/hannobraun/Fornjot/blob/15294c2ca2fa5ac5016bb29853943b28952f2dae/fj-app/src/graphics/renderer.rs#L245>
+        //
+        // Then working backwards from there to merge the functionality.
+        //
+        // In addition, the following examples were also referenced:
+        //
+        //  * "Make the example more like an actual use case #17"
+        //    <https://github.com/hasenbanck/egui_example/pull/17/files>
+        //    This removes some non-essential code from the example
+        //    which helps clarify what's *actually* necessary.
+        //
+        //  * "Update to 0.17, use official winit backend #18"
+        //    <https://github.com/hasenbanck/egui_example/pull/18/files>
+        //    This uses a more up-to-date `egui` version which
+        //    included some API changes.
+        //    It's still not the *latest* `egui` version though.
+        //
 
         let egui_input = self.egui.winit_state.take_egui_input(window);
         self.egui.context.begin_frame(egui_input);
