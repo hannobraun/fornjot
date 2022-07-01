@@ -22,8 +22,11 @@ impl<T: LocalForm> Local<T> {
     ///
     /// It is the caller's responsibility to make sure that the local and global
     /// forms passed into this constructor match.
-    pub fn new(local: T, global: T::GlobalForm) -> Self {
-        Self { local, global }
+    pub fn new(local: impl Into<T>, global: impl Into<T::GlobalForm>) -> Self {
+        Self {
+            local: local.into(),
+            global: global.into(),
+        }
     }
 
     /// Access the local form of the value
