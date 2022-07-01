@@ -439,7 +439,7 @@ impl Renderer {
     //       So, as an interim measure, this code is a copy of the
     //       texture update code from <https://github.com/emilk/egui/blob/f807a290a422f401939bd38236ece3cf86c8ee70/egui-wgpu/src/winit.rs#L102-L136>.
     //
-    //       TODO: Add transparency workaround.
+    //       Update: Added transparency workaround.
     //
     fn paint_and_update_textures(
         &mut self,
@@ -478,18 +478,24 @@ impl Renderer {
             &screen_descriptor,
         );
 
+        let clear_color_ = if clear_color == egui::Rgba::TRANSPARENT {
+            None
+        } else {
+            Some(wgpu::Color {
+                r: clear_color.r() as f64,
+                g: clear_color.g() as f64,
+                b: clear_color.b() as f64,
+                a: clear_color.a() as f64,
+            })
+        };
+
         // Record all render passes.
         self.egui.rpass.execute(
             encoder,
             &output_view,
             clipped_primitives,
             &screen_descriptor,
-            Some(wgpu::Color {
-                r: clear_color.r() as f64,
-                g: clear_color.g() as f64,
-                b: clear_color.b() as f64,
-                a: clear_color.a() as f64,
-            }),
+            clear_color_,
         );
     }
 }
