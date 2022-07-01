@@ -25,35 +25,21 @@ pub fn triangulate(
                 let surface = brep.surface;
                 let approx = FaceApprox::new(&face, tolerance);
 
-                let points: Vec<_> = approx
-                    .points
-                    .into_iter()
-                    .map(|vertex| {
-                        // Can't panic, unless the approximation wrongfully
-                        // generates points that are not in the surface.
-                        surface.point_to_surface_coords(vertex.global())
-                    })
-                    .collect();
+                let points: Vec<_> = approx.points.into_iter().collect();
                 let face_as_polygon = Polygon::new(surface)
-                    .with_exterior(approx.exterior.points.into_iter().map(
-                        |point| {
-                            // Can't panic, unless the approximation wrongfully
-                            // generates points that are not in the surface.
-                            surface
-                                .point_to_surface_coords(point.global())
-                                .local()
-                        },
-                    ))
+                    .with_exterior(
+                        approx
+                            .exterior
+                            .points
+                            .into_iter()
+                            .map(|point| point.local()),
+                    )
                     .with_interiors(approx.interiors.into_iter().map(
                         |interior| {
-                            interior.points.into_iter().map(|point| {
-                                // Can't panic, unless the approximation
-                                // wrongfully generates points that are not in
-                                // the surface.
-                                surface
-                                    .point_to_surface_coords(point.global())
-                                    .local()
-                            })
+                            interior
+                                .points
+                                .into_iter()
+                                .map(|point| point.local())
                         },
                     ));
 
