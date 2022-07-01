@@ -30,17 +30,3 @@ impl<Local, Canonical> LocalForm<Local, Canonical> {
         &self.canonical
     }
 }
-
-impl<Canonical> LocalForm<Canonical, Canonical> {
-    /// Construct a new instance of `LocalForm` without a local form
-    ///
-    /// It's possible that an object's local and canonical forms are the same.
-    /// This is a convenience constructor that constructs a `LocalForm` instance
-    /// for such a situation.
-    pub fn canonical_only(canonical: Canonical) -> Self
-    where
-        Canonical: Clone,
-    {
-        Self::new(canonical.clone(), canonical)
-    }
-}
