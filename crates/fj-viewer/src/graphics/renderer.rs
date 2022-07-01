@@ -417,3 +417,79 @@ pub enum DrawError {
     /// Text rasterisation error.
     Text(String),
 }
+
+impl Renderer {
+    //
+    // Note: `egui` changed how it handles updating textures on
+    //       the GPU between v0.17.0 & v0.18.0, this means we can't
+    //       use the same approach as original proof-of-concept used.
+    //
+    //       Unfortunately we can't use the helper function provided
+    //       by `egui` here, as it is tightly integrated with `Painter`
+    //       which assumes it is handling surface creation itself.
+    //
+    //       Additionally, subsequent code changes significantly
+    //       changed the API but haven't yet been released.
+    //
+    //       And, to top it all off, the `Painter::paint_and_update_textures()`
+    //       as it currently exists doesn't support a transparent
+    //       clear color, which we rely on to overlay the UI on the
+    //       already rendered model.
+    //
+    //       So, as an interim measure, this code is a copy of the
+    //       texture update code from <https://github.com/emilk/egui/blob/f807a290a422f401939bd38236ece3cf86c8ee70/egui-wgpu/src/winit.rs#L102-L136>.
+    //
+    //       TODO: Add transparency workaround.
+    //
+    fn paint_and_update_textures(
+        &mut self,
+        pixels_per_point: f32,
+        clear_color: egui::Rgba,
+        clipped_primitives: &[egui::ClippedPrimitive],
+        textures_delta: &egui::TexturesDelta,
+        output_view: &wgpu::TextureView,
+        encoder: &mut wgpu::CommandEncoder,
+    ) {
+        // Upload all resources for the GPU.
+        let screen_descriptor = egui_wgpu::renderer::ScreenDescriptor {
+            size_in_pixels: [
+                self.surface_config.width,
+                self.surface_config.height,
+            ],
+            pixels_per_point,
+        };
+
+        for (id, image_delta) in &textures_delta.set {
+            self.egui.rpass.update_texture(
+                &self.device,
+                &self.queue,
+                *id,
+                image_delta,
+            );
+        }
+        for id in &textures_delta.free {
+            self.egui.rpass.free_texture(id);
+        }
+
+        self.egui.rpass.update_buffers(
+            &self.device,
+            &self.queue,
+            clipped_primitives,
+            &screen_descriptor,
+        );
+
+        // Record all render passes.
+        self.egui.rpass.execute(
+            encoder,
+            &output_view,
+            clipped_primitives,
+            &screen_descriptor,
+            Some(wgpu::Color {
+                r: clear_color.r() as f64,
+                g: clear_color.g() as f64,
+                b: clear_color.b() as f64,
+                a: clear_color.a() as f64,
+            }),
+        );
+    }
+}
