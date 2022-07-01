@@ -1,5 +1,7 @@
 //! Infrastructure for types that have a local and a global form
 
+use fj_math::Point;
+
 use crate::objects::Curve;
 
 /// A wrapper around the local and global forms of a type
@@ -50,4 +52,8 @@ pub trait LocalForm: Copy {
 
 impl LocalForm for Curve<2> {
     type GlobalForm = Curve<3>;
+}
+
+impl LocalForm for Point<1> {
+    type GlobalForm = Point<3>;
 }
