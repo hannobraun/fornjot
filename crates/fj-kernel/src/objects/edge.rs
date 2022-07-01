@@ -4,17 +4,17 @@ use fj_math::{Circle, Line, Point, Scalar, Vector};
 
 use crate::shape::LocalForm;
 
-use super::{Curve, GlobalVertex, Vertex};
+use super::{Curve, GlobalVertex, Surface, Vertex};
 
 /// An edge of a shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Edge<const D: usize> {
+pub struct Edge {
     /// Access the curve that defines the edge's geometry
     ///
     /// The edge can be a segment of the curve that is bounded by two vertices,
     /// or if the curve is continuous (i.e. connects to itself), the edge could
     /// be defined by the whole curve, and have no bounding vertices.
-    pub curve: LocalForm<Curve<D>, Curve<3>>,
+    pub curve: LocalForm<Curve<2>, Curve<3>>,
 
     /// Access the vertices that bound the edge on the curve
     ///
@@ -23,27 +23,9 @@ pub struct Edge<const D: usize> {
     pub vertices: VerticesOfEdge,
 }
 
-impl<const D: usize> Edge<D> {
-    /// Access the curve that the edge refers to
-    ///
-    /// This is a convenience method that saves the caller from dealing with the
-    /// [`Handle`].
-    pub fn curve(&self) -> Curve<3> {
-        *self.curve.canonical()
-    }
-
-    /// Access the vertices that the edge refers to
-    ///
-    /// This is a convenience method that saves the caller from dealing with the
-    /// [`Handle`]s.
-    pub fn vertices(&self) -> Option<[Vertex; 2]> {
-        self.vertices.0
-    }
-}
-
-impl Edge<2> {
+impl Edge {
     /// Create a circle from the given radius
-    pub fn circle_from_radius(radius: Scalar) -> Edge<2> {
+    pub fn circle_from_radius(radius: Scalar) -> Self {
         let curve_local = Curve::Circle(Circle {
             center: Point::origin(),
             a: Vector::from([radius, Scalar::ZERO]),
@@ -61,50 +43,57 @@ impl Edge<2> {
         }
     }
 
-    /// Temporary utility method to aid refactoring
-    pub fn to_canonical(&self) -> Edge<3> {
-        let curve = *self.curve.canonical();
-        let curve = LocalForm::canonical_only(curve);
-
-        let vertices = self.vertices.clone();
-
-        Edge { curve, vertices }
-    }
-}
-
-impl Edge<3> {
     /// Create a line segment from two points
     pub fn line_segment_from_points(
-        vertices: [impl Into<Point<3>>; 2],
+        surface: &Surface,
+        points: [impl Into<Point<2>>; 2],
     ) -> Self {
-        let vertices = vertices.map(|position| {
-            let position = position.into();
+        let points = points.map(Into::into);
+
+        let global_vertices = points.map(|position| {
+            let position = surface.point_from_surface_coords(position);
             GlobalVertex::from_position(position)
         });
 
-        Self::line_segment_from_vertices(vertices)
-    }
-
-    /// Create a line segment from two vertices
-    pub fn line_segment_from_vertices([a, b]: [GlobalVertex; 2]) -> Self {
-        let curve = {
-            let points = [a, b].map(|vertex| vertex.position());
+        let curve_local = Curve::Line(Line::from_points(points));
+        let curve_canonical = {
+            let points =
+                global_vertices.map(|global_vertex| global_vertex.position());
             Curve::Line(Line::from_points(points))
         };
 
-        let vertices = [
-            Vertex::new(Point::from([0.]), a),
-            Vertex::new(Point::from([1.]), b),
-        ];
+        let vertices = {
+            let [a, b] = global_vertices;
+            [
+                Vertex::new(Point::from([0.]), a),
+                Vertex::new(Point::from([1.]), b),
+            ]
+        };
 
         Self {
-            curve: LocalForm::canonical_only(curve),
+            curve: LocalForm::new(curve_local, curve_canonical),
             vertices: VerticesOfEdge::from_vertices(vertices),
         }
     }
+
+    /// Access the curve that the edge refers to
+    ///
+    /// This is a convenience method that saves the caller from dealing with the
+    /// [`Handle`].
+    pub fn curve(&self) -> Curve<3> {
+        *self.curve.canonical()
+    }
+
+    /// Access the vertices that the edge refers to
+    ///
+    /// This is a convenience method that saves the caller from dealing with the
+    /// [`Handle`]s.
+    pub fn vertices(&self) -> Option<[Vertex; 2]> {
+        self.vertices.0
+    }
 }
 
-impl<const D: usize> fmt::Display for Edge<D> {
+impl fmt::Display for Edge {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self.vertices() {
             Some(vertices) => {

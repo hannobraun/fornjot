@@ -168,7 +168,7 @@ fn create_non_continuous_side_face(
 }
 
 fn create_continuous_side_face(
-    edge: Edge<2>,
+    edge: Edge,
     path: Vector<3>,
     tolerance: Tolerance,
     color: [u8; 4],

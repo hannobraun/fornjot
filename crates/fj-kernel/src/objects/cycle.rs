@@ -12,7 +12,7 @@ use super::{Curve, Edge, Surface};
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
     /// The edges that make up the cycle
-    pub edges: Vec<Edge<2>>,
+    pub edges: Vec<Edge>,
 }
 
 impl Cycle {
@@ -36,10 +36,8 @@ impl Cycle {
             // Can be cleaned up, once `array_windows` is stable.
             let points = [points[0], points[1]];
 
-            let points_canonical =
-                points.map(|point| surface.point_from_surface_coords(point));
             let edge_canonical =
-                Edge::line_segment_from_points(points_canonical);
+                Edge::line_segment_from_points(surface, points);
 
             let edge_local = Edge {
                 curve: LocalForm::new(
@@ -59,7 +57,7 @@ impl Cycle {
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn edges(&self) -> impl Iterator<Item = Edge<2>> + '_ {
+    pub fn edges(&self) -> impl Iterator<Item = Edge> + '_ {
         self.edges.iter().cloned()
     }
 }

@@ -152,8 +152,9 @@ mod tests {
         let b = Point::from([1., 0., 0.]);
 
         let curve = {
-            let curve = Curve::line_from_points([a, b]);
-            LocalForm::canonical_only(curve)
+            let curve_local = Curve::line_from_points([[0., 0.], [1., 0.]]);
+            let curve_canonical = Curve::line_from_points([a, b]);
+            LocalForm::new(curve_local, curve_canonical)
         };
 
         let a = GlobalVertex::from_position(a);
