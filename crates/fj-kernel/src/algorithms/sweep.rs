@@ -2,10 +2,10 @@ use fj_math::{Point, Scalar, Transform, Triangle, Vector};
 
 use crate::{
     iter::ObjectIters,
+    local::LocalForm,
     objects::{
         Curve, Cycle, Edge, Face, GlobalVertex, Surface, Vertex, VerticesOfEdge,
     },
-    shape::LocalForm,
 };
 
 use super::{reverse_face, transform::transform_face, CycleApprox, Tolerance};

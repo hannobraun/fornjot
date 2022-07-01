@@ -1,6 +1,6 @@
 use fj_math::{Line, Point};
 
-use crate::shape::LocalForm;
+use crate::local::LocalForm;
 
 use super::{Curve, Edge, Surface};
 

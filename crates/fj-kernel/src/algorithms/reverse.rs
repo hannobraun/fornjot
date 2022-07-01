@@ -1,8 +1,8 @@
 use fj_math::{Circle, Line, Point, Vector};
 
 use crate::{
+    local::LocalForm,
     objects::{Curve, Cycle, CyclesInFace, Edge, Face},
-    shape::LocalForm,
 };
 
 /// Reverse the direction of a face

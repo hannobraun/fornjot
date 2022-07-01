@@ -2,8 +2,8 @@ use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
     iter::ObjectIters,
+    local::LocalForm,
     objects::{Cycle, Edge, Face},
-    shape::LocalForm,
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;

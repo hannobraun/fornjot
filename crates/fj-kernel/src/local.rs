@@ -1,3 +1,5 @@
+//! Infrastructure for types that have a local and a global form
+
 /// A reference to an object, which includes a local form
 ///
 /// This type is used by topological objects to reference other objects, while

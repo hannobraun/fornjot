@@ -2,7 +2,7 @@ use std::fmt;
 
 use fj_math::{Circle, Line, Point, Scalar, Vector};
 
-use crate::shape::LocalForm;
+use crate::local::LocalForm;
 
 use super::{Curve, GlobalVertex, Surface, Vertex};
 

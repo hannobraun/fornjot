@@ -91,6 +91,6 @@ pub mod algorithms;
 pub mod builder;
 pub mod geometry;
 pub mod iter;
+pub mod local;
 pub mod objects;
-pub mod shape;
 pub mod validation;

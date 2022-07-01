@@ -1,10 +1,10 @@
 use fj_math::Transform;
 
 use crate::{
+    local::LocalForm,
     objects::{
         Cycle, CyclesInFace, Edge, Face, FaceBRep, GlobalVertex, Vertex,
     },
-    shape::LocalForm,
 };
 
 /// Transform a shape

@@ -141,8 +141,8 @@ mod tests {
     use fj_math::{Point, Scalar};
 
     use crate::{
+        local::LocalForm,
         objects::{Curve, Edge, GlobalVertex, Vertex, VerticesOfEdge},
-        shape::LocalForm,
         validation::{validate, ValidationConfig, ValidationError},
     };
 
