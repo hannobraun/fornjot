@@ -4,7 +4,7 @@ use fj_interop::mesh::Mesh;
 use fj_math::{Point, Transform, Vector};
 
 use crate::{
-    camera::{Camera, FocusPoint},
+    camera::Camera,
     screen::{Position, Size},
 };
 
@@ -53,8 +53,8 @@ impl Handler {
         &mut self,
         event: Event,
         screen_size: Size,
-        focus_point: FocusPoint,
         now: Instant,
+        mesh: &Mesh<Point<3>>,
         camera: &mut Camera,
         actions: &mut Actions,
     ) {
@@ -83,12 +83,18 @@ impl Handler {
             }
 
             Event::Key(Key::MouseLeft, KeyState::Pressed) => {
+                let focus_point =
+                    camera.focus_point(screen_size, self.cursor(), mesh);
+
                 self.rotation.start(focus_point);
             }
             Event::Key(Key::MouseLeft, KeyState::Released) => {
                 self.rotation.stop();
             }
             Event::Key(Key::MouseRight, KeyState::Pressed) => {
+                let focus_point =
+                    camera.focus_point(screen_size, self.cursor(), mesh);
+
                 self.movement.start(focus_point, self.cursor);
             }
             Event::Key(Key::MouseRight, KeyState::Released) => {
