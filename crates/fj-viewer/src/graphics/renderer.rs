@@ -706,6 +706,18 @@ impl Renderer {
             &screen_descriptor,
         );
 
+        //
+        // This approach is based on the original proof-of-concept
+        // integration which used `egui_wgpu_backend` and included
+        // the following comment for context:
+        //
+        //   "Set this to `None` to overlay the UI on top of what's in the framebuffer"
+        //   via <https://github.com/hasenbanck/egui_example/pull/17/files#diff-42cb6807ad74b3e201c5a7ca98b911c5fa08380e942be6e4ac5807f8377f87fcR132>
+        //
+        //   Alternatively, for initial testing, you can use a colour without alpha
+        //   (e.g. `Some(wgpu::Color {r:0.5, g:0.0, b:0.0, a:1.0})` ) in order
+        //   to verify that the renderpass is doing *something*.
+        //
         let clear_color_ = if clear_color == egui::Rgba::TRANSPARENT {
             None
         } else {
