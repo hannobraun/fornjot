@@ -24,22 +24,6 @@ pub struct Edge {
 }
 
 impl Edge {
-    /// Access the curve that the edge refers to
-    ///
-    /// This is a convenience method that saves the caller from dealing with the
-    /// [`Handle`].
-    pub fn curve(&self) -> Curve<3> {
-        *self.curve.canonical()
-    }
-
-    /// Access the vertices that the edge refers to
-    ///
-    /// This is a convenience method that saves the caller from dealing with the
-    /// [`Handle`]s.
-    pub fn vertices(&self) -> Option<[Vertex; 2]> {
-        self.vertices.0
-    }
-
     /// Create a circle from the given radius
     pub fn circle_from_radius(radius: Scalar) -> Self {
         let curve_local = Curve::Circle(Circle {
@@ -90,6 +74,22 @@ impl Edge {
             curve: LocalForm::new(curve_local, curve_canonical),
             vertices: VerticesOfEdge::from_vertices(vertices),
         }
+    }
+
+    /// Access the curve that the edge refers to
+    ///
+    /// This is a convenience method that saves the caller from dealing with the
+    /// [`Handle`].
+    pub fn curve(&self) -> Curve<3> {
+        *self.curve.canonical()
+    }
+
+    /// Access the vertices that the edge refers to
+    ///
+    /// This is a convenience method that saves the caller from dealing with the
+    /// [`Handle`]s.
+    pub fn vertices(&self) -> Option<[Vertex; 2]> {
+        self.vertices.0
     }
 }
 
