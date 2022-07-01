@@ -47,27 +47,6 @@ impl<const D: usize> Curve<D> {
         }
     }
 
-    /// Convert a point in model coordinates to curve coordinates
-    ///
-    /// Projects the point onto the curve before computing curve coordinate.
-    /// This is done to make this method robust against floating point accuracy
-    /// issues.
-    ///
-    /// Callers are advised to be careful about the points they pass, as the
-    /// point not being on the curve, intentional or not, will never result in
-    /// an error.
-    pub fn point_to_curve_coords(
-        &self,
-        point: impl Into<Point<D>>,
-    ) -> Point<1> {
-        let point = point.into();
-
-        match self {
-            Self::Circle(curve) => curve.point_to_circle_coords(point),
-            Self::Line(curve) => curve.point_to_line_coords(point),
-        }
-    }
-
     /// Convert a point on the curve into model coordinates
     pub fn point_from_curve_coords(
         &self,

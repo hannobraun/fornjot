@@ -1,7 +1,5 @@
 use fj_math::{Line, Point, Transform, Vector};
 
-use crate::local::Local;
-
 use super::Curve;
 
 /// A two-dimensional shape
@@ -64,22 +62,6 @@ impl Surface {
         }
     }
 
-    /// Convert a point in model coordinates to surface coordinates
-    pub fn point_to_surface_coords(
-        &self,
-        point_3d: impl Into<Point<3>>,
-    ) -> Local<Point<2>> {
-        let point_3d = point_3d.into();
-
-        let point_2d = match self {
-            Self::SweptCurve(surface) => {
-                surface.point_to_surface_coords(point_3d)
-            }
-        };
-
-        Local::new(point_2d, point_3d)
-    }
-
     /// Convert a point in surface coordinates to model coordinates
     pub fn point_from_surface_coords(
         &self,
@@ -129,19 +111,6 @@ impl SweptCurve {
         self.curve = self.curve.transform(transform);
         self.path = transform.transform_vector(&self.path);
         self
-    }
-
-    /// Convert a point in model coordinates to surface coordinates
-    pub fn point_to_surface_coords(
-        &self,
-        point: impl Into<Point<3>>,
-    ) -> Point<2> {
-        let point = point.into();
-
-        let u = self.curve.point_to_curve_coords(point).t;
-        let v = self.path_to_line().point_to_line_coords(point).t;
-
-        Point::from([u, v])
     }
 
     /// Convert a point in surface coordinates to model coordinates
@@ -201,29 +170,6 @@ mod tests {
             path: Vector::from([0., 0., -3.]),
         };
         assert_eq!(expected, reversed);
-    }
-
-    #[test]
-    fn point_to_surface_coords() {
-        let plane = SweptCurve {
-            curve: Curve::Line(Line {
-                origin: Point::from([1., 0., 0.]),
-                direction: Vector::from([0., 2., 0.]),
-            }),
-            path: Vector::from([0., 0., 3.]),
-        };
-
-        verify(&plane, Point::from([-1., -1.]));
-        verify(&plane, Point::from([0., 0.]));
-        verify(&plane, Point::from([1., 1.]));
-        verify(&plane, Point::from([2., 3.]));
-
-        fn verify(swept: &SweptCurve, surface_point: Point<2>) {
-            let point = swept.point_from_surface_coords(surface_point);
-            let result = swept.point_to_surface_coords(point);
-
-            assert_eq!(result, surface_point);
-        }
     }
 
     #[test]
