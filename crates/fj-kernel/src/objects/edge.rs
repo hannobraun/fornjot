@@ -75,18 +75,18 @@ impl Edge<2> {
 impl Edge<3> {
     /// Create a line segment from two points
     pub fn line_segment_from_points(points: [impl Into<Point<3>>; 2]) -> Self {
-        let vertices = points.map(|position| {
+        let global_vertices = points.map(|position| {
             let position = position.into();
             GlobalVertex::from_position(position)
         });
 
         let curve = {
-            let points = vertices.map(|vertex| vertex.position());
+            let points = global_vertices.map(|vertex| vertex.position());
             Curve::Line(Line::from_points(points))
         };
 
         let vertices = {
-            let [a, b] = vertices;
+            let [a, b] = global_vertices;
             [
                 Vertex::new(Point::from([0.]), a),
                 Vertex::new(Point::from([1.]), b),
