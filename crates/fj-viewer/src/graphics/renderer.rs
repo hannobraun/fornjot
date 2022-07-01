@@ -17,6 +17,16 @@ use super::{
     uniforms::Uniforms, vertices::Vertices, DEPTH_FORMAT,
 };
 
+#[derive(Default)]
+struct EguiOptionsState {
+    show_trace: bool,
+    show_layout_debug_on_hover: bool,
+    show_debug_text_example: bool,
+    show_original_ui: bool,
+    show_settings_ui: bool,
+    show_inspection_ui: bool,
+}
+
 /// Graphics rendering state and target abstraction
 #[derive(Debug)]
 pub struct Renderer {
