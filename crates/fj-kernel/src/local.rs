@@ -23,13 +23,13 @@ impl<T: LocalForm> Local<T> {
     }
 
     /// Access the local form of the referenced object
-    pub fn local(&self) -> &T {
-        &self.local
+    pub fn local(&self) -> T {
+        self.local
     }
 
     /// Access the canonical form of the referenced object
-    pub fn global(&self) -> &T::GlobalForm {
-        &self.global
+    pub fn global(&self) -> T::GlobalForm {
+        self.global
     }
 }
 

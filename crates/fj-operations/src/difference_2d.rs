@@ -94,7 +94,7 @@ impl ToShape for fj::Difference2d {
 fn add_cycle(cycle: Cycle, reverse: bool) -> Cycle {
     let mut edges = Vec::new();
     for edge in cycle.edges {
-        let curve_local = *edge.curve.local();
+        let curve_local = edge.curve.local();
         let curve_local = if reverse {
             curve_local.reverse()
         } else {

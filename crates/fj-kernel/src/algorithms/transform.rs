@@ -53,7 +53,7 @@ pub fn transform_cycles(
             .edges
             .iter()
             .map(|edge| {
-                let curve_local = *edge.curve.local();
+                let curve_local = edge.curve.local();
                 let curve_canonical = edge.curve().transform(transform);
 
                 let vertices = edge
