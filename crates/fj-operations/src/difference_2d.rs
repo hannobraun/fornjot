@@ -2,7 +2,7 @@ use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
     iter::ObjectIters,
-    local::LocalForm,
+    local::Local,
     objects::{Cycle, Edge, Face},
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
@@ -115,7 +115,7 @@ fn add_cycle(cycle: Cycle, reverse: bool) -> Cycle {
         };
 
         let edge = Edge {
-            curve: LocalForm::new(curve_local, curve_canonical),
+            curve: Local::new(curve_local, curve_canonical),
             vertices: vertices.clone(),
         };
 

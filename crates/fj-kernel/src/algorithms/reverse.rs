@@ -1,7 +1,7 @@
 use fj_math::{Circle, Line, Point, Vector};
 
 use crate::{
-    local::LocalForm,
+    local::Local,
     objects::{Curve, Cycle, CyclesInFace, Edge, Face},
 };
 
@@ -50,7 +50,7 @@ fn reverse_local_coordinates_in_cycle(
                     };
 
                     let canonical = *edge.curve.canonical();
-                    LocalForm::new(local, canonical)
+                    Local::new(local, canonical)
                 };
                 let vertices = edge.vertices.clone();
 

@@ -2,7 +2,7 @@ use std::fmt;
 
 use fj_math::{Circle, Line, Point, Scalar, Vector};
 
-use crate::local::LocalForm;
+use crate::local::Local;
 
 use super::{Curve, GlobalVertex, Surface, Vertex};
 
@@ -14,7 +14,7 @@ pub struct Edge {
     /// The edge can be a segment of the curve that is bounded by two vertices,
     /// or if the curve is continuous (i.e. connects to itself), the edge could
     /// be defined by the whole curve, and have no bounding vertices.
-    pub curve: LocalForm<Curve<2>, Curve<3>>,
+    pub curve: Local<Curve<2>, Curve<3>>,
 
     /// Access the vertices that bound the edge on the curve
     ///
@@ -38,7 +38,7 @@ impl Edge {
         });
 
         Edge {
-            curve: LocalForm::new(curve_local, curve_canonical),
+            curve: Local::new(curve_local, curve_canonical),
             vertices: VerticesOfEdge::none(),
         }
     }
@@ -71,7 +71,7 @@ impl Edge {
         };
 
         Self {
-            curve: LocalForm::new(curve_local, curve_canonical),
+            curve: Local::new(curve_local, curve_canonical),
             vertices: VerticesOfEdge::from_vertices(vertices),
         }
     }

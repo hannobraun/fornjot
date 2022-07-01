@@ -6,12 +6,12 @@
 /// also keeping track of a local representation of that object, which is often
 /// more appropriate for various tasks.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct LocalForm<T, Canonical> {
+pub struct Local<T, Canonical> {
     local: T,
     canonical: Canonical,
 }
 
-impl<T, Canonical> LocalForm<T, Canonical> {
+impl<T, Canonical> Local<T, Canonical> {
     /// Construct a new instance of `LocalForm`
     ///
     /// It is the caller's responsibility to make sure that the local and

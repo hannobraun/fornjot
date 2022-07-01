@@ -1,6 +1,6 @@
 use fj_math::{Line, Point};
 
-use crate::local::LocalForm;
+use crate::local::Local;
 
 use super::{Curve, Edge, Surface};
 
@@ -40,7 +40,7 @@ impl Cycle {
                 Edge::line_segment_from_points(surface, points);
 
             let edge_local = Edge {
-                curve: LocalForm::new(
+                curve: Local::new(
                     Curve::Line(Line::from_points(points)),
                     *edge_canonical.curve.canonical(),
                 ),
