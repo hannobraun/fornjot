@@ -99,6 +99,26 @@ impl Renderer {
         //             * <https://github.com/emilk/egui/commit/a5076d4cc491536b07b16dced1772c7b6bf7cc29>
         //
 
+        //
+        // NOTE: If at some point you use `Painter` or similar and you
+        //       get this error:
+        //
+        //         `VK_ERROR_NATIVE_WINDOW_IN_USE_KHR`
+        //
+        //       and/or:
+        //
+        //         `wgpu_core::device: surface configuration failed: Native window is in use`
+        //
+        //       it's *probably(?)* because the swapchain has already
+        //       been created for the window (e.g. by an integration)
+        //       and *not* because of a regression of this issue
+        //       (probably):
+        //
+        //         <https://github.com/gfx-rs/wgpu/issues/1492>
+        //
+        //       Don't ask me how I know.
+        //
+
         let egui_winit_state = egui_winit::State::new(4096, screen.window());
         let egui_context = egui::Context::default();
 
