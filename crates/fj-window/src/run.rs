@@ -229,7 +229,7 @@ pub fn run(
                     camera.update_planes(&shape.aabb);
 
                     if let Err(err) =
-                        renderer.draw(camera, &draw_config, &window.window())
+                        renderer.draw(camera, &mut draw_config, &window.window())
                     {
                         warn!("Draw error: {}", err);
                     }

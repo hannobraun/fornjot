@@ -241,7 +241,7 @@ impl Renderer {
     pub fn draw(
         &mut self,
         camera: &Camera,
-        config: &DrawConfig,
+        config: &mut DrawConfig,
         window: &egui_winit::winit::window::Window,
     ) -> Result<(), DrawError> {
         let aspect_ratio = self.surface_config.width as f64
