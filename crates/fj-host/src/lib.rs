@@ -115,9 +115,9 @@ impl Model {
         // I don't know of a way to fix this. We should take this as motivation
         // to switch to a better technique:
         // https://github.com/hannobraun/Fornjot/issues/71
-        let shape = unsafe {
-            let lib = libloading::Library::new(&self.lib_path)?;
-            let model: libloading::Symbol<ModelFn> = lib.get(b"model")?;
+        let shape = {
+            let lib = unsafe {libloading::Library::new(&self.lib_path)?};
+            let model: unsafe {libloading::Symbol<ModelFn> = lib.get(b"model")?};
             model(arguments)
         };
 
