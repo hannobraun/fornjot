@@ -11,7 +11,7 @@ use crate::objects::Curve;
 /// The purpose of storing both forms is to be able to losslessly convert
 /// between them. Even if this conversion can be computed on the fly, it might
 /// be lossy due to floating point accuracy issues.
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Local<T: LocalForm> {
     local: T,
     global: T::GlobalForm,

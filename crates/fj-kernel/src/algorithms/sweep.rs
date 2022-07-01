@@ -153,7 +153,7 @@ fn create_non_continuous_side_face(
             ]);
 
             let edge = Edge {
-                curve: curve.clone(),
+                curve,
                 vertices: vertices.clone(),
             };
 
