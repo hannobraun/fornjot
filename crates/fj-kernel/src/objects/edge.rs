@@ -4,7 +4,7 @@ use fj_math::{Circle, Line, Point, Scalar, Vector};
 
 use crate::shape::LocalForm;
 
-use super::{Curve, GlobalVertex, Vertex};
+use super::{Curve, GlobalVertex, Surface, Vertex};
 
 /// An edge of a shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -74,9 +74,12 @@ impl Edge<2> {
 
 impl Edge<3> {
     /// Create a line segment from two points
-    pub fn line_segment_from_points(points: [impl Into<Point<3>>; 2]) -> Self {
+    pub fn line_segment_from_points(
+        surface: &Surface,
+        points: [impl Into<Point<2>>; 2],
+    ) -> Self {
         let global_vertices = points.map(|position| {
-            let position = position.into();
+            let position = surface.point_from_surface_coords(position);
             GlobalVertex::from_position(position)
         });
 

@@ -36,10 +36,8 @@ impl Cycle {
             // Can be cleaned up, once `array_windows` is stable.
             let points = [points[0], points[1]];
 
-            let points_canonical =
-                points.map(|point| surface.point_from_surface_coords(point));
             let edge_canonical =
-                Edge::line_segment_from_points(points_canonical);
+                Edge::line_segment_from_points(surface, points);
 
             let edge_local = Edge {
                 curve: LocalForm::new(

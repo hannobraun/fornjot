@@ -532,7 +532,10 @@ mod tests {
 
     #[test]
     fn edge() {
-        let edge = Edge::line_segment_from_points([[0., 0., 0.], [1., 0., 0.]]);
+        let edge = Edge::line_segment_from_points(
+            &Surface::xy_plane(),
+            [[0., 0.], [1., 0.]],
+        );
 
         assert_eq!(1, edge.curve_iter().count());
         assert_eq!(0, edge.cycle_iter().count());
