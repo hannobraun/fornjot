@@ -36,9 +36,9 @@ impl<T: LocalForm> Local<T> {
 /// Implemented for types that are the local form of a global type
 ///
 /// See [`Local`] for more information.
-pub trait LocalForm {
+pub trait LocalForm: Copy {
     /// The global form of the implementing type
-    type GlobalForm;
+    type GlobalForm: Copy;
 }
 
 impl LocalForm for Curve<2> {
