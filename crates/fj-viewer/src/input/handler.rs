@@ -1,16 +1,15 @@
 use std::time::Instant;
 
 use fj_interop::mesh::Mesh;
-use fj_math::{Point, Transform, Vector};
-
-use crate::{
-    camera::Camera,
-    screen::{Position, Size},
-};
+use fj_math::Point;
 
 use super::{
     event::KeyState, movement::Movement, rotation::Rotation, zoom::Zoom, Event,
     Key,
+};
+use crate::{
+    camera::Camera,
+    screen::{Position, Size},
 };
 
 /// Input handling abstraction
@@ -39,7 +38,7 @@ impl Handler {
 
             movement: Movement::new(),
             rotation: Rotation::new(),
-            zoom: Zoom::new(now),
+            zoom: Zoom::new(),
         }
     }
 
@@ -102,7 +101,7 @@ impl Handler {
             }
 
             Event::Scroll(delta) => {
-                self.zoom.push_input_delta(delta, now);
+                self.zoom.push(delta);
             }
 
             _ => {}
@@ -118,17 +117,7 @@ impl Handler {
         size: Size,
         mesh: &Mesh<Point<3>>,
     ) {
-        let focus_point = camera.focus_point(size, self.cursor, mesh);
-
-        self.zoom.discard_old_events(now);
-        self.zoom.update_speed(now, delta_t, focus_point, camera);
-
-        camera.translation = camera.translation
-            * Transform::translation(Vector::from([
-                0.0,
-                0.0,
-                -self.zoom.speed(),
-            ]));
+        self.zoom.apply_to_camera(delta_t, camera);
     }
 }
 
