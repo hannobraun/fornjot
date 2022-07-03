@@ -1,41 +1,37 @@
-use std::time::Instant;
-
 use fj_math::{Transform, Vector};
 
 use crate::camera::Camera;
 
 pub struct Zoom {
-    current_speed: f64,
+    accumulated_delta: f64,
 }
 
 impl Zoom {
     pub fn new() -> Self {
-        Self { current_speed: 0.0 }
+        Self {
+            accumulated_delta: 0.0,
+        }
     }
 
     pub fn push(&mut self, delta: f64) {
         // Accumulate all zoom inputs
-        self.current_speed += delta * ACCELERATION;
+        self.accumulated_delta += delta;
     }
 
     pub fn apply_to_camera(&mut self, delta_t: f64, camera: &mut Camera) {
-        let distance: f64 = camera.position().coords.magnitude().into();
-        let displacement = self.current_speed * delta_t * distance;
+        let displacement = self.accumulated_delta
+            * delta_t
+            * ZOOM_FACTOR
+            * camera.position().coords.magnitude().into_f64();
         camera.translation = camera.translation
             * Transform::translation(Vector::from([0.0, 0.0, -displacement]));
 
-        self.current_speed = 0.;
+        self.accumulated_delta = 0.;
     }
 }
 
-/// Acceleration value for the zoom movement
+/// Affects the speed of zoom movement.
 ///
-/// Tuning notes:
-/// - If this value is too low, target zoom speed will be reached slowly,
-///   leading to less precise control.
-/// - If this value is too high, zoom movement seems unnatural, which can cause
-///   a jarring experience.
-///
-/// This value should be as high as possible, while not causing jarring
-/// accelerations.
-const ACCELERATION: f64 = 1.;
+/// Smaller values will move the camera less with the same input.
+/// Larger values will move the camera more with the same input.
+const ZOOM_FACTOR: f64 = 0.05;
