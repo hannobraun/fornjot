@@ -1,6 +1,6 @@
 use fj_math::{Transform, Vector};
 
-use crate::camera::Camera;
+use crate::camera::{Camera, FocusPoint};
 
 pub struct Zoom {
     accumulated_delta: f64,
@@ -18,11 +18,20 @@ impl Zoom {
         self.accumulated_delta += delta;
     }
 
-    pub fn apply_to_camera(&mut self, delta_t: f64, camera: &mut Camera) {
+    pub fn apply_to_camera(
+        &mut self,
+        delta_t: f64,
+        focus_point: FocusPoint,
+        camera: &mut Camera,
+    ) {
+        let distance = match focus_point.0 {
+            Some(fp) => (fp - camera.position()).magnitude(),
+            None => camera.position().coords.magnitude(),
+        };
         let displacement = self.accumulated_delta
             * delta_t
             * ZOOM_FACTOR
-            * camera.position().coords.magnitude().into_f64();
+            * distance.into_f64();
         camera.translation = camera.translation
             * Transform::translation(Vector::from([0.0, 0.0, -displacement]));
 

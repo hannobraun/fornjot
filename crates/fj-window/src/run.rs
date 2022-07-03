@@ -36,7 +36,7 @@ pub fn run(
 
     let mut previous_time = Instant::now();
 
-    let mut input_handler = input::Handler::new(previous_time);
+    let mut input_handler = input::Handler::default();
     let mut renderer = block_on(Renderer::new(&window))?;
 
     let mut draw_config = DrawConfig::default();
@@ -182,7 +182,6 @@ pub fn run(
                 if let (Some(shape), Some(camera)) = (&shape, &mut camera) {
                     input_handler.update(
                         delta_t.as_secs_f64(),
-                        now,
                         camera,
                         window.size(),
                         &shape.mesh,
@@ -213,7 +212,6 @@ pub fn run(
             input_handler.handle_event(
                 event,
                 window.size(),
-                now,
                 &shape.mesh,
                 camera,
                 &mut actions,

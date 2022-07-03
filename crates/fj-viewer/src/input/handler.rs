@@ -1,5 +1,3 @@
-use std::time::Instant;
-
 use fj_interop::mesh::Mesh;
 use fj_math::Point;
 
@@ -24,24 +22,6 @@ pub struct Handler {
 }
 
 impl Handler {
-    /// Returns a new Handler.
-    ///
-    /// # Examples
-    /// ```rust no_run
-    /// // Store initialization time for camera zoom calculations
-    /// let instant = std::time::Instant::now();
-    /// let input_handler = fj_viewer::input::Handler::new(instant);
-    /// ```
-    pub fn new(now: Instant) -> Self {
-        Self {
-            cursor: None,
-
-            movement: Movement::new(),
-            rotation: Rotation::new(),
-            zoom: Zoom::new(),
-        }
-    }
-
     /// Returns the state of the cursor position.
     pub fn cursor(&self) -> Option<Position> {
         self.cursor
@@ -52,7 +32,6 @@ impl Handler {
         &mut self,
         event: Event,
         screen_size: Size,
-        now: Instant,
         mesh: &Mesh<Point<3>>,
         camera: &mut Camera,
         actions: &mut Actions,
@@ -112,12 +91,24 @@ impl Handler {
     pub fn update(
         &mut self,
         delta_t: f64,
-        now: Instant,
         camera: &mut Camera,
-        size: Size,
+        screen_size: Size,
         mesh: &Mesh<Point<3>>,
     ) {
-        self.zoom.apply_to_camera(delta_t, camera);
+        let focus_point = camera.focus_point(screen_size, self.cursor(), mesh);
+        self.zoom.apply_to_camera(delta_t, focus_point, camera);
+    }
+}
+
+impl Default for Handler {
+    fn default() -> Self {
+        Self {
+            cursor: None,
+
+            movement: Movement::new(),
+            rotation: Rotation::new(),
+            zoom: Zoom::new(),
+        }
     }
 }
 
