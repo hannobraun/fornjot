@@ -13,17 +13,6 @@
 //!
 //! Please note that not all of these validation categories are fully
 //! implemented, as of this writing.
-//!
-//! # Implementation Note
-//!
-//! There is an ongoing effort to abolish [`Shape`] and replace it with a much
-//! simpler data structure:
-//! <https://github.com/hannobraun/Fornjot/issues/697>
-//!
-//! Once completed, this would make structural validation moot, and reduce the
-//! scope of uniqueness validation.
-//!
-//! [`Shape`]: crate::shape::Shape
 
 mod coherence;
 mod uniqueness;
@@ -39,7 +28,7 @@ use fj_math::Scalar;
 
 use crate::iter::ObjectIters;
 
-/// Validate the given [`Shape`]
+/// Validate the given object
 pub fn validate<T>(
     object: T,
     config: &ValidationConfig,
