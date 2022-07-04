@@ -1,3 +1,4 @@
+export RUSTFLAGS := "-D warnings"
 export RUSTDOCFLAGS := "-D warnings"
 
 build:
