@@ -1,9 +1,8 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
-    geometry::Surface,
-    shape::{Shape, ValidationError},
-    topology::{Cycle, Edge, Face},
+    objects::{Cycle, Edge, Face, Surface},
+    validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::{Aabb, Point, Scalar};
 
@@ -12,23 +11,21 @@ use super::ToShape;
 impl ToShape for fj::Circle {
     fn to_shape(
         &self,
+        config: &ValidationConfig,
         _: Tolerance,
         _: &mut DebugInfo,
-    ) -> Result<Shape, ValidationError> {
-        let mut shape = Shape::new();
-
+    ) -> Result<Validated<Vec<Face>>, ValidationError> {
         // Circles have just a single round edge with no vertices. So none need
         // to be added here.
 
-        let edge = Edge::builder(&mut shape)
-            .build_circle(Scalar::from_f64(self.radius()))?;
-        shape.insert(Cycle::new(vec![edge]))?;
+        let edge = Edge::circle_from_radius(Scalar::from_f64(self.radius()));
 
-        let cycles = shape.cycles();
-        let surface = shape.insert(Surface::xy_plane())?;
-        shape.insert(Face::new(surface, cycles, Vec::new(), self.color()))?;
+        let cycle = Cycle { edges: vec![edge] };
 
-        Ok(shape)
+        let surface = Surface::xy_plane();
+        let face = Face::new(surface, vec![cycle], Vec::new(), self.color());
+
+        validate(vec![face], config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

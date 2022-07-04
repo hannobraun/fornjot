@@ -1,8 +1,10 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
-    shape::{Handle, LocalForm, Shape, ValidationError, ValidationResult},
-    topology::{Cycle, Edge, Face},
+    iter::ObjectIters,
+    local::Local,
+    objects::{Cycle, Edge, Face},
+    validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
 
@@ -11,13 +13,14 @@ use super::ToShape;
 impl ToShape for fj::Difference2d {
     fn to_shape(
         &self,
+        config: &ValidationConfig,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
-    ) -> Result<Shape, ValidationError> {
+    ) -> Result<Validated<Vec<Face>>, ValidationError> {
         // This method assumes that `b` is fully contained within `a`:
         // https://github.com/hannobraun/Fornjot/issues/92
 
-        let mut difference = Shape::new();
+        let mut difference = Vec::new();
 
         let mut exteriors = Vec::new();
         let mut interiors = Vec::new();
@@ -26,62 +29,58 @@ impl ToShape for fj::Difference2d {
         // - https://doc.rust-lang.org/std/primitive.array.html#method.each_ref
         // - https://doc.rust-lang.org/std/primitive.array.html#method.try_map
         let [a, b] = self.shapes();
-        let [a, b] = [a, b].map(|shape| shape.to_shape(tolerance, debug_info));
+        let [a, b] =
+            [a, b].map(|shape| shape.to_shape(config, tolerance, debug_info));
         let [a, b] = [a?, b?];
 
-        if let Some(face) = a.faces().next() {
+        if let Some(face) = a.face_iter().next() {
             // If there's at least one face to subtract from, we can proceed.
 
-            let surface = face.get().brep().surface.clone();
+            let surface = face.brep().surface;
 
-            for face in a.faces() {
-                let face = face.get();
+            for face in a.face_iter() {
                 let face = face.brep();
 
                 assert_eq!(
-                    surface.get(),
+                    surface,
                     face.surface(),
                     "Trying to subtract faces with different surfaces.",
                 );
 
-                for cycle in face.exteriors.as_handle() {
-                    let cycle =
-                        add_cycle(cycle.clone(), &mut difference, false)?;
+                for cycle in face.exteriors.as_local() {
+                    let cycle = add_cycle(cycle, false);
                     exteriors.push(cycle);
                 }
-                for cycle in face.interiors.as_handle() {
-                    let cycle =
-                        add_cycle(cycle.clone(), &mut difference, true)?;
+                for cycle in face.interiors.as_local() {
+                    let cycle = add_cycle(cycle, true);
                     interiors.push(cycle);
                 }
             }
 
-            for face in b.faces() {
-                let face = face.get();
+            for face in b.face_iter() {
                 let face = face.brep();
 
                 assert_eq!(
-                    surface.get(),
+                    surface,
                     face.surface(),
                     "Trying to subtract faces with different surfaces.",
                 );
 
-                for cycle in face.exteriors.as_handle() {
-                    let cycle =
-                        add_cycle(cycle.clone(), &mut difference, true)?;
+                for cycle in face.exteriors.as_local() {
+                    let cycle = add_cycle(cycle, true);
                     interiors.push(cycle);
                 }
             }
 
-            difference.merge(Face::new(
+            difference.push(Face::new(
                 surface,
                 exteriors,
                 interiors,
                 self.color(),
-            ))?;
+            ));
         }
 
-        Ok(difference)
+        validate(difference, config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
@@ -92,31 +91,34 @@ impl ToShape for fj::Difference2d {
     }
 }
 
-fn add_cycle(
-    cycle: Handle<Cycle<3>>,
-    shape: &mut Shape,
-    reverse: bool,
-) -> ValidationResult<Cycle<3>> {
+fn add_cycle(cycle: Cycle, reverse: bool) -> Cycle {
     let mut edges = Vec::new();
-    for edge in cycle.get().edges() {
-        let curve = edge.curve();
-        let curve = if reverse { curve.reverse() } else { curve };
-        let curve = shape.insert(curve)?;
+    for edge in cycle.edges {
+        let curve_local = edge.curve.local();
+        let curve_local = if reverse {
+            curve_local.reverse()
+        } else {
+            curve_local
+        };
 
-        let vertices = edge.vertices.clone().map(|[a, b]| {
-            if reverse {
-                // Switch `a` and `b`, but make sure the local forms are still
-                // correct, after we reversed the curve above.
-                [
-                    LocalForm::new(-(*b.local()), b.canonical()),
-                    LocalForm::new(-(*a.local()), a.canonical()),
-                ]
-            } else {
-                [a, b]
-            }
-        });
+        let curve_canonical = edge.curve();
+        let curve_canonical = if reverse {
+            curve_canonical.reverse()
+        } else {
+            curve_canonical
+        };
 
-        let edge = shape.merge(Edge::new(curve, vertices))?;
+        let vertices = if reverse {
+            edge.vertices.clone().reverse()
+        } else {
+            edge.vertices.clone()
+        };
+
+        let edge = Edge {
+            curve: Local::new(curve_local, curve_canonical),
+            vertices: vertices.clone(),
+        };
+
         edges.push(edge);
     }
 
@@ -124,7 +126,5 @@ fn add_cycle(
         edges.reverse();
     }
 
-    let cycle = shape.insert(Cycle::new(edges))?;
-
-    Ok(cycle)
+    Cycle { edges }
 }

@@ -4,15 +4,17 @@
 //! on their respective purpose.
 
 mod approx;
+mod reverse;
 mod sweep;
 mod transform;
-mod triangulation;
+mod triangulate;
 
 pub mod intersection;
 
 pub use self::{
     approx::{CycleApprox, FaceApprox, InvalidTolerance, Tolerance},
-    sweep::sweep_shape,
+    reverse::reverse_face,
+    sweep::sweep,
     transform::transform_shape,
-    triangulation::triangulate,
+    triangulate::triangulate,
 };

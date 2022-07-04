@@ -34,16 +34,33 @@ impl Rotation {
             let angle_x = diff_y * f;
             let angle_y = diff_x * f;
 
-            let trans = Transform::translation(rotate_around);
+            let rotate_around = Transform::translation(rotate_around);
 
-            let aa_x = Vector::unit_x() * angle_x;
-            let aa_y = Vector::unit_y() * angle_y;
-            let rot_x = Transform::rotation(aa_x);
-            let rot_y = Transform::rotation(aa_y);
+            // the model rotates not the camera, so invert the transform
+            let camera_rotation = camera.rotation.inverse();
+            let right_vector = right_vector(&camera_rotation);
+            let up_vector = up_vector(&camera_rotation);
 
-            let inv = trans.inverse();
+            let rotation = Transform::rotation(right_vector * angle_x)
+                * Transform::rotation(up_vector * angle_y);
 
-            camera.rotation = trans * rot_y * rot_x * inv * camera.rotation;
+            let transform = camera.camera_to_model()
+                * rotate_around
+                * rotation
+                * rotate_around.inverse();
+
+            camera.rotation = transform.extract_rotation();
+            camera.translation = transform.extract_translation();
         }
     }
+}
+
+fn up_vector(rotation: &Transform) -> Vector<3> {
+    let d = rotation.data();
+    Vector::from_components_f64([d[4], d[5], d[6]])
+}
+
+fn right_vector(rotation: &Transform) -> Vector<3> {
+    let d = rotation.data();
+    Vector::from_components_f64([d[0], d[1], d[2]])
 }

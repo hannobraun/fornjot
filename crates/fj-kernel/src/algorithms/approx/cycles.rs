@@ -1,14 +1,14 @@
-use fj_math::Segment;
+use fj_math::{Point, Segment};
 
-use crate::{geometry, topology::Cycle};
+use crate::{local::Local, objects::Cycle};
 
-use super::{curves::approx_curve, edges::approximate_edge, Tolerance};
+use super::{curves::approx_curve, edges::approx_edge, Tolerance};
 
 /// An approximation of a [`Cycle`]
 #[derive(Debug, Eq, PartialEq, Hash)]
 pub struct CycleApprox {
     /// The points that approximate the cycle
-    pub points: Vec<geometry::Point<3, 3>>,
+    pub points: Vec<Local<Point<2>>>,
 }
 
 impl CycleApprox {
@@ -16,25 +16,24 @@ impl CycleApprox {
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual face.
-    pub fn new(cycle: &Cycle<3>, tolerance: Tolerance) -> Self {
+    pub fn new(cycle: &Cycle, tolerance: Tolerance) -> Self {
         let mut points = Vec::new();
 
-        for edge in cycle.edges() {
+        for edge in &cycle.edges {
             let mut edge_points = Vec::new();
             approx_curve(&edge.curve(), tolerance, &mut edge_points);
-            approximate_edge(edge.vertices, &mut edge_points);
+            approx_edge(edge.vertices.clone(), &mut edge_points);
 
-            points.extend(edge_points);
+            points.extend(edge_points.into_iter().map(|point| {
+                let local =
+                    edge.curve.local().point_from_curve_coords(point.local());
+                Local::new(local, point.global())
+            }));
         }
 
-        let mut points: Vec<_> = points
-            .into_iter()
-            .map(|point| {
-                geometry::Point::new(point.canonical(), point.canonical())
-            })
-            .collect();
-
-        points.dedup();
+        // Can't just rely on `dedup`, as the conversion from curve coordinates
+        // could lead to subtly different surface coordinates.
+        points.dedup_by(|a, b| a.global() == b.global());
 
         Self { points }
     }
@@ -48,8 +47,7 @@ impl CycleApprox {
             // up, once `array_windows` is stable.
             let segment = [segment[0], segment[1]];
 
-            let segment = segment.map(|point| point.canonical());
-            segments.push(Segment::from(segment));
+            segments.push(Segment::from(segment.map(|point| point.global())));
         }
 
         segments

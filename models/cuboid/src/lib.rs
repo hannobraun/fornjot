@@ -1,23 +1,9 @@
-use std::collections::HashMap;
-
-#[no_mangle]
-pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
-    let x: f64 = args
-        .get("x")
-        .unwrap_or(&"3.0".to_owned())
-        .parse()
-        .expect("Could not parse parameter `x`");
-    let y: f64 = args
-        .get("y")
-        .unwrap_or(&"2.0".to_owned())
-        .parse()
-        .expect("Could not parse parameter `y`");
-    let z: f64 = args
-        .get("z")
-        .unwrap_or(&"1.0".to_owned())
-        .parse()
-        .expect("Could not parse parameter `z`");
-
+#[fj::model]
+pub fn model(
+    #[value(default = 3.0)] x: f64,
+    #[value(default = 2.0)] y: f64,
+    #[value(default = 1.0)] z: f64,
+) -> fj::Shape {
     #[rustfmt::skip]
     let rectangle = fj::Sketch::from_points(vec![
         [-x / 2., -y / 2.],

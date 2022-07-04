@@ -1,12 +1,10 @@
-use fj_math::{Scalar, Triangle, Winding};
+use fj_math::{Point, Scalar, Triangle, Winding};
 use spade::HasPosition;
 
-use crate::geometry;
+use crate::local::Local;
 
 /// Create a Delaunay triangulation of all points
-pub fn triangulate(
-    points: Vec<geometry::Point<2, 3>>,
-) -> Vec<[geometry::Point<2, 3>; 3]> {
+pub fn triangulate(points: Vec<Local<Point<2>>>) -> Vec<[Local<Point<2>>; 3]> {
     use spade::Triangulation as _;
 
     let triangulation = spade::DelaunayTriangulation::<_>::bulk_load(points)
@@ -30,8 +28,8 @@ pub fn triangulate(
     triangles
 }
 
-// Enables the use of `geometry::Point` in the triangulation.
-impl HasPosition for geometry::Point<2, 3> {
+// Enables the use of `LocalPoint` in the triangulation.
+impl HasPosition for Local<Point<2>> {
     type Scalar = Scalar;
 
     fn position(&self) -> spade::Point2<Self::Scalar> {

@@ -1,5 +1,5 @@
 [package]
-name = "fj"
+name = "fj-proc"
 version = "0.6.0"
 edition = "2021"
 
@@ -11,12 +11,18 @@ license = "0BSD"
 keywords = ["cad", "programmatic", "code-cad"]
 categories = ["encoding", "mathematics", "rendering"]
 
+[lib]
+proc-macro = true
+
 
 [dependencies]
-serde = { version = "1.0.7", features = ["derive"], optional = true }
+proc-macro2 = "1.0.40"
+quote = "1.0.20"
 
-[dependencies.fj-proc]
-path = "../../crates/fj-proc"
+[dependencies.serde]
+version = "1.0.137"
+optional = true
 
-[dev-dependencies]
-serde_json = "1.0.81"
+[dependencies.syn]
+version = "1.0.98"
+features = ["full", "extra-traits"]

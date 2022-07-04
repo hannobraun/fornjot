@@ -13,7 +13,7 @@ For an introduction of what the project aims to achieve, [please check out the w
 
 ## Sponsors
 
-Fornjot is supported by [**@webtrax-oz**](https://github.com/webtrax-oz), [**@lthiery**](https://github.com/lthiery), [**@Yatekii**](https://github.com/Yatekii), [**@martindederer**](https://github.com/martindederer), [**@hobofan**](https://github.com/hobofan), [**@ahdinosaur**](https://github.com/ahdinosaur), [**@thawkins**](https://github.com/thawkins), [**@nullstyle**](https://github.com/nullstyle), [**@jessebraham**](https://github.com/jessebraham), [**@Kethku**](https://github.com/Kethku), [**@sanxiyn**](https://github.com/sanxiyn), [**@seigel**](https://github.com/seigel), [**@seanjensengrey**](https://github.com/seanjensengrey), [**@jacobrosenthal**](https://github.com/jacobrosenthal), [**@MattOslin**](https://github.com/MattOslin), [**@benwis**](https://github.com/benwis), [**@happysalada**](https://github.com/happysalada), and my other awesome sponsors. Thank you!
+Fornjot is supported by [**@webtrax-oz**](https://github.com/webtrax-oz), [**@lthiery**](https://github.com/lthiery), [**@Yatekii**](https://github.com/Yatekii), [**@martindederer**](https://github.com/martindederer), [**@hobofan**](https://github.com/hobofan), [**@ahdinosaur**](https://github.com/ahdinosaur), [**@thawkins**](https://github.com/thawkins), [**@bollian**](https://github.com/bollian), [**@nullstyle**](https://github.com/nullstyle), [**@rozgo**](https://github.com/rozgo), [**@sucaba**](https://github.com/sucaba), [**@jessebraham**](https://github.com/jessebraham), [**@Kethku**](https://github.com/Kethku), [**@sanxiyn**](https://github.com/sanxiyn), [**@seigel**](https://github.com/seigel), [**@seanjensengrey**](https://github.com/seanjensengrey), [**@jacobrosenthal**](https://github.com/jacobrosenthal), [**@MattOslin**](https://github.com/MattOslin), [**@benwis**](https://github.com/benwis), [**@happysalada**](https://github.com/happysalada), [**@jminer**](https://github.com/jminer) and my other awesome sponsors. Thank you!
 
 **Please consider [supporting me too](https://github.com/sponsors/hannobraun), to help make Fornjot sustainable long-term.**
 
@@ -24,7 +24,7 @@ Fornjot is **under active development, but still experimental**. Efforts are cur
 
 If you are interested in Fornjot and are considering to use it, you should fully expect to run into limitation pretty much immediately. Unless you are willing to contribute to its development, it would be better to wait for a year or ten, to let it mature. For more information on current limitations and improvements that could be implemented in the near future, [check out the open issues](https://github.com/hannobraun/Fornjot/issues).
 
-To learn what the direction is longer-term, refer to the [feature wishlist](https://github.com/hannobraun/Fornjot/discussions/146).
+To learn about the project's longer-term direction, please refer to the [roadmap](https://www.fornjot.app/roadmap/).
 
 
 ## Overview
@@ -33,57 +33,54 @@ Fornjot is both an application, as well as an ecosystem of components that make 
 
 Here's an overview over all of the crates, with a short description of what they do:
 
-- `fj-math`: Math primitives used by the rest of the Fornjot ecosystem.
-- `fj-interop`: Basic types that allow other crates to interoperate, without depending on each other.
-- `fj-kernel`: CAD kernel of Fornjot. Defines geometric and topological primitives, and algorithms that operate on those primitives.
-- `fj-operations`: CAD operations, built on top of `fj-kernel`. Link between the kernel, and the API that users use to define models.
-- `fj-export`: Exports Fornjot models to external data formats.
-- `fj-host`: Loads Fornjot models and watches them for changes.
-- `fj-viewer`: Displays Fornjot models.
-- `fj-window`: Embed `fj-viewer` in a Winit-based window.
-- `fj-app`: The Fornjot CAD application.
-- `fj`: End-user API for defining Fornjot models.
+- [`fj-math`]: Math primitives used by the rest of the Fornjot ecosystem.
+- [`fj-interop`]: Basic types that allow other crates to interoperate, without depending on each other.
+- [`fj-kernel`]: CAD kernel of Fornjot. Defines geometric and topological primitives, and algorithms that operate on those primitives.
+- [`fj-operations`]: CAD operations, built on top of `fj-kernel`. Link between the kernel, and the API that users use to define models.
+- [`fj-export`]: Exports Fornjot models to external data formats.
+- [`fj-host`]: Loads Fornjot models and watches them for changes.
+- [`fj-viewer`]: Displays Fornjot models.
+- `fj-window` (not published yet): Embed `fj-viewer` in a Winit-based window.
+- [`fj-app`]: The Fornjot CAD application.
+- [`fj`]: End-user API for defining Fornjot models.
+
+[`fj`]: https://crates.io/crates/fj
+[`fj-app`]: https://crates.io/crates/fj-app
+[`fj-export`]: https://crates.io/crates/fj-export
+[`fj-host`]: https://crates.io/crates/fj-host
+[`fj-interop`]: https://crates.io/crates/fj-interop
+[`fj-kernel`]: https://crates.io/crates/fj-kernel
+[`fj-math`]: https://crates.io/crates/fj-math
+[`fj-operations`]: https://crates.io/crates/fj-operations
+[`fj-viewer`]: https://crates.io/crates/fj-viewer
 
 
 ## Features
 
-### Code-CAD in Rust
+### Code-first CAD in Rust
 
-Models are defined as Rust code. To ensure fast compile times, they are compiled separately, and loaded into a host application as a plug-in.
+Models are defined as Rust code. To ensure fast compile times, they are compiled separately, and loaded into the Fornjot application as a plug-in.
 
 ``` rust
-use std::collections::HashMap;
+use fj::syntax::*;
 
-#[no_mangle]
-pub extern "C" fn model(args: &HashMap<String, String>) -> fj::Shape {
-    let outer = args
-        .get("outer")
-        .unwrap_or(&"1.0".to_owned())
-        .parse()
-        .expect("Could not parse parameter `outer`");
-    let inner = args
-        .get("inner")
-        .unwrap_or(&"0.5".to_owned())
-        .parse()
-        .expect("Could not parse parameter `inner`");
-    let height = args
-        .get("height")
-        .unwrap_or(&"1.0".to_owned())
-        .parse()
-        .expect("Could not parse parameter `height`");
-
+#[fj::model]
+pub fn model(
+    #[value(default = 1.0, min = inner * 1.01)] outer: f64,
+    #[value(default = 0.5, max = outer * 0.99)] inner: f64,
+    #[value(default = 1.0)] height: f64,
+) -> fj::Shape {
     let outer_edge = fj::Circle::from_radius(outer);
     let inner_edge = fj::Circle::from_radius(inner);
 
-    let footprint = fj::Difference2d::from_objects(outer_edge.into(), inner_edge.into());
-
-    let spacer = fj::Sweep::from_shape_and_length(footprint.into(), height);
+    let footprint = outer_edge.difference(&inner_edge);
+    let spacer = footprint.sweep([0., 0., height]);
 
     spacer.into()
 }
 ```
 
-This is the code for the [spacer model](/models/spacer). As you can see, there's still some work to do, to make the process of defining models more convenient.
+This is the code for the [spacer model](/models/spacer).
 
 ### Basic modeling features
 
@@ -140,7 +137,7 @@ The file type is based on the supplied extension. Both 3MF and STL are supported
 Some models have parameters that can be overridden. For example, to override the inner and outer radii of the spacer model:
 
 ``` sh
-cargo run -- -m spacer --parameters outer=8.0 --parameters inner=5.0
+cargo run -- -m spacer --parameters "outer=8.0,inner=5.0"
 ```
 
 

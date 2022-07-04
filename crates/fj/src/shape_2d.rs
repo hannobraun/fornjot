@@ -1,10 +1,13 @@
+#[cfg(feature = "serde")]
+use serde::{de, ser, Deserialize, Serialize};
 use std::mem;
+use std::sync::atomic;
 
 use crate::Shape;
 
 /// A 2-dimensional shape
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "serialization", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub enum Shape2d {
     /// A circle
@@ -30,7 +33,7 @@ impl Shape2d {
 
 /// A circle
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "serialization", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Circle {
     /// The radius of the circle
@@ -84,7 +87,7 @@ impl From<Circle> for Shape2d {
 
 /// A difference between two shapes
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "serialization", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Difference2d {
     shapes: [Shape2d; 2],
@@ -128,8 +131,7 @@ impl From<Difference2d> for Shape2d {
 /// Nothing about these edges is checked right now, but algorithms might assume
 /// that the edges are non-overlapping. If you create a `Sketch` with
 /// overlapping edges, you're on your own.
-#[derive(Clone, Debug)]
-#[cfg_attr(feature = "serialization", derive(Serialize, Deserialize))]
+#[derive(Debug)]
 #[repr(C)]
 pub struct Sketch {
     // The fields are the raw parts of a `Vec`. `Sketch` needs to be FFI-safe,
@@ -137,6 +139,10 @@ pub struct Sketch {
     ptr: *mut [f64; 2],
     length: usize,
     capacity: usize,
+    // The `Sketch` can be cloned, so we need to track the number of live
+    // instances, so as to free the buffer behind `ptr` only when the last
+    // one is dropped.
+    rc: *mut atomic::AtomicUsize,
     // The color of the sketch in RGBA
     color: [u8; 4],
 }
@@ -153,10 +159,16 @@ impl Sketch {
         // to deallocate it.
         mem::forget(points);
 
+        // Allocate the reference counter on the heap. It will be reclaimed
+        // alongside `points` when it reaches 0.
+        let rc = Box::new(atomic::AtomicUsize::new(1));
+        let rc = Box::leak(rc) as *mut _;
+
         Self {
             ptr,
             length,
             capacity,
+            rc,
             color: [255, 0, 0, 255],
         }
     }
@@ -199,6 +211,91 @@ impl Sketch {
     }
 }
 
+impl Clone for Sketch {
+    fn clone(&self) -> Self {
+        // Increment the reference counter
+        unsafe {
+            (*self.rc).fetch_add(1, atomic::Ordering::AcqRel);
+        }
+
+        Self {
+            ptr: self.ptr,
+            length: self.length,
+            capacity: self.capacity,
+            rc: self.rc,
+            color: self.color,
+        }
+    }
+}
+
+impl Drop for Sketch {
+    fn drop(&mut self) {
+        // Decrement the reference counter
+        let rc_last =
+            unsafe { (*self.rc).fetch_sub(1, atomic::Ordering::AcqRel) };
+
+        // If the value of the refcount before decrementing was 1,
+        // then this must be the last Drop call. Reclaim all resources
+        // allocated on the heap.
+        if rc_last == 1 {
+            unsafe {
+                let points =
+                    Vec::from_raw_parts(self.ptr, self.length, self.capacity);
+                let rc = Box::from_raw(self.rc);
+
+                drop(points);
+                drop(rc);
+            }
+        }
+    }
+}
+
+/// An owned, non-repr-C Sketch
+///
+/// De/serializing a non-trivial structure with raw pointers is a hassle.
+/// This structure is a simple, owned intermediate form that can use the derive
+/// macros provided by serde. The implementation of the Serialize and Deserialize
+/// traits for Sketch use this type as a stepping stone.
+///
+/// Note that constructing this requires cloning the points behind Sketch. If
+/// de/serialization turns out to be a bottleneck, a more complete implementation
+/// will be required.
+#[cfg(feature = "serde")]
+#[derive(Serialize, Deserialize)]
+#[serde(rename = "Sketch")]
+struct SerdeSketch {
+    points: Vec<[f64; 2]>,
+    color: [u8; 4],
+}
+
+#[cfg(feature = "serde")]
+impl ser::Serialize for Sketch {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: ser::Serializer,
+    {
+        let serde_sketch = SerdeSketch {
+            points: self.to_points(),
+            color: self.color,
+        };
+
+        serde_sketch.serialize(serializer)
+    }
+}
+
+#[cfg(feature = "serde")]
+impl<'de> de::Deserialize<'de> for Sketch {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: de::Deserializer<'de>,
+    {
+        SerdeSketch::deserialize(deserializer).map(|serde_sketch| {
+            Sketch::from_points(serde_sketch.points)
+                .with_color(serde_sketch.color)
+        })
+    }
+}
+
 impl From<Sketch> for Shape {
     fn from(shape: Sketch) -> Self {
         Self::Shape2d(shape.into())
@@ -214,3 +311,61 @@ impl From<Sketch> for Shape2d {
 // `Sketch` can be `Send`, because it encapsulates the raw pointer it contains,
 // making sure memory ownership rules are observed.
 unsafe impl Send for Sketch {}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn test_points() -> Vec<[f64; 2]> {
+        vec![[1.0, 1.0], [2.0, 1.0], [2.0, 2.0], [1.0, 2.0]]
+    }
+
+    #[test]
+    fn test_sketch_preserve_points() {
+        let points = test_points();
+        let sketch = Sketch::from_points(points.clone());
+
+        assert_eq!(sketch.to_points(), points);
+    }
+
+    #[test]
+    fn test_sketch_rc() {
+        let assert_rc = |sketch: &Sketch, expected_rc: usize| {
+            let rc = unsafe { (*sketch.rc).load(atomic::Ordering::Acquire) };
+            assert_eq!(
+                rc, expected_rc,
+                "Sketch has rc = {rc}, expected {expected_rc}"
+            );
+        };
+
+        let sketch = Sketch::from_points(test_points());
+        assert_rc(&sketch, 1);
+
+        let (s2, s3) = (sketch.clone(), sketch.clone());
+        assert_rc(&sketch, 3);
+
+        drop(s2);
+        assert_rc(&sketch, 2);
+
+        drop(s3);
+        assert_rc(&sketch, 1);
+
+        // rc is deallocated after the last drop, so we can't assert that it's 0
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn test_serialize_loopback() {
+        use serde_json::{from_str, to_string};
+
+        let sketch = Sketch::from_points(test_points());
+
+        let json = to_string(&sketch).expect("failed to serialize sketch");
+        let sketch_de: Sketch =
+            from_str(&json).expect("failed to deserialize sketch");
+
+        // ensure same content
+        assert_eq!(sketch.to_points(), sketch_de.to_points());
+        assert_eq!(sketch.color(), sketch_de.color());
+    }
+}

@@ -1,26 +1,11 @@
-use std::hash::{Hash, Hasher};
-
 use fj_interop::mesh::Color;
 use fj_math::Triangle;
 
-use crate::{
-    geometry::Surface,
-    shape::{Handle, Shape},
-};
+use crate::builder::FaceBuilder;
 
-use super::{Cycle, FaceBuilder};
+use super::{Cycle, Surface};
 
 /// A face of a shape
-///
-/// # Equality
-///
-/// Please refer to [`crate::kernel::topology`] for documentation on the
-/// equality of topological objects.
-///
-/// # Validation
-///
-/// A face that is part of a [`Shape`] must be structurally sound. That means
-/// the surface and any cycles it refers to, must be part of the same shape.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum Face {
     /// A face of a shape
@@ -41,9 +26,9 @@ pub enum Face {
 impl Face {
     /// Construct a new instance of `Face`
     pub fn new(
-        surface: Handle<Surface>,
-        exteriors: impl IntoIterator<Item = Handle<Cycle<3>>>,
-        interiors: impl IntoIterator<Item = Handle<Cycle<3>>>,
+        surface: Surface,
+        exteriors: impl IntoIterator<Item = Cycle>,
+        interiors: impl IntoIterator<Item = Cycle>,
         color: [u8; 4],
     ) -> Self {
         let exteriors = CyclesInFace::new(exteriors);
@@ -57,8 +42,8 @@ impl Face {
         })
     }
     /// Build a face using the [`FaceBuilder`] API
-    pub fn builder(surface: Surface, shape: &mut Shape) -> FaceBuilder {
-        FaceBuilder::new(surface, shape)
+    pub fn builder(surface: Surface) -> FaceBuilder {
+        FaceBuilder::new(surface)
     }
 
     /// Access the boundary representation of the face
@@ -85,7 +70,7 @@ impl Face {
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn exteriors(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
+    pub fn exteriors(&self) -> impl Iterator<Item = Cycle> + '_ {
         self.brep().exteriors()
     }
 
@@ -93,7 +78,7 @@ impl Face {
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn interiors(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
+    pub fn interiors(&self) -> impl Iterator<Item = Cycle> + '_ {
         self.brep().interiors()
     }
 
@@ -101,8 +86,13 @@ impl Face {
     ///
     /// This is equivalent to chaining the iterators returned by
     /// [`Face::exteriors`] and [`Face::interiors`].
-    pub fn all_cycles(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
+    pub fn all_cycles(&self) -> impl Iterator<Item = Cycle> + '_ {
         self.exteriors().chain(self.interiors())
+    }
+
+    /// Access the color of the face
+    pub fn color(&self) -> [u8; 4] {
+        self.brep().color
     }
 }
 
@@ -111,10 +101,10 @@ impl Face {
 /// This type exists to ease the handling of faces that use boundary
 /// representation. It will eventually be merged into `Face`, once
 /// `Face::Triangles` can finally be removed.
-#[derive(Clone, Debug, Eq, Ord, PartialOrd)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct FaceBRep {
     /// The surface that defines this face
-    pub surface: Handle<Surface>,
+    pub surface: Surface,
 
     /// The cycles that bound the face on the outside
     ///
@@ -147,67 +137,46 @@ impl FaceBRep {
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`].
     pub fn surface(&self) -> Surface {
-        self.surface.get()
+        self.surface
     }
 
     /// Access the exterior cycles that the face refers to
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn exteriors(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
-        self.exteriors.as_canonical()
+    pub fn exteriors(&self) -> impl Iterator<Item = Cycle> + '_ {
+        self.exteriors.as_local()
     }
 
     /// Access the interior cycles that the face refers to
     ///
     /// This is a convenience method that saves the caller from dealing with the
     /// [`Handle`]s.
-    pub fn interiors(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
-        self.interiors.as_canonical()
+    pub fn interiors(&self) -> impl Iterator<Item = Cycle> + '_ {
+        self.interiors.as_local()
     }
 
     /// Access all cycles that the face refers to
     ///
     /// This is equivalent to chaining the iterators returned by
     /// [`Face::exteriors`] and [`Face::interiors`].
-    pub fn all_cycles(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
+    pub fn all_cycles(&self) -> impl Iterator<Item = Cycle> + '_ {
         self.exteriors().chain(self.interiors())
-    }
-}
-
-impl PartialEq for FaceBRep {
-    fn eq(&self, other: &Self) -> bool {
-        self.surface() == other.surface()
-            && self.exteriors().eq(other.exteriors())
-            && self.interiors().eq(other.interiors())
-    }
-}
-
-impl Hash for FaceBRep {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        self.surface().hash(state);
-        for cycle in self.all_cycles() {
-            cycle.hash(state);
-        }
     }
 }
 
 /// A list of cycles, as they are stored in `Face`
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct CyclesInFace(Vec<Handle<Cycle<3>>>);
+pub struct CyclesInFace(Vec<Cycle>);
 
 impl CyclesInFace {
-    fn new(cycles: impl IntoIterator<Item = Handle<Cycle<3>>>) -> Self {
+    /// Create a new instance of `CyclesInFace`
+    pub fn new(cycles: impl IntoIterator<Item = Cycle>) -> Self {
         Self(cycles.into_iter().collect())
     }
 
     /// Access an iterator over the canonical forms of the cycles
-    pub fn as_canonical(&self) -> impl Iterator<Item = Cycle<3>> + '_ {
-        self.as_handle().map(|edge| edge.get())
-    }
-
-    /// Access an iterator over handles to the cycles
-    pub fn as_handle(&self) -> impl Iterator<Item = Handle<Cycle<3>>> + '_ {
+    pub fn as_local(&self) -> impl Iterator<Item = Cycle> + '_ {
         self.0.iter().cloned()
     }
 }

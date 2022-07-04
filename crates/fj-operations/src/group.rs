@@ -1,7 +1,8 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
-    shape::{Shape, ValidationError},
+    objects::Face,
+    validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
 
@@ -10,18 +11,19 @@ use super::ToShape;
 impl ToShape for fj::Group {
     fn to_shape(
         &self,
+        config: &ValidationConfig,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
-    ) -> Result<Shape, ValidationError> {
-        let mut shape = Shape::new();
+    ) -> Result<Validated<Vec<Face>>, ValidationError> {
+        let mut shape = Vec::new();
 
-        let a = self.a.to_shape(tolerance, debug_info)?;
-        let b = self.b.to_shape(tolerance, debug_info)?;
+        let a = self.a.to_shape(config, tolerance, debug_info)?;
+        let b = self.b.to_shape(config, tolerance, debug_info)?;
 
-        shape.merge_shape(&a)?;
-        shape.merge_shape(&b)?;
+        shape.extend(a.into_inner());
+        shape.extend(b.into_inner());
 
-        Ok(shape)
+        validate(shape, config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

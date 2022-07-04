@@ -28,7 +28,8 @@ mod transform;
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
-    shape::{Shape, ValidationError},
+    objects::Face,
+    validation::{Validated, ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
 
@@ -37,9 +38,10 @@ pub trait ToShape {
     /// Compute the boundary representation of the shape
     fn to_shape(
         &self,
+        config: &ValidationConfig,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
-    ) -> Result<Shape, ValidationError>;
+    ) -> Result<Validated<Vec<Face>>, ValidationError>;
 
     /// Access the axis-aligned bounding box of a shape
     ///
@@ -89,8 +91,9 @@ macro_rules! dispatch {
 
 dispatch! {
     to_shape(
+        config: &ValidationConfig,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
-    ) -> Result<Shape, ValidationError>;
+    ) -> Result<Validated<Vec<Face>>, ValidationError>;
     bounding_volume() -> Aabb<3>;
 }

@@ -1,9 +1,8 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
-    geometry::Surface,
-    shape::{Shape, ValidationError},
-    topology::Face,
+    objects::{Face, Surface},
+    validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::{Aabb, Point};
 
@@ -12,23 +11,19 @@ use super::ToShape;
 impl ToShape for fj::Sketch {
     fn to_shape(
         &self,
+        config: &ValidationConfig,
         _: Tolerance,
         _: &mut DebugInfo,
-    ) -> Result<Shape, ValidationError> {
-        let mut shape = Shape::new();
-
+    ) -> Result<Validated<Vec<Face>>, ValidationError> {
         let surface = Surface::xy_plane();
-        let points = self
-            .to_points()
-            .into_iter()
-            .map(Point::from)
-            .map(|point| surface.point_from_surface_coords(point));
+        let points = self.to_points().into_iter().map(Point::from);
 
-        Face::builder(surface, &mut shape)
+        let sketch = Face::builder(surface)
             .with_exterior_polygon(points)
-            .build()?;
+            .with_color(self.color())
+            .build();
 
-        Ok(shape)
+        validate(vec![sketch], config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

@@ -1,26 +1,20 @@
-use std::fmt;
+use std::{collections::HashSet, fmt};
 
 use fj_math::Scalar;
 
-use crate::{
-    shape::{stores::Stores, Handle},
-    topology::Vertex,
-};
+use crate::objects::GlobalVertex;
 
 pub fn validate_vertex(
-    vertex: &Vertex,
-    handle: Option<&Handle<Vertex>>,
+    vertex: &GlobalVertex,
+    vertices: &HashSet<GlobalVertex>,
     min_distance: Scalar,
-    stores: &Stores,
 ) -> Result<(), UniquenessIssues> {
-    for existing in stores.vertices.iter() {
-        if Some(&existing) == handle {
-            continue;
-        }
-
-        let distance = (existing.get().point() - vertex.point()).magnitude();
-        if distance < min_distance {
-            return Err(UniquenessIssues);
+    for existing in vertices {
+        if (existing.position() - vertex.position()).magnitude() < min_distance
+        {
+            return Err(UniquenessIssues {
+                duplicate_vertex: Some(*existing),
+            });
         }
     }
 
@@ -39,11 +33,19 @@ pub fn validate_vertex(
 ///
 /// [`ValidationError`]: super::ValidationError
 #[derive(Debug, Default, thiserror::Error)]
-pub struct UniquenessIssues;
+pub struct UniquenessIssues {
+    /// Duplicate vertex found
+    pub duplicate_vertex: Option<GlobalVertex>,
+}
 
 impl fmt::Display for UniquenessIssues {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Uniqueness issues found")?;
+        writeln!(f, "Uniqueness issues found:")?;
+
+        if let Some(duplicate_vertex) = &self.duplicate_vertex {
+            writeln!(f, "- Duplicate vertex ({:?}", duplicate_vertex)?;
+        }
+
         Ok(())
     }
 }

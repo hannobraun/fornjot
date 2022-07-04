@@ -1,6 +1,8 @@
 use std::collections::HashSet;
 
-use crate::{geometry, topology::Face};
+use fj_math::Point;
+
+use crate::{local::Local, objects::Face};
 
 use super::{CycleApprox, Tolerance};
 
@@ -11,7 +13,7 @@ pub struct FaceApprox {
     ///
     /// These could be actual vertices from the model, points that approximate
     /// an edge, or points that approximate a face.
-    pub points: HashSet<geometry::Point<3, 3>>,
+    pub points: HashSet<Local<Point<2>>>,
 
     /// Approximation of the exterior cycle
     pub exterior: CycleApprox,
@@ -56,7 +58,7 @@ impl FaceApprox {
             interiors.insert(cycle);
         }
 
-        // Only polygon with exactly one exterior cycle are supported.
+        // Only polygons with exactly one exterior cycle are supported.
         //
         // See this issue for some background:
         // https://github.com/hannobraun/Fornjot/issues/250
@@ -82,9 +84,8 @@ mod tests {
     use map_macro::set;
 
     use crate::{
-        geometry::{self, Surface},
-        shape::Shape,
-        topology::Face,
+        local::Local,
+        objects::{Face, Surface},
     };
 
     use super::{CycleApprox, FaceApprox, Tolerance};
@@ -95,33 +96,31 @@ mod tests {
 
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
 
-        let mut shape = Shape::new();
+        let a = Point::from([0., 0.]);
+        let b = Point::from([3., 0.]);
+        let c = Point::from([3., 3.]);
+        let d = Point::from([0., 3.]);
 
-        let a = Point::from([0., 0., 0.]);
-        let b = Point::from([3., 0., 0.]);
-        let c = Point::from([3., 3., 0.]);
-        let d = Point::from([0., 3., 0.]);
+        let e = Point::from([1., 1.]);
+        let f = Point::from([2., 1.]);
+        let g = Point::from([2., 2.]);
+        let h = Point::from([1., 2.]);
 
-        let e = Point::from([1., 1., 0.]);
-        let f = Point::from([2., 1., 0.]);
-        let g = Point::from([2., 2., 0.]);
-        let h = Point::from([1., 2., 0.]);
-
-        let face = Face::builder(Surface::xy_plane(), &mut shape)
+        let face = Face::builder(Surface::xy_plane())
             .with_exterior_polygon([a, b, c, d])
             .with_interior_polygon([e, f, g, h])
-            .build()?;
+            .build();
 
-        let a = geometry::Point::new(a, a);
-        let b = geometry::Point::new(b, b);
-        let c = geometry::Point::new(c, c);
-        let d = geometry::Point::new(d, d);
-        let e = geometry::Point::new(e, e);
-        let f = geometry::Point::new(f, f);
-        let g = geometry::Point::new(g, g);
-        let h = geometry::Point::new(h, h);
+        let a = Local::new(a, a.to_xyz());
+        let b = Local::new(b, b.to_xyz());
+        let c = Local::new(c, c.to_xyz());
+        let d = Local::new(d, d.to_xyz());
+        let e = Local::new(e, e.to_xyz());
+        let f = Local::new(f, f.to_xyz());
+        let g = Local::new(g, g.to_xyz());
+        let h = Local::new(h, h.to_xyz());
 
-        let approx = FaceApprox::new(&face.get(), tolerance);
+        let approx = FaceApprox::new(&face, tolerance);
         let expected = FaceApprox {
             points: set![a, b, c, d, e, f, g, h],
             exterior: CycleApprox {

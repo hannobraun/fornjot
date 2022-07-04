@@ -25,10 +25,13 @@ mod shape_2d;
 mod shape_3d;
 
 pub use self::{angle::*, shape_2d::*, shape_3d::*};
+pub use fj_proc::*;
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
 
 /// A shape
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "serialization", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub enum Shape {
     /// A 2D shape

@@ -1,8 +1,8 @@
 use std::cmp::max;
 
-use fj_math::{Circle, Scalar};
+use fj_math::{Circle, Point, Scalar};
 
-use crate::geometry::{self, Curve};
+use crate::{local::Local, objects::Curve};
 
 use super::Tolerance;
 
@@ -20,10 +20,10 @@ use super::Tolerance;
 ///
 /// The `approximate_between` methods of the curves then need to make sure to
 /// only return points in between those vertices, not the vertices themselves.
-pub fn approx_curve<const D: usize>(
-    curve: &Curve<D>,
+pub fn approx_curve(
+    curve: &Curve<3>,
     tolerance: Tolerance,
-    out: &mut Vec<geometry::Point<1, D>>,
+    out: &mut Vec<Local<Point<1>>>,
 ) {
     match curve {
         Curve::Circle(curve) => approx_circle(curve, tolerance, out),
@@ -35,10 +35,10 @@ pub fn approx_curve<const D: usize>(
 ///
 /// `tolerance` specifies how much the approximation is allowed to deviate
 /// from the circle.
-pub fn approx_circle<const D: usize>(
-    circle: &Circle<D>,
+pub fn approx_circle(
+    circle: &Circle<3>,
     tolerance: Tolerance,
-    out: &mut Vec<geometry::Point<1, D>>,
+    out: &mut Vec<Local<Point<1>>>,
 ) {
     let radius = circle.a.magnitude();
 
@@ -53,7 +53,7 @@ pub fn approx_circle<const D: usize>(
     for i in 0..n {
         let angle = Scalar::PI * 2. / n as f64 * i as f64;
         let point = circle.point_from_circle_coords([angle]);
-        out.push(geometry::Point::new([angle], point));
+        out.push(Local::new([angle], point));
     }
 }
 

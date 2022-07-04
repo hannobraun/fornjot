@@ -44,10 +44,12 @@ fn parse_parameters(input: &str) -> anyhow::Result<Parameters> {
         let key = parameter
             .next()
             .ok_or_else(|| anyhow!("Expected model parameter key"))?
+            .trim()
             .to_owned();
         let value = parameter
             .next()
             .ok_or_else(|| anyhow!("Expected model parameter value"))?
+            .trim()
             .to_owned();
 
         parameters.0.insert(key, value);
