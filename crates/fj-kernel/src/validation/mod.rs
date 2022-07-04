@@ -28,7 +28,7 @@ use fj_math::Scalar;
 
 use crate::iter::ObjectIters;
 
-/// Validate the given [`Shape`]
+/// Validate the given object
 pub fn validate<T>(
     object: T,
     config: &ValidationConfig,
