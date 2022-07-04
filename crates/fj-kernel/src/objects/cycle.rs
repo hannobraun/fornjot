@@ -40,10 +40,7 @@ impl Cycle {
         Cycle { edges }
     }
 
-    /// Access the edges that this cycle refers to
-    ///
-    /// This is a convenience method that saves the caller from dealing with the
-    /// [`Handle`]s.
+    /// Access this cycle's edges
     pub fn edges(&self) -> impl Iterator<Item = Edge> + '_ {
         self.edges.iter().cloned()
     }

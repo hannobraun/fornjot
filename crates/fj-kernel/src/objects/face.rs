@@ -58,31 +58,22 @@ impl Face {
         }
     }
 
-    /// Access the surface that the face refers to
-    ///
-    /// This is a convenience method that saves the caller from dealing with the
-    /// [`Handle`].
+    /// Access this face's surface
     pub fn surface(&self) -> Surface {
         self.brep().surface()
     }
 
-    /// Access the exterior cycles that the face refers to
-    ///
-    /// This is a convenience method that saves the caller from dealing with the
-    /// [`Handle`]s.
+    /// Access this face's exterior cycles
     pub fn exteriors(&self) -> impl Iterator<Item = Cycle> + '_ {
         self.brep().exteriors()
     }
 
-    /// Access the interior cycles that the face refers to
-    ///
-    /// This is a convenience method that saves the caller from dealing with the
-    /// [`Handle`]s.
+    /// Access this face's interior cycles
     pub fn interiors(&self) -> impl Iterator<Item = Cycle> + '_ {
         self.brep().interiors()
     }
 
-    /// Access all cycles that the face refers to
+    /// Access all cycles of this face
     ///
     /// This is equivalent to chaining the iterators returned by
     /// [`Face::exteriors`] and [`Face::interiors`].
@@ -132,31 +123,22 @@ pub struct FaceBRep {
 }
 
 impl FaceBRep {
-    /// Access the surface that the face refers to
-    ///
-    /// This is a convenience method that saves the caller from dealing with the
-    /// [`Handle`].
+    /// Access this face's surface
     pub fn surface(&self) -> Surface {
         self.surface
     }
 
-    /// Access the exterior cycles that the face refers to
-    ///
-    /// This is a convenience method that saves the caller from dealing with the
-    /// [`Handle`]s.
+    /// Access this face's exterior cycles
     pub fn exteriors(&self) -> impl Iterator<Item = Cycle> + '_ {
         self.exteriors.as_local()
     }
 
-    /// Access the interior cycles that the face refers to
-    ///
-    /// This is a convenience method that saves the caller from dealing with the
-    /// [`Handle`]s.
+    /// Access this face's interior cycles
     pub fn interiors(&self) -> impl Iterator<Item = Cycle> + '_ {
         self.interiors.as_local()
     }
 
-    /// Access all cycles that the face refers to
+    /// Access all cycles of this face
     ///
     /// This is equivalent to chaining the iterators returned by
     /// [`Face::exteriors`] and [`Face::interiors`].

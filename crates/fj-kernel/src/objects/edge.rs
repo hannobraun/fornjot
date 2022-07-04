@@ -76,18 +76,12 @@ impl Edge {
         }
     }
 
-    /// Access the curve that the edge refers to
-    ///
-    /// This is a convenience method that saves the caller from dealing with the
-    /// [`Handle`].
+    /// Access this edge's curve
     pub fn curve(&self) -> Curve<3> {
         self.curve.global()
     }
 
-    /// Access the vertices that the edge refers to
-    ///
-    /// This is a convenience method that saves the caller from dealing with the
-    /// [`Handle`]s.
+    /// Access this edge's vertices
     pub fn vertices(&self) -> Option<[Vertex; 2]> {
         self.vertices.0
     }
