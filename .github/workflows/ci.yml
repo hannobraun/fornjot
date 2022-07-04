@@ -82,6 +82,8 @@ jobs:
           override: true
           profile: minimal
           target: ${{ matrix.target }}
+      - name: Set up Rust cache
+        uses: Swatinem/rust-cache@v1
       - name: Run `cargo doc`
         uses: actions-rs/cargo@v1
         with:
