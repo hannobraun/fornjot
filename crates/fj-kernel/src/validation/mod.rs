@@ -18,7 +18,7 @@
 //!
 //! There is an ongoing effort to abolish [`Shape`] and replace it with a much
 //! simpler data structure:
-//! https://github.com/hannobraun/Fornjot/issues/697
+//! <https://github.com/hannobraun/Fornjot/issues/697>
 //!
 //! Once completed, this would make structural validation moot, and reduce the
 //! scope of uniqueness validation.
