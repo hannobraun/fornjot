@@ -22,7 +22,7 @@ version = "0.11.11"
 features = ["blocking"]
 
 [dependencies.clap]
-version = "3.2.6"
+version = "3.2.8"
 features = ["std", "derive", "env"]
 default_features = false
 
