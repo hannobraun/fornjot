@@ -16,7 +16,7 @@ categories = ["encoding", "mathematics", "rendering"]
 anyhow = "1.0.58"
 
 [dependencies.clap]
-version = "3.2.6"
+version = "3.2.8"
 features = ["derive"]
 
 [dependencies.figment]
