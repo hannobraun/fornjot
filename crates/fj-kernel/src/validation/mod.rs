@@ -28,14 +28,15 @@
 mod coherence;
 mod uniqueness;
 
-use std::{collections::HashSet, ops::Deref};
-
-use fj_math::Scalar;
-
 pub use self::{
     coherence::{CoherenceIssues, CoherenceMismatch},
     uniqueness::UniquenessIssues,
 };
+
+use std::{collections::HashSet, ops::Deref};
+
+use fj_math::Scalar;
+
 use crate::iter::ObjectIters;
 
 /// Validate the given [`Shape`]
