@@ -16,8 +16,10 @@ use fj_math::Point;
 /// Vertices must be unique within a shape, meaning an identical vertex must not
 /// exist in the same shape. In the context of vertex uniqueness, points that
 /// are close to each other are considered identical. The minimum distance
-/// between distinct vertices can be configured using
-/// [`Shape::with_minimum_distance`].
+/// between distinct vertices can be configured using the respective field in
+/// [`ValidationConfig`].
+///
+/// [`ValidationConfig`]: crate::validation::ValidationConfig
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalVertex {
     position: Point<3>,
