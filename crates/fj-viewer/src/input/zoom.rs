@@ -43,4 +43,4 @@ impl Zoom {
 ///
 /// Smaller values will move the camera less with the same input.
 /// Larger values will move the camera more with the same input.
-const ZOOM_FACTOR: f64 = 0.05;
+const ZOOM_FACTOR: f64 = 0.1;
