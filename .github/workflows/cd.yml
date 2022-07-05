@@ -93,18 +93,16 @@ jobs:
         uses: Swatinem/rust-cache@v1
         with:
           key: release-operator-01
-          working-directory: ./tools/release-operator
 
       - name: Operator | Deduce
         id: release
-        working-directory: ./tools/release-operator
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_LABEL: release
           RUST_LOG: info
         run: |
           # Run release operator
-          cargo run -- detect
+          cargo run -p release-operator -- detect
 
       - name: Binaries | Download
         if: ${{ steps.release.outputs.release-detected == 'true' }}
@@ -130,12 +128,11 @@ jobs:
 
       - name: Release | Crates.io
         if: ${{ steps.release.outputs.release-detected == 'true' }}
-        working-directory: ./tools/release-operator
         env:
           RUST_LOG: info
         run: |
           # Publish to crates.io
-          cargo run -- publish \
+          cargo run -p release-operator -- publish \
             --token ${{ secrets.CARGO_REGISTRY_TOKEN }} \
             --crate ../../crates/fj-math \
             --crate ../../crates/fj \
