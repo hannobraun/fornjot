@@ -1,5 +1,5 @@
 use anyhow::{anyhow, Context};
-use secstr::SecStr;
+use secstr::SecUtf8;
 use serde::Deserialize;
 use std::fmt::{Display, Formatter};
 use std::io::{BufRead, BufReader};
@@ -7,7 +7,7 @@ use std::path::PathBuf;
 use std::str::FromStr;
 
 pub struct Registry {
-    token: SecStr,
+    token: SecUtf8,
     crates: Vec<Crate>,
     dry_run: bool,
 }
@@ -29,7 +29,7 @@ enum CrateState {
 }
 
 impl Registry {
-    pub fn new(token: &SecStr, crates: &[Crate], dry_run: bool) -> Self {
+    pub fn new(token: &SecUtf8, crates: &[Crate], dry_run: bool) -> Self {
         Self {
             token: token.to_owned(),
             crates: crates.to_vec(),
@@ -149,7 +149,7 @@ impl Crate {
         Ok(CrateState::Ahead)
     }
 
-    fn submit(&self, token: &SecStr, dry_run: bool) -> anyhow::Result<()> {
+    fn submit(&self, token: &SecUtf8, dry_run: bool) -> anyhow::Result<()> {
         log::info!("{self} publishing new version");
 
         std::env::set_current_dir(&self.path)
