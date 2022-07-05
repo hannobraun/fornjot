@@ -166,7 +166,9 @@ impl Crate {
             cmd.join(" ")
         };
 
-        cmd_lib::spawn_with_output!(bash -c $cmd)?.wait_with_pipe(
+        // The `-e` makes sure that bash stops if any non-zero status code is
+        // encountered, and return a non-zero status code itself.
+        cmd_lib::spawn_with_output!(bash -e -c $cmd)?.wait_with_pipe(
             &mut |pipe| {
                 BufReader::new(pipe)
                     .lines()
