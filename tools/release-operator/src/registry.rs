@@ -156,8 +156,7 @@ impl Crate {
             .context("switch working directory to the crate in scope")?;
 
         let cmd = {
-            let token = token.to_string();
-            let mut cmd = vec!["cargo", "publish", "--token", &token];
+            let mut cmd = vec!["cargo", "publish", "--token", token.unsecure()];
 
             if dry_run {
                 cmd.push("--dry-run");
