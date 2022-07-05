@@ -257,7 +257,6 @@ pub fn run(
                 );
             }
         }
-        }
 
         if actions.exit {
             *control_flow = ControlFlow::Exit;
