@@ -141,6 +141,9 @@ jobs:
         with:
           command: build
           args: --all-features
+      # Verify that Cargo.lock contains all changes it should
+      - name: Check up-to-date Cargo.lock
+        run: git diff --exit-code Cargo.lock
       - name: Run `cargo test`
         uses: actions-rs/cargo@4ff6ec2846f6e7217c1a9b0b503506665f134c4b
         with:
