@@ -351,15 +351,15 @@ impl Renderer {
 
         if self.egui.options.show_original_ui {
             self.config_ui
-            .draw(
-                &self.device,
-                &mut encoder,
-                &color_view,
-                &self.surface_config,
-                &self.geometries.aabb,
-                config,
-            )
-            .map_err(DrawError::Text)?;
+                .draw(
+                    &self.device,
+                    &mut encoder,
+                    &color_view,
+                    &self.surface_config,
+                    &self.geometries.aabb,
+                    config,
+                )
+                .map_err(DrawError::Text)?;
         }
 
         //
