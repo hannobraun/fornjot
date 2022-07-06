@@ -165,16 +165,14 @@ pub fn run(
             Event::WindowEvent {
                 event: WindowEvent::MouseWheel { delta, .. },
                 ..
-            } => {
-                let delta = match delta {
-                    MouseScrollDelta::LineDelta(_, y) => y as f64 * 10.0,
-                    MouseScrollDelta::PixelDelta(PhysicalPosition {
-                        y,
-                        ..
-                    }) => y,
-                };
-                Some(input::Event::Scroll(delta))
-            }
+            } => Some(input::Event::Scroll(match delta {
+                MouseScrollDelta::LineDelta(_, y) => {
+                    input::MouseScrollDelta::Line(y as f64)
+                }
+                MouseScrollDelta::PixelDelta(PhysicalPosition {
+                    y, ..
+                }) => input::MouseScrollDelta::Pixel(y),
+            })),
             Event::MainEventsCleared => {
                 let delta_t = now.duration_since(previous_time);
                 previous_time = now;
