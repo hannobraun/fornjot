@@ -141,6 +141,9 @@ jobs:
         with:
           command: build
           args: --all-features
+      # The repo shouldn't have any unstaged changes after a build
+      - name: Check up-to-date repo
+        run: git diff --exit-code
       - name: Run `cargo test`
         uses: actions-rs/cargo@4ff6ec2846f6e7217c1a9b0b503506665f134c4b
         with:
