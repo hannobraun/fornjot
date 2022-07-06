@@ -12,13 +12,12 @@ pub enum Event {
     Scroll(MouseScrollDelta),
 }
 
-/// Describes a difference in the mouse scroll wheel state.
+/// Describes a difference in the vertical mouse scroll wheel state.
+/// Positive values indicate movement forward (away from the user).
 pub enum MouseScrollDelta {
-    /// Amount in lines to scroll in the horizontal direction.
-    ///
-    /// Positive values indicate movement forward (away from the user).
+    /// Amount in lines to scroll.
     Line(f64),
-    /// Amount in pixels to scroll in the vertical direction.
+    /// Amount in pixels to scroll.
     Pixel(f64),
 }
 
