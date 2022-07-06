@@ -36,7 +36,7 @@ pub fn run(
 
     let mut previous_time = Instant::now();
 
-    let mut input_handler = input::Handler::new(previous_time);
+    let mut input_handler = input::Handler::default();
     let mut renderer = block_on(Renderer::new(&window))?;
 
     let mut draw_config = DrawConfig::default();
@@ -165,16 +165,14 @@ pub fn run(
             Event::WindowEvent {
                 event: WindowEvent::MouseWheel { delta, .. },
                 ..
-            } => {
-                let delta = match delta {
-                    MouseScrollDelta::LineDelta(_, y) => y as f64 * 10.0,
-                    MouseScrollDelta::PixelDelta(PhysicalPosition {
-                        y,
-                        ..
-                    }) => y,
-                };
-                Some(input::Event::Scroll(delta))
-            }
+            } => Some(input::Event::Scroll(match delta {
+                MouseScrollDelta::LineDelta(_, y) => {
+                    input::MouseScrollDelta::Line(y as f64)
+                }
+                MouseScrollDelta::PixelDelta(PhysicalPosition {
+                    y, ..
+                }) => input::MouseScrollDelta::Pixel(y),
+            })),
             Event::MainEventsCleared => {
                 let delta_t = now.duration_since(previous_time);
                 previous_time = now;
@@ -182,7 +180,6 @@ pub fn run(
                 if let (Some(shape), Some(camera)) = (&shape, &mut camera) {
                     input_handler.update(
                         delta_t.as_secs_f64(),
-                        now,
                         camera,
                         window.size(),
                         &shape.mesh,
@@ -213,7 +210,6 @@ pub fn run(
             input_handler.handle_event(
                 event,
                 window.size(),
-                now,
                 &shape.mesh,
                 camera,
                 &mut actions,

@@ -9,7 +9,17 @@ pub enum Event {
     Key(Key, KeyState),
 
     /// The user scrolled
-    Scroll(f64),
+    Scroll(MouseScrollDelta),
+}
+
+/// Describes a difference in the mouse scroll wheel state.
+pub enum MouseScrollDelta {
+    /// Amount in lines to scroll in the horizontal direction.
+    ///
+    /// Positive values indicate movement forward (away from the user).
+    Line(f64),
+    /// Amount in pixels to scroll in the vertical direction.
+    Pixel(f64),
 }
 
 /// A keyboard or mouse key
