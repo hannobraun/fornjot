@@ -84,6 +84,37 @@ pub fn run(
             }
         }
 
+        //
+
+        if let Event::WindowEvent {
+            event: window_event,
+            ..
+        } = &event
+        {
+            //
+            // Note: In theory we could/should check if `egui` wants "exclusive" use
+            //       of this event here.
+            //
+            //       But with the current integration with Fornjot we're kinda blurring
+            //       the lines between "app" and "platform", so for the moment we pass
+            //       every event to both `egui` & Fornjot.
+            //
+            //       The primary visible impact of this currently is that if you drag
+            //       a title bar that overlaps the model then both the model & window
+            //       get moved.
+            //
+            // TODO: Revisit this.
+            //
+            // TODO: Encapsulate the egui state/context access better.
+            //
+            renderer
+                .egui
+                .winit_state
+                .on_event(&renderer.egui.context, window_event);
+        }
+
+        //
+
         let event = match event {
             Event::WindowEvent {
                 event: WindowEvent::CloseRequested,
@@ -194,7 +225,9 @@ pub fn run(
                 if let (Some(shape), Some(camera)) = (&shape, &mut camera) {
                     camera.update_planes(&shape.aabb);
 
-                    if let Err(err) = renderer.draw(camera, &draw_config) {
+                    if let Err(err) =
+                        renderer.draw(camera, &mut draw_config, window.window())
+                    {
                         warn!("Draw error: {}", err);
                     }
                 }

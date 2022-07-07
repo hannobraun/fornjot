@@ -27,3 +27,13 @@ path = "../fj-interop"
 [dependencies.fj-math]
 version = "0.7.0"
 path = "../fj-math"
+
+[dependencies.egui]
+version = "0.18.1"
+
+[dependencies.egui-wgpu]
+version = "0.18.0"
+features = ["winit"]
+
+[dependencies.egui-winit]
+version = "0.18.0"
