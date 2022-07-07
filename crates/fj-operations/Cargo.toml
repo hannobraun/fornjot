@@ -1,6 +1,6 @@
 [package]
 name = "fj-operations"
-version = "0.6.0"
+version = "0.7.0"
 edition = "2021"
 
 description = "The world needs another CAD program."
@@ -16,17 +16,17 @@ categories = ["encoding", "mathematics", "rendering"]
 thiserror = "1.0.31"
 
 [dependencies.fj]
-version = "0.6.0"
+version = "0.7.0"
 path = "../fj"
 
 [dependencies.fj-math]
-version = "0.6.0"
+version = "0.7.0"
 path = "../fj-math"
 
 [dependencies.fj-interop]
-version = "0.6.0"
+version = "0.7.0"
 path = "../fj-interop"
 
 [dependencies.fj-kernel]
-version = "0.6.0"
+version = "0.7.0"
 path = "../fj-kernel"
