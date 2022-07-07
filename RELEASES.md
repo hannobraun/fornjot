@@ -14,7 +14,7 @@ git switch -c release
 Add a changelog entry for the new version. Use the entry for the previous version as a template. Remember to thank the contributors.
 
 The list of pull request since the last release is available here:
-https://github.com/hannobraun/Fornjot/pulls?q=is%3Apr+merged%3A%3E2022-01-25+sort%3Acreated-asc
+https://github.com/hannobraun/Fornjot/pulls?q=is%3Apr+merged%3A%3E2022-07-07+sort%3Acreated-asc+
 
 Replace the date near the end of that URL with the day before the previous release.
 
@@ -25,10 +25,10 @@ Commit these changes: `git commit -m "Update changelog"`
 
 Use the previous release announcement as a template, but make the following changes:
 
-1. Place the directory in the `static/blog/` instead of `content/blog/`.
-2. Move the `index.md` file to `content/release.md`.
-2. Remove the `date` key from the Markdown front matter.
-3. Add a `path` key to explicitly specify the path.
+1. Place the directory in `static/blog/` instead of `content/blog/`.
+2. Add the `index.md` file as `content/release.md`.
+3. Remove the `date` key from the Markdown front matter.
+4. Add a `path` key to explicitly specify the path.
 
 The path should be identical to where the page would be, if it were added to `content/blog/`. This will result in the page being and all static assets being available at their final URLs, without the page being listed on the blog page, or being picked up by the Atom/RSS feed.
 
@@ -37,7 +37,7 @@ Deploy the release announcement in this form to the website.
 
 ## 4. Update versions
 
-In the release branch, update the version numbers in the `Cargo.toml` files of all crates to the new version. Also update the version numbers of the dependencies between the crates.
+In the release branch, update the version numbers in the `Cargo.toml` files of all crates in the `crates/` directory to the new version. Also update the version numbers of the dependencies between the crates.
 
 
 ## 5. Publish the release
@@ -56,7 +56,7 @@ The GitHub Release has been created by automation in the previous step. Copy the
 1. Take contents of `<main>`
 2. Replace `href="/` with `href="https://www.fornjot.app/`.
 3. Replace `src="/` with `src="https://www.fornjot.app/`.
-4. Added note up top, linking to the release announcement on the website.
+4. Add note up top, linking to the release announcement on the website.
 
 
 ## 7. Finish publishing release announcement
