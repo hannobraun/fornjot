@@ -134,14 +134,14 @@ jobs:
           # Publish to crates.io
           cargo run -p release-operator -- publish \
             --token ${{ secrets.CARGO_REGISTRY_TOKEN }} \
-            --crate ../../crates/fj-math \
-            --crate ../../crates/fj-proc \
-            --crate ../../crates/fj \
-            --crate ../../crates/fj-host \
-            --crate ../../crates/fj-interop \
-            --crate ../../crates/fj-kernel \
-            --crate ../../crates/fj-export \
-            --crate ../../crates/fj-operations \
-            --crate ../../crates/fj-viewer \
-            --crate ../../crates/fj-window \
-            --crate ../../crates/fj-app
+            --crate crates/fj-math \
+            --crate crates/fj-proc \
+            --crate crates/fj \
+            --crate crates/fj-host \
+            --crate crates/fj-interop \
+            --crate crates/fj-kernel \
+            --crate crates/fj-export \
+            --crate crates/fj-operations \
+            --crate crates/fj-viewer \
+            --crate crates/fj-window \
+            --crate crates/fj-app
