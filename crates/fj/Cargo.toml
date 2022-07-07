@@ -16,6 +16,7 @@ categories = ["encoding", "mathematics", "rendering"]
 serde = { version = "1.0.138", features = ["derive"], optional = true }
 
 [dependencies.fj-proc]
+version = "0.7.0"
 path = "../../crates/fj-proc"
 
 [dev-dependencies]
