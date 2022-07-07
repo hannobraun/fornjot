@@ -152,6 +152,8 @@ impl Crate {
     fn submit(&self, token: &SecUtf8, dry_run: bool) -> anyhow::Result<()> {
         log::info!("{self} publishing new version");
 
+        let current_dir = std::env::current_dir()
+            .context("determine current working directory")?;
         std::env::set_current_dir(&self.path)
             .context("switch working directory to the crate in scope")?;
 
@@ -175,6 +177,9 @@ impl Crate {
                     .for_each(|line| println!("{}", line));
             },
         )?;
+
+        std::env::set_current_dir(current_dir)
+            .context("reset working directory")?;
 
         Ok(())
     }
