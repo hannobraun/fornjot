@@ -1,6 +1,6 @@
 # Fornjot - Changelog
 
-## v0.7.0 (2022-07-06)
+## v0.7.0 (2022-07-07)
 
 The following changelog is a summary of user-visible changes made since the previous release. User-visible changes are changes visible to end users (who define CAD models using `fj` and `fj-app`), and changes to the API of Fornjot ecosystem crates.
 
