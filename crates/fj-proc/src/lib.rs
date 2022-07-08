@@ -86,7 +86,7 @@ pub fn model(_: TokenStream, input: TokenStream) -> TokenStream {
 }
 
 /// Represents one parameter given to the `model`
-/// `#[value(default=3, min=4)] num_points: u64`
+/// `#[param(default=3, min=4)] num_points: u64`
 /// `^^^^^^^^^^^^^^^^^^^^^^^^^^ ~~~~~~~~~~  ^^^-- ty`
 /// `           |                    |`
 /// `         attr                 ident`
@@ -112,8 +112,8 @@ impl Parse for Argument {
     }
 }
 
-/// Represents all arguments given to the `#[value]` attribute eg:
-/// `#[value(default=3, min=4)]`
+/// Represents all arguments given to the `#[param]` attribute eg:
+/// `#[param(default=3, min=4)]`
 /// `        ^^^^^^^^^^^^^^^^`
 #[derive(Debug, Clone)]
 struct HelperAttribute {
@@ -128,11 +128,11 @@ impl Parse for HelperAttribute {
         let _: syn::token::Pound = input.parse()?;
         bracketed!(attr_content in input);
         let ident: proc_macro2::Ident = attr_content.parse()?;
-        if ident != *"value" {
+        if ident != *"param" {
             return Err(syn::Error::new_spanned(
                 ident.clone(),
                 format!(
-                    "Unknown attribute \"{}\" found, expected \"value\"",
+                    "Unknown attribute \"{}\" found, expected \"param\"",
                     ident
                 ),
             ));
@@ -180,8 +180,8 @@ impl HelperAttribute {
     }
 }
 
-/// Represents one argument given to the `#[value]` attribute eg:
-/// `#[value(default=3)]`
+/// Represents one argument given to the `#[param]` attribute eg:
+/// `#[param(default=3)]`
 /// `        ^^^^^^^^^----- is parsed as DefaultParam{ ident: Some(default), val: 3 }`
 #[derive(Debug, Clone)]
 struct DefaultParam {
