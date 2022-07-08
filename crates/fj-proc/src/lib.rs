@@ -117,7 +117,7 @@ impl Parse for Argument {
 /// `        ^^^^^^^^^^^^^^^^`
 #[derive(Debug, Clone)]
 struct HelperAttribute {
-    pub values:
+    pub param:
         Option<syn::punctuated::Punctuated<DefaultParam, syn::Token![,]>>,
 }
 
@@ -141,10 +141,10 @@ impl Parse for HelperAttribute {
         if attr_content.peek(syn::token::Paren) {
             parenthesized!(param_content in attr_content);
             if param_content.is_empty() {
-                Ok(Self { values: None })
+                Ok(Self { param: None })
             } else {
                 Ok(Self {
-                values: Some(
+                param: Some(
                     syn::punctuated::Punctuated::parse_separated_nonempty_with(
                         &param_content,
                         DefaultParam::parse,
@@ -153,14 +153,14 @@ impl Parse for HelperAttribute {
             })
             }
         } else {
-            Ok(Self { values: None })
+            Ok(Self { param: None })
         }
     }
 }
 
 impl HelperAttribute {
     fn get_parameter(&self, parameter_name: &str) -> Option<DefaultParam> {
-        if let Some(values) = self.values.clone() {
+        if let Some(values) = self.param.clone() {
             values.into_iter().find(|val| val.ident == *parameter_name)
         } else {
             None
