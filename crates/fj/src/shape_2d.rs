@@ -27,27 +27,6 @@ impl Shape2d {
     }
 }
 
-/// A circle
-#[derive(Clone, Debug)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[repr(C)]
-pub struct Circle {
-    /// The radius of the circle
-    radius: f64,
-}
-
-impl Circle {
-    /// Construct a new circle with a specific radius
-    pub fn from_radius(radius: f64) -> Self {
-        Self { radius }
-    }
-
-    /// Access the circle's radius
-    pub fn radius(&self) -> f64 {
-        self.radius
-    }
-}
-
 /// A difference between two shapes
 #[derive(Clone, Debug)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
@@ -148,6 +127,27 @@ pub enum Chain {
 
     /// The chain is a polygonal chain
     PolyChain(PolyChain),
+}
+
+/// A circle
+#[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[repr(C)]
+pub struct Circle {
+    /// The radius of the circle
+    radius: f64,
+}
+
+impl Circle {
+    /// Construct a new circle with a specific radius
+    pub fn from_radius(radius: f64) -> Self {
+        Self { radius }
+    }
+
+    /// Access the circle's radius
+    pub fn radius(&self) -> f64 {
+        self.radius
+    }
 }
 
 /// A polygonal chain that is part of a [`Sketch`]
