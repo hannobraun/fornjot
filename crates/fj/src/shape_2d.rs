@@ -131,24 +131,59 @@ impl From<Difference2d> for Shape2d {
 /// Nothing about these edges is checked right now, but algorithms might assume
 /// that the edges are non-overlapping. If you create a `Sketch` with
 /// overlapping edges, you're on your own.
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 #[repr(C)]
 pub struct Sketch {
-    // The fields are the raw parts of a `Vec`. `Sketch` needs to be FFI-safe,
-    // meaning it can't store a `Vec` directly. It needs to take this detour.
-    ptr: *mut [f64; 2],
-    length: usize,
-    capacity: usize,
-    // The `Sketch` can be cloned, so we need to track the number of live
-    // instances, so as to free the buffer behind `ptr` only when the last
-    // one is dropped.
-    rc: *mut atomic::AtomicUsize,
+    poly_chain: PolyChain,
+
     // The color of the sketch in RGBA
     color: [u8; 4],
 }
 
 impl Sketch {
     /// Create a sketch from a bunch of points
+    pub fn from_points(points: Vec<[f64; 2]>) -> Self {
+        Self {
+            poly_chain: PolyChain::from_points(points),
+            color: [255, 0, 0, 255],
+        }
+    }
+
+    /// Return the points of the sketch
+    pub fn to_points(&self) -> Vec<[f64; 2]> {
+        self.poly_chain.to_points()
+    }
+
+    /// Set the rendering color of the sketch in RGBA
+    pub fn with_color(mut self, color: [u8; 4]) -> Self {
+        self.color = color;
+        self
+    }
+
+    /// Get the rendering color of the sketch in RGBA
+    pub fn color(&self) -> [u8; 4] {
+        self.color
+    }
+}
+
+/// A polygonal chain that is part of a [`Sketch`]
+#[derive(Debug)]
+#[repr(C)]
+pub struct PolyChain {
+    // The fields are the raw parts of a `Vec`. `Sketch` needs to be FFI-safe,
+    // meaning it can't store a `Vec` directly. It needs to take this detour.
+    ptr: *mut [f64; 2],
+    length: usize,
+    capacity: usize,
+
+    // The `Sketch` can be cloned, so we need to track the number of live
+    // instances, so as to free the buffer behind `ptr` only when the last
+    // one is dropped.
+    rc: *mut atomic::AtomicUsize,
+}
+
+impl PolyChain {
+    /// Construct an instance from a list of points
     pub fn from_points(mut points: Vec<[f64; 2]>) -> Self {
         // This can be cleaned up, once `Vec::into_raw_parts` is stable.
         let ptr = points.as_mut_ptr();
@@ -169,11 +204,10 @@ impl Sketch {
             length,
             capacity,
             rc,
-            color: [255, 0, 0, 255],
         }
     }
 
-    /// Return the points of the sketch
+    /// Return the points that define the polygonal chain
     pub fn to_points(&self) -> Vec<[f64; 2]> {
         // This is sound. All invariants are automatically kept, as the raw
         // parts come from an original `Vec` that is identical to the new one we
@@ -193,20 +227,9 @@ impl Sketch {
 
         ret
     }
-
-    /// Set the rendering color of the sketch in RGBA
-    pub fn with_color(mut self, color: [u8; 4]) -> Self {
-        self.color = color;
-        self
-    }
-
-    /// Get the rendering color of the sketch in RGBA
-    pub fn color(&self) -> [u8; 4] {
-        self.color
-    }
 }
 
-impl Clone for Sketch {
+impl Clone for PolyChain {
     fn clone(&self) -> Self {
         // Increment the reference counter
         unsafe {
@@ -218,12 +241,11 @@ impl Clone for Sketch {
             length: self.length,
             capacity: self.capacity,
             rc: self.rc,
-            color: self.color,
         }
     }
 }
 
-impl Drop for Sketch {
+impl Drop for PolyChain {
     fn drop(&mut self) {
         // Decrement the reference counter
         let rc_last =
@@ -244,6 +266,10 @@ impl Drop for Sketch {
         }
     }
 }
+
+// `PolyChain` can be `Send`, because it encapsulates the raw pointer it
+// contains, making sure memory ownership rules are observed.
+unsafe impl Send for PolyChain {}
 
 /// An owned, non-repr-C Sketch
 ///
@@ -303,10 +329,6 @@ impl From<Sketch> for Shape2d {
     }
 }
 
-// `Sketch` can be `Send`, because it encapsulates the raw pointer it contains,
-// making sure memory ownership rules are observed.
-unsafe impl Send for Sketch {}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -316,34 +338,35 @@ mod tests {
     }
 
     #[test]
-    fn test_sketch_preserve_points() {
+    fn test_poly_chain_preserve_points() {
         let points = test_points();
-        let sketch = Sketch::from_points(points.clone());
+        let poly_chain = PolyChain::from_points(points.clone());
 
-        assert_eq!(sketch.to_points(), points);
+        assert_eq!(poly_chain.to_points(), points);
     }
 
     #[test]
-    fn test_sketch_rc() {
-        let assert_rc = |sketch: &Sketch, expected_rc: usize| {
-            let rc = unsafe { (*sketch.rc).load(atomic::Ordering::Acquire) };
+    fn test_poly_chain_rc() {
+        let assert_rc = |poly_chain: &PolyChain, expected_rc: usize| {
+            let rc =
+                unsafe { (*poly_chain.rc).load(atomic::Ordering::Acquire) };
             assert_eq!(
                 rc, expected_rc,
                 "Sketch has rc = {rc}, expected {expected_rc}"
             );
         };
 
-        let sketch = Sketch::from_points(test_points());
-        assert_rc(&sketch, 1);
+        let poly_chain = PolyChain::from_points(test_points());
+        assert_rc(&poly_chain, 1);
 
-        let (s2, s3) = (sketch.clone(), sketch.clone());
-        assert_rc(&sketch, 3);
+        let (s2, s3) = (poly_chain.clone(), poly_chain.clone());
+        assert_rc(&poly_chain, 3);
 
         drop(s2);
-        assert_rc(&sketch, 2);
+        assert_rc(&poly_chain, 2);
 
         drop(s3);
-        assert_rc(&sketch, 1);
+        assert_rc(&poly_chain, 1);
 
         // rc is deallocated after the last drop, so we can't assert that it's 0
     }
