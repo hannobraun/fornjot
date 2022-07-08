@@ -132,6 +132,7 @@ impl From<Difference2d> for Shape2d {
 /// that the edges are non-overlapping. If you create a `Sketch` with
 /// overlapping edges, you're on your own.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Sketch {
     poly_chain: PolyChain,
@@ -271,6 +272,31 @@ impl Drop for PolyChain {
 // contains, making sure memory ownership rules are observed.
 unsafe impl Send for PolyChain {}
 
+#[cfg(feature = "serde")]
+impl ser::Serialize for PolyChain {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: ser::Serializer,
+    {
+        let serde_sketch = PolyChainSerde {
+            points: self.to_points(),
+        };
+
+        serde_sketch.serialize(serializer)
+    }
+}
+
+#[cfg(feature = "serde")]
+impl<'de> de::Deserialize<'de> for PolyChain {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: de::Deserializer<'de>,
+    {
+        PolyChainSerde::deserialize(deserializer)
+            .map(|serde_sketch| PolyChain::from_points(serde_sketch.points))
+    }
+}
+
 /// An owned, non-repr-C Sketch
 ///
 /// De/serializing a non-trivial structure with raw pointers is a hassle.
@@ -283,38 +309,9 @@ unsafe impl Send for PolyChain {}
 /// will be required.
 #[cfg(feature = "serde")]
 #[derive(Serialize, Deserialize)]
-#[serde(rename = "Sketch")]
-struct SerdeSketch {
+#[serde(rename = "Polyline")]
+struct PolyChainSerde {
     points: Vec<[f64; 2]>,
-    color: [u8; 4],
-}
-
-#[cfg(feature = "serde")]
-impl ser::Serialize for Sketch {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: ser::Serializer,
-    {
-        let serde_sketch = SerdeSketch {
-            points: self.to_points(),
-            color: self.color,
-        };
-
-        serde_sketch.serialize(serializer)
-    }
-}
-
-#[cfg(feature = "serde")]
-impl<'de> de::Deserialize<'de> for Sketch {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: de::Deserializer<'de>,
-    {
-        SerdeSketch::deserialize(deserializer).map(|serde_sketch| {
-            Sketch::from_points(serde_sketch.points)
-                .with_color(serde_sketch.color)
-        })
-    }
 }
 
 impl From<Sketch> for Shape {
@@ -373,17 +370,16 @@ mod tests {
 
     #[cfg(feature = "serde")]
     #[test]
-    fn test_serialize_loopback() {
+    fn test_poly_chain_serialize_loopback() {
         use serde_json::{from_str, to_string};
 
-        let sketch = Sketch::from_points(test_points());
+        let poly_chain = PolyChain::from_points(test_points());
 
-        let json = to_string(&sketch).expect("failed to serialize sketch");
-        let sketch_de: Sketch =
+        let json = to_string(&poly_chain).expect("failed to serialize sketch");
+        let poly_chain_de: PolyChain =
             from_str(&json).expect("failed to deserialize sketch");
 
         // ensure same content
-        assert_eq!(sketch.to_points(), sketch_de.to_points());
-        assert_eq!(sketch.color(), sketch_de.color());
+        assert_eq!(poly_chain.to_points(), poly_chain_de.to_points());
     }
 }
