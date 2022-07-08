@@ -297,16 +297,16 @@ impl<'de> de::Deserialize<'de> for PolyChain {
     }
 }
 
-/// An owned, non-repr-C Sketch
+/// An owned, non-repr-C [`PolyChain`]
 ///
 /// De/serializing a non-trivial structure with raw pointers is a hassle.
 /// This structure is a simple, owned intermediate form that can use the derive
-/// macros provided by serde. The implementation of the Serialize and Deserialize
-/// traits for Sketch use this type as a stepping stone.
+/// macros provided by serde. The implementation of the `Serialize` and
+/// `Deserialize` traits for [`PolyChain`] use this type as a stepping stone.
 ///
-/// Note that constructing this requires cloning the points behind Sketch. If
-/// de/serialization turns out to be a bottleneck, a more complete implementation
-/// will be required.
+/// Note that constructing this requires cloning the points behind
+/// [`PolyChain`]. If de/serialization turns out to be a bottleneck, a more
+/// complete implementation will be required.
 #[cfg(feature = "serde")]
 #[derive(Serialize, Deserialize)]
 #[serde(rename = "Polyline")]
