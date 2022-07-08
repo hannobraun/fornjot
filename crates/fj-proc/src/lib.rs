@@ -124,7 +124,7 @@ struct HelperAttribute {
 impl Parse for HelperAttribute {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
         let attr_content;
-        let value_content;
+        let param_content;
         let _: syn::token::Pound = input.parse()?;
         bracketed!(attr_content in input);
         let ident: proc_macro2::Ident = attr_content.parse()?;
@@ -139,14 +139,14 @@ impl Parse for HelperAttribute {
         }
 
         if attr_content.peek(syn::token::Paren) {
-            parenthesized!(value_content in attr_content);
-            if value_content.is_empty() {
+            parenthesized!(param_content in attr_content);
+            if param_content.is_empty() {
                 Ok(Self { values: None })
             } else {
                 Ok(Self {
                 values: Some(
                     syn::punctuated::Punctuated::parse_separated_nonempty_with(
-                        &value_content,
+                        &param_content,
                         DefaultParam::parse,
                     )?,
                 ),
