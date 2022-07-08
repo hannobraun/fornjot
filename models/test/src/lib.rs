@@ -58,9 +58,9 @@ fn spacer() -> fj::Shape3d {
     let inner = 1.;
     let height = 2.;
 
-    let outer_edge =
-        fj::Circle::from_radius(outer).with_color([0, 0, 255, 255]);
-    let inner_edge = fj::Circle::from_radius(inner);
+    let outer_edge = fj::Sketch::from_circle(fj::Circle::from_radius(outer))
+        .with_color([0, 0, 255, 255]);
+    let inner_edge = fj::Sketch::from_circle(fj::Circle::from_radius(inner));
 
     let footprint = outer_edge.difference(&inner_edge);
     let spacer = footprint.sweep([0., 0., height]);

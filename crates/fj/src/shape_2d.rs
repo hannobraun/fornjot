@@ -10,9 +10,6 @@ use crate::Shape;
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub enum Shape2d {
-    /// A circle
-    Circle(Circle),
-
     /// A difference between two shapes
     Difference(Box<Difference2d>),
 
@@ -24,7 +21,6 @@ impl Shape2d {
     /// Get the rendering color of the larger object in RGBA
     pub fn color(&self) -> [u8; 4] {
         match &self {
-            Shape2d::Circle(c) => c.color(),
             Shape2d::Sketch(s) => s.color(),
             Shape2d::Difference(d) => d.color(),
         }
@@ -70,18 +66,6 @@ impl Circle {
     /// Get the rendering color of the circle in RGBA
     pub fn color(&self) -> [u8; 4] {
         self.color
-    }
-}
-
-impl From<Circle> for Shape {
-    fn from(shape: Circle) -> Self {
-        Self::Shape2d(shape.into())
-    }
-}
-
-impl From<Circle> for Shape2d {
-    fn from(shape: Circle) -> Self {
-        Self::Circle(shape)
     }
 }
 
@@ -150,6 +134,14 @@ impl Sketch {
         }
     }
 
+    /// Create a sketch from a circle
+    pub fn from_circle(circle: Circle) -> Self {
+        Self {
+            chain: Chain::Circle(circle),
+            color: [255, 0, 0, 255],
+        }
+    }
+
     /// Set the rendering color of the sketch in RGBA
     pub fn with_color(mut self, color: [u8; 4]) -> Self {
         self.color = color;
@@ -172,6 +164,9 @@ impl Sketch {
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub enum Chain {
+    /// The chain is a circle
+    Circle(Circle),
+
     /// The chain is a polygonal chain
     PolyChain(PolyChain),
 }
