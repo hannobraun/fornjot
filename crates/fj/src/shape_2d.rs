@@ -34,38 +34,17 @@ impl Shape2d {
 pub struct Circle {
     /// The radius of the circle
     radius: f64,
-    // The color of the circle in RGBA
-    color: [u8; 4],
 }
 
 impl Circle {
     /// Construct a new circle with a specific radius
     pub fn from_radius(radius: f64) -> Self {
-        Self {
-            radius,
-            color: [255, 0, 0, 255],
-        }
+        Self { radius }
     }
 
     /// Access the circle's radius
     pub fn radius(&self) -> f64 {
         self.radius
-    }
-
-    /// Set the rendering color of the circle in RGBA
-    pub fn with_color(mut self, color: [u8; 4]) -> Self {
-        self.color = color;
-        self
-    }
-
-    /// Set the rendering color of the circle in RGBA
-    pub fn set_color(&mut self, color: [u8; 4]) {
-        self.color = color;
-    }
-
-    /// Get the rendering color of the circle in RGBA
-    pub fn color(&self) -> [u8; 4] {
-        self.color
     }
 }
 
