@@ -129,7 +129,7 @@ pub enum Chain {
     PolyChain(PolyChain),
 }
 
-/// A circle
+/// A circle that is part of a [`Sketch`]
 #[derive(Clone, Debug)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
