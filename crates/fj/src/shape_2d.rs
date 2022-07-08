@@ -200,11 +200,6 @@ impl Sketch {
         self
     }
 
-    /// Set the rendering color of the sketch in RGBA
-    pub fn set_color(&mut self, color: [u8; 4]) {
-        self.color = color;
-    }
-
     /// Get the rendering color of the sketch in RGBA
     pub fn color(&self) -> [u8; 4] {
         self.color
