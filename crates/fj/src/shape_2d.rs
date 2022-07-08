@@ -135,7 +135,7 @@ impl From<Difference2d> for Shape2d {
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Sketch {
-    poly_chain: PolyChain,
+    chain: Chain,
 
     // The color of the sketch in RGBA
     color: [u8; 4],
@@ -145,14 +145,9 @@ impl Sketch {
     /// Create a sketch from a bunch of points
     pub fn from_points(points: Vec<[f64; 2]>) -> Self {
         Self {
-            poly_chain: PolyChain::from_points(points),
+            chain: Chain::PolyChain(PolyChain::from_points(points)),
             color: [255, 0, 0, 255],
         }
-    }
-
-    /// Return the points of the sketch
-    pub fn to_points(&self) -> Vec<[f64; 2]> {
-        self.poly_chain.to_points()
     }
 
     /// Set the rendering color of the sketch in RGBA
@@ -161,10 +156,24 @@ impl Sketch {
         self
     }
 
+    /// Access the chain of the sketch
+    pub fn chain(&self) -> &Chain {
+        &self.chain
+    }
+
     /// Get the rendering color of the sketch in RGBA
     pub fn color(&self) -> [u8; 4] {
         self.color
     }
+}
+
+/// A chain of elements that is part of a [`Sketch`]
+#[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[repr(C)]
+pub enum Chain {
+    /// The chain is a polygonal chain
+    PolyChain(PolyChain),
 }
 
 /// A polygonal chain that is part of a [`Sketch`]
