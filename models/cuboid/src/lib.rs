@@ -1,8 +1,8 @@
 #[fj::model]
 pub fn model(
-    #[value(default = 3.0)] x: f64,
-    #[value(default = 2.0)] y: f64,
-    #[value(default = 1.0)] z: f64,
+    #[param(default = 3.0)] x: f64,
+    #[param(default = 2.0)] y: f64,
+    #[param(default = 1.0)] z: f64,
 ) -> fj::Shape {
     #[rustfmt::skip]
     let rectangle = fj::Sketch::from_points(vec![

@@ -86,7 +86,7 @@ pub fn model(_: TokenStream, input: TokenStream) -> TokenStream {
 }
 
 /// Represents one parameter given to the `model`
-/// `#[value(default=3, min=4)] num_points: u64`
+/// `#[param(default=3, min=4)] num_points: u64`
 /// `^^^^^^^^^^^^^^^^^^^^^^^^^^ ~~~~~~~~~~  ^^^-- ty`
 /// `           |                    |`
 /// `         attr                 ident`
@@ -112,55 +112,55 @@ impl Parse for Argument {
     }
 }
 
-/// Represents all arguments given to the `#[value]` attribute eg:
-/// `#[value(default=3, min=4)]`
+/// Represents all arguments given to the `#[param]` attribute eg:
+/// `#[param(default=3, min=4)]`
 /// `        ^^^^^^^^^^^^^^^^`
 #[derive(Debug, Clone)]
 struct HelperAttribute {
-    pub values:
+    pub param:
         Option<syn::punctuated::Punctuated<DefaultParam, syn::Token![,]>>,
 }
 
 impl Parse for HelperAttribute {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
         let attr_content;
-        let value_content;
+        let param_content;
         let _: syn::token::Pound = input.parse()?;
         bracketed!(attr_content in input);
         let ident: proc_macro2::Ident = attr_content.parse()?;
-        if ident != *"value" {
+        if ident != *"param" {
             return Err(syn::Error::new_spanned(
                 ident.clone(),
                 format!(
-                    "Unknown attribute \"{}\" found, expected \"value\"",
+                    "Unknown attribute \"{}\" found, expected \"param\"",
                     ident
                 ),
             ));
         }
 
         if attr_content.peek(syn::token::Paren) {
-            parenthesized!(value_content in attr_content);
-            if value_content.is_empty() {
-                Ok(Self { values: None })
+            parenthesized!(param_content in attr_content);
+            if param_content.is_empty() {
+                Ok(Self { param: None })
             } else {
                 Ok(Self {
-                values: Some(
+                param: Some(
                     syn::punctuated::Punctuated::parse_separated_nonempty_with(
-                        &value_content,
+                        &param_content,
                         DefaultParam::parse,
                     )?,
                 ),
             })
             }
         } else {
-            Ok(Self { values: None })
+            Ok(Self { param: None })
         }
     }
 }
 
 impl HelperAttribute {
     fn get_parameter(&self, parameter_name: &str) -> Option<DefaultParam> {
-        if let Some(values) = self.values.clone() {
+        if let Some(values) = self.param.clone() {
             values.into_iter().find(|val| val.ident == *parameter_name)
         } else {
             None
@@ -180,8 +180,8 @@ impl HelperAttribute {
     }
 }
 
-/// Represents one argument given to the `#[value]` attribute eg:
-/// `#[value(default=3)]`
+/// Represents one argument given to the `#[param]` attribute eg:
+/// `#[param(default=3)]`
 /// `        ^^^^^^^^^----- is parsed as DefaultParam{ ident: Some(default), val: 3 }`
 #[derive(Debug, Clone)]
 struct DefaultParam {
