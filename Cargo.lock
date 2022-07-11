@@ -893,6 +893,7 @@ dependencies = [
  "fj-math",
  "map-macro",
  "parking_lot 0.12.1",
+ "parry2d-f64",
  "pretty_assertions",
  "robust",
  "slotmap",
