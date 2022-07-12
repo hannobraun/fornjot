@@ -1,52 +1,23 @@
-use crate::screen::Position;
+use crate::screen::NormalizedPosition;
 
 /// An input event
 pub enum Event {
-    /// The cursor has moved to another position
-    CursorMoved(Position),
+    /// Move the model up, down, left or right
+    Translate {
+        /// The normalized position of the cursor before input
+        previous: NormalizedPosition,
+        /// The normalized position of the cursor after input
+        current: NormalizedPosition,
+    },
 
-    /// A key has been pressed or released
-    Key(Key, KeyState),
+    /// Rotate the model around the focus point
+    Rotation {
+        /// The angle around the screen x axis to rotate (in radians)
+        angle_x: f64,
+        /// The angle around the screen y axis to rotate (in radians)
+        angle_y: f64,
+    },
 
-    /// The user scrolled
-    Scroll(MouseScrollDelta),
-}
-
-/// Describes a difference in the vertical mouse scroll wheel state.
-/// Positive values indicate movement forward (away from the user).
-pub enum MouseScrollDelta {
-    /// Amount in lines to scroll.
-    Line(f64),
-    /// Amount in pixels to scroll.
-    Pixel(f64),
-}
-
-/// A keyboard or mouse key
-pub enum Key {
-    /// The escape key
-    Escape,
-
-    /// The numerical key `1`
-    Key1,
-
-    /// The numerical key `2`
-    Key2,
-
-    /// The numerical key `3`
-    Key3,
-
-    /// The left mouse key
-    MouseLeft,
-
-    /// The right mouse key
-    MouseRight,
-}
-
-/// Defines the meaning of a key event
-pub enum KeyState {
-    /// A key was pressed
-    Pressed,
-
-    /// A key was released
-    Released,
+    /// Move the view forwards and backwards
+    Zoom(f64),
 }
