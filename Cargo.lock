@@ -944,6 +944,7 @@ dependencies = [
  "egui-winit",
  "fj-interop",
  "fj-math",
+ "fj-operations",
  "raw-window-handle",
  "thiserror",
  "tracing",

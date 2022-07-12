@@ -1,4 +1,4 @@
-use fj_math::{Point, Transform, Vector};
+use fj_math::{Transform, Vector};
 
 use crate::camera::{Camera, FocusPoint};
 
@@ -9,12 +9,10 @@ impl Rotation {
         &self,
         angle_x: f64,
         angle_y: f64,
-        focus_point: &FocusPoint,
+        focus_point: FocusPoint,
         camera: &mut Camera,
     ) {
-        let rotate_around: Vector<3> =
-            focus_point.0.unwrap_or_else(Point::origin).coords;
-        let rotate_around = Transform::translation(rotate_around);
+        let rotate_around = Transform::translation(focus_point.0.coords);
 
         // the model rotates not the camera, so invert the transform
         let camera_rotation = camera.rotation.inverse();

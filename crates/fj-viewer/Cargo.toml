@@ -28,6 +28,10 @@ path = "../fj-interop"
 version = "0.7.0"
 path = "../fj-math"
 
+[dependencies.fj-operations]
+version = "0.7.0"
+path = "../fj-operations"
+
 [dependencies.egui]
 version = "0.18.1"
 

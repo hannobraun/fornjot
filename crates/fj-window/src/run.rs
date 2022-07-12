@@ -36,7 +36,7 @@ pub fn run(
 
     let mut previous_cursor = None;
     let mut held_mouse_button = None;
-    let mut focus_pending = false;
+    let mut focus_point = None;
 
     let mut input_handler = input::Handler::default();
     let mut renderer = block_on(Renderer::new(&window))?;
@@ -111,8 +111,6 @@ pub fn run(
                 .on_event(&renderer.egui.context, window_event);
         }
 
-        focus_pending |= focus_event(&event);
-
         // fj-window events
         match event {
             Event::WindowEvent {
@@ -166,16 +164,6 @@ pub fn run(
                 };
             }
             Event::MainEventsCleared => {
-                if let (Some(shape), Some(camera)) = (&shape, &mut camera) {
-                    // Only perform focus calculation once per frame (if pending)
-                    if focus_pending {
-                        input_handler.focus(
-                            camera.focus_point(previous_cursor, &shape.mesh),
-                        );
-                    }
-                    focus_pending = false;
-                }
-
                 window.window().request_redraw();
             }
             Event::RedrawRequested(_) => {
@@ -193,14 +181,32 @@ pub fn run(
         }
 
         // fj-viewer input events
+        // These can fire multiple times per frame
+
+        if let (Some(shape), Some(camera), Some(should_focus)) =
+            (&shape, &camera, focus_event(&event))
+        {
+            if should_focus {
+                // Don't unnecessarily recalculate focus point
+                if focus_point.is_none() {
+                    focus_point =
+                        Some(camera.focus_point(previous_cursor, shape));
+                }
+            } else {
+                focus_point = None;
+            }
+        }
+
         let input_event = input_event(
             &event,
             &window,
             &held_mouse_button,
             &mut previous_cursor,
         );
-        if let (Some(input_event), Some(camera)) = (input_event, &mut camera) {
-            input_handler.handle_event(input_event, camera);
+        if let (Some(input_event), Some(fp), Some(camera)) =
+            (input_event, focus_point, &mut camera)
+        {
+            input_handler.handle_event(input_event, fp, camera);
         }
     });
 }
@@ -258,8 +264,9 @@ fn input_event(
     }
 }
 
-/// Returns true if new focus point should be calculated based on this event
-fn focus_event(event: &Event<()>) -> bool {
+/// Returns true/false if focus point point should be created/removed
+/// None means no change to focus point is needed
+fn focus_event(event: &Event<()>) -> Option<bool> {
     match event {
         Event::WindowEvent {
             event:
@@ -270,14 +277,14 @@ fn focus_event(event: &Event<()>) -> bool {
                 },
             ..
         } => match state {
-            ElementState::Pressed => true,
-            ElementState::Released => false,
+            ElementState::Pressed => Some(true),
+            ElementState::Released => Some(false),
         },
         Event::WindowEvent {
             event: WindowEvent::MouseWheel { .. },
             ..
-        } => true,
-        _ => false,
+        } => Some(true),
+        _ => None,
     }
 }
 

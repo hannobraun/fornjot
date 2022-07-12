@@ -12,25 +12,23 @@ impl Movement {
         &mut self,
         previous: NormalizedPosition,
         current: NormalizedPosition,
-        focus_point: &FocusPoint,
+        focus_point: FocusPoint,
         camera: &mut Camera,
     ) {
         let previous = camera.cursor_to_model_space(previous);
         let cursor = camera.cursor_to_model_space(current);
 
-        if let Some(focus_point) = focus_point.0 {
-            let d1 = Point::distance(&camera.position(), &cursor);
-            let d2 = Point::distance(&camera.position(), &focus_point);
+        let d1 = Point::distance(&camera.position(), &cursor);
+        let d2 = Point::distance(&camera.position(), &focus_point.0);
 
-            let diff = (cursor - previous) * d2 / d1;
-            let offset = camera.camera_to_model().transform_vector(&diff);
+        let diff = (cursor - previous) * d2 / d1;
+        let offset = camera.camera_to_model().transform_vector(&diff);
 
-            camera.translation = camera.translation
-                * Transform::translation(Vector::from([
-                    offset.x,
-                    offset.y,
-                    Scalar::ZERO,
-                ]));
-        }
+        camera.translation = camera.translation
+            * Transform::translation(Vector::from([
+                offset.x,
+                offset.y,
+                Scalar::ZERO,
+            ]));
     }
 }
