@@ -3,15 +3,15 @@
 //! Provides the functionality to create a window and perform basic viewing
 //! with programmed models.
 
-use std::{error, time::Instant};
+use std::error;
 
 use fj_host::Watcher;
 use fj_operations::shape_processor::ShapeProcessor;
 use fj_viewer::{
     camera::Camera,
     graphics::{self, DrawConfig, Renderer},
-    input::{self, KeyState},
-    screen::{Position, Screen as _, Size},
+    input,
+    screen::{NormalizedPosition, Screen as _, Size},
 };
 use futures::executor::block_on;
 use tracing::{trace, warn};
@@ -34,7 +34,8 @@ pub fn run(
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop)?;
 
-    let mut previous_time = Instant::now();
+    let mut previous_cursor = None;
+    let mut held_mouse_button = None;
 
     let mut input_handler = input::Handler::default();
     let mut renderer = block_on(Renderer::new(&window))?;
@@ -48,8 +49,6 @@ pub fn run(
         trace!("Handling event: {:?}", event);
 
         let mut actions = input::Actions::new();
-
-        let now = Instant::now();
 
         if let Some(new_shape) = watcher.receive() {
             match shape_processor.process(&new_shape) {
@@ -148,19 +147,10 @@ pub fn run(
                     },
                 ..
             } => match virtual_key_code {
-                VirtualKeyCode::Escape => Some(input::Event::Key(
-                    input::Key::Escape,
-                    KeyState::Pressed,
-                )),
-                VirtualKeyCode::Key1 => {
-                    Some(input::Event::Key(input::Key::Key1, KeyState::Pressed))
-                }
-                VirtualKeyCode::Key2 => {
-                    Some(input::Event::Key(input::Key::Key2, KeyState::Pressed))
-                }
-                VirtualKeyCode::Key3 => {
-                    Some(input::Event::Key(input::Key::Key3, KeyState::Pressed))
-                }
+                VirtualKeyCode::Escape => Some(input::Event::Exit),
+                VirtualKeyCode::Key1 => Some(input::Event::ToggleModel),
+                VirtualKeyCode::Key2 => Some(input::Event::ToggleMesh),
+                VirtualKeyCode::Key3 => Some(input::Event::ToggleDebug),
 
                 _ => None,
             },
@@ -168,55 +158,64 @@ pub fn run(
                 event: WindowEvent::CursorMoved { position, .. },
                 ..
             } => {
-                let position = Position {
-                    x: position.x,
-                    y: position.y,
+                let [width, height] = window.size().as_f64();
+                let aspect_ratio = width / height;
+
+                // Cursor position in normalized coordinates (-1 to +1) with
+                // aspect ratio taken into account.
+                let current = NormalizedPosition {
+                    x: position.x / width * 2. - 1.,
+                    y: -(position.y / height * 2. - 1.) / aspect_ratio,
                 };
-                Some(input::Event::CursorMoved(position))
+                let event = match (previous_cursor, held_mouse_button) {
+                    (Some(previous), Some(button)) => match button {
+                        MouseButton::Left => {
+                            Some(input::Event::Orbit { previous, current })
+                        }
+                        MouseButton::Right => {
+                            Some(input::Event::Pan { previous, current })
+                        }
+                        _ => None,
+                    },
+                    _ => None,
+                };
+                previous_cursor = Some(current);
+                event
             }
             Event::WindowEvent {
                 event: WindowEvent::MouseInput { state, button, .. },
                 ..
             } => {
-                let state = match state {
-                    ElementState::Pressed => input::KeyState::Pressed,
-                    ElementState::Released => input::KeyState::Released,
+                match state {
+                    ElementState::Pressed => held_mouse_button = Some(button),
+                    ElementState::Released => held_mouse_button = None,
                 };
-
-                match button {
-                    MouseButton::Left => {
-                        Some(input::Event::Key(input::Key::MouseLeft, state))
+                if let (Some(shape), Some(camera)) = (&shape, &camera) {
+                    match button {
+                        MouseButton::Left | MouseButton::Right => {
+                            Some(input::Event::FocusPoint(
+                                camera
+                                    .focus_point(previous_cursor, &shape.mesh),
+                            ))
+                        }
+                        _ => None,
                     }
-                    MouseButton::Right => {
-                        Some(input::Event::Key(input::Key::MouseRight, state))
-                    }
-                    _ => None,
+                } else {
+                    None
                 }
             }
             Event::WindowEvent {
                 event: WindowEvent::MouseWheel { delta, .. },
                 ..
-            } => Some(input::Event::Scroll(match delta {
+            } => Some(input::Event::Zoom(match delta {
                 MouseScrollDelta::LineDelta(_, y) => {
-                    input::MouseScrollDelta::Line(y as f64)
+                    (y as f64) * ZOOM_FACTOR_LINE
                 }
                 MouseScrollDelta::PixelDelta(PhysicalPosition {
                     y, ..
-                }) => input::MouseScrollDelta::Pixel(y),
+                }) => y * ZOOM_FACTOR_PIXEL,
             })),
             Event::MainEventsCleared => {
-                let delta_t = now.duration_since(previous_time);
-                previous_time = now;
-
-                if let (Some(shape), Some(camera)) = (&shape, &mut camera) {
-                    input_handler.update(
-                        delta_t.as_secs_f64(),
-                        camera,
-                        window.size(),
-                        &shape.mesh,
-                    );
-                }
-
                 window.window().request_redraw();
 
                 None
@@ -237,16 +236,8 @@ pub fn run(
             _ => None,
         };
 
-        if let (Some(event), Some(shape), Some(camera)) =
-            (event, &shape, &mut camera)
-        {
-            input_handler.handle_event(
-                event,
-                window.size(),
-                &shape.mesh,
-                camera,
-                &mut actions,
-            );
+        if let (Some(event), Some(camera)) = (event, &mut camera) {
+            input_handler.handle_event(event, camera, &mut actions);
         }
 
         if actions.exit {
@@ -275,3 +266,15 @@ pub enum Error {
     #[error("Error initializing graphics")]
     GraphicsInit(#[from] graphics::InitError),
 }
+
+/// Affects the speed of zoom movement given a scroll wheel input in lines.
+///
+/// Smaller values will move the camera less with the same input.
+/// Larger values will move the camera more with the same input.
+const ZOOM_FACTOR_LINE: f64 = 0.075;
+
+/// Affects the speed of zoom movement given a scroll wheel input in pixels.
+///
+/// Smaller values will move the camera less with the same input.
+/// Larger values will move the camera more with the same input.
+const ZOOM_FACTOR_PIXEL: f64 = 0.005;

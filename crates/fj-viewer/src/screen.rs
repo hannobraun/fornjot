@@ -24,6 +24,17 @@ pub struct Position {
     pub y: f64,
 }
 
+/// Cursor position in normalized coordinates (-1 to +1) with aspect ratio taken into account.
+/// i.e. the center of the screen is at (0, 0)
+#[derive(Clone, Copy, Debug)]
+pub struct NormalizedPosition {
+    /// The x coordinate of the position
+    pub x: f64,
+
+    /// The y coordinate of the position
+    pub y: f64,
+}
+
 /// The size of the screen
 #[derive(Clone, Copy, Debug)]
 pub struct Size {

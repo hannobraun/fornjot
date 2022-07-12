@@ -1,15 +1,38 @@
-use crate::screen::Position;
+use crate::{camera::FocusPoint, screen::NormalizedPosition};
 
 /// An input event
 pub enum Event {
-    /// The cursor has moved to another position
-    CursorMoved(Position),
+    /// A new focus point was selected.
+    FocusPoint(FocusPoint),
 
-    /// A key has been pressed or released
-    Key(Key, KeyState),
+    /// Move the view up, down, left or right
+    Pan {
+        /// The normalized position of the cursor before input
+        previous: NormalizedPosition,
+        /// The normalized position of the cursor after input
+        current: NormalizedPosition,
+    },
 
-    /// The user scrolled
-    Scroll(MouseScrollDelta),
+    /// Rotate the view around the focus point
+    Orbit {
+        /// The normalized position of the cursor before input
+        previous: NormalizedPosition,
+        /// The normalized position of the cursor after input
+        current: NormalizedPosition,
+    },
+
+    /// Move the view forwards and backwards
+    Zoom(f64),
+
+    /// Application should exit
+    Exit,
+
+    /// Toggle the shaded display of the model.
+    ToggleModel,
+    /// Toggle the model's wireframe.
+    ToggleMesh,
+    /// Toggle debug information.
+    ToggleDebug,
 }
 
 /// Describes a difference in the vertical mouse scroll wheel state.
