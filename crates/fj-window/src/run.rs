@@ -48,8 +48,6 @@ pub fn run(
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
 
-        let mut actions = input::Actions::new();
-
         if let Some(new_shape) = watcher.receive() {
             match shape_processor.process(&new_shape) {
                 Ok(new_shape) => {
@@ -160,7 +158,7 @@ pub fn run(
             if let Some(focus_event) =
                 focus_event(&event, previous_cursor, shape, camera)
             {
-                input_handler.handle_event(focus_event, camera, &mut actions);
+                input_handler.handle_event(focus_event, camera);
             }
         }
 
@@ -170,21 +168,24 @@ pub fn run(
             &held_mouse_button,
             &mut previous_cursor,
         );
-        if let (Some(input_event), Some(camera)) = (input_event, &mut camera) {
-            input_handler.handle_event(input_event, camera, &mut actions);
-        }
+        if let Some(input_event) = input_event {
+            match input_event {
+                input::Event::Exit => *control_flow = ControlFlow::Exit,
+                input::Event::ToggleModel => {
+                    draw_config.draw_model = !draw_config.draw_model
+                }
+                input::Event::ToggleMesh => {
+                    draw_config.draw_mesh = !draw_config.draw_mesh
+                }
+                input::Event::ToggleDebug => {
+                    draw_config.draw_debug = !draw_config.draw_debug
+                }
+                _ => {}
+            };
 
-        if actions.exit {
-            *control_flow = ControlFlow::Exit;
-        }
-        if actions.toggle_model {
-            draw_config.draw_model = !draw_config.draw_model;
-        }
-        if actions.toggle_mesh {
-            draw_config.draw_mesh = !draw_config.draw_mesh;
-        }
-        if actions.toggle_debug {
-            draw_config.draw_debug = !draw_config.draw_debug;
+            if let Some(camera) = &mut camera {
+                input_handler.handle_event(input_event, camera);
+            }
         }
     });
 }

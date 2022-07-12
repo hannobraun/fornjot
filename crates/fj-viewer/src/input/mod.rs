@@ -8,5 +8,5 @@ mod zoom;
 
 pub use self::{
     event::{Event, Key, KeyState, MouseScrollDelta},
-    handler::{Actions, Handler},
+    handler::Handler,
 };

@@ -14,12 +14,7 @@ pub struct Handler {
 
 impl Handler {
     /// Handle an input event
-    pub fn handle_event(
-        &mut self,
-        event: Event,
-        camera: &mut Camera,
-        actions: &mut Actions,
-    ) {
+    pub fn handle_event(&mut self, event: Event, camera: &mut Camera) {
         match event {
             Event::FocusPoint(focus_point) => self.focus_point = focus_point,
             Event::Pan { previous, current } => self.movement.apply(
@@ -37,10 +32,7 @@ impl Handler {
             Event::Zoom(zoom_delta) => {
                 self.zoom.apply(zoom_delta, &self.focus_point, camera)
             }
-            Event::Exit => actions.exit = true,
-            Event::ToggleModel => actions.toggle_model = true,
-            Event::ToggleMesh => actions.toggle_mesh = true,
-            Event::ToggleDebug => actions.toggle_debug = true,
+            _ => {}
         }
     }
 }
@@ -54,28 +46,5 @@ impl Default for Handler {
             rotation: Rotation,
             zoom: Zoom,
         }
-    }
-}
-
-/// Intermediate input state container
-///
-/// Used as a per frame state container for sending application state to `winit`.
-#[derive(Default)]
-pub struct Actions {
-    /// Application exit state.
-    pub exit: bool,
-
-    /// Toggle for the shaded display of the model.
-    pub toggle_model: bool,
-    /// Toggle for the model's wireframe.
-    pub toggle_mesh: bool,
-    /// Toggle for debug information.
-    pub toggle_debug: bool,
-}
-
-impl Actions {
-    /// Returns a new `Actions`.
-    pub fn new() -> Self {
-        Self::default()
     }
 }
