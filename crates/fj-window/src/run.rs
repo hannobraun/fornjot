@@ -112,15 +112,13 @@ pub fn run(
                 .on_event(&renderer.egui.context, window_event);
         }
 
-        //
-
-        let event = match event {
+        // Window events
+        match event {
             Event::WindowEvent {
                 event: WindowEvent::CloseRequested,
                 ..
             } => {
                 *control_flow = ControlFlow::Exit;
-                None
             }
             Event::WindowEvent {
                 event: WindowEvent::Resized(size),
@@ -131,9 +129,26 @@ pub fn run(
                     height: size.height,
                 };
                 renderer.handle_resize(size);
-
-                None
             }
+            Event::MainEventsCleared => {
+                window.window().request_redraw();
+            }
+            Event::RedrawRequested(_) => {
+                if let (Some(shape), Some(camera)) = (&shape, &mut camera) {
+                    camera.update_planes(&shape.aabb);
+
+                    if let Err(err) =
+                        renderer.draw(camera, &mut draw_config, window.window())
+                    {
+                        warn!("Draw error: {}", err);
+                    }
+                }
+            }
+            _ => {}
+        }
+
+        // Viewer events
+        let event = match event {
             Event::WindowEvent {
                 event:
                     WindowEvent::KeyboardInput {
@@ -190,18 +205,15 @@ pub fn run(
                     ElementState::Pressed => held_mouse_button = Some(button),
                     ElementState::Released => held_mouse_button = None,
                 };
-                if let (Some(shape), Some(camera)) = (&shape, &camera) {
-                    match button {
-                        MouseButton::Left | MouseButton::Right => {
-                            Some(input::Event::FocusPoint(
-                                camera
-                                    .focus_point(previous_cursor, &shape.mesh),
-                            ))
-                        }
-                        _ => None,
-                    }
-                } else {
-                    None
+                match (&shape, &camera, button) {
+                    (
+                        Some(shape),
+                        Some(camera),
+                        MouseButton::Left | MouseButton::Right,
+                    ) => Some(input::Event::FocusPoint(
+                        camera.focus_point(previous_cursor, &shape.mesh),
+                    )),
+                    _ => None,
                 }
             }
             Event::WindowEvent {
@@ -215,24 +227,6 @@ pub fn run(
                     y, ..
                 }) => y * ZOOM_FACTOR_PIXEL,
             })),
-            Event::MainEventsCleared => {
-                window.window().request_redraw();
-
-                None
-            }
-            Event::RedrawRequested(_) => {
-                if let (Some(shape), Some(camera)) = (&shape, &mut camera) {
-                    camera.update_planes(&shape.aabb);
-
-                    if let Err(err) =
-                        renderer.draw(camera, &mut draw_config, window.window())
-                    {
-                        warn!("Draw error: {}", err);
-                    }
-                }
-
-                None
-            }
             _ => None,
         };
 
