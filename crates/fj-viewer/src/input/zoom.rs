@@ -5,7 +5,7 @@ use crate::camera::{Camera, FocusPoint};
 pub struct Zoom;
 
 impl Zoom {
-    pub fn apply_to_camera(
+    pub fn apply(
         &mut self,
         zoom_delta: f64,
         focus_point: &FocusPoint,

@@ -35,8 +35,7 @@ impl Handler {
                 camera,
             ),
             Event::Zoom(zoom_delta) => {
-                self.zoom
-                    .apply_to_camera(zoom_delta, &self.focus_point, camera)
+                self.zoom.apply(zoom_delta, &self.focus_point, camera)
             }
             Event::Exit => actions.exit = true,
             Event::ToggleModel => actions.toggle_model = true,

@@ -4,7 +4,7 @@ use std::f64::consts::FRAC_PI_2;
 use fj_interop::mesh::Mesh;
 use fj_math::{Aabb, Point, Scalar, Transform, Triangle, Vector};
 
-use crate::screen::{NormalizedPosition, Position, Size};
+use crate::screen::NormalizedPosition;
 
 /// The camera abstraction
 ///
@@ -105,7 +105,7 @@ impl Camera {
     }
 
     /// Transform a normalized cursor position on the near plane to model space.
-    pub fn normalized_cursor_to_model_space(
+    pub fn cursor_to_model_space(
         &self,
         cursor: NormalizedPosition,
     ) -> Point<3> {
@@ -115,23 +115,6 @@ impl Camera {
             + Vector::from([cursor.x * f, cursor.y * f, -self.near_plane()]);
 
         self.camera_to_model().inverse_transform_point(&cursor)
-    }
-
-    /// Transform the position of the cursor on the near plane to model space.
-    pub fn cursor_to_model_space(
-        &self,
-        cursor: Position,
-        size: Size,
-    ) -> Point<3> {
-        let [width, height] = size.as_f64();
-        let aspect_ratio = width / height;
-
-        // Cursor position in normalized coordinates (-1 to +1) with
-        // aspect ratio taken into account.
-        let x = cursor.x / width * 2. - 1.;
-        let y = -(cursor.y / height * 2. - 1.) / aspect_ratio;
-
-        self.normalized_cursor_to_model_space(NormalizedPosition { x, y })
     }
 
     /// Compute the point on the model, that the cursor currently points to.
@@ -147,7 +130,7 @@ impl Camera {
 
         // Transform camera and cursor positions to model space.
         let origin = self.position();
-        let cursor = self.normalized_cursor_to_model_space(cursor);
+        let cursor = self.cursor_to_model_space(cursor);
         let dir = (cursor - origin).normalize();
 
         let mut min_t = None;
