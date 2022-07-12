@@ -16,13 +16,13 @@ impl Handler {
     /// Handle an input event
     pub fn handle_event(&mut self, event: Event, camera: &mut Camera) {
         match event {
-            Event::Pan { previous, current } => self.movement.apply(
+            Event::Translate { previous, current } => self.movement.apply(
                 previous,
                 current,
                 &self.focus_point,
                 camera,
             ),
-            Event::Orbit { previous, current } => self.rotation.apply(
+            Event::Rotation { previous, current } => self.rotation.apply(
                 previous,
                 current,
                 &self.focus_point,

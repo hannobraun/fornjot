@@ -6,7 +6,4 @@ mod movement;
 mod rotation;
 mod zoom;
 
-pub use self::{
-    event::{Event, Key, KeyState, MouseScrollDelta},
-    handler::Handler,
-};
+pub use self::{event::Event, handler::Handler};

@@ -223,10 +223,10 @@ fn input_event(
             let event = match (*previous_cursor, held_mouse_button) {
                 (Some(previous), Some(button)) => match button {
                     MouseButton::Left => {
-                        Some(input::Event::Orbit { previous, current })
+                        Some(input::Event::Rotation { previous, current })
                     }
                     MouseButton::Right => {
-                        Some(input::Event::Pan { previous, current })
+                        Some(input::Event::Translate { previous, current })
                     }
                     _ => None,
                 },
