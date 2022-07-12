@@ -6,9 +6,9 @@
 use std::error;
 
 use fj_host::Watcher;
-use fj_operations::shape_processor::{ProcessedShape, ShapeProcessor};
+use fj_operations::shape_processor::ShapeProcessor;
 use fj_viewer::{
-    camera::{Camera, FocusPoint},
+    camera::Camera,
     graphics::{self, DrawConfig, Renderer},
     input,
     screen::{NormalizedPosition, Screen as _, Size},
@@ -36,6 +36,7 @@ pub fn run(
 
     let mut previous_cursor = None;
     let mut held_mouse_button = None;
+    let mut focus_pending = false;
 
     let mut input_handler = input::Handler::default();
     let mut renderer = block_on(Renderer::new(&window))?;
@@ -110,6 +111,8 @@ pub fn run(
                 .on_event(&renderer.egui.context, window_event);
         }
 
+        focus_pending |= focus_event(&event);
+
         // fj-window events
         match event {
             Event::WindowEvent {
@@ -163,6 +166,16 @@ pub fn run(
                 };
             }
             Event::MainEventsCleared => {
+                if let (Some(shape), Some(camera)) = (&shape, &mut camera) {
+                    // Only perform focus calculation once per frame (if pending)
+                    if focus_pending {
+                        input_handler.focus(
+                            camera.focus_point(previous_cursor, &shape.mesh),
+                        );
+                    }
+                    focus_pending = false;
+                }
+
                 window.window().request_redraw();
             }
             Event::RedrawRequested(_) => {
@@ -179,15 +192,7 @@ pub fn run(
             _ => {}
         }
 
-        // fj-viewer events
-        if let (Some(shape), Some(camera)) = (&shape, &mut camera) {
-            if let Some(focus_event) =
-                focus(&event, previous_cursor, shape, camera)
-            {
-                input_handler.focus(focus_event);
-            }
-        }
-
+        // fj-viewer input events
         let input_event = input_event(
             &event,
             &window,
@@ -253,13 +258,9 @@ fn input_event(
     }
 }
 
-fn focus(
-    event: &Event<()>,
-    previous_cursor: Option<NormalizedPosition>,
-    shape: &ProcessedShape,
-    camera: &Camera,
-) -> Option<FocusPoint> {
-    let focus_point = match event {
+/// Returns true if new focus point should be calculated based on this event
+fn focus_event(event: &Event<()>) -> bool {
+    match event {
         Event::WindowEvent {
             event:
                 WindowEvent::MouseInput {
@@ -269,19 +270,15 @@ fn focus(
                 },
             ..
         } => match state {
-            ElementState::Pressed => {
-                camera.focus_point(previous_cursor, &shape.mesh)
-            }
-            ElementState::Released => FocusPoint::none(),
+            ElementState::Pressed => true,
+            ElementState::Released => false,
         },
         Event::WindowEvent {
             event: WindowEvent::MouseWheel { .. },
             ..
-        } => camera.focus_point(previous_cursor, &shape.mesh),
-
-        _ => return None,
-    };
-    Some(focus_point)
+        } => true,
+        _ => false,
+    }
 }
 
 /// Error in main loop
