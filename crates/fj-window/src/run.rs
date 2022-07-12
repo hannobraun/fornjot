@@ -6,9 +6,9 @@
 use std::error;
 
 use fj_host::Watcher;
-use fj_operations::shape_processor::ShapeProcessor;
+use fj_operations::shape_processor::{ProcessedShape, ShapeProcessor};
 use fj_viewer::{
-    camera::Camera,
+    camera::{Camera, FocusPoint},
     graphics::{self, DrawConfig, Renderer},
     input,
     screen::{NormalizedPosition, Screen as _, Size},
@@ -130,6 +130,15 @@ pub fn run(
                 };
                 renderer.handle_resize(size);
             }
+            Event::WindowEvent {
+                event: WindowEvent::MouseInput { state, button, .. },
+                ..
+            } => {
+                match state {
+                    ElementState::Pressed => held_mouse_button = Some(button),
+                    ElementState::Released => held_mouse_button = None,
+                };
+            }
             Event::MainEventsCleared => {
                 window.window().request_redraw();
             }
@@ -147,91 +156,22 @@ pub fn run(
             _ => {}
         }
 
-        // Viewer events
-        let event = match event {
-            Event::WindowEvent {
-                event:
-                    WindowEvent::KeyboardInput {
-                        input:
-                            KeyboardInput {
-                                state: ElementState::Pressed,
-                                virtual_keycode: Some(virtual_key_code),
-                                ..
-                            },
-                        ..
-                    },
-                ..
-            } => match virtual_key_code {
-                VirtualKeyCode::Escape => Some(input::Event::Exit),
-                VirtualKeyCode::Key1 => Some(input::Event::ToggleModel),
-                VirtualKeyCode::Key2 => Some(input::Event::ToggleMesh),
-                VirtualKeyCode::Key3 => Some(input::Event::ToggleDebug),
-
-                _ => None,
-            },
-            Event::WindowEvent {
-                event: WindowEvent::CursorMoved { position, .. },
-                ..
-            } => {
-                let [width, height] = window.size().as_f64();
-                let aspect_ratio = width / height;
-
-                // Cursor position in normalized coordinates (-1 to +1) with
-                // aspect ratio taken into account.
-                let current = NormalizedPosition {
-                    x: position.x / width * 2. - 1.,
-                    y: -(position.y / height * 2. - 1.) / aspect_ratio,
-                };
-                let event = match (previous_cursor, held_mouse_button) {
-                    (Some(previous), Some(button)) => match button {
-                        MouseButton::Left => {
-                            Some(input::Event::Orbit { previous, current })
-                        }
-                        MouseButton::Right => {
-                            Some(input::Event::Pan { previous, current })
-                        }
-                        _ => None,
-                    },
-                    _ => None,
-                };
-                previous_cursor = Some(current);
-                event
+        if let (Some(shape), Some(camera)) = (&shape, &mut camera) {
+            if let Some(focus_event) =
+                focus_event(&event, previous_cursor, shape, camera)
+            {
+                input_handler.handle_event(focus_event, camera, &mut actions);
             }
-            Event::WindowEvent {
-                event: WindowEvent::MouseInput { state, button, .. },
-                ..
-            } => {
-                match state {
-                    ElementState::Pressed => held_mouse_button = Some(button),
-                    ElementState::Released => held_mouse_button = None,
-                };
-                match (&shape, &camera, button) {
-                    (
-                        Some(shape),
-                        Some(camera),
-                        MouseButton::Left | MouseButton::Right,
-                    ) => Some(input::Event::FocusPoint(
-                        camera.focus_point(previous_cursor, &shape.mesh),
-                    )),
-                    _ => None,
-                }
-            }
-            Event::WindowEvent {
-                event: WindowEvent::MouseWheel { delta, .. },
-                ..
-            } => Some(input::Event::Zoom(match delta {
-                MouseScrollDelta::LineDelta(_, y) => {
-                    (y as f64) * ZOOM_FACTOR_LINE
-                }
-                MouseScrollDelta::PixelDelta(PhysicalPosition {
-                    y, ..
-                }) => y * ZOOM_FACTOR_PIXEL,
-            })),
-            _ => None,
-        };
+        }
 
-        if let (Some(event), Some(camera)) = (event, &mut camera) {
-            input_handler.handle_event(event, camera, &mut actions);
+        let input_event = input_event(
+            event,
+            &window,
+            &held_mouse_button,
+            &mut previous_cursor,
+        );
+        if let (Some(input_event), Some(camera)) = (input_event, &mut camera) {
+            input_handler.handle_event(input_event, camera, &mut actions);
         }
 
         if actions.exit {
@@ -247,6 +187,105 @@ pub fn run(
             draw_config.draw_debug = !draw_config.draw_debug;
         }
     });
+}
+
+fn input_event(
+    event: Event<()>,
+    window: &Window,
+    held_mouse_button: &Option<MouseButton>,
+    previous_cursor: &mut Option<NormalizedPosition>,
+) -> Option<input::Event> {
+    match event {
+        Event::WindowEvent {
+            event:
+                WindowEvent::KeyboardInput {
+                    input:
+                        KeyboardInput {
+                            state: ElementState::Pressed,
+                            virtual_keycode: Some(virtual_key_code),
+                            ..
+                        },
+                    ..
+                },
+            ..
+        } => match virtual_key_code {
+            VirtualKeyCode::Escape => Some(input::Event::Exit),
+            VirtualKeyCode::Key1 => Some(input::Event::ToggleModel),
+            VirtualKeyCode::Key2 => Some(input::Event::ToggleMesh),
+            VirtualKeyCode::Key3 => Some(input::Event::ToggleDebug),
+
+            _ => None,
+        },
+        Event::WindowEvent {
+            event: WindowEvent::CursorMoved { position, .. },
+            ..
+        } => {
+            let [width, height] = window.size().as_f64();
+            let aspect_ratio = width / height;
+
+            // Cursor position in normalized coordinates (-1 to +1) with
+            // aspect ratio taken into account.
+            let current = NormalizedPosition {
+                x: position.x / width * 2. - 1.,
+                y: -(position.y / height * 2. - 1.) / aspect_ratio,
+            };
+            let event = match (*previous_cursor, held_mouse_button) {
+                (Some(previous), Some(button)) => match button {
+                    MouseButton::Left => {
+                        Some(input::Event::Orbit { previous, current })
+                    }
+                    MouseButton::Right => {
+                        Some(input::Event::Pan { previous, current })
+                    }
+                    _ => None,
+                },
+                _ => None,
+            };
+            *previous_cursor = Some(current);
+            event
+        }
+        Event::WindowEvent {
+            event: WindowEvent::MouseWheel { delta, .. },
+            ..
+        } => Some(input::Event::Zoom(match delta {
+            MouseScrollDelta::LineDelta(_, y) => (y as f64) * ZOOM_FACTOR_LINE,
+            MouseScrollDelta::PixelDelta(PhysicalPosition { y, .. }) => {
+                y * ZOOM_FACTOR_PIXEL
+            }
+        })),
+        _ => None,
+    }
+}
+
+fn focus_event(
+    event: &Event<()>,
+    previous_cursor: Option<NormalizedPosition>,
+    shape: &ProcessedShape,
+    camera: &Camera,
+) -> Option<input::Event> {
+    let focus_point = match event {
+        Event::WindowEvent {
+            event:
+                WindowEvent::MouseInput {
+                    state,
+                    button: MouseButton::Left | MouseButton::Right,
+                    ..
+                },
+            ..
+        } => match state {
+            ElementState::Pressed => {
+                camera.focus_point(previous_cursor, &shape.mesh)
+            }
+            ElementState::Released => FocusPoint::none(),
+        },
+        Event::WindowEvent {
+            event: WindowEvent::MouseWheel { .. },
+            ..
+        } => camera.focus_point(previous_cursor, &shape.mesh),
+
+        _ => return None,
+    };
+    Some(input::Event::FocusPoint(focus_point))
 }
 
 /// Error in main loop
