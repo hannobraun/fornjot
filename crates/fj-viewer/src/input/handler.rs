@@ -16,7 +16,6 @@ impl Handler {
     /// Handle an input event
     pub fn handle_event(&mut self, event: Event, camera: &mut Camera) {
         match event {
-            Event::FocusPoint(focus_point) => self.focus_point = focus_point,
             Event::Pan { previous, current } => self.movement.apply(
                 previous,
                 current,
@@ -32,8 +31,12 @@ impl Handler {
             Event::Zoom(zoom_delta) => {
                 self.zoom.apply(zoom_delta, &self.focus_point, camera)
             }
-            _ => {}
         }
+    }
+
+    /// A new focus point was selected (or deselected)
+    pub fn focus(&mut self, focus_point: FocusPoint) {
+        self.focus_point = focus_point;
     }
 }
 

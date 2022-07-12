@@ -110,7 +110,7 @@ pub fn run(
                 .on_event(&renderer.egui.context, window_event);
         }
 
-        // Window events
+        // fj-window events
         match event {
             Event::WindowEvent {
                 event: WindowEvent::CloseRequested,
@@ -118,6 +118,31 @@ pub fn run(
             } => {
                 *control_flow = ControlFlow::Exit;
             }
+            Event::WindowEvent {
+                event:
+                    WindowEvent::KeyboardInput {
+                        input:
+                            KeyboardInput {
+                                state: ElementState::Pressed,
+                                virtual_keycode: Some(virtual_key_code),
+                                ..
+                            },
+                        ..
+                    },
+                ..
+            } => match virtual_key_code {
+                VirtualKeyCode::Escape => *control_flow = ControlFlow::Exit,
+                VirtualKeyCode::Key1 => {
+                    draw_config.draw_model = !draw_config.draw_model
+                }
+                VirtualKeyCode::Key2 => {
+                    draw_config.draw_mesh = !draw_config.draw_mesh
+                }
+                VirtualKeyCode::Key3 => {
+                    draw_config.draw_debug = !draw_config.draw_debug
+                }
+                _ => {}
+            },
             Event::WindowEvent {
                 event: WindowEvent::Resized(size),
                 ..
@@ -154,69 +179,34 @@ pub fn run(
             _ => {}
         }
 
+        // fj-viewer events
         if let (Some(shape), Some(camera)) = (&shape, &mut camera) {
             if let Some(focus_event) =
-                focus_event(&event, previous_cursor, shape, camera)
+                focus(&event, previous_cursor, shape, camera)
             {
-                input_handler.handle_event(focus_event, camera);
+                input_handler.focus(focus_event);
             }
         }
 
         let input_event = input_event(
-            event,
+            &event,
             &window,
             &held_mouse_button,
             &mut previous_cursor,
         );
-        if let Some(input_event) = input_event {
-            match input_event {
-                input::Event::Exit => *control_flow = ControlFlow::Exit,
-                input::Event::ToggleModel => {
-                    draw_config.draw_model = !draw_config.draw_model
-                }
-                input::Event::ToggleMesh => {
-                    draw_config.draw_mesh = !draw_config.draw_mesh
-                }
-                input::Event::ToggleDebug => {
-                    draw_config.draw_debug = !draw_config.draw_debug
-                }
-                _ => {}
-            };
-
-            if let Some(camera) = &mut camera {
-                input_handler.handle_event(input_event, camera);
-            }
+        if let (Some(input_event), Some(camera)) = (input_event, &mut camera) {
+            input_handler.handle_event(input_event, camera);
         }
     });
 }
 
 fn input_event(
-    event: Event<()>,
+    event: &Event<()>,
     window: &Window,
     held_mouse_button: &Option<MouseButton>,
     previous_cursor: &mut Option<NormalizedPosition>,
 ) -> Option<input::Event> {
     match event {
-        Event::WindowEvent {
-            event:
-                WindowEvent::KeyboardInput {
-                    input:
-                        KeyboardInput {
-                            state: ElementState::Pressed,
-                            virtual_keycode: Some(virtual_key_code),
-                            ..
-                        },
-                    ..
-                },
-            ..
-        } => match virtual_key_code {
-            VirtualKeyCode::Escape => Some(input::Event::Exit),
-            VirtualKeyCode::Key1 => Some(input::Event::ToggleModel),
-            VirtualKeyCode::Key2 => Some(input::Event::ToggleMesh),
-            VirtualKeyCode::Key3 => Some(input::Event::ToggleDebug),
-
-            _ => None,
-        },
         Event::WindowEvent {
             event: WindowEvent::CursorMoved { position, .. },
             ..
@@ -249,7 +239,7 @@ fn input_event(
             event: WindowEvent::MouseWheel { delta, .. },
             ..
         } => Some(input::Event::Zoom(match delta {
-            MouseScrollDelta::LineDelta(_, y) => (y as f64) * ZOOM_FACTOR_LINE,
+            MouseScrollDelta::LineDelta(_, y) => (*y as f64) * ZOOM_FACTOR_LINE,
             MouseScrollDelta::PixelDelta(PhysicalPosition { y, .. }) => {
                 y * ZOOM_FACTOR_PIXEL
             }
@@ -258,12 +248,12 @@ fn input_event(
     }
 }
 
-fn focus_event(
+fn focus(
     event: &Event<()>,
     previous_cursor: Option<NormalizedPosition>,
     shape: &ProcessedShape,
     camera: &Camera,
-) -> Option<input::Event> {
+) -> Option<FocusPoint> {
     let focus_point = match event {
         Event::WindowEvent {
             event:
@@ -286,7 +276,7 @@ fn focus_event(
 
         _ => return None,
     };
-    Some(input::Event::FocusPoint(focus_point))
+    Some(focus_point)
 }
 
 /// Error in main loop
