@@ -22,12 +22,10 @@ impl Handler {
                 &self.focus_point,
                 camera,
             ),
-            Event::Rotation { previous, current } => self.rotation.apply(
-                previous,
-                current,
-                &self.focus_point,
-                camera,
-            ),
+            Event::Rotation { angle_x, angle_y } => {
+                self.rotation
+                    .apply(angle_x, angle_y, &self.focus_point, camera)
+            }
             Event::Zoom(zoom_delta) => {
                 self.zoom.apply(zoom_delta, &self.focus_point, camera)
             }

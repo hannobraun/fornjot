@@ -1,30 +1,19 @@
 use fj_math::{Point, Transform, Vector};
 
-use crate::{
-    camera::{Camera, FocusPoint},
-    screen::NormalizedPosition,
-};
+use crate::camera::{Camera, FocusPoint};
 
 pub struct Rotation;
 
 impl Rotation {
     pub fn apply(
         &self,
-        previous: NormalizedPosition,
-        current: NormalizedPosition,
+        angle_x: f64,
+        angle_y: f64,
         focus_point: &FocusPoint,
         camera: &mut Camera,
     ) {
         let rotate_around: Vector<3> =
             focus_point.0.unwrap_or_else(Point::origin).coords;
-
-        let f = -5.;
-
-        let diff_x = current.x - previous.x;
-        let diff_y = current.y - previous.y;
-        let angle_x = diff_y * f;
-        let angle_y = -diff_x * f;
-
         let rotate_around = Transform::translation(rotate_around);
 
         // the model rotates not the camera, so invert the transform

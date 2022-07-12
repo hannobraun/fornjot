@@ -223,7 +223,12 @@ fn input_event(
             let event = match (*previous_cursor, held_mouse_button) {
                 (Some(previous), Some(button)) => match button {
                     MouseButton::Left => {
-                        Some(input::Event::Rotation { previous, current })
+                        let diff_x = current.x - previous.x;
+                        let diff_y = current.y - previous.y;
+                        let angle_x = -diff_y * ROTATION_SENSITIVITY;
+                        let angle_y = diff_x * ROTATION_SENSITIVITY;
+
+                        Some(input::Event::Rotation { angle_x, angle_y })
                     }
                     MouseButton::Right => {
                         Some(input::Event::Translate { previous, current })
@@ -302,3 +307,9 @@ const ZOOM_FACTOR_LINE: f64 = 0.075;
 /// Smaller values will move the camera less with the same input.
 /// Larger values will move the camera more with the same input.
 const ZOOM_FACTOR_PIXEL: f64 = 0.005;
+
+/// Affects the speed of rotation given a change in normalized screen position [-1, 1]
+///
+/// Smaller values will move the camera less with the same input.
+/// Larger values will move the camera more with the same input.
+const ROTATION_SENSITIVITY: f64 = 5.;

@@ -12,10 +12,10 @@ pub enum Event {
 
     /// Rotate the model around the focus point
     Rotation {
-        /// The normalized position of the cursor before input
-        previous: NormalizedPosition,
-        /// The normalized position of the cursor after input
-        current: NormalizedPosition,
+        /// The angle around the screen x axis to rotate (in radians)
+        angle_x: f64,
+        /// The angle around the screen y axis to rotate (in radians)
+        angle_y: f64,
     },
 
     /// Move the view forwards and backwards
