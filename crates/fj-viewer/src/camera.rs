@@ -1,8 +1,8 @@
 //! Viewer camera module
 use std::f64::consts::FRAC_PI_2;
 
-use fj_interop::mesh::Mesh;
 use fj_math::{Aabb, Point, Scalar, Transform, Triangle, Vector};
+use fj_operations::shape_processor::ProcessedShape;
 
 use crate::screen::NormalizedPosition;
 
@@ -121,21 +121,25 @@ impl Camera {
     pub fn focus_point(
         &self,
         cursor: Option<NormalizedPosition>,
-        mesh: &Mesh<fj_math::Point<3>>,
+        shape: &ProcessedShape,
     ) -> FocusPoint {
-        let cursor = match cursor {
-            Some(cursor) => cursor,
-            None => return FocusPoint::none(),
-        };
+        self.calculate_focus_point(cursor, shape)
+            .unwrap_or_else(|| FocusPoint(shape.aabb.center()))
+    }
 
+    fn calculate_focus_point(
+        &self,
+        cursor: Option<NormalizedPosition>,
+        shape: &ProcessedShape,
+    ) -> Option<FocusPoint> {
         // Transform camera and cursor positions to model space.
         let origin = self.position();
-        let cursor = self.cursor_to_model_space(cursor);
+        let cursor = self.cursor_to_model_space(cursor?);
         let dir = (cursor - origin).normalize();
 
         let mut min_t = None;
 
-        for triangle in mesh.triangles() {
+        for triangle in shape.mesh.triangles() {
             let t = Triangle::from_points(triangle.points).cast_local_ray(
                 origin,
                 dir,
@@ -150,7 +154,7 @@ impl Camera {
             }
         }
 
-        FocusPoint(min_t.map(|t| origin + dir * t))
+        Some(FocusPoint(origin + dir * min_t?))
     }
 
     /// Access the transform from camera to model space.
@@ -211,17 +215,9 @@ impl Camera {
     }
 }
 
-/// The point on the model that the cursor is currently pointing at.
+/// The point around which camera movement happens.
 ///
-/// Such a point might or might not exist, depending on whether the cursor is
-/// pointing at the model or not.
-pub struct FocusPoint(pub Option<Point<3>>);
-
-impl FocusPoint {
-    /// Construct the "none" instance of `FocusPoint`
-    ///
-    /// This instance represents the case that no focus point exists.
-    pub fn none() -> Self {
-        Self(None)
-    }
-}
+/// This will be the point on the model that the cursor is currently pointing at if such a point exists,
+/// falling back to the center point of the model's bounding volume otherwise.
+#[derive(Clone, Copy)]
+pub struct FocusPoint(pub Point<3>);
