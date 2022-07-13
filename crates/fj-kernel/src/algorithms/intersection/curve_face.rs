@@ -8,9 +8,7 @@ use crate::objects::{Curve, Face};
 pub struct CurveFaceIntersections(Vec<[Scalar; 2]>);
 
 impl CurveFaceIntersections {
-    /// Determine the intersection between a [`Curve`] and a [`Face`]
-    ///
-    /// Returns a list of intersections in curve coordinates.
+    /// Compute the intersections between a [`Curve`] and a [`Face`]
     pub fn compute(curve: &Curve<2>, face: &Face) -> CurveFaceIntersections {
         let line = match curve {
             Curve::Line(line) => line,
