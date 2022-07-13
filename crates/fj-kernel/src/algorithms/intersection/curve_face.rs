@@ -8,6 +8,19 @@ use crate::objects::{Curve, Face};
 pub struct CurveFaceIntersections(Vec<[Scalar; 2]>);
 
 impl CurveFaceIntersections {
+    /// Create a new instance from the intersection intervals
+    ///
+    /// This method is useful for test code.
+    pub fn from_intervals(
+        intervals: impl IntoIterator<Item = [impl Into<Scalar>; 2]>,
+    ) -> Self {
+        let intervals = intervals
+            .into_iter()
+            .map(|interval| interval.map(Into::into))
+            .collect();
+        Self(intervals)
+    }
+
     /// Compute the intersections between a [`Curve`] and a [`Face`]
     pub fn compute(curve: &Curve<2>, face: &Face) -> Self {
         let line = match curve {
@@ -96,7 +109,7 @@ impl CurveFaceIntersections {
 
 #[cfg(test)]
 mod tests {
-    use fj_math::{Line, Point, Scalar, Vector};
+    use fj_math::{Line, Point, Vector};
 
     use crate::objects::{Curve, Face, Surface};
 
@@ -129,11 +142,8 @@ mod tests {
             .with_interior_polygon(interior)
             .build();
 
-        let expected: Vec<_> = [[1., 2.], [4., 5.]]
-            .into_iter()
-            .map(|interval: [f64; 2]| interval.map(Scalar::from))
-            .collect();
-        let expected = CurveFaceIntersections(expected);
+        let expected =
+            CurveFaceIntersections::from_intervals([[1., 2.], [4., 5.]]);
         assert_eq!(CurveFaceIntersections::compute(&curve, &face), expected);
     }
 }
