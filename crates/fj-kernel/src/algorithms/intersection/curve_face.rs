@@ -5,7 +5,9 @@ use crate::objects::{Curve, Face};
 
 /// The intersections between a [`Curve`] and a [`Face`], in curve coordinates
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct CurveFaceIntersections(Vec<[Scalar; 2]>);
+pub struct CurveFaceIntersections {
+    intervals: Vec<[Scalar; 2]>,
+}
 
 impl CurveFaceIntersections {
     /// Create a new instance from the intersection intervals
@@ -18,7 +20,7 @@ impl CurveFaceIntersections {
             .into_iter()
             .map(|interval| interval.map(Into::into))
             .collect();
-        Self(intervals)
+        Self { intervals }
     }
 
     /// Compute the intersections between a [`Curve`] and a [`Face`]
@@ -103,7 +105,7 @@ impl CurveFaceIntersections {
             })
             .collect();
 
-        CurveFaceIntersections(intervals)
+        CurveFaceIntersections { intervals }
     }
 }
 
