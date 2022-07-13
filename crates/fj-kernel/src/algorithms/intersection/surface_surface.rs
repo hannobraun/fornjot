@@ -3,9 +3,15 @@ use fj_math::{Line, Point, Scalar, Vector};
 use crate::objects::{Curve, Surface};
 
 /// Test intersection between two surfaces
-pub fn surface_surface(a: &Surface, b: &Surface) -> Option<Curve<3>> {
+pub fn surface_surface(
+    a: &Surface,
+    b: &Surface,
+) -> Option<(Curve<2>, Curve<2>, Curve<3>)> {
     // Algorithm from Real-Time Collision Detection by Christer Ericson. See
     // section 5.4.4, Intersection of Two Planes.
+    //
+    // Adaptations were made to get the intersection curves in local coordinates
+    // for each surface.
 
     let a_parametric = PlaneParametric::extract_from_surface(a);
     let b_parametric = PlaneParametric::extract_from_surface(b);
@@ -32,9 +38,13 @@ pub fn surface_surface(a: &Surface, b: &Surface) -> Option<Curve<3>> {
         / denom;
     let origin = Point { coords: origin };
 
+    let line = Line { origin, direction };
+
+    let curve_a = project_line_into_plane(&line, &a_parametric);
+    let curve_b = project_line_into_plane(&line, &b_parametric);
     let curve_global = Curve::Line(Line { origin, direction });
 
-    Some(curve_global)
+    Some((curve_a, curve_b, curve_global))
 }
 
 /// A plane in parametric form
@@ -86,6 +96,36 @@ impl PlaneConstantNormal {
     }
 }
 
+fn project_line_into_plane(
+    line: &Line<3>,
+    plane: &PlaneParametric,
+) -> Curve<2> {
+    let line_origin_relative_to_plane = line.origin - plane.origin;
+    dbg!(&line_origin_relative_to_plane);
+    let line_origin_in_plane = Vector::from([
+        plane
+            .u
+            .scalar_projection_onto(&line_origin_relative_to_plane),
+        plane
+            .v
+            .scalar_projection_onto(&line_origin_relative_to_plane),
+    ]);
+
+    let line_direction_in_plane = Vector::from([
+        plane.u.scalar_projection_onto(&line.direction),
+        plane.v.scalar_projection_onto(&line.direction),
+    ]);
+
+    let line = Line {
+        origin: Point {
+            coords: line_origin_in_plane,
+        },
+        direction: line_direction_in_plane,
+    };
+
+    Curve::Line(line)
+}
+
 #[cfg(test)]
 mod tests {
     use fj_math::Transform;
@@ -99,6 +139,7 @@ mod tests {
         let xy = Surface::xy_plane();
         let xz = Surface::xz_plane();
 
+        // Coincident and parallel planes don't have an intersection curve.
         assert_eq!(surface_surface(&xy, &xy), None);
         assert_eq!(
             surface_surface(
@@ -107,6 +148,14 @@ mod tests {
             ),
             None,
         );
-        assert_eq!(surface_surface(&xy, &xz), Some(Curve::x_axis()));
+
+        let expected_xy = Curve::u_axis();
+        let expected_xz = Curve::u_axis();
+        let expected_global = Curve::x_axis();
+
+        assert_eq!(
+            surface_surface(&xy, &xz),
+            Some((expected_xy, expected_xz, expected_global))
+        );
     }
 }
