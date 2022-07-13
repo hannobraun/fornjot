@@ -32,7 +32,9 @@ pub fn surface_surface(a: &Surface, b: &Surface) -> Option<Curve<3>> {
         / denom;
     let origin = Point { coords: origin };
 
-    Some(Curve::Line(Line { origin, direction }))
+    let curve_global = Curve::Line(Line { origin, direction });
+
+    Some(curve_global)
 }
 
 /// A plane in parametric form
