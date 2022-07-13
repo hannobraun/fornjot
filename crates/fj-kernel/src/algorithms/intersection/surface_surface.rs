@@ -10,8 +10,8 @@ pub fn surface_surface(a: &Surface, b: &Surface) -> Option<Curve<3>> {
     let a_parametric = PlaneParametric::extract_from_surface(a);
     let b_parametric = PlaneParametric::extract_from_surface(b);
 
-    let a = extract_plane(&a_parametric);
-    let b = extract_plane(&b_parametric);
+    let a = PlaneConstantNormal::extract_plane(&a_parametric);
+    let b = PlaneConstantNormal::extract_plane(&b_parametric);
 
     let direction = a.normal.cross(&b.normal);
 
@@ -64,22 +64,24 @@ struct PlaneConstantNormal {
     pub normal: Vector<3>,
 }
 
-/// Extract a plane in constant-normal form from a `Surface`
-///
-/// Panics, if the given `Surface` is not a plane.
-fn extract_plane(plane: &PlaneParametric) -> PlaneConstantNormal {
-    // Convert plane from parametric form to three-point form.
-    let a = plane.origin;
-    let b = plane.origin + plane.u;
-    let c = plane.origin + plane.v;
+impl PlaneConstantNormal {
+    /// Extract a plane in constant-normal form from a `Surface`
+    ///
+    /// Panics, if the given `Surface` is not a plane.
+    pub fn extract_plane(plane: &PlaneParametric) -> Self {
+        // Convert plane from parametric form to three-point form.
+        let a = plane.origin;
+        let b = plane.origin + plane.u;
+        let c = plane.origin + plane.v;
 
-    // Convert plane from three-point form to constant-normal form. See
-    // Real-Time Collision Detection by Christer Ericson, section 3.6, Planes
-    // and Halfspaces.
-    let normal = (b - a).cross(&(c - a)).normalize();
-    let distance = normal.dot(&a.coords);
+        // Convert plane from three-point form to constant-normal form. See
+        // Real-Time Collision Detection by Christer Ericson, section 3.6, Planes
+        // and Halfspaces.
+        let normal = (b - a).cross(&(c - a)).normalize();
+        let distance = normal.dot(&a.coords);
 
-    PlaneConstantNormal { distance, normal }
+        PlaneConstantNormal { distance, normal }
+    }
 }
 
 #[cfg(test)]
