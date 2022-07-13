@@ -159,6 +159,11 @@ impl CurveFaceIntersectionList {
 
         Self { intervals }
     }
+
+    /// Indicate whether the intersection list is empty
+    pub fn is_empty(&self) -> bool {
+        self.intervals.is_empty()
+    }
 }
 
 #[cfg(test)]
