@@ -7,10 +7,10 @@ pub fn surface_surface(a: &Surface, b: &Surface) -> Option<Curve<3>> {
     // Algorithm from Real-Time Collision Detection by Christer Ericson. See
     // section 5.4.4, Intersection of Two Planes.
 
-    let (a_normal, a_distance) = extract_plane(a);
-    let (b_normal, b_distance) = extract_plane(b);
+    let a = extract_plane(a);
+    let b = extract_plane(b);
 
-    let direction = a_normal.cross(&b_normal);
+    let direction = a.normal.cross(&b.normal);
 
     let denom = direction.dot(&direction);
     if denom == Scalar::ZERO {
@@ -24,7 +24,7 @@ pub fn surface_surface(a: &Surface, b: &Surface) -> Option<Curve<3>> {
         return None;
     }
 
-    let origin = (b_normal * a_distance - a_normal * b_distance)
+    let origin = (b.normal * a.distance - a.normal * b.distance)
         .cross(&direction)
         / denom;
     let origin = Point { coords: origin };
@@ -32,10 +32,16 @@ pub fn surface_surface(a: &Surface, b: &Surface) -> Option<Curve<3>> {
     Some(Curve::Line(Line { origin, direction }))
 }
 
+/// A plane in constant-normal form
+struct PlaneConstantNormal {
+    pub distance: Scalar,
+    pub normal: Vector<3>,
+}
+
 /// Extract a plane in constant-normal form from a `Surface`
 ///
 /// Panics, if the given `Surface` is not a plane.
-fn extract_plane(surface: &Surface) -> (Vector<3>, Scalar) {
+fn extract_plane(surface: &Surface) -> PlaneConstantNormal {
     let Surface::SweptCurve(surface) = surface;
     let line = match surface.curve {
         Curve::Line(line) => line,
@@ -53,7 +59,7 @@ fn extract_plane(surface: &Surface) -> (Vector<3>, Scalar) {
     let normal = (b - a).cross(&(c - a)).normalize();
     let distance = normal.dot(&a.coords);
 
-    (normal, distance)
+    PlaneConstantNormal { distance, normal }
 }
 
 #[cfg(test)]
