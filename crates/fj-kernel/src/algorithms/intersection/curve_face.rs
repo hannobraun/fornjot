@@ -107,6 +107,58 @@ impl CurveFaceIntersections {
 
         CurveFaceIntersections { intervals }
     }
+
+    /// Merge this intersection list with another
+    ///
+    /// The merged list will contain all overlaps of the intervals from the two
+    /// other lists.
+    pub fn merge(&self, other: &Self) -> Self {
+        let mut self_ = self.intervals.iter().copied();
+        let mut other = other.intervals.iter().copied();
+
+        let mut next_self = self_.next();
+        let mut next_other = other.next();
+
+        let mut intervals = Vec::new();
+
+        while let (
+            Some([self_start, self_end]),
+            Some([other_start, other_end]),
+        ) = (next_self, next_other)
+        {
+            // If we're starting another loop iteration, we have another
+            // interval available from both `self` and `other` each. Only if
+            // that's the case, is there a chance for an overlap.
+
+            // Build the overlap of the two next intervals, by comparing them.
+            // At this point we don't know yet, if this is a valid interval.
+            let overlap_start = self_start.max(other_start);
+            let overlap_end = self_end.min(other_end);
+
+            if overlap_start < overlap_end {
+                // This is indeed a valid overlap. Add it to our list of
+                // results.
+                intervals.push([overlap_start, overlap_end]);
+            }
+
+            // Only if the end of the overlap interval has overtaken one of the
+            // input ones are we done with it. An input interval that hasn't
+            // been overtaken by the overlap, could still overlap with another
+            // interval.
+            if self_end <= overlap_end {
+                // Current interval from `self` has been overtaken. Let's grab
+                // the next one.
+                next_self = self_.next();
+            }
+            if other_end <= overlap_end {
+                // Current interval from `other` has been overtaken. Let's grab
+                // the next one.
+                next_other = other.next();
+            }
+        }
+
+        Self { intervals }
+    }
 }
 
 #[cfg(test)]
@@ -147,5 +199,75 @@ mod tests {
         let expected =
             CurveFaceIntersections::from_intervals([[1., 2.], [4., 5.]]);
         assert_eq!(CurveFaceIntersections::compute(&curve, &face), expected);
+    }
+
+    #[test]
+    fn merge() {
+        let a = CurveFaceIntersections::from_intervals([
+            [0., 1.],   // 1: `a` and `b` are equal
+            [2., 5.],   // 2: `a` contains `b`
+            [7., 8.],   // 3: `b` contains `a`
+            [9., 11.],  // 4: overlap; `a` is left
+            [14., 16.], // 5: overlap; `a` is right
+            [18., 21.], // 6: one of `a` partially overlaps two of `b`
+            [23., 25.], // 7: two of `a` partially overlap one of `b`
+            [26., 28.], // 7
+            [31., 35.], // 8: one of `a` overlaps two of `b`; partial/complete
+            [36., 38.], // 9: two of `a` overlap one of `b`; partial/complete
+            [39., 40.], // 9
+            [41., 45.], // 10: one of `a` overlaps two of `b`; complete/partial
+            [48., 49.], // 11: two of `a` overlap one of `b`; complete/partial
+            [50., 52.], // 11
+            [53., 58.], // 12: one of `a` overlaps two of `b` completely
+            [60., 61.], // 13: one of `b` overlaps two of `a` completely
+            [62., 63.], // 13
+            [65., 66.], // 14: one of `a` with no overlap in `b`
+        ]);
+        let b = CurveFaceIntersections::from_intervals([
+            [0., 1.],   // 1
+            [3., 4.],   // 2
+            [6., 9.],   // 3
+            [10., 12.], // 4
+            [13., 15.], // 5
+            [17., 19.], // 6
+            [20., 22.], // 6
+            [24., 27.], // 7
+            [30., 32.], // 8
+            [33., 34.], // 8
+            [37., 41.], // 9
+            [42., 43.], // 10
+            [44., 46.], // 10
+            [47., 51.], // 11
+            [54., 55.], // 12
+            [56., 57.], // 12
+            [59., 64.], // 13
+        ]);
+
+        let merged = a.merge(&b);
+
+        let expected = CurveFaceIntersections::from_intervals([
+            [0., 1.],   // 1
+            [3., 4.],   // 2
+            [7., 8.],   // 3
+            [10., 11.], // 4
+            [14., 15.], // 5
+            [18., 19.], // 6
+            [20., 21.], // 6
+            [24., 25.], // 7
+            [26., 27.], // 7
+            [31., 32.], // 8
+            [33., 34.], // 8
+            [37., 38.], // 9
+            [39., 40.], // 9
+            [42., 43.], // 10
+            [44., 45.], // 10
+            [48., 49.], // 11
+            [50., 51.], // 11
+            [54., 55.], // 12
+            [56., 57.], // 12
+            [60., 61.], // 13
+            [62., 63.], // 13
+        ]);
+        assert_eq!(merged, expected);
     }
 }
