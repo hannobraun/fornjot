@@ -11,7 +11,7 @@ impl CurveFaceIntersections {
     /// Determine the intersection between a [`Curve`] and a [`Face`]
     ///
     /// Returns a list of intersections in curve coordinates.
-    pub fn curve_face(curve: &Curve<2>, face: &Face) -> CurveFaceIntersections {
+    pub fn compute(curve: &Curve<2>, face: &Face) -> CurveFaceIntersections {
         let line = match curve {
             Curve::Line(line) => line,
             _ => todo!("Curve-face intersection only supports lines"),
@@ -136,6 +136,6 @@ mod tests {
             .map(|interval: [f64; 2]| interval.map(Scalar::from))
             .collect();
         let expected = CurveFaceIntersections(expected);
-        assert_eq!(CurveFaceIntersections::curve_face(&curve, &face), expected);
+        assert_eq!(CurveFaceIntersections::compute(&curve, &face), expected);
     }
 }
