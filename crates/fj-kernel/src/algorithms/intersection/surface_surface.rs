@@ -32,6 +32,29 @@ pub fn surface_surface(a: &Surface, b: &Surface) -> Option<Curve<3>> {
     Some(Curve::Line(Line { origin, direction }))
 }
 
+/// A plane in parametric form
+struct PlaneParametric {
+    pub origin: Point<3>,
+    pub u: Vector<3>,
+    pub v: Vector<3>,
+}
+
+impl PlaneParametric {
+    pub fn extract_from_surface(surface: &Surface) -> Self {
+        let Surface::SweptCurve(surface) = surface;
+        let line = match surface.curve {
+            Curve::Line(line) => line,
+            _ => todo!("Only plane-plane intersection is currently supported."),
+        };
+
+        Self {
+            origin: line.origin,
+            u: line.direction,
+            v: surface.path,
+        }
+    }
+}
+
 /// A plane in constant-normal form
 struct PlaneConstantNormal {
     pub distance: Scalar,
@@ -42,16 +65,12 @@ struct PlaneConstantNormal {
 ///
 /// Panics, if the given `Surface` is not a plane.
 fn extract_plane(surface: &Surface) -> PlaneConstantNormal {
-    let Surface::SweptCurve(surface) = surface;
-    let line = match surface.curve {
-        Curve::Line(line) => line,
-        _ => todo!("Only plane-plane intersection is currently supported."),
-    };
+    let plane = PlaneParametric::extract_from_surface(surface);
 
     // Convert plane from parametric form to three-point form.
-    let a = line.origin;
-    let b = line.origin + line.direction;
-    let c = line.origin + surface.path;
+    let a = plane.origin;
+    let b = plane.origin + plane.u;
+    let c = plane.origin + plane.v;
 
     // Convert plane from three-point form to constant-normal form. See
     // Real-Time Collision Detection by Christer Ericson, section 3.6, Planes
