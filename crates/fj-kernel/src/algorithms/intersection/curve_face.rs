@@ -95,7 +95,7 @@ impl CurveFaceIntersections {
 
         // Can be cleaned up, once `array_chunks` is stable:
         // https://doc.rust-lang.org/std/primitive.slice.html#method.array_chunks
-        let intersections = intersections
+        let intervals = intersections
             .chunks(2)
             .map(|chunk| {
                 // Can't panic, as we passed `2` to `windows`.
@@ -103,7 +103,7 @@ impl CurveFaceIntersections {
             })
             .collect();
 
-        CurveFaceIntersections(intersections)
+        CurveFaceIntersections(intervals)
     }
 }
 
