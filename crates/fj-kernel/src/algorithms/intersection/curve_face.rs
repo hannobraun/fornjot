@@ -103,7 +103,7 @@ mod tests {
     use super::CurveFaceIntersections;
 
     #[test]
-    fn curve_face() {
+    fn compute() {
         let curve = Curve::Line(Line {
             origin: Point::from([-3., 0.]),
             direction: Vector::from([1., 0.]),
