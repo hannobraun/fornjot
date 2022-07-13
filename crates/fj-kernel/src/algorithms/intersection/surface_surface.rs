@@ -7,8 +7,11 @@ pub fn surface_surface(a: &Surface, b: &Surface) -> Option<Curve<3>> {
     // Algorithm from Real-Time Collision Detection by Christer Ericson. See
     // section 5.4.4, Intersection of Two Planes.
 
-    let a = extract_plane(a);
-    let b = extract_plane(b);
+    let a_parametric = PlaneParametric::extract_from_surface(a);
+    let b_parametric = PlaneParametric::extract_from_surface(b);
+
+    let a = extract_plane(&a_parametric);
+    let b = extract_plane(&b_parametric);
 
     let direction = a.normal.cross(&b.normal);
 
@@ -64,9 +67,7 @@ struct PlaneConstantNormal {
 /// Extract a plane in constant-normal form from a `Surface`
 ///
 /// Panics, if the given `Surface` is not a plane.
-fn extract_plane(surface: &Surface) -> PlaneConstantNormal {
-    let plane = PlaneParametric::extract_from_surface(surface);
-
+fn extract_plane(plane: &PlaneParametric) -> PlaneConstantNormal {
     // Convert plane from parametric form to three-point form.
     let a = plane.origin;
     let b = plane.origin + plane.u;
