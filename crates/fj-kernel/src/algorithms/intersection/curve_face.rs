@@ -3,10 +3,14 @@ use parry2d_f64::query::{Ray, RayCast};
 
 use crate::objects::{Curve, Face};
 
+/// The intersections between a [`Curve`] and a [`Face`], in curve coordinates
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct CurveFaceIntersections(Vec<[Scalar; 2]>);
+
 /// Determine the intersection between a [`Curve`] and a [`Face`]
 ///
 /// Returns a list of intersections in curve coordinates.
-pub fn curve_face(curve: &Curve<2>, face: &Face) -> Vec<[Scalar; 2]> {
+pub fn curve_face(curve: &Curve<2>, face: &Face) -> CurveFaceIntersections {
     let line = match curve {
         Curve::Line(line) => line,
         _ => todo!("Curve-face intersection only supports lines"),
@@ -75,13 +79,15 @@ pub fn curve_face(curve: &Curve<2>, face: &Face) -> Vec<[Scalar; 2]> {
 
     // Can be cleaned up, once `array_chunks` is stable:
     // https://doc.rust-lang.org/std/primitive.slice.html#method.array_chunks
-    intersections
+    let intersections = intersections
         .chunks(2)
         .map(|chunk| {
             // Can't panic, as we passed `2` to `windows`.
             [chunk[0], chunk[1]]
         })
-        .collect()
+        .collect();
+
+    CurveFaceIntersections(intersections)
 }
 
 #[cfg(test)]
@@ -89,6 +95,8 @@ mod tests {
     use fj_math::{Line, Point, Scalar, Vector};
 
     use crate::objects::{Curve, Face, Surface};
+
+    use super::CurveFaceIntersections;
 
     #[test]
     fn curve_face() {
@@ -121,6 +129,7 @@ mod tests {
             .into_iter()
             .map(|interval: [f64; 2]| interval.map(Scalar::from))
             .collect();
+        let expected = CurveFaceIntersections(expected);
         assert_eq!(super::curve_face(&curve, &face), expected);
     }
 }
