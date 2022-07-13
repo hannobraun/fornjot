@@ -9,7 +9,7 @@ pub struct CurveFaceIntersections(Vec<[Scalar; 2]>);
 
 impl CurveFaceIntersections {
     /// Compute the intersections between a [`Curve`] and a [`Face`]
-    pub fn compute(curve: &Curve<2>, face: &Face) -> CurveFaceIntersections {
+    pub fn compute(curve: &Curve<2>, face: &Face) -> Self {
         let line = match curve {
             Curve::Line(line) => line,
             _ => todo!("Curve-face intersection only supports lines"),
