@@ -1,8 +1,8 @@
 //! Viewer camera module
 use std::f64::consts::FRAC_PI_2;
 
+use fj_interop::processed_shape::ProcessedShape;
 use fj_math::{Aabb, Point, Scalar, Transform, Triangle, Vector};
-use fj_operations::shape_processor::ProcessedShape;
 
 use crate::screen::NormalizedPosition;
 
