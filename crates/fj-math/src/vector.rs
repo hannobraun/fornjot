@@ -102,6 +102,10 @@ impl<const D: usize> Vector<D> {
 
     /// Compute the scalar project of this vector onto another
     pub fn scalar_projection_onto(&self, other: &Self) -> Scalar {
+        if other.magnitude() == Scalar::ZERO {
+            return Scalar::ZERO;
+        }
+
         self.dot(&other.normalize())
     }
 }
@@ -366,5 +370,12 @@ mod tests {
         assert_eq!(v.scalar_projection_onto(&x), Scalar::from(1.));
         assert_eq!(v.scalar_projection_onto(&y), Scalar::from(2.));
         assert_eq!(v.scalar_projection_onto(&z), Scalar::from(3.));
+
+        // Zero-length vectors should be handled as well.
+        assert_eq!(
+            Vector::unit_x()
+                .scalar_projection_onto(&Vector::from([0., 0., 0.])),
+            Scalar::ZERO
+        );
     }
 }
