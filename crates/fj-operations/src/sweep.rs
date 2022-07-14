@@ -1,7 +1,7 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::{sweep, Tolerance},
-    objects::Face,
+    objects::{Face, Sketch},
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::{Aabb, Vector};
@@ -19,7 +19,12 @@ impl ToShape for fj::Sweep {
         let path = Vector::from(self.path());
         let color = self.shape().color();
 
-        let solid = sweep(sketch.into_inner(), path, tolerance, color);
+        let solid = sweep(
+            Sketch::from_faces(sketch.into_inner()),
+            path,
+            tolerance,
+            color,
+        );
 
         validate(solid, config)
     }

@@ -4,7 +4,8 @@ use crate::{
     iter::ObjectIters,
     local::Local,
     objects::{
-        Curve, Cycle, Edge, Face, GlobalVertex, Surface, Vertex, VerticesOfEdge,
+        Curve, Cycle, Edge, Face, GlobalVertex, Sketch, Surface, Vertex,
+        VerticesOfEdge,
     },
 };
 
@@ -12,7 +13,7 @@ use super::{reverse_face, transform::transform_face, CycleApprox, Tolerance};
 
 /// Create a solid by sweeping a sketch
 pub fn sweep(
-    source: Vec<Face>,
+    source: Sketch,
     path: impl Into<Vector<3>>,
     tolerance: Tolerance,
     color: [u8; 4],
@@ -203,7 +204,7 @@ mod tests {
     use crate::{
         algorithms::Tolerance,
         iter::ObjectIters,
-        objects::{Face, Surface},
+        objects::{Face, Sketch, Surface},
     };
 
     #[test]
@@ -295,9 +296,10 @@ mod tests {
         let sketch = Face::builder(Surface::xy_plane())
             .with_exterior_polygon([[0., 0.], [1., 0.], [0., 1.]])
             .build();
+        let sketch = Sketch::from_faces([sketch]);
 
         let solid =
-            super::sweep(vec![sketch], direction, tolerance, [255, 0, 0, 255]);
+            super::sweep(sketch, direction, tolerance, [255, 0, 0, 255]);
 
         let expected_vertices: Vec<_> = expected_vertices
             .into_iter()
