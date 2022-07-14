@@ -9,7 +9,7 @@ use fj_math::Aabb;
 use super::Shape;
 
 impl Shape for fj::Group {
-    fn to_shape(
+    fn compute_brep(
         &self,
         config: &ValidationConfig,
         tolerance: Tolerance,
@@ -17,8 +17,8 @@ impl Shape for fj::Group {
     ) -> Result<Validated<Vec<Face>>, ValidationError> {
         let mut shape = Vec::new();
 
-        let a = self.a.to_shape(config, tolerance, debug_info)?;
-        let b = self.b.to_shape(config, tolerance, debug_info)?;
+        let a = self.a.compute_brep(config, tolerance, debug_info)?;
+        let b = self.b.compute_brep(config, tolerance, debug_info)?;
 
         shape.extend(a.into_inner());
         shape.extend(b.into_inner());

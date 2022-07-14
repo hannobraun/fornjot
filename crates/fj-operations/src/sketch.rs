@@ -9,7 +9,7 @@ use fj_math::{Aabb, Point, Scalar};
 use super::Shape;
 
 impl Shape for fj::Sketch {
-    fn to_shape(
+    fn compute_brep(
         &self,
         config: &ValidationConfig,
         _: Tolerance,

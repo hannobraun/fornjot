@@ -35,7 +35,7 @@ use fj_math::Aabb;
 /// Implemented for all operations from the [`fj`] crate
 pub trait Shape {
     /// Compute the boundary representation of the shape
-    fn to_shape(
+    fn compute_brep(
         &self,
         config: &ValidationConfig,
         tolerance: Tolerance,
@@ -88,7 +88,7 @@ macro_rules! dispatch {
 }
 
 dispatch! {
-    to_shape(
+    compute_brep(
         config: &ValidationConfig,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,

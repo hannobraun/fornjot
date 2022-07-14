@@ -9,7 +9,7 @@ use fj_math::{Aabb, Transform, Vector};
 use super::Shape;
 
 impl Shape for fj::Transform {
-    fn to_shape(
+    fn compute_brep(
         &self,
         config: &ValidationConfig,
         tolerance: Tolerance,
@@ -17,7 +17,7 @@ impl Shape for fj::Transform {
     ) -> Result<Validated<Vec<Face>>, ValidationError> {
         let mut shape = self
             .shape
-            .to_shape(config, tolerance, debug_info)?
+            .compute_brep(config, tolerance, debug_info)?
             .into_inner();
 
         transform_shape(&mut shape, &make_transform(self));
