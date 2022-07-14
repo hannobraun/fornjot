@@ -63,6 +63,30 @@ impl Crate {
         }
     }
 
+    fn get_local_version(&self) -> anyhow::Result<semver::Version> {
+        let name = format!("{self}");
+        let cargo_toml_location = std::fs::canonicalize(&self.path)
+            .context("absolute path to Cargo.toml")?;
+        let mut cmd = cargo_metadata::MetadataCommand::new();
+        cmd.manifest_path(format!(
+            "{}/Cargo.toml",
+            cargo_toml_location.to_string_lossy()
+        ))
+        .no_deps();
+
+        let metadata = cmd.exec()?;
+        let package = metadata
+            .packages
+            .iter()
+            .find(|p| p.name == name)
+            .ok_or_else(|| anyhow!("could not find package"))?;
+
+        let version = package.version.to_owned();
+        log::debug!("{self} found as {version} on our side");
+
+        Ok(version)
+    }
+
     fn determine_state(&self) -> anyhow::Result<CrateState> {
         let theirs = {
             #[derive(Deserialize)]
@@ -112,29 +136,7 @@ impl Crate {
             versions.versions.get(0).unwrap().version.to_owned()
         };
 
-        let ours = {
-            let name = format!("{self}");
-            let cargo_toml_location = std::fs::canonicalize(&self.path)
-                .context("absolute path to Cargo.toml")?;
-            let mut cmd = cargo_metadata::MetadataCommand::new();
-            cmd.manifest_path(format!(
-                "{}/Cargo.toml",
-                cargo_toml_location.to_string_lossy()
-            ))
-            .no_deps();
-
-            let metadata = cmd.exec()?;
-            let package = metadata
-                .packages
-                .iter()
-                .find(|p| p.name == name)
-                .ok_or_else(|| anyhow!("could not find package"))?;
-
-            let version = package.version.to_owned();
-            log::debug!("{self} found as {version} on our side");
-
-            version
-        };
+        let ours = self.get_local_version()?;
 
         if ours == theirs {
             log::info!("{self} has already been published as {ours}");
