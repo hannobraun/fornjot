@@ -361,6 +361,82 @@ impl ObjectIters for GlobalVertex {
     }
 }
 
+impl ObjectIters for Sketch {
+    fn curve_iter(&self) -> Iter<Curve<3>> {
+        let mut iter = Iter::empty();
+
+        for edge in self.faces() {
+            iter = iter.with(edge.curve_iter());
+        }
+
+        iter
+    }
+
+    fn cycle_iter(&self) -> Iter<Cycle> {
+        let mut iter = Iter::empty();
+
+        for edge in self.faces() {
+            iter = iter.with(edge.cycle_iter());
+        }
+
+        iter
+    }
+
+    fn edge_iter(&self) -> Iter<Edge> {
+        let mut iter = Iter::empty();
+
+        for edge in self.faces() {
+            iter = iter.with(edge.edge_iter());
+        }
+
+        iter
+    }
+
+    fn face_iter(&self) -> Iter<Face> {
+        let mut iter = Iter::empty();
+
+        for edge in self.faces() {
+            iter = iter.with(edge.face_iter());
+        }
+
+        iter
+    }
+
+    fn global_vertex_iter(&self) -> Iter<GlobalVertex> {
+        let mut iter = Iter::empty();
+
+        for edge in self.faces() {
+            iter = iter.with(edge.global_vertex_iter());
+        }
+
+        iter
+    }
+
+    fn sketch_iter(&self) -> Iter<Sketch> {
+        Iter::from_object(self.clone())
+    }
+
+    fn surface_iter(&self) -> Iter<Surface> {
+        let mut iter = Iter::empty();
+
+        for edge in self.faces() {
+            iter = iter.with(edge.surface_iter());
+        }
+
+        iter
+    }
+
+    fn vertex_iter(&self) -> Iter<Vertex> {
+        let mut iter = Iter::empty();
+
+        for edge in self.faces() {
+            iter = iter.with(edge.vertex_iter());
+        }
+
+        iter
+    }
+}
+
 impl ObjectIters for Surface {
     fn curve_iter(&self) -> Iter<Curve<3>> {
         Iter::empty()
@@ -561,7 +637,7 @@ impl<T> Iterator for Iter<T> {
 #[cfg(test)]
 mod tests {
     use crate::objects::{
-        Curve, Cycle, Edge, Face, GlobalVertex, Surface, Vertex,
+        Curve, Cycle, Edge, Face, GlobalVertex, Sketch, Surface, Vertex,
     };
 
     use super::ObjectIters as _;
@@ -642,6 +718,23 @@ mod tests {
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(0, object.surface_iter().count());
         assert_eq!(0, object.vertex_iter().count());
+    }
+
+    #[test]
+    fn sketch() {
+        let face = Face::builder(Surface::xy_plane())
+            .with_exterior_polygon([[0., 0.], [1., 0.], [0., 1.]])
+            .build();
+        let object = Sketch::from_faces([face]);
+
+        assert_eq!(3, object.curve_iter().count());
+        assert_eq!(1, object.cycle_iter().count());
+        assert_eq!(3, object.edge_iter().count());
+        assert_eq!(1, object.face_iter().count());
+        assert_eq!(3, object.global_vertex_iter().count());
+        assert_eq!(1, object.sketch_iter().count());
+        assert_eq!(1, object.surface_iter().count());
+        assert_eq!(6, object.vertex_iter().count());
     }
 
     #[test]
