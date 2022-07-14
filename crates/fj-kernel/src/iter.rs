@@ -346,27 +346,27 @@ impl ObjectIters for Surface {
 
 impl ObjectIters for Vertex {
     fn curve_iter(&self) -> Iter<Curve<3>> {
-        Iter::empty()
+        self.global().curve_iter()
     }
 
     fn cycle_iter(&self) -> Iter<Cycle> {
-        Iter::empty()
+        self.global().cycle_iter()
     }
 
     fn edge_iter(&self) -> Iter<Edge> {
-        Iter::empty()
+        self.global().edge_iter()
     }
 
     fn face_iter(&self) -> Iter<Face> {
-        Iter::empty()
+        self.global().face_iter()
     }
 
     fn global_vertex_iter(&self) -> Iter<GlobalVertex> {
-        Iter::from_object(self.global())
+        self.global().global_vertex_iter()
     }
 
     fn surface_iter(&self) -> Iter<Surface> {
-        Iter::empty()
+        self.global().surface_iter()
     }
 
     fn vertex_iter(&self) -> Iter<Vertex> {
