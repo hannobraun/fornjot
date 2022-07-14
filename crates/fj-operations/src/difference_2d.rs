@@ -109,14 +109,14 @@ fn add_cycle(cycle: Cycle, reverse: bool) -> Cycle {
         };
 
         let vertices = if reverse {
-            edge.vertices.clone().reverse()
+            edge.vertices.reverse()
         } else {
-            edge.vertices.clone()
+            edge.vertices
         };
 
         let edge = Edge {
             curve: Local::new(curve_local, curve_canonical),
-            vertices: vertices.clone(),
+            vertices,
         };
 
         edges.push(edge);
