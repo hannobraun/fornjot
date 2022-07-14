@@ -53,6 +53,17 @@ impl Registry {
     }
 }
 
+#[derive(Debug)]
+struct CrateNotFoundError;
+
+impl std::fmt::Display for CrateNotFoundError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "crate was not found on crates.io")
+    }
+}
+
+impl std::error::Error for CrateNotFoundError {}
+
 impl Crate {
     fn validate(&self) -> anyhow::Result<()> {
         match self.path.exists() {
@@ -87,53 +98,60 @@ impl Crate {
         Ok(version)
     }
 
+    fn get_upstream_version(&self) -> anyhow::Result<semver::Version> {
+        #[derive(Deserialize)]
+        struct CrateVersions {
+            versions: Vec<CrateVersion>,
+        }
+
+        #[derive(Deserialize)]
+        struct CrateVersion {
+            #[serde(rename = "num")]
+            version: semver::Version,
+        }
+
+        let client = reqwest::blocking::ClientBuilder::new()
+            .user_agent(concat!(
+                env!("CARGO_PKG_NAME"),
+                "/",
+                env!("CARGO_PKG_VERSION")
+            ))
+            .build()
+            .context("build http client")?;
+
+        let resp = client
+            .get(format!("https://crates.io/api/v1/crates/{self}"))
+            .send()
+            .context("fetching crate versions from the registry")?;
+
+        if resp.status() == reqwest::StatusCode::NOT_FOUND {
+            return Err(anyhow::Error::new(CrateNotFoundError));
+        }
+
+        if resp.status() != reqwest::StatusCode::OK {
+            return Err(anyhow!(
+                "{self} request to crates.io failed with {} '{}'",
+                resp.status(),
+                resp.text().unwrap_or_else(|_| {
+                    "[response body could not be read]".to_string()
+                })
+            ));
+        }
+
+        let versions =
+            serde_json::from_str::<CrateVersions>(resp.text()?.as_str())
+                .context("deserializing crates.io response")?;
+
+        Ok(versions.versions.get(0).unwrap().version.to_owned())
+    }
+
     fn determine_state(&self) -> anyhow::Result<CrateState> {
-        let theirs = {
-            #[derive(Deserialize)]
-            struct CrateVersions {
-                versions: Vec<CrateVersion>,
-            }
-
-            #[derive(Deserialize)]
-            struct CrateVersion {
-                #[serde(rename = "num")]
-                version: semver::Version,
-            }
-
-            let client = reqwest::blocking::ClientBuilder::new()
-                .user_agent(concat!(
-                    env!("CARGO_PKG_NAME"),
-                    "/",
-                    env!("CARGO_PKG_VERSION")
-                ))
-                .build()
-                .context("build http client")?;
-
-            let resp = client
-                .get(format!("https://crates.io/api/v1/crates/{self}"))
-                .send()
-                .context("fetching crate versions from the registry")?;
-
-            if resp.status() == reqwest::StatusCode::NOT_FOUND {
-                log::info!("{self} has not been published yet");
-                return Ok(CrateState::Unknown);
-            }
-
-            if resp.status() != reqwest::StatusCode::OK {
-                return Err(anyhow!(
-                    "{self} request to crates.io failed with {} '{}'",
-                    resp.status(),
-                    resp.text().unwrap_or_else(|_| {
-                        "[response body could not be read]".to_string()
-                    })
-                ));
-            }
-
-            let versions =
-                serde_json::from_str::<CrateVersions>(resp.text()?.as_str())
-                    .context("deserializing crates.io response")?;
-
-            versions.versions.get(0).unwrap().version.to_owned()
+        let theirs = match self.get_upstream_version() {
+            Ok(version) => version,
+            Err(error) => match error.downcast_ref::<CrateNotFoundError>() {
+                Some(_) => return Ok(CrateState::Unknown),
+                None => return Err(error),
+            },
         };
 
         let ours = self.get_local_version()?;
