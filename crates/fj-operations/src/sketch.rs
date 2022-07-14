@@ -6,9 +6,9 @@ use fj_kernel::{
 };
 use fj_math::{Aabb, Point, Scalar};
 
-use super::ToShape;
+use super::Shape;
 
-impl ToShape for fj::Sketch {
+impl Shape for fj::Sketch {
     fn to_shape(
         &self,
         config: &ValidationConfig,

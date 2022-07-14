@@ -8,9 +8,9 @@ use fj_kernel::{
 };
 use fj_math::Aabb;
 
-use super::ToShape;
+use super::Shape;
 
-impl ToShape for fj::Difference2d {
+impl Shape for fj::Difference2d {
     fn to_shape(
         &self,
         config: &ValidationConfig,

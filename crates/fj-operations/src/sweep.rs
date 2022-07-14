@@ -6,9 +6,9 @@ use fj_kernel::{
 };
 use fj_math::{Aabb, Vector};
 
-use super::ToShape;
+use super::Shape;
 
-impl ToShape for fj::Sweep {
+impl Shape for fj::Sweep {
     fn to_shape(
         &self,
         config: &ValidationConfig,

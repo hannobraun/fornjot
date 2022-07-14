@@ -7,7 +7,7 @@ use fj_kernel::{
 };
 use fj_math::Scalar;
 
-use crate::ToShape as _;
+use crate::Shape as _;
 
 /// Processes an [`fj::Shape`] into a [`ProcessedShape`]
 pub struct ShapeProcessor {

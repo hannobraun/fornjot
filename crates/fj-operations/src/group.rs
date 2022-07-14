@@ -6,9 +6,9 @@ use fj_kernel::{
 };
 use fj_math::Aabb;
 
-use super::ToShape;
+use super::Shape;
 
-impl ToShape for fj::Group {
+impl Shape for fj::Group {
     fn to_shape(
         &self,
         config: &ValidationConfig,

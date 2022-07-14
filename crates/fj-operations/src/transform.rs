@@ -6,9 +6,9 @@ use fj_kernel::{
 };
 use fj_math::{Aabb, Transform, Vector};
 
-use super::ToShape;
+use super::Shape;
 
-impl ToShape for fj::Transform {
+impl Shape for fj::Transform {
     fn to_shape(
         &self,
         config: &ValidationConfig,

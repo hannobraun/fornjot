@@ -33,7 +33,7 @@ use fj_kernel::{
 use fj_math::Aabb;
 
 /// Implemented for all operations from the [`fj`] crate
-pub trait ToShape {
+pub trait Shape {
     /// Compute the boundary representation of the shape
     fn to_shape(
         &self,
@@ -51,7 +51,7 @@ pub trait ToShape {
 
 macro_rules! dispatch {
     ($($method:ident($($arg_name:ident: $arg_ty:ty,)*) -> $ret:ty;)*) => {
-        impl ToShape for fj::Shape {
+        impl Shape for fj::Shape {
             $(
                 fn $method(&self, $($arg_name: $arg_ty,)*) -> $ret {
                     match self {
@@ -62,7 +62,7 @@ macro_rules! dispatch {
             )*
         }
 
-        impl ToShape for fj::Shape2d {
+        impl Shape for fj::Shape2d {
             $(
                 fn $method(&self, $($arg_name: $arg_ty,)*) -> $ret {
                     match self {
@@ -73,7 +73,7 @@ macro_rules! dispatch {
             )*
         }
 
-        impl ToShape for fj::Shape3d {
+        impl Shape for fj::Shape3d {
             $(
                 fn $method(&self, $($arg_name: $arg_ty,)*) -> $ret {
                     match self {
