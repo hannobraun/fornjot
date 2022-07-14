@@ -6,10 +6,10 @@ use fj_kernel::{
 };
 use fj_math::{Aabb, Point, Scalar};
 
-use super::ToShape;
+use super::Shape;
 
-impl ToShape for fj::Sketch {
-    fn to_shape(
+impl Shape for fj::Sketch {
+    fn compute_brep(
         &self,
         config: &ValidationConfig,
         _: Tolerance,

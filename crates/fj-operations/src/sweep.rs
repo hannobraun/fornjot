@@ -6,16 +6,17 @@ use fj_kernel::{
 };
 use fj_math::{Aabb, Vector};
 
-use super::ToShape;
+use super::Shape;
 
-impl ToShape for fj::Sweep {
-    fn to_shape(
+impl Shape for fj::Sweep {
+    fn compute_brep(
         &self,
         config: &ValidationConfig,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Vec<Face>>, ValidationError> {
-        let sketch = self.shape().to_shape(config, tolerance, debug_info)?;
+        let sketch =
+            self.shape().compute_brep(config, tolerance, debug_info)?;
         let path = Vector::from(self.path());
         let color = self.shape().color();
 
