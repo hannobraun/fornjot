@@ -1,6 +1,9 @@
 use std::collections::BTreeSet;
 
-use crate::objects::Solid;
+use crate::{
+    local::Local,
+    objects::{Edge, GlobalVertex, Solid, Vertex, VerticesOfEdge},
+};
 
 use super::intersection::{
     CurveFaceIntersectionList, SurfaceSurfaceIntersection,
@@ -127,9 +130,26 @@ pub fn union(a: impl Into<Solid>, b: impl Into<Solid>) -> Solid {
                 let _ = face;
             }
 
-            // TASK: Implement.
-            let _ = curve;
-            let _ = intersections;
+            for [start, end] in intersections {
+                let curve = intersection.global_intersection_curve;
+
+                let [start_global, end_global] = [start, end].map(|point| {
+                    let position = curve.point_from_curve_coords(point);
+                    GlobalVertex::from_position(position)
+                });
+
+                let vertices = VerticesOfEdge::from_vertices([
+                    Vertex::new(start, start_global),
+                    Vertex::new(end, end_global),
+                ]);
+
+                let edge_a = Edge::new(Local::new(curve_a, curve), vertices);
+                let edge_b = Edge::new(Local::new(curve_b, curve), vertices);
+
+                // TASK: Implement.
+                let _ = edge_a;
+                let _ = edge_b;
+            }
         }
     }
 
