@@ -5,6 +5,7 @@ use std::fmt::{Display, Formatter};
 use std::path::PathBuf;
 use std::process::Command;
 use std::str::FromStr;
+use std::time::{Duration, Instant};
 
 pub struct Registry {
     token: SecUtf8,
@@ -193,6 +194,31 @@ impl Crate {
                     bail!("`cargo publish` was terminated by signal")
                 }
             }
+        }
+
+        let ours = self.get_local_version()?;
+        let delay = Duration::from_secs(10);
+        let start_time = Instant::now();
+        let timeout = Duration::from_secs(600);
+
+        log::info!(
+            "{self} should appear as {ours} on the registry, waiting... [{delay:?}|{timeout:?}]"
+        );
+
+        loop {
+            if Instant::now() - start_time > timeout {
+                return Err(anyhow!("{self} did not appear as {ours} on the registry within {timeout:?}"));
+            }
+
+            let theirs = self.get_upstream_version()?;
+
+            if theirs == ours {
+                log::info!("{self} appeared as {ours} on the registry");
+                break;
+            }
+
+            log::info!("{self} waiting for {ours}...");
+            std::thread::sleep(delay);
         }
 
         Ok(())
