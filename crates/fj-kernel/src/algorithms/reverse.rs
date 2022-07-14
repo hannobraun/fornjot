@@ -51,7 +51,7 @@ fn reverse_local_coordinates_in_cycle(
 
                     Local::new(local, edge.curve.global())
                 };
-                let vertices = edge.vertices.clone();
+                let vertices = edge.vertices;
 
                 Edge { curve, vertices }
             })

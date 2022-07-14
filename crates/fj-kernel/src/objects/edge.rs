@@ -104,7 +104,7 @@ impl fmt::Display for Edge {
 }
 
 /// The vertices that bound an edge
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct VerticesOfEdge(Option<[Vertex; 2]>);
 
 impl VerticesOfEdge {
