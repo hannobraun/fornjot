@@ -157,17 +157,17 @@ impl Crate {
 
         let ours = self.get_local_version()?;
 
-        if ours == theirs {
-            log::info!("{self} has already been published as {ours}");
-            return Ok(CrateState::Published);
+        match theirs.cmp(&ours) {
+            std::cmp::Ordering::Less => Ok(CrateState::Ahead),
+            std::cmp::Ordering::Equal => {
+                log::info!("{self} has already been published as {ours}");
+                Ok(CrateState::Published)
+            }
+            std::cmp::Ordering::Greater => {
+                log::warn!("{self} has already been published as {ours}, which is a newer version");
+                Ok(CrateState::Behind)
+            }
         }
-
-        if ours < theirs {
-            log::warn!("{self} has already been published as {ours}, which is a newer version");
-            return Ok(CrateState::Behind);
-        }
-
-        Ok(CrateState::Ahead)
     }
 
     fn submit(&self, token: &SecUtf8, dry_run: bool) -> anyhow::Result<()> {
