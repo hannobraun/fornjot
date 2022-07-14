@@ -503,101 +503,101 @@ mod tests {
 
     #[test]
     fn curve() {
-        let curve = Curve::x_axis();
+        let object = Curve::x_axis();
 
-        assert_eq!(1, curve.curve_iter().count());
-        assert_eq!(0, curve.cycle_iter().count());
-        assert_eq!(0, curve.edge_iter().count());
-        assert_eq!(0, curve.face_iter().count());
-        assert_eq!(0, curve.global_vertex_iter().count());
-        assert_eq!(0, curve.surface_iter().count());
-        assert_eq!(0, curve.vertex_iter().count());
+        assert_eq!(1, object.curve_iter().count());
+        assert_eq!(0, object.cycle_iter().count());
+        assert_eq!(0, object.edge_iter().count());
+        assert_eq!(0, object.face_iter().count());
+        assert_eq!(0, object.global_vertex_iter().count());
+        assert_eq!(0, object.surface_iter().count());
+        assert_eq!(0, object.vertex_iter().count());
     }
 
     #[test]
     fn cycle() {
-        let cycle = Cycle::polygon_from_points(
+        let object = Cycle::polygon_from_points(
             &Surface::xy_plane(),
             [[0., 0.], [1., 0.], [0., 1.]],
         );
 
-        assert_eq!(3, cycle.curve_iter().count());
-        assert_eq!(1, cycle.cycle_iter().count());
-        assert_eq!(3, cycle.edge_iter().count());
-        assert_eq!(0, cycle.face_iter().count());
-        assert_eq!(3, cycle.global_vertex_iter().count());
-        assert_eq!(0, cycle.surface_iter().count());
-        assert_eq!(6, cycle.vertex_iter().count());
+        assert_eq!(3, object.curve_iter().count());
+        assert_eq!(1, object.cycle_iter().count());
+        assert_eq!(3, object.edge_iter().count());
+        assert_eq!(0, object.face_iter().count());
+        assert_eq!(3, object.global_vertex_iter().count());
+        assert_eq!(0, object.surface_iter().count());
+        assert_eq!(6, object.vertex_iter().count());
     }
 
     #[test]
     fn edge() {
-        let edge = Edge::line_segment_from_points(
+        let object = Edge::line_segment_from_points(
             &Surface::xy_plane(),
             [[0., 0.], [1., 0.]],
         );
 
-        assert_eq!(1, edge.curve_iter().count());
-        assert_eq!(0, edge.cycle_iter().count());
-        assert_eq!(1, edge.edge_iter().count());
-        assert_eq!(0, edge.face_iter().count());
-        assert_eq!(2, edge.global_vertex_iter().count());
-        assert_eq!(0, edge.surface_iter().count());
-        assert_eq!(2, edge.vertex_iter().count());
+        assert_eq!(1, object.curve_iter().count());
+        assert_eq!(0, object.cycle_iter().count());
+        assert_eq!(1, object.edge_iter().count());
+        assert_eq!(0, object.face_iter().count());
+        assert_eq!(2, object.global_vertex_iter().count());
+        assert_eq!(0, object.surface_iter().count());
+        assert_eq!(2, object.vertex_iter().count());
     }
 
     #[test]
     fn face() {
-        let face = Face::builder(Surface::xy_plane())
+        let object = Face::builder(Surface::xy_plane())
             .with_exterior_polygon([[0., 0.], [1., 0.], [0., 1.]])
             .build();
 
-        assert_eq!(3, face.curve_iter().count());
-        assert_eq!(1, face.cycle_iter().count());
-        assert_eq!(3, face.edge_iter().count());
-        assert_eq!(1, face.face_iter().count());
-        assert_eq!(3, face.global_vertex_iter().count());
-        assert_eq!(1, face.surface_iter().count());
-        assert_eq!(6, face.vertex_iter().count());
+        assert_eq!(3, object.curve_iter().count());
+        assert_eq!(1, object.cycle_iter().count());
+        assert_eq!(3, object.edge_iter().count());
+        assert_eq!(1, object.face_iter().count());
+        assert_eq!(3, object.global_vertex_iter().count());
+        assert_eq!(1, object.surface_iter().count());
+        assert_eq!(6, object.vertex_iter().count());
     }
 
     #[test]
     fn global_vertex() {
-        let global_vertex = GlobalVertex::from_position([0., 0., 0.]);
+        let object = GlobalVertex::from_position([0., 0., 0.]);
 
-        assert_eq!(0, global_vertex.curve_iter().count());
-        assert_eq!(0, global_vertex.cycle_iter().count());
-        assert_eq!(0, global_vertex.edge_iter().count());
-        assert_eq!(0, global_vertex.face_iter().count());
-        assert_eq!(1, global_vertex.global_vertex_iter().count());
-        assert_eq!(0, global_vertex.surface_iter().count());
-        assert_eq!(0, global_vertex.vertex_iter().count());
+        assert_eq!(0, object.curve_iter().count());
+        assert_eq!(0, object.cycle_iter().count());
+        assert_eq!(0, object.edge_iter().count());
+        assert_eq!(0, object.face_iter().count());
+        assert_eq!(1, object.global_vertex_iter().count());
+        assert_eq!(0, object.surface_iter().count());
+        assert_eq!(0, object.vertex_iter().count());
     }
 
     #[test]
     fn surface() {
-        let surface = Surface::xy_plane();
+        let object = Surface::xy_plane();
 
-        assert_eq!(0, surface.curve_iter().count());
-        assert_eq!(0, surface.cycle_iter().count());
-        assert_eq!(0, surface.edge_iter().count());
-        assert_eq!(0, surface.face_iter().count());
-        assert_eq!(0, surface.global_vertex_iter().count());
-        assert_eq!(1, surface.surface_iter().count());
-        assert_eq!(0, surface.vertex_iter().count());
+        assert_eq!(0, object.curve_iter().count());
+        assert_eq!(0, object.cycle_iter().count());
+        assert_eq!(0, object.edge_iter().count());
+        assert_eq!(0, object.face_iter().count());
+        assert_eq!(0, object.global_vertex_iter().count());
+        assert_eq!(1, object.surface_iter().count());
+        assert_eq!(0, object.vertex_iter().count());
     }
 
     #[test]
     fn vertex() {
         let global_vertex = GlobalVertex::from_position([0., 0., 0.]);
-        let vertex = Vertex::new([0.], global_vertex);
+        let object = Vertex::new([0.], global_vertex);
 
-        assert_eq!(0, vertex.curve_iter().count());
-        assert_eq!(0, vertex.cycle_iter().count());
-        assert_eq!(0, vertex.edge_iter().count());
-        assert_eq!(0, vertex.face_iter().count());
-        assert_eq!(1, vertex.global_vertex_iter().count());
-        assert_eq!(0, vertex.surface_iter().count());
-        assert_eq!(1, vertex.vertex_iter().count());
+        assert_eq!(0, object.curve_iter().count());
+        assert_eq!(0, object.cycle_iter().count());
+        assert_eq!(0, object.edge_iter().count());
+        assert_eq!(0, object.face_iter().count());
+        assert_eq!(1, object.global_vertex_iter().count());
+        assert_eq!(0, object.surface_iter().count());
+        assert_eq!(1, object.vertex_iter().count());
     }
 }
