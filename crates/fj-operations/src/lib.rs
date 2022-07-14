@@ -52,55 +52,87 @@ pub trait Shape {
     fn bounding_volume(&self) -> Aabb<3>;
 }
 
-macro_rules! dispatch {
-    ($($method:ident($($arg_name:ident: $arg_ty:ty,)*) -> $ret:ty;)*) => {
-        impl Shape for fj::Shape {
-            type Brep = Vec<Face>;
+impl Shape for fj::Shape {
+    type Brep = Vec<Face>;
 
-            $(
-                fn $method(&self, $($arg_name: $arg_ty,)*) -> $ret {
-                    match self {
-                        Self::Shape2d(shape) => shape.$method($($arg_name,)*),
-                        Self::Shape3d(shape) => shape.$method($($arg_name,)*),
-                    }
-                }
-            )*
-        }
-
-        impl Shape for fj::Shape2d {
-            type Brep = Vec<Face>;
-
-            $(
-                fn $method(&self, $($arg_name: $arg_ty,)*) -> $ret {
-                    match self {
-                        Self::Difference(shape) => shape.$method($($arg_name,)*),
-                        Self::Sketch(shape) => shape.$method($($arg_name,)*),
-                    }
-                }
-            )*
-        }
-
-        impl Shape for fj::Shape3d {
-            type Brep = Vec<Face>;
-
-            $(
-                fn $method(&self, $($arg_name: $arg_ty,)*) -> $ret {
-                    match self {
-                        Self::Group(shape) => shape.$method($($arg_name,)*),
-                        Self::Sweep(shape) => shape.$method($($arg_name,)*),
-                        Self::Transform(shape) => shape.$method($($arg_name,)*),
-                    }
-                }
-            )*
-        }
-    };
-}
-
-dispatch! {
-    compute_brep(
+    fn compute_brep(
+        &self,
         config: &ValidationConfig,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
-    ) -> Result<Validated<Self::Brep>, ValidationError>;
-    bounding_volume() -> Aabb<3>;
+    ) -> Result<Validated<Self::Brep>, ValidationError> {
+        match self {
+            Self::Shape2d(shape) => {
+                shape.compute_brep(config, tolerance, debug_info)
+            }
+            Self::Shape3d(shape) => {
+                shape.compute_brep(config, tolerance, debug_info)
+            }
+        }
+    }
+
+    fn bounding_volume(&self) -> Aabb<3> {
+        match self {
+            Self::Shape2d(shape) => shape.bounding_volume(),
+            Self::Shape3d(shape) => shape.bounding_volume(),
+        }
+    }
+}
+
+impl Shape for fj::Shape2d {
+    type Brep = Vec<Face>;
+
+    fn compute_brep(
+        &self,
+        config: &ValidationConfig,
+        tolerance: Tolerance,
+        debug_info: &mut DebugInfo,
+    ) -> Result<Validated<Self::Brep>, ValidationError> {
+        match self {
+            Self::Difference(shape) => {
+                shape.compute_brep(config, tolerance, debug_info)
+            }
+            Self::Sketch(shape) => {
+                shape.compute_brep(config, tolerance, debug_info)
+            }
+        }
+    }
+
+    fn bounding_volume(&self) -> Aabb<3> {
+        match self {
+            Self::Difference(shape) => shape.bounding_volume(),
+            Self::Sketch(shape) => shape.bounding_volume(),
+        }
+    }
+}
+
+impl Shape for fj::Shape3d {
+    type Brep = Vec<Face>;
+
+    fn compute_brep(
+        &self,
+        config: &ValidationConfig,
+        tolerance: Tolerance,
+        debug_info: &mut DebugInfo,
+    ) -> Result<Validated<Self::Brep>, ValidationError> {
+        match self {
+            Self::Group(shape) => {
+                shape.compute_brep(config, tolerance, debug_info)
+            }
+            Self::Sweep(shape) => {
+                shape.compute_brep(config, tolerance, debug_info)
+            }
+            Self::Transform(shape) => {
+                shape.compute_brep(config, tolerance, debug_info)
+            }
+        }
+    }
+
+    fn bounding_volume(&self) -> Aabb<3> {
+        match self {
+            Self::Group(shape) => shape.bounding_volume(),
+            Self::Sweep(shape) => shape.bounding_volume(),
+            Self::Transform(shape) => shape.bounding_volume(),
+        }
+    }
 }
