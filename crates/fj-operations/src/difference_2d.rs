@@ -3,7 +3,7 @@ use fj_kernel::{
     algorithms::Tolerance,
     iter::ObjectIters,
     local::Local,
-    objects::{Cycle, Edge, Face},
+    objects::{Cycle, Edge, Face, Sketch},
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
@@ -11,7 +11,7 @@ use fj_math::Aabb;
 use super::Shape;
 
 impl Shape for fj::Difference2d {
-    type Brep = Vec<Face>;
+    type Brep = Sketch;
 
     fn compute_brep(
         &self,
@@ -82,6 +82,7 @@ impl Shape for fj::Difference2d {
             ));
         }
 
+        let difference = Sketch::from_faces(difference);
         validate(difference, config)
     }
 
