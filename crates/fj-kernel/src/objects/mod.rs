@@ -9,6 +9,7 @@ mod cycle;
 mod edge;
 mod face;
 mod global_vertex;
+mod sketch;
 mod surface;
 mod vertex;
 
@@ -18,6 +19,7 @@ pub use self::{
     edge::{Edge, VerticesOfEdge},
     face::{CyclesInFace, Face, FaceBRep},
     global_vertex::GlobalVertex,
+    sketch::Sketch,
     surface::{Surface, SweptCurve},
     vertex::Vertex,
 };
