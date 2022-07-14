@@ -19,7 +19,7 @@ impl Shape for fj::Sketch {
     ) -> Result<Validated<Self::Brep>, ValidationError> {
         let surface = Surface::xy_plane();
 
-        let sketch = match self.chain() {
+        let face = match self.chain() {
             fj::Chain::Circle(circle) => {
                 // Circles have just a single round edge with no vertices. So
                 // none need to be added here.
@@ -41,7 +41,7 @@ impl Shape for fj::Sketch {
             }
         };
 
-        let sketch = Sketch::from_faces([sketch]);
+        let sketch = Sketch::from_faces([face]);
         validate(sketch, config)
     }
 
