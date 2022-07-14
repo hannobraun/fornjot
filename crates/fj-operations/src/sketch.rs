@@ -9,12 +9,14 @@ use fj_math::{Aabb, Point, Scalar};
 use super::Shape;
 
 impl Shape for fj::Sketch {
+    type Brep = Vec<Face>;
+
     fn compute_brep(
         &self,
         config: &ValidationConfig,
         _: Tolerance,
         _: &mut DebugInfo,
-    ) -> Result<Validated<Vec<Face>>, ValidationError> {
+    ) -> Result<Validated<Self::Brep>, ValidationError> {
         let surface = Surface::xy_plane();
 
         let sketch = match self.chain() {

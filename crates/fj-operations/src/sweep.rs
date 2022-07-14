@@ -9,12 +9,14 @@ use fj_math::{Aabb, Vector};
 use super::Shape;
 
 impl Shape for fj::Sweep {
+    type Brep = Vec<Face>;
+
     fn compute_brep(
         &self,
         config: &ValidationConfig,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
-    ) -> Result<Validated<Vec<Face>>, ValidationError> {
+    ) -> Result<Validated<Self::Brep>, ValidationError> {
         let sketch =
             self.shape().compute_brep(config, tolerance, debug_info)?;
         let path = Vector::from(self.path());

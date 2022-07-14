@@ -9,12 +9,14 @@ use fj_math::{Aabb, Transform, Vector};
 use super::Shape;
 
 impl Shape for fj::Transform {
+    type Brep = Vec<Face>;
+
     fn compute_brep(
         &self,
         config: &ValidationConfig,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
-    ) -> Result<Validated<Vec<Face>>, ValidationError> {
+    ) -> Result<Validated<Self::Brep>, ValidationError> {
         let mut shape = self
             .shape
             .compute_brep(config, tolerance, debug_info)?

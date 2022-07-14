@@ -9,12 +9,14 @@ use fj_math::Aabb;
 use super::Shape;
 
 impl Shape for fj::Group {
+    type Brep = Vec<Face>;
+
     fn compute_brep(
         &self,
         config: &ValidationConfig,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
-    ) -> Result<Validated<Vec<Face>>, ValidationError> {
+    ) -> Result<Validated<Self::Brep>, ValidationError> {
         let mut shape = Vec::new();
 
         let a = self.a.compute_brep(config, tolerance, debug_info)?;

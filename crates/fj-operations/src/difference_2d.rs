@@ -11,12 +11,14 @@ use fj_math::Aabb;
 use super::Shape;
 
 impl Shape for fj::Difference2d {
+    type Brep = Vec<Face>;
+
     fn compute_brep(
         &self,
         config: &ValidationConfig,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
-    ) -> Result<Validated<Vec<Face>>, ValidationError> {
+    ) -> Result<Validated<Self::Brep>, ValidationError> {
         // This method assumes that `b` is fully contained within `a`:
         // https://github.com/hannobraun/Fornjot/issues/92
 
