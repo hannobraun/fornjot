@@ -293,10 +293,10 @@ mod tests {
     ) -> anyhow::Result<()> {
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
 
-        let sketch = Face::builder(Surface::xy_plane())
+        let face = Face::builder(Surface::xy_plane())
             .with_exterior_polygon([[0., 0.], [1., 0.], [0., 1.]])
             .build();
-        let sketch = Sketch::from_faces([sketch]);
+        let sketch = Sketch::from_faces([face]);
 
         let solid =
             super::sweep(sketch, direction, tolerance, [255, 0, 0, 255]);
