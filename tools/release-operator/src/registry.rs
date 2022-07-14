@@ -212,9 +212,15 @@ impl Crate {
 
             let theirs = self.get_upstream_version()?;
 
-            if theirs == ours {
-                log::info!("{self} appeared as {ours} on the registry");
-                break;
+            match theirs.cmp(&ours) {
+                std::cmp::Ordering::Less => (),
+                std::cmp::Ordering::Equal => {
+                    log::info!("{self} appeared as {ours} on the registry");
+                    break;
+                }
+                std::cmp::Ordering::Greater => {
+                    return Err(anyhow!("{self} appeared as {theirs} on the registry which is newer than the current release ({ours})"))
+                },
             }
 
             log::info!("{self} waiting for {ours}...");
