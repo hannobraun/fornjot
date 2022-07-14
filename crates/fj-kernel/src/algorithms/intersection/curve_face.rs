@@ -1,3 +1,5 @@
+use std::vec;
+
 use fj_math::{Scalar, Segment};
 use parry2d_f64::query::{Ray, RayCast};
 
@@ -163,6 +165,15 @@ impl CurveFaceIntersectionList {
     /// Indicate whether the intersection list is empty
     pub fn is_empty(&self) -> bool {
         self.intervals.is_empty()
+    }
+}
+
+impl IntoIterator for CurveFaceIntersectionList {
+    type Item = CurveFaceIntersection;
+    type IntoIter = vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.intervals.into_iter()
     }
 }
 
