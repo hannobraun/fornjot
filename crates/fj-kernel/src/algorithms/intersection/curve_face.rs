@@ -5,11 +5,11 @@ use crate::objects::{Curve, Face};
 
 /// The intersections between a [`Curve`] and a [`Face`], in curve coordinates
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct CurveFaceIntersections {
+pub struct CurveFaceIntersectionList {
     intervals: Vec<[Scalar; 2]>,
 }
 
-impl CurveFaceIntersections {
+impl CurveFaceIntersectionList {
     /// Create a new instance from the intersection intervals
     ///
     /// This method is useful for test code.
@@ -105,7 +105,7 @@ impl CurveFaceIntersections {
             })
             .collect();
 
-        CurveFaceIntersections { intervals }
+        CurveFaceIntersectionList { intervals }
     }
 
     /// Merge this intersection list with another
@@ -167,7 +167,7 @@ mod tests {
 
     use crate::objects::{Curve, Face, Surface};
 
-    use super::CurveFaceIntersections;
+    use super::CurveFaceIntersectionList;
 
     #[test]
     fn compute() {
@@ -197,13 +197,13 @@ mod tests {
             .build();
 
         let expected =
-            CurveFaceIntersections::from_intervals([[1., 2.], [4., 5.]]);
-        assert_eq!(CurveFaceIntersections::compute(&curve, &face), expected);
+            CurveFaceIntersectionList::from_intervals([[1., 2.], [4., 5.]]);
+        assert_eq!(CurveFaceIntersectionList::compute(&curve, &face), expected);
     }
 
     #[test]
     fn merge() {
-        let a = CurveFaceIntersections::from_intervals([
+        let a = CurveFaceIntersectionList::from_intervals([
             [0., 1.],   // 1: `a` and `b` are equal
             [2., 5.],   // 2: `a` contains `b`
             [7., 8.],   // 3: `b` contains `a`
@@ -223,7 +223,7 @@ mod tests {
             [62., 63.], // 13
             [65., 66.], // 14: one of `a` with no overlap in `b`
         ]);
-        let b = CurveFaceIntersections::from_intervals([
+        let b = CurveFaceIntersectionList::from_intervals([
             [0., 1.],   // 1
             [3., 4.],   // 2
             [6., 9.],   // 3
@@ -245,7 +245,7 @@ mod tests {
 
         let merged = a.merge(&b);
 
-        let expected = CurveFaceIntersections::from_intervals([
+        let expected = CurveFaceIntersectionList::from_intervals([
             [0., 1.],   // 1
             [3., 4.],   // 2
             [7., 8.],   // 3
