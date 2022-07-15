@@ -8,7 +8,7 @@ use crate::{
     },
 };
 
-/// Extension trait that provides transformation methods for objects
+/// Transform an object
 ///
 /// # Implementation Note
 ///
