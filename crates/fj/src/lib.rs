@@ -21,11 +21,14 @@
 pub mod syntax;
 
 mod angle;
+mod group;
 mod shape_2d;
 mod shape_3d;
 mod transform;
 
-pub use self::{angle::*, shape_2d::*, shape_3d::*, transform::Transform};
+pub use self::{
+    angle::*, group::Group, shape_2d::*, shape_3d::*, transform::Transform,
+};
 pub use fj_proc::*;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
