@@ -3,7 +3,8 @@ use fj_math::{Transform, Vector};
 use crate::{
     local::Local,
     objects::{
-        Curve, Cycle, CyclesInFace, Edge, Face, FaceBRep, GlobalVertex, Vertex,
+        Curve, Cycle, CyclesInFace, Edge, Face, FaceBRep, GlobalVertex, Sketch,
+        Vertex,
     },
 };
 
@@ -106,6 +107,14 @@ impl TransformExt for GlobalVertex {
     fn transform(self, transform: &Transform) -> Self {
         let position = transform.transform_point(&self.position());
         Self::from_position(position)
+    }
+}
+
+impl TransformExt for Sketch {
+    fn transform(self, transform: &Transform) -> Self {
+        let mut faces = self.into_faces();
+        transform_shape(&mut faces, transform);
+        Self::from_faces(faces)
     }
 }
 
