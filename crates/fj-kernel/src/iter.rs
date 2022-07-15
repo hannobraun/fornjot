@@ -492,6 +492,92 @@ impl ObjectIters for Sketch {
     }
 }
 
+impl ObjectIters for Solid {
+    fn curve_iter(&self) -> Iter<Curve<3>> {
+        let mut iter = Iter::empty();
+
+        for edge in self.faces() {
+            iter = iter.with(edge.curve_iter());
+        }
+
+        iter
+    }
+
+    fn cycle_iter(&self) -> Iter<Cycle> {
+        let mut iter = Iter::empty();
+
+        for edge in self.faces() {
+            iter = iter.with(edge.cycle_iter());
+        }
+
+        iter
+    }
+
+    fn edge_iter(&self) -> Iter<Edge> {
+        let mut iter = Iter::empty();
+
+        for edge in self.faces() {
+            iter = iter.with(edge.edge_iter());
+        }
+
+        iter
+    }
+
+    fn face_iter(&self) -> Iter<Face> {
+        let mut iter = Iter::empty();
+
+        for edge in self.faces() {
+            iter = iter.with(edge.face_iter());
+        }
+
+        iter
+    }
+
+    fn global_vertex_iter(&self) -> Iter<GlobalVertex> {
+        let mut iter = Iter::empty();
+
+        for edge in self.faces() {
+            iter = iter.with(edge.global_vertex_iter());
+        }
+
+        iter
+    }
+
+    fn sketch_iter(&self) -> Iter<Sketch> {
+        let mut iter = Iter::empty();
+
+        for edge in self.faces() {
+            iter = iter.with(edge.sketch_iter());
+        }
+
+        iter
+    }
+
+    fn solid_iter(&self) -> Iter<Solid> {
+        Iter::from_object(self.clone())
+    }
+
+    fn surface_iter(&self) -> Iter<Surface> {
+        let mut iter = Iter::empty();
+
+        for edge in self.faces() {
+            iter = iter.with(edge.surface_iter());
+        }
+
+        iter
+    }
+
+    fn vertex_iter(&self) -> Iter<Vertex> {
+        let mut iter = Iter::empty();
+
+        for edge in self.faces() {
+            iter = iter.with(edge.vertex_iter());
+        }
+
+        iter
+    }
+}
+
 impl ObjectIters for Surface {
     fn curve_iter(&self) -> Iter<Curve<3>> {
         Iter::empty()
@@ -710,7 +796,7 @@ impl<T> Iterator for Iter<T> {
 #[cfg(test)]
 mod tests {
     use crate::objects::{
-        Curve, Cycle, Edge, Face, GlobalVertex, Sketch, Surface, Vertex,
+        Curve, Cycle, Edge, Face, GlobalVertex, Sketch, Solid, Surface, Vertex,
     };
 
     use super::ObjectIters as _;
@@ -814,6 +900,21 @@ mod tests {
         assert_eq!(0, object.solid_iter().count());
         assert_eq!(1, object.surface_iter().count());
         assert_eq!(6, object.vertex_iter().count());
+    }
+
+    #[test]
+    fn solid() {
+        let object = Solid::cube_from_edge_length(1.);
+
+        assert_eq!(18, object.curve_iter().count());
+        assert_eq!(6, object.cycle_iter().count());
+        assert_eq!(20, object.edge_iter().count());
+        assert_eq!(6, object.face_iter().count());
+        assert_eq!(8, object.global_vertex_iter().count());
+        assert_eq!(0, object.sketch_iter().count());
+        assert_eq!(1, object.solid_iter().count());
+        assert_eq!(6, object.surface_iter().count());
+        assert_eq!(16, object.vertex_iter().count());
     }
 
     #[test]
