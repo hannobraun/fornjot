@@ -17,15 +17,15 @@ impl Shape for fj::Group {
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
-        let mut shape = Vec::new();
+        let mut faces = Vec::new();
 
         let a = self.a.compute_brep(config, tolerance, debug_info)?;
         let b = self.b.compute_brep(config, tolerance, debug_info)?;
 
-        shape.extend(a.into_inner().into_faces());
-        shape.extend(b.into_inner().into_faces());
+        faces.extend(a.into_inner().into_faces());
+        faces.extend(b.into_inner().into_faces());
 
-        let group = Solid::from_faces(shape);
+        let group = Solid::from_faces(faces);
         validate(group, config)
     }
 
