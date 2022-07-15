@@ -32,7 +32,7 @@ pub fn sweep(
             &mut target,
         );
         create_top_face(
-            &face,
+            face.clone(),
             path,
             is_sweep_along_negative_direction,
             &mut target,
@@ -80,12 +80,12 @@ fn create_bottom_faces(
 }
 
 fn create_top_face(
-    face: &Face,
+    face: Face,
     path: Vector<3>,
     is_sweep_along_negative_direction: bool,
     target: &mut Vec<Face>,
 ) {
-    let mut face = face.clone().translate(path);
+    let mut face = face.translate(path);
 
     if is_sweep_along_negative_direction {
         face = reverse_face(&face);
