@@ -9,7 +9,7 @@ use crate::{
     },
 };
 
-use super::{reverse_face, transform::transform_face, CycleApprox, Tolerance};
+use super::{reverse_face, CycleApprox, Tolerance, TransformObject};
 
 /// Create a solid by sweeping a sketch
 pub fn sweep(
@@ -32,7 +32,7 @@ pub fn sweep(
             &mut target,
         );
         create_top_face(
-            &face,
+            face.clone(),
             path,
             is_sweep_along_negative_direction,
             &mut target,
@@ -52,7 +52,7 @@ pub fn sweep(
                 }
 
                 create_continuous_side_face(
-                    edge.clone(),
+                    edge,
                     path,
                     tolerance,
                     color,
@@ -80,13 +80,12 @@ fn create_bottom_faces(
 }
 
 fn create_top_face(
-    face: &Face,
+    face: Face,
     path: Vector<3>,
     is_sweep_along_negative_direction: bool,
     target: &mut Vec<Face>,
 ) {
-    let translation = Transform::translation(path);
-    let mut face = transform_face(face, &translation);
+    let mut face = face.translate(path);
 
     if is_sweep_along_negative_direction {
         face = reverse_face(&face);

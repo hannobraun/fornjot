@@ -168,7 +168,7 @@ impl ObjectIters for Edge {
     }
 
     fn edge_iter(&self) -> Iter<Edge> {
-        Iter::from_object(self.clone())
+        Iter::from_object(*self)
     }
 
     fn face_iter(&self) -> Iter<Face> {

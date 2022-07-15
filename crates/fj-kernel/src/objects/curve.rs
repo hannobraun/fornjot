@@ -1,6 +1,6 @@
 use std::fmt;
 
-use fj_math::{Circle, Line, Point, Transform, Vector};
+use fj_math::{Circle, Line, Point, Vector};
 
 /// A one-dimensional shape
 ///
@@ -111,17 +111,6 @@ impl Curve<3> {
             origin: Point::origin(),
             direction: Vector::unit_z(),
         })
-    }
-
-    /// Create a new instance that is transformed by `transform`
-    #[must_use]
-    pub fn transform(self, transform: &Transform) -> Self {
-        match self {
-            Self::Circle(curve) => {
-                Self::Circle(transform.transform_circle(&curve))
-            }
-            Self::Line(curve) => Self::Line(transform.transform_line(&curve)),
-        }
     }
 }
 

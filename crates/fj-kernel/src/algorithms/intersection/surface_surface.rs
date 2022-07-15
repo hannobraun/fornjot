@@ -130,7 +130,10 @@ fn project_line_into_plane(
 mod tests {
     use fj_math::Transform;
 
-    use crate::objects::{Curve, Surface};
+    use crate::{
+        algorithms::TransformObject,
+        objects::{Curve, Surface},
+    };
 
     use super::surface_surface;
 

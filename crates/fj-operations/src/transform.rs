@@ -1,6 +1,6 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
-    algorithms::{transform_shape, Tolerance},
+    algorithms::{transform_faces, Tolerance},
     objects::Face,
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
@@ -20,7 +20,7 @@ impl Shape for fj::Transform {
             .compute_brep(config, tolerance, debug_info)?
             .into_inner();
 
-        transform_shape(&mut shape, &make_transform(self));
+        transform_faces(&mut shape, &make_transform(self));
 
         validate(shape, config)
     }

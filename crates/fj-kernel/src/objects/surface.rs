@@ -1,5 +1,7 @@
 use fj_math::{Line, Point, Transform, Vector};
 
+use crate::algorithms::TransformObject;
+
 use super::Curve;
 
 /// A two-dimensional shape
@@ -49,16 +51,6 @@ impl Surface {
     pub fn reverse(self) -> Self {
         match self {
             Self::SweptCurve(surface) => Self::SweptCurve(surface.reverse()),
-        }
-    }
-
-    /// Transform the surface
-    #[must_use]
-    pub fn transform(self, transform: &Transform) -> Self {
-        match self {
-            Self::SweptCurve(surface) => {
-                Self::SweptCurve(surface.transform(transform))
-            }
         }
     }
 
