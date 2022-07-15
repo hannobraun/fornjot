@@ -7,6 +7,12 @@ use std::process::Command;
 use std::str::FromStr;
 use std::time::{Duration, Instant};
 
+#[derive(thiserror::Error, Debug)]
+enum Error {
+    #[error("crate was not found on crates.io")]
+    CrateNotFound,
+}
+
 pub struct Registry {
     token: SecUtf8,
     crates: Vec<Crate>,
@@ -53,17 +59,6 @@ impl Registry {
         Ok(())
     }
 }
-
-#[derive(Debug)]
-struct CrateNotFoundError;
-
-impl std::fmt::Display for CrateNotFoundError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "crate was not found on crates.io")
-    }
-}
-
-impl std::error::Error for CrateNotFoundError {}
 
 impl Crate {
     fn validate(&self) -> anyhow::Result<()> {
@@ -126,7 +121,7 @@ impl Crate {
             .context("fetching crate versions from the registry")?;
 
         if resp.status() == reqwest::StatusCode::NOT_FOUND {
-            return Err(anyhow::Error::new(CrateNotFoundError));
+            return Err(anyhow::Error::new(Error::CrateNotFound));
         }
 
         if resp.status() != reqwest::StatusCode::OK {
@@ -149,8 +144,8 @@ impl Crate {
     fn determine_state(&self) -> anyhow::Result<CrateState> {
         let theirs = match self.get_upstream_version() {
             Ok(version) => version,
-            Err(error) => match error.downcast_ref::<CrateNotFoundError>() {
-                Some(_) => return Ok(CrateState::Unknown),
+            Err(error) => match error.downcast_ref::<Error>() {
+                Some(Error::CrateNotFound) => return Ok(CrateState::Unknown),
                 None => return Err(error),
             },
         };
