@@ -70,40 +70,42 @@ impl TransformExt for Edge {
     }
 }
 
-/// Transform a shape
-pub fn transform_shape(faces: &mut Vec<Face>, transform: &Transform) {
-    for face in faces {
-        *face = transform_face(face, transform);
+impl TransformExt for Face {
+    fn transform(self, transform: &Transform) -> Self {
+        match self {
+            Self::Face(face) => {
+                let surface = face.surface.transform(transform);
+
+                let exteriors = transform_cycles(&face.exteriors, transform);
+                let interiors = transform_cycles(&face.interiors, transform);
+
+                let color = face.color;
+
+                Self::Face(FaceBRep {
+                    surface,
+                    exteriors,
+                    interiors,
+                    color,
+                })
+            }
+            Self::Triangles(triangles) => {
+                let mut target = Vec::new();
+
+                for (triangle, color) in triangles {
+                    let triangle = transform.transform_triangle(&triangle);
+                    target.push((triangle, color));
+                }
+
+                Self::Triangles(target)
+            }
+        }
     }
 }
 
-pub fn transform_face(face: &Face, transform: &Transform) -> Face {
-    match face {
-        Face::Face(face) => {
-            let surface = face.surface.transform(transform);
-
-            let exteriors = transform_cycles(&face.exteriors, transform);
-            let interiors = transform_cycles(&face.interiors, transform);
-
-            let color = face.color;
-
-            Face::Face(FaceBRep {
-                surface,
-                exteriors,
-                interiors,
-                color,
-            })
-        }
-        Face::Triangles(triangles) => {
-            let mut target = Vec::new();
-
-            for &(triangle, color) in triangles {
-                let triangle = transform.transform_triangle(&triangle);
-                target.push((triangle, color));
-            }
-
-            Face::Triangles(target)
-        }
+/// Transform a shape
+pub fn transform_shape(faces: &mut Vec<Face>, transform: &Transform) {
+    for face in faces {
+        *face = face.clone().transform(transform);
     }
 }
 
