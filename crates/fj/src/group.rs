@@ -1,7 +1,7 @@
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
-use crate::{Shape, Shape3d};
+use crate::Shape;
 
 /// A group of two 3-dimensional shapes
 ///
@@ -16,19 +16,13 @@ use crate::{Shape, Shape3d};
 #[repr(C)]
 pub struct Group {
     /// The first of the shapes
-    pub a: Shape3d,
+    pub a: Shape,
 
     /// The second of the shapes
-    pub b: Shape3d,
+    pub b: Shape,
 }
 
 impl From<Group> for Shape {
-    fn from(shape: Group) -> Self {
-        Self::Shape3d(Shape3d::Group(Box::new(shape)))
-    }
-}
-
-impl From<Group> for Shape3d {
     fn from(shape: Group) -> Self {
         Self::Group(Box::new(shape))
     }

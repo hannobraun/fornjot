@@ -1,7 +1,7 @@
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
-use crate::{Angle, Shape, Shape3d};
+use crate::{Angle, Shape};
 
 /// A transformed 3-dimensional shape
 ///
@@ -17,7 +17,7 @@ use crate::{Angle, Shape, Shape3d};
 #[repr(C)]
 pub struct Transform {
     /// The shape being transformed
-    pub shape: Shape3d,
+    pub shape: Shape,
 
     /// The axis of the rotation
     pub axis: [f64; 3],
@@ -30,12 +30,6 @@ pub struct Transform {
 }
 
 impl From<Transform> for Shape {
-    fn from(shape: Transform) -> Self {
-        Self::Shape3d(Shape3d::Transform(Box::new(shape)))
-    }
-}
-
-impl From<Transform> for Shape3d {
     fn from(shape: Transform) -> Self {
         Self::Transform(Box::new(shape))
     }

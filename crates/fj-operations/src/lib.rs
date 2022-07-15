@@ -27,7 +27,7 @@ mod transform;
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
-    objects::{Face, Sketch, Solid},
+    objects::{Face, Sketch},
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
@@ -69,7 +69,21 @@ impl Shape for fj::Shape {
                     .into_faces(),
                 config,
             ),
-            Self::Shape3d(shape) => validate(
+            Self::Group(shape) => validate(
+                shape
+                    .compute_brep(config, tolerance, debug_info)?
+                    .into_inner()
+                    .into_faces(),
+                config,
+            ),
+            Self::Sweep(shape) => validate(
+                shape
+                    .compute_brep(config, tolerance, debug_info)?
+                    .into_inner()
+                    .into_faces(),
+                config,
+            ),
+            Self::Transform(shape) => validate(
                 shape
                     .compute_brep(config, tolerance, debug_info)?
                     .into_inner()
@@ -82,7 +96,9 @@ impl Shape for fj::Shape {
     fn bounding_volume(&self) -> Aabb<3> {
         match self {
             Self::Shape2d(shape) => shape.bounding_volume(),
-            Self::Shape3d(shape) => shape.bounding_volume(),
+            Self::Group(shape) => shape.bounding_volume(),
+            Self::Sweep(shape) => shape.bounding_volume(),
+            Self::Transform(shape) => shape.bounding_volume(),
         }
     }
 }
@@ -110,37 +126,6 @@ impl Shape for fj::Shape2d {
         match self {
             Self::Difference(shape) => shape.bounding_volume(),
             Self::Sketch(shape) => shape.bounding_volume(),
-        }
-    }
-}
-
-impl Shape for fj::Shape3d {
-    type Brep = Solid;
-
-    fn compute_brep(
-        &self,
-        config: &ValidationConfig,
-        tolerance: Tolerance,
-        debug_info: &mut DebugInfo,
-    ) -> Result<Validated<Self::Brep>, ValidationError> {
-        match self {
-            Self::Group(shape) => {
-                shape.compute_brep(config, tolerance, debug_info)
-            }
-            Self::Sweep(shape) => {
-                shape.compute_brep(config, tolerance, debug_info)
-            }
-            Self::Transform(shape) => {
-                shape.compute_brep(config, tolerance, debug_info)
-            }
-        }
-    }
-
-    fn bounding_volume(&self) -> Aabb<3> {
-        match self {
-            Self::Group(shape) => shape.bounding_volume(),
-            Self::Sweep(shape) => shape.bounding_volume(),
-            Self::Transform(shape) => shape.bounding_volume(),
         }
     }
 }

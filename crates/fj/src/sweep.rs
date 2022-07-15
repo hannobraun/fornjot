@@ -1,7 +1,7 @@
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
-use crate::{Shape, Shape2d, Shape3d};
+use crate::{Shape, Shape2d};
 
 /// A sweep of a 2-dimensional shape along straight path
 #[derive(Clone, Debug)]
@@ -33,12 +33,6 @@ impl Sweep {
 }
 
 impl From<Sweep> for Shape {
-    fn from(shape: Sweep) -> Self {
-        Self::Shape3d(shape.into())
-    }
-}
-
-impl From<Sweep> for Shape3d {
     fn from(shape: Sweep) -> Self {
         Self::Sweep(shape)
     }

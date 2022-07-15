@@ -35,16 +35,16 @@ pub trait Group {
     /// Create a group with `self` and `other`
     fn group<Other>(&self, other: &Other) -> crate::Group
     where
-        Other: Clone + Into<crate::Shape3d>;
+        Other: Clone + Into<crate::Shape>;
 }
 
 impl<T> Group for T
 where
-    T: Clone + Into<crate::Shape3d>,
+    T: Clone + Into<crate::Shape>,
 {
     fn group<Other>(&self, other: &Other) -> crate::Group
     where
-        Other: Clone + Into<crate::Shape3d>,
+        Other: Clone + Into<crate::Shape>,
     {
         let a = self.clone().into();
         let b = other.clone().into();
@@ -109,7 +109,7 @@ pub trait Transform {
 
 impl<T> Transform for T
 where
-    T: Clone + Into<crate::Shape3d>,
+    T: Clone + Into<crate::Shape>,
 {
     fn rotate(&self, axis: [f64; 3], angle: crate::Angle) -> crate::Transform {
         let shape = self.clone().into();

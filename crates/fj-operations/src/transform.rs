@@ -17,10 +17,11 @@ impl Shape for fj::Transform {
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
-        let original = self
-            .shape
-            .compute_brep(config, tolerance, debug_info)?
-            .into_inner();
+        let original = Solid::from_faces(
+            self.shape
+                .compute_brep(config, tolerance, debug_info)?
+                .into_inner(),
+        );
 
         let transformed = original.transform(&make_transform(self));
         validate(transformed, config)
