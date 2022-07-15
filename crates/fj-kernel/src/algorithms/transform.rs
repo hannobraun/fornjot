@@ -63,9 +63,7 @@ impl TransformExt for Edge {
             self.curve.global().transform(transform),
         );
 
-        let vertices = self
-            .vertices
-            .map(|vertex| transform_vertex(&vertex, transform));
+        let vertices = self.vertices.map(|vertex| vertex.transform(transform));
 
         Self { curve, vertices }
     }
@@ -128,6 +126,12 @@ impl TransformExt for Surface {
     }
 }
 
+impl TransformExt for Vertex {
+    fn transform(self, transform: &Transform) -> Self {
+        Self::new(self.position(), self.global().transform(transform))
+    }
+}
+
 /// Transform a shape
 pub fn transform_shape(faces: &mut Vec<Face>, transform: &Transform) {
     for face in faces {
@@ -142,8 +146,4 @@ pub fn transform_cycles(
     let cycles = cycles.as_local().map(|cycle| cycle.transform(transform));
 
     CyclesInFace::new(cycles)
-}
-
-pub fn transform_vertex(vertex: &Vertex, transform: &Transform) -> Vertex {
-    Vertex::new(vertex.position(), vertex.global().transform(transform))
 }
