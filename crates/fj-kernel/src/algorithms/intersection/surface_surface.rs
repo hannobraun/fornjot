@@ -101,7 +101,6 @@ fn project_line_into_plane(
     plane: &PlaneParametric,
 ) -> Curve<2> {
     let line_origin_relative_to_plane = line.origin - plane.origin;
-    dbg!(&line_origin_relative_to_plane);
     let line_origin_in_plane = Vector::from([
         plane
             .u
