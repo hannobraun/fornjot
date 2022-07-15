@@ -4,7 +4,7 @@ use crate::{
     local::Local,
     objects::{
         Curve, Cycle, CyclesInFace, Edge, Face, FaceBRep, GlobalVertex, Sketch,
-        Surface, Vertex,
+        Solid, Surface, Vertex,
     },
 };
 
@@ -109,6 +109,14 @@ impl TransformObject for GlobalVertex {
 }
 
 impl TransformObject for Sketch {
+    fn transform(self, transform: &Transform) -> Self {
+        let mut faces = self.into_faces();
+        transform_faces(&mut faces, transform);
+        Self::from_faces(faces)
+    }
+}
+
+impl TransformObject for Solid {
     fn transform(self, transform: &Transform) -> Self {
         let mut faces = self.into_faces();
         transform_faces(&mut faces, transform);

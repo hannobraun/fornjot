@@ -27,7 +27,7 @@ impl Shape for fj::Sweep {
             color,
         );
 
-        validate(solid, config)
+        validate(solid.into_faces(), config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

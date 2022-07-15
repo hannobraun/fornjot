@@ -4,7 +4,7 @@ use crate::{
     iter::ObjectIters,
     local::Local,
     objects::{
-        Curve, Cycle, Edge, Face, GlobalVertex, Sketch, Surface, Vertex,
+        Curve, Cycle, Edge, Face, GlobalVertex, Sketch, Solid, Surface, Vertex,
         VerticesOfEdge,
     },
 };
@@ -17,7 +17,7 @@ pub fn sweep(
     path: impl Into<Vector<3>>,
     tolerance: Tolerance,
     color: [u8; 4],
-) -> Vec<Face> {
+) -> Solid {
     let path = path.into();
 
     let is_sweep_along_negative_direction =
@@ -62,7 +62,7 @@ pub fn sweep(
         }
     }
 
-    target
+    Solid::from_faces(target)
 }
 
 fn create_bottom_faces(
