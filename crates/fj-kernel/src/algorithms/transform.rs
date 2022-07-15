@@ -110,16 +110,20 @@ impl TransformObject for GlobalVertex {
 
 impl TransformObject for Sketch {
     fn transform(self, transform: &Transform) -> Self {
-        let mut faces = self.into_faces();
-        transform_faces(&mut faces, transform);
+        let faces = self
+            .into_faces()
+            .into_iter()
+            .map(|face| face.transform(transform));
         Self::from_faces(faces)
     }
 }
 
 impl TransformObject for Solid {
     fn transform(self, transform: &Transform) -> Self {
-        let mut faces = self.into_faces();
-        transform_faces(&mut faces, transform);
+        let faces = self
+            .into_faces()
+            .into_iter()
+            .map(|face| face.transform(transform));
         Self::from_faces(faces)
     }
 }

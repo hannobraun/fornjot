@@ -66,7 +66,9 @@ impl Shape for fj::Shape {
                 shape
                     .compute_brep(config, tolerance, debug_info)?
                     .into_inner()
-                    .into_faces(),
+                    .into_faces()
+                    .into_iter()
+                    .collect(),
                 config,
             ),
             Self::Group(shape) => {
@@ -76,7 +78,9 @@ impl Shape for fj::Shape {
                 shape
                     .compute_brep(config, tolerance, debug_info)?
                     .into_inner()
-                    .into_faces(),
+                    .into_faces()
+                    .into_iter()
+                    .collect(),
                 config,
             ),
             Self::Transform(shape) => {
