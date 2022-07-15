@@ -15,7 +15,7 @@ pub fn model() -> fj::Shape {
     group.into()
 }
 
-fn star(num_points: u64, height: f64, color: [u8; 4]) -> fj::Shape3d {
+fn star(num_points: u64, height: f64, color: [u8; 4]) -> fj::Shape {
     let r1 = 1.;
     let r2 = 2.;
 
@@ -53,7 +53,7 @@ fn star(num_points: u64, height: f64, color: [u8; 4]) -> fj::Shape3d {
     star.into()
 }
 
-fn spacer() -> fj::Shape3d {
+fn spacer() -> fj::Shape {
     let outer = 2.;
     let inner = 1.;
     let height = 2.;

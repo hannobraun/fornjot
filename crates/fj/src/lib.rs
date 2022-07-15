@@ -21,10 +21,14 @@
 pub mod syntax;
 
 mod angle;
+mod group;
 mod shape_2d;
-mod shape_3d;
+mod sweep;
+mod transform;
 
-pub use self::{angle::*, shape_2d::*, shape_3d::*};
+pub use self::{
+    angle::*, group::Group, shape_2d::*, sweep::Sweep, transform::Transform,
+};
 pub use fj_proc::*;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
@@ -34,9 +38,15 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub enum Shape {
+    /// A group of two 3-dimensional shapes
+    Group(Box<Group>),
+
     /// A 2D shape
     Shape2d(Shape2d),
 
-    /// A 3D shape
-    Shape3d(Shape3d),
+    /// A sweep of 2-dimensional shape along the z-axis
+    Sweep(Sweep),
+
+    /// A transformed 3-dimensional shape
+    Transform(Box<Transform>),
 }
