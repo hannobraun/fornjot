@@ -21,12 +21,13 @@ use std::{
     collections::{HashMap, HashSet},
     ffi::OsStr,
     io,
-    path::PathBuf,
+    path::{Path, PathBuf},
     process::Command,
     sync::mpsc,
     thread,
 };
 
+use cargo_metadata::Metadata;
 use notify::Watcher as _;
 use thiserror::Error;
 
@@ -64,7 +65,9 @@ impl Model {
 
         let lib_path = {
             let file = HostPlatform::lib_file_name(&name);
-            let target_dir = target_dir.unwrap_or_else(|| path.join("target"));
+            let target_dir = target_dir
+                .or_else(|| cargo_metadata_target_dir(&path))
+                .unwrap_or_else(|| path.join("target"));
             target_dir.join("debug").join(file)
         };
 
@@ -285,3 +288,14 @@ pub enum Error {
 }
 
 type ModelFn = unsafe extern "C" fn(args: &Parameters) -> fj::Shape;
+
+fn cargo_metadata_target_dir(model: &Path) -> Option<PathBuf> {
+    let Metadata {
+        target_directory, ..
+    } = cargo_metadata::MetadataCommand::new()
+        .current_dir(model)
+        .exec()
+        .ok()?;
+
+    Some(target_directory.into())
+}
