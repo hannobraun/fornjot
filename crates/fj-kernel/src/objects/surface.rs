@@ -54,16 +54,6 @@ impl Surface {
         }
     }
 
-    /// Transform the surface
-    #[must_use]
-    pub fn transform(self, transform: &Transform) -> Self {
-        match self {
-            Self::SweptCurve(surface) => {
-                Self::SweptCurve(surface.transform(transform))
-            }
-        }
-    }
-
     /// Convert a point in surface coordinates to model coordinates
     pub fn point_from_surface_coords(
         &self,

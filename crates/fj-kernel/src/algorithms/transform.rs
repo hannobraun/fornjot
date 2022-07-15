@@ -4,7 +4,7 @@ use crate::{
     local::Local,
     objects::{
         Curve, Cycle, CyclesInFace, Edge, Face, FaceBRep, GlobalVertex, Sketch,
-        Vertex,
+        Surface, Vertex,
     },
 };
 
@@ -115,6 +115,16 @@ impl TransformExt for Sketch {
         let mut faces = self.into_faces();
         transform_shape(&mut faces, transform);
         Self::from_faces(faces)
+    }
+}
+
+impl TransformExt for Surface {
+    fn transform(self, transform: &Transform) -> Self {
+        match self {
+            Self::SweptCurve(surface) => {
+                Self::SweptCurve(surface.transform(transform))
+            }
+        }
     }
 }
 
