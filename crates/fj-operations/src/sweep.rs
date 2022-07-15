@@ -1,7 +1,7 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::{sweep, Tolerance},
-    objects::Face,
+    objects::Solid,
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::{Aabb, Vector};
@@ -9,7 +9,7 @@ use fj_math::{Aabb, Vector};
 use super::Shape;
 
 impl Shape for fj::Sweep {
-    type Brep = Vec<Face>;
+    type Brep = Solid;
 
     fn compute_brep(
         &self,
@@ -23,8 +23,7 @@ impl Shape for fj::Sweep {
         let color = self.shape().color();
 
         let solid = sweep(sketch.into_inner(), path, tolerance, color);
-
-        validate(solid.into_faces(), config)
+        validate(solid, config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

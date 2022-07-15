@@ -27,7 +27,7 @@ mod transform;
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
-    objects::{Face, Sketch},
+    objects::{Face, Sketch, Solid},
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
@@ -69,9 +69,13 @@ impl Shape for fj::Shape {
                     .into_faces(),
                 config,
             ),
-            Self::Shape3d(shape) => {
-                shape.compute_brep(config, tolerance, debug_info)
-            }
+            Self::Shape3d(shape) => validate(
+                shape
+                    .compute_brep(config, tolerance, debug_info)?
+                    .into_inner()
+                    .into_faces(),
+                config,
+            ),
         }
     }
 
@@ -111,7 +115,7 @@ impl Shape for fj::Shape2d {
 }
 
 impl Shape for fj::Shape3d {
-    type Brep = Vec<Face>;
+    type Brep = Solid;
 
     fn compute_brep(
         &self,
