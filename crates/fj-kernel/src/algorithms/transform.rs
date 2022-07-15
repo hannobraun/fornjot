@@ -139,7 +139,7 @@ pub fn transform_shape(faces: &mut Vec<Face>, transform: &Transform) {
     }
 }
 
-pub fn transform_cycles(
+fn transform_cycles(
     cycles: &CyclesInFace,
     transform: &Transform,
 ) -> CyclesInFace {
