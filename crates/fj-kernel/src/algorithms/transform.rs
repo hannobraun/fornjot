@@ -111,7 +111,7 @@ impl TransformExt for GlobalVertex {
 impl TransformExt for Sketch {
     fn transform(self, transform: &Transform) -> Self {
         let mut faces = self.into_faces();
-        transform_shape(&mut faces, transform);
+        transform_faces(&mut faces, transform);
         Self::from_faces(faces)
     }
 }
@@ -133,7 +133,7 @@ impl TransformExt for Vertex {
 }
 
 /// Transform a shape
-pub fn transform_shape(faces: &mut Vec<Face>, transform: &Transform) {
+pub fn transform_faces(faces: &mut Vec<Face>, transform: &Transform) {
     for face in faces {
         *face = face.clone().transform(transform);
     }
