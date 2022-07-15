@@ -22,4 +22,9 @@ impl Sketch {
     pub fn faces(&self) -> impl Iterator<Item = &Face> {
         self.faces.iter()
     }
+
+    /// Convert the sketch into a list of faces
+    pub fn into_faces(self) -> Vec<Face> {
+        self.faces
+    }
 }
