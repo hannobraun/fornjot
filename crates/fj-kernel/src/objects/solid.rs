@@ -1,3 +1,5 @@
+use std::collections::BTreeSet;
+
 use fj_math::Scalar;
 
 use crate::algorithms::TransformObject;
@@ -12,7 +14,7 @@ use super::{Face, Surface};
 /// currently validated.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Solid {
-    faces: Vec<Face>,
+    faces: BTreeSet<Face>,
 }
 
 impl Solid {
@@ -53,7 +55,7 @@ impl Solid {
     }
 
     /// Convert the solid into a list of faces
-    pub fn into_faces(self) -> Vec<Face> {
+    pub fn into_faces(self) -> BTreeSet<Face> {
         self.faces
     }
 }

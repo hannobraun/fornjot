@@ -1,3 +1,5 @@
+use std::collections::BTreeSet;
+
 use super::Face;
 
 /// A 2-dimensional shape
@@ -8,7 +10,7 @@ use super::Face;
 /// currently validated.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Sketch {
-    faces: Vec<Face>,
+    faces: BTreeSet<Face>,
 }
 
 impl Sketch {
@@ -24,7 +26,7 @@ impl Sketch {
     }
 
     /// Convert the sketch into a list of faces
-    pub fn into_faces(self) -> Vec<Face> {
+    pub fn into_faces(self) -> BTreeSet<Face> {
         self.faces
     }
 }
