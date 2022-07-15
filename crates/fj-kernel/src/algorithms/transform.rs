@@ -46,14 +46,12 @@ impl TransformExt for Curve<3> {
 }
 
 impl TransformExt for Cycle {
-    fn transform(self, transform: &Transform) -> Self {
-        let edges = self
-            .edges
-            .into_iter()
-            .map(|edge| edge.transform(transform))
-            .collect();
+    fn transform(mut self, transform: &Transform) -> Self {
+        for edge in &mut self.edges {
+            *edge = edge.transform(transform);
+        }
 
-        Self { edges }
+        self
     }
 }
 
