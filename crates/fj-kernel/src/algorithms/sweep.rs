@@ -52,7 +52,7 @@ pub fn sweep(
                 }
 
                 create_continuous_side_face(
-                    edge.clone(),
+                    edge,
                     path,
                     tolerance,
                     color,

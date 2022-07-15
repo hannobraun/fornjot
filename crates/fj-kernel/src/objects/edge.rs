@@ -7,7 +7,7 @@ use crate::local::Local;
 use super::{Curve, GlobalVertex, Surface, Vertex};
 
 /// An edge of a shape
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edge {
     /// Access the curve that defines the edge's geometry
     ///

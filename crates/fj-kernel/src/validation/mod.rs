@@ -158,7 +158,7 @@ mod tests {
         let edge = Edge { curve, vertices };
 
         let result = validate(
-            edge.clone(),
+            edge,
             &ValidationConfig {
                 identical_max_distance: deviation * 2.,
                 ..ValidationConfig::default()
