@@ -50,22 +50,25 @@ impl TransformExt for Cycle {
         let edges = self
             .edges
             .into_iter()
-            .map(|edge| {
-                let curve_local = edge.curve.local();
-                let curve_canonical = edge.curve().transform(transform);
-
-                let vertices = edge
-                    .vertices
-                    .map(|vertex| transform_vertex(&vertex, transform));
-
-                Edge {
-                    curve: Local::new(curve_local, curve_canonical),
-                    vertices,
-                }
-            })
+            .map(|edge| edge.transform(transform))
             .collect();
 
         Self { edges }
+    }
+}
+
+impl TransformExt for Edge {
+    fn transform(self, transform: &Transform) -> Self {
+        let curve = Local::new(
+            self.curve.local(),
+            self.curve.global().transform(transform),
+        );
+
+        let vertices = self
+            .vertices
+            .map(|vertex| transform_vertex(&vertex, transform));
+
+        Self { curve, vertices }
     }
 }
 
