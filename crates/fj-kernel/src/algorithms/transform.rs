@@ -1,4 +1,4 @@
-use fj_math::Transform;
+use fj_math::{Transform, Vector};
 
 use crate::{
     local::Local,
@@ -6,6 +6,33 @@ use crate::{
         Cycle, CyclesInFace, Edge, Face, FaceBRep, GlobalVertex, Vertex,
     },
 };
+
+/// Extension trait that provides transformation methods for objects
+///
+/// # Implementation Note
+///
+/// So far, a general `transform` method is available, along some convenience
+/// methods for more specific transformations.
+///
+/// More convenience methods can be added as required. The only reason this
+/// hasn't been done so far, is that no one has put in the work yet.
+pub trait TransformExt: Sized {
+    /// Transform the object
+    #[must_use]
+    fn transform(self, transform: &Transform) -> Self;
+
+    /// Translate the object
+    #[must_use]
+    fn translate(self, offset: impl Into<Vector<3>>) -> Self {
+        self.transform(&Transform::translation(offset))
+    }
+
+    /// Rotate the object
+    #[must_use]
+    fn rotate(self, axis_angle: impl Into<Vector<3>>) -> Self {
+        self.transform(&Transform::rotation(axis_angle))
+    }
+}
 
 /// Transform a shape
 pub fn transform_shape(faces: &mut Vec<Face>, transform: &Transform) {

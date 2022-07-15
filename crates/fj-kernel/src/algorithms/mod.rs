@@ -15,6 +15,6 @@ pub use self::{
     approx::{CycleApprox, FaceApprox, InvalidTolerance, Tolerance},
     reverse::reverse_face,
     sweep::sweep,
-    transform::transform_shape,
+    transform::{transform_shape, TransformExt},
     triangulate::triangulate,
 };
