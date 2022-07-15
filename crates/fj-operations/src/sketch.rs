@@ -1,7 +1,7 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
-    objects::{Cycle, Edge, Face, Surface},
+    objects::{Cycle, Edge, Face, Sketch, Surface},
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::{Aabb, Point, Scalar};
@@ -9,15 +9,17 @@ use fj_math::{Aabb, Point, Scalar};
 use super::Shape;
 
 impl Shape for fj::Sketch {
+    type Brep = Sketch;
+
     fn compute_brep(
         &self,
         config: &ValidationConfig,
         _: Tolerance,
         _: &mut DebugInfo,
-    ) -> Result<Validated<Vec<Face>>, ValidationError> {
+    ) -> Result<Validated<Self::Brep>, ValidationError> {
         let surface = Surface::xy_plane();
 
-        let sketch = match self.chain() {
+        let face = match self.chain() {
             fj::Chain::Circle(circle) => {
                 // Circles have just a single round edge with no vertices. So
                 // none need to be added here.
@@ -39,7 +41,8 @@ impl Shape for fj::Sketch {
             }
         };
 
-        validate(vec![sketch], config)
+        let sketch = Sketch::from_faces([face]);
+        validate(sketch, config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

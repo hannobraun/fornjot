@@ -3,7 +3,7 @@ use fj_kernel::{
     algorithms::Tolerance,
     iter::ObjectIters,
     local::Local,
-    objects::{Cycle, Edge, Face},
+    objects::{Cycle, Edge, Face, Sketch},
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
@@ -11,16 +11,18 @@ use fj_math::Aabb;
 use super::Shape;
 
 impl Shape for fj::Difference2d {
+    type Brep = Sketch;
+
     fn compute_brep(
         &self,
         config: &ValidationConfig,
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
-    ) -> Result<Validated<Vec<Face>>, ValidationError> {
+    ) -> Result<Validated<Self::Brep>, ValidationError> {
         // This method assumes that `b` is fully contained within `a`:
         // https://github.com/hannobraun/Fornjot/issues/92
 
-        let mut difference = Vec::new();
+        let mut faces = Vec::new();
 
         let mut exteriors = Vec::new();
         let mut interiors = Vec::new();
@@ -72,14 +74,10 @@ impl Shape for fj::Difference2d {
                 }
             }
 
-            difference.push(Face::new(
-                surface,
-                exteriors,
-                interiors,
-                self.color(),
-            ));
+            faces.push(Face::new(surface, exteriors, interiors, self.color()));
         }
 
+        let difference = Sketch::from_faces(faces);
         validate(difference, config)
     }
 
