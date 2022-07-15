@@ -85,8 +85,7 @@ fn create_top_face(
     is_sweep_along_negative_direction: bool,
     target: &mut Vec<Face>,
 ) {
-    let translation = Transform::translation(path);
-    let mut face = face.clone().transform(&translation);
+    let mut face = face.clone().translate(path);
 
     if is_sweep_along_negative_direction {
         face = reverse_face(&face);
