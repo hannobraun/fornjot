@@ -102,6 +102,13 @@ impl TransformExt for Face {
     }
 }
 
+impl TransformExt for GlobalVertex {
+    fn transform(self, transform: &Transform) -> Self {
+        let position = transform.transform_point(&self.position());
+        Self::from_position(position)
+    }
+}
+
 /// Transform a shape
 pub fn transform_shape(faces: &mut Vec<Face>, transform: &Transform) {
     for face in faces {
@@ -119,8 +126,5 @@ pub fn transform_cycles(
 }
 
 pub fn transform_vertex(vertex: &Vertex, transform: &Transform) -> Vertex {
-    let position = transform.transform_point(&vertex.global().position());
-    let global = GlobalVertex::from_position(position);
-
-    Vertex::new(vertex.position(), global)
+    Vertex::new(vertex.position(), vertex.global().transform(transform))
 }
