@@ -79,13 +79,9 @@ impl Shape for fj::Shape {
                     .into_faces(),
                 config,
             ),
-            Self::Transform(shape) => validate(
-                shape
-                    .compute_brep(config, tolerance, debug_info)?
-                    .into_inner()
-                    .into_faces(),
-                config,
-            ),
+            Self::Transform(shape) => {
+                shape.compute_brep(config, tolerance, debug_info)
+            }
         }
     }
 

@@ -1,7 +1,7 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
-    algorithms::{Tolerance, TransformObject},
-    objects::Solid,
+    algorithms::{transform_faces, Tolerance},
+    objects::Face,
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::{Aabb, Transform, Vector};
@@ -9,7 +9,7 @@ use fj_math::{Aabb, Transform, Vector};
 use super::Shape;
 
 impl Shape for fj::Transform {
-    type Brep = Solid;
+    type Brep = Vec<Face>;
 
     fn compute_brep(
         &self,
@@ -17,14 +17,14 @@ impl Shape for fj::Transform {
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
-        let original = Solid::from_faces(
-            self.shape
-                .compute_brep(config, tolerance, debug_info)?
-                .into_inner(),
-        );
+        let mut faces = self
+            .shape
+            .compute_brep(config, tolerance, debug_info)?
+            .into_inner();
 
-        let transformed = original.transform(&make_transform(self));
-        validate(transformed, config)
+        transform_faces(&mut faces, &make_transform(self));
+
+        validate(faces, config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
