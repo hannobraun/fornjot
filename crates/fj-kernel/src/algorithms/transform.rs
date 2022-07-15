@@ -3,7 +3,7 @@ use fj_math::{Transform, Vector};
 use crate::{
     local::Local,
     objects::{
-        Cycle, CyclesInFace, Edge, Face, FaceBRep, GlobalVertex, Vertex,
+        Curve, Cycle, CyclesInFace, Edge, Face, FaceBRep, GlobalVertex, Vertex,
     },
 };
 
@@ -31,6 +31,17 @@ pub trait TransformExt: Sized {
     #[must_use]
     fn rotate(self, axis_angle: impl Into<Vector<3>>) -> Self {
         self.transform(&Transform::rotation(axis_angle))
+    }
+}
+
+impl TransformExt for Curve<3> {
+    fn transform(self, transform: &Transform) -> Self {
+        match self {
+            Self::Circle(curve) => {
+                Self::Circle(transform.transform_circle(&curve))
+            }
+            Self::Line(curve) => Self::Line(transform.transform_line(&curve)),
+        }
     }
 }
 
