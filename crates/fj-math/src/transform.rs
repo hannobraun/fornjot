@@ -18,11 +18,11 @@ impl Transform {
     }
 
     /// Construct a translation
-    pub fn translation(vector: impl Into<Vector<3>>) -> Self {
-        let vector = vector.into();
+    pub fn translation(offset: impl Into<Vector<3>>) -> Self {
+        let offset = offset.into();
 
         Self(nalgebra::Transform::from_matrix_unchecked(
-            nalgebra::OMatrix::new_translation(&vector.to_na()),
+            nalgebra::OMatrix::new_translation(&offset.to_na()),
         ))
     }
 
