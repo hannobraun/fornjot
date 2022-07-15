@@ -131,7 +131,7 @@ mod tests {
     use fj_math::Transform;
 
     use crate::{
-        algorithms::TransformExt,
+        algorithms::TransformObject,
         objects::{Curve, Surface},
     };
 

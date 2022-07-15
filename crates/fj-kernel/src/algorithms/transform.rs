@@ -17,7 +17,7 @@ use crate::{
 ///
 /// More convenience methods can be added as required. The only reason this
 /// hasn't been done so far, is that no one has put in the work yet.
-pub trait TransformExt: Sized {
+pub trait TransformObject: Sized {
     /// Transform the object
     #[must_use]
     fn transform(self, transform: &Transform) -> Self;
@@ -35,7 +35,7 @@ pub trait TransformExt: Sized {
     }
 }
 
-impl TransformExt for Curve<3> {
+impl TransformObject for Curve<3> {
     fn transform(self, transform: &Transform) -> Self {
         match self {
             Self::Circle(curve) => {
@@ -46,7 +46,7 @@ impl TransformExt for Curve<3> {
     }
 }
 
-impl TransformExt for Cycle {
+impl TransformObject for Cycle {
     fn transform(mut self, transform: &Transform) -> Self {
         for edge in &mut self.edges {
             *edge = edge.transform(transform);
@@ -56,7 +56,7 @@ impl TransformExt for Cycle {
     }
 }
 
-impl TransformExt for Edge {
+impl TransformObject for Edge {
     fn transform(self, transform: &Transform) -> Self {
         let curve = Local::new(
             self.curve.local(),
@@ -69,7 +69,7 @@ impl TransformExt for Edge {
     }
 }
 
-impl TransformExt for Face {
+impl TransformObject for Face {
     fn transform(self, transform: &Transform) -> Self {
         match self {
             Self::Face(face) => {
@@ -101,14 +101,14 @@ impl TransformExt for Face {
     }
 }
 
-impl TransformExt for GlobalVertex {
+impl TransformObject for GlobalVertex {
     fn transform(self, transform: &Transform) -> Self {
         let position = transform.transform_point(&self.position());
         Self::from_position(position)
     }
 }
 
-impl TransformExt for Sketch {
+impl TransformObject for Sketch {
     fn transform(self, transform: &Transform) -> Self {
         let mut faces = self.into_faces();
         transform_faces(&mut faces, transform);
@@ -116,7 +116,7 @@ impl TransformExt for Sketch {
     }
 }
 
-impl TransformExt for Surface {
+impl TransformObject for Surface {
     fn transform(self, transform: &Transform) -> Self {
         match self {
             Self::SweptCurve(surface) => {
@@ -126,7 +126,7 @@ impl TransformExt for Surface {
     }
 }
 
-impl TransformExt for Vertex {
+impl TransformObject for Vertex {
     fn transform(self, transform: &Transform) -> Self {
         Self::new(self.position(), self.global().transform(transform))
     }

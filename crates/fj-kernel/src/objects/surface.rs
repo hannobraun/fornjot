@@ -1,6 +1,6 @@
 use fj_math::{Line, Point, Transform, Vector};
 
-use crate::algorithms::TransformExt;
+use crate::algorithms::TransformObject;
 
 use super::Curve;
 

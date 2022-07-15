@@ -9,7 +9,7 @@ use crate::{
     },
 };
 
-use super::{reverse_face, CycleApprox, Tolerance, TransformExt};
+use super::{reverse_face, CycleApprox, Tolerance, TransformObject};
 
 /// Create a solid by sweeping a sketch
 pub fn sweep(
