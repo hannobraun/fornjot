@@ -45,6 +45,30 @@ impl TransformExt for Curve<3> {
     }
 }
 
+impl TransformExt for Cycle {
+    fn transform(self, transform: &Transform) -> Self {
+        let edges = self
+            .edges
+            .into_iter()
+            .map(|edge| {
+                let curve_local = edge.curve.local();
+                let curve_canonical = edge.curve().transform(transform);
+
+                let vertices = edge
+                    .vertices
+                    .map(|vertex| transform_vertex(&vertex, transform));
+
+                Edge {
+                    curve: Local::new(curve_local, curve_canonical),
+                    vertices,
+                }
+            })
+            .collect();
+
+        Self { edges }
+    }
+}
+
 /// Transform a shape
 pub fn transform_shape(faces: &mut Vec<Face>, transform: &Transform) {
     for face in faces {
@@ -86,28 +110,7 @@ pub fn transform_cycles(
     cycles: &CyclesInFace,
     transform: &Transform,
 ) -> CyclesInFace {
-    let cycles = cycles.as_local().map(|cycle| {
-        let edges = cycle
-            .edges
-            .iter()
-            .map(|edge| {
-                let curve_local = edge.curve.local();
-                let curve_canonical = edge.curve().transform(transform);
-
-                let vertices = edge
-                    .clone()
-                    .vertices
-                    .map(|vertex| transform_vertex(&vertex, transform));
-
-                Edge {
-                    curve: Local::new(curve_local, curve_canonical),
-                    vertices,
-                }
-            })
-            .collect();
-
-        Cycle { edges }
-    });
+    let cycles = cycles.as_local().map(|cycle| cycle.transform(transform));
 
     CyclesInFace::new(cycles)
 }
