@@ -1,7 +1,7 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::Tolerance,
-    objects::Solid,
+    objects::Face,
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
@@ -9,7 +9,7 @@ use fj_math::Aabb;
 use super::Shape;
 
 impl Shape for fj::Group {
-    type Brep = Solid;
+    type Brep = Vec<Face>;
 
     fn compute_brep(
         &self,
@@ -25,8 +25,7 @@ impl Shape for fj::Group {
         faces.extend(a.into_inner());
         faces.extend(b.into_inner());
 
-        let group = Solid::from_faces(faces);
-        validate(group, config)
+        validate(faces, config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
