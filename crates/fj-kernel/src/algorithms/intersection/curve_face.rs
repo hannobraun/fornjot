@@ -1,3 +1,5 @@
+use std::vec;
+
 use fj_math::{Scalar, Segment};
 use parry2d_f64::query::{Ray, RayCast};
 
@@ -6,7 +8,7 @@ use crate::objects::{Curve, Face};
 /// The intersections between a [`Curve`] and a [`Face`], in curve coordinates
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct CurveFaceIntersectionList {
-    intervals: Vec<[Scalar; 2]>,
+    intervals: Vec<CurveFaceIntersection>,
 }
 
 impl CurveFaceIntersectionList {
@@ -159,7 +161,24 @@ impl CurveFaceIntersectionList {
 
         Self { intervals }
     }
+
+    /// Indicate whether the intersection list is empty
+    pub fn is_empty(&self) -> bool {
+        self.intervals.is_empty()
+    }
 }
+
+impl IntoIterator for CurveFaceIntersectionList {
+    type Item = CurveFaceIntersection;
+    type IntoIter = vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.intervals.into_iter()
+    }
+}
+
+/// An intersection between a curve and a face, in curve coordinates
+pub type CurveFaceIntersection = [Scalar; 2];
 
 #[cfg(test)]
 mod tests {
