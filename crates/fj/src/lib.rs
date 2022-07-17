@@ -34,7 +34,7 @@ pub use fj_proc::*;
 use serde::{Deserialize, Serialize};
 
 /// A shape
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub enum Shape {

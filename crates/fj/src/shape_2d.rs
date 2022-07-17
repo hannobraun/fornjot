@@ -6,7 +6,7 @@ use std::sync::atomic;
 use crate::Shape;
 
 /// A 2-dimensional shape
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub enum Shape2d {
@@ -28,7 +28,7 @@ impl Shape2d {
 }
 
 /// A difference between two shapes
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Difference2d {
@@ -73,7 +73,7 @@ impl From<Difference2d> for Shape2d {
 /// Nothing about these edges is checked right now, but algorithms might assume
 /// that the edges are non-overlapping. If you create a `Sketch` with
 /// overlapping edges, you're on your own.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Sketch {
@@ -118,7 +118,7 @@ impl Sketch {
 }
 
 /// A chain of elements that is part of a [`Sketch`]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub enum Chain {
@@ -130,7 +130,7 @@ pub enum Chain {
 }
 
 /// A circle that is part of a [`Sketch`]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Circle {
@@ -191,6 +191,11 @@ impl PolyChain {
         }
     }
 
+    /// Get a reference to the points in this [`PolyChain`].
+    fn points(&self) -> &[[f64; 2]] {
+        unsafe { std::slice::from_raw_parts(self.ptr, self.length) }
+    }
+
     /// Return the points that define the polygonal chain
     pub fn to_points(&self) -> Vec<[f64; 2]> {
         // This is sound. All invariants are automatically kept, as the raw
@@ -226,6 +231,12 @@ impl Clone for PolyChain {
             capacity: self.capacity,
             rc: self.rc,
         }
+    }
+}
+
+impl PartialEq for PolyChain {
+    fn eq(&self, other: &Self) -> bool {
+        self.points() == other.points()
     }
 }
 
