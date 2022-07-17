@@ -295,9 +295,9 @@ impl Parameters {
     pub fn insert(
         &mut self,
         key: impl Into<String>,
-        value: impl Into<String>,
+        value: impl ToString,
     ) -> &mut Self {
-        self.0.insert(key.into(), value.into());
+        self.0.insert(key.into(), value.to_string());
         self
     }
 }
