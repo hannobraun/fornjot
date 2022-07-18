@@ -14,7 +14,7 @@ categories = ["encoding", "mathematics", "rendering"]
 
 [dependencies]
 bytemuck = "1.9.1"
-raw-window-handle = "0.4.3"
+raw-window-handle = "0.5.0"
 thiserror = "1.0.31"
 tracing = "0.1.35"
 wgpu = "0.12.0"
