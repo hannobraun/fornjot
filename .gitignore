@@ -4,4 +4,5 @@
 # IDE Configurations
 **/.vs/ # Visual Studio
 **/.idea/ # Intellij
+.idea/
 **/.buildconfig # Gnome Builder

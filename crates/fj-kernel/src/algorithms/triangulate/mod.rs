@@ -143,6 +143,49 @@ mod tests {
         Ok(())
     }
 
+    #[ignore]
+    #[test]
+    fn sharp_concave_shape() -> anyhow::Result<()> {
+        //
+        //                c
+        //               /|
+        //   e          / |
+        //   |\       /   |
+        //   | |     /    |
+        //   | \   /      |
+        //   |  \ /       |
+        //   |   d        |
+        //   a ---------- b
+        //
+
+        let a = Point::from([0., 0.]);
+        let b = Point::from([0.4, 0.]);
+        //let b = Point::from([0.5, 0.]); // test passes with this change
+        let c = Point::from([0.4, 1.0]);
+        let d = Point::from([0.1, 0.1]);
+        let e = Point::from([0., 0.8]);
+
+        let face = Face::builder(Surface::xy_plane())
+            .with_exterior_polygon([a, b, c, d, e])
+            .build();
+
+        let triangles = triangulate(face)?;
+
+        let a3 = a.to_xyz();
+        let b3 = b.to_xyz();
+        let c3 = c.to_xyz();
+        let d3 = d.to_xyz();
+        let e3 = e.to_xyz();
+
+        assert!(triangles.contains_triangle([a3, b3, d3]));
+        assert!(triangles.contains_triangle([b3, c3, d3]));
+        assert!(triangles.contains_triangle([a3, d3, e3]));
+
+        assert!(!triangles.contains_triangle([b3, e3, d3]));
+
+        Ok(())
+    }
+
     fn triangulate(face: Face) -> anyhow::Result<Mesh<Point<3>>> {
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
 
