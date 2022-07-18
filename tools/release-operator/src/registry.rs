@@ -5,6 +5,13 @@ use std::fmt::{Display, Formatter};
 use std::path::PathBuf;
 use std::process::Command;
 use std::str::FromStr;
+use std::time::{Duration, Instant};
+
+#[derive(thiserror::Error, Debug)]
+enum Error {
+    #[error("crate was not found on crates.io")]
+    CrateNotFound,
+}
 
 pub struct Registry {
     token: SecUtf8,
@@ -63,90 +70,99 @@ impl Crate {
         }
     }
 
-    fn determine_state(&self) -> anyhow::Result<CrateState> {
-        let theirs = {
-            #[derive(Deserialize)]
-            struct CrateVersions {
-                versions: Vec<CrateVersion>,
-            }
+    fn get_local_version(&self) -> anyhow::Result<semver::Version> {
+        let name = format!("{self}");
+        let cargo_toml_location = std::fs::canonicalize(&self.path)
+            .context("absolute path to Cargo.toml")?;
+        let mut cmd = cargo_metadata::MetadataCommand::new();
+        cmd.manifest_path(format!(
+            "{}/Cargo.toml",
+            cargo_toml_location.to_string_lossy()
+        ))
+        .no_deps();
 
-            #[derive(Deserialize)]
-            struct CrateVersion {
-                #[serde(rename = "num")]
-                version: semver::Version,
-            }
+        let metadata = cmd.exec()?;
+        let package = metadata
+            .packages
+            .iter()
+            .find(|p| p.name == name)
+            .ok_or_else(|| anyhow!("could not find package"))?;
 
-            let client = reqwest::blocking::ClientBuilder::new()
-                .user_agent(concat!(
-                    env!("CARGO_PKG_NAME"),
-                    "/",
-                    env!("CARGO_PKG_VERSION")
-                ))
-                .build()
-                .context("build http client")?;
+        let version = package.version.to_owned();
+        log::debug!("{self} found as {version} on our side");
 
-            let resp = client
-                .get(format!("https://crates.io/api/v1/crates/{self}"))
-                .send()
-                .context("fetching crate versions from the registry")?;
+        Ok(version)
+    }
 
-            if resp.status() == reqwest::StatusCode::NOT_FOUND {
-                log::info!("{self} has not been published yet");
-                return Ok(CrateState::Unknown);
-            }
+    fn get_upstream_version(&self) -> anyhow::Result<semver::Version> {
+        #[derive(Deserialize)]
+        struct CrateVersions {
+            versions: Vec<CrateVersion>,
+        }
 
-            if resp.status() != reqwest::StatusCode::OK {
-                return Err(anyhow!(
-                    "{self} request to crates.io failed with {} '{}'",
-                    resp.status(),
-                    resp.text().unwrap_or_else(|_| {
-                        "[response body could not be read]".to_string()
-                    })
-                ));
-            }
+        #[derive(Deserialize)]
+        struct CrateVersion {
+            #[serde(rename = "num")]
+            version: semver::Version,
+        }
 
-            let versions =
-                serde_json::from_str::<CrateVersions>(resp.text()?.as_str())
-                    .context("deserializing crates.io response")?;
-
-            versions.versions.get(0).unwrap().version.to_owned()
-        };
-
-        let ours = {
-            let name = format!("{self}");
-            let cargo_toml_location = std::fs::canonicalize(&self.path)
-                .context("absolute path to Cargo.toml")?;
-            let mut cmd = cargo_metadata::MetadataCommand::new();
-            cmd.manifest_path(format!(
-                "{}/Cargo.toml",
-                cargo_toml_location.to_string_lossy()
+        let client = reqwest::blocking::ClientBuilder::new()
+            .user_agent(concat!(
+                env!("CARGO_PKG_NAME"),
+                "/",
+                env!("CARGO_PKG_VERSION")
             ))
-            .no_deps();
+            .build()
+            .context("build http client")?;
 
-            let metadata = cmd.exec()?;
-            let package = metadata
-                .packages
-                .iter()
-                .find(|p| p.name == name)
-                .ok_or_else(|| anyhow!("could not find package"))?;
+        let resp = client
+            .get(format!("https://crates.io/api/v1/crates/{self}"))
+            .send()
+            .context("fetching crate versions from the registry")?;
 
-            let version = package.version.to_owned();
-            log::debug!("{self} found as {version} on our side");
+        if resp.status() == reqwest::StatusCode::NOT_FOUND {
+            return Err(anyhow::Error::new(Error::CrateNotFound));
+        }
 
-            version
+        if resp.status() != reqwest::StatusCode::OK {
+            return Err(anyhow!(
+                "{self} request to crates.io failed with {} '{}'",
+                resp.status(),
+                resp.text().unwrap_or_else(|_| {
+                    "[response body could not be read]".to_string()
+                })
+            ));
+        }
+
+        let versions =
+            serde_json::from_str::<CrateVersions>(resp.text()?.as_str())
+                .context("deserializing crates.io response")?;
+
+        Ok(versions.versions.get(0).unwrap().version.to_owned())
+    }
+
+    fn determine_state(&self) -> anyhow::Result<CrateState> {
+        let theirs = match self.get_upstream_version() {
+            Ok(version) => version,
+            Err(error) => match error.downcast_ref::<Error>() {
+                Some(Error::CrateNotFound) => return Ok(CrateState::Unknown),
+                None => return Err(error),
+            },
         };
 
-        if ours == theirs {
-            log::info!("{self} has already been published as {ours}");
-            return Ok(CrateState::Published);
-        }
+        let ours = self.get_local_version()?;
 
-        if ours < theirs {
-            log::warn!("{self} has already been published as {ours}, which is a newer version");
-            return Ok(CrateState::Behind);
+        match theirs.cmp(&ours) {
+            std::cmp::Ordering::Less => Ok(CrateState::Ahead),
+            std::cmp::Ordering::Equal => {
+                log::info!("{self} has already been published as {ours}");
+                Ok(CrateState::Published)
+            }
+            std::cmp::Ordering::Greater => {
+                log::warn!("{self} has already been published as {ours}, which is a newer version");
+                Ok(CrateState::Behind)
+            }
         }
-
-        Ok(CrateState::Ahead)
     }
 
     fn submit(&self, token: &SecUtf8, dry_run: bool) -> anyhow::Result<()> {
@@ -173,6 +189,37 @@ impl Crate {
                     bail!("`cargo publish` was terminated by signal")
                 }
             }
+        }
+
+        let ours = self.get_local_version()?;
+        let delay = Duration::from_secs(10);
+        let start_time = Instant::now();
+        let timeout = Duration::from_secs(600);
+
+        log::info!(
+            "{self} should appear as {ours} on the registry, waiting... [{delay:?}|{timeout:?}]"
+        );
+
+        loop {
+            if Instant::now() - start_time > timeout {
+                return Err(anyhow!("{self} did not appear as {ours} on the registry within {timeout:?}"));
+            }
+
+            let theirs = self.get_upstream_version()?;
+
+            match theirs.cmp(&ours) {
+                std::cmp::Ordering::Less => (),
+                std::cmp::Ordering::Equal => {
+                    log::info!("{self} appeared as {ours} on the registry");
+                    break;
+                }
+                std::cmp::Ordering::Greater => {
+                    return Err(anyhow!("{self} appeared as {theirs} on the registry which is newer than the current release ({ours})"))
+                },
+            }
+
+            log::info!("{self} waiting for {ours}...");
+            std::thread::sleep(delay);
         }
 
         Ok(())
