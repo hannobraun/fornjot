@@ -228,21 +228,21 @@ fn ambiguous_path_error(
     metadata: &cargo_metadata::Metadata,
     dir: &Path,
 ) -> Error {
-    let possible_paths = metadata
-        .workspace_members
-        .iter()
-        .map(|id| PathBuf::from(&metadata[id].manifest_path))
-        .map(|mut cargo_toml_path| {
-            let _ = cargo_toml_path.pop();
-            cargo_toml_path
-        })
-        .map(|crate_dir| {
-            crate_dir
-                .strip_prefix(&metadata.workspace_root)
-                .unwrap_or(&crate_dir)
-                .to_path_buf()
-        })
-        .collect();
+    let mut possible_paths = Vec::new();
+
+    for id in &metadata.workspace_members {
+        let cargo_toml = &metadata[id].manifest_path;
+        let crate_dir = cargo_toml
+            .parent()
+            .expect("A Cargo.toml always has a parent");
+        // Try to make the path relative to the workspace root so error messages
+        // aren't super long.
+        let simplified_path = crate_dir
+            .strip_prefix(&metadata.workspace_root)
+            .unwrap_or(crate_dir);
+
+        possible_paths.push(simplified_path.into());
+    }
 
     Error::AmbiguousPath {
         dir: dir.to_path_buf(),
@@ -368,7 +368,8 @@ pub enum Error {
     AmbiguousPath {
         /// The model directory supplied by the user.
         dir: PathBuf,
-        /// The directories for each crate in the workspace.
+        /// The directories for each crate in the workspace, relative to the
+        /// workspace root.
         possible_paths: Vec<PathBuf>,
     },
 }
