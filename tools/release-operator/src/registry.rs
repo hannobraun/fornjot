@@ -1,9 +1,9 @@
-use anyhow::{anyhow, Context};
+use anyhow::{anyhow, bail, Context};
 use secstr::SecUtf8;
 use serde::Deserialize;
 use std::fmt::{Display, Formatter};
-use std::io::{BufRead, BufReader};
 use std::path::PathBuf;
+use std::process::Command;
 use std::str::FromStr;
 
 pub struct Registry {
@@ -157,26 +157,25 @@ impl Crate {
         std::env::set_current_dir(&self.path)
             .context("switch working directory to the crate in scope")?;
 
-        let cmd = {
-            let mut cmd = vec!["cargo", "publish", "--token", token.unsecure()];
+        let mut command = Command::new("cargo");
+        command.arg("publish").args(["--token", token.unsecure()]);
 
-            if dry_run {
-                cmd.push("--dry-run");
+        if dry_run {
+            command.arg("--dry-run");
+        }
+
+        let exit_status = command.status()?;
+
+        if !exit_status.success() {
+            match exit_status.code() {
+                Some(code) => {
+                    bail!("`cargo publish` failed with exit code {code}")
+                }
+                None => {
+                    bail!("`cargo publish` was terminated by signal")
+                }
             }
-
-            cmd.join(" ")
-        };
-
-        // The `-e` makes sure that bash stops if any non-zero status code is
-        // encountered, and return a non-zero status code itself.
-        cmd_lib::spawn_with_output!(bash -e -c $cmd)?.wait_with_pipe(
-            &mut |pipe| {
-                BufReader::new(pipe)
-                    .lines()
-                    .flatten()
-                    .for_each(|line| println!("{}", line));
-            },
-        )?;
+        }
 
         std::env::set_current_dir(current_dir)
             .context("reset working directory")?;
