@@ -1,5 +1,76 @@
 # Fornjot - Changelog
 
+## v0.8.0 (2022-07-18)
+
+### End-user improvements
+
+Improvements to Fornjot and its documentation that are visible to end-users.
+
+- Make moving the model work, even if mouse is not hovering over it ([#806])
+- Make group and transform operations work on all shapes ([#825])
+
+### Ecosystem improvements
+
+Improvements to the Fornjot ecosystem that are relevant to developers who are building on top of Fornjot components.
+
+#### `fj-interop`
+
+- Add `ProcessedShape` from `fj-operations` ([#809]; thank you [@jeevcat]!)
+
+#### `fj-kernel`
+
+- Implement curve/face intersection algorithm ([#802], [#812], [#813], [#817], [#826])
+- Return local curves from surface/surface intersection ([#811])
+- Derive `Copy` for `VerticesOfEdge` ([#818])
+- Add `Sketch`/`Solid` to distinguish between 2D/3D shapes ([#819], [#823], [#827])
+- Provide more complete and convenient transform API ([#822])
+
+#### `fj-math`
+
+- Fix edge case in `Vector::scalar_projection_onto` ([#810])
+
+#### `fj-operations`
+
+- Rename `ToShape` to `Shape`; clean it up ([#820])
+- Make use of `Sketch` and `Solid` ([#824])
+
+#### `fj-viewer`
+
+- Make events more high-level ([#803]; thank you [@jeevcat]!)
+
+### Internal Improvements
+
+Improvements that are relevant to developers working on Fornjot itself.
+
+- Update dependencies ([#799], [#800], [#801])
+- Update list of sponsors ([#833])
+
+[#799]: https://github.com/hannobraun/Fornjot/pull/799
+[#800]: https://github.com/hannobraun/Fornjot/pull/800
+[#801]: https://github.com/hannobraun/Fornjot/pull/801
+[#802]: https://github.com/hannobraun/Fornjot/pull/802
+[#803]: https://github.com/hannobraun/Fornjot/pull/803
+[#806]: https://github.com/hannobraun/Fornjot/pull/806
+[#809]: https://github.com/hannobraun/Fornjot/pull/809
+[#810]: https://github.com/hannobraun/Fornjot/pull/810
+[#811]: https://github.com/hannobraun/Fornjot/pull/811
+[#812]: https://github.com/hannobraun/Fornjot/pull/812
+[#813]: https://github.com/hannobraun/Fornjot/pull/813
+[#817]: https://github.com/hannobraun/Fornjot/pull/817
+[#818]: https://github.com/hannobraun/Fornjot/pull/818
+[#819]: https://github.com/hannobraun/Fornjot/pull/819
+[#820]: https://github.com/hannobraun/Fornjot/pull/820
+[#822]: https://github.com/hannobraun/Fornjot/pull/822
+[#823]: https://github.com/hannobraun/Fornjot/pull/823
+[#824]: https://github.com/hannobraun/Fornjot/pull/824
+[#825]: https://github.com/hannobraun/Fornjot/pull/825
+[#826]: https://github.com/hannobraun/Fornjot/pull/826
+[#827]: https://github.com/hannobraun/Fornjot/pull/827
+[#833]: https://github.com/hannobraun/Fornjot/pull/833
+
+[@jeevcat]: https://github.com/jeevcat
+
+
 ## v0.7.0 (2022-07-07)
 
 The following changelog is a summary of user-visible changes made since the previous release. User-visible changes are changes visible to end users (who define CAD models using `fj` and `fj-app`), and changes to the API of Fornjot ecosystem crates.
