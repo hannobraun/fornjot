@@ -209,7 +209,7 @@ impl Model {
 fn package_associated_with_directory<'m>(
     metadata: &'m cargo_metadata::Metadata,
     dir: &Path,
-) -> Result<&'m cargo_metadata::Package, io::Error> {
+) -> Result<&'m cargo_metadata::Package, Error> {
     for pkg in metadata.workspace_packages() {
         let crate_dir = pkg
             .manifest_path
@@ -221,9 +221,33 @@ fn package_associated_with_directory<'m>(
         }
     }
 
-    let msg = format!("\"{}\" doesn't point to a crate", dir.display());
+    Err(ambiguous_path_error(metadata, dir))
+}
 
-    Err(io::Error::new(io::ErrorKind::Other, msg))
+fn ambiguous_path_error(
+    metadata: &cargo_metadata::Metadata,
+    dir: &Path,
+) -> Error {
+    let possible_paths = metadata
+        .workspace_members
+        .iter()
+        .map(|id| PathBuf::from(&metadata[id].manifest_path))
+        .map(|mut cargo_toml_path| {
+            let _ = cargo_toml_path.pop();
+            cargo_toml_path
+        })
+        .map(|crate_dir| {
+            crate_dir
+                .strip_prefix(&metadata.workspace_root)
+                .unwrap_or(&crate_dir)
+                .to_path_buf()
+        })
+        .collect();
+
+    Error::AmbiguousPath {
+        dir: dir.to_path_buf(),
+        possible_paths,
+    }
 }
 
 /// Watches a model for changes, reloading it continually
@@ -331,6 +355,22 @@ pub enum Error {
     /// [`cargo_metadata::MetadataCommand`].
     #[error("Unable to determine the crate's metadata")]
     CargoMetadata(#[from] cargo_metadata::Error),
+
+    /// The user pointed us to a directory, but it doesn't look like that was
+    /// a crate root (i.e. the folder containing `Cargo.toml`).
+    #[error(
+        "It doesn't look like \"{}\" is a crate directory. Did you mean one of {}?",
+        dir.display(),
+        possible_paths.iter().map(|p| p.display().to_string())
+        .collect::<Vec<_>>()
+        .join(", ")
+    )]
+    AmbiguousPath {
+        /// The model directory supplied by the user.
+        dir: PathBuf,
+        /// The directories for each crate in the workspace.
+        possible_paths: Vec<PathBuf>,
+    },
 }
 
 type ModelFn = unsafe extern "C" fn(args: &Parameters) -> fj::Shape;
