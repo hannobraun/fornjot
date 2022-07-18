@@ -12,7 +12,7 @@ use crate::{Angle, Shape};
 ///
 /// See issue:
 /// <https://github.com/hannobraun/Fornjot/issues/101>
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Transform {

@@ -6,7 +6,7 @@ use std::f64::consts::{PI, TAU};
 const GON_RAD: f64 = PI / 200.;
 
 /// An angle
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Angle {
     // The value of the angle in radians
