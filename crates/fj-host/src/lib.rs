@@ -50,13 +50,12 @@ impl Model {
     pub fn from_path(
         path: PathBuf,
         target_dir: Option<PathBuf>,
-    ) -> io::Result<Self> {
+    ) -> Result<Self, Error> {
         let crate_dir = path.canonicalize()?;
 
         let metadata = cargo_metadata::MetadataCommand::new()
             .current_dir(&crate_dir)
-            .exec()
-            .map_err(metadata_error_to_io)?;
+            .exec()?;
 
         let pkg = package_associated_with_directory(&metadata, &crate_dir)?;
         let src_path = crate_dir.join("src");
@@ -207,13 +206,6 @@ impl Model {
     }
 }
 
-fn metadata_error_to_io(e: cargo_metadata::Error) -> std::io::Error {
-    match e {
-        cargo_metadata::Error::Io(io) => io,
-        _ => std::io::Error::new(io::ErrorKind::Other, e),
-    }
-}
-
 fn package_associated_with_directory<'m>(
     metadata: &'m cargo_metadata::Metadata,
     dir: &Path,
@@ -334,6 +326,11 @@ pub enum Error {
     /// Error while watching the model code for changes
     #[error("Error watching model for changes")]
     Notify(#[from] notify::Error),
+
+    /// An error occurred while trying to use evaluate
+    /// [`cargo_metadata::MetadataCommand`].
+    #[error("Unable to determine the crate's metadata")]
+    CargoMetadata(#[from] cargo_metadata::Error),
 }
 
 type ModelFn = unsafe extern "C" fn(args: &Parameters) -> fj::Shape;
