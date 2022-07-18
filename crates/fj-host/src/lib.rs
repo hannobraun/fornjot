@@ -21,7 +21,7 @@ use std::{
     collections::{HashMap, HashSet},
     ffi::OsStr,
     io,
-    path::PathBuf,
+    path::{Path, PathBuf},
     process::Command,
     sync::mpsc,
     thread,
@@ -40,7 +40,8 @@ pub struct Model {
 }
 
 impl Model {
-    /// Initialize the model from a path
+    /// Initialize the model using the path to its crate (i.e. the folder
+    /// containing `Cargo.toml`).
     ///
     /// Optionally, the target directory where plugin files are compiled to can
     /// be provided. If it is not provided, the target directory is assumed to
@@ -49,31 +50,28 @@ impl Model {
         path: PathBuf,
         target_dir: Option<PathBuf>,
     ) -> io::Result<Self> {
-        let name = {
-            // Can't panic. It only would, if the path ends with "..", and we
-            // are canonicalizing it here to prevent that.
-            let canonical = path.canonicalize()?;
-            let file_name = canonical
-                .file_name()
-                .expect("Expected path to be canonical");
+        let crate_dir = path.canonicalize()?;
 
-            file_name.to_string_lossy().replace('-', "_")
-        };
+        let metadata = cargo_metadata::MetadataCommand::new()
+            .current_dir(&crate_dir)
+            .exec()
+            .map_err(metadata_error_to_io)?;
 
-        let src_path = path.join("src");
+        let pkg = package_associated_with_directory(&metadata, &crate_dir)?;
+        let src_path = crate_dir.join("src");
 
         let lib_path = {
+            let name = pkg.name.replace('-', "_");
             let file = HostPlatform::lib_file_name(&name);
-            let target_dir = target_dir.unwrap_or_else(|| path.join("target"));
+            let target_dir = target_dir
+                .unwrap_or_else(|| metadata.target_directory.clone().into());
             target_dir.join("debug").join(file)
         };
-
-        let manifest_path = path.join("Cargo.toml");
 
         Ok(Self {
             src_path,
             lib_path,
-            manifest_path,
+            manifest_path: pkg.manifest_path.as_std_path().to_path_buf(),
         })
     }
 
@@ -206,6 +204,33 @@ impl Model {
             parameters,
         })
     }
+}
+
+fn metadata_error_to_io(e: cargo_metadata::Error) -> std::io::Error {
+    match e {
+        cargo_metadata::Error::Io(io) => io,
+        _ => std::io::Error::new(io::ErrorKind::Other, e),
+    }
+}
+
+fn package_associated_with_directory<'m>(
+    metadata: &'m cargo_metadata::Metadata,
+    dir: &Path,
+) -> Result<&'m cargo_metadata::Package, io::Error> {
+    for pkg in metadata.workspace_packages() {
+        let crate_dir = pkg
+            .manifest_path
+            .parent()
+            .and_then(|p| p.canonicalize().ok());
+
+        if crate_dir.as_deref() == Some(dir) {
+            return Ok(pkg);
+        }
+    }
+
+    let msg = format!("\"{}\" doesn't point to a crate", dir.display());
+
+    Err(io::Error::new(io::ErrorKind::Other, msg))
 }
 
 /// Watches a model for changes, reloading it continually

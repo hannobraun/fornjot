@@ -870,6 +870,7 @@ dependencies = [
 name = "fj-host"
 version = "0.8.0"
 dependencies = [
+ "cargo_metadata",
  "fj",
  "libloading",
  "notify",
