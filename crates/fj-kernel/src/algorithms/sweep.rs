@@ -44,7 +44,7 @@ pub fn sweep(
                     create_non_continuous_side_face(
                         path,
                         is_sweep_along_negative_direction,
-                        vertices.map(|vertex| vertex.global()),
+                        vertices.map(|vertex| *vertex.global()),
                         color,
                         &mut target,
                     );

@@ -36,7 +36,7 @@ impl Vertex {
     }
 
     /// The global form of this vertex
-    pub fn global(&self) -> GlobalVertex {
-        self.global
+    pub fn global(&self) -> &GlobalVertex {
+        &self.global
     }
 }
