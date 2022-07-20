@@ -252,45 +252,45 @@ impl ObjectIters for Edge {
 
 impl ObjectIters for Face {
     fn curve_iter(&self) -> Iter<Curve<3>> {
-        if let Face::Face(face) = self {
-            let mut iter = Iter::empty().with(face.surface().curve_iter());
-
-            for cycle in face.all_cycles() {
-                iter = iter.with(cycle.curve_iter());
-            }
-
-            return iter;
+        if let Face::Triangles(_) = self {
+            return Iter::empty();
         }
 
-        Iter::empty()
+        let mut iter = Iter::empty().with(self.surface().curve_iter());
+
+        for cycle in self.all_cycles() {
+            iter = iter.with(cycle.curve_iter());
+        }
+
+        iter
     }
 
     fn cycle_iter(&self) -> Iter<Cycle> {
-        if let Face::Face(face) = self {
-            let mut iter = Iter::empty().with(face.surface().cycle_iter());
-
-            for cycle in face.all_cycles() {
-                iter = iter.with(cycle.cycle_iter());
-            }
-
-            return iter;
+        if let Face::Triangles(_) = self {
+            return Iter::empty();
         }
 
-        Iter::empty()
+        let mut iter = Iter::empty().with(self.surface().cycle_iter());
+
+        for cycle in self.all_cycles() {
+            iter = iter.with(cycle.cycle_iter());
+        }
+
+        iter
     }
 
     fn edge_iter(&self) -> Iter<Edge> {
-        if let Face::Face(face) = self {
-            let mut iter = Iter::empty().with(face.surface().edge_iter());
-
-            for cycle in face.all_cycles() {
-                iter = iter.with(cycle.edge_iter());
-            }
-
-            return iter;
+        if let Face::Triangles(_) = self {
+            return Iter::empty();
         }
 
-        Iter::empty()
+        let mut iter = Iter::empty().with(self.surface().edge_iter());
+
+        for cycle in self.all_cycles() {
+            iter = iter.with(cycle.edge_iter());
+        }
+
+        iter
     }
 
     fn face_iter(&self) -> Iter<Face> {
@@ -298,74 +298,73 @@ impl ObjectIters for Face {
     }
 
     fn global_vertex_iter(&self) -> Iter<GlobalVertex> {
-        if let Face::Face(face) = self {
-            let mut iter =
-                Iter::empty().with(face.surface().global_vertex_iter());
-
-            for cycle in face.all_cycles() {
-                iter = iter.with(cycle.global_vertex_iter());
-            }
-
-            return iter;
+        if let Face::Triangles(_) = self {
+            return Iter::empty();
         }
 
-        Iter::empty()
+        let mut iter = Iter::empty().with(self.surface().global_vertex_iter());
+
+        for cycle in self.all_cycles() {
+            iter = iter.with(cycle.global_vertex_iter());
+        }
+
+        iter
     }
 
     fn sketch_iter(&self) -> Iter<Sketch> {
-        if let Face::Face(face) = self {
-            let mut iter = Iter::empty().with(face.surface().sketch_iter());
-
-            for cycle in face.all_cycles() {
-                iter = iter.with(cycle.sketch_iter());
-            }
-
-            return iter;
+        if let Face::Triangles(_) = self {
+            return Iter::empty();
         }
 
-        Iter::empty()
+        let mut iter = Iter::empty().with(self.surface().sketch_iter());
+
+        for cycle in self.all_cycles() {
+            iter = iter.with(cycle.sketch_iter());
+        }
+
+        iter
     }
 
     fn solid_iter(&self) -> Iter<Solid> {
-        if let Face::Face(face) = self {
-            let mut iter = Iter::empty().with(face.surface().solid_iter());
-
-            for cycle in face.all_cycles() {
-                iter = iter.with(cycle.solid_iter());
-            }
-
-            return iter;
+        if let Face::Triangles(_) = self {
+            return Iter::empty();
         }
 
-        Iter::empty()
+        let mut iter = Iter::empty().with(self.surface().solid_iter());
+
+        for cycle in self.all_cycles() {
+            iter = iter.with(cycle.solid_iter());
+        }
+
+        iter
     }
 
     fn surface_iter(&self) -> Iter<Surface> {
-        if let Face::Face(face) = self {
-            let mut iter = Iter::empty().with(face.surface().surface_iter());
-
-            for cycle in face.all_cycles() {
-                iter = iter.with(cycle.surface_iter());
-            }
-
-            return iter;
+        if let Face::Triangles(_) = self {
+            return Iter::empty();
         }
 
-        Iter::empty()
+        let mut iter = Iter::empty().with(self.surface().surface_iter());
+
+        for cycle in self.all_cycles() {
+            iter = iter.with(cycle.surface_iter());
+        }
+
+        iter
     }
 
     fn vertex_iter(&self) -> Iter<Vertex> {
-        if let Face::Face(face) = self {
-            let mut iter = Iter::empty().with(face.surface().vertex_iter());
-
-            for cycle in face.all_cycles() {
-                iter = iter.with(cycle.vertex_iter());
-            }
-
-            return iter;
+        if let Face::Triangles(_) = self {
+            return Iter::empty();
         }
 
-        Iter::empty()
+        let mut iter = Iter::empty().with(self.surface().vertex_iter());
+
+        for cycle in self.all_cycles() {
+            iter = iter.with(cycle.vertex_iter());
+        }
+
+        iter
     }
 }
 
