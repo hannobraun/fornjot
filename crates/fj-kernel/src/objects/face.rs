@@ -48,19 +48,19 @@ impl Face {
 
     /// Access this face's surface
     pub fn surface(&self) -> &Surface {
-        self.brep().surface()
+        &self.brep().surface
     }
 
     /// Access the cycles that bound the face on the outside
     pub fn exteriors(&self) -> impl Iterator<Item = &Cycle> + '_ {
-        self.brep().exteriors()
+        self.brep().exteriors.as_local()
     }
 
     /// Access the cycles that bound the face on the inside
     ///
     /// Each of these cycles defines a hole in the face.
     pub fn interiors(&self) -> impl Iterator<Item = &Cycle> + '_ {
-        self.brep().interiors()
+        self.brep().interiors.as_local()
     }
 
     /// Access all cycles of this face
@@ -68,7 +68,7 @@ impl Face {
     /// This is equivalent to chaining the iterators returned by
     /// [`Face::exteriors`] and [`Face::interiors`].
     pub fn all_cycles(&self) -> impl Iterator<Item = &Cycle> + '_ {
-        self.brep().all_cycles()
+        self.exteriors().chain(self.interiors())
     }
 
     /// Access the color of the face
@@ -99,31 +99,6 @@ pub struct FaceBRep {
     exteriors: CyclesInFace,
     interiors: CyclesInFace,
     color: [u8; 4],
-}
-
-impl FaceBRep {
-    /// Access this face's surface
-    pub fn surface(&self) -> &Surface {
-        &self.surface
-    }
-
-    /// Access this face's exterior cycles
-    pub fn exteriors(&self) -> impl Iterator<Item = &Cycle> + '_ {
-        self.exteriors.as_local()
-    }
-
-    /// Access this face's interior cycles
-    pub fn interiors(&self) -> impl Iterator<Item = &Cycle> + '_ {
-        self.interiors.as_local()
-    }
-
-    /// Access all cycles of this face
-    ///
-    /// This is equivalent to chaining the iterators returned by
-    /// [`Face::exteriors`] and [`Face::interiors`].
-    pub fn all_cycles(&self) -> impl Iterator<Item = &Cycle> + '_ {
-        self.exteriors().chain(self.interiors())
-    }
 }
 
 /// A list of cycles, as they are stored in `Face`
