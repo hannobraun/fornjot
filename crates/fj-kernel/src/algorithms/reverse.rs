@@ -7,19 +7,16 @@ use crate::{
 
 /// Reverse the direction of a face
 pub fn reverse_face(face: &Face) -> Face {
-    let face = match face {
-        Face::Face(face) => face,
-        Face::Triangles(_) => {
-            panic!("Reversing tri-rep faces is not supported")
-        }
-    };
+    if let Face::Triangles(_) = face {
+        panic!("Reversing tri-rep faces is not supported");
+    }
 
     let surface = face.surface().reverse();
 
     let exteriors = reverse_local_coordinates_in_cycle(face.exteriors());
     let interiors = reverse_local_coordinates_in_cycle(face.interiors());
 
-    Face::new(surface, exteriors, interiors, face.color)
+    Face::new(surface, exteriors, interiors, face.color())
 }
 
 fn reverse_local_coordinates_in_cycle<'r>(
