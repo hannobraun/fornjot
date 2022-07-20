@@ -46,13 +46,13 @@ impl FaceApprox {
         let mut interiors = HashSet::new();
 
         for cycle in face.exteriors() {
-            let cycle = CycleApprox::new(&cycle, tolerance);
+            let cycle = CycleApprox::new(cycle, tolerance);
 
             points.extend(cycle.points.iter().copied());
             exteriors.push(cycle);
         }
         for cycle in face.interiors() {
-            let cycle = CycleApprox::new(&cycle, tolerance);
+            let cycle = CycleApprox::new(cycle, tolerance);
 
             points.extend(cycle.points.iter().copied());
             interiors.insert(cycle);

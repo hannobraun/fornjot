@@ -18,7 +18,7 @@ pub use self::{
     curve::Curve,
     cycle::Cycle,
     edge::{Edge, VerticesOfEdge},
-    face::{CyclesInFace, Face, FaceBRep},
+    face::Face,
     global_vertex::GlobalVertex,
     sketch::Sketch,
     solid::Solid,

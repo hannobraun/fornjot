@@ -3,8 +3,7 @@ use fj_math::{Transform, Vector};
 use crate::{
     local::Local,
     objects::{
-        Curve, Cycle, CyclesInFace, Edge, Face, FaceBRep, GlobalVertex, Sketch,
-        Solid, Surface, Vertex,
+        Curve, Cycle, Edge, Face, GlobalVertex, Sketch, Solid, Surface, Vertex,
     },
 };
 
@@ -72,33 +71,25 @@ impl TransformObject for Edge {
 
 impl TransformObject for Face {
     fn transform(self, transform: &Transform) -> Self {
-        match self {
-            Self::Face(face) => {
-                let surface = face.surface.transform(transform);
+        if let Some(triangles) = self.triangles() {
+            let mut target = Vec::new();
 
-                let exteriors = transform_cycles(&face.exteriors, transform);
-                let interiors = transform_cycles(&face.interiors, transform);
-
-                let color = face.color;
-
-                Self::Face(FaceBRep {
-                    surface,
-                    exteriors,
-                    interiors,
-                    color,
-                })
+            for (triangle, color) in triangles.clone() {
+                let triangle = transform.transform_triangle(&triangle);
+                target.push((triangle, color));
             }
-            Self::Triangles(triangles) => {
-                let mut target = Vec::new();
 
-                for (triangle, color) in triangles {
-                    let triangle = transform.transform_triangle(&triangle);
-                    target.push((triangle, color));
-                }
-
-                Self::Triangles(target)
-            }
+            return Self::from_triangles(target);
         }
+
+        let surface = self.surface().transform(transform);
+
+        let exteriors = transform_cycles(self.exteriors(), transform);
+        let interiors = transform_cycles(self.interiors(), transform);
+
+        let color = self.color();
+
+        Face::new(surface, exteriors, interiors, color)
     }
 }
 
@@ -152,11 +143,11 @@ pub fn transform_faces(faces: &mut Vec<Face>, transform: &Transform) {
     }
 }
 
-fn transform_cycles(
-    cycles: &CyclesInFace,
-    transform: &Transform,
-) -> CyclesInFace {
-    let cycles = cycles.as_local().map(|cycle| cycle.transform(transform));
-
-    CyclesInFace::new(cycles)
+fn transform_cycles<'a>(
+    cycles: impl IntoIterator<Item = &'a Cycle> + 'a,
+    transform: &'a Transform,
+) -> impl Iterator<Item = Cycle> + 'a {
+    cycles
+        .into_iter()
+        .map(|cycle| cycle.clone().transform(transform))
 }

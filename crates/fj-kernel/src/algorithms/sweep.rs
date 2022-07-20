@@ -39,7 +39,7 @@ pub fn sweep(
         );
 
         for cycle in face.all_cycles() {
-            for edge in cycle.edges {
+            for edge in &cycle.edges {
                 if let Some(vertices) = edge.vertices().get() {
                     create_non_continuous_side_face(
                         path,
@@ -52,7 +52,7 @@ pub fn sweep(
                 }
 
                 create_continuous_side_face(
-                    edge,
+                    *edge,
                     path,
                     tolerance,
                     color,
@@ -193,7 +193,7 @@ fn create_continuous_side_face(
         side_face.push(([v0, v2, v3].into(), color));
     }
 
-    target.push(Face::Triangles(side_face));
+    target.push(Face::from_triangles(side_face));
 }
 
 #[cfg(test)]
