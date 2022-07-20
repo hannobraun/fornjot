@@ -20,7 +20,7 @@ pub enum Face {
     /// The plan is to eventually represent faces as a geometric surface,
     /// bounded by edges. While the transition is being made, this variant is
     /// still required.
-    Triangles(Vec<(Triangle<3>, Color)>),
+    Triangles(TriRep),
 }
 
 impl Face {
@@ -100,3 +100,5 @@ pub struct FaceBRep {
     interiors: Vec<Cycle>,
     color: [u8; 4],
 }
+
+type TriRep = Vec<(Triangle<3>, Color)>;
