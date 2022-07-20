@@ -23,7 +23,7 @@ impl Face {
         let interiors = interiors.into_iter().collect();
 
         Self {
-            representation: Representation::BRep(FaceBRep {
+            representation: Representation::BRep(BRep {
                 surface,
                 exteriors,
                 interiors,
@@ -88,7 +88,7 @@ impl Face {
     }
 
     /// Access the boundary representation of the face
-    fn brep(&self) -> &FaceBRep {
+    fn brep(&self) -> &BRep {
         if let Representation::BRep(face) = &self.representation {
             return face;
         }
@@ -101,12 +101,12 @@ impl Face {
 
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 enum Representation {
-    BRep(FaceBRep),
+    BRep(BRep),
     TriRep(TriRep),
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-struct FaceBRep {
+struct BRep {
     surface: Surface,
     exteriors: Vec<Cycle>,
     interiors: Vec<Cycle>,
