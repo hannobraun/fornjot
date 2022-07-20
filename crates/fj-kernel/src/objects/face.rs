@@ -78,7 +78,7 @@ impl Face {
     /// This is equivalent to chaining the iterators returned by
     /// [`Face::exteriors`] and [`Face::interiors`].
     pub fn all_cycles(&self) -> impl Iterator<Item = Cycle> + '_ {
-        self.exteriors().chain(self.interiors())
+        self.brep().all_cycles()
     }
 
     /// Access the color of the face
