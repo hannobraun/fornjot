@@ -53,7 +53,7 @@ fn main() -> anyhow::Result<()> {
     })?;
     path.push(model);
 
-    let model = Model::from_path(path.clone(), config.target_dir)
+    let model = Model::from_path(path.clone())
         .with_context(|| format!("Failed to load model: {}", path.display()))?;
     let parameters = args.parameters.unwrap_or_else(Parameters::empty);
 

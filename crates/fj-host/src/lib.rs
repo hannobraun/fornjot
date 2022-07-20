@@ -47,10 +47,7 @@ impl Model {
     /// Optionally, the target directory where plugin files are compiled to can
     /// be provided. If it is not provided, the target directory is assumed to
     /// be located within the model path.
-    pub fn from_path(
-        path: PathBuf,
-        target_dir: Option<PathBuf>,
-    ) -> Result<Self, Error> {
+    pub fn from_path(path: PathBuf) -> Result<Self, Error> {
         let crate_dir = path.canonicalize()?;
 
         let metadata = cargo_metadata::MetadataCommand::new()
@@ -63,8 +60,8 @@ impl Model {
         let lib_path = {
             let name = pkg.name.replace('-', "_");
             let file = HostPlatform::lib_file_name(&name);
-            let target_dir = target_dir
-                .unwrap_or_else(|| metadata.target_directory.clone().into());
+            let target_dir =
+                metadata.target_directory.clone().into_std_path_buf();
             target_dir.join("debug").join(file)
         };
 
