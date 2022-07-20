@@ -95,19 +95,10 @@ impl Face {
 /// `Face::Triangles` can finally be removed.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct FaceBRep {
-    /// The surface that defines this face
-    pub surface: Surface,
-
-    /// The cycles that bound the face on the outside
-    pub exteriors: CyclesInFace,
-
-    /// The cycles that bound the face on the inside
-    ///
-    /// Each of these cycles defines a hole in the face.
-    pub interiors: CyclesInFace,
-
-    /// The color of the face
-    pub color: [u8; 4],
+    surface: Surface,
+    exteriors: CyclesInFace,
+    interiors: CyclesInFace,
+    color: [u8; 4],
 }
 
 impl FaceBRep {
