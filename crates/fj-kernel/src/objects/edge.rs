@@ -9,21 +9,16 @@ use super::{Curve, GlobalVertex, Surface, Vertex};
 /// An edge of a shape
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edge {
-    /// Access the curve that defines the edge's geometry
-    ///
-    /// The edge can be a segment of the curve that is bounded by two vertices,
-    /// or if the curve is continuous (i.e. connects to itself), the edge could
-    /// be defined by the whole curve, and have no bounding vertices.
-    pub curve: Local<Curve<2>>,
-
-    /// Access the vertices that bound the edge on the curve
-    ///
-    /// If there are no such vertices, that means that both the curve and the
-    /// edge are continuous (i.e. connected to themselves).
-    pub vertices: VerticesOfEdge,
+    curve: Local<Curve<2>>,
+    vertices: VerticesOfEdge,
 }
 
 impl Edge {
+    /// Create a new instance
+    pub fn new(curve: Local<Curve<2>>, vertices: VerticesOfEdge) -> Self {
+        Self { curve, vertices }
+    }
+
     /// Create a circle from the given radius
     pub fn circle_from_radius(radius: Scalar) -> Self {
         let curve_local = Curve::Circle(Circle {
@@ -76,20 +71,28 @@ impl Edge {
         }
     }
 
-    /// Access this edge's curve
-    pub fn curve(&self) -> Curve<3> {
-        self.curve.global()
+    /// Access the curve that defines the edge's geometry
+    ///
+    /// The edge can be a segment of the curve that is bounded by two vertices,
+    /// or if the curve is continuous (i.e. connects to itself), the edge could
+    /// be defined by the whole curve, and have no bounding vertices.
+    pub fn curve(&self) -> &Local<Curve<2>> {
+        &self.curve
     }
 
-    /// Access this edge's vertices
-    pub fn vertices(&self) -> Option<[Vertex; 2]> {
-        self.vertices.0
+    /// Access the vertices that bound the edge on the curve
+    ///
+    /// An edge has either two bounding vertices or none. The latter is possible
+    /// if the edge's curve is continuous (i.e. connects to itself), and defines
+    /// the whole edge.
+    pub fn vertices(&self) -> &VerticesOfEdge {
+        &self.vertices
     }
 }
 
 impl fmt::Display for Edge {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self.vertices() {
+        match self.vertices().0 {
             Some(vertices) => {
                 let [a, b] = vertices.map(|vertex| vertex.position());
                 write!(f, "edge from {:?} to {:?}", a, b)?
@@ -97,7 +100,7 @@ impl fmt::Display for Edge {
             None => write!(f, "continuous edge")?,
         }
 
-        write!(f, " on {}", self.curve())?;
+        write!(f, " on {}", self.curve().global())?;
 
         Ok(())
     }
@@ -136,6 +139,16 @@ impl VerticesOfEdge {
         false
     }
 
+    /// Access the vertices
+    pub fn get(&self) -> Option<[&Vertex; 2]> {
+        self.0.as_ref().map(|vertices| {
+            // Can be cleaned up once `each_ref` is stable:
+            // https://doc.rust-lang.org/std/primitive.array.html#method.each_ref
+            let [a, b] = vertices;
+            [a, b]
+        })
+    }
+
     /// Access the two vertices
     ///
     /// # Panics
@@ -145,7 +158,7 @@ impl VerticesOfEdge {
         self.0.expect("Expected edge to have vertices")
     }
 
-    /// Iterate over the vertices, if any
+    /// Iterate over the vertices
     pub fn iter(&self) -> impl Iterator<Item = &Vertex> {
         self.0.iter().flatten()
     }

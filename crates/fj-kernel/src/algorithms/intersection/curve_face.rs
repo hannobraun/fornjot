@@ -40,15 +40,15 @@ impl CurveFaceIntersectionList {
                 edges
             })
             .map(|edge| {
-                let line = match edge.curve.local() {
+                let line = match edge.curve().local() {
                     Curve::Line(line) => line,
                     _ => {
                         todo!("Curve-face intersection only supports polygons")
                     }
                 };
 
-                let vertices = match edge.vertices() {
-                    Some(vertices) => vertices,
+                let vertices = match edge.vertices().get() {
+                    Some(vertices) => vertices.map(|&vertex| vertex),
                     None => todo!(
                         "Curve-face intersection does not support faces with \
                     continuous edges"
