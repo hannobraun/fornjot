@@ -3,8 +3,7 @@ use fj_math::{Transform, Vector};
 use crate::{
     local::Local,
     objects::{
-        Curve, Cycle, CyclesInFace, Edge, Face, FaceBRep, GlobalVertex, Sketch,
-        Solid, Surface, Vertex,
+        Curve, Cycle, Edge, Face, GlobalVertex, Sketch, Solid, Surface, Vertex,
     },
 };
 
@@ -76,17 +75,12 @@ impl TransformObject for Face {
             Self::Face(face) => {
                 let surface = face.surface.transform(transform);
 
-                let exteriors = transform_cycles(&face.exteriors, transform);
-                let interiors = transform_cycles(&face.interiors, transform);
+                let exteriors = transform_cycles(face.exteriors(), transform);
+                let interiors = transform_cycles(face.interiors(), transform);
 
                 let color = face.color;
 
-                Self::Face(FaceBRep {
-                    surface,
-                    exteriors,
-                    interiors,
-                    color,
-                })
+                Face::new(surface, exteriors, interiors, color)
             }
             Self::Triangles(triangles) => {
                 let mut target = Vec::new();
@@ -152,13 +146,11 @@ pub fn transform_faces(faces: &mut Vec<Face>, transform: &Transform) {
     }
 }
 
-fn transform_cycles(
-    cycles: &CyclesInFace,
-    transform: &Transform,
-) -> CyclesInFace {
-    let cycles = cycles
-        .as_local()
-        .map(|cycle| cycle.clone().transform(transform));
-
-    CyclesInFace::new(cycles)
+fn transform_cycles<'a>(
+    cycles: impl IntoIterator<Item = &'a Cycle> + 'a,
+    transform: &'a Transform,
+) -> impl Iterator<Item = Cycle> + 'a {
+    cycles
+        .into_iter()
+        .map(|cycle| cycle.clone().transform(transform))
 }
