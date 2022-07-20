@@ -5,6 +5,7 @@ use std::fmt::{Display, Formatter};
 use std::path::PathBuf;
 use std::process::Command;
 use std::str::FromStr;
+use std::thread::sleep;
 use std::time::{Duration, Instant};
 
 #[derive(thiserror::Error, Debug)]
@@ -168,30 +169,52 @@ impl Crate {
     fn submit(&self, token: &SecUtf8, dry_run: bool) -> anyhow::Result<()> {
         log::info!("{self} publishing new version");
 
-        let mut command = Command::new("cargo");
-        command
-            .arg("publish")
-            .args(["--token", token.unsecure()])
-            .current_dir(&self.path);
+        let ours = self.get_local_version()?;
+        let delay = Duration::from_secs(10);
+        let start_time = Instant::now();
+        let timeout = Duration::from_secs(600);
+        let mut attempt = 1;
+        let maximum_attempts = 10;
 
-        if dry_run {
-            command.arg("--dry-run");
-        }
+        loop {
+            if Instant::now() - start_time > timeout {
+                bail!("{self} could not be published to the registry within {timeout:?}");
+            }
 
-        let exit_status = command.status()?;
+            if attempt > maximum_attempts {
+                bail!("{self} could not be published to the registry; tried {attempt} times");
+            }
 
-        if !exit_status.success() {
-            match exit_status.code() {
-                Some(code) => {
-                    bail!("`cargo publish` failed with exit code {code}")
-                }
-                None => {
-                    bail!("`cargo publish` was terminated by signal")
+            let mut command = Command::new("cargo");
+            command
+                .arg("publish")
+                .args(["--token", token.unsecure()])
+                .current_dir(&self.path);
+
+            if dry_run {
+                command.arg("--dry-run");
+            }
+
+            let exit_status = command.status()?;
+
+            if !exit_status.success() {
+                match exit_status.code() {
+                    Some(code) => {
+                        log::warn!("`cargo publish` failed with exit code {code}; trying again in {delay:?}");
+                        sleep(delay);
+                        attempt += 1;
+                        continue;
+                    }
+                    None => {
+                        bail!("`cargo publish` was terminated by signal")
+                    }
                 }
             }
+
+            log::info!("{self} published as {ours}");
+            break;
         }
 
-        let ours = self.get_local_version()?;
         let delay = Duration::from_secs(10);
         let start_time = Instant::now();
         let timeout = Duration::from_secs(600);
