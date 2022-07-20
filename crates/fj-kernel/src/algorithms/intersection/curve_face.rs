@@ -40,7 +40,7 @@ impl CurveFaceIntersectionList {
                 edges
             })
             .map(|edge| {
-                let line = match edge.curve.local() {
+                let line = match edge.curve().local() {
                     Curve::Line(line) => line,
                     _ => {
                         todo!("Curve-face intersection only supports polygons")

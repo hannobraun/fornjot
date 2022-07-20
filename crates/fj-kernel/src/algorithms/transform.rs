@@ -59,11 +59,12 @@ impl TransformObject for Cycle {
 impl TransformObject for Edge {
     fn transform(self, transform: &Transform) -> Self {
         let curve = Local::new(
-            self.curve.local(),
-            self.curve.global().transform(transform),
+            self.curve().local(),
+            self.curve().global().transform(transform),
         );
 
-        let vertices = self.vertices.map(|vertex| vertex.transform(transform));
+        let vertices =
+            self.vertices().map(|vertex| vertex.transform(transform));
 
         Self { curve, vertices }
     }

@@ -16,7 +16,7 @@ pub fn validate_edge(
 
     let mut edge_vertex_mismatches = Vec::new();
 
-    for vertex in edge.vertices.iter() {
+    for vertex in edge.vertices().iter() {
         let local = vertex.position();
         let local_as_global =
             edge.curve().global().point_from_curve_coords(local);

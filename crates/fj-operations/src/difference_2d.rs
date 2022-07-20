@@ -92,7 +92,7 @@ impl Shape for fj::Difference2d {
 fn add_cycle(cycle: Cycle, reverse: bool) -> Cycle {
     let mut edges = Vec::new();
     for edge in cycle.edges {
-        let curve_local = edge.curve.local();
+        let curve_local = edge.curve().local();
         let curve_local = if reverse {
             curve_local.reverse()
         } else {
@@ -106,9 +106,9 @@ fn add_cycle(cycle: Cycle, reverse: bool) -> Cycle {
         };
 
         let vertices = if reverse {
-            edge.vertices.reverse()
+            edge.vertices().reverse()
         } else {
-            edge.vertices
+            *edge.vertices()
         };
 
         let edge = Edge {
