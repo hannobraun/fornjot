@@ -163,7 +163,7 @@ impl VerticesOfEdge {
         self.0.expect("Expected edge to have vertices")
     }
 
-    /// Iterate over the vertices, if any
+    /// Iterate over the vertices
     pub fn iter(&self) -> impl Iterator<Item = &Vertex> {
         self.0.iter().flatten()
     }
