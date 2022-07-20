@@ -76,12 +76,20 @@ impl Edge {
         }
     }
 
-    /// Access this edge's curve
+    /// Access the curve that defines the edge's geometry
+    ///
+    /// The edge can be a segment of the curve that is bounded by two vertices,
+    /// or if the curve is continuous (i.e. connects to itself), the edge could
+    /// be defined by the whole curve, and have no bounding vertices.
     pub fn curve(&self) -> Curve<3> {
         self.curve.global()
     }
 
-    /// Access this edge's vertices
+    /// Access the vertices that bound the edge on the curve
+    ///
+    /// An edge has either two bounding vertices or none. The latter is possible
+    /// if the edge's curve is continuous (i.e. connects to itself), and defines
+    /// the whole edge.
     pub fn vertices(&self) -> Option<[Vertex; 2]> {
         self.vertices.0
     }
