@@ -7,20 +7,8 @@ use super::{Cycle, Surface};
 
 /// A face of a shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub enum Face {
-    /// A face of a shape
-    ///
-    /// A face is defined by a surface, and is bounded by edges that lie in that
-    /// surface.
-    BRep(FaceBRep),
-
-    /// The triangles of the face
-    ///
-    /// Representing faces as a collection of triangles is a temporary state.
-    /// The plan is to eventually represent faces as a geometric surface,
-    /// bounded by edges. While the transition is being made, this variant is
-    /// still required.
-    TriRep(TriRep),
+pub struct Face {
+    representation: Representation,
 }
 
 impl Face {
@@ -34,17 +22,21 @@ impl Face {
         let exteriors = exteriors.into_iter().collect();
         let interiors = interiors.into_iter().collect();
 
-        Self::BRep(FaceBRep {
-            surface,
-            exteriors,
-            interiors,
-            color,
-        })
+        Self {
+            representation: Representation::BRep(FaceBRep {
+                surface,
+                exteriors,
+                interiors,
+                color,
+            }),
+        }
     }
 
     /// Contact an instance that uses triangle representation
     pub fn from_triangles(triangles: TriRep) -> Self {
-        Self::TriRep(triangles)
+        Self {
+            representation: Representation::TriRep(triangles),
+        }
     }
 
     /// Build a face using the [`FaceBuilder`] API
@@ -88,7 +80,7 @@ impl Face {
     /// will. This method exists as a workaround, while the transition is still
     /// in progress.
     pub fn triangles(&self) -> Option<&TriRep> {
-        if let Self::TriRep(triangles) = self {
+        if let Representation::TriRep(triangles) = &self.representation {
             return Some(triangles);
         }
 
@@ -97,7 +89,7 @@ impl Face {
 
     /// Access the boundary representation of the face
     fn brep(&self) -> &FaceBRep {
-        if let Self::BRep(face) = self {
+        if let Representation::BRep(face) = &self.representation {
             return face;
         }
 
@@ -105,6 +97,12 @@ impl Face {
         // method.
         unreachable!()
     }
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+enum Representation {
+    BRep(FaceBRep),
+    TriRep(TriRep),
 }
 
 /// The boundary representation of a face
