@@ -12,7 +12,7 @@ pub enum Face {
     ///
     /// A face is defined by a surface, and is bounded by edges that lie in that
     /// surface.
-    Face(FaceBRep),
+    BRep(FaceBRep),
 
     /// The triangles of the face
     ///
@@ -34,7 +34,7 @@ impl Face {
         let exteriors = exteriors.into_iter().collect();
         let interiors = interiors.into_iter().collect();
 
-        Self::Face(FaceBRep {
+        Self::BRep(FaceBRep {
             surface,
             exteriors,
             interiors,
@@ -78,7 +78,7 @@ impl Face {
 
     /// Access the boundary representation of the face
     fn brep(&self) -> &FaceBRep {
-        if let Self::Face(face) = self {
+        if let Self::BRep(face) = self {
             return face;
         }
 
