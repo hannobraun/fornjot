@@ -165,7 +165,7 @@ impl ObjectIters for Cycle {
 
 impl ObjectIters for Edge {
     fn curve_iter(&self) -> Iter<Curve<3>> {
-        let mut iter = Iter::empty().with(self.curve().curve_iter());
+        let mut iter = Iter::empty().with(self.curve().global().curve_iter());
 
         for vertex in self.vertices().into_iter().flatten() {
             iter = iter.with(vertex.curve_iter());
@@ -175,7 +175,7 @@ impl ObjectIters for Edge {
     }
 
     fn cycle_iter(&self) -> Iter<Cycle> {
-        let mut iter = Iter::empty().with(self.curve().cycle_iter());
+        let mut iter = Iter::empty().with(self.curve().global().cycle_iter());
 
         for vertex in self.vertices().into_iter().flatten() {
             iter = iter.with(vertex.cycle_iter());
@@ -189,7 +189,7 @@ impl ObjectIters for Edge {
     }
 
     fn face_iter(&self) -> Iter<Face> {
-        let mut iter = Iter::empty().with(self.curve().face_iter());
+        let mut iter = Iter::empty().with(self.curve().global().face_iter());
 
         for vertex in self.vertices().into_iter().flatten() {
             iter = iter.with(vertex.face_iter());
@@ -199,7 +199,8 @@ impl ObjectIters for Edge {
     }
 
     fn global_vertex_iter(&self) -> Iter<GlobalVertex> {
-        let mut iter = Iter::empty().with(self.curve().global_vertex_iter());
+        let mut iter =
+            Iter::empty().with(self.curve().global().global_vertex_iter());
 
         for vertex in self.vertices().into_iter().flatten() {
             iter = iter.with(vertex.global_vertex_iter());
@@ -209,7 +210,7 @@ impl ObjectIters for Edge {
     }
 
     fn sketch_iter(&self) -> Iter<Sketch> {
-        let mut iter = Iter::empty().with(self.curve().sketch_iter());
+        let mut iter = Iter::empty().with(self.curve().global().sketch_iter());
 
         for vertex in self.vertices().into_iter().flatten() {
             iter = iter.with(vertex.sketch_iter());
@@ -219,7 +220,7 @@ impl ObjectIters for Edge {
     }
 
     fn solid_iter(&self) -> Iter<Solid> {
-        let mut iter = Iter::empty().with(self.curve().solid_iter());
+        let mut iter = Iter::empty().with(self.curve().global().solid_iter());
 
         for vertex in self.vertices().into_iter().flatten() {
             iter = iter.with(vertex.solid_iter());
@@ -229,7 +230,7 @@ impl ObjectIters for Edge {
     }
 
     fn surface_iter(&self) -> Iter<Surface> {
-        let mut iter = Iter::empty().with(self.curve().surface_iter());
+        let mut iter = Iter::empty().with(self.curve().global().surface_iter());
 
         for vertex in self.vertices().into_iter().flatten() {
             iter = iter.with(vertex.surface_iter());
@@ -239,7 +240,7 @@ impl ObjectIters for Edge {
     }
 
     fn vertex_iter(&self) -> Iter<Vertex> {
-        let mut iter = Iter::empty().with(self.curve().vertex_iter());
+        let mut iter = Iter::empty().with(self.curve().global().vertex_iter());
 
         for vertex in self.vertices().into_iter().flatten() {
             iter = iter.with(vertex.vertex_iter());

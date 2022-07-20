@@ -81,8 +81,8 @@ impl Edge {
     /// The edge can be a segment of the curve that is bounded by two vertices,
     /// or if the curve is continuous (i.e. connects to itself), the edge could
     /// be defined by the whole curve, and have no bounding vertices.
-    pub fn curve(&self) -> Curve<3> {
-        self.curve.global()
+    pub fn curve(&self) -> &Local<Curve<2>> {
+        &self.curve
     }
 
     /// Access the vertices that bound the edge on the curve
@@ -105,7 +105,7 @@ impl fmt::Display for Edge {
             None => write!(f, "continuous edge")?,
         }
 
-        write!(f, " on {}", self.curve())?;
+        write!(f, " on {}", self.curve().global())?;
 
         Ok(())
     }
