@@ -193,7 +193,7 @@ fn create_continuous_side_face(
         side_face.push(([v0, v2, v3].into(), color));
     }
 
-    target.push(Face::Triangles(side_face));
+    target.push(Face::from_triangles(side_face));
 }
 
 #[cfg(test)]

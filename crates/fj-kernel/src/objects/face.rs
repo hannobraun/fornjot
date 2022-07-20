@@ -41,6 +41,12 @@ impl Face {
             color,
         })
     }
+
+    /// Contact an instance that uses triangle representation
+    pub fn from_triangles(triangles: TriRep) -> Self {
+        Self::Triangles(triangles)
+    }
+
     /// Build a face using the [`FaceBuilder`] API
     pub fn builder(surface: Surface) -> FaceBuilder {
         FaceBuilder::new(surface)

@@ -79,7 +79,7 @@ impl TransformObject for Face {
                 target.push((triangle, color));
             }
 
-            return Self::Triangles(target);
+            return Self::from_triangles(target);
         }
 
         let surface = self.surface().transform(transform);
