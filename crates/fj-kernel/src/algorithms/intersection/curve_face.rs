@@ -47,8 +47,8 @@ impl CurveFaceIntersectionList {
                     }
                 };
 
-                let vertices = match edge.vertices() {
-                    Some(vertices) => vertices,
+                let vertices = match edge.vertices().get() {
+                    Some(vertices) => vertices.map(|&vertex| vertex),
                     None => todo!(
                         "Curve-face intersection does not support faces with \
                     continuous edges"

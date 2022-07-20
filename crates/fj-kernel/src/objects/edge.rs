@@ -90,14 +90,14 @@ impl Edge {
     /// An edge has either two bounding vertices or none. The latter is possible
     /// if the edge's curve is continuous (i.e. connects to itself), and defines
     /// the whole edge.
-    pub fn vertices(&self) -> Option<[Vertex; 2]> {
-        self.vertices.0
+    pub fn vertices(&self) -> &VerticesOfEdge {
+        &self.vertices
     }
 }
 
 impl fmt::Display for Edge {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self.vertices() {
+        match self.vertices().0 {
             Some(vertices) => {
                 let [a, b] = vertices.map(|vertex| vertex.position());
                 write!(f, "edge from {:?} to {:?}", a, b)?
