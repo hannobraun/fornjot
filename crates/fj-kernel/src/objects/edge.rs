@@ -144,6 +144,16 @@ impl VerticesOfEdge {
         false
     }
 
+    /// Access the vertices
+    pub fn get(&self) -> Option<[&Vertex; 2]> {
+        self.0.as_ref().map(|vertices| {
+            // Can be cleaned up once `each_ref` is stable:
+            // https://doc.rust-lang.org/std/primitive.array.html#method.each_ref
+            let [a, b] = vertices;
+            [a, b]
+        })
+    }
+
     /// Access the two vertices
     ///
     /// # Panics
