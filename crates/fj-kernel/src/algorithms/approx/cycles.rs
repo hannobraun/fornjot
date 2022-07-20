@@ -21,7 +21,7 @@ impl CycleApprox {
 
         for edge in &cycle.edges {
             let mut edge_points = Vec::new();
-            approx_curve(&edge.curve().global(), tolerance, &mut edge_points);
+            approx_curve(edge.curve().global(), tolerance, &mut edge_points);
             approx_edge(*edge.vertices(), &mut edge_points);
 
             points.extend(edge_points.into_iter().map(|point| {
@@ -29,7 +29,7 @@ impl CycleApprox {
                     .curve()
                     .local()
                     .point_from_curve_coords(*point.local());
-                Local::new(local, point.global())
+                Local::new(local, *point.global())
             }));
         }
 
@@ -49,7 +49,7 @@ impl CycleApprox {
             // up, once `array_windows` is stable.
             let segment = [segment[0], segment[1]];
 
-            segments.push(Segment::from(segment.map(|point| point.global())));
+            segments.push(Segment::from(segment.map(|point| *point.global())));
         }
 
         segments

@@ -37,8 +37,8 @@ impl<T: LocalForm> Local<T> {
     }
 
     /// Access the global form of the value
-    pub fn global(&self) -> T::GlobalForm {
-        self.global
+    pub fn global(&self) -> &T::GlobalForm {
+        &self.global
     }
 }
 

@@ -46,7 +46,7 @@ fn reverse_local_coordinates_in_cycle<'r>(
                         }
                     };
 
-                    Local::new(local, edge.curve().global())
+                    Local::new(local, *edge.curve().global())
                 };
 
                 Edge::new(curve, *edge.vertices())
