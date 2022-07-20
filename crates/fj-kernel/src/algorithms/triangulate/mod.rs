@@ -20,7 +20,7 @@ pub fn triangulate(
     let mut mesh = Mesh::new();
 
     for face in faces {
-        if let Face::Triangles(triangles) = &face {
+        if let Some(triangles) = face.triangles() {
             for &(triangle, color) in triangles {
                 mesh.push_triangle(triangle.points(), color);
             }

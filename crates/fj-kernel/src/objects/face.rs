@@ -76,6 +76,19 @@ impl Face {
         self.brep().color
     }
 
+    /// Access triangles, if this face uses triangle representation
+    ///
+    /// Only some faces still use triangle representation. At some point, none
+    /// will. This method exists as a workaround, while the transition is still
+    /// in progress.
+    pub fn triangles(&self) -> Option<&TriRep> {
+        if let Self::Triangles(triangles) = self {
+            return Some(triangles);
+        }
+
+        None
+    }
+
     /// Access the boundary representation of the face
     fn brep(&self) -> &FaceBRep {
         if let Self::BRep(face) = self {

@@ -71,10 +71,10 @@ impl TransformObject for Edge {
 
 impl TransformObject for Face {
     fn transform(self, transform: &Transform) -> Self {
-        if let Self::Triangles(triangles) = self {
+        if let Some(triangles) = self.triangles() {
             let mut target = Vec::new();
 
-            for (triangle, color) in triangles {
+            for (triangle, color) in triangles.clone() {
                 let triangle = transform.transform_triangle(&triangle);
                 target.push((triangle, color));
             }

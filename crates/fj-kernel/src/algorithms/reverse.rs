@@ -7,7 +7,7 @@ use crate::{
 
 /// Reverse the direction of a face
 pub fn reverse_face(face: &Face) -> Face {
-    if let Face::Triangles(_) = face {
+    if face.triangles().is_some() {
         panic!("Reversing tri-rep faces is not supported");
     }
 

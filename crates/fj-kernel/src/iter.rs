@@ -252,7 +252,7 @@ impl ObjectIters for Edge {
 
 impl ObjectIters for Face {
     fn curve_iter(&self) -> Iter<Curve<3>> {
-        if let Face::Triangles(_) = self {
+        if self.triangles().is_some() {
             return Iter::empty();
         }
 
@@ -266,7 +266,7 @@ impl ObjectIters for Face {
     }
 
     fn cycle_iter(&self) -> Iter<Cycle> {
-        if let Face::Triangles(_) = self {
+        if self.triangles().is_some() {
             return Iter::empty();
         }
 
@@ -280,7 +280,7 @@ impl ObjectIters for Face {
     }
 
     fn edge_iter(&self) -> Iter<Edge> {
-        if let Face::Triangles(_) = self {
+        if self.triangles().is_some() {
             return Iter::empty();
         }
 
@@ -298,7 +298,7 @@ impl ObjectIters for Face {
     }
 
     fn global_vertex_iter(&self) -> Iter<GlobalVertex> {
-        if let Face::Triangles(_) = self {
+        if self.triangles().is_some() {
             return Iter::empty();
         }
 
@@ -312,7 +312,7 @@ impl ObjectIters for Face {
     }
 
     fn sketch_iter(&self) -> Iter<Sketch> {
-        if let Face::Triangles(_) = self {
+        if self.triangles().is_some() {
             return Iter::empty();
         }
 
@@ -326,7 +326,7 @@ impl ObjectIters for Face {
     }
 
     fn solid_iter(&self) -> Iter<Solid> {
-        if let Face::Triangles(_) = self {
+        if self.triangles().is_some() {
             return Iter::empty();
         }
 
@@ -340,7 +340,7 @@ impl ObjectIters for Face {
     }
 
     fn surface_iter(&self) -> Iter<Surface> {
-        if let Face::Triangles(_) = self {
+        if self.triangles().is_some() {
             return Iter::empty();
         }
 
@@ -354,7 +354,7 @@ impl ObjectIters for Face {
     }
 
     fn vertex_iter(&self) -> Iter<Vertex> {
-        if let Face::Triangles(_) = self {
+        if self.triangles().is_some() {
             return Iter::empty();
         }
 
