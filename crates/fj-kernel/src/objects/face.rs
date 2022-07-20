@@ -97,24 +97,11 @@ pub struct FaceBRep {
     pub surface: Surface,
 
     /// The cycles that bound the face on the outside
-    ///
-    /// # Implementation Note
-    ///
-    /// Since these cycles bound the face, the edges they consist of must
-    /// lie in the surface. The data we're using here is 3-dimensional
-    /// though, so no such limitation is enforced.
-    ///
-    /// It might be less error-prone to specify the cycles in surface
-    /// coordinates.
     pub exteriors: CyclesInFace,
 
     /// The cycles that bound the face on the inside
     ///
     /// Each of these cycles defines a hole in the face.
-    ///
-    /// # Implementation note
-    ///
-    /// See note on `exterior` field.
     pub interiors: CyclesInFace,
 
     /// The color of the face
