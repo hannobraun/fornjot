@@ -38,43 +38,39 @@ impl Shape for fj::Difference2d {
         if let Some(face) = a.face_iter().next() {
             // If there's at least one face to subtract from, we can proceed.
 
-            let surface = face.brep().surface;
+            let surface = face.surface();
 
             for face in a.face_iter() {
-                let face = face.brep();
-
                 assert_eq!(
                     surface,
-                    *face.surface(),
+                    face.surface(),
                     "Trying to subtract faces with different surfaces.",
                 );
 
-                for cycle in face.exteriors.as_local() {
+                for cycle in face.exteriors() {
                     let cycle = add_cycle(cycle.clone(), false);
                     exteriors.push(cycle);
                 }
-                for cycle in face.interiors.as_local() {
+                for cycle in face.interiors() {
                     let cycle = add_cycle(cycle.clone(), true);
                     interiors.push(cycle);
                 }
             }
 
             for face in b.face_iter() {
-                let face = face.brep();
-
                 assert_eq!(
                     surface,
-                    *face.surface(),
+                    face.surface(),
                     "Trying to subtract faces with different surfaces.",
                 );
 
-                for cycle in face.exteriors.as_local() {
+                for cycle in face.exteriors() {
                     let cycle = add_cycle(cycle.clone(), true);
                     interiors.push(cycle);
                 }
             }
 
-            faces.push(Face::new(surface, exteriors, interiors, self.color()));
+            faces.push(Face::new(*surface, exteriors, interiors, self.color()));
         }
 
         let difference = Sketch::from_faces(faces);
