@@ -48,14 +48,13 @@ impl Face {
 
     /// Access the boundary representation of the face
     pub fn brep(&self) -> &FaceBRep {
-        match self {
-            Self::Face(face) => face,
-            _ => {
-                // No code that still uses triangle representation is calling
-                // this method.
-                unreachable!()
-            }
+        if let Self::Face(face) = self {
+            return face;
         }
+
+        // No code that still uses triangle representation is calling this
+        // method.
+        unreachable!()
     }
 
     /// Access this face's surface
