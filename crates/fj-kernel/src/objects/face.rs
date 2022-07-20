@@ -20,7 +20,7 @@ pub enum Face {
     /// The plan is to eventually represent faces as a geometric surface,
     /// bounded by edges. While the transition is being made, this variant is
     /// still required.
-    Triangles(TriRep),
+    TriRep(TriRep),
 }
 
 impl Face {
@@ -44,7 +44,7 @@ impl Face {
 
     /// Contact an instance that uses triangle representation
     pub fn from_triangles(triangles: TriRep) -> Self {
-        Self::Triangles(triangles)
+        Self::TriRep(triangles)
     }
 
     /// Build a face using the [`FaceBuilder`] API
@@ -88,7 +88,7 @@ impl Face {
     /// will. This method exists as a workaround, while the transition is still
     /// in progress.
     pub fn triangles(&self) -> Option<&TriRep> {
-        if let Self::Triangles(triangles) = self {
+        if let Self::TriRep(triangles) = self {
             return Some(triangles);
         }
 
