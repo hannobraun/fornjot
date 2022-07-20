@@ -99,11 +99,10 @@ fn add_cycle(cycle: Cycle, reverse: bool) -> Cycle {
             curve_local
         };
 
-        let curve_canonical = edge.curve();
         let curve_canonical = if reverse {
-            curve_canonical.global().reverse()
+            edge.curve().global().reverse()
         } else {
-            curve_canonical.global()
+            edge.curve().global()
         };
 
         let vertices = if reverse {
