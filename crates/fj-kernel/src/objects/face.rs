@@ -58,7 +58,7 @@ impl Face {
     }
 
     /// Access this face's surface
-    pub fn surface(&self) -> Surface {
+    pub fn surface(&self) -> &Surface {
         self.brep().surface()
     }
 
@@ -123,8 +123,8 @@ pub struct FaceBRep {
 
 impl FaceBRep {
     /// Access this face's surface
-    pub fn surface(&self) -> Surface {
-        self.surface
+    pub fn surface(&self) -> &Surface {
+        &self.surface
     }
 
     /// Access this face's exterior cycles

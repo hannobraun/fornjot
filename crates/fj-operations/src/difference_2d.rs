@@ -45,7 +45,7 @@ impl Shape for fj::Difference2d {
 
                 assert_eq!(
                     surface,
-                    face.surface(),
+                    *face.surface(),
                     "Trying to subtract faces with different surfaces.",
                 );
 
@@ -64,7 +64,7 @@ impl Shape for fj::Difference2d {
 
                 assert_eq!(
                     surface,
-                    face.surface(),
+                    *face.surface(),
                     "Trying to subtract faces with different surfaces.",
                 );
 
