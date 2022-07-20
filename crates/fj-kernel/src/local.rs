@@ -32,8 +32,8 @@ impl<T: LocalForm> Local<T> {
     }
 
     /// Access the local form of the value
-    pub fn local(&self) -> T {
-        self.local
+    pub fn local(&self) -> &T {
+        &self.local
     }
 
     /// Access the global form of the value

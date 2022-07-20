@@ -55,7 +55,7 @@ impl CurveFaceIntersectionList {
                     ),
                 };
 
-                (line, vertices)
+                (*line, vertices)
             });
 
         let mut intersections = Vec::new();

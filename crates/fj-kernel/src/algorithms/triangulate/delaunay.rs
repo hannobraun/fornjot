@@ -14,7 +14,7 @@ pub fn triangulate(points: Vec<Local<Point<2>>>) -> Vec<[Local<Point<2>>; 3]> {
     for triangle in triangulation.inner_faces() {
         let [v0, v1, v2] = triangle.vertices().map(|vertex| *vertex.data());
         let orientation =
-            Triangle::<2>::from_points([v0.local(), v1.local(), v2.local()])
+            Triangle::<2>::from_points([*v0.local(), *v1.local(), *v2.local()])
                 .winding_direction();
 
         let triangle = match orientation {

@@ -25,8 +25,10 @@ impl CycleApprox {
             approx_edge(*edge.vertices(), &mut edge_points);
 
             points.extend(edge_points.into_iter().map(|point| {
-                let local =
-                    edge.curve().local().point_from_curve_coords(point.local());
+                let local = edge
+                    .curve()
+                    .local()
+                    .point_from_curve_coords(*point.local());
                 Local::new(local, point.global())
             }));
         }
