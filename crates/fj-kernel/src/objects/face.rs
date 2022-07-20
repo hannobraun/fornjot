@@ -105,13 +105,8 @@ enum Representation {
     TriRep(TriRep),
 }
 
-/// The boundary representation of a face
-///
-/// This type exists to ease the handling of faces that use boundary
-/// representation. It will eventually be merged into `Face`, once
-/// `Face::Triangles` can finally be removed.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct FaceBRep {
+struct FaceBRep {
     surface: Surface,
     exteriors: Vec<Cycle>,
     interiors: Vec<Cycle>,
