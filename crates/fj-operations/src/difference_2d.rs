@@ -50,11 +50,11 @@ impl Shape for fj::Difference2d {
                 );
 
                 for cycle in face.exteriors.as_local() {
-                    let cycle = add_cycle(cycle, false);
+                    let cycle = add_cycle(cycle.clone(), false);
                     exteriors.push(cycle);
                 }
                 for cycle in face.interiors.as_local() {
-                    let cycle = add_cycle(cycle, true);
+                    let cycle = add_cycle(cycle.clone(), true);
                     interiors.push(cycle);
                 }
             }
@@ -69,7 +69,7 @@ impl Shape for fj::Difference2d {
                 );
 
                 for cycle in face.exteriors.as_local() {
-                    let cycle = add_cycle(cycle, true);
+                    let cycle = add_cycle(cycle.clone(), true);
                     interiors.push(cycle);
                 }
             }

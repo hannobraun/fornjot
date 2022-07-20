@@ -156,7 +156,9 @@ fn transform_cycles(
     cycles: &CyclesInFace,
     transform: &Transform,
 ) -> CyclesInFace {
-    let cycles = cycles.as_local().map(|cycle| cycle.transform(transform));
+    let cycles = cycles
+        .as_local()
+        .map(|cycle| cycle.clone().transform(transform));
 
     CyclesInFace::new(cycles)
 }

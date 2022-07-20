@@ -63,12 +63,12 @@ impl Face {
     }
 
     /// Access this face's exterior cycles
-    pub fn exteriors(&self) -> impl Iterator<Item = Cycle> + '_ {
+    pub fn exteriors(&self) -> impl Iterator<Item = &Cycle> + '_ {
         self.brep().exteriors()
     }
 
     /// Access this face's interior cycles
-    pub fn interiors(&self) -> impl Iterator<Item = Cycle> + '_ {
+    pub fn interiors(&self) -> impl Iterator<Item = &Cycle> + '_ {
         self.brep().interiors()
     }
 
@@ -76,7 +76,7 @@ impl Face {
     ///
     /// This is equivalent to chaining the iterators returned by
     /// [`Face::exteriors`] and [`Face::interiors`].
-    pub fn all_cycles(&self) -> impl Iterator<Item = Cycle> + '_ {
+    pub fn all_cycles(&self) -> impl Iterator<Item = &Cycle> + '_ {
         self.brep().all_cycles()
     }
 
@@ -128,12 +128,12 @@ impl FaceBRep {
     }
 
     /// Access this face's exterior cycles
-    pub fn exteriors(&self) -> impl Iterator<Item = Cycle> + '_ {
+    pub fn exteriors(&self) -> impl Iterator<Item = &Cycle> + '_ {
         self.exteriors.as_local()
     }
 
     /// Access this face's interior cycles
-    pub fn interiors(&self) -> impl Iterator<Item = Cycle> + '_ {
+    pub fn interiors(&self) -> impl Iterator<Item = &Cycle> + '_ {
         self.interiors.as_local()
     }
 
@@ -141,7 +141,7 @@ impl FaceBRep {
     ///
     /// This is equivalent to chaining the iterators returned by
     /// [`Face::exteriors`] and [`Face::interiors`].
-    pub fn all_cycles(&self) -> impl Iterator<Item = Cycle> + '_ {
+    pub fn all_cycles(&self) -> impl Iterator<Item = &Cycle> + '_ {
         self.exteriors().chain(self.interiors())
     }
 }
@@ -157,7 +157,7 @@ impl CyclesInFace {
     }
 
     /// Access an iterator over the canonical forms of the cycles
-    pub fn as_local(&self) -> impl Iterator<Item = Cycle> + '_ {
-        self.0.iter().cloned()
+    pub fn as_local(&self) -> impl Iterator<Item = &Cycle> + '_ {
+        self.0.iter()
     }
 }
