@@ -31,8 +31,8 @@ impl Face {
         interiors: impl IntoIterator<Item = Cycle>,
         color: [u8; 4],
     ) -> Self {
-        let exteriors = CyclesInFace::new(exteriors);
-        let interiors = CyclesInFace::new(interiors);
+        let exteriors = exteriors.into_iter().collect();
+        let interiors = interiors.into_iter().collect();
 
         Self::Face(FaceBRep {
             surface,
@@ -53,14 +53,14 @@ impl Face {
 
     /// Access the cycles that bound the face on the outside
     pub fn exteriors(&self) -> impl Iterator<Item = &Cycle> + '_ {
-        self.brep().exteriors.as_local()
+        self.brep().exteriors.iter()
     }
 
     /// Access the cycles that bound the face on the inside
     ///
     /// Each of these cycles defines a hole in the face.
     pub fn interiors(&self) -> impl Iterator<Item = &Cycle> + '_ {
-        self.brep().interiors.as_local()
+        self.brep().interiors.iter()
     }
 
     /// Access all cycles of this face
@@ -96,23 +96,7 @@ impl Face {
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct FaceBRep {
     surface: Surface,
-    exteriors: CyclesInFace,
-    interiors: CyclesInFace,
+    exteriors: Vec<Cycle>,
+    interiors: Vec<Cycle>,
     color: [u8; 4],
-}
-
-/// A list of cycles, as they are stored in `Face`
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct CyclesInFace(Vec<Cycle>);
-
-impl CyclesInFace {
-    /// Create a new instance of `CyclesInFace`
-    pub fn new(cycles: impl IntoIterator<Item = Cycle>) -> Self {
-        Self(cycles.into_iter().collect())
-    }
-
-    /// Access an iterator over the canonical forms of the cycles
-    pub fn as_local(&self) -> impl Iterator<Item = &Cycle> + '_ {
-        self.0.iter()
-    }
 }
