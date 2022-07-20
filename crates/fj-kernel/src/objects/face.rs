@@ -51,12 +51,14 @@ impl Face {
         self.brep().surface()
     }
 
-    /// Access this face's exterior cycles
+    /// Access the cycles that bound the face on the outside
     pub fn exteriors(&self) -> impl Iterator<Item = &Cycle> + '_ {
         self.brep().exteriors()
     }
 
-    /// Access this face's interior cycles
+    /// Access the cycles that bound the face on the inside
+    ///
+    /// Each of these cycles defines a hole in the face.
     pub fn interiors(&self) -> impl Iterator<Item = &Cycle> + '_ {
         self.brep().interiors()
     }
