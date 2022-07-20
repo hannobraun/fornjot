@@ -46,17 +46,6 @@ impl Face {
         FaceBuilder::new(surface)
     }
 
-    /// Access the boundary representation of the face
-    pub fn brep(&self) -> &FaceBRep {
-        if let Self::Face(face) = self {
-            return face;
-        }
-
-        // No code that still uses triangle representation is calling this
-        // method.
-        unreachable!()
-    }
-
     /// Access this face's surface
     pub fn surface(&self) -> &Surface {
         self.brep().surface()
@@ -83,6 +72,17 @@ impl Face {
     /// Access the color of the face
     pub fn color(&self) -> [u8; 4] {
         self.brep().color
+    }
+
+    /// Access the boundary representation of the face
+    fn brep(&self) -> &FaceBRep {
+        if let Self::Face(face) = self {
+            return face;
+        }
+
+        // No code that still uses triangle representation is calling this
+        // method.
+        unreachable!()
     }
 }
 
