@@ -654,11 +654,7 @@ impl<'r> ObjectIters<'r> for Vertex {
     }
 }
 
-// This implementation exists to paper over the lack of any "top-level" objects
-// that are an entry point into a shape (basically, the lack of `Sketch` and
-// `Solid`).
-//
-// It is also very useful in test code.
+// This implementation is useful for test code.
 impl<'r, T, O> ObjectIters<'r> for T
 where
     T: 'r,
