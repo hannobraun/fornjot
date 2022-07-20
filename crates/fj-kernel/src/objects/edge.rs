@@ -9,18 +9,8 @@ use super::{Curve, GlobalVertex, Surface, Vertex};
 /// An edge of a shape
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edge {
-    /// Access the curve that defines the edge's geometry
-    ///
-    /// The edge can be a segment of the curve that is bounded by two vertices,
-    /// or if the curve is continuous (i.e. connects to itself), the edge could
-    /// be defined by the whole curve, and have no bounding vertices.
-    pub curve: Local<Curve<2>>,
-
-    /// Access the vertices that bound the edge on the curve
-    ///
-    /// If there are no such vertices, that means that both the curve and the
-    /// edge are continuous (i.e. connected to themselves).
-    pub vertices: VerticesOfEdge,
+    curve: Local<Curve<2>>,
+    vertices: VerticesOfEdge,
 }
 
 impl Edge {
