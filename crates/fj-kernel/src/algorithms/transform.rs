@@ -66,7 +66,7 @@ impl TransformObject for Edge {
         let vertices =
             self.vertices().map(|vertex| vertex.transform(transform));
 
-        Self { curve, vertices }
+        Self::new(curve, vertices)
     }
 }
 

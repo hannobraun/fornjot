@@ -152,7 +152,7 @@ fn create_non_continuous_side_face(
                 Vertex::new(Point::from([1.]), b.1),
             ]);
 
-            let edge = Edge { curve, vertices };
+            let edge = Edge::new(curve, vertices);
 
             edges.push(edge);
         }

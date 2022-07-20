@@ -52,10 +52,7 @@ fn reverse_local_coordinates_in_cycle(
                     Local::new(local, edge.curve().global())
                 };
 
-                Edge {
-                    curve,
-                    vertices: *edge.vertices(),
-                }
+                Edge::new(curve, *edge.vertices())
             })
             .collect();
 

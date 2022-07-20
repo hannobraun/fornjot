@@ -24,6 +24,11 @@ pub struct Edge {
 }
 
 impl Edge {
+    /// Create a new instance
+    pub fn new(curve: Local<Curve<2>>, vertices: VerticesOfEdge) -> Self {
+        Self { curve, vertices }
+    }
+
     /// Create a circle from the given radius
     pub fn circle_from_radius(radius: Scalar) -> Self {
         let curve_local = Curve::Circle(Circle {

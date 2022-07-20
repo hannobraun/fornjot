@@ -155,7 +155,7 @@ mod tests {
         let b = Vertex::new(Point::from([Scalar::ONE]), b);
         let vertices = VerticesOfEdge::from_vertices([a, b]);
 
-        let edge = Edge { curve, vertices };
+        let edge = Edge::new(curve, vertices);
 
         let result = validate(
             edge,
