@@ -11,748 +11,248 @@ use crate::objects::{
 /// Implemented for all object types. An implementation must return itself, in
 /// addition to any other objects it references.
 pub trait ObjectIters<'r> {
+    /// Return all objects being referenced
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters>;
+
     /// Iterate over all curves
-    fn curve_iter(&'r self) -> Iter<&'r Curve<3>>;
-
-    /// Iterate over all cycles
-    fn cycle_iter(&'r self) -> Iter<&'r Cycle>;
-
-    /// Iterate over all edges
-    fn edge_iter(&'r self) -> Iter<&'r Edge>;
-
-    /// Iterate over all faces
-    fn face_iter(&'r self) -> Iter<&'r Face>;
-
-    /// Iterate over all global vertices
-    fn global_vertex_iter(&'r self) -> Iter<&'r GlobalVertex>;
-
-    /// Iterate over all sketches
-    fn sketch_iter(&'r self) -> Iter<&'r Sketch>;
-
-    /// Iterate over all solids
-    fn solid_iter(&'r self) -> Iter<&'r Solid>;
-
-    /// Iterate over all surfaces
-    fn surface_iter(&'r self) -> Iter<&'r Surface>;
-
-    /// Iterator over all vertices
-    fn vertex_iter(&'r self) -> Iter<&'r Vertex>;
-}
-
-impl<'r> ObjectIters<'r> for Curve<3> {
-    fn curve_iter(&'r self) -> Iter<&'r Curve<3>> {
-        Iter::from_object(self)
-    }
-
-    fn cycle_iter(&'r self) -> Iter<&'r Cycle> {
-        Iter::empty()
-    }
-
-    fn edge_iter(&'r self) -> Iter<&'r Edge> {
-        Iter::empty()
-    }
-
-    fn face_iter(&'r self) -> Iter<&'r Face> {
-        Iter::empty()
-    }
-
-    fn global_vertex_iter(&'r self) -> Iter<&'r GlobalVertex> {
-        Iter::empty()
-    }
-
-    fn sketch_iter(&'r self) -> Iter<&'r Sketch> {
-        Iter::empty()
-    }
-
-    fn solid_iter(&'r self) -> Iter<&'r Solid> {
-        Iter::empty()
-    }
-
-    fn surface_iter(&'r self) -> Iter<&'r Surface> {
-        Iter::empty()
-    }
-
-    fn vertex_iter(&'r self) -> Iter<&'r Vertex> {
-        Iter::empty()
-    }
-}
-
-impl<'r> ObjectIters<'r> for Cycle {
     fn curve_iter(&'r self) -> Iter<&'r Curve<3>> {
         let mut iter = Iter::empty();
 
-        for edge in self.edges() {
-            iter = iter.with(edge.curve_iter());
-        }
-
-        iter
-    }
-
-    fn cycle_iter(&'r self) -> Iter<&'r Cycle> {
-        Iter::from_object(self)
-    }
-
-    fn edge_iter(&'r self) -> Iter<&'r Edge> {
-        let mut iter = Iter::empty();
-
-        for edge in self.edges() {
-            iter = iter.with(edge.edge_iter());
-        }
-
-        iter
-    }
-
-    fn face_iter(&'r self) -> Iter<&'r Face> {
-        let mut iter = Iter::empty();
-
-        for edge in self.edges() {
-            iter = iter.with(edge.face_iter());
-        }
-
-        iter
-    }
-
-    fn global_vertex_iter(&'r self) -> Iter<&'r GlobalVertex> {
-        let mut iter = Iter::empty();
-
-        for edge in self.edges() {
-            iter = iter.with(edge.global_vertex_iter());
-        }
-
-        iter
-    }
-
-    fn sketch_iter(&'r self) -> Iter<&'r Sketch> {
-        let mut iter = Iter::empty();
-
-        for edge in self.edges() {
-            iter = iter.with(edge.sketch_iter());
-        }
-
-        iter
-    }
-
-    fn solid_iter(&'r self) -> Iter<&'r Solid> {
-        let mut iter = Iter::empty();
-
-        for edge in self.edges() {
-            iter = iter.with(edge.solid_iter());
-        }
-
-        iter
-    }
-
-    fn surface_iter(&'r self) -> Iter<&'r Surface> {
-        let mut iter = Iter::empty();
-
-        for edge in self.edges() {
-            iter = iter.with(edge.surface_iter());
-        }
-
-        iter
-    }
-
-    fn vertex_iter(&'r self) -> Iter<&'r Vertex> {
-        let mut iter = Iter::empty();
-
-        for edge in self.edges() {
-            iter = iter.with(edge.vertex_iter());
-        }
-
-        iter
-    }
-}
-
-impl<'r> ObjectIters<'r> for Edge {
-    fn curve_iter(&'r self) -> Iter<&'r Curve<3>> {
-        let mut iter = Iter::empty().with(self.curve().global().curve_iter());
-
-        for vertex in self.vertices().iter() {
-            iter = iter.with(vertex.curve_iter());
-        }
-
-        iter
-    }
-
-    fn cycle_iter(&'r self) -> Iter<&'r Cycle> {
-        let mut iter = Iter::empty().with(self.curve().global().cycle_iter());
-
-        for vertex in self.vertices().iter() {
-            iter = iter.with(vertex.cycle_iter());
-        }
-
-        iter
-    }
-
-    fn edge_iter(&'r self) -> Iter<&'r Edge> {
-        Iter::from_object(self)
-    }
-
-    fn face_iter(&'r self) -> Iter<&'r Face> {
-        let mut iter = Iter::empty().with(self.curve().global().face_iter());
-
-        for vertex in self.vertices().iter() {
-            iter = iter.with(vertex.face_iter());
-        }
-
-        iter
-    }
-
-    fn global_vertex_iter(&'r self) -> Iter<&'r GlobalVertex> {
-        let mut iter =
-            Iter::empty().with(self.curve().global().global_vertex_iter());
-
-        for vertex in self.vertices().iter() {
-            iter = iter.with(vertex.global_vertex_iter());
-        }
-
-        iter
-    }
-
-    fn sketch_iter(&'r self) -> Iter<&'r Sketch> {
-        let mut iter = Iter::empty().with(self.curve().global().sketch_iter());
-
-        for vertex in self.vertices().iter() {
-            iter = iter.with(vertex.sketch_iter());
-        }
-
-        iter
-    }
-
-    fn solid_iter(&'r self) -> Iter<&'r Solid> {
-        let mut iter = Iter::empty().with(self.curve().global().solid_iter());
-
-        for vertex in self.vertices().iter() {
-            iter = iter.with(vertex.solid_iter());
-        }
-
-        iter
-    }
-
-    fn surface_iter(&'r self) -> Iter<&'r Surface> {
-        let mut iter = Iter::empty().with(self.curve().global().surface_iter());
-
-        for vertex in self.vertices().iter() {
-            iter = iter.with(vertex.surface_iter());
-        }
-
-        iter
-    }
-
-    fn vertex_iter(&'r self) -> Iter<&'r Vertex> {
-        let mut iter = Iter::empty().with(self.curve().global().vertex_iter());
-
-        for vertex in self.vertices().iter() {
-            iter = iter.with(vertex.vertex_iter());
-        }
-
-        iter
-    }
-}
-
-impl<'r> ObjectIters<'r> for Face {
-    fn curve_iter(&'r self) -> Iter<&'r Curve<3>> {
-        if self.triangles().is_some() {
-            return Iter::empty();
-        }
-
-        let mut iter = Iter::empty().with(self.surface().curve_iter());
-
-        for cycle in self.all_cycles() {
-            iter = iter.with(cycle.curve_iter());
-        }
-
-        iter
-    }
-
-    fn cycle_iter(&'r self) -> Iter<&'r Cycle> {
-        if self.triangles().is_some() {
-            return Iter::empty();
-        }
-
-        let mut iter = Iter::empty().with(self.surface().cycle_iter());
-
-        for cycle in self.all_cycles() {
-            iter = iter.with(cycle.cycle_iter());
-        }
-
-        iter
-    }
-
-    fn edge_iter(&'r self) -> Iter<&'r Edge> {
-        if self.triangles().is_some() {
-            return Iter::empty();
-        }
-
-        let mut iter = Iter::empty().with(self.surface().edge_iter());
-
-        for cycle in self.all_cycles() {
-            iter = iter.with(cycle.edge_iter());
-        }
-
-        iter
-    }
-
-    fn face_iter(&'r self) -> Iter<&'r Face> {
-        Iter::from_object(self)
-    }
-
-    fn global_vertex_iter(&'r self) -> Iter<&'r GlobalVertex> {
-        if self.triangles().is_some() {
-            return Iter::empty();
-        }
-
-        let mut iter = Iter::empty().with(self.surface().global_vertex_iter());
-
-        for cycle in self.all_cycles() {
-            iter = iter.with(cycle.global_vertex_iter());
-        }
-
-        iter
-    }
-
-    fn sketch_iter(&'r self) -> Iter<&'r Sketch> {
-        if self.triangles().is_some() {
-            return Iter::empty();
-        }
-
-        let mut iter = Iter::empty().with(self.surface().sketch_iter());
-
-        for cycle in self.all_cycles() {
-            iter = iter.with(cycle.sketch_iter());
-        }
-
-        iter
-    }
-
-    fn solid_iter(&'r self) -> Iter<&'r Solid> {
-        if self.triangles().is_some() {
-            return Iter::empty();
-        }
-
-        let mut iter = Iter::empty().with(self.surface().solid_iter());
-
-        for cycle in self.all_cycles() {
-            iter = iter.with(cycle.solid_iter());
-        }
-
-        iter
-    }
-
-    fn surface_iter(&'r self) -> Iter<&'r Surface> {
-        if self.triangles().is_some() {
-            return Iter::empty();
-        }
-
-        let mut iter = Iter::empty().with(self.surface().surface_iter());
-
-        for cycle in self.all_cycles() {
-            iter = iter.with(cycle.surface_iter());
-        }
-
-        iter
-    }
-
-    fn vertex_iter(&'r self) -> Iter<&'r Vertex> {
-        if self.triangles().is_some() {
-            return Iter::empty();
-        }
-
-        let mut iter = Iter::empty().with(self.surface().vertex_iter());
-
-        for cycle in self.all_cycles() {
-            iter = iter.with(cycle.vertex_iter());
-        }
-
-        iter
-    }
-}
-
-impl<'r> ObjectIters<'r> for GlobalVertex {
-    fn curve_iter(&'r self) -> Iter<&'r Curve<3>> {
-        Iter::empty()
-    }
-
-    fn cycle_iter(&'r self) -> Iter<&'r Cycle> {
-        Iter::empty()
-    }
-
-    fn edge_iter(&'r self) -> Iter<&'r Edge> {
-        Iter::empty()
-    }
-
-    fn face_iter(&'r self) -> Iter<&'r Face> {
-        Iter::empty()
-    }
-
-    fn global_vertex_iter(&'r self) -> Iter<&'r GlobalVertex> {
-        Iter::from_object(self)
-    }
-
-    fn sketch_iter(&'r self) -> Iter<&'r Sketch> {
-        Iter::empty()
-    }
-
-    fn solid_iter(&'r self) -> Iter<&'r Solid> {
-        Iter::empty()
-    }
-
-    fn surface_iter(&'r self) -> Iter<&'r Surface> {
-        Iter::empty()
-    }
-
-    fn vertex_iter(&'r self) -> Iter<&'r Vertex> {
-        Iter::empty()
-    }
-}
-
-impl<'r> ObjectIters<'r> for Sketch {
-    fn curve_iter(&'r self) -> Iter<&'r Curve<3>> {
-        let mut iter = Iter::empty();
-
-        for edge in self.faces() {
-            iter = iter.with(edge.curve_iter());
-        }
-
-        iter
-    }
-
-    fn cycle_iter(&'r self) -> Iter<&'r Cycle> {
-        let mut iter = Iter::empty();
-
-        for edge in self.faces() {
-            iter = iter.with(edge.cycle_iter());
-        }
-
-        iter
-    }
-
-    fn edge_iter(&'r self) -> Iter<&'r Edge> {
-        let mut iter = Iter::empty();
-
-        for edge in self.faces() {
-            iter = iter.with(edge.edge_iter());
-        }
-
-        iter
-    }
-
-    fn face_iter(&'r self) -> Iter<&'r Face> {
-        let mut iter = Iter::empty();
-
-        for edge in self.faces() {
-            iter = iter.with(edge.face_iter());
-        }
-
-        iter
-    }
-
-    fn global_vertex_iter(&'r self) -> Iter<&'r GlobalVertex> {
-        let mut iter = Iter::empty();
-
-        for edge in self.faces() {
-            iter = iter.with(edge.global_vertex_iter());
-        }
-
-        iter
-    }
-
-    fn sketch_iter(&'r self) -> Iter<&'r Sketch> {
-        Iter::from_object(self)
-    }
-
-    fn solid_iter(&'r self) -> Iter<&'r Solid> {
-        let mut iter = Iter::empty();
-
-        for edge in self.faces() {
-            iter = iter.with(edge.solid_iter());
-        }
-
-        iter
-    }
-
-    fn surface_iter(&'r self) -> Iter<&'r Surface> {
-        let mut iter = Iter::empty();
-
-        for edge in self.faces() {
-            iter = iter.with(edge.surface_iter());
-        }
-
-        iter
-    }
-
-    fn vertex_iter(&'r self) -> Iter<&'r Vertex> {
-        let mut iter = Iter::empty();
-
-        for edge in self.faces() {
-            iter = iter.with(edge.vertex_iter());
-        }
-
-        iter
-    }
-}
-
-impl<'r> ObjectIters<'r> for Solid {
-    fn curve_iter(&'r self) -> Iter<&'r Curve<3>> {
-        let mut iter = Iter::empty();
-
-        for edge in self.faces() {
-            iter = iter.with(edge.curve_iter());
-        }
-
-        iter
-    }
-
-    fn cycle_iter(&'r self) -> Iter<&'r Cycle> {
-        let mut iter = Iter::empty();
-
-        for edge in self.faces() {
-            iter = iter.with(edge.cycle_iter());
-        }
-
-        iter
-    }
-
-    fn edge_iter(&'r self) -> Iter<&'r Edge> {
-        let mut iter = Iter::empty();
-
-        for edge in self.faces() {
-            iter = iter.with(edge.edge_iter());
-        }
-
-        iter
-    }
-
-    fn face_iter(&'r self) -> Iter<&'r Face> {
-        let mut iter = Iter::empty();
-
-        for edge in self.faces() {
-            iter = iter.with(edge.face_iter());
-        }
-
-        iter
-    }
-
-    fn global_vertex_iter(&'r self) -> Iter<&'r GlobalVertex> {
-        let mut iter = Iter::empty();
-
-        for edge in self.faces() {
-            iter = iter.with(edge.global_vertex_iter());
-        }
-
-        iter
-    }
-
-    fn sketch_iter(&'r self) -> Iter<&'r Sketch> {
-        let mut iter = Iter::empty();
-
-        for edge in self.faces() {
-            iter = iter.with(edge.sketch_iter());
-        }
-
-        iter
-    }
-
-    fn solid_iter(&'r self) -> Iter<&'r Solid> {
-        Iter::from_object(self)
-    }
-
-    fn surface_iter(&'r self) -> Iter<&'r Surface> {
-        let mut iter = Iter::empty();
-
-        for edge in self.faces() {
-            iter = iter.with(edge.surface_iter());
-        }
-
-        iter
-    }
-
-    fn vertex_iter(&'r self) -> Iter<&'r Vertex> {
-        let mut iter = Iter::empty();
-
-        for edge in self.faces() {
-            iter = iter.with(edge.vertex_iter());
-        }
-
-        iter
-    }
-}
-
-impl<'r> ObjectIters<'r> for Surface {
-    fn curve_iter(&'r self) -> Iter<&'r Curve<3>> {
-        Iter::empty()
-    }
-
-    fn cycle_iter(&'r self) -> Iter<&'r Cycle> {
-        Iter::empty()
-    }
-
-    fn edge_iter(&'r self) -> Iter<&'r Edge> {
-        Iter::empty()
-    }
-
-    fn face_iter(&'r self) -> Iter<&'r Face> {
-        Iter::empty()
-    }
-
-    fn global_vertex_iter(&'r self) -> Iter<&'r GlobalVertex> {
-        Iter::empty()
-    }
-
-    fn sketch_iter(&'r self) -> Iter<&'r Sketch> {
-        Iter::empty()
-    }
-
-    fn solid_iter(&'r self) -> Iter<&'r Solid> {
-        Iter::empty()
-    }
-
-    fn surface_iter(&'r self) -> Iter<&'r Surface> {
-        Iter::from_object(self)
-    }
-
-    fn vertex_iter(&'r self) -> Iter<&'r Vertex> {
-        Iter::empty()
-    }
-}
-
-impl<'r> ObjectIters<'r> for Vertex {
-    fn curve_iter(&'r self) -> Iter<&'r Curve<3>> {
-        self.global().curve_iter()
-    }
-
-    fn cycle_iter(&'r self) -> Iter<&'r Cycle> {
-        self.global().cycle_iter()
-    }
-
-    fn edge_iter(&'r self) -> Iter<&'r Edge> {
-        self.global().edge_iter()
-    }
-
-    fn face_iter(&'r self) -> Iter<&'r Face> {
-        self.global().face_iter()
-    }
-
-    fn global_vertex_iter(&'r self) -> Iter<&'r GlobalVertex> {
-        self.global().global_vertex_iter()
-    }
-
-    fn sketch_iter(&'r self) -> Iter<&'r Sketch> {
-        self.global().sketch_iter()
-    }
-
-    fn solid_iter(&'r self) -> Iter<&'r Solid> {
-        self.global().solid_iter()
-    }
-
-    fn surface_iter(&'r self) -> Iter<&'r Surface> {
-        self.global().surface_iter()
-    }
-
-    fn vertex_iter(&'r self) -> Iter<&'r Vertex> {
-        Iter::from_object(self)
-    }
-}
-
-// This implementation exists to paper over the lack of any "top-level" objects
-// that are an entry point into a shape (basically, the lack of `Sketch` and
-// `Solid`).
-//
-// It is also very useful in test code.
-impl<'r, T, O> ObjectIters<'r> for T
-where
-    T: 'r,
-    O: ObjectIters<'r> + 'r,
-    &'r T: IntoIterator<Item = &'r O>,
-{
-    fn curve_iter(&'r self) -> Iter<&'r Curve<3>> {
-        let mut iter = Iter::empty();
-
-        for object in self.into_iter() {
+        for object in self.referenced_objects() {
             iter = iter.with(object.curve_iter());
         }
 
         iter
     }
 
+    /// Iterate over all cycles
     fn cycle_iter(&'r self) -> Iter<&'r Cycle> {
         let mut iter = Iter::empty();
 
-        for object in self.into_iter() {
+        for object in self.referenced_objects() {
             iter = iter.with(object.cycle_iter());
         }
 
         iter
     }
 
+    /// Iterate over all edges
     fn edge_iter(&'r self) -> Iter<&'r Edge> {
         let mut iter = Iter::empty();
 
-        for object in self.into_iter() {
+        for object in self.referenced_objects() {
             iter = iter.with(object.edge_iter());
         }
 
         iter
     }
 
+    /// Iterate over all faces
     fn face_iter(&'r self) -> Iter<&'r Face> {
         let mut iter = Iter::empty();
 
-        for object in self.into_iter() {
+        for object in self.referenced_objects() {
             iter = iter.with(object.face_iter());
         }
 
         iter
     }
 
+    /// Iterate over all global vertices
     fn global_vertex_iter(&'r self) -> Iter<&'r GlobalVertex> {
         let mut iter = Iter::empty();
 
-        for object in self.into_iter() {
+        for object in self.referenced_objects() {
             iter = iter.with(object.global_vertex_iter());
         }
 
         iter
     }
 
+    /// Iterate over all sketches
     fn sketch_iter(&'r self) -> Iter<&'r Sketch> {
         let mut iter = Iter::empty();
 
-        for object in self.into_iter() {
+        for object in self.referenced_objects() {
             iter = iter.with(object.sketch_iter());
         }
 
         iter
     }
 
+    /// Iterate over all solids
     fn solid_iter(&'r self) -> Iter<&'r Solid> {
         let mut iter = Iter::empty();
 
-        for object in self.into_iter() {
+        for object in self.referenced_objects() {
             iter = iter.with(object.solid_iter());
         }
 
         iter
     }
 
+    /// Iterate over all surfaces
     fn surface_iter(&'r self) -> Iter<&'r Surface> {
         let mut iter = Iter::empty();
 
-        for object in self.into_iter() {
+        for object in self.referenced_objects() {
             iter = iter.with(object.surface_iter());
         }
 
         iter
     }
 
+    /// Iterator over all vertices
     fn vertex_iter(&'r self) -> Iter<&'r Vertex> {
         let mut iter = Iter::empty();
 
-        for object in self.into_iter() {
+        for object in self.referenced_objects() {
             iter = iter.with(object.vertex_iter());
         }
 
         iter
+    }
+}
+
+impl<'r> ObjectIters<'r> for Curve<3> {
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
+        Vec::new()
+    }
+
+    fn curve_iter(&'r self) -> Iter<&'r Curve<3>> {
+        Iter::from_object(self)
+    }
+}
+
+impl<'r> ObjectIters<'r> for Cycle {
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
+        let mut objects = Vec::new();
+
+        for edge in self.edges() {
+            objects.push(edge as &dyn ObjectIters);
+        }
+
+        objects
+    }
+
+    fn cycle_iter(&'r self) -> Iter<&'r Cycle> {
+        Iter::from_object(self)
+    }
+}
+
+impl<'r> ObjectIters<'r> for Edge {
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
+        let mut objects = vec![self.curve().global() as &dyn ObjectIters];
+
+        for vertex in self.vertices().iter() {
+            objects.push(vertex);
+        }
+
+        objects
+    }
+
+    fn edge_iter(&'r self) -> Iter<&'r Edge> {
+        Iter::from_object(self)
+    }
+}
+
+impl<'r> ObjectIters<'r> for Face {
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
+        if self.triangles().is_some() {
+            return Vec::new();
+        }
+
+        let mut objects = vec![self.surface() as &dyn ObjectIters];
+
+        for cycle in self.all_cycles() {
+            objects.push(cycle);
+        }
+
+        objects
+    }
+
+    fn face_iter(&'r self) -> Iter<&'r Face> {
+        Iter::from_object(self)
+    }
+}
+
+impl<'r> ObjectIters<'r> for GlobalVertex {
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
+        Vec::new()
+    }
+
+    fn global_vertex_iter(&'r self) -> Iter<&'r GlobalVertex> {
+        Iter::from_object(self)
+    }
+}
+
+impl<'r> ObjectIters<'r> for Sketch {
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
+        let mut objects = Vec::new();
+
+        for face in self.faces() {
+            objects.push(face as &dyn ObjectIters);
+        }
+
+        objects
+    }
+
+    fn sketch_iter(&'r self) -> Iter<&'r Sketch> {
+        Iter::from_object(self)
+    }
+}
+
+impl<'r> ObjectIters<'r> for Solid {
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
+        let mut objects = Vec::new();
+
+        for face in self.faces() {
+            objects.push(face as &dyn ObjectIters);
+        }
+
+        objects
+    }
+
+    fn solid_iter(&'r self) -> Iter<&'r Solid> {
+        Iter::from_object(self)
+    }
+}
+
+impl<'r> ObjectIters<'r> for Surface {
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
+        Vec::new()
+    }
+
+    fn surface_iter(&'r self) -> Iter<&'r Surface> {
+        Iter::from_object(self)
+    }
+}
+
+impl<'r> ObjectIters<'r> for Vertex {
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
+        vec![self.global() as &dyn ObjectIters]
+    }
+
+    fn vertex_iter(&'r self) -> Iter<&'r Vertex> {
+        Iter::from_object(self)
+    }
+}
+
+// This implementation is useful for test code.
+impl<'r, T, O> ObjectIters<'r> for T
+where
+    T: 'r,
+    O: ObjectIters<'r> + 'r,
+    &'r T: IntoIterator<Item = &'r O>,
+{
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
+        let mut objects = Vec::new();
+
+        for object in self.into_iter() {
+            objects.push(object as &dyn ObjectIters);
+        }
+
+        objects
     }
 }
 
