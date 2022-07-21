@@ -19,7 +19,7 @@ pub fn validate_edge(
     for vertex in edge.vertices().iter() {
         let local = vertex.position();
         let local_as_global =
-            edge.curve().global().point_from_curve_coords(local);
+            edge.curve().global_form().point_from_curve_coords(local);
         let global = vertex.global().position();
         let distance = (local_as_global - global).magnitude();
 

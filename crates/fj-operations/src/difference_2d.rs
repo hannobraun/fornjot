@@ -95,9 +95,9 @@ fn add_cycle(cycle: Cycle, reverse: bool) -> Cycle {
         };
 
         let curve_global = if reverse {
-            edge.curve().global().reverse()
+            edge.curve().global_form().reverse()
         } else {
-            *edge.curve().global()
+            *edge.curve().global_form()
         };
 
         let vertices = if reverse {

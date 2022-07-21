@@ -52,7 +52,7 @@ pub fn triangulate(
         });
 
         for triangle in triangles {
-            let points = triangle.map(|point| *point.global());
+            let points = triangle.map(|point| *point.global_form());
             mesh.push_triangle(points, face.color());
         }
     }
