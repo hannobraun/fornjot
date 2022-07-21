@@ -47,7 +47,6 @@ Potential new issues of the week:
 - https://github.com/hannobraun/Fornjot/issues/15
 - https://github.com/hannobraun/Fornjot/issues/20
 - https://github.com/hannobraun/Fornjot/issues/794
-- https://github.com/hannobraun/Fornjot/issues/798
 - https://github.com/hannobraun/Fornjot/issues/804
 - https://github.com/hannobraun/Fornjot/issues/805
 
