@@ -39,7 +39,7 @@ Use the previously prepared file and create the release announcement:
 
 Use previous release announcement as template for all of this. When done, deploy to the website.
 
-### Issue of the week
+### Issue of the Week
 
 Potential new issues of the week:
 
@@ -47,9 +47,14 @@ Potential new issues of the week:
 - https://github.com/hannobraun/Fornjot/issues/15
 - https://github.com/hannobraun/Fornjot/issues/20
 - https://github.com/hannobraun/Fornjot/issues/794
-- https://github.com/hannobraun/Fornjot/issues/798
 - https://github.com/hannobraun/Fornjot/issues/804
 - https://github.com/hannobraun/Fornjot/issues/805
+- https://github.com/hannobraun/Fornjot/issues/847
+- https://github.com/hannobraun/Fornjot/issues/848
+- https://github.com/hannobraun/Fornjot/issues/849
+- https://github.com/hannobraun/Fornjot/issues/850
+- https://github.com/hannobraun/Fornjot/issues/851
+- https://github.com/hannobraun/Fornjot/issues/856
 
 Already mentioned issues of the week (remove, once closed):
 
