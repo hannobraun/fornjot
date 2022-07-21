@@ -32,7 +32,7 @@ impl<T: LocalForm> Local<T> {
     }
 
     /// Access the local form of the value
-    pub fn local(&self) -> &T {
+    pub fn local_form(&self) -> &T {
         &self.local
     }
 

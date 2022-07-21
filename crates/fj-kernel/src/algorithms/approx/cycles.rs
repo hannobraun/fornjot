@@ -27,8 +27,8 @@ impl CycleApprox {
             points.extend(edge_points.into_iter().map(|point| {
                 let local = edge
                     .curve()
-                    .local()
-                    .point_from_curve_coords(*point.local());
+                    .local_form()
+                    .point_from_curve_coords(*point.local_form());
                 Local::new(local, *point.global())
             }));
         }

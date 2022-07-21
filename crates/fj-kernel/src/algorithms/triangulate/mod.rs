@@ -37,16 +37,16 @@ pub fn triangulate(
                     .exterior
                     .points
                     .into_iter()
-                    .map(|point| *point.local()),
+                    .map(|point| *point.local_form()),
             )
             .with_interiors(approx.interiors.into_iter().map(|interior| {
-                interior.points.into_iter().map(|point| *point.local())
+                interior.points.into_iter().map(|point| *point.local_form())
             }));
 
         let mut triangles = delaunay::triangulate(points);
         triangles.retain(|triangle| {
             face_as_polygon.contains_triangle(
-                triangle.map(|point| *point.local()),
+                triangle.map(|point| *point.local_form()),
                 debug_info,
             )
         });

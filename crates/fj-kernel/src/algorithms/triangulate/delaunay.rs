@@ -13,9 +13,12 @@ pub fn triangulate(points: Vec<Local<Point<2>>>) -> Vec<[Local<Point<2>>; 3]> {
     let mut triangles = Vec::new();
     for triangle in triangulation.inner_faces() {
         let [v0, v1, v2] = triangle.vertices().map(|vertex| *vertex.data());
-        let orientation =
-            Triangle::<2>::from_points([*v0.local(), *v1.local(), *v2.local()])
-                .winding_direction();
+        let orientation = Triangle::<2>::from_points([
+            *v0.local_form(),
+            *v1.local_form(),
+            *v2.local_form(),
+        ])
+        .winding_direction();
 
         let triangle = match orientation {
             Winding::Ccw => [v0, v1, v2],
@@ -34,8 +37,8 @@ impl HasPosition for Local<Point<2>> {
 
     fn position(&self) -> spade::Point2<Self::Scalar> {
         spade::Point2 {
-            x: self.local().u,
-            y: self.local().v,
+            x: self.local_form().u,
+            y: self.local_form().v,
         }
     }
 }
