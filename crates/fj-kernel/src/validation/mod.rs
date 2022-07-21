@@ -34,22 +34,22 @@ pub fn validate<T>(
     config: &ValidationConfig,
 ) -> Result<Validated<T>, ValidationError>
 where
-    T: ObjectIters,
+    T: for<'r> ObjectIters<'r>,
 {
     let mut vertices = HashSet::new();
 
     for vertex in object.global_vertex_iter() {
         uniqueness::validate_vertex(
-            &vertex,
+            vertex,
             &vertices,
             config.distinct_min_distance,
         )?;
 
-        vertices.insert(vertex);
+        vertices.insert(*vertex);
     }
 
     for edge in object.edge_iter() {
-        coherence::validate_edge(&edge, config.identical_max_distance)?;
+        coherence::validate_edge(edge, config.identical_max_distance)?;
     }
 
     Ok(Validated(object))
