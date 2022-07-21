@@ -91,13 +91,13 @@ fn add_cycle(cycle: Cycle, reverse: bool) -> Cycle {
         let curve_local = if reverse {
             edge.curve().local().reverse()
         } else {
-            edge.curve().local()
+            *edge.curve().local()
         };
 
         let curve_global = if reverse {
             edge.curve().global().reverse()
         } else {
-            edge.curve().global()
+            *edge.curve().global()
         };
 
         let vertices = if reverse {

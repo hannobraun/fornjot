@@ -32,22 +32,22 @@ impl<T: LocalForm> Local<T> {
     }
 
     /// Access the local form of the value
-    pub fn local(&self) -> T {
-        self.local
+    pub fn local(&self) -> &T {
+        &self.local
     }
 
     /// Access the global form of the value
-    pub fn global(&self) -> T::GlobalForm {
-        self.global
+    pub fn global(&self) -> &T::GlobalForm {
+        &self.global
     }
 }
 
 /// Implemented for types that are the local form of a global type
 ///
 /// See [`Local`] for more information.
-pub trait LocalForm: Copy {
+pub trait LocalForm {
     /// The global form of the implementing type
-    type GlobalForm: Copy;
+    type GlobalForm;
 }
 
 impl LocalForm for Curve<2> {

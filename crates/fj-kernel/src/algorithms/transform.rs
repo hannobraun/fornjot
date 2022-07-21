@@ -58,7 +58,7 @@ impl TransformObject for Cycle {
 impl TransformObject for Edge {
     fn transform(self, transform: &Transform) -> Self {
         let curve = Local::new(
-            self.curve().local(),
+            *self.curve().local(),
             self.curve().global().transform(transform),
         );
 

@@ -37,22 +37,22 @@ pub fn triangulate(
                     .exterior
                     .points
                     .into_iter()
-                    .map(|point| point.local()),
+                    .map(|point| *point.local()),
             )
             .with_interiors(approx.interiors.into_iter().map(|interior| {
-                interior.points.into_iter().map(|point| point.local())
+                interior.points.into_iter().map(|point| *point.local())
             }));
 
         let mut triangles = delaunay::triangulate(points);
         triangles.retain(|triangle| {
             face_as_polygon.contains_triangle(
-                triangle.map(|point| point.local()),
+                triangle.map(|point| *point.local()),
                 debug_info,
             )
         });
 
         for triangle in triangles {
-            let points = triangle.map(|point| point.global());
+            let points = triangle.map(|point| *point.global());
             mesh.push_triangle(points, face.color());
         }
     }

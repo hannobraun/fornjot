@@ -36,7 +36,7 @@ impl CurveFaceIntersectionList {
             .exteriors()
             .chain(face.interiors())
             .flat_map(|cycle| {
-                let edges: Vec<_> = cycle.edges().collect();
+                let edges: Vec<_> = cycle.edges().cloned().collect();
                 edges
             })
             .map(|edge| {
@@ -55,7 +55,7 @@ impl CurveFaceIntersectionList {
                     ),
                 };
 
-                (line, vertices)
+                (*line, vertices)
             });
 
         let mut intersections = Vec::new();

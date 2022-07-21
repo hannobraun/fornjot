@@ -27,7 +27,7 @@ pub fn sweep(
 
     for face in source.face_iter() {
         create_bottom_faces(
-            &face,
+            face,
             is_sweep_along_negative_direction,
             &mut target,
         );
@@ -44,7 +44,7 @@ pub fn sweep(
                     create_non_continuous_side_face(
                         path,
                         is_sweep_along_negative_direction,
-                        vertices.map(|vertex| vertex.global()),
+                        vertices.map(|vertex| *vertex.global()),
                         color,
                         &mut target,
                     );
@@ -314,7 +314,7 @@ mod tests {
         });
 
         for face in faces {
-            assert!(solid.face_iter().any(|f| f == face));
+            assert!(solid.face_iter().any(|f| f == &face));
         }
 
         Ok(())

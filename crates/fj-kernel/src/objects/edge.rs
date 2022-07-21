@@ -169,8 +169,8 @@ impl VerticesOfEdge {
     pub fn reverse(self) -> Self {
         Self(self.0.map(|[a, b]| {
             [
-                Vertex::new(-b.position(), b.global()),
-                Vertex::new(-a.position(), a.global()),
+                Vertex::new(-b.position(), *b.global()),
+                Vertex::new(-a.position(), *a.global()),
             ]
         }))
     }
