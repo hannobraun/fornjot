@@ -15,31 +15,103 @@ pub trait ObjectIters<'r> {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters>;
 
     /// Iterate over all curves
-    fn curve_iter(&'r self) -> Iter<&'r Curve<3>>;
+    fn curve_iter(&'r self) -> Iter<&'r Curve<3>> {
+        let mut iter = Iter::empty();
+
+        for object in self.referenced_objects() {
+            iter = iter.with(object.curve_iter());
+        }
+
+        iter
+    }
 
     /// Iterate over all cycles
-    fn cycle_iter(&'r self) -> Iter<&'r Cycle>;
+    fn cycle_iter(&'r self) -> Iter<&'r Cycle> {
+        let mut iter = Iter::empty();
+
+        for object in self.referenced_objects() {
+            iter = iter.with(object.cycle_iter());
+        }
+
+        iter
+    }
 
     /// Iterate over all edges
-    fn edge_iter(&'r self) -> Iter<&'r Edge>;
+    fn edge_iter(&'r self) -> Iter<&'r Edge> {
+        let mut iter = Iter::empty();
+
+        for object in self.referenced_objects() {
+            iter = iter.with(object.edge_iter());
+        }
+
+        iter
+    }
 
     /// Iterate over all faces
-    fn face_iter(&'r self) -> Iter<&'r Face>;
+    fn face_iter(&'r self) -> Iter<&'r Face> {
+        let mut iter = Iter::empty();
+
+        for object in self.referenced_objects() {
+            iter = iter.with(object.face_iter());
+        }
+
+        iter
+    }
 
     /// Iterate over all global vertices
-    fn global_vertex_iter(&'r self) -> Iter<&'r GlobalVertex>;
+    fn global_vertex_iter(&'r self) -> Iter<&'r GlobalVertex> {
+        let mut iter = Iter::empty();
+
+        for object in self.referenced_objects() {
+            iter = iter.with(object.global_vertex_iter());
+        }
+
+        iter
+    }
 
     /// Iterate over all sketches
-    fn sketch_iter(&'r self) -> Iter<&'r Sketch>;
+    fn sketch_iter(&'r self) -> Iter<&'r Sketch> {
+        let mut iter = Iter::empty();
+
+        for object in self.referenced_objects() {
+            iter = iter.with(object.sketch_iter());
+        }
+
+        iter
+    }
 
     /// Iterate over all solids
-    fn solid_iter(&'r self) -> Iter<&'r Solid>;
+    fn solid_iter(&'r self) -> Iter<&'r Solid> {
+        let mut iter = Iter::empty();
+
+        for object in self.referenced_objects() {
+            iter = iter.with(object.solid_iter());
+        }
+
+        iter
+    }
 
     /// Iterate over all surfaces
-    fn surface_iter(&'r self) -> Iter<&'r Surface>;
+    fn surface_iter(&'r self) -> Iter<&'r Surface> {
+        let mut iter = Iter::empty();
+
+        for object in self.referenced_objects() {
+            iter = iter.with(object.surface_iter());
+        }
+
+        iter
+    }
 
     /// Iterator over all vertices
-    fn vertex_iter(&'r self) -> Iter<&'r Vertex>;
+    fn vertex_iter(&'r self) -> Iter<&'r Vertex> {
+        let mut iter = Iter::empty();
+
+        for object in self.referenced_objects() {
+            iter = iter.with(object.vertex_iter());
+        }
+
+        iter
+    }
 }
 
 impl<'r> ObjectIters<'r> for Curve<3> {
