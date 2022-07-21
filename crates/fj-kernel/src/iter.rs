@@ -11,6 +11,9 @@ use crate::objects::{
 /// Implemented for all object types. An implementation must return itself, in
 /// addition to any other objects it references.
 pub trait ObjectIters<'r> {
+    /// Return all objects being referenced
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters>;
+
     /// Iterate over all curves
     fn curve_iter(&'r self) -> Iter<&'r Curve<3>>;
 
@@ -40,6 +43,10 @@ pub trait ObjectIters<'r> {
 }
 
 impl<'r> ObjectIters<'r> for Curve<3> {
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
+        Vec::new()
+    }
+
     fn curve_iter(&'r self) -> Iter<&'r Curve<3>> {
         Iter::from_object(self)
     }
@@ -78,6 +85,16 @@ impl<'r> ObjectIters<'r> for Curve<3> {
 }
 
 impl<'r> ObjectIters<'r> for Cycle {
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
+        let mut objects = Vec::new();
+
+        for edge in self.edges() {
+            objects.push(edge as &dyn ObjectIters);
+        }
+
+        objects
+    }
+
     fn curve_iter(&'r self) -> Iter<&'r Curve<3>> {
         let mut iter = Iter::empty();
 
@@ -164,6 +181,16 @@ impl<'r> ObjectIters<'r> for Cycle {
 }
 
 impl<'r> ObjectIters<'r> for Edge {
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
+        let mut objects = vec![self.curve().global() as &dyn ObjectIters];
+
+        for vertex in self.vertices().iter() {
+            objects.push(vertex);
+        }
+
+        objects
+    }
+
     fn curve_iter(&'r self) -> Iter<&'r Curve<3>> {
         let mut iter = Iter::empty().with(self.curve().global().curve_iter());
 
@@ -251,6 +278,20 @@ impl<'r> ObjectIters<'r> for Edge {
 }
 
 impl<'r> ObjectIters<'r> for Face {
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
+        if self.triangles().is_some() {
+            return Vec::new();
+        }
+
+        let mut objects = vec![self.surface() as &dyn ObjectIters];
+
+        for cycle in self.all_cycles() {
+            objects.push(cycle);
+        }
+
+        objects
+    }
+
     fn curve_iter(&'r self) -> Iter<&'r Curve<3>> {
         if self.triangles().is_some() {
             return Iter::empty();
@@ -369,6 +410,10 @@ impl<'r> ObjectIters<'r> for Face {
 }
 
 impl<'r> ObjectIters<'r> for GlobalVertex {
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
+        Vec::new()
+    }
+
     fn curve_iter(&'r self) -> Iter<&'r Curve<3>> {
         Iter::empty()
     }
@@ -407,6 +452,16 @@ impl<'r> ObjectIters<'r> for GlobalVertex {
 }
 
 impl<'r> ObjectIters<'r> for Sketch {
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
+        let mut objects = Vec::new();
+
+        for face in self.faces() {
+            objects.push(face as &dyn ObjectIters);
+        }
+
+        objects
+    }
+
     fn curve_iter(&'r self) -> Iter<&'r Curve<3>> {
         let mut iter = Iter::empty();
 
@@ -493,6 +548,16 @@ impl<'r> ObjectIters<'r> for Sketch {
 }
 
 impl<'r> ObjectIters<'r> for Solid {
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
+        let mut objects = Vec::new();
+
+        for face in self.faces() {
+            objects.push(face as &dyn ObjectIters);
+        }
+
+        objects
+    }
+
     fn curve_iter(&'r self) -> Iter<&'r Curve<3>> {
         let mut iter = Iter::empty();
 
@@ -579,6 +644,10 @@ impl<'r> ObjectIters<'r> for Solid {
 }
 
 impl<'r> ObjectIters<'r> for Surface {
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
+        Vec::new()
+    }
+
     fn curve_iter(&'r self) -> Iter<&'r Curve<3>> {
         Iter::empty()
     }
@@ -617,6 +686,10 @@ impl<'r> ObjectIters<'r> for Surface {
 }
 
 impl<'r> ObjectIters<'r> for Vertex {
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
+        vec![self.global() as &dyn ObjectIters]
+    }
+
     fn curve_iter(&'r self) -> Iter<&'r Curve<3>> {
         self.global().curve_iter()
     }
@@ -661,6 +734,16 @@ where
     O: ObjectIters<'r> + 'r,
     &'r T: IntoIterator<Item = &'r O>,
 {
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
+        let mut objects = Vec::new();
+
+        for object in self.into_iter() {
+            objects.push(object as &dyn ObjectIters);
+        }
+
+        objects
+    }
+
     fn curve_iter(&'r self) -> Iter<&'r Curve<3>> {
         let mut iter = Iter::empty();
 
