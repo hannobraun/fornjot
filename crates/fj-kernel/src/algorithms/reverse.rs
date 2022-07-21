@@ -28,7 +28,7 @@ fn reverse_local_coordinates_in_cycle<'r>(
             .iter()
             .map(|edge| {
                 let curve = {
-                    let local = match edge.curve().local() {
+                    let local = match edge.curve().local_form() {
                         Curve::Circle(Circle { center, a, b }) => {
                             let center = Point::from([center.u, -center.v]);
 
@@ -46,7 +46,7 @@ fn reverse_local_coordinates_in_cycle<'r>(
                         }
                     };
 
-                    Local::new(local, *edge.curve().global())
+                    Local::new(local, *edge.curve().global_form())
                 };
 
                 Edge::new(curve, *edge.vertices())

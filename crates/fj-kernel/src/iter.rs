@@ -142,7 +142,7 @@ impl<'r> ObjectIters<'r> for Cycle {
 
 impl<'r> ObjectIters<'r> for Edge {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
-        let mut objects = vec![self.curve().global() as &dyn ObjectIters];
+        let mut objects = vec![self.curve().global_form() as &dyn ObjectIters];
 
         for vertex in self.vertices().iter() {
             objects.push(vertex);

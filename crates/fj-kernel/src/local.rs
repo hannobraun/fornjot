@@ -32,12 +32,12 @@ impl<T: LocalForm> Local<T> {
     }
 
     /// Access the local form of the value
-    pub fn local(&self) -> &T {
+    pub fn local_form(&self) -> &T {
         &self.local
     }
 
     /// Access the global form of the value
-    pub fn global(&self) -> &T::GlobalForm {
+    pub fn global_form(&self) -> &T::GlobalForm {
         &self.global
     }
 }

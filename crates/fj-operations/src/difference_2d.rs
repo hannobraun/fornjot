@@ -89,15 +89,15 @@ fn add_cycle(cycle: Cycle, reverse: bool) -> Cycle {
     let mut edges = Vec::new();
     for edge in cycle.edges {
         let curve_local = if reverse {
-            edge.curve().local().reverse()
+            edge.curve().local_form().reverse()
         } else {
-            *edge.curve().local()
+            *edge.curve().local_form()
         };
 
         let curve_global = if reverse {
-            edge.curve().global().reverse()
+            edge.curve().global_form().reverse()
         } else {
-            *edge.curve().global()
+            *edge.curve().global_form()
         };
 
         let vertices = if reverse {

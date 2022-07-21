@@ -21,21 +21,25 @@ impl CycleApprox {
 
         for edge in &cycle.edges {
             let mut edge_points = Vec::new();
-            approx_curve(edge.curve().global(), tolerance, &mut edge_points);
+            approx_curve(
+                edge.curve().global_form(),
+                tolerance,
+                &mut edge_points,
+            );
             approx_edge(*edge.vertices(), &mut edge_points);
 
             points.extend(edge_points.into_iter().map(|point| {
                 let local = edge
                     .curve()
-                    .local()
-                    .point_from_curve_coords(*point.local());
-                Local::new(local, *point.global())
+                    .local_form()
+                    .point_from_curve_coords(*point.local_form());
+                Local::new(local, *point.global_form())
             }));
         }
 
         // Can't just rely on `dedup`, as the conversion from curve coordinates
         // could lead to subtly different surface coordinates.
-        points.dedup_by(|a, b| a.global() == b.global());
+        points.dedup_by(|a, b| a.global_form() == b.global_form());
 
         Self { points }
     }
@@ -49,7 +53,8 @@ impl CycleApprox {
             // up, once `array_windows` is stable.
             let segment = [segment[0], segment[1]];
 
-            segments.push(Segment::from(segment.map(|point| *point.global())));
+            segments
+                .push(Segment::from(segment.map(|point| *point.global_form())));
         }
 
         segments
