@@ -109,7 +109,7 @@ mod tests {
         let surface = Surface::xy_plane();
         let face = Face::builder(surface)
             .with_exterior(Cycle::polygon_from_points(&surface, [a, b, c, d]))
-            .with_interior_polygon([e, f, g, h])
+            .with_interior(Cycle::polygon_from_points(&surface, [e, f, g, h]))
             .build();
 
         let a = Local::new(a, a.to_xyz());

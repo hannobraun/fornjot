@@ -1,7 +1,6 @@
 //! Convenient API to build objects
 
 use fj_interop::mesh::Color;
-use fj_math::Point;
 
 use crate::objects::{Cycle, Face, Surface};
 
@@ -10,7 +9,7 @@ use crate::objects::{Cycle, Face, Surface};
 pub struct FaceBuilder {
     surface: Surface,
     exterior: Option<Cycle>,
-    interiors: Vec<Vec<Point<2>>>,
+    interiors: Vec<Cycle>,
     color: Option<Color>,
 }
 
@@ -34,14 +33,9 @@ impl FaceBuilder {
     }
 
     /// Add an interior polygon to the face
-    pub fn with_interior_polygon(
-        self,
-        points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Self {
-        let points = points.into_iter().map(Into::into).collect();
-
+    pub fn with_interior(self, cycle: Cycle) -> Self {
         let mut interiors = self.interiors;
-        interiors.push(points);
+        interiors.push(cycle);
 
         Self { interiors, ..self }
     }
@@ -61,11 +55,7 @@ impl FaceBuilder {
             exteriors.push(cycle);
         }
 
-        let mut interiors = Vec::new();
-        for points in self.interiors {
-            let cycle = Cycle::polygon_from_points(&self.surface, points);
-            interiors.push(cycle);
-        }
+        let interiors = self.interiors;
 
         let color = self.color.unwrap_or_default();
 
