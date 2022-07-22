@@ -70,12 +70,10 @@ impl Shape for fj::Difference2d {
                 }
             }
 
-            faces.push(Face::new(
-                *surface,
-                exteriors,
-                interiors,
-                Color(self.color()),
-            ));
+            faces.push(
+                Face::new(*surface, [], interiors, Color(self.color()))
+                    .with_exteriors(exteriors),
+            );
         }
 
         let difference = Sketch::from_faces(faces);

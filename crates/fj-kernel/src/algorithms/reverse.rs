@@ -16,7 +16,7 @@ pub fn reverse_face(face: &Face) -> Face {
     let exteriors = reverse_local_coordinates_in_cycle(face.exteriors());
     let interiors = reverse_local_coordinates_in_cycle(face.interiors());
 
-    Face::new(surface, exteriors, interiors, face.color())
+    Face::new(surface, [], interiors, face.color()).with_exteriors(exteriors)
 }
 
 fn reverse_local_coordinates_in_cycle<'r>(

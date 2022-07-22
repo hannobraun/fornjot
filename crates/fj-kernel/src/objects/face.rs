@@ -87,9 +87,34 @@ impl Face {
         None
     }
 
+    /// Add exterior cycles to the face
+    ///
+    /// Consumes the face and returns the updated instance.
+    pub fn with_exteriors(
+        mut self,
+        exteriors: impl IntoIterator<Item = Cycle>,
+    ) -> Self {
+        for exterior in exteriors.into_iter() {
+            self.brep_mut().exteriors.push(exterior);
+        }
+
+        self
+    }
+
     /// Access the boundary representation of the face
     fn brep(&self) -> &BRep {
         if let Representation::BRep(face) = &self.representation {
+            return face;
+        }
+
+        // No code that still uses triangle representation is calling this
+        // method.
+        unreachable!()
+    }
+
+    /// Access the boundary representation of the face mutably
+    fn brep_mut(&mut self) -> &mut BRep {
+        if let Representation::BRep(face) = &mut self.representation {
             return face;
         }
 
