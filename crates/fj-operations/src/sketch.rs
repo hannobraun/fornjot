@@ -37,7 +37,7 @@ impl Shape for fj::Sketch {
                     poly_chain.to_points().into_iter().map(Point::from);
 
                 Face::builder(surface)
-                    .with_exterior_polygon(points)
+                    .with_exterior(Cycle::polygon_from_points(&surface, points))
                     .with_color(Color(self.color()))
                     .build()
             }

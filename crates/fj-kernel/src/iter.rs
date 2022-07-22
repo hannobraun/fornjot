@@ -357,7 +357,10 @@ mod tests {
     fn face() {
         let surface = Surface::xy_plane();
         let object = Face::builder(surface)
-            .with_exterior_polygon([[0., 0.], [1., 0.], [0., 1.]])
+            .with_exterior(Cycle::polygon_from_points(
+                &surface,
+                [[0., 0.], [1., 0.], [0., 1.]],
+            ))
             .build();
 
         assert_eq!(3, object.curve_iter().count());
@@ -390,7 +393,10 @@ mod tests {
     fn sketch() {
         let surface = Surface::xy_plane();
         let face = Face::builder(surface)
-            .with_exterior_polygon([[0., 0.], [1., 0.], [0., 1.]])
+            .with_exterior(Cycle::polygon_from_points(
+                &surface,
+                [[0., 0.], [1., 0.], [0., 1.]],
+            ))
             .build();
         let object = Sketch::from_faces([face]);
 

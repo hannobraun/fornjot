@@ -9,7 +9,7 @@ use crate::objects::{Cycle, Face, Surface};
 #[must_use]
 pub struct FaceBuilder {
     surface: Surface,
-    exterior: Option<Vec<Point<2>>>,
+    exterior: Option<Cycle>,
     interiors: Vec<Vec<Point<2>>>,
     color: Option<Color>,
 }
@@ -26,14 +26,9 @@ impl FaceBuilder {
     }
 
     /// Make the exterior or the face a polygon
-    pub fn with_exterior_polygon(
-        self,
-        points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Self {
-        let points = points.into_iter().map(Into::into).collect();
-
+    pub fn with_exterior(self, cycle: Cycle) -> Self {
         Self {
-            exterior: Some(points),
+            exterior: Some(cycle),
             ..self
         }
     }
@@ -62,8 +57,7 @@ impl FaceBuilder {
         let surface = self.surface;
 
         let mut exteriors = Vec::new();
-        if let Some(points) = self.exterior {
-            let cycle = Cycle::polygon_from_points(&self.surface, points);
+        if let Some(cycle) = self.exterior {
             exteriors.push(cycle);
         }
 

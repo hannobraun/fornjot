@@ -205,7 +205,7 @@ mod tests {
     use crate::{
         algorithms::Tolerance,
         iter::ObjectIters,
-        objects::{Face, Sketch, Surface},
+        objects::{Cycle, Face, Sketch, Surface},
     };
 
     #[test]
@@ -296,7 +296,10 @@ mod tests {
 
         let surface = Surface::xy_plane();
         let face = Face::builder(surface)
-            .with_exterior_polygon([[0., 0.], [1., 0.], [0., 1.]])
+            .with_exterior(Cycle::polygon_from_points(
+                &surface,
+                [[0., 0.], [1., 0.], [0., 1.]],
+            ))
             .build();
         let sketch = Sketch::from_faces([face]);
 
@@ -312,7 +315,10 @@ mod tests {
             let surface = Surface::plane_from_points(surface);
 
             Face::builder(surface)
-                .with_exterior_polygon(expected_vertices.clone())
+                .with_exterior(Cycle::polygon_from_points(
+                    &surface,
+                    expected_vertices.clone(),
+                ))
                 .build()
         });
 

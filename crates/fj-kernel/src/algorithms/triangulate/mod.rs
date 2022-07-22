@@ -67,7 +67,7 @@ mod tests {
 
     use crate::{
         algorithms::Tolerance,
-        objects::{Face, Surface},
+        objects::{Cycle, Face, Surface},
     };
 
     #[test]
@@ -79,7 +79,7 @@ mod tests {
 
         let surface = Surface::xy_plane();
         let face = Face::builder(surface)
-            .with_exterior_polygon([a, b, c, d])
+            .with_exterior(Cycle::polygon_from_points(&surface, [a, b, c, d]))
             .build();
 
         let a = Point::from(a).to_xyz();
@@ -111,7 +111,7 @@ mod tests {
 
         let surface = Surface::xy_plane();
         let face = Face::builder(surface)
-            .with_exterior_polygon([a, b, c, d])
+            .with_exterior(Cycle::polygon_from_points(&surface, [a, b, c, d]))
             .with_interior_polygon([e, f, g, h])
             .build();
 
@@ -162,7 +162,10 @@ mod tests {
 
         let surface = Surface::xy_plane();
         let face = Face::builder(surface)
-            .with_exterior_polygon([a, b, c, d, e])
+            .with_exterior(Cycle::polygon_from_points(
+                &surface,
+                [a, b, c, d, e],
+            ))
             .build();
 
         let triangles = triangulate(face)?;
