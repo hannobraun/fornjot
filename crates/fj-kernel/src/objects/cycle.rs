@@ -64,4 +64,9 @@ impl Cycle {
     pub fn edges(&self) -> impl Iterator<Item = &Edge> + '_ {
         self.edges.iter()
     }
+
+    /// Consume the cycle and return its edges
+    pub fn into_edges(self) -> impl Iterator<Item = Edge> {
+        self.edges.into_iter()
+    }
 }
