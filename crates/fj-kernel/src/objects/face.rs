@@ -101,6 +101,20 @@ impl Face {
         self
     }
 
+    /// Add interior cycles to the face
+    ///
+    /// Consumes the face and returns the updated instance.
+    pub fn with_interiors(
+        mut self,
+        interiors: impl IntoIterator<Item = Cycle>,
+    ) -> Self {
+        for interior in interiors.into_iter() {
+            self.brep_mut().interiors.push(interior);
+        }
+
+        self
+    }
+
     /// Access the boundary representation of the face
     fn brep(&self) -> &BRep {
         if let Representation::BRep(face) = &self.representation {
