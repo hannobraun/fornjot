@@ -115,6 +115,14 @@ impl Face {
         self
     }
 
+    /// Update the color of the face
+    ///
+    /// Consumes the face and returns the updated instance.
+    pub fn with_color(mut self, color: Color) -> Self {
+        self.brep_mut().color = color;
+        self
+    }
+
     /// Access the boundary representation of the face
     fn brep(&self) -> &BRep {
         if let Representation::BRep(face) = &self.representation {

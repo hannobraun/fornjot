@@ -161,7 +161,9 @@ fn create_non_continuous_side_face(
         Cycle { edges }
     };
 
-    let face = Face::new(surface, [], [], color).with_exteriors([cycle]);
+    let face = Face::new(surface, [], [], Color::default())
+        .with_exteriors([cycle])
+        .with_color(color);
     target.push(face);
 }
 
