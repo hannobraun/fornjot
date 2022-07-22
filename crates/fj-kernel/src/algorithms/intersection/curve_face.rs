@@ -211,8 +211,8 @@ mod tests {
         ];
 
         let surface = Surface::xy_plane();
-        let face = Face::new(surface)
-            .with_exteriors([Cycle::polygon_from_points(&surface, exterior)])
+        let face = Face::build(surface)
+            .polygon_from_points(exterior)
             .with_interiors([Cycle::polygon_from_points(&surface, interior)]);
 
         let expected =

@@ -1,6 +1,8 @@
 use fj_interop::mesh::Color;
 use fj_math::Triangle;
 
+use crate::builder::FaceBuilder;
+
 use super::{Cycle, Surface};
 
 /// A face of a shape
@@ -66,6 +68,11 @@ impl Face {
     pub fn with_color(mut self, color: Color) -> Self {
         self.brep_mut().color = color;
         self
+    }
+
+    /// Build a face using [`FaceBuilder`]
+    pub fn build(surface: Surface) -> FaceBuilder {
+        FaceBuilder::new(surface)
     }
 
     /// Access this face's surface

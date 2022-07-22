@@ -78,11 +78,7 @@ mod tests {
         let d = [0., 1.];
 
         let surface = Surface::xy_plane();
-        let face =
-            Face::new(surface).with_exteriors([Cycle::polygon_from_points(
-                &surface,
-                [a, b, c, d],
-            )]);
+        let face = Face::build(surface).polygon_from_points([a, b, c, d]);
 
         let a = Point::from(a).to_xyz();
         let b = Point::from(b).to_xyz();
@@ -112,11 +108,8 @@ mod tests {
         let h = [1., 2.];
 
         let surface = Surface::xy_plane();
-        let face = Face::new(surface)
-            .with_exteriors([Cycle::polygon_from_points(
-                &surface,
-                [a, b, c, d],
-            )])
+        let face = Face::build(surface)
+            .polygon_from_points([a, b, c, d])
             .with_interiors([Cycle::polygon_from_points(
                 &surface,
                 [e, f, g, h],
@@ -168,11 +161,7 @@ mod tests {
         let e = Point::from([0., 0.8]);
 
         let surface = Surface::xy_plane();
-        let face =
-            Face::new(surface).with_exteriors([Cycle::polygon_from_points(
-                &surface,
-                [a, b, c, d, e],
-            )]);
+        let face = Face::build(surface).polygon_from_points([a, b, c, d, e]);
 
         let triangles = triangulate(face)?;
 
