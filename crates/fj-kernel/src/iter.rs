@@ -319,10 +319,11 @@ mod tests {
 
     #[test]
     fn cycle() {
-        let object = Cycle::polygon_from_points(
-            &Surface::xy_plane(),
-            [[0., 0.], [1., 0.], [0., 1.]],
-        );
+        let object = Cycle::build(Surface::xy_plane()).polygon_from_points([
+            [0., 0.],
+            [1., 0.],
+            [0., 1.],
+        ]);
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());

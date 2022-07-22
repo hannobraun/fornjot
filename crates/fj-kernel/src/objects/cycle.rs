@@ -1,4 +1,4 @@
-use fj_math::Point;
+use crate::builder::CycleBuilder;
 
 use super::{Edge, Surface};
 
@@ -33,30 +33,9 @@ impl Cycle {
         self
     }
 
-    /// Create a polygon from a list of points
-    pub fn polygon_from_points(
-        surface: &Surface,
-        points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Cycle {
-        let mut points: Vec<_> = points.into_iter().map(Into::into).collect();
-
-        // A polygon is closed, so we need to add the first point at the end
-        // again, for the next step.
-        if let Some(point) = points.first().cloned() {
-            points.push(point);
-        }
-
-        let mut edges = Vec::new();
-        for points in points.windows(2) {
-            // Can't panic, as we passed `2` to `windows`.
-            //
-            // Can be cleaned up, once `array_windows` is stable.
-            let points = [points[0], points[1]];
-
-            edges.push(Edge::line_segment_from_points(surface, points));
-        }
-
-        Cycle { edges }
+    /// Build a cycle using [`CycleBuilder`]
+    pub fn build(surface: Surface) -> CycleBuilder {
+        CycleBuilder::new(surface)
     }
 
     /// Access edges that make up the cycle
