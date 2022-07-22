@@ -19,7 +19,7 @@ impl CycleApprox {
     pub fn new(cycle: &Cycle, tolerance: Tolerance) -> Self {
         let mut points = Vec::new();
 
-        for edge in &cycle.edges {
+        for edge in cycle.edges() {
             let mut edge_points = Vec::new();
             approx_curve(
                 edge.curve().global_form(),

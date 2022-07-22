@@ -26,37 +26,33 @@ fn reverse_local_coordinates_in_cycle<'r>(
     cycles: impl IntoIterator<Item = &'r Cycle> + 'r,
 ) -> impl Iterator<Item = Cycle> + 'r {
     cycles.into_iter().map(|cycle| {
-        let edges = cycle
-            .edges
-            .iter()
-            .map(|edge| {
-                let curve = {
-                    let local = match edge.curve().local_form() {
-                        Curve::Circle(Circle { center, a, b }) => {
-                            let center = Point::from([center.u, -center.v]);
+        let edges = cycle.edges().map(|edge| {
+            let curve = {
+                let local = match edge.curve().local_form() {
+                    Curve::Circle(Circle { center, a, b }) => {
+                        let center = Point::from([center.u, -center.v]);
 
-                            let a = Vector::from([a.u, -a.v]);
-                            let b = Vector::from([b.u, -b.v]);
+                        let a = Vector::from([a.u, -a.v]);
+                        let b = Vector::from([b.u, -b.v]);
 
-                            Curve::Circle(Circle { center, a, b })
-                        }
-                        Curve::Line(Line { origin, direction }) => {
-                            let origin = Point::from([origin.u, -origin.v]);
-                            let direction =
-                                Vector::from([direction.u, -direction.v]);
+                        Curve::Circle(Circle { center, a, b })
+                    }
+                    Curve::Line(Line { origin, direction }) => {
+                        let origin = Point::from([origin.u, -origin.v]);
+                        let direction =
+                            Vector::from([direction.u, -direction.v]);
 
-                            Curve::Line(Line { origin, direction })
-                        }
-                    };
-
-                    Local::new(local, *edge.curve().global_form())
+                        Curve::Line(Line { origin, direction })
+                    }
                 };
 
-                Edge::new(curve, *edge.vertices())
-            })
-            .collect();
+                Local::new(local, *edge.curve().global_form())
+            };
 
-        Cycle { edges }
+            Edge::new(curve, *edge.vertices())
+        });
+
+        Cycle::new().with_edges(edges)
     })
 }
 

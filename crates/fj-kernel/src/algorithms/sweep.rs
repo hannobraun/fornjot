@@ -40,7 +40,7 @@ pub fn sweep(
         );
 
         for cycle in face.all_cycles() {
-            for edge in &cycle.edges {
+            for edge in cycle.edges() {
                 if let Some(vertices) = edge.vertices().get() {
                     create_non_continuous_side_face(
                         path,
@@ -158,7 +158,7 @@ fn create_non_continuous_side_face(
             edges.push(edge);
         }
 
-        Cycle { edges }
+        Cycle::new().with_edges(edges)
     };
 
     let face = Face::new(surface).with_exteriors([cycle]).with_color(color);
@@ -174,7 +174,7 @@ fn create_continuous_side_face(
 ) {
     let translation = Transform::translation(path);
 
-    let cycle = Cycle { edges: vec![edge] };
+    let cycle = Cycle::new().with_edges([edge]);
     let approx = CycleApprox::new(&cycle, tolerance);
 
     let mut quads = Vec::new();
