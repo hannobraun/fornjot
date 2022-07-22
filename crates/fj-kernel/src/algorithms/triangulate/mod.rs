@@ -180,10 +180,14 @@ mod tests {
         Ok(())
     }
 
-    fn triangulate(face: Face) -> anyhow::Result<Mesh<Point<3>>> {
+    fn triangulate(face: impl Into<Face>) -> anyhow::Result<Mesh<Point<3>>> {
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
 
         let mut debug_info = DebugInfo::new();
-        Ok(super::triangulate(vec![face], tolerance, &mut debug_info))
+        Ok(super::triangulate(
+            vec![face.into()],
+            tolerance,
+            &mut debug_info,
+        ))
     }
 }
