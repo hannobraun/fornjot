@@ -69,22 +69,20 @@ mod tests {
     #[test]
     fn reverse_face() {
         let surface = Surface::xy_plane();
-        let original = Face::builder(surface)
-            .with_exterior(Cycle::polygon_from_points(
+        let original =
+            Face::new(surface).with_exteriors([Cycle::polygon_from_points(
                 &surface,
                 [[0., 0.], [1., 0.], [0., 1.]],
-            ))
-            .build();
+            )]);
 
         let reversed = super::reverse_face(&original);
 
         let surface = Surface::xy_plane().reverse();
-        let expected = Face::builder(surface)
-            .with_exterior(Cycle::polygon_from_points(
+        let expected =
+            Face::new(surface).with_exteriors([Cycle::polygon_from_points(
                 &surface,
                 [[0., 0.], [1., 0.], [0., -1.]],
-            ))
-            .build();
+            )]);
 
         assert_eq!(expected, reversed);
     }

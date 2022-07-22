@@ -211,10 +211,9 @@ mod tests {
         ];
 
         let surface = Surface::xy_plane();
-        let face = Face::builder(surface)
-            .with_exterior(Cycle::polygon_from_points(&surface, exterior))
-            .with_interior(Cycle::polygon_from_points(&surface, interior))
-            .build();
+        let face = Face::new(surface)
+            .with_exteriors([Cycle::polygon_from_points(&surface, exterior)])
+            .with_interiors([Cycle::polygon_from_points(&surface, interior)]);
 
         let expected =
             CurveFaceIntersectionList::from_intervals([[1., 2.], [4., 5.]]);

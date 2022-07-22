@@ -49,9 +49,8 @@ impl Solid {
         ];
 
         let faces = planes.map(|plane| {
-            Face::builder(plane)
-                .with_exterior(Cycle::polygon_from_points(&plane, points))
-                .build()
+            Face::new(plane)
+                .with_exteriors([Cycle::polygon_from_points(&plane, points)])
         });
 
         Solid::from_faces(faces)

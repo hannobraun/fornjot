@@ -295,12 +295,11 @@ mod tests {
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
 
         let surface = Surface::xy_plane();
-        let face = Face::builder(surface)
-            .with_exterior(Cycle::polygon_from_points(
+        let face =
+            Face::new(surface).with_exteriors([Cycle::polygon_from_points(
                 &surface,
                 [[0., 0.], [1., 0.], [0., 1.]],
-            ))
-            .build();
+            )]);
         let sketch = Sketch::from_faces([face]);
 
         let solid =
@@ -314,12 +313,10 @@ mod tests {
         let faces = expected_surfaces.into_iter().map(|surface| {
             let surface = Surface::plane_from_points(surface);
 
-            Face::builder(surface)
-                .with_exterior(Cycle::polygon_from_points(
-                    &surface,
-                    expected_vertices.clone(),
-                ))
-                .build()
+            Face::new(surface).with_exteriors([Cycle::polygon_from_points(
+                &surface,
+                expected_vertices.clone(),
+            )])
         });
 
         for face in faces {

@@ -107,10 +107,15 @@ mod tests {
         let h = Point::from([1., 2.]);
 
         let surface = Surface::xy_plane();
-        let face = Face::builder(surface)
-            .with_exterior(Cycle::polygon_from_points(&surface, [a, b, c, d]))
-            .with_interior(Cycle::polygon_from_points(&surface, [e, f, g, h]))
-            .build();
+        let face = Face::new(surface)
+            .with_exteriors([Cycle::polygon_from_points(
+                &surface,
+                [a, b, c, d],
+            )])
+            .with_interiors([Cycle::polygon_from_points(
+                &surface,
+                [e, f, g, h],
+            )]);
 
         let a = Local::new(a, a.to_xyz());
         let b = Local::new(b, b.to_xyz());
