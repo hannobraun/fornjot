@@ -46,12 +46,9 @@ impl TransformObject for Curve<3> {
 }
 
 impl TransformObject for Cycle {
-    fn transform(mut self, transform: &Transform) -> Self {
-        for edge in &mut self.edges {
-            *edge = edge.transform(transform);
-        }
-
-        self
+    fn transform(self, transform: &Transform) -> Self {
+        Self::new()
+            .with_edges(self.into_edges().map(|edge| edge.transform(transform)))
     }
 }
 
