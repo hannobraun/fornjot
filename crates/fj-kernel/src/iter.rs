@@ -319,10 +319,11 @@ mod tests {
 
     #[test]
     fn cycle() {
-        let object = Cycle::polygon_from_points(
-            &Surface::xy_plane(),
-            [[0., 0.], [1., 0.], [0., 1.]],
-        );
+        let object = Cycle::build(Surface::xy_plane()).polygon_from_points([
+            [0., 0.],
+            [1., 0.],
+            [0., 1.],
+        ]);
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
@@ -337,7 +338,7 @@ mod tests {
 
     #[test]
     fn edge() {
-        let object = Edge::line_segment_from_points(
+        let object = Edge::build().line_segment_from_points(
             &Surface::xy_plane(),
             [[0., 0.], [1., 0.]],
         );
@@ -356,11 +357,11 @@ mod tests {
     #[test]
     fn face() {
         let surface = Surface::xy_plane();
-        let object =
-            Face::new(surface).with_exteriors([Cycle::polygon_from_points(
-                &surface,
-                [[0., 0.], [1., 0.], [0., 1.]],
-            )]);
+        let object = Face::build(surface).polygon_from_points([
+            [0., 0.],
+            [1., 0.],
+            [0., 1.],
+        ]);
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
@@ -391,11 +392,11 @@ mod tests {
     #[test]
     fn sketch() {
         let surface = Surface::xy_plane();
-        let face =
-            Face::new(surface).with_exteriors([Cycle::polygon_from_points(
-                &surface,
-                [[0., 0.], [1., 0.], [0., 1.]],
-            )]);
+        let face = Face::build(surface).polygon_from_points([
+            [0., 0.],
+            [1., 0.],
+            [0., 1.],
+        ]);
         let object = Sketch::from_faces([face]);
 
         assert_eq!(3, object.curve_iter().count());
@@ -411,7 +412,7 @@ mod tests {
 
     #[test]
     fn solid() {
-        let object = Solid::cube_from_edge_length(1.);
+        let object = Solid::build().cube_from_edge_length(1.);
 
         assert_eq!(18, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());

@@ -1,10 +1,8 @@
 use std::fmt;
 
-use fj_math::{Circle, Line, Point, Scalar, Vector};
+use crate::{builder::EdgeBuilder, local::Local};
 
-use crate::local::Local;
-
-use super::{Curve, GlobalVertex, Surface, Vertex};
+use super::{Curve, Vertex};
 
 /// An edge of a shape
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -19,56 +17,9 @@ impl Edge {
         Self { curve, vertices }
     }
 
-    /// Create a circle from the given radius
-    pub fn circle_from_radius(radius: Scalar) -> Self {
-        let curve_local = Curve::Circle(Circle {
-            center: Point::origin(),
-            a: Vector::from([radius, Scalar::ZERO]),
-            b: Vector::from([Scalar::ZERO, radius]),
-        });
-        let curve_canonical = Curve::Circle(Circle {
-            center: Point::origin(),
-            a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
-            b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
-        });
-
-        Edge {
-            curve: Local::new(curve_local, curve_canonical),
-            vertices: VerticesOfEdge::none(),
-        }
-    }
-
-    /// Create a line segment from two points
-    pub fn line_segment_from_points(
-        surface: &Surface,
-        points: [impl Into<Point<2>>; 2],
-    ) -> Self {
-        let points = points.map(Into::into);
-
-        let global_vertices = points.map(|position| {
-            let position = surface.point_from_surface_coords(position);
-            GlobalVertex::from_position(position)
-        });
-
-        let curve_local = Curve::Line(Line::from_points(points));
-        let curve_canonical = {
-            let points =
-                global_vertices.map(|global_vertex| global_vertex.position());
-            Curve::Line(Line::from_points(points))
-        };
-
-        let vertices = {
-            let [a, b] = global_vertices;
-            [
-                Vertex::new(Point::from([0.]), a),
-                Vertex::new(Point::from([1.]), b),
-            ]
-        };
-
-        Self {
-            curve: Local::new(curve_local, curve_canonical),
-            vertices: VerticesOfEdge::from_vertices(vertices),
-        }
+    /// Build an edge using [`EdgeBuilder`]
+    pub fn build() -> EdgeBuilder {
+        EdgeBuilder
     }
 
     /// Access the curve that defines the edge's geometry

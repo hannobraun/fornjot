@@ -88,6 +88,7 @@
 #![warn(missing_docs)]
 
 pub mod algorithms;
+pub mod builder;
 pub mod iter;
 pub mod local;
 pub mod objects;

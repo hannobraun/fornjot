@@ -1,6 +1,8 @@
 use fj_interop::mesh::Color;
 use fj_math::Triangle;
 
+use crate::builder::FaceBuilder;
+
 use super::{Cycle, Surface};
 
 /// A face of a shape
@@ -30,6 +32,47 @@ impl Face {
         Self {
             representation: Representation::TriRep(triangles),
         }
+    }
+
+    /// Add exterior cycles to the face
+    ///
+    /// Consumes the face and returns the updated instance.
+    pub fn with_exteriors(
+        mut self,
+        exteriors: impl IntoIterator<Item = Cycle>,
+    ) -> Self {
+        for exterior in exteriors.into_iter() {
+            self.brep_mut().exteriors.push(exterior);
+        }
+
+        self
+    }
+
+    /// Add interior cycles to the face
+    ///
+    /// Consumes the face and returns the updated instance.
+    pub fn with_interiors(
+        mut self,
+        interiors: impl IntoIterator<Item = Cycle>,
+    ) -> Self {
+        for interior in interiors.into_iter() {
+            self.brep_mut().interiors.push(interior);
+        }
+
+        self
+    }
+
+    /// Update the color of the face
+    ///
+    /// Consumes the face and returns the updated instance.
+    pub fn with_color(mut self, color: Color) -> Self {
+        self.brep_mut().color = color;
+        self
+    }
+
+    /// Build a face using [`FaceBuilder`]
+    pub fn build(surface: Surface) -> FaceBuilder {
+        FaceBuilder::new(surface)
     }
 
     /// Access this face's surface
@@ -73,42 +116,6 @@ impl Face {
         }
 
         None
-    }
-
-    /// Add exterior cycles to the face
-    ///
-    /// Consumes the face and returns the updated instance.
-    pub fn with_exteriors(
-        mut self,
-        exteriors: impl IntoIterator<Item = Cycle>,
-    ) -> Self {
-        for exterior in exteriors.into_iter() {
-            self.brep_mut().exteriors.push(exterior);
-        }
-
-        self
-    }
-
-    /// Add interior cycles to the face
-    ///
-    /// Consumes the face and returns the updated instance.
-    pub fn with_interiors(
-        mut self,
-        interiors: impl IntoIterator<Item = Cycle>,
-    ) -> Self {
-        for interior in interiors.into_iter() {
-            self.brep_mut().interiors.push(interior);
-        }
-
-        self
-    }
-
-    /// Update the color of the face
-    ///
-    /// Consumes the face and returns the updated instance.
-    pub fn with_color(mut self, color: Color) -> Self {
-        self.brep_mut().color = color;
-        self
     }
 
     /// Access the boundary representation of the face

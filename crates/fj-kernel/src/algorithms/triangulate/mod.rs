@@ -67,7 +67,7 @@ mod tests {
 
     use crate::{
         algorithms::Tolerance,
-        objects::{Cycle, Face, Surface},
+        objects::{Face, Surface},
     };
 
     #[test]
@@ -78,11 +78,7 @@ mod tests {
         let d = [0., 1.];
 
         let surface = Surface::xy_plane();
-        let face =
-            Face::new(surface).with_exteriors([Cycle::polygon_from_points(
-                &surface,
-                [a, b, c, d],
-            )]);
+        let face = Face::build(surface).polygon_from_points([a, b, c, d]);
 
         let a = Point::from(a).to_xyz();
         let b = Point::from(b).to_xyz();
@@ -112,15 +108,9 @@ mod tests {
         let h = [1., 2.];
 
         let surface = Surface::xy_plane();
-        let face = Face::new(surface)
-            .with_exteriors([Cycle::polygon_from_points(
-                &surface,
-                [a, b, c, d],
-            )])
-            .with_interiors([Cycle::polygon_from_points(
-                &surface,
-                [e, f, g, h],
-            )]);
+        let face = Face::build(surface)
+            .polygon_from_points([a, b, c, d])
+            .with_hole([e, f, g, h]);
 
         let triangles = triangulate(face)?;
 
@@ -168,11 +158,7 @@ mod tests {
         let e = Point::from([0., 0.8]);
 
         let surface = Surface::xy_plane();
-        let face =
-            Face::new(surface).with_exteriors([Cycle::polygon_from_points(
-                &surface,
-                [a, b, c, d, e],
-            )]);
+        let face = Face::build(surface).polygon_from_points([a, b, c, d, e]);
 
         let triangles = triangulate(face)?;
 
@@ -191,10 +177,14 @@ mod tests {
         Ok(())
     }
 
-    fn triangulate(face: Face) -> anyhow::Result<Mesh<Point<3>>> {
+    fn triangulate(face: impl Into<Face>) -> anyhow::Result<Mesh<Point<3>>> {
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
 
         let mut debug_info = DebugInfo::new();
-        Ok(super::triangulate(vec![face], tolerance, &mut debug_info))
+        Ok(super::triangulate(
+            vec![face.into()],
+            tolerance,
+            &mut debug_info,
+        ))
     }
 }
