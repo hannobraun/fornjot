@@ -199,6 +199,7 @@ fn create_continuous_side_face(
 
 #[cfg(test)]
 mod tests {
+    use fj_interop::mesh::Color;
     use fj_math::{Point, Scalar, Vector};
 
     use crate::{
@@ -299,7 +300,7 @@ mod tests {
         let sketch = Sketch::from_faces([face]);
 
         let solid =
-            super::sweep(sketch, direction, tolerance, [255, 0, 0, 255]);
+            super::sweep(sketch, direction, tolerance, Color([255, 0, 0, 255]));
 
         let expected_vertices: Vec<_> = expected_vertices
             .into_iter()

@@ -73,7 +73,7 @@ impl FaceBuilder {
             interiors.push(cycle);
         }
 
-        let color = self.color.unwrap_or([255, 0, 0, 255]);
+        let color = self.color.unwrap_or(Color([255, 0, 0, 255]));
 
         Face::new(surface, exteriors, interiors, color)
     }

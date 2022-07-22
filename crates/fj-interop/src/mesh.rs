@@ -107,4 +107,5 @@ pub struct Triangle {
 }
 
 /// RGBA color
-pub type Color = [u8; 4];
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct Color(pub [u8; 4]);
