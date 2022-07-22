@@ -1,4 +1,4 @@
-use fj_interop::debug::DebugInfo;
+use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
     algorithms::Tolerance,
     objects::{Cycle, Edge, Face, Sketch, Surface},
@@ -28,7 +28,7 @@ impl Shape for fj::Sketch {
                     Edge::circle_from_radius(Scalar::from_f64(circle.radius()));
                 let cycle = Cycle { edges: vec![edge] };
 
-                Face::new(surface, vec![cycle], Vec::new(), self.color())
+                Face::new(surface, vec![cycle], Vec::new(), Color(self.color()))
             }
             fj::Chain::PolyChain(poly_chain) => {
                 let points =
@@ -36,7 +36,7 @@ impl Shape for fj::Sketch {
 
                 Face::builder(surface)
                     .with_exterior_polygon(points)
-                    .with_color(self.color())
+                    .with_color(Color(self.color()))
                     .build()
             }
         };

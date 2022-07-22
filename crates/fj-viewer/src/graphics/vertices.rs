@@ -92,7 +92,7 @@ impl From<&Mesh<fj_math::Point<3>>> for Vertices {
             .map(|(vertex, normal, color)| Vertex {
                 position: vertex.into(),
                 normal: normal.into(),
-                color: color.map(|v| f32::from(v) / 255.0),
+                color: color.0.map(|v| f32::from(v) / 255.0),
             })
             .collect();
 

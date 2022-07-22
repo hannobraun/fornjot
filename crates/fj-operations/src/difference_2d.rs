@@ -1,4 +1,4 @@
-use fj_interop::debug::DebugInfo;
+use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
     algorithms::Tolerance,
     iter::ObjectIters,
@@ -70,7 +70,12 @@ impl Shape for fj::Difference2d {
                 }
             }
 
-            faces.push(Face::new(*surface, exteriors, interiors, self.color()));
+            faces.push(Face::new(
+                *surface,
+                exteriors,
+                interiors,
+                Color(self.color()),
+            ));
         }
 
         let difference = Sketch::from_faces(faces);
