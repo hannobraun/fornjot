@@ -75,7 +75,7 @@ impl FaceBuilder {
 
         let color = self.color.unwrap_or_default();
 
-        Face::new(surface, [], [], Color::default())
+        Face::new(surface)
             .with_exteriors(exteriors)
             .with_interiors(interiors)
             .with_color(color)

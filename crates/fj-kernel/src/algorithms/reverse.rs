@@ -1,4 +1,3 @@
-use fj_interop::mesh::Color;
 use fj_math::{Circle, Line, Point, Vector};
 
 use crate::{
@@ -17,7 +16,7 @@ pub fn reverse_face(face: &Face) -> Face {
     let exteriors = reverse_local_coordinates_in_cycle(face.exteriors());
     let interiors = reverse_local_coordinates_in_cycle(face.interiors());
 
-    Face::new(surface, [], [], Color::default())
+    Face::new(surface)
         .with_exteriors(exteriors)
         .with_interiors(interiors)
         .with_color(face.color())

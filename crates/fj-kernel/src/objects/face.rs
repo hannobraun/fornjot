@@ -13,21 +13,13 @@ pub struct Face {
 
 impl Face {
     /// Construct a new instance of `Face`
-    pub fn new(
-        surface: Surface,
-        exteriors: impl IntoIterator<Item = Cycle>,
-        interiors: impl IntoIterator<Item = Cycle>,
-        color: Color,
-    ) -> Self {
-        let exteriors = exteriors.into_iter().collect();
-        let interiors = interiors.into_iter().collect();
-
+    pub fn new(surface: Surface) -> Self {
         Self {
             representation: Representation::BRep(BRep {
                 surface,
-                exteriors,
-                interiors,
-                color,
+                exteriors: Vec::new(),
+                interiors: Vec::new(),
+                color: Color::default(),
             }),
         }
     }

@@ -1,4 +1,3 @@
-use fj_interop::mesh::Color;
 use fj_math::{Transform, Vector};
 
 use crate::{
@@ -90,7 +89,7 @@ impl TransformObject for Face {
 
         let color = self.color();
 
-        Face::new(surface, [], [], Color::default())
+        Face::new(surface)
             .with_exteriors(exteriors)
             .with_interiors(interiors)
             .with_color(color)
