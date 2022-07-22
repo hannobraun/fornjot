@@ -1,3 +1,4 @@
+use fj_interop::mesh::Color;
 use fj_math::{Point, Scalar, Transform, Triangle, Vector};
 
 use crate::{
@@ -16,7 +17,7 @@ pub fn sweep(
     source: Sketch,
     path: impl Into<Vector<3>>,
     tolerance: Tolerance,
-    color: [u8; 4],
+    color: Color,
 ) -> Solid {
     let path = path.into();
 
@@ -98,7 +99,7 @@ fn create_non_continuous_side_face(
     path: Vector<3>,
     is_sweep_along_negative_direction: bool,
     vertices_bottom: [GlobalVertex; 2],
-    color: [u8; 4],
+    color: Color,
     target: &mut Vec<Face>,
 ) {
     let vertices = {
@@ -168,7 +169,7 @@ fn create_continuous_side_face(
     edge: Edge,
     path: Vector<3>,
     tolerance: Tolerance,
-    color: [u8; 4],
+    color: Color,
     target: &mut Vec<Face>,
 ) {
     let translation = Transform::translation(path);

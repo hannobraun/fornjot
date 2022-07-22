@@ -17,7 +17,7 @@ impl Face {
         surface: Surface,
         exteriors: impl IntoIterator<Item = Cycle>,
         interiors: impl IntoIterator<Item = Cycle>,
-        color: [u8; 4],
+        color: Color,
     ) -> Self {
         let exteriors = exteriors.into_iter().collect();
         let interiors = interiors.into_iter().collect();
@@ -70,7 +70,7 @@ impl Face {
     }
 
     /// Access the color of the face
-    pub fn color(&self) -> [u8; 4] {
+    pub fn color(&self) -> Color {
         self.brep().color
     }
 
@@ -110,7 +110,7 @@ struct BRep {
     surface: Surface,
     exteriors: Vec<Cycle>,
     interiors: Vec<Cycle>,
-    color: [u8; 4],
+    color: Color,
 }
 
 type TriRep = Vec<(Triangle<3>, Color)>;

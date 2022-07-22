@@ -1,5 +1,6 @@
 //! Convenient API to build objects
 
+use fj_interop::mesh::Color;
 use fj_math::Point;
 
 use crate::objects::{Cycle, Face, Surface};
@@ -10,7 +11,7 @@ pub struct FaceBuilder {
     surface: Surface,
     exterior: Option<Vec<Point<2>>>,
     interiors: Vec<Vec<Point<2>>>,
-    color: Option<[u8; 4]>,
+    color: Option<Color>,
 }
 
 impl FaceBuilder {
@@ -51,7 +52,7 @@ impl FaceBuilder {
     }
 
     /// Define the color of the face
-    pub fn with_color(mut self, color: [u8; 4]) -> Self {
+    pub fn with_color(mut self, color: Color) -> Self {
         self.color = Some(color);
         self
     }
