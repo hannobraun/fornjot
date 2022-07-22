@@ -412,7 +412,7 @@ mod tests {
 
     #[test]
     fn solid() {
-        let object = Solid::cube_from_edge_length(1.);
+        let object = Solid::build().cube_from_edge_length(1.);
 
         assert_eq!(18, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());
