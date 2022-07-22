@@ -85,7 +85,7 @@ mod tests {
 
     use crate::{
         local::Local,
-        objects::{Cycle, Face, Surface},
+        objects::{Face, Surface},
     };
 
     use super::{CycleApprox, FaceApprox, Tolerance};
@@ -109,11 +109,7 @@ mod tests {
         let surface = Surface::xy_plane();
         let face = Face::build(surface)
             .polygon_from_points([a, b, c, d])
-            .into_face()
-            .with_interiors([Cycle::polygon_from_points(
-                &surface,
-                [e, f, g, h],
-            )]);
+            .with_hole([e, f, g, h]);
 
         let a = Local::new(a, a.to_xyz());
         let b = Local::new(b, b.to_xyz());

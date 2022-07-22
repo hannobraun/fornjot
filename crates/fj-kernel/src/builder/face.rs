@@ -37,6 +37,19 @@ pub struct FacePolygon {
 }
 
 impl FacePolygon {
+    /// Add a hole to the polygon
+    pub fn with_hole(
+        mut self,
+        points: impl IntoIterator<Item = impl Into<Point<2>>>,
+    ) -> Self {
+        let surface = *self.face.surface();
+        self.face = self
+            .face
+            .with_interiors([Cycle::polygon_from_points(&surface, points)]);
+
+        self
+    }
+
     /// Consume the `Polygon` and return the [`Face`] it wraps
     pub fn into_face(self) -> Face {
         self.face
