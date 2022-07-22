@@ -13,6 +13,9 @@ pub struct Face {
 
 impl Face {
     /// Construct a new instance of `Face`
+    ///
+    /// Creates the face with no exteriors, no interiors and the default color.
+    /// This can be overridden using the `with_` methods.
     pub fn new(surface: Surface) -> Self {
         Self {
             representation: Representation::BRep(BRep {
