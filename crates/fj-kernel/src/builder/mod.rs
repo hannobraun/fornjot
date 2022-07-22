@@ -2,4 +2,4 @@
 
 mod face;
 
-pub use self::face::FaceBuilder;
+pub use self::face::{FaceBuilder, FacePolygon};

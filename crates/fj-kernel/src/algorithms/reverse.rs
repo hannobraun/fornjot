@@ -74,11 +74,9 @@ mod tests {
         let reversed = super::reverse_face(&original);
 
         let surface = Surface::xy_plane().reverse();
-        let expected = Face::build(surface).polygon_from_points([
-            [0., 0.],
-            [1., 0.],
-            [0., -1.],
-        ]);
+        let expected = Face::build(surface)
+            .polygon_from_points([[0., 0.], [1., 0.], [0., -1.]])
+            .into_face();
 
         assert_eq!(expected, reversed);
     }

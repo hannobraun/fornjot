@@ -213,6 +213,7 @@ mod tests {
         let surface = Surface::xy_plane();
         let face = Face::build(surface)
             .polygon_from_points(exterior)
+            .into_face()
             .with_interiors([Cycle::polygon_from_points(&surface, interior)]);
 
         let expected =

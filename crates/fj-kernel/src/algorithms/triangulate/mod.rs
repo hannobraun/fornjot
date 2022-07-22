@@ -110,6 +110,7 @@ mod tests {
         let surface = Surface::xy_plane();
         let face = Face::build(surface)
             .polygon_from_points([a, b, c, d])
+            .into_face()
             .with_interiors([Cycle::polygon_from_points(
                 &surface,
                 [e, f, g, h],

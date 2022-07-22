@@ -313,7 +313,9 @@ mod tests {
         let faces = expected_surfaces.into_iter().map(|surface| {
             let surface = Surface::plane_from_points(surface);
 
-            Face::build(surface).polygon_from_points(expected_vertices.clone())
+            Face::build(surface)
+                .polygon_from_points(expected_vertices.clone())
+                .into_face()
         });
 
         for face in faces {
