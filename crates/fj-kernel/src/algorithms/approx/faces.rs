@@ -106,7 +106,8 @@ mod tests {
         let g = Point::from([2., 2.]);
         let h = Point::from([1., 2.]);
 
-        let face = Face::builder(Surface::xy_plane())
+        let surface = Surface::xy_plane();
+        let face = Face::builder(surface)
             .with_exterior_polygon([a, b, c, d])
             .with_interior_polygon([e, f, g, h])
             .build();

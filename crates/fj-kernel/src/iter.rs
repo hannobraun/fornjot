@@ -355,7 +355,8 @@ mod tests {
 
     #[test]
     fn face() {
-        let object = Face::builder(Surface::xy_plane())
+        let surface = Surface::xy_plane();
+        let object = Face::builder(surface)
             .with_exterior_polygon([[0., 0.], [1., 0.], [0., 1.]])
             .build();
 
@@ -387,7 +388,8 @@ mod tests {
 
     #[test]
     fn sketch() {
-        let face = Face::builder(Surface::xy_plane())
+        let surface = Surface::xy_plane();
+        let face = Face::builder(surface)
             .with_exterior_polygon([[0., 0.], [1., 0.], [0., 1.]])
             .build();
         let object = Sketch::from_faces([face]);

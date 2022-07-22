@@ -294,7 +294,8 @@ mod tests {
     ) -> anyhow::Result<()> {
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
 
-        let face = Face::builder(Surface::xy_plane())
+        let surface = Surface::xy_plane();
+        let face = Face::builder(surface)
             .with_exterior_polygon([[0., 0.], [1., 0.], [0., 1.]])
             .build();
         let sketch = Sketch::from_faces([face]);

@@ -68,13 +68,15 @@ mod tests {
 
     #[test]
     fn reverse_face() {
-        let original = Face::builder(Surface::xy_plane())
+        let surface = Surface::xy_plane();
+        let original = Face::builder(surface)
             .with_exterior_polygon([[0., 0.], [1., 0.], [0., 1.]])
             .build();
 
         let reversed = super::reverse_face(&original);
 
-        let expected = Face::builder(Surface::xy_plane().reverse())
+        let surface = Surface::xy_plane().reverse();
+        let expected = Face::builder(surface)
             .with_exterior_polygon([[0., 0.], [1., 0.], [0., -1.]])
             .build();
 

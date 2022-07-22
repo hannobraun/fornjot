@@ -77,7 +77,8 @@ mod tests {
         let c = [2., 2.];
         let d = [0., 1.];
 
-        let face = Face::builder(Surface::xy_plane())
+        let surface = Surface::xy_plane();
+        let face = Face::builder(surface)
             .with_exterior_polygon([a, b, c, d])
             .build();
 
@@ -108,7 +109,8 @@ mod tests {
         let g = [3., 3.];
         let h = [1., 2.];
 
-        let face = Face::builder(Surface::xy_plane())
+        let surface = Surface::xy_plane();
+        let face = Face::builder(surface)
             .with_exterior_polygon([a, b, c, d])
             .with_interior_polygon([e, f, g, h])
             .build();
@@ -158,7 +160,8 @@ mod tests {
         let d = Point::from([0.1, 0.1]);
         let e = Point::from([0., 0.8]);
 
-        let face = Face::builder(Surface::xy_plane())
+        let surface = Surface::xy_plane();
+        let face = Face::builder(surface)
             .with_exterior_polygon([a, b, c, d, e])
             .build();
 

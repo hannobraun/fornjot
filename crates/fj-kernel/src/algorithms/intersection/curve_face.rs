@@ -210,7 +210,8 @@ mod tests {
             [-1.,  1.],
         ];
 
-        let face = Face::builder(Surface::xy_plane())
+        let surface = Surface::xy_plane();
+        let face = Face::builder(surface)
             .with_exterior_polygon(exterior)
             .with_interior_polygon(interior)
             .build();
