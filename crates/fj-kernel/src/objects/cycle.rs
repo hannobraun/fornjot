@@ -9,8 +9,7 @@ use super::{Edge, Surface};
 /// one.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
-    /// The edges that make up the cycle
-    pub edges: Vec<Edge>,
+    edges: Vec<Edge>,
 }
 
 impl Cycle {
