@@ -14,6 +14,18 @@ pub struct Cycle {
 }
 
 impl Cycle {
+    /// Create a new cycle
+    #[allow(clippy::new_without_default)]
+    pub fn new() -> Self {
+        // Implementation note:
+        // As I'm writing this, this constructor has no arguments. I expect it
+        // to take a `Surface` at some point. Remove the `#[allow(...)]`
+        // attribute then.
+        // - @hannobraun
+
+        Self { edges: Vec::new() }
+    }
+
     /// Create a polygon from a list of points
     pub fn polygon_from_points(
         surface: &Surface,
