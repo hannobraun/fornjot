@@ -26,7 +26,7 @@ impl Shape for fj::Sketch {
 
                 let edge =
                     Edge::circle_from_radius(Scalar::from_f64(circle.radius()));
-                let cycle = Cycle { edges: vec![edge] };
+                let cycle = Cycle::new().with_edges([edge]);
 
                 Face::new(surface)
                     .with_exteriors([cycle])

@@ -26,6 +26,14 @@ impl Cycle {
         Self { edges: Vec::new() }
     }
 
+    /// Add edges to the cycle
+    ///
+    /// Consumes the cycle and returns the updated instance.
+    pub fn with_edges(mut self, edges: impl IntoIterator<Item = Edge>) -> Self {
+        self.edges.extend(edges);
+        self
+    }
+
     /// Create a polygon from a list of points
     pub fn polygon_from_points(
         surface: &Surface,

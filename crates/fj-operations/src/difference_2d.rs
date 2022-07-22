@@ -120,5 +120,5 @@ fn add_cycle(cycle: Cycle, reverse: bool) -> Cycle {
         edges.reverse();
     }
 
-    Cycle { edges }
+    Cycle::new().with_edges(edges)
 }
