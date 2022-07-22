@@ -28,7 +28,9 @@ impl Shape for fj::Sketch {
                     Edge::circle_from_radius(Scalar::from_f64(circle.radius()));
                 let cycle = Cycle { edges: vec![edge] };
 
-                Face::new(surface, vec![cycle], Vec::new(), Color(self.color()))
+                Face::new(surface)
+                    .with_exteriors([cycle])
+                    .with_color(Color(self.color()))
             }
             fj::Chain::PolyChain(poly_chain) => {
                 let points =

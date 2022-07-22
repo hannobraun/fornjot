@@ -13,21 +13,16 @@ pub struct Face {
 
 impl Face {
     /// Construct a new instance of `Face`
-    pub fn new(
-        surface: Surface,
-        exteriors: impl IntoIterator<Item = Cycle>,
-        interiors: impl IntoIterator<Item = Cycle>,
-        color: Color,
-    ) -> Self {
-        let exteriors = exteriors.into_iter().collect();
-        let interiors = interiors.into_iter().collect();
-
+    ///
+    /// Creates the face with no exteriors, no interiors and the default color.
+    /// This can be overridden using the `with_` methods.
+    pub fn new(surface: Surface) -> Self {
         Self {
             representation: Representation::BRep(BRep {
                 surface,
-                exteriors,
-                interiors,
-                color,
+                exteriors: Vec::new(),
+                interiors: Vec::new(),
+                color: Color::default(),
             }),
         }
     }
@@ -87,9 +82,56 @@ impl Face {
         None
     }
 
+    /// Add exterior cycles to the face
+    ///
+    /// Consumes the face and returns the updated instance.
+    pub fn with_exteriors(
+        mut self,
+        exteriors: impl IntoIterator<Item = Cycle>,
+    ) -> Self {
+        for exterior in exteriors.into_iter() {
+            self.brep_mut().exteriors.push(exterior);
+        }
+
+        self
+    }
+
+    /// Add interior cycles to the face
+    ///
+    /// Consumes the face and returns the updated instance.
+    pub fn with_interiors(
+        mut self,
+        interiors: impl IntoIterator<Item = Cycle>,
+    ) -> Self {
+        for interior in interiors.into_iter() {
+            self.brep_mut().interiors.push(interior);
+        }
+
+        self
+    }
+
+    /// Update the color of the face
+    ///
+    /// Consumes the face and returns the updated instance.
+    pub fn with_color(mut self, color: Color) -> Self {
+        self.brep_mut().color = color;
+        self
+    }
+
     /// Access the boundary representation of the face
     fn brep(&self) -> &BRep {
         if let Representation::BRep(face) = &self.representation {
+            return face;
+        }
+
+        // No code that still uses triangle representation is calling this
+        // method.
+        unreachable!()
+    }
+
+    /// Access the boundary representation of the face mutably
+    fn brep_mut(&mut self) -> &mut BRep {
+        if let Representation::BRep(face) = &mut self.representation {
             return face;
         }
 

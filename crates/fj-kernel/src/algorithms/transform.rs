@@ -89,7 +89,10 @@ impl TransformObject for Face {
 
         let color = self.color();
 
-        Face::new(surface, exteriors, interiors, color)
+        Face::new(surface)
+            .with_exteriors(exteriors)
+            .with_interiors(interiors)
+            .with_color(color)
     }
 }
 
