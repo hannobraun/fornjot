@@ -27,8 +27,7 @@ fn reverse_local_coordinates_in_cycle<'r>(
 ) -> impl Iterator<Item = Cycle> + 'r {
     cycles.into_iter().map(|cycle| {
         let edges = cycle
-            .edges
-            .iter()
+            .edges()
             .map(|edge| {
                 let curve = {
                     let local = match edge.curve().local_form() {

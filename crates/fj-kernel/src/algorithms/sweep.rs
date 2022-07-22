@@ -40,7 +40,7 @@ pub fn sweep(
         );
 
         for cycle in face.all_cycles() {
-            for edge in &cycle.edges {
+            for edge in cycle.edges() {
                 if let Some(vertices) = edge.vertices().get() {
                     create_non_continuous_side_face(
                         path,
