@@ -40,7 +40,7 @@ impl Cycle {
         Cycle { edges }
     }
 
-    /// Access this cycle's edges
+    /// Access edges that make up the cycle
     pub fn edges(&self) -> impl Iterator<Item = &Edge> + '_ {
         self.edges.iter()
     }
