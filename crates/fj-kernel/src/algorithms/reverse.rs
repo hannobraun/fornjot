@@ -64,19 +64,25 @@ fn reverse_local_coordinates_in_cycle<'r>(
 mod tests {
     use pretty_assertions::assert_eq;
 
-    use crate::objects::{Face, Surface};
+    use crate::objects::{Cycle, Face, Surface};
 
     #[test]
     fn reverse_face() {
-        let original = Face::builder(Surface::xy_plane())
-            .with_exterior_polygon([[0., 0.], [1., 0.], [0., 1.]])
-            .build();
+        let surface = Surface::xy_plane();
+        let original =
+            Face::new(surface).with_exteriors([Cycle::polygon_from_points(
+                &surface,
+                [[0., 0.], [1., 0.], [0., 1.]],
+            )]);
 
         let reversed = super::reverse_face(&original);
 
-        let expected = Face::builder(Surface::xy_plane().reverse())
-            .with_exterior_polygon([[0., 0.], [1., 0.], [0., -1.]])
-            .build();
+        let surface = Surface::xy_plane().reverse();
+        let expected =
+            Face::new(surface).with_exteriors([Cycle::polygon_from_points(
+                &surface,
+                [[0., 0.], [1., 0.], [0., -1.]],
+            )]);
 
         assert_eq!(expected, reversed);
     }

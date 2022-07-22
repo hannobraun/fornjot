@@ -67,7 +67,7 @@ mod tests {
 
     use crate::{
         algorithms::Tolerance,
-        objects::{Face, Surface},
+        objects::{Cycle, Face, Surface},
     };
 
     #[test]
@@ -77,9 +77,12 @@ mod tests {
         let c = [2., 2.];
         let d = [0., 1.];
 
-        let face = Face::builder(Surface::xy_plane())
-            .with_exterior_polygon([a, b, c, d])
-            .build();
+        let surface = Surface::xy_plane();
+        let face =
+            Face::new(surface).with_exteriors([Cycle::polygon_from_points(
+                &surface,
+                [a, b, c, d],
+            )]);
 
         let a = Point::from(a).to_xyz();
         let b = Point::from(b).to_xyz();
@@ -108,10 +111,16 @@ mod tests {
         let g = [3., 3.];
         let h = [1., 2.];
 
-        let face = Face::builder(Surface::xy_plane())
-            .with_exterior_polygon([a, b, c, d])
-            .with_interior_polygon([e, f, g, h])
-            .build();
+        let surface = Surface::xy_plane();
+        let face = Face::new(surface)
+            .with_exteriors([Cycle::polygon_from_points(
+                &surface,
+                [a, b, c, d],
+            )])
+            .with_interiors([Cycle::polygon_from_points(
+                &surface,
+                [e, f, g, h],
+            )]);
 
         let triangles = triangulate(face)?;
 
@@ -158,9 +167,12 @@ mod tests {
         let d = Point::from([0.1, 0.1]);
         let e = Point::from([0., 0.8]);
 
-        let face = Face::builder(Surface::xy_plane())
-            .with_exterior_polygon([a, b, c, d, e])
-            .build();
+        let surface = Surface::xy_plane();
+        let face =
+            Face::new(surface).with_exteriors([Cycle::polygon_from_points(
+                &surface,
+                [a, b, c, d, e],
+            )]);
 
         let triangles = triangulate(face)?;
 

@@ -184,7 +184,7 @@ pub type CurveFaceIntersection = [Scalar; 2];
 mod tests {
     use fj_math::{Line, Point, Vector};
 
-    use crate::objects::{Curve, Face, Surface};
+    use crate::objects::{Curve, Cycle, Face, Surface};
 
     use super::CurveFaceIntersectionList;
 
@@ -210,10 +210,10 @@ mod tests {
             [-1.,  1.],
         ];
 
-        let face = Face::builder(Surface::xy_plane())
-            .with_exterior_polygon(exterior)
-            .with_interior_polygon(interior)
-            .build();
+        let surface = Surface::xy_plane();
+        let face = Face::new(surface)
+            .with_exteriors([Cycle::polygon_from_points(&surface, exterior)])
+            .with_interiors([Cycle::polygon_from_points(&surface, interior)]);
 
         let expected =
             CurveFaceIntersectionList::from_intervals([[1., 2.], [4., 5.]]);

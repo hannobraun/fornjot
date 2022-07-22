@@ -1,8 +1,6 @@
 use fj_interop::mesh::Color;
 use fj_math::Triangle;
 
-use crate::builder::FaceBuilder;
-
 use super::{Cycle, Surface};
 
 /// A face of a shape
@@ -32,11 +30,6 @@ impl Face {
         Self {
             representation: Representation::TriRep(triangles),
         }
-    }
-
-    /// Build a face using the [`FaceBuilder`] API
-    pub fn builder(surface: Surface) -> FaceBuilder {
-        FaceBuilder::new(surface)
     }
 
     /// Access this face's surface

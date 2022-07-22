@@ -2,7 +2,7 @@ use std::collections::BTreeSet;
 
 use fj_math::Scalar;
 
-use crate::algorithms::TransformObject;
+use crate::{algorithms::TransformObject, objects::Cycle};
 
 use super::{Face, Surface};
 
@@ -49,7 +49,8 @@ impl Solid {
         ];
 
         let faces = planes.map(|plane| {
-            Face::builder(plane).with_exterior_polygon(points).build()
+            Face::new(plane)
+                .with_exteriors([Cycle::polygon_from_points(&plane, points)])
         });
 
         Solid::from_faces(faces)
