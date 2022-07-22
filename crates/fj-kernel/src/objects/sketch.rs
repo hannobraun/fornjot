@@ -15,8 +15,10 @@ pub struct Sketch {
 
 impl Sketch {
     /// Construct a sketch from faces
-    pub fn from_faces(faces: impl IntoIterator<Item = Face>) -> Self {
-        let faces = faces.into_iter().collect();
+    pub fn from_faces(
+        faces: impl IntoIterator<Item = impl Into<Face>>,
+    ) -> Self {
+        let faces = faces.into_iter().map(Into::into).collect();
         Self { faces }
     }
 
