@@ -35,7 +35,9 @@ impl CycleBuilder {
             // Can be cleaned up, once `array_windows` is stable.
             let points = [points[0], points[1]];
 
-            edges.push(Edge::line_segment_from_points(&self.surface, points));
+            edges.push(
+                Edge::build().line_segment_from_points(&self.surface, points),
+            );
         }
 
         Cycle::new().with_edges(edges)

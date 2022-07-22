@@ -338,7 +338,7 @@ mod tests {
 
     #[test]
     fn edge() {
-        let object = Edge::line_segment_from_points(
+        let object = Edge::build().line_segment_from_points(
             &Surface::xy_plane(),
             [[0., 0.], [1., 0.]],
         );
