@@ -7,6 +7,7 @@ use fj_math::Scalar;
 
 /// Fornjot - Experimental CAD System
 #[derive(clap::Parser)]
+#[clap(version = env!("VERSION_STRING"))]
 pub struct Args {
     /// The model to open
     #[clap(short, long)]
