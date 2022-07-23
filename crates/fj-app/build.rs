@@ -1,16 +1,25 @@
 use std::process::{Command, Output, Stdio};
 
 fn main() {
+    println!("cargo:rustc-env=FJ_VERSION_STRING={}", version_string());
+}
+
+fn version_string() -> String {
     let pkg_version = std::env::var("CARGO_PKG_VERSION")
         .expect("The $CARGO_PKG_VERSION variable wasn't set");
     let commit = git_description();
 
-    let version_string = match commit {
-        Some(commit) => format!("{pkg_version} ({commit})"),
-        None => pkg_version,
-    };
+    let official_release = std::env::var("FJ_OFFICIAL_RELEASE").is_ok();
+    println!("cargo:rerun-if-env-changed=FJ_OFFICIAL_RELEASE");
 
-    println!("cargo:rustc-env=VERSION_STRING={version_string}");
+    match (commit, official_release) {
+        (Some(commit), true) => format!("{pkg_version} ({commit})"),
+        (Some(commit), false) => {
+            format!("{pkg_version} ({commit}, unreleased)")
+        }
+        (None, true) => pkg_version,
+        (None, false) => format!("{pkg_version} (unreleased)"),
+    }
 }
 
 fn git_description() -> Option<String> {
