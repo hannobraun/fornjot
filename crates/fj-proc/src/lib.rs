@@ -7,7 +7,7 @@ use syn::{
 #[proc_macro_attribute]
 pub fn model(_: TokenStream, input: TokenStream) -> TokenStream {
     let item = parse_macro_input!(input as syn::ItemFn);
-    let inputs = item.clone().sig.inputs;
+    let inputs = &item.sig.inputs;
 
     let args: Vec<Argument> =
         inputs.iter().map(|inp| parse_quote!(#inp)).collect();
@@ -16,10 +16,9 @@ pub fn model(_: TokenStream, input: TokenStream) -> TokenStream {
 
     let mut min_checks = Vec::new();
     let mut max_checks = Vec::new();
-    for arg in args {
-        let ident = arg.ident;
-        let ty = arg.ty;
-        if let Some(attr) = arg.attr {
+
+    for Argument { attr, ident, ty } in &args {
+        if let Some(attr) = attr {
             if let Some(default) = attr.get_default() {
                 let def = default.val;
                 parameter_extraction.push(quote! {
@@ -59,7 +58,6 @@ pub fn model(_: TokenStream, input: TokenStream) -> TokenStream {
             });
         }
     }
-    let block = item.block;
 
     let function_boilerplate = quote! {
         #[no_mangle]
@@ -67,6 +65,12 @@ pub fn model(_: TokenStream, input: TokenStream) -> TokenStream {
                 args: &std::collections::HashMap<String, String>
             ) -> fj::Shape
     };
+
+    let function_name = &item.sig.ident;
+    let body = &item.block;
+    let arg_names: Vec<_> = args.iter().map(|a| &a.ident).collect();
+    let arg_types: Vec<_> = args.iter().map(|a| &a.ty).collect();
+    let return_type = &item.sig.output;
 
     quote! {
     #function_boilerplate {
@@ -79,7 +83,14 @@ pub fn model(_: TokenStream, input: TokenStream) -> TokenStream {
         #(
             #max_checks
         )*
-        #block
+
+            fn #function_name(
+                #( #arg_names : #arg_types ),*
+            ) #return_type {
+                #body
+            }
+
+            #function_name(#( #arg_names),*).into()
     }
     }
     .into()
