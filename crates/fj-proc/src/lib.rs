@@ -4,6 +4,73 @@ use syn::{
     bracketed, parenthesized, parse::Parse, parse_macro_input, parse_quote,
 };
 
+/// Define a function-based model.
+///
+/// The simplest model function takes no parameters and returns a hard-coded
+/// `fj::Shape`.
+///
+/// ```rust
+/// # use fj_proc::model;
+/// use fj::{Circle, Sketch, Shape};
+/// #[model]
+/// fn model() -> Shape {
+///     let circle = Circle::from_radius(10.0);
+///     Sketch::from_circle(circle).into()
+/// }
+/// ```
+///
+/// For convenience, you can also return anything that could be converted into
+/// a `fj::Shape` (e.g. a `fj::Sketch`).
+///
+/// ```rust
+/// # use fj_proc::model;
+/// use fj::{Circle, Sketch};
+/// #[model]
+/// fn model() -> Sketch {
+///     let circle = Circle::from_radius(10.0);
+///     Sketch::from_circle(circle)
+/// }
+/// ```
+///
+/// The return type is checked at compile time. That means something like this
+/// won't work because `()` can't be converted into a `fj::Shape`.
+///
+/// ```rust,compile_fail
+/// # use fj_proc::model;
+/// #[model]
+/// fn model() { todo!() }
+/// ```
+///
+/// The model function's arguments can be anything that implement
+/// [`std::str::FromStr`].
+///
+/// ```rust
+/// # use fj_proc::model;
+/// #[model]
+/// fn cylinder(height: f64, label: String, is_horizontal: bool) -> fj::Shape { todo!() }
+/// ```
+///
+/// Constraints and default values can be added to an argument using the
+/// `#[param]` attribute.
+///
+/// ```rust
+/// use fj::syntax::*;
+///
+/// #[fj::model]
+/// pub fn spacer(
+///     #[param(default = 1.0, min = inner * 1.01)] outer: f64,
+///     #[param(default = 0.5, max = outer * 0.99)] inner: f64,
+///     #[param(default = 1.0)] height: f64,
+/// ) -> fj::Shape {
+///     let outer_edge = fj::Sketch::from_circle(fj::Circle::from_radius(outer));
+///     let inner_edge = fj::Sketch::from_circle(fj::Circle::from_radius(inner));
+///
+///     let footprint = outer_edge.difference(&inner_edge);
+///     let spacer = footprint.sweep([0., 0., height]);
+///
+///     spacer.into()
+/// }
+/// ```
 #[proc_macro_attribute]
 pub fn model(_: TokenStream, input: TokenStream) -> TokenStream {
     let item = parse_macro_input!(input as syn::ItemFn);
@@ -73,16 +140,16 @@ pub fn model(_: TokenStream, input: TokenStream) -> TokenStream {
     let return_type = &item.sig.output;
 
     quote! {
-    #function_boilerplate {
-        #(
-            #parameter_extraction
-        )*
-        #(
-            #min_checks
-        )*
-        #(
-            #max_checks
-        )*
+        #function_boilerplate {
+            #(
+                #parameter_extraction
+            )*
+            #(
+                #min_checks
+            )*
+            #(
+                #max_checks
+            )*
 
             fn #function_name(
                 #( #arg_names : #arg_types ),*
@@ -91,7 +158,7 @@ pub fn model(_: TokenStream, input: TokenStream) -> TokenStream {
             }
 
             #function_name(#( #arg_names),*).into()
-    }
+        }
     }
     .into()
 }

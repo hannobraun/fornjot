@@ -26,3 +26,6 @@ optional = true
 [dependencies.syn]
 version = "1.0.98"
 features = ["full", "extra-traits"]
+
+[dev-dependencies]
+fj = { path = "../fj" }
