@@ -63,11 +63,15 @@ fn git_description() -> Option<String> {
     println!("cargo:rerun-if-changed={}", head_file.display());
 
     if let Ok(contents) = std::fs::read_to_string(&head_file) {
-        let (_, branch) = contents
-            .split_once(' ')
-            .expect(".git/HEAD should point to a valid head file");
-        let commit_hash_file = project_root.join(".git").join(branch.trim());
-        println!("cargo:rerun-if-changed={}", commit_hash_file.display());
+        // Most of the time the HEAD file will be `ref: refs/heads/$branch`, but
+        // when it's a detached head we'll only get the commit hash and can skip
+        // the rerun-if-changed logic.
+
+        if let Some((_, branch)) = contents.split_once(' ') {
+            let commit_hash_file =
+                project_root.join(".git").join(branch.trim());
+            println!("cargo:rerun-if-changed={}", commit_hash_file.display());
+        }
     }
 
     Some(stdout.trim().to_string())
