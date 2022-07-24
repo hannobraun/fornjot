@@ -929,6 +929,7 @@ dependencies = [
 name = "fj-proc"
 version = "0.8.0"
 dependencies = [
+ "fj",
  "proc-macro2",
  "quote",
  "serde",
