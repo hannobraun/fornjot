@@ -1,6 +1,6 @@
 [package]
 name = "fj-kernel"
-version = "0.8.0"
+version = "0.9.0"
 edition = "2021"
 
 description = "The world needs another CAD program."
@@ -23,11 +23,11 @@ spade = "2.0.0"
 thiserror = "1.0.31"
 
 [dependencies.fj-interop]
-version = "0.8.0"
+version = "0.9.0"
 path = "../fj-interop"
 
 [dependencies.fj-math]
-version = "0.8.0"
+version = "0.9.0"
 path = "../fj-math"
 
 

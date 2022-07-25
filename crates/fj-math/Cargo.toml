@@ -1,6 +1,6 @@
 [package]
 name = "fj-math"
-version = "0.8.0"
+version = "0.9.0"
 edition = "2021"
 
 description = "The world needs another CAD program."

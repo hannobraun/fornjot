@@ -1,6 +1,6 @@
 [package]
 name = "fj-host"
-version = "0.8.0"
+version = "0.9.0"
 edition = "2021"
 
 description = "The world needs another CAD program."
@@ -19,5 +19,5 @@ thiserror = "1.0.31"
 cargo_metadata = "0.15.0"
 
 [dependencies.fj]
-version = "0.8.0"
+version = "0.9.0"
 path = "../fj"
