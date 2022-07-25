@@ -13,7 +13,7 @@ categories = ["encoding", "mathematics", "rendering"]
 
 
 [dependencies]
-bytemuck = "1.9.1"
+bytemuck = "1.11.0"
 raw-window-handle = "0.4.3"
 thiserror = "1.0.31"
 tracing = "0.1.35"
