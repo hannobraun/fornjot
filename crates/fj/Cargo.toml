@@ -13,7 +13,7 @@ categories = ["encoding", "mathematics", "rendering"]
 
 
 [dependencies]
-serde = { version = "1.0.139", features = ["derive"], optional = true }
+serde = { version = "1.0.140", features = ["derive"], optional = true }
 
 [dependencies.fj-proc]
 version = "0.9.0"
