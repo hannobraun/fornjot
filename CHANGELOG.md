@@ -1,5 +1,73 @@
 # Fornjot - Changelog
 
+## v0.9.0 (2022-07-25)
+
+### End-user improvements
+
+Improvements to Fornjot and its documentation that are visible to end-users.
+
+- Determine model's `target/` directory from Cargo metadata ([#828], [#841], [#853]; special thanks go to first-time contributor [@Michael-F-Bryan]!)
+- Derive `PartialEq` for types in `fj` crate ([#832]; thank you, [@Michael-F-Bryan]!)
+- Type-check model functions ([#867]; thank you, [@Michael-F-Bryan]!)
+
+### Ecosystem improvements
+
+Improvements to the Fornjot ecosystem that are relevant to developers who are building on top of Fornjot components.
+
+#### `fj-interop`
+
+- Convert `Color` into a struct ([#862])
+
+#### `fj-kernel`
+
+- Clean up and expand APIs of `Edge`, `Face`, and `Cycle` ([#854], [#855], [#863], [#865])
+- Return references to objects, where appropriate ([#858])
+- Make names of `Local` methods more explicit ([#860])
+- Revamp builder API ([#864], [#866])
+
+### Internal Improvements
+
+Improvements that are relevant to developers working on Fornjot itself.
+
+- Fix release automation issues ([#814], [#843]; thank you, [@hendrikmaus]!)
+- Update dependencies ([#836], [#840])
+- Update release procedure ([#838], [#839], [#857])
+- Add unit test for triangulation bug ([#842]; special thanks go to first-time contributor [@willhansen]!)
+- Upgrade to  Rust 1.62.1 ([#852])
+- Clean up `fj-kernel`'s `iter` module ([#859])
+- Expand implementation note ([#861])
+
+[#814]: https://github.com/hannobraun/Fornjot/pull/814
+[#828]: https://github.com/hannobraun/Fornjot/pull/828
+[#832]: https://github.com/hannobraun/Fornjot/pull/832
+[#836]: https://github.com/hannobraun/Fornjot/pull/836
+[#838]: https://github.com/hannobraun/Fornjot/pull/838
+[#839]: https://github.com/hannobraun/Fornjot/pull/839
+[#840]: https://github.com/hannobraun/Fornjot/pull/840
+[#841]: https://github.com/hannobraun/Fornjot/pull/841
+[#842]: https://github.com/hannobraun/Fornjot/pull/842
+[#843]: https://github.com/hannobraun/Fornjot/pull/843
+[#852]: https://github.com/hannobraun/Fornjot/pull/852
+[#853]: https://github.com/hannobraun/Fornjot/pull/853
+[#854]: https://github.com/hannobraun/Fornjot/pull/854
+[#855]: https://github.com/hannobraun/Fornjot/pull/855
+[#857]: https://github.com/hannobraun/Fornjot/pull/857
+[#858]: https://github.com/hannobraun/Fornjot/pull/858
+[#859]: https://github.com/hannobraun/Fornjot/pull/859
+[#860]: https://github.com/hannobraun/Fornjot/pull/860
+[#861]: https://github.com/hannobraun/Fornjot/pull/861
+[#862]: https://github.com/hannobraun/Fornjot/pull/862
+[#863]: https://github.com/hannobraun/Fornjot/pull/863
+[#864]: https://github.com/hannobraun/Fornjot/pull/864
+[#865]: https://github.com/hannobraun/Fornjot/pull/865
+[#866]: https://github.com/hannobraun/Fornjot/pull/866
+[#867]: https://github.com/hannobraun/Fornjot/pull/867
+
+[@hendrikmaus]: https://github.com/hendrikmaus
+[@Michael-F-Bryan]: https://github.com/Michael-F-Bryan
+[@willhansen]: https://github.com/willhansen
+
+
 ## v0.8.0 (2022-07-18)
 
 ### End-user improvements
