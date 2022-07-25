@@ -16,7 +16,7 @@ proc-macro = true
 
 
 [dependencies]
-proc-macro2 = "1.0.40"
+proc-macro2 = "1.0.41"
 quote = "1.0.20"
 
 [dependencies.serde]
