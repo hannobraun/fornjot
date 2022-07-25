@@ -10,9 +10,10 @@ The release announcement lives on the website, and needs to be created in the [w
 We need to make the release announcement available on the website, without publishing it to the blog or RSS feed at first:
 
 1. Create directory for release announcement. Copy previous one and adapt name.
-2. Remove the `date` key from the Markdown front matter.
-3. Add a `path` key to explicitly specify the path of the announcement.
-4. Update the `extra.version` key.
+2. Update `title` key in the Markdown front matter.
+3. Remove the `date` key.
+4. Add a `path` key to explicitly specify the path of the announcement.
+5. Update the `extra.version` key.
 
 
 ## 2. Write release announcement
@@ -22,10 +23,10 @@ Use the previously prepared file and create the release announcement:
 1. Remove any content left form the previous announcement, leave structure.
 2. Go through all pull requests, add them to the draft.
    - Get list of pull requests from GitHub
-     https://github.com/hannobraun/Fornjot/pulls?q=is%3Apr+merged%3A%3E%3D2022-07-04+sort%3Acreated-asc+
+     https://github.com/hannobraun/Fornjot/pulls?q=is%3Apr+merged%3A%3E%3D2022-07-18+sort%3Acreated-asc+
    - Thank all contributors
      - new contributors: "special thanks go to first-time contributor `@name`!"
-     - other contributors: "thank you `@name`!"
+     - other contributors: "thank you, `@name`!"
    - Make notes for introduction
 3. Write introduction
    - Ideally, you already have a list of notes from adding the pull requests.
@@ -51,13 +52,11 @@ Potential new issues of the week:
 - https://github.com/hannobraun/Fornjot/issues/805
 - https://github.com/hannobraun/Fornjot/issues/847
 - https://github.com/hannobraun/Fornjot/issues/848
-- https://github.com/hannobraun/Fornjot/issues/849
 - https://github.com/hannobraun/Fornjot/issues/850
-- https://github.com/hannobraun/Fornjot/issues/851
-- https://github.com/hannobraun/Fornjot/issues/856
 
 Already mentioned issues of the week (remove, once closed):
 
+- 2022-07-25: https://github.com/hannobraun/Fornjot/issues/856
 - 2022-07-18: https://github.com/hannobraun/Fornjot/issues/815
 - 2022-07-11: https://github.com/hannobraun/Fornjot/issues/793
 - 2022-07-04: https://github.com/hannobraun/Fornjot/issues/479
@@ -82,10 +81,10 @@ Commit these changes: `git commit -m "Update changelog"`
 
 In the release branch, update the version numbers in the `Cargo.toml` files of all crates in the `crates/` directory to the new version. Also update the version numbers of the dependencies between the crates.
 
+Commit these changes: `git commit -m "Update versions"`
+
 
 ## 6. Publish the release
-
-**TASK: Make sure #788 is fixed.**
 
 Push the release branch, create a pull request, and label it as `release`. Once the CI build completed successfully, merge the pull-request and mention the new version in the commit, e.g. `Release v0.1.2`.
 
