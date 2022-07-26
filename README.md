@@ -40,7 +40,7 @@ Here's an overview over all of the crates, with a short description of what they
 - [`fj-export`]: Exports Fornjot models to external data formats.
 - [`fj-host`]: Loads Fornjot models and watches them for changes.
 - [`fj-viewer`]: Displays Fornjot models.
-- `fj-window` (not published yet): Embed `fj-viewer` in a Winit-based window.
+- [`fj-window`]: Embed `fj-viewer` in a Winit-based window.
 - [`fj-app`]: The Fornjot CAD application.
 - [`fj`]: End-user API for defining Fornjot models.
 
@@ -53,6 +53,7 @@ Here's an overview over all of the crates, with a short description of what they
 [`fj-math`]: https://crates.io/crates/fj-math
 [`fj-operations`]: https://crates.io/crates/fj-operations
 [`fj-viewer`]: https://crates.io/crates/fj-viewer
+[`fj-window`]: https://crates.io/crates/fj-window
 
 
 ## Features
