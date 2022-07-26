@@ -22,8 +22,8 @@ Use the previously prepared file and create the release announcement:
 
 1. Remove any content left form the previous announcement, leave structure.
 2. Go through all pull requests, add them to the draft.
-   - Get list of pull requests from GitHub
-     https://github.com/hannobraun/Fornjot/pulls?q=is%3Apr+merged%3A%3E%3D2022-07-18+sort%3Acreated-asc+
+   - Get list of pull requests by executing this command in website repository:
+     `cargo run 2022-07-25` (replace date with date of previous release)
    - Thank all contributors
      - new contributors: "special thanks go to first-time contributor `@name`!"
      - other contributors: "thank you, `@name`!"
