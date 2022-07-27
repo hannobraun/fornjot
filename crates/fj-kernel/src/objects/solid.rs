@@ -27,6 +27,13 @@ impl Solid {
         SolidBuilder
     }
 
+    /// Construct an empty instance of `Solid`
+    pub fn new() -> Self {
+        Self {
+            faces: BTreeSet::new(),
+        }
+    }
+
     /// Construct a solid from faces
     pub fn from_faces(
         faces: impl IntoIterator<Item = impl Into<Face>>,
@@ -43,5 +50,11 @@ impl Solid {
     /// Convert the solid into a list of faces
     pub fn into_faces(self) -> BTreeSet<Face> {
         self.faces
+    }
+}
+
+impl Default for Solid {
+    fn default() -> Self {
+        Self::new()
     }
 }
