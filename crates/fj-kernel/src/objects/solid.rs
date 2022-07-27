@@ -22,17 +22,17 @@ pub struct Solid {
 }
 
 impl Solid {
+    /// Build a solid using [`SolidBuilder`]
+    pub fn build() -> SolidBuilder {
+        SolidBuilder
+    }
+
     /// Construct a solid from faces
     pub fn from_faces(
         faces: impl IntoIterator<Item = impl Into<Face>>,
     ) -> Self {
         let faces = faces.into_iter().map(Into::into).collect();
         Self { faces }
-    }
-
-    /// Build a solid using [`SolidBuilder`]
-    pub fn build() -> SolidBuilder {
-        SolidBuilder
     }
 
     /// Access the solid's faces
