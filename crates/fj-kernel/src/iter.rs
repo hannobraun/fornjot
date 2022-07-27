@@ -11,7 +11,7 @@ use crate::objects::{
 /// Implemented for all object types. An implementation must return itself, in
 /// addition to any other objects it references.
 pub trait ObjectIters<'r> {
-    /// Return all objects being referenced
+    /// Return all objects that this one references
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters>;
 
     /// Iterate over all curves
