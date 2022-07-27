@@ -14,6 +14,13 @@ pub struct Sketch {
 }
 
 impl Sketch {
+    /// Construct an empty instance of `Sketch`
+    pub fn new() -> Self {
+        Self {
+            faces: BTreeSet::new(),
+        }
+    }
+
     /// Construct a sketch from faces
     pub fn from_faces(
         faces: impl IntoIterator<Item = impl Into<Face>>,
@@ -30,5 +37,11 @@ impl Sketch {
     /// Convert the sketch into a list of faces
     pub fn into_faces(self) -> BTreeSet<Face> {
         self.faces
+    }
+}
+
+impl Default for Sketch {
+    fn default() -> Self {
+        Self::new()
     }
 }
