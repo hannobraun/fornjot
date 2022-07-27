@@ -52,8 +52,8 @@ impl Solid {
     }
 
     /// Convert the solid into a list of faces
-    pub fn into_faces(self) -> BTreeSet<Face> {
-        self.faces
+    pub fn into_faces(self) -> impl Iterator<Item = Face> {
+        self.faces.into_iter()
     }
 }
 
