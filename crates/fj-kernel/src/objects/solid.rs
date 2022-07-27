@@ -22,17 +22,28 @@ pub struct Solid {
 }
 
 impl Solid {
-    /// Construct a solid from faces
-    pub fn from_faces(
-        faces: impl IntoIterator<Item = impl Into<Face>>,
-    ) -> Self {
-        let faces = faces.into_iter().map(Into::into).collect();
-        Self { faces }
-    }
-
     /// Build a solid using [`SolidBuilder`]
     pub fn build() -> SolidBuilder {
         SolidBuilder
+    }
+
+    /// Construct an empty instance of `Solid`
+    pub fn new() -> Self {
+        Self {
+            faces: BTreeSet::new(),
+        }
+    }
+
+    /// Add faces to the solid
+    ///
+    /// Consumes the solid and returns the updated instance.
+    pub fn with_faces(
+        mut self,
+        faces: impl IntoIterator<Item = impl Into<Face>>,
+    ) -> Self {
+        let faces = faces.into_iter().map(Into::into);
+        self.faces.extend(faces);
+        self
     }
 
     /// Access the solid's faces
@@ -41,7 +52,13 @@ impl Solid {
     }
 
     /// Convert the solid into a list of faces
-    pub fn into_faces(self) -> BTreeSet<Face> {
-        self.faces
+    pub fn into_faces(self) -> impl Iterator<Item = Face> {
+        self.faces.into_iter()
+    }
+}
+
+impl Default for Solid {
+    fn default() -> Self {
+        Self::new()
     }
 }

@@ -14,12 +14,23 @@ pub struct Sketch {
 }
 
 impl Sketch {
-    /// Construct a sketch from faces
-    pub fn from_faces(
+    /// Construct an empty instance of `Sketch`
+    pub fn new() -> Self {
+        Self {
+            faces: BTreeSet::new(),
+        }
+    }
+
+    /// Add faces to the sketch
+    ///
+    /// Consumes the sketch and returns the updated instance.
+    pub fn with_faces(
+        mut self,
         faces: impl IntoIterator<Item = impl Into<Face>>,
     ) -> Self {
-        let faces = faces.into_iter().map(Into::into).collect();
-        Self { faces }
+        let faces = faces.into_iter().map(Into::into);
+        self.faces.extend(faces);
+        self
     }
 
     /// Access the sketch's faces
@@ -28,7 +39,13 @@ impl Sketch {
     }
 
     /// Convert the sketch into a list of faces
-    pub fn into_faces(self) -> BTreeSet<Face> {
-        self.faces
+    pub fn into_faces(self) -> impl Iterator<Item = Face> {
+        self.faces.into_iter()
+    }
+}
+
+impl Default for Sketch {
+    fn default() -> Self {
+        Self::new()
     }
 }

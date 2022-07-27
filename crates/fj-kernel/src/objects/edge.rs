@@ -12,14 +12,14 @@ pub struct Edge {
 }
 
 impl Edge {
-    /// Create a new instance
-    pub fn new(curve: Local<Curve<2>>, vertices: VerticesOfEdge) -> Self {
-        Self { curve, vertices }
-    }
-
     /// Build an edge using [`EdgeBuilder`]
     pub fn build() -> EdgeBuilder {
         EdgeBuilder
+    }
+
+    /// Create a new instance
+    pub fn new(curve: Local<Curve<2>>, vertices: VerticesOfEdge) -> Self {
+        Self { curve, vertices }
     }
 
     /// Access the curve that defines the edge's geometry

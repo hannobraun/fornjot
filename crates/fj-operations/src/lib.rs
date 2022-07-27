@@ -67,7 +67,6 @@ impl Shape for fj::Shape {
                     .compute_brep(config, tolerance, debug_info)?
                     .into_inner()
                     .into_faces()
-                    .into_iter()
                     .collect(),
                 config,
             ),
@@ -79,7 +78,6 @@ impl Shape for fj::Shape {
                     .compute_brep(config, tolerance, debug_info)?
                     .into_inner()
                     .into_faces()
-                    .into_iter()
                     .collect(),
                 config,
             ),

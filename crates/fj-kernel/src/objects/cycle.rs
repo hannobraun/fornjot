@@ -13,6 +13,11 @@ pub struct Cycle {
 }
 
 impl Cycle {
+    /// Build a cycle using [`CycleBuilder`]
+    pub fn build(surface: Surface) -> CycleBuilder {
+        CycleBuilder::new(surface)
+    }
+
     /// Create a new cycle
     #[allow(clippy::new_without_default)]
     pub fn new() -> Self {
@@ -31,11 +36,6 @@ impl Cycle {
     pub fn with_edges(mut self, edges: impl IntoIterator<Item = Edge>) -> Self {
         self.edges.extend(edges);
         self
-    }
-
-    /// Build a cycle using [`CycleBuilder`]
-    pub fn build(surface: Surface) -> CycleBuilder {
-        CycleBuilder::new(surface)
     }
 
     /// Access edges that make up the cycle

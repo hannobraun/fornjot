@@ -12,6 +12,11 @@ pub struct Face {
 }
 
 impl Face {
+    /// Build a face using [`FaceBuilder`]
+    pub fn build(surface: Surface) -> FaceBuilder {
+        FaceBuilder::new(surface)
+    }
+
     /// Construct a new instance of `Face`
     ///
     /// Creates the face with no exteriors, no interiors and the default color.
@@ -27,7 +32,7 @@ impl Face {
         }
     }
 
-    /// Contact an instance that uses triangle representation
+    /// Construct an instance that uses triangle representation
     pub fn from_triangles(triangles: TriRep) -> Self {
         Self {
             representation: Representation::TriRep(triangles),
@@ -68,11 +73,6 @@ impl Face {
     pub fn with_color(mut self, color: Color) -> Self {
         self.brep_mut().color = color;
         self
-    }
-
-    /// Build a face using [`FaceBuilder`]
-    pub fn build(surface: Surface) -> FaceBuilder {
-        FaceBuilder::new(surface)
     }
 
     /// Access this face's surface

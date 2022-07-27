@@ -33,6 +33,6 @@ impl SolidBuilder {
         let faces =
             planes.map(|plane| Face::build(plane).polygon_from_points(points));
 
-        Solid::from_faces(faces)
+        Solid::new().with_faces(faces)
     }
 }
