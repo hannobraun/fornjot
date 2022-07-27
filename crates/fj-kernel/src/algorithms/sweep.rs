@@ -300,7 +300,7 @@ mod tests {
             [1., 0.],
             [0., 1.],
         ]);
-        let sketch = Sketch::from_faces([face]);
+        let sketch = Sketch::new().with_faces([face]);
 
         let solid =
             super::sweep(sketch, direction, tolerance, Color([255, 0, 0, 255]));

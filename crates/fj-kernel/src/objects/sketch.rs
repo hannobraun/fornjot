@@ -21,12 +21,16 @@ impl Sketch {
         }
     }
 
-    /// Construct a sketch from faces
-    pub fn from_faces(
+    /// Add faces to the sketch
+    ///
+    /// Consumes the sketch and returns the updated instance.
+    pub fn with_faces(
+        mut self,
         faces: impl IntoIterator<Item = impl Into<Face>>,
     ) -> Self {
-        let faces = faces.into_iter().map(Into::into).collect();
-        Self { faces }
+        let faces = faces.into_iter().map(Into::into);
+        self.faces.extend(faces);
+        self
     }
 
     /// Access the sketch's faces

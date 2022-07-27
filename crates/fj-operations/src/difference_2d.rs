@@ -78,7 +78,7 @@ impl Shape for fj::Difference2d {
             );
         }
 
-        let difference = Sketch::from_faces(faces);
+        let difference = Sketch::new().with_faces(faces);
         validate(difference, config)
     }
 
