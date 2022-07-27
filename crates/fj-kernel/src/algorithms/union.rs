@@ -62,8 +62,7 @@ pub fn union(a: impl Into<Solid>, b: impl Into<Solid>) -> Solid {
                 // Both faces intersect the intersection curve, which means they
                 // intersect each other.
                 (false, false) => {
-                    // TASK: Figure out what this means. The faces need to be
-                    //       cut to size somehow.
+                    // Nothing to do here. We'll resume after the `match`.
                 }
 
                 // Intersection curve intersects only one of the faces.
@@ -78,9 +77,11 @@ pub fn union(a: impl Into<Solid>, b: impl Into<Solid>) -> Solid {
                 //       modified instead.
                 (false, true) => {
                     faces.insert(face_a.clone());
+                    continue;
                 }
                 (true, false) => {
                     faces.insert(face_b.clone());
+                    continue;
                 }
 
                 // Intersection curve intersects none of the faces. This can
@@ -90,11 +91,45 @@ pub fn union(a: impl Into<Solid>, b: impl Into<Solid>) -> Solid {
                 (true, true) => {
                     faces.insert(face_a.clone());
                     faces.insert(face_b.clone());
+                    continue;
                 }
+            }
+
+            // If we reach this point, we have two faces that intersect each
+            // other. Merge the intersection lists, then update the faces as
+            // appropriate.
+            let intersections = intersections_a.merge(&intersections_b);
+
+            // TASK: For a start, we can ignore all those tasks here, and try to
+            //       get the expected interior cycle in there. Then worry about
+            //       making the diff between the actual and expected shapes
+            //       smaller, as a next step.
+            for face in [face_a, face_b] {
+                // TASK: Handle the case where the intersections don't cross any
+                //       edges of the face. This means, the intersection is part
+                //       of an interior cycle.
+                //
+                //       At least in some cases. The problem here is that I
+                //       can't really tell per-edge. An edge might be on the
+                //       inside of the face, so it might *look* like it should
+                //       be part of an interior cycle, but then other
+                //       intersections connect that edge to the outside.
+                // TASK: Handle the case where the intersections *do* cross
+                //       edges of the face. This must result in these edges
+                //       being shortened.
+
+                // TASK: I probably need to move this piece of code outside of
+                //       the inner loop. I think we need to store the
+                //       intersections per-face, then merge *all* intersections
+                //       of a face, in some way, to cut the face to size.
+
+                // TASK: Implement.
+                let _ = face;
             }
 
             // TASK: Implement.
             let _ = curve;
+            let _ = intersections;
         }
     }
 
@@ -107,7 +142,7 @@ mod tests {
 
     use crate::{
         algorithms::{union, TransformObject},
-        objects::Solid,
+        objects::{Cycle, Face, Solid},
     };
 
     #[test]
@@ -148,6 +183,75 @@ mod tests {
         assert_eq!(union, b.into_solid());
     }
 
-    // TASK: intersecting, broken edges in a
+    #[test]
+    fn intersecting_with_broken_edges_in_a() {
+        let a = Solid::build()
+            .cube_from_edge_length(1.)
+            .translate([0., 0., 1.]);
+        let b = Solid::build().cube_from_edge_length(2.);
+
+        let union = union(a.clone(), b.clone());
+
+        let expected = {
+            // The face where the two cubes connect.
+            let connecting_face = b.top_face().clone();
+
+            // Build the smaller cube that attaches to the larger cube. Since
+            // `a` intersects with `b`, we need to cut it down here.
+            let smaller_cube = {
+                let left = a.left_face().clone();
+                let right = a.right_face().clone();
+                let front = a.front_face().clone();
+                let back = a.back_face().clone();
+
+                // Let's create some shorthands for values we're going to need a
+                // lot.
+                let x = 0.5; // half the width of the smaller cube
+                let y = 0.25; // half the height of the smaller cube
+
+                let updated_faces =
+                    [&left, &right, &front, &back].into_iter().map(|face| {
+                        (
+                            face,
+                            Face::build(*face.surface())
+                                .polygon_from_points([
+                                    [-x, -y],
+                                    [x, -y],
+                                    [x, y],
+                                    [-x, y],
+                                ])
+                                .into_face(),
+                        )
+                    });
+
+                let mut smaller_cube = a.into_solid();
+                for (original, updated) in updated_faces {
+                    smaller_cube =
+                        smaller_cube.update_face(original, |_| updated);
+                }
+
+                smaller_cube
+            };
+
+            // Now that we have the smaller cube, we can connect it to the
+            // larger one.
+            b.into_solid()
+                .update_face(&connecting_face, |face| {
+                    // Add a polygon to the connecting face, where the smaller
+                    // cube attaches.
+                    let polygon = Cycle::build(*face.surface())
+                        .polygon_from_points([
+                            [0.5, 0.5],
+                            [1.5, 0.5],
+                            [1.5, 1.5],
+                            [0.5, 1.5],
+                        ]);
+                    face.clone().with_interiors([polygon])
+                })
+                .with_faces(smaller_cube.into_faces())
+        };
+        assert_eq!(union, expected);
+    }
+
     // TASK: intersection, broken edges in b
 }
