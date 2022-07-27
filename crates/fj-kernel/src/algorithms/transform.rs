@@ -116,7 +116,7 @@ impl TransformObject for Solid {
             .into_faces()
             .into_iter()
             .map(|face| face.transform(transform));
-        Self::from_faces(faces)
+        Self::new().with_faces(faces)
     }
 }
 

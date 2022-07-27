@@ -63,7 +63,7 @@ pub fn sweep(
         }
     }
 
-    Solid::from_faces(target)
+    Solid::new().with_faces(target)
 }
 
 fn create_bottom_faces(

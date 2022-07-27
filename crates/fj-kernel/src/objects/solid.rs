@@ -34,12 +34,16 @@ impl Solid {
         }
     }
 
-    /// Construct a solid from faces
-    pub fn from_faces(
+    /// Add faces to the solid
+    ///
+    /// Consumes the solid and returns the updated instance.
+    pub fn with_faces(
+        mut self,
         faces: impl IntoIterator<Item = impl Into<Face>>,
     ) -> Self {
-        let faces = faces.into_iter().map(Into::into).collect();
-        Self { faces }
+        let faces = faces.into_iter().map(Into::into);
+        self.faces.extend(faces);
+        self
     }
 
     /// Access the solid's faces
