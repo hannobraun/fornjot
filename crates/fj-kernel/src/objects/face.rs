@@ -32,7 +32,7 @@ impl Face {
         }
     }
 
-    /// Contact an instance that uses triangle representation
+    /// Construct an instance that uses triangle representation
     pub fn from_triangles(triangles: TriRep) -> Self {
         Self {
             representation: Representation::TriRep(triangles),
