@@ -233,11 +233,11 @@ mod tests {
             [[18.], [21.]], // 6: one of `a` partially overlaps two of `b`
             [[23.], [25.]], // 7: two of `a` partially overlap one of `b`
             [[26.], [28.]], // 7
-            [[31.], [35.]], // 8: one of `a` overlaps two of `b`; partial/complete
-            [[36.], [38.]], // 9: two of `a` overlap one of `b`; partial/complete
+            [[31.], [35.]], // 8: partial/complete: one of `a`, two of `b`;
+            [[36.], [38.]], // 9: partial/complete: two of `a`, one of `b`
             [[39.], [40.]], // 9
-            [[41.], [45.]], // 10: one of `a` overlaps two of `b`; complete/partial
-            [[48.], [49.]], // 11: two of `a` overlap one of `b`; complete/partial
+            [[41.], [45.]], // 10: complete/partial: one of `a`, two of `b`
+            [[48.], [49.]], // 11: complete/partial: two of `a`, one of `b`
             [[50.], [52.]], // 11
             [[53.], [58.]], // 12: one of `a` overlaps two of `b` completely
             [[60.], [61.]], // 13: one of `b` overlaps two of `a` completely
