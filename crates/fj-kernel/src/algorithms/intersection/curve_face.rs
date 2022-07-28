@@ -33,8 +33,7 @@ impl CurveFaceIntersectionList {
         };
 
         let face_as_polygon = face
-            .exteriors()
-            .chain(face.interiors())
+            .all_cycles()
             .flat_map(|cycle| {
                 let edges: Vec<_> = cycle.edges().cloned().collect();
                 edges
