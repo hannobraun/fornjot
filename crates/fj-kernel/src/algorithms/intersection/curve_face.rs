@@ -32,7 +32,7 @@ impl CurveFaceIntersectionList {
             _ => todo!("Curve-face intersection only supports lines"),
         };
 
-        let face_as_polygon = face
+        let edges = face
             .all_cycles()
             .flat_map(|cycle| {
                 let edges: Vec<_> = cycle.edges().cloned().collect();
@@ -59,7 +59,7 @@ impl CurveFaceIntersectionList {
 
         let mut intersections = Vec::new();
 
-        for (edge_line, vertices) in face_as_polygon {
+        for (edge_line, vertices) in edges {
             let vertices = vertices.map(|vertex| {
                 edge_line.point_from_line_coords(vertex.position())
             });
