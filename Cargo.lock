@@ -853,6 +853,7 @@ dependencies = [
  "fj-viewer",
  "fj-window",
  "serde",
+ "stl",
  "tempfile",
  "tracing-subscriber",
 ]
