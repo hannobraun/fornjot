@@ -11,6 +11,15 @@ pub enum CurveEdgeIntersection {
         /// The intersection point, in curve coordinates on the curve
         point_on_curve: Point<1>,
     },
+
+    /// The edge lies on the curve
+    Coincident {
+        /// The first vertex of the edge, in curve coordinates
+        a_on_curve: Point<1>,
+
+        /// The second vertex of the edge, in curve coordinates
+        b_on_curve: Point<1>,
+    },
 }
 
 impl CurveEdgeIntersection {
@@ -44,6 +53,16 @@ impl CurveEdgeIntersection {
         };
 
         let edge_as_segment = Segment::from_points(edge_vertices);
+
+        if curve_as_line.is_coincident_with(edge_curve_as_line) {
+            let [a_on_curve, b_on_curve] = edge_vertices
+                .map(|vertex| curve_as_line.point_to_line_coords(vertex));
+
+            return Some(Self::Coincident {
+                a_on_curve,
+                b_on_curve,
+            });
+        }
 
         let ray = Ray {
             origin: curve_as_line.origin.to_na(),
@@ -132,5 +151,23 @@ mod tests {
         let intersection = CurveEdgeIntersection::compute(&curve, &edge);
 
         assert!(intersection.is_none());
+    }
+
+    #[test]
+    fn compute_edge_on_curve() {
+        let surface = Surface::xy_plane();
+        let curve = Curve::u_axis();
+        let edge = Edge::build()
+            .line_segment_from_points(&surface, [[-1., 0.], [1., 0.]]);
+
+        let intersection = CurveEdgeIntersection::compute(&curve, &edge);
+
+        assert_eq!(
+            intersection,
+            Some(CurveEdgeIntersection::Coincident {
+                a_on_curve: Point::from([-1.]),
+                b_on_curve: Point::from([1.]),
+            })
+        );
     }
 }
