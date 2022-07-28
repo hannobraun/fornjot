@@ -32,10 +32,13 @@ fn version_string() -> String {
 /// we're building just the `fj-app` crate in a Docker container or when
 /// someone is installing from crates.io via `cargo install`.
 fn git_description() -> Option<String> {
+    let crate_dir = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").unwrap());
+
     let mut cmd = Command::new("git");
     cmd.args(["describe", "--always", "--dirty=-modified"])
         .stdout(Stdio::piped())
-        .stderr(Stdio::piped());
+        .stderr(Stdio::piped())
+        .current_dir(&crate_dir);
 
     let Output {
         status,
@@ -58,7 +61,6 @@ fn git_description() -> Option<String> {
     }
 
     // Make sure we re-run whenever the current commit changes
-    let crate_dir = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").unwrap());
     let project_root = crate_dir.ancestors().nth(2).unwrap();
     let head_file = project_root.join(".git").join("HEAD");
     println!("cargo:rerun-if-changed={}", head_file.display());
