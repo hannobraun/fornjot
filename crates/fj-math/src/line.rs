@@ -1,4 +1,4 @@
-use crate::{Point, Vector};
+use crate::{Point, Triangle, Vector};
 
 /// An n-dimensional line, defined by an origin and a direction
 ///
@@ -31,6 +31,33 @@ impl<const D: usize> Line<D> {
             origin: a,
             direction: b - a,
         }
+    }
+
+    /// Determine if this line is coincident with another line
+    ///
+    /// # Implementation Note
+    ///
+    /// This method only returns `true`, if the lines are precisely coincident.
+    /// This will probably not be enough going forward, but it'll do for now.
+    pub fn is_coincident_with(&self, other: &Self) -> bool {
+        let other_origin_is_not_on_self = {
+            let a = other.origin;
+            let b = self.origin;
+            let c = self.origin + self.direction;
+
+            // The triangle is valid only, if the three points are not on the
+            // same line.
+            Triangle::from_points([a, b, c]).is_some()
+        };
+
+        if other_origin_is_not_on_self {
+            return false;
+        }
+
+        let d1 = self.direction.normalize();
+        let d2 = other.direction.normalize();
+
+        d1 == d2 || d1 == -d2
     }
 
     /// Create a new instance that is reversed
@@ -101,6 +128,19 @@ mod tests {
     use crate::{Point, Vector};
 
     use super::Line;
+
+    #[test]
+    fn is_coincident_with() {
+        let line = Line::from_points([[0., 0.], [1., 0.]]);
+
+        let a = Line::from_points([[0., 0.], [1., 0.]]);
+        let b = Line::from_points([[0., 0.], [-1., 0.]]);
+        let c = Line::from_points([[0., 1.], [1., 1.]]);
+
+        assert!(line.is_coincident_with(&a));
+        assert!(line.is_coincident_with(&b));
+        assert!(!line.is_coincident_with(&c));
+    }
 
     #[test]
     fn convert_point_to_line_coords() {

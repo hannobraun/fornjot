@@ -21,7 +21,7 @@ impl<const D: usize> Triangle<D> {
     /// # Panics
     ///
     /// Panics, if the points don't form a triangle.
-    pub fn from_points(points: [impl Into<Point<D>>; 3]) -> Self {
+    pub fn from_points(points: [impl Into<Point<D>>; 3]) -> Option<Self> {
         let points = points.map(Into::into);
 
         let area = {
@@ -31,9 +31,9 @@ impl<const D: usize> Triangle<D> {
 
         // A triangle is not valid if it doesn't span any area
         if area != Scalar::from(0.0) {
-            Self { points }
+            Some(Self { points })
         } else {
-            panic!("Invalid Triangle specified");
+            None
         }
     }
 
@@ -103,7 +103,7 @@ where
     P: Into<Point<D>>,
 {
     fn from(points: [P; 3]) -> Self {
-        Self::from_points(points)
+        Self::from_points(points).expect("invalid triangle")
     }
 }
 

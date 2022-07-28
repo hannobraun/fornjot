@@ -18,6 +18,7 @@ pub fn triangulate(points: Vec<Local<Point<2>>>) -> Vec<[Local<Point<2>>; 3]> {
             *v1.local_form(),
             *v2.local_form(),
         ])
+        .expect("invalid triangle")
         .winding_direction();
 
         let triangle = match orientation {
