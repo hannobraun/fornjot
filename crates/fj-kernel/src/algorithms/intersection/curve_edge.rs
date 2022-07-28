@@ -5,15 +5,19 @@ use crate::objects::{Curve, Edge};
 
 /// The intersection between a [`Curve`] and an [`Edge`], in curve coordinates
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct CurveEdgeIntersection {
-    point_on_curve: Point<1>,
+pub enum CurveEdgeIntersection {
+    /// The curve and edge intersect at a point
+    Point {
+        /// The intersection point, in curve coordinates on the curve
+        point_on_curve: Point<1>,
+    },
 }
 
 impl CurveEdgeIntersection {
     /// Construct an instance from a point on a curve
     pub fn from_point_on_curve(point_on_curve: impl Into<Point<1>>) -> Self {
         let point_on_curve = point_on_curve.into();
-        Self { point_on_curve }
+        Self::Point { point_on_curve }
     }
 
     /// Compute the intersection
@@ -70,22 +74,17 @@ impl CurveEdgeIntersection {
         );
 
         if let Some(result) = result {
-            return Some(Self {
+            return Some(Self::Point {
                 point_on_curve: Point::from([result]),
             });
         }
         if let Some(result_inv) = result_inv {
-            return Some(Self {
+            return Some(Self::Point {
                 point_on_curve: Point::from([-result_inv]),
             });
         }
 
         None
-    }
-
-    /// Access the intersection point on the curve
-    pub fn point_on_curve(&self) -> Point<1> {
-        self.point_on_curve
     }
 }
 

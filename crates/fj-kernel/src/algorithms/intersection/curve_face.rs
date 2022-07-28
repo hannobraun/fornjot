@@ -40,7 +40,11 @@ impl CurveFaceIntersectionList {
             let intersection = CurveEdgeIntersection::compute(curve, &edge);
 
             if let Some(intersection) = intersection {
-                intersections.push(intersection.point_on_curve());
+                match intersection {
+                    CurveEdgeIntersection::Point { point_on_curve } => {
+                        intersections.push(point_on_curve);
+                    }
+                }
             }
         }
 
