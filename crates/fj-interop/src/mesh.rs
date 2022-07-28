@@ -69,7 +69,13 @@ where
 
 impl Mesh<Point<3>> {
     /// Add a triangle to the mesh
-    pub fn push_triangle(&mut self, points: [Point<3>; 3], color: Color) {
+    pub fn push_triangle(
+        &mut self,
+        triangle: impl Into<fj_math::Triangle<3>>,
+        color: Color,
+    ) {
+        let points = triangle.into().points();
+
         for point in points {
             self.push_vertex(point);
         }

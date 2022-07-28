@@ -22,7 +22,7 @@ pub fn triangulate(
     for face in faces {
         if let Some(triangles) = face.triangles() {
             for &(triangle, color) in triangles {
-                mesh.push_triangle(triangle.points(), color);
+                mesh.push_triangle(triangle, color);
             }
             continue;
         }
