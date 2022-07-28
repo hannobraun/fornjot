@@ -70,7 +70,7 @@ fn export_3mf(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
 fn export_stl(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
     let points = mesh
         .triangles()
-        .map(|triangle| triangle.points)
+        .map(|triangle| triangle.inner.points())
         .collect::<Vec<_>>();
 
     let vertices = points.iter().map(|points| {
@@ -119,8 +119,8 @@ pub enum Error {
     #[error("no extension specified")]
     NoExtension,
 
-    /// Unrecognised extension found
-    #[error("unrecognised extension found `{0:?}`")]
+    /// Unrecognized extension found
+    #[error("unrecognized extension found `{0:?}`")]
     InvalidExtension(String),
 
     /// I/O error whilst exporting to file

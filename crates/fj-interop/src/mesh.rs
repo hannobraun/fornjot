@@ -38,11 +38,14 @@ where
     ///
     /// Returns true, if a triangle with any combination of the provided points
     /// is part of the mesh.
-    pub fn contains_triangle(&self, points: [impl Into<Point<3>>; 3]) -> bool {
-        let triangle = fj_math::Triangle::from_points(points).normalize();
+    pub fn contains_triangle(
+        &self,
+        triangle: impl Into<fj_math::Triangle<3>>,
+    ) -> bool {
+        let triangle = triangle.into().normalize();
 
         for t in &self.triangles {
-            let t = fj_math::Triangle::from_points(t.points).normalize();
+            let t = t.inner.normalize();
             if triangle == t {
                 return true;
             }
@@ -69,12 +72,21 @@ where
 
 impl Mesh<Point<3>> {
     /// Add a triangle to the mesh
-    pub fn push_triangle(&mut self, points: [Point<3>; 3], color: Color) {
-        for point in points {
+    pub fn push_triangle(
+        &mut self,
+        triangle: impl Into<fj_math::Triangle<3>>,
+        color: Color,
+    ) {
+        let triangle = triangle.into();
+
+        for point in triangle.points() {
             self.push_vertex(point);
         }
 
-        self.triangles.push(Triangle { points, color });
+        self.triangles.push(Triangle {
+            inner: triangle,
+            color,
+        });
     }
 }
 
@@ -100,7 +112,7 @@ pub type Index = u32;
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct Triangle {
     /// The points of the triangle
-    pub points: [Point<3>; 3],
+    pub inner: fj_math::Triangle<3>,
 
     /// The color of the triangle
     pub color: Color,
