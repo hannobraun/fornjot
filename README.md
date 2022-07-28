@@ -102,43 +102,52 @@ Exporting models to both the [3D Manufacturing Format](https://en.wikipedia.org/
 
 ## Usage
 
+### Installation
+
+Since Fornjot uses Rust as the language for defining models, a [Rust toolchain](https://www.rust-lang.org/tools/install) is required to use Fornjot.
+
+To install Fornjot itself, you have the following options:
+
+1. Download a binary from [the latest release](https://github.com/hannobraun/Fornjot/releases).
+2. Compile the latest release yourself: `cargo install fj-app`
+3. Compile a development version from this repository: `cd path/to/repo; cargo install --path crates/fj-app`
+
+While the Fornjot application is a graphical application that opens a window and displays a 3D view of your model, it can currently only be started from the command-line. The instructions below assume that you have the Fornjot application installed somewhere on your path, under the name `fj-app`.
+
 ### Defining models
 
-Models depend on the [`fj`](/fj) library, which they use to define the geometry. Furthermore, they need to be built as a dynamic library. Just use the examples in the [`models/`](/models) directory as a template.
+Models are Rust libraries that depend on the [`fj`](crates/fj) library, which they use to define the geometry. Furthermore, they need to be built as a dynamic library. Just use the examples in the [`models/`](models) directory as a template to define your own.
 
 ### Viewing models
 
-To compile and view a model, run it from the host application.
+To view a model, run:
 
 ``` sh
-# Compile/view the spacer model
-cargo run -- -m spacer
+fj-app --model my-model
 ```
 
-This invocation expects that the model exists in the `models/spacer` directory, with a package name of `spacer`.
+This will compile and load the model in the `my-model/` directory.
 
 Rotate the model by pressing the left mouse button while moving the mouse. Move the model by pressing the right mouse button while moving the mouse. Zoom with the mouse wheel.
 
-Toggle model rendering by pressing `1`. Toggle mesh rendering by pressing `2`.
-
-So far, the host application is not published on [crates.io](https://crates.io/), and the whole process is not really optimized for being used outside of this repository. Contributions to improve that situations are very welcome.
+Toggle model rendering by pressing `1`. Toggle mesh rendering by pressing `2`. Toggle rendering of debug data by pressing `3`.
 
 ### Exporting models
 
 To export a model to a file, run:
 
 ``` sh
-cargo run -- -m spacer --export spacer.3mf
+fj-app --model my-model --export my-model.3mf
 ```
 
-The file type is based on the supplied extension. Both 3MF and STL are supported.
+The file type is chosen based on the file extension. Both 3MF and STL are supported.
 
 ### Model parameters
 
-Some models have parameters that can be overridden. For example, to override the inner and outer radii of the spacer model:
+Models can define parameters that can be overridden. This can be done using the `--parameters` argument:
 
 ``` sh
-cargo run -- -m spacer --parameters "outer=8.0,inner=5.0"
+fj-app --model my-model --parameters "width=3.0,height=5.0"
 ```
 
 
