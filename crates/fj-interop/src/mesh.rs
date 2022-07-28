@@ -38,8 +38,11 @@ where
     ///
     /// Returns true, if a triangle with any combination of the provided points
     /// is part of the mesh.
-    pub fn contains_triangle(&self, points: [impl Into<Point<3>>; 3]) -> bool {
-        let triangle = fj_math::Triangle::from_points(points).normalize();
+    pub fn contains_triangle(
+        &self,
+        triangle: impl Into<fj_math::Triangle<3>>,
+    ) -> bool {
+        let triangle = triangle.into().normalize();
 
         for t in &self.triangles {
             let t = t.inner.normalize();
