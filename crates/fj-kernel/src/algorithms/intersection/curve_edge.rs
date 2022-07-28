@@ -98,37 +98,48 @@ mod tests {
     use super::CurveEdgeIntersection;
 
     #[test]
-    fn compute() {
+    fn compute_edge_in_front_of_curve_origin() {
         let surface = Surface::xy_plane();
-
         let curve = Curve::u_axis();
-
-        let edge_left = Edge::build()
-            .line_segment_from_points(&surface, [[-1., -1.], [-1., 1.]]);
-        let edge_right = Edge::build()
+        let edge = Edge::build()
             .line_segment_from_points(&surface, [[1., -1.], [1., 1.]]);
-        let edge_below = Edge::build()
-            .line_segment_from_points(&surface, [[-1., -1.], [1., -1.]]);
 
-        let intersection_with_edge_left =
-            CurveEdgeIntersection::compute(&curve, &edge_left);
-        let intersection_with_edge_right =
-            CurveEdgeIntersection::compute(&curve, &edge_right);
-        let intersection_with_edge_below =
-            CurveEdgeIntersection::compute(&curve, &edge_below);
+        let intersection = CurveEdgeIntersection::compute(&curve, &edge);
 
         assert_eq!(
-            intersection_with_edge_left,
-            Some(CurveEdgeIntersection::from_point_on_curve(Point::from([
-                -1.
-            ])))
-        );
-        assert_eq!(
-            intersection_with_edge_right,
+            intersection,
             Some(CurveEdgeIntersection::from_point_on_curve(Point::from([
                 1.
             ])))
         );
-        assert!(intersection_with_edge_below.is_none());
+    }
+
+    #[test]
+    fn compute_edge_behind_curve_origin() {
+        let surface = Surface::xy_plane();
+        let curve = Curve::u_axis();
+        let edge = Edge::build()
+            .line_segment_from_points(&surface, [[-1., -1.], [-1., 1.]]);
+
+        let intersection = CurveEdgeIntersection::compute(&curve, &edge);
+
+        assert_eq!(
+            intersection,
+            Some(CurveEdgeIntersection::from_point_on_curve(Point::from([
+                -1.
+            ])))
+        );
+    }
+
+    #[test]
+    fn compute_edge_parallel_to_curve() {
+        let surface = Surface::xy_plane();
+        let curve = Curve::u_axis();
+        let edge = Edge::build()
+            .line_segment_from_points(&surface, [[-1., -1.], [1., -1.]]);
+
+        let intersection = CurveEdgeIntersection::compute(&curve, &edge);
+
+        assert!(intersection.is_none());
     }
 }
