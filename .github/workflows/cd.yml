@@ -2,7 +2,7 @@ name: Continuous Deployment
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 env:
   CARGO_TERM_COLOR: always
@@ -10,6 +10,10 @@ env:
   # Name of the crate from Cargo.toml
   # used to rename and upload the binaries
   PROJ_NAME: fj-app
+
+  # This lets our app know it's an "official" release. Otherwise we would get
+  # a version number like "fj-app 0.8.0 (8cb928bb, unreleased)"
+  FJ_OFFICIAL_RELEASE: 1
 
 defaults:
   run:
