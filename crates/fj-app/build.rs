@@ -11,7 +11,8 @@ fn version_string() -> String {
     let pkg_version = std::env::var("CARGO_PKG_VERSION").unwrap();
     let commit = git_description();
 
-    let official_release = std::env::var("FJ_OFFICIAL_RELEASE").is_ok();
+    let official_release =
+        std::env::var("FJ_OFFICIAL_RELEASE").as_deref() == Ok("1");
     println!("cargo:rerun-if-env-changed=FJ_OFFICIAL_RELEASE");
 
     match (commit, official_release) {
