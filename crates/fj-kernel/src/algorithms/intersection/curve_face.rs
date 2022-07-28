@@ -1,9 +1,11 @@
 use std::vec;
 
-use fj_math::{Point, Segment};
-use parry2d_f64::query::{Ray, RayCast};
+use fj_math::Point;
 
-use crate::objects::{Curve, Face};
+use crate::{
+    algorithms::intersection::CurveEdgeIntersection,
+    objects::{Curve, Face},
+};
 
 /// The intersections between a [`Curve`] and a [`Face`], in curve coordinates
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -27,68 +29,18 @@ impl CurveFaceIntersectionList {
 
     /// Compute the intersections between a [`Curve`] and a [`Face`]
     pub fn compute(curve: &Curve<2>, face: &Face) -> Self {
-        let line = match curve {
-            Curve::Line(line) => line,
-            _ => todo!("Curve-face intersection only supports lines"),
-        };
-
-        let edges = face
-            .all_cycles()
-            .flat_map(|cycle| {
-                let edges: Vec<_> = cycle.edges().cloned().collect();
-                edges
-            })
-            .map(|edge| {
-                let line = match edge.curve().local_form() {
-                    Curve::Line(line) => line,
-                    _ => {
-                        todo!("Curve-face intersection only supports polygons")
-                    }
-                };
-
-                let vertices = match edge.vertices().get() {
-                    Some(vertices) => vertices.map(|&vertex| vertex),
-                    None => todo!(
-                        "Curve-face intersection does not support faces with \
-                    continuous edges"
-                    ),
-                };
-
-                (*line, vertices)
-            });
+        let edges = face.all_cycles().flat_map(|cycle| {
+            let edges: Vec<_> = cycle.edges().cloned().collect();
+            edges
+        });
 
         let mut intersections = Vec::new();
 
-        for (edge_line, vertices) in edges {
-            let vertices = vertices.map(|vertex| {
-                edge_line.point_from_line_coords(vertex.position())
-            });
-            let segment = Segment::from_points(vertices);
+        for edge in edges {
+            let intersection = CurveEdgeIntersection::compute(curve, &edge);
 
-            let ray = Ray {
-                origin: line.origin.to_na(),
-                dir: line.direction.to_na(),
-            };
-            let ray_inv = Ray {
-                origin: line.origin.to_na(),
-                dir: -line.direction.to_na(),
-            };
-
-            let result =
-                segment
-                    .to_parry()
-                    .cast_local_ray(&ray, f64::INFINITY, false);
-            let result_inv = segment.to_parry().cast_local_ray(
-                &ray_inv,
-                f64::INFINITY,
-                false,
-            );
-
-            if let Some(result) = result {
-                intersections.push(Point::from([result]));
-            }
-            if let Some(result_inv) = result_inv {
-                intersections.push(Point::from([-result_inv]));
+            if let Some(intersection) = intersection {
+                intersections.push(intersection.point_on_curve());
             }
         }
 
