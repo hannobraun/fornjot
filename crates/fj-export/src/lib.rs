@@ -119,8 +119,8 @@ pub enum Error {
     #[error("no extension specified")]
     NoExtension,
 
-    /// Unrecognised extension found
-    #[error("unrecognised extension found `{0:?}`")]
+    /// Unrecognized extension found
+    #[error("unrecognized extension found `{0:?}`")]
     InvalidExtension(String),
 
     /// I/O error whilst exporting to file
