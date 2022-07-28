@@ -2,7 +2,7 @@
 use std::f64::consts::FRAC_PI_2;
 
 use fj_interop::processed_shape::ProcessedShape;
-use fj_math::{Aabb, Point, Scalar, Transform, Triangle, Vector};
+use fj_math::{Aabb, Point, Scalar, Transform, Vector};
 
 use crate::screen::NormalizedPosition;
 
@@ -140,12 +140,10 @@ impl Camera {
         let mut min_t = None;
 
         for triangle in shape.mesh.triangles() {
-            let t = Triangle::from_points(triangle.points).cast_local_ray(
-                origin,
-                dir,
-                f64::INFINITY,
-                true,
-            );
+            let t =
+                triangle
+                    .inner
+                    .cast_local_ray(origin, dir, f64::INFINITY, true);
 
             if let Some(t) = t {
                 if t <= min_t.unwrap_or(t) {

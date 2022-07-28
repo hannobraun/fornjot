@@ -42,7 +42,7 @@ where
         let triangle = fj_math::Triangle::from_points(points).normalize();
 
         for t in &self.triangles {
-            let t = fj_math::Triangle::from_points(t.points).normalize();
+            let t = t.inner.normalize();
             if triangle == t {
                 return true;
             }
@@ -74,13 +74,16 @@ impl Mesh<Point<3>> {
         triangle: impl Into<fj_math::Triangle<3>>,
         color: Color,
     ) {
-        let points = triangle.into().points();
+        let triangle = triangle.into();
 
-        for point in points {
+        for point in triangle.points() {
             self.push_vertex(point);
         }
 
-        self.triangles.push(Triangle { points, color });
+        self.triangles.push(Triangle {
+            inner: triangle,
+            color,
+        });
     }
 }
 
@@ -106,7 +109,7 @@ pub type Index = u32;
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct Triangle {
     /// The points of the triangle
-    pub points: [Point<3>; 3],
+    pub inner: fj_math::Triangle<3>,
 
     /// The color of the triangle
     pub color: Color,
