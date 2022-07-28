@@ -14,12 +14,6 @@ pub enum CurveEdgeIntersection {
 }
 
 impl CurveEdgeIntersection {
-    /// Construct an instance from a point on a curve
-    pub fn from_point_on_curve(point_on_curve: impl Into<Point<1>>) -> Self {
-        let point_on_curve = point_on_curve.into();
-        Self::Point { point_on_curve }
-    }
-
     /// Compute the intersection
     ///
     /// # Panics
@@ -107,9 +101,9 @@ mod tests {
 
         assert_eq!(
             intersection,
-            Some(CurveEdgeIntersection::from_point_on_curve(Point::from([
-                1.
-            ])))
+            Some(CurveEdgeIntersection::Point {
+                point_on_curve: Point::from([1.])
+            })
         );
     }
 
@@ -124,9 +118,9 @@ mod tests {
 
         assert_eq!(
             intersection,
-            Some(CurveEdgeIntersection::from_point_on_curve(Point::from([
-                -1.
-            ])))
+            Some(CurveEdgeIntersection::Point {
+                point_on_curve: Point::from([-1.])
+            })
         );
     }
 
