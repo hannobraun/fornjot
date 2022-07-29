@@ -131,7 +131,7 @@ mod tests {
 
     use crate::{
         local::Local,
-        objects::{Curve, Edge, GlobalVertex, Vertex, VerticesOfEdge},
+        objects::{CurveKind, Edge, GlobalVertex, Vertex, VerticesOfEdge},
         validation::{validate, ValidationConfig, ValidationError},
     };
 
@@ -141,8 +141,8 @@ mod tests {
         let b = Point::from([1., 0., 0.]);
 
         let curve = {
-            let curve_local = Curve::line_from_points([[0., 0.], [1., 0.]]);
-            let curve_canonical = Curve::line_from_points([a, b]);
+            let curve_local = CurveKind::line_from_points([[0., 0.], [1., 0.]]);
+            let curve_canonical = CurveKind::line_from_points([a, b]);
             Local::new(curve_local, curve_canonical)
         };
 

@@ -1,6 +1,6 @@
 use fj_math::{Point, Segment};
 
-use crate::objects::{Curve, Edge};
+use crate::objects::{CurveKind, Edge};
 
 use super::LineSegmentIntersection;
 
@@ -28,15 +28,15 @@ impl CurveEdgeIntersection {
     /// Currently, only intersections between lines and line segments can be
     /// computed. Panics, if a different type of [`Curve`] or [`Edge`] is
     /// passed.
-    pub fn compute(curve: &Curve<2>, edge: &Edge) -> Option<Self> {
+    pub fn compute(curve: &CurveKind<2>, edge: &Edge) -> Option<Self> {
         let curve_as_line = match curve {
-            Curve::Line(line) => line,
+            CurveKind::Line(line) => line,
             _ => todo!("Curve-edge intersection only supports lines"),
         };
 
         let edge_as_segment = {
             let edge_curve_as_line = match edge.curve().local_form() {
-                Curve::Line(line) => line,
+                CurveKind::Line(line) => line,
                 _ => {
                     todo!("Curve-edge intersection only supports line segments")
                 }
@@ -76,14 +76,14 @@ impl CurveEdgeIntersection {
 mod tests {
     use fj_math::Point;
 
-    use crate::objects::{Curve, Edge, Surface};
+    use crate::objects::{CurveKind, Edge, Surface};
 
     use super::CurveEdgeIntersection;
 
     #[test]
     fn compute_edge_in_front_of_curve_origin() {
         let surface = Surface::xy_plane();
-        let curve = Curve::u_axis();
+        let curve = CurveKind::u_axis();
         let edge = Edge::build()
             .line_segment_from_points(&surface, [[1., -1.], [1., 1.]]);
 
@@ -100,7 +100,7 @@ mod tests {
     #[test]
     fn compute_edge_behind_curve_origin() {
         let surface = Surface::xy_plane();
-        let curve = Curve::u_axis();
+        let curve = CurveKind::u_axis();
         let edge = Edge::build()
             .line_segment_from_points(&surface, [[-1., -1.], [-1., 1.]]);
 
@@ -117,7 +117,7 @@ mod tests {
     #[test]
     fn compute_edge_parallel_to_curve() {
         let surface = Surface::xy_plane();
-        let curve = Curve::u_axis();
+        let curve = CurveKind::u_axis();
         let edge = Edge::build()
             .line_segment_from_points(&surface, [[-1., -1.], [1., -1.]]);
 
@@ -129,7 +129,7 @@ mod tests {
     #[test]
     fn compute_edge_on_curve() {
         let surface = Surface::xy_plane();
-        let curve = Curve::u_axis();
+        let curve = CurveKind::u_axis();
         let edge = Edge::build()
             .line_segment_from_points(&surface, [[-1., 0.], [1., 0.]]);
 

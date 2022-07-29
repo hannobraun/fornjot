@@ -3,7 +3,7 @@
 use std::collections::VecDeque;
 
 use crate::objects::{
-    Curve, Cycle, Edge, Face, GlobalVertex, Sketch, Solid, Surface, Vertex,
+    CurveKind, Cycle, Edge, Face, GlobalVertex, Sketch, Solid, Surface, Vertex,
 };
 
 /// Access iterators over all objects of a shape, or part of it
@@ -15,7 +15,7 @@ pub trait ObjectIters<'r> {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters>;
 
     /// Iterate over all curves
-    fn curve_iter(&'r self) -> Iter<&'r Curve<3>> {
+    fn curve_iter(&'r self) -> Iter<&'r CurveKind<3>> {
         let mut iter = Iter::empty();
 
         for object in self.referenced_objects() {
@@ -114,12 +114,12 @@ pub trait ObjectIters<'r> {
     }
 }
 
-impl<'r> ObjectIters<'r> for Curve<3> {
+impl<'r> ObjectIters<'r> for CurveKind<3> {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
         Vec::new()
     }
 
-    fn curve_iter(&'r self) -> Iter<&'r Curve<3>> {
+    fn curve_iter(&'r self) -> Iter<&'r CurveKind<3>> {
         Iter::from_object(self)
     }
 }
@@ -297,14 +297,15 @@ impl<T> Iterator for Iter<T> {
 #[cfg(test)]
 mod tests {
     use crate::objects::{
-        Curve, Cycle, Edge, Face, GlobalVertex, Sketch, Solid, Surface, Vertex,
+        CurveKind, Cycle, Edge, Face, GlobalVertex, Sketch, Solid, Surface,
+        Vertex,
     };
 
     use super::ObjectIters as _;
 
     #[test]
     fn curve() {
-        let object = Curve::x_axis();
+        let object = CurveKind::x_axis();
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());

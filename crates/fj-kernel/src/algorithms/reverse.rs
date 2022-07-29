@@ -2,7 +2,7 @@ use fj_math::{Circle, Line, Point, Vector};
 
 use crate::{
     local::Local,
-    objects::{Curve, Cycle, Edge, Face},
+    objects::{CurveKind, Cycle, Edge, Face},
 };
 
 /// Reverse the direction of a face
@@ -29,20 +29,20 @@ fn reverse_local_coordinates_in_cycle<'r>(
         let edges = cycle.edges().map(|edge| {
             let curve = {
                 let local = match edge.curve().local_form() {
-                    Curve::Circle(Circle { center, a, b }) => {
+                    CurveKind::Circle(Circle { center, a, b }) => {
                         let center = Point::from([center.u, -center.v]);
 
                         let a = Vector::from([a.u, -a.v]);
                         let b = Vector::from([b.u, -b.v]);
 
-                        Curve::Circle(Circle { center, a, b })
+                        CurveKind::Circle(Circle { center, a, b })
                     }
-                    Curve::Line(Line { origin, direction }) => {
+                    CurveKind::Line(Line { origin, direction }) => {
                         let origin = Point::from([origin.u, -origin.v]);
                         let direction =
                             Vector::from([direction.u, -direction.v]);
 
-                        Curve::Line(Line { origin, direction })
+                        CurveKind::Line(Line { origin, direction })
                     }
                 };
 

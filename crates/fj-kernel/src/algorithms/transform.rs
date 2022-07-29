@@ -3,7 +3,8 @@ use fj_math::{Transform, Vector};
 use crate::{
     local::Local,
     objects::{
-        Curve, Cycle, Edge, Face, GlobalVertex, Sketch, Solid, Surface, Vertex,
+        CurveKind, Cycle, Edge, Face, GlobalVertex, Sketch, Solid, Surface,
+        Vertex,
     },
 };
 
@@ -34,7 +35,7 @@ pub trait TransformObject: Sized {
     }
 }
 
-impl TransformObject for Curve<3> {
+impl TransformObject for CurveKind<3> {
     fn transform(self, transform: &Transform) -> Self {
         match self {
             Self::Circle(curve) => {

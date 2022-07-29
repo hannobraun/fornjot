@@ -4,7 +4,7 @@ use fj_math::Point;
 
 use crate::{
     algorithms::intersection::CurveEdgeIntersection,
-    objects::{Curve, Face},
+    objects::{CurveKind, Face},
 };
 
 /// The intersections between a [`Curve`] and a [`Face`], in curve coordinates
@@ -28,7 +28,7 @@ impl CurveFaceIntersectionList {
     }
 
     /// Compute the intersections between a [`Curve`] and a [`Face`]
-    pub fn compute(curve: &Curve<2>, face: &Face) -> Self {
+    pub fn compute(curve: &CurveKind<2>, face: &Face) -> Self {
         let edges = face.all_cycles().flat_map(|cycle| {
             let edges: Vec<_> = cycle.edges().cloned().collect();
             edges
@@ -142,13 +142,13 @@ pub type CurveFaceIntersection = [Point<1>; 2];
 mod tests {
     use fj_math::{Line, Point, Vector};
 
-    use crate::objects::{Curve, Face, Surface};
+    use crate::objects::{CurveKind, Face, Surface};
 
     use super::CurveFaceIntersectionList;
 
     #[test]
     fn compute() {
-        let curve = Curve::Line(Line {
+        let curve = CurveKind::Line(Line {
             origin: Point::from([-3., 0.]),
             direction: Vector::from([1., 0.]),
         });

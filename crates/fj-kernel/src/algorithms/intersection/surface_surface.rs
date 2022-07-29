@@ -1,15 +1,15 @@
 use fj_math::{Line, Point, Scalar, Vector};
 
-use crate::objects::{Curve, Surface};
+use crate::objects::{CurveKind, Surface};
 
 /// The intersection between two surfaces
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct SurfaceSurfaceIntersection {
     /// The intersection curves, in the coordinates of the input surfaces
-    pub local_intersection_curves: [Curve<2>; 2],
+    pub local_intersection_curves: [CurveKind<2>; 2],
 
     /// The intersection curve, in global coordinates
-    pub global_intersection_curve: Curve<3>,
+    pub global_intersection_curve: CurveKind<3>,
 }
 
 impl SurfaceSurfaceIntersection {
@@ -50,7 +50,7 @@ impl SurfaceSurfaceIntersection {
 
         let curve_a = project_line_into_plane(&line, &a_parametric);
         let curve_b = project_line_into_plane(&line, &b_parametric);
-        let curve_global = Curve::Line(Line { origin, direction });
+        let curve_global = CurveKind::Line(Line { origin, direction });
 
         Some(Self {
             local_intersection_curves: [curve_a, curve_b],
@@ -70,7 +70,7 @@ impl PlaneParametric {
     pub fn extract_from_surface(surface: &Surface) -> Self {
         let Surface::SweptCurve(surface) = surface;
         let line = match surface.curve {
-            Curve::Line(line) => line,
+            CurveKind::Line(line) => line,
             _ => todo!("Only plane-plane intersection is currently supported."),
         };
 
@@ -111,7 +111,7 @@ impl PlaneConstantNormal {
 fn project_line_into_plane(
     line: &Line<3>,
     plane: &PlaneParametric,
-) -> Curve<2> {
+) -> CurveKind<2> {
     let line_origin_relative_to_plane = line.origin - plane.origin;
     let line_origin_in_plane = Vector::from([
         plane
@@ -134,7 +134,7 @@ fn project_line_into_plane(
         direction: line_direction_in_plane,
     };
 
-    Curve::Line(line)
+    CurveKind::Line(line)
 }
 
 #[cfg(test)]
@@ -143,7 +143,7 @@ mod tests {
 
     use crate::{
         algorithms::TransformObject,
-        objects::{Curve, Surface},
+        objects::{CurveKind, Surface},
     };
 
     use super::SurfaceSurfaceIntersection;
@@ -163,9 +163,9 @@ mod tests {
             None,
         );
 
-        let expected_xy = Curve::u_axis();
-        let expected_xz = Curve::u_axis();
-        let expected_global = Curve::x_axis();
+        let expected_xy = CurveKind::u_axis();
+        let expected_xz = CurveKind::u_axis();
+        let expected_global = CurveKind::x_axis();
 
         assert_eq!(
             SurfaceSurfaceIntersection::compute(&xy, &xz),
