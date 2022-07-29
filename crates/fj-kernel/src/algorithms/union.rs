@@ -133,6 +133,10 @@ pub fn union(a: impl Into<Solid>, b: impl Into<Solid>) -> Solid {
             for [start, end] in intersections {
                 let curve = intersection.global_intersection_curve;
 
+                // TASK: This conversion isn't right. It can result in slightly
+                //       different global vertices for different edges, even
+                //       though those might be where those edges connect, and
+                //       thus supposed to be exactly the same.
                 let [start_global, end_global] = [start, end].map(|point| {
                     let position = curve.point_from_curve_coords(point);
                     GlobalVertex::from_position(position)
@@ -145,6 +149,13 @@ pub fn union(a: impl Into<Solid>, b: impl Into<Solid>) -> Solid {
 
                 let edge_a = Edge::new(Local::new(curve_a, curve), vertices);
                 let edge_b = Edge::new(Local::new(curve_b, curve), vertices);
+
+                // TASK: Even if the conversion to `GlobalVertex` above weren't
+                //       a problem, what would I even do with these edges I
+                //       created? They need to end up in cycles, but at this
+                //       point, I have no way of knowing which cycles those are
+                //       going to be, and in what order the edges need to go in
+                //       there.
 
                 // TASK: Implement.
                 let _ = edge_a;
