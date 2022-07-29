@@ -2,11 +2,21 @@ use fj_math::{Line, Point, Scalar, Vector};
 
 use crate::objects::{Curve, Surface};
 
+/// The intersection between two surfaces
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct SurfaceSurfaceIntersection {
+    /// The intersection curves, in the coordinates of the input surfaces
+    pub local_intersection_curves: [Curve<2>; 2],
+
+    /// The intersection curve, in global coordinates
+    pub global_intersection_curve: Curve<3>,
+}
+
 /// Test intersection between two surfaces
 pub fn surface_surface(
     a: &Surface,
     b: &Surface,
-) -> Option<(Curve<2>, Curve<2>, Curve<3>)> {
+) -> Option<SurfaceSurfaceIntersection> {
     // Algorithm from Real-Time Collision Detection by Christer Ericson. See
     // section 5.4.4, Intersection of Two Planes.
     //
@@ -44,7 +54,10 @@ pub fn surface_surface(
     let curve_b = project_line_into_plane(&line, &b_parametric);
     let curve_global = Curve::Line(Line { origin, direction });
 
-    Some((curve_a, curve_b, curve_global))
+    Some(SurfaceSurfaceIntersection {
+        local_intersection_curves: [curve_a, curve_b],
+        global_intersection_curve: curve_global,
+    })
 }
 
 /// A plane in parametric form
@@ -134,7 +147,7 @@ mod tests {
         objects::{Curve, Surface},
     };
 
-    use super::surface_surface;
+    use super::{surface_surface, SurfaceSurfaceIntersection};
 
     #[test]
     fn plane_plane() {
@@ -157,7 +170,10 @@ mod tests {
 
         assert_eq!(
             surface_surface(&xy, &xz),
-            Some((expected_xy, expected_xz, expected_global))
+            Some(SurfaceSurfaceIntersection {
+                local_intersection_curves: [expected_xy, expected_xz],
+                global_intersection_curve: expected_global,
+            })
         );
     }
 }

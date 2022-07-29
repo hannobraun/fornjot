@@ -9,5 +9,5 @@ pub use self::{
     curve_edge::CurveEdgeIntersection,
     curve_face::{CurveFaceIntersection, CurveFaceIntersectionList},
     line_segment::LineSegmentIntersection,
-    surface_surface::surface_surface,
+    surface_surface::{surface_surface, SurfaceSurfaceIntersection},
 };
