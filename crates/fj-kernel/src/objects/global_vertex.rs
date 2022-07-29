@@ -2,7 +2,7 @@ use std::hash::Hash;
 
 use fj_math::Point;
 
-/// A vertex
+/// A vertex, defined in global (3D) coordinates
 ///
 /// This struct exists to distinguish between vertices and points at the type
 /// level. This is a relevant distinction, as vertices are part of a shape that
