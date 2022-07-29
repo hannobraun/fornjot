@@ -4,7 +4,7 @@ use fj_math::Point;
 ///
 /// `Vertex` is defined in terms of a 1-dimensional position on a curve. If you
 /// need the 3D position of a vertex, you can use [`Vertex::global`], to get
-/// access of the global form of a vertex.
+/// access of the global form of a vertex ([`GlobalVertex`]).
 ///
 /// # Implementation Note
 ///
