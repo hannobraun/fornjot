@@ -22,11 +22,7 @@ impl CurveFaceIntersectionList {
     ) -> Self {
         let intervals = intervals
             .into_iter()
-            .map(|interval| {
-                interval
-                    .map(Into::into)
-                    .map(CurveEdgeIntersection::from_point_on_curve)
-            })
+            .map(|interval| interval.map(Into::into))
             .collect();
         Self { intervals }
     }
@@ -44,7 +40,18 @@ impl CurveFaceIntersectionList {
             let intersection = CurveEdgeIntersection::compute(curve, &edge);
 
             if let Some(intersection) = intersection {
-                intersections.push(intersection);
+                match intersection {
+                    CurveEdgeIntersection::Point { point_on_curve } => {
+                        intersections.push(point_on_curve);
+                    }
+                    CurveEdgeIntersection::Coincident {
+                        a_on_curve,
+                        b_on_curve,
+                    } => {
+                        intersections.push(a_on_curve);
+                        intersections.push(b_on_curve);
+                    }
+                }
             }
         }
 
@@ -57,7 +64,7 @@ impl CurveFaceIntersectionList {
         let intervals = intersections
             .chunks(2)
             .map(|chunk| {
-                // Can't panic, as we passed `2` to `windows`.
+                // Can't panic, as we passed `2` to `chunks`.
                 [chunk[0], chunk[1]]
             })
             .collect();
@@ -133,7 +140,7 @@ impl IntoIterator for CurveFaceIntersectionList {
 }
 
 /// An intersection between a curve and a face, in curve coordinates
-pub type CurveFaceIntersection = [CurveEdgeIntersection; 2];
+pub type CurveFaceIntersection = [Point<1>; 2];
 
 #[cfg(test)]
 mod tests {
