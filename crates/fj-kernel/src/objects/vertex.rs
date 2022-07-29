@@ -1,5 +1,3 @@
-use std::hash::Hash;
-
 use fj_math::Point;
 
 /// A vertex
