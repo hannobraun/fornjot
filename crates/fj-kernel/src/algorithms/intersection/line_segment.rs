@@ -1,5 +1,17 @@
 use fj_math::{Aabb, Line, Scalar, Segment, Vector};
 
+/// An intersection between a [`Line`] and a [`Segment`]
+#[derive(Debug, Eq, PartialEq)]
+pub enum LineSegmentIntersection {
+    /// Line and segment intersect on a point
+    ///
+    /// Point is given as a coordinate on the line.
+    PointOnLine(Scalar),
+
+    /// Line and segment are coincident
+    Coincident,
+}
+
 /// Determine the intersection between a [`Line`] and a [`Segment`]
 pub fn line_segment(
     line: &Line<2>,
@@ -40,18 +52,6 @@ pub fn line_segment(
     }
 
     Some(LineSegmentIntersection::PointOnLine(t))
-}
-
-/// An intersection between a [`Line`] and a [`Segment`]
-#[derive(Debug, Eq, PartialEq)]
-pub enum LineSegmentIntersection {
-    /// Line and segment intersect on a point
-    ///
-    /// Point is given as a coordinate on the line.
-    PointOnLine(Scalar),
-
-    /// Line and segment are coincident
-    Coincident,
 }
 
 #[cfg(test)]
