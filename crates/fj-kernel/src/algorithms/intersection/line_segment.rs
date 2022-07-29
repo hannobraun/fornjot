@@ -30,13 +30,14 @@ impl LineSegmentIntersection {
         let n_dot_origin = n.dot(&(b - line.origin));
         let n_dot_direction = n.dot(&line.direction);
 
-        if n_dot_origin == Scalar::ZERO && n_dot_direction == Scalar::ZERO {
-            // `line` and `segment` are not just parallel, but coincident!
-            return Some(Self::Coincident);
-        }
-
         if n_dot_direction == Scalar::ZERO {
-            // `line` and `segment` are parallel, but not coincident
+            // `line` and `segment` are parallel
+
+            if n_dot_origin == Scalar::ZERO {
+                // `line` and `segment` are not just parallel, but coincident!
+                return Some(Self::Coincident);
+            }
+
             return None;
         }
 
