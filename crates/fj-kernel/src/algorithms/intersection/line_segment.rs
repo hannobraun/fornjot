@@ -6,7 +6,10 @@ pub enum LineSegmentIntersection {
     /// Line and segment intersect on a point
     ///
     /// Point is given as a coordinate on the line.
-    Point(Point<1>),
+    Point {
+        /// The intersection point, given as a coordinate on the line
+        point_on_line: Point<1>,
+    },
 
     /// Line and segment are coincident
     Coincident,
@@ -49,7 +52,9 @@ impl LineSegmentIntersection {
             return None;
         }
 
-        Some(Self::Point(Point::from([t])))
+        Some(Self::Point {
+            point_on_line: Point::from([t]),
+        })
     }
 }
 
@@ -71,7 +76,9 @@ mod tests {
                 &line,
                 &Segment::from_points([[1., -1.], [1., 1.]]),
             ),
-            Some(LineSegmentIntersection::Point(Point::from([Scalar::ONE]))),
+            Some(LineSegmentIntersection::Point {
+                point_on_line: Point::from([Scalar::ONE])
+            }),
         );
     }
 
