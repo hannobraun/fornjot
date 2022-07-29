@@ -60,13 +60,12 @@ mod tests {
     use crate::algorithms::intersection::LineSegmentIntersection;
 
     #[test]
-    fn line_segment() {
+    fn compute_one_hit() {
         let line = Line {
             origin: Point::origin(),
             direction: Vector::unit_u(),
         };
 
-        // regular hit
         assert_eq!(
             LineSegmentIntersection::compute(
                 &line,
@@ -74,8 +73,15 @@ mod tests {
             ),
             Some(LineSegmentIntersection::PointOnLine(Scalar::ONE)),
         );
+    }
 
-        // hit, where line and segment are parallel
+    #[test]
+    fn compute_coincident() {
+        let line = Line {
+            origin: Point::origin(),
+            direction: Vector::unit_u(),
+        };
+
         assert_eq!(
             LineSegmentIntersection::compute(
                 &line,
@@ -83,8 +89,15 @@ mod tests {
             ),
             Some(LineSegmentIntersection::Coincident),
         );
+    }
 
-        // segment above line
+    #[test]
+    fn compute_no_hit_above() {
+        let line = Line {
+            origin: Point::origin(),
+            direction: Vector::unit_u(),
+        };
+
         assert_eq!(
             LineSegmentIntersection::compute(
                 &line,
@@ -92,8 +105,15 @@ mod tests {
             ),
             None,
         );
+    }
 
-        // segment below line
+    #[test]
+    fn compute_no_hit_below() {
+        let line = Line {
+            origin: Point::origin(),
+            direction: Vector::unit_u(),
+        };
+
         assert_eq!(
             LineSegmentIntersection::compute(
                 &line,
@@ -101,8 +121,15 @@ mod tests {
             ),
             None,
         );
+    }
 
-        // segment parallel to line
+    #[test]
+    fn compute_no_hit_parallel() {
+        let line = Line {
+            origin: Point::origin(),
+            direction: Vector::unit_u(),
+        };
+
         assert_eq!(
             LineSegmentIntersection::compute(
                 &line,
