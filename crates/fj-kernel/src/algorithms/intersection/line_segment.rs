@@ -3,9 +3,7 @@ use fj_math::{Aabb, Line, Point, Scalar, Segment, Vector};
 /// An intersection between a [`Line`] and a [`Segment`]
 #[derive(Debug, Eq, PartialEq)]
 pub enum LineSegmentIntersection {
-    /// Line and segment intersect on a point
-    ///
-    /// Point is given as a coordinate on the line.
+    /// Line and segment intersect at a point
     Point {
         /// The intersection point, given as a coordinate on the line
         point_on_line: Point<1>,
