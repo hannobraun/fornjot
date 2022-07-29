@@ -34,23 +34,25 @@ impl CurveEdgeIntersection {
             _ => todo!("Curve-edge intersection only supports lines"),
         };
 
-        let edge_curve_as_line = match edge.curve().local_form() {
-            Curve::Line(line) => line,
-            _ => {
-                todo!("Curve-edge intersection only supports line segments")
-            }
-        };
+        let edge_as_segment = {
+            let edge_curve_as_line = match edge.curve().local_form() {
+                Curve::Line(line) => line,
+                _ => {
+                    todo!("Curve-edge intersection only supports line segments")
+                }
+            };
 
-        let edge_vertices = match edge.vertices().get() {
-            Some(vertices) => vertices.map(|vertex| {
-                edge_curve_as_line.point_from_line_coords(vertex.position())
-            }),
-            None => todo!(
-                "Curve-edge intersection does not support continuous edges"
-            ),
-        };
+            let edge_vertices = match edge.vertices().get() {
+                Some(vertices) => vertices.map(|vertex| {
+                    edge_curve_as_line.point_from_line_coords(vertex.position())
+                }),
+                None => todo!(
+                    "Curve-edge intersection does not support continuous edges"
+                ),
+            };
 
-        let edge_as_segment = Segment::from_points(edge_vertices);
+            Segment::from_points(edge_vertices)
+        };
 
         let intersection =
             LineSegmentIntersection::compute(curve_as_line, &edge_as_segment)?;
