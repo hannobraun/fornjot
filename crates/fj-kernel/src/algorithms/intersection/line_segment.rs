@@ -10,7 +10,10 @@ pub enum LineSegmentIntersection {
     },
 
     /// Line and segment are coincident
-    Coincident,
+    Coincident {
+        /// The end points of the segment, given as coordinates on the line
+        points_on_line: [Point<1>; 2],
+    },
 }
 
 impl LineSegmentIntersection {
@@ -35,7 +38,11 @@ impl LineSegmentIntersection {
 
             if n_dot_origin == Scalar::ZERO {
                 // `line` and `segment` are not just parallel, but coincident!
-                return Some(Self::Coincident);
+                return Some(Self::Coincident {
+                    points_on_line: segment
+                        .points()
+                        .map(|point| line.point_to_line_coords(point)),
+                });
             }
 
             return None;
@@ -93,7 +100,9 @@ mod tests {
                 &line,
                 &Segment::from_points([[1., 0.], [2., 0.]]),
             ),
-            Some(LineSegmentIntersection::Coincident),
+            Some(LineSegmentIntersection::Coincident {
+                points_on_line: [Point::from([1.]), Point::from([2.])],
+            }),
         );
     }
 
