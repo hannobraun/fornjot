@@ -64,7 +64,7 @@ impl CurveFaceIntersectionList {
         let intervals = intersections
             .chunks(2)
             .map(|chunk| {
-                // Can't panic, as we passed `2` to `windows`.
+                // Can't panic, as we passed `2` to `chunks`.
                 [chunk[0], chunk[1]]
             })
             .collect();
