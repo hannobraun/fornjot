@@ -13,7 +13,7 @@ pub struct SurfaceSurfaceIntersection {
 }
 
 impl SurfaceSurfaceIntersection {
-    /// Test intersection between two surfaces
+    /// Compute the intersection between two surfaces
     pub fn compute(a: &Surface, b: &Surface) -> Option<Self> {
         // Algorithm from Real-Time Collision Detection by Christer Ericson. See
         // section 5.4.4, Intersection of Two Planes.
