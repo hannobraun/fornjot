@@ -12,52 +12,54 @@ pub struct SurfaceSurfaceIntersection {
     pub global_intersection_curve: Curve<3>,
 }
 
-/// Test intersection between two surfaces
-pub fn surface_surface(
-    a: &Surface,
-    b: &Surface,
-) -> Option<SurfaceSurfaceIntersection> {
-    // Algorithm from Real-Time Collision Detection by Christer Ericson. See
-    // section 5.4.4, Intersection of Two Planes.
-    //
-    // Adaptations were made to get the intersection curves in local coordinates
-    // for each surface.
-
-    let a_parametric = PlaneParametric::extract_from_surface(a);
-    let b_parametric = PlaneParametric::extract_from_surface(b);
-
-    let a = PlaneConstantNormal::from_parametric_plane(&a_parametric);
-    let b = PlaneConstantNormal::from_parametric_plane(&b_parametric);
-
-    let direction = a.normal.cross(&b.normal);
-
-    let denom = direction.dot(&direction);
-    if denom == Scalar::ZERO {
-        // Comparing `denom` against zero looks fishy. It's probably better to
-        // compare it against an epsilon value, but I don't know how large that
-        // epsilon should be.
+impl SurfaceSurfaceIntersection {
+    /// Test intersection between two surfaces
+    pub fn surface_surface(
+        a: &Surface,
+        b: &Surface,
+    ) -> Option<SurfaceSurfaceIntersection> {
+        // Algorithm from Real-Time Collision Detection by Christer Ericson. See
+        // section 5.4.4, Intersection of Two Planes.
         //
-        // I'll just leave it like that, until we had the opportunity to collect
-        // some experience with this code.
-        // - @hannobraun
-        return None;
+        // Adaptations were made to get the intersection curves in local
+        // coordinates for each surface.
+
+        let a_parametric = PlaneParametric::extract_from_surface(a);
+        let b_parametric = PlaneParametric::extract_from_surface(b);
+
+        let a = PlaneConstantNormal::from_parametric_plane(&a_parametric);
+        let b = PlaneConstantNormal::from_parametric_plane(&b_parametric);
+
+        let direction = a.normal.cross(&b.normal);
+
+        let denom = direction.dot(&direction);
+        if denom == Scalar::ZERO {
+            // Comparing `denom` against zero looks fishy. It's probably better
+            // to compare it against an epsilon value, but I don't know how
+            // large that epsilon should be.
+            //
+            // I'll just leave it like that, until we had the opportunity to
+            // collect some experience with this code.
+            // - @hannobraun
+            return None;
+        }
+
+        let origin = (b.normal * a.distance - a.normal * b.distance)
+            .cross(&direction)
+            / denom;
+        let origin = Point { coords: origin };
+
+        let line = Line { origin, direction };
+
+        let curve_a = project_line_into_plane(&line, &a_parametric);
+        let curve_b = project_line_into_plane(&line, &b_parametric);
+        let curve_global = Curve::Line(Line { origin, direction });
+
+        Some(SurfaceSurfaceIntersection {
+            local_intersection_curves: [curve_a, curve_b],
+            global_intersection_curve: curve_global,
+        })
     }
-
-    let origin = (b.normal * a.distance - a.normal * b.distance)
-        .cross(&direction)
-        / denom;
-    let origin = Point { coords: origin };
-
-    let line = Line { origin, direction };
-
-    let curve_a = project_line_into_plane(&line, &a_parametric);
-    let curve_b = project_line_into_plane(&line, &b_parametric);
-    let curve_global = Curve::Line(Line { origin, direction });
-
-    Some(SurfaceSurfaceIntersection {
-        local_intersection_curves: [curve_a, curve_b],
-        global_intersection_curve: curve_global,
-    })
 }
 
 /// A plane in parametric form
@@ -147,7 +149,7 @@ mod tests {
         objects::{Curve, Surface},
     };
 
-    use super::{surface_surface, SurfaceSurfaceIntersection};
+    use super::SurfaceSurfaceIntersection;
 
     #[test]
     fn plane_plane() {
@@ -155,9 +157,9 @@ mod tests {
         let xz = Surface::xz_plane();
 
         // Coincident and parallel planes don't have an intersection curve.
-        assert_eq!(surface_surface(&xy, &xy), None);
+        assert_eq!(SurfaceSurfaceIntersection::surface_surface(&xy, &xy), None);
         assert_eq!(
-            surface_surface(
+            SurfaceSurfaceIntersection::surface_surface(
                 &xy,
                 &xy.transform(&Transform::translation([0., 0., 1.]))
             ),
@@ -169,7 +171,7 @@ mod tests {
         let expected_global = Curve::x_axis();
 
         assert_eq!(
-            surface_surface(&xy, &xz),
+            SurfaceSurfaceIntersection::surface_surface(&xy, &xz),
             Some(SurfaceSurfaceIntersection {
                 local_intersection_curves: [expected_xy, expected_xz],
                 global_intersection_curve: expected_global,
