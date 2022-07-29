@@ -1,8 +1,8 @@
 //! Objects of a shape
 //!
 //! Objects, in Fornjot parlance, are the elements that make up shapes. An
-//! object can be simple and just contain data (like, for example, [`Vertex`]),
-//! or they can be quite complex and refer to other objects.
+//! object can be simple and just contain data (like [`GlobalVertex`], for
+//! example), or they can be quite complex and refer to other objects.
 
 mod curve;
 mod cycle;
