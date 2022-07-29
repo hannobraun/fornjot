@@ -1,7 +1,8 @@
 use fj_math::{Point, Segment};
-use parry2d_f64::query::{Ray, RayCast};
 
 use crate::objects::{Curve, Edge};
+
+use super::LineSegmentIntersection;
 
 /// The intersection between a [`Curve`] and an [`Edge`], in curve coordinates
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -54,48 +55,22 @@ impl CurveEdgeIntersection {
 
         let edge_as_segment = Segment::from_points(edge_vertices);
 
-        if curve_as_line.is_coincident_with(edge_curve_as_line) {
-            let [a_on_curve, b_on_curve] = edge_vertices
-                .map(|vertex| curve_as_line.point_to_line_coords(vertex));
+        let intersection =
+            LineSegmentIntersection::compute(curve_as_line, &edge_as_segment)?;
 
-            return Some(Self::Coincident {
-                a_on_curve,
-                b_on_curve,
-            });
-        }
-
-        let ray = Ray {
-            origin: curve_as_line.origin.to_na(),
-            dir: curve_as_line.direction.to_na(),
-        };
-        let ray_inv = Ray {
-            origin: curve_as_line.origin.to_na(),
-            dir: -curve_as_line.direction.to_na(),
+        let intersection = match intersection {
+            LineSegmentIntersection::Point { point_on_line } => Self::Point {
+                point_on_curve: point_on_line,
+            },
+            LineSegmentIntersection::Coincident {
+                points_on_line: [a, b],
+            } => Self::Coincident {
+                a_on_curve: a,
+                b_on_curve: b,
+            },
         };
 
-        let result = edge_as_segment.to_parry().cast_local_ray(
-            &ray,
-            f64::INFINITY,
-            false,
-        );
-        let result_inv = edge_as_segment.to_parry().cast_local_ray(
-            &ray_inv,
-            f64::INFINITY,
-            false,
-        );
-
-        if let Some(result) = result {
-            return Some(Self::Point {
-                point_on_curve: Point::from([result]),
-            });
-        }
-        if let Some(result_inv) = result_inv {
-            return Some(Self::Point {
-                point_on_curve: Point::from([-result_inv]),
-            });
-        }
-
-        None
+        Some(intersection)
     }
 }
 
