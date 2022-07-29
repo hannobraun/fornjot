@@ -44,12 +44,8 @@ impl CurveFaceIntersectionList {
                     CurveEdgeIntersection::Point { point_on_curve } => {
                         intersections.push(point_on_curve);
                     }
-                    CurveEdgeIntersection::Coincident {
-                        a_on_curve,
-                        b_on_curve,
-                    } => {
-                        intersections.push(a_on_curve);
-                        intersections.push(b_on_curve);
+                    CurveEdgeIntersection::Coincident { points_on_curve } => {
+                        intersections.extend(points_on_curve);
                     }
                 }
             }

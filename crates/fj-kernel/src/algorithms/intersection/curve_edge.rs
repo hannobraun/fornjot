@@ -15,11 +15,8 @@ pub enum CurveEdgeIntersection {
 
     /// The edge lies on the curve
     Coincident {
-        /// The first vertex of the edge, in curve coordinates
-        a_on_curve: Point<1>,
-
-        /// The second vertex of the edge, in curve coordinates
-        b_on_curve: Point<1>,
+        /// The end points of the edge, in curve coordinates on the curve
+        points_on_curve: [Point<1>; 2],
     },
 }
 
@@ -62,12 +59,11 @@ impl CurveEdgeIntersection {
             LineSegmentIntersection::Point { point_on_line } => Self::Point {
                 point_on_curve: point_on_line,
             },
-            LineSegmentIntersection::Coincident {
-                points_on_line: [a, b],
-            } => Self::Coincident {
-                a_on_curve: a,
-                b_on_curve: b,
-            },
+            LineSegmentIntersection::Coincident { points_on_line } => {
+                Self::Coincident {
+                    points_on_curve: points_on_line,
+                }
+            }
         };
 
         Some(intersection)
@@ -140,8 +136,7 @@ mod tests {
         assert_eq!(
             intersection,
             Some(CurveEdgeIntersection::Coincident {
-                a_on_curve: Point::from([-1.]),
-                b_on_curve: Point::from([1.]),
+                points_on_curve: [Point::from([-1.]), Point::from([1.]),]
             })
         );
     }
