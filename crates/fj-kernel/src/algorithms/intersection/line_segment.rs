@@ -14,10 +14,7 @@ pub enum LineSegmentIntersection {
 
 impl LineSegmentIntersection {
     /// Determine the intersection between a [`Line`] and a [`Segment`]
-    pub fn line_segment(
-        line: &Line<2>,
-        segment: &Segment<2>,
-    ) -> Option<LineSegmentIntersection> {
+    pub fn line_segment(line: &Line<2>, segment: &Segment<2>) -> Option<Self> {
         // Algorithm adapted from Real-Time Collision Detection by Christer
         // Ericson. See section 5.1.9.1, 2D Segment Intersection.
 
@@ -34,7 +31,7 @@ impl LineSegmentIntersection {
 
         if n_dot_origin == Scalar::ZERO && n_dot_direction == Scalar::ZERO {
             // `line` and `segment` are not just parallel, but coincident!
-            return Some(LineSegmentIntersection::Coincident);
+            return Some(Self::Coincident);
         }
 
         if n_dot_direction == Scalar::ZERO {
@@ -52,7 +49,7 @@ impl LineSegmentIntersection {
             return None;
         }
 
-        Some(LineSegmentIntersection::PointOnLine(t))
+        Some(Self::PointOnLine(t))
     }
 }
 
