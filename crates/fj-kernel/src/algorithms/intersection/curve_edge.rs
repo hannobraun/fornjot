@@ -1,7 +1,8 @@
 use fj_math::{Point, Segment};
-use parry2d_f64::query::{Ray, RayCast};
 
 use crate::objects::{Curve, Edge};
+
+use super::LineSegmentIntersection;
 
 /// The intersection between a [`Curve`] and an [`Edge`], in curve coordinates
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -14,11 +15,8 @@ pub enum CurveEdgeIntersection {
 
     /// The edge lies on the curve
     Coincident {
-        /// The first vertex of the edge, in curve coordinates
-        a_on_curve: Point<1>,
-
-        /// The second vertex of the edge, in curve coordinates
-        b_on_curve: Point<1>,
+        /// The end points of the edge, in curve coordinates on the curve
+        points_on_curve: [Point<1>; 2],
     },
 }
 
@@ -36,66 +34,41 @@ impl CurveEdgeIntersection {
             _ => todo!("Curve-edge intersection only supports lines"),
         };
 
-        let edge_curve_as_line = match edge.curve().local_form() {
-            Curve::Line(line) => line,
-            _ => {
-                todo!("Curve-edge intersection only supports line segments")
+        let edge_as_segment = {
+            let edge_curve_as_line = match edge.curve().local_form() {
+                Curve::Line(line) => line,
+                _ => {
+                    todo!("Curve-edge intersection only supports line segments")
+                }
+            };
+
+            let edge_vertices = match edge.vertices().get() {
+                Some(vertices) => vertices.map(|vertex| {
+                    edge_curve_as_line.point_from_line_coords(vertex.position())
+                }),
+                None => todo!(
+                    "Curve-edge intersection does not support continuous edges"
+                ),
+            };
+
+            Segment::from_points(edge_vertices)
+        };
+
+        let intersection =
+            LineSegmentIntersection::compute(curve_as_line, &edge_as_segment)?;
+
+        let intersection = match intersection {
+            LineSegmentIntersection::Point { point_on_line } => Self::Point {
+                point_on_curve: point_on_line,
+            },
+            LineSegmentIntersection::Coincident { points_on_line } => {
+                Self::Coincident {
+                    points_on_curve: points_on_line,
+                }
             }
         };
 
-        let edge_vertices = match edge.vertices().get() {
-            Some(vertices) => vertices.map(|vertex| {
-                edge_curve_as_line.point_from_line_coords(vertex.position())
-            }),
-            None => todo!(
-                "Curve-edge intersection does not support continuous edges"
-            ),
-        };
-
-        let edge_as_segment = Segment::from_points(edge_vertices);
-
-        if curve_as_line.is_coincident_with(edge_curve_as_line) {
-            let [a_on_curve, b_on_curve] = edge_vertices
-                .map(|vertex| curve_as_line.point_to_line_coords(vertex));
-
-            return Some(Self::Coincident {
-                a_on_curve,
-                b_on_curve,
-            });
-        }
-
-        let ray = Ray {
-            origin: curve_as_line.origin.to_na(),
-            dir: curve_as_line.direction.to_na(),
-        };
-        let ray_inv = Ray {
-            origin: curve_as_line.origin.to_na(),
-            dir: -curve_as_line.direction.to_na(),
-        };
-
-        let result = edge_as_segment.to_parry().cast_local_ray(
-            &ray,
-            f64::INFINITY,
-            false,
-        );
-        let result_inv = edge_as_segment.to_parry().cast_local_ray(
-            &ray_inv,
-            f64::INFINITY,
-            false,
-        );
-
-        if let Some(result) = result {
-            return Some(Self::Point {
-                point_on_curve: Point::from([result]),
-            });
-        }
-        if let Some(result_inv) = result_inv {
-            return Some(Self::Point {
-                point_on_curve: Point::from([-result_inv]),
-            });
-        }
-
-        None
+        Some(intersection)
     }
 }
 
@@ -165,8 +138,7 @@ mod tests {
         assert_eq!(
             intersection,
             Some(CurveEdgeIntersection::Coincident {
-                a_on_curve: Point::from([-1.]),
-                b_on_curve: Point::from([1.]),
+                points_on_curve: [Point::from([-1.]), Point::from([1.]),]
             })
         );
     }
