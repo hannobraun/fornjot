@@ -14,10 +14,7 @@ pub struct SurfaceSurfaceIntersection {
 
 impl SurfaceSurfaceIntersection {
     /// Test intersection between two surfaces
-    pub fn surface_surface(
-        a: &Surface,
-        b: &Surface,
-    ) -> Option<SurfaceSurfaceIntersection> {
+    pub fn surface_surface(a: &Surface, b: &Surface) -> Option<Self> {
         // Algorithm from Real-Time Collision Detection by Christer Ericson. See
         // section 5.4.4, Intersection of Two Planes.
         //
@@ -55,7 +52,7 @@ impl SurfaceSurfaceIntersection {
         let curve_b = project_line_into_plane(&line, &b_parametric);
         let curve_global = Curve::Line(Line { origin, direction });
 
-        Some(SurfaceSurfaceIntersection {
+        Some(Self {
             local_intersection_curves: [curve_a, curve_b],
             global_intersection_curve: curve_global,
         })
