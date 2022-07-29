@@ -14,7 +14,7 @@ pub enum LineSegmentIntersection {
 
 impl LineSegmentIntersection {
     /// Determine the intersection between a [`Line`] and a [`Segment`]
-    pub fn line_segment(line: &Line<2>, segment: &Segment<2>) -> Option<Self> {
+    pub fn compute(line: &Line<2>, segment: &Segment<2>) -> Option<Self> {
         // Algorithm adapted from Real-Time Collision Detection by Christer
         // Ericson. See section 5.1.9.1, 2D Segment Intersection.
 
@@ -68,7 +68,7 @@ mod tests {
 
         // regular hit
         assert_eq!(
-            LineSegmentIntersection::line_segment(
+            LineSegmentIntersection::compute(
                 &line,
                 &Segment::from_points([[1., -1.], [1., 1.]]),
             ),
@@ -77,7 +77,7 @@ mod tests {
 
         // hit, where line and segment are parallel
         assert_eq!(
-            LineSegmentIntersection::line_segment(
+            LineSegmentIntersection::compute(
                 &line,
                 &Segment::from_points([[1., 0.], [2., 0.]]),
             ),
@@ -86,7 +86,7 @@ mod tests {
 
         // segment above line
         assert_eq!(
-            LineSegmentIntersection::line_segment(
+            LineSegmentIntersection::compute(
                 &line,
                 &Segment::from_points([[1., 1.], [1., 2.]]),
             ),
@@ -95,7 +95,7 @@ mod tests {
 
         // segment below line
         assert_eq!(
-            LineSegmentIntersection::line_segment(
+            LineSegmentIntersection::compute(
                 &line,
                 &Segment::from_points([[1., -2.], [1., -1.]]),
             ),
@@ -104,7 +104,7 @@ mod tests {
 
         // segment parallel to line
         assert_eq!(
-            LineSegmentIntersection::line_segment(
+            LineSegmentIntersection::compute(
                 &line,
                 &Segment::from_points([[-1., 1.], [1., 1.]]),
             ),
