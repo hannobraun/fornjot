@@ -3,8 +3,8 @@
 use std::collections::VecDeque;
 
 use crate::objects::{
-    Cycle, Edge, Face, GlobalCurve, GlobalVertex, Sketch, Solid, Surface,
-    Vertex,
+    Curve, Cycle, Edge, Face, GlobalCurve, GlobalVertex, Sketch, Solid,
+    Surface, Vertex,
 };
 
 /// Access iterators over all objects of a shape, or part of it
@@ -14,6 +14,17 @@ use crate::objects::{
 pub trait ObjectIters<'r> {
     /// Return all objects that this one references
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters>;
+
+    /// Iterate over all curves
+    fn curve_iter(&'r self) -> Iter<&'r Curve> {
+        let mut iter = Iter::empty();
+
+        for object in self.referenced_objects() {
+            iter = iter.with(object.curve_iter());
+        }
+
+        iter
+    }
 
     /// Iterate over all cycles
     fn cycle_iter(&'r self) -> Iter<&'r Cycle> {
@@ -115,6 +126,16 @@ pub trait ObjectIters<'r> {
     }
 }
 
+impl<'r> ObjectIters<'r> for Curve {
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
+        vec![self.global() as &dyn ObjectIters]
+    }
+
+    fn curve_iter(&'r self) -> Iter<&'r Curve> {
+        Iter::from_object(self)
+    }
+}
+
 impl<'r> ObjectIters<'r> for Cycle {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
         let mut objects = Vec::new();
@@ -133,7 +154,7 @@ impl<'r> ObjectIters<'r> for Cycle {
 
 impl<'r> ObjectIters<'r> for Edge {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
-        let mut objects = vec![self.curve().global_form() as &dyn ObjectIters];
+        let mut objects = vec![self.curve() as &dyn ObjectIters];
 
         for vertex in self.vertices().iter() {
             objects.push(vertex);

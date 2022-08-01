@@ -35,7 +35,7 @@ impl CurveEdgeIntersection {
         };
 
         let edge_as_segment = {
-            let edge_curve_as_line = match edge.curve().local_form() {
+            let edge_curve_as_line = match edge.curve().kind() {
                 CurveKind::Line(line) => line,
                 _ => {
                     todo!("Curve-edge intersection only supports line segments")

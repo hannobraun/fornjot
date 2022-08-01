@@ -2,7 +2,7 @@
 
 use fj_math::Point;
 
-use crate::objects::{CurveKind, GlobalCurve};
+use crate::objects::{Curve, GlobalCurve};
 
 /// A wrapper around the local and global forms of a type
 ///
@@ -50,7 +50,7 @@ pub trait LocalForm {
     type GlobalForm;
 }
 
-impl LocalForm for CurveKind<2> {
+impl LocalForm for Curve {
     type GlobalForm = GlobalCurve;
 }
 

@@ -130,9 +130,9 @@ mod tests {
     use fj_math::{Point, Scalar};
 
     use crate::{
-        local::Local,
         objects::{
-            CurveKind, Edge, GlobalCurve, GlobalVertex, Vertex, VerticesOfEdge,
+            Curve, CurveKind, Edge, GlobalCurve, GlobalVertex, Vertex,
+            VerticesOfEdge,
         },
         validation::{validate, ValidationConfig, ValidationError},
     };
@@ -146,7 +146,7 @@ mod tests {
             let curve_local = CurveKind::line_from_points([[0., 0.], [1., 0.]]);
             let curve_global =
                 GlobalCurve::from_kind(CurveKind::line_from_points([a, b]));
-            Local::new(curve_local, curve_global)
+            Curve::new(curve_local, curve_global)
         };
 
         let a = GlobalVertex::from_position(a);

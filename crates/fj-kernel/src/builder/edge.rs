@@ -1,11 +1,8 @@
 use fj_math::{Circle, Line, Point, Scalar, Vector};
 
-use crate::{
-    local::Local,
-    objects::{
-        CurveKind, Edge, GlobalCurve, GlobalVertex, Surface, Vertex,
-        VerticesOfEdge,
-    },
+use crate::objects::{
+    Curve, CurveKind, Edge, GlobalCurve, GlobalVertex, Surface, Vertex,
+    VerticesOfEdge,
 };
 
 /// API for building an [`Edge`]
@@ -26,7 +23,7 @@ impl EdgeBuilder {
         }));
 
         Edge::new(
-            Local::new(curve_local, curve_global),
+            Curve::new(curve_local, curve_global),
             VerticesOfEdge::none(),
         )
     }
@@ -61,7 +58,7 @@ impl EdgeBuilder {
         };
 
         Edge::new(
-            Local::new(curve_local, curve_global),
+            Curve::new(curve_local, curve_global),
             VerticesOfEdge::from_vertices(vertices),
         )
     }

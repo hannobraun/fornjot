@@ -1,5 +1,29 @@
 use fj_math::{Circle, Line, Point, Transform, Vector};
 
+/// A curve, defined in local surface coordinates
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct Curve {
+    kind: CurveKind<2>,
+    global: GlobalCurve,
+}
+
+impl Curve {
+    /// Construct a new instance of `Curve`
+    pub fn new(kind: CurveKind<2>, global: GlobalCurve) -> Self {
+        Self { kind, global }
+    }
+
+    /// Access the kind of this curve
+    pub fn kind(&self) -> &CurveKind<2> {
+        &self.kind
+    }
+
+    /// Access the global form of this curve
+    pub fn global(&self) -> &GlobalCurve {
+        &self.global
+    }
+}
+
 /// A curve, defined in global (3D) coordinates
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalCurve {
