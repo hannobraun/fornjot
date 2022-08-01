@@ -15,7 +15,7 @@ pub trait ObjectIters<'r> {
     /// Return all objects that this one references
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters>;
 
-    /// Iterate over all curves
+    /// Iterate over all global curves
     fn global_curve_iter(&'r self) -> Iter<&'r GlobalCurve> {
         let mut iter = Iter::empty();
 
