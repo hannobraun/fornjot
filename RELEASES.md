@@ -12,8 +12,7 @@ We need to make the release announcement available on the website, without publi
 1. Create directory for release announcement. Copy previous one and adapt name.
 2. Update `title` key in the Markdown front matter.
 3. Remove the `date` key.
-4. Add a `path` key to explicitly specify the path of the announcement.
-5. Update the `extra.version` key.
+4. Update the `extra.version` key.
 
 
 ## 2. Write release announcement
@@ -52,10 +51,10 @@ Potential new issues of the week:
 - https://github.com/hannobraun/Fornjot/issues/805
 - https://github.com/hannobraun/Fornjot/issues/847
 - https://github.com/hannobraun/Fornjot/issues/848
-- https://github.com/hannobraun/Fornjot/issues/850
 
 Already mentioned issues of the week (remove, once closed):
 
+- 2022-08-01: https://github.com/hannobraun/Fornjot/issues/883
 - 2022-07-25: https://github.com/hannobraun/Fornjot/issues/856
 - 2022-07-18: https://github.com/hannobraun/Fornjot/issues/815
 - 2022-07-11: https://github.com/hannobraun/Fornjot/issues/793
@@ -102,12 +101,7 @@ Add note up top, linking to the release announcement on the website.
 
 ## 8. Finish publishing release announcement
 
-To publish the release on the website properly, do the following:
-
-1. Add a `date` key to the front matter.
-2. Remove the `path` key.
-
-Now the announcement should show up on the blog page and the Atom/RSS feed.
+To publish the release on the website properly, add a `date` key to the front matter. Now the announcement should show up on the blog page and the Atom/RSS feed.
 
 Deploy the announcement to the website.
 
