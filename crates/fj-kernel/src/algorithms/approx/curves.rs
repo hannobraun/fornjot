@@ -2,12 +2,9 @@ use std::cmp::max;
 
 use fj_math::{Circle, Point, Scalar};
 
-use crate::{
-    local::Local,
-    objects::{CurveKind, GlobalCurve},
-};
+use crate::objects::{CurveKind, GlobalCurve};
 
-use super::Tolerance;
+use super::{Local, Tolerance};
 
 /// Compute an approximation of the curve
 ///

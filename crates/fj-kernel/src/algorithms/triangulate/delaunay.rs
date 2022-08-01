@@ -1,7 +1,7 @@
 use fj_math::{Point, Scalar, Triangle, Winding};
 use spade::HasPosition;
 
-use crate::local::Local;
+use crate::algorithms::approx::Local;
 
 /// Create a Delaunay triangulation of all points
 pub fn triangulate(points: Vec<Local<Point<2>>>) -> Vec<[Local<Point<2>>; 3]> {
