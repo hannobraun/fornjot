@@ -1,5 +1,66 @@
 # Fornjot - Changelog
 
+## v0.10.0 (2022-08-01)
+
+### End-user improvements
+
+Improvements to Fornjot and its documentation that are visible to end-users.
+
+- Add `--version` argument ([#868]; thank you, [@Michael-F-Bryan]!)
+- Improve README ([#877], [#882])
+
+
+### Ecosystem improvements
+
+Improvements to the Fornjot ecosystem that are relevant to developers who are building on top of Fornjot components.
+
+#### `fj-interop`
+
+- Re-use `fj_math::Triangle` in `fj_interop::mesh` ([#886])
+
+#### `fj-kernel`
+
+- Improve wording in doc comment ([#880])
+- Clean up API of object types ([#881], [#891])
+- Implement curve/edge intersection ([#884], [#888], [#889])
+- Clean up surface/surface intersection ([#890])
+
+#### `fj-math`
+
+- Make `Triangle::from_points` fallible; add `Line::is_coincident_with` ([#887])
+
+
+### Internal Improvements
+
+Improvements that are relevant to developers working on Fornjot itself.
+
+- Update dependencies ([#870], [#871], [#872], [#873], [#874], [#876])
+- Update release procedure ([#875], [#879])
+
+[#868]: https://github.com/hannobraun/Fornjot/pull/868
+[#870]: https://github.com/hannobraun/Fornjot/pull/870
+[#871]: https://github.com/hannobraun/Fornjot/pull/871
+[#872]: https://github.com/hannobraun/Fornjot/pull/872
+[#873]: https://github.com/hannobraun/Fornjot/pull/873
+[#874]: https://github.com/hannobraun/Fornjot/pull/874
+[#875]: https://github.com/hannobraun/Fornjot/pull/875
+[#876]: https://github.com/hannobraun/Fornjot/pull/876
+[#877]: https://github.com/hannobraun/Fornjot/pull/877
+[#879]: https://github.com/hannobraun/Fornjot/pull/879
+[#880]: https://github.com/hannobraun/Fornjot/pull/880
+[#881]: https://github.com/hannobraun/Fornjot/pull/881
+[#882]: https://github.com/hannobraun/Fornjot/pull/882
+[#884]: https://github.com/hannobraun/Fornjot/pull/884
+[#886]: https://github.com/hannobraun/Fornjot/pull/886
+[#887]: https://github.com/hannobraun/Fornjot/pull/887
+[#888]: https://github.com/hannobraun/Fornjot/pull/888
+[#889]: https://github.com/hannobraun/Fornjot/pull/889
+[#890]: https://github.com/hannobraun/Fornjot/pull/890
+[#891]: https://github.com/hannobraun/Fornjot/pull/891
+
+[@Michael-F-Bryan]: https://github.com/Michael-F-Bryan
+
+
 ## v0.9.0 (2022-07-25)
 
 ### End-user improvements
