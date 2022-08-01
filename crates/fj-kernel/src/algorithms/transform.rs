@@ -35,13 +35,6 @@ pub trait TransformObject: Sized {
     }
 }
 
-impl TransformObject for GlobalCurve {
-    fn transform(self, transform: &Transform) -> Self {
-        let kind = self.kind().transform(transform);
-        GlobalCurve::from_kind(kind)
-    }
-}
-
 impl TransformObject for Cycle {
     fn transform(self, transform: &Transform) -> Self {
         Self::new()
@@ -87,6 +80,13 @@ impl TransformObject for Face {
             .with_exteriors(exteriors)
             .with_interiors(interiors)
             .with_color(color)
+    }
+}
+
+impl TransformObject for GlobalCurve {
+    fn transform(self, transform: &Transform) -> Self {
+        let kind = self.kind().transform(transform);
+        GlobalCurve::from_kind(kind)
     }
 }
 
