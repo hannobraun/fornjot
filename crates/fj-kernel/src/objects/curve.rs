@@ -1,5 +1,3 @@
-use std::fmt;
-
 use fj_math::{Circle, Line, Point, Vector};
 
 /// A one-dimensional shape
@@ -111,14 +109,5 @@ impl CurveKind<3> {
             origin: Point::origin(),
             direction: Vector::unit_z(),
         })
-    }
-}
-
-impl<const D: usize> fmt::Display for CurveKind<D> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Self::Circle(curve) => write!(f, "{:?}", curve),
-            Self::Line(curve) => write!(f, "{:?}", curve),
-        }
     }
 }

@@ -51,7 +51,7 @@ impl fmt::Display for Edge {
             None => write!(f, "continuous edge")?,
         }
 
-        write!(f, " on {}", self.curve().global_form())?;
+        write!(f, " on {:?}", self.curve().global_form())?;
 
         Ok(())
     }
