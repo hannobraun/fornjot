@@ -2,8 +2,6 @@
 
 use fj_math::Point;
 
-use crate::objects::{Curve, GlobalCurve};
-
 /// A wrapper around the local and global forms of a type
 ///
 /// The local form is whatever representation of the value that is most
@@ -48,10 +46,6 @@ impl<T: LocalForm> Local<T> {
 pub trait LocalForm {
     /// The global form of the implementing type
     type GlobalForm;
-}
-
-impl LocalForm for Curve {
-    type GlobalForm = GlobalCurve;
 }
 
 impl LocalForm for Point<1> {
