@@ -1,13 +1,13 @@
 use std::fmt;
 
-use crate::{builder::EdgeBuilder, local::Local};
+use crate::builder::EdgeBuilder;
 
 use super::{Curve, Vertex};
 
 /// An edge of a shape
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edge {
-    curve: Local<Curve<2>>,
+    curve: Curve,
     vertices: VerticesOfEdge,
 }
 
@@ -18,7 +18,7 @@ impl Edge {
     }
 
     /// Create a new instance
-    pub fn new(curve: Local<Curve<2>>, vertices: VerticesOfEdge) -> Self {
+    pub fn new(curve: Curve, vertices: VerticesOfEdge) -> Self {
         Self { curve, vertices }
     }
 
@@ -27,7 +27,7 @@ impl Edge {
     /// The edge can be a segment of the curve that is bounded by two vertices,
     /// or if the curve is continuous (i.e. connects to itself), the edge could
     /// be defined by the whole curve, and have no bounding vertices.
-    pub fn curve(&self) -> &Local<Curve<2>> {
+    pub fn curve(&self) -> &Curve {
         &self.curve
     }
 
@@ -51,7 +51,7 @@ impl fmt::Display for Edge {
             None => write!(f, "continuous edge")?,
         }
 
-        write!(f, " on {}", self.curve().global_form())?;
+        write!(f, " on {:?}", self.curve().global())?;
 
         Ok(())
     }

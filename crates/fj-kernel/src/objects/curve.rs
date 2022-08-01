@@ -1,6 +1,46 @@
-use std::fmt;
+use fj_math::{Circle, Line, Point, Transform, Vector};
 
-use fj_math::{Circle, Line, Point, Vector};
+/// A curve, defined in local surface coordinates
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct Curve {
+    kind: CurveKind<2>,
+    global: GlobalCurve,
+}
+
+impl Curve {
+    /// Construct a new instance of `Curve`
+    pub fn new(kind: CurveKind<2>, global: GlobalCurve) -> Self {
+        Self { kind, global }
+    }
+
+    /// Access the kind of this curve
+    pub fn kind(&self) -> &CurveKind<2> {
+        &self.kind
+    }
+
+    /// Access the global form of this curve
+    pub fn global(&self) -> &GlobalCurve {
+        &self.global
+    }
+}
+
+/// A curve, defined in global (3D) coordinates
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct GlobalCurve {
+    kind: CurveKind<3>,
+}
+
+impl GlobalCurve {
+    /// Construct a `GlobalCurve` from a [`CurveKind<3>`]
+    pub fn from_kind(kind: CurveKind<3>) -> Self {
+        Self { kind }
+    }
+
+    /// Access the kind of this curve
+    pub fn kind(&self) -> &CurveKind<3> {
+        &self.kind
+    }
+}
 
 /// A one-dimensional shape
 ///
@@ -16,7 +56,7 @@ use fj_math::{Circle, Line, Point, Vector};
 /// Typically, only `2` or `3` make sense, which means the curve is defined on
 /// a surface or in a space, respectively.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub enum Curve<const D: usize> {
+pub enum CurveKind<const D: usize> {
     /// A circle
     Circle(Circle<D>),
 
@@ -24,7 +64,7 @@ pub enum Curve<const D: usize> {
     Line(Line<D>),
 }
 
-impl<const D: usize> Curve<D> {
+impl<const D: usize> CurveKind<D> {
     /// Construct a line from two points
     pub fn line_from_points(points: [impl Into<Point<D>>; 2]) -> Self {
         Self::Line(Line::from_points(points))
@@ -70,7 +110,7 @@ impl<const D: usize> Curve<D> {
     }
 }
 
-impl Curve<2> {
+impl CurveKind<2> {
     /// Construct a `Curve` that represents the u-axis
     pub fn u_axis() -> Self {
         Self::Line(Line {
@@ -88,7 +128,7 @@ impl Curve<2> {
     }
 }
 
-impl Curve<3> {
+impl CurveKind<3> {
     /// Construct a `Curve` that represents the x-axis
     pub fn x_axis() -> Self {
         Self::Line(Line {
@@ -112,13 +152,17 @@ impl Curve<3> {
             direction: Vector::unit_z(),
         })
     }
-}
 
-impl<const D: usize> fmt::Display for Curve<D> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    /// Transform the surface
+    #[must_use]
+    pub fn transform(self, transform: &Transform) -> Self {
         match self {
-            Self::Circle(curve) => write!(f, "{:?}", curve),
-            Self::Line(curve) => write!(f, "{:?}", curve),
+            CurveKind::Circle(curve) => {
+                CurveKind::Circle(transform.transform_circle(&curve))
+            }
+            CurveKind::Line(curve) => {
+                CurveKind::Line(transform.transform_line(&curve))
+            }
         }
     }
 }

@@ -1,8 +1,8 @@
 use fj_math::{Circle, Line, Point, Scalar, Vector};
 
-use crate::{
-    local::Local,
-    objects::{Curve, Edge, GlobalVertex, Surface, Vertex, VerticesOfEdge},
+use crate::objects::{
+    Curve, CurveKind, Edge, GlobalCurve, GlobalVertex, Surface, Vertex,
+    VerticesOfEdge,
 };
 
 /// API for building an [`Edge`]
@@ -11,19 +11,19 @@ pub struct EdgeBuilder;
 impl EdgeBuilder {
     /// Create a circle from the given radius
     pub fn circle_from_radius(&self, radius: Scalar) -> Edge {
-        let curve_local = Curve::Circle(Circle {
+        let curve_local = CurveKind::Circle(Circle {
             center: Point::origin(),
             a: Vector::from([radius, Scalar::ZERO]),
             b: Vector::from([Scalar::ZERO, radius]),
         });
-        let curve_canonical = Curve::Circle(Circle {
+        let curve_global = GlobalCurve::from_kind(CurveKind::Circle(Circle {
             center: Point::origin(),
             a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
             b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
-        });
+        }));
 
         Edge::new(
-            Local::new(curve_local, curve_canonical),
+            Curve::new(curve_local, curve_global),
             VerticesOfEdge::none(),
         )
     }
@@ -41,11 +41,12 @@ impl EdgeBuilder {
             GlobalVertex::from_position(position)
         });
 
-        let curve_local = Curve::Line(Line::from_points(points));
-        let curve_canonical = {
+        let curve_local = CurveKind::Line(Line::from_points(points));
+        let curve_global = {
             let points =
                 global_vertices.map(|global_vertex| global_vertex.position());
-            Curve::Line(Line::from_points(points))
+            let kind = CurveKind::Line(Line::from_points(points));
+            GlobalCurve::from_kind(kind)
         };
 
         let vertices = {
@@ -57,7 +58,7 @@ impl EdgeBuilder {
         };
 
         Edge::new(
-            Local::new(curve_local, curve_canonical),
+            Curve::new(curve_local, curve_global),
             VerticesOfEdge::from_vertices(vertices),
         )
     }

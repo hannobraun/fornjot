@@ -21,17 +21,13 @@ impl CycleApprox {
 
         for edge in cycle.edges() {
             let mut edge_points = Vec::new();
-            approx_curve(
-                edge.curve().global_form(),
-                tolerance,
-                &mut edge_points,
-            );
+            approx_curve(edge.curve().global(), tolerance, &mut edge_points);
             approx_edge(*edge.vertices(), &mut edge_points);
 
             points.extend(edge_points.into_iter().map(|point| {
                 let local = edge
                     .curve()
-                    .local_form()
+                    .kind()
                     .point_from_curve_coords(*point.local_form());
                 Local::new(local, *point.global_form())
             }));

@@ -3,10 +3,9 @@ use fj_math::{Point, Scalar, Transform, Triangle, Vector};
 
 use crate::{
     iter::ObjectIters,
-    local::Local,
     objects::{
-        Curve, Cycle, Edge, Face, GlobalVertex, Sketch, Solid, Surface, Vertex,
-        VerticesOfEdge,
+        Curve, CurveKind, Cycle, Edge, Face, GlobalCurve, GlobalVertex, Sketch,
+        Solid, Surface, Vertex, VerticesOfEdge,
     },
 };
 
@@ -140,12 +139,13 @@ fn create_non_continuous_side_face(
             let [a, b] = [&vertices[0], &vertices[1]];
 
             let curve = {
-                let local = Curve::line_from_points([a.0, b.0]);
+                let local = CurveKind::line_from_points([a.0, b.0]);
 
                 let global = [a, b].map(|vertex| vertex.1.position());
-                let global = Curve::line_from_points(global);
+                let global =
+                    GlobalCurve::from_kind(CurveKind::line_from_points(global));
 
-                Local::new(local, global)
+                Curve::new(local, global)
             };
 
             let vertices = VerticesOfEdge::from_vertices([

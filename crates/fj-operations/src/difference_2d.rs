@@ -2,8 +2,7 @@ use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
     algorithms::Tolerance,
     iter::ObjectIters,
-    local::Local,
-    objects::{Cycle, Edge, Face, Sketch},
+    objects::{Curve, Cycle, Edge, Face, GlobalCurve, Sketch},
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
@@ -94,16 +93,16 @@ fn add_cycle(cycle: Cycle, reverse: bool) -> Cycle {
     let mut edges = Vec::new();
     for edge in cycle.edges() {
         let curve_local = if reverse {
-            edge.curve().local_form().reverse()
+            edge.curve().kind().reverse()
         } else {
-            *edge.curve().local_form()
+            *edge.curve().kind()
         };
 
-        let curve_global = if reverse {
-            edge.curve().global_form().reverse()
+        let curve_global = GlobalCurve::from_kind(if reverse {
+            edge.curve().global().kind().reverse()
         } else {
-            *edge.curve().global_form()
-        };
+            *edge.curve().global().kind()
+        });
 
         let vertices = if reverse {
             edge.vertices().reverse()
@@ -111,7 +110,7 @@ fn add_cycle(cycle: Cycle, reverse: bool) -> Cycle {
             *edge.vertices()
         };
 
-        let edge = Edge::new(Local::new(curve_local, curve_global), vertices);
+        let edge = Edge::new(Curve::new(curve_local, curve_global), vertices);
 
         edges.push(edge);
     }

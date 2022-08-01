@@ -2,7 +2,10 @@ use std::cmp::max;
 
 use fj_math::{Circle, Point, Scalar};
 
-use crate::{local::Local, objects::Curve};
+use crate::{
+    local::Local,
+    objects::{CurveKind, GlobalCurve},
+};
 
 use super::Tolerance;
 
@@ -21,13 +24,13 @@ use super::Tolerance;
 /// The `approximate_between` methods of the curves then need to make sure to
 /// only return points in between those vertices, not the vertices themselves.
 pub fn approx_curve(
-    curve: &Curve<3>,
+    curve: &GlobalCurve,
     tolerance: Tolerance,
     out: &mut Vec<Local<Point<1>>>,
 ) {
-    match curve {
-        Curve::Circle(curve) => approx_circle(curve, tolerance, out),
-        Curve::Line(_) => {}
+    match curve.kind() {
+        CurveKind::Circle(curve) => approx_circle(curve, tolerance, out),
+        CurveKind::Line(_) => {}
     }
 }
 

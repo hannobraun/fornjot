@@ -1,10 +1,8 @@
 use fj_math::{Transform, Vector};
 
-use crate::{
-    local::Local,
-    objects::{
-        Curve, Cycle, Edge, Face, GlobalVertex, Sketch, Solid, Surface, Vertex,
-    },
+use crate::objects::{
+    Curve, Cycle, Edge, Face, GlobalCurve, GlobalVertex, Sketch, Solid,
+    Surface, Vertex,
 };
 
 /// Transform an object
@@ -34,14 +32,12 @@ pub trait TransformObject: Sized {
     }
 }
 
-impl TransformObject for Curve<3> {
+impl TransformObject for Curve {
     fn transform(self, transform: &Transform) -> Self {
-        match self {
-            Self::Circle(curve) => {
-                Self::Circle(transform.transform_circle(&curve))
-            }
-            Self::Line(curve) => Self::Line(transform.transform_line(&curve)),
-        }
+        // Don't need to transform `self.kind`, as that's in local form.
+        let global = self.global().transform(transform);
+
+        Curve::new(*self.kind(), global)
     }
 }
 
@@ -54,9 +50,9 @@ impl TransformObject for Cycle {
 
 impl TransformObject for Edge {
     fn transform(self, transform: &Transform) -> Self {
-        let curve = Local::new(
-            *self.curve().local_form(),
-            self.curve().global_form().transform(transform),
+        let curve = Curve::new(
+            *self.curve().kind(),
+            self.curve().global().transform(transform),
         );
 
         let vertices =
@@ -90,6 +86,13 @@ impl TransformObject for Face {
             .with_exteriors(exteriors)
             .with_interiors(interiors)
             .with_color(color)
+    }
+}
+
+impl TransformObject for GlobalCurve {
+    fn transform(self, transform: &Transform) -> Self {
+        let kind = self.kind().transform(transform);
+        GlobalCurve::from_kind(kind)
     }
 }
 

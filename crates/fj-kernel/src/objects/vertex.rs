@@ -61,7 +61,7 @@ pub struct GlobalVertex {
 }
 
 impl GlobalVertex {
-    /// Construct a `Vertex` from a point
+    /// Construct a `GlobalVertex` from a point
     pub fn from_position(position: impl Into<Point<3>>) -> Self {
         let position = position.into();
         Self { position }
