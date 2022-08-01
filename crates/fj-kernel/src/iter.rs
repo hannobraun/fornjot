@@ -305,7 +305,7 @@ mod tests {
     use super::ObjectIters as _;
 
     #[test]
-    fn curve() {
+    fn global_curve() {
         let object = GlobalCurve::from_kind(CurveKind::x_axis());
 
         assert_eq!(1, object.global_curve_iter().count());
