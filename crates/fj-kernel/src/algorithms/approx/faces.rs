@@ -2,9 +2,9 @@ use std::collections::HashSet;
 
 use fj_math::Point;
 
-use crate::{local::Local, objects::Face};
+use crate::objects::Face;
 
-use super::{CycleApprox, Tolerance};
+use super::{CycleApprox, Local, Tolerance};
 
 /// An approximation of a [`Face`]
 #[derive(Debug, PartialEq)]
@@ -84,7 +84,7 @@ mod tests {
     use map_macro::set;
 
     use crate::{
-        local::Local,
+        algorithms::approx::Local,
         objects::{Face, Surface},
     };
 

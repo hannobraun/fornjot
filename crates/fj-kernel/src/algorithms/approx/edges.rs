@@ -1,6 +1,8 @@
 use fj_math::Point;
 
-use crate::{local::Local, objects::VerticesOfEdge};
+use crate::objects::VerticesOfEdge;
+
+use super::Local;
 
 pub fn approx_edge(
     vertices: VerticesOfEdge,
@@ -37,7 +39,7 @@ mod test {
     use fj_math::Point;
 
     use crate::{
-        local::Local,
+        algorithms::approx::Local,
         objects::{GlobalVertex, Vertex, VerticesOfEdge},
     };
 

@@ -1,8 +1,8 @@
 use fj_math::{Point, Segment};
 
-use crate::{local::Local, objects::Cycle};
+use crate::objects::Cycle;
 
-use super::{curves::approx_curve, edges::approx_edge, Tolerance};
+use super::{curves::approx_curve, edges::approx_edge, Local, Tolerance};
 
 /// An approximation of a [`Cycle`]
 #[derive(Debug, Eq, PartialEq, Hash)]
