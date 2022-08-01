@@ -142,8 +142,8 @@ mod tests {
 
         let curve = {
             let curve_local = CurveKind::line_from_points([[0., 0.], [1., 0.]]);
-            let curve_canonical = CurveKind::line_from_points([a, b]);
-            Local::new(curve_local, curve_canonical)
+            let curve_global = CurveKind::line_from_points([a, b]);
+            Local::new(curve_local, curve_global)
         };
 
         let a = GlobalVertex::from_position(a);

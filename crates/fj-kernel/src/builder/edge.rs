@@ -16,14 +16,14 @@ impl EdgeBuilder {
             a: Vector::from([radius, Scalar::ZERO]),
             b: Vector::from([Scalar::ZERO, radius]),
         });
-        let curve_canonical = CurveKind::Circle(Circle {
+        let curve_global = CurveKind::Circle(Circle {
             center: Point::origin(),
             a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
             b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
         });
 
         Edge::new(
-            Local::new(curve_local, curve_canonical),
+            Local::new(curve_local, curve_global),
             VerticesOfEdge::none(),
         )
     }
@@ -42,7 +42,7 @@ impl EdgeBuilder {
         });
 
         let curve_local = CurveKind::Line(Line::from_points(points));
-        let curve_canonical = {
+        let curve_global = {
             let points =
                 global_vertices.map(|global_vertex| global_vertex.position());
             CurveKind::Line(Line::from_points(points))
@@ -57,7 +57,7 @@ impl EdgeBuilder {
         };
 
         Edge::new(
-            Local::new(curve_local, curve_canonical),
+            Local::new(curve_local, curve_global),
             VerticesOfEdge::from_vertices(vertices),
         )
     }
