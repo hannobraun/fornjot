@@ -2,7 +2,10 @@ use fj_math::{Circle, Line, Point, Scalar, Vector};
 
 use crate::{
     local::Local,
-    objects::{CurveKind, Edge, GlobalVertex, Surface, Vertex, VerticesOfEdge},
+    objects::{
+        CurveKind, Edge, GlobalCurve, GlobalVertex, Surface, Vertex,
+        VerticesOfEdge,
+    },
 };
 
 /// API for building an [`Edge`]
@@ -16,11 +19,11 @@ impl EdgeBuilder {
             a: Vector::from([radius, Scalar::ZERO]),
             b: Vector::from([Scalar::ZERO, radius]),
         });
-        let curve_global = CurveKind::Circle(Circle {
+        let curve_global = GlobalCurve::from_kind(CurveKind::Circle(Circle {
             center: Point::origin(),
             a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
             b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
-        });
+        }));
 
         Edge::new(
             Local::new(curve_local, curve_global),
@@ -45,7 +48,8 @@ impl EdgeBuilder {
         let curve_global = {
             let points =
                 global_vertices.map(|global_vertex| global_vertex.position());
-            CurveKind::Line(Line::from_points(points))
+            let kind = CurveKind::Line(Line::from_points(points));
+            GlobalCurve::from_kind(kind)
         };
 
         let vertices = {

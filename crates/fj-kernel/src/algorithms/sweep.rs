@@ -5,8 +5,8 @@ use crate::{
     iter::ObjectIters,
     local::Local,
     objects::{
-        CurveKind, Cycle, Edge, Face, GlobalVertex, Sketch, Solid, Surface,
-        Vertex, VerticesOfEdge,
+        CurveKind, Cycle, Edge, Face, GlobalCurve, GlobalVertex, Sketch, Solid,
+        Surface, Vertex, VerticesOfEdge,
     },
 };
 
@@ -143,7 +143,8 @@ fn create_non_continuous_side_face(
                 let local = CurveKind::line_from_points([a.0, b.0]);
 
                 let global = [a, b].map(|vertex| vertex.1.position());
-                let global = CurveKind::line_from_points(global);
+                let global =
+                    GlobalCurve::from_kind(CurveKind::line_from_points(global));
 
                 Local::new(local, global)
             };

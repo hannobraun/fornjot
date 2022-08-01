@@ -1,7 +1,5 @@
 use fj_math::{Line, Point, Transform, Vector};
 
-use crate::algorithms::TransformObject;
-
 use super::CurveKind;
 
 /// A two-dimensional shape

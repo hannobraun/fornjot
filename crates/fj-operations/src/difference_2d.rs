@@ -3,7 +3,7 @@ use fj_kernel::{
     algorithms::Tolerance,
     iter::ObjectIters,
     local::Local,
-    objects::{Cycle, Edge, Face, Sketch},
+    objects::{Cycle, Edge, Face, GlobalCurve, Sketch},
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
@@ -99,11 +99,11 @@ fn add_cycle(cycle: Cycle, reverse: bool) -> Cycle {
             *edge.curve().local_form()
         };
 
-        let curve_global = if reverse {
-            edge.curve().global_form().reverse()
+        let curve_global = GlobalCurve::from_kind(if reverse {
+            edge.curve().global_form().kind().reverse()
         } else {
-            *edge.curve().global_form()
-        };
+            *edge.curve().global_form().kind()
+        });
 
         let vertices = if reverse {
             edge.vertices().reverse()

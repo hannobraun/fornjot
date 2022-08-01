@@ -1,4 +1,22 @@
-use fj_math::{Circle, Line, Point, Vector};
+use fj_math::{Circle, Line, Point, Transform, Vector};
+
+/// A curve, defined in global (3D) coordinates
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct GlobalCurve {
+    kind: CurveKind<3>,
+}
+
+impl GlobalCurve {
+    /// Construct a `GlobalCurve` from a [`CurveKind<3>`]
+    pub fn from_kind(kind: CurveKind<3>) -> Self {
+        Self { kind }
+    }
+
+    /// Access the kind of this curve
+    pub fn kind(&self) -> &CurveKind<3> {
+        &self.kind
+    }
+}
 
 /// A one-dimensional shape
 ///
@@ -109,5 +127,18 @@ impl CurveKind<3> {
             origin: Point::origin(),
             direction: Vector::unit_z(),
         })
+    }
+
+    /// Transform the surface
+    #[must_use]
+    pub fn transform(self, transform: &Transform) -> Self {
+        match self {
+            CurveKind::Circle(curve) => {
+                CurveKind::Circle(transform.transform_circle(&curve))
+            }
+            CurveKind::Line(curve) => {
+                CurveKind::Line(transform.transform_line(&curve))
+            }
+        }
     }
 }

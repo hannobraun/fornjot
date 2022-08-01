@@ -131,7 +131,9 @@ mod tests {
 
     use crate::{
         local::Local,
-        objects::{CurveKind, Edge, GlobalVertex, Vertex, VerticesOfEdge},
+        objects::{
+            CurveKind, Edge, GlobalCurve, GlobalVertex, Vertex, VerticesOfEdge,
+        },
         validation::{validate, ValidationConfig, ValidationError},
     };
 
@@ -142,7 +144,8 @@ mod tests {
 
         let curve = {
             let curve_local = CurveKind::line_from_points([[0., 0.], [1., 0.]]);
-            let curve_global = CurveKind::line_from_points([a, b]);
+            let curve_global =
+                GlobalCurve::from_kind(CurveKind::line_from_points([a, b]));
             Local::new(curve_local, curve_global)
         };
 
