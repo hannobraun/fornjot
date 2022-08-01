@@ -13,7 +13,7 @@ categories = ["encoding", "mathematics", "rendering"]
 
 
 [dependencies]
-anyhow = "1.0.58"
+anyhow = "1.0.59"
 
 [dependencies.clap]
 version = "3.2.14"
