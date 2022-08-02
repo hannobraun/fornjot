@@ -143,7 +143,7 @@ mod tests {
 
     use crate::{
         algorithms::TransformObject,
-        objects::{Curve, CurveKind, Surface},
+        objects::{Curve, Surface},
     };
 
     use super::SurfaceSurfaceIntersection;
@@ -165,7 +165,6 @@ mod tests {
 
         let expected_xy = Curve::build(xy).u_axis();
         let expected_xz = Curve::build(xz).u_axis();
-        let expected_global = CurveKind::x_axis();
 
         assert_eq!(
             SurfaceSurfaceIntersection::compute(&xy, &xz),
@@ -174,7 +173,7 @@ mod tests {
                     *expected_xy.kind(),
                     *expected_xz.kind()
                 ],
-                global_intersection_curve: expected_global,
+                global_intersection_curve: *expected_xy.global().kind(),
             })
         );
     }
