@@ -19,15 +19,11 @@ impl CurveFaceIntersection {
     ///
     /// This method is useful for test code.
     pub fn from_intervals(
-        intervals: impl IntoIterator<Item = [impl Into<Point<1>>; 2]>,
+        intervals: impl IntoIterator<
+            Item = impl Into<CurveFaceIntersectionInterval>,
+        >,
     ) -> Self {
-        let intervals = intervals
-            .into_iter()
-            .map(|interval| {
-                let [start, end] = interval.map(Into::into);
-                CurveFaceIntersectionInterval { start, end }
-            })
-            .collect();
+        let intervals = intervals.into_iter().map(Into::into).collect();
         Self { intervals }
     }
 
@@ -149,6 +145,16 @@ pub struct CurveFaceIntersectionInterval {
 
     /// The end of the intersection interval, in curve coordinates
     pub end: Point<1>,
+}
+
+impl<P> From<[P; 2]> for CurveFaceIntersectionInterval
+where
+    P: Into<Point<1>>,
+{
+    fn from(interval: [P; 2]) -> Self {
+        let [start, end] = interval.map(Into::into);
+        CurveFaceIntersectionInterval { start, end }
+    }
 }
 
 #[cfg(test)]
