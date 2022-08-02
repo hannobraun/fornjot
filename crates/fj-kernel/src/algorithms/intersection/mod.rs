@@ -7,7 +7,7 @@ mod surface_surface;
 
 pub use self::{
     curve_edge::CurveEdgeIntersection,
-    curve_face::{CurveFaceIntersection, CurveFaceIntersectionList},
+    curve_face::{CurveFaceIntersection, CurveFaceIntersectionInterval},
     line_segment::LineSegmentIntersection,
     surface_surface::SurfaceSurfaceIntersection,
 };

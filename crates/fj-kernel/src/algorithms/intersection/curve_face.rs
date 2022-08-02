@@ -9,21 +9,21 @@ use crate::{
 
 /// The intersections between a [`Curve`] and a [`Face`], in curve coordinates
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct CurveFaceIntersectionList {
-    intervals: Vec<CurveFaceIntersection>,
+pub struct CurveFaceIntersection {
+    /// The intervals where the curve and face intersect, in curve coordinates
+    pub intervals: Vec<CurveFaceIntersectionInterval>,
 }
 
-impl CurveFaceIntersectionList {
+impl CurveFaceIntersection {
     /// Create a new instance from the intersection intervals
     ///
     /// This method is useful for test code.
     pub fn from_intervals(
-        intervals: impl IntoIterator<Item = [impl Into<Point<1>>; 2]>,
+        intervals: impl IntoIterator<
+            Item = impl Into<CurveFaceIntersectionInterval>,
+        >,
     ) -> Self {
-        let intervals = intervals
-            .into_iter()
-            .map(|interval| interval.map(Into::into))
-            .collect();
+        let intervals = intervals.into_iter().map(Into::into).collect();
         Self { intervals }
     }
 
@@ -61,11 +61,14 @@ impl CurveFaceIntersectionList {
             .chunks(2)
             .map(|chunk| {
                 // Can't panic, as we passed `2` to `chunks`.
-                [chunk[0], chunk[1]]
+                CurveFaceIntersectionInterval {
+                    start: chunk[0],
+                    end: chunk[1],
+                }
             })
             .collect();
 
-        CurveFaceIntersectionList { intervals }
+        CurveFaceIntersection { intervals }
     }
 
     /// Merge this intersection list with another
@@ -73,47 +76,46 @@ impl CurveFaceIntersectionList {
     /// The merged list will contain all overlaps of the intervals from the two
     /// other lists.
     pub fn merge(&self, other: &Self) -> Self {
-        let mut self_ = self.intervals.iter().copied();
-        let mut other = other.intervals.iter().copied();
+        let mut self_intervals = self.intervals.iter().copied();
+        let mut other_interval = other.intervals.iter().copied();
 
-        let mut next_self = self_.next();
-        let mut next_other = other.next();
+        let mut next_self = self_intervals.next();
+        let mut next_other = other_interval.next();
 
         let mut intervals = Vec::new();
 
-        while let (
-            Some([self_start, self_end]),
-            Some([other_start, other_end]),
-        ) = (next_self, next_other)
-        {
+        while let (Some(self_), Some(other)) = (next_self, next_other) {
             // If we're starting another loop iteration, we have another
             // interval available from both `self` and `other` each. Only if
             // that's the case, is there a chance for an overlap.
 
             // Build the overlap of the two next intervals, by comparing them.
             // At this point we don't know yet, if this is a valid interval.
-            let overlap_start = self_start.max(other_start);
-            let overlap_end = self_end.min(other_end);
+            let overlap_start = self_.start.max(other.start);
+            let overlap_end = self_.end.min(other.end);
 
             if overlap_start < overlap_end {
                 // This is indeed a valid overlap. Add it to our list of
                 // results.
-                intervals.push([overlap_start, overlap_end]);
+                intervals.push(CurveFaceIntersectionInterval {
+                    start: overlap_start,
+                    end: overlap_end,
+                });
             }
 
             // Only if the end of the overlap interval has overtaken one of the
             // input ones are we done with it. An input interval that hasn't
             // been overtaken by the overlap, could still overlap with another
             // interval.
-            if self_end <= overlap_end {
+            if self_.end <= overlap_end {
                 // Current interval from `self` has been overtaken. Let's grab
                 // the next one.
-                next_self = self_.next();
+                next_self = self_intervals.next();
             }
-            if other_end <= overlap_end {
+            if other.end <= overlap_end {
                 // Current interval from `other` has been overtaken. Let's grab
                 // the next one.
-                next_other = other.next();
+                next_other = other_interval.next();
             }
         }
 
@@ -126,8 +128,8 @@ impl CurveFaceIntersectionList {
     }
 }
 
-impl IntoIterator for CurveFaceIntersectionList {
-    type Item = CurveFaceIntersection;
+impl IntoIterator for CurveFaceIntersection {
+    type Item = CurveFaceIntersectionInterval;
     type IntoIter = vec::IntoIter<Self::Item>;
 
     fn into_iter(self) -> Self::IntoIter {
@@ -135,14 +137,31 @@ impl IntoIterator for CurveFaceIntersectionList {
     }
 }
 
-/// An intersection between a curve and a face, in curve coordinates
-pub type CurveFaceIntersection = [Point<1>; 2];
+/// An intersection between a curve and a face
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct CurveFaceIntersectionInterval {
+    /// The start of the intersection interval, in curve coordinates
+    pub start: Point<1>,
+
+    /// The end of the intersection interval, in curve coordinates
+    pub end: Point<1>,
+}
+
+impl<P> From<[P; 2]> for CurveFaceIntersectionInterval
+where
+    P: Into<Point<1>>,
+{
+    fn from(interval: [P; 2]) -> Self {
+        let [start, end] = interval.map(Into::into);
+        CurveFaceIntersectionInterval { start, end }
+    }
+}
 
 #[cfg(test)]
 mod tests {
     use crate::objects::{Curve, Face, Surface};
 
-    use super::CurveFaceIntersectionList;
+    use super::CurveFaceIntersection;
 
     #[test]
     fn compute() {
@@ -170,16 +189,14 @@ mod tests {
             .polygon_from_points(exterior)
             .with_hole(interior);
 
-        let expected = CurveFaceIntersectionList::from_intervals([
-            [[1.], [2.]],
-            [[4.], [5.]],
-        ]);
-        assert_eq!(CurveFaceIntersectionList::compute(&curve, &face), expected);
+        let expected =
+            CurveFaceIntersection::from_intervals([[[1.], [2.]], [[4.], [5.]]]);
+        assert_eq!(CurveFaceIntersection::compute(&curve, &face), expected);
     }
 
     #[test]
     fn merge() {
-        let a = CurveFaceIntersectionList::from_intervals([
+        let a = CurveFaceIntersection::from_intervals([
             [[0.], [1.]],   // 1: `a` and `b` are equal
             [[2.], [5.]],   // 2: `a` contains `b`
             [[7.], [8.]],   // 3: `b` contains `a`
@@ -199,7 +216,7 @@ mod tests {
             [[62.], [63.]], // 13
             [[65.], [66.]], // 14: one of `a` with no overlap in `b`
         ]);
-        let b = CurveFaceIntersectionList::from_intervals([
+        let b = CurveFaceIntersection::from_intervals([
             [[0.], [1.]],   // 1
             [[3.], [4.]],   // 2
             [[6.], [9.]],   // 3
@@ -221,7 +238,7 @@ mod tests {
 
         let merged = a.merge(&b);
 
-        let expected = CurveFaceIntersectionList::from_intervals([
+        let expected = CurveFaceIntersection::from_intervals([
             [[0.], [1.]],   // 1
             [[3.], [4.]],   // 2
             [[7.], [8.]],   // 3
