@@ -4,7 +4,7 @@ use crate::objects::{Curve, CurveKind, Edge};
 
 use super::LineSegmentIntersection;
 
-/// The intersection between a curve and an [`Edge`], in curve coordinates
+/// The intersection between a [`Curve`] and an [`Edge`], in curve coordinates
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum CurveEdgeIntersection {
     /// The curve and edge intersect at a point
@@ -26,7 +26,7 @@ impl CurveEdgeIntersection {
     /// # Panics
     ///
     /// Currently, only intersections between lines and line segments can be
-    /// computed. Panics, if a different type of curve or [`Edge`] is
+    /// computed. Panics, if a different type of [`Curve`] or [`Edge`] is
     /// passed.
     pub fn compute(curve: &Curve, edge: &Edge) -> Option<Self> {
         let curve_as_line = match curve.kind() {

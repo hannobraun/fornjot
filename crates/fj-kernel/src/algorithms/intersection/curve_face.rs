@@ -7,7 +7,7 @@ use crate::{
     objects::{Curve, Face},
 };
 
-/// The intersections between a curve and a [`Face`], in curve coordinates
+/// The intersections between a [`Curve`] and a [`Face`], in curve coordinates
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct CurveFaceIntersectionList {
     intervals: Vec<CurveFaceIntersection>,
@@ -27,7 +27,7 @@ impl CurveFaceIntersectionList {
         Self { intervals }
     }
 
-    /// Compute the intersections between a curve and a [`Face`]
+    /// Compute the intersections between a [`Curve`] and a [`Face`]
     pub fn compute(curve: &Curve, face: &Face) -> Self {
         let edges = face.all_cycles().flat_map(|cycle| {
             let edges: Vec<_> = cycle.edges().cloned().collect();
