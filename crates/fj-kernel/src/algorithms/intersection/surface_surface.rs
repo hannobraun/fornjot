@@ -60,6 +60,7 @@ impl SurfaceSurfaceIntersection {
 }
 
 /// A plane in parametric form
+#[derive(Clone, Copy)]
 struct PlaneParametric {
     pub origin: Point<3>,
     pub u: Vector<3>,
