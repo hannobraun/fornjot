@@ -10,7 +10,7 @@ use crate::{
 /// The intersections between a [`Curve`] and a [`Face`], in curve coordinates
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct CurveFaceIntersectionList {
-    intervals: Vec<CurveFaceIntersection>,
+    intervals: Vec<CurveFaceIntersectionInterval>,
 }
 
 impl CurveFaceIntersectionList {
@@ -24,7 +24,7 @@ impl CurveFaceIntersectionList {
             .into_iter()
             .map(|interval| {
                 let interval = interval.map(Into::into);
-                CurveFaceIntersection { interval }
+                CurveFaceIntersectionInterval { interval }
             })
             .collect();
         Self { intervals }
@@ -65,7 +65,7 @@ impl CurveFaceIntersectionList {
             .map(|chunk| {
                 // Can't panic, as we passed `2` to `chunks`.
                 let interval = [chunk[0], chunk[1]];
-                CurveFaceIntersection { interval }
+                CurveFaceIntersectionInterval { interval }
             })
             .collect();
 
@@ -86,10 +86,10 @@ impl CurveFaceIntersectionList {
         let mut intervals = Vec::new();
 
         while let (
-            Some(CurveFaceIntersection {
+            Some(CurveFaceIntersectionInterval {
                 interval: [self_start, self_end],
             }),
-            Some(CurveFaceIntersection {
+            Some(CurveFaceIntersectionInterval {
                 interval: [other_start, other_end],
             }),
         ) = (next_self, next_other)
@@ -106,7 +106,7 @@ impl CurveFaceIntersectionList {
             if overlap_start < overlap_end {
                 // This is indeed a valid overlap. Add it to our list of
                 // results.
-                intervals.push(CurveFaceIntersection {
+                intervals.push(CurveFaceIntersectionInterval {
                     interval: [overlap_start, overlap_end],
                 });
             }
@@ -137,7 +137,7 @@ impl CurveFaceIntersectionList {
 }
 
 impl IntoIterator for CurveFaceIntersectionList {
-    type Item = CurveFaceIntersection;
+    type Item = CurveFaceIntersectionInterval;
     type IntoIter = vec::IntoIter<Self::Item>;
 
     fn into_iter(self) -> Self::IntoIter {
@@ -147,7 +147,7 @@ impl IntoIterator for CurveFaceIntersectionList {
 
 /// An intersection between a curve and a face
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct CurveFaceIntersection {
+pub struct CurveFaceIntersectionInterval {
     /// The intersection interval, in curve coordinates
     pub interval: [Point<1>; 2],
 }
