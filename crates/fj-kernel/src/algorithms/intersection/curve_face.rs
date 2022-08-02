@@ -23,8 +23,8 @@ impl CurveFaceIntersectionList {
         let intervals = intervals
             .into_iter()
             .map(|interval| {
-                let interval = interval.map(Into::into);
-                CurveFaceIntersectionInterval { interval }
+                let [start, end] = interval.map(Into::into);
+                CurveFaceIntersectionInterval { start, end }
             })
             .collect();
         Self { intervals }
@@ -64,8 +64,8 @@ impl CurveFaceIntersectionList {
             .chunks(2)
             .map(|chunk| {
                 // Can't panic, as we passed `2` to `chunks`.
-                let interval = [chunk[0], chunk[1]];
-                CurveFaceIntersectionInterval { interval }
+                let [start, end] = [chunk[0], chunk[1]];
+                CurveFaceIntersectionInterval { start, end }
             })
             .collect();
 
@@ -87,10 +87,12 @@ impl CurveFaceIntersectionList {
 
         while let (
             Some(CurveFaceIntersectionInterval {
-                interval: [self_start, self_end],
+                start: self_start,
+                end: self_end,
             }),
             Some(CurveFaceIntersectionInterval {
-                interval: [other_start, other_end],
+                start: other_start,
+                end: other_end,
             }),
         ) = (next_self, next_other)
         {
@@ -107,7 +109,8 @@ impl CurveFaceIntersectionList {
                 // This is indeed a valid overlap. Add it to our list of
                 // results.
                 intervals.push(CurveFaceIntersectionInterval {
-                    interval: [overlap_start, overlap_end],
+                    start: overlap_start,
+                    end: overlap_end,
                 });
             }
 
@@ -148,8 +151,11 @@ impl IntoIterator for CurveFaceIntersectionList {
 /// An intersection between a curve and a face
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct CurveFaceIntersectionInterval {
-    /// The intersection interval, in curve coordinates
-    pub interval: [Point<1>; 2],
+    /// The start of the intersection interval, in curve coordinates
+    pub start: Point<1>,
+
+    /// The end of the intersection interval, in curve coordinates
+    pub end: Point<1>,
 }
 
 #[cfg(test)]
