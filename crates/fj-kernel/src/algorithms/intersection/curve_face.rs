@@ -80,10 +80,10 @@ impl CurveFaceIntersectionList {
     /// other lists.
     pub fn merge(&self, other: &Self) -> Self {
         let mut self_intervals = self.intervals.iter().copied();
-        let mut other = other.intervals.iter().copied();
+        let mut other_interval = other.intervals.iter().copied();
 
         let mut next_self = self_intervals.next();
-        let mut next_other = other.next();
+        let mut next_other = other_interval.next();
 
         let mut intervals = Vec::new();
 
@@ -128,7 +128,7 @@ impl CurveFaceIntersectionList {
             if other_end <= overlap_end {
                 // Current interval from `other` has been overtaken. Let's grab
                 // the next one.
-                next_other = other.next();
+                next_other = other_interval.next();
             }
         }
 
