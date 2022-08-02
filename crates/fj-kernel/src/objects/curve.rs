@@ -1,5 +1,9 @@
 use fj_math::{Circle, Line, Point, Transform, Vector};
 
+use crate::builder::CurveBuilder;
+
+use super::Surface;
+
 /// A curve, defined in local surface coordinates
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Curve {
@@ -8,6 +12,11 @@ pub struct Curve {
 }
 
 impl Curve {
+    /// Build a curve using [`CurveBuilder`]
+    pub fn build(surface: Surface) -> CurveBuilder {
+        CurveBuilder::new(surface)
+    }
+
     /// Construct a new instance of `Curve`
     pub fn new(kind: CurveKind<2>, global: GlobalCurve) -> Self {
         Self { kind, global }
