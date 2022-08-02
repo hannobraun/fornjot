@@ -14,7 +14,7 @@ pub struct SurfaceSurfaceIntersection {
 
 impl SurfaceSurfaceIntersection {
     /// Compute the intersection between two surfaces
-    pub fn compute(a: &Surface, b: &Surface) -> Option<Self> {
+    pub fn compute([a, b]: [&Surface; 2]) -> Option<Self> {
         // Algorithm from Real-Time Collision Detection by Christer Ericson. See
         // section 5.4.4, Intersection of Two Planes.
         //
@@ -154,12 +154,12 @@ mod tests {
         let xz = Surface::xz_plane();
 
         // Coincident and parallel planes don't have an intersection curve.
-        assert_eq!(SurfaceSurfaceIntersection::compute(&xy, &xy), None);
+        assert_eq!(SurfaceSurfaceIntersection::compute([&xy, &xy]), None);
         assert_eq!(
-            SurfaceSurfaceIntersection::compute(
+            SurfaceSurfaceIntersection::compute([
                 &xy,
                 &xy.transform(&Transform::translation([0., 0., 1.]))
-            ),
+            ]),
             None,
         );
 
@@ -167,7 +167,7 @@ mod tests {
         let expected_xz = Curve::build(xz).u_axis();
 
         assert_eq!(
-            SurfaceSurfaceIntersection::compute(&xy, &xz),
+            SurfaceSurfaceIntersection::compute([&xy, &xz]),
             Some(SurfaceSurfaceIntersection {
                 local_intersection_curves: [
                     *expected_xy.kind(),
