@@ -7,7 +7,7 @@ mod face;
 mod solid;
 
 pub use self::{
-    curve::CurveBuilder,
+    curve::{CurveBuilder, GlobalCurveBuilder},
     cycle::CycleBuilder,
     edge::EdgeBuilder,
     face::{FaceBuilder, FacePolygon},

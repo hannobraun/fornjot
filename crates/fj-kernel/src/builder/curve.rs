@@ -46,3 +46,32 @@ impl CurveBuilder {
         )
     }
 }
+
+/// API for building a [`GlobalCurve`]
+pub struct GlobalCurveBuilder;
+
+impl GlobalCurveBuilder {
+    /// Create a line that represents the x-axis
+    pub fn x_axis(&self) -> GlobalCurve {
+        GlobalCurve::from_kind(CurveKind::x_axis())
+    }
+
+    /// Create a line that represents the y-axis
+    pub fn y_axis(&self) -> GlobalCurve {
+        GlobalCurve::from_kind(CurveKind::y_axis())
+    }
+
+    /// Create a line that represents the z-axis
+    pub fn z_axis(&self) -> GlobalCurve {
+        GlobalCurve::from_kind(CurveKind::z_axis())
+    }
+
+    /// Create a line from the given points
+    pub fn line_from_points(
+        &self,
+        points: [impl Into<Point<3>>; 2],
+    ) -> GlobalCurve {
+        let line = Line::from_points(points);
+        GlobalCurve::from_kind(CurveKind::Line(line))
+    }
+}

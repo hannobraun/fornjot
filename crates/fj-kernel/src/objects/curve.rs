@@ -1,6 +1,6 @@
 use fj_math::{Circle, Line, Point, Transform, Vector};
 
-use crate::builder::CurveBuilder;
+use crate::builder::{CurveBuilder, GlobalCurveBuilder};
 
 use super::Surface;
 
@@ -40,6 +40,11 @@ pub struct GlobalCurve {
 }
 
 impl GlobalCurve {
+    /// Build a curve using [`GlobalCurveBuilder`]
+    pub fn build() -> GlobalCurveBuilder {
+        GlobalCurveBuilder
+    }
+
     /// Construct a `GlobalCurve` from a [`CurveKind<3>`]
     pub fn from_kind(kind: CurveKind<3>) -> Self {
         Self { kind }
