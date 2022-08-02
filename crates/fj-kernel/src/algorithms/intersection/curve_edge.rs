@@ -76,18 +76,18 @@ impl CurveEdgeIntersection {
 mod tests {
     use fj_math::Point;
 
-    use crate::objects::{CurveKind, Edge, Surface};
+    use crate::objects::{Curve, Edge, Surface};
 
     use super::CurveEdgeIntersection;
 
     #[test]
     fn compute_edge_in_front_of_curve_origin() {
         let surface = Surface::xy_plane();
-        let curve = CurveKind::u_axis();
+        let curve = Curve::build(surface).u_axis();
         let edge = Edge::build()
             .line_segment_from_points(&surface, [[1., -1.], [1., 1.]]);
 
-        let intersection = CurveEdgeIntersection::compute(&curve, &edge);
+        let intersection = CurveEdgeIntersection::compute(curve.kind(), &edge);
 
         assert_eq!(
             intersection,
@@ -100,11 +100,11 @@ mod tests {
     #[test]
     fn compute_edge_behind_curve_origin() {
         let surface = Surface::xy_plane();
-        let curve = CurveKind::u_axis();
+        let curve = Curve::build(surface).u_axis();
         let edge = Edge::build()
             .line_segment_from_points(&surface, [[-1., -1.], [-1., 1.]]);
 
-        let intersection = CurveEdgeIntersection::compute(&curve, &edge);
+        let intersection = CurveEdgeIntersection::compute(curve.kind(), &edge);
 
         assert_eq!(
             intersection,
@@ -117,11 +117,11 @@ mod tests {
     #[test]
     fn compute_edge_parallel_to_curve() {
         let surface = Surface::xy_plane();
-        let curve = CurveKind::u_axis();
+        let curve = Curve::build(surface).u_axis();
         let edge = Edge::build()
             .line_segment_from_points(&surface, [[-1., -1.], [1., -1.]]);
 
-        let intersection = CurveEdgeIntersection::compute(&curve, &edge);
+        let intersection = CurveEdgeIntersection::compute(curve.kind(), &edge);
 
         assert!(intersection.is_none());
     }
@@ -129,11 +129,11 @@ mod tests {
     #[test]
     fn compute_edge_on_curve() {
         let surface = Surface::xy_plane();
-        let curve = CurveKind::u_axis();
+        let curve = Curve::build(surface).u_axis();
         let edge = Edge::build()
             .line_segment_from_points(&surface, [[-1., 0.], [1., 0.]]);
 
-        let intersection = CurveEdgeIntersection::compute(&curve, &edge);
+        let intersection = CurveEdgeIntersection::compute(curve.kind(), &edge);
 
         assert_eq!(
             intersection,
