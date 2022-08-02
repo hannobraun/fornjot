@@ -37,8 +37,7 @@ impl CurveFaceIntersectionList {
         let mut intersections = Vec::new();
 
         for edge in edges {
-            let intersection =
-                CurveEdgeIntersection::compute(curve.kind(), &edge);
+            let intersection = CurveEdgeIntersection::compute(curve, &edge);
 
             if let Some(intersection) = intersection {
                 match intersection {
