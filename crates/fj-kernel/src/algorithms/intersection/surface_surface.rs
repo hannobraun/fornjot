@@ -14,18 +14,17 @@ pub struct SurfaceSurfaceIntersection {
 
 impl SurfaceSurfaceIntersection {
     /// Compute the intersection between two surfaces
-    pub fn compute([a, b]: [&Surface; 2]) -> Option<Self> {
+    pub fn compute(surfaces: [&Surface; 2]) -> Option<Self> {
         // Algorithm from Real-Time Collision Detection by Christer Ericson. See
         // section 5.4.4, Intersection of Two Planes.
         //
         // Adaptations were made to get the intersection curves in local
         // coordinates for each surface.
 
-        let a_parametric = PlaneParametric::extract_from_surface(a);
-        let b_parametric = PlaneParametric::extract_from_surface(b);
-
-        let a = PlaneConstantNormal::from_parametric_plane(&a_parametric);
-        let b = PlaneConstantNormal::from_parametric_plane(&b_parametric);
+        let planes_parametric =
+            surfaces.map(PlaneParametric::extract_from_surface);
+        let [a, b] = planes_parametric
+            .map(|plane| PlaneConstantNormal::from_parametric_plane(&plane));
 
         let direction = a.normal.cross(&b.normal);
 
@@ -48,12 +47,12 @@ impl SurfaceSurfaceIntersection {
 
         let line = Line { origin, direction };
 
-        let curve_a = project_line_into_plane(&line, &a_parametric);
-        let curve_b = project_line_into_plane(&line, &b_parametric);
+        let curves = planes_parametric
+            .map(|plane| project_line_into_plane(&line, &plane));
         let curve_global = CurveKind::Line(Line { origin, direction });
 
         Some(Self {
-            local_intersection_curves: [curve_a, curve_b],
+            local_intersection_curves: curves,
             global_intersection_curve: curve_global,
         })
     }
