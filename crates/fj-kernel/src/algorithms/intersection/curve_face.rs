@@ -22,7 +22,10 @@ impl CurveFaceIntersectionList {
     ) -> Self {
         let intervals = intervals
             .into_iter()
-            .map(|interval| interval.map(Into::into))
+            .map(|interval| {
+                let interval = interval.map(Into::into);
+                CurveFaceIntersection { interval }
+            })
             .collect();
         Self { intervals }
     }
@@ -61,7 +64,8 @@ impl CurveFaceIntersectionList {
             .chunks(2)
             .map(|chunk| {
                 // Can't panic, as we passed `2` to `chunks`.
-                [chunk[0], chunk[1]]
+                let interval = [chunk[0], chunk[1]];
+                CurveFaceIntersection { interval }
             })
             .collect();
 
@@ -82,8 +86,12 @@ impl CurveFaceIntersectionList {
         let mut intervals = Vec::new();
 
         while let (
-            Some([self_start, self_end]),
-            Some([other_start, other_end]),
+            Some(CurveFaceIntersection {
+                interval: [self_start, self_end],
+            }),
+            Some(CurveFaceIntersection {
+                interval: [other_start, other_end],
+            }),
         ) = (next_self, next_other)
         {
             // If we're starting another loop iteration, we have another
@@ -98,7 +106,9 @@ impl CurveFaceIntersectionList {
             if overlap_start < overlap_end {
                 // This is indeed a valid overlap. Add it to our list of
                 // results.
-                intervals.push([overlap_start, overlap_end]);
+                intervals.push(CurveFaceIntersection {
+                    interval: [overlap_start, overlap_end],
+                });
             }
 
             // Only if the end of the overlap interval has overtaken one of the
@@ -136,7 +146,11 @@ impl IntoIterator for CurveFaceIntersectionList {
 }
 
 /// An intersection between a curve and a face, in curve coordinates
-pub type CurveFaceIntersection = [Point<1>; 2];
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct CurveFaceIntersection {
+    /// The intersection interval, in curve coordinates
+    pub interval: [Point<1>; 2],
+}
 
 #[cfg(test)]
 mod tests {
