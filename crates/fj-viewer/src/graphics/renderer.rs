@@ -44,6 +44,7 @@ impl std::fmt::Debug for EguiState {
 #[derive(Debug)]
 pub struct Renderer {
     surface: wgpu::Surface,
+    features: wgpu::Features,
     device: wgpu::Device,
     queue: wgpu::Queue,
 
@@ -134,6 +135,8 @@ impl Renderer {
             .await
             .ok_or(InitError::RequestAdapter)?;
 
+        let features = adapter.features();
+
         let (device, queue) = adapter
             .request_device(
                 &wgpu::DeviceDescriptor {
@@ -144,7 +147,7 @@ impl Renderer {
                     //
                     // See this issue:
                     // https://github.com/hannobraun/fornjot/issues/33
-                    features: wgpu::Features::POLYGON_MODE_LINE,
+                    features,
                     limits: wgpu::Limits::default(),
                 },
                 None,
@@ -239,6 +242,7 @@ impl Renderer {
 
         Ok(Self {
             surface,
+            features,
             device,
             queue,
 
@@ -328,21 +332,26 @@ impl Renderer {
                 &self.bind_group,
             );
         }
-        if config.draw_mesh {
-            drawables.mesh.draw(
-                &mut encoder,
-                &color_view,
-                &self.depth_view,
-                &self.bind_group,
-            );
-        }
-        if config.draw_debug {
-            drawables.lines.draw(
-                &mut encoder,
-                &color_view,
-                &self.depth_view,
-                &self.bind_group,
-            );
+
+        // NOTE: This does not inform the user if the renderer cannot
+        // use the POLYGON_MODE_LINE feature.
+        if self.features.contains(wgpu::Features::POLYGON_MODE_LINE) {
+            if config.draw_mesh {
+                drawables.mesh.draw(
+                    &mut encoder,
+                    &color_view,
+                    &self.depth_view,
+                    &self.bind_group,
+                );
+            }
+            if config.draw_debug {
+                drawables.lines.draw(
+                    &mut encoder,
+                    &color_view,
+                    &self.depth_view,
+                    &self.bind_group,
+                );
+            }
         }
 
         if self.egui.options.show_original_ui {
