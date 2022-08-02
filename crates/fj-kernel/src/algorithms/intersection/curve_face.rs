@@ -87,25 +87,15 @@ impl CurveFaceIntersectionList {
 
         let mut intervals = Vec::new();
 
-        while let (
-            Some(CurveFaceIntersectionInterval {
-                start: self_start,
-                end: self_end,
-            }),
-            Some(CurveFaceIntersectionInterval {
-                start: other_start,
-                end: other_end,
-            }),
-        ) = (next_self, next_other)
-        {
+        while let (Some(self_), Some(other)) = (next_self, next_other) {
             // If we're starting another loop iteration, we have another
             // interval available from both `self` and `other` each. Only if
             // that's the case, is there a chance for an overlap.
 
             // Build the overlap of the two next intervals, by comparing them.
             // At this point we don't know yet, if this is a valid interval.
-            let overlap_start = self_start.max(other_start);
-            let overlap_end = self_end.min(other_end);
+            let overlap_start = self_.start.max(other.start);
+            let overlap_end = self_.end.min(other.end);
 
             if overlap_start < overlap_end {
                 // This is indeed a valid overlap. Add it to our list of
@@ -120,12 +110,12 @@ impl CurveFaceIntersectionList {
             // input ones are we done with it. An input interval that hasn't
             // been overtaken by the overlap, could still overlap with another
             // interval.
-            if self_end <= overlap_end {
+            if self_.end <= overlap_end {
                 // Current interval from `self` has been overtaken. Let's grab
                 // the next one.
                 next_self = self_intervals.next();
             }
-            if other_end <= overlap_end {
+            if other.end <= overlap_end {
                 // Current interval from `other` has been overtaken. Let's grab
                 // the next one.
                 next_other = other_interval.next();
