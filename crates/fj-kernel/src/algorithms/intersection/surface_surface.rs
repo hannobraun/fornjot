@@ -1,31 +1,27 @@
 use fj_math::{Line, Point, Scalar, Vector};
 
-use crate::objects::{CurveKind, Surface};
+use crate::objects::{Curve, CurveKind, GlobalCurve, Surface};
 
 /// The intersection between two surfaces
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct SurfaceSurfaceIntersection {
-    /// The intersection curves, in the coordinates of the input surfaces
-    pub local_intersection_curves: [CurveKind<2>; 2],
-
-    /// The intersection curve, in global coordinates
-    pub global_intersection_curve: CurveKind<3>,
+    /// The intersection curves
+    pub intersection_curves: [Curve; 2],
 }
 
 impl SurfaceSurfaceIntersection {
     /// Compute the intersection between two surfaces
-    pub fn compute(a: &Surface, b: &Surface) -> Option<Self> {
+    pub fn compute(surfaces: [&Surface; 2]) -> Option<Self> {
         // Algorithm from Real-Time Collision Detection by Christer Ericson. See
         // section 5.4.4, Intersection of Two Planes.
         //
         // Adaptations were made to get the intersection curves in local
         // coordinates for each surface.
 
-        let a_parametric = PlaneParametric::extract_from_surface(a);
-        let b_parametric = PlaneParametric::extract_from_surface(b);
-
-        let a = PlaneConstantNormal::from_parametric_plane(&a_parametric);
-        let b = PlaneConstantNormal::from_parametric_plane(&b_parametric);
+        let planes_parametric =
+            surfaces.map(PlaneParametric::extract_from_surface);
+        let [a, b] = planes_parametric
+            .map(|plane| PlaneConstantNormal::from_parametric_plane(&plane));
 
         let direction = a.normal.cross(&b.normal);
 
@@ -48,18 +44,21 @@ impl SurfaceSurfaceIntersection {
 
         let line = Line { origin, direction };
 
-        let curve_a = project_line_into_plane(&line, &a_parametric);
-        let curve_b = project_line_into_plane(&line, &b_parametric);
-        let curve_global = CurveKind::Line(Line { origin, direction });
+        let curves = planes_parametric.map(|plane| {
+            let local = project_line_into_plane(&line, &plane);
+            let global = CurveKind::Line(Line { origin, direction });
+
+            Curve::new(local, GlobalCurve::from_kind(global))
+        });
 
         Some(Self {
-            local_intersection_curves: [curve_a, curve_b],
-            global_intersection_curve: curve_global,
+            intersection_curves: curves,
         })
     }
 }
 
 /// A plane in parametric form
+#[derive(Clone, Copy)]
 struct PlaneParametric {
     pub origin: Point<3>,
     pub u: Vector<3>,
@@ -154,12 +153,12 @@ mod tests {
         let xz = Surface::xz_plane();
 
         // Coincident and parallel planes don't have an intersection curve.
-        assert_eq!(SurfaceSurfaceIntersection::compute(&xy, &xy), None);
+        assert_eq!(SurfaceSurfaceIntersection::compute([&xy, &xy]), None);
         assert_eq!(
-            SurfaceSurfaceIntersection::compute(
+            SurfaceSurfaceIntersection::compute([
                 &xy,
                 &xy.transform(&Transform::translation([0., 0., 1.]))
-            ),
+            ]),
             None,
         );
 
@@ -167,13 +166,9 @@ mod tests {
         let expected_xz = Curve::build(xz).u_axis();
 
         assert_eq!(
-            SurfaceSurfaceIntersection::compute(&xy, &xz),
+            SurfaceSurfaceIntersection::compute([&xy, &xz]),
             Some(SurfaceSurfaceIntersection {
-                local_intersection_curves: [
-                    *expected_xy.kind(),
-                    *expected_xz.kind()
-                ],
-                global_intersection_curve: *expected_xy.global().kind(),
+                intersection_curves: [expected_xy, expected_xz],
             })
         );
     }

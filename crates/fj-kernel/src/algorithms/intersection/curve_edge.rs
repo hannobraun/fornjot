@@ -1,10 +1,10 @@
 use fj_math::{Point, Segment};
 
-use crate::objects::{CurveKind, Edge};
+use crate::objects::{Curve, CurveKind, Edge};
 
 use super::LineSegmentIntersection;
 
-/// The intersection between a curve and an [`Edge`], in curve coordinates
+/// The intersection between a [`Curve`] and an [`Edge`], in curve coordinates
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum CurveEdgeIntersection {
     /// The curve and edge intersect at a point
@@ -26,10 +26,10 @@ impl CurveEdgeIntersection {
     /// # Panics
     ///
     /// Currently, only intersections between lines and line segments can be
-    /// computed. Panics, if a different type of curve or [`Edge`] is
+    /// computed. Panics, if a different type of [`Curve`] or [`Edge`] is
     /// passed.
-    pub fn compute(curve: &CurveKind<2>, edge: &Edge) -> Option<Self> {
-        let curve_as_line = match curve {
+    pub fn compute(curve: &Curve, edge: &Edge) -> Option<Self> {
+        let curve_as_line = match curve.kind() {
             CurveKind::Line(line) => line,
             _ => todo!("Curve-edge intersection only supports lines"),
         };
@@ -87,7 +87,7 @@ mod tests {
         let edge = Edge::build()
             .line_segment_from_points(&surface, [[1., -1.], [1., 1.]]);
 
-        let intersection = CurveEdgeIntersection::compute(curve.kind(), &edge);
+        let intersection = CurveEdgeIntersection::compute(&curve, &edge);
 
         assert_eq!(
             intersection,
@@ -104,7 +104,7 @@ mod tests {
         let edge = Edge::build()
             .line_segment_from_points(&surface, [[-1., -1.], [-1., 1.]]);
 
-        let intersection = CurveEdgeIntersection::compute(curve.kind(), &edge);
+        let intersection = CurveEdgeIntersection::compute(&curve, &edge);
 
         assert_eq!(
             intersection,
@@ -121,7 +121,7 @@ mod tests {
         let edge = Edge::build()
             .line_segment_from_points(&surface, [[-1., -1.], [1., -1.]]);
 
-        let intersection = CurveEdgeIntersection::compute(curve.kind(), &edge);
+        let intersection = CurveEdgeIntersection::compute(&curve, &edge);
 
         assert!(intersection.is_none());
     }
@@ -133,7 +133,7 @@ mod tests {
         let edge = Edge::build()
             .line_segment_from_points(&surface, [[-1., 0.], [1., 0.]]);
 
-        let intersection = CurveEdgeIntersection::compute(curve.kind(), &edge);
+        let intersection = CurveEdgeIntersection::compute(&curve, &edge);
 
         assert_eq!(
             intersection,
