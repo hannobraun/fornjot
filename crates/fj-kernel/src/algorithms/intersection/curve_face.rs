@@ -64,8 +64,10 @@ impl CurveFaceIntersectionList {
             .chunks(2)
             .map(|chunk| {
                 // Can't panic, as we passed `2` to `chunks`.
-                let [start, end] = [chunk[0], chunk[1]];
-                CurveFaceIntersectionInterval { start, end }
+                CurveFaceIntersectionInterval {
+                    start: chunk[0],
+                    end: chunk[1],
+                }
             })
             .collect();
 
