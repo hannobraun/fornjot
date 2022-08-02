@@ -145,7 +145,7 @@ impl IntoIterator for CurveFaceIntersectionList {
     }
 }
 
-/// An intersection between a curve and a face, in curve coordinates
+/// An intersection between a curve and a face
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct CurveFaceIntersection {
     /// The intersection interval, in curve coordinates
