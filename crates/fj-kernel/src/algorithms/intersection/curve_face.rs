@@ -10,7 +10,8 @@ use crate::{
 /// The intersections between a [`Curve`] and a [`Face`], in curve coordinates
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct CurveFaceIntersection {
-    intervals: Vec<CurveFaceIntersectionInterval>,
+    /// The intervals where the curve and face intersect, in curve coordinates
+    pub intervals: Vec<CurveFaceIntersectionInterval>,
 }
 
 impl CurveFaceIntersection {
