@@ -189,6 +189,10 @@ impl Crate {
             command
                 .arg("publish")
                 .args(["--token", token.unsecure()])
+                // By this point in the process, the crates have been built
+                // successfully multiple times. No reason to slow down the
+                // release by building them again.
+                .arg("--no-verify")
                 .current_dir(&self.path);
 
             if dry_run {
