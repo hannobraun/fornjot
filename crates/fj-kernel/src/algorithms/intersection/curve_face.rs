@@ -148,6 +148,8 @@ mod tests {
 
     #[test]
     fn compute() {
+        let surface = Surface::xy_plane();
+
         let curve = CurveKind::Line(Line {
             origin: Point::from([-3., 0.]),
             direction: Vector::from([1., 0.]),
@@ -168,7 +170,6 @@ mod tests {
             [-1.,  1.],
         ];
 
-        let surface = Surface::xy_plane();
         let face = Face::build(surface)
             .polygon_from_points(exterior)
             .with_hole(interior);
