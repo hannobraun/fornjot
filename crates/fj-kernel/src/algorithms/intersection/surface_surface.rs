@@ -1,15 +1,12 @@
 use fj_math::{Line, Point, Scalar, Vector};
 
-use crate::objects::{CurveKind, Surface};
+use crate::objects::{Curve, CurveKind, GlobalCurve, Surface};
 
 /// The intersection between two surfaces
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct SurfaceSurfaceIntersection {
-    /// The intersection curves, in the coordinates of the input surfaces
-    pub local_intersection_curves: [CurveKind<2>; 2],
-
-    /// The intersection curve, in global coordinates
-    pub global_intersection_curve: CurveKind<3>,
+    /// The intersection curves
+    pub intersection_curves: [Curve; 2],
 }
 
 impl SurfaceSurfaceIntersection {
@@ -47,13 +44,15 @@ impl SurfaceSurfaceIntersection {
 
         let line = Line { origin, direction };
 
-        let curves = planes_parametric
-            .map(|plane| project_line_into_plane(&line, &plane));
-        let curve_global = CurveKind::Line(Line { origin, direction });
+        let curves = planes_parametric.map(|plane| {
+            let local = project_line_into_plane(&line, &plane);
+            let global = CurveKind::Line(Line { origin, direction });
+
+            Curve::new(local, GlobalCurve::from_kind(global))
+        });
 
         Some(Self {
-            local_intersection_curves: curves,
-            global_intersection_curve: curve_global,
+            intersection_curves: curves,
         })
     }
 }
@@ -169,11 +168,7 @@ mod tests {
         assert_eq!(
             SurfaceSurfaceIntersection::compute([&xy, &xz]),
             Some(SurfaceSurfaceIntersection {
-                local_intersection_curves: [
-                    *expected_xy.kind(),
-                    *expected_xz.kind()
-                ],
-                global_intersection_curve: *expected_xy.global().kind(),
+                intersection_curves: [expected_xy, expected_xz],
             })
         );
     }
