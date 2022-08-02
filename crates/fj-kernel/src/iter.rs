@@ -319,8 +319,8 @@ impl<T> Iterator for Iter<T> {
 #[cfg(test)]
 mod tests {
     use crate::objects::{
-        CurveKind, Cycle, Edge, Face, GlobalCurve, GlobalVertex, Sketch, Solid,
-        Surface, Vertex,
+        Cycle, Edge, Face, GlobalCurve, GlobalVertex, Sketch, Solid, Surface,
+        Vertex,
     };
 
     use super::ObjectIters as _;
@@ -384,7 +384,7 @@ mod tests {
 
     #[test]
     fn global_curve() {
-        let object = GlobalCurve::from_kind(CurveKind::x_axis());
+        let object = GlobalCurve::build().x_axis();
 
         assert_eq!(0, object.cycle_iter().count());
         assert_eq!(0, object.edge_iter().count());

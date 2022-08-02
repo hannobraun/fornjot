@@ -1,5 +1,9 @@
 use fj_math::{Circle, Line, Point, Transform, Vector};
 
+use crate::builder::{CurveBuilder, GlobalCurveBuilder};
+
+use super::Surface;
+
 /// A curve, defined in local surface coordinates
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Curve {
@@ -8,6 +12,11 @@ pub struct Curve {
 }
 
 impl Curve {
+    /// Build a curve using [`CurveBuilder`]
+    pub fn build(surface: Surface) -> CurveBuilder {
+        CurveBuilder::new(surface)
+    }
+
     /// Construct a new instance of `Curve`
     pub fn new(kind: CurveKind<2>, global: GlobalCurve) -> Self {
         Self { kind, global }
@@ -31,6 +40,11 @@ pub struct GlobalCurve {
 }
 
 impl GlobalCurve {
+    /// Build a curve using [`GlobalCurveBuilder`]
+    pub fn build() -> GlobalCurveBuilder {
+        GlobalCurveBuilder
+    }
+
     /// Construct a `GlobalCurve` from a [`CurveKind<3>`]
     pub fn from_kind(kind: CurveKind<3>) -> Self {
         Self { kind }
@@ -107,24 +121,6 @@ impl<const D: usize> CurveKind<D> {
             Self::Circle(curve) => curve.vector_from_circle_coords(point),
             Self::Line(curve) => curve.vector_from_line_coords(point),
         }
-    }
-}
-
-impl CurveKind<2> {
-    /// Construct a `Curve` that represents the u-axis
-    pub fn u_axis() -> Self {
-        Self::Line(Line {
-            origin: Point::origin(),
-            direction: Vector::unit_u(),
-        })
-    }
-
-    /// Construct a `Curve` that represents the v-axis
-    pub fn v_axis() -> Self {
-        Self::Line(Line {
-            origin: Point::origin(),
-            direction: Vector::unit_v(),
-        })
     }
 }
 
