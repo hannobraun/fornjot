@@ -34,12 +34,17 @@ fn reverse_local_coordinates_in_cycle<'r>(
 
                         CurveKind::Circle(Circle { center, a, b })
                     }
-                    CurveKind::Line(Line { origin, direction }) => {
-                        let origin = Point::from([origin.u, -origin.v]);
-                        let direction =
-                            Vector::from([direction.u, -direction.v]);
+                    CurveKind::Line(line) => {
+                        let origin =
+                            Point::from([line.origin().u, -line.origin().v]);
+                        let direction = Vector::from([
+                            line.direction().u,
+                            -line.direction().v,
+                        ]);
 
-                        CurveKind::Line(Line { origin, direction })
+                        CurveKind::Line(Line::from_origin_and_direction(
+                            origin, direction,
+                        ))
                     }
                 };
 

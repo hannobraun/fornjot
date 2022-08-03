@@ -57,10 +57,10 @@ impl Transform {
 
     /// Transform the given line
     pub fn transform_line(&self, line: &Line<3>) -> Line<3> {
-        Line {
-            origin: self.transform_point(&line.origin),
-            direction: self.transform_vector(&line.direction),
-        }
+        Line::from_origin_and_direction(
+            self.transform_point(&line.origin()),
+            self.transform_vector(&line.direction()),
+        )
     }
 
     /// Transform the given segment
@@ -163,10 +163,10 @@ mod tests {
 
     #[test]
     fn transform() {
-        let line = Line {
-            origin: Point::from([1., 0., 0.]),
-            direction: Vector::from([0., 1., 0.]),
-        };
+        let line = Line::from_origin_and_direction(
+            Point::from([1., 0., 0.]),
+            Vector::from([0., 1., 0.]),
+        );
 
         let transform = Transform::translation([1., 2., 3.])
             * Transform::rotation(Vector::unit_z() * (Scalar::PI / 2.));
@@ -174,10 +174,10 @@ mod tests {
 
         assert_abs_diff_eq!(
             line,
-            Line {
-                origin: Point::from([1., 3., 3.]),
-                direction: Vector::from([-1., 0., 0.]),
-            },
+            Line::from_origin_and_direction(
+                Point::from([1., 3., 3.]),
+                Vector::from([-1., 0., 0.]),
+            ),
             epsilon = 1e-8,
         );
     }

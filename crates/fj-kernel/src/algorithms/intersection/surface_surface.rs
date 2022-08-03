@@ -42,11 +42,13 @@ impl SurfaceSurfaceIntersection {
             / denom;
         let origin = Point { coords: origin };
 
-        let line = Line { origin, direction };
+        let line = Line::from_origin_and_direction(origin, direction);
 
         let curves = planes_parametric.map(|plane| {
             let local = project_line_into_plane(&line, &plane);
-            let global = CurveKind::Line(Line { origin, direction });
+            let global = CurveKind::Line(Line::from_origin_and_direction(
+                origin, direction,
+            ));
 
             Curve::new(local, GlobalCurve::from_kind(global))
         });
@@ -74,8 +76,8 @@ impl PlaneParametric {
         };
 
         Self {
-            origin: line.origin,
-            u: line.direction,
+            origin: line.origin(),
+            u: line.direction(),
             v: surface.path,
         }
     }
@@ -111,7 +113,7 @@ fn project_line_into_plane(
     line: &Line<3>,
     plane: &PlaneParametric,
 ) -> CurveKind<2> {
-    let line_origin_relative_to_plane = line.origin - plane.origin;
+    let line_origin_relative_to_plane = line.origin() - plane.origin;
     let line_origin_in_plane = Vector::from([
         plane
             .u
@@ -122,16 +124,16 @@ fn project_line_into_plane(
     ]);
 
     let line_direction_in_plane = Vector::from([
-        plane.u.scalar_projection_onto(&line.direction),
-        plane.v.scalar_projection_onto(&line.direction),
+        plane.u.scalar_projection_onto(&line.direction()),
+        plane.v.scalar_projection_onto(&line.direction()),
     ]);
 
-    let line = Line {
-        origin: Point {
+    let line = Line::from_origin_and_direction(
+        Point {
             coords: line_origin_in_plane,
         },
-        direction: line_direction_in_plane,
-    };
+        line_direction_in_plane,
+    );
 
     CurveKind::Line(line)
 }

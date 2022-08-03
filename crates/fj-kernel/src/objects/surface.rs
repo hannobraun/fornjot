@@ -124,10 +124,7 @@ impl SweptCurve {
     }
 
     fn path_to_line(&self) -> Line<3> {
-        Line {
-            origin: self.curve.origin(),
-            direction: self.path,
-        }
+        Line::from_origin_and_direction(self.curve.origin(), self.path)
     }
 }
 
@@ -143,20 +140,20 @@ mod tests {
     #[test]
     fn reverse() {
         let original = SweptCurve {
-            curve: CurveKind::Line(Line {
-                origin: Point::from([1., 0., 0.]),
-                direction: Vector::from([0., 2., 0.]),
-            }),
+            curve: CurveKind::Line(Line::from_origin_and_direction(
+                Point::from([1., 0., 0.]),
+                Vector::from([0., 2., 0.]),
+            )),
             path: Vector::from([0., 0., 3.]),
         };
 
         let reversed = original.reverse();
 
         let expected = SweptCurve {
-            curve: CurveKind::Line(Line {
-                origin: Point::from([1., 0., 0.]),
-                direction: Vector::from([0., 2., 0.]),
-            }),
+            curve: CurveKind::Line(Line::from_origin_and_direction(
+                Point::from([1., 0., 0.]),
+                Vector::from([0., 2., 0.]),
+            )),
             path: Vector::from([0., 0., -3.]),
         };
         assert_eq!(expected, reversed);
@@ -165,10 +162,10 @@ mod tests {
     #[test]
     fn point_from_surface_coords() {
         let swept = SweptCurve {
-            curve: CurveKind::Line(Line {
-                origin: Point::from([1., 1., 1.]),
-                direction: Vector::from([0., 2., 0.]),
-            }),
+            curve: CurveKind::Line(Line::from_origin_and_direction(
+                Point::from([1., 1., 1.]),
+                Vector::from([0., 2., 0.]),
+            )),
             path: Vector::from([0., 0., 2.]),
         };
 
@@ -181,10 +178,10 @@ mod tests {
     #[test]
     fn vector_from_surface_coords() {
         let swept = SweptCurve {
-            curve: CurveKind::Line(Line {
-                origin: Point::from([1., 0., 0.]),
-                direction: Vector::from([0., 2., 0.]),
-            }),
+            curve: CurveKind::Line(Line::from_origin_and_direction(
+                Point::from([1., 0., 0.]),
+                Vector::from([0., 2., 0.]),
+            )),
             path: Vector::from([0., 0., 2.]),
         };
 

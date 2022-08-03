@@ -1,4 +1,4 @@
-use crate::{Point, Triangle, Vector};
+use crate::{Point, Scalar, Triangle, Vector};
 
 /// An n-dimensional line, defined by an origin and a direction
 ///
@@ -7,30 +7,57 @@ use crate::{Point, Triangle, Vector};
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 #[repr(C)]
 pub struct Line<const D: usize> {
-    /// The origin of the line
+    origin: Point<D>,
+    direction: Vector<D>,
+}
+
+impl<const D: usize> Line<D> {
+    /// Create a line from a point and a vector
+    ///
+    /// # Panics
+    ///
+    /// Panics, if `direction` has a length of zero.
+    pub fn from_origin_and_direction(
+        origin: Point<D>,
+        direction: Vector<D>,
+    ) -> Self {
+        if direction.magnitude() == Scalar::ZERO {
+            panic!(
+                "Can't construct `Line`. Direction is zero: {:?}",
+                direction
+            );
+        }
+
+        Self { origin, direction }
+    }
+
+    /// Create a line from two points
+    ///
+    /// # Panics
+    ///
+    /// Panics, if the points are coincident.
+    pub fn from_points(points: [impl Into<Point<D>>; 2]) -> Self {
+        let [a, b] = points.map(Into::into);
+
+        Self::from_origin_and_direction(a, b - a)
+    }
+
+    /// Access the origin of the line
     ///
     /// The origin is a point on the line which, together with the `direction`
     /// field, defines the line fully. The origin also defines the origin of the
     /// line's 1-dimensional coordinate system.
-    pub origin: Point<D>,
+    pub fn origin(&self) -> Point<D> {
+        self.origin
+    }
 
-    /// The direction of the line
+    /// Access the direction of the line
     ///
     /// The length of this vector defines the unit of the line's curve
     /// coordinate system. The coordinate `1.` is always were the direction
     /// vector points, from `origin`.
-    pub direction: Vector<D>,
-}
-
-impl<const D: usize> Line<D> {
-    /// Create a line from two points
-    pub fn from_points(points: [impl Into<Point<D>>; 2]) -> Self {
-        let [a, b] = points.map(Into::into);
-
-        Self {
-            origin: a,
-            direction: b - a,
-        }
+    pub fn direction(&self) -> Vector<D> {
+        self.direction
     }
 
     /// Determine if this line is coincident with another line

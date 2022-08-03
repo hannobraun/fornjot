@@ -30,8 +30,8 @@ impl LineSegmentIntersection {
             Vector::from([ab.v, ab.u])
         };
 
-        let n_dot_origin = n.dot(&(b - line.origin));
-        let n_dot_direction = n.dot(&line.direction);
+        let n_dot_origin = n.dot(&(b - line.origin()));
+        let n_dot_direction = n.dot(&line.direction());
 
         if n_dot_direction == Scalar::ZERO {
             // `line` and `segment` are parallel
@@ -72,10 +72,8 @@ mod tests {
 
     #[test]
     fn compute_one_hit() {
-        let line = Line {
-            origin: Point::origin(),
-            direction: Vector::unit_u(),
-        };
+        let line =
+            Line::from_origin_and_direction(Point::origin(), Vector::unit_u());
 
         assert_eq!(
             LineSegmentIntersection::compute(
@@ -90,10 +88,8 @@ mod tests {
 
     #[test]
     fn compute_coincident() {
-        let line = Line {
-            origin: Point::origin(),
-            direction: Vector::unit_u(),
-        };
+        let line =
+            Line::from_origin_and_direction(Point::origin(), Vector::unit_u());
 
         assert_eq!(
             LineSegmentIntersection::compute(
@@ -108,10 +104,8 @@ mod tests {
 
     #[test]
     fn compute_no_hit_above() {
-        let line = Line {
-            origin: Point::origin(),
-            direction: Vector::unit_u(),
-        };
+        let line =
+            Line::from_origin_and_direction(Point::origin(), Vector::unit_u());
 
         assert_eq!(
             LineSegmentIntersection::compute(
@@ -124,10 +118,8 @@ mod tests {
 
     #[test]
     fn compute_no_hit_below() {
-        let line = Line {
-            origin: Point::origin(),
-            direction: Vector::unit_u(),
-        };
+        let line =
+            Line::from_origin_and_direction(Point::origin(), Vector::unit_u());
 
         assert_eq!(
             LineSegmentIntersection::compute(
@@ -140,10 +132,8 @@ mod tests {
 
     #[test]
     fn compute_no_hit_parallel() {
-        let line = Line {
-            origin: Point::origin(),
-            direction: Vector::unit_u(),
-        };
+        let line =
+            Line::from_origin_and_direction(Point::origin(), Vector::unit_u());
 
         assert_eq!(
             LineSegmentIntersection::compute(
