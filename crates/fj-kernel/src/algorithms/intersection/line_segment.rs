@@ -30,8 +30,8 @@ impl LineSegmentIntersection {
             Vector::from([ab.v, ab.u])
         };
 
-        let n_dot_origin = n.dot(&(b - line.origin));
-        let n_dot_direction = n.dot(&line.direction);
+        let n_dot_origin = n.dot(&(b - line.origin()));
+        let n_dot_direction = n.dot(&line.direction());
 
         if n_dot_direction == Scalar::ZERO {
             // `line` and `segment` are parallel

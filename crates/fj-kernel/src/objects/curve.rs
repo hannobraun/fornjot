@@ -88,7 +88,7 @@ impl<const D: usize> CurveKind<D> {
     pub fn origin(&self) -> Point<D> {
         match self {
             Self::Circle(curve) => curve.center,
-            Self::Line(curve) => curve.origin,
+            Self::Line(curve) => curve.origin(),
         }
     }
 

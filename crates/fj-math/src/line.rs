@@ -38,6 +38,24 @@ impl<const D: usize> Line<D> {
         Self::from_origin_and_direction(a, b - a)
     }
 
+    /// Access the origin of the line
+    ///
+    /// The origin is a point on the line which, together with the `direction`
+    /// field, defines the line fully. The origin also defines the origin of the
+    /// line's 1-dimensional coordinate system.
+    pub fn origin(&self) -> Point<D> {
+        self.origin
+    }
+
+    /// Access the direction of the line
+    ///
+    /// The length of this vector defines the unit of the line's curve
+    /// coordinate system. The coordinate `1.` is always were the direction
+    /// vector points, from `origin`.
+    pub fn direction(&self) -> Vector<D> {
+        self.direction
+    }
+
     /// Determine if this line is coincident with another line
     ///
     /// # Implementation Note
