@@ -1,4 +1,4 @@
-use crate::{Point, Triangle, Vector};
+use crate::{Point, Scalar, Triangle, Vector};
 
 /// An n-dimensional line, defined by an origin and a direction
 ///
@@ -17,6 +17,13 @@ impl<const D: usize> Line<D> {
         origin: Point<D>,
         direction: Vector<D>,
     ) -> Self {
+        if direction.magnitude() == Scalar::ZERO {
+            panic!(
+                "Can't construct `Line`. Direction is zero: {:?}",
+                direction
+            );
+        }
+
         Self { origin, direction }
     }
 
