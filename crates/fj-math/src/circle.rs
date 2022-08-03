@@ -24,6 +24,19 @@ pub struct Circle<const D: usize> {
 }
 
 impl<const D: usize> Circle<D> {
+    /// Construct a circle
+    pub fn new(
+        center: impl Into<Point<D>>,
+        a: impl Into<Vector<D>>,
+        b: impl Into<Vector<D>>,
+    ) -> Self {
+        let center = center.into();
+        let a = a.into();
+        let b = b.into();
+
+        Self { center, a, b }
+    }
+
     /// Create a new instance that is reversed
     #[must_use]
     pub fn reverse(mut self) -> Self {

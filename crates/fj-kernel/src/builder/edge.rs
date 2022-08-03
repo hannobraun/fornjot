@@ -11,16 +11,17 @@ pub struct EdgeBuilder;
 impl EdgeBuilder {
     /// Create a circle from the given radius
     pub fn circle_from_radius(&self, radius: Scalar) -> Edge {
-        let curve_local = CurveKind::Circle(Circle {
-            center: Point::origin(),
-            a: Vector::from([radius, Scalar::ZERO]),
-            b: Vector::from([Scalar::ZERO, radius]),
-        });
-        let curve_global = GlobalCurve::from_kind(CurveKind::Circle(Circle {
-            center: Point::origin(),
-            a: Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
-            b: Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
-        }));
+        let curve_local = CurveKind::Circle(Circle::new(
+            Point::origin(),
+            Vector::from([radius, Scalar::ZERO]),
+            Vector::from([Scalar::ZERO, radius]),
+        ));
+        let curve_global =
+            GlobalCurve::from_kind(CurveKind::Circle(Circle::new(
+                Point::origin(),
+                Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
+                Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
+            )));
 
         Edge::new(
             Curve::new(curve_local, curve_global),

@@ -33,7 +33,7 @@ fn reverse_local_coordinates_in_cycle<'r>(
                         let a = Vector::from([circle.a.u, -circle.a.v]);
                         let b = Vector::from([circle.b.u, -circle.b.v]);
 
-                        CurveKind::Circle(Circle { center, a, b })
+                        CurveKind::Circle(Circle::new(center, a, b))
                     }
                     CurveKind::Line(line) => {
                         let origin =
