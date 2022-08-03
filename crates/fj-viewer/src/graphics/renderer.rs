@@ -135,18 +135,25 @@ impl Renderer {
             .await
             .ok_or(InitError::RequestAdapter)?;
 
-        let features = adapter.features();
+        let features = {
+            let desired_features = wgpu::Features::POLYGON_MODE_LINE;
+            let available_features = adapter.features();
+
+            // By requesting the intersection of desired and available features,
+            // we ensure two things:
+            //
+            // 1. That requesting the device doesn't panic, which would happen
+            //    if we requested unavailable features.
+            // 2. That a developer ends up accidentally using features that
+            //    happen to be available on their machine, but that aren't
+            //    necessarily available for all the users.
+            desired_features.intersection(available_features)
+        };
 
         let (device, queue) = adapter
             .request_device(
                 &wgpu::DeviceDescriptor {
                     label: None,
-                    // Don't just blindly assume that we can request this
-                    // feature. If it isn't available, that might cause a panic,
-                    // or an error to be returned here.
-                    //
-                    // See this issue:
-                    // https://github.com/hannobraun/fornjot/issues/33
                     features,
                     limits: wgpu::Limits::default(),
                 },
