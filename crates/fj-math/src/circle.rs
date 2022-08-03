@@ -37,6 +37,31 @@ impl<const D: usize> Circle<D> {
         Self { center, a, b }
     }
 
+    /// Access the center point of the circle
+    pub fn center(&self) -> Point<D> {
+        self.center
+    }
+
+    /// Access the vector that defines the starting point of the circle
+    ///
+    /// The point where this vector points from the circle center, is the zero
+    /// coordinate of the circle's coordinate system. The length of the vector
+    /// defines the circle's radius.
+    ///
+    /// Please also refer to [`Self::b`].
+    pub fn a(&self) -> Vector<D> {
+        self.a
+    }
+
+    /// Access the vector that defines the plane of the circle
+    ///
+    /// Also defines the direction of the circle's coordinate system. The length
+    /// is equal to the circle's radius, and this vector is perpendicular to
+    /// [`Self::a`].
+    pub fn b(&self) -> Vector<D> {
+        self.b
+    }
+
     /// Create a new instance that is reversed
     #[must_use]
     pub fn reverse(mut self) -> Self {

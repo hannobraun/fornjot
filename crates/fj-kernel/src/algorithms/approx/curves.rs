@@ -40,7 +40,7 @@ pub fn approx_circle(
     tolerance: Tolerance,
     out: &mut Vec<Local<Point<1>>>,
 ) {
-    let radius = circle.a.magnitude();
+    let radius = circle.a().magnitude();
 
     // To approximate the circle, we use a regular polygon for which
     // the circle is the circumscribed circle. The `tolerance`

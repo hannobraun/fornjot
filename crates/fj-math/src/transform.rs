@@ -82,9 +82,9 @@ impl Transform {
     /// Transform the given circle
     pub fn transform_circle(&self, circle: &Circle<3>) -> Circle<3> {
         Circle::new(
-            self.transform_point(&circle.center),
-            self.transform_vector(&circle.a),
-            self.transform_vector(&circle.b),
+            self.transform_point(&circle.center()),
+            self.transform_vector(&circle.a()),
+            self.transform_vector(&circle.b()),
         )
     }
 
