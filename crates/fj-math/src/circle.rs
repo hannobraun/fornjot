@@ -15,6 +15,15 @@ pub struct Circle<const D: usize> {
 
 impl<const D: usize> Circle<D> {
     /// Construct a circle
+    ///
+    /// # Panics
+    ///
+    /// Panics, if any of the following requirements are not met:
+    ///
+    /// - The circle radius (defined by the length of `a` and `b`) must not be
+    ///   zero.
+    /// - `a` and `b` must be of equal length.
+    /// - `a` and `b` must be perpendicular to each other.
     pub fn new(
         center: impl Into<Point<D>>,
         a: impl Into<Vector<D>>,
