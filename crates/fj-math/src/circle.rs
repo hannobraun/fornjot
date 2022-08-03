@@ -1,3 +1,5 @@
+use approx::AbsDiffEq;
+
 use crate::{Point, Scalar, Vector};
 
 /// An n-dimensional circle
@@ -21,6 +23,24 @@ impl<const D: usize> Circle<D> {
         let center = center.into();
         let a = a.into();
         let b = b.into();
+
+        assert_eq!(
+            a.magnitude(),
+            b.magnitude(),
+            "`a` and `b` must be of equal length"
+        );
+        assert_ne!(
+            a.magnitude(),
+            Scalar::ZERO,
+            "circle radius must not be zero"
+        );
+        // Requiring the vector to be *precisely* perpendicular is not
+        // practical, because of numerical inaccuracy. This epsilon value seems
+        // seems to work for now, but maybe it needs to become configurable.
+        assert!(
+            a.dot(&b) < Scalar::default_epsilon(),
+            "`a` and `b` must be perpendicular to each other"
+        );
 
         Self { center, a, b }
     }
