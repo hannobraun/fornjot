@@ -17,6 +17,7 @@
 
 mod platform;
 
+use fj_interop::status_report::StatusReport;
 use std::{
     collections::{HashMap, HashSet},
     ffi::OsStr,
@@ -82,16 +83,37 @@ impl Model {
     pub fn load_once(
         &self,
         arguments: &Parameters,
+        status: &mut StatusReport,
     ) -> Result<fj::Shape, Error> {
         let manifest_path = self.manifest_path.display().to_string();
 
-        let status = Command::new("cargo")
-            .arg("build")
-            .args(["--manifest-path", &manifest_path])
-            .status()?;
+        let mut command_root = Command::new("cargo");
 
-        if !status.success() {
-            return Err(Error::Compile);
+        let command = command_root
+            .arg("build")
+            .args(["--manifest-path", &manifest_path]);
+        let exit_status = command.status()?;
+
+        if !exit_status.success() {
+            status.update_status(&format!(
+                "Compile error: {:?}",
+                String::from_utf8(
+                    command
+                        .output()
+                        .expect("Failed to get command output.")
+                        .stderr
+                )
+                .expect("Failed to read command output.")
+            ));
+            return Err(Error::Compile(
+                String::from_utf8(
+                    command
+                        .output()
+                        .expect("Failed to get command output.")
+                        .stderr,
+                )
+                .expect("Failed to read command output"),
+            ));
         }
 
         // So, strictly speaking this is all unsound:
@@ -260,16 +282,16 @@ impl Watcher {
     ///
     /// Returns `None`, if the model has not changed since the last time this
     /// method was called.
-    pub fn receive(&self) -> Option<fj::Shape> {
+    pub fn receive(&self, status: &mut StatusReport) -> Option<fj::Shape> {
         match self.channel.try_recv() {
             Ok(()) => {
-                let shape = match self.model.load_once(&self.parameters) {
+                let shape = match self.model.load_once(&self.parameters, status)
+                {
                     Ok(shape) => shape,
-                    Err(Error::Compile) => {
+                    Err(Error::Compile(_)) => {
                         // It would be better to display an error in the UI,
                         // where the user can actually see it. Issue:
                         // https://github.com/hannobraun/fornjot/issues/30
-                        println!("Error compiling model");
                         return None;
                     }
                     Err(err) => {
@@ -334,7 +356,7 @@ impl DerefMut for Parameters {
 pub enum Error {
     /// Model failed to compile
     #[error("Error compiling model")]
-    Compile,
+    Compile(String),
 
     /// I/O error while loading the model
     #[error("I/O error while loading model")]

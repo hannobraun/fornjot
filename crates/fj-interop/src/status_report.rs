@@ -6,9 +6,7 @@ pub struct StatusReport {
 
 impl StatusReport {
     pub fn new() -> Self {
-        StatusReport {
-            status: String::new(),
-        }
+        Self::default()
     }
 
     pub fn update_status(&mut self, status: &str) {
@@ -17,5 +15,11 @@ impl StatusReport {
 
     pub fn status(&self) -> &str {
         self.status.as_str()
+    }
+
+    fn default() -> Self {
+        Self {
+            status: String::new(),
+        }
     }
 }

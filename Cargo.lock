@@ -846,6 +846,7 @@ dependencies = [
  "fj",
  "fj-export",
  "fj-host",
+ "fj-interop",
  "fj-kernel",
  "fj-math",
  "fj-operations",
@@ -872,6 +873,7 @@ version = "0.10.0"
 dependencies = [
  "cargo_metadata",
  "fj",
+ "fj-interop",
  "libloading",
  "notify",
  "thiserror",
@@ -958,6 +960,7 @@ name = "fj-window"
 version = "0.10.0"
 dependencies = [
  "fj-host",
+ "fj-interop",
  "fj-operations",
  "fj-viewer",
  "futures",

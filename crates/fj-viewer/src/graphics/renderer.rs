@@ -1,5 +1,6 @@
 use std::{io, mem::size_of};
 
+use fj_interop::status_report::StatusReport;
 use fj_math::{Aabb, Point};
 use thiserror::Error;
 use tracing::debug;
@@ -304,6 +305,7 @@ impl Renderer {
         camera: &Camera,
         config: &mut DrawConfig,
         window: &egui_winit::winit::window::Window,
+        status: &mut StatusReport,
     ) -> Result<(), DrawError> {
         let aspect_ratio = self.surface_config.width as f64
             / self.surface_config.height as f64;
@@ -426,6 +428,10 @@ impl Renderer {
 
         let line_drawing_available = self.is_line_drawing_available();
         egui::SidePanel::left("fj-left-panel").show(&self.egui.context, |ui| {
+            ui.add_space(16.0);
+
+            ui.label(format!("Status Report:\n{}", status.status()));
+
             ui.add_space(16.0);
 
             ui.group(|ui| {

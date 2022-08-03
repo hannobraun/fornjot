@@ -6,6 +6,7 @@
 use std::error;
 
 use fj_host::Watcher;
+use fj_interop::status_report::StatusReport;
 use fj_operations::shape_processor::ShapeProcessor;
 use fj_viewer::{
     camera::Camera,
@@ -30,6 +31,7 @@ use crate::window::{self, Window};
 pub fn run(
     watcher: Watcher,
     shape_processor: ShapeProcessor,
+    mut status: StatusReport,
 ) -> Result<(), Error> {
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop)?;
@@ -49,7 +51,7 @@ pub fn run(
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
 
-        if let Some(new_shape) = watcher.receive() {
+        if let Some(new_shape) = watcher.receive(&mut status) {
             match shape_processor.process(&new_shape) {
                 Ok(new_shape) => {
                     renderer.update_geometry(
@@ -174,9 +176,12 @@ pub fn run(
                 if let (Some(shape), Some(camera)) = (&shape, &mut camera) {
                     camera.update_planes(&shape.aabb);
 
-                    if let Err(err) =
-                        renderer.draw(camera, &mut draw_config, window.window())
-                    {
+                    if let Err(err) = renderer.draw(
+                        camera,
+                        &mut draw_config,
+                        window.window(),
+                        &mut status,
+                    ) {
                         warn!("Draw error: {}", err);
                     }
                 }
