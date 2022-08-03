@@ -519,13 +519,13 @@ impl fmt::Display for Scalar {
 }
 
 impl approx::AbsDiffEq for Scalar {
-    type Epsilon = <f64 as approx::AbsDiffEq>::Epsilon;
+    type Epsilon = Self;
 
     fn default_epsilon() -> Self::Epsilon {
-        f64::default_epsilon()
+        f64::default_epsilon().into()
     }
 
     fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
-        self.0.abs_diff_eq(&other.0, epsilon)
+        self.0.abs_diff_eq(&other.0, epsilon.0)
     }
 }

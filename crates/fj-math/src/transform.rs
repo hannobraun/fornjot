@@ -178,7 +178,7 @@ mod tests {
                 Point::from([1., 3., 3.]),
                 Vector::from([-1., 0., 0.]),
             ),
-            epsilon = 1e-8,
+            epsilon = Scalar::from(1e-8),
         );
     }
 
