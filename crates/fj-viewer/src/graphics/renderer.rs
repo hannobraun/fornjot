@@ -141,12 +141,6 @@ impl Renderer {
             .request_device(
                 &wgpu::DeviceDescriptor {
                     label: None,
-                    // Don't just blindly assume that we can request this
-                    // feature. If it isn't available, that might cause a panic,
-                    // or an error to be returned here.
-                    //
-                    // See this issue:
-                    // https://github.com/hannobraun/fornjot/issues/33
                     features,
                     limits: wgpu::Limits::default(),
                 },
