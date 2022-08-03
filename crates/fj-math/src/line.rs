@@ -7,19 +7,8 @@ use crate::{Point, Triangle, Vector};
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 #[repr(C)]
 pub struct Line<const D: usize> {
-    /// The origin of the line
-    ///
-    /// The origin is a point on the line which, together with the `direction`
-    /// field, defines the line fully. The origin also defines the origin of the
-    /// line's 1-dimensional coordinate system.
-    pub origin: Point<D>,
-
-    /// The direction of the line
-    ///
-    /// The length of this vector defines the unit of the line's curve
-    /// coordinate system. The coordinate `1.` is always were the direction
-    /// vector points, from `origin`.
-    pub direction: Vector<D>,
+    origin: Point<D>,
+    direction: Vector<D>,
 }
 
 impl<const D: usize> Line<D> {
