@@ -23,14 +23,19 @@ pub struct Line<const D: usize> {
 }
 
 impl<const D: usize> Line<D> {
+    /// Create a line from a point and a vector
+    pub fn from_origin_and_direction(
+        origin: Point<D>,
+        direction: Vector<D>,
+    ) -> Self {
+        Self { origin, direction }
+    }
+
     /// Create a line from two points
     pub fn from_points(points: [impl Into<Point<D>>; 2]) -> Self {
         let [a, b] = points.map(Into::into);
 
-        Self {
-            origin: a,
-            direction: b - a,
-        }
+        Self::from_origin_and_direction(a, b - a)
     }
 
     /// Determine if this line is coincident with another line

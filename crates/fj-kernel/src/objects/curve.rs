@@ -127,26 +127,26 @@ impl<const D: usize> CurveKind<D> {
 impl CurveKind<3> {
     /// Construct a `Curve` that represents the x-axis
     pub fn x_axis() -> Self {
-        Self::Line(Line {
-            origin: Point::origin(),
-            direction: Vector::unit_x(),
-        })
+        Self::Line(Line::from_origin_and_direction(
+            Point::origin(),
+            Vector::unit_x(),
+        ))
     }
 
     /// Construct a `Curve` that represents the y-axis
     pub fn y_axis() -> Self {
-        Self::Line(Line {
-            origin: Point::origin(),
-            direction: Vector::unit_y(),
-        })
+        Self::Line(Line::from_origin_and_direction(
+            Point::origin(),
+            Vector::unit_y(),
+        ))
     }
 
     /// Construct a `Curve` that represents the z-axis
     pub fn z_axis() -> Self {
-        Self::Line(Line {
-            origin: Point::origin(),
-            direction: Vector::unit_z(),
-        })
+        Self::Line(Line::from_origin_and_direction(
+            Point::origin(),
+            Vector::unit_z(),
+        ))
     }
 
     /// Transform the surface

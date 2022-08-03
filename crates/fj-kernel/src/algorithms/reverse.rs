@@ -39,7 +39,9 @@ fn reverse_local_coordinates_in_cycle<'r>(
                         let direction =
                             Vector::from([direction.u, -direction.v]);
 
-                        CurveKind::Line(Line { origin, direction })
+                        CurveKind::Line(Line::from_origin_and_direction(
+                            origin, direction,
+                        ))
                     }
                 };
 
