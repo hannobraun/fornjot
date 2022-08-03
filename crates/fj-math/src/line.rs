@@ -13,6 +13,10 @@ pub struct Line<const D: usize> {
 
 impl<const D: usize> Line<D> {
     /// Create a line from a point and a vector
+    ///
+    /// # Panics
+    ///
+    /// Panics, if `direction` has a length of zero.
     pub fn from_origin_and_direction(
         origin: Point<D>,
         direction: Vector<D>,
@@ -28,6 +32,10 @@ impl<const D: usize> Line<D> {
     }
 
     /// Create a line from two points
+    ///
+    /// # Panics
+    ///
+    /// Panics, if the points are coincident.
     pub fn from_points(points: [impl Into<Point<D>>; 2]) -> Self {
         let [a, b] = points.map(Into::into);
 
