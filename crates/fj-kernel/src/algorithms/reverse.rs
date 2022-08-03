@@ -26,11 +26,12 @@ fn reverse_local_coordinates_in_cycle<'r>(
         let edges = cycle.edges().map(|edge| {
             let curve = {
                 let local = match edge.curve().kind() {
-                    CurveKind::Circle(Circle { center, a, b }) => {
-                        let center = Point::from([center.u, -center.v]);
+                    CurveKind::Circle(circle) => {
+                        let center =
+                            Point::from([circle.center.u, -circle.center.v]);
 
-                        let a = Vector::from([a.u, -a.v]);
-                        let b = Vector::from([b.u, -b.v]);
+                        let a = Vector::from([circle.a.u, -circle.a.v]);
+                        let b = Vector::from([circle.b.u, -circle.b.v]);
 
                         CurveKind::Circle(Circle { center, a, b })
                     }
