@@ -6,21 +6,9 @@ use crate::{Point, Scalar, Vector};
 /// parameter.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Circle<const D: usize> {
-    /// The center point of the circle
-    pub center: Point<D>,
-
-    /// A vector from the center to the starting point of the circle
-    ///
-    /// The length of this vector defines the circle radius. Please also refer
-    /// to the documentation of `b`.
-    pub a: Vector<D>,
-
-    /// A second vector that defines the plane of the circle
-    ///
-    /// The vector must be of equal length to `a` (the circle radius) and must
-    /// be perpendicular to it. Code working with circles might assume that
-    /// these conditions are met.
-    pub b: Vector<D>,
+    center: Point<D>,
+    a: Vector<D>,
+    b: Vector<D>,
 }
 
 impl<const D: usize> Circle<D> {
