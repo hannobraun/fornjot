@@ -136,10 +136,10 @@ impl<const D: usize> Line<D> {
 }
 
 impl<const D: usize> approx::AbsDiffEq for Line<D> {
-    type Epsilon = <f64 as approx::AbsDiffEq>::Epsilon;
+    type Epsilon = <Scalar as approx::AbsDiffEq>::Epsilon;
 
     fn default_epsilon() -> Self::Epsilon {
-        f64::default_epsilon()
+        Scalar::default_epsilon()
     }
 
     fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
@@ -152,7 +152,7 @@ impl<const D: usize> approx::AbsDiffEq for Line<D> {
 mod tests {
     use approx::assert_abs_diff_eq;
 
-    use crate::{Point, Vector};
+    use crate::{Point, Scalar, Vector};
 
     use super::Line;
 
@@ -185,7 +185,11 @@ mod tests {
             let point = line.point_from_line_coords([t]);
             let t_result = line.point_to_line_coords(point);
 
-            assert_abs_diff_eq!(Point::from([t]), t_result, epsilon = 1e-8);
+            assert_abs_diff_eq!(
+                Point::from([t]),
+                t_result,
+                epsilon = Scalar::from(1e-8)
+            );
         }
     }
 }

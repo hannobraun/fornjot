@@ -209,7 +209,7 @@ impl<const D: usize> approx::AbsDiffEq for Point<D> {
     type Epsilon = <Vector<D> as approx::AbsDiffEq>::Epsilon;
 
     fn default_epsilon() -> Self::Epsilon {
-        f64::default_epsilon()
+        Scalar::default_epsilon()
     }
 
     fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
