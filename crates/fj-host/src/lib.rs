@@ -94,20 +94,11 @@ impl Model {
             .args(["--manifest-path", &manifest_path]);
         let exit_status = command.status()?;
 
-        if !exit_status.success() {
-            status.update_status(&format!(
-                "Compile error: {:?}",
-                String::from_utf8(
-                    command
-                        .output()
-                        .expect("Failed to get command output.")
-                        .stderr
-                )
-                .expect("Failed to read command output.")
-            ));
-            return Err(Error::Compile);
-        } else {
+        if exit_status.success() {
             status.update_status("Model compiled successfully!");
+        } else {
+            status.update_status("Error compiling the model!");
+            return Err(Error::Compile);
         }
 
         // So, strictly speaking this is all unsound:
