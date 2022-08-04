@@ -1,3 +1,5 @@
+use approx::AbsDiffEq;
+
 use crate::{Point, Scalar, Vector};
 
 /// An n-dimensional circle
@@ -6,24 +8,77 @@ use crate::{Point, Scalar, Vector};
 /// parameter.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Circle<const D: usize> {
-    /// The center point of the circle
-    pub center: Point<D>,
-
-    /// A vector from the center to the starting point of the circle
-    ///
-    /// The length of this vector defines the circle radius. Please also refer
-    /// to the documentation of `b`.
-    pub a: Vector<D>,
-
-    /// A second vector that defines the plane of the circle
-    ///
-    /// The vector must be of equal length to `a` (the circle radius) and must
-    /// be perpendicular to it. Code working with circles might assume that
-    /// these conditions are met.
-    pub b: Vector<D>,
+    center: Point<D>,
+    a: Vector<D>,
+    b: Vector<D>,
 }
 
 impl<const D: usize> Circle<D> {
+    /// Construct a circle
+    ///
+    /// # Panics
+    ///
+    /// Panics, if any of the following requirements are not met:
+    ///
+    /// - The circle radius (defined by the length of `a` and `b`) must not be
+    ///   zero.
+    /// - `a` and `b` must be of equal length.
+    /// - `a` and `b` must be perpendicular to each other.
+    pub fn new(
+        center: impl Into<Point<D>>,
+        a: impl Into<Vector<D>>,
+        b: impl Into<Vector<D>>,
+    ) -> Self {
+        let center = center.into();
+        let a = a.into();
+        let b = b.into();
+
+        assert_eq!(
+            a.magnitude(),
+            b.magnitude(),
+            "`a` and `b` must be of equal length"
+        );
+        assert_ne!(
+            a.magnitude(),
+            Scalar::ZERO,
+            "circle radius must not be zero"
+        );
+        // Requiring the vector to be *precisely* perpendicular is not
+        // practical, because of numerical inaccuracy. This epsilon value seems
+        // seems to work for now, but maybe it needs to become configurable.
+        assert!(
+            a.dot(&b) < Scalar::default_epsilon(),
+            "`a` and `b` must be perpendicular to each other"
+        );
+
+        Self { center, a, b }
+    }
+
+    /// Access the center point of the circle
+    pub fn center(&self) -> Point<D> {
+        self.center
+    }
+
+    /// Access the vector that defines the starting point of the circle
+    ///
+    /// The point where this vector points from the circle center, is the zero
+    /// coordinate of the circle's coordinate system. The length of the vector
+    /// defines the circle's radius.
+    ///
+    /// Please also refer to [`Self::b`].
+    pub fn a(&self) -> Vector<D> {
+        self.a
+    }
+
+    /// Access the vector that defines the plane of the circle
+    ///
+    /// Also defines the direction of the circle's coordinate system. The length
+    /// is equal to the circle's radius, and this vector is perpendicular to
+    /// [`Self::a`].
+    pub fn b(&self) -> Vector<D> {
+        self.b
+    }
+
     /// Create a new instance that is reversed
     #[must_use]
     pub fn reverse(mut self) -> Self {
