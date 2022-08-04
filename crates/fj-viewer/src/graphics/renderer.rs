@@ -424,16 +424,23 @@ impl Renderer {
             info
         }
 
+        let line_drawing_available = self.is_line_drawing_available();
         egui::SidePanel::left("fj-left-panel").show(&self.egui.context, |ui| {
             ui.add_space(16.0);
 
             ui.group(|ui| {
                 ui.checkbox(&mut config.draw_model, "Render model")
                     .on_hover_text_at_pointer("Toggle with 1");
-                ui.checkbox(&mut config.draw_mesh, "Render mesh")
-                    .on_hover_text_at_pointer("Toggle with 2");
-                ui.checkbox(&mut config.draw_debug, "Render debug")
-                    .on_hover_text_at_pointer("Toggle with 3");
+                ui.add_enabled(line_drawing_available, egui::Checkbox::new(&mut config.draw_mesh, "Render mesh"))
+                    .on_hover_text_at_pointer("Toggle with 2")
+                    .on_disabled_hover_text(
+                        "Rendering device does not have line rendering feature support",
+                    );
+                ui.add_enabled(line_drawing_available, egui::Checkbox::new(&mut config.draw_debug, "Render debug"))
+                    .on_hover_text_at_pointer("Toggle with 3")
+                    .on_disabled_hover_text(
+                        "Rendering device does not have line rendering feature support"
+                    );
                 ui.checkbox(
                     &mut self.egui.options.show_original_ui,
                     "Render original UI",
@@ -635,6 +642,11 @@ impl Renderer {
                 },
             ),
         });
+    }
+
+    /// Returns true if the renderer's adapter can draw lines
+    pub fn is_line_drawing_available(&self) -> bool {
+        self.features.contains(wgpu::Features::POLYGON_MODE_LINE)
     }
 }
 

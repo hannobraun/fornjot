@@ -137,10 +137,14 @@ pub fn run(
                     draw_config.draw_model = !draw_config.draw_model
                 }
                 VirtualKeyCode::Key2 => {
-                    draw_config.draw_mesh = !draw_config.draw_mesh
+                    if renderer.is_line_drawing_available() {
+                        draw_config.draw_mesh = !draw_config.draw_mesh
+                    }
                 }
                 VirtualKeyCode::Key3 => {
-                    draw_config.draw_debug = !draw_config.draw_debug
+                    if renderer.is_line_drawing_available() {
+                        draw_config.draw_debug = !draw_config.draw_debug
+                    }
                 }
                 _ => {}
             },
