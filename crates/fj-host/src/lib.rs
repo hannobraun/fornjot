@@ -105,15 +105,9 @@ impl Model {
                 )
                 .expect("Failed to read command output.")
             ));
-            return Err(Error::Compile(
-                String::from_utf8(
-                    command
-                        .output()
-                        .expect("Failed to get command output.")
-                        .stderr,
-                )
-                .expect("Failed to read command output"),
-            ));
+            return Err(Error::Compile);
+        } else {
+            status.update_status("Model compiled successfully!");
         }
 
         // So, strictly speaking this is all unsound:
@@ -288,7 +282,7 @@ impl Watcher {
                 let shape = match self.model.load_once(&self.parameters, status)
                 {
                     Ok(shape) => shape,
-                    Err(Error::Compile(_)) => {
+                    Err(Error::Compile) => {
                         // It would be better to display an error in the UI,
                         // where the user can actually see it. Issue:
                         // https://github.com/hannobraun/fornjot/issues/30
@@ -356,7 +350,7 @@ impl DerefMut for Parameters {
 pub enum Error {
     /// Model failed to compile
     #[error("Error compiling model")]
-    Compile(String),
+    Compile,
 
     /// I/O error while loading the model
     #[error("I/O error while loading model")]
