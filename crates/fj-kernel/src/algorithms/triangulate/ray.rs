@@ -1,10 +1,18 @@
+//! Ray casting
+
 use fj_math::{Point, Segment};
 
+/// A horizontal ray that goes to the right
+///
+/// For in-kernel use, we don't need anything more flexible, and being exactly
+/// horizontal simplifies some calculations.
 pub struct HorizontalRayToTheRight {
+    /// The point where the ray originates
     pub origin: Point<2>,
 }
 
 impl HorizontalRayToTheRight {
+    /// Determine whether the ray hits the given line segment
     pub fn hits_segment(&self, segment: impl Into<Segment<2>>) -> Option<Hit> {
         let [a, b] = segment.into().points();
         let [lower, upper] = if a.v <= b.v { [a, b] } else { [b, a] };
@@ -70,13 +78,19 @@ where
     }
 }
 
+/// A hit between a ray and a line segment
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Hit {
+    /// The ray hit the segment itself
     Segment,
 
+    /// The ray hit the lower vertex of the segment
     LowerVertex,
+
+    /// The ray hit the upper vertex of the segment
     UpperVertex,
 
+    /// The ray hit the whole segment, as it is parallel to the ray
     Parallel,
 }
 
