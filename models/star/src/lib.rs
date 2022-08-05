@@ -13,7 +13,7 @@ pub fn model(
             fj::Angle::from_rad(2. * PI / num_vertices as f64 * i as f64);
         let radius = if i % 2 == 0 { r1 } else { r2 };
         (angle, radius)
-    })
+    });
 
     // Now that we got that iterator prepared, generating the vertices is just a
     // bit of trigonometry.
