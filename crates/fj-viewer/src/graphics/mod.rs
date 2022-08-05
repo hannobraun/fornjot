@@ -7,7 +7,6 @@ mod geometries;
 mod pipelines;
 mod renderer;
 mod shaders;
-mod status_report;
 mod transform;
 mod uniforms;
 mod vertices;
