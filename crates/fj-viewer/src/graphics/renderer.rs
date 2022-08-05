@@ -425,8 +425,7 @@ impl Renderer {
             );
             info
         }
-        
-        
+
         egui::SidePanel::right("fj-right-panel").show(
             &self.egui.context,
             |ui| {
