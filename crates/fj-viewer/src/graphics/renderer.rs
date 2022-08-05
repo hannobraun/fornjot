@@ -426,21 +426,18 @@ impl Renderer {
             info
         }
 
+        let line_drawing_available = self.is_line_drawing_available();
         egui::SidePanel::right("fj-right-panel").show(
             &self.egui.context,
             |ui| {
                 ui.group(|ui| {
-                    egui::ScrollArea::vertical()
-                        .max_height(f32::INFINITY)
-                        .max_width(f32::INFINITY)
-                        .show(ui, |ui| {
-                            ui.label(format!("Status:\n{}", status.status()))
-                        });
+                    egui::ScrollArea::vertical().show(ui, |ui| {
+                        ui.label(format!("Status:\n{}", status.status()))
+                    });
                 })
             },
         );
 
-        let line_drawing_available = self.is_line_drawing_available();
         egui::SidePanel::left("fj-left-panel").show(&self.egui.context, |ui| {
             ui.add_space(16.0);
 
