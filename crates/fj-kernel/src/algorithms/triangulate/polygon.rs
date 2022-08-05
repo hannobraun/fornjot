@@ -1,9 +1,10 @@
 use fj_interop::debug::{DebugInfo, TriangleEdgeCheck};
 use fj_math::{Point, PolyChain, Segment};
 
-use crate::objects::Surface;
-
-use super::ray::{HorizontalRayToTheRight, RaySegmentHit};
+use crate::{
+    algorithms::ray_cast::{HorizontalRayToTheRight, RaySegmentHit},
+    objects::Surface,
+};
 
 pub struct Polygon {
     surface: Surface,
