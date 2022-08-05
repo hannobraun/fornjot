@@ -6,12 +6,12 @@ use fj_math::{Point, Segment};
 ///
 /// For in-kernel use, we don't need anything more flexible, and being exactly
 /// horizontal simplifies some calculations.
-pub struct HorizontalRayToTheRight {
+pub struct HorizontalRayToTheRight<const D: usize> {
     /// The point where the ray originates
-    pub origin: Point<2>,
+    pub origin: Point<D>,
 }
 
-impl HorizontalRayToTheRight {
+impl HorizontalRayToTheRight<2> {
     /// Determine whether the ray hits the given line segment
     pub fn hits_segment(
         &self,
@@ -70,9 +70,9 @@ impl HorizontalRayToTheRight {
     }
 }
 
-impl<P> From<P> for HorizontalRayToTheRight
+impl<P, const D: usize> From<P> for HorizontalRayToTheRight<D>
 where
-    P: Into<Point<2>>,
+    P: Into<Point<D>>,
 {
     fn from(point: P) -> Self {
         Self {
