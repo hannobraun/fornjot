@@ -103,7 +103,7 @@ impl Polygon {
             }
         }
 
-        // We haven't rules out that the triangle is a polygon hole. Since we
+        // We haven't ruled out that the triangle is a polygon hole. Since we
         // checked all its edges, this means we now know for certain that is is.
         if might_be_hole {
             return false;
