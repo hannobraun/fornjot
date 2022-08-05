@@ -8,9 +8,7 @@ pub struct StatusReport {
 impl StatusReport {
     /// Create a new ``StatusReport`` instance with a blank status
     pub fn new() -> Self {
-        Self {
-            status: String::new(),
-        }
+        Self::default()
     }
 
     /// Update the status
@@ -21,5 +19,11 @@ impl StatusReport {
     /// Get current status
     pub fn status(&self) -> &str {
         self.status.as_str()
+    }
+}
+
+impl Default for StatusReport {
+    fn default() -> Self {
+        Self::new()
     }
 }
