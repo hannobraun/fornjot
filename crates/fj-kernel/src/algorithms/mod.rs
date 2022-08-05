@@ -10,6 +10,7 @@ mod transform;
 mod triangulate;
 
 pub mod intersection;
+pub mod ray_cast;
 
 pub use self::{
     approx::{CycleApprox, FaceApprox, InvalidTolerance, Tolerance},

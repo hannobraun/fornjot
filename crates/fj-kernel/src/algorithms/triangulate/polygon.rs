@@ -1,9 +1,10 @@
 use fj_interop::debug::{DebugInfo, TriangleEdgeCheck};
 use fj_math::{Point, PolyChain, Segment};
 
-use crate::objects::Surface;
-
-use super::ray::{Hit, HorizontalRayToTheRight};
+use crate::{
+    algorithms::ray_cast::{HorizontalRayToTheRight, RaySegmentHit},
+    objects::Surface,
+};
 
 pub struct Polygon {
     surface: Surface,
@@ -103,7 +104,7 @@ impl Polygon {
             }
         }
 
-        // We haven't rules out that the triangle is a polygon hole. Since we
+        // We haven't ruled out that the triangle is a polygon hole. Since we
         // checked all its edges, this means we now know for certain that is is.
         if might_be_hole {
             return false;
@@ -162,12 +163,18 @@ impl Polygon {
                 let hit = ray.hits_segment(edge);
 
                 let count_hit = match (hit, previous_hit) {
-                    (Some(Hit::Segment), _) => {
+                    (Some(RaySegmentHit::Segment), _) => {
                         // We're hitting a segment right-on. Clear case.
                         true
                     }
-                    (Some(Hit::UpperVertex), Some(Hit::LowerVertex))
-                    | (Some(Hit::LowerVertex), Some(Hit::UpperVertex)) => {
+                    (
+                        Some(RaySegmentHit::UpperVertex),
+                        Some(RaySegmentHit::LowerVertex),
+                    )
+                    | (
+                        Some(RaySegmentHit::LowerVertex),
+                        Some(RaySegmentHit::UpperVertex),
+                    ) => {
                         // If we're hitting a vertex, only count it if we've hit
                         // the other kind of vertex right before.
                         //
@@ -183,7 +190,7 @@ impl Polygon {
                         // passing through anything.
                         true
                     }
-                    (Some(Hit::Parallel), _) => {
+                    (Some(RaySegmentHit::Parallel), _) => {
                         // A parallel edge must be completely ignored. Its
                         // presence won't change anything, so we can treat it as
                         // if it wasn't there, and its neighbors were connected

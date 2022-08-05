@@ -1,6 +1,5 @@
 mod delaunay;
 mod polygon;
-mod ray;
 
 use fj_interop::{debug::DebugInfo, mesh::Mesh};
 use fj_math::Point;
