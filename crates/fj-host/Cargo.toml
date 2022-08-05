@@ -24,3 +24,7 @@ cargo_metadata = "0.15.0"
 [dependencies.fj]
 version = "0.10.0"
 path = "../fj"
+
+[dependencies.fj-interop]
+version = "0.10.0"
+path = "../fj-interop"

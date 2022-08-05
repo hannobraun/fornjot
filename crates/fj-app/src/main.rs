@@ -20,6 +20,7 @@ use std::path::PathBuf;
 use anyhow::{anyhow, Context as _};
 use fj_export::export;
 use fj_host::{Model, Parameters};
+use fj_interop::status_report::StatusReport;
 use fj_operations::shape_processor::ShapeProcessor;
 use fj_window::run::run;
 use tracing_subscriber::fmt::format;
@@ -28,6 +29,7 @@ use tracing_subscriber::EnvFilter;
 use crate::{args::Args, config::Config};
 
 fn main() -> anyhow::Result<()> {
+    let mut status = StatusReport::new();
     // Respect `RUST_LOG`. If that's not defined or erroneous, log warnings and
     // above.
     //
@@ -62,7 +64,7 @@ fn main() -> anyhow::Result<()> {
     };
 
     if let Some(path) = args.export {
-        let shape = model.load_once(&parameters)?;
+        let shape = model.load_once(&parameters, &mut status)?;
         let shape = shape_processor.process(&shape)?;
 
         export(&shape.mesh, &path)?;
@@ -71,7 +73,7 @@ fn main() -> anyhow::Result<()> {
     }
 
     let watcher = model.load_and_watch(parameters)?;
-    run(watcher, shape_processor)?;
+    run(watcher, shape_processor, status)?;
 
     Ok(())
 }
