@@ -13,6 +13,9 @@ impl StatusReport {
 
     /// Update the status
     pub fn update_status(&mut self, status: &str) {
+        if self.status.len() >= 5 {
+            self.clear_status();
+        }
         self.status.push(status.to_string());
     }
 
@@ -22,7 +25,7 @@ impl StatusReport {
     }
 
     /// Reset status
-    pub fn clear_status(&mut self) {
+    fn clear_status(&mut self) {
         self.status.clear();
     }
 }
