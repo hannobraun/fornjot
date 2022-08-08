@@ -23,4 +23,4 @@ version = "0.11.0"
 path = "../../crates/fj-proc"
 
 [dev-dependencies]
-serde_json = "1.0.82"
+serde_json = "1.0.83"
