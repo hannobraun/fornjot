@@ -38,6 +38,10 @@ path = "../fj-export"
 version = "0.10.0"
 path = "../fj-host"
 
+[dependencies.fj-interop]
+version = "0.10.0"
+path = "../fj-interop"
+
 [dependencies.fj-kernel]
 version = "0.10.0"
 path = "../fj-kernel"
@@ -65,7 +69,3 @@ features = ["derive"]
 [dependencies.tracing-subscriber]
 version = "0.3.15"
 features = ["env-filter", "fmt"]
-
-[dependencies.fj-interop]
-version = "0.10.0"
-path = "../fj-interop"
