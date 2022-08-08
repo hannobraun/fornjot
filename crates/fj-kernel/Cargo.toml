@@ -35,5 +35,5 @@ path = "../fj-math"
 
 
 [dev-dependencies]
-anyhow = "1.0.59"
+anyhow = "1.0.60"
 pretty_assertions = "1.2.1"
