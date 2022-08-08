@@ -43,20 +43,11 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Segment<2>) {
             return Some(RaySegmentIntersection::RayHitsSegmentAndAreParallel);
         }
 
-        let pa = robust::Coord {
-            x: lower.u,
-            y: lower.v,
-        };
-        let pb = robust::Coord {
-            x: upper.u,
-            y: upper.v,
-        };
-        let pc = robust::Coord {
-            x: ray.origin.u,
-            y: ray.origin.v,
-        };
+        let pa = [lower.u.into(), lower.v.into()];
+        let pb = [upper.u.into(), upper.v.into()];
+        let pc = [ray.origin.u.into(), ray.origin.v.into()];
 
-        if robust::orient2d(pa, pb, pc) == 0. {
+        if robust_predicates::orient2d(&pa, &pb, &pc) == 0. {
             // ray starts on the line
 
             if ray.origin.v == a.v {
@@ -69,7 +60,7 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Segment<2>) {
             return Some(RaySegmentIntersection::RayStartsOnSegment);
         }
 
-        if robust::orient2d(pa, pb, pc) > 0. {
+        if robust_predicates::orient2d(&pa, &pb, &pc) > 0. {
             // ray starts left of the line
 
             if ray.origin.v == upper.v {
