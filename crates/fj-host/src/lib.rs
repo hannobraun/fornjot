@@ -91,13 +91,25 @@ impl Model {
 
         let command = command_root
             .arg("build")
+            .arg("-q")
             .args(["--manifest-path", &manifest_path]);
         let exit_status = command.status()?;
 
         if exit_status.success() {
             status.update_status("Model compiled successfully!");
         } else {
-            status.update_status("Error compiling the model!");
+            let output = match command.output() {
+                Ok(output) => {
+                    String::from_utf8(output.stderr).unwrap_or_else(|_| {
+                        String::from("Failed to fetch command output")
+                    })
+                }
+                Err(_) => String::from("Failed to fetch command output"),
+            };
+            status.update_status(&format!(
+                "Failed to compile model:\n{}",
+                output
+            ));
             return Err(Error::Compile);
         }
 
