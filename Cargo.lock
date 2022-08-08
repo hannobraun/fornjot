@@ -1566,9 +1566,9 @@ dependencies = [
 
 [[package]]
 name = "map-macro"
-version = "0.2.2"
+version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "308eec36c376312771da349d880afd5f092533499dbe9beb7bcba8c15eabe2c4"
+checksum = "ff92816d6a5feaa0c67e8ce9c9199ff59c832d7972534d879648319c623542b7"
 
 [[package]]
 name = "matchers"
