@@ -17,7 +17,11 @@ impl Reverse for Curve {
     /// orientation, which would then make it possible for curves to be without
     /// direction. Then this implementation would not exist.
     fn reverse(self) -> Self {
-        Curve::new(self.kind().reverse(), self.global().reverse())
+        Curve::new(
+            *self.surface(),
+            self.kind().reverse(),
+            self.global().reverse(),
+        )
     }
 }
 

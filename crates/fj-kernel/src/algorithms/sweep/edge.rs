@@ -85,7 +85,7 @@ fn create_non_continuous_side_face(
                 let global =
                     GlobalCurve::from_kind(CurveKind::line_from_points(global));
 
-                Curve::new(local, global)
+                Curve::new(surface, local, global)
             };
 
             let vertices = VerticesOfEdge::from_vertices([

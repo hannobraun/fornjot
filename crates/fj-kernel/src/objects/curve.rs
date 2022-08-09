@@ -7,6 +7,7 @@ use super::Surface;
 /// A curve, defined in local surface coordinates
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Curve {
+    surface: Surface,
     kind: CurveKind<2>,
     global: GlobalCurve,
 }
@@ -18,8 +19,21 @@ impl Curve {
     }
 
     /// Construct a new instance of `Curve`
-    pub fn new(kind: CurveKind<2>, global: GlobalCurve) -> Self {
-        Self { kind, global }
+    pub fn new(
+        surface: Surface,
+        kind: CurveKind<2>,
+        global: GlobalCurve,
+    ) -> Self {
+        Self {
+            surface,
+            kind,
+            global,
+        }
+    }
+
+    /// Access the surface that this curve is defined in
+    pub fn surface(&self) -> &Surface {
+        &self.surface
     }
 
     /// Access the kind of this curve

@@ -472,9 +472,9 @@ mod tests {
     fn shell() {
         let object = Shell::build().cube_from_edge_length(1.);
 
-        assert_eq!(20, object.curve_iter().count());
+        assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());
-        assert_eq!(20, object.edge_iter().count());
+        assert_eq!(24, object.edge_iter().count());
         assert_eq!(6, object.face_iter().count());
         assert_eq!(18, object.global_curve_iter().count());
         assert_eq!(8, object.global_vertex_iter().count());
@@ -482,7 +482,7 @@ mod tests {
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(0, object.solid_iter().count());
         assert_eq!(6, object.surface_iter().count());
-        assert_eq!(40, object.vertex_iter().count());
+        assert_eq!(48, object.vertex_iter().count());
     }
 
     #[test]
@@ -512,9 +512,9 @@ mod tests {
     fn solid() {
         let object = Solid::build().cube_from_edge_length(1.);
 
-        assert_eq!(20, object.curve_iter().count());
+        assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());
-        assert_eq!(20, object.edge_iter().count());
+        assert_eq!(24, object.edge_iter().count());
         assert_eq!(6, object.face_iter().count());
         assert_eq!(18, object.global_curve_iter().count());
         assert_eq!(8, object.global_vertex_iter().count());
@@ -522,7 +522,7 @@ mod tests {
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(1, object.solid_iter().count());
         assert_eq!(6, object.surface_iter().count());
-        assert_eq!(40, object.vertex_iter().count());
+        assert_eq!(48, object.vertex_iter().count());
     }
 
     #[test]

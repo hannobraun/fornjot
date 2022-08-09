@@ -33,7 +33,7 @@ impl EdgeBuilder {
             )));
 
         Edge::from_curve_and_vertices(
-            Curve::new(curve_local, curve_global),
+            Curve::new(self.surface, curve_local, curve_global),
             VerticesOfEdge::none(),
         )
     }
@@ -59,7 +59,7 @@ impl EdgeBuilder {
                 GlobalCurve::from_kind(kind)
             };
 
-            Curve::new(curve_local, curve_global)
+            Curve::new(self.surface, curve_local, curve_global)
         };
 
         let vertices = {
