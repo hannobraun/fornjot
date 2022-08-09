@@ -109,7 +109,12 @@ impl ToTokens for GeometryFunction {
             #geometry_function(#( #argument_names ),*)
         };
         let invocation = if *fallible {
-            quote! { #invocation.map(fj::Shape::from).map_err(Into::into) }
+            quote! {
+                match #invocation {
+                    Ok(s) => ROk(s.into()),
+                    Err(e) => RErr(RBoxError::new(e))
+                }
+            }
         } else {
             quote! { ROk(#invocation.into()) }
         };
@@ -117,8 +122,8 @@ impl ToTokens for GeometryFunction {
         tokens.extend(quote! {
             fn shape(
                 &self,
-                ctx: fj::models::internal::Context<'_>,
-            ) -> fj::models::internal::RResult<fj::Shape, fj::models::Error> {
+                ctx: Context<'_>,
+            ) -> RResult<fj::Shape, RBoxError> {
                 #( #arguments )*
                 #( #constraints )*
                 #invocation
@@ -154,7 +159,7 @@ impl ToTokens for ExtractedArgument {
                             Ok(v) => v,
                             Err(e) => return RErr(RBoxError::new(e)),
                         },
-                        RNone => return RErr(#error_message.into()),
+                        RNone => return RErr(RBoxError::from_fmt(&#error_message)),
                     };
                 }
             }

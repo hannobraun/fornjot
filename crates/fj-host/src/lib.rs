@@ -389,7 +389,7 @@ pub enum Error {
 
     /// Initializing a model failed.
     #[error("Unable to initialize the model")]
-    InitializeModel(#[source] fj::models::Error),
+    InitializeModel(#[source] fj::models::internal::RBoxError),
 
     /// The user forgot to register a model when calling
     /// [`fj::register_model!()`].
@@ -398,7 +398,7 @@ pub enum Error {
 
     /// An error was returned from [`fj::models::Model::shape()`].
     #[error("Unable to determine the model's geometry")]
-    Shape(#[source] fj::models::Error),
+    Shape(#[source] fj::models::internal::RBoxError),
 
     /// Error while watching the model code for changes
     #[error("Error watching model for changes")]

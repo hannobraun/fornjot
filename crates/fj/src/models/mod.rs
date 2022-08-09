@@ -16,7 +16,7 @@ pub use self::{
     model::Model,
 };
 
-/// A generic error used when defining a model.
+/// The error type used in this module.
 pub type Error = abi_stable::std_types::RBoxError;
 
 /// Internal implementation details for the host-guest interface.
@@ -28,17 +28,20 @@ pub type Error = abi_stable::std_types::RBoxError;
 /// If the macro generated the wrong code, this doctest would fail.
 ///
 /// ```rust
-/// use fj::{models::internal::{self, INIT_FUNCTION_NAME}, models::Metadata};
+/// use fj::models::{
+///     internal::{self, INIT_FUNCTION_NAME, RResult, RBoxError},
+///     Metadata,
+/// };
 ///
 /// fj::register_model!(|_| {
 ///     Ok(Metadata::new("My Model", "1.2.3"))
 /// });
 ///
 /// mod x {
-///     use fj::models::internal;
+///     use fj::models::{Metadata, internal::{Host, RResult, RBoxError}};
 ///
 ///     extern "C" {
-///         pub fn fj_model_init(_: internal::Host<'_>) -> internal::InitResult;
+///         pub fn fj_model_init(_: Host<'_>) -> RResult<Metadata, RBoxError>;
 ///     }
 /// }
 ///
@@ -47,7 +50,7 @@ pub type Error = abi_stable::std_types::RBoxError;
 ///
 /// // We can also make sure the unmangled name is correct by calling it.
 ///
-/// let metadata: fj::models::Metadata = unsafe {
+/// let metadata: Metadata = unsafe {
 ///     let mut host = Host;
 ///     let mut host = internal::Host::new(&mut host);
 ///     x::fj_model_init(host).unwrap().into()
@@ -65,6 +68,6 @@ pub mod internal {
         context::Context_trait, host::Host_trait, model::Model_trait, types::*,
     };
     pub use abi_stable::std_types::{
-        RErr, RNone, ROk, ROption, RResult, RSome, RBoxError,
+        RBoxError, RErr, RNone, ROk, ROption, RResult, RSome,
     };
 }

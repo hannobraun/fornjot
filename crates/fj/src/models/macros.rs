@@ -1,4 +1,3 @@
-
 /// Define the initialization routine used when registering models.
 ///
 /// See the [`crate::model`] macro if your model can be implemented as a pure
@@ -7,8 +6,7 @@
 /// # Examples
 ///
 /// ```rust
-/// use fj::models::*;
-/// use abi_stable::std_types::{RResult, RBoxError};
+/// use fj::models::{*, internal::RResult};
 ///
 /// fj::register_model!(|host: &mut dyn Host| {
 ///     host.register_model(MyModel::default());
@@ -22,7 +20,7 @@
 /// impl Model for MyModel {
 ///     fn metadata(&self) -> ModelMetadata { todo!() }
 ///
-///     fn shape(&self, ctx: fj::models::internal::Context) -> RResult<fj::Shape, RBoxError> {
+///     fn shape(&self, ctx: fj::models::internal::Context) -> RResult<fj::Shape, Error> {
 ///         todo!()
 ///     }
 /// }
@@ -33,7 +31,10 @@ macro_rules! register_model {
         #[no_mangle]
         unsafe extern "C" fn fj_model_init(
             mut host: $crate::models::internal::Host,
-        ) -> $crate::models::internal::InitResult {
+        ) -> $crate::models::internal::RResult<
+            $crate::models::Metadata,
+            $crate::models::Error,
+        > {
             let init: fn(
                 &mut dyn $crate::models::Host,
             ) -> Result<
@@ -42,10 +43,8 @@ macro_rules! register_model {
             > = $init;
 
             match init(&mut host) {
-                Ok(meta) => {
-                    $crate::models::internal::InitResult::ROk(meta.into())
-                }
-                Err(e) => $crate::models::internal::InitResult::RErr(e.into()),
+                Ok(meta) => $crate::models::internal::ROk(meta.into()),
+                Err(e) => $crate::models::internal::RErr(e.into()),
             }
         }
     };

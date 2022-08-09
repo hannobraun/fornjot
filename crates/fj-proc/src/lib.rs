@@ -83,7 +83,9 @@ use syn::{parse_macro_input, FnArg, ItemFn};
 ///     todo!("Do something with {home_dir}")
 /// }
 ///
-/// fn assert_convertible(e: std::env::VarError) -> fj::models::Error { e.into() }
+/// fn assert_convertible(e: std::env::VarError) -> fj::models::Error {
+///     fj::models::Error::new(e)
+/// }
 /// ```
 #[proc_macro_attribute]
 pub fn model(_: TokenStream, input: TokenStream) -> TokenStream {

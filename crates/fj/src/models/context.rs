@@ -8,10 +8,8 @@ use std::{
 
 use abi_stable::{
     sabi_trait,
-    std_types::{RBoxError, ROption, RStr},
+    std_types::{ROption, RStr},
 };
-
-use crate::models::Error;
 
 /// Contextual information passed to a [`Model`][crate::models::Model] when it
 /// is being initialized.
@@ -106,7 +104,7 @@ impl<C: Context + ?Sized> ContextExt for C {
             .map_err(|e| ParseFailed {
                 name: name.to_string(),
                 value: value.to_string(),
-                error: RBoxError::new(e),
+                error: e.into(),
             })
             .map_err(ContextError::from)
     }
@@ -127,7 +125,7 @@ impl<C: Context + ?Sized> ContextExt for C {
         let parsed = value.parse::<T>().map_err(|e| ParseFailed {
             name: name.to_string(),
             value: value.to_string(),
-            error: RBoxError::new(e),
+            error: e.into(),
         })?;
 
         Ok(Some(parsed))
@@ -204,7 +202,7 @@ pub struct ParseFailed {
     /// The actual value.
     pub value: String,
     /// The error that occurred.
-    pub error: Error,
+    pub error: Box<dyn std::error::Error + Send + Sync>,
 }
 
 impl Display for ParseFailed {
@@ -217,7 +215,7 @@ impl Display for ParseFailed {
 
 impl std::error::Error for ParseFailed {
     fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
-        Some(&self.error)
+        Some(&*self.error)
     }
 }
 
