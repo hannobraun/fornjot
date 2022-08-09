@@ -10,9 +10,9 @@ pub struct Host<'a> {
     _lifetime: PhantomData<&'a mut ()>,
 }
 
-impl<'a, H: crate::Host + Sized> From<&'a mut H> for Host<'a> {
+impl<'a, H: crate::models::Host + Sized> From<&'a mut H> for Host<'a> {
     fn from(host: &'a mut H) -> Self {
-        extern "C" fn register_boxed_model<H: crate::Host + Sized>(
+        extern "C" fn register_boxed_model<H: crate::models::Host + Sized>(
             user_data: *mut c_void,
             model: Model,
         ) {
@@ -33,8 +33,8 @@ impl<'a, H: crate::Host + Sized> From<&'a mut H> for Host<'a> {
     }
 }
 
-impl<'a> crate::Host for Host<'a> {
-    fn register_boxed_model(&mut self, model: Box<dyn crate::Model>) {
+impl<'a> crate::models::Host for Host<'a> {
+    fn register_boxed_model(&mut self, model: Box<dyn crate::models::Model>) {
         let Host {
             user_data,
             register_boxed_model,

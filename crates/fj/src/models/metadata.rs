@@ -115,7 +115,7 @@ impl Metadata {
     }
 }
 
-/// Metadata about a [`crate::Model`].
+/// Metadata about a [`crate::models::Model`].
 #[derive(Debug, Clone, PartialEq)]
 pub struct ModelMetadata {
     /// A short, human-friendly name used to identify this model.

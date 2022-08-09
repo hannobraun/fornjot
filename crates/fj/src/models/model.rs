@@ -1,12 +1,12 @@
-use crate::{Context, ModelMetadata, Shape};
+use crate::{
+    models::{Context, ModelMetadata, Error},
+    Shape,
+};
 
 /// A model.
 pub trait Model: Send + Sync {
     /// Calculate this model's concrete geometry.
-    fn shape(
-        &self,
-        ctx: &dyn Context,
-    ) -> Result<Shape, Box<dyn std::error::Error + Send + Sync>>;
+    fn shape(&self, ctx: &dyn Context) -> Result<Shape, Error>;
 
     /// Get metadata for the model.
     fn metadata(&self) -> ModelMetadata;

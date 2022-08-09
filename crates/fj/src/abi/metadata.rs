@@ -8,7 +8,7 @@ pub struct ModelMetadata {
     arguments: ffi_safe::Vec<ArgumentMetadata>,
 }
 
-impl From<ModelMetadata> for crate::ModelMetadata {
+impl From<ModelMetadata> for crate::models::ModelMetadata {
     fn from(m: ModelMetadata) -> Self {
         let ModelMetadata {
             name,
@@ -16,7 +16,7 @@ impl From<ModelMetadata> for crate::ModelMetadata {
             arguments,
         } = m;
 
-        crate::ModelMetadata {
+        crate::models::ModelMetadata {
             name: name.into(),
             description: description.map(Into::into).into(),
             arguments: arguments.iter().cloned().map(|a| a.into()).collect(),
@@ -24,9 +24,9 @@ impl From<ModelMetadata> for crate::ModelMetadata {
     }
 }
 
-impl From<crate::ModelMetadata> for ModelMetadata {
-    fn from(m: crate::ModelMetadata) -> Self {
-        let crate::ModelMetadata {
+impl From<crate::models::ModelMetadata> for ModelMetadata {
+    fn from(m: crate::models::ModelMetadata) -> Self {
+        let crate::models::ModelMetadata {
             name,
             description,
             arguments,
@@ -52,7 +52,7 @@ pub struct Metadata {
     license: ffi_safe::Option<ffi_safe::String>,
 }
 
-impl From<Metadata> for crate::Metadata {
+impl From<Metadata> for crate::models::Metadata {
     fn from(m: Metadata) -> Self {
         let Metadata {
             name,
@@ -64,7 +64,7 @@ impl From<Metadata> for crate::Metadata {
             license,
         } = m;
 
-        crate::Metadata {
+        crate::models::Metadata {
             name: name.into(),
             version: version.into(),
             short_description: short_description.map(Into::into).into(),
@@ -76,9 +76,9 @@ impl From<Metadata> for crate::Metadata {
     }
 }
 
-impl From<crate::Metadata> for Metadata {
-    fn from(m: crate::Metadata) -> Self {
-        let crate::Metadata {
+impl From<crate::models::Metadata> for Metadata {
+    fn from(m: crate::models::Metadata) -> Self {
+        let crate::models::Metadata {
             name,
             version,
             short_description,
@@ -108,9 +108,9 @@ pub struct ArgumentMetadata {
     default_value: ffi_safe::Option<ffi_safe::String>,
 }
 
-impl From<crate::ArgumentMetadata> for ArgumentMetadata {
-    fn from(meta: crate::ArgumentMetadata) -> Self {
-        let crate::ArgumentMetadata {
+impl From<crate::models::ArgumentMetadata> for ArgumentMetadata {
+    fn from(meta: crate::models::ArgumentMetadata) -> Self {
+        let crate::models::ArgumentMetadata {
             name,
             description,
             default_value,
@@ -124,7 +124,7 @@ impl From<crate::ArgumentMetadata> for ArgumentMetadata {
     }
 }
 
-impl From<ArgumentMetadata> for crate::ArgumentMetadata {
+impl From<ArgumentMetadata> for crate::models::ArgumentMetadata {
     fn from(meta: ArgumentMetadata) -> Self {
         let ArgumentMetadata {
             name,
@@ -132,7 +132,7 @@ impl From<ArgumentMetadata> for crate::ArgumentMetadata {
             default_value,
         } = meta;
 
-        crate::ArgumentMetadata {
+        crate::models::ArgumentMetadata {
             name: name.into(),
             description: description.map(Into::into).into(),
             default_value: default_value.map(Into::into).into(),

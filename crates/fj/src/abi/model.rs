@@ -1,6 +1,6 @@
 use std::{os::raw::c_void, panic::AssertUnwindSafe};
 
-use crate::abi::{Context, ModelMetadata, ShapeResult};
+use crate::{abi::{Context, ModelMetadata, ShapeResult}, models::Error};
 
 #[repr(C)]
 pub struct Model {
@@ -10,11 +10,11 @@ pub struct Model {
     free: unsafe extern "C" fn(*mut c_void),
 }
 
-impl crate::Model for Model {
+impl crate::models::Model for Model {
     fn shape(
         &self,
-        ctx: &dyn crate::Context,
-    ) -> Result<crate::Shape, Box<dyn std::error::Error + Send + Sync>> {
+        ctx: &dyn crate::models::Context,
+    ) -> Result<crate::Shape, Error> {
         let ctx = Context::from(&ctx);
 
         let Model { ptr, shape, .. } = *self;
@@ -27,17 +27,17 @@ impl crate::Model for Model {
         }
     }
 
-    fn metadata(&self) -> crate::ModelMetadata {
+    fn metadata(&self) -> crate::models::ModelMetadata {
         let Model { ptr, metadata, .. } = *self;
 
         unsafe { metadata(ptr).into() }
     }
 }
 
-impl From<Box<dyn crate::Model>> for Model {
-    fn from(m: Box<dyn crate::Model>) -> Self {
+impl From<Box<dyn crate::models::Model>> for Model {
+    fn from(m: Box<dyn crate::models::Model>) -> Self {
         unsafe extern "C" fn metadata(user_data: *mut c_void) -> ModelMetadata {
-            let model = &*(user_data as *mut Box<dyn crate::Model>);
+            let model = &*(user_data as *mut Box<dyn crate::models::Model>);
 
             match std::panic::catch_unwind(AssertUnwindSafe(|| {
                 model.metadata()
@@ -51,7 +51,7 @@ impl From<Box<dyn crate::Model>> for Model {
             user_data: *mut c_void,
             ctx: Context<'_>,
         ) -> ShapeResult {
-            let model = &*(user_data as *mut Box<dyn crate::Model>);
+            let model = &*(user_data as *mut Box<dyn crate::models::Model>);
 
             match std::panic::catch_unwind(AssertUnwindSafe(|| {
                 model.shape(&ctx)
@@ -63,7 +63,7 @@ impl From<Box<dyn crate::Model>> for Model {
         }
 
         unsafe extern "C" fn free(user_data: *mut c_void) {
-            let model = user_data as *mut Box<dyn crate::Model>;
+            let model = user_data as *mut Box<dyn crate::models::Model>;
 
             if let Err(e) = std::panic::catch_unwind(AssertUnwindSafe(|| {
                 let model = Box::from_raw(model);
