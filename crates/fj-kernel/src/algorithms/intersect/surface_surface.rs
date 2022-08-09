@@ -69,16 +69,22 @@ struct PlaneParametric {
 
 impl PlaneParametric {
     pub fn extract_from_surface(surface: &Surface) -> Self {
-        let Surface::SweptCurve(surface) = surface;
-        let line = match surface.curve {
-            CurveKind::Line(line) => line,
-            _ => todo!("Only plane-plane intersection is currently supported."),
+        let (line, path) = {
+            let Surface::SweptCurve(surface) = surface;
+            let line = match surface.curve {
+                CurveKind::Line(line) => line,
+                _ => todo!(
+                    "Only plane-plane intersection is currently supported."
+                ),
+            };
+
+            (line, surface.path)
         };
 
         Self {
             origin: line.origin(),
             u: line.direction(),
-            v: surface.path,
+            v: path,
         }
     }
 }
