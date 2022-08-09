@@ -25,8 +25,18 @@ impl From<ModelMetadata> for crate::ModelMetadata {
 }
 
 impl From<crate::ModelMetadata> for ModelMetadata {
-    fn from(_m: crate::ModelMetadata) -> Self {
-        todo!()
+    fn from(m: crate::ModelMetadata) -> Self {
+        let crate::ModelMetadata {
+            name,
+            description,
+            arguments,
+        } = m;
+
+        ModelMetadata {
+            name: name.into(),
+            description: description.into(),
+            arguments: arguments.into_iter().map(Into::into).collect(),
+        }
     }
 }
 

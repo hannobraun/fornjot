@@ -314,7 +314,11 @@ impl std::error::Error for BoxedError {}
 
 impl From<Box<dyn std::error::Error + Send + Sync>> for BoxedError {
     fn from(err: Box<dyn std::error::Error + Send + Sync>) -> Self {
-        // TODO: is it worth capturing the message from each source error, too?
+        // Open question: is it worth capturing the message from each source
+        // error, too? We could have some sort of `sources: Vec<Source>` field
+        // where `Source` is a private wrapper around String that implements
+        // std::error::Error, however then people will see what *looks* like a
+        // particular error type, but they won't be able to downcast to it.
         BoxedError {
             msg: err.to_string().into(),
         }
