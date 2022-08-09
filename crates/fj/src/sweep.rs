@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use crate::{Shape, Shape2d};
 
 /// A sweep of a 2-dimensional shape along straight path
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, abi_stable::StableAbi)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Sweep {

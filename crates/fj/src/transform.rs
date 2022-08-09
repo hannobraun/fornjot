@@ -1,3 +1,4 @@
+use abi_stable::std_types::RBox;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
@@ -12,7 +13,7 @@ use crate::{Angle, Shape};
 ///
 /// See issue:
 /// <https://github.com/hannobraun/Fornjot/issues/101>
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, abi_stable::StableAbi)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Transform {
@@ -31,6 +32,6 @@ pub struct Transform {
 
 impl From<Transform> for Shape {
     fn from(shape: Transform) -> Self {
-        Self::Transform(Box::new(shape))
+        Self::Transform(RBox::new(shape))
     }
 }

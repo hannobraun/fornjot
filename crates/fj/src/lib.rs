@@ -32,18 +32,19 @@ mod transform;
 pub use self::{
     angle::*, group::Group, shape_2d::*, sweep::Sweep, transform::Transform,
 };
+use abi_stable::std_types::RBox;
 pub use fj_proc::*;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
 /// A shape
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, abi_stable::StableAbi)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 #[allow(improper_ctypes)] // Box isn't FFI-safe
 pub enum Shape {
     /// A group of two 3-dimensional shapes
-    Group(Box<Group>),
+    Group(RBox<Group>),
 
     /// A 2D shape
     Shape2d(Shape2d),
@@ -52,5 +53,5 @@ pub enum Shape {
     Sweep(Sweep),
 
     /// A transformed 3-dimensional shape
-    Transform(Box<Transform>),
+    Transform(RBox<Transform>),
 }

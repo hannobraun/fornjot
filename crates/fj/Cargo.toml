@@ -17,6 +17,7 @@ categories = ["encoding", "mathematics", "rendering"]
 
 [dependencies]
 serde = { version = "1.0.142", features = ["derive"], optional = true }
+abi_stable = "0.10.4"
 
 [dependencies.fj-proc]
 version = "0.11.0"

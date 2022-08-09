@@ -1,3 +1,4 @@
+use abi_stable::std_types::RBox;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
@@ -11,7 +12,7 @@ use crate::Shape;
 /// # Limitations
 ///
 /// Whether the shapes in the group touch or overlap is not currently checked.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, abi_stable::StableAbi)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Group {
@@ -24,6 +25,6 @@ pub struct Group {
 
 impl From<Group> for Shape {
     fn from(shape: Group) -> Self {
-        Self::Group(Box::new(shape))
+        Self::Group(RBox::new(shape))
     }
 }

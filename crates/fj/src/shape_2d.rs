@@ -1,17 +1,16 @@
+use abi_stable::std_types::{RArc, RBox, RVec};
 #[cfg(feature = "serde")]
-use serde::{de, ser, Deserialize, Serialize};
-use std::mem;
-use std::sync::atomic;
+use serde::{Deserialize, Serialize};
 
 use crate::Shape;
 
 /// A 2-dimensional shape
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, abi_stable::StableAbi)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub enum Shape2d {
     /// A difference between two shapes
-    Difference(Box<Difference2d>),
+    Difference(RBox<Difference2d>),
 
     /// A sketch
     Sketch(Sketch),
@@ -28,7 +27,7 @@ impl Shape2d {
 }
 
 /// A difference between two shapes
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, abi_stable::StableAbi)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Difference2d {
@@ -60,7 +59,7 @@ impl From<Difference2d> for Shape {
 
 impl From<Difference2d> for Shape2d {
     fn from(shape: Difference2d) -> Self {
-        Self::Difference(Box::new(shape))
+        Self::Difference(RBox::new(shape))
     }
 }
 
@@ -73,7 +72,7 @@ impl From<Difference2d> for Shape2d {
 /// Nothing about these edges is checked right now, but algorithms might assume
 /// that the edges are non-overlapping. If you create a `Sketch` with
 /// overlapping edges, you're on your own.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, abi_stable::StableAbi)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Sketch {
@@ -118,7 +117,7 @@ impl Sketch {
 }
 
 /// A chain of elements that is part of a [`Sketch`]
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, abi_stable::StableAbi)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub enum Chain {
@@ -130,7 +129,7 @@ pub enum Chain {
 }
 
 /// A circle that is part of a [`Sketch`]
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, abi_stable::StableAbi)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[repr(C)]
 pub struct Circle {
@@ -151,161 +150,21 @@ impl Circle {
 }
 
 /// A polygonal chain that is part of a [`Sketch`]
-#[derive(Debug)]
+#[derive(Clone, Debug, PartialEq, abi_stable::StableAbi)]
 #[repr(C)]
-pub struct PolyChain {
-    // The fields are the raw parts of a `Vec`. `Sketch` needs to be FFI-safe,
-    // meaning it can't store a `Vec` directly. It needs to take this detour.
-    ptr: *mut [f64; 2],
-    length: usize,
-    capacity: usize,
-
-    // The `Sketch` can be cloned, so we need to track the number of live
-    // instances, so as to free the buffer behind `ptr` only when the last
-    // one is dropped.
-    rc: *mut atomic::AtomicUsize,
-}
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+pub struct PolyChain(RArc<RVec<[f64; 2]>>);
 
 impl PolyChain {
     /// Construct an instance from a list of points
-    pub fn from_points(mut points: Vec<[f64; 2]>) -> Self {
-        // This can be cleaned up, once `Vec::into_raw_parts` is stable.
-        let ptr = points.as_mut_ptr();
-        let length = points.len();
-        let capacity = points.capacity();
-
-        // We're taking ownership of the memory here, so we can't allow `points`
-        // to deallocate it.
-        mem::forget(points);
-
-        // Allocate the reference counter on the heap. It will be reclaimed
-        // alongside `points` when it reaches 0.
-        let rc = Box::new(atomic::AtomicUsize::new(1));
-        let rc = Box::leak(rc) as *mut _;
-
-        Self {
-            ptr,
-            length,
-            capacity,
-            rc,
-        }
-    }
-
-    /// Get a reference to the points in this [`PolyChain`].
-    fn points(&self) -> &[[f64; 2]] {
-        unsafe { std::slice::from_raw_parts(self.ptr, self.length) }
+    pub fn from_points(points: Vec<[f64; 2]>) -> Self {
+        PolyChain(RArc::new(points.into()))
     }
 
     /// Return the points that define the polygonal chain
     pub fn to_points(&self) -> Vec<[f64; 2]> {
-        // This is sound. All invariants are automatically kept, as the raw
-        // parts come from an original `Vec` that is identical to the new one we
-        // create here, and aren't being modified anywhere.
-        let points = unsafe {
-            Vec::from_raw_parts(self.ptr, self.length, self.capacity)
-        };
-
-        // Ownership of the pointer in `self.raw_parts` transferred to `points`.
-        // We work around that, by returning a clone of `points` (hence not
-        // giving ownership to the caller).
-        let ret = points.clone();
-
-        // Now we just need to forget that `points` ever existed, and we keep
-        // ownership of the pointer.
-        mem::forget(points);
-
-        ret
+        self.0.to_vec()
     }
-}
-
-impl Clone for PolyChain {
-    fn clone(&self) -> Self {
-        // Increment the reference counter
-        unsafe {
-            (*self.rc).fetch_add(1, atomic::Ordering::AcqRel);
-        }
-
-        Self {
-            ptr: self.ptr,
-            length: self.length,
-            capacity: self.capacity,
-            rc: self.rc,
-        }
-    }
-}
-
-impl PartialEq for PolyChain {
-    fn eq(&self, other: &Self) -> bool {
-        self.points() == other.points()
-    }
-}
-
-impl Drop for PolyChain {
-    fn drop(&mut self) {
-        // Decrement the reference counter
-        let rc_last =
-            unsafe { (*self.rc).fetch_sub(1, atomic::Ordering::AcqRel) };
-
-        // If the value of the refcount before decrementing was 1,
-        // then this must be the last Drop call. Reclaim all resources
-        // allocated on the heap.
-        if rc_last == 1 {
-            unsafe {
-                let points =
-                    Vec::from_raw_parts(self.ptr, self.length, self.capacity);
-                let rc = Box::from_raw(self.rc);
-
-                drop(points);
-                drop(rc);
-            }
-        }
-    }
-}
-
-// `PolyChain` can be `Send`, because it encapsulates the raw pointer it
-// contains, making sure memory ownership rules are observed.
-unsafe impl Send for PolyChain {}
-
-#[cfg(feature = "serde")]
-impl ser::Serialize for PolyChain {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: ser::Serializer,
-    {
-        let serde_sketch = PolyChainSerde {
-            points: self.to_points(),
-        };
-
-        serde_sketch.serialize(serializer)
-    }
-}
-
-#[cfg(feature = "serde")]
-impl<'de> de::Deserialize<'de> for PolyChain {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: de::Deserializer<'de>,
-    {
-        PolyChainSerde::deserialize(deserializer)
-            .map(|serde_sketch| PolyChain::from_points(serde_sketch.points))
-    }
-}
-
-/// An owned, non-repr-C [`PolyChain`]
-///
-/// De/serializing a non-trivial structure with raw pointers is a hassle.
-/// This structure is a simple, owned intermediate form that can use the derive
-/// macros provided by serde. The implementation of the `Serialize` and
-/// `Deserialize` traits for [`PolyChain`] use this type as a stepping stone.
-///
-/// Note that constructing this requires cloning the points behind
-/// [`PolyChain`]. If de/serialization turns out to be a bottleneck, a more
-/// complete implementation will be required.
-#[cfg(feature = "serde")]
-#[derive(Serialize, Deserialize)]
-#[serde(rename = "Polyline")]
-struct PolyChainSerde {
-    points: Vec<[f64; 2]>,
 }
 
 impl From<Sketch> for Shape {
@@ -339,8 +198,7 @@ mod tests {
     #[test]
     fn test_poly_chain_rc() {
         let assert_rc = |poly_chain: &PolyChain, expected_rc: usize| {
-            let rc =
-                unsafe { (*poly_chain.rc).load(atomic::Ordering::Acquire) };
+            let rc = RArc::strong_count(&poly_chain.0);
             assert_eq!(
                 rc, expected_rc,
                 "Sketch has rc = {rc}, expected {expected_rc}"
