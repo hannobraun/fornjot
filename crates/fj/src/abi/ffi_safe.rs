@@ -7,6 +7,8 @@ use std::{
     ptr::NonNull,
 };
 
+use crate::models::Error;
+
 /// A FFI-safe version of `Vec<T>`.
 #[repr(C)]
 pub(crate) struct Vec<T> {
@@ -312,8 +314,8 @@ impl Display for BoxedError {
 
 impl std::error::Error for BoxedError {}
 
-impl From<Box<dyn std::error::Error + Send + Sync>> for BoxedError {
-    fn from(err: Box<dyn std::error::Error + Send + Sync>) -> Self {
+impl From<Error> for BoxedError {
+    fn from(err: Error) -> Self {
         // Open question: is it worth capturing the message from each source
         // error, too? We could have some sort of `sources: Vec<Source>` field
         // where `Source` is a private wrapper around String that implements

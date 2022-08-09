@@ -11,10 +11,10 @@ impl Initializer {
         quote! {
             const _: () = {
                 fj::register_model!(|host| {
-                    fj::HostExt::register_model(host, Model);
+                    fj::models::HostExt::register_model(host, Model);
 
                     Ok(
-                        fj::Metadata::new(env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"))
+                        fj::models::Metadata::new(env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"))
                             .with_short_description(env!("CARGO_PKG_DESCRIPTION"))
                             .with_homepage(env!("CARGO_PKG_HOMEPAGE"))
                             .with_repository(env!("CARGO_PKG_REPOSITORY"))
@@ -44,7 +44,7 @@ impl Model {
         let Model { metadata, geometry } = self;
 
         quote! {
-            impl fj::Model for Model {
+            impl fj::models::Model for Model {
                 #metadata
                 #geometry
             }
@@ -64,8 +64,8 @@ impl ToTokens for Metadata {
         let Metadata { name, arguments } = self;
 
         tokens.extend(quote! {
-            fn metadata(&self) -> fj::ModelMetadata {
-                fj::ModelMetadata::new(#name)
+            fn metadata(&self) -> fj::models::ModelMetadata {
+                fj::models::ModelMetadata::new(#name)
                 #( .with_argument(#arguments) )*
             }
         });
@@ -79,7 +79,7 @@ impl ToTokens for ArgumentMetadata {
             default_value,
         } = self;
 
-        tokens.extend(quote! { fj::ArgumentMetadata::new(#name) });
+        tokens.extend(quote! { fj::models::ArgumentMetadata::new(#name) });
 
         if let Some(default_value) = default_value {
             tokens.extend(quote! {
@@ -112,8 +112,8 @@ impl ToTokens for GeometryFunction {
         tokens.extend(quote! {
             fn shape(
                 &self,
-                ctx: &dyn fj::Context,
-            ) -> Result<fj::Shape, Box<dyn std::error::Error + Send + Sync>> {
+                ctx: &dyn fj::models::Context,
+            ) -> Result<fj::Shape, fj::models::Error> {
                 #( #arguments )*
                 #( #constraints )*
                 #invocation

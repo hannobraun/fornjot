@@ -71,6 +71,20 @@ use syn::{parse_macro_input, FnArg, ItemFn};
 ///     spacer.into()
 /// }
 /// ```
+///
+/// For more complex situations, model functions are allowed to return any
+/// error type that converts into a model error.
+///
+/// ```rust
+/// #[fj::model]
+/// pub fn model() -> Result<fj::Shape, std::env::VarError> {
+///     let home_dir = std::env::var("HOME")?;
+///
+///     todo!("Do something with {home_dir}")
+/// }
+///
+/// fn assert_convertible(e: std::env::VarError) -> fj::models::Error { e.into() }
+/// ```
 #[proc_macro_attribute]
 pub fn model(_: TokenStream, input: TokenStream) -> TokenStream {
     let item = parse_macro_input!(input as syn::ItemFn);

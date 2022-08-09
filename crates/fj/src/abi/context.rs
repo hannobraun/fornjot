@@ -10,13 +10,13 @@ pub struct Context<'a> {
     _lifetime: PhantomData<&'a ()>,
 }
 
-impl<'a> From<&'a &dyn crate::Context> for Context<'a> {
-    fn from(ctx: &'a &dyn crate::Context) -> Self {
+impl<'a> From<&'a &dyn crate::models::Context> for Context<'a> {
+    fn from(ctx: &'a &dyn crate::models::Context) -> Self {
         unsafe extern "C" fn get_argument(
             user_data: *const c_void,
             name: StringSlice,
         ) -> StringSlice {
-            let ctx = &*(user_data as *const &dyn crate::Context);
+            let ctx = &*(user_data as *const &dyn crate::models::Context);
 
             match std::panic::catch_unwind(AssertUnwindSafe(|| {
                 ctx.get_argument(&*name)
@@ -28,14 +28,15 @@ impl<'a> From<&'a &dyn crate::Context> for Context<'a> {
         }
 
         Context {
-            user_data: ctx as *const &dyn crate::Context as *const c_void,
+            user_data: ctx as *const &dyn crate::models::Context
+                as *const c_void,
             get_argument,
             _lifetime: PhantomData,
         }
     }
 }
 
-impl crate::Context for Context<'_> {
+impl crate::models::Context for Context<'_> {
     fn get_argument(&self, name: &str) -> Option<&str> {
         unsafe {
             let Context {

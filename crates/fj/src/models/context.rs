@@ -4,8 +4,10 @@ use std::{
     str::FromStr,
 };
 
-/// Contextual information passed to a [`Model`][crate::Model] when it is being
-/// initialized.
+use crate::models::Error;
+
+/// Contextual information passed to a [`Model`][crate::models::Model] when it
+/// is being initialized.
 ///
 /// Check out the [`ContextExt`] trait for some helper methods.
 pub trait Context {
@@ -191,7 +193,7 @@ pub struct ParseFailed {
     /// The actual value.
     pub value: String,
     /// The error that occurred.
-    pub error: Box<dyn std::error::Error + Send + Sync>,
+    pub error: Error,
 }
 
 impl Display for ParseFailed {

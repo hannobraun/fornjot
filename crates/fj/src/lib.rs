@@ -23,27 +23,14 @@ pub mod syntax;
 #[doc(hidden)]
 pub mod abi;
 mod angle;
-mod context;
 mod group;
-mod host;
-mod metadata;
-mod model;
+pub mod models;
 mod shape_2d;
 mod sweep;
 mod transform;
 
 pub use self::{
-    angle::*,
-    context::{
-        Context, ContextError, ContextExt, MissingArgument, ParseFailed,
-    },
-    group::Group,
-    host::{Host, HostExt},
-    metadata::{ArgumentMetadata, Metadata, ModelMetadata},
-    model::Model,
-    shape_2d::*,
-    sweep::Sweep,
-    transform::Transform,
+    angle::*, group::Group, shape_2d::*, sweep::Sweep, transform::Transform,
 };
 pub use fj_proc::*;
 #[cfg(feature = "serde")]

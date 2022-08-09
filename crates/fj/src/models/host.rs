@@ -1,4 +1,4 @@
-use crate::Model;
+use crate::models::Model;
 
 /// An abstract interface to the Fornjot host.
 pub trait Host {

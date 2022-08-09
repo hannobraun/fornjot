@@ -382,16 +382,16 @@ pub enum Error {
 
     /// Initializing a model failed.
     #[error("Unable to initialize the model")]
-    InitializeModel(#[source] Box<dyn std::error::Error + Send + Sync>),
+    InitializeModel(#[source] fj::models::Error),
 
     /// The user forgot to register a model when calling
     /// [`fj::register_model!()`].
     #[error("No model was registered")]
     NoModelRegistered,
 
-    /// An error was returned from [`fj::Model::shape()`].
+    /// An error was returned from [`fj::models::Model::shape()`].
     #[error("Unable to determine the model's geometry")]
-    Shape(#[source] Box<dyn std::error::Error + Send + Sync>),
+    Shape(#[source] fj::models::Error),
 
     /// Error while watching the model code for changes
     #[error("Error watching model for changes")]
@@ -422,16 +422,16 @@ pub enum Error {
 
 struct Host<'a> {
     args: &'a Parameters,
-    model: Option<Box<dyn fj::Model>>,
+    model: Option<Box<dyn fj::models::Model>>,
 }
 
-impl<'a> fj::Host for Host<'a> {
-    fn register_boxed_model(&mut self, model: Box<dyn fj::Model>) {
+impl<'a> fj::models::Host for Host<'a> {
+    fn register_boxed_model(&mut self, model: Box<dyn fj::models::Model>) {
         self.model = Some(model);
     }
 }
 
-impl<'a> fj::Context for Host<'a> {
+impl<'a> fj::models::Context for Host<'a> {
     fn get_argument(&self, name: &str) -> Option<&str> {
         self.args.get(name).map(|s| s.as_str())
     }

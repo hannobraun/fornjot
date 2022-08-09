@@ -7,7 +7,7 @@
 /// If the macro generated the wrong code, this doctest would fail.
 ///
 /// ```rust
-/// use fj::{abi::INIT_FUNCTION_NAME, Metadata};
+/// use fj::{abi::INIT_FUNCTION_NAME, models::Metadata};
 ///
 /// fj::register_model!(|_| {
 ///     Ok(Metadata::new("My Model", "1.2.3"))
@@ -24,7 +24,7 @@
 ///
 /// // We can also make sure the unmangled name is correct by calling it.
 ///
-/// let metadata: fj::Metadata = unsafe {
+/// let metadata: fj::models::Metadata = unsafe {
 ///     let mut host = Host;
 ///     let mut host = fj::abi::Host::from(&mut host);
 ///     x::fj_model_init(&mut host).unwrap().into()
@@ -33,8 +33,8 @@
 /// assert_eq!(metadata.name, "My Model");
 ///
 /// struct Host;
-/// impl fj::Host for Host {
-///     fn register_boxed_model(&mut self, model: Box<dyn fj::Model>) { todo!() }
+/// impl fj::models::Host for Host {
+///     fn register_boxed_model(&mut self, model: Box<dyn fj::models::Model>) { todo!() }
 /// }
 /// ```
 mod context;
@@ -52,6 +52,33 @@ pub use self::{
     model::Model,
 };
 
+/// Define the initialization routine used when registering models.
+///
+/// See the [`crate::model`] macro if your model can be implemented as a pure
+/// function.
+///
+/// # Examples
+///
+/// ```rust
+/// use fj::models::*;
+///
+/// fj::register_model!(|host: &mut dyn Host| {
+///     host.register_model(MyModel::default());
+///
+///     Ok(Metadata::new(env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION")))
+/// });
+///
+/// #[derive(Default)]
+/// struct MyModel { }
+///
+/// impl Model for MyModel {
+///     fn metadata(&self) -> ModelMetadata { todo!() }
+///
+///     fn shape(&self, ctx: &dyn Context) -> Result<fj::Shape, Error> {
+///         todo!()
+///     }
+/// }
+/// ```
 #[macro_export]
 macro_rules! register_model {
     ($init:expr) => {
@@ -60,10 +87,10 @@ macro_rules! register_model {
             mut host: *mut $crate::abi::Host<'_>,
         ) -> $crate::abi::InitResult {
             let init: fn(
-                &mut dyn $crate::Host,
+                &mut dyn $crate::models::Host,
             ) -> Result<
-                $crate::Metadata,
-                Box<dyn std::error::Error + Send + Sync>,
+                $crate::models::Metadata,
+                $crate::models::Error,
             > = $init;
 
             match init(&mut *host) {
