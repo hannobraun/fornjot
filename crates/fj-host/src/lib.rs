@@ -389,7 +389,7 @@ pub enum Error {
     #[error("No model was registered")]
     NoModelRegistered,
 
-    /// An error was returned from [`fj::Model::shape()`].
+    /// An error was returned from [`fj::models::Model::shape()`].
     #[error("Unable to determine the model's geometry")]
     Shape(#[source] fj::models::Error),
 
