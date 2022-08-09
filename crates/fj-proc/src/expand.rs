@@ -9,19 +9,17 @@ use crate::parse::{
 impl Initializer {
     fn register(&self) -> TokenStream {
         quote! {
-            const _: () = {
-                fj::register_model!(|host| {
-                    fj::models::HostExt::register_model(host, Model);
+            fj::register_model!(|host| {
+                fj::models::HostExt::register_model(host, Model);
 
-                    Ok(
-                        fj::models::Metadata::new(env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"))
-                            .with_short_description(env!("CARGO_PKG_DESCRIPTION"))
-                            .with_homepage(env!("CARGO_PKG_HOMEPAGE"))
-                            .with_repository(env!("CARGO_PKG_REPOSITORY"))
-                            .with_license(env!("CARGO_PKG_LICENSE")),
-                    )
-                });
-            };
+                Ok(
+                    fj::models::Metadata::new(env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"))
+                        .with_short_description(env!("CARGO_PKG_DESCRIPTION"))
+                        .with_homepage(env!("CARGO_PKG_HOMEPAGE"))
+                        .with_repository(env!("CARGO_PKG_REPOSITORY"))
+                        .with_license(env!("CARGO_PKG_LICENSE")),
+                )
+            });
         }
     }
 }
@@ -30,8 +28,15 @@ impl ToTokens for Initializer {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         let Initializer { model } = self;
 
-        tokens.extend(self.register());
-        model.to_tokens(tokens);
+        let register = self.register();
+
+        tokens.extend(quote! {
+            const _: () = {
+                use fj::models::internal::*;
+                #register
+                #model
+            };
+        });
     }
 }
 
@@ -106,14 +111,14 @@ impl ToTokens for GeometryFunction {
         let invocation = if *fallible {
             quote! { #invocation.map(fj::Shape::from).map_err(Into::into) }
         } else {
-            quote! { Ok(#invocation.into()) }
+            quote! { ROk(#invocation.into()) }
         };
 
         tokens.extend(quote! {
             fn shape(
                 &self,
-                ctx: &dyn fj::models::Context,
-            ) -> Result<fj::Shape, fj::models::Error> {
+                ctx: fj::models::internal::Context<'_>,
+            ) -> fj::models::internal::RResult<fj::Shape, fj::models::Error> {
                 #( #arguments )*
                 #( #constraints )*
                 #invocation
@@ -133,17 +138,23 @@ impl ToTokens for ExtractedArgument {
         let name = ident.to_string();
         let t = match default_value {
             Some(default) => quote! {
-                let #ident: #ty = match ctx.get_argument(#name) {
-                    Some(value) => value.parse()?,
-                    None => #default
+                let #ident: #ty = match ctx.get_argument(#name.into()) {
+                    RSome(value) => match value.parse() {
+                        Ok(v) => v,
+                        Err(e) => return RErr(RBoxError::new(e)),
+                    },
+                    RNone => #default
                 };
             },
             None => {
                 let error_message = format!("Expected {name}");
                 quote! {
-                    let #ident: #ty = match ctx.get_argument(#name) {
-                        Some(value) => value.parse()?,
-                        None => return Err(#error_message.into()),
+                    let #ident: #ty = match ctx.get_argument(#name.into()) {
+                        RSome(value) => match value.parse() {
+                            Ok(v) => v,
+                            Err(e) => return RErr(RBoxError::new(e)),
+                        },
+                        RNone => return RErr(#error_message.into()),
                     };
                 }
             }
@@ -178,7 +189,7 @@ impl ToTokens for Constraint {
 
         tokens.extend(quote! {
             if !(#predicate) {
-                return Err(#error_message.into());
+                return RErr(RBoxError::from_fmt(&#error_message));
             }
         });
     }

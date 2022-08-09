@@ -17,6 +17,7 @@
 
 mod platform;
 
+use fj::models::internal::{self, InitFunction, INIT_FUNCTION_NAME};
 use fj_interop::status_report::StatusReport;
 use std::{
     collections::{HashMap, HashSet},
@@ -29,7 +30,7 @@ use std::{
     thread,
 };
 
-use fj::abi;
+use abi_stable::std_types::{ROption, RResult, RStr};
 use notify::Watcher as _;
 use thiserror::Error;
 
@@ -132,24 +133,30 @@ impl Model {
         // https://github.com/hannobraun/Fornjot/issues/71
         let shape = unsafe {
             let lib = libloading::Library::new(&self.lib_path)?;
-            let init: libloading::Symbol<abi::InitFunction> =
-                lib.get(abi::INIT_FUNCTION_NAME.as_bytes())?;
+            let init: libloading::Symbol<InitFunction> =
+                lib.get(INIT_FUNCTION_NAME.as_bytes())?;
 
             let mut host = Host {
                 args: arguments,
                 model: None,
             };
 
-            match init(&mut abi::Host::from(&mut host)) {
-                abi::ffi_safe::Result::Ok(_metadata) => {}
-                abi::ffi_safe::Result::Err(e) => {
-                    return Err(Error::InitializeModel(e.into()));
+            match init(internal::Host::new(&mut host)) {
+                RResult::ROk(_metadata) => {}
+                RResult::RErr(e) => {
+                    return Err(Error::InitializeModel(e));
                 }
             }
 
             let model = host.model.take().ok_or(Error::NoModelRegistered)?;
 
-            model.shape(&host).map_err(Error::Shape)?
+            match model
+                .shape(internal::Context::new(&host))
+                .map_err(Error::Shape)
+            {
+                RResult::ROk(s) => s,
+                RResult::RErr(e) => return Err(e),
+            }
         };
 
         Ok(shape)
@@ -422,17 +429,20 @@ pub enum Error {
 
 struct Host<'a> {
     args: &'a Parameters,
-    model: Option<Box<dyn fj::models::Model>>,
+    model: Option<fj::models::internal::Model>,
 }
 
 impl<'a> fj::models::Host for Host<'a> {
-    fn register_boxed_model(&mut self, model: Box<dyn fj::models::Model>) {
+    fn register_boxed_model(&mut self, model: fj::models::internal::Model) {
         self.model = Some(model);
     }
 }
 
 impl<'a> fj::models::Context for Host<'a> {
-    fn get_argument(&self, name: &str) -> Option<&str> {
-        self.args.get(name).map(|s| s.as_str())
+    fn get_argument(&self, name: RStr<'_>) -> ROption<RStr<'_>> {
+        self.args
+            .get(name.into())
+            .map(|s| RStr::from(s.as_str()))
+            .into()
     }
 }

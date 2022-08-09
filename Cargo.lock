@@ -946,6 +946,7 @@ dependencies = [
 name = "fj-host"
 version = "0.11.0"
 dependencies = [
+ "abi_stable",
  "cargo_metadata",
  "fj",
  "fj-interop",

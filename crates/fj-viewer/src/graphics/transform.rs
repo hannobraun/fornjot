@@ -3,7 +3,7 @@ use bytemuck::{Pod, Zeroable};
 use crate::camera::Camera;
 
 #[derive(Clone, Copy, Pod, Zeroable)]
-#[repr(transparent)]
+#[repr(C)]
 pub struct Transform(pub [f32; 16]);
 
 impl Transform {

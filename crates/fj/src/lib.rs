@@ -20,8 +20,6 @@
 
 pub mod syntax;
 
-#[doc(hidden)]
-pub mod abi;
 mod angle;
 mod group;
 pub mod models;
