@@ -158,8 +158,8 @@ impl ToTokens for Constraint {
         let Constraint { target, expr, kind } = self;
 
         let operator = match kind {
-            ConstraintKind::Max => quote!(<),
-            ConstraintKind::Min => quote!(>),
+            ConstraintKind::Max => quote!(<=),
+            ConstraintKind::Min => quote!(>=),
         };
         let predicate = quote! { #target #operator #expr };
         // Note: this will cause `expr` to be evaluated twice. Predicates should
