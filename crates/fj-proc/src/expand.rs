@@ -177,7 +177,7 @@ impl ToTokens for Constraint {
         };
 
         tokens.extend(quote! {
-            if !#predicate {
+            if !(#predicate) {
                 return Err(#error_message.into());
             }
         });
