@@ -1,5 +1,5 @@
 use crate::{
-    models::{Context, ModelMetadata, Error},
+    models::{Context, Error, ModelMetadata},
     Shape,
 };
 

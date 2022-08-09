@@ -1,6 +1,9 @@
 use std::{os::raw::c_void, panic::AssertUnwindSafe};
 
-use crate::{abi::{Context, ModelMetadata, ShapeResult}, models::Error};
+use crate::{
+    abi::{Context, ModelMetadata, ShapeResult},
+    models::Error,
+};
 
 #[repr(C)]
 pub struct Model {
