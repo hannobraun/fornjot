@@ -36,7 +36,7 @@ impl CycleBuilder {
             let points = [points[0], points[1]];
 
             edges.push(
-                Edge::build().line_segment_from_points(&self.surface, points),
+                Edge::build(self.surface).line_segment_from_points(points),
             );
         }
 

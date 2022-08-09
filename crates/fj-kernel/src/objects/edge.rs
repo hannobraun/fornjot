@@ -2,7 +2,7 @@ use std::fmt;
 
 use crate::{algorithms::reverse::Reverse, builder::EdgeBuilder};
 
-use super::{Curve, GlobalCurve, GlobalVertex, Vertex};
+use super::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex};
 
 /// An edge
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -14,8 +14,8 @@ pub struct Edge {
 
 impl Edge {
     /// Build an edge using [`EdgeBuilder`]
-    pub fn build() -> EdgeBuilder {
-        EdgeBuilder
+    pub fn build(surface: Surface) -> EdgeBuilder {
+        EdgeBuilder::new(surface)
     }
 
     /// Create a new instance of `Edge`
