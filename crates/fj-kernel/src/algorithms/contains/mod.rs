@@ -1,3 +1,5 @@
+mod face_point;
+
 /// Test whether an object or shape contains another
 pub trait Contains<T> {
     /// Test whether an object or shape contains another
