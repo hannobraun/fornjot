@@ -15,6 +15,7 @@ pub trait CastRay<const D: usize> {
 ///
 /// For in-kernel use, we don't need anything more flexible, and being exactly
 /// horizontal simplifies some calculations.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct HorizontalRayToTheRight<const D: usize> {
     /// The point where the ray originates
     pub origin: Point<D>,
