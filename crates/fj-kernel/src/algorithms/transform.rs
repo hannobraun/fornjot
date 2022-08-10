@@ -43,7 +43,7 @@ impl TransformObject for Curve {
 
 impl TransformObject for Cycle {
     fn transform(self, transform: &Transform) -> Self {
-        Self::new()
+        Self::new(self.surface().transform(transform))
             .with_edges(self.into_edges().map(|edge| edge.transform(transform)))
     }
 }

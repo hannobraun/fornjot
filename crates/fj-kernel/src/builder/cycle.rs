@@ -40,6 +40,6 @@ impl CycleBuilder {
             );
         }
 
-        Cycle::new().with_edges(edges)
+        Cycle::new(self.surface).with_edges(edges)
     }
 }

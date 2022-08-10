@@ -158,7 +158,7 @@ fn create_non_continuous_side_face(
             edges.push(edge);
         }
 
-        Cycle::new().with_edges(edges)
+        Cycle::new(surface).with_edges(edges)
     };
 
     let face = Face::new(surface).with_exteriors([cycle]).with_color(color);
@@ -174,7 +174,13 @@ fn create_continuous_side_face(
 ) {
     let translation = Transform::translation(path);
 
-    let cycle = Cycle::new().with_edges([edge]);
+    // This is definitely the wrong surface, but it shouldn't matter. Since this
+    // code will hopefully soon be gone anyway (this is the last piece of code
+    // that prevents us from removing triangle representation), it hopefully
+    // won't start to matter at some point either.
+    let placeholder = Surface::xy_plane();
+
+    let cycle = Cycle::new(placeholder).with_edges([edge]);
     let approx = CycleApprox::new(&cycle, tolerance);
 
     let mut quads = Vec::new();

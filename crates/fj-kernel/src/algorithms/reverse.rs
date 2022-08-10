@@ -23,6 +23,8 @@ fn reverse_local_coordinates_in_cycle<'r>(
     cycles: impl IntoIterator<Item = &'r Cycle> + 'r,
 ) -> impl Iterator<Item = Cycle> + 'r {
     cycles.into_iter().map(|cycle| {
+        let surface = cycle.surface().reverse();
+
         let edges = cycle.edges().map(|edge| {
             let curve = {
                 let local = match edge.curve().kind() {
@@ -57,7 +59,7 @@ fn reverse_local_coordinates_in_cycle<'r>(
             Edge::new(curve, *edge.vertices())
         });
 
-        Cycle::new().with_edges(edges)
+        Cycle::new(surface).with_edges(edges)
     })
 }
 
