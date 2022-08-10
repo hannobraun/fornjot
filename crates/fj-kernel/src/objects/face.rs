@@ -49,6 +49,10 @@ impl Face {
     /// Add exterior cycles to the face
     ///
     /// Consumes the face and returns the updated instance.
+    ///
+    /// # Panics
+    ///
+    /// Panics, if the added cycles are not defined in the face's surface.
     pub fn with_exteriors(
         mut self,
         exteriors: impl IntoIterator<Item = Cycle>,
@@ -69,6 +73,10 @@ impl Face {
     /// Add interior cycles to the face
     ///
     /// Consumes the face and returns the updated instance.
+    ///
+    /// # Panics
+    ///
+    /// Panics, if the added cycles are not defined in the face's surface.
     pub fn with_interiors(
         mut self,
         interiors: impl IntoIterator<Item = Cycle>,
