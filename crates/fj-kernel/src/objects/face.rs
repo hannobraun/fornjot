@@ -53,8 +53,8 @@ impl Face {
         mut self,
         exteriors: impl IntoIterator<Item = Cycle>,
     ) -> Self {
-        for exterior in exteriors.into_iter() {
-            self.brep_mut().exteriors.push(exterior);
+        for cycle in exteriors.into_iter() {
+            self.brep_mut().exteriors.push(cycle);
         }
 
         self
@@ -67,8 +67,8 @@ impl Face {
         mut self,
         interiors: impl IntoIterator<Item = Cycle>,
     ) -> Self {
-        for interior in interiors.into_iter() {
-            self.brep_mut().interiors.push(interior);
+        for cycle in interiors.into_iter() {
+            self.brep_mut().interiors.push(cycle);
         }
 
         self
