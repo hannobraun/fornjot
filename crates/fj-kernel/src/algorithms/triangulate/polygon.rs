@@ -131,6 +131,13 @@ impl Polygon {
         contains
     }
 
+    /// Check whether the polygon contains a point
+    ///
+    /// # Implementation Note
+    ///
+    /// This code is being duplicated by the `Contains<Point<2>>` implementation
+    /// for `Face`. It would be nice to be able to consolidate the duplication,
+    /// but this has turned out to be difficult.
     pub fn contains_point(
         &self,
         point: impl Into<Point<2>>,
