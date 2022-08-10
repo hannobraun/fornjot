@@ -9,6 +9,7 @@ use super::{Edge, Surface};
 /// one.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
+    surface: Surface,
     edges: Vec<Edge>,
 }
 
@@ -20,14 +21,17 @@ impl Cycle {
 
     /// Create a new cycle
     #[allow(clippy::new_without_default)]
-    pub fn new() -> Self {
+    pub fn new(surface: Surface) -> Self {
         // Implementation note:
         // As I'm writing this, this constructor has no arguments. I expect it
         // to take a `Surface` at some point. Remove the `#[allow(...)]`
         // attribute then.
         // - @hannobraun
 
-        Self { edges: Vec::new() }
+        Self {
+            surface,
+            edges: Vec::new(),
+        }
     }
 
     /// Add edges to the cycle
@@ -36,6 +40,11 @@ impl Cycle {
     pub fn with_edges(mut self, edges: impl IntoIterator<Item = Edge>) -> Self {
         self.edges.extend(edges);
         self
+    }
+
+    /// Access the surface that this cycle is in
+    pub fn surface(&self) -> &Surface {
+        &self.surface
     }
 
     /// Access edges that make up the cycle
