@@ -1,5 +1,6 @@
 //! Ray casting
 
+mod edge;
 mod segment;
 
 pub use self::segment::RaySegmentHit;
