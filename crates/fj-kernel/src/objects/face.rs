@@ -33,6 +33,13 @@ impl Face {
     }
 
     /// Construct an instance that uses triangle representation
+    ///
+    /// Triangle representation is obsolete, and only still present because
+    /// there is one last place in the kernel code that uses it. Don't add any
+    /// more of those places!
+    ///
+    /// See this issue for more context:
+    /// <https://github.com/hannobraun/Fornjot/issues/97>
     pub fn from_triangles(triangles: TriRep) -> Self {
         Self {
             representation: Representation::TriRep(triangles),
