@@ -2,6 +2,15 @@
 
 use fj_math::{Point, Segment};
 
+/// Implemented by types that support ray casting
+pub trait CastRay<const D: usize> {
+    /// The type that describes a hit of the ray on the implementing type
+    type Hit;
+
+    /// Cast a ray against `self`
+    fn cast_ray(&self, ray: HorizontalRayToTheRight<D>) -> Option<Self::Hit>;
+}
+
 /// A horizontal ray that goes to the right
 ///
 /// For in-kernel use, we don't need anything more flexible, and being exactly
