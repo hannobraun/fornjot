@@ -2,7 +2,7 @@ use fj_interop::debug::{DebugInfo, TriangleEdgeCheck};
 use fj_math::{Point, PolyChain, Segment};
 
 use crate::{
-    algorithms::cast_ray::{HorizontalRayToTheRight, RaySegmentHit},
+    algorithms::cast_ray::{CastRay, HorizontalRayToTheRight, RaySegmentHit},
     objects::Surface,
 };
 
@@ -154,13 +154,11 @@ impl Polygon {
             // first segment. The logic in the loop properly takes care of that,
             // as long as we initialize the `previous_hit` variable with the
             // result of the last segment.
-            let mut previous_hit = edges
-                .last()
-                .copied()
-                .and_then(|edge| ray.hits_segment(edge));
+            let mut previous_hit =
+                edges.last().copied().and_then(|edge| edge.cast_ray(ray));
 
             for edge in edges {
-                let hit = ray.hits_segment(edge);
+                let hit = edge.cast_ray(ray);
 
                 let count_hit = match (hit, previous_hit) {
                     (Some(RaySegmentHit::Segment), _) => {
