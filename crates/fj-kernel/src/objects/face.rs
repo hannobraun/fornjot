@@ -54,6 +54,12 @@ impl Face {
         exteriors: impl IntoIterator<Item = Cycle>,
     ) -> Self {
         for cycle in exteriors.into_iter() {
+            assert_eq!(
+                self.surface(),
+                cycle.surface(),
+                "Cycles that bound a face must be in face's surface"
+            );
+
             self.brep_mut().exteriors.push(cycle);
         }
 
@@ -68,6 +74,12 @@ impl Face {
         interiors: impl IntoIterator<Item = Cycle>,
     ) -> Self {
         for cycle in interiors.into_iter() {
+            assert_eq!(
+                self.surface(),
+                cycle.surface(),
+                "Cycles that bound a face must be in face's surface"
+            );
+
             self.brep_mut().interiors.push(cycle);
         }
 
