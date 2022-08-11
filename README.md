@@ -18,6 +18,16 @@ Fornjot is supported by [**@webtrax-oz**](https://github.com/webtrax-oz), [**@lt
 **Please consider [supporting me too](https://github.com/sponsors/hannobraun), to help make Fornjot sustainable long-term.**
 
 
+## Table of Contents
+
+- [**Status**](#status)
+- [**Overview**](#overview)
+- [**Features**](#features)
+- [**Usage**](#usage)
+- [**Community**](#community)
+- [**Get Involved**](#get-involved)
+- [**License**](#license)
+
 ## Status
 
 Fornjot is **under active development, but still experimental**. Efforts are currently focused on providing a [stable set of basic CAD features](https://github.com/hannobraun/Fornjot/milestone/1).
