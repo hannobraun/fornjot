@@ -36,9 +36,9 @@ impl Intersect for (&Face, &Point<2>) {
                 let count_hit = match (hit, previous_hit) {
                     (
                         Some(
-                            RaySegmentIntersection::OnSegment
-                            | RaySegmentIntersection::OnFirstVertex
-                            | RaySegmentIntersection::OnSecondVertex,
+                            RaySegmentIntersection::RayStartsOnSegment
+                            | RaySegmentIntersection::RayStartsOnOnFirstVertex
+                            | RaySegmentIntersection::RayStartsOnSecondVertex,
                         ),
                         _,
                     ) => {
@@ -47,17 +47,17 @@ impl Intersect for (&Face, &Point<2>) {
                         // this intersection test, the face contains the point.
                         return Some(FacePointIntersection::FaceContainsPoint);
                     }
-                    (Some(RaySegmentIntersection::Segment), _) => {
+                    (Some(RaySegmentIntersection::RayHitsSegment), _) => {
                         // We're hitting a segment right-on. Clear case.
                         true
                     }
                     (
-                        Some(RaySegmentIntersection::UpperVertex),
-                        Some(RaySegmentIntersection::LowerVertex),
+                        Some(RaySegmentIntersection::RayHitsUpperVertex),
+                        Some(RaySegmentIntersection::RayHitsLowerVertex),
                     )
                     | (
-                        Some(RaySegmentIntersection::LowerVertex),
-                        Some(RaySegmentIntersection::UpperVertex),
+                        Some(RaySegmentIntersection::RayHitsLowerVertex),
+                        Some(RaySegmentIntersection::RayHitsUpperVertex),
                     ) => {
                         // If we're hitting a vertex, only count it if we've hit
                         // the other kind of vertex right before.
@@ -74,7 +74,7 @@ impl Intersect for (&Face, &Point<2>) {
                         // passing through anything.
                         true
                     }
-                    (Some(RaySegmentIntersection::Parallel), _) => {
+                    (Some(RaySegmentIntersection::RayHitsSegmentAndAreParallel), _) => {
                         // A parallel edge must be completely ignored. Its
                         // presence won't change anything, so we can treat it as
                         // if it wasn't there, and its neighbors were connected
