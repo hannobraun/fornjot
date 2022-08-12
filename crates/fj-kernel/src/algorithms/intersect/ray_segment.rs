@@ -63,7 +63,7 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Segment<2>) {
     }
 }
 
-/// A hit between a ray and a line segment
+/// An intersection between a ray and a line segment
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum RaySegmentIntersection {
     /// The ray hit the segment itself
