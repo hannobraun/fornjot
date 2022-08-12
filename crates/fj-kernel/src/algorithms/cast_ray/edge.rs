@@ -2,15 +2,12 @@ use fj_math::Segment;
 
 use crate::objects::{CurveKind, Edge};
 
-use super::CastRay;
+use super::{CastRay, HorizontalRayToTheRight};
 
 impl CastRay<2> for Edge {
     type Hit = <Segment<2> as CastRay<2>>::Hit;
 
-    fn cast_ray(
-        &self,
-        ray: super::HorizontalRayToTheRight<2>,
-    ) -> Option<Self::Hit> {
+    fn cast_ray(&self, ray: HorizontalRayToTheRight<2>) -> Option<Self::Hit> {
         let line = match self.curve().kind() {
             CurveKind::Line(line) => line,
             CurveKind::Circle(_) => {
