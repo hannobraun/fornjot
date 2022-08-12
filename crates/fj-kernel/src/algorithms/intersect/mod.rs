@@ -1,12 +1,16 @@
 //! Intersection algorithms
 
 pub mod face_point;
+pub mod ray_edge;
+pub mod ray_segment;
 
 mod curve_edge;
 mod curve_face;
 mod face_face;
 mod line_segment;
 mod surface_surface;
+
+use fj_math::Point;
 
 pub use self::{
     curve_edge::CurveEdgeIntersection,
@@ -28,4 +32,25 @@ pub trait Intersect {
 
     /// Compute the intersection between a tuple of objects
     fn intersect(self) -> Option<Self::Intersection>;
+}
+
+/// A horizontal ray that goes to the right
+///
+/// For in-kernel use, we don't need anything more flexible, and being exactly
+/// horizontal simplifies some calculations.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct HorizontalRayToTheRight<const D: usize> {
+    /// The point where the ray originates
+    pub origin: Point<D>,
+}
+
+impl<P, const D: usize> From<P> for HorizontalRayToTheRight<D>
+where
+    P: Into<Point<D>>,
+{
+    fn from(point: P) -> Self {
+        Self {
+            origin: point.into(),
+        }
+    }
 }

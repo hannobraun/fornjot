@@ -9,7 +9,6 @@ mod sweep;
 mod transform;
 mod triangulate;
 
-pub mod cast_ray;
 pub mod intersect;
 
 pub use self::{

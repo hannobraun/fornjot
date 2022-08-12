@@ -1,15 +1,16 @@
+//! Intersection between a ray and a line segment in 2D
+
 use fj_math::Segment;
 
-use super::{CastRay, HorizontalRayToTheRight};
+use super::{HorizontalRayToTheRight, Intersect};
 
-impl CastRay<2> for Segment<2> {
-    type Hit = RaySegmentHit;
+impl Intersect for (&HorizontalRayToTheRight<2>, &Segment<2>) {
+    type Intersection = RaySegmentIntersection;
 
-    fn cast_ray(
-        &self,
-        ray: HorizontalRayToTheRight<2>,
-    ) -> Option<RaySegmentHit> {
-        let [a, b] = self.points();
+    fn intersect(self) -> Option<Self::Intersection> {
+        let (ray, segment) = self;
+
+        let [a, b] = segment.points();
         let [lower, upper] = if a.v <= b.v { [a, b] } else { [b, a] };
         let right = if a.u > b.u { a } else { b };
 
@@ -29,7 +30,7 @@ impl CastRay<2> for Segment<2> {
                 return None;
             }
 
-            return Some(RaySegmentHit::Parallel);
+            return Some(RaySegmentIntersection::Parallel);
         }
 
         let pa = robust::Coord {
@@ -49,22 +50,22 @@ impl CastRay<2> for Segment<2> {
             // ray starts on the line or left of it
 
             if ray.origin.v == upper.v {
-                return Some(RaySegmentHit::UpperVertex);
+                return Some(RaySegmentIntersection::UpperVertex);
             }
             if ray.origin.v == lower.v {
-                return Some(RaySegmentHit::LowerVertex);
+                return Some(RaySegmentIntersection::LowerVertex);
             }
 
-            return Some(RaySegmentHit::Segment);
+            return Some(RaySegmentIntersection::Segment);
         }
 
         None
     }
 }
 
-/// A hit between a ray and a line segment
+/// An intersection between a ray and a line segment
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum RaySegmentHit {
+pub enum RaySegmentIntersection {
     /// The ray hit the segment itself
     Segment,
 
@@ -82,9 +83,9 @@ pub enum RaySegmentHit {
 mod tests {
     use fj_math::Segment;
 
-    use crate::algorithms::cast_ray::CastRay;
+    use crate::algorithms::intersect::Intersect;
 
-    use super::{HorizontalRayToTheRight, RaySegmentHit};
+    use super::{HorizontalRayToTheRight, RaySegmentIntersection};
 
     #[test]
     fn hits_segment_right() {
@@ -94,11 +95,11 @@ mod tests {
         let above = Segment::from([[1., 3.], [1., 4.]]);
         let same_level = Segment::from([[1., 1.], [1., 3.]]);
 
-        assert!(below.cast_ray(ray).is_none());
-        assert!(above.cast_ray(ray).is_none());
+        assert!((&ray, &below).intersect().is_none());
+        assert!((&ray, &above).intersect().is_none());
         assert!(matches!(
-            same_level.cast_ray(ray),
-            Some(RaySegmentHit::Segment)
+            (&ray, &same_level).intersect(),
+            Some(RaySegmentIntersection::Segment)
         ));
     }
 
@@ -107,7 +108,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([1., 2.]);
 
         let same_level = Segment::from([[0., 1.], [0., 3.]]);
-        assert!(same_level.cast_ray(ray).is_none());
+        assert!((&ray, &same_level).intersect().is_none());
     }
 
     #[test]
@@ -120,18 +121,18 @@ mod tests {
         let hit_upper = Segment::from([[0., 0.], [2., 1.]]);
         let hit_lower = Segment::from([[0., 2.], [2., 1.]]);
 
-        assert!(no_hit.cast_ray(ray).is_none());
+        assert!((&ray, &no_hit).intersect().is_none());
         assert!(matches!(
-            hit_segment.cast_ray(ray),
-            Some(RaySegmentHit::Segment)
+            (&ray, &hit_segment).intersect(),
+            Some(RaySegmentIntersection::Segment)
         ));
         assert!(matches!(
-            hit_upper.cast_ray(ray),
-            Some(RaySegmentHit::UpperVertex),
+            (&ray, &hit_upper).intersect(),
+            Some(RaySegmentIntersection::UpperVertex),
         ));
         assert!(matches!(
-            hit_lower.cast_ray(ray),
-            Some(RaySegmentHit::LowerVertex),
+            (&ray, &hit_lower).intersect(),
+            Some(RaySegmentIntersection::LowerVertex),
         ));
     }
 
@@ -144,16 +145,16 @@ mod tests {
         let hit_lower = Segment::from([[1., 1.], [2., 2.]]);
 
         assert!(matches!(
-            hit_segment.cast_ray(ray),
-            Some(RaySegmentHit::Segment)
+            (&ray, &hit_segment).intersect(),
+            Some(RaySegmentIntersection::Segment)
         ));
         assert!(matches!(
-            hit_upper.cast_ray(ray),
-            Some(RaySegmentHit::UpperVertex),
+            (&ray, &hit_upper).intersect(),
+            Some(RaySegmentIntersection::UpperVertex),
         ));
         assert!(matches!(
-            hit_lower.cast_ray(ray),
-            Some(RaySegmentHit::LowerVertex),
+            (&ray, &hit_lower).intersect(),
+            Some(RaySegmentIntersection::LowerVertex),
         ));
     }
 
@@ -165,11 +166,14 @@ mod tests {
         let overlapping = Segment::from([[1., 0.], [3., 0.]]);
         let right = Segment::from([[3., 0.], [4., 0.]]);
 
-        assert!(left.cast_ray(ray).is_none());
+        assert!((&ray, &left).intersect().is_none());
         assert!(matches!(
-            overlapping.cast_ray(ray),
-            Some(RaySegmentHit::Parallel)
+            (&ray, &overlapping).intersect(),
+            Some(RaySegmentIntersection::Parallel)
         ));
-        assert!(matches!(right.cast_ray(ray), Some(RaySegmentHit::Parallel)));
+        assert!(matches!(
+            (&ray, &right).intersect(),
+            Some(RaySegmentIntersection::Parallel)
+        ));
     }
 }
