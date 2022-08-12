@@ -107,6 +107,7 @@ impl Model {
                 }
                 Err(_) => String::from("Failed to fetch command output"),
             };
+            status.clear_status();
             status.update_status(&format!(
                 "Failed to compile model:\n{}",
                 output
