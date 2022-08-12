@@ -12,7 +12,7 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Segment<2>) {
 
         let [a, b] = segment.points();
         let [lower, upper] = if a.v <= b.v { [a, b] } else { [b, a] };
-        let right = if a.u > b.u { a } else { b };
+        let [left, right] = if a.u <= b.u { [a, b] } else { [b, a] };
 
         if ray.origin.v > upper.v {
             // ray is above segment
@@ -28,6 +28,16 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Segment<2>) {
 
             if ray.origin.u > right.u {
                 return None;
+            }
+
+            if ray.origin.u == a.u {
+                return Some(RaySegmentIntersection::OnFirstVertex);
+            }
+            if ray.origin.u == b.u {
+                return Some(RaySegmentIntersection::OnSecondVertex);
+            }
+            if ray.origin.u > left.u && ray.origin.u < right.u {
+                return Some(RaySegmentIntersection::OnSegment);
             }
 
             return Some(RaySegmentIntersection::Parallel);
@@ -46,8 +56,21 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Segment<2>) {
             y: ray.origin.v,
         };
 
-        if robust::orient2d(pa, pb, pc) >= 0. {
-            // ray starts on the line or left of it
+        if robust::orient2d(pa, pb, pc) == 0. {
+            // ray starts on the line
+
+            if ray.origin.v == a.v {
+                return Some(RaySegmentIntersection::OnFirstVertex);
+            }
+            if ray.origin.v == b.v {
+                return Some(RaySegmentIntersection::OnSecondVertex);
+            }
+
+            return Some(RaySegmentIntersection::OnSegment);
+        }
+
+        if robust::orient2d(pa, pb, pc) > 0. {
+            // ray starts left of the line
 
             if ray.origin.v == upper.v {
                 return Some(RaySegmentIntersection::UpperVertex);
@@ -77,6 +100,15 @@ pub enum RaySegmentIntersection {
 
     /// The ray hit the whole segment, as it is parallel to the ray
     Parallel,
+
+    /// The ray starts on the segment
+    OnSegment,
+
+    /// The ray starts on the first vertex of the segment
+    OnFirstVertex,
+
+    /// The ray starts on the second vertex of the segment
+    OnSecondVertex,
 }
 
 #[cfg(test)]
@@ -88,7 +120,7 @@ mod tests {
     use super::{HorizontalRayToTheRight, RaySegmentIntersection};
 
     #[test]
-    fn hits_segment_right() {
+    fn ray_is_left_of_segment() {
         let ray = HorizontalRayToTheRight::from([0., 2.]);
 
         let below = Segment::from([[1., 0.], [1., 1.]]);
@@ -104,7 +136,7 @@ mod tests {
     }
 
     #[test]
-    fn hits_segment_left() {
+    fn ray_is_right_of_segment() {
         let ray = HorizontalRayToTheRight::from([1., 2.]);
 
         let same_level = Segment::from([[0., 1.], [0., 3.]]);
@@ -112,7 +144,7 @@ mod tests {
     }
 
     #[test]
-    fn hits_segment_overlapping() {
+    fn ray_overlaps_with_segment_along_x_axis() {
         let ray = HorizontalRayToTheRight::from([1., 1.]);
 
         let no_hit = Segment::from([[0., 0.], [2., 3.]]);
@@ -137,7 +169,7 @@ mod tests {
     }
 
     #[test]
-    fn hits_segment_on_segment() {
+    fn ray_starts_on_segment() {
         let ray = HorizontalRayToTheRight::from([1., 1.]);
 
         let hit_segment = Segment::from([[0., 0.], [2., 2.]]);
@@ -146,34 +178,51 @@ mod tests {
 
         assert!(matches!(
             (&ray, &hit_segment).intersect(),
-            Some(RaySegmentIntersection::Segment)
+            Some(RaySegmentIntersection::OnSegment)
         ));
         assert!(matches!(
             (&ray, &hit_upper).intersect(),
-            Some(RaySegmentIntersection::UpperVertex),
+            Some(RaySegmentIntersection::OnSecondVertex),
         ));
         assert!(matches!(
             (&ray, &hit_lower).intersect(),
-            Some(RaySegmentIntersection::LowerVertex),
+            Some(RaySegmentIntersection::OnFirstVertex),
         ));
     }
 
     #[test]
-    fn hits_segment_parallel() {
+    fn ray_and_segment_are_parallel_and_on_same_level() {
         let ray = HorizontalRayToTheRight::from([2., 0.]);
 
         let left = Segment::from([[0., 0.], [1., 0.]]);
-        let overlapping = Segment::from([[1., 0.], [3., 0.]]);
         let right = Segment::from([[3., 0.], [4., 0.]]);
 
         assert!((&ray, &left).intersect().is_none());
         assert!(matches!(
-            (&ray, &overlapping).intersect(),
+            (&ray, &right).intersect(),
             Some(RaySegmentIntersection::Parallel)
+        ));
+    }
+
+    #[test]
+    fn ray_starts_on_parallel_segment() {
+        let ray = HorizontalRayToTheRight::from([2., 0.]);
+
+        let left = Segment::from([[0., 0.], [2., 0.]]);
+        let overlapping = Segment::from([[1., 0.], [3., 0.]]);
+        let right = Segment::from([[2., 0.], [4., 0.]]);
+
+        assert!(matches!(
+            (&ray, &left).intersect(),
+            Some(RaySegmentIntersection::OnSecondVertex)
+        ));
+        assert!(matches!(
+            (&ray, &overlapping).intersect(),
+            Some(RaySegmentIntersection::OnSegment),
         ));
         assert!(matches!(
             (&ray, &right).intersect(),
-            Some(RaySegmentIntersection::Parallel)
+            Some(RaySegmentIntersection::OnFirstVertex),
         ));
     }
 }
