@@ -27,5 +27,5 @@ pub trait Intersect {
     type Intersection;
 
     /// Compute the intersection between a tuple of objects
-    fn intersect(&self) -> Option<Self::Intersection>;
+    fn intersect(self) -> Option<Self::Intersection>;
 }
