@@ -47,7 +47,9 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Segment<2>) {
         let pb = [upper.u.into(), upper.v.into()];
         let pc = [ray.origin.u.into(), ray.origin.v.into()];
 
-        if robust_predicates::orient2d(&pa, &pb, &pc) == 0. {
+        let orient2d = robust_predicates::orient2d(&pa, &pb, &pc);
+
+        if orient2d == 0. {
             // ray starts on the line
 
             if ray.origin.v == a.v {
@@ -60,7 +62,7 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Segment<2>) {
             return Some(RaySegmentIntersection::RayStartsOnSegment);
         }
 
-        if robust_predicates::orient2d(&pa, &pb, &pc) > 0. {
+        if orient2d > 0. {
             // ray starts left of the line
 
             if ray.origin.v == upper.v {
