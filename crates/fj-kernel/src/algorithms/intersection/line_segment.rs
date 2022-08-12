@@ -68,7 +68,7 @@ impl LineSegmentIntersection {
 mod tests {
     use fj_math::{Line, Point, Scalar, Segment, Vector};
 
-    use crate::algorithms::intersection::LineSegmentIntersection;
+    use super::LineSegmentIntersection;
 
     #[test]
     fn compute_one_hit() {

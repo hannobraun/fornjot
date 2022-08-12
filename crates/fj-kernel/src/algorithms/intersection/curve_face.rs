@@ -2,10 +2,9 @@ use std::vec;
 
 use fj_math::Point;
 
-use crate::{
-    algorithms::intersection::CurveEdgeIntersection,
-    objects::{Curve, Face},
-};
+use crate::objects::{Curve, Face};
+
+use super::CurveEdgeIntersection;
 
 /// The intersections between a [`Curve`] and a [`Face`], in curve coordinates
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
