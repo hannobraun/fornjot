@@ -9,10 +9,10 @@ use crate::{
 
 use super::Intersect;
 
-impl Intersect for (Face, Point<2>) {
+impl Intersect for (&Face, &Point<2>) {
     type Intersection = FacePointIntersection;
 
-    fn intersect(&self) -> Option<Self::Intersection> {
+    fn intersect(self) -> Option<Self::Intersection> {
         let (face, point) = self;
 
         let ray = HorizontalRayToTheRight { origin: *point };
@@ -114,7 +114,7 @@ mod tests {
             .into_face();
         let point = Point::from([2., 1.]);
 
-        let intersection = (face, point).intersect();
+        let intersection = (&face, &point).intersect();
         assert_eq!(intersection, None);
     }
 
@@ -125,7 +125,7 @@ mod tests {
             .into_face();
         let point = Point::from([1., 1.]);
 
-        let intersection = (face, point).intersect();
+        let intersection = (&face, &point).intersect();
         assert_eq!(
             intersection,
             Some(FacePointIntersection::FaceContainsPoint)
@@ -140,7 +140,7 @@ mod tests {
             .into_face();
         let point = Point::from([1., 2.]);
 
-        let intersection = (face, point).intersect();
+        let intersection = (&face, &point).intersect();
         assert_eq!(
             intersection,
             Some(FacePointIntersection::FaceContainsPoint)
@@ -154,7 +154,7 @@ mod tests {
             .into_face();
         let point = Point::from([1., 1.]);
 
-        let intersection = (face, point).intersect();
+        let intersection = (&face, &point).intersect();
         assert_eq!(
             intersection,
             Some(FacePointIntersection::FaceContainsPoint)
@@ -168,7 +168,7 @@ mod tests {
             .into_face();
         let point = Point::from([1., 1.]);
 
-        let intersection = (face, point).intersect();
+        let intersection = (&face, &point).intersect();
         assert_eq!(
             intersection,
             Some(FacePointIntersection::FaceContainsPoint)
@@ -188,7 +188,7 @@ mod tests {
             .into_face();
         let point = Point::from([1., 1.]);
 
-        let intersection = (face, point).intersect();
+        let intersection = (&face, &point).intersect();
         assert_eq!(
             intersection,
             Some(FacePointIntersection::FaceContainsPoint)
