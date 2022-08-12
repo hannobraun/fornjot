@@ -1,5 +1,7 @@
 //! Intersection algorithms
 
+pub mod face_point;
+
 mod curve_edge;
 mod curve_face;
 mod face_face;

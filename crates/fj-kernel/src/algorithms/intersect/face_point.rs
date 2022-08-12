@@ -1,3 +1,5 @@
+//! Intersection between faces and points in 2D
+
 use fj_math::Point;
 
 use crate::{
@@ -5,15 +7,19 @@ use crate::{
     objects::Face,
 };
 
-use super::Contains;
+use super::Intersect;
 
-impl Contains<Point<2>> for Face {
-    fn contains(&self, point: &Point<2>) -> bool {
+impl Intersect for (Face, Point<2>) {
+    type Intersection = ();
+
+    fn intersect(&self) -> Option<Self::Intersection> {
+        let (face, point) = self;
+
         let ray = HorizontalRayToTheRight { origin: *point };
 
         let mut num_hits = 0;
 
-        for cycle in self.all_cycles() {
+        for cycle in face.all_cycles() {
             // We need to properly detect the ray passing the boundary at the
             // "seam" of the polygon, i.e. the vertex between the last and the
             // first segment. The logic in the loop properly takes care of that,
@@ -77,7 +83,11 @@ impl Contains<Point<2>> for Face {
             }
         }
 
-        num_hits % 2 == 1
+        if num_hits % 2 == 1 {
+            Some(())
+        } else {
+            None
+        }
     }
 }
 
@@ -86,7 +96,7 @@ mod tests {
     use fj_math::Point;
 
     use crate::{
-        algorithms::Contains,
+        algorithms::intersect::Intersect,
         objects::{Face, Surface},
     };
 
@@ -151,6 +161,6 @@ mod tests {
         let face = face.into();
         let point = point.into();
 
-        assert!(face.contains(&point));
+        assert!((face, point).intersect().is_some());
     }
 }
