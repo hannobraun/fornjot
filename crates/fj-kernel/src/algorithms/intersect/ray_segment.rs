@@ -31,16 +31,16 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Segment<2>) {
             }
 
             if ray.origin.u == a.u {
-                return Some(RaySegmentIntersection::OnFirstVertex);
+                return Some(RaySegmentIntersection::RayStartsOnOnFirstVertex);
             }
             if ray.origin.u == b.u {
-                return Some(RaySegmentIntersection::OnSecondVertex);
+                return Some(RaySegmentIntersection::RayStartsOnSecondVertex);
             }
             if ray.origin.u > left.u && ray.origin.u < right.u {
-                return Some(RaySegmentIntersection::OnSegment);
+                return Some(RaySegmentIntersection::RayStartsOnSegment);
             }
 
-            return Some(RaySegmentIntersection::Parallel);
+            return Some(RaySegmentIntersection::RayHitsSegmentAndAreParallel);
         }
 
         let pa = robust::Coord {
@@ -60,26 +60,26 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Segment<2>) {
             // ray starts on the line
 
             if ray.origin.v == a.v {
-                return Some(RaySegmentIntersection::OnFirstVertex);
+                return Some(RaySegmentIntersection::RayStartsOnOnFirstVertex);
             }
             if ray.origin.v == b.v {
-                return Some(RaySegmentIntersection::OnSecondVertex);
+                return Some(RaySegmentIntersection::RayStartsOnSecondVertex);
             }
 
-            return Some(RaySegmentIntersection::OnSegment);
+            return Some(RaySegmentIntersection::RayStartsOnSegment);
         }
 
         if robust::orient2d(pa, pb, pc) > 0. {
             // ray starts left of the line
 
             if ray.origin.v == upper.v {
-                return Some(RaySegmentIntersection::UpperVertex);
+                return Some(RaySegmentIntersection::RayHitsUpperVertex);
             }
             if ray.origin.v == lower.v {
-                return Some(RaySegmentIntersection::LowerVertex);
+                return Some(RaySegmentIntersection::RayHitsLowerVertex);
             }
 
-            return Some(RaySegmentIntersection::Segment);
+            return Some(RaySegmentIntersection::RayHitsSegment);
         }
 
         None
@@ -90,25 +90,25 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Segment<2>) {
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum RaySegmentIntersection {
     /// The ray hit the segment itself
-    Segment,
+    RayHitsSegment,
 
     /// The ray hit the lower vertex of the segment
-    LowerVertex,
+    RayHitsLowerVertex,
 
     /// The ray hit the upper vertex of the segment
-    UpperVertex,
+    RayHitsUpperVertex,
 
     /// The ray hit the whole segment, as it is parallel to the ray
-    Parallel,
+    RayHitsSegmentAndAreParallel,
 
     /// The ray starts on the segment
-    OnSegment,
+    RayStartsOnSegment,
 
     /// The ray starts on the first vertex of the segment
-    OnFirstVertex,
+    RayStartsOnOnFirstVertex,
 
     /// The ray starts on the second vertex of the segment
-    OnSecondVertex,
+    RayStartsOnSecondVertex,
 }
 
 #[cfg(test)]
@@ -131,7 +131,7 @@ mod tests {
         assert!((&ray, &above).intersect().is_none());
         assert!(matches!(
             (&ray, &same_level).intersect(),
-            Some(RaySegmentIntersection::Segment)
+            Some(RaySegmentIntersection::RayHitsSegment)
         ));
     }
 
@@ -156,15 +156,15 @@ mod tests {
         assert!((&ray, &no_hit).intersect().is_none());
         assert!(matches!(
             (&ray, &hit_segment).intersect(),
-            Some(RaySegmentIntersection::Segment)
+            Some(RaySegmentIntersection::RayHitsSegment)
         ));
         assert!(matches!(
             (&ray, &hit_upper).intersect(),
-            Some(RaySegmentIntersection::UpperVertex),
+            Some(RaySegmentIntersection::RayHitsUpperVertex),
         ));
         assert!(matches!(
             (&ray, &hit_lower).intersect(),
-            Some(RaySegmentIntersection::LowerVertex),
+            Some(RaySegmentIntersection::RayHitsLowerVertex),
         ));
     }
 
@@ -178,15 +178,15 @@ mod tests {
 
         assert!(matches!(
             (&ray, &hit_segment).intersect(),
-            Some(RaySegmentIntersection::OnSegment)
+            Some(RaySegmentIntersection::RayStartsOnSegment)
         ));
         assert!(matches!(
             (&ray, &hit_upper).intersect(),
-            Some(RaySegmentIntersection::OnSecondVertex),
+            Some(RaySegmentIntersection::RayStartsOnSecondVertex),
         ));
         assert!(matches!(
             (&ray, &hit_lower).intersect(),
-            Some(RaySegmentIntersection::OnFirstVertex),
+            Some(RaySegmentIntersection::RayStartsOnOnFirstVertex),
         ));
     }
 
@@ -200,7 +200,7 @@ mod tests {
         assert!((&ray, &left).intersect().is_none());
         assert!(matches!(
             (&ray, &right).intersect(),
-            Some(RaySegmentIntersection::Parallel)
+            Some(RaySegmentIntersection::RayHitsSegmentAndAreParallel)
         ));
     }
 
@@ -214,15 +214,15 @@ mod tests {
 
         assert!(matches!(
             (&ray, &left).intersect(),
-            Some(RaySegmentIntersection::OnSecondVertex)
+            Some(RaySegmentIntersection::RayStartsOnSecondVertex)
         ));
         assert!(matches!(
             (&ray, &overlapping).intersect(),
-            Some(RaySegmentIntersection::OnSegment),
+            Some(RaySegmentIntersection::RayStartsOnSegment),
         ));
         assert!(matches!(
             (&ray, &right).intersect(),
-            Some(RaySegmentIntersection::OnFirstVertex),
+            Some(RaySegmentIntersection::RayStartsOnOnFirstVertex),
         ));
     }
 }
