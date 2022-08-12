@@ -172,6 +172,13 @@ impl Polygon {
                 let hit = (&ray, &edge).intersect();
 
                 let count_hit = match (hit, previous_hit) {
+                    (Some(RaySegmentIntersection::OnSegment), _) => {
+                        // If the ray starts on the boundary of the polygon,
+                        // there's nothing else to check. By the definition of
+                        // this intersection test, the polygon contains the
+                        // point.
+                        return true;
+                    }
                     (Some(RaySegmentIntersection::Segment), _) => {
                         // We're hitting a segment right-on. Clear case.
                         true

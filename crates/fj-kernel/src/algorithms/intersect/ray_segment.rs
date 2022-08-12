@@ -46,8 +46,21 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Segment<2>) {
             y: ray.origin.v,
         };
 
-        if robust::orient2d(pa, pb, pc) >= 0. {
-            // ray starts on the line or left of it
+        if robust::orient2d(pa, pb, pc) == 0. {
+            // ray starts on the line
+
+            if ray.origin.v == upper.v {
+                return Some(RaySegmentIntersection::UpperVertex);
+            }
+            if ray.origin.v == lower.v {
+                return Some(RaySegmentIntersection::LowerVertex);
+            }
+
+            return Some(RaySegmentIntersection::OnSegment);
+        }
+
+        if robust::orient2d(pa, pb, pc) > 0. {
+            // ray starts left of the line
 
             if ray.origin.v == upper.v {
                 return Some(RaySegmentIntersection::UpperVertex);
@@ -77,6 +90,9 @@ pub enum RaySegmentIntersection {
 
     /// The ray hit the whole segment, as it is parallel to the ray
     Parallel,
+
+    /// The ray starts on the segment
+    OnSegment,
 }
 
 #[cfg(test)]
@@ -146,7 +162,7 @@ mod tests {
 
         assert!(matches!(
             (&ray, &hit_segment).intersect(),
-            Some(RaySegmentIntersection::Segment)
+            Some(RaySegmentIntersection::OnSegment)
         ));
         assert!(matches!(
             (&ray, &hit_upper).intersect(),
