@@ -2,7 +2,7 @@ use fj_math::Segment;
 
 use crate::{
     algorithms::intersect::{
-        ray_segment::RaySegmentHit, HorizontalRayToTheRight, Intersect,
+        ray_segment::RaySegmentIntersection, HorizontalRayToTheRight, Intersect,
     },
     objects::{CurveKind, Edge},
 };
@@ -10,7 +10,7 @@ use crate::{
 use super::CastRay;
 
 impl CastRay<2> for Edge {
-    type Hit = RaySegmentHit;
+    type Hit = RaySegmentIntersection;
 
     fn cast_ray(&self, ray: HorizontalRayToTheRight<2>) -> Option<Self::Hit> {
         let line = match self.curve().kind() {

@@ -3,7 +3,7 @@ use fj_math::{Point, PolyChain, Segment};
 
 use crate::{
     algorithms::intersect::{
-        ray_segment::RaySegmentHit, HorizontalRayToTheRight, Intersect,
+        ray_segment::RaySegmentIntersection, HorizontalRayToTheRight, Intersect,
     },
     objects::Surface,
 };
@@ -172,17 +172,17 @@ impl Polygon {
                 let hit = (&ray, &edge).intersect();
 
                 let count_hit = match (hit, previous_hit) {
-                    (Some(RaySegmentHit::Segment), _) => {
+                    (Some(RaySegmentIntersection::Segment), _) => {
                         // We're hitting a segment right-on. Clear case.
                         true
                     }
                     (
-                        Some(RaySegmentHit::UpperVertex),
-                        Some(RaySegmentHit::LowerVertex),
+                        Some(RaySegmentIntersection::UpperVertex),
+                        Some(RaySegmentIntersection::LowerVertex),
                     )
                     | (
-                        Some(RaySegmentHit::LowerVertex),
-                        Some(RaySegmentHit::UpperVertex),
+                        Some(RaySegmentIntersection::LowerVertex),
+                        Some(RaySegmentIntersection::UpperVertex),
                     ) => {
                         // If we're hitting a vertex, only count it if we've hit
                         // the other kind of vertex right before.
@@ -199,7 +199,7 @@ impl Polygon {
                         // passing through anything.
                         true
                     }
-                    (Some(RaySegmentHit::Parallel), _) => {
+                    (Some(RaySegmentIntersection::Parallel), _) => {
                         // A parallel edge must be completely ignored. Its
                         // presence won't change anything, so we can treat it as
                         // if it wasn't there, and its neighbors were connected

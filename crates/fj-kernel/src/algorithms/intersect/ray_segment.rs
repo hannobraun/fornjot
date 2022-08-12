@@ -5,7 +5,7 @@ use fj_math::Segment;
 use super::{HorizontalRayToTheRight, Intersect};
 
 impl Intersect for (&HorizontalRayToTheRight<2>, &Segment<2>) {
-    type Intersection = RaySegmentHit;
+    type Intersection = RaySegmentIntersection;
 
     fn intersect(self) -> Option<Self::Intersection> {
         let (ray, segment) = self;
@@ -30,7 +30,7 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Segment<2>) {
                 return None;
             }
 
-            return Some(RaySegmentHit::Parallel);
+            return Some(RaySegmentIntersection::Parallel);
         }
 
         let pa = robust::Coord {
@@ -50,13 +50,13 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Segment<2>) {
             // ray starts on the line or left of it
 
             if ray.origin.v == upper.v {
-                return Some(RaySegmentHit::UpperVertex);
+                return Some(RaySegmentIntersection::UpperVertex);
             }
             if ray.origin.v == lower.v {
-                return Some(RaySegmentHit::LowerVertex);
+                return Some(RaySegmentIntersection::LowerVertex);
             }
 
-            return Some(RaySegmentHit::Segment);
+            return Some(RaySegmentIntersection::Segment);
         }
 
         None
@@ -65,7 +65,7 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Segment<2>) {
 
 /// A hit between a ray and a line segment
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum RaySegmentHit {
+pub enum RaySegmentIntersection {
     /// The ray hit the segment itself
     Segment,
 
@@ -85,7 +85,7 @@ mod tests {
 
     use crate::algorithms::intersect::Intersect;
 
-    use super::{HorizontalRayToTheRight, RaySegmentHit};
+    use super::{HorizontalRayToTheRight, RaySegmentIntersection};
 
     #[test]
     fn hits_segment_right() {
@@ -99,7 +99,7 @@ mod tests {
         assert!((&ray, &above).intersect().is_none());
         assert!(matches!(
             (&ray, &same_level).intersect(),
-            Some(RaySegmentHit::Segment)
+            Some(RaySegmentIntersection::Segment)
         ));
     }
 
@@ -124,15 +124,15 @@ mod tests {
         assert!((&ray, &no_hit).intersect().is_none());
         assert!(matches!(
             (&ray, &hit_segment).intersect(),
-            Some(RaySegmentHit::Segment)
+            Some(RaySegmentIntersection::Segment)
         ));
         assert!(matches!(
             (&ray, &hit_upper).intersect(),
-            Some(RaySegmentHit::UpperVertex),
+            Some(RaySegmentIntersection::UpperVertex),
         ));
         assert!(matches!(
             (&ray, &hit_lower).intersect(),
-            Some(RaySegmentHit::LowerVertex),
+            Some(RaySegmentIntersection::LowerVertex),
         ));
     }
 
@@ -146,15 +146,15 @@ mod tests {
 
         assert!(matches!(
             (&ray, &hit_segment).intersect(),
-            Some(RaySegmentHit::Segment)
+            Some(RaySegmentIntersection::Segment)
         ));
         assert!(matches!(
             (&ray, &hit_upper).intersect(),
-            Some(RaySegmentHit::UpperVertex),
+            Some(RaySegmentIntersection::UpperVertex),
         ));
         assert!(matches!(
             (&ray, &hit_lower).intersect(),
-            Some(RaySegmentHit::LowerVertex),
+            Some(RaySegmentIntersection::LowerVertex),
         ));
     }
 
@@ -169,11 +169,11 @@ mod tests {
         assert!((&ray, &left).intersect().is_none());
         assert!(matches!(
             (&ray, &overlapping).intersect(),
-            Some(RaySegmentHit::Parallel)
+            Some(RaySegmentIntersection::Parallel)
         ));
         assert!(matches!(
             (&ray, &right).intersect(),
-            Some(RaySegmentHit::Parallel)
+            Some(RaySegmentIntersection::Parallel)
         ));
     }
 }

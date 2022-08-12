@@ -4,7 +4,9 @@ use fj_math::Point;
 
 use crate::{algorithms::cast_ray::CastRay, objects::Face};
 
-use super::{ray_segment::RaySegmentHit, HorizontalRayToTheRight, Intersect};
+use super::{
+    ray_segment::RaySegmentIntersection, HorizontalRayToTheRight, Intersect,
+};
 
 impl Intersect for (&Face, &Point<2>) {
     type Intersection = FacePointIntersection;
@@ -32,17 +34,17 @@ impl Intersect for (&Face, &Point<2>) {
                 let hit = edge.cast_ray(ray);
 
                 let count_hit = match (hit, previous_hit) {
-                    (Some(RaySegmentHit::Segment), _) => {
+                    (Some(RaySegmentIntersection::Segment), _) => {
                         // We're hitting a segment right-on. Clear case.
                         true
                     }
                     (
-                        Some(RaySegmentHit::UpperVertex),
-                        Some(RaySegmentHit::LowerVertex),
+                        Some(RaySegmentIntersection::UpperVertex),
+                        Some(RaySegmentIntersection::LowerVertex),
                     )
                     | (
-                        Some(RaySegmentHit::LowerVertex),
-                        Some(RaySegmentHit::UpperVertex),
+                        Some(RaySegmentIntersection::LowerVertex),
+                        Some(RaySegmentIntersection::UpperVertex),
                     ) => {
                         // If we're hitting a vertex, only count it if we've hit
                         // the other kind of vertex right before.
@@ -59,7 +61,7 @@ impl Intersect for (&Face, &Point<2>) {
                         // passing through anything.
                         true
                     }
-                    (Some(RaySegmentHit::Parallel), _) => {
+                    (Some(RaySegmentIntersection::Parallel), _) => {
                         // A parallel edge must be completely ignored. Its
                         // presence won't change anything, so we can treat it as
                         // if it wasn't there, and its neighbors were connected
