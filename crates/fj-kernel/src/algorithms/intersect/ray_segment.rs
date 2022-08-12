@@ -53,7 +53,7 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Segment<2>) {
                 return Some(RaySegmentIntersection::OnUpperVertex);
             }
             if ray.origin.v == lower.v {
-                return Some(RaySegmentIntersection::LowerVertex);
+                return Some(RaySegmentIntersection::OnLowerVertex);
             }
 
             return Some(RaySegmentIntersection::OnSegment);
@@ -96,6 +96,9 @@ pub enum RaySegmentIntersection {
 
     /// The ray starts on the upper vertex of the segment
     OnUpperVertex,
+
+    /// The ray starts on the lower vertex of the segment
+    OnLowerVertex,
 }
 
 #[cfg(test)]
@@ -173,7 +176,7 @@ mod tests {
         ));
         assert!(matches!(
             (&ray, &hit_lower).intersect(),
-            Some(RaySegmentIntersection::LowerVertex),
+            Some(RaySegmentIntersection::OnLowerVertex),
         ));
     }
 

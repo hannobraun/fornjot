@@ -175,7 +175,8 @@ impl Polygon {
                     (
                         Some(
                             RaySegmentIntersection::OnSegment
-                            | RaySegmentIntersection::OnUpperVertex,
+                            | RaySegmentIntersection::OnUpperVertex
+                            | RaySegmentIntersection::OnLowerVertex,
                         ),
                         _,
                     ) => {
