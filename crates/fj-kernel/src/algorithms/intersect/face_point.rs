@@ -108,6 +108,17 @@ mod tests {
     };
 
     #[test]
+    fn point_is_outside_face() {
+        let face = Face::build(Surface::xy_plane())
+            .polygon_from_points([[0., 0.], [1., 1.], [0., 2.]])
+            .into_face();
+        let point = Point::from([2., 1.]);
+
+        let intersection = (face, point).intersect();
+        assert_eq!(intersection, None);
+    }
+
+    #[test]
     fn ray_hits_vertex_while_passing_outside() {
         let face = Face::build(Surface::xy_plane())
             .polygon_from_points([[0., 0.], [2., 1.], [0., 2.]])
