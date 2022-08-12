@@ -88,7 +88,7 @@ mod tests {
     use super::{HorizontalRayToTheRight, RaySegmentIntersection};
 
     #[test]
-    fn hits_segment_right() {
+    fn ray_is_left_of_segment() {
         let ray = HorizontalRayToTheRight::from([0., 2.]);
 
         let below = Segment::from([[1., 0.], [1., 1.]]);
@@ -104,7 +104,7 @@ mod tests {
     }
 
     #[test]
-    fn hits_segment_left() {
+    fn ray_is_right_of_segment() {
         let ray = HorizontalRayToTheRight::from([1., 2.]);
 
         let same_level = Segment::from([[0., 1.], [0., 3.]]);
@@ -112,7 +112,7 @@ mod tests {
     }
 
     #[test]
-    fn hits_segment_overlapping() {
+    fn ray_overlaps_with_segment_along_x_axis() {
         let ray = HorizontalRayToTheRight::from([1., 1.]);
 
         let no_hit = Segment::from([[0., 0.], [2., 3.]]);
@@ -137,7 +137,7 @@ mod tests {
     }
 
     #[test]
-    fn hits_segment_on_segment() {
+    fn ray_starts_on_segment() {
         let ray = HorizontalRayToTheRight::from([1., 1.]);
 
         let hit_segment = Segment::from([[0., 0.], [2., 2.]]);
@@ -159,7 +159,7 @@ mod tests {
     }
 
     #[test]
-    fn hits_segment_parallel() {
+    fn ray_and_segment_are_parallel_and_on_same_level() {
         let ray = HorizontalRayToTheRight::from([2., 0.]);
 
         let left = Segment::from([[0., 0.], [1., 0.]]);
