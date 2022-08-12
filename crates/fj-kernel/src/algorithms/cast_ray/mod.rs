@@ -1,7 +1,5 @@
 //! Ray casting
 
-mod edge;
-
 use super::intersect::HorizontalRayToTheRight;
 
 /// Implemented by types that support ray casting

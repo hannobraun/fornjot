@@ -2,7 +2,7 @@
 
 use fj_math::Point;
 
-use crate::{algorithms::cast_ray::CastRay, objects::Face};
+use crate::objects::Face;
 
 use super::{
     ray_segment::RaySegmentIntersection, HorizontalRayToTheRight, Intersect,
@@ -28,10 +28,10 @@ impl Intersect for (&Face, &Point<2>) {
                 .edges()
                 .last()
                 .copied()
-                .and_then(|edge| edge.cast_ray(ray));
+                .and_then(|edge| (&ray, &edge).intersect());
 
             for edge in cycle.edges() {
-                let hit = edge.cast_ray(ray);
+                let hit = (&ray, edge).intersect();
 
                 let count_hit = match (hit, previous_hit) {
                     (Some(RaySegmentIntersection::Segment), _) => {
