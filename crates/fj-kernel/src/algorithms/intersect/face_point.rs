@@ -10,7 +10,7 @@ use crate::{
 use super::Intersect;
 
 impl Intersect for (Face, Point<2>) {
-    type Intersection = ();
+    type Intersection = FacePointIntersection;
 
     fn intersect(&self) -> Option<Self::Intersection> {
         let (face, point) = self;
@@ -84,11 +84,18 @@ impl Intersect for (Face, Point<2>) {
         }
 
         if num_hits % 2 == 1 {
-            Some(())
+            Some(FacePointIntersection::FaceContainsPoint)
         } else {
             None
         }
     }
+}
+
+/// The intersection between a face and a point
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub enum FacePointIntersection {
+    /// The point is inside of the face
+    FaceContainsPoint,
 }
 
 #[cfg(test)]
