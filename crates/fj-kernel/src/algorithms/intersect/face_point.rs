@@ -2,7 +2,7 @@
 
 use fj_math::Point;
 
-use crate::objects::Face;
+use crate::objects::{Face, Vertex};
 
 use super::{
     ray_segment::RaySegmentIntersection, HorizontalRayToTheRight, Intersect,
@@ -35,17 +35,25 @@ impl Intersect for (&Face, &Point<2>) {
 
                 let count_hit = match (hit, previous_hit) {
                     (
-                        Some(
-                            RaySegmentIntersection::RayStartsOnSegment
-                            | RaySegmentIntersection::RayStartsOnOnFirstVertex
-                            | RaySegmentIntersection::RayStartsOnSecondVertex,
-                        ),
+                        Some(RaySegmentIntersection::RayStartsOnSegment),
                         _,
                     ) => {
                         // If the ray starts on the boundary of the face,
                         // there's nothing to else check. By the definition of
                         // this intersection test, the face contains the point.
                         return Some(FacePointIntersection::PointIsInsideFace);
+                    }
+                    (Some(RaySegmentIntersection::RayStartsOnOnFirstVertex), _) => {
+                        let vertex = edge.vertices().expect_vertices()[0];
+                        return Some(
+                            FacePointIntersection::PointIsOnVertex(vertex)
+                        );
+                    }
+                    (Some(RaySegmentIntersection::RayStartsOnSecondVertex), _) => {
+                        let vertex = edge.vertices().expect_vertices()[1];
+                        return Some(
+                            FacePointIntersection::PointIsOnVertex(vertex)
+                        );
                     }
                     (Some(RaySegmentIntersection::RayHitsSegment), _) => {
                         // We're hitting a segment right-on. Clear case.
@@ -108,6 +116,9 @@ impl Intersect for (&Face, &Point<2>) {
 pub enum FacePointIntersection {
     /// The point is inside of the face
     PointIsInsideFace,
+
+    /// The point is coincident with a vertex
+    PointIsOnVertex(Vertex),
 }
 
 #[cfg(test)]
@@ -116,6 +127,7 @@ mod tests {
 
     use crate::{
         algorithms::intersect::{face_point::FacePointIntersection, Intersect},
+        iter::ObjectIters,
         objects::{Face, Surface},
     };
 
@@ -204,6 +216,28 @@ mod tests {
         assert_eq!(
             intersection,
             Some(FacePointIntersection::PointIsInsideFace)
+        );
+    }
+
+    #[test]
+    fn point_is_coincident_with_vertex() {
+        let face = Face::build(Surface::xy_plane())
+            .polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
+            .into_face();
+        let point = Point::from([1., 0.]);
+
+        let intersection = (&face, &point).intersect();
+
+        let vertex = face
+            .vertex_iter()
+            .copied()
+            .find(|vertex| {
+                vertex.global().position() == Point::from([1., 0., 0.])
+            })
+            .unwrap();
+        assert_eq!(
+            intersection,
+            Some(FacePointIntersection::PointIsOnVertex(vertex))
         );
     }
 }
