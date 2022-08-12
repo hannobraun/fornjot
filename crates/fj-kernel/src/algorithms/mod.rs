@@ -11,7 +11,7 @@ mod transform;
 mod triangulate;
 
 pub mod cast_ray;
-pub mod intersection;
+pub mod intersect;
 
 pub use self::{
     approx::{CycleApprox, FaceApprox, InvalidTolerance, Tolerance},
