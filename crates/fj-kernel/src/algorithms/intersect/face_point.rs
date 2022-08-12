@@ -45,7 +45,7 @@ impl Intersect for (&Face, &Point<2>) {
                         // If the ray starts on the boundary of the face,
                         // there's nothing to else check. By the definition of
                         // this intersection test, the face contains the point.
-                        return Some(FacePointIntersection::FaceContainsPoint);
+                        return Some(FacePointIntersection::PointIsInsideFace);
                     }
                     (Some(RaySegmentIntersection::RayHitsSegment), _) => {
                         // We're hitting a segment right-on. Clear case.
@@ -96,7 +96,7 @@ impl Intersect for (&Face, &Point<2>) {
         }
 
         if num_hits % 2 == 1 {
-            Some(FacePointIntersection::FaceContainsPoint)
+            Some(FacePointIntersection::PointIsInsideFace)
         } else {
             None
         }
@@ -107,7 +107,7 @@ impl Intersect for (&Face, &Point<2>) {
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum FacePointIntersection {
     /// The point is inside of the face
-    FaceContainsPoint,
+    PointIsInsideFace,
 }
 
 #[cfg(test)]
@@ -140,7 +140,7 @@ mod tests {
         let intersection = (&face, &point).intersect();
         assert_eq!(
             intersection,
-            Some(FacePointIntersection::FaceContainsPoint)
+            Some(FacePointIntersection::PointIsInsideFace)
         );
     }
 
@@ -155,7 +155,7 @@ mod tests {
         let intersection = (&face, &point).intersect();
         assert_eq!(
             intersection,
-            Some(FacePointIntersection::FaceContainsPoint)
+            Some(FacePointIntersection::PointIsInsideFace)
         );
     }
 
@@ -169,7 +169,7 @@ mod tests {
         let intersection = (&face, &point).intersect();
         assert_eq!(
             intersection,
-            Some(FacePointIntersection::FaceContainsPoint)
+            Some(FacePointIntersection::PointIsInsideFace)
         );
     }
 
@@ -183,7 +183,7 @@ mod tests {
         let intersection = (&face, &point).intersect();
         assert_eq!(
             intersection,
-            Some(FacePointIntersection::FaceContainsPoint)
+            Some(FacePointIntersection::PointIsInsideFace)
         );
     }
 
@@ -203,7 +203,7 @@ mod tests {
         let intersection = (&face, &point).intersect();
         assert_eq!(
             intersection,
-            Some(FacePointIntersection::FaceContainsPoint)
+            Some(FacePointIntersection::PointIsInsideFace)
         );
     }
 }
