@@ -37,8 +37,8 @@ impl Intersect for (&Face, &Point<2>) {
                     (
                         Some(
                             RaySegmentIntersection::OnSegment
-                            | RaySegmentIntersection::OnUpperVertex
-                            | RaySegmentIntersection::OnLowerVertex,
+                            | RaySegmentIntersection::OnFirstVertex
+                            | RaySegmentIntersection::OnSecondVertex,
                         ),
                         _,
                     ) => {

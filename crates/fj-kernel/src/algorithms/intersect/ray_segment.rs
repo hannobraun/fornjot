@@ -30,11 +30,11 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Segment<2>) {
                 return None;
             }
 
-            if ray.origin.u == left.u {
-                return Some(RaySegmentIntersection::OnLowerVertex);
+            if ray.origin.u == a.u {
+                return Some(RaySegmentIntersection::OnFirstVertex);
             }
-            if ray.origin.u == right.u {
-                return Some(RaySegmentIntersection::OnUpperVertex);
+            if ray.origin.u == b.u {
+                return Some(RaySegmentIntersection::OnSecondVertex);
             }
             if ray.origin.u > left.u && ray.origin.u < right.u {
                 return Some(RaySegmentIntersection::OnSegment);
@@ -59,11 +59,11 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Segment<2>) {
         if robust::orient2d(pa, pb, pc) == 0. {
             // ray starts on the line
 
-            if ray.origin.v == upper.v {
-                return Some(RaySegmentIntersection::OnUpperVertex);
+            if ray.origin.v == a.v {
+                return Some(RaySegmentIntersection::OnFirstVertex);
             }
-            if ray.origin.v == lower.v {
-                return Some(RaySegmentIntersection::OnLowerVertex);
+            if ray.origin.v == b.v {
+                return Some(RaySegmentIntersection::OnSecondVertex);
             }
 
             return Some(RaySegmentIntersection::OnSegment);
@@ -105,10 +105,10 @@ pub enum RaySegmentIntersection {
     OnSegment,
 
     /// The ray starts on the upper vertex of the segment
-    OnUpperVertex,
+    OnFirstVertex,
 
     /// The ray starts on the lower vertex of the segment
-    OnLowerVertex,
+    OnSecondVertex,
 }
 
 #[cfg(test)]
@@ -182,11 +182,11 @@ mod tests {
         ));
         assert!(matches!(
             (&ray, &hit_upper).intersect(),
-            Some(RaySegmentIntersection::OnUpperVertex),
+            Some(RaySegmentIntersection::OnSecondVertex),
         ));
         assert!(matches!(
             (&ray, &hit_lower).intersect(),
-            Some(RaySegmentIntersection::OnLowerVertex),
+            Some(RaySegmentIntersection::OnFirstVertex),
         ));
     }
 
@@ -214,7 +214,7 @@ mod tests {
 
         assert!(matches!(
             (&ray, &left).intersect(),
-            Some(RaySegmentIntersection::OnUpperVertex)
+            Some(RaySegmentIntersection::OnSecondVertex)
         ));
         assert!(matches!(
             (&ray, &overlapping).intersect(),
@@ -222,7 +222,7 @@ mod tests {
         ));
         assert!(matches!(
             (&ray, &right).intersect(),
-            Some(RaySegmentIntersection::OnLowerVertex),
+            Some(RaySegmentIntersection::OnFirstVertex),
         ));
     }
 }
