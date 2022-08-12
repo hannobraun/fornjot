@@ -12,7 +12,7 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Segment<2>) {
 
         let [a, b] = segment.points();
         let [lower, upper] = if a.v <= b.v { [a, b] } else { [b, a] };
-        let right = if a.u > b.u { a } else { b };
+        let [left, right] = if a.u <= b.u { [a, b] } else { [b, a] };
 
         if ray.origin.v > upper.v {
             // ray is above segment
@@ -28,6 +28,16 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Segment<2>) {
 
             if ray.origin.u > right.u {
                 return None;
+            }
+
+            if ray.origin.u == left.u {
+                return Some(RaySegmentIntersection::OnLowerVertex);
+            }
+            if ray.origin.u == right.u {
+                return Some(RaySegmentIntersection::OnUpperVertex);
+            }
+            if ray.origin.u > left.u && ray.origin.u < right.u {
+                return Some(RaySegmentIntersection::OnSegment);
             }
 
             return Some(RaySegmentIntersection::Parallel);
@@ -185,17 +195,34 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([2., 0.]);
 
         let left = Segment::from([[0., 0.], [1., 0.]]);
-        let overlapping = Segment::from([[1., 0.], [3., 0.]]);
         let right = Segment::from([[3., 0.], [4., 0.]]);
 
         assert!((&ray, &left).intersect().is_none());
         assert!(matches!(
-            (&ray, &overlapping).intersect(),
+            (&ray, &right).intersect(),
             Some(RaySegmentIntersection::Parallel)
+        ));
+    }
+
+    #[test]
+    fn ray_starts_on_parallel_segment() {
+        let ray = HorizontalRayToTheRight::from([2., 0.]);
+
+        let left = Segment::from([[0., 0.], [2., 0.]]);
+        let overlapping = Segment::from([[1., 0.], [3., 0.]]);
+        let right = Segment::from([[2., 0.], [4., 0.]]);
+
+        assert!(matches!(
+            (&ray, &left).intersect(),
+            Some(RaySegmentIntersection::OnUpperVertex)
+        ));
+        assert!(matches!(
+            (&ray, &overlapping).intersect(),
+            Some(RaySegmentIntersection::OnSegment),
         ));
         assert!(matches!(
             (&ray, &right).intersect(),
-            Some(RaySegmentIntersection::Parallel)
+            Some(RaySegmentIntersection::OnLowerVertex),
         ));
     }
 }
