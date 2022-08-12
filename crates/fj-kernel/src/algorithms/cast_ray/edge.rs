@@ -1,14 +1,16 @@
 use fj_math::Segment;
 
 use crate::{
-    algorithms::intersect::HorizontalRayToTheRight,
+    algorithms::intersect::{
+        ray_segment::RaySegmentHit, HorizontalRayToTheRight, Intersect,
+    },
     objects::{CurveKind, Edge},
 };
 
 use super::CastRay;
 
 impl CastRay<2> for Edge {
-    type Hit = <Segment<2> as CastRay<2>>::Hit;
+    type Hit = RaySegmentHit;
 
     fn cast_ray(&self, ray: HorizontalRayToTheRight<2>) -> Option<Self::Hit> {
         let line = match self.curve().kind() {
@@ -24,6 +26,6 @@ impl CastRay<2> for Edge {
         });
         let segment = Segment::from_points(points);
 
-        segment.cast_ray(ray)
+        (&ray, &segment).intersect()
     }
 }
