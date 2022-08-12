@@ -140,17 +140,19 @@ mod tests {
     }
 
     #[test]
-    fn ray_hits_parallel_edge() {
-        // Ray passes face boundary at a vertex.
+    fn ray_hits_parallel_edge_and_leaves_face_at_vertex() {
         let face = Face::build(Surface::xy_plane()).polygon_from_points([
             [0., 0.],
             [2., 1.],
             [3., 1.],
             [0., 2.],
         ]);
-        assert_contains_point(face, [1., 1.]);
 
-        // Ray hits a vertex, but doesn't pass face boundary there.
+        assert_contains_point(face, [1., 1.]);
+    }
+
+    #[test]
+    fn ray_hits_parallel_edge_and_does_not_leave_face_there() {
         let face = Face::build(Surface::xy_plane()).polygon_from_points([
             [0., 0.],
             [2., 1.],
