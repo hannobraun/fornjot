@@ -34,7 +34,13 @@ impl Intersect for (&Face, &Point<2>) {
                 let hit = (&ray, edge).intersect();
 
                 let count_hit = match (hit, previous_hit) {
-                    (Some(RaySegmentIntersection::OnSegment), _) => {
+                    (
+                        Some(
+                            RaySegmentIntersection::OnSegment
+                            | RaySegmentIntersection::OnUpperVertex,
+                        ),
+                        _,
+                    ) => {
                         // If the ray starts on the boundary of the face,
                         // there's nothing to else check. By the definition of
                         // this intersection test, the face contains the point.
