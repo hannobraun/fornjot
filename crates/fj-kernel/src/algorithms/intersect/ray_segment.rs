@@ -104,10 +104,10 @@ pub enum RaySegmentIntersection {
     /// The ray starts on the segment
     OnSegment,
 
-    /// The ray starts on the upper vertex of the segment
+    /// The ray starts on the first vertex of the segment
     OnFirstVertex,
 
-    /// The ray starts on the lower vertex of the segment
+    /// The ray starts on the second vertex of the segment
     OnSecondVertex,
 }
 
