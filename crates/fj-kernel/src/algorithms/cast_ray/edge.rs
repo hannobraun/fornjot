@@ -1,8 +1,11 @@
 use fj_math::Segment;
 
-use crate::objects::{CurveKind, Edge};
+use crate::{
+    algorithms::intersect::HorizontalRayToTheRight,
+    objects::{CurveKind, Edge},
+};
 
-use super::{CastRay, HorizontalRayToTheRight};
+use super::CastRay;
 
 impl CastRay<2> for Edge {
     type Hit = <Segment<2> as CastRay<2>>::Hit;

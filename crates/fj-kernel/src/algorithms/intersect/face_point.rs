@@ -3,11 +3,11 @@
 use fj_math::Point;
 
 use crate::{
-    algorithms::cast_ray::{CastRay, HorizontalRayToTheRight, RaySegmentHit},
+    algorithms::cast_ray::{CastRay, RaySegmentHit},
     objects::Face,
 };
 
-use super::Intersect;
+use super::{HorizontalRayToTheRight, Intersect};
 
 impl Intersect for (&Face, &Point<2>) {
     type Intersection = FacePointIntersection;

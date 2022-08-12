@@ -2,7 +2,10 @@ use fj_interop::debug::{DebugInfo, TriangleEdgeCheck};
 use fj_math::{Point, PolyChain, Segment};
 
 use crate::{
-    algorithms::cast_ray::{CastRay, HorizontalRayToTheRight, RaySegmentHit},
+    algorithms::{
+        cast_ray::{CastRay, RaySegmentHit},
+        intersect::HorizontalRayToTheRight,
+    },
     objects::Surface,
 };
 
