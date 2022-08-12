@@ -4,7 +4,6 @@
 //! on their respective purpose.
 
 mod approx;
-mod contains;
 mod reverse;
 mod sweep;
 mod transform;
@@ -15,7 +14,6 @@ pub mod intersect;
 
 pub use self::{
     approx::{CycleApprox, FaceApprox, InvalidTolerance, Tolerance},
-    contains::Contains,
     reverse::reverse_face,
     sweep::sweep,
     transform::{transform_faces, TransformObject},

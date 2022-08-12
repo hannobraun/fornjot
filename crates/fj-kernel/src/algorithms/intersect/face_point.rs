@@ -1,3 +1,5 @@
+//! Intersection between faces and points in 2D
+
 use fj_math::Point;
 
 use crate::{
@@ -5,15 +7,19 @@ use crate::{
     objects::Face,
 };
 
-use super::Contains;
+use super::Intersect;
 
-impl Contains<Point<2>> for Face {
-    fn contains(&self, point: &Point<2>) -> bool {
+impl Intersect for (Face, Point<2>) {
+    type Intersection = FacePointIntersection;
+
+    fn intersect(&self) -> Option<Self::Intersection> {
+        let (face, point) = self;
+
         let ray = HorizontalRayToTheRight { origin: *point };
 
         let mut num_hits = 0;
 
-        for cycle in self.all_cycles() {
+        for cycle in face.all_cycles() {
             // We need to properly detect the ray passing the boundary at the
             // "seam" of the polygon, i.e. the vertex between the last and the
             // first segment. The logic in the loop properly takes care of that,
@@ -77,8 +83,19 @@ impl Contains<Point<2>> for Face {
             }
         }
 
-        num_hits % 2 == 1
+        if num_hits % 2 == 1 {
+            Some(FacePointIntersection::FaceContainsPoint)
+        } else {
+            None
+        }
     }
+}
+
+/// The intersection between a face and a point
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub enum FacePointIntersection {
+    /// The point is inside of the face
+    FaceContainsPoint,
 }
 
 #[cfg(test)]
@@ -86,71 +103,95 @@ mod tests {
     use fj_math::Point;
 
     use crate::{
-        algorithms::Contains,
+        algorithms::intersect::{face_point::FacePointIntersection, Intersect},
         objects::{Face, Surface},
     };
 
     #[test]
-    fn ray_hits_vertex_while_passing_outside() {
-        let face = Face::build(Surface::xy_plane()).polygon_from_points([
-            [0., 0.],
-            [2., 1.],
-            [0., 2.],
-        ]);
+    fn point_is_outside_face() {
+        let face = Face::build(Surface::xy_plane())
+            .polygon_from_points([[0., 0.], [1., 1.], [0., 2.]])
+            .into_face();
+        let point = Point::from([2., 1.]);
 
-        assert_contains_point(face, [1., 1.]);
+        let intersection = (face, point).intersect();
+        assert_eq!(intersection, None);
+    }
+
+    #[test]
+    fn ray_hits_vertex_while_passing_outside() {
+        let face = Face::build(Surface::xy_plane())
+            .polygon_from_points([[0., 0.], [2., 1.], [0., 2.]])
+            .into_face();
+        let point = Point::from([1., 1.]);
+
+        let intersection = (face, point).intersect();
+        assert_eq!(
+            intersection,
+            Some(FacePointIntersection::FaceContainsPoint)
+        );
     }
 
     #[test]
     fn ray_hits_vertex_at_cycle_seam() {
         let face = Face::build(Surface::xy_plane())
             .polygon_from_points([[4., 2.], [0., 4.], [0., 0.]])
-            .with_hole([[1., 1.], [2., 1.], [1., 3.]]);
+            .with_hole([[1., 1.], [2., 1.], [1., 3.]])
+            .into_face();
+        let point = Point::from([1., 2.]);
 
-        assert_contains_point(face, [1., 2.]);
+        let intersection = (face, point).intersect();
+        assert_eq!(
+            intersection,
+            Some(FacePointIntersection::FaceContainsPoint)
+        );
     }
 
     #[test]
     fn ray_hits_vertex_while_staying_inside() {
-        let face = Face::build(Surface::xy_plane()).polygon_from_points([
-            [0., 0.],
-            [2., 1.],
-            [3., 0.],
-            [3., 4.],
-        ]);
+        let face = Face::build(Surface::xy_plane())
+            .polygon_from_points([[0., 0.], [2., 1.], [3., 0.], [3., 4.]])
+            .into_face();
+        let point = Point::from([1., 1.]);
 
-        assert_contains_point(face, [1., 1.]);
+        let intersection = (face, point).intersect();
+        assert_eq!(
+            intersection,
+            Some(FacePointIntersection::FaceContainsPoint)
+        );
     }
 
     #[test]
-    fn ray_hits_parallel_edge() {
-        // Ray passes face boundary at a vertex.
-        let face = Face::build(Surface::xy_plane()).polygon_from_points([
-            [0., 0.],
-            [2., 1.],
-            [3., 1.],
-            [0., 2.],
-        ]);
-        assert_contains_point(face, [1., 1.]);
+    fn ray_hits_parallel_edge_and_leaves_face_at_vertex() {
+        let face = Face::build(Surface::xy_plane())
+            .polygon_from_points([[0., 0.], [2., 1.], [3., 1.], [0., 2.]])
+            .into_face();
+        let point = Point::from([1., 1.]);
 
-        // Ray hits a vertex, but doesn't pass face boundary there.
-        let face = Face::build(Surface::xy_plane()).polygon_from_points([
-            [0., 0.],
-            [2., 1.],
-            [3., 1.],
-            [4., 0.],
-            [4., 5.],
-        ]);
-        assert_contains_point(face, [1., 1.]);
+        let intersection = (face, point).intersect();
+        assert_eq!(
+            intersection,
+            Some(FacePointIntersection::FaceContainsPoint)
+        );
     }
 
-    fn assert_contains_point(
-        face: impl Into<Face>,
-        point: impl Into<Point<2>>,
-    ) {
-        let face = face.into();
-        let point = point.into();
+    #[test]
+    fn ray_hits_parallel_edge_and_does_not_leave_face_there() {
+        let face = Face::build(Surface::xy_plane())
+            .polygon_from_points([
+                [0., 0.],
+                [2., 1.],
+                [3., 1.],
+                [4., 0.],
+                [4., 5.],
+            ])
+            .into_face();
+        let point = Point::from([1., 1.]);
 
-        assert!(face.contains(&point));
+        let intersection = (face, point).intersect();
+        assert_eq!(
+            intersection,
+            Some(FacePointIntersection::FaceContainsPoint)
+        );
     }
 }
