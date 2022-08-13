@@ -574,11 +574,8 @@ impl Renderer {
         egui::Area::new("fj-status-message").show(&self.egui.context, |ui| {
             ui.group(|ui| {
                 ui.add(egui::Label::new(
-                    egui::RichText::new(format!(
-                        "Status:\n{}",
-                        status.status()
-                    ))
-                    .color(egui::Color32::BLACK),
+                    egui::RichText::new(format!("Status:{}", status.status()))
+                        .color(egui::Color32::BLACK),
                 ))
             })
         });

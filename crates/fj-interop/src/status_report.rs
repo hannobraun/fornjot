@@ -1,31 +1,41 @@
 //! Struct to store and update status messages
 
+use std::collections::VecDeque;
+
 /// Struct to store and update status messages
 pub struct StatusReport {
-    status: Vec<String>,
+    status: VecDeque<String>,
 }
 
 impl StatusReport {
     /// Create a new ``StatusReport`` instance with a blank status
     pub fn new() -> Self {
-        Self { status: Vec::new() }
+        Self {
+            status: VecDeque::new(),
+        }
     }
 
     /// Update the status
     pub fn update_status(&mut self, status: &str) {
-        if self.status.len() >= 5 {
-            self.clear_status();
+        let status = format!("\n{}", status.to_owned());
+        self.status.push_back(status);
+        if self.status.len() > 5 {
+            for _ in 0..(self.status.len() - 5) {
+                self.status.pop_front();
+            }
         }
-        self.status.push(status.to_string());
     }
 
     /// Get current status
     pub fn status(&self) -> String {
-        self.status.join("\n")
+        self.status
+            .iter()
+            .map(std::string::ToString::to_string)
+            .collect::<String>()
     }
 
     /// Reset status
-    fn clear_status(&mut self) {
+    pub fn clear_status(&mut self) {
         self.status.clear();
     }
 }
