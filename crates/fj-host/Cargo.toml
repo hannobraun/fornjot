@@ -17,7 +17,7 @@ categories = ["encoding", "mathematics", "rendering"]
 
 [dependencies]
 libloading = "0.7.2"
-notify = "5.0.0-pre.15"
+notify = "5.0.0-pre.16"
 thiserror = "1.0.32"
 cargo_metadata = "0.15.0"
 
