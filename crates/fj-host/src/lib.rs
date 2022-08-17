@@ -99,8 +99,16 @@ impl Model {
         let exit_status = cargo_output.status;
 
         if exit_status.success() {
-            let seconds_taken = str::from_utf8(&cargo_output.stderr).unwrap().rsplit_once(' ').unwrap().1.trim();
-            status.update_status(format!("Model compiled successfully in {seconds_taken}!").as_str());
+            let seconds_taken = str::from_utf8(&cargo_output.stderr)
+                .unwrap()
+                .rsplit_once(' ')
+                .unwrap()
+                .1
+                .trim();
+            status.update_status(
+                format!("Model compiled successfully in {seconds_taken}!")
+                    .as_str(),
+            );
         } else {
             let output = match command.output() {
                 Ok(output) => {
