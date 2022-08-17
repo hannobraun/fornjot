@@ -25,6 +25,7 @@ use std::{
     ops::{Deref, DerefMut},
     path::{Path, PathBuf},
     process::Command,
+    str,
     sync::mpsc,
     thread,
 };
@@ -92,12 +93,14 @@ impl Model {
 
         let command = command_root
             .arg("build")
-            .arg("-q")
             .args(["--manifest-path", &manifest_path]);
-        let exit_status = command.status()?;
+
+        let cargo_output = command.output()?;
+        let exit_status = cargo_output.status;
 
         if exit_status.success() {
-            status.update_status("Model compiled successfully!");
+            let seconds_taken = str::from_utf8(&cargo_output.stderr).unwrap().rsplit_once(' ').unwrap().1.trim();
+            status.update_status(format!("Model compiled successfully in {seconds_taken}!").as_str());
         } else {
             let output = match command.output() {
                 Ok(output) => {
