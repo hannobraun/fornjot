@@ -1,6 +1,6 @@
 [package]
 name = "fj-interop"
-version = "0.11.0"
+version = "0.12.0"
 edition = "2021"
 
 description = """\
@@ -17,4 +17,4 @@ categories = ["encoding", "mathematics", "rendering"]
 
 [dependencies.fj-math]
 path = "../fj-math"
-version = "0.11.0"
+version = "0.12.0"

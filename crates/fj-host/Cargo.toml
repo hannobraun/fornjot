@@ -1,6 +1,6 @@
 [package]
 name = "fj-host"
-version = "0.11.0"
+version = "0.12.0"
 edition = "2021"
 
 description = """\
@@ -22,9 +22,9 @@ thiserror = "1.0.32"
 cargo_metadata = "0.15.0"
 
 [dependencies.fj]
-version = "0.11.0"
+version = "0.12.0"
 path = "../fj"
 
 [dependencies.fj-interop]
-version = "0.11.0"
+version = "0.12.0"
 path = "../fj-interop"

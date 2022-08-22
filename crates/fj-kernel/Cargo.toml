@@ -1,6 +1,6 @@
 [package]
 name = "fj-kernel"
-version = "0.11.0"
+version = "0.12.0"
 edition = "2021"
 
 description = """\
@@ -26,11 +26,11 @@ spade = "2.0.0"
 thiserror = "1.0.32"
 
 [dependencies.fj-interop]
-version = "0.11.0"
+version = "0.12.0"
 path = "../fj-interop"
 
 [dependencies.fj-math]
-version = "0.11.0"
+version = "0.12.0"
 path = "../fj-math"
 
 
