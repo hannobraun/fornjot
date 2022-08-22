@@ -5,7 +5,7 @@ pub struct Shaders(wgpu::ShaderModule);
 impl Shaders {
     pub fn new(device: &wgpu::Device) -> Self {
         let module =
-            device.create_shader_module(&wgpu::ShaderModuleDescriptor {
+            device.create_shader_module(wgpu::ShaderModuleDescriptor {
                 label: None,
                 source: wgpu::ShaderSource::Wgsl(Cow::Borrowed(include_str!(
                     "shader.wgsl"
