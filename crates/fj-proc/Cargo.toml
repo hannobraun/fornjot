@@ -23,7 +23,7 @@ proc-macro2 = "1.0.43"
 quote = "1.0.21"
 
 [dependencies.serde]
-version = "1.0.143"
+version = "1.0.144"
 optional = true
 
 [dependencies.syn]
