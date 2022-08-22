@@ -1,5 +1,6 @@
 use std::{io, mem::size_of};
 
+use egui_winit::winit::event_loop::EventLoop;
 use fj_interop::status_report::StatusReport;
 use fj_math::{Aabb, Point};
 use thiserror::Error;
@@ -68,6 +69,7 @@ impl Renderer {
     /// Returns a new `Renderer`.
     pub async fn new(
         screen: &impl Screen<Window = egui_winit::winit::window::Window>,
+        event_loop: &EventLoop<()>,
     ) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::PRIMARY);
 
@@ -121,7 +123,7 @@ impl Renderer {
         //       Don't ask me how I know.
         //
 
-        let egui_winit_state = egui_winit::State::new(4096, screen.window());
+        let egui_winit_state = egui_winit::State::new(event_loop);
         let egui_context = egui::Context::default();
 
         // This is sound, as `window` is an object to create a surface upon.
@@ -163,7 +165,9 @@ impl Renderer {
             .await?;
 
         let color_format = surface
-            .get_preferred_format(&adapter)
+            .get_supported_formats(&adapter)
+            .get(0)
+            .copied()
             .expect("Error determining preferred color format");
 
         let Size { width, height } = screen.size();
@@ -635,14 +639,14 @@ impl Renderer {
     ) {
         encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
             label: None,
-            color_attachments: &[wgpu::RenderPassColorAttachment {
+            color_attachments: &[Some(wgpu::RenderPassColorAttachment {
                 view,
                 resolve_target: None,
                 ops: wgpu::Operations {
                     load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
                     store: true,
                 },
-            }],
+            })],
             depth_stencil_attachment: Some(
                 wgpu::RenderPassDepthStencilAttachment {
                     view: &self.depth_view,

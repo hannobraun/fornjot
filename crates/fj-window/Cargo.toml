@@ -19,7 +19,7 @@ categories = ["encoding", "mathematics", "rendering"]
 futures = "0.3.23"
 thiserror = "1.0.32"
 tracing = "0.1.35"
-winit = "0.26.1"
+winit = "0.27.2"
 
 [dependencies.fj-host]
 version = "0.12.0"

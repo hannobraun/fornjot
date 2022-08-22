@@ -115,13 +115,13 @@ impl Pipeline {
                 fragment: Some(wgpu::FragmentState {
                     module: shader.module,
                     entry_point: shader.frag_entry,
-                    targets: &[wgpu::ColorTargetState {
+                    targets: &[Some(wgpu::ColorTargetState {
                         format: color_format,
                         blend: Some(
                             wgpu::BlendState::PREMULTIPLIED_ALPHA_BLENDING,
                         ),
                         write_mask: wgpu::ColorWrites::ALL,
-                    }],
+                    })],
                 }),
                 multiview: None,
             });
