@@ -2,7 +2,7 @@
 
 use fj_math::Point;
 
-use crate::objects::{Face, Vertex};
+use crate::objects::{Edge, Face, Vertex};
 
 use super::{
     ray_segment::RaySegmentIntersection, HorizontalRayToTheRight, Intersect,
@@ -39,9 +39,10 @@ impl Intersect for (&Face, &Point<2>) {
                         _,
                     ) => {
                         // If the ray starts on the boundary of the face,
-                        // there's nothing to else check. By the definition of
-                        // this intersection test, the face contains the point.
-                        return Some(FacePointIntersection::PointIsInsideFace);
+                        // there's nothing to else check.
+                        return Some(
+                            FacePointIntersection::PointIsOnEdge(*edge)
+                        );
                     }
                     (Some(RaySegmentIntersection::RayStartsOnOnFirstVertex), _) => {
                         let vertex = edge.vertices().expect_vertices()[0];
@@ -116,6 +117,9 @@ impl Intersect for (&Face, &Point<2>) {
 pub enum FacePointIntersection {
     /// The point is inside of the face
     PointIsInsideFace,
+
+    /// The point is coincident with an edge
+    PointIsOnEdge(Edge),
 
     /// The point is coincident with a vertex
     PointIsOnVertex(Vertex),
@@ -216,6 +220,30 @@ mod tests {
         assert_eq!(
             intersection,
             Some(FacePointIntersection::PointIsInsideFace)
+        );
+    }
+
+    #[test]
+    fn point_is_coincident_with_edge() {
+        let face = Face::build(Surface::xy_plane())
+            .polygon_from_points([[0., 0.], [2., 0.], [0., 1.]])
+            .into_face();
+        let point = Point::from([1., 0.]);
+
+        let intersection = (&face, &point).intersect();
+
+        let edge = face
+            .edge_iter()
+            .copied()
+            .find(|edge| {
+                let [a, b] = edge.vertices().expect_vertices();
+                a.global().position() == Point::from([0., 0., 0.])
+                    && b.global().position() == Point::from([2., 0., 0.])
+            })
+            .unwrap();
+        assert_eq!(
+            intersection,
+            Some(FacePointIntersection::PointIsOnEdge(edge))
         );
     }
 
