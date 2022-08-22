@@ -17,7 +17,7 @@ categories = ["encoding", "mathematics", "rendering"]
 
 [dependencies]
 anymap = "1.0.0-beta.2"
-map-macro = "0.2.3"
+map-macro = "0.2.4"
 parking_lot = "0.12.0"
 parry2d-f64 = "0.9.0"
 robust = "0.2.3"
