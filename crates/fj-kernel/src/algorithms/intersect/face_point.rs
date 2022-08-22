@@ -161,7 +161,6 @@ mod tests {
     fn ray_hits_vertex_at_cycle_seam() {
         let face = Face::build(Surface::xy_plane())
             .polygon_from_points([[4., 2.], [0., 4.], [0., 0.]])
-            .with_hole([[1., 1.], [2., 1.], [1., 3.]])
             .into_face();
         let point = Point::from([1., 2.]);
 
