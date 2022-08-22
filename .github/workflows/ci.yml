@@ -63,7 +63,7 @@ jobs:
       - name: Set up Rust cache
         uses: Swatinem/rust-cache@1232abb8968faf344409165de17cbf9e7f340fd8
       - name: Run `cargo clippy`
-        uses: actions-rs/clippy-check@9d09632661e31982c0be8af59aeb96b680641bc4
+        uses: actions-rs/clippy-check@b5b5f21f4797c02da247df37026fcd0a5024aa4d
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           args: --all-features -- -D warnings
