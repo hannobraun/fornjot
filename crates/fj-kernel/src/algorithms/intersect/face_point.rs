@@ -124,6 +124,7 @@ pub enum FacePointIntersection {
 #[cfg(test)]
 mod tests {
     use fj_math::Point;
+    use pretty_assertions::assert_eq;
 
     use crate::{
         algorithms::intersect::{face_point::FacePointIntersection, Intersect},
