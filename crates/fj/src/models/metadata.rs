@@ -116,7 +116,7 @@ impl Metadata {
 }
 
 /// Metadata about a [`crate::models::Model`].
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, Eq, PartialEq)]
 pub struct ModelMetadata {
     /// A short, human-friendly name used to identify this model.
     pub name: String,
@@ -167,7 +167,7 @@ impl ModelMetadata {
 }
 
 /// Metadata describing a model's argument.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, Eq, PartialEq)]
 pub struct ArgumentMetadata {
     /// The name used to refer to this argument.
     pub name: String,

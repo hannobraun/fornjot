@@ -342,7 +342,7 @@ impl Watcher {
 }
 
 /// Parameters that are passed to a model.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, Eq, PartialEq)]
 pub struct Parameters(pub HashMap<String, String>);
 
 impl Parameters {

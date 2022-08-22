@@ -7,7 +7,7 @@ use crate::objects::Face;
 use super::{CycleApprox, Local, Tolerance};
 
 /// An approximation of a [`Face`]
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Eq, PartialEq)]
 pub struct FaceApprox {
     /// All points that make up the approximation
     ///
