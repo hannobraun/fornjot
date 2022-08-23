@@ -1,5 +1,7 @@
 use std::collections::BTreeSet;
 
+use crate::builder::ShellBuilder;
+
 use super::Face;
 
 /// A 3-dimensional closed shell
@@ -14,6 +16,11 @@ pub struct Shell {
 }
 
 impl Shell {
+    /// Build a shell using [`ShellBuilder`]
+    pub fn build() -> ShellBuilder {
+        ShellBuilder
+    }
+
     /// Construct an empty instance of `Shell`
     pub fn new() -> Self {
         Self {
