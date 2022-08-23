@@ -19,14 +19,14 @@ impl Sweep for Sketch {
     ) -> Self::Swept {
         let path = path.into();
 
-        let mut target = Vec::new();
+        let mut shells = Vec::new();
 
         for face in self.into_faces() {
             let shell = face.sweep(path, tolerance, color);
-            target.push(shell);
+            shells.push(shell);
         }
 
-        Solid::new().with_shells(target)
+        Solid::new().with_shells(shells)
     }
 }
 
