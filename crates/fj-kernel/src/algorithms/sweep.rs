@@ -41,7 +41,7 @@ impl Sweep for Sketch {
 }
 
 /// Create a solid by sweeping a sketch
-pub fn sweep(
+fn sweep(
     source: Sketch,
     path: impl Into<Vector<3>>,
     tolerance: Tolerance,
