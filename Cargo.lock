@@ -219,6 +219,7 @@ dependencies = [
  "anyhow",
  "chrono",
  "clap",
+ "map-macro",
  "octocrab",
  "tokio",
  "url",
