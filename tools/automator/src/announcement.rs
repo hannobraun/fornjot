@@ -54,7 +54,9 @@ async fn generate_announcement(
     let mut pull_request_links = String::new();
 
     for pull_request in pull_requests {
-        let PullRequest { number, title, url } = pull_request;
+        let PullRequest {
+            number, title, url, ..
+        } = pull_request;
 
         let item = format!("- {title} ([#{number}])\n");
         pull_request_list.push_str(&item);
