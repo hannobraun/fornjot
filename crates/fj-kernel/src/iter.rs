@@ -255,7 +255,7 @@ impl<'r> ObjectIters<'r> for Solid {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
         let mut objects = Vec::new();
 
-        for face in self.faces() {
+        for face in self.shells() {
             objects.push(face as &dyn ObjectIters);
         }
 
@@ -491,7 +491,7 @@ mod tests {
         assert_eq!(6, object.face_iter().count());
         assert_eq!(18, object.global_curve_iter().count());
         assert_eq!(8, object.global_vertex_iter().count());
-        assert_eq!(0, object.shell_iter().count());
+        assert_eq!(1, object.shell_iter().count());
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(1, object.solid_iter().count());
         assert_eq!(6, object.surface_iter().count());

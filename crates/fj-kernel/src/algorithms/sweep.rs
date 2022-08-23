@@ -4,8 +4,8 @@ use fj_math::{Point, Scalar, Transform, Triangle, Vector};
 use crate::{
     iter::ObjectIters,
     objects::{
-        Curve, CurveKind, Cycle, Edge, Face, GlobalCurve, GlobalVertex, Sketch,
-        Solid, Surface, Vertex, VerticesOfEdge,
+        Curve, CurveKind, Cycle, Edge, Face, GlobalCurve, GlobalVertex, Shell,
+        Sketch, Solid, Surface, Vertex, VerticesOfEdge,
     },
 };
 
@@ -62,7 +62,8 @@ pub fn sweep(
         }
     }
 
-    Solid::new().with_faces(target)
+    let shell = Shell::new().with_faces(target);
+    Solid::new().with_shells([shell])
 }
 
 fn create_bottom_faces(

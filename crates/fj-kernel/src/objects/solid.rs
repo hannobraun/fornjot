@@ -2,7 +2,7 @@ use std::collections::BTreeSet;
 
 use crate::builder::SolidBuilder;
 
-use super::Face;
+use super::Shell;
 
 /// A 3-dimensional shape
 ///
@@ -18,7 +18,7 @@ use super::Face;
 /// `Shell`s, and validate that those `Shell`s don't intersect.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Solid {
-    faces: BTreeSet<Face>,
+    shells: BTreeSet<Shell>,
 }
 
 impl Solid {
@@ -30,30 +30,30 @@ impl Solid {
     /// Construct an empty instance of `Solid`
     pub fn new() -> Self {
         Self {
-            faces: BTreeSet::new(),
+            shells: BTreeSet::new(),
         }
     }
 
-    /// Add faces to the solid
+    /// Add shells to the solid
     ///
     /// Consumes the solid and returns the updated instance.
-    pub fn with_faces(
+    pub fn with_shells(
         mut self,
-        faces: impl IntoIterator<Item = impl Into<Face>>,
+        shells: impl IntoIterator<Item = impl Into<Shell>>,
     ) -> Self {
-        let faces = faces.into_iter().map(Into::into);
-        self.faces.extend(faces);
+        let shells = shells.into_iter().map(Into::into);
+        self.shells.extend(shells);
         self
     }
 
-    /// Access the solid's faces
-    pub fn faces(&self) -> impl Iterator<Item = &Face> {
-        self.faces.iter()
+    /// Access the solid's shells
+    pub fn shells(&self) -> impl Iterator<Item = &Shell> {
+        self.shells.iter()
     }
 
-    /// Convert the solid into a list of faces
-    pub fn into_faces(self) -> impl Iterator<Item = Face> {
-        self.faces.into_iter()
+    /// Convert the solid into a list of shells
+    pub fn into_shells(self) -> impl Iterator<Item = Shell> {
+        self.shells.into_iter()
     }
 }
 

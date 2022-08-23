@@ -119,8 +119,8 @@ impl TransformObject for Sketch {
 
 impl TransformObject for Solid {
     fn transform(self, transform: &Transform) -> Self {
-        let faces = self.into_faces().map(|face| face.transform(transform));
-        Self::new().with_faces(faces)
+        let faces = self.into_shells().map(|shell| shell.transform(transform));
+        Self::new().with_shells(faces)
     }
 }
 
