@@ -13,6 +13,20 @@ use crate::{
 
 use super::{reverse_face, CycleApprox, Tolerance, TransformObject};
 
+/// Sweep an object along a path to create another object
+pub trait Sweep {
+    /// The object that is created by sweeping the implementing object
+    type Swept;
+
+    /// Sweep the object along the given path
+    fn sweep(
+        self,
+        path: impl Into<Vector<3>>,
+        tolerance: Tolerance,
+        color: Color,
+    ) -> Self::Swept;
+}
+
 /// Create a solid by sweeping a sketch
 pub fn sweep(
     source: Sketch,
