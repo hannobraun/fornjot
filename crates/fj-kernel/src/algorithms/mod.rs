@@ -5,11 +5,11 @@
 
 mod approx;
 mod reverse;
-mod sweep;
 mod transform;
 mod triangulate;
 
 pub mod intersect;
+pub mod sweep;
 
 pub use self::{
     approx::{CycleApprox, FaceApprox, InvalidTolerance, Tolerance},
