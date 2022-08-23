@@ -18,6 +18,7 @@ members = [
     "models/star",
     "models/test",
 
+    "tools/automator",
     "tools/export-validator",
     "tools/release-operator",
 ]
