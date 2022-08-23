@@ -25,18 +25,18 @@ impl Sweep for Face {
         let is_sweep_along_negative_direction =
             path.dot(&Vector::from([0., 0., 1.])) < Scalar::ZERO;
 
-        let mut target = Vec::new();
+        let mut faces = Vec::new();
 
         create_bottom_faces(
             &self,
             is_sweep_along_negative_direction,
-            &mut target,
+            &mut faces,
         );
         create_top_face(
             self.clone(),
             path,
             is_sweep_along_negative_direction,
-            &mut target,
+            &mut faces,
         );
 
         for cycle in self.all_cycles() {
@@ -47,22 +47,18 @@ impl Sweep for Face {
                         is_sweep_along_negative_direction,
                         vertices.map(|vertex| *vertex.global()),
                         color,
-                        &mut target,
+                        &mut faces,
                     );
                     continue;
                 }
 
                 create_continuous_side_face(
-                    *edge,
-                    path,
-                    tolerance,
-                    color,
-                    &mut target,
+                    *edge, path, tolerance, color, &mut faces,
                 );
             }
         }
 
-        Shell::new().with_faces(target)
+        Shell::new().with_faces(faces)
     }
 }
 
