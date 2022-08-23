@@ -50,12 +50,18 @@ async fn generate_announcement(
     pull_requests: impl IntoIterator<Item = PullRequest>,
     file: &mut File,
 ) -> anyhow::Result<()> {
+    let mut pull_request_list = String::new();
     let mut pull_request_links = String::new();
 
     for pull_request in pull_requests {
         let PullRequest {
-            number, html_url, ..
+            number,
+            title,
+            html_url,
         } = pull_request;
+
+        let item = format!("- {title} ([#{number}])\n");
+        pull_request_list.push_str(&item);
 
         let link = format!("[#{number}]: {html_url}\n");
         pull_request_links.push_str(&link);
@@ -104,6 +110,12 @@ Improvements that are relevant to developers working on Fornjot itself.
 
 **TASK: Add internal improvements.**
 
+
+### Unsorted pull requests
+
+**TASK: Sort into the categories above; update/merge as appropriate.**
+
+{pull_request_list}
 
 ### Issue of the Week
 
