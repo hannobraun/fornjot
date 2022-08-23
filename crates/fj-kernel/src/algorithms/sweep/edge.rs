@@ -1,5 +1,5 @@
 use fj_interop::mesh::Color;
-use fj_math::{Point, Scalar, Transform, Triangle, Vector};
+use fj_math::{Point, Transform, Triangle};
 
 use crate::{
     algorithms::{CycleApprox, Tolerance},
@@ -22,13 +22,9 @@ impl Sweep for Edge {
     ) -> Self::Swept {
         let path = path.into();
 
-        let is_sweep_along_negative_direction =
-            path.inner().dot(&Vector::from([0., 0., 1.])) < Scalar::ZERO;
-
         if let Some(vertices) = self.vertices().get() {
             let face = create_non_continuous_side_face(
                 path,
-                is_sweep_along_negative_direction,
                 vertices.map(|vertex| *vertex.global()),
                 color,
             );
@@ -41,7 +37,6 @@ impl Sweep for Edge {
 
 fn create_non_continuous_side_face(
     path: Path,
-    is_sweep_along_negative_direction: bool,
     vertices_bottom: [GlobalVertex; 2],
     color: Color,
 ) -> Face {
@@ -53,7 +48,7 @@ fn create_non_continuous_side_face(
 
         let [[a, b], [c, d]] = [vertices_bottom, vertices_top];
 
-        if is_sweep_along_negative_direction {
+        if path.is_negative_direction() {
             [b, a, c, d]
         } else {
             [a, b, d, c]

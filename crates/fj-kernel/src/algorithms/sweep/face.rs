@@ -1,5 +1,3 @@
-use fj_math::{Scalar, Vector};
-
 use crate::{
     algorithms::{reverse_face, TransformObject},
     objects::{Face, Shell},
@@ -18,20 +16,13 @@ impl Sweep for Face {
     ) -> Self::Swept {
         let path = path.into();
 
-        let is_sweep_along_negative_direction =
-            path.inner().dot(&Vector::from([0., 0., 1.])) < Scalar::ZERO;
-
         let mut faces = Vec::new();
 
         let bottom_face =
-            create_bottom_face(&self, is_sweep_along_negative_direction);
+            create_bottom_face(&self, path.is_negative_direction());
         faces.push(bottom_face);
 
-        let top_face = create_top_face(
-            self.clone(),
-            path,
-            is_sweep_along_negative_direction,
-        );
+        let top_face = create_top_face(self.clone(), path);
         faces.push(top_face);
 
         for cycle in self.all_cycles() {
@@ -56,14 +47,10 @@ fn create_bottom_face(
     }
 }
 
-fn create_top_face(
-    face: Face,
-    path: Path,
-    is_sweep_along_negative_direction: bool,
-) -> Face {
+fn create_top_face(face: Face, path: Path) -> Face {
     let mut face = face.translate(path.inner());
 
-    if is_sweep_along_negative_direction {
+    if path.is_negative_direction() {
         face = reverse_face(&face);
     };
 

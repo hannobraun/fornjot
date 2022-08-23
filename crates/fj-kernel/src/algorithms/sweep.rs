@@ -5,7 +5,7 @@ mod face;
 mod sketch;
 
 use fj_interop::mesh::Color;
-use fj_math::Vector;
+use fj_math::{Scalar, Vector};
 
 use super::Tolerance;
 
@@ -31,6 +31,11 @@ impl Path {
     /// Return the vector that defines this path
     pub fn inner(&self) -> Vector<3> {
         self.0
+    }
+
+    /// Indicate whether the path is in the negative direction
+    pub fn is_negative_direction(&self) -> bool {
+        self.0.dot(&Vector::from([0., 0., 1.])) < Scalar::ZERO
     }
 }
 
