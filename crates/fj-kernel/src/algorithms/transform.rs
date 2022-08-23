@@ -1,7 +1,7 @@
 use fj_math::{Transform, Vector};
 
 use crate::objects::{
-    Curve, Cycle, Edge, Face, GlobalCurve, GlobalVertex, Sketch, Solid,
+    Curve, Cycle, Edge, Face, GlobalCurve, GlobalVertex, Shell, Sketch, Solid,
     Surface, Vertex,
 };
 
@@ -100,6 +100,13 @@ impl TransformObject for GlobalVertex {
     fn transform(self, transform: &Transform) -> Self {
         let position = transform.transform_point(&self.position());
         Self::from_position(position)
+    }
+}
+
+impl TransformObject for Shell {
+    fn transform(self, transform: &Transform) -> Self {
+        let faces = self.into_faces().map(|face| face.transform(transform));
+        Self::new().with_faces(faces)
     }
 }
 
