@@ -1,6 +1,6 @@
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
-    algorithms::{sweep, Tolerance},
+    algorithms::{sweep::Sweep, Tolerance},
     objects::Solid,
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
@@ -22,7 +22,7 @@ impl Shape for fj::Sweep {
         let path = Vector::from(self.path());
         let color = self.shape().color();
 
-        let solid = sweep(sketch.into_inner(), path, tolerance, Color(color));
+        let solid = sketch.into_inner().sweep(path, tolerance, Color(color));
         validate(solid, config)
     }
 
