@@ -244,6 +244,8 @@ mod tests {
         objects::{Face, Sketch, Surface},
     };
 
+    use super::Sweep;
+
     #[test]
     fn bottom_positive() -> anyhow::Result<()> {
         test_bottom_top(
@@ -338,8 +340,7 @@ mod tests {
         ]);
         let sketch = Sketch::new().with_faces([face]);
 
-        let solid =
-            super::sweep(sketch, direction, tolerance, Color([255, 0, 0, 255]));
+        let solid = sketch.sweep(direction, tolerance, Color([255, 0, 0, 255]));
 
         let expected_vertices: Vec<_> = expected_vertices
             .into_iter()
