@@ -27,12 +27,12 @@ impl Sweep for Face {
             create_bottom_face(&self, is_sweep_along_negative_direction);
         faces.push(bottom_face);
 
-        create_top_face(
+        let top_face = create_top_face(
             self.clone(),
             path,
             is_sweep_along_negative_direction,
-            &mut faces,
         );
+        faces.push(top_face);
 
         for cycle in self.all_cycles() {
             for edge in cycle.edges() {
@@ -60,13 +60,12 @@ fn create_top_face(
     face: Face,
     path: Vector<3>,
     is_sweep_along_negative_direction: bool,
-    target: &mut Vec<Face>,
-) {
+) -> Face {
     let mut face = face.translate(path);
 
     if is_sweep_along_negative_direction {
         face = reverse_face(&face);
     };
 
-    target.push(face);
+    face
 }
