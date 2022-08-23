@@ -27,6 +27,19 @@ pub trait Sweep {
     ) -> Self::Swept;
 }
 
+impl Sweep for Sketch {
+    type Swept = Solid;
+
+    fn sweep(
+        self,
+        path: impl Into<Vector<3>>,
+        tolerance: Tolerance,
+        color: Color,
+    ) -> Self::Swept {
+        sweep(self, path, tolerance, color)
+    }
+}
+
 /// Create a solid by sweeping a sketch
 pub fn sweep(
     source: Sketch,
