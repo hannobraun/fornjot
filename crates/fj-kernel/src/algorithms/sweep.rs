@@ -1,3 +1,5 @@
+//! Sweeping objects along a path to create new objects
+
 use fj_interop::mesh::Color;
 use fj_math::{Point, Scalar, Transform, Triangle, Vector};
 
