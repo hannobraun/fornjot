@@ -52,9 +52,10 @@ async fn generate_announcement(
 ) -> anyhow::Result<()> {
     let mut pull_request_links = String::new();
 
-    for PullRequest { number, html_url } in pull_requests {
-        let link = format!("[#{number}]: {html_url}\n");
+    for pull_request in pull_requests {
+        let PullRequest { number, html_url } = pull_request;
 
+        let link = format!("[#{number}]: {html_url}\n");
         pull_request_links.push_str(&link);
     }
 
