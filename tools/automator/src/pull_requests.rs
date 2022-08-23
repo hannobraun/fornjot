@@ -7,6 +7,7 @@ use url::Url;
 
 pub struct PullRequest {
     pub number: u64,
+    pub title: String,
     pub html_url: Url,
 }
 
@@ -50,12 +51,19 @@ impl PullRequest {
                 if let Some(merged_at) = pull_request.merged_at {
                     if merged_at.date() >= last_release_date {
                         let number = pull_request.number;
+                        let title = pull_request.title.ok_or_else(|| {
+                            anyhow!("Pull request is missing title")
+                        })?;
                         let html_url =
                             pull_request.html_url.ok_or_else(|| {
                                 anyhow!("Pull request is missing URL")
                             })?;
 
-                        let pull_request = Self { number, html_url };
+                        let pull_request = Self {
+                            number,
+                            title,
+                            html_url,
+                        };
 
                         pull_requests.insert(pull_request.number, pull_request);
                     }
