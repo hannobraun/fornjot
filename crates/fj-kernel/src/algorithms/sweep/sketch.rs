@@ -20,7 +20,6 @@ impl Sweep for Sketch {
         let path = path.into();
 
         let mut shells = Vec::new();
-
         for face in self.into_faces() {
             let shell = face.sweep(path, tolerance, color);
             shells.push(shell);
