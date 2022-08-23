@@ -23,7 +23,7 @@ impl Sweep for Face {
 
         let mut faces = Vec::new();
 
-        create_bottom_faces(
+        create_bottom_face(
             &self,
             is_sweep_along_negative_direction,
             &mut faces,
@@ -46,7 +46,7 @@ impl Sweep for Face {
     }
 }
 
-fn create_bottom_faces(
+fn create_bottom_face(
     face: &Face,
     is_sweep_along_negative_direction: bool,
     target: &mut Vec<Face>,
