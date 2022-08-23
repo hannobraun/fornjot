@@ -8,14 +8,8 @@ use super::Shell;
 ///
 /// # Implementation Note
 ///
-/// The faces that make up the solid must form a closed shape. This is not
-/// currently validated.
-///
-/// In fact, solids could be made up of several closed shells. One outer shell,
-/// and multiple inner ones (cavities within the solid). There should probably
-/// a separate `Shell` object that is a collection of faces, and validates that
-/// those faces form a closed shape. `Solid` should be a collection of such
-/// `Shell`s, and validate that those `Shell`s don't intersect.
+/// The shells that form the boundaries of the solid must not intersect. This is
+/// not currently validated.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Solid {
     shells: BTreeSet<Shell>,
