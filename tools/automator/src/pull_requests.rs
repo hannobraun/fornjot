@@ -25,6 +25,9 @@ impl PullRequest {
                 .pulls("hannobraun", "Fornjot")
                 .list()
                 .state(State::Closed)
+                // It would be *much* better to sort by the date the pull
+                // requests were merged, since "updated" could result in false
+                // positives. GitHub doesn't support that though.
                 .sort(Sort::Updated)
                 .direction(Direction::Descending)
                 .per_page(MAX_RESULTS_PER_PAGE)
