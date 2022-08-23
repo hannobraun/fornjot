@@ -23,11 +23,10 @@ impl Sweep for Face {
 
         let mut faces = Vec::new();
 
-        create_bottom_face(
-            &self,
-            is_sweep_along_negative_direction,
-            &mut faces,
-        );
+        let bottom_face =
+            create_bottom_face(&self, is_sweep_along_negative_direction);
+        faces.push(bottom_face);
+
         create_top_face(
             self.clone(),
             path,
@@ -49,15 +48,12 @@ impl Sweep for Face {
 fn create_bottom_face(
     face: &Face,
     is_sweep_along_negative_direction: bool,
-    target: &mut Vec<Face>,
-) {
-    let face = if is_sweep_along_negative_direction {
+) -> Face {
+    if is_sweep_along_negative_direction {
         face.clone()
     } else {
         reverse_face(face)
-    };
-
-    target.push(face);
+    }
 }
 
 fn create_top_face(
