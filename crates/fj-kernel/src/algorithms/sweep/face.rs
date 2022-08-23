@@ -42,13 +42,13 @@ impl Sweep for Face {
         for cycle in self.all_cycles() {
             for edge in cycle.edges() {
                 if let Some(vertices) = edge.vertices().get() {
-                    create_non_continuous_side_face(
+                    let face = create_non_continuous_side_face(
                         path,
                         is_sweep_along_negative_direction,
                         vertices.map(|vertex| *vertex.global()),
                         color,
-                        &mut faces,
                     );
+                    faces.push(face);
                     continue;
                 }
 
@@ -96,8 +96,7 @@ fn create_non_continuous_side_face(
     is_sweep_along_negative_direction: bool,
     vertices_bottom: [GlobalVertex; 2],
     color: Color,
-    target: &mut Vec<Face>,
-) {
+) -> Face {
     let vertices = {
         let vertices_top = vertices_bottom.map(|vertex| {
             let position = vertex.position() + path;
@@ -158,8 +157,7 @@ fn create_non_continuous_side_face(
         Cycle::new(surface).with_edges(edges)
     };
 
-    let face = Face::new(surface).with_exteriors([cycle]).with_color(color);
-    target.push(face);
+    Face::new(surface).with_exteriors([cycle]).with_color(color)
 }
 
 fn create_continuous_side_face(
