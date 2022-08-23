@@ -91,6 +91,8 @@ pub fn sweep(
         }
     }
 
+    // Implementation note: This only works, if the original sketch has a single
+    // face. If it has multiple, then multiple shells must be created.
     let shell = Shell::new().with_faces(target);
     Solid::new().with_shells([shell])
 }
