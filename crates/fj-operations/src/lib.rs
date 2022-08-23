@@ -77,7 +77,8 @@ impl Shape for fj::Shape {
                 shape
                     .compute_brep(config, tolerance, debug_info)?
                     .into_inner()
-                    .into_faces()
+                    .into_shells()
+                    .flat_map(|shell| shell.into_faces())
                     .collect(),
                 config,
             ),

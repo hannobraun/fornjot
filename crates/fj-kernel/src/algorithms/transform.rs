@@ -1,7 +1,7 @@
 use fj_math::{Transform, Vector};
 
 use crate::objects::{
-    Curve, Cycle, Edge, Face, GlobalCurve, GlobalVertex, Sketch, Solid,
+    Curve, Cycle, Edge, Face, GlobalCurve, GlobalVertex, Shell, Sketch, Solid,
     Surface, Vertex,
 };
 
@@ -103,6 +103,13 @@ impl TransformObject for GlobalVertex {
     }
 }
 
+impl TransformObject for Shell {
+    fn transform(self, transform: &Transform) -> Self {
+        let faces = self.into_faces().map(|face| face.transform(transform));
+        Self::new().with_faces(faces)
+    }
+}
+
 impl TransformObject for Sketch {
     fn transform(self, transform: &Transform) -> Self {
         let faces = self.into_faces().map(|face| face.transform(transform));
@@ -112,8 +119,8 @@ impl TransformObject for Sketch {
 
 impl TransformObject for Solid {
     fn transform(self, transform: &Transform) -> Self {
-        let faces = self.into_faces().map(|face| face.transform(transform));
-        Self::new().with_faces(faces)
+        let faces = self.into_shells().map(|shell| shell.transform(transform));
+        Self::new().with_shells(faces)
     }
 }
 
