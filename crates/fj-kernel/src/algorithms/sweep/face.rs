@@ -52,9 +52,9 @@ impl Sweep for Face {
                     continue;
                 }
 
-                create_continuous_side_face(
-                    *edge, path, tolerance, color, &mut faces,
-                );
+                let face =
+                    create_continuous_side_face(*edge, path, tolerance, color);
+                faces.push(face);
             }
         }
 
@@ -165,8 +165,7 @@ fn create_continuous_side_face(
     path: Vector<3>,
     tolerance: Tolerance,
     color: Color,
-    target: &mut Vec<Face>,
-) {
+) -> Face {
     let translation = Transform::translation(path);
 
     // This is definitely the wrong surface, but it shouldn't matter. Since this
@@ -195,5 +194,5 @@ fn create_continuous_side_face(
         side_face.push(([v0, v2, v3].into(), color));
     }
 
-    target.push(Face::from_triangles(side_face));
+    Face::from_triangles(side_face)
 }
