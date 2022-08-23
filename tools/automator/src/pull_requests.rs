@@ -18,6 +18,8 @@ impl PullRequest {
         let mut page = 1u32;
 
         'outer: loop {
+            const MAX_RESULTS_PER_PAGE: u8 = 100;
+
             println!("Fetching page {}...", page);
             let pull_request_page = octocrab::instance()
                 .pulls("hannobraun", "Fornjot")
@@ -25,7 +27,7 @@ impl PullRequest {
                 .state(State::Closed)
                 .sort(Sort::Updated)
                 .direction(Direction::Descending)
-                .per_page(100) // this is the maximum number of results per page
+                .per_page(MAX_RESULTS_PER_PAGE)
                 .page(page)
                 .send()
                 .await?;
