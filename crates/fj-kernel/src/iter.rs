@@ -219,6 +219,22 @@ impl<'r> ObjectIters<'r> for GlobalVertex {
     }
 }
 
+impl<'r> ObjectIters<'r> for Shell {
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
+        let mut objects = Vec::new();
+
+        for face in self.faces() {
+            objects.push(face as &dyn ObjectIters);
+        }
+
+        objects
+    }
+
+    fn shell_iter(&'r self) -> Iter<&'r Shell> {
+        Iter::from_object(self)
+    }
+}
+
 impl<'r> ObjectIters<'r> for Sketch {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
         let mut objects = Vec::new();
@@ -330,8 +346,8 @@ impl<T> Iterator for Iter<T> {
 #[cfg(test)]
 mod tests {
     use crate::objects::{
-        Cycle, Edge, Face, GlobalCurve, GlobalVertex, Sketch, Solid, Surface,
-        Vertex,
+        Cycle, Edge, Face, GlobalCurve, GlobalVertex, Shell, Sketch, Solid,
+        Surface, Vertex,
     };
 
     use super::ObjectIters as _;
@@ -426,6 +442,22 @@ mod tests {
         assert_eq!(0, object.solid_iter().count());
         assert_eq!(0, object.surface_iter().count());
         assert_eq!(0, object.vertex_iter().count());
+    }
+
+    #[test]
+    fn shell() {
+        let object = Shell::build().cube_from_edge_length(1.);
+
+        assert_eq!(6, object.cycle_iter().count());
+        assert_eq!(20, object.edge_iter().count());
+        assert_eq!(6, object.face_iter().count());
+        assert_eq!(18, object.global_curve_iter().count());
+        assert_eq!(8, object.global_vertex_iter().count());
+        assert_eq!(1, object.shell_iter().count());
+        assert_eq!(0, object.sketch_iter().count());
+        assert_eq!(0, object.solid_iter().count());
+        assert_eq!(6, object.surface_iter().count());
+        assert_eq!(16, object.vertex_iter().count());
     }
 
     #[test]
