@@ -21,65 +21,56 @@ impl Sweep for Sketch {
         tolerance: Tolerance,
         color: Color,
     ) -> Self::Swept {
-        sweep(self, path, tolerance, color)
-    }
-}
+        let path = path.into();
 
-/// Create a solid by sweeping a sketch
-fn sweep(
-    source: Sketch,
-    path: impl Into<Vector<3>>,
-    tolerance: Tolerance,
-    color: Color,
-) -> Solid {
-    let path = path.into();
+        let is_sweep_along_negative_direction =
+            path.dot(&Vector::from([0., 0., 1.])) < Scalar::ZERO;
 
-    let is_sweep_along_negative_direction =
-        path.dot(&Vector::from([0., 0., 1.])) < Scalar::ZERO;
+        let mut target = Vec::new();
 
-    let mut target = Vec::new();
+        for face in self.face_iter() {
+            create_bottom_faces(
+                face,
+                is_sweep_along_negative_direction,
+                &mut target,
+            );
+            create_top_face(
+                face.clone(),
+                path,
+                is_sweep_along_negative_direction,
+                &mut target,
+            );
 
-    for face in source.face_iter() {
-        create_bottom_faces(
-            face,
-            is_sweep_along_negative_direction,
-            &mut target,
-        );
-        create_top_face(
-            face.clone(),
-            path,
-            is_sweep_along_negative_direction,
-            &mut target,
-        );
+            for cycle in face.all_cycles() {
+                for edge in cycle.edges() {
+                    if let Some(vertices) = edge.vertices().get() {
+                        create_non_continuous_side_face(
+                            path,
+                            is_sweep_along_negative_direction,
+                            vertices.map(|vertex| *vertex.global()),
+                            color,
+                            &mut target,
+                        );
+                        continue;
+                    }
 
-        for cycle in face.all_cycles() {
-            for edge in cycle.edges() {
-                if let Some(vertices) = edge.vertices().get() {
-                    create_non_continuous_side_face(
+                    create_continuous_side_face(
+                        *edge,
                         path,
-                        is_sweep_along_negative_direction,
-                        vertices.map(|vertex| *vertex.global()),
+                        tolerance,
                         color,
                         &mut target,
                     );
-                    continue;
                 }
-
-                create_continuous_side_face(
-                    *edge,
-                    path,
-                    tolerance,
-                    color,
-                    &mut target,
-                );
             }
         }
-    }
 
-    // Implementation note: This only works, if the original sketch has a single
-    // face. If it has multiple, then multiple shells must be created.
-    let shell = Shell::new().with_faces(target);
-    Solid::new().with_shells([shell])
+        // Implementation note: This only works, if the original sketch has a
+        // single face. If it has multiple, then multiple shells must be
+        // created.
+        let shell = Shell::new().with_faces(target);
+        Solid::new().with_shells([shell])
+    }
 }
 
 fn create_bottom_faces(
