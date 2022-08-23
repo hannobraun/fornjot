@@ -8,7 +8,7 @@ use url::Url;
 pub struct PullRequest {
     pub number: u64,
     pub title: String,
-    pub html_url: Url,
+    pub url: Url,
 }
 
 impl PullRequest {
@@ -54,16 +54,11 @@ impl PullRequest {
                         let title = pull_request.title.ok_or_else(|| {
                             anyhow!("Pull request is missing title")
                         })?;
-                        let html_url =
-                            pull_request.html_url.ok_or_else(|| {
-                                anyhow!("Pull request is missing URL")
-                            })?;
+                        let url = pull_request.html_url.ok_or_else(|| {
+                            anyhow!("Pull request is missing URL")
+                        })?;
 
-                        let pull_request = Self {
-                            number,
-                            title,
-                            html_url,
-                        };
+                        let pull_request = Self { number, title, url };
 
                         pull_requests.insert(pull_request.number, pull_request);
                     }
