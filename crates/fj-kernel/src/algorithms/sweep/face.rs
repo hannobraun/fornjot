@@ -5,21 +5,21 @@ use crate::{
     objects::{Face, Shell},
 };
 
-use super::Sweep;
+use super::{Path, Sweep};
 
 impl Sweep for Face {
     type Swept = Shell;
 
     fn sweep(
         self,
-        path: impl Into<fj_math::Vector<3>>,
+        path: impl Into<Path>,
         tolerance: crate::algorithms::Tolerance,
         color: fj_interop::mesh::Color,
     ) -> Self::Swept {
         let path = path.into();
 
         let is_sweep_along_negative_direction =
-            path.dot(&Vector::from([0., 0., 1.])) < Scalar::ZERO;
+            path.inner().dot(&Vector::from([0., 0., 1.])) < Scalar::ZERO;
 
         let mut faces = Vec::new();
 
@@ -58,10 +58,10 @@ fn create_bottom_face(
 
 fn create_top_face(
     face: Face,
-    path: Vector<3>,
+    path: Path,
     is_sweep_along_negative_direction: bool,
 ) -> Face {
-    let mut face = face.translate(path);
+    let mut face = face.translate(path.inner());
 
     if is_sweep_along_negative_direction {
         face = reverse_face(&face);

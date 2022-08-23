@@ -1,19 +1,18 @@
 use fj_interop::mesh::Color;
-use fj_math::Vector;
 
 use crate::{
     algorithms::Tolerance,
     objects::{Sketch, Solid},
 };
 
-use super::Sweep;
+use super::{Path, Sweep};
 
 impl Sweep for Sketch {
     type Swept = Solid;
 
     fn sweep(
         self,
-        path: impl Into<Vector<3>>,
+        path: impl Into<Path>,
         tolerance: Tolerance,
         color: Color,
     ) -> Self::Swept {

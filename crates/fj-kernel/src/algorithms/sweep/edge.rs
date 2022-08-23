@@ -9,21 +9,21 @@ use crate::{
     },
 };
 
-use super::Sweep;
+use super::{Path, Sweep};
 
 impl Sweep for Edge {
     type Swept = Face;
 
     fn sweep(
         self,
-        path: impl Into<fj_math::Vector<3>>,
+        path: impl Into<Path>,
         tolerance: crate::algorithms::Tolerance,
         color: fj_interop::mesh::Color,
     ) -> Self::Swept {
         let path = path.into();
 
         let is_sweep_along_negative_direction =
-            path.dot(&Vector::from([0., 0., 1.])) < Scalar::ZERO;
+            path.inner().dot(&Vector::from([0., 0., 1.])) < Scalar::ZERO;
 
         if let Some(vertices) = self.vertices().get() {
             let face = create_non_continuous_side_face(
@@ -40,14 +40,14 @@ impl Sweep for Edge {
 }
 
 fn create_non_continuous_side_face(
-    path: Vector<3>,
+    path: Path,
     is_sweep_along_negative_direction: bool,
     vertices_bottom: [GlobalVertex; 2],
     color: Color,
 ) -> Face {
     let vertices = {
         let vertices_top = vertices_bottom.map(|vertex| {
-            let position = vertex.position() + path;
+            let position = vertex.position() + path.inner();
             GlobalVertex::from_position(position)
         });
 
@@ -110,11 +110,11 @@ fn create_non_continuous_side_face(
 
 fn create_continuous_side_face(
     edge: Edge,
-    path: Vector<3>,
+    path: Path,
     tolerance: Tolerance,
     color: Color,
 ) -> Face {
-    let translation = Transform::translation(path);
+    let translation = Transform::translation(path.inner());
 
     // This is definitely the wrong surface, but it shouldn't matter. Since this
     // code will hopefully soon be gone anyway (this is the last piece of code
