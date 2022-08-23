@@ -1,13 +1,14 @@
-use std::{fmt::Write, path::PathBuf};
+use std::{collections::HashSet, fmt::Write, path::PathBuf};
 
 use anyhow::Context;
 use chrono::{Date, Datelike, Utc};
+use map_macro::set;
 use tokio::{
     fs::{self, File},
     io::AsyncWriteExt,
 };
 
-use crate::pull_requests::PullRequest;
+use crate::pull_requests::{Author, PullRequest};
 
 pub async fn create_release_announcement(
     last_release_date: Date<Utc>,
@@ -50,12 +51,43 @@ async fn generate_announcement(
     pull_requests: impl IntoIterator<Item = PullRequest>,
     file: &mut File,
 ) -> anyhow::Result<()> {
+    let mut pull_request_list = String::new();
     let mut pull_request_links = String::new();
+    let mut author_links = String::new();
 
-    for PullRequest { number, html_url } in pull_requests {
-        let link = format!("[#{number}]: {html_url}\n");
+    let author_blacklist = set! {
+        "hannobraun",
+        "dependabot[bot]"
+    };
+    let mut authors = HashSet::new();
 
+    for pull_request in pull_requests {
+        let PullRequest {
+            number,
+            title,
+            url,
+            author,
+        } = pull_request;
+
+        let author = if authors.contains(&author.name)
+            || author_blacklist.contains(author.name.as_str())
+        {
+            None
+        } else {
+            authors.insert(author.name.clone());
+            Some(author)
+        };
+
+        let item = format!("- {title} ([#{number}])\n");
+        pull_request_list.push_str(&item);
+
+        let link = format!("[#{number}]: {url}\n");
         pull_request_links.push_str(&link);
+
+        if let Some(Author { name, profile }) = author {
+            let author_link = format!("[@{name}]: {profile}\n");
+            author_links.push_str(&author_link);
+        }
     }
 
     let mut buf = String::new();
@@ -102,6 +134,12 @@ Improvements that are relevant to developers working on Fornjot itself.
 **TASK: Add internal improvements.**
 
 
+### Unsorted pull requests
+
+**TASK: Sort into the categories above; update/merge as appropriate.**
+
+{pull_request_list}
+
 ### Issue of the Week
 
 **TASK: Write.**
@@ -112,7 +150,8 @@ Improvements that are relevant to developers working on Fornjot itself.
 **TASK: Write.**
 
 
-{pull_request_links}\
+{pull_request_links}
+{author_links}\
     "
     )?;
 
