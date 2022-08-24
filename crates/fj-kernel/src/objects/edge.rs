@@ -2,7 +2,7 @@ use std::fmt;
 
 use crate::builder::EdgeBuilder;
 
-use super::{Curve, Vertex};
+use super::{Curve, GlobalCurve, GlobalVertex, Vertex};
 
 /// An edge
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -54,6 +54,41 @@ impl fmt::Display for Edge {
         write!(f, " on {:?}", self.curve().global())?;
 
         Ok(())
+    }
+}
+
+/// An edge, defined in global (3D) coordinates
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct GlobalEdge {
+    curve: GlobalCurve,
+    vertices: VerticesOfEdge<GlobalVertex>,
+}
+
+impl GlobalEdge {
+    /// Create a new instance
+    pub fn new(
+        curve: GlobalCurve,
+        vertices: VerticesOfEdge<GlobalVertex>,
+    ) -> Self {
+        Self { curve, vertices }
+    }
+
+    /// Access the curve that defines the edge's geometry
+    ///
+    /// The edge can be a segment of the curve that is bounded by two vertices,
+    /// or if the curve is continuous (i.e. connects to itself), the edge could
+    /// be defined by the whole curve, and have no bounding vertices.
+    pub fn curve(&self) -> &GlobalCurve {
+        &self.curve
+    }
+
+    /// Access the vertices that bound the edge on the curve
+    ///
+    /// An edge has either two bounding vertices or none. The latter is possible
+    /// if the edge's curve is continuous (i.e. connects to itself), and defines
+    /// the whole edge.
+    pub fn vertices(&self) -> &VerticesOfEdge<GlobalVertex> {
+        &self.vertices
     }
 }
 
