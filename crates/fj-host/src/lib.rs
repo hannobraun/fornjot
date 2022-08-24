@@ -44,12 +44,10 @@ pub struct Model {
 }
 
 impl Model {
-    /// Initialize the model using the path to its crate (i.e. the folder
-    /// containing `Cargo.toml`).
+    /// Initialize the model using the path to its crate
     ///
-    /// Optionally, the target directory where plugin files are compiled to can
-    /// be provided. If it is not provided, the target directory is assumed to
-    /// be located within the model path.
+    /// The path expected here is the root directory of the model's Cargo
+    /// package, that is the folder containing `Cargo.toml`.
     pub fn from_path(path: PathBuf) -> Result<Self, Error> {
         let crate_dir = path.canonicalize()?;
 
@@ -315,9 +313,9 @@ impl Watcher {
                 {
                     Ok(shape) => shape,
                     Err(Error::Compile) => {
-                        // It would be better to display an error in the UI,
-                        // where the user can actually see it. Issue:
-                        // https://github.com/hannobraun/fornjot/issues/30
+                        // An error is being displayed to the user via the
+                        // `StatusReport that is passed to `load_once` above, so
+                        // no need to do anything else here.
                         return None;
                     }
                     Err(err) => {
