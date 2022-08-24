@@ -313,9 +313,9 @@ impl Watcher {
                 {
                     Ok(shape) => shape,
                     Err(Error::Compile) => {
-                        // It would be better to display an error in the UI,
-                        // where the user can actually see it. Issue:
-                        // https://github.com/hannobraun/fornjot/issues/30
+                        // An error is being displayed to the user via the
+                        // `StatusReport that is passed to `load_once` above, so
+                        // no need to do anything else here.
                         return None;
                     }
                     Err(err) => {
