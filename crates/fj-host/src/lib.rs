@@ -46,10 +46,6 @@ pub struct Model {
 impl Model {
     /// Initialize the model using the path to its crate (i.e. the folder
     /// containing `Cargo.toml`).
-    ///
-    /// Optionally, the target directory where plugin files are compiled to can
-    /// be provided. If it is not provided, the target directory is assumed to
-    /// be located within the model path.
     pub fn from_path(path: PathBuf) -> Result<Self, Error> {
         let crate_dir = path.canonicalize()?;
 
