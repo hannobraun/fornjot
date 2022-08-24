@@ -4,7 +4,7 @@ use crate::builder::EdgeBuilder;
 
 use super::{Curve, Vertex};
 
-/// An edge of a shape
+/// An edge
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edge {
     curve: Curve,
