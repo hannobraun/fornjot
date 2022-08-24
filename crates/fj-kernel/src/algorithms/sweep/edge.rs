@@ -17,10 +17,11 @@ impl Sweep for Edge {
     fn sweep(
         self,
         path: impl Into<Path>,
-        tolerance: Tolerance,
+        tolerance: impl Into<Tolerance>,
         color: Color,
     ) -> Self::Swept {
         let path = path.into();
+        let tolerance = tolerance.into();
 
         if let Some(vertices) = self.vertices().get() {
             let face = create_non_continuous_side_face(

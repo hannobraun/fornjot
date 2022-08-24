@@ -13,10 +13,11 @@ impl Sweep for Face {
     fn sweep(
         self,
         path: impl Into<Path>,
-        tolerance: Tolerance,
+        tolerance: impl Into<Tolerance>,
         color: Color,
     ) -> Self::Swept {
         let path = path.into();
+        let tolerance = tolerance.into();
 
         let mut faces = Vec::new();
 
