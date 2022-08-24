@@ -17,8 +17,8 @@ impl Sweep for Edge {
     fn sweep(
         self,
         path: impl Into<Path>,
-        tolerance: crate::algorithms::Tolerance,
-        color: fj_interop::mesh::Color,
+        tolerance: Tolerance,
+        color: Color,
     ) -> Self::Swept {
         let path = path.into();
 

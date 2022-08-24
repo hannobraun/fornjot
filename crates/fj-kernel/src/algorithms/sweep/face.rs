@@ -1,5 +1,7 @@
+use fj_interop::mesh::Color;
+
 use crate::{
-    algorithms::{reverse_face, TransformObject},
+    algorithms::{reverse_face, Tolerance, TransformObject},
     objects::{Face, Shell},
 };
 
@@ -11,8 +13,8 @@ impl Sweep for Face {
     fn sweep(
         self,
         path: impl Into<Path>,
-        tolerance: crate::algorithms::Tolerance,
-        color: fj_interop::mesh::Color,
+        tolerance: Tolerance,
+        color: Color,
     ) -> Self::Swept {
         let path = path.into();
 
