@@ -44,8 +44,10 @@ pub struct Model {
 }
 
 impl Model {
-    /// Initialize the model using the path to its crate (i.e. the folder
-    /// containing `Cargo.toml`).
+    /// Initialize the model using the path to its crate
+    ///
+    /// The path expected here is the root directory of the model's Cargo
+    /// package, that is the folder containing `Cargo.toml`.
     pub fn from_path(path: PathBuf) -> Result<Self, Error> {
         let crate_dir = path.canonicalize()?;
 
