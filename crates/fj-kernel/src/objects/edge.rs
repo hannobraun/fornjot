@@ -18,18 +18,39 @@ impl Edge {
         EdgeBuilder
     }
 
-    /// Create a new instance
-    pub fn from_curve_and_vertices(
+    /// Create a new instance of `Edge`
+    ///
+    /// If you only have a curve and the edge vertices, please check out
+    /// [`Edge::from_curve_and_vertices`], which is a convenience wrapper around
+    /// this method, which creates an instance of [`GlobalEdge`].
+    ///
+    /// # Panics
+    ///
+    /// Panics, if the provided [`GlobalEdge`] instance doesn't refer to the
+    /// same [`GlobalCurve`] and [`GlobalVertex`] instances that the other
+    /// objects that are passed refer to.
+    pub fn new(
         curve: Curve,
         vertices: VerticesOfEdge<Vertex>,
+        global: GlobalEdge,
     ) -> Self {
-        let global = GlobalEdge::new(*curve.global(), vertices.to_global());
+        assert_eq!(curve.global(), global.curve());
+        assert_eq!(&vertices.to_global(), global.vertices());
 
         Self {
             curve,
             vertices,
             global,
         }
+    }
+
+    /// Create a new instance
+    pub fn from_curve_and_vertices(
+        curve: Curve,
+        vertices: VerticesOfEdge<Vertex>,
+    ) -> Self {
+        let global = GlobalEdge::new(*curve.global(), vertices.to_global());
+        Self::new(curve, vertices, global)
     }
 
     /// Access the curve that defines the edge's geometry
