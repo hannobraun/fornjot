@@ -20,7 +20,6 @@ impl Cycle {
     }
 
     /// Create a new cycle
-    #[allow(clippy::new_without_default)]
     pub fn new(surface: Surface) -> Self {
         // Implementation note:
         // As I'm writing this, this constructor has no arguments. I expect it
