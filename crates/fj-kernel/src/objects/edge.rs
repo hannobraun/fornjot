@@ -19,7 +19,10 @@ impl Edge {
     }
 
     /// Create a new instance
-    pub fn new(curve: Curve, vertices: VerticesOfEdge<Vertex>) -> Self {
+    pub fn from_curve_and_vertices(
+        curve: Curve,
+        vertices: VerticesOfEdge<Vertex>,
+    ) -> Self {
         let global = GlobalEdge::new(*curve.global(), vertices.to_global());
 
         Self {

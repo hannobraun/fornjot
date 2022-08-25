@@ -23,7 +23,7 @@ impl EdgeBuilder {
                 Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
             )));
 
-        Edge::new(
+        Edge::from_curve_and_vertices(
             Curve::new(curve_local, curve_global),
             VerticesOfEdge::none(),
         )
@@ -58,7 +58,7 @@ impl EdgeBuilder {
             ]
         };
 
-        Edge::new(
+        Edge::from_curve_and_vertices(
             Curve::new(curve_local, curve_global),
             VerticesOfEdge::from_vertices(vertices),
         )

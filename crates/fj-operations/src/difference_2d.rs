@@ -110,7 +110,10 @@ fn add_cycle(cycle: Cycle, reverse: bool) -> Cycle {
             *edge.vertices()
         };
 
-        let edge = Edge::new(Curve::new(curve_local, curve_global), vertices);
+        let edge = Edge::from_curve_and_vertices(
+            Curve::new(curve_local, curve_global),
+            vertices,
+        );
 
         edges.push(edge);
     }

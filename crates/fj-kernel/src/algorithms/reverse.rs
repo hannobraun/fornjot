@@ -56,7 +56,7 @@ fn reverse_local_coordinates_in_cycle<'r>(
                 Curve::new(local, *edge.curve().global())
             };
 
-            Edge::new(curve, *edge.vertices())
+            Edge::from_curve_and_vertices(curve, *edge.vertices())
         });
 
         Cycle::new(surface).with_edges(edges)
