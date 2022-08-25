@@ -23,10 +23,10 @@ impl Sweep for Edge {
         let path = path.into();
         let tolerance = tolerance.into();
 
-        if let Some(vertices) = self.vertices().get() {
+        if let Some(vertices) = self.global().vertices().get() {
             let face = create_non_continuous_side_face(
                 path,
-                vertices.map(|vertex| *vertex.global()),
+                vertices.map(|vertex| *vertex),
                 color,
             );
             return face;
