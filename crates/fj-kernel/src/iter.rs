@@ -346,11 +346,29 @@ impl<T> Iterator for Iter<T> {
 #[cfg(test)]
 mod tests {
     use crate::objects::{
-        Cycle, Edge, Face, GlobalCurve, GlobalVertex, Shell, Sketch, Solid,
-        Surface, Vertex,
+        Curve, Cycle, Edge, Face, GlobalCurve, GlobalVertex, Shell, Sketch,
+        Solid, Surface, Vertex,
     };
 
     use super::ObjectIters as _;
+
+    #[test]
+    fn curve() {
+        let surface = Surface::xy_plane();
+        let object = Curve::build(surface).u_axis();
+
+        assert_eq!(1, object.curve_iter().count());
+        assert_eq!(0, object.cycle_iter().count());
+        assert_eq!(0, object.edge_iter().count());
+        assert_eq!(0, object.face_iter().count());
+        assert_eq!(1, object.global_curve_iter().count());
+        assert_eq!(0, object.global_vertex_iter().count());
+        assert_eq!(0, object.shell_iter().count());
+        assert_eq!(0, object.sketch_iter().count());
+        assert_eq!(0, object.solid_iter().count());
+        assert_eq!(0, object.surface_iter().count());
+        assert_eq!(0, object.vertex_iter().count());
+    }
 
     #[test]
     fn cycle() {
