@@ -36,7 +36,9 @@ impl EdgeBuilder {
             Curve::new(self.surface, local, global)
         };
 
-        Edge::from_curve_and_vertices(curve, VerticesOfEdge::none())
+        let vertices = VerticesOfEdge::none();
+
+        Edge::from_curve_and_vertices(curve, vertices)
     }
 
     /// Create a line segment from two points
