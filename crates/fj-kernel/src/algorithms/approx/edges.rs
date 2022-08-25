@@ -1,11 +1,11 @@
 use fj_math::Point;
 
-use crate::objects::VerticesOfEdge;
+use crate::objects::{Vertex, VerticesOfEdge};
 
 use super::Local;
 
 pub fn approx_edge(
-    vertices: VerticesOfEdge,
+    vertices: VerticesOfEdge<Vertex>,
     points: &mut Vec<Local<Point<1>>>,
 ) {
     // Insert the exact vertices of this edge into the approximation. This means
