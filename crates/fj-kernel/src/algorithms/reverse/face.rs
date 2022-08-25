@@ -22,6 +22,19 @@ impl Reverse for Face {
     }
 }
 
+/// Reverse local coordinates within the cycle, leaving global ones as-is
+///
+/// # Implementation Note
+///
+/// This is probably overly complicated. If the orientation of a face were
+/// defined by the direction of the half-edges that bound it, we could reverse
+/// the whole cycle with no weird distinction. The `Reverse` implementation of
+/// `Face` could just use the `Reverse` implementation of `Cycle` then.
+///
+/// Please note that, as of this writing, half-edges don't really exist as a
+/// concept in the kernel. We kind of treat `Edge` as a half-edge, but in an
+/// inconsistent way that causes problems. This issue has some context on that:
+/// <https://github.com/hannobraun/Fornjot/issues/993>
 fn reverse_local_coordinates_in_cycle<'r>(
     cycles: impl IntoIterator<Item = &'r Cycle> + 'r,
 ) -> impl Iterator<Item = Cycle> + 'r {
