@@ -9,6 +9,7 @@ use super::{Curve, GlobalCurve, GlobalVertex, Vertex};
 pub struct Edge {
     curve: Curve,
     vertices: VerticesOfEdge<Vertex>,
+    global: GlobalEdge,
 }
 
 impl Edge {
@@ -19,7 +20,13 @@ impl Edge {
 
     /// Create a new instance
     pub fn new(curve: Curve, vertices: VerticesOfEdge<Vertex>) -> Self {
-        Self { curve, vertices }
+        let global = GlobalEdge::new(*curve.global(), vertices.to_global());
+
+        Self {
+            curve,
+            vertices,
+            global,
+        }
     }
 
     /// Access the curve that defines the edge's geometry
@@ -38,6 +45,11 @@ impl Edge {
     /// the whole edge.
     pub fn vertices(&self) -> &VerticesOfEdge<Vertex> {
         &self.vertices
+    }
+
+    /// Access the global form of this edge
+    pub fn global(&self) -> &GlobalEdge {
+        &self.global
     }
 }
 
@@ -162,5 +174,10 @@ impl VerticesOfEdge<Vertex> {
                 Vertex::new(-a.position(), *a.global()),
             ]
         }))
+    }
+
+    /// Convert this instance into its global variant
+    pub fn to_global(&self) -> VerticesOfEdge<GlobalVertex> {
+        VerticesOfEdge(self.convert(|vertex| *vertex.global()))
     }
 }
