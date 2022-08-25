@@ -87,7 +87,7 @@ impl VerticesOfEdge {
     /// # Panics
     ///
     /// Panics, if the edge has no vertices.
-    pub fn expect_vertices(self) -> [Vertex; 2] {
+    pub fn get_or_panic(self) -> [Vertex; 2] {
         self.0.expect("Expected edge to have vertices")
     }
 

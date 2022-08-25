@@ -215,7 +215,7 @@ mod tests {
             .edge_iter()
             .copied()
             .find(|edge| {
-                let [a, b] = edge.vertices().expect_vertices();
+                let [a, b] = edge.vertices().get_or_panic();
                 dbg!((a.global().position(), b.global().position()));
                 a.global().position() == Point::from([1., 0., 1.])
                     && b.global().position() == Point::from([1., 0., -1.])
