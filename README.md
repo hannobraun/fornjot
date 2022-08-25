@@ -126,7 +126,7 @@ While the Fornjot application is a graphical application that opens a window and
 
 ### Defining models
 
-Models are Rust libraries that depend on the [`fj`](crates/fj) library, which they use to define the geometry. Furthermore, they need to be built as a dynamic library. Just use the examples in the [`models/`](models) directory as a template to define your own.
+Models are Rust libraries that depend on the [`fj`](https://crates.io/crates/fj) library, which they use to define the geometry. Furthermore, they need to be built as a dynamic library. Just use the examples in the [`models/`](models) directory as a template to define your own.
 
 ### Viewing models
 
