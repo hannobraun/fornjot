@@ -8,7 +8,7 @@ use super::{Curve, Vertex};
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edge {
     curve: Curve,
-    vertices: VerticesOfEdge,
+    vertices: VerticesOfEdge<Vertex>,
 }
 
 impl Edge {
@@ -18,7 +18,7 @@ impl Edge {
     }
 
     /// Create a new instance
-    pub fn new(curve: Curve, vertices: VerticesOfEdge) -> Self {
+    pub fn new(curve: Curve, vertices: VerticesOfEdge<Vertex>) -> Self {
         Self { curve, vertices }
     }
 
@@ -36,7 +36,7 @@ impl Edge {
     /// An edge has either two bounding vertices or none. The latter is possible
     /// if the edge's curve is continuous (i.e. connects to itself), and defines
     /// the whole edge.
-    pub fn vertices(&self) -> &VerticesOfEdge {
+    pub fn vertices(&self) -> &VerticesOfEdge<Vertex> {
         &self.vertices
     }
 }
@@ -59,11 +59,11 @@ impl fmt::Display for Edge {
 
 /// The vertices that bound an edge
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct VerticesOfEdge(Option<[Vertex; 2]>);
+pub struct VerticesOfEdge<T>(Option<[T; 2]>);
 
-impl VerticesOfEdge {
+impl<T> VerticesOfEdge<T> {
     /// Construct an instance of `VerticesOfEdge` from two vertices
-    pub fn from_vertices(vertices: [Vertex; 2]) -> Self {
+    pub fn from_vertices(vertices: [T; 2]) -> Self {
         Self(Some(vertices))
     }
 
@@ -73,7 +73,7 @@ impl VerticesOfEdge {
     }
 
     /// Access the vertices
-    pub fn get(&self) -> Option<[&Vertex; 2]> {
+    pub fn get(&self) -> Option<[&T; 2]> {
         self.0.as_ref().map(|vertices| {
             // Can be cleaned up once `each_ref` is stable:
             // https://doc.rust-lang.org/std/primitive.array.html#method.each_ref
@@ -87,15 +87,33 @@ impl VerticesOfEdge {
     /// # Panics
     ///
     /// Panics, if the edge has no vertices.
-    pub fn get_or_panic(&self) -> [&Vertex; 2] {
+    pub fn get_or_panic(&self) -> [&T; 2] {
         self.get().expect("Expected edge to have vertices")
     }
 
     /// Iterate over the vertices
-    pub fn iter(&self) -> impl Iterator<Item = &Vertex> {
+    pub fn iter(&self) -> impl Iterator<Item = &T> {
         self.0.iter().flatten()
     }
 
+    /// Map each vertex using the provided function
+    pub fn map<F>(self, f: F) -> Self
+    where
+        F: FnMut(T) -> T,
+    {
+        Self(self.convert(f))
+    }
+
+    /// Convert each vertex using the provided function
+    pub fn convert<F, U>(self, f: F) -> Option<[U; 2]>
+    where
+        F: FnMut(T) -> U,
+    {
+        self.0.map(|vertices| vertices.map(f))
+    }
+}
+
+impl VerticesOfEdge<Vertex> {
     /// Reverse the order of vertices
     ///
     /// Makes sure that the local coordinates are still correct.
@@ -106,21 +124,5 @@ impl VerticesOfEdge {
                 Vertex::new(-a.position(), *a.global()),
             ]
         }))
-    }
-
-    /// Map each vertex using the provided function
-    pub fn map<F>(self, f: F) -> Self
-    where
-        F: FnMut(Vertex) -> Vertex,
-    {
-        Self(self.convert(f))
-    }
-
-    /// Convert each vertex using the provided function
-    pub fn convert<F, U>(self, f: F) -> Option<[U; 2]>
-    where
-        F: FnMut(Vertex) -> U,
-    {
-        self.0.map(|vertices| vertices.map(f))
     }
 }
