@@ -62,11 +62,6 @@ impl fmt::Display for Edge {
 pub struct VerticesOfEdge(Option<[Vertex; 2]>);
 
 impl VerticesOfEdge {
-    /// Construct an instance of `VerticesOfEdge` from zero or two vertices
-    pub fn new(vertices: Option<[Vertex; 2]>) -> Self {
-        Self(vertices)
-    }
-
     /// Construct an instance of `VerticesOfEdge` from two vertices
     pub fn from_vertices(vertices: [Vertex; 2]) -> Self {
         Self(Some(vertices))
@@ -75,19 +70,6 @@ impl VerticesOfEdge {
     /// Construct an instance of `VerticesOfEdge` without vertices
     pub fn none() -> Self {
         Self(None)
-    }
-
-    /// Determine whether the other instance has the same vertices
-    ///
-    /// The order of vertices is ignored.
-    pub fn are_same(&self, other: &Self) -> bool {
-        if let Some([a, b]) = self.0 {
-            if let Some(other) = other.0 {
-                return [a, b] == other || [b, a] == other;
-            }
-        }
-
-        false
     }
 
     /// Access the vertices
@@ -140,21 +122,5 @@ impl VerticesOfEdge {
         F: FnMut(Vertex) -> T,
     {
         self.0.map(|vertices| vertices.map(f))
-    }
-
-    /// Convert each vertex using the provided fallible function
-    pub fn try_convert<F, T, E>(self, f: F) -> Result<Option<[T; 2]>, E>
-    where
-        F: FnMut(Vertex) -> Result<T, E>,
-    {
-        // Can be cleaned up using `try_map`, once that is stable:
-        // https://doc.rust-lang.org/std/primitive.array.html#method.try_map
-        let vertices: Option<[Result<_, E>; 2]> = self.convert(f);
-        let vertices = match vertices {
-            Some([a, b]) => Some([a?, b?]),
-            None => None,
-        };
-
-        Ok(vertices)
     }
 }
