@@ -117,9 +117,9 @@ impl VerticesOfEdge {
     }
 
     /// Convert each vertex using the provided function
-    pub fn convert<F, T>(self, f: F) -> Option<[T; 2]>
+    pub fn convert<F, U>(self, f: F) -> Option<[U; 2]>
     where
-        F: FnMut(Vertex) -> T,
+        F: FnMut(Vertex) -> U,
     {
         self.0.map(|vertices| vertices.map(f))
     }
