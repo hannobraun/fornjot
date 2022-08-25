@@ -1,6 +1,7 @@
 //! Reverse the direction/orientation of objects
 
 mod face;
+mod surface;
 
 /// Reverse the direction/orientation of an object
 pub trait Reverse {
