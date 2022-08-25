@@ -136,7 +136,7 @@ To view a model, run:
 fj-app --model my-model
 ```
 
-This will compile and load the model in the `my-model/` directory.
+This will usually compile and load the model in the `my-model/` directory. If there is a configuration file (`fj.toml`) available, it might define a default path to load models from that is different from the current working directory. This is the case [in the Fornjot repository](fj.toml).
 
 Rotate the model by pressing the left mouse button while moving the mouse. Move the model by pressing the right mouse button while moving the mouse. Zoom with the mouse wheel.
 
