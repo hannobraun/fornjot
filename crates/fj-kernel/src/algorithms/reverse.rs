@@ -4,6 +4,13 @@ use fj_math::{Circle, Line, Point, Vector};
 
 use crate::objects::{Curve, CurveKind, Cycle, Edge, Face};
 
+/// Reverse the direction/orientation of an object
+pub trait Reverse {
+    /// Reverse the direction/orientation of the object
+    #[must_use]
+    fn reverse(self) -> Self;
+}
+
 /// Reverse the direction of a face
 pub fn reverse_face(face: &Face) -> Face {
     if face.triangles().is_some() {
