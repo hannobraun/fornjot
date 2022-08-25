@@ -5,6 +5,7 @@ mod cycle;
 mod edge;
 mod face;
 mod shell;
+mod sketch;
 mod solid;
 
 pub use self::{
@@ -13,5 +14,6 @@ pub use self::{
     edge::EdgeBuilder,
     face::{FaceBuilder, FacePolygon},
     shell::ShellBuilder,
+    sketch::SketchBuilder,
     solid::SolidBuilder,
 };

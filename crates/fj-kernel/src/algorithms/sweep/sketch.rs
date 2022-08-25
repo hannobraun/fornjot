@@ -13,10 +13,11 @@ impl Sweep for Sketch {
     fn sweep(
         self,
         path: impl Into<Path>,
-        tolerance: Tolerance,
+        tolerance: impl Into<Tolerance>,
         color: Color,
     ) -> Self::Swept {
         let path = path.into();
+        let tolerance = tolerance.into();
 
         let mut shells = Vec::new();
         for face in self.into_faces() {

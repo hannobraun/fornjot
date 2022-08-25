@@ -18,7 +18,7 @@ pub trait Sweep {
     fn sweep(
         self,
         path: impl Into<Path>,
-        tolerance: Tolerance,
+        tolerance: impl Into<Tolerance>,
         color: Color,
     ) -> Self::Swept;
 }

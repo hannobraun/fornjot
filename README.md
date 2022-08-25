@@ -118,7 +118,7 @@ Since Fornjot uses Rust as the language for defining models, a [Rust toolchain](
 
 To install Fornjot itself, you have the following options:
 
-1. Download a binary from [the latest release](https://github.com/hannobraun/Fornjot/releases).
+1. Download a binary from the [latest release](https://github.com/hannobraun/Fornjot/releases).
 2. Compile the latest release yourself: `cargo install fj-app`
 3. Compile a development version from this repository: `cd path/to/repo; cargo install --path crates/fj-app`
 
@@ -126,7 +126,7 @@ While the Fornjot application is a graphical application that opens a window and
 
 ### Defining models
 
-Models are Rust libraries that depend on the [`fj`](crates/fj) library, which they use to define the geometry. Furthermore, they need to be built as a dynamic library. Just use the examples in the [`models/`](models) directory as a template to define your own.
+Models are Rust libraries that depend on the [`fj`](https://crates.io/crates/fj) library, which they use to define the geometry. Furthermore, they need to be built as a dynamic library. Just use the examples in the [`models/`](models) directory as a template to define your own.
 
 ### Viewing models
 
@@ -136,7 +136,7 @@ To view a model, run:
 fj-app --model my-model
 ```
 
-This will compile and load the model in the `my-model/` directory.
+This will usually compile and load the model in the `my-model/` directory. If there is a configuration file (`fj.toml`) available, it might define a default path to load models from that is different from the current working directory. This is the case [in the Fornjot repository](fj.toml).
 
 Rotate the model by pressing the left mouse button while moving the mouse. Move the model by pressing the right mouse button while moving the mouse. Zoom with the mouse wheel.
 

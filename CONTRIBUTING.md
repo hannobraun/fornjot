@@ -6,12 +6,66 @@ Thank you for your interest in contributing to Fornjot. We appreciate the help!
 
 This document teaches you how to...
 
+- ...use Fornjot as a developer.
 - ...report a bug.
 - ...suggest an improvement
 - ...make an improvement.
 - ...find work to do.
 
 Each of these topics is addressed in one of the following sections. After that, there's also a collection of optional guidelines you can follow when making your contribution.
+
+
+## Using Fornjot
+
+The README explains [how to install and use the Fornjot app](README.md#usage). While all of this applies for development as well, installing the app via `cargo install` to test every single change would be tedious. As a developer working in this repository, there are better ways to do things.
+
+### Running the app
+
+You can compile and run the Fornjot app like this:
+
+``` sh
+cargo run
+```
+
+Usually, you'd have to specify which model you want to load, but there is a [configuration file](fj.toml) in the Fornjot repository that specifies the [test model](models/test/) as the default model. The purpose of the test model is to use all features available, so it can serve as a testing ground for most development work.
+
+The same configuration file specifies the [`models/` directory](models/) as the default path. That means, if you want to run another model, you don't have to type the full path. To load the [cuboid model](models/cuboid/), for example, you can do this:
+
+``` sh
+cargo run -m cuboid
+```
+
+### Running tests
+
+You can run the full suite of unit/integration tests like this:
+
+``` sh
+cargo test
+```
+
+During development, it can often be convenient to just run the tests for the crate you're currently working on, as that can be much quicker. You can run only the tests for `fj-kernel`, for example, like this:
+
+``` sh
+cargo test -p fj-kernel
+```
+
+### Running a full build
+
+You can run the full suite of checks and tests like this:
+
+``` sh
+just build
+```
+
+This requires [`just`](https://crates.io/crates/just), which you can install like this:
+
+``` sh
+cargo install just
+```
+
+The purpose of `just build` is to run the same suite of checks and tests that the CI build runs, so you can figure out any issues in advance, without having to submit a pull request, and having to wait for a CI run to finish.
+
+This is defined in [`justfile`](justfile). Please note that `justfile` is maintained in parallel to the CI configuration, and most deviations should be considered bugs in `justfile`.
 
 
 ## Reporting Bugs
@@ -44,20 +98,6 @@ If you think your request is an obvious improvement, open an issue. If want to d
 ## Making Improvements
 
 If you want to fix a bug, add a new feature, or improve an existing one, just fork the repository, make your change, and submit a pull request. Once submitted, [@hannobraun] will review the pull request, give feedback and possibly request changes, and once everything is in order, merge it.
-
-CI will kick in automatically when you create a PR. However, to save time you can verify your changes locally by running the following from the repository root:
-
-``` sh
-just build
-```
-
-You may need to install `just` first:
-
-```sh
-cargo install just
-```
-
-Please note that the `justfile` is maintained in parallel to the CI configuration. It's possible that they can start to deviate over time. Most CI failures not caught by `just build` should be considered a bug, so please open an issue if you run into that!
 
 Pull requests are always welcome. But of course, there's a risk that yours might not be accepted. Bug fixes and other obvious improvements are usually safe, but new features might be deemed out of scope.
 

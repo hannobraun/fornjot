@@ -1,6 +1,8 @@
 use std::collections::BTreeSet;
 
-use super::Face;
+use crate::builder::SketchBuilder;
+
+use super::{Face, Surface};
 
 /// A 2-dimensional shape
 ///
@@ -14,6 +16,11 @@ pub struct Sketch {
 }
 
 impl Sketch {
+    /// Build a sketch using [`SketchBuilder`]
+    pub fn build(surface: Surface) -> SketchBuilder {
+        SketchBuilder::new(surface)
+    }
+
     /// Construct an empty instance of `Sketch`
     pub fn new() -> Self {
         Self {

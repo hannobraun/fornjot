@@ -23,7 +23,7 @@ impl EdgeBuilder {
                 Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
             )));
 
-        Edge::new(
+        Edge::from_curve_and_vertices(
             Curve::new(curve_local, curve_global),
             VerticesOfEdge::none(),
         )
@@ -42,25 +42,28 @@ impl EdgeBuilder {
             GlobalVertex::from_position(position)
         });
 
-        let curve_local = CurveKind::Line(Line::from_points(points));
-        let curve_global = {
-            let points =
-                global_vertices.map(|global_vertex| global_vertex.position());
-            let kind = CurveKind::Line(Line::from_points(points));
-            GlobalCurve::from_kind(kind)
+        let curve = {
+            let curve_local = CurveKind::Line(Line::from_points(points));
+            let curve_global = {
+                let points = global_vertices
+                    .map(|global_vertex| global_vertex.position());
+                let kind = CurveKind::Line(Line::from_points(points));
+                GlobalCurve::from_kind(kind)
+            };
+
+            Curve::new(curve_local, curve_global)
         };
 
         let vertices = {
             let [a, b] = global_vertices;
-            [
+            let vertices = [
                 Vertex::new(Point::from([0.]), a),
                 Vertex::new(Point::from([1.]), b),
-            ]
+            ];
+
+            VerticesOfEdge::from_vertices(vertices)
         };
 
-        Edge::new(
-            Curve::new(curve_local, curve_global),
-            VerticesOfEdge::from_vertices(vertices),
-        )
+        Edge::from_curve_and_vertices(curve, vertices)
     }
 }

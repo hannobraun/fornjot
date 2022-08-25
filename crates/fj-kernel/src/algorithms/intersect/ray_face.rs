@@ -133,6 +133,7 @@ impl Intersect for (&HorizontalRayToTheRight<3>, &Face) {
 
 /// A hit between a ray and a face
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[allow(clippy::large_enum_variant)]
 pub enum RayFaceIntersection {
     /// The ray hits the face itself
     RayHitsFace,
@@ -215,7 +216,7 @@ mod tests {
             .edge_iter()
             .copied()
             .find(|edge| {
-                let [a, b] = edge.vertices().expect_vertices();
+                let [a, b] = edge.vertices().get_or_panic();
                 dbg!((a.global().position(), b.global().position()));
                 a.global().position() == Point::from([1., 0., 1.])
                     && b.global().position() == Point::from([1., 0., -1.])

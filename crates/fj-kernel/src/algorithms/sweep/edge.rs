@@ -17,10 +17,11 @@ impl Sweep for Edge {
     fn sweep(
         self,
         path: impl Into<Path>,
-        tolerance: crate::algorithms::Tolerance,
-        color: fj_interop::mesh::Color,
+        tolerance: impl Into<Tolerance>,
+        color: Color,
     ) -> Self::Swept {
         let path = path.into();
+        let tolerance = tolerance.into();
 
         if let Some(vertices) = self.vertices().get() {
             let face = create_non_continuous_side_face(
@@ -92,7 +93,7 @@ fn create_non_continuous_side_face(
                 Vertex::new(Point::from([1.]), b.1),
             ]);
 
-            let edge = Edge::new(curve, vertices);
+            let edge = Edge::from_curve_and_vertices(curve, vertices);
 
             edges.push(edge);
         }
