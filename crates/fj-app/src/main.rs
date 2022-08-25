@@ -65,7 +65,6 @@ fn main() -> anyhow::Result<()> {
                                             \n3. Try to run 'cargo run -- -m cuboid' to know path is connected", abs_path_for_models.display(), 
                                             path.display(), 
                                             abs_path_for_models.display(),
-                                            abs_path_for_models.display()
                                         );
 
     let model = Model::from_path(path.clone())
