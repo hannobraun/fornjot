@@ -21,12 +21,6 @@ impl Cycle {
 
     /// Create a new cycle
     pub fn new(surface: Surface) -> Self {
-        // Implementation note:
-        // As I'm writing this, this constructor has no arguments. I expect it
-        // to take a `Surface` at some point. Remove the `#[allow(...)]`
-        // attribute then.
-        // - @hannobraun
-
         Self {
             surface,
             edges: Vec::new(),
