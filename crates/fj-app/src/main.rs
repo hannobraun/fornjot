@@ -45,6 +45,9 @@ fn main() -> anyhow::Result<()> {
 
     let args = Args::parse();
     let config = Config::load()?;
+    
+    // finds the absolute path by the directory name
+    let abs_path_for_models = PathBuf::from("./models").canonicalize().unwrap();
 
     let mut path = config.default_path.unwrap_or_else(|| PathBuf::from(""));
     let model = args.model.or(config.default_model).ok_or_else(|| {
@@ -55,13 +58,23 @@ fn main() -> anyhow::Result<()> {
     })?;
     path.push(model);
 
-    let model = Model::from_path(path.clone())
-        .with_context(|| format!("Failed to load model: {}", path.display()))?;
-    let parameters = args.parameters.unwrap_or_else(Parameters::empty);
+    let new_error_message = format!("inside default models directory: {}
+                                            \nCan mainly caused by: 
+                                            \n1.Model '{}' can not be found inside '{}' 
+                                            \n2.{} can be mis-typed see inside {} for a match
+                                            \n3. Try to run 'cargo run -- -m cuboid' to know path is connected", abs_path_for_models.display(), 
+                                            path.display(), 
+                                            abs_path_for_models.display(),
+                                            abs_path_for_models.display()
+                                        );
 
+    let model = Model::from_path(path.clone())
+        .with_context(|| format!("\nFailed to load model: {} {new_error_message}", path.display()))?;
+    let parameters = args.parameters.unwrap_or_else(Parameters::empty);
     let shape_processor = ShapeProcessor {
         tolerance: args.tolerance,
     };
+    
 
     if let Some(path) = args.export {
         let shape = model.load_once(&parameters, &mut status)?;
