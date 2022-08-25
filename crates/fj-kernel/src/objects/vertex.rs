@@ -26,12 +26,12 @@ impl Vertex {
         Self { position, global }
     }
 
-    /// The position of the vertex on the curve
+    /// Access the position of the vertex on the curve
     pub fn position(&self) -> Point<1> {
         self.position
     }
 
-    /// The global form of this vertex
+    /// Access the global form of this vertex
     pub fn global(&self) -> &GlobalVertex {
         &self.global
     }
@@ -67,7 +67,7 @@ impl GlobalVertex {
         Self { position }
     }
 
-    /// The position of the vertex
+    /// Access the position of the vertex
     pub fn position(&self) -> Point<3> {
         self.position
     }
