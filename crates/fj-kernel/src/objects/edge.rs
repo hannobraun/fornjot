@@ -44,7 +44,11 @@ impl Edge {
         }
     }
 
-    /// Create a new instance
+    /// Create a new instance of `Edge` from a curve and vertices
+    ///
+    /// The [`GlobalEdge`] instance is created from the provided curve and
+    /// vertices. Please refer to [`Edge::new`], if you already have a
+    /// [`GlobalEdge`] instance that you can provide.
     pub fn from_curve_and_vertices(
         curve: Curve,
         vertices: VerticesOfEdge<Vertex>,
