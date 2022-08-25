@@ -56,15 +56,14 @@ impl EdgeBuilder {
 
         let vertices = {
             let [a, b] = global_vertices;
-            [
+            let vertices = [
                 Vertex::new(Point::from([0.]), a),
                 Vertex::new(Point::from([1.]), b),
-            ]
+            ];
+
+            VerticesOfEdge::from_vertices(vertices)
         };
 
-        Edge::from_curve_and_vertices(
-            curve,
-            VerticesOfEdge::from_vertices(vertices),
-        )
+        Edge::from_curve_and_vertices(curve, vertices)
     }
 }
