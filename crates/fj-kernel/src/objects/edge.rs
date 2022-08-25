@@ -93,6 +93,9 @@ impl GlobalEdge {
 }
 
 /// The vertices that bound an edge
+///
+/// This struct is generic over the actual vertex type used, but typically, `T`
+/// will either be [`Vertex`] or [`GlobalVertex`].
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct VerticesOfEdge<T>(Option<[T; 2]>);
 
