@@ -118,7 +118,7 @@ Since Fornjot uses Rust as the language for defining models, a [Rust toolchain](
 
 To install Fornjot itself, you have the following options:
 
-1. Download a binary from [the latest release](https://github.com/hannobraun/Fornjot/releases).
+1. Download a binary from the [latest release](https://github.com/hannobraun/Fornjot/releases).
 2. Compile the latest release yourself: `cargo install fj-app`
 3. Compile a development version from this repository: `cd path/to/repo; cargo install --path crates/fj-app`
 
