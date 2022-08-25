@@ -1,3 +1,5 @@
+//! Reverse the direction/orientation of objects
+
 use fj_math::{Circle, Line, Point, Vector};
 
 use crate::objects::{Curve, CurveKind, Cycle, Edge, Face};
