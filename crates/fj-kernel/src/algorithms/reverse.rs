@@ -13,25 +13,20 @@ pub trait Reverse {
 
 impl Reverse for Face {
     fn reverse(self) -> Self {
-        reverse_face(&self)
+        if self.triangles().is_some() {
+            panic!("Reversing tri-rep faces is not supported");
+        }
+
+        let surface = self.surface().reverse();
+
+        let exteriors = reverse_local_coordinates_in_cycle(self.exteriors());
+        let interiors = reverse_local_coordinates_in_cycle(self.interiors());
+
+        Face::new(surface)
+            .with_exteriors(exteriors)
+            .with_interiors(interiors)
+            .with_color(self.color())
     }
-}
-
-/// Reverse the direction of a face
-pub fn reverse_face(face: &Face) -> Face {
-    if face.triangles().is_some() {
-        panic!("Reversing tri-rep faces is not supported");
-    }
-
-    let surface = face.surface().reverse();
-
-    let exteriors = reverse_local_coordinates_in_cycle(face.exteriors());
-    let interiors = reverse_local_coordinates_in_cycle(face.interiors());
-
-    Face::new(surface)
-        .with_exteriors(exteriors)
-        .with_interiors(interiors)
-        .with_color(face.color())
 }
 
 fn reverse_local_coordinates_in_cycle<'r>(

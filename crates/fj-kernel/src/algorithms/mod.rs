@@ -11,4 +11,4 @@ pub mod reverse;
 pub mod sweep;
 pub mod transform;
 
-pub use self::{reverse::reverse_face, triangulate::triangulate};
+pub use self::triangulate::triangulate;
