@@ -60,10 +60,13 @@ fn main() -> anyhow::Result<()> {
 
     let new_error_message = format!("inside default models directory: {}
                                             \nCan mainly caused by: 
-                                            \n1.Model '{}' can not be found inside '{}' 
-                                            \n2.{} can be mis-typed see inside {} for a match
-                                            \n3. Try to run 'cargo run -- -m cuboid' to know path is connected", abs_path_for_models.display(), 
+                                            \n1. Model '{}' can not be found inside '{}' 
+                                            \n2. {} can be mis-typed see inside {} for a match
+                                            \n3. Try to run 'cargo run -- -m cuboid' to know path is connected", 
+                                            abs_path_for_models.display(), 
                                             path.display(), 
+                                            abs_path_for_models.display(),
+                                            path.display(),
                                             abs_path_for_models.display(),
                                         );
 
