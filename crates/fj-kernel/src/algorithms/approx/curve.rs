@@ -108,16 +108,6 @@ impl RangeOnCurve {
     }
 }
 
-impl<P> From<[P; 2]> for RangeOnCurve
-where
-    P: Into<Point<1>>,
-{
-    fn from(points: [P; 2]) -> Self {
-        let boundary = points.map(Into::into);
-        Self { boundary }
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use fj_math::Scalar;
