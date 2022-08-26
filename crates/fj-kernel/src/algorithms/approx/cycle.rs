@@ -2,24 +2,15 @@ use fj_math::{Point, Segment};
 
 use crate::objects::Cycle;
 
-use super::{curve::approx_curve, edge::approx_edge, Local, Tolerance};
+use super::{curve::approx_curve, edge::approx_edge, Approx, Local, Tolerance};
 
-/// An approximation of a [`Cycle`]
-#[derive(Debug, Eq, PartialEq, Hash)]
-pub struct CycleApprox {
-    /// The points that approximate the cycle
-    pub points: Vec<Local<Point<2>>>,
-}
+impl Approx for Cycle {
+    type Approximation = CycleApprox;
 
-impl CycleApprox {
-    /// Compute the approximation of a cycle
-    ///
-    /// `tolerance` defines how far the approximation is allowed to deviate from
-    /// the actual face.
-    pub fn new(cycle: &Cycle, tolerance: Tolerance) -> Self {
+    fn approx(&self, tolerance: Tolerance) -> Self::Approximation {
         let mut points = Vec::new();
 
-        for edge in cycle.edges() {
+        for edge in self.edges() {
             let mut edge_points = Vec::new();
             approx_curve(edge.curve().global(), tolerance, &mut edge_points);
             approx_edge(*edge.vertices(), &mut edge_points);
@@ -37,9 +28,18 @@ impl CycleApprox {
         // could lead to subtly different surface coordinates.
         points.dedup_by(|a, b| a.global_form() == b.global_form());
 
-        Self { points }
+        CycleApprox { points }
     }
+}
 
+/// An approximation of a [`Cycle`]
+#[derive(Debug, Eq, PartialEq, Hash)]
+pub struct CycleApprox {
+    /// The points that approximate the cycle
+    pub points: Vec<Local<Point<2>>>,
+}
+
+impl CycleApprox {
     /// Construct the segments that approximate the cycle
     pub fn segments(&self) -> Vec<Segment<3>> {
         let mut segments = Vec::new();
