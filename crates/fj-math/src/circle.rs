@@ -107,7 +107,7 @@ impl<const D: usize> Circle<D> {
         let coord = if atan >= Scalar::ZERO {
             atan
         } else {
-            atan + Scalar::PI * 2.
+            atan + Scalar::TAU
         };
         Point::from([coord])
     }
