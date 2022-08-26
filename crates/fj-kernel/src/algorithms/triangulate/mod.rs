@@ -27,7 +27,7 @@ pub fn triangulate(
         }
 
         let surface = face.surface();
-        let approx = face.approx(tolerance);
+        let approx = face.approx(tolerance, ());
 
         let points: Vec<_> = approx
             .points

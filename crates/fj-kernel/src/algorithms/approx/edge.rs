@@ -6,9 +6,14 @@ use super::Approx;
 
 impl Approx for Edge {
     type Approximation = Vec<(Point<1>, Point<3>)>;
+    type Params = ();
 
-    fn approx(&self, tolerance: super::Tolerance) -> Self::Approximation {
-        let mut points = self.curve().approx(tolerance);
+    fn approx(
+        &self,
+        tolerance: super::Tolerance,
+        (): Self::Params,
+    ) -> Self::Approximation {
+        let mut points = self.curve().approx(tolerance, ());
         approx_edge(*self.vertices(), &mut points);
 
         points

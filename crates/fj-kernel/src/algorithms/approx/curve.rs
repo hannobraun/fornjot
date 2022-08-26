@@ -8,14 +8,20 @@ use super::{Approx, Tolerance};
 
 impl Approx for Curve {
     type Approximation = Vec<(Point<1>, Point<3>)>;
+    type Params = ();
 
-    fn approx(&self, tolerance: Tolerance) -> Self::Approximation {
-        self.global().approx(tolerance)
+    fn approx(
+        &self,
+        tolerance: Tolerance,
+        (): Self::Params,
+    ) -> Self::Approximation {
+        self.global().approx(tolerance, ())
     }
 }
 
 impl Approx for GlobalCurve {
     type Approximation = Vec<(Point<1>, Point<3>)>;
+    type Params = ();
 
     /// Approximate the global curve
     ///
@@ -27,7 +33,11 @@ impl Approx for GlobalCurve {
     ///
     /// To support that, we will need additional information here, to define
     /// between which points the curve needs to be approximated.
-    fn approx(&self, tolerance: Tolerance) -> Self::Approximation {
+    fn approx(
+        &self,
+        tolerance: Tolerance,
+        (): Self::Params,
+    ) -> Self::Approximation {
         match self.kind() {
             CurveKind::Circle(curve) => {
                 approx_circle(curve, [[Scalar::ZERO], [Scalar::TAU]], tolerance)
