@@ -158,7 +158,7 @@ mod tests {
                 ray_face::RayFaceIntersection, HorizontalRayToTheRight,
                 Intersect,
             },
-            TransformObject,
+            transform::TransformObject,
         },
         iter::ObjectIters,
         objects::{Face, Surface},
