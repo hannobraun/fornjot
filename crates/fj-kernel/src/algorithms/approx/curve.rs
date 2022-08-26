@@ -2,36 +2,46 @@ use std::cmp::max;
 
 use fj_math::{Circle, Point, Scalar};
 
-use crate::objects::{CurveKind, GlobalCurve};
+use crate::objects::{Curve, CurveKind, GlobalCurve};
 
-use super::{Local, Tolerance};
+use super::{Approx, Local, Tolerance};
 
-/// Compute an approximation of the curve
-///
-/// `tolerance` defines how far the approximation is allowed to deviate from the
-/// actual edge.
-///
-/// # Implementation Note
-///
-/// This only works as it is, because edges are severely limited and don't
-/// define which section of the curve they inhabit. Once they do that, we need
-/// an `approximate_between(a, b)` method instead, where `a` and `b` are the
-/// vertices that bound the edge on the curve.
-///
-/// The `approximate_between` methods of the curves then need to make sure to
-/// only return points in between those vertices, not the vertices themselves.
-pub fn approx_curve(
-    curve: &GlobalCurve,
-    tolerance: Tolerance,
-    out: &mut Vec<Local<Point<1>>>,
-) {
-    match curve.kind() {
-        CurveKind::Circle(curve) => approx_circle(curve, tolerance, out),
-        CurveKind::Line(_) => {}
+impl Approx for Curve {
+    type Approximation = Vec<Local<Point<1>>>;
+
+    fn approx(&self, tolerance: Tolerance) -> Self::Approximation {
+        self.global().approx(tolerance)
     }
 }
 
-/// Approximate the circle
+impl Approx for GlobalCurve {
+    type Approximation = Vec<Local<Point<1>>>;
+
+    /// Approximate the global curve
+    ///
+    /// # Implementation Note
+    ///
+    /// This only works as-is, because only circles need to be approximated
+    /// right now and because only edges that are full circles are supported, as
+    /// opposed to edges that only inhabit part of the circle.
+    ///
+    /// To support that, we will need additional information here, to define
+    /// between which points the curve needs to be approximated.
+    fn approx(&self, tolerance: Tolerance) -> Self::Approximation {
+        let mut points = Vec::new();
+
+        match self.kind() {
+            CurveKind::Circle(curve) => {
+                approx_circle(curve, tolerance, &mut points)
+            }
+            CurveKind::Line(_) => {}
+        }
+
+        points
+    }
+}
+
+/// Approximate a circle
 ///
 /// `tolerance` specifies how much the approximation is allowed to deviate
 /// from the circle.
@@ -69,7 +79,7 @@ fn number_of_vertices_for_circle(tolerance: Tolerance, radius: Scalar) -> u64 {
 mod tests {
     use fj_math::Scalar;
 
-    use crate::algorithms::Tolerance;
+    use crate::algorithms::approx::Tolerance;
 
     #[test]
     fn number_of_vertices_for_circle() {

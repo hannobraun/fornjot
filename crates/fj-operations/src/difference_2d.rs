@@ -1,6 +1,6 @@
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
-    algorithms::Tolerance,
+    algorithms::approx::Tolerance,
     iter::ObjectIters,
     objects::{Curve, Cycle, Edge, Face, GlobalCurve, Sketch},
     validation::{validate, Validated, ValidationConfig, ValidationError},

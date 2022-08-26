@@ -7,7 +7,7 @@ mod sketch;
 use fj_interop::mesh::Color;
 use fj_math::{Scalar, Vector};
 
-use super::Tolerance;
+use super::approx::Tolerance;
 
 /// Sweep an object along a path to create another object
 pub trait Sweep {

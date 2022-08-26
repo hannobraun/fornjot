@@ -2,7 +2,7 @@ use fj_interop::mesh::Color;
 use fj_math::{Point, Transform, Triangle};
 
 use crate::{
-    algorithms::{CycleApprox, Tolerance},
+    algorithms::approx::{Approx, Tolerance},
     objects::{
         Curve, CurveKind, Cycle, Edge, Face, GlobalCurve, GlobalVertex,
         Surface, Vertex, VerticesOfEdge,
@@ -119,7 +119,7 @@ fn create_continuous_side_face(
     let placeholder = Surface::xy_plane();
 
     let cycle = Cycle::new(placeholder).with_edges([edge]);
-    let approx = CycleApprox::new(&cycle, tolerance);
+    let approx = cycle.approx(tolerance);
 
     let mut quads = Vec::new();
     for segment in approx.segments() {
