@@ -43,7 +43,7 @@ pub fn approx_circle(
     circle: &Circle<3>,
     tolerance: Tolerance,
 ) -> Vec<Local<Point<1>>> {
-    let mut out = Vec::new();
+    let mut points = Vec::new();
 
     let radius = circle.a().magnitude();
 
@@ -58,10 +58,10 @@ pub fn approx_circle(
     for i in 0..n {
         let angle = Scalar::TAU / n as f64 * i as f64;
         let point = circle.point_from_circle_coords([angle]);
-        out.push(Local::new([angle], point));
+        points.push(Local::new([angle], point));
     }
 
-    out
+    points
 }
 
 fn number_of_vertices_for_circle(tolerance: Tolerance, radius: Scalar) -> u64 {
