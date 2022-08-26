@@ -1,4 +1,4 @@
-use fj_math::Point;
+use fj_math::{Point, Scalar};
 
 use crate::objects::{Edge, Vertex, VerticesOfEdge};
 
@@ -13,7 +13,11 @@ impl Approx for Edge {
         tolerance: super::Tolerance,
         (): Self::Params,
     ) -> Self::Approximation {
-        let mut points = self.curve().approx(tolerance, ());
+        let mut points = self.curve().approx(
+            tolerance,
+            // The range is only used for circles right now.
+            [[Scalar::ZERO], [Scalar::TAU]].into(),
+        );
         approx_edge(*self.vertices(), &mut points);
 
         points
