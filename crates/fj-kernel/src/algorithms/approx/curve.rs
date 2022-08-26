@@ -39,7 +39,7 @@ impl Approx for GlobalCurve {
 ///
 /// `tolerance` specifies how much the approximation is allowed to deviate
 /// from the circle.
-pub fn approx_circle(
+fn approx_circle(
     circle: &Circle<3>,
     range: impl Into<RangeOnCurve>,
     tolerance: Tolerance,
