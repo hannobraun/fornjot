@@ -59,11 +59,7 @@ pub fn approx_circle(
     let mut points = Vec::new();
 
     let radius = circle.a().magnitude();
-
-    let RangeOnCurve {
-        boundary: [start, end],
-    } = range.into();
-    let range = (end - start).t;
+    let range = range.into();
 
     // To approximate the circle, we use a regular polygon for which
     // the circle is the circumscribed circle. The `tolerance`
@@ -71,11 +67,11 @@ pub fn approx_circle(
     // and the circle. This is the same as the difference between
     // the circumscribed circle and the incircle.
 
-    let n = number_of_vertices_for_circle(tolerance, radius, range.abs());
+    let n = number_of_vertices_for_circle(tolerance, radius, range.length());
 
     for i in 0..n {
-        let angle =
-            start.t + (Scalar::TAU / n as f64 * i as f64) * range.sign();
+        let angle = range.start().t
+            + (Scalar::TAU / n as f64 * i as f64) * range.direction();
 
         let point_curve = Point::from([angle]);
         let point_global = circle.point_from_circle_coords(point_curve);
@@ -100,6 +96,28 @@ fn number_of_vertices_for_circle(
 
 pub struct RangeOnCurve {
     pub boundary: [Point<1>; 2],
+}
+
+impl RangeOnCurve {
+    fn start(&self) -> Point<1> {
+        self.boundary[0]
+    }
+
+    fn end(&self) -> Point<1> {
+        self.boundary[1]
+    }
+
+    fn signed_length(&self) -> Scalar {
+        (self.end() - self.start()).t
+    }
+
+    fn length(&self) -> Scalar {
+        self.signed_length().abs()
+    }
+
+    fn direction(&self) -> Scalar {
+        self.signed_length().sign()
+    }
 }
 
 impl<P> From<[P; 2]> for RangeOnCurve
