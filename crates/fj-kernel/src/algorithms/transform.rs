@@ -1,3 +1,5 @@
+//! Transforming objects
+
 use fj_math::{Transform, Vector};
 
 use crate::objects::{
