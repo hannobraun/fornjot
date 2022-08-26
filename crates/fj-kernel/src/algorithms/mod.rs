@@ -3,11 +3,11 @@
 //! Algorithmic code is collected in this module, to keep other modules focused
 //! on their respective purpose.
 
-mod approx;
 mod reverse;
 mod transform;
 mod triangulate;
 
+pub mod approx;
 pub mod intersect;
 pub mod sweep;
 
