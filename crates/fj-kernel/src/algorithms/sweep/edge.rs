@@ -2,7 +2,7 @@ use fj_interop::mesh::Color;
 use fj_math::{Point, Transform, Triangle};
 
 use crate::{
-    algorithms::{CycleApprox, Tolerance},
+    algorithms::approx::{CycleApprox, Tolerance},
     objects::{
         Curve, CurveKind, Cycle, Edge, Face, GlobalCurve, GlobalVertex,
         Surface, Vertex, VerticesOfEdge,

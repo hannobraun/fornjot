@@ -8,7 +8,7 @@ use crate::objects::Face;
 
 use self::polygon::Polygon;
 
-use super::{FaceApprox, Tolerance};
+use super::approx::{FaceApprox, Tolerance};
 
 /// Triangulate a shape
 pub fn triangulate(
@@ -65,7 +65,7 @@ mod tests {
     use fj_math::{Point, Scalar};
 
     use crate::{
-        algorithms::Tolerance,
+        algorithms::approx::Tolerance,
         objects::{Face, Surface},
     };
 

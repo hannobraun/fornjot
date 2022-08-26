@@ -69,7 +69,7 @@ fn number_of_vertices_for_circle(tolerance: Tolerance, radius: Scalar) -> u64 {
 mod tests {
     use fj_math::Scalar;
 
-    use crate::algorithms::Tolerance;
+    use crate::algorithms::approx::Tolerance;
 
     #[test]
     fn number_of_vertices_for_circle() {

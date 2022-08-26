@@ -2,7 +2,10 @@
 
 use fj_interop::{debug::DebugInfo, processed_shape::ProcessedShape};
 use fj_kernel::{
-    algorithms::{triangulate, InvalidTolerance, Tolerance},
+    algorithms::{
+        approx::{InvalidTolerance, Tolerance},
+        triangulate,
+    },
     validation::{ValidationConfig, ValidationError},
 };
 use fj_math::Scalar;

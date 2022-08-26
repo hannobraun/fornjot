@@ -26,7 +26,7 @@ mod transform;
 
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
-    algorithms::Tolerance,
+    algorithms::approx::Tolerance,
     objects::{Face, Sketch},
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
