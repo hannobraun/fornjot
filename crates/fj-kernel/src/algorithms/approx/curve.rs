@@ -41,7 +41,7 @@ impl Approx for GlobalCurve {
     }
 }
 
-/// Approximate the circle
+/// Approximate a circle
 ///
 /// `tolerance` specifies how much the approximation is allowed to deviate
 /// from the circle.
