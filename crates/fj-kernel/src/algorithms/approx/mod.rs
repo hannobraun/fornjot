@@ -1,3 +1,5 @@
+//! Approximation of objects
+
 mod curves;
 mod cycles;
 mod edges;
