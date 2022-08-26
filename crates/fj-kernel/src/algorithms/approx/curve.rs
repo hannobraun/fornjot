@@ -28,16 +28,12 @@ impl Approx for GlobalCurve {
     /// To support that, we will need additional information here, to define
     /// between which points the curve needs to be approximated.
     fn approx(&self, tolerance: Tolerance) -> Self::Approximation {
-        let mut points = Vec::new();
-
         match self.kind() {
             CurveKind::Circle(curve) => {
-                approx_circle(curve, tolerance, &mut points)
+                approx_circle(curve, [[Scalar::ZERO], [Scalar::TAU]], tolerance)
             }
-            CurveKind::Line(_) => {}
+            CurveKind::Line(_) => Vec::new(),
         }
-
-        points
     }
 }
 
@@ -47,10 +43,15 @@ impl Approx for GlobalCurve {
 /// from the circle.
 pub fn approx_circle(
     circle: &Circle<3>,
+    between: [impl Into<Point<1>>; 2],
     tolerance: Tolerance,
-    out: &mut Vec<Local<Point<1>>>,
-) {
+) -> Vec<Local<Point<1>>> {
+    let mut points = Vec::new();
+
     let radius = circle.a().magnitude();
+
+    let [start, end] = between.map(Into::into);
+    let range = (end - start).t;
 
     // To approximate the circle, we use a regular polygon for which
     // the circle is the circumscribed circle. The `tolerance`
@@ -58,17 +59,24 @@ pub fn approx_circle(
     // and the circle. This is the same as the difference between
     // the circumscribed circle and the incircle.
 
-    let n = number_of_vertices_for_circle(tolerance, radius);
+    let n = number_of_vertices_for_circle(tolerance, radius, range.abs());
 
     for i in 0..n {
-        let angle = Scalar::TAU / n as f64 * i as f64;
+        let angle =
+            start.t + (Scalar::TAU / n as f64 * i as f64) * range.sign();
         let point = circle.point_from_circle_coords([angle]);
-        out.push(Local::new([angle], point));
+        points.push(Local::new([angle], point));
     }
+
+    points
 }
 
-fn number_of_vertices_for_circle(tolerance: Tolerance, radius: Scalar) -> u64 {
-    let n = (Scalar::PI / (Scalar::ONE - (tolerance.inner() / radius)).acos())
+fn number_of_vertices_for_circle(
+    tolerance: Tolerance,
+    radius: Scalar,
+    range: Scalar,
+) -> u64 {
+    let n = (range / (Scalar::ONE - (tolerance.inner() / radius)).acos() / 2.)
         .ceil()
         .into_u64();
 
@@ -83,31 +91,38 @@ mod tests {
 
     #[test]
     fn number_of_vertices_for_circle() {
-        verify_result(50., 100., 3);
-        verify_result(10., 100., 7);
-        verify_result(1., 100., 23);
+        verify_result(50., 100., Scalar::TAU, 3);
+        verify_result(50., 100., Scalar::PI, 3);
+        verify_result(10., 100., Scalar::TAU, 7);
+        verify_result(10., 100., Scalar::PI, 4);
+        verify_result(1., 100., Scalar::TAU, 23);
+        verify_result(1., 100., Scalar::PI, 12);
 
         fn verify_result(
             tolerance: impl Into<Tolerance>,
             radius: impl Into<Scalar>,
+            range: impl Into<Scalar>,
             n: u64,
         ) {
             let tolerance = tolerance.into();
             let radius = radius.into();
+            let range = range.into();
 
             assert_eq!(
                 n,
-                super::number_of_vertices_for_circle(tolerance, radius)
+                super::number_of_vertices_for_circle(tolerance, radius, range)
             );
 
-            assert!(calculate_error(radius, n) <= tolerance.inner());
+            assert!(calculate_error(radius, range, n) <= tolerance.inner());
             if n > 3 {
-                assert!(calculate_error(radius, n - 1) >= tolerance.inner());
+                assert!(
+                    calculate_error(radius, range, n - 1) >= tolerance.inner()
+                );
             }
         }
 
-        fn calculate_error(radius: Scalar, n: u64) -> Scalar {
-            radius - radius * (Scalar::PI / Scalar::from_u64(n)).cos()
+        fn calculate_error(radius: Scalar, range: Scalar, n: u64) -> Scalar {
+            radius - radius * (range / Scalar::from_u64(n) / 2.).cos()
         }
     }
 }
