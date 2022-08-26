@@ -53,14 +53,16 @@ impl Approx for GlobalCurve {
 /// from the circle.
 pub fn approx_circle(
     circle: &Circle<3>,
-    range: [impl Into<Point<1>>; 2],
+    range: impl Into<RangeOnCurve>,
     tolerance: Tolerance,
 ) -> Vec<(Point<1>, Point<3>)> {
     let mut points = Vec::new();
 
     let radius = circle.a().magnitude();
 
-    let [start, end] = range.map(Into::into);
+    let RangeOnCurve {
+        boundary: [start, end],
+    } = range.into();
     let range = (end - start).t;
 
     // To approximate the circle, we use a regular polygon for which
@@ -94,6 +96,20 @@ fn number_of_vertices_for_circle(
         .into_u64();
 
     max(n, 3)
+}
+
+pub struct RangeOnCurve {
+    pub boundary: [Point<1>; 2],
+}
+
+impl<P> From<[P; 2]> for RangeOnCurve
+where
+    P: Into<Point<1>>,
+{
+    fn from(points: [P; 2]) -> Self {
+        let boundary = points.map(Into::into);
+        Self { boundary }
+    }
 }
 
 #[cfg(test)]
