@@ -61,7 +61,7 @@ pub fn approx_circle(
     let n = number_of_vertices_for_circle(tolerance, radius);
 
     for i in 0..n {
-        let angle = Scalar::PI * 2. / n as f64 * i as f64;
+        let angle = Scalar::TAU / n as f64 * i as f64;
         let point = circle.point_from_circle_coords([angle]);
         out.push(Local::new([angle], point));
     }
