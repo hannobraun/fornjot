@@ -74,7 +74,7 @@ impl<const D: usize> Line<D> {
 
             // The triangle is valid only, if the three points are not on the
             // same line.
-            Triangle::from_points([a, b, c]).is_some()
+            Triangle::from_points([a, b, c]).is_ok()
         };
 
         if other_origin_is_not_on_self {
