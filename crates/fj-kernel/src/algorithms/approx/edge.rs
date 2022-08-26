@@ -18,8 +18,19 @@ impl Approx for Edge {
             let start_curve = Point::from([Scalar::ZERO]);
             let end_curve = Point::from([Scalar::TAU]);
 
+            // We're dealing with a circle here. Start and end are identical
+            // points, in global coordinates.
+            let point_global = self
+                .global()
+                .curve()
+                .kind()
+                .point_from_curve_coords(start_curve);
+
             RangeOnCurve {
-                boundary: [start_curve, end_curve],
+                boundary: [
+                    (start_curve, point_global),
+                    (end_curve, point_global),
+                ],
             }
         };
 

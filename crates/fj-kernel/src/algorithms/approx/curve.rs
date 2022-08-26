@@ -64,9 +64,10 @@ fn approx_circle(
     let n = number_of_vertices_for_circle(tolerance, radius, range.length());
 
     let mut points = Vec::new();
+    points.push(range.start());
 
-    for i in 0..n {
-        let angle = range.start().t
+    for i in 1..n {
+        let angle = range.start().0.t
             + (Scalar::TAU / n as f64 * i as f64) * range.direction();
 
         let point_curve = Point::from([angle]);
@@ -91,20 +92,20 @@ fn number_of_vertices_for_circle(
 }
 
 pub struct RangeOnCurve {
-    pub boundary: [Point<1>; 2],
+    pub boundary: [(Point<1>, Point<3>); 2],
 }
 
 impl RangeOnCurve {
-    fn start(&self) -> Point<1> {
+    fn start(&self) -> (Point<1>, Point<3>) {
         self.boundary[0]
     }
 
-    fn end(&self) -> Point<1> {
+    fn end(&self) -> (Point<1>, Point<3>) {
         self.boundary[1]
     }
 
     fn signed_length(&self) -> Scalar {
-        (self.end() - self.start()).t
+        (self.end().0 - self.start().0).t
     }
 
     fn length(&self) -> Scalar {
