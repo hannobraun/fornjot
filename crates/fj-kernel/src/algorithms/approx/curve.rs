@@ -44,8 +44,6 @@ fn approx_circle(
     range: impl Into<RangeOnCurve>,
     tolerance: Tolerance,
 ) -> Vec<(Point<1>, Point<3>)> {
-    let mut points = Vec::new();
-
     let radius = circle.a().magnitude();
     let range = range.into();
 
@@ -56,6 +54,8 @@ fn approx_circle(
     // the circumscribed circle and the incircle.
 
     let n = number_of_vertices_for_circle(tolerance, radius, range.length());
+
+    let mut points = Vec::new();
 
     for i in 0..n {
         let angle = range.start().t
