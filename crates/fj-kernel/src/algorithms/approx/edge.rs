@@ -2,15 +2,13 @@ use fj_math::Point;
 
 use crate::objects::{Edge, Vertex, VerticesOfEdge};
 
-use super::{curve::approx_curve, Approx, Local};
+use super::{Approx, Local};
 
 impl Approx for Edge {
     type Approximation = Vec<Local<Point<1>>>;
 
     fn approx(&self, tolerance: super::Tolerance) -> Self::Approximation {
-        let mut points = Vec::new();
-
-        approx_curve(self.curve().global(), tolerance, &mut points);
+        let mut points = self.curve().approx(tolerance);
         approx_edge(*self.vertices(), &mut points);
 
         points

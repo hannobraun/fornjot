@@ -2,9 +2,19 @@ use std::cmp::max;
 
 use fj_math::{Circle, Point, Scalar};
 
-use crate::objects::{CurveKind, GlobalCurve};
+use crate::objects::{Curve, CurveKind, GlobalCurve};
 
-use super::{Local, Tolerance};
+use super::{Approx, Local, Tolerance};
+
+impl Approx for Curve {
+    type Approximation = Vec<Local<Point<1>>>;
+
+    fn approx(&self, tolerance: Tolerance) -> Self::Approximation {
+        let mut points = Vec::new();
+        approx_curve(self.global(), tolerance, &mut points);
+        points
+    }
+}
 
 /// Compute an approximation of the curve
 ///
