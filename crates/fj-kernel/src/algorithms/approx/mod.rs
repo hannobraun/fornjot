@@ -1,15 +1,15 @@
 //! Approximation of objects
 
-mod curves;
-mod cycles;
-mod edges;
-mod faces;
+mod curve;
+mod cycle;
+mod edge;
+mod face;
 mod local;
 mod tolerance;
 
 pub use self::{
-    cycles::CycleApprox,
-    faces::FaceApprox,
+    cycle::CycleApprox,
+    face::FaceApprox,
     local::{Local, LocalForm},
     tolerance::{InvalidTolerance, Tolerance},
 };

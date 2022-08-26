@@ -2,7 +2,7 @@ use fj_math::{Point, Segment};
 
 use crate::objects::Cycle;
 
-use super::{curves::approx_curve, edges::approx_edge, Local, Tolerance};
+use super::{curve::approx_curve, edge::approx_edge, Local, Tolerance};
 
 /// An approximation of a [`Cycle`]
 #[derive(Debug, Eq, PartialEq, Hash)]
