@@ -70,6 +70,18 @@ impl Scalar {
         self.0 as u64
     }
 
+    /// The sign of the scalar
+    ///
+    /// Return `Scalar::ZERO`, if the scalar is zero, `Scalar::ONE`, if it is
+    /// positive, `-Scalar::ONE`, if it is negative.
+    pub fn sign(self) -> Scalar {
+        if self == Self::ZERO {
+            Self::ZERO
+        } else {
+            Self(self.0.signum())
+        }
+    }
+
     /// Compute the absolute value of the scalar
     pub fn abs(self) -> Self {
         self.0.abs().into()
