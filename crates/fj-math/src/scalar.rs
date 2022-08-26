@@ -1,4 +1,10 @@
-use std::{cmp, f64::consts::PI, fmt, hash::Hash, ops};
+use std::{
+    cmp,
+    f64::consts::{PI, TAU},
+    fmt,
+    hash::Hash,
+    ops,
+};
 
 use decorum::R64;
 
@@ -27,6 +33,9 @@ impl Scalar {
 
     /// The `Scalar` instance that represents pi
     pub const PI: Self = Self(PI);
+
+    /// The `Scalar` instance that represents tau
+    pub const TAU: Self = Self(TAU);
 
     /// Construct a `Scalar` from an `f64`
     ///
