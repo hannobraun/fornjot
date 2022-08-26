@@ -23,16 +23,6 @@ impl Approx for GlobalCurve {
     type Approximation = Vec<(Point<1>, Point<3>)>;
     type Params = RangeOnCurve;
 
-    /// Approximate the global curve
-    ///
-    /// # Implementation Note
-    ///
-    /// This only works as-is, because only circles need to be approximated
-    /// right now and because only edges that are full circles are supported, as
-    /// opposed to edges that only inhabit part of the circle.
-    ///
-    /// To support that, we will need additional information here, to define
-    /// between which points the curve needs to be approximated.
     fn approx(
         &self,
         tolerance: Tolerance,
