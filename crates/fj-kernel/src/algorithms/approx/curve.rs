@@ -29,7 +29,9 @@ impl Approx for GlobalCurve {
     /// between which points the curve needs to be approximated.
     fn approx(&self, tolerance: Tolerance) -> Self::Approximation {
         match self.kind() {
-            CurveKind::Circle(curve) => approx_circle(curve, tolerance),
+            CurveKind::Circle(curve) => {
+                approx_circle(curve, [[Scalar::ZERO], [Scalar::TAU]], tolerance)
+            }
             CurveKind::Line(_) => Vec::new(),
         }
     }
@@ -41,11 +43,15 @@ impl Approx for GlobalCurve {
 /// from the circle.
 pub fn approx_circle(
     circle: &Circle<3>,
+    between: [impl Into<Point<1>>; 2],
     tolerance: Tolerance,
 ) -> Vec<Local<Point<1>>> {
     let mut points = Vec::new();
 
     let radius = circle.a().magnitude();
+
+    let [start, end] = between.map(Into::into);
+    let range = (end - start).t;
 
     // To approximate the circle, we use a regular polygon for which
     // the circle is the circumscribed circle. The `tolerance`
@@ -53,10 +59,11 @@ pub fn approx_circle(
     // and the circle. This is the same as the difference between
     // the circumscribed circle and the incircle.
 
-    let n = number_of_vertices_for_circle(tolerance, radius, Scalar::TAU);
+    let n = number_of_vertices_for_circle(tolerance, radius, range.abs());
 
     for i in 0..n {
-        let angle = Scalar::TAU / n as f64 * i as f64;
+        let angle =
+            start.t + (Scalar::TAU / n as f64 * i as f64) * range.sign();
         let point = circle.point_from_circle_coords([angle]);
         points.push(Local::new([angle], point));
     }
