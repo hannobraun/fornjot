@@ -1,6 +1,6 @@
 //! # Fornjot Application
 //!
-//! This library is part of the [Fornjot] ecosystem. Fornjot is an open-source,
+//! This library is part of the [&Fornjot] ecosystem. Fornjot is an open-source,
 //! code-first CAD application; and collection of libraries that make up the CAD
 //! application, but can be used independently.
 //!
@@ -16,6 +16,7 @@ mod args;
 mod config;
 
 use std::path::PathBuf;
+use std::env;
 
 use anyhow::{anyhow, Context as _};
 use fj_export::export;
@@ -43,40 +44,35 @@ fn main() -> anyhow::Result<()> {
         .event_format(format().pretty())
         .init();
 
+    let file_name: Vec<String> = env:: args().collect();
+    
     let args = Args::parse();
     let config = Config::load()?;
-    
-    // finds the absolute path by the directory name
-    let abs_path_for_models = PathBuf::from("./models").canonicalize().unwrap();
 
     let mut path = config.default_path.unwrap_or_else(|| PathBuf::from(""));
+    let abs_path_for_models = path.canonicalize().unwrap();
+
     let model = args.model.or(config.default_model).ok_or_else(|| {
         anyhow!(
             "No model specified, and no default model configured.\n\
                 Specify a model by passing `--model path/to/model`."
         )
     })?;
+    // println!("{:}", args.model.as_ref());
     path.push(model);
 
-    let new_error_message = format!("inside default models directory: {}
-                                            \nCan mainly caused by: 
-                                            \n1. Model '{}' can not be found inside '{}' 
-                                            \n2. {} can be mis-typed see inside {} for a match
-                                            \n3. Try to run 'cargo run -- -m cuboid' to know path is connected", 
-                                            abs_path_for_models.display(), 
-                                            path.display(), 
-                                            abs_path_for_models.display(),
-                                            path.display(),
-                                            abs_path_for_models.display(),
-                                        );
+    let new_error_message = format!("inside default models directory: {0}\nCan mainly caused by: \n1. Model '{1}' can not be found inside '{0}' \n2. '{1}' can be mis-typed see inside '{0}' for a match \n3. '{1}' could not be found",abs_path_for_models.display(),&file_name[2]);
 
-    let model = Model::from_path(path.clone())
-        .with_context(|| format!("\nFailed to load model: {} {new_error_message}", path.display()))?;
+    let model = Model::from_path(path.clone()).with_context(|| {
+        format!(
+            "\nFailed to load model: {:#?} {new_error_message}",
+            path.display()
+        )
+    })?;
     let parameters = args.parameters.unwrap_or_else(Parameters::empty);
     let shape_processor = ShapeProcessor {
         tolerance: args.tolerance,
     };
-    
 
     if let Some(path) = args.export {
         let shape = model.load_once(&parameters, &mut status)?;
