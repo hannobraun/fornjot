@@ -1,7 +1,7 @@
 use fj_math::Scalar;
 
 use crate::{
-    algorithms::TransformObject,
+    algorithms::transform::TransformObject,
     objects::{Face, Shell, Surface},
 };
 

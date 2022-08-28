@@ -1,6 +1,6 @@
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
-    algorithms::{sweep::Sweep, Tolerance},
+    algorithms::{approx::Tolerance, sweep::Sweep},
     objects::Solid,
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };

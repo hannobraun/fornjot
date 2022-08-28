@@ -1,6 +1,6 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
-    algorithms::{transform_faces, Tolerance},
+    algorithms::{approx::Tolerance, transform::transform_faces},
     objects::Face,
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };

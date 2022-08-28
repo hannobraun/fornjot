@@ -1,4 +1,10 @@
-use std::{cmp, f64::consts::PI, fmt, hash::Hash, ops};
+use std::{
+    cmp,
+    f64::consts::{PI, TAU},
+    fmt,
+    hash::Hash,
+    ops,
+};
 
 use decorum::R64;
 
@@ -27,6 +33,9 @@ impl Scalar {
 
     /// The `Scalar` instance that represents pi
     pub const PI: Self = Self(PI);
+
+    /// The `Scalar` instance that represents tau
+    pub const TAU: Self = Self(TAU);
 
     /// Construct a `Scalar` from an `f64`
     ///
@@ -59,6 +68,18 @@ impl Scalar {
     /// Convert the scalar into a `u64`
     pub fn into_u64(self) -> u64 {
         self.0 as u64
+    }
+
+    /// The sign of the scalar
+    ///
+    /// Return `Scalar::ZERO`, if the scalar is zero, `Scalar::ONE`, if it is
+    /// positive, `-Scalar::ONE`, if it is negative.
+    pub fn sign(self) -> Scalar {
+        if self == Self::ZERO {
+            Self::ZERO
+        } else {
+            Self(self.0.signum())
+        }
     }
 
     /// Compute the absolute value of the scalar

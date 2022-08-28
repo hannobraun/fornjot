@@ -1,7 +1,7 @@
 use fj_interop::mesh::Color;
 
 use crate::{
-    algorithms::{reverse_face, Tolerance, TransformObject},
+    algorithms::{approx::Tolerance, reverse_face, transform::TransformObject},
     objects::{Face, Shell},
 };
 

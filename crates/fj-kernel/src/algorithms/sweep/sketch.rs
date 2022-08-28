@@ -1,7 +1,7 @@
 use fj_interop::mesh::Color;
 
 use crate::{
-    algorithms::Tolerance,
+    algorithms::approx::Tolerance,
     objects::{Sketch, Solid},
 };
 
@@ -35,7 +35,7 @@ mod tests {
     use fj_math::{Point, Scalar, Vector};
 
     use crate::{
-        algorithms::Tolerance,
+        algorithms::approx::Tolerance,
         iter::ObjectIters,
         objects::{Face, Sketch, Surface},
     };

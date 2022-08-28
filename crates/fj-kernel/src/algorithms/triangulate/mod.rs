@@ -8,7 +8,7 @@ use crate::objects::Face;
 
 use self::polygon::Polygon;
 
-use super::{FaceApprox, Tolerance};
+use super::approx::{Approx, Tolerance};
 
 /// Triangulate a shape
 pub fn triangulate(
@@ -27,7 +27,7 @@ pub fn triangulate(
         }
 
         let surface = face.surface();
-        let approx = FaceApprox::new(&face, tolerance);
+        let approx = face.approx(tolerance);
 
         let points: Vec<_> = approx.points.into_iter().collect();
         let face_as_polygon = Polygon::new(*surface)
@@ -65,7 +65,7 @@ mod tests {
     use fj_math::{Point, Scalar};
 
     use crate::{
-        algorithms::Tolerance,
+        algorithms::approx::Tolerance,
         objects::{Face, Surface},
     };
 

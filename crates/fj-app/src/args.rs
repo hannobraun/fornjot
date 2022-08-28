@@ -2,7 +2,7 @@ use std::{path::PathBuf, str::FromStr as _};
 
 use anyhow::anyhow;
 use fj_host::Parameters;
-use fj_kernel::algorithms::Tolerance;
+use fj_kernel::algorithms::approx::Tolerance;
 use fj_math::Scalar;
 
 /// Fornjot - Experimental CAD System
