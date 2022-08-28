@@ -15,8 +15,8 @@
 mod args;
 mod config;
 
-use std::path::PathBuf;
 use std::env;
+use std::path::PathBuf;
 
 use anyhow::{anyhow, Context as _};
 use fj_export::export;
@@ -44,8 +44,8 @@ fn main() -> anyhow::Result<()> {
         .event_format(format().pretty())
         .init();
 
-    let file_name: Vec<String> = env:: args().collect();
-    
+    let file_name: Vec<String> = env::args().collect();
+
     let args = Args::parse();
     let config = Config::load()?;
 
