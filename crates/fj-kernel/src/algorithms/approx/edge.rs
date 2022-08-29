@@ -13,13 +13,12 @@ impl Approx for Edge {
         tolerance: super::Tolerance,
         (): Self::Params,
     ) -> Self::Approximation {
-        let mut points = self.curve().approx(
-            tolerance,
-            // The range is only used for circles right now.
-            RangeOnCurve {
-                boundary: [[Scalar::ZERO].into(), [Scalar::TAU].into()],
-            },
-        );
+        // The range is only used for circles right now.
+        let range = RangeOnCurve {
+            boundary: [[Scalar::ZERO].into(), [Scalar::TAU].into()],
+        };
+
+        let mut points = self.curve().approx(tolerance, range);
 
         // Insert the exact vertices of this edge into the approximation. This
         // means we don't rely on the curve approximation to deliver accurate
