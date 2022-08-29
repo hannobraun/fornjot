@@ -2,10 +2,10 @@ use fj_math::Point;
 
 use crate::objects::{Edge, Vertex, VerticesOfEdge};
 
-use super::{Approx, Local};
+use super::Approx;
 
 impl Approx for Edge {
-    type Approximation = Vec<Local<Point<1>>>;
+    type Approximation = Vec<(Point<1>, Point<3>)>;
 
     fn approx(&self, tolerance: super::Tolerance) -> Self::Approximation {
         let mut points = self.curve().approx(tolerance);
@@ -17,7 +17,7 @@ impl Approx for Edge {
 
 pub fn approx_edge(
     vertices: VerticesOfEdge<Vertex>,
-    points: &mut Vec<Local<Point<1>>>,
+    points: &mut Vec<(Point<1>, Point<3>)>,
 ) {
     // Insert the exact vertices of this edge into the approximation. This means
     // we don't rely on the curve approximation to deliver accurate
@@ -27,9 +27,8 @@ pub fn approx_edge(
     // would lead to bugs in the approximation, as points that should refer to
     // the same vertex would be understood to refer to very close, but distinct
     // vertices.
-    let vertices = vertices.convert(|vertex| {
-        Local::new(vertex.position(), vertex.global().position())
-    });
+    let vertices = vertices
+        .convert(|vertex| (vertex.position(), vertex.global().position()));
     if let Some([a, b]) = vertices {
         points.insert(0, a);
         points.push(b);
@@ -49,10 +48,7 @@ pub fn approx_edge(
 mod test {
     use fj_math::Point;
 
-    use crate::{
-        algorithms::approx::Local,
-        objects::{GlobalVertex, Vertex, VerticesOfEdge},
-    };
+    use crate::objects::{GlobalVertex, Vertex, VerticesOfEdge};
 
     #[test]
     fn approx_edge() {
@@ -69,10 +65,10 @@ mod test {
             Vertex::new(Point::from([1.]), v2),
         ]);
 
-        let a = Local::new([0.0], a);
-        let b = Local::new([0.25], b);
-        let c = Local::new([0.75], c);
-        let d = Local::new([1.0], d);
+        let a = (Point::from([0.0]), a);
+        let b = (Point::from([0.25]), b);
+        let c = (Point::from([0.75]), c);
+        let d = (Point::from([1.0]), d);
 
         // Regular edge
         let mut points = vec![b, c];
