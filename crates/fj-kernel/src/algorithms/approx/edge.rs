@@ -40,18 +40,8 @@ pub fn approx_edge(
     // vertices.
     let vertices = vertices
         .convert(|vertex| (vertex.position(), vertex.global().position()));
-    if let Some([a, b]) = vertices {
+    if let Some([a, _]) = vertices {
         points.insert(0, a);
-        points.push(b);
-    }
-
-    if vertices.is_none() {
-        // The edge has no vertices, which means it connects to itself. We need
-        // to reflect that in the approximation.
-
-        if let Some(&point) = points.first() {
-            points.push(point);
-        }
     }
 }
 
@@ -79,16 +69,15 @@ mod test {
         let a = (Point::from([0.0]), a);
         let b = (Point::from([0.25]), b);
         let c = (Point::from([0.75]), c);
-        let d = (Point::from([1.0]), d);
 
         // Regular edge
         let mut points = vec![b, c];
         super::approx_edge(vertices, &mut points);
-        assert_eq!(points, vec![a, b, c, d]);
+        assert_eq!(points, vec![a, b, c]);
 
         // Continuous edge
         let mut points = vec![b, c];
         super::approx_edge(VerticesOfEdge::none(), &mut points);
-        assert_eq!(points, vec![b, c, b]);
+        assert_eq!(points, vec![b, c]);
     }
 }

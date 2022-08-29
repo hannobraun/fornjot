@@ -27,9 +27,9 @@ impl Approx for Cycle {
             }));
         }
 
-        // Can't just rely on `dedup`, as the conversion from curve coordinates
-        // could lead to subtly different surface coordinates.
-        points.dedup_by(|(_, a), (_, b)| a == b);
+        if let Some(&point) = points.first() {
+            points.push(point);
+        }
 
         CycleApprox { points }
     }
