@@ -1,10 +1,10 @@
 use fj_math::{Point, Scalar, Triangle, Winding};
 use spade::HasPosition;
 
-use crate::algorithms::approx::Local;
-
 /// Create a Delaunay triangulation of all points
-pub fn triangulate(points: Vec<Local<Point<2>>>) -> Vec<[Local<Point<2>>; 3]> {
+pub fn triangulate(
+    points: Vec<TriangulationPoint>,
+) -> Vec<[TriangulationPoint; 3]> {
     use spade::Triangulation as _;
 
     let triangulation = spade::DelaunayTriangulation::<_>::bulk_load(points)
@@ -14,9 +14,9 @@ pub fn triangulate(points: Vec<Local<Point<2>>>) -> Vec<[Local<Point<2>>; 3]> {
     for triangle in triangulation.inner_faces() {
         let [v0, v1, v2] = triangle.vertices().map(|vertex| *vertex.data());
         let orientation = Triangle::<2>::from_points([
-            *v0.local_form(),
-            *v1.local_form(),
-            *v2.local_form(),
+            v0.point_surface,
+            v1.point_surface,
+            v2.point_surface,
         ])
         .expect("invalid triangle")
         .winding_direction();
@@ -32,14 +32,20 @@ pub fn triangulate(points: Vec<Local<Point<2>>>) -> Vec<[Local<Point<2>>; 3]> {
     triangles
 }
 
+#[derive(Clone, Copy, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct TriangulationPoint {
+    pub point_surface: Point<2>,
+    pub point_global: Point<3>,
+}
+
 // Enables the use of `LocalPoint` in the triangulation.
-impl HasPosition for Local<Point<2>> {
+impl HasPosition for TriangulationPoint {
     type Scalar = Scalar;
 
     fn position(&self) -> spade::Point2<Self::Scalar> {
         spade::Point2 {
-            x: self.local_form().u,
-            y: self.local_form().v,
+            x: self.point_surface.u,
+            y: self.point_surface.v,
         }
     }
 }
