@@ -1,6 +1,6 @@
 //! # Fornjot Application
 //!
-//! This library is part of the [&Fornjot] ecosystem. Fornjot is an open-source,
+//! This library is part of the [Fornjot] ecosystem. Fornjot is an open-source,
 //! code-first CAD application; and collection of libraries that make up the CAD
 //! application, but can be used independently.
 //!
