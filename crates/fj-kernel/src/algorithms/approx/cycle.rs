@@ -14,11 +14,11 @@ impl Approx for Cycle {
             let edge_points = edge.approx(tolerance);
 
             points.extend(edge_points.into_iter().map(|point| {
-                let local = edge
+                let point_surface = edge
                     .curve()
                     .kind()
                     .point_from_curve_coords(*point.local_form());
-                Local::new(local, *point.global_form())
+                Local::new(point_surface, *point.global_form())
             }));
         }
 
