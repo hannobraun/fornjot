@@ -4,10 +4,10 @@ use fj_math::{Circle, Point, Scalar};
 
 use crate::objects::{Curve, CurveKind, GlobalCurve};
 
-use super::{Approx, Local, Tolerance};
+use super::{Approx, Tolerance};
 
 impl Approx for Curve {
-    type Approximation = Vec<Local<Point<1>>>;
+    type Approximation = Vec<(Point<1>, Point<3>)>;
 
     fn approx(&self, tolerance: Tolerance) -> Self::Approximation {
         self.global().approx(tolerance)
@@ -15,7 +15,7 @@ impl Approx for Curve {
 }
 
 impl Approx for GlobalCurve {
-    type Approximation = Vec<Local<Point<1>>>;
+    type Approximation = Vec<(Point<1>, Point<3>)>;
 
     /// Approximate the global curve
     ///
@@ -45,7 +45,7 @@ pub fn approx_circle(
     circle: &Circle<3>,
     between: [impl Into<Point<1>>; 2],
     tolerance: Tolerance,
-) -> Vec<Local<Point<1>>> {
+) -> Vec<(Point<1>, Point<3>)> {
     let mut points = Vec::new();
 
     let radius = circle.a().magnitude();
@@ -68,7 +68,7 @@ pub fn approx_circle(
         let point_curve = Point::from([angle]);
         let point_global = circle.point_from_circle_coords(point_curve);
 
-        points.push(Local::new(point_curve, point_global));
+        points.push((point_curve, point_global));
     }
 
     points
