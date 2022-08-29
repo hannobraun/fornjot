@@ -7,7 +7,7 @@ use crate::objects::{Curve, CurveKind, GlobalCurve};
 use super::{Approx, Tolerance};
 
 impl Approx for Curve {
-    type Approximation = Vec<(Point<1>, Point<3>)>;
+    type Approximation = Vec<(Point<2>, Point<3>)>;
     type Params = RangeOnCurve;
 
     fn approx(
@@ -15,7 +15,15 @@ impl Approx for Curve {
         tolerance: Tolerance,
         range: Self::Params,
     ) -> Self::Approximation {
-        self.global().approx(tolerance, range)
+        self.global()
+            .approx(tolerance, range)
+            .into_iter()
+            .map(|(point_curve, point_global)| {
+                let point_surface =
+                    self.kind().point_from_curve_coords(point_curve);
+                (point_surface, point_global)
+            })
+            .collect()
     }
 }
 

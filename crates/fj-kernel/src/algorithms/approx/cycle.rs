@@ -17,14 +17,7 @@ impl Approx for Cycle {
 
         for edge in self.edges() {
             let edge_points = edge.approx(tolerance, ());
-
-            points.extend(edge_points.into_iter().map(|point| {
-                let (point_curve, point_global) = point;
-
-                let point_surface =
-                    edge.curve().kind().point_from_curve_coords(point_curve);
-                (point_surface, point_global)
-            }));
+            points.extend(edge_points);
         }
 
         if let Some(&point) = points.first() {

@@ -5,7 +5,7 @@ use crate::objects::Edge;
 use super::{curve::RangeOnCurve, Approx};
 
 impl Approx for Edge {
-    type Approximation = Vec<(Point<1>, Point<3>)>;
+    type Approximation = Vec<(Point<2>, Point<3>)>;
     type Params = ();
 
     fn approx(
@@ -33,8 +33,10 @@ impl Approx for Edge {
         let vertices = self
             .vertices()
             .convert(|vertex| (vertex.position(), vertex.global().position()));
-        if let Some([a, _]) = vertices {
-            points.insert(0, a);
+        if let Some([(point_curve, point_global), _]) = vertices {
+            let point_surface =
+                self.curve().kind().point_from_curve_coords(point_curve);
+            points.insert(0, (point_surface, point_global));
         }
 
         points
