@@ -38,7 +38,7 @@ impl Approx for GlobalCurve {
     ) -> Self::Approximation {
         match self.kind() {
             CurveKind::Circle(curve) => approx_circle(curve, range, tolerance),
-            CurveKind::Line(_) => Vec::new(),
+            CurveKind::Line(_) => vec![range.start()],
         }
     }
 }
