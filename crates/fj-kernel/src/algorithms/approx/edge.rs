@@ -14,8 +14,13 @@ impl Approx for Edge {
         (): Self::Params,
     ) -> Self::Approximation {
         // The range is only used for circles right now.
-        let range = RangeOnCurve {
-            boundary: [[Scalar::ZERO].into(), [Scalar::TAU].into()],
+        let range = {
+            let start_curve = Point::from([Scalar::ZERO]);
+            let end_curve = Point::from([Scalar::TAU]);
+
+            RangeOnCurve {
+                boundary: [start_curve, end_curve],
+            }
         };
 
         let mut points = self.curve().approx(tolerance, range);
