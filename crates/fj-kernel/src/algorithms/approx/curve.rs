@@ -64,8 +64,8 @@ pub fn approx_circle(
     for i in 0..n {
         let angle =
             start.t + (Scalar::TAU / n as f64 * i as f64) * range.sign();
-        let point = circle.point_from_circle_coords([angle]);
-        points.push(Local::new([angle], point));
+        let point_global = circle.point_from_circle_coords([angle]);
+        points.push(Local::new([angle], point_global));
     }
 
     points
