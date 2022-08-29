@@ -32,9 +32,9 @@ pub fn triangulate(
         let points: Vec<_> = approx
             .points
             .into_iter()
-            .map(|point| TriangulationPoint {
-                point_surface: *point.local_form(),
-                point_global: *point.global_form(),
+            .map(|(point_surface, point_global)| TriangulationPoint {
+                point_surface,
+                point_global,
             })
             .collect();
         let face_as_polygon = Polygon::new(*surface)
@@ -43,10 +43,13 @@ pub fn triangulate(
                     .exterior
                     .points
                     .into_iter()
-                    .map(|point| *point.local_form()),
+                    .map(|(point_surface, _)| point_surface),
             )
             .with_interiors(approx.interiors.into_iter().map(|interior| {
-                interior.points.into_iter().map(|point| *point.local_form())
+                interior
+                    .points
+                    .into_iter()
+                    .map(|(point_surface, _)| point_surface)
             }));
 
         let mut triangles = delaunay::triangulate(points);
