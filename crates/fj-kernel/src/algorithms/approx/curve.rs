@@ -7,7 +7,7 @@ use crate::objects::{Curve, CurveKind, GlobalCurve};
 use super::{Approx, Tolerance};
 
 impl Approx for Curve {
-    type Approximation = Vec<(Point<1>, Point<3>)>;
+    type Approximation = Vec<(Point<2>, Point<3>)>;
     type Params = RangeOnCurve;
 
     fn approx(
@@ -15,7 +15,15 @@ impl Approx for Curve {
         tolerance: Tolerance,
         range: Self::Params,
     ) -> Self::Approximation {
-        self.global().approx(tolerance, range)
+        self.global()
+            .approx(tolerance, range)
+            .into_iter()
+            .map(|(point_curve, point_global)| {
+                let point_surface =
+                    self.kind().point_from_curve_coords(point_curve);
+                (point_surface, point_global)
+            })
+            .collect()
     }
 }
 
@@ -30,7 +38,7 @@ impl Approx for GlobalCurve {
     ) -> Self::Approximation {
         match self.kind() {
             CurveKind::Circle(curve) => approx_circle(curve, range, tolerance),
-            CurveKind::Line(_) => Vec::new(),
+            CurveKind::Line(_) => vec![range.start()],
         }
     }
 }
@@ -56,9 +64,10 @@ fn approx_circle(
     let n = number_of_vertices_for_circle(tolerance, radius, range.length());
 
     let mut points = Vec::new();
+    points.push(range.start());
 
-    for i in 0..n {
-        let angle = range.start().t
+    for i in 1..n {
+        let angle = range.start().0.t
             + (Scalar::TAU / n as f64 * i as f64) * range.direction();
 
         let point_curve = Point::from([angle]);
@@ -83,20 +92,20 @@ fn number_of_vertices_for_circle(
 }
 
 pub struct RangeOnCurve {
-    pub boundary: [Point<1>; 2],
+    pub boundary: [(Point<1>, Point<3>); 2],
 }
 
 impl RangeOnCurve {
-    fn start(&self) -> Point<1> {
+    fn start(&self) -> (Point<1>, Point<3>) {
         self.boundary[0]
     }
 
-    fn end(&self) -> Point<1> {
+    fn end(&self) -> (Point<1>, Point<3>) {
         self.boundary[1]
     }
 
     fn signed_length(&self) -> Scalar {
-        (self.end() - self.start()).t
+        (self.end().0 - self.start().0).t
     }
 
     fn length(&self) -> Scalar {
