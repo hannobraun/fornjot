@@ -1,7 +1,7 @@
 use std::{collections::HashSet, fmt::Write, path::PathBuf};
 
 use anyhow::Context;
-use chrono::{Date, Datelike, Utc};
+use chrono::{Datelike, Utc};
 use map_macro::set;
 use tokio::{
     fs::{self, File},
@@ -11,7 +11,6 @@ use tokio::{
 use crate::pull_requests::{Author, PullRequest};
 
 pub async fn create_release_announcement(
-    last_release_date: Date<Utc>,
     version: String,
 ) -> anyhow::Result<()> {
     let now = Utc::now();
@@ -20,9 +19,7 @@ pub async fn create_release_announcement(
     let week = now.iso_week().week();
 
     let pull_requests =
-        PullRequest::fetch_since_last_release(last_release_date)
-            .await?
-            .into_values();
+        PullRequest::fetch_since_last_release().await?.into_values();
 
     let mut file = create_file(year, week).await?;
     generate_announcement(week, version, pull_requests, &mut file).await?;
