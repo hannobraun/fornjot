@@ -1,6 +1,6 @@
 use fj_math::{Circle, Line, Point, Vector};
 
-use crate::objects::{Curve, CurveKind, Cycle, Edge, Face};
+use crate::objects::{Curve, CurveKind, Cycle, Edge, Face, Vertex};
 
 use super::Reverse;
 
@@ -72,7 +72,11 @@ fn reverse_local_coordinates_in_cycle<'r>(
                 Curve::new(local, *edge.curve().global())
             };
 
-            Edge::from_curve_and_vertices(curve, *edge.vertices())
+            let vertices = edge.vertices().map(|vertex| {
+                Vertex::new(vertex.position(), curve, *vertex.global())
+            });
+
+            Edge::from_curve_and_vertices(curve, vertices)
         });
 
         Cycle::new(surface).with_edges(edges)

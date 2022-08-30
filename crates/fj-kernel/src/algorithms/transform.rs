@@ -138,7 +138,11 @@ impl TransformObject for Surface {
 
 impl TransformObject for Vertex {
     fn transform(self, transform: &Transform) -> Self {
-        Self::new(self.position(), self.global().transform(transform))
+        Self::new(
+            self.position(),
+            self.curve().transform(transform),
+            self.global().transform(transform),
+        )
     }
 }
 

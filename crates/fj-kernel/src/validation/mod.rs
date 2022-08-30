@@ -154,8 +154,8 @@ mod tests {
 
         let deviation = Scalar::from_f64(0.25);
 
-        let a = Vertex::new(Point::from([Scalar::ZERO + deviation]), a);
-        let b = Vertex::new(Point::from([Scalar::ONE]), b);
+        let a = Vertex::new(Point::from([Scalar::ZERO + deviation]), curve, a);
+        let b = Vertex::new(Point::from([Scalar::ONE]), curve, b);
         let vertices = VerticesOfEdge::from_vertices([a, b]);
 
         let edge = Edge::from_curve_and_vertices(curve, vertices);

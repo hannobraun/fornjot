@@ -89,8 +89,8 @@ fn create_non_continuous_side_face(
             };
 
             let vertices = VerticesOfEdge::from_vertices([
-                Vertex::new(Point::from([0.]), a.1),
-                Vertex::new(Point::from([1.]), b.1),
+                Vertex::new(Point::from([0.]), curve, a.1),
+                Vertex::new(Point::from([1.]), curve, b.1),
             ]);
 
             let edge = Edge::from_curve_and_vertices(curve, vertices);
