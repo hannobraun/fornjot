@@ -2,7 +2,7 @@ use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
     algorithms::{approx::Tolerance, reverse::Reverse},
     iter::ObjectIters,
-    objects::{Curve, Cycle, Edge, Face, Sketch},
+    objects::{Cycle, Edge, Face, Sketch},
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
@@ -92,16 +92,10 @@ impl Shape for fj::Difference2d {
 fn add_cycle(cycle: Cycle, reverse: bool) -> Cycle {
     let mut edges = Vec::new();
     for edge in cycle.edges() {
-        let curve_local = if reverse {
-            edge.curve().kind().reverse()
+        let curve = if reverse {
+            edge.curve().reverse()
         } else {
-            *edge.curve().kind()
-        };
-
-        let curve_global = if reverse {
-            edge.curve().global().reverse()
-        } else {
-            *edge.curve().global()
+            *edge.curve()
         };
 
         let vertices = if reverse {
@@ -110,10 +104,7 @@ fn add_cycle(cycle: Cycle, reverse: bool) -> Cycle {
             *edge.vertices()
         };
 
-        let edge = Edge::from_curve_and_vertices(
-            Curve::new(curve_local, curve_global),
-            vertices,
-        );
+        let edge = Edge::from_curve_and_vertices(curve, vertices);
 
         edges.push(edge);
     }
