@@ -44,14 +44,6 @@ impl Surface {
         Self::SweptCurve(SweptCurve { curve, path })
     }
 
-    /// Create a new instance that is reversed
-    #[must_use]
-    pub fn reverse(self) -> Self {
-        match self {
-            Self::SweptCurve(surface) => Self::SweptCurve(surface.reverse()),
-        }
-    }
-
     /// Convert a point in surface coordinates to model coordinates
     pub fn point_from_surface_coords(
         &self,

@@ -2,23 +2,39 @@ use fj_math::{Circle, Line, Point, Vector};
 
 use crate::objects::{Curve, CurveKind, Cycle, Edge, Face};
 
-/// Reverse the direction of a face
-pub fn reverse_face(face: &Face) -> Face {
-    if face.triangles().is_some() {
-        panic!("Reversing tri-rep faces is not supported");
+use super::Reverse;
+
+impl Reverse for Face {
+    fn reverse(self) -> Self {
+        if self.triangles().is_some() {
+            panic!("Reversing tri-rep faces is not supported");
+        }
+
+        let surface = self.surface().reverse();
+
+        let exteriors = reverse_local_coordinates_in_cycle(self.exteriors());
+        let interiors = reverse_local_coordinates_in_cycle(self.interiors());
+
+        Face::new(surface)
+            .with_exteriors(exteriors)
+            .with_interiors(interiors)
+            .with_color(self.color())
     }
-
-    let surface = face.surface().reverse();
-
-    let exteriors = reverse_local_coordinates_in_cycle(face.exteriors());
-    let interiors = reverse_local_coordinates_in_cycle(face.interiors());
-
-    Face::new(surface)
-        .with_exteriors(exteriors)
-        .with_interiors(interiors)
-        .with_color(face.color())
 }
 
+/// Reverse local coordinates within the cycle, leaving global ones as-is
+///
+/// # Implementation Note
+///
+/// This is probably overly complicated. If the orientation of a face were
+/// defined by the direction of the half-edges that bound it, we could reverse
+/// the whole cycle with no weird distinction. The `Reverse` implementation of
+/// `Face` could just use the `Reverse` implementation of `Cycle` then.
+///
+/// Please note that, as of this writing, half-edges don't really exist as a
+/// concept in the kernel. We kind of treat `Edge` as a half-edge, but in an
+/// inconsistent way that causes problems. This issue has some context on that:
+/// <https://github.com/hannobraun/Fornjot/issues/993>
 fn reverse_local_coordinates_in_cycle<'r>(
     cycles: impl IntoIterator<Item = &'r Cycle> + 'r,
 ) -> impl Iterator<Item = Cycle> + 'r {
@@ -67,18 +83,19 @@ fn reverse_local_coordinates_in_cycle<'r>(
 mod tests {
     use pretty_assertions::assert_eq;
 
-    use crate::objects::{Face, Surface};
+    use crate::{
+        algorithms::reverse::Reverse,
+        objects::{Face, Surface},
+    };
 
     #[test]
     fn reverse_face() {
         let surface = Surface::xy_plane();
-        let original = Face::build(surface).polygon_from_points([
-            [0., 0.],
-            [1., 0.],
-            [0., 1.],
-        ]);
+        let original = Face::build(surface)
+            .polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
+            .into_face();
 
-        let reversed = super::reverse_face(&original);
+        let reversed = original.reverse();
 
         let surface = Surface::xy_plane().reverse();
         let expected = Face::build(surface)
