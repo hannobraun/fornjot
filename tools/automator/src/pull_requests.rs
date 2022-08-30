@@ -1,7 +1,6 @@
 use std::collections::BTreeMap;
 
 use anyhow::anyhow;
-use chrono::{Date, Utc};
 use octocrab::{
     models::pulls::PullRequest as OctoPullRequest,
     params::{pulls::Sort, Direction, State},
@@ -17,7 +16,6 @@ pub struct PullRequest {
 
 impl PullRequest {
     pub async fn fetch_since_last_release(
-        last_release_date: Date<Utc>,
     ) -> anyhow::Result<BTreeMap<u64, Self>> {
         let mut pull_requests = BTreeMap::new();
         let mut page = 1u32;
@@ -41,40 +39,37 @@ impl PullRequest {
                 .await?;
 
             for pull_request in pull_request_page.items {
-                if let Some(updated_at) = pull_request.updated_at {
-                    if updated_at.date() < last_release_date {
-                        // This pull request has been updated before the last
-                        // release. Since we sort pull requests by
-                        // updated-descending, that means all following pull
-                        // requests have been updated before the last release,
-                        // and thus couldn't have been merged after.
-                        break 'outer;
+                if let Some(labels) = pull_request.labels.as_ref() {
+                    for label in labels {
+                        if label.name == "release" {
+                            // We have found the most recently updated release
+                            // PR. Unless it has been updated since being merged
+                            // (which we prevent, by locking release PRs as part
+                            // of the release procedure), we can stop here.
+                            break 'outer;
+                        }
                     }
                 }
 
-                if let Some(merged_at) = pull_request.merged_at {
-                    if merged_at.date() >= last_release_date {
-                        let number = pull_request.number;
-                        let title =
-                            pull_request.title.clone().ok_or_else(|| {
-                                anyhow!("Pull request is missing title")
-                            })?;
-                        let url =
-                            pull_request.html_url.clone().ok_or_else(|| {
-                                anyhow!("Pull request is missing URL")
-                            })?;
-                        let author = Author::from_pull_request(&pull_request)?;
+                let number = pull_request.number;
+                let title = pull_request
+                    .title
+                    .clone()
+                    .ok_or_else(|| anyhow!("Pull request is missing title"))?;
+                let url = pull_request
+                    .html_url
+                    .clone()
+                    .ok_or_else(|| anyhow!("Pull request is missing URL"))?;
+                let author = Author::from_pull_request(&pull_request)?;
 
-                        let pull_request = Self {
-                            number,
-                            title,
-                            url,
-                            author,
-                        };
+                let pull_request = Self {
+                    number,
+                    title,
+                    url,
+                    author,
+                };
 
-                        pull_requests.insert(pull_request.number, pull_request);
-                    }
-                }
+                pull_requests.insert(pull_request.number, pull_request);
             }
 
             if pull_request_page.next.is_some() {
