@@ -1,6 +1,7 @@
 //! Reverse the direction/orientation of objects
 
 mod curve;
+mod edge;
 mod face;
 mod surface;
 
