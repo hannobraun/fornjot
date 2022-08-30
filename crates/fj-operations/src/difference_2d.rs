@@ -2,7 +2,7 @@ use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
     algorithms::{approx::Tolerance, reverse::Reverse},
     iter::ObjectIters,
-    objects::{Cycle, Face, Sketch},
+    objects::{Face, Sketch},
     validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
@@ -47,12 +47,10 @@ impl Shape for fj::Difference2d {
                 );
 
                 for cycle in face.exteriors() {
-                    let cycle = add_cycle(cycle.clone(), false);
-                    exteriors.push(cycle);
+                    exteriors.push(cycle.clone());
                 }
                 for cycle in face.interiors() {
-                    let cycle = add_cycle(cycle.clone(), true);
-                    interiors.push(cycle);
+                    interiors.push(cycle.clone().reverse());
                 }
             }
 
@@ -64,8 +62,7 @@ impl Shape for fj::Difference2d {
                 );
 
                 for cycle in face.exteriors() {
-                    let cycle = add_cycle(cycle.clone(), true);
-                    interiors.push(cycle);
+                    interiors.push(cycle.clone().reverse());
                 }
             }
 
@@ -86,13 +83,5 @@ impl Shape for fj::Difference2d {
         // to be bigger than the bounding box of the original shape that another
         // is being subtracted from.
         self.shapes()[0].bounding_volume()
-    }
-}
-
-fn add_cycle(cycle: Cycle, reverse: bool) -> Cycle {
-    if reverse {
-        cycle.reverse()
-    } else {
-        cycle
     }
 }
