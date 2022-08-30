@@ -139,6 +139,8 @@ Improvements that are relevant to developers working on Fornjot itself.
 **TASK: Sort into the categories above; update/merge as appropriate.**
 
 {pull_request_list}
+{pull_request_links}
+{author_links}
 
 ### Issue of the Week
 
@@ -147,11 +149,7 @@ Improvements that are relevant to developers working on Fornjot itself.
 
 ### Outlook
 
-**TASK: Write.**
-
-
-{pull_request_links}
-{author_links}\
+**TASK: Write.**\n\
     "
     )?;
 
