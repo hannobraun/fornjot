@@ -90,16 +90,9 @@ impl Shape for fj::Difference2d {
 }
 
 fn add_cycle(cycle: Cycle, reverse: bool) -> Cycle {
-    let mut edges = Vec::new();
-    for edge in cycle.edges() {
-        let edge = if reverse { edge.reverse() } else { *edge };
-
-        edges.push(edge);
-    }
-
     if reverse {
-        edges.reverse();
+        cycle.reverse()
+    } else {
+        cycle
     }
-
-    Cycle::new(*cycle.surface()).with_edges(edges)
 }
