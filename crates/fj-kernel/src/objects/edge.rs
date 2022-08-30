@@ -1,6 +1,6 @@
 use std::fmt;
 
-use crate::builder::EdgeBuilder;
+use crate::{algorithms::reverse::Reverse, builder::EdgeBuilder};
 
 use super::{Curve, GlobalCurve, GlobalVertex, Vertex};
 
@@ -198,8 +198,8 @@ impl VerticesOfEdge<Vertex> {
     pub fn reverse(self) -> Self {
         Self(self.0.map(|[a, b]| {
             [
-                Vertex::new(-b.position(), *b.global()),
-                Vertex::new(-a.position(), *a.global()),
+                Vertex::new(-b.position(), b.curve().reverse(), *b.global()),
+                Vertex::new(-a.position(), a.curve().reverse(), *a.global()),
             ]
         }))
     }
