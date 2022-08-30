@@ -1,5 +1,6 @@
 //! Sweeping objects along a path to create new objects
 
+mod curve;
 mod edge;
 mod face;
 mod sketch;
