@@ -78,7 +78,12 @@ async fn generate_announcement(
             Some(author)
         };
 
-        let item = format!("- {title} ([#{number}])\n");
+        let thanks = match author.as_ref() {
+            Some(author) => format!("; thank you, [@{}]!", author.name),
+            None => String::new(),
+        };
+
+        let item = format!("- {title} ([#{number}]{thanks})\n");
         pull_request_list.push_str(&item);
 
         let link = format!("[#{number}]: {url}\n");
