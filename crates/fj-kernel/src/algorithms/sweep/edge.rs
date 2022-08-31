@@ -7,8 +7,8 @@ use crate::{
         reverse::Reverse,
     },
     objects::{
-        Curve, CurveKind, Cycle, Edge, Face, GlobalCurve, GlobalVertex,
-        Surface, Vertex, VerticesOfEdge,
+        Curve, CurveKind, Cycle, Edge, Face, GlobalCurve, Surface, Vertex,
+        VerticesOfEdge,
     },
 };
 
@@ -26,14 +26,9 @@ impl Sweep for Edge {
         let path = path.into();
         let tolerance = tolerance.into();
 
-        if let Some(vertices) = self.global().vertices().get() {
-            let face = create_non_continuous_side_face(
-                &self,
-                path,
-                tolerance,
-                vertices.map(|vertex| *vertex),
-                color,
-            );
+        if self.vertices().get().is_some() {
+            let face =
+                create_non_continuous_side_face(&self, path, tolerance, color);
             return face;
         }
 
@@ -45,10 +40,13 @@ fn create_non_continuous_side_face(
     edge: &Edge,
     path: Path,
     tolerance: Tolerance,
-    vertices_bottom: [GlobalVertex; 2],
     color: Color,
 ) -> Face {
+    let vertices_bottom = edge.vertices().get_or_panic();
+
     let vertices = {
+        let vertices_bottom = vertices_bottom.map(|vertex| *vertex.global());
+
         let vertices_top = vertices_bottom.map(|vertex| {
             let side_edge = vertex.sweep(path, tolerance, color);
             let [_, &vertex_top] = side_edge.vertices().get_or_panic();
