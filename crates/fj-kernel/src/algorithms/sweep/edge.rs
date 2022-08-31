@@ -44,6 +44,16 @@ fn create_non_continuous_side_face(
 ) -> Face {
     let vertices_bottom = edge.vertices().get_or_panic();
 
+    let surface = {
+        let edge = if path.is_negative_direction() {
+            edge.reverse()
+        } else {
+            *edge
+        };
+
+        edge.curve().sweep(path, tolerance, color)
+    };
+
     let vertices = {
         let vertices_bottom = vertices_bottom.map(|vertex| *vertex.global());
 
@@ -60,16 +70,6 @@ fn create_non_continuous_side_face(
         } else {
             [a, b, d, c]
         }
-    };
-
-    let surface = {
-        let edge = if path.is_negative_direction() {
-            edge.reverse()
-        } else {
-            *edge
-        };
-
-        edge.curve().sweep(path, tolerance, color)
     };
 
     let cycle = {
