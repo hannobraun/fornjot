@@ -26,6 +26,7 @@ impl Sweep for Edge {
         if let Some(vertices) = self.global().vertices().get() {
             let face = create_non_continuous_side_face(
                 path,
+                tolerance,
                 vertices.map(|vertex| *vertex),
                 color,
             );
@@ -38,13 +39,15 @@ impl Sweep for Edge {
 
 fn create_non_continuous_side_face(
     path: Path,
+    tolerance: Tolerance,
     vertices_bottom: [GlobalVertex; 2],
     color: Color,
 ) -> Face {
     let vertices = {
         let vertices_top = vertices_bottom.map(|vertex| {
-            let position = vertex.position() + path.inner();
-            GlobalVertex::from_position(position)
+            let side_edge = vertex.sweep(path, tolerance, color);
+            let [_, &vertex_top] = side_edge.vertices().get_or_panic();
+            vertex_top
         });
 
         let [[a, b], [c, d]] = [vertices_bottom, vertices_top];
