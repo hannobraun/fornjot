@@ -50,7 +50,9 @@ fn main() -> anyhow::Result<()> {
     let config = Config::load()?;
 
     let mut path = config.default_path.unwrap_or_else(|| PathBuf::from(""));
-    let abs_path_for_models = path.canonicalize().unwrap();
+    let abs_path_for_models = path.canonicalize().with_context(|| {
+        format!("heyeyyy")
+    })?;
 
     let model = args.model.or(config.default_model).ok_or_else(|| {
         anyhow!(
@@ -58,10 +60,10 @@ fn main() -> anyhow::Result<()> {
                 Specify a model by passing `--model path/to/model`."
         )
     })?;
-    // println!("{:}", args.model.as_ref());
+    println!("{0}", model.display());
     path.push(model);
 
-    let new_error_message = format!("inside default models directory: {0}\nCan mainly caused by: \n1. Model '{1}' can not be found inside '{0}' \n2. '{1}' can be mis-typed see inside '{0}' for a match \n3. '{1}' could not be found",abs_path_for_models.display(),&file_name[2]);
+    let new_error_message = format!("inside default models directory: {0}\nCan mainly caused by: \n1. Model '{1}' can not be found inside '{0}' \n2. '{1}' can be mis-typed see inside '{0}' for a match \n3. '{1}' could not be found",abs_path_for_models.display(),&file_name[file_name.len()-1]);
 
     let model = Model::from_path(path.clone()).with_context(|| {
         format!(
