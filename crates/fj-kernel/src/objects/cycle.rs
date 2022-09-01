@@ -24,7 +24,47 @@ impl Cycle {
         surface: Surface,
         edges: impl IntoIterator<Item = Edge>,
     ) -> Self {
-        let edges = edges.into_iter().collect();
+        let edges = edges.into_iter().collect::<Vec<_>>();
+
+        if edges.len() != 1 {
+            // If the length is one, we might have a cycle made up of just one
+            // circle. If that isn't the case, we are dealing with line segments
+            // and can be sure that the following `get_or_panic` calls won't
+            // panic.
+
+            // Verify that all edges connect.
+            for edges in edges.windows(2) {
+                // Can't panic, as we passed `2` to `windows`.
+                //
+                // Can be cleaned up, once `array_windows` is stable"
+                // https://doc.rust-lang.org/std/primitive.slice.html#method.array_windows
+                let [a, b] = [&edges[0], &edges[1]];
+
+                let [_, prev] = a.vertices().get_or_panic();
+                let [next, _] = b.vertices().get_or_panic();
+
+                assert_eq!(
+                    prev.global(),
+                    next.global(),
+                    "Edges in cycle do not connect"
+                );
+            }
+
+            // Verify that the edges form a cycle
+            if let Some(first) = edges.first() {
+                if let Some(last) = edges.last() {
+                    let [first, _] = first.vertices().get_or_panic();
+                    let [_, last] = last.vertices().get_or_panic();
+
+                    assert_eq!(
+                        first.global(),
+                        last.global(),
+                        "Edges do not form a cycle"
+                    );
+                }
+            }
+        }
+
         Self { surface, edges }
     }
 
