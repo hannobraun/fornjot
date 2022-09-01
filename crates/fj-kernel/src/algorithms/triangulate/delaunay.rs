@@ -32,7 +32,7 @@ pub fn triangulate(
     triangles
 }
 
-#[derive(Clone, Copy, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct TriangulationPoint {
     pub point_surface: Point<2>,
     pub point_global: Point<3>,
