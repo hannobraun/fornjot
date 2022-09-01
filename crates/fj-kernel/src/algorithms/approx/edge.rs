@@ -14,19 +14,23 @@ impl Approx for Edge {
         (): Self::Params,
     ) -> Self::Approximation {
         // The range is only used for circles right now.
-        let boundary = {
-            let start_curve = Point::from([Scalar::ZERO]);
-            let end_curve = Point::from([Scalar::TAU]);
+        let boundary = match self.vertices().get() {
+            Some(vertices) => vertices
+                .map(|vertex| (vertex.position(), vertex.global().position())),
+            None => {
+                let start_curve = Point::from([Scalar::ZERO]);
+                let end_curve = Point::from([Scalar::TAU]);
 
-            // We're dealing with a circle here. Start and end are identical
-            // points, in global coordinates.
-            let point_global = self
-                .global()
-                .curve()
-                .kind()
-                .point_from_curve_coords(start_curve);
+                // We're dealing with a circle here. Start and end are identical
+                // points, in global coordinates.
+                let point_global = self
+                    .global()
+                    .curve()
+                    .kind()
+                    .point_from_curve_coords(start_curve);
 
-            [(start_curve, point_global), (end_curve, point_global)]
+                [(start_curve, point_global), (end_curve, point_global)]
+            }
         };
 
         let range = RangeOnCurve { boundary };
