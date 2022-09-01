@@ -37,6 +37,20 @@ impl Edge {
         assert_eq!(curve.global(), global.curve());
         assert_eq!(&vertices.to_global(), global.vertices());
 
+        // Make sure that the edge vertices are not coincident on the curve. If
+        // they were, the edge would have no length, and not be valid.
+        //
+        // It is perfectly fine for global forms of the the vertices to be
+        // coincident (in 3D space). That would just mean, that ends of the edge
+        // connect to each other.
+        if let Some([a, b]) = vertices.get() {
+            assert_ne!(
+                a.position(),
+                b.position(),
+                "Vertices of an edge must not be coincident on curve"
+            );
+        }
+
         Self {
             curve,
             vertices,
