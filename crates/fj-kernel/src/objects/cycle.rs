@@ -20,19 +20,12 @@ impl Cycle {
     }
 
     /// Create a new cycle
-    pub fn new(surface: Surface) -> Self {
-        Self {
-            surface,
-            edges: Vec::new(),
-        }
-    }
-
-    /// Add edges to the cycle
-    ///
-    /// Consumes the cycle and returns the updated instance.
-    pub fn with_edges(mut self, edges: impl IntoIterator<Item = Edge>) -> Self {
-        self.edges.extend(edges);
-        self
+    pub fn new(
+        surface: Surface,
+        edges: impl IntoIterator<Item = Edge>,
+    ) -> Self {
+        let edges = edges.into_iter().collect();
+        Self { surface, edges }
     }
 
     /// Access the surface that this cycle is in

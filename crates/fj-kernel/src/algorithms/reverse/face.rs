@@ -83,7 +83,7 @@ fn reverse_local_coordinates_in_cycle<'r>(
             Edge::from_curve_and_vertices(curve, vertices)
         });
 
-        Cycle::new(surface).with_edges(edges)
+        Cycle::new(surface, edges)
     })
 }
 
