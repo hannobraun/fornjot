@@ -20,7 +20,21 @@ impl<const D: usize> PolyChain<D> {
     pub fn from_points(
         points: impl IntoIterator<Item = impl Into<Point<D>>>,
     ) -> Self {
-        let points = points.into_iter().map(Into::into).collect();
+        let points = points.into_iter().map(Into::into).collect::<Vec<_>>();
+
+        // Validate that we don't have any neighboring points that are the same.
+        // This doesn't ensure that the `PolyChain` is fully valid, but it's
+        // better than nothing.
+        for points in points.windows(2) {
+            // Can't panic, as we passed `2` to `windows`.
+            //
+            // Can be cleaned up, once `array_windows` is stable"
+            // https://doc.rust-lang.org/std/primitive.slice.html#method.array_windows
+            let [a, b] = [&points[0], &points[1]];
+
+            assert_ne!(a, b, "Polygonal chain has duplicate point");
+        }
+
         Self { points }
     }
 
