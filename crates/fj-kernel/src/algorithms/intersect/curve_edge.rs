@@ -84,8 +84,8 @@ mod tests {
     fn compute_edge_in_front_of_curve_origin() {
         let surface = Surface::xy_plane();
         let curve = Curve::build(surface).u_axis();
-        let edge = Edge::build()
-            .line_segment_from_points(&surface, [[1., -1.], [1., 1.]]);
+        let edge = Edge::build(surface)
+            .line_segment_from_points([[1., -1.], [1., 1.]]);
 
         let intersection = CurveEdgeIntersection::compute(&curve, &edge);
 
@@ -101,8 +101,8 @@ mod tests {
     fn compute_edge_behind_curve_origin() {
         let surface = Surface::xy_plane();
         let curve = Curve::build(surface).u_axis();
-        let edge = Edge::build()
-            .line_segment_from_points(&surface, [[-1., -1.], [-1., 1.]]);
+        let edge = Edge::build(surface)
+            .line_segment_from_points([[-1., -1.], [-1., 1.]]);
 
         let intersection = CurveEdgeIntersection::compute(&curve, &edge);
 
@@ -118,8 +118,8 @@ mod tests {
     fn compute_edge_parallel_to_curve() {
         let surface = Surface::xy_plane();
         let curve = Curve::build(surface).u_axis();
-        let edge = Edge::build()
-            .line_segment_from_points(&surface, [[-1., -1.], [1., -1.]]);
+        let edge = Edge::build(surface)
+            .line_segment_from_points([[-1., -1.], [1., -1.]]);
 
         let intersection = CurveEdgeIntersection::compute(&curve, &edge);
 
@@ -130,8 +130,8 @@ mod tests {
     fn compute_edge_on_curve() {
         let surface = Surface::xy_plane();
         let curve = Curve::build(surface).u_axis();
-        let edge = Edge::build()
-            .line_segment_from_points(&surface, [[-1., 0.], [1., 0.]]);
+        let edge = Edge::build(surface)
+            .line_segment_from_points([[-1., 0.], [1., 0.]]);
 
         let intersection = CurveEdgeIntersection::compute(&curve, &edge);
 

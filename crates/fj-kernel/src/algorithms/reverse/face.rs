@@ -69,7 +69,11 @@ fn reverse_local_coordinates_in_cycle<'r>(
                     }
                 };
 
-                Curve::new(local, *edge.curve().global())
+                Curve::new(
+                    edge.curve().surface().reverse(),
+                    local,
+                    *edge.curve().global(),
+                )
             };
 
             let vertices = edge.vertices().map(|vertex| {

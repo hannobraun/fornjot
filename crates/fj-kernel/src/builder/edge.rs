@@ -6,9 +6,18 @@ use crate::objects::{
 };
 
 /// API for building an [`Edge`]
-pub struct EdgeBuilder;
+pub struct EdgeBuilder {
+    surface: Surface,
+}
 
 impl EdgeBuilder {
+    /// Construct a new instance of [`EdgeBuilder`]
+    ///
+    /// Also see [`Edge::build`].
+    pub fn new(surface: Surface) -> Self {
+        Self { surface }
+    }
+
     /// Create a circle from the given radius
     pub fn circle_from_radius(&self, radius: Scalar) -> Edge {
         let curve_local = CurveKind::Circle(Circle::new(
@@ -24,7 +33,7 @@ impl EdgeBuilder {
             )));
 
         Edge::from_curve_and_vertices(
-            Curve::new(curve_local, curve_global),
+            Curve::new(self.surface, curve_local, curve_global),
             VerticesOfEdge::none(),
         )
     }
@@ -32,13 +41,12 @@ impl EdgeBuilder {
     /// Create a line segment from two points
     pub fn line_segment_from_points(
         &self,
-        surface: &Surface,
         points: [impl Into<Point<2>>; 2],
     ) -> Edge {
         let points = points.map(Into::into);
 
         let global_vertices = points.map(|position| {
-            let position = surface.point_from_surface_coords(position);
+            let position = self.surface.point_from_surface_coords(position);
             GlobalVertex::from_position(position)
         });
 
@@ -51,7 +59,7 @@ impl EdgeBuilder {
                 GlobalCurve::from_kind(kind)
             };
 
-            Curve::new(curve_local, curve_global)
+            Curve::new(self.surface, curve_local, curve_global)
         };
 
         let vertices = {

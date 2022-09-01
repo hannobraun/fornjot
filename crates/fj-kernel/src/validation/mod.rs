@@ -131,7 +131,7 @@ mod tests {
 
     use crate::{
         objects::{
-            Curve, CurveKind, Edge, GlobalCurve, GlobalVertex, Vertex,
+            Curve, CurveKind, Edge, GlobalCurve, GlobalVertex, Surface, Vertex,
             VerticesOfEdge,
         },
         validation::{validate, ValidationConfig, ValidationError},
@@ -146,7 +146,7 @@ mod tests {
             let curve_local = CurveKind::line_from_points([[0., 0.], [1., 0.]]);
             let curve_global =
                 GlobalCurve::from_kind(CurveKind::line_from_points([a, b]));
-            Curve::new(curve_local, curve_global)
+            Curve::new(Surface::xy_plane(), curve_local, curve_global)
         };
 
         let a = GlobalVertex::from_position(a);
