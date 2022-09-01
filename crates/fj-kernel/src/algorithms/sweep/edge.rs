@@ -2,7 +2,10 @@ use fj_interop::mesh::Color;
 use fj_math::{Point, Transform, Triangle};
 
 use crate::{
-    algorithms::approx::{Approx, Tolerance},
+    algorithms::{
+        approx::{Approx, Tolerance},
+        reverse::Reverse,
+    },
     objects::{
         Curve, CurveKind, Cycle, Edge, Face, GlobalCurve, GlobalVertex,
         Surface, Vertex, VerticesOfEdge,
@@ -25,7 +28,9 @@ impl Sweep for Edge {
 
         if let Some(vertices) = self.global().vertices().get() {
             let face = create_non_continuous_side_face(
+                &self,
                 path,
+                tolerance,
                 vertices.map(|vertex| *vertex),
                 color,
             );
@@ -37,14 +42,17 @@ impl Sweep for Edge {
 }
 
 fn create_non_continuous_side_face(
+    edge: &Edge,
     path: Path,
+    tolerance: Tolerance,
     vertices_bottom: [GlobalVertex; 2],
     color: Color,
 ) -> Face {
     let vertices = {
         let vertices_top = vertices_bottom.map(|vertex| {
-            let position = vertex.position() + path.inner();
-            GlobalVertex::from_position(position)
+            let side_edge = vertex.sweep(path, tolerance, color);
+            let [_, &vertex_top] = side_edge.vertices().get_or_panic();
+            vertex_top
         });
 
         let [[a, b], [c, d]] = [vertices_bottom, vertices_top];
@@ -57,8 +65,13 @@ fn create_non_continuous_side_face(
     };
 
     let surface = {
-        let [a, b, _, c] = vertices.map(|vertex| vertex.position());
-        Surface::plane_from_points([a, b, c])
+        let edge = if path.is_negative_direction() {
+            edge.reverse()
+        } else {
+            *edge
+        };
+
+        edge.curve().sweep(path, tolerance, color)
     };
 
     let cycle = {
