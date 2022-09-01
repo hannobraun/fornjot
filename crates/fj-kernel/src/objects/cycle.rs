@@ -27,6 +27,16 @@ impl Cycle {
     ) -> Self {
         let edges = edges.into_iter().collect::<Vec<_>>();
 
+        // Verify, that the curves of all edges are defined in the correct
+        // surface.
+        for edge in &edges {
+            assert_eq!(
+                &surface,
+                edge.curve().surface(),
+                "Edges in cycle not defined in same surface"
+            );
+        }
+
         if edges.len() != 1 {
             // If the length is one, we might have a cycle made up of just one
             // circle. If that isn't the case, we are dealing with line segments
