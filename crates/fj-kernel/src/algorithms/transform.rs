@@ -36,10 +36,10 @@ pub trait TransformObject: Sized {
 
 impl TransformObject for Curve {
     fn transform(self, transform: &Transform) -> Self {
-        // Don't need to transform `self.kind`, as that's in local form.
         let surface = self.surface().transform(transform);
         let global = self.global().transform(transform);
 
+        // Don't need to transform `self.kind`, as that's in local form.
         Curve::new(surface, *self.kind(), global)
     }
 }
