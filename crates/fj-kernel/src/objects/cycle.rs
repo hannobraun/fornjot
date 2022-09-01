@@ -3,10 +3,6 @@ use crate::builder::CycleBuilder;
 use super::{Edge, Surface};
 
 /// A cycle of connected edges
-///
-/// The end of each edge in the cycle must connect to the beginning of the next
-/// edge. The end of the last edge must connect to the beginning of the first
-/// one.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
     surface: Surface,
@@ -20,6 +16,11 @@ impl Cycle {
     }
 
     /// Create a new cycle
+    ///
+    /// # Panics
+    ///
+    /// Panic, if the end of each edge does not connect to the beginning of the
+    /// next edge.
     pub fn new(
         surface: Surface,
         edges: impl IntoIterator<Item = Edge>,
