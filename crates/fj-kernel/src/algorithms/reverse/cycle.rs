@@ -13,6 +13,6 @@ impl Reverse for Cycle {
 
         edges.reverse();
 
-        Cycle::new(surface).with_edges(edges)
+        Cycle::new(surface, edges)
     }
 }

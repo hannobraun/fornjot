@@ -98,7 +98,7 @@ fn create_non_continuous_side_face(
             edges.push(edge);
         }
 
-        Cycle::new(surface).with_edges(edges)
+        Cycle::new(surface, edges)
     };
 
     Face::new(surface).with_exteriors([cycle]).with_color(color)
@@ -118,7 +118,7 @@ fn create_continuous_side_face(
     // won't start to matter at some point either.
     let placeholder = Surface::xy_plane();
 
-    let cycle = Cycle::new(placeholder).with_edges([edge]);
+    let cycle = Cycle::new(placeholder, [edge]);
     let approx = cycle.approx(tolerance, ());
 
     let mut quads = Vec::new();
