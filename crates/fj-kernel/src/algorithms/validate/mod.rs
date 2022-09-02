@@ -17,7 +17,10 @@
 mod coherence;
 mod uniqueness;
 
-pub use self::{coherence::CoherenceMismatch, uniqueness::UniquenessIssues};
+pub use self::{
+    coherence::{CoherenceIssues, VertexCoherenceMismatch},
+    uniqueness::UniquenessIssues,
+};
 
 use std::{collections::HashSet, ops::Deref};
 
@@ -59,6 +62,10 @@ where
         config: &ValidationConfig,
     ) -> Result<Validated<Self>, ValidationError> {
         let mut global_vertices = HashSet::new();
+
+        for curve in self.curve_iter() {
+            coherence::validate_curve(curve, config.identical_max_distance)?;
+        }
 
         for global_vertex in self.global_vertex_iter() {
             uniqueness::validate_vertex(
@@ -136,7 +143,7 @@ impl<T> Deref for Validated<T> {
 pub enum ValidationError {
     /// Coherence validation failed
     #[error("Coherence validation failed")]
-    Coherence(#[from] CoherenceMismatch),
+    Coherence(#[from] CoherenceIssues),
 
     /// Geometric validation failed
     #[error("Geometric validation failed")]
@@ -149,7 +156,7 @@ pub enum ValidationError {
 
 #[cfg(test)]
 mod tests {
-    use fj_math::{Point, Scalar};
+    use fj_math::{Line, Point, Scalar};
 
     use crate::{
         algorithms::validate::{Validate, ValidationConfig, ValidationError},
@@ -158,6 +165,22 @@ mod tests {
             VerticesOfEdge,
         },
     };
+
+    #[test]
+    fn coherence_curve() {
+        let line_global = Line::from_points([[0., 0., 0.], [1., 0., 0.]]);
+        let global_curve = GlobalCurve::from_kind(CurveKind::Line(line_global));
+
+        let line_surface = Line::from_points([[0., 0.], [2., 0.]]);
+        let curve = Curve::new(
+            Surface::xy_plane(),
+            CurveKind::Line(line_surface),
+            global_curve,
+        );
+
+        let result = curve.validate();
+        assert!(result.is_err());
+    }
 
     #[test]
     fn coherence_edge() {
