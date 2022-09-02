@@ -42,6 +42,25 @@ impl<const D: usize> Line<D> {
         Self::from_origin_and_direction(a, b - a)
     }
 
+    /// Create a line from two points that include line coordinates
+    ///
+    /// # Panics
+    ///
+    /// Panics, if the points are coincident.
+    pub fn from_points_with_line_coords(
+        points: [(impl Into<Point<1>>, impl Into<Point<D>>); 2],
+    ) -> Self {
+        let [(a_line, a_global), (b_line, b_global)] =
+            points.map(|(point_line, point_global)| {
+                (point_line.into(), point_global.into())
+            });
+
+        let direction = (b_global - a_global) / (b_line - a_line).t;
+        let origin = a_global + direction * -a_line.t;
+
+        Self::from_origin_and_direction(origin, direction)
+    }
+
     /// Access the origin of the line
     ///
     /// The origin is a point on the line which, together with the `direction`
