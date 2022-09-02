@@ -2,7 +2,7 @@ use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::{
         approx::Tolerance,
-        validate::{validate, Validated, ValidationConfig, ValidationError},
+        validate::{Validate, Validated, ValidationConfig, ValidationError},
     },
     objects::Face,
 };
@@ -27,7 +27,7 @@ impl Shape for fj::Group {
         faces.extend(a.into_inner());
         faces.extend(b.into_inner());
 
-        validate(faces, config)
+        faces.validate_with_config(config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

@@ -3,7 +3,7 @@ use fj_kernel::{
     algorithms::{
         approx::Tolerance,
         transform::transform_faces,
-        validate::{validate, Validated, ValidationConfig, ValidationError},
+        validate::{Validate, Validated, ValidationConfig, ValidationError},
     },
     objects::Face,
 };
@@ -27,7 +27,7 @@ impl Shape for fj::Transform {
 
         transform_faces(&mut faces, &make_transform(self));
 
-        validate(faces, config)
+        faces.validate_with_config(config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

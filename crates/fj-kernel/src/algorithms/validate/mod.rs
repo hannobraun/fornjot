@@ -167,7 +167,7 @@ mod tests {
     use fj_math::{Point, Scalar};
 
     use crate::{
-        algorithms::validate::{validate, ValidationConfig, ValidationError},
+        algorithms::validate::{Validate, ValidationConfig, ValidationError},
         objects::{
             Curve, CurveKind, Edge, GlobalCurve, GlobalVertex, Surface, Vertex,
             VerticesOfEdge,
@@ -197,22 +197,16 @@ mod tests {
 
         let edge = Edge::from_curve_and_vertices(curve, vertices);
 
-        let result = validate(
-            edge,
-            &ValidationConfig {
-                identical_max_distance: deviation * 2.,
-                ..ValidationConfig::default()
-            },
-        );
+        let result = edge.validate_with_config(&ValidationConfig {
+            identical_max_distance: deviation * 2.,
+            ..ValidationConfig::default()
+        });
         assert!(result.is_ok());
 
-        let result = validate(
-            edge,
-            &ValidationConfig {
-                identical_max_distance: deviation / 2.,
-                ..ValidationConfig::default()
-            },
-        );
+        let result = edge.validate_with_config(&ValidationConfig {
+            identical_max_distance: deviation / 2.,
+            ..ValidationConfig::default()
+        });
         assert!(result.is_err());
     }
 
@@ -234,11 +228,11 @@ mod tests {
 
         // Adding a vertex should work.
         shape.push(GlobalVertex::from_position(a));
-        validate(shape.clone(), &config)?;
+        shape.clone().validate_with_config(&config)?;
 
         // Adding a second vertex that is considered identical should fail.
         shape.push(GlobalVertex::from_position(b));
-        let result = validate(shape, &config);
+        let result = shape.validate_with_config(&config);
         assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
 
         Ok(())

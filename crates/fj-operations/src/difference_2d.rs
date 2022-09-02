@@ -3,7 +3,7 @@ use fj_kernel::{
     algorithms::{
         approx::Tolerance,
         reverse::Reverse,
-        validate::{validate, Validated, ValidationConfig, ValidationError},
+        validate::{Validate, Validated, ValidationConfig, ValidationError},
     },
     iter::ObjectIters,
     objects::{Face, Sketch},
@@ -78,7 +78,7 @@ impl Shape for fj::Difference2d {
         }
 
         let difference = Sketch::new().with_faces(faces);
-        validate(difference, config)
+        difference.validate_with_config(config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

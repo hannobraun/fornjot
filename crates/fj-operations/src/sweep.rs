@@ -3,7 +3,7 @@ use fj_kernel::{
     algorithms::{
         approx::Tolerance,
         sweep::Sweep,
-        validate::{validate, Validated, ValidationConfig, ValidationError},
+        validate::{Validate, Validated, ValidationConfig, ValidationError},
     },
     objects::Solid,
 };
@@ -26,7 +26,7 @@ impl Shape for fj::Sweep {
         let color = self.shape().color();
 
         let solid = sketch.into_inner().sweep(path, tolerance, Color(color));
-        validate(solid, config)
+        solid.validate_with_config(config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

@@ -28,7 +28,7 @@ use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::{
         approx::Tolerance,
-        validate::{validate, Validated, ValidationConfig, ValidationError},
+        validate::{Validate, Validated, ValidationConfig, ValidationError},
     },
     objects::{Face, Sketch},
 };
@@ -64,26 +64,22 @@ impl Shape for fj::Shape {
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
         match self {
-            Self::Shape2d(shape) => validate(
-                shape
-                    .compute_brep(config, tolerance, debug_info)?
-                    .into_inner()
-                    .into_faces()
-                    .collect(),
-                config,
-            ),
+            Self::Shape2d(shape) => shape
+                .compute_brep(config, tolerance, debug_info)?
+                .into_inner()
+                .into_faces()
+                .collect::<Vec<_>>()
+                .validate_with_config(config),
             Self::Group(shape) => {
                 shape.compute_brep(config, tolerance, debug_info)
             }
-            Self::Sweep(shape) => validate(
-                shape
-                    .compute_brep(config, tolerance, debug_info)?
-                    .into_inner()
-                    .into_shells()
-                    .flat_map(|shell| shell.into_faces())
-                    .collect(),
-                config,
-            ),
+            Self::Sweep(shape) => shape
+                .compute_brep(config, tolerance, debug_info)?
+                .into_inner()
+                .into_shells()
+                .flat_map(|shell| shell.into_faces())
+                .collect::<Vec<_>>()
+                .validate_with_config(config),
             Self::Transform(shape) => {
                 shape.compute_brep(config, tolerance, debug_info)
             }
