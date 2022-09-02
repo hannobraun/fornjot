@@ -669,24 +669,24 @@ impl Renderer {
 /// Error describing the set of render surface initialization errors
 #[derive(Error, Debug)]
 pub enum InitError {
-    #[error("I/O error: {0}")]
     /// General IO error
+    #[error("I/O error: {0}")]
     Io(#[from] io::Error),
 
-    #[error("Error request adapter")]
     /// Graphics accelerator acquisition error
+    #[error("Error request adapter")]
     RequestAdapter,
 
-    #[error("Error requesting device: {0}")]
     /// Device request errors
     ///
     /// See: [wgpu::RequestDeviceError](https://docs.rs/wgpu/latest/wgpu/struct.RequestDeviceError.html)
+    #[error("Error requesting device: {0}")]
     RequestDevice(#[from] wgpu::RequestDeviceError),
 
-    #[error("Error loading font: {0}")]
     /// Error loading font
     ///
     /// See: [ab_glyph::InvalidFont](https://docs.rs/ab_glyph/latest/ab_glyph/struct.InvalidFont.html)
+    #[error("Error loading font: {0}")]
     InvalidFont(#[from] InvalidFont),
 }
 
@@ -695,14 +695,14 @@ pub enum InitError {
 /// Describes errors related to non initialization graphics errors.
 #[derive(Error, Debug)]
 pub enum DrawError {
-    #[error("Error acquiring output surface: {0}")]
     /// Surface drawing error.
     ///
     /// See - [wgpu::SurfaceError](https://docs.rs/wgpu/latest/wgpu/enum.SurfaceError.html)
+    #[error("Error acquiring output surface: {0}")]
     Surface(#[from] wgpu::SurfaceError),
 
-    #[error("Error drawing text: {0}")]
     /// Text rasterisation error.
+    #[error("Error drawing text: {0}")]
     Text(String),
 }
 
