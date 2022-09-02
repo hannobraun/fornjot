@@ -4,7 +4,7 @@ use crate::{Point, Segment};
 ///
 /// The dimensionality of the polygonal chain is defined by the const generic
 /// `D` parameter.
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 #[repr(C)]
 pub struct PolyChain<const D: usize> {
     points: Vec<Point<D>>,
@@ -70,12 +70,6 @@ impl<const D: usize> PolyChain<D> {
     pub fn reverse(mut self) -> Self {
         self.points.reverse();
         self
-    }
-}
-
-impl<const D: usize> Default for PolyChain<D> {
-    fn default() -> Self {
-        Self { points: Vec::new() }
     }
 }
 
