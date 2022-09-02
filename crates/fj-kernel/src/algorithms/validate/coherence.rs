@@ -42,7 +42,9 @@ pub enum CoherenceIssues {
     Vertex(#[from] CoherenceMismatch),
 }
 
-/// A mismatch between the local and global forms of an object
+/// A mismatch between the local and global forms of a vertex
+///
+/// Used in [`CoherenceIssues`].
 #[derive(Debug, Default, thiserror::Error)]
 pub struct CoherenceMismatch {
     /// The local form of the object
