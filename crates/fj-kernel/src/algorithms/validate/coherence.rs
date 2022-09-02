@@ -7,7 +7,7 @@ use crate::objects::Vertex;
 pub fn validate_vertex(
     vertex: &Vertex,
     max_distance: impl Into<Scalar>,
-) -> Result<(), CoherenceMismatch> {
+) -> Result<(), CoherenceIssues> {
     let max_distance = max_distance.into();
 
     // Validate that the local and global forms of the vertex match. As a side
@@ -24,14 +24,22 @@ pub fn validate_vertex(
     let distance = (local_as_global - global).magnitude();
 
     if distance > max_distance {
-        return Err(CoherenceMismatch {
+        Err(CoherenceMismatch {
             local,
             local_as_global,
             global,
-        });
+        })?
     }
 
     Ok(())
+}
+
+/// Issues in coherence validation
+#[derive(Debug, thiserror::Error)]
+pub enum CoherenceIssues {
+    /// Mismatch between the local and global coordinates of a vertex
+    #[error("Mismatch between local and global coordinates of vertex")]
+    Vertex(#[from] CoherenceMismatch),
 }
 
 /// A mismatch between the local and global forms of an object
