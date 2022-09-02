@@ -1,8 +1,11 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
-    algorithms::{approx::Tolerance, transform::transform_faces},
+    algorithms::{
+        approx::Tolerance,
+        transform::transform_faces,
+        validate::{validate, Validated, ValidationConfig, ValidationError},
+    },
     objects::Face,
-    validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::{Aabb, Transform, Vector};
 

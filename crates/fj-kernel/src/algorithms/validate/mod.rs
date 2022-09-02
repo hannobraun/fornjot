@@ -130,11 +130,11 @@ mod tests {
     use fj_math::{Point, Scalar};
 
     use crate::{
+        algorithms::validate::{validate, ValidationConfig, ValidationError},
         objects::{
             Curve, CurveKind, Edge, GlobalCurve, GlobalVertex, Surface, Vertex,
             VerticesOfEdge,
         },
-        validation::{validate, ValidationConfig, ValidationError},
     };
 
     #[test]

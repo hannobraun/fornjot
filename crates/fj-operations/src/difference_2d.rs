@@ -1,9 +1,12 @@
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
-    algorithms::{approx::Tolerance, reverse::Reverse},
+    algorithms::{
+        approx::Tolerance,
+        reverse::Reverse,
+        validate::{validate, Validated, ValidationConfig, ValidationError},
+    },
     iter::ObjectIters,
     objects::{Face, Sketch},
-    validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
 

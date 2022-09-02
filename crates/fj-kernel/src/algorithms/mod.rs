@@ -10,5 +10,6 @@ pub mod intersect;
 pub mod reverse;
 pub mod sweep;
 pub mod transform;
+pub mod validate;
 
 pub use self::triangulate::triangulate;

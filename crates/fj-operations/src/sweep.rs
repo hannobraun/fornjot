@@ -1,8 +1,11 @@
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
-    algorithms::{approx::Tolerance, sweep::Sweep},
+    algorithms::{
+        approx::Tolerance,
+        sweep::Sweep,
+        validate::{validate, Validated, ValidationConfig, ValidationError},
+    },
     objects::Solid,
-    validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::{Aabb, Vector};
 

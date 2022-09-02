@@ -1,8 +1,10 @@
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
-    algorithms::approx::Tolerance,
+    algorithms::{
+        approx::Tolerance,
+        validate::{validate, Validated, ValidationConfig, ValidationError},
+    },
     objects::{Cycle, Edge, Face, Sketch, Surface},
-    validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::{Aabb, Point, Scalar};
 
