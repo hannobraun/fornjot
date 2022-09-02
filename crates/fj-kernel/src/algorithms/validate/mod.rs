@@ -18,7 +18,7 @@ mod coherence;
 mod uniqueness;
 
 pub use self::{
-    coherence::{CoherenceIssues, CoherenceMismatch},
+    coherence::{CoherenceIssues, VertexCoherenceMismatch},
     uniqueness::UniquenessIssues,
 };
 

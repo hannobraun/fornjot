@@ -24,7 +24,7 @@ pub fn validate_vertex(
     let distance = (local_as_global - global).magnitude();
 
     if distance > max_distance {
-        Err(CoherenceMismatch {
+        Err(VertexCoherenceMismatch {
             local,
             local_as_global,
             global,
@@ -39,14 +39,14 @@ pub fn validate_vertex(
 pub enum CoherenceIssues {
     /// Mismatch between the local and global coordinates of a vertex
     #[error("Mismatch between local and global coordinates of vertex")]
-    Vertex(#[from] CoherenceMismatch),
+    Vertex(#[from] VertexCoherenceMismatch),
 }
 
 /// A mismatch between the local and global forms of a vertex
 ///
 /// Used in [`CoherenceIssues`].
 #[derive(Debug, Default, thiserror::Error)]
-pub struct CoherenceMismatch {
+pub struct VertexCoherenceMismatch {
     /// The local form of the object
     pub local: Point<1>,
 
@@ -57,7 +57,7 @@ pub struct CoherenceMismatch {
     pub global: Point<3>,
 }
 
-impl fmt::Display for CoherenceMismatch {
+impl fmt::Display for VertexCoherenceMismatch {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
