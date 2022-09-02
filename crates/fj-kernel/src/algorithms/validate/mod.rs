@@ -17,10 +17,7 @@
 mod coherence;
 mod uniqueness;
 
-pub use self::{
-    coherence::{CoherenceIssues, CoherenceMismatch},
-    uniqueness::UniquenessIssues,
-};
+pub use self::{coherence::CoherenceMismatch, uniqueness::UniquenessIssues};
 
 use std::{collections::HashSet, ops::Deref};
 
@@ -139,7 +136,7 @@ impl<T> Deref for Validated<T> {
 pub enum ValidationError {
     /// Coherence validation failed
     #[error("Coherence validation failed")]
-    Coherence(#[from] CoherenceIssues),
+    Coherence(#[from] CoherenceMismatch),
 
     /// Geometric validation failed
     #[error("Geometric validation failed")]
