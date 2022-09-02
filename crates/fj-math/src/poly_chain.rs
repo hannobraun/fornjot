@@ -13,7 +13,7 @@ pub struct PolyChain<const D: usize> {
 impl<const D: usize> PolyChain<D> {
     /// Create an empty `PolyChain`
     pub fn new() -> Self {
-        Self { points: Vec::new() }
+        Self::default()
     }
 
     /// Construct a polygonal chain from a number of points
@@ -75,7 +75,7 @@ impl<const D: usize> PolyChain<D> {
 
 impl<const D: usize> Default for PolyChain<D> {
     fn default() -> Self {
-        Self::new()
+        Self { points: Vec::new() }
     }
 }
 
