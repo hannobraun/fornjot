@@ -4,7 +4,7 @@ use crate::{Point, Scalar, Triangle, Vector};
 ///
 /// The dimensionality of the line is defined by the const generic `D`
 /// parameter.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 #[repr(C)]
 pub struct Line<const D: usize> {
     origin: Point<D>,

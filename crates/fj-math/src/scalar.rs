@@ -14,7 +14,7 @@ use decorum::R64;
 /// value is not NaN. This allows `Scalar` to provide implementations of [`Eq`],
 /// [`Ord`], and [`Hash`], enabling `Scalar` (and types built on top of it), to
 /// be used as keys in hash maps, hash sets, and similar types.
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Default)]
 #[repr(C)]
 pub struct Scalar(f64);
 

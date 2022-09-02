@@ -8,7 +8,7 @@ use super::{Aabb, Point, Segment, Triangle, Vector};
 
 /// An affine transform
 #[repr(C)]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Default)]
 pub struct Transform(nalgebra::Transform<f64, nalgebra::TAffine, 3>);
 
 impl Transform {
