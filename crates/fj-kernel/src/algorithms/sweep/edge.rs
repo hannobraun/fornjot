@@ -1,5 +1,5 @@
 use fj_interop::mesh::Color;
-use fj_math::{Point, Transform, Triangle};
+use fj_math::{Line, Point, Scalar, Transform, Triangle};
 
 use crate::{
     algorithms::{
@@ -7,8 +7,8 @@ use crate::{
         reverse::Reverse,
     },
     objects::{
-        Curve, CurveKind, Cycle, Edge, Face, GlobalCurve, GlobalVertex,
-        Surface, Vertex, VerticesOfEdge,
+        Curve, CurveKind, Cycle, Edge, Face, GlobalCurve, GlobalEdge, Surface,
+        Vertex, VerticesOfEdge,
     },
 };
 
@@ -26,14 +26,9 @@ impl Sweep for Edge {
         let path = path.into();
         let tolerance = tolerance.into();
 
-        if let Some(vertices) = self.global().vertices().get() {
-            let face = create_non_continuous_side_face(
-                &self,
-                path,
-                tolerance,
-                vertices.map(|vertex| *vertex),
-                color,
-            );
+        if self.vertices().get().is_some() {
+            let face =
+                create_non_continuous_side_face(&self, path, tolerance, color);
             return face;
         }
 
@@ -45,70 +40,123 @@ fn create_non_continuous_side_face(
     edge: &Edge,
     path: Path,
     tolerance: Tolerance,
-    vertices_bottom: [GlobalVertex; 2],
     color: Color,
 ) -> Face {
-    let vertices = {
-        let vertices_top = vertices_bottom.map(|vertex| {
-            let side_edge = vertex.sweep(path, tolerance, color);
-            let [_, &vertex_top] = side_edge.vertices().get_or_panic();
-            vertex_top
-        });
-
-        let [[a, b], [c, d]] = [vertices_bottom, vertices_top];
-
-        if path.is_negative_direction() {
-            [b, a, c, d]
-        } else {
-            [a, b, d, c]
-        }
+    let edge = if path.is_negative_direction() {
+        edge.reverse()
+    } else {
+        *edge
     };
 
-    let surface = {
-        let edge = if path.is_negative_direction() {
-            edge.reverse()
-        } else {
-            *edge
+    let surface = edge.curve().sweep(path, tolerance, color);
+
+    // We can't use the edge we're sweeping from as the bottom edge, as that is
+    // not defined in the right surface. Let's create a new bottom edge, by
+    // swapping the surface of the original.
+    let bottom_edge = {
+        let vertices = edge.vertices().get_or_panic();
+
+        let curve = {
+            let points = vertices.map(|vertex| {
+                (vertex.position(), [vertex.position().t, Scalar::ZERO])
+            });
+            let kind =
+                CurveKind::Line(Line::from_points_with_line_coords(points));
+
+            Curve::new(surface, kind, *edge.curve().global())
         };
 
-        edge.curve().sweep(path, tolerance, color)
+        let vertices = {
+            let vertices = vertices.map(|vertex| {
+                Vertex::new(vertex.position(), curve, *vertex.global())
+            });
+            VerticesOfEdge::from_vertices(vertices)
+        };
+
+        Edge::new(curve, vertices, *edge.global())
+    };
+
+    let side_edges = bottom_edge
+        .vertices()
+        .get_or_panic()
+        .map(|&vertex| (vertex, surface).sweep(path, tolerance, color));
+
+    let top_edge = {
+        let bottom_vertices = bottom_edge.vertices().get_or_panic();
+        let points_surface = bottom_vertices
+            .map(|vertex| Point::from([vertex.position().t, Scalar::ONE]));
+
+        let global_vertices = side_edges.map(|edge| {
+            let [_, vertex] = edge.vertices().get_or_panic();
+            *vertex.global()
+        });
+
+        let curve = {
+            let [a_curve, b_curve] =
+                bottom_vertices.map(|vertex| vertex.position());
+            let [a_surface, b_surface] = points_surface;
+            let [a_global, b_global] =
+                global_vertices.map(|vertex| vertex.position());
+
+            let global = {
+                let line = Line::from_points_with_line_coords([
+                    (a_curve, a_global),
+                    (b_curve, b_global),
+                ]);
+
+                GlobalCurve::from_kind(CurveKind::Line(line))
+            };
+
+            let line = Line::from_points_with_line_coords([
+                (a_curve, a_surface),
+                (b_curve, b_surface),
+            ]);
+
+            Curve::new(surface, CurveKind::Line(line), global)
+        };
+
+        let global = {
+            GlobalEdge::new(
+                *curve.global(),
+                VerticesOfEdge::from_vertices(global_vertices),
+            )
+        };
+
+        let vertices = {
+            // Can be cleaned up, once `zip` is stable:
+            // https://doc.rust-lang.org/std/primitive.array.html#method.zip
+            let [a_bottom, b_bottom] = bottom_vertices;
+            let [a_global, b_global] = global_vertices;
+            let vertices = [(a_bottom, a_global), (b_bottom, b_global)];
+
+            vertices.map(|(bottom, global)| {
+                Vertex::new(bottom.position(), curve, global)
+            })
+        };
+
+        Edge::new(curve, VerticesOfEdge::from_vertices(vertices), global)
     };
 
     let cycle = {
-        let [a, b, c, d] = vertices;
+        let a = bottom_edge;
+        let [d, b] = side_edges;
+        let c = top_edge;
 
-        let mut vertices =
-            vec![([0., 0.], a), ([1., 0.], b), ([1., 1.], c), ([0., 1.], d)];
-        if let Some(vertex) = vertices.first().cloned() {
-            vertices.push(vertex);
-        }
+        let mut edges = [a, b, c, d];
 
-        let mut edges = Vec::new();
-        for vertices in vertices.windows(2) {
-            // Can't panic, as we passed `2` to `windows`.
-            //
-            // Can be cleaned up, once `array_windows` is stable"
-            // https://doc.rust-lang.org/std/primitive.slice.html#method.array_windows
-            let [a, b] = [&vertices[0], &vertices[1]];
+        // Make sure that edges are oriented correctly.
+        let mut i = 0;
+        while i < edges.len() {
+            let j = (i + 1) % edges.len();
 
-            let curve = {
-                let local = CurveKind::line_from_points([a.0, b.0]);
+            let [_, prev_last] = edges[i].vertices().get_or_panic();
+            let [next_first, _] = edges[j].vertices().get_or_panic();
 
-                let global = [a, b].map(|vertex| vertex.1.position());
-                let global =
-                    GlobalCurve::from_kind(CurveKind::line_from_points(global));
+            if prev_last.global() != next_first.global() {
+                edges[j] = edges[j].reverse();
+            }
 
-                Curve::new(surface, local, global)
-            };
-
-            let vertices = VerticesOfEdge::from_vertices([
-                Vertex::new(Point::from([0.]), curve, a.1),
-                Vertex::new(Point::from([1.]), curve, b.1),
-            ]);
-
-            let edge = Edge::from_curve_and_vertices(curve, vertices);
-
-            edges.push(edge);
+            i += 1;
         }
 
         Cycle::new(surface, edges)
