@@ -176,7 +176,7 @@ impl Renderer {
             format: color_format,
             width,
             height,
-            present_mode: wgpu::PresentMode::Mailbox,
+            present_mode: wgpu::PresentMode::AutoVsync,
         };
         surface.configure(&device, &surface_config);
 
