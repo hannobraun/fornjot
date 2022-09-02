@@ -72,7 +72,7 @@ impl fmt::Display for CoherenceIssues {
 /// A mismatch between the local and global forms of an object
 ///
 /// Used in [`CoherenceIssues`].
-#[derive(Debug)]
+#[derive(Debug, Default, thiserror::Error)]
 pub struct CoherenceMismatch {
     /// The local form of the object
     pub local: Point<1>,
