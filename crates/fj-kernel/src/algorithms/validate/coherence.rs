@@ -2,20 +2,7 @@ use std::fmt;
 
 use fj_math::{Point, Scalar};
 
-use crate::objects::{Edge, Vertex};
-
-pub fn validate_edge(
-    edge: &Edge,
-    max_distance: impl Into<Scalar>,
-) -> Result<(), CoherenceIssues> {
-    let max_distance = max_distance.into();
-
-    for vertex in edge.vertices().iter() {
-        validate_vertex(vertex, max_distance)?;
-    }
-
-    Ok(())
-}
+use crate::objects::Vertex;
 
 pub fn validate_vertex(
     vertex: &Vertex,

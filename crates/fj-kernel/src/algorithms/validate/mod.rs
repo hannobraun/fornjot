@@ -72,9 +72,8 @@ where
 
             global_vertices.insert(*global_vertex);
         }
-
-        for edge in self.edge_iter() {
-            coherence::validate_edge(edge, config.identical_max_distance)?;
+        for vertex in self.vertex_iter() {
+            coherence::validate_vertex(vertex, config.identical_max_distance)?;
         }
 
         Ok(Validated(self))
