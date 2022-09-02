@@ -35,8 +35,6 @@ pub fn validate_vertex(
 }
 
 /// A mismatch between the local and global forms of an object
-///
-/// Used in [`CoherenceIssues`].
 #[derive(Debug, Default, thiserror::Error)]
 pub struct CoherenceMismatch {
     /// The local form of the object
