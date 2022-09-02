@@ -1,8 +1,11 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
-    algorithms::{approx::Tolerance, transform::transform_faces},
+    algorithms::{
+        approx::Tolerance,
+        transform::transform_faces,
+        validate::{Validate, Validated, ValidationConfig, ValidationError},
+    },
     objects::Face,
-    validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::{Aabb, Transform, Vector};
 
@@ -24,7 +27,7 @@ impl Shape for fj::Transform {
 
         transform_faces(&mut faces, &make_transform(self));
 
-        validate(faces, config)
+        faces.validate_with_config(config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

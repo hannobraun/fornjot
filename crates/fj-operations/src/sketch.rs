@@ -1,8 +1,10 @@
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
-    algorithms::approx::Tolerance,
+    algorithms::{
+        approx::Tolerance,
+        validate::{Validate, Validated, ValidationConfig, ValidationError},
+    },
     objects::{Cycle, Edge, Face, Sketch, Surface},
-    validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::{Aabb, Point, Scalar};
 
@@ -44,7 +46,7 @@ impl Shape for fj::Sketch {
         };
 
         let sketch = Sketch::new().with_faces([face]);
-        validate(sketch, config)
+        sketch.validate_with_config(config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

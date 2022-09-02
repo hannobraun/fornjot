@@ -1,9 +1,12 @@
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
-    algorithms::{approx::Tolerance, reverse::Reverse},
+    algorithms::{
+        approx::Tolerance,
+        reverse::Reverse,
+        validate::{Validate, Validated, ValidationConfig, ValidationError},
+    },
     iter::ObjectIters,
     objects::{Face, Sketch},
-    validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
 
@@ -75,7 +78,7 @@ impl Shape for fj::Difference2d {
         }
 
         let difference = Sketch::new().with_faces(faces);
-        validate(difference, config)
+        difference.validate_with_config(config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
