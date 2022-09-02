@@ -61,16 +61,16 @@ where
         self,
         config: &ValidationConfig,
     ) -> Result<Validated<Self>, ValidationError> {
-        let mut vertices = HashSet::new();
+        let mut global_vertices = HashSet::new();
 
         for global_vertex in self.global_vertex_iter() {
             uniqueness::validate_vertex(
                 global_vertex,
-                &vertices,
+                &global_vertices,
                 config.distinct_min_distance,
             )?;
 
-            vertices.insert(*global_vertex);
+            global_vertices.insert(*global_vertex);
         }
 
         for edge in self.edge_iter() {
