@@ -50,7 +50,7 @@ pub fn validate_vertex(
 #[derive(Debug, Default, thiserror::Error)]
 pub struct CoherenceIssues {
     /// Mismatches between the local and global forms of edge vertices
-    pub edge_vertex_mismatches: Vec<CoherenceMismatch<Point<1>, Point<3>>>,
+    pub edge_vertex_mismatches: Vec<CoherenceMismatch>,
 }
 
 impl fmt::Display for CoherenceIssues {
@@ -73,22 +73,18 @@ impl fmt::Display for CoherenceIssues {
 ///
 /// Used in [`CoherenceIssues`].
 #[derive(Debug)]
-pub struct CoherenceMismatch<Local, Global> {
+pub struct CoherenceMismatch {
     /// The local form of the object
-    pub local: Local,
+    pub local: Point<1>,
 
     /// The local form of the object, converted into the global form
-    pub local_as_global: Global,
+    pub local_as_global: Point<3>,
 
     /// The global form of the object
-    pub global: Global,
+    pub global: Point<3>,
 }
 
-impl<Local, Canonical> fmt::Display for CoherenceMismatch<Local, Canonical>
-where
-    Local: fmt::Debug,
-    Canonical: fmt::Debug,
-{
+impl fmt::Display for CoherenceMismatch {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
