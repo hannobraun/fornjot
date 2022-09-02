@@ -2,7 +2,7 @@ use std::fmt;
 
 use fj_math::{Point, Scalar};
 
-use crate::objects::Edge;
+use crate::objects::{Edge, Vertex};
 
 pub fn validate_edge(
     edge: &Edge,
@@ -10,26 +10,40 @@ pub fn validate_edge(
 ) -> Result<(), CoherenceIssues> {
     let max_distance = max_distance.into();
 
-    // Validate that the local and global forms of the vertices match. As a side
-    // effect, this also happens to validate that the global forms of the
-    // vertices lie on the curve.
+    for vertex in edge.vertices().iter() {
+        validate_vertex(vertex, max_distance)?;
+    }
+
+    Ok(())
+}
+
+pub fn validate_vertex(
+    vertex: &Vertex,
+    max_distance: impl Into<Scalar>,
+) -> Result<(), CoherenceIssues> {
+    let max_distance = max_distance.into();
+
+    // Validate that the local and global forms of the vertex match. As a side
+    // effect, this also happens to validate that the global form of the vertex
+    // lies on the curve.
 
     let mut edge_vertex_mismatches = Vec::new();
 
-    for vertex in edge.vertices().iter() {
-        let local = vertex.position();
-        let local_as_global =
-            edge.curve().global().kind().point_from_curve_coords(local);
-        let global = vertex.global().position();
-        let distance = (local_as_global - global).magnitude();
+    let local = vertex.position();
+    let local_as_global = vertex
+        .curve()
+        .global()
+        .kind()
+        .point_from_curve_coords(local);
+    let global = vertex.global().position();
+    let distance = (local_as_global - global).magnitude();
 
-        if distance > max_distance {
-            edge_vertex_mismatches.push(CoherenceMismatch {
-                local,
-                local_as_global,
-                global,
-            });
-        }
+    if distance > max_distance {
+        edge_vertex_mismatches.push(CoherenceMismatch {
+            local,
+            local_as_global,
+            global,
+        });
     }
 
     if !edge_vertex_mismatches.is_empty() {
