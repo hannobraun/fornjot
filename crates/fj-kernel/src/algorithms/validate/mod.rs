@@ -28,6 +28,43 @@ use fj_math::Scalar;
 
 use crate::iter::ObjectIters;
 
+/// Validate an object
+pub trait Validate: Sized {
+    /// Validate the object using default configuration
+    ///
+    /// The following calls are equivalent:
+    /// ``` rust
+    /// # use fj_kernel::{
+    /// #     algorithms::validate::{Validate, ValidationConfig},
+    /// #     objects::GlobalVertex,
+    /// # };
+    /// # let object = GlobalVertex::from_position([0., 0., 0.]);
+    /// object.validate();
+    /// object.validate_with_config(&ValidationConfig::default());
+    /// ```
+    fn validate(self) -> Result<Validated<Self>, ValidationError> {
+        self.validate_with_config(&ValidationConfig::default())
+    }
+
+    /// Validate the object
+    fn validate_with_config(
+        self,
+        config: &ValidationConfig,
+    ) -> Result<Validated<Self>, ValidationError>;
+}
+
+impl<T> Validate for T
+where
+    T: for<'r> ObjectIters<'r>,
+{
+    fn validate_with_config(
+        self,
+        config: &ValidationConfig,
+    ) -> Result<Validated<Self>, ValidationError> {
+        validate(self, config)
+    }
+}
+
 /// Validate the given object
 pub fn validate<T>(
     object: T,
