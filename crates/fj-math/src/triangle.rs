@@ -9,7 +9,7 @@ use super::{Point, Scalar};
 ///
 /// The dimensionality of the triangle is defined by the const generic `D`
 /// parameter.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 #[repr(C)]
 pub struct Triangle<const D: usize> {
     points: [Point<D>; 3],

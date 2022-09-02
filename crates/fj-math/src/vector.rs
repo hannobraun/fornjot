@@ -222,6 +222,13 @@ impl ops::DerefMut for Vector<3> {
     }
 }
 
+impl<const D: usize> Default for Vector<D> {
+    fn default() -> Self {
+        let components = [Scalar::default(); D];
+        Self { components }
+    }
+}
+
 impl<const D: usize> From<[Scalar; D]> for Vector<D> {
     fn from(components: [Scalar; D]) -> Self {
         Self { components }

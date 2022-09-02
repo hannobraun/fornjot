@@ -3,7 +3,7 @@ use parry3d_f64::bounding_volume::BoundingVolume as _;
 use super::{Point, Vector};
 
 /// An axis-aligned bounding box (AABB)
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 #[repr(C)]
 pub struct Aabb<const D: usize> {
     /// The minimum coordinates of the AABB
