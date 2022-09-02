@@ -324,7 +324,20 @@ impl Renderer {
             bytemuck::cast_slice(&[uniforms]),
         );
 
-        let surface_texture = self.surface.get_current_texture()?;
+        let surface_texture = match self.surface.get_current_texture() {
+            Ok(surface_texture) => surface_texture,
+            Err(wgpu::SurfaceError::Timeout) => {
+                // I'm seeing this all the time now (as in, multiple times per
+                // microsecond), which `PresentMode::AutoVsync`. Not sure what's
+                // going on, but for now, it works to just ignore it.
+                //
+                // Issues for reference:
+                // - https://github.com/gfx-rs/wgpu/issues/1218
+                // - https://github.com/gfx-rs/wgpu/issues/1565
+                return Ok(());
+            }
+            result => result?,
+        };
         let color_view = surface_texture
             .texture
             .create_view(&wgpu::TextureViewDescriptor::default());
