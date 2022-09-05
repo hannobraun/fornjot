@@ -16,7 +16,7 @@ categories = ["encoding", "mathematics", "rendering"]
 
 
 [dependencies]
-futures = "0.3.23"
+futures = "0.3.24"
 thiserror = "1.0.32"
 tracing = "0.1.35"
 winit = "0.27.2"
