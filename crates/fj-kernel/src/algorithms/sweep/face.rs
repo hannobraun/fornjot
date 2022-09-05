@@ -1,7 +1,9 @@
 use fj_interop::mesh::Color;
 
 use crate::{
-    algorithms::{approx::Tolerance, reverse_face, transform::TransformObject},
+    algorithms::{
+        approx::Tolerance, reverse::Reverse, transform::TransformObject,
+    },
     objects::{Face, Shell},
 };
 
@@ -46,7 +48,7 @@ fn create_bottom_face(
     if is_sweep_along_negative_direction {
         face.clone()
     } else {
-        reverse_face(face)
+        face.clone().reverse()
     }
 }
 
@@ -54,7 +56,7 @@ fn create_top_face(face: Face, path: Path) -> Face {
     let mut face = face.translate(path.inner());
 
     if path.is_negative_direction() {
-        face = reverse_face(&face);
+        face = face.reverse();
     };
 
     face

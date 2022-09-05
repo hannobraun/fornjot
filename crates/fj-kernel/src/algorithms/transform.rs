@@ -36,27 +36,26 @@ pub trait TransformObject: Sized {
 
 impl TransformObject for Curve {
     fn transform(self, transform: &Transform) -> Self {
-        // Don't need to transform `self.kind`, as that's in local form.
+        let surface = self.surface().transform(transform);
         let global = self.global().transform(transform);
 
-        Curve::new(*self.kind(), global)
+        // Don't need to transform `self.kind`, as that's in local form.
+        Curve::new(surface, *self.kind(), global)
     }
 }
 
 impl TransformObject for Cycle {
     fn transform(self, transform: &Transform) -> Self {
-        Self::new(self.surface().transform(transform))
-            .with_edges(self.into_edges().map(|edge| edge.transform(transform)))
+        Self::new(
+            self.surface().transform(transform),
+            self.into_edges().map(|edge| edge.transform(transform)),
+        )
     }
 }
 
 impl TransformObject for Edge {
     fn transform(self, transform: &Transform) -> Self {
-        let curve = Curve::new(
-            *self.curve().kind(),
-            self.curve().global().transform(transform),
-        );
-
+        let curve = self.curve().transform(transform);
         let vertices =
             self.vertices().map(|vertex| vertex.transform(transform));
 
@@ -138,7 +137,11 @@ impl TransformObject for Surface {
 
 impl TransformObject for Vertex {
     fn transform(self, transform: &Transform) -> Self {
-        Self::new(self.position(), self.global().transform(transform))
+        Self::new(
+            self.position(),
+            self.curve().transform(transform),
+            self.global().transform(transform),
+        )
     }
 }
 

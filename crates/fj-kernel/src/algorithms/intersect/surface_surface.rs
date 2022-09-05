@@ -18,10 +18,13 @@ impl SurfaceSurfaceIntersection {
         // Adaptations were made to get the intersection curves in local
         // coordinates for each surface.
 
-        let planes_parametric =
-            surfaces.map(PlaneParametric::extract_from_surface);
-        let [a, b] = planes_parametric
-            .map(|plane| PlaneConstantNormal::from_parametric_plane(&plane));
+        let planes_parametric = surfaces.map(|surface| {
+            let plane = PlaneParametric::extract_from_surface(surface);
+            (*surface, plane)
+        });
+        let [a, b] = planes_parametric.map(|(_, plane)| {
+            PlaneConstantNormal::from_parametric_plane(&plane)
+        });
 
         let direction = a.normal.cross(&b.normal);
 
@@ -44,13 +47,13 @@ impl SurfaceSurfaceIntersection {
 
         let line = Line::from_origin_and_direction(origin, direction);
 
-        let curves = planes_parametric.map(|plane| {
+        let curves = planes_parametric.map(|(surface, plane)| {
             let local = project_line_into_plane(&line, &plane);
             let global = CurveKind::Line(Line::from_origin_and_direction(
                 origin, direction,
             ));
 
-            Curve::new(local, GlobalCurve::from_kind(global))
+            Curve::new(surface, local, GlobalCurve::from_kind(global))
         });
 
         Some(Self {
@@ -69,16 +72,22 @@ struct PlaneParametric {
 
 impl PlaneParametric {
     pub fn extract_from_surface(surface: &Surface) -> Self {
-        let Surface::SweptCurve(surface) = surface;
-        let line = match surface.curve {
-            CurveKind::Line(line) => line,
-            _ => todo!("Only plane-plane intersection is currently supported."),
+        let (line, path) = {
+            let Surface::SweptCurve(surface) = surface;
+            let line = match surface.curve {
+                CurveKind::Line(line) => line,
+                _ => todo!(
+                    "Only plane-plane intersection is currently supported."
+                ),
+            };
+
+            (line, surface.path)
         };
 
         Self {
             origin: line.origin(),
             u: line.direction(),
-            v: surface.path,
+            v: path,
         }
     }
 }

@@ -18,7 +18,7 @@ mod coherence;
 mod uniqueness;
 
 pub use self::{
-    coherence::{CoherenceIssues, CoherenceMismatch},
+    coherence::{CoherenceIssues, VertexCoherenceMismatch},
     uniqueness::UniquenessIssues,
 };
 
@@ -28,31 +28,60 @@ use fj_math::Scalar;
 
 use crate::iter::ObjectIters;
 
-/// Validate the given object
-pub fn validate<T>(
-    object: T,
-    config: &ValidationConfig,
-) -> Result<Validated<T>, ValidationError>
+/// Validate an object
+pub trait Validate: Sized {
+    /// Validate the object using default configuration
+    ///
+    /// The following calls are equivalent:
+    /// ``` rust
+    /// # use fj_kernel::{
+    /// #     algorithms::validate::{Validate, ValidationConfig},
+    /// #     objects::GlobalVertex,
+    /// # };
+    /// # let object = GlobalVertex::from_position([0., 0., 0.]);
+    /// object.validate();
+    /// object.validate_with_config(&ValidationConfig::default());
+    /// ```
+    fn validate(self) -> Result<Validated<Self>, ValidationError> {
+        self.validate_with_config(&ValidationConfig::default())
+    }
+
+    /// Validate the object
+    fn validate_with_config(
+        self,
+        config: &ValidationConfig,
+    ) -> Result<Validated<Self>, ValidationError>;
+}
+
+impl<T> Validate for T
 where
     T: for<'r> ObjectIters<'r>,
 {
-    let mut vertices = HashSet::new();
+    fn validate_with_config(
+        self,
+        config: &ValidationConfig,
+    ) -> Result<Validated<Self>, ValidationError> {
+        let mut global_vertices = HashSet::new();
 
-    for vertex in object.global_vertex_iter() {
-        uniqueness::validate_vertex(
-            vertex,
-            &vertices,
-            config.distinct_min_distance,
-        )?;
+        for curve in self.curve_iter() {
+            coherence::validate_curve(curve, config.identical_max_distance)?;
+        }
 
-        vertices.insert(*vertex);
+        for global_vertex in self.global_vertex_iter() {
+            uniqueness::validate_vertex(
+                global_vertex,
+                &global_vertices,
+                config.distinct_min_distance,
+            )?;
+
+            global_vertices.insert(*global_vertex);
+        }
+        for vertex in self.vertex_iter() {
+            coherence::validate_vertex(vertex, config.identical_max_distance)?;
+        }
+
+        Ok(Validated(self))
     }
-
-    for edge in object.edge_iter() {
-        coherence::validate_edge(edge, config.identical_max_distance)?;
-    }
-
-    Ok(Validated(object))
 }
 
 /// Configuration required for the validation process
@@ -127,15 +156,31 @@ pub enum ValidationError {
 
 #[cfg(test)]
 mod tests {
-    use fj_math::{Point, Scalar};
+    use fj_math::{Line, Point, Scalar};
 
     use crate::{
+        algorithms::validate::{Validate, ValidationConfig, ValidationError},
         objects::{
-            Curve, CurveKind, Edge, GlobalCurve, GlobalVertex, Vertex,
+            Curve, CurveKind, Edge, GlobalCurve, GlobalVertex, Surface, Vertex,
             VerticesOfEdge,
         },
-        validation::{validate, ValidationConfig, ValidationError},
     };
+
+    #[test]
+    fn coherence_curve() {
+        let line_global = Line::from_points([[0., 0., 0.], [1., 0., 0.]]);
+        let global_curve = GlobalCurve::from_kind(CurveKind::Line(line_global));
+
+        let line_surface = Line::from_points([[0., 0.], [2., 0.]]);
+        let curve = Curve::new(
+            Surface::xy_plane(),
+            CurveKind::Line(line_surface),
+            global_curve,
+        );
+
+        let result = curve.validate();
+        assert!(result.is_err());
+    }
 
     #[test]
     fn coherence_edge() {
@@ -146,7 +191,7 @@ mod tests {
             let curve_local = CurveKind::line_from_points([[0., 0.], [1., 0.]]);
             let curve_global =
                 GlobalCurve::from_kind(CurveKind::line_from_points([a, b]));
-            Curve::new(curve_local, curve_global)
+            Curve::new(Surface::xy_plane(), curve_local, curve_global)
         };
 
         let a = GlobalVertex::from_position(a);
@@ -154,28 +199,22 @@ mod tests {
 
         let deviation = Scalar::from_f64(0.25);
 
-        let a = Vertex::new(Point::from([Scalar::ZERO + deviation]), a);
-        let b = Vertex::new(Point::from([Scalar::ONE]), b);
+        let a = Vertex::new(Point::from([Scalar::ZERO + deviation]), curve, a);
+        let b = Vertex::new(Point::from([Scalar::ONE]), curve, b);
         let vertices = VerticesOfEdge::from_vertices([a, b]);
 
         let edge = Edge::from_curve_and_vertices(curve, vertices);
 
-        let result = validate(
-            edge,
-            &ValidationConfig {
-                identical_max_distance: deviation * 2.,
-                ..ValidationConfig::default()
-            },
-        );
+        let result = edge.validate_with_config(&ValidationConfig {
+            identical_max_distance: deviation * 2.,
+            ..ValidationConfig::default()
+        });
         assert!(result.is_ok());
 
-        let result = validate(
-            edge,
-            &ValidationConfig {
-                identical_max_distance: deviation / 2.,
-                ..ValidationConfig::default()
-            },
-        );
+        let result = edge.validate_with_config(&ValidationConfig {
+            identical_max_distance: deviation / 2.,
+            ..ValidationConfig::default()
+        });
         assert!(result.is_err());
     }
 
@@ -197,11 +236,11 @@ mod tests {
 
         // Adding a vertex should work.
         shape.push(GlobalVertex::from_position(a));
-        validate(shape.clone(), &config)?;
+        shape.clone().validate_with_config(&config)?;
 
         // Adding a second vertex that is considered identical should fail.
         shape.push(GlobalVertex::from_position(b));
-        let result = validate(shape, &config);
+        let result = shape.validate_with_config(&config);
         assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
 
         Ok(())

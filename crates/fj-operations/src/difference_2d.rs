@@ -1,9 +1,12 @@
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
-    algorithms::approx::Tolerance,
+    algorithms::{
+        approx::Tolerance,
+        reverse::Reverse,
+        validate::{Validate, Validated, ValidationConfig, ValidationError},
+    },
     iter::ObjectIters,
-    objects::{Curve, Cycle, Edge, Face, GlobalCurve, Sketch},
-    validation::{validate, Validated, ValidationConfig, ValidationError},
+    objects::{Face, Sketch},
 };
 use fj_math::Aabb;
 
@@ -47,12 +50,10 @@ impl Shape for fj::Difference2d {
                 );
 
                 for cycle in face.exteriors() {
-                    let cycle = add_cycle(cycle.clone(), false);
-                    exteriors.push(cycle);
+                    exteriors.push(cycle.clone());
                 }
                 for cycle in face.interiors() {
-                    let cycle = add_cycle(cycle.clone(), true);
-                    interiors.push(cycle);
+                    interiors.push(cycle.clone().reverse());
                 }
             }
 
@@ -64,8 +65,7 @@ impl Shape for fj::Difference2d {
                 );
 
                 for cycle in face.exteriors() {
-                    let cycle = add_cycle(cycle.clone(), true);
-                    interiors.push(cycle);
+                    interiors.push(cycle.clone().reverse());
                 }
             }
 
@@ -78,7 +78,7 @@ impl Shape for fj::Difference2d {
         }
 
         let difference = Sketch::new().with_faces(faces);
-        validate(difference, config)
+        difference.validate_with_config(config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
@@ -87,40 +87,4 @@ impl Shape for fj::Difference2d {
         // is being subtracted from.
         self.shapes()[0].bounding_volume()
     }
-}
-
-fn add_cycle(cycle: Cycle, reverse: bool) -> Cycle {
-    let mut edges = Vec::new();
-    for edge in cycle.edges() {
-        let curve_local = if reverse {
-            edge.curve().kind().reverse()
-        } else {
-            *edge.curve().kind()
-        };
-
-        let curve_global = GlobalCurve::from_kind(if reverse {
-            edge.curve().global().kind().reverse()
-        } else {
-            *edge.curve().global().kind()
-        });
-
-        let vertices = if reverse {
-            edge.vertices().reverse()
-        } else {
-            *edge.vertices()
-        };
-
-        let edge = Edge::from_curve_and_vertices(
-            Curve::new(curve_local, curve_global),
-            vertices,
-        );
-
-        edges.push(edge);
-    }
-
-    if reverse {
-        edges.reverse();
-    }
-
-    Cycle::new(*cycle.surface()).with_edges(edges)
 }

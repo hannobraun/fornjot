@@ -1,8 +1,11 @@
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
-    algorithms::{approx::Tolerance, sweep::Sweep},
+    algorithms::{
+        approx::Tolerance,
+        sweep::Sweep,
+        validate::{Validate, Validated, ValidationConfig, ValidationError},
+    },
     objects::Solid,
-    validation::{validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::{Aabb, Vector};
 
@@ -23,7 +26,7 @@ impl Shape for fj::Sweep {
         let color = self.shape().color();
 
         let solid = sketch.into_inner().sweep(path, tolerance, Color(color));
-        validate(solid, config)
+        solid.validate_with_config(config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

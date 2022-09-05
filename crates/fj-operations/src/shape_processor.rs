@@ -1,12 +1,10 @@
 //! API for processing shapes
 
 use fj_interop::{debug::DebugInfo, processed_shape::ProcessedShape};
-use fj_kernel::{
-    algorithms::{
-        approx::{InvalidTolerance, Tolerance},
-        triangulate,
-    },
-    validation::{ValidationConfig, ValidationError},
+use fj_kernel::algorithms::{
+    approx::{InvalidTolerance, Tolerance},
+    triangulate,
+    validate::{ValidationConfig, ValidationError},
 };
 use fj_math::Scalar;
 

@@ -6,7 +6,7 @@ use fj_math::Point;
 
 use crate::objects::Face;
 
-use self::polygon::Polygon;
+use self::{delaunay::TriangulationPoint, polygon::Polygon};
 
 use super::approx::{Approx, Tolerance};
 
@@ -27,31 +27,41 @@ pub fn triangulate(
         }
 
         let surface = face.surface();
-        let approx = face.approx(tolerance);
+        let approx = face.approx(tolerance, ());
 
-        let points: Vec<_> = approx.points.into_iter().collect();
+        let points: Vec<_> = approx
+            .points
+            .into_iter()
+            .map(|(point_surface, point_global)| TriangulationPoint {
+                point_surface,
+                point_global,
+            })
+            .collect();
         let face_as_polygon = Polygon::new(*surface)
             .with_exterior(
                 approx
                     .exterior
                     .points
                     .into_iter()
-                    .map(|point| *point.local_form()),
+                    .map(|(point_surface, _)| point_surface),
             )
             .with_interiors(approx.interiors.into_iter().map(|interior| {
-                interior.points.into_iter().map(|point| *point.local_form())
+                interior
+                    .points
+                    .into_iter()
+                    .map(|(point_surface, _)| point_surface)
             }));
 
         let mut triangles = delaunay::triangulate(points);
         triangles.retain(|triangle| {
             face_as_polygon.contains_triangle(
-                triangle.map(|point| *point.local_form()),
+                triangle.map(|point| point.point_surface),
                 debug_info,
             )
         });
 
         for triangle in triangles {
-            let points = triangle.map(|point| *point.global_form());
+            let points = triangle.map(|point| point.point_global);
             mesh.push_triangle(points, face.color());
         }
     }

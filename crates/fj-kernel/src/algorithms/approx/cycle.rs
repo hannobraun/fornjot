@@ -2,29 +2,27 @@ use fj_math::{Point, Segment};
 
 use crate::objects::Cycle;
 
-use super::{Approx, Local, Tolerance};
+use super::{Approx, Tolerance};
 
 impl Approx for Cycle {
     type Approximation = CycleApprox;
+    type Params = ();
 
-    fn approx(&self, tolerance: Tolerance) -> Self::Approximation {
+    fn approx(
+        &self,
+        tolerance: Tolerance,
+        (): Self::Params,
+    ) -> Self::Approximation {
         let mut points = Vec::new();
 
         for edge in self.edges() {
-            let edge_points = edge.approx(tolerance);
-
-            points.extend(edge_points.into_iter().map(|point| {
-                let local = edge
-                    .curve()
-                    .kind()
-                    .point_from_curve_coords(*point.local_form());
-                Local::new(local, *point.global_form())
-            }));
+            let edge_points = edge.approx(tolerance, ());
+            points.extend(edge_points);
         }
 
-        // Can't just rely on `dedup`, as the conversion from curve coordinates
-        // could lead to subtly different surface coordinates.
-        points.dedup_by(|a, b| a.global_form() == b.global_form());
+        if let Some(&point) = points.first() {
+            points.push(point);
+        }
 
         CycleApprox { points }
     }
@@ -34,7 +32,7 @@ impl Approx for Cycle {
 #[derive(Debug, Eq, PartialEq, Hash)]
 pub struct CycleApprox {
     /// The points that approximate the cycle
-    pub points: Vec<Local<Point<2>>>,
+    pub points: Vec<(Point<2>, Point<3>)>,
 }
 
 impl CycleApprox {
@@ -47,8 +45,10 @@ impl CycleApprox {
             // up, once `array_windows` is stable.
             let segment = [segment[0], segment[1]];
 
-            segments
-                .push(Segment::from(segment.map(|point| *point.global_form())));
+            segments.push(Segment::from(segment.map(|point| {
+                let (_, point_global) = point;
+                point_global
+            })));
         }
 
         segments
