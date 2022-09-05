@@ -83,9 +83,6 @@ fn create_non_continuous_side_face(
 
     let top_edge = {
         let bottom_vertices = bottom_edge.vertices().get_or_panic();
-        let points_surface = bottom_vertices.map(|vertex| {
-            (vertex.position(), [vertex.position().t, Scalar::ONE])
-        });
 
         let global_vertices = side_edges.map(|edge| {
             let [_, vertex] = edge.vertices().get_or_panic();
@@ -107,6 +104,9 @@ fn create_non_continuous_side_face(
                 GlobalCurve::from_kind(CurveKind::Line(line))
             };
 
+            let points_surface = bottom_vertices.map(|vertex| {
+                (vertex.position(), [vertex.position().t, Scalar::ONE])
+            });
             let line = Line::from_points_with_line_coords(points_surface);
 
             Curve::new(surface, CurveKind::Line(line), global)
