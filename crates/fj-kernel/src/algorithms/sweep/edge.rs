@@ -90,12 +90,12 @@ fn create_non_continuous_side_face(
         });
 
         let curve = {
-            let [a_curve, b_curve] =
-                bottom_vertices.map(|vertex| vertex.position());
-            let [a_global, b_global] =
-                global_vertices.map(|vertex| vertex.position());
-
             let global = {
+                let [a_curve, b_curve] =
+                    bottom_vertices.map(|vertex| vertex.position());
+                let [a_global, b_global] =
+                    global_vertices.map(|vertex| vertex.position());
+
                 let line = Line::from_points_with_line_coords([
                     (a_curve, a_global),
                     (b_curve, b_global),
