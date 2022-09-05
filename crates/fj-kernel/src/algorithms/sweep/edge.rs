@@ -107,9 +107,10 @@ fn create_non_continuous_side_face(
             let points = bottom_vertices.map(|vertex| {
                 (vertex.position(), [vertex.position().t, Scalar::ONE])
             });
-            let line = Line::from_points_with_line_coords(points);
+            let kind =
+                CurveKind::Line(Line::from_points_with_line_coords(points));
 
-            Curve::new(surface, CurveKind::Line(line), global)
+            Curve::new(surface, kind, global)
         };
 
         let global = {
