@@ -5,10 +5,11 @@ use crate::{
     algorithms::{
         approx::{Approx, Tolerance},
         reverse::Reverse,
+        transform::TransformObject,
     },
     objects::{
-        Curve, CurveKind, Cycle, Edge, Face, GlobalCurve, GlobalEdge, Surface,
-        Vertex, VerticesOfEdge,
+        Curve, CurveKind, Cycle, Edge, Face, GlobalEdge, Surface, Vertex,
+        VerticesOfEdge,
     },
 };
 
@@ -93,19 +94,7 @@ fn create_non_continuous_side_face(
         });
 
         let curve = {
-            let global = {
-                let [a_curve, b_curve] =
-                    bottom_vertices.map(|vertex| vertex.position());
-                let [a_global, b_global] =
-                    global_vertices.map(|vertex| vertex.position());
-
-                let line = Line::from_points_with_line_coords([
-                    (a_curve, a_global),
-                    (b_curve, b_global),
-                ]);
-
-                GlobalCurve::from_kind(CurveKind::Line(line))
-            };
+            let global = bottom_edge.curve().global().translate(path.inner());
 
             // Please note that creating a line here is correct, even if the
             // global curve is a circle. Projected into the side surface, it is
