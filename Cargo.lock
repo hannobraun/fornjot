@@ -979,7 +979,7 @@ dependencies = [
 
 [[package]]
 name = "fj"
-version = "0.13.0"
+version = "0.14.0"
 dependencies = [
  "fj-proc",
  "serde",
@@ -988,7 +988,7 @@ dependencies = [
 
 [[package]]
 name = "fj-app"
-version = "0.13.0"
+version = "0.14.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -1008,7 +1008,7 @@ dependencies = [
 
 [[package]]
 name = "fj-export"
-version = "0.13.0"
+version = "0.14.0"
 dependencies = [
  "fj-interop",
  "fj-math",
@@ -1019,7 +1019,7 @@ dependencies = [
 
 [[package]]
 name = "fj-host"
-version = "0.13.0"
+version = "0.14.0"
 dependencies = [
  "cargo_metadata",
  "fj",
@@ -1031,14 +1031,14 @@ dependencies = [
 
 [[package]]
 name = "fj-interop"
-version = "0.13.0"
+version = "0.14.0"
 dependencies = [
  "fj-math",
 ]
 
 [[package]]
 name = "fj-kernel"
-version = "0.13.0"
+version = "0.14.0"
 dependencies = [
  "anyhow",
  "anymap",
@@ -1056,7 +1056,7 @@ dependencies = [
 
 [[package]]
 name = "fj-math"
-version = "0.13.0"
+version = "0.14.0"
 dependencies = [
  "approx 0.5.1",
  "decorum",
@@ -1068,7 +1068,7 @@ dependencies = [
 
 [[package]]
 name = "fj-operations"
-version = "0.13.0"
+version = "0.14.0"
 dependencies = [
  "fj",
  "fj-interop",
@@ -1079,7 +1079,7 @@ dependencies = [
 
 [[package]]
 name = "fj-proc"
-version = "0.13.0"
+version = "0.14.0"
 dependencies = [
  "fj",
  "proc-macro2",
@@ -1090,7 +1090,7 @@ dependencies = [
 
 [[package]]
 name = "fj-viewer"
-version = "0.13.0"
+version = "0.14.0"
 dependencies = [
  "bytemuck",
  "egui",
@@ -1107,7 +1107,7 @@ dependencies = [
 
 [[package]]
 name = "fj-window"
-version = "0.13.0"
+version = "0.14.0"
 dependencies = [
  "fj-host",
  "fj-interop",
