@@ -1,14 +1,15 @@
 use fj_interop::mesh::Color;
-use fj_math::{Line, Point, Scalar, Transform, Triangle};
+use fj_math::{Line, Scalar, Transform, Triangle};
 
 use crate::{
     algorithms::{
         approx::{Approx, Tolerance},
         reverse::Reverse,
+        transform::TransformObject,
     },
     objects::{
-        Curve, CurveKind, Cycle, Edge, Face, GlobalCurve, GlobalEdge, Surface,
-        Vertex, VerticesOfEdge,
+        Curve, CurveKind, Cycle, Edge, Face, GlobalEdge, Surface, Vertex,
+        VerticesOfEdge,
     },
 };
 
@@ -57,6 +58,9 @@ fn create_non_continuous_side_face(
         let vertices = edge.vertices().get_or_panic();
 
         let curve = {
+            // Please note that creating a line here is correct, even if the
+            // global curve is a circle. Projected into the side surface, it is
+            // going to be a line either way.
             let points = vertices.map(|vertex| {
                 (vertex.position(), [vertex.position().t, Scalar::ZERO])
             });
@@ -83,8 +87,6 @@ fn create_non_continuous_side_face(
 
     let top_edge = {
         let bottom_vertices = bottom_edge.vertices().get_or_panic();
-        let points_surface = bottom_vertices
-            .map(|vertex| Point::from([vertex.position().t, Scalar::ONE]));
 
         let global_vertices = side_edges.map(|edge| {
             let [_, vertex] = edge.vertices().get_or_panic();
@@ -92,27 +94,18 @@ fn create_non_continuous_side_face(
         });
 
         let curve = {
-            let [a_curve, b_curve] =
-                bottom_vertices.map(|vertex| vertex.position());
-            let [a_surface, b_surface] = points_surface;
-            let [a_global, b_global] =
-                global_vertices.map(|vertex| vertex.position());
+            let global = bottom_edge.curve().global().translate(path.inner());
 
-            let global = {
-                let line = Line::from_points_with_line_coords([
-                    (a_curve, a_global),
-                    (b_curve, b_global),
-                ]);
+            // Please note that creating a line here is correct, even if the
+            // global curve is a circle. Projected into the side surface, it is
+            // going to be a line either way.
+            let points = bottom_vertices.map(|vertex| {
+                (vertex.position(), [vertex.position().t, Scalar::ONE])
+            });
+            let kind =
+                CurveKind::Line(Line::from_points_with_line_coords(points));
 
-                GlobalCurve::from_kind(CurveKind::Line(line))
-            };
-
-            let line = Line::from_points_with_line_coords([
-                (a_curve, a_surface),
-                (b_curve, b_surface),
-            ]);
-
-            Curve::new(surface, CurveKind::Line(line), global)
+            Curve::new(surface, kind, global)
         };
 
         let global = {
