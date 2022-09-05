@@ -57,6 +57,9 @@ fn create_non_continuous_side_face(
         let vertices = edge.vertices().get_or_panic();
 
         let curve = {
+            // Please note that creating a line here is correct, even if the
+            // global curve is a circle. Projected into the side surface, it is
+            // going to be a line either way.
             let points = vertices.map(|vertex| {
                 (vertex.position(), [vertex.position().t, Scalar::ZERO])
             });
@@ -104,6 +107,9 @@ fn create_non_continuous_side_face(
                 GlobalCurve::from_kind(CurveKind::Line(line))
             };
 
+            // Please note that creating a line here is correct, even if the
+            // global curve is a circle. Projected into the side surface, it is
+            // going to be a line either way.
             let points = bottom_vertices.map(|vertex| {
                 (vertex.position(), [vertex.position().t, Scalar::ONE])
             });
