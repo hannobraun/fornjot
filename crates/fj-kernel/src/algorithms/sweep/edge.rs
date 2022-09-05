@@ -1,5 +1,5 @@
 use fj_interop::mesh::Color;
-use fj_math::{Line, Point, Scalar, Transform, Triangle};
+use fj_math::{Line, Scalar, Transform, Triangle};
 
 use crate::{
     algorithms::{
@@ -83,8 +83,8 @@ fn create_non_continuous_side_face(
 
     let top_edge = {
         let bottom_vertices = bottom_edge.vertices().get_or_panic();
-        let points_surface = bottom_vertices
-            .map(|vertex| Point::from([vertex.position().t, Scalar::ONE]));
+        let points_surface =
+            bottom_vertices.map(|vertex| [vertex.position().t, Scalar::ONE]);
 
         let global_vertices = side_edges.map(|edge| {
             let [_, vertex] = edge.vertices().get_or_panic();
