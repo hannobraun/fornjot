@@ -227,6 +227,7 @@ name = "automator"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "autolib",
  "chrono",
  "clap",
  "map-macro",

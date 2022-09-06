@@ -11,6 +11,9 @@ map-macro = "0.2.4"
 octocrab = "0.17.0"
 url = "2.2.2"
 
+[dependencies.autolib]
+path = "../autolib"
+
 [dependencies.clap]
 version = "3.2.20"
 features = ["derive"]
