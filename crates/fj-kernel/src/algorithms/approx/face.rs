@@ -1,20 +1,19 @@
+//! Face approximation
+//!
+//! See [`FaceApprox`].
+
 use std::collections::HashSet;
 
 use fj_math::Point;
 
 use crate::objects::Face;
 
-use super::{Approx, CycleApprox, Tolerance};
+use super::{cycle::CycleApprox, Approx, Tolerance};
 
-impl Approx for Face {
+impl Approx for &Face {
     type Approximation = FaceApprox;
-    type Params = ();
 
-    fn approx(
-        &self,
-        tolerance: Tolerance,
-        (): Self::Params,
-    ) -> Self::Approximation {
+    fn approx(self, tolerance: Tolerance) -> Self::Approximation {
         // Curved faces whose curvature is not fully defined by their edges
         // are not supported yet. For that reason, we can fully ignore `face`'s
         // `surface` field and just pass the edges to `Self::for_edges`.
@@ -33,13 +32,13 @@ impl Approx for Face {
         let mut interiors = HashSet::new();
 
         for cycle in self.exteriors() {
-            let cycle = cycle.approx(tolerance, ());
+            let cycle = cycle.approx(tolerance);
 
             points.extend(cycle.points.iter().copied());
             exteriors.push(cycle);
         }
         for cycle in self.interiors() {
-            let cycle = cycle.approx(tolerance, ());
+            let cycle = cycle.approx(tolerance);
 
             points.extend(cycle.points.iter().copied());
             interiors.insert(cycle);
@@ -123,7 +122,7 @@ mod tests {
         let g = (g, g.to_xyz());
         let h = (h, h.to_xyz());
 
-        let approx = face.approx(tolerance, ());
+        let approx = face.approx(tolerance);
         let expected = FaceApprox {
             points: set![a, b, c, d, e, f, g, h],
             exterior: CycleApprox {

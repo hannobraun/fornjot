@@ -1,45 +1,56 @@
+//! Curve approximation
+//!
+//! Since curves are infinite (even circles have an infinite coordinate space,
+//! even though they connect to themselves in global coordinates), a range must
+//! be provided to approximate them. The approximation then returns points
+//! within that range.
+//!
+//! The boundaries of the range are not included in the approximation. This is
+//! done, to give the caller (who knows the boundary anyway) more options on how
+//! to further process the approximation.
+
 use std::cmp::max;
 
 use fj_math::{Circle, Point, Scalar};
 
-use crate::objects::{Curve, CurveKind, GlobalCurve};
+use crate::objects::{Curve, CurveKind, GlobalCurve, Vertex};
 
 use super::{Approx, Tolerance};
 
-impl Approx for Curve {
+impl Approx for (&Curve, RangeOnCurve) {
     type Approximation = Vec<(Point<2>, Point<3>)>;
-    type Params = RangeOnCurve;
 
-    fn approx(
-        &self,
-        tolerance: Tolerance,
-        range: Self::Params,
-    ) -> Self::Approximation {
-        self.global_form()
-            .approx(tolerance, range)
+    fn approx(self, tolerance: Tolerance) -> Self::Approximation {
+        let (curve, range) = self;
+
+        (curve.global_form(), range)
+            .approx(tolerance)
             .into_iter()
             .map(|(point_curve, point_global)| {
                 let point_surface =
-                    self.kind().point_from_curve_coords(point_curve);
+                    curve.kind().point_from_curve_coords(point_curve);
                 (point_surface, point_global)
             })
             .collect()
     }
 }
 
-impl Approx for GlobalCurve {
+impl Approx for (&GlobalCurve, RangeOnCurve) {
     type Approximation = Vec<(Point<1>, Point<3>)>;
-    type Params = RangeOnCurve;
 
-    fn approx(
-        &self,
-        tolerance: Tolerance,
-        range: Self::Params,
-    ) -> Self::Approximation {
-        match self.kind() {
-            CurveKind::Circle(curve) => approx_circle(curve, range, tolerance),
-            CurveKind::Line(_) => vec![range.start()],
+    fn approx(self, tolerance: Tolerance) -> Self::Approximation {
+        let (curve, range) = self;
+
+        let mut points = Vec::new();
+
+        match curve.kind() {
+            CurveKind::Circle(curve) => {
+                approx_circle(curve, range, tolerance, &mut points);
+            }
+            CurveKind::Line(_) => {}
         }
+
+        points
     }
 }
 
@@ -51,7 +62,8 @@ fn approx_circle(
     circle: &Circle<3>,
     range: impl Into<RangeOnCurve>,
     tolerance: Tolerance,
-) -> Vec<(Point<1>, Point<3>)> {
+    points: &mut Vec<(Point<1>, Point<3>)>,
+) {
     let radius = circle.a().magnitude();
     let range = range.into();
 
@@ -63,11 +75,8 @@ fn approx_circle(
 
     let n = number_of_vertices_for_circle(tolerance, radius, range.length());
 
-    let mut points = Vec::new();
-    points.push(range.start());
-
     for i in 1..n {
-        let angle = range.start().0.t
+        let angle = range.start().position().t
             + (Scalar::TAU / n as f64 * i as f64) * range.direction();
 
         let point_curve = Point::from([angle]);
@@ -75,8 +84,6 @@ fn approx_circle(
 
         points.push((point_curve, point_global));
     }
-
-    points
 }
 
 fn number_of_vertices_for_circle(
@@ -91,28 +98,41 @@ fn number_of_vertices_for_circle(
     max(n, 3)
 }
 
+/// The range on which a curve should be approximated
+#[derive(Clone, Copy)]
 pub struct RangeOnCurve {
-    pub boundary: [(Point<1>, Point<3>); 2],
+    /// The boundary of the range
+    ///
+    /// The vertices that make up the boundary are themselves not included in
+    /// the approximation.
+    pub boundary: [Vertex; 2],
 }
 
 impl RangeOnCurve {
-    fn start(&self) -> (Point<1>, Point<3>) {
+    /// Access the start of the range
+    pub fn start(&self) -> Vertex {
         self.boundary[0]
     }
 
-    fn end(&self) -> (Point<1>, Point<3>) {
+    /// Access the end of the range
+    pub fn end(&self) -> Vertex {
         self.boundary[1]
     }
 
-    fn signed_length(&self) -> Scalar {
-        (self.end().0 - self.start().0).t
+    /// Compute the signed length of the range
+    pub fn signed_length(&self) -> Scalar {
+        (self.end().position() - self.start().position()).t
     }
 
-    fn length(&self) -> Scalar {
+    /// Compute the absolute length of the range
+    pub fn length(&self) -> Scalar {
         self.signed_length().abs()
     }
 
-    fn direction(&self) -> Scalar {
+    /// Compute the direction of the range
+    ///
+    /// Returns a [`Scalar`] that is zero or +/- one.
+    pub fn direction(&self) -> Scalar {
         self.signed_length().sign()
     }
 }
