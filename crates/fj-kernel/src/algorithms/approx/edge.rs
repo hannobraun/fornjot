@@ -15,7 +15,6 @@ impl Approx for &Edge {
     type Approximation = Vec<(Point<2>, Point<3>)>;
 
     fn approx(self, tolerance: super::Tolerance) -> Self::Approximation {
-        // The range is only used for circles right now.
         let boundary = match self.vertices().get() {
             Some(vertices) => vertices.map(|&vertex| vertex),
             None => {
