@@ -4,10 +4,10 @@ use crate::objects::Cycle;
 
 use super::{Approx, Tolerance};
 
-impl Approx for Cycle {
+impl Approx for &Cycle {
     type Approximation = CycleApprox;
 
-    fn approx(&self, tolerance: Tolerance) -> Self::Approximation {
+    fn approx(self, tolerance: Tolerance) -> Self::Approximation {
         let mut points = Vec::new();
 
         for edge in self.edges() {

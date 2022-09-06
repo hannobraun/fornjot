@@ -6,13 +6,13 @@ use crate::objects::{Curve, CurveKind, GlobalCurve, Vertex};
 
 use super::{Approx, Tolerance};
 
-impl Approx for (Curve, RangeOnCurve) {
+impl Approx for (&Curve, RangeOnCurve) {
     type Approximation = Vec<(Point<2>, Point<3>)>;
 
-    fn approx(&self, tolerance: Tolerance) -> Self::Approximation {
-        let &(curve, range) = self;
+    fn approx(self, tolerance: Tolerance) -> Self::Approximation {
+        let (curve, range) = self;
 
-        (*curve.global_form(), range)
+        (curve.global_form(), range)
             .approx(tolerance)
             .into_iter()
             .map(|(point_curve, point_global)| {
@@ -24,11 +24,11 @@ impl Approx for (Curve, RangeOnCurve) {
     }
 }
 
-impl Approx for (GlobalCurve, RangeOnCurve) {
+impl Approx for (&GlobalCurve, RangeOnCurve) {
     type Approximation = Vec<(Point<1>, Point<3>)>;
 
-    fn approx(&self, tolerance: Tolerance) -> Self::Approximation {
-        let &(curve, range) = self;
+    fn approx(self, tolerance: Tolerance) -> Self::Approximation {
+        let (curve, range) = self;
 
         let mut points = Vec::new();
 

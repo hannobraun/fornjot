@@ -6,10 +6,10 @@ use crate::objects::Face;
 
 use super::{Approx, CycleApprox, Tolerance};
 
-impl Approx for Face {
+impl Approx for &Face {
     type Approximation = FaceApprox;
 
-    fn approx(&self, tolerance: Tolerance) -> Self::Approximation {
+    fn approx(self, tolerance: Tolerance) -> Self::Approximation {
         // Curved faces whose curvature is not fully defined by their edges
         // are not supported yet. For that reason, we can fully ignore `face`'s
         // `surface` field and just pass the edges to `Self::for_edges`.

@@ -21,5 +21,5 @@ pub trait Approx {
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual object.
-    fn approx(&self, tolerance: Tolerance) -> Self::Approximation;
+    fn approx(self, tolerance: Tolerance) -> Self::Approximation;
 }
