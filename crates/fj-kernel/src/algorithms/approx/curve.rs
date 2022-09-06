@@ -36,13 +36,19 @@ impl Approx for GlobalCurve {
         tolerance: Tolerance,
         range: Self::Params,
     ) -> Self::Approximation {
+        let mut points = Vec::new();
+
         match self.kind() {
-            CurveKind::Circle(curve) => approx_circle(curve, range, tolerance),
-            CurveKind::Line(_) => vec![(
+            CurveKind::Circle(curve) => {
+                approx_circle(curve, range, tolerance, &mut points);
+            }
+            CurveKind::Line(_) => points.push((
                 range.start().position(),
                 range.start().global_form().position(),
-            )],
+            )),
         }
+
+        points
     }
 }
 
@@ -54,7 +60,8 @@ fn approx_circle(
     circle: &Circle<3>,
     range: impl Into<RangeOnCurve>,
     tolerance: Tolerance,
-) -> Vec<(Point<1>, Point<3>)> {
+    points: &mut Vec<(Point<1>, Point<3>)>,
+) {
     let radius = circle.a().magnitude();
     let range = range.into();
 
@@ -66,7 +73,6 @@ fn approx_circle(
 
     let n = number_of_vertices_for_circle(tolerance, radius, range.length());
 
-    let mut points = Vec::new();
     points.push((
         range.start().position(),
         range.start().global_form().position(),
@@ -81,8 +87,6 @@ fn approx_circle(
 
         points.push((point_curve, point_global));
     }
-
-    points
 }
 
 fn number_of_vertices_for_circle(
