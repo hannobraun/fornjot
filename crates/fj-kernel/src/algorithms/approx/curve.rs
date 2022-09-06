@@ -97,6 +97,7 @@ fn number_of_vertices_for_circle(
     max(n, 3)
 }
 
+#[derive(Clone, Copy)]
 pub struct RangeOnCurve {
     pub boundary: [Vertex; 2],
 }
