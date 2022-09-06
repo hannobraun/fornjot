@@ -36,7 +36,36 @@ impl EdgeBuilder {
             Curve::new(self.surface, local, global)
         };
 
-        let vertices = VerticesOfEdge::none();
+        let vertices = {
+            let [a_curve, b_curve] =
+                [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
+
+            let global_vertex = GlobalVertex::from_position(
+                curve.global_form().kind().point_from_curve_coords(a_curve),
+            );
+
+            let surface_vertices = [a_curve, b_curve].map(|point_curve| {
+                let point_surface =
+                    curve.kind().point_from_curve_coords(point_curve);
+                SurfaceVertex::new(point_surface, self.surface, global_vertex)
+            });
+
+            // Can be cleaned up, once `zip` is stable:
+            // https://doc.rust-lang.org/std/primitive.array.html#method.zip
+            let [a_surface, b_surface] = surface_vertices;
+            let vertices = [(a_curve, a_surface), (b_curve, b_surface)].map(
+                |(point_curve, surface_vertex)| {
+                    Vertex::new(
+                        point_curve,
+                        curve,
+                        surface_vertex,
+                        global_vertex,
+                    )
+                },
+            );
+
+            VerticesOfEdge::from_vertices(vertices)
+        };
 
         Edge::from_curve_and_vertices(curve, vertices)
     }
