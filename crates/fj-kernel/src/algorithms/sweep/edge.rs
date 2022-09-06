@@ -2,9 +2,7 @@ use fj_interop::mesh::Color;
 use fj_math::{Line, Scalar};
 
 use crate::{
-    algorithms::{
-        approx::Tolerance, reverse::Reverse, transform::TransformObject,
-    },
+    algorithms::{reverse::Reverse, transform::TransformObject},
     objects::{
         Curve, CurveKind, Cycle, Edge, Face, GlobalEdge, SurfaceVertex, Vertex,
         VerticesOfEdge,
@@ -16,14 +14,8 @@ use super::{Path, Sweep};
 impl Sweep for Edge {
     type Swept = Face;
 
-    fn sweep(
-        self,
-        path: impl Into<Path>,
-        tolerance: impl Into<Tolerance>,
-        color: Color,
-    ) -> Self::Swept {
+    fn sweep(self, path: impl Into<Path>, color: Color) -> Self::Swept {
         let path = path.into();
-        let tolerance = tolerance.into();
 
         let edge = if path.is_negative_direction() {
             self.reverse_including_curve()
@@ -31,7 +23,7 @@ impl Sweep for Edge {
             self
         };
 
-        let surface = edge.curve().sweep(path, tolerance, color);
+        let surface = edge.curve().sweep(path, color);
 
         // We can't use the edge we're sweeping from as the bottom edge, as that
         // is not defined in the right surface. Let's create a new bottom edge,
@@ -90,7 +82,7 @@ impl Sweep for Edge {
         let side_edges = bottom_edge
             .vertices()
             .get()
-            .map(|&vertex| (vertex, surface).sweep(path, tolerance, color));
+            .map(|&vertex| (vertex, surface).sweep(path, color));
 
         let top_edge = {
             let bottom_vertices = bottom_edge.vertices().get();

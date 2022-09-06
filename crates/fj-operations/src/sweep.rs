@@ -25,7 +25,7 @@ impl Shape for fj::Sweep {
         let path = Vector::from(self.path());
         let color = self.shape().color();
 
-        let solid = sketch.into_inner().sweep(path, tolerance, Color(color));
+        let solid = sketch.into_inner().sweep(path, Color(color));
         solid.validate_with_config(config)
     }
 
