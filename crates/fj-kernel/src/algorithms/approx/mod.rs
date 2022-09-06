@@ -6,10 +6,7 @@ pub mod edge;
 pub mod face;
 pub mod tolerance;
 
-pub use self::{
-    face::FaceApprox,
-    tolerance::{InvalidTolerance, Tolerance},
-};
+pub use self::tolerance::{InvalidTolerance, Tolerance};
 
 /// Approximate an object
 pub trait Approx {
