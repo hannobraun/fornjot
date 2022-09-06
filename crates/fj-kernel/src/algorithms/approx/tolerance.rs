@@ -1,3 +1,7 @@
+//! Tolerance value for approximation
+//!
+//! See [`Tolerance`].
+
 use fj_math::Scalar;
 
 /// A tolerance value

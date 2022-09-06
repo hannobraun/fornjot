@@ -1,3 +1,14 @@
+//! Curve approximation
+//!
+//! Since curves are infinite (even circles have an infinite coordinate space,
+//! even though they connect to themselves in global coordinates), a range must
+//! be provided to approximate them. The approximation then returns points
+//! within that range.
+//!
+//! The boundaries of the range are not included in the approximation. This is
+//! done, to give the caller (who knows the boundary anyway) more options on how
+//! to further process the approximation.
+
 use std::cmp::max;
 
 use fj_math::{Circle, Point, Scalar};
@@ -87,28 +98,40 @@ fn number_of_vertices_for_circle(
     max(n, 3)
 }
 
+/// The range on which a curve should be approximated
 #[derive(Clone, Copy)]
 pub struct RangeOnCurve {
+    /// The boundary of the range
+    ///
+    /// The vertices that make up the boundary are themselves not included in
+    /// the approximation.
     pub boundary: [Vertex; 2],
 }
 
 impl RangeOnCurve {
+    /// Access the start of the range
     pub fn start(&self) -> Vertex {
         self.boundary[0]
     }
 
+    /// Access the end of the range
     pub fn end(&self) -> Vertex {
         self.boundary[1]
     }
 
+    /// Compute the signed length of the range
     pub fn signed_length(&self) -> Scalar {
         (self.end().position() - self.start().position()).t
     }
 
+    /// Compute the absolute length of the range
     pub fn length(&self) -> Scalar {
         self.signed_length().abs()
     }
 
+    /// Compute the direction of the range
+    ///
+    /// Returns a [`Scalar`] that is zero or +/- one.
     pub fn direction(&self) -> Scalar {
         self.signed_length().sign()
     }

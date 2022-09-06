@@ -1,3 +1,7 @@
+//! Cycle approximation
+//!
+//! See [`CycleApprox`].
+
 use fj_math::{Point, Segment};
 
 use crate::objects::Cycle;

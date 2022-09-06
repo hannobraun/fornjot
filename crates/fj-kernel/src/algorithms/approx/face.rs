@@ -1,3 +1,7 @@
+//! Face approximation
+//!
+//! See [`FaceApprox`].
+
 use std::collections::HashSet;
 
 use fj_math::Point;

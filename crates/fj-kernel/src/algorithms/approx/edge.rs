@@ -1,3 +1,10 @@
+//! Edge approximation
+//!
+//! The approximation of a curve is its first vertex, combined with the
+//! approximation of its curve. The second vertex is left off, as edge
+//! approximations are usually used to build cycle approximations, and this way,
+//! the caller doesn't have to call with duplicate vertices.
+
 use fj_math::{Point, Scalar};
 
 use crate::objects::{Edge, GlobalVertex, SurfaceVertex, Vertex};
