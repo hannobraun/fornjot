@@ -42,14 +42,9 @@ impl CurveEdgeIntersection {
                 }
             };
 
-            let edge_vertices = match edge.vertices().get() {
-                Some(vertices) => vertices.map(|vertex| {
-                    edge_curve_as_line.point_from_line_coords(vertex.position())
-                }),
-                None => todo!(
-                    "Curve-edge intersection does not support continuous edges"
-                ),
-            };
+            let edge_vertices = edge.vertices().get().map(|vertex| {
+                edge_curve_as_line.point_from_line_coords(vertex.position())
+            });
 
             Segment::from_points(edge_vertices)
         };

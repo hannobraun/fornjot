@@ -45,13 +45,13 @@ impl Intersect for (&Face, &Point<2>) {
                         );
                     }
                     (Some(RaySegmentIntersection::RayStartsOnOnFirstVertex), _) => {
-                        let vertex = *edge.vertices().get_or_panic()[0];
+                        let vertex = *edge.vertices().get()[0];
                         return Some(
                             FacePointIntersection::PointIsOnVertex(vertex)
                         );
                     }
                     (Some(RaySegmentIntersection::RayStartsOnSecondVertex), _) => {
-                        let vertex = *edge.vertices().get_or_panic()[1];
+                        let vertex = *edge.vertices().get()[1];
                         return Some(
                             FacePointIntersection::PointIsOnVertex(vertex)
                         );
@@ -237,7 +237,7 @@ mod tests {
             .edge_iter()
             .copied()
             .find(|edge| {
-                let [a, b] = edge.vertices().get_or_panic();
+                let [a, b] = edge.vertices().get();
                 a.global_form().position() == Point::from([0., 0., 0.])
                     && b.global_form().position() == Point::from([2., 0., 0.])
             })

@@ -216,7 +216,7 @@ mod tests {
             .edge_iter()
             .copied()
             .find(|edge| {
-                let [a, b] = edge.vertices().get_or_panic();
+                let [a, b] = edge.vertices().get();
                 a.global_form().position() == Point::from([1., 0., 1.])
                     && b.global_form().position() == Point::from([1., 0., -1.])
             })
