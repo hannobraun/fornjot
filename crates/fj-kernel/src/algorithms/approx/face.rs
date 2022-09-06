@@ -8,7 +8,7 @@ use fj_math::Point;
 
 use crate::objects::Face;
 
-use super::{Approx, CycleApprox, Tolerance};
+use super::{cycle::CycleApprox, Approx, Tolerance};
 
 impl Approx for &Face {
     type Approximation = FaceApprox;

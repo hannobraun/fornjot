@@ -7,7 +7,6 @@ pub mod face;
 pub mod tolerance;
 
 pub use self::{
-    cycle::CycleApprox,
     face::FaceApprox,
     tolerance::{InvalidTolerance, Tolerance},
 };
