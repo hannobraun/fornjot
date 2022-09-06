@@ -123,9 +123,9 @@ fn create_non_continuous_side_face(
         let vertices = {
             // Can be cleaned up, once `zip` is stable:
             // https://doc.rust-lang.org/std/primitive.array.html#method.zip
-            let [a_bottom, b_bottom] = bottom_vertices;
+            let [a_vertex, b_vertex] = bottom_vertices;
             let [a_global, b_global] = global_vertices;
-            let vertices = [(a_bottom, a_global), (b_bottom, b_global)];
+            let vertices = [(a_vertex, a_global), (b_vertex, b_global)];
 
             vertices.map(|(vertex, vertex_global)| {
                 Vertex::new(vertex.position(), curve, vertex_global)
