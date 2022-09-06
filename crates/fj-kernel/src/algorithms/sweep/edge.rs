@@ -186,7 +186,10 @@ fn create_non_continuous_side_face(
             let [_, prev_last] = edges[i].vertices().get_or_panic();
             let [next_first, _] = edges[j].vertices().get_or_panic();
 
-            if prev_last.global_form() != next_first.global_form() {
+            // Need to compare surface forms here, as the global forms might be
+            // coincident when sweeping circles, despite the vertices being
+            // different!
+            if prev_last.surface_form() != next_first.surface_form() {
                 edges[j] = edges[j].reverse();
             }
 
