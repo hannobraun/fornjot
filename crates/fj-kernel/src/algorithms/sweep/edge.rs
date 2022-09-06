@@ -127,8 +127,8 @@ fn create_non_continuous_side_face(
             let [a_global, b_global] = global_vertices;
             let vertices = [(a_bottom, a_global), (b_bottom, b_global)];
 
-            vertices.map(|(vertex, global)| {
-                Vertex::new(vertex.position(), curve, global)
+            vertices.map(|(vertex, vertex_global)| {
+                Vertex::new(vertex.position(), curve, vertex_global)
             })
         };
 
