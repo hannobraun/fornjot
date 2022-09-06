@@ -184,6 +184,8 @@ mod tests {
 
     #[test]
     fn coherence_edge() {
+        let surface = Surface::xy_plane();
+
         let points_surface = [[0., 0.], [1., 0.]];
         let points_global = [[0., 0., 0.], [1., 0., 0.]];
 
@@ -192,7 +194,7 @@ mod tests {
             let curve_global = GlobalCurve::from_kind(
                 CurveKind::line_from_points(points_global),
             );
-            Curve::new(Surface::xy_plane(), curve_local, curve_global)
+            Curve::new(surface, curve_local, curve_global)
         };
 
         let [a_global, b_global] =
