@@ -174,7 +174,7 @@ impl GlobalEdge {
 /// This struct is generic over the actual vertex type used, but typically, `T`
 /// will either be [`Vertex`] or [`GlobalVertex`].
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct VerticesOfEdge<T>([T; 2]);
+pub struct VerticesOfEdge<T>(pub [T; 2]);
 
 impl<T> VerticesOfEdge<T> {
     /// Construct an instance of `VerticesOfEdge` from two vertices
