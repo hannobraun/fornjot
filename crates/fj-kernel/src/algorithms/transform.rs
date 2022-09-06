@@ -4,7 +4,7 @@ use fj_math::{Transform, Vector};
 
 use crate::objects::{
     Curve, Cycle, Edge, Face, GlobalCurve, GlobalVertex, Shell, Sketch, Solid,
-    Surface, Vertex,
+    Surface, SurfaceVertex, Vertex,
 };
 
 /// Transform an object
@@ -132,6 +132,16 @@ impl TransformObject for Surface {
                 Self::SweptCurve(surface.transform(transform))
             }
         }
+    }
+}
+
+impl TransformObject for SurfaceVertex {
+    fn transform(self, transform: &Transform) -> Self {
+        Self::new(
+            self.position(),
+            self.surface().transform(transform),
+            self.global_form().transform(transform),
+        )
     }
 }
 
