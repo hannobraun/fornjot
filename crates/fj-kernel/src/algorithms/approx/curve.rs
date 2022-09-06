@@ -17,9 +17,8 @@ impl Approx for (Curve, RangeOnCurve) {
     ) -> Self::Approximation {
         let &(curve, range) = self;
 
-        curve
-            .global_form()
-            .approx(tolerance, range)
+        (*curve.global_form(), range)
+            .approx(tolerance, ())
             .into_iter()
             .map(|(point_curve, point_global)| {
                 let point_surface =
@@ -30,18 +29,20 @@ impl Approx for (Curve, RangeOnCurve) {
     }
 }
 
-impl Approx for GlobalCurve {
+impl Approx for (GlobalCurve, RangeOnCurve) {
     type Approximation = Vec<(Point<1>, Point<3>)>;
-    type Params = RangeOnCurve;
+    type Params = ();
 
     fn approx(
         &self,
         tolerance: Tolerance,
-        range: Self::Params,
+        _: Self::Params,
     ) -> Self::Approximation {
+        let &(curve, range) = self;
+
         let mut points = Vec::new();
 
-        match self.kind() {
+        match curve.kind() {
             CurveKind::Circle(curve) => {
                 approx_circle(curve, range, tolerance, &mut points);
             }
