@@ -12,7 +12,7 @@ pub struct PullRequestsSinceLastRelease {
 }
 
 impl PullRequestsSinceLastRelease {
-    pub async fn fetch_since_last_release() -> anyhow::Result<Self> {
+    pub async fn fetch() -> anyhow::Result<Self> {
         let mut pull_requests = BTreeMap::new();
         let mut page = 1u32;
 
