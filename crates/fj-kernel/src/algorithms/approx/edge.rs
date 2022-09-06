@@ -25,7 +25,7 @@ impl Approx for Edge {
                 // We're dealing with a circle here. Start and end are identical
                 // points, in global coordinates.
                 let point_global = self
-                    .global()
+                    .global_form()
                     .curve()
                     .kind()
                     .point_from_curve_coords(start_curve);

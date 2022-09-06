@@ -77,7 +77,7 @@ fn create_non_continuous_side_face(
             VerticesOfEdge::from_vertices(vertices)
         };
 
-        Edge::new(curve, vertices, *edge.global())
+        Edge::new(curve, vertices, *edge.global_form())
     };
 
     let side_edges = bottom_edge

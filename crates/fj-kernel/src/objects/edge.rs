@@ -91,7 +91,7 @@ impl Edge {
     }
 
     /// Access the global form of this edge
-    pub fn global(&self) -> &GlobalEdge {
+    pub fn global_form(&self) -> &GlobalEdge {
         &self.global
     }
 }
