@@ -71,7 +71,7 @@ impl PullRequestsSinceLastRelease {
             if pull_request_page.next.is_some() {
                 page += 1;
             } else {
-                break;
+                return Err(anyhow!("Could not find previous release PR"));
             }
         }
 
