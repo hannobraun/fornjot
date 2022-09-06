@@ -281,7 +281,7 @@ impl<'r> ObjectIters<'r> for Vertex {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
         vec![
             self.curve() as &dyn ObjectIters,
-            self.global() as &dyn ObjectIters,
+            self.global_form() as &dyn ObjectIters,
         ]
     }
 

@@ -15,8 +15,9 @@ impl Approx for Edge {
     ) -> Self::Approximation {
         // The range is only used for circles right now.
         let boundary = match self.vertices().get() {
-            Some(vertices) => vertices
-                .map(|vertex| (vertex.position(), vertex.global().position())),
+            Some(vertices) => vertices.map(|vertex| {
+                (vertex.position(), vertex.global_form().position())
+            }),
             None => {
                 let start_curve = Point::from([Scalar::ZERO]);
                 let end_curve = Point::from([Scalar::TAU]);

@@ -212,14 +212,22 @@ impl VerticesOfEdge<Vertex> {
     pub fn reverse(self) -> Self {
         Self(self.0.map(|[a, b]| {
             [
-                Vertex::new(-b.position(), b.curve().reverse(), *b.global()),
-                Vertex::new(-a.position(), a.curve().reverse(), *a.global()),
+                Vertex::new(
+                    -b.position(),
+                    b.curve().reverse(),
+                    *b.global_form(),
+                ),
+                Vertex::new(
+                    -a.position(),
+                    a.curve().reverse(),
+                    *a.global_form(),
+                ),
             ]
         }))
     }
 
     /// Convert this instance into its global variant
     pub fn to_global(&self) -> VerticesOfEdge<GlobalVertex> {
-        VerticesOfEdge(self.convert(|vertex| *vertex.global()))
+        VerticesOfEdge(self.convert(|vertex| *vertex.global_form()))
     }
 }

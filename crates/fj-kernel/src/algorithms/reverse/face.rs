@@ -77,7 +77,7 @@ fn reverse_local_coordinates_in_cycle<'r>(
             };
 
             let vertices = edge.vertices().map(|vertex| {
-                Vertex::new(vertex.position(), curve, *vertex.global())
+                Vertex::new(vertex.position(), curve, *vertex.global_form())
             });
 
             Edge::from_curve_and_vertices(curve, vertices)

@@ -72,7 +72,7 @@ fn create_non_continuous_side_face(
 
         let vertices = {
             let vertices = vertices.map(|vertex| {
-                Vertex::new(vertex.position(), curve, *vertex.global())
+                Vertex::new(vertex.position(), curve, *vertex.global_form())
             });
             VerticesOfEdge::from_vertices(vertices)
         };
@@ -90,7 +90,7 @@ fn create_non_continuous_side_face(
 
         let global_vertices = side_edges.map(|edge| {
             let [_, vertex] = edge.vertices().get_or_panic();
-            *vertex.global()
+            *vertex.global_form()
         });
 
         let curve = {
@@ -145,7 +145,7 @@ fn create_non_continuous_side_face(
             let [_, prev_last] = edges[i].vertices().get_or_panic();
             let [next_first, _] = edges[j].vertices().get_or_panic();
 
-            if prev_last.global() != next_first.global() {
+            if prev_last.global_form() != next_first.global_form() {
                 edges[j] = edges[j].reverse();
             }
 

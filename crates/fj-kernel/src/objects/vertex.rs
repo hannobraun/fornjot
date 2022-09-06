@@ -5,8 +5,8 @@ use super::Curve;
 /// A vertex
 ///
 /// `Vertex` is defined in terms of a 1-dimensional position on a curve. If you
-/// need the 3D position of a vertex, you can use [`Vertex::global`], to get
-/// access of the global form of a vertex ([`GlobalVertex`]).
+/// need the 3D position of a vertex, you can use [`Vertex::global_form`], to
+/// get access of the global form of a vertex ([`GlobalVertex`]).
 ///
 /// # Implementation Note
 ///
@@ -48,7 +48,7 @@ impl Vertex {
     }
 
     /// Access the global form of this vertex
-    pub fn global(&self) -> &GlobalVertex {
+    pub fn global_form(&self) -> &GlobalVertex {
         &self.global
     }
 }

@@ -68,7 +68,7 @@ impl Sweep for (Vertex, Surface) {
         // With that out of the way, let's start by creating the `GlobalEdge`,
         // as that is the most straight-forward part of this operations, and
         // we're going to need it soon anyway.
-        let edge_global = vertex.global().sweep(path, tolerance, color);
+        let edge_global = vertex.global_form().sweep(path, tolerance, color);
 
         // Next, let's compute the surface coordinates of the two vertices of
         // the output `Edge`, as we're going to need these for the rest of this

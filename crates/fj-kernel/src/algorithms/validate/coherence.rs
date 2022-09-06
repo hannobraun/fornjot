@@ -51,7 +51,7 @@ pub fn validate_vertex(
         .global()
         .kind()
         .point_from_curve_coords(local);
-    let global = vertex.global().position();
+    let global = vertex.global_form().position();
     let distance = (local_as_global - global).magnitude();
 
     if distance > max_distance {
