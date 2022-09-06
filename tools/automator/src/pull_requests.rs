@@ -1,6 +1,7 @@
 use std::collections::BTreeMap;
 
 use anyhow::anyhow;
+use autolib::find_version_in_str;
 use octocrab::{
     models::pulls::PullRequest as OctoPullRequest,
     params::{pulls::Sort, Direction, State},
@@ -9,6 +10,7 @@ use url::Url;
 
 pub struct PullRequestsSinceLastRelease {
     pub pull_requests: BTreeMap<u64, PullRequest>,
+    pub version_of_last_release: semver::Version,
 }
 
 impl PullRequestsSinceLastRelease {
@@ -16,7 +18,7 @@ impl PullRequestsSinceLastRelease {
         let mut pull_requests = BTreeMap::new();
         let mut page = 1u32;
 
-        'outer: loop {
+        let version_of_last_release = 'outer: loop {
             const MAX_RESULTS_PER_PAGE: u8 = 100;
 
             println!("Fetching page {}...", page);
@@ -42,7 +44,21 @@ impl PullRequestsSinceLastRelease {
                             // PR. Unless it has been updated since being merged
                             // (which we prevent, by locking release PRs as part
                             // of the release procedure), we can stop here.
-                            break 'outer;
+
+                            let title =
+                                pull_request.title.ok_or_else(|| {
+                                    anyhow!("Release PR is missing title")
+                                })?;
+                            let version = find_version_in_str(&title)?;
+
+                            let version = version.ok_or_else(|| {
+                                anyhow!(
+                                    "Pull request title contains no version:\
+                                    {title}"
+                                )
+                            })?;
+
+                            break 'outer version;
                         }
                     }
                 }
@@ -73,9 +89,12 @@ impl PullRequestsSinceLastRelease {
             } else {
                 return Err(anyhow!("Could not find previous release PR"));
             }
-        }
+        };
 
-        Ok(Self { pull_requests })
+        Ok(Self {
+            pull_requests,
+            version_of_last_release,
+        })
     }
 }
 
