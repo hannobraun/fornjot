@@ -34,7 +34,7 @@ impl Edge {
         vertices: VerticesOfEdge<Vertex>,
         global: GlobalEdge,
     ) -> Self {
-        assert_eq!(curve.global(), global.curve());
+        assert_eq!(curve.global_form(), global.curve());
         assert_eq!(&vertices.to_global(), global.vertices());
 
         // Make sure that the edge vertices are not coincident on the curve. If
@@ -67,7 +67,8 @@ impl Edge {
         curve: Curve,
         vertices: VerticesOfEdge<Vertex>,
     ) -> Self {
-        let global = GlobalEdge::new(*curve.global(), vertices.to_global());
+        let global =
+            GlobalEdge::new(*curve.global_form(), vertices.to_global());
         Self::new(curve, vertices, global)
     }
 
@@ -105,7 +106,7 @@ impl fmt::Display for Edge {
             None => write!(f, "continuous edge")?,
         }
 
-        write!(f, " on {:?}", self.curve().global())?;
+        write!(f, " on {:?}", self.curve().global_form())?;
 
         Ok(())
     }

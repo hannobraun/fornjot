@@ -72,7 +72,7 @@ fn reverse_local_coordinates_in_cycle<'r>(
                 Curve::new(
                     edge.curve().surface().reverse(),
                     local,
-                    *edge.curve().global(),
+                    *edge.curve().global_form(),
                 )
             };
 

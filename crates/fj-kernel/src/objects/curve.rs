@@ -42,7 +42,7 @@ impl Curve {
     }
 
     /// Access the global form of this curve
-    pub fn global(&self) -> &GlobalCurve {
+    pub fn global_form(&self) -> &GlobalCurve {
         &self.global
     }
 }

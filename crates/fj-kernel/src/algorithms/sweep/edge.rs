@@ -67,7 +67,7 @@ fn create_non_continuous_side_face(
             let kind =
                 CurveKind::Line(Line::from_points_with_line_coords(points));
 
-            Curve::new(surface, kind, *edge.curve().global())
+            Curve::new(surface, kind, *edge.curve().global_form())
         };
 
         let vertices = {
@@ -94,7 +94,8 @@ fn create_non_continuous_side_face(
         });
 
         let curve = {
-            let global = bottom_edge.curve().global().translate(path.inner());
+            let global =
+                bottom_edge.curve().global_form().translate(path.inner());
 
             // Please note that creating a line here is correct, even if the
             // global curve is a circle. Projected into the side surface, it is
@@ -110,7 +111,7 @@ fn create_non_continuous_side_face(
 
         let global = {
             GlobalEdge::new(
-                *curve.global(),
+                *curve.global_form(),
                 VerticesOfEdge::from_vertices(global_vertices),
             )
         };

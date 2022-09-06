@@ -15,7 +15,7 @@ impl Approx for Curve {
         tolerance: Tolerance,
         range: Self::Params,
     ) -> Self::Approximation {
-        self.global()
+        self.global_form()
             .approx(tolerance, range)
             .into_iter()
             .map(|(point_curve, point_global)| {

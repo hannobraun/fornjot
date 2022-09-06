@@ -11,7 +11,7 @@ impl Sweep for Curve {
         tolerance: impl Into<crate::algorithms::approx::Tolerance>,
         color: fj_interop::mesh::Color,
     ) -> Self::Swept {
-        self.global().sweep(path, tolerance, color)
+        self.global_form().sweep(path, tolerance, color)
     }
 }
 

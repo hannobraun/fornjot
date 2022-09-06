@@ -139,7 +139,7 @@ pub trait ObjectIters<'r> {
 
 impl<'r> ObjectIters<'r> for Curve {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
-        vec![self.global() as &dyn ObjectIters]
+        vec![self.global_form() as &dyn ObjectIters]
     }
 
     fn curve_iter(&'r self) -> Iter<&'r Curve> {

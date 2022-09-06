@@ -61,7 +61,7 @@ impl Sweep for (Vertex, Surface) {
                 path: surface_path,
             }) = surface;
 
-            assert_eq!(vertex.curve().global().kind(), &surface_curve);
+            assert_eq!(vertex.curve().global_form().kind(), &surface_curve);
             assert_eq!(path.inner(), surface_path);
         }
 
