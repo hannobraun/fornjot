@@ -1,6 +1,6 @@
 use fj_math::Point;
 
-use super::Curve;
+use super::{Curve, Surface};
 
 /// A vertex
 ///
@@ -50,6 +50,45 @@ impl Vertex {
     /// Access the global form of this vertex
     pub fn global_form(&self) -> &GlobalVertex {
         &self.global
+    }
+}
+
+/// A vertex, defined in surface (2D) coordinates
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct SurfaceVertex {
+    position: Point<2>,
+    surface: Surface,
+    global_form: GlobalVertex,
+}
+
+impl SurfaceVertex {
+    /// Construct a new instance of `SurfaceVertex`
+    pub fn new(
+        position: impl Into<Point<2>>,
+        surface: Surface,
+        global_form: GlobalVertex,
+    ) -> Self {
+        let position = position.into();
+        Self {
+            position,
+            surface,
+            global_form,
+        }
+    }
+
+    /// Access the position of the vertex on the surface
+    pub fn position(&self) -> Point<2> {
+        self.position
+    }
+
+    /// Access the surface that the vertex is defined on
+    pub fn surface(&self) -> &Surface {
+        &self.surface
+    }
+
+    /// Access the global form of this vertex
+    pub fn global_form(&self) -> &GlobalVertex {
+        &self.global_form
     }
 }
 

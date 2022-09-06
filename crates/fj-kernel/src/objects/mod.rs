@@ -23,5 +23,5 @@ pub use self::{
     sketch::Sketch,
     solid::Solid,
     surface::{Surface, SweptCurve},
-    vertex::{GlobalVertex, Vertex},
+    vertex::{GlobalVertex, SurfaceVertex, Vertex},
 };
