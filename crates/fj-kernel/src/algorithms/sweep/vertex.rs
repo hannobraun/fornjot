@@ -91,10 +91,10 @@ impl Sweep for (Vertex, Surface) {
         // Armed with those coordinates, creating the `Curve` of the output
         // `Edge` becomes straight-forward.
         let curve = {
-            let a = Point::from([u, v_a]);
-            let b = Point::from([u, v_b]);
+            let a_surface = Point::from([u, v_a]);
+            let b_surface = Point::from([u, v_b]);
 
-            let line = Line::from_points([a, b]);
+            let line = Line::from_points([a_surface, b_surface]);
 
             Curve::new(surface, CurveKind::Line(line), *edge_global.curve())
         };
