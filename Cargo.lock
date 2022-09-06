@@ -232,6 +232,7 @@ dependencies = [
  "clap",
  "map-macro",
  "octocrab",
+ "semver",
  "tokio",
  "url",
 ]

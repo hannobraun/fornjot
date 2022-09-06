@@ -9,6 +9,7 @@ anyhow = "1.0.64"
 chrono = "0.4.22"
 map-macro = "0.2.4"
 octocrab = "0.17.0"
+semver = "1.0.13"
 url = "2.2.2"
 
 [dependencies.autolib]
