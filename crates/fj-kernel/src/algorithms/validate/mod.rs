@@ -184,18 +184,17 @@ mod tests {
 
     #[test]
     fn coherence_edge() {
-        let a = Point::from([0., 0., 0.]);
-        let b = Point::from([1., 0., 0.]);
+        let points_global = [[0., 0., 0.], [1., 0., 0.]];
 
         let curve = {
             let curve_local = CurveKind::line_from_points([[0., 0.], [1., 0.]]);
-            let curve_global =
-                GlobalCurve::from_kind(CurveKind::line_from_points([a, b]));
+            let curve_global = GlobalCurve::from_kind(
+                CurveKind::line_from_points(points_global),
+            );
             Curve::new(Surface::xy_plane(), curve_local, curve_global)
         };
 
-        let a = GlobalVertex::from_position(a);
-        let b = GlobalVertex::from_position(b);
+        let [a, b] = points_global.map(GlobalVertex::from_position);
 
         let deviation = Scalar::from_f64(0.25);
 
