@@ -101,10 +101,10 @@ impl Sweep for (Vertex, Surface) {
 
         // And now the vertices. Again, nothing wild here.
         let vertices = {
-            let [&a, &b] = edge_global.vertices().get_or_panic();
+            let [&a_global, &b_global] = edge_global.vertices().get_or_panic();
 
-            let a = Vertex::new([v_a], curve, a);
-            let b = Vertex::new([v_b], curve, b);
+            let a = Vertex::new([v_a], curve, a_global);
+            let b = Vertex::new([v_b], curve, b_global);
 
             VerticesOfEdge::from_vertices([a, b])
         };
