@@ -55,8 +55,8 @@ impl Cycle {
                 let [next, _] = b.vertices().get_or_panic();
 
                 assert_eq!(
-                    prev.global_form(),
-                    next.global_form(),
+                    prev.surface_form(),
+                    next.surface_form(),
                     "Edges in cycle do not connect"
                 );
             }
@@ -68,8 +68,8 @@ impl Cycle {
                     let [_, last] = last.vertices().get_or_panic();
 
                     assert_eq!(
-                        first.global_form(),
-                        last.global_form(),
+                        first.surface_form(),
+                        last.surface_form(),
                         "Edges do not form a cycle"
                     );
                 }
