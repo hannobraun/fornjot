@@ -11,16 +11,8 @@ pub struct PullRequestsSinceLastRelease {
     pub pull_requests: BTreeMap<u64, PullRequest>,
 }
 
-pub struct PullRequest {
-    pub number: u64,
-    pub title: String,
-    pub url: Url,
-    pub author: Author,
-}
-
-impl PullRequest {
-    pub async fn fetch_since_last_release(
-    ) -> anyhow::Result<PullRequestsSinceLastRelease> {
+impl PullRequestsSinceLastRelease {
+    pub async fn fetch_since_last_release() -> anyhow::Result<Self> {
         let mut pull_requests = BTreeMap::new();
         let mut page = 1u32;
 
@@ -66,7 +58,7 @@ impl PullRequest {
                     .ok_or_else(|| anyhow!("Pull request is missing URL"))?;
                 let author = Author::from_pull_request(&pull_request)?;
 
-                let pull_request = Self {
+                let pull_request = PullRequest {
                     number,
                     title,
                     url,
@@ -83,8 +75,15 @@ impl PullRequest {
             }
         }
 
-        Ok(PullRequestsSinceLastRelease { pull_requests })
+        Ok(Self { pull_requests })
     }
+}
+
+pub struct PullRequest {
+    pub number: u64,
+    pub title: String,
+    pub url: Url,
+    pub author: Author,
 }
 
 pub struct Author {
