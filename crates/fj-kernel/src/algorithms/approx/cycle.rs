@@ -6,17 +6,12 @@ use super::{Approx, Tolerance};
 
 impl Approx for Cycle {
     type Approximation = CycleApprox;
-    type Params = ();
 
-    fn approx(
-        &self,
-        tolerance: Tolerance,
-        (): Self::Params,
-    ) -> Self::Approximation {
+    fn approx(&self, tolerance: Tolerance) -> Self::Approximation {
         let mut points = Vec::new();
 
         for edge in self.edges() {
-            let edge_points = edge.approx(tolerance, ());
+            let edge_points = edge.approx(tolerance);
             points.extend(edge_points);
         }
 

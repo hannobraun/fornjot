@@ -6,13 +6,8 @@ use super::{curve::RangeOnCurve, Approx};
 
 impl Approx for Edge {
     type Approximation = Vec<(Point<2>, Point<3>)>;
-    type Params = ();
 
-    fn approx(
-        &self,
-        tolerance: super::Tolerance,
-        (): Self::Params,
-    ) -> Self::Approximation {
+    fn approx(&self, tolerance: super::Tolerance) -> Self::Approximation {
         // The range is only used for circles right now.
         let boundary = match self.vertices().get() {
             Some(vertices) => vertices.map(|&vertex| vertex),
@@ -69,7 +64,7 @@ impl Approx for Edge {
 
         let range = RangeOnCurve { boundary };
 
-        let mut points = (*self.curve(), range).approx(tolerance, ());
+        let mut points = (*self.curve(), range).approx(tolerance);
         points.insert(
             0,
             (

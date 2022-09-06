@@ -8,17 +8,12 @@ use super::{Approx, Tolerance};
 
 impl Approx for (Curve, RangeOnCurve) {
     type Approximation = Vec<(Point<2>, Point<3>)>;
-    type Params = ();
 
-    fn approx(
-        &self,
-        tolerance: Tolerance,
-        _: Self::Params,
-    ) -> Self::Approximation {
+    fn approx(&self, tolerance: Tolerance) -> Self::Approximation {
         let &(curve, range) = self;
 
         (*curve.global_form(), range)
-            .approx(tolerance, ())
+            .approx(tolerance)
             .into_iter()
             .map(|(point_curve, point_global)| {
                 let point_surface =
@@ -31,13 +26,8 @@ impl Approx for (Curve, RangeOnCurve) {
 
 impl Approx for (GlobalCurve, RangeOnCurve) {
     type Approximation = Vec<(Point<1>, Point<3>)>;
-    type Params = ();
 
-    fn approx(
-        &self,
-        tolerance: Tolerance,
-        _: Self::Params,
-    ) -> Self::Approximation {
+    fn approx(&self, tolerance: Tolerance) -> Self::Approximation {
         let &(curve, range) = self;
 
         let mut points = Vec::new();
