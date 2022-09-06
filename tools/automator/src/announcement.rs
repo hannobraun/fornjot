@@ -18,8 +18,10 @@ pub async fn create_release_announcement(
     let year = now.year();
     let week = now.iso_week().week();
 
-    let pull_requests =
-        PullRequest::fetch_since_last_release().await?.into_values();
+    let pull_requests = PullRequest::fetch_since_last_release()
+        .await?
+        .pull_requests
+        .into_values();
 
     let mut file = create_file(year, week).await?;
     generate_announcement(week, version, pull_requests, &mut file).await?;

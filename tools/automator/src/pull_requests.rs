@@ -7,6 +7,10 @@ use octocrab::{
 };
 use url::Url;
 
+pub struct PullRequestsSinceLastRelease {
+    pub pull_requests: BTreeMap<u64, PullRequest>,
+}
+
 pub struct PullRequest {
     pub number: u64,
     pub title: String,
@@ -16,7 +20,7 @@ pub struct PullRequest {
 
 impl PullRequest {
     pub async fn fetch_since_last_release(
-    ) -> anyhow::Result<BTreeMap<u64, Self>> {
+    ) -> anyhow::Result<PullRequestsSinceLastRelease> {
         let mut pull_requests = BTreeMap::new();
         let mut page = 1u32;
 
@@ -79,7 +83,7 @@ impl PullRequest {
             }
         }
 
-        Ok(pull_requests)
+        Ok(PullRequestsSinceLastRelease { pull_requests })
     }
 }
 
