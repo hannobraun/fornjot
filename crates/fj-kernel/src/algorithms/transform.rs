@@ -65,17 +65,6 @@ impl TransformObject for Edge {
 
 impl TransformObject for Face {
     fn transform(self, transform: &Transform) -> Self {
-        if let Some(triangles) = self.triangles() {
-            let mut target = Vec::new();
-
-            for (triangle, color) in triangles.clone() {
-                let triangle = transform.transform_triangle(&triangle);
-                target.push((triangle, color));
-            }
-
-            return Self::from_triangles(target);
-        }
-
         let surface = self.surface().transform(transform);
 
         let exteriors = transform_cycles(self.exteriors(), transform);

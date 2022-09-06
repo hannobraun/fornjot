@@ -19,13 +19,6 @@ pub fn triangulate(
     let mut mesh = Mesh::new();
 
     for face in faces {
-        if let Some(triangles) = face.triangles() {
-            for &(triangle, color) in triangles {
-                mesh.push_triangle(triangle, color);
-            }
-            continue;
-        }
-
         let surface = face.surface();
         let approx = face.approx(tolerance);
 
