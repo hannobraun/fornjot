@@ -184,10 +184,11 @@ mod tests {
 
     #[test]
     fn coherence_edge() {
+        let points_surface = [[0., 0.], [1., 0.]];
         let points_global = [[0., 0., 0.], [1., 0., 0.]];
 
         let curve = {
-            let curve_local = CurveKind::line_from_points([[0., 0.], [1., 0.]]);
+            let curve_local = CurveKind::line_from_points(points_surface);
             let curve_global = GlobalCurve::from_kind(
                 CurveKind::line_from_points(points_global),
             );
