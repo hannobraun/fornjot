@@ -69,7 +69,7 @@ impl Approx for Edge {
 
         let range = RangeOnCurve { boundary };
 
-        let mut points = self.curve().approx(tolerance, range);
+        let mut points = (*self.curve(), range).approx(tolerance, ());
         points.insert(
             0,
             (
