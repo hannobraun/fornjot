@@ -37,15 +37,16 @@ impl Approx for GlobalCurve {
         range: Self::Params,
     ) -> Self::Approximation {
         let mut points = Vec::new();
+        points.push((
+            range.start().position(),
+            range.start().global_form().position(),
+        ));
 
         match self.kind() {
             CurveKind::Circle(curve) => {
                 approx_circle(curve, range, tolerance, &mut points);
             }
-            CurveKind::Line(_) => points.push((
-                range.start().position(),
-                range.start().global_form().position(),
-            )),
+            CurveKind::Line(_) => {}
         }
 
         points
@@ -72,11 +73,6 @@ fn approx_circle(
     // the circumscribed circle and the incircle.
 
     let n = number_of_vertices_for_circle(tolerance, radius, range.length());
-
-    points.push((
-        range.start().position(),
-        range.start().global_form().position(),
-    ));
 
     for i in 1..n {
         let angle = range.start().position().t
