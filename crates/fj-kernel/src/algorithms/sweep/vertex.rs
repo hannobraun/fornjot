@@ -5,7 +5,7 @@ use crate::{
     algorithms::approx::Tolerance,
     objects::{
         Curve, CurveKind, Edge, GlobalCurve, GlobalEdge, GlobalVertex, Surface,
-        SweptCurve, Vertex, VerticesOfEdge,
+        SurfaceVertex, SweptCurve, Vertex, VerticesOfEdge,
     },
 };
 
@@ -105,10 +105,30 @@ impl Sweep for (Vertex, Surface) {
             // https://doc.rust-lang.org/std/primitive.array.html#method.zip
             let [a_surface, b_surface] = points_surface;
             let [a_global, b_global] = vertices_global;
+            let vertices_surface =
+                [(a_surface, a_global), (b_surface, b_global)].map(
+                    |(point_surface, &vertex_global)| {
+                        SurfaceVertex::new(
+                            point_surface,
+                            surface,
+                            vertex_global,
+                        )
+                    },
+                );
+
+            // Can be cleaned up, once `zip` is stable:
+            // https://doc.rust-lang.org/std/primitive.array.html#method.zip
+            let [a_surface, b_surface] = vertices_surface;
+            let [a_global, b_global] = vertices_global;
             let vertices = [(a_surface, a_global), (b_surface, b_global)];
 
-            let vertices = vertices.map(|(point_surface, &vertex_global)| {
-                Vertex::new([point_surface.v], curve, vertex_global)
+            let vertices = vertices.map(|(vertex_surface, &vertex_global)| {
+                Vertex::new(
+                    [vertex_surface.position().v],
+                    curve,
+                    vertex_surface,
+                    vertex_global,
+                )
             });
 
             VerticesOfEdge::from_vertices(vertices)

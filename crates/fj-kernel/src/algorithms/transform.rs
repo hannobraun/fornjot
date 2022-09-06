@@ -150,6 +150,7 @@ impl TransformObject for Vertex {
         Self::new(
             self.position(),
             self.curve().transform(transform),
+            self.surface_form().transform(transform),
             self.global_form().transform(transform),
         )
     }

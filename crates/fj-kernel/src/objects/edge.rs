@@ -216,11 +216,13 @@ impl VerticesOfEdge<Vertex> {
                 Vertex::new(
                     -b.position(),
                     b.curve().reverse(),
+                    *b.surface_form(),
                     *b.global_form(),
                 ),
                 Vertex::new(
                     -a.position(),
                     a.curve().reverse(),
+                    *a.surface_form(),
                     *a.global_form(),
                 ),
             ]

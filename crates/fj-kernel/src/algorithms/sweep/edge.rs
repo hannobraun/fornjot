@@ -8,8 +8,8 @@ use crate::{
         transform::TransformObject,
     },
     objects::{
-        Curve, CurveKind, Cycle, Edge, Face, GlobalEdge, Surface, Vertex,
-        VerticesOfEdge,
+        Curve, CurveKind, Cycle, Edge, Face, GlobalEdge, Surface,
+        SurfaceVertex, Vertex, VerticesOfEdge,
     },
 };
 
@@ -73,9 +73,31 @@ fn create_non_continuous_side_face(
         };
 
         let vertices = {
-            let vertices = vertices.map(|vertex| {
-                Vertex::new(vertex.position(), curve, *vertex.global_form())
-            });
+            let points_surface = points_curve_and_surface
+                .map(|(_, point_surface)| point_surface);
+
+            // Can be cleaned up, once `zip` is stable:
+            // https://doc.rust-lang.org/std/primitive.array.html#method.zip
+            let [a_vertex, b_vertex] = vertices;
+            let [a_surface, b_surface] = points_surface;
+            let vertices_with_surface_points =
+                [(a_vertex, a_surface), (b_vertex, b_surface)];
+
+            let vertices =
+                vertices_with_surface_points.map(|(vertex, point_surface)| {
+                    let surface_vertex = SurfaceVertex::new(
+                        point_surface,
+                        surface,
+                        *vertex.global_form(),
+                    );
+
+                    Vertex::new(
+                        vertex.position(),
+                        curve,
+                        surface_vertex,
+                        *vertex.global_form(),
+                    )
+                });
             VerticesOfEdge::from_vertices(vertices)
         };
 
@@ -121,14 +143,28 @@ fn create_non_continuous_side_face(
         };
 
         let vertices = {
+            let surface_points = points_curve_and_surface
+                .map(|(_, point_surface)| point_surface);
+
             // Can be cleaned up, once `zip` is stable:
             // https://doc.rust-lang.org/std/primitive.array.html#method.zip
             let [a_vertex, b_vertex] = bottom_vertices;
+            let [a_surface, b_surface] = surface_points;
             let [a_global, b_global] = global_vertices;
-            let vertices = [(a_vertex, a_global), (b_vertex, b_global)];
+            let vertices = [
+                (a_vertex, a_surface, a_global),
+                (b_vertex, b_surface, b_global),
+            ];
 
-            vertices.map(|(vertex, vertex_global)| {
-                Vertex::new(vertex.position(), curve, vertex_global)
+            vertices.map(|(vertex, point_surface, vertex_global)| {
+                let vertex_surface =
+                    SurfaceVertex::new(point_surface, surface, vertex_global);
+                Vertex::new(
+                    vertex.position(),
+                    curve,
+                    vertex_surface,
+                    vertex_global,
+                )
             })
         };
 

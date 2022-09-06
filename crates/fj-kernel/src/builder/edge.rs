@@ -1,8 +1,8 @@
 use fj_math::{Circle, Line, Point, Scalar, Vector};
 
 use crate::objects::{
-    Curve, CurveKind, Edge, GlobalCurve, GlobalVertex, Surface, Vertex,
-    VerticesOfEdge,
+    Curve, CurveKind, Edge, GlobalCurve, GlobalVertex, Surface, SurfaceVertex,
+    Vertex, VerticesOfEdge,
 };
 
 /// API for building an [`Edge`]
@@ -50,6 +50,22 @@ impl EdgeBuilder {
             GlobalVertex::from_position(position)
         });
 
+        let surface_vertices = {
+            // Can be cleaned up, once `zip` is stable:
+            // https://doc.rust-lang.org/std/primitive.array.html#method.zip
+            let [a_surface, b_surface] = points;
+            let [a_global, b_global] = global_vertices;
+            [(a_surface, a_global), (b_surface, b_global)].map(
+                |(point_surface, vertex_global)| {
+                    SurfaceVertex::new(
+                        point_surface,
+                        self.surface,
+                        vertex_global,
+                    )
+                },
+            )
+        };
+
         let curve = {
             let curve_local = CurveKind::Line(Line::from_points(points));
             let curve_global = {
@@ -64,9 +80,11 @@ impl EdgeBuilder {
 
         let vertices = {
             let [a_global, b_global] = global_vertices;
+            let [a_surface, b_surface] = surface_vertices;
+
             let vertices = [
-                Vertex::new(Point::from([0.]), curve, a_global),
-                Vertex::new(Point::from([1.]), curve, b_global),
+                Vertex::new(Point::from([0.]), curve, a_surface, a_global),
+                Vertex::new(Point::from([1.]), curve, b_surface, b_global),
             ];
 
             VerticesOfEdge::from_vertices(vertices)

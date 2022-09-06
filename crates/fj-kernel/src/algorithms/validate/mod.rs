@@ -161,8 +161,8 @@ mod tests {
     use crate::{
         algorithms::validate::{Validate, ValidationConfig, ValidationError},
         objects::{
-            Curve, CurveKind, Edge, GlobalCurve, GlobalVertex, Surface, Vertex,
-            VerticesOfEdge,
+            Curve, CurveKind, Edge, GlobalCurve, GlobalVertex, Surface,
+            SurfaceVertex, Vertex, VerticesOfEdge,
         },
     };
 
@@ -200,14 +200,27 @@ mod tests {
         let [a_global, b_global] =
             points_global.map(GlobalVertex::from_position);
 
+        let [a_surface, b_surface] = {
+            // Can be cleaned up, once `zip` is stable:
+            // https://doc.rust-lang.org/std/primitive.array.html#method.zip
+            let [a_surface, b_surface] = points_surface;
+            [(a_surface, a_global), (b_surface, b_global)].map(
+                |(point_surface, vertex_global)| {
+                    SurfaceVertex::new(point_surface, surface, vertex_global)
+                },
+            )
+        };
+
         let deviation = Scalar::from_f64(0.25);
 
         let a = Vertex::new(
             Point::from([Scalar::ZERO + deviation]),
             curve,
+            a_surface,
             a_global,
         );
-        let b = Vertex::new(Point::from([Scalar::ONE]), curve, b_global);
+        let b =
+            Vertex::new(Point::from([Scalar::ONE]), curve, b_surface, b_global);
         let vertices = VerticesOfEdge::from_vertices([a, b]);
 
         let edge = Edge::from_curve_and_vertices(curve, vertices);
