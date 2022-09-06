@@ -84,25 +84,34 @@ impl Sweep for (Vertex, Surface) {
         // thereby defined its coordinate system. That makes the v-coordinates
         // straight-forward: The start of the edge is at zero, the end is at
         // one.
-        let a_surface = Point::from([vertex.position().t, Scalar::ZERO]);
-        let b_surface = Point::from([vertex.position().t, Scalar::ONE]);
+        let points_surface = [
+            Point::from([vertex.position().t, Scalar::ZERO]),
+            Point::from([vertex.position().t, Scalar::ONE]),
+        ];
 
         // Armed with those coordinates, creating the `Curve` of the output
         // `Edge` becomes straight-forward.
         let curve = {
-            let line = Line::from_points([a_surface, b_surface]);
+            let line = Line::from_points(points_surface);
 
             Curve::new(surface, CurveKind::Line(line), *edge_global.curve())
         };
 
         // And now the vertices. Again, nothing wild here.
         let vertices = {
-            let [&a_global, &b_global] = edge_global.vertices().get_or_panic();
+            let vertices_global = edge_global.vertices().get_or_panic();
 
-            let a = Vertex::new([a_surface.v], curve, a_global);
-            let b = Vertex::new([b_surface.v], curve, b_global);
+            // Can be cleaned up, once `zip` is stable:
+            // https://doc.rust-lang.org/std/primitive.array.html#method.zip
+            let [a_surface, b_surface] = points_surface;
+            let [a_global, b_global] = vertices_global;
+            let vertices = [(a_surface, a_global), (b_surface, b_global)];
 
-            VerticesOfEdge::from_vertices([a, b])
+            let vertices = vertices.map(|(point_surface, &vertex_global)| {
+                Vertex::new([point_surface.v], curve, vertex_global)
+            });
+
+            VerticesOfEdge::from_vertices(vertices)
         };
 
         // And finally, creating the output `Edge` is just a matter of
