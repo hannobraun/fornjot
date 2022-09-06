@@ -10,21 +10,28 @@ use tokio::{
 
 use crate::pull_requests::{Author, PullRequest, PullRequestsSinceLastRelease};
 
-pub async fn create_release_announcement(
-    version: String,
-) -> anyhow::Result<()> {
+pub async fn create_release_announcement() -> anyhow::Result<()> {
     let now = Utc::now();
 
     let year = now.year();
     let week = now.iso_week().week();
 
-    let pull_requests = PullRequestsSinceLastRelease::fetch()
-        .await?
-        .pull_requests
-        .into_values();
+    let pull_requests_since_last_release =
+        PullRequestsSinceLastRelease::fetch().await?;
+
+    let pull_requests =
+        pull_requests_since_last_release.pull_requests.into_values();
+
+    // For now, it's good enough to just release a new minor version every week.
+    // We could also determine whether there were breaking changes to make sure
+    // we actually need it, but as of now, breaking changes every week are
+    // pretty much a given.
+    let mut version = pull_requests_since_last_release.version_of_last_release;
+    version.minor += 1;
 
     let mut file = create_file(year, week).await?;
-    generate_announcement(week, version, pull_requests, &mut file).await?;
+    generate_announcement(week, version.to_string(), pull_requests, &mut file)
+        .await?;
 
     Ok(())
 }
