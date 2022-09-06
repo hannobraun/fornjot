@@ -102,23 +102,23 @@ pub struct RangeOnCurve {
 }
 
 impl RangeOnCurve {
-    fn start(&self) -> Vertex {
+    pub fn start(&self) -> Vertex {
         self.boundary[0]
     }
 
-    fn end(&self) -> Vertex {
+    pub fn end(&self) -> Vertex {
         self.boundary[1]
     }
 
-    fn signed_length(&self) -> Scalar {
+    pub fn signed_length(&self) -> Scalar {
         (self.end().position() - self.start().position()).t
     }
 
-    fn length(&self) -> Scalar {
+    pub fn length(&self) -> Scalar {
         self.signed_length().abs()
     }
 
-    fn direction(&self) -> Scalar {
+    pub fn direction(&self) -> Scalar {
         self.signed_length().sign()
     }
 }
