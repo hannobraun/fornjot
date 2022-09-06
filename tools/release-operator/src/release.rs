@@ -1,5 +1,6 @@
+use autolib::find_version_in_str;
+
 use crate::{Actions, GitHub};
-use regex::Regex;
 use std::fmt::{Display, Formatter};
 
 pub struct Release {
@@ -43,25 +44,7 @@ impl Release {
         let commit: String = cmd_lib::run_fun!(git log -n 1 "${sha}")?;
 
         // A release commits need to contain a semver version number.
-        let version = Regex::new(r"(\d+\.\d+\.\d+)")?
-            .find_iter(&commit)
-            .inspect(|version| {
-                log::info!(
-                    "Found candidate for version in commit message: {}",
-                    version.as_str(),
-                );
-            })
-            .find(|m| {
-                let confirmed = semver::Version::parse(m.as_str()).is_ok();
-
-                if confirmed {
-                    log::info!("Candidate confirmed.");
-                } else {
-                    log::info!("Candidate not confirmed.");
-                }
-
-                confirmed
-            });
+        let version = find_version_in_str(&commit)?;
 
         match version {
             Some(v) => self.hit(v.as_str()),

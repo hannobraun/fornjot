@@ -2,3 +2,9 @@
 name = "autolib"
 version = "0.1.0"
 edition = "2021"
+
+[dependencies]
+anyhow = "1.0.64"
+log = "0.4.17"
+regex = "1.6.0"
+semver = "1.0.13"
