@@ -37,10 +37,6 @@ impl Approx for GlobalCurve {
         range: Self::Params,
     ) -> Self::Approximation {
         let mut points = Vec::new();
-        points.push((
-            range.start().position(),
-            range.start().global_form().position(),
-        ));
 
         match self.kind() {
             CurveKind::Circle(curve) => {
