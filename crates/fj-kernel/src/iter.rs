@@ -181,10 +181,6 @@ impl<'r> ObjectIters<'r> for Edge {
 
 impl<'r> ObjectIters<'r> for Face {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
-        if self.triangles().is_some() {
-            return Vec::new();
-        }
-
         let mut objects = vec![self.surface() as &dyn ObjectIters];
 
         for cycle in self.all_cycles() {

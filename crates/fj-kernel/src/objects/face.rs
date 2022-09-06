@@ -1,7 +1,6 @@
 use std::collections::{btree_set, BTreeSet};
 
 use fj_interop::mesh::Color;
-use fj_math::Triangle;
 
 use crate::builder::FaceBuilder;
 
@@ -68,20 +67,6 @@ impl Face {
                 interiors: Vec::new(),
                 color: Color::default(),
             }),
-        }
-    }
-
-    /// Construct an instance that uses triangle representation
-    ///
-    /// Triangle representation is obsolete, and only still present because
-    /// there is one last place in the kernel code that uses it. Don't add any
-    /// more of those places!
-    ///
-    /// See this issue for more context:
-    /// <https://github.com/hannobraun/Fornjot/issues/97>
-    pub fn from_triangles(triangles: TriRep) -> Self {
-        Self {
-            representation: Representation::TriRep(triangles),
         }
     }
 
@@ -171,46 +156,22 @@ impl Face {
         self.brep().color
     }
 
-    /// Access triangles, if this face uses triangle representation
-    ///
-    /// Only some faces still use triangle representation. At some point, none
-    /// will. This method exists as a workaround, while the transition is still
-    /// in progress.
-    pub fn triangles(&self) -> Option<&TriRep> {
-        if let Representation::TriRep(triangles) = &self.representation {
-            return Some(triangles);
-        }
-
-        None
-    }
-
     /// Access the boundary representation of the face
     fn brep(&self) -> &BRep {
-        if let Representation::BRep(face) = &self.representation {
-            return face;
-        }
-
-        // No code that still uses triangle representation is calling this
-        // method.
-        unreachable!()
+        let Representation::BRep(face) = &self.representation;
+        face
     }
 
     /// Access the boundary representation of the face mutably
     fn brep_mut(&mut self) -> &mut BRep {
-        if let Representation::BRep(face) = &mut self.representation {
-            return face;
-        }
-
-        // No code that still uses triangle representation is calling this
-        // method.
-        unreachable!()
+        let Representation::BRep(face) = &mut self.representation;
+        face
     }
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 enum Representation {
     BRep(BRep),
-    TriRep(TriRep),
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -220,5 +181,3 @@ struct BRep {
     interiors: Vec<Cycle>,
     color: Color,
 }
-
-type TriRep = Vec<(Triangle<3>, Color)>;
