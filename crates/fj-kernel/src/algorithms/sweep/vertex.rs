@@ -84,16 +84,12 @@ impl Sweep for (Vertex, Surface) {
         // thereby defined its coordinate system. That makes the v-coordinates
         // straight-forward: The start of the edge is at zero, the end is at
         // one.
-        let u = vertex.position().t;
-        let v_a = Scalar::ZERO;
-        let v_b = Scalar::ONE;
+        let a_surface = Point::from([vertex.position().t, Scalar::ZERO]);
+        let b_surface = Point::from([vertex.position().t, Scalar::ONE]);
 
         // Armed with those coordinates, creating the `Curve` of the output
         // `Edge` becomes straight-forward.
         let curve = {
-            let a_surface = Point::from([u, v_a]);
-            let b_surface = Point::from([u, v_b]);
-
             let line = Line::from_points([a_surface, b_surface]);
 
             Curve::new(surface, CurveKind::Line(line), *edge_global.curve())
@@ -103,8 +99,8 @@ impl Sweep for (Vertex, Surface) {
         let vertices = {
             let [&a_global, &b_global] = edge_global.vertices().get_or_panic();
 
-            let a = Vertex::new([v_a], curve, a_global);
-            let b = Vertex::new([v_b], curve, b_global);
+            let a = Vertex::new([a_surface.v], curve, a_global);
+            let b = Vertex::new([b_surface.v], curve, b_global);
 
             VerticesOfEdge::from_vertices([a, b])
         };
