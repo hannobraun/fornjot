@@ -19,7 +19,7 @@ use super::{Curve, Surface};
 pub struct Vertex {
     position: Point<1>,
     curve: Curve,
-    global: GlobalVertex,
+    global_form: GlobalVertex,
 }
 
 impl Vertex {
@@ -27,13 +27,13 @@ impl Vertex {
     pub fn new(
         position: impl Into<Point<1>>,
         curve: Curve,
-        global: GlobalVertex,
+        global_form: GlobalVertex,
     ) -> Self {
         let position = position.into();
         Self {
             position,
             curve,
-            global,
+            global_form,
         }
     }
 
@@ -49,7 +49,7 @@ impl Vertex {
 
     /// Access the global form of this vertex
     pub fn global_form(&self) -> &GlobalVertex {
-        &self.global
+        &self.global_form
     }
 }
 
