@@ -4,7 +4,7 @@ use fj_math::{Transform, Vector};
 
 use crate::objects::{
     Curve, Cycle, Edge, Face, GlobalCurve, GlobalVertex, Shell, Sketch, Solid,
-    Surface, Vertex,
+    Surface, SurfaceVertex, Vertex,
 };
 
 /// Transform an object
@@ -37,7 +37,7 @@ pub trait TransformObject: Sized {
 impl TransformObject for Curve {
     fn transform(self, transform: &Transform) -> Self {
         let surface = self.surface().transform(transform);
-        let global = self.global().transform(transform);
+        let global = self.global_form().transform(transform);
 
         // Don't need to transform `self.kind`, as that's in local form.
         Curve::new(surface, *self.kind(), global)
@@ -135,12 +135,23 @@ impl TransformObject for Surface {
     }
 }
 
+impl TransformObject for SurfaceVertex {
+    fn transform(self, transform: &Transform) -> Self {
+        Self::new(
+            self.position(),
+            self.surface().transform(transform),
+            self.global_form().transform(transform),
+        )
+    }
+}
+
 impl TransformObject for Vertex {
     fn transform(self, transform: &Transform) -> Self {
         Self::new(
             self.position(),
             self.curve().transform(transform),
-            self.global().transform(transform),
+            self.surface_form().transform(transform),
+            self.global_form().transform(transform),
         )
     }
 }

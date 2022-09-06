@@ -20,7 +20,7 @@ impl Reverse for Curve {
         Curve::new(
             *self.surface(),
             self.kind().reverse(),
-            self.global().reverse(),
+            self.global_form().reverse(),
         )
     }
 }

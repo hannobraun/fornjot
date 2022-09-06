@@ -34,7 +34,7 @@ impl Edge {
         vertices: VerticesOfEdge<Vertex>,
         global: GlobalEdge,
     ) -> Self {
-        assert_eq!(curve.global(), global.curve());
+        assert_eq!(curve.global_form(), global.curve());
         assert_eq!(&vertices.to_global(), global.vertices());
 
         // Make sure that the edge vertices are not coincident on the curve. If
@@ -67,7 +67,8 @@ impl Edge {
         curve: Curve,
         vertices: VerticesOfEdge<Vertex>,
     ) -> Self {
-        let global = GlobalEdge::new(*curve.global(), vertices.to_global());
+        let global =
+            GlobalEdge::new(*curve.global_form(), vertices.to_global());
         Self::new(curve, vertices, global)
     }
 
@@ -90,7 +91,7 @@ impl Edge {
     }
 
     /// Access the global form of this edge
-    pub fn global(&self) -> &GlobalEdge {
+    pub fn global_form(&self) -> &GlobalEdge {
         &self.global
     }
 }
@@ -105,7 +106,7 @@ impl fmt::Display for Edge {
             None => write!(f, "continuous edge")?,
         }
 
-        write!(f, " on {:?}", self.curve().global())?;
+        write!(f, " on {:?}", self.curve().global_form())?;
 
         Ok(())
     }
@@ -212,14 +213,24 @@ impl VerticesOfEdge<Vertex> {
     pub fn reverse(self) -> Self {
         Self(self.0.map(|[a, b]| {
             [
-                Vertex::new(-b.position(), b.curve().reverse(), *b.global()),
-                Vertex::new(-a.position(), a.curve().reverse(), *a.global()),
+                Vertex::new(
+                    -b.position(),
+                    b.curve().reverse(),
+                    *b.surface_form(),
+                    *b.global_form(),
+                ),
+                Vertex::new(
+                    -a.position(),
+                    a.curve().reverse(),
+                    *a.surface_form(),
+                    *a.global_form(),
+                ),
             ]
         }))
     }
 
     /// Convert this instance into its global variant
     pub fn to_global(&self) -> VerticesOfEdge<GlobalVertex> {
-        VerticesOfEdge(self.convert(|vertex| *vertex.global()))
+        VerticesOfEdge(self.convert(|vertex| *vertex.global_form()))
     }
 }

@@ -139,7 +139,7 @@ pub trait ObjectIters<'r> {
 
 impl<'r> ObjectIters<'r> for Curve {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
-        vec![self.global() as &dyn ObjectIters]
+        vec![self.global_form() as &dyn ObjectIters]
     }
 
     fn curve_iter(&'r self) -> Iter<&'r Curve> {
@@ -281,7 +281,7 @@ impl<'r> ObjectIters<'r> for Vertex {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
         vec![
             self.curve() as &dyn ObjectIters,
-            self.global() as &dyn ObjectIters,
+            self.global_form() as &dyn ObjectIters,
         ]
     }
 
@@ -350,7 +350,7 @@ impl<T> Iterator for Iter<T> {
 mod tests {
     use crate::objects::{
         Curve, Cycle, Edge, Face, GlobalCurve, GlobalVertex, Shell, Sketch,
-        Solid, Surface, Vertex,
+        Solid, Surface, SurfaceVertex, Vertex,
     };
 
     use super::ObjectIters as _;
@@ -547,7 +547,9 @@ mod tests {
         let surface = Surface::xy_plane();
         let curve = Curve::build(surface).u_axis();
         let global_vertex = GlobalVertex::from_position([0., 0., 0.]);
-        let object = Vertex::new([0.], curve, global_vertex);
+        let surface_vertex =
+            SurfaceVertex::new([0., 0.], surface, global_vertex);
+        let object = Vertex::new([0.], curve, surface_vertex, global_vertex);
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());

@@ -238,8 +238,8 @@ mod tests {
             .copied()
             .find(|edge| {
                 let [a, b] = edge.vertices().get_or_panic();
-                a.global().position() == Point::from([0., 0., 0.])
-                    && b.global().position() == Point::from([2., 0., 0.])
+                a.global_form().position() == Point::from([0., 0., 0.])
+                    && b.global_form().position() == Point::from([2., 0., 0.])
             })
             .unwrap();
         assert_eq!(
@@ -261,7 +261,7 @@ mod tests {
             .vertex_iter()
             .copied()
             .find(|vertex| {
-                vertex.global().position() == Point::from([1., 0., 0.])
+                vertex.global_form().position() == Point::from([1., 0., 0.])
             })
             .unwrap();
         assert_eq!(

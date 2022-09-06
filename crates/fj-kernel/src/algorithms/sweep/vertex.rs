@@ -5,7 +5,7 @@ use crate::{
     algorithms::approx::Tolerance,
     objects::{
         Curve, CurveKind, Edge, GlobalCurve, GlobalEdge, GlobalVertex, Surface,
-        SweptCurve, Vertex, VerticesOfEdge,
+        SurfaceVertex, SweptCurve, Vertex, VerticesOfEdge,
     },
 };
 
@@ -61,14 +61,14 @@ impl Sweep for (Vertex, Surface) {
                 path: surface_path,
             }) = surface;
 
-            assert_eq!(vertex.curve().global().kind(), &surface_curve);
+            assert_eq!(vertex.curve().global_form().kind(), &surface_curve);
             assert_eq!(path.inner(), surface_path);
         }
 
         // With that out of the way, let's start by creating the `GlobalEdge`,
         // as that is the most straight-forward part of this operations, and
         // we're going to need it soon anyway.
-        let edge_global = vertex.global().sweep(path, tolerance, color);
+        let edge_global = vertex.global_form().sweep(path, tolerance, color);
 
         // Next, let's compute the surface coordinates of the two vertices of
         // the output `Edge`, as we're going to need these for the rest of this
@@ -84,29 +84,54 @@ impl Sweep for (Vertex, Surface) {
         // thereby defined its coordinate system. That makes the v-coordinates
         // straight-forward: The start of the edge is at zero, the end is at
         // one.
-        let u = vertex.position().t;
-        let v_a = Scalar::ZERO;
-        let v_b = Scalar::ONE;
+        let points_surface = [
+            Point::from([vertex.position().t, Scalar::ZERO]),
+            Point::from([vertex.position().t, Scalar::ONE]),
+        ];
 
         // Armed with those coordinates, creating the `Curve` of the output
         // `Edge` becomes straight-forward.
         let curve = {
-            let a = Point::from([u, v_a]);
-            let b = Point::from([u, v_b]);
-
-            let line = Line::from_points([a, b]);
+            let line = Line::from_points(points_surface);
 
             Curve::new(surface, CurveKind::Line(line), *edge_global.curve())
         };
 
         // And now the vertices. Again, nothing wild here.
         let vertices = {
-            let [&a, &b] = edge_global.vertices().get_or_panic();
+            let vertices_global = edge_global.vertices().get_or_panic();
 
-            let a = Vertex::new([v_a], curve, a);
-            let b = Vertex::new([v_b], curve, b);
+            // Can be cleaned up, once `zip` is stable:
+            // https://doc.rust-lang.org/std/primitive.array.html#method.zip
+            let [a_surface, b_surface] = points_surface;
+            let [a_global, b_global] = vertices_global;
+            let vertices_surface =
+                [(a_surface, a_global), (b_surface, b_global)].map(
+                    |(point_surface, &vertex_global)| {
+                        SurfaceVertex::new(
+                            point_surface,
+                            surface,
+                            vertex_global,
+                        )
+                    },
+                );
 
-            VerticesOfEdge::from_vertices([a, b])
+            // Can be cleaned up, once `zip` is stable:
+            // https://doc.rust-lang.org/std/primitive.array.html#method.zip
+            let [a_surface, b_surface] = vertices_surface;
+            let [a_global, b_global] = vertices_global;
+            let vertices = [(a_surface, a_global), (b_surface, b_global)];
+
+            let vertices = vertices.map(|(vertex_surface, &vertex_global)| {
+                Vertex::new(
+                    [vertex_surface.position().v],
+                    curve,
+                    vertex_surface,
+                    vertex_global,
+                )
+            });
+
+            VerticesOfEdge::from_vertices(vertices)
         };
 
         // And finally, creating the output `Edge` is just a matter of
