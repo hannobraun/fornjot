@@ -102,11 +102,12 @@ fn create_non_continuous_side_face(
             // Please note that creating a line here is correct, even if the
             // global curve is a circle. Projected into the side surface, it is
             // going to be a line either way.
-            let points = bottom_vertices.map(|vertex| {
+            let points_curve_and_surface = bottom_vertices.map(|vertex| {
                 (vertex.position(), [vertex.position().t, Scalar::ONE])
             });
-            let kind =
-                CurveKind::Line(Line::from_points_with_line_coords(points));
+            let kind = CurveKind::Line(Line::from_points_with_line_coords(
+                points_curve_and_surface,
+            ));
 
             Curve::new(surface, kind, global)
         };
