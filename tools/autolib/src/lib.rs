@@ -1,7 +1,7 @@
 use regex::Regex;
 
-pub fn find_version_in_str(s: &str) -> anyhow::Result<Option<regex::Match>> {
-    let regex_match = Regex::new(r"(\d+\.\d+\.\d+)")?
+pub fn find_version_in_str(s: &str) -> anyhow::Result<Option<semver::Version>> {
+    let version = Regex::new(r"(\d+\.\d+\.\d+)")?
         .find_iter(s)
         .inspect(|version| {
             log::info!(
@@ -9,17 +9,18 @@ pub fn find_version_in_str(s: &str) -> anyhow::Result<Option<regex::Match>> {
                 version.as_str(),
             );
         })
-        .find(|m| {
-            let confirmed = semver::Version::parse(m.as_str()).is_ok();
+        .filter_map(|m| {
+            let version = semver::Version::parse(m.as_str()).ok();
 
-            if confirmed {
+            if version.is_some() {
                 log::info!("Candidate confirmed.");
             } else {
                 log::info!("Candidate not confirmed.");
             }
 
-            confirmed
-        });
+            version
+        })
+        .next();
 
-    Ok(regex_match)
+    Ok(version)
 }

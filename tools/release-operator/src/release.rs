@@ -47,7 +47,7 @@ impl Release {
         let version = find_version_in_str(&commit)?;
 
         match version {
-            Some(v) => self.hit(v.as_str()),
+            Some(v) => self.hit(&v.to_string()),
             None => {
                 log::info!(
                     "Commit message is missing version number:\n\
