@@ -9,20 +9,13 @@ mod vertex;
 use fj_interop::mesh::Color;
 use fj_math::{Scalar, Vector};
 
-use super::approx::Tolerance;
-
 /// Sweep an object along a path to create another object
 pub trait Sweep {
     /// The object that is created by sweeping the implementing object
     type Swept;
 
     /// Sweep the object along the given path
-    fn sweep(
-        self,
-        path: impl Into<Path>,
-        tolerance: impl Into<Tolerance>,
-        color: Color,
-    ) -> Self::Swept;
+    fn sweep(self, path: impl Into<Path>, color: Color) -> Self::Swept;
 }
 
 /// A path to be used with [`Sweep`]

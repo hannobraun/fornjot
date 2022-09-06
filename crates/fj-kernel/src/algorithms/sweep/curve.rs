@@ -8,10 +8,9 @@ impl Sweep for Curve {
     fn sweep(
         self,
         path: impl Into<super::Path>,
-        tolerance: impl Into<crate::algorithms::approx::Tolerance>,
         color: fj_interop::mesh::Color,
     ) -> Self::Swept {
-        self.global_form().sweep(path, tolerance, color)
+        self.global_form().sweep(path, color)
     }
 }
 
@@ -21,7 +20,6 @@ impl Sweep for GlobalCurve {
     fn sweep(
         self,
         path: impl Into<super::Path>,
-        _: impl Into<crate::algorithms::approx::Tolerance>,
         _: fj_interop::mesh::Color,
     ) -> Self::Swept {
         Surface::SweptCurve(SweptCurve {

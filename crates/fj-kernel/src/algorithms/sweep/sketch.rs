@@ -1,27 +1,18 @@
 use fj_interop::mesh::Color;
 
-use crate::{
-    algorithms::approx::Tolerance,
-    objects::{Sketch, Solid},
-};
+use crate::objects::{Sketch, Solid};
 
 use super::{Path, Sweep};
 
 impl Sweep for Sketch {
     type Swept = Solid;
 
-    fn sweep(
-        self,
-        path: impl Into<Path>,
-        tolerance: impl Into<Tolerance>,
-        color: Color,
-    ) -> Self::Swept {
+    fn sweep(self, path: impl Into<Path>, color: Color) -> Self::Swept {
         let path = path.into();
-        let tolerance = tolerance.into();
 
         let mut shells = Vec::new();
         for face in self.into_faces() {
-            let shell = face.sweep(path, tolerance, color);
+            let shell = face.sweep(path, color);
             shells.push(shell);
         }
 
@@ -32,10 +23,9 @@ impl Sweep for Sketch {
 #[cfg(test)]
 mod tests {
     use fj_interop::mesh::Color;
-    use fj_math::{Point, Scalar, Vector};
+    use fj_math::{Point, Vector};
 
     use crate::{
-        algorithms::approx::Tolerance,
         iter::ObjectIters,
         objects::{Face, Sketch, Surface},
     };
@@ -144,8 +134,6 @@ mod tests {
         expected_surfaces: impl IntoIterator<Item = [impl Into<Point<3>>; 3]>,
         expected_vertices: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> anyhow::Result<()> {
-        let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
-
         let surface = Surface::xy_plane();
         let face = Face::build(surface).polygon_from_points([
             [0., 0.],
@@ -154,7 +142,7 @@ mod tests {
         ]);
         let sketch = Sketch::new().with_faces([face]);
 
-        let solid = sketch.sweep(direction, tolerance, Color([255, 0, 0, 255]));
+        let solid = sketch.sweep(direction, Color([255, 0, 0, 255]));
 
         let expected_vertices: Vec<_> = expected_vertices
             .into_iter()
