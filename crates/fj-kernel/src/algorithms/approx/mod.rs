@@ -1,10 +1,10 @@
 //! Approximation of objects
 
-mod curve;
-mod cycle;
-mod edge;
-mod face;
-mod tolerance;
+pub mod curve;
+pub mod cycle;
+pub mod edge;
+pub mod face;
+pub mod tolerance;
 
 pub use self::{
     cycle::CycleApprox,
