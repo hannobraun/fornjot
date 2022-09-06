@@ -99,7 +99,7 @@ impl Sweep for (Vertex, Surface) {
 
         // And now the vertices. Again, nothing wild here.
         let vertices = {
-            let vertices_global = edge_global.vertices().get_or_panic();
+            let vertices_global = edge_global.vertices().get();
 
             // Can be cleaned up, once `zip` is stable:
             // https://doc.rust-lang.org/std/primitive.array.html#method.zip

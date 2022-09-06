@@ -43,13 +43,12 @@ impl Edge {
         // It is perfectly fine for global forms of the the vertices to be
         // coincident (in 3D space). That would just mean, that ends of the edge
         // connect to each other.
-        if let Some([a, b]) = vertices.get() {
-            assert_ne!(
-                a.position(),
-                b.position(),
-                "Vertices of an edge must not be coincident on curve"
-            );
-        }
+        let [a, b] = vertices.get();
+        assert_ne!(
+            a.position(),
+            b.position(),
+            "Vertices of an edge must not be coincident on curve"
+        );
 
         Self {
             curve,
@@ -98,14 +97,8 @@ impl Edge {
 
 impl fmt::Display for Edge {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self.vertices().0 {
-            Some(vertices) => {
-                let [a, b] = vertices.map(|vertex| vertex.position());
-                write!(f, "edge from {:?} to {:?}", a, b)?
-            }
-            None => write!(f, "continuous edge")?,
-        }
-
+        let [a, b] = self.vertices().0.map(|vertex| vertex.position());
+        write!(f, "edge from {:?} to {:?}", a, b)?;
         write!(f, " on {:?}", self.curve().global_form())?;
 
         Ok(())
@@ -152,41 +145,25 @@ impl GlobalEdge {
 /// This struct is generic over the actual vertex type used, but typically, `T`
 /// will either be [`Vertex`] or [`GlobalVertex`].
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct VerticesOfEdge<T>(Option<[T; 2]>);
+pub struct VerticesOfEdge<T>([T; 2]);
 
 impl<T> VerticesOfEdge<T> {
     /// Construct an instance of `VerticesOfEdge` from two vertices
     pub fn from_vertices(vertices: [T; 2]) -> Self {
-        Self(Some(vertices))
-    }
-
-    /// Construct an instance of `VerticesOfEdge` without vertices
-    pub fn none() -> Self {
-        Self(None)
+        Self(vertices)
     }
 
     /// Access the vertices
-    pub fn get(&self) -> Option<[&T; 2]> {
-        self.0.as_ref().map(|vertices| {
-            // Can be cleaned up once `each_ref` is stable:
-            // https://doc.rust-lang.org/std/primitive.array.html#method.each_ref
-            let [a, b] = vertices;
-            [a, b]
-        })
-    }
-
-    /// Access the two vertices
-    ///
-    /// # Panics
-    ///
-    /// Panics, if the edge has no vertices.
-    pub fn get_or_panic(&self) -> [&T; 2] {
-        self.get().expect("Expected edge to have vertices")
+    pub fn get(&self) -> [&T; 2] {
+        // Can be cleaned up once `each_ref` is stable:
+        // https://doc.rust-lang.org/std/primitive.array.html#method.each_ref
+        let [a, b] = &self.0;
+        [a, b]
     }
 
     /// Iterate over the vertices
     pub fn iter(&self) -> impl Iterator<Item = &T> {
-        self.0.iter().flatten()
+        self.0.iter()
     }
 
     /// Map each vertex using the provided function
@@ -198,11 +175,11 @@ impl<T> VerticesOfEdge<T> {
     }
 
     /// Convert each vertex using the provided function
-    pub fn convert<F, U>(self, f: F) -> Option<[U; 2]>
+    pub fn convert<F, U>(self, f: F) -> [U; 2]
     where
         F: FnMut(T) -> U,
     {
-        self.0.map(|vertices| vertices.map(f))
+        self.0.map(f)
     }
 }
 
@@ -211,22 +188,21 @@ impl VerticesOfEdge<Vertex> {
     ///
     /// Makes sure that the local coordinates are still correct.
     pub fn reverse(self) -> Self {
-        Self(self.0.map(|[a, b]| {
-            [
-                Vertex::new(
-                    -b.position(),
-                    b.curve().reverse(),
-                    *b.surface_form(),
-                    *b.global_form(),
-                ),
-                Vertex::new(
-                    -a.position(),
-                    a.curve().reverse(),
-                    *a.surface_form(),
-                    *a.global_form(),
-                ),
-            ]
-        }))
+        let [a, b] = &self.0;
+        Self([
+            Vertex::new(
+                -b.position(),
+                b.curve().reverse(),
+                *b.surface_form(),
+                *b.global_form(),
+            ),
+            Vertex::new(
+                -a.position(),
+                a.curve().reverse(),
+                *a.surface_form(),
+                *a.global_form(),
+            ),
+        ])
     }
 
     /// Convert this instance into its global variant
