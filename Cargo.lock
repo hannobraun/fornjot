@@ -213,14 +213,26 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
 
 [[package]]
+name = "autolib"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "log",
+ "regex",
+ "semver",
+]
+
+[[package]]
 name = "automator"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "autolib",
  "chrono",
  "clap",
  "map-macro",
  "octocrab",
+ "semver",
  "tokio",
  "url",
 ]
@@ -2766,12 +2778,12 @@ name = "release-operator"
 version = "0.3.1"
 dependencies = [
  "anyhow",
+ "autolib",
  "cargo_metadata",
  "clap",
  "cmd_lib",
  "env_logger",
  "log",
- "regex",
  "reqwest",
  "secstr",
  "semver",
