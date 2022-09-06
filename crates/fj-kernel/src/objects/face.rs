@@ -46,7 +46,10 @@ impl<'a> IntoIterator for &'a Faces {
 /// A face of a shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Face {
-    representation: Representation,
+    surface: Surface,
+    exteriors: Vec<Cycle>,
+    interiors: Vec<Cycle>,
+    color: Color,
 }
 
 impl Face {
@@ -61,12 +64,10 @@ impl Face {
     /// This can be overridden using the `with_` methods.
     pub fn new(surface: Surface) -> Self {
         Self {
-            representation: Representation::BRep(BRep {
-                surface,
-                exteriors: Vec::new(),
-                interiors: Vec::new(),
-                color: Color::default(),
-            }),
+            surface,
+            exteriors: Vec::new(),
+            interiors: Vec::new(),
+            color: Color::default(),
         }
     }
 
@@ -88,7 +89,7 @@ impl Face {
                 "Cycles that bound a face must be in face's surface"
             );
 
-            self.brep_mut().exteriors.push(cycle);
+            self.exteriors.push(cycle);
         }
 
         self
@@ -112,7 +113,7 @@ impl Face {
                 "Cycles that bound a face must be in face's surface"
             );
 
-            self.brep_mut().interiors.push(cycle);
+            self.interiors.push(cycle);
         }
 
         self
@@ -122,25 +123,25 @@ impl Face {
     ///
     /// Consumes the face and returns the updated instance.
     pub fn with_color(mut self, color: Color) -> Self {
-        self.brep_mut().color = color;
+        self.color = color;
         self
     }
 
     /// Access this face's surface
     pub fn surface(&self) -> &Surface {
-        &self.brep().surface
+        &self.surface
     }
 
     /// Access the cycles that bound the face on the outside
     pub fn exteriors(&self) -> impl Iterator<Item = &Cycle> + '_ {
-        self.brep().exteriors.iter()
+        self.exteriors.iter()
     }
 
     /// Access the cycles that bound the face on the inside
     ///
     /// Each of these cycles defines a hole in the face.
     pub fn interiors(&self) -> impl Iterator<Item = &Cycle> + '_ {
-        self.brep().interiors.iter()
+        self.interiors.iter()
     }
 
     /// Access all cycles of this face
@@ -153,31 +154,6 @@ impl Face {
 
     /// Access the color of the face
     pub fn color(&self) -> Color {
-        self.brep().color
+        self.color
     }
-
-    /// Access the boundary representation of the face
-    fn brep(&self) -> &BRep {
-        let Representation::BRep(face) = &self.representation;
-        face
-    }
-
-    /// Access the boundary representation of the face mutably
-    fn brep_mut(&mut self) -> &mut BRep {
-        let Representation::BRep(face) = &mut self.representation;
-        face
-    }
-}
-
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-enum Representation {
-    BRep(BRep),
-}
-
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-struct BRep {
-    surface: Surface,
-    exteriors: Vec<Cycle>,
-    interiors: Vec<Cycle>,
-    color: Color,
 }
