@@ -71,22 +71,22 @@ impl Approx for &Edge {
 
         let range = RangeOnCurve { boundary };
 
-        let mut points = (self.curve(), range).approx(tolerance).points;
-        points.insert(
-            0,
-            (
-                range.start().surface_form().position(),
-                range.start().global_form().position(),
-            ),
+        let first = (
+            range.start().surface_form().position(),
+            range.start().global_form().position(),
         );
+        let points = (self.curve(), range).approx(tolerance).points;
 
-        EdgeApprox { points }
+        EdgeApprox { first, points }
     }
 }
 
 /// An approximation of an [`Edge`]
 #[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct EdgeApprox {
+    /// The point that approximates the first vertex of the curve
+    pub first: (Point<2>, Point<3>),
+
     /// The points that approximate the [`Edge`]
     pub points: Vec<(Point<2>, Point<3>)>,
 }
@@ -94,6 +94,11 @@ pub struct EdgeApprox {
 impl EdgeApprox {
     /// Compute the points that approximate the edge
     pub fn points(&self) -> Vec<(Point<2>, Point<3>)> {
-        self.points.clone()
+        let mut points = Vec::new();
+
+        points.push(self.first);
+        points.extend(self.points.clone());
+
+        points
     }
 }
