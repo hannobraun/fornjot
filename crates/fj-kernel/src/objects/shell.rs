@@ -1,8 +1,6 @@
-use std::collections::BTreeSet;
-
 use crate::builder::ShellBuilder;
 
-use super::Face;
+use super::{face::Faces, Face};
 
 /// A 3-dimensional closed shell
 ///
@@ -12,7 +10,7 @@ use super::Face;
 /// currently validated.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Shell {
-    faces: BTreeSet<Face>,
+    faces: Faces,
 }
 
 impl Shell {
@@ -24,7 +22,7 @@ impl Shell {
     /// Construct an empty instance of `Shell`
     pub fn new() -> Self {
         Self {
-            faces: BTreeSet::new(),
+            faces: Faces::new(),
         }
     }
 
@@ -42,7 +40,7 @@ impl Shell {
 
     /// Access the shell's faces
     pub fn faces(&self) -> impl Iterator<Item = &Face> {
-        self.faces.iter()
+        (&self.faces).into_iter()
     }
 
     /// Convert the shell into a list of faces
