@@ -19,20 +19,35 @@ pub trait Triangulate: Sized {
         self,
         tolerance: impl Into<Tolerance>,
         debug_info: &mut DebugInfo,
-    ) -> Mesh<Point<3>>;
+    ) -> Mesh<Point<3>> {
+        let mut mesh = Mesh::new();
+        self.triangulate_into_mesh(tolerance, &mut mesh, debug_info);
+        mesh
+    }
+
+    /// Triangulate a partial shape into the provided mesh
+    ///
+    /// This is a low-level method, intended for implementation of
+    /// `Triangulate`. Most callers should prefer [`Triangulate::triangulate`].
+    fn triangulate_into_mesh(
+        self,
+        tolerance: impl Into<Tolerance>,
+        mesh: &mut Mesh<Point<3>>,
+        debug_info: &mut DebugInfo,
+    );
 }
 
 impl<T> Triangulate for T
 where
     T: IntoIterator<Item = Face>,
 {
-    fn triangulate(
+    fn triangulate_into_mesh(
         self,
         tolerance: impl Into<Tolerance>,
+        mesh: &mut Mesh<Point<3>>,
         debug_info: &mut DebugInfo,
-    ) -> Mesh<Point<3>> {
+    ) {
         let tolerance = tolerance.into();
-        let mut mesh = Mesh::new();
 
         for face in self {
             if let Some(triangles) = face.triangles() {
@@ -81,8 +96,6 @@ where
                 mesh.push_triangle(points, face.color());
             }
         }
-
-        mesh
     }
 }
 
