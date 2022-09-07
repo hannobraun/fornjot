@@ -55,7 +55,6 @@ impl Triangulate for Face {
         tolerance: impl Into<Tolerance>,
         mesh: &mut Mesh<Point<3>>,
     ) {
-        let surface = self.surface();
         let approx = self.approx(tolerance.into());
 
         let points: Vec<_> = approx
@@ -66,7 +65,7 @@ impl Triangulate for Face {
                 point_global: point.global_form,
             })
             .collect();
-        let face_as_polygon = Polygon::new(*surface)
+        let face_as_polygon = Polygon::new()
             .with_exterior(
                 approx
                     .exterior

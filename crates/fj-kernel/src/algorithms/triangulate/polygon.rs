@@ -1,24 +1,18 @@
-use fj_interop::debug::TriangleEdgeCheck;
 use fj_math::{Point, PolyChain, Segment};
 
-use crate::{
-    algorithms::intersect::{
-        ray_segment::RaySegmentIntersection, HorizontalRayToTheRight, Intersect,
-    },
-    objects::Surface,
+use crate::algorithms::intersect::{
+    ray_segment::RaySegmentIntersection, HorizontalRayToTheRight, Intersect,
 };
 
 pub struct Polygon {
-    surface: Surface,
     exterior: PolyChain<2>,
     interiors: Vec<PolyChain<2>>,
 }
 
 impl Polygon {
     /// Construct an instance of `Polygon`
-    pub fn new(surface: Surface) -> Self {
+    pub fn new() -> Self {
         Self {
-            surface,
             exterior: PolyChain::new(),
             interiors: Vec::new(),
         }
@@ -130,10 +124,6 @@ impl Polygon {
             origin: point.into(),
         };
 
-        let mut check = TriangleEdgeCheck::new(
-            self.surface.point_from_surface_coords(ray.origin),
-        );
-
         let mut num_hits = 0;
 
         for chain in Some(&self.exterior).into_iter().chain(&self.interiors) {
@@ -209,12 +199,6 @@ impl Polygon {
 
                 if count_hit {
                     num_hits += 1;
-
-                    let edge =
-                        Segment::from_points(edge.points().map(|point| {
-                            self.surface.point_from_surface_coords(point)
-                        }));
-                    check.hits.push(edge);
                 }
 
                 previous_hit = hit;
@@ -229,8 +213,6 @@ impl Polygon {
 mod tests {
     use fj_math::{Point, PolyChain};
 
-    use crate::objects::Surface;
-
     use super::Polygon;
 
     #[test]
@@ -243,7 +225,7 @@ mod tests {
         let e = [2., 1.];
         let f = [1., 2.];
 
-        let polygon = Polygon::new(Surface::xy_plane())
+        let polygon = Polygon::new()
             .with_exterior(PolyChain::from([a, b, c]).close())
             .with_interiors([PolyChain::from([d, e, f]).close()]);
 
@@ -256,8 +238,8 @@ mod tests {
         let b = [2., 1.];
         let c = [0., 2.];
 
-        let polygon = Polygon::new(Surface::xy_plane())
-            .with_exterior(PolyChain::from([a, b, c]).close());
+        let polygon =
+            Polygon::new().with_exterior(PolyChain::from([a, b, c]).close());
 
         assert_contains_point(polygon, [1., 1.]);
     }
@@ -272,7 +254,7 @@ mod tests {
         let e = [2., 1.];
         let f = [1., 3.];
 
-        let polygon = Polygon::new(Surface::xy_plane())
+        let polygon = Polygon::new()
             .with_exterior(PolyChain::from([a, b, c]).close())
             .with_interiors([PolyChain::from([d, e, f]).close()]);
 
@@ -286,8 +268,8 @@ mod tests {
         let c = [3., 0.];
         let d = [3., 4.];
 
-        let polygon = Polygon::new(Surface::xy_plane())
-            .with_exterior(PolyChain::from([a, b, c, d]).close());
+        let polygon =
+            Polygon::new().with_exterior(PolyChain::from([a, b, c, d]).close());
 
         assert_contains_point(polygon, [1., 1.]);
     }
@@ -299,8 +281,8 @@ mod tests {
         let b = [2., 1.];
         let c = [3., 1.];
         let d = [0., 2.];
-        let polygon = Polygon::new(Surface::xy_plane())
-            .with_exterior(PolyChain::from([a, b, c, d]).close());
+        let polygon =
+            Polygon::new().with_exterior(PolyChain::from([a, b, c, d]).close());
         assert_contains_point(polygon, [1., 1.]);
 
         // Ray hits a vertex, but doesn't pass polygon boundary there.
@@ -309,7 +291,7 @@ mod tests {
         let c = [3., 1.];
         let d = [4., 0.];
         let e = [4., 5.];
-        let polygon = Polygon::new(Surface::xy_plane())
+        let polygon = Polygon::new()
             .with_exterior(PolyChain::from([a, b, c, d, e]).close());
         assert_contains_point(polygon, [1., 1.]);
     }
