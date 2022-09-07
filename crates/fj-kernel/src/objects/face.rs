@@ -1,9 +1,48 @@
+use std::collections::{btree_set, BTreeSet};
+
 use fj_interop::mesh::Color;
 use fj_math::Triangle;
 
 use crate::builder::FaceBuilder;
 
 use super::{Cycle, Surface};
+
+/// A collection of faces
+#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct Faces {
+    inner: BTreeSet<Face>,
+}
+
+impl Faces {
+    /// Create an empty instance of `Faces`
+    pub fn new() -> Self {
+        Self::default()
+    }
+}
+
+impl Extend<Face> for Faces {
+    fn extend<T: IntoIterator<Item = Face>>(&mut self, iter: T) {
+        self.inner.extend(iter)
+    }
+}
+
+impl IntoIterator for Faces {
+    type Item = Face;
+    type IntoIter = btree_set::IntoIter<Face>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.inner.into_iter()
+    }
+}
+
+impl<'a> IntoIterator for &'a Faces {
+    type Item = &'a Face;
+    type IntoIter = btree_set::Iter<'a, Face>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.inner.iter()
+    }
+}
 
 /// A face of a shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
