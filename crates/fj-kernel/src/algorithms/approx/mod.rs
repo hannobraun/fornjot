@@ -16,6 +16,8 @@ use std::{
 
 use fj_math::Point;
 
+use crate::objects::Curve;
+
 pub use self::tolerance::{InvalidTolerance, Tolerance};
 
 /// Approximate an object
@@ -50,6 +52,14 @@ impl<const D: usize> ApproxPoint<D> {
             local_form,
             global_form,
             source: None,
+        }
+    }
+
+    /// Attach a source to the point
+    pub fn with_source(self, source: impl Source) -> Self {
+        Self {
+            source: Some(Rc::new(source)),
+            ..self
         }
     }
 }
@@ -88,3 +98,5 @@ impl<const D: usize> PartialOrd for ApproxPoint<D> {
 
 /// The source of an [`ApproxPoint`]
 pub trait Source: Any + Debug {}
+
+impl Source for (Curve, Point<1>) {}

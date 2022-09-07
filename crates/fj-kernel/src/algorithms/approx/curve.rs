@@ -30,6 +30,7 @@ impl Approx for (&Curve, RangeOnCurve) {
                 let point_surface =
                     curve.kind().point_from_curve_coords(point.local_form);
                 ApproxPoint::new(point_surface, point.global_form)
+                    .with_source((*curve, point.local_form))
             })
             .collect();
 
