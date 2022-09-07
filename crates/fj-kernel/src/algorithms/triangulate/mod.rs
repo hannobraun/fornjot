@@ -10,7 +10,7 @@ use crate::objects::Face;
 
 use self::{delaunay::TriangulationPoint, polygon::Polygon};
 
-use super::approx::{Approx, Tolerance};
+use super::approx::{face::FaceApprox, Approx, Tolerance};
 
 /// Triangulate a shape
 pub trait Triangulate: Sized {
@@ -44,20 +44,19 @@ where
         let tolerance = tolerance.into();
 
         for face in self {
-            face.triangulate_into_mesh(tolerance, mesh);
+            let approx = face.approx(tolerance);
+            approx.triangulate_into_mesh(tolerance, mesh);
         }
     }
 }
 
-impl Triangulate for Face {
+impl Triangulate for FaceApprox {
     fn triangulate_into_mesh(
         self,
-        tolerance: impl Into<Tolerance>,
+        _: impl Into<Tolerance>,
         mesh: &mut Mesh<Point<3>>,
     ) {
-        let approx = self.approx(tolerance.into());
-
-        let points: Vec<_> = approx
+        let points: Vec<_> = self
             .points()
             .into_iter()
             .map(|point| TriangulationPoint {
@@ -67,13 +66,12 @@ impl Triangulate for Face {
             .collect();
         let face_as_polygon = Polygon::new()
             .with_exterior(
-                approx
-                    .exterior
+                self.exterior
                     .points()
                     .into_iter()
                     .map(|point| point.local_form),
             )
-            .with_interiors(approx.interiors.into_iter().map(|interior| {
+            .with_interiors(self.interiors.into_iter().map(|interior| {
                 interior.points().into_iter().map(|point| point.local_form)
             }));
 
@@ -85,7 +83,7 @@ impl Triangulate for Face {
 
         for triangle in triangles {
             let points = triangle.map(|point| point.point_global);
-            mesh.push_triangle(points, self.color());
+            mesh.push_triangle(points, self.color);
         }
     }
 }
