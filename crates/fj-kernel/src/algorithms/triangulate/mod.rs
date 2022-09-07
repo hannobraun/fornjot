@@ -1,3 +1,5 @@
+//! Shape triangulation
+
 mod delaunay;
 mod polygon;
 
@@ -11,23 +13,64 @@ use self::{delaunay::TriangulationPoint, polygon::Polygon};
 use super::approx::{Approx, Tolerance};
 
 /// Triangulate a shape
-pub fn triangulate(
-    faces: Vec<Face>,
-    tolerance: Tolerance,
-    debug_info: &mut DebugInfo,
-) -> Mesh<Point<3>> {
-    let mut mesh = Mesh::new();
+pub trait Triangulate: Sized {
+    /// Triangulate the shape
+    fn triangulate(
+        self,
+        tolerance: impl Into<Tolerance>,
+        debug_info: &mut DebugInfo,
+    ) -> Mesh<Point<3>> {
+        let mut mesh = Mesh::new();
+        self.triangulate_into_mesh(tolerance, &mut mesh, debug_info);
+        mesh
+    }
 
-    for face in faces {
-        if let Some(triangles) = face.triangles() {
+    /// Triangulate a partial shape into the provided mesh
+    ///
+    /// This is a low-level method, intended for implementation of
+    /// `Triangulate`. Most callers should prefer [`Triangulate::triangulate`].
+    fn triangulate_into_mesh(
+        self,
+        tolerance: impl Into<Tolerance>,
+        mesh: &mut Mesh<Point<3>>,
+        debug_info: &mut DebugInfo,
+    );
+}
+
+impl<T> Triangulate for T
+where
+    T: IntoIterator<Item = Face>,
+{
+    fn triangulate_into_mesh(
+        self,
+        tolerance: impl Into<Tolerance>,
+        mesh: &mut Mesh<Point<3>>,
+        debug_info: &mut DebugInfo,
+    ) {
+        let tolerance = tolerance.into();
+
+        for face in self {
+            face.triangulate_into_mesh(tolerance, mesh, debug_info);
+        }
+    }
+}
+
+impl Triangulate for Face {
+    fn triangulate_into_mesh(
+        self,
+        tolerance: impl Into<Tolerance>,
+        mesh: &mut Mesh<Point<3>>,
+        debug_info: &mut DebugInfo,
+    ) {
+        if let Some(triangles) = self.triangles() {
             for &(triangle, color) in triangles {
                 mesh.push_triangle(triangle, color);
             }
-            continue;
+            return;
         }
 
-        let surface = face.surface();
-        let approx = face.approx(tolerance);
+        let surface = self.surface();
+        let approx = self.approx(tolerance.into());
 
         let points: Vec<_> = approx
             .points
@@ -62,11 +105,9 @@ pub fn triangulate(
 
         for triangle in triangles {
             let points = triangle.map(|point| point.point_global);
-            mesh.push_triangle(points, face.color());
+            mesh.push_triangle(points, self.color());
         }
     }
-
-    mesh
 }
 
 #[cfg(test)]
@@ -78,6 +119,8 @@ mod tests {
         algorithms::approx::Tolerance,
         objects::{Face, Surface},
     };
+
+    use super::Triangulate;
 
     #[test]
     fn simple() -> anyhow::Result<()> {
@@ -190,10 +233,6 @@ mod tests {
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
 
         let mut debug_info = DebugInfo::new();
-        Ok(super::triangulate(
-            vec![face.into()],
-            tolerance,
-            &mut debug_info,
-        ))
+        Ok(vec![face.into()].triangulate(tolerance, &mut debug_info))
     }
 }
