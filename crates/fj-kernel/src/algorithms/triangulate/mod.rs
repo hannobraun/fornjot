@@ -22,6 +22,19 @@ pub trait Triangulate: Sized {
     ) -> Mesh<Point<3>>;
 }
 
+impl<T> Triangulate for T
+where
+    T: IntoIterator<Item = Face>,
+{
+    fn triangulate(
+        self,
+        tolerance: impl Into<Tolerance>,
+        debug_info: &mut DebugInfo,
+    ) -> Mesh<Point<3>> {
+        triangulate(self.into_iter().collect(), tolerance.into(), debug_info)
+    }
+}
+
 /// Triangulate a shape
 pub fn triangulate(
     faces: Vec<Face>,
@@ -90,6 +103,8 @@ mod tests {
         algorithms::approx::Tolerance,
         objects::{Face, Surface},
     };
+
+    use super::Triangulate;
 
     #[test]
     fn simple() -> anyhow::Result<()> {
@@ -202,10 +217,6 @@ mod tests {
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
 
         let mut debug_info = DebugInfo::new();
-        Ok(super::triangulate(
-            vec![face.into()],
-            tolerance,
-            &mut debug_info,
-        ))
+        Ok(vec![face.into()].triangulate(tolerance, &mut debug_info))
     }
 }
