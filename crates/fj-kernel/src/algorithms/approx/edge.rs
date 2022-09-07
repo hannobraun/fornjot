@@ -74,10 +74,10 @@ impl Approx for &Edge {
 
         let range = RangeOnCurve { boundary };
 
-        let first = ApproxPoint {
-            local_form: range.start().surface_form().position(),
-            global_form: range.start().global_form().position(),
-        };
+        let first = ApproxPoint::new(
+            range.start().surface_form().position(),
+            range.start().global_form().position(),
+        );
         let curve_approx = (self.curve(), range).approx(tolerance);
 
         EdgeApprox {

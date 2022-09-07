@@ -29,10 +29,7 @@ impl Approx for (&Curve, RangeOnCurve) {
             .map(|point| {
                 let point_surface =
                     curve.kind().point_from_curve_coords(point.local_form);
-                ApproxPoint {
-                    local_form: point_surface,
-                    global_form: point.global_form,
-                }
+                ApproxPoint::new(point_surface, point.global_form)
             })
             .collect();
 
@@ -87,10 +84,7 @@ fn approx_circle(
         let point_curve = Point::from([angle]);
         let point_global = circle.point_from_circle_coords(point_curve);
 
-        points.push(ApproxPoint {
-            local_form: point_curve,
-            global_form: point_global,
-        });
+        points.push(ApproxPoint::new(point_curve, point_global));
     }
 }
 
