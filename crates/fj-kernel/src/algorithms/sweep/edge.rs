@@ -44,7 +44,7 @@ fn create_non_continuous_side_face(
     color: Color,
 ) -> Face {
     let edge = if path.is_negative_direction() {
-        edge.reverse()
+        edge.reverse_including_curve()
     } else {
         *edge
     };

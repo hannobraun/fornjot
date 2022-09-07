@@ -239,22 +239,7 @@ impl VerticesOfEdge<Vertex> {
     ///
     /// Makes sure that the local coordinates are still correct.
     pub fn reverse(self) -> Self {
-        Self(self.0.map(|[a, b]| {
-            [
-                Vertex::new(
-                    -b.position(),
-                    b.curve().reverse(),
-                    *b.surface_form(),
-                    *b.global_form(),
-                ),
-                Vertex::new(
-                    -a.position(),
-                    a.curve().reverse(),
-                    *a.surface_form(),
-                    *a.global_form(),
-                ),
-            ]
-        }))
+        Self(self.0.map(|[a, b]| [b, a]))
     }
 
     /// Convert this instance into its global variant

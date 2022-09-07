@@ -4,6 +4,6 @@ use super::Reverse;
 
 impl Reverse for Edge {
     fn reverse(self) -> Self {
-        self.reverse_including_curve()
+        Edge::from_curve_and_vertices(*self.curve(), self.vertices().reverse())
     }
 }
