@@ -50,51 +50,62 @@ where
         let tolerance = tolerance.into();
 
         for face in self {
-            if let Some(triangles) = face.triangles() {
-                for &(triangle, color) in triangles {
-                    mesh.push_triangle(triangle, color);
-                }
-                continue;
+            face.triangulate_into_mesh(tolerance, mesh, debug_info);
+        }
+    }
+}
+
+impl Triangulate for Face {
+    fn triangulate_into_mesh(
+        self,
+        tolerance: impl Into<Tolerance>,
+        mesh: &mut Mesh<Point<3>>,
+        debug_info: &mut DebugInfo,
+    ) {
+        if let Some(triangles) = self.triangles() {
+            for &(triangle, color) in triangles {
+                mesh.push_triangle(triangle, color);
             }
+            return;
+        }
 
-            let surface = face.surface();
-            let approx = face.approx(tolerance);
+        let surface = self.surface();
+        let approx = self.approx(tolerance.into());
 
-            let points: Vec<_> = approx
-                .points
-                .into_iter()
-                .map(|(point_surface, point_global)| TriangulationPoint {
-                    point_surface,
-                    point_global,
-                })
-                .collect();
-            let face_as_polygon = Polygon::new(*surface)
-                .with_exterior(
-                    approx
-                        .exterior
-                        .points
-                        .into_iter()
-                        .map(|(point_surface, _)| point_surface),
-                )
-                .with_interiors(approx.interiors.into_iter().map(|interior| {
-                    interior
-                        .points
-                        .into_iter()
-                        .map(|(point_surface, _)| point_surface)
-                }));
+        let points: Vec<_> = approx
+            .points
+            .into_iter()
+            .map(|(point_surface, point_global)| TriangulationPoint {
+                point_surface,
+                point_global,
+            })
+            .collect();
+        let face_as_polygon = Polygon::new(*surface)
+            .with_exterior(
+                approx
+                    .exterior
+                    .points
+                    .into_iter()
+                    .map(|(point_surface, _)| point_surface),
+            )
+            .with_interiors(approx.interiors.into_iter().map(|interior| {
+                interior
+                    .points
+                    .into_iter()
+                    .map(|(point_surface, _)| point_surface)
+            }));
 
-            let mut triangles = delaunay::triangulate(points);
-            triangles.retain(|triangle| {
-                face_as_polygon.contains_triangle(
-                    triangle.map(|point| point.point_surface),
-                    debug_info,
-                )
-            });
+        let mut triangles = delaunay::triangulate(points);
+        triangles.retain(|triangle| {
+            face_as_polygon.contains_triangle(
+                triangle.map(|point| point.point_surface),
+                debug_info,
+            )
+        });
 
-            for triangle in triangles {
-                let points = triangle.map(|point| point.point_global);
-                mesh.push_triangle(points, face.color());
-            }
+        for triangle in triangles {
+            let points = triangle.map(|point| point.point_global);
+            mesh.push_triangle(points, self.color());
         }
     }
 }
