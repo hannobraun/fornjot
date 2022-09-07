@@ -2,17 +2,17 @@ use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::{
         approx::Tolerance,
-        transform::transform_faces,
+        transform::TransformObject,
         validate::{Validate, Validated, ValidationConfig, ValidationError},
     },
-    objects::Face,
+    objects::Faces,
 };
 use fj_math::{Aabb, Transform, Vector};
 
 use super::Shape;
 
 impl Shape for fj::Transform {
-    type Brep = Vec<Face>;
+    type Brep = Faces;
 
     fn compute_brep(
         &self,
@@ -20,12 +20,11 @@ impl Shape for fj::Transform {
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
-        let mut faces = self
+        let faces = self
             .shape
             .compute_brep(config, tolerance, debug_info)?
-            .into_inner();
-
-        transform_faces(&mut faces, &make_transform(self));
+            .into_inner()
+            .transform(&make_transform(self));
 
         faces.validate_with_config(config)
     }

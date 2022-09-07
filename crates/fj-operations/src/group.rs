@@ -4,14 +4,14 @@ use fj_kernel::{
         approx::Tolerance,
         validate::{Validate, Validated, ValidationConfig, ValidationError},
     },
-    objects::Face,
+    objects::Faces,
 };
 use fj_math::Aabb;
 
 use super::Shape;
 
 impl Shape for fj::Group {
-    type Brep = Vec<Face>;
+    type Brep = Faces;
 
     fn compute_brep(
         &self,
@@ -19,7 +19,7 @@ impl Shape for fj::Group {
         tolerance: Tolerance,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
-        let mut faces = Vec::new();
+        let mut faces = Faces::new();
 
         let a = self.a.compute_brep(config, tolerance, debug_info)?;
         let b = self.b.compute_brep(config, tolerance, debug_info)?;

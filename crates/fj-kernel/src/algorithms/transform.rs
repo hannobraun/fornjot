@@ -3,8 +3,8 @@
 use fj_math::{Transform, Vector};
 
 use crate::objects::{
-    Curve, Cycle, Edge, Face, GlobalCurve, GlobalVertex, Shell, Sketch, Solid,
-    Surface, SurfaceVertex, Vertex,
+    Curve, Cycle, Edge, Face, Faces, GlobalCurve, GlobalVertex, Shell, Sketch,
+    Solid, Surface, SurfaceVertex, Vertex,
 };
 
 /// Transform an object
@@ -90,6 +90,14 @@ impl TransformObject for Face {
     }
 }
 
+impl TransformObject for Faces {
+    fn transform(self, transform: &Transform) -> Self {
+        let mut faces = Faces::new();
+        faces.extend(self.into_iter().map(|face| face.transform(transform)));
+        faces
+    }
+}
+
 impl TransformObject for GlobalCurve {
     fn transform(self, transform: &Transform) -> Self {
         let kind = self.kind().transform(transform);
@@ -159,13 +167,6 @@ impl TransformObject for Vertex {
             self.surface_form().transform(transform),
             self.global_form().transform(transform),
         )
-    }
-}
-
-/// Transform a shape
-pub fn transform_faces(faces: &mut Vec<Face>, transform: &Transform) {
-    for face in faces {
-        *face = face.clone().transform(transform);
     }
 }
 

@@ -30,7 +30,7 @@ use fj_kernel::{
         approx::Tolerance,
         validate::{Validate, Validated, ValidationConfig, ValidationError},
     },
-    objects::{Face, Sketch},
+    objects::{Faces, Sketch},
 };
 use fj_math::Aabb;
 
@@ -55,7 +55,7 @@ pub trait Shape {
 }
 
 impl Shape for fj::Shape {
-    type Brep = Vec<Face>;
+    type Brep = Faces;
 
     fn compute_brep(
         &self,
@@ -68,8 +68,6 @@ impl Shape for fj::Shape {
                 .compute_brep(config, tolerance, debug_info)?
                 .into_inner()
                 .into_faces()
-                .into_iter()
-                .collect::<Vec<_>>()
                 .validate_with_config(config),
             Self::Group(shape) => {
                 shape.compute_brep(config, tolerance, debug_info)
@@ -78,8 +76,12 @@ impl Shape for fj::Shape {
                 .compute_brep(config, tolerance, debug_info)?
                 .into_inner()
                 .into_shells()
-                .flat_map(|shell| shell.into_faces())
-                .collect::<Vec<_>>()
+                .map(|shell| shell.into_faces())
+                .reduce(|mut a, b| {
+                    a.extend(b);
+                    a
+                })
+                .unwrap_or_default()
                 .validate_with_config(config),
             Self::Transform(shape) => {
                 shape.compute_brep(config, tolerance, debug_info)
