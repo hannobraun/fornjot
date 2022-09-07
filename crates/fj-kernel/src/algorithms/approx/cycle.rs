@@ -28,7 +28,7 @@ impl Approx for &Cycle {
 }
 
 /// An approximation of a [`Cycle`]
-#[derive(Debug, Eq, PartialEq, Hash)]
+#[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct CycleApprox {
     /// The points that approximate the cycle
     pub points: Vec<(Point<2>, Point<3>)>,
