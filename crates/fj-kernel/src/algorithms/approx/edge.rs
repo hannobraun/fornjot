@@ -12,7 +12,7 @@ use crate::objects::{Edge, GlobalVertex, SurfaceVertex, Vertex};
 use super::{curve::RangeOnCurve, Approx};
 
 impl Approx for &Edge {
-    type Approximation = Vec<(Point<2>, Point<3>)>;
+    type Approximation = EdgeApprox;
 
     fn approx(self, tolerance: super::Tolerance) -> Self::Approximation {
         // The range is only used for circles right now.
@@ -80,6 +80,13 @@ impl Approx for &Edge {
             ),
         );
 
-        points
+        EdgeApprox { points }
     }
+}
+
+/// An approximation of an [`Edge`]
+#[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct EdgeApprox {
+    /// The points that approximate the [`Edge`]
+    pub points: Vec<(Point<2>, Point<3>)>,
 }

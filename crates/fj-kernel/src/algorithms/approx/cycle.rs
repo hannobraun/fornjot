@@ -15,8 +15,8 @@ impl Approx for &Cycle {
         let mut points = Vec::new();
 
         for edge in self.edges() {
-            let edge_points = edge.approx(tolerance);
-            points.extend(edge_points);
+            let approx = edge.approx(tolerance);
+            points.extend(approx.points);
         }
 
         if let Some(&point) = points.first() {
