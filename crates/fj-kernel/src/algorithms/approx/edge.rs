@@ -90,3 +90,10 @@ pub struct EdgeApprox {
     /// The points that approximate the [`Edge`]
     pub points: Vec<(Point<2>, Point<3>)>,
 }
+
+impl EdgeApprox {
+    /// Compute the points that approximate the edge
+    pub fn points(&self) -> Vec<(Point<2>, Point<3>)> {
+        self.points.clone()
+    }
+}
