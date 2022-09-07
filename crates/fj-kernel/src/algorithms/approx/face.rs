@@ -6,9 +6,19 @@ use std::collections::BTreeSet;
 
 use fj_interop::mesh::Color;
 
-use crate::objects::Face;
+use crate::objects::{Face, Faces};
 
 use super::{cycle::CycleApprox, Approx, ApproxPoint, Tolerance};
+
+impl Approx for &Faces {
+    type Approximation = BTreeSet<FaceApprox>;
+
+    fn approx(self, tolerance: Tolerance) -> Self::Approximation {
+        self.into_iter()
+            .map(|face| face.approx(tolerance))
+            .collect()
+    }
+}
 
 impl Approx for &Face {
     type Approximation = FaceApprox;
