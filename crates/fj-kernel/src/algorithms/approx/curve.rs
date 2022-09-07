@@ -18,12 +18,12 @@ use crate::objects::{Curve, CurveKind, GlobalCurve, Vertex};
 use super::{Approx, Tolerance};
 
 impl Approx for (&Curve, RangeOnCurve) {
-    type Approximation = Vec<(Point<2>, Point<3>)>;
+    type Approximation = CurveApprox;
 
     fn approx(self, tolerance: Tolerance) -> Self::Approximation {
         let (curve, range) = self;
 
-        (curve.global_form(), range)
+        let points = (curve.global_form(), range)
             .approx(tolerance)
             .into_iter()
             .map(|(point_curve, point_global)| {
@@ -31,7 +31,9 @@ impl Approx for (&Curve, RangeOnCurve) {
                     curve.kind().point_from_curve_coords(point_curve);
                 (point_surface, point_global)
             })
-            .collect()
+            .collect();
+
+        CurveApprox { points }
     }
 }
 
@@ -135,6 +137,13 @@ impl RangeOnCurve {
     pub fn direction(&self) -> Scalar {
         self.signed_length().sign()
     }
+}
+
+/// An approximation of a [`Curve`]
+#[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct CurveApprox {
+    /// The points that approximate the curve
+    pub points: Vec<(Point<2>, Point<3>)>,
 }
 
 #[cfg(test)]
