@@ -28,20 +28,15 @@ impl Approx for &Face {
         // would need to provide its own approximation, as the edges that bound
         // it have nothing to do with its curvature.
 
-        let mut points = BTreeSet::new();
         let mut exteriors = Vec::new();
         let mut interiors = BTreeSet::new();
 
         for cycle in self.exteriors() {
             let cycle = cycle.approx(tolerance);
-
-            points.extend(cycle.points());
             exteriors.push(cycle);
         }
         for cycle in self.interiors() {
             let cycle = cycle.approx(tolerance);
-
-            points.extend(cycle.points());
             interiors.insert(cycle);
         }
 
@@ -58,7 +53,6 @@ impl Approx for &Face {
         );
 
         FaceApprox {
-            points,
             exterior,
             interiors,
             color: self.color(),
@@ -69,12 +63,6 @@ impl Approx for &Face {
 /// An approximation of a [`Face`]
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct FaceApprox {
-    /// All points that make up the approximation
-    ///
-    /// These could be actual vertices from the model, points that approximate
-    /// an edge, or points that approximate a face.
-    pub points: BTreeSet<(Point<2>, Point<3>)>,
-
     /// Approximation of the exterior cycle
     pub exterior: CycleApprox,
 
@@ -88,6 +76,14 @@ pub struct FaceApprox {
 impl FaceApprox {
     /// Compute all points that make up the approximation
     pub fn points(&self) -> BTreeSet<(Point<2>, Point<3>)> {
-        self.points.clone()
+        let mut points = BTreeSet::new();
+
+        points.extend(self.exterior.points());
+
+        for cycle_approx in &self.interiors {
+            points.extend(cycle_approx.points());
+        }
+
+        points
     }
 }
