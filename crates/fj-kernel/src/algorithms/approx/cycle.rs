@@ -2,11 +2,11 @@
 //!
 //! See [`CycleApprox`].
 
-use fj_math::{Point, Segment};
+use fj_math::Segment;
 
 use crate::objects::Cycle;
 
-use super::{edge::EdgeApprox, Approx, Tolerance};
+use super::{edge::EdgeApprox, Approx, ApproxPoint, Tolerance};
 
 impl Approx for &Cycle {
     type Approximation = CycleApprox;
@@ -26,15 +26,15 @@ pub struct CycleApprox {
 
 impl CycleApprox {
     /// Compute the points that approximate the cycle
-    pub fn points(&self) -> Vec<(Point<2>, Point<3>)> {
+    pub fn points(&self) -> Vec<ApproxPoint<2>> {
         let mut points = Vec::new();
 
         for edge_approx in &self.edges {
             points.extend(edge_approx.points());
         }
 
-        if let Some(&point) = points.first() {
-            points.push(point);
+        if let Some(point) = points.first() {
+            points.push(point.clone());
         }
 
         points
@@ -47,12 +47,10 @@ impl CycleApprox {
         for segment in self.points().windows(2) {
             // This can't panic, as we passed `2` to `windows`. Can be cleaned
             // up, once `array_windows` is stable.
-            let segment = [segment[0], segment[1]];
+            let segment = [&segment[0], &segment[1]];
 
-            segments.push(Segment::from(segment.map(|point| {
-                let (_, point_global) = point;
-                point_global
-            })));
+            segments
+                .push(Segment::from(segment.map(|point| point.global_form)));
         }
 
         segments

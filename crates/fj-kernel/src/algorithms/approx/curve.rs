@@ -15,7 +15,7 @@ use fj_math::{Circle, Point, Scalar};
 
 use crate::objects::{Curve, CurveKind, GlobalCurve, Vertex};
 
-use super::{Approx, Tolerance};
+use super::{Approx, ApproxPoint, Tolerance};
 
 impl Approx for (&Curve, RangeOnCurve) {
     type Approximation = CurveApprox;
@@ -26,10 +26,13 @@ impl Approx for (&Curve, RangeOnCurve) {
         let points = (curve.global_form(), range)
             .approx(tolerance)
             .into_iter()
-            .map(|(point_curve, point_global)| {
+            .map(|point| {
                 let point_surface =
-                    curve.kind().point_from_curve_coords(point_curve);
-                (point_surface, point_global)
+                    curve.kind().point_from_curve_coords(point.local_form);
+                ApproxPoint {
+                    local_form: point_surface,
+                    global_form: point.global_form,
+                }
             })
             .collect();
 
@@ -38,7 +41,7 @@ impl Approx for (&Curve, RangeOnCurve) {
 }
 
 impl Approx for (&GlobalCurve, RangeOnCurve) {
-    type Approximation = Vec<(Point<1>, Point<3>)>;
+    type Approximation = Vec<ApproxPoint<1>>;
 
     fn approx(self, tolerance: Tolerance) -> Self::Approximation {
         let (curve, range) = self;
@@ -64,7 +67,7 @@ fn approx_circle(
     circle: &Circle<3>,
     range: impl Into<RangeOnCurve>,
     tolerance: Tolerance,
-    points: &mut Vec<(Point<1>, Point<3>)>,
+    points: &mut Vec<ApproxPoint<1>>,
 ) {
     let radius = circle.a().magnitude();
     let range = range.into();
@@ -84,7 +87,10 @@ fn approx_circle(
         let point_curve = Point::from([angle]);
         let point_global = circle.point_from_circle_coords(point_curve);
 
-        points.push((point_curve, point_global));
+        points.push(ApproxPoint {
+            local_form: point_curve,
+            global_form: point_global,
+        });
     }
 }
 
@@ -143,7 +149,7 @@ impl RangeOnCurve {
 #[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct CurveApprox {
     /// The points that approximate the curve
-    pub points: Vec<(Point<2>, Point<3>)>,
+    pub points: Vec<ApproxPoint<2>>,
 }
 
 #[cfg(test)]

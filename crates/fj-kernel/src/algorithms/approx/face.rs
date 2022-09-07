@@ -5,11 +5,10 @@
 use std::collections::BTreeSet;
 
 use fj_interop::mesh::Color;
-use fj_math::Point;
 
 use crate::objects::Face;
 
-use super::{cycle::CycleApprox, Approx, Tolerance};
+use super::{cycle::CycleApprox, Approx, ApproxPoint, Tolerance};
 
 impl Approx for &Face {
     type Approximation = FaceApprox;
@@ -75,7 +74,7 @@ pub struct FaceApprox {
 
 impl FaceApprox {
     /// Compute all points that make up the approximation
-    pub fn points(&self) -> BTreeSet<(Point<2>, Point<3>)> {
+    pub fn points(&self) -> BTreeSet<ApproxPoint<2>> {
         let mut points = BTreeSet::new();
 
         points.extend(self.exterior.points());
