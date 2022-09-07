@@ -13,6 +13,16 @@ use self::{delaunay::TriangulationPoint, polygon::Polygon};
 use super::approx::{Approx, Tolerance};
 
 /// Triangulate a shape
+pub trait Triangulate: Sized {
+    /// Triangulate the shape
+    fn triangulate(
+        self,
+        tolerance: impl Into<Tolerance>,
+        debug_info: &mut DebugInfo,
+    ) -> Mesh<Point<3>>;
+}
+
+/// Triangulate a shape
 pub fn triangulate(
     faces: Vec<Face>,
     tolerance: Tolerance,
