@@ -2,7 +2,7 @@
 //!
 //! See [`FaceApprox`].
 
-use std::collections::HashSet;
+use std::collections::BTreeSet;
 
 use fj_math::Point;
 
@@ -27,9 +27,9 @@ impl Approx for &Face {
         // would need to provide its own approximation, as the edges that bound
         // it have nothing to do with its curvature.
 
-        let mut points = HashSet::new();
+        let mut points = BTreeSet::new();
         let mut exteriors = Vec::new();
-        let mut interiors = HashSet::new();
+        let mut interiors = BTreeSet::new();
 
         for cycle in self.exteriors() {
             let cycle = cycle.approx(tolerance);
@@ -71,19 +71,19 @@ pub struct FaceApprox {
     ///
     /// These could be actual vertices from the model, points that approximate
     /// an edge, or points that approximate a face.
-    pub points: HashSet<(Point<2>, Point<3>)>,
+    pub points: BTreeSet<(Point<2>, Point<3>)>,
 
     /// Approximation of the exterior cycle
     pub exterior: CycleApprox,
 
     /// Approximations of the interior cycles
-    pub interiors: HashSet<CycleApprox>,
+    pub interiors: BTreeSet<CycleApprox>,
 }
 
 #[cfg(test)]
 mod tests {
     use fj_math::{Point, Scalar};
-    use map_macro::set;
+    use map_macro::btree_set;
 
     use crate::{
         algorithms::approx::Approx,
@@ -124,11 +124,11 @@ mod tests {
 
         let approx = face.approx(tolerance);
         let expected = FaceApprox {
-            points: set![a, b, c, d, e, f, g, h],
+            points: btree_set![a, b, c, d, e, f, g, h],
             exterior: CycleApprox {
                 points: vec![a, b, c, d, a],
             },
-            interiors: set![CycleApprox {
+            interiors: btree_set![CycleApprox {
                 points: vec![e, f, g, h, e],
             }],
         };
