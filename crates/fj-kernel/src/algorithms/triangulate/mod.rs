@@ -6,8 +6,6 @@ mod polygon;
 use fj_interop::mesh::Mesh;
 use fj_math::Point;
 
-use crate::objects::Face;
-
 use self::{delaunay::TriangulationPoint, polygon::Polygon};
 
 use super::approx::{face::FaceApprox, Approx, Tolerance};
@@ -34,7 +32,8 @@ pub trait Triangulate: Sized {
 
 impl<T> Triangulate for T
 where
-    T: IntoIterator<Item = Face>,
+    T: Approx,
+    T::Approximation: IntoIterator<Item = FaceApprox>,
 {
     fn triangulate_into_mesh(
         self,
@@ -42,9 +41,9 @@ where
         mesh: &mut Mesh<Point<3>>,
     ) {
         let tolerance = tolerance.into();
+        let approx = self.approx(tolerance);
 
-        for face in self {
-            let approx = face.approx(tolerance);
+        for approx in approx {
             approx.triangulate_into_mesh(tolerance, mesh);
         }
     }
