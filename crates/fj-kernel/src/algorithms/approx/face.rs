@@ -65,7 +65,7 @@ impl Approx for &Face {
 }
 
 /// An approximation of a [`Face`]
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct FaceApprox {
     /// All points that make up the approximation
     ///
