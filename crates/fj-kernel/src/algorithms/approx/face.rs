@@ -6,7 +6,10 @@ use std::collections::BTreeSet;
 
 use fj_interop::mesh::Color;
 
-use crate::objects::{Face, Faces};
+use crate::{
+    algorithms::validate::ValidationConfig,
+    objects::{Face, Faces},
+};
 
 use super::{cycle::CycleApprox, Approx, ApproxPoint, Tolerance};
 
@@ -14,9 +17,44 @@ impl Approx for &Faces {
     type Approximation = BTreeSet<FaceApprox>;
 
     fn approx(self, tolerance: Tolerance) -> Self::Approximation {
-        self.into_iter()
+        let approx = self
+            .into_iter()
             .map(|face| face.approx(tolerance))
-            .collect()
+            .collect();
+
+        let min_distance = ValidationConfig::default().distinct_min_distance;
+        let mut all_points: BTreeSet<ApproxPoint<2>> = BTreeSet::new();
+
+        for approx in &approx {
+            let approx: &FaceApprox = approx;
+
+            for point in &approx.points() {
+                for p in &all_points {
+                    let distance =
+                        (p.global_form - point.global_form).magnitude();
+
+                    if p.global_form != point.global_form
+                        && distance < min_distance
+                    {
+                        let a = p;
+                        let b = point;
+
+                        panic!(
+                            "Invalid approximation: \
+                            Distinct points are too close \
+                            (a: {:?}, b: {:?}, distance: {distance})\n\
+                            source of `a`: {:#?}\n\
+                            source of `b`: {:#?}\n",
+                            a.global_form, b.global_form, a.source, b.source
+                        );
+                    }
+                }
+
+                all_points.insert(point.clone());
+            }
+        }
+
+        approx
     }
 }
 
