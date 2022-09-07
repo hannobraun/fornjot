@@ -9,7 +9,10 @@ use fj_math::{Point, Scalar};
 
 use crate::objects::{Edge, GlobalVertex, SurfaceVertex, Vertex};
 
-use super::{curve::RangeOnCurve, Approx};
+use super::{
+    curve::{CurveApprox, RangeOnCurve},
+    Approx,
+};
 
 impl Approx for &Edge {
     type Approximation = EdgeApprox;
@@ -75,9 +78,12 @@ impl Approx for &Edge {
             range.start().surface_form().position(),
             range.start().global_form().position(),
         );
-        let points = (self.curve(), range).approx(tolerance).points;
+        let curve_approx = (self.curve(), range).approx(tolerance);
 
-        EdgeApprox { first, points }
+        EdgeApprox {
+            first,
+            curve_approx,
+        }
     }
 }
 
@@ -87,8 +93,8 @@ pub struct EdgeApprox {
     /// The point that approximates the first vertex of the curve
     pub first: (Point<2>, Point<3>),
 
-    /// The points that approximate the [`Edge`]
-    pub points: Vec<(Point<2>, Point<3>)>,
+    /// The approximation of the edge's curve
+    pub curve_approx: CurveApprox,
 }
 
 impl EdgeApprox {
@@ -97,7 +103,7 @@ impl EdgeApprox {
         let mut points = Vec::new();
 
         points.push(self.first);
-        points.extend(self.points.clone());
+        points.extend(self.curve_approx.points.clone());
 
         points
     }
