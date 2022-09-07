@@ -15,28 +15,31 @@ use fj_math::{Circle, Point, Scalar};
 
 use crate::objects::{Curve, CurveKind, GlobalCurve, Vertex};
 
-use super::{Approx, Tolerance};
+use super::{Approx, ApproxPoint, Tolerance};
 
 impl Approx for (&Curve, RangeOnCurve) {
-    type Approximation = Vec<(Point<2>, Point<3>)>;
+    type Approximation = CurveApprox;
 
     fn approx(self, tolerance: Tolerance) -> Self::Approximation {
         let (curve, range) = self;
 
-        (curve.global_form(), range)
+        let points = (curve.global_form(), range)
             .approx(tolerance)
             .into_iter()
-            .map(|(point_curve, point_global)| {
+            .map(|point| {
                 let point_surface =
-                    curve.kind().point_from_curve_coords(point_curve);
-                (point_surface, point_global)
+                    curve.kind().point_from_curve_coords(point.local_form);
+                ApproxPoint::new(point_surface, point.global_form)
+                    .with_source((*curve, point.local_form))
             })
-            .collect()
+            .collect();
+
+        CurveApprox { points }
     }
 }
 
 impl Approx for (&GlobalCurve, RangeOnCurve) {
-    type Approximation = Vec<(Point<1>, Point<3>)>;
+    type Approximation = Vec<ApproxPoint<1>>;
 
     fn approx(self, tolerance: Tolerance) -> Self::Approximation {
         let (curve, range) = self;
@@ -62,7 +65,7 @@ fn approx_circle(
     circle: &Circle<3>,
     range: impl Into<RangeOnCurve>,
     tolerance: Tolerance,
-    points: &mut Vec<(Point<1>, Point<3>)>,
+    points: &mut Vec<ApproxPoint<1>>,
 ) {
     let radius = circle.a().magnitude();
     let range = range.into();
@@ -82,7 +85,7 @@ fn approx_circle(
         let point_curve = Point::from([angle]);
         let point_global = circle.point_from_circle_coords(point_curve);
 
-        points.push((point_curve, point_global));
+        points.push(ApproxPoint::new(point_curve, point_global));
     }
 }
 
@@ -135,6 +138,13 @@ impl RangeOnCurve {
     pub fn direction(&self) -> Scalar {
         self.signed_length().sign()
     }
+}
+
+/// An approximation of a [`Curve`]
+#[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct CurveApprox {
+    /// The points that approximate the curve
+    pub points: Vec<ApproxPoint<2>>,
 }
 
 #[cfg(test)]

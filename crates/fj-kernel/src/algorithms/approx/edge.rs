@@ -9,10 +9,13 @@ use fj_math::{Point, Scalar};
 
 use crate::objects::{Edge, GlobalVertex, SurfaceVertex, Vertex};
 
-use super::{curve::RangeOnCurve, Approx};
+use super::{
+    curve::{CurveApprox, RangeOnCurve},
+    Approx, ApproxPoint,
+};
 
 impl Approx for &Edge {
-    type Approximation = Vec<(Point<2>, Point<3>)>;
+    type Approximation = EdgeApprox;
 
     fn approx(self, tolerance: super::Tolerance) -> Self::Approximation {
         // The range is only used for circles right now.
@@ -71,14 +74,36 @@ impl Approx for &Edge {
 
         let range = RangeOnCurve { boundary };
 
-        let mut points = (self.curve(), range).approx(tolerance);
-        points.insert(
-            0,
-            (
-                range.start().surface_form().position(),
-                range.start().global_form().position(),
-            ),
+        let first = ApproxPoint::new(
+            range.start().surface_form().position(),
+            range.start().global_form().position(),
         );
+        let curve_approx = (self.curve(), range).approx(tolerance);
+
+        EdgeApprox {
+            first,
+            curve_approx,
+        }
+    }
+}
+
+/// An approximation of an [`Edge`]
+#[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct EdgeApprox {
+    /// The point that approximates the first vertex of the curve
+    pub first: ApproxPoint<2>,
+
+    /// The approximation of the edge's curve
+    pub curve_approx: CurveApprox,
+}
+
+impl EdgeApprox {
+    /// Compute the points that approximate the edge
+    pub fn points(&self) -> Vec<ApproxPoint<2>> {
+        let mut points = Vec::new();
+
+        points.push(self.first.clone());
+        points.extend(self.curve_approx.points.clone());
 
         points
     }

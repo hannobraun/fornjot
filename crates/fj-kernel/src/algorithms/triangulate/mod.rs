@@ -73,26 +73,23 @@ impl Triangulate for Face {
         let approx = self.approx(tolerance.into());
 
         let points: Vec<_> = approx
-            .points
+            .points()
             .into_iter()
-            .map(|(point_surface, point_global)| TriangulationPoint {
-                point_surface,
-                point_global,
+            .map(|point| TriangulationPoint {
+                point_surface: point.local_form,
+                point_global: point.global_form,
             })
             .collect();
         let face_as_polygon = Polygon::new(*surface)
             .with_exterior(
                 approx
                     .exterior
-                    .points
+                    .points()
                     .into_iter()
-                    .map(|(point_surface, _)| point_surface),
+                    .map(|point| point.local_form),
             )
             .with_interiors(approx.interiors.into_iter().map(|interior| {
-                interior
-                    .points
-                    .into_iter()
-                    .map(|(point_surface, _)| point_surface)
+                interior.points().into_iter().map(|point| point.local_form)
             }));
 
         let mut triangles = delaunay::triangulate(points);

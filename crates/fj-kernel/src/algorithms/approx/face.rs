@@ -2,13 +2,13 @@
 //!
 //! See [`FaceApprox`].
 
-use std::collections::HashSet;
+use std::collections::BTreeSet;
 
-use fj_math::Point;
+use fj_interop::mesh::Color;
 
 use crate::objects::Face;
 
-use super::{cycle::CycleApprox, Approx, Tolerance};
+use super::{cycle::CycleApprox, Approx, ApproxPoint, Tolerance};
 
 impl Approx for &Face {
     type Approximation = FaceApprox;
@@ -27,20 +27,15 @@ impl Approx for &Face {
         // would need to provide its own approximation, as the edges that bound
         // it have nothing to do with its curvature.
 
-        let mut points = HashSet::new();
         let mut exteriors = Vec::new();
-        let mut interiors = HashSet::new();
+        let mut interiors = BTreeSet::new();
 
         for cycle in self.exteriors() {
             let cycle = cycle.approx(tolerance);
-
-            points.extend(cycle.points.iter().copied());
             exteriors.push(cycle);
         }
         for cycle in self.interiors() {
             let cycle = cycle.approx(tolerance);
-
-            points.extend(cycle.points.iter().copied());
             interiors.insert(cycle);
         }
 
@@ -57,84 +52,37 @@ impl Approx for &Face {
         );
 
         FaceApprox {
-            points,
             exterior,
             interiors,
+            color: self.color(),
         }
     }
 }
 
 /// An approximation of a [`Face`]
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct FaceApprox {
-    /// All points that make up the approximation
-    ///
-    /// These could be actual vertices from the model, points that approximate
-    /// an edge, or points that approximate a face.
-    pub points: HashSet<(Point<2>, Point<3>)>,
-
     /// Approximation of the exterior cycle
     pub exterior: CycleApprox,
 
     /// Approximations of the interior cycles
-    pub interiors: HashSet<CycleApprox>,
+    pub interiors: BTreeSet<CycleApprox>,
+
+    /// The color of the approximated face
+    pub color: Color,
 }
 
-#[cfg(test)]
-mod tests {
-    use fj_math::{Point, Scalar};
-    use map_macro::set;
+impl FaceApprox {
+    /// Compute all points that make up the approximation
+    pub fn points(&self) -> BTreeSet<ApproxPoint<2>> {
+        let mut points = BTreeSet::new();
 
-    use crate::{
-        algorithms::approx::Approx,
-        objects::{Face, Surface},
-    };
+        points.extend(self.exterior.points());
 
-    use super::{CycleApprox, FaceApprox, Tolerance};
+        for cycle_approx in &self.interiors {
+            points.extend(cycle_approx.points());
+        }
 
-    #[test]
-    fn for_face_closed() -> anyhow::Result<()> {
-        // Test a closed face, i.e. one that is completely encircled by edges.
-
-        let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
-
-        let a = Point::from([0., 0.]);
-        let b = Point::from([3., 0.]);
-        let c = Point::from([3., 3.]);
-        let d = Point::from([0., 3.]);
-
-        let e = Point::from([1., 1.]);
-        let f = Point::from([2., 1.]);
-        let g = Point::from([2., 2.]);
-        let h = Point::from([1., 2.]);
-
-        let surface = Surface::xy_plane();
-        let face = Face::build(surface)
-            .polygon_from_points([a, b, c, d])
-            .with_hole([e, f, g, h]);
-
-        let a = (a, a.to_xyz());
-        let b = (b, b.to_xyz());
-        let c = (c, c.to_xyz());
-        let d = (d, d.to_xyz());
-        let e = (e, e.to_xyz());
-        let f = (f, f.to_xyz());
-        let g = (g, g.to_xyz());
-        let h = (h, h.to_xyz());
-
-        let approx = face.approx(tolerance);
-        let expected = FaceApprox {
-            points: set![a, b, c, d, e, f, g, h],
-            exterior: CycleApprox {
-                points: vec![a, b, c, d, a],
-            },
-            interiors: set![CycleApprox {
-                points: vec![e, f, g, h, e],
-            }],
-        };
-
-        assert_eq!(approx, expected);
-
-        Ok(())
+        points
     }
 }
