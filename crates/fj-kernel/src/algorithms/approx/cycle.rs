@@ -19,10 +19,6 @@ impl Approx for &Cycle {
             points.extend(approx.points);
         }
 
-        if let Some(&point) = points.first() {
-            points.push(point);
-        }
-
         CycleApprox { points }
     }
 }
@@ -37,7 +33,13 @@ pub struct CycleApprox {
 impl CycleApprox {
     /// Compute the points that approximate the cycle
     pub fn points(&self) -> Vec<(Point<2>, Point<3>)> {
-        self.points.clone()
+        let mut points = self.points.clone();
+
+        if let Some(&point) = points.first() {
+            points.push(point);
+        }
+
+        points
     }
 
     /// Construct the segments that approximate the cycle
