@@ -35,13 +35,13 @@ impl Approx for &Face {
         for cycle in self.exteriors() {
             let cycle = cycle.approx(tolerance);
 
-            points.extend(cycle.points.iter().copied());
+            points.extend(cycle.points());
             exteriors.push(cycle);
         }
         for cycle in self.interiors() {
             let cycle = cycle.approx(tolerance);
 
-            points.extend(cycle.points.iter().copied());
+            points.extend(cycle.points());
             interiors.insert(cycle);
         }
 

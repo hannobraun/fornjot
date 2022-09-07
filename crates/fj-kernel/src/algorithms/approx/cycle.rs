@@ -35,11 +35,16 @@ pub struct CycleApprox {
 }
 
 impl CycleApprox {
+    /// Compute the points that approximate the cycle
+    pub fn points(&self) -> Vec<(Point<2>, Point<3>)> {
+        self.points.clone()
+    }
+
     /// Construct the segments that approximate the cycle
     pub fn segments(&self) -> Vec<Segment<3>> {
         let mut segments = Vec::new();
 
-        for segment in self.points.windows(2) {
+        for segment in self.points().windows(2) {
             // This can't panic, as we passed `2` to `windows`. Can be cleaned
             // up, once `array_windows` is stable.
             let segment = [segment[0], segment[1]];

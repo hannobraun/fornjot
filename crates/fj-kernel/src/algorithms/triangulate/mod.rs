@@ -84,13 +84,13 @@ impl Triangulate for Face {
             .with_exterior(
                 approx
                     .exterior
-                    .points
+                    .points()
                     .into_iter()
                     .map(|(point_surface, _)| point_surface),
             )
             .with_interiors(approx.interiors.into_iter().map(|interior| {
                 interior
-                    .points
+                    .points()
                     .into_iter()
                     .map(|(point_surface, _)| point_surface)
             }));
