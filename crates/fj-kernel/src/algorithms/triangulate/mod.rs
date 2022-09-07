@@ -1,3 +1,5 @@
+//! Shape triangulation
+
 mod delaunay;
 mod polygon;
 
