@@ -39,13 +39,13 @@ impl Shell {
     }
 
     /// Access the shell's faces
-    pub fn faces(&self) -> impl Iterator<Item = &Face> {
-        (&self.faces).into_iter()
+    pub fn faces(&self) -> &Faces {
+        &self.faces
     }
 
     /// Convert the shell into a list of faces
-    pub fn into_faces(self) -> impl Iterator<Item = Face> {
-        self.faces.into_iter()
+    pub fn into_faces(self) -> Faces {
+        self.faces
     }
 }
 
