@@ -94,7 +94,7 @@ mod tests {
     use fj_math::{Point, Scalar};
 
     use crate::{
-        algorithms::approx::Tolerance,
+        algorithms::approx::{Approx, Tolerance},
         objects::{Face, Surface},
     };
 
@@ -209,6 +209,6 @@ mod tests {
 
     fn triangulate(face: impl Into<Face>) -> anyhow::Result<Mesh<Point<3>>> {
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
-        Ok(vec![face.into()].triangulate(tolerance))
+        Ok(face.into().approx(tolerance).triangulate(tolerance))
     }
 }
