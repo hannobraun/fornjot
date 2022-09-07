@@ -3,7 +3,7 @@
 mod delaunay;
 mod polygon;
 
-use fj_interop::{debug::DebugInfo, mesh::Mesh};
+use fj_interop::mesh::Mesh;
 use fj_math::Point;
 
 use crate::objects::Face;
@@ -15,13 +15,9 @@ use super::approx::{Approx, Tolerance};
 /// Triangulate a shape
 pub trait Triangulate: Sized {
     /// Triangulate the shape
-    fn triangulate(
-        self,
-        tolerance: impl Into<Tolerance>,
-        debug_info: &mut DebugInfo,
-    ) -> Mesh<Point<3>> {
+    fn triangulate(self, tolerance: impl Into<Tolerance>) -> Mesh<Point<3>> {
         let mut mesh = Mesh::new();
-        self.triangulate_into_mesh(tolerance, &mut mesh, debug_info);
+        self.triangulate_into_mesh(tolerance, &mut mesh);
         mesh
     }
 
@@ -33,7 +29,6 @@ pub trait Triangulate: Sized {
         self,
         tolerance: impl Into<Tolerance>,
         mesh: &mut Mesh<Point<3>>,
-        debug_info: &mut DebugInfo,
     );
 }
 
@@ -45,12 +40,11 @@ where
         self,
         tolerance: impl Into<Tolerance>,
         mesh: &mut Mesh<Point<3>>,
-        debug_info: &mut DebugInfo,
     ) {
         let tolerance = tolerance.into();
 
         for face in self {
-            face.triangulate_into_mesh(tolerance, mesh, debug_info);
+            face.triangulate_into_mesh(tolerance, mesh);
         }
     }
 }
@@ -60,7 +54,6 @@ impl Triangulate for Face {
         self,
         tolerance: impl Into<Tolerance>,
         mesh: &mut Mesh<Point<3>>,
-        debug_info: &mut DebugInfo,
     ) {
         let surface = self.surface();
         let approx = self.approx(tolerance.into());
@@ -87,10 +80,8 @@ impl Triangulate for Face {
 
         let mut triangles = delaunay::triangulate(points);
         triangles.retain(|triangle| {
-            face_as_polygon.contains_triangle(
-                triangle.map(|point| point.point_surface),
-                debug_info,
-            )
+            face_as_polygon
+                .contains_triangle(triangle.map(|point| point.point_surface))
         });
 
         for triangle in triangles {
@@ -102,7 +93,7 @@ impl Triangulate for Face {
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::{debug::DebugInfo, mesh::Mesh};
+    use fj_interop::mesh::Mesh;
     use fj_math::{Point, Scalar};
 
     use crate::{
@@ -221,8 +212,6 @@ mod tests {
 
     fn triangulate(face: impl Into<Face>) -> anyhow::Result<Mesh<Point<3>>> {
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
-
-        let mut debug_info = DebugInfo::new();
-        Ok(vec![face.into()].triangulate(tolerance, &mut debug_info))
+        Ok(vec![face.into()].triangulate(tolerance))
     }
 }

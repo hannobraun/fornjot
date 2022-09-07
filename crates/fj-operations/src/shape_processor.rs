@@ -42,7 +42,7 @@ impl ShapeProcessor {
         let config = ValidationConfig::default();
         let mut debug_info = DebugInfo::new();
         let shape = shape.compute_brep(&config, tolerance, &mut debug_info)?;
-        let mesh = shape.into_inner().triangulate(tolerance, &mut debug_info);
+        let mesh = shape.into_inner().triangulate(tolerance);
 
         Ok(ProcessedShape {
             aabb,

@@ -1,4 +1,4 @@
-use fj_interop::debug::{DebugInfo, TriangleEdgeCheck};
+use fj_interop::debug::TriangleEdgeCheck;
 use fj_math::{Point, PolyChain, Segment};
 
 use crate::{
@@ -65,7 +65,6 @@ impl Polygon {
     pub fn contains_triangle(
         &self,
         triangle: [impl Into<Point<2>>; 3],
-        debug_info: &mut DebugInfo,
     ) -> bool {
         let [a, b, c] = triangle.map(Into::into);
 
@@ -99,7 +98,7 @@ impl Polygon {
             // polygon edge (and if we reached this point, it isn't), we don't
             // need to care about the distinction between "inside the polygon"
             // and "on the polygon boundary".
-            if !self.contains_point(edge.center(), debug_info) {
+            if !self.contains_point(edge.center()) {
                 // The segment is outside of the face. This means we can throw
                 // away the whole triangle.
                 return false;
@@ -140,11 +139,7 @@ impl Polygon {
     /// This code is being duplicated by the `Contains<Point<2>>` implementation
     /// for `Face`. It would be nice to be able to consolidate the duplication,
     /// but this has turned out to be difficult.
-    pub fn contains_point(
-        &self,
-        point: impl Into<Point<2>>,
-        debug_info: &mut DebugInfo,
-    ) -> bool {
+    pub fn contains_point(&self, point: impl Into<Point<2>>) -> bool {
         let ray = HorizontalRayToTheRight {
             origin: point.into(),
         };
@@ -240,15 +235,12 @@ impl Polygon {
             }
         }
 
-        debug_info.triangle_edge_checks.push(check);
-
         num_hits % 2 == 1
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::debug::DebugInfo;
     use fj_math::{Point, PolyChain};
 
     use crate::objects::Surface;
@@ -269,7 +261,7 @@ mod tests {
             .with_exterior(PolyChain::from([a, b, c]).close())
             .with_interiors([PolyChain::from([d, e, f]).close()]);
 
-        assert!(!polygon.contains_triangle([d, e, f], &mut DebugInfo::new()));
+        assert!(!polygon.contains_triangle([d, e, f]));
     }
 
     #[test]
@@ -339,9 +331,7 @@ mod tests {
     fn assert_contains_point(polygon: Polygon, point: impl Into<Point<2>>) {
         let point = point.into();
 
-        assert!(polygon.contains_point(point, &mut DebugInfo::new()));
-        assert!(polygon
-            .invert_winding()
-            .contains_point(point, &mut DebugInfo::new()));
+        assert!(polygon.contains_point(point));
+        assert!(polygon.invert_winding().contains_point(point,));
     }
 }
