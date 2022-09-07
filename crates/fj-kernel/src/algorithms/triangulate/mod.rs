@@ -73,7 +73,7 @@ impl Triangulate for Face {
         let approx = self.approx(tolerance.into());
 
         let points: Vec<_> = approx
-            .points
+            .points()
             .into_iter()
             .map(|(point_surface, point_global)| TriangulationPoint {
                 point_surface,

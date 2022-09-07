@@ -84,3 +84,10 @@ pub struct FaceApprox {
     /// The color of the approximated face
     pub color: Color,
 }
+
+impl FaceApprox {
+    /// Compute all points that make up the approximation
+    pub fn points(&self) -> BTreeSet<(Point<2>, Point<3>)> {
+        self.points.clone()
+    }
+}
