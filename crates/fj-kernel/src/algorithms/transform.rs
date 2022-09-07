@@ -170,13 +170,6 @@ impl TransformObject for Vertex {
     }
 }
 
-/// Transform a shape
-pub fn transform_faces(faces: &mut Vec<Face>, transform: &Transform) {
-    for face in faces {
-        *face = face.clone().transform(transform);
-    }
-}
-
 fn transform_cycles<'a>(
     cycles: impl IntoIterator<Item = &'a Cycle> + 'a,
     transform: &'a Transform,
