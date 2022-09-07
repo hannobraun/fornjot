@@ -4,6 +4,7 @@
 
 use std::collections::BTreeSet;
 
+use fj_interop::mesh::Color;
 use fj_math::Point;
 
 use crate::objects::Face;
@@ -60,6 +61,7 @@ impl Approx for &Face {
             points,
             exterior,
             interiors,
+            color: self.color(),
         }
     }
 }
@@ -78,10 +80,14 @@ pub struct FaceApprox {
 
     /// Approximations of the interior cycles
     pub interiors: BTreeSet<CycleApprox>,
+
+    /// The color of the approximated face
+    pub color: Color,
 }
 
 #[cfg(test)]
 mod tests {
+    use fj_interop::mesh::Color;
     use fj_math::{Point, Scalar};
     use map_macro::btree_set;
 
@@ -131,6 +137,7 @@ mod tests {
             interiors: btree_set![CycleApprox {
                 points: vec![e, f, g, h, e],
             }],
+            color: Color::default(),
         };
 
         assert_eq!(approx, expected);
