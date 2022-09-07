@@ -10,5 +10,3 @@ pub mod sweep;
 pub mod transform;
 pub mod triangulate;
 pub mod validate;
-
-pub use self::triangulate::triangulate;
