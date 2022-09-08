@@ -25,11 +25,11 @@ impl Cycle {
         surface: Surface,
         edges: impl IntoIterator<Item = HalfEdge>,
     ) -> Self {
-        let edges = edges.into_iter().collect::<Vec<_>>();
+        let half_edges = edges.into_iter().collect::<Vec<_>>();
 
         // Verify, that the curves of all edges are defined in the correct
         // surface.
-        for edge in &edges {
+        for edge in &half_edges {
             assert_eq!(
                 &surface,
                 edge.curve().surface(),
@@ -37,14 +37,14 @@ impl Cycle {
             );
         }
 
-        if edges.len() != 1 {
+        if half_edges.len() != 1 {
             // If the length is one, we might have a cycle made up of just one
             // circle. If that isn't the case, we are dealing with line segments
             // and can be sure that the following `get_or_panic` calls won't
             // panic.
 
             // Verify that all edges connect.
-            for edges in edges.windows(2) {
+            for edges in half_edges.windows(2) {
                 // Can't panic, as we passed `2` to `windows`.
                 //
                 // Can be cleaned up, once `array_windows` is stable"
@@ -62,8 +62,8 @@ impl Cycle {
             }
 
             // Verify that the edges form a cycle
-            if let Some(first) = edges.first() {
-                if let Some(last) = edges.last() {
+            if let Some(first) = half_edges.first() {
+                if let Some(last) = half_edges.last() {
                     let [first, _] = first.vertices();
                     let [_, last] = last.vertices();
 
@@ -78,7 +78,7 @@ impl Cycle {
 
         Self {
             surface,
-            half_edges: edges,
+            half_edges,
         }
     }
 
