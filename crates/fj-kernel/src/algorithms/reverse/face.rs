@@ -10,8 +10,8 @@ impl Reverse for Face {
     fn reverse(self) -> Self {
         let surface = self.surface().reverse();
 
-        let exteriors = reverse_local_coordinates_in_cycle(self.exteriors());
-        let interiors = reverse_local_coordinates_in_cycle(self.interiors());
+        let exteriors = reverse_local_coordinates_in_cycles(self.exteriors());
+        let interiors = reverse_local_coordinates_in_cycles(self.interiors());
 
         Face::new(surface)
             .with_exteriors(exteriors)
@@ -33,7 +33,7 @@ impl Reverse for Face {
 /// concept in the kernel. We kind of treat `Edge` as a half-edge, but in an
 /// inconsistent way that causes problems. This issue has some context on that:
 /// <https://github.com/hannobraun/Fornjot/issues/993>
-fn reverse_local_coordinates_in_cycle<'r>(
+fn reverse_local_coordinates_in_cycles<'r>(
     cycles: impl IntoIterator<Item = &'r Cycle> + 'r,
 ) -> impl Iterator<Item = Cycle> + 'r {
     cycles.into_iter().map(|cycle| {
