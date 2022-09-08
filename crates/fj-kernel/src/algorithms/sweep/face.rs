@@ -13,8 +13,9 @@ impl Sweep for Face {
 
         let mut faces = Vec::new();
 
-        let bottom_face =
-            create_bottom_face(&self, path.is_negative_direction());
+        let is_negative_sweep = path.is_negative_direction();
+
+        let bottom_face = create_bottom_face(&self, is_negative_sweep);
         faces.push(bottom_face);
 
         let top_face = create_top_face(self.clone(), path);
@@ -22,7 +23,7 @@ impl Sweep for Face {
 
         for cycle in self.all_cycles() {
             for &edge in cycle.edges() {
-                let edge = if path.is_negative_direction() {
+                let edge = if is_negative_sweep {
                     edge.reverse_including_curve()
                 } else {
                     edge
