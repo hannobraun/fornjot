@@ -223,15 +223,15 @@ mod tests {
             Vertex::new(Point::from([Scalar::ONE]), curve, b_surface, b_global);
         let vertices = [a, b];
 
-        let edge = HalfEdge::from_curve_and_vertices(curve, vertices);
+        let half_edge = HalfEdge::from_curve_and_vertices(curve, vertices);
 
-        let result = edge.validate_with_config(&ValidationConfig {
+        let result = half_edge.validate_with_config(&ValidationConfig {
             identical_max_distance: deviation * 2.,
             ..ValidationConfig::default()
         });
         assert!(result.is_ok());
 
-        let result = edge.validate_with_config(&ValidationConfig {
+        let result = half_edge.validate_with_config(&ValidationConfig {
             identical_max_distance: deviation / 2.,
             ..ValidationConfig::default()
         });
