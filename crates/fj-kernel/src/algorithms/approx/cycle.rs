@@ -14,7 +14,7 @@ impl Approx for &Cycle {
     fn approx(self, tolerance: Tolerance) -> Self::Approximation {
         let half_edges = self
             .half_edges()
-            .map(|edge| edge.approx(tolerance))
+            .map(|half_edge| half_edge.approx(tolerance))
             .collect();
         CycleApprox { edges: half_edges }
     }
