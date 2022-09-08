@@ -93,7 +93,7 @@ impl Cycle {
     }
 
     /// Consume the cycle and return its edges
-    pub fn into_edges(self) -> impl Iterator<Item = HalfEdge> {
+    pub fn into_half_edges(self) -> impl Iterator<Item = HalfEdge> {
         self.half_edges.into_iter()
     }
 }

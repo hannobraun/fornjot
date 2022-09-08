@@ -48,7 +48,7 @@ impl TransformObject for Cycle {
     fn transform(self, transform: &Transform) -> Self {
         Self::new(
             self.surface().transform(transform),
-            self.into_edges().map(|edge| edge.transform(transform)),
+            self.into_half_edges().map(|edge| edge.transform(transform)),
         )
     }
 }
