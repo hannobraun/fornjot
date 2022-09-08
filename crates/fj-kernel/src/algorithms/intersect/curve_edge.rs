@@ -42,7 +42,7 @@ impl CurveEdgeIntersection {
                 }
             };
 
-            let edge_vertices = edge.vertices().get().map(|vertex| {
+            let edge_vertices = edge.vertices().map(|vertex| {
                 edge_curve_as_line.point_from_line_coords(vertex.position())
             });
 

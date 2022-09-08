@@ -1,12 +1,12 @@
-use crate::objects::{Edge, VerticesOfEdge};
+use crate::objects::Edge;
 
 use super::Reverse;
 
 impl Reverse for Edge {
     fn reverse(self) -> Self {
         let vertices = {
-            let &VerticesOfEdge([a, b]) = self.vertices();
-            VerticesOfEdge([b, a])
+            let &[a, b] = self.vertices();
+            [b, a]
         };
 
         Edge::from_curve_and_vertices(*self.curve(), vertices)

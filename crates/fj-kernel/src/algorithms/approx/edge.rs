@@ -16,7 +16,7 @@ impl Approx for &Edge {
     type Approximation = EdgeApprox;
 
     fn approx(self, tolerance: super::Tolerance) -> Self::Approximation {
-        let [a, b] = self.vertices().get().map(|&vertex| vertex);
+        let &[a, b] = self.vertices();
         let range = RangeOnCurve::new([a, b]);
 
         let first = ApproxPoint::new(

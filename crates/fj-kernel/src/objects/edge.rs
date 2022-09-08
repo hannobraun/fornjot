@@ -8,7 +8,7 @@ use super::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex};
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edge {
     curve: Curve,
-    vertices: VerticesOfEdge<Vertex>,
+    vertices: [Vertex; 2],
     global: GlobalEdge,
 }
 
@@ -31,12 +31,12 @@ impl Edge {
     /// objects that are passed refer to.
     pub fn new(
         curve: Curve,
-        vertices: VerticesOfEdge<Vertex>,
+        vertices: [Vertex; 2],
         global: GlobalEdge,
     ) -> Self {
         assert_eq!(curve.global_form(), global.curve());
         assert_eq!(
-            &vertices.convert(|vertex| *vertex.global_form()),
+            &vertices.map(|vertex| *vertex.global_form()),
             global.vertices()
         );
 
@@ -46,7 +46,7 @@ impl Edge {
         // It is perfectly fine for global forms of the the vertices to be
         // coincident (in 3D space). That would just mean, that ends of the edge
         // connect to each other.
-        let [a, b] = vertices.get();
+        let [a, b] = vertices;
         assert_ne!(
             a.position(),
             b.position(),
@@ -67,11 +67,11 @@ impl Edge {
     /// [`GlobalEdge`] instance that you can provide.
     pub fn from_curve_and_vertices(
         curve: Curve,
-        vertices: VerticesOfEdge<Vertex>,
+        vertices: [Vertex; 2],
     ) -> Self {
         let global = GlobalEdge::new(
             *curve.global_form(),
-            vertices.convert(|vertex| *vertex.global_form()),
+            vertices.map(|vertex| *vertex.global_form()),
         );
         Self::new(curve, vertices, global)
     }
@@ -85,8 +85,8 @@ impl Edge {
     /// <https://github.com/hannobraun/Fornjot/issues/695>
     pub fn reverse_including_curve(self) -> Self {
         let vertices = {
-            let VerticesOfEdge([a, b]) = self.vertices;
-            VerticesOfEdge([
+            let [a, b] = self.vertices;
+            [
                 Vertex::new(
                     -b.position(),
                     b.curve().reverse(),
@@ -99,7 +99,7 @@ impl Edge {
                     *a.surface_form(),
                     *a.global_form(),
                 ),
-            ])
+            ]
         };
 
         Self::from_curve_and_vertices(self.curve().reverse(), vertices)
@@ -119,7 +119,7 @@ impl Edge {
     /// An edge has either two bounding vertices or none. The latter is possible
     /// if the edge's curve is continuous (i.e. connects to itself), and defines
     /// the whole edge.
-    pub fn vertices(&self) -> &VerticesOfEdge<Vertex> {
+    pub fn vertices(&self) -> &[Vertex; 2] {
         &self.vertices
     }
 
@@ -131,7 +131,7 @@ impl Edge {
 
 impl fmt::Display for Edge {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let [a, b] = self.vertices().0.map(|vertex| vertex.position());
+        let [a, b] = self.vertices().map(|vertex| vertex.position());
         write!(f, "edge from {:?} to {:?}", a, b)?;
         write!(f, " on {:?}", self.curve().global_form())?;
 

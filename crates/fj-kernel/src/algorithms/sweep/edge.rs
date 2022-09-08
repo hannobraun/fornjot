@@ -5,7 +5,6 @@ use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
     objects::{
         Curve, CurveKind, Cycle, Edge, Face, GlobalEdge, SurfaceVertex, Vertex,
-        VerticesOfEdge,
     },
 };
 
@@ -30,7 +29,7 @@ impl Sweep for (Edge, Color) {
         // is not defined in the right surface. Let's create a new bottom edge,
         // by swapping the surface of the original.
         let bottom_edge = {
-            let vertices = edge.vertices().get();
+            let vertices = edge.vertices();
 
             let points_curve_and_surface = vertices.map(|vertex| {
                 (vertex.position(), [vertex.position().t, Scalar::ZERO])
@@ -58,23 +57,20 @@ impl Sweep for (Edge, Color) {
                 let vertices_with_surface_points =
                     [(a_vertex, a_surface), (b_vertex, b_surface)];
 
-                let vertices = vertices_with_surface_points.map(
-                    |(vertex, point_surface)| {
-                        let surface_vertex = SurfaceVertex::new(
-                            point_surface,
-                            surface,
-                            *vertex.global_form(),
-                        );
+                vertices_with_surface_points.map(|(vertex, point_surface)| {
+                    let surface_vertex = SurfaceVertex::new(
+                        point_surface,
+                        surface,
+                        *vertex.global_form(),
+                    );
 
-                        Vertex::new(
-                            vertex.position(),
-                            curve,
-                            surface_vertex,
-                            *vertex.global_form(),
-                        )
-                    },
-                );
-                VerticesOfEdge::from_vertices(vertices)
+                    Vertex::new(
+                        vertex.position(),
+                        curve,
+                        surface_vertex,
+                        *vertex.global_form(),
+                    )
+                })
             };
 
             Edge::new(curve, vertices, *edge.global_form())
@@ -82,14 +78,13 @@ impl Sweep for (Edge, Color) {
 
         let side_edges = bottom_edge
             .vertices()
-            .get()
-            .map(|&vertex| (vertex, surface).sweep(path));
+            .map(|vertex| (vertex, surface).sweep(path));
 
         let top_edge = {
-            let bottom_vertices = bottom_edge.vertices().get();
+            let bottom_vertices = bottom_edge.vertices();
 
             let global_vertices = side_edges.map(|edge| {
-                let [_, vertex] = edge.vertices().get();
+                let [_, vertex] = edge.vertices();
                 *vertex.global_form()
             });
 
@@ -142,7 +137,7 @@ impl Sweep for (Edge, Color) {
                 })
             };
 
-            Edge::new(curve, VerticesOfEdge::from_vertices(vertices), global)
+            Edge::new(curve, vertices, global)
         };
 
         let cycle = {
@@ -157,8 +152,8 @@ impl Sweep for (Edge, Color) {
             while i < edges.len() {
                 let j = (i + 1) % edges.len();
 
-                let [_, prev_last] = edges[i].vertices().get();
-                let [next_first, _] = edges[j].vertices().get();
+                let [_, prev_last] = edges[i].vertices();
+                let [next_first, _] = edges[j].vertices();
 
                 // Need to compare surface forms here, as the global forms might
                 // be coincident when sweeping circles, despite the vertices
