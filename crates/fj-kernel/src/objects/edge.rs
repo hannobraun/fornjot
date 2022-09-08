@@ -1,6 +1,6 @@
 use std::fmt;
 
-use crate::{algorithms::reverse::Reverse, builder::EdgeBuilder};
+use crate::{algorithms::reverse::Reverse, builder::HalfEdgeBuilder};
 
 use super::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex};
 
@@ -13,9 +13,9 @@ pub struct HalfEdge {
 }
 
 impl HalfEdge {
-    /// Build an edge using [`EdgeBuilder`]
-    pub fn build(surface: Surface) -> EdgeBuilder {
-        EdgeBuilder::new(surface)
+    /// Build an edge using [`HalfEdgeBuilder`]
+    pub fn build(surface: Surface) -> HalfEdgeBuilder {
+        HalfEdgeBuilder::new(surface)
     }
 
     /// Create a new instance of `Edge`

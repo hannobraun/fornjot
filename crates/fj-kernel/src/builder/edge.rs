@@ -6,12 +6,12 @@ use crate::objects::{
 };
 
 /// API for building an [`HalfEdge`]
-pub struct EdgeBuilder {
+pub struct HalfEdgeBuilder {
     surface: Surface,
 }
 
-impl EdgeBuilder {
-    /// Construct a new instance of [`EdgeBuilder`]
+impl HalfEdgeBuilder {
+    /// Construct a new instance of [`HalfEdgeBuilder`]
     ///
     /// Also see [`HalfEdge::build`].
     pub fn new(surface: Surface) -> Self {
