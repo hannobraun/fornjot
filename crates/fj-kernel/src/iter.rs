@@ -358,10 +358,10 @@ mod tests {
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
-        assert_eq!(0, object.half_edge_iter().count());
         assert_eq!(0, object.face_iter().count());
         assert_eq!(1, object.global_curve_iter().count());
         assert_eq!(0, object.global_vertex_iter().count());
+        assert_eq!(0, object.half_edge_iter().count());
         assert_eq!(0, object.shell_iter().count());
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(0, object.solid_iter().count());
@@ -379,10 +379,10 @@ mod tests {
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
-        assert_eq!(3, object.half_edge_iter().count());
         assert_eq!(0, object.face_iter().count());
         assert_eq!(3, object.global_curve_iter().count());
         assert_eq!(3, object.global_vertex_iter().count());
+        assert_eq!(3, object.half_edge_iter().count());
         assert_eq!(0, object.shell_iter().count());
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(0, object.solid_iter().count());
@@ -401,10 +401,10 @@ mod tests {
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
-        assert_eq!(3, object.half_edge_iter().count());
         assert_eq!(1, object.face_iter().count());
         assert_eq!(3, object.global_curve_iter().count());
         assert_eq!(3, object.global_vertex_iter().count());
+        assert_eq!(3, object.half_edge_iter().count());
         assert_eq!(0, object.shell_iter().count());
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(0, object.solid_iter().count());
@@ -418,10 +418,10 @@ mod tests {
 
         assert_eq!(0, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
-        assert_eq!(0, object.half_edge_iter().count());
         assert_eq!(0, object.face_iter().count());
         assert_eq!(1, object.global_curve_iter().count());
         assert_eq!(0, object.global_vertex_iter().count());
+        assert_eq!(0, object.half_edge_iter().count());
         assert_eq!(0, object.shell_iter().count());
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(0, object.solid_iter().count());
@@ -435,10 +435,10 @@ mod tests {
 
         assert_eq!(0, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
-        assert_eq!(0, object.half_edge_iter().count());
         assert_eq!(0, object.face_iter().count());
         assert_eq!(0, object.global_curve_iter().count());
         assert_eq!(1, object.global_vertex_iter().count());
+        assert_eq!(0, object.half_edge_iter().count());
         assert_eq!(0, object.shell_iter().count());
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(0, object.solid_iter().count());
@@ -453,10 +453,10 @@ mod tests {
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
-        assert_eq!(1, object.half_edge_iter().count());
         assert_eq!(0, object.face_iter().count());
         assert_eq!(1, object.global_curve_iter().count());
         assert_eq!(2, object.global_vertex_iter().count());
+        assert_eq!(1, object.half_edge_iter().count());
         assert_eq!(0, object.shell_iter().count());
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(0, object.solid_iter().count());
@@ -470,10 +470,10 @@ mod tests {
 
         assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());
-        assert_eq!(24, object.half_edge_iter().count());
         assert_eq!(6, object.face_iter().count());
         assert_eq!(18, object.global_curve_iter().count());
         assert_eq!(8, object.global_vertex_iter().count());
+        assert_eq!(24, object.half_edge_iter().count());
         assert_eq!(1, object.shell_iter().count());
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(0, object.solid_iter().count());
@@ -493,10 +493,10 @@ mod tests {
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
-        assert_eq!(3, object.half_edge_iter().count());
         assert_eq!(1, object.face_iter().count());
         assert_eq!(3, object.global_curve_iter().count());
         assert_eq!(3, object.global_vertex_iter().count());
+        assert_eq!(3, object.half_edge_iter().count());
         assert_eq!(0, object.shell_iter().count());
         assert_eq!(1, object.sketch_iter().count());
         assert_eq!(0, object.solid_iter().count());
@@ -510,10 +510,10 @@ mod tests {
 
         assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());
-        assert_eq!(24, object.half_edge_iter().count());
         assert_eq!(6, object.face_iter().count());
         assert_eq!(18, object.global_curve_iter().count());
         assert_eq!(8, object.global_vertex_iter().count());
+        assert_eq!(24, object.half_edge_iter().count());
         assert_eq!(1, object.shell_iter().count());
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(1, object.solid_iter().count());
@@ -527,10 +527,10 @@ mod tests {
 
         assert_eq!(0, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
-        assert_eq!(0, object.half_edge_iter().count());
         assert_eq!(0, object.face_iter().count());
         assert_eq!(0, object.global_curve_iter().count());
         assert_eq!(0, object.global_vertex_iter().count());
+        assert_eq!(0, object.half_edge_iter().count());
         assert_eq!(0, object.shell_iter().count());
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(0, object.solid_iter().count());
@@ -549,10 +549,10 @@ mod tests {
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
-        assert_eq!(0, object.half_edge_iter().count());
         assert_eq!(0, object.face_iter().count());
         assert_eq!(1, object.global_curve_iter().count());
         assert_eq!(1, object.global_vertex_iter().count());
+        assert_eq!(0, object.half_edge_iter().count());
         assert_eq!(0, object.shell_iter().count());
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(0, object.solid_iter().count());
