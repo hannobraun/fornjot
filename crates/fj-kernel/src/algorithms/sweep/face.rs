@@ -5,12 +5,12 @@ use crate::{
     objects::{CurveKind, Face, Shell, Surface},
 };
 
-use super::{Path, Sweep};
+use super::Sweep;
 
 impl Sweep for Face {
     type Swept = Shell;
 
-    fn sweep(self, path: impl Into<Path>) -> Self::Swept {
+    fn sweep(self, path: impl Into<Vector<3>>) -> Self::Swept {
         let path = path.into();
 
         let mut faces = Vec::new();
@@ -29,14 +29,13 @@ impl Sweep for Face {
 
             let normal = a.cross(&b);
 
-            normal.dot(&path.inner()) < Scalar::ZERO
+            normal.dot(&path) < Scalar::ZERO
         };
 
         let bottom_face = create_bottom_face(&self, is_negative_sweep);
         faces.push(bottom_face);
 
-        let top_face =
-            create_top_face(self.clone(), path.inner(), is_negative_sweep);
+        let top_face = create_top_face(self.clone(), path, is_negative_sweep);
         faces.push(top_face);
 
         for cycle in self.all_cycles() {

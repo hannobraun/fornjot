@@ -1,11 +1,13 @@
+use fj_math::Vector;
+
 use crate::objects::{Sketch, Solid};
 
-use super::{Path, Sweep};
+use super::Sweep;
 
 impl Sweep for Sketch {
     type Swept = Solid;
 
-    fn sweep(self, path: impl Into<Path>) -> Self::Swept {
+    fn sweep(self, path: impl Into<Vector<3>>) -> Self::Swept {
         let path = path.into();
 
         let mut shells = Vec::new();

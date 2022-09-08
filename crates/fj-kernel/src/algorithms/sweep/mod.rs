@@ -14,7 +14,7 @@ pub trait Sweep {
     type Swept;
 
     /// Sweep the object along the given path
-    fn sweep(self, path: impl Into<Path>) -> Self::Swept;
+    fn sweep(self, path: impl Into<Vector<3>>) -> Self::Swept;
 }
 
 /// A path to be used with [`Sweep`]

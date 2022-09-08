@@ -1,16 +1,16 @@
-use fj_math::{Line, Point, Scalar};
+use fj_math::{Line, Point, Scalar, Vector};
 
 use crate::objects::{
     Curve, CurveKind, Edge, GlobalCurve, GlobalEdge, GlobalVertex, Surface,
     SurfaceVertex, SweptCurve, Vertex,
 };
 
-use super::{Path, Sweep};
+use super::Sweep;
 
 impl Sweep for (Vertex, Surface) {
     type Swept = Edge;
 
-    fn sweep(self, path: impl Into<Path>) -> Self::Swept {
+    fn sweep(self, path: impl Into<Vector<3>>) -> Self::Swept {
         let (vertex, surface) = self;
         let path = path.into();
 
@@ -53,7 +53,7 @@ impl Sweep for (Vertex, Surface) {
             }) = surface;
 
             assert_eq!(vertex.curve().global_form().kind(), &surface_curve);
-            assert_eq!(path.inner(), surface_path);
+            assert_eq!(path, surface_path);
         }
 
         // With that out of the way, let's start by creating the `GlobalEdge`,
@@ -132,10 +132,9 @@ impl Sweep for (Vertex, Surface) {
 impl Sweep for GlobalVertex {
     type Swept = GlobalEdge;
 
-    fn sweep(self, path: impl Into<Path>) -> Self::Swept {
+    fn sweep(self, path: impl Into<Vector<3>>) -> Self::Swept {
         let a = self;
-        let b =
-            GlobalVertex::from_position(self.position() + path.into().inner());
+        let b = GlobalVertex::from_position(self.position() + path.into());
 
         let curve =
             GlobalCurve::build().line_from_points([a.position(), b.position()]);

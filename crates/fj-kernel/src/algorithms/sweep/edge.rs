@@ -1,5 +1,5 @@
 use fj_interop::mesh::Color;
-use fj_math::{Line, Scalar};
+use fj_math::{Line, Scalar, Vector};
 
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
@@ -8,12 +8,12 @@ use crate::{
     },
 };
 
-use super::{Path, Sweep};
+use super::Sweep;
 
 impl Sweep for (Edge, Color) {
     type Swept = Face;
 
-    fn sweep(self, path: impl Into<Path>) -> Self::Swept {
+    fn sweep(self, path: impl Into<Vector<3>>) -> Self::Swept {
         let (edge, color) = self;
         let path = path.into();
 
@@ -87,8 +87,7 @@ impl Sweep for (Edge, Color) {
             });
 
             let curve = {
-                let global =
-                    bottom_edge.curve().global_form().translate(path.inner());
+                let global = bottom_edge.curve().global_form().translate(path);
 
                 // Please note that creating a line here is correct, even if the
                 // global curve is a circle. Projected into the side surface, it
