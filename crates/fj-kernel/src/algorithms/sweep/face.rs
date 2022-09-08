@@ -1,6 +1,8 @@
+use fj_math::Scalar;
+
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
-    objects::{Face, Shell},
+    objects::{CurveKind, Face, Shell, Surface},
 };
 
 use super::{Path, Sweep};
@@ -13,7 +15,22 @@ impl Sweep for Face {
 
         let mut faces = Vec::new();
 
-        let is_negative_sweep = path.is_negative_direction();
+        let is_negative_sweep = {
+            let Surface::SweptCurve(surface) = self.surface();
+
+            let a = match surface.curve {
+                CurveKind::Circle(_) => todo!(
+                    "Sweeping from faces defined in round surfaces is not \
+                    supported"
+                ),
+                CurveKind::Line(line) => line.direction(),
+            };
+            let b = surface.path;
+
+            let normal = a.cross(&b);
+
+            normal.dot(&path.inner()) < Scalar::ZERO
+        };
 
         let bottom_face = create_bottom_face(&self, is_negative_sweep);
         faces.push(bottom_face);
