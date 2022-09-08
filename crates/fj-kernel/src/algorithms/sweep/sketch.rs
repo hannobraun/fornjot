@@ -1,5 +1,3 @@
-use fj_interop::mesh::Color;
-
 use crate::objects::{Sketch, Solid};
 
 use super::{Path, Sweep};
@@ -7,12 +5,12 @@ use super::{Path, Sweep};
 impl Sweep for Sketch {
     type Swept = Solid;
 
-    fn sweep(self, path: impl Into<Path>, color: Color) -> Self::Swept {
+    fn sweep(self, path: impl Into<Path>) -> Self::Swept {
         let path = path.into();
 
         let mut shells = Vec::new();
         for face in self.into_faces() {
-            let shell = face.sweep(path, color);
+            let shell = face.sweep(path);
             shells.push(shell);
         }
 
@@ -22,7 +20,6 @@ impl Sweep for Sketch {
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::mesh::Color;
     use fj_math::{Point, Vector};
 
     use crate::{
@@ -142,7 +139,7 @@ mod tests {
         ]);
         let sketch = Sketch::new().with_faces([face]);
 
-        let solid = sketch.sweep(direction, Color([255, 0, 0, 255]));
+        let solid = sketch.sweep(direction);
 
         let expected_vertices: Vec<_> = expected_vertices
             .into_iter()

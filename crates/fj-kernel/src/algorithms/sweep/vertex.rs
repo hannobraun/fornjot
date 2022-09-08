@@ -1,4 +1,3 @@
-use fj_interop::mesh::Color;
 use fj_math::{Line, Point, Scalar};
 
 use crate::objects::{
@@ -11,7 +10,7 @@ use super::{Path, Sweep};
 impl Sweep for (Vertex, Surface) {
     type Swept = Edge;
 
-    fn sweep(self, path: impl Into<Path>, color: Color) -> Self::Swept {
+    fn sweep(self, path: impl Into<Path>) -> Self::Swept {
         let (vertex, surface) = self;
         let path = path.into();
 
@@ -60,7 +59,7 @@ impl Sweep for (Vertex, Surface) {
         // With that out of the way, let's start by creating the `GlobalEdge`,
         // as that is the most straight-forward part of this operations, and
         // we're going to need it soon anyway.
-        let edge_global = vertex.global_form().sweep(path, color);
+        let edge_global = vertex.global_form().sweep(path);
 
         // Next, let's compute the surface coordinates of the two vertices of
         // the output `Edge`, as we're going to need these for the rest of this
@@ -135,7 +134,7 @@ impl Sweep for (Vertex, Surface) {
 impl Sweep for GlobalVertex {
     type Swept = GlobalEdge;
 
-    fn sweep(self, path: impl Into<Path>, _: Color) -> Self::Swept {
+    fn sweep(self, path: impl Into<Path>) -> Self::Swept {
         let a = self;
         let b =
             GlobalVertex::from_position(self.position() + path.into().inner());

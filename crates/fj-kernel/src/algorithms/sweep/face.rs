@@ -1,5 +1,3 @@
-use fj_interop::mesh::Color;
-
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
     objects::{Face, Shell},
@@ -10,7 +8,7 @@ use super::{Path, Sweep};
 impl Sweep for Face {
     type Swept = Shell;
 
-    fn sweep(self, path: impl Into<Path>, _: Color) -> Self::Swept {
+    fn sweep(self, path: impl Into<Path>) -> Self::Swept {
         let path = path.into();
 
         let mut faces = Vec::new();
@@ -24,7 +22,7 @@ impl Sweep for Face {
 
         for cycle in self.all_cycles() {
             for &edge in cycle.edges() {
-                let face = (edge, self.color()).sweep(path, self.color());
+                let face = (edge, self.color()).sweep(path);
                 faces.push(face);
             }
         }

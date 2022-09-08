@@ -1,4 +1,4 @@
-use fj_interop::{debug::DebugInfo, mesh::Color};
+use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::{
         sweep::Sweep,
@@ -20,9 +20,8 @@ impl Shape for fj::Sweep {
     ) -> Result<Validated<Self::Brep>, ValidationError> {
         let sketch = self.shape().compute_brep(config, debug_info)?;
         let path = Vector::from(self.path());
-        let color = self.shape().color();
 
-        let solid = sketch.into_inner().sweep(path, Color(color));
+        let solid = sketch.into_inner().sweep(path);
         solid.validate_with_config(config)
     }
 

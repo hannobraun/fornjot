@@ -14,7 +14,7 @@ use super::{Path, Sweep};
 impl Sweep for (Edge, Color) {
     type Swept = Face;
 
-    fn sweep(self, path: impl Into<Path>, _: Color) -> Self::Swept {
+    fn sweep(self, path: impl Into<Path>) -> Self::Swept {
         let (edge, color) = self;
         let path = path.into();
 
@@ -24,7 +24,7 @@ impl Sweep for (Edge, Color) {
             edge
         };
 
-        let surface = edge.curve().sweep(path, color);
+        let surface = edge.curve().sweep(path);
 
         // We can't use the edge we're sweeping from as the bottom edge, as that
         // is not defined in the right surface. Let's create a new bottom edge,
@@ -83,7 +83,7 @@ impl Sweep for (Edge, Color) {
         let side_edges = bottom_edge
             .vertices()
             .get()
-            .map(|&vertex| (vertex, surface).sweep(path, color));
+            .map(|&vertex| (vertex, surface).sweep(path));
 
         let top_edge = {
             let bottom_vertices = bottom_edge.vertices().get();
