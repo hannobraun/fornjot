@@ -37,7 +37,7 @@ pub trait ObjectIters<'r> {
         iter
     }
 
-    /// Iterate over all edges
+    /// Iterate over all half-edges
     fn half_edge_iter(&'r self) -> Iter<&'r HalfEdge> {
         let mut iter = Iter::empty();
 
