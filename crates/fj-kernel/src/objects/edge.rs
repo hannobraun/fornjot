@@ -214,8 +214,6 @@ impl<T> VerticesOfEdge<T> {
 
 impl VerticesOfEdge<Vertex> {
     /// Reverse the order of vertices
-    ///
-    /// Makes sure that the local coordinates are still correct.
     pub fn reverse(self) -> Self {
         let Self([a, b]) = self;
         Self([b, a])
