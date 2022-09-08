@@ -4,7 +4,7 @@ use crate::{algorithms::reverse::Reverse, builder::HalfEdgeBuilder};
 
 use super::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex};
 
-/// An edge
+/// A half-edge
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdge {
     curve: Curve,
@@ -13,12 +13,12 @@ pub struct HalfEdge {
 }
 
 impl HalfEdge {
-    /// Build an edge using [`HalfEdgeBuilder`]
+    /// Build a half-edge using [`HalfEdgeBuilder`]
     pub fn build(surface: Surface) -> HalfEdgeBuilder {
         HalfEdgeBuilder::new(surface)
     }
 
-    /// Create a new instance of `Edge`
+    /// Create a new instance of `HalfEdge`
     ///
     /// If you only have a curve and the edge vertices, please check out
     /// [`HalfEdge::from_curve_and_vertices`], which is a convenience wrapper
@@ -60,7 +60,7 @@ impl HalfEdge {
         }
     }
 
-    /// Create a new instance of `Edge` from a curve and vertices
+    /// Create a new instance of `HalfEdge` from a curve and vertices
     ///
     /// The [`GlobalEdge`] instance is created from the provided curve and
     /// vertices. Please refer to [`HalfEdge::new`], if you already have a
@@ -76,7 +76,7 @@ impl HalfEdge {
         Self::new(curve, vertices, global)
     }
 
-    /// Reverse the edge, including the curve
+    /// Reverse the half-edge, including the curve
     ///
     /// # Implementation Note
     ///
@@ -105,7 +105,7 @@ impl HalfEdge {
         Self::from_curve_and_vertices(self.curve().reverse(), vertices)
     }
 
-    /// Access the curve that defines the edge's geometry
+    /// Access the curve that defines the half-edge's geometry
     ///
     /// The edge can be a segment of the curve that is bounded by two vertices,
     /// or if the curve is continuous (i.e. connects to itself), the edge could
@@ -114,7 +114,7 @@ impl HalfEdge {
         &self.curve
     }
 
-    /// Access the vertices that bound the edge on the curve
+    /// Access the vertices that bound the half-edge on the curve
     ///
     /// An edge has either two bounding vertices or none. The latter is possible
     /// if the edge's curve is continuous (i.e. connects to itself), and defines
@@ -123,7 +123,7 @@ impl HalfEdge {
         &self.vertices
     }
 
-    /// Access the global form of this edge
+    /// Access the global form of this half-edge
     pub fn global_form(&self) -> &GlobalEdge {
         &self.global
     }
