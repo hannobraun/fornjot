@@ -11,16 +11,17 @@ use crate::{
 
 use super::{Path, Sweep};
 
-impl Sweep for Edge {
+impl Sweep for (Edge, Color) {
     type Swept = Face;
 
-    fn sweep(self, path: impl Into<Path>, color: Color) -> Self::Swept {
+    fn sweep(self, path: impl Into<Path>, _: Color) -> Self::Swept {
+        let (edge, color) = self;
         let path = path.into();
 
         let edge = if path.is_negative_direction() {
-            self.reverse_including_curve()
+            edge.reverse_including_curve()
         } else {
-            self
+            edge
         };
 
         let surface = edge.curve().sweep(path, color);

@@ -23,8 +23,8 @@ impl Sweep for Face {
         faces.push(top_face);
 
         for cycle in self.all_cycles() {
-            for edge in cycle.edges() {
-                let face = edge.sweep(path, color);
+            for &edge in cycle.edges() {
+                let face = (edge, color).sweep(path, color);
                 faces.push(face);
             }
         }
