@@ -10,11 +10,10 @@ impl Reverse for Face {
     fn reverse(self) -> Self {
         let surface = self.surface().reverse();
 
-        let exteriors = reverse_local_coordinates_in_cycles(self.exteriors());
+        let exterior = reverse_local_coordinates_in_cycle(self.exterior());
         let interiors = reverse_local_coordinates_in_cycles(self.interiors());
 
-        Face::new(surface)
-            .with_exteriors(exteriors)
+        Face::new(surface, exterior)
             .with_interiors(interiors)
             .with_color(self.color())
     }

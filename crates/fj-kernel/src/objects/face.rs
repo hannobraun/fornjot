@@ -47,7 +47,7 @@ impl<'a> IntoIterator for &'a Faces {
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Face {
     surface: Surface,
-    exteriors: Vec<Cycle>,
+    exterior: Cycle,
     interiors: Vec<Cycle>,
     color: Color,
 }
@@ -62,37 +62,13 @@ impl Face {
     ///
     /// Creates the face with no exteriors, no interiors and the default color.
     /// This can be overridden using the `with_` methods.
-    pub fn new(surface: Surface) -> Self {
+    pub fn new(surface: Surface, exterior: Cycle) -> Self {
         Self {
             surface,
-            exteriors: Vec::new(),
+            exterior,
             interiors: Vec::new(),
             color: Color::default(),
         }
-    }
-
-    /// Add exterior cycles to the face
-    ///
-    /// Consumes the face and returns the updated instance.
-    ///
-    /// # Panics
-    ///
-    /// Panics, if the added cycles are not defined in the face's surface.
-    pub fn with_exteriors(
-        mut self,
-        exteriors: impl IntoIterator<Item = Cycle>,
-    ) -> Self {
-        for cycle in exteriors.into_iter() {
-            assert_eq!(
-                self.surface(),
-                cycle.surface(),
-                "Cycles that bound a face must be in face's surface"
-            );
-
-            self.exteriors.push(cycle);
-        }
-
-        self
     }
 
     /// Add interior cycles to the face
@@ -133,8 +109,8 @@ impl Face {
     }
 
     /// Access the cycles that bound the face on the outside
-    pub fn exteriors(&self) -> impl Iterator<Item = &Cycle> + '_ {
-        self.exteriors.iter()
+    pub fn exterior(&self) -> &Cycle {
+        &self.exterior
     }
 
     /// Access the cycles that bound the face on the inside
@@ -145,11 +121,8 @@ impl Face {
     }
 
     /// Access all cycles of this face
-    ///
-    /// This is equivalent to chaining the iterators returned by
-    /// [`Face::exteriors`] and [`Face::interiors`].
     pub fn all_cycles(&self) -> impl Iterator<Item = &Cycle> + '_ {
-        self.exteriors().chain(self.interiors())
+        [self.exterior()].into_iter().chain(self.interiors())
     }
 
     /// Access the color of the face

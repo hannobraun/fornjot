@@ -67,13 +67,12 @@ impl TransformObject for Face {
     fn transform(self, transform: &Transform) -> Self {
         let surface = self.surface().transform(transform);
 
-        let exteriors = transform_cycles(self.exteriors(), transform);
+        let exterior = self.exterior().clone().transform(transform);
         let interiors = transform_cycles(self.interiors(), transform);
 
         let color = self.color();
 
-        Face::new(surface)
-            .with_exteriors(exteriors)
+        Face::new(surface, exterior)
             .with_interiors(interiors)
             .with_color(color)
     }

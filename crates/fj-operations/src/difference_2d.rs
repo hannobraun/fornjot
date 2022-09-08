@@ -49,9 +49,7 @@ impl Shape for fj::Difference2d {
                     "Trying to subtract faces with different surfaces.",
                 );
 
-                for cycle in face.exteriors() {
-                    exteriors.push(cycle.clone());
-                }
+                exteriors.push(face.exterior().clone());
                 for cycle in face.interiors() {
                     interiors.push(cycle.clone().reverse());
                 }
@@ -64,14 +62,28 @@ impl Shape for fj::Difference2d {
                     "Trying to subtract faces with different surfaces.",
                 );
 
-                for cycle in face.exteriors() {
-                    interiors.push(cycle.clone().reverse());
-                }
+                interiors.push(face.exterior().clone().reverse());
             }
 
+            // Faces only support one exterior, while the code here comes from
+            // the time when a face could have multiple exteriors. This was only
+            // a special case, i.e. faces that connected to themselves, and I
+            // have my doubts that this code was ever correct in the first
+            // place.
+            //
+            // Anyway, the following should make sure that at least any problems
+            // this code causes become obvious. I don't know if this can ever
+            // trigger, but better safe than sorry.
+            let exterior = exteriors
+                .pop()
+                .expect("Can't construct face without an exterior");
+            assert!(
+                exteriors.is_empty(),
+                "Can't construct face with multiple exteriors"
+            );
+
             faces.push(
-                Face::new(*surface)
-                    .with_exteriors(exteriors)
+                Face::new(*surface, exterior)
                     .with_interiors(interiors)
                     .with_color(Color(self.color())),
             );
