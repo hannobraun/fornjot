@@ -53,16 +53,6 @@ impl TransformObject for Cycle {
     }
 }
 
-impl TransformObject for HalfEdge {
-    fn transform(self, transform: &Transform) -> Self {
-        let curve = self.curve().transform(transform);
-        let vertices =
-            self.vertices().map(|vertex| vertex.transform(transform));
-
-        Self::from_curve_and_vertices(curve, vertices)
-    }
-}
-
 impl TransformObject for Face {
     fn transform(self, transform: &Transform) -> Self {
         let surface = self.surface().transform(transform);
@@ -99,6 +89,16 @@ impl TransformObject for GlobalVertex {
     fn transform(self, transform: &Transform) -> Self {
         let position = transform.transform_point(&self.position());
         Self::from_position(position)
+    }
+}
+
+impl TransformObject for HalfEdge {
+    fn transform(self, transform: &Transform) -> Self {
+        let curve = self.curve().transform(transform);
+        let vertices =
+            self.vertices().map(|vertex| vertex.transform(transform));
+
+        Self::from_curve_and_vertices(curve, vertices)
     }
 }
 
