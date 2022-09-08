@@ -6,7 +6,6 @@ mod face;
 mod sketch;
 mod vertex;
 
-use fj_interop::mesh::Color;
 use fj_math::{Scalar, Vector};
 
 /// Sweep an object along a path to create another object
@@ -15,7 +14,7 @@ pub trait Sweep {
     type Swept;
 
     /// Sweep the object along the given path
-    fn sweep(self, path: impl Into<Path>, color: Color) -> Self::Swept;
+    fn sweep(self, path: impl Into<Path>) -> Self::Swept;
 }
 
 /// A path to be used with [`Sweep`]
