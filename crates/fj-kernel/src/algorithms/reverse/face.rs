@@ -41,7 +41,7 @@ fn reverse_local_coordinates_in_cycles<'r>(
 fn reverse_local_coordinates_in_cycle(cycle: &Cycle) -> Cycle {
     let surface = cycle.surface().reverse();
 
-    let edges = cycle.half_edges().map(|edge| {
+    let half_edges = cycle.half_edges().map(|edge| {
         let curve = {
             let local = match edge.curve().kind() {
                 CurveKind::Circle(circle) => {
@@ -97,7 +97,7 @@ fn reverse_local_coordinates_in_cycle(cycle: &Cycle) -> Cycle {
         HalfEdge::from_curve_and_vertices(curve, vertices)
     });
 
-    Cycle::new(surface, edges)
+    Cycle::new(surface, half_edges)
 }
 
 #[cfg(test)]
