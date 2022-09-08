@@ -6,7 +6,7 @@ use fj_math::Segment;
 
 use crate::objects::Cycle;
 
-use super::{edge::EdgeApprox, Approx, ApproxPoint, Tolerance};
+use super::{edge::HalfEdgeApprox, Approx, ApproxPoint, Tolerance};
 
 impl Approx for &Cycle {
     type Approximation = CycleApprox;
@@ -24,7 +24,7 @@ impl Approx for &Cycle {
 #[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct CycleApprox {
     /// The approximated edges that make up the approximated cycle
-    pub half_edges: Vec<EdgeApprox>,
+    pub half_edges: Vec<HalfEdgeApprox>,
 }
 
 impl CycleApprox {
