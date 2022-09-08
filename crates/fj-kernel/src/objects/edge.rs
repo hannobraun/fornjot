@@ -213,12 +213,6 @@ impl<T> VerticesOfEdge<T> {
 }
 
 impl VerticesOfEdge<Vertex> {
-    /// Reverse the order of vertices
-    pub fn reverse(self) -> Self {
-        let Self([a, b]) = self;
-        Self([b, a])
-    }
-
     /// Convert this instance into its global variant
     pub fn to_global(&self) -> VerticesOfEdge<GlobalVertex> {
         VerticesOfEdge(self.convert(|vertex| *vertex.global_form()))
