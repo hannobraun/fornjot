@@ -1,7 +1,6 @@
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
     algorithms::{
-        approx::Tolerance,
         sweep::Sweep,
         validate::{Validate, Validated, ValidationConfig, ValidationError},
     },
@@ -17,11 +16,9 @@ impl Shape for fj::Sweep {
     fn compute_brep(
         &self,
         config: &ValidationConfig,
-        tolerance: Tolerance,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
-        let sketch =
-            self.shape().compute_brep(config, tolerance, debug_info)?;
+        let sketch = self.shape().compute_brep(config, debug_info)?;
         let path = Vector::from(self.path());
         let color = self.shape().color();
 

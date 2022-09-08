@@ -1,8 +1,7 @@
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
-    algorithms::{
-        approx::Tolerance,
-        validate::{Validate, Validated, ValidationConfig, ValidationError},
+    algorithms::validate::{
+        Validate, Validated, ValidationConfig, ValidationError,
     },
     objects::{Cycle, Edge, Face, Sketch, Surface},
 };
@@ -16,7 +15,6 @@ impl Shape for fj::Sketch {
     fn compute_brep(
         &self,
         config: &ValidationConfig,
-        _: Tolerance,
         _: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
         let surface = Surface::xy_plane();
