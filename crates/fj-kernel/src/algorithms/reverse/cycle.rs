@@ -7,7 +7,7 @@ impl Reverse for Cycle {
         let surface = *self.surface();
 
         let mut edges = self
-            .into_edges()
+            .into_half_edges()
             .map(|edge| edge.reverse_including_curve())
             .collect::<Vec<_>>();
 

@@ -4,12 +4,12 @@ use fj_math::Segment;
 
 use crate::{
     algorithms::intersect::{HorizontalRayToTheRight, Intersect},
-    objects::{CurveKind, Edge},
+    objects::{CurveKind, HalfEdge},
 };
 
 use super::ray_segment::RaySegmentIntersection;
 
-impl Intersect for (&HorizontalRayToTheRight<2>, &Edge) {
+impl Intersect for (&HorizontalRayToTheRight<2>, &HalfEdge) {
     type Intersection = RaySegmentIntersection;
 
     fn intersect(self) -> Option<Self::Intersection> {

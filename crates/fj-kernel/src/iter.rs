@@ -3,8 +3,8 @@
 use std::collections::VecDeque;
 
 use crate::objects::{
-    Curve, Cycle, Edge, Face, GlobalCurve, GlobalVertex, Shell, Sketch, Solid,
-    Surface, Vertex,
+    Curve, Cycle, Face, GlobalCurve, GlobalVertex, HalfEdge, Shell, Sketch,
+    Solid, Surface, Vertex,
 };
 
 /// Access iterators over all objects of a shape, or part of it
@@ -32,17 +32,6 @@ pub trait ObjectIters<'r> {
 
         for object in self.referenced_objects() {
             iter = iter.with(object.cycle_iter());
-        }
-
-        iter
-    }
-
-    /// Iterate over all edges
-    fn edge_iter(&'r self) -> Iter<&'r Edge> {
-        let mut iter = Iter::empty();
-
-        for object in self.referenced_objects() {
-            iter = iter.with(object.edge_iter());
         }
 
         iter
@@ -76,6 +65,17 @@ pub trait ObjectIters<'r> {
 
         for object in self.referenced_objects() {
             iter = iter.with(object.global_vertex_iter());
+        }
+
+        iter
+    }
+
+    /// Iterate over all half-edges
+    fn half_edge_iter(&'r self) -> Iter<&'r HalfEdge> {
+        let mut iter = Iter::empty();
+
+        for object in self.referenced_objects() {
+            iter = iter.with(object.half_edge_iter());
         }
 
         iter
@@ -151,30 +151,14 @@ impl<'r> ObjectIters<'r> for Cycle {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
         let mut objects = Vec::new();
 
-        for edge in self.edges() {
-            objects.push(edge as &dyn ObjectIters);
+        for half_edge in self.half_edges() {
+            objects.push(half_edge as &dyn ObjectIters);
         }
 
         objects
     }
 
     fn cycle_iter(&'r self) -> Iter<&'r Cycle> {
-        Iter::from_object(self)
-    }
-}
-
-impl<'r> ObjectIters<'r> for Edge {
-    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
-        let mut objects = vec![self.curve() as &dyn ObjectIters];
-
-        for vertex in self.vertices().iter() {
-            objects.push(vertex);
-        }
-
-        objects
-    }
-
-    fn edge_iter(&'r self) -> Iter<&'r Edge> {
         Iter::from_object(self)
     }
 }
@@ -211,6 +195,22 @@ impl<'r> ObjectIters<'r> for GlobalVertex {
     }
 
     fn global_vertex_iter(&'r self) -> Iter<&'r GlobalVertex> {
+        Iter::from_object(self)
+    }
+}
+
+impl<'r> ObjectIters<'r> for HalfEdge {
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
+        let mut objects = vec![self.curve() as &dyn ObjectIters];
+
+        for vertex in self.vertices().iter() {
+            objects.push(vertex);
+        }
+
+        objects
+    }
+
+    fn half_edge_iter(&'r self) -> Iter<&'r HalfEdge> {
         Iter::from_object(self)
     }
 }
@@ -345,7 +345,7 @@ impl<T> Iterator for Iter<T> {
 #[cfg(test)]
 mod tests {
     use crate::objects::{
-        Curve, Cycle, Edge, Face, GlobalCurve, GlobalVertex, Shell, Sketch,
+        Curve, Cycle, Face, GlobalCurve, GlobalVertex, HalfEdge, Shell, Sketch,
         Solid, Surface, SurfaceVertex, Vertex,
     };
 
@@ -358,10 +358,10 @@ mod tests {
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
-        assert_eq!(0, object.edge_iter().count());
         assert_eq!(0, object.face_iter().count());
         assert_eq!(1, object.global_curve_iter().count());
         assert_eq!(0, object.global_vertex_iter().count());
+        assert_eq!(0, object.half_edge_iter().count());
         assert_eq!(0, object.shell_iter().count());
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(0, object.solid_iter().count());
@@ -379,33 +379,15 @@ mod tests {
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
-        assert_eq!(3, object.edge_iter().count());
         assert_eq!(0, object.face_iter().count());
         assert_eq!(3, object.global_curve_iter().count());
         assert_eq!(3, object.global_vertex_iter().count());
+        assert_eq!(3, object.half_edge_iter().count());
         assert_eq!(0, object.shell_iter().count());
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(0, object.solid_iter().count());
         assert_eq!(0, object.surface_iter().count());
         assert_eq!(6, object.vertex_iter().count());
-    }
-
-    #[test]
-    fn edge() {
-        let object = Edge::build(Surface::xy_plane())
-            .line_segment_from_points([[0., 0.], [1., 0.]]);
-
-        assert_eq!(1, object.curve_iter().count());
-        assert_eq!(0, object.cycle_iter().count());
-        assert_eq!(1, object.edge_iter().count());
-        assert_eq!(0, object.face_iter().count());
-        assert_eq!(1, object.global_curve_iter().count());
-        assert_eq!(2, object.global_vertex_iter().count());
-        assert_eq!(0, object.shell_iter().count());
-        assert_eq!(0, object.sketch_iter().count());
-        assert_eq!(0, object.solid_iter().count());
-        assert_eq!(0, object.surface_iter().count());
-        assert_eq!(2, object.vertex_iter().count());
     }
 
     #[test]
@@ -419,10 +401,10 @@ mod tests {
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
-        assert_eq!(3, object.edge_iter().count());
         assert_eq!(1, object.face_iter().count());
         assert_eq!(3, object.global_curve_iter().count());
         assert_eq!(3, object.global_vertex_iter().count());
+        assert_eq!(3, object.half_edge_iter().count());
         assert_eq!(0, object.shell_iter().count());
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(0, object.solid_iter().count());
@@ -436,10 +418,10 @@ mod tests {
 
         assert_eq!(0, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
-        assert_eq!(0, object.edge_iter().count());
         assert_eq!(0, object.face_iter().count());
         assert_eq!(1, object.global_curve_iter().count());
         assert_eq!(0, object.global_vertex_iter().count());
+        assert_eq!(0, object.half_edge_iter().count());
         assert_eq!(0, object.shell_iter().count());
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(0, object.solid_iter().count());
@@ -453,10 +435,10 @@ mod tests {
 
         assert_eq!(0, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
-        assert_eq!(0, object.edge_iter().count());
         assert_eq!(0, object.face_iter().count());
         assert_eq!(0, object.global_curve_iter().count());
         assert_eq!(1, object.global_vertex_iter().count());
+        assert_eq!(0, object.half_edge_iter().count());
         assert_eq!(0, object.shell_iter().count());
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(0, object.solid_iter().count());
@@ -465,15 +447,33 @@ mod tests {
     }
 
     #[test]
+    fn half_edge() {
+        let object = HalfEdge::build(Surface::xy_plane())
+            .line_segment_from_points([[0., 0.], [1., 0.]]);
+
+        assert_eq!(1, object.curve_iter().count());
+        assert_eq!(0, object.cycle_iter().count());
+        assert_eq!(0, object.face_iter().count());
+        assert_eq!(1, object.global_curve_iter().count());
+        assert_eq!(2, object.global_vertex_iter().count());
+        assert_eq!(1, object.half_edge_iter().count());
+        assert_eq!(0, object.shell_iter().count());
+        assert_eq!(0, object.sketch_iter().count());
+        assert_eq!(0, object.solid_iter().count());
+        assert_eq!(0, object.surface_iter().count());
+        assert_eq!(2, object.vertex_iter().count());
+    }
+
+    #[test]
     fn shell() {
         let object = Shell::build().cube_from_edge_length(1.);
 
         assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());
-        assert_eq!(24, object.edge_iter().count());
         assert_eq!(6, object.face_iter().count());
         assert_eq!(18, object.global_curve_iter().count());
         assert_eq!(8, object.global_vertex_iter().count());
+        assert_eq!(24, object.half_edge_iter().count());
         assert_eq!(1, object.shell_iter().count());
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(0, object.solid_iter().count());
@@ -493,10 +493,10 @@ mod tests {
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
-        assert_eq!(3, object.edge_iter().count());
         assert_eq!(1, object.face_iter().count());
         assert_eq!(3, object.global_curve_iter().count());
         assert_eq!(3, object.global_vertex_iter().count());
+        assert_eq!(3, object.half_edge_iter().count());
         assert_eq!(0, object.shell_iter().count());
         assert_eq!(1, object.sketch_iter().count());
         assert_eq!(0, object.solid_iter().count());
@@ -510,10 +510,10 @@ mod tests {
 
         assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());
-        assert_eq!(24, object.edge_iter().count());
         assert_eq!(6, object.face_iter().count());
         assert_eq!(18, object.global_curve_iter().count());
         assert_eq!(8, object.global_vertex_iter().count());
+        assert_eq!(24, object.half_edge_iter().count());
         assert_eq!(1, object.shell_iter().count());
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(1, object.solid_iter().count());
@@ -527,10 +527,10 @@ mod tests {
 
         assert_eq!(0, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
-        assert_eq!(0, object.edge_iter().count());
         assert_eq!(0, object.face_iter().count());
         assert_eq!(0, object.global_curve_iter().count());
         assert_eq!(0, object.global_vertex_iter().count());
+        assert_eq!(0, object.half_edge_iter().count());
         assert_eq!(0, object.shell_iter().count());
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(0, object.solid_iter().count());
@@ -549,10 +549,10 @@ mod tests {
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
-        assert_eq!(0, object.edge_iter().count());
         assert_eq!(0, object.face_iter().count());
         assert_eq!(1, object.global_curve_iter().count());
         assert_eq!(1, object.global_vertex_iter().count());
+        assert_eq!(0, object.half_edge_iter().count());
         assert_eq!(0, object.shell_iter().count());
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(0, object.solid_iter().count());

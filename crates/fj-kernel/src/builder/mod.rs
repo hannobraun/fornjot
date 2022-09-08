@@ -11,7 +11,7 @@ mod solid;
 pub use self::{
     curve::{CurveBuilder, GlobalCurveBuilder},
     cycle::CycleBuilder,
-    edge::EdgeBuilder,
+    edge::HalfEdgeBuilder,
     face::{FaceBuilder, FacePolygon},
     shell::ShellBuilder,
     sketch::SketchBuilder,

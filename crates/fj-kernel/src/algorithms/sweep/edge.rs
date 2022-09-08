@@ -4,13 +4,14 @@ use fj_math::{Line, Scalar, Vector};
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
     objects::{
-        Curve, CurveKind, Cycle, Edge, Face, GlobalEdge, SurfaceVertex, Vertex,
+        Curve, CurveKind, Cycle, Face, GlobalEdge, HalfEdge, SurfaceVertex,
+        Vertex,
     },
 };
 
 use super::Sweep;
 
-impl Sweep for (Edge, Color) {
+impl Sweep for (HalfEdge, Color) {
     type Swept = Face;
 
     fn sweep(self, path: impl Into<Vector<3>>) -> Self::Swept {
@@ -67,7 +68,7 @@ impl Sweep for (Edge, Color) {
                 })
             };
 
-            Edge::new(curve, vertices, *edge.global_form())
+            HalfEdge::new(curve, vertices, *edge.global_form())
         };
 
         let side_edges = bottom_edge
@@ -130,7 +131,7 @@ impl Sweep for (Edge, Color) {
                 })
             };
 
-            Edge::new(curve, vertices, global)
+            HalfEdge::new(curve, vertices, global)
         };
 
         let cycle = {

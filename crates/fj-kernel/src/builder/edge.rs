@@ -1,25 +1,25 @@
 use fj_math::{Circle, Line, Point, Scalar, Vector};
 
 use crate::objects::{
-    Curve, CurveKind, Edge, GlobalCurve, GlobalVertex, Surface, SurfaceVertex,
-    Vertex,
+    Curve, CurveKind, GlobalCurve, GlobalVertex, HalfEdge, Surface,
+    SurfaceVertex, Vertex,
 };
 
-/// API for building an [`Edge`]
-pub struct EdgeBuilder {
+/// API for building an [`HalfEdge`]
+pub struct HalfEdgeBuilder {
     surface: Surface,
 }
 
-impl EdgeBuilder {
-    /// Construct a new instance of [`EdgeBuilder`]
+impl HalfEdgeBuilder {
+    /// Construct a new instance of [`HalfEdgeBuilder`]
     ///
-    /// Also see [`Edge::build`].
+    /// Also see [`HalfEdge::build`].
     pub fn new(surface: Surface) -> Self {
         Self { surface }
     }
 
     /// Create a circle from the given radius
-    pub fn circle_from_radius(&self, radius: Scalar) -> Edge {
+    pub fn circle_from_radius(&self, radius: Scalar) -> HalfEdge {
         let curve = {
             let local = CurveKind::Circle(Circle::new(
                 Point::origin(),
@@ -65,14 +65,14 @@ impl EdgeBuilder {
             )
         };
 
-        Edge::from_curve_and_vertices(curve, vertices)
+        HalfEdge::from_curve_and_vertices(curve, vertices)
     }
 
     /// Create a line segment from two points
     pub fn line_segment_from_points(
         &self,
         points: [impl Into<Point<2>>; 2],
-    ) -> Edge {
+    ) -> HalfEdge {
         let points = points.map(Into::into);
 
         let global_vertices = points.map(|position| {
@@ -118,6 +118,6 @@ impl EdgeBuilder {
             ]
         };
 
-        Edge::from_curve_and_vertices(curve, vertices)
+        HalfEdge::from_curve_and_vertices(curve, vertices)
     }
 }

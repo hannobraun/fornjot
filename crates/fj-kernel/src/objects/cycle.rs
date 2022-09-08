@@ -1,12 +1,12 @@
 use crate::builder::CycleBuilder;
 
-use super::{Edge, Surface};
+use super::{HalfEdge, Surface};
 
-/// A cycle of connected edges
+/// A cycle of connected half-edges
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
     surface: Surface,
-    edges: Vec<Edge>,
+    half_edges: Vec<HalfEdge>,
 }
 
 impl Cycle {
@@ -19,17 +19,17 @@ impl Cycle {
     ///
     /// # Panics
     ///
-    /// Panic, if the end of each edge does not connect to the beginning of the
-    /// next edge.
+    /// Panic, if the end of each half-edge does not connect to the beginning of
+    /// the next one.
     pub fn new(
         surface: Surface,
-        edges: impl IntoIterator<Item = Edge>,
+        half_edges: impl IntoIterator<Item = HalfEdge>,
     ) -> Self {
-        let edges = edges.into_iter().collect::<Vec<_>>();
+        let half_edges = half_edges.into_iter().collect::<Vec<_>>();
 
         // Verify, that the curves of all edges are defined in the correct
         // surface.
-        for edge in &edges {
+        for edge in &half_edges {
             assert_eq!(
                 &surface,
                 edge.curve().surface(),
@@ -37,19 +37,19 @@ impl Cycle {
             );
         }
 
-        if edges.len() != 1 {
+        if half_edges.len() != 1 {
             // If the length is one, we might have a cycle made up of just one
             // circle. If that isn't the case, we are dealing with line segments
             // and can be sure that the following `get_or_panic` calls won't
             // panic.
 
             // Verify that all edges connect.
-            for edges in edges.windows(2) {
+            for half_edges in half_edges.windows(2) {
                 // Can't panic, as we passed `2` to `windows`.
                 //
                 // Can be cleaned up, once `array_windows` is stable"
                 // https://doc.rust-lang.org/std/primitive.slice.html#method.array_windows
-                let [a, b] = [&edges[0], &edges[1]];
+                let [a, b] = [&half_edges[0], &half_edges[1]];
 
                 let [_, prev] = a.vertices();
                 let [next, _] = b.vertices();
@@ -62,8 +62,8 @@ impl Cycle {
             }
 
             // Verify that the edges form a cycle
-            if let Some(first) = edges.first() {
-                if let Some(last) = edges.last() {
+            if let Some(first) = half_edges.first() {
+                if let Some(last) = half_edges.last() {
                     let [first, _] = first.vertices();
                     let [_, last] = last.vertices();
 
@@ -76,7 +76,10 @@ impl Cycle {
             }
         }
 
-        Self { surface, edges }
+        Self {
+            surface,
+            half_edges,
+        }
     }
 
     /// Access the surface that this cycle is in
@@ -84,13 +87,13 @@ impl Cycle {
         &self.surface
     }
 
-    /// Access edges that make up the cycle
-    pub fn edges(&self) -> impl Iterator<Item = &Edge> + '_ {
-        self.edges.iter()
+    /// Access the half-edges that make up the cycle
+    pub fn half_edges(&self) -> impl Iterator<Item = &HalfEdge> + '_ {
+        self.half_edges.iter()
     }
 
-    /// Consume the cycle and return its edges
-    pub fn into_edges(self) -> impl Iterator<Item = Edge> {
-        self.edges.into_iter()
+    /// Consume the cycle and return its half-edges
+    pub fn into_half_edges(self) -> impl Iterator<Item = HalfEdge> {
+        self.half_edges.into_iter()
     }
 }

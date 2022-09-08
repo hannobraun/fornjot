@@ -6,14 +6,17 @@ use fj_math::Segment;
 
 use crate::objects::Cycle;
 
-use super::{edge::EdgeApprox, Approx, ApproxPoint, Tolerance};
+use super::{edge::HalfEdgeApprox, Approx, ApproxPoint, Tolerance};
 
 impl Approx for &Cycle {
     type Approximation = CycleApprox;
 
     fn approx(self, tolerance: Tolerance) -> Self::Approximation {
-        let edges = self.edges().map(|edge| edge.approx(tolerance)).collect();
-        CycleApprox { edges }
+        let half_edges = self
+            .half_edges()
+            .map(|half_edge| half_edge.approx(tolerance))
+            .collect();
+        CycleApprox { half_edges }
     }
 }
 
@@ -21,7 +24,7 @@ impl Approx for &Cycle {
 #[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct CycleApprox {
     /// The approximated edges that make up the approximated cycle
-    pub edges: Vec<EdgeApprox>,
+    pub half_edges: Vec<HalfEdgeApprox>,
 }
 
 impl CycleApprox {
@@ -29,8 +32,8 @@ impl CycleApprox {
     pub fn points(&self) -> Vec<ApproxPoint<2>> {
         let mut points = Vec::new();
 
-        for edge_approx in &self.edges {
-            points.extend(edge_approx.points());
+        for approx in &self.half_edges {
+            points.extend(approx.points());
         }
 
         if let Some(point) = points.first() {

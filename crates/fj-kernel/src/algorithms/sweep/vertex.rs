@@ -1,14 +1,14 @@
 use fj_math::{Line, Point, Scalar, Vector};
 
 use crate::objects::{
-    Curve, CurveKind, Edge, GlobalCurve, GlobalEdge, GlobalVertex, Surface,
+    Curve, CurveKind, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
     SurfaceVertex, SweptCurve, Vertex,
 };
 
 use super::Sweep;
 
 impl Sweep for (Vertex, Surface) {
-    type Swept = Edge;
+    type Swept = HalfEdge;
 
     fn sweep(self, path: impl Into<Vector<3>>) -> Self::Swept {
         let (vertex, surface) = self;
@@ -125,7 +125,7 @@ impl Sweep for (Vertex, Surface) {
 
         // And finally, creating the output `Edge` is just a matter of
         // assembling the pieces we've already created.
-        Edge::new(curve, vertices, edge_global)
+        HalfEdge::new(curve, vertices, edge_global)
     }
 }
 

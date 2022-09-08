@@ -3,8 +3,8 @@
 use fj_math::{Transform, Vector};
 
 use crate::objects::{
-    Curve, Cycle, Edge, Face, Faces, GlobalCurve, GlobalVertex, Shell, Sketch,
-    Solid, Surface, SurfaceVertex, Vertex,
+    Curve, Cycle, Face, Faces, GlobalCurve, GlobalVertex, HalfEdge, Shell,
+    Sketch, Solid, Surface, SurfaceVertex, Vertex,
 };
 
 /// Transform an object
@@ -48,18 +48,8 @@ impl TransformObject for Cycle {
     fn transform(self, transform: &Transform) -> Self {
         Self::new(
             self.surface().transform(transform),
-            self.into_edges().map(|edge| edge.transform(transform)),
+            self.into_half_edges().map(|edge| edge.transform(transform)),
         )
-    }
-}
-
-impl TransformObject for Edge {
-    fn transform(self, transform: &Transform) -> Self {
-        let curve = self.curve().transform(transform);
-        let vertices =
-            self.vertices().map(|vertex| vertex.transform(transform));
-
-        Self::from_curve_and_vertices(curve, vertices)
     }
 }
 
@@ -99,6 +89,16 @@ impl TransformObject for GlobalVertex {
     fn transform(self, transform: &Transform) -> Self {
         let position = transform.transform_point(&self.position());
         Self::from_position(position)
+    }
+}
+
+impl TransformObject for HalfEdge {
+    fn transform(self, transform: &Transform) -> Self {
+        let curve = self.curve().transform(transform);
+        let vertices =
+            self.vertices().map(|vertex| vertex.transform(transform));
+
+        Self::from_curve_and_vertices(curve, vertices)
     }
 }
 

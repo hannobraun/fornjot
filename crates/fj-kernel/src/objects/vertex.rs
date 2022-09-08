@@ -7,14 +7,6 @@ use super::{Curve, Surface};
 /// `Vertex` is defined in terms of a 1-dimensional position on a curve. If you
 /// need the 3D position of a vertex, you can use [`Vertex::global_form`], to
 /// get access of the global form of a vertex ([`GlobalVertex`]).
-///
-/// # Implementation Note
-///
-/// Since `Vertex` is defined in terms of the curve it lies on, a reference to
-/// that curve should be available here. As of this writing, this reference
-/// still lives in [`Edge`].
-///
-/// [`Edge`]: super::Edge
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Vertex {
     position: Point<1>,

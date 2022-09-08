@@ -17,7 +17,7 @@ mod vertex;
 pub use self::{
     curve::{Curve, CurveKind, GlobalCurve},
     cycle::Cycle,
-    edge::{Edge, GlobalEdge},
+    edge::{GlobalEdge, HalfEdge},
     face::{Face, Faces},
     shell::Shell,
     sketch::Sketch,
