@@ -391,7 +391,7 @@ mod tests {
     }
 
     #[test]
-    fn edge() {
+    fn half_edge() {
         let object = HalfEdge::build(Surface::xy_plane())
             .line_segment_from_points([[0., 0.], [1., 0.]]);
 
