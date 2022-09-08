@@ -29,7 +29,7 @@ impl CurveFaceIntersection {
     /// Compute the intersections between a [`Curve`] and a [`Face`]
     pub fn compute(curve: &Curve, face: &Face) -> Self {
         let edges = face.all_cycles().flat_map(|cycle| {
-            let edges: Vec<_> = cycle.edges().cloned().collect();
+            let edges: Vec<_> = cycle.half_edges().cloned().collect();
             edges
         });
 

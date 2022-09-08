@@ -12,7 +12,10 @@ impl Approx for &Cycle {
     type Approximation = CycleApprox;
 
     fn approx(self, tolerance: Tolerance) -> Self::Approximation {
-        let edges = self.edges().map(|edge| edge.approx(tolerance)).collect();
+        let edges = self
+            .half_edges()
+            .map(|edge| edge.approx(tolerance))
+            .collect();
         CycleApprox { edges }
     }
 }

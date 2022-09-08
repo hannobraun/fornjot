@@ -25,12 +25,12 @@ impl Intersect for (&Face, &Point<2>) {
             // as long as we initialize the `previous_hit` variable with the
             // result of the last segment.
             let mut previous_hit = cycle
-                .edges()
+                .half_edges()
                 .last()
                 .copied()
                 .and_then(|edge| (&ray, &edge).intersect());
 
-            for edge in cycle.edges() {
+            for edge in cycle.half_edges() {
                 let hit = (&ray, edge).intersect();
 
                 let count_hit = match (hit, previous_hit) {

@@ -88,7 +88,7 @@ impl Cycle {
     }
 
     /// Access edges that make up the cycle
-    pub fn edges(&self) -> impl Iterator<Item = &HalfEdge> + '_ {
+    pub fn half_edges(&self) -> impl Iterator<Item = &HalfEdge> + '_ {
         self.half_edges.iter()
     }
 

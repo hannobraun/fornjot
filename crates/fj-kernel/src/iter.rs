@@ -151,7 +151,7 @@ impl<'r> ObjectIters<'r> for Cycle {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
         let mut objects = Vec::new();
 
-        for edge in self.edges() {
+        for edge in self.half_edges() {
             objects.push(edge as &dyn ObjectIters);
         }
 
