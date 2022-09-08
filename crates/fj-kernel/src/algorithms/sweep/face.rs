@@ -10,7 +10,7 @@ use super::{Path, Sweep};
 impl Sweep for Face {
     type Swept = Shell;
 
-    fn sweep(self, path: impl Into<Path>, color: Color) -> Self::Swept {
+    fn sweep(self, path: impl Into<Path>, _: Color) -> Self::Swept {
         let path = path.into();
 
         let mut faces = Vec::new();
@@ -24,7 +24,7 @@ impl Sweep for Face {
 
         for cycle in self.all_cycles() {
             for &edge in cycle.edges() {
-                let face = (edge, color).sweep(path, color);
+                let face = (edge, self.color()).sweep(path, self.color());
                 faces.push(face);
             }
         }
