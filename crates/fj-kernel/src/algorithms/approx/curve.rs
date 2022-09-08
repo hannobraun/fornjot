@@ -112,6 +112,11 @@ pub struct RangeOnCurve {
 }
 
 impl RangeOnCurve {
+    /// Construct an instance of `RangeOnCurve`
+    pub fn new(boundary: [Vertex; 2]) -> Self {
+        Self { boundary }
+    }
+
     /// Access the start of the range
     pub fn start(&self) -> Vertex {
         self.boundary[0]

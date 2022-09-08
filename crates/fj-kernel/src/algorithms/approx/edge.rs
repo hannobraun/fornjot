@@ -72,7 +72,7 @@ impl Approx for &Edge {
             }
         };
 
-        let range = RangeOnCurve { boundary };
+        let range = RangeOnCurve::new(boundary);
 
         let first = ApproxPoint::new(
             range.start().surface_form().position(),
