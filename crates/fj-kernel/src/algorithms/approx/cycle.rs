@@ -16,7 +16,7 @@ impl Approx for &Cycle {
             .half_edges()
             .map(|half_edge| half_edge.approx(tolerance))
             .collect();
-        CycleApprox { edges: half_edges }
+        CycleApprox { half_edges }
     }
 }
 
@@ -24,7 +24,7 @@ impl Approx for &Cycle {
 #[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct CycleApprox {
     /// The approximated edges that make up the approximated cycle
-    pub edges: Vec<EdgeApprox>,
+    pub half_edges: Vec<EdgeApprox>,
 }
 
 impl CycleApprox {
@@ -32,7 +32,7 @@ impl CycleApprox {
     pub fn points(&self) -> Vec<ApproxPoint<2>> {
         let mut points = Vec::new();
 
-        for edge_approx in &self.edges {
+        for edge_approx in &self.half_edges {
             points.extend(edge_approx.points());
         }
 
