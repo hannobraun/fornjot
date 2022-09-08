@@ -30,8 +30,8 @@ impl Intersect for (&Face, &Point<2>) {
                 .copied()
                 .and_then(|edge| (&ray, &edge).intersect());
 
-            for edge in cycle.half_edges() {
-                let hit = (&ray, edge).intersect();
+            for half_edge in cycle.half_edges() {
+                let hit = (&ray, half_edge).intersect();
 
                 let count_hit = match (hit, previous_hit) {
                     (
@@ -41,17 +41,17 @@ impl Intersect for (&Face, &Point<2>) {
                         // If the ray starts on the boundary of the face,
                         // there's nothing to else check.
                         return Some(
-                            FacePointIntersection::PointIsOnEdge(*edge)
+                            FacePointIntersection::PointIsOnEdge(*half_edge)
                         );
                     }
                     (Some(RaySegmentIntersection::RayStartsOnOnFirstVertex), _) => {
-                        let vertex = edge.vertices()[0];
+                        let vertex = half_edge.vertices()[0];
                         return Some(
                             FacePointIntersection::PointIsOnVertex(vertex)
                         );
                     }
                     (Some(RaySegmentIntersection::RayStartsOnSecondVertex), _) => {
-                        let vertex = edge.vertices()[1];
+                        let vertex = half_edge.vertices()[1];
                         return Some(
                             FacePointIntersection::PointIsOnVertex(vertex)
                         );
