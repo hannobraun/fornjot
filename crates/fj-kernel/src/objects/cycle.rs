@@ -23,9 +23,9 @@ impl Cycle {
     /// next edge.
     pub fn new(
         surface: Surface,
-        edges: impl IntoIterator<Item = HalfEdge>,
+        half_edges: impl IntoIterator<Item = HalfEdge>,
     ) -> Self {
-        let half_edges = edges.into_iter().collect::<Vec<_>>();
+        let half_edges = half_edges.into_iter().collect::<Vec<_>>();
 
         // Verify, that the curves of all edges are defined in the correct
         // surface.
