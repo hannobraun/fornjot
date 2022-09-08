@@ -35,7 +35,10 @@ impl Edge {
         global: GlobalEdge,
     ) -> Self {
         assert_eq!(curve.global_form(), global.curve());
-        assert_eq!(&vertices.to_global(), global.vertices());
+        assert_eq!(
+            &VerticesOfEdge(vertices.convert(|vertex| *vertex.global_form())),
+            global.vertices()
+        );
 
         // Make sure that the edge vertices are not coincident on the curve. If
         // they were, the edge would have no length, and not be valid.
@@ -66,8 +69,10 @@ impl Edge {
         curve: Curve,
         vertices: VerticesOfEdge<Vertex>,
     ) -> Self {
-        let global =
-            GlobalEdge::new(*curve.global_form(), vertices.to_global());
+        let global = GlobalEdge::new(
+            *curve.global_form(),
+            VerticesOfEdge(vertices.convert(|vertex| *vertex.global_form())),
+        );
         Self::new(curve, vertices, global)
     }
 
@@ -209,12 +214,5 @@ impl<T> VerticesOfEdge<T> {
         F: FnMut(T) -> U,
     {
         self.0.map(f)
-    }
-}
-
-impl VerticesOfEdge<Vertex> {
-    /// Convert this instance into its global variant
-    pub fn to_global(&self) -> VerticesOfEdge<GlobalVertex> {
-        VerticesOfEdge(self.convert(|vertex| *vertex.global_form()))
     }
 }
