@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar, Vector};
 
 use crate::{
     algorithms::intersect::face_point::FacePointIntersection,
-    objects::{Edge, Face, Vertex},
+    objects::{Face, HalfEdge, Vertex},
 };
 
 use super::{HorizontalRayToTheRight, Intersect};
@@ -142,7 +142,7 @@ pub enum RayFaceIntersection {
     RayHitsFaceAndAreParallel,
 
     /// The ray hits an edge
-    RayHitsEdge(Edge),
+    RayHitsEdge(HalfEdge),
 
     /// The ray hits a vertex
     RayHitsVertex(Vertex),

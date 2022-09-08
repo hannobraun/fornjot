@@ -2,7 +2,7 @@
 
 use fj_math::Point;
 
-use crate::objects::{Edge, Face, Vertex};
+use crate::objects::{Face, HalfEdge, Vertex};
 
 use super::{
     ray_segment::RaySegmentIntersection, HorizontalRayToTheRight, Intersect,
@@ -120,7 +120,7 @@ pub enum FacePointIntersection {
     PointIsInsideFace,
 
     /// The point is coincident with an edge
-    PointIsOnEdge(Edge),
+    PointIsOnEdge(HalfEdge),
 
     /// The point is coincident with a vertex
     PointIsOnVertex(Vertex),

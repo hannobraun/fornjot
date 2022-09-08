@@ -1,6 +1,6 @@
 use fj_math::Point;
 
-use crate::objects::{Cycle, Edge, Surface};
+use crate::objects::{Cycle, HalfEdge, Surface};
 
 /// API for building a [`Cycle`]
 pub struct CycleBuilder {
@@ -36,7 +36,7 @@ impl CycleBuilder {
             let points = [points[0], points[1]];
 
             edges.push(
-                Edge::build(self.surface).line_segment_from_points(points),
+                HalfEdge::build(self.surface).line_segment_from_points(points),
             );
         }
 

@@ -3,8 +3,8 @@
 use std::collections::VecDeque;
 
 use crate::objects::{
-    Curve, Cycle, Edge, Face, GlobalCurve, GlobalVertex, Shell, Sketch, Solid,
-    Surface, Vertex,
+    Curve, Cycle, Face, GlobalCurve, GlobalVertex, HalfEdge, Shell, Sketch,
+    Solid, Surface, Vertex,
 };
 
 /// Access iterators over all objects of a shape, or part of it
@@ -38,7 +38,7 @@ pub trait ObjectIters<'r> {
     }
 
     /// Iterate over all edges
-    fn edge_iter(&'r self) -> Iter<&'r Edge> {
+    fn edge_iter(&'r self) -> Iter<&'r HalfEdge> {
         let mut iter = Iter::empty();
 
         for object in self.referenced_objects() {
@@ -163,7 +163,7 @@ impl<'r> ObjectIters<'r> for Cycle {
     }
 }
 
-impl<'r> ObjectIters<'r> for Edge {
+impl<'r> ObjectIters<'r> for HalfEdge {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
         let mut objects = vec![self.curve() as &dyn ObjectIters];
 
@@ -174,7 +174,7 @@ impl<'r> ObjectIters<'r> for Edge {
         objects
     }
 
-    fn edge_iter(&'r self) -> Iter<&'r Edge> {
+    fn edge_iter(&'r self) -> Iter<&'r HalfEdge> {
         Iter::from_object(self)
     }
 }
@@ -345,7 +345,7 @@ impl<T> Iterator for Iter<T> {
 #[cfg(test)]
 mod tests {
     use crate::objects::{
-        Curve, Cycle, Edge, Face, GlobalCurve, GlobalVertex, Shell, Sketch,
+        Curve, Cycle, Face, GlobalCurve, GlobalVertex, HalfEdge, Shell, Sketch,
         Solid, Surface, SurfaceVertex, Vertex,
     };
 
@@ -392,7 +392,7 @@ mod tests {
 
     #[test]
     fn edge() {
-        let object = Edge::build(Surface::xy_plane())
+        let object = HalfEdge::build(Surface::xy_plane())
             .line_segment_from_points([[0., 0.], [1., 0.]]);
 
         assert_eq!(1, object.curve_iter().count());

@@ -3,8 +3,8 @@
 use fj_math::{Transform, Vector};
 
 use crate::objects::{
-    Curve, Cycle, Edge, Face, Faces, GlobalCurve, GlobalVertex, Shell, Sketch,
-    Solid, Surface, SurfaceVertex, Vertex,
+    Curve, Cycle, Face, Faces, GlobalCurve, GlobalVertex, HalfEdge, Shell,
+    Sketch, Solid, Surface, SurfaceVertex, Vertex,
 };
 
 /// Transform an object
@@ -53,7 +53,7 @@ impl TransformObject for Cycle {
     }
 }
 
-impl TransformObject for Edge {
+impl TransformObject for HalfEdge {
     fn transform(self, transform: &Transform) -> Self {
         let curve = self.curve().transform(transform);
         let vertices =

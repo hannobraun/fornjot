@@ -3,7 +3,7 @@ use fj_kernel::{
     algorithms::validate::{
         Validate, Validated, ValidationConfig, ValidationError,
     },
-    objects::{Cycle, Edge, Face, Sketch, Surface},
+    objects::{Cycle, Face, HalfEdge, Sketch, Surface},
 };
 use fj_math::{Aabb, Point, Scalar};
 
@@ -24,7 +24,7 @@ impl Shape for fj::Sketch {
                 // Circles have just a single round edge with no vertices. So
                 // none need to be added here.
 
-                let edge = Edge::build(surface)
+                let edge = HalfEdge::build(surface)
                     .circle_from_radius(Scalar::from_f64(circle.radius()));
                 let cycle = Cycle::new(surface, [edge]);
 

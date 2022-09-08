@@ -1,12 +1,12 @@
 use crate::builder::CycleBuilder;
 
-use super::{Edge, Surface};
+use super::{HalfEdge, Surface};
 
 /// A cycle of connected edges
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
     surface: Surface,
-    edges: Vec<Edge>,
+    edges: Vec<HalfEdge>,
 }
 
 impl Cycle {
@@ -23,7 +23,7 @@ impl Cycle {
     /// next edge.
     pub fn new(
         surface: Surface,
-        edges: impl IntoIterator<Item = Edge>,
+        edges: impl IntoIterator<Item = HalfEdge>,
     ) -> Self {
         let edges = edges.into_iter().collect::<Vec<_>>();
 
@@ -85,12 +85,12 @@ impl Cycle {
     }
 
     /// Access edges that make up the cycle
-    pub fn edges(&self) -> impl Iterator<Item = &Edge> + '_ {
+    pub fn edges(&self) -> impl Iterator<Item = &HalfEdge> + '_ {
         self.edges.iter()
     }
 
     /// Consume the cycle and return its edges
-    pub fn into_edges(self) -> impl Iterator<Item = Edge> {
+    pub fn into_edges(self) -> impl Iterator<Item = HalfEdge> {
         self.edges.into_iter()
     }
 }

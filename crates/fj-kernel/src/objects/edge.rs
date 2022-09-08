@@ -6,13 +6,13 @@ use super::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex};
 
 /// An edge
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Edge {
+pub struct HalfEdge {
     curve: Curve,
     vertices: [Vertex; 2],
     global: GlobalEdge,
 }
 
-impl Edge {
+impl HalfEdge {
     /// Build an edge using [`EdgeBuilder`]
     pub fn build(surface: Surface) -> EdgeBuilder {
         EdgeBuilder::new(surface)
@@ -21,8 +21,8 @@ impl Edge {
     /// Create a new instance of `Edge`
     ///
     /// If you only have a curve and the edge vertices, please check out
-    /// [`Edge::from_curve_and_vertices`], which is a convenience wrapper around
-    /// this method, which creates an instance of [`GlobalEdge`].
+    /// [`HalfEdge::from_curve_and_vertices`], which is a convenience wrapper
+    /// around this method, which creates an instance of [`GlobalEdge`].
     ///
     /// # Panics
     ///
@@ -63,7 +63,7 @@ impl Edge {
     /// Create a new instance of `Edge` from a curve and vertices
     ///
     /// The [`GlobalEdge`] instance is created from the provided curve and
-    /// vertices. Please refer to [`Edge::new`], if you already have a
+    /// vertices. Please refer to [`HalfEdge::new`], if you already have a
     /// [`GlobalEdge`] instance that you can provide.
     pub fn from_curve_and_vertices(
         curve: Curve,
@@ -129,7 +129,7 @@ impl Edge {
     }
 }
 
-impl fmt::Display for Edge {
+impl fmt::Display for HalfEdge {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let [a, b] = self.vertices().map(|vertex| vertex.position());
         write!(f, "edge from {:?} to {:?}", a, b)?;

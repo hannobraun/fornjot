@@ -5,14 +5,14 @@
 //! approximations are usually used to build cycle approximations, and this way,
 //! the caller doesn't have to call with duplicate vertices.
 
-use crate::objects::Edge;
+use crate::objects::HalfEdge;
 
 use super::{
     curve::{CurveApprox, RangeOnCurve},
     Approx, ApproxPoint,
 };
 
-impl Approx for &Edge {
+impl Approx for &HalfEdge {
     type Approximation = EdgeApprox;
 
     fn approx(self, tolerance: super::Tolerance) -> Self::Approximation {
@@ -32,7 +32,7 @@ impl Approx for &Edge {
     }
 }
 
-/// An approximation of an [`Edge`]
+/// An approximation of an [`HalfEdge`]
 #[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct EdgeApprox {
     /// The point that approximates the first vertex of the curve

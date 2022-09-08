@@ -1,7 +1,7 @@
 use fj_math::{Circle, Line, Point, Vector};
 
 use crate::objects::{
-    Curve, CurveKind, Cycle, Edge, Face, SurfaceVertex, Vertex,
+    Curve, CurveKind, Cycle, Face, HalfEdge, SurfaceVertex, Vertex,
 };
 
 use super::Reverse;
@@ -94,7 +94,7 @@ fn reverse_local_coordinates_in_cycle(cycle: &Cycle) -> Cycle {
             )
         });
 
-        Edge::from_curve_and_vertices(curve, vertices)
+        HalfEdge::from_curve_and_vertices(curve, vertices)
     });
 
     Cycle::new(surface, edges)
