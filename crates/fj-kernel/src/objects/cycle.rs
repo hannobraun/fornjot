@@ -6,7 +6,7 @@ use super::{HalfEdge, Surface};
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
     surface: Surface,
-    edges: Vec<HalfEdge>,
+    half_edges: Vec<HalfEdge>,
 }
 
 impl Cycle {
@@ -76,7 +76,10 @@ impl Cycle {
             }
         }
 
-        Self { surface, edges }
+        Self {
+            surface,
+            half_edges: edges,
+        }
     }
 
     /// Access the surface that this cycle is in
@@ -86,11 +89,11 @@ impl Cycle {
 
     /// Access edges that make up the cycle
     pub fn edges(&self) -> impl Iterator<Item = &HalfEdge> + '_ {
-        self.edges.iter()
+        self.half_edges.iter()
     }
 
     /// Consume the cycle and return its edges
     pub fn into_edges(self) -> impl Iterator<Item = HalfEdge> {
-        self.edges.into_iter()
+        self.half_edges.into_iter()
     }
 }
