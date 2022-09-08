@@ -20,22 +20,25 @@ impl EdgeBuilder {
 
     /// Create a circle from the given radius
     pub fn circle_from_radius(&self, radius: Scalar) -> Edge {
-        let curve_local = CurveKind::Circle(Circle::new(
-            Point::origin(),
-            Vector::from([radius, Scalar::ZERO]),
-            Vector::from([Scalar::ZERO, radius]),
-        ));
-        let curve_global =
-            GlobalCurve::from_kind(CurveKind::Circle(Circle::new(
+        let curve = {
+            let local = CurveKind::Circle(Circle::new(
                 Point::origin(),
-                Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
-                Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
-            )));
+                Vector::from([radius, Scalar::ZERO]),
+                Vector::from([Scalar::ZERO, radius]),
+            ));
+            let global =
+                GlobalCurve::from_kind(CurveKind::Circle(Circle::new(
+                    Point::origin(),
+                    Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
+                    Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
+                )));
 
-        Edge::from_curve_and_vertices(
-            Curve::new(self.surface, curve_local, curve_global),
-            VerticesOfEdge::none(),
-        )
+            Curve::new(self.surface, local, global)
+        };
+
+        let vertices = VerticesOfEdge::none();
+
+        Edge::from_curve_and_vertices(curve, vertices)
     }
 
     /// Create a line segment from two points
