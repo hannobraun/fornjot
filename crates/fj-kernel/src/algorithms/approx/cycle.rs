@@ -32,8 +32,8 @@ impl CycleApprox {
     pub fn points(&self) -> Vec<ApproxPoint<2>> {
         let mut points = Vec::new();
 
-        for edge_approx in &self.half_edges {
-            points.extend(edge_approx.points());
+        for approx in &self.half_edges {
+            points.extend(approx.points());
         }
 
         if let Some(point) = points.first() {
