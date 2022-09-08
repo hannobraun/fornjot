@@ -102,7 +102,7 @@ fn number_of_vertices_for_circle(
 }
 
 /// The range on which a curve should be approximated
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub struct RangeOnCurve {
     /// The boundary of the range
     ///

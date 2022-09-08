@@ -72,6 +72,34 @@ impl Edge {
         Self::new(curve, vertices, global)
     }
 
+    /// Reverse the edge, including the curve
+    ///
+    /// # Implementation Note
+    ///
+    /// It would be much nicer to just reverse the edge normally everywhere, but
+    /// we can't do that, until #695 is addressed:
+    /// <https://github.com/hannobraun/Fornjot/issues/695>
+    pub fn reverse_including_curve(self) -> Self {
+        let vertices = VerticesOfEdge(self.vertices.get().map(|[a, b]| {
+            [
+                Vertex::new(
+                    -b.position(),
+                    b.curve().reverse(),
+                    *b.surface_form(),
+                    *b.global_form(),
+                ),
+                Vertex::new(
+                    -a.position(),
+                    a.curve().reverse(),
+                    *a.surface_form(),
+                    *a.global_form(),
+                ),
+            ]
+        }));
+
+        Self::from_curve_and_vertices(self.curve().reverse(), vertices)
+    }
+
     /// Access the curve that defines the edge's geometry
     ///
     /// The edge can be a segment of the curve that is bounded by two vertices,
@@ -211,22 +239,7 @@ impl VerticesOfEdge<Vertex> {
     ///
     /// Makes sure that the local coordinates are still correct.
     pub fn reverse(self) -> Self {
-        Self(self.0.map(|[a, b]| {
-            [
-                Vertex::new(
-                    -b.position(),
-                    b.curve().reverse(),
-                    *b.surface_form(),
-                    *b.global_form(),
-                ),
-                Vertex::new(
-                    -a.position(),
-                    a.curve().reverse(),
-                    *a.surface_form(),
-                    *a.global_form(),
-                ),
-            ]
-        }))
+        Self(self.0.map(|[a, b]| [b, a]))
     }
 
     /// Convert this instance into its global variant
