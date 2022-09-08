@@ -68,7 +68,9 @@ impl TransformObject for Face {
         let surface = self.surface().transform(transform);
 
         let exterior = self.exterior().clone().transform(transform);
-        let interiors = transform_cycles(self.interiors(), transform);
+        let interiors = self
+            .interiors()
+            .map(|cycle| cycle.clone().transform(transform));
 
         let color = self.color();
 
@@ -156,13 +158,4 @@ impl TransformObject for Vertex {
             self.global_form().transform(transform),
         )
     }
-}
-
-fn transform_cycles<'a>(
-    cycles: impl IntoIterator<Item = &'a Cycle> + 'a,
-    transform: &'a Transform,
-) -> impl Iterator<Item = Cycle> + 'a {
-    cycles
-        .into_iter()
-        .map(|cycle| cycle.clone().transform(transform))
 }
