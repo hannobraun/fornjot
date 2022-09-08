@@ -391,24 +391,6 @@ mod tests {
     }
 
     #[test]
-    fn half_edge() {
-        let object = HalfEdge::build(Surface::xy_plane())
-            .line_segment_from_points([[0., 0.], [1., 0.]]);
-
-        assert_eq!(1, object.curve_iter().count());
-        assert_eq!(0, object.cycle_iter().count());
-        assert_eq!(1, object.half_edge_iter().count());
-        assert_eq!(0, object.face_iter().count());
-        assert_eq!(1, object.global_curve_iter().count());
-        assert_eq!(2, object.global_vertex_iter().count());
-        assert_eq!(0, object.shell_iter().count());
-        assert_eq!(0, object.sketch_iter().count());
-        assert_eq!(0, object.solid_iter().count());
-        assert_eq!(0, object.surface_iter().count());
-        assert_eq!(2, object.vertex_iter().count());
-    }
-
-    #[test]
     fn face() {
         let surface = Surface::xy_plane();
         let object = Face::build(surface).polygon_from_points([
@@ -462,6 +444,24 @@ mod tests {
         assert_eq!(0, object.solid_iter().count());
         assert_eq!(0, object.surface_iter().count());
         assert_eq!(0, object.vertex_iter().count());
+    }
+
+    #[test]
+    fn half_edge() {
+        let object = HalfEdge::build(Surface::xy_plane())
+            .line_segment_from_points([[0., 0.], [1., 0.]]);
+
+        assert_eq!(1, object.curve_iter().count());
+        assert_eq!(0, object.cycle_iter().count());
+        assert_eq!(1, object.half_edge_iter().count());
+        assert_eq!(0, object.face_iter().count());
+        assert_eq!(1, object.global_curve_iter().count());
+        assert_eq!(2, object.global_vertex_iter().count());
+        assert_eq!(0, object.shell_iter().count());
+        assert_eq!(0, object.sketch_iter().count());
+        assert_eq!(0, object.solid_iter().count());
+        assert_eq!(0, object.surface_iter().count());
+        assert_eq!(2, object.vertex_iter().count());
     }
 
     #[test]
