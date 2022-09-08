@@ -37,11 +37,8 @@ impl Sweep for Face {
     }
 }
 
-fn create_bottom_face(
-    face: &Face,
-    is_sweep_along_negative_direction: bool,
-) -> Face {
-    if is_sweep_along_negative_direction {
+fn create_bottom_face(face: &Face, is_negative_sweep: bool) -> Face {
+    if is_negative_sweep {
         face.clone()
     } else {
         face.clone().reverse()
