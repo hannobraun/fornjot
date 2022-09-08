@@ -234,7 +234,7 @@ mod tests {
         let intersection = (&face, &point).intersect();
 
         let edge = face
-            .edge_iter()
+            .half_edge_iter()
             .copied()
             .find(|edge| {
                 let [a, b] = edge.vertices();

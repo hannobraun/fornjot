@@ -213,7 +213,7 @@ mod tests {
             .translate([1., 1., 0.]);
 
         let edge = face
-            .edge_iter()
+            .half_edge_iter()
             .copied()
             .find(|edge| {
                 let [a, b] = edge.vertices();
