@@ -18,7 +18,7 @@ impl Sweep for Face {
         let bottom_face = create_bottom_face(&self, is_negative_sweep);
         faces.push(bottom_face);
 
-        let top_face = create_top_face(self.clone(), path);
+        let top_face = create_top_face(self.clone(), path, is_negative_sweep);
         faces.push(top_face);
 
         for cycle in self.all_cycles() {
@@ -45,10 +45,10 @@ fn create_bottom_face(face: &Face, is_negative_sweep: bool) -> Face {
     }
 }
 
-fn create_top_face(face: Face, path: Path) -> Face {
+fn create_top_face(face: Face, path: Path, is_negative_sweep: bool) -> Face {
     let mut face = face.translate(path.inner());
 
-    if path.is_negative_direction() {
+    if is_negative_sweep {
         face = face.reverse();
     };
 
