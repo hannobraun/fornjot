@@ -111,12 +111,7 @@ impl Sweep for (Edge, Color) {
                 Curve::new(surface, kind, global)
             };
 
-            let global = {
-                GlobalEdge::new(
-                    *curve.global_form(),
-                    VerticesOfEdge::from_vertices(global_vertices),
-                )
-            };
+            let global = GlobalEdge::new(*curve.global_form(), global_vertices);
 
             let vertices = {
                 let surface_points = points_curve_and_surface

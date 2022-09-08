@@ -90,7 +90,7 @@ impl Sweep for (Vertex, Surface) {
 
         // And now the vertices. Again, nothing wild here.
         let vertices = {
-            let vertices_global = edge_global.vertices().get();
+            let vertices_global = edge_global.vertices();
 
             // Can be cleaned up, once `zip` is stable:
             // https://doc.rust-lang.org/std/primitive.array.html#method.zip
@@ -142,6 +142,6 @@ impl Sweep for GlobalVertex {
         let curve =
             GlobalCurve::build().line_from_points([a.position(), b.position()]);
 
-        GlobalEdge::new(curve, VerticesOfEdge::from_vertices([a, b]))
+        GlobalEdge::new(curve, [a, b])
     }
 }

@@ -36,7 +36,7 @@ impl Edge {
     ) -> Self {
         assert_eq!(curve.global_form(), global.curve());
         assert_eq!(
-            &VerticesOfEdge(vertices.convert(|vertex| *vertex.global_form())),
+            &vertices.convert(|vertex| *vertex.global_form()),
             global.vertices()
         );
 
@@ -71,7 +71,7 @@ impl Edge {
     ) -> Self {
         let global = GlobalEdge::new(
             *curve.global_form(),
-            VerticesOfEdge(vertices.convert(|vertex| *vertex.global_form())),
+            vertices.convert(|vertex| *vertex.global_form()),
         );
         Self::new(curve, vertices, global)
     }
@@ -143,15 +143,12 @@ impl fmt::Display for Edge {
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalEdge {
     curve: GlobalCurve,
-    vertices: VerticesOfEdge<GlobalVertex>,
+    vertices: [GlobalVertex; 2],
 }
 
 impl GlobalEdge {
     /// Create a new instance
-    pub fn new(
-        curve: GlobalCurve,
-        vertices: VerticesOfEdge<GlobalVertex>,
-    ) -> Self {
+    pub fn new(curve: GlobalCurve, vertices: [GlobalVertex; 2]) -> Self {
         Self { curve, vertices }
     }
 
@@ -169,7 +166,7 @@ impl GlobalEdge {
     /// An edge has either two bounding vertices or none. The latter is possible
     /// if the edge's curve is continuous (i.e. connects to itself), and defines
     /// the whole edge.
-    pub fn vertices(&self) -> &VerticesOfEdge<GlobalVertex> {
+    pub fn vertices(&self) -> &[GlobalVertex; 2] {
         &self.vertices
     }
 }
