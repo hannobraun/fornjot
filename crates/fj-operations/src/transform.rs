@@ -1,7 +1,6 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::{
-        approx::Tolerance,
         transform::TransformObject,
         validate::{Validate, Validated, ValidationConfig, ValidationError},
     },
@@ -17,12 +16,11 @@ impl Shape for fj::Transform {
     fn compute_brep(
         &self,
         config: &ValidationConfig,
-        tolerance: Tolerance,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
         let faces = self
             .shape
-            .compute_brep(config, tolerance, debug_info)?
+            .compute_brep(config, debug_info)?
             .into_inner()
             .transform(&make_transform(self));
 
