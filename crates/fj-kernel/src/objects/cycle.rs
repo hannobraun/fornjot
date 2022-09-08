@@ -2,7 +2,7 @@ use crate::builder::CycleBuilder;
 
 use super::{HalfEdge, Surface};
 
-/// A cycle of connected edges
+/// A cycle of connected half-edges
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
     surface: Surface,
@@ -19,8 +19,8 @@ impl Cycle {
     ///
     /// # Panics
     ///
-    /// Panic, if the end of each edge does not connect to the beginning of the
-    /// next edge.
+    /// Panic, if the end of each half-edge does not connect to the beginning of
+    /// the next one.
     pub fn new(
         surface: Surface,
         half_edges: impl IntoIterator<Item = HalfEdge>,
@@ -87,12 +87,12 @@ impl Cycle {
         &self.surface
     }
 
-    /// Access edges that make up the cycle
+    /// Access the half-edges that make up the cycle
     pub fn half_edges(&self) -> impl Iterator<Item = &HalfEdge> + '_ {
         self.half_edges.iter()
     }
 
-    /// Consume the cycle and return its edges
+    /// Consume the cycle and return its half-edges
     pub fn into_half_edges(self) -> impl Iterator<Item = HalfEdge> {
         self.half_edges.into_iter()
     }
