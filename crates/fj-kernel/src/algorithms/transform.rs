@@ -67,13 +67,14 @@ impl TransformObject for Face {
     fn transform(self, transform: &Transform) -> Self {
         let surface = self.surface().transform(transform);
 
-        let exteriors = transform_cycles(self.exteriors(), transform);
-        let interiors = transform_cycles(self.interiors(), transform);
+        let exterior = self.exterior().clone().transform(transform);
+        let interiors = self
+            .interiors()
+            .map(|cycle| cycle.clone().transform(transform));
 
         let color = self.color();
 
-        Face::new(surface)
-            .with_exteriors(exteriors)
+        Face::new(surface, exterior)
             .with_interiors(interiors)
             .with_color(color)
     }
@@ -157,13 +158,4 @@ impl TransformObject for Vertex {
             self.global_form().transform(transform),
         )
     }
-}
-
-fn transform_cycles<'a>(
-    cycles: impl IntoIterator<Item = &'a Cycle> + 'a,
-    transform: &'a Transform,
-) -> impl Iterator<Item = Cycle> + 'a {
-    cycles
-        .into_iter()
-        .map(|cycle| cycle.clone().transform(transform))
 }

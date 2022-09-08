@@ -177,6 +177,6 @@ impl Sweep for Edge {
             Cycle::new(surface, edges)
         };
 
-        Face::new(surface).with_exteriors([cycle]).with_color(color)
+        Face::new(surface, cycle).with_color(color)
     }
 }

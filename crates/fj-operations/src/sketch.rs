@@ -30,9 +30,7 @@ impl Shape for fj::Sketch {
                     .circle_from_radius(Scalar::from_f64(circle.radius()));
                 let cycle = Cycle::new(surface, [edge]);
 
-                Face::new(surface)
-                    .with_exteriors([cycle])
-                    .with_color(Color(self.color()))
+                Face::new(surface, cycle).with_color(Color(self.color()))
             }
             fj::Chain::PolyChain(poly_chain) => {
                 let points =

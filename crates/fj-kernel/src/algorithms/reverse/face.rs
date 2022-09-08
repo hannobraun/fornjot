@@ -10,14 +10,19 @@ impl Reverse for Face {
     fn reverse(self) -> Self {
         let surface = self.surface().reverse();
 
-        let exteriors = reverse_local_coordinates_in_cycle(self.exteriors());
-        let interiors = reverse_local_coordinates_in_cycle(self.interiors());
+        let exterior = reverse_local_coordinates_in_cycle(self.exterior());
+        let interiors = reverse_local_coordinates_in_cycles(self.interiors());
 
-        Face::new(surface)
-            .with_exteriors(exteriors)
+        Face::new(surface, exterior)
             .with_interiors(interiors)
             .with_color(self.color())
     }
+}
+
+fn reverse_local_coordinates_in_cycles<'r>(
+    cycles: impl IntoIterator<Item = &'r Cycle> + 'r,
+) -> impl Iterator<Item = Cycle> + 'r {
+    cycles.into_iter().map(reverse_local_coordinates_in_cycle)
 }
 
 /// Reverse local coordinates within the cycle, leaving global ones as-is
@@ -33,76 +38,66 @@ impl Reverse for Face {
 /// concept in the kernel. We kind of treat `Edge` as a half-edge, but in an
 /// inconsistent way that causes problems. This issue has some context on that:
 /// <https://github.com/hannobraun/Fornjot/issues/993>
-fn reverse_local_coordinates_in_cycle<'r>(
-    cycles: impl IntoIterator<Item = &'r Cycle> + 'r,
-) -> impl Iterator<Item = Cycle> + 'r {
-    cycles.into_iter().map(|cycle| {
-        let surface = cycle.surface().reverse();
+fn reverse_local_coordinates_in_cycle(cycle: &Cycle) -> Cycle {
+    let surface = cycle.surface().reverse();
 
-        let edges = cycle.edges().map(|edge| {
-            let curve = {
-                let local = match edge.curve().kind() {
-                    CurveKind::Circle(circle) => {
-                        let center = Point::from([
-                            circle.center().u,
-                            -circle.center().v,
-                        ]);
+    let edges = cycle.edges().map(|edge| {
+        let curve = {
+            let local = match edge.curve().kind() {
+                CurveKind::Circle(circle) => {
+                    let center =
+                        Point::from([circle.center().u, -circle.center().v]);
 
-                        let a = Vector::from([circle.a().u, -circle.a().v]);
-                        let b = Vector::from([circle.b().u, -circle.b().v]);
+                    let a = Vector::from([circle.a().u, -circle.a().v]);
+                    let b = Vector::from([circle.b().u, -circle.b().v]);
 
-                        CurveKind::Circle(Circle::new(center, a, b))
-                    }
-                    CurveKind::Line(line) => {
-                        let origin =
-                            Point::from([line.origin().u, -line.origin().v]);
-                        let direction = Vector::from([
-                            line.direction().u,
-                            -line.direction().v,
-                        ]);
+                    CurveKind::Circle(Circle::new(center, a, b))
+                }
+                CurveKind::Line(line) => {
+                    let origin =
+                        Point::from([line.origin().u, -line.origin().v]);
+                    let direction =
+                        Vector::from([line.direction().u, -line.direction().v]);
 
-                        CurveKind::Line(Line::from_origin_and_direction(
-                            origin, direction,
-                        ))
-                    }
-                };
+                    CurveKind::Line(Line::from_origin_and_direction(
+                        origin, direction,
+                    ))
+                }
+            };
 
-                Curve::new(
-                    edge.curve().surface().reverse(),
-                    local,
-                    *edge.curve().global_form(),
+            Curve::new(
+                edge.curve().surface().reverse(),
+                local,
+                *edge.curve().global_form(),
+            )
+        };
+
+        let vertices = edge.vertices().map(|vertex| {
+            let surface_vertex = {
+                let vertex = vertex.surface_form();
+
+                let position =
+                    Point::from([vertex.position().u, -vertex.position().v]);
+
+                SurfaceVertex::new(
+                    position,
+                    vertex.surface().reverse(),
+                    *vertex.global_form(),
                 )
             };
 
-            let vertices = edge.vertices().map(|vertex| {
-                let surface_vertex = {
-                    let vertex = vertex.surface_form();
-
-                    let position = Point::from([
-                        vertex.position().u,
-                        -vertex.position().v,
-                    ]);
-
-                    SurfaceVertex::new(
-                        position,
-                        vertex.surface().reverse(),
-                        *vertex.global_form(),
-                    )
-                };
-
-                Vertex::new(
-                    vertex.position(),
-                    curve,
-                    surface_vertex,
-                    *vertex.global_form(),
-                )
-            });
-
-            Edge::from_curve_and_vertices(curve, vertices)
+            Vertex::new(
+                vertex.position(),
+                curve,
+                surface_vertex,
+                *vertex.global_form(),
+            )
         });
 
-        Cycle::new(surface, edges)
-    })
+        Edge::from_curve_and_vertices(curve, vertices)
+    });
+
+    Cycle::new(surface, edges)
 }
 
 #[cfg(test)]

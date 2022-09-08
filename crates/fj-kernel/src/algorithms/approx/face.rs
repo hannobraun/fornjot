@@ -75,29 +75,13 @@ impl Approx for &Face {
         // would need to provide its own approximation, as the edges that bound
         // it have nothing to do with its curvature.
 
-        let mut exteriors = Vec::new();
-        let mut interiors = BTreeSet::new();
+        let exterior = self.exterior().approx(tolerance);
 
-        for cycle in self.exteriors() {
-            let cycle = cycle.approx(tolerance);
-            exteriors.push(cycle);
-        }
+        let mut interiors = BTreeSet::new();
         for cycle in self.interiors() {
             let cycle = cycle.approx(tolerance);
             interiors.insert(cycle);
         }
-
-        // Only polygons with exactly one exterior cycle are supported.
-        //
-        // See this issue for some background:
-        // https://github.com/hannobraun/Fornjot/issues/250
-        let exterior = exteriors
-            .pop()
-            .expect("Can't approximate face without exterior cycle");
-        assert!(
-            exteriors.is_empty(),
-            "Approximation only supports faces with one exterior cycle",
-        );
 
         FaceApprox {
             exterior,
