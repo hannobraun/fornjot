@@ -1,12 +1,9 @@
 use fj_interop::mesh::Color;
 use fj_math::{Line, Point, Scalar};
 
-use crate::{
-    algorithms::approx::Tolerance,
-    objects::{
-        Curve, CurveKind, Edge, GlobalCurve, GlobalEdge, GlobalVertex, Surface,
-        SurfaceVertex, SweptCurve, Vertex, VerticesOfEdge,
-    },
+use crate::objects::{
+    Curve, CurveKind, Edge, GlobalCurve, GlobalEdge, GlobalVertex, Surface,
+    SurfaceVertex, SweptCurve, Vertex, VerticesOfEdge,
 };
 
 use super::{Path, Sweep};
@@ -14,12 +11,7 @@ use super::{Path, Sweep};
 impl Sweep for (Vertex, Surface) {
     type Swept = Edge;
 
-    fn sweep(
-        self,
-        path: impl Into<Path>,
-        tolerance: impl Into<Tolerance>,
-        color: Color,
-    ) -> Self::Swept {
+    fn sweep(self, path: impl Into<Path>, color: Color) -> Self::Swept {
         let (vertex, surface) = self;
         let path = path.into();
 
@@ -68,7 +60,7 @@ impl Sweep for (Vertex, Surface) {
         // With that out of the way, let's start by creating the `GlobalEdge`,
         // as that is the most straight-forward part of this operations, and
         // we're going to need it soon anyway.
-        let edge_global = vertex.global_form().sweep(path, tolerance, color);
+        let edge_global = vertex.global_form().sweep(path, color);
 
         // Next, let's compute the surface coordinates of the two vertices of
         // the output `Edge`, as we're going to need these for the rest of this
@@ -99,7 +91,7 @@ impl Sweep for (Vertex, Surface) {
 
         // And now the vertices. Again, nothing wild here.
         let vertices = {
-            let vertices_global = edge_global.vertices().get_or_panic();
+            let vertices_global = edge_global.vertices().get();
 
             // Can be cleaned up, once `zip` is stable:
             // https://doc.rust-lang.org/std/primitive.array.html#method.zip
@@ -143,12 +135,7 @@ impl Sweep for (Vertex, Surface) {
 impl Sweep for GlobalVertex {
     type Swept = GlobalEdge;
 
-    fn sweep(
-        self,
-        path: impl Into<Path>,
-        _: impl Into<Tolerance>,
-        _: Color,
-    ) -> Self::Swept {
+    fn sweep(self, path: impl Into<Path>, _: Color) -> Self::Swept {
         let a = self;
         let b =
             GlobalVertex::from_position(self.position() + path.into().inner());

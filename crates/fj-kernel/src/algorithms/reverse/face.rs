@@ -8,10 +8,6 @@ use super::Reverse;
 
 impl Reverse for Face {
     fn reverse(self) -> Self {
-        if self.triangles().is_some() {
-            panic!("Reversing tri-rep faces is not supported");
-        }
-
         let surface = self.surface().reverse();
 
         let exteriors = reverse_local_coordinates_in_cycle(self.exteriors());

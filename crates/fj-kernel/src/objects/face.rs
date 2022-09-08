@@ -1,7 +1,6 @@
 use std::collections::{btree_set, BTreeSet};
 
 use fj_interop::mesh::Color;
-use fj_math::Triangle;
 
 use crate::builder::FaceBuilder;
 
@@ -47,7 +46,10 @@ impl<'a> IntoIterator for &'a Faces {
 /// A face of a shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Face {
-    representation: Representation,
+    surface: Surface,
+    exteriors: Vec<Cycle>,
+    interiors: Vec<Cycle>,
+    color: Color,
 }
 
 impl Face {
@@ -62,26 +64,10 @@ impl Face {
     /// This can be overridden using the `with_` methods.
     pub fn new(surface: Surface) -> Self {
         Self {
-            representation: Representation::BRep(BRep {
-                surface,
-                exteriors: Vec::new(),
-                interiors: Vec::new(),
-                color: Color::default(),
-            }),
-        }
-    }
-
-    /// Construct an instance that uses triangle representation
-    ///
-    /// Triangle representation is obsolete, and only still present because
-    /// there is one last place in the kernel code that uses it. Don't add any
-    /// more of those places!
-    ///
-    /// See this issue for more context:
-    /// <https://github.com/hannobraun/Fornjot/issues/97>
-    pub fn from_triangles(triangles: TriRep) -> Self {
-        Self {
-            representation: Representation::TriRep(triangles),
+            surface,
+            exteriors: Vec::new(),
+            interiors: Vec::new(),
+            color: Color::default(),
         }
     }
 
@@ -103,7 +89,7 @@ impl Face {
                 "Cycles that bound a face must be in face's surface"
             );
 
-            self.brep_mut().exteriors.push(cycle);
+            self.exteriors.push(cycle);
         }
 
         self
@@ -127,7 +113,7 @@ impl Face {
                 "Cycles that bound a face must be in face's surface"
             );
 
-            self.brep_mut().interiors.push(cycle);
+            self.interiors.push(cycle);
         }
 
         self
@@ -137,25 +123,25 @@ impl Face {
     ///
     /// Consumes the face and returns the updated instance.
     pub fn with_color(mut self, color: Color) -> Self {
-        self.brep_mut().color = color;
+        self.color = color;
         self
     }
 
     /// Access this face's surface
     pub fn surface(&self) -> &Surface {
-        &self.brep().surface
+        &self.surface
     }
 
     /// Access the cycles that bound the face on the outside
     pub fn exteriors(&self) -> impl Iterator<Item = &Cycle> + '_ {
-        self.brep().exteriors.iter()
+        self.exteriors.iter()
     }
 
     /// Access the cycles that bound the face on the inside
     ///
     /// Each of these cycles defines a hole in the face.
     pub fn interiors(&self) -> impl Iterator<Item = &Cycle> + '_ {
-        self.brep().interiors.iter()
+        self.interiors.iter()
     }
 
     /// Access all cycles of this face
@@ -168,57 +154,6 @@ impl Face {
 
     /// Access the color of the face
     pub fn color(&self) -> Color {
-        self.brep().color
-    }
-
-    /// Access triangles, if this face uses triangle representation
-    ///
-    /// Only some faces still use triangle representation. At some point, none
-    /// will. This method exists as a workaround, while the transition is still
-    /// in progress.
-    pub fn triangles(&self) -> Option<&TriRep> {
-        if let Representation::TriRep(triangles) = &self.representation {
-            return Some(triangles);
-        }
-
-        None
-    }
-
-    /// Access the boundary representation of the face
-    fn brep(&self) -> &BRep {
-        if let Representation::BRep(face) = &self.representation {
-            return face;
-        }
-
-        // No code that still uses triangle representation is calling this
-        // method.
-        unreachable!()
-    }
-
-    /// Access the boundary representation of the face mutably
-    fn brep_mut(&mut self) -> &mut BRep {
-        if let Representation::BRep(face) = &mut self.representation {
-            return face;
-        }
-
-        // No code that still uses triangle representation is calling this
-        // method.
-        unreachable!()
+        self.color
     }
 }
-
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-enum Representation {
-    BRep(BRep),
-    TriRep(TriRep),
-}
-
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-struct BRep {
-    surface: Surface,
-    exteriors: Vec<Cycle>,
-    interiors: Vec<Cycle>,
-    color: Color,
-}
-
-type TriRep = Vec<(Triangle<3>, Color)>;

@@ -62,13 +62,6 @@ impl Triangulate for Face {
         mesh: &mut Mesh<Point<3>>,
         debug_info: &mut DebugInfo,
     ) {
-        if let Some(triangles) = self.triangles() {
-            for &(triangle, color) in triangles {
-                mesh.push_triangle(triangle, color);
-            }
-            return;
-        }
-
         let surface = self.surface();
         let approx = self.approx(tolerance.into());
 
