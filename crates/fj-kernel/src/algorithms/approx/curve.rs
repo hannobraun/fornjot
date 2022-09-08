@@ -44,16 +44,10 @@ impl Approx for (&GlobalCurve, RangeOnCurve) {
     fn approx(self, tolerance: Tolerance) -> Self::Approximation {
         let (curve, range) = self;
 
-        let mut points = Vec::new();
-
         match curve.kind() {
-            CurveKind::Circle(curve) => {
-                approx_circle(curve, range, tolerance, &mut points);
-            }
-            CurveKind::Line(_) => {}
+            CurveKind::Circle(curve) => approx_circle(curve, range, tolerance),
+            CurveKind::Line(_) => vec![],
         }
-
-        points
     }
 }
 
@@ -65,8 +59,9 @@ fn approx_circle(
     circle: &Circle<3>,
     range: impl Into<RangeOnCurve>,
     tolerance: Tolerance,
-    points: &mut Vec<ApproxPoint<1>>,
-) {
+) -> Vec<ApproxPoint<1>> {
+    let mut points = Vec::new();
+
     let radius = circle.a().magnitude();
     let range = range.into();
 
@@ -87,6 +82,12 @@ fn approx_circle(
 
         points.push(ApproxPoint::new(point_curve, point_global));
     }
+
+    if range.is_reversed() {
+        points.reverse();
+    }
+
+    points
 }
 
 fn number_of_vertices_for_circle(
@@ -104,14 +105,43 @@ fn number_of_vertices_for_circle(
 /// The range on which a curve should be approximated
 #[derive(Clone, Copy, Debug)]
 pub struct RangeOnCurve {
-    /// The boundary of the range
-    ///
-    /// The vertices that make up the boundary are themselves not included in
-    /// the approximation.
-    pub boundary: [Vertex; 2],
+    boundary: [Vertex; 2],
+    is_reversed: bool,
 }
 
 impl RangeOnCurve {
+    /// Construct an instance of `RangeOnCurve`
+    ///
+    /// Ranges are normalized on construction, meaning that the order of
+    /// vertices passed to this constructor does not influence the range that is
+    /// constructed.
+    ///
+    /// This is done to prevent bugs during mesh construction: The curve
+    /// approximation code is regularly faced with ranges that are reversed
+    /// versions of each other. This can lead to slightly different
+    /// approximations, which in turn leads to the aforementioned invalid
+    /// meshes.
+    ///
+    /// The caller can use `is_reversed` to determine, if the range was reversed
+    /// during normalization, to adjust the approximation accordingly.
+    pub fn new([a, b]: [Vertex; 2]) -> Self {
+        let (boundary, is_reversed) = if a < b {
+            ([a, b], false)
+        } else {
+            ([b, a], true)
+        };
+
+        Self {
+            boundary,
+            is_reversed,
+        }
+    }
+
+    /// Indicate whether the range was reversed during normalization
+    pub fn is_reversed(&self) -> bool {
+        self.is_reversed
+    }
+
     /// Access the start of the range
     pub fn start(&self) -> Vertex {
         self.boundary[0]

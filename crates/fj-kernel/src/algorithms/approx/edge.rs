@@ -19,7 +19,7 @@ impl Approx for &Edge {
 
     fn approx(self, tolerance: super::Tolerance) -> Self::Approximation {
         // The range is only used for circles right now.
-        let boundary = match self.vertices().get() {
+        let [a, b] = match self.vertices().get() {
             Some(vertices) => vertices.map(|&vertex| vertex),
             None => {
                 // Creating vertices from nothing, just for the sake of
@@ -72,11 +72,11 @@ impl Approx for &Edge {
             }
         };
 
-        let range = RangeOnCurve { boundary };
+        let range = RangeOnCurve::new([a, b]);
 
         let first = ApproxPoint::new(
-            range.start().surface_form().position(),
-            range.start().global_form().position(),
+            a.surface_form().position(),
+            a.global_form().position(),
         );
         let curve_approx = (self.curve(), range).approx(tolerance);
 
