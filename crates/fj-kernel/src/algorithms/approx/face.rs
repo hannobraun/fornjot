@@ -76,12 +76,12 @@ impl Approx for &Face {
         // it have nothing to do with its curvature.
 
         let mut exteriors = Vec::new();
-        let mut interiors = BTreeSet::new();
-
         for cycle in self.exteriors() {
             let cycle = cycle.approx(tolerance);
             exteriors.push(cycle);
         }
+
+        let mut interiors = BTreeSet::new();
         for cycle in self.interiors() {
             let cycle = cycle.approx(tolerance);
             interiors.insert(cycle);
