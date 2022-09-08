@@ -163,22 +163,6 @@ impl<'r> ObjectIters<'r> for Cycle {
     }
 }
 
-impl<'r> ObjectIters<'r> for HalfEdge {
-    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
-        let mut objects = vec![self.curve() as &dyn ObjectIters];
-
-        for vertex in self.vertices().iter() {
-            objects.push(vertex);
-        }
-
-        objects
-    }
-
-    fn half_edge_iter(&'r self) -> Iter<&'r HalfEdge> {
-        Iter::from_object(self)
-    }
-}
-
 impl<'r> ObjectIters<'r> for Face {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
         let mut objects = vec![self.surface() as &dyn ObjectIters];
@@ -211,6 +195,22 @@ impl<'r> ObjectIters<'r> for GlobalVertex {
     }
 
     fn global_vertex_iter(&'r self) -> Iter<&'r GlobalVertex> {
+        Iter::from_object(self)
+    }
+}
+
+impl<'r> ObjectIters<'r> for HalfEdge {
+    fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
+        let mut objects = vec![self.curve() as &dyn ObjectIters];
+
+        for vertex in self.vertices().iter() {
+            objects.push(vertex);
+        }
+
+        objects
+    }
+
+    fn half_edge_iter(&'r self) -> Iter<&'r HalfEdge> {
         Iter::from_object(self)
     }
 }
