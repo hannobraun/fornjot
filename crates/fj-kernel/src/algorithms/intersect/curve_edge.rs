@@ -4,7 +4,7 @@ use crate::objects::{Curve, CurveKind, Edge};
 
 use super::LineSegmentIntersection;
 
-/// The intersection between a [`Curve`] and an [`Edge`], in curve coordinates
+/// The intersection between a [`Curve`] and an [`Edge`]
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum CurveEdgeIntersection {
     /// The curve and edge intersect at a point
