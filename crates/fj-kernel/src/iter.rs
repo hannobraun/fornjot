@@ -37,17 +37,6 @@ pub trait ObjectIters<'r> {
         iter
     }
 
-    /// Iterate over all half-edges
-    fn half_edge_iter(&'r self) -> Iter<&'r HalfEdge> {
-        let mut iter = Iter::empty();
-
-        for object in self.referenced_objects() {
-            iter = iter.with(object.half_edge_iter());
-        }
-
-        iter
-    }
-
     /// Iterate over all faces
     fn face_iter(&'r self) -> Iter<&'r Face> {
         let mut iter = Iter::empty();
@@ -76,6 +65,17 @@ pub trait ObjectIters<'r> {
 
         for object in self.referenced_objects() {
             iter = iter.with(object.global_vertex_iter());
+        }
+
+        iter
+    }
+
+    /// Iterate over all half-edges
+    fn half_edge_iter(&'r self) -> Iter<&'r HalfEdge> {
+        let mut iter = Iter::empty();
+
+        for object in self.referenced_objects() {
+            iter = iter.with(object.half_edge_iter());
         }
 
         iter
