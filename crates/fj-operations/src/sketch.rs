@@ -24,9 +24,9 @@ impl Shape for fj::Sketch {
                 // Circles have just a single round edge with no vertices. So
                 // none need to be added here.
 
-                let edge = HalfEdge::build(surface)
+                let half_edge = HalfEdge::build(surface)
                     .circle_from_radius(Scalar::from_f64(circle.radius()));
-                let cycle = Cycle::new(surface, [edge]);
+                let cycle = Cycle::new(surface, [half_edge]);
 
                 Face::new(surface, cycle).with_color(Color(self.color()))
             }
