@@ -17,12 +17,6 @@ impl Sweep for (Edge, Color) {
         let (edge, color) = self;
         let path = path.into();
 
-        let edge = if path.is_negative_direction() {
-            edge.reverse_including_curve()
-        } else {
-            edge
-        };
-
         let surface = edge.curve().sweep(path);
 
         // We can't use the edge we're sweeping from as the bottom edge, as that

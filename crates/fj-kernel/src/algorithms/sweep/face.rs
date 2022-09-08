@@ -22,6 +22,11 @@ impl Sweep for Face {
 
         for cycle in self.all_cycles() {
             for &edge in cycle.edges() {
+                let edge = if path.is_negative_direction() {
+                    edge.reverse_including_curve()
+                } else {
+                    edge
+                };
                 let face = (edge, self.color()).sweep(path);
                 faces.push(face);
             }
