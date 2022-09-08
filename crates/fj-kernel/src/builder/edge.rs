@@ -2,7 +2,7 @@ use fj_math::{Circle, Line, Point, Scalar, Vector};
 
 use crate::objects::{
     Curve, CurveKind, Edge, GlobalCurve, GlobalVertex, Surface, SurfaceVertex,
-    Vertex, VerticesOfEdge,
+    Vertex,
 };
 
 /// API for building an [`Edge`]
@@ -53,7 +53,7 @@ impl EdgeBuilder {
             // Can be cleaned up, once `zip` is stable:
             // https://doc.rust-lang.org/std/primitive.array.html#method.zip
             let [a_surface, b_surface] = surface_vertices;
-            let vertices = [(a_curve, a_surface), (b_curve, b_surface)].map(
+            [(a_curve, a_surface), (b_curve, b_surface)].map(
                 |(point_curve, surface_vertex)| {
                     Vertex::new(
                         point_curve,
@@ -62,9 +62,7 @@ impl EdgeBuilder {
                         global_vertex,
                     )
                 },
-            );
-
-            VerticesOfEdge::from_vertices(vertices)
+            )
         };
 
         Edge::from_curve_and_vertices(curve, vertices)
@@ -114,12 +112,10 @@ impl EdgeBuilder {
             let [a_global, b_global] = global_vertices;
             let [a_surface, b_surface] = surface_vertices;
 
-            let vertices = [
+            [
                 Vertex::new(Point::from([0.]), curve, a_surface, a_global),
                 Vertex::new(Point::from([1.]), curve, b_surface, b_global),
-            ];
-
-            VerticesOfEdge::from_vertices(vertices)
+            ]
         };
 
         Edge::from_curve_and_vertices(curve, vertices)

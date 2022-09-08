@@ -8,7 +8,7 @@ use super::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex};
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edge {
     curve: Curve,
-    vertices: VerticesOfEdge<Vertex>,
+    vertices: [Vertex; 2],
     global: GlobalEdge,
 }
 
@@ -31,11 +31,14 @@ impl Edge {
     /// objects that are passed refer to.
     pub fn new(
         curve: Curve,
-        vertices: VerticesOfEdge<Vertex>,
+        vertices: [Vertex; 2],
         global: GlobalEdge,
     ) -> Self {
         assert_eq!(curve.global_form(), global.curve());
-        assert_eq!(&vertices.to_global(), global.vertices());
+        assert_eq!(
+            &vertices.map(|vertex| *vertex.global_form()),
+            global.vertices()
+        );
 
         // Make sure that the edge vertices are not coincident on the curve. If
         // they were, the edge would have no length, and not be valid.
@@ -43,7 +46,7 @@ impl Edge {
         // It is perfectly fine for global forms of the the vertices to be
         // coincident (in 3D space). That would just mean, that ends of the edge
         // connect to each other.
-        let [a, b] = vertices.get();
+        let [a, b] = vertices;
         assert_ne!(
             a.position(),
             b.position(),
@@ -64,10 +67,12 @@ impl Edge {
     /// [`GlobalEdge`] instance that you can provide.
     pub fn from_curve_and_vertices(
         curve: Curve,
-        vertices: VerticesOfEdge<Vertex>,
+        vertices: [Vertex; 2],
     ) -> Self {
-        let global =
-            GlobalEdge::new(*curve.global_form(), vertices.to_global());
+        let global = GlobalEdge::new(
+            *curve.global_form(),
+            vertices.map(|vertex| *vertex.global_form()),
+        );
         Self::new(curve, vertices, global)
     }
 
@@ -80,8 +85,8 @@ impl Edge {
     /// <https://github.com/hannobraun/Fornjot/issues/695>
     pub fn reverse_including_curve(self) -> Self {
         let vertices = {
-            let VerticesOfEdge([a, b]) = self.vertices;
-            VerticesOfEdge([
+            let [a, b] = self.vertices;
+            [
                 Vertex::new(
                     -b.position(),
                     b.curve().reverse(),
@@ -94,7 +99,7 @@ impl Edge {
                     *a.surface_form(),
                     *a.global_form(),
                 ),
-            ])
+            ]
         };
 
         Self::from_curve_and_vertices(self.curve().reverse(), vertices)
@@ -114,7 +119,7 @@ impl Edge {
     /// An edge has either two bounding vertices or none. The latter is possible
     /// if the edge's curve is continuous (i.e. connects to itself), and defines
     /// the whole edge.
-    pub fn vertices(&self) -> &VerticesOfEdge<Vertex> {
+    pub fn vertices(&self) -> &[Vertex; 2] {
         &self.vertices
     }
 
@@ -126,7 +131,7 @@ impl Edge {
 
 impl fmt::Display for Edge {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let [a, b] = self.vertices().0.map(|vertex| vertex.position());
+        let [a, b] = self.vertices().map(|vertex| vertex.position());
         write!(f, "edge from {:?} to {:?}", a, b)?;
         write!(f, " on {:?}", self.curve().global_form())?;
 
@@ -138,15 +143,12 @@ impl fmt::Display for Edge {
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalEdge {
     curve: GlobalCurve,
-    vertices: VerticesOfEdge<GlobalVertex>,
+    vertices: [GlobalVertex; 2],
 }
 
 impl GlobalEdge {
     /// Create a new instance
-    pub fn new(
-        curve: GlobalCurve,
-        vertices: VerticesOfEdge<GlobalVertex>,
-    ) -> Self {
+    pub fn new(curve: GlobalCurve, vertices: [GlobalVertex; 2]) -> Self {
         Self { curve, vertices }
     }
 
@@ -164,65 +166,7 @@ impl GlobalEdge {
     /// An edge has either two bounding vertices or none. The latter is possible
     /// if the edge's curve is continuous (i.e. connects to itself), and defines
     /// the whole edge.
-    pub fn vertices(&self) -> &VerticesOfEdge<GlobalVertex> {
+    pub fn vertices(&self) -> &[GlobalVertex; 2] {
         &self.vertices
-    }
-}
-
-/// The vertices that bound an edge
-///
-/// This struct is generic over the actual vertex type used, but typically, `T`
-/// will either be [`Vertex`] or [`GlobalVertex`].
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct VerticesOfEdge<T>([T; 2]);
-
-impl<T> VerticesOfEdge<T> {
-    /// Construct an instance of `VerticesOfEdge` from two vertices
-    pub fn from_vertices(vertices: [T; 2]) -> Self {
-        Self(vertices)
-    }
-
-    /// Access the vertices
-    pub fn get(&self) -> [&T; 2] {
-        // Can be cleaned up once `each_ref` is stable:
-        // https://doc.rust-lang.org/std/primitive.array.html#method.each_ref
-        let [a, b] = &self.0;
-        [a, b]
-    }
-
-    /// Iterate over the vertices
-    pub fn iter(&self) -> impl Iterator<Item = &T> {
-        self.0.iter()
-    }
-
-    /// Map each vertex using the provided function
-    pub fn map<F>(self, f: F) -> Self
-    where
-        F: FnMut(T) -> T,
-    {
-        Self(self.convert(f))
-    }
-
-    /// Convert each vertex using the provided function
-    pub fn convert<F, U>(self, f: F) -> [U; 2]
-    where
-        F: FnMut(T) -> U,
-    {
-        self.0.map(f)
-    }
-}
-
-impl VerticesOfEdge<Vertex> {
-    /// Reverse the order of vertices
-    ///
-    /// Makes sure that the local coordinates are still correct.
-    pub fn reverse(self) -> Self {
-        let Self([a, b]) = self;
-        Self([b, a])
-    }
-
-    /// Convert this instance into its global variant
-    pub fn to_global(&self) -> VerticesOfEdge<GlobalVertex> {
-        VerticesOfEdge(self.convert(|vertex| *vertex.global_form()))
     }
 }

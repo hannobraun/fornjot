@@ -162,7 +162,7 @@ mod tests {
         algorithms::validate::{Validate, ValidationConfig, ValidationError},
         objects::{
             Curve, CurveKind, Edge, GlobalCurve, GlobalVertex, Surface,
-            SurfaceVertex, Vertex, VerticesOfEdge,
+            SurfaceVertex, Vertex,
         },
     };
 
@@ -221,7 +221,7 @@ mod tests {
         );
         let b =
             Vertex::new(Point::from([Scalar::ONE]), curve, b_surface, b_global);
-        let vertices = VerticesOfEdge::from_vertices([a, b]);
+        let vertices = [a, b];
 
         let edge = Edge::from_curve_and_vertices(curve, vertices);
 

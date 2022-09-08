@@ -2,7 +2,7 @@ use fj_math::{Line, Point, Scalar};
 
 use crate::objects::{
     Curve, CurveKind, Edge, GlobalCurve, GlobalEdge, GlobalVertex, Surface,
-    SurfaceVertex, SweptCurve, Vertex, VerticesOfEdge,
+    SurfaceVertex, SweptCurve, Vertex,
 };
 
 use super::{Path, Sweep};
@@ -90,7 +90,7 @@ impl Sweep for (Vertex, Surface) {
 
         // And now the vertices. Again, nothing wild here.
         let vertices = {
-            let vertices_global = edge_global.vertices().get();
+            let vertices_global = edge_global.vertices();
 
             // Can be cleaned up, once `zip` is stable:
             // https://doc.rust-lang.org/std/primitive.array.html#method.zip
@@ -113,16 +113,14 @@ impl Sweep for (Vertex, Surface) {
             let [a_global, b_global] = vertices_global;
             let vertices = [(a_surface, a_global), (b_surface, b_global)];
 
-            let vertices = vertices.map(|(vertex_surface, &vertex_global)| {
+            vertices.map(|(vertex_surface, &vertex_global)| {
                 Vertex::new(
                     [vertex_surface.position().v],
                     curve,
                     vertex_surface,
                     vertex_global,
                 )
-            });
-
-            VerticesOfEdge::from_vertices(vertices)
+            })
         };
 
         // And finally, creating the output `Edge` is just a matter of
@@ -142,6 +140,6 @@ impl Sweep for GlobalVertex {
         let curve =
             GlobalCurve::build().line_from_points([a.position(), b.position()]);
 
-        GlobalEdge::new(curve, VerticesOfEdge::from_vertices([a, b]))
+        GlobalEdge::new(curve, [a, b])
     }
 }

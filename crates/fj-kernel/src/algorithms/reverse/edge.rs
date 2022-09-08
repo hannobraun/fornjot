@@ -4,6 +4,11 @@ use super::Reverse;
 
 impl Reverse for Edge {
     fn reverse(self) -> Self {
-        Edge::from_curve_and_vertices(*self.curve(), self.vertices().reverse())
+        let vertices = {
+            let &[a, b] = self.vertices();
+            [b, a]
+        };
+
+        Edge::from_curve_and_vertices(*self.curve(), vertices)
     }
 }

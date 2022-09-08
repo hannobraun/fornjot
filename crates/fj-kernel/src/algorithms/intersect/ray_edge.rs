@@ -22,7 +22,7 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Edge) {
             }
         };
 
-        let points = edge.vertices().get().map(|vertex| {
+        let points = edge.vertices().map(|vertex| {
             let point = vertex.position();
             line.point_from_line_coords(point)
         });
