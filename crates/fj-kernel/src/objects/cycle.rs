@@ -44,12 +44,12 @@ impl Cycle {
             // panic.
 
             // Verify that all edges connect.
-            for edges in half_edges.windows(2) {
+            for half_edges in half_edges.windows(2) {
                 // Can't panic, as we passed `2` to `windows`.
                 //
                 // Can be cleaned up, once `array_windows` is stable"
                 // https://doc.rust-lang.org/std/primitive.slice.html#method.array_windows
-                let [a, b] = [&edges[0], &edges[1]];
+                let [a, b] = [&half_edges[0], &half_edges[1]];
 
                 let [_, prev] = a.vertices();
                 let [next, _] = b.vertices();
