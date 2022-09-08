@@ -28,15 +28,12 @@ impl CurveFaceIntersection {
 
     /// Compute the intersections between a [`Curve`] and a [`Face`]
     pub fn compute(curve: &Curve, face: &Face) -> Self {
-        let half_edges = face.all_cycles().flat_map(|cycle| {
-            let edges: Vec<_> = cycle.half_edges().cloned().collect();
-            edges
-        });
+        let half_edges = face.all_cycles().flat_map(|cycle| cycle.half_edges());
 
         let mut intersections = Vec::new();
 
         for edge in half_edges {
-            let intersection = CurveEdgeIntersection::compute(curve, &edge);
+            let intersection = CurveEdgeIntersection::compute(curve, edge);
 
             if let Some(intersection) = intersection {
                 match intersection {
