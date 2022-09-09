@@ -1,9 +1,12 @@
 use fj_math::{Point, Scalar, Triangle, Winding};
 use spade::HasPosition;
 
+use crate::objects::Handedness;
+
 /// Create a Delaunay triangulation of all points
 pub fn triangulate(
     points: Vec<TriangulationPoint>,
+    coord_handedness: Handedness,
 ) -> Vec<[TriangulationPoint; 3]> {
     use spade::Triangulation as _;
 
@@ -21,9 +24,15 @@ pub fn triangulate(
         .expect("invalid triangle")
         .winding_direction();
 
-        let triangle = match triangle_winding {
-            Winding::Ccw => [v0, v1, v2],
-            Winding::Cw => [v0, v2, v1],
+        let required_winding = match coord_handedness {
+            Handedness::LeftHanded => Winding::Cw,
+            Handedness::RightHanded => Winding::Ccw,
+        };
+
+        let triangle = if triangle_winding == required_winding {
+            [v0, v1, v2]
+        } else {
+            [v0, v2, v1]
         };
 
         triangles.push(triangle);
