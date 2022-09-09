@@ -52,7 +52,9 @@ impl HalfEdge {
             the half-edge's global form"
         );
         assert_eq!(
-            &vertices.clone().map(|vertex| *vertex.global_form()),
+            &normalize_vertex_order(
+                vertices.clone().map(|vertex| *vertex.global_form())
+            ),
             global_form.vertices(),
             "The global forms of a half-edge's vertices must match the \
             vertices of the half-edge's global form"
@@ -121,6 +123,7 @@ impl GlobalEdge {
         vertices: [GlobalVertex; 2],
     ) -> Self {
         let curve = curve.into();
+        let vertices = normalize_vertex_order(vertices);
         Self { curve, vertices }
     }
 
@@ -140,5 +143,41 @@ impl GlobalEdge {
     /// the whole edge.
     pub fn vertices(&self) -> &[GlobalVertex; 2] {
         &self.vertices
+    }
+}
+
+fn normalize_vertex_order([a, b]: [GlobalVertex; 2]) -> [GlobalVertex; 2] {
+    if a < b {
+        [a, b]
+    } else {
+        [b, a]
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use pretty_assertions::assert_eq;
+
+    use crate::{objects::Surface, partial::HasPartial, stores::Stores};
+
+    use super::HalfEdge;
+
+    #[test]
+    fn global_edge_equality() {
+        let stores = Stores::new();
+
+        let surface = Surface::xy_plane();
+
+        let a = [0., 0.];
+        let b = [1., 0.];
+
+        let a_to_b = HalfEdge::partial()
+            .as_line_segment_from_points(surface, [a, b])
+            .build(&stores);
+        let b_to_a = HalfEdge::partial()
+            .as_line_segment_from_points(surface, [b, a])
+            .build(&stores);
+
+        assert_eq!(a_to_b.global_form(), b_to_a.global_form());
     }
 }
