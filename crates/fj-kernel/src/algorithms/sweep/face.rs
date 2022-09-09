@@ -142,14 +142,6 @@ mod tests {
 
         assert!(solid.find_face(&bottom).is_some());
         assert!(solid.find_face(&top).is_some());
-    }
-
-    #[test]
-    fn side_negative() {
-        let surface = Surface::xy_plane();
-        let solid = Sketch::build(surface)
-            .polygon_from_points(TRIANGLE)
-            .sweep(DOWN);
 
         let mut side_faces = TRIANGLE.windows(2).map(|window| {
             // Can't panic, as we passed `2` to `windows`.
