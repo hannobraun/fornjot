@@ -81,7 +81,7 @@ mod tests {
     use fj_math::{Point, Vector};
 
     use crate::{
-        algorithms::reverse::Reverse,
+        algorithms::{reverse::Reverse, transform::TransformObject},
         iter::ObjectIters,
         objects::{Face, Sketch, Surface},
     };
@@ -93,7 +93,7 @@ mod tests {
     const UP: [f64; 3] = [0., 0., 1.];
 
     #[test]
-    fn bottom_positive() {
+    fn sweep_up() {
         let surface = Surface::xy_plane();
         let solid = Sketch::build(surface)
             .polygon_from_points(TRIANGLE)
@@ -103,8 +103,12 @@ mod tests {
             .polygon_from_points(TRIANGLE)
             .into_face()
             .reverse();
+        let top = Face::build(surface.translate(UP))
+            .polygon_from_points(TRIANGLE)
+            .into_face();
 
         assert!(solid.find_face(&bottom).is_some());
+        assert!(solid.find_face(&top).is_some());
     }
 
     #[test]
@@ -112,15 +116,6 @@ mod tests {
         test_bottom_top(
             [0., 0., -1.],
             [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]],
-            [[0., 0.], [1., 0.], [0., 1.]],
-        )
-    }
-
-    #[test]
-    fn top_positive() -> anyhow::Result<()> {
-        test_bottom_top(
-            [0., 0., 1.],
-            [[0., 0., 1.], [1., 0., 1.], [0., 1., 1.]],
             [[0., 0.], [1., 0.], [0., 1.]],
         )
     }
