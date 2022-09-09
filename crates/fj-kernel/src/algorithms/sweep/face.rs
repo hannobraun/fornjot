@@ -79,11 +79,9 @@ fn create_top_face(
 #[cfg(test)]
 mod tests {
     use fj_interop::mesh::Color;
-    use fj_math::{Point, Vector};
 
     use crate::{
         algorithms::{reverse::Reverse, transform::TransformObject},
-        iter::ObjectIters,
         objects::{Face, HalfEdge, Sketch, Surface},
     };
 
@@ -146,65 +144,26 @@ mod tests {
         assert!(solid.find_face(&top).is_some());
     }
 
-    // This test currently fails, even though the code it tests works correctly.
-    // At the time this test was disabled, fixing it would have been
-    // impractical. This has changed since then, thanks to some simplifications.
     #[test]
-    #[ignore]
-    fn side_negative() -> anyhow::Result<()> {
-        test_side(
-            [0., 0., -1.],
-            [
-                [[0., 0., 0.], [0., 1., 0.], [0., 0., -1.]],
-                [[0., 1., 0.], [1., 0., 0.], [0., 1., -1.]],
-                [[1., 0., 0.], [0., 0., 0.], [1., 0., -1.]],
-            ],
-        )
-    }
-
-    fn test_side(
-        direction: impl Into<Vector<3>>,
-        expected_surfaces: [[impl Into<Point<3>>; 3]; 3],
-    ) -> anyhow::Result<()> {
-        test(
-            direction,
-            expected_surfaces,
-            [[0., 0.], [1., 0.], [1., 1.], [0., 1.]],
-        )
-    }
-
-    fn test(
-        direction: impl Into<Vector<3>>,
-        expected_surfaces: impl IntoIterator<Item = [impl Into<Point<3>>; 3]>,
-        expected_vertices: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> anyhow::Result<()> {
+    fn side_negative() {
         let surface = Surface::xy_plane();
-        let face = Face::build(surface).polygon_from_points([
-            [0., 0.],
-            [1., 0.],
-            [0., 1.],
-        ]);
-        let sketch = Sketch::new().with_faces([face]);
+        let solid = Sketch::build(surface)
+            .polygon_from_points(TRIANGLE)
+            .sweep(DOWN);
 
-        let solid = sketch.sweep(direction);
+        let mut side_faces = TRIANGLE.windows(2).map(|window| {
+            // Can't panic, as we passed `2` to `windows`.
+            //
+            // Can be cleaned up, once `array_windows` is stable:
+            // https://doc.rust-lang.org/std/primitive.slice.html#method.array_windows
+            let [a, b] = [window[0], window[1]];
 
-        let expected_vertices: Vec<_> = expected_vertices
-            .into_iter()
-            .map(|vertex| vertex.into())
-            .collect();
-
-        let faces = expected_surfaces.into_iter().map(|surface| {
-            let surface = Surface::plane_from_points(surface);
-
-            Face::build(surface)
-                .polygon_from_points(expected_vertices.clone())
-                .into_face()
+            let half_edge = HalfEdge::build(Surface::xy_plane())
+                .line_segment_from_points([a, b])
+                .reverse();
+            (half_edge, Color::default()).sweep(DOWN)
         });
 
-        for face in faces {
-            assert!(solid.face_iter().any(|f| f == &face));
-        }
-
-        Ok(())
+        assert!(side_faces.all(|face| solid.find_face(&face).is_some()));
     }
 }
