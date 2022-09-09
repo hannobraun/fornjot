@@ -78,12 +78,13 @@ fn create_top_face(
 
 #[cfg(test)]
 mod tests {
+    use fj_interop::mesh::Color;
     use fj_math::{Point, Vector};
 
     use crate::{
         algorithms::{reverse::Reverse, transform::TransformObject},
         iter::ObjectIters,
-        objects::{Face, Sketch, Surface},
+        objects::{Face, HalfEdge, Sketch, Surface},
     };
 
     use super::Sweep;
@@ -137,20 +138,26 @@ mod tests {
         )
     }
 
-    // This test currently fails, even though the code it tests works correctly.
-    // At the time this test was disabled, fixing it would have been
-    // impractical. This has changed since then, thanks to some simplifications.
     #[test]
-    #[ignore]
-    fn side_positive() -> anyhow::Result<()> {
-        test_side(
-            [0., 0., 1.],
-            [
-                [[0., 0., 0.], [1., 0., 0.], [0., 0., 1.]],
-                [[1., 0., 0.], [0., 1., 0.], [1., 0., 1.]],
-                [[0., 1., 0.], [0., 0., 0.], [0., 1., 1.]],
-            ],
-        )
+    fn side_positive() {
+        let surface = Surface::xy_plane();
+        let solid = Sketch::build(surface)
+            .polygon_from_points(TRIANGLE)
+            .sweep(UP);
+
+        let mut side_faces = TRIANGLE.windows(2).map(|window| {
+            // Can't panic, as we passed `2` to `windows`.
+            //
+            // Can be cleaned up, once `array_windows` is stable:
+            // https://doc.rust-lang.org/std/primitive.slice.html#method.array_windows
+            let [a, b] = [window[0], window[1]];
+
+            let half_edge = HalfEdge::build(Surface::xy_plane())
+                .line_segment_from_points([a, b]);
+            (half_edge, Color::default()).sweep(UP)
+        });
+
+        assert!(side_faces.all(|face| solid.find_face(&face).is_some()));
     }
 
     // This test currently fails, even though the code it tests works correctly.
