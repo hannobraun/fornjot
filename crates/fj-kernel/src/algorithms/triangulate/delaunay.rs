@@ -13,7 +13,7 @@ pub fn triangulate(
     let mut triangles = Vec::new();
     for triangle in triangulation.inner_faces() {
         let [v0, v1, v2] = triangle.vertices().map(|vertex| *vertex.data());
-        let orientation = Triangle::<2>::from_points([
+        let triangle_winding = Triangle::<2>::from_points([
             v0.point_surface,
             v1.point_surface,
             v2.point_surface,
@@ -21,7 +21,7 @@ pub fn triangulate(
         .expect("invalid triangle")
         .winding_direction();
 
-        let triangle = match orientation {
+        let triangle = match triangle_winding {
             Winding::Ccw => [v0, v1, v2],
             Winding::Cw => [v0, v2, v1],
         };
