@@ -2,7 +2,7 @@ use std::collections::BTreeSet;
 
 use crate::builder::SolidBuilder;
 
-use super::Shell;
+use super::{Face, Shell};
 
 /// A 3-dimensional shape
 ///
@@ -48,6 +48,17 @@ impl Solid {
     /// Convert the solid into a list of shells
     pub fn into_shells(self) -> impl Iterator<Item = Shell> {
         self.shells.into_iter()
+    }
+
+    /// Find the given face in this solid
+    pub fn find_face(&self, face: &Face) -> Option<Face> {
+        for shell in self.shells() {
+            if let Some(face) = shell.find_face(face) {
+                return Some(face);
+            }
+        }
+
+        None
     }
 }
 
