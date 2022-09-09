@@ -8,7 +8,7 @@ use fj_interop::mesh::Color;
 
 use crate::{
     algorithms::validate::ValidationConfig,
-    objects::{Face, Faces},
+    objects::{Face, Faces, Handedness},
 };
 
 use super::{cycle::CycleApprox, Approx, ApproxPoint, Tolerance};
@@ -87,6 +87,7 @@ impl Approx for &Face {
             exterior,
             interiors,
             color: self.color(),
+            coord_handedness: self.coord_handedness(),
         }
     }
 }
@@ -102,6 +103,9 @@ pub struct FaceApprox {
 
     /// The color of the approximated face
     pub color: Color,
+
+    /// The handedness of the approximated face's front-side coordinate system
+    pub coord_handedness: Handedness,
 }
 
 impl FaceApprox {
