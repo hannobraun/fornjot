@@ -75,3 +75,87 @@ fn create_top_face(
 
     face
 }
+
+#[cfg(test)]
+mod tests {
+    use fj_interop::mesh::Color;
+
+    use crate::{
+        algorithms::{reverse::Reverse, transform::TransformObject},
+        objects::{Face, HalfEdge, Sketch, Surface},
+    };
+
+    use super::Sweep;
+
+    const TRIANGLE: [[f64; 2]; 3] = [[0., 0.], [1., 0.], [0., 1.]];
+
+    const UP: [f64; 3] = [0., 0., 1.];
+    const DOWN: [f64; 3] = [0., 0., -1.];
+
+    #[test]
+    fn sweep_up() {
+        let surface = Surface::xy_plane();
+        let solid = Sketch::build(surface)
+            .polygon_from_points(TRIANGLE)
+            .sweep(UP);
+
+        let bottom = Face::build(surface)
+            .polygon_from_points(TRIANGLE)
+            .into_face()
+            .reverse();
+        let top = Face::build(surface.translate(UP))
+            .polygon_from_points(TRIANGLE)
+            .into_face();
+
+        assert!(solid.find_face(&bottom).is_some());
+        assert!(solid.find_face(&top).is_some());
+
+        let mut side_faces = TRIANGLE.windows(2).map(|window| {
+            // Can't panic, as we passed `2` to `windows`.
+            //
+            // Can be cleaned up, once `array_windows` is stable:
+            // https://doc.rust-lang.org/std/primitive.slice.html#method.array_windows
+            let [a, b] = [window[0], window[1]];
+
+            let half_edge = HalfEdge::build(Surface::xy_plane())
+                .line_segment_from_points([a, b]);
+            (half_edge, Color::default()).sweep(UP)
+        });
+
+        assert!(side_faces.all(|face| solid.find_face(&face).is_some()));
+    }
+
+    #[test]
+    fn sweep_down() {
+        let surface = Surface::xy_plane();
+        let solid = Sketch::build(surface)
+            .polygon_from_points(TRIANGLE)
+            .sweep(DOWN);
+
+        let bottom = Face::build(surface.translate(DOWN))
+            .polygon_from_points(TRIANGLE)
+            .into_face()
+            .reverse();
+        let top = Face::build(surface)
+            .polygon_from_points(TRIANGLE)
+            .into_face();
+
+        assert!(solid.find_face(&bottom).is_some());
+        assert!(solid.find_face(&top).is_some());
+
+        let mut side_faces = TRIANGLE.windows(2).map(|window| {
+            // Can't panic, as we passed `2` to `windows`.
+            //
+            // Can be cleaned up, once `array_windows` is stable:
+            // https://doc.rust-lang.org/std/primitive.slice.html#method.array_windows
+            let [a, b] = [window[0], window[1]];
+
+            let half_edge = HalfEdge::build(Surface::xy_plane())
+                .line_segment_from_points([a, b])
+                .reverse();
+            (half_edge, Color::default()).sweep(DOWN)
+        });
+
+        assert!(side_faces.all(|face| solid.find_face(&face).is_some()));
+    }
+}
