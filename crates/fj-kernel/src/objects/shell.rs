@@ -47,6 +47,11 @@ impl Shell {
     pub fn into_faces(self) -> Faces {
         self.faces
     }
+
+    /// Find the given face in this shell
+    pub fn find_face(&self, face: &Face) -> Option<Face> {
+        self.faces().find(face)
+    }
 }
 
 impl Default for Shell {
