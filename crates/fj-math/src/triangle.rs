@@ -114,6 +114,7 @@ pub struct NotATriangle<const D: usize> {
 }
 
 /// Winding direction of a triangle.
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum Winding {
     /// Counter-clockwise
     Ccw,
