@@ -32,7 +32,7 @@ impl Sweep for Face {
             normal.dot(&path) < Scalar::ZERO
         };
 
-        let bottom_face = create_bottom_face(&self, is_negative_sweep);
+        let bottom_face = create_bottom_face(self.clone(), is_negative_sweep);
         faces.push(bottom_face);
 
         let top_face = create_top_face(self.clone(), path, is_negative_sweep);
@@ -41,7 +41,7 @@ impl Sweep for Face {
         for cycle in self.all_cycles() {
             for &half_edge in cycle.half_edges() {
                 let edge = if is_negative_sweep {
-                    half_edge.reverse_including_curve()
+                    half_edge.reverse()
                 } else {
                     half_edge
                 };
@@ -54,11 +54,11 @@ impl Sweep for Face {
     }
 }
 
-fn create_bottom_face(face: &Face, is_negative_sweep: bool) -> Face {
+fn create_bottom_face(face: Face, is_negative_sweep: bool) -> Face {
     if is_negative_sweep {
-        face.clone()
+        face
     } else {
-        face.clone().reverse()
+        face.reverse()
     }
 }
 

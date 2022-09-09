@@ -18,7 +18,7 @@ pub use self::{
     curve::{Curve, CurveKind, GlobalCurve},
     cycle::Cycle,
     edge::{GlobalEdge, HalfEdge},
-    face::{Face, Faces},
+    face::{Face, Faces, Handedness},
     shell::Shell,
     sketch::Sketch,
     solid::Solid,

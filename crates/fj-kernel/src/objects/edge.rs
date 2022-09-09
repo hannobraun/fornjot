@@ -1,6 +1,6 @@
 use std::fmt;
 
-use crate::{algorithms::reverse::Reverse, builder::HalfEdgeBuilder};
+use crate::builder::HalfEdgeBuilder;
 
 use super::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex};
 
@@ -74,35 +74,6 @@ impl HalfEdge {
             vertices.map(|vertex| *vertex.global_form()),
         );
         Self::new(curve, vertices, global)
-    }
-
-    /// Reverse the half-edge, including the curve
-    ///
-    /// # Implementation Note
-    ///
-    /// It would be much nicer to just reverse the edge normally everywhere, but
-    /// we can't do that, until #695 is addressed:
-    /// <https://github.com/hannobraun/Fornjot/issues/695>
-    pub fn reverse_including_curve(self) -> Self {
-        let vertices = {
-            let [a, b] = self.vertices;
-            [
-                Vertex::new(
-                    -b.position(),
-                    b.curve().reverse(),
-                    *b.surface_form(),
-                    *b.global_form(),
-                ),
-                Vertex::new(
-                    -a.position(),
-                    a.curve().reverse(),
-                    *a.surface_form(),
-                    *a.global_form(),
-                ),
-            ]
-        };
-
-        Self::from_curve_and_vertices(self.curve().reverse(), vertices)
     }
 
     /// Access the curve that defines the half-edge's geometry

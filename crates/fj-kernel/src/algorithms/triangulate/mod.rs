@@ -74,7 +74,8 @@ impl Triangulate for FaceApprox {
                 interior.points().into_iter().map(|point| point.local_form)
             }));
 
-        let mut triangles = delaunay::triangulate(points);
+        let mut triangles =
+            delaunay::triangulate(points, self.coord_handedness);
         triangles.retain(|triangle| {
             face_as_polygon
                 .contains_triangle(triangle.map(|point| point.point_surface))

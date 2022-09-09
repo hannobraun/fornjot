@@ -1,6 +1,7 @@
 use std::collections::{btree_set, BTreeSet};
 
 use fj_interop::mesh::Color;
+use fj_math::Winding;
 
 use crate::builder::FaceBuilder;
 
@@ -129,4 +130,33 @@ impl Face {
     pub fn color(&self) -> Color {
         self.color
     }
+
+    /// Determine handed-ness of the face's front-side coordinate system
+    ///
+    /// A face is defined on a surface, which has a coordinate system. Since
+    /// surfaces aren't considered to have an orientation, their coordinate
+    /// system can be considered to be left-handed or right-handed, depending on
+    /// which side of the surface you're looking at.
+    ///
+    /// Faces *do* have an orientation, meaning they have definite front and
+    /// back sides. The front side is the side, where the face's exterior cycle
+    /// is wound clockwise.
+    pub fn coord_handedness(&self) -> Handedness {
+        match self.exterior().winding() {
+            Winding::Ccw => Handedness::RightHanded,
+            Winding::Cw => Handedness::LeftHanded,
+        }
+    }
+}
+
+/// The handedness of a face's coordinate system
+///
+/// See [`Face::coord_handedness`].
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub enum Handedness {
+    /// The face's coordinate system is left-handed
+    LeftHanded,
+
+    /// The face's coordinate system is right-handed
+    RightHanded,
 }
