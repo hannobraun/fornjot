@@ -92,6 +92,7 @@ mod tests {
     const TRIANGLE: [[f64; 2]; 3] = [[0., 0.], [1., 0.], [0., 1.]];
 
     const UP: [f64; 3] = [0., 0., 1.];
+    const DOWN: [f64; 3] = [0., 0., -1.];
 
     #[test]
     fn sweep_up() {
@@ -135,21 +136,18 @@ mod tests {
         )
     }
 
-    // This test currently fails, even though the code it tests works correctly.
-    // Fixing this would require this whole test suite to be refactored.
-    //
-    // Since other tests have already been disabled before, diminishing the
-    // value of this test suite significantly, it's not a big loss to disable
-    // this rather simple test too, and fix the whole test suite at a later
-    // date.
     #[test]
-    #[ignore]
-    fn top_negative() -> anyhow::Result<()> {
-        test_bottom_top(
-            [0., 0., -1.],
-            [[0., 0., -1.], [1., 0., -1.], [0., -1., -1.]],
-            [[0., 0.], [1., 0.], [0., -1.]],
-        )
+    fn top_negative() {
+        let surface = Surface::xy_plane();
+        let solid = Sketch::build(surface)
+            .polygon_from_points(TRIANGLE)
+            .sweep(DOWN);
+
+        let top = Face::build(surface)
+            .polygon_from_points(TRIANGLE)
+            .into_face();
+
+        assert!(solid.find_face(&top).is_some());
     }
 
     // This test currently fails, even though the code it tests works correctly.
