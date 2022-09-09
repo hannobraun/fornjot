@@ -127,6 +127,11 @@ impl Vector<2> {
     pub fn unit_v() -> Self {
         Vector::from([1., 0.])
     }
+
+    /// Compute the 2D cross product with another vector
+    pub fn cross(&self, other: &Self) -> Scalar {
+        (self.u * other.v) - (self.v * other.u)
+    }
 }
 
 impl Vector<3> {
