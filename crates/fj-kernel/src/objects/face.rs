@@ -129,4 +129,23 @@ impl Face {
     pub fn color(&self) -> Color {
         self.color
     }
+
+    /// Determine handed-ness of the face's front-side coordinate system
+    pub fn coord_handedness(&self) -> Handedness {
+        // For now, a face's coordinate system is always right-handed, as we
+        // adjust the surface coordinate system to reverse a face.
+        Handedness::RightHanded
+    }
+}
+
+/// The handedness of a face's coordinate system
+///
+/// See [`Face::coord_handedness`].
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub enum Handedness {
+    /// The face's coordinate system is left-handed
+    LeftHanded,
+
+    /// The face's coordinate system is right-handed
+    RightHanded,
 }
