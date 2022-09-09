@@ -128,25 +128,21 @@ mod tests {
     }
 
     #[test]
-    fn bottom_negative() -> anyhow::Result<()> {
-        test_bottom_top(
-            [0., 0., -1.],
-            [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]],
-            [[0., 0.], [1., 0.], [0., 1.]],
-        )
-    }
-
-    #[test]
-    fn top_negative() {
+    fn sweep_down() {
         let surface = Surface::xy_plane();
         let solid = Sketch::build(surface)
             .polygon_from_points(TRIANGLE)
             .sweep(DOWN);
 
+        let bottom = Face::build(surface.translate(DOWN))
+            .polygon_from_points(TRIANGLE)
+            .into_face()
+            .reverse();
         let top = Face::build(surface)
             .polygon_from_points(TRIANGLE)
             .into_face();
 
+        assert!(solid.find_face(&bottom).is_some());
         assert!(solid.find_face(&top).is_some());
     }
 
@@ -175,14 +171,6 @@ mod tests {
             expected_surfaces,
             [[0., 0.], [1., 0.], [1., 1.], [0., 1.]],
         )
-    }
-
-    fn test_bottom_top(
-        direction: impl Into<Vector<3>>,
-        expected_surface: [impl Into<Point<3>>; 3],
-        expected_vertices: [impl Into<Point<2>>; 3],
-    ) -> anyhow::Result<()> {
-        test(direction, [expected_surface], expected_vertices)
     }
 
     fn test(
