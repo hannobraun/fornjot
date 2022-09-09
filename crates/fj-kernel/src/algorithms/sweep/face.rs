@@ -41,7 +41,7 @@ impl Sweep for Face {
         for cycle in self.all_cycles() {
             for &half_edge in cycle.half_edges() {
                 let edge = if is_negative_sweep {
-                    half_edge.reverse_including_curve()
+                    half_edge.reverse()
                 } else {
                     half_edge
                 };

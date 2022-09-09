@@ -1,6 +1,7 @@
 use std::collections::{btree_set, BTreeSet};
 
 use fj_interop::mesh::Color;
+use fj_math::Winding;
 
 use crate::builder::FaceBuilder;
 
@@ -132,9 +133,10 @@ impl Face {
 
     /// Determine handed-ness of the face's front-side coordinate system
     pub fn coord_handedness(&self) -> Handedness {
-        // For now, a face's coordinate system is always right-handed, as we
-        // adjust the surface coordinate system to reverse a face.
-        Handedness::RightHanded
+        match self.exterior().winding() {
+            Winding::Ccw => Handedness::RightHanded,
+            Winding::Cw => Handedness::LeftHanded,
+        }
     }
 }
 

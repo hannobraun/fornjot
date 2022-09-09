@@ -8,7 +8,7 @@ impl Reverse for Cycle {
 
         let mut edges = self
             .into_half_edges()
-            .map(|edge| edge.reverse_including_curve())
+            .map(|edge| edge.reverse())
             .collect::<Vec<_>>();
 
         edges.reverse();
