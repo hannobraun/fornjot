@@ -83,14 +83,9 @@ mod tests {
         )
     }
 
-    // This test currently fails, even though the code it tests works correctly,
-    // due to the subtleties of curve reversal. It would be possible to fix the
-    // test, but it's probably not worth it right now, as curves should be
-    // irreversible anyway.
-    //
-    // Once curves have become irreversible (which depends on a change, making
-    // all edge bound by vertices, which in turn depends on the change that made
-    // this test fail), this test can likely be restored with relative ease.
+    // This test currently fails, even though the code it tests works correctly.
+    // At the time this test was disabled, fixing it would have been
+    // impractical. This has changed since then, thanks to some simplifications.
     #[test]
     #[ignore]
     fn side_positive() -> anyhow::Result<()> {
@@ -104,14 +99,9 @@ mod tests {
         )
     }
 
-    // This test currently fails, even though the code it tests works correctly,
-    // due to the subtleties of curve reversal. It would be possible to fix the
-    // test, but it's probably not worth it right now, as curves should be
-    // irreversible anyway.
-    //
-    // Once curves have become irreversible (which depends on a change, making
-    // all edge bound by vertices, which in turn depends on the change that made
-    // this test fail), this test can likely be restored with relative ease.
+    // This test currently fails, even though the code it tests works correctly.
+    // At the time this test was disabled, fixing it would have been
+    // impractical. This has changed since then, thanks to some simplifications.
     #[test]
     #[ignore]
     fn side_negative() -> anyhow::Result<()> {
