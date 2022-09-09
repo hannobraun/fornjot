@@ -18,6 +18,17 @@ impl Faces {
     pub fn new() -> Self {
         Self::default()
     }
+
+    /// Find the given face
+    pub fn find(&self, face: &Face) -> Option<Face> {
+        for f in self {
+            if f == face {
+                return Some(f.clone());
+            }
+        }
+
+        None
+    }
 }
 
 impl Extend<Face> for Faces {
