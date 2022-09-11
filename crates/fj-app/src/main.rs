@@ -55,25 +55,29 @@ fn main() -> anyhow::Result<()> {
     })?;
     path.push(model);
 
-    let model = Model::from_path(path.clone())
-        .with_context(|| format!("Failed to load model: {}", path.display()))?;
     let parameters = args.parameters.unwrap_or_else(Parameters::empty);
-
     let shape_processor = ShapeProcessor {
         tolerance: args.tolerance,
     };
 
     if let Some(path) = args.export {
+        let model = Model::from_path(path.clone()).with_context(|| {
+            format!("Failed to load model: {}", path.display())
+        })?;
+
         let shape = model.load_once(&parameters, &mut status)?;
         let shape = shape_processor.process(&shape)?;
 
         export(&shape.mesh, &path)?;
+    } else {
+        let model = Model::from_path(path.clone()).with_context(|| {
+            format!("Failed to load model: {}", path.display())
+        })?;
 
-        return Ok(());
+        let watcher = model.load_and_watch(parameters)?;
+
+        run(watcher, shape_processor, status)?;
     }
-
-    let watcher = model.load_and_watch(parameters)?;
-    run(watcher, shape_processor, status)?;
 
     Ok(())
 }
