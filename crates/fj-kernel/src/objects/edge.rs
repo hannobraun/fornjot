@@ -9,7 +9,7 @@ use super::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex};
 pub struct HalfEdge {
     curve: Curve,
     vertices: [Vertex; 2],
-    global: GlobalEdge,
+    global_form: GlobalEdge,
 }
 
 impl HalfEdge {
@@ -32,12 +32,12 @@ impl HalfEdge {
     pub fn new(
         curve: Curve,
         vertices: [Vertex; 2],
-        global: GlobalEdge,
+        global_form: GlobalEdge,
     ) -> Self {
-        assert_eq!(curve.global_form(), global.curve());
+        assert_eq!(curve.global_form(), global_form.curve());
         assert_eq!(
             &vertices.map(|vertex| *vertex.global_form()),
-            global.vertices()
+            global_form.vertices()
         );
 
         // Make sure that the edge vertices are not coincident on the curve. If
@@ -56,7 +56,7 @@ impl HalfEdge {
         Self {
             curve,
             vertices,
-            global,
+            global_form,
         }
     }
 
@@ -96,7 +96,7 @@ impl HalfEdge {
 
     /// Access the global form of this half-edge
     pub fn global_form(&self) -> &GlobalEdge {
-        &self.global
+        &self.global_form
     }
 }
 
