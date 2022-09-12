@@ -145,8 +145,24 @@ impl Sweep for GlobalVertex {
 mod tests {
     use crate::{
         algorithms::sweep::Sweep,
-        objects::{GlobalCurve, GlobalEdge, GlobalVertex},
+        objects::{
+            Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
+            Vertex,
+        },
     };
+
+    #[test]
+    fn vertex_surface() {
+        let surface = Surface::xz_plane();
+        let curve = Curve::build(surface).u_axis();
+        let vertex = Vertex::build(curve).from_point([0.]);
+
+        let half_edge = (vertex, surface).sweep([0., 0., 1.]);
+
+        let expected_half_edge = HalfEdge::build(surface)
+            .line_segment_from_points([[0., 0.], [0., 1.]]);
+        assert_eq!(half_edge, expected_half_edge);
+    }
 
     #[test]
     fn global_vertex() {
