@@ -26,6 +26,9 @@ impl HalfEdge {
     ///
     /// # Panics
     ///
+    /// Panics, if the provided `vertices` are not defined on the same curve as
+    /// `curve`.
+    ///
     /// Panics, if the provided [`GlobalEdge`] instance doesn't refer to the
     /// same [`GlobalCurve`] and [`GlobalVertex`] instances that the other
     /// objects that are passed refer to.
