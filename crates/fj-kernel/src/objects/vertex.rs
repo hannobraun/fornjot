@@ -24,6 +24,13 @@ impl Vertex {
         global_form: GlobalVertex,
     ) -> Self {
         let position = position.into();
+
+        assert_eq!(
+            curve.surface(),
+            surface_form.surface(),
+            "Surface form of vertex must be defined on same surface as curve",
+        );
+
         Self {
             position,
             curve,
