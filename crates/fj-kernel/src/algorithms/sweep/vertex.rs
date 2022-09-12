@@ -22,15 +22,14 @@ impl Sweep for (Vertex, Surface) {
         //    `Curve` is defined in a `Surface`, and we're going to need that to
         //    create the `Curve`. Which is why this `Sweep` implementation is
         //    for `(Vertex, Surface)`, and not just for `Vertex`.
-        // 2. Please note that, while the result `Edge` has two vertices, our
+        // 2. Please note that, while the output `Edge` has two vertices, our
         //    input `Vertex` is not one of them! It can't be, unless the `Curve`
-        //    of the resulting `Edge` happens to be the same `Curve` that the
-        //    input `Vertex` is defined on. That would be an edge case that
-        //    probably can't result in anything valid, and we're going to ignore
-        //    it for now.
+        //    of the output `Edge` happens to be the same `Curve` that the input
+        //    `Vertex` is defined on. That would be an edge case that probably
+        //    can't result in anything valid, and we're going to ignore it for
+        //    now.
         // 3. This means, we have to compute everything that defines the
-        //    resulting `Edge`: The `Curve`, the vertices, and the
-        //    `GlobalCurve`.
+        //    output `Edge`: The `Curve`, the vertices, and the `GlobalCurve`.
         //
         // Before we get to that though, let's make sure that whoever called
         // this didn't give us bad input.
@@ -81,7 +80,7 @@ impl Sweep for (Vertex, Surface) {
         ];
 
         // Armed with those coordinates, creating the `Curve` of the output
-        // `Edge` becomes straight-forward.
+        // `Edge` is straight-forward.
         let curve = {
             let line = Line::from_points(points_surface);
 
