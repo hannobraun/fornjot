@@ -20,6 +20,7 @@ anymap = "1.0.0-beta.2"
 map-macro = "0.2.4"
 parking_lot = "0.12.0"
 parry2d-f64 = "0.9.0"
+pretty_assertions = "1.3.0"
 robust-predicates = "0.1.3"
 slotmap = "1.0.6"
 spade = "2.0.0"
@@ -36,4 +37,3 @@ path = "../fj-math"
 
 [dev-dependencies]
 anyhow = "1.0.64"
-pretty_assertions = "1.3.0"
