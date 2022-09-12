@@ -39,6 +39,15 @@ impl HalfEdge {
         vertices: [Vertex; 2],
         global_form: GlobalEdge,
     ) -> Self {
+        // Make sure `curve` and `vertices` match.
+        for vertex in vertices {
+            assert_eq!(
+                &curve,
+                vertex.curve(),
+                "An edge and its vertices must be defined on the same curve"
+            );
+        }
+
         // Make sure `curve` and `vertices` match `global_form`.
         assert_eq!(curve.global_form(), global_form.curve());
         assert_eq!(
