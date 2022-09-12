@@ -165,3 +165,42 @@ impl Sweep for (HalfEdge, Color) {
         Face::new(surface, cycle).with_color(color)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use fj_interop::mesh::Color;
+    use pretty_assertions::assert_eq;
+
+    use crate::{
+        algorithms::{reverse::Reverse, sweep::Sweep},
+        objects::{Cycle, Face, HalfEdge, Surface},
+    };
+
+    #[test]
+    fn sweep() {
+        let half_edge = HalfEdge::build(Surface::xy_plane())
+            .line_segment_from_points([[0., 0.], [1., 0.]]);
+
+        let face = (half_edge, Color::default()).sweep([0., 0., 1.]);
+
+        let expected_face = {
+            let surface = Surface::xz_plane();
+            let builder = HalfEdge::build(surface);
+
+            let bottom = builder.line_segment_from_points([[0., 0.], [1., 0.]]);
+            let top = builder
+                .line_segment_from_points([[0., 1.], [1., 1.]])
+                .reverse();
+            let left = builder
+                .line_segment_from_points([[0., 0.], [0., 1.]])
+                .reverse();
+            let right = builder.line_segment_from_points([[1., 0.], [1., 1.]]);
+
+            let cycle = Cycle::new(surface, [bottom, right, top, left]);
+
+            Face::new(surface, cycle)
+        };
+
+        assert_eq!(face, expected_face);
+    }
+}

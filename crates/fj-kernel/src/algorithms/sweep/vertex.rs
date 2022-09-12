@@ -22,15 +22,14 @@ impl Sweep for (Vertex, Surface) {
         //    `Curve` is defined in a `Surface`, and we're going to need that to
         //    create the `Curve`. Which is why this `Sweep` implementation is
         //    for `(Vertex, Surface)`, and not just for `Vertex`.
-        // 2. Please note that, while the result `Edge` has two vertices, our
+        // 2. Please note that, while the output `Edge` has two vertices, our
         //    input `Vertex` is not one of them! It can't be, unless the `Curve`
-        //    of the resulting `Edge` happens to be the same `Curve` that the
-        //    input `Vertex` is defined on. That would be an edge case that
-        //    probably can't result in anything valid, and we're going to ignore
-        //    it for now.
+        //    of the output `Edge` happens to be the same `Curve` that the input
+        //    `Vertex` is defined on. That would be an edge case that probably
+        //    can't result in anything valid, and we're going to ignore it for
+        //    now.
         // 3. This means, we have to compute everything that defines the
-        //    resulting `Edge`: The `Curve`, the vertices, and the
-        //    `GlobalCurve`.
+        //    output `Edge`: The `Curve`, the vertices, and the `GlobalCurve`.
         //
         // Before we get to that though, let's make sure that whoever called
         // this didn't give us bad input.
@@ -81,10 +80,9 @@ impl Sweep for (Vertex, Surface) {
         ];
 
         // Armed with those coordinates, creating the `Curve` of the output
-        // `Edge` becomes straight-forward.
+        // `Edge` is straight-forward.
         let curve = {
             let line = Line::from_points(points_surface);
-
             Curve::new(surface, CurveKind::Line(line), *edge_global.curve())
         };
 
@@ -140,5 +138,41 @@ impl Sweep for GlobalVertex {
             GlobalCurve::build().line_from_points([a.position(), b.position()]);
 
         GlobalEdge::new(curve, [a, b])
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{
+        algorithms::sweep::Sweep,
+        objects::{
+            Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
+            Vertex,
+        },
+    };
+
+    #[test]
+    fn vertex_surface() {
+        let surface = Surface::xz_plane();
+        let curve = Curve::build(surface).u_axis();
+        let vertex = Vertex::build(curve).from_point([0.]);
+
+        let half_edge = (vertex, surface).sweep([0., 0., 1.]);
+
+        let expected_half_edge = HalfEdge::build(surface)
+            .line_segment_from_points([[0., 0.], [0., 1.]]);
+        assert_eq!(half_edge, expected_half_edge);
+    }
+
+    #[test]
+    fn global_vertex() {
+        let edge =
+            GlobalVertex::from_position([0., 0., 0.]).sweep([0., 0., 1.]);
+
+        let expected_edge = GlobalEdge::new(
+            GlobalCurve::build().z_axis(),
+            [[0., 0., 0.], [0., 0., 1.]].map(GlobalVertex::from_position),
+        );
+        assert_eq!(edge, expected_edge);
     }
 }
