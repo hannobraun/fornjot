@@ -18,7 +18,7 @@ impl HalfEdgeBuilder {
         Self { surface }
     }
 
-    /// Create a circle from the given radius
+    /// Build a circle from the given radius
     pub fn circle_from_radius(&self, radius: Scalar) -> HalfEdge {
         let curve = {
             let local = CurveKind::Circle(Circle::new(
@@ -68,7 +68,7 @@ impl HalfEdgeBuilder {
         HalfEdge::from_curve_and_vertices(curve, vertices)
     }
 
-    /// Create a line segment from two points
+    /// Build a line segment from two points
     pub fn line_segment_from_points(
         &self,
         points: [impl Into<Point<2>>; 2],
