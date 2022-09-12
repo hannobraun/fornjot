@@ -110,6 +110,11 @@ impl fmt::Display for HalfEdge {
 }
 
 /// An edge, defined in global (3D) coordinates
+///
+/// In contract to [`HalfEdge`], `GlobalEdge` is undirected, meaning it has no
+/// defined direction, and its vertices have no defined order. This means it can
+/// be used to determine whether two [`HalfEdge`]s map to the same `GlobalEdge`,
+/// regardless of their direction.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalEdge {
     curve: HandleWrapper<GlobalCurve>,
@@ -118,6 +123,10 @@ pub struct GlobalEdge {
 
 impl GlobalEdge {
     /// Create a new instance
+    ///
+    /// The order of `vertices` is irrelevant. Two `GlobalEdge`s with the same
+    /// `curve` and `vertices` will end up being equal, regardless of the order
+    /// of `vertices` here.
     pub fn new(
         curve: impl Into<HandleWrapper<GlobalCurve>>,
         vertices: [GlobalVertex; 2],
@@ -138,9 +147,10 @@ impl GlobalEdge {
 
     /// Access the vertices that bound the edge on the curve
     ///
-    /// An edge has either two bounding vertices or none. The latter is possible
-    /// if the edge's curve is continuous (i.e. connects to itself), and defines
-    /// the whole edge.
+    /// As the name indicates, the order of the returned vertices is normalized
+    /// and might not match the order of the vertices that were passed to
+    /// [`GlobalEdge::new`]. You must not rely on the vertices being in any
+    /// specific order.
     pub fn vertices_in_normalized_order(&self) -> &[GlobalVertex; 2] {
         &self.vertices
     }
