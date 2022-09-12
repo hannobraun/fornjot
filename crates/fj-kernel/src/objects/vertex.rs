@@ -17,6 +17,9 @@ pub struct Vertex {
 
 impl Vertex {
     /// Construct an instance of `Vertex`
+    ///
+    /// Panics, if `curve` and `surface_form` are not defined on the same
+    /// surface.
     pub fn new(
         position: impl Into<Point<1>>,
         curve: Curve,
