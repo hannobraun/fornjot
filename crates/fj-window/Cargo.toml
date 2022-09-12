@@ -1,6 +1,6 @@
 [package]
 name = "fj-window"
-version = "0.14.0"
+version = "0.15.0"
 edition = "2021"
 
 description = """\
@@ -22,17 +22,17 @@ tracing = "0.1.35"
 winit = "0.27.2"
 
 [dependencies.fj-host]
-version = "0.14.0"
+version = "0.15.0"
 path = "../fj-host"
 
 [dependencies.fj-operations]
-version = "0.14.0"
+version = "0.15.0"
 path = "../fj-operations"
 
 [dependencies.fj-viewer]
-version = "0.14.0"
+version = "0.15.0"
 path = "../fj-viewer"
 
 [dependencies.fj-interop]
-version = "0.14.0"
+version = "0.15.0"
 path = "../fj-interop"
