@@ -1,6 +1,8 @@
 use fj_math::Point;
 use pretty_assertions::assert_eq;
 
+use crate::builder::VertexBuilder;
+
 use super::{Curve, Surface};
 
 /// A vertex
@@ -17,6 +19,11 @@ pub struct Vertex {
 }
 
 impl Vertex {
+    /// Build a vertex using [`VertexBuilder`]
+    pub fn build(curve: Curve) -> VertexBuilder {
+        VertexBuilder::new(curve)
+    }
+
     /// Construct an instance of `Vertex`
     ///
     /// Panics, if `curve` and `surface_form` are not defined on the same
