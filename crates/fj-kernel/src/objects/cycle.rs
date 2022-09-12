@@ -40,11 +40,6 @@ impl Cycle {
         }
 
         if half_edges.len() != 1 {
-            // If the length is one, we might have a cycle made up of just one
-            // circle. If that isn't the case, we are dealing with line segments
-            // and can be sure that the following `get_or_panic` calls won't
-            // panic.
-
             // Verify that all edges connect.
             for half_edges in half_edges.windows(2) {
                 // Can't panic, as we passed `2` to `windows`.
