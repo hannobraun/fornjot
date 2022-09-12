@@ -20,7 +20,7 @@ The release announcement lives on the website, and needs to be created in the [w
 First, create the initial draft of the release announcement (replace version with version of the new release):
 
 ```
-automator create-release-announcement 0.14.0
+automator create-release-announcement
 ```
 
 This will create an announcement that will initially not be published to the blog or RSS feed, but it will be available at its final URL.
@@ -33,9 +33,8 @@ Now, edit this file to finish the release announcement:
    - Thank all contributors
      - new contributors: "special thanks go to first-time contributor `@name`!"
      - other contributors: "thank you, `@name`!"
-   - Make notes for introduction
 2. Write introduction
-   - Ideally, you already have a list of notes from adding the pull requests.
+   - Summarize the week's development.
    - Highlight contributions.
 3. Update list of sponsors
    - https://github.com/sponsors/hannobraun/dashboard/activity
@@ -66,6 +65,7 @@ Potential new issues of the week:
 
 Already mentioned issues of the week (remove, once closed):
 
+- 2022-09-12: https://github.com/hannobraun/Fornjot/issues/1015
 - 2022-09-05: https://github.com/hannobraun/Fornjot/issues/920
 - 2022-08-29: https://github.com/hannobraun/Fornjot/issues/980
 - 2022-08-22: https://github.com/hannobraun/Fornjot/issues/938
