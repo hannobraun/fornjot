@@ -1,4 +1,5 @@
 use fj_math::{Scalar, Winding};
+use pretty_assertions::assert_eq;
 
 use crate::builder::CycleBuilder;
 

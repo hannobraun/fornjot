@@ -1,4 +1,5 @@
 use fj_math::Point;
+use pretty_assertions::assert_eq;
 
 use super::{Curve, Surface};
 
