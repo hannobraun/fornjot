@@ -1,4 +1,5 @@
 use fj_math::Point;
+use pretty_assertions::assert_eq;
 
 use super::{Curve, Surface};
 
@@ -17,6 +18,9 @@ pub struct Vertex {
 
 impl Vertex {
     /// Construct an instance of `Vertex`
+    ///
+    /// Panics, if `curve` and `surface_form` are not defined on the same
+    /// surface.
     pub fn new(
         position: impl Into<Point<1>>,
         curve: Curve,
@@ -24,6 +28,13 @@ impl Vertex {
         global_form: GlobalVertex,
     ) -> Self {
         let position = position.into();
+
+        assert_eq!(
+            curve.surface(),
+            surface_form.surface(),
+            "Surface form of vertex must be defined on same surface as curve",
+        );
+
         Self {
             position,
             curve,

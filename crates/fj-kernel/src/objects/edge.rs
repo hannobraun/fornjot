@@ -9,7 +9,7 @@ use super::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex};
 pub struct HalfEdge {
     curve: Curve,
     vertices: [Vertex; 2],
-    global: GlobalEdge,
+    global_form: GlobalEdge,
 }
 
 impl HalfEdge {
@@ -26,26 +26,39 @@ impl HalfEdge {
     ///
     /// # Panics
     ///
+    /// Panics, if the provided `vertices` are not defined on the same curve as
+    /// `curve`.
+    ///
     /// Panics, if the provided [`GlobalEdge`] instance doesn't refer to the
     /// same [`GlobalCurve`] and [`GlobalVertex`] instances that the other
     /// objects that are passed refer to.
+    ///
+    /// Panics, if the provided vertices are coincident on the curve. If they
+    /// were, the edge would have no length, and thus not be valid. (It is
+    /// perfectly fine for global forms of the the vertices to be coincident.
+    /// That would just mean, that ends of the edge connect to each other.)
     pub fn new(
         curve: Curve,
         vertices: [Vertex; 2],
-        global: GlobalEdge,
+        global_form: GlobalEdge,
     ) -> Self {
-        assert_eq!(curve.global_form(), global.curve());
+        // Make sure `curve` and `vertices` match.
+        for vertex in vertices {
+            assert_eq!(
+                &curve,
+                vertex.curve(),
+                "An edge and its vertices must be defined on the same curve"
+            );
+        }
+
+        // Make sure `curve` and `vertices` match `global_form`.
+        assert_eq!(curve.global_form(), global_form.curve());
         assert_eq!(
             &vertices.map(|vertex| *vertex.global_form()),
-            global.vertices()
+            global_form.vertices()
         );
 
-        // Make sure that the edge vertices are not coincident on the curve. If
-        // they were, the edge would have no length, and not be valid.
-        //
-        // It is perfectly fine for global forms of the the vertices to be
-        // coincident (in 3D space). That would just mean, that ends of the edge
-        // connect to each other.
+        // Make sure that the edge vertices are not coincident on the curve.
         let [a, b] = vertices;
         assert_ne!(
             a.position(),
@@ -56,7 +69,7 @@ impl HalfEdge {
         Self {
             curve,
             vertices,
-            global,
+            global_form,
         }
     }
 
@@ -96,7 +109,7 @@ impl HalfEdge {
 
     /// Access the global form of this half-edge
     pub fn global_form(&self) -> &GlobalEdge {
-        &self.global
+        &self.global_form
     }
 }
 
