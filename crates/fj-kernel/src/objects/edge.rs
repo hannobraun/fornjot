@@ -46,12 +46,7 @@ impl HalfEdge {
             global_form.vertices()
         );
 
-        // Make sure that the edge vertices are not coincident on the curve. If
-        // they were, the edge would have no length, and not be valid.
-        //
-        // It is perfectly fine for global forms of the the vertices to be
-        // coincident (in 3D space). That would just mean, that ends of the edge
-        // connect to each other.
+        // Make sure that the edge vertices are not coincident on the curve.
         let [a, b] = vertices;
         assert_ne!(
             a.position(),
