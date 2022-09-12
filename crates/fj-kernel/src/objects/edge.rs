@@ -29,6 +29,11 @@ impl HalfEdge {
     /// Panics, if the provided [`GlobalEdge`] instance doesn't refer to the
     /// same [`GlobalCurve`] and [`GlobalVertex`] instances that the other
     /// objects that are passed refer to.
+    ///
+    /// Panics, if the provided vertices are coincident on the curve. If they
+    /// were, the edge would have no length, and thus not be valid. (It is
+    /// perfectly fine for global forms of the the vertices to be coincident.
+    /// That would just mean, that ends of the edge connect to each other.)
     pub fn new(
         curve: Curve,
         vertices: [Vertex; 2],
