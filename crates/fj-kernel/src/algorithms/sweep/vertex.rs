@@ -140,3 +140,23 @@ impl Sweep for GlobalVertex {
         GlobalEdge::new(curve, [a, b])
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::{
+        algorithms::sweep::Sweep,
+        objects::{GlobalCurve, GlobalEdge, GlobalVertex},
+    };
+
+    #[test]
+    fn global_vertex() {
+        let edge =
+            GlobalVertex::from_position([0., 0., 0.]).sweep([0., 0., 1.]);
+
+        let expected_edge = GlobalEdge::new(
+            GlobalCurve::build().z_axis(),
+            [[0., 0., 0.], [0., 0., 1.]].map(GlobalVertex::from_position),
+        );
+        assert_eq!(edge, expected_edge);
+    }
+}
