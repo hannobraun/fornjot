@@ -83,7 +83,6 @@ impl Sweep for (Vertex, Surface) {
         // `Edge` is straight-forward.
         let curve = {
             let line = Line::from_points(points_surface);
-
             Curve::new(surface, CurveKind::Line(line), *edge_global.curve())
         };
 
