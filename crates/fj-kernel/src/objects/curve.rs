@@ -11,7 +11,7 @@ use super::Surface;
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Curve {
     surface: Surface,
-    kind: CurveKind<2>,
+    path: CurveKind<2>,
     global: GlobalCurve,
 }
 
@@ -24,12 +24,12 @@ impl Curve {
     /// Construct a new instance of `Curve`
     pub fn new(
         surface: Surface,
-        kind: CurveKind<2>,
+        path: CurveKind<2>,
         global: GlobalCurve,
     ) -> Self {
         Self {
             surface,
-            kind,
+            path,
             global,
         }
     }
@@ -41,7 +41,7 @@ impl Curve {
 
     /// Access the kind of this curve
     pub fn path(&self) -> &CurveKind<2> {
-        &self.kind
+        &self.path
     }
 
     /// Access the global form of this curve
