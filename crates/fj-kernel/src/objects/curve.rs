@@ -39,7 +39,7 @@ impl Curve {
         &self.surface
     }
 
-    /// Access the kind of this curve
+    /// Access the path that defines this curve
     pub fn path(&self) -> CurveKind<2> {
         self.path
     }
