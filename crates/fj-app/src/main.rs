@@ -51,7 +51,7 @@ fn main() -> anyhow::Result<()> {
 
     let mut path = config.default_path.unwrap_or_else(|| PathBuf::from(""));
     let abs_path_for_models =
-        path.canonicalize().with_context(|| format!("no path {}"))?;
+        path.canonicalize().with_context(|| format!("no path"))?;
 
     let model = args.model.or(config.default_model).ok_or_else(|| {
         anyhow!(
