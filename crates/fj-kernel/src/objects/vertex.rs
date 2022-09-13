@@ -1,39 +1,52 @@
 use fj_math::Point;
+use pretty_assertions::assert_eq;
 
-use super::Curve;
+use crate::builder::VertexBuilder;
+
+use super::{Curve, Surface};
 
 /// A vertex
 ///
 /// `Vertex` is defined in terms of a 1-dimensional position on a curve. If you
-/// need the 3D position of a vertex, you can use [`Vertex::global`], to get
-/// access of the global form of a vertex ([`GlobalVertex`]).
-///
-/// # Implementation Note
-///
-/// Since `Vertex` is defined in terms of the curve it lies on, a reference to
-/// that curve should be available here. As of this writing, this reference
-/// still lives in [`Edge`].
-///
-/// [`Edge`]: super::Edge
+/// need the 3D position of a vertex, you can use [`Vertex::global_form`], to
+/// get access of the global form of a vertex ([`GlobalVertex`]).
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Vertex {
     position: Point<1>,
     curve: Curve,
-    global: GlobalVertex,
+    surface_form: SurfaceVertex,
+    global_form: GlobalVertex,
 }
 
 impl Vertex {
+    /// Build a vertex using [`VertexBuilder`]
+    pub fn build(curve: Curve) -> VertexBuilder {
+        VertexBuilder::new(curve)
+    }
+
     /// Construct an instance of `Vertex`
+    ///
+    /// Panics, if `curve` and `surface_form` are not defined on the same
+    /// surface.
     pub fn new(
         position: impl Into<Point<1>>,
         curve: Curve,
-        global: GlobalVertex,
+        surface_form: SurfaceVertex,
+        global_form: GlobalVertex,
     ) -> Self {
         let position = position.into();
+
+        assert_eq!(
+            curve.surface(),
+            surface_form.surface(),
+            "Surface form of vertex must be defined on same surface as curve",
+        );
+
         Self {
             position,
             curve,
-            global,
+            surface_form,
+            global_form,
         }
     }
 
@@ -47,9 +60,53 @@ impl Vertex {
         &self.curve
     }
 
+    /// Access the surface form of this vertex
+    pub fn surface_form(&self) -> &SurfaceVertex {
+        &self.surface_form
+    }
+
     /// Access the global form of this vertex
-    pub fn global(&self) -> &GlobalVertex {
-        &self.global
+    pub fn global_form(&self) -> &GlobalVertex {
+        &self.global_form
+    }
+}
+
+/// A vertex, defined in surface (2D) coordinates
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct SurfaceVertex {
+    position: Point<2>,
+    surface: Surface,
+    global_form: GlobalVertex,
+}
+
+impl SurfaceVertex {
+    /// Construct a new instance of `SurfaceVertex`
+    pub fn new(
+        position: impl Into<Point<2>>,
+        surface: Surface,
+        global_form: GlobalVertex,
+    ) -> Self {
+        let position = position.into();
+        Self {
+            position,
+            surface,
+            global_form,
+        }
+    }
+
+    /// Access the position of the vertex on the surface
+    pub fn position(&self) -> Point<2> {
+        self.position
+    }
+
+    /// Access the surface that the vertex is defined on
+    pub fn surface(&self) -> &Surface {
+        &self.surface
+    }
+
+    /// Access the global form of this vertex
+    pub fn global_form(&self) -> &GlobalVertex {
+        &self.global_form
     }
 }
 

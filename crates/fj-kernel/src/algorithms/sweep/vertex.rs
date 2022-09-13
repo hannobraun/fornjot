@@ -1,25 +1,16 @@
-use fj_interop::mesh::Color;
-use fj_math::{Line, Point, Scalar};
+use fj_math::{Line, Point, Scalar, Vector};
 
-use crate::{
-    algorithms::approx::Tolerance,
-    objects::{
-        Curve, CurveKind, Edge, GlobalCurve, GlobalEdge, GlobalVertex, Surface,
-        SweptCurve, Vertex, VerticesOfEdge,
-    },
+use crate::objects::{
+    Curve, CurveKind, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
+    SurfaceVertex, SweptCurve, Vertex,
 };
 
-use super::{Path, Sweep};
+use super::Sweep;
 
 impl Sweep for (Vertex, Surface) {
-    type Swept = Edge;
+    type Swept = HalfEdge;
 
-    fn sweep(
-        self,
-        path: impl Into<Path>,
-        tolerance: impl Into<Tolerance>,
-        color: Color,
-    ) -> Self::Swept {
+    fn sweep(self, path: impl Into<Vector<3>>) -> Self::Swept {
         let (vertex, surface) = self;
         let path = path.into();
 
@@ -31,15 +22,14 @@ impl Sweep for (Vertex, Surface) {
         //    `Curve` is defined in a `Surface`, and we're going to need that to
         //    create the `Curve`. Which is why this `Sweep` implementation is
         //    for `(Vertex, Surface)`, and not just for `Vertex`.
-        // 2. Please note that, while the result `Edge` has two vertices, our
+        // 2. Please note that, while the output `Edge` has two vertices, our
         //    input `Vertex` is not one of them! It can't be, unless the `Curve`
-        //    of the resulting `Edge` happens to be the same `Curve` that the
-        //    input `Vertex` is defined on. That would be an edge case that
-        //    probably can't result in anything valid, and we're going to ignore
-        //    it for now.
+        //    of the output `Edge` happens to be the same `Curve` that the input
+        //    `Vertex` is defined on. That would be an edge case that probably
+        //    can't result in anything valid, and we're going to ignore it for
+        //    now.
         // 3. This means, we have to compute everything that defines the
-        //    resulting `Edge`: The `Curve`, the vertices, and the
-        //    `GlobalCurve`.
+        //    output `Edge`: The `Curve`, the vertices, and the `GlobalCurve`.
         //
         // Before we get to that though, let's make sure that whoever called
         // this didn't give us bad input.
@@ -61,14 +51,14 @@ impl Sweep for (Vertex, Surface) {
                 path: surface_path,
             }) = surface;
 
-            assert_eq!(vertex.curve().global().kind(), &surface_curve);
-            assert_eq!(path.inner(), surface_path);
+            assert_eq!(vertex.curve().global_form().kind(), &surface_curve);
+            assert_eq!(path, surface_path);
         }
 
         // With that out of the way, let's start by creating the `GlobalEdge`,
         // as that is the most straight-forward part of this operations, and
         // we're going to need it soon anyway.
-        let edge_global = vertex.global().sweep(path, tolerance, color);
+        let edge_global = vertex.global_form().sweep(path);
 
         // Next, let's compute the surface coordinates of the two vertices of
         // the output `Edge`, as we're going to need these for the rest of this
@@ -84,53 +74,105 @@ impl Sweep for (Vertex, Surface) {
         // thereby defined its coordinate system. That makes the v-coordinates
         // straight-forward: The start of the edge is at zero, the end is at
         // one.
-        let u = vertex.position().t;
-        let v_a = Scalar::ZERO;
-        let v_b = Scalar::ONE;
+        let points_surface = [
+            Point::from([vertex.position().t, Scalar::ZERO]),
+            Point::from([vertex.position().t, Scalar::ONE]),
+        ];
 
         // Armed with those coordinates, creating the `Curve` of the output
-        // `Edge` becomes straight-forward.
+        // `Edge` is straight-forward.
         let curve = {
-            let a = Point::from([u, v_a]);
-            let b = Point::from([u, v_b]);
-
-            let line = Line::from_points([a, b]);
-
+            let line = Line::from_points(points_surface);
             Curve::new(surface, CurveKind::Line(line), *edge_global.curve())
         };
 
         // And now the vertices. Again, nothing wild here.
         let vertices = {
-            let [&a, &b] = edge_global.vertices().get_or_panic();
+            let vertices_global = edge_global.vertices();
 
-            let a = Vertex::new([v_a], curve, a);
-            let b = Vertex::new([v_b], curve, b);
+            // Can be cleaned up, once `zip` is stable:
+            // https://doc.rust-lang.org/std/primitive.array.html#method.zip
+            let [a_surface, b_surface] = points_surface;
+            let [a_global, b_global] = vertices_global;
+            let vertices_surface =
+                [(a_surface, a_global), (b_surface, b_global)].map(
+                    |(point_surface, &vertex_global)| {
+                        SurfaceVertex::new(
+                            point_surface,
+                            surface,
+                            vertex_global,
+                        )
+                    },
+                );
 
-            VerticesOfEdge::from_vertices([a, b])
+            // Can be cleaned up, once `zip` is stable:
+            // https://doc.rust-lang.org/std/primitive.array.html#method.zip
+            let [a_surface, b_surface] = vertices_surface;
+            let [a_global, b_global] = vertices_global;
+            let vertices = [(a_surface, a_global), (b_surface, b_global)];
+
+            vertices.map(|(vertex_surface, &vertex_global)| {
+                Vertex::new(
+                    [vertex_surface.position().v],
+                    curve,
+                    vertex_surface,
+                    vertex_global,
+                )
+            })
         };
 
         // And finally, creating the output `Edge` is just a matter of
         // assembling the pieces we've already created.
-        Edge::new(curve, vertices, edge_global)
+        HalfEdge::new(curve, vertices, edge_global)
     }
 }
 
 impl Sweep for GlobalVertex {
     type Swept = GlobalEdge;
 
-    fn sweep(
-        self,
-        path: impl Into<Path>,
-        _: impl Into<Tolerance>,
-        _: Color,
-    ) -> Self::Swept {
+    fn sweep(self, path: impl Into<Vector<3>>) -> Self::Swept {
         let a = self;
-        let b =
-            GlobalVertex::from_position(self.position() + path.into().inner());
+        let b = GlobalVertex::from_position(self.position() + path.into());
 
         let curve =
             GlobalCurve::build().line_from_points([a.position(), b.position()]);
 
-        GlobalEdge::new(curve, VerticesOfEdge::from_vertices([a, b]))
+        GlobalEdge::new(curve, [a, b])
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{
+        algorithms::sweep::Sweep,
+        objects::{
+            Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
+            Vertex,
+        },
+    };
+
+    #[test]
+    fn vertex_surface() {
+        let surface = Surface::xz_plane();
+        let curve = Curve::build(surface).u_axis();
+        let vertex = Vertex::build(curve).from_point([0.]);
+
+        let half_edge = (vertex, surface).sweep([0., 0., 1.]);
+
+        let expected_half_edge = HalfEdge::build(surface)
+            .line_segment_from_points([[0., 0.], [0., 1.]]);
+        assert_eq!(half_edge, expected_half_edge);
+    }
+
+    #[test]
+    fn global_vertex() {
+        let edge =
+            GlobalVertex::from_position([0., 0., 0.]).sweep([0., 0., 1.]);
+
+        let expected_edge = GlobalEdge::new(
+            GlobalCurve::build().z_axis(),
+            [[0., 0., 0.], [0., 0., 1.]].map(GlobalVertex::from_position),
+        );
+        assert_eq!(edge, expected_edge);
     }
 }

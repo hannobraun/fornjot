@@ -10,6 +10,4 @@ impl Args {
 }
 
 #[derive(clap::Parser)]
-pub struct CreateReleaseAnnouncement {
-    pub version: String,
-}
+pub struct CreateReleaseAnnouncement {}

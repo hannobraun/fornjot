@@ -17,11 +17,11 @@ mod vertex;
 pub use self::{
     curve::{Curve, CurveKind, GlobalCurve},
     cycle::Cycle,
-    edge::{Edge, GlobalEdge, VerticesOfEdge},
-    face::Face,
+    edge::{GlobalEdge, HalfEdge},
+    face::{Face, Faces, Handedness},
     shell::Shell,
     sketch::Sketch,
     solid::Solid,
     surface::{Surface, SweptCurve},
-    vertex::{GlobalVertex, Vertex},
+    vertex::{GlobalVertex, SurfaceVertex, Vertex},
 };

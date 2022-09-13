@@ -1,26 +1,24 @@
 use std::collections::BTreeMap;
 
 use anyhow::anyhow;
+use autolib::find_version_in_str;
 use octocrab::{
     models::pulls::PullRequest as OctoPullRequest,
     params::{pulls::Sort, Direction, State},
 };
 use url::Url;
 
-pub struct PullRequest {
-    pub number: u64,
-    pub title: String,
-    pub url: Url,
-    pub author: Author,
+pub struct PullRequestsSinceLastRelease {
+    pub pull_requests: BTreeMap<u64, PullRequest>,
+    pub version_of_last_release: semver::Version,
 }
 
-impl PullRequest {
-    pub async fn fetch_since_last_release(
-    ) -> anyhow::Result<BTreeMap<u64, Self>> {
+impl PullRequestsSinceLastRelease {
+    pub async fn fetch() -> anyhow::Result<Self> {
         let mut pull_requests = BTreeMap::new();
         let mut page = 1u32;
 
-        'outer: loop {
+        let version_of_last_release = 'outer: loop {
             const MAX_RESULTS_PER_PAGE: u8 = 100;
 
             println!("Fetching page {}...", page);
@@ -46,7 +44,21 @@ impl PullRequest {
                             // PR. Unless it has been updated since being merged
                             // (which we prevent, by locking release PRs as part
                             // of the release procedure), we can stop here.
-                            break 'outer;
+
+                            let title =
+                                pull_request.title.ok_or_else(|| {
+                                    anyhow!("Release PR is missing title")
+                                })?;
+                            let version = find_version_in_str(&title)?;
+
+                            let version = version.ok_or_else(|| {
+                                anyhow!(
+                                    "Pull request title contains no version:\
+                                    {title}"
+                                )
+                            })?;
+
+                            break 'outer version;
                         }
                     }
                 }
@@ -62,7 +74,7 @@ impl PullRequest {
                     .ok_or_else(|| anyhow!("Pull request is missing URL"))?;
                 let author = Author::from_pull_request(&pull_request)?;
 
-                let pull_request = Self {
+                let pull_request = PullRequest {
                     number,
                     title,
                     url,
@@ -75,12 +87,22 @@ impl PullRequest {
             if pull_request_page.next.is_some() {
                 page += 1;
             } else {
-                break;
+                return Err(anyhow!("Could not find previous release PR"));
             }
-        }
+        };
 
-        Ok(pull_requests)
+        Ok(Self {
+            pull_requests,
+            version_of_last_release,
+        })
     }
+}
+
+pub struct PullRequest {
+    pub number: u64,
+    pub title: String,
+    pub url: Url,
+    pub author: Author,
 }
 
 pub struct Author {

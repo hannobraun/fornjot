@@ -26,11 +26,10 @@ mod transform;
 
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
-    algorithms::{
-        approx::Tolerance,
-        validate::{Validate, Validated, ValidationConfig, ValidationError},
+    algorithms::validate::{
+        Validate, Validated, ValidationConfig, ValidationError,
     },
-    objects::{Face, Sketch},
+    objects::{Faces, Sketch},
 };
 use fj_math::Aabb;
 
@@ -43,7 +42,6 @@ pub trait Shape {
     fn compute_brep(
         &self,
         config: &ValidationConfig,
-        tolerance: Tolerance,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError>;
 
@@ -55,34 +53,32 @@ pub trait Shape {
 }
 
 impl Shape for fj::Shape {
-    type Brep = Vec<Face>;
+    type Brep = Faces;
 
     fn compute_brep(
         &self,
         config: &ValidationConfig,
-        tolerance: Tolerance,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
         match self {
             Self::Shape2d(shape) => shape
-                .compute_brep(config, tolerance, debug_info)?
+                .compute_brep(config, debug_info)?
                 .into_inner()
                 .into_faces()
-                .collect::<Vec<_>>()
                 .validate_with_config(config),
-            Self::Group(shape) => {
-                shape.compute_brep(config, tolerance, debug_info)
-            }
+            Self::Group(shape) => shape.compute_brep(config, debug_info),
             Self::Sweep(shape) => shape
-                .compute_brep(config, tolerance, debug_info)?
+                .compute_brep(config, debug_info)?
                 .into_inner()
                 .into_shells()
-                .flat_map(|shell| shell.into_faces())
-                .collect::<Vec<_>>()
+                .map(|shell| shell.into_faces())
+                .reduce(|mut a, b| {
+                    a.extend(b);
+                    a
+                })
+                .unwrap_or_default()
                 .validate_with_config(config),
-            Self::Transform(shape) => {
-                shape.compute_brep(config, tolerance, debug_info)
-            }
+            Self::Transform(shape) => shape.compute_brep(config, debug_info),
         }
     }
 
@@ -102,16 +98,11 @@ impl Shape for fj::Shape2d {
     fn compute_brep(
         &self,
         config: &ValidationConfig,
-        tolerance: Tolerance,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
         match self {
-            Self::Difference(shape) => {
-                shape.compute_brep(config, tolerance, debug_info)
-            }
-            Self::Sketch(shape) => {
-                shape.compute_brep(config, tolerance, debug_info)
-            }
+            Self::Difference(shape) => shape.compute_brep(config, debug_info),
+            Self::Sketch(shape) => shape.compute_brep(config, debug_info),
         }
     }
 
