@@ -15,6 +15,7 @@ pub async fn create_release_announcement() -> anyhow::Result<()> {
 
     let year = now.year();
     let week = now.iso_week().week();
+    let date = format!("{year}-{:02}-{:02}", now.month(), now.day());
 
     let pull_requests_since_last_release =
         PullRequestsSinceLastRelease::fetch().await?;
@@ -30,8 +31,14 @@ pub async fn create_release_announcement() -> anyhow::Result<()> {
     version.minor += 1;
 
     let mut file = create_file(year, week).await?;
-    generate_announcement(week, version.to_string(), pull_requests, &mut file)
-        .await?;
+    generate_announcement(
+        week,
+        date,
+        version.to_string(),
+        pull_requests,
+        &mut file,
+    )
+    .await?;
 
     Ok(())
 }
@@ -53,6 +60,7 @@ async fn create_file(year: i32, week: u32) -> anyhow::Result<File> {
 
 async fn generate_announcement(
     week: u32,
+    date: String,
     version: String,
     pull_requests: impl IntoIterator<Item = PullRequest>,
     file: &mut File,
@@ -107,6 +115,8 @@ async fn generate_announcement(
         "\
 +++
 title = \"Weekly Release - 2022-W{week}\"
+# TASK: Uncomment this date, once the announcement is ready to be published.
+# date = {date}
 
 [extra]
 version = \"{version}\"
