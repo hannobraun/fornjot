@@ -5,6 +5,7 @@ use autolib::find_version_in_str;
 use octocrab::{
     models::pulls::PullRequest as OctoPullRequest,
     params::{pulls::Sort, Direction, State},
+    Octocrab,
 };
 use url::Url;
 
@@ -14,7 +15,7 @@ pub struct PullRequestsSinceLastRelease {
 }
 
 impl PullRequestsSinceLastRelease {
-    pub async fn fetch() -> anyhow::Result<Self> {
+    pub async fn fetch(octocrab: &Octocrab) -> anyhow::Result<Self> {
         let mut pull_requests = BTreeMap::new();
         let mut page = 1u32;
 
@@ -22,7 +23,7 @@ impl PullRequestsSinceLastRelease {
             const MAX_RESULTS_PER_PAGE: u8 = 100;
 
             println!("Fetching page {}...", page);
-            let pull_request_page = octocrab::instance()
+            let pull_request_page = octocrab
                 .pulls("hannobraun", "Fornjot")
                 .list()
                 .state(State::Closed)

@@ -3,6 +3,7 @@ use std::{collections::HashSet, fmt::Write, path::PathBuf};
 use anyhow::Context;
 use chrono::{Datelike, Utc};
 use map_macro::set;
+use octocrab::Octocrab;
 use tokio::{
     fs::{self, File},
     io::AsyncWriteExt,
@@ -10,7 +11,9 @@ use tokio::{
 
 use crate::pull_requests::{Author, PullRequest, PullRequestsSinceLastRelease};
 
-pub async fn create_release_announcement() -> anyhow::Result<()> {
+pub async fn create_release_announcement(
+    octocrab: &Octocrab,
+) -> anyhow::Result<()> {
     let now = Utc::now();
 
     let year = now.year();
@@ -18,7 +21,7 @@ pub async fn create_release_announcement() -> anyhow::Result<()> {
     let date = format!("{year}-{:02}-{:02}", now.month(), now.day());
 
     let pull_requests_since_last_release =
-        PullRequestsSinceLastRelease::fetch().await?;
+        PullRequestsSinceLastRelease::fetch(octocrab).await?;
 
     let pull_requests =
         pull_requests_since_last_release.pull_requests.into_values();
