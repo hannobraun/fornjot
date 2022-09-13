@@ -40,8 +40,8 @@ impl Curve {
     }
 
     /// Access the kind of this curve
-    pub fn path(&self) -> &CurveKind<2> {
-        &self.path
+    pub fn path(&self) -> CurveKind<2> {
+        self.path
     }
 
     /// Access the global form of this curve

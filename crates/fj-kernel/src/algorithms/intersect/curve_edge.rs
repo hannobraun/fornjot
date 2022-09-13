@@ -50,7 +50,7 @@ impl CurveEdgeIntersection {
         };
 
         let intersection =
-            LineSegmentIntersection::compute(curve_as_line, &edge_as_segment)?;
+            LineSegmentIntersection::compute(&curve_as_line, &edge_as_segment)?;
 
         let intersection = match intersection {
             LineSegmentIntersection::Point { point_on_line } => Self::Point {
