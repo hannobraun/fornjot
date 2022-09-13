@@ -9,6 +9,9 @@ pub async fn run() -> anyhow::Result<()> {
                 .await
                 .context("Failed to create release announcement")?;
         }
+        Args::Sponsors => {
+            todo!("Querying sponsors is not supported yet.")
+        }
     }
 
     Ok(())
