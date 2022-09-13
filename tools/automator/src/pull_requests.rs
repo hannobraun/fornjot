@@ -63,6 +63,11 @@ impl PullRequestsSinceLastRelease {
                     }
                 }
 
+                if pull_request.merged_at.is_none() {
+                    // If it wasn't merged, we're not interested.
+                    continue;
+                }
+
                 let number = pull_request.number;
                 let title = pull_request
                     .title
