@@ -5,11 +5,8 @@ use super::CurveKind;
 /// A two-dimensional shape
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Surface {
-    /// The path that defines the u-coordinate of this surface
-    pub u: CurveKind<3>,
-
-    /// The path that defines the v-coordinate of this surface
-    pub v: Vector<3>,
+    u: CurveKind<3>,
+    v: Vector<3>,
 }
 
 impl Surface {
