@@ -2,7 +2,7 @@ use fj_math::{Line, Point, Scalar, Vector};
 
 use crate::objects::{
     Curve, CurveKind, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
-    SurfaceVertex, SweptCurve, Vertex,
+    SurfaceVertex, Vertex,
 };
 
 use super::Sweep;
@@ -46,13 +46,8 @@ impl Sweep for (Vertex, Surface) {
         //
         // Let's make sure that these requirements are met.
         {
-            let Surface::SweptCurve(SweptCurve {
-                curve: surface_curve,
-                path: surface_path,
-            }) = surface;
-
-            assert_eq!(vertex.curve().global_form().kind(), &surface_curve);
-            assert_eq!(path, surface_path);
+            assert_eq!(vertex.curve().global_form().kind(), &surface.u());
+            assert_eq!(path, surface.v());
         }
 
         // With that out of the way, let's start by creating the `GlobalEdge`,

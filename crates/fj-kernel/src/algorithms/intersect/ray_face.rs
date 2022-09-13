@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar, Vector};
 
 use crate::{
     algorithms::intersect::face_point::FacePointIntersection,
-    objects::{Face, HalfEdge, Vertex},
+    objects::{CurveKind, Face, HalfEdge, Vertex},
 };
 
 use super::{HorizontalRayToTheRight, Intersect};
@@ -15,19 +15,15 @@ impl Intersect for (&HorizontalRayToTheRight<3>, &Face) {
     fn intersect(self) -> Option<Self::Intersection> {
         let (ray, face) = self;
 
-        let (plane_origin, plane_direction_1, plane_direction_2) = match face
-            .surface()
-        {
-            crate::objects::Surface::SweptCurve(surface) => match surface.curve
-            {
-                crate::objects::CurveKind::Circle(_) => todo!(
+        let (plane_origin, plane_direction_1, plane_direction_2) =
+            match face.surface().u() {
+                CurveKind::Circle(_) => todo!(
                     "Casting a ray against a swept circle is not supported yet"
                 ),
-                crate::objects::CurveKind::Line(line) => {
-                    (line.origin(), line.direction(), surface.path)
+                CurveKind::Line(line) => {
+                    (line.origin(), line.direction(), face.surface().v())
                 }
-            },
-        };
+            };
 
         let plane_and_ray_are_parallel = {
             let plane_normal = plane_direction_1.cross(&plane_direction_2);
