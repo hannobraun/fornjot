@@ -45,7 +45,9 @@ impl Approx for (&GlobalCurve, RangeOnCurve) {
         let (curve, range) = self;
 
         match curve.kind() {
-            CurveKind::Circle(curve) => approx_circle(curve, range, tolerance),
+            CurveKind::Circle(circle) => {
+                approx_circle(circle, range, tolerance)
+            }
             CurveKind::Line(_) => vec![],
         }
     }
