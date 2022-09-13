@@ -4,9 +4,9 @@ use fj_math::{Line, Scalar, Vector};
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
     objects::{
-        Curve, CurveKind, Cycle, Face, GlobalEdge, HalfEdge, SurfaceVertex,
-        Vertex,
+        Curve, Cycle, Face, GlobalEdge, HalfEdge, SurfaceVertex, Vertex,
     },
+    path::SurfacePath,
 };
 
 use super::Sweep;
@@ -32,13 +32,14 @@ impl Sweep for (HalfEdge, Color) {
 
             let curve = {
                 // Please note that creating a line here is correct, even if the
-                // global curve is a circle. Projected into the side surface, it is
-                // going to be a line either way.
-                let kind = CurveKind::Line(Line::from_points_with_line_coords(
-                    points_curve_and_surface,
-                ));
+                // global curve is a circle. Projected into the side surface, it
+                // is going to be a line either way.
+                let path =
+                    SurfacePath::Line(Line::from_points_with_line_coords(
+                        points_curve_and_surface,
+                    ));
 
-                Curve::new(surface, kind, *edge.curve().global_form())
+                Curve::new(surface, path, *edge.curve().global_form())
             };
 
             let vertices = {
@@ -93,11 +94,12 @@ impl Sweep for (HalfEdge, Color) {
                 // Please note that creating a line here is correct, even if the
                 // global curve is a circle. Projected into the side surface, it
                 // is going to be a line either way.
-                let kind = CurveKind::Line(Line::from_points_with_line_coords(
-                    points_curve_and_surface,
-                ));
+                let path =
+                    SurfacePath::Line(Line::from_points_with_line_coords(
+                        points_curve_and_surface,
+                    ));
 
-                Curve::new(surface, kind, global)
+                Curve::new(surface, path, global)
             };
 
             let global = GlobalEdge::new(*curve.global_form(), global_vertices);

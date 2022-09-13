@@ -1,7 +1,7 @@
 use fj_math::{Scalar, Winding};
 use pretty_assertions::assert_eq;
 
-use crate::builder::CycleBuilder;
+use crate::{builder::CycleBuilder, path::SurfacePath};
 
 use super::{HalfEdge, Surface};
 
@@ -104,9 +104,9 @@ impl Cycle {
             let [a, b] = first.vertices();
             let edge_direction_positive = a.position() < b.position();
 
-            let circle = match first.curve().kind() {
-                super::CurveKind::Circle(circle) => circle,
-                super::CurveKind::Line(_) => unreachable!(
+            let circle = match first.curve().path() {
+                SurfacePath::Circle(circle) => circle,
+                SurfacePath::Line(_) => unreachable!(
                     "Invalid cycle: less than 3 edges, but not all are circles"
                 ),
             };

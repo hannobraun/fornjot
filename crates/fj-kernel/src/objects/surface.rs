@@ -1,24 +1,24 @@
 use fj_math::{Line, Point, Vector};
 
-use super::CurveKind;
+use crate::path::GlobalPath;
 
 /// A two-dimensional shape
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Surface {
-    u: CurveKind<3>,
+    u: GlobalPath,
     v: Vector<3>,
 }
 
 impl Surface {
     /// Construct a `Surface` from two paths that define its coordinate system
-    pub fn new(u: CurveKind<3>, v: Vector<3>) -> Self {
+    pub fn new(u: GlobalPath, v: Vector<3>) -> Self {
         Self { u, v }
     }
 
     /// Construct a `Surface` that represents the xy-plane
     pub fn xy_plane() -> Self {
         Self {
-            u: CurveKind::x_axis(),
+            u: GlobalPath::x_axis(),
             v: Vector::unit_y(),
         }
     }
@@ -26,7 +26,7 @@ impl Surface {
     /// Construct a `Surface` that represents the xz-plane
     pub fn xz_plane() -> Self {
         Self {
-            u: CurveKind::x_axis(),
+            u: GlobalPath::x_axis(),
             v: Vector::unit_z(),
         }
     }
@@ -34,7 +34,7 @@ impl Surface {
     /// Construct a `Surface` that represents the yz-plane
     pub fn yz_plane() -> Self {
         Self {
-            u: CurveKind::y_axis(),
+            u: GlobalPath::y_axis(),
             v: Vector::unit_z(),
         }
     }
@@ -43,14 +43,14 @@ impl Surface {
     pub fn plane_from_points(points: [impl Into<Point<3>>; 3]) -> Self {
         let [a, b, c] = points.map(Into::into);
 
-        let u = CurveKind::Line(Line::from_points([a, b]));
+        let u = GlobalPath::Line(Line::from_points([a, b]));
         let v = c - a;
 
         Self { u, v }
     }
 
     /// Access the path that defines the u-coordinate of this surface
-    pub fn u(&self) -> CurveKind<3> {
+    pub fn u(&self) -> GlobalPath {
         self.u
     }
 
@@ -65,7 +65,7 @@ impl Surface {
         point: impl Into<Point<2>>,
     ) -> Point<3> {
         let point = point.into();
-        self.u.point_from_curve_coords([point.u])
+        self.u.point_from_path_coords([point.u])
             + self.path_to_line().vector_from_line_coords([point.v])
     }
 
@@ -75,7 +75,7 @@ impl Surface {
         vector: impl Into<Vector<2>>,
     ) -> Vector<3> {
         let vector = vector.into();
-        self.u.vector_from_curve_coords([vector.u])
+        self.u.vector_from_path_coords([vector.u])
             + self.path_to_line().vector_from_line_coords([vector.v])
     }
 
@@ -89,14 +89,14 @@ mod tests {
     use fj_math::{Line, Point, Vector};
     use pretty_assertions::assert_eq;
 
-    use crate::objects::CurveKind;
+    use crate::path::GlobalPath;
 
     use super::Surface;
 
     #[test]
     fn point_from_surface_coords() {
         let swept = Surface {
-            u: CurveKind::Line(Line::from_origin_and_direction(
+            u: GlobalPath::Line(Line::from_origin_and_direction(
                 Point::from([1., 1., 1.]),
                 Vector::from([0., 2., 0.]),
             )),
@@ -112,7 +112,7 @@ mod tests {
     #[test]
     fn vector_from_surface_coords() {
         let swept = Surface {
-            u: CurveKind::Line(Line::from_origin_and_direction(
+            u: GlobalPath::Line(Line::from_origin_and_direction(
                 Point::from([1., 0., 0.]),
                 Vector::from([0., 2., 0.]),
             )),

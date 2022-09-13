@@ -1,6 +1,9 @@
 use fj_math::{Point, Segment};
 
-use crate::objects::{Curve, CurveKind, HalfEdge};
+use crate::{
+    objects::{Curve, HalfEdge},
+    path::SurfacePath,
+};
 
 use super::LineSegmentIntersection;
 
@@ -29,14 +32,14 @@ impl CurveEdgeIntersection {
     /// computed. Panics, if a different type of [`Curve`] or [`HalfEdge`] is
     /// passed.
     pub fn compute(curve: &Curve, half_edge: &HalfEdge) -> Option<Self> {
-        let curve_as_line = match curve.kind() {
-            CurveKind::Line(line) => line,
+        let curve_as_line = match curve.path() {
+            SurfacePath::Line(line) => line,
             _ => todo!("Curve-edge intersection only supports lines"),
         };
 
         let edge_as_segment = {
-            let edge_curve_as_line = match half_edge.curve().kind() {
-                CurveKind::Line(line) => line,
+            let edge_curve_as_line = match half_edge.curve().path() {
+                SurfacePath::Line(line) => line,
                 _ => {
                     todo!("Curve-edge intersection only supports line segments")
                 }
@@ -50,7 +53,7 @@ impl CurveEdgeIntersection {
         };
 
         let intersection =
-            LineSegmentIntersection::compute(curve_as_line, &edge_as_segment)?;
+            LineSegmentIntersection::compute(&curve_as_line, &edge_as_segment)?;
 
         let intersection = match intersection {
             LineSegmentIntersection::Point { point_on_line } => Self::Point {

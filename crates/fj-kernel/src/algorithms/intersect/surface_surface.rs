@@ -1,6 +1,9 @@
 use fj_math::{Line, Point, Scalar, Vector};
 
-use crate::objects::{Curve, CurveKind, GlobalCurve, Surface};
+use crate::{
+    objects::{Curve, GlobalCurve, Surface},
+    path::{GlobalPath, SurfacePath},
+};
 
 /// The intersection between two surfaces
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -49,11 +52,11 @@ impl SurfaceSurfaceIntersection {
 
         let curves = planes_parametric.map(|(surface, plane)| {
             let local = project_line_into_plane(&line, &plane);
-            let global = CurveKind::Line(Line::from_origin_and_direction(
+            let global = GlobalPath::Line(Line::from_origin_and_direction(
                 origin, direction,
             ));
 
-            Curve::new(surface, local, GlobalCurve::from_kind(global))
+            Curve::new(surface, local, GlobalCurve::from_path(global))
         });
 
         Some(Self {
@@ -74,7 +77,7 @@ impl PlaneParametric {
     pub fn extract_from_surface(surface: &Surface) -> Self {
         let (line, path) = {
             let line = match surface.u() {
-                CurveKind::Line(line) => line,
+                GlobalPath::Line(line) => line,
                 _ => todo!(
                     "Only plane-plane intersection is currently supported."
                 ),
@@ -120,7 +123,7 @@ impl PlaneConstantNormal {
 fn project_line_into_plane(
     line: &Line<3>,
     plane: &PlaneParametric,
-) -> CurveKind<2> {
+) -> SurfacePath {
     let line_origin_relative_to_plane = line.origin() - plane.origin;
     let line_origin_in_plane = Vector::from([
         plane
@@ -143,7 +146,7 @@ fn project_line_into_plane(
         line_direction_in_plane,
     );
 
-    CurveKind::Line(line)
+    SurfacePath::Line(line)
 }
 
 #[cfg(test)]

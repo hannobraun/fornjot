@@ -1,8 +1,11 @@
 use fj_math::{Line, Point, Scalar, Vector};
 
-use crate::objects::{
-    Curve, CurveKind, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
-    SurfaceVertex, Vertex,
+use crate::{
+    objects::{
+        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
+        SurfaceVertex, Vertex,
+    },
+    path::SurfacePath,
 };
 
 use super::Sweep;
@@ -46,7 +49,7 @@ impl Sweep for (Vertex, Surface) {
         //
         // Let's make sure that these requirements are met.
         {
-            assert_eq!(vertex.curve().global_form().kind(), &surface.u());
+            assert_eq!(vertex.curve().global_form().path(), surface.u());
             assert_eq!(path, surface.v());
         }
 
@@ -78,7 +81,7 @@ impl Sweep for (Vertex, Surface) {
         // `Edge` is straight-forward.
         let curve = {
             let line = Line::from_points(points_surface);
-            Curve::new(surface, CurveKind::Line(line), *edge_global.curve())
+            Curve::new(surface, SurfacePath::Line(line), *edge_global.curve())
         };
 
         // And now the vertices. Again, nothing wild here.

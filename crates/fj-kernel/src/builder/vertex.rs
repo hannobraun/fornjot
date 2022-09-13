@@ -23,11 +23,11 @@ impl VertexBuilder {
         let global_form = GlobalVertex::from_position(
             self.curve
                 .global_form()
-                .kind()
-                .point_from_curve_coords(point),
+                .path()
+                .point_from_path_coords(point),
         );
         let surface_form = SurfaceVertex::new(
-            self.curve.kind().point_from_curve_coords(point),
+            self.curve.path().point_from_path_coords(point),
             surface,
             global_form,
         );

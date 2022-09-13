@@ -2,9 +2,12 @@
 
 use fj_math::{Transform, Vector};
 
-use crate::objects::{
-    Curve, Cycle, Face, Faces, GlobalCurve, GlobalVertex, HalfEdge, Shell,
-    Sketch, Solid, Surface, SurfaceVertex, Vertex,
+use crate::{
+    objects::{
+        Curve, Cycle, Face, Faces, GlobalCurve, GlobalVertex, HalfEdge, Shell,
+        Sketch, Solid, Surface, SurfaceVertex, Vertex,
+    },
+    path::GlobalPath,
 };
 
 /// Transform an object
@@ -40,7 +43,7 @@ impl TransformObject for Curve {
         let global = self.global_form().transform(transform);
 
         // Don't need to transform `self.kind`, as that's in local form.
-        Curve::new(surface, *self.kind(), global)
+        Curve::new(surface, self.path(), global)
     }
 }
 
@@ -80,8 +83,18 @@ impl TransformObject for Faces {
 
 impl TransformObject for GlobalCurve {
     fn transform(self, transform: &Transform) -> Self {
-        let kind = self.kind().transform(transform);
-        GlobalCurve::from_kind(kind)
+        GlobalCurve::from_path(self.path().transform(transform))
+    }
+}
+
+impl TransformObject for GlobalPath {
+    fn transform(self, transform: &Transform) -> Self {
+        match self {
+            Self::Circle(curve) => {
+                Self::Circle(transform.transform_circle(&curve))
+            }
+            Self::Line(curve) => Self::Line(transform.transform_line(&curve)),
+        }
     }
 }
 

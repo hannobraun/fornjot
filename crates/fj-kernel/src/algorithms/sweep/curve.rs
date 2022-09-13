@@ -16,6 +16,6 @@ impl Sweep for GlobalCurve {
     type Swept = Surface;
 
     fn sweep(self, path: impl Into<Vector<3>>) -> Self::Swept {
-        Surface::new(*self.kind(), path.into())
+        Surface::new(self.path(), path.into())
     }
 }
