@@ -32,8 +32,8 @@ impl Sweep for (HalfEdge, Color) {
 
             let curve = {
                 // Please note that creating a line here is correct, even if the
-                // global curve is a circle. Projected into the side surface, it is
-                // going to be a line either way.
+                // global curve is a circle. Projected into the side surface, it
+                // is going to be a line either way.
                 let kind =
                     SurfacePath::Line(Line::from_points_with_line_coords(
                         points_curve_and_surface,
