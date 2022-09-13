@@ -131,10 +131,10 @@ impl TransformObject for Solid {
 
 impl TransformObject for Surface {
     fn transform(self, transform: &Transform) -> Self {
-        Self {
-            u: self.u.transform(transform),
-            v: transform.transform_vector(&self.v),
-        }
+        Self::new(
+            self.u.transform(transform),
+            transform.transform_vector(&self.v),
+        )
     }
 }
 

@@ -13,6 +13,11 @@ pub struct Surface {
 }
 
 impl Surface {
+    /// Construct a `Surface` from two paths that define its coordinate system
+    pub fn new(u: CurveKind<3>, v: Vector<3>) -> Self {
+        Self { u, v }
+    }
+
     /// Construct a `Surface` that represents the xy-plane
     pub fn xy_plane() -> Self {
         Self {
