@@ -16,7 +16,7 @@ impl Sweep for Face {
         let mut faces = Vec::new();
 
         let is_negative_sweep = {
-            let a = match self.surface().curve {
+            let a = match self.surface().u {
                 CurveKind::Circle(_) => todo!(
                     "Sweeping from faces defined in round surfaces is not \
                     supported"

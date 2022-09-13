@@ -16,7 +16,7 @@ impl Intersect for (&HorizontalRayToTheRight<3>, &Face) {
         let (ray, face) = self;
 
         let (plane_origin, plane_direction_1, plane_direction_2) =
-            match face.surface().curve {
+            match face.surface().u {
                 CurveKind::Circle(_) => todo!(
                     "Casting a ray against a swept circle is not supported yet"
                 ),
