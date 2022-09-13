@@ -104,7 +104,7 @@ impl Cycle {
             let [a, b] = first.vertices();
             let edge_direction_positive = a.position() < b.position();
 
-            let circle = match first.curve().kind() {
+            let circle = match first.curve().path() {
                 super::CurveKind::Circle(circle) => circle,
                 super::CurveKind::Line(_) => unreachable!(
                     "Invalid cycle: less than 3 edges, but not all are circles"

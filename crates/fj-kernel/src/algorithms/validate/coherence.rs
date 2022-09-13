@@ -13,7 +13,7 @@ pub fn validate_curve(
     let points_curve = [-2., -1., 0., 1., 2.].map(|point| Point::from([point]));
 
     for point_curve in points_curve {
-        let point_surface = curve.kind().point_from_curve_coords(point_curve);
+        let point_surface = curve.path().point_from_curve_coords(point_curve);
         let point_surface_as_global =
             curve.surface().point_from_surface_coords(point_surface);
         let point_global = curve

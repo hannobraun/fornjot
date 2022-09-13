@@ -40,7 +40,7 @@ impl Curve {
     }
 
     /// Access the kind of this curve
-    pub fn kind(&self) -> &CurveKind<2> {
+    pub fn path(&self) -> &CurveKind<2> {
         &self.kind
     }
 

@@ -49,7 +49,7 @@ impl HalfEdgeBuilder {
 
             let surface_vertices = [a_curve, b_curve].map(|point_curve| {
                 let point_surface =
-                    curve.kind().point_from_curve_coords(point_curve);
+                    curve.path().point_from_curve_coords(point_curve);
                 SurfaceVertex::new(point_surface, self.surface, global_vertex)
             });
 

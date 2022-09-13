@@ -29,13 +29,13 @@ impl CurveEdgeIntersection {
     /// computed. Panics, if a different type of [`Curve`] or [`HalfEdge`] is
     /// passed.
     pub fn compute(curve: &Curve, half_edge: &HalfEdge) -> Option<Self> {
-        let curve_as_line = match curve.kind() {
+        let curve_as_line = match curve.path() {
             CurveKind::Line(line) => line,
             _ => todo!("Curve-edge intersection only supports lines"),
         };
 
         let edge_as_segment = {
-            let edge_curve_as_line = match half_edge.curve().kind() {
+            let edge_curve_as_line = match half_edge.curve().path() {
                 CurveKind::Line(line) => line,
                 _ => {
                     todo!("Curve-edge intersection only supports line segments")
