@@ -3,6 +3,7 @@ use std::{collections::HashSet, fmt::Write, path::PathBuf};
 use anyhow::Context;
 use chrono::{Datelike, Utc};
 use map_macro::set;
+use octocrab::Octocrab;
 use tokio::{
     fs::{self, File},
     io::AsyncWriteExt,
@@ -10,14 +11,17 @@ use tokio::{
 
 use crate::pull_requests::{Author, PullRequest, PullRequestsSinceLastRelease};
 
-pub async fn create_release_announcement() -> anyhow::Result<()> {
+pub async fn create_release_announcement(
+    octocrab: &Octocrab,
+) -> anyhow::Result<()> {
     let now = Utc::now();
 
     let year = now.year();
     let week = now.iso_week().week();
+    let date = format!("{year}-{:02}-{:02}", now.month(), now.day());
 
     let pull_requests_since_last_release =
-        PullRequestsSinceLastRelease::fetch().await?;
+        PullRequestsSinceLastRelease::fetch(octocrab).await?;
 
     let pull_requests =
         pull_requests_since_last_release.pull_requests.into_values();
@@ -30,8 +34,14 @@ pub async fn create_release_announcement() -> anyhow::Result<()> {
     version.minor += 1;
 
     let mut file = create_file(year, week).await?;
-    generate_announcement(week, version.to_string(), pull_requests, &mut file)
-        .await?;
+    generate_announcement(
+        week,
+        date,
+        version.to_string(),
+        pull_requests,
+        &mut file,
+    )
+    .await?;
 
     Ok(())
 }
@@ -53,6 +63,7 @@ async fn create_file(year: i32, week: u32) -> anyhow::Result<File> {
 
 async fn generate_announcement(
     week: u32,
+    date: String,
     version: String,
     pull_requests: impl IntoIterator<Item = PullRequest>,
     file: &mut File,
@@ -107,6 +118,8 @@ async fn generate_announcement(
         "\
 +++
 title = \"Weekly Release - 2022-W{week}\"
+# TASK: Uncomment this date, once the announcement is ready to be published.
+# date = {date}
 
 [extra]
 version = \"{version}\"
@@ -119,7 +132,11 @@ version = \"{version}\"
 
 Fornjot is supported by [@webtrax-oz](https://github.com/webtrax-oz), [@lthiery](https://github.com/lthiery), [@Yatekii](https://github.com/Yatekii), [@martindederer](https://github.com/martindederer), [@hobofan](https://github.com/hobofan), [@ahdinosaur](https://github.com/ahdinosaur), [@thawkins](https://github.com/thawkins), [@bollian](https://github.com/bollian), [@rozgo](https://github.com/rozgo), [@reivilibre](https://github.com/reivilibre), and [my other awesome sponsors](https://github.com/sponsors/hannobraun). Thank you!
 
-If you want Fornjot to be stable and sustainable long-term, please consider [supporting me](https://github.com/sponsors/hannobraun) too.
+<strong class=\"call-to-action\">
+    <p>
+        If you want Fornjot to be sustainable long-term, please consider <a href=\"https://github.com/sponsors/hannobraun\">supporting me</a> too.
+    </p>
+</strong>
 
 
 ### End-user improvements

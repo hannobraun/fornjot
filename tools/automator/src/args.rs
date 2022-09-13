@@ -1,6 +1,7 @@
 #[derive(clap::Parser)]
 pub enum Args {
     CreateReleaseAnnouncement(CreateReleaseAnnouncement),
+    Sponsors,
 }
 
 impl Args {

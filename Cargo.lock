@@ -227,6 +227,7 @@ dependencies = [
  "map-macro",
  "octocrab",
  "semver",
+ "serde_json",
  "tokio",
  "url",
 ]
