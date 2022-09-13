@@ -5,10 +5,10 @@ use super::CurveKind;
 /// A two-dimensional shape
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Surface {
-    /// The curve that this surface was swept from
+    /// The path that defines the u-coordinate of this surface
     pub u: CurveKind<3>,
 
-    /// The path that the curve was swept along
+    /// The path that defines the v-coordinate of this surface
     pub v: Vector<3>,
 }
 
