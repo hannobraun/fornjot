@@ -60,7 +60,7 @@ impl GlobalCurve {
     }
 
     /// Construct a `GlobalCurve` from a [`CurveKind<3>`]
-    pub fn from_kind(kind: CurveKind<3>) -> Self {
+    pub fn from_path(kind: CurveKind<3>) -> Self {
         Self { kind }
     }
 

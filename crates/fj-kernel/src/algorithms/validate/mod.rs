@@ -169,7 +169,7 @@ mod tests {
     #[test]
     fn coherence_curve() {
         let line_global = Line::from_points([[0., 0., 0.], [1., 0., 0.]]);
-        let global_curve = GlobalCurve::from_kind(CurveKind::Line(line_global));
+        let global_curve = GlobalCurve::from_path(CurveKind::Line(line_global));
 
         let line_surface = Line::from_points([[0., 0.], [2., 0.]]);
         let curve = Curve::new(
@@ -191,7 +191,7 @@ mod tests {
 
         let curve = {
             let curve_local = CurveKind::line_from_points(points_surface);
-            let curve_global = GlobalCurve::from_kind(
+            let curve_global = GlobalCurve::from_path(
                 CurveKind::line_from_points(points_global),
             );
             Curve::new(surface, curve_local, curve_global)

@@ -84,7 +84,7 @@ impl TransformObject for Faces {
 impl TransformObject for GlobalCurve {
     fn transform(self, transform: &Transform) -> Self {
         let kind = self.path().transform(transform);
-        GlobalCurve::from_kind(kind)
+        GlobalCurve::from_path(kind)
     }
 }
 

@@ -53,7 +53,7 @@ impl SurfaceSurfaceIntersection {
                 origin, direction,
             ));
 
-            Curve::new(surface, local, GlobalCurve::from_kind(global))
+            Curve::new(surface, local, GlobalCurve::from_path(global))
         });
 
         Some(Self {

@@ -27,7 +27,7 @@ impl HalfEdgeBuilder {
                 Vector::from([Scalar::ZERO, radius]),
             ));
             let global =
-                GlobalCurve::from_kind(CurveKind::Circle(Circle::new(
+                GlobalCurve::from_path(CurveKind::Circle(Circle::new(
                     Point::origin(),
                     Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
                     Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
@@ -102,7 +102,7 @@ impl HalfEdgeBuilder {
                 let points = global_vertices
                     .map(|global_vertex| global_vertex.position());
                 let kind = CurveKind::Line(Line::from_points(points));
-                GlobalCurve::from_kind(kind)
+                GlobalCurve::from_path(kind)
             };
 
             Curve::new(self.surface, curve_local, curve_global)
