@@ -9,7 +9,7 @@ pub struct Surface {
     pub u: CurveKind<3>,
 
     /// The path that the curve was swept along
-    pub path: Vector<3>,
+    pub v: Vector<3>,
 }
 
 impl Surface {
@@ -17,7 +17,7 @@ impl Surface {
     pub fn xy_plane() -> Self {
         Self {
             u: CurveKind::x_axis(),
-            path: Vector::unit_y(),
+            v: Vector::unit_y(),
         }
     }
 
@@ -25,7 +25,7 @@ impl Surface {
     pub fn xz_plane() -> Self {
         Self {
             u: CurveKind::x_axis(),
-            path: Vector::unit_z(),
+            v: Vector::unit_z(),
         }
     }
 
@@ -33,7 +33,7 @@ impl Surface {
     pub fn yz_plane() -> Self {
         Self {
             u: CurveKind::y_axis(),
-            path: Vector::unit_z(),
+            v: Vector::unit_z(),
         }
     }
 
@@ -42,9 +42,9 @@ impl Surface {
         let [a, b, c] = points.map(Into::into);
 
         let u = CurveKind::Line(Line::from_points([a, b]));
-        let path = c - a;
+        let v = c - a;
 
-        Self { u, path }
+        Self { u, v }
     }
 
     /// Convert a point in surface coordinates to model coordinates
@@ -68,7 +68,7 @@ impl Surface {
     }
 
     fn path_to_line(&self) -> Line<3> {
-        Line::from_origin_and_direction(self.u.origin(), self.path)
+        Line::from_origin_and_direction(self.u.origin(), self.v)
     }
 }
 
@@ -88,7 +88,7 @@ mod tests {
                 Point::from([1., 1., 1.]),
                 Vector::from([0., 2., 0.]),
             )),
-            path: Vector::from([0., 0., 2.]),
+            v: Vector::from([0., 0., 2.]),
         };
 
         assert_eq!(
@@ -104,7 +104,7 @@ mod tests {
                 Point::from([1., 0., 0.]),
                 Vector::from([0., 2., 0.]),
             )),
-            path: Vector::from([0., 0., 2.]),
+            v: Vector::from([0., 0., 2.]),
         };
 
         assert_eq!(

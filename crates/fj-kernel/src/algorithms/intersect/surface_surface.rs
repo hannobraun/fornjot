@@ -80,7 +80,7 @@ impl PlaneParametric {
                 ),
             };
 
-            (line, surface.path)
+            (line, surface.v)
         };
 
         Self {

@@ -23,7 +23,7 @@ impl Sweep for Face {
                 ),
                 CurveKind::Line(line) => line.direction(),
             };
-            let b = self.surface().path;
+            let b = self.surface().v;
 
             let normal = a.cross(&b);
 

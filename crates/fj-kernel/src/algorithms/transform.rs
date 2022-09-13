@@ -132,7 +132,7 @@ impl TransformObject for Solid {
 impl TransformObject for Surface {
     fn transform(mut self, transform: &Transform) -> Self {
         self.u = self.u.transform(transform);
-        self.path = transform.transform_vector(&self.path);
+        self.v = transform.transform_vector(&self.v);
         self
     }
 }

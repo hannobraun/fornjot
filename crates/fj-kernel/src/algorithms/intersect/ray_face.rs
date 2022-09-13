@@ -21,7 +21,7 @@ impl Intersect for (&HorizontalRayToTheRight<3>, &Face) {
                     "Casting a ray against a swept circle is not supported yet"
                 ),
                 CurveKind::Line(line) => {
-                    (line.origin(), line.direction(), face.surface().path)
+                    (line.origin(), line.direction(), face.surface().v)
                 }
             };
 
