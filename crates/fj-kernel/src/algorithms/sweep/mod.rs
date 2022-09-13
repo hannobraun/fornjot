@@ -1,8 +1,10 @@
 //! Sweeping objects along a path to create new objects
 
+mod curve;
 mod edge;
 mod face;
 mod sketch;
+mod vertex;
 
 use fj_interop::mesh::Color;
 use fj_math::{Scalar, Vector};

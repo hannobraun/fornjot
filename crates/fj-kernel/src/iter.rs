@@ -279,7 +279,10 @@ impl<'r> ObjectIters<'r> for Surface {
 
 impl<'r> ObjectIters<'r> for Vertex {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
-        vec![self.global() as &dyn ObjectIters]
+        vec![
+            self.curve() as &dyn ObjectIters,
+            self.global() as &dyn ObjectIters,
+        ]
     }
 
     fn vertex_iter(&'r self) -> Iter<&'r Vertex> {
@@ -393,10 +396,8 @@ mod tests {
 
     #[test]
     fn edge() {
-        let object = Edge::build().line_segment_from_points(
-            &Surface::xy_plane(),
-            [[0., 0.], [1., 0.]],
-        );
+        let object = Edge::build(Surface::xy_plane())
+            .line_segment_from_points([[0., 0.], [1., 0.]]);
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -471,9 +472,9 @@ mod tests {
     fn shell() {
         let object = Shell::build().cube_from_edge_length(1.);
 
-        assert_eq!(20, object.curve_iter().count());
+        assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());
-        assert_eq!(20, object.edge_iter().count());
+        assert_eq!(24, object.edge_iter().count());
         assert_eq!(6, object.face_iter().count());
         assert_eq!(18, object.global_curve_iter().count());
         assert_eq!(8, object.global_vertex_iter().count());
@@ -481,7 +482,7 @@ mod tests {
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(0, object.solid_iter().count());
         assert_eq!(6, object.surface_iter().count());
-        assert_eq!(16, object.vertex_iter().count());
+        assert_eq!(48, object.vertex_iter().count());
     }
 
     #[test]
@@ -511,9 +512,9 @@ mod tests {
     fn solid() {
         let object = Solid::build().cube_from_edge_length(1.);
 
-        assert_eq!(20, object.curve_iter().count());
+        assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());
-        assert_eq!(20, object.edge_iter().count());
+        assert_eq!(24, object.edge_iter().count());
         assert_eq!(6, object.face_iter().count());
         assert_eq!(18, object.global_curve_iter().count());
         assert_eq!(8, object.global_vertex_iter().count());
@@ -521,7 +522,7 @@ mod tests {
         assert_eq!(0, object.sketch_iter().count());
         assert_eq!(1, object.solid_iter().count());
         assert_eq!(6, object.surface_iter().count());
-        assert_eq!(16, object.vertex_iter().count());
+        assert_eq!(48, object.vertex_iter().count());
     }
 
     #[test]
@@ -543,14 +544,16 @@ mod tests {
 
     #[test]
     fn vertex() {
+        let surface = Surface::xy_plane();
+        let curve = Curve::build(surface).u_axis();
         let global_vertex = GlobalVertex::from_position([0., 0., 0.]);
-        let object = Vertex::new([0.], global_vertex);
+        let object = Vertex::new([0.], curve, global_vertex);
 
-        assert_eq!(0, object.curve_iter().count());
+        assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
         assert_eq!(0, object.edge_iter().count());
         assert_eq!(0, object.face_iter().count());
-        assert_eq!(0, object.global_curve_iter().count());
+        assert_eq!(1, object.global_curve_iter().count());
         assert_eq!(1, object.global_vertex_iter().count());
         assert_eq!(0, object.shell_iter().count());
         assert_eq!(0, object.sketch_iter().count());

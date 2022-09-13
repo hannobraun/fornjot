@@ -41,6 +41,7 @@ impl CurveBuilder {
         );
 
         Curve::new(
+            self.surface,
             CurveKind::Line(local),
             GlobalCurve::from_kind(CurveKind::Line(global)),
         )

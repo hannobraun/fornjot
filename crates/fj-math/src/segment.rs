@@ -8,7 +8,7 @@ use super::Point;
 ///
 /// The dimensionality of the segment is defined by the const generic `D`
 /// parameter.
-#[derive(Clone, Copy, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Copy, Eq, Default, PartialEq, Hash, Ord, PartialOrd)]
 #[repr(C)]
 pub struct Segment<const D: usize> {
     points: [Point<D>; 2],

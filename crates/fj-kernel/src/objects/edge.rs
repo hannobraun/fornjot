@@ -1,8 +1,8 @@
 use std::fmt;
 
-use crate::builder::EdgeBuilder;
+use crate::{algorithms::reverse::Reverse, builder::EdgeBuilder};
 
-use super::{Curve, GlobalCurve, GlobalVertex, Vertex};
+use super::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex};
 
 /// An edge
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -14,8 +14,8 @@ pub struct Edge {
 
 impl Edge {
     /// Build an edge using [`EdgeBuilder`]
-    pub fn build() -> EdgeBuilder {
-        EdgeBuilder
+    pub fn build(surface: Surface) -> EdgeBuilder {
+        EdgeBuilder::new(surface)
     }
 
     /// Create a new instance of `Edge`
@@ -36,6 +36,20 @@ impl Edge {
     ) -> Self {
         assert_eq!(curve.global(), global.curve());
         assert_eq!(&vertices.to_global(), global.vertices());
+
+        // Make sure that the edge vertices are not coincident on the curve. If
+        // they were, the edge would have no length, and not be valid.
+        //
+        // It is perfectly fine for global forms of the the vertices to be
+        // coincident (in 3D space). That would just mean, that ends of the edge
+        // connect to each other.
+        if let Some([a, b]) = vertices.get() {
+            assert_ne!(
+                a.position(),
+                b.position(),
+                "Vertices of an edge must not be coincident on curve"
+            );
+        }
 
         Self {
             curve,
@@ -198,8 +212,8 @@ impl VerticesOfEdge<Vertex> {
     pub fn reverse(self) -> Self {
         Self(self.0.map(|[a, b]| {
             [
-                Vertex::new(-b.position(), *b.global()),
-                Vertex::new(-a.position(), *a.global()),
+                Vertex::new(-b.position(), b.curve().reverse(), *b.global()),
+                Vertex::new(-a.position(), a.curve().reverse(), *a.global()),
             ]
         }))
     }
