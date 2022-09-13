@@ -10,8 +10,8 @@ use super::Surface;
 /// A curve, defined in local surface coordinates
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Curve {
-    surface: Surface,
     path: SurfacePath,
+    surface: Surface,
     global: GlobalCurve,
 }
 
@@ -34,14 +34,14 @@ impl Curve {
         }
     }
 
-    /// Access the surface that this curve is defined in
-    pub fn surface(&self) -> &Surface {
-        &self.surface
-    }
-
     /// Access the path that defines this curve
     pub fn path(&self) -> SurfacePath {
         self.path
+    }
+
+    /// Access the surface that this curve is defined in
+    pub fn surface(&self) -> &Surface {
+        &self.surface
     }
 
     /// Access the global form of this curve
