@@ -59,12 +59,12 @@ impl GlobalCurve {
         GlobalCurveBuilder
     }
 
-    /// Construct a `GlobalCurve` from a [`CurveKind<3>`]
+    /// Construct a `GlobalCurve` from the path that defines it
     pub fn from_path(path: CurveKind<3>) -> Self {
         Self { path }
     }
 
-    /// Access the kind of this curve
+    /// Access the path that defines this curve
     pub fn path(&self) -> CurveKind<3> {
         self.path
     }
