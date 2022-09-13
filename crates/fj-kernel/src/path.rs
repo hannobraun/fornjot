@@ -2,6 +2,34 @@
 
 use fj_math::{Circle, Line, Point, Vector};
 
+/// A path through surface (2D) space
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub enum SurfacePath {
+    /// A circle
+    Circle(Circle<2>),
+
+    /// A line
+    Line(Line<2>),
+}
+
+impl SurfacePath {
+    /// Construct a line from two points
+    pub fn line_from_points(points: [impl Into<Point<2>>; 2]) -> Self {
+        Self::Line(Line::from_points(points))
+    }
+
+    /// Convert a point on the path into global coordinates
+    pub fn point_from_path_coords(
+        &self,
+        point: impl Into<Point<1>>,
+    ) -> Point<2> {
+        match self {
+            Self::Circle(circle) => circle.point_from_circle_coords(point),
+            Self::Line(line) => line.point_from_line_coords(point),
+        }
+    }
+}
+
 /// A path through global (3D) space
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum GlobalPath {
