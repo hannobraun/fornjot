@@ -80,13 +80,6 @@ pub struct SweptCurve {
 }
 
 impl SweptCurve {
-    /// Create a new instance that is reversed
-    #[must_use]
-    pub fn reverse(mut self) -> Self {
-        self.path = -self.path;
-        self
-    }
-
     /// Transform the surface
     #[must_use]
     pub fn transform(mut self, transform: &Transform) -> Self {
@@ -128,28 +121,6 @@ mod tests {
     use crate::objects::CurveKind;
 
     use super::SweptCurve;
-
-    #[test]
-    fn reverse() {
-        let original = SweptCurve {
-            curve: CurveKind::Line(Line::from_origin_and_direction(
-                Point::from([1., 0., 0.]),
-                Vector::from([0., 2., 0.]),
-            )),
-            path: Vector::from([0., 0., 3.]),
-        };
-
-        let reversed = original.reverse();
-
-        let expected = SweptCurve {
-            curve: CurveKind::Line(Line::from_origin_and_direction(
-                Point::from([1., 0., 0.]),
-                Vector::from([0., 2., 0.]),
-            )),
-            path: Vector::from([0., 0., -3.]),
-        };
-        assert_eq!(expected, reversed);
-    }
 
     #[test]
     fn point_from_surface_coords() {

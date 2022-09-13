@@ -106,15 +106,6 @@ impl<const D: usize> CurveKind<D> {
         }
     }
 
-    /// Create a new instance that is reversed
-    #[must_use]
-    pub fn reverse(self) -> Self {
-        match self {
-            Self::Circle(curve) => Self::Circle(curve.reverse()),
-            Self::Line(curve) => Self::Line(curve.reverse()),
-        }
-    }
-
     /// Convert a point on the curve into model coordinates
     pub fn point_from_curve_coords(
         &self,
