@@ -101,8 +101,9 @@ impl HalfEdgeBuilder {
             let curve_global = {
                 let points = global_vertices
                     .map(|global_vertex| global_vertex.position());
-                let kind = CurveKind::Line(Line::from_points(points));
-                GlobalCurve::from_path(kind)
+                GlobalCurve::from_path(CurveKind::Line(Line::from_points(
+                    points,
+                )))
             };
 
             Curve::new(self.surface, curve_local, curve_global)
