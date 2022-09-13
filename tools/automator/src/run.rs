@@ -17,6 +17,10 @@ pub async fn run() -> anyhow::Result<()> {
                 .context("Failed to create release announcement")?;
         }
         Args::Sponsors => {
+            let response: serde_json::Value =
+                octocrab.graphql("query { viewer { login }}").await?;
+            println!("{response}");
+
             todo!("Querying sponsors is not supported yet.")
         }
     }
