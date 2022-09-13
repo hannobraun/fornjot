@@ -50,7 +50,7 @@ impl Curve {
 /// A curve, defined in global (3D) coordinates
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalCurve {
-    kind: CurveKind<3>,
+    path: CurveKind<3>,
 }
 
 impl GlobalCurve {
@@ -60,13 +60,13 @@ impl GlobalCurve {
     }
 
     /// Construct a `GlobalCurve` from a [`CurveKind<3>`]
-    pub fn from_path(kind: CurveKind<3>) -> Self {
-        Self { kind }
+    pub fn from_path(path: CurveKind<3>) -> Self {
+        Self { path }
     }
 
     /// Access the kind of this curve
     pub fn path(&self) -> CurveKind<3> {
-        self.kind
+        self.path
     }
 }
 
