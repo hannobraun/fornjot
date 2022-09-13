@@ -1,6 +1,6 @@
 [package]
 name = "fj-host"
-version = "0.13.0"
+version = "0.15.0"
 edition = "2021"
 
 description = """\
@@ -17,14 +17,14 @@ categories = ["encoding", "mathematics", "rendering"]
 
 [dependencies]
 libloading = "0.7.2"
-notify = "5.0.0-pre.16"
-thiserror = "1.0.32"
+notify = "5.0.0"
+thiserror = "1.0.34"
 cargo_metadata = "0.15.0"
 
 [dependencies.fj]
-version = "0.13.0"
+version = "0.15.0"
 path = "../fj"
 
 [dependencies.fj-interop]
-version = "0.13.0"
+version = "0.15.0"
 path = "../fj-interop"

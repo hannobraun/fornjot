@@ -1,44 +1,52 @@
+//! Curve approximation
+//!
+//! Since curves are infinite (even circles have an infinite coordinate space,
+//! even though they connect to themselves in global coordinates), a range must
+//! be provided to approximate them. The approximation then returns points
+//! within that range.
+//!
+//! The boundaries of the range are not included in the approximation. This is
+//! done, to give the caller (who knows the boundary anyway) more options on how
+//! to further process the approximation.
+
 use std::cmp::max;
 
 use fj_math::{Circle, Point, Scalar};
 
-use crate::objects::{Curve, CurveKind, GlobalCurve};
+use crate::objects::{Curve, CurveKind, GlobalCurve, Vertex};
 
-use super::{Approx, Tolerance};
+use super::{Approx, ApproxPoint, Tolerance};
 
-impl Approx for Curve {
-    type Approximation = Vec<(Point<2>, Point<3>)>;
-    type Params = RangeOnCurve;
+impl Approx for (&Curve, RangeOnCurve) {
+    type Approximation = CurveApprox;
 
-    fn approx(
-        &self,
-        tolerance: Tolerance,
-        range: Self::Params,
-    ) -> Self::Approximation {
-        self.global()
-            .approx(tolerance, range)
+    fn approx(self, tolerance: Tolerance) -> Self::Approximation {
+        let (curve, range) = self;
+
+        let points = (curve.global_form(), range)
+            .approx(tolerance)
             .into_iter()
-            .map(|(point_curve, point_global)| {
+            .map(|point| {
                 let point_surface =
-                    self.kind().point_from_curve_coords(point_curve);
-                (point_surface, point_global)
+                    curve.kind().point_from_curve_coords(point.local_form);
+                ApproxPoint::new(point_surface, point.global_form)
+                    .with_source((*curve, point.local_form))
             })
-            .collect()
+            .collect();
+
+        CurveApprox { points }
     }
 }
 
-impl Approx for GlobalCurve {
-    type Approximation = Vec<(Point<1>, Point<3>)>;
-    type Params = RangeOnCurve;
+impl Approx for (&GlobalCurve, RangeOnCurve) {
+    type Approximation = Vec<ApproxPoint<1>>;
 
-    fn approx(
-        &self,
-        tolerance: Tolerance,
-        range: Self::Params,
-    ) -> Self::Approximation {
-        match self.kind() {
+    fn approx(self, tolerance: Tolerance) -> Self::Approximation {
+        let (curve, range) = self;
+
+        match curve.kind() {
             CurveKind::Circle(curve) => approx_circle(curve, range, tolerance),
-            CurveKind::Line(_) => vec![range.start()],
+            CurveKind::Line(_) => vec![],
         }
     }
 }
@@ -51,7 +59,9 @@ fn approx_circle(
     circle: &Circle<3>,
     range: impl Into<RangeOnCurve>,
     tolerance: Tolerance,
-) -> Vec<(Point<1>, Point<3>)> {
+) -> Vec<ApproxPoint<1>> {
+    let mut points = Vec::new();
+
     let radius = circle.a().magnitude();
     let range = range.into();
 
@@ -63,17 +73,18 @@ fn approx_circle(
 
     let n = number_of_vertices_for_circle(tolerance, radius, range.length());
 
-    let mut points = Vec::new();
-    points.push(range.start());
-
     for i in 1..n {
-        let angle = range.start().0.t
+        let angle = range.start().position().t
             + (Scalar::TAU / n as f64 * i as f64) * range.direction();
 
         let point_curve = Point::from([angle]);
         let point_global = circle.point_from_circle_coords(point_curve);
 
-        points.push((point_curve, point_global));
+        points.push(ApproxPoint::new(point_curve, point_global));
+    }
+
+    if range.is_reversed() {
+        points.reverse();
     }
 
     points
@@ -91,30 +102,79 @@ fn number_of_vertices_for_circle(
     max(n, 3)
 }
 
+/// The range on which a curve should be approximated
+#[derive(Clone, Copy, Debug)]
 pub struct RangeOnCurve {
-    pub boundary: [(Point<1>, Point<3>); 2],
+    boundary: [Vertex; 2],
+    is_reversed: bool,
 }
 
 impl RangeOnCurve {
-    fn start(&self) -> (Point<1>, Point<3>) {
+    /// Construct an instance of `RangeOnCurve`
+    ///
+    /// Ranges are normalized on construction, meaning that the order of
+    /// vertices passed to this constructor does not influence the range that is
+    /// constructed.
+    ///
+    /// This is done to prevent bugs during mesh construction: The curve
+    /// approximation code is regularly faced with ranges that are reversed
+    /// versions of each other. This can lead to slightly different
+    /// approximations, which in turn leads to the aforementioned invalid
+    /// meshes.
+    ///
+    /// The caller can use `is_reversed` to determine, if the range was reversed
+    /// during normalization, to adjust the approximation accordingly.
+    pub fn new([a, b]: [Vertex; 2]) -> Self {
+        let (boundary, is_reversed) = if a < b {
+            ([a, b], false)
+        } else {
+            ([b, a], true)
+        };
+
+        Self {
+            boundary,
+            is_reversed,
+        }
+    }
+
+    /// Indicate whether the range was reversed during normalization
+    pub fn is_reversed(&self) -> bool {
+        self.is_reversed
+    }
+
+    /// Access the start of the range
+    pub fn start(&self) -> Vertex {
         self.boundary[0]
     }
 
-    fn end(&self) -> (Point<1>, Point<3>) {
+    /// Access the end of the range
+    pub fn end(&self) -> Vertex {
         self.boundary[1]
     }
 
-    fn signed_length(&self) -> Scalar {
-        (self.end().0 - self.start().0).t
+    /// Compute the signed length of the range
+    pub fn signed_length(&self) -> Scalar {
+        (self.end().position() - self.start().position()).t
     }
 
-    fn length(&self) -> Scalar {
+    /// Compute the absolute length of the range
+    pub fn length(&self) -> Scalar {
         self.signed_length().abs()
     }
 
-    fn direction(&self) -> Scalar {
+    /// Compute the direction of the range
+    ///
+    /// Returns a [`Scalar`] that is zero or +/- one.
+    pub fn direction(&self) -> Scalar {
         self.signed_length().sign()
     }
+}
+
+/// An approximation of a [`Curve`]
+#[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct CurveApprox {
+    /// The points that approximate the curve
+    pub points: Vec<ApproxPoint<2>>,
 }
 
 #[cfg(test)]

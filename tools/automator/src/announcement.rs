@@ -8,21 +8,30 @@ use tokio::{
     io::AsyncWriteExt,
 };
 
-use crate::pull_requests::{Author, PullRequest};
+use crate::pull_requests::{Author, PullRequest, PullRequestsSinceLastRelease};
 
-pub async fn create_release_announcement(
-    version: String,
-) -> anyhow::Result<()> {
+pub async fn create_release_announcement() -> anyhow::Result<()> {
     let now = Utc::now();
 
     let year = now.year();
     let week = now.iso_week().week();
 
+    let pull_requests_since_last_release =
+        PullRequestsSinceLastRelease::fetch().await?;
+
     let pull_requests =
-        PullRequest::fetch_since_last_release().await?.into_values();
+        pull_requests_since_last_release.pull_requests.into_values();
+
+    // For now, it's good enough to just release a new minor version every week.
+    // We could also determine whether there were breaking changes to make sure
+    // we actually need it, but as of now, breaking changes every week are
+    // pretty much a given.
+    let mut version = pull_requests_since_last_release.version_of_last_release;
+    version.minor += 1;
 
     let mut file = create_file(year, week).await?;
-    generate_announcement(week, version, pull_requests, &mut file).await?;
+    generate_announcement(week, version.to_string(), pull_requests, &mut file)
+        .await?;
 
     Ok(())
 }
@@ -108,7 +117,7 @@ version = \"{version}\"
 
 ### Sponsors
 
-Fornjot is supported by [@webtrax-oz](https://github.com/webtrax-oz), [@lthiery](https://github.com/lthiery), [@Yatekii](https://github.com/Yatekii), [@martindederer](https://github.com/martindederer), [@hobofan](https://github.com/hobofan), [@ahdinosaur](https://github.com/ahdinosaur), [@thawkins](https://github.com/thawkins), [@bollian](https://github.com/bollian), [@rozgo](https://github.com/rozgo), and [my other awesome sponsors](https://github.com/sponsors/hannobraun). Thank you!
+Fornjot is supported by [@webtrax-oz](https://github.com/webtrax-oz), [@lthiery](https://github.com/lthiery), [@Yatekii](https://github.com/Yatekii), [@martindederer](https://github.com/martindederer), [@hobofan](https://github.com/hobofan), [@ahdinosaur](https://github.com/ahdinosaur), [@thawkins](https://github.com/thawkins), [@bollian](https://github.com/bollian), [@rozgo](https://github.com/rozgo), [@reivilibre](https://github.com/reivilibre), and [my other awesome sponsors](https://github.com/sponsors/hannobraun). Thank you!
 
 If you want Fornjot to be stable and sustainable long-term, please consider [supporting me](https://github.com/sponsors/hannobraun) too.
 

@@ -161,8 +161,8 @@ mod tests {
     use crate::{
         algorithms::validate::{Validate, ValidationConfig, ValidationError},
         objects::{
-            Curve, CurveKind, Edge, GlobalCurve, GlobalVertex, Surface, Vertex,
-            VerticesOfEdge,
+            Curve, CurveKind, GlobalCurve, GlobalVertex, HalfEdge, Surface,
+            SurfaceVertex, Vertex,
         },
     };
 
@@ -184,34 +184,54 @@ mod tests {
 
     #[test]
     fn coherence_edge() {
-        let a = Point::from([0., 0., 0.]);
-        let b = Point::from([1., 0., 0.]);
+        let surface = Surface::xy_plane();
+
+        let points_surface = [[0., 0.], [1., 0.]];
+        let points_global = [[0., 0., 0.], [1., 0., 0.]];
 
         let curve = {
-            let curve_local = CurveKind::line_from_points([[0., 0.], [1., 0.]]);
-            let curve_global =
-                GlobalCurve::from_kind(CurveKind::line_from_points([a, b]));
-            Curve::new(Surface::xy_plane(), curve_local, curve_global)
+            let curve_local = CurveKind::line_from_points(points_surface);
+            let curve_global = GlobalCurve::from_kind(
+                CurveKind::line_from_points(points_global),
+            );
+            Curve::new(surface, curve_local, curve_global)
         };
 
-        let a = GlobalVertex::from_position(a);
-        let b = GlobalVertex::from_position(b);
+        let [a_global, b_global] =
+            points_global.map(GlobalVertex::from_position);
+
+        let [a_surface, b_surface] = {
+            // Can be cleaned up, once `zip` is stable:
+            // https://doc.rust-lang.org/std/primitive.array.html#method.zip
+            let [a_surface, b_surface] = points_surface;
+            [(a_surface, a_global), (b_surface, b_global)].map(
+                |(point_surface, vertex_global)| {
+                    SurfaceVertex::new(point_surface, surface, vertex_global)
+                },
+            )
+        };
 
         let deviation = Scalar::from_f64(0.25);
 
-        let a = Vertex::new(Point::from([Scalar::ZERO + deviation]), curve, a);
-        let b = Vertex::new(Point::from([Scalar::ONE]), curve, b);
-        let vertices = VerticesOfEdge::from_vertices([a, b]);
+        let a = Vertex::new(
+            Point::from([Scalar::ZERO + deviation]),
+            curve,
+            a_surface,
+            a_global,
+        );
+        let b =
+            Vertex::new(Point::from([Scalar::ONE]), curve, b_surface, b_global);
+        let vertices = [a, b];
 
-        let edge = Edge::from_curve_and_vertices(curve, vertices);
+        let half_edge = HalfEdge::from_curve_and_vertices(curve, vertices);
 
-        let result = edge.validate_with_config(&ValidationConfig {
+        let result = half_edge.validate_with_config(&ValidationConfig {
             identical_max_distance: deviation * 2.,
             ..ValidationConfig::default()
         });
         assert!(result.is_ok());
 
-        let result = edge.validate_with_config(&ValidationConfig {
+        let result = half_edge.validate_with_config(&ValidationConfig {
             identical_max_distance: deviation / 2.,
             ..ValidationConfig::default()
         });

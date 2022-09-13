@@ -1,8 +1,6 @@
-use std::collections::BTreeSet;
-
 use crate::builder::SketchBuilder;
 
-use super::{Face, Surface};
+use super::{face::Faces, Face, Surface};
 
 /// A 2-dimensional shape
 ///
@@ -12,7 +10,7 @@ use super::{Face, Surface};
 /// currently validated.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Sketch {
-    faces: BTreeSet<Face>,
+    faces: Faces,
 }
 
 impl Sketch {
@@ -24,7 +22,7 @@ impl Sketch {
     /// Construct an empty instance of `Sketch`
     pub fn new() -> Self {
         Self {
-            faces: BTreeSet::new(),
+            faces: Faces::new(),
         }
     }
 
@@ -41,13 +39,13 @@ impl Sketch {
     }
 
     /// Access the sketch's faces
-    pub fn faces(&self) -> impl Iterator<Item = &Face> {
-        self.faces.iter()
+    pub fn faces(&self) -> &Faces {
+        &self.faces
     }
 
     /// Convert the sketch into a list of faces
-    pub fn into_faces(self) -> impl Iterator<Item = Face> {
-        self.faces.into_iter()
+    pub fn into_faces(self) -> Faces {
+        self.faces
     }
 }
 

@@ -1,10 +1,9 @@
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
-    algorithms::{
-        approx::Tolerance,
-        validate::{Validate, Validated, ValidationConfig, ValidationError},
+    algorithms::validate::{
+        Validate, Validated, ValidationConfig, ValidationError,
     },
-    objects::{Cycle, Edge, Face, Sketch, Surface},
+    objects::{Cycle, Face, HalfEdge, Sketch, Surface},
 };
 use fj_math::{Aabb, Point, Scalar};
 
@@ -16,7 +15,6 @@ impl Shape for fj::Sketch {
     fn compute_brep(
         &self,
         config: &ValidationConfig,
-        _: Tolerance,
         _: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
         let surface = Surface::xy_plane();
@@ -26,13 +24,11 @@ impl Shape for fj::Sketch {
                 // Circles have just a single round edge with no vertices. So
                 // none need to be added here.
 
-                let edge = Edge::build(surface)
+                let half_edge = HalfEdge::build(surface)
                     .circle_from_radius(Scalar::from_f64(circle.radius()));
-                let cycle = Cycle::new(surface, [edge]);
+                let cycle = Cycle::new(surface, [half_edge]);
 
-                Face::new(surface)
-                    .with_exteriors([cycle])
-                    .with_color(Color(self.color()))
+                Face::new(surface, cycle).with_color(Color(self.color()))
             }
             fj::Chain::PolyChain(poly_chain) => {
                 let points =

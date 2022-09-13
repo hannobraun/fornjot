@@ -1,38 +1,18 @@
-use fj_interop::debug::{DebugInfo, TriangleEdgeCheck};
 use fj_math::{Point, PolyChain, Segment};
 
-use crate::{
-    algorithms::intersect::{
-        ray_segment::RaySegmentIntersection, HorizontalRayToTheRight, Intersect,
-    },
-    objects::Surface,
+use crate::algorithms::intersect::{
+    ray_segment::RaySegmentIntersection, HorizontalRayToTheRight, Intersect,
 };
 
 pub struct Polygon {
-    surface: Surface,
     exterior: PolyChain<2>,
     interiors: Vec<PolyChain<2>>,
 }
 
 impl Polygon {
     /// Construct an instance of `Polygon`
-    ///
-    /// # Implementation note
-    ///
-    /// This method takes a `Surface`, but `Polygon` only uses that for
-    /// generating debug info. It might be better, if `Polygon` had a field
-    /// where it stored debug info specific to its algorithm. Then code using
-    /// `Polygon` could access that `Polygon`-specific debug info and translate
-    /// that into `DebugInfo`, as necessary.
-    ///
-    /// This would have the advantage of removing this dependency on `Surface`.
-    /// It would also make the test code a bit cleaner, as it wouldn't have to
-    /// bother with the `DebugInfo` anymore. Also, the `Polygon`-specific debug
-    /// info could potentially be more useful in test code, as a debugging tool
-    /// there.
-    pub fn new(surface: Surface) -> Self {
+    pub fn new() -> Self {
         Self {
-            surface,
             exterior: PolyChain::new(),
             interiors: Vec::new(),
         }
@@ -65,7 +45,6 @@ impl Polygon {
     pub fn contains_triangle(
         &self,
         triangle: [impl Into<Point<2>>; 3],
-        debug_info: &mut DebugInfo,
     ) -> bool {
         let [a, b, c] = triangle.map(Into::into);
 
@@ -99,7 +78,7 @@ impl Polygon {
             // polygon edge (and if we reached this point, it isn't), we don't
             // need to care about the distinction between "inside the polygon"
             // and "on the polygon boundary".
-            if !self.contains_point(edge.center(), debug_info) {
+            if !self.contains_point(edge.center()) {
                 // The segment is outside of the face. This means we can throw
                 // away the whole triangle.
                 return false;
@@ -140,18 +119,10 @@ impl Polygon {
     /// This code is being duplicated by the `Contains<Point<2>>` implementation
     /// for `Face`. It would be nice to be able to consolidate the duplication,
     /// but this has turned out to be difficult.
-    pub fn contains_point(
-        &self,
-        point: impl Into<Point<2>>,
-        debug_info: &mut DebugInfo,
-    ) -> bool {
+    pub fn contains_point(&self, point: impl Into<Point<2>>) -> bool {
         let ray = HorizontalRayToTheRight {
             origin: point.into(),
         };
-
-        let mut check = TriangleEdgeCheck::new(
-            self.surface.point_from_surface_coords(ray.origin),
-        );
 
         let mut num_hits = 0;
 
@@ -228,19 +199,11 @@ impl Polygon {
 
                 if count_hit {
                     num_hits += 1;
-
-                    let edge =
-                        Segment::from_points(edge.points().map(|point| {
-                            self.surface.point_from_surface_coords(point)
-                        }));
-                    check.hits.push(edge);
                 }
 
                 previous_hit = hit;
             }
         }
-
-        debug_info.triangle_edge_checks.push(check);
 
         num_hits % 2 == 1
     }
@@ -248,10 +211,7 @@ impl Polygon {
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::debug::DebugInfo;
     use fj_math::{Point, PolyChain};
-
-    use crate::objects::Surface;
 
     use super::Polygon;
 
@@ -265,11 +225,11 @@ mod tests {
         let e = [2., 1.];
         let f = [1., 2.];
 
-        let polygon = Polygon::new(Surface::xy_plane())
+        let polygon = Polygon::new()
             .with_exterior(PolyChain::from([a, b, c]).close())
             .with_interiors([PolyChain::from([d, e, f]).close()]);
 
-        assert!(!polygon.contains_triangle([d, e, f], &mut DebugInfo::new()));
+        assert!(!polygon.contains_triangle([d, e, f]));
     }
 
     #[test]
@@ -278,8 +238,8 @@ mod tests {
         let b = [2., 1.];
         let c = [0., 2.];
 
-        let polygon = Polygon::new(Surface::xy_plane())
-            .with_exterior(PolyChain::from([a, b, c]).close());
+        let polygon =
+            Polygon::new().with_exterior(PolyChain::from([a, b, c]).close());
 
         assert_contains_point(polygon, [1., 1.]);
     }
@@ -294,7 +254,7 @@ mod tests {
         let e = [2., 1.];
         let f = [1., 3.];
 
-        let polygon = Polygon::new(Surface::xy_plane())
+        let polygon = Polygon::new()
             .with_exterior(PolyChain::from([a, b, c]).close())
             .with_interiors([PolyChain::from([d, e, f]).close()]);
 
@@ -308,8 +268,8 @@ mod tests {
         let c = [3., 0.];
         let d = [3., 4.];
 
-        let polygon = Polygon::new(Surface::xy_plane())
-            .with_exterior(PolyChain::from([a, b, c, d]).close());
+        let polygon =
+            Polygon::new().with_exterior(PolyChain::from([a, b, c, d]).close());
 
         assert_contains_point(polygon, [1., 1.]);
     }
@@ -321,8 +281,8 @@ mod tests {
         let b = [2., 1.];
         let c = [3., 1.];
         let d = [0., 2.];
-        let polygon = Polygon::new(Surface::xy_plane())
-            .with_exterior(PolyChain::from([a, b, c, d]).close());
+        let polygon =
+            Polygon::new().with_exterior(PolyChain::from([a, b, c, d]).close());
         assert_contains_point(polygon, [1., 1.]);
 
         // Ray hits a vertex, but doesn't pass polygon boundary there.
@@ -331,7 +291,7 @@ mod tests {
         let c = [3., 1.];
         let d = [4., 0.];
         let e = [4., 5.];
-        let polygon = Polygon::new(Surface::xy_plane())
+        let polygon = Polygon::new()
             .with_exterior(PolyChain::from([a, b, c, d, e]).close());
         assert_contains_point(polygon, [1., 1.]);
     }
@@ -339,9 +299,7 @@ mod tests {
     fn assert_contains_point(polygon: Polygon, point: impl Into<Point<2>>) {
         let point = point.into();
 
-        assert!(polygon.contains_point(point, &mut DebugInfo::new()));
-        assert!(polygon
-            .invert_winding()
-            .contains_point(point, &mut DebugInfo::new()));
+        assert!(polygon.contains_point(point));
+        assert!(polygon.invert_winding().contains_point(point,));
     }
 }

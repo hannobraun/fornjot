@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar, Vector};
 
 use crate::{
     algorithms::intersect::face_point::FacePointIntersection,
-    objects::{Edge, Face, Vertex},
+    objects::{Face, HalfEdge, Vertex},
 };
 
 use super::{HorizontalRayToTheRight, Intersect};
@@ -142,7 +142,7 @@ pub enum RayFaceIntersection {
     RayHitsFaceAndAreParallel,
 
     /// The ray hits an edge
-    RayHitsEdge(Edge),
+    RayHitsEdge(HalfEdge),
 
     /// The ray hits a vertex
     RayHitsVertex(Vertex),
@@ -213,12 +213,12 @@ mod tests {
             .translate([1., 1., 0.]);
 
         let edge = face
-            .edge_iter()
+            .half_edge_iter()
             .copied()
             .find(|edge| {
-                let [a, b] = edge.vertices().get_or_panic();
-                a.global().position() == Point::from([1., 0., 1.])
-                    && b.global().position() == Point::from([1., 0., -1.])
+                let [a, b] = edge.vertices();
+                a.global_form().position() == Point::from([1., 0., 1.])
+                    && b.global_form().position() == Point::from([1., 0., -1.])
             })
             .unwrap();
         assert_eq!(
@@ -240,7 +240,7 @@ mod tests {
             .vertex_iter()
             .copied()
             .find(|vertex| {
-                vertex.global().position() == Point::from([1., 0., 0.])
+                vertex.global_form().position() == Point::from([1., 0., 0.])
             })
             .unwrap();
         assert_eq!(

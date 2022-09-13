@@ -1,6 +1,6 @@
 use fj_math::Point;
 
-use crate::objects::{Cycle, Edge, Surface};
+use crate::objects::{Cycle, HalfEdge, Surface};
 
 /// API for building a [`Cycle`]
 pub struct CycleBuilder {
@@ -28,18 +28,18 @@ impl CycleBuilder {
             points.push(point);
         }
 
-        let mut edges = Vec::new();
+        let mut half_edges = Vec::new();
         for points in points.windows(2) {
             // Can't panic, as we passed `2` to `windows`.
             //
             // Can be cleaned up, once `array_windows` is stable.
             let points = [points[0], points[1]];
 
-            edges.push(
-                Edge::build(self.surface).line_segment_from_points(points),
+            half_edges.push(
+                HalfEdge::build(self.surface).line_segment_from_points(points),
             );
         }
 
-        Cycle::new(self.surface, edges)
+        Cycle::new(self.surface, half_edges)
     }
 }

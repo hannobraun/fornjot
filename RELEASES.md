@@ -17,10 +17,10 @@ cargo install --path tools/automator
 
 The release announcement lives on the website, and needs to be created in the [website repository](https://github.com/hannobraun/www.fornjot.app).
 
-First, create the initial draft of the release announcement (replace date with date of previous release; replace version with version of the new release):
+First, create the initial draft of the release announcement (replace version with version of the new release):
 
 ```
-automator create-release-announcement 2022-08-22 0.13.0
+automator create-release-announcement
 ```
 
 This will create an announcement that will initially not be published to the blog or RSS feed, but it will be available at its final URL.
@@ -33,9 +33,8 @@ Now, edit this file to finish the release announcement:
    - Thank all contributors
      - new contributors: "special thanks go to first-time contributor `@name`!"
      - other contributors: "thank you, `@name`!"
-   - Make notes for introduction
 2. Write introduction
-   - Ideally, you already have a list of notes from adding the pull requests.
+   - Summarize the week's development.
    - Highlight contributions.
 3. Update list of sponsors
    - https://github.com/sponsors/hannobraun/dashboard/activity
@@ -57,7 +56,6 @@ Potential new issues of the week:
 - https://github.com/hannobraun/Fornjot/issues/821
 - https://github.com/hannobraun/Fornjot/issues/848
 - https://github.com/hannobraun/Fornjot/issues/851
-- https://github.com/hannobraun/Fornjot/issues/920
 - https://github.com/hannobraun/Fornjot/issues/937
 - https://github.com/hannobraun/Fornjot/issues/971
 - https://github.com/hannobraun/Fornjot/issues/986
@@ -66,6 +64,9 @@ Potential new issues of the week:
 - https://github.com/hannobraun/Fornjot/issues/997
 
 Already mentioned issues of the week (remove, once closed):
+
+- 2022-09-12: https://github.com/hannobraun/Fornjot/issues/1015
+- 2022-09-05: https://github.com/hannobraun/Fornjot/issues/920
 - 2022-08-29: https://github.com/hannobraun/Fornjot/issues/980
 - 2022-08-22: https://github.com/hannobraun/Fornjot/issues/938
 - 2022-08-08: https://github.com/hannobraun/Fornjot/issues/20
@@ -107,7 +108,7 @@ git push -u origin release
 Create a pull request, mention the release in the title (e.g. `Release v0.1.2`), and label it as `release`.
 
 - Once the CI build completed successfully, merge the pull request.
-- After merging, lock the pull requests. Anything that updates this pull request (like comments), could confuse next week's release automation (because GitHub doesn't allow fetching pull requests by merged date, unfortunately).
+- After merging, lock the pull requests. Anything that updates this pull request (like comments), could confuse next week's release automation (because GitHub doesn't allow sorting pull requests by merged date, unfortunately).
 
 The release automation will now compile binaries, create a release on GitHub, and publish to [crates.io](https://crates.io/).
 

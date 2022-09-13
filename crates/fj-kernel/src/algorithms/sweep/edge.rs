@@ -1,203 +1,206 @@
 use fj_interop::mesh::Color;
-use fj_math::{Line, Point, Scalar, Transform, Triangle};
+use fj_math::{Line, Scalar, Vector};
 
 use crate::{
-    algorithms::{
-        approx::{Approx, Tolerance},
-        reverse::Reverse,
-    },
+    algorithms::{reverse::Reverse, transform::TransformObject},
     objects::{
-        Curve, CurveKind, Cycle, Edge, Face, GlobalCurve, GlobalEdge, Surface,
-        Vertex, VerticesOfEdge,
+        Curve, CurveKind, Cycle, Face, GlobalEdge, HalfEdge, SurfaceVertex,
+        Vertex,
     },
 };
 
-use super::{Path, Sweep};
+use super::Sweep;
 
-impl Sweep for Edge {
+impl Sweep for (HalfEdge, Color) {
     type Swept = Face;
 
-    fn sweep(
-        self,
-        path: impl Into<Path>,
-        tolerance: impl Into<Tolerance>,
-        color: Color,
-    ) -> Self::Swept {
+    fn sweep(self, path: impl Into<Vector<3>>) -> Self::Swept {
+        let (edge, color) = self;
         let path = path.into();
-        let tolerance = tolerance.into();
 
-        if self.vertices().get().is_some() {
-            let face =
-                create_non_continuous_side_face(&self, path, tolerance, color);
-            return face;
-        }
+        let surface = edge.curve().sweep(path);
 
-        create_continuous_side_face(self, path, tolerance, color)
-    }
-}
+        // We can't use the edge we're sweeping from as the bottom edge, as that
+        // is not defined in the right surface. Let's create a new bottom edge,
+        // by swapping the surface of the original.
+        let bottom_edge = {
+            let vertices = edge.vertices();
 
-fn create_non_continuous_side_face(
-    edge: &Edge,
-    path: Path,
-    tolerance: Tolerance,
-    color: Color,
-) -> Face {
-    let edge = if path.is_negative_direction() {
-        edge.reverse()
-    } else {
-        *edge
-    };
-
-    let surface = edge.curve().sweep(path, tolerance, color);
-
-    // We can't use the edge we're sweeping from as the bottom edge, as that is
-    // not defined in the right surface. Let's create a new bottom edge, by
-    // swapping the surface of the original.
-    let bottom_edge = {
-        let vertices = edge.vertices().get_or_panic();
-
-        let curve = {
-            let points = vertices.map(|vertex| {
+            let points_curve_and_surface = vertices.map(|vertex| {
                 (vertex.position(), [vertex.position().t, Scalar::ZERO])
             });
-            let kind =
-                CurveKind::Line(Line::from_points_with_line_coords(points));
 
-            Curve::new(surface, kind, *edge.curve().global())
-        };
+            let curve = {
+                // Please note that creating a line here is correct, even if the
+                // global curve is a circle. Projected into the side surface, it is
+                // going to be a line either way.
+                let kind = CurveKind::Line(Line::from_points_with_line_coords(
+                    points_curve_and_surface,
+                ));
 
-        let vertices = {
-            let vertices = vertices.map(|vertex| {
-                Vertex::new(vertex.position(), curve, *vertex.global())
-            });
-            VerticesOfEdge::from_vertices(vertices)
-        };
-
-        Edge::new(curve, vertices, *edge.global())
-    };
-
-    let side_edges = bottom_edge
-        .vertices()
-        .get_or_panic()
-        .map(|&vertex| (vertex, surface).sweep(path, tolerance, color));
-
-    let top_edge = {
-        let bottom_vertices = bottom_edge.vertices().get_or_panic();
-        let points_surface = bottom_vertices
-            .map(|vertex| Point::from([vertex.position().t, Scalar::ONE]));
-
-        let global_vertices = side_edges.map(|edge| {
-            let [_, vertex] = edge.vertices().get_or_panic();
-            *vertex.global()
-        });
-
-        let curve = {
-            let [a_curve, b_curve] =
-                bottom_vertices.map(|vertex| vertex.position());
-            let [a_surface, b_surface] = points_surface;
-            let [a_global, b_global] =
-                global_vertices.map(|vertex| vertex.position());
-
-            let global = {
-                let line = Line::from_points_with_line_coords([
-                    (a_curve, a_global),
-                    (b_curve, b_global),
-                ]);
-
-                GlobalCurve::from_kind(CurveKind::Line(line))
+                Curve::new(surface, kind, *edge.curve().global_form())
             };
 
-            let line = Line::from_points_with_line_coords([
-                (a_curve, a_surface),
-                (b_curve, b_surface),
-            ]);
+            let vertices = {
+                let points_surface = points_curve_and_surface
+                    .map(|(_, point_surface)| point_surface);
 
-            Curve::new(surface, CurveKind::Line(line), global)
+                // Can be cleaned up, once `zip` is stable:
+                // https://doc.rust-lang.org/std/primitive.array.html#method.zip
+                let [a_vertex, b_vertex] = vertices;
+                let [a_surface, b_surface] = points_surface;
+                let vertices_with_surface_points =
+                    [(a_vertex, a_surface), (b_vertex, b_surface)];
+
+                vertices_with_surface_points.map(|(vertex, point_surface)| {
+                    let surface_vertex = SurfaceVertex::new(
+                        point_surface,
+                        surface,
+                        *vertex.global_form(),
+                    );
+
+                    Vertex::new(
+                        vertex.position(),
+                        curve,
+                        surface_vertex,
+                        *vertex.global_form(),
+                    )
+                })
+            };
+
+            HalfEdge::new(curve, vertices, *edge.global_form())
         };
 
-        let global = {
-            GlobalEdge::new(
-                *curve.global(),
-                VerticesOfEdge::from_vertices(global_vertices),
-            )
+        let side_edges = bottom_edge
+            .vertices()
+            .map(|vertex| (vertex, surface).sweep(path));
+
+        let top_edge = {
+            let bottom_vertices = bottom_edge.vertices();
+
+            let global_vertices = side_edges.map(|edge| {
+                let [_, vertex] = edge.vertices();
+                *vertex.global_form()
+            });
+
+            let points_curve_and_surface = bottom_vertices.map(|vertex| {
+                (vertex.position(), [vertex.position().t, Scalar::ONE])
+            });
+
+            let curve = {
+                let global = bottom_edge.curve().global_form().translate(path);
+
+                // Please note that creating a line here is correct, even if the
+                // global curve is a circle. Projected into the side surface, it
+                // is going to be a line either way.
+                let kind = CurveKind::Line(Line::from_points_with_line_coords(
+                    points_curve_and_surface,
+                ));
+
+                Curve::new(surface, kind, global)
+            };
+
+            let global = GlobalEdge::new(*curve.global_form(), global_vertices);
+
+            let vertices = {
+                let surface_points = points_curve_and_surface
+                    .map(|(_, point_surface)| point_surface);
+
+                // Can be cleaned up, once `zip` is stable:
+                // https://doc.rust-lang.org/std/primitive.array.html#method.zip
+                let [a_vertex, b_vertex] = bottom_vertices;
+                let [a_surface, b_surface] = surface_points;
+                let [a_global, b_global] = global_vertices;
+                let vertices = [
+                    (a_vertex, a_surface, a_global),
+                    (b_vertex, b_surface, b_global),
+                ];
+
+                vertices.map(|(vertex, point_surface, vertex_global)| {
+                    let vertex_surface = SurfaceVertex::new(
+                        point_surface,
+                        surface,
+                        vertex_global,
+                    );
+                    Vertex::new(
+                        vertex.position(),
+                        curve,
+                        vertex_surface,
+                        vertex_global,
+                    )
+                })
+            };
+
+            HalfEdge::new(curve, vertices, global)
         };
 
-        let vertices = {
-            // Can be cleaned up, once `zip` is stable:
-            // https://doc.rust-lang.org/std/primitive.array.html#method.zip
-            let [a_bottom, b_bottom] = bottom_vertices;
-            let [a_global, b_global] = global_vertices;
-            let vertices = [(a_bottom, a_global), (b_bottom, b_global)];
+        let cycle = {
+            let a = bottom_edge;
+            let [d, b] = side_edges;
+            let c = top_edge;
 
-            vertices.map(|(bottom, global)| {
-                Vertex::new(bottom.position(), curve, global)
-            })
-        };
+            let mut edges = [a, b, c, d];
 
-        Edge::new(curve, VerticesOfEdge::from_vertices(vertices), global)
-    };
+            // Make sure that edges are oriented correctly.
+            let mut i = 0;
+            while i < edges.len() {
+                let j = (i + 1) % edges.len();
 
-    let cycle = {
-        let a = bottom_edge;
-        let [d, b] = side_edges;
-        let c = top_edge;
+                let [_, prev_last] = edges[i].vertices();
+                let [next_first, _] = edges[j].vertices();
 
-        let mut edges = [a, b, c, d];
+                // Need to compare surface forms here, as the global forms might
+                // be coincident when sweeping circles, despite the vertices
+                // being different!
+                if prev_last.surface_form() != next_first.surface_form() {
+                    edges[j] = edges[j].reverse();
+                }
 
-        // Make sure that edges are oriented correctly.
-        let mut i = 0;
-        while i < edges.len() {
-            let j = (i + 1) % edges.len();
-
-            let [_, prev_last] = edges[i].vertices().get_or_panic();
-            let [next_first, _] = edges[j].vertices().get_or_panic();
-
-            if prev_last.global() != next_first.global() {
-                edges[j] = edges[j].reverse();
+                i += 1;
             }
 
-            i += 1;
-        }
-
-        Cycle::new(surface, edges)
-    };
-
-    Face::new(surface).with_exteriors([cycle]).with_color(color)
-}
-
-fn create_continuous_side_face(
-    edge: Edge,
-    path: Path,
-    tolerance: Tolerance,
-    color: Color,
-) -> Face {
-    let translation = Transform::translation(path.inner());
-
-    // This is definitely the wrong surface, but it shouldn't matter. Since this
-    // code will hopefully soon be gone anyway (this is the last piece of code
-    // that prevents us from removing triangle representation), it hopefully
-    // won't start to matter at some point either.
-    let placeholder = Surface::xy_plane();
-
-    let cycle = Cycle::new(placeholder, [edge]);
-    let approx = cycle.approx(tolerance, ());
-
-    let mut quads = Vec::new();
-    for segment in approx.segments() {
-        let [v0, v1] = segment.points();
-        let [v3, v2] = {
-            let segment = translation.transform_segment(&segment);
-            segment.points()
+            Cycle::new(surface, edges)
         };
 
-        quads.push([v0, v1, v2, v3]);
+        Face::new(surface, cycle).with_color(color)
     }
+}
 
-    let mut side_face: Vec<(Triangle<3>, _)> = Vec::new();
-    for [v0, v1, v2, v3] in quads {
-        side_face.push(([v0, v1, v2].into(), color));
-        side_face.push(([v0, v2, v3].into(), color));
+#[cfg(test)]
+mod tests {
+    use fj_interop::mesh::Color;
+    use pretty_assertions::assert_eq;
+
+    use crate::{
+        algorithms::{reverse::Reverse, sweep::Sweep},
+        objects::{Cycle, Face, HalfEdge, Surface},
+    };
+
+    #[test]
+    fn sweep() {
+        let half_edge = HalfEdge::build(Surface::xy_plane())
+            .line_segment_from_points([[0., 0.], [1., 0.]]);
+
+        let face = (half_edge, Color::default()).sweep([0., 0., 1.]);
+
+        let expected_face = {
+            let surface = Surface::xz_plane();
+            let builder = HalfEdge::build(surface);
+
+            let bottom = builder.line_segment_from_points([[0., 0.], [1., 0.]]);
+            let top = builder
+                .line_segment_from_points([[0., 1.], [1., 1.]])
+                .reverse();
+            let left = builder
+                .line_segment_from_points([[0., 0.], [0., 1.]])
+                .reverse();
+            let right = builder.line_segment_from_points([[1., 0.], [1., 1.]]);
+
+            let cycle = Cycle::new(surface, [bottom, right, top, left]);
+
+            Face::new(surface, cycle)
+        };
+
+        assert_eq!(face, expected_face);
     }
-
-    Face::from_triangles(side_face)
 }

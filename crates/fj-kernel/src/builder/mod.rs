@@ -7,13 +7,15 @@ mod face;
 mod shell;
 mod sketch;
 mod solid;
+mod vertex;
 
 pub use self::{
     curve::{CurveBuilder, GlobalCurveBuilder},
     cycle::CycleBuilder,
-    edge::EdgeBuilder,
+    edge::HalfEdgeBuilder,
     face::{FaceBuilder, FacePolygon},
     shell::ShellBuilder,
     sketch::SketchBuilder,
     solid::SolidBuilder,
+    vertex::VertexBuilder,
 };

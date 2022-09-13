@@ -1,28 +1,26 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
-    algorithms::{
-        approx::Tolerance,
-        validate::{Validate, Validated, ValidationConfig, ValidationError},
+    algorithms::validate::{
+        Validate, Validated, ValidationConfig, ValidationError,
     },
-    objects::Face,
+    objects::Faces,
 };
 use fj_math::Aabb;
 
 use super::Shape;
 
 impl Shape for fj::Group {
-    type Brep = Vec<Face>;
+    type Brep = Faces;
 
     fn compute_brep(
         &self,
         config: &ValidationConfig,
-        tolerance: Tolerance,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
-        let mut faces = Vec::new();
+        let mut faces = Faces::new();
 
-        let a = self.a.compute_brep(config, tolerance, debug_info)?;
-        let b = self.b.compute_brep(config, tolerance, debug_info)?;
+        let a = self.a.compute_brep(config, debug_info)?;
+        let b = self.b.compute_brep(config, debug_info)?;
 
         faces.extend(a.into_inner());
         faces.extend(b.into_inner());

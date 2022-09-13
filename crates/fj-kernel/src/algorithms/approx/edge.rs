@@ -1,40 +1,55 @@
-use fj_math::{Point, Scalar};
+//! Edge approximation
+//!
+//! The approximation of a curve is its first vertex, combined with the
+//! approximation of its curve. The second vertex is left off, as edge
+//! approximations are usually used to build cycle approximations, and this way,
+//! the caller doesn't have to call with duplicate vertices.
 
-use crate::objects::Edge;
+use crate::objects::HalfEdge;
 
-use super::{curve::RangeOnCurve, Approx};
+use super::{
+    curve::{CurveApprox, RangeOnCurve},
+    Approx, ApproxPoint,
+};
 
-impl Approx for Edge {
-    type Approximation = Vec<(Point<2>, Point<3>)>;
-    type Params = ();
+impl Approx for &HalfEdge {
+    type Approximation = HalfEdgeApprox;
 
-    fn approx(
-        &self,
-        tolerance: super::Tolerance,
-        (): Self::Params,
-    ) -> Self::Approximation {
-        // The range is only used for circles right now.
-        let boundary = match self.vertices().get() {
-            Some(vertices) => vertices
-                .map(|vertex| (vertex.position(), vertex.global().position())),
-            None => {
-                let start_curve = Point::from([Scalar::ZERO]);
-                let end_curve = Point::from([Scalar::TAU]);
+    fn approx(self, tolerance: super::Tolerance) -> Self::Approximation {
+        let &[a, b] = self.vertices();
+        let range = RangeOnCurve::new([a, b]);
 
-                // We're dealing with a circle here. Start and end are identical
-                // points, in global coordinates.
-                let point_global = self
-                    .global()
-                    .curve()
-                    .kind()
-                    .point_from_curve_coords(start_curve);
+        let first = ApproxPoint::new(
+            a.surface_form().position(),
+            a.global_form().position(),
+        );
+        let curve_approx = (self.curve(), range).approx(tolerance);
 
-                [(start_curve, point_global), (end_curve, point_global)]
-            }
-        };
+        HalfEdgeApprox {
+            first,
+            curve_approx,
+        }
+    }
+}
 
-        let range = RangeOnCurve { boundary };
+/// An approximation of an [`HalfEdge`]
+#[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct HalfEdgeApprox {
+    /// The point that approximates the first vertex of the curve
+    pub first: ApproxPoint<2>,
 
-        self.curve().approx(tolerance, range)
+    /// The approximation of the edge's curve
+    pub curve_approx: CurveApprox,
+}
+
+impl HalfEdgeApprox {
+    /// Compute the points that approximate the edge
+    pub fn points(&self) -> Vec<ApproxPoint<2>> {
+        let mut points = Vec::new();
+
+        points.push(self.first.clone());
+        points.extend(self.curve_approx.points.clone());
+
+        points
     }
 }
