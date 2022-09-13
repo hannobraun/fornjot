@@ -1,10 +1,14 @@
+use std::env;
+
 use anyhow::Context;
 use octocrab::Octocrab;
 
 use crate::{announcement::create_release_announcement, args::Args};
 
 pub async fn run() -> anyhow::Result<()> {
-    let octocrab = Octocrab::builder().build()?;
+    let token = env::var("GITHUB_TOKEN")
+        .context("Loading env variable `GITHUB_TOKEN`")?;
+    let octocrab = Octocrab::builder().personal_token(token).build()?;
 
     match Args::parse() {
         Args::CreateReleaseAnnouncement(_) => {
