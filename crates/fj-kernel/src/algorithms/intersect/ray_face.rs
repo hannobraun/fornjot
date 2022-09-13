@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar, Vector};
 
 use crate::{
     algorithms::intersect::face_point::FacePointIntersection,
-    objects::{CurveKind, Face, HalfEdge, Surface, Vertex},
+    objects::{CurveKind, Face, HalfEdge, Vertex},
 };
 
 use super::{HorizontalRayToTheRight, Intersect};
@@ -16,15 +16,13 @@ impl Intersect for (&HorizontalRayToTheRight<3>, &Face) {
         let (ray, face) = self;
 
         let (plane_origin, plane_direction_1, plane_direction_2) =
-            match face.surface() {
-                Surface::SweptCurve(surface) => match surface.curve {
-                    CurveKind::Circle(_) => todo!(
+            match face.surface().curve {
+                CurveKind::Circle(_) => todo!(
                     "Casting a ray against a swept circle is not supported yet"
                 ),
-                    CurveKind::Line(line) => {
-                        (line.origin(), line.direction(), surface.path)
-                    }
-                },
+                CurveKind::Line(line) => {
+                    (line.origin(), line.direction(), face.surface().path)
+                }
             };
 
         let plane_and_ray_are_parallel = {

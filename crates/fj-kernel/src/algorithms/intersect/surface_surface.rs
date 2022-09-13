@@ -73,7 +73,6 @@ struct PlaneParametric {
 impl PlaneParametric {
     pub fn extract_from_surface(surface: &Surface) -> Self {
         let (line, path) = {
-            let Surface::SweptCurve(surface) = surface;
             let line = match surface.curve {
                 CurveKind::Line(line) => line,
                 _ => todo!(

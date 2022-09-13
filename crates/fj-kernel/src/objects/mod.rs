@@ -22,6 +22,6 @@ pub use self::{
     shell::Shell,
     sketch::Sketch,
     solid::Solid,
-    surface::{Surface, SweptCurve},
+    surface::Surface,
     vertex::{GlobalVertex, SurfaceVertex, Vertex},
 };

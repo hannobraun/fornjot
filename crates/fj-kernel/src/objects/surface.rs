@@ -4,34 +4,37 @@ use super::CurveKind;
 
 /// A two-dimensional shape
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub enum Surface {
-    /// A swept curve
-    SweptCurve(SweptCurve),
+pub struct Surface {
+    /// The curve that this surface was swept from
+    pub curve: CurveKind<3>,
+
+    /// The path that the curve was swept along
+    pub path: Vector<3>,
 }
 
 impl Surface {
     /// Construct a `Surface` that represents the xy-plane
     pub fn xy_plane() -> Self {
-        Self::SweptCurve(SweptCurve {
+        Self {
             curve: CurveKind::x_axis(),
             path: Vector::unit_y(),
-        })
+        }
     }
 
     /// Construct a `Surface` that represents the xz-plane
     pub fn xz_plane() -> Self {
-        Self::SweptCurve(SweptCurve {
+        Self {
             curve: CurveKind::x_axis(),
             path: Vector::unit_z(),
-        })
+        }
     }
 
     /// Construct a `Surface` that represents the yz-plane
     pub fn yz_plane() -> Self {
-        Self::SweptCurve(SweptCurve {
+        Self {
             curve: CurveKind::y_axis(),
             path: Vector::unit_z(),
-        })
+        }
     }
 
     /// Construct a plane from 3 points
@@ -41,45 +44,9 @@ impl Surface {
         let curve = CurveKind::Line(Line::from_points([a, b]));
         let path = c - a;
 
-        Self::SweptCurve(SweptCurve { curve, path })
+        Self { curve, path }
     }
 
-    /// Convert a point in surface coordinates to model coordinates
-    pub fn point_from_surface_coords(
-        &self,
-        point: impl Into<Point<2>>,
-    ) -> Point<3> {
-        match self {
-            Self::SweptCurve(surface) => {
-                surface.point_from_surface_coords(point)
-            }
-        }
-    }
-
-    /// Convert a vector in surface coordinates to model coordinates
-    pub fn vector_from_surface_coords(
-        &self,
-        vector: impl Into<Vector<2>>,
-    ) -> Vector<3> {
-        match self {
-            Self::SweptCurve(surface) => {
-                surface.vector_from_surface_coords(vector)
-            }
-        }
-    }
-}
-
-/// A surface that was swept from a curve
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct SweptCurve {
-    /// The curve that this surface was swept from
-    pub curve: CurveKind<3>,
-
-    /// The path that the curve was swept along
-    pub path: Vector<3>,
-}
-
-impl SweptCurve {
     /// Convert a point in surface coordinates to model coordinates
     pub fn point_from_surface_coords(
         &self,
@@ -112,11 +79,11 @@ mod tests {
 
     use crate::objects::CurveKind;
 
-    use super::SweptCurve;
+    use super::Surface;
 
     #[test]
     fn point_from_surface_coords() {
-        let swept = SweptCurve {
+        let swept = Surface {
             curve: CurveKind::Line(Line::from_origin_and_direction(
                 Point::from([1., 1., 1.]),
                 Vector::from([0., 2., 0.]),
@@ -132,7 +99,7 @@ mod tests {
 
     #[test]
     fn vector_from_surface_coords() {
-        let swept = SweptCurve {
+        let swept = Surface {
             curve: CurveKind::Line(Line::from_origin_and_direction(
                 Point::from([1., 0., 0.]),
                 Vector::from([0., 2., 0.]),
