@@ -192,11 +192,11 @@ mod tests {
         let points_global = [[0., 0., 0.], [1., 0., 0.]];
 
         let curve = {
-            let curve_local = SurfacePath::line_from_points(points_surface);
+            let path = SurfacePath::line_from_points(points_surface);
             let curve_global = GlobalCurve::from_path(
                 GlobalPath::line_from_points(points_global),
             );
-            Curve::new(surface, curve_local, curve_global)
+            Curve::new(surface, path, curve_global)
         };
 
         let [a_global, b_global] =

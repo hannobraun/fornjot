@@ -24,7 +24,7 @@ impl HalfEdgeBuilder {
     /// Build a circle from the given radius
     pub fn circle_from_radius(&self, radius: Scalar) -> HalfEdge {
         let curve = {
-            let local = SurfacePath::Circle(Circle::new(
+            let path = SurfacePath::Circle(Circle::new(
                 Point::origin(),
                 Vector::from([radius, Scalar::ZERO]),
                 Vector::from([Scalar::ZERO, radius]),
@@ -36,7 +36,7 @@ impl HalfEdgeBuilder {
                     Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
                 )));
 
-            Curve::new(self.surface, local, global)
+            Curve::new(self.surface, path, global)
         };
 
         let vertices = {
@@ -100,7 +100,7 @@ impl HalfEdgeBuilder {
         };
 
         let curve = {
-            let curve_local = SurfacePath::Line(Line::from_points(points));
+            let path = SurfacePath::Line(Line::from_points(points));
             let curve_global = {
                 let points = global_vertices
                     .map(|global_vertex| global_vertex.position());
@@ -109,7 +109,7 @@ impl HalfEdgeBuilder {
                 )))
             };
 
-            Curve::new(self.surface, curve_local, curve_global)
+            Curve::new(self.surface, path, curve_global)
         };
 
         let vertices = {
