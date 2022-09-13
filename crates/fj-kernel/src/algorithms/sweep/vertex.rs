@@ -46,7 +46,7 @@ impl Sweep for (Vertex, Surface) {
         //
         // Let's make sure that these requirements are met.
         {
-            assert_eq!(vertex.curve().global_form().path(), &surface.u());
+            assert_eq!(vertex.curve().global_form().path(), surface.u());
             assert_eq!(path, surface.v());
         }
 
