@@ -13,7 +13,10 @@ use std::cmp::max;
 
 use fj_math::{Circle, Point, Scalar};
 
-use crate::objects::{Curve, CurveKind, GlobalCurve, Vertex};
+use crate::{
+    objects::{Curve, GlobalCurve, Vertex},
+    path::GlobalPath,
+};
 
 use super::{Approx, ApproxPoint, Tolerance};
 
@@ -45,10 +48,10 @@ impl Approx for (&GlobalCurve, RangeOnCurve) {
         let (curve, range) = self;
 
         match curve.path() {
-            CurveKind::Circle(circle) => {
+            GlobalPath::Circle(circle) => {
                 approx_circle(&circle, range, tolerance)
             }
-            CurveKind::Line(_) => vec![],
+            GlobalPath::Line(_) => vec![],
         }
     }
 }

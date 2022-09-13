@@ -19,7 +19,7 @@ pub fn validate_curve(
         let point_global = curve
             .global_form()
             .path()
-            .point_from_curve_coords(point_curve);
+            .point_from_path_coords(point_curve);
 
         let distance = (point_surface_as_global - point_global).magnitude();
 
@@ -52,7 +52,7 @@ pub fn validate_vertex(
         .curve()
         .global_form()
         .path()
-        .point_from_curve_coords(local);
+        .point_from_path_coords(local);
     let global = vertex.global_form().position();
     let distance = (local_as_global - global).magnitude();
 

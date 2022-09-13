@@ -1,6 +1,9 @@
 use fj_math::{Circle, Line, Point, Transform, Vector};
 
-use crate::builder::{CurveBuilder, GlobalCurveBuilder};
+use crate::{
+    builder::{CurveBuilder, GlobalCurveBuilder},
+    path::GlobalPath,
+};
 
 use super::Surface;
 
@@ -50,7 +53,7 @@ impl Curve {
 /// A curve, defined in global (3D) coordinates
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalCurve {
-    path: CurveKind<3>,
+    path: GlobalPath,
 }
 
 impl GlobalCurve {
@@ -60,12 +63,12 @@ impl GlobalCurve {
     }
 
     /// Construct a `GlobalCurve` from the path that defines it
-    pub fn from_path(path: CurveKind<3>) -> Self {
+    pub fn from_path(path: GlobalPath) -> Self {
         Self { path }
     }
 
     /// Access the path that defines this curve
-    pub fn path(&self) -> CurveKind<3> {
+    pub fn path(&self) -> GlobalPath {
         self.path
     }
 }

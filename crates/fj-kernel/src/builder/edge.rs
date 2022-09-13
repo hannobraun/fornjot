@@ -1,8 +1,11 @@
 use fj_math::{Circle, Line, Point, Scalar, Vector};
 
-use crate::objects::{
-    Curve, CurveKind, GlobalCurve, GlobalVertex, HalfEdge, Surface,
-    SurfaceVertex, Vertex,
+use crate::{
+    objects::{
+        Curve, CurveKind, GlobalCurve, GlobalVertex, HalfEdge, Surface,
+        SurfaceVertex, Vertex,
+    },
+    path::GlobalPath,
 };
 
 /// API for building an [`HalfEdge`]
@@ -27,7 +30,7 @@ impl HalfEdgeBuilder {
                 Vector::from([Scalar::ZERO, radius]),
             ));
             let global =
-                GlobalCurve::from_path(CurveKind::Circle(Circle::new(
+                GlobalCurve::from_path(GlobalPath::Circle(Circle::new(
                     Point::origin(),
                     Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
                     Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
@@ -41,7 +44,7 @@ impl HalfEdgeBuilder {
                 [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
             let global_vertex = GlobalVertex::from_position(
-                curve.global_form().path().point_from_curve_coords(a_curve),
+                curve.global_form().path().point_from_path_coords(a_curve),
             );
 
             let surface_vertices = [a_curve, b_curve].map(|point_curve| {
@@ -101,7 +104,7 @@ impl HalfEdgeBuilder {
             let curve_global = {
                 let points = global_vertices
                     .map(|global_vertex| global_vertex.position());
-                GlobalCurve::from_path(CurveKind::Line(Line::from_points(
+                GlobalCurve::from_path(GlobalPath::Line(Line::from_points(
                     points,
                 )))
             };

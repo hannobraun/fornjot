@@ -1,6 +1,9 @@
 use fj_math::{Line, Point, Vector};
 
-use crate::objects::{Curve, CurveKind, GlobalCurve, Surface};
+use crate::{
+    objects::{Curve, CurveKind, GlobalCurve, Surface},
+    path::GlobalPath,
+};
 
 /// API for building a [`Curve`]
 pub struct CurveBuilder {
@@ -43,7 +46,7 @@ impl CurveBuilder {
         Curve::new(
             self.surface,
             CurveKind::Line(local),
-            GlobalCurve::from_path(CurveKind::Line(global)),
+            GlobalCurve::from_path(GlobalPath::Line(global)),
         )
     }
 }
@@ -54,17 +57,17 @@ pub struct GlobalCurveBuilder;
 impl GlobalCurveBuilder {
     /// Create a line that represents the x-axis
     pub fn x_axis(&self) -> GlobalCurve {
-        GlobalCurve::from_path(CurveKind::x_axis())
+        GlobalCurve::from_path(GlobalPath::x_axis())
     }
 
     /// Create a line that represents the y-axis
     pub fn y_axis(&self) -> GlobalCurve {
-        GlobalCurve::from_path(CurveKind::y_axis())
+        GlobalCurve::from_path(GlobalPath::y_axis())
     }
 
     /// Create a line that represents the z-axis
     pub fn z_axis(&self) -> GlobalCurve {
-        GlobalCurve::from_path(CurveKind::z_axis())
+        GlobalCurve::from_path(GlobalPath::z_axis())
     }
 
     /// Create a line from the given points
@@ -73,6 +76,6 @@ impl GlobalCurveBuilder {
         points: [impl Into<Point<3>>; 2],
     ) -> GlobalCurve {
         let line = Line::from_points(points);
-        GlobalCurve::from_path(CurveKind::Line(line))
+        GlobalCurve::from_path(GlobalPath::Line(line))
     }
 }

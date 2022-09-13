@@ -24,7 +24,7 @@ impl VertexBuilder {
             self.curve
                 .global_form()
                 .path()
-                .point_from_curve_coords(point),
+                .point_from_path_coords(point),
         );
         let surface_form = SurfaceVertex::new(
             self.curve.kind().point_from_curve_coords(point),

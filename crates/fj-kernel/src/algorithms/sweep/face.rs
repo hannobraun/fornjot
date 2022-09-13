@@ -2,7 +2,8 @@ use fj_math::{Scalar, Vector};
 
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
-    objects::{CurveKind, Face, Shell},
+    objects::{Face, Shell},
+    path::GlobalPath,
 };
 
 use super::Sweep;
@@ -17,11 +18,11 @@ impl Sweep for Face {
 
         let is_negative_sweep = {
             let a = match self.surface().u() {
-                CurveKind::Circle(_) => todo!(
+                GlobalPath::Circle(_) => todo!(
                     "Sweeping from faces defined in round surfaces is not \
                     supported"
                 ),
-                CurveKind::Line(line) => line.direction(),
+                GlobalPath::Line(line) => line.direction(),
             };
             let b = self.surface().v();
 
