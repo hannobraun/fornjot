@@ -52,6 +52,16 @@ impl Surface {
         Self { u, v }
     }
 
+    /// Access the path that defines the u-coordinate of this surface
+    pub fn u(&self) -> CurveKind<3> {
+        self.u
+    }
+
+    /// Access the path that defines the v-coordinate of this surface
+    pub fn v(&self) -> Vector<3> {
+        self.v
+    }
+
     /// Convert a point in surface coordinates to model coordinates
     pub fn point_from_surface_coords(
         &self,

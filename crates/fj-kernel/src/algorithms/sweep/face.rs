@@ -16,14 +16,14 @@ impl Sweep for Face {
         let mut faces = Vec::new();
 
         let is_negative_sweep = {
-            let a = match self.surface().u {
+            let a = match self.surface().u() {
                 CurveKind::Circle(_) => todo!(
                     "Sweeping from faces defined in round surfaces is not \
                     supported"
                 ),
                 CurveKind::Line(line) => line.direction(),
             };
-            let b = self.surface().v;
+            let b = self.surface().v();
 
             let normal = a.cross(&b);
 

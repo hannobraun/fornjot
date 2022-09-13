@@ -46,8 +46,8 @@ impl Sweep for (Vertex, Surface) {
         //
         // Let's make sure that these requirements are met.
         {
-            assert_eq!(vertex.curve().global_form().kind(), &surface.u);
-            assert_eq!(path, surface.v);
+            assert_eq!(vertex.curve().global_form().kind(), &surface.u());
+            assert_eq!(path, surface.v());
         }
 
         // With that out of the way, let's start by creating the `GlobalEdge`,
