@@ -2,7 +2,7 @@ use fj_math::{Circle, Line, Point, Transform, Vector};
 
 use crate::{
     builder::{CurveBuilder, GlobalCurveBuilder},
-    path::GlobalPath,
+    path::{GlobalPath, SurfacePath},
 };
 
 use super::Surface;
@@ -11,7 +11,7 @@ use super::Surface;
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Curve {
     surface: Surface,
-    path: CurveKind<2>,
+    path: SurfacePath,
     global: GlobalCurve,
 }
 
@@ -24,7 +24,7 @@ impl Curve {
     /// Construct a new instance of `Curve`
     pub fn new(
         surface: Surface,
-        path: CurveKind<2>,
+        path: SurfacePath,
         global: GlobalCurve,
     ) -> Self {
         Self {
@@ -40,7 +40,7 @@ impl Curve {
     }
 
     /// Access the path that defines this curve
-    pub fn path(&self) -> CurveKind<2> {
+    pub fn path(&self) -> SurfacePath {
         self.path
     }
 

@@ -1,8 +1,8 @@
 use fj_math::{Line, Point, Scalar, Vector};
 
 use crate::{
-    objects::{Curve, CurveKind, GlobalCurve, Surface},
-    path::GlobalPath,
+    objects::{Curve, GlobalCurve, Surface},
+    path::{GlobalPath, SurfacePath},
 };
 
 /// The intersection between two surfaces
@@ -123,7 +123,7 @@ impl PlaneConstantNormal {
 fn project_line_into_plane(
     line: &Line<3>,
     plane: &PlaneParametric,
-) -> CurveKind<2> {
+) -> SurfacePath {
     let line_origin_relative_to_plane = line.origin() - plane.origin;
     let line_origin_in_plane = Vector::from([
         plane
@@ -146,7 +146,7 @@ fn project_line_into_plane(
         line_direction_in_plane,
     );
 
-    CurveKind::Line(line)
+    SurfacePath::Line(line)
 }
 
 #[cfg(test)]

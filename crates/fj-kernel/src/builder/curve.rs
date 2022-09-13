@@ -1,8 +1,8 @@
 use fj_math::{Line, Point, Vector};
 
 use crate::{
-    objects::{Curve, CurveKind, GlobalCurve, Surface},
-    path::GlobalPath,
+    objects::{Curve, GlobalCurve, Surface},
+    path::{GlobalPath, SurfacePath},
 };
 
 /// API for building a [`Curve`]
@@ -45,7 +45,7 @@ impl CurveBuilder {
 
         Curve::new(
             self.surface,
-            CurveKind::Line(local),
+            SurfacePath::Line(local),
             GlobalCurve::from_path(GlobalPath::Line(global)),
         )
     }

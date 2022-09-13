@@ -161,10 +161,10 @@ mod tests {
     use crate::{
         algorithms::validate::{Validate, ValidationConfig, ValidationError},
         objects::{
-            Curve, CurveKind, GlobalCurve, GlobalVertex, HalfEdge, Surface,
-            SurfaceVertex, Vertex,
+            Curve, GlobalCurve, GlobalVertex, HalfEdge, Surface, SurfaceVertex,
+            Vertex,
         },
-        path::GlobalPath,
+        path::{GlobalPath, SurfacePath},
     };
 
     #[test]
@@ -176,7 +176,7 @@ mod tests {
         let line_surface = Line::from_points([[0., 0.], [2., 0.]]);
         let curve = Curve::new(
             Surface::xy_plane(),
-            CurveKind::Line(line_surface),
+            SurfacePath::Line(line_surface),
             global_curve,
         );
 
@@ -192,7 +192,7 @@ mod tests {
         let points_global = [[0., 0., 0.], [1., 0., 0.]];
 
         let curve = {
-            let curve_local = CurveKind::line_from_points(points_surface);
+            let curve_local = SurfacePath::line_from_points(points_surface);
             let curve_global = GlobalCurve::from_path(
                 GlobalPath::line_from_points(points_global),
             );

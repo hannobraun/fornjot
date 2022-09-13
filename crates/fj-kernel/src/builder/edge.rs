@@ -2,10 +2,10 @@ use fj_math::{Circle, Line, Point, Scalar, Vector};
 
 use crate::{
     objects::{
-        Curve, CurveKind, GlobalCurve, GlobalVertex, HalfEdge, Surface,
-        SurfaceVertex, Vertex,
+        Curve, GlobalCurve, GlobalVertex, HalfEdge, Surface, SurfaceVertex,
+        Vertex,
     },
-    path::GlobalPath,
+    path::{GlobalPath, SurfacePath},
 };
 
 /// API for building an [`HalfEdge`]
@@ -24,7 +24,7 @@ impl HalfEdgeBuilder {
     /// Build a circle from the given radius
     pub fn circle_from_radius(&self, radius: Scalar) -> HalfEdge {
         let curve = {
-            let local = CurveKind::Circle(Circle::new(
+            let local = SurfacePath::Circle(Circle::new(
                 Point::origin(),
                 Vector::from([radius, Scalar::ZERO]),
                 Vector::from([Scalar::ZERO, radius]),
@@ -49,7 +49,7 @@ impl HalfEdgeBuilder {
 
             let surface_vertices = [a_curve, b_curve].map(|point_curve| {
                 let point_surface =
-                    curve.path().point_from_curve_coords(point_curve);
+                    curve.path().point_from_path_coords(point_curve);
                 SurfaceVertex::new(point_surface, self.surface, global_vertex)
             });
 
@@ -100,7 +100,7 @@ impl HalfEdgeBuilder {
         };
 
         let curve = {
-            let curve_local = CurveKind::Line(Line::from_points(points));
+            let curve_local = SurfacePath::Line(Line::from_points(points));
             let curve_global = {
                 let points = global_vertices
                     .map(|global_vertex| global_vertex.position());

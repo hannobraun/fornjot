@@ -4,9 +4,9 @@ use fj_math::{Line, Scalar, Vector};
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
     objects::{
-        Curve, CurveKind, Cycle, Face, GlobalEdge, HalfEdge, SurfaceVertex,
-        Vertex,
+        Curve, Cycle, Face, GlobalEdge, HalfEdge, SurfaceVertex, Vertex,
     },
+    path::SurfacePath,
 };
 
 use super::Sweep;
@@ -34,9 +34,10 @@ impl Sweep for (HalfEdge, Color) {
                 // Please note that creating a line here is correct, even if the
                 // global curve is a circle. Projected into the side surface, it is
                 // going to be a line either way.
-                let kind = CurveKind::Line(Line::from_points_with_line_coords(
-                    points_curve_and_surface,
-                ));
+                let kind =
+                    SurfacePath::Line(Line::from_points_with_line_coords(
+                        points_curve_and_surface,
+                    ));
 
                 Curve::new(surface, kind, *edge.curve().global_form())
             };
@@ -93,9 +94,10 @@ impl Sweep for (HalfEdge, Color) {
                 // Please note that creating a line here is correct, even if the
                 // global curve is a circle. Projected into the side surface, it
                 // is going to be a line either way.
-                let kind = CurveKind::Line(Line::from_points_with_line_coords(
-                    points_curve_and_surface,
-                ));
+                let kind =
+                    SurfacePath::Line(Line::from_points_with_line_coords(
+                        points_curve_and_surface,
+                    ));
 
                 Curve::new(surface, kind, global)
             };
