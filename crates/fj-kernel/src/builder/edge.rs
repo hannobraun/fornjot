@@ -41,7 +41,7 @@ impl HalfEdgeBuilder {
                 [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
             let global_vertex = GlobalVertex::from_position(
-                curve.global_form().kind().point_from_curve_coords(a_curve),
+                curve.global_form().path().point_from_curve_coords(a_curve),
             );
 
             let surface_vertices = [a_curve, b_curve].map(|point_curve| {

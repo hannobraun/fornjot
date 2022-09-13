@@ -65,7 +65,7 @@ impl GlobalCurve {
     }
 
     /// Access the kind of this curve
-    pub fn kind(&self) -> &CurveKind<3> {
+    pub fn path(&self) -> &CurveKind<3> {
         &self.kind
     }
 }
