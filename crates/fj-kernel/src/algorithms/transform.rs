@@ -132,8 +132,11 @@ impl TransformObject for Solid {
 impl TransformObject for Surface {
     fn transform(self, transform: &Transform) -> Self {
         match self {
-            Self::SweptCurve(surface) => {
-                Self::SweptCurve(surface.transform(transform))
+            Self::SweptCurve(mut surface) => {
+                surface.curve = surface.curve.transform(transform);
+                surface.path = transform.transform_vector(&surface.path);
+
+                Self::SweptCurve(surface)
             }
         }
     }

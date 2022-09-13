@@ -1,4 +1,4 @@
-use fj_math::{Line, Point, Transform, Vector};
+use fj_math::{Line, Point, Vector};
 
 use super::CurveKind;
 
@@ -80,14 +80,6 @@ pub struct SweptCurve {
 }
 
 impl SweptCurve {
-    /// Transform the surface
-    #[must_use]
-    pub fn transform(mut self, transform: &Transform) -> Self {
-        self.curve = self.curve.transform(transform);
-        self.path = transform.transform_vector(&self.path);
-        self
-    }
-
     /// Convert a point in surface coordinates to model coordinates
     pub fn point_from_surface_coords(
         &self,
