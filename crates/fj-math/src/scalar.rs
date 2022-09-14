@@ -88,8 +88,8 @@ impl Scalar {
     }
 
     /// Compute the maximum of this and another scalar
-    pub fn max(self, other: Self) -> Self {
-        self.0.max(other.0).into()
+    pub fn max(self, other: impl Into<Self>) -> Self {
+        self.0.max(other.into().0).into()
     }
 
     /// Compute the smallest integer larger than or equal to this scalar
