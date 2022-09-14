@@ -125,7 +125,7 @@ impl Vector<2> {
 
     /// Construct a `Vector` that represents the v-axis
     pub fn unit_v() -> Self {
-        Vector::from([1., 0.])
+        Vector::from([0., 1.])
     }
 
     /// Compute the 2D cross product with another vector
