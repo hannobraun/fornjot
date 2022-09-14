@@ -1,4 +1,4 @@
-use fj_math::{Circle, Line, Point, Scalar, Vector};
+use fj_math::{Line, Point, Scalar};
 
 use crate::{
     objects::{
@@ -22,22 +22,8 @@ impl HalfEdgeBuilder {
     }
 
     /// Build a circle from the given radius
-    pub fn circle_from_radius(&self, radius: Scalar) -> HalfEdge {
-        let curve = {
-            let path = SurfacePath::Circle(Circle::new(
-                Point::origin(),
-                Vector::from([radius, Scalar::ZERO]),
-                Vector::from([Scalar::ZERO, radius]),
-            ));
-            let global =
-                GlobalCurve::from_path(GlobalPath::Circle(Circle::new(
-                    Point::origin(),
-                    Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
-                    Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
-                )));
-
-            Curve::new(self.surface, path, global)
-        };
+    pub fn circle_from_radius(&self, radius: impl Into<Scalar>) -> HalfEdge {
+        let curve = Curve::build(self.surface).circle_from_radius(radius);
 
         let vertices = {
             let [a_curve, b_curve] =

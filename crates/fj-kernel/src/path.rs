@@ -22,7 +22,7 @@
 //! [`Surface`]: crate::objects::Surface
 //! [#1021]: https://github.com/hannobraun/Fornjot/issues/1021
 
-use fj_math::{Circle, Line, Point, Vector};
+use fj_math::{Circle, Line, Point, Scalar, Vector};
 
 /// A path through surface (2D) space
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -35,6 +35,17 @@ pub enum SurfacePath {
 }
 
 impl SurfacePath {
+    /// Build a circle from the given radius
+    pub fn circle_from_radius(radius: impl Into<Scalar>) -> Self {
+        let radius = radius.into();
+
+        SurfacePath::Circle(Circle::new(
+            Point::origin(),
+            Vector::from([radius, Scalar::ZERO]),
+            Vector::from([Scalar::ZERO, radius]),
+        ))
+    }
+
     /// Construct a line from two points
     pub fn line_from_points(points: [impl Into<Point<2>>; 2]) -> Self {
         Self::Line(Line::from_points(points))
@@ -63,11 +74,6 @@ pub enum GlobalPath {
 }
 
 impl GlobalPath {
-    /// Construct a line from two points
-    pub fn line_from_points(points: [impl Into<Point<3>>; 2]) -> Self {
-        Self::Line(Line::from_points(points))
-    }
-
     /// Construct a `GlobalPath` that represents the x-axis
     pub fn x_axis() -> Self {
         Self::Line(Line::from_origin_and_direction(
@@ -90,6 +96,22 @@ impl GlobalPath {
             Point::origin(),
             Vector::unit_z(),
         ))
+    }
+
+    /// Build a circle from the given radius
+    pub fn circle_from_radius(radius: impl Into<Scalar>) -> Self {
+        let radius = radius.into();
+
+        GlobalPath::Circle(Circle::new(
+            Point::origin(),
+            Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
+            Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
+        ))
+    }
+
+    /// Construct a line from two points
+    pub fn line_from_points(points: [impl Into<Point<3>>; 2]) -> Self {
+        Self::Line(Line::from_points(points))
     }
 
     /// Access the origin of the path's coordinate system
