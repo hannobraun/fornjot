@@ -18,7 +18,7 @@ impl CurveBuilder {
         Self { surface }
     }
 
-    /// Create a line that represents the u-axis on the surface
+    /// Build a line that represents the u-axis on the surface
     pub fn u_axis(&self) -> Curve {
         let a = Point::origin();
         let b = a + Vector::unit_u();
@@ -26,7 +26,7 @@ impl CurveBuilder {
         self.line_from_points([a, b])
     }
 
-    /// Create a line that represents the v-axis on the surface
+    /// Build a line that represents the v-axis on the surface
     pub fn v_axis(&self) -> Curve {
         let a = Point::origin();
         let b = a + Vector::unit_v();
@@ -34,7 +34,7 @@ impl CurveBuilder {
         self.line_from_points([a, b])
     }
 
-    /// Create a line from the given points
+    /// Build a line from the given points
     pub fn line_from_points(&self, points: [impl Into<Point<2>>; 2]) -> Curve {
         let points = points.map(Into::into);
 
@@ -55,17 +55,17 @@ impl CurveBuilder {
 pub struct GlobalCurveBuilder;
 
 impl GlobalCurveBuilder {
-    /// Create a line that represents the x-axis
+    /// Build a line that represents the x-axis
     pub fn x_axis(&self) -> GlobalCurve {
         GlobalCurve::from_path(GlobalPath::x_axis())
     }
 
-    /// Create a line that represents the y-axis
+    /// Build a line that represents the y-axis
     pub fn y_axis(&self) -> GlobalCurve {
         GlobalCurve::from_path(GlobalPath::y_axis())
     }
 
-    /// Create a line that represents the z-axis
+    /// Build a line that represents the z-axis
     pub fn z_axis(&self) -> GlobalCurve {
         GlobalCurve::from_path(GlobalPath::z_axis())
     }
