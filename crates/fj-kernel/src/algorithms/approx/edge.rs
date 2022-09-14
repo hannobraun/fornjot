@@ -21,7 +21,7 @@ impl Approx for &HalfEdge {
         cache: &mut ApproxCache,
     ) -> Self::Approximation {
         let &[a, b] = self.vertices();
-        let range = RangeOnCurve::new([a, b]);
+        let range = RangeOnCurve::new([a, b].map(|vertex| vertex.position()));
 
         let first = ApproxPoint::new(
             a.surface_form().position(),

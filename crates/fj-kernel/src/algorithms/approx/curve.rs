@@ -14,7 +14,7 @@ use std::cmp::max;
 use fj_math::{Circle, Point, Scalar};
 
 use crate::{
-    objects::{Curve, GlobalCurve, Vertex},
+    objects::{Curve, GlobalCurve},
     path::GlobalPath,
 };
 
@@ -94,7 +94,7 @@ fn approx_circle(
     let n = number_of_vertices_for_circle(tolerance, radius, range.length());
 
     for i in 1..n {
-        let angle = range.start().position().t
+        let angle = range.start().t
             + (Scalar::TAU / n as f64 * i as f64) * range.direction();
 
         let point_curve = Point::from([angle]);
@@ -125,7 +125,7 @@ fn number_of_vertices_for_circle(
 /// The range on which a curve should be approximated
 #[derive(Clone, Copy, Debug)]
 pub struct RangeOnCurve {
-    boundary: [Vertex; 2],
+    boundary: [Point<1>; 2],
     is_reversed: bool,
 }
 
@@ -144,7 +144,7 @@ impl RangeOnCurve {
     ///
     /// The caller can use `is_reversed` to determine, if the range was reversed
     /// during normalization, to adjust the approximation accordingly.
-    pub fn new([a, b]: [Vertex; 2]) -> Self {
+    pub fn new([a, b]: [Point<1>; 2]) -> Self {
         let (boundary, is_reversed) = if a < b {
             ([a, b], false)
         } else {
@@ -163,18 +163,18 @@ impl RangeOnCurve {
     }
 
     /// Access the start of the range
-    pub fn start(&self) -> Vertex {
+    pub fn start(&self) -> Point<1> {
         self.boundary[0]
     }
 
     /// Access the end of the range
-    pub fn end(&self) -> Vertex {
+    pub fn end(&self) -> Point<1> {
         self.boundary[1]
     }
 
     /// Compute the signed length of the range
     pub fn signed_length(&self) -> Scalar {
-        (self.end().position() - self.start().position()).t
+        (self.end() - self.start()).t
     }
 
     /// Compute the absolute length of the range
