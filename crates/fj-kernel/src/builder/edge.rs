@@ -22,7 +22,9 @@ impl HalfEdgeBuilder {
     }
 
     /// Build a circle from the given radius
-    pub fn circle_from_radius(&self, radius: Scalar) -> HalfEdge {
+    pub fn circle_from_radius(&self, radius: impl Into<Scalar>) -> HalfEdge {
+        let radius = radius.into();
+
         let curve = {
             let path = SurfacePath::Circle(Circle::new(
                 Point::origin(),
