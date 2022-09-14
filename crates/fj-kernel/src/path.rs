@@ -22,7 +22,11 @@
 //! [`Surface`]: crate::objects::Surface
 //! [#1021]: https://github.com/hannobraun/Fornjot/issues/1021
 
+use std::cmp::max;
+
 use fj_math::{Circle, Line, Point, Scalar, Vector};
+
+use crate::algorithms::approx::{curve::RangeOnCurve, ApproxPoint, Tolerance};
 
 /// A path through surface (2D) space
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -141,6 +145,115 @@ impl GlobalPath {
         match self {
             Self::Circle(circle) => circle.vector_from_circle_coords(vector),
             Self::Line(line) => line.vector_from_line_coords(vector),
+        }
+    }
+
+    /// Approximate the path
+    pub fn approx(
+        &self,
+        range: RangeOnCurve,
+        tolerance: impl Into<Tolerance>,
+    ) -> Vec<ApproxPoint<1>> {
+        match self {
+            GlobalPath::Circle(circle) => {
+                approx_circle(circle, range, tolerance.into())
+            }
+            GlobalPath::Line(_) => vec![],
+        }
+    }
+}
+
+/// Approximate a circle
+///
+/// `tolerance` specifies how much the approximation is allowed to deviate
+/// from the circle.
+fn approx_circle(
+    circle: &Circle<3>,
+    range: impl Into<RangeOnCurve>,
+    tolerance: Tolerance,
+) -> Vec<ApproxPoint<1>> {
+    let mut points = Vec::new();
+
+    let radius = circle.a().magnitude();
+    let range = range.into();
+
+    // To approximate the circle, we use a regular polygon for which
+    // the circle is the circumscribed circle. The `tolerance`
+    // parameter is the maximum allowed distance between the polygon
+    // and the circle. This is the same as the difference between
+    // the circumscribed circle and the incircle.
+
+    let n = number_of_vertices_for_circle(tolerance, radius, range.length());
+
+    for i in 1..n {
+        let angle = range.start().t
+            + (Scalar::TAU / n as f64 * i as f64) * range.direction();
+
+        let point_curve = Point::from([angle]);
+        let point_global = circle.point_from_circle_coords(point_curve);
+
+        points.push(ApproxPoint::new(point_curve, point_global));
+    }
+
+    if range.is_reversed() {
+        points.reverse();
+    }
+
+    points
+}
+
+fn number_of_vertices_for_circle(
+    tolerance: Tolerance,
+    radius: Scalar,
+    range: Scalar,
+) -> u64 {
+    let n = (range / (Scalar::ONE - (tolerance.inner() / radius)).acos() / 2.)
+        .ceil()
+        .into_u64();
+
+    max(n, 3)
+}
+
+#[cfg(test)]
+mod tests {
+    use fj_math::Scalar;
+
+    use crate::algorithms::approx::Tolerance;
+
+    #[test]
+    fn number_of_vertices_for_circle() {
+        verify_result(50., 100., Scalar::TAU, 3);
+        verify_result(50., 100., Scalar::PI, 3);
+        verify_result(10., 100., Scalar::TAU, 7);
+        verify_result(10., 100., Scalar::PI, 4);
+        verify_result(1., 100., Scalar::TAU, 23);
+        verify_result(1., 100., Scalar::PI, 12);
+
+        fn verify_result(
+            tolerance: impl Into<Tolerance>,
+            radius: impl Into<Scalar>,
+            range: impl Into<Scalar>,
+            n: u64,
+        ) {
+            let tolerance = tolerance.into();
+            let radius = radius.into();
+            let range = range.into();
+
+            assert_eq!(
+                n,
+                super::number_of_vertices_for_circle(tolerance, radius, range)
+            );
+
+            assert!(calculate_error(radius, range, n) <= tolerance.inner());
+            if n > 3 {
+                assert!(
+                    calculate_error(radius, range, n - 1) >= tolerance.inner()
+                );
+            }
+        }
+
+        fn calculate_error(radius: Scalar, range: Scalar, n: u64) -> Scalar {
+            radius - radius * (range / Scalar::from_u64(n) / 2.).cos()
         }
     }
 }
