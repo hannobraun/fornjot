@@ -16,7 +16,7 @@ use crate::path::GlobalPath;
 use super::{Approx, ApproxCache, ApproxPoint, Tolerance};
 
 impl Approx for (GlobalPath, RangeOnPath) {
-    type Approximation = Vec<ApproxPoint<1>>;
+    type Approximation = GlobalPathApprox;
 
     fn approx_with_cache(
         self,
@@ -25,13 +25,22 @@ impl Approx for (GlobalPath, RangeOnPath) {
     ) -> Self::Approximation {
         let (path, range) = self;
 
-        match path {
+        let points = match path {
             GlobalPath::Circle(circle) => {
                 approx_circle(&circle, range, tolerance.into())
             }
             GlobalPath::Line(_) => vec![],
-        }
+        };
+
+        GlobalPathApprox { points }
     }
+}
+
+/// An approximation of a [`GlobalPath`]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct GlobalPathApprox {
+    /// The points that approximate the path
+    pub points: Vec<ApproxPoint<1>>,
 }
 
 /// Approximate a circle
