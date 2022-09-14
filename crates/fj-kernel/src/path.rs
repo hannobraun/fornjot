@@ -257,6 +257,11 @@ impl RangeOnPath {
         self.is_reversed
     }
 
+    /// Access the boundary of the range
+    pub fn boundary(&self) -> [Point<1>; 2] {
+        self.boundary
+    }
+
     /// Access the start of the range
     pub fn start(&self) -> Point<1> {
         self.boundary[0]
