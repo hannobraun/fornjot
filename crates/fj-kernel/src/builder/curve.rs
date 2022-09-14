@@ -43,12 +43,7 @@ impl CurveBuilder {
             Vector::from([radius, Scalar::ZERO]),
             Vector::from([Scalar::ZERO, radius]),
         ));
-        let global_form =
-            GlobalCurve::from_path(GlobalPath::Circle(Circle::new(
-                Point::origin(),
-                Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
-                Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
-            )));
+        let global_form = GlobalCurveBuilder.circle_from_radius(radius);
 
         Curve::new(self.surface, path, global_form)
     }
@@ -87,6 +82,17 @@ impl GlobalCurveBuilder {
     /// Build a line that represents the z-axis
     pub fn z_axis(&self) -> GlobalCurve {
         GlobalCurve::from_path(GlobalPath::z_axis())
+    }
+
+    /// Build a circle from the given radius
+    pub fn circle_from_radius(&self, radius: impl Into<Scalar>) -> GlobalCurve {
+        let radius = radius.into();
+
+        GlobalCurve::from_path(GlobalPath::Circle(Circle::new(
+            Point::origin(),
+            Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
+            Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
+        )))
     }
 
     /// Create a line from the given points
