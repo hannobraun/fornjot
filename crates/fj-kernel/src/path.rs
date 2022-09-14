@@ -216,7 +216,7 @@ fn number_of_vertices_for_circle(
 }
 
 /// The range on which a path should be approximated
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct RangeOnPath {
     boundary: [Point<1>; 2],
     is_reversed: bool,
