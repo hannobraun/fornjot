@@ -103,6 +103,17 @@ impl GlobalPath {
         ))
     }
 
+    /// Build a circle from the given radius
+    pub fn circle_from_radius(radius: impl Into<Scalar>) -> Self {
+        let radius = radius.into();
+
+        GlobalPath::Circle(Circle::new(
+            Point::origin(),
+            Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
+            Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
+        ))
+    }
+
     /// Access the origin of the path's coordinate system
     pub fn origin(&self) -> Point<3> {
         match self {
