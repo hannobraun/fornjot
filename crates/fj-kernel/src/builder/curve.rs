@@ -1,4 +1,4 @@
-use fj_math::{Line, Point, Vector};
+use fj_math::{Circle, Line, Point, Scalar, Vector};
 
 use crate::{
     objects::{Curve, GlobalCurve, Surface},
@@ -32,6 +32,25 @@ impl CurveBuilder {
         let b = a + Vector::unit_v();
 
         self.line_from_points([a, b])
+    }
+
+    /// Build a circle from the given radius
+    pub fn circle_from_radius(&self, radius: impl Into<Scalar>) -> Curve {
+        let radius = radius.into();
+
+        let path = SurfacePath::Circle(Circle::new(
+            Point::origin(),
+            Vector::from([radius, Scalar::ZERO]),
+            Vector::from([Scalar::ZERO, radius]),
+        ));
+        let global_form =
+            GlobalCurve::from_path(GlobalPath::Circle(Circle::new(
+                Point::origin(),
+                Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
+                Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
+            )));
+
+        Curve::new(self.surface, path, global_form)
     }
 
     /// Build a line from the given points
