@@ -43,6 +43,13 @@ pub struct GlobalPathApprox {
     pub points: Vec<ApproxPoint<1>>,
 }
 
+impl GlobalPathApprox {
+    /// Access the points that approximate the path
+    pub fn points(&self) -> impl Iterator<Item = ApproxPoint<1>> + '_ {
+        self.points.iter().cloned()
+    }
+}
+
 /// Approximate a circle
 ///
 /// `tolerance` specifies how much the approximation is allowed to deviate
