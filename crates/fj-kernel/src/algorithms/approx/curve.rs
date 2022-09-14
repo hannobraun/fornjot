@@ -39,10 +39,9 @@ impl Approx for (&Curve, RangeOnCurve) {
                     curve.path().point_from_path_coords(point.local_form);
                 ApproxPoint::new(point_surface, point.global_form)
                     .with_source((*curve, point.local_form))
-            })
-            .collect();
+            });
 
-        CurveApprox { points }
+        CurveApprox::empty().with_points(points)
     }
 }
 
@@ -195,6 +194,22 @@ impl RangeOnCurve {
 pub struct CurveApprox {
     /// The points that approximate the curve
     pub points: Vec<ApproxPoint<2>>,
+}
+
+impl CurveApprox {
+    /// Create an empty instance of `CurveApprox`
+    pub fn empty() -> Self {
+        Self { points: Vec::new() }
+    }
+
+    /// Add points to the approximation
+    pub fn with_points(
+        mut self,
+        points: impl IntoIterator<Item = ApproxPoint<2>>,
+    ) -> Self {
+        self.points.extend(points);
+        self
+    }
 }
 
 /// An approximation of a [`GlobalCurve`]
