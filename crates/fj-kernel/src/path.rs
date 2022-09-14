@@ -26,7 +26,7 @@ use std::cmp::max;
 
 use fj_math::{Circle, Line, Point, Scalar, Vector};
 
-use crate::algorithms::approx::{curve::RangeOnCurve, ApproxPoint, Tolerance};
+use crate::algorithms::approx::{curve::RangeOnPath, ApproxPoint, Tolerance};
 
 /// A path through surface (2D) space
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -151,7 +151,7 @@ impl GlobalPath {
     /// Approximate the path
     pub fn approx(
         &self,
-        range: RangeOnCurve,
+        range: RangeOnPath,
         tolerance: impl Into<Tolerance>,
     ) -> Vec<ApproxPoint<1>> {
         match self {
@@ -169,7 +169,7 @@ impl GlobalPath {
 /// from the circle.
 fn approx_circle(
     circle: &Circle<3>,
-    range: impl Into<RangeOnCurve>,
+    range: impl Into<RangeOnPath>,
     tolerance: Tolerance,
 ) -> Vec<ApproxPoint<1>> {
     let mut points = Vec::new();

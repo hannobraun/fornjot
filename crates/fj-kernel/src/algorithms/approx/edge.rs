@@ -8,7 +8,7 @@
 use crate::objects::HalfEdge;
 
 use super::{
-    curve::{CurveApprox, RangeOnCurve},
+    curve::{CurveApprox, RangeOnPath},
     Approx, ApproxCache, ApproxPoint, Tolerance,
 };
 
@@ -21,7 +21,7 @@ impl Approx for &HalfEdge {
         cache: &mut ApproxCache,
     ) -> Self::Approximation {
         let &[a, b] = self.vertices();
-        let range = RangeOnCurve::new([a, b].map(|vertex| vertex.position()));
+        let range = RangeOnPath::new([a, b].map(|vertex| vertex.position()));
 
         let first = ApproxPoint::new(
             a.surface_form().position(),

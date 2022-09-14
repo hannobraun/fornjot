@@ -15,7 +15,7 @@ use crate::objects::{Curve, GlobalCurve};
 
 use super::{Approx, ApproxCache, ApproxPoint, Tolerance};
 
-impl Approx for (&Curve, RangeOnCurve) {
+impl Approx for (&Curve, RangeOnPath) {
     type Approximation = CurveApprox;
 
     fn approx_with_cache(
@@ -40,7 +40,7 @@ impl Approx for (&Curve, RangeOnCurve) {
     }
 }
 
-impl Approx for (&GlobalCurve, RangeOnCurve) {
+impl Approx for (&GlobalCurve, RangeOnPath) {
     type Approximation = GlobalCurveApprox;
 
     fn approx_with_cache(
@@ -61,12 +61,12 @@ impl Approx for (&GlobalCurve, RangeOnCurve) {
 
 /// The range on which a curve should be approximated
 #[derive(Clone, Copy, Debug)]
-pub struct RangeOnCurve {
+pub struct RangeOnPath {
     boundary: [Point<1>; 2],
     is_reversed: bool,
 }
 
-impl RangeOnCurve {
+impl RangeOnPath {
     /// Construct an instance of `RangeOnCurve`
     ///
     /// Ranges are normalized on construction, meaning that the order of
