@@ -9,12 +9,9 @@
 //! done, to give the caller (who knows the boundary anyway) more options on how
 //! to further process the approximation.
 
-use crate::{
-    objects::{Curve, GlobalCurve},
-    path::RangeOnPath,
-};
+use crate::objects::{Curve, GlobalCurve};
 
-use super::{Approx, ApproxCache, ApproxPoint, Tolerance};
+use super::{path::RangeOnPath, Approx, ApproxCache, ApproxPoint, Tolerance};
 
 impl Approx for (&Curve, RangeOnPath) {
     type Approximation = CurveApprox;
@@ -55,7 +52,7 @@ impl Approx for (&GlobalCurve, RangeOnPath) {
             return approx;
         }
 
-        let points = curve.path().approx(range, tolerance);
+        let points = (curve.path(), range).approx_with_cache(tolerance, cache);
         cache.insert_global_curve(curve, GlobalCurveApprox { points })
     }
 }

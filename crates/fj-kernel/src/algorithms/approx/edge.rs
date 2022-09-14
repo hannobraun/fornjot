@@ -5,9 +5,12 @@
 //! approximations are usually used to build cycle approximations, and this way,
 //! the caller doesn't have to call with duplicate vertices.
 
-use crate::{objects::HalfEdge, path::RangeOnPath};
+use crate::objects::HalfEdge;
 
-use super::{curve::CurveApprox, Approx, ApproxCache, ApproxPoint, Tolerance};
+use super::{
+    curve::CurveApprox, path::RangeOnPath, Approx, ApproxCache, ApproxPoint,
+    Tolerance,
+};
 
 impl Approx for &HalfEdge {
     type Approximation = HalfEdgeApprox;
