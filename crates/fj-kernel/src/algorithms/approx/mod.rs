@@ -12,6 +12,7 @@ pub mod tolerance;
 use std::{
     any::Any,
     cmp::Ordering,
+    collections::BTreeMap,
     fmt::Debug,
     hash::{Hash, Hasher},
     rc::Rc,
@@ -19,12 +20,13 @@ use std::{
 
 use fj_math::Point;
 
-use crate::objects::Curve;
+use crate::objects::{Curve, GlobalCurve};
 
+use self::curve::GlobalCurveApprox;
 pub use self::tolerance::{InvalidTolerance, Tolerance};
 
 /// Approximate an object
-pub trait Approx {
+pub trait Approx: Sized {
     /// The approximation of the object
     type Approximation;
 
@@ -32,7 +34,48 @@ pub trait Approx {
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual object.
-    fn approx(self, tolerance: Tolerance) -> Self::Approximation;
+    fn approx(self, tolerance: Tolerance) -> Self::Approximation {
+        let mut cache = ApproxCache::new();
+        self.approx_with_cache(tolerance, &mut cache)
+    }
+
+    /// Approximate the object, using the provided cache
+    fn approx_with_cache(
+        self,
+        tolerance: Tolerance,
+        cache: &mut ApproxCache,
+    ) -> Self::Approximation;
+}
+
+/// A cache for results of an approximation
+#[derive(Default)]
+pub struct ApproxCache {
+    global_curves: BTreeMap<GlobalCurve, GlobalCurveApprox>,
+}
+
+impl ApproxCache {
+    /// Create an empty cache
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Insert the approximation of a [`GlobalCurve`]
+    pub fn insert_global_curve(
+        &mut self,
+        object: &GlobalCurve,
+        approx: GlobalCurveApprox,
+    ) -> GlobalCurveApprox {
+        self.global_curves.insert(*object, approx.clone());
+        approx
+    }
+
+    /// Access the approximation for the given [`GlobalCurve`], if available
+    pub fn global_curve(
+        &self,
+        object: &GlobalCurve,
+    ) -> Option<GlobalCurveApprox> {
+        self.global_curves.get(object).cloned()
+    }
 }
 
 /// A point from an approximation, with local and global forms

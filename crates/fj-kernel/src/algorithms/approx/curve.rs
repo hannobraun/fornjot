@@ -18,16 +18,21 @@ use crate::{
     path::GlobalPath,
 };
 
-use super::{Approx, ApproxPoint, Tolerance};
+use super::{Approx, ApproxCache, ApproxPoint, Tolerance};
 
 impl Approx for (&Curve, RangeOnCurve) {
     type Approximation = CurveApprox;
 
-    fn approx(self, tolerance: Tolerance) -> Self::Approximation {
+    fn approx_with_cache(
+        self,
+        tolerance: Tolerance,
+        cache: &mut ApproxCache,
+    ) -> Self::Approximation {
         let (curve, range) = self;
 
         let points = (curve.global_form(), range)
-            .approx(tolerance)
+            .approx_with_cache(tolerance, cache)
+            .points
             .into_iter()
             .map(|point| {
                 let point_surface =
@@ -42,17 +47,27 @@ impl Approx for (&Curve, RangeOnCurve) {
 }
 
 impl Approx for (&GlobalCurve, RangeOnCurve) {
-    type Approximation = Vec<ApproxPoint<1>>;
+    type Approximation = GlobalCurveApprox;
 
-    fn approx(self, tolerance: Tolerance) -> Self::Approximation {
+    fn approx_with_cache(
+        self,
+        tolerance: Tolerance,
+        cache: &mut ApproxCache,
+    ) -> Self::Approximation {
         let (curve, range) = self;
 
-        match curve.path() {
+        if let Some(approx) = cache.global_curve(curve) {
+            return approx;
+        }
+
+        let points = match curve.path() {
             GlobalPath::Circle(circle) => {
                 approx_circle(&circle, range, tolerance)
             }
             GlobalPath::Line(_) => vec![],
-        }
+        };
+
+        cache.insert_global_curve(curve, GlobalCurveApprox { points })
     }
 }
 
@@ -180,6 +195,13 @@ impl RangeOnCurve {
 pub struct CurveApprox {
     /// The points that approximate the curve
     pub points: Vec<ApproxPoint<2>>,
+}
+
+/// An approximation of a [`GlobalCurve`]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct GlobalCurveApprox {
+    /// The points that approximate the curve
+    pub points: Vec<ApproxPoint<1>>,
 }
 
 #[cfg(test)]

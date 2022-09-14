@@ -9,13 +9,17 @@ use crate::objects::HalfEdge;
 
 use super::{
     curve::{CurveApprox, RangeOnCurve},
-    Approx, ApproxPoint,
+    Approx, ApproxCache, ApproxPoint, Tolerance,
 };
 
 impl Approx for &HalfEdge {
     type Approximation = HalfEdgeApprox;
 
-    fn approx(self, tolerance: super::Tolerance) -> Self::Approximation {
+    fn approx_with_cache(
+        self,
+        tolerance: Tolerance,
+        cache: &mut ApproxCache,
+    ) -> Self::Approximation {
         let &[a, b] = self.vertices();
         let range = RangeOnCurve::new([a, b]);
 
@@ -23,7 +27,8 @@ impl Approx for &HalfEdge {
             a.surface_form().position(),
             a.global_form().position(),
         );
-        let curve_approx = (self.curve(), range).approx(tolerance);
+        let curve_approx =
+            (self.curve(), range).approx_with_cache(tolerance, cache);
 
         HalfEdgeApprox {
             first,
