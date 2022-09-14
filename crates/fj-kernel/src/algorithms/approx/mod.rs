@@ -32,7 +32,17 @@ pub trait Approx: Sized {
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual object.
-    fn approx(self, tolerance: Tolerance) -> Self::Approximation;
+    fn approx(self, tolerance: Tolerance) -> Self::Approximation {
+        let mut cache = ApproxCache::new();
+        self.approx_with_cache(tolerance, &mut cache)
+    }
+
+    /// Approximate the object, using the provided cache
+    fn approx_with_cache(
+        self,
+        tolerance: Tolerance,
+        cache: &mut ApproxCache,
+    ) -> Self::Approximation;
 }
 
 /// A cache for results of an approximation

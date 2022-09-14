@@ -18,16 +18,20 @@ use crate::{
     path::GlobalPath,
 };
 
-use super::{Approx, ApproxPoint, Tolerance};
+use super::{Approx, ApproxCache, ApproxPoint, Tolerance};
 
 impl Approx for (&Curve, RangeOnCurve) {
     type Approximation = CurveApprox;
 
-    fn approx(self, tolerance: Tolerance) -> Self::Approximation {
+    fn approx_with_cache(
+        self,
+        tolerance: Tolerance,
+        cache: &mut ApproxCache,
+    ) -> Self::Approximation {
         let (curve, range) = self;
 
         let points = (curve.global_form(), range)
-            .approx(tolerance)
+            .approx_with_cache(tolerance, cache)
             .into_iter()
             .map(|point| {
                 let point_surface =
@@ -44,7 +48,11 @@ impl Approx for (&Curve, RangeOnCurve) {
 impl Approx for (&GlobalCurve, RangeOnCurve) {
     type Approximation = Vec<ApproxPoint<1>>;
 
-    fn approx(self, tolerance: Tolerance) -> Self::Approximation {
+    fn approx_with_cache(
+        self,
+        tolerance: Tolerance,
+        _: &mut ApproxCache,
+    ) -> Self::Approximation {
         let (curve, range) = self;
 
         match curve.path() {

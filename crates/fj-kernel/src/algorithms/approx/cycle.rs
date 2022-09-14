@@ -6,15 +6,21 @@ use fj_math::Segment;
 
 use crate::objects::Cycle;
 
-use super::{edge::HalfEdgeApprox, Approx, ApproxPoint, Tolerance};
+use super::{
+    edge::HalfEdgeApprox, Approx, ApproxCache, ApproxPoint, Tolerance,
+};
 
 impl Approx for &Cycle {
     type Approximation = CycleApprox;
 
-    fn approx(self, tolerance: Tolerance) -> Self::Approximation {
+    fn approx_with_cache(
+        self,
+        tolerance: Tolerance,
+        cache: &mut ApproxCache,
+    ) -> Self::Approximation {
         let half_edges = self
             .half_edges()
-            .map(|half_edge| half_edge.approx(tolerance))
+            .map(|half_edge| half_edge.approx_with_cache(tolerance, cache))
             .collect();
         CycleApprox { half_edges }
     }

@@ -11,15 +11,19 @@ use crate::{
     objects::{Face, Faces, Handedness},
 };
 
-use super::{cycle::CycleApprox, Approx, ApproxPoint, Tolerance};
+use super::{cycle::CycleApprox, Approx, ApproxCache, ApproxPoint, Tolerance};
 
 impl Approx for &Faces {
     type Approximation = BTreeSet<FaceApprox>;
 
-    fn approx(self, tolerance: Tolerance) -> Self::Approximation {
+    fn approx_with_cache(
+        self,
+        tolerance: Tolerance,
+        cache: &mut ApproxCache,
+    ) -> Self::Approximation {
         let approx = self
             .into_iter()
-            .map(|face| face.approx(tolerance))
+            .map(|face| face.approx_with_cache(tolerance, cache))
             .collect();
 
         let min_distance = ValidationConfig::default().distinct_min_distance;
@@ -61,7 +65,11 @@ impl Approx for &Faces {
 impl Approx for &Face {
     type Approximation = FaceApprox;
 
-    fn approx(self, tolerance: Tolerance) -> Self::Approximation {
+    fn approx_with_cache(
+        self,
+        tolerance: Tolerance,
+        cache: &mut ApproxCache,
+    ) -> Self::Approximation {
         // Curved faces whose curvature is not fully defined by their edges
         // are not supported yet. For that reason, we can fully ignore `face`'s
         // `surface` field and just pass the edges to `Self::for_edges`.
@@ -75,11 +83,11 @@ impl Approx for &Face {
         // would need to provide its own approximation, as the edges that bound
         // it have nothing to do with its curvature.
 
-        let exterior = self.exterior().approx(tolerance);
+        let exterior = self.exterior().approx_with_cache(tolerance, cache);
 
         let mut interiors = BTreeSet::new();
         for cycle in self.interiors() {
-            let cycle = cycle.approx(tolerance);
+            let cycle = cycle.approx_with_cache(tolerance, cache);
             interiors.insert(cycle);
         }
 
