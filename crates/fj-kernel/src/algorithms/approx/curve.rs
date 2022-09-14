@@ -130,3 +130,27 @@ pub struct GlobalCurveApprox {
     /// The points that approximate the curve
     pub points: Vec<ApproxPoint<1>>,
 }
+
+#[cfg(test)]
+mod tests {
+
+    use crate::{
+        algorithms::approx::{path::RangeOnPath, Approx},
+        objects::{Curve, Surface},
+        path::GlobalPath,
+    };
+
+    use super::CurveApprox;
+
+    #[test]
+    fn approx_line_on_flat_surface() {
+        let surface = Surface::new(GlobalPath::x_axis(), [0., 0., 1.]);
+        let curve =
+            Curve::build(surface).line_from_points([[1., 1.], [2., 1.]]);
+        let range = RangeOnPath::from([[0.], [1.]]);
+
+        let approx = (&curve, range).approx(1.);
+
+        assert_eq!(approx, CurveApprox::empty())
+    }
+}
