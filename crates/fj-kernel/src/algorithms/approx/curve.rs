@@ -143,7 +143,9 @@ impl RangeOnCurve {
     ///
     /// The caller can use `is_reversed` to determine, if the range was reversed
     /// during normalization, to adjust the approximation accordingly.
-    pub fn new([a, b]: [Point<1>; 2]) -> Self {
+    pub fn new(boundary: [impl Into<Point<1>>; 2]) -> Self {
+        let [a, b] = boundary.map(Into::into);
+
         let (boundary, is_reversed) = if a < b {
             ([a, b], false)
         } else {
