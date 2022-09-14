@@ -24,7 +24,7 @@ use crate::objects::Curve;
 pub use self::tolerance::{InvalidTolerance, Tolerance};
 
 /// Approximate an object
-pub trait Approx {
+pub trait Approx: Sized {
     /// The approximation of the object
     type Approximation;
 
