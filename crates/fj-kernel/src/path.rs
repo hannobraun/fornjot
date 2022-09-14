@@ -74,11 +74,6 @@ pub enum GlobalPath {
 }
 
 impl GlobalPath {
-    /// Construct a line from two points
-    pub fn line_from_points(points: [impl Into<Point<3>>; 2]) -> Self {
-        Self::Line(Line::from_points(points))
-    }
-
     /// Construct a `GlobalPath` that represents the x-axis
     pub fn x_axis() -> Self {
         Self::Line(Line::from_origin_and_direction(
@@ -112,6 +107,11 @@ impl GlobalPath {
             Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
             Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
         ))
+    }
+
+    /// Construct a line from two points
+    pub fn line_from_points(points: [impl Into<Point<3>>; 2]) -> Self {
+        Self::Line(Line::from_points(points))
     }
 
     /// Access the origin of the path's coordinate system
