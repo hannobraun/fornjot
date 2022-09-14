@@ -38,11 +38,7 @@ impl CurveBuilder {
     pub fn circle_from_radius(&self, radius: impl Into<Scalar>) -> Curve {
         let radius = radius.into();
 
-        let path = SurfacePath::Circle(Circle::new(
-            Point::origin(),
-            Vector::from([radius, Scalar::ZERO]),
-            Vector::from([Scalar::ZERO, radius]),
-        ));
+        let path = SurfacePath::circle_from_radius(radius);
         let global_form = GlobalCurveBuilder.circle_from_radius(radius);
 
         Curve::new(self.surface, path, global_form)
