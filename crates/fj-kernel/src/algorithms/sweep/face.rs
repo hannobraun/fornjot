@@ -17,16 +17,16 @@ impl Sweep for Face {
         let mut faces = Vec::new();
 
         let is_negative_sweep = {
-            let a = match self.surface().u() {
+            let u = match self.surface().u() {
                 GlobalPath::Circle(_) => todo!(
                     "Sweeping from faces defined in round surfaces is not \
                     supported"
                 ),
                 GlobalPath::Line(line) => line.direction(),
             };
-            let b = self.surface().v();
+            let v = self.surface().v();
 
-            let normal = a.cross(&b);
+            let normal = u.cross(&v);
 
             normal.dot(&path) < Scalar::ZERO
         };
