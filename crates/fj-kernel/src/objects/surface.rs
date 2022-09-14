@@ -11,7 +11,8 @@ pub struct Surface {
 
 impl Surface {
     /// Construct a `Surface` from two paths that define its coordinate system
-    pub fn new(u: GlobalPath, v: Vector<3>) -> Self {
+    pub fn new(u: GlobalPath, v: impl Into<Vector<3>>) -> Self {
+        let v = v.into();
         Self { u, v }
     }
 
