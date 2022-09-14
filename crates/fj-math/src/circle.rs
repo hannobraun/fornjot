@@ -54,6 +54,22 @@ impl<const D: usize> Circle<D> {
         Self { center, a, b }
     }
 
+    /// Construct a `Circle` from a center point and a radius
+    pub fn from_center_and_radius(
+        center: impl Into<Point<D>>,
+        radius: impl Into<Scalar>,
+    ) -> Self {
+        let radius = radius.into();
+
+        let mut a = [Scalar::ZERO; D];
+        let mut b = [Scalar::ZERO; D];
+
+        a[0] = radius;
+        b[1] = radius;
+
+        Circle::new(center, a, b)
+    }
+
     /// Access the center point of the circle
     pub fn center(&self) -> Point<D> {
         self.center

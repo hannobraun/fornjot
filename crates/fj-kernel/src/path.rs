@@ -43,10 +43,9 @@ impl SurfacePath {
     pub fn circle_from_radius(radius: impl Into<Scalar>) -> Self {
         let radius = radius.into();
 
-        SurfacePath::Circle(Circle::new(
+        SurfacePath::Circle(Circle::from_center_and_radius(
             Point::origin(),
-            Vector::from([radius, Scalar::ZERO]),
-            Vector::from([Scalar::ZERO, radius]),
+            radius,
         ))
     }
 
@@ -106,10 +105,9 @@ impl GlobalPath {
     pub fn circle_from_radius(radius: impl Into<Scalar>) -> Self {
         let radius = radius.into();
 
-        GlobalPath::Circle(Circle::new(
+        GlobalPath::Circle(Circle::from_center_and_radius(
             Point::origin(),
-            Vector::from([radius, Scalar::ZERO, Scalar::ZERO]),
-            Vector::from([Scalar::ZERO, radius, Scalar::ZERO]),
+            radius,
         ))
     }
 
