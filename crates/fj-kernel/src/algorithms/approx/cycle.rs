@@ -15,13 +15,16 @@ impl Approx for &Cycle {
 
     fn approx_with_cache(
         self,
-        tolerance: Tolerance,
+        tolerance: impl Into<Tolerance>,
         cache: &mut ApproxCache,
     ) -> Self::Approximation {
+        let tolerance = tolerance.into();
+
         let half_edges = self
             .half_edges()
             .map(|half_edge| half_edge.approx_with_cache(tolerance, cache))
             .collect();
+
         CycleApprox { half_edges }
     }
 }

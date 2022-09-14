@@ -18,9 +18,11 @@ impl Approx for &Faces {
 
     fn approx_with_cache(
         self,
-        tolerance: Tolerance,
+        tolerance: impl Into<Tolerance>,
         cache: &mut ApproxCache,
     ) -> Self::Approximation {
+        let tolerance = tolerance.into();
+
         let approx = self
             .into_iter()
             .map(|face| face.approx_with_cache(tolerance, cache))
@@ -67,9 +69,11 @@ impl Approx for &Face {
 
     fn approx_with_cache(
         self,
-        tolerance: Tolerance,
+        tolerance: impl Into<Tolerance>,
         cache: &mut ApproxCache,
     ) -> Self::Approximation {
+        let tolerance = tolerance.into();
+
         // Curved faces whose curvature is not fully defined by their edges
         // are not supported yet. For that reason, we can fully ignore `face`'s
         // `surface` field and just pass the edges to `Self::for_edges`.

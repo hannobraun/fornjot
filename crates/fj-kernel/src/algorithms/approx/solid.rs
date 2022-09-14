@@ -11,9 +11,11 @@ impl Approx for &Solid {
 
     fn approx_with_cache(
         self,
-        tolerance: Tolerance,
+        tolerance: impl Into<Tolerance>,
         cache: &mut ApproxCache,
     ) -> Self::Approximation {
+        let tolerance = tolerance.into();
+
         self.shells()
             .flat_map(|shell| shell.approx_with_cache(tolerance, cache))
             .collect()

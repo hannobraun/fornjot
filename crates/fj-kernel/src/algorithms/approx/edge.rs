@@ -17,7 +17,7 @@ impl Approx for &HalfEdge {
 
     fn approx_with_cache(
         self,
-        tolerance: Tolerance,
+        tolerance: impl Into<Tolerance>,
         cache: &mut ApproxCache,
     ) -> Self::Approximation {
         let &[a, b] = self.vertices();

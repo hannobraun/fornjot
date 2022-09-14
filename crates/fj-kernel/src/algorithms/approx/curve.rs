@@ -25,7 +25,7 @@ impl Approx for (&Curve, RangeOnCurve) {
 
     fn approx_with_cache(
         self,
-        tolerance: Tolerance,
+        tolerance: impl Into<Tolerance>,
         cache: &mut ApproxCache,
     ) -> Self::Approximation {
         let (curve, range) = self;
@@ -50,7 +50,7 @@ impl Approx for (&GlobalCurve, RangeOnCurve) {
 
     fn approx_with_cache(
         self,
-        tolerance: Tolerance,
+        tolerance: impl Into<Tolerance>,
         cache: &mut ApproxCache,
     ) -> Self::Approximation {
         let (curve, range) = self;
@@ -61,7 +61,7 @@ impl Approx for (&GlobalCurve, RangeOnCurve) {
 
         let points = match curve.path() {
             GlobalPath::Circle(circle) => {
-                approx_circle(&circle, range, tolerance)
+                approx_circle(&circle, range, tolerance.into())
             }
             GlobalPath::Line(_) => vec![],
         };
