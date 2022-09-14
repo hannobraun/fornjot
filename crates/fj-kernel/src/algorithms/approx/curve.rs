@@ -32,6 +32,7 @@ impl Approx for (&Curve, RangeOnCurve) {
 
         let points = (curve.global_form(), range)
             .approx_with_cache(tolerance, cache)
+            .points
             .into_iter()
             .map(|point| {
                 let point_surface =
@@ -46,7 +47,7 @@ impl Approx for (&Curve, RangeOnCurve) {
 }
 
 impl Approx for (&GlobalCurve, RangeOnCurve) {
-    type Approximation = Vec<ApproxPoint<1>>;
+    type Approximation = GlobalCurveApprox;
 
     fn approx_with_cache(
         self,
@@ -55,12 +56,14 @@ impl Approx for (&GlobalCurve, RangeOnCurve) {
     ) -> Self::Approximation {
         let (curve, range) = self;
 
-        match curve.path() {
+        let points = match curve.path() {
             GlobalPath::Circle(circle) => {
                 approx_circle(&circle, range, tolerance)
             }
             GlobalPath::Line(_) => vec![],
-        }
+        };
+
+        GlobalCurveApprox { points }
     }
 }
 
@@ -188,6 +191,13 @@ impl RangeOnCurve {
 pub struct CurveApprox {
     /// The points that approximate the curve
     pub points: Vec<ApproxPoint<2>>,
+}
+
+/// An approximation of a [`GlobalCurve`]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct GlobalCurveApprox {
+    /// The points that approximate the curve
+    pub points: Vec<ApproxPoint<1>>,
 }
 
 #[cfg(test)]
