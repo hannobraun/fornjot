@@ -52,9 +52,13 @@ impl Approx for (&GlobalCurve, RangeOnCurve) {
     fn approx_with_cache(
         self,
         tolerance: Tolerance,
-        _: &mut ApproxCache,
+        cache: &mut ApproxCache,
     ) -> Self::Approximation {
         let (curve, range) = self;
+
+        if let Some(approx) = cache.global_curve(curve) {
+            return approx;
+        }
 
         let points = match curve.path() {
             GlobalPath::Circle(circle) => {
@@ -63,7 +67,7 @@ impl Approx for (&GlobalCurve, RangeOnCurve) {
             GlobalPath::Line(_) => vec![],
         };
 
-        GlobalCurveApprox { points }
+        cache.insert_global_curve(curve, GlobalCurveApprox { points })
     }
 }
 
