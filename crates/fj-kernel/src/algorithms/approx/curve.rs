@@ -59,7 +59,7 @@ impl Approx for (&GlobalCurve, RangeOnPath) {
     }
 }
 
-/// The range on which a curve should be approximated
+/// The range on which a path should be approximated
 #[derive(Clone, Copy, Debug)]
 pub struct RangeOnPath {
     boundary: [Point<1>; 2],
