@@ -35,6 +35,17 @@ pub trait Approx: Sized {
     fn approx(self, tolerance: Tolerance) -> Self::Approximation;
 }
 
+/// A cache for results of an approximation
+#[derive(Default)]
+pub struct ApproxCache;
+
+impl ApproxCache {
+    /// Create an empty cache
+    pub fn new() -> Self {
+        Self::default()
+    }
+}
+
 /// A point from an approximation, with local and global forms
 #[derive(Debug, Clone)]
 pub struct ApproxPoint<const D: usize> {
