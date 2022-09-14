@@ -39,8 +39,7 @@ impl Approx for (GlobalPath, RangeOnPath) {
 /// An approximation of a [`GlobalPath`]
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalPathApprox {
-    /// The points that approximate the path
-    pub points: Vec<ApproxPoint<1>>,
+    points: Vec<ApproxPoint<1>>,
 }
 
 impl GlobalPathApprox {
