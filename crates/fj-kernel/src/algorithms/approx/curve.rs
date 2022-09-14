@@ -9,9 +9,10 @@
 //! done, to give the caller (who knows the boundary anyway) more options on how
 //! to further process the approximation.
 
-use fj_math::{Point, Scalar};
-
-use crate::objects::{Curve, GlobalCurve};
+use crate::{
+    objects::{Curve, GlobalCurve},
+    path::RangeOnPath,
+};
 
 use super::{Approx, ApproxCache, ApproxPoint, Tolerance};
 
@@ -56,76 +57,6 @@ impl Approx for (&GlobalCurve, RangeOnPath) {
 
         let points = curve.path().approx(range, tolerance);
         cache.insert_global_curve(curve, GlobalCurveApprox { points })
-    }
-}
-
-/// The range on which a path should be approximated
-#[derive(Clone, Copy, Debug)]
-pub struct RangeOnPath {
-    boundary: [Point<1>; 2],
-    is_reversed: bool,
-}
-
-impl RangeOnPath {
-    /// Construct an instance of `RangeOnCurve`
-    ///
-    /// Ranges are normalized on construction, meaning that the order of
-    /// vertices passed to this constructor does not influence the range that is
-    /// constructed.
-    ///
-    /// This is done to prevent bugs during mesh construction: The curve
-    /// approximation code is regularly faced with ranges that are reversed
-    /// versions of each other. This can lead to slightly different
-    /// approximations, which in turn leads to the aforementioned invalid
-    /// meshes.
-    ///
-    /// The caller can use `is_reversed` to determine, if the range was reversed
-    /// during normalization, to adjust the approximation accordingly.
-    pub fn new(boundary: [impl Into<Point<1>>; 2]) -> Self {
-        let [a, b] = boundary.map(Into::into);
-
-        let (boundary, is_reversed) = if a < b {
-            ([a, b], false)
-        } else {
-            ([b, a], true)
-        };
-
-        Self {
-            boundary,
-            is_reversed,
-        }
-    }
-
-    /// Indicate whether the range was reversed during normalization
-    pub fn is_reversed(&self) -> bool {
-        self.is_reversed
-    }
-
-    /// Access the start of the range
-    pub fn start(&self) -> Point<1> {
-        self.boundary[0]
-    }
-
-    /// Access the end of the range
-    pub fn end(&self) -> Point<1> {
-        self.boundary[1]
-    }
-
-    /// Compute the signed length of the range
-    pub fn signed_length(&self) -> Scalar {
-        (self.end() - self.start()).t
-    }
-
-    /// Compute the absolute length of the range
-    pub fn length(&self) -> Scalar {
-        self.signed_length().abs()
-    }
-
-    /// Compute the direction of the range
-    ///
-    /// Returns a [`Scalar`] that is zero or +/- one.
-    pub fn direction(&self) -> Scalar {
-        self.signed_length().sign()
     }
 }
 

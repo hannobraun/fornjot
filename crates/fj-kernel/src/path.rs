@@ -26,7 +26,7 @@ use std::cmp::max;
 
 use fj_math::{Circle, Line, Point, Scalar, Vector};
 
-use crate::algorithms::approx::{curve::RangeOnPath, ApproxPoint, Tolerance};
+use crate::algorithms::approx::{ApproxPoint, Tolerance};
 
 /// A path through surface (2D) space
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -212,6 +212,76 @@ fn number_of_vertices_for_circle(
         .into_u64();
 
     max(n, 3)
+}
+
+/// The range on which a path should be approximated
+#[derive(Clone, Copy, Debug)]
+pub struct RangeOnPath {
+    boundary: [Point<1>; 2],
+    is_reversed: bool,
+}
+
+impl RangeOnPath {
+    /// Construct an instance of `RangeOnCurve`
+    ///
+    /// Ranges are normalized on construction, meaning that the order of
+    /// vertices passed to this constructor does not influence the range that is
+    /// constructed.
+    ///
+    /// This is done to prevent bugs during mesh construction: The curve
+    /// approximation code is regularly faced with ranges that are reversed
+    /// versions of each other. This can lead to slightly different
+    /// approximations, which in turn leads to the aforementioned invalid
+    /// meshes.
+    ///
+    /// The caller can use `is_reversed` to determine, if the range was reversed
+    /// during normalization, to adjust the approximation accordingly.
+    pub fn new(boundary: [impl Into<Point<1>>; 2]) -> Self {
+        let [a, b] = boundary.map(Into::into);
+
+        let (boundary, is_reversed) = if a < b {
+            ([a, b], false)
+        } else {
+            ([b, a], true)
+        };
+
+        Self {
+            boundary,
+            is_reversed,
+        }
+    }
+
+    /// Indicate whether the range was reversed during normalization
+    pub fn is_reversed(&self) -> bool {
+        self.is_reversed
+    }
+
+    /// Access the start of the range
+    pub fn start(&self) -> Point<1> {
+        self.boundary[0]
+    }
+
+    /// Access the end of the range
+    pub fn end(&self) -> Point<1> {
+        self.boundary[1]
+    }
+
+    /// Compute the signed length of the range
+    pub fn signed_length(&self) -> Scalar {
+        (self.end() - self.start()).t
+    }
+
+    /// Compute the absolute length of the range
+    pub fn length(&self) -> Scalar {
+        self.signed_length().abs()
+    }
+
+    /// Compute the direction of the range
+    ///
+    /// Returns a [`Scalar`] that is zero or +/- one.
+    pub fn direction(&self) -> Scalar {
+        self.signed_length().sign()
+    }
 }
 
 #[cfg(test)]
