@@ -32,7 +32,7 @@ impl Approx for (&Curve, RangeOnPath) {
             None => {
                 let approx = (curve.global_form(), range)
                     .approx_with_cache(tolerance, &mut ());
-                cache.insert_global_curve(cache_key, approx)
+                cache.insert(cache_key, approx)
             }
         };
 
@@ -106,7 +106,7 @@ impl CurveCache {
     }
 
     /// Insert the approximation of a [`GlobalCurve`]
-    pub fn insert_global_curve(
+    pub fn insert(
         &mut self,
         key: (GlobalCurve, RangeOnPath),
         approx: GlobalCurveApprox,
