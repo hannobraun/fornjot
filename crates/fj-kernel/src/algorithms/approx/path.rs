@@ -183,14 +183,14 @@ impl PathApproxParams {
 
         let mut i = start;
         iter::from_fn(move || {
-            if i <= end {
-                let t = self.increment() * i;
-                i += Scalar::ONE;
-
-                Some(Point::from([t]))
-            } else {
-                None
+            if i > end {
+                return None;
             }
+
+            let t = self.increment() * i;
+            i += Scalar::ONE;
+
+            Some(Point::from([t]))
         })
     }
 }
