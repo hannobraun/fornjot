@@ -1,4 +1,4 @@
-use fj_math::{Point, PolyChain, Segment};
+use fj_math::{Point, PolyChain, Segment, Triangle};
 
 use crate::algorithms::intersect::{
     ray_segment::RaySegmentIntersection, HorizontalRayToTheRight, Intersect,
@@ -42,11 +42,8 @@ impl Polygon {
         self
     }
 
-    pub fn contains_triangle(
-        &self,
-        triangle: [impl Into<Point<2>>; 3],
-    ) -> bool {
-        let [a, b, c] = triangle.map(Into::into);
+    pub fn contains_triangle(&self, triangle: impl Into<Triangle<2>>) -> bool {
+        let [a, b, c] = triangle.into().points();
 
         let mut might_be_hole = true;
 
