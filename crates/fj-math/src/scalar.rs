@@ -180,66 +180,50 @@ impl ops::Neg for Scalar {
     }
 }
 
-impl ops::Add<Self> for Scalar {
+impl<T: Into<Scalar>> ops::Add<T> for Scalar {
     type Output = Self;
 
-    fn add(self, rhs: Self) -> Self::Output {
-        self.0.add(rhs.0).into()
+    fn add(self, rhs: T) -> Self::Output {
+        self.0.add(rhs.into().0).into()
     }
 }
 
-impl ops::AddAssign<Self> for Scalar {
-    fn add_assign(&mut self, rhs: Self) {
-        self.0.add_assign(rhs.0);
+impl<T: Into<Scalar>> ops::AddAssign<T> for Scalar {
+    fn add_assign(&mut self, rhs: T) {
+        self.0.add_assign(rhs.into().0);
         *self = Self::from_f64(self.0);
     }
 }
 
-impl ops::Sub<Self> for Scalar {
+impl<T: Into<Scalar>> ops::Sub<T> for Scalar {
     type Output = Self;
 
-    fn sub(self, rhs: Self) -> Self::Output {
-        self.0.sub(rhs.0).into()
+    fn sub(self, rhs: T) -> Self::Output {
+        self.0.sub(rhs.into().0).into()
     }
 }
 
-impl ops::Mul<Self> for Scalar {
+impl<T: Into<Scalar>> ops::Mul<T> for Scalar {
     type Output = Self;
 
-    fn mul(self, rhs: Self) -> Self::Output {
-        self.0.mul(rhs.0).into()
+    fn mul(self, rhs: T) -> Self::Output {
+        self.0.mul(rhs.into().0).into()
     }
 }
 
-impl ops::Mul<f64> for Scalar {
+impl<T: Into<Scalar>> ops::Div<T> for Scalar {
     type Output = Self;
 
-    fn mul(self, rhs: f64) -> Self::Output {
-        self.0.mul(rhs).into()
+    fn div(self, rhs: T) -> Self::Output {
+        self.0.div(rhs.into().0).into()
     }
 }
 
-impl ops::Div<Self> for Scalar {
+impl<T: Into<Scalar>> ops::Rem<T> for Scalar {
     type Output = Self;
 
-    fn div(self, rhs: Self) -> Self::Output {
-        self.0.div(rhs.0).into()
-    }
-}
-
-impl ops::Div<f64> for Scalar {
-    type Output = Self;
-
-    fn div(self, rhs: f64) -> Self::Output {
-        self.0.div(rhs).into()
-    }
-}
-
-impl ops::Rem<Self> for Scalar {
-    type Output = Self;
-
-    fn rem(self, rhs: Self) -> Self::Output {
-        self.0.rem(rhs.0).into()
+    fn rem(self, rhs: T) -> Self::Output {
+        self.0.rem(rhs.into().0).into()
     }
 }
 
