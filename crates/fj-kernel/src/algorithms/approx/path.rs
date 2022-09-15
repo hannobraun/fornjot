@@ -36,11 +36,12 @@ use super::{Approx, ApproxCache, Tolerance};
 
 impl Approx for (GlobalPath, RangeOnPath) {
     type Approximation = Vec<(Point<1>, Point<3>)>;
+    type Cache = ApproxCache;
 
     fn approx_with_cache(
         self,
         tolerance: impl Into<Tolerance>,
-        _: &mut ApproxCache,
+        _: &mut Self::Cache,
     ) -> Self::Approximation {
         let (path, range) = self;
 

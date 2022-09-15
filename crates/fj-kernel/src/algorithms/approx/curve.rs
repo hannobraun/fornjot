@@ -15,11 +15,12 @@ use super::{path::RangeOnPath, Approx, ApproxCache, ApproxPoint, Tolerance};
 
 impl Approx for (&Curve, RangeOnPath) {
     type Approximation = CurveApprox;
+    type Cache = ApproxCache;
 
     fn approx_with_cache(
         self,
         tolerance: impl Into<Tolerance>,
-        cache: &mut ApproxCache,
+        cache: &mut Self::Cache,
     ) -> Self::Approximation {
         let (curve, range) = self;
 
@@ -46,11 +47,12 @@ impl Approx for (&Curve, RangeOnPath) {
 
 impl Approx for (&GlobalCurve, RangeOnPath) {
     type Approximation = GlobalCurveApprox;
+    type Cache = ApproxCache;
 
     fn approx_with_cache(
         self,
         tolerance: impl Into<Tolerance>,
-        cache: &mut ApproxCache,
+        cache: &mut Self::Cache,
     ) -> Self::Approximation {
         let (curve, range) = self;
 

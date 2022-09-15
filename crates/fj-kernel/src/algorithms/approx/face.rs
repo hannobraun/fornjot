@@ -15,11 +15,12 @@ use super::{cycle::CycleApprox, Approx, ApproxCache, ApproxPoint, Tolerance};
 
 impl Approx for &Faces {
     type Approximation = BTreeSet<FaceApprox>;
+    type Cache = ApproxCache;
 
     fn approx_with_cache(
         self,
         tolerance: impl Into<Tolerance>,
-        cache: &mut ApproxCache,
+        cache: &mut Self::Cache,
     ) -> Self::Approximation {
         let tolerance = tolerance.into();
 
@@ -66,11 +67,12 @@ impl Approx for &Faces {
 
 impl Approx for &Face {
     type Approximation = FaceApprox;
+    type Cache = ApproxCache;
 
     fn approx_with_cache(
         self,
         tolerance: impl Into<Tolerance>,
-        cache: &mut ApproxCache,
+        cache: &mut Self::Cache,
     ) -> Self::Approximation {
         let tolerance = tolerance.into();
 

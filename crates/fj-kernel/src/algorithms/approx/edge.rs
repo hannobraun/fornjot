@@ -14,11 +14,12 @@ use super::{
 
 impl Approx for &HalfEdge {
     type Approximation = HalfEdgeApprox;
+    type Cache = ApproxCache;
 
     fn approx_with_cache(
         self,
         tolerance: impl Into<Tolerance>,
-        cache: &mut ApproxCache,
+        cache: &mut Self::Cache,
     ) -> Self::Approximation {
         let &[a, b] = self.vertices();
         let range = RangeOnPath::new([a, b].map(|vertex| vertex.position()));

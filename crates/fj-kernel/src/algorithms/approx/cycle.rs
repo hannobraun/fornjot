@@ -12,11 +12,12 @@ use super::{
 
 impl Approx for &Cycle {
     type Approximation = CycleApprox;
+    type Cache = ApproxCache;
 
     fn approx_with_cache(
         self,
         tolerance: impl Into<Tolerance>,
-        cache: &mut ApproxCache,
+        cache: &mut Self::Cache,
     ) -> Self::Approximation {
         let tolerance = tolerance.into();
 

@@ -31,12 +31,15 @@ pub trait Approx: Sized {
     /// The approximation of the object
     type Approximation;
 
+    /// The cache used to cache approximation results
+    type Cache: Default;
+
     /// Approximate the object
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual object.
     fn approx(self, tolerance: impl Into<Tolerance>) -> Self::Approximation {
-        let mut cache = ApproxCache::new();
+        let mut cache = Self::Cache::default();
         self.approx_with_cache(tolerance, &mut cache)
     }
 
@@ -44,7 +47,7 @@ pub trait Approx: Sized {
     fn approx_with_cache(
         self,
         tolerance: impl Into<Tolerance>,
-        cache: &mut ApproxCache,
+        cache: &mut Self::Cache,
     ) -> Self::Approximation;
 }
 
