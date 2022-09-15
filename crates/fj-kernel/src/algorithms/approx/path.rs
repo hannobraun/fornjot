@@ -121,14 +121,8 @@ where
 /// An approximation of a [`GlobalPath`]
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalPathApprox {
-    points: Vec<ApproxPoint<1>>,
-}
-
-impl GlobalPathApprox {
-    /// Access the points that approximate the path
-    pub fn points(&self) -> impl Iterator<Item = ApproxPoint<1>> + '_ {
-        self.points.iter().cloned()
-    }
+    /// The points that approximate the path
+    pub points: Vec<ApproxPoint<1>>,
 }
 
 /// Approximate a circle
