@@ -89,12 +89,18 @@ impl Scalar {
     ///
     /// Return `Scalar::ZERO`, if the scalar is zero, `Scalar::ONE`, if it is
     /// positive, `-Scalar::ONE`, if it is negative.
-    pub fn sign(self) -> Scalar {
-        if self == Self::ZERO {
-            Self::ZERO
-        } else {
-            Self(self.0.signum())
+    pub fn sign(self) -> Sign {
+        if self.is_negative() {
+            return Sign::Negative;
         }
+        if self.is_positive() {
+            return Sign::Positive;
+        }
+        if self.is_zero() {
+            return Sign::Zero;
+        }
+
+        unreachable!("Sign is neither negative, nor positive, nor zero.")
     }
 
     /// Compute the absolute value of the scalar
@@ -580,5 +586,31 @@ impl approx::AbsDiffEq for Scalar {
 
     fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
         self.0.abs_diff_eq(&other.0, epsilon.0)
+    }
+}
+
+/// The sign of a [`Scalar`]
+///
+/// See [`Scalar::sign`]
+#[derive(Clone, Copy, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub enum Sign {
+    /// The scalar is negative
+    Negative,
+
+    /// The scalar is positive
+    Positive,
+
+    /// The scalar is zero
+    Zero,
+}
+
+impl Sign {
+    /// Convert this sign back to a scalar
+    pub fn to_scalar(self) -> Scalar {
+        match self {
+            Sign::Negative => -Scalar::ONE,
+            Sign::Positive => Scalar::ONE,
+            Sign::Zero => Scalar::ZERO,
+        }
     }
 }
