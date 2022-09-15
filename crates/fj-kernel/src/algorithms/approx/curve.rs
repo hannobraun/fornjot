@@ -46,7 +46,8 @@ impl Approx for (&GlobalCurve, RangeOnPath) {
     ) -> Self::Approximation {
         let (curve, range) = self;
 
-        if let Some(approx) = cache.global_curve(curve) {
+        let cache_key = (*curve, range);
+        if let Some(approx) = cache.global_curve(cache_key) {
             return approx;
         }
 
@@ -57,7 +58,7 @@ impl Approx for (&GlobalCurve, RangeOnPath) {
                 ApproxPoint::new(point_curve, point_global)
             })
             .collect();
-        cache.insert_global_curve(curve, GlobalCurveApprox { points })
+        cache.insert_global_curve(cache_key, GlobalCurveApprox { points })
     }
 }
 
