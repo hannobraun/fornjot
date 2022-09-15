@@ -154,19 +154,8 @@ fn approx_circle(
     // and the circle. This is the same as the difference between
     // the circumscribed circle and the incircle.
 
-    let n = number_of_vertices_for_circle(
-        tolerance,
-        circle.radius(),
-        range.length(),
-    );
-
-    for i in 1..n {
-        let angle = range.start().t
-            + (params.increment() * i as f64) * range.direction();
-
-        let point_curve = Point::from([angle]);
+    for point_curve in params.points(range) {
         let point_global = circle.point_from_circle_coords(point_curve);
-
         points.push(ApproxPoint::new(point_curve, point_global));
     }
 
@@ -204,7 +193,6 @@ impl PathApproxParams {
         self.increment
     }
 
-    #[cfg(test)]
     pub fn points(
         &self,
         range: impl Into<RangeOnPath>,
@@ -234,17 +222,6 @@ impl PathApproxParams {
             }
         })
     }
-}
-
-fn number_of_vertices_for_circle(
-    tolerance: Tolerance,
-    radius: Scalar,
-    range: Scalar,
-) -> u64 {
-    let n = (Scalar::PI / (Scalar::ONE - (tolerance.inner() / radius)).acos())
-        .max(3.);
-
-    (n / (Scalar::TAU / range)).ceil().into_u64()
 }
 
 #[cfg(test)]
@@ -309,43 +286,6 @@ mod tests {
                 .map(|i| Point::from([params.increment() * i]))
                 .collect::<Vec<_>>();
             assert_eq!(points, expected_points);
-        }
-    }
-
-    #[test]
-    fn number_of_vertices_for_circle() {
-        verify_result(50., 100., Scalar::TAU, 3);
-        verify_result(50., 100., Scalar::PI, 2);
-        verify_result(10., 100., Scalar::TAU, 7);
-        verify_result(10., 100., Scalar::PI, 4);
-        verify_result(1., 100., Scalar::TAU, 23);
-        verify_result(1., 100., Scalar::PI, 12);
-
-        fn verify_result(
-            tolerance: impl Into<Tolerance>,
-            radius: impl Into<Scalar>,
-            range: impl Into<Scalar>,
-            n: u64,
-        ) {
-            let tolerance = tolerance.into();
-            let radius = radius.into();
-            let range = range.into();
-
-            assert_eq!(
-                n,
-                super::number_of_vertices_for_circle(tolerance, radius, range)
-            );
-
-            assert!(calculate_error(radius, range, n) <= tolerance.inner());
-            if n > 3 {
-                assert!(
-                    calculate_error(radius, range, n - 1) >= tolerance.inner()
-                );
-            }
-        }
-
-        fn calculate_error(radius: Scalar, range: Scalar, n: u64) -> Scalar {
-            radius - radius * (range / Scalar::from_u64(n) / 2.).cos()
         }
     }
 }
