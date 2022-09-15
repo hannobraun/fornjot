@@ -8,14 +8,14 @@
 use crate::objects::HalfEdge;
 
 use super::{
-    curve::{ApproxCache, CurveApprox},
+    curve::{CurveApprox, CurveCache},
     path::RangeOnPath,
     Approx, ApproxPoint, Tolerance,
 };
 
 impl Approx for &HalfEdge {
     type Approximation = HalfEdgeApprox;
-    type Cache = ApproxCache;
+    type Cache = CurveCache;
 
     fn approx_with_cache(
         self,

@@ -7,12 +7,12 @@ use fj_math::Segment;
 use crate::objects::Cycle;
 
 use super::{
-    curve::ApproxCache, edge::HalfEdgeApprox, Approx, ApproxPoint, Tolerance,
+    curve::CurveCache, edge::HalfEdgeApprox, Approx, ApproxPoint, Tolerance,
 };
 
 impl Approx for &Cycle {
     type Approximation = CycleApprox;
-    type Cache = ApproxCache;
+    type Cache = CurveCache;
 
     fn approx_with_cache(
         self,

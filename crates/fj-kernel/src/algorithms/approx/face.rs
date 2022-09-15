@@ -12,12 +12,12 @@ use crate::{
 };
 
 use super::{
-    curve::ApproxCache, cycle::CycleApprox, Approx, ApproxPoint, Tolerance,
+    curve::CurveCache, cycle::CycleApprox, Approx, ApproxPoint, Tolerance,
 };
 
 impl Approx for &Faces {
     type Approximation = BTreeSet<FaceApprox>;
-    type Cache = ApproxCache;
+    type Cache = CurveCache;
 
     fn approx_with_cache(
         self,
@@ -69,7 +69,7 @@ impl Approx for &Faces {
 
 impl Approx for &Face {
     type Approximation = FaceApprox;
-    type Cache = ApproxCache;
+    type Cache = CurveCache;
 
     fn approx_with_cache(
         self,

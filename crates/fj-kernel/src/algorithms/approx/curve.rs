@@ -17,7 +17,7 @@ use super::{path::RangeOnPath, Approx, ApproxPoint, Tolerance};
 
 impl Approx for (&Curve, RangeOnPath) {
     type Approximation = CurveApprox;
-    type Cache = ApproxCache;
+    type Cache = CurveCache;
 
     fn approx_with_cache(
         self,
@@ -95,11 +95,11 @@ impl CurveApprox {
 
 /// A cache for results of an approximation
 #[derive(Default)]
-pub struct ApproxCache {
+pub struct CurveCache {
     global_curve: BTreeMap<(GlobalCurve, RangeOnPath), GlobalCurveApprox>,
 }
 
-impl ApproxCache {
+impl CurveCache {
     /// Create an empty cache
     pub fn new() -> Self {
         Self::default()

@@ -4,11 +4,11 @@ use std::collections::BTreeSet;
 
 use crate::objects::Sketch;
 
-use super::{curve::ApproxCache, face::FaceApprox, Approx, Tolerance};
+use super::{curve::CurveCache, face::FaceApprox, Approx, Tolerance};
 
 impl Approx for &Sketch {
     type Approximation = BTreeSet<FaceApprox>;
-    type Cache = ApproxCache;
+    type Cache = CurveCache;
 
     fn approx_with_cache(
         self,
