@@ -63,19 +63,16 @@ impl ApproxCache {
     /// Insert the approximation of a [`GlobalCurve`]
     pub fn insert_global_curve(
         &mut self,
-        object: &GlobalCurve,
+        key: &GlobalCurve,
         approx: GlobalCurveApprox,
     ) -> GlobalCurveApprox {
-        self.global_curves.insert(*object, approx.clone());
+        self.global_curves.insert(*key, approx.clone());
         approx
     }
 
     /// Access the approximation for the given [`GlobalCurve`], if available
-    pub fn global_curve(
-        &self,
-        object: &GlobalCurve,
-    ) -> Option<GlobalCurveApprox> {
-        self.global_curves.get(object).cloned()
+    pub fn global_curve(&self, key: &GlobalCurve) -> Option<GlobalCurveApprox> {
+        self.global_curves.get(key).cloned()
     }
 }
 
