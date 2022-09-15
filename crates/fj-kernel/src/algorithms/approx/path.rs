@@ -51,6 +51,12 @@ impl Approx for (GlobalPath, RangeOnPath) {
             GlobalPath::Line(_) => vec![],
         };
 
+        let points = points
+            .into_iter()
+            .map(|(point_path, point_global)| {
+                ApproxPoint::new(point_path, point_global)
+            })
+            .collect();
         GlobalPathApprox { points }
     }
 }
@@ -133,7 +139,7 @@ fn approx_circle(
     circle: &Circle<3>,
     range: impl Into<RangeOnPath>,
     tolerance: Tolerance,
-) -> Vec<ApproxPoint<1>> {
+) -> Vec<(Point<1>, Point<3>)> {
     let range = range.into();
 
     let params = PathApproxParams::for_circle(circle, tolerance);
@@ -141,7 +147,7 @@ fn approx_circle(
 
     for point_curve in params.points(range) {
         let point_global = circle.point_from_circle_coords(point_curve);
-        points.push(ApproxPoint::new(point_curve, point_global));
+        points.push((point_curve, point_global));
     }
 
     if range.is_reversed() {
