@@ -191,7 +191,7 @@ impl<T: Into<Scalar>> ops::Add<T> for Scalar {
 impl<T: Into<Scalar>> ops::AddAssign<T> for Scalar {
     fn add_assign(&mut self, rhs: T) {
         self.0.add_assign(rhs.into().0);
-        *self = Self::from_f64(self.0);
+        *self = self.0.into();
     }
 }
 
