@@ -75,6 +75,11 @@ impl<const D: usize> Circle<D> {
         self.center
     }
 
+    /// Access the radius of the circle
+    pub fn radius(&self) -> Scalar {
+        self.a().magnitude()
+    }
+
     /// Access the vector that defines the starting point of the circle
     ///
     /// The point where this vector points from the circle center, is the zero
