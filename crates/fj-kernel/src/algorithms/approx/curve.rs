@@ -53,8 +53,14 @@ impl Approx for (&GlobalCurve, RangeOnPath) {
             return approx;
         }
 
-        let approx = (curve.path(), range).approx_with_cache(tolerance, cache);
-        cache.insert_global_curve(curve, approx)
+        let points = (curve.path(), range)
+            .approx_with_cache(tolerance, cache)
+            .into_iter()
+            .map(|(point_curve, point_global)| {
+                ApproxPoint::new(point_curve, point_global)
+            })
+            .collect();
+        cache.insert_global_curve(curve, GlobalPathApprox { points })
     }
 }
 

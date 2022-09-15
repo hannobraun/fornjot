@@ -35,7 +35,7 @@ use crate::path::GlobalPath;
 use super::{Approx, ApproxCache, ApproxPoint, Tolerance};
 
 impl Approx for (GlobalPath, RangeOnPath) {
-    type Approximation = GlobalPathApprox;
+    type Approximation = Vec<(Point<1>, Point<3>)>;
 
     fn approx_with_cache(
         self,
@@ -44,20 +44,12 @@ impl Approx for (GlobalPath, RangeOnPath) {
     ) -> Self::Approximation {
         let (path, range) = self;
 
-        let points = match path {
+        match path {
             GlobalPath::Circle(circle) => {
                 approx_circle(&circle, range, tolerance.into())
             }
             GlobalPath::Line(_) => vec![],
-        };
-
-        let points = points
-            .into_iter()
-            .map(|(point_path, point_global)| {
-                ApproxPoint::new(point_path, point_global)
-            })
-            .collect();
-        GlobalPathApprox { points }
+        }
     }
 }
 
