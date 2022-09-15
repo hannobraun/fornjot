@@ -36,72 +36,6 @@ impl Approx for (GlobalPath, RangeOnPath) {
     }
 }
 
-/// An approximation of a [`GlobalPath`]
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct GlobalPathApprox {
-    points: Vec<ApproxPoint<1>>,
-}
-
-impl GlobalPathApprox {
-    /// Access the points that approximate the path
-    pub fn points(&self) -> impl Iterator<Item = ApproxPoint<1>> + '_ {
-        self.points.iter().cloned()
-    }
-}
-
-/// Approximate a circle
-///
-/// `tolerance` specifies how much the approximation is allowed to deviate
-/// from the circle.
-fn approx_circle(
-    circle: &Circle<3>,
-    range: impl Into<RangeOnPath>,
-    tolerance: Tolerance,
-) -> Vec<ApproxPoint<1>> {
-    let mut points = Vec::new();
-
-    let range = range.into();
-
-    // To approximate the circle, we use a regular polygon for which
-    // the circle is the circumscribed circle. The `tolerance`
-    // parameter is the maximum allowed distance between the polygon
-    // and the circle. This is the same as the difference between
-    // the circumscribed circle and the incircle.
-
-    let n = number_of_vertices_for_circle(
-        tolerance,
-        circle.radius(),
-        range.length(),
-    );
-
-    for i in 1..n {
-        let angle = range.start().t
-            + (Scalar::TAU / n as f64 * i as f64) * range.direction();
-
-        let point_curve = Point::from([angle]);
-        let point_global = circle.point_from_circle_coords(point_curve);
-
-        points.push(ApproxPoint::new(point_curve, point_global));
-    }
-
-    if range.is_reversed() {
-        points.reverse();
-    }
-
-    points
-}
-
-fn number_of_vertices_for_circle(
-    tolerance: Tolerance,
-    radius: Scalar,
-    range: Scalar,
-) -> u64 {
-    let n = (Scalar::PI / (Scalar::ONE - (tolerance.inner() / radius)).acos())
-        .max(3.);
-
-    (n / (Scalar::TAU / range)).ceil().into_u64()
-}
-
 /// The range on which a path should be approximated
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct RangeOnPath {
@@ -175,6 +109,72 @@ impl RangeOnPath {
     pub fn direction(&self) -> Scalar {
         self.signed_length().sign()
     }
+}
+
+/// An approximation of a [`GlobalPath`]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct GlobalPathApprox {
+    points: Vec<ApproxPoint<1>>,
+}
+
+impl GlobalPathApprox {
+    /// Access the points that approximate the path
+    pub fn points(&self) -> impl Iterator<Item = ApproxPoint<1>> + '_ {
+        self.points.iter().cloned()
+    }
+}
+
+/// Approximate a circle
+///
+/// `tolerance` specifies how much the approximation is allowed to deviate
+/// from the circle.
+fn approx_circle(
+    circle: &Circle<3>,
+    range: impl Into<RangeOnPath>,
+    tolerance: Tolerance,
+) -> Vec<ApproxPoint<1>> {
+    let mut points = Vec::new();
+
+    let range = range.into();
+
+    // To approximate the circle, we use a regular polygon for which
+    // the circle is the circumscribed circle. The `tolerance`
+    // parameter is the maximum allowed distance between the polygon
+    // and the circle. This is the same as the difference between
+    // the circumscribed circle and the incircle.
+
+    let n = number_of_vertices_for_circle(
+        tolerance,
+        circle.radius(),
+        range.length(),
+    );
+
+    for i in 1..n {
+        let angle = range.start().t
+            + (Scalar::TAU / n as f64 * i as f64) * range.direction();
+
+        let point_curve = Point::from([angle]);
+        let point_global = circle.point_from_circle_coords(point_curve);
+
+        points.push(ApproxPoint::new(point_curve, point_global));
+    }
+
+    if range.is_reversed() {
+        points.reverse();
+    }
+
+    points
+}
+
+fn number_of_vertices_for_circle(
+    tolerance: Tolerance,
+    radius: Scalar,
+    range: Scalar,
+) -> u64 {
+    let n = (Scalar::PI / (Scalar::ONE - (tolerance.inner() / radius)).acos())
+        .max(3.);
+
+    (n / (Scalar::TAU / range)).ceil().into_u64()
 }
 
 #[cfg(test)]
