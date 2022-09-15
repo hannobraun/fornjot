@@ -226,16 +226,22 @@ mod tests {
 
     #[test]
     fn points_for_circle() {
-        // Needed to support type inference.
-        let empty: [Scalar; 0] = [];
+        // At the chosen values for radius and tolerance (see below), the
+        // increment is roughly 1.25.
 
-        // At the chosen values, the increment is ~1.25.
-        test_path([[0.], [0.]], empty); // empty range
-        test_path([[0.], [TAU]], [1., 2., 3.]); // start before first increment
-        test_path([[1.], [TAU]], [1., 2., 3.]); // start before first increment
-        test_path([[0.], [TAU - 1.]], [1., 2., 3.]); // end after last increment
-        test_path([[2.], [TAU]], [2., 3.]); // start after first increment
-        test_path([[0.], [TAU - 2.]], [1., 2.]); // end before last increment
+        // Empty range
+        let empty: [Scalar; 0] = [];
+        test_path([[0.], [0.]], empty);
+
+        // Ranges contain all generated points. Start is before the first
+        // increment and after the last one in each case.
+        test_path([[0.], [TAU]], [1., 2., 3.]);
+        test_path([[1.], [TAU]], [1., 2., 3.]);
+        test_path([[0.], [TAU - 1.]], [1., 2., 3.]);
+
+        // Here the range is restricted to cut of the first or last increment.
+        test_path([[2.], [TAU]], [2., 3.]);
+        test_path([[0.], [TAU - 2.]], [1., 2.]);
 
         fn test_path(
             range: impl Into<RangeOnPath>,
