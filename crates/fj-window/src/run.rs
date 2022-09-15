@@ -10,7 +10,7 @@ use fj_interop::status_report::StatusReport;
 use fj_operations::shape_processor::ShapeProcessor;
 use fj_viewer::{
     camera::Camera,
-    graphics::{self, DrawConfig, Renderer},
+    graphics::{self, DrawConfig, Renderer, Vertices},
     input,
     screen::{NormalizedPosition, Screen as _, Size},
 };
@@ -84,6 +84,16 @@ pub fn run(
                     }
                 }
             }
+        } else if camera.is_none() {
+            renderer.update_geometry(
+                Vertices::empty(),
+                Vertices::empty(),
+                Default::default(),
+            );
+
+            camera = Some(Camera::new(&Default::default()));
+
+            println!("camera is set");
         }
 
         //
@@ -177,7 +187,9 @@ pub fn run(
             Event::RedrawRequested(_) => {
                 if let (Some(shape), Some(camera)) = (&shape, &mut camera) {
                     camera.update_planes(&shape.aabb);
+                }
 
+                if let Some(camera) = &mut camera {
                     if let Err(err) = renderer.draw(
                         camera,
                         &mut draw_config,
@@ -186,6 +198,8 @@ pub fn run(
                     ) {
                         warn!("Draw error: {}", err);
                     }
+                } else {
+                    println!("redraw without camera");
                 }
             }
             _ => {}
