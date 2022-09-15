@@ -188,13 +188,6 @@ impl<T: Into<Scalar>> ops::Add<T> for Scalar {
     }
 }
 
-impl<T: Into<Scalar>> ops::AddAssign<T> for Scalar {
-    fn add_assign(&mut self, rhs: T) {
-        self.0.add_assign(rhs.into().0);
-        *self = self.0.into();
-    }
-}
-
 impl<T: Into<Scalar>> ops::Sub<T> for Scalar {
     type Output = Self;
 
@@ -224,6 +217,13 @@ impl<T: Into<Scalar>> ops::Rem<T> for Scalar {
 
     fn rem(self, rhs: T) -> Self::Output {
         self.0.rem(rhs.into().0).into()
+    }
+}
+
+impl<T: Into<Scalar>> ops::AddAssign<T> for Scalar {
+    fn add_assign(&mut self, rhs: T) {
+        self.0.add_assign(rhs.into().0);
+        *self = self.0.into();
     }
 }
 
