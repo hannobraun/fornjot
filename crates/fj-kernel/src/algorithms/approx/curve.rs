@@ -27,7 +27,7 @@ impl Approx for (&Curve, RangeOnPath) {
         let (curve, range) = self;
 
         let cache_key = (*curve.global_form(), range);
-        let global_curve_approx = match cache.global_curve(cache_key) {
+        let global_curve_approx = match cache.get(cache_key) {
             Some(approx) => approx,
             None => {
                 let approx = (curve.global_form(), range)
@@ -116,7 +116,7 @@ impl CurveCache {
     }
 
     /// Access the approximation for the given [`GlobalCurve`], if available
-    pub fn global_curve(
+    pub fn get(
         &self,
         key: (GlobalCurve, RangeOnPath),
     ) -> Option<GlobalCurveApprox> {
