@@ -23,7 +23,8 @@ impl Approx for &HalfEdge {
         cache: &mut Self::Cache,
     ) -> Self::Approximation {
         let &[a, b] = self.vertices();
-        let range = RangeOnPath::new([a, b].map(|vertex| vertex.position()));
+        let boundary = [a, b].map(|vertex| vertex.position());
+        let range = RangeOnPath { boundary };
 
         let first = ApproxPoint::new(
             a.surface_form().position(),
