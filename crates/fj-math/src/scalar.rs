@@ -80,6 +80,11 @@ impl Scalar {
         self > Self::ZERO
     }
 
+    /// Indicate whether the scalar is zero
+    pub fn is_zero(self) -> bool {
+        self == Scalar::ZERO
+    }
+
     /// The sign of the scalar
     ///
     /// Return `Scalar::ZERO`, if the scalar is zero, `Scalar::ONE`, if it is
