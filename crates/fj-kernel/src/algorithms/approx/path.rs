@@ -137,6 +137,8 @@ fn approx_circle(
 
     let range = range.into();
 
+    let params = PathApproxParams::for_circle(circle, tolerance);
+
     // To approximate the circle, we use a regular polygon for which
     // the circle is the circumscribed circle. The `tolerance`
     // parameter is the maximum allowed distance between the polygon
@@ -151,7 +153,7 @@ fn approx_circle(
 
     for i in 1..n {
         let angle = range.start().t
-            + (Scalar::TAU / n as f64 * i as f64) * range.direction();
+            + (params.increment() * i as f64) * range.direction();
 
         let point_curve = Point::from([angle]);
         let point_global = circle.point_from_circle_coords(point_curve);
@@ -164,6 +166,34 @@ fn approx_circle(
     }
 
     points
+}
+
+struct PathApproxParams {
+    increment: Scalar,
+}
+
+impl PathApproxParams {
+    pub fn for_circle<const D: usize>(
+        circle: &Circle<D>,
+        tolerance: impl Into<Tolerance>,
+    ) -> Self {
+        let radius = circle.a().magnitude();
+
+        let num_vertices_to_approx_full_circle = Scalar::max(
+            Scalar::PI
+                / (Scalar::ONE - (tolerance.into().inner() / radius)).acos(),
+            3.,
+        )
+        .ceil();
+
+        let increment = Scalar::TAU / num_vertices_to_approx_full_circle;
+
+        Self { increment }
+    }
+
+    pub fn increment(&self) -> Scalar {
+        self.increment
+    }
 }
 
 fn number_of_vertices_for_circle(
@@ -179,9 +209,30 @@ fn number_of_vertices_for_circle(
 
 #[cfg(test)]
 mod tests {
-    use fj_math::Scalar;
+    use fj_math::{Circle, Scalar};
 
     use crate::algorithms::approx::Tolerance;
+
+    use super::PathApproxParams;
+
+    #[test]
+    fn increment_for_circle() {
+        test_increment(1., 0.5, 3.);
+        test_increment(1., 0.1, 7.);
+        test_increment(1., 0.01, 23.);
+
+        fn test_increment(
+            radius: impl Into<Scalar>,
+            tolerance: impl Into<Tolerance>,
+            expected_num_vertices: impl Into<Scalar>,
+        ) {
+            let circle = Circle::from_center_and_radius([0., 0.], radius);
+            let params = PathApproxParams::for_circle(&circle, tolerance);
+
+            let expected_increment = Scalar::TAU / expected_num_vertices;
+            assert_eq!(params.increment(), expected_increment);
+        }
+    }
 
     #[test]
     fn number_of_vertices_for_circle() {
