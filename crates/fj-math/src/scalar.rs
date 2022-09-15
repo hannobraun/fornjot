@@ -70,6 +70,11 @@ impl Scalar {
         self.0 as u64
     }
 
+    /// Indicate whether the scalar is negative
+    pub fn is_negative(self) -> bool {
+        self < Self::ZERO
+    }
+
     /// The sign of the scalar
     ///
     /// Return `Scalar::ZERO`, if the scalar is zero, `Scalar::ONE`, if it is
