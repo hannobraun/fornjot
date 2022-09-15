@@ -32,10 +32,10 @@ use fj_math::{Circle, Point, Scalar};
 
 use crate::path::GlobalPath;
 
-use super::{Approx, ApproxCache, ApproxPoint, Tolerance};
+use super::{Approx, ApproxCache, Tolerance};
 
 impl Approx for (GlobalPath, RangeOnPath) {
-    type Approximation = GlobalPathApprox;
+    type Approximation = Vec<(Point<1>, Point<3>)>;
 
     fn approx_with_cache(
         self,
@@ -44,14 +44,12 @@ impl Approx for (GlobalPath, RangeOnPath) {
     ) -> Self::Approximation {
         let (path, range) = self;
 
-        let points = match path {
+        match path {
             GlobalPath::Circle(circle) => {
                 approx_circle(&circle, range, tolerance.into())
             }
             GlobalPath::Line(_) => vec![],
-        };
-
-        GlobalPathApprox { points }
+        }
     }
 }
 
@@ -112,28 +110,15 @@ where
     }
 }
 
-/// An approximation of a [`GlobalPath`]
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct GlobalPathApprox {
-    points: Vec<ApproxPoint<1>>,
-}
-
-impl GlobalPathApprox {
-    /// Access the points that approximate the path
-    pub fn points(&self) -> impl Iterator<Item = ApproxPoint<1>> + '_ {
-        self.points.iter().cloned()
-    }
-}
-
 /// Approximate a circle
 ///
 /// `tolerance` specifies how much the approximation is allowed to deviate
 /// from the circle.
-fn approx_circle(
-    circle: &Circle<3>,
+fn approx_circle<const D: usize>(
+    circle: &Circle<D>,
     range: impl Into<RangeOnPath>,
     tolerance: Tolerance,
-) -> Vec<ApproxPoint<1>> {
+) -> Vec<(Point<1>, Point<D>)> {
     let range = range.into();
 
     let params = PathApproxParams::for_circle(circle, tolerance);
@@ -141,7 +126,7 @@ fn approx_circle(
 
     for point_curve in params.points(range) {
         let point_global = circle.point_from_circle_coords(point_curve);
-        points.push(ApproxPoint::new(point_curve, point_global));
+        points.push((point_curve, point_global));
     }
 
     if range.is_reversed() {
