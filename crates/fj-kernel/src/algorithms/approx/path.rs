@@ -28,6 +28,8 @@
 //! fit together in a valid mesh, no matter which ranges of a path are being
 //! approximated, and how many times.
 
+use std::iter;
+
 use fj_math::{Circle, Point, Scalar};
 
 use crate::path::GlobalPath;
@@ -168,8 +170,6 @@ impl PathApproxParams {
         &self,
         range: impl Into<RangeOnPath>,
     ) -> impl Iterator<Item = Point<1>> + '_ {
-        use std::iter;
-
         let range = range.into();
 
         let [a, b] = range.boundary.map(|point| point.t / self.increment());
