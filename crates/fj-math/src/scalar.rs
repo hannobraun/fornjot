@@ -75,6 +75,11 @@ impl Scalar {
         self < Self::ZERO
     }
 
+    /// Indicate whether the scalar is positive
+    pub fn is_positive(self) -> bool {
+        self > Self::ZERO
+    }
+
     /// The sign of the scalar
     ///
     /// Return `Scalar::ZERO`, if the scalar is zero, `Scalar::ONE`, if it is
