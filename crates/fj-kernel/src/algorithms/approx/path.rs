@@ -135,11 +135,11 @@ impl GlobalPathApprox {
 ///
 /// `tolerance` specifies how much the approximation is allowed to deviate
 /// from the circle.
-fn approx_circle(
-    circle: &Circle<3>,
+fn approx_circle<const D: usize>(
+    circle: &Circle<D>,
     range: impl Into<RangeOnPath>,
     tolerance: Tolerance,
-) -> Vec<(Point<1>, Point<3>)> {
+) -> Vec<(Point<1>, Point<D>)> {
     let range = range.into();
 
     let params = PathApproxParams::for_circle(circle, tolerance);
