@@ -92,6 +92,11 @@ impl Scalar {
         self.0.max(other.into().0).into()
     }
 
+    /// Compute the largest integer smaller than or equal to this scalar
+    pub fn floor(self) -> Self {
+        self.0.floor().into()
+    }
+
     /// Compute the smallest integer larger than or equal to this scalar
     pub fn ceil(self) -> Self {
         self.0.ceil().into()
