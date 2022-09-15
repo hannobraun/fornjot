@@ -9,12 +9,12 @@
 //! done, to give the caller (who knows the boundary anyway) more options on how
 //! to further process the approximation.
 
-use crate::{
-    objects::{Curve, GlobalCurve},
-    path::RangeOnPath,
-};
+use crate::objects::{Curve, GlobalCurve};
 
-use super::{Approx, ApproxCache, ApproxPoint, Tolerance};
+use super::{
+    path::{GlobalPathApprox, RangeOnPath},
+    Approx, ApproxCache, ApproxPoint, Tolerance,
+};
 
 impl Approx for (&Curve, RangeOnPath) {
     type Approximation = CurveApprox;
@@ -26,23 +26,21 @@ impl Approx for (&Curve, RangeOnPath) {
     ) -> Self::Approximation {
         let (curve, range) = self;
 
-        let points = (curve.global_form(), range)
-            .approx_with_cache(tolerance, cache)
-            .points
-            .into_iter()
-            .map(|point| {
-                let point_surface =
-                    curve.path().point_from_path_coords(point.local_form);
-                ApproxPoint::new(point_surface, point.global_form)
-                    .with_source((*curve, point.local_form))
-            });
+        let approx =
+            (curve.global_form(), range).approx_with_cache(tolerance, cache);
+        let points = approx.points().map(|point| {
+            let point_surface =
+                curve.path().point_from_path_coords(point.local_form);
+            ApproxPoint::new(point_surface, point.global_form)
+                .with_source((*curve, point.local_form))
+        });
 
         CurveApprox::empty().with_points(points)
     }
 }
 
 impl Approx for (&GlobalCurve, RangeOnPath) {
-    type Approximation = GlobalCurveApprox;
+    type Approximation = GlobalPathApprox;
 
     fn approx_with_cache(
         self,
@@ -55,8 +53,8 @@ impl Approx for (&GlobalCurve, RangeOnPath) {
             return approx;
         }
 
-        let points = curve.path().approx(range, tolerance);
-        cache.insert_global_curve(curve, GlobalCurveApprox { points })
+        let approx = (curve.path(), range).approx_with_cache(tolerance, cache);
+        cache.insert_global_curve(curve, approx)
     }
 }
 
@@ -81,11 +79,4 @@ impl CurveApprox {
         self.points.extend(points);
         self
     }
-}
-
-/// An approximation of a [`GlobalCurve`]
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct GlobalCurveApprox {
-    /// The points that approximate the curve
-    pub points: Vec<ApproxPoint<1>>,
 }

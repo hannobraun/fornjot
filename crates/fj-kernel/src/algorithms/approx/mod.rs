@@ -4,6 +4,7 @@ pub mod curve;
 pub mod cycle;
 pub mod edge;
 pub mod face;
+pub mod path;
 pub mod shell;
 pub mod sketch;
 pub mod solid;
@@ -22,7 +23,7 @@ use fj_math::Point;
 
 use crate::objects::{Curve, GlobalCurve};
 
-use self::curve::GlobalCurveApprox;
+use self::path::GlobalPathApprox;
 pub use self::tolerance::{InvalidTolerance, Tolerance};
 
 /// Approximate an object
@@ -50,7 +51,7 @@ pub trait Approx: Sized {
 /// A cache for results of an approximation
 #[derive(Default)]
 pub struct ApproxCache {
-    global_curves: BTreeMap<GlobalCurve, GlobalCurveApprox>,
+    global_curves: BTreeMap<GlobalCurve, GlobalPathApprox>,
 }
 
 impl ApproxCache {
@@ -63,8 +64,8 @@ impl ApproxCache {
     pub fn insert_global_curve(
         &mut self,
         object: &GlobalCurve,
-        approx: GlobalCurveApprox,
-    ) -> GlobalCurveApprox {
+        approx: GlobalPathApprox,
+    ) -> GlobalPathApprox {
         self.global_curves.insert(*object, approx.clone());
         approx
     }
@@ -73,7 +74,7 @@ impl ApproxCache {
     pub fn global_curve(
         &self,
         object: &GlobalCurve,
-    ) -> Option<GlobalCurveApprox> {
+    ) -> Option<GlobalPathApprox> {
         self.global_curves.get(object).cloned()
     }
 }
