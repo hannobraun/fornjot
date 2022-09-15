@@ -46,7 +46,7 @@ pub fn run(
     let mut draw_config = DrawConfig::default();
 
     let mut shape = None;
-    let mut camera = None;
+    let mut camera = Camera::new(&Default::default());
 
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
@@ -61,9 +61,7 @@ pub fn run(
                             new_shape.aabb,
                         );
 
-                        if camera.is_none() {
-                            camera = Some(Camera::new(&new_shape.aabb));
-                        }
+                        camera.update_planes(&new_shape.aabb);
 
                         shape = Some(new_shape);
                     }
@@ -84,16 +82,6 @@ pub fn run(
                     }
                 }
             }
-        } else if camera.is_none() {
-            renderer.update_geometry(
-                Vertices::empty(),
-                Vertices::empty(),
-                Default::default(),
-            );
-
-            camera = Some(Camera::new(&Default::default()));
-
-            println!("camera is set");
         }
 
         //
@@ -185,21 +173,17 @@ pub fn run(
                 window.window().request_redraw();
             }
             Event::RedrawRequested(_) => {
-                if let (Some(shape), Some(camera)) = (&shape, &mut camera) {
+                if let Some(shape) = &shape {
                     camera.update_planes(&shape.aabb);
                 }
 
-                if let Some(camera) = &mut camera {
-                    if let Err(err) = renderer.draw(
-                        camera,
-                        &mut draw_config,
-                        window.window(),
-                        &mut status,
-                    ) {
-                        warn!("Draw error: {}", err);
-                    }
-                } else {
-                    println!("redraw without camera");
+                if let Err(err) = renderer.draw(
+                    &camera,
+                    &mut draw_config,
+                    window.window(),
+                    &mut status,
+                ) {
+                    warn!("Draw error: {}", err);
                 }
             }
             _ => {}
@@ -208,8 +192,7 @@ pub fn run(
         // fj-viewer input events
         // These can fire multiple times per frame
 
-        if let (Some(shape), Some(camera), Some(should_focus)) =
-            (&shape, &camera, focus_event(&event))
+        if let (Some(shape), Some(should_focus)) = (&shape, focus_event(&event))
         {
             if should_focus {
                 // Don't unnecessarily recalculate focus point
@@ -228,10 +211,8 @@ pub fn run(
             &held_mouse_button,
             &mut previous_cursor,
         );
-        if let (Some(input_event), Some(fp), Some(camera)) =
-            (input_event, focus_point, &mut camera)
-        {
-            input_handler.handle_event(input_event, fp, camera);
+        if let (Some(input_event), Some(fp)) = (input_event, focus_point) {
+            input_handler.handle_event(input_event, fp, &mut camera);
         }
     });
 }
