@@ -30,7 +30,7 @@
 
 use std::iter;
 
-use fj_math::{Circle, Point, Scalar};
+use fj_math::{Circle, Point, Scalar, Sign};
 
 use crate::path::GlobalPath;
 
@@ -60,7 +60,6 @@ impl Approx for (GlobalPath, RangeOnPath) {
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct RangeOnPath {
     boundary: [Point<1>; 2],
-    is_reversed: bool,
 }
 
 impl RangeOnPath {
@@ -79,23 +78,8 @@ impl RangeOnPath {
     /// The caller can use `is_reversed` to determine, if the range was reversed
     /// during normalization, to adjust the approximation accordingly.
     pub fn new(boundary: [impl Into<Point<1>>; 2]) -> Self {
-        let [a, b] = boundary.map(Into::into);
-
-        let (boundary, is_reversed) = if a < b {
-            ([a, b], false)
-        } else {
-            ([b, a], true)
-        };
-
-        Self {
-            boundary,
-            is_reversed,
-        }
-    }
-
-    /// Indicate whether the range was reversed during normalization
-    pub fn is_reversed(&self) -> bool {
-        self.is_reversed
+        let boundary = boundary.map(Into::into);
+        Self { boundary }
     }
 
     /// Access the boundary of the range
@@ -130,10 +114,6 @@ fn approx_circle<const D: usize>(
     for point_curve in params.points(range) {
         let point_global = circle.point_from_circle_coords(point_curve);
         points.push((point_curve, point_global));
-    }
-
-    if range.is_reversed() {
-        points.reverse();
     }
 
     points
@@ -173,20 +153,32 @@ impl PathApproxParams {
         let range = range.into();
 
         let [a, b] = range.boundary.map(|point| point.t / self.increment());
+        let direction = (b - a).sign();
+        let [min, max] = if a < b { [a, b] } else { [b, a] };
 
         // We can't generate a point exactly at the boundaries of the range as
         // part of the approximation. Make sure we stay inside the range.
-        let start = a.floor() + 1.;
-        let end = b.ceil() - 1.;
+        let min = min.floor() + 1.;
+        let max = max.ceil() - 1.;
+
+        let [start, end] = match direction {
+            Sign::Negative => [max, min],
+            Sign::Positive | Sign::Zero => [min, max],
+        };
 
         let mut i = start;
         iter::from_fn(move || {
-            if i > end {
+            let is_finished = match direction {
+                Sign::Negative => i < end,
+                Sign::Positive | Sign::Zero => i > end,
+            };
+
+            if is_finished {
                 return None;
             }
 
             let t = self.increment() * i;
-            i += Scalar::ONE;
+            i += direction.to_scalar();
 
             Some(Point::from([t]))
         })
@@ -240,6 +232,13 @@ mod tests {
         // Here the range is restricted to cut of the first or last increment.
         test_path([[2.], [TAU]], [2., 3.]);
         test_path([[0.], [TAU - 2.]], [1., 2.]);
+
+        // And everything again, but in reverse.
+        test_path([[TAU], [0.]], [3., 2., 1.]);
+        test_path([[TAU], [1.]], [3., 2., 1.]);
+        test_path([[TAU - 1.], [0.]], [3., 2., 1.]);
+        test_path([[TAU], [2.]], [3., 2.]);
+        test_path([[TAU - 2.], [0.]], [2., 1.]);
 
         fn test_path(
             range: impl Into<RangeOnPath>,
