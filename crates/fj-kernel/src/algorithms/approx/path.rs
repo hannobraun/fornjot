@@ -179,7 +179,7 @@ impl PathApproxParams {
         let b = if b.ceil() == b { b - 1. } else { b };
 
         let start = a.floor() + 1.;
-        let end = b - 1.;
+        let end = b;
 
         let mut i = start;
         iter::from_fn(move || {
@@ -235,13 +235,13 @@ mod tests {
 
         // Ranges contain all generated points. Start is before the first
         // increment and after the last one in each case.
-        test_path([[0.], [TAU]], [1., 2., 3.]);
-        test_path([[1.], [TAU]], [1., 2., 3.]);
-        test_path([[0.], [TAU - 1.]], [1., 2., 3.]);
+        test_path([[0.], [TAU]], [1., 2., 3., 4.]);
+        test_path([[1.], [TAU]], [1., 2., 3., 4.]);
+        test_path([[0.], [TAU - 1.]], [1., 2., 3., 4.]);
 
         // Here the range is restricted to cut of the first or last increment.
-        test_path([[2.], [TAU]], [2., 3.]);
-        test_path([[0.], [TAU - 2.]], [1., 2.]);
+        test_path([[2.], [TAU]], [2., 3., 4.]);
+        test_path([[0.], [TAU - 2.]], [1., 2., 3.]);
 
         fn test_path(
             range: impl Into<RangeOnPath>,
