@@ -8,6 +8,25 @@
 //! The boundaries of the range are not included in the approximation. This is
 //! done, to give the caller (who knows the boundary anyway) more options on how
 //! to further process the approximation.
+//!
+//! ## Determinism
+//!
+//! Path approximation is carefully designed to produce a deterministic result
+//! for the combination of a given path and a given tolerance, regardless of
+//! what the range is. This is done to prevent invalid meshes from being
+//! generated.
+//!
+//! In specific terms, this means there is an infinite set of points that
+//! approximates a path, and that set is deterministic for a given combination
+//! of path and tolerance. The range that defines where the path is approximated
+//! only influences the result in two ways:
+//!
+//! 1. It controls which points from the infinite set are actually computed.
+//! 2. It defines the order in which the computed points are returned.
+//!
+//! As a result, path approximation is guaranteed to generate points that can
+//! fit together in a valid mesh, no matter which ranges of a path are being
+//! approximated, and how many times.
 
 use fj_math::{Circle, Point, Scalar};
 
@@ -82,32 +101,14 @@ impl RangeOnPath {
     pub fn boundary(&self) -> [Point<1>; 2] {
         self.boundary
     }
+}
 
-    /// Access the start of the range
-    pub fn start(&self) -> Point<1> {
-        self.boundary[0]
-    }
-
-    /// Access the end of the range
-    pub fn end(&self) -> Point<1> {
-        self.boundary[1]
-    }
-
-    /// Compute the signed length of the range
-    pub fn signed_length(&self) -> Scalar {
-        (self.end() - self.start()).t
-    }
-
-    /// Compute the absolute length of the range
-    pub fn length(&self) -> Scalar {
-        self.signed_length().abs()
-    }
-
-    /// Compute the direction of the range
-    ///
-    /// Returns a [`Scalar`] that is zero or +/- one.
-    pub fn direction(&self) -> Scalar {
-        self.signed_length().sign()
+impl<T> From<[T; 2]> for RangeOnPath
+where
+    T: Into<Point<1>>,
+{
+    fn from(boundary: [T; 2]) -> Self {
+        Self::new(boundary)
     }
 }
 
@@ -133,29 +134,13 @@ fn approx_circle(
     range: impl Into<RangeOnPath>,
     tolerance: Tolerance,
 ) -> Vec<ApproxPoint<1>> {
-    let mut points = Vec::new();
-
     let range = range.into();
 
-    // To approximate the circle, we use a regular polygon for which
-    // the circle is the circumscribed circle. The `tolerance`
-    // parameter is the maximum allowed distance between the polygon
-    // and the circle. This is the same as the difference between
-    // the circumscribed circle and the incircle.
+    let params = PathApproxParams::for_circle(circle, tolerance);
+    let mut points = Vec::new();
 
-    let n = number_of_vertices_for_circle(
-        tolerance,
-        circle.radius(),
-        range.length(),
-    );
-
-    for i in 1..n {
-        let angle = range.start().t
-            + (Scalar::TAU / n as f64 * i as f64) * range.direction();
-
-        let point_curve = Point::from([angle]);
+    for point_curve in params.points(range) {
         let point_global = circle.point_from_circle_coords(point_curve);
-
         points.push(ApproxPoint::new(point_curve, point_global));
     }
 
@@ -166,57 +151,126 @@ fn approx_circle(
     points
 }
 
-fn number_of_vertices_for_circle(
-    tolerance: Tolerance,
-    radius: Scalar,
-    range: Scalar,
-) -> u64 {
-    let n = (Scalar::PI / (Scalar::ONE - (tolerance.inner() / radius)).acos())
-        .max(3.);
+struct PathApproxParams {
+    increment: Scalar,
+}
 
-    (n / (Scalar::TAU / range)).ceil().into_u64()
+impl PathApproxParams {
+    pub fn for_circle<const D: usize>(
+        circle: &Circle<D>,
+        tolerance: impl Into<Tolerance>,
+    ) -> Self {
+        let radius = circle.a().magnitude();
+
+        let num_vertices_to_approx_full_circle = Scalar::max(
+            Scalar::PI
+                / (Scalar::ONE - (tolerance.into().inner() / radius)).acos(),
+            3.,
+        )
+        .ceil();
+
+        let increment = Scalar::TAU / num_vertices_to_approx_full_circle;
+
+        Self { increment }
+    }
+
+    pub fn increment(&self) -> Scalar {
+        self.increment
+    }
+
+    pub fn points(
+        &self,
+        range: impl Into<RangeOnPath>,
+    ) -> impl Iterator<Item = Point<1>> + '_ {
+        use std::iter;
+
+        let range = range.into();
+
+        let [a, b] = range.boundary.map(|point| point.t / self.increment());
+
+        // We can't generate a point exactly at the end of the range as part of
+        // the approximation. Make sure we stop one step before that.
+        let b = if b.ceil() == b { b - 1. } else { b };
+
+        let start = a.floor() + 1.;
+        let end = b - 1.;
+
+        let mut i = start;
+        iter::from_fn(move || {
+            if i <= end {
+                let t = self.increment() * i;
+                i += Scalar::ONE;
+
+                Some(Point::from([t]))
+            } else {
+                None
+            }
+        })
+    }
 }
 
 #[cfg(test)]
 mod tests {
-    use fj_math::Scalar;
+    use std::f64::consts::TAU;
 
-    use crate::algorithms::approx::Tolerance;
+    use fj_math::{Circle, Point, Scalar};
+
+    use crate::algorithms::approx::{path::RangeOnPath, Tolerance};
+
+    use super::PathApproxParams;
 
     #[test]
-    fn number_of_vertices_for_circle() {
-        verify_result(50., 100., Scalar::TAU, 3);
-        verify_result(50., 100., Scalar::PI, 2);
-        verify_result(10., 100., Scalar::TAU, 7);
-        verify_result(10., 100., Scalar::PI, 4);
-        verify_result(1., 100., Scalar::TAU, 23);
-        verify_result(1., 100., Scalar::PI, 12);
+    fn increment_for_circle() {
+        test_increment(1., 0.5, 3.);
+        test_increment(1., 0.1, 7.);
+        test_increment(1., 0.01, 23.);
 
-        fn verify_result(
-            tolerance: impl Into<Tolerance>,
+        fn test_increment(
             radius: impl Into<Scalar>,
-            range: impl Into<Scalar>,
-            n: u64,
+            tolerance: impl Into<Tolerance>,
+            expected_num_vertices: impl Into<Scalar>,
         ) {
-            let tolerance = tolerance.into();
-            let radius = radius.into();
-            let range = range.into();
+            let circle = Circle::from_center_and_radius([0., 0.], radius);
+            let params = PathApproxParams::for_circle(&circle, tolerance);
 
-            assert_eq!(
-                n,
-                super::number_of_vertices_for_circle(tolerance, radius, range)
-            );
-
-            assert!(calculate_error(radius, range, n) <= tolerance.inner());
-            if n > 3 {
-                assert!(
-                    calculate_error(radius, range, n - 1) >= tolerance.inner()
-                );
-            }
+            let expected_increment = Scalar::TAU / expected_num_vertices;
+            assert_eq!(params.increment(), expected_increment);
         }
+    }
 
-        fn calculate_error(radius: Scalar, range: Scalar, n: u64) -> Scalar {
-            radius - radius * (range / Scalar::from_u64(n) / 2.).cos()
+    #[test]
+    fn points_for_circle() {
+        // Needed to support type inference.
+        let empty: [Scalar; 0] = [];
+
+        // At the chosen values, the increment is ~1.25.
+        test_path([[0.], [0.]], empty); // empty range
+        test_path([[0.], [TAU]], [1., 2., 3.]); // start before first increment
+        test_path([[1.], [TAU]], [1., 2., 3.]); // start before first increment
+        test_path([[0.], [TAU - 1.]], [1., 2., 3.]); // end after last increment
+        test_path([[2.], [TAU]], [2., 3.]); // start after first increment
+        test_path([[0.], [TAU - 2.]], [1., 2.]); // end before last increment
+
+        fn test_path(
+            range: impl Into<RangeOnPath>,
+            expected_coords: impl IntoIterator<Item = impl Into<Scalar>>,
+        ) {
+            // Choose radius and tolerance such, that we need 5 vertices to
+            // approximate a full circle. This is the lowest number that we can
+            // still cover all the edge cases with
+            let radius = 1.;
+            let tolerance = 0.25;
+
+            let circle = Circle::from_center_and_radius([0., 0.], radius);
+            let params = PathApproxParams::for_circle(&circle, tolerance);
+
+            let points = params.points(range).collect::<Vec<_>>();
+
+            let expected_points = expected_coords
+                .into_iter()
+                .map(|i| Point::from([params.increment() * i]))
+                .collect::<Vec<_>>();
+            assert_eq!(points, expected_points);
         }
     }
 }
