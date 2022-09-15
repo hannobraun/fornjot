@@ -125,29 +125,6 @@ fn approx_global_curve(
     GlobalCurveApprox { points }
 }
 
-impl Approx for (&GlobalCurve, RangeOnPath) {
-    type Approximation = GlobalCurveApprox;
-    type Cache = ();
-
-    fn approx_with_cache(
-        self,
-        tolerance: impl Into<Tolerance>,
-        cache: &mut Self::Cache,
-    ) -> Self::Approximation {
-        let (curve, range) = self;
-
-        let points = (curve.path(), range)
-            .approx_with_cache(tolerance, cache)
-            .into_iter()
-            .map(|(point_curve, point_global)| {
-                ApproxPoint::new(point_curve, point_global)
-            })
-            .collect();
-
-        GlobalCurveApprox { points }
-    }
-}
-
 /// An approximation of a [`Curve`]
 #[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct CurveApprox {
