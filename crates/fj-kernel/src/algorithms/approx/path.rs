@@ -32,7 +32,7 @@ use fj_math::{Circle, Point, Scalar};
 
 use crate::path::GlobalPath;
 
-use super::{Approx, ApproxCache, ApproxPoint, Tolerance};
+use super::{Approx, ApproxCache, Tolerance};
 
 impl Approx for (GlobalPath, RangeOnPath) {
     type Approximation = Vec<(Point<1>, Point<3>)>;
@@ -108,13 +108,6 @@ where
     fn from(boundary: [T; 2]) -> Self {
         Self::new(boundary)
     }
-}
-
-/// An approximation of a [`GlobalPath`]
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct GlobalPathApprox {
-    /// The points that approximate the path
-    pub points: Vec<ApproxPoint<1>>,
 }
 
 /// Approximate a circle
