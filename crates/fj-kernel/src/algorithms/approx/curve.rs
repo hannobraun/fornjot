@@ -23,9 +23,9 @@ impl Approx for (&Curve, RangeOnPath) {
     ) -> Self::Approximation {
         let (curve, range) = self;
 
-        let approx =
+        let global_curve_approx =
             (curve.global_form(), range).approx_with_cache(tolerance, cache);
-        let points = approx.points.into_iter().map(|point| {
+        let points = global_curve_approx.points.into_iter().map(|point| {
             let point_surface =
                 curve.path().point_from_path_coords(point.local_form);
             ApproxPoint::new(point_surface, point.global_form)
