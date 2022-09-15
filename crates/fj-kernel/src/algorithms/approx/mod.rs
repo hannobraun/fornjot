@@ -51,7 +51,7 @@ pub trait Approx: Sized {
 /// A cache for results of an approximation
 #[derive(Default)]
 pub struct ApproxCache {
-    global_curves: BTreeMap<GlobalCurve, GlobalCurveApprox>,
+    global_curve: BTreeMap<GlobalCurve, GlobalCurveApprox>,
 }
 
 impl ApproxCache {
@@ -66,13 +66,13 @@ impl ApproxCache {
         key: &GlobalCurve,
         approx: GlobalCurveApprox,
     ) -> GlobalCurveApprox {
-        self.global_curves.insert(*key, approx.clone());
+        self.global_curve.insert(*key, approx.clone());
         approx
     }
 
     /// Access the approximation for the given [`GlobalCurve`], if available
     pub fn global_curve(&self, key: &GlobalCurve) -> Option<GlobalCurveApprox> {
-        self.global_curves.get(key).cloned()
+        self.global_curve.get(key).cloned()
     }
 }
 
