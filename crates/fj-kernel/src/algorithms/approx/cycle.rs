@@ -7,7 +7,7 @@ use fj_math::Segment;
 use crate::objects::Cycle;
 
 use super::{
-    edge::HalfEdgeApprox, Approx, ApproxCache, ApproxPoint, Tolerance,
+    curve::ApproxCache, edge::HalfEdgeApprox, Approx, ApproxPoint, Tolerance,
 };
 
 impl Approx for &Cycle {

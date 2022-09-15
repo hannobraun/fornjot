@@ -4,7 +4,7 @@ use std::collections::BTreeSet;
 
 use crate::objects::Sketch;
 
-use super::{face::FaceApprox, Approx, ApproxCache, Tolerance};
+use super::{curve::ApproxCache, face::FaceApprox, Approx, Tolerance};
 
 impl Approx for &Sketch {
     type Approximation = BTreeSet<FaceApprox>;

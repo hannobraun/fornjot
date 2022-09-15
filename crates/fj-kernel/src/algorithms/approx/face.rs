@@ -11,7 +11,9 @@ use crate::{
     objects::{Face, Faces, Handedness},
 };
 
-use super::{cycle::CycleApprox, Approx, ApproxCache, ApproxPoint, Tolerance};
+use super::{
+    curve::ApproxCache, cycle::CycleApprox, Approx, ApproxPoint, Tolerance,
+};
 
 impl Approx for &Faces {
     type Approximation = BTreeSet<FaceApprox>;

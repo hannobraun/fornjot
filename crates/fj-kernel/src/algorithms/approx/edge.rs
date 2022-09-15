@@ -8,8 +8,9 @@
 use crate::objects::HalfEdge;
 
 use super::{
-    curve::CurveApprox, path::RangeOnPath, Approx, ApproxCache, ApproxPoint,
-    Tolerance,
+    curve::{ApproxCache, CurveApprox},
+    path::RangeOnPath,
+    Approx, ApproxPoint, Tolerance,
 };
 
 impl Approx for &HalfEdge {
