@@ -227,7 +227,7 @@ mod tests {
     #[test]
     fn points_for_circle() {
         // At the chosen values for radius and tolerance (see below), the
-        // increment is roughly 1.25.
+        // increment is `PI / 4`, so ~1.57.
 
         // Empty range
         let empty: [Scalar; 0] = [];
@@ -235,23 +235,23 @@ mod tests {
 
         // Ranges contain all generated points. Start is before the first
         // increment and after the last one in each case.
-        test_path([[0.], [TAU]], [1., 2., 3., 4.]);
-        test_path([[1.], [TAU]], [1., 2., 3., 4.]);
-        test_path([[0.], [TAU - 1.]], [1., 2., 3., 4.]);
+        test_path([[0.], [TAU]], [1., 2., 3.]);
+        test_path([[1.], [TAU]], [1., 2., 3.]);
+        test_path([[0.], [TAU - 1.]], [1., 2., 3.]);
 
         // Here the range is restricted to cut of the first or last increment.
-        test_path([[2.], [TAU]], [2., 3., 4.]);
-        test_path([[0.], [TAU - 2.]], [1., 2., 3.]);
+        test_path([[2.], [TAU]], [2., 3.]);
+        test_path([[0.], [TAU - 2.]], [1., 2.]);
 
         fn test_path(
             range: impl Into<RangeOnPath>,
             expected_coords: impl IntoIterator<Item = impl Into<Scalar>>,
         ) {
-            // Choose radius and tolerance such, that we need 5 vertices to
+            // Choose radius and tolerance such, that we need 4 vertices to
             // approximate a full circle. This is the lowest number that we can
             // still cover all the edge cases with
             let radius = 1.;
-            let tolerance = 0.25;
+            let tolerance = 0.375;
 
             let circle = Circle::from_center_and_radius([0., 0.], radius);
             let params = PathApproxParams::for_circle(&circle, tolerance);
