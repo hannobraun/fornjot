@@ -32,16 +32,16 @@ use fj_math::{Circle, Point, Scalar};
 
 use crate::path::GlobalPath;
 
-use super::{Approx, ApproxCache, Tolerance};
+use super::{Approx, Tolerance};
 
 impl Approx for (GlobalPath, RangeOnPath) {
     type Approximation = Vec<(Point<1>, Point<3>)>;
-    type Cache = ApproxCache;
+    type Cache = ();
 
     fn approx_with_cache(
         self,
         tolerance: impl Into<Tolerance>,
-        _: &mut Self::Cache,
+        (): &mut Self::Cache,
     ) -> Self::Approximation {
         let (path, range) = self;
 

@@ -29,7 +29,7 @@ impl Approx for (&Curve, RangeOnPath) {
             Some(approx) => approx,
             None => {
                 let approx = (curve.global_form(), range)
-                    .approx_with_cache(tolerance, cache);
+                    .approx_with_cache(tolerance, &mut ());
                 cache.insert_global_curve(cache_key, approx)
             }
         };
@@ -47,7 +47,7 @@ impl Approx for (&Curve, RangeOnPath) {
 
 impl Approx for (&GlobalCurve, RangeOnPath) {
     type Approximation = GlobalCurveApprox;
-    type Cache = ApproxCache;
+    type Cache = ();
 
     fn approx_with_cache(
         self,
