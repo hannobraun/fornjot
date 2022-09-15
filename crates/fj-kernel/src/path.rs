@@ -172,7 +172,6 @@ fn approx_circle(
 ) -> Vec<ApproxPoint<1>> {
     let mut points = Vec::new();
 
-    let radius = circle.a().magnitude();
     let range = range.into();
 
     // To approximate the circle, we use a regular polygon for which
@@ -181,7 +180,11 @@ fn approx_circle(
     // and the circle. This is the same as the difference between
     // the circumscribed circle and the incircle.
 
-    let n = number_of_vertices_for_circle(tolerance, radius, range.length());
+    let n = number_of_vertices_for_circle(
+        tolerance,
+        circle.radius(),
+        range.length(),
+    );
 
     for i in 1..n {
         let angle = range.start().t
