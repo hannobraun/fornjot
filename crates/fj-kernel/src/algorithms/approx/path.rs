@@ -203,6 +203,37 @@ impl PathApproxParams {
     pub fn increment(&self) -> Scalar {
         self.increment
     }
+
+    #[cfg(test)]
+    pub fn points(
+        &self,
+        range: impl Into<RangeOnPath>,
+    ) -> impl Iterator<Item = Point<1>> + '_ {
+        use std::iter;
+
+        let range = range.into();
+
+        let [a, b] = range.boundary.map(|point| point.t / self.increment());
+
+        // We can't generate a point exactly at the end of the range as part of
+        // the approximation. Make sure we stop one step before that.
+        let b = if b.ceil() == b { b - 1. } else { b };
+
+        let start = a.floor() + 1.;
+        let end = b - 1.;
+
+        let mut i = start;
+        iter::from_fn(move || {
+            if i <= end {
+                let t = self.increment() * i;
+                i += Scalar::ONE;
+
+                Some(Point::from([t]))
+            } else {
+                None
+            }
+        })
+    }
 }
 
 fn number_of_vertices_for_circle(
@@ -218,9 +249,11 @@ fn number_of_vertices_for_circle(
 
 #[cfg(test)]
 mod tests {
-    use fj_math::{Circle, Scalar};
+    use std::f64::consts::TAU;
 
-    use crate::algorithms::approx::Tolerance;
+    use fj_math::{Circle, Point, Scalar};
+
+    use crate::algorithms::approx::{path::RangeOnPath, Tolerance};
 
     use super::PathApproxParams;
 
@@ -240,6 +273,42 @@ mod tests {
 
             let expected_increment = Scalar::TAU / expected_num_vertices;
             assert_eq!(params.increment(), expected_increment);
+        }
+    }
+
+    #[test]
+    fn points_for_circle() {
+        // Needed to support type inference.
+        let empty: [Scalar; 0] = [];
+
+        // At the chosen values, the increment is ~1.25.
+        test_path([[0.], [0.]], empty); // empty range
+        test_path([[0.], [TAU]], [1., 2., 3.]); // start before first increment
+        test_path([[1.], [TAU]], [1., 2., 3.]); // start before first increment
+        test_path([[0.], [TAU - 1.]], [1., 2., 3.]); // end after last increment
+        test_path([[2.], [TAU]], [2., 3.]); // start after first increment
+        test_path([[0.], [TAU - 2.]], [1., 2.]); // end before last increment
+
+        fn test_path(
+            range: impl Into<RangeOnPath>,
+            expected_coords: impl IntoIterator<Item = impl Into<Scalar>>,
+        ) {
+            // Choose radius and tolerance such, that we need 5 vertices to
+            // approximate a full circle. This is the lowest number that we can
+            // still cover all the edge cases with
+            let radius = 1.;
+            let tolerance = 0.25;
+
+            let circle = Circle::from_center_and_radius([0., 0.], radius);
+            let params = PathApproxParams::for_circle(&circle, tolerance);
+
+            let points = params.points(range).collect::<Vec<_>>();
+
+            let expected_points = expected_coords
+                .into_iter()
+                .map(|i| Point::from([params.increment() * i]))
+                .collect::<Vec<_>>();
+            assert_eq!(points, expected_points);
         }
     }
 
