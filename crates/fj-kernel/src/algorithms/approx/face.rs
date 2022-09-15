@@ -11,15 +11,18 @@ use crate::{
     objects::{Face, Faces, Handedness},
 };
 
-use super::{cycle::CycleApprox, Approx, ApproxCache, ApproxPoint, Tolerance};
+use super::{
+    curve::CurveCache, cycle::CycleApprox, Approx, ApproxPoint, Tolerance,
+};
 
 impl Approx for &Faces {
     type Approximation = BTreeSet<FaceApprox>;
+    type Cache = CurveCache;
 
     fn approx_with_cache(
         self,
         tolerance: impl Into<Tolerance>,
-        cache: &mut ApproxCache,
+        cache: &mut Self::Cache,
     ) -> Self::Approximation {
         let tolerance = tolerance.into();
 
@@ -66,11 +69,12 @@ impl Approx for &Faces {
 
 impl Approx for &Face {
     type Approximation = FaceApprox;
+    type Cache = CurveCache;
 
     fn approx_with_cache(
         self,
         tolerance: impl Into<Tolerance>,
-        cache: &mut ApproxCache,
+        cache: &mut Self::Cache,
     ) -> Self::Approximation {
         let tolerance = tolerance.into();
 

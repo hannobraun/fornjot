@@ -9,27 +9,30 @@
 //! done, to give the caller (who knows the boundary anyway) more options on how
 //! to further process the approximation.
 
+use std::collections::BTreeMap;
+
 use crate::objects::{Curve, GlobalCurve};
 
-use super::{path::RangeOnPath, Approx, ApproxCache, ApproxPoint, Tolerance};
+use super::{path::RangeOnPath, Approx, ApproxPoint, Tolerance};
 
 impl Approx for (&Curve, RangeOnPath) {
     type Approximation = CurveApprox;
+    type Cache = CurveCache;
 
     fn approx_with_cache(
         self,
         tolerance: impl Into<Tolerance>,
-        cache: &mut ApproxCache,
+        cache: &mut Self::Cache,
     ) -> Self::Approximation {
         let (curve, range) = self;
 
         let cache_key = (*curve.global_form(), range);
-        let global_curve_approx = match cache.global_curve(cache_key) {
+        let global_curve_approx = match cache.get(cache_key) {
             Some(approx) => approx,
             None => {
                 let approx = (curve.global_form(), range)
-                    .approx_with_cache(tolerance, cache);
-                cache.insert_global_curve(cache_key, approx)
+                    .approx_with_cache(tolerance, &mut ());
+                cache.insert(cache_key, approx)
             }
         };
 
@@ -46,11 +49,12 @@ impl Approx for (&Curve, RangeOnPath) {
 
 impl Approx for (&GlobalCurve, RangeOnPath) {
     type Approximation = GlobalCurveApprox;
+    type Cache = ();
 
     fn approx_with_cache(
         self,
         tolerance: impl Into<Tolerance>,
-        cache: &mut ApproxCache,
+        cache: &mut Self::Cache,
     ) -> Self::Approximation {
         let (curve, range) = self;
 
@@ -86,6 +90,37 @@ impl CurveApprox {
     ) -> Self {
         self.points.extend(points);
         self
+    }
+}
+
+/// A cache for results of an approximation
+#[derive(Default)]
+pub struct CurveCache {
+    inner: BTreeMap<(GlobalCurve, RangeOnPath), GlobalCurveApprox>,
+}
+
+impl CurveCache {
+    /// Create an empty cache
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Insert the approximation of a [`GlobalCurve`]
+    pub fn insert(
+        &mut self,
+        key: (GlobalCurve, RangeOnPath),
+        approx: GlobalCurveApprox,
+    ) -> GlobalCurveApprox {
+        self.inner.insert(key, approx.clone());
+        approx
+    }
+
+    /// Access the approximation for the given [`GlobalCurve`], if available
+    pub fn get(
+        &self,
+        key: (GlobalCurve, RangeOnPath),
+    ) -> Option<GlobalCurveApprox> {
+        self.inner.get(&key).cloned()
     }
 }
 

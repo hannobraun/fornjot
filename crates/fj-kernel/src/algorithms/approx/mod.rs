@@ -13,7 +13,6 @@ pub mod tolerance;
 use std::{
     any::Any,
     cmp::Ordering,
-    collections::BTreeMap,
     fmt::Debug,
     hash::{Hash, Hasher},
     rc::Rc,
@@ -21,62 +20,36 @@ use std::{
 
 use fj_math::Point;
 
-use crate::objects::{Curve, GlobalCurve};
+use crate::objects::Curve;
 
 pub use self::tolerance::{InvalidTolerance, Tolerance};
-use self::{curve::GlobalCurveApprox, path::RangeOnPath};
 
 /// Approximate an object
 pub trait Approx: Sized {
     /// The approximation of the object
     type Approximation;
 
+    /// The cache used to cache approximation results
+    type Cache: Default;
+
     /// Approximate the object
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual object.
     fn approx(self, tolerance: impl Into<Tolerance>) -> Self::Approximation {
-        let mut cache = ApproxCache::new();
+        let mut cache = Self::Cache::default();
         self.approx_with_cache(tolerance, &mut cache)
     }
 
     /// Approximate the object, using the provided cache
+    ///
+    /// This is a lower-level method that allows some degree of control over
+    /// caching. Callers might consider using [`Approx::approx`] instead.
     fn approx_with_cache(
         self,
         tolerance: impl Into<Tolerance>,
-        cache: &mut ApproxCache,
+        cache: &mut Self::Cache,
     ) -> Self::Approximation;
-}
-
-/// A cache for results of an approximation
-#[derive(Default)]
-pub struct ApproxCache {
-    global_curve: BTreeMap<(GlobalCurve, RangeOnPath), GlobalCurveApprox>,
-}
-
-impl ApproxCache {
-    /// Create an empty cache
-    pub fn new() -> Self {
-        Self::default()
-    }
-
-    /// Insert the approximation of a [`GlobalCurve`]
-    pub fn insert_global_curve(
-        &mut self,
-        key: (GlobalCurve, RangeOnPath),
-        approx: GlobalCurveApprox,
-    ) -> GlobalCurveApprox {
-        self.global_curve.insert(key, approx.clone());
-        approx
-    }
-
-    /// Access the approximation for the given [`GlobalCurve`], if available
-    pub fn global_curve(
-        &self,
-        key: (GlobalCurve, RangeOnPath),
-    ) -> Option<GlobalCurveApprox> {
-        self.global_curve.get(&key).cloned()
-    }
 }
 
 /// A point from an approximation, with local and global forms
