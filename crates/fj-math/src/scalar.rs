@@ -227,6 +227,34 @@ impl<T: Into<Scalar>> ops::Rem<T> for Scalar {
     }
 }
 
+impl<T: Into<Scalar>> ops::SubAssign<T> for Scalar {
+    fn sub_assign(&mut self, rhs: T) {
+        self.0.sub_assign(rhs.into().0);
+        *self = self.0.into();
+    }
+}
+
+impl<T: Into<Scalar>> ops::MulAssign<T> for Scalar {
+    fn mul_assign(&mut self, rhs: T) {
+        self.0.mul_assign(rhs.into().0);
+        *self = self.0.into();
+    }
+}
+
+impl<T: Into<Scalar>> ops::DivAssign<T> for Scalar {
+    fn div_assign(&mut self, rhs: T) {
+        self.0.div_assign(rhs.into().0);
+        *self = self.0.into();
+    }
+}
+
+impl<T: Into<Scalar>> ops::RemAssign<T> for Scalar {
+    fn rem_assign(&mut self, rhs: T) {
+        self.0.rem_assign(rhs.into().0);
+        *self = self.0.into();
+    }
+}
+
 impl num_traits::Zero for Scalar {
     fn zero() -> Self {
         Self::ZERO
