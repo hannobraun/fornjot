@@ -59,33 +59,8 @@ impl Approx for (GlobalPath, RangeOnPath) {
 /// The range on which a path should be approximated
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct RangeOnPath {
-    boundary: [Point<1>; 2],
-}
-
-impl RangeOnPath {
-    /// Construct an instance of `RangeOnCurve`
-    ///
-    /// Ranges are normalized on construction, meaning that the order of
-    /// vertices passed to this constructor does not influence the range that is
-    /// constructed.
-    ///
-    /// This is done to prevent bugs during mesh construction: The curve
-    /// approximation code is regularly faced with ranges that are reversed
-    /// versions of each other. This can lead to slightly different
-    /// approximations, which in turn leads to the aforementioned invalid
-    /// meshes.
-    ///
-    /// The caller can use `is_reversed` to determine, if the range was reversed
-    /// during normalization, to adjust the approximation accordingly.
-    pub fn new(boundary: [impl Into<Point<1>>; 2]) -> Self {
-        let boundary = boundary.map(Into::into);
-        Self { boundary }
-    }
-
-    /// Access the boundary of the range
-    pub fn boundary(&self) -> [Point<1>; 2] {
-        self.boundary
-    }
+    /// The boundary of the range
+    pub boundary: [Point<1>; 2],
 }
 
 impl<T> From<[T; 2]> for RangeOnPath
@@ -93,7 +68,8 @@ where
     T: Into<Point<1>>,
 {
     fn from(boundary: [T; 2]) -> Self {
-        Self::new(boundary)
+        let boundary = boundary.map(Into::into);
+        Self { boundary }
     }
 }
 
