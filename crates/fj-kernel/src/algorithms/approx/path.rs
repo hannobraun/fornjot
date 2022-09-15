@@ -101,33 +101,6 @@ impl RangeOnPath {
     pub fn boundary(&self) -> [Point<1>; 2] {
         self.boundary
     }
-
-    /// Access the start of the range
-    pub fn start(&self) -> Point<1> {
-        self.boundary[0]
-    }
-
-    /// Access the end of the range
-    pub fn end(&self) -> Point<1> {
-        self.boundary[1]
-    }
-
-    /// Compute the signed length of the range
-    pub fn signed_length(&self) -> Scalar {
-        (self.end() - self.start()).t
-    }
-
-    /// Compute the absolute length of the range
-    pub fn length(&self) -> Scalar {
-        self.signed_length().abs()
-    }
-
-    /// Compute the direction of the range
-    ///
-    /// Returns a [`Scalar`] that is zero or +/- one.
-    pub fn direction(&self) -> Scalar {
-        self.signed_length().sign()
-    }
 }
 
 impl<T> From<[T; 2]> for RangeOnPath
