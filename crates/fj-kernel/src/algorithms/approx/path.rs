@@ -174,12 +174,10 @@ impl PathApproxParams {
 
         let [a, b] = range.boundary.map(|point| point.t / self.increment());
 
-        // We can't generate a point exactly at the end of the range as part of
-        // the approximation. Make sure we stop one step before that.
-        let b = if b.ceil() == b { b - 1. } else { b };
-
+        // We can't generate a point exactly at the boundaries of the range as
+        // part of the approximation. Make sure we stay inside the range.
         let start = a.floor() + 1.;
-        let end = b;
+        let end = b.ceil() - 1.;
 
         let mut i = start;
         iter::from_fn(move || {
