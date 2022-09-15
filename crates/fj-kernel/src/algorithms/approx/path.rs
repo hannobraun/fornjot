@@ -140,12 +140,6 @@ fn approx_circle(
 
     let params = PathApproxParams::for_circle(circle, tolerance);
 
-    // To approximate the circle, we use a regular polygon for which
-    // the circle is the circumscribed circle. The `tolerance`
-    // parameter is the maximum allowed distance between the polygon
-    // and the circle. This is the same as the difference between
-    // the circumscribed circle and the incircle.
-
     for point_curve in params.points(range) {
         let point_global = circle.point_from_circle_coords(point_curve);
         points.push(ApproxPoint::new(point_curve, point_global));
