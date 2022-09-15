@@ -96,7 +96,7 @@ impl CurveApprox {
 /// A cache for results of an approximation
 #[derive(Default)]
 pub struct CurveCache {
-    global_curve: BTreeMap<(GlobalCurve, RangeOnPath), GlobalCurveApprox>,
+    inner: BTreeMap<(GlobalCurve, RangeOnPath), GlobalCurveApprox>,
 }
 
 impl CurveCache {
@@ -111,7 +111,7 @@ impl CurveCache {
         key: (GlobalCurve, RangeOnPath),
         approx: GlobalCurveApprox,
     ) -> GlobalCurveApprox {
-        self.global_curve.insert(key, approx.clone());
+        self.inner.insert(key, approx.clone());
         approx
     }
 
@@ -120,7 +120,7 @@ impl CurveCache {
         &self,
         key: (GlobalCurve, RangeOnPath),
     ) -> Option<GlobalCurveApprox> {
-        self.global_curve.get(&key).cloned()
+        self.inner.get(&key).cloned()
     }
 }
 
