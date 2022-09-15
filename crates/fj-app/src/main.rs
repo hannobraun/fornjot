@@ -73,7 +73,7 @@ fn main() -> anyhow::Result<()> {
     }
 
     let watcher = model.load_and_watch(parameters)?;
-    run(watcher, shape_processor, status)?;
+    run(None, shape_processor, status)?;
 
     Ok(())
 }

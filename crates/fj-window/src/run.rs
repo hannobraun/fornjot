@@ -29,7 +29,7 @@ use crate::window::{self, Window};
 
 /// Initializes a model viewer for a given model and enters its process loop.
 pub fn run(
-    watcher: Watcher,
+    watcher: Option<Watcher>,
     shape_processor: ShapeProcessor,
     mut status: StatusReport,
 ) -> Result<(), Error> {
@@ -51,34 +51,36 @@ pub fn run(
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
 
-        if let Some(new_shape) = watcher.receive(&mut status) {
-            match shape_processor.process(&new_shape) {
-                Ok(new_shape) => {
-                    renderer.update_geometry(
-                        (&new_shape.mesh).into(),
-                        (&new_shape.debug_info).into(),
-                        new_shape.aabb,
-                    );
+        if let Some(watcher) = &watcher {
+            if let Some(new_shape) = watcher.receive(&mut status) {
+                match shape_processor.process(&new_shape) {
+                    Ok(new_shape) => {
+                        renderer.update_geometry(
+                            (&new_shape.mesh).into(),
+                            (&new_shape.debug_info).into(),
+                            new_shape.aabb,
+                        );
 
-                    if camera.is_none() {
-                        camera = Some(Camera::new(&new_shape.aabb));
+                        if camera.is_none() {
+                            camera = Some(Camera::new(&new_shape.aabb));
+                        }
+
+                        shape = Some(new_shape);
                     }
+                    Err(err) => {
+                        // Can be cleaned up, once `Report` is stable:
+                        // https://doc.rust-lang.org/std/error/struct.Report.html
 
-                    shape = Some(new_shape);
-                }
-                Err(err) => {
-                    // Can be cleaned up, once `Report` is stable:
-                    // https://doc.rust-lang.org/std/error/struct.Report.html
+                        println!("Shape processing error: {}", err);
 
-                    println!("Shape processing error: {}", err);
+                        let mut current_err = &err as &dyn error::Error;
+                        while let Some(err) = current_err.source() {
+                            println!();
+                            println!("Caused by:");
+                            println!("    {}", err);
 
-                    let mut current_err = &err as &dyn error::Error;
-                    while let Some(err) = current_err.source() {
-                        println!();
-                        println!("Caused by:");
-                        println!("    {}", err);
-
-                        current_err = err;
+                            current_err = err;
+                        }
                     }
                 }
             }
