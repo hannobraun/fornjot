@@ -10,7 +10,7 @@ use fj_interop::status_report::StatusReport;
 use fj_operations::shape_processor::ShapeProcessor;
 use fj_viewer::{
     camera::Camera,
-    graphics::{self, DrawConfig, Renderer, Vertices},
+    graphics::{self, DrawConfig, Renderer},
     input,
     screen::{NormalizedPosition, Screen as _, Size},
 };
@@ -47,6 +47,7 @@ pub fn run(
 
     let mut shape = None;
     let mut camera = Camera::new(&Default::default());
+    let mut camera_update_once = watcher.is_some();
 
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
@@ -61,7 +62,10 @@ pub fn run(
                             new_shape.aabb,
                         );
 
-                        camera.update_planes(&new_shape.aabb);
+                        if camera_update_once {
+                            camera_update_once = false;
+                            camera = Camera::new(&new_shape.aabb);
+                        }
 
                         shape = Some(new_shape);
                     }
