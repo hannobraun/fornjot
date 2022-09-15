@@ -111,6 +111,15 @@ impl RangeOnPath {
     }
 }
 
+impl<T> From<[T; 2]> for RangeOnPath
+where
+    T: Into<Point<1>>,
+{
+    fn from(boundary: [T; 2]) -> Self {
+        Self::new(boundary)
+    }
+}
+
 /// An approximation of a [`GlobalPath`]
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalPathApprox {
