@@ -44,6 +44,9 @@ pub trait Approx: Sized {
     }
 
     /// Approximate the object, using the provided cache
+    ///
+    /// This is a lower-level method that allows some degree of control over
+    /// caching. Callers might consider using [`Approx::approx`] instead.
     fn approx_with_cache(
         self,
         tolerance: impl Into<Tolerance>,
