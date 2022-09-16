@@ -9,6 +9,6 @@ impl Reverse for HalfEdge {
             [b, a]
         };
 
-        HalfEdge::from_curve_and_vertices(*self.curve(), vertices)
+        HalfEdge::from_curve_and_vertices(self.curve().clone(), vertices)
     }
 }

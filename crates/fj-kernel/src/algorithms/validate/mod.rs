@@ -217,12 +217,16 @@ mod tests {
 
         let a = Vertex::new(
             Point::from([Scalar::ZERO + deviation]),
-            curve,
+            curve.clone(),
             a_surface,
             a_global,
         );
-        let b =
-            Vertex::new(Point::from([Scalar::ONE]), curve, b_surface, b_global);
+        let b = Vertex::new(
+            Point::from([Scalar::ONE]),
+            curve.clone(),
+            b_surface,
+            b_global,
+        );
         let vertices = [a, b];
 
         let half_edge = HalfEdge::from_curve_and_vertices(curve, vertices);

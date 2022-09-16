@@ -18,7 +18,7 @@ impl Sweep for (HalfEdge, Color) {
         let (edge, color) = self;
         let path = path.into();
 
-        let surface = edge.curve().sweep(path);
+        let surface = edge.curve().clone().sweep(path);
 
         // We can't use the edge we're sweeping from as the bottom edge, as that
         // is not defined in the right surface. Let's create a new bottom edge,
@@ -62,7 +62,7 @@ impl Sweep for (HalfEdge, Color) {
 
                     Vertex::new(
                         vertex.position(),
-                        curve,
+                        curve.clone(),
                         surface_vertex,
                         *vertex.global_form(),
                     )
@@ -128,7 +128,7 @@ impl Sweep for (HalfEdge, Color) {
                     );
                     Vertex::new(
                         vertex.position(),
-                        curve,
+                        curve.clone(),
                         vertex_surface,
                         vertex_global,
                     )

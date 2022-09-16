@@ -6,7 +6,7 @@ use crate::{
 use super::Surface;
 
 /// A curve, defined in local surface coordinates
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Curve {
     path: SurfacePath,
     surface: Surface,

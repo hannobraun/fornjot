@@ -29,7 +29,7 @@ pub fn validate_curve(
                 point_surface,
                 point_surface_as_global,
                 point_global,
-                curve: *curve,
+                curve: curve.clone(),
             })?
         }
     }

@@ -112,7 +112,7 @@ impl Sweep for (Vertex, Surface) {
             vertices.map(|(vertex_surface, &vertex_global)| {
                 Vertex::new(
                     [vertex_surface.position().v],
-                    curve,
+                    curve.clone(),
                     vertex_surface,
                     vertex_global,
                 )
