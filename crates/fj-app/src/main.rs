@@ -46,34 +46,46 @@ fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     let config = Config::load()?;
 
-    let mut path = config.default_path.unwrap_or_else(|| PathBuf::from(""));
-    let model = args.model.or(config.default_model).ok_or_else(|| {
-        anyhow!(
-            "No model specified, and no default model configured.\n\
-                Specify a model by passing `--model path/to/model`."
-        )
-    })?;
-    path.push(model);
-
-    let model = Model::from_path(path.clone())
-        .with_context(|| format!("Failed to load model: {}", path.display()))?;
+    let path = config.default_path.unwrap_or_else(|| PathBuf::from(""));
     let parameters = args.parameters.unwrap_or_else(Parameters::empty);
-
     let shape_processor = ShapeProcessor {
         tolerance: args.tolerance,
     };
 
-    if let Some(path) = args.export {
+    let model = if let Some(model) = args.model.or(config.default_model) {
+        let mut model_path = path;
+        model_path.push(model);
+        Some(Model::from_path(model_path.clone()).with_context(|| {
+            format!("Failed to load model: {}", model_path.display())
+        })?)
+    } else {
+        None
+    };
+
+    if let Some(export_path) = args.export {
+        // export only mode. just load model, process, export and exit
+
+        let model = model.ok_or_else(|| {
+            anyhow!(
+                "No model specified, and no default model configured.\n\
+            Specify a model by passing `--model path/to/model`."
+            )
+        })?;
+
         let shape = model.load_once(&parameters, &mut status)?;
         let shape = shape_processor.process(&shape)?;
 
-        export(&shape.mesh, &path)?;
+        export(&shape.mesh, &export_path)?;
 
         return Ok(());
     }
 
-    let watcher = model.load_and_watch(parameters)?;
-    run(watcher, shape_processor, status)?;
+    if let Some(model) = model {
+        let watcher = model.load_and_watch(parameters)?;
+        run(Some(watcher), shape_processor, status)?;
+    } else {
+        run(None, shape_processor, status)?;
+    }
 
     Ok(())
 }

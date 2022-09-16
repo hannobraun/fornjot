@@ -29,7 +29,7 @@ use crate::window::{self, Window};
 
 /// Initializes a model viewer for a given model and enters its process loop.
 pub fn run(
-    watcher: Watcher,
+    watcher: Option<Watcher>,
     shape_processor: ShapeProcessor,
     mut status: StatusReport,
 ) -> Result<(), Error> {
@@ -46,39 +46,43 @@ pub fn run(
     let mut draw_config = DrawConfig::default();
 
     let mut shape = None;
-    let mut camera = None;
+    let mut camera = Camera::new(&Default::default());
+    let mut camera_update_once = watcher.is_some();
 
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
 
-        if let Some(new_shape) = watcher.receive(&mut status) {
-            match shape_processor.process(&new_shape) {
-                Ok(new_shape) => {
-                    renderer.update_geometry(
-                        (&new_shape.mesh).into(),
-                        (&new_shape.debug_info).into(),
-                        new_shape.aabb,
-                    );
+        if let Some(watcher) = &watcher {
+            if let Some(new_shape) = watcher.receive(&mut status) {
+                match shape_processor.process(&new_shape) {
+                    Ok(new_shape) => {
+                        renderer.update_geometry(
+                            (&new_shape.mesh).into(),
+                            (&new_shape.debug_info).into(),
+                            new_shape.aabb,
+                        );
 
-                    if camera.is_none() {
-                        camera = Some(Camera::new(&new_shape.aabb));
+                        if camera_update_once {
+                            camera_update_once = false;
+                            camera = Camera::new(&new_shape.aabb);
+                        }
+
+                        shape = Some(new_shape);
                     }
+                    Err(err) => {
+                        // Can be cleaned up, once `Report` is stable:
+                        // https://doc.rust-lang.org/std/error/struct.Report.html
 
-                    shape = Some(new_shape);
-                }
-                Err(err) => {
-                    // Can be cleaned up, once `Report` is stable:
-                    // https://doc.rust-lang.org/std/error/struct.Report.html
+                        println!("Shape processing error: {}", err);
 
-                    println!("Shape processing error: {}", err);
+                        let mut current_err = &err as &dyn error::Error;
+                        while let Some(err) = current_err.source() {
+                            println!();
+                            println!("Caused by:");
+                            println!("    {}", err);
 
-                    let mut current_err = &err as &dyn error::Error;
-                    while let Some(err) = current_err.source() {
-                        println!();
-                        println!("Caused by:");
-                        println!("    {}", err);
-
-                        current_err = err;
+                            current_err = err;
+                        }
                     }
                 }
             }
@@ -173,17 +177,17 @@ pub fn run(
                 window.window().request_redraw();
             }
             Event::RedrawRequested(_) => {
-                if let (Some(shape), Some(camera)) = (&shape, &mut camera) {
+                if let Some(shape) = &shape {
                     camera.update_planes(&shape.aabb);
+                }
 
-                    if let Err(err) = renderer.draw(
-                        camera,
-                        &mut draw_config,
-                        window.window(),
-                        &mut status,
-                    ) {
-                        warn!("Draw error: {}", err);
-                    }
+                if let Err(err) = renderer.draw(
+                    &camera,
+                    &mut draw_config,
+                    window.window(),
+                    &mut status,
+                ) {
+                    warn!("Draw error: {}", err);
                 }
             }
             _ => {}
@@ -192,8 +196,7 @@ pub fn run(
         // fj-viewer input events
         // These can fire multiple times per frame
 
-        if let (Some(shape), Some(camera), Some(should_focus)) =
-            (&shape, &camera, focus_event(&event))
+        if let (Some(shape), Some(should_focus)) = (&shape, focus_event(&event))
         {
             if should_focus {
                 // Don't unnecessarily recalculate focus point
@@ -212,10 +215,8 @@ pub fn run(
             &held_mouse_button,
             &mut previous_cursor,
         );
-        if let (Some(input_event), Some(fp), Some(camera)) =
-            (input_event, focus_point, &mut camera)
-        {
-            input_handler.handle_event(input_event, fp, camera);
+        if let (Some(input_event), Some(fp)) = (input_event, focus_point) {
+            input_handler.handle_event(input_event, fp, &mut camera);
         }
     });
 }
