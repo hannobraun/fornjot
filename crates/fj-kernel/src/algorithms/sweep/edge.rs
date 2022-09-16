@@ -18,7 +18,7 @@ impl Sweep for (HalfEdge, Color) {
         let (edge, color) = self;
         let path = path.into();
 
-        let surface = edge.curve().sweep(path);
+        let surface = edge.curve().clone().sweep(path);
 
         // We can't use the edge we're sweeping from as the bottom edge, as that
         // is not defined in the right surface. Let's create a new bottom edge,
@@ -26,7 +26,7 @@ impl Sweep for (HalfEdge, Color) {
         let bottom_edge = {
             let vertices = edge.vertices();
 
-            let points_curve_and_surface = vertices.map(|vertex| {
+            let points_curve_and_surface = vertices.clone().map(|vertex| {
                 (vertex.position(), [vertex.position().t, Scalar::ZERO])
             });
 
@@ -62,31 +62,33 @@ impl Sweep for (HalfEdge, Color) {
 
                     Vertex::new(
                         vertex.position(),
-                        curve,
+                        curve.clone(),
                         surface_vertex,
                         *vertex.global_form(),
                     )
                 })
             };
 
-            HalfEdge::new(curve, vertices, *edge.global_form())
+            HalfEdge::new(curve, vertices, edge.global_form().clone())
         };
 
         let side_edges = bottom_edge
             .vertices()
+            .clone()
             .map(|vertex| (vertex, surface).sweep(path));
 
         let top_edge = {
             let bottom_vertices = bottom_edge.vertices();
 
-            let global_vertices = side_edges.map(|edge| {
+            let global_vertices = side_edges.clone().map(|edge| {
                 let [_, vertex] = edge.vertices();
                 *vertex.global_form()
             });
 
-            let points_curve_and_surface = bottom_vertices.map(|vertex| {
-                (vertex.position(), [vertex.position().t, Scalar::ONE])
-            });
+            let points_curve_and_surface =
+                bottom_vertices.clone().map(|vertex| {
+                    (vertex.position(), [vertex.position().t, Scalar::ONE])
+                });
 
             let curve = {
                 let global = bottom_edge.curve().global_form().translate(path);
@@ -126,7 +128,7 @@ impl Sweep for (HalfEdge, Color) {
                     );
                     Vertex::new(
                         vertex.position(),
-                        curve,
+                        curve.clone(),
                         vertex_surface,
                         vertex_global,
                     )
@@ -155,7 +157,7 @@ impl Sweep for (HalfEdge, Color) {
                 // be coincident when sweeping circles, despite the vertices
                 // being different!
                 if prev_last.surface_form() != next_first.surface_form() {
-                    edges[j] = edges[j].reverse();
+                    edges[j] = edges[j].clone().reverse();
                 }
 
                 i += 1;

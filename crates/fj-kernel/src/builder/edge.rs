@@ -46,7 +46,7 @@ impl HalfEdgeBuilder {
                 |(point_curve, surface_vertex)| {
                     Vertex::new(
                         point_curve,
-                        curve,
+                        curve.clone(),
                         surface_vertex,
                         global_vertex,
                     )
@@ -103,8 +103,18 @@ impl HalfEdgeBuilder {
             let [a_surface, b_surface] = surface_vertices;
 
             [
-                Vertex::new(Point::from([0.]), curve, a_surface, a_global),
-                Vertex::new(Point::from([1.]), curve, b_surface, b_global),
+                Vertex::new(
+                    Point::from([0.]),
+                    curve.clone(),
+                    a_surface,
+                    a_global,
+                ),
+                Vertex::new(
+                    Point::from([1.]),
+                    curve.clone(),
+                    b_surface,
+                    b_global,
+                ),
             ]
         };
 

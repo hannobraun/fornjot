@@ -129,7 +129,7 @@ impl Intersect for (&HorizontalRayToTheRight<3>, &Face) {
 }
 
 /// A hit between a ray and a face
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 #[allow(clippy::large_enum_variant)]
 pub enum RayFaceIntersection {
     /// The ray hits the face itself
@@ -211,7 +211,6 @@ mod tests {
 
         let edge = face
             .half_edge_iter()
-            .copied()
             .find(|edge| {
                 let [a, b] = edge.vertices();
                 a.global_form().position() == Point::from([1., 0., 1.])
@@ -220,7 +219,7 @@ mod tests {
             .unwrap();
         assert_eq!(
             (&ray, &face).intersect(),
-            Some(RayFaceIntersection::RayHitsEdge(edge))
+            Some(RayFaceIntersection::RayHitsEdge(edge.clone()))
         );
     }
 
@@ -235,14 +234,13 @@ mod tests {
 
         let vertex = face
             .vertex_iter()
-            .copied()
             .find(|vertex| {
                 vertex.global_form().position() == Point::from([1., 0., 0.])
             })
             .unwrap();
         assert_eq!(
             (&ray, &face).intersect(),
-            Some(RayFaceIntersection::RayHitsVertex(vertex))
+            Some(RayFaceIntersection::RayHitsVertex(vertex.clone()))
         );
     }
 

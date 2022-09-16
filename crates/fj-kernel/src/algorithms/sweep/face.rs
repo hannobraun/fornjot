@@ -38,11 +38,11 @@ impl Sweep for Face {
         faces.push(top_face);
 
         for cycle in self.all_cycles() {
-            for &half_edge in cycle.half_edges() {
+            for half_edge in cycle.half_edges() {
                 let edge = if is_negative_sweep {
-                    half_edge.reverse()
+                    half_edge.clone().reverse()
                 } else {
-                    half_edge
+                    half_edge.clone()
                 };
                 let face = (edge, self.color()).sweep(path);
                 faces.push(face);

@@ -22,7 +22,7 @@ impl Approx for &HalfEdge {
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
     ) -> Self::Approximation {
-        let &[a, b] = self.vertices();
+        let [a, b] = self.vertices();
         let boundary = [a, b].map(|vertex| vertex.position());
         let range = RangeOnPath { boundary };
 

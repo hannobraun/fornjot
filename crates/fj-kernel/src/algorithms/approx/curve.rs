@@ -44,7 +44,7 @@ impl Approx for (&Curve, RangeOnPath) {
                     curve.path().point_from_path_coords(point.local_form);
 
                 ApproxPoint::new(point_surface, point.global_form)
-                    .with_source((*curve, point.local_form))
+                    .with_source((curve.clone(), point.local_form))
             }),
         )
     }

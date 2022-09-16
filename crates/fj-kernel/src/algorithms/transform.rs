@@ -107,9 +107,11 @@ impl TransformObject for GlobalVertex {
 
 impl TransformObject for HalfEdge {
     fn transform(self, transform: &Transform) -> Self {
-        let curve = self.curve().transform(transform);
-        let vertices =
-            self.vertices().map(|vertex| vertex.transform(transform));
+        let curve = self.curve().clone().transform(transform);
+        let vertices = self
+            .vertices()
+            .clone()
+            .map(|vertex| vertex.transform(transform));
 
         Self::from_curve_and_vertices(curve, vertices)
     }
@@ -165,7 +167,7 @@ impl TransformObject for Vertex {
     fn transform(self, transform: &Transform) -> Self {
         Self::new(
             self.position(),
-            self.curve().transform(transform),
+            self.curve().clone().transform(transform),
             self.surface_form().transform(transform),
             self.global_form().transform(transform),
         )

@@ -5,7 +5,7 @@ use crate::builder::HalfEdgeBuilder;
 use super::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex};
 
 /// A half-edge
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdge {
     curve: Curve,
     vertices: [Vertex; 2],
@@ -43,7 +43,7 @@ impl HalfEdge {
         global_form: GlobalEdge,
     ) -> Self {
         // Make sure `curve` and `vertices` match.
-        for vertex in vertices {
+        for vertex in &vertices {
             assert_eq!(
                 &curve,
                 vertex.curve(),
@@ -54,12 +54,12 @@ impl HalfEdge {
         // Make sure `curve` and `vertices` match `global_form`.
         assert_eq!(curve.global_form(), global_form.curve());
         assert_eq!(
-            &vertices.map(|vertex| *vertex.global_form()),
+            &vertices.clone().map(|vertex| *vertex.global_form()),
             global_form.vertices()
         );
 
         // Make sure that the edge vertices are not coincident on the curve.
-        let [a, b] = vertices;
+        let [a, b] = &vertices;
         assert_ne!(
             a.position(),
             b.position(),
@@ -84,7 +84,7 @@ impl HalfEdge {
     ) -> Self {
         let global = GlobalEdge::new(
             *curve.global_form(),
-            vertices.map(|vertex| *vertex.global_form()),
+            vertices.clone().map(|vertex| *vertex.global_form()),
         );
         Self::new(curve, vertices, global)
     }
@@ -115,7 +115,7 @@ impl HalfEdge {
 
 impl fmt::Display for HalfEdge {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let [a, b] = self.vertices().map(|vertex| vertex.position());
+        let [a, b] = self.vertices().clone().map(|vertex| vertex.position());
         write!(f, "edge from {:?} to {:?}", a, b)?;
         write!(f, " on {:?}", self.curve().global_form())?;
 
@@ -124,7 +124,7 @@ impl fmt::Display for HalfEdge {
 }
 
 /// An edge, defined in global (3D) coordinates
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalEdge {
     curve: GlobalCurve,
     vertices: [GlobalVertex; 2],
