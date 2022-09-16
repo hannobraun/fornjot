@@ -30,7 +30,7 @@ impl FaceBuilder {
 }
 
 /// A polygon
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug)]
 pub struct FacePolygon {
     face: Face,
 }
