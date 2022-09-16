@@ -21,24 +21,46 @@ use crate::{
 /// More convenience methods can be added as required. The only reason this
 /// hasn't been done so far, is that no one has put in the work yet.
 pub trait TransformObject: Sized {
+    /// The type of the transformed object
+    ///
+    /// # Implementation Note
+    ///
+    /// This type is temporary, while we transition to a global object store. It
+    /// should be removed, once that transition is complete.
+    type Transformed;
+
     /// Transform the object
     #[must_use]
-    fn transform(self, transform: &Transform, stores: &Stores) -> Self;
+    fn transform(
+        self,
+        transform: &Transform,
+        stores: &Stores,
+    ) -> Self::Transformed;
 
     /// Translate the object
     #[must_use]
-    fn translate(self, offset: impl Into<Vector<3>>, stores: &Stores) -> Self {
+    fn translate(
+        self,
+        offset: impl Into<Vector<3>>,
+        stores: &Stores,
+    ) -> Self::Transformed {
         self.transform(&Transform::translation(offset), stores)
     }
 
     /// Rotate the object
     #[must_use]
-    fn rotate(self, axis_angle: impl Into<Vector<3>>, stores: &Stores) -> Self {
+    fn rotate(
+        self,
+        axis_angle: impl Into<Vector<3>>,
+        stores: &Stores,
+    ) -> Self::Transformed {
         self.transform(&Transform::rotation(axis_angle), stores)
     }
 }
 
 impl TransformObject for Curve {
+    type Transformed = Self;
+
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         let surface = self.surface().transform(transform, stores);
         let global = self.global_form().transform(transform, stores);
@@ -49,6 +71,8 @@ impl TransformObject for Curve {
 }
 
 impl TransformObject for Cycle {
+    type Transformed = Self;
+
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         Self::new(
             self.surface().transform(transform, stores),
@@ -59,6 +83,8 @@ impl TransformObject for Cycle {
 }
 
 impl TransformObject for Face {
+    type Transformed = Self;
+
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         let surface = self.surface().transform(transform, stores);
 
@@ -76,6 +102,8 @@ impl TransformObject for Face {
 }
 
 impl TransformObject for Faces {
+    type Transformed = Self;
+
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         let mut faces = Faces::new();
         faces.extend(
@@ -87,12 +115,16 @@ impl TransformObject for Faces {
 }
 
 impl TransformObject for GlobalCurve {
+    type Transformed = Self;
+
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         GlobalCurve::from_path(self.path().transform(transform, stores))
     }
 }
 
 impl TransformObject for GlobalPath {
+    type Transformed = Self;
+
     fn transform(self, transform: &Transform, _: &Stores) -> Self {
         match self {
             Self::Circle(curve) => {
@@ -104,6 +136,8 @@ impl TransformObject for GlobalPath {
 }
 
 impl TransformObject for GlobalVertex {
+    type Transformed = Self;
+
     fn transform(self, transform: &Transform, _: &Stores) -> Self {
         let position = transform.transform_point(&self.position());
         Self::from_position(position)
@@ -111,6 +145,8 @@ impl TransformObject for GlobalVertex {
 }
 
 impl TransformObject for HalfEdge {
+    type Transformed = Self;
+
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         let curve = self.curve().clone().transform(transform, stores);
         let vertices = self
@@ -123,6 +159,8 @@ impl TransformObject for HalfEdge {
 }
 
 impl TransformObject for Shell {
+    type Transformed = Self;
+
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         let faces = self
             .into_faces()
@@ -133,6 +171,8 @@ impl TransformObject for Shell {
 }
 
 impl TransformObject for Sketch {
+    type Transformed = Self;
+
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         let faces = self
             .into_faces()
@@ -143,6 +183,8 @@ impl TransformObject for Sketch {
 }
 
 impl TransformObject for Solid {
+    type Transformed = Self;
+
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         let faces = self
             .into_shells()
@@ -152,6 +194,8 @@ impl TransformObject for Solid {
 }
 
 impl TransformObject for Surface {
+    type Transformed = Self;
+
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         Self::new(
             self.u().transform(transform, stores),
@@ -161,6 +205,8 @@ impl TransformObject for Surface {
 }
 
 impl TransformObject for SurfaceVertex {
+    type Transformed = Self;
+
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         Self::new(
             self.position(),
@@ -171,6 +217,8 @@ impl TransformObject for SurfaceVertex {
 }
 
 impl TransformObject for Vertex {
+    type Transformed = Self;
+
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         Self::new(
             self.position(),
