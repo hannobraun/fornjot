@@ -43,7 +43,7 @@ impl HalfEdge {
         global_form: GlobalEdge,
     ) -> Self {
         // Make sure `curve` and `vertices` match.
-        for vertex in vertices {
+        for vertex in &vertices {
             assert_eq!(
                 &curve,
                 vertex.curve(),
@@ -59,7 +59,7 @@ impl HalfEdge {
         );
 
         // Make sure that the edge vertices are not coincident on the curve.
-        let [a, b] = vertices;
+        let [a, b] = &vertices;
         assert_ne!(
             a.position(),
             b.position(),
