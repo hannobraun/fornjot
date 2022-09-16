@@ -52,11 +52,11 @@ impl SurfaceSurfaceIntersection {
 
         let curves = planes_parametric.map(|(surface, plane)| {
             let local = project_line_into_plane(&line, &plane);
-            let global = GlobalPath::Line(Line::from_origin_and_direction(
-                origin, direction,
+            let global = GlobalCurve::from_path(GlobalPath::Line(
+                Line::from_origin_and_direction(origin, direction),
             ));
 
-            Curve::new(surface, local, GlobalCurve::from_path(global))
+            Curve::new(surface, local, global)
         });
 
         Some(Self {
