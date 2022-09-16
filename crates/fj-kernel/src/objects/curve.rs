@@ -10,7 +10,7 @@ use super::Surface;
 pub struct Curve {
     path: SurfacePath,
     surface: Surface,
-    global: GlobalCurve,
+    global_form: GlobalCurve,
 }
 
 impl Curve {
@@ -23,12 +23,12 @@ impl Curve {
     pub fn new(
         surface: Surface,
         path: SurfacePath,
-        global: GlobalCurve,
+        global_form: GlobalCurve,
     ) -> Self {
         Self {
             surface,
             path,
-            global,
+            global_form,
         }
     }
 
@@ -44,7 +44,7 @@ impl Curve {
 
     /// Access the global form of this curve
     pub fn global_form(&self) -> &GlobalCurve {
-        &self.global
+        &self.global_form
     }
 }
 
