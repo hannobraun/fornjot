@@ -39,7 +39,7 @@ impl CurveBuilder {
         let radius = radius.into();
 
         let path = SurfacePath::circle_from_radius(radius);
-        let global_form = GlobalCurveBuilder.circle_from_radius(radius);
+        let global_form = GlobalCurve::build().circle_from_radius(radius);
 
         Curve::new(self.surface, path, global_form)
     }
