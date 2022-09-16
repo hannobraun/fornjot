@@ -8,7 +8,7 @@ use crate::{
         Sketch, Solid, Surface, SurfaceVertex, Vertex,
     },
     path::GlobalPath,
-    stores::Stores,
+    stores::{Handle, Stores},
 };
 
 /// Transform an object
@@ -115,10 +115,12 @@ impl TransformObject for Faces {
 }
 
 impl TransformObject for GlobalCurve {
-    type Transformed = Self;
+    type Transformed = Handle<Self>;
 
-    fn transform(self, transform: &Transform, stores: &Stores) -> Self {
-        GlobalCurve::from_path(self.path().transform(transform, stores))
+    fn transform(self, transform: &Transform, stores: &Stores) -> Handle<Self> {
+        stores.global_curves.insert(GlobalCurve::from_path(
+            self.path().transform(transform, stores),
+        ))
     }
 }
 

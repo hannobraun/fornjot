@@ -165,13 +165,17 @@ mod tests {
             Vertex,
         },
         path::{GlobalPath, SurfacePath},
+        stores::Stores,
     };
 
     #[test]
     fn coherence_curve() {
+        let stores = Stores::new();
+
         let line_global = Line::from_points([[0., 0., 0.], [1., 0., 0.]]);
-        let global_curve =
-            GlobalCurve::from_path(GlobalPath::Line(line_global));
+        let global_curve = stores
+            .global_curves
+            .insert(GlobalCurve::from_path(GlobalPath::Line(line_global)));
 
         let line_surface = Line::from_points([[0., 0.], [2., 0.]]);
         let curve = Curve::new(
@@ -186,6 +190,8 @@ mod tests {
 
     #[test]
     fn coherence_edge() {
+        let stores = Stores::new();
+
         let surface = Surface::xy_plane();
 
         let points_surface = [[0., 0.], [1., 0.]];
@@ -193,9 +199,10 @@ mod tests {
 
         let curve = {
             let path = SurfacePath::line_from_points(points_surface);
-            let curve_global = GlobalCurve::from_path(
-                GlobalPath::line_from_points(points_global),
-            );
+            let curve_global =
+                stores.global_curves.insert(GlobalCurve::from_path(
+                    GlobalPath::line_from_points(points_global),
+                ));
             Curve::new(surface, path, curve_global)
         };
 

@@ -1,4 +1,7 @@
-use crate::objects::{Curve, Face};
+use crate::{
+    objects::{Curve, Face},
+    stores::Stores,
+};
 
 use super::{CurveFaceIntersection, SurfaceSurfaceIntersection};
 
@@ -21,11 +24,12 @@ pub struct FaceFaceIntersection {
 
 impl FaceFaceIntersection {
     /// Compute the intersections between two faces
-    pub fn compute(faces: [&Face; 2]) -> Option<Self> {
+    pub fn compute(faces: [&Face; 2], stores: &Stores) -> Option<Self> {
         let surfaces = faces.map(|face| face.surface());
 
         let intersection_curves =
-            SurfaceSurfaceIntersection::compute(surfaces)?.intersection_curves;
+            SurfaceSurfaceIntersection::compute(surfaces, stores)?
+                .intersection_curves;
 
         // Can be cleaned up, once `zip` is stable:
         // https://doc.rust-lang.org/std/primitive.array.html#method.zip
@@ -84,7 +88,7 @@ mod tests {
                 .into_face()
         });
 
-        let intersection = FaceFaceIntersection::compute([&a, &b]);
+        let intersection = FaceFaceIntersection::compute([&a, &b], &stores);
 
         assert!(intersection.is_none());
     }
@@ -107,7 +111,7 @@ mod tests {
                 .into_face()
         });
 
-        let intersection = FaceFaceIntersection::compute([&a, &b]);
+        let intersection = FaceFaceIntersection::compute([&a, &b], &stores);
 
         let expected_curves = surfaces.map(|surface| {
             Curve::build(&stores, surface)

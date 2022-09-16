@@ -82,7 +82,11 @@ impl Sweep for (Vertex, Surface) {
         // `Edge` is straight-forward.
         let curve = {
             let line = Line::from_points(points_surface);
-            Curve::new(surface, SurfacePath::Line(line), *edge_global.curve())
+            Curve::new(
+                surface,
+                SurfacePath::Line(line),
+                edge_global.curve().clone(),
+            )
         };
 
         // And now the vertices. Again, nothing wild here.

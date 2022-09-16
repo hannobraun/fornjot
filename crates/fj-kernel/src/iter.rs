@@ -2,9 +2,12 @@
 
 use std::collections::VecDeque;
 
-use crate::objects::{
-    Curve, Cycle, Face, GlobalCurve, GlobalVertex, HalfEdge, Shell, Sketch,
-    Solid, Surface, Vertex,
+use crate::{
+    objects::{
+        Curve, Cycle, Face, GlobalCurve, GlobalVertex, HalfEdge, Shell, Sketch,
+        Solid, Surface, Vertex,
+    },
+    stores::Handle,
 };
 
 /// Access iterators over all objects of a shape, or part of it
@@ -179,7 +182,7 @@ impl<'r> ObjectIters<'r> for Face {
     }
 }
 
-impl<'r> ObjectIters<'r> for GlobalCurve {
+impl<'r> ObjectIters<'r> for Handle<GlobalCurve> {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
         Vec::new()
     }

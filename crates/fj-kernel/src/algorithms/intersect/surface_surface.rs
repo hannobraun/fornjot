@@ -3,6 +3,7 @@ use fj_math::{Line, Point, Scalar, Vector};
 use crate::{
     objects::{Curve, GlobalCurve, Surface},
     path::{GlobalPath, SurfacePath},
+    stores::Stores,
 };
 
 /// The intersection between two surfaces
@@ -14,7 +15,7 @@ pub struct SurfaceSurfaceIntersection {
 
 impl SurfaceSurfaceIntersection {
     /// Compute the intersection between two surfaces
-    pub fn compute(surfaces: [&Surface; 2]) -> Option<Self> {
+    pub fn compute(surfaces: [&Surface; 2], store: &Stores) -> Option<Self> {
         // Algorithm from Real-Time Collision Detection by Christer Ericson. See
         // section 5.4.4, Intersection of Two Planes.
         //
@@ -52,8 +53,10 @@ impl SurfaceSurfaceIntersection {
 
         let curves = planes_parametric.map(|(surface, plane)| {
             let local = project_line_into_plane(&line, &plane);
-            let global = GlobalCurve::from_path(GlobalPath::Line(
-                Line::from_origin_and_direction(origin, direction),
+            let global = store.global_curves.insert(GlobalCurve::from_path(
+                GlobalPath::Line(Line::from_origin_and_direction(
+                    origin, direction,
+                )),
             ));
 
             Curve::new(surface, local, global)
@@ -169,12 +172,17 @@ mod tests {
         let xz = Surface::xz_plane();
 
         // Coincident and parallel planes don't have an intersection curve.
-        assert_eq!(SurfaceSurfaceIntersection::compute([&xy, &xy]), None);
         assert_eq!(
-            SurfaceSurfaceIntersection::compute([
-                &xy,
-                &xy.transform(&Transform::translation([0., 0., 1.],), &stores)
-            ]),
+            SurfaceSurfaceIntersection::compute(
+                [
+                    &xy,
+                    &xy.transform(
+                        &Transform::translation([0., 0., 1.],),
+                        &stores
+                    )
+                ],
+                &stores
+            ),
             None,
         );
 
@@ -182,7 +190,7 @@ mod tests {
         let expected_xz = Curve::build(&stores, xz).u_axis();
 
         assert_eq!(
-            SurfaceSurfaceIntersection::compute([&xy, &xz]),
+            SurfaceSurfaceIntersection::compute([&xy, &xz], &stores),
             Some(SurfaceSurfaceIntersection {
                 intersection_curves: [expected_xy, expected_xz],
             })

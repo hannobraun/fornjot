@@ -40,7 +40,7 @@ impl Sweep for (HalfEdge, Color) {
                         points_curve_and_surface,
                     ));
 
-                Curve::new(surface, path, *edge.curve().global_form())
+                Curve::new(surface, path, edge.curve().global_form().clone())
             };
 
             let vertices = {
@@ -92,8 +92,11 @@ impl Sweep for (HalfEdge, Color) {
                 });
 
             let curve = {
-                let global =
-                    bottom_edge.curve().global_form().translate(path, stores);
+                let global = bottom_edge
+                    .curve()
+                    .global_form()
+                    .clone_object()
+                    .translate(path, stores);
 
                 // Please note that creating a line here is correct, even if the
                 // global curve is a circle. Projected into the side surface, it
@@ -106,7 +109,8 @@ impl Sweep for (HalfEdge, Color) {
                 Curve::new(surface, path, global)
             };
 
-            let global = GlobalEdge::new(*curve.global_form(), global_vertices);
+            let global =
+                GlobalEdge::new(curve.global_form().clone(), global_vertices);
 
             let vertices = {
                 let surface_points = points_curve_and_surface

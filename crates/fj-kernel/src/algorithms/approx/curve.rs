@@ -14,6 +14,7 @@ use std::collections::BTreeMap;
 use crate::{
     objects::{Curve, GlobalCurve},
     path::{GlobalPath, SurfacePath},
+    stores::Handle,
 };
 
 use super::{path::RangeOnPath, Approx, ApproxPoint, Tolerance};
@@ -29,8 +30,8 @@ impl Approx for (&Curve, RangeOnPath) {
     ) -> Self::Approximation {
         let (curve, range) = self;
 
-        let cache_key = (*curve.global_form(), range);
-        let global_curve_approx = match cache.get(cache_key) {
+        let cache_key = (curve.global_form().clone(), range);
+        let global_curve_approx = match cache.get(cache_key.clone()) {
             Some(approx) => approx,
             None => {
                 let approx = approx_global_curve(curve, range, tolerance);
@@ -151,7 +152,7 @@ impl CurveApprox {
 /// A cache for results of an approximation
 #[derive(Default)]
 pub struct CurveCache {
-    inner: BTreeMap<(GlobalCurve, RangeOnPath), GlobalCurveApprox>,
+    inner: BTreeMap<(Handle<GlobalCurve>, RangeOnPath), GlobalCurveApprox>,
 }
 
 impl CurveCache {
@@ -163,7 +164,7 @@ impl CurveCache {
     /// Insert the approximation of a [`GlobalCurve`]
     pub fn insert(
         &mut self,
-        key: (GlobalCurve, RangeOnPath),
+        key: (Handle<GlobalCurve>, RangeOnPath),
         approx: GlobalCurveApprox,
     ) -> GlobalCurveApprox {
         self.inner.insert(key, approx.clone());
@@ -173,7 +174,7 @@ impl CurveCache {
     /// Access the approximation for the given [`GlobalCurve`], if available
     pub fn get(
         &self,
-        key: (GlobalCurve, RangeOnPath),
+        key: (Handle<GlobalCurve>, RangeOnPath),
     ) -> Option<GlobalCurveApprox> {
         self.inner.get(&key).cloned()
     }
