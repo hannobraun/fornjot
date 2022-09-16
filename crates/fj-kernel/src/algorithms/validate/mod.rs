@@ -227,10 +227,11 @@ mod tests {
 
         let half_edge = HalfEdge::from_curve_and_vertices(curve, vertices);
 
-        let result = half_edge.validate_with_config(&ValidationConfig {
-            identical_max_distance: deviation * 2.,
-            ..ValidationConfig::default()
-        });
+        let result =
+            half_edge.clone().validate_with_config(&ValidationConfig {
+                identical_max_distance: deviation * 2.,
+                ..ValidationConfig::default()
+            });
         assert!(result.is_ok());
 
         let result = half_edge.validate_with_config(&ValidationConfig {

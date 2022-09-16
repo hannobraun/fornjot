@@ -5,7 +5,7 @@ use crate::builder::HalfEdgeBuilder;
 use super::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex};
 
 /// A half-edge
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdge {
     curve: Curve,
     vertices: [Vertex; 2],

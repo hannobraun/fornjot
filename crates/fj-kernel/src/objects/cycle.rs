@@ -130,7 +130,7 @@ impl Cycle {
             //
             // Can be cleaned up, once `array_windows` is stable:
             // https://doc.rust-lang.org/std/primitive.slice.html#method.array_windows
-            let [a, b] = [half_edge[0], half_edge[1]];
+            let [a, b] = [&half_edge[0], &half_edge[1]];
 
             let [a, b] = [a, b].map(|half_edge| {
                 let [vertex, _] = half_edge.vertices();

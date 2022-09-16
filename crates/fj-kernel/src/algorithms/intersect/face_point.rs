@@ -40,9 +40,9 @@ impl Intersect for (&Face, &Point<2>) {
                     ) => {
                         // If the ray starts on the boundary of the face,
                         // there's nothing to else check.
-                        return Some(
-                            FacePointIntersection::PointIsOnEdge(*half_edge)
-                        );
+                        return Some(FacePointIntersection::PointIsOnEdge(
+                            half_edge.clone()
+                        ));
                     }
                     (Some(RaySegmentIntersection::RayStartsOnOnFirstVertex), _) => {
                         let vertex = half_edge.vertices()[0];
@@ -243,7 +243,7 @@ mod tests {
             .unwrap();
         assert_eq!(
             intersection,
-            Some(FacePointIntersection::PointIsOnEdge(*edge))
+            Some(FacePointIntersection::PointIsOnEdge(edge.clone()))
         );
     }
 

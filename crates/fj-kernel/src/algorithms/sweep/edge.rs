@@ -79,7 +79,7 @@ impl Sweep for (HalfEdge, Color) {
         let top_edge = {
             let bottom_vertices = bottom_edge.vertices();
 
-            let global_vertices = side_edges.map(|edge| {
+            let global_vertices = side_edges.clone().map(|edge| {
                 let [_, vertex] = edge.vertices();
                 *vertex.global_form()
             });
@@ -155,7 +155,7 @@ impl Sweep for (HalfEdge, Color) {
                 // be coincident when sweeping circles, despite the vertices
                 // being different!
                 if prev_last.surface_form() != next_first.surface_form() {
-                    edges[j] = edges[j].reverse();
+                    edges[j] = edges[j].clone().reverse();
                 }
 
                 i += 1;
