@@ -27,7 +27,7 @@ impl Intersect for (&Face, &Point<2>) {
             let mut previous_hit = cycle
                 .half_edges()
                 .last()
-                .copied()
+                .cloned()
                 .and_then(|edge| (&ray, &edge).intersect());
 
             for half_edge in cycle.half_edges() {
@@ -235,7 +235,6 @@ mod tests {
 
         let edge = face
             .half_edge_iter()
-            .copied()
             .find(|edge| {
                 let [a, b] = edge.vertices();
                 a.global_form().position() == Point::from([0., 0., 0.])
@@ -244,7 +243,7 @@ mod tests {
             .unwrap();
         assert_eq!(
             intersection,
-            Some(FacePointIntersection::PointIsOnEdge(edge))
+            Some(FacePointIntersection::PointIsOnEdge(*edge))
         );
     }
 
@@ -259,14 +258,13 @@ mod tests {
 
         let vertex = face
             .vertex_iter()
-            .copied()
             .find(|vertex| {
                 vertex.global_form().position() == Point::from([1., 0., 0.])
             })
             .unwrap();
         assert_eq!(
             intersection,
-            Some(FacePointIntersection::PointIsOnVertex(vertex))
+            Some(FacePointIntersection::PointIsOnVertex(*vertex))
         );
     }
 }
