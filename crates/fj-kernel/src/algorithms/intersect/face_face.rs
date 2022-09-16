@@ -30,11 +30,11 @@ impl FaceFaceIntersection {
         // Can be cleaned up, once `zip` is stable:
         // https://doc.rust-lang.org/std/primitive.array.html#method.zip
         let curve_face_intersections = {
-            let [curve_a, curve_b] = intersection_curves;
+            let [curve_a, curve_b] = &intersection_curves;
             let [face_a, face_b] = faces;
 
             [(curve_a, face_a), (curve_b, face_b)].map(|(curve, face)| {
-                CurveFaceIntersection::compute(&curve, face)
+                CurveFaceIntersection::compute(curve, face)
             })
         };
 
