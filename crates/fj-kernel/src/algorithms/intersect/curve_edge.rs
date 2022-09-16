@@ -45,7 +45,7 @@ impl CurveEdgeIntersection {
                 }
             };
 
-            let edge_vertices = half_edge.vertices().map(|vertex| {
+            let edge_vertices = half_edge.vertices().clone().map(|vertex| {
                 edge_curve_as_line.point_from_line_coords(vertex.position())
             });
 

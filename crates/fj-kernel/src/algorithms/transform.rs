@@ -108,8 +108,10 @@ impl TransformObject for GlobalVertex {
 impl TransformObject for HalfEdge {
     fn transform(self, transform: &Transform) -> Self {
         let curve = self.curve().transform(transform);
-        let vertices =
-            self.vertices().map(|vertex| vertex.transform(transform));
+        let vertices = self
+            .vertices()
+            .clone()
+            .map(|vertex| vertex.transform(transform));
 
         Self::from_curve_and_vertices(curve, vertices)
     }

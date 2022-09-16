@@ -5,7 +5,7 @@ use super::Reverse;
 impl Reverse for HalfEdge {
     fn reverse(self) -> Self {
         let vertices = {
-            let &[a, b] = self.vertices();
+            let [a, b] = self.vertices().clone();
             [b, a]
         };
 

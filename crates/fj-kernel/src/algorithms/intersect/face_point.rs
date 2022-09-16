@@ -45,13 +45,13 @@ impl Intersect for (&Face, &Point<2>) {
                         ));
                     }
                     (Some(RaySegmentIntersection::RayStartsOnOnFirstVertex), _) => {
-                        let vertex = half_edge.vertices()[0];
+                        let vertex = half_edge.vertices()[0].clone();
                         return Some(
                             FacePointIntersection::PointIsOnVertex(vertex)
                         );
                     }
                     (Some(RaySegmentIntersection::RayStartsOnSecondVertex), _) => {
-                        let vertex = half_edge.vertices()[1];
+                        let vertex = half_edge.vertices()[1].clone();
                         return Some(
                             FacePointIntersection::PointIsOnVertex(vertex)
                         );
@@ -264,7 +264,7 @@ mod tests {
             .unwrap();
         assert_eq!(
             intersection,
-            Some(FacePointIntersection::PointIsOnVertex(*vertex))
+            Some(FacePointIntersection::PointIsOnVertex(vertex.clone()))
         );
     }
 }

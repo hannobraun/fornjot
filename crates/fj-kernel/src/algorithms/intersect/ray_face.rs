@@ -240,7 +240,7 @@ mod tests {
             .unwrap();
         assert_eq!(
             (&ray, &face).intersect(),
-            Some(RayFaceIntersection::RayHitsVertex(*vertex))
+            Some(RayFaceIntersection::RayHitsVertex(vertex.clone()))
         );
     }
 

@@ -54,7 +54,7 @@ impl HalfEdge {
         // Make sure `curve` and `vertices` match `global_form`.
         assert_eq!(curve.global_form(), global_form.curve());
         assert_eq!(
-            &vertices.map(|vertex| *vertex.global_form()),
+            &vertices.clone().map(|vertex| *vertex.global_form()),
             global_form.vertices()
         );
 
@@ -84,7 +84,7 @@ impl HalfEdge {
     ) -> Self {
         let global = GlobalEdge::new(
             *curve.global_form(),
-            vertices.map(|vertex| *vertex.global_form()),
+            vertices.clone().map(|vertex| *vertex.global_form()),
         );
         Self::new(curve, vertices, global)
     }
@@ -115,7 +115,7 @@ impl HalfEdge {
 
 impl fmt::Display for HalfEdge {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let [a, b] = self.vertices().map(|vertex| vertex.position());
+        let [a, b] = self.vertices().clone().map(|vertex| vertex.position());
         write!(f, "edge from {:?} to {:?}", a, b)?;
         write!(f, " on {:?}", self.curve().global_form())?;
 

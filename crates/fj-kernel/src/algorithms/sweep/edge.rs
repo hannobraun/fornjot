@@ -26,7 +26,7 @@ impl Sweep for (HalfEdge, Color) {
         let bottom_edge = {
             let vertices = edge.vertices();
 
-            let points_curve_and_surface = vertices.map(|vertex| {
+            let points_curve_and_surface = vertices.clone().map(|vertex| {
                 (vertex.position(), [vertex.position().t, Scalar::ZERO])
             });
 
@@ -74,6 +74,7 @@ impl Sweep for (HalfEdge, Color) {
 
         let side_edges = bottom_edge
             .vertices()
+            .clone()
             .map(|vertex| (vertex, surface).sweep(path));
 
         let top_edge = {
@@ -84,9 +85,10 @@ impl Sweep for (HalfEdge, Color) {
                 *vertex.global_form()
             });
 
-            let points_curve_and_surface = bottom_vertices.map(|vertex| {
-                (vertex.position(), [vertex.position().t, Scalar::ONE])
-            });
+            let points_curve_and_surface =
+                bottom_vertices.clone().map(|vertex| {
+                    (vertex.position(), [vertex.position().t, Scalar::ONE])
+                });
 
             let curve = {
                 let global = bottom_edge.curve().global_form().translate(path);
