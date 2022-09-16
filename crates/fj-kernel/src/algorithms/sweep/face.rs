@@ -42,7 +42,7 @@ impl Sweep for Face {
         faces.push(bottom_face);
 
         let top_face = {
-            let mut face = self.clone().translate(path);
+            let mut face = self.clone().translate(path, stores);
 
             if is_negative_sweep {
                 face = face.reverse();
@@ -98,7 +98,7 @@ mod tests {
             .polygon_from_points(TRIANGLE)
             .into_face()
             .reverse();
-        let top = Face::build(&stores, surface.translate(UP))
+        let top = Face::build(&stores, surface.translate(UP, &stores))
             .polygon_from_points(TRIANGLE)
             .into_face();
 
@@ -129,7 +129,7 @@ mod tests {
             .polygon_from_points(TRIANGLE)
             .sweep(DOWN, &stores);
 
-        let bottom = Face::build(&stores, surface.translate(DOWN))
+        let bottom = Face::build(&stores, surface.translate(DOWN, &stores))
             .polygon_from_points(TRIANGLE)
             .into_face()
             .reverse();

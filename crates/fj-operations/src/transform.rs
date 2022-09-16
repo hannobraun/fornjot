@@ -24,7 +24,7 @@ impl Shape for fj::Transform {
             .shape
             .compute_brep(config, stores, debug_info)?
             .into_inner()
-            .transform(&make_transform(self));
+            .transform(&make_transform(self), stores);
 
         faces.validate_with_config(config)
     }

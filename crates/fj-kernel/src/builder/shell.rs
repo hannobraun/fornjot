@@ -32,12 +32,12 @@ impl<'a> ShellBuilder<'a> {
 
         const Z: Scalar = Scalar::ZERO;
         let planes = [
-            Surface::xy_plane().translate([Z, Z, -h]), // bottom
-            Surface::xy_plane().translate([Z, Z, h]),  // top
-            Surface::xz_plane().translate([Z, -h, Z]), // front
-            Surface::xz_plane().translate([Z, h, Z]),  // back
-            Surface::yz_plane().translate([-h, Z, Z]), // left
-            Surface::yz_plane().translate([h, Z, Z]),  // right
+            Surface::xy_plane().translate([Z, Z, -h], self.stores), // bottom
+            Surface::xy_plane().translate([Z, Z, h], self.stores),  // top
+            Surface::xz_plane().translate([Z, -h, Z], self.stores), // front
+            Surface::xz_plane().translate([Z, h, Z], self.stores),  // back
+            Surface::yz_plane().translate([-h, Z, Z], self.stores), // left
+            Surface::yz_plane().translate([h, Z, Z], self.stores),  // right
         ];
 
         let faces = planes.map(|plane| {

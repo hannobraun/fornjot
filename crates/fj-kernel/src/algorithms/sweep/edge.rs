@@ -92,7 +92,8 @@ impl Sweep for (HalfEdge, Color) {
                 });
 
             let curve = {
-                let global = bottom_edge.curve().global_form().translate(path);
+                let global =
+                    bottom_edge.curve().global_form().translate(path, stores);
 
                 // Please note that creating a line here is correct, even if the
                 // global curve is a circle. Projected into the side surface, it

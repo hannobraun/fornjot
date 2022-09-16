@@ -173,7 +173,7 @@ mod tests {
         assert_eq!(
             SurfaceSurfaceIntersection::compute([
                 &xy,
-                &xy.transform(&Transform::translation([0., 0., 1.]))
+                &xy.transform(&Transform::translation([0., 0., 1.],), &stores)
             ]),
             None,
         );

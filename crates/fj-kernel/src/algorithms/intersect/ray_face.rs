@@ -171,7 +171,7 @@ mod tests {
         let face = Face::build(&stores, Surface::yz_plane())
             .polygon_from_points([[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]])
             .into_face()
-            .translate([-1., 0., 0.]);
+            .translate([-1., 0., 0.], &stores);
 
         assert_eq!((&ray, &face).intersect(), None);
     }
@@ -185,7 +185,7 @@ mod tests {
         let face = Face::build(&stores, Surface::yz_plane())
             .polygon_from_points([[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]])
             .into_face()
-            .translate([1., 0., 0.]);
+            .translate([1., 0., 0.], &stores);
 
         assert_eq!(
             (&ray, &face).intersect(),
@@ -202,7 +202,7 @@ mod tests {
         let face = Face::build(&stores, Surface::yz_plane())
             .polygon_from_points([[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]])
             .into_face()
-            .translate([0., 0., 2.]);
+            .translate([0., 0., 2.], &stores);
 
         assert_eq!((&ray, &face).intersect(), None);
     }
@@ -216,7 +216,7 @@ mod tests {
         let face = Face::build(&stores, Surface::yz_plane())
             .polygon_from_points([[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]])
             .into_face()
-            .translate([1., 1., 0.]);
+            .translate([1., 1., 0.], &stores);
 
         let edge = face
             .half_edge_iter()
@@ -241,7 +241,7 @@ mod tests {
         let face = Face::build(&stores, Surface::yz_plane())
             .polygon_from_points([[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]])
             .into_face()
-            .translate([1., 1., 1.]);
+            .translate([1., 1., 1.], &stores);
 
         let vertex = face
             .vertex_iter()
@@ -280,7 +280,7 @@ mod tests {
         let face = Face::build(&stores, Surface::xy_plane())
             .polygon_from_points([[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]])
             .into_face()
-            .translate([0., 0., 1.]);
+            .translate([0., 0., 1.], &stores);
 
         assert_eq!((&ray, &face).intersect(), None)
     }
