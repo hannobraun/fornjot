@@ -155,16 +155,21 @@ where
 
 #[cfg(test)]
 mod tests {
-    use crate::objects::{Curve, Face, Surface};
+    use crate::{
+        objects::{Curve, Face, Surface},
+        stores::Stores,
+    };
 
     use super::CurveFaceIntersection;
 
     #[test]
     fn compute() {
+        let stores = Stores::new();
+
         let surface = Surface::xy_plane();
 
-        let curve =
-            Curve::build(surface).line_from_points([[-3., 0.], [-2., 0.]]);
+        let curve = Curve::build(&stores, surface)
+            .line_from_points([[-3., 0.], [-2., 0.]]);
 
         #[rustfmt::skip]
         let exterior = [
@@ -181,9 +186,10 @@ mod tests {
             [-1.,  1.],
         ];
 
-        let face = Face::build(surface)
+        let face = Face::build(&stores, surface)
             .polygon_from_points(exterior)
-            .with_hole(interior);
+            .with_hole(interior)
+            .into_face();
 
         let expected =
             CurveFaceIntersection::from_intervals([[[1.], [2.]], [[4.], [5.]]]);

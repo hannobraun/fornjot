@@ -344,17 +344,22 @@ impl<T> Iterator for Iter<T> {
 
 #[cfg(test)]
 mod tests {
-    use crate::objects::{
-        Curve, Cycle, Face, GlobalCurve, GlobalVertex, HalfEdge, Shell, Sketch,
-        Solid, Surface, SurfaceVertex, Vertex,
+    use crate::{
+        objects::{
+            Curve, Cycle, Face, GlobalCurve, GlobalVertex, HalfEdge, Shell,
+            Sketch, Solid, Surface, SurfaceVertex, Vertex,
+        },
+        stores::Stores,
     };
 
     use super::ObjectIters as _;
 
     #[test]
     fn curve() {
+        let stores = Stores::new();
+
         let surface = Surface::xy_plane();
-        let object = Curve::build(surface).u_axis();
+        let object = Curve::build(&stores, surface).u_axis();
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -371,11 +376,10 @@ mod tests {
 
     #[test]
     fn cycle() {
-        let object = Cycle::build(Surface::xy_plane()).polygon_from_points([
-            [0., 0.],
-            [1., 0.],
-            [0., 1.],
-        ]);
+        let stores = Stores::new();
+
+        let object = Cycle::build(&stores, Surface::xy_plane())
+            .polygon_from_points([[0., 0.], [1., 0.], [0., 1.]]);
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
@@ -392,12 +396,12 @@ mod tests {
 
     #[test]
     fn face() {
+        let stores = Stores::new();
+
         let surface = Surface::xy_plane();
-        let object = Face::build(surface).polygon_from_points([
-            [0., 0.],
-            [1., 0.],
-            [0., 1.],
-        ]);
+        let object = Face::build(&stores, surface)
+            .polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
+            .into_face();
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
@@ -414,7 +418,9 @@ mod tests {
 
     #[test]
     fn global_curve() {
-        let object = GlobalCurve::build().x_axis();
+        let stores = Stores::new();
+
+        let object = GlobalCurve::build(&stores).x_axis();
 
         assert_eq!(0, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -448,7 +454,9 @@ mod tests {
 
     #[test]
     fn half_edge() {
-        let object = HalfEdge::build(Surface::xy_plane())
+        let stores = Stores::new();
+
+        let object = HalfEdge::build(&stores, Surface::xy_plane())
             .line_segment_from_points([[0., 0.], [1., 0.]]);
 
         assert_eq!(1, object.curve_iter().count());
@@ -466,7 +474,9 @@ mod tests {
 
     #[test]
     fn shell() {
-        let object = Shell::build().cube_from_edge_length(1.);
+        let stores = Stores::new();
+
+        let object = Shell::build(&stores).cube_from_edge_length(1.);
 
         assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());
@@ -483,12 +493,12 @@ mod tests {
 
     #[test]
     fn sketch() {
+        let stores = Stores::new();
+
         let surface = Surface::xy_plane();
-        let face = Face::build(surface).polygon_from_points([
-            [0., 0.],
-            [1., 0.],
-            [0., 1.],
-        ]);
+        let face = Face::build(&stores, surface)
+            .polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
+            .into_face();
         let object = Sketch::new().with_faces([face]);
 
         assert_eq!(3, object.curve_iter().count());
@@ -506,7 +516,9 @@ mod tests {
 
     #[test]
     fn solid() {
-        let object = Solid::build().cube_from_edge_length(1.);
+        let stores = Stores::new();
+
+        let object = Solid::build(&stores).cube_from_edge_length(1.);
 
         assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());
@@ -540,8 +552,10 @@ mod tests {
 
     #[test]
     fn vertex() {
+        let stores = Stores::new();
+
         let surface = Surface::xy_plane();
-        let curve = Curve::build(surface).u_axis();
+        let curve = Curve::build(&stores, surface).u_axis();
         let global_vertex = GlobalVertex::from_position([0., 0., 0.]);
         let surface_vertex =
             SurfaceVertex::new([0., 0.], surface, global_vertex);

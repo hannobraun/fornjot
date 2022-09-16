@@ -6,24 +6,27 @@ use crate::{
         Vertex,
     },
     path::{GlobalPath, SurfacePath},
+    stores::Stores,
 };
 
 /// API for building an [`HalfEdge`]
-pub struct HalfEdgeBuilder {
+pub struct HalfEdgeBuilder<'a> {
+    stores: &'a Stores,
     surface: Surface,
 }
 
-impl HalfEdgeBuilder {
+impl<'a> HalfEdgeBuilder<'a> {
     /// Construct a new instance of [`HalfEdgeBuilder`]
     ///
     /// Also see [`HalfEdge::build`].
-    pub fn new(surface: Surface) -> Self {
-        Self { surface }
+    pub fn new(stores: &'a Stores, surface: Surface) -> Self {
+        Self { stores, surface }
     }
 
     /// Build a circle from the given radius
     pub fn circle_from_radius(&self, radius: impl Into<Scalar>) -> HalfEdge {
-        let curve = Curve::build(self.surface).circle_from_radius(radius);
+        let curve =
+            Curve::build(self.stores, self.surface).circle_from_radius(radius);
 
         let vertices = {
             let [a_curve, b_curve] =

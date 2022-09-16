@@ -3,12 +3,22 @@ use fj_math::Scalar;
 use crate::{
     algorithms::transform::TransformObject,
     objects::{Face, Shell, Surface},
+    stores::Stores,
 };
 
 /// API for building a [`Shell`]
-pub struct ShellBuilder;
+pub struct ShellBuilder<'a> {
+    stores: &'a Stores,
+}
 
-impl ShellBuilder {
+impl<'a> ShellBuilder<'a> {
+    /// Construct a new instance of `ShellBuilder`
+    ///
+    /// Also see [`Shell::build`].
+    pub fn new(stores: &'a Stores) -> Self {
+        Self { stores }
+    }
+
     /// Create a cube from the length of its edges
     pub fn cube_from_edge_length(
         &self,
@@ -30,8 +40,11 @@ impl ShellBuilder {
             Surface::yz_plane().translate([h, Z, Z]),  // right
         ];
 
-        let faces =
-            planes.map(|plane| Face::build(plane).polygon_from_points(points));
+        let faces = planes.map(|plane| {
+            Face::build(self.stores, plane)
+                .polygon_from_points(points)
+                .into_face()
+        });
 
         Shell::new().with_faces(faces)
     }

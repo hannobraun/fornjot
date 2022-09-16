@@ -3,19 +3,21 @@ use fj_math::{Line, Point, Scalar, Vector};
 use crate::{
     objects::{Curve, GlobalCurve, Surface},
     path::{GlobalPath, SurfacePath},
+    stores::Stores,
 };
 
 /// API for building a [`Curve`]
-pub struct CurveBuilder {
+pub struct CurveBuilder<'a> {
+    stores: &'a Stores,
     surface: Surface,
 }
 
-impl CurveBuilder {
+impl<'a> CurveBuilder<'a> {
     /// Construct a new instance of [`CurveBuilder`]
     ///
     /// Also see [`Curve::build`].
-    pub fn new(surface: Surface) -> Self {
-        Self { surface }
+    pub fn new(stores: &'a Stores, surface: Surface) -> Self {
+        Self { stores, surface }
     }
 
     /// Build a line that represents the u-axis on the surface
@@ -39,7 +41,8 @@ impl CurveBuilder {
         let radius = radius.into();
 
         let path = SurfacePath::circle_from_radius(radius);
-        let global_form = GlobalCurve::build().circle_from_radius(radius);
+        let global_form =
+            GlobalCurve::build(self.stores).circle_from_radius(radius);
 
         Curve::new(self.surface, path, global_form)
     }
@@ -62,9 +65,18 @@ impl CurveBuilder {
 }
 
 /// API for building a [`GlobalCurve`]
-pub struct GlobalCurveBuilder;
+pub struct GlobalCurveBuilder<'a> {
+    _stores: &'a Stores,
+}
 
-impl GlobalCurveBuilder {
+impl<'a> GlobalCurveBuilder<'a> {
+    /// Construct a new instance of [`GlobalCurveBuilder`]
+    ///
+    /// Also see [`GlobalCurve::build`].
+    pub fn new(stores: &'a Stores) -> Self {
+        Self { _stores: stores }
+    }
+
     /// Build a line that represents the x-axis
     pub fn x_axis(&self) -> GlobalCurve {
         GlobalCurve::from_path(GlobalPath::x_axis())

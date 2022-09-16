@@ -61,12 +61,15 @@ mod tests {
     use crate::{
         algorithms::intersect::CurveFaceIntersection,
         objects::{Curve, Face, Surface},
+        stores::Stores,
     };
 
     use super::FaceFaceIntersection;
 
     #[test]
     fn compute_no_intersection() {
+        let stores = Stores::new();
+
         #[rustfmt::skip]
         let points = [
             [1., 1.],
@@ -76,7 +79,9 @@ mod tests {
         ];
         let surfaces = [Surface::xy_plane(), Surface::xz_plane()];
         let [a, b] = surfaces.map(|surface| {
-            Face::build(surface).polygon_from_points(points).into_face()
+            Face::build(&stores, surface)
+                .polygon_from_points(points)
+                .into_face()
         });
 
         let intersection = FaceFaceIntersection::compute([&a, &b]);
@@ -86,6 +91,8 @@ mod tests {
 
     #[test]
     fn compute_one_intersection() {
+        let stores = Stores::new();
+
         #[rustfmt::skip]
         let points = [
             [-1., -1.],
@@ -95,13 +102,16 @@ mod tests {
         ];
         let surfaces = [Surface::xy_plane(), Surface::xz_plane()];
         let [a, b] = surfaces.map(|surface| {
-            Face::build(surface).polygon_from_points(points).into_face()
+            Face::build(&stores, surface)
+                .polygon_from_points(points)
+                .into_face()
         });
 
         let intersection = FaceFaceIntersection::compute([&a, &b]);
 
         let expected_curves = surfaces.map(|surface| {
-            Curve::build(surface).line_from_points([[0., 0.], [1., 0.]])
+            Curve::build(&stores, surface)
+                .line_from_points([[0., 0.], [1., 0.]])
         });
         let expected_intervals =
             CurveFaceIntersection::from_intervals([[[-1.], [1.]]]);

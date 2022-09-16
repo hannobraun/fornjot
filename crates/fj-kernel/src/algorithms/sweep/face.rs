@@ -90,15 +90,15 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::xy_plane();
-        let solid = Sketch::build(surface)
+        let solid = Sketch::build(&stores, surface)
             .polygon_from_points(TRIANGLE)
             .sweep(UP, &stores);
 
-        let bottom = Face::build(surface)
+        let bottom = Face::build(&stores, surface)
             .polygon_from_points(TRIANGLE)
             .into_face()
             .reverse();
-        let top = Face::build(surface.translate(UP))
+        let top = Face::build(&stores, surface.translate(UP))
             .polygon_from_points(TRIANGLE)
             .into_face();
 
@@ -112,7 +112,7 @@ mod tests {
             // https://doc.rust-lang.org/std/primitive.slice.html#method.array_windows
             let [a, b] = [window[0], window[1]];
 
-            let half_edge = HalfEdge::build(Surface::xy_plane())
+            let half_edge = HalfEdge::build(&stores, Surface::xy_plane())
                 .line_segment_from_points([a, b]);
             (half_edge, Color::default()).sweep(UP, &stores)
         });
@@ -125,15 +125,15 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::xy_plane();
-        let solid = Sketch::build(surface)
+        let solid = Sketch::build(&stores, surface)
             .polygon_from_points(TRIANGLE)
             .sweep(DOWN, &stores);
 
-        let bottom = Face::build(surface.translate(DOWN))
+        let bottom = Face::build(&stores, surface.translate(DOWN))
             .polygon_from_points(TRIANGLE)
             .into_face()
             .reverse();
-        let top = Face::build(surface)
+        let top = Face::build(&stores, surface)
             .polygon_from_points(TRIANGLE)
             .into_face();
 
@@ -147,7 +147,7 @@ mod tests {
             // https://doc.rust-lang.org/std/primitive.slice.html#method.array_windows
             let [a, b] = [window[0], window[1]];
 
-            let half_edge = HalfEdge::build(Surface::xy_plane())
+            let half_edge = HalfEdge::build(&stores, Surface::xy_plane())
                 .line_segment_from_points([a, b])
                 .reverse();
             (half_edge, Color::default()).sweep(DOWN, &stores)

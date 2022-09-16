@@ -1,6 +1,7 @@
 use crate::{
     builder::{CurveBuilder, GlobalCurveBuilder},
     path::{GlobalPath, SurfacePath},
+    stores::Stores,
 };
 
 use super::Surface;
@@ -15,8 +16,8 @@ pub struct Curve {
 
 impl Curve {
     /// Build a curve using [`CurveBuilder`]
-    pub fn build(surface: Surface) -> CurveBuilder {
-        CurveBuilder::new(surface)
+    pub fn build(stores: &Stores, surface: Surface) -> CurveBuilder {
+        CurveBuilder::new(stores, surface)
     }
 
     /// Construct a new instance of `Curve`
@@ -56,8 +57,8 @@ pub struct GlobalCurve {
 
 impl GlobalCurve {
     /// Build a curve using [`GlobalCurveBuilder`]
-    pub fn build() -> GlobalCurveBuilder {
-        GlobalCurveBuilder
+    pub fn build(stores: &Stores) -> GlobalCurveBuilder {
+        GlobalCurveBuilder::new(stores)
     }
 
     /// Construct a `GlobalCurve` from the path that defines it

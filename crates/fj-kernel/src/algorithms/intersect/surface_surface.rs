@@ -156,12 +156,15 @@ mod tests {
     use crate::{
         algorithms::transform::TransformObject,
         objects::{Curve, Surface},
+        stores::Stores,
     };
 
     use super::SurfaceSurfaceIntersection;
 
     #[test]
     fn plane_plane() {
+        let stores = Stores::new();
+
         let xy = Surface::xy_plane();
         let xz = Surface::xz_plane();
 
@@ -175,8 +178,8 @@ mod tests {
             None,
         );
 
-        let expected_xy = Curve::build(xy).u_axis();
-        let expected_xz = Curve::build(xz).u_axis();
+        let expected_xy = Curve::build(&stores, xy).u_axis();
+        let expected_xz = Curve::build(&stores, xz).u_axis();
 
         assert_eq!(
             SurfaceSurfaceIntersection::compute([&xy, &xz]),
