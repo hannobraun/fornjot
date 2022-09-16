@@ -124,7 +124,7 @@ impl fmt::Display for HalfEdge {
 }
 
 /// An edge, defined in global (3D) coordinates
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalEdge {
     curve: GlobalCurve,
     vertices: [GlobalVertex; 2],
