@@ -4,6 +4,7 @@ use fj_kernel::{
         Validate, Validated, ValidationConfig, ValidationError,
     },
     objects::{Cycle, Face, HalfEdge, Sketch, Surface},
+    stores::Stores,
 };
 use fj_math::{Aabb, Point, Scalar};
 
@@ -15,6 +16,7 @@ impl Shape for fj::Sketch {
     fn compute_brep(
         &self,
         config: &ValidationConfig,
+        _: &Stores,
         _: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
         let surface = Surface::xy_plane();

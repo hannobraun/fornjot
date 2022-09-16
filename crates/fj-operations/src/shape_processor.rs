@@ -1,10 +1,13 @@
 //! API for processing shapes
 
 use fj_interop::{debug::DebugInfo, processed_shape::ProcessedShape};
-use fj_kernel::algorithms::{
-    approx::{InvalidTolerance, Tolerance},
-    triangulate::Triangulate,
-    validate::{ValidationConfig, ValidationError},
+use fj_kernel::{
+    algorithms::{
+        approx::{InvalidTolerance, Tolerance},
+        triangulate::Triangulate,
+        validate::{ValidationConfig, ValidationError},
+    },
+    stores::Stores,
 };
 use fj_math::Scalar;
 
@@ -40,8 +43,9 @@ impl ShapeProcessor {
         };
 
         let config = ValidationConfig::default();
+        let stores = Stores::new();
         let mut debug_info = DebugInfo::new();
-        let shape = shape.compute_brep(&config, &mut debug_info)?;
+        let shape = shape.compute_brep(&config, &stores, &mut debug_info)?;
         let mesh = shape.into_inner().triangulate(tolerance);
 
         Ok(ProcessedShape {

@@ -5,6 +5,7 @@ use fj_kernel::{
         validate::{Validate, Validated, ValidationConfig, ValidationError},
     },
     objects::Solid,
+    stores::Stores,
 };
 use fj_math::{Aabb, Vector};
 
@@ -16,9 +17,10 @@ impl Shape for fj::Sweep {
     fn compute_brep(
         &self,
         config: &ValidationConfig,
+        stores: &Stores,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
-        let sketch = self.shape().compute_brep(config, debug_info)?;
+        let sketch = self.shape().compute_brep(config, stores, debug_info)?;
         let path = Vector::from(self.path());
 
         let solid = sketch.into_inner().sweep(path);

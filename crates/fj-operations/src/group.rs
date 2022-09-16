@@ -4,6 +4,7 @@ use fj_kernel::{
         Validate, Validated, ValidationConfig, ValidationError,
     },
     objects::Faces,
+    stores::Stores,
 };
 use fj_math::Aabb;
 
@@ -15,12 +16,13 @@ impl Shape for fj::Group {
     fn compute_brep(
         &self,
         config: &ValidationConfig,
+        stores: &Stores,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
         let mut faces = Faces::new();
 
-        let a = self.a.compute_brep(config, debug_info)?;
-        let b = self.b.compute_brep(config, debug_info)?;
+        let a = self.a.compute_brep(config, stores, debug_info)?;
+        let b = self.b.compute_brep(config, stores, debug_info)?;
 
         faces.extend(a.into_inner());
         faces.extend(b.into_inner());

@@ -5,6 +5,7 @@ use fj_kernel::{
         validate::{Validate, Validated, ValidationConfig, ValidationError},
     },
     objects::Faces,
+    stores::Stores,
 };
 use fj_math::{Aabb, Transform, Vector};
 
@@ -16,11 +17,12 @@ impl Shape for fj::Transform {
     fn compute_brep(
         &self,
         config: &ValidationConfig,
+        stores: &Stores,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
         let faces = self
             .shape
-            .compute_brep(config, debug_info)?
+            .compute_brep(config, stores, debug_info)?
             .into_inner()
             .transform(&make_transform(self));
 
