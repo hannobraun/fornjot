@@ -23,7 +23,7 @@ impl Shape for fj::Sweep {
         let sketch = self.shape().compute_brep(config, stores, debug_info)?;
         let path = Vector::from(self.path());
 
-        let solid = sketch.into_inner().sweep(path);
+        let solid = sketch.into_inner().sweep(path, stores);
         solid.validate_with_config(config)
     }
 

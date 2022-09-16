@@ -4,6 +4,7 @@ use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
     objects::{Face, Shell},
     path::GlobalPath,
+    stores::Stores,
 };
 
 use super::Sweep;
@@ -11,7 +12,7 @@ use super::Sweep;
 impl Sweep for Face {
     type Swept = Shell;
 
-    fn sweep(self, path: impl Into<Vector<3>>) -> Self::Swept {
+    fn sweep(self, path: impl Into<Vector<3>>, stores: &Stores) -> Self::Swept {
         let path = path.into();
 
         let mut faces = Vec::new();
@@ -44,7 +45,7 @@ impl Sweep for Face {
                 } else {
                     half_edge.clone()
                 };
-                let face = (edge, self.color()).sweep(path);
+                let face = (edge, self.color()).sweep(path, stores);
                 faces.push(face);
             }
         }
@@ -82,6 +83,7 @@ mod tests {
     use crate::{
         algorithms::{reverse::Reverse, transform::TransformObject},
         objects::{Face, HalfEdge, Sketch, Surface},
+        stores::Stores,
     };
 
     use super::Sweep;
@@ -93,10 +95,12 @@ mod tests {
 
     #[test]
     fn sweep_up() {
+        let stores = Stores::new();
+
         let surface = Surface::xy_plane();
         let solid = Sketch::build(surface)
             .polygon_from_points(TRIANGLE)
-            .sweep(UP);
+            .sweep(UP, &stores);
 
         let bottom = Face::build(surface)
             .polygon_from_points(TRIANGLE)
@@ -118,7 +122,7 @@ mod tests {
 
             let half_edge = HalfEdge::build(Surface::xy_plane())
                 .line_segment_from_points([a, b]);
-            (half_edge, Color::default()).sweep(UP)
+            (half_edge, Color::default()).sweep(UP, &stores)
         });
 
         assert!(side_faces.all(|face| solid.find_face(&face).is_some()));
@@ -126,10 +130,12 @@ mod tests {
 
     #[test]
     fn sweep_down() {
+        let stores = Stores::new();
+
         let surface = Surface::xy_plane();
         let solid = Sketch::build(surface)
             .polygon_from_points(TRIANGLE)
-            .sweep(DOWN);
+            .sweep(DOWN, &stores);
 
         let bottom = Face::build(surface.translate(DOWN))
             .polygon_from_points(TRIANGLE)
@@ -152,7 +158,7 @@ mod tests {
             let half_edge = HalfEdge::build(Surface::xy_plane())
                 .line_segment_from_points([a, b])
                 .reverse();
-            (half_edge, Color::default()).sweep(DOWN)
+            (half_edge, Color::default()).sweep(DOWN, &stores)
         });
 
         assert!(side_faces.all(|face| solid.find_face(&face).is_some()));

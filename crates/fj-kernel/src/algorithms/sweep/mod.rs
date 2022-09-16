@@ -8,11 +8,13 @@ mod vertex;
 
 use fj_math::Vector;
 
+use crate::stores::Stores;
+
 /// Sweep an object along a path to create another object
 pub trait Sweep {
     /// The object that is created by sweeping the implementing object
     type Swept;
 
     /// Sweep the object along the given path
-    fn sweep(self, path: impl Into<Vector<3>>) -> Self::Swept;
+    fn sweep(self, path: impl Into<Vector<3>>, store: &Stores) -> Self::Swept;
 }
