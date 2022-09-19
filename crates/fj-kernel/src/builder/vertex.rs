@@ -1,6 +1,6 @@
 use fj_math::Point;
 
-use crate::objects::{Curve, GlobalVertex, SurfaceVertex, Vertex};
+use crate::objects::{Curve, GlobalVertex, Surface, SurfaceVertex, Vertex};
 
 /// API for building a [`Vertex`]
 pub struct VertexBuilder {
@@ -44,8 +44,16 @@ impl GlobalVertexBuilder {
         position: impl Into<Point<1>>,
     ) -> GlobalVertex {
         let position_surface = curve.path().point_from_path_coords(position);
-        let position_global =
-            curve.surface().point_from_surface_coords(position_surface);
-        GlobalVertex::from_position(position_global)
+        self.from_surface_and_position(curve.surface(), position_surface)
+    }
+
+    /// Build a [`GlobalVertex`] from a surface and a position on that surface
+    pub fn from_surface_and_position(
+        &self,
+        surface: &Surface,
+        position: impl Into<Point<2>>,
+    ) -> GlobalVertex {
+        let position = surface.point_from_surface_coords(position);
+        GlobalVertex::from_position(position)
     }
 }
