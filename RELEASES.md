@@ -28,20 +28,16 @@ This will create an announcement that will initially not be published to the blo
 Now, edit this file to finish the release announcement:
 
 1. Add pull requests
-   - A list of pull requests has been added to the draft automatically.
-     Go through them, update and merge entries as appropriate, sort them into the correct categories.
-   - Thank all contributors
-     - new contributors: "special thanks go to first-time contributor `@name`!"
-     - other contributors: "thank you, `@name`!"
+   A list of pull requests has been added to the draft automatically. Go through them, update and merge entries as appropriate, sort them into the correct categories.
 2. Write introduction
    - Summarize the week's development.
    - Highlight contributions.
-3. Update list of sponsors
+3. Write *Outlook*
+4. Update list of sponsors
    - https://github.com/sponsors/hannobraun/dashboard/activity
    - Mention all sponsors at $32 / month and above by name.
-4. Write *Issue of the Week*
+5. Write *Issue of the Week*
    See notes below.
-5. Write *Outlook*
 
 When done, deploy to the website.
 
@@ -53,7 +49,6 @@ Potential new issues of the week:
 - https://github.com/hannobraun/Fornjot/issues/15
 - https://github.com/hannobraun/Fornjot/issues/794
 - https://github.com/hannobraun/Fornjot/issues/805
-- https://github.com/hannobraun/Fornjot/issues/821
 - https://github.com/hannobraun/Fornjot/issues/848
 - https://github.com/hannobraun/Fornjot/issues/851
 - https://github.com/hannobraun/Fornjot/issues/937
@@ -65,7 +60,7 @@ Potential new issues of the week:
 
 Already mentioned issues of the week (remove, once closed):
 
-- 2022-09-12: https://github.com/hannobraun/Fornjot/issues/1015
+- 2022-09-19: https://github.com/hannobraun/Fornjot/issues/821
 - 2022-09-05: https://github.com/hannobraun/Fornjot/issues/920
 - 2022-08-29: https://github.com/hannobraun/Fornjot/issues/980
 - 2022-08-22: https://github.com/hannobraun/Fornjot/issues/938
@@ -108,7 +103,7 @@ git push -u origin release
 Create a pull request, mention the release in the title (e.g. `Release v0.1.2`), and label it as `release`.
 
 - Once the CI build completed successfully, merge the pull request.
-- After merging, lock the pull requests. Anything that updates this pull request (like comments), could confuse next week's release automation (because GitHub doesn't allow sorting pull requests by merged date, unfortunately).
+- After merging, lock the pull requests. Anything that updates this pull request (like comments), could confuse next week's release automation (because GitHub doesn't allow sorting pull requests by merge date, unfortunately).
 
 The release automation will now compile binaries, create a release on GitHub, and publish to [crates.io](https://crates.io/).
 
@@ -143,8 +138,6 @@ Additionally, post it in the following communities:
     - Add comment with short explanation, offer to answer questions
 - Rust Users
   https://users.rust-lang.org/t/fornjot-code-cad-in-rust-weekly-dev-log/71783
-- This Week in Rust
-  https://github.com/rust-lang/this-week-in-rust
 
 
 ## 10. Improve release procedure
