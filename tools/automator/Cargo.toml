@@ -9,7 +9,7 @@ anyhow = "1.0.65"
 chrono = "0.4.22"
 map-macro = "0.2.4"
 octocrab = "0.17.0"
-semver = "1.0.13"
+semver = "1.0.14"
 serde_json = "1.0.85"
 url = "2.3.0"
 
