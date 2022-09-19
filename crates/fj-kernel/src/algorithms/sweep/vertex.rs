@@ -5,9 +5,8 @@ use crate::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
         SurfaceVertex, Vertex,
     },
-    partial::HasPartial,
     path::SurfacePath,
-    stores::{Handle, Stores},
+    stores::Stores,
 };
 
 use super::Sweep;
@@ -41,19 +40,15 @@ impl Sweep for (Vertex, Surface) {
 
         // So, we're supposed to create the `Edge` by sweeping a `Vertex` using
         // `path`. Unless `path` is identical to the path that created the
-        // `Surface`, this doesn't make any sense.
+        // `Surface`, this doesn't make any sense. Let's make sure this
+        // requirement is met.
         //
         // Further, the `Curve` that was swept to create the `Surface` needs to
         // be the same `Curve` that the input `Vertex` is defined on. If it's
         // not, we have no way of knowing the surface coordinates of the input
         // `Vertex` on the `Surface`, and we're going to need to do that further
-        // down.
-        //
-        // Let's make sure that these requirements are met.
-        {
-            assert_eq!(vertex.curve().global_form().path(), surface.u());
-            assert_eq!(path, surface.v());
-        }
+        // down. There's no way to check for that, unfortunately.
+        assert_eq!(path, surface.v());
 
         // With that out of the way, let's start by creating the `GlobalEdge`,
         // as that is the most straight-forward part of this operations, and
@@ -138,9 +133,7 @@ impl Sweep for GlobalVertex {
         let a = self;
         let b = GlobalVertex::from_position(self.position() + path.into());
 
-        let curve = Handle::<GlobalCurve>::partial()
-            .as_line_from_points([a.position(), b.position()])
-            .build(stores);
+        let curve = GlobalCurve::new(stores);
 
         GlobalEdge::new(curve, [a, b])
     }
@@ -152,12 +145,9 @@ mod tests {
 
     use crate::{
         algorithms::sweep::Sweep,
-        objects::{
-            Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
-            Vertex,
-        },
+        objects::{Curve, HalfEdge, Surface, Vertex},
         partial::HasPartial,
-        stores::{Handle, Stores},
+        stores::Stores,
     };
 
     #[test]
@@ -180,19 +170,5 @@ mod tests {
             .as_line_segment_from_points(surface, [[0., 0.], [0., 1.]])
             .build(&stores);
         assert_eq!(half_edge, expected_half_edge);
-    }
-
-    #[test]
-    fn global_vertex() {
-        let stores = Stores::new();
-
-        let edge = GlobalVertex::from_position([0., 0., 0.])
-            .sweep([0., 0., 1.], &stores);
-
-        let expected_edge = GlobalEdge::new(
-            Handle::<GlobalCurve>::partial().as_z_axis().build(&stores),
-            [[0., 0., 0.], [0., 0., 1.]].map(GlobalVertex::from_position),
-        );
-        assert_eq!(edge, expected_edge);
     }
 }

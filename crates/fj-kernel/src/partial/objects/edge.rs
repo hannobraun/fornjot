@@ -6,7 +6,7 @@ use crate::{
         SurfaceVertex, Vertex,
     },
     partial::{HasPartial, MaybePartial, PartialCurve},
-    stores::{Handle, Stores},
+    stores::{Handle, HandleWrapper, Stores},
 };
 
 /// A partial [`HalfEdge`]
@@ -102,21 +102,22 @@ impl PartialHalfEdge {
     pub fn as_line_segment(mut self) -> Self {
         fn extract_global_curve(
             partial: &PartialHalfEdge,
-        ) -> Option<MaybePartial<Handle<GlobalCurve>>> {
+        ) -> Option<HandleWrapper<GlobalCurve>> {
             fn extract_global_curve_from_curve(
                 partial: &PartialHalfEdge,
-            ) -> Option<MaybePartial<Handle<GlobalCurve>>> {
+            ) -> Option<Handle<GlobalCurve>> {
                 partial.curve.as_ref()?.global_form()
             }
 
             fn extract_global_curve_from_global_form(
                 partial: &PartialHalfEdge,
-            ) -> Option<MaybePartial<Handle<GlobalCurve>>> {
-                Some(partial.global_form.as_ref()?.curve()?.clone().into())
+            ) -> Option<Handle<GlobalCurve>> {
+                Some(partial.global_form.as_ref()?.curve()?.clone())
             }
 
             extract_global_curve_from_curve(partial)
                 .or_else(|| extract_global_curve_from_global_form(partial))
+                .map(Into::into)
         }
 
         let [from, to] = self
@@ -205,7 +206,7 @@ pub struct PartialGlobalEdge {
     /// The curve that the [`GlobalEdge`] is defined in
     ///
     /// Must be provided before [`PartialGlobalEdge::build`] is called.
-    pub curve: Option<Handle<GlobalCurve>>,
+    pub curve: Option<HandleWrapper<GlobalCurve>>,
 
     /// The vertices that bound the [`GlobalEdge`] in the curve
     ///
@@ -216,7 +217,7 @@ pub struct PartialGlobalEdge {
 impl PartialGlobalEdge {
     /// Update the partial global edge with the given curve
     pub fn with_curve(mut self, curve: Handle<GlobalCurve>) -> Self {
-        self.curve = Some(curve);
+        self.curve = Some(curve.into());
         self
     }
 
@@ -252,7 +253,7 @@ impl PartialGlobalEdge {
 impl From<&GlobalEdge> for PartialGlobalEdge {
     fn from(global_edge: &GlobalEdge) -> Self {
         Self {
-            curve: Some(global_edge.curve().clone()),
+            curve: Some(global_edge.curve().clone().into()),
             vertices: Some(*global_edge.vertices()),
         }
     }

@@ -41,7 +41,7 @@ mod traits;
 pub use self::{
     maybe_partial::MaybePartial,
     objects::{
-        curve::{PartialCurve, PartialGlobalCurve},
+        curve::PartialCurve,
         edge::{PartialGlobalEdge, PartialHalfEdge},
         vertex::{PartialGlobalVertex, PartialSurfaceVertex, PartialVertex},
     },

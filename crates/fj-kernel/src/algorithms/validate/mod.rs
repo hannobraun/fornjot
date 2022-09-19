@@ -161,7 +161,7 @@ mod tests {
             SurfaceVertex, Vertex,
         },
         partial::HasPartial,
-        path::{GlobalPath, SurfacePath},
+        path::SurfacePath,
         stores::Stores,
     };
 
@@ -176,10 +176,7 @@ mod tests {
 
         let curve = {
             let path = SurfacePath::line_from_points(points_surface);
-            let curve_global =
-                stores.global_curves.insert(GlobalCurve::from_path(
-                    GlobalPath::line_from_points(points_global),
-                ));
+            let curve_global = GlobalCurve::new(&stores);
             Curve::new(surface, path, curve_global)
         };
 
