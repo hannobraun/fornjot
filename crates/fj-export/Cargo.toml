@@ -16,7 +16,7 @@ categories = ["encoding", "mathematics", "rendering"]
 
 
 [dependencies]
-thiserror = "1.0.34"
+thiserror = "1.0.35"
 threemf = "0.3.1"
 stl = "0.2.1"
 

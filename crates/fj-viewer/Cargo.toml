@@ -18,7 +18,7 @@ categories = ["encoding", "mathematics", "rendering"]
 [dependencies]
 bytemuck = "1.12.1"
 raw-window-handle = "0.4.3"
-thiserror = "1.0.34"
+thiserror = "1.0.35"
 tracing = "0.1.35"
 wgpu = "0.13.1"
 wgpu_glyph = "0.17.0"
