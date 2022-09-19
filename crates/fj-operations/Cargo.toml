@@ -16,7 +16,7 @@ categories = ["encoding", "mathematics", "rendering"]
 
 
 [dependencies]
-thiserror = "1.0.34"
+thiserror = "1.0.35"
 
 [dependencies.fj]
 version = "0.16.0"
