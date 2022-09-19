@@ -51,7 +51,7 @@ impl<'a> CurveBuilder<'a> {
     pub fn line_from_points(&self, points: [impl Into<Point<2>>; 2]) -> Curve {
         let points = points.map(Into::into);
 
-        let local = SurfacePath::Line(Line::from_points(points));
+        let path = SurfacePath::Line(Line::from_points(points));
         let global_form = self.stores.global_curves.insert(
             GlobalCurve::from_path(GlobalPath::Line(Line::from_points(
                 points
@@ -59,7 +59,7 @@ impl<'a> CurveBuilder<'a> {
             ))),
         );
 
-        Curve::new(self.surface, local, global_form)
+        Curve::new(self.surface, path, global_form)
     }
 }
 
