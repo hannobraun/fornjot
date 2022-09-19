@@ -48,11 +48,11 @@ pub fn validate_vertex(
     // lies on the curve.
 
     let local = vertex.position();
+    let local_as_surface = vertex.curve().path().point_from_path_coords(local);
     let local_as_global = vertex
         .curve()
-        .global_form()
-        .path()
-        .point_from_path_coords(local);
+        .surface()
+        .point_from_surface_coords(local_as_surface);
     let global = vertex.global_form().position();
     let distance = (local_as_global - global).magnitude();
 
