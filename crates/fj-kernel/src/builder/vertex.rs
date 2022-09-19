@@ -35,3 +35,6 @@ impl VertexBuilder {
         Vertex::new([0.], self.curve.clone(), surface_form, global_form)
     }
 }
+
+/// API for building a [`GlobalVertex`]
+pub struct GlobalVertexBuilder;
