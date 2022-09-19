@@ -44,18 +44,11 @@ pub struct Model {
 }
 
 impl Model {
-    /// Load the model once
+    /// Initialize the model using the path to its crate
     ///
-    /// The passed arguments are provided to the model. Returns the shape that
-    /// the model returns.
-    ///
-    /// Please refer to [`Model::load_and_watch`], if you want to watch the
-    /// model for changes, reloading it continually.
-    pub fn load_once(
-        path: PathBuf,
-        arguments: &Parameters,
-        status: &mut StatusReport,
-    ) -> Result<fj::Shape, Error> {
+    /// The path expected here is the root directory of the model's Cargo
+    /// package, that is the folder containing `Cargo.toml`.
+    pub fn from_path(path: PathBuf) -> Result<Self, Error> {
         let crate_dir = path.canonicalize()?;
 
         let metadata = cargo_metadata::MetadataCommand::new()
@@ -73,13 +66,26 @@ impl Model {
             target_dir.join("debug").join(file)
         };
 
-        let me = Self {
+        Ok(Self {
             src_path,
             lib_path,
             manifest_path: pkg.manifest_path.as_std_path().to_path_buf(),
-        };
+        })
+    }
 
-        let manifest_path = me.manifest_path.display().to_string();
+    /// Load the model once
+    ///
+    /// The passed arguments are provided to the model. Returns the shape that
+    /// the model returns.
+    ///
+    /// Please refer to [`Model::load_and_watch`], if you want to watch the
+    /// model for changes, reloading it continually.
+    pub fn shape_from_model(
+        &self,
+        arguments: &Parameters,
+        status: &mut StatusReport,
+    ) -> Result<fj::Shape, Error> {
+        let manifest_path = self.manifest_path.display().to_string();
 
         let mut command_root = Command::new("cargo");
 
@@ -135,7 +141,7 @@ impl Model {
         // to switch to a better technique:
         // https://github.com/hannobraun/Fornjot/issues/71
         let shape = unsafe {
-            let lib = libloading::Library::new(&me.lib_path)?;
+            let lib = libloading::Library::new(&self.lib_path)?;
             let init: libloading::Symbol<abi::InitFunction> =
                 lib.get(abi::INIT_FUNCTION_NAME.as_bytes())?;
 
@@ -165,37 +171,14 @@ impl Model {
     ///
     /// Consumes this instance of `Model` and returns a [`Watcher`], which can
     /// be queried for changes to the model.
-    pub fn load_and_watch(
-        path: PathBuf,
+    pub fn watcher_for_model(
+        self,
         parameters: Parameters,
     ) -> Result<Watcher, Error> {
-        let crate_dir = path.canonicalize()?;
-
-        let metadata = cargo_metadata::MetadataCommand::new()
-            .current_dir(&crate_dir)
-            .exec()?;
-
-        let pkg = package_associated_with_directory(&metadata, &crate_dir)?;
-        let src_path = crate_dir.join("src");
-
-        let lib_path = {
-            let name = pkg.name.replace('-', "_");
-            let file = HostPlatform::lib_file_name(&name);
-            let target_dir =
-                metadata.target_directory.clone().into_std_path_buf();
-            target_dir.join("debug").join(file)
-        };
-
-        let me = Self {
-            src_path,
-            lib_path,
-            manifest_path: pkg.manifest_path.as_std_path().to_path_buf(),
-        };
-
         let (tx, rx) = mpsc::sync_channel(0);
         let tx2 = tx.clone();
 
-        let watch_path = me.src_path.clone();
+        let watch_path = self.src_path.clone();
 
         let mut watcher = notify::recommended_watcher(
             move |event: notify::Result<notify::Event>| {
@@ -260,7 +243,7 @@ impl Model {
         Ok(Watcher {
             _watcher: Box::new(watcher),
             channel: rx,
-            model: me,
+            model: self,
             parameters,
         })
     }
@@ -326,22 +309,20 @@ impl Watcher {
     pub fn receive(&self, status: &mut StatusReport) -> Option<fj::Shape> {
         match self.channel.try_recv() {
             Ok(()) => {
-                let shape = match Model::load_once(
-                    self.model.src_path.clone(),
-                    &self.parameters,
-                    status,
-                ) {
-                    Ok(shape) => shape,
-                    Err(Error::Compile) => {
-                        // An error is being displayed to the user via the
-                        // `StatusReport that is passed to `load_once` above, so
-                        // no need to do anything else here.
-                        return None;
-                    }
-                    Err(err) => {
-                        panic!("Error reloading model: {:?}", err);
-                    }
-                };
+                let shape =
+                    match self.model.shape_from_model(&self.parameters, status)
+                    {
+                        Ok(shape) => shape,
+                        Err(Error::Compile) => {
+                            // An error is being displayed to the user via the
+                            // `StatusReport that is passed to `load_once` above, so
+                            // no need to do anything else here.
+                            return None;
+                        }
+                        Err(err) => {
+                            panic!("Error reloading model: {:?}", err);
+                        }
+                    };
 
                 Some(shape)
             }
