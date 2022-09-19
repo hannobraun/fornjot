@@ -43,8 +43,9 @@ impl GlobalVertexBuilder {
         curve: &Curve,
         position: impl Into<Point<1>>,
     ) -> GlobalVertex {
+        let position_surface = curve.path().point_from_path_coords(position);
         let position_global =
-            curve.global_form().path().point_from_path_coords(position);
+            curve.surface().point_from_surface_coords(position_surface);
         GlobalVertex::from_position(position_global)
     }
 }
