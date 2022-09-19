@@ -15,7 +15,7 @@ pub struct SurfaceSurfaceIntersection {
 
 impl SurfaceSurfaceIntersection {
     /// Compute the intersection between two surfaces
-    pub fn compute(surfaces: [&Surface; 2], store: &Stores) -> Option<Self> {
+    pub fn compute(surfaces: [&Surface; 2], stores: &Stores) -> Option<Self> {
         // Algorithm from Real-Time Collision Detection by Christer Ericson. See
         // section 5.4.4, Intersection of Two Planes.
         //
@@ -53,7 +53,7 @@ impl SurfaceSurfaceIntersection {
 
         let curves = planes_parametric.map(|(surface, plane)| {
             let local = project_line_into_plane(&line, &plane);
-            let global_form = store.global_curves.insert(
+            let global_form = stores.global_curves.insert(
                 GlobalCurve::from_path(GlobalPath::Line(
                     Line::from_origin_and_direction(origin, direction),
                 )),
