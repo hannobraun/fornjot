@@ -52,14 +52,14 @@ impl<'a> CurveBuilder<'a> {
         let points = points.map(Into::into);
 
         let local = Line::from_points(points);
-        let global = self.stores.global_curves.insert(GlobalCurve::from_path(
-            GlobalPath::Line(Line::from_points(
+        let global_form = self.stores.global_curves.insert(
+            GlobalCurve::from_path(GlobalPath::Line(Line::from_points(
                 points
                     .map(|point| self.surface.point_from_surface_coords(point)),
-            )),
-        ));
+            ))),
+        );
 
-        Curve::new(self.surface, SurfacePath::Line(local), global)
+        Curve::new(self.surface, SurfacePath::Line(local), global_form)
     }
 }
 
