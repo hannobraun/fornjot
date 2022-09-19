@@ -1,7 +1,8 @@
-use fj_math::Vector;
+use fj_math::{Circle, Line, Vector};
 
 use crate::{
     objects::{Curve, Surface},
+    path::{GlobalPath, SurfacePath},
     stores::Stores,
 };
 
@@ -11,6 +12,53 @@ impl Sweep for Curve {
     type Swept = Surface;
 
     fn sweep(self, path: impl Into<Vector<3>>, _: &Stores) -> Self::Swept {
-        Surface::new(self.global_form().path(), path)
+        match self.surface().u() {
+            GlobalPath::Circle(_) => {
+                // Sweeping a `Curve` creates a `Surface`. The u-axis of that
+                // `Surface` is a `GlobalPath`, which we are computing below.
+                // That computation might or might not work with an arbitrary
+                // surface. Probably not, but I'm not sure.
+                //
+                // What definitely won't work, is computing the bottom edge of
+                // the sweep. The edge sweeping code currently assumes that the
+                // bottom edge is a line (which is true when sweeping from a
+                // flat surface). But is the surface we're sweeping from is
+                // curved, there's simply no way to represent the curve of the
+                // resulting bottom edge.
+                todo!(
+                    "Sweeping a curve that is defined on a curved surface is \
+                    not supported yet."
+                )
+            }
+            GlobalPath::Line(_) => {
+                // We're sweeping from a curve on a flat surface, which is
+                // supported. Carry on.
+            }
+        }
+
+        let u = match self.path() {
+            SurfacePath::Circle(circle) => {
+                let center =
+                    self.surface().point_from_surface_coords(circle.center());
+                let a = self.surface().vector_from_surface_coords(circle.a());
+                let b = self.surface().vector_from_surface_coords(circle.b());
+
+                let circle = Circle::new(center, a, b);
+
+                GlobalPath::Circle(circle)
+            }
+            SurfacePath::Line(line) => {
+                let origin =
+                    self.surface().point_from_surface_coords(line.origin());
+                let direction =
+                    self.surface().vector_from_surface_coords(line.direction());
+
+                let line = Line::from_origin_and_direction(origin, direction);
+
+                GlobalPath::Line(line)
+            }
+        };
+
+        Surface::new(u, path)
     }
 }
