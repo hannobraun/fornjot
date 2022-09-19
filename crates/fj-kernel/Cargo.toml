@@ -36,4 +36,4 @@ path = "../fj-math"
 
 
 [dev-dependencies]
-anyhow = "1.0.64"
+anyhow = "1.0.65"
