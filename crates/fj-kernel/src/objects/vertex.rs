@@ -1,7 +1,7 @@
 use fj_math::Point;
 use pretty_assertions::assert_eq;
 
-use crate::builder::VertexBuilder;
+use crate::builder::{GlobalVertexBuilder, VertexBuilder};
 
 use super::{Curve, Surface};
 
@@ -134,6 +134,11 @@ pub struct GlobalVertex {
 }
 
 impl GlobalVertex {
+    /// Build a `GlobalVertex` using [`GlobalVertexBuilder`]
+    pub fn build() -> GlobalVertexBuilder {
+        GlobalVertexBuilder
+    }
+
     /// Construct a `GlobalVertex` from a point
     pub fn from_position(position: impl Into<Point<3>>) -> Self {
         let position = position.into();

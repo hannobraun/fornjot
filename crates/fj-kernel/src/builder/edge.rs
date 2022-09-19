@@ -68,8 +68,8 @@ impl<'a> HalfEdgeBuilder<'a> {
         let points = points.map(Into::into);
 
         let global_vertices = points.map(|position| {
-            let position = self.surface.point_from_surface_coords(position);
-            GlobalVertex::from_position(position)
+            GlobalVertex::build()
+                .from_surface_and_position(&self.surface, position)
         });
 
         let surface_vertices = {
