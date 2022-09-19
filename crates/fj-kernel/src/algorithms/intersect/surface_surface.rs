@@ -53,13 +53,13 @@ impl SurfaceSurfaceIntersection {
 
         let curves = planes_parametric.map(|(surface, plane)| {
             let local = project_line_into_plane(&line, &plane);
-            let global = store.global_curves.insert(GlobalCurve::from_path(
-                GlobalPath::Line(Line::from_origin_and_direction(
-                    origin, direction,
+            let global_form = store.global_curves.insert(
+                GlobalCurve::from_path(GlobalPath::Line(
+                    Line::from_origin_and_direction(origin, direction),
                 )),
-            ));
+            );
 
-            Curve::new(surface, local, global)
+            Curve::new(surface, local, global_form)
         });
 
         Some(Self {
