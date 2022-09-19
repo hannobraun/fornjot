@@ -4,6 +4,7 @@ use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
     objects::{Face, Shell},
     path::GlobalPath,
+    stores::Stores,
 };
 
 use super::Sweep;
@@ -11,7 +12,7 @@ use super::Sweep;
 impl Sweep for Face {
     type Swept = Shell;
 
-    fn sweep(self, path: impl Into<Vector<3>>) -> Self::Swept {
+    fn sweep(self, path: impl Into<Vector<3>>, stores: &Stores) -> Self::Swept {
         let path = path.into();
 
         let mut faces = Vec::new();
@@ -31,10 +32,24 @@ impl Sweep for Face {
             normal.dot(&path) < Scalar::ZERO
         };
 
-        let bottom_face = create_bottom_face(self.clone(), is_negative_sweep);
+        let bottom_face = {
+            if is_negative_sweep {
+                self.clone()
+            } else {
+                self.clone().reverse()
+            }
+        };
         faces.push(bottom_face);
 
-        let top_face = create_top_face(self.clone(), path, is_negative_sweep);
+        let top_face = {
+            let mut face = self.clone().translate(path, stores);
+
+            if is_negative_sweep {
+                face = face.reverse();
+            };
+
+            face
+        };
         faces.push(top_face);
 
         for cycle in self.all_cycles() {
@@ -44,35 +59,13 @@ impl Sweep for Face {
                 } else {
                     half_edge.clone()
                 };
-                let face = (edge, self.color()).sweep(path);
+                let face = (edge, self.color()).sweep(path, stores);
                 faces.push(face);
             }
         }
 
         Shell::new().with_faces(faces)
     }
-}
-
-fn create_bottom_face(face: Face, is_negative_sweep: bool) -> Face {
-    if is_negative_sweep {
-        face
-    } else {
-        face.reverse()
-    }
-}
-
-fn create_top_face(
-    face: Face,
-    path: Vector<3>,
-    is_negative_sweep: bool,
-) -> Face {
-    let mut face = face.translate(path);
-
-    if is_negative_sweep {
-        face = face.reverse();
-    };
-
-    face
 }
 
 #[cfg(test)]
@@ -82,6 +75,7 @@ mod tests {
     use crate::{
         algorithms::{reverse::Reverse, transform::TransformObject},
         objects::{Face, HalfEdge, Sketch, Surface},
+        stores::Stores,
     };
 
     use super::Sweep;
@@ -93,16 +87,18 @@ mod tests {
 
     #[test]
     fn sweep_up() {
-        let surface = Surface::xy_plane();
-        let solid = Sketch::build(surface)
-            .polygon_from_points(TRIANGLE)
-            .sweep(UP);
+        let stores = Stores::new();
 
-        let bottom = Face::build(surface)
+        let surface = Surface::xy_plane();
+        let solid = Sketch::build(&stores, surface)
+            .polygon_from_points(TRIANGLE)
+            .sweep(UP, &stores);
+
+        let bottom = Face::build(&stores, surface)
             .polygon_from_points(TRIANGLE)
             .into_face()
             .reverse();
-        let top = Face::build(surface.translate(UP))
+        let top = Face::build(&stores, surface.translate(UP, &stores))
             .polygon_from_points(TRIANGLE)
             .into_face();
 
@@ -116,9 +112,9 @@ mod tests {
             // https://doc.rust-lang.org/std/primitive.slice.html#method.array_windows
             let [a, b] = [window[0], window[1]];
 
-            let half_edge = HalfEdge::build(Surface::xy_plane())
+            let half_edge = HalfEdge::build(&stores, Surface::xy_plane())
                 .line_segment_from_points([a, b]);
-            (half_edge, Color::default()).sweep(UP)
+            (half_edge, Color::default()).sweep(UP, &stores)
         });
 
         assert!(side_faces.all(|face| solid.find_face(&face).is_some()));
@@ -126,16 +122,18 @@ mod tests {
 
     #[test]
     fn sweep_down() {
-        let surface = Surface::xy_plane();
-        let solid = Sketch::build(surface)
-            .polygon_from_points(TRIANGLE)
-            .sweep(DOWN);
+        let stores = Stores::new();
 
-        let bottom = Face::build(surface.translate(DOWN))
+        let surface = Surface::xy_plane();
+        let solid = Sketch::build(&stores, surface)
+            .polygon_from_points(TRIANGLE)
+            .sweep(DOWN, &stores);
+
+        let bottom = Face::build(&stores, surface.translate(DOWN, &stores))
             .polygon_from_points(TRIANGLE)
             .into_face()
             .reverse();
-        let top = Face::build(surface)
+        let top = Face::build(&stores, surface)
             .polygon_from_points(TRIANGLE)
             .into_face();
 
@@ -149,10 +147,10 @@ mod tests {
             // https://doc.rust-lang.org/std/primitive.slice.html#method.array_windows
             let [a, b] = [window[0], window[1]];
 
-            let half_edge = HalfEdge::build(Surface::xy_plane())
+            let half_edge = HalfEdge::build(&stores, Surface::xy_plane())
                 .line_segment_from_points([a, b])
                 .reverse();
-            (half_edge, Color::default()).sweep(DOWN)
+            (half_edge, Color::default()).sweep(DOWN, &stores)
         });
 
         assert!(side_faces.all(|face| solid.find_face(&face).is_some()));

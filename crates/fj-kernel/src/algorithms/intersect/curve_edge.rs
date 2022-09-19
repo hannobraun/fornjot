@@ -74,15 +74,20 @@ impl CurveEdgeIntersection {
 mod tests {
     use fj_math::Point;
 
-    use crate::objects::{Curve, HalfEdge, Surface};
+    use crate::{
+        objects::{Curve, HalfEdge, Surface},
+        stores::Stores,
+    };
 
     use super::CurveEdgeIntersection;
 
     #[test]
     fn compute_edge_in_front_of_curve_origin() {
+        let stores = Stores::new();
+
         let surface = Surface::xy_plane();
-        let curve = Curve::build(surface).u_axis();
-        let half_edge = HalfEdge::build(surface)
+        let curve = Curve::build(&stores, surface).u_axis();
+        let half_edge = HalfEdge::build(&stores, surface)
             .line_segment_from_points([[1., -1.], [1., 1.]]);
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
@@ -97,9 +102,11 @@ mod tests {
 
     #[test]
     fn compute_edge_behind_curve_origin() {
+        let stores = Stores::new();
+
         let surface = Surface::xy_plane();
-        let curve = Curve::build(surface).u_axis();
-        let half_edge = HalfEdge::build(surface)
+        let curve = Curve::build(&stores, surface).u_axis();
+        let half_edge = HalfEdge::build(&stores, surface)
             .line_segment_from_points([[-1., -1.], [-1., 1.]]);
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
@@ -114,9 +121,11 @@ mod tests {
 
     #[test]
     fn compute_edge_parallel_to_curve() {
+        let stores = Stores::new();
+
         let surface = Surface::xy_plane();
-        let curve = Curve::build(surface).u_axis();
-        let half_edge = HalfEdge::build(surface)
+        let curve = Curve::build(&stores, surface).u_axis();
+        let half_edge = HalfEdge::build(&stores, surface)
             .line_segment_from_points([[-1., -1.], [1., -1.]]);
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
@@ -126,9 +135,11 @@ mod tests {
 
     #[test]
     fn compute_edge_on_curve() {
+        let stores = Stores::new();
+
         let surface = Surface::xy_plane();
-        let curve = Curve::build(surface).u_axis();
-        let half_edge = HalfEdge::build(surface)
+        let curve = Curve::build(&stores, surface).u_axis();
+        let half_edge = HalfEdge::build(&stores, surface)
             .line_segment_from_points([[-1., 0.], [1., 0.]]);
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);

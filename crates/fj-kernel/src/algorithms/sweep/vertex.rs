@@ -6,6 +6,7 @@ use crate::{
         SurfaceVertex, Vertex,
     },
     path::SurfacePath,
+    stores::Stores,
 };
 
 use super::Sweep;
@@ -13,7 +14,7 @@ use super::Sweep;
 impl Sweep for (Vertex, Surface) {
     type Swept = HalfEdge;
 
-    fn sweep(self, path: impl Into<Vector<3>>) -> Self::Swept {
+    fn sweep(self, path: impl Into<Vector<3>>, stores: &Stores) -> Self::Swept {
         let (vertex, surface) = self;
         let path = path.into();
 
@@ -56,7 +57,7 @@ impl Sweep for (Vertex, Surface) {
         // With that out of the way, let's start by creating the `GlobalEdge`,
         // as that is the most straight-forward part of this operations, and
         // we're going to need it soon anyway.
-        let edge_global = vertex.global_form().sweep(path);
+        let edge_global = vertex.global_form().sweep(path, stores);
 
         // Next, let's compute the surface coordinates of the two vertices of
         // the output `Edge`, as we're going to need these for the rest of this
@@ -81,7 +82,11 @@ impl Sweep for (Vertex, Surface) {
         // `Edge` is straight-forward.
         let curve = {
             let line = Line::from_points(points_surface);
-            Curve::new(surface, SurfacePath::Line(line), *edge_global.curve())
+            Curve::new(
+                surface,
+                SurfacePath::Line(line),
+                edge_global.curve().clone(),
+            )
         };
 
         // And now the vertices. Again, nothing wild here.
@@ -128,12 +133,12 @@ impl Sweep for (Vertex, Surface) {
 impl Sweep for GlobalVertex {
     type Swept = GlobalEdge;
 
-    fn sweep(self, path: impl Into<Vector<3>>) -> Self::Swept {
+    fn sweep(self, path: impl Into<Vector<3>>, stores: &Stores) -> Self::Swept {
         let a = self;
         let b = GlobalVertex::from_position(self.position() + path.into());
 
-        let curve =
-            GlobalCurve::build().line_from_points([a.position(), b.position()]);
+        let curve = GlobalCurve::build(stores)
+            .line_from_points([a.position(), b.position()]);
 
         GlobalEdge::new(curve, [a, b])
     }
@@ -147,28 +152,33 @@ mod tests {
             Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
             Vertex,
         },
+        stores::Stores,
     };
 
     #[test]
     fn vertex_surface() {
+        let stores = Stores::new();
+
         let surface = Surface::xz_plane();
-        let curve = Curve::build(surface).u_axis();
+        let curve = Curve::build(&stores, surface).u_axis();
         let vertex = Vertex::build(curve).from_point([0.]);
 
-        let half_edge = (vertex, surface).sweep([0., 0., 1.]);
+        let half_edge = (vertex, surface).sweep([0., 0., 1.], &stores);
 
-        let expected_half_edge = HalfEdge::build(surface)
+        let expected_half_edge = HalfEdge::build(&stores, surface)
             .line_segment_from_points([[0., 0.], [0., 1.]]);
         assert_eq!(half_edge, expected_half_edge);
     }
 
     #[test]
     fn global_vertex() {
-        let edge =
-            GlobalVertex::from_position([0., 0., 0.]).sweep([0., 0., 1.]);
+        let stores = Stores::new();
+
+        let edge = GlobalVertex::from_position([0., 0., 0.])
+            .sweep([0., 0., 1.], &stores);
 
         let expected_edge = GlobalEdge::new(
-            GlobalCurve::build().z_axis(),
+            GlobalCurve::build(&stores).z_axis(),
             [[0., 0., 0.], [0., 0., 1.]].map(GlobalVertex::from_position),
         );
         assert_eq!(edge, expected_edge);

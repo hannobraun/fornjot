@@ -135,11 +135,14 @@ mod tests {
         algorithms::intersect::{face_point::FacePointIntersection, Intersect},
         iter::ObjectIters,
         objects::{Face, Surface},
+        stores::Stores,
     };
 
     #[test]
     fn point_is_outside_face() {
-        let face = Face::build(Surface::xy_plane())
+        let stores = Stores::new();
+
+        let face = Face::build(&stores, Surface::xy_plane())
             .polygon_from_points([[0., 0.], [1., 1.], [0., 2.]])
             .into_face();
         let point = Point::from([2., 1.]);
@@ -150,7 +153,9 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex_while_passing_outside() {
-        let face = Face::build(Surface::xy_plane())
+        let stores = Stores::new();
+
+        let face = Face::build(&stores, Surface::xy_plane())
             .polygon_from_points([[0., 0.], [2., 1.], [0., 2.]])
             .into_face();
         let point = Point::from([1., 1.]);
@@ -164,7 +169,9 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex_at_cycle_seam() {
-        let face = Face::build(Surface::xy_plane())
+        let stores = Stores::new();
+
+        let face = Face::build(&stores, Surface::xy_plane())
             .polygon_from_points([[4., 2.], [0., 4.], [0., 0.]])
             .into_face();
         let point = Point::from([1., 2.]);
@@ -178,7 +185,9 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex_while_staying_inside() {
-        let face = Face::build(Surface::xy_plane())
+        let stores = Stores::new();
+
+        let face = Face::build(&stores, Surface::xy_plane())
             .polygon_from_points([[0., 0.], [2., 1.], [3., 0.], [3., 4.]])
             .into_face();
         let point = Point::from([1., 1.]);
@@ -192,7 +201,9 @@ mod tests {
 
     #[test]
     fn ray_hits_parallel_edge_and_leaves_face_at_vertex() {
-        let face = Face::build(Surface::xy_plane())
+        let stores = Stores::new();
+
+        let face = Face::build(&stores, Surface::xy_plane())
             .polygon_from_points([[0., 0.], [2., 1.], [3., 1.], [0., 2.]])
             .into_face();
         let point = Point::from([1., 1.]);
@@ -206,7 +217,9 @@ mod tests {
 
     #[test]
     fn ray_hits_parallel_edge_and_does_not_leave_face_there() {
-        let face = Face::build(Surface::xy_plane())
+        let stores = Stores::new();
+
+        let face = Face::build(&stores, Surface::xy_plane())
             .polygon_from_points([
                 [0., 0.],
                 [2., 1.],
@@ -226,7 +239,9 @@ mod tests {
 
     #[test]
     fn point_is_coincident_with_edge() {
-        let face = Face::build(Surface::xy_plane())
+        let stores = Stores::new();
+
+        let face = Face::build(&stores, Surface::xy_plane())
             .polygon_from_points([[0., 0.], [2., 0.], [0., 1.]])
             .into_face();
         let point = Point::from([1., 0.]);
@@ -249,7 +264,9 @@ mod tests {
 
     #[test]
     fn point_is_coincident_with_vertex() {
-        let face = Face::build(Surface::xy_plane())
+        let stores = Stores::new();
+
+        let face = Face::build(&stores, Surface::xy_plane())
             .polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .into_face();
         let point = Point::from([1., 0.]);

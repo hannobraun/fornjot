@@ -1,6 +1,9 @@
 use std::fmt;
 
-use crate::builder::HalfEdgeBuilder;
+use crate::{
+    builder::HalfEdgeBuilder,
+    stores::{Handle, Stores},
+};
 
 use super::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex};
 
@@ -14,8 +17,8 @@ pub struct HalfEdge {
 
 impl HalfEdge {
     /// Build a half-edge using [`HalfEdgeBuilder`]
-    pub fn build(surface: Surface) -> HalfEdgeBuilder {
-        HalfEdgeBuilder::new(surface)
+    pub fn build(stores: &Stores, surface: Surface) -> HalfEdgeBuilder {
+        HalfEdgeBuilder::new(stores, surface)
     }
 
     /// Create a new instance of `HalfEdge`
@@ -83,7 +86,7 @@ impl HalfEdge {
         vertices: [Vertex; 2],
     ) -> Self {
         let global = GlobalEdge::new(
-            *curve.global_form(),
+            curve.global_form().clone(),
             vertices.clone().map(|vertex| *vertex.global_form()),
         );
         Self::new(curve, vertices, global)
@@ -126,13 +129,16 @@ impl fmt::Display for HalfEdge {
 /// An edge, defined in global (3D) coordinates
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalEdge {
-    curve: GlobalCurve,
+    curve: Handle<GlobalCurve>,
     vertices: [GlobalVertex; 2],
 }
 
 impl GlobalEdge {
     /// Create a new instance
-    pub fn new(curve: GlobalCurve, vertices: [GlobalVertex; 2]) -> Self {
+    pub fn new(
+        curve: Handle<GlobalCurve>,
+        vertices: [GlobalVertex; 2],
+    ) -> Self {
         Self { curve, vertices }
     }
 
@@ -141,7 +147,7 @@ impl GlobalEdge {
     /// The edge can be a segment of the curve that is bounded by two vertices,
     /// or if the curve is continuous (i.e. connects to itself), the edge could
     /// be defined by the whole curve, and have no bounding vertices.
-    pub fn curve(&self) -> &GlobalCurve {
+    pub fn curve(&self) -> &Handle<GlobalCurve> {
         &self.curve
     }
 

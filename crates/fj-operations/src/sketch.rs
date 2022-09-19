@@ -4,6 +4,7 @@ use fj_kernel::{
         Validate, Validated, ValidationConfig, ValidationError,
     },
     objects::{Cycle, Face, HalfEdge, Sketch, Surface},
+    stores::Stores,
 };
 use fj_math::{Aabb, Point, Scalar};
 
@@ -15,6 +16,7 @@ impl Shape for fj::Sketch {
     fn compute_brep(
         &self,
         config: &ValidationConfig,
+        stores: &Stores,
         _: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
         let surface = Surface::xy_plane();
@@ -24,7 +26,7 @@ impl Shape for fj::Sketch {
                 // Circles have just a single round edge with no vertices. So
                 // none need to be added here.
 
-                let half_edge = HalfEdge::build(surface)
+                let half_edge = HalfEdge::build(stores, surface)
                     .circle_from_radius(Scalar::from_f64(circle.radius()));
                 let cycle = Cycle::new(surface, [half_edge]);
 
@@ -34,7 +36,7 @@ impl Shape for fj::Sketch {
                 let points =
                     poly_chain.to_points().into_iter().map(Point::from);
 
-                Face::build(surface)
+                Face::build(stores, surface)
                     .polygon_from_points(points)
                     .into_face()
                     .with_color(Color(self.color()))

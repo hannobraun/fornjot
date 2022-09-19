@@ -7,6 +7,7 @@ use crate::{
         Curve, Cycle, Face, GlobalEdge, HalfEdge, SurfaceVertex, Vertex,
     },
     path::SurfacePath,
+    stores::Stores,
 };
 
 use super::Sweep;
@@ -14,11 +15,11 @@ use super::Sweep;
 impl Sweep for (HalfEdge, Color) {
     type Swept = Face;
 
-    fn sweep(self, path: impl Into<Vector<3>>) -> Self::Swept {
+    fn sweep(self, path: impl Into<Vector<3>>, stores: &Stores) -> Self::Swept {
         let (edge, color) = self;
         let path = path.into();
 
-        let surface = edge.curve().clone().sweep(path);
+        let surface = edge.curve().clone().sweep(path, stores);
 
         // We can't use the edge we're sweeping from as the bottom edge, as that
         // is not defined in the right surface. Let's create a new bottom edge,
@@ -39,7 +40,7 @@ impl Sweep for (HalfEdge, Color) {
                         points_curve_and_surface,
                     ));
 
-                Curve::new(surface, path, *edge.curve().global_form())
+                Curve::new(surface, path, edge.curve().global_form().clone())
             };
 
             let vertices = {
@@ -75,7 +76,7 @@ impl Sweep for (HalfEdge, Color) {
         let side_edges = bottom_edge
             .vertices()
             .clone()
-            .map(|vertex| (vertex, surface).sweep(path));
+            .map(|vertex| (vertex, surface).sweep(path, stores));
 
         let top_edge = {
             let bottom_vertices = bottom_edge.vertices();
@@ -91,7 +92,11 @@ impl Sweep for (HalfEdge, Color) {
                 });
 
             let curve = {
-                let global = bottom_edge.curve().global_form().translate(path);
+                let global = bottom_edge
+                    .curve()
+                    .global_form()
+                    .clone_object()
+                    .translate(path, stores);
 
                 // Please note that creating a line here is correct, even if the
                 // global curve is a circle. Projected into the side surface, it
@@ -104,7 +109,8 @@ impl Sweep for (HalfEdge, Color) {
                 Curve::new(surface, path, global)
             };
 
-            let global = GlobalEdge::new(*curve.global_form(), global_vertices);
+            let global =
+                GlobalEdge::new(curve.global_form().clone(), global_vertices);
 
             let vertices = {
                 let surface_points = points_curve_and_surface
@@ -178,18 +184,21 @@ mod tests {
     use crate::{
         algorithms::{reverse::Reverse, sweep::Sweep},
         objects::{Cycle, Face, HalfEdge, Surface},
+        stores::Stores,
     };
 
     #[test]
     fn sweep() {
-        let half_edge = HalfEdge::build(Surface::xy_plane())
+        let stores = Stores::new();
+
+        let half_edge = HalfEdge::build(&stores, Surface::xy_plane())
             .line_segment_from_points([[0., 0.], [1., 0.]]);
 
-        let face = (half_edge, Color::default()).sweep([0., 0., 1.]);
+        let face = (half_edge, Color::default()).sweep([0., 0., 1.], &stores);
 
         let expected_face = {
             let surface = Surface::xz_plane();
-            let builder = HalfEdge::build(surface);
+            let builder = HalfEdge::build(&stores, surface);
 
             let bottom = builder.line_segment_from_points([[0., 0.], [1., 0.]]);
             let top = builder

@@ -96,19 +96,24 @@ mod tests {
     use crate::{
         algorithms::approx::{Approx, Tolerance},
         objects::{Face, Surface},
+        stores::Stores,
     };
 
     use super::Triangulate;
 
     #[test]
     fn simple() -> anyhow::Result<()> {
+        let stores = Stores::new();
+
         let a = [0., 0.];
         let b = [2., 0.];
         let c = [2., 2.];
         let d = [0., 1.];
 
         let surface = Surface::xy_plane();
-        let face = Face::build(surface).polygon_from_points([a, b, c, d]);
+        let face = Face::build(&stores, surface)
+            .polygon_from_points([a, b, c, d])
+            .into_face();
 
         let a = Point::from(a).to_xyz();
         let b = Point::from(b).to_xyz();
@@ -127,6 +132,8 @@ mod tests {
 
     #[test]
     fn simple_hole() -> anyhow::Result<()> {
+        let stores = Stores::new();
+
         let a = [0., 0.];
         let b = [4., 0.];
         let c = [4., 4.];
@@ -138,9 +145,10 @@ mod tests {
         let h = [1., 2.];
 
         let surface = Surface::xy_plane();
-        let face = Face::build(surface)
+        let face = Face::build(&stores, surface)
             .polygon_from_points([a, b, c, d])
-            .with_hole([e, f, g, h]);
+            .with_hole([e, f, g, h])
+            .into_face();
 
         let triangles = triangulate(face)?;
 
@@ -168,6 +176,8 @@ mod tests {
     #[ignore]
     #[test]
     fn sharp_concave_shape() -> anyhow::Result<()> {
+        let stores = Stores::new();
+
         //
         //                c
         //               /|
@@ -188,7 +198,9 @@ mod tests {
         let e = Point::from([0., 0.8]);
 
         let surface = Surface::xy_plane();
-        let face = Face::build(surface).polygon_from_points([a, b, c, d, e]);
+        let face = Face::build(&stores, surface)
+            .polygon_from_points([a, b, c, d, e])
+            .into_face();
 
         let triangles = triangulate(face)?;
 

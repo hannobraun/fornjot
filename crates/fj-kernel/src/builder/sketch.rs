@@ -1,18 +1,22 @@
 use fj_math::Point;
 
-use crate::objects::{Face, Sketch, Surface};
+use crate::{
+    objects::{Face, Sketch, Surface},
+    stores::Stores,
+};
 
 /// API for building a [`Sketch`]
-pub struct SketchBuilder {
+pub struct SketchBuilder<'a> {
+    stores: &'a Stores,
     surface: Surface,
 }
 
-impl SketchBuilder {
+impl<'a> SketchBuilder<'a> {
     /// Construct an instance of `SketchBuilder`
     ///
     /// Also see [`Sketch::build`].
-    pub fn new(surface: Surface) -> Self {
-        Self { surface }
+    pub fn new(stores: &'a Stores, surface: Surface) -> Self {
+        Self { stores, surface }
     }
 
     /// Construct a polygon from a list of points
@@ -20,7 +24,9 @@ impl SketchBuilder {
         &self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Sketch {
-        let face = Face::build(self.surface).polygon_from_points(points);
+        let face = Face::build(self.stores, self.surface)
+            .polygon_from_points(points)
+            .into_face();
         Sketch::new().with_faces([face])
     }
 }

@@ -1,4 +1,4 @@
-use crate::builder::ShellBuilder;
+use crate::{builder::ShellBuilder, stores::Stores};
 
 use super::{face::Faces, Face};
 
@@ -15,8 +15,8 @@ pub struct Shell {
 
 impl Shell {
     /// Build a shell using [`ShellBuilder`]
-    pub fn build() -> ShellBuilder {
-        ShellBuilder
+    pub fn build(stores: &Stores) -> ShellBuilder {
+        ShellBuilder::new(stores)
     }
 
     /// Construct an empty instance of `Shell`

@@ -14,6 +14,7 @@ use std::collections::BTreeMap;
 use crate::{
     objects::{Curve, GlobalCurve},
     path::{GlobalPath, SurfacePath},
+    stores::Handle,
 };
 
 use super::{path::RangeOnPath, Approx, ApproxPoint, Tolerance};
@@ -29,8 +30,8 @@ impl Approx for (&Curve, RangeOnPath) {
     ) -> Self::Approximation {
         let (curve, range) = self;
 
-        let cache_key = (*curve.global_form(), range);
-        let global_curve_approx = match cache.get(cache_key) {
+        let cache_key = (curve.global_form().clone(), range);
+        let global_curve_approx = match cache.get(cache_key.clone()) {
             Some(approx) => approx,
             None => {
                 let approx = approx_global_curve(curve, range, tolerance);
@@ -151,7 +152,7 @@ impl CurveApprox {
 /// A cache for results of an approximation
 #[derive(Default)]
 pub struct CurveCache {
-    inner: BTreeMap<(GlobalCurve, RangeOnPath), GlobalCurveApprox>,
+    inner: BTreeMap<(Handle<GlobalCurve>, RangeOnPath), GlobalCurveApprox>,
 }
 
 impl CurveCache {
@@ -163,7 +164,7 @@ impl CurveCache {
     /// Insert the approximation of a [`GlobalCurve`]
     pub fn insert(
         &mut self,
-        key: (GlobalCurve, RangeOnPath),
+        key: (Handle<GlobalCurve>, RangeOnPath),
         approx: GlobalCurveApprox,
     ) -> GlobalCurveApprox {
         self.inner.insert(key, approx.clone());
@@ -173,7 +174,7 @@ impl CurveCache {
     /// Access the approximation for the given [`GlobalCurve`], if available
     pub fn get(
         &self,
-        key: (GlobalCurve, RangeOnPath),
+        key: (Handle<GlobalCurve>, RangeOnPath),
     ) -> Option<GlobalCurveApprox> {
         self.inner.get(&key).cloned()
     }
@@ -196,15 +197,18 @@ mod tests {
         algorithms::approx::{path::RangeOnPath, Approx, ApproxPoint},
         objects::{Curve, Surface},
         path::GlobalPath,
+        stores::Stores,
     };
 
     use super::CurveApprox;
 
     #[test]
     fn approx_line_on_flat_surface() {
+        let stores = Stores::new();
+
         let surface = Surface::new(GlobalPath::x_axis(), [0., 0., 1.]);
-        let curve =
-            Curve::build(surface).line_from_points([[1., 1.], [2., 1.]]);
+        let curve = Curve::build(&stores, surface)
+            .line_from_points([[1., 1.], [2., 1.]]);
         let range = RangeOnPath::from([[0.], [1.]]);
 
         let approx = (&curve, range).approx(1.);
@@ -214,10 +218,12 @@ mod tests {
 
     #[test]
     fn approx_line_on_curved_surface_but_not_along_curve() {
+        let stores = Stores::new();
+
         let surface =
             Surface::new(GlobalPath::circle_from_radius(1.), [0., 0., 1.]);
-        let curve =
-            Curve::build(surface).line_from_points([[1., 1.], [1., 2.]]);
+        let curve = Curve::build(&stores, surface)
+            .line_from_points([[1., 1.], [1., 2.]]);
         let range = RangeOnPath::from([[0.], [1.]]);
 
         let approx = (&curve, range).approx(1.);
@@ -227,10 +233,12 @@ mod tests {
 
     #[test]
     fn approx_line_on_curved_surface_along_curve() {
+        let stores = Stores::new();
+
         let path = GlobalPath::circle_from_radius(1.);
         let surface = Surface::new(path, [0., 0., 1.]);
-        let curve =
-            Curve::build(surface).line_from_points([[0., 1.], [1., 1.]]);
+        let curve = Curve::build(&stores, surface)
+            .line_from_points([[0., 1.], [1., 1.]]);
 
         let range = RangeOnPath::from([[0.], [TAU]]);
         let tolerance = 1.;
@@ -253,8 +261,10 @@ mod tests {
 
     #[test]
     fn approx_circle_on_flat_surface() {
+        let stores = Stores::new();
+
         let surface = Surface::new(GlobalPath::x_axis(), [0., 0., 1.]);
-        let curve = Curve::build(surface).circle_from_radius(1.);
+        let curve = Curve::build(&stores, surface).circle_from_radius(1.);
 
         let range = RangeOnPath::from([[0.], [TAU]]);
         let tolerance = 1.;

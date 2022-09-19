@@ -1,18 +1,22 @@
 use fj_math::Point;
 
-use crate::objects::{Cycle, HalfEdge, Surface};
+use crate::{
+    objects::{Cycle, HalfEdge, Surface},
+    stores::Stores,
+};
 
 /// API for building a [`Cycle`]
-pub struct CycleBuilder {
+pub struct CycleBuilder<'a> {
+    stores: &'a Stores,
     surface: Surface,
 }
 
-impl CycleBuilder {
+impl<'a> CycleBuilder<'a> {
     /// Construct an instance of `CycleBuilder`
     ///
     /// Also see [`Cycle::build`].
-    pub fn new(surface: Surface) -> Self {
-        Self { surface }
+    pub fn new(stores: &'a Stores, surface: Surface) -> Self {
+        Self { stores, surface }
     }
 
     /// Create a polygon from a list of points
@@ -36,7 +40,8 @@ impl CycleBuilder {
             let points = [points[0], points[1]];
 
             half_edges.push(
-                HalfEdge::build(self.surface).line_segment_from_points(points),
+                HalfEdge::build(self.stores, self.surface)
+                    .line_segment_from_points(points),
             );
         }
 

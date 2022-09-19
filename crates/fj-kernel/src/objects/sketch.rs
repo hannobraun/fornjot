@@ -1,4 +1,4 @@
-use crate::builder::SketchBuilder;
+use crate::{builder::SketchBuilder, stores::Stores};
 
 use super::{face::Faces, Face, Surface};
 
@@ -15,8 +15,8 @@ pub struct Sketch {
 
 impl Sketch {
     /// Build a sketch using [`SketchBuilder`]
-    pub fn build(surface: Surface) -> SketchBuilder {
-        SketchBuilder::new(surface)
+    pub fn build(stores: &Stores, surface: Surface) -> SketchBuilder {
+        SketchBuilder::new(stores, surface)
     }
 
     /// Construct an empty instance of `Sketch`

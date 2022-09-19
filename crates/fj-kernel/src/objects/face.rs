@@ -3,7 +3,7 @@ use std::collections::{btree_set, BTreeSet};
 use fj_interop::mesh::Color;
 use fj_math::Winding;
 
-use crate::builder::FaceBuilder;
+use crate::{builder::FaceBuilder, stores::Stores};
 
 use super::{Cycle, Surface};
 
@@ -66,8 +66,8 @@ pub struct Face {
 
 impl Face {
     /// Build a face using [`FaceBuilder`]
-    pub fn build(surface: Surface) -> FaceBuilder {
-        FaceBuilder::new(surface)
+    pub fn build(stores: &Stores, surface: Surface) -> FaceBuilder {
+        FaceBuilder::new(stores, surface)
     }
 
     /// Construct a new instance of `Face`

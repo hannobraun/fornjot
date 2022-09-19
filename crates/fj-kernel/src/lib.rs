@@ -92,3 +92,4 @@ pub mod builder;
 pub mod iter;
 pub mod objects;
 pub mod path;
+pub mod stores;
