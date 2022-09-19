@@ -1,6 +1,6 @@
 [package]
 name = "fj-app"
-version = "0.15.0"
+version = "0.16.0"
 edition = "2021"
 
 description = """\
@@ -27,39 +27,39 @@ version = "0.10.6"
 features = ["env", "toml"]
 
 [dependencies.fj]
-version = "0.15.0"
+version = "0.16.0"
 path = "../fj"
 
 [dependencies.fj-export]
-version = "0.15.0"
+version = "0.16.0"
 path = "../fj-export"
 
 [dependencies.fj-host]
-version = "0.15.0"
+version = "0.16.0"
 path = "../fj-host"
 
 [dependencies.fj-interop]
-version = "0.15.0"
+version = "0.16.0"
 path = "../fj-interop"
 
 [dependencies.fj-kernel]
-version = "0.15.0"
+version = "0.16.0"
 path = "../fj-kernel"
 
 [dependencies.fj-math]
-version = "0.15.0"
+version = "0.16.0"
 path = "../fj-math"
 
 [dependencies.fj-operations]
-version = "0.15.0"
+version = "0.16.0"
 path = "../fj-operations"
 
 [dependencies.fj-viewer]
-version = "0.15.0"
+version = "0.16.0"
 path = "../fj-viewer"
 
 [dependencies.fj-window]
-version = "0.15.0"
+version = "0.16.0"
 path = "../fj-window"
 
 [dependencies.serde]
