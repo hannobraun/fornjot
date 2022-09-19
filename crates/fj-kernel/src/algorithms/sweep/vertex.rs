@@ -130,10 +130,10 @@ impl Sweep for GlobalVertex {
     type Swept = GlobalEdge;
 
     fn sweep(self, path: impl Into<Vector<3>>, stores: &Stores) -> Self::Swept {
+        let curve = GlobalCurve::new(stores);
+
         let a = self;
         let b = GlobalVertex::from_position(self.position() + path.into());
-
-        let curve = GlobalCurve::new(stores);
 
         GlobalEdge::new(curve, [a, b])
     }
