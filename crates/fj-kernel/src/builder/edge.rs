@@ -90,7 +90,7 @@ impl<'a> HalfEdgeBuilder<'a> {
 
         let curve = {
             let path = SurfacePath::Line(Line::from_points(points));
-            let curve_global = {
+            let global_form = {
                 let points = global_vertices
                     .map(|global_vertex| global_vertex.position());
                 self.stores.global_curves.insert(GlobalCurve::from_path(
@@ -98,7 +98,7 @@ impl<'a> HalfEdgeBuilder<'a> {
                 ))
             };
 
-            Curve::new(self.surface, path, curve_global)
+            Curve::new(self.surface, path, global_form)
         };
 
         let vertices = {
