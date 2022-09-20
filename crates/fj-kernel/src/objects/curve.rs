@@ -56,7 +56,7 @@ pub struct GlobalCurve {
 }
 
 impl GlobalCurve {
-    /// Build a curve using [`GlobalCurveBuilder`]
+    /// Build a `Curve` using [`GlobalCurveBuilder`]
     pub fn builder(stores: &Stores) -> GlobalCurveBuilder {
         GlobalCurveBuilder { stores }
     }

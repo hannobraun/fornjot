@@ -30,6 +30,8 @@ impl VertexBuilder {
 }
 
 /// API for building a [`GlobalVertex`]
+///
+/// Also see [`GlobalVertex::builder`].
 pub struct GlobalVertexBuilder;
 
 impl GlobalVertexBuilder {
