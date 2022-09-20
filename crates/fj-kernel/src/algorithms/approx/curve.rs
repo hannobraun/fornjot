@@ -30,12 +30,12 @@ impl Approx for (&Curve, RangeOnPath) {
     ) -> Self::Approximation {
         let (curve, range) = self;
 
-        let cache_key = (curve.global_form().clone(), range);
-        let global_curve_approx = match cache.get(cache_key.clone()) {
+        let global_curve = curve.global_form().clone();
+        let global_curve_approx = match cache.get(global_curve.clone(), range) {
             Some(approx) => approx,
             None => {
                 let approx = approx_global_curve(curve, range, tolerance);
-                cache.insert(cache_key, approx)
+                cache.insert(global_curve, range, approx)
             }
         };
 
@@ -164,19 +164,21 @@ impl CurveCache {
     /// Insert the approximation of a [`GlobalCurve`]
     pub fn insert(
         &mut self,
-        key: (Handle<GlobalCurve>, RangeOnPath),
+        handle: Handle<GlobalCurve>,
+        range: RangeOnPath,
         approx: GlobalCurveApprox,
     ) -> GlobalCurveApprox {
-        self.inner.insert(key, approx.clone());
+        self.inner.insert((handle, range), approx.clone());
         approx
     }
 
     /// Access the approximation for the given [`GlobalCurve`], if available
     pub fn get(
         &self,
-        key: (Handle<GlobalCurve>, RangeOnPath),
+        handle: Handle<GlobalCurve>,
+        range: RangeOnPath,
     ) -> Option<GlobalCurveApprox> {
-        self.inner.get(&key).cloned()
+        self.inner.get(&(handle, range)).cloned()
     }
 }
 
