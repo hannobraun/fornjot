@@ -1,11 +1,37 @@
+use std::cmp::Ordering;
+
 use chrono::{DateTime, Utc};
 use octocrab::Octocrab;
 
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 pub struct Sponsor {
     pub login: String,
     pub since: DateTime<Utc>,
     pub dollars: u32,
+}
+
+impl Ord for Sponsor {
+    fn cmp(&self, other: &Self) -> Ordering {
+        let by_dollars = other.dollars.cmp(&self.dollars);
+        let by_date = self.since.cmp(&other.since);
+        let by_login = self.login.cmp(&other.login);
+
+        if by_dollars.is_ne() {
+            return by_dollars;
+        }
+
+        if by_date.is_ne() {
+            return by_date;
+        }
+
+        by_login
+    }
+}
+
+impl PartialOrd for Sponsor {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
 }
 
 pub async fn query_sponsors(octocrab: &Octocrab) -> anyhow::Result<()> {
@@ -41,7 +67,7 @@ pub async fn query_sponsors(octocrab: &Octocrab) -> anyhow::Result<()> {
         )
         .await?;
 
-    let sponsors = response
+    let mut sponsors = response
         .data
         .viewer
         .sponsors
@@ -62,6 +88,8 @@ pub async fn query_sponsors(octocrab: &Octocrab) -> anyhow::Result<()> {
             }
         })
         .collect::<Vec<_>>();
+
+    sponsors.sort();
 
     println!("{sponsors:#?}");
 
