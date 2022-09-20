@@ -14,11 +14,10 @@ impl VertexBuilder {
     /// Build a vertex from a curve position
     pub fn from_point(&self, point: impl Into<Point<1>>) -> Vertex {
         let point = point.into();
-        let &surface = self.curve.surface();
 
         let surface_form = SurfaceVertexBuilder {
             position: self.curve.path().point_from_path_coords(point),
-            surface,
+            surface: *self.curve.surface(),
             global_form: None,
         }
         .build();
