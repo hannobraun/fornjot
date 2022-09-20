@@ -12,11 +12,11 @@ pub struct VertexBuilder {
 
 impl VertexBuilder {
     /// Build a vertex from a curve position
-    pub fn from_point(&self, point: impl Into<Point<1>>) -> Vertex {
-        let point = point.into();
+    pub fn from_point(&self, position: impl Into<Point<1>>) -> Vertex {
+        let position = position.into();
 
         let surface_form = SurfaceVertexBuilder {
-            position: self.curve.path().point_from_path_coords(point),
+            position: self.curve.path().point_from_path_coords(position),
             surface: *self.curve.surface(),
             global_form: None,
         }
@@ -24,7 +24,7 @@ impl VertexBuilder {
 
         let global_form = *surface_form.global_form();
 
-        Vertex::new(point, self.curve.clone(), surface_form, global_form)
+        Vertex::new(position, self.curve.clone(), surface_form, global_form)
     }
 }
 
