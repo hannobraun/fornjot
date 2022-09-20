@@ -23,8 +23,8 @@ pub struct HalfEdgeBuilder<'a> {
 impl<'a> HalfEdgeBuilder<'a> {
     /// Build a circle from the given radius
     pub fn circle_from_radius(&self, radius: impl Into<Scalar>) -> HalfEdge {
-        let curve =
-            Curve::build(self.stores, self.surface).circle_from_radius(radius);
+        let curve = Curve::builder(self.stores, self.surface)
+            .circle_from_radius(radius);
 
         let vertices = {
             let [a_curve, b_curve] =
