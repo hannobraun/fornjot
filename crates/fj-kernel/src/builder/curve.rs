@@ -62,18 +62,14 @@ impl<'a> CurveBuilder<'a> {
 }
 
 /// API for building a [`GlobalCurve`]
+///
+/// Also see [`GlobalCurve::build`].
 pub struct GlobalCurveBuilder<'a> {
-    stores: &'a Stores,
+    /// The stores that the created objects are put in
+    pub stores: &'a Stores,
 }
 
 impl<'a> GlobalCurveBuilder<'a> {
-    /// Construct a new instance of [`GlobalCurveBuilder`]
-    ///
-    /// Also see [`GlobalCurve::build`].
-    pub fn new(stores: &'a Stores) -> Self {
-        Self { stores }
-    }
-
     /// Build a line that represents the x-axis
     pub fn x_axis(&self) -> Handle<GlobalCurve> {
         self.stores
