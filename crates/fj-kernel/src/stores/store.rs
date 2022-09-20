@@ -123,8 +123,8 @@ pub struct Handle<T> {
 
 impl<T> Handle<T> {
     /// Access this pointer's unique id
-    pub fn id(&self) -> u64 {
-        self.ptr as u64
+    pub fn id(&self) -> ObjectId {
+        ObjectId(self.ptr as u64)
     }
 
     /// Return a clone of the object this handle refers to
@@ -232,7 +232,7 @@ impl<T> fmt::Debug for Handle<T> {
                 None => type_name,
             }
         };
-        let id = self.id();
+        let id = self.id().0;
 
         write!(f, "{name} @ {id:#x}")?;
 
@@ -242,6 +242,12 @@ impl<T> fmt::Debug for Handle<T> {
 
 unsafe impl<T> Send for Handle<T> {}
 unsafe impl<T> Sync for Handle<T> {}
+
+/// Represents the ID of an object
+///
+/// See [`Handle::id`].
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct ObjectId(u64);
 
 /// An iterator over objects in a [`Store`]
 pub struct Iter<'a, T> {

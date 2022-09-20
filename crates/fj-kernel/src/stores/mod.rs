@@ -4,7 +4,7 @@ mod store;
 
 use crate::objects::GlobalCurve;
 
-pub use self::store::{Handle, Iter, Reservation, Store};
+pub use self::store::{Handle, Iter, ObjectId, Reservation, Store};
 
 /// The available object stores
 #[derive(Debug, Default)]
