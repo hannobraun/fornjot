@@ -19,7 +19,7 @@ pub struct Vertex {
 }
 
 impl Vertex {
-    /// Build a vertex using [`VertexBuilder`]
+    /// Build a `Vertex` using [`VertexBuilder`]
     pub fn builder(curve: Curve) -> VertexBuilder {
         VertexBuilder { curve }
     }
