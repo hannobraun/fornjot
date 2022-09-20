@@ -91,6 +91,13 @@ pub async fn query_sponsors(
         })
         .collect::<Vec<_>>();
 
+    if sponsors.len() >= 100 {
+        todo!(
+            "Number of sponsors has reached max page size, but query does not \
+            support pagination."
+        )
+    }
+
     sponsors.sort();
 
     Ok(sponsors)
