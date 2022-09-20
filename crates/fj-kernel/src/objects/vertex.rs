@@ -135,7 +135,7 @@ pub struct GlobalVertex {
 
 impl GlobalVertex {
     /// Build a `GlobalVertex` using [`GlobalVertexBuilder`]
-    pub fn build() -> GlobalVertexBuilder {
+    pub fn builder() -> GlobalVertexBuilder {
         GlobalVertexBuilder
     }
 

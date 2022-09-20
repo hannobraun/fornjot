@@ -17,7 +17,7 @@ impl VertexBuilder {
         let &surface = self.curve.surface();
 
         let global_form =
-            GlobalVertex::build().from_curve_and_position(&self.curve, point);
+            GlobalVertex::builder().from_curve_and_position(&self.curve, point);
 
         let surface_form = SurfaceVertex::new(
             self.curve.path().point_from_path_coords(point),
