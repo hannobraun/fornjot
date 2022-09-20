@@ -7,18 +7,14 @@ use crate::{
 };
 
 /// API for building a [`Shell`]
+///
+/// Also see [`Shell::build`].
 pub struct ShellBuilder<'a> {
-    stores: &'a Stores,
+    /// The stores that the created objects are put in
+    pub stores: &'a Stores,
 }
 
 impl<'a> ShellBuilder<'a> {
-    /// Construct a new instance of `ShellBuilder`
-    ///
-    /// Also see [`Shell::build`].
-    pub fn new(stores: &'a Stores) -> Self {
-        Self { stores }
-    }
-
     /// Create a cube from the length of its edges
     pub fn cube_from_edge_length(
         &self,
