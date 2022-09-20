@@ -381,7 +381,7 @@ mod tests {
     fn cycle() {
         let stores = Stores::new();
 
-        let object = Cycle::build(&stores, Surface::xy_plane())
+        let object = Cycle::builder(&stores, Surface::xy_plane())
             .polygon_from_points([[0., 0.], [1., 0.], [0., 1.]]);
 
         assert_eq!(3, object.curve_iter().count());

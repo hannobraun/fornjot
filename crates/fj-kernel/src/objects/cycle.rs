@@ -14,7 +14,7 @@ pub struct Cycle {
 
 impl Cycle {
     /// Build a cycle using [`CycleBuilder`]
-    pub fn build(stores: &Stores, surface: Surface) -> CycleBuilder {
+    pub fn builder(stores: &Stores, surface: Surface) -> CycleBuilder {
         CycleBuilder { stores, surface }
     }
 

@@ -7,7 +7,7 @@ use crate::{
 
 /// API for building a [`Cycle`]
 ///
-/// Also see [`Cycle::build`].
+/// Also see [`Cycle::builder`].
 pub struct CycleBuilder<'a> {
     /// The stores that the created objects are put in
     pub stores: &'a Stores,

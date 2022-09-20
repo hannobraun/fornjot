@@ -24,8 +24,8 @@ impl<'a> FaceBuilder<'a> {
         &self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> FacePolygon {
-        let cycle =
-            Cycle::build(self.stores, self.surface).polygon_from_points(points);
+        let cycle = Cycle::builder(self.stores, self.surface)
+            .polygon_from_points(points);
         let face = Face::new(self.surface, cycle);
 
         FacePolygon {
@@ -51,7 +51,7 @@ impl FacePolygon<'_> {
         let surface = *self.face.surface();
         self.face =
             self.face
-                .with_interiors([Cycle::build(self.stores, surface)
+                .with_interiors([Cycle::builder(self.stores, surface)
                     .polygon_from_points(points)]);
 
         self
