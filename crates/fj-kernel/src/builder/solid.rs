@@ -6,18 +6,14 @@ use crate::{
 };
 
 /// API for building a [`Solid`]
+///
+/// Also see [`Solid::build`].
 pub struct SolidBuilder<'a> {
-    stores: &'a Stores,
+    /// The stores that the created objects are put in
+    pub stores: &'a Stores,
 }
 
 impl<'a> SolidBuilder<'a> {
-    /// Construct a new instance of `SolidBuilder`
-    ///
-    /// Also see [`Solid::build`].
-    pub fn new(stores: &'a Stores) -> Self {
-        Self { stores }
-    }
-
     /// Create a cube from the length of its edges
     pub fn cube_from_edge_length(
         &self,

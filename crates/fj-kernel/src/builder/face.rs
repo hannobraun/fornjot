@@ -8,19 +8,17 @@ use crate::{
 };
 
 /// API for building a [`Face`]
+///
+/// Also see [`Face::build`].
 pub struct FaceBuilder<'a> {
-    stores: &'a Stores,
-    surface: Surface,
+    /// The stores that the created objects are put in
+    pub stores: &'a Stores,
+
+    /// The surface that the [`Face`] is defined in
+    pub surface: Surface,
 }
 
 impl<'a> FaceBuilder<'a> {
-    /// Construct an instance of `FaceBuilder`
-    ///
-    /// Also see [`Face::build`].
-    pub fn new(stores: &'a Stores, surface: Surface) -> Self {
-        Self { stores, surface }
-    }
-
     /// Construct a polygon from a list of points
     pub fn polygon_from_points(
         &self,

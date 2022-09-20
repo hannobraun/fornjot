@@ -16,7 +16,7 @@ pub struct Shell {
 impl Shell {
     /// Build a shell using [`ShellBuilder`]
     pub fn build(stores: &Stores) -> ShellBuilder {
-        ShellBuilder::new(stores)
+        ShellBuilder { stores }
     }
 
     /// Construct an empty instance of `Shell`

@@ -10,19 +10,17 @@ use crate::{
 };
 
 /// API for building an [`HalfEdge`]
+///
+/// Also see [`HalfEdge::build`].
 pub struct HalfEdgeBuilder<'a> {
-    stores: &'a Stores,
-    surface: Surface,
+    /// The stores that the created objects are put in
+    pub stores: &'a Stores,
+
+    /// The surface that the [`HalfEdge`] is defined in
+    pub surface: Surface,
 }
 
 impl<'a> HalfEdgeBuilder<'a> {
-    /// Construct a new instance of [`HalfEdgeBuilder`]
-    ///
-    /// Also see [`HalfEdge::build`].
-    pub fn new(stores: &'a Stores, surface: Surface) -> Self {
-        Self { stores, surface }
-    }
-
     /// Build a circle from the given radius
     pub fn circle_from_radius(&self, radius: impl Into<Scalar>) -> HalfEdge {
         let curve =

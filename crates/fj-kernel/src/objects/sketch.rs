@@ -16,7 +16,7 @@ pub struct Sketch {
 impl Sketch {
     /// Build a sketch using [`SketchBuilder`]
     pub fn build(stores: &Stores, surface: Surface) -> SketchBuilder {
-        SketchBuilder::new(stores, surface)
+        SketchBuilder { stores, surface }
     }
 
     /// Construct an empty instance of `Sketch`
