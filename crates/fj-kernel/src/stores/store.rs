@@ -21,7 +21,10 @@
 //!
 //! But in any case, this was fun to write, and not that much work.
 
-use std::{fmt, hash::Hash, iter, marker::PhantomData, ops::Deref, sync::Arc};
+use std::{
+    any::type_name, fmt, hash::Hash, iter, marker::PhantomData, ops::Deref,
+    sync::Arc,
+};
 
 use parking_lot::RwLock;
 
@@ -222,7 +225,18 @@ where
 
 impl<T> fmt::Debug for Handle<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        f.debug_struct("Handle").field("id", &self.id()).finish()
+        let name = {
+            let type_name = type_name::<T>();
+            match type_name.rsplit_once("::") {
+                Some((_, name)) => name,
+                None => type_name,
+            }
+        };
+        let id = self.id();
+
+        write!(f, "{name} @ {id:#x}")?;
+
+        Ok(())
     }
 }
 
