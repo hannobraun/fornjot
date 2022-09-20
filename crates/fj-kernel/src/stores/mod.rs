@@ -1,5 +1,6 @@
 //! Append-only object storage
 
+mod blocks;
 mod store;
 
 use crate::objects::GlobalCurve;
