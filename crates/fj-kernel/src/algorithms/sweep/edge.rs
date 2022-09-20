@@ -191,14 +191,14 @@ mod tests {
     fn sweep() {
         let stores = Stores::new();
 
-        let half_edge = HalfEdge::build(&stores, Surface::xy_plane())
+        let half_edge = HalfEdge::builder(&stores, Surface::xy_plane())
             .line_segment_from_points([[0., 0.], [1., 0.]]);
 
         let face = (half_edge, Color::default()).sweep([0., 0., 1.], &stores);
 
         let expected_face = {
             let surface = Surface::xz_plane();
-            let builder = HalfEdge::build(&stores, surface);
+            let builder = HalfEdge::builder(&stores, surface);
 
             let bottom = builder.line_segment_from_points([[0., 0.], [1., 0.]]);
             let top = builder

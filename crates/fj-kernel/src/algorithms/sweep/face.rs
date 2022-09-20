@@ -112,7 +112,7 @@ mod tests {
             // https://doc.rust-lang.org/std/primitive.slice.html#method.array_windows
             let [a, b] = [window[0], window[1]];
 
-            let half_edge = HalfEdge::build(&stores, Surface::xy_plane())
+            let half_edge = HalfEdge::builder(&stores, Surface::xy_plane())
                 .line_segment_from_points([a, b]);
             (half_edge, Color::default()).sweep(UP, &stores)
         });
@@ -147,7 +147,7 @@ mod tests {
             // https://doc.rust-lang.org/std/primitive.slice.html#method.array_windows
             let [a, b] = [window[0], window[1]];
 
-            let half_edge = HalfEdge::build(&stores, Surface::xy_plane())
+            let half_edge = HalfEdge::builder(&stores, Surface::xy_plane())
                 .line_segment_from_points([a, b])
                 .reverse();
             (half_edge, Color::default()).sweep(DOWN, &stores)

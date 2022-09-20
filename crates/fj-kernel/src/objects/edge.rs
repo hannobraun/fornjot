@@ -17,7 +17,7 @@ pub struct HalfEdge {
 
 impl HalfEdge {
     /// Build a half-edge using [`HalfEdgeBuilder`]
-    pub fn build(stores: &Stores, surface: Surface) -> HalfEdgeBuilder {
+    pub fn builder(stores: &Stores, surface: Surface) -> HalfEdgeBuilder {
         HalfEdgeBuilder { stores, surface }
     }
 

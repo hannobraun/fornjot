@@ -38,7 +38,7 @@ impl<'a> CycleBuilder<'a> {
             let points = [points[0], points[1]];
 
             half_edges.push(
-                HalfEdge::build(self.stores, self.surface)
+                HalfEdge::builder(self.stores, self.surface)
                     .line_segment_from_points(points),
             );
         }

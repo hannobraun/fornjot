@@ -11,7 +11,7 @@ use crate::{
 
 /// API for building an [`HalfEdge`]
 ///
-/// Also see [`HalfEdge::build`].
+/// Also see [`HalfEdge::builder`].
 pub struct HalfEdgeBuilder<'a> {
     /// The stores that the created objects are put in
     pub stores: &'a Stores,
