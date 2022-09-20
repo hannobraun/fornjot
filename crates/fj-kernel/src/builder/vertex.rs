@@ -25,7 +25,7 @@ impl VertexBuilder {
             global_form,
         );
 
-        Vertex::new([0.], self.curve.clone(), surface_form, global_form)
+        Vertex::new(point, self.curve.clone(), surface_form, global_form)
     }
 }
 
