@@ -11,7 +11,7 @@ pub async fn run() -> anyhow::Result<()> {
     let octocrab = Octocrab::builder().personal_token(token).build()?;
 
     match Args::parse() {
-        Args::CreateReleaseAnnouncement(_) => {
+        Args::CreateReleaseAnnouncement => {
             create_release_announcement(&octocrab)
                 .await
                 .context("Failed to create release announcement")?;
