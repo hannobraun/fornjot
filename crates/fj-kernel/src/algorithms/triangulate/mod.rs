@@ -111,7 +111,7 @@ mod tests {
         let d = [0., 1.];
 
         let surface = Surface::xy_plane();
-        let face = Face::build(&stores, surface)
+        let face = Face::builder(&stores, surface)
             .polygon_from_points([a, b, c, d])
             .into_face();
 
@@ -145,7 +145,7 @@ mod tests {
         let h = [1., 2.];
 
         let surface = Surface::xy_plane();
-        let face = Face::build(&stores, surface)
+        let face = Face::builder(&stores, surface)
             .polygon_from_points([a, b, c, d])
             .with_hole([e, f, g, h])
             .into_face();
@@ -198,7 +198,7 @@ mod tests {
         let e = Point::from([0., 0.8]);
 
         let surface = Surface::xy_plane();
-        let face = Face::build(&stores, surface)
+        let face = Face::builder(&stores, surface)
             .polygon_from_points([a, b, c, d, e])
             .into_face();
 

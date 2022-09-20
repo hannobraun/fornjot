@@ -94,11 +94,11 @@ mod tests {
             .polygon_from_points(TRIANGLE)
             .sweep(UP, &stores);
 
-        let bottom = Face::build(&stores, surface)
+        let bottom = Face::builder(&stores, surface)
             .polygon_from_points(TRIANGLE)
             .into_face()
             .reverse();
-        let top = Face::build(&stores, surface.translate(UP, &stores))
+        let top = Face::builder(&stores, surface.translate(UP, &stores))
             .polygon_from_points(TRIANGLE)
             .into_face();
 
@@ -129,11 +129,11 @@ mod tests {
             .polygon_from_points(TRIANGLE)
             .sweep(DOWN, &stores);
 
-        let bottom = Face::build(&stores, surface.translate(DOWN, &stores))
+        let bottom = Face::builder(&stores, surface.translate(DOWN, &stores))
             .polygon_from_points(TRIANGLE)
             .into_face()
             .reverse();
-        let top = Face::build(&stores, surface)
+        let top = Face::builder(&stores, surface)
             .polygon_from_points(TRIANGLE)
             .into_face();
 

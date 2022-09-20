@@ -66,7 +66,7 @@ pub struct Face {
 
 impl Face {
     /// Build a face using [`FaceBuilder`]
-    pub fn build(stores: &Stores, surface: Surface) -> FaceBuilder {
+    pub fn builder(stores: &Stores, surface: Surface) -> FaceBuilder {
         FaceBuilder { stores, surface }
     }
 

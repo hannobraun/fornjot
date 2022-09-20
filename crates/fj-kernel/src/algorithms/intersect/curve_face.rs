@@ -186,7 +186,7 @@ mod tests {
             [-1.,  1.],
         ];
 
-        let face = Face::build(&stores, surface)
+        let face = Face::builder(&stores, surface)
             .polygon_from_points(exterior)
             .with_hole(interior)
             .into_face();

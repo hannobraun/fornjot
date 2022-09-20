@@ -9,7 +9,7 @@ use crate::{
 
 /// API for building a [`Face`]
 ///
-/// Also see [`Face::build`].
+/// Also see [`Face::builder`].
 pub struct FaceBuilder<'a> {
     /// The stores that the created objects are put in
     pub stores: &'a Stores,

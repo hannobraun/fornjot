@@ -402,7 +402,7 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::xy_plane();
-        let object = Face::build(&stores, surface)
+        let object = Face::builder(&stores, surface)
             .polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .into_face();
 
@@ -499,7 +499,7 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::xy_plane();
-        let face = Face::build(&stores, surface)
+        let face = Face::builder(&stores, surface)
             .polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .into_face();
         let object = Sketch::new().with_faces([face]);
