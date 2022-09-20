@@ -153,3 +153,76 @@ unsafe impl<T> Sync for Handle<T> {}
 /// See [`Handle::id`].
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct ObjectId(u64);
+
+/// A wrapper around [`Handle`] to define equality based on identity
+///
+/// This is a utility type that implements [`Eq`]/[`PartialEq`] and other common
+/// traits that are based on those, based on the identity of object that the
+/// wrapped handle references. This is useful, if a type of object doesn't
+/// implement `Eq`/`PartialEq`, which means handles referencing it won't
+/// implement those types either.
+///
+/// Typically, if an object doesn't implement [`Eq`]/[`PartialEq`], it will do
+/// so for good reason. If you need something that represents the object and
+/// implements those missing traits, you might want to be explicit about what
+/// you're doing, and access its ID via [`Handle::id`] instead.
+///
+/// But if you have a struct that owns a [`Handle`] to such an object, and you
+/// want to be able to derive various traits that are not available for the
+/// [`Handle`] itself, this wrapper is for you.
+pub struct HandleWrapper<T>(pub Handle<T>);
+
+impl<T> Deref for HandleWrapper<T> {
+    type Target = Handle<T>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl<T> Clone for HandleWrapper<T> {
+    fn clone(&self) -> Self {
+        Self(self.0.clone())
+    }
+}
+
+impl<T> Eq for HandleWrapper<T> {}
+
+impl<T> PartialEq for HandleWrapper<T> {
+    fn eq(&self, other: &Self) -> bool {
+        self.0.id().eq(&other.0.id())
+    }
+}
+
+impl<T> Hash for HandleWrapper<T> {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.0.id().hash(state)
+    }
+}
+
+impl<T> Ord for HandleWrapper<T> {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.0.id().cmp(&other.0.id())
+    }
+}
+
+impl<T> PartialOrd for HandleWrapper<T> {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        self.0.id().partial_cmp(&other.0.id())
+    }
+}
+
+impl<T> fmt::Debug for HandleWrapper<T> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
+impl<T> From<Handle<T>> for HandleWrapper<T> {
+    fn from(handle: Handle<T>) -> Self {
+        Self(handle)
+    }
+}
+
+unsafe impl<T> Send for HandleWrapper<T> {}
+unsafe impl<T> Sync for HandleWrapper<T> {}

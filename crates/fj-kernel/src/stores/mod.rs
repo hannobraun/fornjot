@@ -7,7 +7,7 @@ mod store;
 use crate::objects::GlobalCurve;
 
 pub use self::{
-    handle::{Handle, ObjectId},
+    handle::{Handle, HandleWrapper, ObjectId},
     store::{Iter, Reservation, Store},
 };
 
