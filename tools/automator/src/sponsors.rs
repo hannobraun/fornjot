@@ -34,7 +34,9 @@ impl PartialOrd for Sponsor {
     }
 }
 
-pub async fn query_sponsors(octocrab: &Octocrab) -> anyhow::Result<()> {
+pub async fn query_sponsors(
+    octocrab: &Octocrab,
+) -> anyhow::Result<Vec<Sponsor>> {
     let response: QueryResult = octocrab
         .graphql(
             "query {
@@ -91,9 +93,7 @@ pub async fn query_sponsors(octocrab: &Octocrab) -> anyhow::Result<()> {
 
     sponsors.sort();
 
-    println!("{sponsors:#?}");
-
-    Ok(())
+    Ok(sponsors)
 }
 
 #[derive(Debug, serde::Deserialize)]
