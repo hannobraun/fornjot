@@ -1,6 +1,13 @@
 use chrono::{DateTime, Utc};
 use octocrab::Octocrab;
 
+#[derive(Debug)]
+pub struct Sponsor {
+    pub login: String,
+    pub since: DateTime<Utc>,
+    pub dollars: u32,
+}
+
 pub async fn query_sponsors(octocrab: &Octocrab) -> anyhow::Result<()> {
     let response: QueryResult = octocrab
         .graphql(
@@ -34,7 +41,29 @@ pub async fn query_sponsors(octocrab: &Octocrab) -> anyhow::Result<()> {
         )
         .await?;
 
-    println!("{:#?}", response.data.viewer.sponsors.nodes);
+    let sponsors = response
+        .data
+        .viewer
+        .sponsors
+        .nodes
+        .into_iter()
+        .map(|node| {
+            let login = node.login;
+            let since = node.sponsorship_for_viewer_as_sponsorable.created_at;
+            let dollars = node
+                .sponsorship_for_viewer_as_sponsorable
+                .tier
+                .monthly_price_in_dollars;
+
+            Sponsor {
+                login,
+                since,
+                dollars,
+            }
+        })
+        .collect::<Vec<_>>();
+
+    println!("{sponsors:#?}");
 
     Ok(())
 }
