@@ -29,6 +29,7 @@ impl Vertex {
         VertexBuilder {
             position: position.into(),
             curve,
+            surface_form: None,
         }
     }
 

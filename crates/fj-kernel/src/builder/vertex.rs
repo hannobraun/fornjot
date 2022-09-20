@@ -11,17 +11,34 @@ pub struct VertexBuilder {
 
     /// The curve that the [`Vertex`] is defined in
     pub curve: Curve,
+
+    /// The surface form of the [`Vertex`]
+    ///
+    /// Can be provided to the builder, if already available, or computed from
+    /// the position on the [`Curve`].
+    pub surface_form: Option<SurfaceVertex>,
 }
 
 impl VertexBuilder {
+    /// Build the [`Vertex`] with the provided surface form
+    pub fn with_surface_form(mut self, surface_form: SurfaceVertex) -> Self {
+        self.surface_form = Some(surface_form);
+        self
+    }
+
     /// Build a vertex from a curve position
     pub fn build(self) -> Vertex {
-        let surface_form = SurfaceVertexBuilder {
-            position: self.curve.path().point_from_path_coords(self.position),
-            surface: *self.curve.surface(),
-            global_form: None,
-        }
-        .build();
+        let surface_form = self.surface_form.unwrap_or_else(|| {
+            SurfaceVertexBuilder {
+                position: self
+                    .curve
+                    .path()
+                    .point_from_path_coords(self.position),
+                surface: *self.curve.surface(),
+                global_form: None,
+            }
+            .build()
+        });
 
         let global_form = *surface_form.global_form();
 
