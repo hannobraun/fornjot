@@ -17,12 +17,24 @@ pub struct VertexBuilder {
     /// Can be provided to the builder, if already available, or computed from
     /// the position on the [`Curve`].
     pub surface_form: Option<SurfaceVertex>,
+
+    /// The global form of the [`Vertex`]
+    ///
+    /// Can be provided to the builder, if already available, or acquired
+    /// through the surface form.
+    pub global_form: Option<GlobalVertex>,
 }
 
 impl VertexBuilder {
     /// Build the [`Vertex`] with the provided surface form
     pub fn with_surface_form(mut self, surface_form: SurfaceVertex) -> Self {
         self.surface_form = Some(surface_form);
+        self
+    }
+
+    /// Build the [`Vertex`] with the provided global form
+    pub fn with_global_form(mut self, global_form: GlobalVertex) -> Self {
+        self.global_form = Some(global_form);
         self
     }
 
@@ -35,7 +47,7 @@ impl VertexBuilder {
                     .path()
                     .point_from_path_coords(self.position),
                 surface: *self.curve.surface(),
-                global_form: None,
+                global_form: self.global_form,
             }
             .build()
         });

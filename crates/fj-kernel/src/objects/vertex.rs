@@ -30,6 +30,7 @@ impl Vertex {
             position: position.into(),
             curve,
             surface_form: None,
+            global_form: None,
         }
     }
 
