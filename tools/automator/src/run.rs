@@ -3,7 +3,10 @@ use std::env;
 use anyhow::Context;
 use octocrab::Octocrab;
 
-use crate::{announcement::create_release_announcement, args::Args};
+use crate::{
+    announcement::create_release_announcement, args::Args,
+    sponsors::query_sponsors,
+};
 
 pub async fn run() -> anyhow::Result<()> {
     let token = env::var("GITHUB_TOKEN")
@@ -11,15 +14,17 @@ pub async fn run() -> anyhow::Result<()> {
     let octocrab = Octocrab::builder().personal_token(token).build()?;
 
     match Args::parse() {
-        Args::CreateReleaseAnnouncement(_) => {
+        Args::Announcement => {
             create_release_announcement(&octocrab)
                 .await
                 .context("Failed to create release announcement")?;
         }
         Args::Sponsors => {
-            let response: serde_json::Value =
-                octocrab.graphql("query { viewer { login }}").await?;
-            println!("{response}");
+            let sponsors = query_sponsors(&octocrab)
+                .await
+                .context("Failed to query sponsors")?;
+
+            println!("{sponsors:#?}");
 
             todo!("Querying sponsors is not supported yet.")
         }
