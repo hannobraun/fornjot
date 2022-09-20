@@ -6,19 +6,17 @@ use crate::{
 };
 
 /// API for building a [`Cycle`]
+///
+/// Also see [`Cycle::build`].
 pub struct CycleBuilder<'a> {
-    stores: &'a Stores,
-    surface: Surface,
+    /// The stores that the created objects are put in
+    pub stores: &'a Stores,
+
+    /// The surface that the [`Cycle`] is defined in
+    pub surface: Surface,
 }
 
 impl<'a> CycleBuilder<'a> {
-    /// Construct an instance of `CycleBuilder`
-    ///
-    /// Also see [`Cycle::build`].
-    pub fn new(stores: &'a Stores, surface: Surface) -> Self {
-        Self { stores, surface }
-    }
-
     /// Create a polygon from a list of points
     pub fn polygon_from_points(
         &self,

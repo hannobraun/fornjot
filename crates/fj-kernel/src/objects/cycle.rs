@@ -15,7 +15,7 @@ pub struct Cycle {
 impl Cycle {
     /// Build a cycle using [`CycleBuilder`]
     pub fn build(stores: &Stores, surface: Surface) -> CycleBuilder {
-        CycleBuilder::new(stores, surface)
+        CycleBuilder { stores, surface }
     }
 
     /// Create a new cycle
