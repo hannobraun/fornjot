@@ -423,7 +423,7 @@ mod tests {
     fn global_curve() {
         let stores = Stores::new();
 
-        let object = GlobalCurve::build(&stores).x_axis();
+        let object = GlobalCurve::builder(&stores).x_axis();
 
         assert_eq!(0, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
