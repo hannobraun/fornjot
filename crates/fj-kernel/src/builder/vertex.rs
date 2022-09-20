@@ -4,7 +4,7 @@ use crate::objects::{Curve, GlobalVertex, Surface, SurfaceVertex, Vertex};
 
 /// API for building a [`Vertex`]
 ///
-/// Also see [`Vertex::build`].
+/// Also see [`Vertex::builder`].
 pub struct VertexBuilder {
     /// The curve that the [`Vertex`] is defined in
     pub curve: Curve,
