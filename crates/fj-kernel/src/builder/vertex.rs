@@ -16,14 +16,14 @@ impl VertexBuilder {
         let point = point.into();
         let &surface = self.curve.surface();
 
-        let global_form =
-            GlobalVertex::builder().from_curve_and_position(&self.curve, point);
-
-        let surface_form = SurfaceVertex::new(
-            self.curve.path().point_from_path_coords(point),
+        let surface_form = SurfaceVertexBuilder {
+            position: self.curve.path().point_from_path_coords(point),
             surface,
-            global_form,
-        );
+            global_form: None,
+        }
+        .build();
+
+        let global_form = *surface_form.global_form();
 
         Vertex::new(point, self.curve.clone(), surface_form, global_form)
     }
