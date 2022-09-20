@@ -6,19 +6,17 @@ use crate::{
 };
 
 /// API for building a [`Sketch`]
+///
+/// Also see [`Sketch::build`].
 pub struct SketchBuilder<'a> {
-    stores: &'a Stores,
-    surface: Surface,
+    /// The stores that the created objects are put in
+    pub stores: &'a Stores,
+
+    /// The surface that the [`Sketch`] is defined in
+    pub surface: Surface,
 }
 
 impl<'a> SketchBuilder<'a> {
-    /// Construct an instance of `SketchBuilder`
-    ///
-    /// Also see [`Sketch::build`].
-    pub fn new(stores: &'a Stores, surface: Surface) -> Self {
-        Self { stores, surface }
-    }
-
     /// Construct a polygon from a list of points
     pub fn polygon_from_points(
         &self,
