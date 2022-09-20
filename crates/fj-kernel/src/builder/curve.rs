@@ -7,19 +7,17 @@ use crate::{
 };
 
 /// API for building a [`Curve`]
+///
+/// Also see [`Curve::build`].
 pub struct CurveBuilder<'a> {
-    stores: &'a Stores,
-    surface: Surface,
+    /// The stores that the created objects are put in
+    pub stores: &'a Stores,
+
+    /// The surface that the [`Curve`] is defined in
+    pub surface: Surface,
 }
 
 impl<'a> CurveBuilder<'a> {
-    /// Construct a new instance of [`CurveBuilder`]
-    ///
-    /// Also see [`Curve::build`].
-    pub fn new(stores: &'a Stores, surface: Surface) -> Self {
-        Self { stores, surface }
-    }
-
     /// Build a line that represents the u-axis on the surface
     pub fn u_axis(&self) -> Curve {
         let a = Point::origin();
