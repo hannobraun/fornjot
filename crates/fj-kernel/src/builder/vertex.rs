@@ -86,7 +86,7 @@ impl SurfaceVertexBuilder {
     pub fn build(self) -> SurfaceVertex {
         let global_form = self.global_form.unwrap_or_else(|| {
             GlobalVertex::builder()
-                .from_surface_and_position(&self.surface, self.position)
+                .build_from_surface_and_position(&self.surface, self.position)
         });
 
         SurfaceVertex::new(self.position, self.surface, global_form)
@@ -106,11 +106,11 @@ impl GlobalVertexBuilder {
         position: impl Into<Point<1>>,
     ) -> GlobalVertex {
         let position_surface = curve.path().point_from_path_coords(position);
-        self.from_surface_and_position(curve.surface(), position_surface)
+        self.build_from_surface_and_position(curve.surface(), position_surface)
     }
 
     /// Build a [`GlobalVertex`] from a surface and a position on that surface
-    pub fn from_surface_and_position(
+    pub fn build_from_surface_and_position(
         &self,
         surface: &Surface,
         position: impl Into<Point<2>>,
