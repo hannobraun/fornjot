@@ -46,7 +46,7 @@ impl ShapeProcessor {
         let stores = Stores::new();
         let mut debug_info = DebugInfo::new();
         let shape = shape.compute_brep(&config, &stores, &mut debug_info)?;
-        let mesh = shape.into_inner().triangulate(tolerance);
+        let mesh = (&shape.into_inner(), tolerance).triangulate();
 
         Ok(ProcessedShape {
             aabb,
