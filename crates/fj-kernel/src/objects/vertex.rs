@@ -1,7 +1,9 @@
 use fj_math::Point;
 use pretty_assertions::assert_eq;
 
-use crate::builder::{GlobalVertexBuilder, VertexBuilder};
+use crate::builder::{
+    GlobalVertexBuilder, SurfaceVertexBuilder, VertexBuilder,
+};
 
 use super::{Curve, Surface};
 
@@ -80,6 +82,18 @@ pub struct SurfaceVertex {
 }
 
 impl SurfaceVertex {
+    /// Build a `SurfaceVertex` using [`SurfaceVertexBuilder`]
+    pub fn builder(
+        position: impl Into<Point<2>>,
+        surface: Surface,
+    ) -> SurfaceVertexBuilder {
+        SurfaceVertexBuilder {
+            position: position.into(),
+            surface,
+            global_form: None,
+        }
+    }
+
     /// Construct a new instance of `SurfaceVertex`
     pub fn new(
         position: impl Into<Point<2>>,
