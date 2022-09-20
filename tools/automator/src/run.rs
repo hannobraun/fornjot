@@ -3,7 +3,10 @@ use std::env;
 use anyhow::Context;
 use octocrab::Octocrab;
 
-use crate::{announcement::create_release_announcement, args::Args};
+use crate::{
+    announcement::create_release_announcement, args::Args,
+    sponsors::query_sponsors,
+};
 
 pub async fn run() -> anyhow::Result<()> {
     let token = env::var("GITHUB_TOKEN")
@@ -17,39 +20,9 @@ pub async fn run() -> anyhow::Result<()> {
                 .context("Failed to create release announcement")?;
         }
         Args::Sponsors => {
-            let response: serde_json::Value = octocrab
-                .graphql(
-                    "query {
-                        viewer {
-                            sponsors(first: 100) {
-                                nodes {
-                                    __typename
-                                    ... on User {
-                                        login
-                                        sponsorshipForViewerAsSponsorable {
-                                            createdAt
-                                            tier {
-                                                monthlyPriceInDollars
-                                            }
-                                        }
-                                    }
-                                    ... on Organization {
-                                        login
-                                        sponsorshipForViewerAsSponsorable {
-                                            createdAt
-                                            tier {
-                                                monthlyPriceInDollars
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }",
-                )
-                .await?;
-            println!("{response}");
-
+            query_sponsors(&octocrab)
+                .await
+                .context("Failed to query sponsors")?;
             todo!("Querying sponsors is not supported yet.")
         }
     }
