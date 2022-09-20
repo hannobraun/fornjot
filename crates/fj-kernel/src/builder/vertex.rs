@@ -12,7 +12,7 @@ pub struct VertexBuilder {
 
 impl VertexBuilder {
     /// Build a vertex from a curve position
-    pub fn from_point(self, position: impl Into<Point<1>>) -> Vertex {
+    pub fn build(self, position: impl Into<Point<1>>) -> Vertex {
         let position = position.into();
 
         let surface_form = SurfaceVertexBuilder {
