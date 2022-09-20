@@ -21,12 +21,11 @@
 //!
 //! But in any case, this was fun to write, and not that much work.
 
-use std::{
-    any::type_name, fmt, hash::Hash, iter, marker::PhantomData, ops::Deref,
-    sync::Arc,
-};
+use std::{marker::PhantomData, sync::Arc};
 
 use parking_lot::RwLock;
+
+use super::{blocks::Blocks, Handle};
 
 /// Append-only object storage
 #[derive(Debug)]
@@ -97,152 +96,6 @@ impl<'a, T> IntoIterator for &'a Store<T> {
     }
 }
 
-/// A handle for an object
-///
-/// You can get an instance of `Handle` by inserting an object into a store. See
-/// [`Store::insert`]. A handle dereferences to the object it points to, via its
-/// [`Deref`] implementation.
-///
-/// # Equality and Identity
-///
-/// Equality of `Handle`s is defined via the objects they reference. If those
-/// objects are equal, the `Handle`s are considered equal.
-///
-/// This is distinct from the *identity* of the referenced objects. Two objects
-/// might be equal, but they might be have been created at different times, for
-/// different reasons, and thus live in different slots in the storage. This is
-/// a relevant distinction when validating objects, as equal but not identical
-/// objects might be a sign of a bug.
-///
-/// You can compare the identity of two objects through their `Handle`s, by
-/// comparing the values returned by [`Handle::id`].
-pub struct Handle<T> {
-    store: StoreInner<T>,
-    ptr: *const Option<T>,
-}
-
-impl<T> Handle<T> {
-    /// Access this pointer's unique id
-    pub fn id(&self) -> u64 {
-        self.ptr as u64
-    }
-
-    /// Return a clone of the object this handle refers to
-    pub fn clone_object(&self) -> T
-    where
-        T: Clone,
-    {
-        self.deref().clone()
-    }
-}
-
-impl<T> Deref for Handle<T> {
-    type Target = T;
-
-    fn deref(&self) -> &Self::Target {
-        // `Handle` keeps a reference to `StoreInner`. Since that is an `Arc`
-        // under the hood, we know that as long as an instance of `Handle`
-        // exists, the `StoreInner` its data lives in is still alive. Even if
-        // the `Store` was dropped.
-        //
-        // The `Store` API ensures two things:
-        //
-        // 1. That no `Handle` is ever created, until the object it references
-        //    has at least been reserved.
-        // 2. That the memory objects live in is never deallocated.
-        //
-        // That means that as long as a `Handle` exists, the object is
-        // references has at least been reserved, and has not been deallocated.
-        //
-        // Given all this, we know that the following must be true:
-        //
-        // - The pointer is not null.
-        // - The pointer is properly aligned.
-        // - The pointer is dereferenceable.
-        // - The pointer points to an initialized instance of `T`.
-        //
-        // Further, there is no way to (safely) get a `&mut` reference to any
-        // object in a `Store`/`Block`. So we know that the aliasing rules for
-        // the reference we return here are enforced.
-        //
-        // Furthermore, all of the code mentioned here is covered by unit tests,
-        // which I've run successfully run under Miri.
-        let cell = unsafe { &*self.ptr };
-
-        // Can only happen, if the object has been reserved, but the reservation
-        // was never completed.
-        cell.as_ref()
-            .expect("Handle references non-existing object")
-    }
-}
-
-impl<T> Clone for Handle<T> {
-    fn clone(&self) -> Self {
-        Self {
-            store: self.store.clone(),
-            ptr: self.ptr,
-        }
-    }
-}
-
-impl<T> Eq for Handle<T> where T: Eq {}
-
-impl<T> PartialEq for Handle<T>
-where
-    T: PartialEq,
-{
-    fn eq(&self, other: &Self) -> bool {
-        self.deref().eq(other.deref())
-    }
-}
-
-impl<T> Hash for Handle<T>
-where
-    T: Hash,
-{
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.deref().hash(state)
-    }
-}
-
-impl<T> Ord for Handle<T>
-where
-    T: Ord,
-{
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.deref().cmp(other.deref())
-    }
-}
-
-impl<T> PartialOrd for Handle<T>
-where
-    T: PartialOrd,
-{
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        self.deref().partial_cmp(other.deref())
-    }
-}
-
-impl<T> fmt::Debug for Handle<T> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let name = {
-            let type_name = type_name::<T>();
-            match type_name.rsplit_once("::") {
-                Some((_, name)) => name,
-                None => type_name,
-            }
-        };
-        let id = self.id();
-
-        write!(f, "{name} @ {id:#x}")?;
-
-        Ok(())
-    }
-}
-
-unsafe impl<T> Send for Handle<T> {}
-unsafe impl<T> Sync for Handle<T> {}
-
 /// An iterator over objects in a [`Store`]
 pub struct Iter<'a, T> {
     store: StoreInner<T>,
@@ -310,131 +163,11 @@ impl<T> Reservation<T> {
     }
 }
 
-type StoreInner<T> = Arc<RwLock<Blocks<T>>>;
-
-#[derive(Debug)]
-pub struct Blocks<T> {
-    inner: Vec<Block<T>>,
-    block_size: usize,
-}
-
-impl<T> Blocks<T> {
-    pub fn new(block_size: usize) -> Self {
-        Self {
-            inner: Vec::new(),
-            block_size,
-        }
-    }
-
-    pub fn push(&mut self, object: T) -> *const Option<T> {
-        let (index, _) = self.reserve();
-        self.insert(index, object)
-    }
-
-    pub fn reserve(&mut self) -> ((usize, usize), *mut Option<T>) {
-        let mut current_block = match self.inner.pop() {
-            Some(block) => block,
-            None => Block::new(self.block_size),
-        };
-
-        let ret = loop {
-            match current_block.reserve() {
-                Ok((object_index, ptr)) => {
-                    let block_index = self.inner.len();
-                    break ((block_index, object_index), ptr);
-                }
-                Err(()) => {
-                    // Block is full. Need to create a new one and retry.
-                    self.inner.push(current_block);
-                    current_block = Block::new(self.block_size);
-                }
-            }
-        };
-
-        self.inner.push(current_block);
-
-        ret
-    }
-
-    pub fn insert(
-        &mut self,
-        (block_index, object_index): (usize, usize),
-        object: T,
-    ) -> *const Option<T> {
-        let block = &mut self.inner[block_index];
-        block.insert(object_index, object)
-    }
-
-    pub fn get(&self, index: usize) -> Option<&Block<T>> {
-        self.inner.get(index)
-    }
-
-    #[cfg(test)]
-    pub fn iter(&self) -> impl Iterator<Item = &T> + '_ {
-        self.inner.iter().flat_map(|block| block.iter())
-    }
-}
-
-#[derive(Debug)]
-pub struct Block<T> {
-    objects: Box<[Option<T>]>,
-    next: usize,
-}
-
-impl<T> Block<T> {
-    pub fn new(size: usize) -> Self {
-        let vec = iter::repeat_with(|| None)
-            .take(size)
-            .collect::<Vec<Option<T>>>();
-        let objects = vec.into_boxed_slice();
-
-        Self { objects, next: 0 }
-    }
-
-    pub fn reserve(&mut self) -> Result<(usize, *mut Option<T>), ()> {
-        if self.next >= self.objects.len() {
-            return Err(());
-        }
-
-        let index = self.next;
-        let ptr = &mut self.objects[self.next];
-        self.next += 1;
-
-        Ok((index, ptr))
-    }
-
-    pub fn insert(&mut self, index: usize, object: T) -> *const Option<T> {
-        self.objects[index] = Some(object);
-        &self.objects[index]
-    }
-
-    pub fn get(&self, index: usize) -> &Option<T> {
-        &self.objects[index]
-    }
-
-    pub fn len(&self) -> usize {
-        self.next
-    }
-
-    #[cfg(test)]
-    pub fn iter(&self) -> impl Iterator<Item = &T> + '_ {
-        let mut i = 0;
-        iter::from_fn(move || {
-            if i >= self.len() {
-                return None;
-            }
-
-            let object = self.get(i).as_ref()?;
-            i += 1;
-
-            Some(object)
-        })
-    }
-}
+pub type StoreInner<T> = Arc<RwLock<Blocks<T>>>;
 
 #[cfg(test)]
 mod tests {
-    use super::{Blocks, Store};
+    use super::Store;
 
     #[test]
     fn insert_and_handle() {
@@ -476,16 +209,5 @@ mod tests {
 
         let objects = store.iter().collect::<Vec<_>>();
         assert_eq!(objects, [a, b]);
-    }
-
-    #[test]
-    fn blocks_push() {
-        let mut blocks = Blocks::new(1);
-
-        blocks.push(0);
-        blocks.push(1);
-
-        let objects = blocks.iter().copied().collect::<Vec<_>>();
-        assert_eq!(objects, [0, 1]);
     }
 }

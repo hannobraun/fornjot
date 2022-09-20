@@ -1,10 +1,15 @@
 //! Append-only object storage
 
+mod blocks;
+mod handle;
 mod store;
 
 use crate::objects::GlobalCurve;
 
-pub use self::store::{Handle, Iter, Reservation, Store};
+pub use self::{
+    handle::{Handle, HandleWrapper, ObjectId},
+    store::{Iter, Reservation, Store},
+};
 
 /// The available object stores
 #[derive(Debug, Default)]
