@@ -13,9 +13,9 @@ use super::approx::{face::FaceApprox, Approx, Tolerance};
 /// Triangulate a shape
 pub trait Triangulate: Sized {
     /// Triangulate the shape
-    fn triangulate(self, tolerance: impl Into<Tolerance>) -> Mesh<Point<3>> {
+    fn triangulate(self) -> Mesh<Point<3>> {
         let mut mesh = Mesh::new();
-        self.triangulate_into_mesh(tolerance, &mut mesh);
+        self.triangulate_into_mesh(&mut mesh);
         mesh
     }
 
@@ -23,38 +23,27 @@ pub trait Triangulate: Sized {
     ///
     /// This is a low-level method, intended for implementation of
     /// `Triangulate`. Most callers should prefer [`Triangulate::triangulate`].
-    fn triangulate_into_mesh(
-        self,
-        tolerance: impl Into<Tolerance>,
-        mesh: &mut Mesh<Point<3>>,
-    );
+    fn triangulate_into_mesh(self, mesh: &mut Mesh<Point<3>>);
 }
 
-impl<T> Triangulate for T
+impl<T> Triangulate for (T, Tolerance)
 where
     T: Approx,
     T::Approximation: IntoIterator<Item = FaceApprox>,
 {
-    fn triangulate_into_mesh(
-        self,
-        tolerance: impl Into<Tolerance>,
-        mesh: &mut Mesh<Point<3>>,
-    ) {
-        let tolerance = tolerance.into();
-        let approx = self.approx(tolerance);
+    fn triangulate_into_mesh(self, mesh: &mut Mesh<Point<3>>) {
+        let (approx, tolerance) = self;
+
+        let approx = approx.approx(tolerance);
 
         for approx in approx {
-            approx.triangulate_into_mesh(tolerance, mesh);
+            approx.triangulate_into_mesh(mesh);
         }
     }
 }
 
 impl Triangulate for FaceApprox {
-    fn triangulate_into_mesh(
-        self,
-        _: impl Into<Tolerance>,
-        mesh: &mut Mesh<Point<3>>,
-    ) {
+    fn triangulate_into_mesh(self, mesh: &mut Mesh<Point<3>>) {
         let points: Vec<_> = self
             .points()
             .into_iter()
@@ -221,6 +210,6 @@ mod tests {
 
     fn triangulate(face: impl Into<Face>) -> anyhow::Result<Mesh<Point<3>>> {
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
-        Ok(face.into().approx(tolerance).triangulate(tolerance))
+        Ok(face.into().approx(tolerance).triangulate())
     }
 }
