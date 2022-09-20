@@ -14,7 +14,7 @@ use std::collections::BTreeMap;
 use crate::{
     objects::{Curve, GlobalCurve},
     path::{GlobalPath, SurfacePath},
-    stores::Handle,
+    stores::{Handle, ObjectId},
 };
 
 use super::{path::RangeOnPath, Approx, ApproxPoint, Tolerance};
@@ -152,7 +152,7 @@ impl CurveApprox {
 /// A cache for results of an approximation
 #[derive(Default)]
 pub struct CurveCache {
-    inner: BTreeMap<(Handle<GlobalCurve>, RangeOnPath), GlobalCurveApprox>,
+    inner: BTreeMap<(ObjectId, RangeOnPath), GlobalCurveApprox>,
 }
 
 impl CurveCache {
@@ -168,7 +168,7 @@ impl CurveCache {
         range: RangeOnPath,
         approx: GlobalCurveApprox,
     ) -> GlobalCurveApprox {
-        self.inner.insert((handle, range), approx.clone());
+        self.inner.insert((handle.id(), range), approx.clone());
         approx
     }
 
@@ -178,7 +178,7 @@ impl CurveCache {
         handle: Handle<GlobalCurve>,
         range: RangeOnPath,
     ) -> Option<GlobalCurveApprox> {
-        self.inner.get(&(handle, range)).cloned()
+        self.inner.get(&(handle.id(), range)).cloned()
     }
 }
 
