@@ -8,7 +8,7 @@ use crate::{
 
 /// API for building a [`Curve`]
 ///
-/// Also see [`Curve::build`].
+/// Also see [`Curve::builder`].
 pub struct CurveBuilder<'a> {
     /// The stores that the created objects are put in
     pub stores: &'a Stores,

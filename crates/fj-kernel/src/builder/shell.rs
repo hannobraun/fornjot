@@ -8,7 +8,7 @@ use crate::{
 
 /// API for building a [`Shell`]
 ///
-/// Also see [`Shell::build`].
+/// Also see [`Shell::builder`].
 pub struct ShellBuilder<'a> {
     /// The stores that the created objects are put in
     pub stores: &'a Stores,
@@ -37,7 +37,7 @@ impl<'a> ShellBuilder<'a> {
         ];
 
         let faces = planes.map(|plane| {
-            Face::build(self.stores, plane)
+            Face::builder(self.stores, plane)
                 .polygon_from_points(points)
                 .into_face()
         });

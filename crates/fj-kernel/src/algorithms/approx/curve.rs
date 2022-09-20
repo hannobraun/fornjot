@@ -207,7 +207,7 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::new(GlobalPath::x_axis(), [0., 0., 1.]);
-        let curve = Curve::build(&stores, surface)
+        let curve = Curve::builder(&stores, surface)
             .line_from_points([[1., 1.], [2., 1.]]);
         let range = RangeOnPath::from([[0.], [1.]]);
 
@@ -222,7 +222,7 @@ mod tests {
 
         let surface =
             Surface::new(GlobalPath::circle_from_radius(1.), [0., 0., 1.]);
-        let curve = Curve::build(&stores, surface)
+        let curve = Curve::builder(&stores, surface)
             .line_from_points([[1., 1.], [1., 2.]]);
         let range = RangeOnPath::from([[0.], [1.]]);
 
@@ -237,7 +237,7 @@ mod tests {
 
         let path = GlobalPath::circle_from_radius(1.);
         let surface = Surface::new(path, [0., 0., 1.]);
-        let curve = Curve::build(&stores, surface)
+        let curve = Curve::builder(&stores, surface)
             .line_from_points([[0., 1.], [1., 1.]]);
 
         let range = RangeOnPath::from([[0.], [TAU]]);
@@ -264,7 +264,7 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::new(GlobalPath::x_axis(), [0., 0., 1.]);
-        let curve = Curve::build(&stores, surface).circle_from_radius(1.);
+        let curve = Curve::builder(&stores, surface).circle_from_radius(1.);
 
         let range = RangeOnPath::from([[0.], [TAU]]);
         let tolerance = 1.;

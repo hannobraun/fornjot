@@ -15,8 +15,8 @@ pub struct Curve {
 }
 
 impl Curve {
-    /// Build a curve using [`CurveBuilder`]
-    pub fn build(stores: &Stores, surface: Surface) -> CurveBuilder {
+    /// Build a `Curve` using [`CurveBuilder`]
+    pub fn builder(stores: &Stores, surface: Surface) -> CurveBuilder {
         CurveBuilder { stores, surface }
     }
 

@@ -14,8 +14,8 @@ pub struct Sketch {
 }
 
 impl Sketch {
-    /// Build a sketch using [`SketchBuilder`]
-    pub fn build(stores: &Stores, surface: Surface) -> SketchBuilder {
+    /// Build a `Sketch` using [`SketchBuilder`]
+    pub fn builder(stores: &Stores, surface: Surface) -> SketchBuilder {
         SketchBuilder { stores, surface }
     }
 

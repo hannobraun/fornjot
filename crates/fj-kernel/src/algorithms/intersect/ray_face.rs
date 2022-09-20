@@ -168,7 +168,7 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = Face::build(&stores, Surface::yz_plane())
+        let face = Face::builder(&stores, Surface::yz_plane())
             .polygon_from_points([[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]])
             .into_face()
             .translate([-1., 0., 0.], &stores);
@@ -182,7 +182,7 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = Face::build(&stores, Surface::yz_plane())
+        let face = Face::builder(&stores, Surface::yz_plane())
             .polygon_from_points([[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]])
             .into_face()
             .translate([1., 0., 0.], &stores);
@@ -199,7 +199,7 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = Face::build(&stores, Surface::yz_plane())
+        let face = Face::builder(&stores, Surface::yz_plane())
             .polygon_from_points([[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]])
             .into_face()
             .translate([0., 0., 2.], &stores);
@@ -213,7 +213,7 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = Face::build(&stores, Surface::yz_plane())
+        let face = Face::builder(&stores, Surface::yz_plane())
             .polygon_from_points([[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]])
             .into_face()
             .translate([1., 1., 0.], &stores);
@@ -238,7 +238,7 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = Face::build(&stores, Surface::yz_plane())
+        let face = Face::builder(&stores, Surface::yz_plane())
             .polygon_from_points([[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]])
             .into_face()
             .translate([1., 1., 1.], &stores);
@@ -261,7 +261,7 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = Face::build(&stores, Surface::xy_plane())
+        let face = Face::builder(&stores, Surface::xy_plane())
             .polygon_from_points([[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]])
             .into_face();
 
@@ -277,7 +277,7 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = Face::build(&stores, Surface::xy_plane())
+        let face = Face::builder(&stores, Surface::xy_plane())
             .polygon_from_points([[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]])
             .into_face()
             .translate([0., 0., 1.], &stores);

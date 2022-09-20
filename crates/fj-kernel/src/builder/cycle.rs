@@ -7,7 +7,7 @@ use crate::{
 
 /// API for building a [`Cycle`]
 ///
-/// Also see [`Cycle::build`].
+/// Also see [`Cycle::builder`].
 pub struct CycleBuilder<'a> {
     /// The stores that the created objects are put in
     pub stores: &'a Stores,
@@ -38,7 +38,7 @@ impl<'a> CycleBuilder<'a> {
             let points = [points[0], points[1]];
 
             half_edges.push(
-                HalfEdge::build(self.stores, self.surface)
+                HalfEdge::builder(self.stores, self.surface)
                     .line_segment_from_points(points),
             );
         }
