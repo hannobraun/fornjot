@@ -317,7 +317,7 @@ impl<T> Reservation<T> {
     }
 }
 
-type StoreInner<T> = Arc<RwLock<Blocks<T>>>;
+pub type StoreInner<T> = Arc<RwLock<Blocks<T>>>;
 
 #[cfg(test)]
 mod tests {
