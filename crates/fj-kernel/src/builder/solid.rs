@@ -20,7 +20,7 @@ impl<'a> SolidBuilder<'a> {
         edge_length: impl Into<Scalar>,
     ) -> Solid {
         let shell =
-            Shell::build(self.stores).cube_from_edge_length(edge_length);
+            Shell::builder(self.stores).cube_from_edge_length(edge_length);
         Solid::new().with_shells([shell])
     }
 }

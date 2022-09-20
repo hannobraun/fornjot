@@ -15,7 +15,7 @@ pub struct Shell {
 
 impl Shell {
     /// Build a shell using [`ShellBuilder`]
-    pub fn build(stores: &Stores) -> ShellBuilder {
+    pub fn builder(stores: &Stores) -> ShellBuilder {
         ShellBuilder { stores }
     }
 

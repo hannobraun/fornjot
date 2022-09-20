@@ -8,7 +8,7 @@ use crate::{
 
 /// API for building a [`Shell`]
 ///
-/// Also see [`Shell::build`].
+/// Also see [`Shell::builder`].
 pub struct ShellBuilder<'a> {
     /// The stores that the created objects are put in
     pub stores: &'a Stores,
