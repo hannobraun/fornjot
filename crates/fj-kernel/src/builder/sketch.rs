@@ -7,7 +7,7 @@ use crate::{
 
 /// API for building a [`Sketch`]
 ///
-/// Also see [`Sketch::build`].
+/// Also see [`Sketch::builder`].
 pub struct SketchBuilder<'a> {
     /// The stores that the created objects are put in
     pub stores: &'a Stores,

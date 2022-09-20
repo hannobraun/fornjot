@@ -90,7 +90,7 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::xy_plane();
-        let solid = Sketch::build(&stores, surface)
+        let solid = Sketch::builder(&stores, surface)
             .polygon_from_points(TRIANGLE)
             .sweep(UP, &stores);
 
@@ -125,7 +125,7 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::xy_plane();
-        let solid = Sketch::build(&stores, surface)
+        let solid = Sketch::builder(&stores, surface)
             .polygon_from_points(TRIANGLE)
             .sweep(DOWN, &stores);
 
