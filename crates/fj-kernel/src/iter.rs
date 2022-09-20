@@ -521,7 +521,7 @@ mod tests {
     fn solid() {
         let stores = Stores::new();
 
-        let object = Solid::build(&stores).cube_from_edge_length(1.);
+        let object = Solid::builder(&stores).cube_from_edge_length(1.);
 
         assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());

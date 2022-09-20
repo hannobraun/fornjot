@@ -17,7 +17,7 @@ pub struct Solid {
 
 impl Solid {
     /// Build a solid using [`SolidBuilder`]
-    pub fn build(stores: &Stores) -> SolidBuilder {
+    pub fn builder(stores: &Stores) -> SolidBuilder {
         SolidBuilder { stores }
     }
 

@@ -7,7 +7,7 @@ use crate::{
 
 /// API for building a [`Solid`]
 ///
-/// Also see [`Solid::build`].
+/// Also see [`Solid::builder`].
 pub struct SolidBuilder<'a> {
     /// The stores that the created objects are put in
     pub stores: &'a Stores,
