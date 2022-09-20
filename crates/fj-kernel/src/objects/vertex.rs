@@ -22,8 +22,14 @@ pub struct Vertex {
 
 impl Vertex {
     /// Build a `Vertex` using [`VertexBuilder`]
-    pub fn builder(curve: Curve) -> VertexBuilder {
-        VertexBuilder { curve }
+    pub fn builder(
+        position: impl Into<Point<1>>,
+        curve: Curve,
+    ) -> VertexBuilder {
+        VertexBuilder {
+            position: position.into(),
+            curve,
+        }
     }
 
     /// Construct an instance of `Vertex`

@@ -6,17 +6,18 @@ use crate::objects::{Curve, GlobalVertex, Surface, SurfaceVertex, Vertex};
 ///
 /// Also see [`Vertex::builder`].
 pub struct VertexBuilder {
+    /// The position of the [`Vertex`] on the [`Curve`]
+    pub position: Point<1>,
+
     /// The curve that the [`Vertex`] is defined in
     pub curve: Curve,
 }
 
 impl VertexBuilder {
     /// Build a vertex from a curve position
-    pub fn build(self, position: impl Into<Point<1>>) -> Vertex {
-        let position = position.into();
-
+    pub fn build(self) -> Vertex {
         let surface_form = SurfaceVertexBuilder {
-            position: self.curve.path().point_from_path_coords(position),
+            position: self.curve.path().point_from_path_coords(self.position),
             surface: *self.curve.surface(),
             global_form: None,
         }
@@ -24,7 +25,7 @@ impl VertexBuilder {
 
         let global_form = *surface_form.global_form();
 
-        Vertex::new(position, self.curve, surface_form, global_form)
+        Vertex::new(self.position, self.curve, surface_form, global_form)
     }
 }
 
