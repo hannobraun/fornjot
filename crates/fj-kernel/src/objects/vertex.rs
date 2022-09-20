@@ -21,7 +21,7 @@ pub struct Vertex {
 impl Vertex {
     /// Build a vertex using [`VertexBuilder`]
     pub fn build(curve: Curve) -> VertexBuilder {
-        VertexBuilder::new(curve)
+        VertexBuilder { curve }
     }
 
     /// Construct an instance of `Vertex`

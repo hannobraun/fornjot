@@ -3,18 +3,14 @@ use fj_math::Point;
 use crate::objects::{Curve, GlobalVertex, Surface, SurfaceVertex, Vertex};
 
 /// API for building a [`Vertex`]
+///
+/// Also see [`Vertex::build`].
 pub struct VertexBuilder {
-    curve: Curve,
+    /// The curve that the [`Vertex`] is defined in
+    pub curve: Curve,
 }
 
 impl VertexBuilder {
-    /// Construct a new instance of `VertexBuilder`
-    ///
-    /// Also see [`Vertex::build`].
-    pub fn new(curve: Curve) -> Self {
-        Self { curve }
-    }
-
     /// Build a vertex from a curve position
     pub fn from_point(&self, point: impl Into<Point<1>>) -> Vertex {
         let point = point.into();
