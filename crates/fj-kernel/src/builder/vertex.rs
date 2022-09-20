@@ -100,7 +100,7 @@ pub struct GlobalVertexBuilder;
 
 impl GlobalVertexBuilder {
     /// Build a [`GlobalVertex`] from a curve and a position on that curve
-    pub fn from_curve_and_position(
+    pub fn build_from_curve_and_position(
         &self,
         curve: &Curve,
         position: impl Into<Point<1>>,
