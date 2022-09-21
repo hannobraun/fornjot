@@ -23,7 +23,8 @@ impl<'a> SketchBuilder<'a> {
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Sketch {
         let face = Face::builder(self.stores, self.surface)
-            .build_polygon_from_points(points)
+            .with_exterior_polygon_from_points(points)
+            .build()
             .into_face();
         Sketch::new().with_faces([face])
     }

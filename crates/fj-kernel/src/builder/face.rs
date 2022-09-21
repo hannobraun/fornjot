@@ -16,16 +16,32 @@ pub struct FaceBuilder<'a> {
 
     /// The surface that the [`Face`] is defined in
     pub surface: Surface,
+
+    /// The exterior cycle that bounds the [`Face`] on the outside
+    ///
+    /// Must be provided by the caller, directly or using one of the `with_`
+    /// methods, before [`FaceBuilder::build`] is called.
+    pub exterior: Option<Cycle>,
 }
 
 impl<'a> FaceBuilder<'a> {
-    /// Construct a polygon from a list of points
-    pub fn build_polygon_from_points(
-        self,
+    /// Build the [`Face`] with an exterior polygon from the provided points
+    pub fn with_exterior_polygon_from_points(
+        mut self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> FacePolygon<'a> {
-        let exterior = Cycle::builder(self.stores, self.surface)
-            .build_polygon_from_points(points);
+    ) -> Self {
+        self.exterior = Some(
+            Cycle::builder(self.stores, self.surface)
+                .build_polygon_from_points(points),
+        );
+        self
+    }
+
+    /// Construct a polygon from a list of points
+    pub fn build(self) -> FacePolygon<'a> {
+        let exterior = self
+            .exterior
+            .expect("Can't build `Face` without exterior cycle");
         let face = Face::new(self.surface, exterior);
 
         FacePolygon {

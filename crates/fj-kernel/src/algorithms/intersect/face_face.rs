@@ -84,7 +84,8 @@ mod tests {
         let surfaces = [Surface::xy_plane(), Surface::xz_plane()];
         let [a, b] = surfaces.map(|surface| {
             Face::builder(&stores, surface)
-                .build_polygon_from_points(points)
+                .with_exterior_polygon_from_points(points)
+                .build()
                 .into_face()
         });
 
@@ -107,7 +108,8 @@ mod tests {
         let surfaces = [Surface::xy_plane(), Surface::xz_plane()];
         let [a, b] = surfaces.map(|surface| {
             Face::builder(&stores, surface)
-                .build_polygon_from_points(points)
+                .with_exterior_polygon_from_points(points)
+                .build()
                 .into_face()
         });
 

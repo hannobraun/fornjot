@@ -38,7 +38,8 @@ impl<'a> ShellBuilder<'a> {
 
         let faces = planes.map(|plane| {
             Face::builder(self.stores, plane)
-                .build_polygon_from_points(points)
+                .with_exterior_polygon_from_points(points)
+                .build()
                 .into_face()
         });
 
