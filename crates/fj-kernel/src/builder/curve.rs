@@ -27,7 +27,7 @@ impl<'a> CurveBuilder<'a> {
     }
 
     /// Build a line that represents the v-axis on the surface
-    pub fn v_axis(&self) -> Curve {
+    pub fn build_v_axis(&self) -> Curve {
         let a = Point::origin();
         let b = a + Vector::unit_v();
 
