@@ -12,7 +12,7 @@ mod vertex;
 pub use self::{
     curve::{CurveBuilder, GlobalCurveBuilder},
     cycle::CycleBuilder,
-    edge::HalfEdgeBuilder,
+    edge::{GlobalEdgeBuilder, HalfEdgeBuilder},
     face::FaceBuilder,
     shell::ShellBuilder,
     sketch::SketchBuilder,

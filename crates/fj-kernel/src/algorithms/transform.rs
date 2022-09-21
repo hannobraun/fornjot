@@ -4,8 +4,8 @@ use fj_math::{Transform, Vector};
 
 use crate::{
     objects::{
-        Curve, Cycle, Face, Faces, GlobalCurve, GlobalVertex, HalfEdge, Shell,
-        Sketch, Solid, Surface, SurfaceVertex, Vertex,
+        Curve, Cycle, Face, Faces, GlobalCurve, GlobalEdge, GlobalVertex,
+        HalfEdge, Shell, Sketch, Solid, Surface, SurfaceVertex, Vertex,
     },
     path::GlobalPath,
     stores::{Handle, Stores},
@@ -122,6 +122,23 @@ impl TransformObject for GlobalCurve {
     }
 }
 
+impl TransformObject for GlobalEdge {
+    type Transformed = Self;
+
+    fn transform(
+        self,
+        transform: &Transform,
+        stores: &Stores,
+    ) -> Self::Transformed {
+        let curve = self.curve().clone().transform(transform, stores);
+        let vertices = self
+            .vertices()
+            .map(|vertex| vertex.transform(transform, stores));
+
+        Self::new(curve, vertices)
+    }
+}
+
 impl TransformObject for GlobalPath {
     type Transformed = Self;
 
@@ -153,8 +170,10 @@ impl TransformObject for HalfEdge {
             .vertices()
             .clone()
             .map(|vertex| vertex.transform(transform, stores));
+        let global_form =
+            self.global_form().clone().transform(transform, stores);
 
-        Self::from_curve_and_vertices(curve, vertices)
+        Self::new(curve, vertices, global_form)
     }
 }
 

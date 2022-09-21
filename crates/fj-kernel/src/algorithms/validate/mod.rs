@@ -161,8 +161,8 @@ mod tests {
     use crate::{
         algorithms::validate::{Validate, ValidationConfig, ValidationError},
         objects::{
-            Curve, GlobalCurve, GlobalVertex, HalfEdge, Surface, SurfaceVertex,
-            Vertex,
+            Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
+            SurfaceVertex, Vertex,
         },
         path::{GlobalPath, SurfacePath},
         stores::Stores,
@@ -236,7 +236,9 @@ mod tests {
         );
         let vertices = [a, b];
 
-        let half_edge = HalfEdge::from_curve_and_vertices(curve, vertices);
+        let global_edge = GlobalEdge::builder()
+            .build_from_curve_and_vertices(&curve, &vertices);
+        let half_edge = HalfEdge::new(curve, vertices, global_edge);
 
         let result =
             half_edge.clone().validate_with_config(&ValidationConfig {

@@ -1,7 +1,7 @@
 use std::fmt;
 
 use crate::{
-    builder::HalfEdgeBuilder,
+    builder::{GlobalEdgeBuilder, HalfEdgeBuilder},
     stores::{Handle, Stores},
 };
 
@@ -22,10 +22,6 @@ impl HalfEdge {
     }
 
     /// Create a new instance of `HalfEdge`
-    ///
-    /// If you only have a curve and the edge vertices, please check out
-    /// [`HalfEdge::from_curve_and_vertices`], which is a convenience wrapper
-    /// around this method, which creates an instance of [`GlobalEdge`].
     ///
     /// # Panics
     ///
@@ -76,22 +72,6 @@ impl HalfEdge {
         }
     }
 
-    /// Create a new instance of `HalfEdge` from a curve and vertices
-    ///
-    /// The [`GlobalEdge`] instance is created from the provided curve and
-    /// vertices. Please refer to [`HalfEdge::new`], if you already have a
-    /// [`GlobalEdge`] instance that you can provide.
-    pub fn from_curve_and_vertices(
-        curve: Curve,
-        vertices: [Vertex; 2],
-    ) -> Self {
-        let global = GlobalEdge::new(
-            curve.global_form().clone(),
-            vertices.clone().map(|vertex| *vertex.global_form()),
-        );
-        Self::new(curve, vertices, global)
-    }
-
     /// Access the curve that defines the half-edge's geometry
     ///
     /// The edge can be a segment of the curve that is bounded by two vertices,
@@ -134,6 +114,11 @@ pub struct GlobalEdge {
 }
 
 impl GlobalEdge {
+    /// Build a `GlobalEdge` using [`GlobalEdgeBuilder`]
+    pub fn builder() -> GlobalEdgeBuilder {
+        GlobalEdgeBuilder
+    }
+
     /// Create a new instance
     pub fn new(
         curve: Handle<GlobalCurve>,
