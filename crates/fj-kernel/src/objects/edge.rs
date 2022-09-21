@@ -22,6 +22,7 @@ impl HalfEdge {
             stores,
             surface,
             curve: None,
+            vertices: None,
         }
     }
 

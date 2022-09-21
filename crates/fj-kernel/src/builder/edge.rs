@@ -21,12 +21,21 @@ pub struct HalfEdgeBuilder<'a> {
 
     /// The curve that the [`HalfEdge`] is defined in
     pub curve: Option<Curve>,
+
+    /// The vertices that bound this [`HalfEdge`] in the [`Curve`]
+    pub vertices: Option<[Vertex; 2]>,
 }
 
 impl<'a> HalfEdgeBuilder<'a> {
     /// Build the [`HalfEdge`] with the given curve
     pub fn with_curve(mut self, curve: Curve) -> Self {
         self.curve = Some(curve);
+        self
+    }
+
+    /// Build the [`HalfEdge`] with the given vertices
+    pub fn with_vertices(mut self, vertices: [Vertex; 2]) -> Self {
+        self.vertices = Some(vertices);
         self
     }
 
@@ -40,7 +49,7 @@ impl<'a> HalfEdgeBuilder<'a> {
                 .build_circle_from_radius(radius)
         });
 
-        let vertices = {
+        let vertices = self.vertices.unwrap_or_else(|| {
             let [a_curve, b_curve] =
                 [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
@@ -66,7 +75,7 @@ impl<'a> HalfEdgeBuilder<'a> {
                     )
                 },
             )
-        };
+        });
 
         let global_form = GlobalEdge::builder()
             .build_from_curve_and_vertices(&curve, &vertices);
@@ -115,7 +124,7 @@ impl<'a> HalfEdgeBuilder<'a> {
             Curve::new(self.surface, path, global_form)
         });
 
-        let vertices = {
+        let vertices = self.vertices.unwrap_or_else(|| {
             let [a_global, b_global] = global_vertices;
             let [a_surface, b_surface] = surface_vertices;
 
@@ -133,7 +142,7 @@ impl<'a> HalfEdgeBuilder<'a> {
                     b_global,
                 ),
             ]
-        };
+        });
 
         let global_form = GlobalEdge::builder()
             .build_from_curve_and_vertices(&curve, &vertices);
