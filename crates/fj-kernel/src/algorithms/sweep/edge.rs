@@ -192,7 +192,8 @@ mod tests {
         let stores = Stores::new();
 
         let half_edge = HalfEdge::builder(&stores, Surface::xy_plane())
-            .build_line_segment_from_points([[0., 0.], [1., 0.]]);
+            .as_line_segment_from_points([[0., 0.], [1., 0.]])
+            .build();
 
         let face = (half_edge, Color::default()).sweep([0., 0., 1.], &stores);
 
@@ -200,15 +201,19 @@ mod tests {
             let surface = Surface::xz_plane();
 
             let bottom = HalfEdge::builder(&stores, surface)
-                .build_line_segment_from_points([[0., 0.], [1., 0.]]);
+                .as_line_segment_from_points([[0., 0.], [1., 0.]])
+                .build();
             let top = HalfEdge::builder(&stores, surface)
-                .build_line_segment_from_points([[0., 1.], [1., 1.]])
+                .as_line_segment_from_points([[0., 1.], [1., 1.]])
+                .build()
                 .reverse();
             let left = HalfEdge::builder(&stores, surface)
-                .build_line_segment_from_points([[0., 0.], [0., 1.]])
+                .as_line_segment_from_points([[0., 0.], [0., 1.]])
+                .build()
                 .reverse();
             let right = HalfEdge::builder(&stores, surface)
-                .build_line_segment_from_points([[1., 0.], [1., 1.]]);
+                .as_line_segment_from_points([[1., 0.], [1., 1.]])
+                .build();
 
             let cycle = Cycle::new(surface, [bottom, right, top, left]);
 

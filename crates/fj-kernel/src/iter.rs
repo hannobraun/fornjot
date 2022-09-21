@@ -462,7 +462,8 @@ mod tests {
         let stores = Stores::new();
 
         let object = HalfEdge::builder(&stores, Surface::xy_plane())
-            .build_line_segment_from_points([[0., 0.], [1., 0.]]);
+            .as_line_segment_from_points([[0., 0.], [1., 0.]])
+            .build();
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());

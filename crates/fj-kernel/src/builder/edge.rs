@@ -9,23 +9,50 @@ use crate::{
     stores::Stores,
 };
 
-/// API for building an [`HalfEdge`]
+/// API for building a [`HalfEdge`]
 ///
 /// Also see [`HalfEdge::builder`].
 pub struct HalfEdgeBuilder<'a> {
     /// The stores that the created objects are put in
     pub stores: &'a Stores,
 
-    /// The surface that the [`HalfEdge`] is defined in
+    /// The surface that the [`HalfEdge`]'s [`Curve`] is defined in
     pub surface: Surface,
+
+    /// The curve that the [`HalfEdge`] is defined in
+    pub curve: Option<Curve>,
+
+    /// The vertices that bound this [`HalfEdge`] in the [`Curve`]
+    pub vertices: Option<[Vertex; 2]>,
+
+    /// The global form of the [`HalfEdge`]
+    ///
+    /// Can be provided to the builder, if available, or computed by one of the
+    /// build methods.
+    pub global_form: Option<GlobalEdge>,
 }
 
 impl<'a> HalfEdgeBuilder<'a> {
-    /// Build a circle from the given radius
-    pub fn build_circle_from_radius(
-        self,
-        radius: impl Into<Scalar>,
-    ) -> HalfEdge {
+    /// Build the [`HalfEdge`] with the given curve
+    pub fn with_curve(mut self, curve: Curve) -> Self {
+        self.curve = Some(curve);
+        self
+    }
+
+    /// Build the [`HalfEdge`] with the given vertices
+    pub fn with_vertices(mut self, vertices: [Vertex; 2]) -> Self {
+        self.vertices = Some(vertices);
+        self
+    }
+
+    /// Build the [`HalfEdge`] with the provided global form
+    pub fn with_global_form(mut self, global_form: GlobalEdge) -> Self {
+        self.global_form = Some(global_form);
+        self
+    }
+
+    /// Build the [`HalfEdge`] as a circle from the given radius
+    pub fn as_circle_from_radius(mut self, radius: impl Into<Scalar>) -> Self {
         let curve = Curve::builder(self.stores, self.surface)
             .build_circle_from_radius(radius);
 
@@ -57,17 +84,17 @@ impl<'a> HalfEdgeBuilder<'a> {
             )
         };
 
-        let global_form = GlobalEdge::builder()
-            .build_from_curve_and_vertices(&curve, &vertices);
+        self.curve = Some(curve);
+        self.vertices = Some(vertices);
 
-        HalfEdge::new(curve, vertices, global_form)
+        self
     }
 
-    /// Build a line segment from two points
-    pub fn build_line_segment_from_points(
-        self,
+    /// Build the [`HalfEdge`] as a line segment from the given points
+    pub fn as_line_segment_from_points(
+        mut self,
         points: [impl Into<Point<2>>; 2],
-    ) -> HalfEdge {
+    ) -> Self {
         let points = points.map(Into::into);
 
         let global_vertices = points.map(|position| {
@@ -124,8 +151,23 @@ impl<'a> HalfEdgeBuilder<'a> {
             ]
         };
 
-        let global_form = GlobalEdge::builder()
-            .build_from_curve_and_vertices(&curve, &vertices);
+        self.curve = Some(curve);
+        self.vertices = Some(vertices);
+
+        self
+    }
+
+    /// Finish building the [`HalfEdge`]
+    pub fn build(self) -> HalfEdge {
+        let curve = self.curve.expect("Can't build `HalfEdge` without curve");
+        let vertices = self
+            .vertices
+            .expect("Can't build `HalfEdge` without vertices");
+
+        let global_form = self.global_form.unwrap_or_else(|| {
+            GlobalEdge::builder()
+                .build_from_curve_and_vertices(&curve, &vertices)
+        });
 
         HalfEdge::new(curve, vertices, global_form)
     }
