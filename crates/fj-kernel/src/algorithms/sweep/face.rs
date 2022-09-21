@@ -91,7 +91,7 @@ mod tests {
 
         let surface = Surface::xy_plane();
         let solid = Sketch::builder(&stores, surface)
-            .polygon_from_points(TRIANGLE)
+            .build_polygon_from_points(TRIANGLE)
             .sweep(UP, &stores);
 
         let bottom = Face::builder(&stores, surface)
@@ -126,7 +126,7 @@ mod tests {
 
         let surface = Surface::xy_plane();
         let solid = Sketch::builder(&stores, surface)
-            .polygon_from_points(TRIANGLE)
+            .build_polygon_from_points(TRIANGLE)
             .sweep(DOWN, &stores);
 
         let bottom = Face::builder(&stores, surface.translate(DOWN, &stores))
