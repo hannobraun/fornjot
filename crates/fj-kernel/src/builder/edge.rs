@@ -165,6 +165,21 @@ impl<'a> HalfEdgeBuilder<'a> {
 
         HalfEdge::new(curve, vertices, global_form)
     }
+
+    /// Finish building the [`HalfEdge`]
+    pub fn build(self) -> HalfEdge {
+        let curve = self.curve.expect("Can't build `HalfEdge` without curve");
+        let vertices = self
+            .vertices
+            .expect("Can't build `HalfEdge` without vertices");
+
+        let global_form = self.global_form.unwrap_or_else(|| {
+            GlobalEdge::builder()
+                .build_from_curve_and_vertices(&curve, &vertices)
+        });
+
+        HalfEdge::new(curve, vertices, global_form)
+    }
 }
 
 /// API for building a [`GlobalEdge`]
