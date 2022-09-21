@@ -27,7 +27,9 @@ impl Shape for fj::Sketch {
                 // none need to be added here.
 
                 let half_edge = HalfEdge::builder(stores, surface)
-                    .circle_from_radius(Scalar::from_f64(circle.radius()));
+                    .build_circle_from_radius(Scalar::from_f64(
+                        circle.radius(),
+                    ));
                 let cycle = Cycle::new(surface, [half_edge]);
 
                 Face::new(surface, cycle).with_color(Color(self.color()))
