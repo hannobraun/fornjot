@@ -23,6 +23,7 @@ impl HalfEdge {
             surface,
             curve: None,
             vertices: None,
+            global_form: None,
         }
     }
 
