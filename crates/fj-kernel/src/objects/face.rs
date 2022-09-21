@@ -71,6 +71,7 @@ impl Face {
             stores,
             surface,
             exterior: None,
+            interiors: Vec::new(),
         }
     }
 

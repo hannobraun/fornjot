@@ -22,6 +22,9 @@ pub struct FaceBuilder<'a> {
     /// Must be provided by the caller, directly or using one of the `with_`
     /// methods, before [`FaceBuilder::build`] is called.
     pub exterior: Option<Cycle>,
+
+    /// The interior cycles that form holes in the [`Face`]
+    pub interiors: Vec<Cycle>,
 }
 
 impl<'a> FaceBuilder<'a> {
@@ -37,12 +40,25 @@ impl<'a> FaceBuilder<'a> {
         self
     }
 
+    /// Build the [`Face`] with an interior polygon from the provided points
+    pub fn with_interior_polygon_from_points(
+        mut self,
+        points: impl IntoIterator<Item = impl Into<Point<2>>>,
+    ) -> Self {
+        self.interiors.push(
+            Cycle::builder(self.stores, self.surface)
+                .build_polygon_from_points(points),
+        );
+        self
+    }
+
     /// Construct a polygon from a list of points
     pub fn build(self) -> FacePolygon<'a> {
         let exterior = self
             .exterior
             .expect("Can't build `Face` without exterior cycle");
-        let face = Face::new(self.surface, exterior);
+        let face =
+            Face::new(self.surface, exterior).with_interiors(self.interiors);
 
         FacePolygon {
             stores: self.stores,

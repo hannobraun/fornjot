@@ -188,8 +188,8 @@ mod tests {
 
         let face = Face::builder(&stores, surface)
             .with_exterior_polygon_from_points(exterior)
+            .with_interior_polygon_from_points(interior)
             .build()
-            .with_hole(interior)
             .into_face();
 
         let expected =

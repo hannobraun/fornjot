@@ -137,8 +137,8 @@ mod tests {
         let surface = Surface::xy_plane();
         let face = Face::builder(&stores, surface)
             .with_exterior_polygon_from_points([a, b, c, d])
+            .with_interior_polygon_from_points([e, f, g, h])
             .build()
-            .with_hole([e, f, g, h])
             .into_face();
 
         let triangles = triangulate(face)?;
