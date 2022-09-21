@@ -19,7 +19,7 @@ pub struct CurveBuilder<'a> {
 
 impl<'a> CurveBuilder<'a> {
     /// Build a line that represents the u-axis on the surface
-    pub fn u_axis(&self) -> Curve {
+    pub fn build_u_axis(&self) -> Curve {
         let a = Point::origin();
         let b = a + Vector::unit_u();
 

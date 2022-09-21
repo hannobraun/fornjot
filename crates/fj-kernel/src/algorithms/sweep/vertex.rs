@@ -160,7 +160,7 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::xz_plane();
-        let curve = Curve::builder(&stores, surface).u_axis();
+        let curve = Curve::builder(&stores, surface).build_u_axis();
         let vertex = Vertex::builder([0.], curve).build();
 
         let half_edge = (vertex, surface).sweep([0., 0., 1.], &stores);
