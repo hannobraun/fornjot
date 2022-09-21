@@ -382,7 +382,8 @@ mod tests {
         let stores = Stores::new();
 
         let object = Cycle::builder(&stores, Surface::xy_plane())
-            .with_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
+            .with_poly_chain_from_points([[0., 0.], [1., 0.], [0., 1.]])
+            .close_with_line_segment()
             .build();
 
         assert_eq!(3, object.curve_iter().count());
