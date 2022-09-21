@@ -90,11 +90,11 @@ impl<'a> HalfEdgeBuilder<'a> {
         self
     }
 
-    /// Finish building the [`HalfEdge`] as a line segment from the given points
-    pub fn build_line_segment_from_points(
-        self,
+    /// Build the [`HalfEdge`] as a line segment from the given points
+    pub fn as_line_segment_from_points(
+        mut self,
         points: [impl Into<Point<2>>; 2],
-    ) -> HalfEdge {
+    ) -> Self {
         let points = points.map(Into::into);
 
         let global_vertices = points.map(|position| {
@@ -118,7 +118,7 @@ impl<'a> HalfEdgeBuilder<'a> {
             )
         };
 
-        let curve = self.curve.unwrap_or_else(|| {
+        let curve = {
             let path = SurfacePath::Line(Line::from_points(points));
             let global_form = {
                 let points = global_vertices
@@ -129,9 +129,9 @@ impl<'a> HalfEdgeBuilder<'a> {
             };
 
             Curve::new(self.surface, path, global_form)
-        });
+        };
 
-        let vertices = self.vertices.unwrap_or_else(|| {
+        let vertices = {
             let [a_global, b_global] = global_vertices;
             let [a_surface, b_surface] = surface_vertices;
 
@@ -149,14 +149,12 @@ impl<'a> HalfEdgeBuilder<'a> {
                     b_global,
                 ),
             ]
-        });
+        };
 
-        let global_form = self.global_form.unwrap_or_else(|| {
-            GlobalEdge::builder()
-                .build_from_curve_and_vertices(&curve, &vertices)
-        });
+        self.curve = Some(curve);
+        self.vertices = Some(vertices);
 
-        HalfEdge::new(curve, vertices, global_form)
+        self
     }
 
     /// Finish building the [`HalfEdge`]
