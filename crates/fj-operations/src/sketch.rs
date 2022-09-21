@@ -39,7 +39,6 @@ impl Shape for fj::Sketch {
                 Face::builder(stores, surface)
                     .with_exterior_polygon_from_points(points)
                     .build()
-                    .into_face()
                     .with_color(Color(self.color()))
             }
         };

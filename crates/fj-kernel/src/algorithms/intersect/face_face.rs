@@ -86,7 +86,6 @@ mod tests {
             Face::builder(&stores, surface)
                 .with_exterior_polygon_from_points(points)
                 .build()
-                .into_face()
         });
 
         let intersection = FaceFaceIntersection::compute([&a, &b], &stores);
@@ -110,7 +109,6 @@ mod tests {
             Face::builder(&stores, surface)
                 .with_exterior_polygon_from_points(points)
                 .build()
-                .into_face()
         });
 
         let intersection = FaceFaceIntersection::compute([&a, &b], &stores);

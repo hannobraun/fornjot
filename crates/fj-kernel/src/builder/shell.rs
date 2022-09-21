@@ -40,7 +40,6 @@ impl<'a> ShellBuilder<'a> {
             Face::builder(self.stores, plane)
                 .with_exterior_polygon_from_points(points)
                 .build()
-                .into_face()
         });
 
         Shell::new().with_faces(faces)

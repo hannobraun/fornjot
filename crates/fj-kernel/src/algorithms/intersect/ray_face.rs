@@ -176,7 +176,6 @@ mod tests {
                 [-1., 1.],
             ])
             .build()
-            .into_face()
             .translate([-1., 0., 0.], &stores);
 
         assert_eq!((&ray, &face).intersect(), None);
@@ -196,7 +195,6 @@ mod tests {
                 [-1., 1.],
             ])
             .build()
-            .into_face()
             .translate([1., 0., 0.], &stores);
 
         assert_eq!(
@@ -219,7 +217,6 @@ mod tests {
                 [-1., 1.],
             ])
             .build()
-            .into_face()
             .translate([0., 0., 2.], &stores);
 
         assert_eq!((&ray, &face).intersect(), None);
@@ -239,7 +236,6 @@ mod tests {
                 [-1., 1.],
             ])
             .build()
-            .into_face()
             .translate([1., 1., 0.], &stores);
 
         let edge = face
@@ -270,7 +266,6 @@ mod tests {
                 [-1., 1.],
             ])
             .build()
-            .into_face()
             .translate([1., 1., 1.], &stores);
 
         let vertex = face
@@ -298,8 +293,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build()
-            .into_face();
+            .build();
 
         assert_eq!(
             (&ray, &face).intersect(),
@@ -321,7 +315,6 @@ mod tests {
                 [-1., 1.],
             ])
             .build()
-            .into_face()
             .translate([0., 0., 1.], &stores);
 
         assert_eq!((&ray, &face).intersect(), None)
