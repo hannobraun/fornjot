@@ -25,7 +25,16 @@ impl<'a> CycleBuilder<'a> {
         mut self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
-        let points: Vec<_> = points.into_iter().map(Into::into).collect();
+        let points = self
+            .half_edges
+            .last()
+            .map(|half_edge| {
+                let [_, last] = half_edge.vertices();
+                last.surface_form().position()
+            })
+            .into_iter()
+            .chain(points.into_iter().map(Into::into))
+            .collect::<Vec<_>>();
 
         for points in points.windows(2) {
             // Can't panic, as we passed `2` to `windows`.
