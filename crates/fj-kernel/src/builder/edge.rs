@@ -18,16 +18,27 @@ pub struct HalfEdgeBuilder<'a> {
 
     /// The surface that the [`HalfEdge`]'s [`Curve`] is defined in
     pub surface: Surface,
+
+    /// The curve that the [`HalfEdge`] is defined in
+    pub curve: Option<Curve>,
 }
 
 impl<'a> HalfEdgeBuilder<'a> {
+    /// Build the [`HalfEdge`] with the given curve
+    pub fn with_curve(mut self, curve: Curve) -> Self {
+        self.curve = Some(curve);
+        self
+    }
+
     /// Finish building the [`HalfEdge`] as a circle from the given radius
     pub fn build_circle_from_radius(
         self,
         radius: impl Into<Scalar>,
     ) -> HalfEdge {
-        let curve = Curve::builder(self.stores, self.surface)
-            .build_circle_from_radius(radius);
+        let curve = self.curve.unwrap_or_else(|| {
+            Curve::builder(self.stores, self.surface)
+                .build_circle_from_radius(radius)
+        });
 
         let vertices = {
             let [a_curve, b_curve] =
@@ -91,7 +102,7 @@ impl<'a> HalfEdgeBuilder<'a> {
             )
         };
 
-        let curve = {
+        let curve = self.curve.unwrap_or_else(|| {
             let path = SurfacePath::Line(Line::from_points(points));
             let global_form = {
                 let points = global_vertices
@@ -102,7 +113,7 @@ impl<'a> HalfEdgeBuilder<'a> {
             };
 
             Curve::new(self.surface, path, global_form)
-        };
+        });
 
         let vertices = {
             let [a_global, b_global] = global_vertices;

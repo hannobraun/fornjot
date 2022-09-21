@@ -18,7 +18,11 @@ pub struct HalfEdge {
 impl HalfEdge {
     /// Build a `HalfEdge` using [`HalfEdgeBuilder`]
     pub fn builder(stores: &Stores, surface: Surface) -> HalfEdgeBuilder {
-        HalfEdgeBuilder { stores, surface }
+        HalfEdgeBuilder {
+            stores,
+            surface,
+            curve: None,
+        }
     }
 
     /// Create a new instance of `HalfEdge`
