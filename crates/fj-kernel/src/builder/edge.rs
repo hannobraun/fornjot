@@ -51,17 +51,12 @@ impl<'a> HalfEdgeBuilder<'a> {
         self
     }
 
-    /// Finish building the [`HalfEdge`] as a circle from the given radius
-    pub fn build_circle_from_radius(
-        self,
-        radius: impl Into<Scalar>,
-    ) -> HalfEdge {
-        let curve = self.curve.unwrap_or_else(|| {
-            Curve::builder(self.stores, self.surface)
-                .build_circle_from_radius(radius)
-        });
+    /// Build the [`HalfEdge`] as a circle from the given radius
+    pub fn as_circle_from_radius(mut self, radius: impl Into<Scalar>) -> Self {
+        let curve = Curve::builder(self.stores, self.surface)
+            .build_circle_from_radius(radius);
 
-        let vertices = self.vertices.unwrap_or_else(|| {
+        let vertices = {
             let [a_curve, b_curve] =
                 [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
@@ -87,14 +82,12 @@ impl<'a> HalfEdgeBuilder<'a> {
                     )
                 },
             )
-        });
+        };
 
-        let global_form = self.global_form.unwrap_or_else(|| {
-            GlobalEdge::builder()
-                .build_from_curve_and_vertices(&curve, &vertices)
-        });
+        self.curve = Some(curve);
+        self.vertices = Some(vertices);
 
-        HalfEdge::new(curve, vertices, global_form)
+        self
     }
 
     /// Finish building the [`HalfEdge`] as a line segment from the given points
