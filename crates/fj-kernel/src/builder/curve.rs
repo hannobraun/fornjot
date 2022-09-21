@@ -35,7 +35,7 @@ impl<'a> CurveBuilder<'a> {
     }
 
     /// Build a circle from the given radius
-    pub fn circle_from_radius(&self, radius: impl Into<Scalar>) -> Curve {
+    pub fn build_circle_from_radius(&self, radius: impl Into<Scalar>) -> Curve {
         let radius = radius.into();
 
         let path = SurfacePath::circle_from_radius(radius);
