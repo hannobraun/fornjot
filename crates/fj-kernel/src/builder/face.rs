@@ -33,7 +33,9 @@ impl<'a> FaceBuilder<'a> {
     ) -> Self {
         self.exterior = Some(
             Cycle::builder(self.stores, self.surface)
-                .build_polygon_from_points(points),
+                .with_poly_chain_from_points(points)
+                .close_with_line_segment()
+                .build(),
         );
         self
     }
@@ -45,7 +47,9 @@ impl<'a> FaceBuilder<'a> {
     ) -> Self {
         self.interiors.push(
             Cycle::builder(self.stores, self.surface)
-                .build_polygon_from_points(points),
+                .with_poly_chain_from_points(points)
+                .close_with_line_segment()
+                .build(),
         );
         self
     }

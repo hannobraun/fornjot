@@ -15,7 +15,11 @@ pub struct Cycle {
 impl Cycle {
     /// Build a `Cycle` using [`CycleBuilder`]
     pub fn builder(stores: &Stores, surface: Surface) -> CycleBuilder {
-        CycleBuilder { stores, surface }
+        CycleBuilder {
+            stores,
+            surface,
+            half_edges: Vec::new(),
+        }
     }
 
     /// Create a new cycle

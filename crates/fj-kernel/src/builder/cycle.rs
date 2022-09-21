@@ -14,35 +14,75 @@ pub struct CycleBuilder<'a> {
 
     /// The surface that the [`Cycle`] is defined in
     pub surface: Surface,
+
+    /// The half-edges that make up the [`Cycle`]
+    pub half_edges: Vec<HalfEdge>,
 }
 
 impl<'a> CycleBuilder<'a> {
-    /// Create a polygon from a list of points
-    pub fn build_polygon_from_points(
-        self,
+    /// Build the [`Cycle`] with the given half-edge
+    pub fn with_half_edges(
+        mut self,
+        half_edge: impl IntoIterator<Item = HalfEdge>,
+    ) -> Self {
+        self.half_edges.extend(half_edge);
+        self
+    }
+
+    /// Build the [`Cycle`] with a polygonal chain from the provided points
+    pub fn with_poly_chain_from_points(
+        mut self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Cycle {
-        let mut points: Vec<_> = points.into_iter().map(Into::into).collect();
+    ) -> Self {
+        let points = self
+            .half_edges
+            .last()
+            .map(|half_edge| {
+                let [_, last] = half_edge.vertices();
+                last.surface_form().position()
+            })
+            .into_iter()
+            .chain(points.into_iter().map(Into::into))
+            .collect::<Vec<_>>();
 
-        // A polygon is closed, so we need to add the first point at the end
-        // again, for the next step.
-        if let Some(point) = points.first().cloned() {
-            points.push(point);
-        }
-
-        let mut half_edges = Vec::new();
         for points in points.windows(2) {
             // Can't panic, as we passed `2` to `windows`.
             //
             // Can be cleaned up, once `array_windows` is stable.
             let points = [points[0], points[1]];
 
-            half_edges.push(
+            self.half_edges.push(
                 HalfEdge::builder(self.stores, self.surface)
                     .build_line_segment_from_points(points),
             );
         }
 
-        Cycle::new(self.surface, half_edges)
+        self
+    }
+
+    /// Close the [`Cycle`] with a line segment
+    ///
+    /// Builds a line segment from the last and first vertex, closing the cycle.
+    pub fn close_with_line_segment(mut self) -> Self {
+        let first = self.half_edges.first();
+        let last = self.half_edges.last();
+
+        if let [Some([first, _]), Some([_, last])] = [first, last]
+            .map(|option| option.map(|half_edge| half_edge.vertices()))
+        {
+            let vertices =
+                [last, first].map(|vertex| vertex.surface_form().position());
+            self.half_edges.push(
+                HalfEdge::builder(self.stores, self.surface)
+                    .build_line_segment_from_points(vertices),
+            );
+        }
+
+        self
+    }
+
+    /// Create a polygon from a list of points
+    pub fn build(self) -> Cycle {
+        Cycle::new(self.surface, self.half_edges)
     }
 }
