@@ -95,11 +95,11 @@ mod tests {
             .sweep(UP, &stores);
 
         let bottom = Face::builder(&stores, surface)
-            .polygon_from_points(TRIANGLE)
+            .build_polygon_from_points(TRIANGLE)
             .into_face()
             .reverse();
         let top = Face::builder(&stores, surface.translate(UP, &stores))
-            .polygon_from_points(TRIANGLE)
+            .build_polygon_from_points(TRIANGLE)
             .into_face();
 
         assert!(solid.find_face(&bottom).is_some());
@@ -130,11 +130,11 @@ mod tests {
             .sweep(DOWN, &stores);
 
         let bottom = Face::builder(&stores, surface.translate(DOWN, &stores))
-            .polygon_from_points(TRIANGLE)
+            .build_polygon_from_points(TRIANGLE)
             .into_face()
             .reverse();
         let top = Face::builder(&stores, surface)
-            .polygon_from_points(TRIANGLE)
+            .build_polygon_from_points(TRIANGLE)
             .into_face();
 
         assert!(solid.find_face(&bottom).is_some());

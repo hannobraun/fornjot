@@ -143,7 +143,7 @@ mod tests {
         let stores = Stores::new();
 
         let face = Face::builder(&stores, Surface::xy_plane())
-            .polygon_from_points([[0., 0.], [1., 1.], [0., 2.]])
+            .build_polygon_from_points([[0., 0.], [1., 1.], [0., 2.]])
             .into_face();
         let point = Point::from([2., 1.]);
 
@@ -156,7 +156,7 @@ mod tests {
         let stores = Stores::new();
 
         let face = Face::builder(&stores, Surface::xy_plane())
-            .polygon_from_points([[0., 0.], [2., 1.], [0., 2.]])
+            .build_polygon_from_points([[0., 0.], [2., 1.], [0., 2.]])
             .into_face();
         let point = Point::from([1., 1.]);
 
@@ -172,7 +172,7 @@ mod tests {
         let stores = Stores::new();
 
         let face = Face::builder(&stores, Surface::xy_plane())
-            .polygon_from_points([[4., 2.], [0., 4.], [0., 0.]])
+            .build_polygon_from_points([[4., 2.], [0., 4.], [0., 0.]])
             .into_face();
         let point = Point::from([1., 2.]);
 
@@ -188,7 +188,7 @@ mod tests {
         let stores = Stores::new();
 
         let face = Face::builder(&stores, Surface::xy_plane())
-            .polygon_from_points([[0., 0.], [2., 1.], [3., 0.], [3., 4.]])
+            .build_polygon_from_points([[0., 0.], [2., 1.], [3., 0.], [3., 4.]])
             .into_face();
         let point = Point::from([1., 1.]);
 
@@ -204,7 +204,7 @@ mod tests {
         let stores = Stores::new();
 
         let face = Face::builder(&stores, Surface::xy_plane())
-            .polygon_from_points([[0., 0.], [2., 1.], [3., 1.], [0., 2.]])
+            .build_polygon_from_points([[0., 0.], [2., 1.], [3., 1.], [0., 2.]])
             .into_face();
         let point = Point::from([1., 1.]);
 
@@ -220,7 +220,7 @@ mod tests {
         let stores = Stores::new();
 
         let face = Face::builder(&stores, Surface::xy_plane())
-            .polygon_from_points([
+            .build_polygon_from_points([
                 [0., 0.],
                 [2., 1.],
                 [3., 1.],
@@ -242,7 +242,7 @@ mod tests {
         let stores = Stores::new();
 
         let face = Face::builder(&stores, Surface::xy_plane())
-            .polygon_from_points([[0., 0.], [2., 0.], [0., 1.]])
+            .build_polygon_from_points([[0., 0.], [2., 0.], [0., 1.]])
             .into_face();
         let point = Point::from([1., 0.]);
 
@@ -267,7 +267,7 @@ mod tests {
         let stores = Stores::new();
 
         let face = Face::builder(&stores, Surface::xy_plane())
-            .polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
+            .build_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .into_face();
         let point = Point::from([1., 0.]);
 

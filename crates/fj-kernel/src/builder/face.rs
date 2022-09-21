@@ -20,7 +20,7 @@ pub struct FaceBuilder<'a> {
 
 impl<'a> FaceBuilder<'a> {
     /// Construct a polygon from a list of points
-    pub fn polygon_from_points(
+    pub fn build_polygon_from_points(
         &self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> FacePolygon {

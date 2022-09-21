@@ -403,7 +403,7 @@ mod tests {
 
         let surface = Surface::xy_plane();
         let object = Face::builder(&stores, surface)
-            .polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
+            .build_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .into_face();
 
         assert_eq!(3, object.curve_iter().count());
@@ -500,7 +500,7 @@ mod tests {
 
         let surface = Surface::xy_plane();
         let face = Face::builder(&stores, surface)
-            .polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
+            .build_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .into_face();
         let object = Sketch::new().with_faces([face]);
 

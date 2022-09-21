@@ -187,7 +187,7 @@ mod tests {
         ];
 
         let face = Face::builder(&stores, surface)
-            .polygon_from_points(exterior)
+            .build_polygon_from_points(exterior)
             .with_hole(interior)
             .into_face();
 
