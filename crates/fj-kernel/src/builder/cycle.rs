@@ -20,6 +20,15 @@ pub struct CycleBuilder<'a> {
 }
 
 impl<'a> CycleBuilder<'a> {
+    /// Build the [`Cycle`] with the given half-edge
+    pub fn with_half_edges(
+        mut self,
+        half_edge: impl IntoIterator<Item = HalfEdge>,
+    ) -> Self {
+        self.half_edges.extend(half_edge);
+        self
+    }
+
     /// Build the [`Cycle`] with a polygonal chain from the provided points
     pub fn with_poly_chain_from_points(
         mut self,
