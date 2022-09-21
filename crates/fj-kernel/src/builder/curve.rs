@@ -23,7 +23,7 @@ impl<'a> CurveBuilder<'a> {
         let a = Point::origin();
         let b = a + Vector::unit_u();
 
-        self.line_from_points([a, b])
+        self.build_line_from_points([a, b])
     }
 
     /// Build a line that represents the v-axis on the surface
@@ -31,7 +31,7 @@ impl<'a> CurveBuilder<'a> {
         let a = Point::origin();
         let b = a + Vector::unit_v();
 
-        self.line_from_points([a, b])
+        self.build_line_from_points([a, b])
     }
 
     /// Build a circle from the given radius
@@ -46,7 +46,10 @@ impl<'a> CurveBuilder<'a> {
     }
 
     /// Build a line from the given points
-    pub fn line_from_points(&self, points: [impl Into<Point<2>>; 2]) -> Curve {
+    pub fn build_line_from_points(
+        &self,
+        points: [impl Into<Point<2>>; 2],
+    ) -> Curve {
         let points = points.map(Into::into);
 
         let path = SurfacePath::Line(Line::from_points(points));

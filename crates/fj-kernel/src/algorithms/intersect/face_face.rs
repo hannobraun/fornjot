@@ -115,7 +115,7 @@ mod tests {
 
         let expected_curves = surfaces.map(|surface| {
             Curve::builder(&stores, surface)
-                .line_from_points([[0., 0.], [1., 0.]])
+                .build_line_from_points([[0., 0.], [1., 0.]])
         });
         let expected_intervals =
             CurveFaceIntersection::from_intervals([[[-1.], [1.]]]);
