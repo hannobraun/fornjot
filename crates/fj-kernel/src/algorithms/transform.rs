@@ -86,8 +86,6 @@ impl TransformObject for Face {
     type Transformed = Self;
 
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
-        let surface = self.surface().transform(transform, stores);
-
         let exterior = self.exterior().clone().transform(transform, stores);
         let interiors = self
             .interiors()
@@ -95,7 +93,7 @@ impl TransformObject for Face {
 
         let color = self.color();
 
-        Face::new(surface, exterior)
+        Face::new(exterior)
             .with_interiors(interiors)
             .with_color(color)
     }

@@ -172,7 +172,7 @@ impl Sweep for (HalfEdge, Color) {
             Cycle::new(surface, edges)
         };
 
-        Face::new(surface, cycle).with_color(color)
+        Face::new(cycle).with_color(color)
     }
 }
 
@@ -212,7 +212,7 @@ mod tests {
 
             let cycle = Cycle::new(surface, [bottom, right, top, left]);
 
-            Face::new(surface, cycle)
+            Face::new(cycle)
         };
 
         assert_eq!(face, expected_face);

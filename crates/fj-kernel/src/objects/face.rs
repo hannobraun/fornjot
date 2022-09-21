@@ -79,9 +79,9 @@ impl Face {
     ///
     /// Creates the face with no interiors and the default color. This can be
     /// overridden using the `with_` methods.
-    pub fn new(surface: Surface, exterior: Cycle) -> Self {
+    pub fn new(exterior: Cycle) -> Self {
         Self {
-            surface,
+            surface: *exterior.surface(),
             exterior,
             interiors: Vec::new(),
             color: Color::default(),
