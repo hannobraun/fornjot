@@ -7,54 +7,6 @@ use crate::{builder::FaceBuilder, stores::Stores};
 
 use super::{Cycle, Surface};
 
-/// A collection of faces
-#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Faces {
-    inner: BTreeSet<Face>,
-}
-
-impl Faces {
-    /// Create an empty instance of `Faces`
-    pub fn new() -> Self {
-        Self::default()
-    }
-
-    /// Find the given face
-    pub fn find(&self, face: &Face) -> Option<Face> {
-        for f in self {
-            if f == face {
-                return Some(f.clone());
-            }
-        }
-
-        None
-    }
-}
-
-impl Extend<Face> for Faces {
-    fn extend<T: IntoIterator<Item = Face>>(&mut self, iter: T) {
-        self.inner.extend(iter)
-    }
-}
-
-impl IntoIterator for Faces {
-    type Item = Face;
-    type IntoIter = btree_set::IntoIter<Face>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        self.inner.into_iter()
-    }
-}
-
-impl<'a> IntoIterator for &'a Faces {
-    type Item = &'a Face;
-    type IntoIter = btree_set::Iter<'a, Face>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        self.inner.iter()
-    }
-}
-
 /// A face of a shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Face {
@@ -79,9 +31,9 @@ impl Face {
     ///
     /// Creates the face with no interiors and the default color. This can be
     /// overridden using the `with_` methods.
-    pub fn new(surface: Surface, exterior: Cycle) -> Self {
+    pub fn from_exterior(exterior: Cycle) -> Self {
         Self {
-            surface,
+            surface: *exterior.surface(),
             exterior,
             interiors: Vec::new(),
             color: Color::default(),
@@ -162,6 +114,54 @@ impl Face {
             Winding::Ccw => Handedness::RightHanded,
             Winding::Cw => Handedness::LeftHanded,
         }
+    }
+}
+
+/// A collection of faces
+#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct Faces {
+    inner: BTreeSet<Face>,
+}
+
+impl Faces {
+    /// Create an empty instance of `Faces`
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Find the given face
+    pub fn find(&self, face: &Face) -> Option<Face> {
+        for f in self {
+            if f == face {
+                return Some(f.clone());
+            }
+        }
+
+        None
+    }
+}
+
+impl Extend<Face> for Faces {
+    fn extend<T: IntoIterator<Item = Face>>(&mut self, iter: T) {
+        self.inner.extend(iter)
+    }
+}
+
+impl IntoIterator for Faces {
+    type Item = Face;
+    type IntoIter = btree_set::IntoIter<Face>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.inner.into_iter()
+    }
+}
+
+impl<'a> IntoIterator for &'a Faces {
+    type Item = &'a Face;
+    type IntoIter = btree_set::Iter<'a, Face>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.inner.iter()
     }
 }
 
