@@ -166,7 +166,7 @@ mod tests {
         let half_edge = (vertex, surface).sweep([0., 0., 1.], &stores);
 
         let expected_half_edge = HalfEdge::builder(&stores, surface)
-            .line_segment_from_points([[0., 0.], [0., 1.]]);
+            .build_line_segment_from_points([[0., 0.], [0., 1.]]);
         assert_eq!(half_edge, expected_half_edge);
     }
 
