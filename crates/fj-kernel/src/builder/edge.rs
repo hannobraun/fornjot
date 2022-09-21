@@ -57,7 +57,10 @@ impl<'a> HalfEdgeBuilder<'a> {
             )
         };
 
-        HalfEdge::from_curve_and_vertices(curve, vertices)
+        let global_form = GlobalEdge::builder()
+            .build_from_curve_and_vertices(&curve, &vertices);
+
+        HalfEdge::new(curve, vertices, global_form)
     }
 
     /// Build a line segment from two points
@@ -121,7 +124,10 @@ impl<'a> HalfEdgeBuilder<'a> {
             ]
         };
 
-        HalfEdge::from_curve_and_vertices(curve, vertices)
+        let global_form = GlobalEdge::builder()
+            .build_from_curve_and_vertices(&curve, &vertices);
+
+        HalfEdge::new(curve, vertices, global_form)
     }
 }
 

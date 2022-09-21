@@ -23,10 +23,6 @@ impl HalfEdge {
 
     /// Create a new instance of `HalfEdge`
     ///
-    /// If you only have a curve and the edge vertices, please check out
-    /// [`HalfEdge::from_curve_and_vertices`], which is a convenience wrapper
-    /// around this method, which creates an instance of [`GlobalEdge`].
-    ///
     /// # Panics
     ///
     /// Panics, if the provided `vertices` are not defined on the same curve as
@@ -74,20 +70,6 @@ impl HalfEdge {
             vertices,
             global_form,
         }
-    }
-
-    /// Create a new instance of `HalfEdge` from a curve and vertices
-    ///
-    /// The [`GlobalEdge`] instance is created from the provided curve and
-    /// vertices. Please refer to [`HalfEdge::new`], if you already have a
-    /// [`GlobalEdge`] instance that you can provide.
-    pub fn from_curve_and_vertices(
-        curve: Curve,
-        vertices: [Vertex; 2],
-    ) -> Self {
-        let global = GlobalEdge::builder()
-            .build_from_curve_and_vertices(&curve, &vertices);
-        Self::new(curve, vertices, global)
     }
 
     /// Access the curve that defines the half-edge's geometry
