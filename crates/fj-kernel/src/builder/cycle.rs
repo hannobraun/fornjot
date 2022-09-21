@@ -18,7 +18,7 @@ pub struct CycleBuilder<'a> {
 
 impl<'a> CycleBuilder<'a> {
     /// Create a polygon from a list of points
-    pub fn polygon_from_points(
+    pub fn build_polygon_from_points(
         &self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Cycle {
