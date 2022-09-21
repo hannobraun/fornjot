@@ -1,7 +1,7 @@
 use std::fmt;
 
 use crate::{
-    builder::HalfEdgeBuilder,
+    builder::{GlobalEdgeBuilder, HalfEdgeBuilder},
     stores::{Handle, Stores},
 };
 
@@ -134,6 +134,11 @@ pub struct GlobalEdge {
 }
 
 impl GlobalEdge {
+    /// Build a `GlobalEdge` using [`GlobalEdgeBuilder`]
+    pub fn builder() -> GlobalEdgeBuilder {
+        GlobalEdgeBuilder
+    }
+
     /// Create a new instance
     pub fn new(
         curve: Handle<GlobalCurve>,

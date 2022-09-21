@@ -124,3 +124,8 @@ impl<'a> HalfEdgeBuilder<'a> {
         HalfEdge::from_curve_and_vertices(curve, vertices)
     }
 }
+
+/// API for building a [`GlobalEdge`]
+///
+/// Also see [`GlobalEdge::builder`].
+pub struct GlobalEdgeBuilder;
