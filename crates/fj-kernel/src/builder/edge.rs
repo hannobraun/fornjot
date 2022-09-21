@@ -9,19 +9,19 @@ use crate::{
     stores::Stores,
 };
 
-/// API for building an [`HalfEdge`]
+/// API for building a [`HalfEdge`]
 ///
 /// Also see [`HalfEdge::builder`].
 pub struct HalfEdgeBuilder<'a> {
     /// The stores that the created objects are put in
     pub stores: &'a Stores,
 
-    /// The surface that the [`HalfEdge`] is defined in
+    /// The surface that the [`HalfEdge`]'s [`Curve`] is defined in
     pub surface: Surface,
 }
 
 impl<'a> HalfEdgeBuilder<'a> {
-    /// Build a circle from the given radius
+    /// Finish building the [`HalfEdge`] as a circle from the given radius
     pub fn build_circle_from_radius(
         self,
         radius: impl Into<Scalar>,
@@ -63,7 +63,7 @@ impl<'a> HalfEdgeBuilder<'a> {
         HalfEdge::new(curve, vertices, global_form)
     }
 
-    /// Build a line segment from two points
+    /// Finish building the [`HalfEdge`] as a line segment from the given points
     pub fn build_line_segment_from_points(
         self,
         points: [impl Into<Point<2>>; 2],

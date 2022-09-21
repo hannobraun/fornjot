@@ -38,7 +38,7 @@ impl VertexBuilder {
         self
     }
 
-    /// Build a vertex from a curve position
+    /// Finish building the [`Vertex`]
     pub fn build(self) -> Vertex {
         let surface_form = self.surface_form.unwrap_or_else(|| {
             SurfaceVertexBuilder {
