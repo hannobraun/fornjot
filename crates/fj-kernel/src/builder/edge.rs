@@ -2,8 +2,8 @@ use fj_math::{Line, Point, Scalar};
 
 use crate::{
     objects::{
-        Curve, GlobalCurve, GlobalVertex, HalfEdge, Surface, SurfaceVertex,
-        Vertex,
+        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
+        SurfaceVertex, Vertex,
     },
     path::{GlobalPath, SurfacePath},
     stores::Stores,
@@ -129,3 +129,17 @@ impl<'a> HalfEdgeBuilder<'a> {
 ///
 /// Also see [`GlobalEdge::builder`].
 pub struct GlobalEdgeBuilder;
+
+impl GlobalEdgeBuilder {
+    /// Build a [`GlobalEdge`] from the provided curve and vertices
+    pub fn build_from_curve_and_vertices(
+        self,
+        curve: &Curve,
+        vertices: &[Vertex; 2],
+    ) -> GlobalEdge {
+        GlobalEdge::new(
+            curve.global_form().clone(),
+            vertices.clone().map(|vertex| *vertex.global_form()),
+        )
+    }
+}

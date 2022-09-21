@@ -85,10 +85,8 @@ impl HalfEdge {
         curve: Curve,
         vertices: [Vertex; 2],
     ) -> Self {
-        let global = GlobalEdge::new(
-            curve.global_form().clone(),
-            vertices.clone().map(|vertex| *vertex.global_form()),
-        );
+        let global = GlobalEdge::builder()
+            .build_from_curve_and_vertices(&curve, &vertices);
         Self::new(curve, vertices, global)
     }
 
