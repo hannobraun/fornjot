@@ -187,9 +187,9 @@ mod tests {
         ];
 
         let face = Face::builder(&stores, surface)
-            .build_polygon_from_points(exterior)
-            .with_hole(interior)
-            .into_face();
+            .with_exterior_polygon_from_points(exterior)
+            .with_interior_polygon_from_points(interior)
+            .build();
 
         let expected =
             CurveFaceIntersection::from_intervals([[[1.], [2.]], [[4.], [5.]]]);

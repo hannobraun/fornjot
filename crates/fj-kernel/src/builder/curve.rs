@@ -19,7 +19,7 @@ pub struct CurveBuilder<'a> {
 
 impl<'a> CurveBuilder<'a> {
     /// Build a line that represents the u-axis on the surface
-    pub fn build_u_axis(&self) -> Curve {
+    pub fn build_u_axis(self) -> Curve {
         let a = Point::origin();
         let b = a + Vector::unit_u();
 
@@ -27,7 +27,7 @@ impl<'a> CurveBuilder<'a> {
     }
 
     /// Build a line that represents the v-axis on the surface
-    pub fn build_v_axis(&self) -> Curve {
+    pub fn build_v_axis(self) -> Curve {
         let a = Point::origin();
         let b = a + Vector::unit_v();
 
@@ -35,7 +35,7 @@ impl<'a> CurveBuilder<'a> {
     }
 
     /// Build a circle from the given radius
-    pub fn build_circle_from_radius(&self, radius: impl Into<Scalar>) -> Curve {
+    pub fn build_circle_from_radius(self, radius: impl Into<Scalar>) -> Curve {
         let radius = radius.into();
 
         let path = SurfacePath::circle_from_radius(radius);

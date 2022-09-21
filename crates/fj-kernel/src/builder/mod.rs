@@ -13,7 +13,7 @@ pub use self::{
     curve::{CurveBuilder, GlobalCurveBuilder},
     cycle::CycleBuilder,
     edge::HalfEdgeBuilder,
-    face::{FaceBuilder, FacePolygon},
+    face::FaceBuilder,
     shell::ShellBuilder,
     sketch::SketchBuilder,
     solid::SolidBuilder,

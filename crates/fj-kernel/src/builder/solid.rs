@@ -16,7 +16,7 @@ pub struct SolidBuilder<'a> {
 impl<'a> SolidBuilder<'a> {
     /// Create a cube from the length of its edges
     pub fn build_cube_from_edge_length(
-        &self,
+        self,
         edge_length: impl Into<Scalar>,
     ) -> Solid {
         let shell = Shell::builder(self.stores)

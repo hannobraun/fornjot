@@ -67,7 +67,12 @@ pub struct Face {
 impl Face {
     /// Build a `Face` using [`FaceBuilder`]
     pub fn builder(stores: &Stores, surface: Surface) -> FaceBuilder {
-        FaceBuilder { stores, surface }
+        FaceBuilder {
+            stores,
+            surface,
+            exterior: None,
+            interiors: Vec::new(),
+        }
     }
 
     /// Construct a new instance of `Face`

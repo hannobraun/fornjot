@@ -84,8 +84,8 @@ mod tests {
         let surfaces = [Surface::xy_plane(), Surface::xz_plane()];
         let [a, b] = surfaces.map(|surface| {
             Face::builder(&stores, surface)
-                .build_polygon_from_points(points)
-                .into_face()
+                .with_exterior_polygon_from_points(points)
+                .build()
         });
 
         let intersection = FaceFaceIntersection::compute([&a, &b], &stores);
@@ -107,8 +107,8 @@ mod tests {
         let surfaces = [Surface::xy_plane(), Surface::xz_plane()];
         let [a, b] = surfaces.map(|surface| {
             Face::builder(&stores, surface)
-                .build_polygon_from_points(points)
-                .into_face()
+                .with_exterior_polygon_from_points(points)
+                .build()
         });
 
         let intersection = FaceFaceIntersection::compute([&a, &b], &stores);

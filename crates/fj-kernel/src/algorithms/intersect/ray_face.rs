@@ -169,13 +169,13 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face = Face::builder(&stores, Surface::yz_plane())
-            .build_polygon_from_points([
+            .with_exterior_polygon_from_points([
                 [-1., -1.],
                 [1., -1.],
                 [1., 1.],
                 [-1., 1.],
             ])
-            .into_face()
+            .build()
             .translate([-1., 0., 0.], &stores);
 
         assert_eq!((&ray, &face).intersect(), None);
@@ -188,13 +188,13 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face = Face::builder(&stores, Surface::yz_plane())
-            .build_polygon_from_points([
+            .with_exterior_polygon_from_points([
                 [-1., -1.],
                 [1., -1.],
                 [1., 1.],
                 [-1., 1.],
             ])
-            .into_face()
+            .build()
             .translate([1., 0., 0.], &stores);
 
         assert_eq!(
@@ -210,13 +210,13 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face = Face::builder(&stores, Surface::yz_plane())
-            .build_polygon_from_points([
+            .with_exterior_polygon_from_points([
                 [-1., -1.],
                 [1., -1.],
                 [1., 1.],
                 [-1., 1.],
             ])
-            .into_face()
+            .build()
             .translate([0., 0., 2.], &stores);
 
         assert_eq!((&ray, &face).intersect(), None);
@@ -229,13 +229,13 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face = Face::builder(&stores, Surface::yz_plane())
-            .build_polygon_from_points([
+            .with_exterior_polygon_from_points([
                 [-1., -1.],
                 [1., -1.],
                 [1., 1.],
                 [-1., 1.],
             ])
-            .into_face()
+            .build()
             .translate([1., 1., 0.], &stores);
 
         let edge = face
@@ -259,13 +259,13 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face = Face::builder(&stores, Surface::yz_plane())
-            .build_polygon_from_points([
+            .with_exterior_polygon_from_points([
                 [-1., -1.],
                 [1., -1.],
                 [1., 1.],
                 [-1., 1.],
             ])
-            .into_face()
+            .build()
             .translate([1., 1., 1.], &stores);
 
         let vertex = face
@@ -287,13 +287,13 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face = Face::builder(&stores, Surface::xy_plane())
-            .build_polygon_from_points([
+            .with_exterior_polygon_from_points([
                 [-1., -1.],
                 [1., -1.],
                 [1., 1.],
                 [-1., 1.],
             ])
-            .into_face();
+            .build();
 
         assert_eq!(
             (&ray, &face).intersect(),
@@ -308,13 +308,13 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face = Face::builder(&stores, Surface::xy_plane())
-            .build_polygon_from_points([
+            .with_exterior_polygon_from_points([
                 [-1., -1.],
                 [1., -1.],
                 [1., 1.],
                 [-1., 1.],
             ])
-            .into_face()
+            .build()
             .translate([0., 0., 1.], &stores);
 
         assert_eq!((&ray, &face).intersect(), None)

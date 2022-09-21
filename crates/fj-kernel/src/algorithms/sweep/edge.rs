@@ -198,18 +198,17 @@ mod tests {
 
         let expected_face = {
             let surface = Surface::xz_plane();
-            let builder = HalfEdge::builder(&stores, surface);
 
-            let bottom =
-                builder.build_line_segment_from_points([[0., 0.], [1., 0.]]);
-            let top = builder
+            let bottom = HalfEdge::builder(&stores, surface)
+                .build_line_segment_from_points([[0., 0.], [1., 0.]]);
+            let top = HalfEdge::builder(&stores, surface)
                 .build_line_segment_from_points([[0., 1.], [1., 1.]])
                 .reverse();
-            let left = builder
+            let left = HalfEdge::builder(&stores, surface)
                 .build_line_segment_from_points([[0., 0.], [0., 1.]])
                 .reverse();
-            let right =
-                builder.build_line_segment_from_points([[1., 0.], [1., 1.]]);
+            let right = HalfEdge::builder(&stores, surface)
+                .build_line_segment_from_points([[1., 0.], [1., 1.]]);
 
             let cycle = Cycle::new(surface, [bottom, right, top, left]);
 

@@ -1,5 +1,3 @@
-use std::ops::Deref;
-
 use fj_math::Point;
 
 use crate::{
@@ -16,63 +14,47 @@ pub struct FaceBuilder<'a> {
 
     /// The surface that the [`Face`] is defined in
     pub surface: Surface,
+
+    /// The exterior cycle that bounds the [`Face`] on the outside
+    ///
+    /// Must be provided by the caller, directly or using one of the `with_`
+    /// methods, before [`FaceBuilder::build`] is called.
+    pub exterior: Option<Cycle>,
+
+    /// The interior cycles that form holes in the [`Face`]
+    pub interiors: Vec<Cycle>,
 }
 
 impl<'a> FaceBuilder<'a> {
-    /// Construct a polygon from a list of points
-    pub fn build_polygon_from_points(
-        &self,
-        points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> FacePolygon {
-        let cycle = Cycle::builder(self.stores, self.surface)
-            .build_polygon_from_points(points);
-        let face = Face::new(self.surface, cycle);
-
-        FacePolygon {
-            stores: self.stores,
-            face,
-        }
-    }
-}
-
-/// A polygon
-#[derive(Clone, Debug)]
-pub struct FacePolygon<'a> {
-    stores: &'a Stores,
-    face: Face,
-}
-
-impl FacePolygon<'_> {
-    /// Add a hole to the polygon
-    pub fn with_hole(
+    /// Build the [`Face`] with an exterior polygon from the provided points
+    pub fn with_exterior_polygon_from_points(
         mut self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
-        let surface = *self.face.surface();
-        self.face =
-            self.face
-                .with_interiors([Cycle::builder(self.stores, surface)
-                    .build_polygon_from_points(points)]);
-
+        self.exterior = Some(
+            Cycle::builder(self.stores, self.surface)
+                .build_polygon_from_points(points),
+        );
         self
     }
 
-    /// Consume the `Polygon` and return the [`Face`] it wraps
-    pub fn into_face(self) -> Face {
-        self.face
+    /// Build the [`Face`] with an interior polygon from the provided points
+    pub fn with_interior_polygon_from_points(
+        mut self,
+        points: impl IntoIterator<Item = impl Into<Point<2>>>,
+    ) -> Self {
+        self.interiors.push(
+            Cycle::builder(self.stores, self.surface)
+                .build_polygon_from_points(points),
+        );
+        self
     }
-}
 
-impl From<FacePolygon<'_>> for Face {
-    fn from(polygon: FacePolygon) -> Self {
-        polygon.into_face()
-    }
-}
-
-impl Deref for FacePolygon<'_> {
-    type Target = Face;
-
-    fn deref(&self) -> &Self::Target {
-        &self.face
+    /// Construct a polygon from a list of points
+    pub fn build(self) -> Face {
+        let exterior = self
+            .exterior
+            .expect("Can't build `Face` without exterior cycle");
+        Face::new(self.surface, exterior).with_interiors(self.interiors)
     }
 }
