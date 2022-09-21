@@ -169,7 +169,7 @@ mod tests {
         let surface = Surface::xy_plane();
 
         let curve = Curve::builder(&stores, surface)
-            .line_from_points([[-3., 0.], [-2., 0.]]);
+            .build_line_from_points([[-3., 0.], [-2., 0.]]);
 
         #[rustfmt::skip]
         let exterior = [
@@ -187,7 +187,7 @@ mod tests {
         ];
 
         let face = Face::builder(&stores, surface)
-            .polygon_from_points(exterior)
+            .build_polygon_from_points(exterior)
             .with_hole(interior)
             .into_face();
 

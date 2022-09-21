@@ -91,15 +91,15 @@ mod tests {
 
         let surface = Surface::xy_plane();
         let solid = Sketch::builder(&stores, surface)
-            .polygon_from_points(TRIANGLE)
+            .build_polygon_from_points(TRIANGLE)
             .sweep(UP, &stores);
 
         let bottom = Face::builder(&stores, surface)
-            .polygon_from_points(TRIANGLE)
+            .build_polygon_from_points(TRIANGLE)
             .into_face()
             .reverse();
         let top = Face::builder(&stores, surface.translate(UP, &stores))
-            .polygon_from_points(TRIANGLE)
+            .build_polygon_from_points(TRIANGLE)
             .into_face();
 
         assert!(solid.find_face(&bottom).is_some());
@@ -113,7 +113,7 @@ mod tests {
             let [a, b] = [window[0], window[1]];
 
             let half_edge = HalfEdge::builder(&stores, Surface::xy_plane())
-                .line_segment_from_points([a, b]);
+                .build_line_segment_from_points([a, b]);
             (half_edge, Color::default()).sweep(UP, &stores)
         });
 
@@ -126,15 +126,15 @@ mod tests {
 
         let surface = Surface::xy_plane();
         let solid = Sketch::builder(&stores, surface)
-            .polygon_from_points(TRIANGLE)
+            .build_polygon_from_points(TRIANGLE)
             .sweep(DOWN, &stores);
 
         let bottom = Face::builder(&stores, surface.translate(DOWN, &stores))
-            .polygon_from_points(TRIANGLE)
+            .build_polygon_from_points(TRIANGLE)
             .into_face()
             .reverse();
         let top = Face::builder(&stores, surface)
-            .polygon_from_points(TRIANGLE)
+            .build_polygon_from_points(TRIANGLE)
             .into_face();
 
         assert!(solid.find_face(&bottom).is_some());
@@ -148,7 +148,7 @@ mod tests {
             let [a, b] = [window[0], window[1]];
 
             let half_edge = HalfEdge::builder(&stores, Surface::xy_plane())
-                .line_segment_from_points([a, b])
+                .build_line_segment_from_points([a, b])
                 .reverse();
             (half_edge, Color::default()).sweep(DOWN, &stores)
         });

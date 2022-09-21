@@ -101,7 +101,7 @@ mod tests {
 
         let surface = Surface::xy_plane();
         let face = Face::builder(&stores, surface)
-            .polygon_from_points([a, b, c, d])
+            .build_polygon_from_points([a, b, c, d])
             .into_face();
 
         let a = Point::from(a).to_xyz();
@@ -135,7 +135,7 @@ mod tests {
 
         let surface = Surface::xy_plane();
         let face = Face::builder(&stores, surface)
-            .polygon_from_points([a, b, c, d])
+            .build_polygon_from_points([a, b, c, d])
             .with_hole([e, f, g, h])
             .into_face();
 
@@ -188,7 +188,7 @@ mod tests {
 
         let surface = Surface::xy_plane();
         let face = Face::builder(&stores, surface)
-            .polygon_from_points([a, b, c, d, e])
+            .build_polygon_from_points([a, b, c, d, e])
             .into_face();
 
         let triangles = triangulate(face)?;

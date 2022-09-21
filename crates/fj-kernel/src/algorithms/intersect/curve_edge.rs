@@ -86,9 +86,9 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::xy_plane();
-        let curve = Curve::builder(&stores, surface).u_axis();
+        let curve = Curve::builder(&stores, surface).build_u_axis();
         let half_edge = HalfEdge::builder(&stores, surface)
-            .line_segment_from_points([[1., -1.], [1., 1.]]);
+            .build_line_segment_from_points([[1., -1.], [1., 1.]]);
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
@@ -105,9 +105,9 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::xy_plane();
-        let curve = Curve::builder(&stores, surface).u_axis();
+        let curve = Curve::builder(&stores, surface).build_u_axis();
         let half_edge = HalfEdge::builder(&stores, surface)
-            .line_segment_from_points([[-1., -1.], [-1., 1.]]);
+            .build_line_segment_from_points([[-1., -1.], [-1., 1.]]);
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
@@ -124,9 +124,9 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::xy_plane();
-        let curve = Curve::builder(&stores, surface).u_axis();
+        let curve = Curve::builder(&stores, surface).build_u_axis();
         let half_edge = HalfEdge::builder(&stores, surface)
-            .line_segment_from_points([[-1., -1.], [1., -1.]]);
+            .build_line_segment_from_points([[-1., -1.], [1., -1.]]);
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
@@ -138,9 +138,9 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::xy_plane();
-        let curve = Curve::builder(&stores, surface).u_axis();
+        let curve = Curve::builder(&stores, surface).build_u_axis();
         let half_edge = HalfEdge::builder(&stores, surface)
-            .line_segment_from_points([[-1., 0.], [1., 0.]]);
+            .build_line_segment_from_points([[-1., 0.], [1., 0.]]);
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 

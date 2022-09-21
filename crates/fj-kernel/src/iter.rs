@@ -362,7 +362,7 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::xy_plane();
-        let object = Curve::builder(&stores, surface).u_axis();
+        let object = Curve::builder(&stores, surface).build_u_axis();
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -382,7 +382,7 @@ mod tests {
         let stores = Stores::new();
 
         let object = Cycle::builder(&stores, Surface::xy_plane())
-            .polygon_from_points([[0., 0.], [1., 0.], [0., 1.]]);
+            .build_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]]);
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
@@ -403,7 +403,7 @@ mod tests {
 
         let surface = Surface::xy_plane();
         let object = Face::builder(&stores, surface)
-            .polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
+            .build_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .into_face();
 
         assert_eq!(3, object.curve_iter().count());
@@ -460,7 +460,7 @@ mod tests {
         let stores = Stores::new();
 
         let object = HalfEdge::builder(&stores, Surface::xy_plane())
-            .line_segment_from_points([[0., 0.], [1., 0.]]);
+            .build_line_segment_from_points([[0., 0.], [1., 0.]]);
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -479,7 +479,7 @@ mod tests {
     fn shell() {
         let stores = Stores::new();
 
-        let object = Shell::builder(&stores).cube_from_edge_length(1.);
+        let object = Shell::builder(&stores).build_cube_from_edge_length(1.);
 
         assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());
@@ -500,7 +500,7 @@ mod tests {
 
         let surface = Surface::xy_plane();
         let face = Face::builder(&stores, surface)
-            .polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
+            .build_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .into_face();
         let object = Sketch::new().with_faces([face]);
 
@@ -521,7 +521,7 @@ mod tests {
     fn solid() {
         let stores = Stores::new();
 
-        let object = Solid::builder(&stores).cube_from_edge_length(1.);
+        let object = Solid::builder(&stores).build_cube_from_edge_length(1.);
 
         assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());
@@ -558,7 +558,7 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::xy_plane();
-        let curve = Curve::builder(&stores, surface).u_axis();
+        let curve = Curve::builder(&stores, surface).build_u_axis();
         let global_vertex = GlobalVertex::from_position([0., 0., 0.]);
         let surface_vertex =
             SurfaceVertex::new([0., 0.], surface, global_vertex);

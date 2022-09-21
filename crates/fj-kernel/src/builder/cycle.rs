@@ -18,7 +18,7 @@ pub struct CycleBuilder<'a> {
 
 impl<'a> CycleBuilder<'a> {
     /// Create a polygon from a list of points
-    pub fn polygon_from_points(
+    pub fn build_polygon_from_points(
         &self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Cycle {
@@ -39,7 +39,7 @@ impl<'a> CycleBuilder<'a> {
 
             half_edges.push(
                 HalfEdge::builder(self.stores, self.surface)
-                    .line_segment_from_points(points),
+                    .build_line_segment_from_points(points),
             );
         }
 

@@ -160,13 +160,13 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::xz_plane();
-        let curve = Curve::builder(&stores, surface).u_axis();
+        let curve = Curve::builder(&stores, surface).build_u_axis();
         let vertex = Vertex::builder([0.], curve).build();
 
         let half_edge = (vertex, surface).sweep([0., 0., 1.], &stores);
 
         let expected_half_edge = HalfEdge::builder(&stores, surface)
-            .line_segment_from_points([[0., 0.], [0., 1.]]);
+            .build_line_segment_from_points([[0., 0.], [0., 1.]]);
         assert_eq!(half_edge, expected_half_edge);
     }
 

@@ -20,12 +20,12 @@ pub struct FaceBuilder<'a> {
 
 impl<'a> FaceBuilder<'a> {
     /// Construct a polygon from a list of points
-    pub fn polygon_from_points(
+    pub fn build_polygon_from_points(
         &self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> FacePolygon {
         let cycle = Cycle::builder(self.stores, self.surface)
-            .polygon_from_points(points);
+            .build_polygon_from_points(points);
         let face = Face::new(self.surface, cycle);
 
         FacePolygon {
@@ -52,7 +52,7 @@ impl FacePolygon<'_> {
         self.face =
             self.face
                 .with_interiors([Cycle::builder(self.stores, surface)
-                    .polygon_from_points(points)]);
+                    .build_polygon_from_points(points)]);
 
         self
     }

@@ -6,7 +6,7 @@ use fj_kernel::{
     objects::{Cycle, Face, HalfEdge, Sketch, Surface},
     stores::Stores,
 };
-use fj_math::{Aabb, Point, Scalar};
+use fj_math::{Aabb, Point};
 
 use super::Shape;
 
@@ -27,7 +27,7 @@ impl Shape for fj::Sketch {
                 // none need to be added here.
 
                 let half_edge = HalfEdge::builder(stores, surface)
-                    .circle_from_radius(Scalar::from_f64(circle.radius()));
+                    .build_circle_from_radius(circle.radius());
                 let cycle = Cycle::new(surface, [half_edge]);
 
                 Face::new(surface, cycle).with_color(Color(self.color()))
@@ -37,7 +37,7 @@ impl Shape for fj::Sketch {
                     poly_chain.to_points().into_iter().map(Point::from);
 
                 Face::builder(stores, surface)
-                    .polygon_from_points(points)
+                    .build_polygon_from_points(points)
                     .into_face()
                     .with_color(Color(self.color()))
             }

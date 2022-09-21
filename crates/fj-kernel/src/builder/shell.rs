@@ -16,7 +16,7 @@ pub struct ShellBuilder<'a> {
 
 impl<'a> ShellBuilder<'a> {
     /// Create a cube from the length of its edges
-    pub fn cube_from_edge_length(
+    pub fn build_cube_from_edge_length(
         &self,
         edge_length: impl Into<Scalar>,
     ) -> Shell {
@@ -38,7 +38,7 @@ impl<'a> ShellBuilder<'a> {
 
         let faces = planes.map(|plane| {
             Face::builder(self.stores, plane)
-                .polygon_from_points(points)
+                .build_polygon_from_points(points)
                 .into_face()
         });
 

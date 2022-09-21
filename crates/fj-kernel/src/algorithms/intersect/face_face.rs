@@ -84,7 +84,7 @@ mod tests {
         let surfaces = [Surface::xy_plane(), Surface::xz_plane()];
         let [a, b] = surfaces.map(|surface| {
             Face::builder(&stores, surface)
-                .polygon_from_points(points)
+                .build_polygon_from_points(points)
                 .into_face()
         });
 
@@ -107,7 +107,7 @@ mod tests {
         let surfaces = [Surface::xy_plane(), Surface::xz_plane()];
         let [a, b] = surfaces.map(|surface| {
             Face::builder(&stores, surface)
-                .polygon_from_points(points)
+                .build_polygon_from_points(points)
                 .into_face()
         });
 
@@ -115,7 +115,7 @@ mod tests {
 
         let expected_curves = surfaces.map(|surface| {
             Curve::builder(&stores, surface)
-                .line_from_points([[0., 0.], [1., 0.]])
+                .build_line_from_points([[0., 0.], [1., 0.]])
         });
         let expected_intervals =
             CurveFaceIntersection::from_intervals([[[-1.], [1.]]]);
