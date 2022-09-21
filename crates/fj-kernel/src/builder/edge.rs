@@ -23,7 +23,7 @@ pub struct HalfEdgeBuilder<'a> {
 impl<'a> HalfEdgeBuilder<'a> {
     /// Build a circle from the given radius
     pub fn build_circle_from_radius(
-        &self,
+        self,
         radius: impl Into<Scalar>,
     ) -> HalfEdge {
         let curve = Curve::builder(self.stores, self.surface)
@@ -62,7 +62,7 @@ impl<'a> HalfEdgeBuilder<'a> {
 
     /// Build a line segment from two points
     pub fn build_line_segment_from_points(
-        &self,
+        self,
         points: [impl Into<Point<2>>; 2],
     ) -> HalfEdge {
         let points = points.map(Into::into);

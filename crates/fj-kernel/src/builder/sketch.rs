@@ -19,7 +19,7 @@ pub struct SketchBuilder<'a> {
 impl<'a> SketchBuilder<'a> {
     /// Construct a polygon from a list of points
     pub fn build_polygon_from_points(
-        &self,
+        self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Sketch {
         let face = Face::builder(self.stores, self.surface)

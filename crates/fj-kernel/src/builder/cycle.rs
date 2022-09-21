@@ -19,7 +19,7 @@ pub struct CycleBuilder<'a> {
 impl<'a> CycleBuilder<'a> {
     /// Create a polygon from a list of points
     pub fn build_polygon_from_points(
-        &self,
+        self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Cycle {
         let mut points: Vec<_> = points.into_iter().map(Into::into).collect();
