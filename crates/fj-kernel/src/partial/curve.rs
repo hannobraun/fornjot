@@ -64,12 +64,9 @@ impl<'a> PartialCurve<'a> {
         let points = points.map(Into::into);
 
         self.path = Some(SurfacePath::Line(Line::from_points(points)));
-        self.global_form =
-            Some(GlobalCurve::partial().with_path(GlobalPath::Line(
-                Line::from_points(points.map(|point| {
-                    self.surface.point_from_surface_coords(point)
-                })),
-            )));
+        self.global_form = Some(GlobalCurve::partial().as_line_from_points(
+            points.map(|point| self.surface.point_from_surface_coords(point)),
+        ));
 
         self
     }
