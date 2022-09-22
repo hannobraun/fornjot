@@ -1,8 +1,8 @@
 use fj_math::Point;
 use pretty_assertions::assert_eq;
 
-use crate::builder::{
-    GlobalVertexBuilder, SurfaceVertexBuilder, VertexBuilder,
+use crate::partial::{
+    PartialGlobalVertex, PartialSurfaceVertex, PartialVertex,
 };
 
 use super::{Curve, Surface};
@@ -21,17 +21,12 @@ pub struct Vertex {
 }
 
 impl Vertex {
-    /// Build a `Vertex` using [`VertexBuilder`]
-    pub fn builder(
-        position: impl Into<Point<1>>,
-        curve: Curve,
-    ) -> VertexBuilder {
-        VertexBuilder {
-            position: position.into(),
-            curve,
-            surface_form: None,
-            global_form: None,
-        }
+    /// Create a [`PartialVertex`]
+    ///
+    /// This function exists just for convenience, and will just return a
+    /// default [`PartialVertex`].
+    pub fn partial() -> PartialVertex {
+        PartialVertex::default()
     }
 
     /// Construct an instance of `Vertex`
@@ -90,16 +85,12 @@ pub struct SurfaceVertex {
 }
 
 impl SurfaceVertex {
-    /// Build a `SurfaceVertex` using [`SurfaceVertexBuilder`]
-    pub fn builder(
-        position: impl Into<Point<2>>,
-        surface: Surface,
-    ) -> SurfaceVertexBuilder {
-        SurfaceVertexBuilder {
-            position: position.into(),
-            surface,
-            global_form: None,
-        }
+    /// Create a [`PartialSurfaceVertex`]
+    ///
+    /// This function exists just for convenience, and will just return a
+    /// default [`PartialSurfaceVertex`].
+    pub fn partial() -> PartialSurfaceVertex {
+        PartialSurfaceVertex::default()
     }
 
     /// Construct a new instance of `SurfaceVertex`
@@ -156,12 +147,15 @@ pub struct GlobalVertex {
 }
 
 impl GlobalVertex {
-    /// Build a `GlobalVertex` using [`GlobalVertexBuilder`]
-    pub fn builder() -> GlobalVertexBuilder {
-        GlobalVertexBuilder
+    /// Create a [`PartialGlobalVertex`]
+    ///
+    /// This function exists just for convenience, and will just return a
+    /// default [`PartialGlobalVertex`].
+    pub fn partial() -> PartialGlobalVertex {
+        PartialGlobalVertex::default()
     }
 
-    /// Construct a `GlobalVertex` from a point
+    /// Construct a `GlobalVertex` from a position
     pub fn from_position(position: impl Into<Point<3>>) -> Self {
         let position = position.into();
         Self { position }

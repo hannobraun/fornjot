@@ -60,8 +60,9 @@ impl<'a> HalfEdgeBuilder<'a> {
             let [a_curve, b_curve] =
                 [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-            let global_vertex = GlobalVertex::builder()
-                .build_from_curve_and_position(&curve, a_curve);
+            let global_vertex = GlobalVertex::partial()
+                .from_curve_and_position(&curve, a_curve)
+                .build();
 
             let surface_vertices = [a_curve, b_curve].map(|point_curve| {
                 let point_surface =
@@ -98,8 +99,9 @@ impl<'a> HalfEdgeBuilder<'a> {
         let points = points.map(Into::into);
 
         let global_vertices = points.map(|position| {
-            GlobalVertex::builder()
-                .build_from_surface_and_position(&self.surface, position)
+            GlobalVertex::partial()
+                .from_surface_and_position(&self.surface, position)
+                .build()
         });
 
         let surface_vertices = {

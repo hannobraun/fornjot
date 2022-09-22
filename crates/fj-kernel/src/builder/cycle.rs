@@ -83,7 +83,7 @@ impl<'a> CycleBuilder<'a> {
         self
     }
 
-    /// Create a polygon from a list of points
+    /// Finish building the [`Cycle`]
     pub fn build(self) -> Cycle {
         Cycle::new(self.surface, self.half_edges)
     }
