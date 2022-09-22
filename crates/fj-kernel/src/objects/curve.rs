@@ -15,7 +15,10 @@ pub struct Curve {
 }
 
 impl Curve {
-    /// Build a `Curve` using [`PartialCurve`]
+    /// Create a [`PartialCurve`]
+    ///
+    /// This function exists just for convenience, and will just return a
+    /// default [`PartialCurve`].
     pub fn partial() -> PartialCurve {
         PartialCurve::default()
     }

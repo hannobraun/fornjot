@@ -6,9 +6,9 @@ use crate::{
     stores::{Handle, Stores},
 };
 
-/// API for building a [`Curve`]
+/// A partial [`Curve`]
 ///
-/// Also see [`Curve::builder`].
+/// See [`crate::partial`] for more information.
 #[derive(Default)]
 pub struct PartialCurve {
     /// The path that defines the [`Curve`]
@@ -17,6 +17,8 @@ pub struct PartialCurve {
     pub path: Option<SurfacePath>,
 
     /// The surface that the [`Curve`] is defined in
+    ///
+    /// Must be provided before calling [`PartialCurve::build`].
     pub surface: Option<Surface>,
 
     /// The global form of the [`Curve`]
