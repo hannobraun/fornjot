@@ -1,4 +1,4 @@
-use fj_math::{Line, Point, Scalar, Vector};
+use fj_math::{Point, Scalar, Vector};
 
 use crate::{
     objects::{Curve, GlobalCurve, Surface},
@@ -62,7 +62,7 @@ impl<'a> PartialCurve<'a> {
     ) -> Self {
         let points = points.map(Into::into);
 
-        self.path = Some(SurfacePath::Line(Line::from_points(points)));
+        self.path = Some(SurfacePath::line_from_points(points));
         self.global_form = Some(GlobalCurve::partial().as_line_from_points(
             points.map(|point| self.surface.point_from_surface_coords(point)),
         ));
