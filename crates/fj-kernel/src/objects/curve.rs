@@ -1,5 +1,5 @@
 use crate::{
-    builder::{CurveBuilder, GlobalCurveBuilder},
+    partial::{CurveBuilder, GlobalCurveBuilder},
     path::{GlobalPath, SurfacePath},
     stores::{Handle, Stores},
 };

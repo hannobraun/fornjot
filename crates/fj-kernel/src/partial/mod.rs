@@ -25,8 +25,10 @@
 //! - All `with_*`, `as_*`, and `build` methods can be chained, to provide a
 //!   convenient API.
 
+mod curve;
 mod vertex;
 
-pub use self::vertex::{
-    PartialGlobalVertex, PartialSurfaceVertex, PartialVertex,
+pub use self::{
+    curve::{CurveBuilder, GlobalCurveBuilder},
+    vertex::{PartialGlobalVertex, PartialSurfaceVertex, PartialVertex},
 };
