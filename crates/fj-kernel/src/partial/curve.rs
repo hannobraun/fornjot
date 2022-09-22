@@ -60,12 +60,15 @@ impl<'a> PartialCurve<'a> {
         mut self,
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
-        let points = points.map(Into::into);
+        let points_surface = points.map(Into::into);
 
-        self.path = Some(SurfacePath::line_from_points(points));
-        self.global_form = Some(GlobalCurve::partial().as_line_from_points(
-            points.map(|point| self.surface.point_from_surface_coords(point)),
-        ));
+        self.path = Some(SurfacePath::line_from_points(points_surface));
+        self.global_form = Some(
+            GlobalCurve::partial()
+                .as_line_from_points(points_surface.map(|point| {
+                    self.surface.point_from_surface_coords(point)
+                })),
+        );
 
         self
     }
