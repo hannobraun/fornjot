@@ -58,7 +58,7 @@ pub struct GlobalCurve {
 impl GlobalCurve {
     /// Build a `Curve` using [`PartialGlobalCurve`]
     pub fn partial() -> PartialGlobalCurve {
-        PartialGlobalCurve { path: None }
+        PartialGlobalCurve::default()
     }
 
     /// Construct a `GlobalCurve` from the path that defines it
