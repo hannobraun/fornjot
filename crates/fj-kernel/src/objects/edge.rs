@@ -121,7 +121,7 @@ pub struct GlobalEdge {
 
 impl GlobalEdge {
     /// Build a `GlobalEdge` using [`PartialGlobalEdge`]
-    pub fn builder() -> PartialGlobalEdge {
+    pub fn partial() -> PartialGlobalEdge {
         PartialGlobalEdge::default()
     }
 

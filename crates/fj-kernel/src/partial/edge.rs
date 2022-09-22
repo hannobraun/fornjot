@@ -169,7 +169,7 @@ impl<'a> HalfEdgeBuilder<'a> {
             .expect("Can't build `HalfEdge` without vertices");
 
         let global_form = self.global_form.unwrap_or_else(|| {
-            GlobalEdge::builder()
+            GlobalEdge::partial()
                 .from_curve_and_vertices(&curve, &vertices)
                 .build(self.stores)
         });
@@ -180,7 +180,7 @@ impl<'a> HalfEdgeBuilder<'a> {
 
 /// API for building a [`GlobalEdge`]
 ///
-/// Also see [`GlobalEdge::builder`].
+/// Also see [`GlobalEdge::partial`].
 #[derive(Default)]
 pub struct PartialGlobalEdge {
     /// The curve that the [`GlobalEdge`] is defined in
