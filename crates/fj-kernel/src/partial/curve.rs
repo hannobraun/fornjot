@@ -70,9 +70,20 @@ impl<'a> CurveBuilder<'a> {
 pub struct PartialGlobalCurve<'a> {
     /// The stores that the created objects are put in
     pub stores: &'a Stores,
+
+    /// The path that defines the [`GlobalCurve`]
+    ///
+    /// Must be provided before [`PartialGlobalCurve::build`] is called.
+    pub path: Option<GlobalPath>,
 }
 
 impl<'a> PartialGlobalCurve<'a> {
+    /// Provide a path for the partial global curve
+    pub fn with_path(mut self, path: GlobalPath) -> Self {
+        self.path = Some(path);
+        self
+    }
+
     /// Build a line that represents the x-axis
     pub fn x_axis(&self) -> Handle<GlobalCurve> {
         self.stores
@@ -114,5 +125,17 @@ impl<'a> PartialGlobalCurve<'a> {
         self.stores
             .global_curves
             .insert(GlobalCurve::from_path(GlobalPath::Line(line)))
+    }
+
+    /// Build a full [`GlobalCurve`] from the partial global curve
+    ///
+    /// # Panics
+    ///
+    /// Panics, if no path was provided.
+    pub fn build(self) -> Handle<GlobalCurve> {
+        let path = self.path.expect("Can't build `GlobalCurve` without a path");
+        self.stores
+            .global_curves
+            .insert(GlobalCurve::from_path(path))
     }
 }
