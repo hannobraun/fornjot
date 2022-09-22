@@ -89,11 +89,9 @@ impl<'a> PartialGlobalCurve<'a> {
         self.with_path(GlobalPath::x_axis())
     }
 
-    /// Build a line that represents the y-axis
-    pub fn y_axis(&self) -> Handle<GlobalCurve> {
-        self.stores
-            .global_curves
-            .insert(GlobalCurve::from_path(GlobalPath::y_axis()))
+    /// Update partial global curve to represent the y-axis
+    pub fn as_y_axis(self) -> Self {
+        self.with_path(GlobalPath::y_axis())
     }
 
     /// Build a line that represents the z-axis
