@@ -40,7 +40,7 @@ impl<'a> CurveBuilder<'a> {
 
         let path = SurfacePath::circle_from_radius(radius);
         let global_form =
-            GlobalCurve::builder(self.stores).circle_from_radius(radius);
+            GlobalCurve::partial(self.stores).circle_from_radius(radius);
 
         Curve::new(self.surface, path, global_form)
     }
@@ -66,7 +66,7 @@ impl<'a> CurveBuilder<'a> {
 
 /// API for building a [`GlobalCurve`]
 ///
-/// Also see [`GlobalCurve::builder`].
+/// Also see [`GlobalCurve::partial`].
 pub struct PartialGlobalCurve<'a> {
     /// The stores that the created objects are put in
     pub stores: &'a Stores,
