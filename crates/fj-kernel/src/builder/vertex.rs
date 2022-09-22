@@ -10,7 +10,7 @@ pub struct VertexBuilder {
     pub position: Point<1>,
 
     /// The curve that the [`Vertex`] is defined in
-    pub curve: Curve,
+    pub curve: Option<Curve>,
 
     /// The surface form of the [`Vertex`]
     ///
@@ -26,6 +26,12 @@ pub struct VertexBuilder {
 }
 
 impl VertexBuilder {
+    /// Build the [`Vertex`] with the provided curve
+    pub fn with_curve(mut self, curve: Curve) -> Self {
+        self.curve = Some(curve);
+        self
+    }
+
     /// Build the [`Vertex`] with the provided surface form
     pub fn with_surface_form(mut self, surface_form: SurfaceVertex) -> Self {
         self.surface_form = Some(surface_form);
@@ -40,13 +46,12 @@ impl VertexBuilder {
 
     /// Finish building the [`Vertex`]
     pub fn build(self) -> Vertex {
+        let curve = self.curve.expect("Can't build `Vertex` without `Curve`");
+
         let surface_form = self.surface_form.unwrap_or_else(|| {
             SurfaceVertexBuilder {
-                position: self
-                    .curve
-                    .path()
-                    .point_from_path_coords(self.position),
-                surface: *self.curve.surface(),
+                position: curve.path().point_from_path_coords(self.position),
+                surface: *curve.surface(),
                 global_form: self.global_form,
             }
             .build()
@@ -54,7 +59,7 @@ impl VertexBuilder {
 
         let global_form = *surface_form.global_form();
 
-        Vertex::new(self.position, self.curve, surface_form, global_form)
+        Vertex::new(self.position, curve, surface_form, global_form)
     }
 }
 

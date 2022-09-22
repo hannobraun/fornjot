@@ -161,7 +161,7 @@ mod tests {
 
         let surface = Surface::xz_plane();
         let curve = Curve::builder(&stores, surface).build_u_axis();
-        let vertex = Vertex::builder([0.], curve).build();
+        let vertex = Vertex::builder([0.]).with_curve(curve).build();
 
         let half_edge = (vertex, surface).sweep([0., 0., 1.], &stores);
 
