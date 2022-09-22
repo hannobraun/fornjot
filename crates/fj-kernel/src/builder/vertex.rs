@@ -19,14 +19,13 @@ impl GlobalVertexBuilder {
     }
 
     /// Build a [`GlobalVertex`] from a curve and a position on that curve
-    pub fn build_from_curve_and_position(
+    pub fn from_curve_and_position(
         self,
         curve: &Curve,
         position: impl Into<Point<1>>,
-    ) -> GlobalVertex {
+    ) -> Self {
         let position_surface = curve.path().point_from_path_coords(position);
         self.from_surface_and_position(curve.surface(), position_surface)
-            .build()
     }
 
     /// Build a [`GlobalVertex`] from a surface and a position on that surface
