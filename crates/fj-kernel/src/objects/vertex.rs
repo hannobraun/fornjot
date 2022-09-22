@@ -156,7 +156,7 @@ impl GlobalVertex {
         PartialGlobalVertex::default()
     }
 
-    /// Construct a `GlobalVertex` from a point
+    /// Construct a `GlobalVertex` from a position
     pub fn from_position(position: impl Into<Point<3>>) -> Self {
         let position = position.into();
         Self { position }
