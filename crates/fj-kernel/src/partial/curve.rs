@@ -94,11 +94,9 @@ impl<'a> PartialGlobalCurve<'a> {
         self.with_path(GlobalPath::y_axis())
     }
 
-    /// Build a line that represents the z-axis
-    pub fn z_axis(&self) -> Handle<GlobalCurve> {
-        self.stores
-            .global_curves
-            .insert(GlobalCurve::from_path(GlobalPath::z_axis()))
+    /// Update partial global curve to represent the z-axis
+    pub fn as_z_axis(self) -> Self {
+        self.with_path(GlobalPath::z_axis())
     }
 
     /// Build a circle from the given radius

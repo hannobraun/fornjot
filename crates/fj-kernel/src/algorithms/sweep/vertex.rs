@@ -182,7 +182,7 @@ mod tests {
             .sweep([0., 0., 1.], &stores);
 
         let expected_edge = GlobalEdge::new(
-            GlobalCurve::partial(&stores).z_axis(),
+            GlobalCurve::partial(&stores).as_z_axis().build(),
             [[0., 0., 0.], [0., 0., 1.]].map(GlobalVertex::from_position),
         );
         assert_eq!(edge, expected_edge);
