@@ -23,7 +23,8 @@ pub struct PartialCurve {
 
     /// The global form of the [`Curve`]
     ///
-    /// Must be provided before calling [`PartialCurve::build`].
+    /// Will be computed from `path` and `surface` in [`PartialCurve::build`],
+    /// if not provided.
     pub global_form: Option<PartialGlobalCurve>,
 }
 
@@ -65,25 +66,13 @@ impl PartialCurve {
     /// Update partial curve as a circle, from the provided radius
     pub fn as_circle_from_radius(self, radius: impl Into<Scalar>) -> Self {
         let radius = radius.into();
-
         self.with_path(SurfacePath::circle_from_radius(radius))
-            .with_global_form(
-                GlobalCurve::partial().as_circle_from_radius(radius),
-            )
     }
 
     /// Update partial curve as a line, from the provided points
     pub fn as_line_from_points(self, points: [impl Into<Point<2>>; 2]) -> Self {
-        let surface = self.surface.expect("Can't build line without surface");
-
         let points_surface = points.map(Into::into);
-        let points_global = points_surface
-            .map(|point| surface.point_from_surface_coords(point));
-
         self.with_path(SurfacePath::line_from_points(points_surface))
-            .with_global_form(
-                GlobalCurve::partial().as_line_from_points(points_global),
-            )
     }
 
     /// Build a full [`Curve`] from the partial curve
@@ -91,9 +80,23 @@ impl PartialCurve {
         let path = self.path.expect("Can't build `Curve` without path");
         let surface =
             self.surface.expect("Can't build `Curve` without surface");
+
         let global_form = self
             .global_form
-            .expect("Can't build `Curve` without a global form")
+            .unwrap_or_else(|| {
+                let path = match path {
+                    SurfacePath::Circle(circle) => {
+                        GlobalPath::circle_from_radius(circle.radius())
+                    }
+                    SurfacePath::Line(line) => GlobalPath::line_from_points(
+                        [line.origin(), line.origin() + line.direction()].map(
+                            |point| surface.point_from_surface_coords(point),
+                        ),
+                    ),
+                };
+
+                GlobalCurve::partial().with_path(path)
+            })
             .build(stores);
 
         Curve::new(surface, path, global_form)
