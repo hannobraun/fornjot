@@ -269,8 +269,9 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::new(GlobalPath::x_axis(), [0., 0., 1.]);
-        let curve =
-            Curve::partial(&stores, surface).build_circle_from_radius(1.);
+        let curve = Curve::partial(&stores, surface)
+            .as_circle_from_radius(1.)
+            .build();
 
         let range = RangeOnPath::from([[0.], [TAU]]);
         let tolerance = 1.;

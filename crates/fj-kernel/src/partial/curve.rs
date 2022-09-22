@@ -44,16 +44,15 @@ impl<'a> PartialCurve<'a> {
         self.as_line_from_points([a, b]).build()
     }
 
-    /// Build a circle from the given radius
-    pub fn build_circle_from_radius(self, radius: impl Into<Scalar>) -> Curve {
+    /// Update partial curve as a circle, from the provided radius
+    pub fn as_circle_from_radius(mut self, radius: impl Into<Scalar>) -> Self {
         let radius = radius.into();
 
-        let path = SurfacePath::circle_from_radius(radius);
-        let global_form = GlobalCurve::partial()
-            .as_circle_from_radius(radius)
-            .build(self.stores);
+        self.path = Some(SurfacePath::circle_from_radius(radius));
+        self.global_form =
+            Some(GlobalCurve::partial().as_circle_from_radius(radius));
 
-        Curve::new(self.surface, path, global_form)
+        self
     }
 
     /// Update partial curve as a line, from the provided points
