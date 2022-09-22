@@ -105,15 +105,9 @@ impl<'a> PartialGlobalCurve<'a> {
         self.with_path(GlobalPath::circle_from_radius(radius))
     }
 
-    /// Create a line from the given points
-    pub fn line_from_points(
-        &self,
-        points: [impl Into<Point<3>>; 2],
-    ) -> Handle<GlobalCurve> {
-        let line = Line::from_points(points);
-        self.stores
-            .global_curves
-            .insert(GlobalCurve::from_path(GlobalPath::Line(line)))
+    /// Update partial global curve as a line, from the provided points
+    pub fn as_line_from_points(self, points: [impl Into<Point<3>>; 2]) -> Self {
+        self.with_path(GlobalPath::line_from_points(points))
     }
 
     /// Build a full [`GlobalCurve`] from the partial global curve

@@ -138,7 +138,8 @@ impl Sweep for GlobalVertex {
         let b = GlobalVertex::from_position(self.position() + path.into());
 
         let curve = GlobalCurve::partial(stores)
-            .line_from_points([a.position(), b.position()]);
+            .as_line_from_points([a.position(), b.position()])
+            .build();
 
         GlobalEdge::new(curve, [a, b])
     }
