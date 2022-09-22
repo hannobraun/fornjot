@@ -26,10 +26,12 @@
 //!   convenient API.
 
 mod curve;
+mod edge;
 mod vertex;
 
 pub use self::{
     curve::{PartialCurve, PartialGlobalCurve},
+    edge::{GlobalEdgeBuilder, HalfEdgeBuilder},
     vertex::{PartialGlobalVertex, PartialSurfaceVertex, PartialVertex},
 };
 

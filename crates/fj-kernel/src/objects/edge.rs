@@ -1,7 +1,7 @@
 use std::fmt;
 
 use crate::{
-    builder::{GlobalEdgeBuilder, HalfEdgeBuilder},
+    partial::{GlobalEdgeBuilder, HalfEdgeBuilder},
     stores::{Handle, Stores},
 };
 
