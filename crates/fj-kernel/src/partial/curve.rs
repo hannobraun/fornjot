@@ -9,10 +9,7 @@ use crate::{
 /// API for building a [`Curve`]
 ///
 /// Also see [`Curve::builder`].
-pub struct PartialCurve<'a> {
-    /// The stores that the created objects are put in
-    pub stores: &'a Stores,
-
+pub struct PartialCurve {
     /// The path that defines the [`Curve`]
     ///
     /// Must be provided before calling [`PartialCurve::build`].
@@ -27,7 +24,7 @@ pub struct PartialCurve<'a> {
     pub global_form: Option<PartialGlobalCurve>,
 }
 
-impl<'a> PartialCurve<'a> {
+impl PartialCurve {
     /// Provide a path for the partial curve
     pub fn with_path(mut self, path: SurfacePath) -> Self {
         self.path = Some(path);
@@ -79,12 +76,12 @@ impl<'a> PartialCurve<'a> {
     }
 
     /// Build a full [`Curve`] from the partial curve
-    pub fn build(self) -> Curve {
+    pub fn build(self, stores: &Stores) -> Curve {
         let path = self.path.expect("Can't build `Curve` without path");
         let global_form = self
             .global_form
             .expect("Can't build `Curve` without a global form")
-            .build(self.stores);
+            .build(stores);
 
         Curve::new(self.surface, path, global_form)
     }

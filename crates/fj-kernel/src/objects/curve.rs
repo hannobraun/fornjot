@@ -1,7 +1,7 @@
 use crate::{
     partial::{PartialCurve, PartialGlobalCurve},
     path::{GlobalPath, SurfacePath},
-    stores::{Handle, Stores},
+    stores::Handle,
 };
 
 use super::Surface;
@@ -16,9 +16,8 @@ pub struct Curve {
 
 impl Curve {
     /// Build a `Curve` using [`PartialCurve`]
-    pub fn partial(stores: &Stores, surface: Surface) -> PartialCurve {
+    pub fn partial(surface: Surface) -> PartialCurve {
         PartialCurve {
-            stores,
             path: None,
             surface,
             global_form: None,
