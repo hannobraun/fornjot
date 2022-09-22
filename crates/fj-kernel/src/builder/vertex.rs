@@ -5,7 +5,7 @@ use crate::objects::{Curve, GlobalVertex, Surface, SurfaceVertex};
 /// API for building a [`SurfaceVertex`]
 ///
 /// Also see [`SurfaceVertex::builder`].
-pub struct SurfaceVertexBuilder {
+pub struct PartialSurfaceVertex {
     /// The position of the [`SurfaceVertex`] on the [`Surface`]
     pub position: Point<2>,
 
@@ -19,7 +19,7 @@ pub struct SurfaceVertexBuilder {
     pub global_form: Option<GlobalVertex>,
 }
 
-impl SurfaceVertexBuilder {
+impl PartialSurfaceVertex {
     /// Build the [`SurfaceVertex`] with the provided global form
     pub fn with_global_form(mut self, global_form: GlobalVertex) -> Self {
         self.global_form = Some(global_form);

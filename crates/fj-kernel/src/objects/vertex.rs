@@ -2,7 +2,7 @@ use fj_math::Point;
 use pretty_assertions::assert_eq;
 
 use crate::{
-    builder::{GlobalVertexBuilder, SurfaceVertexBuilder},
+    builder::{GlobalVertexBuilder, PartialSurfaceVertex},
     partial::PartialVertex,
 };
 
@@ -86,12 +86,12 @@ pub struct SurfaceVertex {
 }
 
 impl SurfaceVertex {
-    /// Build a `SurfaceVertex` using [`SurfaceVertexBuilder`]
+    /// Build a `SurfaceVertex` using [`PartialSurfaceVertex`]
     pub fn builder(
         position: impl Into<Point<2>>,
         surface: Surface,
-    ) -> SurfaceVertexBuilder {
-        SurfaceVertexBuilder {
+    ) -> PartialSurfaceVertex {
+        PartialSurfaceVertex {
             position: position.into(),
             surface,
             global_form: None,

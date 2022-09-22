@@ -1,7 +1,7 @@
 use fj_math::Point;
 
 use crate::{
-    builder::SurfaceVertexBuilder,
+    builder::PartialSurfaceVertex,
     objects::{Curve, GlobalVertex, SurfaceVertex, Vertex},
 };
 
@@ -72,7 +72,7 @@ impl PartialVertex {
         let curve = self.curve.expect("Can't build `Vertex` without `Curve`");
 
         let surface_form = self.surface_form.unwrap_or_else(|| {
-            SurfaceVertexBuilder {
+            PartialSurfaceVertex {
                 position: curve.path().point_from_path_coords(position),
                 surface: *curve.surface(),
                 global_form: self.global_form,
