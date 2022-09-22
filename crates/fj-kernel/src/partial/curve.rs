@@ -9,7 +9,7 @@ use crate::{
 /// API for building a [`Curve`]
 ///
 /// Also see [`Curve::builder`].
-pub struct CurveBuilder<'a> {
+pub struct PartialCurve<'a> {
     /// The stores that the created objects are put in
     pub stores: &'a Stores,
 
@@ -17,7 +17,7 @@ pub struct CurveBuilder<'a> {
     pub surface: Surface,
 }
 
-impl<'a> CurveBuilder<'a> {
+impl<'a> PartialCurve<'a> {
     /// Build a line that represents the u-axis on the surface
     pub fn build_u_axis(self) -> Curve {
         let a = Point::origin();

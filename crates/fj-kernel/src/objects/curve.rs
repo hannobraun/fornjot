@@ -1,5 +1,5 @@
 use crate::{
-    partial::{CurveBuilder, PartialGlobalCurve},
+    partial::{PartialCurve, PartialGlobalCurve},
     path::{GlobalPath, SurfacePath},
     stores::{Handle, Stores},
 };
@@ -15,9 +15,9 @@ pub struct Curve {
 }
 
 impl Curve {
-    /// Build a `Curve` using [`CurveBuilder`]
-    pub fn builder(stores: &Stores, surface: Surface) -> CurveBuilder {
-        CurveBuilder { stores, surface }
+    /// Build a `Curve` using [`PartialCurve`]
+    pub fn builder(stores: &Stores, surface: Surface) -> PartialCurve {
+        PartialCurve { stores, surface }
     }
 
     /// Construct a new instance of `Curve`
