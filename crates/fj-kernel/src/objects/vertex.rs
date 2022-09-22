@@ -1,8 +1,9 @@
 use fj_math::Point;
 use pretty_assertions::assert_eq;
 
-use crate::builder::{
-    GlobalVertexBuilder, PartialVertex, SurfaceVertexBuilder,
+use crate::{
+    builder::{GlobalVertexBuilder, SurfaceVertexBuilder},
+    partial::PartialVertex,
 };
 
 use super::{Curve, Surface};
