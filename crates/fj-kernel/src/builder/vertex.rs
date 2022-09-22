@@ -25,17 +25,18 @@ impl GlobalVertexBuilder {
         position: impl Into<Point<1>>,
     ) -> GlobalVertex {
         let position_surface = curve.path().point_from_path_coords(position);
-        self.build_from_surface_and_position(curve.surface(), position_surface)
+        self.from_surface_and_position(curve.surface(), position_surface)
+            .build()
     }
 
     /// Build a [`GlobalVertex`] from a surface and a position on that surface
-    pub fn build_from_surface_and_position(
-        self,
+    pub fn from_surface_and_position(
+        mut self,
         surface: &Surface,
         position: impl Into<Point<2>>,
-    ) -> GlobalVertex {
-        let position = surface.point_from_surface_coords(position);
-        GlobalVertex::from_position(position)
+    ) -> Self {
+        self.position = Some(surface.point_from_surface_coords(position));
+        self
     }
 
     /// Build a full [`GlobalVertex`]

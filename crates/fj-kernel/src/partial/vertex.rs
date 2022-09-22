@@ -141,7 +141,8 @@ impl PartialSurfaceVertex {
 
         let global_form = self.global_form.unwrap_or_else(|| {
             GlobalVertex::builder()
-                .build_from_surface_and_position(&surface, position)
+                .from_surface_and_position(&surface, position)
+                .build()
         });
 
         SurfaceVertex::new(position, surface, global_form)
