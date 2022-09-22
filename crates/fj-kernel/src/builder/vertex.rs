@@ -7,7 +7,7 @@ use crate::objects::{Curve, GlobalVertex, Surface, SurfaceVertex};
 /// Also see [`SurfaceVertex::partial`].
 pub struct PartialSurfaceVertex {
     /// The position of the [`SurfaceVertex`] on the [`Surface`]
-    pub position: Point<2>,
+    pub position: Option<Point<2>>,
 
     /// The surface that the [`SurfaceVertex`] is defined in
     pub surface: Option<Surface>,
@@ -20,6 +20,12 @@ pub struct PartialSurfaceVertex {
 }
 
 impl PartialSurfaceVertex {
+    /// Provide a position for the partial surface vertex
+    pub fn with_position(mut self, position: impl Into<Point<2>>) -> Self {
+        self.position = Some(position.into());
+        self
+    }
+
     /// Provide a surface for the partial surface vertex
     pub fn with_surface(mut self, surface: Surface) -> Self {
         self.surface = Some(surface);
@@ -34,16 +40,19 @@ impl PartialSurfaceVertex {
 
     /// Finish building the [`SurfaceVertex`]
     pub fn build(self) -> SurfaceVertex {
+        let position = self
+            .position
+            .expect("Can't build `SurfaceVertex` without position");
         let surface = self
             .surface
             .expect("Can't build `SurfaceVertex` without `Surface`");
 
         let global_form = self.global_form.unwrap_or_else(|| {
             GlobalVertex::builder()
-                .build_from_surface_and_position(&surface, self.position)
+                .build_from_surface_and_position(&surface, position)
         });
 
-        SurfaceVertex::new(self.position, surface, global_form)
+        SurfaceVertex::new(position, surface, global_form)
     }
 }
 

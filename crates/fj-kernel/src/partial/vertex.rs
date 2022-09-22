@@ -73,7 +73,7 @@ impl PartialVertex {
 
         let surface_form = self.surface_form.unwrap_or_else(|| {
             PartialSurfaceVertex {
-                position: curve.path().point_from_path_coords(position),
+                position: Some(curve.path().point_from_path_coords(position)),
                 surface: Some(*curve.surface()),
                 global_form: self.global_form,
             }
