@@ -39,8 +39,9 @@ impl<'a> CurveBuilder<'a> {
         let radius = radius.into();
 
         let path = SurfacePath::circle_from_radius(radius);
-        let global_form =
-            GlobalCurve::partial(self.stores).circle_from_radius(radius);
+        let global_form = GlobalCurve::partial(self.stores)
+            .as_circle_from_radius(radius)
+            .build();
 
         Curve::new(self.surface, path, global_form)
     }
@@ -99,15 +100,9 @@ impl<'a> PartialGlobalCurve<'a> {
         self.with_path(GlobalPath::z_axis())
     }
 
-    /// Build a circle from the given radius
-    pub fn circle_from_radius(
-        &self,
-        radius: impl Into<Scalar>,
-    ) -> Handle<GlobalCurve> {
-        let path = GlobalPath::circle_from_radius(radius);
-        self.stores
-            .global_curves
-            .insert(GlobalCurve::from_path(path))
+    /// Update partial global curve as a circle, from the provided radius
+    pub fn as_circle_from_radius(self, radius: impl Into<Scalar>) -> Self {
+        self.with_path(GlobalPath::circle_from_radius(radius))
     }
 
     /// Create a line from the given points
