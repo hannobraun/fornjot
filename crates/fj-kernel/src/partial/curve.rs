@@ -9,6 +9,7 @@ use crate::{
 /// API for building a [`Curve`]
 ///
 /// Also see [`Curve::builder`].
+#[derive(Default)]
 pub struct PartialCurve {
     /// The path that defines the [`Curve`]
     ///
