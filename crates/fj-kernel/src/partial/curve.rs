@@ -24,7 +24,7 @@ pub struct PartialCurve<'a> {
     /// The global form of the [`Curve`]
     ///
     /// Must be provided before calling [`PartialCurve::build`].
-    pub global_form: Option<GlobalCurve>,
+    pub global_form: Option<PartialGlobalCurve>,
 }
 
 impl<'a> PartialCurve<'a> {
@@ -65,10 +65,11 @@ impl<'a> PartialCurve<'a> {
 
         self.path = Some(SurfacePath::Line(Line::from_points(points)));
         self.global_form =
-            Some(GlobalCurve::from_path(GlobalPath::Line(Line::from_points(
-                points
-                    .map(|point| self.surface.point_from_surface_coords(point)),
-            ))));
+            Some(GlobalCurve::partial().with_path(GlobalPath::Line(
+                Line::from_points(points.map(|point| {
+                    self.surface.point_from_surface_coords(point)
+                })),
+            )));
 
         self
     }
@@ -78,9 +79,8 @@ impl<'a> PartialCurve<'a> {
         let path = self.path.expect("Can't build `Curve` without path");
         let global_form = self
             .global_form
-            .expect("Can't build `Curve` without a global form");
-
-        let global_form = self.stores.global_curves.insert(global_form);
+            .expect("Can't build `Curve` without a global form")
+            .build(self.stores);
 
         Curve::new(self.surface, path, global_form)
     }
