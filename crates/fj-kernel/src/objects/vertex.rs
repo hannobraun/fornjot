@@ -86,7 +86,10 @@ pub struct SurfaceVertex {
 }
 
 impl SurfaceVertex {
-    /// Build a `SurfaceVertex` using [`PartialSurfaceVertex`]
+    /// Create a [`PartialSurfaceVertex`]
+    ///
+    /// This function exists just for convenience, and will just return a
+    /// default [`PartialSurfaceVertex`].
     pub fn partial() -> PartialSurfaceVertex {
         PartialSurfaceVertex::default()
     }

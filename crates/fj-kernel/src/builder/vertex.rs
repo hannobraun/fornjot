@@ -2,21 +2,25 @@ use fj_math::Point;
 
 use crate::objects::{Curve, GlobalVertex, Surface, SurfaceVertex};
 
-/// API for building a [`SurfaceVertex`]
+/// A partial [`SurfaceVertex`]
 ///
-/// Also see [`SurfaceVertex::partial`].
+/// See [`crate::partial`] for more information.
 #[derive(Default)]
 pub struct PartialSurfaceVertex {
-    /// The position of the [`SurfaceVertex`] on the [`Surface`]
+    /// The position of the [`SurfaceVertex`] in the [`Surface`]
+    ///
+    /// Must be provided before [`PartialSurfaceVertex::build`] is called.
     pub position: Option<Point<2>>,
 
     /// The surface that the [`SurfaceVertex`] is defined in
+    ///
+    /// Must be provided before [`PartialSurfaceVertex::build`] is called.
     pub surface: Option<Surface>,
 
     /// The global form of the [`SurfaceVertex`]
     ///
-    /// Can be provided to the builder, if already available, or computed from
-    /// the position on the [`Surface`].
+    /// Can be provided, if already available, or computed from the position on
+    /// the [`Surface`].
     pub global_form: Option<GlobalVertex>,
 }
 
@@ -33,13 +37,19 @@ impl PartialSurfaceVertex {
         self
     }
 
-    /// Build the [`SurfaceVertex`] with the provided global form
+    /// Provide a global form for the partial surface vertex
     pub fn with_global_form(mut self, global_form: GlobalVertex) -> Self {
         self.global_form = Some(global_form);
         self
     }
 
-    /// Finish building the [`SurfaceVertex`]
+    /// Build a full [`SurfaceVertex`] from the partial surface vertex
+    ///
+    /// # Panics
+    ///
+    /// Panics, if no position has been provided.
+    ///
+    /// Panics, if no surface has been provided.
     pub fn build(self) -> SurfaceVertex {
         let position = self
             .position
