@@ -178,9 +178,9 @@ impl<'a> HalfEdgeBuilder<'a> {
     }
 }
 
-/// API for building a [`GlobalEdge`]
+/// A partial [`GlobalEdge`]
 ///
-/// Also see [`GlobalEdge::partial`].
+/// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct PartialGlobalEdge {
     /// The curve that the [`GlobalEdge`] is defined in

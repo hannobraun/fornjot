@@ -120,7 +120,10 @@ pub struct GlobalEdge {
 }
 
 impl GlobalEdge {
-    /// Build a `GlobalEdge` using [`PartialGlobalEdge`]
+    /// Create a [`PartialGlobalEdge`]
+    ///
+    /// This function exists just for convenience, and will just return a
+    /// default [`PartialGlobalEdge`].
     pub fn partial() -> PartialGlobalEdge {
         PartialGlobalEdge::default()
     }
