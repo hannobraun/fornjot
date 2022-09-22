@@ -180,6 +180,7 @@ impl<'a> HalfEdgeBuilder<'a> {
 /// API for building a [`GlobalEdge`]
 ///
 /// Also see [`GlobalEdge::builder`].
+#[derive(Default)]
 pub struct GlobalEdgeBuilder;
 
 impl GlobalEdgeBuilder {

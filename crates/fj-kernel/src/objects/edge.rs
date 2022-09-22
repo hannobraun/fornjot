@@ -122,7 +122,7 @@ pub struct GlobalEdge {
 impl GlobalEdge {
     /// Build a `GlobalEdge` using [`GlobalEdgeBuilder`]
     pub fn builder() -> GlobalEdgeBuilder {
-        GlobalEdgeBuilder
+        GlobalEdgeBuilder::default()
     }
 
     /// Create a new instance
