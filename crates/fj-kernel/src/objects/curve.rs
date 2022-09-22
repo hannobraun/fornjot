@@ -1,5 +1,5 @@
 use crate::{
-    partial::{CurveBuilder, GlobalCurveBuilder},
+    partial::{CurveBuilder, PartialGlobalCurve},
     path::{GlobalPath, SurfacePath},
     stores::{Handle, Stores},
 };
@@ -56,9 +56,9 @@ pub struct GlobalCurve {
 }
 
 impl GlobalCurve {
-    /// Build a `Curve` using [`GlobalCurveBuilder`]
-    pub fn builder(stores: &Stores) -> GlobalCurveBuilder {
-        GlobalCurveBuilder { stores }
+    /// Build a `Curve` using [`PartialGlobalCurve`]
+    pub fn builder(stores: &Stores) -> PartialGlobalCurve {
+        PartialGlobalCurve { stores }
     }
 
     /// Construct a `GlobalCurve` from the path that defines it

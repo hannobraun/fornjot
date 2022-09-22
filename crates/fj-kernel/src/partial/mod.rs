@@ -29,6 +29,6 @@ mod curve;
 mod vertex;
 
 pub use self::{
-    curve::{CurveBuilder, GlobalCurveBuilder},
+    curve::{CurveBuilder, PartialGlobalCurve},
     vertex::{PartialGlobalVertex, PartialSurfaceVertex, PartialVertex},
 };
