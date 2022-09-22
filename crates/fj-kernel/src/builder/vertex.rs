@@ -4,7 +4,7 @@ use crate::objects::{Curve, GlobalVertex, Surface, SurfaceVertex};
 
 /// API for building a [`SurfaceVertex`]
 ///
-/// Also see [`SurfaceVertex::builder`].
+/// Also see [`SurfaceVertex::partial`].
 pub struct PartialSurfaceVertex {
     /// The position of the [`SurfaceVertex`] on the [`Surface`]
     pub position: Point<2>,

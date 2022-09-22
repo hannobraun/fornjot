@@ -87,7 +87,7 @@ pub struct SurfaceVertex {
 
 impl SurfaceVertex {
     /// Build a `SurfaceVertex` using [`PartialSurfaceVertex`]
-    pub fn builder(
+    pub fn partial(
         position: impl Into<Point<2>>,
         surface: Surface,
     ) -> PartialSurfaceVertex {
