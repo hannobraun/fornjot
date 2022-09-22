@@ -4,7 +4,7 @@ use crate::objects::{Curve, GlobalVertex, Surface};
 
 /// API for building a [`GlobalVertex`]
 ///
-/// Also see [`GlobalVertex::builder`].
+/// Also see [`GlobalVertex::partial`].
 #[derive(Default)]
 pub struct PartialGlobalVertex {
     /// The position of the [`GlobalVertex`]

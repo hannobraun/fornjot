@@ -140,7 +140,7 @@ impl PartialSurfaceVertex {
             .expect("Can't build `SurfaceVertex` without `Surface`");
 
         let global_form = self.global_form.unwrap_or_else(|| {
-            GlobalVertex::builder()
+            GlobalVertex::partial()
                 .from_surface_and_position(&surface, position)
                 .build()
         });

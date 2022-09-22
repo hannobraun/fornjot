@@ -149,7 +149,7 @@ pub struct GlobalVertex {
 
 impl GlobalVertex {
     /// Build a `GlobalVertex` using [`PartialGlobalVertex`]
-    pub fn builder() -> PartialGlobalVertex {
+    pub fn partial() -> PartialGlobalVertex {
         PartialGlobalVertex::default()
     }
 
