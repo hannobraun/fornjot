@@ -56,7 +56,10 @@ pub struct GlobalCurve {
 }
 
 impl GlobalCurve {
-    /// Build a `Curve` using [`PartialGlobalCurve`]
+    /// Create a [`PartialGlobalCurve`]
+    ///
+    /// This function exists just for convenience, and will just return a
+    /// default [`PartialGlobalCurve`].
     pub fn partial() -> PartialGlobalCurve {
         PartialGlobalCurve::default()
     }

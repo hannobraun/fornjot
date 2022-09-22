@@ -65,9 +65,9 @@ impl<'a> CurveBuilder<'a> {
     }
 }
 
-/// API for building a [`GlobalCurve`]
+/// A partial [`GlobalCurve`]
 ///
-/// Also see [`GlobalCurve::partial`].
+/// See [`crate::partial`] for more information.
 #[derive(Default)]
 pub struct PartialGlobalCurve {
     /// The path that defines the [`GlobalCurve`]
