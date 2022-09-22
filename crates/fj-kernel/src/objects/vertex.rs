@@ -22,7 +22,7 @@ pub struct Vertex {
 
 impl Vertex {
     /// Build a `Vertex` using [`PartialVertex`]
-    pub fn builder() -> PartialVertex {
+    pub fn partial() -> PartialVertex {
         PartialVertex::default()
     }
 

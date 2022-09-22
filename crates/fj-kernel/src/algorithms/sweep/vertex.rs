@@ -161,7 +161,7 @@ mod tests {
 
         let surface = Surface::xz_plane();
         let curve = Curve::builder(&stores, surface).build_u_axis();
-        let vertex = Vertex::builder()
+        let vertex = Vertex::partial()
             .with_position([0.])
             .with_curve(curve)
             .build();
