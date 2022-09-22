@@ -150,7 +150,7 @@ pub struct GlobalVertex {
 impl GlobalVertex {
     /// Build a `GlobalVertex` using [`GlobalVertexBuilder`]
     pub fn builder() -> GlobalVertexBuilder {
-        GlobalVertexBuilder
+        GlobalVertexBuilder::default()
     }
 
     /// Construct a `GlobalVertex` from a point

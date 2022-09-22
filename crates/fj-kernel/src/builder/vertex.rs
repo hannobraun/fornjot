@@ -5,6 +5,7 @@ use crate::objects::{Curve, GlobalVertex, Surface};
 /// API for building a [`GlobalVertex`]
 ///
 /// Also see [`GlobalVertex::builder`].
+#[derive(Default)]
 pub struct GlobalVertexBuilder;
 
 impl GlobalVertexBuilder {
