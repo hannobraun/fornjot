@@ -13,8 +13,18 @@ pub struct PartialCurve<'a> {
     /// The stores that the created objects are put in
     pub stores: &'a Stores,
 
+    /// The path that defines the [`Curve`]
+    ///
+    /// Must be provided before calling [`PartialCurve::build`].
+    pub path: Option<SurfacePath>,
+
     /// The surface that the [`Curve`] is defined in
     pub surface: Surface,
+
+    /// The global form of the [`Curve`]
+    ///
+    /// Must be provided before calling [`PartialCurve::build`].
+    pub global_form: Option<GlobalCurve>,
 }
 
 impl<'a> PartialCurve<'a> {
@@ -23,7 +33,7 @@ impl<'a> PartialCurve<'a> {
         let a = Point::origin();
         let b = a + Vector::unit_u();
 
-        self.build_line_from_points([a, b])
+        self.as_line_from_points([a, b]).build()
     }
 
     /// Build a line that represents the v-axis on the surface
@@ -31,7 +41,7 @@ impl<'a> PartialCurve<'a> {
         let a = Point::origin();
         let b = a + Vector::unit_v();
 
-        self.build_line_from_points([a, b])
+        self.as_line_from_points([a, b]).build()
     }
 
     /// Build a circle from the given radius
@@ -46,20 +56,31 @@ impl<'a> PartialCurve<'a> {
         Curve::new(self.surface, path, global_form)
     }
 
-    /// Build a line from the given points
-    pub fn build_line_from_points(
-        &self,
+    /// Update partial curve as a line, from the provided points
+    pub fn as_line_from_points(
+        mut self,
         points: [impl Into<Point<2>>; 2],
-    ) -> Curve {
+    ) -> Self {
         let points = points.map(Into::into);
 
-        let path = SurfacePath::Line(Line::from_points(points));
-        let global_form = self.stores.global_curves.insert(
-            GlobalCurve::from_path(GlobalPath::Line(Line::from_points(
+        self.path = Some(SurfacePath::Line(Line::from_points(points)));
+        self.global_form =
+            Some(GlobalCurve::from_path(GlobalPath::Line(Line::from_points(
                 points
                     .map(|point| self.surface.point_from_surface_coords(point)),
-            ))),
-        );
+            ))));
+
+        self
+    }
+
+    /// Build a full [`Curve`] from the partial curve
+    pub fn build(self) -> Curve {
+        let path = self.path.expect("Can't build `Curve` without path");
+        let global_form = self
+            .global_form
+            .expect("Can't build `Curve` without a global form");
+
+        let global_form = self.stores.global_curves.insert(global_form);
 
         Curve::new(self.surface, path, global_form)
     }

@@ -17,7 +17,12 @@ pub struct Curve {
 impl Curve {
     /// Build a `Curve` using [`PartialCurve`]
     pub fn partial(stores: &Stores, surface: Surface) -> PartialCurve {
-        PartialCurve { stores, surface }
+        PartialCurve {
+            stores,
+            path: None,
+            surface,
+            global_form: None,
+        }
     }
 
     /// Construct a new instance of `Curve`

@@ -115,7 +115,8 @@ mod tests {
 
         let expected_curves = surfaces.map(|surface| {
             Curve::partial(&stores, surface)
-                .build_line_from_points([[0., 0.], [1., 0.]])
+                .as_line_from_points([[0., 0.], [1., 0.]])
+                .build()
         });
         let expected_intervals =
             CurveFaceIntersection::from_intervals([[[-1.], [1.]]]);
