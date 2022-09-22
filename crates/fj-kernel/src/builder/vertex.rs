@@ -2,23 +2,25 @@ use fj_math::Point;
 
 use crate::objects::{Curve, GlobalVertex, Surface};
 
-/// API for building a [`GlobalVertex`]
+/// A partial [`GlobalVertex`]
 ///
-/// Also see [`GlobalVertex::partial`].
+/// See [`crate::partial`] for more information.
 #[derive(Default)]
 pub struct PartialGlobalVertex {
     /// The position of the [`GlobalVertex`]
+    ///
+    /// Must be provided before [`PartialGlobalVertex::build`] is called.
     pub position: Option<Point<3>>,
 }
 
 impl PartialGlobalVertex {
-    /// Provide a position
+    /// Provide a position for the partial global vertex
     pub fn with_position(mut self, position: impl Into<Point<3>>) -> Self {
         self.position = Some(position.into());
         self
     }
 
-    /// Build a [`GlobalVertex`] from a curve and a position on that curve
+    /// Update partial global vertex from the given curve and position on it
     pub fn from_curve_and_position(
         self,
         curve: &Curve,
@@ -28,7 +30,7 @@ impl PartialGlobalVertex {
         self.from_surface_and_position(curve.surface(), position_surface)
     }
 
-    /// Build a [`GlobalVertex`] from a surface and a position on that surface
+    /// Update partial global vertex from the given surface and position on it
     pub fn from_surface_and_position(
         mut self,
         surface: &Surface,
@@ -38,7 +40,7 @@ impl PartialGlobalVertex {
         self
     }
 
-    /// Build a full [`GlobalVertex`]
+    /// Build a full [`GlobalVertex`] from the partial global vertex
     pub fn build(self) -> GlobalVertex {
         let position = self
             .position

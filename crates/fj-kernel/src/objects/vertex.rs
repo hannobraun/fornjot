@@ -148,7 +148,10 @@ pub struct GlobalVertex {
 }
 
 impl GlobalVertex {
-    /// Build a `GlobalVertex` using [`PartialGlobalVertex`]
+    /// Create a [`PartialGlobalVertex`]
+    ///
+    /// This function exists just for convenience, and will just return a
+    /// default [`PartialGlobalVertex`].
     pub fn partial() -> PartialGlobalVertex {
         PartialGlobalVertex::default()
     }
