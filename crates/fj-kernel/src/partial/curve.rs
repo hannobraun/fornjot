@@ -28,6 +28,12 @@ pub struct PartialCurve<'a> {
 }
 
 impl<'a> PartialCurve<'a> {
+    /// Provide a path for the partial curve
+    pub fn with_path(mut self, path: SurfacePath) -> Self {
+        self.path = Some(path);
+        self
+    }
+
     /// Provide a global form for the partial curve
     pub fn with_global_form(mut self, global_form: PartialGlobalCurve) -> Self {
         self.global_form = Some(global_form);
@@ -51,28 +57,25 @@ impl<'a> PartialCurve<'a> {
     }
 
     /// Update partial curve as a circle, from the provided radius
-    pub fn as_circle_from_radius(mut self, radius: impl Into<Scalar>) -> Self {
+    pub fn as_circle_from_radius(self, radius: impl Into<Scalar>) -> Self {
         let radius = radius.into();
 
-        self.path = Some(SurfacePath::circle_from_radius(radius));
-        self.with_global_form(
-            GlobalCurve::partial().as_circle_from_radius(radius),
-        )
+        self.with_path(SurfacePath::circle_from_radius(radius))
+            .with_global_form(
+                GlobalCurve::partial().as_circle_from_radius(radius),
+            )
     }
 
     /// Update partial curve as a line, from the provided points
-    pub fn as_line_from_points(
-        mut self,
-        points: [impl Into<Point<2>>; 2],
-    ) -> Self {
+    pub fn as_line_from_points(self, points: [impl Into<Point<2>>; 2]) -> Self {
         let points_surface = points.map(Into::into);
         let points_global = points_surface
             .map(|point| self.surface.point_from_surface_coords(point));
 
-        self.path = Some(SurfacePath::line_from_points(points_surface));
-        self.with_global_form(
-            GlobalCurve::partial().as_line_from_points(points_global),
-        )
+        self.with_path(SurfacePath::line_from_points(points_surface))
+            .with_global_form(
+                GlobalCurve::partial().as_line_from_points(points_global),
+            )
     }
 
     /// Build a full [`Curve`] from the partial curve
