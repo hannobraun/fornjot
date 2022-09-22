@@ -168,7 +168,7 @@ mod tests {
 
         let surface = Surface::xy_plane();
 
-        let curve = Curve::builder(&stores, surface)
+        let curve = Curve::partial(&stores, surface)
             .build_line_from_points([[-3., 0.], [-2., 0.]]);
 
         #[rustfmt::skip]

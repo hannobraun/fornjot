@@ -16,7 +16,7 @@ pub struct Curve {
 
 impl Curve {
     /// Build a `Curve` using [`PartialCurve`]
-    pub fn builder(stores: &Stores, surface: Surface) -> PartialCurve {
+    pub fn partial(stores: &Stores, surface: Surface) -> PartialCurve {
         PartialCurve { stores, surface }
     }
 
