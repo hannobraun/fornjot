@@ -2,8 +2,8 @@ use fj_math::Point;
 use pretty_assertions::assert_eq;
 
 use crate::{
-    builder::{GlobalVertexBuilder, PartialSurfaceVertex},
-    partial::PartialVertex,
+    builder::GlobalVertexBuilder,
+    partial::{PartialSurfaceVertex, PartialVertex},
 };
 
 use super::{Curve, Surface};
