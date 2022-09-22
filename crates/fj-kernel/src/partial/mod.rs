@@ -26,4 +26,6 @@
 
 mod vertex;
 
-pub use self::vertex::{PartialSurfaceVertex, PartialVertex};
+pub use self::vertex::{
+    PartialGlobalVertex, PartialSurfaceVertex, PartialVertex,
+};
