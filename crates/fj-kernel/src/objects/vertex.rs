@@ -2,7 +2,7 @@ use fj_math::Point;
 use pretty_assertions::assert_eq;
 
 use crate::{
-    builder::GlobalVertexBuilder,
+    builder::PartialGlobalVertex,
     partial::{PartialSurfaceVertex, PartialVertex},
 };
 
@@ -148,9 +148,9 @@ pub struct GlobalVertex {
 }
 
 impl GlobalVertex {
-    /// Build a `GlobalVertex` using [`GlobalVertexBuilder`]
-    pub fn builder() -> GlobalVertexBuilder {
-        GlobalVertexBuilder::default()
+    /// Build a `GlobalVertex` using [`PartialGlobalVertex`]
+    pub fn builder() -> PartialGlobalVertex {
+        PartialGlobalVertex::default()
     }
 
     /// Construct a `GlobalVertex` from a point

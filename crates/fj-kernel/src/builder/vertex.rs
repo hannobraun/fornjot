@@ -6,12 +6,12 @@ use crate::objects::{Curve, GlobalVertex, Surface};
 ///
 /// Also see [`GlobalVertex::builder`].
 #[derive(Default)]
-pub struct GlobalVertexBuilder {
+pub struct PartialGlobalVertex {
     /// The position of the [`GlobalVertex`]
     pub position: Option<Point<3>>,
 }
 
-impl GlobalVertexBuilder {
+impl PartialGlobalVertex {
     /// Provide a position
     pub fn with_position(mut self, position: impl Into<Point<3>>) -> Self {
         self.position = Some(position.into());
