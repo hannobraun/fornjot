@@ -182,7 +182,7 @@ impl<'a> HalfEdgeBuilder<'a> {
 ///
 /// Also see [`GlobalEdge::builder`].
 #[derive(Default)]
-pub struct GlobalEdgeBuilder {
+pub struct PartialGlobalEdge {
     /// The curve that the [`GlobalEdge`] is defined in
     ///
     /// Must be provided before [`PartialGlobalEdge::build`] is called.
@@ -194,7 +194,7 @@ pub struct GlobalEdgeBuilder {
     pub vertices: Option<[GlobalVertex; 2]>,
 }
 
-impl GlobalEdgeBuilder {
+impl PartialGlobalEdge {
     /// Update partial global edge from the given curve and vertices
     pub fn from_curve_and_vertices(
         mut self,
