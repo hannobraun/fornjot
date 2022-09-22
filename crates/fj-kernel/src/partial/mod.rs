@@ -31,7 +31,7 @@ mod vertex;
 
 pub use self::{
     curve::{PartialCurve, PartialGlobalCurve},
-    edge::{HalfEdgeBuilder, PartialGlobalEdge},
+    edge::{PartialGlobalEdge, PartialHalfEdge},
     vertex::{PartialGlobalVertex, PartialSurfaceVertex, PartialVertex},
 };
 

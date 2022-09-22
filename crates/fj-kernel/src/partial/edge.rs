@@ -12,7 +12,7 @@ use crate::{
 /// API for building a [`HalfEdge`]
 ///
 /// Also see [`HalfEdge::builder`].
-pub struct HalfEdgeBuilder<'a> {
+pub struct PartialHalfEdge<'a> {
     /// The stores that the created objects are put in
     pub stores: &'a Stores,
 
@@ -32,7 +32,7 @@ pub struct HalfEdgeBuilder<'a> {
     pub global_form: Option<GlobalEdge>,
 }
 
-impl<'a> HalfEdgeBuilder<'a> {
+impl<'a> PartialHalfEdge<'a> {
     /// Build the [`HalfEdge`] with the given curve
     pub fn with_curve(mut self, curve: Curve) -> Self {
         self.curve = Some(curve);
