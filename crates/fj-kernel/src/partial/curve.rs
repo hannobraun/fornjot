@@ -36,12 +36,12 @@ impl<'a> PartialCurve<'a> {
         self.as_line_from_points([a, b]).build()
     }
 
-    /// Build a line that represents the v-axis on the surface
-    pub fn build_v_axis(self) -> Curve {
+    /// Update partial curve to represent the v-axis
+    pub fn as_v_axis(self) -> Self {
         let a = Point::origin();
         let b = a + Vector::unit_v();
 
-        self.as_line_from_points([a, b]).build()
+        self.as_line_from_points([a, b])
     }
 
     /// Update partial curve as a circle, from the provided radius
