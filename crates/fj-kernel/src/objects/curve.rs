@@ -16,10 +16,10 @@ pub struct Curve {
 
 impl Curve {
     /// Build a `Curve` using [`PartialCurve`]
-    pub fn partial(surface: Surface) -> PartialCurve {
+    pub fn partial() -> PartialCurve {
         PartialCurve {
             path: None,
-            surface,
+            surface: None,
             global_form: None,
         }
     }

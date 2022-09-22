@@ -16,7 +16,7 @@ pub struct PartialCurve {
     pub path: Option<SurfacePath>,
 
     /// The surface that the [`Curve`] is defined in
-    pub surface: Surface,
+    pub surface: Option<Surface>,
 
     /// The global form of the [`Curve`]
     ///
@@ -28,6 +28,12 @@ impl PartialCurve {
     /// Provide a path for the partial curve
     pub fn with_path(mut self, path: SurfacePath) -> Self {
         self.path = Some(path);
+        self
+    }
+
+    /// Provide a surface for the partial curve
+    pub fn with_surface(mut self, surface: Surface) -> Self {
+        self.surface = Some(surface);
         self
     }
 
@@ -65,9 +71,11 @@ impl PartialCurve {
 
     /// Update partial curve as a line, from the provided points
     pub fn as_line_from_points(self, points: [impl Into<Point<2>>; 2]) -> Self {
+        let surface = self.surface.expect("Can't build line without surface");
+
         let points_surface = points.map(Into::into);
         let points_global = points_surface
-            .map(|point| self.surface.point_from_surface_coords(point));
+            .map(|point| surface.point_from_surface_coords(point));
 
         self.with_path(SurfacePath::line_from_points(points_surface))
             .with_global_form(
@@ -78,12 +86,14 @@ impl PartialCurve {
     /// Build a full [`Curve`] from the partial curve
     pub fn build(self, stores: &Stores) -> Curve {
         let path = self.path.expect("Can't build `Curve` without path");
+        let surface =
+            self.surface.expect("Can't build `Curve` without surface");
         let global_form = self
             .global_form
             .expect("Can't build `Curve` without a global form")
             .build(stores);
 
-        Curve::new(self.surface, path, global_form)
+        Curve::new(surface, path, global_form)
     }
 }
 

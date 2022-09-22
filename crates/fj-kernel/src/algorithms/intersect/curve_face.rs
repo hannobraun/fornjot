@@ -168,7 +168,8 @@ mod tests {
 
         let surface = Surface::xy_plane();
 
-        let curve = Curve::partial(surface)
+        let curve = Curve::partial()
+            .with_surface(surface)
             .as_line_from_points([[-3., 0.], [-2., 0.]])
             .build(&stores);
 

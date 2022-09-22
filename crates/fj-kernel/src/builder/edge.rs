@@ -53,7 +53,8 @@ impl<'a> HalfEdgeBuilder<'a> {
 
     /// Build the [`HalfEdge`] as a circle from the given radius
     pub fn as_circle_from_radius(mut self, radius: impl Into<Scalar>) -> Self {
-        let curve = Curve::partial(self.surface)
+        let curve = Curve::partial()
+            .with_surface(self.surface)
             .as_circle_from_radius(radius)
             .build(self.stores);
 
