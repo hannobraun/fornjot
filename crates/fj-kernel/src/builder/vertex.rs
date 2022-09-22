@@ -7,7 +7,7 @@ use crate::objects::{Curve, GlobalVertex, Surface, SurfaceVertex, Vertex};
 /// Also see [`Vertex::builder`].
 pub struct VertexBuilder {
     /// The position of the [`Vertex`] on the [`Curve`]
-    pub position: Point<1>,
+    pub position: Option<Point<1>>,
 
     /// The curve that the [`Vertex`] is defined in
     pub curve: Option<Curve>,
@@ -26,6 +26,12 @@ pub struct VertexBuilder {
 }
 
 impl VertexBuilder {
+    /// Build the [`Vertex`] with the provided position
+    pub fn with_position(mut self, position: impl Into<Point<1>>) -> Self {
+        self.position = Some(position.into());
+        self
+    }
+
     /// Build the [`Vertex`] with the provided curve
     pub fn with_curve(mut self, curve: Curve) -> Self {
         self.curve = Some(curve);
@@ -46,11 +52,14 @@ impl VertexBuilder {
 
     /// Finish building the [`Vertex`]
     pub fn build(self) -> Vertex {
+        let position = self
+            .position
+            .expect("Cant' build `Vertex` without position");
         let curve = self.curve.expect("Can't build `Vertex` without `Curve`");
 
         let surface_form = self.surface_form.unwrap_or_else(|| {
             SurfaceVertexBuilder {
-                position: curve.path().point_from_path_coords(self.position),
+                position: curve.path().point_from_path_coords(position),
                 surface: *curve.surface(),
                 global_form: self.global_form,
             }
@@ -59,7 +68,7 @@ impl VertexBuilder {
 
         let global_form = *surface_form.global_form();
 
-        Vertex::new(self.position, curve, surface_form, global_form)
+        Vertex::new(position, curve, surface_form, global_form)
     }
 }
 
