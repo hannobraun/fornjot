@@ -6,7 +6,7 @@ use crate::objects::{Curve, GlobalVertex, Surface, SurfaceVertex, Vertex};
 ///
 /// Also see [`Vertex::builder`].
 #[derive(Default)]
-pub struct VertexBuilder {
+pub struct PartialVertex {
     /// The position of the [`Vertex`] on the [`Curve`]
     pub position: Option<Point<1>>,
 
@@ -26,7 +26,7 @@ pub struct VertexBuilder {
     pub global_form: Option<GlobalVertex>,
 }
 
-impl VertexBuilder {
+impl PartialVertex {
     /// Build the [`Vertex`] with the provided position
     pub fn with_position(mut self, position: impl Into<Point<1>>) -> Self {
         self.position = Some(position.into());

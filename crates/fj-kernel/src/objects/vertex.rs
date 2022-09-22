@@ -2,7 +2,7 @@ use fj_math::Point;
 use pretty_assertions::assert_eq;
 
 use crate::builder::{
-    GlobalVertexBuilder, SurfaceVertexBuilder, VertexBuilder,
+    GlobalVertexBuilder, PartialVertex, SurfaceVertexBuilder,
 };
 
 use super::{Curve, Surface};
@@ -21,9 +21,9 @@ pub struct Vertex {
 }
 
 impl Vertex {
-    /// Build a `Vertex` using [`VertexBuilder`]
-    pub fn builder() -> VertexBuilder {
-        VertexBuilder::default()
+    /// Build a `Vertex` using [`PartialVertex`]
+    pub fn builder() -> PartialVertex {
+        PartialVertex::default()
     }
 
     /// Construct an instance of `Vertex`
