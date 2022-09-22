@@ -28,12 +28,12 @@ pub struct PartialCurve<'a> {
 }
 
 impl<'a> PartialCurve<'a> {
-    /// Build a line that represents the u-axis on the surface
-    pub fn build_u_axis(self) -> Curve {
+    /// Update partial curve to represent the u-axis
+    pub fn as_u_axis(self) -> Self {
         let a = Point::origin();
         let b = a + Vector::unit_u();
 
-        self.as_line_from_points([a, b]).build()
+        self.as_line_from_points([a, b])
     }
 
     /// Update partial curve to represent the v-axis

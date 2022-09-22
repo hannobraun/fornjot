@@ -362,7 +362,7 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::xy_plane();
-        let object = Curve::partial(&stores, surface).build_u_axis();
+        let object = Curve::partial(&stores, surface).as_u_axis().build();
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -561,7 +561,7 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::xy_plane();
-        let curve = Curve::partial(&stores, surface).build_u_axis();
+        let curve = Curve::partial(&stores, surface).as_u_axis().build();
         let global_vertex = GlobalVertex::from_position([0., 0., 0.]);
         let surface_vertex =
             SurfaceVertex::new([0., 0.], surface, global_vertex);

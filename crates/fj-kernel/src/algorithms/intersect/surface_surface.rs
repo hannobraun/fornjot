@@ -186,8 +186,8 @@ mod tests {
             None,
         );
 
-        let expected_xy = Curve::partial(&stores, xy).build_u_axis();
-        let expected_xz = Curve::partial(&stores, xz).build_u_axis();
+        let expected_xy = Curve::partial(&stores, xy).as_u_axis().build();
+        let expected_xz = Curve::partial(&stores, xz).as_u_axis().build();
 
         assert_eq!(
             SurfaceSurfaceIntersection::compute([&xy, &xz], &stores),
