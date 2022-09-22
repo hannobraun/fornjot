@@ -21,7 +21,10 @@ pub struct Vertex {
 }
 
 impl Vertex {
-    /// Build a `Vertex` using [`PartialVertex`]
+    /// Create a [`PartialVertex`]
+    ///
+    /// This function exists just for convenience, and will just return a
+    /// default [`PartialVertex`].
     pub fn partial() -> PartialVertex {
         PartialVertex::default()
     }

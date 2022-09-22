@@ -8,9 +8,15 @@ use crate::objects::{Curve, GlobalVertex, Surface, SurfaceVertex, Vertex};
 #[derive(Default)]
 pub struct PartialVertex {
     /// The position of the [`Vertex`] on the [`Curve`]
+    ///
+    /// Must be provided to the builder before [`PartialVertex::build`] is
+    /// called.
     pub position: Option<Point<1>>,
 
     /// The curve that the [`Vertex`] is defined in
+    ///
+    /// Must be provided to the builder before [`PartialVertex::build`] is
+    /// called.
     pub curve: Option<Curve>,
 
     /// The surface form of the [`Vertex`]
