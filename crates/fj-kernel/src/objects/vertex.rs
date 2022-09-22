@@ -88,11 +88,7 @@ pub struct SurfaceVertex {
 impl SurfaceVertex {
     /// Build a `SurfaceVertex` using [`PartialSurfaceVertex`]
     pub fn partial() -> PartialSurfaceVertex {
-        PartialSurfaceVertex {
-            position: None,
-            surface: None,
-            global_form: None,
-        }
+        PartialSurfaceVertex::default()
     }
 
     /// Construct a new instance of `SurfaceVertex`
