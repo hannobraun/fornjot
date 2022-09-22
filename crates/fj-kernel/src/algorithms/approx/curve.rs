@@ -209,8 +209,10 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::new(GlobalPath::x_axis(), [0., 0., 1.]);
-        let curve = Curve::builder(&stores, surface)
-            .build_line_from_points([[1., 1.], [2., 1.]]);
+        let curve = Curve::partial()
+            .with_surface(surface)
+            .as_line_from_points([[1., 1.], [2., 1.]])
+            .build(&stores);
         let range = RangeOnPath::from([[0.], [1.]]);
 
         let approx = (&curve, range).approx(1.);
@@ -224,8 +226,10 @@ mod tests {
 
         let surface =
             Surface::new(GlobalPath::circle_from_radius(1.), [0., 0., 1.]);
-        let curve = Curve::builder(&stores, surface)
-            .build_line_from_points([[1., 1.], [1., 2.]]);
+        let curve = Curve::partial()
+            .with_surface(surface)
+            .as_line_from_points([[1., 1.], [1., 2.]])
+            .build(&stores);
         let range = RangeOnPath::from([[0.], [1.]]);
 
         let approx = (&curve, range).approx(1.);
@@ -239,8 +243,10 @@ mod tests {
 
         let path = GlobalPath::circle_from_radius(1.);
         let surface = Surface::new(path, [0., 0., 1.]);
-        let curve = Curve::builder(&stores, surface)
-            .build_line_from_points([[0., 1.], [1., 1.]]);
+        let curve = Curve::partial()
+            .with_surface(surface)
+            .as_line_from_points([[0., 1.], [1., 1.]])
+            .build(&stores);
 
         let range = RangeOnPath::from([[0.], [TAU]]);
         let tolerance = 1.;
@@ -266,8 +272,10 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::new(GlobalPath::x_axis(), [0., 0., 1.]);
-        let curve =
-            Curve::builder(&stores, surface).build_circle_from_radius(1.);
+        let curve = Curve::partial()
+            .with_surface(surface)
+            .as_circle_from_radius(1.)
+            .build(&stores);
 
         let range = RangeOnPath::from([[0.], [TAU]]);
         let tolerance = 1.;

@@ -1,7 +1,7 @@
 use crate::{
-    builder::{CurveBuilder, GlobalCurveBuilder},
+    partial::{PartialCurve, PartialGlobalCurve},
     path::{GlobalPath, SurfacePath},
-    stores::{Handle, Stores},
+    stores::Handle,
 };
 
 use super::Surface;
@@ -15,9 +15,12 @@ pub struct Curve {
 }
 
 impl Curve {
-    /// Build a `Curve` using [`CurveBuilder`]
-    pub fn builder(stores: &Stores, surface: Surface) -> CurveBuilder {
-        CurveBuilder { stores, surface }
+    /// Create a [`PartialCurve`]
+    ///
+    /// This function exists just for convenience, and will just return a
+    /// default [`PartialCurve`].
+    pub fn partial() -> PartialCurve {
+        PartialCurve::default()
     }
 
     /// Construct a new instance of `Curve`
@@ -56,9 +59,12 @@ pub struct GlobalCurve {
 }
 
 impl GlobalCurve {
-    /// Build a `Curve` using [`GlobalCurveBuilder`]
-    pub fn builder(stores: &Stores) -> GlobalCurveBuilder {
-        GlobalCurveBuilder { stores }
+    /// Create a [`PartialGlobalCurve`]
+    ///
+    /// This function exists just for convenience, and will just return a
+    /// default [`PartialGlobalCurve`].
+    pub fn partial() -> PartialGlobalCurve {
+        PartialGlobalCurve::default()
     }
 
     /// Construct a `GlobalCurve` from the path that defines it

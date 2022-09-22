@@ -86,7 +86,10 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::xy_plane();
-        let curve = Curve::builder(&stores, surface).build_u_axis();
+        let curve = Curve::partial()
+            .with_surface(surface)
+            .as_u_axis()
+            .build(&stores);
         let half_edge = HalfEdge::builder(&stores, surface)
             .as_line_segment_from_points([[1., -1.], [1., 1.]])
             .build();
@@ -106,7 +109,10 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::xy_plane();
-        let curve = Curve::builder(&stores, surface).build_u_axis();
+        let curve = Curve::partial()
+            .with_surface(surface)
+            .as_u_axis()
+            .build(&stores);
         let half_edge = HalfEdge::builder(&stores, surface)
             .as_line_segment_from_points([[-1., -1.], [-1., 1.]])
             .build();
@@ -126,7 +132,10 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::xy_plane();
-        let curve = Curve::builder(&stores, surface).build_u_axis();
+        let curve = Curve::partial()
+            .with_surface(surface)
+            .as_u_axis()
+            .build(&stores);
         let half_edge = HalfEdge::builder(&stores, surface)
             .as_line_segment_from_points([[-1., -1.], [1., -1.]])
             .build();
@@ -141,7 +150,10 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::xy_plane();
-        let curve = Curve::builder(&stores, surface).build_u_axis();
+        let curve = Curve::partial()
+            .with_surface(surface)
+            .as_u_axis()
+            .build(&stores);
         let half_edge = HalfEdge::builder(&stores, surface)
             .as_line_segment_from_points([[-1., 0.], [1., 0.]])
             .build();

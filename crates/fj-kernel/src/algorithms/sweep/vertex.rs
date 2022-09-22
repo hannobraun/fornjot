@@ -137,8 +137,9 @@ impl Sweep for GlobalVertex {
         let a = self;
         let b = GlobalVertex::from_position(self.position() + path.into());
 
-        let curve = GlobalCurve::builder(stores)
-            .line_from_points([a.position(), b.position()]);
+        let curve = GlobalCurve::partial()
+            .as_line_from_points([a.position(), b.position()])
+            .build(stores);
 
         GlobalEdge::new(curve, [a, b])
     }
@@ -160,7 +161,10 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::xz_plane();
-        let curve = Curve::builder(&stores, surface).build_u_axis();
+        let curve = Curve::partial()
+            .with_surface(surface)
+            .as_u_axis()
+            .build(&stores);
         let vertex = Vertex::partial()
             .with_position([0.])
             .with_curve(curve)
@@ -182,7 +186,7 @@ mod tests {
             .sweep([0., 0., 1.], &stores);
 
         let expected_edge = GlobalEdge::new(
-            GlobalCurve::builder(&stores).z_axis(),
+            GlobalCurve::partial().as_z_axis().build(&stores),
             [[0., 0., 0.], [0., 0., 1.]].map(GlobalVertex::from_position),
         );
         assert_eq!(edge, expected_edge);

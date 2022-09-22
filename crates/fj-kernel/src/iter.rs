@@ -362,7 +362,10 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::xy_plane();
-        let object = Curve::builder(&stores, surface).build_u_axis();
+        let object = Curve::partial()
+            .with_surface(surface)
+            .as_u_axis()
+            .build(&stores);
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -425,7 +428,7 @@ mod tests {
     fn global_curve() {
         let stores = Stores::new();
 
-        let object = GlobalCurve::builder(&stores).x_axis();
+        let object = GlobalCurve::partial().as_x_axis().build(&stores);
 
         assert_eq!(0, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -561,7 +564,10 @@ mod tests {
         let stores = Stores::new();
 
         let surface = Surface::xy_plane();
-        let curve = Curve::builder(&stores, surface).build_u_axis();
+        let curve = Curve::partial()
+            .with_surface(surface)
+            .as_u_axis()
+            .build(&stores);
         let global_vertex = GlobalVertex::from_position([0., 0., 0.]);
         let surface_vertex =
             SurfaceVertex::new([0., 0.], surface, global_vertex);
