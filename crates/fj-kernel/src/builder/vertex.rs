@@ -5,6 +5,7 @@ use crate::objects::{Curve, GlobalVertex, Surface, SurfaceVertex, Vertex};
 /// API for building a [`Vertex`]
 ///
 /// Also see [`Vertex::builder`].
+#[derive(Default)]
 pub struct VertexBuilder {
     /// The position of the [`Vertex`] on the [`Curve`]
     pub position: Option<Point<1>>,

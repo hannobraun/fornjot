@@ -23,12 +23,7 @@ pub struct Vertex {
 impl Vertex {
     /// Build a `Vertex` using [`VertexBuilder`]
     pub fn builder() -> VertexBuilder {
-        VertexBuilder {
-            position: None,
-            curve: None,
-            surface_form: None,
-            global_form: None,
-        }
+        VertexBuilder::default()
     }
 
     /// Construct an instance of `Vertex`
