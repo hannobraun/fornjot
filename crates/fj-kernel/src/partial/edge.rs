@@ -6,7 +6,7 @@ use crate::{
         SurfaceVertex, Vertex,
     },
     path::{GlobalPath, SurfacePath},
-    stores::Stores,
+    stores::{Handle, Stores},
 };
 
 /// API for building a [`HalfEdge`]
@@ -170,7 +170,8 @@ impl<'a> HalfEdgeBuilder<'a> {
 
         let global_form = self.global_form.unwrap_or_else(|| {
             GlobalEdge::builder()
-                .build_from_curve_and_vertices(&curve, &vertices)
+                .from_curve_and_vertices(&curve, &vertices)
+                .build(self.stores)
         });
 
         HalfEdge::new(curve, vertices, global_form)
@@ -181,18 +182,41 @@ impl<'a> HalfEdgeBuilder<'a> {
 ///
 /// Also see [`GlobalEdge::builder`].
 #[derive(Default)]
-pub struct GlobalEdgeBuilder;
+pub struct GlobalEdgeBuilder {
+    /// The curve that the [`GlobalEdge`] is defined in
+    ///
+    /// Must be provided before [`PartialGlobalEdge::build`] is called.
+    pub curve: Option<Handle<GlobalCurve>>,
+
+    /// The vertices that bound the [`GlobalEdge`] in the curve
+    ///
+    /// Must be provided before [`PartialGlobalEdge::build`] is called.
+    pub vertices: Option<[GlobalVertex; 2]>,
+}
 
 impl GlobalEdgeBuilder {
-    /// Build a [`GlobalEdge`] from the provided curve and vertices
-    pub fn build_from_curve_and_vertices(
-        self,
+    /// Update partial global edge from the given curve and vertices
+    pub fn from_curve_and_vertices(
+        mut self,
         curve: &Curve,
         vertices: &[Vertex; 2],
-    ) -> GlobalEdge {
-        GlobalEdge::new(
-            curve.global_form().clone(),
-            vertices.clone().map(|vertex| *vertex.global_form()),
-        )
+    ) -> Self {
+        self.curve = Some(curve.global_form().clone());
+        self.vertices =
+            Some(vertices.clone().map(|vertex| *vertex.global_form()));
+
+        self
+    }
+
+    /// Build a full [`GlobalEdge`] from the partial global edge
+    pub fn build(self, _: &Stores) -> GlobalEdge {
+        let curve = self
+            .curve
+            .expect("Can't build `GlobalEdge` without `GlobalCurve`");
+        let vertices = self
+            .vertices
+            .expect("Can't build `GlobalEdge` without vertices");
+
+        GlobalEdge::new(curve, vertices)
     }
 }

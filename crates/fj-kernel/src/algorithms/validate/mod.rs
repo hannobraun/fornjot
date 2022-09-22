@@ -237,7 +237,8 @@ mod tests {
         let vertices = [a, b];
 
         let global_edge = GlobalEdge::builder()
-            .build_from_curve_and_vertices(&curve, &vertices);
+            .from_curve_and_vertices(&curve, &vertices)
+            .build(&stores);
         let half_edge = HalfEdge::new(curve, vertices, global_edge);
 
         let result =
