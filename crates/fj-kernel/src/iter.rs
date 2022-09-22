@@ -464,7 +464,7 @@ mod tests {
     fn half_edge() {
         let stores = Stores::new();
 
-        let object = HalfEdge::builder(&stores, Surface::xy_plane())
+        let object = HalfEdge::partial(&stores, Surface::xy_plane())
             .as_line_segment_from_points([[0., 0.], [1., 0.]])
             .build();
 

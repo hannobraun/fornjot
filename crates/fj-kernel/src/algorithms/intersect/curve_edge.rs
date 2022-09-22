@@ -90,7 +90,7 @@ mod tests {
             .with_surface(surface)
             .as_u_axis()
             .build(&stores);
-        let half_edge = HalfEdge::builder(&stores, surface)
+        let half_edge = HalfEdge::partial(&stores, surface)
             .as_line_segment_from_points([[1., -1.], [1., 1.]])
             .build();
 
@@ -113,7 +113,7 @@ mod tests {
             .with_surface(surface)
             .as_u_axis()
             .build(&stores);
-        let half_edge = HalfEdge::builder(&stores, surface)
+        let half_edge = HalfEdge::partial(&stores, surface)
             .as_line_segment_from_points([[-1., -1.], [-1., 1.]])
             .build();
 
@@ -136,7 +136,7 @@ mod tests {
             .with_surface(surface)
             .as_u_axis()
             .build(&stores);
-        let half_edge = HalfEdge::builder(&stores, surface)
+        let half_edge = HalfEdge::partial(&stores, surface)
             .as_line_segment_from_points([[-1., -1.], [1., -1.]])
             .build();
 
@@ -154,7 +154,7 @@ mod tests {
             .with_surface(surface)
             .as_u_axis()
             .build(&stores);
-        let half_edge = HalfEdge::builder(&stores, surface)
+        let half_edge = HalfEdge::partial(&stores, surface)
             .as_line_segment_from_points([[-1., 0.], [1., 0.]])
             .build();
 
