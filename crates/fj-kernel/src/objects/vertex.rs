@@ -87,13 +87,10 @@ pub struct SurfaceVertex {
 
 impl SurfaceVertex {
     /// Build a `SurfaceVertex` using [`PartialSurfaceVertex`]
-    pub fn partial(
-        position: impl Into<Point<2>>,
-        surface: Surface,
-    ) -> PartialSurfaceVertex {
+    pub fn partial(position: impl Into<Point<2>>) -> PartialSurfaceVertex {
         PartialSurfaceVertex {
             position: position.into(),
-            surface,
+            surface: None,
             global_form: None,
         }
     }

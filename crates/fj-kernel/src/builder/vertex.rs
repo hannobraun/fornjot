@@ -10,7 +10,7 @@ pub struct PartialSurfaceVertex {
     pub position: Point<2>,
 
     /// The surface that the [`SurfaceVertex`] is defined in
-    pub surface: Surface,
+    pub surface: Option<Surface>,
 
     /// The global form of the [`SurfaceVertex`]
     ///
@@ -20,6 +20,12 @@ pub struct PartialSurfaceVertex {
 }
 
 impl PartialSurfaceVertex {
+    /// Provide a surface for the partial surface vertex
+    pub fn with_surface(mut self, surface: Surface) -> Self {
+        self.surface = Some(surface);
+        self
+    }
+
     /// Build the [`SurfaceVertex`] with the provided global form
     pub fn with_global_form(mut self, global_form: GlobalVertex) -> Self {
         self.global_form = Some(global_form);
@@ -28,12 +34,16 @@ impl PartialSurfaceVertex {
 
     /// Finish building the [`SurfaceVertex`]
     pub fn build(self) -> SurfaceVertex {
+        let surface = self
+            .surface
+            .expect("Can't build `SurfaceVertex` without `Surface`");
+
         let global_form = self.global_form.unwrap_or_else(|| {
             GlobalVertex::builder()
-                .build_from_surface_and_position(&self.surface, self.position)
+                .build_from_surface_and_position(&surface, self.position)
         });
 
-        SurfaceVertex::new(self.position, self.surface, global_form)
+        SurfaceVertex::new(self.position, surface, global_form)
     }
 }
 
