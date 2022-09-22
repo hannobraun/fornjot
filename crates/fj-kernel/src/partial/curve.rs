@@ -65,14 +65,12 @@ impl PartialCurve {
 
     /// Update partial curve as a circle, from the provided radius
     pub fn as_circle_from_radius(self, radius: impl Into<Scalar>) -> Self {
-        let radius = radius.into();
         self.with_path(SurfacePath::circle_from_radius(radius))
     }
 
     /// Update partial curve as a line, from the provided points
     pub fn as_line_from_points(self, points: [impl Into<Point<2>>; 2]) -> Self {
-        let points_surface = points.map(Into::into);
-        self.with_path(SurfacePath::line_from_points(points_surface))
+        self.with_path(SurfacePath::line_from_points(points))
     }
 
     /// Build a full [`Curve`] from the partial curve
