@@ -39,9 +39,9 @@ impl<'a> CurveBuilder<'a> {
         let radius = radius.into();
 
         let path = SurfacePath::circle_from_radius(radius);
-        let global_form = GlobalCurve::partial(self.stores)
+        let global_form = GlobalCurve::partial()
             .as_circle_from_radius(radius)
-            .build();
+            .build(self.stores);
 
         Curve::new(self.surface, path, global_form)
     }
@@ -68,17 +68,14 @@ impl<'a> CurveBuilder<'a> {
 /// API for building a [`GlobalCurve`]
 ///
 /// Also see [`GlobalCurve::partial`].
-pub struct PartialGlobalCurve<'a> {
-    /// The stores that the created objects are put in
-    pub stores: &'a Stores,
-
+pub struct PartialGlobalCurve {
     /// The path that defines the [`GlobalCurve`]
     ///
     /// Must be provided before [`PartialGlobalCurve::build`] is called.
     pub path: Option<GlobalPath>,
 }
 
-impl<'a> PartialGlobalCurve<'a> {
+impl PartialGlobalCurve {
     /// Provide a path for the partial global curve
     pub fn with_path(mut self, path: GlobalPath) -> Self {
         self.path = Some(path);
@@ -115,10 +112,8 @@ impl<'a> PartialGlobalCurve<'a> {
     /// # Panics
     ///
     /// Panics, if no path was provided.
-    pub fn build(self) -> Handle<GlobalCurve> {
+    pub fn build(self, stores: &Stores) -> Handle<GlobalCurve> {
         let path = self.path.expect("Can't build `GlobalCurve` without a path");
-        self.stores
-            .global_curves
-            .insert(GlobalCurve::from_path(path))
+        stores.global_curves.insert(GlobalCurve::from_path(path))
     }
 }

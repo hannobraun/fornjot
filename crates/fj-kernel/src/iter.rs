@@ -425,7 +425,7 @@ mod tests {
     fn global_curve() {
         let stores = Stores::new();
 
-        let object = GlobalCurve::partial(&stores).as_x_axis().build();
+        let object = GlobalCurve::partial().as_x_axis().build(&stores);
 
         assert_eq!(0, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
