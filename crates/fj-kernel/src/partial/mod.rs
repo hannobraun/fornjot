@@ -18,8 +18,9 @@
 //!   convenient and readable way to construct a partial object.
 //! - Partial object structs have `with_*` methods to provide values for each of
 //!   their fields.
-//! - Partial object structs may have `as_*` methods, if one or more of their
-//!   fields can be initialized by providing some alternative data.
+//! - Partial object structs may have other methods with prefixes like `as_*`,
+//!   `from_*`, or similar, if one or more of their fields can be initialized by
+//!   providing alternative data.
 //! - Partial object structs have a `build` method to build a full object.
 //! - All `with_*`, `as_*`, and `build` methods can be chained, to provide a
 //!   convenient API.
