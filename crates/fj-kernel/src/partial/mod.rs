@@ -36,7 +36,9 @@ pub use self::{
 };
 
 use crate::{
-    objects::{Curve, GlobalCurve, GlobalVertex, SurfaceVertex, Vertex},
+    objects::{
+        Curve, GlobalCurve, GlobalEdge, GlobalVertex, SurfaceVertex, Vertex,
+    },
     stores::{Handle, Stores},
 };
 
@@ -115,6 +117,7 @@ macro_rules! impl_traits {
 
 impl_traits!(
     Curve, PartialCurve;
+    GlobalEdge, PartialGlobalEdge;
     GlobalVertex, PartialGlobalVertex;
     SurfaceVertex, PartialSurfaceVertex;
     Vertex, PartialVertex;
