@@ -32,7 +32,7 @@ pub struct PartialVertex {
     ///
     /// Can be provided, if already available, or acquired through the surface
     /// form.
-    pub global_form: Option<GlobalVertex>,
+    pub global_form: Option<MaybePartial<GlobalVertex>>,
 }
 
 impl PartialVertex {
@@ -55,8 +55,11 @@ impl PartialVertex {
     }
 
     /// Provide a global form for the partial vertex
-    pub fn with_global_form(mut self, global_form: GlobalVertex) -> Self {
-        self.global_form = Some(global_form);
+    pub fn with_global_form(
+        mut self,
+        global_form: impl Into<MaybePartial<GlobalVertex>>,
+    ) -> Self {
+        self.global_form = Some(global_form.into());
         self
     }
 
@@ -80,7 +83,7 @@ impl PartialVertex {
             PartialSurfaceVertex {
                 position: Some(curve.path().point_from_path_coords(position)),
                 surface: Some(*curve.surface()),
-                global_form: self.global_form.map(Into::into),
+                global_form: self.global_form,
             }
             .build(stores)
         });
@@ -97,7 +100,7 @@ impl From<Vertex> for PartialVertex {
             position: Some(vertex.position()),
             curve: Some(vertex.curve().clone().into()),
             surface_form: Some(*vertex.surface_form()),
-            global_form: Some(*vertex.global_form()),
+            global_form: Some((*vertex.global_form()).into()),
         }
     }
 }
