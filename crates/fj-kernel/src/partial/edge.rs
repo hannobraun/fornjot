@@ -142,6 +142,16 @@ impl PartialHalfEdge {
     }
 }
 
+impl From<HalfEdge> for PartialHalfEdge {
+    fn from(half_edge: HalfEdge) -> Self {
+        Self {
+            curve: Some(half_edge.curve().clone().into()),
+            vertices: half_edge.vertices().clone().map(Into::into).map(Some),
+            global_form: Some(half_edge.global_form().clone()),
+        }
+    }
+}
+
 /// A partial [`GlobalEdge`]
 ///
 /// See [`crate::partial`] for more information.
