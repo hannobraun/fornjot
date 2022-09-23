@@ -1,36 +1,24 @@
 [package]
 name = "fj-kernel"
-version = "0.16.0"
-edition = "2021"
-
-description = """\
-Early-stage, next-generation, code-first CAD application. Because the world \
-needs another CAD program.\
-"""
-readme = "../../README.md"
-homepage = "https://www.fornjot.app/"
-repository = "https://github.com/hannobraun/fornjot"
-license = "0BSD"
-keywords = ["cad", "programmatic", "code-cad"]
-categories = ["encoding", "mathematics", "rendering"]
-
+version.workspace = true
+edition.workspace = true
+description.workspace = true
+readme.workspace = true
+homepage.workspace = true
+repository.workspace = true
+license.workspace = true
+keywords.workspace = true
+categories.workspace = true
 
 [dependencies]
+fj-interop.workspace = true
+fj-math.workspace = true
 parking_lot = "0.12.0"
 parry2d-f64 = "0.9.0"
 pretty_assertions = "1.3.0"
 robust-predicates = "0.1.3"
 spade = "2.0.0"
 thiserror = "1.0.35"
-
-[dependencies.fj-interop]
-version = "0.16.0"
-path = "../fj-interop"
-
-[dependencies.fj-math]
-version = "0.16.0"
-path = "../fj-math"
-
 
 [dev-dependencies]
 anyhow = "1.0.65"

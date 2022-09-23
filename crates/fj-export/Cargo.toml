@@ -1,29 +1,19 @@
 [package]
 name = "fj-export"
-version = "0.16.0"
-edition = "2021"
-
-description = """\
-Early-stage, next-generation, code-first CAD application. Because the world \
-needs another CAD program.\
-"""
-readme = "../../README.md"
-homepage = "https://www.fornjot.app/"
-repository = "https://github.com/hannobraun/fornjot"
-license = "0BSD"
-keywords = ["cad", "programmatic", "code-cad"]
-categories = ["encoding", "mathematics", "rendering"]
+version.workspace = true
+edition.workspace = true
+description.workspace = true
+readme.workspace = true
+homepage.workspace = true
+repository.workspace = true
+license.workspace = true
+keywords.workspace = true
+categories.workspace = true
 
 
 [dependencies]
+fj-interop.workspace = true
+fj-math.workspace = true
 thiserror = "1.0.35"
 threemf = "0.3.1"
 stl = "0.2.1"
-
-[dependencies.fj-interop]
-version = "0.16.0"
-path = "../fj-interop"
-
-[dependencies.fj-math]
-version = "0.16.0"
-path = "../fj-math"
