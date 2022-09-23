@@ -1,11 +1,9 @@
-use fj_math::{Line, Point, Scalar};
+use fj_math::{Point, Scalar};
 
 use crate::{
     objects::{
-        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
-        SurfaceVertex, Vertex,
+        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface, Vertex,
     },
-    path::{GlobalPath, SurfacePath},
     stores::{Handle, Stores},
 };
 
@@ -99,55 +97,17 @@ impl<'a> PartialHalfEdge<'a> {
         surface: Surface,
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
-        let points = points.map(Into::into);
+        let curve = Curve::partial()
+            .with_surface(surface)
+            .as_line_from_points(points)
+            .build(self.stores);
 
-        let global_vertices = points.map(|position| {
-            GlobalVertex::partial()
-                .from_surface_and_position(&surface, position)
+        let vertices = [0., 1.].map(|position| {
+            Vertex::partial()
+                .with_position([position])
+                .with_curve(curve.clone())
                 .build(self.stores)
         });
-
-        let surface_vertices = {
-            // Can be cleaned up, once `zip` is stable:
-            // https://doc.rust-lang.org/std/primitive.array.html#method.zip
-            let [a_surface, b_surface] = points;
-            let [a_global, b_global] = global_vertices;
-            [(a_surface, a_global), (b_surface, b_global)].map(
-                |(point_surface, vertex_global)| {
-                    SurfaceVertex::new(point_surface, surface, vertex_global)
-                },
-            )
-        };
-
-        let curve = {
-            let path = SurfacePath::Line(Line::from_points(points));
-            let global_form = {
-                let points = global_vertices
-                    .map(|global_vertex| global_vertex.position());
-                self.stores.global_curves.insert(GlobalCurve::from_path(
-                    GlobalPath::Line(Line::from_points(points)),
-                ))
-            };
-
-            Curve::new(surface, path, global_form)
-        };
-
-        let vertices = {
-            // Can be cleaned up, once `zip` is stable:
-            // https://doc.rust-lang.org/std/primitive.array.html#method.zip
-            let [a_global, b_global] = global_vertices;
-            let [a_surface, b_surface] = surface_vertices;
-            [(0., a_surface, a_global), (1., b_surface, b_global)].map(
-                |(position, surface_form, global_form)| {
-                    Vertex::new(
-                        [position],
-                        curve.clone(),
-                        surface_form,
-                        global_form,
-                    )
-                },
-            )
-        };
 
         self.curve = Some(curve);
         self.vertices = vertices.map(Some);
