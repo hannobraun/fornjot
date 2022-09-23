@@ -191,29 +191,32 @@ mod tests {
     fn sweep() {
         let stores = Stores::new();
 
-        let half_edge = HalfEdge::builder(&stores, Surface::xy_plane())
-            .as_line_segment_from_points([[0., 0.], [1., 0.]])
-            .build();
+        let half_edge = HalfEdge::partial()
+            .as_line_segment_from_points(
+                Surface::xy_plane(),
+                [[0., 0.], [1., 0.]],
+            )
+            .build(&stores);
 
         let face = (half_edge, Color::default()).sweep([0., 0., 1.], &stores);
 
         let expected_face = {
             let surface = Surface::xz_plane();
 
-            let bottom = HalfEdge::builder(&stores, surface)
-                .as_line_segment_from_points([[0., 0.], [1., 0.]])
-                .build();
-            let top = HalfEdge::builder(&stores, surface)
-                .as_line_segment_from_points([[0., 1.], [1., 1.]])
-                .build()
+            let bottom = HalfEdge::partial()
+                .as_line_segment_from_points(surface, [[0., 0.], [1., 0.]])
+                .build(&stores);
+            let top = HalfEdge::partial()
+                .as_line_segment_from_points(surface, [[0., 1.], [1., 1.]])
+                .build(&stores)
                 .reverse();
-            let left = HalfEdge::builder(&stores, surface)
-                .as_line_segment_from_points([[0., 0.], [0., 1.]])
-                .build()
+            let left = HalfEdge::partial()
+                .as_line_segment_from_points(surface, [[0., 0.], [0., 1.]])
+                .build(&stores)
                 .reverse();
-            let right = HalfEdge::builder(&stores, surface)
-                .as_line_segment_from_points([[1., 0.], [1., 1.]])
-                .build();
+            let right = HalfEdge::partial()
+                .as_line_segment_from_points(surface, [[1., 0.], [1., 1.]])
+                .build(&stores);
 
             let cycle = Cycle::new(surface, [bottom, right, top, left]);
 

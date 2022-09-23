@@ -1,7 +1,7 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{Cycle, HalfEdge, Surface},
+    objects::{Curve, Cycle, HalfEdge, Surface, SurfaceVertex, Vertex},
     stores::Stores,
 };
 
@@ -34,28 +34,64 @@ impl<'a> CycleBuilder<'a> {
         mut self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
-        let points = self
+        let iter = self
             .half_edges
             .last()
             .map(|half_edge| {
                 let [_, last] = half_edge.vertices();
-                last.surface_form().position()
+
+                let vertex = *last.surface_form();
+                let position = last.surface_form().position();
+
+                (position, Some(vertex))
             })
             .into_iter()
-            .chain(points.into_iter().map(Into::into))
-            .collect::<Vec<_>>();
+            .chain(points.into_iter().map(|point| (point.into(), None)));
 
-        for points in points.windows(2) {
-            // Can't panic, as we passed `2` to `windows`.
-            //
-            // Can be cleaned up, once `array_windows` is stable.
-            let points = [points[0], points[1]];
+        let mut previous: Option<(Point<2>, Option<SurfaceVertex>)> = None;
 
-            self.half_edges.push(
-                HalfEdge::builder(self.stores, self.surface)
-                    .as_line_segment_from_points(points)
-                    .build(),
-            );
+        for (position, vertex) in iter {
+            if let Some((previous_position, previous_vertex)) = previous {
+                let from = previous_vertex.unwrap_or_else(|| {
+                    SurfaceVertex::partial()
+                        .with_surface(self.surface)
+                        .with_position(previous_position)
+                        .build(self.stores)
+                });
+                let to = vertex.unwrap_or_else(|| {
+                    SurfaceVertex::partial()
+                        .with_surface(self.surface)
+                        .with_position(position)
+                        .build(self.stores)
+                });
+
+                previous = Some((position, Some(to)));
+
+                let curve = Curve::partial()
+                    .with_surface(self.surface)
+                    .as_line_from_points([previous_position, position])
+                    .build(self.stores);
+
+                let [from, to] =
+                    [(0., from), (1., to)].map(|(position, surface_form)| {
+                        Vertex::partial()
+                            .with_curve(curve.clone())
+                            .with_position([position])
+                            .with_surface_form(surface_form)
+                            .build(self.stores)
+                    });
+
+                self.half_edges.push(
+                    HalfEdge::partial()
+                        .with_curve(curve)
+                        .with_vertices([from, to])
+                        .build(self.stores),
+                );
+
+                continue;
+            }
+
+            previous = Some((position, vertex));
         }
 
         self
@@ -74,9 +110,9 @@ impl<'a> CycleBuilder<'a> {
             let vertices =
                 [last, first].map(|vertex| vertex.surface_form().position());
             self.half_edges.push(
-                HalfEdge::builder(self.stores, self.surface)
-                    .as_line_segment_from_points(vertices)
-                    .build(),
+                HalfEdge::partial()
+                    .as_line_segment_from_points(self.surface, vertices)
+                    .build(self.stores),
             );
         }
 

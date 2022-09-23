@@ -26,15 +26,20 @@
 //!   convenient API.
 
 mod curve;
+mod edge;
 mod vertex;
 
 pub use self::{
     curve::{PartialCurve, PartialGlobalCurve},
+    edge::{PartialGlobalEdge, PartialHalfEdge},
     vertex::{PartialGlobalVertex, PartialSurfaceVertex, PartialVertex},
 };
 
 use crate::{
-    objects::{Curve, GlobalCurve, GlobalVertex, SurfaceVertex, Vertex},
+    objects::{
+        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, SurfaceVertex,
+        Vertex,
+    },
     stores::{Handle, Stores},
 };
 
@@ -113,7 +118,9 @@ macro_rules! impl_traits {
 
 impl_traits!(
     Curve, PartialCurve;
+    GlobalEdge, PartialGlobalEdge;
     GlobalVertex, PartialGlobalVertex;
+    HalfEdge, PartialHalfEdge;
     SurfaceVertex, PartialSurfaceVertex;
     Vertex, PartialVertex;
 

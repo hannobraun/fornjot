@@ -1,11 +1,11 @@
 use std::fmt;
 
 use crate::{
-    builder::{GlobalEdgeBuilder, HalfEdgeBuilder},
-    stores::{Handle, Stores},
+    partial::{PartialGlobalEdge, PartialHalfEdge},
+    stores::Handle,
 };
 
-use super::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex};
+use super::{Curve, GlobalCurve, GlobalVertex, Vertex};
 
 /// A half-edge
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -16,15 +16,12 @@ pub struct HalfEdge {
 }
 
 impl HalfEdge {
-    /// Build a `HalfEdge` using [`HalfEdgeBuilder`]
-    pub fn builder(stores: &Stores, surface: Surface) -> HalfEdgeBuilder {
-        HalfEdgeBuilder {
-            stores,
-            surface,
-            curve: None,
-            vertices: None,
-            global_form: None,
-        }
+    /// Create a [`PartialHalfEdge`]
+    ///
+    /// This function exists just for convenience, and will just return a
+    /// default [`PartialHalfEdge`].
+    pub fn partial() -> PartialHalfEdge {
+        PartialHalfEdge::default()
     }
 
     /// Create a new instance of `HalfEdge`
@@ -120,9 +117,12 @@ pub struct GlobalEdge {
 }
 
 impl GlobalEdge {
-    /// Build a `GlobalEdge` using [`GlobalEdgeBuilder`]
-    pub fn builder() -> GlobalEdgeBuilder {
-        GlobalEdgeBuilder
+    /// Create a [`PartialGlobalEdge`]
+    ///
+    /// This function exists just for convenience, and will just return a
+    /// default [`PartialGlobalEdge`].
+    pub fn partial() -> PartialGlobalEdge {
+        PartialGlobalEdge::default()
     }
 
     /// Create a new instance
