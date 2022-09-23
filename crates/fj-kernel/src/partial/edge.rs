@@ -133,23 +133,20 @@ impl<'a> PartialHalfEdge<'a> {
         };
 
         let vertices = {
+            // Can be cleaned up, once `zip` is stable:
+            // https://doc.rust-lang.org/std/primitive.array.html#method.zip
             let [a_global, b_global] = global_vertices;
             let [a_surface, b_surface] = surface_vertices;
-
-            [
-                Vertex::new(
-                    Point::from([0.]),
-                    curve.clone(),
-                    a_surface,
-                    a_global,
-                ),
-                Vertex::new(
-                    Point::from([1.]),
-                    curve.clone(),
-                    b_surface,
-                    b_global,
-                ),
-            ]
+            [(0., a_surface, a_global), (1., b_surface, b_global)].map(
+                |(position, surface_form, global_form)| {
+                    Vertex::new(
+                        [position],
+                        curve.clone(),
+                        surface_form,
+                        global_form,
+                    )
+                },
+            )
         };
 
         self.curve = Some(curve);
