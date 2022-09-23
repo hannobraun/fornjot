@@ -191,32 +191,32 @@ mod tests {
     fn sweep() {
         let stores = Stores::new();
 
-        let half_edge = HalfEdge::partial(&stores)
+        let half_edge = HalfEdge::partial()
             .as_line_segment_from_points(
                 Surface::xy_plane(),
                 [[0., 0.], [1., 0.]],
             )
-            .build();
+            .build(&stores);
 
         let face = (half_edge, Color::default()).sweep([0., 0., 1.], &stores);
 
         let expected_face = {
             let surface = Surface::xz_plane();
 
-            let bottom = HalfEdge::partial(&stores)
+            let bottom = HalfEdge::partial()
                 .as_line_segment_from_points(surface, [[0., 0.], [1., 0.]])
-                .build();
-            let top = HalfEdge::partial(&stores)
+                .build(&stores);
+            let top = HalfEdge::partial()
                 .as_line_segment_from_points(surface, [[0., 1.], [1., 1.]])
-                .build()
+                .build(&stores)
                 .reverse();
-            let left = HalfEdge::partial(&stores)
+            let left = HalfEdge::partial()
                 .as_line_segment_from_points(surface, [[0., 0.], [0., 1.]])
-                .build()
+                .build(&stores)
                 .reverse();
-            let right = HalfEdge::partial(&stores)
+            let right = HalfEdge::partial()
                 .as_line_segment_from_points(surface, [[1., 0.], [1., 1.]])
-                .build();
+                .build(&stores);
 
             let cycle = Cycle::new(surface, [bottom, right, top, left]);
 

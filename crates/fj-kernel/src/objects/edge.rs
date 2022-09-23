@@ -2,7 +2,7 @@ use std::fmt;
 
 use crate::{
     partial::{PartialGlobalEdge, PartialHalfEdge},
-    stores::{Handle, Stores},
+    stores::Handle,
 };
 
 use super::{Curve, GlobalCurve, GlobalVertex, Vertex};
@@ -17,9 +17,8 @@ pub struct HalfEdge {
 
 impl HalfEdge {
     /// Build a `HalfEdge` using [`PartialHalfEdge`]
-    pub fn partial(stores: &Stores) -> PartialHalfEdge {
+    pub fn partial() -> PartialHalfEdge {
         PartialHalfEdge {
-            stores,
             curve: None,
             vertices: [None, None],
             global_form: None,

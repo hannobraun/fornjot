@@ -464,12 +464,12 @@ mod tests {
     fn half_edge() {
         let stores = Stores::new();
 
-        let object = HalfEdge::partial(&stores)
+        let object = HalfEdge::partial()
             .as_line_segment_from_points(
                 Surface::xy_plane(),
                 [[0., 0.], [1., 0.]],
             )
-            .build();
+            .build(&stores);
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());

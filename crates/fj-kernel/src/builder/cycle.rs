@@ -82,10 +82,10 @@ impl<'a> CycleBuilder<'a> {
                     });
 
                 self.half_edges.push(
-                    HalfEdge::partial(self.stores)
+                    HalfEdge::partial()
                         .with_curve(curve)
                         .with_vertices([from, to])
-                        .build(),
+                        .build(self.stores),
                 );
 
                 continue;
@@ -110,9 +110,9 @@ impl<'a> CycleBuilder<'a> {
             let vertices =
                 [last, first].map(|vertex| vertex.surface_form().position());
             self.half_edges.push(
-                HalfEdge::partial(self.stores)
+                HalfEdge::partial()
                     .as_line_segment_from_points(self.surface, vertices)
-                    .build(),
+                    .build(self.stores),
             );
         }
 

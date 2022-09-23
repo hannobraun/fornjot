@@ -12,10 +12,7 @@ use super::MaybePartial;
 /// API for building a [`HalfEdge`]
 ///
 /// Also see [`HalfEdge::partial`].
-pub struct PartialHalfEdge<'a> {
-    /// The stores that the created objects are put in
-    pub stores: &'a Stores,
-
+pub struct PartialHalfEdge {
     /// The curve that the [`HalfEdge`] is defined in
     pub curve: Option<MaybePartial<Curve>>,
 
@@ -29,7 +26,7 @@ pub struct PartialHalfEdge<'a> {
     pub global_form: Option<GlobalEdge>,
 }
 
-impl<'a> PartialHalfEdge<'a> {
+impl PartialHalfEdge {
     /// Build the [`HalfEdge`] with the given curve
     pub fn with_curve(mut self, curve: impl Into<MaybePartial<Curve>>) -> Self {
         self.curve = Some(curve.into());
@@ -123,21 +120,21 @@ impl<'a> PartialHalfEdge<'a> {
     }
 
     /// Finish building the [`HalfEdge`]
-    pub fn build(self) -> HalfEdge {
+    pub fn build(self, stores: &Stores) -> HalfEdge {
         let curve = self
             .curve
             .expect("Can't build `HalfEdge` without curve")
-            .into_full(self.stores);
+            .into_full(stores);
         let vertices = self.vertices.map(|vertex| {
             vertex
                 .expect("Can't build `HalfEdge` without vertices")
-                .into_full(self.stores)
+                .into_full(stores)
         });
 
         let global_form = self.global_form.unwrap_or_else(|| {
             GlobalEdge::partial()
                 .from_curve_and_vertices(&curve, &vertices)
-                .build(self.stores)
+                .build(stores)
         });
 
         HalfEdge::new(curve, vertices, global_form)

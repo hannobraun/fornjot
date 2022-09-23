@@ -172,9 +172,9 @@ mod tests {
 
         let half_edge = (vertex, surface).sweep([0., 0., 1.], &stores);
 
-        let expected_half_edge = HalfEdge::partial(&stores)
+        let expected_half_edge = HalfEdge::partial()
             .as_line_segment_from_points(surface, [[0., 0.], [0., 1.]])
-            .build();
+            .build(&stores);
         assert_eq!(half_edge, expected_half_edge);
     }
 
