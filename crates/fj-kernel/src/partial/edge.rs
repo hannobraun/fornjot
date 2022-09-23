@@ -220,3 +220,12 @@ impl PartialGlobalEdge {
         GlobalEdge::new(curve, vertices)
     }
 }
+
+impl From<GlobalEdge> for PartialGlobalEdge {
+    fn from(global_edge: GlobalEdge) -> Self {
+        Self {
+            curve: Some(global_edge.curve().clone()),
+            vertices: Some(*global_edge.vertices()),
+        }
+    }
+}
