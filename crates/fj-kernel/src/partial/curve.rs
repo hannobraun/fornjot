@@ -9,7 +9,7 @@ use crate::{
 /// A partial [`Curve`]
 ///
 /// See [`crate::partial`] for more information.
-#[derive(Default)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct PartialCurve {
     /// The path that defines the [`Curve`]
     ///
@@ -104,7 +104,7 @@ impl PartialCurve {
 /// A partial [`GlobalCurve`]
 ///
 /// See [`crate::partial`] for more information.
-#[derive(Default)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct PartialGlobalCurve {
     /// The path that defines the [`GlobalCurve`]
     ///

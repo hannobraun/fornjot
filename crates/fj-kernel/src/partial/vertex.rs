@@ -5,7 +5,7 @@ use crate::objects::{Curve, GlobalVertex, Surface, SurfaceVertex, Vertex};
 /// A partial [`Vertex`]
 ///
 /// See [`crate::partial`] for more information.
-#[derive(Default)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct PartialVertex {
     /// The position of the [`Vertex`] on the [`Curve`]
     ///
@@ -86,7 +86,7 @@ impl PartialVertex {
 /// A partial [`SurfaceVertex`]
 ///
 /// See [`crate::partial`] for more information.
-#[derive(Default)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct PartialSurfaceVertex {
     /// The position of the [`SurfaceVertex`] in the [`Surface`]
     ///
@@ -152,7 +152,7 @@ impl PartialSurfaceVertex {
 /// A partial [`GlobalVertex`]
 ///
 /// See [`crate::partial`] for more information.
-#[derive(Default)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct PartialGlobalVertex {
     /// The position of the [`GlobalVertex`]
     ///
