@@ -21,7 +21,7 @@ impl HalfEdge {
         PartialHalfEdge {
             stores,
             curve: None,
-            vertices: None,
+            vertices: [None, None],
             global_form: None,
         }
     }

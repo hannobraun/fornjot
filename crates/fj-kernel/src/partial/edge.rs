@@ -20,7 +20,7 @@ pub struct PartialHalfEdge<'a> {
     pub curve: Option<Curve>,
 
     /// The vertices that bound this [`HalfEdge`] in the [`Curve`]
-    pub vertices: Option<[Vertex; 2]>,
+    pub vertices: [Option<Vertex>; 2],
 
     /// The global form of the [`HalfEdge`]
     ///
@@ -38,7 +38,19 @@ impl<'a> PartialHalfEdge<'a> {
 
     /// Build the [`HalfEdge`] with the given vertices
     pub fn with_vertices(mut self, vertices: [Vertex; 2]) -> Self {
-        self.vertices = Some(vertices);
+        self.vertices = vertices.map(Some);
+        self
+    }
+
+    /// Update the partial half-edge, starting it from the given vertex
+    pub fn with_from_vertex(mut self, vertex: Vertex) -> Self {
+        self.vertices[0] = Some(vertex);
+        self
+    }
+
+    /// Update the partial half-edge with the given end vertex
+    pub fn with_to_vertex(mut self, vertex: Vertex) -> Self {
+        self.vertices[1] = Some(vertex);
         self
     }
 
@@ -89,7 +101,7 @@ impl<'a> PartialHalfEdge<'a> {
         };
 
         self.curve = Some(curve);
-        self.vertices = Some(vertices);
+        self.vertices = vertices.map(Some);
 
         self
     }
@@ -154,7 +166,7 @@ impl<'a> PartialHalfEdge<'a> {
         };
 
         self.curve = Some(curve);
-        self.vertices = Some(vertices);
+        self.vertices = vertices.map(Some);
 
         self
     }
@@ -162,9 +174,9 @@ impl<'a> PartialHalfEdge<'a> {
     /// Finish building the [`HalfEdge`]
     pub fn build(self) -> HalfEdge {
         let curve = self.curve.expect("Can't build `HalfEdge` without curve");
-        let vertices = self
-            .vertices
-            .expect("Can't build `HalfEdge` without vertices");
+        let vertices = self.vertices.map(|vertex| {
+            vertex.expect("Can't build `HalfEdge` without vertices")
+        });
 
         let global_form = self.global_form.unwrap_or_else(|| {
             GlobalEdge::partial()
