@@ -26,8 +26,8 @@ impl Shape for fj::Sketch {
                 // Circles have just a single round edge with no vertices. So
                 // none need to be added here.
 
-                let half_edge = HalfEdge::partial(stores, surface)
-                    .as_circle_from_radius(circle.radius())
+                let half_edge = HalfEdge::partial(stores)
+                    .as_circle_from_radius(surface, circle.radius())
                     .build();
                 let cycle = Cycle::new(surface, [half_edge]);
 

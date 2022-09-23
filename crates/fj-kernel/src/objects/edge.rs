@@ -5,7 +5,7 @@ use crate::{
     stores::{Handle, Stores},
 };
 
-use super::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex};
+use super::{Curve, GlobalCurve, GlobalVertex, Vertex};
 
 /// A half-edge
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -17,10 +17,9 @@ pub struct HalfEdge {
 
 impl HalfEdge {
     /// Build a `HalfEdge` using [`PartialHalfEdge`]
-    pub fn partial(stores: &Stores, surface: Surface) -> PartialHalfEdge {
+    pub fn partial(stores: &Stores) -> PartialHalfEdge {
         PartialHalfEdge {
             stores,
-            surface,
             curve: None,
             vertices: None,
             global_form: None,

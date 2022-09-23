@@ -16,9 +16,6 @@ pub struct PartialHalfEdge<'a> {
     /// The stores that the created objects are put in
     pub stores: &'a Stores,
 
-    /// The surface that the [`HalfEdge`]'s [`Curve`] is defined in
-    pub surface: Surface,
-
     /// The curve that the [`HalfEdge`] is defined in
     pub curve: Option<Curve>,
 
@@ -52,9 +49,13 @@ impl<'a> PartialHalfEdge<'a> {
     }
 
     /// Build the [`HalfEdge`] as a circle from the given radius
-    pub fn as_circle_from_radius(mut self, radius: impl Into<Scalar>) -> Self {
+    pub fn as_circle_from_radius(
+        mut self,
+        surface: Surface,
+        radius: impl Into<Scalar>,
+    ) -> Self {
         let curve = Curve::partial()
-            .with_surface(self.surface)
+            .with_surface(surface)
             .as_circle_from_radius(radius)
             .build(self.stores);
 
@@ -69,7 +70,7 @@ impl<'a> PartialHalfEdge<'a> {
             let surface_vertices = [a_curve, b_curve].map(|point_curve| {
                 let point_surface =
                     curve.path().point_from_path_coords(point_curve);
-                SurfaceVertex::new(point_surface, self.surface, global_vertex)
+                SurfaceVertex::new(point_surface, surface, global_vertex)
             });
 
             // Can be cleaned up, once `zip` is stable:
@@ -96,13 +97,14 @@ impl<'a> PartialHalfEdge<'a> {
     /// Build the [`HalfEdge`] as a line segment from the given points
     pub fn as_line_segment_from_points(
         mut self,
+        surface: Surface,
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
         let points = points.map(Into::into);
 
         let global_vertices = points.map(|position| {
             GlobalVertex::partial()
-                .from_surface_and_position(&self.surface, position)
+                .from_surface_and_position(&surface, position)
                 .build(self.stores)
         });
 
@@ -113,11 +115,7 @@ impl<'a> PartialHalfEdge<'a> {
             let [a_global, b_global] = global_vertices;
             [(a_surface, a_global), (b_surface, b_global)].map(
                 |(point_surface, vertex_global)| {
-                    SurfaceVertex::new(
-                        point_surface,
-                        self.surface,
-                        vertex_global,
-                    )
+                    SurfaceVertex::new(point_surface, surface, vertex_global)
                 },
             )
         };
@@ -132,7 +130,7 @@ impl<'a> PartialHalfEdge<'a> {
                 ))
             };
 
-            Curve::new(self.surface, path, global_form)
+            Curve::new(surface, path, global_form)
         };
 
         let vertices = {
