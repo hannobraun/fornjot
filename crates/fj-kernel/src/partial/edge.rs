@@ -17,7 +17,7 @@ pub struct PartialHalfEdge<'a> {
     pub stores: &'a Stores,
 
     /// The curve that the [`HalfEdge`] is defined in
-    pub curve: Option<Curve>,
+    pub curve: Option<MaybePartial<Curve>>,
 
     /// The vertices that bound this [`HalfEdge`] in the [`Curve`]
     pub vertices: [Option<MaybePartial<Vertex>>; 2],
@@ -31,8 +31,8 @@ pub struct PartialHalfEdge<'a> {
 
 impl<'a> PartialHalfEdge<'a> {
     /// Build the [`HalfEdge`] with the given curve
-    pub fn with_curve(mut self, curve: Curve) -> Self {
-        self.curve = Some(curve);
+    pub fn with_curve(mut self, curve: impl Into<MaybePartial<Curve>>) -> Self {
+        self.curve = Some(curve.into());
         self
     }
 
@@ -77,8 +77,7 @@ impl<'a> PartialHalfEdge<'a> {
     ) -> Self {
         let curve = Curve::partial()
             .with_surface(surface)
-            .as_circle_from_radius(radius)
-            .build(self.stores);
+            .as_circle_from_radius(radius);
 
         let vertices = {
             let [a_curve, b_curve] =
@@ -95,7 +94,7 @@ impl<'a> PartialHalfEdge<'a> {
             })
         };
 
-        self.curve = Some(curve);
+        self.curve = Some(curve.into());
         self.vertices = vertices.map(Into::into).map(Some);
 
         self
@@ -109,8 +108,7 @@ impl<'a> PartialHalfEdge<'a> {
     ) -> Self {
         let curve = Curve::partial()
             .with_surface(surface)
-            .as_line_from_points(points)
-            .build(self.stores);
+            .as_line_from_points(points);
 
         let vertices = [0., 1.].map(|position| {
             Vertex::partial()
@@ -118,7 +116,7 @@ impl<'a> PartialHalfEdge<'a> {
                 .with_curve(curve.clone())
         });
 
-        self.curve = Some(curve);
+        self.curve = Some(curve.into());
         self.vertices = vertices.map(Into::into).map(Some);
 
         self
@@ -126,7 +124,10 @@ impl<'a> PartialHalfEdge<'a> {
 
     /// Finish building the [`HalfEdge`]
     pub fn build(self) -> HalfEdge {
-        let curve = self.curve.expect("Can't build `HalfEdge` without curve");
+        let curve = self
+            .curve
+            .expect("Can't build `HalfEdge` without curve")
+            .into_full(self.stores);
         let vertices = self.vertices.map(|vertex| {
             vertex
                 .expect("Can't build `HalfEdge` without vertices")
