@@ -9,9 +9,9 @@ use crate::{
 
 use super::MaybePartial;
 
-/// API for building a [`HalfEdge`]
+/// A partial [`HalfEdge`]
 ///
-/// Also see [`HalfEdge::partial`].
+/// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct PartialHalfEdge {
     /// The curve that the [`HalfEdge`] is defined in
@@ -22,19 +22,18 @@ pub struct PartialHalfEdge {
 
     /// The global form of the [`HalfEdge`]
     ///
-    /// Can be provided to the builder, if available, or computed by one of the
-    /// build methods.
+    /// Can be computed by [`PartialHalfEdge::build`], if not available.
     pub global_form: Option<GlobalEdge>,
 }
 
 impl PartialHalfEdge {
-    /// Build the [`HalfEdge`] with the given curve
+    /// Update the partial half-edge with the given curve
     pub fn with_curve(mut self, curve: impl Into<MaybePartial<Curve>>) -> Self {
         self.curve = Some(curve.into());
         self
     }
 
-    /// Build the [`HalfEdge`] with the given vertices
+    /// Update the partial half-edge with the given vertices
     pub fn with_vertices(
         mut self,
         vertices: [impl Into<MaybePartial<Vertex>>; 2],
@@ -61,13 +60,13 @@ impl PartialHalfEdge {
         self
     }
 
-    /// Build the [`HalfEdge`] with the provided global form
+    /// Update the partial half-edge with the given global form
     pub fn with_global_form(mut self, global_form: GlobalEdge) -> Self {
         self.global_form = Some(global_form);
         self
     }
 
-    /// Build the [`HalfEdge`] as a circle from the given radius
+    /// Update partial half-edge as a circle, from the given radius
     pub fn as_circle_from_radius(
         mut self,
         surface: Surface,
@@ -98,7 +97,7 @@ impl PartialHalfEdge {
         self
     }
 
-    /// Build the [`HalfEdge`] as a line segment from the given points
+    /// Update partial half-edge as a line segment, from the given points
     pub fn as_line_segment_from_points(
         mut self,
         surface: Surface,
@@ -120,7 +119,7 @@ impl PartialHalfEdge {
         self
     }
 
-    /// Finish building the [`HalfEdge`]
+    /// Build a full [`HalfEdge`] from the partial half-edge
     pub fn build(self, stores: &Stores) -> HalfEdge {
         let curve = self
             .curve

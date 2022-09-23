@@ -16,7 +16,10 @@ pub struct HalfEdge {
 }
 
 impl HalfEdge {
-    /// Build a `HalfEdge` using [`PartialHalfEdge`]
+    /// Create a [`PartialHalfEdge`]
+    ///
+    /// This function exists just for convenience, and will just return a
+    /// default [`PartialHalfEdge`].
     pub fn partial() -> PartialHalfEdge {
         PartialHalfEdge::default()
     }
