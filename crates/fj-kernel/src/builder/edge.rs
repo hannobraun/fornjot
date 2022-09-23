@@ -63,7 +63,7 @@ impl<'a> HalfEdgeBuilder<'a> {
                 [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
             let global_vertex = GlobalVertex::partial()
-                .from_curve_and_position(&curve, a_curve)
+                .from_curve_and_position(curve.clone(), a_curve)
                 .build(self.stores);
 
             let surface_vertices = [a_curve, b_curve].map(|point_curve| {

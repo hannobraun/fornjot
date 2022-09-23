@@ -5,6 +5,8 @@ use crate::{
     stores::Stores,
 };
 
+use super::MaybePartial;
+
 /// A partial [`Vertex`]
 ///
 /// See [`crate::partial`] for more information.
@@ -18,7 +20,7 @@ pub struct PartialVertex {
     /// The curve that the [`Vertex`] is defined in
     ///
     /// Must be provided before [`PartialVertex::build`] is called.
-    pub curve: Option<Curve>,
+    pub curve: Option<MaybePartial<Curve>>,
 
     /// The surface form of the [`Vertex`]
     ///
@@ -30,7 +32,7 @@ pub struct PartialVertex {
     ///
     /// Can be provided, if already available, or acquired through the surface
     /// form.
-    pub global_form: Option<GlobalVertex>,
+    pub global_form: Option<MaybePartial<GlobalVertex>>,
 }
 
 impl PartialVertex {
@@ -41,8 +43,8 @@ impl PartialVertex {
     }
 
     /// Provide a curve for the partial vertex
-    pub fn with_curve(mut self, curve: Curve) -> Self {
-        self.curve = Some(curve);
+    pub fn with_curve(mut self, curve: impl Into<MaybePartial<Curve>>) -> Self {
+        self.curve = Some(curve.into());
         self
     }
 
@@ -53,8 +55,11 @@ impl PartialVertex {
     }
 
     /// Provide a global form for the partial vertex
-    pub fn with_global_form(mut self, global_form: GlobalVertex) -> Self {
-        self.global_form = Some(global_form);
+    pub fn with_global_form(
+        mut self,
+        global_form: impl Into<MaybePartial<GlobalVertex>>,
+    ) -> Self {
+        self.global_form = Some(global_form.into());
         self
     }
 
@@ -69,7 +74,10 @@ impl PartialVertex {
         let position = self
             .position
             .expect("Cant' build `Vertex` without position");
-        let curve = self.curve.expect("Can't build `Vertex` without `Curve`");
+        let curve = self
+            .curve
+            .expect("Can't build `Vertex` without `Curve`")
+            .into_full(stores);
 
         let surface_form = self.surface_form.unwrap_or_else(|| {
             PartialSurfaceVertex {
@@ -90,9 +98,9 @@ impl From<Vertex> for PartialVertex {
     fn from(vertex: Vertex) -> Self {
         Self {
             position: Some(vertex.position()),
-            curve: Some(vertex.curve().clone()),
+            curve: Some(vertex.curve().clone().into()),
             surface_form: Some(*vertex.surface_form()),
-            global_form: Some(*vertex.global_form()),
+            global_form: Some((*vertex.global_form()).into()),
         }
     }
 }
@@ -116,7 +124,7 @@ pub struct PartialSurfaceVertex {
     ///
     /// Can be provided, if already available, or computed from the position on
     /// the [`Surface`].
-    pub global_form: Option<GlobalVertex>,
+    pub global_form: Option<MaybePartial<GlobalVertex>>,
 }
 
 impl PartialSurfaceVertex {
@@ -133,8 +141,11 @@ impl PartialSurfaceVertex {
     }
 
     /// Provide a global form for the partial surface vertex
-    pub fn with_global_form(mut self, global_form: GlobalVertex) -> Self {
-        self.global_form = Some(global_form);
+    pub fn with_global_form(
+        mut self,
+        global_form: impl Into<MaybePartial<GlobalVertex>>,
+    ) -> Self {
+        self.global_form = Some(global_form.into());
         self
     }
 
@@ -153,11 +164,14 @@ impl PartialSurfaceVertex {
             .surface
             .expect("Can't build `SurfaceVertex` without `Surface`");
 
-        let global_form = self.global_form.unwrap_or_else(|| {
-            GlobalVertex::partial()
-                .from_surface_and_position(&surface, position)
-                .build(stores)
-        });
+        let global_form = self
+            .global_form
+            .unwrap_or_else(|| {
+                GlobalVertex::partial()
+                    .from_surface_and_position(&surface, position)
+                    .into()
+            })
+            .into_full(stores);
 
         SurfaceVertex::new(position, surface, global_form)
     }
@@ -168,7 +182,7 @@ impl From<SurfaceVertex> for PartialSurfaceVertex {
         Self {
             position: Some(surface_vertex.position()),
             surface: Some(*surface_vertex.surface()),
-            global_form: Some(*surface_vertex.global_form()),
+            global_form: Some((*surface_vertex.global_form()).into()),
         }
     }
 }
@@ -194,11 +208,20 @@ impl PartialGlobalVertex {
     /// Update partial global vertex from the given curve and position on it
     pub fn from_curve_and_position(
         self,
-        curve: &Curve,
+        curve: impl Into<MaybePartial<Curve>>,
         position: impl Into<Point<1>>,
     ) -> Self {
-        let position_surface = curve.path().point_from_path_coords(position);
-        self.from_surface_and_position(curve.surface(), position_surface)
+        let curve = curve.into().into_partial();
+
+        let path = curve.path.expect(
+            "Need path to create `GlobalVertex` from curve and position",
+        );
+        let surface = curve.surface.expect(
+            "Need surface to create `GlobalVertex` from curve and position",
+        );
+
+        let position_surface = path.point_from_path_coords(position);
+        self.from_surface_and_position(&surface, position_surface)
     }
 
     /// Update partial global vertex from the given surface and position on it
