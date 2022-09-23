@@ -100,6 +100,16 @@ impl PartialCurve {
     }
 }
 
+impl From<Curve> for PartialCurve {
+    fn from(curve: Curve) -> Self {
+        Self {
+            path: Some(curve.path()),
+            surface: Some(*curve.surface()),
+            global_form: Some(curve.global_form().clone()),
+        }
+    }
+}
+
 /// A partial [`GlobalCurve`]
 ///
 /// See [`crate::partial`] for more information.
@@ -151,5 +161,13 @@ impl PartialGlobalCurve {
     pub fn build(self, stores: &Stores) -> Handle<GlobalCurve> {
         let path = self.path.expect("Can't build `GlobalCurve` without a path");
         stores.global_curves.insert(GlobalCurve::from_path(path))
+    }
+}
+
+impl From<Handle<GlobalCurve>> for PartialGlobalCurve {
+    fn from(global_curve: Handle<GlobalCurve>) -> Self {
+        Self {
+            path: Some(global_curve.path()),
+        }
     }
 }

@@ -86,6 +86,17 @@ impl PartialVertex {
     }
 }
 
+impl From<Vertex> for PartialVertex {
+    fn from(vertex: Vertex) -> Self {
+        Self {
+            position: Some(vertex.position()),
+            curve: Some(vertex.curve().clone()),
+            surface_form: Some(*vertex.surface_form()),
+            global_form: Some(*vertex.global_form()),
+        }
+    }
+}
+
 /// A partial [`SurfaceVertex`]
 ///
 /// See [`crate::partial`] for more information.
@@ -152,6 +163,16 @@ impl PartialSurfaceVertex {
     }
 }
 
+impl From<SurfaceVertex> for PartialSurfaceVertex {
+    fn from(surface_vertex: SurfaceVertex) -> Self {
+        Self {
+            position: Some(surface_vertex.position()),
+            surface: Some(*surface_vertex.surface()),
+            global_form: Some(*surface_vertex.global_form()),
+        }
+    }
+}
+
 /// A partial [`GlobalVertex`]
 ///
 /// See [`crate::partial`] for more information.
@@ -197,5 +218,13 @@ impl PartialGlobalVertex {
             .expect("Can't build a `GlobalVertex` without a position");
 
         GlobalVertex::from_position(position)
+    }
+}
+
+impl From<GlobalVertex> for PartialGlobalVertex {
+    fn from(global_vertex: GlobalVertex) -> Self {
+        Self {
+            position: Some(global_vertex.position()),
+        }
     }
 }
