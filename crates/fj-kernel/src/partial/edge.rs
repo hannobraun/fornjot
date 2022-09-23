@@ -76,28 +76,15 @@ impl<'a> PartialHalfEdge<'a> {
                 [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
             let global_vertex = GlobalVertex::partial()
-                .from_curve_and_position(curve.clone(), a_curve)
-                .build(self.stores);
+                .from_curve_and_position(curve.clone(), a_curve);
 
-            let surface_vertices = [a_curve, b_curve].map(|point_curve| {
-                let point_surface =
-                    curve.path().point_from_path_coords(point_curve);
-                SurfaceVertex::new(point_surface, surface, global_vertex)
-            });
-
-            // Can be cleaned up, once `zip` is stable:
-            // https://doc.rust-lang.org/std/primitive.array.html#method.zip
-            let [a_surface, b_surface] = surface_vertices;
-            [(a_curve, a_surface), (b_curve, b_surface)].map(
-                |(point_curve, surface_vertex)| {
-                    Vertex::new(
-                        point_curve,
-                        curve.clone(),
-                        surface_vertex,
-                        global_vertex,
-                    )
-                },
-            )
+            [a_curve, b_curve].map(|point_curve| {
+                Vertex::partial()
+                    .with_position(point_curve)
+                    .with_curve(curve.clone())
+                    .with_global_form(global_vertex.clone())
+                    .build(self.stores)
+            })
         };
 
         self.curve = Some(curve);
