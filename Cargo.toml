@@ -52,3 +52,44 @@ repository = "https://github.com/hannobraun/fornjot"
 license = "0BSD"
 keywords = ["cad", "programmatic", "code-cad"]
 categories = ["encoding", "mathematics", "rendering"]
+
+
+[workspace.dependencies.fj]
+version = "0.16.0"
+path = "crates/fj"
+
+[workspace.dependencies.fj-export]
+version = "0.16.0"
+path = "crates/fj-export"
+
+[workspace.dependencies.fj-host]
+version = "0.16.0"
+path = "crates/fj-host"
+
+[workspace.dependencies.fj-interop]
+version = "0.16.0"
+path = "crates/fj-interop"
+
+[workspace.dependencies.fj-kernel]
+version = "0.16.0"
+path = "crates/fj-kernel"
+
+[workspace.dependencies.fj-math]
+version = "0.16.0"
+path = "crates/fj-math"
+
+[workspace.dependencies.fj-operations]
+version = "0.16.0"
+path = "crates/fj-operations"
+
+[workspace.dependencies.fj-proc]
+version = "0.16.0"
+path = "crates/fj-proc"
+
+[workspace.dependencies.fj-viewer]
+version = "0.16.0"
+path = "crates/fj-viewer"
+
+[workspace.dependencies.fj-window]
+version = "0.16.0"
+path = "crates/fj-window"

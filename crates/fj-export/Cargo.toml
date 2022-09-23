@@ -12,14 +12,8 @@ categories.workspace = true
 
 
 [dependencies]
+fj-interop.workspace = true
+fj-math.workspace = true
 thiserror = "1.0.35"
 threemf = "0.3.1"
 stl = "0.2.1"
-
-[dependencies.fj-interop]
-version = "0.16.0"
-path = "../fj-interop"
-
-[dependencies.fj-math]
-version = "0.16.0"
-path = "../fj-math"

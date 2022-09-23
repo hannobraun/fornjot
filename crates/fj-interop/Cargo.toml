@@ -10,6 +10,5 @@ license.workspace = true
 keywords.workspace = true
 categories.workspace = true
 
-[dependencies.fj-math]
-path = "../fj-math"
-version = "0.16.0"
+[dependencies]
+fj-math.workspace = true

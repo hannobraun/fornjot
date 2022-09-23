@@ -11,20 +11,8 @@ keywords.workspace = true
 categories.workspace = true
 
 [dependencies]
+fj.workspace = true
+fj-interop.workspace = true
+fj-kernel.workspace = true
+fj-math.workspace = true
 thiserror = "1.0.35"
-
-[dependencies.fj]
-version = "0.16.0"
-path = "../fj"
-
-[dependencies.fj-math]
-version = "0.16.0"
-path = "../fj-math"
-
-[dependencies.fj-interop]
-version = "0.16.0"
-path = "../fj-interop"
-
-[dependencies.fj-kernel]
-version = "0.16.0"
-path = "../fj-kernel"

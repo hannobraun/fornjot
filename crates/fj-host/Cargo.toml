@@ -12,15 +12,9 @@ categories.workspace = true
 
 
 [dependencies]
+fj.workspace = true
+fj-interop.workspace = true
 libloading = "0.7.2"
 notify = "5.0.0"
 thiserror = "1.0.35"
 cargo_metadata = "0.15.0"
-
-[dependencies.fj]
-version = "0.16.0"
-path = "../fj"
-
-[dependencies.fj-interop]
-version = "0.16.0"
-path = "../fj-interop"
