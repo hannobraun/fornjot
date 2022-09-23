@@ -32,3 +32,50 @@ pub use self::{
     curve::{PartialCurve, PartialGlobalCurve},
     vertex::{PartialGlobalVertex, PartialSurfaceVertex, PartialVertex},
 };
+
+use crate::{
+    objects::{Curve, GlobalCurve, GlobalVertex, SurfaceVertex, Vertex},
+    stores::{Handle, Stores},
+};
+
+/// Implemented for types that are partial objects
+///
+/// # Implementation Note
+///
+/// It would be nicer to require a conversion from `&Self` into the partial
+/// form, but I think we need a `where` clause on the associated type to specify
+/// that, which is unstable. It should become stable soon though, together with
+/// generic associated types:
+/// <https://github.com/rust-lang/rust/issues/44265>
+pub trait HasPartialForm: Into<Self::PartialForm> {
+    /// The full version of this partial object
+    type PartialForm;
+
+    /// Build a full object from the partial object
+    fn from_partial(partial: Self::PartialForm, stores: &Stores) -> Self;
+}
+
+macro_rules! impl_traits {
+    ($($full:ty, $partial:ty;)*) => {
+        $(
+            impl HasPartialForm for $full {
+                type PartialForm = $partial;
+
+                fn from_partial(partial: Self::PartialForm, stores: &Stores)
+                    -> Self
+                {
+                    partial.build(stores)
+                }
+            }
+        )*
+    };
+}
+
+impl_traits!(
+    Curve, PartialCurve;
+    GlobalVertex, PartialGlobalVertex;
+    SurfaceVertex, PartialSurfaceVertex;
+    Vertex, PartialVertex;
+
+    Handle<GlobalCurve>, PartialGlobalCurve;
+);
