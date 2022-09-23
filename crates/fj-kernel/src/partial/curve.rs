@@ -25,7 +25,7 @@ pub struct PartialCurve {
     ///
     /// Will be computed from `path` and `surface` in [`PartialCurve::build`],
     /// if not provided.
-    pub global_form: Option<PartialGlobalCurve>,
+    pub global_form: Option<Handle<GlobalCurve>>,
 }
 
 impl PartialCurve {
@@ -42,7 +42,10 @@ impl PartialCurve {
     }
 
     /// Provide a global form for the partial curve
-    pub fn with_global_form(mut self, global_form: PartialGlobalCurve) -> Self {
+    pub fn with_global_form(
+        mut self,
+        global_form: Handle<GlobalCurve>,
+    ) -> Self {
         self.global_form = Some(global_form);
         self
     }
@@ -79,23 +82,19 @@ impl PartialCurve {
         let surface =
             self.surface.expect("Can't build `Curve` without surface");
 
-        let global_form = self
-            .global_form
-            .unwrap_or_else(|| {
-                let path = match path {
-                    SurfacePath::Circle(circle) => {
-                        GlobalPath::circle_from_radius(circle.radius())
-                    }
-                    SurfacePath::Line(line) => GlobalPath::line_from_points(
-                        [line.origin(), line.origin() + line.direction()].map(
-                            |point| surface.point_from_surface_coords(point),
-                        ),
-                    ),
-                };
+        let global_form = self.global_form.unwrap_or_else(|| {
+            let path = match path {
+                SurfacePath::Circle(circle) => {
+                    GlobalPath::circle_from_radius(circle.radius())
+                }
+                SurfacePath::Line(line) => GlobalPath::line_from_points(
+                    [line.origin(), line.origin() + line.direction()]
+                        .map(|point| surface.point_from_surface_coords(point)),
+                ),
+            };
 
-                GlobalCurve::partial().with_path(path)
-            })
-            .build(stores);
+            GlobalCurve::partial().with_path(path).build(stores)
+        });
 
         Curve::new(surface, path, global_form)
     }
