@@ -37,7 +37,8 @@ pub use self::{
 
 use crate::{
     objects::{
-        Curve, GlobalCurve, GlobalEdge, GlobalVertex, SurfaceVertex, Vertex,
+        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, SurfaceVertex,
+        Vertex,
     },
     stores::{Handle, Stores},
 };
@@ -119,6 +120,7 @@ impl_traits!(
     Curve, PartialCurve;
     GlobalEdge, PartialGlobalEdge;
     GlobalVertex, PartialGlobalVertex;
+    HalfEdge, PartialHalfEdge;
     SurfaceVertex, PartialSurfaceVertex;
     Vertex, PartialVertex;
 
