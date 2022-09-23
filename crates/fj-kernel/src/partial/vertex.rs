@@ -5,6 +5,8 @@ use crate::{
     stores::Stores,
 };
 
+use super::MaybePartial;
+
 /// A partial [`Vertex`]
 ///
 /// See [`crate::partial`] for more information.
@@ -194,11 +196,20 @@ impl PartialGlobalVertex {
     /// Update partial global vertex from the given curve and position on it
     pub fn from_curve_and_position(
         self,
-        curve: &Curve,
+        curve: impl Into<MaybePartial<Curve>>,
         position: impl Into<Point<1>>,
     ) -> Self {
-        let position_surface = curve.path().point_from_path_coords(position);
-        self.from_surface_and_position(curve.surface(), position_surface)
+        let curve = curve.into().into_partial();
+
+        let path = curve.path.expect(
+            "Need path to create `GlobalVertex` from curve and position",
+        );
+        let surface = curve.surface.expect(
+            "Need surface to create `GlobalVertex` from curve and position",
+        );
+
+        let position_surface = path.point_from_path_coords(position);
+        self.from_surface_and_position(&surface, position_surface)
     }
 
     /// Update partial global vertex from the given surface and position on it
