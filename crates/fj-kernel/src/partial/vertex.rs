@@ -1,6 +1,9 @@
 use fj_math::Point;
 
-use crate::objects::{Curve, GlobalVertex, Surface, SurfaceVertex, Vertex};
+use crate::{
+    objects::{Curve, GlobalVertex, Surface, SurfaceVertex, Vertex},
+    stores::Stores,
+};
 
 /// A partial [`Vertex`]
 ///
@@ -62,7 +65,7 @@ impl PartialVertex {
     /// Panics, if no position has been provided.
     ///
     /// Panics, if no curve has been provided.
-    pub fn build(self) -> Vertex {
+    pub fn build(self, stores: &Stores) -> Vertex {
         let position = self
             .position
             .expect("Cant' build `Vertex` without position");
@@ -74,7 +77,7 @@ impl PartialVertex {
                 surface: Some(*curve.surface()),
                 global_form: self.global_form,
             }
-            .build()
+            .build(stores)
         });
 
         let global_form = *surface_form.global_form();
@@ -131,7 +134,7 @@ impl PartialSurfaceVertex {
     /// Panics, if no position has been provided.
     ///
     /// Panics, if no surface has been provided.
-    pub fn build(self) -> SurfaceVertex {
+    pub fn build(self, stores: &Stores) -> SurfaceVertex {
         let position = self
             .position
             .expect("Can't build `SurfaceVertex` without position");
@@ -142,7 +145,7 @@ impl PartialSurfaceVertex {
         let global_form = self.global_form.unwrap_or_else(|| {
             GlobalVertex::partial()
                 .from_surface_and_position(&surface, position)
-                .build()
+                .build(stores)
         });
 
         SurfaceVertex::new(position, surface, global_form)
@@ -188,7 +191,7 @@ impl PartialGlobalVertex {
     }
 
     /// Build a full [`GlobalVertex`] from the partial global vertex
-    pub fn build(self) -> GlobalVertex {
+    pub fn build(self, _: &Stores) -> GlobalVertex {
         let position = self
             .position
             .expect("Can't build a `GlobalVertex` without a position");
