@@ -36,3 +36,19 @@ default-members = [
     "crates/fj-viewer",
     "crates/fj-window",
 ]
+
+
+[workspace.package]
+version = "0.16.0"
+edition = "2021"
+
+description = """\
+Early-stage, next-generation, code-first CAD application. Because the world \
+needs another CAD program.\
+"""
+readme = "README.md"
+homepage = "https://www.fornjot.app/"
+repository = "https://github.com/hannobraun/fornjot"
+license = "0BSD"
+keywords = ["cad", "programmatic", "code-cad"]
+categories = ["encoding", "mathematics", "rendering"]
