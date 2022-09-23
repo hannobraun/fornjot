@@ -18,11 +18,7 @@ pub struct HalfEdge {
 impl HalfEdge {
     /// Build a `HalfEdge` using [`PartialHalfEdge`]
     pub fn partial() -> PartialHalfEdge {
-        PartialHalfEdge {
-            curve: None,
-            vertices: [None, None],
-            global_form: None,
-        }
+        PartialHalfEdge::default()
     }
 
     /// Create a new instance of `HalfEdge`

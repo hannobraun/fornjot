@@ -12,6 +12,7 @@ use super::MaybePartial;
 /// API for building a [`HalfEdge`]
 ///
 /// Also see [`HalfEdge::partial`].
+#[derive(Default)]
 pub struct PartialHalfEdge {
     /// The curve that the [`HalfEdge`] is defined in
     pub curve: Option<MaybePartial<Curve>>,
