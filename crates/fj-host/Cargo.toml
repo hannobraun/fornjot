@@ -12,9 +12,9 @@ categories.workspace = true
 
 
 [dependencies]
+cargo_metadata = "0.15.0"
 fj.workspace = true
 fj-interop.workspace = true
 libloading = "0.7.2"
 notify = "5.0.0"
 thiserror = "1.0.35"
-cargo_metadata = "0.15.0"
