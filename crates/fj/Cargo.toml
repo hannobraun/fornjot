@@ -12,7 +12,11 @@ categories.workspace = true
 
 [dependencies]
 fj-proc.workspace = true
-serde = { version = "1.0.144", features = ["derive"], optional = true }
+
+[dependencies.serde]
+version = "1.0.144"
+features = ["derive"]
+optional = true
 
 [dev-dependencies]
 serde_json = "1.0.85"
