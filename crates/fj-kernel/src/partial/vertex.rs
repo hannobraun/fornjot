@@ -80,7 +80,7 @@ impl PartialVertex {
             PartialSurfaceVertex {
                 position: Some(curve.path().point_from_path_coords(position)),
                 surface: Some(*curve.surface()),
-                global_form: self.global_form,
+                global_form: self.global_form.map(Into::into),
             }
             .build(stores)
         });
@@ -121,7 +121,7 @@ pub struct PartialSurfaceVertex {
     ///
     /// Can be provided, if already available, or computed from the position on
     /// the [`Surface`].
-    pub global_form: Option<GlobalVertex>,
+    pub global_form: Option<MaybePartial<GlobalVertex>>,
 }
 
 impl PartialSurfaceVertex {
@@ -138,8 +138,11 @@ impl PartialSurfaceVertex {
     }
 
     /// Provide a global form for the partial surface vertex
-    pub fn with_global_form(mut self, global_form: GlobalVertex) -> Self {
-        self.global_form = Some(global_form);
+    pub fn with_global_form(
+        mut self,
+        global_form: impl Into<MaybePartial<GlobalVertex>>,
+    ) -> Self {
+        self.global_form = Some(global_form.into());
         self
     }
 
@@ -158,11 +161,14 @@ impl PartialSurfaceVertex {
             .surface
             .expect("Can't build `SurfaceVertex` without `Surface`");
 
-        let global_form = self.global_form.unwrap_or_else(|| {
-            GlobalVertex::partial()
-                .from_surface_and_position(&surface, position)
-                .build(stores)
-        });
+        let global_form = self
+            .global_form
+            .unwrap_or_else(|| {
+                GlobalVertex::partial()
+                    .from_surface_and_position(&surface, position)
+                    .into()
+            })
+            .into_full(stores);
 
         SurfaceVertex::new(position, surface, global_form)
     }
@@ -173,7 +179,7 @@ impl From<SurfaceVertex> for PartialSurfaceVertex {
         Self {
             position: Some(surface_vertex.position()),
             surface: Some(*surface_vertex.surface()),
-            global_form: Some(*surface_vertex.global_form()),
+            global_form: Some((*surface_vertex.global_form()).into()),
         }
     }
 }
