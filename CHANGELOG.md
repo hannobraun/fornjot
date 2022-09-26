@@ -1,5 +1,71 @@
 # Fornjot - Changelog
 
+## v0.17.0 (2022-09-26)
+
+### End-user improvements
+
+Improvements to Fornjot and its documentation that are visible to end-users.
+
+*None this week. Busy improving the kernel!*
+
+### Ecosystem improvements
+
+Improvements to the Fornjot ecosystem that are relevant to developers who are building on top of Fornjot components.
+
+#### `fj-kernel`
+
+- Implement centralized object storage ([#1108], [#1116], [#1121])
+- Prepare for removing geometry from `GlobalCurve` ([#1111], [#1114])
+- Start converting builder API into partial object API ([#1113], [#1117], [#1118], [#1119], [#1120], [#1123], [#1124], [#1126], [#1128], [#1130], [#1131], [#1133], [#1134], [#1135])
+- Simplify `Triangulate` trait ([#1122])
+- Clean up `Face` constructor ([#1125])
+- Remove `HalfEdge::from_curve_and_vertices` ([#1127])
+
+### Internal Improvements
+
+Improvements that are relevant to developers working on Fornjot itself.
+
+- Update dependencies ([#1101], [#1103], [#1104], [#1105], [#1106], [#1107], [#1109])
+- Remove unused dependencies ([#1110])
+- Expand release automation ([#1115])
+- Upgrade to Rust 1.64.0 ([#1132])
+- Update list of sponsors in README ([#1136])
+
+[#1101]: https://github.com/hannobraun/Fornjot/pull/1101
+[#1103]: https://github.com/hannobraun/Fornjot/pull/1103
+[#1104]: https://github.com/hannobraun/Fornjot/pull/1104
+[#1105]: https://github.com/hannobraun/Fornjot/pull/1105
+[#1106]: https://github.com/hannobraun/Fornjot/pull/1106
+[#1107]: https://github.com/hannobraun/Fornjot/pull/1107
+[#1108]: https://github.com/hannobraun/Fornjot/pull/1108
+[#1109]: https://github.com/hannobraun/Fornjot/pull/1109
+[#1110]: https://github.com/hannobraun/Fornjot/pull/1110
+[#1111]: https://github.com/hannobraun/Fornjot/pull/1111
+[#1113]: https://github.com/hannobraun/Fornjot/pull/1113
+[#1114]: https://github.com/hannobraun/Fornjot/pull/1114
+[#1115]: https://github.com/hannobraun/Fornjot/pull/1115
+[#1116]: https://github.com/hannobraun/Fornjot/pull/1116
+[#1117]: https://github.com/hannobraun/Fornjot/pull/1117
+[#1118]: https://github.com/hannobraun/Fornjot/pull/1118
+[#1119]: https://github.com/hannobraun/Fornjot/pull/1119
+[#1120]: https://github.com/hannobraun/Fornjot/pull/1120
+[#1121]: https://github.com/hannobraun/Fornjot/pull/1121
+[#1122]: https://github.com/hannobraun/Fornjot/pull/1122
+[#1123]: https://github.com/hannobraun/Fornjot/pull/1123
+[#1124]: https://github.com/hannobraun/Fornjot/pull/1124
+[#1125]: https://github.com/hannobraun/Fornjot/pull/1125
+[#1126]: https://github.com/hannobraun/Fornjot/pull/1126
+[#1127]: https://github.com/hannobraun/Fornjot/pull/1127
+[#1128]: https://github.com/hannobraun/Fornjot/pull/1128
+[#1130]: https://github.com/hannobraun/Fornjot/pull/1130
+[#1131]: https://github.com/hannobraun/Fornjot/pull/1131
+[#1132]: https://github.com/hannobraun/Fornjot/pull/1132
+[#1133]: https://github.com/hannobraun/Fornjot/pull/1133
+[#1134]: https://github.com/hannobraun/Fornjot/pull/1134
+[#1135]: https://github.com/hannobraun/Fornjot/pull/1135
+[#1136]: https://github.com/hannobraun/Fornjot/pull/1136
+
+
 ## v0.16.0 (2022-09-19)
 
 ### End-user improvements
