@@ -1,3 +1,5 @@
+use fj_math::Point;
+
 use crate::{
     objects::{GlobalCurve, GlobalEdge, Surface, SurfaceVertex, Vertex},
     stores::{Handle, Stores},
@@ -44,6 +46,14 @@ impl MaybePartial<GlobalEdge> {
 }
 
 impl MaybePartial<SurfaceVertex> {
+    /// Access the position
+    pub fn position(&self) -> Option<Point<2>> {
+        match self {
+            Self::Full(full) => Some(full.position()),
+            Self::Partial(partial) => partial.position,
+        }
+    }
+
     /// Access the surface
     pub fn surface(&self) -> Option<&Surface> {
         match self {
