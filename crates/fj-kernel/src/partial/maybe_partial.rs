@@ -1,5 +1,5 @@
 use crate::{
-    objects::{GlobalCurve, GlobalEdge, SurfaceVertex, Vertex},
+    objects::{GlobalCurve, GlobalEdge, Surface, SurfaceVertex, Vertex},
     stores::{Handle, Stores},
 };
 
@@ -39,6 +39,16 @@ impl MaybePartial<GlobalEdge> {
         match self {
             Self::Full(full) => Some(full.curve()),
             Self::Partial(partial) => partial.curve.as_ref(),
+        }
+    }
+}
+
+impl MaybePartial<SurfaceVertex> {
+    /// Access the surface
+    pub fn surface(&self) -> Option<&Surface> {
+        match self {
+            Self::Full(full) => Some(full.surface()),
+            Self::Partial(partial) => partial.surface.as_ref(),
         }
     }
 }
