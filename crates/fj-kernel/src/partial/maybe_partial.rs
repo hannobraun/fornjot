@@ -1,6 +1,6 @@
 use crate::{
-    objects::{SurfaceVertex, Vertex},
-    stores::Stores,
+    objects::{GlobalCurve, GlobalEdge, SurfaceVertex, Vertex},
+    stores::{Handle, Stores},
 };
 
 use super::HasPartialForm;
@@ -29,6 +29,16 @@ impl<T: HasPartialForm> MaybePartial<T> {
         match self {
             Self::Partial(partial) => partial,
             Self::Full(full) => full.into(),
+        }
+    }
+}
+
+impl MaybePartial<GlobalEdge> {
+    /// Access the curve
+    pub fn curve(&self) -> Option<&Handle<GlobalCurve>> {
+        match self {
+            Self::Full(full) => Some(full.curve()),
+            Self::Partial(partial) => partial.curve.as_ref(),
         }
     }
 }
