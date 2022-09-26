@@ -1,4 +1,7 @@
-use crate::stores::Stores;
+use crate::{
+    objects::{SurfaceVertex, Vertex},
+    stores::Stores,
+};
 
 use super::HasPartialForm;
 
@@ -26,6 +29,16 @@ impl<T: HasPartialForm> MaybePartial<T> {
         match self {
             Self::Partial(partial) => partial,
             Self::Full(full) => full.into(),
+        }
+    }
+}
+
+impl MaybePartial<Vertex> {
+    /// Access the surface form
+    pub fn surface_form(&self) -> Option<&SurfaceVertex> {
+        match self {
+            Self::Full(full) => Some(full.surface_form()),
+            Self::Partial(partial) => partial.surface_form.as_ref(),
         }
     }
 }
