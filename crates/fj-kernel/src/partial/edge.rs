@@ -7,7 +7,7 @@ use crate::{
     stores::{Handle, Stores},
 };
 
-use super::MaybePartial;
+use super::{MaybePartial, PartialCurve};
 
 /// A partial [`HalfEdge`]
 ///
@@ -18,12 +18,12 @@ pub struct PartialHalfEdge {
     pub curve: Option<MaybePartial<Curve>>,
 
     /// The vertices that bound this [`HalfEdge`] in the [`Curve`]
-    pub vertices: [Option<MaybePartial<Vertex>>; 2],
+    pub vertices: Option<[MaybePartial<Vertex>; 2]>,
 
     /// The global form of the [`HalfEdge`]
     ///
     /// Can be computed by [`PartialHalfEdge::build`], if not available.
-    pub global_form: Option<GlobalEdge>,
+    pub global_form: Option<MaybePartial<GlobalEdge>>,
 }
 
 impl PartialHalfEdge {
@@ -38,31 +38,16 @@ impl PartialHalfEdge {
         mut self,
         vertices: [impl Into<MaybePartial<Vertex>>; 2],
     ) -> Self {
-        self.vertices = vertices.map(Into::into).map(Some);
-        self
-    }
-
-    /// Update the partial half-edge, starting it from the given vertex
-    pub fn with_from_vertex(
-        mut self,
-        vertex: impl Into<MaybePartial<Vertex>>,
-    ) -> Self {
-        self.vertices[0] = Some(vertex.into());
-        self
-    }
-
-    /// Update the partial half-edge with the given end vertex
-    pub fn with_to_vertex(
-        mut self,
-        vertex: impl Into<MaybePartial<Vertex>>,
-    ) -> Self {
-        self.vertices[1] = Some(vertex.into());
+        self.vertices = Some(vertices.map(Into::into));
         self
     }
 
     /// Update the partial half-edge with the given global form
-    pub fn with_global_form(mut self, global_form: GlobalEdge) -> Self {
-        self.global_form = Some(global_form);
+    pub fn with_global_form(
+        mut self,
+        global_form: impl Into<MaybePartial<GlobalEdge>>,
+    ) -> Self {
+        self.global_form = Some(global_form.into());
         self
     }
 
@@ -92,7 +77,7 @@ impl PartialHalfEdge {
         };
 
         self.curve = Some(curve.into());
-        self.vertices = vertices.map(Into::into).map(Some);
+        self.vertices = Some(vertices.map(Into::into));
 
         self
     }
@@ -103,9 +88,12 @@ impl PartialHalfEdge {
         surface: Surface,
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
-        let curve = Curve::partial()
-            .with_surface(surface)
-            .as_line_from_points(points);
+        let curve = PartialCurve {
+            global_form: self.extract_global_curve(),
+            ..PartialCurve::default()
+        }
+        .with_surface(surface)
+        .as_line_from_points(points);
 
         let vertices = [0., 1.].map(|position| {
             Vertex::partial()
@@ -114,7 +102,42 @@ impl PartialHalfEdge {
         });
 
         self.curve = Some(curve.into());
-        self.vertices = vertices.map(Into::into).map(Some);
+        self.vertices = Some(vertices.map(Into::into));
+
+        self
+    }
+
+    /// Update partial half-edge as a line segment, reusing existing vertices
+    pub fn as_line_segment(mut self) -> Self {
+        let [from, to] = self
+            .vertices
+            .clone()
+            .expect("Can't infer line segment without vertices")
+            .map(|vertex| {
+                vertex.surface_form().expect(
+                    "Can't infer line segment without two surface vertices",
+                )
+            });
+
+        let surface = from
+            .surface()
+            .copied()
+            .or_else(|| to.surface().copied())
+            .expect("Can't infer line segment without a surface");
+        let points = [from, to].map(|vertex| {
+            vertex
+                .position()
+                .expect("Can't infer line segment without surface position")
+        });
+
+        let curve = PartialCurve {
+            global_form: self.extract_global_curve(),
+            ..PartialCurve::default()
+        }
+        .with_surface(surface)
+        .as_line_from_points(points);
+
+        self.curve = Some(curve.into());
 
         self
     }
@@ -125,19 +148,28 @@ impl PartialHalfEdge {
             .curve
             .expect("Can't build `HalfEdge` without curve")
             .into_full(stores);
-        let vertices = self.vertices.map(|vertex| {
-            vertex
-                .expect("Can't build `HalfEdge` without vertices")
-                .into_full(stores)
-        });
+        let vertices = self
+            .vertices
+            .expect("Can't build `HalfEdge` without vertices")
+            .map(|vertex| vertex.into_full(stores));
 
-        let global_form = self.global_form.unwrap_or_else(|| {
-            GlobalEdge::partial()
-                .from_curve_and_vertices(&curve, &vertices)
-                .build(stores)
-        });
+        let global_form = self
+            .global_form
+            .unwrap_or_else(|| {
+                GlobalEdge::partial()
+                    .from_curve_and_vertices(&curve, &vertices)
+                    .into()
+            })
+            .into_full(stores);
 
         HalfEdge::new(curve, vertices, global_form)
+    }
+
+    fn extract_global_curve(
+        &self,
+    ) -> Option<MaybePartial<Handle<GlobalCurve>>> {
+        let global_curve = self.global_form.as_ref()?.curve()?.clone();
+        Some(global_curve.into())
     }
 }
 
@@ -145,8 +177,8 @@ impl From<HalfEdge> for PartialHalfEdge {
     fn from(half_edge: HalfEdge) -> Self {
         Self {
             curve: Some(half_edge.curve().clone().into()),
-            vertices: half_edge.vertices().clone().map(Into::into).map(Some),
-            global_form: Some(half_edge.global_form().clone()),
+            vertices: Some(half_edge.vertices().clone().map(Into::into)),
+            global_form: Some(half_edge.global_form().clone().into()),
         }
     }
 }
