@@ -54,10 +54,17 @@ impl HalfEdge {
         }
 
         // Make sure `curve` and `vertices` match `global_form`.
-        assert_eq!(curve.global_form(), global_form.curve());
+        assert_eq!(
+            curve.global_form(),
+            global_form.curve(),
+            "The global form of a half-edge's curve must match the curve of \
+            the half-edge's global form"
+        );
         assert_eq!(
             &vertices.clone().map(|vertex| *vertex.global_form()),
-            global_form.vertices()
+            global_form.vertices(),
+            "The global forms of a half-edge's vertices must match the \
+            vertices of the half-edge's global form"
         );
 
         // Make sure that the edge vertices are not coincident on the curve.
