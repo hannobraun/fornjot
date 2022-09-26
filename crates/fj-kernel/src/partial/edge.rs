@@ -107,6 +107,41 @@ impl PartialHalfEdge {
         self
     }
 
+    /// Update partial half-edge as a line segment, reusing existing vertices
+    pub fn as_line_segment(mut self) -> Self {
+        let [from, to] = self
+            .vertices
+            .clone()
+            .expect("Can't infer line segment without vertices")
+            .map(|vertex| {
+                vertex.surface_form().expect(
+                    "Can't infer line segment without two surface vertices",
+                )
+            });
+
+        let surface = from
+            .surface()
+            .copied()
+            .or_else(|| to.surface().copied())
+            .expect("Can't infer line segment without a surface");
+        let points = [from, to].map(|vertex| {
+            vertex
+                .position()
+                .expect("Can't infer line segment without surface position")
+        });
+
+        let curve = PartialCurve {
+            global_form: self.extract_global_curve(),
+            ..PartialCurve::default()
+        }
+        .with_surface(surface)
+        .as_line_from_points(points);
+
+        self.curve = Some(curve.into());
+
+        self
+    }
+
     /// Build a full [`HalfEdge`] from the partial half-edge
     pub fn build(self, stores: &Stores) -> HalfEdge {
         let curve = self
