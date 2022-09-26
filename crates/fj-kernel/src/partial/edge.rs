@@ -7,7 +7,7 @@ use crate::{
     stores::{Handle, Stores},
 };
 
-use super::MaybePartial;
+use super::{MaybePartial, PartialCurve};
 
 /// A partial [`HalfEdge`]
 ///
@@ -106,9 +106,12 @@ impl PartialHalfEdge {
         surface: Surface,
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
-        let curve = Curve::partial()
-            .with_surface(surface)
-            .as_line_from_points(points);
+        let curve = PartialCurve {
+            global_form: self.extract_global_curve(),
+            ..PartialCurve::default()
+        }
+        .with_surface(surface)
+        .as_line_from_points(points);
 
         let vertices = [0., 1.].map(|position| {
             Vertex::partial()
@@ -144,6 +147,13 @@ impl PartialHalfEdge {
             .into_full(stores);
 
         HalfEdge::new(curve, vertices, global_form)
+    }
+
+    fn extract_global_curve(
+        &self,
+    ) -> Option<MaybePartial<Handle<GlobalCurve>>> {
+        let global_curve = self.global_form.as_ref()?.curve()?.clone();
+        Some(global_curve.into())
     }
 }
 
