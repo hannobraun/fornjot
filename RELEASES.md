@@ -17,10 +17,10 @@ cargo install --path tools/automator
 
 The release announcement lives on the website, and needs to be created in the [website repository](https://github.com/hannobraun/www.fornjot.app).
 
-First, create the initial draft of the release announcement (replace version with version of the new release):
+First, create the initial draft of the release announcement:
 
 ```
-automator create-release-announcement
+automator announcement
 ```
 
 This will create an announcement that will initially not be published to the blog or RSS feed, but it will be available at its final URL.
@@ -52,7 +52,6 @@ Potential new issues of the week:
 - https://github.com/hannobraun/Fornjot/issues/848
 - https://github.com/hannobraun/Fornjot/issues/851
 - https://github.com/hannobraun/Fornjot/issues/937
-- https://github.com/hannobraun/Fornjot/issues/971
 - https://github.com/hannobraun/Fornjot/issues/986
 - https://github.com/hannobraun/Fornjot/issues/987
 - https://github.com/hannobraun/Fornjot/issues/996
@@ -60,6 +59,7 @@ Potential new issues of the week:
 
 Already mentioned issues of the week (remove, once closed):
 
+- 2022-09-26: https://github.com/hannobraun/Fornjot/issues/971
 - 2022-09-19: https://github.com/hannobraun/Fornjot/issues/821
 - 2022-09-05: https://github.com/hannobraun/Fornjot/issues/920
 - 2022-08-29: https://github.com/hannobraun/Fornjot/issues/980
@@ -88,7 +88,7 @@ Commit these changes: `git commit -m "Update changelog"`
 
 ## 5. Update version
 
-In the release branch, update the version numbers in the `Cargo.toml` files of all crates in the `crates/` directory to the new version. Also update the version numbers of the dependencies between the crates.
+Update all `version` keys in the top-level `Cargo.toml`.
 
 Commit these changes: `git commit -m "Update version"`
 
