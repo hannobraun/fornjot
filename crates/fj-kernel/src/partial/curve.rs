@@ -6,6 +6,8 @@ use crate::{
     stores::{Handle, Stores},
 };
 
+use super::MaybePartial;
+
 /// A partial [`Curve`]
 ///
 /// See [`crate::partial`] for more information.
@@ -25,7 +27,7 @@ pub struct PartialCurve {
     ///
     /// Will be computed from `path` and `surface` in [`PartialCurve::build`],
     /// if not provided.
-    pub global_form: Option<Handle<GlobalCurve>>,
+    pub global_form: Option<MaybePartial<Handle<GlobalCurve>>>,
 }
 
 impl PartialCurve {
@@ -44,9 +46,9 @@ impl PartialCurve {
     /// Provide a global form for the partial curve
     pub fn with_global_form(
         mut self,
-        global_form: Handle<GlobalCurve>,
+        global_form: impl Into<MaybePartial<Handle<GlobalCurve>>>,
     ) -> Self {
-        self.global_form = Some(global_form);
+        self.global_form = Some(global_form.into());
         self
     }
 
@@ -82,19 +84,23 @@ impl PartialCurve {
         let surface =
             self.surface.expect("Can't build `Curve` without surface");
 
-        let global_form = self.global_form.unwrap_or_else(|| {
-            let path = match path {
-                SurfacePath::Circle(circle) => {
-                    GlobalPath::circle_from_radius(circle.radius())
-                }
-                SurfacePath::Line(line) => GlobalPath::line_from_points(
-                    [line.origin(), line.origin() + line.direction()]
-                        .map(|point| surface.point_from_surface_coords(point)),
-                ),
-            };
+        let global_form = self
+            .global_form
+            .unwrap_or_else(|| {
+                let path = match path {
+                    SurfacePath::Circle(circle) => {
+                        GlobalPath::circle_from_radius(circle.radius())
+                    }
+                    SurfacePath::Line(line) => GlobalPath::line_from_points(
+                        [line.origin(), line.origin() + line.direction()].map(
+                            |point| surface.point_from_surface_coords(point),
+                        ),
+                    ),
+                };
 
-            GlobalCurve::partial().with_path(path).build(stores)
-        });
+                GlobalCurve::partial().with_path(path).into()
+            })
+            .into_full(stores);
 
         Curve::new(surface, path, global_form)
     }
@@ -105,7 +111,7 @@ impl From<Curve> for PartialCurve {
         Self {
             path: Some(curve.path()),
             surface: Some(*curve.surface()),
-            global_form: Some(curve.global_form().clone()),
+            global_form: Some(curve.global_form().clone().into()),
         }
     }
 }
