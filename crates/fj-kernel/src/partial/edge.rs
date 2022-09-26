@@ -18,7 +18,7 @@ pub struct PartialHalfEdge {
     pub curve: Option<MaybePartial<Curve>>,
 
     /// The vertices that bound this [`HalfEdge`] in the [`Curve`]
-    pub vertices: [Option<MaybePartial<Vertex>>; 2],
+    pub vertices: Option<[MaybePartial<Vertex>; 2]>,
 
     /// The global form of the [`HalfEdge`]
     ///
@@ -38,25 +38,7 @@ impl PartialHalfEdge {
         mut self,
         vertices: [impl Into<MaybePartial<Vertex>>; 2],
     ) -> Self {
-        self.vertices = vertices.map(Into::into).map(Some);
-        self
-    }
-
-    /// Update the partial half-edge, starting it from the given vertex
-    pub fn with_from_vertex(
-        mut self,
-        vertex: impl Into<MaybePartial<Vertex>>,
-    ) -> Self {
-        self.vertices[0] = Some(vertex.into());
-        self
-    }
-
-    /// Update the partial half-edge with the given end vertex
-    pub fn with_to_vertex(
-        mut self,
-        vertex: impl Into<MaybePartial<Vertex>>,
-    ) -> Self {
-        self.vertices[1] = Some(vertex.into());
+        self.vertices = Some(vertices.map(Into::into));
         self
     }
 
@@ -95,7 +77,7 @@ impl PartialHalfEdge {
         };
 
         self.curve = Some(curve.into());
-        self.vertices = vertices.map(Into::into).map(Some);
+        self.vertices = Some(vertices.map(Into::into));
 
         self
     }
@@ -120,7 +102,7 @@ impl PartialHalfEdge {
         });
 
         self.curve = Some(curve.into());
-        self.vertices = vertices.map(Into::into).map(Some);
+        self.vertices = Some(vertices.map(Into::into));
 
         self
     }
@@ -131,11 +113,10 @@ impl PartialHalfEdge {
             .curve
             .expect("Can't build `HalfEdge` without curve")
             .into_full(stores);
-        let vertices = self.vertices.map(|vertex| {
-            vertex
-                .expect("Can't build `HalfEdge` without vertices")
-                .into_full(stores)
-        });
+        let vertices = self
+            .vertices
+            .expect("Can't build `HalfEdge` without vertices")
+            .map(|vertex| vertex.into_full(stores));
 
         let global_form = self
             .global_form
@@ -161,7 +142,7 @@ impl From<HalfEdge> for PartialHalfEdge {
     fn from(half_edge: HalfEdge) -> Self {
         Self {
             curve: Some(half_edge.curve().clone().into()),
-            vertices: half_edge.vertices().clone().map(Into::into).map(Some),
+            vertices: Some(half_edge.vertices().clone().map(Into::into)),
             global_form: Some(half_edge.global_form().clone().into()),
         }
     }
