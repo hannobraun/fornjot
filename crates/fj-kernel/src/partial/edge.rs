@@ -23,7 +23,7 @@ pub struct PartialHalfEdge {
     /// The global form of the [`HalfEdge`]
     ///
     /// Can be computed by [`PartialHalfEdge::build`], if not available.
-    pub global_form: Option<GlobalEdge>,
+    pub global_form: Option<MaybePartial<GlobalEdge>>,
 }
 
 impl PartialHalfEdge {
@@ -61,8 +61,11 @@ impl PartialHalfEdge {
     }
 
     /// Update the partial half-edge with the given global form
-    pub fn with_global_form(mut self, global_form: GlobalEdge) -> Self {
-        self.global_form = Some(global_form);
+    pub fn with_global_form(
+        mut self,
+        global_form: impl Into<MaybePartial<GlobalEdge>>,
+    ) -> Self {
+        self.global_form = Some(global_form.into());
         self
     }
 
@@ -131,11 +134,14 @@ impl PartialHalfEdge {
                 .into_full(stores)
         });
 
-        let global_form = self.global_form.unwrap_or_else(|| {
-            GlobalEdge::partial()
-                .from_curve_and_vertices(&curve, &vertices)
-                .build(stores)
-        });
+        let global_form = self
+            .global_form
+            .unwrap_or_else(|| {
+                GlobalEdge::partial()
+                    .from_curve_and_vertices(&curve, &vertices)
+                    .into()
+            })
+            .into_full(stores);
 
         HalfEdge::new(curve, vertices, global_form)
     }
@@ -146,7 +152,7 @@ impl From<HalfEdge> for PartialHalfEdge {
         Self {
             curve: Some(half_edge.curve().clone().into()),
             vertices: half_edge.vertices().clone().map(Into::into).map(Some),
-            global_form: Some(half_edge.global_form().clone()),
+            global_form: Some(half_edge.global_form().clone().into()),
         }
     }
 }
