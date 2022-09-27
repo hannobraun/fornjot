@@ -148,6 +148,8 @@ impl Sweep for GlobalVertex {
 
 #[cfg(test)]
 mod tests {
+    use pretty_assertions::assert_eq;
+
     use crate::{
         algorithms::sweep::Sweep,
         objects::{
