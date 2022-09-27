@@ -493,7 +493,7 @@ mod tests {
         assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());
         assert_eq!(6, object.face_iter().count());
-        assert_eq!(18, object.global_curve_iter().count());
+        assert_eq!(12, object.global_curve_iter().count());
         assert_eq!(8, object.global_vertex_iter().count());
         assert_eq!(24, object.half_edge_iter().count());
         assert_eq!(1, object.shell_iter().count());
@@ -535,7 +535,7 @@ mod tests {
         assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());
         assert_eq!(6, object.face_iter().count());
-        assert_eq!(18, object.global_curve_iter().count());
+        assert_eq!(12, object.global_curve_iter().count());
         assert_eq!(8, object.global_vertex_iter().count());
         assert_eq!(24, object.half_edge_iter().count());
         assert_eq!(1, object.shell_iter().count());
