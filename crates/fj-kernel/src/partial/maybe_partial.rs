@@ -18,6 +18,17 @@ pub enum MaybePartial<T: HasPartialForm> {
 }
 
 impl<T: HasPartialForm> MaybePartial<T> {
+    /// If this is a partial object, update it
+    pub fn update_partial(
+        self,
+        f: impl FnOnce(T::PartialForm) -> T::PartialForm,
+    ) -> Self {
+        match self {
+            Self::Partial(partial) => Self::Partial(f(partial)),
+            _ => self,
+        }
+    }
+
     /// Return the full object, either directly or by building it
     pub fn into_full(self, stores: &Stores) -> T {
         match self {
