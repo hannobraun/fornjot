@@ -1,4 +1,4 @@
-use std::cmp::Ordering;
+use std::{cmp::Ordering, fmt::Write};
 
 use chrono::{DateTime, Utc};
 use octocrab::Octocrab;
@@ -75,6 +75,27 @@ impl Sponsors {
         sponsors.sort();
 
         Ok(Sponsors { inner: sponsors })
+    }
+
+    pub fn as_markdown(&self, min_dollars: u32) -> anyhow::Result<String> {
+        let mut output = String::from("Fornjot is supported by ");
+
+        for sponsor in &self.inner {
+            if sponsor.dollars < min_dollars {
+                continue;
+            }
+
+            let login = &sponsor.login;
+            let url = format!("https://github.com/{login}");
+
+            write!(output, "[@{login}]({url}), ")?;
+        }
+
+        output.push_str(
+            "and [my other awesome sponsors](https://github.com/sponsors/hannobraun). Thank you!"
+        );
+
+        Ok(output)
     }
 }
 

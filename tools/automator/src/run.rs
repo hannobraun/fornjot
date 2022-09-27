@@ -21,7 +21,9 @@ pub async fn run() -> anyhow::Result<()> {
         Args::Sponsors => {
             let sponsors = Sponsors::query(&octocrab)
                 .await
-                .context("Failed to query sponsors")?;
+                .context("Failed to query sponsors")?
+                .as_markdown(8)
+                .context("Failed to format sponsors")?;
 
             println!("{sponsors:#?}");
 
