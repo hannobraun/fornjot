@@ -137,13 +137,16 @@ impl PartialHalfEdge {
         .with_surface(surface)
         .as_line_from_points(points);
 
-        let vertices = [from, to].map(|vertex| match vertex {
-            MaybePartial::Partial(vertex) => {
-                let vertex = vertex.with_curve(curve.clone());
-                MaybePartial::from(vertex)
-            }
-            _ => vertex,
-        });
+        let vertices =
+            [(from, 0.), (to, 1.)].map(|(vertex, position)| match vertex {
+                MaybePartial::Partial(vertex) => {
+                    let vertex = vertex
+                        .with_position([position])
+                        .with_curve(curve.clone());
+                    MaybePartial::from(vertex)
+                }
+                _ => vertex,
+            });
 
         self.curve = Some(curve.into());
         self.vertices = Some(vertices);
