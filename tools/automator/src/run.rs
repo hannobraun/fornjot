@@ -19,7 +19,7 @@ pub async fn run() -> anyhow::Result<()> {
                 .context("Failed to create release announcement")?;
         }
         Args::Sponsors => {
-            let sponsors = Sponsors::query_sponsors(&octocrab)
+            let sponsors = Sponsors::query(&octocrab)
                 .await
                 .context("Failed to query sponsors")?;
 

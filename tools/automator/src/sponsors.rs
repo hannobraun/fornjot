@@ -9,9 +9,7 @@ pub struct Sponsors {
 }
 
 impl Sponsors {
-    pub async fn query_sponsors(
-        octocrab: &Octocrab,
-    ) -> anyhow::Result<Sponsors> {
+    pub async fn query(octocrab: &Octocrab) -> anyhow::Result<Sponsors> {
         let response: QueryResult = octocrab
             .graphql(
                 "query {
