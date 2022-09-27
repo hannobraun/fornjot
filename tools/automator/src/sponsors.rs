@@ -77,7 +77,11 @@ impl Sponsors {
         Ok(Sponsors { inner: sponsors })
     }
 
-    pub fn as_markdown(&self, min_dollars: u32) -> anyhow::Result<String> {
+    pub fn as_markdown(
+        &self,
+        min_dollars: u32,
+        for_readme: bool,
+    ) -> anyhow::Result<String> {
         let mut output = String::from("Fornjot is supported by ");
 
         for sponsor in &self.inner {
@@ -86,9 +90,14 @@ impl Sponsors {
             }
 
             let login = &sponsor.login;
+            let name = if for_readme {
+                format!("**@{login}**")
+            } else {
+                format!("@{login}")
+            };
             let url = format!("https://github.com/{login}");
 
-            write!(output, "[@{login}]({url}), ")?;
+            write!(output, "[{name}]({url}), ")?;
         }
 
         output.push_str(

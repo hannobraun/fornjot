@@ -37,7 +37,10 @@ pub async fn create_release_announcement(
     version.minor += 1;
 
     let min_dollars = 32;
-    let sponsors = Sponsors::query(octocrab).await?.as_markdown(min_dollars)?;
+    let for_readme = false;
+    let sponsors = Sponsors::query(octocrab)
+        .await?
+        .as_markdown(min_dollars, for_readme)?;
 
     let mut file = create_file(year, week).await?;
     generate_announcement(

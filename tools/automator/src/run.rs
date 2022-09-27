@@ -22,7 +22,7 @@ pub async fn run() -> anyhow::Result<()> {
             let sponsors = Sponsors::query(&octocrab)
                 .await
                 .context("Failed to query sponsors")?
-                .as_markdown(8)
+                .as_markdown(8, true)
                 .context("Failed to format sponsors")?;
 
             println!("{sponsors:#?}");
