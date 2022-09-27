@@ -4,8 +4,7 @@ use anyhow::Context;
 use octocrab::Octocrab;
 
 use crate::{
-    announcement::create_release_announcement, args::Args,
-    sponsors::query_sponsors,
+    announcement::create_release_announcement, args::Args, sponsors::Sponsors,
 };
 
 pub async fn run() -> anyhow::Result<()> {
@@ -19,14 +18,14 @@ pub async fn run() -> anyhow::Result<()> {
                 .await
                 .context("Failed to create release announcement")?;
         }
-        Args::Sponsors => {
-            let sponsors = query_sponsors(&octocrab)
+        Args::Sponsors(args) => {
+            let sponsors = Sponsors::query(&octocrab)
                 .await
-                .context("Failed to query sponsors")?;
+                .context("Failed to query sponsors")?
+                .as_markdown(8, args.for_readme)
+                .context("Failed to format sponsors")?;
 
-            println!("{sponsors:#?}");
-
-            todo!("Querying sponsors is not supported yet.")
+            println!("{sponsors}");
         }
     }
 

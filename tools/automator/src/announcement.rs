@@ -9,7 +9,10 @@ use tokio::{
     io::AsyncWriteExt,
 };
 
-use crate::pull_requests::{Author, PullRequest, PullRequestsSinceLastRelease};
+use crate::{
+    pull_requests::{Author, PullRequest, PullRequestsSinceLastRelease},
+    sponsors::Sponsors,
+};
 
 pub async fn create_release_announcement(
     octocrab: &Octocrab,
@@ -33,11 +36,18 @@ pub async fn create_release_announcement(
     let mut version = pull_requests_since_last_release.version_of_last_release;
     version.minor += 1;
 
+    let min_dollars = 32;
+    let for_readme = false;
+    let sponsors = Sponsors::query(octocrab)
+        .await?
+        .as_markdown(min_dollars, for_readme)?;
+
     let mut file = create_file(year, week).await?;
     generate_announcement(
         week,
         date,
         version.to_string(),
+        sponsors,
         pull_requests,
         &mut file,
     )
@@ -65,6 +75,7 @@ async fn generate_announcement(
     week: u32,
     date: String,
     version: String,
+    sponsors: String,
     pull_requests: impl IntoIterator<Item = PullRequest>,
     file: &mut File,
 ) -> anyhow::Result<()> {
@@ -121,6 +132,9 @@ title = \"Weekly Release - 2022-W{week}\"
 # TASK: Uncomment this date, once the announcement is ready to be published.
 # date = {date}
 
+# TASK: Uncomment to generate the HTML for the email newsletter.
+# template = \"newsletter/weekly-release.html\"
+
 [extra]
 version = \"{version}\"
 +++
@@ -130,7 +144,7 @@ version = \"{version}\"
 
 ### Sponsors
 
-Fornjot is supported by [@webtrax-oz](https://github.com/webtrax-oz), [@lthiery](https://github.com/lthiery), [@Yatekii](https://github.com/Yatekii), [@martindederer](https://github.com/martindederer), [@hobofan](https://github.com/hobofan), [@ahdinosaur](https://github.com/ahdinosaur), [@thawkins](https://github.com/thawkins), [@bollian](https://github.com/bollian), [@rozgo](https://github.com/rozgo), [@reivilibre](https://github.com/reivilibre), and [my other awesome sponsors](https://github.com/sponsors/hannobraun). Thank you!
+{sponsors}
 
 <strong class=\"call-to-action\">
     <p>

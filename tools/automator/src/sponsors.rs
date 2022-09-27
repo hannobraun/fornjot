@@ -1,7 +1,112 @@
-use std::cmp::Ordering;
+use std::{cmp::Ordering, fmt::Write};
 
 use chrono::{DateTime, Utc};
 use octocrab::Octocrab;
+
+#[derive(Debug)]
+pub struct Sponsors {
+    pub inner: Vec<Sponsor>,
+}
+
+impl Sponsors {
+    pub async fn query(octocrab: &Octocrab) -> anyhow::Result<Sponsors> {
+        let response: QueryResult = octocrab
+            .graphql(
+                "query {
+                    viewer {
+                        sponsors(first: 100) {
+                            nodes {
+                                __typename
+                                ... on User {
+                                    login
+                                    sponsorshipForViewerAsSponsorable {
+                                        createdAt
+                                        tier {
+                                            monthlyPriceInDollars
+                                        }
+                                    }
+                                }
+                                ... on Organization {
+                                    login
+                                    sponsorshipForViewerAsSponsorable {
+                                        createdAt
+                                        tier {
+                                            monthlyPriceInDollars
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }",
+            )
+            .await?;
+
+        let mut sponsors = response
+            .data
+            .viewer
+            .sponsors
+            .nodes
+            .into_iter()
+            .map(|node| {
+                let login = node.login;
+                let since =
+                    node.sponsorship_for_viewer_as_sponsorable.created_at;
+                let dollars = node
+                    .sponsorship_for_viewer_as_sponsorable
+                    .tier
+                    .monthly_price_in_dollars;
+
+                Sponsor {
+                    login,
+                    since,
+                    dollars,
+                }
+            })
+            .collect::<Vec<_>>();
+
+        if sponsors.len() >= 100 {
+            todo!(
+                "Number of sponsors has reached max page size, but query does \
+                not support pagination."
+            )
+        }
+
+        sponsors.sort();
+
+        Ok(Sponsors { inner: sponsors })
+    }
+
+    pub fn as_markdown(
+        &self,
+        min_dollars: u32,
+        for_readme: bool,
+    ) -> anyhow::Result<String> {
+        let mut output = String::from("Fornjot is supported by ");
+
+        for sponsor in &self.inner {
+            if sponsor.dollars < min_dollars {
+                continue;
+            }
+
+            let login = &sponsor.login;
+            let name = if for_readme {
+                format!("**@{login}**")
+            } else {
+                format!("@{login}")
+            };
+            let url = format!("https://github.com/{login}");
+
+            write!(output, "[{name}]({url}), ")?;
+        }
+
+        output.push_str(
+            "and [my other awesome sponsors](https://github.com/sponsors/hannobraun). Thank you!"
+        );
+
+        Ok(output)
+    }
+}
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct Sponsor {
@@ -32,75 +137,6 @@ impl PartialOrd for Sponsor {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(other))
     }
-}
-
-pub async fn query_sponsors(
-    octocrab: &Octocrab,
-) -> anyhow::Result<Vec<Sponsor>> {
-    let response: QueryResult = octocrab
-        .graphql(
-            "query {
-                viewer {
-                    sponsors(first: 100) {
-                        nodes {
-                            __typename
-                            ... on User {
-                                login
-                                sponsorshipForViewerAsSponsorable {
-                                    createdAt
-                                    tier {
-                                        monthlyPriceInDollars
-                                    }
-                                }
-                            }
-                            ... on Organization {
-                                login
-                                sponsorshipForViewerAsSponsorable {
-                                    createdAt
-                                    tier {
-                                        monthlyPriceInDollars
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }",
-        )
-        .await?;
-
-    let mut sponsors = response
-        .data
-        .viewer
-        .sponsors
-        .nodes
-        .into_iter()
-        .map(|node| {
-            let login = node.login;
-            let since = node.sponsorship_for_viewer_as_sponsorable.created_at;
-            let dollars = node
-                .sponsorship_for_viewer_as_sponsorable
-                .tier
-                .monthly_price_in_dollars;
-
-            Sponsor {
-                login,
-                since,
-                dollars,
-            }
-        })
-        .collect::<Vec<_>>();
-
-    if sponsors.len() >= 100 {
-        todo!(
-            "Number of sponsors has reached max page size, but query does not \
-            support pagination."
-        )
-    }
-
-    sponsors.sort();
-
-    Ok(sponsors)
 }
 
 #[derive(Debug, serde::Deserialize)]
