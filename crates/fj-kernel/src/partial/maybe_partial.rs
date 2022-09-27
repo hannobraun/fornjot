@@ -1,7 +1,7 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{GlobalCurve, GlobalEdge, Surface, SurfaceVertex, Vertex},
+    objects::{Curve, GlobalCurve, GlobalEdge, Surface, SurfaceVertex, Vertex},
     stores::{Handle, Stores},
 };
 
@@ -18,6 +18,17 @@ pub enum MaybePartial<T: HasPartialForm> {
 }
 
 impl<T: HasPartialForm> MaybePartial<T> {
+    /// If this is a partial object, update it
+    pub fn update_partial(
+        self,
+        f: impl FnOnce(T::PartialForm) -> T::PartialForm,
+    ) -> Self {
+        match self {
+            Self::Partial(partial) => Self::Partial(f(partial)),
+            _ => self,
+        }
+    }
+
     /// Return the full object, either directly or by building it
     pub fn into_full(self, stores: &Stores) -> T {
         match self {
@@ -31,6 +42,16 @@ impl<T: HasPartialForm> MaybePartial<T> {
         match self {
             Self::Partial(partial) => partial,
             Self::Full(full) => full.into(),
+        }
+    }
+}
+
+impl MaybePartial<Curve> {
+    /// Access the global form
+    pub fn global_form(&self) -> Option<MaybePartial<Handle<GlobalCurve>>> {
+        match self {
+            Self::Full(full) => Some(full.global_form().clone().into()),
+            Self::Partial(partial) => partial.global_form.clone(),
         }
     }
 }
