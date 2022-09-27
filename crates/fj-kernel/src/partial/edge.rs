@@ -109,7 +109,7 @@ impl PartialHalfEdge {
 
     /// Update partial half-edge as a line segment, reusing existing vertices
     pub fn as_line_segment(mut self) -> Self {
-        let [from, to] = self
+        let [from_surface, to_surface] = self
             .vertices
             .clone()
             .expect("Can't infer line segment without vertices")
@@ -119,12 +119,12 @@ impl PartialHalfEdge {
                 )
             });
 
-        let surface = from
+        let surface = from_surface
             .surface()
             .copied()
-            .or_else(|| to.surface().copied())
+            .or_else(|| to_surface.surface().copied())
             .expect("Can't infer line segment without a surface");
-        let points = [&from, &to].map(|vertex| {
+        let points = [&from_surface, &to_surface].map(|vertex| {
             vertex
                 .position()
                 .expect("Can't infer line segment without surface position")
