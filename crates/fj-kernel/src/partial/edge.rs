@@ -101,6 +101,25 @@ impl PartialHalfEdge {
 
     /// Update partial half-edge as a line segment, reusing existing vertices
     pub fn as_line_segment(mut self) -> Self {
+        fn extract_global_curve(
+            partial: &PartialHalfEdge,
+        ) -> Option<MaybePartial<Handle<GlobalCurve>>> {
+            fn extract_global_curve_from_curve(
+                partial: &PartialHalfEdge,
+            ) -> Option<MaybePartial<Handle<GlobalCurve>>> {
+                partial.curve.as_ref()?.global_form()
+            }
+
+            fn extract_global_curve_from_global_form(
+                partial: &PartialHalfEdge,
+            ) -> Option<MaybePartial<Handle<GlobalCurve>>> {
+                Some(partial.global_form.as_ref()?.curve()?.clone().into())
+            }
+
+            extract_global_curve_from_curve(partial)
+                .or_else(|| extract_global_curve_from_global_form(partial))
+        }
+
         let [from, to] = self
             .vertices
             .clone()
@@ -123,7 +142,7 @@ impl PartialHalfEdge {
         });
 
         let curve = PartialCurve {
-            global_form: self.extract_global_curve(),
+            global_form: extract_global_curve(&self),
             ..PartialCurve::default()
         }
         .with_surface(surface)
@@ -167,25 +186,6 @@ impl PartialHalfEdge {
             .into_full(stores);
 
         HalfEdge::new(curve, vertices, global_form)
-    }
-
-    fn extract_global_curve(
-        &self,
-    ) -> Option<MaybePartial<Handle<GlobalCurve>>> {
-        fn extract_global_curve_from_curve(
-            partial: &PartialHalfEdge,
-        ) -> Option<MaybePartial<Handle<GlobalCurve>>> {
-            partial.curve.as_ref()?.global_form()
-        }
-
-        fn extract_global_curve_from_global_form(
-            partial: &PartialHalfEdge,
-        ) -> Option<MaybePartial<Handle<GlobalCurve>>> {
-            Some(partial.global_form.as_ref()?.curve()?.clone().into())
-        }
-
-        extract_global_curve_from_curve(self)
-            .or_else(|| extract_global_curve_from_global_form(self))
     }
 }
 
