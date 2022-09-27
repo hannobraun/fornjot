@@ -177,8 +177,20 @@ impl PartialHalfEdge {
     fn extract_global_curve(
         &self,
     ) -> Option<MaybePartial<Handle<GlobalCurve>>> {
-        let global_curve = self.global_form.as_ref()?.curve()?.clone();
-        Some(global_curve.into())
+        fn extract_global_curve_from_curve(
+            partial: &PartialHalfEdge,
+        ) -> Option<MaybePartial<Handle<GlobalCurve>>> {
+            partial.curve.as_ref()?.global_form()
+        }
+
+        fn extract_global_curve_from_global_form(
+            partial: &PartialHalfEdge,
+        ) -> Option<MaybePartial<Handle<GlobalCurve>>> {
+            Some(partial.global_form.as_ref()?.curve()?.clone().into())
+        }
+
+        extract_global_curve_from_curve(self)
+            .or_else(|| extract_global_curve_from_global_form(self))
     }
 }
 
