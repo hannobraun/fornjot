@@ -3,6 +3,11 @@ use std::cmp::Ordering;
 use chrono::{DateTime, Utc};
 use octocrab::Octocrab;
 
+#[derive(Debug)]
+pub struct Sponsors {
+    pub inner: Vec<Sponsor>,
+}
+
 #[derive(Debug, Eq, PartialEq)]
 pub struct Sponsor {
     pub login: String,
@@ -34,9 +39,7 @@ impl PartialOrd for Sponsor {
     }
 }
 
-pub async fn query_sponsors(
-    octocrab: &Octocrab,
-) -> anyhow::Result<Vec<Sponsor>> {
+pub async fn query_sponsors(octocrab: &Octocrab) -> anyhow::Result<Sponsors> {
     let response: QueryResult = octocrab
         .graphql(
             "query {
@@ -100,7 +103,7 @@ pub async fn query_sponsors(
 
     sponsors.sort();
 
-    Ok(sponsors)
+    Ok(Sponsors { inner: sponsors })
 }
 
 #[derive(Debug, serde::Deserialize)]
