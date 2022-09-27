@@ -121,6 +121,9 @@ title = \"Weekly Release - 2022-W{week}\"
 # TASK: Uncomment this date, once the announcement is ready to be published.
 # date = {date}
 
+# TASK: Uncomment to generate the HTML for the email newsletter.
+# template = \"newsletter/weekly-release.html\"
+
 [extra]
 version = \"{version}\"
 +++
