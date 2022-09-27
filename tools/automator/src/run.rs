@@ -18,11 +18,11 @@ pub async fn run() -> anyhow::Result<()> {
                 .await
                 .context("Failed to create release announcement")?;
         }
-        Args::Sponsors => {
+        Args::Sponsors(args) => {
             let sponsors = Sponsors::query(&octocrab)
                 .await
                 .context("Failed to query sponsors")?
-                .as_markdown(8, true)
+                .as_markdown(8, args.for_readme)
                 .context("Failed to format sponsors")?;
 
             println!("{sponsors:#?}");
