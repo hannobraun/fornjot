@@ -2,7 +2,8 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     objects::{
-        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface, Vertex,
+        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
+        SurfaceVertex, Vertex,
     },
     stores::{Handle, Stores},
 };
@@ -84,27 +85,18 @@ impl PartialHalfEdge {
 
     /// Update partial half-edge as a line segment, from the given points
     pub fn as_line_segment_from_points(
-        mut self,
+        self,
         surface: Surface,
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
-        let curve = PartialCurve {
-            global_form: self.extract_global_curve(),
-            ..PartialCurve::default()
-        }
-        .with_surface(surface)
-        .as_line_from_points(points);
-
-        let vertices = [0., 1.].map(|position| {
-            Vertex::partial()
-                .with_position([position])
-                .with_curve(curve.clone())
-        });
-
-        self.curve = Some(curve.into());
-        self.vertices = Some(vertices.map(Into::into));
-
-        self
+        self.with_vertices(points.map(|point| {
+            Vertex::partial().with_surface_form(
+                SurfaceVertex::partial()
+                    .with_surface(surface)
+                    .with_position(point),
+            )
+        }))
+        .as_line_segment()
     }
 
     /// Update partial half-edge as a line segment, reusing existing vertices
