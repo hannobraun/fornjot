@@ -169,7 +169,11 @@ impl PartialHalfEdge {
         let vertices = self
             .vertices
             .expect("Can't build `HalfEdge` without vertices")
-            .map(|vertex| vertex.into_full(stores));
+            .map(|vertex| {
+                vertex
+                    .update_partial(|vertex| vertex.with_curve(curve.clone()))
+                    .into_full(stores)
+            });
 
         let global_form = self
             .global_form
