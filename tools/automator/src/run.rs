@@ -25,7 +25,7 @@ pub async fn run() -> anyhow::Result<()> {
                 .as_markdown(8, args.for_readme)
                 .context("Failed to format sponsors")?;
 
-            println!("{sponsors:#?}");
+            println!("{sponsors}");
 
             todo!("Querying sponsors is not supported yet.")
         }
