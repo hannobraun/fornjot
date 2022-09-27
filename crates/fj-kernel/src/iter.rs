@@ -52,11 +52,11 @@ pub trait ObjectIters<'r> {
     }
 
     /// Iterate over all global curves
-    fn global_curve_iter(&'r self) -> Iter<&'r GlobalCurve> {
+    fn global_curve_iter(&'r self) -> Iter<&'r Handle<GlobalCurve>> {
         let mut iter = Iter::empty();
 
         for object in self.referenced_objects() {
-            iter = iter.with(object.global_curve_iter());
+            iter = iter.with_handles(object.global_curve_iter());
         }
 
         iter
@@ -187,7 +187,7 @@ impl<'r> ObjectIters<'r> for Handle<GlobalCurve> {
         Vec::new()
     }
 
-    fn global_curve_iter(&'r self) -> Iter<&'r GlobalCurve> {
+    fn global_curve_iter(&'r self) -> Iter<&'r Handle<GlobalCurve>> {
         Iter::from_object(self)
     }
 }
@@ -330,6 +330,18 @@ impl<T> Iter<T> {
         for object in other {
             if !self.0.contains(&object) {
                 self.0.push_back(object);
+            }
+        }
+
+        self
+    }
+}
+
+impl<T> Iter<&'_ Handle<T>> {
+    fn with_handles(mut self, other: Self) -> Self {
+        for handle in other {
+            if !self.0.iter().any(|h| h.id() == handle.id()) {
+                self.0.push_back(handle);
             }
         }
 
