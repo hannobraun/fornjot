@@ -13,32 +13,32 @@ impl Sponsors {
         let response: QueryResult = octocrab
             .graphql(
                 "query {
-                viewer {
-                    sponsors(first: 100) {
-                        nodes {
-                            __typename
-                            ... on User {
-                                login
-                                sponsorshipForViewerAsSponsorable {
-                                    createdAt
-                                    tier {
-                                        monthlyPriceInDollars
+                    viewer {
+                        sponsors(first: 100) {
+                            nodes {
+                                __typename
+                                ... on User {
+                                    login
+                                    sponsorshipForViewerAsSponsorable {
+                                        createdAt
+                                        tier {
+                                            monthlyPriceInDollars
+                                        }
                                     }
                                 }
-                            }
-                            ... on Organization {
-                                login
-                                sponsorshipForViewerAsSponsorable {
-                                    createdAt
-                                    tier {
-                                        monthlyPriceInDollars
+                                ... on Organization {
+                                    login
+                                    sponsorshipForViewerAsSponsorable {
+                                        createdAt
+                                        tier {
+                                            monthlyPriceInDollars
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                }
-            }",
+                }",
             )
             .await?;
 
