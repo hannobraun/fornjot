@@ -54,21 +54,21 @@ use crate::{
 /// that, which is unstable. It should become stable soon though, together with
 /// generic associated types:
 /// <https://github.com/rust-lang/rust/issues/44265>
-pub trait HasPartial: Into<Self::PartialForm> {
+pub trait HasPartial: Into<Self::Partial> {
     /// The full version of this partial object
-    type PartialForm;
+    type Partial;
 
     /// Build a full object from the partial object
-    fn from_partial(partial: Self::PartialForm, stores: &Stores) -> Self;
+    fn from_partial(partial: Self::Partial, stores: &Stores) -> Self;
 }
 
 macro_rules! impl_traits {
     ($($full:ty, $partial:ty;)*) => {
         $(
             impl HasPartial for $full {
-                type PartialForm = $partial;
+                type Partial = $partial;
 
-                fn from_partial(partial: Self::PartialForm, stores: &Stores)
+                fn from_partial(partial: Self::Partial, stores: &Stores)
                     -> Self
                 {
                     partial.build(stores)

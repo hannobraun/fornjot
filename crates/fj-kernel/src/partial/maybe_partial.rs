@@ -14,14 +14,14 @@ pub enum MaybePartial<T: HasPartial> {
     Full(T),
 
     /// A partial object
-    Partial(T::PartialForm),
+    Partial(T::Partial),
 }
 
 impl<T: HasPartial> MaybePartial<T> {
     /// If this is a partial object, update it
     pub fn update_partial(
         self,
-        f: impl FnOnce(T::PartialForm) -> T::PartialForm,
+        f: impl FnOnce(T::Partial) -> T::Partial,
     ) -> Self {
         match self {
             Self::Partial(partial) => Self::Partial(f(partial)),
@@ -38,7 +38,7 @@ impl<T: HasPartial> MaybePartial<T> {
     }
 
     /// Return the partial object, either directly or via conversion
-    pub fn into_partial(self) -> T::PartialForm {
+    pub fn into_partial(self) -> T::Partial {
         match self {
             Self::Partial(partial) => partial,
             Self::Full(full) => full.into(),
