@@ -5,7 +5,7 @@ use crate::{
     stores::{Handle, Stores},
 };
 
-use super::HasPartial;
+use super::{HasPartial, Partial};
 
 /// Either a partial object or a full one
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -32,7 +32,7 @@ impl<T: HasPartial> MaybePartial<T> {
     /// Return the full object, either directly or by building it
     pub fn into_full(self, stores: &Stores) -> T {
         match self {
-            Self::Partial(partial) => T::from_partial(partial, stores),
+            Self::Partial(partial) => partial.build(stores),
             Self::Full(full) => full,
         }
     }

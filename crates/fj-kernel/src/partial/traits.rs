@@ -11,7 +11,7 @@ use crate::stores::Stores;
 /// <https://github.com/rust-lang/rust/issues/44265>
 pub trait HasPartial: Into<Self::Partial> {
     /// The full version of this partial object
-    type Partial: Partial;
+    type Partial: Partial<Full = Self>;
 
     /// Create an empty partial variant of this object
     ///
@@ -20,10 +20,21 @@ pub trait HasPartial: Into<Self::Partial> {
     fn partial() -> Self::Partial {
         Self::Partial::default()
     }
-
-    /// Build a full object from the partial object
-    fn from_partial(partial: Self::Partial, stores: &Stores) -> Self;
 }
 
 /// Implemented for partial objects
-pub trait Partial: Default {}
+pub trait Partial: Default {
+    /// The type representing the full variant of this object
+    type Full;
+
+    /// Build a full object from this partial one
+    ///
+    /// Implementations of this method will typically try to infer any missing
+    /// parts of the partial object, but this is not possible in all cases. In
+    /// such cases, implementations of this method may panic.
+    ///
+    /// Calling `build` on a partial object that can't infer its missing parts
+    /// is considered a programmer error, hence why this method doesn't return a
+    /// [`Result`].
+    fn build(self, stores: &Stores) -> Self::Full;
+}

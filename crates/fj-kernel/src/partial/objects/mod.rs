@@ -21,15 +21,15 @@ macro_rules! impl_traits {
         $(
             impl HasPartial for $full {
                 type Partial = $partial;
-
-                fn from_partial(partial: Self::Partial, stores: &Stores)
-                    -> Self
-                {
-                    partial.build(stores)
-                }
             }
 
-            impl Partial for $partial {}
+            impl Partial for $partial {
+                type Full = $full;
+
+                fn build(self, stores: &Stores) -> Self::Full {
+                    self.build(stores)
+                }
+            }
 
             impl From<$partial> for MaybePartial<$full> {
                 fn from(partial: $partial) -> Self {
