@@ -228,15 +228,12 @@ impl PartialGlobalEdge {
 
     /// Update partial global edge from the given curve and vertices
     pub fn from_curve_and_vertices(
-        mut self,
+        self,
         curve: &Curve,
         vertices: &[Vertex; 2],
     ) -> Self {
-        self.curve = Some(curve.global_form().clone());
-        self.vertices =
-            Some(vertices.clone().map(|vertex| *vertex.global_form()));
-
-        self
+        self.with_curve(curve.global_form().clone())
+            .with_vertices(vertices.clone().map(|vertex| *vertex.global_form()))
     }
 
     /// Build a full [`GlobalEdge`] from the partial global edge
