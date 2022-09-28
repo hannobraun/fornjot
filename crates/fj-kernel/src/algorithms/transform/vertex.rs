@@ -11,12 +11,11 @@ impl TransformObject for Vertex {
     type Transformed = Self;
 
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
-        Self::new(
-            self.position(),
-            self.curve().clone().transform(transform, stores),
-            self.surface_form().transform(transform, stores),
-            self.global_form().transform(transform, stores),
-        )
+        let curve = self.curve().clone().transform(transform, stores);
+        let surface_form = self.surface_form().transform(transform, stores);
+        let global_form = self.global_form().transform(transform, stores);
+
+        Self::new(self.position(), curve, surface_form, global_form)
     }
 }
 
