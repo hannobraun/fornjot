@@ -1,5 +1,7 @@
 use std::fmt;
 
+use pretty_assertions::{assert_eq, assert_ne};
+
 use crate::stores::Handle;
 
 use super::{Curve, GlobalCurve, GlobalVertex, Vertex};
