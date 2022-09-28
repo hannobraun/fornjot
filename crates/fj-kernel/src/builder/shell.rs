@@ -5,6 +5,7 @@ use crate::{
     objects::{
         Curve, Cycle, Face, HalfEdge, Shell, Surface, SurfaceVertex, Vertex,
     },
+    partial::HasPartial,
     stores::Stores,
 };
 

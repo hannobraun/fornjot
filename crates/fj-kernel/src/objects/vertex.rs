@@ -1,10 +1,6 @@
 use fj_math::Point;
 use pretty_assertions::assert_eq;
 
-use crate::partial::{
-    PartialGlobalVertex, PartialSurfaceVertex, PartialVertex,
-};
-
 use super::{Curve, Surface};
 
 /// A vertex
@@ -21,14 +17,6 @@ pub struct Vertex {
 }
 
 impl Vertex {
-    /// Create a [`PartialVertex`]
-    ///
-    /// This function exists just for convenience, and will just return a
-    /// default [`PartialVertex`].
-    pub fn partial() -> PartialVertex {
-        PartialVertex::default()
-    }
-
     /// Construct an instance of `Vertex`
     ///
     /// Panics, if `curve` and `surface_form` are not defined on the same
@@ -85,14 +73,6 @@ pub struct SurfaceVertex {
 }
 
 impl SurfaceVertex {
-    /// Create a [`PartialSurfaceVertex`]
-    ///
-    /// This function exists just for convenience, and will just return a
-    /// default [`PartialSurfaceVertex`].
-    pub fn partial() -> PartialSurfaceVertex {
-        PartialSurfaceVertex::default()
-    }
-
     /// Construct a new instance of `SurfaceVertex`
     pub fn new(
         position: impl Into<Point<2>>,
@@ -147,14 +127,6 @@ pub struct GlobalVertex {
 }
 
 impl GlobalVertex {
-    /// Create a [`PartialGlobalVertex`]
-    ///
-    /// This function exists just for convenience, and will just return a
-    /// default [`PartialGlobalVertex`].
-    pub fn partial() -> PartialGlobalVertex {
-        PartialGlobalVertex::default()
-    }
-
     /// Construct a `GlobalVertex` from a position
     pub fn from_position(position: impl Into<Point<3>>) -> Self {
         let position = position.into();

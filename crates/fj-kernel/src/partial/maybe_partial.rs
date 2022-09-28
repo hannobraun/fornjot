@@ -5,23 +5,35 @@ use crate::{
     stores::{Handle, Stores},
 };
 
-use super::HasPartialForm;
+use super::{HasPartial, Partial};
 
-/// Either a partial object or a full one
+/// Can be used everywhere either a partial or full objects are accepted
+///
+/// Some convenience methods are available for specific instances of
+/// `MaybePartial` (like, `MaybePartial<Curve>`, or `MaybePartial<Vertex>`).
+///
+/// # Implementation Note
+///
+/// The set of available convenience methods is far from complete. Please feel
+/// free to just add more, if you need them.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub enum MaybePartial<T: HasPartialForm> {
+pub enum MaybePartial<T: HasPartial> {
     /// A full object
     Full(T),
 
     /// A partial object
-    Partial(T::PartialForm),
+    Partial(T::Partial),
 }
 
-impl<T: HasPartialForm> MaybePartial<T> {
+impl<T: HasPartial> MaybePartial<T> {
     /// If this is a partial object, update it
+    ///
+    /// This is useful whenever a partial object can infer something about its
+    /// parts from other parts, and wants to update what was inferred, in case
+    /// it *can* be updated.
     pub fn update_partial(
         self,
-        f: impl FnOnce(T::PartialForm) -> T::PartialForm,
+        f: impl FnOnce(T::Partial) -> T::Partial,
     ) -> Self {
         match self {
             Self::Partial(partial) => Self::Partial(f(partial)),
@@ -29,22 +41,41 @@ impl<T: HasPartialForm> MaybePartial<T> {
         }
     }
 
-    /// Return the full object, either directly or by building it
+    /// Return or build a full object
+    ///
+    /// If this already is a full object, it is returned. If this is a partial
+    /// object, the full object is built from it, using [`Partial::build`].
     pub fn into_full(self, stores: &Stores) -> T {
         match self {
-            Self::Partial(partial) => T::from_partial(partial, stores),
+            Self::Partial(partial) => partial.build(stores),
             Self::Full(full) => full,
         }
     }
 
-    /// Return the partial object, either directly or via conversion
-    pub fn into_partial(self) -> T::PartialForm {
+    /// Return or convert a partial object
+    ///
+    /// If this already is a partial object, is is returned. If this is a full
+    /// object, it is converted into a partial object using
+    /// [`HasPartial::to_partial`].
+    pub fn into_partial(self) -> T::Partial {
         match self {
             Self::Partial(partial) => partial,
-            Self::Full(full) => full.into(),
+            Self::Full(full) => full.to_partial(),
         }
     }
 }
+
+impl<T> From<T> for MaybePartial<T>
+where
+    T: HasPartial,
+{
+    fn from(full: T) -> Self {
+        Self::Full(full)
+    }
+}
+
+// Unfortunately, we can't add a blanket implementation from `T::Partial` for
+// `MaybePartial<T>`, as that would conflict.
 
 impl MaybePartial<Curve> {
     /// Access the global form

@@ -164,6 +164,7 @@ mod tests {
             Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
             SurfaceVertex, Vertex,
         },
+        partial::HasPartial,
         path::{GlobalPath, SurfacePath},
         stores::Stores,
     };

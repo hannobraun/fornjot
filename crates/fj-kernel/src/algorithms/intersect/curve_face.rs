@@ -157,6 +157,7 @@ where
 mod tests {
     use crate::{
         objects::{Curve, Face, Surface},
+        partial::HasPartial,
         stores::Stores,
     };
 

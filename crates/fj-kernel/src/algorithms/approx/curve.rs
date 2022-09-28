@@ -198,6 +198,7 @@ mod tests {
     use crate::{
         algorithms::approx::{path::RangeOnPath, Approx, ApproxPoint},
         objects::{Curve, Surface},
+        partial::HasPartial,
         path::GlobalPath,
         stores::Stores,
     };

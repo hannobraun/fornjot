@@ -184,6 +184,7 @@ mod tests {
     use crate::{
         algorithms::{reverse::Reverse, sweep::Sweep},
         objects::{Cycle, Face, HalfEdge, Surface},
+        partial::HasPartial,
         stores::Stores,
     };
 

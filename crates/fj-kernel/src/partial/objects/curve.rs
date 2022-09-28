@@ -2,11 +2,10 @@ use fj_math::{Point, Scalar, Vector};
 
 use crate::{
     objects::{Curve, GlobalCurve, Surface},
+    partial::{HasPartial, MaybePartial},
     path::{GlobalPath, SurfacePath},
     stores::{Handle, Stores},
 };
-
-use super::MaybePartial;
 
 /// A partial [`Curve`]
 ///
@@ -98,7 +97,7 @@ impl PartialCurve {
                     ),
                 };
 
-                GlobalCurve::partial().with_path(path).into()
+                Handle::<GlobalCurve>::partial().with_path(path).into()
             })
             .into_full(stores);
 
@@ -106,8 +105,8 @@ impl PartialCurve {
     }
 }
 
-impl From<Curve> for PartialCurve {
-    fn from(curve: Curve) -> Self {
+impl From<&Curve> for PartialCurve {
+    fn from(curve: &Curve) -> Self {
         Self {
             path: Some(curve.path()),
             surface: Some(*curve.surface()),
@@ -170,8 +169,8 @@ impl PartialGlobalCurve {
     }
 }
 
-impl From<Handle<GlobalCurve>> for PartialGlobalCurve {
-    fn from(global_curve: Handle<GlobalCurve>) -> Self {
+impl From<&Handle<GlobalCurve>> for PartialGlobalCurve {
+    fn from(global_curve: &Handle<GlobalCurve>) -> Self {
         Self {
             path: Some(global_curve.path()),
         }

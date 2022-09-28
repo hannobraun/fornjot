@@ -4,6 +4,7 @@ use fj_kernel::{
         Validate, Validated, ValidationConfig, ValidationError,
     },
     objects::{Cycle, Face, HalfEdge, Sketch, Surface},
+    partial::HasPartial,
     stores::Stores,
 };
 use fj_math::{Aabb, Point};

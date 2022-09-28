@@ -1,9 +1,6 @@
 use std::fmt;
 
-use crate::{
-    partial::{PartialGlobalEdge, PartialHalfEdge},
-    stores::Handle,
-};
+use crate::stores::Handle;
 
 use super::{Curve, GlobalCurve, GlobalVertex, Vertex};
 
@@ -16,14 +13,6 @@ pub struct HalfEdge {
 }
 
 impl HalfEdge {
-    /// Create a [`PartialHalfEdge`]
-    ///
-    /// This function exists just for convenience, and will just return a
-    /// default [`PartialHalfEdge`].
-    pub fn partial() -> PartialHalfEdge {
-        PartialHalfEdge::default()
-    }
-
     /// Create a new instance of `HalfEdge`
     ///
     /// # Panics
@@ -124,14 +113,6 @@ pub struct GlobalEdge {
 }
 
 impl GlobalEdge {
-    /// Create a [`PartialGlobalEdge`]
-    ///
-    /// This function exists just for convenience, and will just return a
-    /// default [`PartialGlobalEdge`].
-    pub fn partial() -> PartialGlobalEdge {
-        PartialGlobalEdge::default()
-    }
-
     /// Create a new instance
     pub fn new(
         curve: Handle<GlobalCurve>,

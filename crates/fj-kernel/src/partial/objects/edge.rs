@@ -5,10 +5,9 @@ use crate::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
         SurfaceVertex, Vertex,
     },
+    partial::{HasPartial, MaybePartial, PartialCurve},
     stores::{Handle, Stores},
 };
-
-use super::{MaybePartial, PartialCurve};
 
 /// A partial [`HalfEdge`]
 ///
@@ -188,8 +187,8 @@ impl PartialHalfEdge {
     }
 }
 
-impl From<HalfEdge> for PartialHalfEdge {
-    fn from(half_edge: HalfEdge) -> Self {
+impl From<&HalfEdge> for PartialHalfEdge {
+    fn from(half_edge: &HalfEdge) -> Self {
         Self {
             curve: Some(half_edge.curve().clone().into()),
             vertices: Some(half_edge.vertices().clone().map(Into::into)),
@@ -241,8 +240,8 @@ impl PartialGlobalEdge {
     }
 }
 
-impl From<GlobalEdge> for PartialGlobalEdge {
-    fn from(global_edge: GlobalEdge) -> Self {
+impl From<&GlobalEdge> for PartialGlobalEdge {
+    fn from(global_edge: &GlobalEdge) -> Self {
         Self {
             curve: Some(global_edge.curve().clone()),
             vertices: Some(*global_edge.vertices()),

@@ -2,6 +2,7 @@ use fj_math::Point;
 
 use crate::{
     objects::{Curve, Cycle, HalfEdge, Surface, SurfaceVertex, Vertex},
+    partial::HasPartial,
     stores::Stores,
 };
 

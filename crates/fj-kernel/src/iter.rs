@@ -364,7 +364,8 @@ mod tests {
             Curve, Cycle, Face, GlobalCurve, GlobalVertex, HalfEdge, Shell,
             Sketch, Solid, Surface, SurfaceVertex, Vertex,
         },
-        stores::Stores,
+        partial::HasPartial,
+        stores::{Handle, Stores},
     };
 
     use super::ObjectIters as _;
@@ -440,7 +441,8 @@ mod tests {
     fn global_curve() {
         let stores = Stores::new();
 
-        let object = GlobalCurve::partial().as_x_axis().build(&stores);
+        let object =
+            Handle::<GlobalCurve>::partial().as_x_axis().build(&stores);
 
         assert_eq!(0, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());

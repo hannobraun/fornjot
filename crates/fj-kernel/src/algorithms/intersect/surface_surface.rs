@@ -159,6 +159,7 @@ mod tests {
     use crate::{
         algorithms::transform::TransformObject,
         objects::{Curve, Surface},
+        partial::HasPartial,
         stores::Stores,
     };
 
