@@ -220,6 +220,12 @@ impl PartialGlobalEdge {
         self
     }
 
+    /// Update the partial global edge with the given vertices
+    pub fn with_vertices(mut self, vertices: [GlobalVertex; 2]) -> Self {
+        self.vertices = Some(vertices);
+        self
+    }
+
     /// Update partial global edge from the given curve and vertices
     pub fn from_curve_and_vertices(
         mut self,
