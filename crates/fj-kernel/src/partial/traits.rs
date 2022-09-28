@@ -13,6 +13,14 @@ pub trait HasPartial: Into<Self::Partial> {
     /// The full version of this partial object
     type Partial: Partial;
 
+    /// Create an empty partial variant of this object
+    ///
+    /// This function exists just for convenience, and will just return a
+    /// [`Default`] version of the partial object.
+    fn partial() -> Self::Partial {
+        Self::Partial::default()
+    }
+
     /// Build a full object from the partial object
     fn from_partial(partial: Self::Partial, stores: &Stores) -> Self;
 }
