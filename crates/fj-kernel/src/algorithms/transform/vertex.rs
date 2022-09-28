@@ -2,6 +2,7 @@ use fj_math::Transform;
 
 use crate::{
     objects::{GlobalVertex, SurfaceVertex, Vertex},
+    partial::PartialGlobalVertex,
     stores::Stores,
 };
 
@@ -34,5 +35,15 @@ impl TransformObject for GlobalVertex {
     fn transform(self, transform: &Transform, _: &Stores) -> Self {
         let position = transform.transform_point(&self.position());
         Self::from_position(position)
+    }
+}
+
+impl TransformObject for PartialGlobalVertex {
+    fn transform(self, transform: &Transform, _: &Stores) -> Self {
+        let position = self
+            .position
+            .map(|position| transform.transform_point(&position));
+
+        Self { position }
     }
 }
