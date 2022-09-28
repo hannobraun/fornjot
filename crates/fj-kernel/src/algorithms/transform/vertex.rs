@@ -21,11 +21,10 @@ impl TransformObject for Vertex {
 
 impl TransformObject for SurfaceVertex {
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
-        Self::new(
-            self.position(),
-            self.surface().transform(transform, stores),
-            self.global_form().transform(transform, stores),
-        )
+        let surface = self.surface().transform(transform, stores);
+        let global_form = self.global_form().transform(transform, stores);
+
+        Self::new(self.position(), surface, global_form)
     }
 }
 
