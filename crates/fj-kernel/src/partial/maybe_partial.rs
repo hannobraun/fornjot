@@ -7,7 +7,15 @@ use crate::{
 
 use super::{HasPartial, Partial};
 
-/// Either a partial object or a full one
+/// Can be used everywhere either a partial or full objects are accepted
+///
+/// Some convenience methods are available for specific instances of
+/// `MaybePartial` (like, `MaybePartial<Curve>`, or `MaybePartial<Vertex>`).
+///
+/// # Implementation Note
+///
+/// The set of available convenience methods is far from complete. Please feel
+/// free to just add more, if you need them.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum MaybePartial<T: HasPartial> {
     /// A full object
@@ -19,6 +27,10 @@ pub enum MaybePartial<T: HasPartial> {
 
 impl<T: HasPartial> MaybePartial<T> {
     /// If this is a partial object, update it
+    ///
+    /// This is useful whenever a partial object can infer something about its
+    /// parts from other parts, and wants to update what was inferred, in case
+    /// it *can* be updated.
     pub fn update_partial(
         self,
         f: impl FnOnce(T::Partial) -> T::Partial,
@@ -29,7 +41,10 @@ impl<T: HasPartial> MaybePartial<T> {
         }
     }
 
-    /// Return the full object, either directly or by building it
+    /// Return or build a full object
+    ///
+    /// If this already is a full object, it is returned. If this is a partial
+    /// object, the full object is built from it, using [`Partial::build`].
     pub fn into_full(self, stores: &Stores) -> T {
         match self {
             Self::Partial(partial) => partial.build(stores),
@@ -37,7 +52,11 @@ impl<T: HasPartial> MaybePartial<T> {
         }
     }
 
-    /// Return the partial object, either directly or via conversion
+    /// Return or convert a partial object
+    ///
+    /// If this already is a partial object, is is returned. If this is a full
+    /// object, it is converted into a partial object using
+    /// [`HasPartial::to_partial`].
     pub fn into_partial(self) -> T::Partial {
         match self {
             Self::Partial(partial) => partial,

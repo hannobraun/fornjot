@@ -1,29 +1,38 @@
-//! Partial objects
+//! API for dealing with partially defined objects
 //!
-//! This module contains type that represent partial objects. This is useful
-//! when building objects, as it's often possible to provide just some the data
-//! they own or objects they reference, while computing the rest.
+//! This module contains types that represent objects that only have some of
+//! their data and referenced objects defined. This is useful in the following
+//! situations:
 //!
-//! More generally speaking, there are situations where different parts of a new
-//! objects are available at different times, and provided from different
-//! places. Partial objects can be used to represent such partially constructed
-//! objects whenever that is required.
+//! - Sometimes parts of an object can be inferred. For example, when building a
+//!   half-edge that is a line segment, it is enough to provide only two partial
+//!   vertices with only their surface coordinates defined. The rest can be
+//!   inferred.
+//! - Sometimes you need to build an object, but parts of it already exist. For
+//!   example, a new half-edge might share a vertex with an existing half-edge.
+//!   In such a case you can use the partial object to provide the existing
+//!   vertex, then provide or infer other parts as appropriate.
+//! - When transforming an object, parts of it might already be transformed. For
+//!   example, when transforming a half-edge, each of its vertices references
+//!   the same curve as the half-edge does. The partial object API can be used
+//!   to avoid transforming the same object multiple times.
 //!
-//! The API for partial objects follows a specific style:
+//! This module contains two groups of types:
 //!
-//! - Partial objects are structs with fields that mirror the fields of the full
-//!   object structs, but all fields are optional.
-//! - Partial object structs implement [`Default`], but a `partial` method is
-//!   also available on the respective full object struct, as a perhaps more
-//!   convenient and readable way to construct a partial object.
-//! - Partial object structs have `with_*` methods to provide values for each of
-//!   their fields.
-//! - Partial object structs may have other methods with prefixes like `as_*`,
-//!   `from_*`, or similar, if one or more of their fields can be initialized by
-//!   providing alternative data.
-//! - Partial object structs have a `build` method to build a full object.
-//! - All `with_*`, `as_*`, and `build` methods can be chained, to provide a
-//!   convenient API.
+//! - Structs that represent partial objects. For example [`PartialHalfEdge`] is
+//!   the partial variant of [`HalfEdge`].
+//! - Infrastructure for abstracting over partial objects. See [`Partial`],
+//!   [`HasPartial`], and [`MaybePartial`].
+//!
+//! [`HalfEdge`]: crate::objects::HalfEdge
+//!
+//! # Implementation Note
+//!
+//! This API grew out of the [builder API][crate::builder] and is still
+//! incomplete. Eventually, it should replace the builder API completely
+//! ([#1147]).
+//!
+//! [#1147]: https://github.com/hannobraun/Fornjot/issues/1147
 
 mod maybe_partial;
 mod objects;

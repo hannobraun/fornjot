@@ -1,6 +1,6 @@
 use crate::stores::Stores;
 
-/// Implemented for types that are partial objects
+/// Implemented for objects that a partial object type exists for
 ///
 /// # Implementation Note
 ///
@@ -17,7 +17,7 @@ use crate::stores::Stores;
 /// [#1021]: https://github.com/hannobraun/Fornjot/issues/1021
 /// [`MaybePartial`]: super::MaybePartial
 pub trait HasPartial {
-    /// The full version of this partial object
+    /// The type representing the partial variant of this object
     type Partial: Partial<Full = Self>;
 
     /// Create an empty partial variant of this object
@@ -39,6 +39,19 @@ pub trait HasPartial {
 }
 
 /// Implemented for partial objects
+///
+/// The API for partial objects follows a specific style:
+///
+/// - Partial objects are structs with fields that mirror the fields of the full
+///   object structs, but all fields are optional.
+/// - Partial object structs have `with_*` methods to provide values for each of
+///   their fields.
+/// - Partial object structs may have other methods with prefixes like `as_*`,
+///   `from_*`, or similar, if one or more of their fields can be initialized by
+///   providing alternative data.
+/// - Partial object structs have a `build` method to build a full object.
+/// - All `with_*`, `as_*`, and `build` methods can be chained, to provide a
+///   convenient API.
 ///
 /// # Implementation Note
 ///
