@@ -2,7 +2,7 @@ use fj_math::Transform;
 
 use crate::{
     objects::{GlobalEdge, HalfEdge},
-    partial::HasPartial,
+    partial::{HasPartial, PartialGlobalEdge},
     stores::Stores,
 };
 
@@ -38,5 +38,16 @@ impl TransformObject for GlobalEdge {
             .map(|vertex| vertex.transform(transform, stores));
 
         Self::new(curve, vertices)
+    }
+}
+
+impl TransformObject for PartialGlobalEdge {
+    fn transform(self, transform: &Transform, stores: &Stores) -> Self {
+        let curve = self.curve.map(|curve| curve.transform(transform, stores));
+        let vertices = self.vertices.map(|vertices| {
+            vertices.map(|vertex| vertex.transform(transform, stores))
+        });
+
+        Self { curve, vertices }
     }
 }
