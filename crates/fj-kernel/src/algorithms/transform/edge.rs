@@ -23,8 +23,12 @@ impl TransformObject for HalfEdge {
                     .with_curve(curve.clone())
                     .build(stores)
             });
-        let global_form =
-            self.global_form().clone().transform(transform, stores);
+        let global_form = self
+            .global_form()
+            .to_partial()
+            .transform(transform, stores)
+            .with_curve(curve.global_form().clone())
+            .build(stores);
 
         Self::new(curve, vertices, global_form)
     }
