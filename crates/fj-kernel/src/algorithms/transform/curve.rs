@@ -12,10 +12,10 @@ impl TransformObject for Curve {
 
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         let surface = self.surface().transform(transform, stores);
-        let global = self.global_form().transform(transform, stores);
+        let global_form = self.global_form().transform(transform, stores);
 
         // Don't need to transform `self.path`, as that's in local form.
-        Curve::new(surface, self.path(), global)
+        Curve::new(surface, self.path(), global_form)
     }
 }
 
