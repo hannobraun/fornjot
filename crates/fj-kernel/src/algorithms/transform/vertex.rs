@@ -15,6 +15,8 @@ impl TransformObject for Vertex {
         let surface_form = self.surface_form().transform(transform, stores);
         let global_form = self.global_form().transform(transform, stores);
 
+        // Don't need to transform `self.position`, as that is in curve
+        // coordinates and thus transforming the curve takes care of it.
         Self::new(self.position(), curve, surface_form, global_form)
     }
 }
