@@ -1,4 +1,4 @@
-//! Transforming objects
+//! API for transforming objects
 
 use fj_math::{Transform, Vector};
 
@@ -38,6 +38,8 @@ pub trait TransformObject: Sized {
     ) -> Self::Transformed;
 
     /// Translate the object
+    ///
+    /// Convenience wrapper around [`TransformObject::transform`].
     #[must_use]
     fn translate(
         self,
@@ -48,6 +50,8 @@ pub trait TransformObject: Sized {
     }
 
     /// Rotate the object
+    ///
+    /// Convenience wrapper around [`TransformObject::transform`].
     #[must_use]
     fn rotate(
         self,
