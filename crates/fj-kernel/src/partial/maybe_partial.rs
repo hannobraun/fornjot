@@ -5,11 +5,11 @@ use crate::{
     stores::{Handle, Stores},
 };
 
-use super::HasPartialForm;
+use super::HasPartial;
 
 /// Either a partial object or a full one
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub enum MaybePartial<T: HasPartialForm> {
+pub enum MaybePartial<T: HasPartial> {
     /// A full object
     Full(T),
 
@@ -17,7 +17,7 @@ pub enum MaybePartial<T: HasPartialForm> {
     Partial(T::PartialForm),
 }
 
-impl<T: HasPartialForm> MaybePartial<T> {
+impl<T: HasPartial> MaybePartial<T> {
     /// If this is a partial object, update it
     pub fn update_partial(
         self,
