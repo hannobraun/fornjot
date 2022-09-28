@@ -24,6 +24,8 @@ impl TransformObject for SurfaceVertex {
         let surface = self.surface().transform(transform, stores);
         let global_form = self.global_form().transform(transform, stores);
 
+        // Don't need to transform `self.position`, as that is in surface
+        // coordinates and thus transforming the surface takes care of it.
         Self::new(self.position(), surface, global_form)
     }
 }
