@@ -12,6 +12,15 @@ pub trait HasPartial {
     fn partial() -> Self::Partial {
         Self::Partial::default()
     }
+
+    /// Convert this object into its partial variant
+    ///
+    /// All fields of the partial variant are set from this object. This is
+    /// useful when creating a new object that needs to share parts of an
+    /// existing one.
+    fn to_partial(&self) -> Self::Partial {
+        self.into()
+    }
 }
 
 /// Implemented for partial objects
