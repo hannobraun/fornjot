@@ -46,6 +46,18 @@ impl<T: HasPartial> MaybePartial<T> {
     }
 }
 
+impl<T> From<T> for MaybePartial<T>
+where
+    T: HasPartial,
+{
+    fn from(full: T) -> Self {
+        Self::Full(full)
+    }
+}
+
+// Unfortunately, we can't add a blanket implementation from `T::Partial` for
+// `MaybePartial<T>`, as that would conflict.
+
 impl MaybePartial<Curve> {
     /// Access the global form
     pub fn global_form(&self) -> Option<MaybePartial<Handle<GlobalCurve>>> {

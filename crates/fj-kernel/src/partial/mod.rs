@@ -75,12 +75,6 @@ macro_rules! impl_traits {
                 }
             }
 
-            impl From<$full> for MaybePartial<$full> {
-                fn from(full: $full) -> Self {
-                    Self::Full(full)
-                }
-            }
-
             impl From<$partial> for MaybePartial<$full> {
                 fn from(partial: $partial) -> Self {
                     Self::Partial(partial)
