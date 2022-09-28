@@ -2,6 +2,7 @@ use fj_math::Transform;
 
 use crate::{
     objects::{Curve, GlobalCurve},
+    partial::PartialGlobalCurve,
     stores::{Handle, Stores},
 };
 
@@ -24,5 +25,12 @@ impl TransformObject for Handle<GlobalCurve> {
         stores.global_curves.insert(GlobalCurve::from_path(
             self.path().transform(transform, stores),
         ))
+    }
+}
+
+impl TransformObject for PartialGlobalCurve {
+    fn transform(self, transform: &Transform, stores: &Stores) -> Self {
+        let path = self.path.map(|path| path.transform(transform, stores));
+        Self { path }
     }
 }
