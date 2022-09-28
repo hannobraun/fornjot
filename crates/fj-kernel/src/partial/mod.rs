@@ -36,5 +36,5 @@ pub use self::{
         edge::{PartialGlobalEdge, PartialHalfEdge},
         vertex::{PartialGlobalVertex, PartialSurfaceVertex, PartialVertex},
     },
-    traits::HasPartial,
+    traits::{HasPartial, Partial},
 };

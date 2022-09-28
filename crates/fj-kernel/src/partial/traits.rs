@@ -11,8 +11,11 @@ use crate::stores::Stores;
 /// <https://github.com/rust-lang/rust/issues/44265>
 pub trait HasPartial: Into<Self::Partial> {
     /// The full version of this partial object
-    type Partial;
+    type Partial: Partial;
 
     /// Build a full object from the partial object
     fn from_partial(partial: Self::Partial, stores: &Stores) -> Self;
 }
+
+/// Implemented for partial objects
+pub trait Partial: Default {}

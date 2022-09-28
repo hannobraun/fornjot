@@ -11,7 +11,7 @@ use crate::{
 };
 
 use super::{
-    HasPartial, MaybePartial, PartialCurve, PartialGlobalCurve,
+    HasPartial, MaybePartial, Partial, PartialCurve, PartialGlobalCurve,
     PartialGlobalEdge, PartialGlobalVertex, PartialHalfEdge,
     PartialSurfaceVertex, PartialVertex,
 };
@@ -28,6 +28,8 @@ macro_rules! impl_traits {
                     partial.build(stores)
                 }
             }
+
+            impl Partial for $partial {}
 
             impl From<$partial> for MaybePartial<$full> {
                 fn from(partial: $partial) -> Self {
