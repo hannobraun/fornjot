@@ -8,8 +8,6 @@ use crate::{
 use super::TransformObject;
 
 impl TransformObject for Curve {
-    type Transformed = Self;
-
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         let surface = self.surface().transform(transform, stores);
         let global_form =
@@ -22,8 +20,6 @@ impl TransformObject for Curve {
 }
 
 impl TransformObject for Handle<GlobalCurve> {
-    type Transformed = Self;
-
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         stores.global_curves.insert(GlobalCurve::from_path(
             self.path().transform(transform, stores),

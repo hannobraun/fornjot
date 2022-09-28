@@ -8,8 +8,6 @@ use crate::{
 use super::TransformObject;
 
 impl TransformObject for HalfEdge {
-    type Transformed = Self;
-
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         let curve = self.curve().clone().transform(transform, stores);
         let vertices = self
@@ -24,8 +22,6 @@ impl TransformObject for HalfEdge {
 }
 
 impl TransformObject for GlobalEdge {
-    type Transformed = Self;
-
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         let curve = self.curve().clone().transform(transform, stores);
         let vertices = self

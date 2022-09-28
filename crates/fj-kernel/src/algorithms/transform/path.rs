@@ -5,8 +5,6 @@ use crate::{path::GlobalPath, stores::Stores};
 use super::TransformObject;
 
 impl TransformObject for GlobalPath {
-    type Transformed = Self;
-
     fn transform(self, transform: &Transform, _: &Stores) -> Self {
         match self {
             Self::Circle(curve) => {

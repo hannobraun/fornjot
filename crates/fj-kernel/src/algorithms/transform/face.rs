@@ -8,8 +8,6 @@ use crate::{
 use super::TransformObject;
 
 impl TransformObject for Face {
-    type Transformed = Self;
-
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         let exterior = self.exterior().clone().transform(transform, stores);
         let interiors = self
@@ -25,8 +23,6 @@ impl TransformObject for Face {
 }
 
 impl TransformObject for Faces {
-    type Transformed = Self;
-
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         let mut faces = Faces::new();
         faces.extend(

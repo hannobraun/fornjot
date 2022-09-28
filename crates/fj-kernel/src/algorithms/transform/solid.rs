@@ -5,8 +5,6 @@ use crate::{objects::Solid, stores::Stores};
 use super::TransformObject;
 
 impl TransformObject for Solid {
-    type Transformed = Self;
-
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         let faces = self
             .into_shells()

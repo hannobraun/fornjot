@@ -5,8 +5,6 @@ use crate::{objects::Surface, stores::Stores};
 use super::TransformObject;
 
 impl TransformObject for Surface {
-    type Transformed = Self;
-
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         Self::new(
             self.u().transform(transform, stores),

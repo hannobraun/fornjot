@@ -25,31 +25,15 @@ use crate::stores::Stores;
 /// More convenience methods can be added as required. The only reason this
 /// hasn't been done so far, is that no one has put in the work yet.
 pub trait TransformObject: Sized {
-    /// The type of the transformed object
-    ///
-    /// # Implementation Note
-    ///
-    /// This type is temporary, while we transition to a global object store. It
-    /// should be removed, once that transition is complete.
-    type Transformed;
-
     /// Transform the object
     #[must_use]
-    fn transform(
-        self,
-        transform: &Transform,
-        stores: &Stores,
-    ) -> Self::Transformed;
+    fn transform(self, transform: &Transform, stores: &Stores) -> Self;
 
     /// Translate the object
     ///
     /// Convenience wrapper around [`TransformObject::transform`].
     #[must_use]
-    fn translate(
-        self,
-        offset: impl Into<Vector<3>>,
-        stores: &Stores,
-    ) -> Self::Transformed {
+    fn translate(self, offset: impl Into<Vector<3>>, stores: &Stores) -> Self {
         self.transform(&Transform::translation(offset), stores)
     }
 
@@ -57,11 +41,7 @@ pub trait TransformObject: Sized {
     ///
     /// Convenience wrapper around [`TransformObject::transform`].
     #[must_use]
-    fn rotate(
-        self,
-        axis_angle: impl Into<Vector<3>>,
-        stores: &Stores,
-    ) -> Self::Transformed {
+    fn rotate(self, axis_angle: impl Into<Vector<3>>, stores: &Stores) -> Self {
         self.transform(&Transform::rotation(axis_angle), stores)
     }
 }
