@@ -14,7 +14,8 @@ impl TransformObject for Curve {
         let surface = self.surface().transform(transform, stores);
         let global_form = self.global_form().transform(transform, stores);
 
-        // Don't need to transform `self.path`, as that's in local form.
+        // Don't need to transform `self.path`, as that's defined in surface
+        // coordinates, and thus transforming `surface` takes care of it.
         Curve::new(surface, self.path(), global_form)
     }
 }
