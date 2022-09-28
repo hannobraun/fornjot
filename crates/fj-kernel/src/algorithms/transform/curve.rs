@@ -16,7 +16,7 @@ impl TransformObject for Curve {
 
         // Don't need to transform `self.path`, as that's defined in surface
         // coordinates, and thus transforming `surface` takes care of it.
-        Curve::new(surface, self.path(), global_form)
+        Self::new(surface, self.path(), global_form)
     }
 }
 
