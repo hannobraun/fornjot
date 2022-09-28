@@ -214,6 +214,12 @@ pub struct PartialGlobalEdge {
 }
 
 impl PartialGlobalEdge {
+    /// Update the partial global edge with the given curve
+    pub fn with_curve(mut self, curve: Handle<GlobalCurve>) -> Self {
+        self.curve = Some(curve);
+        self
+    }
+
     /// Update partial global edge from the given curve and vertices
     pub fn from_curve_and_vertices(
         mut self,
