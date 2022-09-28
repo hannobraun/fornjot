@@ -13,6 +13,8 @@ impl TransformObject for HalfEdge {
         let curve = self.curve().clone().transform(transform, stores);
         let vertices = self
             .vertices()
+            // The `clone` can be replaced with `each_ref`, once that is stable:
+            // https://doc.rust-lang.org/std/primitive.array.html#method.each_ref
             .clone()
             .map(|vertex| {
                 vertex
