@@ -95,7 +95,7 @@ impl Sweep for (HalfEdge, Color) {
                 let global = bottom_edge
                     .curve()
                     .global_form()
-                    .clone_object()
+                    .clone()
                     .translate(path, stores);
 
                 // Please note that creating a line here is correct, even if the

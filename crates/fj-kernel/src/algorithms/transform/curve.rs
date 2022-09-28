@@ -12,7 +12,8 @@ impl TransformObject for Curve {
 
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         let surface = self.surface().transform(transform, stores);
-        let global_form = self.global_form().transform(transform, stores);
+        let global_form =
+            self.global_form().clone().transform(transform, stores);
 
         // Don't need to transform `self.path`, as that's defined in surface
         // coordinates, and thus transforming `surface` takes care of it.
@@ -20,10 +21,10 @@ impl TransformObject for Curve {
     }
 }
 
-impl TransformObject for GlobalCurve {
-    type Transformed = Handle<Self>;
+impl TransformObject for Handle<GlobalCurve> {
+    type Transformed = Self;
 
-    fn transform(self, transform: &Transform, stores: &Stores) -> Handle<Self> {
+    fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         stores.global_curves.insert(GlobalCurve::from_path(
             self.path().transform(transform, stores),
         ))
