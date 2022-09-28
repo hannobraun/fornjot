@@ -105,8 +105,8 @@ impl PartialCurve {
     }
 }
 
-impl From<Curve> for PartialCurve {
-    fn from(curve: Curve) -> Self {
+impl From<&Curve> for PartialCurve {
+    fn from(curve: &Curve) -> Self {
         Self {
             path: Some(curve.path()),
             surface: Some(*curve.surface()),
@@ -169,8 +169,8 @@ impl PartialGlobalCurve {
     }
 }
 
-impl From<Handle<GlobalCurve>> for PartialGlobalCurve {
-    fn from(global_curve: Handle<GlobalCurve>) -> Self {
+impl From<&Handle<GlobalCurve>> for PartialGlobalCurve {
+    fn from(global_curve: &Handle<GlobalCurve>) -> Self {
         Self {
             path: Some(global_curve.path()),
         }

@@ -101,8 +101,8 @@ impl PartialVertex {
     }
 }
 
-impl From<Vertex> for PartialVertex {
-    fn from(vertex: Vertex) -> Self {
+impl From<&Vertex> for PartialVertex {
+    fn from(vertex: &Vertex) -> Self {
         Self {
             position: Some(vertex.position()),
             curve: Some(vertex.curve().clone().into()),
@@ -184,8 +184,8 @@ impl PartialSurfaceVertex {
     }
 }
 
-impl From<SurfaceVertex> for PartialSurfaceVertex {
-    fn from(surface_vertex: SurfaceVertex) -> Self {
+impl From<&SurfaceVertex> for PartialSurfaceVertex {
+    fn from(surface_vertex: &SurfaceVertex) -> Self {
         Self {
             position: Some(surface_vertex.position()),
             surface: Some(*surface_vertex.surface()),
@@ -251,8 +251,8 @@ impl PartialGlobalVertex {
     }
 }
 
-impl From<GlobalVertex> for PartialGlobalVertex {
-    fn from(global_vertex: GlobalVertex) -> Self {
+impl From<&GlobalVertex> for PartialGlobalVertex {
+    fn from(global_vertex: &GlobalVertex) -> Self {
         Self {
             position: Some(global_vertex.position()),
         }

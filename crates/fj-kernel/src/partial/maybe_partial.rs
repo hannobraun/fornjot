@@ -41,7 +41,7 @@ impl<T: HasPartial> MaybePartial<T> {
     pub fn into_partial(self) -> T::Partial {
         match self {
             Self::Partial(partial) => partial,
-            Self::Full(full) => full.into(),
+            Self::Full(full) => (&full).into(),
         }
     }
 }

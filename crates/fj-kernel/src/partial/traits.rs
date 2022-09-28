@@ -1,15 +1,7 @@
 use crate::stores::Stores;
 
 /// Implemented for types that are partial objects
-///
-/// # Implementation Note
-///
-/// It would be nicer to require a conversion from `&Self` into the partial
-/// form, but I think we need a `where` clause on the associated type to specify
-/// that, which is unstable. It should become stable soon though, together with
-/// generic associated types:
-/// <https://github.com/rust-lang/rust/issues/44265>
-pub trait HasPartial: Into<Self::Partial> {
+pub trait HasPartial {
     /// The full version of this partial object
     type Partial: Partial<Full = Self>;
 
@@ -23,7 +15,7 @@ pub trait HasPartial: Into<Self::Partial> {
 }
 
 /// Implemented for partial objects
-pub trait Partial: Default {
+pub trait Partial: Default + for<'a> From<&'a Self::Full> {
     /// The type representing the full variant of this object
     type Full;
 
