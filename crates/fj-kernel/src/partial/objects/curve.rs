@@ -2,7 +2,7 @@ use fj_math::{Point, Scalar, Vector};
 
 use crate::{
     objects::{Curve, GlobalCurve, Surface},
-    partial::MaybePartial,
+    partial::{HasPartial, MaybePartial},
     path::{GlobalPath, SurfacePath},
     stores::{Handle, Stores},
 };
@@ -97,7 +97,7 @@ impl PartialCurve {
                     ),
                 };
 
-                GlobalCurve::partial().with_path(path).into()
+                Handle::<GlobalCurve>::partial().with_path(path).into()
             })
             .into_full(stores);
 

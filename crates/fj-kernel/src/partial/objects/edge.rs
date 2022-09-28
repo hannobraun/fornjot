@@ -5,7 +5,7 @@ use crate::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
         SurfaceVertex, Vertex,
     },
-    partial::{MaybePartial, PartialCurve},
+    partial::{HasPartial, MaybePartial, PartialCurve},
     stores::{Handle, Stores},
 };
 

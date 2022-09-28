@@ -76,6 +76,7 @@ mod tests {
 
     use crate::{
         objects::{Curve, HalfEdge, Surface},
+        partial::HasPartial,
         stores::Stores,
     };
 

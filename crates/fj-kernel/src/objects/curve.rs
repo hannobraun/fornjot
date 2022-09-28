@@ -1,5 +1,4 @@
 use crate::{
-    partial::{PartialCurve, PartialGlobalCurve},
     path::{GlobalPath, SurfacePath},
     stores::Handle,
 };
@@ -15,14 +14,6 @@ pub struct Curve {
 }
 
 impl Curve {
-    /// Create a [`PartialCurve`]
-    ///
-    /// This function exists just for convenience, and will just return a
-    /// default [`PartialCurve`].
-    pub fn partial() -> PartialCurve {
-        PartialCurve::default()
-    }
-
     /// Construct a new instance of `Curve`
     pub fn new(
         surface: Surface,
@@ -59,14 +50,6 @@ pub struct GlobalCurve {
 }
 
 impl GlobalCurve {
-    /// Create a [`PartialGlobalCurve`]
-    ///
-    /// This function exists just for convenience, and will just return a
-    /// default [`PartialGlobalCurve`].
-    pub fn partial() -> PartialGlobalCurve {
-        PartialGlobalCurve::default()
-    }
-
     /// Construct a `GlobalCurve` from the path that defines it
     pub fn from_path(path: GlobalPath) -> Self {
         Self { path }

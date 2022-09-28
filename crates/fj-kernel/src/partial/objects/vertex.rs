@@ -2,7 +2,7 @@ use fj_math::Point;
 
 use crate::{
     objects::{Curve, GlobalVertex, Surface, SurfaceVertex, Vertex},
-    partial::MaybePartial,
+    partial::{HasPartial, MaybePartial},
     stores::Stores,
 };
 

@@ -5,8 +5,9 @@ use crate::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
         SurfaceVertex, Vertex,
     },
+    partial::HasPartial,
     path::SurfacePath,
-    stores::Stores,
+    stores::{Handle, Stores},
 };
 
 use super::Sweep;
@@ -137,7 +138,7 @@ impl Sweep for GlobalVertex {
         let a = self;
         let b = GlobalVertex::from_position(self.position() + path.into());
 
-        let curve = GlobalCurve::partial()
+        let curve = Handle::<GlobalCurve>::partial()
             .as_line_from_points([a.position(), b.position()])
             .build(stores);
 
@@ -153,7 +154,8 @@ mod tests {
             Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
             Vertex,
         },
-        stores::Stores,
+        partial::HasPartial,
+        stores::{Handle, Stores},
     };
 
     #[test]
@@ -186,7 +188,7 @@ mod tests {
             .sweep([0., 0., 1.], &stores);
 
         let expected_edge = GlobalEdge::new(
-            GlobalCurve::partial().as_z_axis().build(&stores),
+            Handle::<GlobalCurve>::partial().as_z_axis().build(&stores),
             [[0., 0., 0.], [0., 0., 1.]].map(GlobalVertex::from_position),
         );
         assert_eq!(edge, expected_edge);
