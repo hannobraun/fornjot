@@ -1,6 +1,21 @@
 use crate::stores::Stores;
 
 /// Implemented for types that are partial objects
+///
+/// # Implementation Note
+///
+/// This trait is usually implemented for object types themselves, but types
+/// that are already managed in the centralized object storage ([#1021])
+/// implement this trait for `Handle<T>` instead. This is necessary, due to the
+/// use of this type in [`MaybePartial`], but leads to some not so nice
+/// inconsistencies.
+///
+/// Once [#1021] is addressed and all types are managed in the centralized
+/// object storage, this should be changed to all object types implement this
+/// directly.
+///
+/// [#1021]: https://github.com/hannobraun/Fornjot/issues/1021
+/// [`MaybePartial`]: super::MaybePartial
 pub trait HasPartial {
     /// The full version of this partial object
     type Partial: Partial<Full = Self>;
