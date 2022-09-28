@@ -37,13 +37,7 @@ pub use self::{
     },
 };
 
-use crate::{
-    objects::{
-        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, SurfaceVertex,
-        Vertex,
-    },
-    stores::{Handle, Stores},
-};
+use crate::stores::Stores;
 
 /// Implemented for types that are partial objects
 ///
@@ -61,36 +55,3 @@ pub trait HasPartial: Into<Self::Partial> {
     /// Build a full object from the partial object
     fn from_partial(partial: Self::Partial, stores: &Stores) -> Self;
 }
-
-macro_rules! impl_traits {
-    ($($full:ty, $partial:ty;)*) => {
-        $(
-            impl HasPartial for $full {
-                type Partial = $partial;
-
-                fn from_partial(partial: Self::Partial, stores: &Stores)
-                    -> Self
-                {
-                    partial.build(stores)
-                }
-            }
-
-            impl From<$partial> for MaybePartial<$full> {
-                fn from(partial: $partial) -> Self {
-                    Self::Partial(partial)
-                }
-            }
-        )*
-    };
-}
-
-impl_traits!(
-    Curve, PartialCurve;
-    GlobalEdge, PartialGlobalEdge;
-    GlobalVertex, PartialGlobalVertex;
-    HalfEdge, PartialHalfEdge;
-    SurfaceVertex, PartialSurfaceVertex;
-    Vertex, PartialVertex;
-
-    Handle<GlobalCurve>, PartialGlobalCurve;
-);
