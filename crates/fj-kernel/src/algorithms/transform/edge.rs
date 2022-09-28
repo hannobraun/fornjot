@@ -2,6 +2,7 @@ use fj_math::Transform;
 
 use crate::{
     objects::{GlobalEdge, HalfEdge},
+    partial::HasPartial,
     stores::Stores,
 };
 
@@ -13,7 +14,13 @@ impl TransformObject for HalfEdge {
         let vertices = self
             .vertices()
             .clone()
-            .map(|vertex| vertex.transform(transform, stores));
+            .map(|vertex| {
+                vertex
+                    .to_partial()
+                    .transform(transform, stores)
+                    .with_curve(curve.clone())
+                    .build(stores)
+            });
         let global_form =
             self.global_form().clone().transform(transform, stores);
 
