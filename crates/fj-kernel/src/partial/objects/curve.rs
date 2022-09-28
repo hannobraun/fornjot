@@ -2,11 +2,10 @@ use fj_math::{Point, Scalar, Vector};
 
 use crate::{
     objects::{Curve, GlobalCurve, Surface},
+    partial::MaybePartial,
     path::{GlobalPath, SurfacePath},
     stores::{Handle, Stores},
 };
-
-use super::MaybePartial;
 
 /// A partial [`Curve`]
 ///

@@ -2,10 +2,9 @@ use fj_math::Point;
 
 use crate::{
     objects::{Curve, GlobalVertex, Surface, SurfaceVertex, Vertex},
+    partial::MaybePartial,
     stores::Stores,
 };
-
-use super::MaybePartial;
 
 /// A partial [`Vertex`]
 ///

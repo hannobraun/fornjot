@@ -5,10 +5,9 @@ use crate::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
         SurfaceVertex, Vertex,
     },
+    partial::{MaybePartial, PartialCurve},
     stores::{Handle, Stores},
 };
-
-use super::{MaybePartial, PartialCurve};
 
 /// A partial [`HalfEdge`]
 ///

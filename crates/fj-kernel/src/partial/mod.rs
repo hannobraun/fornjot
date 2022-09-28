@@ -25,16 +25,16 @@
 //! - All `with_*`, `as_*`, and `build` methods can be chained, to provide a
 //!   convenient API.
 
-mod curve;
-mod edge;
 mod maybe_partial;
-mod vertex;
+mod objects;
 
 pub use self::{
-    curve::{PartialCurve, PartialGlobalCurve},
-    edge::{PartialGlobalEdge, PartialHalfEdge},
     maybe_partial::MaybePartial,
-    vertex::{PartialGlobalVertex, PartialSurfaceVertex, PartialVertex},
+    objects::{
+        curve::{PartialCurve, PartialGlobalCurve},
+        edge::{PartialGlobalEdge, PartialHalfEdge},
+        vertex::{PartialGlobalVertex, PartialSurfaceVertex, PartialVertex},
+    },
 };
 
 use crate::{
