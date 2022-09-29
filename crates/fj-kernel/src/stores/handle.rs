@@ -1,4 +1,4 @@
-use std::{any::type_name, fmt, hash::Hash, ops::Deref};
+use std::{any::type_name, cmp::Ordering, fmt, hash::Hash, ops::Deref};
 
 use super::store::StoreInner;
 
@@ -201,13 +201,13 @@ impl<T> Hash for HandleWrapper<T> {
 }
 
 impl<T> Ord for HandleWrapper<T> {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+    fn cmp(&self, other: &Self) -> Ordering {
         self.0.id().cmp(&other.0.id())
     }
 }
 
 impl<T> PartialOrd for HandleWrapper<T> {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         self.0.id().partial_cmp(&other.0.id())
     }
 }
