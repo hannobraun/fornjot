@@ -53,7 +53,7 @@ impl SurfaceSurfaceIntersection {
         let line = Line::from_origin_and_direction(origin, direction);
 
         let curves = surfaces_and_planes.map(|(surface, plane)| {
-            let path = project_line_into_plane(&line, &plane);
+            let path = SurfacePath::Line(plane.project_line(&line));
             let global_form = GlobalCurve::new(stores);
 
             Curve::new(surface, path, global_form)
@@ -76,11 +76,6 @@ fn plane_from_surface(surface: &Surface) -> Plane {
     };
 
     Plane::from_parametric(line.origin(), line.direction(), path)
-}
-
-fn project_line_into_plane(line: &Line<3>, plane: &Plane) -> SurfacePath {
-    let line = plane.project_line(line);
-    SurfacePath::Line(line)
 }
 
 #[cfg(test)]
