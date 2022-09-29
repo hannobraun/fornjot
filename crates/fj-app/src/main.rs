@@ -45,18 +45,22 @@ fn main() -> anyhow::Result<()> {
 
     let args = Args::parse();
     let config = Config::load()?;
-
+    // model name defined here.
+    let model_name_from_cli = args.model.as_ref().expect("REASON").display();
+    // path for the models
     let path = config.default_path.unwrap_or_else(|| PathBuf::from(""));
     let parameters = args.parameters.unwrap_or_else(Parameters::empty);
     let shape_processor = ShapeProcessor {
         tolerance: args.tolerance,
     };
 
+    let path_of_model =  path.canonicalize().unwrap();
+    let new_error_message = format!("inside default models directory: '{0}'\nCan mainly caused by: \n1. Model '{1}' can not be found inside '{0}'\n2.'{1}' can be mis-typed see inside '{0}' for a match \n3.'{1}' couldn\'t be found", path_of_model.display(), model_name_from_cli);
     let model = if let Some(model) = args.model.or(config.default_model) {
         let mut model_path = path;
         model_path.push(model);
         Some(Model::from_path(model_path.clone()).with_context(|| {
-            format!("Failed to load model: {}", model_path.display())
+            format!("Failed to load model: {} {new_error_message}", model_path.display())
         })?)
     } else {
         None
