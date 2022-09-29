@@ -38,7 +38,7 @@ impl TransformObject for GlobalEdge {
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         let curve = self.curve().clone().transform(transform, stores);
         let vertices = self
-            .vertices()
+            .vertices_in_normalized_order()
             .map(|vertex| vertex.transform(transform, stores));
 
         Self::new(curve, vertices)
