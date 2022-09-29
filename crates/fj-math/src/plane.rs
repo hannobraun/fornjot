@@ -1,4 +1,4 @@
-use crate::{Point, Vector};
+use crate::{Point, Scalar, Vector};
 
 /// A plane
 #[derive(Clone, Copy, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -41,5 +41,17 @@ impl Plane {
         let c = self.origin() + self.v();
 
         [a, b, c]
+    }
+
+    /// Convert the plane to constant-normal form
+    pub fn constant_normal_form(&self) -> (Scalar, Vector<3>) {
+        let [a, b, c] = self.three_point_form();
+
+        // See Real-Time Collision Detection by Christer Ericson, section 3.6,
+        // Planes and Halfspaces.
+        let normal = (b - a).cross(&(c - a)).normalize();
+        let distance = normal.dot(&a.coords);
+
+        (distance, normal)
     }
 }

@@ -88,13 +88,7 @@ impl PlaneConstantNormal {
     ///
     /// Panics, if the given `Surface` is not a plane.
     pub fn from_parametric_plane(plane: &Plane) -> Self {
-        let [a, b, c] = plane.three_point_form();
-
-        // Convert plane from three-point form to constant-normal form. See
-        // Real-Time Collision Detection by Christer Ericson, section 3.6, Planes
-        // and Halfspaces.
-        let normal = (b - a).cross(&(c - a)).normalize();
-        let distance = normal.dot(&a.coords);
+        let (distance, normal) = plane.constant_normal_form();
 
         PlaneConstantNormal { distance, normal }
     }
