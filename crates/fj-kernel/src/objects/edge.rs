@@ -2,7 +2,7 @@ use std::fmt;
 
 use pretty_assertions::{assert_eq, assert_ne};
 
-use crate::stores::Handle;
+use crate::stores::{Handle, HandleWrapper};
 
 use super::{Curve, GlobalCurve, GlobalVertex, Vertex};
 
@@ -46,8 +46,8 @@ impl HalfEdge {
 
         // Make sure `curve` and `vertices` match `global_form`.
         assert_eq!(
-            curve.global_form(),
-            global_form.curve(),
+            curve.global_form().id(),
+            global_form.curve().id(),
             "The global form of a half-edge's curve must match the curve of \
             the half-edge's global form"
         );
@@ -110,16 +110,17 @@ impl fmt::Display for HalfEdge {
 /// An edge, defined in global (3D) coordinates
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalEdge {
-    curve: Handle<GlobalCurve>,
+    curve: HandleWrapper<GlobalCurve>,
     vertices: [GlobalVertex; 2],
 }
 
 impl GlobalEdge {
     /// Create a new instance
     pub fn new(
-        curve: Handle<GlobalCurve>,
+        curve: impl Into<HandleWrapper<GlobalCurve>>,
         vertices: [GlobalVertex; 2],
     ) -> Self {
+        let curve = curve.into();
         Self { curve, vertices }
     }
 

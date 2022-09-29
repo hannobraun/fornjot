@@ -47,11 +47,15 @@ impl TransformObject for GlobalEdge {
 
 impl TransformObject for PartialGlobalEdge {
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
-        let curve = self.curve.map(|curve| curve.transform(transform, stores));
+        let curve =
+            self.curve.map(|curve| curve.0.transform(transform, stores));
         let vertices = self.vertices.map(|vertices| {
             vertices.map(|vertex| vertex.transform(transform, stores))
         });
 
-        Self { curve, vertices }
+        Self {
+            curve: curve.map(Into::into),
+            vertices,
+        }
     }
 }

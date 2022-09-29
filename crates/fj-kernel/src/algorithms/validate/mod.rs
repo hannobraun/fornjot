@@ -63,10 +63,6 @@ where
     ) -> Result<Validated<Self>, ValidationError> {
         let mut global_vertices = HashSet::new();
 
-        for curve in self.curve_iter() {
-            coherence::validate_curve(curve, config.identical_max_distance)?;
-        }
-
         for global_vertex in self.global_vertex_iter() {
             uniqueness::validate_vertex(
                 global_vertex,
@@ -156,7 +152,7 @@ pub enum ValidationError {
 
 #[cfg(test)]
 mod tests {
-    use fj_math::{Line, Point, Scalar};
+    use fj_math::{Point, Scalar};
 
     use crate::{
         algorithms::validate::{Validate, ValidationConfig, ValidationError},
@@ -165,29 +161,9 @@ mod tests {
             SurfaceVertex, Vertex,
         },
         partial::HasPartial,
-        path::{GlobalPath, SurfacePath},
+        path::SurfacePath,
         stores::Stores,
     };
-
-    #[test]
-    fn coherence_curve() {
-        let stores = Stores::new();
-
-        let line_global = Line::from_points([[0., 0., 0.], [1., 0., 0.]]);
-        let global_curve = stores
-            .global_curves
-            .insert(GlobalCurve::from_path(GlobalPath::Line(line_global)));
-
-        let line_surface = Line::from_points([[0., 0.], [2., 0.]]);
-        let curve = Curve::new(
-            Surface::xy_plane(),
-            SurfacePath::Line(line_surface),
-            global_curve,
-        );
-
-        let result = curve.validate();
-        assert!(result.is_err());
-    }
 
     #[test]
     fn coherence_edge() {
@@ -200,10 +176,7 @@ mod tests {
 
         let curve = {
             let path = SurfacePath::line_from_points(points_surface);
-            let curve_global =
-                stores.global_curves.insert(GlobalCurve::from_path(
-                    GlobalPath::line_from_points(points_global),
-                ));
+            let curve_global = GlobalCurve::new(&stores);
             Curve::new(surface, path, curve_global)
         };
 

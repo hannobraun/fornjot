@@ -79,10 +79,12 @@ where
 
 impl MaybePartial<Curve> {
     /// Access the global form
-    pub fn global_form(&self) -> Option<MaybePartial<Handle<GlobalCurve>>> {
+    pub fn global_form(&self) -> Option<Handle<GlobalCurve>> {
         match self {
-            Self::Full(full) => Some(full.global_form().clone().into()),
-            Self::Partial(partial) => partial.global_form.clone(),
+            Self::Full(full) => Some(full.global_form().clone()),
+            Self::Partial(partial) => {
+                partial.global_form.clone().map(Into::into)
+            }
         }
     }
 }
@@ -92,7 +94,9 @@ impl MaybePartial<GlobalEdge> {
     pub fn curve(&self) -> Option<&Handle<GlobalCurve>> {
         match self {
             Self::Full(full) => Some(full.curve()),
-            Self::Partial(partial) => partial.curve.as_ref(),
+            Self::Partial(partial) => {
+                partial.curve.as_ref().map(|wrapper| &wrapper.0)
+            }
         }
     }
 }
