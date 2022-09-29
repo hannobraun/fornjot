@@ -145,6 +145,12 @@ impl<T> fmt::Debug for Handle<T> {
     }
 }
 
+impl<T> From<HandleWrapper<T>> for Handle<T> {
+    fn from(wrapper: HandleWrapper<T>) -> Self {
+        wrapper.0
+    }
+}
+
 unsafe impl<T> Send for Handle<T> {}
 unsafe impl<T> Sync for Handle<T> {}
 
