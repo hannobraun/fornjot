@@ -1,4 +1,4 @@
-use crate::{Point, Scalar, Vector};
+use crate::{Line, Point, Scalar, Vector};
 
 /// A plane
 #[derive(Clone, Copy, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -53,5 +53,28 @@ impl Plane {
         let distance = normal.dot(&a.coords);
 
         (distance, normal)
+    }
+
+    /// Project a line into the plane
+    pub fn project_line(&self, line: &Line<3>) -> Line<2> {
+        let line_origin_relative_to_plane = line.origin() - self.origin();
+        let line_origin_in_plane = Point {
+            coords: Vector::from([
+                self.u()
+                    .scalar_projection_onto(&line_origin_relative_to_plane),
+                self.v()
+                    .scalar_projection_onto(&line_origin_relative_to_plane),
+            ]),
+        };
+
+        let line_direction_in_plane = Vector::from([
+            self.u().scalar_projection_onto(&line.direction()),
+            self.v().scalar_projection_onto(&line.direction()),
+        ]);
+
+        Line::from_origin_and_direction(
+            line_origin_in_plane,
+            line_direction_in_plane,
+        )
     }
 }

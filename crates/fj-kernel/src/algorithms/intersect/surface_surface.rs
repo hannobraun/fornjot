@@ -1,4 +1,4 @@
-use fj_math::{Line, Plane, Point, Scalar, Vector};
+use fj_math::{Line, Plane, Point, Scalar};
 
 use crate::{
     objects::{Curve, GlobalCurve, Surface},
@@ -79,28 +79,7 @@ fn plane_from_surface(surface: &Surface) -> Plane {
 }
 
 fn project_line_into_plane(line: &Line<3>, plane: &Plane) -> SurfacePath {
-    let line_origin_relative_to_plane = line.origin() - plane.origin();
-    let line_origin_in_plane = Vector::from([
-        plane
-            .u()
-            .scalar_projection_onto(&line_origin_relative_to_plane),
-        plane
-            .v()
-            .scalar_projection_onto(&line_origin_relative_to_plane),
-    ]);
-
-    let line_direction_in_plane = Vector::from([
-        plane.u().scalar_projection_onto(&line.direction()),
-        plane.v().scalar_projection_onto(&line.direction()),
-    ]);
-
-    let line = Line::from_origin_and_direction(
-        Point {
-            coords: line_origin_in_plane,
-        },
-        line_direction_in_plane,
-    );
-
+    let line = plane.project_line(line);
     SurfacePath::Line(line)
 }
 
