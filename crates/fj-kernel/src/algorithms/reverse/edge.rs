@@ -1,4 +1,4 @@
-use crate::objects::{GlobalEdge, HalfEdge};
+use crate::objects::HalfEdge;
 
 use super::Reverse;
 
@@ -12,18 +12,7 @@ impl Reverse for HalfEdge {
         HalfEdge::new(
             self.curve().clone(),
             vertices,
-            self.global_form().clone().reverse(),
+            self.global_form().clone(),
         )
-    }
-}
-
-impl Reverse for GlobalEdge {
-    fn reverse(self) -> Self {
-        let vertices = {
-            let &[a, b] = self.vertices();
-            [b, a]
-        };
-
-        GlobalEdge::new(self.curve().clone(), vertices)
     }
 }
