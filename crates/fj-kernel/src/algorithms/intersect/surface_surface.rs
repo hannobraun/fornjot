@@ -1,4 +1,4 @@
-use fj_math::{Line, Point, Scalar, Vector};
+use fj_math::{Line, Plane, Point, Scalar, Vector};
 
 use crate::{
     objects::{Curve, GlobalCurve, Surface},
@@ -23,7 +23,7 @@ impl SurfaceSurfaceIntersection {
         // coordinates for each surface.
 
         let planes_parametric = surfaces.map(|surface| {
-            let plane = PlaneParametric::extract_from_surface(surface);
+            let plane = plane_from_surface(surface);
             (*surface, plane)
         });
         let [a, b] = planes_parametric.map(|(_, plane)| {
@@ -64,33 +64,17 @@ impl SurfaceSurfaceIntersection {
     }
 }
 
-/// A plane in parametric form
-#[derive(Clone, Copy)]
-struct PlaneParametric {
-    pub origin: Point<3>,
-    pub u: Vector<3>,
-    pub v: Vector<3>,
-}
-
-impl PlaneParametric {
-    pub fn extract_from_surface(surface: &Surface) -> Self {
-        let (line, path) = {
-            let line = match surface.u() {
-                GlobalPath::Line(line) => line,
-                _ => todo!(
-                    "Only plane-plane intersection is currently supported."
-                ),
-            };
-
-            (line, surface.v())
+fn plane_from_surface(surface: &Surface) -> Plane {
+    let (line, path) = {
+        let line = match surface.u() {
+            GlobalPath::Line(line) => line,
+            _ => todo!("Only plane-plane intersection is currently supported."),
         };
 
-        Self {
-            origin: line.origin(),
-            u: line.direction(),
-            v: path,
-        }
-    }
+        (line, surface.v())
+    };
+
+    Plane::from_parametric(line.origin(), line.direction(), path)
 }
 
 /// A plane in constant-normal form
@@ -103,11 +87,11 @@ impl PlaneConstantNormal {
     /// Extract a plane in constant-normal form from a `Surface`
     ///
     /// Panics, if the given `Surface` is not a plane.
-    pub fn from_parametric_plane(plane: &PlaneParametric) -> Self {
+    pub fn from_parametric_plane(plane: &Plane) -> Self {
         // Convert plane from parametric form to three-point form.
-        let a = plane.origin;
-        let b = plane.origin + plane.u;
-        let c = plane.origin + plane.v;
+        let a = plane.origin();
+        let b = plane.origin() + plane.u();
+        let c = plane.origin() + plane.v();
 
         // Convert plane from three-point form to constant-normal form. See
         // Real-Time Collision Detection by Christer Ericson, section 3.6, Planes
@@ -119,23 +103,20 @@ impl PlaneConstantNormal {
     }
 }
 
-fn project_line_into_plane(
-    line: &Line<3>,
-    plane: &PlaneParametric,
-) -> SurfacePath {
-    let line_origin_relative_to_plane = line.origin() - plane.origin;
+fn project_line_into_plane(line: &Line<3>, plane: &Plane) -> SurfacePath {
+    let line_origin_relative_to_plane = line.origin() - plane.origin();
     let line_origin_in_plane = Vector::from([
         plane
-            .u
+            .u()
             .scalar_projection_onto(&line_origin_relative_to_plane),
         plane
-            .v
+            .v()
             .scalar_projection_onto(&line_origin_relative_to_plane),
     ]);
 
     let line_direction_in_plane = Vector::from([
-        plane.u.scalar_projection_onto(&line.direction()),
-        plane.v.scalar_projection_onto(&line.direction()),
+        plane.u().scalar_projection_onto(&line.direction()),
+        plane.v().scalar_projection_onto(&line.direction()),
     ]);
 
     let line = Line::from_origin_and_direction(
