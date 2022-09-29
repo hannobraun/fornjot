@@ -26,14 +26,10 @@ impl SurfaceSurfaceIntersection {
             let plane = plane_from_surface(surface);
             (*surface, plane)
         });
-        let [a, b] = planes_parametric.map(|(_, plane)| {
-            PlaneConstantNormal::from_parametric_plane(&plane)
-        });
+        let [a, b] = planes_parametric.map(|(_, plane)| plane);
 
-        let a_normal = a.normal;
-        let b_normal = b.normal;
-        let a_distance = a.distance;
-        let b_distance = b.distance;
+        let (a_distance, a_normal) = a.constant_normal_form();
+        let (b_distance, b_normal) = b.constant_normal_form();
 
         let direction = a_normal.cross(&b_normal);
 
@@ -80,23 +76,6 @@ fn plane_from_surface(surface: &Surface) -> Plane {
     };
 
     Plane::from_parametric(line.origin(), line.direction(), path)
-}
-
-/// A plane in constant-normal form
-struct PlaneConstantNormal {
-    pub distance: Scalar,
-    pub normal: Vector<3>,
-}
-
-impl PlaneConstantNormal {
-    /// Extract a plane in constant-normal form from a `Surface`
-    ///
-    /// Panics, if the given `Surface` is not a plane.
-    pub fn from_parametric_plane(plane: &Plane) -> Self {
-        let (distance, normal) = plane.constant_normal_form();
-
-        PlaneConstantNormal { distance, normal }
-    }
 }
 
 fn project_line_into_plane(line: &Line<3>, plane: &Plane) -> SurfacePath {
