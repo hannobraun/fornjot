@@ -137,6 +137,9 @@ impl Sweep for GlobalVertex {
         let vertices = [a, b];
         let global_edge = GlobalEdge::new(curve, vertices);
 
+        // The vertices of the returned `GlobalEdge` are in normalized order,
+        // which means the order can't be relied upon by the caller. Return the
+        // ordered vertices in addition.
         (global_edge, vertices)
     }
 }
