@@ -254,7 +254,7 @@ impl From<&GlobalEdge> for PartialGlobalEdge {
     fn from(global_edge: &GlobalEdge) -> Self {
         Self {
             curve: Some(global_edge.curve().clone().into()),
-            vertices: Some(*global_edge.vertices()),
+            vertices: Some(*global_edge.vertices_in_normalized_order()),
         }
     }
 }

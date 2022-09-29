@@ -55,7 +55,7 @@ impl HalfEdge {
             &normalize_vertex_order(
                 vertices.clone().map(|vertex| *vertex.global_form())
             ),
-            global_form.vertices(),
+            global_form.vertices_in_normalized_order(),
             "The global forms of a half-edge's vertices must match the \
             vertices of the half-edge's global form"
         );
@@ -141,7 +141,7 @@ impl GlobalEdge {
     /// An edge has either two bounding vertices or none. The latter is possible
     /// if the edge's curve is continuous (i.e. connects to itself), and defines
     /// the whole edge.
-    pub fn vertices(&self) -> &[GlobalVertex; 2] {
+    pub fn vertices_in_normalized_order(&self) -> &[GlobalVertex; 2] {
         &self.vertices
     }
 }
