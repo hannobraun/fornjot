@@ -33,4 +33,13 @@ impl Plane {
     pub fn v(&self) -> Vector<3> {
         self.v
     }
+
+    /// Convert the plane to three-point form
+    pub fn three_point_form(&self) -> [Point<3>; 3] {
+        let a = self.origin();
+        let b = self.origin() + self.u();
+        let c = self.origin() + self.v();
+
+        [a, b, c]
+    }
 }
