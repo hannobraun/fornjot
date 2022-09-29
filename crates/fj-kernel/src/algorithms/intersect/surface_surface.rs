@@ -30,7 +30,12 @@ impl SurfaceSurfaceIntersection {
             PlaneConstantNormal::from_parametric_plane(&plane)
         });
 
-        let direction = a.normal.cross(&b.normal);
+        let a_normal = a.normal;
+        let b_normal = b.normal;
+        let a_distance = a.distance;
+        let b_distance = b.distance;
+
+        let direction = a_normal.cross(&b_normal);
 
         let denom = direction.dot(&direction);
         if denom == Scalar::ZERO {
@@ -44,7 +49,7 @@ impl SurfaceSurfaceIntersection {
             return None;
         }
 
-        let origin = (b.normal * a.distance - a.normal * b.distance)
+        let origin = (b_normal * a_distance - a_normal * b_distance)
             .cross(&direction)
             / denom;
         let origin = Point { coords: origin };
