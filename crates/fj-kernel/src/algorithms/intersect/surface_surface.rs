@@ -1,4 +1,4 @@
-use fj_math::{Line, Point, Scalar, Vector};
+use fj_math::{Line, Plane, Point, Scalar};
 
 use crate::{
     objects::{Curve, GlobalCurve, Surface},
@@ -22,15 +22,16 @@ impl SurfaceSurfaceIntersection {
         // Adaptations were made to get the intersection curves in local
         // coordinates for each surface.
 
-        let planes_parametric = surfaces.map(|surface| {
-            let plane = PlaneParametric::extract_from_surface(surface);
+        let surfaces_and_planes = surfaces.map(|surface| {
+            let plane = plane_from_surface(surface);
             (*surface, plane)
         });
-        let [a, b] = planes_parametric.map(|(_, plane)| {
-            PlaneConstantNormal::from_parametric_plane(&plane)
-        });
+        let [a, b] = surfaces_and_planes.map(|(_, plane)| plane);
 
-        let direction = a.normal.cross(&b.normal);
+        let (a_distance, a_normal) = a.constant_normal_form();
+        let (b_distance, b_normal) = b.constant_normal_form();
+
+        let direction = a_normal.cross(&b_normal);
 
         let denom = direction.dot(&direction);
         if denom == Scalar::ZERO {
@@ -44,15 +45,15 @@ impl SurfaceSurfaceIntersection {
             return None;
         }
 
-        let origin = (b.normal * a.distance - a.normal * b.distance)
+        let origin = (b_normal * a_distance - a_normal * b_distance)
             .cross(&direction)
             / denom;
         let origin = Point { coords: origin };
 
         let line = Line::from_origin_and_direction(origin, direction);
 
-        let curves = planes_parametric.map(|(surface, plane)| {
-            let path = project_line_into_plane(&line, &plane);
+        let curves = surfaces_and_planes.map(|(surface, plane)| {
+            let path = SurfacePath::Line(plane.project_line(&line));
             let global_form = GlobalCurve::new(stores);
 
             Curve::new(surface, path, global_form)
@@ -64,88 +65,17 @@ impl SurfaceSurfaceIntersection {
     }
 }
 
-/// A plane in parametric form
-#[derive(Clone, Copy)]
-struct PlaneParametric {
-    pub origin: Point<3>,
-    pub u: Vector<3>,
-    pub v: Vector<3>,
-}
-
-impl PlaneParametric {
-    pub fn extract_from_surface(surface: &Surface) -> Self {
-        let (line, path) = {
-            let line = match surface.u() {
-                GlobalPath::Line(line) => line,
-                _ => todo!(
-                    "Only plane-plane intersection is currently supported."
-                ),
-            };
-
-            (line, surface.v())
+fn plane_from_surface(surface: &Surface) -> Plane {
+    let (line, path) = {
+        let line = match surface.u() {
+            GlobalPath::Line(line) => line,
+            _ => todo!("Only plane-plane intersection is currently supported."),
         };
 
-        Self {
-            origin: line.origin(),
-            u: line.direction(),
-            v: path,
-        }
-    }
-}
+        (line, surface.v())
+    };
 
-/// A plane in constant-normal form
-struct PlaneConstantNormal {
-    pub distance: Scalar,
-    pub normal: Vector<3>,
-}
-
-impl PlaneConstantNormal {
-    /// Extract a plane in constant-normal form from a `Surface`
-    ///
-    /// Panics, if the given `Surface` is not a plane.
-    pub fn from_parametric_plane(plane: &PlaneParametric) -> Self {
-        // Convert plane from parametric form to three-point form.
-        let a = plane.origin;
-        let b = plane.origin + plane.u;
-        let c = plane.origin + plane.v;
-
-        // Convert plane from three-point form to constant-normal form. See
-        // Real-Time Collision Detection by Christer Ericson, section 3.6, Planes
-        // and Halfspaces.
-        let normal = (b - a).cross(&(c - a)).normalize();
-        let distance = normal.dot(&a.coords);
-
-        PlaneConstantNormal { distance, normal }
-    }
-}
-
-fn project_line_into_plane(
-    line: &Line<3>,
-    plane: &PlaneParametric,
-) -> SurfacePath {
-    let line_origin_relative_to_plane = line.origin() - plane.origin;
-    let line_origin_in_plane = Vector::from([
-        plane
-            .u
-            .scalar_projection_onto(&line_origin_relative_to_plane),
-        plane
-            .v
-            .scalar_projection_onto(&line_origin_relative_to_plane),
-    ]);
-
-    let line_direction_in_plane = Vector::from([
-        plane.u.scalar_projection_onto(&line.direction()),
-        plane.v.scalar_projection_onto(&line.direction()),
-    ]);
-
-    let line = Line::from_origin_and_direction(
-        Point {
-            coords: line_origin_in_plane,
-        },
-        line_direction_in_plane,
-    );
-
-    SurfacePath::Line(line)
+    Plane::from_parametric(line.origin(), line.direction(), path)
 }
 
 #[cfg(test)]
