@@ -81,6 +81,7 @@ fn plane_from_surface(surface: &Surface) -> Plane {
 #[cfg(test)]
 mod tests {
     use fj_math::Transform;
+    use pretty_assertions::assert_eq;
 
     use crate::{
         algorithms::transform::TransformObject,
