@@ -397,7 +397,8 @@ mod tests {
     fn cycle() {
         let stores = Stores::new();
 
-        let object = Cycle::builder(&stores, Surface::xy_plane())
+        let surface = Surface::xy_plane();
+        let object = Cycle::builder(&stores, surface)
             .with_poly_chain_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .close_with_line_segment()
             .build();
