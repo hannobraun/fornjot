@@ -141,12 +141,12 @@ mod tests {
 
         let triangles = triangulate(face)?;
 
-        let a = Point::from(a).to_xyz();
-        let d = Point::from(d).to_xyz();
-        let e = Point::from(e).to_xyz();
-        let f = Point::from(f).to_xyz();
-        let g = Point::from(g).to_xyz();
-        let h = Point::from(h).to_xyz();
+        let a = surface.point_from_surface_coords(a);
+        let d = surface.point_from_surface_coords(d);
+        let e = surface.point_from_surface_coords(e);
+        let f = surface.point_from_surface_coords(f);
+        let g = surface.point_from_surface_coords(g);
+        let h = surface.point_from_surface_coords(h);
 
         // Should contain some triangles from the polygon. Don't need to test
         // them all.
@@ -193,11 +193,11 @@ mod tests {
 
         let triangles = triangulate(face)?;
 
-        let a3 = a.to_xyz();
-        let b3 = b.to_xyz();
-        let c3 = c.to_xyz();
-        let d3 = d.to_xyz();
-        let e3 = e.to_xyz();
+        let a3 = surface.point_from_surface_coords(a);
+        let b3 = surface.point_from_surface_coords(b);
+        let c3 = surface.point_from_surface_coords(c);
+        let d3 = surface.point_from_surface_coords(d);
+        let e3 = surface.point_from_surface_coords(e);
 
         assert!(triangles.contains_triangle([a3, b3, d3]));
         assert!(triangles.contains_triangle([b3, c3, d3]));
