@@ -27,10 +27,7 @@ impl Intersect for (&HorizontalRayToTheRight<3>, &Face) {
             ),
         };
 
-        let plane_and_ray_are_parallel =
-            plane.normal().dot(&ray.direction()) == Scalar::ZERO;
-
-        if plane_and_ray_are_parallel {
+        if plane.is_parallel_to_vector(&ray.direction()) {
             let a = plane.origin();
             let b = plane.origin() + plane.u();
             let c = plane.origin() + plane.v();

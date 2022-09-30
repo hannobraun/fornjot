@@ -56,6 +56,11 @@ impl Plane {
         (distance, normal)
     }
 
+    /// Determine whether the plane is parallel to the given vector
+    pub fn is_parallel_to_vector(&self, vector: &Vector<3>) -> bool {
+        self.normal().dot(vector) == Scalar::ZERO
+    }
+
     /// Project a line into the plane
     pub fn project_line(&self, line: &Line<3>) -> Line<2> {
         let line_origin_relative_to_plane = line.origin() - self.origin();
