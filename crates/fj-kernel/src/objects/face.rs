@@ -57,6 +57,11 @@ impl Face {
                 interior.surface(),
                 "Cycles that bound a face must be in face's surface"
             );
+            assert_ne!(
+                self.exterior().winding(),
+                interior.winding(),
+                "Interior cycles must have opposite winding of exterior cycle"
+            );
 
             self.interiors.push(interior);
         }
