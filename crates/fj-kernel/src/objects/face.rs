@@ -51,14 +51,14 @@ impl Face {
         mut self,
         interiors: impl IntoIterator<Item = Cycle>,
     ) -> Self {
-        for cycle in interiors.into_iter() {
+        for interior in interiors.into_iter() {
             assert_eq!(
                 self.surface(),
-                cycle.surface(),
+                interior.surface(),
                 "Cycles that bound a face must be in face's surface"
             );
 
-            self.interiors.push(cycle);
+            self.interiors.push(interior);
         }
 
         self
