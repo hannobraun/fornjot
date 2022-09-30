@@ -50,8 +50,6 @@ impl Plane {
 
     /// Convert the plane to constant-normal form
     pub fn constant_normal_form(&self) -> (Scalar, Vector<3>) {
-        // See Real-Time Collision Detection by Christer Ericson, section 3.6,
-        // Planes and Halfspaces.
         let normal = self.normal();
         let distance = normal.dot(&self.origin().coords);
 
