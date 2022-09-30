@@ -179,12 +179,12 @@ mod tests {
         //   a ---------- b
         //
 
-        let a = Point::from([0., 0.]);
-        let b = Point::from([0.4, 0.]);
-        //let b = Point::from([0.5, 0.]); // test passes with this change
-        let c = Point::from([0.4, 1.0]);
-        let d = Point::from([0.1, 0.1]);
-        let e = Point::from([0., 0.8]);
+        let a = [0., 0.];
+        let b = [0.4, 0.];
+        //let b = [0.5, 0.]; // test passes with this change
+        let c = [0.4, 1.0];
+        let d = [0.1, 0.1];
+        let e = [0., 0.8];
 
         let surface = Surface::xy_plane();
         let face = Face::builder(&stores, surface)
