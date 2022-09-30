@@ -60,7 +60,9 @@ impl Sweep for Face {
                 } else {
                     half_edge.clone()
                 };
+
                 let face = (half_edge, self.color()).sweep(path, stores);
+
                 faces.push(face);
             }
         }
