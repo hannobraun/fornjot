@@ -129,7 +129,7 @@ impl Vector<2> {
     }
 
     /// Compute the 2D cross product with another vector
-    pub fn cross(&self, other: &Self) -> Scalar {
+    pub fn cross2d(&self, other: &Self) -> Scalar {
         (self.u * other.v) - (self.v * other.u)
     }
 }
