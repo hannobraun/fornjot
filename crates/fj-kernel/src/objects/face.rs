@@ -8,6 +8,29 @@ use crate::{builder::FaceBuilder, stores::Stores};
 use super::{Cycle, Surface};
 
 /// A face of a shape
+///
+/// A `Face` is a bounded area of a [`Surface`], the [`Surface`] itself being an
+/// infinite 2-dimensional object in 3D space. `Face`s are bound by one exterior
+/// cycle, which defines the outer boundary, and an arbitrary number of interior
+/// cycles (i.e. holes).
+///
+/// `Face` has a defined orientation, a front and a back side. When faces are
+/// combined into [`Shell`]s, the face orientation defines what is inside and
+/// outside of the shell. This stands in contrast to [`Surface`], which has no
+/// defined orientation.
+///
+/// You can look at a `Face` from two directions: front and back. The winding of
+/// the exterior cycle will be clockwise or counter-clockwise, depending on your
+/// perspective. The front side of the face, is the side where from which the
+/// exterior cycle appear counter-clockwise.
+///
+/// Interior cycles must have the opposite winding of the exterior cycle,
+/// meaning on the front side of the face, they must appear clockwise. This
+/// means that all [`HalfEdge`]s that bound a `Face` have the interior of the
+/// face on their left side (on the face's front side).
+///
+/// [`HalfEdge`]: super::HalfEdge
+/// [`Shell`]: super::Shell
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Face {
     surface: Surface,
@@ -47,6 +70,9 @@ impl Face {
     /// # Panics
     ///
     /// Panics, if the added cycles are not defined in the face's surface.
+    ///
+    /// Panics, if the winding of the interior cycles is not opposite that of
+    /// the exterior cycle.
     pub fn with_interiors(
         mut self,
         interiors: impl IntoIterator<Item = Cycle>,
@@ -82,7 +108,7 @@ impl Face {
         &self.surface
     }
 
-    /// Access the cycles that bound the face on the outside
+    /// Access the cycle that bounds the face on the outside
     pub fn exterior(&self) -> &Cycle {
         &self.exterior
     }
