@@ -34,6 +34,11 @@ impl Plane {
         self.v
     }
 
+    /// Compute the normal of the plane
+    pub fn normal(&self) -> Vector<3> {
+        self.u().cross(&self.v()).normalize()
+    }
+
     /// Convert the plane to three-point form
     pub fn three_point_form(&self) -> [Point<3>; 3] {
         let a = self.origin();
@@ -45,14 +50,23 @@ impl Plane {
 
     /// Convert the plane to constant-normal form
     pub fn constant_normal_form(&self) -> (Scalar, Vector<3>) {
-        let [a, b, c] = self.three_point_form();
-
-        // See Real-Time Collision Detection by Christer Ericson, section 3.6,
-        // Planes and Halfspaces.
-        let normal = (b - a).cross(&(c - a)).normalize();
-        let distance = normal.dot(&a.coords);
+        let normal = self.normal();
+        let distance = normal.dot(&self.origin().coords);
 
         (distance, normal)
+    }
+
+    /// Determine whether the plane is parallel to the given vector
+    pub fn is_parallel_to_vector(&self, vector: &Vector<3>) -> bool {
+        self.normal().dot(vector) == Scalar::ZERO
+    }
+
+    /// Project a vector into the plane
+    pub fn project_vector(&self, vector: &Vector<3>) -> Vector<2> {
+        Vector::from([
+            self.u().scalar_projection_onto(vector),
+            self.v().scalar_projection_onto(vector),
+        ])
     }
 
     /// Project a line into the plane
@@ -67,10 +81,7 @@ impl Plane {
             ]),
         };
 
-        let line_direction_in_plane = Vector::from([
-            self.u().scalar_projection_onto(&line.direction()),
-            self.v().scalar_projection_onto(&line.direction()),
-        ]);
+        let line_direction_in_plane = self.project_vector(&line.direction());
 
         Line::from_origin_and_direction(
             line_origin_in_plane,
