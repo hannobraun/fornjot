@@ -82,8 +82,8 @@ impl Face {
     ) -> Self {
         for interior in interiors.into_iter() {
             assert_eq!(
-                self.surface(),
-                interior.surface(),
+                self.surface().id(),
+                interior.surface().id(),
                 "Cycles that bound a face must be in face's surface"
             );
             assert_ne!(
