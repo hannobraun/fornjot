@@ -10,7 +10,7 @@ use super::TransformObject;
 
 impl TransformObject for Curve {
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
-        let surface = self.surface().transform(transform, stores);
+        let surface = self.surface().clone().transform(transform, stores);
         let global_form =
             self.global_form().clone().transform(transform, stores);
 

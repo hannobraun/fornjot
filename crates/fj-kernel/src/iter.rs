@@ -266,7 +266,7 @@ impl<'r> ObjectIters<'r> for Solid {
     }
 }
 
-impl<'r> ObjectIters<'r> for Surface {
+impl<'r> ObjectIters<'r> for Handle<Surface> {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
         Vec::new()
     }
@@ -374,7 +374,7 @@ mod tests {
     fn curve() {
         let stores = Stores::new();
 
-        let surface = Surface::xy_plane();
+        let surface = stores.surfaces.insert(Surface::xy_plane());
         let object = Curve::partial()
             .with_surface(surface)
             .as_u_axis()
@@ -397,7 +397,7 @@ mod tests {
     fn cycle() {
         let stores = Stores::new();
 
-        let surface = Surface::xy_plane();
+        let surface = stores.surfaces.insert(Surface::xy_plane());
         let object = Cycle::builder(&stores, surface)
             .with_poly_chain_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .close_with_line_segment()
@@ -420,7 +420,7 @@ mod tests {
     fn face() {
         let stores = Stores::new();
 
-        let surface = Surface::xy_plane();
+        let surface = stores.surfaces.insert(Surface::xy_plane());
         let object = Face::builder(&stores, surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .build();
@@ -480,7 +480,7 @@ mod tests {
 
         let object = HalfEdge::partial()
             .as_line_segment_from_points(
-                Surface::xy_plane(),
+                stores.surfaces.insert(Surface::xy_plane()),
                 [[0., 0.], [1., 0.]],
             )
             .build(&stores);
@@ -521,7 +521,7 @@ mod tests {
     fn sketch() {
         let stores = Stores::new();
 
-        let surface = Surface::xy_plane();
+        let surface = stores.surfaces.insert(Surface::xy_plane());
         let face = Face::builder(&stores, surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .build();
@@ -561,7 +561,9 @@ mod tests {
 
     #[test]
     fn surface() {
-        let object = Surface::xy_plane();
+        let stores = Stores::new();
+
+        let object = stores.surfaces.insert(Surface::xy_plane());
 
         assert_eq!(0, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -580,9 +582,9 @@ mod tests {
     fn vertex() {
         let stores = Stores::new();
 
-        let surface = Surface::xy_plane();
+        let surface = stores.surfaces.insert(Surface::xy_plane());
         let curve = Curve::partial()
-            .with_surface(surface)
+            .with_surface(surface.clone())
             .as_u_axis()
             .build(&stores);
         let global_vertex = GlobalVertex::from_position([0., 0., 0.]);

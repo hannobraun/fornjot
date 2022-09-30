@@ -162,7 +162,7 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = Surface::yz_plane();
+        let surface = stores.surfaces.insert(Surface::yz_plane());
         let face = Face::builder(&stores, surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
@@ -182,7 +182,7 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = Surface::yz_plane();
+        let surface = stores.surfaces.insert(Surface::yz_plane());
         let face = Face::builder(&stores, surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
@@ -205,7 +205,7 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = Surface::yz_plane();
+        let surface = stores.surfaces.insert(Surface::yz_plane());
         let face = Face::builder(&stores, surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
@@ -225,7 +225,7 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = Surface::yz_plane();
+        let surface = stores.surfaces.insert(Surface::yz_plane());
         let face = Face::builder(&stores, surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
@@ -256,7 +256,7 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = Surface::yz_plane();
+        let surface = stores.surfaces.insert(Surface::yz_plane());
         let face = Face::builder(&stores, surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
@@ -285,7 +285,7 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = Surface::xy_plane();
+        let surface = stores.surfaces.insert(Surface::xy_plane());
         let face = Face::builder(&stores, surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
@@ -307,7 +307,7 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = Surface::xy_plane();
+        let surface = stores.surfaces.insert(Surface::xy_plane());
         let face = Face::builder(&stores, surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],

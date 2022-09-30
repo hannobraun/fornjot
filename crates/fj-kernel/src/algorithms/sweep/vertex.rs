@@ -6,12 +6,12 @@ use crate::{
         SurfaceVertex, Vertex,
     },
     path::SurfacePath,
-    stores::Stores,
+    stores::{Handle, Stores},
 };
 
 use super::Sweep;
 
-impl Sweep for (Vertex, Surface) {
+impl Sweep for (Vertex, Handle<Surface>) {
     type Swept = HalfEdge;
 
     fn sweep(self, path: impl Into<Vector<3>>, stores: &Stores) -> Self::Swept {
@@ -80,7 +80,7 @@ impl Sweep for (Vertex, Surface) {
         let curve = {
             let line = Line::from_points(points_surface);
             Curve::new(
-                surface,
+                surface.clone(),
                 SurfacePath::Line(line),
                 edge_global.curve().clone(),
             )
@@ -97,7 +97,7 @@ impl Sweep for (Vertex, Surface) {
                     |(point_surface, vertex_global)| {
                         SurfaceVertex::new(
                             point_surface,
-                            surface,
+                            surface.clone(),
                             vertex_global,
                         )
                     },
@@ -159,9 +159,9 @@ mod tests {
     fn vertex_surface() {
         let stores = Stores::new();
 
-        let surface = Surface::xz_plane();
+        let surface = stores.surfaces.insert(Surface::xz_plane());
         let curve = Curve::partial()
-            .with_surface(surface)
+            .with_surface(surface.clone())
             .as_u_axis()
             .build(&stores);
         let vertex = Vertex::partial()
@@ -169,7 +169,7 @@ mod tests {
             .with_curve(curve)
             .build(&stores);
 
-        let half_edge = (vertex, surface).sweep([0., 0., 1.], &stores);
+        let half_edge = (vertex, surface.clone()).sweep([0., 0., 1.], &stores);
 
         let expected_half_edge = HalfEdge::partial()
             .as_line_segment_from_points(surface, [[0., 0.], [0., 1.]])

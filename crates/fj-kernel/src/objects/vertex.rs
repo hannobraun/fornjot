@@ -1,6 +1,8 @@
 use fj_math::Point;
 use pretty_assertions::assert_eq;
 
+use crate::stores::Handle;
+
 use super::{Curve, Surface};
 
 /// A vertex
@@ -68,7 +70,7 @@ impl Vertex {
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct SurfaceVertex {
     position: Point<2>,
-    surface: Surface,
+    surface: Handle<Surface>,
     global_form: GlobalVertex,
 }
 
@@ -76,7 +78,7 @@ impl SurfaceVertex {
     /// Construct a new instance of `SurfaceVertex`
     pub fn new(
         position: impl Into<Point<2>>,
-        surface: Surface,
+        surface: Handle<Surface>,
         global_form: GlobalVertex,
     ) -> Self {
         let position = position.into();
@@ -93,7 +95,7 @@ impl SurfaceVertex {
     }
 
     /// Access the surface that the vertex is defined on
-    pub fn surface(&self) -> &Surface {
+    pub fn surface(&self) -> &Handle<Surface> {
         &self.surface
     }
 

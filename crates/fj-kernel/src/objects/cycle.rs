@@ -1,20 +1,24 @@
 use fj_math::{Scalar, Winding};
 use pretty_assertions::assert_eq;
 
-use crate::{builder::CycleBuilder, path::SurfacePath, stores::Stores};
+use crate::{
+    builder::CycleBuilder,
+    path::SurfacePath,
+    stores::{Handle, Stores},
+};
 
 use super::{HalfEdge, Surface};
 
 /// A cycle of connected half-edges
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
-    surface: Surface,
+    surface: Handle<Surface>,
     half_edges: Vec<HalfEdge>,
 }
 
 impl Cycle {
     /// Build a `Cycle` using [`CycleBuilder`]
-    pub fn builder(stores: &Stores, surface: Surface) -> CycleBuilder {
+    pub fn builder(stores: &Stores, surface: Handle<Surface>) -> CycleBuilder {
         CycleBuilder {
             stores,
             surface,
@@ -29,7 +33,7 @@ impl Cycle {
     /// Panic, if the end of each half-edge does not connect to the beginning of
     /// the next one.
     pub fn new(
-        surface: Surface,
+        surface: Handle<Surface>,
         half_edges: impl IntoIterator<Item = HalfEdge>,
     ) -> Self {
         let half_edges = half_edges.into_iter().collect::<Vec<_>>();
@@ -85,7 +89,7 @@ impl Cycle {
     }
 
     /// Access the surface that this cycle is in
-    pub fn surface(&self) -> &Surface {
+    pub fn surface(&self) -> &Handle<Surface> {
         &self.surface
     }
 

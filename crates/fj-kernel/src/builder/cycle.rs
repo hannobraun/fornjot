@@ -3,7 +3,7 @@ use fj_math::Point;
 use crate::{
     objects::{Curve, Cycle, HalfEdge, Surface, SurfaceVertex, Vertex},
     partial::HasPartial,
-    stores::Stores,
+    stores::{Handle, Stores},
 };
 
 /// API for building a [`Cycle`]
@@ -14,7 +14,7 @@ pub struct CycleBuilder<'a> {
     pub stores: &'a Stores,
 
     /// The surface that the [`Cycle`] is defined in
-    pub surface: Surface,
+    pub surface: Handle<Surface>,
 
     /// The half-edges that make up the [`Cycle`]
     pub half_edges: Vec<HalfEdge>,
@@ -55,13 +55,13 @@ impl<'a> CycleBuilder<'a> {
             if let Some((previous_position, previous_vertex)) = previous {
                 let from = previous_vertex.unwrap_or_else(|| {
                     SurfaceVertex::partial()
-                        .with_surface(self.surface)
+                        .with_surface(self.surface.clone())
                         .with_position(previous_position)
                         .build(self.stores)
                 });
                 let to = vertex.unwrap_or_else(|| {
                     SurfaceVertex::partial()
-                        .with_surface(self.surface)
+                        .with_surface(self.surface.clone())
                         .with_position(position)
                         .build(self.stores)
                 });
@@ -69,7 +69,7 @@ impl<'a> CycleBuilder<'a> {
                 previous = Some((position, Some(to.clone())));
 
                 let curve = Curve::partial()
-                    .with_surface(self.surface)
+                    .with_surface(self.surface.clone())
                     .as_line_from_points([previous_position, position])
                     .build(self.stores);
 
@@ -112,7 +112,7 @@ impl<'a> CycleBuilder<'a> {
                 [last, first].map(|vertex| vertex.surface_form().position());
             self.half_edges.push(
                 HalfEdge::partial()
-                    .as_line_segment_from_points(self.surface, vertices)
+                    .as_line_segment_from_points(self.surface.clone(), vertices)
                     .build(self.stores),
             );
         }

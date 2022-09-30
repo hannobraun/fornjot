@@ -30,8 +30,11 @@ impl<'a> ShellBuilder<'a> {
         let h = edge_length / 2.;
 
         let bottom = {
-            let surface =
-                Surface::xy_plane().translate([Z, Z, -h], self.stores);
+            let surface = self
+                .stores
+                .surfaces
+                .insert(Surface::xy_plane())
+                .translate([Z, Z, -h], self.stores);
 
             Face::builder(self.stores, surface)
                 .with_exterior_polygon_from_points([
@@ -54,7 +57,9 @@ impl<'a> ShellBuilder<'a> {
                         .map(|vertex| vertex.global_form().position());
                     let c = a + [Z, Z, edge_length];
 
-                    Surface::plane_from_points([a, b, c])
+                    self.stores
+                        .surfaces
+                        .insert(Surface::plane_from_points([a, b, c]))
                 })
                 .collect::<Vec<_>>();
 
@@ -62,11 +67,11 @@ impl<'a> ShellBuilder<'a> {
                 .exterior()
                 .half_edges()
                 .zip(&surfaces)
-                .map(|(half_edge, &surface)| {
+                .map(|(half_edge, surface)| {
                     HalfEdge::partial()
                         .with_global_form(half_edge.global_form().clone())
                         .as_line_segment_from_points(
-                            surface,
+                            surface.clone(),
                             [[Z, Z], [edge_length, Z]],
                         )
                         .build(self.stores)
@@ -77,13 +82,13 @@ impl<'a> ShellBuilder<'a> {
                 .clone()
                 .into_iter()
                 .zip(&surfaces)
-                .map(|(bottom, &surface)| {
+                .map(|(bottom, surface)| {
                     let [_, from] = bottom.vertices();
 
                     let from = from.surface_form().clone();
                     let to = SurfaceVertex::partial()
                         .with_position(from.position() + [Z, edge_length])
-                        .with_surface(surface);
+                        .with_surface(surface.clone());
 
                     HalfEdge::partial()
                         .with_vertices([
@@ -104,14 +109,14 @@ impl<'a> ShellBuilder<'a> {
                     .into_iter()
                     .zip(sides_up_prev)
                     .zip(&surfaces)
-                    .map(|((bottom, side_up_prev), &surface)| {
+                    .map(|((bottom, side_up_prev), surface)| {
                         let [_, from] = side_up_prev.vertices();
                         let [to, _] = bottom.vertices();
 
                         let to = to.surface_form().clone();
                         let from = SurfaceVertex::partial()
                             .with_position(to.position() + [Z, edge_length])
-                            .with_surface(surface)
+                            .with_surface(surface.clone())
                             .with_global_form(*from.global_form());
 
                         let curve = Curve::partial().with_global_form(
@@ -135,14 +140,14 @@ impl<'a> ShellBuilder<'a> {
                 .into_iter()
                 .zip(sides_down.clone())
                 .zip(&surfaces)
-                .map(|((side_up, side_down), &surface)| {
+                .map(|((side_up, side_down), surface)| {
                     let [_, from] = side_up.vertices();
                     let [to, _] = side_down.vertices();
 
                     let from = from.surface_form().clone();
                     let to = SurfaceVertex::partial()
                         .with_position(from.position() + [-edge_length, Z])
-                        .with_surface(surface)
+                        .with_surface(surface.clone())
                         .with_global_form(*to.global_form());
 
                     let from = Vertex::partial().with_surface_form(from);
@@ -173,7 +178,11 @@ impl<'a> ShellBuilder<'a> {
         };
 
         let top = {
-            let surface = Surface::xy_plane().translate([Z, Z, h], self.stores);
+            let surface = self
+                .stores
+                .surfaces
+                .insert(Surface::xy_plane())
+                .translate([Z, Z, h], self.stores);
 
             let points = [[-h, -h], [-h, h], [h, h], [h, -h], [-h, -h]];
 
@@ -194,7 +203,7 @@ impl<'a> ShellBuilder<'a> {
                     |(point, vertex)| {
                         let surface_form = SurfaceVertex::partial()
                             .with_position(point)
-                            .with_surface(surface)
+                            .with_surface(surface.clone())
                             .with_global_form(*vertex.global_form())
                             .build(self.stores);
                         Vertex::partial()

@@ -9,14 +9,14 @@ use super::Surface;
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Curve {
     path: SurfacePath,
-    surface: Surface,
+    surface: Handle<Surface>,
     global_form: HandleWrapper<GlobalCurve>,
 }
 
 impl Curve {
     /// Construct a new instance of `Curve`
     pub fn new(
-        surface: Surface,
+        surface: Handle<Surface>,
         path: SurfacePath,
         global_form: impl Into<HandleWrapper<GlobalCurve>>,
     ) -> Self {
@@ -35,7 +35,7 @@ impl Curve {
     }
 
     /// Access the surface that this curve is defined in
-    pub fn surface(&self) -> &Surface {
+    pub fn surface(&self) -> &Handle<Surface> {
         &self.surface
     }
 

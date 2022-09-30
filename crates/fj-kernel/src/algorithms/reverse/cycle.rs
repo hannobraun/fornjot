@@ -4,7 +4,7 @@ use super::Reverse;
 
 impl Reverse for Cycle {
     fn reverse(self) -> Self {
-        let surface = *self.surface();
+        let surface = self.surface().clone();
 
         let mut edges = self
             .into_half_edges()

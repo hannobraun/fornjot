@@ -142,7 +142,7 @@ mod tests {
     fn point_is_outside_face() {
         let stores = Stores::new();
 
-        let surface = Surface::xy_plane();
+        let surface = stores.surfaces.insert(Surface::xy_plane());
         let face = Face::builder(&stores, surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 1.], [0., 2.]])
             .build();
@@ -156,7 +156,7 @@ mod tests {
     fn ray_hits_vertex_while_passing_outside() {
         let stores = Stores::new();
 
-        let surface = Surface::xy_plane();
+        let surface = stores.surfaces.insert(Surface::xy_plane());
         let face = Face::builder(&stores, surface)
             .with_exterior_polygon_from_points([[0., 0.], [2., 1.], [0., 2.]])
             .build();
@@ -173,7 +173,7 @@ mod tests {
     fn ray_hits_vertex_at_cycle_seam() {
         let stores = Stores::new();
 
-        let surface = Surface::xy_plane();
+        let surface = stores.surfaces.insert(Surface::xy_plane());
         let face = Face::builder(&stores, surface)
             .with_exterior_polygon_from_points([[4., 2.], [0., 4.], [0., 0.]])
             .build();
@@ -190,7 +190,7 @@ mod tests {
     fn ray_hits_vertex_while_staying_inside() {
         let stores = Stores::new();
 
-        let surface = Surface::xy_plane();
+        let surface = stores.surfaces.insert(Surface::xy_plane());
         let face = Face::builder(&stores, surface)
             .with_exterior_polygon_from_points([
                 [0., 0.],
@@ -212,7 +212,7 @@ mod tests {
     fn ray_hits_parallel_edge_and_leaves_face_at_vertex() {
         let stores = Stores::new();
 
-        let surface = Surface::xy_plane();
+        let surface = stores.surfaces.insert(Surface::xy_plane());
         let face = Face::builder(&stores, surface)
             .with_exterior_polygon_from_points([
                 [0., 0.],
@@ -234,7 +234,7 @@ mod tests {
     fn ray_hits_parallel_edge_and_does_not_leave_face_there() {
         let stores = Stores::new();
 
-        let surface = Surface::xy_plane();
+        let surface = stores.surfaces.insert(Surface::xy_plane());
         let face = Face::builder(&stores, surface)
             .with_exterior_polygon_from_points([
                 [0., 0.],
@@ -257,7 +257,7 @@ mod tests {
     fn point_is_coincident_with_edge() {
         let stores = Stores::new();
 
-        let surface = Surface::xy_plane();
+        let surface = stores.surfaces.insert(Surface::xy_plane());
         let face = Face::builder(&stores, surface)
             .with_exterior_polygon_from_points([[0., 0.], [2., 0.], [0., 1.]])
             .build();
@@ -283,7 +283,7 @@ mod tests {
     fn point_is_coincident_with_vertex() {
         let stores = Stores::new();
 
-        let surface = Surface::xy_plane();
+        let surface = stores.surfaces.insert(Surface::xy_plane());
         let face = Face::builder(&stores, surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .build();

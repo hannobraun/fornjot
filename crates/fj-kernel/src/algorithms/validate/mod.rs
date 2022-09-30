@@ -169,7 +169,7 @@ mod tests {
     fn coherence_edge() {
         let stores = Stores::new();
 
-        let surface = Surface::xy_plane();
+        let surface = stores.surfaces.insert(Surface::xy_plane());
 
         let points_surface = [[0., 0.], [1., 0.]];
         let points_global = [[0., 0., 0.], [1., 0., 0.]];
@@ -177,7 +177,7 @@ mod tests {
         let curve = {
             let path = SurfacePath::line_from_points(points_surface);
             let curve_global = GlobalCurve::new(&stores);
-            Curve::new(surface, path, curve_global)
+            Curve::new(surface.clone(), path, curve_global)
         };
 
         let [a_global, b_global] =
@@ -189,7 +189,11 @@ mod tests {
             let [a_surface, b_surface] = points_surface;
             [(a_surface, a_global), (b_surface, b_global)].map(
                 |(point_surface, vertex_global)| {
-                    SurfaceVertex::new(point_surface, surface, vertex_global)
+                    SurfaceVertex::new(
+                        point_surface,
+                        surface.clone(),
+                        vertex_global,
+                    )
                 },
             )
         };

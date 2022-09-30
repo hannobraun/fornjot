@@ -54,7 +54,7 @@ impl PartialHalfEdge {
     /// Update partial half-edge as a circle, from the given radius
     pub fn as_circle_from_radius(
         mut self,
-        surface: Surface,
+        surface: Handle<Surface>,
         radius: impl Into<Scalar>,
     ) -> Self {
         let curve = Curve::partial()
@@ -85,13 +85,13 @@ impl PartialHalfEdge {
     /// Update partial half-edge as a line segment, from the given points
     pub fn as_line_segment_from_points(
         self,
-        surface: Surface,
+        surface: Handle<Surface>,
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
         self.with_vertices(points.map(|point| {
             Vertex::partial().with_surface_form(
                 SurfaceVertex::partial()
-                    .with_surface(surface)
+                    .with_surface(surface.clone())
                     .with_position(point),
             )
         }))
@@ -132,8 +132,8 @@ impl PartialHalfEdge {
 
         let surface = from_surface
             .surface()
-            .copied()
-            .or_else(|| to_surface.surface().copied())
+            .cloned()
+            .or_else(|| to_surface.surface().cloned())
             .expect("Can't infer line segment without a surface");
         let points = [&from_surface, &to_surface].map(|vertex| {
             vertex
