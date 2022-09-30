@@ -1,6 +1,6 @@
 //! Intersection between a ray and a face, in 3D
 
-use fj_math::{Point, Scalar, Vector};
+use fj_math::{Point, Scalar};
 
 use crate::{
     algorithms::intersect::face_point::FacePointIntersection,
@@ -28,9 +28,7 @@ impl Intersect for (&HorizontalRayToTheRight<3>, &Face) {
 
         let plane_and_ray_are_parallel = {
             let plane_normal = plane_direction_1.cross(&plane_direction_2);
-            let ray_direction = Vector::from([1., 0., 0.]);
-
-            plane_normal.dot(&ray_direction) == Scalar::ZERO
+            plane_normal.dot(&ray.direction()) == Scalar::ZERO
         };
 
         if plane_and_ray_are_parallel {

@@ -11,7 +11,7 @@ mod face_face;
 mod line_segment;
 mod surface_surface;
 
-use fj_math::Point;
+use fj_math::{Point, Vector};
 
 pub use self::{
     curve_edge::CurveEdgeIntersection,
@@ -43,6 +43,15 @@ pub trait Intersect {
 pub struct HorizontalRayToTheRight<const D: usize> {
     /// The point where the ray originates
     pub origin: Point<D>,
+}
+
+impl<const D: usize> HorizontalRayToTheRight<D> {
+    /// Access the direction of this ray
+    pub fn direction(&self) -> Vector<D> {
+        let mut components = [0.; D];
+        components[0] = 1.;
+        components.into()
+    }
 }
 
 impl<P, const D: usize> From<P> for HorizontalRayToTheRight<D>
