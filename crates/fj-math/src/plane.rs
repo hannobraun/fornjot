@@ -34,6 +34,11 @@ impl Plane {
         self.v
     }
 
+    /// Compute the normal of the plane
+    pub fn normal(&self) -> Vector<3> {
+        self.u().cross(&self.v()).normalize()
+    }
+
     /// Convert the plane to three-point form
     pub fn three_point_form(&self) -> [Point<3>; 3] {
         let a = self.origin();
@@ -45,11 +50,11 @@ impl Plane {
 
     /// Convert the plane to constant-normal form
     pub fn constant_normal_form(&self) -> (Scalar, Vector<3>) {
-        let [a, b, c] = self.three_point_form();
+        let [a, _, _] = self.three_point_form();
 
         // See Real-Time Collision Detection by Christer Ericson, section 3.6,
         // Planes and Halfspaces.
-        let normal = (b - a).cross(&(c - a)).normalize();
+        let normal = self.normal();
         let distance = normal.dot(&a.coords);
 
         (distance, normal)
