@@ -148,8 +148,15 @@ mod tests {
         let g = surface.point_from_surface_coords(g);
         let h = surface.point_from_surface_coords(h);
 
-        // Should contain some triangles from the polygon. Don't need to test
-        // them all.
+        // Let's test that some correct triangles are present. We don't need to
+        // test them all.
+        //
+        // Please note that there are multiple valid triangulations of any given
+        // polygon. So if you change the input data above, or the algorithm, the
+        // following assertions might break.
+        //
+        // This limits the usefulness of this test. It would be better to have a
+        // smarter way of verifying the triangulation.
         assert!(triangles.contains_triangle([a, e, h]));
         assert!(triangles.contains_triangle([a, d, h]));
 
