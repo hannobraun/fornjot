@@ -32,8 +32,8 @@ impl Vertex {
         let position = position.into();
 
         assert_eq!(
-            curve.surface(),
-            surface_form.surface(),
+            curve.surface().id(),
+            surface_form.surface().id(),
             "Surface form of vertex must be defined on same surface as curve",
         );
         assert_eq!(
