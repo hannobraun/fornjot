@@ -184,9 +184,9 @@ mod tests {
         #[rustfmt::skip]
         let interior = [
             [-1., -1.],
-            [ 1., -1.],
-            [ 1.,  1.],
             [-1.,  1.],
+            [ 1.,  1.],
+            [ 1., -1.],
         ];
 
         let face = Face::builder(&stores, surface)

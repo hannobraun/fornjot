@@ -95,6 +95,10 @@ impl Cycle {
     }
 
     /// Indicate the cycle's winding, assuming a right-handed coordinate system
+    ///
+    /// Please note that this is not *the* winding of the cycle, only one of the
+    /// two possible windings, depending on the direction you look at the
+    /// surface that the cycle is defined on from.
     pub fn winding(&self) -> Winding {
         // The cycle could be made up of one or two circles. If that is the
         // case, the winding of the cycle is determined by the winding of the

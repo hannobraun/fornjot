@@ -129,9 +129,9 @@ mod tests {
         let d = [0., 4.];
 
         let e = [1., 1.];
-        let f = [3., 1.];
+        let f = [1., 2.];
         let g = [3., 3.];
-        let h = [1., 2.];
+        let h = [3., 1.];
 
         let surface = Surface::xy_plane();
         let face = Face::builder(&stores, surface)
@@ -141,17 +141,24 @@ mod tests {
 
         let triangles = triangulate(face)?;
 
-        let a = Point::from(a).to_xyz();
-        let d = Point::from(d).to_xyz();
-        let e = Point::from(e).to_xyz();
-        let f = Point::from(f).to_xyz();
-        let g = Point::from(g).to_xyz();
-        let h = Point::from(h).to_xyz();
+        let a = surface.point_from_surface_coords(a);
+        let b = surface.point_from_surface_coords(b);
+        let e = surface.point_from_surface_coords(e);
+        let f = surface.point_from_surface_coords(f);
+        let g = surface.point_from_surface_coords(g);
+        let h = surface.point_from_surface_coords(h);
 
-        // Should contain some triangles from the polygon. Don't need to test
-        // them all.
-        assert!(triangles.contains_triangle([a, e, h]));
-        assert!(triangles.contains_triangle([a, d, h]));
+        // Let's test that some correct triangles are present. We don't need to
+        // test them all.
+        //
+        // Please note that there are multiple valid triangulations of any given
+        // polygon. So if you change the input data above, or the algorithm, the
+        // following assertions might break.
+        //
+        // This limits the usefulness of this test. It would be better to have a
+        // smarter way of verifying the triangulation.
+        assert!(triangles.contains_triangle([a, b, e]));
+        assert!(triangles.contains_triangle([b, e, h]));
 
         // Shouldn't contain any possible triangle from the hole.
         assert!(!triangles.contains_triangle([e, f, g]));
@@ -179,12 +186,12 @@ mod tests {
         //   a ---------- b
         //
 
-        let a = Point::from([0., 0.]);
-        let b = Point::from([0.4, 0.]);
-        //let b = Point::from([0.5, 0.]); // test passes with this change
-        let c = Point::from([0.4, 1.0]);
-        let d = Point::from([0.1, 0.1]);
-        let e = Point::from([0., 0.8]);
+        let a = [0., 0.];
+        let b = [0.4, 0.];
+        //let b = [0.5, 0.]; // test passes with this change
+        let c = [0.4, 1.0];
+        let d = [0.1, 0.1];
+        let e = [0., 0.8];
 
         let surface = Surface::xy_plane();
         let face = Face::builder(&stores, surface)
@@ -193,11 +200,11 @@ mod tests {
 
         let triangles = triangulate(face)?;
 
-        let a3 = a.to_xyz();
-        let b3 = b.to_xyz();
-        let c3 = c.to_xyz();
-        let d3 = d.to_xyz();
-        let e3 = e.to_xyz();
+        let a3 = surface.point_from_surface_coords(a);
+        let b3 = surface.point_from_surface_coords(b);
+        let c3 = surface.point_from_surface_coords(c);
+        let d3 = surface.point_from_surface_coords(d);
+        let e3 = surface.point_from_surface_coords(e);
 
         assert!(triangles.contains_triangle([a3, b3, d3]));
         assert!(triangles.contains_triangle([b3, c3, d3]));
