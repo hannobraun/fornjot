@@ -82,12 +82,12 @@ mod tests {
             [2., 2.],
             [1., 2.],
         ];
-        let surfaces = [Surface::xy_plane(), Surface::xz_plane()];
-        let [a, b] = surfaces.map(|surface| {
-            Face::builder(&stores, surface)
-                .with_exterior_polygon_from_points(points)
-                .build()
-        });
+        let [a, b] =
+            [Surface::xy_plane(), Surface::xz_plane()].map(|surface| {
+                Face::builder(&stores, surface)
+                    .with_exterior_polygon_from_points(points)
+                    .build()
+            });
 
         let intersection = FaceFaceIntersection::compute([&a, &b], &stores);
 
