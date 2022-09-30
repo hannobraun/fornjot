@@ -129,9 +129,9 @@ mod tests {
         let d = [0., 4.];
 
         let e = [1., 1.];
-        let f = [3., 1.];
+        let f = [1., 2.];
         let g = [3., 3.];
-        let h = [1., 2.];
+        let h = [3., 1.];
 
         let surface = Surface::xy_plane();
         let face = Face::builder(&stores, surface)
@@ -142,7 +142,7 @@ mod tests {
         let triangles = triangulate(face)?;
 
         let a = surface.point_from_surface_coords(a);
-        let d = surface.point_from_surface_coords(d);
+        let b = surface.point_from_surface_coords(b);
         let e = surface.point_from_surface_coords(e);
         let f = surface.point_from_surface_coords(f);
         let g = surface.point_from_surface_coords(g);
@@ -157,8 +157,8 @@ mod tests {
         //
         // This limits the usefulness of this test. It would be better to have a
         // smarter way of verifying the triangulation.
-        assert!(triangles.contains_triangle([a, e, h]));
-        assert!(triangles.contains_triangle([a, d, h]));
+        assert!(triangles.contains_triangle([a, b, e]));
+        assert!(triangles.contains_triangle([b, e, h]));
 
         // Shouldn't contain any possible triangle from the hole.
         assert!(!triangles.contains_triangle([e, f, g]));
