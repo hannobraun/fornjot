@@ -11,7 +11,8 @@ use super::TransformObject;
 impl TransformObject for Vertex {
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
         let curve = self.curve().clone().transform(transform, stores);
-        let surface_form = self.surface_form().transform(transform, stores);
+        let surface_form =
+            self.surface_form().clone().transform(transform, stores);
         let global_form = self.global_form().transform(transform, stores);
 
         // Don't need to transform `self.position`, as that is in curve
@@ -22,7 +23,7 @@ impl TransformObject for Vertex {
 
 impl TransformObject for SurfaceVertex {
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
-        let surface = self.surface().transform(transform, stores);
+        let surface = self.surface().clone().transform(transform, stores);
         let global_form = self.global_form().transform(transform, stores);
 
         // Don't need to transform `self.position`, as that is in surface

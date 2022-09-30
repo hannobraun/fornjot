@@ -3,7 +3,10 @@ use std::collections::{btree_set, BTreeSet};
 use fj_interop::mesh::Color;
 use fj_math::Winding;
 
-use crate::{builder::FaceBuilder, stores::Stores};
+use crate::{
+    builder::FaceBuilder,
+    stores::{Handle, Stores},
+};
 
 use super::{Cycle, Surface};
 
@@ -33,7 +36,7 @@ use super::{Cycle, Surface};
 /// [`Shell`]: super::Shell
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Face {
-    surface: Surface,
+    surface: Handle<Surface>,
     exterior: Cycle,
     interiors: Vec<Cycle>,
     color: Color,
@@ -41,7 +44,7 @@ pub struct Face {
 
 impl Face {
     /// Build a `Face` using [`FaceBuilder`]
-    pub fn builder(stores: &Stores, surface: Surface) -> FaceBuilder {
+    pub fn builder(stores: &Stores, surface: Handle<Surface>) -> FaceBuilder {
         FaceBuilder {
             stores,
             surface,
@@ -56,7 +59,7 @@ impl Face {
     /// overridden using the `with_` methods.
     pub fn from_exterior(exterior: Cycle) -> Self {
         Self {
-            surface: *exterior.surface(),
+            surface: exterior.surface().clone(),
             exterior,
             interiors: Vec::new(),
             color: Color::default(),
@@ -104,7 +107,7 @@ impl Face {
     }
 
     /// Access this face's surface
-    pub fn surface(&self) -> &Surface {
+    pub fn surface(&self) -> &Handle<Surface> {
         &self.surface
     }
 

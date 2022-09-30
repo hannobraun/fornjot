@@ -111,7 +111,7 @@ impl MaybePartial<SurfaceVertex> {
     }
 
     /// Access the surface
-    pub fn surface(&self) -> Option<&Surface> {
+    pub fn surface(&self) -> Option<&Handle<Surface>> {
         match self {
             Self::Full(full) => Some(full.surface()),
             Self::Partial(partial) => partial.surface.as_ref(),
@@ -123,7 +123,7 @@ impl MaybePartial<Vertex> {
     /// Access the surface form
     pub fn surface_form(&self) -> Option<MaybePartial<SurfaceVertex>> {
         match self {
-            Self::Full(full) => Some((*full.surface_form()).into()),
+            Self::Full(full) => Some(full.surface_form().clone().into()),
             Self::Partial(partial) => partial.surface_form.clone(),
         }
     }

@@ -20,7 +20,7 @@ impl Shape for fj::Sketch {
         stores: &Stores,
         _: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
-        let surface = Surface::xy_plane();
+        let surface = stores.surfaces.insert(Surface::xy_plane());
 
         let face = match self.chain() {
             fj::Chain::Circle(circle) => {
@@ -28,7 +28,7 @@ impl Shape for fj::Sketch {
                 // none need to be added here.
 
                 let half_edge = HalfEdge::partial()
-                    .as_circle_from_radius(surface, circle.radius())
+                    .as_circle_from_radius(surface.clone(), circle.radius())
                     .build(stores);
                 let cycle = Cycle::new(surface, [half_edge]);
 

@@ -25,7 +25,7 @@ pub struct FaceFaceIntersection {
 impl FaceFaceIntersection {
     /// Compute the intersections between two faces
     pub fn compute(faces: [&Face; 2], stores: &Stores) -> Option<Self> {
-        let surfaces = faces.map(|face| face.surface());
+        let surfaces = faces.map(|face| face.surface().clone());
 
         let intersection_curves =
             SurfaceSurfaceIntersection::compute(surfaces, stores)?
@@ -82,12 +82,13 @@ mod tests {
             [2., 2.],
             [1., 2.],
         ];
-        let surfaces = [Surface::xy_plane(), Surface::xz_plane()];
-        let [a, b] = surfaces.map(|surface| {
-            Face::builder(&stores, surface)
-                .with_exterior_polygon_from_points(points)
-                .build()
-        });
+        let [a, b] =
+            [Surface::xy_plane(), Surface::xz_plane()].map(|surface| {
+                let surface = stores.surfaces.insert(surface);
+                Face::builder(&stores, surface)
+                    .with_exterior_polygon_from_points(points)
+                    .build()
+            });
 
         let intersection = FaceFaceIntersection::compute([&a, &b], &stores);
 
@@ -105,8 +106,9 @@ mod tests {
             [ 1.,  1.],
             [-1.,  1.],
         ];
-        let surfaces = [Surface::xy_plane(), Surface::xz_plane()];
-        let [a, b] = surfaces.map(|surface| {
+        let surfaces = [Surface::xy_plane(), Surface::xz_plane()]
+            .map(|surface| stores.surfaces.insert(surface));
+        let [a, b] = surfaces.clone().map(|surface| {
             Face::builder(&stores, surface)
                 .with_exterior_polygon_from_points(points)
                 .build()

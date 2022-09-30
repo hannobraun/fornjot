@@ -3,7 +3,7 @@ use fj_math::{Point, Scalar, Vector};
 use crate::{
     objects::{Curve, GlobalCurve, Surface},
     path::SurfacePath,
-    stores::{HandleWrapper, Stores},
+    stores::{Handle, HandleWrapper, Stores},
 };
 
 /// A partial [`Curve`]
@@ -19,7 +19,7 @@ pub struct PartialCurve {
     /// The surface that the [`Curve`] is defined in
     ///
     /// Must be provided before calling [`PartialCurve::build`].
-    pub surface: Option<Surface>,
+    pub surface: Option<Handle<Surface>>,
 
     /// The global form of the [`Curve`]
     ///
@@ -36,7 +36,7 @@ impl PartialCurve {
     }
 
     /// Provide a surface for the partial curve
-    pub fn with_surface(mut self, surface: Surface) -> Self {
+    pub fn with_surface(mut self, surface: Handle<Surface>) -> Self {
         self.surface = Some(surface);
         self
     }
@@ -94,7 +94,7 @@ impl From<&Curve> for PartialCurve {
     fn from(curve: &Curve) -> Self {
         Self {
             path: Some(curve.path()),
-            surface: Some(*curve.surface()),
+            surface: Some(curve.surface().clone()),
             global_form: Some(curve.global_form().clone().into()),
         }
     }

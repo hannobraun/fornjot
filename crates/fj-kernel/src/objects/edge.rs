@@ -176,13 +176,13 @@ mod tests {
     fn global_edge_equality() {
         let stores = Stores::new();
 
-        let surface = Surface::xy_plane();
+        let surface = stores.surfaces.insert(Surface::xy_plane());
 
         let a = [0., 0.];
         let b = [1., 0.];
 
         let a_to_b = HalfEdge::partial()
-            .as_line_segment_from_points(surface, [a, b])
+            .as_line_segment_from_points(surface.clone(), [a, b])
             .build(&stores);
         let b_to_a = HalfEdge::partial()
             .as_line_segment_from_points(surface, [b, a])

@@ -167,10 +167,10 @@ mod tests {
     fn compute() {
         let stores = Stores::new();
 
-        let surface = Surface::xy_plane();
+        let surface = stores.surfaces.insert(Surface::xy_plane());
 
         let curve = Curve::partial()
-            .with_surface(surface)
+            .with_surface(surface.clone())
             .as_line_from_points([[-3., 0.], [-2., 0.]])
             .build(&stores);
 

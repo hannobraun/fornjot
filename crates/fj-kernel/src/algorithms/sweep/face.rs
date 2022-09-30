@@ -90,12 +90,12 @@ mod tests {
     fn sweep_up() {
         let stores = Stores::new();
 
-        let surface = Surface::xy_plane();
-        let solid = Sketch::builder(&stores, surface)
+        let surface = stores.surfaces.insert(Surface::xy_plane());
+        let solid = Sketch::builder(&stores, surface.clone())
             .build_polygon_from_points(TRIANGLE)
             .sweep(UP, &stores);
 
-        let bottom = Face::builder(&stores, surface)
+        let bottom = Face::builder(&stores, surface.clone())
             .with_exterior_polygon_from_points(TRIANGLE)
             .build()
             .reverse();
@@ -114,7 +114,10 @@ mod tests {
             let [a, b] = [window[0], window[1]];
 
             let half_edge = HalfEdge::partial()
-                .as_line_segment_from_points(Surface::xy_plane(), [a, b])
+                .as_line_segment_from_points(
+                    stores.surfaces.insert(Surface::xy_plane()),
+                    [a, b],
+                )
                 .build(&stores);
             (half_edge, Color::default()).sweep(UP, &stores)
         });
@@ -126,15 +129,16 @@ mod tests {
     fn sweep_down() {
         let stores = Stores::new();
 
-        let surface = Surface::xy_plane();
-        let solid = Sketch::builder(&stores, surface)
+        let surface = stores.surfaces.insert(Surface::xy_plane());
+        let solid = Sketch::builder(&stores, surface.clone())
             .build_polygon_from_points(TRIANGLE)
             .sweep(DOWN, &stores);
 
-        let bottom = Face::builder(&stores, surface.translate(DOWN, &stores))
-            .with_exterior_polygon_from_points(TRIANGLE)
-            .build()
-            .reverse();
+        let bottom =
+            Face::builder(&stores, surface.clone().translate(DOWN, &stores))
+                .with_exterior_polygon_from_points(TRIANGLE)
+                .build()
+                .reverse();
         let top = Face::builder(&stores, surface)
             .with_exterior_polygon_from_points(TRIANGLE)
             .build();
@@ -150,7 +154,10 @@ mod tests {
             let [a, b] = [window[0], window[1]];
 
             let half_edge = HalfEdge::partial()
-                .as_line_segment_from_points(Surface::xy_plane(), [a, b])
+                .as_line_segment_from_points(
+                    stores.surfaces.insert(Surface::xy_plane()),
+                    [a, b],
+                )
                 .build(&stores)
                 .reverse();
             (half_edge, Color::default()).sweep(DOWN, &stores)

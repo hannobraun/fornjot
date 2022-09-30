@@ -3,7 +3,7 @@ use fj_math::Point;
 use crate::{
     objects::{Curve, GlobalVertex, Surface, SurfaceVertex, Vertex},
     partial::{HasPartial, MaybePartial},
-    stores::Stores,
+    stores::{Handle, Stores},
 };
 
 /// A partial [`Vertex`]
@@ -88,7 +88,7 @@ impl PartialVertex {
                     position: Some(
                         curve.path().point_from_path_coords(position),
                     ),
-                    surface: Some(*curve.surface()),
+                    surface: Some(curve.surface().clone()),
                     global_form: self.global_form,
                 }
                 .into()
@@ -106,7 +106,7 @@ impl From<&Vertex> for PartialVertex {
         Self {
             position: Some(vertex.position()),
             curve: Some(vertex.curve().clone().into()),
-            surface_form: Some((*vertex.surface_form()).into()),
+            surface_form: Some(vertex.surface_form().clone().into()),
             global_form: Some((*vertex.global_form()).into()),
         }
     }
@@ -125,7 +125,7 @@ pub struct PartialSurfaceVertex {
     /// The surface that the [`SurfaceVertex`] is defined in
     ///
     /// Must be provided before [`PartialSurfaceVertex::build`] is called.
-    pub surface: Option<Surface>,
+    pub surface: Option<Handle<Surface>>,
 
     /// The global form of the [`SurfaceVertex`]
     ///
@@ -142,7 +142,7 @@ impl PartialSurfaceVertex {
     }
 
     /// Provide a surface for the partial surface vertex
-    pub fn with_surface(mut self, surface: Surface) -> Self {
+    pub fn with_surface(mut self, surface: Handle<Surface>) -> Self {
         self.surface = Some(surface);
         self
     }
@@ -188,7 +188,7 @@ impl From<&SurfaceVertex> for PartialSurfaceVertex {
     fn from(surface_vertex: &SurfaceVertex) -> Self {
         Self {
             position: Some(surface_vertex.position()),
-            surface: Some(*surface_vertex.surface()),
+            surface: Some(surface_vertex.surface().clone()),
             global_form: Some((*surface_vertex.global_form()).into()),
         }
     }

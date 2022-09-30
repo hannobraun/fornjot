@@ -209,7 +209,9 @@ mod tests {
     fn approx_line_on_flat_surface() {
         let stores = Stores::new();
 
-        let surface = Surface::new(GlobalPath::x_axis(), [0., 0., 1.]);
+        let surface = stores
+            .surfaces
+            .insert(Surface::new(GlobalPath::x_axis(), [0., 0., 1.]));
         let curve = Curve::partial()
             .with_surface(surface)
             .as_line_from_points([[1., 1.], [2., 1.]])
@@ -225,8 +227,10 @@ mod tests {
     fn approx_line_on_curved_surface_but_not_along_curve() {
         let stores = Stores::new();
 
-        let surface =
-            Surface::new(GlobalPath::circle_from_radius(1.), [0., 0., 1.]);
+        let surface = stores.surfaces.insert(Surface::new(
+            GlobalPath::circle_from_radius(1.),
+            [0., 0., 1.],
+        ));
         let curve = Curve::partial()
             .with_surface(surface)
             .as_line_from_points([[1., 1.], [1., 2.]])
@@ -243,9 +247,9 @@ mod tests {
         let stores = Stores::new();
 
         let path = GlobalPath::circle_from_radius(1.);
-        let surface = Surface::new(path, [0., 0., 1.]);
+        let surface = stores.surfaces.insert(Surface::new(path, [0., 0., 1.]));
         let curve = Curve::partial()
-            .with_surface(surface)
+            .with_surface(surface.clone())
             .as_line_from_points([[0., 1.], [1., 1.]])
             .build(&stores);
 
@@ -272,7 +276,9 @@ mod tests {
     fn approx_circle_on_flat_surface() {
         let stores = Stores::new();
 
-        let surface = Surface::new(GlobalPath::x_axis(), [0., 0., 1.]);
+        let surface = stores
+            .surfaces
+            .insert(Surface::new(GlobalPath::x_axis(), [0., 0., 1.]));
         let curve = Curve::partial()
             .with_surface(surface)
             .as_circle_from_radius(1.)

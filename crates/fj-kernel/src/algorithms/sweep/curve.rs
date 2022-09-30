@@ -3,15 +3,15 @@ use fj_math::{Circle, Line, Vector};
 use crate::{
     objects::{Curve, Surface},
     path::{GlobalPath, SurfacePath},
-    stores::Stores,
+    stores::{Handle, Stores},
 };
 
 use super::Sweep;
 
 impl Sweep for Curve {
-    type Swept = Surface;
+    type Swept = Handle<Surface>;
 
-    fn sweep(self, path: impl Into<Vector<3>>, _: &Stores) -> Self::Swept {
+    fn sweep(self, path: impl Into<Vector<3>>, stores: &Stores) -> Self::Swept {
         match self.surface().u() {
             GlobalPath::Circle(_) => {
                 // Sweeping a `Curve` creates a `Surface`. The u-axis of that
@@ -59,6 +59,6 @@ impl Sweep for Curve {
             }
         };
 
-        Surface::new(u, path)
+        stores.surfaces.insert(Surface::new(u, path))
     }
 }

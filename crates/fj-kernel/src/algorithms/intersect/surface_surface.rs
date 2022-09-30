@@ -3,7 +3,7 @@ use fj_math::{Line, Plane, Point, Scalar};
 use crate::{
     objects::{Curve, GlobalCurve, Surface},
     path::{GlobalPath, SurfacePath},
-    stores::Stores,
+    stores::{Handle, Stores},
 };
 
 /// The intersection between two surfaces
@@ -15,7 +15,10 @@ pub struct SurfaceSurfaceIntersection {
 
 impl SurfaceSurfaceIntersection {
     /// Compute the intersection between two surfaces
-    pub fn compute(surfaces: [&Surface; 2], stores: &Stores) -> Option<Self> {
+    pub fn compute(
+        surfaces: [Handle<Surface>; 2],
+        stores: &Stores,
+    ) -> Option<Self> {
         // Algorithm from Real-Time Collision Detection by Christer Ericson. See
         // section 5.4.4, Intersection of Two Planes.
         //
@@ -23,10 +26,10 @@ impl SurfaceSurfaceIntersection {
         // coordinates for each surface.
 
         let surfaces_and_planes = surfaces.map(|surface| {
-            let plane = plane_from_surface(surface);
-            (*surface, plane)
+            let plane = plane_from_surface(&surface);
+            (surface, plane)
         });
-        let [a, b] = surfaces_and_planes.map(|(_, plane)| plane);
+        let [a, b] = surfaces_and_planes.clone().map(|(_, plane)| plane);
 
         let (a_distance, a_normal) = a.constant_normal_form();
         let (b_distance, b_normal) = b.constant_normal_form();
@@ -96,15 +99,15 @@ mod tests {
     fn plane_plane() {
         let stores = Stores::new();
 
-        let xy = Surface::xy_plane();
-        let xz = Surface::xz_plane();
+        let xy = stores.surfaces.insert(Surface::xy_plane());
+        let xz = stores.surfaces.insert(Surface::xz_plane());
 
         // Coincident and parallel planes don't have an intersection curve.
         assert_eq!(
             SurfaceSurfaceIntersection::compute(
                 [
-                    &xy,
-                    &xy.transform(
+                    xy.clone(),
+                    xy.clone().transform(
                         &Transform::translation([0., 0., 1.],),
                         &stores
                     )
@@ -114,13 +117,17 @@ mod tests {
             None,
         );
 
-        let expected_xy =
-            Curve::partial().with_surface(xy).as_u_axis().build(&stores);
-        let expected_xz =
-            Curve::partial().with_surface(xz).as_u_axis().build(&stores);
+        let expected_xy = Curve::partial()
+            .with_surface(xy.clone())
+            .as_u_axis()
+            .build(&stores);
+        let expected_xz = Curve::partial()
+            .with_surface(xz.clone())
+            .as_u_axis()
+            .build(&stores);
 
         assert_eq!(
-            SurfaceSurfaceIntersection::compute([&xy, &xz], &stores),
+            SurfaceSurfaceIntersection::compute([xy, xz], &stores),
             Some(SurfaceSurfaceIntersection {
                 intersection_curves: [expected_xy, expected_xz],
             })

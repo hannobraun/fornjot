@@ -40,7 +40,11 @@ impl Sweep for (HalfEdge, Color) {
                         points_curve_and_surface,
                     ));
 
-                Curve::new(surface, path, edge.curve().global_form().clone())
+                Curve::new(
+                    surface.clone(),
+                    path,
+                    edge.curve().global_form().clone(),
+                )
             };
 
             let vertices = {
@@ -57,7 +61,7 @@ impl Sweep for (HalfEdge, Color) {
                 vertices_with_surface_points.map(|(vertex, point_surface)| {
                     let surface_vertex = SurfaceVertex::new(
                         point_surface,
-                        surface,
+                        surface.clone(),
                         *vertex.global_form(),
                     );
 
@@ -76,7 +80,7 @@ impl Sweep for (HalfEdge, Color) {
         let side_edges = bottom_edge
             .vertices()
             .clone()
-            .map(|vertex| (vertex, surface).sweep(path, stores));
+            .map(|vertex| (vertex, surface.clone()).sweep(path, stores));
 
         let top_edge = {
             let bottom_vertices = bottom_edge.vertices();
@@ -106,7 +110,7 @@ impl Sweep for (HalfEdge, Color) {
                         points_curve_and_surface,
                     ));
 
-                Curve::new(surface, path, global)
+                Curve::new(surface.clone(), path, global)
             };
 
             let global =
@@ -129,7 +133,7 @@ impl Sweep for (HalfEdge, Color) {
                 vertices.map(|(vertex, point_surface, vertex_global)| {
                     let vertex_surface = SurfaceVertex::new(
                         point_surface,
-                        surface,
+                        surface.clone(),
                         vertex_global,
                     );
                     Vertex::new(
@@ -194,7 +198,7 @@ mod tests {
 
         let half_edge = HalfEdge::partial()
             .as_line_segment_from_points(
-                Surface::xy_plane(),
+                stores.surfaces.insert(Surface::xy_plane()),
                 [[0., 0.], [1., 0.]],
             )
             .build(&stores);
@@ -202,21 +206,33 @@ mod tests {
         let face = (half_edge, Color::default()).sweep([0., 0., 1.], &stores);
 
         let expected_face = {
-            let surface = Surface::xz_plane();
+            let surface = stores.surfaces.insert(Surface::xz_plane());
 
             let bottom = HalfEdge::partial()
-                .as_line_segment_from_points(surface, [[0., 0.], [1., 0.]])
+                .as_line_segment_from_points(
+                    surface.clone(),
+                    [[0., 0.], [1., 0.]],
+                )
                 .build(&stores);
             let top = HalfEdge::partial()
-                .as_line_segment_from_points(surface, [[0., 1.], [1., 1.]])
+                .as_line_segment_from_points(
+                    surface.clone(),
+                    [[0., 1.], [1., 1.]],
+                )
                 .build(&stores)
                 .reverse();
             let left = HalfEdge::partial()
-                .as_line_segment_from_points(surface, [[0., 0.], [0., 1.]])
+                .as_line_segment_from_points(
+                    surface.clone(),
+                    [[0., 0.], [0., 1.]],
+                )
                 .build(&stores)
                 .reverse();
             let right = HalfEdge::partial()
-                .as_line_segment_from_points(surface, [[1., 0.], [1., 1.]])
+                .as_line_segment_from_points(
+                    surface.clone(),
+                    [[1., 0.], [1., 1.]],
+                )
                 .build(&stores);
 
             let cycle = Cycle::new(surface, [bottom, right, top, left]);

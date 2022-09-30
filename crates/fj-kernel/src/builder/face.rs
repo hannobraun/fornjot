@@ -2,7 +2,7 @@ use fj_math::Point;
 
 use crate::{
     objects::{Cycle, Face, Surface},
-    stores::Stores,
+    stores::{Handle, Stores},
 };
 
 /// API for building a [`Face`]
@@ -13,7 +13,7 @@ pub struct FaceBuilder<'a> {
     pub stores: &'a Stores,
 
     /// The surface that the [`Face`] is defined in
-    pub surface: Surface,
+    pub surface: Handle<Surface>,
 
     /// The exterior cycle that bounds the [`Face`] on the outside
     ///
@@ -32,7 +32,7 @@ impl<'a> FaceBuilder<'a> {
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
         self.exterior = Some(
-            Cycle::builder(self.stores, self.surface)
+            Cycle::builder(self.stores, self.surface.clone())
                 .with_poly_chain_from_points(points)
                 .close_with_line_segment()
                 .build(),
@@ -46,7 +46,7 @@ impl<'a> FaceBuilder<'a> {
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
         self.interiors.push(
-            Cycle::builder(self.stores, self.surface)
+            Cycle::builder(self.stores, self.surface.clone())
                 .with_poly_chain_from_points(points)
                 .close_with_line_segment()
                 .build(),

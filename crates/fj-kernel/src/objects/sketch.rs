@@ -1,4 +1,7 @@
-use crate::{builder::SketchBuilder, stores::Stores};
+use crate::{
+    builder::SketchBuilder,
+    stores::{Handle, Stores},
+};
 
 use super::{face::Faces, Face, Surface};
 
@@ -15,7 +18,7 @@ pub struct Sketch {
 
 impl Sketch {
     /// Build a `Sketch` using [`SketchBuilder`]
-    pub fn builder(stores: &Stores, surface: Surface) -> SketchBuilder {
+    pub fn builder(stores: &Stores, surface: Handle<Surface>) -> SketchBuilder {
         SketchBuilder { stores, surface }
     }
 
