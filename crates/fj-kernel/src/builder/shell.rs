@@ -80,7 +80,7 @@ impl<'a> ShellBuilder<'a> {
                 .map(|(bottom, &surface)| {
                     let [_, from] = bottom.vertices();
 
-                    let from = *from.surface_form();
+                    let from = from.surface_form().clone();
                     let to = SurfaceVertex::partial()
                         .with_position(from.position() + [Z, edge_length])
                         .with_surface(surface);
@@ -108,7 +108,7 @@ impl<'a> ShellBuilder<'a> {
                         let [_, from] = side_up_prev.vertices();
                         let [to, _] = bottom.vertices();
 
-                        let to = *to.surface_form();
+                        let to = to.surface_form().clone();
                         let from = SurfaceVertex::partial()
                             .with_position(to.position() + [Z, edge_length])
                             .with_surface(surface)
@@ -139,7 +139,7 @@ impl<'a> ShellBuilder<'a> {
                     let [_, from] = side_up.vertices();
                     let [to, _] = side_down.vertices();
 
-                    let from = *from.surface_form();
+                    let from = from.surface_form().clone();
                     let to = SurfaceVertex::partial()
                         .with_position(from.position() + [-edge_length, Z])
                         .with_surface(surface)

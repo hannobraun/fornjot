@@ -106,7 +106,7 @@ impl From<&Vertex> for PartialVertex {
         Self {
             position: Some(vertex.position()),
             curve: Some(vertex.curve().clone().into()),
-            surface_form: Some((*vertex.surface_form()).into()),
+            surface_form: Some(vertex.surface_form().clone().into()),
             global_form: Some((*vertex.global_form()).into()),
         }
     }

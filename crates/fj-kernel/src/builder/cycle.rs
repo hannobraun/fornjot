@@ -41,7 +41,7 @@ impl<'a> CycleBuilder<'a> {
             .map(|half_edge| {
                 let [_, last] = half_edge.vertices();
 
-                let vertex = *last.surface_form();
+                let vertex = last.surface_form().clone();
                 let position = last.surface_form().position();
 
                 (position, Some(vertex))
@@ -66,7 +66,7 @@ impl<'a> CycleBuilder<'a> {
                         .build(self.stores)
                 });
 
-                previous = Some((position, Some(to)));
+                previous = Some((position, Some(to.clone())));
 
                 let curve = Curve::partial()
                     .with_surface(self.surface)

@@ -65,7 +65,7 @@ impl Vertex {
 }
 
 /// A vertex, defined in surface (2D) coordinates
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct SurfaceVertex {
     position: Point<2>,
     surface: Surface,
