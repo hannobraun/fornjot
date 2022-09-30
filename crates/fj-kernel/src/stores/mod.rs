@@ -12,6 +12,13 @@ pub use self::{
 };
 
 /// The available object stores
+///
+/// # Implementation Note
+///
+/// The intention is to eventually manage all objects in here. Making this
+/// happen is simply a case of putting in the required work. See [#1021].
+///
+/// [#1021]: https://github.com/hannobraun/Fornjot/issues/1021
 #[derive(Debug, Default)]
 pub struct Stores {
     /// Store for global curves
