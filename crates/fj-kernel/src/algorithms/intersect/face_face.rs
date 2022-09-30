@@ -25,7 +25,7 @@ pub struct FaceFaceIntersection {
 impl FaceFaceIntersection {
     /// Compute the intersections between two faces
     pub fn compute(faces: [&Face; 2], stores: &Stores) -> Option<Self> {
-        let surfaces = faces.map(|face| face.surface());
+        let surfaces = faces.map(|face| *face.surface());
 
         let intersection_curves =
             SurfaceSurfaceIntersection::compute(surfaces, stores)?
