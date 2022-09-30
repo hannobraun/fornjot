@@ -14,7 +14,7 @@ pub use self::{
 /// The available object stores
 #[derive(Debug, Default)]
 pub struct Stores {
-    /// Store for [`GlobalCurve`]s
+    /// Store for global curves
     pub global_curves: Store<GlobalCurve>,
 }
 
