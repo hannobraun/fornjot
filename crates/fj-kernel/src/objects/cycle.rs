@@ -118,7 +118,7 @@ impl Cycle {
                     "Invalid cycle: less than 3 edges, but not all are circles"
                 ),
             };
-            let cross_positive = circle.a().cross(&circle.b()) > Scalar::ZERO;
+            let cross_positive = circle.a().cross2d(&circle.b()) > Scalar::ZERO;
 
             if edge_direction_positive == cross_positive {
                 return Winding::Ccw;

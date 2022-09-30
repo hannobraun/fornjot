@@ -129,8 +129,14 @@ impl Vector<2> {
     }
 
     /// Compute the 2D cross product with another vector
-    pub fn cross(&self, other: &Self) -> Scalar {
+    pub fn cross2d(&self, other: &Self) -> Scalar {
         (self.u * other.v) - (self.v * other.u)
+    }
+
+    /// Determine whether this vector is between two other vectors
+    pub fn is_between(&self, others: [impl Into<Self>; 2]) -> bool {
+        let [a, b] = others.map(Into::into);
+        a.cross2d(self) * b.cross2d(self) < Scalar::ZERO
     }
 }
 
@@ -389,5 +395,14 @@ mod tests {
                 .scalar_projection_onto(&Vector::from([0., 0., 0.])),
             Scalar::ZERO
         );
+    }
+
+    #[test]
+    fn is_between() {
+        let v = Vector::from([1., 1.]);
+
+        assert!(v.is_between([[1., 0.], [0., 1.]]));
+        assert!(!v.is_between([[1., 0.], [0., -1.]]));
+        assert!(!v.is_between([[-1., 0.], [0., 1.]]));
     }
 }
