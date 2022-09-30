@@ -1,6 +1,6 @@
 //! Intersection between a ray and a face, in 3D
 
-use fj_math::{Point, Scalar};
+use fj_math::{Plane, Point, Scalar};
 
 use crate::{
     algorithms::intersect::face_point::FacePointIntersection,
@@ -16,25 +16,26 @@ impl Intersect for (&HorizontalRayToTheRight<3>, &Face) {
     fn intersect(self) -> Option<Self::Intersection> {
         let (ray, face) = self;
 
-        let (plane_origin, plane_direction_1, plane_direction_2) =
-            match face.surface().u() {
-                GlobalPath::Circle(_) => todo!(
-                    "Casting a ray against a swept circle is not supported yet"
-                ),
-                GlobalPath::Line(line) => {
-                    (line.origin(), line.direction(), face.surface().v())
-                }
-            };
+        let plane = match face.surface().u() {
+            GlobalPath::Circle(_) => todo!(
+                "Casting a ray against a swept circle is not supported yet"
+            ),
+            GlobalPath::Line(line) => Plane::from_parametric(
+                line.origin(),
+                line.direction(),
+                face.surface().v(),
+            ),
+        };
 
         let plane_and_ray_are_parallel = {
-            let plane_normal = plane_direction_1.cross(&plane_direction_2);
+            let plane_normal = plane.u().cross(&plane.v());
             plane_normal.dot(&ray.direction()) == Scalar::ZERO
         };
 
         if plane_and_ray_are_parallel {
-            let a = plane_origin;
-            let b = plane_origin + plane_direction_1;
-            let c = plane_origin + plane_direction_2;
+            let a = plane.origin();
+            let b = plane.origin() + plane.u();
+            let c = plane.origin() + plane.v();
             let d = ray.origin;
 
             let [a, b, c, d] = [a, b, c, d]
@@ -63,8 +64,8 @@ impl Intersect for (&HorizontalRayToTheRight<3>, &Face) {
         // We already handled the case of the ray and plane being parallel
         // above. The following assertion should thus never be triggered.
         assert_ne!(
-            plane_direction_1.y * plane_direction_2.z,
-            plane_direction_1.z * plane_direction_2.y,
+            plane.u().y * plane.v().z,
+            plane.u().z * plane.v().y,
             "Plane and ray are parallel; should have been ruled out previously"
         );
 
@@ -75,15 +76,15 @@ impl Intersect for (&HorizontalRayToTheRight<3>, &Face) {
             let orx = ray.origin.x;
             let ory = ray.origin.y;
             let orz = ray.origin.z;
-            let opx = plane_origin.x;
-            let opy = plane_origin.y;
-            let opz = plane_origin.z;
-            let d1x = plane_direction_1.x;
-            let d1y = plane_direction_1.y;
-            let d1z = plane_direction_1.z;
-            let d2x = plane_direction_2.x;
-            let d2y = plane_direction_2.y;
-            let d2z = plane_direction_2.z;
+            let opx = plane.origin().x;
+            let opy = plane.origin().y;
+            let opz = plane.origin().z;
+            let d1x = plane.u().x;
+            let d1y = plane.u().y;
+            let d1z = plane.u().z;
+            let d2x = plane.v().x;
+            let d2y = plane.v().y;
+            let d2z = plane.v().z;
 
             // Let's figure out where the intersection between the ray and the
             // plane is. By equating the parametric equations of the ray and the
