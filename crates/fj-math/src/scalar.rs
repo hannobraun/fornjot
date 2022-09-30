@@ -150,6 +150,12 @@ impl Scalar {
     }
 }
 
+impl PartialEq for Scalar {
+    fn eq(&self, other: &Self) -> bool {
+        self.0 == other.0
+    }
+}
+
 impl Eq for Scalar {}
 
 impl PartialOrd for Scalar {
@@ -163,12 +169,6 @@ impl Ord for Scalar {
         // Should never panic, as `from_f64` checks that the wrapped value is
         // finite.
         self.partial_cmp(other).expect("Invalid `Scalar`")
-    }
-}
-
-impl PartialEq for Scalar {
-    fn eq(&self, other: &Self) -> bool {
-        self.0 == other.0
     }
 }
 
