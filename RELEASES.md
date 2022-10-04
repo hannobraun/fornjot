@@ -33,10 +33,7 @@ Now, edit this file to finish the release announcement:
    - Summarize the week's development.
    - Highlight contributions.
 3. Write *Outlook*
-4. Update list of sponsors
-   - https://github.com/sponsors/hannobraun/dashboard/activity
-   - Mention all sponsors at $32 / month and above by name.
-5. Write *Issue of the Week*
+4. Write *Issue of the Week*
    See notes below.
 
 When done, deploy to the website.
@@ -54,11 +51,11 @@ Potential new issues of the week:
 - https://github.com/hannobraun/Fornjot/issues/937
 - https://github.com/hannobraun/Fornjot/issues/986
 - https://github.com/hannobraun/Fornjot/issues/987
-- https://github.com/hannobraun/Fornjot/issues/996
 - https://github.com/hannobraun/Fornjot/issues/997
 
 Already mentioned issues of the week (remove, once closed):
 
+- 2022-10-04: https://github.com/hannobraun/Fornjot/issues/996
 - 2022-09-26: https://github.com/hannobraun/Fornjot/issues/971
 - 2022-09-19: https://github.com/hannobraun/Fornjot/issues/821
 - 2022-09-05: https://github.com/hannobraun/Fornjot/issues/920
