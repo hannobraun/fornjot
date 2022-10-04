@@ -1,5 +1,66 @@
 # Fornjot - Changelog
 
+## v0.18.0 (2022-10-04)
+
+### End-user improvements
+
+Improvements to Fornjot and its documentation that are visible to end-users.
+
+*None this week. Busy improving the kernel!*
+
+### Ecosystem improvements
+
+Improvements to the Fornjot ecosystem that are relevant to developers who are building on top of Fornjot components.
+
+#### `fj-kernel`
+
+- Improve some panic messages ([#1139], [#1149])
+- Improve partial object API ([#1140], [#1144], [#1148], [#1150])
+- Fix some code that creates duplicate global curves ([#1145], [#1151], [#1152])
+- Remove redundant geometry from `GlobalCurve` ([#1146], [#1153])
+- Make `GlobalEdge` undirected ([#1155])
+- Validate winding of interior cycles of `Face` ([#1158])
+- Add `HorizontalRayToTheRight::direction` ([#1159])
+- Integrate `Surface` into centralized object storage ([#1163])
+
+#### `fj-math`
+
+- Add `Plane` ([#1157], [#1160])
+- Expand and clean up API of `Vector` ([#1161])
+
+### Internal Improvements
+
+Improvements that are relevant to developers working on Fornjot itself.
+
+- Update release procedure ([#1138])
+- Expand release automation ([#1141])
+- Update dependencies ([#1142])
+- Update screenshot of test model ([#1156])
+
+[#1138]: https://github.com/hannobraun/Fornjot/pull/1138
+[#1139]: https://github.com/hannobraun/Fornjot/pull/1139
+[#1140]: https://github.com/hannobraun/Fornjot/pull/1140
+[#1141]: https://github.com/hannobraun/Fornjot/pull/1141
+[#1142]: https://github.com/hannobraun/Fornjot/pull/1142
+[#1144]: https://github.com/hannobraun/Fornjot/pull/1144
+[#1145]: https://github.com/hannobraun/Fornjot/pull/1145
+[#1146]: https://github.com/hannobraun/Fornjot/pull/1146
+[#1148]: https://github.com/hannobraun/Fornjot/pull/1148
+[#1149]: https://github.com/hannobraun/Fornjot/pull/1149
+[#1150]: https://github.com/hannobraun/Fornjot/pull/1150
+[#1151]: https://github.com/hannobraun/Fornjot/pull/1151
+[#1152]: https://github.com/hannobraun/Fornjot/pull/1152
+[#1153]: https://github.com/hannobraun/Fornjot/pull/1153
+[#1155]: https://github.com/hannobraun/Fornjot/pull/1155
+[#1156]: https://github.com/hannobraun/Fornjot/pull/1156
+[#1157]: https://github.com/hannobraun/Fornjot/pull/1157
+[#1158]: https://github.com/hannobraun/Fornjot/pull/1158
+[#1159]: https://github.com/hannobraun/Fornjot/pull/1159
+[#1160]: https://github.com/hannobraun/Fornjot/pull/1160
+[#1161]: https://github.com/hannobraun/Fornjot/pull/1161
+[#1163]: https://github.com/hannobraun/Fornjot/pull/1163
+
+
 ## v0.17.0 (2022-09-26)
 
 ### End-user improvements
