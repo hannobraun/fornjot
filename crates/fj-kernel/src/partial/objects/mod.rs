@@ -5,14 +5,15 @@ pub mod vertex;
 
 use crate::{
     objects::{
-        Curve, GlobalEdge, GlobalVertex, HalfEdge, SurfaceVertex, Vertex,
+        Curve, Cycle, GlobalEdge, GlobalVertex, HalfEdge, SurfaceVertex, Vertex,
     },
     stores::Stores,
 };
 
 use super::{
-    HasPartial, MaybePartial, Partial, PartialCurve, PartialGlobalEdge,
-    PartialGlobalVertex, PartialHalfEdge, PartialSurfaceVertex, PartialVertex,
+    HasPartial, MaybePartial, Partial, PartialCurve, PartialCycle,
+    PartialGlobalEdge, PartialGlobalVertex, PartialHalfEdge,
+    PartialSurfaceVertex, PartialVertex,
 };
 
 macro_rules! impl_traits {
@@ -41,6 +42,7 @@ macro_rules! impl_traits {
 
 impl_traits!(
     Curve, PartialCurve;
+    Cycle, PartialCycle;
     GlobalEdge, PartialGlobalEdge;
     GlobalVertex, PartialGlobalVertex;
     HalfEdge, PartialHalfEdge;
