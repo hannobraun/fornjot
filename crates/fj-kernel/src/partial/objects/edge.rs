@@ -91,7 +91,7 @@ impl PartialHalfEdge {
         self.with_vertices(points.map(|point| {
             Vertex::partial().with_surface_form(Some(
                 SurfaceVertex::partial()
-                    .with_surface(surface.clone())
+                    .with_surface(Some(surface.clone()))
                     .with_position(Some(point)),
             ))
         }))
