@@ -71,7 +71,7 @@ impl PartialHalfEdge {
             [a_curve, b_curve].map(|point_curve| {
                 Vertex::partial()
                     .with_position(Some(point_curve))
-                    .with_curve(curve.clone())
+                    .with_curve(Some(curve.clone()))
                     .with_global_form(global_vertex.clone())
             })
         };
@@ -152,7 +152,7 @@ impl PartialHalfEdge {
             vertex.update_partial(|vertex| {
                 vertex
                     .with_position(Some([position]))
-                    .with_curve(curve.clone())
+                    .with_curve(Some(curve.clone()))
             })
         });
 
@@ -173,7 +173,9 @@ impl PartialHalfEdge {
             .expect("Can't build `HalfEdge` without vertices")
             .map(|vertex| {
                 vertex
-                    .update_partial(|vertex| vertex.with_curve(curve.clone()))
+                    .update_partial(|vertex| {
+                        vertex.with_curve(Some(curve.clone()))
+                    })
                     .into_full(stores)
             });
 

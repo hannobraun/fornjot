@@ -166,7 +166,7 @@ mod tests {
             .build(&stores);
         let vertex = Vertex::partial()
             .with_position(Some([0.]))
-            .with_curve(curve)
+            .with_curve(Some(curve))
             .build(&stores);
 
         let half_edge = (vertex, surface.clone()).sweep([0., 0., 1.], &stores);

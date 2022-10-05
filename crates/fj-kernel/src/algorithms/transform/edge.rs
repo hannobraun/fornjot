@@ -16,10 +16,7 @@ impl TransformObject for PartialHalfEdge {
         let vertices = self.vertices.clone().map(|vertices| {
             vertices.map(|vertex| {
                 let vertex = vertex.into_partial().transform(transform, stores);
-                let vertex = match &curve {
-                    Some(curve) => vertex.with_curve(curve.clone()),
-                    None => vertex,
-                };
+                let vertex = vertex.with_curve(curve.clone());
                 vertex.into()
             })
         });
