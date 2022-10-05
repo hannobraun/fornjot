@@ -237,8 +237,13 @@ impl PartialGlobalEdge {
     }
 
     /// Update the partial global edge with the given vertices
-    pub fn with_vertices(mut self, vertices: [GlobalVertex; 2]) -> Self {
-        self.vertices = Some(vertices);
+    pub fn with_vertices(
+        mut self,
+        vertices: Option<[GlobalVertex; 2]>,
+    ) -> Self {
+        if let Some(vertices) = vertices {
+            self.vertices = Some(vertices);
+        }
         self
     }
 
@@ -249,7 +254,9 @@ impl PartialGlobalEdge {
         vertices: &[Vertex; 2],
     ) -> Self {
         self.with_curve(Some(curve.global_form().clone()))
-            .with_vertices(vertices.clone().map(|vertex| *vertex.global_form()))
+            .with_vertices(Some(
+                vertices.clone().map(|vertex| *vertex.global_form()),
+            ))
     }
 
     /// Build a full [`GlobalEdge`] from the partial global edge
