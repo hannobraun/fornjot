@@ -1,7 +1,8 @@
 use fj_math::Transform;
 
 use crate::{
-    partial::{PartialGlobalEdge, PartialHalfEdge},
+    objects::Curve,
+    partial::{MaybePartial, PartialGlobalEdge, PartialHalfEdge},
     stores::Stores,
 };
 
@@ -9,10 +10,16 @@ use super::TransformObject;
 
 impl TransformObject for PartialHalfEdge {
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
-        let curve = self
-            .curve
-            .clone()
-            .map(|curve| curve.transform(transform, stores));
+        let surface = self
+            .surface
+            .map(|surface| surface.transform(transform, stores));
+        let curve = self.curve.clone().map(|curve| {
+            curve
+                .into_partial()
+                .transform(transform, stores)
+                .with_surface(surface.clone())
+                .into()
+        });
         let vertices = self.vertices.clone().map(|vertices| {
             vertices.map(|vertex| {
                 vertex
@@ -26,13 +33,14 @@ impl TransformObject for PartialHalfEdge {
             global_form
                 .into_partial()
                 .transform(transform, stores)
-                .with_curve(
-                    curve.as_ref().and_then(|curve| curve.global_form()),
-                )
+                .with_curve(curve.as_ref().and_then(
+                    |curve: &MaybePartial<Curve>| curve.global_form(),
+                ))
                 .into()
         });
 
         Self {
+            surface,
             curve,
             vertices,
             global_form,

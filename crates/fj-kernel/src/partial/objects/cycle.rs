@@ -144,7 +144,8 @@ impl PartialCycle {
 
             self.half_edges.push(
                 HalfEdge::partial()
-                    .as_line_segment_from_points(surface, vertices)
+                    .with_surface(Some(surface))
+                    .as_line_segment_from_points(vertices)
                     .into(),
             );
         }
@@ -155,10 +156,14 @@ impl PartialCycle {
     /// Build a full [`Cycle`] from the partial cycle
     pub fn build(self, stores: &Stores) -> Cycle {
         let surface = self.surface.expect("Need surface to build `Cycle`");
-        let half_edges = self
-            .half_edges
-            .into_iter()
-            .map(|half_edge| half_edge.into_full(stores));
+        let surface_for_edges = surface.clone();
+        let half_edges = self.half_edges.into_iter().map(|half_edge| {
+            half_edge
+                .update_partial(|half_edge| {
+                    half_edge.with_surface(Some(surface_for_edges.clone()))
+                })
+                .into_full(stores)
+        });
 
         Cycle::new(surface, half_edges)
     }

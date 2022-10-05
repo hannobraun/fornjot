@@ -14,6 +14,9 @@ use crate::{
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct PartialHalfEdge {
+    /// The surface that the [`HalfEdge`]'s [`Curve`] is defined in
+    pub surface: Option<Handle<Surface>>,
+
     /// The curve that the [`HalfEdge`] is defined in
     pub curve: Option<MaybePartial<Curve>>,
 
@@ -27,6 +30,14 @@ pub struct PartialHalfEdge {
 }
 
 impl PartialHalfEdge {
+    /// Update the partial half-edge with the given surface
+    pub fn with_surface(mut self, surface: Option<Handle<Surface>>) -> Self {
+        if let Some(surface) = surface {
+            self.surface = Some(surface);
+        }
+        self
+    }
+
     /// Update the partial half-edge with the given curve
     pub fn with_curve(
         mut self,
@@ -61,13 +72,9 @@ impl PartialHalfEdge {
     }
 
     /// Update partial half-edge as a circle, from the given radius
-    pub fn as_circle_from_radius(
-        mut self,
-        surface: Handle<Surface>,
-        radius: impl Into<Scalar>,
-    ) -> Self {
+    pub fn as_circle_from_radius(mut self, radius: impl Into<Scalar>) -> Self {
         let curve = Curve::partial()
-            .with_surface(Some(surface))
+            .with_surface(self.surface.clone())
             .as_circle_from_radius(radius);
 
         let vertices = {
@@ -94,13 +101,13 @@ impl PartialHalfEdge {
     /// Update partial half-edge as a line segment, from the given points
     pub fn as_line_segment_from_points(
         self,
-        surface: Handle<Surface>,
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
+        let surface = self.surface.clone();
         self.with_vertices(Some(points.map(|point| {
             Vertex::partial().with_surface_form(Some(
                 SurfaceVertex::partial()
-                    .with_surface(Some(surface.clone()))
+                    .with_surface(surface.clone())
                     .with_position(Some(point)),
             ))
         })))
@@ -139,11 +146,13 @@ impl PartialHalfEdge {
                 .expect("Can't infer line segment without two surface vertices")
         });
 
-        let surface = from_surface
-            .surface()
-            .cloned()
-            .or_else(|| to_surface.surface().cloned())
-            .expect("Can't infer line segment without a surface");
+        let surface = self
+            .surface
+            .as_ref()
+            .or_else(|| from_surface.surface())
+            .or_else(|| to_surface.surface())
+            .expect("Can't infer line segment without a surface")
+            .clone();
         let points = [&from_surface, &to_surface].map(|vertex| {
             vertex
                 .position()
@@ -173,9 +182,11 @@ impl PartialHalfEdge {
 
     /// Build a full [`HalfEdge`] from the partial half-edge
     pub fn build(self, stores: &Stores) -> HalfEdge {
+        let surface = self.surface;
         let curve = self
             .curve
             .expect("Can't build `HalfEdge` without curve")
+            .update_partial(|curve| curve.with_surface(surface))
             .into_full(stores);
         let vertices = self
             .vertices
@@ -204,6 +215,7 @@ impl PartialHalfEdge {
 impl From<&HalfEdge> for PartialHalfEdge {
     fn from(half_edge: &HalfEdge) -> Self {
         Self {
+            surface: Some(half_edge.surface().clone()),
             curve: Some(half_edge.curve().clone().into()),
             vertices: Some(half_edge.vertices().clone().map(Into::into)),
             global_form: Some(half_edge.global_form().clone().into()),

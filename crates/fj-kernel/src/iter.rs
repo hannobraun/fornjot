@@ -480,10 +480,8 @@ mod tests {
         let stores = Stores::new();
 
         let object = HalfEdge::partial()
-            .as_line_segment_from_points(
-                stores.surfaces.insert(Surface::xy_plane()),
-                [[0., 0.], [1., 0.]],
-            )
+            .with_surface(Some(stores.surfaces.insert(Surface::xy_plane())))
+            .as_line_segment_from_points([[0., 0.], [1., 0.]])
             .build(&stores);
 
         assert_eq!(1, object.curve_iter().count());

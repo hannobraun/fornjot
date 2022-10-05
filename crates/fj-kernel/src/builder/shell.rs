@@ -69,11 +69,9 @@ impl<'a> ShellBuilder<'a> {
                 .zip(&surfaces)
                 .map(|(half_edge, surface)| {
                     HalfEdge::partial()
+                        .with_surface(Some(surface.clone()))
                         .with_global_form(Some(half_edge.global_form().clone()))
-                        .as_line_segment_from_points(
-                            surface.clone(),
-                            [[Z, Z], [edge_length, Z]],
-                        )
+                        .as_line_segment_from_points([[Z, Z], [edge_length, Z]])
                         .build(self.stores)
                 })
                 .collect::<Vec<_>>();
