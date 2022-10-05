@@ -72,13 +72,9 @@ impl PartialHalfEdge {
     }
 
     /// Update partial half-edge as a circle, from the given radius
-    pub fn as_circle_from_radius(
-        mut self,
-        surface: Handle<Surface>,
-        radius: impl Into<Scalar>,
-    ) -> Self {
+    pub fn as_circle_from_radius(mut self, radius: impl Into<Scalar>) -> Self {
         let curve = Curve::partial()
-            .with_surface(Some(surface))
+            .with_surface(self.surface.clone())
             .as_circle_from_radius(radius);
 
         let vertices = {
