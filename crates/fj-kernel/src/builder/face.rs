@@ -2,6 +2,7 @@ use fj_math::Point;
 
 use crate::{
     objects::{Cycle, Face, Surface},
+    partial::HasPartial,
     stores::{Handle, Stores},
 };
 
@@ -32,7 +33,7 @@ impl<'a> FaceBuilder<'a> {
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
         self.exterior = Some(
-            Cycle::builder()
+            Cycle::partial()
                 .with_surface(self.surface.clone())
                 .with_poly_chain_from_points(points)
                 .close_with_line_segment()
@@ -47,7 +48,7 @@ impl<'a> FaceBuilder<'a> {
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
         self.interiors.push(
-            Cycle::builder()
+            Cycle::partial()
                 .with_surface(self.surface.clone())
                 .with_poly_chain_from_points(points)
                 .close_with_line_segment()
