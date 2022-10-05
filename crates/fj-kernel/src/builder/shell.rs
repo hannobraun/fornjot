@@ -119,9 +119,9 @@ impl<'a> ShellBuilder<'a> {
                             .with_surface(surface.clone())
                             .with_global_form(*from.global_form());
 
-                        let curve = Curve::partial().with_global_form(
+                        let curve = Curve::partial().with_global_form(Some(
                             side_up_prev.curve().global_form().clone(),
-                        );
+                        ));
 
                         HalfEdge::partial()
                             .with_curve(curve)

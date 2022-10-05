@@ -48,9 +48,11 @@ impl PartialCurve {
     /// Provide a global form for the partial curve
     pub fn with_global_form(
         mut self,
-        global_form: impl Into<HandleWrapper<GlobalCurve>>,
+        global_form: Option<impl Into<HandleWrapper<GlobalCurve>>>,
     ) -> Self {
-        self.global_form = Some(global_form.into());
+        if let Some(global_form) = global_form {
+            self.global_form = Some(global_form.into());
+        }
         self
     }
 
