@@ -8,6 +8,8 @@ use fj_kernel::{
 };
 use fj_math::Aabb;
 
+use crate::planes::Planes;
+
 use super::Shape;
 
 impl Shape for fj::Group {
@@ -17,12 +19,13 @@ impl Shape for fj::Group {
         &self,
         config: &ValidationConfig,
         stores: &Stores,
+        planes: &Planes,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
         let mut faces = Faces::new();
 
-        let a = self.a.compute_brep(config, stores, debug_info)?;
-        let b = self.b.compute_brep(config, stores, debug_info)?;
+        let a = self.a.compute_brep(config, stores, planes, debug_info)?;
+        let b = self.b.compute_brep(config, stores, planes, debug_info)?;
 
         faces.extend(a.into_inner());
         faces.extend(b.into_inner());

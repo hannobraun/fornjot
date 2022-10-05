@@ -9,6 +9,8 @@ use fj_kernel::{
 };
 use fj_math::{Aabb, Point};
 
+use crate::planes::Planes;
+
 use super::Shape;
 
 impl Shape for fj::Sketch {
@@ -18,6 +20,7 @@ impl Shape for fj::Sketch {
         &self,
         config: &ValidationConfig,
         stores: &Stores,
+        _: &Planes,
         _: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
         let surface = stores.surfaces.insert(Surface::xy_plane());
