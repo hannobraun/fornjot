@@ -71,9 +71,11 @@ impl PartialVertex {
     /// Provide a global form for the partial vertex
     pub fn with_global_form(
         mut self,
-        global_form: impl Into<MaybePartial<GlobalVertex>>,
+        global_form: Option<impl Into<MaybePartial<GlobalVertex>>>,
     ) -> Self {
-        self.global_form = Some(global_form.into());
+        if let Some(global_form) = global_form {
+            self.global_form = Some(global_form.into());
+        }
         self
     }
 

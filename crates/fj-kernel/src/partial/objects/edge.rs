@@ -72,7 +72,7 @@ impl PartialHalfEdge {
                 Vertex::partial()
                     .with_position(Some(point_curve))
                     .with_curve(Some(curve.clone()))
-                    .with_global_form(global_vertex.clone())
+                    .with_global_form(Some(global_vertex.clone()))
             })
         };
 
