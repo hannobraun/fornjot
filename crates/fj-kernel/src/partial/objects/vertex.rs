@@ -230,8 +230,13 @@ pub struct PartialGlobalVertex {
 
 impl PartialGlobalVertex {
     /// Provide a position for the partial global vertex
-    pub fn with_position(mut self, position: impl Into<Point<3>>) -> Self {
-        self.position = Some(position.into());
+    pub fn with_position(
+        mut self,
+        position: Option<impl Into<Point<3>>>,
+    ) -> Self {
+        if let Some(position) = position {
+            self.position = Some(position.into());
+        }
         self
     }
 
