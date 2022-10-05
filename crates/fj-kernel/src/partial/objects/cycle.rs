@@ -9,7 +9,7 @@ use crate::{
 /// API for building a [`Cycle`]
 ///
 /// Also see [`Cycle::builder`].
-pub struct CycleBuilder<'a> {
+pub struct PartialCycle<'a> {
     /// The stores that the created objects are put in
     pub stores: &'a Stores,
 
@@ -20,7 +20,7 @@ pub struct CycleBuilder<'a> {
     pub half_edges: Vec<HalfEdge>,
 }
 
-impl<'a> CycleBuilder<'a> {
+impl<'a> PartialCycle<'a> {
     /// Build the [`Cycle`] with the given half-edge
     pub fn with_half_edges(
         mut self,

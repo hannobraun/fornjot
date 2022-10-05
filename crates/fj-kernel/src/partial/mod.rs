@@ -42,7 +42,7 @@ pub use self::{
     maybe_partial::MaybePartial,
     objects::{
         curve::PartialCurve,
-        cycle::CycleBuilder,
+        cycle::PartialCycle,
         edge::{PartialGlobalEdge, PartialHalfEdge},
         vertex::{PartialGlobalVertex, PartialSurfaceVertex, PartialVertex},
     },
