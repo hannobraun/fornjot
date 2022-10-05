@@ -15,13 +15,13 @@ impl TransformObject for Face {
             .exterior()
             .to_partial()
             .transform(transform, stores)
-            .with_surface(surface.clone())
+            .with_surface(Some(surface.clone()))
             .build(stores);
         let interiors = self.interiors().map(|cycle| {
             cycle
                 .to_partial()
                 .transform(transform, stores)
-                .with_surface(surface.clone())
+                .with_surface(Some(surface.clone()))
                 .build(stores)
         });
 

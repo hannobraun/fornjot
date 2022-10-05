@@ -34,7 +34,7 @@ impl<'a> FaceBuilder<'a> {
     ) -> Self {
         self.exterior = Some(
             Cycle::partial()
-                .with_surface(self.surface.clone())
+                .with_surface(Some(self.surface.clone()))
                 .with_poly_chain_from_points(points)
                 .close_with_line_segment()
                 .build(self.stores),
@@ -49,7 +49,7 @@ impl<'a> FaceBuilder<'a> {
     ) -> Self {
         self.interiors.push(
             Cycle::partial()
-                .with_surface(self.surface.clone())
+                .with_surface(Some(self.surface.clone()))
                 .with_poly_chain_from_points(points)
                 .close_with_line_segment()
                 .build(self.stores),
