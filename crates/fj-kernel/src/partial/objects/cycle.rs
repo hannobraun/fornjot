@@ -11,7 +11,7 @@ use crate::{
 /// Also see [`Cycle::builder`].
 pub struct PartialCycle {
     /// The surface that the [`Cycle`] is defined in
-    pub surface: Handle<Surface>,
+    pub surface: Option<Handle<Surface>>,
 
     /// The half-edges that make up the [`Cycle`]
     pub half_edges: Vec<MaybePartial<HalfEdge>>,
@@ -20,7 +20,7 @@ pub struct PartialCycle {
 impl PartialCycle {
     /// Update the partial cycle with the given surface
     pub fn with_surface(mut self, surface: Handle<Surface>) -> Self {
-        self.surface = surface;
+        self.surface = Some(surface);
         self
     }
 
@@ -67,7 +67,10 @@ impl PartialCycle {
 
         for (position, vertex) in iter {
             if let Some((previous_position, previous_vertex)) = previous {
-                let surface = self.surface.clone();
+                let surface = self
+                    .surface
+                    .clone()
+                    .expect("Need surface to extend cycle with poly-chain");
 
                 let from = previous_vertex.unwrap_or_else(|| {
                     SurfaceVertex::partial()
@@ -133,7 +136,8 @@ impl PartialCycle {
                     .position()
                     .expect("Need surface position to close cycle")
             });
-            let surface = self.surface.clone();
+            let surface =
+                self.surface.clone().expect("Need surface to close cycle");
 
             self.half_edges.push(
                 HalfEdge::partial()
@@ -147,7 +151,7 @@ impl PartialCycle {
 
     /// Finish building the [`Cycle`]
     pub fn build(self, stores: &Stores) -> Cycle {
-        let surface = self.surface;
+        let surface = self.surface.expect("Need surface to build `Cycle`");
         let half_edges = self
             .half_edges
             .into_iter()

@@ -14,9 +14,9 @@ pub struct Cycle {
 
 impl Cycle {
     /// Build a `Cycle` using [`CycleBuilder`]
-    pub fn builder(surface: Handle<Surface>) -> PartialCycle {
+    pub fn builder() -> PartialCycle {
         PartialCycle {
-            surface,
+            surface: None,
             half_edges: Vec::new(),
         }
     }

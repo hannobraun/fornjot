@@ -167,7 +167,8 @@ impl<'a> ShellBuilder<'a> {
                 .zip(sides_down)
                 .zip(surfaces)
                 .map(|((((bottom, side_up), top), side_down), surface)| {
-                    let cycle = Cycle::builder(surface)
+                    let cycle = Cycle::builder()
+                        .with_surface(surface)
                         .with_half_edges([bottom, side_up, top, side_down])
                         .build(self.stores);
 
