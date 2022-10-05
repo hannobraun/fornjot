@@ -15,25 +15,21 @@ impl TransformObject for PartialHalfEdge {
             .map(|curve| curve.transform(transform, stores));
         let vertices = self.vertices.clone().map(|vertices| {
             vertices.map(|vertex| {
-                let vertex = vertex.into_partial().transform(transform, stores);
-                let vertex = match &curve {
-                    Some(curve) => vertex.with_curve(curve.clone()),
-                    None => vertex,
-                };
-                vertex.into()
+                vertex
+                    .into_partial()
+                    .transform(transform, stores)
+                    .with_curve(curve.clone())
+                    .into()
             })
         });
         let global_form = self.global_form.map(|global_form| {
-            let global_form =
-                global_form.into_partial().transform(transform, stores);
-
-            let curve = curve.as_ref().and_then(|curve| curve.global_form());
-            let global_form = match curve {
-                Some(curve) => global_form.with_curve(curve),
-                None => global_form,
-            };
-
-            global_form.into()
+            global_form
+                .into_partial()
+                .transform(transform, stores)
+                .with_curve(
+                    curve.as_ref().and_then(|curve| curve.global_form()),
+                )
+                .into()
         });
 
         Self {

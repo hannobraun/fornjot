@@ -30,23 +30,29 @@ pub struct PartialCurve {
 
 impl PartialCurve {
     /// Provide a path for the partial curve
-    pub fn with_path(mut self, path: SurfacePath) -> Self {
-        self.path = Some(path);
+    pub fn with_path(mut self, path: Option<SurfacePath>) -> Self {
+        if let Some(path) = path {
+            self.path = Some(path);
+        }
         self
     }
 
     /// Provide a surface for the partial curve
-    pub fn with_surface(mut self, surface: Handle<Surface>) -> Self {
-        self.surface = Some(surface);
+    pub fn with_surface(mut self, surface: Option<Handle<Surface>>) -> Self {
+        if let Some(surface) = surface {
+            self.surface = Some(surface);
+        }
         self
     }
 
     /// Provide a global form for the partial curve
     pub fn with_global_form(
         mut self,
-        global_form: impl Into<HandleWrapper<GlobalCurve>>,
+        global_form: Option<impl Into<HandleWrapper<GlobalCurve>>>,
     ) -> Self {
-        self.global_form = Some(global_form.into());
+        if let Some(global_form) = global_form {
+            self.global_form = Some(global_form.into());
+        }
         self
     }
 
@@ -68,12 +74,12 @@ impl PartialCurve {
 
     /// Update partial curve as a circle, from the provided radius
     pub fn as_circle_from_radius(self, radius: impl Into<Scalar>) -> Self {
-        self.with_path(SurfacePath::circle_from_radius(radius))
+        self.with_path(Some(SurfacePath::circle_from_radius(radius)))
     }
 
     /// Update partial curve as a line, from the provided points
     pub fn as_line_from_points(self, points: [impl Into<Point<2>>; 2]) -> Self {
-        self.with_path(SurfacePath::line_from_points(points))
+        self.with_path(Some(SurfacePath::line_from_points(points)))
     }
 
     /// Build a full [`Curve`] from the partial curve

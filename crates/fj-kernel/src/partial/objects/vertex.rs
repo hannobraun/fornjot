@@ -36,32 +36,46 @@ pub struct PartialVertex {
 
 impl PartialVertex {
     /// Provide a position for the partial vertex
-    pub fn with_position(mut self, position: impl Into<Point<1>>) -> Self {
-        self.position = Some(position.into());
+    pub fn with_position(
+        mut self,
+        position: Option<impl Into<Point<1>>>,
+    ) -> Self {
+        if let Some(position) = position {
+            self.position = Some(position.into());
+        }
         self
     }
 
     /// Provide a curve for the partial vertex
-    pub fn with_curve(mut self, curve: impl Into<MaybePartial<Curve>>) -> Self {
-        self.curve = Some(curve.into());
+    pub fn with_curve(
+        mut self,
+        curve: Option<impl Into<MaybePartial<Curve>>>,
+    ) -> Self {
+        if let Some(curve) = curve {
+            self.curve = Some(curve.into());
+        }
         self
     }
 
     /// Provide a surface form for the partial vertex
     pub fn with_surface_form(
         mut self,
-        surface_form: impl Into<MaybePartial<SurfaceVertex>>,
+        surface_form: Option<impl Into<MaybePartial<SurfaceVertex>>>,
     ) -> Self {
-        self.surface_form = Some(surface_form.into());
+        if let Some(surface_form) = surface_form {
+            self.surface_form = Some(surface_form.into());
+        }
         self
     }
 
     /// Provide a global form for the partial vertex
     pub fn with_global_form(
         mut self,
-        global_form: impl Into<MaybePartial<GlobalVertex>>,
+        global_form: Option<impl Into<MaybePartial<GlobalVertex>>>,
     ) -> Self {
-        self.global_form = Some(global_form.into());
+        if let Some(global_form) = global_form {
+            self.global_form = Some(global_form.into());
+        }
         self
     }
 
@@ -136,23 +150,32 @@ pub struct PartialSurfaceVertex {
 
 impl PartialSurfaceVertex {
     /// Provide a position for the partial surface vertex
-    pub fn with_position(mut self, position: impl Into<Point<2>>) -> Self {
-        self.position = Some(position.into());
+    pub fn with_position(
+        mut self,
+        position: Option<impl Into<Point<2>>>,
+    ) -> Self {
+        if let Some(position) = position {
+            self.position = Some(position.into());
+        }
         self
     }
 
     /// Provide a surface for the partial surface vertex
-    pub fn with_surface(mut self, surface: Handle<Surface>) -> Self {
-        self.surface = Some(surface);
+    pub fn with_surface(mut self, surface: Option<Handle<Surface>>) -> Self {
+        if let Some(surface) = surface {
+            self.surface = Some(surface);
+        }
         self
     }
 
     /// Provide a global form for the partial surface vertex
     pub fn with_global_form(
         mut self,
-        global_form: impl Into<MaybePartial<GlobalVertex>>,
+        global_form: Option<impl Into<MaybePartial<GlobalVertex>>>,
     ) -> Self {
-        self.global_form = Some(global_form.into());
+        if let Some(global_form) = global_form {
+            self.global_form = Some(global_form.into());
+        }
         self
     }
 
@@ -207,8 +230,13 @@ pub struct PartialGlobalVertex {
 
 impl PartialGlobalVertex {
     /// Provide a position for the partial global vertex
-    pub fn with_position(mut self, position: impl Into<Point<3>>) -> Self {
-        self.position = Some(position.into());
+    pub fn with_position(
+        mut self,
+        position: Option<impl Into<Point<3>>>,
+    ) -> Self {
+        if let Some(position) = position {
+            self.position = Some(position.into());
+        }
         self
     }
 

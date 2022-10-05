@@ -69,7 +69,7 @@ impl<'a> ShellBuilder<'a> {
                 .zip(&surfaces)
                 .map(|(half_edge, surface)| {
                     HalfEdge::partial()
-                        .with_global_form(half_edge.global_form().clone())
+                        .with_global_form(Some(half_edge.global_form().clone()))
                         .as_line_segment_from_points(
                             surface.clone(),
                             [[Z, Z], [edge_length, Z]],
@@ -87,14 +87,14 @@ impl<'a> ShellBuilder<'a> {
 
                     let from = from.surface_form().clone();
                     let to = SurfaceVertex::partial()
-                        .with_position(from.position() + [Z, edge_length])
-                        .with_surface(surface.clone());
+                        .with_position(Some(from.position() + [Z, edge_length]))
+                        .with_surface(Some(surface.clone()));
 
                     HalfEdge::partial()
-                        .with_vertices([
-                            Vertex::partial().with_surface_form(from),
-                            Vertex::partial().with_surface_form(to),
-                        ])
+                        .with_vertices(Some([
+                            Vertex::partial().with_surface_form(Some(from)),
+                            Vertex::partial().with_surface_form(Some(to)),
+                        ]))
                         .as_line_segment()
                         .build(self.stores)
                 })
@@ -115,20 +115,22 @@ impl<'a> ShellBuilder<'a> {
 
                         let to = to.surface_form().clone();
                         let from = SurfaceVertex::partial()
-                            .with_position(to.position() + [Z, edge_length])
-                            .with_surface(surface.clone())
-                            .with_global_form(*from.global_form());
+                            .with_position(Some(
+                                to.position() + [Z, edge_length],
+                            ))
+                            .with_surface(Some(surface.clone()))
+                            .with_global_form(Some(*from.global_form()));
 
-                        let curve = Curve::partial().with_global_form(
+                        let curve = Curve::partial().with_global_form(Some(
                             side_up_prev.curve().global_form().clone(),
-                        );
+                        ));
 
                         HalfEdge::partial()
-                            .with_curve(curve)
-                            .with_vertices([
-                                Vertex::partial().with_surface_form(from),
-                                Vertex::partial().with_surface_form(to),
-                            ])
+                            .with_curve(Some(curve))
+                            .with_vertices(Some([
+                                Vertex::partial().with_surface_form(Some(from)),
+                                Vertex::partial().with_surface_form(Some(to)),
+                            ]))
                             .as_line_segment()
                             .build(self.stores)
                     })
@@ -146,15 +148,17 @@ impl<'a> ShellBuilder<'a> {
 
                     let from = from.surface_form().clone();
                     let to = SurfaceVertex::partial()
-                        .with_position(from.position() + [-edge_length, Z])
-                        .with_surface(surface.clone())
-                        .with_global_form(*to.global_form());
+                        .with_position(Some(
+                            from.position() + [-edge_length, Z],
+                        ))
+                        .with_surface(Some(surface.clone()))
+                        .with_global_form(Some(*to.global_form()));
 
-                    let from = Vertex::partial().with_surface_form(from);
-                    let to = Vertex::partial().with_surface_form(to);
+                    let from = Vertex::partial().with_surface_form(Some(from));
+                    let to = Vertex::partial().with_surface_form(Some(to));
 
                     HalfEdge::partial()
-                        .with_vertices([from, to])
+                        .with_vertices(Some([from, to]))
                         .as_line_segment()
                         .build(self.stores)
                 })
@@ -168,7 +172,7 @@ impl<'a> ShellBuilder<'a> {
                 .zip(surfaces)
                 .map(|((((bottom, side_up), top), side_down), surface)| {
                     let cycle = Cycle::partial()
-                        .with_surface(surface)
+                        .with_surface(Some(surface))
                         .with_half_edges([bottom, side_up, top, side_down])
                         .build(self.stores);
 
@@ -203,20 +207,20 @@ impl<'a> ShellBuilder<'a> {
                 let vertices = [(point_a, vertex_a), (point_b, vertex_b)].map(
                     |(point, vertex)| {
                         let surface_form = SurfaceVertex::partial()
-                            .with_position(point)
-                            .with_surface(surface.clone())
-                            .with_global_form(*vertex.global_form())
+                            .with_position(Some(point))
+                            .with_surface(Some(surface.clone()))
+                            .with_global_form(Some(*vertex.global_form()))
                             .build(self.stores);
                         Vertex::partial()
-                            .with_position(vertex.position())
-                            .with_surface_form(surface_form)
+                            .with_position(Some(vertex.position()))
+                            .with_surface_form(Some(surface_form))
                     },
                 );
 
                 edges.push(
                     HalfEdge::partial()
-                        .with_vertices(vertices)
-                        .with_global_form(edge.global_form().clone())
+                        .with_vertices(Some(vertices))
+                        .with_global_form(Some(edge.global_form().clone()))
                         .as_line_segment()
                         .build(self.stores),
                 );

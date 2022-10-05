@@ -118,11 +118,11 @@ mod tests {
         );
 
         let expected_xy = Curve::partial()
-            .with_surface(xy.clone())
+            .with_surface(Some(xy.clone()))
             .as_u_axis()
             .build(&stores);
         let expected_xz = Curve::partial()
-            .with_surface(xz.clone())
+            .with_surface(Some(xz.clone()))
             .as_u_axis()
             .build(&stores);
 

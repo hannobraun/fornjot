@@ -20,8 +20,10 @@ pub struct PartialCycle {
 
 impl PartialCycle {
     /// Update the partial cycle with the given surface
-    pub fn with_surface(mut self, surface: Handle<Surface>) -> Self {
-        self.surface = Some(surface);
+    pub fn with_surface(mut self, surface: Option<Handle<Surface>>) -> Self {
+        if let Some(surface) = surface {
+            self.surface = Some(surface);
+        }
         self
     }
 
@@ -75,35 +77,35 @@ impl PartialCycle {
 
                 let from = previous_vertex.unwrap_or_else(|| {
                     SurfaceVertex::partial()
-                        .with_surface(surface.clone())
-                        .with_position(previous_position)
+                        .with_surface(Some(surface.clone()))
+                        .with_position(Some(previous_position))
                         .into()
                 });
                 let to = vertex.unwrap_or_else(|| {
                     SurfaceVertex::partial()
-                        .with_surface(surface.clone())
-                        .with_position(position)
+                        .with_surface(Some(surface.clone()))
+                        .with_position(Some(position))
                         .into()
                 });
 
                 previous = Some((position, Some(to.clone())));
 
                 let curve = Curve::partial()
-                    .with_surface(surface.clone())
+                    .with_surface(Some(surface.clone()))
                     .as_line_from_points([previous_position, position]);
 
                 let [from, to] =
                     [(0., from), (1., to)].map(|(position, surface_form)| {
                         Vertex::partial()
-                            .with_curve(curve.clone())
-                            .with_position([position])
-                            .with_surface_form(surface_form)
+                            .with_curve(Some(curve.clone()))
+                            .with_position(Some([position]))
+                            .with_surface_form(Some(surface_form))
                     });
 
                 self.half_edges.push(
                     HalfEdge::partial()
-                        .with_curve(curve)
-                        .with_vertices([from, to])
+                        .with_curve(Some(curve))
+                        .with_vertices(Some([from, to]))
                         .into(),
                 );
 

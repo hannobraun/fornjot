@@ -170,7 +170,7 @@ mod tests {
         let surface = stores.surfaces.insert(Surface::xy_plane());
 
         let curve = Curve::partial()
-            .with_surface(surface.clone())
+            .with_surface(Some(surface.clone()))
             .as_line_from_points([[-3., 0.], [-2., 0.]])
             .build(&stores);
 
