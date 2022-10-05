@@ -18,6 +18,12 @@ pub struct PartialCycle {
 }
 
 impl PartialCycle {
+    /// Update the partial cycle with the given surface
+    pub fn with_surface(mut self, surface: Handle<Surface>) -> Self {
+        self.surface = surface;
+        self
+    }
+
     /// Build the [`Cycle`] with the given half-edge
     pub fn with_half_edges(
         mut self,
