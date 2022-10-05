@@ -182,9 +182,11 @@ impl PartialHalfEdge {
 
     /// Build a full [`HalfEdge`] from the partial half-edge
     pub fn build(self, stores: &Stores) -> HalfEdge {
+        let surface = self.surface;
         let curve = self
             .curve
             .expect("Can't build `HalfEdge` without curve")
+            .update_partial(|curve| curve.with_surface(surface))
             .into_full(stores);
         let vertices = self
             .vertices
