@@ -69,7 +69,7 @@ impl<'a> ShellBuilder<'a> {
                 .zip(&surfaces)
                 .map(|(half_edge, surface)| {
                     HalfEdge::partial()
-                        .with_global_form(half_edge.global_form().clone())
+                        .with_global_form(Some(half_edge.global_form().clone()))
                         .as_line_segment_from_points(
                             surface.clone(),
                             [[Z, Z], [edge_length, Z]],
@@ -220,7 +220,7 @@ impl<'a> ShellBuilder<'a> {
                 edges.push(
                     HalfEdge::partial()
                         .with_vertices(Some(vertices))
-                        .with_global_form(edge.global_form().clone())
+                        .with_global_form(Some(edge.global_form().clone()))
                         .as_line_segment()
                         .build(self.stores),
                 );
