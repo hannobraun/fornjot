@@ -41,9 +41,11 @@ impl PartialHalfEdge {
     /// Update the partial half-edge with the given vertices
     pub fn with_vertices(
         mut self,
-        vertices: [impl Into<MaybePartial<Vertex>>; 2],
+        vertices: Option<[impl Into<MaybePartial<Vertex>>; 2]>,
     ) -> Self {
-        self.vertices = Some(vertices.map(Into::into));
+        if let Some(vertices) = vertices {
+            self.vertices = Some(vertices.map(Into::into));
+        }
         self
     }
 
@@ -93,13 +95,13 @@ impl PartialHalfEdge {
         surface: Handle<Surface>,
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
-        self.with_vertices(points.map(|point| {
+        self.with_vertices(Some(points.map(|point| {
             Vertex::partial().with_surface_form(Some(
                 SurfaceVertex::partial()
                     .with_surface(Some(surface.clone()))
                     .with_position(Some(point)),
             ))
-        }))
+        })))
         .as_line_segment()
     }
 

@@ -91,10 +91,10 @@ impl<'a> ShellBuilder<'a> {
                         .with_surface(Some(surface.clone()));
 
                     HalfEdge::partial()
-                        .with_vertices([
+                        .with_vertices(Some([
                             Vertex::partial().with_surface_form(Some(from)),
                             Vertex::partial().with_surface_form(Some(to)),
-                        ])
+                        ]))
                         .as_line_segment()
                         .build(self.stores)
                 })
@@ -127,10 +127,10 @@ impl<'a> ShellBuilder<'a> {
 
                         HalfEdge::partial()
                             .with_curve(Some(curve))
-                            .with_vertices([
+                            .with_vertices(Some([
                                 Vertex::partial().with_surface_form(Some(from)),
                                 Vertex::partial().with_surface_form(Some(to)),
-                            ])
+                            ]))
                             .as_line_segment()
                             .build(self.stores)
                     })
@@ -158,7 +158,7 @@ impl<'a> ShellBuilder<'a> {
                     let to = Vertex::partial().with_surface_form(Some(to));
 
                     HalfEdge::partial()
-                        .with_vertices([from, to])
+                        .with_vertices(Some([from, to]))
                         .as_line_segment()
                         .build(self.stores)
                 })
@@ -219,7 +219,7 @@ impl<'a> ShellBuilder<'a> {
 
                 edges.push(
                     HalfEdge::partial()
-                        .with_vertices(vertices)
+                        .with_vertices(Some(vertices))
                         .with_global_form(edge.global_form().clone())
                         .as_line_segment()
                         .build(self.stores),
