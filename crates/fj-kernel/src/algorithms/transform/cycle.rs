@@ -13,7 +13,12 @@ impl TransformObject for PartialCycle {
         let half_edges = self
             .half_edges
             .into_iter()
-            .map(|edge| edge.transform(transform, stores))
+            .map(|edge| {
+                edge.into_partial()
+                    .transform(transform, stores)
+                    .with_surface(surface.clone())
+                    .into()
+            })
             .collect();
 
         Self {
