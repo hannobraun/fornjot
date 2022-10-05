@@ -3,7 +3,7 @@ use fj_kernel::{
     algorithms::validate::{
         Validate, Validated, ValidationConfig, ValidationError,
     },
-    objects::{Cycle, Face, HalfEdge, Sketch, Surface},
+    objects::{Cycle, Face, HalfEdge, Sketch},
     partial::HasPartial,
     stores::Stores,
 };
@@ -20,10 +20,10 @@ impl Shape for fj::Sketch {
         &self,
         config: &ValidationConfig,
         stores: &Stores,
-        _: &Planes,
+        planes: &Planes,
         _: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
-        let surface = stores.surfaces.insert(Surface::xy_plane());
+        let surface = planes.xy();
 
         let face = match self.chain() {
             fj::Chain::Circle(circle) => {
