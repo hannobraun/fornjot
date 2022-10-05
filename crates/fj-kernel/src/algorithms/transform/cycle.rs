@@ -6,10 +6,11 @@ use super::TransformObject;
 
 impl TransformObject for Cycle {
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
-        Self::new(
-            self.surface().clone().transform(transform, stores),
-            self.into_half_edges()
-                .map(|edge| edge.transform(transform, stores)),
-        )
+        let surface = self.surface().clone().transform(transform, stores);
+        let half_edges = self
+            .into_half_edges()
+            .map(|edge| edge.transform(transform, stores));
+
+        Self::new(surface, half_edges)
     }
 }
