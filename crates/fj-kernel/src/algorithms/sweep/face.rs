@@ -117,10 +117,8 @@ mod tests {
             let [a, b] = [window[0], window[1]];
 
             let half_edge = HalfEdge::partial()
-                .as_line_segment_from_points(
-                    stores.surfaces.insert(Surface::xy_plane()),
-                    [a, b],
-                )
+                .with_surface(Some(stores.surfaces.insert(Surface::xy_plane())))
+                .as_line_segment_from_points([a, b])
                 .build(&stores);
             (half_edge, Color::default()).sweep(UP, &stores)
         });
@@ -157,10 +155,8 @@ mod tests {
             let [a, b] = [window[0], window[1]];
 
             let half_edge = HalfEdge::partial()
-                .as_line_segment_from_points(
-                    stores.surfaces.insert(Surface::xy_plane()),
-                    [a, b],
-                )
+                .with_surface(Some(stores.surfaces.insert(Surface::xy_plane())))
+                .as_line_segment_from_points([a, b])
                 .build(&stores)
                 .reverse();
             (half_edge, Color::default()).sweep(DOWN, &stores)

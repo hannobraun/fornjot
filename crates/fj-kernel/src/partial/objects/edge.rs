@@ -101,13 +101,13 @@ impl PartialHalfEdge {
     /// Update partial half-edge as a line segment, from the given points
     pub fn as_line_segment_from_points(
         self,
-        surface: Handle<Surface>,
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
+        let surface = self.surface.clone();
         self.with_vertices(Some(points.map(|point| {
             Vertex::partial().with_surface_form(Some(
                 SurfaceVertex::partial()
-                    .with_surface(Some(surface.clone()))
+                    .with_surface(surface.clone())
                     .with_position(Some(point)),
             ))
         })))

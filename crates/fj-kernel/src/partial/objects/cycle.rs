@@ -144,7 +144,8 @@ impl PartialCycle {
 
             self.half_edges.push(
                 HalfEdge::partial()
-                    .as_line_segment_from_points(surface, vertices)
+                    .with_surface(Some(surface))
+                    .as_line_segment_from_points(vertices)
                     .into(),
             );
         }
