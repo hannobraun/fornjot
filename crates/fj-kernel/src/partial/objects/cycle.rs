@@ -104,7 +104,7 @@ impl PartialCycle {
 
                 self.half_edges.push(
                     HalfEdge::partial()
-                        .with_curve(curve)
+                        .with_curve(Some(curve))
                         .with_vertices([from, to])
                         .into(),
                 );
