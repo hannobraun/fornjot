@@ -9,6 +9,7 @@ use crate::{
 /// API for building a [`Cycle`]
 ///
 /// Also see [`Cycle::builder`].
+#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct PartialCycle {
     /// The surface that the [`Cycle`] is defined in
     pub surface: Option<Handle<Surface>>,
