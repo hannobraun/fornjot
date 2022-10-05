@@ -165,7 +165,7 @@ mod tests {
             .as_u_axis()
             .build(&stores);
         let vertex = Vertex::partial()
-            .with_position([0.])
+            .with_position(Some([0.]))
             .with_curve(curve)
             .build(&stores);
 

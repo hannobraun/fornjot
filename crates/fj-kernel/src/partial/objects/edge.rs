@@ -70,7 +70,7 @@ impl PartialHalfEdge {
 
             [a_curve, b_curve].map(|point_curve| {
                 Vertex::partial()
-                    .with_position(point_curve)
+                    .with_position(Some(point_curve))
                     .with_curve(curve.clone())
                     .with_global_form(global_vertex.clone())
             })
@@ -150,7 +150,9 @@ impl PartialHalfEdge {
 
         let vertices = [(from, 0.), (to, 1.)].map(|(vertex, position)| {
             vertex.update_partial(|vertex| {
-                vertex.with_position([position]).with_curve(curve.clone())
+                vertex
+                    .with_position(Some([position]))
+                    .with_curve(curve.clone())
             })
         });
 

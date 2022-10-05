@@ -208,7 +208,7 @@ impl<'a> ShellBuilder<'a> {
                             .with_global_form(*vertex.global_form())
                             .build(self.stores);
                         Vertex::partial()
-                            .with_position(vertex.position())
+                            .with_position(Some(vertex.position()))
                             .with_surface_form(surface_form)
                     },
                 );

@@ -36,8 +36,13 @@ pub struct PartialVertex {
 
 impl PartialVertex {
     /// Provide a position for the partial vertex
-    pub fn with_position(mut self, position: impl Into<Point<1>>) -> Self {
-        self.position = Some(position.into());
+    pub fn with_position(
+        mut self,
+        position: Option<impl Into<Point<1>>>,
+    ) -> Self {
+        if let Some(position) = position {
+            self.position = Some(position.into());
+        }
         self
     }
 
