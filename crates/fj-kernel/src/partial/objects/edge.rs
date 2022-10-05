@@ -14,6 +14,9 @@ use crate::{
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct PartialHalfEdge {
+    /// The surface that the [`HalfEdge`]'s [`Curve`] is defined in
+    pub surface: Option<Handle<Surface>>,
+
     /// The curve that the [`HalfEdge`] is defined in
     pub curve: Option<MaybePartial<Curve>>,
 
@@ -27,6 +30,14 @@ pub struct PartialHalfEdge {
 }
 
 impl PartialHalfEdge {
+    /// Update the partial half-edge with the given surface
+    pub fn with_surface(mut self, surface: Option<Handle<Surface>>) -> Self {
+        if let Some(surface) = surface {
+            self.surface = Some(surface);
+        }
+        self
+    }
+
     /// Update the partial half-edge with the given curve
     pub fn with_curve(
         mut self,
@@ -204,6 +215,7 @@ impl PartialHalfEdge {
 impl From<&HalfEdge> for PartialHalfEdge {
     fn from(half_edge: &HalfEdge) -> Self {
         Self {
+            surface: Some(half_edge.surface().clone()),
             curve: Some(half_edge.curve().clone().into()),
             vertices: Some(half_edge.vertices().clone().map(Into::into)),
             global_form: Some(half_edge.global_form().clone().into()),

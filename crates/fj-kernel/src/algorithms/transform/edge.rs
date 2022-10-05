@@ -9,6 +9,9 @@ use super::TransformObject;
 
 impl TransformObject for PartialHalfEdge {
     fn transform(self, transform: &Transform, stores: &Stores) -> Self {
+        let surface = self
+            .surface
+            .map(|surface| surface.transform(transform, stores));
         let curve = self
             .curve
             .clone()
@@ -33,6 +36,7 @@ impl TransformObject for PartialHalfEdge {
         });
 
         Self {
+            surface,
             curve,
             vertices,
             global_form,
