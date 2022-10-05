@@ -14,7 +14,7 @@ mod vertex;
 use fj_math::{Transform, Vector};
 
 use crate::{
-    partial::{HasPartial, MaybePartial},
+    partial::{HasPartial, MaybePartial, Partial},
     stores::Stores,
 };
 
@@ -46,6 +46,16 @@ pub trait TransformObject: Sized {
     #[must_use]
     fn rotate(self, axis_angle: impl Into<Vector<3>>, stores: &Stores) -> Self {
         self.transform(&Transform::rotation(axis_angle), stores)
+    }
+}
+
+impl<T> TransformObject for T
+where
+    T: HasPartial,
+    T::Partial: TransformObject,
+{
+    fn transform(self, transform: &Transform, stores: &Stores) -> Self {
+        self.to_partial().transform(transform, stores).build(stores)
     }
 }
 
