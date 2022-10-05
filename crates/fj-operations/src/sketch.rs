@@ -3,11 +3,13 @@ use fj_kernel::{
     algorithms::validate::{
         Validate, Validated, ValidationConfig, ValidationError,
     },
-    objects::{Cycle, Face, HalfEdge, Sketch, Surface},
+    objects::{Cycle, Face, HalfEdge, Sketch},
     partial::HasPartial,
     stores::Stores,
 };
 use fj_math::{Aabb, Point};
+
+use crate::planes::Planes;
 
 use super::Shape;
 
@@ -18,9 +20,10 @@ impl Shape for fj::Sketch {
         &self,
         config: &ValidationConfig,
         stores: &Stores,
+        planes: &Planes,
         _: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
-        let surface = stores.surfaces.insert(Surface::xy_plane());
+        let surface = planes.xy();
 
         let face = match self.chain() {
             fj::Chain::Circle(circle) => {

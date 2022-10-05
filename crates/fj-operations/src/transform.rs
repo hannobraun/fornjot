@@ -9,6 +9,8 @@ use fj_kernel::{
 };
 use fj_math::{Aabb, Transform, Vector};
 
+use crate::planes::Planes;
+
 use super::Shape;
 
 impl Shape for fj::Transform {
@@ -18,11 +20,12 @@ impl Shape for fj::Transform {
         &self,
         config: &ValidationConfig,
         stores: &Stores,
+        planes: &Planes,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
         let faces = self
             .shape
-            .compute_brep(config, stores, debug_info)?
+            .compute_brep(config, stores, planes, debug_info)?
             .into_inner()
             .transform(&make_transform(self), stores);
 
