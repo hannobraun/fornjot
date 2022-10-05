@@ -46,6 +46,10 @@ pub trait HasPartial {
 ///   object structs, but all fields are optional.
 /// - Partial object structs have `with_*` methods to provide values for each of
 ///   their fields.
+/// - Values provided to `with_*` are usually wrapped in an `Option`, and only a
+///   `Some(...)` value has any effect. This is a trade-off that makes most use
+///   cases slightly more verbose, while significantly simplifying more complex
+///   use cases.
 /// - Partial object structs may have other methods with prefixes like `as_*`,
 ///   `from_*`, or similar, if one or more of their fields can be initialized by
 ///   providing alternative data.
