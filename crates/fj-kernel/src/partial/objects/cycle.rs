@@ -161,3 +161,12 @@ impl PartialCycle {
         Cycle::new(surface, half_edges)
     }
 }
+
+impl From<&Cycle> for PartialCycle {
+    fn from(cycle: &Cycle) -> Self {
+        Self {
+            surface: Some(cycle.surface().clone()),
+            half_edges: cycle.half_edges().cloned().map(Into::into).collect(),
+        }
+    }
+}
