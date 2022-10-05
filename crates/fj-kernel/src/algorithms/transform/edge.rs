@@ -23,13 +23,13 @@ impl TransformObject for PartialHalfEdge {
             })
         });
         let global_form = self.global_form.map(|global_form| {
-            let global_form =
-                global_form.into_partial().transform(transform, stores);
-
-            let curve = curve.as_ref().and_then(|curve| curve.global_form());
-            let global_form = global_form.with_curve(curve);
-
-            global_form.into()
+            global_form
+                .into_partial()
+                .transform(transform, stores)
+                .with_curve(
+                    curve.as_ref().and_then(|curve| curve.global_form()),
+                )
+                .into()
         });
 
         Self {
