@@ -15,9 +15,11 @@ impl TransformObject for PartialHalfEdge {
             .map(|curve| curve.transform(transform, stores));
         let vertices = self.vertices.clone().map(|vertices| {
             vertices.map(|vertex| {
-                let vertex = vertex.into_partial().transform(transform, stores);
-                let vertex = vertex.with_curve(curve.clone());
-                vertex.into()
+                vertex
+                    .into_partial()
+                    .transform(transform, stores)
+                    .with_curve(curve.clone())
+                    .into()
             })
         });
         let global_form = self.global_form.map(|global_form| {
