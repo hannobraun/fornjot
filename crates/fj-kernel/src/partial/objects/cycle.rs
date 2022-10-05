@@ -127,9 +127,11 @@ impl PartialCycle {
                     .position()
                     .expect("Need surface position to close cycle")
             });
+            let surface = self.surface.clone();
+
             self.half_edges.push(
                 HalfEdge::partial()
-                    .as_line_segment_from_points(self.surface.clone(), vertices)
+                    .as_line_segment_from_points(surface, vertices)
                     .into(),
             );
         }
