@@ -1,11 +1,7 @@
 use fj_math::{Scalar, Winding};
 use pretty_assertions::assert_eq;
 
-use crate::{
-    builder::CycleBuilder,
-    path::SurfacePath,
-    stores::{Handle, Stores},
-};
+use crate::{path::SurfacePath, stores::Handle};
 
 use super::{HalfEdge, Surface};
 
@@ -17,15 +13,6 @@ pub struct Cycle {
 }
 
 impl Cycle {
-    /// Build a `Cycle` using [`CycleBuilder`]
-    pub fn builder(stores: &Stores, surface: Handle<Surface>) -> CycleBuilder {
-        CycleBuilder {
-            stores,
-            surface,
-            half_edges: Vec::new(),
-        }
-    }
-
     /// Create a new cycle
     ///
     /// # Panics
