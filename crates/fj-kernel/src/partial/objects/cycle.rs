@@ -6,9 +6,9 @@ use crate::{
     stores::{Handle, Stores},
 };
 
-/// API for building a [`Cycle`]
+/// A partial [`Cycle`]
 ///
-/// Also see [`Cycle::builder`].
+/// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct PartialCycle {
     /// The surface that the [`Cycle`] is defined in
@@ -25,7 +25,7 @@ impl PartialCycle {
         self
     }
 
-    /// Build the [`Cycle`] with the given half-edge
+    /// Update the partial cycle with the given half-edges
     pub fn with_half_edges(
         mut self,
         half_edge: impl IntoIterator<Item = impl Into<MaybePartial<HalfEdge>>>,
@@ -35,7 +35,7 @@ impl PartialCycle {
         self
     }
 
-    /// Build the [`Cycle`] with a polygonal chain from the provided points
+    /// Update the partial cycle with a polygonal chain from the provided points
     pub fn with_poly_chain_from_points(
         mut self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
@@ -116,7 +116,7 @@ impl PartialCycle {
         self
     }
 
-    /// Close the [`Cycle`] with a line segment
+    /// Update the partial cycle by closing it with a line segment
     ///
     /// Builds a line segment from the last and first vertex, closing the cycle.
     pub fn close_with_line_segment(mut self) -> Self {
@@ -150,7 +150,7 @@ impl PartialCycle {
         self
     }
 
-    /// Finish building the [`Cycle`]
+    /// Build a full [`Cycle`] from the partial cycle
     pub fn build(self, stores: &Stores) -> Cycle {
         let surface = self.surface.expect("Need surface to build `Cycle`");
         let half_edges = self
