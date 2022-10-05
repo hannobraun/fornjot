@@ -106,9 +106,10 @@ impl<'a> PartialCycle<'a> {
         let first = self.half_edges.first();
         let last = self.half_edges.last();
 
-        if let [Some([first, _]), Some([_, last])] = [first, last]
-            .map(|option| option.map(|half_edge| half_edge.vertices()))
-        {
+        let vertices = [first, last]
+            .map(|option| option.map(|half_edge| half_edge.vertices()));
+
+        if let [Some([first, _]), Some([_, last])] = vertices {
             let vertices =
                 [last, first].map(|vertex| vertex.surface_form().position());
             self.half_edges.push(
