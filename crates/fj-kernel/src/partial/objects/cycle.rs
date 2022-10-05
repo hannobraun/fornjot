@@ -81,8 +81,7 @@ impl<'a> PartialCycle<'a> {
 
                 let curve = Curve::partial()
                     .with_surface(self.surface.clone())
-                    .as_line_from_points([previous_position, position])
-                    .build(self.stores);
+                    .as_line_from_points([previous_position, position]);
 
                 let [from, to] =
                     [(0., from), (1., to)].map(|(position, surface_form)| {
@@ -90,7 +89,6 @@ impl<'a> PartialCycle<'a> {
                             .with_curve(curve.clone())
                             .with_position([position])
                             .with_surface_form(surface_form)
-                            .build(self.stores)
                     });
 
                 self.half_edges.push(
