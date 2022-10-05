@@ -9,10 +9,7 @@ use crate::{
 /// API for building a [`Cycle`]
 ///
 /// Also see [`Cycle::builder`].
-pub struct PartialCycle<'a> {
-    /// The stores that the created objects are put in
-    pub stores: &'a Stores,
-
+pub struct PartialCycle {
     /// The surface that the [`Cycle`] is defined in
     pub surface: Handle<Surface>,
 
@@ -20,7 +17,7 @@ pub struct PartialCycle<'a> {
     pub half_edges: Vec<MaybePartial<HalfEdge>>,
 }
 
-impl<'a> PartialCycle<'a> {
+impl PartialCycle {
     /// Build the [`Cycle`] with the given half-edge
     pub fn with_half_edges(
         mut self,
@@ -139,11 +136,11 @@ impl<'a> PartialCycle<'a> {
     }
 
     /// Finish building the [`Cycle`]
-    pub fn build(self) -> Cycle {
+    pub fn build(self, stores: &Stores) -> Cycle {
         let half_edges = self
             .half_edges
             .into_iter()
-            .map(|half_edge| half_edge.into_full(self.stores));
+            .map(|half_edge| half_edge.into_full(stores));
 
         Cycle::new(self.surface, half_edges)
     }
