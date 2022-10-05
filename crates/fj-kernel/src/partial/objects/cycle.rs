@@ -40,9 +40,10 @@ impl<'a> PartialCycle<'a> {
             .last()
             .map(|half_edge| {
                 let [_, last] = half_edge.vertices();
+                let last = last.surface_form();
 
-                let vertex = last.surface_form().clone();
-                let position = last.surface_form().position();
+                let vertex = last.clone();
+                let position = last.position();
 
                 (position, Some(vertex))
             })
