@@ -141,11 +141,12 @@ impl PartialCycle {
 
     /// Finish building the [`Cycle`]
     pub fn build(self, stores: &Stores) -> Cycle {
+        let surface = self.surface;
         let half_edges = self
             .half_edges
             .into_iter()
             .map(|half_edge| half_edge.into_full(stores));
 
-        Cycle::new(self.surface, half_edges)
+        Cycle::new(surface, half_edges)
     }
 }
