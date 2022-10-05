@@ -229,8 +229,10 @@ pub struct PartialGlobalEdge {
 
 impl PartialGlobalEdge {
     /// Update the partial global edge with the given curve
-    pub fn with_curve(mut self, curve: Handle<GlobalCurve>) -> Self {
-        self.curve = Some(curve.into());
+    pub fn with_curve(mut self, curve: Option<Handle<GlobalCurve>>) -> Self {
+        if let Some(curve) = curve {
+            self.curve = Some(curve.into());
+        }
         self
     }
 
@@ -246,7 +248,7 @@ impl PartialGlobalEdge {
         curve: &Curve,
         vertices: &[Vertex; 2],
     ) -> Self {
-        self.with_curve(curve.global_form().clone())
+        self.with_curve(Some(curve.global_form().clone()))
             .with_vertices(vertices.clone().map(|vertex| *vertex.global_form()))
     }
 

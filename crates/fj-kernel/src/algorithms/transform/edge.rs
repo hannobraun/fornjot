@@ -27,10 +27,7 @@ impl TransformObject for PartialHalfEdge {
                 global_form.into_partial().transform(transform, stores);
 
             let curve = curve.as_ref().and_then(|curve| curve.global_form());
-            let global_form = match curve {
-                Some(curve) => global_form.with_curve(curve),
-                None => global_form,
-            };
+            let global_form = global_form.with_curve(curve);
 
             global_form.into()
         });
