@@ -92,8 +92,8 @@ impl<'a> ShellBuilder<'a> {
 
                     HalfEdge::partial()
                         .with_vertices([
-                            Vertex::partial().with_surface_form(from),
-                            Vertex::partial().with_surface_form(to),
+                            Vertex::partial().with_surface_form(Some(from)),
+                            Vertex::partial().with_surface_form(Some(to)),
                         ])
                         .as_line_segment()
                         .build(self.stores)
@@ -126,8 +126,8 @@ impl<'a> ShellBuilder<'a> {
                         HalfEdge::partial()
                             .with_curve(curve)
                             .with_vertices([
-                                Vertex::partial().with_surface_form(from),
-                                Vertex::partial().with_surface_form(to),
+                                Vertex::partial().with_surface_form(Some(from)),
+                                Vertex::partial().with_surface_form(Some(to)),
                             ])
                             .as_line_segment()
                             .build(self.stores)
@@ -150,8 +150,8 @@ impl<'a> ShellBuilder<'a> {
                         .with_surface(surface.clone())
                         .with_global_form(*to.global_form());
 
-                    let from = Vertex::partial().with_surface_form(from);
-                    let to = Vertex::partial().with_surface_form(to);
+                    let from = Vertex::partial().with_surface_form(Some(from));
+                    let to = Vertex::partial().with_surface_form(Some(to));
 
                     HalfEdge::partial()
                         .with_vertices([from, to])
@@ -209,7 +209,7 @@ impl<'a> ShellBuilder<'a> {
                             .build(self.stores);
                         Vertex::partial()
                             .with_position(Some(vertex.position()))
-                            .with_surface_form(surface_form)
+                            .with_surface_form(Some(surface_form))
                     },
                 );
 

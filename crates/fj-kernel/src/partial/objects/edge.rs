@@ -89,11 +89,11 @@ impl PartialHalfEdge {
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
         self.with_vertices(points.map(|point| {
-            Vertex::partial().with_surface_form(
+            Vertex::partial().with_surface_form(Some(
                 SurfaceVertex::partial()
                     .with_surface(surface.clone())
                     .with_position(point),
-            )
+            ))
         }))
         .as_line_segment()
     }
