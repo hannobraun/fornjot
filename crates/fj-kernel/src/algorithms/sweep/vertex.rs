@@ -161,7 +161,7 @@ mod tests {
 
         let surface = stores.surfaces.insert(Surface::xz_plane());
         let curve = Curve::partial()
-            .with_surface(surface.clone())
+            .with_surface(Some(surface.clone()))
             .as_u_axis()
             .build(&stores);
         let vertex = Vertex::partial()

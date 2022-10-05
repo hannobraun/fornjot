@@ -89,7 +89,7 @@ impl PartialCycle {
                 previous = Some((position, Some(to.clone())));
 
                 let curve = Curve::partial()
-                    .with_surface(surface.clone())
+                    .with_surface(Some(surface.clone()))
                     .as_line_from_points([previous_position, position]);
 
                 let [from, to] =

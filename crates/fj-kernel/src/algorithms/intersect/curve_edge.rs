@@ -88,7 +88,7 @@ mod tests {
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
         let curve = Curve::partial()
-            .with_surface(surface.clone())
+            .with_surface(Some(surface.clone()))
             .as_u_axis()
             .build(&stores);
         let half_edge = HalfEdge::partial()
@@ -111,7 +111,7 @@ mod tests {
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
         let curve = Curve::partial()
-            .with_surface(surface.clone())
+            .with_surface(Some(surface.clone()))
             .as_u_axis()
             .build(&stores);
         let half_edge = HalfEdge::partial()
@@ -134,7 +134,7 @@ mod tests {
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
         let curve = Curve::partial()
-            .with_surface(surface.clone())
+            .with_surface(Some(surface.clone()))
             .as_u_axis()
             .build(&stores);
         let half_edge = HalfEdge::partial()
@@ -152,7 +152,7 @@ mod tests {
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
         let curve = Curve::partial()
-            .with_surface(surface.clone())
+            .with_surface(Some(surface.clone()))
             .as_u_axis()
             .build(&stores);
         let half_edge = HalfEdge::partial()

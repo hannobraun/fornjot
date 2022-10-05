@@ -118,7 +118,7 @@ mod tests {
 
         let expected_curves = surfaces.map(|surface| {
             Curve::partial()
-                .with_surface(surface)
+                .with_surface(Some(surface))
                 .as_line_from_points([[0., 0.], [1., 0.]])
                 .build(&stores)
         });

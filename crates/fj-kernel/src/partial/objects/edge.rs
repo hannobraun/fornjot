@@ -58,7 +58,7 @@ impl PartialHalfEdge {
         radius: impl Into<Scalar>,
     ) -> Self {
         let curve = Curve::partial()
-            .with_surface(surface)
+            .with_surface(Some(surface))
             .as_circle_from_radius(radius);
 
         let vertices = {
@@ -145,7 +145,7 @@ impl PartialHalfEdge {
             global_form: extract_global_curve(&self),
             ..PartialCurve::default()
         }
-        .with_surface(surface)
+        .with_surface(Some(surface))
         .as_line_from_points(points);
 
         let vertices = [(from, 0.), (to, 1.)].map(|(vertex, position)| {

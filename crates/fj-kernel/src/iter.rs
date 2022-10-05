@@ -376,7 +376,7 @@ mod tests {
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
         let object = Curve::partial()
-            .with_surface(surface)
+            .with_surface(Some(surface))
             .as_u_axis()
             .build(&stores);
 
@@ -585,7 +585,7 @@ mod tests {
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
         let curve = Curve::partial()
-            .with_surface(surface.clone())
+            .with_surface(Some(surface.clone()))
             .as_u_axis()
             .build(&stores);
         let global_vertex = GlobalVertex::from_position([0., 0., 0.]);
