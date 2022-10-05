@@ -92,7 +92,7 @@ impl PartialHalfEdge {
             Vertex::partial().with_surface_form(Some(
                 SurfaceVertex::partial()
                     .with_surface(surface.clone())
-                    .with_position(point),
+                    .with_position(Some(point)),
             ))
         }))
         .as_line_segment()

@@ -78,13 +78,13 @@ impl PartialCycle {
                 let from = previous_vertex.unwrap_or_else(|| {
                     SurfaceVertex::partial()
                         .with_surface(surface.clone())
-                        .with_position(previous_position)
+                        .with_position(Some(previous_position))
                         .into()
                 });
                 let to = vertex.unwrap_or_else(|| {
                     SurfaceVertex::partial()
                         .with_surface(surface.clone())
-                        .with_position(position)
+                        .with_position(Some(position))
                         .into()
                 });
 

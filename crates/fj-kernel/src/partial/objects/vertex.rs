@@ -150,8 +150,13 @@ pub struct PartialSurfaceVertex {
 
 impl PartialSurfaceVertex {
     /// Provide a position for the partial surface vertex
-    pub fn with_position(mut self, position: impl Into<Point<2>>) -> Self {
-        self.position = Some(position.into());
+    pub fn with_position(
+        mut self,
+        position: Option<impl Into<Point<2>>>,
+    ) -> Self {
+        if let Some(position) = position {
+            self.position = Some(position.into());
+        }
         self
     }
 

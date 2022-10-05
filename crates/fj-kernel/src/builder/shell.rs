@@ -87,7 +87,7 @@ impl<'a> ShellBuilder<'a> {
 
                     let from = from.surface_form().clone();
                     let to = SurfaceVertex::partial()
-                        .with_position(from.position() + [Z, edge_length])
+                        .with_position(Some(from.position() + [Z, edge_length]))
                         .with_surface(surface.clone());
 
                     HalfEdge::partial()
@@ -115,7 +115,9 @@ impl<'a> ShellBuilder<'a> {
 
                         let to = to.surface_form().clone();
                         let from = SurfaceVertex::partial()
-                            .with_position(to.position() + [Z, edge_length])
+                            .with_position(Some(
+                                to.position() + [Z, edge_length],
+                            ))
                             .with_surface(surface.clone())
                             .with_global_form(*from.global_form());
 
@@ -146,7 +148,9 @@ impl<'a> ShellBuilder<'a> {
 
                     let from = from.surface_form().clone();
                     let to = SurfaceVertex::partial()
-                        .with_position(from.position() + [-edge_length, Z])
+                        .with_position(Some(
+                            from.position() + [-edge_length, Z],
+                        ))
                         .with_surface(surface.clone())
                         .with_global_form(*to.global_form());
 
@@ -203,7 +207,7 @@ impl<'a> ShellBuilder<'a> {
                 let vertices = [(point_a, vertex_a), (point_b, vertex_b)].map(
                     |(point, vertex)| {
                         let surface_form = SurfaceVertex::partial()
-                            .with_position(point)
+                            .with_position(Some(point))
                             .with_surface(surface.clone())
                             .with_global_form(*vertex.global_form())
                             .build(self.stores);
