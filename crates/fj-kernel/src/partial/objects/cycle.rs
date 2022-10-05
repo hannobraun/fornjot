@@ -61,15 +61,17 @@ impl PartialCycle {
 
         for (position, vertex) in iter {
             if let Some((previous_position, previous_vertex)) = previous {
+                let surface = self.surface.clone();
+
                 let from = previous_vertex.unwrap_or_else(|| {
                     SurfaceVertex::partial()
-                        .with_surface(self.surface.clone())
+                        .with_surface(surface.clone())
                         .with_position(previous_position)
                         .into()
                 });
                 let to = vertex.unwrap_or_else(|| {
                     SurfaceVertex::partial()
-                        .with_surface(self.surface.clone())
+                        .with_surface(surface.clone())
                         .with_position(position)
                         .into()
                 });
@@ -77,7 +79,7 @@ impl PartialCycle {
                 previous = Some((position, Some(to.clone())));
 
                 let curve = Curve::partial()
-                    .with_surface(self.surface.clone())
+                    .with_surface(surface.clone())
                     .as_line_from_points([previous_position, position]);
 
                 let [from, to] =
