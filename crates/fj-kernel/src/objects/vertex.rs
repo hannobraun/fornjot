@@ -36,6 +36,11 @@ impl Vertex {
             surface_form.surface(),
             "Surface form of vertex must be defined on same surface as curve",
         );
+        assert_eq!(
+            surface_form.global_form(),
+            &global_form,
+            "Vertex and its surface form must have same global form",
+        );
 
         Self {
             position,
