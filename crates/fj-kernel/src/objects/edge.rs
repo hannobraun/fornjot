@@ -69,20 +69,12 @@ impl HalfEdge {
     }
 
     /// Access the curve that defines the half-edge's geometry
-    ///
-    /// The edge can be a segment of the curve that is bounded by two vertices,
-    /// or if the curve is continuous (i.e. connects to itself), the edge could
-    /// be defined by the whole curve, and have no bounding vertices.
     pub fn curve(&self) -> &Curve {
         let [vertex, _] = self.vertices();
         vertex.curve()
     }
 
     /// Access the vertices that bound the half-edge on the curve
-    ///
-    /// An edge has either two bounding vertices or none. The latter is possible
-    /// if the edge's curve is continuous (i.e. connects to itself), and defines
-    /// the whole edge.
     pub fn vertices(&self) -> &[Vertex; 2] {
         &self.vertices
     }
