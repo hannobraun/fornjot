@@ -83,7 +83,7 @@ impl PartialCurve {
     }
 
     /// Build a full [`Curve`] from the partial curve
-    pub fn build(self, stores: &Stores) -> Curve {
+    pub fn build(self, stores: &Stores) -> Handle<Curve> {
         let path = self.path.expect("Can't build `Curve` without path");
         let surface =
             self.surface.expect("Can't build `Curve` without surface");
@@ -92,12 +92,14 @@ impl PartialCurve {
             .global_form
             .unwrap_or_else(|| GlobalCurve::new(stores).into());
 
-        Curve::new(surface, path, global_form)
+        let curve = Curve::new(surface, path, global_form);
+
+        stores.curves.insert(curve)
     }
 }
 
-impl From<&Curve> for PartialCurve {
-    fn from(curve: &Curve) -> Self {
+impl From<&Handle<Curve>> for PartialCurve {
+    fn from(curve: &Handle<Curve>) -> Self {
         Self {
             path: Some(curve.path()),
             surface: Some(curve.surface().clone()),

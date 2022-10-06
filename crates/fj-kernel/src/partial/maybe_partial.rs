@@ -80,7 +80,7 @@ where
 // Unfortunately, we can't add a blanket implementation from `T::Partial` for
 // `MaybePartial<T>`, as that would conflict.
 
-impl MaybePartial<Curve> {
+impl MaybePartial<Handle<Curve>> {
     /// Access the global form
     pub fn global_form(&self) -> Option<Handle<GlobalCurve>> {
         match self {

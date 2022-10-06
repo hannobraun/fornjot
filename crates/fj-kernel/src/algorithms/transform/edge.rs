@@ -3,7 +3,7 @@ use fj_math::Transform;
 use crate::{
     objects::Curve,
     partial::{MaybePartial, PartialGlobalEdge, PartialHalfEdge},
-    stores::Stores,
+    stores::{Handle, Stores},
 };
 
 use super::TransformObject;
@@ -34,7 +34,7 @@ impl TransformObject for PartialHalfEdge {
                 .into_partial()
                 .transform(transform, stores)
                 .with_curve(curve.as_ref().and_then(
-                    |curve: &MaybePartial<Curve>| curve.global_form(),
+                    |curve: &MaybePartial<Handle<Curve>>| curve.global_form(),
                 ))
                 .into()
         });

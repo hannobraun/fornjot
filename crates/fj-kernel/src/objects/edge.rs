@@ -32,8 +32,8 @@ impl HalfEdge {
     pub fn new([a, b]: [Vertex; 2], global_form: GlobalEdge) -> Self {
         // Make sure `curve` and `vertices` match.
         assert_eq!(
-            a.curve(),
-            b.curve(),
+            a.curve().id(),
+            b.curve().id(),
             "An edge's vertices must be defined in the same curve",
         );
 
@@ -69,7 +69,7 @@ impl HalfEdge {
     }
 
     /// Access the curve that defines the half-edge's geometry
-    pub fn curve(&self) -> &Curve {
+    pub fn curve(&self) -> &Handle<Curve> {
         let [vertex, _] = self.vertices();
         vertex.curve()
     }

@@ -4,7 +4,7 @@ mod blocks;
 mod handle;
 mod store;
 
-use crate::objects::{GlobalCurve, Surface};
+use crate::objects::{Curve, GlobalCurve, Surface};
 
 pub use self::{
     handle::{Handle, HandleWrapper, ObjectId},
@@ -21,6 +21,9 @@ pub use self::{
 /// [#1021]: https://github.com/hannobraun/Fornjot/issues/1021
 #[derive(Debug, Default)]
 pub struct Stores {
+    /// Store for curves
+    pub curves: Store<Curve>,
+
     /// Store for global curves
     pub global_curves: Store<GlobalCurve>,
 

@@ -19,7 +19,7 @@ pub struct PartialVertex {
     /// The curve that the [`Vertex`] is defined in
     ///
     /// Must be provided before [`PartialVertex::build`] is called.
-    pub curve: Option<MaybePartial<Curve>>,
+    pub curve: Option<MaybePartial<Handle<Curve>>>,
 
     /// The surface form of the [`Vertex`]
     ///
@@ -49,7 +49,7 @@ impl PartialVertex {
     /// Provide a curve for the partial vertex
     pub fn with_curve(
         mut self,
-        curve: Option<impl Into<MaybePartial<Curve>>>,
+        curve: Option<impl Into<MaybePartial<Handle<Curve>>>>,
     ) -> Self {
         if let Some(curve) = curve {
             self.curve = Some(curve.into());
@@ -244,7 +244,7 @@ impl PartialGlobalVertex {
     /// Update partial global vertex from the given curve and position on it
     pub fn from_curve_and_position(
         self,
-        curve: impl Into<MaybePartial<Curve>>,
+        curve: impl Into<MaybePartial<Handle<Curve>>>,
         position: impl Into<Point<1>>,
     ) -> Self {
         let curve = curve.into().into_partial();

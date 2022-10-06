@@ -13,7 +13,7 @@ use super::{Curve, Surface};
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Vertex {
     position: Point<1>,
-    curve: Curve,
+    curve: Handle<Curve>,
     surface_form: SurfaceVertex,
     global_form: GlobalVertex,
 }
@@ -25,7 +25,7 @@ impl Vertex {
     /// surface.
     pub fn new(
         position: impl Into<Point<1>>,
-        curve: Curve,
+        curve: Handle<Curve>,
         surface_form: SurfaceVertex,
         global_form: GlobalVertex,
     ) -> Self {
@@ -56,7 +56,7 @@ impl Vertex {
     }
 
     /// Access the curve that the vertex is defined on
-    pub fn curve(&self) -> &Curve {
+    pub fn curve(&self) -> &Handle<Curve> {
         &self.curve
     }
 
