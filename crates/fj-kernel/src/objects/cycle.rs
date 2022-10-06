@@ -30,7 +30,7 @@ impl Cycle {
         for edge in &half_edges {
             assert_eq!(
                 surface.id(),
-                edge.surface().id(),
+                edge.curve().surface().id(),
                 "Edges in cycle not defined in same surface"
             );
         }

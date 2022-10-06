@@ -4,7 +4,7 @@ use pretty_assertions::{assert_eq, assert_ne};
 
 use crate::stores::{Handle, HandleWrapper};
 
-use super::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex};
+use super::{Curve, GlobalCurve, GlobalVertex, Vertex};
 
 /// A half-edge
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -66,11 +66,6 @@ impl HalfEdge {
             vertices: [a, b],
             global_form,
         }
-    }
-
-    /// Access the surface that the half-edge's [`Curve`] is defined on
-    pub fn surface(&self) -> &Handle<Surface> {
-        self.curve().surface()
     }
 
     /// Access the curve that defines the half-edge's geometry

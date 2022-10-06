@@ -215,7 +215,7 @@ impl PartialHalfEdge {
 impl From<&HalfEdge> for PartialHalfEdge {
     fn from(half_edge: &HalfEdge) -> Self {
         Self {
-            surface: Some(half_edge.surface().clone()),
+            surface: Some(half_edge.curve().surface().clone()),
             curve: Some(half_edge.curve().clone().into()),
             vertices: Some(half_edge.vertices().clone().map(Into::into)),
             global_form: Some(half_edge.global_form().clone().into()),
