@@ -18,7 +18,7 @@ pub struct PartialHalfEdge {
     pub surface: Option<Handle<Surface>>,
 
     /// The curve that the [`HalfEdge`] is defined in
-    pub curve: Option<MaybePartial<Curve>>,
+    pub curve: Option<MaybePartial<Handle<Curve>>>,
 
     /// The vertices that bound this [`HalfEdge`] in the [`Curve`]
     pub vertices: Option<[MaybePartial<Vertex>; 2]>,
@@ -41,7 +41,7 @@ impl PartialHalfEdge {
     /// Update the partial half-edge with the given curve
     pub fn with_curve(
         mut self,
-        curve: Option<impl Into<MaybePartial<Curve>>>,
+        curve: Option<impl Into<MaybePartial<Handle<Curve>>>>,
     ) -> Self {
         if let Some(curve) = curve {
             self.curve = Some(curve.into());
@@ -73,7 +73,7 @@ impl PartialHalfEdge {
 
     /// Update partial half-edge as a circle, from the given radius
     pub fn as_circle_from_radius(mut self, radius: impl Into<Scalar>) -> Self {
-        let curve = Curve::partial()
+        let curve = Handle::<Curve>::partial()
             .with_surface(self.surface.clone())
             .as_circle_from_radius(radius);
 

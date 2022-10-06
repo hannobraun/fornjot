@@ -77,7 +77,7 @@ mod tests {
     use crate::{
         objects::{Curve, HalfEdge, Surface},
         partial::HasPartial,
-        stores::Stores,
+        stores::{Handle, Stores},
     };
 
     use super::CurveEdgeIntersection;
@@ -87,7 +87,7 @@ mod tests {
         let stores = Stores::new();
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
-        let curve = Curve::partial()
+        let curve = Handle::<Curve>::partial()
             .with_surface(Some(surface.clone()))
             .as_u_axis()
             .build(&stores);
@@ -111,7 +111,7 @@ mod tests {
         let stores = Stores::new();
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
-        let curve = Curve::partial()
+        let curve = Handle::<Curve>::partial()
             .with_surface(Some(surface.clone()))
             .as_u_axis()
             .build(&stores);
@@ -135,7 +135,7 @@ mod tests {
         let stores = Stores::new();
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
-        let curve = Curve::partial()
+        let curve = Handle::<Curve>::partial()
             .with_surface(Some(surface.clone()))
             .as_u_axis()
             .build(&stores);
@@ -154,7 +154,7 @@ mod tests {
         let stores = Stores::new();
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
-        let curve = Curve::partial()
+        let curve = Handle::<Curve>::partial()
             .with_surface(Some(surface.clone()))
             .as_u_axis()
             .build(&stores);

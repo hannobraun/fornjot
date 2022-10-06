@@ -7,7 +7,7 @@ use crate::{
     objects::{
         Curve, Cycle, GlobalEdge, GlobalVertex, HalfEdge, SurfaceVertex, Vertex,
     },
-    stores::Stores,
+    stores::{Handle, Stores},
 };
 
 use super::{
@@ -41,7 +41,7 @@ macro_rules! impl_traits {
 }
 
 impl_traits!(
-    Curve, PartialCurve;
+    Handle<Curve>, PartialCurve;
     Cycle, PartialCycle;
     GlobalEdge, PartialGlobalEdge;
     GlobalVertex, PartialGlobalVertex;

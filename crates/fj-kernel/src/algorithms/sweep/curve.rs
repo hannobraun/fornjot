@@ -8,7 +8,7 @@ use crate::{
 
 use super::Sweep;
 
-impl Sweep for Curve {
+impl Sweep for Handle<Curve> {
     type Swept = Handle<Surface>;
 
     fn sweep(self, path: impl Into<Vector<3>>, stores: &Stores) -> Self::Swept {

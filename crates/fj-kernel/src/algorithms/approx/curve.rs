@@ -19,7 +19,7 @@ use crate::{
 
 use super::{path::RangeOnPath, Approx, ApproxPoint, Tolerance};
 
-impl Approx for (&Curve, RangeOnPath) {
+impl Approx for (&Handle<Curve>, RangeOnPath) {
     type Approximation = CurveApprox;
     type Cache = CurveCache;
 
@@ -200,7 +200,7 @@ mod tests {
         objects::{Curve, Surface},
         partial::HasPartial,
         path::GlobalPath,
-        stores::Stores,
+        stores::{Handle, Stores},
     };
 
     use super::CurveApprox;
@@ -212,7 +212,7 @@ mod tests {
         let surface = stores
             .surfaces
             .insert(Surface::new(GlobalPath::x_axis(), [0., 0., 1.]));
-        let curve = Curve::partial()
+        let curve = Handle::<Curve>::partial()
             .with_surface(Some(surface))
             .as_line_from_points([[1., 1.], [2., 1.]])
             .build(&stores);
@@ -231,7 +231,7 @@ mod tests {
             GlobalPath::circle_from_radius(1.),
             [0., 0., 1.],
         ));
-        let curve = Curve::partial()
+        let curve = Handle::<Curve>::partial()
             .with_surface(Some(surface))
             .as_line_from_points([[1., 1.], [1., 2.]])
             .build(&stores);
@@ -248,7 +248,7 @@ mod tests {
 
         let path = GlobalPath::circle_from_radius(1.);
         let surface = stores.surfaces.insert(Surface::new(path, [0., 0., 1.]));
-        let curve = Curve::partial()
+        let curve = Handle::<Curve>::partial()
             .with_surface(Some(surface.clone()))
             .as_line_from_points([[0., 1.], [1., 1.]])
             .build(&stores);
@@ -279,7 +279,7 @@ mod tests {
         let surface = stores
             .surfaces
             .insert(Surface::new(GlobalPath::x_axis(), [0., 0., 1.]));
-        let curve = Curve::partial()
+        let curve = Handle::<Curve>::partial()
             .with_surface(Some(surface))
             .as_circle_from_radius(1.)
             .build(&stores);

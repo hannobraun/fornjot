@@ -10,7 +10,7 @@ use crate::{
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct SurfaceSurfaceIntersection {
     /// The intersection curves
-    pub intersection_curves: [Curve; 2],
+    pub intersection_curves: [Handle<Curve>; 2],
 }
 
 impl SurfaceSurfaceIntersection {
@@ -58,8 +58,9 @@ impl SurfaceSurfaceIntersection {
         let curves = surfaces_and_planes.map(|(surface, plane)| {
             let path = SurfacePath::Line(plane.project_line(&line));
             let global_form = GlobalCurve::new(stores);
+            let curve = Curve::new(surface, path, global_form);
 
-            Curve::new(surface, path, global_form)
+            stores.curves.insert(curve)
         });
 
         Some(Self {
@@ -90,7 +91,7 @@ mod tests {
         algorithms::transform::TransformObject,
         objects::{Curve, Surface},
         partial::HasPartial,
-        stores::Stores,
+        stores::{Handle, Stores},
     };
 
     use super::SurfaceSurfaceIntersection;
@@ -117,11 +118,11 @@ mod tests {
             None,
         );
 
-        let expected_xy = Curve::partial()
+        let expected_xy = Handle::<Curve>::partial()
             .with_surface(Some(xy.clone()))
             .as_u_axis()
             .build(&stores);
-        let expected_xz = Curve::partial()
+        let expected_xz = Handle::<Curve>::partial()
             .with_surface(Some(xz.clone()))
             .as_u_axis()
             .build(&stores);

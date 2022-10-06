@@ -177,7 +177,8 @@ mod tests {
         let curve = {
             let path = SurfacePath::line_from_points(points_surface);
             let global_form = GlobalCurve::new(&stores);
-            Curve::new(surface.clone(), path, global_form)
+            let curve = Curve::new(surface.clone(), path, global_form);
+            stores.curves.insert(curve)
         };
 
         let [a_global, b_global] =

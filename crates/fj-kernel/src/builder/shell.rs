@@ -6,7 +6,7 @@ use crate::{
         Curve, Cycle, Face, HalfEdge, Shell, Surface, SurfaceVertex, Vertex,
     },
     partial::HasPartial,
-    stores::Stores,
+    stores::{Handle, Stores},
 };
 
 /// API for building a [`Shell`]
@@ -119,9 +119,10 @@ impl<'a> ShellBuilder<'a> {
                             .with_surface(Some(surface.clone()))
                             .with_global_form(Some(*from.global_form()));
 
-                        let curve = Curve::partial().with_global_form(Some(
-                            side_up_prev.curve().global_form().clone(),
-                        ));
+                        let curve = Handle::<Curve>::partial()
+                            .with_global_form(Some(
+                                side_up_prev.curve().global_form().clone(),
+                            ));
 
                         HalfEdge::partial()
                             .with_curve(Some(curve))

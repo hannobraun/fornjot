@@ -140,7 +140,7 @@ pub trait ObjectIters<'r> {
     }
 }
 
-impl<'r> ObjectIters<'r> for Curve {
+impl<'r> ObjectIters<'r> for Handle<Curve> {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
         vec![self.global_form() as &dyn ObjectIters]
     }
@@ -365,7 +365,7 @@ mod tests {
             Sketch, Solid, Surface, SurfaceVertex, Vertex,
         },
         partial::HasPartial,
-        stores::Stores,
+        stores::{Handle, Stores},
     };
 
     use super::ObjectIters as _;
@@ -375,7 +375,7 @@ mod tests {
         let stores = Stores::new();
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
-        let object = Curve::partial()
+        let object = Handle::<Curve>::partial()
             .with_surface(Some(surface))
             .as_u_axis()
             .build(&stores);
@@ -582,7 +582,7 @@ mod tests {
         let stores = Stores::new();
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
-        let curve = Curve::partial()
+        let curve = Handle::<Curve>::partial()
             .with_surface(Some(surface.clone()))
             .as_u_axis()
             .build(&stores);

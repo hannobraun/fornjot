@@ -1,6 +1,6 @@
 use crate::{
     objects::{Curve, Face},
-    stores::Stores,
+    stores::{Handle, Stores},
 };
 
 use super::{CurveFaceIntersection, SurfaceSurfaceIntersection};
@@ -14,7 +14,7 @@ pub struct FaceFaceIntersection {
     /// representation of the intersection on the respective face's surface.
     ///
     /// They both represent the same global curve.
-    pub intersection_curves: [Curve; 2],
+    pub intersection_curves: [Handle<Curve>; 2],
 
     /// The interval of this intersection, in curve coordinates
     ///
@@ -66,7 +66,7 @@ mod tests {
         algorithms::intersect::CurveFaceIntersection,
         objects::{Curve, Face, Surface},
         partial::HasPartial,
-        stores::Stores,
+        stores::{Handle, Stores},
     };
 
     use super::FaceFaceIntersection;
@@ -117,7 +117,7 @@ mod tests {
         let intersection = FaceFaceIntersection::compute([&a, &b], &stores);
 
         let expected_curves = surfaces.map(|surface| {
-            Curve::partial()
+            Handle::<Curve>::partial()
                 .with_surface(Some(surface))
                 .as_line_from_points([[0., 0.], [1., 0.]])
                 .build(&stores)

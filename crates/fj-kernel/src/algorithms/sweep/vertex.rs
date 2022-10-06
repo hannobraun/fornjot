@@ -79,11 +79,12 @@ impl Sweep for (Vertex, Handle<Surface>) {
         // `Edge` is straight-forward.
         let curve = {
             let line = Line::from_points(points_surface);
-            Curve::new(
+            let curve = Curve::new(
                 surface.clone(),
                 SurfacePath::Line(line),
                 edge_global.curve().clone(),
-            )
+            );
+            stores.curves.insert(curve)
         };
 
         // And now the vertices. Again, nothing wild here.
@@ -152,7 +153,7 @@ mod tests {
         algorithms::sweep::Sweep,
         objects::{Curve, HalfEdge, Surface, Vertex},
         partial::HasPartial,
-        stores::Stores,
+        stores::{Handle, Stores},
     };
 
     #[test]
@@ -160,7 +161,7 @@ mod tests {
         let stores = Stores::new();
 
         let surface = stores.surfaces.insert(Surface::xz_plane());
-        let curve = Curve::partial()
+        let curve = Handle::<Curve>::partial()
             .with_surface(Some(surface.clone()))
             .as_u_axis()
             .build(&stores);
