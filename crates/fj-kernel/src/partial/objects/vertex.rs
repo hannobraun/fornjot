@@ -98,14 +98,13 @@ impl PartialVertex {
         let surface_form = self
             .surface_form
             .unwrap_or_else(|| {
-                PartialSurfaceVertex {
-                    position: Some(
+                SurfaceVertex::partial()
+                    .with_position(Some(
                         curve.path().point_from_path_coords(position),
-                    ),
-                    surface: Some(curve.surface().clone()),
-                    global_form: self.global_form,
-                }
-                .into()
+                    ))
+                    .with_surface(Some(curve.surface().clone()))
+                    .with_global_form(self.global_form)
+                    .into()
             })
             .into_full(stores);
 
