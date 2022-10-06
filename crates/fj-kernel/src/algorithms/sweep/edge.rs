@@ -74,7 +74,7 @@ impl Sweep for (HalfEdge, Color) {
                 })
             };
 
-            HalfEdge::new(curve, vertices, edge.global_form().clone())
+            HalfEdge::new(vertices, edge.global_form().clone())
         };
 
         let side_edges = bottom_edge
@@ -145,7 +145,7 @@ impl Sweep for (HalfEdge, Color) {
                 })
             };
 
-            HalfEdge::new(curve, vertices, global)
+            HalfEdge::new(vertices, global)
         };
 
         let cycle = {

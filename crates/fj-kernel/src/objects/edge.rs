@@ -31,19 +31,15 @@ impl HalfEdge {
     /// were, the edge would have no length, and thus not be valid. (It is
     /// perfectly fine for global forms of the the vertices to be coincident.
     /// That would just mean, that ends of the edge connect to each other.)
-    pub fn new(
-        curve: Curve,
-        [a, b]: [Vertex; 2],
-        global_form: GlobalEdge,
-    ) -> Self {
+    pub fn new([a, b]: [Vertex; 2], global_form: GlobalEdge) -> Self {
         // Make sure `curve` and `vertices` match.
-        for vertex in [&a, &b] {
-            assert_eq!(
-                &curve,
-                vertex.curve(),
-                "An edge and its vertices must be defined on the same curve"
-            );
-        }
+        assert_eq!(
+            a.curve(),
+            b.curve(),
+            "An edge's vertices must be defined in the same curve",
+        );
+
+        let curve = a.curve();
 
         // Make sure `curve` and `vertices` match `global_form`.
         assert_eq!(
@@ -70,7 +66,7 @@ impl HalfEdge {
 
         Self {
             surface: curve.surface().clone(),
-            curve,
+            curve: curve.clone(),
             vertices: [a, b],
             global_form,
         }

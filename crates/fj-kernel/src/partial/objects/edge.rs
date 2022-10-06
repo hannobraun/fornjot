@@ -208,7 +208,7 @@ impl PartialHalfEdge {
             })
             .into_full(stores);
 
-        HalfEdge::new(curve, vertices, global_form)
+        HalfEdge::new(vertices, global_form)
     }
 }
 
