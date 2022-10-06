@@ -9,7 +9,6 @@ use super::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex};
 /// A half-edge
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdge {
-    curve: Curve,
     vertices: [Vertex; 2],
     global_form: GlobalEdge,
 }
@@ -64,7 +63,6 @@ impl HalfEdge {
         );
 
         Self {
-            curve: curve.clone(),
             vertices: [a, b],
             global_form,
         }
@@ -81,7 +79,8 @@ impl HalfEdge {
     /// or if the curve is continuous (i.e. connects to itself), the edge could
     /// be defined by the whole curve, and have no bounding vertices.
     pub fn curve(&self) -> &Curve {
-        &self.curve
+        let [vertex, _] = self.vertices();
+        vertex.curve()
     }
 
     /// Access the vertices that bound the half-edge on the curve
