@@ -4,13 +4,11 @@ use pretty_assertions::{assert_eq, assert_ne};
 
 use crate::stores::{Handle, HandleWrapper};
 
-use super::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex};
+use super::{Curve, GlobalCurve, GlobalVertex, Vertex};
 
 /// A half-edge
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdge {
-    surface: Handle<Surface>,
-    curve: Curve,
     vertices: [Vertex; 2],
     global_form: GlobalEdge,
 }
@@ -31,19 +29,15 @@ impl HalfEdge {
     /// were, the edge would have no length, and thus not be valid. (It is
     /// perfectly fine for global forms of the the vertices to be coincident.
     /// That would just mean, that ends of the edge connect to each other.)
-    pub fn new(
-        curve: Curve,
-        vertices: [Vertex; 2],
-        global_form: GlobalEdge,
-    ) -> Self {
+    pub fn new([a, b]: [Vertex; 2], global_form: GlobalEdge) -> Self {
         // Make sure `curve` and `vertices` match.
-        for vertex in &vertices {
-            assert_eq!(
-                &curve,
-                vertex.curve(),
-                "An edge and its vertices must be defined on the same curve"
-            );
-        }
+        assert_eq!(
+            a.curve(),
+            b.curve(),
+            "An edge's vertices must be defined in the same curve",
+        );
+
+        let curve = a.curve();
 
         // Make sure `curve` and `vertices` match `global_form`.
         assert_eq!(
@@ -54,7 +48,7 @@ impl HalfEdge {
         );
         assert_eq!(
             &normalize_vertex_order(
-                vertices.clone().map(|vertex| *vertex.global_form())
+                [&a, &b].map(|vertex| *vertex.global_form())
             ),
             global_form.vertices_in_normalized_order(),
             "The global forms of a half-edge's vertices must match the \
@@ -62,7 +56,6 @@ impl HalfEdge {
         );
 
         // Make sure that the edge vertices are not coincident on the curve.
-        let [a, b] = &vertices;
         assert_ne!(
             a.position(),
             b.position(),
@@ -70,32 +63,18 @@ impl HalfEdge {
         );
 
         Self {
-            surface: curve.surface().clone(),
-            curve,
-            vertices,
+            vertices: [a, b],
             global_form,
         }
     }
 
-    /// Access the surface that the half-edge's [`Curve`] is defined on
-    pub fn surface(&self) -> &Handle<Surface> {
-        &self.surface
-    }
-
     /// Access the curve that defines the half-edge's geometry
-    ///
-    /// The edge can be a segment of the curve that is bounded by two vertices,
-    /// or if the curve is continuous (i.e. connects to itself), the edge could
-    /// be defined by the whole curve, and have no bounding vertices.
     pub fn curve(&self) -> &Curve {
-        &self.curve
+        let [vertex, _] = self.vertices();
+        vertex.curve()
     }
 
     /// Access the vertices that bound the half-edge on the curve
-    ///
-    /// An edge has either two bounding vertices or none. The latter is possible
-    /// if the edge's curve is continuous (i.e. connects to itself), and defines
-    /// the whole edge.
     pub fn vertices(&self) -> &[Vertex; 2] {
         &self.vertices
     }
