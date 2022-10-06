@@ -33,11 +33,11 @@ impl HalfEdge {
     /// That would just mean, that ends of the edge connect to each other.)
     pub fn new(
         curve: Curve,
-        vertices: [Vertex; 2],
+        [a, b]: [Vertex; 2],
         global_form: GlobalEdge,
     ) -> Self {
         // Make sure `curve` and `vertices` match.
-        for vertex in &vertices {
+        for vertex in [&a, &b] {
             assert_eq!(
                 &curve,
                 vertex.curve(),
@@ -54,7 +54,7 @@ impl HalfEdge {
         );
         assert_eq!(
             &normalize_vertex_order(
-                vertices.clone().map(|vertex| *vertex.global_form())
+                [&a, &b].map(|vertex| *vertex.global_form())
             ),
             global_form.vertices_in_normalized_order(),
             "The global forms of a half-edge's vertices must match the \
@@ -62,7 +62,6 @@ impl HalfEdge {
         );
 
         // Make sure that the edge vertices are not coincident on the curve.
-        let [a, b] = &vertices;
         assert_ne!(
             a.position(),
             b.position(),
@@ -72,7 +71,7 @@ impl HalfEdge {
         Self {
             surface: curve.surface().clone(),
             curve,
-            vertices,
+            vertices: [a, b],
             global_form,
         }
     }
