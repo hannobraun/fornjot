@@ -157,8 +157,15 @@ unsafe impl<T> Sync for Handle<T> {}
 /// Represents the ID of an object
 ///
 /// See [`Handle::id`].
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Copy, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct ObjectId(u64);
+
+impl fmt::Debug for ObjectId {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let id = self.0;
+        write!(f, "object id {id:#x}")
+    }
+}
 
 /// A wrapper around [`Handle`] to define equality based on identity
 ///
