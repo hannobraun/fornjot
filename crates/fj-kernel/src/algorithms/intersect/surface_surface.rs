@@ -58,9 +58,8 @@ impl SurfaceSurfaceIntersection {
         let curves = surfaces_and_planes.map(|(surface, plane)| {
             let path = SurfacePath::Line(plane.project_line(&line));
             let global_form = GlobalCurve::new(stores);
-            let curve = Curve::new(surface, path, global_form);
 
-            stores.curves.insert(curve)
+            Curve::new(surface, path, global_form, stores)
         });
 
         Some(Self {

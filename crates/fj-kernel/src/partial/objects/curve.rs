@@ -92,9 +92,7 @@ impl PartialCurve {
             .global_form
             .unwrap_or_else(|| GlobalCurve::new(stores).into());
 
-        let curve = Curve::new(surface, path, global_form);
-
-        stores.curves.insert(curve)
+        Curve::new(surface, path, global_form, stores)
     }
 }
 
