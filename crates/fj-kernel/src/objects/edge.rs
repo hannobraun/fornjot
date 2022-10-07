@@ -47,10 +47,10 @@ impl HalfEdge {
             the half-edge's global form"
         );
         assert_eq!(
-            &normalize_vertex_order(
+            &VerticesInNormalizedOrder::new(
                 [&a, &b].map(|vertex| vertex.global_form().clone())
             ),
-            global_form.vertices_in_normalized_order(),
+            global_form.vertices(),
             "The global forms of a half-edge's vertices must match the \
             vertices of the half-edge's global form"
         );
@@ -104,7 +104,7 @@ impl fmt::Display for HalfEdge {
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalEdge {
     curve: HandleWrapper<GlobalCurve>,
-    vertices: [Handle<GlobalVertex>; 2],
+    vertices: VerticesInNormalizedOrder,
 }
 
 impl GlobalEdge {
@@ -118,7 +118,7 @@ impl GlobalEdge {
         vertices: [Handle<GlobalVertex>; 2],
     ) -> Self {
         let curve = curve.into();
-        let vertices = normalize_vertex_order(vertices);
+        let vertices = VerticesInNormalizedOrder::new(vertices);
         Self { curve, vertices }
     }
 
@@ -137,18 +137,34 @@ impl GlobalEdge {
     /// and might not match the order of the vertices that were passed to
     /// [`GlobalEdge::new`]. You must not rely on the vertices being in any
     /// specific order.
-    pub fn vertices_in_normalized_order(&self) -> &[Handle<GlobalVertex>; 2] {
+    pub fn vertices(&self) -> &VerticesInNormalizedOrder {
         &self.vertices
     }
 }
 
-fn normalize_vertex_order(
-    [a, b]: [Handle<GlobalVertex>; 2],
-) -> [Handle<GlobalVertex>; 2] {
-    if a < b {
-        [a, b]
-    } else {
-        [b, a]
+/// The vertices of a [`GlobalEdge`]
+///
+/// Since [`GlobalEdge`] is the single global representation of an edge in
+/// global space, it must normalize the order of its vertices. Otherwise, it is
+/// possible to construct two [`GlobalEdge`] instances that are meant to
+/// represent the same edge, but aren't equal.
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct VerticesInNormalizedOrder([Handle<GlobalVertex>; 2]);
+
+impl VerticesInNormalizedOrder {
+    /// Construct a new instance of `VerticesInNormalizedOrder`
+    ///
+    /// The provided vertices can be in any order.
+    pub fn new([a, b]: [Handle<GlobalVertex>; 2]) -> Self {
+        let vertices = if a < b { [a, b] } else { [b, a] };
+        Self(vertices)
+    }
+
+    /// Access the vertices
+    ///
+    /// The vertices in the returned array will be in normalized order.
+    pub fn access_in_normalized_order(&self) -> &[Handle<GlobalVertex>; 2] {
+        &self.0
     }
 }
 
