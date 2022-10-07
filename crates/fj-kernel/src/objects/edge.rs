@@ -104,7 +104,7 @@ impl fmt::Display for HalfEdge {
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalEdge {
     curve: HandleWrapper<GlobalCurve>,
-    vertices: [Handle<GlobalVertex>; 2],
+    vertices: VerticesInNormalizedOrder,
 }
 
 impl GlobalEdge {
@@ -118,7 +118,8 @@ impl GlobalEdge {
         vertices: [Handle<GlobalVertex>; 2],
     ) -> Self {
         let curve = curve.into();
-        let vertices = normalize_vertex_order(vertices);
+        let vertices =
+            VerticesInNormalizedOrder(normalize_vertex_order(vertices));
         Self { curve, vertices }
     }
 
@@ -138,9 +139,18 @@ impl GlobalEdge {
     /// [`GlobalEdge::new`]. You must not rely on the vertices being in any
     /// specific order.
     pub fn vertices_in_normalized_order(&self) -> &[Handle<GlobalVertex>; 2] {
-        &self.vertices
+        &self.vertices.0
     }
 }
+
+/// The vertices of a [`GlobalEdge`]
+///
+/// Since [`GlobalEdge`] is the single global representation of an edge in
+/// global space, it must normalize the order of its vertices. Otherwise, it is
+/// possible to construct two [`GlobalEdge`] instances that are meant to
+/// represent the same edge, but aren't equal.
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct VerticesInNormalizedOrder([Handle<GlobalVertex>; 2]);
 
 fn normalize_vertex_order(
     [a, b]: [Handle<GlobalVertex>; 2],
