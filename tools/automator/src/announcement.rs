@@ -162,7 +162,7 @@ Improvements to Fornjot and its documentation that are visible to end users.
 
 ### Ecosystem improvements
 
-Improvements to the Fornjot ecosystem that are relevant to developers who are building on top of Fornjot components.
+Improvements to Fornjot components that are relevant to developers building on top of those. These have an indirect effect on end users, through fixed bugs and improved robustness.
 
 #### `fj-kernel`
 
