@@ -56,7 +56,7 @@ impl<T> Deref for Handle<T> {
         //    has at least been reserved.
         // 2. That the memory objects live in is never deallocated.
         //
-        // That means that as long as a `Handle` exists, the object is
+        // That means that as long as a `Handle` exists, the object it
         // references has at least been reserved, and has not been deallocated.
         //
         // Given all this, we know that the following must be true:
@@ -71,7 +71,7 @@ impl<T> Deref for Handle<T> {
         // the reference we return here are enforced.
         //
         // Furthermore, all of the code mentioned here is covered by unit tests,
-        // which I've run successfully run under Miri.
+        // which I've run successfully under Miri.
         let cell = unsafe { &*self.ptr };
 
         // Can only happen, if the object has been reserved, but the reservation
