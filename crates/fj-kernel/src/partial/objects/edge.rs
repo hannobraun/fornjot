@@ -289,10 +289,7 @@ impl From<&GlobalEdge> for PartialGlobalEdge {
         Self {
             curve: Some(global_edge.curve().clone().into()),
             vertices: Some(
-                global_edge
-                    .vertices_in_normalized_order()
-                    .access_in_normalized_order()
-                    .clone(),
+                global_edge.vertices().access_in_normalized_order().clone(),
             ),
         }
     }

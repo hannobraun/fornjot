@@ -50,7 +50,7 @@ impl HalfEdge {
             &VerticesInNormalizedOrder::new(
                 [&a, &b].map(|vertex| vertex.global_form().clone())
             ),
-            global_form.vertices_in_normalized_order(),
+            global_form.vertices(),
             "The global forms of a half-edge's vertices must match the \
             vertices of the half-edge's global form"
         );
@@ -137,7 +137,7 @@ impl GlobalEdge {
     /// and might not match the order of the vertices that were passed to
     /// [`GlobalEdge::new`]. You must not rely on the vertices being in any
     /// specific order.
-    pub fn vertices_in_normalized_order(&self) -> &VerticesInNormalizedOrder {
+    pub fn vertices(&self) -> &VerticesInNormalizedOrder {
         &self.vertices
     }
 }
