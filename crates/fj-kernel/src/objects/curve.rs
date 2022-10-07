@@ -21,11 +21,10 @@ impl Curve {
         global_form: impl Into<HandleWrapper<GlobalCurve>>,
         stores: &Stores,
     ) -> Handle<Self> {
-        let global_form = global_form.into();
         stores.curves.insert(Self {
             surface,
             path,
-            global_form,
+            global_form: global_form.into(),
         })
     }
 
