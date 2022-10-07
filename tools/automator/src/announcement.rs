@@ -155,7 +155,7 @@ version = \"{version}\"
 
 ### End-user improvements
 
-Improvements to Fornjot and its documentation that are visible to end-users.
+Improvements to Fornjot and its documentation that are visible to end users.
 
 **TASK: Add end-user improvements.**
 
