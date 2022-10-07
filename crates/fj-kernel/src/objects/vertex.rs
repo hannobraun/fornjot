@@ -15,7 +15,6 @@ pub struct Vertex {
     position: Point<1>,
     curve: Handle<Curve>,
     surface_form: SurfaceVertex,
-    global_form: GlobalVertex,
 }
 
 impl Vertex {
@@ -36,13 +35,10 @@ impl Vertex {
             "Surface form of vertex must be defined on same surface as curve",
         );
 
-        let global_form = *surface_form.global_form();
-
         Self {
             position,
             curve,
             surface_form,
-            global_form,
         }
     }
 
@@ -63,7 +59,7 @@ impl Vertex {
 
     /// Access the global form of this vertex
     pub fn global_form(&self) -> &GlobalVertex {
-        &self.global_form
+        self.surface_form.global_form()
     }
 }
 
