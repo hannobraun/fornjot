@@ -104,18 +104,11 @@ impl Sweep for (Vertex, Handle<Surface>) {
                     },
                 );
 
-            // Can be cleaned up, once `zip` is stable:
-            // https://doc.rust-lang.org/std/primitive.array.html#method.zip
-            let [a_surface, b_surface] = vertices_surface;
-            let [a_global, b_global] = vertices_global;
-            let vertices = [(a_surface, a_global), (b_surface, b_global)];
-
-            vertices.map(|(vertex_surface, vertex_global)| {
+            vertices_surface.map(|surface_form| {
                 Vertex::new(
-                    [vertex_surface.position().v],
+                    [surface_form.position().v],
                     curve.clone(),
-                    vertex_surface,
-                    vertex_global,
+                    surface_form,
                 )
             })
         };

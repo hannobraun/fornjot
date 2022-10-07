@@ -110,9 +110,7 @@ impl PartialVertex {
             })
             .into_full(stores);
 
-        let global_form = *surface_form.global_form();
-
-        Vertex::new(position, curve, surface_form, global_form)
+        Vertex::new(position, curve, surface_form)
     }
 }
 
