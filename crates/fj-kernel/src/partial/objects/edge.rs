@@ -30,6 +30,17 @@ pub struct PartialHalfEdge {
 }
 
 impl PartialHalfEdge {
+    /// Extract the global curve from either the curve or global form
+    ///
+    /// If a global curve is available through both, the curve is preferred.
+    pub fn extract_global_curve(&self) -> Option<Handle<GlobalCurve>> {
+        let global_curve_from_curve = || self.curve.as_ref()?.global_form();
+        let global_curve_from_global_form =
+            || Some(self.global_form.as_ref()?.curve()?.clone());
+
+        global_curve_from_curve().or_else(global_curve_from_global_form)
+    }
+
     /// Update the partial half-edge with the given surface
     pub fn with_surface(mut self, surface: Option<Handle<Surface>>) -> Self {
         if let Some(surface) = surface {
@@ -139,16 +150,8 @@ impl PartialHalfEdge {
                 .expect("Can't infer line segment without surface position")
         });
 
-        let global_curve = {
-            let global_curve_from_curve = || self.curve.as_ref()?.global_form();
-            let global_curve_from_global_form =
-                || Some(self.global_form.as_ref()?.curve()?.clone());
-
-            global_curve_from_curve().or_else(global_curve_from_global_form)
-        };
-
         let curve = Handle::<Curve>::partial()
-            .with_global_form(global_curve)
+            .with_global_form(self.extract_global_curve())
             .with_surface(Some(surface))
             .as_line_from_points(points);
 
