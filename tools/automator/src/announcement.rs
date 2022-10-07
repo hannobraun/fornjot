@@ -184,10 +184,6 @@ Improvements that are relevant to developers working on Fornjot itself.
 {pull_request_links}
 {author_links}
 
-### Issue of the Week
-
-**TASK: Write.**
-
 
 ### Outlook
 
