@@ -19,14 +19,14 @@ impl Curve {
         surface: Handle<Surface>,
         path: SurfacePath,
         global_form: impl Into<HandleWrapper<GlobalCurve>>,
-    ) -> Self {
+        stores: &Stores,
+    ) -> Handle<Self> {
         let global_form = global_form.into();
-
-        Self {
+        stores.curves.insert(Self {
             surface,
             path,
             global_form,
-        }
+        })
     }
 
     /// Access the path that defines this curve
