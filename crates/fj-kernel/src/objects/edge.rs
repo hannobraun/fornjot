@@ -48,7 +48,7 @@ impl HalfEdge {
         );
         assert_eq!(
             &normalize_vertex_order(
-                [&a, &b].map(|vertex| *vertex.global_form())
+                [&a, &b].map(|vertex| vertex.global_form().clone())
             ),
             global_form.vertices_in_normalized_order(),
             "The global forms of a half-edge's vertices must match the \
@@ -104,7 +104,7 @@ impl fmt::Display for HalfEdge {
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalEdge {
     curve: HandleWrapper<GlobalCurve>,
-    vertices: [GlobalVertex; 2],
+    vertices: [Handle<GlobalVertex>; 2],
 }
 
 impl GlobalEdge {
@@ -115,7 +115,7 @@ impl GlobalEdge {
     /// of `vertices` here.
     pub fn new(
         curve: impl Into<HandleWrapper<GlobalCurve>>,
-        vertices: [GlobalVertex; 2],
+        vertices: [Handle<GlobalVertex>; 2],
     ) -> Self {
         let curve = curve.into();
         let vertices = normalize_vertex_order(vertices);
@@ -137,12 +137,14 @@ impl GlobalEdge {
     /// and might not match the order of the vertices that were passed to
     /// [`GlobalEdge::new`]. You must not rely on the vertices being in any
     /// specific order.
-    pub fn vertices_in_normalized_order(&self) -> &[GlobalVertex; 2] {
+    pub fn vertices_in_normalized_order(&self) -> &[Handle<GlobalVertex>; 2] {
         &self.vertices
     }
 }
 
-fn normalize_vertex_order([a, b]: [GlobalVertex; 2]) -> [GlobalVertex; 2] {
+fn normalize_vertex_order(
+    [a, b]: [Handle<GlobalVertex>; 2],
+) -> [Handle<GlobalVertex>; 2] {
     if a < b {
         [a, b]
     } else {

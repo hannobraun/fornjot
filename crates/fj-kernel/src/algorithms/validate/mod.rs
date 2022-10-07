@@ -37,9 +37,20 @@ pub trait Validate: Sized {
     /// # use fj_kernel::{
     /// #     algorithms::validate::{Validate, ValidationConfig},
     /// #     objects::GlobalVertex,
+    /// #     stores::Stores,
     /// # };
-    /// # let object = GlobalVertex::from_position([0., 0., 0.]);
+    /// # let stores = Stores::new();
+    /// # let object = GlobalVertex::from_position([0., 0., 0.], &stores);
     /// object.validate();
+    /// ```
+    /// ``` rust
+    /// # use fj_kernel::{
+    /// #     algorithms::validate::{Validate, ValidationConfig},
+    /// #     objects::GlobalVertex,
+    /// #     stores::Stores,
+    /// # };
+    /// # let stores = Stores::new();
+    /// # let object = GlobalVertex::from_position([0., 0., 0.], &stores);
     /// object.validate_with_config(&ValidationConfig::default());
     /// ```
     fn validate(self) -> Result<Validated<Self>, ValidationError> {
@@ -181,8 +192,8 @@ mod tests {
             Curve::new(surface.clone(), path, global_form, &stores)
         };
 
-        let [a_global, b_global] =
-            points_global.map(GlobalVertex::from_position);
+        let [a_global, b_global] = points_global
+            .map(|point| GlobalVertex::from_position(point, &stores));
 
         let [a_surface, b_surface] = {
             // Can be cleaned up, once `zip` is stable:
@@ -231,6 +242,7 @@ mod tests {
 
     #[test]
     fn uniqueness_vertex() -> anyhow::Result<()> {
+        let stores = Stores::new();
         let mut shape = Vec::new();
 
         let deviation = Scalar::from_f64(0.25);
@@ -246,11 +258,11 @@ mod tests {
         };
 
         // Adding a vertex should work.
-        shape.push(GlobalVertex::from_position(a));
+        shape.push(GlobalVertex::from_position(a, &stores));
         shape.clone().validate_with_config(&config)?;
 
         // Adding a second vertex that is considered identical should fail.
-        shape.push(GlobalVertex::from_position(b));
+        shape.push(GlobalVertex::from_position(b, &stores));
         let result = shape.validate_with_config(&config);
         assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
 

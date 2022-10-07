@@ -63,7 +63,7 @@ impl Sweep for (HalfEdge, Color) {
                     let surface_vertex = SurfaceVertex::new(
                         point_surface,
                         surface.clone(),
-                        *vertex.global_form(),
+                        vertex.global_form().clone(),
                     );
 
                     Vertex::new(
@@ -87,7 +87,7 @@ impl Sweep for (HalfEdge, Color) {
 
             let global_vertices = side_edges.clone().map(|edge| {
                 let [_, vertex] = edge.vertices();
-                *vertex.global_form()
+                vertex.global_form().clone()
             });
 
             let points_curve_and_surface =
@@ -113,8 +113,10 @@ impl Sweep for (HalfEdge, Color) {
                 Curve::new(surface.clone(), path, global, stores)
             };
 
-            let global =
-                GlobalEdge::new(curve.global_form().clone(), global_vertices);
+            let global = GlobalEdge::new(
+                curve.global_form().clone(),
+                global_vertices.clone(),
+            );
 
             let vertices = {
                 let surface_points = points_curve_and_surface
