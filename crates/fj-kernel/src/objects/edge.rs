@@ -51,8 +51,15 @@ impl HalfEdge {
             the half-edge's global form"
         );
         assert_eq!(
-            &vertices_in_normalized_order,
-            global_form.vertices(),
+            vertices_in_normalized_order
+                .access_in_normalized_order()
+                .clone()
+                .map(|global_vertex| global_vertex.id()),
+            global_form
+                .vertices()
+                .access_in_normalized_order()
+                .clone()
+                .map(|global_vertex| global_vertex.id()),
             "The global forms of a half-edge's vertices must match the \
             vertices of the half-edge's global form"
         );
