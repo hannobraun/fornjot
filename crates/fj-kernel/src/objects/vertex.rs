@@ -27,7 +27,6 @@ impl Vertex {
         position: impl Into<Point<1>>,
         curve: Handle<Curve>,
         surface_form: SurfaceVertex,
-        global_form: GlobalVertex,
     ) -> Self {
         let position = position.into();
 
@@ -36,11 +35,8 @@ impl Vertex {
             surface_form.surface().id(),
             "Surface form of vertex must be defined on same surface as curve",
         );
-        assert_eq!(
-            surface_form.global_form(),
-            &global_form,
-            "Vertex and its surface form must have same global form",
-        );
+
+        let global_form = *surface_form.global_form();
 
         Self {
             position,

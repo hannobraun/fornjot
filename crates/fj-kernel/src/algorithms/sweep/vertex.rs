@@ -110,12 +110,11 @@ impl Sweep for (Vertex, Handle<Surface>) {
             let [a_global, b_global] = vertices_global;
             let vertices = [(a_surface, a_global), (b_surface, b_global)];
 
-            vertices.map(|(surface_form, vertex_global)| {
+            vertices.map(|(surface_form, _)| {
                 Vertex::new(
                     [surface_form.position().v],
                     curve.clone(),
                     surface_form,
-                    vertex_global,
                 )
             })
         };
