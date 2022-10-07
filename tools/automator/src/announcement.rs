@@ -132,7 +132,7 @@ title = \"Weekly Release - 2022-W{week}\"
 # TASK: Uncomment this date, once the announcement is ready to be published.
 # date = {date}
 
-# TASK: Uncomment to generate the HTML for the email newsletter.
+# Uncomment to generate the HTML for the email newsletter.
 # template = \"newsletter/weekly-release.html\"
 
 [extra]
@@ -155,14 +155,14 @@ version = \"{version}\"
 
 ### End-user improvements
 
-Improvements to Fornjot and its documentation that are visible to end-users.
+Improvements to Fornjot and its documentation that are visible to end users.
 
 **TASK: Add end-user improvements.**
 
 
 ### Ecosystem improvements
 
-Improvements to the Fornjot ecosystem that are relevant to developers who are building on top of Fornjot components.
+Improvements to Fornjot components that are relevant to developers building on top of those. These have an indirect effect on end users, through fixed bugs and improved robustness.
 
 #### `fj-kernel`
 
@@ -183,10 +183,6 @@ Improvements that are relevant to developers working on Fornjot itself.
 {pull_request_list}
 {pull_request_links}
 {author_links}
-
-### Issue of the Week
-
-**TASK: Write.**
 
 
 ### Outlook
