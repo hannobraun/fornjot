@@ -116,26 +116,6 @@ impl PartialHalfEdge {
 
     /// Update partial half-edge as a line segment, reusing existing vertices
     pub fn as_line_segment(mut self) -> Self {
-        fn extract_global_curve(
-            partial: &PartialHalfEdge,
-        ) -> Option<HandleWrapper<GlobalCurve>> {
-            fn extract_global_curve_from_curve(
-                partial: &PartialHalfEdge,
-            ) -> Option<Handle<GlobalCurve>> {
-                partial.curve.as_ref()?.global_form()
-            }
-
-            fn extract_global_curve_from_global_form(
-                partial: &PartialHalfEdge,
-            ) -> Option<Handle<GlobalCurve>> {
-                Some(partial.global_form.as_ref()?.curve()?.clone())
-            }
-
-            extract_global_curve_from_curve(partial)
-                .or_else(|| extract_global_curve_from_global_form(partial))
-                .map(Into::into)
-        }
-
         let [from, to] = self
             .vertices
             .clone()
@@ -159,8 +139,16 @@ impl PartialHalfEdge {
                 .expect("Can't infer line segment without surface position")
         });
 
+        let global_curve = {
+            let global_curve_from_curve = || self.curve.as_ref()?.global_form();
+            let global_curve_from_global_form =
+                || Some(self.global_form.as_ref()?.curve()?.clone());
+
+            global_curve_from_curve().or_else(global_curve_from_global_form)
+        };
+
         let curve = Handle::<Curve>::partial()
-            .with_global_form(extract_global_curve(&self))
+            .with_global_form(global_curve)
             .with_surface(Some(surface))
             .as_line_from_points(points);
 
