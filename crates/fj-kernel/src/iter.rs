@@ -192,7 +192,7 @@ impl<'r> ObjectIters<'r> for Handle<GlobalCurve> {
     }
 }
 
-impl<'r> ObjectIters<'r> for GlobalVertex {
+impl<'r> ObjectIters<'r> for Handle<GlobalVertex> {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
         Vec::new()
     }
@@ -460,7 +460,9 @@ mod tests {
 
     #[test]
     fn global_vertex() {
-        let object = GlobalVertex::from_position([0., 0., 0.]);
+        let stores = Stores::new();
+
+        let object = GlobalVertex::from_position([0., 0., 0.], &stores);
 
         assert_eq!(0, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -586,7 +588,7 @@ mod tests {
             .with_surface(Some(surface.clone()))
             .as_u_axis()
             .build(&stores);
-        let global_vertex = GlobalVertex::from_position([0., 0., 0.]);
+        let global_vertex = GlobalVertex::from_position([0., 0., 0.], &stores);
         let surface_vertex =
             SurfaceVertex::new([0., 0.], surface, global_vertex);
         let object = Vertex::new([0.], curve, surface_vertex);

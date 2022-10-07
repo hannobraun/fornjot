@@ -81,7 +81,7 @@ impl PartialHalfEdge {
             let [a_curve, b_curve] =
                 [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-            let global_vertex = GlobalVertex::partial()
+            let global_vertex = Handle::<GlobalVertex>::partial()
                 .from_curve_and_position(curve.clone(), a_curve);
 
             [a_curve, b_curve].map(|point_curve| {
@@ -236,7 +236,7 @@ pub struct PartialGlobalEdge {
     /// The vertices that bound the [`GlobalEdge`] in the curve
     ///
     /// Must be provided before [`PartialGlobalEdge::build`] is called.
-    pub vertices: Option<[GlobalVertex; 2]>,
+    pub vertices: Option<[Handle<GlobalVertex>; 2]>,
 }
 
 impl PartialGlobalEdge {
@@ -251,7 +251,7 @@ impl PartialGlobalEdge {
     /// Update the partial global edge with the given vertices
     pub fn with_vertices(
         mut self,
-        vertices: Option<[GlobalVertex; 2]>,
+        vertices: Option<[Handle<GlobalVertex>; 2]>,
     ) -> Self {
         if let Some(vertices) = vertices {
             self.vertices = Some(vertices);
@@ -267,7 +267,7 @@ impl PartialGlobalEdge {
     ) -> Self {
         self.with_curve(Some(curve.global_form().clone()))
             .with_vertices(Some(
-                vertices.clone().map(|vertex| *vertex.global_form()),
+                vertices.clone().map(|vertex| vertex.global_form().clone()),
             ))
     }
 
@@ -288,7 +288,7 @@ impl From<&GlobalEdge> for PartialGlobalEdge {
     fn from(global_edge: &GlobalEdge) -> Self {
         Self {
             curve: Some(global_edge.curve().clone().into()),
-            vertices: Some(*global_edge.vertices_in_normalized_order()),
+            vertices: Some(global_edge.vertices_in_normalized_order().clone()),
         }
     }
 }

@@ -1,7 +1,7 @@
 use fj_math::Point;
 use pretty_assertions::assert_eq;
 
-use crate::stores::Handle;
+use crate::stores::{Handle, Stores};
 
 use super::{Curve, Surface};
 
@@ -58,7 +58,7 @@ impl Vertex {
     }
 
     /// Access the global form of this vertex
-    pub fn global_form(&self) -> &GlobalVertex {
+    pub fn global_form(&self) -> &Handle<GlobalVertex> {
         self.surface_form.global_form()
     }
 }
@@ -68,7 +68,7 @@ impl Vertex {
 pub struct SurfaceVertex {
     position: Point<2>,
     surface: Handle<Surface>,
-    global_form: GlobalVertex,
+    global_form: Handle<GlobalVertex>,
 }
 
 impl SurfaceVertex {
@@ -76,7 +76,7 @@ impl SurfaceVertex {
     pub fn new(
         position: impl Into<Point<2>>,
         surface: Handle<Surface>,
-        global_form: GlobalVertex,
+        global_form: Handle<GlobalVertex>,
     ) -> Self {
         let position = position.into();
         Self {
@@ -97,7 +97,7 @@ impl SurfaceVertex {
     }
 
     /// Access the global form of this vertex
-    pub fn global_form(&self) -> &GlobalVertex {
+    pub fn global_form(&self) -> &Handle<GlobalVertex> {
         &self.global_form
     }
 }
@@ -127,9 +127,12 @@ pub struct GlobalVertex {
 
 impl GlobalVertex {
     /// Construct a `GlobalVertex` from a position
-    pub fn from_position(position: impl Into<Point<3>>) -> Self {
+    pub fn from_position(
+        position: impl Into<Point<3>>,
+        stores: &Stores,
+    ) -> Handle<Self> {
         let position = position.into();
-        Self { position }
+        stores.global_vertices.insert(Self { position })
     }
 
     /// Access the position of the vertex

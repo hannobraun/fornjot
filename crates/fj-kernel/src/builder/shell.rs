@@ -117,7 +117,7 @@ impl<'a> ShellBuilder<'a> {
                                 to.position() + [Z, edge_length],
                             ))
                             .with_surface(Some(surface.clone()))
-                            .with_global_form(Some(*from.global_form()));
+                            .with_global_form(Some(from.global_form().clone()));
 
                         let curve = Handle::<Curve>::partial()
                             .with_global_form(Some(
@@ -151,7 +151,7 @@ impl<'a> ShellBuilder<'a> {
                             from.position() + [-edge_length, Z],
                         ))
                         .with_surface(Some(surface.clone()))
-                        .with_global_form(Some(*to.global_form()));
+                        .with_global_form(Some(to.global_form().clone()));
 
                     let from = Vertex::partial().with_surface_form(Some(from));
                     let to = Vertex::partial().with_surface_form(Some(to));
@@ -208,7 +208,9 @@ impl<'a> ShellBuilder<'a> {
                         let surface_form = SurfaceVertex::partial()
                             .with_position(Some(point))
                             .with_surface(Some(surface.clone()))
-                            .with_global_form(Some(*vertex.global_form()))
+                            .with_global_form(Some(
+                                vertex.global_form().clone(),
+                            ))
                             .build(self.stores);
                         Vertex::partial()
                             .with_position(Some(vertex.position()))
