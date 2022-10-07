@@ -4,7 +4,7 @@ mod blocks;
 mod handle;
 mod store;
 
-use crate::objects::{Curve, GlobalCurve, Surface};
+use crate::objects::{Curve, GlobalCurve, GlobalVertex, Surface};
 
 pub use self::{
     handle::{Handle, HandleWrapper, ObjectId},
@@ -26,6 +26,9 @@ pub struct Stores {
 
     /// Store for global curves
     pub global_curves: Store<GlobalCurve>,
+
+    /// Store for global vertices
+    pub global_vertices: Store<GlobalVertex>,
 
     /// Store for surfaces
     pub surfaces: Store<Surface>,
