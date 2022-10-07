@@ -201,10 +201,9 @@ impl PartialHalfEdge {
 
         let global_form = self
             .global_form
-            .unwrap_or_else(|| {
-                GlobalEdge::partial()
-                    .from_curve_and_vertices(&curve, &vertices)
-                    .into()
+            .unwrap_or_else(|| GlobalEdge::partial().into())
+            .update_partial(|partial| {
+                partial.from_curve_and_vertices(&curve, &vertices)
             })
             .into_full(objects);
 
