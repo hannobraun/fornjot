@@ -17,7 +17,7 @@ impl Sweep for (Vertex, Handle<Surface>) {
     fn sweep(
         self,
         path: impl Into<Vector<3>>,
-        stores: &Objects,
+        objects: &Objects,
     ) -> Self::Swept {
         let (vertex, surface) = self;
         let path = path.into();
@@ -58,7 +58,7 @@ impl Sweep for (Vertex, Handle<Surface>) {
         // as that is the most straight-forward part of this operations, and
         // we're going to need it soon anyway.
         let (edge_global, vertices_global) =
-            vertex.global_form().clone().sweep(path, stores);
+            vertex.global_form().clone().sweep(path, objects);
 
         // Next, let's compute the surface coordinates of the two vertices of
         // the output `Edge`, as we're going to need these for the rest of this
@@ -88,7 +88,7 @@ impl Sweep for (Vertex, Handle<Surface>) {
                 surface.clone(),
                 SurfacePath::Line(line),
                 edge_global.curve().clone(),
-                stores,
+                objects,
             )
         };
 
@@ -130,13 +130,13 @@ impl Sweep for Handle<GlobalVertex> {
     fn sweep(
         self,
         path: impl Into<Vector<3>>,
-        stores: &Objects,
+        objects: &Objects,
     ) -> Self::Swept {
-        let curve = GlobalCurve::new(stores);
+        let curve = GlobalCurve::new(objects);
 
         let a = self.clone();
         let b =
-            GlobalVertex::from_position(self.position() + path.into(), stores);
+            GlobalVertex::from_position(self.position() + path.into(), objects);
 
         let vertices = [a, b];
         let global_edge = GlobalEdge::new(curve, vertices.clone());
