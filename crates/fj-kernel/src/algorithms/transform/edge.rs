@@ -1,22 +1,22 @@
 use fj_math::Transform;
 
 use crate::{
-    objects::Curve,
+    objects::{Curve, Objects},
     partial::{MaybePartial, PartialGlobalEdge, PartialHalfEdge},
-    stores::{Handle, Stores},
+    storage::Handle,
 };
 
 use super::TransformObject;
 
 impl TransformObject for PartialHalfEdge {
-    fn transform(self, transform: &Transform, stores: &Stores) -> Self {
+    fn transform(self, transform: &Transform, objects: &Objects) -> Self {
         let surface = self
             .surface
-            .map(|surface| surface.transform(transform, stores));
+            .map(|surface| surface.transform(transform, objects));
         let curve = self.curve.clone().map(|curve| {
             curve
                 .into_partial()
-                .transform(transform, stores)
+                .transform(transform, objects)
                 .with_surface(surface.clone())
                 .into()
         });
@@ -24,7 +24,7 @@ impl TransformObject for PartialHalfEdge {
             vertices.map(|vertex| {
                 vertex
                     .into_partial()
-                    .transform(transform, stores)
+                    .transform(transform, objects)
                     .with_curve(curve.clone())
                     .into()
             })
@@ -32,7 +32,7 @@ impl TransformObject for PartialHalfEdge {
         let global_form = self.global_form.map(|global_form| {
             global_form
                 .into_partial()
-                .transform(transform, stores)
+                .transform(transform, objects)
                 .with_curve(curve.as_ref().and_then(
                     |curve: &MaybePartial<Handle<Curve>>| curve.global_form(),
                 ))
@@ -49,11 +49,12 @@ impl TransformObject for PartialHalfEdge {
 }
 
 impl TransformObject for PartialGlobalEdge {
-    fn transform(self, transform: &Transform, stores: &Stores) -> Self {
-        let curve =
-            self.curve.map(|curve| curve.0.transform(transform, stores));
+    fn transform(self, transform: &Transform, objects: &Objects) -> Self {
+        let curve = self
+            .curve
+            .map(|curve| curve.0.transform(transform, objects));
         let vertices = self.vertices.map(|vertices| {
-            vertices.map(|vertex| vertex.transform(transform, stores))
+            vertices.map(|vertex| vertex.transform(transform, objects))
         });
 
         Self {

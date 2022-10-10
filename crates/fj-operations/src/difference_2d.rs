@@ -5,8 +5,7 @@ use fj_kernel::{
         validate::{Validate, Validated, ValidationConfig, ValidationError},
     },
     iter::ObjectIters,
-    objects::{Face, Sketch},
-    stores::Stores,
+    objects::{Face, Objects, Sketch},
 };
 use fj_math::Aabb;
 
@@ -20,7 +19,7 @@ impl Shape for fj::Difference2d {
     fn compute_brep(
         &self,
         config: &ValidationConfig,
-        stores: &Stores,
+        objects: &Objects,
         planes: &Planes,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
@@ -37,7 +36,7 @@ impl Shape for fj::Difference2d {
         // - https://doc.rust-lang.org/std/primitive.array.html#method.try_map
         let [a, b] = self.shapes();
         let [a, b] = [a, b].map(|shape| {
-            shape.compute_brep(config, stores, planes, debug_info)
+            shape.compute_brep(config, objects, planes, debug_info)
         });
         let [a, b] = [a?, b?];
 

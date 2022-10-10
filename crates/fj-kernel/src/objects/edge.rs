@@ -2,7 +2,7 @@ use std::fmt;
 
 use pretty_assertions::{assert_eq, assert_ne};
 
-use crate::stores::{Handle, HandleWrapper};
+use crate::storage::{Handle, HandleWrapper};
 
 use super::{Curve, GlobalCurve, GlobalVertex, Vertex};
 
@@ -172,15 +172,18 @@ impl VerticesInNormalizedOrder {
 mod tests {
     use pretty_assertions::assert_eq;
 
-    use crate::{objects::Surface, partial::HasPartial, stores::Stores};
+    use crate::{
+        objects::{Objects, Surface},
+        partial::HasPartial,
+    };
 
     use super::HalfEdge;
 
     #[test]
     fn global_edge_equality() {
-        let stores = Stores::new();
+        let objects = Objects::new();
 
-        let surface = stores.surfaces.insert(Surface::xy_plane());
+        let surface = objects.surfaces.insert(Surface::xy_plane());
 
         let a = [0., 0.];
         let b = [1., 0.];
@@ -188,11 +191,11 @@ mod tests {
         let a_to_b = HalfEdge::partial()
             .with_surface(Some(surface.clone()))
             .as_line_segment_from_points([a, b])
-            .build(&stores);
+            .build(&objects);
         let b_to_a = HalfEdge::partial()
             .with_surface(Some(surface))
             .as_line_segment_from_points([b, a])
-            .build(&stores);
+            .build(&objects);
 
         assert_eq!(a_to_b.global_form(), b_to_a.global_form());
     }

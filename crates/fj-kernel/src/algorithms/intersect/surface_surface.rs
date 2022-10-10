@@ -1,9 +1,9 @@
 use fj_math::{Line, Plane, Point, Scalar};
 
 use crate::{
-    objects::{Curve, GlobalCurve, Surface},
+    objects::{Curve, GlobalCurve, Objects, Surface},
     path::{GlobalPath, SurfacePath},
-    stores::{Handle, Stores},
+    storage::Handle,
 };
 
 /// The intersection between two surfaces
@@ -17,7 +17,7 @@ impl SurfaceSurfaceIntersection {
     /// Compute the intersection between two surfaces
     pub fn compute(
         surfaces: [Handle<Surface>; 2],
-        stores: &Stores,
+        objects: &Objects,
     ) -> Option<Self> {
         // Algorithm from Real-Time Collision Detection by Christer Ericson. See
         // section 5.4.4, Intersection of Two Planes.
@@ -57,9 +57,9 @@ impl SurfaceSurfaceIntersection {
 
         let curves = surfaces_and_planes.map(|(surface, plane)| {
             let path = SurfacePath::Line(plane.project_line(&line));
-            let global_form = GlobalCurve::new(stores);
+            let global_form = GlobalCurve::new(objects);
 
-            Curve::new(surface, path, global_form, stores)
+            Curve::new(surface, path, global_form, objects)
         });
 
         Some(Self {
@@ -88,19 +88,19 @@ mod tests {
 
     use crate::{
         algorithms::transform::TransformObject,
-        objects::{Curve, Surface},
+        objects::{Curve, Objects, Surface},
         partial::HasPartial,
-        stores::{Handle, Stores},
+        storage::Handle,
     };
 
     use super::SurfaceSurfaceIntersection;
 
     #[test]
     fn plane_plane() {
-        let stores = Stores::new();
+        let objects = Objects::new();
 
-        let xy = stores.surfaces.insert(Surface::xy_plane());
-        let xz = stores.surfaces.insert(Surface::xz_plane());
+        let xy = objects.surfaces.insert(Surface::xy_plane());
+        let xz = objects.surfaces.insert(Surface::xz_plane());
 
         // Coincident and parallel planes don't have an intersection curve.
         assert_eq!(
@@ -109,10 +109,10 @@ mod tests {
                     xy.clone(),
                     xy.clone().transform(
                         &Transform::translation([0., 0., 1.],),
-                        &stores
+                        &objects
                     )
                 ],
-                &stores
+                &objects
             ),
             None,
         );
@@ -120,14 +120,14 @@ mod tests {
         let expected_xy = Handle::<Curve>::partial()
             .with_surface(Some(xy.clone()))
             .as_u_axis()
-            .build(&stores);
+            .build(&objects);
         let expected_xz = Handle::<Curve>::partial()
             .with_surface(Some(xz.clone()))
             .as_u_axis()
-            .build(&stores);
+            .build(&objects);
 
         assert_eq!(
-            SurfaceSurfaceIntersection::compute([xy, xz], &stores),
+            SurfaceSurfaceIntersection::compute([xy, xz], &objects),
             Some(SurfaceSurfaceIntersection {
                 intersection_curves: [expected_xy, expected_xz],
             })

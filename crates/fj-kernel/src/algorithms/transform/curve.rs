@@ -1,15 +1,15 @@
 use fj_math::Transform;
 
 use crate::{
-    objects::GlobalCurve,
+    objects::{GlobalCurve, Objects},
     partial::PartialCurve,
-    stores::{Handle, Stores},
+    storage::Handle,
 };
 
 use super::TransformObject;
 
 impl TransformObject for Handle<GlobalCurve> {
-    fn transform(self, _: &Transform, stores: &Stores) -> Self {
+    fn transform(self, _: &Transform, objects: &Objects) -> Self {
         // `GlobalCurve` doesn't contain any internal geometry. If it did, that
         // would just be redundant with the geometry of other objects, and this
         // other geometry is already being transformed by other implementations
@@ -18,18 +18,18 @@ impl TransformObject for Handle<GlobalCurve> {
         // All we need to do here is create a new `GlobalCurve` instance, to
         // make sure the transformed `GlobalCurve` has a different identity than
         // the original one.
-        GlobalCurve::new(stores)
+        GlobalCurve::new(objects)
     }
 }
 
 impl TransformObject for PartialCurve {
-    fn transform(self, transform: &Transform, stores: &Stores) -> Self {
+    fn transform(self, transform: &Transform, objects: &Objects) -> Self {
         let surface = self
             .surface
-            .map(|surface| surface.transform(transform, stores));
+            .map(|surface| surface.transform(transform, objects));
         let global_form = self
             .global_form
-            .map(|global_form| global_form.0.transform(transform, stores));
+            .map(|global_form| global_form.0.transform(transform, objects));
 
         // Don't need to transform `self.path`, as that's defined in surface
         // coordinates, and thus transforming `surface` takes care of it.

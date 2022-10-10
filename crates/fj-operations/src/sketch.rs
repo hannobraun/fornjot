@@ -3,9 +3,8 @@ use fj_kernel::{
     algorithms::validate::{
         Validate, Validated, ValidationConfig, ValidationError,
     },
-    objects::{Cycle, Face, HalfEdge, Sketch},
+    objects::{Cycle, Face, HalfEdge, Objects, Sketch},
     partial::HasPartial,
-    stores::Stores,
 };
 use fj_math::{Aabb, Point};
 
@@ -19,7 +18,7 @@ impl Shape for fj::Sketch {
     fn compute_brep(
         &self,
         config: &ValidationConfig,
-        stores: &Stores,
+        objects: &Objects,
         planes: &Planes,
         _: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
@@ -33,7 +32,7 @@ impl Shape for fj::Sketch {
                 let half_edge = HalfEdge::partial()
                     .with_surface(Some(surface.clone()))
                     .as_circle_from_radius(circle.radius())
-                    .build(stores);
+                    .build(objects);
                 let cycle = Cycle::new(surface, [half_edge]);
 
                 Face::from_exterior(cycle).with_color(Color(self.color()))
@@ -42,7 +41,7 @@ impl Shape for fj::Sketch {
                 let points =
                     poly_chain.to_points().into_iter().map(Point::from);
 
-                Face::builder(stores, surface)
+                Face::builder(objects, surface)
                     .with_exterior_polygon_from_points(points)
                     .build()
                     .with_color(Color(self.color()))

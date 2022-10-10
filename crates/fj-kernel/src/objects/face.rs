@@ -3,12 +3,9 @@ use std::collections::{btree_set, BTreeSet};
 use fj_interop::mesh::Color;
 use fj_math::Winding;
 
-use crate::{
-    builder::FaceBuilder,
-    stores::{Handle, Stores},
-};
+use crate::{builder::FaceBuilder, storage::Handle};
 
-use super::{Cycle, Surface};
+use super::{Cycle, Objects, Surface};
 
 /// A face of a shape
 ///
@@ -44,9 +41,9 @@ pub struct Face {
 
 impl Face {
     /// Build a `Face` using [`FaceBuilder`]
-    pub fn builder(stores: &Stores, surface: Handle<Surface>) -> FaceBuilder {
+    pub fn builder(objects: &Objects, surface: Handle<Surface>) -> FaceBuilder {
         FaceBuilder {
-            stores,
+            objects,
             surface,
             exterior: None,
             interiors: Vec::new(),

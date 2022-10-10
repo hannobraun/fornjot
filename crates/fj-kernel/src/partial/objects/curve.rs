@@ -1,9 +1,9 @@
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    objects::{Curve, GlobalCurve, Surface},
+    objects::{Curve, GlobalCurve, Objects, Surface},
     path::SurfacePath,
-    stores::{Handle, HandleWrapper, Stores},
+    storage::{Handle, HandleWrapper},
 };
 
 /// A partial [`Curve`]
@@ -83,16 +83,16 @@ impl PartialCurve {
     }
 
     /// Build a full [`Curve`] from the partial curve
-    pub fn build(self, stores: &Stores) -> Handle<Curve> {
+    pub fn build(self, objects: &Objects) -> Handle<Curve> {
         let path = self.path.expect("Can't build `Curve` without path");
         let surface =
             self.surface.expect("Can't build `Curve` without surface");
 
         let global_form = self
             .global_form
-            .unwrap_or_else(|| GlobalCurve::new(stores).into());
+            .unwrap_or_else(|| GlobalCurve::new(objects).into());
 
-        Curve::new(surface, path, global_form, stores)
+        Curve::new(surface, path, global_form, objects)
     }
 }
 

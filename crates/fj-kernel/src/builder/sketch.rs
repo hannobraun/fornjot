@@ -1,8 +1,8 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{Face, Sketch, Surface},
-    stores::{Handle, Stores},
+    objects::{Face, Objects, Sketch, Surface},
+    storage::Handle,
 };
 
 /// API for building a [`Sketch`]
@@ -10,7 +10,7 @@ use crate::{
 /// Also see [`Sketch::builder`].
 pub struct SketchBuilder<'a> {
     /// The stores that the created objects are put in
-    pub stores: &'a Stores,
+    pub objects: &'a Objects,
 
     /// The surface that the [`Sketch`] is defined in
     pub surface: Handle<Surface>,
@@ -22,7 +22,7 @@ impl<'a> SketchBuilder<'a> {
         self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Sketch {
-        let face = Face::builder(self.stores, self.surface)
+        let face = Face::builder(self.objects, self.surface)
             .with_exterior_polygon_from_points(points)
             .build();
         Sketch::new().with_faces([face])

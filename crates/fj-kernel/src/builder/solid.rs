@@ -1,16 +1,13 @@
 use fj_math::Scalar;
 
-use crate::{
-    objects::{Shell, Solid},
-    stores::Stores,
-};
+use crate::objects::{Objects, Shell, Solid};
 
 /// API for building a [`Solid`]
 ///
 /// Also see [`Solid::builder`].
 pub struct SolidBuilder<'a> {
     /// The stores that the created objects are put in
-    pub stores: &'a Stores,
+    pub objects: &'a Objects,
 }
 
 impl<'a> SolidBuilder<'a> {
@@ -19,7 +16,7 @@ impl<'a> SolidBuilder<'a> {
         self,
         edge_length: impl Into<Scalar>,
     ) -> Solid {
-        let shell = Shell::builder(self.stores)
+        let shell = Shell::builder(self.objects)
             .build_cube_from_edge_length(edge_length);
         Solid::new().with_shells([shell])
     }

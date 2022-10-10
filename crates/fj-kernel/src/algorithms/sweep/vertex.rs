@@ -2,11 +2,11 @@ use fj_math::{Line, Point, Scalar, Vector};
 
 use crate::{
     objects::{
-        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
-        SurfaceVertex, Vertex,
+        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
+        Surface, SurfaceVertex, Vertex,
     },
     path::SurfacePath,
-    stores::{Handle, Stores},
+    storage::Handle,
 };
 
 use super::Sweep;
@@ -14,7 +14,11 @@ use super::Sweep;
 impl Sweep for (Vertex, Handle<Surface>) {
     type Swept = HalfEdge;
 
-    fn sweep(self, path: impl Into<Vector<3>>, stores: &Stores) -> Self::Swept {
+    fn sweep(
+        self,
+        path: impl Into<Vector<3>>,
+        objects: &Objects,
+    ) -> Self::Swept {
         let (vertex, surface) = self;
         let path = path.into();
 
@@ -54,7 +58,7 @@ impl Sweep for (Vertex, Handle<Surface>) {
         // as that is the most straight-forward part of this operations, and
         // we're going to need it soon anyway.
         let (edge_global, vertices_global) =
-            vertex.global_form().clone().sweep(path, stores);
+            vertex.global_form().clone().sweep(path, objects);
 
         // Next, let's compute the surface coordinates of the two vertices of
         // the output `Edge`, as we're going to need these for the rest of this
@@ -84,7 +88,7 @@ impl Sweep for (Vertex, Handle<Surface>) {
                 surface.clone(),
                 SurfacePath::Line(line),
                 edge_global.curve().clone(),
-                stores,
+                objects,
             )
         };
 
@@ -123,12 +127,16 @@ impl Sweep for (Vertex, Handle<Surface>) {
 impl Sweep for Handle<GlobalVertex> {
     type Swept = (GlobalEdge, [Handle<GlobalVertex>; 2]);
 
-    fn sweep(self, path: impl Into<Vector<3>>, stores: &Stores) -> Self::Swept {
-        let curve = GlobalCurve::new(stores);
+    fn sweep(
+        self,
+        path: impl Into<Vector<3>>,
+        objects: &Objects,
+    ) -> Self::Swept {
+        let curve = GlobalCurve::new(objects);
 
         let a = self.clone();
         let b =
-            GlobalVertex::from_position(self.position() + path.into(), stores);
+            GlobalVertex::from_position(self.position() + path.into(), objects);
 
         let vertices = [a, b];
         let global_edge = GlobalEdge::new(curve, vertices.clone());
@@ -146,31 +154,31 @@ mod tests {
 
     use crate::{
         algorithms::sweep::Sweep,
-        objects::{Curve, HalfEdge, Surface, Vertex},
+        objects::{Curve, HalfEdge, Objects, Surface, Vertex},
         partial::HasPartial,
-        stores::{Handle, Stores},
+        storage::Handle,
     };
 
     #[test]
     fn vertex_surface() {
-        let stores = Stores::new();
+        let objects = Objects::new();
 
-        let surface = stores.surfaces.insert(Surface::xz_plane());
+        let surface = objects.surfaces.insert(Surface::xz_plane());
         let curve = Handle::<Curve>::partial()
             .with_surface(Some(surface.clone()))
             .as_u_axis()
-            .build(&stores);
+            .build(&objects);
         let vertex = Vertex::partial()
             .with_position(Some([0.]))
             .with_curve(Some(curve))
-            .build(&stores);
+            .build(&objects);
 
-        let half_edge = (vertex, surface.clone()).sweep([0., 0., 1.], &stores);
+        let half_edge = (vertex, surface.clone()).sweep([0., 0., 1.], &objects);
 
         let expected_half_edge = HalfEdge::partial()
             .with_surface(Some(surface))
             .as_line_segment_from_points([[0., 0.], [0., 1.]])
-            .build(&stores);
+            .build(&objects);
         assert_eq!(half_edge, expected_half_edge);
     }
 }

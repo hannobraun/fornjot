@@ -152,18 +152,17 @@ mod tests {
             transform::TransformObject,
         },
         iter::ObjectIters,
-        objects::{Face, Surface},
-        stores::Stores,
+        objects::{Face, Objects, Surface},
     };
 
     #[test]
     fn ray_misses_whole_surface() {
-        let stores = Stores::new();
+        let objects = Objects::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = stores.surfaces.insert(Surface::yz_plane());
-        let face = Face::builder(&stores, surface)
+        let surface = objects.surfaces.insert(Surface::yz_plane());
+        let face = Face::builder(&objects, surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
                 [1., -1.],
@@ -171,19 +170,19 @@ mod tests {
                 [-1., 1.],
             ])
             .build()
-            .translate([-1., 0., 0.], &stores);
+            .translate([-1., 0., 0.], &objects);
 
         assert_eq!((&ray, &face).intersect(), None);
     }
 
     #[test]
     fn ray_hits_face() {
-        let stores = Stores::new();
+        let objects = Objects::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = stores.surfaces.insert(Surface::yz_plane());
-        let face = Face::builder(&stores, surface)
+        let surface = objects.surfaces.insert(Surface::yz_plane());
+        let face = Face::builder(&objects, surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
                 [1., -1.],
@@ -191,7 +190,7 @@ mod tests {
                 [-1., 1.],
             ])
             .build()
-            .translate([1., 0., 0.], &stores);
+            .translate([1., 0., 0.], &objects);
 
         assert_eq!(
             (&ray, &face).intersect(),
@@ -201,12 +200,12 @@ mod tests {
 
     #[test]
     fn ray_hits_surface_but_misses_face() {
-        let stores = Stores::new();
+        let objects = Objects::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = stores.surfaces.insert(Surface::yz_plane());
-        let face = Face::builder(&stores, surface)
+        let surface = objects.surfaces.insert(Surface::yz_plane());
+        let face = Face::builder(&objects, surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
                 [1., -1.],
@@ -214,19 +213,19 @@ mod tests {
                 [-1., 1.],
             ])
             .build()
-            .translate([0., 0., 2.], &stores);
+            .translate([0., 0., 2.], &objects);
 
         assert_eq!((&ray, &face).intersect(), None);
     }
 
     #[test]
     fn ray_hits_edge() {
-        let stores = Stores::new();
+        let objects = Objects::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = stores.surfaces.insert(Surface::yz_plane());
-        let face = Face::builder(&stores, surface)
+        let surface = objects.surfaces.insert(Surface::yz_plane());
+        let face = Face::builder(&objects, surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
                 [1., -1.],
@@ -234,7 +233,7 @@ mod tests {
                 [-1., 1.],
             ])
             .build()
-            .translate([1., 1., 0.], &stores);
+            .translate([1., 1., 0.], &objects);
 
         let edge = face
             .half_edge_iter()
@@ -252,12 +251,12 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex() {
-        let stores = Stores::new();
+        let objects = Objects::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = stores.surfaces.insert(Surface::yz_plane());
-        let face = Face::builder(&stores, surface)
+        let surface = objects.surfaces.insert(Surface::yz_plane());
+        let face = Face::builder(&objects, surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
                 [1., -1.],
@@ -265,7 +264,7 @@ mod tests {
                 [-1., 1.],
             ])
             .build()
-            .translate([1., 1., 1.], &stores);
+            .translate([1., 1., 1.], &objects);
 
         let vertex = face
             .vertex_iter()
@@ -281,12 +280,12 @@ mod tests {
 
     #[test]
     fn ray_is_parallel_to_surface_and_hits() {
-        let stores = Stores::new();
+        let objects = Objects::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = stores.surfaces.insert(Surface::xy_plane());
-        let face = Face::builder(&stores, surface)
+        let surface = objects.surfaces.insert(Surface::xy_plane());
+        let face = Face::builder(&objects, surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
                 [1., -1.],
@@ -303,12 +302,12 @@ mod tests {
 
     #[test]
     fn ray_is_parallel_to_surface_and_misses() {
-        let stores = Stores::new();
+        let objects = Objects::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = stores.surfaces.insert(Surface::xy_plane());
-        let face = Face::builder(&stores, surface)
+        let surface = objects.surfaces.insert(Surface::xy_plane());
+        let face = Face::builder(&objects, surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
                 [1., -1.],
@@ -316,7 +315,7 @@ mod tests {
                 [-1., 1.],
             ])
             .build()
-            .translate([0., 0., 1.], &stores);
+            .translate([0., 0., 1.], &objects);
 
         assert_eq!((&ray, &face).intersect(), None)
     }

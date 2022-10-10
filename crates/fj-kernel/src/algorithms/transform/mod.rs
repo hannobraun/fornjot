@@ -14,8 +14,8 @@ mod vertex;
 use fj_math::{Transform, Vector};
 
 use crate::{
+    objects::Objects,
     partial::{HasPartial, MaybePartial, Partial},
-    stores::Stores,
 };
 
 /// Transform an object
@@ -30,22 +30,30 @@ use crate::{
 pub trait TransformObject: Sized {
     /// Transform the object
     #[must_use]
-    fn transform(self, transform: &Transform, stores: &Stores) -> Self;
+    fn transform(self, transform: &Transform, objects: &Objects) -> Self;
 
     /// Translate the object
     ///
     /// Convenience wrapper around [`TransformObject::transform`].
     #[must_use]
-    fn translate(self, offset: impl Into<Vector<3>>, stores: &Stores) -> Self {
-        self.transform(&Transform::translation(offset), stores)
+    fn translate(
+        self,
+        offset: impl Into<Vector<3>>,
+        objects: &Objects,
+    ) -> Self {
+        self.transform(&Transform::translation(offset), objects)
     }
 
     /// Rotate the object
     ///
     /// Convenience wrapper around [`TransformObject::transform`].
     #[must_use]
-    fn rotate(self, axis_angle: impl Into<Vector<3>>, stores: &Stores) -> Self {
-        self.transform(&Transform::rotation(axis_angle), stores)
+    fn rotate(
+        self,
+        axis_angle: impl Into<Vector<3>>,
+        objects: &Objects,
+    ) -> Self {
+        self.transform(&Transform::rotation(axis_angle), objects)
     }
 }
 
@@ -54,8 +62,10 @@ where
     T: HasPartial,
     T::Partial: TransformObject,
 {
-    fn transform(self, transform: &Transform, stores: &Stores) -> Self {
-        self.to_partial().transform(transform, stores).build(stores)
+    fn transform(self, transform: &Transform, objects: &Objects) -> Self {
+        self.to_partial()
+            .transform(transform, objects)
+            .build(objects)
     }
 }
 
@@ -64,11 +74,11 @@ where
     T: HasPartial + TransformObject,
     T::Partial: TransformObject,
 {
-    fn transform(self, transform: &Transform, stores: &Stores) -> Self {
+    fn transform(self, transform: &Transform, objects: &Objects) -> Self {
         match self {
-            Self::Full(full) => Self::Full(full.transform(transform, stores)),
+            Self::Full(full) => Self::Full(full.transform(transform, objects)),
             Self::Partial(partial) => {
-                Self::Partial(partial.transform(transform, stores))
+                Self::Partial(partial.transform(transform, objects))
             }
         }
     }

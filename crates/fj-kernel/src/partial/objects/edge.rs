@@ -2,11 +2,11 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     objects::{
-        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
-        SurfaceVertex, Vertex,
+        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
+        Surface, SurfaceVertex, Vertex,
     },
     partial::{HasPartial, MaybePartial, PartialCurve},
-    stores::{Handle, HandleWrapper, Stores},
+    storage::{Handle, HandleWrapper},
 };
 
 /// A partial [`HalfEdge`]
@@ -181,13 +181,13 @@ impl PartialHalfEdge {
     }
 
     /// Build a full [`HalfEdge`] from the partial half-edge
-    pub fn build(self, stores: &Stores) -> HalfEdge {
+    pub fn build(self, objects: &Objects) -> HalfEdge {
         let surface = self.surface;
         let curve = self
             .curve
             .expect("Can't build `HalfEdge` without curve")
             .update_partial(|curve| curve.with_surface(surface))
-            .into_full(stores);
+            .into_full(objects);
         let vertices = self
             .vertices
             .expect("Can't build `HalfEdge` without vertices")
@@ -196,7 +196,7 @@ impl PartialHalfEdge {
                     .update_partial(|vertex| {
                         vertex.with_curve(Some(curve.clone()))
                     })
-                    .into_full(stores)
+                    .into_full(objects)
             });
 
         let global_form = self
@@ -206,7 +206,7 @@ impl PartialHalfEdge {
                     .from_curve_and_vertices(&curve, &vertices)
                     .into()
             })
-            .into_full(stores);
+            .into_full(objects);
 
         HalfEdge::new(vertices, global_form)
     }
@@ -272,7 +272,7 @@ impl PartialGlobalEdge {
     }
 
     /// Build a full [`GlobalEdge`] from the partial global edge
-    pub fn build(self, _: &Stores) -> GlobalEdge {
+    pub fn build(self, _: &Objects) -> GlobalEdge {
         let curve = self
             .curve
             .expect("Can't build `GlobalEdge` without `GlobalCurve`");
