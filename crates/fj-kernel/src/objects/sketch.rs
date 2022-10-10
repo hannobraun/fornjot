@@ -16,10 +16,10 @@ pub struct Sketch {
 impl Sketch {
     /// Build a `Sketch` using [`SketchBuilder`]
     pub fn builder(
-        stores: &Objects,
+        objects: &Objects,
         surface: Handle<Surface>,
     ) -> SketchBuilder {
-        SketchBuilder { stores, surface }
+        SketchBuilder { objects, surface }
     }
 
     /// Construct an empty instance of `Sketch`
