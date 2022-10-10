@@ -28,7 +28,7 @@ version = "3.2.22"
 features = ["derive"]
 
 [dependencies.figment]
-version = "0.10.6"
+version = "0.10.8"
 features = ["env", "toml"]
 
 [dependencies.serde]
