@@ -1,4 +1,4 @@
-use crate::{builder::SketchBuilder, stores::Handle};
+use crate::{builder::SketchBuilder, storage::Handle};
 
 use super::{face::Faces, Face, Stores, Surface};
 

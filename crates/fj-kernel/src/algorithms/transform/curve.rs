@@ -3,7 +3,7 @@ use fj_math::Transform;
 use crate::{
     objects::{GlobalCurve, Stores},
     partial::PartialCurve,
-    stores::Handle,
+    storage::Handle,
 };
 
 use super::TransformObject;

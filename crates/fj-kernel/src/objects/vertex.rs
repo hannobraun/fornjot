@@ -1,7 +1,7 @@
 use fj_math::Point;
 use pretty_assertions::assert_eq;
 
-use crate::stores::Handle;
+use crate::storage::Handle;
 
 use super::{Curve, Stores, Surface};
 

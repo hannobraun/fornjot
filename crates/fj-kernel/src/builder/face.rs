@@ -3,7 +3,7 @@ use fj_math::Point;
 use crate::{
     objects::{Cycle, Face, Stores, Surface},
     partial::HasPartial,
-    stores::Handle,
+    storage::Handle,
 };
 
 /// API for building a [`Face`]

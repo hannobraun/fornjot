@@ -5,7 +5,7 @@ use crate::{
         Curve, GlobalCurve, GlobalEdge, HalfEdge, Stores, Surface,
         SurfaceVertex, Vertex,
     },
-    stores::Handle,
+    storage::Handle,
 };
 
 use super::{HasPartial, Partial};

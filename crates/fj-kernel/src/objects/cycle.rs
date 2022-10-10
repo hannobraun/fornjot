@@ -1,7 +1,7 @@
 use fj_math::{Scalar, Winding};
 use pretty_assertions::assert_eq;
 
-use crate::{path::SurfacePath, stores::Handle};
+use crate::{path::SurfacePath, storage::Handle};
 
 use super::{HalfEdge, Surface};
 

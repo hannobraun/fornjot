@@ -2,7 +2,7 @@ use fj_math::Point;
 
 use crate::{
     objects::{Face, Sketch, Stores, Surface},
-    stores::Handle,
+    storage::Handle,
 };
 
 /// API for building a [`Sketch`]

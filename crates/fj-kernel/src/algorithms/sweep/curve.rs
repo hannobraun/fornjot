@@ -3,7 +3,7 @@ use fj_math::{Circle, Line, Vector};
 use crate::{
     objects::{Curve, Stores, Surface},
     path::{GlobalPath, SurfacePath},
-    stores::Handle,
+    storage::Handle,
 };
 
 use super::Sweep;

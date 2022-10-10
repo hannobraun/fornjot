@@ -1,6 +1,6 @@
 use crate::{
     objects::{Curve, Face, Stores},
-    stores::Handle,
+    storage::Handle,
 };
 
 use super::{CurveFaceIntersection, SurfaceSurfaceIntersection};
@@ -66,7 +66,7 @@ mod tests {
         algorithms::intersect::CurveFaceIntersection,
         objects::{Curve, Face, Stores, Surface},
         partial::HasPartial,
-        stores::Handle,
+        storage::Handle,
     };
 
     use super::FaceFaceIntersection;

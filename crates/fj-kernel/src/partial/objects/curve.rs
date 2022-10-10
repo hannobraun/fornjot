@@ -3,7 +3,7 @@ use fj_math::{Point, Scalar, Vector};
 use crate::{
     objects::{Curve, GlobalCurve, Stores, Surface},
     path::SurfacePath,
-    stores::{Handle, HandleWrapper},
+    storage::{Handle, HandleWrapper},
 };
 
 /// A partial [`Curve`]

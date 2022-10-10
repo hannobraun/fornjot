@@ -93,4 +93,4 @@ pub mod iter;
 pub mod objects;
 pub mod partial;
 pub mod path;
-pub mod stores;
+pub mod storage;

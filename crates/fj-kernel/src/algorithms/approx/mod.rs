@@ -20,7 +20,7 @@ use std::{
 
 use fj_math::Point;
 
-use crate::{objects::Curve, stores::Handle};
+use crate::{objects::Curve, storage::Handle};
 
 pub use self::tolerance::{InvalidTolerance, Tolerance};
 

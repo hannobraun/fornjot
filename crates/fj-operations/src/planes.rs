@@ -1,6 +1,6 @@
 use fj_kernel::{
     objects::{Stores, Surface},
-    stores::Handle,
+    storage::Handle,
 };
 
 /// The static planes

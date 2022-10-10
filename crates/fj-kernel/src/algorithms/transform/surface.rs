@@ -2,7 +2,7 @@ use fj_math::Transform;
 
 use crate::{
     objects::{Stores, Surface},
-    stores::Handle,
+    storage::Handle,
 };
 
 use super::TransformObject;

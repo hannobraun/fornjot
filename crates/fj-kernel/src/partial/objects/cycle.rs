@@ -3,7 +3,7 @@ use fj_math::Point;
 use crate::{
     objects::{Curve, Cycle, HalfEdge, Stores, Surface, SurfaceVertex, Vertex},
     partial::{HasPartial, MaybePartial},
-    stores::Handle,
+    storage::Handle,
 };
 
 /// A partial [`Cycle`]

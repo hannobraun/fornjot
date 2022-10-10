@@ -8,7 +8,7 @@ use crate::{
         Curve, Cycle, GlobalEdge, GlobalVertex, HalfEdge, Stores,
         SurfaceVertex, Vertex,
     },
-    stores::Handle,
+    storage::Handle,
 };
 
 use super::{

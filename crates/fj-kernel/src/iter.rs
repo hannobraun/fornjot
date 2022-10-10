@@ -7,7 +7,7 @@ use crate::{
         Curve, Cycle, Face, GlobalCurve, GlobalVertex, HalfEdge, Shell, Sketch,
         Solid, Surface, Vertex,
     },
-    stores::Handle,
+    storage::Handle,
 };
 
 /// Access iterators over all objects of a shape, or part of it
@@ -365,7 +365,7 @@ mod tests {
             Sketch, Solid, Stores, Surface, SurfaceVertex, Vertex,
         },
         partial::HasPartial,
-        stores::Handle,
+        storage::Handle,
     };
 
     use super::ObjectIters as _;

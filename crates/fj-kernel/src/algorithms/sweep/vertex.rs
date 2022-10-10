@@ -6,7 +6,7 @@ use crate::{
         Surface, SurfaceVertex, Vertex,
     },
     path::SurfacePath,
-    stores::Handle,
+    storage::Handle,
 };
 
 use super::Sweep;
@@ -148,7 +148,7 @@ mod tests {
         algorithms::sweep::Sweep,
         objects::{Curve, HalfEdge, Stores, Surface, Vertex},
         partial::HasPartial,
-        stores::Handle,
+        storage::Handle,
     };
 
     #[test]

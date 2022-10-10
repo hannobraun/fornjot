@@ -1,6 +1,6 @@
 use crate::{
     path::SurfacePath,
-    stores::{Handle, HandleWrapper},
+    storage::{Handle, HandleWrapper},
 };
 
 use super::{Stores, Surface};

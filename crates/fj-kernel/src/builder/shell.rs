@@ -7,7 +7,7 @@ use crate::{
         Vertex,
     },
     partial::HasPartial,
-    stores::Handle,
+    storage::Handle,
 };
 
 /// API for building a [`Shell`]

@@ -2,7 +2,7 @@ use std::fmt;
 
 use pretty_assertions::{assert_eq, assert_ne};
 
-use crate::stores::{Handle, HandleWrapper};
+use crate::storage::{Handle, HandleWrapper};
 
 use super::{Curve, GlobalCurve, GlobalVertex, Vertex};
 

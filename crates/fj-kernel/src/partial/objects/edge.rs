@@ -6,7 +6,7 @@ use crate::{
         Surface, SurfaceVertex, Vertex,
     },
     partial::{HasPartial, MaybePartial, PartialCurve},
-    stores::{Handle, HandleWrapper},
+    storage::{Handle, HandleWrapper},
 };
 
 /// A partial [`HalfEdge`]

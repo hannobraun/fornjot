@@ -77,7 +77,7 @@ mod tests {
     use crate::{
         objects::{Curve, HalfEdge, Stores, Surface},
         partial::HasPartial,
-        stores::Handle,
+        storage::Handle,
     };
 
     use super::CurveEdgeIntersection;

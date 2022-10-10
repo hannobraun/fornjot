@@ -3,7 +3,7 @@ use fj_math::{Line, Plane, Point, Scalar};
 use crate::{
     objects::{Curve, GlobalCurve, Stores, Surface},
     path::{GlobalPath, SurfacePath},
-    stores::Handle,
+    storage::Handle,
 };
 
 /// The intersection between two surfaces
@@ -90,7 +90,7 @@ mod tests {
         algorithms::transform::TransformObject,
         objects::{Curve, Stores, Surface},
         partial::HasPartial,
-        stores::Handle,
+        storage::Handle,
     };
 
     use super::SurfaceSurfaceIntersection;

@@ -158,7 +158,7 @@ mod tests {
     use crate::{
         objects::{Curve, Face, Stores, Surface},
         partial::HasPartial,
-        stores::Handle,
+        storage::Handle,
     };
 
     use super::CurveFaceIntersection;
