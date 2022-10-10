@@ -15,8 +15,8 @@ pub struct Shell {
 
 impl Shell {
     /// Build a `Shell` using [`ShellBuilder`]
-    pub fn builder(stores: &Objects) -> ShellBuilder {
-        ShellBuilder { stores }
+    pub fn builder(objects: &Objects) -> ShellBuilder {
+        ShellBuilder { objects }
     }
 
     /// Construct an empty instance of `Shell`

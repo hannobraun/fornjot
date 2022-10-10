@@ -15,7 +15,7 @@ use crate::{
 /// Also see [`Shell::builder`].
 pub struct ShellBuilder<'a> {
     /// The stores that the created objects are put in
-    pub stores: &'a Objects,
+    pub objects: &'a Objects,
 }
 
 impl<'a> ShellBuilder<'a> {
@@ -32,12 +32,12 @@ impl<'a> ShellBuilder<'a> {
 
         let bottom = {
             let surface = self
-                .stores
+                .objects
                 .surfaces
                 .insert(Surface::xy_plane())
-                .translate([Z, Z, -h], self.stores);
+                .translate([Z, Z, -h], self.objects);
 
-            Face::builder(self.stores, surface)
+            Face::builder(self.objects, surface)
                 .with_exterior_polygon_from_points([
                     [-h, -h],
                     [h, -h],
@@ -58,7 +58,7 @@ impl<'a> ShellBuilder<'a> {
                         .map(|vertex| vertex.global_form().position());
                     let c = a + [Z, Z, edge_length];
 
-                    self.stores
+                    self.objects
                         .surfaces
                         .insert(Surface::plane_from_points([a, b, c]))
                 })
@@ -73,7 +73,7 @@ impl<'a> ShellBuilder<'a> {
                         .with_surface(Some(surface.clone()))
                         .with_global_form(Some(half_edge.global_form().clone()))
                         .as_line_segment_from_points([[Z, Z], [edge_length, Z]])
-                        .build(self.stores)
+                        .build(self.objects)
                 })
                 .collect::<Vec<_>>();
 
@@ -95,7 +95,7 @@ impl<'a> ShellBuilder<'a> {
                             Vertex::partial().with_surface_form(Some(to)),
                         ]))
                         .as_line_segment()
-                        .build(self.stores)
+                        .build(self.objects)
                 })
                 .collect::<Vec<_>>();
 
@@ -132,7 +132,7 @@ impl<'a> ShellBuilder<'a> {
                                 Vertex::partial().with_surface_form(Some(to)),
                             ]))
                             .as_line_segment()
-                            .build(self.stores)
+                            .build(self.objects)
                     })
                     .collect::<Vec<_>>()
             };
@@ -160,7 +160,7 @@ impl<'a> ShellBuilder<'a> {
                     HalfEdge::partial()
                         .with_vertices(Some([from, to]))
                         .as_line_segment()
-                        .build(self.stores)
+                        .build(self.objects)
                 })
                 .collect::<Vec<_>>();
 
@@ -174,7 +174,7 @@ impl<'a> ShellBuilder<'a> {
                     let cycle = Cycle::partial()
                         .with_surface(Some(surface))
                         .with_half_edges([bottom, side_up, top, side_down])
-                        .build(self.stores);
+                        .build(self.objects);
 
                     Face::from_exterior(cycle)
                 });
@@ -184,10 +184,10 @@ impl<'a> ShellBuilder<'a> {
 
         let top = {
             let surface = self
-                .stores
+                .objects
                 .surfaces
                 .insert(Surface::xy_plane())
-                .translate([Z, Z, h], self.stores);
+                .translate([Z, Z, h], self.objects);
 
             let points = [[-h, -h], [-h, h], [h, h], [h, -h], [-h, -h]];
 
@@ -212,7 +212,7 @@ impl<'a> ShellBuilder<'a> {
                             .with_global_form(Some(
                                 vertex.global_form().clone(),
                             ))
-                            .build(self.stores);
+                            .build(self.objects);
                         Vertex::partial()
                             .with_position(Some(vertex.position()))
                             .with_surface_form(Some(surface_form))
@@ -224,7 +224,7 @@ impl<'a> ShellBuilder<'a> {
                         .with_vertices(Some(vertices))
                         .with_global_form(Some(edge.global_form().clone()))
                         .as_line_segment()
-                        .build(self.stores),
+                        .build(self.objects),
                 );
             }
 
