@@ -3,7 +3,7 @@ use fj_kernel::{
     algorithms::validate::{
         Validate, Validated, ValidationConfig, ValidationError,
     },
-    objects::{Faces, Stores},
+    objects::{Faces, Objects},
 };
 use fj_math::Aabb;
 
@@ -17,7 +17,7 @@ impl Shape for fj::Group {
     fn compute_brep(
         &self,
         config: &ValidationConfig,
-        stores: &Stores,
+        stores: &Objects,
         planes: &Planes,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {

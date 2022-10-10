@@ -5,7 +5,7 @@ use fj_kernel::{
         validate::{Validate, Validated, ValidationConfig, ValidationError},
     },
     iter::ObjectIters,
-    objects::{Face, Sketch, Stores},
+    objects::{Face, Objects, Sketch},
 };
 use fj_math::Aabb;
 
@@ -19,7 +19,7 @@ impl Shape for fj::Difference2d {
     fn compute_brep(
         &self,
         config: &ValidationConfig,
-        stores: &Stores,
+        stores: &Objects,
         planes: &Planes,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {

@@ -84,14 +84,14 @@ mod tests {
 
     use crate::{
         algorithms::approx::{Approx, Tolerance},
-        objects::{Face, Stores, Surface},
+        objects::{Face, Objects, Surface},
     };
 
     use super::Triangulate;
 
     #[test]
     fn simple() -> anyhow::Result<()> {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let a = [0., 0.];
         let b = [2., 0.];
@@ -120,7 +120,7 @@ mod tests {
 
     #[test]
     fn simple_hole() -> anyhow::Result<()> {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let a = [0., 0.];
         let b = [4., 0.];
@@ -171,7 +171,7 @@ mod tests {
     #[ignore]
     #[test]
     fn sharp_concave_shape() -> anyhow::Result<()> {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         //
         //                c

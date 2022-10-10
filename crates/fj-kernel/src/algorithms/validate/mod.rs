@@ -36,18 +36,18 @@ pub trait Validate: Sized {
     /// ``` rust
     /// # use fj_kernel::{
     /// #     algorithms::validate::{Validate, ValidationConfig},
-    /// #     objects::{GlobalVertex, Stores},
+    /// #     objects::{GlobalVertex, Objects},
     /// # };
-    /// # let stores = Stores::new();
+    /// # let stores = Objects::new();
     /// # let object = GlobalVertex::from_position([0., 0., 0.], &stores);
     /// object.validate();
     /// ```
     /// ``` rust
     /// # use fj_kernel::{
     /// #     algorithms::validate::{Validate, ValidationConfig},
-    /// #     objects::{GlobalVertex, Stores},
+    /// #     objects::{GlobalVertex, Objects},
     /// # };
-    /// # let stores = Stores::new();
+    /// # let stores = Objects::new();
     /// # let object = GlobalVertex::from_position([0., 0., 0.], &stores);
     /// object.validate_with_config(&ValidationConfig::default());
     /// ```
@@ -166,7 +166,7 @@ mod tests {
     use crate::{
         algorithms::validate::{Validate, ValidationConfig, ValidationError},
         objects::{
-            Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Stores,
+            Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
             Surface, SurfaceVertex, Vertex,
         },
         partial::HasPartial,
@@ -175,7 +175,7 @@ mod tests {
 
     #[test]
     fn coherence_edge() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
 
@@ -239,7 +239,7 @@ mod tests {
 
     #[test]
     fn uniqueness_vertex() -> anyhow::Result<()> {
-        let stores = Stores::new();
+        let stores = Objects::new();
         let mut shape = Vec::new();
 
         let deviation = Scalar::from_f64(0.25);

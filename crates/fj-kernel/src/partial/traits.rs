@@ -1,4 +1,4 @@
-use crate::objects::Stores;
+use crate::objects::Objects;
 
 /// Implemented for objects that a partial object type exists for
 ///
@@ -77,5 +77,5 @@ pub trait Partial: Default + for<'a> From<&'a Self::Full> {
     /// Calling `build` on a partial object that can't infer its missing parts
     /// is considered a programmer error, hence why this method doesn't return a
     /// [`Result`].
-    fn build(self, stores: &Stores) -> Self::Full;
+    fn build(self, stores: &Objects) -> Self::Full;
 }

@@ -32,7 +32,7 @@ use fj_kernel::{
     algorithms::validate::{
         Validate, Validated, ValidationConfig, ValidationError,
     },
-    objects::{Faces, Sketch, Stores},
+    objects::{Faces, Objects, Sketch},
 };
 use fj_math::Aabb;
 
@@ -45,7 +45,7 @@ pub trait Shape {
     fn compute_brep(
         &self,
         config: &ValidationConfig,
-        stores: &Stores,
+        stores: &Objects,
         planes: &Planes,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError>;
@@ -63,7 +63,7 @@ impl Shape for fj::Shape {
     fn compute_brep(
         &self,
         config: &ValidationConfig,
-        stores: &Stores,
+        stores: &Objects,
         planes: &Planes,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
@@ -109,7 +109,7 @@ impl Shape for fj::Shape2d {
     fn compute_brep(
         &self,
         config: &ValidationConfig,
-        stores: &Stores,
+        stores: &Objects,
         planes: &Planes,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {

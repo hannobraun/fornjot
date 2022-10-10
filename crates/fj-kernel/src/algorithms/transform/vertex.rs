@@ -1,14 +1,14 @@
 use fj_math::Transform;
 
 use crate::{
-    objects::Stores,
+    objects::Objects,
     partial::{PartialGlobalVertex, PartialSurfaceVertex, PartialVertex},
 };
 
 use super::TransformObject;
 
 impl TransformObject for PartialVertex {
-    fn transform(self, transform: &Transform, stores: &Stores) -> Self {
+    fn transform(self, transform: &Transform, stores: &Objects) -> Self {
         let curve = self.curve.map(|curve| curve.transform(transform, stores));
         let surface_form = self.surface_form.map(|surface_form| {
             surface_form
@@ -32,7 +32,7 @@ impl TransformObject for PartialVertex {
 }
 
 impl TransformObject for PartialSurfaceVertex {
-    fn transform(self, transform: &Transform, stores: &Stores) -> Self {
+    fn transform(self, transform: &Transform, stores: &Objects) -> Self {
         let surface = self
             .surface
             .map(|surface| surface.transform(transform, stores));
@@ -51,7 +51,7 @@ impl TransformObject for PartialSurfaceVertex {
 }
 
 impl TransformObject for PartialGlobalVertex {
-    fn transform(self, transform: &Transform, _: &Stores) -> Self {
+    fn transform(self, transform: &Transform, _: &Objects) -> Self {
         let position = self
             .position
             .map(|position| transform.transform_point(&position));

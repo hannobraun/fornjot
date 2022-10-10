@@ -1,11 +1,11 @@
 use fj_math::Transform;
 
-use crate::{objects::Stores, partial::PartialCycle};
+use crate::{objects::Objects, partial::PartialCycle};
 
 use super::TransformObject;
 
 impl TransformObject for PartialCycle {
-    fn transform(self, transform: &Transform, stores: &Stores) -> Self {
+    fn transform(self, transform: &Transform, stores: &Objects) -> Self {
         let surface = self
             .surface
             .clone()

@@ -4,7 +4,7 @@ use fj_kernel::{
         transform::TransformObject,
         validate::{Validate, Validated, ValidationConfig, ValidationError},
     },
-    objects::{Faces, Stores},
+    objects::{Faces, Objects},
 };
 use fj_math::{Aabb, Transform, Vector};
 
@@ -18,7 +18,7 @@ impl Shape for fj::Transform {
     fn compute_brep(
         &self,
         config: &ValidationConfig,
-        stores: &Stores,
+        stores: &Objects,
         planes: &Planes,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {

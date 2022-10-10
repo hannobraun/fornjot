@@ -3,7 +3,7 @@ use fj_math::Scalar;
 use crate::{
     algorithms::transform::TransformObject,
     objects::{
-        Curve, Cycle, Face, HalfEdge, Shell, Stores, Surface, SurfaceVertex,
+        Curve, Cycle, Face, HalfEdge, Objects, Shell, Surface, SurfaceVertex,
         Vertex,
     },
     partial::HasPartial,
@@ -15,7 +15,7 @@ use crate::{
 /// Also see [`Shell::builder`].
 pub struct ShellBuilder<'a> {
     /// The stores that the created objects are put in
-    pub stores: &'a Stores,
+    pub stores: &'a Objects,
 }
 
 impl<'a> ShellBuilder<'a> {

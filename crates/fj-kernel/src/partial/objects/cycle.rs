@@ -1,7 +1,9 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{Curve, Cycle, HalfEdge, Stores, Surface, SurfaceVertex, Vertex},
+    objects::{
+        Curve, Cycle, HalfEdge, Objects, Surface, SurfaceVertex, Vertex,
+    },
     partial::{HasPartial, MaybePartial},
     storage::Handle,
 };
@@ -154,7 +156,7 @@ impl PartialCycle {
     }
 
     /// Build a full [`Cycle`] from the partial cycle
-    pub fn build(self, stores: &Stores) -> Cycle {
+    pub fn build(self, stores: &Objects) -> Cycle {
         let surface = self.surface.expect("Need surface to build `Cycle`");
         let surface_for_edges = surface.clone();
         let half_edges = self.half_edges.into_iter().map(|half_edge| {

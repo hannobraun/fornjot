@@ -1,7 +1,7 @@
 use fj_math::{Circle, Line, Vector};
 
 use crate::{
-    objects::{Curve, Stores, Surface},
+    objects::{Curve, Objects, Surface},
     path::{GlobalPath, SurfacePath},
     storage::Handle,
 };
@@ -11,7 +11,11 @@ use super::Sweep;
 impl Sweep for Handle<Curve> {
     type Swept = Handle<Surface>;
 
-    fn sweep(self, path: impl Into<Vector<3>>, stores: &Stores) -> Self::Swept {
+    fn sweep(
+        self,
+        path: impl Into<Vector<3>>,
+        stores: &Objects,
+    ) -> Self::Swept {
         match self.surface().u() {
             GlobalPath::Circle(_) => {
                 // Sweeping a `Curve` creates a `Surface`. The u-axis of that

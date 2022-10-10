@@ -1,11 +1,11 @@
 use fj_math::Transform;
 
-use crate::objects::{Sketch, Stores};
+use crate::objects::{Objects, Sketch};
 
 use super::TransformObject;
 
 impl TransformObject for Sketch {
-    fn transform(self, transform: &Transform, stores: &Stores) -> Self {
+    fn transform(self, transform: &Transform, stores: &Objects) -> Self {
         let faces = self
             .into_faces()
             .into_iter()

@@ -5,7 +5,7 @@ pub mod vertex;
 
 use crate::{
     objects::{
-        Curve, Cycle, GlobalEdge, GlobalVertex, HalfEdge, Stores,
+        Curve, Cycle, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         SurfaceVertex, Vertex,
     },
     storage::Handle,
@@ -27,7 +27,7 @@ macro_rules! impl_traits {
             impl Partial for $partial {
                 type Full = $full;
 
-                fn build(self, stores: &Stores) -> Self::Full {
+                fn build(self, stores: &Objects) -> Self::Full {
                     self.build(stores)
                 }
             }

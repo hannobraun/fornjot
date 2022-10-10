@@ -1,7 +1,7 @@
 use fj_math::{Line, Plane, Point, Scalar};
 
 use crate::{
-    objects::{Curve, GlobalCurve, Stores, Surface},
+    objects::{Curve, GlobalCurve, Objects, Surface},
     path::{GlobalPath, SurfacePath},
     storage::Handle,
 };
@@ -17,7 +17,7 @@ impl SurfaceSurfaceIntersection {
     /// Compute the intersection between two surfaces
     pub fn compute(
         surfaces: [Handle<Surface>; 2],
-        stores: &Stores,
+        stores: &Objects,
     ) -> Option<Self> {
         // Algorithm from Real-Time Collision Detection by Christer Ericson. See
         // section 5.4.4, Intersection of Two Planes.
@@ -88,7 +88,7 @@ mod tests {
 
     use crate::{
         algorithms::transform::TransformObject,
-        objects::{Curve, Stores, Surface},
+        objects::{Curve, Objects, Surface},
         partial::HasPartial,
         storage::Handle,
     };
@@ -97,7 +97,7 @@ mod tests {
 
     #[test]
     fn plane_plane() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let xy = stores.surfaces.insert(Surface::xy_plane());
         let xz = stores.surfaces.insert(Surface::xz_plane());

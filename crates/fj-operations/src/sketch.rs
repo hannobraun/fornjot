@@ -3,7 +3,7 @@ use fj_kernel::{
     algorithms::validate::{
         Validate, Validated, ValidationConfig, ValidationError,
     },
-    objects::{Cycle, Face, HalfEdge, Sketch, Stores},
+    objects::{Cycle, Face, HalfEdge, Objects, Sketch},
     partial::HasPartial,
 };
 use fj_math::{Aabb, Point};
@@ -18,7 +18,7 @@ impl Shape for fj::Sketch {
     fn compute_brep(
         &self,
         config: &ValidationConfig,
-        stores: &Stores,
+        stores: &Objects,
         planes: &Planes,
         _: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {

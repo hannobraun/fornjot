@@ -3,7 +3,7 @@ use pretty_assertions::assert_eq;
 
 use crate::storage::Handle;
 
-use super::{Curve, Stores, Surface};
+use super::{Curve, Objects, Surface};
 
 /// A vertex
 ///
@@ -129,7 +129,7 @@ impl GlobalVertex {
     /// Construct a `GlobalVertex` from a position
     pub fn from_position(
         position: impl Into<Point<3>>,
-        stores: &Stores,
+        stores: &Objects,
     ) -> Handle<Self> {
         let position = position.into();
         stores.global_vertices.insert(Self { position })

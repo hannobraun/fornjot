@@ -1,7 +1,7 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{Cycle, Face, Stores, Surface},
+    objects::{Cycle, Face, Objects, Surface},
     partial::HasPartial,
     storage::Handle,
 };
@@ -11,7 +11,7 @@ use crate::{
 /// Also see [`Face::builder`].
 pub struct FaceBuilder<'a> {
     /// The stores that the created objects are put in
-    pub stores: &'a Stores,
+    pub stores: &'a Objects,
 
     /// The surface that the [`Face`] is defined in
     pub surface: Handle<Surface>,

@@ -1,14 +1,14 @@
 use fj_math::Transform;
 
 use crate::{
-    objects::{Face, Faces, Stores},
+    objects::{Face, Faces, Objects},
     partial::HasPartial,
 };
 
 use super::TransformObject;
 
 impl TransformObject for Face {
-    fn transform(self, transform: &Transform, stores: &Stores) -> Self {
+    fn transform(self, transform: &Transform, stores: &Objects) -> Self {
         let surface = self.surface().clone().transform(transform, stores);
         let exterior = self
             .exterior()
@@ -33,7 +33,7 @@ impl TransformObject for Face {
 }
 
 impl TransformObject for Faces {
-    fn transform(self, transform: &Transform, stores: &Stores) -> Self {
+    fn transform(self, transform: &Transform, stores: &Objects) -> Self {
         let mut faces = Faces::new();
         faces.extend(
             self.into_iter()

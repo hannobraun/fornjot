@@ -1,7 +1,7 @@
 use fj_math::Transform;
 
 use crate::{
-    objects::{GlobalCurve, Stores},
+    objects::{GlobalCurve, Objects},
     partial::PartialCurve,
     storage::Handle,
 };
@@ -9,7 +9,7 @@ use crate::{
 use super::TransformObject;
 
 impl TransformObject for Handle<GlobalCurve> {
-    fn transform(self, _: &Transform, stores: &Stores) -> Self {
+    fn transform(self, _: &Transform, stores: &Objects) -> Self {
         // `GlobalCurve` doesn't contain any internal geometry. If it did, that
         // would just be redundant with the geometry of other objects, and this
         // other geometry is already being transformed by other implementations
@@ -23,7 +23,7 @@ impl TransformObject for Handle<GlobalCurve> {
 }
 
 impl TransformObject for PartialCurve {
-    fn transform(self, transform: &Transform, stores: &Stores) -> Self {
+    fn transform(self, transform: &Transform, stores: &Objects) -> Self {
         let surface = self
             .surface
             .map(|surface| surface.transform(transform, stores));

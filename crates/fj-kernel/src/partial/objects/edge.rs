@@ -2,7 +2,7 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     objects::{
-        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Stores,
+        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, SurfaceVertex, Vertex,
     },
     partial::{HasPartial, MaybePartial, PartialCurve},
@@ -181,7 +181,7 @@ impl PartialHalfEdge {
     }
 
     /// Build a full [`HalfEdge`] from the partial half-edge
-    pub fn build(self, stores: &Stores) -> HalfEdge {
+    pub fn build(self, stores: &Objects) -> HalfEdge {
         let surface = self.surface;
         let curve = self
             .curve
@@ -272,7 +272,7 @@ impl PartialGlobalEdge {
     }
 
     /// Build a full [`GlobalEdge`] from the partial global edge
-    pub fn build(self, _: &Stores) -> GlobalEdge {
+    pub fn build(self, _: &Objects) -> GlobalEdge {
         let curve = self
             .curve
             .expect("Can't build `GlobalEdge` without `GlobalCurve`");

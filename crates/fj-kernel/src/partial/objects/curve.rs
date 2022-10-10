@@ -1,7 +1,7 @@
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    objects::{Curve, GlobalCurve, Stores, Surface},
+    objects::{Curve, GlobalCurve, Objects, Surface},
     path::SurfacePath,
     storage::{Handle, HandleWrapper},
 };
@@ -83,7 +83,7 @@ impl PartialCurve {
     }
 
     /// Build a full [`Curve`] from the partial curve
-    pub fn build(self, stores: &Stores) -> Handle<Curve> {
+    pub fn build(self, stores: &Objects) -> Handle<Curve> {
         let path = self.path.expect("Can't build `Curve` without path");
         let surface =
             self.surface.expect("Can't build `Curve` without surface");

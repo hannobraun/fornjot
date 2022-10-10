@@ -2,7 +2,7 @@ use std::collections::BTreeSet;
 
 use crate::builder::SolidBuilder;
 
-use super::{Face, Shell, Stores};
+use super::{Face, Objects, Shell};
 
 /// A 3-dimensional shape
 ///
@@ -17,7 +17,7 @@ pub struct Solid {
 
 impl Solid {
     /// Build a `Solid` using [`SolidBuilder`]
-    pub fn builder(stores: &Stores) -> SolidBuilder {
+    pub fn builder(stores: &Objects) -> SolidBuilder {
         SolidBuilder { stores }
     }
 

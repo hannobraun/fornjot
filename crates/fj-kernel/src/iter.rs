@@ -361,8 +361,8 @@ impl<T> Iterator for Iter<T> {
 mod tests {
     use crate::{
         objects::{
-            Curve, Cycle, Face, GlobalCurve, GlobalVertex, HalfEdge, Shell,
-            Sketch, Solid, Stores, Surface, SurfaceVertex, Vertex,
+            Curve, Cycle, Face, GlobalCurve, GlobalVertex, HalfEdge, Objects,
+            Shell, Sketch, Solid, Surface, SurfaceVertex, Vertex,
         },
         partial::HasPartial,
         storage::Handle,
@@ -372,7 +372,7 @@ mod tests {
 
     #[test]
     fn curve() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
         let object = Handle::<Curve>::partial()
@@ -395,7 +395,7 @@ mod tests {
 
     #[test]
     fn cycle() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
         let object = Cycle::partial()
@@ -419,7 +419,7 @@ mod tests {
 
     #[test]
     fn face() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
         let object = Face::builder(&stores, surface)
@@ -441,7 +441,7 @@ mod tests {
 
     #[test]
     fn global_curve() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let object = GlobalCurve::new(&stores);
 
@@ -460,7 +460,7 @@ mod tests {
 
     #[test]
     fn global_vertex() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let object = GlobalVertex::from_position([0., 0., 0.], &stores);
 
@@ -479,7 +479,7 @@ mod tests {
 
     #[test]
     fn half_edge() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let object = HalfEdge::partial()
             .with_surface(Some(stores.surfaces.insert(Surface::xy_plane())))
@@ -501,7 +501,7 @@ mod tests {
 
     #[test]
     fn shell() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let object = Shell::builder(&stores).build_cube_from_edge_length(1.);
 
@@ -520,7 +520,7 @@ mod tests {
 
     #[test]
     fn sketch() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
         let face = Face::builder(&stores, surface)
@@ -543,7 +543,7 @@ mod tests {
 
     #[test]
     fn solid() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let object = Solid::builder(&stores).build_cube_from_edge_length(1.);
 
@@ -562,7 +562,7 @@ mod tests {
 
     #[test]
     fn surface() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let object = stores.surfaces.insert(Surface::xy_plane());
 
@@ -581,7 +581,7 @@ mod tests {
 
     #[test]
     fn vertex() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
         let curve = Handle::<Curve>::partial()

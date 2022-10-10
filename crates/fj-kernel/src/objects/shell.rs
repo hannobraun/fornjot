@@ -1,6 +1,6 @@
 use crate::builder::ShellBuilder;
 
-use super::{face::Faces, Face, Stores};
+use super::{face::Faces, Face, Objects};
 
 /// A 3-dimensional closed shell
 ///
@@ -15,7 +15,7 @@ pub struct Shell {
 
 impl Shell {
     /// Build a `Shell` using [`ShellBuilder`]
-    pub fn builder(stores: &Stores) -> ShellBuilder {
+    pub fn builder(stores: &Objects) -> ShellBuilder {
         ShellBuilder { stores }
     }
 

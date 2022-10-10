@@ -1,7 +1,7 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{Face, Sketch, Stores, Surface},
+    objects::{Face, Objects, Sketch, Surface},
     storage::Handle,
 };
 
@@ -10,7 +10,7 @@ use crate::{
 /// Also see [`Sketch::builder`].
 pub struct SketchBuilder<'a> {
     /// The stores that the created objects are put in
-    pub stores: &'a Stores,
+    pub stores: &'a Objects,
 
     /// The surface that the [`Sketch`] is defined in
     pub surface: Handle<Surface>,

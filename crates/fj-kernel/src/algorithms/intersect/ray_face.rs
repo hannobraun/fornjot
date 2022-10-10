@@ -152,12 +152,12 @@ mod tests {
             transform::TransformObject,
         },
         iter::ObjectIters,
-        objects::{Face, Stores, Surface},
+        objects::{Face, Objects, Surface},
     };
 
     #[test]
     fn ray_misses_whole_surface() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -177,7 +177,7 @@ mod tests {
 
     #[test]
     fn ray_hits_face() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -200,7 +200,7 @@ mod tests {
 
     #[test]
     fn ray_hits_surface_but_misses_face() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -220,7 +220,7 @@ mod tests {
 
     #[test]
     fn ray_hits_edge() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -251,7 +251,7 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -280,7 +280,7 @@ mod tests {
 
     #[test]
     fn ray_is_parallel_to_surface_and_hits() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -302,7 +302,7 @@ mod tests {
 
     #[test]
     fn ray_is_parallel_to_surface_and_misses() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 

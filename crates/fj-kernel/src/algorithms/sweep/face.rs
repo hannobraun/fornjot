@@ -2,7 +2,7 @@ use fj_math::{Scalar, Vector};
 
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
-    objects::{Face, Shell, Stores},
+    objects::{Face, Objects, Shell},
     path::GlobalPath,
 };
 
@@ -11,7 +11,11 @@ use super::Sweep;
 impl Sweep for Face {
     type Swept = Shell;
 
-    fn sweep(self, path: impl Into<Vector<3>>, stores: &Stores) -> Self::Swept {
+    fn sweep(
+        self,
+        path: impl Into<Vector<3>>,
+        stores: &Objects,
+    ) -> Self::Swept {
         let path = path.into();
 
         let mut faces = Vec::new();
@@ -76,7 +80,7 @@ mod tests {
 
     use crate::{
         algorithms::{reverse::Reverse, transform::TransformObject},
-        objects::{Face, HalfEdge, Sketch, Stores, Surface},
+        objects::{Face, HalfEdge, Objects, Sketch, Surface},
         partial::HasPartial,
     };
 
@@ -89,7 +93,7 @@ mod tests {
 
     #[test]
     fn sweep_up() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
         let solid = Sketch::builder(&stores, surface.clone())
@@ -126,7 +130,7 @@ mod tests {
 
     #[test]
     fn sweep_down() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
         let solid = Sketch::builder(&stores, surface.clone())

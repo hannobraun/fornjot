@@ -1,6 +1,6 @@
 use crate::{builder::SketchBuilder, storage::Handle};
 
-use super::{face::Faces, Face, Stores, Surface};
+use super::{face::Faces, Face, Objects, Surface};
 
 /// A 2-dimensional shape
 ///
@@ -15,7 +15,10 @@ pub struct Sketch {
 
 impl Sketch {
     /// Build a `Sketch` using [`SketchBuilder`]
-    pub fn builder(stores: &Stores, surface: Handle<Surface>) -> SketchBuilder {
+    pub fn builder(
+        stores: &Objects,
+        surface: Handle<Surface>,
+    ) -> SketchBuilder {
         SketchBuilder { stores, surface }
     }
 

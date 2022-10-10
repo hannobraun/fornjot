@@ -58,7 +58,7 @@
 //! ## How Identity Works
 //!
 //! We can exactly determine the identity of an object, thanks to [centralized
-//! object storage][`Stores`]. If objects are created at different times,
+//! object storage][`Objects`]. If objects are created at different times,
 //! potentially by different code, they end up being stored at different memory
 //! locations, regardless of their (non-)equality.
 //!
@@ -106,7 +106,7 @@ pub use self::{
 ///
 /// [#1021]: https://github.com/hannobraun/Fornjot/issues/1021
 #[derive(Debug, Default)]
-pub struct Stores {
+pub struct Objects {
     /// Store for curves
     pub curves: Store<Curve>,
 
@@ -120,7 +120,7 @@ pub struct Stores {
     pub surfaces: Store<Surface>,
 }
 
-impl Stores {
+impl Objects {
     /// Construct a new instance of `Stores`
     pub fn new() -> Self {
         Self::default()

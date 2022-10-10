@@ -2,7 +2,7 @@ use fj_math::Point;
 
 use crate::{
     objects::{
-        Curve, GlobalCurve, GlobalEdge, HalfEdge, Stores, Surface,
+        Curve, GlobalCurve, GlobalEdge, HalfEdge, Objects, Surface,
         SurfaceVertex, Vertex,
     },
     storage::Handle,
@@ -48,7 +48,7 @@ impl<T: HasPartial> MaybePartial<T> {
     ///
     /// If this already is a full object, it is returned. If this is a partial
     /// object, the full object is built from it, using [`Partial::build`].
-    pub fn into_full(self, stores: &Stores) -> T {
+    pub fn into_full(self, stores: &Objects) -> T {
         match self {
             Self::Partial(partial) => partial.build(stores),
             Self::Full(full) => full,

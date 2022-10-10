@@ -7,7 +7,7 @@ use fj_kernel::{
         triangulate::Triangulate,
         validate::{ValidationConfig, ValidationError},
     },
-    objects::Stores,
+    objects::Objects,
 };
 use fj_math::Scalar;
 
@@ -43,7 +43,7 @@ impl ShapeProcessor {
         };
 
         let config = ValidationConfig::default();
-        let stores = Stores::new();
+        let stores = Objects::new();
         let planes = Planes::new(&stores);
         let mut debug_info = DebugInfo::new();
         let shape =

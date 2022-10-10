@@ -1,7 +1,7 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{Curve, GlobalVertex, Stores, Surface, SurfaceVertex, Vertex},
+    objects::{Curve, GlobalVertex, Objects, Surface, SurfaceVertex, Vertex},
     partial::{HasPartial, MaybePartial},
     storage::Handle,
 };
@@ -86,7 +86,7 @@ impl PartialVertex {
     /// Panics, if no position has been provided.
     ///
     /// Panics, if no curve has been provided.
-    pub fn build(self, stores: &Stores) -> Vertex {
+    pub fn build(self, stores: &Objects) -> Vertex {
         let position = self
             .position
             .expect("Cant' build `Vertex` without position");
@@ -185,7 +185,7 @@ impl PartialSurfaceVertex {
     /// Panics, if no position has been provided.
     ///
     /// Panics, if no surface has been provided.
-    pub fn build(self, stores: &Stores) -> SurfaceVertex {
+    pub fn build(self, stores: &Objects) -> SurfaceVertex {
         let position = self
             .position
             .expect("Can't build `SurfaceVertex` without position");
@@ -269,7 +269,7 @@ impl PartialGlobalVertex {
     }
 
     /// Build a full [`GlobalVertex`] from the partial global vertex
-    pub fn build(self, stores: &Stores) -> Handle<GlobalVertex> {
+    pub fn build(self, stores: &Objects) -> Handle<GlobalVertex> {
         let position = self
             .position
             .expect("Can't build a `GlobalVertex` without a position");

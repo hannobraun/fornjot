@@ -134,12 +134,12 @@ mod tests {
     use crate::{
         algorithms::intersect::{face_point::FacePointIntersection, Intersect},
         iter::ObjectIters,
-        objects::{Face, Stores, Surface},
+        objects::{Face, Objects, Surface},
     };
 
     #[test]
     fn point_is_outside_face() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
         let face = Face::builder(&stores, surface)
@@ -153,7 +153,7 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex_while_passing_outside() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
         let face = Face::builder(&stores, surface)
@@ -170,7 +170,7 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex_at_cycle_seam() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
         let face = Face::builder(&stores, surface)
@@ -187,7 +187,7 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex_while_staying_inside() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
         let face = Face::builder(&stores, surface)
@@ -209,7 +209,7 @@ mod tests {
 
     #[test]
     fn ray_hits_parallel_edge_and_leaves_face_at_vertex() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
         let face = Face::builder(&stores, surface)
@@ -231,7 +231,7 @@ mod tests {
 
     #[test]
     fn ray_hits_parallel_edge_and_does_not_leave_face_there() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
         let face = Face::builder(&stores, surface)
@@ -254,7 +254,7 @@ mod tests {
 
     #[test]
     fn point_is_coincident_with_edge() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
         let face = Face::builder(&stores, surface)
@@ -280,7 +280,7 @@ mod tests {
 
     #[test]
     fn point_is_coincident_with_vertex() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
         let face = Face::builder(&stores, surface)

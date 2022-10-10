@@ -197,7 +197,7 @@ mod tests {
 
     use crate::{
         algorithms::approx::{path::RangeOnPath, Approx, ApproxPoint},
-        objects::{Curve, Stores, Surface},
+        objects::{Curve, Objects, Surface},
         partial::HasPartial,
         path::GlobalPath,
         storage::Handle,
@@ -207,7 +207,7 @@ mod tests {
 
     #[test]
     fn approx_line_on_flat_surface() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let surface = stores
             .surfaces
@@ -225,7 +225,7 @@ mod tests {
 
     #[test]
     fn approx_line_on_curved_surface_but_not_along_curve() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let surface = stores.surfaces.insert(Surface::new(
             GlobalPath::circle_from_radius(1.),
@@ -244,7 +244,7 @@ mod tests {
 
     #[test]
     fn approx_line_on_curved_surface_along_curve() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let path = GlobalPath::circle_from_radius(1.);
         let surface = stores.surfaces.insert(Surface::new(path, [0., 0., 1.]));
@@ -274,7 +274,7 @@ mod tests {
 
     #[test]
     fn approx_circle_on_flat_surface() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let surface = stores
             .surfaces

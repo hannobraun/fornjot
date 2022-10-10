@@ -1,13 +1,13 @@
 use fj_math::Scalar;
 
-use crate::objects::{Shell, Solid, Stores};
+use crate::objects::{Objects, Shell, Solid};
 
 /// API for building a [`Solid`]
 ///
 /// Also see [`Solid::builder`].
 pub struct SolidBuilder<'a> {
     /// The stores that the created objects are put in
-    pub stores: &'a Stores,
+    pub stores: &'a Objects,
 }
 
 impl<'a> SolidBuilder<'a> {

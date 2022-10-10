@@ -2,7 +2,7 @@ use fj_math::{Line, Point, Scalar, Vector};
 
 use crate::{
     objects::{
-        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Stores,
+        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, SurfaceVertex, Vertex,
     },
     path::SurfacePath,
@@ -14,7 +14,11 @@ use super::Sweep;
 impl Sweep for (Vertex, Handle<Surface>) {
     type Swept = HalfEdge;
 
-    fn sweep(self, path: impl Into<Vector<3>>, stores: &Stores) -> Self::Swept {
+    fn sweep(
+        self,
+        path: impl Into<Vector<3>>,
+        stores: &Objects,
+    ) -> Self::Swept {
         let (vertex, surface) = self;
         let path = path.into();
 
@@ -123,7 +127,11 @@ impl Sweep for (Vertex, Handle<Surface>) {
 impl Sweep for Handle<GlobalVertex> {
     type Swept = (GlobalEdge, [Handle<GlobalVertex>; 2]);
 
-    fn sweep(self, path: impl Into<Vector<3>>, stores: &Stores) -> Self::Swept {
+    fn sweep(
+        self,
+        path: impl Into<Vector<3>>,
+        stores: &Objects,
+    ) -> Self::Swept {
         let curve = GlobalCurve::new(stores);
 
         let a = self.clone();
@@ -146,14 +154,14 @@ mod tests {
 
     use crate::{
         algorithms::sweep::Sweep,
-        objects::{Curve, HalfEdge, Stores, Surface, Vertex},
+        objects::{Curve, HalfEdge, Objects, Surface, Vertex},
         partial::HasPartial,
         storage::Handle,
     };
 
     #[test]
     fn vertex_surface() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let surface = stores.surfaces.insert(Surface::xz_plane());
         let curve = Handle::<Curve>::partial()

@@ -173,7 +173,7 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use crate::{
-        objects::{Stores, Surface},
+        objects::{Objects, Surface},
         partial::HasPartial,
     };
 
@@ -181,7 +181,7 @@ mod tests {
 
     #[test]
     fn global_edge_equality() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
 

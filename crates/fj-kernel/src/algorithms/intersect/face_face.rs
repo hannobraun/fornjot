@@ -1,5 +1,5 @@
 use crate::{
-    objects::{Curve, Face, Stores},
+    objects::{Curve, Face, Objects},
     storage::Handle,
 };
 
@@ -24,7 +24,7 @@ pub struct FaceFaceIntersection {
 
 impl FaceFaceIntersection {
     /// Compute the intersections between two faces
-    pub fn compute(faces: [&Face; 2], stores: &Stores) -> Option<Self> {
+    pub fn compute(faces: [&Face; 2], stores: &Objects) -> Option<Self> {
         let surfaces = faces.map(|face| face.surface().clone());
 
         let intersection_curves =
@@ -64,7 +64,7 @@ mod tests {
 
     use crate::{
         algorithms::intersect::CurveFaceIntersection,
-        objects::{Curve, Face, Stores, Surface},
+        objects::{Curve, Face, Objects, Surface},
         partial::HasPartial,
         storage::Handle,
     };
@@ -73,7 +73,7 @@ mod tests {
 
     #[test]
     fn compute_no_intersection() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         #[rustfmt::skip]
         let points = [
@@ -97,7 +97,7 @@ mod tests {
 
     #[test]
     fn compute_one_intersection() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         #[rustfmt::skip]
         let points = [

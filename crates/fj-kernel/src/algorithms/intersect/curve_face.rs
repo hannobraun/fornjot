@@ -156,7 +156,7 @@ where
 #[cfg(test)]
 mod tests {
     use crate::{
-        objects::{Curve, Face, Stores, Surface},
+        objects::{Curve, Face, Objects, Surface},
         partial::HasPartial,
         storage::Handle,
     };
@@ -165,7 +165,7 @@ mod tests {
 
     #[test]
     fn compute() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let surface = stores.surfaces.insert(Surface::xy_plane());
 

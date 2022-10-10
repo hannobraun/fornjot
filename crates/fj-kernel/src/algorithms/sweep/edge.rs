@@ -4,7 +4,8 @@ use fj_math::{Line, Scalar, Vector};
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
     objects::{
-        Curve, Cycle, Face, GlobalEdge, HalfEdge, Stores, SurfaceVertex, Vertex,
+        Curve, Cycle, Face, GlobalEdge, HalfEdge, Objects, SurfaceVertex,
+        Vertex,
     },
     path::SurfacePath,
 };
@@ -14,7 +15,11 @@ use super::Sweep;
 impl Sweep for (HalfEdge, Color) {
     type Swept = Face;
 
-    fn sweep(self, path: impl Into<Vector<3>>, stores: &Stores) -> Self::Swept {
+    fn sweep(
+        self,
+        path: impl Into<Vector<3>>,
+        stores: &Objects,
+    ) -> Self::Swept {
         let (edge, color) = self;
         let path = path.into();
 
@@ -183,13 +188,13 @@ mod tests {
 
     use crate::{
         algorithms::{reverse::Reverse, sweep::Sweep},
-        objects::{Cycle, Face, HalfEdge, Stores, Surface},
+        objects::{Cycle, Face, HalfEdge, Objects, Surface},
         partial::HasPartial,
     };
 
     #[test]
     fn sweep() {
-        let stores = Stores::new();
+        let stores = Objects::new();
 
         let half_edge = HalfEdge::partial()
             .with_surface(Some(stores.surfaces.insert(Surface::xy_plane())))

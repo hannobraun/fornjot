@@ -1,5 +1,5 @@
 use fj_kernel::{
-    objects::{Stores, Surface},
+    objects::{Objects, Surface},
     storage::Handle,
 };
 
@@ -25,7 +25,7 @@ impl Planes {
     ///
     /// Create one instance of this struct, then share it everywhere it's
     /// needed.
-    pub fn new(stores: &Stores) -> Self {
+    pub fn new(stores: &Objects) -> Self {
         let xy = stores.surfaces.insert(Surface::xy_plane());
         let xz = stores.surfaces.insert(Surface::xz_plane());
         let yz = stores.surfaces.insert(Surface::yz_plane());
