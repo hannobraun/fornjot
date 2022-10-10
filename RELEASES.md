@@ -33,39 +33,8 @@ Now, edit this file to finish the release announcement:
    - Summarize the week's development.
    - Highlight contributions.
 3. Write *Outlook*
-4. Write *Issue of the Week*
-   See notes below.
 
 When done, deploy to the website.
-
-### Issue of the Week
-
-Potential new issues of the week:
-
-- https://github.com/hannobraun/Fornjot/issues/13
-- https://github.com/hannobraun/Fornjot/issues/15
-- https://github.com/hannobraun/Fornjot/issues/794
-- https://github.com/hannobraun/Fornjot/issues/805
-- https://github.com/hannobraun/Fornjot/issues/848
-- https://github.com/hannobraun/Fornjot/issues/851
-- https://github.com/hannobraun/Fornjot/issues/937
-- https://github.com/hannobraun/Fornjot/issues/986
-- https://github.com/hannobraun/Fornjot/issues/987
-- https://github.com/hannobraun/Fornjot/issues/997
-
-Already mentioned issues of the week (remove, once closed):
-
-- 2022-10-04: https://github.com/hannobraun/Fornjot/issues/996
-- 2022-09-26: https://github.com/hannobraun/Fornjot/issues/971
-- 2022-09-19: https://github.com/hannobraun/Fornjot/issues/821
-- 2022-09-05: https://github.com/hannobraun/Fornjot/issues/920
-- 2022-08-29: https://github.com/hannobraun/Fornjot/issues/980
-- 2022-08-22: https://github.com/hannobraun/Fornjot/issues/938
-- 2022-08-08: https://github.com/hannobraun/Fornjot/issues/20
-- 2022-08-01: https://github.com/hannobraun/Fornjot/issues/883
-- 2022-07-18: https://github.com/hannobraun/Fornjot/issues/815
-- 2022-07-11: https://github.com/hannobraun/Fornjot/issues/793
-- 2022-07-04: https://github.com/hannobraun/Fornjot/issues/479
 
 
 ## 3. Create release branch
@@ -126,8 +95,10 @@ Post the release announcement in the official Fornjot community channels:
 - Mailing list
 - Matrix channel
 
-Additionally, post it in the following communities:
+Additionally, post it in the following places:
 
+- Twitter
+  https://twitter.com/hannobraun
 - Reddit
   - https://www.reddit.com/r/rust/
     - Use previous post as template
