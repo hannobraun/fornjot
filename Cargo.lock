@@ -2448,9 +2448,9 @@ dependencies = [
 
 [[package]]
 name = "parry3d-f64"
-version = "0.9.0"
+version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "76afcd47906fbc4a5d7e6914fec1577b582f59b579187c9a2a6b381f17c40995"
+checksum = "e36afd258d7ec516d15854c80b933277258028378b4f059446ed304b3ba42267"
 dependencies = [
  "approx 0.5.1",
  "arrayvec 0.7.2",
