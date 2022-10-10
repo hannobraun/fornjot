@@ -3,8 +3,7 @@ use fj_kernel::{
     algorithms::validate::{
         Validate, Validated, ValidationConfig, ValidationError,
     },
-    objects::Faces,
-    stores::Stores,
+    objects::{Faces, Stores},
 };
 use fj_math::Aabb;
 

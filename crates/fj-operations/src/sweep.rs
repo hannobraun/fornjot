@@ -4,8 +4,7 @@ use fj_kernel::{
         sweep::Sweep,
         validate::{Validate, Validated, ValidationConfig, ValidationError},
     },
-    objects::Solid,
-    stores::Stores,
+    objects::{Solid, Stores},
 };
 use fj_math::{Aabb, Vector};
 

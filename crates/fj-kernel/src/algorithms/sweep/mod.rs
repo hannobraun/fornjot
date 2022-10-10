@@ -8,7 +8,7 @@ mod vertex;
 
 use fj_math::Vector;
 
-use crate::stores::Stores;
+use crate::objects::Stores;
 
 /// Sweep an object along a path to create another object
 pub trait Sweep {

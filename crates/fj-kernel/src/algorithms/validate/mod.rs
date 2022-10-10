@@ -36,8 +36,7 @@ pub trait Validate: Sized {
     /// ``` rust
     /// # use fj_kernel::{
     /// #     algorithms::validate::{Validate, ValidationConfig},
-    /// #     objects::GlobalVertex,
-    /// #     stores::Stores,
+    /// #     objects::{GlobalVertex, Stores},
     /// # };
     /// # let stores = Stores::new();
     /// # let object = GlobalVertex::from_position([0., 0., 0.], &stores);
@@ -46,8 +45,7 @@ pub trait Validate: Sized {
     /// ``` rust
     /// # use fj_kernel::{
     /// #     algorithms::validate::{Validate, ValidationConfig},
-    /// #     objects::GlobalVertex,
-    /// #     stores::Stores,
+    /// #     objects::{GlobalVertex, Stores},
     /// # };
     /// # let stores = Stores::new();
     /// # let object = GlobalVertex::from_position([0., 0., 0.], &stores);
@@ -168,12 +166,11 @@ mod tests {
     use crate::{
         algorithms::validate::{Validate, ValidationConfig, ValidationError},
         objects::{
-            Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
-            SurfaceVertex, Vertex,
+            Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Stores,
+            Surface, SurfaceVertex, Vertex,
         },
         partial::HasPartial,
         path::SurfacePath,
-        stores::Stores,
     };
 
     #[test]

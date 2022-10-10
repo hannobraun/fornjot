@@ -2,11 +2,11 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     objects::{
-        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
-        SurfaceVertex, Vertex,
+        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Stores,
+        Surface, SurfaceVertex, Vertex,
     },
     partial::{HasPartial, MaybePartial, PartialCurve},
-    stores::{Handle, HandleWrapper, Stores},
+    stores::{Handle, HandleWrapper},
 };
 
 /// A partial [`HalfEdge`]

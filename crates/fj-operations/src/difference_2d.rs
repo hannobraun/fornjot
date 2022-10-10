@@ -5,8 +5,7 @@ use fj_kernel::{
         validate::{Validate, Validated, ValidationConfig, ValidationError},
     },
     iter::ObjectIters,
-    objects::{Face, Sketch},
-    stores::Stores,
+    objects::{Face, Sketch, Stores},
 };
 use fj_math::Aabb;
 

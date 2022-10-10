@@ -1,8 +1,8 @@
 use std::collections::BTreeSet;
 
-use crate::{builder::SolidBuilder, stores::Stores};
+use crate::builder::SolidBuilder;
 
-use super::{Face, Shell};
+use super::{Face, Shell, Stores};
 
 /// A 3-dimensional shape
 ///

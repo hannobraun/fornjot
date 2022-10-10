@@ -3,9 +3,8 @@ use fj_kernel::{
     algorithms::validate::{
         Validate, Validated, ValidationConfig, ValidationError,
     },
-    objects::{Cycle, Face, HalfEdge, Sketch},
+    objects::{Cycle, Face, HalfEdge, Sketch, Stores},
     partial::HasPartial,
-    stores::Stores,
 };
 use fj_math::{Aabb, Point};
 

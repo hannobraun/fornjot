@@ -1,9 +1,6 @@
 use fj_math::Scalar;
 
-use crate::{
-    objects::{Shell, Solid},
-    stores::Stores,
-};
+use crate::objects::{Shell, Solid, Stores};
 
 /// API for building a [`Solid`]
 ///

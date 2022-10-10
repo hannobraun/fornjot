@@ -3,10 +3,11 @@ use fj_math::Scalar;
 use crate::{
     algorithms::transform::TransformObject,
     objects::{
-        Curve, Cycle, Face, HalfEdge, Shell, Surface, SurfaceVertex, Vertex,
+        Curve, Cycle, Face, HalfEdge, Shell, Stores, Surface, SurfaceVertex,
+        Vertex,
     },
     partial::HasPartial,
-    stores::{Handle, Stores},
+    stores::Handle,
 };
 
 /// API for building a [`Shell`]

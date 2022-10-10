@@ -152,8 +152,7 @@ mod tests {
             transform::TransformObject,
         },
         iter::ObjectIters,
-        objects::{Face, Surface},
-        stores::Stores,
+        objects::{Face, Stores, Surface},
     };
 
     #[test]

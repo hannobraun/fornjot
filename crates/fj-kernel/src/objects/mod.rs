@@ -70,7 +70,6 @@
 //! As of this writing, most objects are not managed in the centralized object
 //! storage. Changing this is an ongoing effort ([#1021]).
 //!
-//! [`Stores`]: crate::stores::Stores
 //! [`Handle`]: crate::stores::Handle
 //! [#1021]: https://github.com/hannobraun/Fornjot/issues/1021
 
@@ -84,6 +83,8 @@ mod solid;
 mod surface;
 mod vertex;
 
+use crate::stores::Store;
+
 pub use self::{
     curve::{Curve, GlobalCurve},
     cycle::Cycle,
@@ -95,3 +96,33 @@ pub use self::{
     surface::Surface,
     vertex::{GlobalVertex, SurfaceVertex, Vertex},
 };
+
+/// The available object stores
+///
+/// # Implementation Note
+///
+/// The intention is to eventually manage all objects in here. Making this
+/// happen is simply a case of putting in the required work. See [#1021].
+///
+/// [#1021]: https://github.com/hannobraun/Fornjot/issues/1021
+#[derive(Debug, Default)]
+pub struct Stores {
+    /// Store for curves
+    pub curves: Store<Curve>,
+
+    /// Store for global curves
+    pub global_curves: Store<GlobalCurve>,
+
+    /// Store for global vertices
+    pub global_vertices: Store<GlobalVertex>,
+
+    /// Store for surfaces
+    pub surfaces: Store<Surface>,
+}
+
+impl Stores {
+    /// Construct a new instance of `Stores`
+    pub fn new() -> Self {
+        Self::default()
+    }
+}

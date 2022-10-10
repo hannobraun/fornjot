@@ -75,9 +75,9 @@ mod tests {
     use fj_math::Point;
 
     use crate::{
-        objects::{Curve, HalfEdge, Surface},
+        objects::{Curve, HalfEdge, Stores, Surface},
         partial::HasPartial,
-        stores::{Handle, Stores},
+        stores::Handle,
     };
 
     use super::CurveEdgeIntersection;

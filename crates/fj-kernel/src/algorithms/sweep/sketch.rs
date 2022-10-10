@@ -1,9 +1,6 @@
 use fj_math::Vector;
 
-use crate::{
-    objects::{Sketch, Solid},
-    stores::Stores,
-};
+use crate::objects::{Sketch, Solid, Stores};
 
 use super::Sweep;
 

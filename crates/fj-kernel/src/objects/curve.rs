@@ -1,9 +1,9 @@
 use crate::{
     path::SurfacePath,
-    stores::{Handle, HandleWrapper, Stores},
+    stores::{Handle, HandleWrapper},
 };
 
-use super::Surface;
+use super::{Stores, Surface};
 
 /// A curve, defined in local surface coordinates
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]

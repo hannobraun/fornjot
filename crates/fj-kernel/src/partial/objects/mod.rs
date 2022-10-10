@@ -5,9 +5,10 @@ pub mod vertex;
 
 use crate::{
     objects::{
-        Curve, Cycle, GlobalEdge, GlobalVertex, HalfEdge, SurfaceVertex, Vertex,
+        Curve, Cycle, GlobalEdge, GlobalVertex, HalfEdge, Stores,
+        SurfaceVertex, Vertex,
     },
-    stores::{Handle, Stores},
+    stores::Handle,
 };
 
 use super::{

@@ -7,7 +7,7 @@ use fj_kernel::{
         triangulate::Triangulate,
         validate::{ValidationConfig, ValidationError},
     },
-    stores::Stores,
+    objects::Stores,
 };
 use fj_math::Scalar;
 

@@ -2,9 +2,8 @@ use fj_math::{Scalar, Vector};
 
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
-    objects::{Face, Shell},
+    objects::{Face, Shell, Stores},
     path::GlobalPath,
-    stores::Stores,
 };
 
 use super::Sweep;
@@ -77,9 +76,8 @@ mod tests {
 
     use crate::{
         algorithms::{reverse::Reverse, transform::TransformObject},
-        objects::{Face, HalfEdge, Sketch, Surface},
+        objects::{Face, HalfEdge, Sketch, Stores, Surface},
         partial::HasPartial,
-        stores::Stores,
     };
 
     use super::Sweep;

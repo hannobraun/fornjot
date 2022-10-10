@@ -3,12 +3,9 @@ use std::collections::{btree_set, BTreeSet};
 use fj_interop::mesh::Color;
 use fj_math::Winding;
 
-use crate::{
-    builder::FaceBuilder,
-    stores::{Handle, Stores},
-};
+use crate::{builder::FaceBuilder, stores::Handle};
 
-use super::{Cycle, Surface};
+use super::{Cycle, Stores, Surface};
 
 /// A face of a shape
 ///

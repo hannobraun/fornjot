@@ -1,9 +1,9 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{Curve, Cycle, HalfEdge, Surface, SurfaceVertex, Vertex},
+    objects::{Curve, Cycle, HalfEdge, Stores, Surface, SurfaceVertex, Vertex},
     partial::{HasPartial, MaybePartial},
-    stores::{Handle, Stores},
+    stores::Handle,
 };
 
 /// A partial [`Cycle`]

@@ -14,8 +14,8 @@ mod vertex;
 use fj_math::{Transform, Vector};
 
 use crate::{
+    objects::Stores,
     partial::{HasPartial, MaybePartial, Partial},
-    stores::Stores,
 };
 
 /// Transform an object

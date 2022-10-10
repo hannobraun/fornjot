@@ -134,8 +134,7 @@ mod tests {
     use crate::{
         algorithms::intersect::{face_point::FacePointIntersection, Intersect},
         iter::ObjectIters,
-        objects::{Face, Surface},
-        stores::Stores,
+        objects::{Face, Stores, Surface},
     };
 
     #[test]

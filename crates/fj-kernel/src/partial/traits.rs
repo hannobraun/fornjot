@@ -1,4 +1,4 @@
-use crate::stores::Stores;
+use crate::objects::Stores;
 
 /// Implemented for objects that a partial object type exists for
 ///

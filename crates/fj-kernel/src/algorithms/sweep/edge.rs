@@ -4,10 +4,9 @@ use fj_math::{Line, Scalar, Vector};
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
     objects::{
-        Curve, Cycle, Face, GlobalEdge, HalfEdge, SurfaceVertex, Vertex,
+        Curve, Cycle, Face, GlobalEdge, HalfEdge, Stores, SurfaceVertex, Vertex,
     },
     path::SurfacePath,
-    stores::Stores,
 };
 
 use super::Sweep;
@@ -184,9 +183,8 @@ mod tests {
 
     use crate::{
         algorithms::{reverse::Reverse, sweep::Sweep},
-        objects::{Cycle, Face, HalfEdge, Surface},
+        objects::{Cycle, Face, HalfEdge, Stores, Surface},
         partial::HasPartial,
-        stores::Stores,
     };
 
     #[test]

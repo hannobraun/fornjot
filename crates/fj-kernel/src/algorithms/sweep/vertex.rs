@@ -2,11 +2,11 @@ use fj_math::{Line, Point, Scalar, Vector};
 
 use crate::{
     objects::{
-        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
-        SurfaceVertex, Vertex,
+        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Stores,
+        Surface, SurfaceVertex, Vertex,
     },
     path::SurfacePath,
-    stores::{Handle, Stores},
+    stores::Handle,
 };
 
 use super::Sweep;
@@ -146,9 +146,9 @@ mod tests {
 
     use crate::{
         algorithms::sweep::Sweep,
-        objects::{Curve, HalfEdge, Surface, Vertex},
+        objects::{Curve, HalfEdge, Stores, Surface, Vertex},
         partial::HasPartial,
-        stores::{Handle, Stores},
+        stores::Handle,
     };
 
     #[test]

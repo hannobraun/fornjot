@@ -1,9 +1,9 @@
 use fj_math::Point;
 use pretty_assertions::assert_eq;
 
-use crate::stores::{Handle, Stores};
+use crate::stores::Handle;
 
-use super::{Curve, Surface};
+use super::{Curve, Stores, Surface};
 
 /// A vertex
 ///

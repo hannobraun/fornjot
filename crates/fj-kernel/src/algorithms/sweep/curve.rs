@@ -1,9 +1,9 @@
 use fj_math::{Circle, Line, Vector};
 
 use crate::{
-    objects::{Curve, Surface},
+    objects::{Curve, Stores, Surface},
     path::{GlobalPath, SurfacePath},
-    stores::{Handle, Stores},
+    stores::Handle,
 };
 
 use super::Sweep;

@@ -1,9 +1,9 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{Cycle, Face, Surface},
+    objects::{Cycle, Face, Stores, Surface},
     partial::HasPartial,
-    stores::{Handle, Stores},
+    stores::Handle,
 };
 
 /// API for building a [`Face`]

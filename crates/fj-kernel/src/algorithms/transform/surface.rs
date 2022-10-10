@@ -1,8 +1,8 @@
 use fj_math::Transform;
 
 use crate::{
-    objects::Surface,
-    stores::{Handle, Stores},
+    objects::{Stores, Surface},
+    stores::Handle,
 };
 
 use super::TransformObject;

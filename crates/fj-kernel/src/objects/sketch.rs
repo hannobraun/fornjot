@@ -1,9 +1,6 @@
-use crate::{
-    builder::SketchBuilder,
-    stores::{Handle, Stores},
-};
+use crate::{builder::SketchBuilder, stores::Handle};
 
-use super::{face::Faces, Face, Surface};
+use super::{face::Faces, Face, Stores, Surface};
 
 /// A 2-dimensional shape
 ///

@@ -1,9 +1,9 @@
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    objects::{Curve, GlobalCurve, Surface},
+    objects::{Curve, GlobalCurve, Stores, Surface},
     path::SurfacePath,
-    stores::{Handle, HandleWrapper, Stores},
+    stores::{Handle, HandleWrapper},
 };
 
 /// A partial [`Curve`]

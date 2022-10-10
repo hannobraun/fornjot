@@ -1,6 +1,6 @@
-use crate::{builder::ShellBuilder, stores::Stores};
+use crate::builder::ShellBuilder;
 
-use super::{face::Faces, Face};
+use super::{face::Faces, Face, Stores};
 
 /// A 3-dimensional closed shell
 ///

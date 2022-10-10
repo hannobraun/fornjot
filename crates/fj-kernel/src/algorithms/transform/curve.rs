@@ -1,9 +1,9 @@
 use fj_math::Transform;
 
 use crate::{
-    objects::GlobalCurve,
+    objects::{GlobalCurve, Stores},
     partial::PartialCurve,
-    stores::{Handle, Stores},
+    stores::Handle,
 };
 
 use super::TransformObject;

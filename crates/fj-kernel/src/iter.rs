@@ -362,10 +362,10 @@ mod tests {
     use crate::{
         objects::{
             Curve, Cycle, Face, GlobalCurve, GlobalVertex, HalfEdge, Shell,
-            Sketch, Solid, Surface, SurfaceVertex, Vertex,
+            Sketch, Solid, Stores, Surface, SurfaceVertex, Vertex,
         },
         partial::HasPartial,
-        stores::{Handle, Stores},
+        stores::Handle,
     };
 
     use super::ObjectIters as _;

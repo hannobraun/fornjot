@@ -1,6 +1,6 @@
 use fj_math::Transform;
 
-use crate::{partial::PartialCycle, stores::Stores};
+use crate::{objects::Stores, partial::PartialCycle};
 
 use super::TransformObject;
 

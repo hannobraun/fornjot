@@ -1,9 +1,9 @@
 use fj_math::{Line, Plane, Point, Scalar};
 
 use crate::{
-    objects::{Curve, GlobalCurve, Surface},
+    objects::{Curve, GlobalCurve, Stores, Surface},
     path::{GlobalPath, SurfacePath},
-    stores::{Handle, Stores},
+    stores::Handle,
 };
 
 /// The intersection between two surfaces
@@ -88,9 +88,9 @@ mod tests {
 
     use crate::{
         algorithms::transform::TransformObject,
-        objects::{Curve, Surface},
+        objects::{Curve, Stores, Surface},
         partial::HasPartial,
-        stores::{Handle, Stores},
+        stores::Handle,
     };
 
     use super::SurfaceSurfaceIntersection;

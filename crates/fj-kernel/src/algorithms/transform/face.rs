@@ -1,9 +1,8 @@
 use fj_math::Transform;
 
 use crate::{
-    objects::{Face, Faces},
+    objects::{Face, Faces, Stores},
     partial::HasPartial,
-    stores::Stores,
 };
 
 use super::TransformObject;

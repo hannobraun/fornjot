@@ -2,10 +2,10 @@ use fj_math::Point;
 
 use crate::{
     objects::{
-        Curve, GlobalCurve, GlobalEdge, HalfEdge, Surface, SurfaceVertex,
-        Vertex,
+        Curve, GlobalCurve, GlobalEdge, HalfEdge, Stores, Surface,
+        SurfaceVertex, Vertex,
     },
-    stores::{Handle, Stores},
+    stores::Handle,
 };
 
 use super::{HasPartial, Partial};

@@ -1,8 +1,8 @@
 use fj_math::Transform;
 
 use crate::{
+    objects::Stores,
     partial::{PartialGlobalVertex, PartialSurfaceVertex, PartialVertex},
-    stores::Stores,
 };
 
 use super::TransformObject;

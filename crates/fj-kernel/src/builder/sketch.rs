@@ -1,8 +1,8 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{Face, Sketch, Surface},
-    stores::{Handle, Stores},
+    objects::{Face, Sketch, Stores, Surface},
+    stores::Handle,
 };
 
 /// API for building a [`Sketch`]

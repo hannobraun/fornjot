@@ -197,10 +197,10 @@ mod tests {
 
     use crate::{
         algorithms::approx::{path::RangeOnPath, Approx, ApproxPoint},
-        objects::{Curve, Surface},
+        objects::{Curve, Stores, Surface},
         partial::HasPartial,
         path::GlobalPath,
-        stores::{Handle, Stores},
+        stores::Handle,
     };
 
     use super::CurveApprox;

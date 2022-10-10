@@ -84,8 +84,7 @@ mod tests {
 
     use crate::{
         algorithms::approx::{Approx, Tolerance},
-        objects::{Face, Surface},
-        stores::Stores,
+        objects::{Face, Stores, Surface},
     };
 
     use super::Triangulate;

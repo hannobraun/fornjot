@@ -4,8 +4,7 @@ use fj_kernel::{
         transform::TransformObject,
         validate::{Validate, Validated, ValidationConfig, ValidationError},
     },
-    objects::Faces,
-    stores::Stores,
+    objects::{Faces, Stores},
 };
 use fj_math::{Aabb, Transform, Vector};
 
