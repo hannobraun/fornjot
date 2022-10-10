@@ -161,24 +161,24 @@ mod tests {
 
     #[test]
     fn vertex_surface() {
-        let stores = Objects::new();
+        let objects = Objects::new();
 
-        let surface = stores.surfaces.insert(Surface::xz_plane());
+        let surface = objects.surfaces.insert(Surface::xz_plane());
         let curve = Handle::<Curve>::partial()
             .with_surface(Some(surface.clone()))
             .as_u_axis()
-            .build(&stores);
+            .build(&objects);
         let vertex = Vertex::partial()
             .with_position(Some([0.]))
             .with_curve(Some(curve))
-            .build(&stores);
+            .build(&objects);
 
-        let half_edge = (vertex, surface.clone()).sweep([0., 0., 1.], &stores);
+        let half_edge = (vertex, surface.clone()).sweep([0., 0., 1.], &objects);
 
         let expected_half_edge = HalfEdge::partial()
             .with_surface(Some(surface))
             .as_line_segment_from_points([[0., 0.], [0., 1.]])
-            .build(&stores);
+            .build(&objects);
         assert_eq!(half_edge, expected_half_edge);
     }
 }
