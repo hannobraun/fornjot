@@ -86,14 +86,14 @@ impl PartialVertex {
     /// Panics, if no position has been provided.
     ///
     /// Panics, if no curve has been provided.
-    pub fn build(self, stores: &Objects) -> Vertex {
+    pub fn build(self, objects: &Objects) -> Vertex {
         let position = self
             .position
             .expect("Cant' build `Vertex` without position");
         let curve = self
             .curve
             .expect("Can't build `Vertex` without `Curve`")
-            .into_full(stores);
+            .into_full(objects);
 
         let surface_form = self
             .surface_form
@@ -108,7 +108,7 @@ impl PartialVertex {
                     .with_surface(Some(curve.surface().clone()))
                     .with_global_form(self.global_form)
             })
-            .into_full(stores);
+            .into_full(objects);
 
         Vertex::new(position, curve, surface_form)
     }
@@ -185,7 +185,7 @@ impl PartialSurfaceVertex {
     /// Panics, if no position has been provided.
     ///
     /// Panics, if no surface has been provided.
-    pub fn build(self, stores: &Objects) -> SurfaceVertex {
+    pub fn build(self, objects: &Objects) -> SurfaceVertex {
         let position = self
             .position
             .expect("Can't build `SurfaceVertex` without position");
@@ -200,7 +200,7 @@ impl PartialSurfaceVertex {
                     .from_surface_and_position(&surface, position)
                     .into()
             })
-            .into_full(stores);
+            .into_full(objects);
 
         SurfaceVertex::new(position, surface, global_form)
     }
@@ -269,12 +269,12 @@ impl PartialGlobalVertex {
     }
 
     /// Build a full [`GlobalVertex`] from the partial global vertex
-    pub fn build(self, stores: &Objects) -> Handle<GlobalVertex> {
+    pub fn build(self, objects: &Objects) -> Handle<GlobalVertex> {
         let position = self
             .position
             .expect("Can't build a `GlobalVertex` without a position");
 
-        GlobalVertex::from_position(position, stores)
+        GlobalVertex::from_position(position, objects)
     }
 }
 
