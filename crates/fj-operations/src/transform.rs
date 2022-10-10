@@ -18,15 +18,15 @@ impl Shape for fj::Transform {
     fn compute_brep(
         &self,
         config: &ValidationConfig,
-        stores: &Objects,
+        objects: &Objects,
         planes: &Planes,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
         let faces = self
             .shape
-            .compute_brep(config, stores, planes, debug_info)?
+            .compute_brep(config, objects, planes, debug_info)?
             .into_inner()
-            .transform(&make_transform(self), stores);
+            .transform(&make_transform(self), objects);
 
         faces.validate_with_config(config)
     }
