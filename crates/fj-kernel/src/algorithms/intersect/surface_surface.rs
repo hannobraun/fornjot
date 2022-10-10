@@ -97,10 +97,10 @@ mod tests {
 
     #[test]
     fn plane_plane() {
-        let stores = Objects::new();
+        let objects = Objects::new();
 
-        let xy = stores.surfaces.insert(Surface::xy_plane());
-        let xz = stores.surfaces.insert(Surface::xz_plane());
+        let xy = objects.surfaces.insert(Surface::xy_plane());
+        let xz = objects.surfaces.insert(Surface::xz_plane());
 
         // Coincident and parallel planes don't have an intersection curve.
         assert_eq!(
@@ -109,10 +109,10 @@ mod tests {
                     xy.clone(),
                     xy.clone().transform(
                         &Transform::translation([0., 0., 1.],),
-                        &stores
+                        &objects
                     )
                 ],
-                &stores
+                &objects
             ),
             None,
         );
@@ -120,14 +120,14 @@ mod tests {
         let expected_xy = Handle::<Curve>::partial()
             .with_surface(Some(xy.clone()))
             .as_u_axis()
-            .build(&stores);
+            .build(&objects);
         let expected_xz = Handle::<Curve>::partial()
             .with_surface(Some(xz.clone()))
             .as_u_axis()
-            .build(&stores);
+            .build(&objects);
 
         assert_eq!(
-            SurfaceSurfaceIntersection::compute([xy, xz], &stores),
+            SurfaceSurfaceIntersection::compute([xy, xz], &objects),
             Some(SurfaceSurfaceIntersection {
                 intersection_curves: [expected_xy, expected_xz],
             })
