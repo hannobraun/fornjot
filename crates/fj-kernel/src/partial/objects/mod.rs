@@ -27,8 +27,8 @@ macro_rules! impl_traits {
             impl Partial for $partial {
                 type Full = $full;
 
-                fn build(self, stores: &Objects) -> Self::Full {
-                    self.build(stores)
+                fn build(self, objects: &Objects) -> Self::Full {
+                    self.build(objects)
                 }
             }
 
