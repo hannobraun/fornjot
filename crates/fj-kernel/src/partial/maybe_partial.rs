@@ -48,9 +48,9 @@ impl<T: HasPartial> MaybePartial<T> {
     ///
     /// If this already is a full object, it is returned. If this is a partial
     /// object, the full object is built from it, using [`Partial::build`].
-    pub fn into_full(self, stores: &Objects) -> T {
+    pub fn into_full(self, objects: &Objects) -> T {
         match self {
-            Self::Partial(partial) => partial.build(stores),
+            Self::Partial(partial) => partial.build(objects),
             Self::Full(full) => full,
         }
     }
