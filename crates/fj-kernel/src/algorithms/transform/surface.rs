@@ -8,9 +8,9 @@ use crate::{
 use super::TransformObject;
 
 impl TransformObject for Handle<Surface> {
-    fn transform(self, transform: &Transform, stores: &Objects) -> Self {
-        stores.surfaces.insert(Surface::new(
-            self.u().transform(transform, stores),
+    fn transform(self, transform: &Transform, objects: &Objects) -> Self {
+        objects.surfaces.insert(Surface::new(
+            self.u().transform(transform, objects),
             transform.transform_vector(&self.v()),
         ))
     }
