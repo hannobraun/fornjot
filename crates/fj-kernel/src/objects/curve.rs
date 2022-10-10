@@ -19,9 +19,9 @@ impl Curve {
         surface: Handle<Surface>,
         path: SurfacePath,
         global_form: impl Into<HandleWrapper<GlobalCurve>>,
-        stores: &Objects,
+        objects: &Objects,
     ) -> Handle<Self> {
-        stores.curves.insert(Self {
+        objects.curves.insert(Self {
             surface,
             path,
             global_form: global_form.into(),
@@ -50,7 +50,7 @@ pub struct GlobalCurve;
 
 impl GlobalCurve {
     /// Construct a new instance of `Handle` and add it to the store
-    pub fn new(stores: &Objects) -> Handle<Self> {
-        stores.global_curves.insert(GlobalCurve)
+    pub fn new(objects: &Objects) -> Handle<Self> {
+        objects.global_curves.insert(GlobalCurve)
     }
 }
