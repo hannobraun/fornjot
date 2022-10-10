@@ -129,10 +129,10 @@ impl GlobalVertex {
     /// Construct a `GlobalVertex` from a position
     pub fn from_position(
         position: impl Into<Point<3>>,
-        stores: &Objects,
+        objects: &Objects,
     ) -> Handle<Self> {
         let position = position.into();
-        stores.global_vertices.insert(Self { position })
+        objects.global_vertices.insert(Self { position })
     }
 
     /// Access the position of the vertex
