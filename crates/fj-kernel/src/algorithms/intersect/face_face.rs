@@ -24,11 +24,11 @@ pub struct FaceFaceIntersection {
 
 impl FaceFaceIntersection {
     /// Compute the intersections between two faces
-    pub fn compute(faces: [&Face; 2], stores: &Objects) -> Option<Self> {
+    pub fn compute(faces: [&Face; 2], objects: &Objects) -> Option<Self> {
         let surfaces = faces.map(|face| face.surface().clone());
 
         let intersection_curves =
-            SurfaceSurfaceIntersection::compute(surfaces, stores)?
+            SurfaceSurfaceIntersection::compute(surfaces, objects)?
                 .intersection_curves;
 
         // Can be cleaned up, once `zip` is stable:
