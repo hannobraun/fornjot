@@ -18,8 +18,8 @@ fj-interop.workspace = true
 fj-math.workspace = true
 raw-window-handle = "0.4.3"
 thiserror = "1.0.35"
-tracing = "0.1.35"
-wgpu = "0.13.1"
+tracing = "0.1.37"
+wgpu = "0.14.0"
 wgpu_glyph = "0.17.0"
 
 [dependencies.egui-wgpu]
