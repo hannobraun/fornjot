@@ -22,7 +22,7 @@ pub struct Args {
     pub parameters: Option<Parameters>,
 
     /// Model deviation tolerance
-    #[clap[short, long, parse(try_from_str = parse_tolerance)]]
+    #[clap(short, long, parse(try_from_str = parse_tolerance))]
     pub tolerance: Option<Tolerance>,
 }
 
