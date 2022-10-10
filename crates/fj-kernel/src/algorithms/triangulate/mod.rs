@@ -91,15 +91,15 @@ mod tests {
 
     #[test]
     fn simple() -> anyhow::Result<()> {
-        let stores = Objects::new();
+        let objects = Objects::new();
 
         let a = [0., 0.];
         let b = [2., 0.];
         let c = [2., 2.];
         let d = [0., 1.];
 
-        let surface = stores.surfaces.insert(Surface::xy_plane());
-        let face = Face::builder(&stores, surface)
+        let surface = objects.surfaces.insert(Surface::xy_plane());
+        let face = Face::builder(&objects, surface)
             .with_exterior_polygon_from_points([a, b, c, d])
             .build();
 
@@ -120,7 +120,7 @@ mod tests {
 
     #[test]
     fn simple_hole() -> anyhow::Result<()> {
-        let stores = Objects::new();
+        let objects = Objects::new();
 
         let a = [0., 0.];
         let b = [4., 0.];
@@ -132,8 +132,8 @@ mod tests {
         let g = [3., 3.];
         let h = [3., 1.];
 
-        let surface = stores.surfaces.insert(Surface::xy_plane());
-        let face = Face::builder(&stores, surface.clone())
+        let surface = objects.surfaces.insert(Surface::xy_plane());
+        let face = Face::builder(&objects, surface.clone())
             .with_exterior_polygon_from_points([a, b, c, d])
             .with_interior_polygon_from_points([e, f, g, h])
             .build();
@@ -171,7 +171,7 @@ mod tests {
     #[ignore]
     #[test]
     fn sharp_concave_shape() -> anyhow::Result<()> {
-        let stores = Objects::new();
+        let objects = Objects::new();
 
         //
         //                c
@@ -192,8 +192,8 @@ mod tests {
         let d = [0.1, 0.1];
         let e = [0., 0.8];
 
-        let surface = stores.surfaces.insert(Surface::xy_plane());
-        let face = Face::builder(&stores, surface.clone())
+        let surface = objects.surfaces.insert(Surface::xy_plane());
+        let face = Face::builder(&objects, surface.clone())
             .with_exterior_polygon_from_points([a, b, c, d, e])
             .build();
 
