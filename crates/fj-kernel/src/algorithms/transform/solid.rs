@@ -5,10 +5,10 @@ use crate::objects::{Objects, Solid};
 use super::TransformObject;
 
 impl TransformObject for Solid {
-    fn transform(self, transform: &Transform, stores: &Objects) -> Self {
+    fn transform(self, transform: &Transform, objects: &Objects) -> Self {
         let faces = self
             .into_shells()
-            .map(|shell| shell.transform(transform, stores));
+            .map(|shell| shell.transform(transform, objects));
         Self::new().with_shells(faces)
     }
 }
