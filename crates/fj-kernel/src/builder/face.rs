@@ -11,7 +11,7 @@ use crate::{
 /// Also see [`Face::builder`].
 pub struct FaceBuilder<'a> {
     /// The stores that the created objects are put in
-    pub stores: &'a Objects,
+    pub objects: &'a Objects,
 
     /// The surface that the [`Face`] is defined in
     pub surface: Handle<Surface>,
@@ -37,7 +37,7 @@ impl<'a> FaceBuilder<'a> {
                 .with_surface(Some(self.surface.clone()))
                 .with_poly_chain_from_points(points)
                 .close_with_line_segment()
-                .build(self.stores),
+                .build(self.objects),
         );
         self
     }
@@ -52,7 +52,7 @@ impl<'a> FaceBuilder<'a> {
                 .with_surface(Some(self.surface.clone()))
                 .with_poly_chain_from_points(points)
                 .close_with_line_segment()
-                .build(self.stores),
+                .build(self.objects),
         );
         self
     }

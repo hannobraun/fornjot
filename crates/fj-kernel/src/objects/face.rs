@@ -41,9 +41,9 @@ pub struct Face {
 
 impl Face {
     /// Build a `Face` using [`FaceBuilder`]
-    pub fn builder(stores: &Objects, surface: Handle<Surface>) -> FaceBuilder {
+    pub fn builder(objects: &Objects, surface: Handle<Surface>) -> FaceBuilder {
         FaceBuilder {
-            stores,
+            objects,
             surface,
             exterior: None,
             interiors: Vec::new(),
