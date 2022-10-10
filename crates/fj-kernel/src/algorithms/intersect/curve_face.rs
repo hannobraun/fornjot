@@ -165,14 +165,14 @@ mod tests {
 
     #[test]
     fn compute() {
-        let stores = Objects::new();
+        let objects = Objects::new();
 
-        let surface = stores.surfaces.insert(Surface::xy_plane());
+        let surface = objects.surfaces.insert(Surface::xy_plane());
 
         let curve = Handle::<Curve>::partial()
             .with_surface(Some(surface.clone()))
             .as_line_from_points([[-3., 0.], [-2., 0.]])
-            .build(&stores);
+            .build(&objects);
 
         #[rustfmt::skip]
         let exterior = [
@@ -189,7 +189,7 @@ mod tests {
             [ 1., -1.],
         ];
 
-        let face = Face::builder(&stores, surface)
+        let face = Face::builder(&objects, surface)
             .with_exterior_polygon_from_points(exterior)
             .with_interior_polygon_from_points(interior)
             .build();
