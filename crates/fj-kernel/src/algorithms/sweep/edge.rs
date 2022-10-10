@@ -18,12 +18,12 @@ impl Sweep for (HalfEdge, Color) {
     fn sweep(
         self,
         path: impl Into<Vector<3>>,
-        stores: &Objects,
+        objects: &Objects,
     ) -> Self::Swept {
         let (edge, color) = self;
         let path = path.into();
 
-        let surface = edge.curve().clone().sweep(path, stores);
+        let surface = edge.curve().clone().sweep(path, objects);
 
         // We can't use the edge we're sweeping from as the bottom edge, as that
         // is not defined in the right surface. Let's create a new bottom edge,
@@ -48,7 +48,7 @@ impl Sweep for (HalfEdge, Color) {
                     surface.clone(),
                     path,
                     edge.curve().global_form().clone(),
-                    stores,
+                    objects,
                 )
             };
 
@@ -84,7 +84,7 @@ impl Sweep for (HalfEdge, Color) {
         let side_edges = bottom_edge
             .vertices()
             .clone()
-            .map(|vertex| (vertex, surface.clone()).sweep(path, stores));
+            .map(|vertex| (vertex, surface.clone()).sweep(path, objects));
 
         let top_edge = {
             let bottom_vertices = bottom_edge.vertices();
@@ -104,7 +104,7 @@ impl Sweep for (HalfEdge, Color) {
                     .curve()
                     .global_form()
                     .clone()
-                    .translate(path, stores);
+                    .translate(path, objects);
 
                 // Please note that creating a line here is correct, even if the
                 // global curve is a circle. Projected into the side surface, it
@@ -114,7 +114,7 @@ impl Sweep for (HalfEdge, Color) {
                         points_curve_and_surface,
                     ));
 
-                Curve::new(surface.clone(), path, global, stores)
+                Curve::new(surface.clone(), path, global, objects)
             };
 
             let global = GlobalEdge::new(
