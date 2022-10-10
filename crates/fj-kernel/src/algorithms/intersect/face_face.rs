@@ -73,7 +73,7 @@ mod tests {
 
     #[test]
     fn compute_no_intersection() {
-        let stores = Objects::new();
+        let objects = Objects::new();
 
         #[rustfmt::skip]
         let points = [
@@ -84,20 +84,20 @@ mod tests {
         ];
         let [a, b] =
             [Surface::xy_plane(), Surface::xz_plane()].map(|surface| {
-                let surface = stores.surfaces.insert(surface);
-                Face::builder(&stores, surface)
+                let surface = objects.surfaces.insert(surface);
+                Face::builder(&objects, surface)
                     .with_exterior_polygon_from_points(points)
                     .build()
             });
 
-        let intersection = FaceFaceIntersection::compute([&a, &b], &stores);
+        let intersection = FaceFaceIntersection::compute([&a, &b], &objects);
 
         assert!(intersection.is_none());
     }
 
     #[test]
     fn compute_one_intersection() {
-        let stores = Objects::new();
+        let objects = Objects::new();
 
         #[rustfmt::skip]
         let points = [
@@ -107,20 +107,20 @@ mod tests {
             [-1.,  1.],
         ];
         let surfaces = [Surface::xy_plane(), Surface::xz_plane()]
-            .map(|surface| stores.surfaces.insert(surface));
+            .map(|surface| objects.surfaces.insert(surface));
         let [a, b] = surfaces.clone().map(|surface| {
-            Face::builder(&stores, surface)
+            Face::builder(&objects, surface)
                 .with_exterior_polygon_from_points(points)
                 .build()
         });
 
-        let intersection = FaceFaceIntersection::compute([&a, &b], &stores);
+        let intersection = FaceFaceIntersection::compute([&a, &b], &objects);
 
         let expected_curves = surfaces.map(|surface| {
             Handle::<Curve>::partial()
                 .with_surface(Some(surface))
                 .as_line_from_points([[0., 0.], [1., 0.]])
-                .build(&stores)
+                .build(&objects)
         });
         let expected_intervals =
             CurveFaceIntersection::from_intervals([[[-1.], [1.]]]);
