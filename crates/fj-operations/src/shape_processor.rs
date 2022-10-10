@@ -43,11 +43,11 @@ impl ShapeProcessor {
         };
 
         let config = ValidationConfig::default();
-        let stores = Objects::new();
-        let planes = Planes::new(&stores);
+        let objects = Objects::new();
+        let planes = Planes::new(&objects);
         let mut debug_info = DebugInfo::new();
         let shape =
-            shape.compute_brep(&config, &stores, &planes, &mut debug_info)?;
+            shape.compute_brep(&config, &objects, &planes, &mut debug_info)?;
         let mesh = (&shape.into_inner(), tolerance).triangulate();
 
         Ok(ProcessedShape {
