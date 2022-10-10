@@ -10,13 +10,13 @@ impl Sweep for Sketch {
     fn sweep(
         self,
         path: impl Into<Vector<3>>,
-        stores: &Objects,
+        objects: &Objects,
     ) -> Self::Swept {
         let path = path.into();
 
         let mut shells = Vec::new();
         for face in self.into_faces() {
-            let shell = face.sweep(path, stores);
+            let shell = face.sweep(path, objects);
             shells.push(shell);
         }
 
