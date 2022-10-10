@@ -14,7 +14,7 @@ impl Sweep for Face {
     fn sweep(
         self,
         path: impl Into<Vector<3>>,
-        stores: &Objects,
+        objects: &Objects,
     ) -> Self::Swept {
         let path = path.into();
 
@@ -45,7 +45,7 @@ impl Sweep for Face {
         faces.push(bottom_face);
 
         let top_face = {
-            let mut face = self.clone().translate(path, stores);
+            let mut face = self.clone().translate(path, objects);
 
             if is_negative_sweep {
                 face = face.reverse();
@@ -64,7 +64,7 @@ impl Sweep for Face {
                     half_edge.clone()
                 };
 
-                let face = (half_edge, self.color()).sweep(path, stores);
+                let face = (half_edge, self.color()).sweep(path, objects);
 
                 faces.push(face);
             }
