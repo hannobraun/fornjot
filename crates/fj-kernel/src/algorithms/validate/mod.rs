@@ -175,22 +175,22 @@ mod tests {
 
     #[test]
     fn coherence_edge() {
-        let stores = Objects::new();
+        let objects = Objects::new();
 
-        let surface = stores.surfaces.insert(Surface::xy_plane());
+        let surface = objects.surfaces.insert(Surface::xy_plane());
 
         let points_surface = [[0., 0.], [1., 0.]];
         let points_global = [[0., 0., 0.], [1., 0., 0.]];
 
         let curve = {
             let path = SurfacePath::line_from_points(points_surface);
-            let global_form = GlobalCurve::new(&stores);
+            let global_form = GlobalCurve::new(&objects);
 
-            Curve::new(surface.clone(), path, global_form, &stores)
+            Curve::new(surface.clone(), path, global_form, &objects)
         };
 
         let [a_global, b_global] = points_global
-            .map(|point| GlobalVertex::from_position(point, &stores));
+            .map(|point| GlobalVertex::from_position(point, &objects));
 
         let [a_surface, b_surface] = {
             // Can be cleaned up, once `zip` is stable:
@@ -220,7 +220,7 @@ mod tests {
 
         let global_edge = GlobalEdge::partial()
             .from_curve_and_vertices(&curve, &vertices)
-            .build(&stores);
+            .build(&objects);
         let half_edge = HalfEdge::new(vertices, global_edge);
 
         let result =
@@ -239,7 +239,7 @@ mod tests {
 
     #[test]
     fn uniqueness_vertex() -> anyhow::Result<()> {
-        let stores = Objects::new();
+        let objects = Objects::new();
         let mut shape = Vec::new();
 
         let deviation = Scalar::from_f64(0.25);
@@ -255,11 +255,11 @@ mod tests {
         };
 
         // Adding a vertex should work.
-        shape.push(GlobalVertex::from_position(a, &stores));
+        shape.push(GlobalVertex::from_position(a, &objects));
         shape.clone().validate_with_config(&config)?;
 
         // Adding a second vertex that is considered identical should fail.
-        shape.push(GlobalVertex::from_position(b, &stores));
+        shape.push(GlobalVertex::from_position(b, &objects));
         let result = shape.validate_with_config(&config);
         assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
 
