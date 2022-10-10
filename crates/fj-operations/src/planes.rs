@@ -25,10 +25,10 @@ impl Planes {
     ///
     /// Create one instance of this struct, then share it everywhere it's
     /// needed.
-    pub fn new(stores: &Objects) -> Self {
-        let xy = stores.surfaces.insert(Surface::xy_plane());
-        let xz = stores.surfaces.insert(Surface::xz_plane());
-        let yz = stores.surfaces.insert(Surface::yz_plane());
+    pub fn new(objects: &Objects) -> Self {
+        let xy = objects.surfaces.insert(Surface::xy_plane());
+        let xz = objects.surfaces.insert(Surface::xz_plane());
+        let yz = objects.surfaces.insert(Surface::yz_plane());
 
         Self { xy, xz, yz }
     }
