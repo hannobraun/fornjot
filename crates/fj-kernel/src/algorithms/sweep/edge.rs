@@ -194,36 +194,36 @@ mod tests {
 
     #[test]
     fn sweep() {
-        let stores = Objects::new();
+        let objects = Objects::new();
 
         let half_edge = HalfEdge::partial()
-            .with_surface(Some(stores.surfaces.insert(Surface::xy_plane())))
+            .with_surface(Some(objects.surfaces.insert(Surface::xy_plane())))
             .as_line_segment_from_points([[0., 0.], [1., 0.]])
-            .build(&stores);
+            .build(&objects);
 
-        let face = (half_edge, Color::default()).sweep([0., 0., 1.], &stores);
+        let face = (half_edge, Color::default()).sweep([0., 0., 1.], &objects);
 
         let expected_face = {
-            let surface = stores.surfaces.insert(Surface::xz_plane());
+            let surface = objects.surfaces.insert(Surface::xz_plane());
 
             let bottom = HalfEdge::partial()
                 .with_surface(Some(surface.clone()))
                 .as_line_segment_from_points([[0., 0.], [1., 0.]])
-                .build(&stores);
+                .build(&objects);
             let top = HalfEdge::partial()
                 .with_surface(Some(surface.clone()))
                 .as_line_segment_from_points([[0., 1.], [1., 1.]])
-                .build(&stores)
+                .build(&objects)
                 .reverse();
             let left = HalfEdge::partial()
                 .with_surface(Some(surface.clone()))
                 .as_line_segment_from_points([[0., 0.], [0., 1.]])
-                .build(&stores)
+                .build(&objects)
                 .reverse();
             let right = HalfEdge::partial()
                 .with_surface(Some(surface.clone()))
                 .as_line_segment_from_points([[1., 0.], [1., 1.]])
-                .build(&stores);
+                .build(&objects);
 
             let cycle = Cycle::new(surface, [bottom, right, top, left]);
 
