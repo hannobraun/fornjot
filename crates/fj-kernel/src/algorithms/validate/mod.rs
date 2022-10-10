@@ -38,8 +38,8 @@ pub trait Validate: Sized {
     /// #     algorithms::validate::{Validate, ValidationConfig},
     /// #     objects::{GlobalVertex, Objects},
     /// # };
-    /// # let stores = Objects::new();
-    /// # let object = GlobalVertex::from_position([0., 0., 0.], &stores);
+    /// # let objects = Objects::new();
+    /// # let object = GlobalVertex::from_position([0., 0., 0.], &objects);
     /// object.validate();
     /// ```
     /// ``` rust
@@ -47,8 +47,8 @@ pub trait Validate: Sized {
     /// #     algorithms::validate::{Validate, ValidationConfig},
     /// #     objects::{GlobalVertex, Objects},
     /// # };
-    /// # let stores = Objects::new();
-    /// # let object = GlobalVertex::from_position([0., 0., 0.], &stores);
+    /// # let objects = Objects::new();
+    /// # let object = GlobalVertex::from_position([0., 0., 0.], &objects);
     /// object.validate_with_config(&ValidationConfig::default());
     /// ```
     fn validate(self) -> Result<Validated<Self>, ValidationError> {
