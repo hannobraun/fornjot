@@ -18,11 +18,11 @@ pub struct Args {
     pub export: Option<PathBuf>,
 
     /// Parameters for the model, each in the form `key=value`
-    #[clap(short, long, parse(try_from_str = parse_parameters))]
+    #[clap(short, long, value_parser = parse_parameters)]
     pub parameters: Option<Parameters>,
 
     /// Model deviation tolerance
-    #[clap(short, long, parse(try_from_str = parse_tolerance))]
+    #[clap(short, long, value_parser = parse_tolerance)]
     pub tolerance: Option<Tolerance>,
 }
 
