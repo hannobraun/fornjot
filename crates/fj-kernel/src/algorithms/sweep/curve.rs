@@ -14,7 +14,7 @@ impl Sweep for Handle<Curve> {
     fn sweep(
         self,
         path: impl Into<Vector<3>>,
-        stores: &Objects,
+        objects: &Objects,
     ) -> Self::Swept {
         match self.surface().u() {
             GlobalPath::Circle(_) => {
@@ -63,6 +63,6 @@ impl Sweep for Handle<Curve> {
             }
         };
 
-        stores.surfaces.insert(Surface::new(u, path))
+        objects.surfaces.insert(Surface::new(u, path))
     }
 }
