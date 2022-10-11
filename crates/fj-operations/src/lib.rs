@@ -20,12 +20,9 @@ pub mod shape_processor;
 
 mod difference_2d;
 mod group;
-mod planes;
 mod sketch;
 mod sweep;
 mod transform;
-
-pub use self::planes::Planes;
 
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
