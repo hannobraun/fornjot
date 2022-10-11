@@ -93,14 +93,14 @@ impl PartialHalfEdge {
             let [a_curve, b_curve] =
                 [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-            let global_vertex = Handle::<GlobalVertex>::partial()
+            let global_form = Handle::<GlobalVertex>::partial()
                 .from_curve_and_position(curve.clone(), a_curve);
 
             [a_curve, b_curve].map(|point_curve| {
                 Vertex::partial()
                     .with_position(Some(point_curve))
                     .with_curve(Some(curve.clone()))
-                    .with_global_form(Some(global_vertex.clone()))
+                    .with_global_form(Some(global_form.clone()))
             })
         };
 
