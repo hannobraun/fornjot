@@ -14,6 +14,6 @@ impl Zoom {
         let distance = (focus_point.0 - camera.position()).magnitude();
         let displacement = zoom_delta * distance.into_f64();
         camera.translation = camera.translation
-            * Transform::translation(Vector::from([0.0, 0.0, -displacement]));
+            * Transform::translation(Vector::from([0.0, 0.0, displacement]));
     }
 }

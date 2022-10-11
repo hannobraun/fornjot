@@ -32,6 +32,7 @@ pub fn run(
     watcher: Option<Watcher>,
     shape_processor: ShapeProcessor,
     mut status: StatusReport,
+    invert_zoom: bool,
 ) -> Result<(), Error> {
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop)?;
@@ -214,6 +215,7 @@ pub fn run(
             &window,
             &held_mouse_button,
             &mut previous_cursor,
+            invert_zoom,
         );
         if let (Some(input_event), Some(fp)) = (input_event, focus_point) {
             input_handler.handle_event(input_event, fp, &mut camera);
@@ -226,6 +228,7 @@ fn input_event(
     window: &Window,
     held_mouse_button: &Option<MouseButton>,
     previous_cursor: &mut Option<NormalizedPosition>,
+    invert_zoom: bool,
 ) -> Option<input::Event> {
     match event {
         Event::WindowEvent {
@@ -264,12 +267,20 @@ fn input_event(
         Event::WindowEvent {
             event: WindowEvent::MouseWheel { delta, .. },
             ..
-        } => Some(input::Event::Zoom(match delta {
-            MouseScrollDelta::LineDelta(_, y) => (*y as f64) * ZOOM_FACTOR_LINE,
-            MouseScrollDelta::PixelDelta(PhysicalPosition { y, .. }) => {
-                y * ZOOM_FACTOR_PIXEL
-            }
-        })),
+        } => {
+            let delta = match delta {
+                MouseScrollDelta::LineDelta(_, y) => {
+                    (*y as f64) * ZOOM_FACTOR_LINE
+                }
+                MouseScrollDelta::PixelDelta(PhysicalPosition {
+                    y, ..
+                }) => y * ZOOM_FACTOR_PIXEL,
+            };
+
+            let delta = if invert_zoom { -delta } else { delta };
+
+            Some(input::Event::Zoom(delta))
+        }
         _ => None,
     }
 }

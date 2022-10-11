@@ -5,3 +5,7 @@ default_path = "models"
 # The default models that is loaded, if none is specified. If this is a relative
 # path, it should be relative to `default_path`.
 default_model = "test"
+
+# Indicate whether to invert the zoom direction. Can be used to override the
+# OS-level setting.
+invert_zoom = false
