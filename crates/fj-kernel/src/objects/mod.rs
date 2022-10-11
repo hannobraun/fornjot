@@ -95,7 +95,12 @@ pub use self::{
     vertex::{GlobalVertex, SurfaceVertex, Vertex},
 };
 
-use crate::storage::{Handle, Store};
+use fj_math::Vector;
+
+use crate::{
+    path::GlobalPath,
+    storage::{Handle, Store},
+};
 
 /// The available object stores
 ///
@@ -163,9 +168,12 @@ impl Default for Surfaces {
     fn default() -> Self {
         let store = Store::new();
 
-        let xy_plane = store.insert(Surface::xy_plane());
-        let xz_plane = store.insert(Surface::xz_plane());
-        let yz_plane = store.insert(Surface::yz_plane());
+        let xy_plane =
+            store.insert(Surface::new(GlobalPath::x_axis(), Vector::unit_y()));
+        let xz_plane =
+            store.insert(Surface::new(GlobalPath::x_axis(), Vector::unit_z()));
+        let yz_plane =
+            store.insert(Surface::new(GlobalPath::y_axis(), Vector::unit_z()));
 
         Self {
             store,
