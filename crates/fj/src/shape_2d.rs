@@ -26,6 +26,19 @@ impl Shape2d {
 }
 
 /// A difference between two shapes
+///
+/// # Examples
+///
+/// Convenient syntax for this operation is available through [`crate::syntax`].
+///
+/// ``` rust
+/// # let a = fj::Sketch::from_points(vec![[0., 0.], [1., 0.], [0., 1.]]);
+/// # let b = fj::Sketch::from_points(vec![[2., 0.], [3., 0.], [2., 1.]]);
+/// use fj::syntax::*;
+///
+/// // `a` and `b` can be anything that converts to `fj::Shape2d`
+/// let difference = a.difference(&b);
+/// ```
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(C)]
