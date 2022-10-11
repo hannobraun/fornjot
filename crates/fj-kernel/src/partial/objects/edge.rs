@@ -131,33 +131,31 @@ impl PartialHalfEdge {
 
         let path = curve.path.expect("Expected path that was just created");
 
-        let [back, front] = {
-            let [a_curve, b_curve] =
-                [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
+        let [a_curve, b_curve] =
+            [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-            let global_form = self
-                .extract_global_vertices()
-                .map(|[global_form, _]| MaybePartial::from(global_form))
-                .unwrap_or_else(|| {
-                    Handle::<GlobalVertex>::partial()
-                        .from_curve_and_position(curve.clone(), a_curve)
-                        .into()
-                });
-
-            let surface_form = Handle::<SurfaceVertex>::partial()
-                .with_position(Some(path.point_from_path_coords(a_curve)))
-                .with_surface(self.surface.clone())
-                .with_global_form(Some(global_form))
-                .build(objects);
-
-            [a_curve, b_curve].map(|point_curve| {
-                Vertex::partial()
-                    .with_position(Some(point_curve))
-                    .with_curve(Some(curve.clone()))
-                    .with_surface_form(Some(surface_form.clone()))
+        let global_form = self
+            .extract_global_vertices()
+            .map(|[global_form, _]| MaybePartial::from(global_form))
+            .unwrap_or_else(|| {
+                Handle::<GlobalVertex>::partial()
+                    .from_curve_and_position(curve.clone(), a_curve)
                     .into()
-            })
-        };
+            });
+
+        let surface_form = Handle::<SurfaceVertex>::partial()
+            .with_position(Some(path.point_from_path_coords(a_curve)))
+            .with_surface(self.surface.clone())
+            .with_global_form(Some(global_form))
+            .build(objects);
+
+        let [back, front] = [a_curve, b_curve].map(|point_curve| {
+            Vertex::partial()
+                .with_position(Some(point_curve))
+                .with_curve(Some(curve.clone()))
+                .with_surface_form(Some(surface_form.clone()))
+                .into()
+        });
 
         self.curve = Some(curve.into());
         self.vertices = [Some(back), Some(front)];
