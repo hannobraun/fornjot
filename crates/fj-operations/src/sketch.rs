@@ -19,10 +19,10 @@ impl Shape for fj::Sketch {
         &self,
         config: &ValidationConfig,
         objects: &Objects,
-        planes: &Planes,
+        _: &Planes,
         _: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
-        let surface = planes.xy();
+        let surface = objects.surfaces.xy_plane();
 
         let face = match self.chain() {
             fj::Chain::Circle(circle) => {
