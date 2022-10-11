@@ -41,6 +41,11 @@ impl PartialHalfEdge {
         global_curve_from_curve().or_else(global_curve_from_global_form)
     }
 
+    /// Access the vertices of the global form, if available
+    pub fn extract_global_vertices(&self) -> Option<[Handle<GlobalVertex>; 2]> {
+        self.global_form.as_ref()?.vertices().cloned()
+    }
+
     /// Update the partial half-edge with the given surface
     pub fn with_surface(mut self, surface: Option<Handle<Surface>>) -> Self {
         if let Some(surface) = surface {
