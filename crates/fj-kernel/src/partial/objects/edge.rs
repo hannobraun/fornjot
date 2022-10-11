@@ -96,11 +96,16 @@ impl PartialHalfEdge {
             let global_form = Handle::<GlobalVertex>::partial()
                 .from_curve_and_position(curve.clone(), a_curve);
 
+            let path = curve.path.expect("Expected path that was just created");
+            let surface_form = SurfaceVertex::partial()
+                .with_position(Some(path.point_from_path_coords(a_curve)))
+                .with_global_form(Some(global_form));
+
             [a_curve, b_curve].map(|point_curve| {
                 Vertex::partial()
                     .with_position(Some(point_curve))
                     .with_curve(Some(curve.clone()))
-                    .with_global_form(Some(global_form.clone()))
+                    .with_surface_form(Some(surface_form.clone()))
             })
         };
 
