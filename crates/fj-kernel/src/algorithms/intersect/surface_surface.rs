@@ -88,7 +88,7 @@ mod tests {
 
     use crate::{
         algorithms::transform::TransformObject,
-        objects::{Curve, Objects, Surface},
+        objects::{Curve, Objects},
         partial::HasPartial,
         storage::Handle,
     };
@@ -99,8 +99,8 @@ mod tests {
     fn plane_plane() {
         let objects = Objects::new();
 
-        let xy = objects.surfaces.insert(Surface::xy_plane());
-        let xz = objects.surfaces.insert(Surface::xz_plane());
+        let xy = objects.surfaces.xy_plane();
+        let xz = objects.surfaces.xz_plane();
 
         // Coincident and parallel planes don't have an intersection curve.
         assert_eq!(

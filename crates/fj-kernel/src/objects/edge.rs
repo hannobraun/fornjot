@@ -172,10 +172,7 @@ impl VerticesInNormalizedOrder {
 mod tests {
     use pretty_assertions::assert_eq;
 
-    use crate::{
-        objects::{Objects, Surface},
-        partial::HasPartial,
-    };
+    use crate::{objects::Objects, partial::HasPartial};
 
     use super::HalfEdge;
 
@@ -183,7 +180,7 @@ mod tests {
     fn global_edge_equality() {
         let objects = Objects::new();
 
-        let surface = objects.surfaces.insert(Surface::xy_plane());
+        let surface = objects.surfaces.xy_plane();
 
         let a = [0., 0.];
         let b = [1., 0.];

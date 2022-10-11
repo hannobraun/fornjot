@@ -154,7 +154,7 @@ mod tests {
 
     use crate::{
         algorithms::sweep::Sweep,
-        objects::{Curve, HalfEdge, Objects, Surface, Vertex},
+        objects::{Curve, HalfEdge, Objects, Vertex},
         partial::HasPartial,
         storage::Handle,
     };
@@ -163,7 +163,7 @@ mod tests {
     fn vertex_surface() {
         let objects = Objects::new();
 
-        let surface = objects.surfaces.insert(Surface::xz_plane());
+        let surface = objects.surfaces.xz_plane();
         let curve = Handle::<Curve>::partial()
             .with_surface(Some(surface.clone()))
             .as_u_axis()

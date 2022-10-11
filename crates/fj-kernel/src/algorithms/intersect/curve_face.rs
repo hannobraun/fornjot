@@ -156,7 +156,7 @@ where
 #[cfg(test)]
 mod tests {
     use crate::{
-        objects::{Curve, Face, Objects, Surface},
+        objects::{Curve, Face, Objects},
         partial::HasPartial,
         storage::Handle,
     };
@@ -167,7 +167,7 @@ mod tests {
     fn compute() {
         let objects = Objects::new();
 
-        let surface = objects.surfaces.insert(Surface::xy_plane());
+        let surface = objects.surfaces.xy_plane();
 
         let curve = Handle::<Curve>::partial()
             .with_surface(Some(surface.clone()))

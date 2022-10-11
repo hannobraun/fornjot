@@ -80,7 +80,7 @@ mod tests {
 
     use crate::{
         algorithms::{reverse::Reverse, transform::TransformObject},
-        objects::{Face, HalfEdge, Objects, Sketch, Surface},
+        objects::{Face, HalfEdge, Objects, Sketch},
         partial::HasPartial,
     };
 
@@ -95,7 +95,7 @@ mod tests {
     fn sweep_up() {
         let objects = Objects::new();
 
-        let surface = objects.surfaces.insert(Surface::xy_plane());
+        let surface = objects.surfaces.xy_plane();
         let solid = Sketch::builder(&objects, surface.clone())
             .build_polygon_from_points(TRIANGLE)
             .sweep(UP, &objects);
@@ -119,9 +119,7 @@ mod tests {
             let [a, b] = [window[0], window[1]];
 
             let half_edge = HalfEdge::partial()
-                .with_surface(Some(
-                    objects.surfaces.insert(Surface::xy_plane()),
-                ))
+                .with_surface(Some(objects.surfaces.xy_plane()))
                 .as_line_segment_from_points([a, b])
                 .build(&objects);
             (half_edge, Color::default()).sweep(UP, &objects)
@@ -134,7 +132,7 @@ mod tests {
     fn sweep_down() {
         let objects = Objects::new();
 
-        let surface = objects.surfaces.insert(Surface::xy_plane());
+        let surface = objects.surfaces.xy_plane();
         let solid = Sketch::builder(&objects, surface.clone())
             .build_polygon_from_points(TRIANGLE)
             .sweep(DOWN, &objects);
@@ -159,9 +157,7 @@ mod tests {
             let [a, b] = [window[0], window[1]];
 
             let half_edge = HalfEdge::partial()
-                .with_surface(Some(
-                    objects.surfaces.insert(Surface::xy_plane()),
-                ))
+                .with_surface(Some(objects.surfaces.xy_plane()))
                 .as_line_segment_from_points([a, b])
                 .build(&objects)
                 .reverse();

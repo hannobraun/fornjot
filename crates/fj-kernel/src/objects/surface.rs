@@ -16,30 +16,6 @@ impl Surface {
         Self { u, v }
     }
 
-    /// Construct a `Surface` that represents the xy-plane
-    pub fn xy_plane() -> Self {
-        Self {
-            u: GlobalPath::x_axis(),
-            v: Vector::unit_y(),
-        }
-    }
-
-    /// Construct a `Surface` that represents the xz-plane
-    pub fn xz_plane() -> Self {
-        Self {
-            u: GlobalPath::x_axis(),
-            v: Vector::unit_z(),
-        }
-    }
-
-    /// Construct a `Surface` that represents the yz-plane
-    pub fn yz_plane() -> Self {
-        Self {
-            u: GlobalPath::y_axis(),
-            v: Vector::unit_z(),
-        }
-    }
-
     /// Construct a plane from 3 points
     pub fn plane_from_points(points: [impl Into<Point<3>>; 3]) -> Self {
         let [a, b, c] = points.map(Into::into);
