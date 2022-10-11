@@ -84,6 +84,17 @@ impl From<Difference2d> for Shape2d {
 /// Nothing about these edges is checked right now, but algorithms might assume
 /// that the edges are non-overlapping. If you create a `Sketch` with
 /// overlapping edges, you're on your own.
+///
+/// # Examples
+///
+/// Convenient syntax for this operation is available through [`crate::syntax`].
+///
+/// ``` rust
+/// use fj::syntax::*;
+///
+/// // `a` and `b` can be anything that converts to `fj::Shape`
+/// let sketch = [[0., 0.], [1., 0.], [0., 1.]].sketch();
+/// ```
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(C)]
