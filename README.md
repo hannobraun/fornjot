@@ -124,6 +124,11 @@ To install Fornjot itself, you have the following options:
 
 While the Fornjot application is a graphical application that opens a window and displays a 3D view of your model, it can currently only be started from the command-line. The instructions below assume that you have the Fornjot application installed somewhere on your path, under the name `fj-app`.
 
+#### Via Nix
+
+There's a Nix [flake](https://nixos.wiki/wiki/Flakes) in the subdirectory `./nix` which contains a devshell environment (via `nix develop` or `nix-shell`) and the package `fj-app`.
+It can be run/tested with a [flake enabled](https://nixos.wiki/wiki/Flakes#Enable_flakes) nix via `nix run github:hannobraun/Fornjot?dir=nix` or with legacy nix in the directory `./nix`, `nix-build`.
+
 ### Defining models
 
 Models are Rust libraries that depend on the [`fj`](https://crates.io/crates/fj) library, which they use to define the geometry. Furthermore, they need to be built as a dynamic library. Just use the examples in the [`models/`](models) directory as a template to define your own.
