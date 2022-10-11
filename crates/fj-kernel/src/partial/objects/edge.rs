@@ -5,7 +5,7 @@ use crate::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, SurfaceVertex, Vertex,
     },
-    partial::{HasPartial, MaybePartial, PartialCurve},
+    partial::{HasPartial, MaybePartial},
     storage::{Handle, HandleWrapper},
 };
 
@@ -30,6 +30,17 @@ pub struct PartialHalfEdge {
 }
 
 impl PartialHalfEdge {
+    /// Extract the global curve from either the curve or global form
+    ///
+    /// If a global curve is available through both, the curve is preferred.
+    pub fn extract_global_curve(&self) -> Option<Handle<GlobalCurve>> {
+        let global_curve_from_curve = || self.curve.as_ref()?.global_form();
+        let global_curve_from_global_form =
+            || Some(self.global_form.as_ref()?.curve()?.clone());
+
+        global_curve_from_curve().or_else(global_curve_from_global_form)
+    }
+
     /// Update the partial half-edge with the given surface
     pub fn with_surface(mut self, surface: Option<Handle<Surface>>) -> Self {
         if let Some(surface) = surface {
@@ -74,6 +85,7 @@ impl PartialHalfEdge {
     /// Update partial half-edge as a circle, from the given radius
     pub fn as_circle_from_radius(mut self, radius: impl Into<Scalar>) -> Self {
         let curve = Handle::<Curve>::partial()
+            .with_global_form(self.extract_global_curve())
             .with_surface(self.surface.clone())
             .as_circle_from_radius(radius);
 
@@ -104,38 +116,18 @@ impl PartialHalfEdge {
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
         let surface = self.surface.clone();
-        self.with_vertices(Some(points.map(|point| {
-            Vertex::partial().with_surface_form(Some(
-                SurfaceVertex::partial()
-                    .with_surface(surface.clone())
-                    .with_position(Some(point)),
-            ))
-        })))
-        .as_line_segment()
+        let vertices = points.map(|point| {
+            let surface_form = SurfaceVertex::partial()
+                .with_surface(surface.clone())
+                .with_position(Some(point));
+            Vertex::partial().with_surface_form(Some(surface_form))
+        });
+
+        self.with_vertices(Some(vertices)).as_line_segment()
     }
 
     /// Update partial half-edge as a line segment, reusing existing vertices
     pub fn as_line_segment(mut self) -> Self {
-        fn extract_global_curve(
-            partial: &PartialHalfEdge,
-        ) -> Option<HandleWrapper<GlobalCurve>> {
-            fn extract_global_curve_from_curve(
-                partial: &PartialHalfEdge,
-            ) -> Option<Handle<GlobalCurve>> {
-                partial.curve.as_ref()?.global_form()
-            }
-
-            fn extract_global_curve_from_global_form(
-                partial: &PartialHalfEdge,
-            ) -> Option<Handle<GlobalCurve>> {
-                Some(partial.global_form.as_ref()?.curve()?.clone())
-            }
-
-            extract_global_curve_from_curve(partial)
-                .or_else(|| extract_global_curve_from_global_form(partial))
-                .map(Into::into)
-        }
-
         let [from, to] = self
             .vertices
             .clone()
@@ -159,12 +151,10 @@ impl PartialHalfEdge {
                 .expect("Can't infer line segment without surface position")
         });
 
-        let curve = PartialCurve {
-            global_form: extract_global_curve(&self),
-            ..PartialCurve::default()
-        }
-        .with_surface(Some(surface))
-        .as_line_from_points(points);
+        let curve = Handle::<Curve>::partial()
+            .with_global_form(self.extract_global_curve())
+            .with_surface(Some(surface))
+            .as_line_from_points(points);
 
         let vertices = [(from, 0.), (to, 1.)].map(|(vertex, position)| {
             vertex.update_partial(|vertex| {
@@ -201,10 +191,9 @@ impl PartialHalfEdge {
 
         let global_form = self
             .global_form
-            .unwrap_or_else(|| {
-                GlobalEdge::partial()
-                    .from_curve_and_vertices(&curve, &vertices)
-                    .into()
+            .unwrap_or_else(|| GlobalEdge::partial().into())
+            .update_partial(|partial| {
+                partial.from_curve_and_vertices(&curve, &vertices)
             })
             .into_full(objects);
 
