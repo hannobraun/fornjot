@@ -128,14 +128,50 @@ impl Objects {
 }
 
 /// The store for [`Surface`]s
-#[derive(Debug, Default)]
+#[derive(Debug)]
 pub struct Surfaces {
     store: Store<Surface>,
+
+    xy_plane: Handle<Surface>,
+    xz_plane: Handle<Surface>,
+    yz_plane: Handle<Surface>,
 }
 
 impl Surfaces {
     /// Insert a surface into the store
     pub fn insert(&self, surface: Surface) -> Handle<Surface> {
         self.store.insert(surface)
+    }
+
+    /// Access the xy-plane
+    pub fn xy_plane(&self) -> Handle<Surface> {
+        self.xy_plane.clone()
+    }
+
+    /// Access the xz-plane
+    pub fn xz_plane(&self) -> Handle<Surface> {
+        self.xz_plane.clone()
+    }
+
+    /// Access the yz-plane
+    pub fn yz_plane(&self) -> Handle<Surface> {
+        self.yz_plane.clone()
+    }
+}
+
+impl Default for Surfaces {
+    fn default() -> Self {
+        let store = Store::new();
+
+        let xy_plane = store.insert(Surface::xy_plane());
+        let xz_plane = store.insert(Surface::xz_plane());
+        let yz_plane = store.insert(Surface::yz_plane());
+
+        Self {
+            store,
+            xy_plane,
+            xz_plane,
+            yz_plane,
+        }
     }
 }
