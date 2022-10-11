@@ -36,7 +36,7 @@ impl PartialHalfEdge {
     pub fn extract_global_curve(&self) -> Option<Handle<GlobalCurve>> {
         let global_curve_from_curve = || self.curve.as_ref()?.global_form();
         let global_curve_from_global_form =
-            || Some(self.global_form.as_ref()?.curve()?.clone());
+            || self.global_form.as_ref()?.curve().cloned();
 
         global_curve_from_curve().or_else(global_curve_from_global_form)
     }
