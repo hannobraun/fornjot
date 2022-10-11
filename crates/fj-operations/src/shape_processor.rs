@@ -11,7 +11,7 @@ use fj_kernel::{
 };
 use fj_math::Scalar;
 
-use crate::{planes::Planes, Shape as _};
+use crate::Shape as _;
 
 /// Processes an [`fj::Shape`] into a [`ProcessedShape`]
 pub struct ShapeProcessor {
@@ -44,10 +44,8 @@ impl ShapeProcessor {
 
         let config = ValidationConfig::default();
         let objects = Objects::new();
-        let planes = Planes::new(&objects);
         let mut debug_info = DebugInfo::new();
-        let shape =
-            shape.compute_brep(&config, &objects, &planes, &mut debug_info)?;
+        let shape = shape.compute_brep(&config, &objects, &mut debug_info)?;
         let mesh = (&shape.into_inner(), tolerance).triangulate();
 
         Ok(ProcessedShape {

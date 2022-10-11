@@ -46,7 +46,6 @@ pub trait Shape {
         &self,
         config: &ValidationConfig,
         objects: &Objects,
-        planes: &Planes,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError>;
 
@@ -64,20 +63,19 @@ impl Shape for fj::Shape {
         &self,
         config: &ValidationConfig,
         objects: &Objects,
-        planes: &Planes,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
         match self {
             Self::Shape2d(shape) => shape
-                .compute_brep(config, objects, planes, debug_info)?
+                .compute_brep(config, objects, debug_info)?
                 .into_inner()
                 .into_faces()
                 .validate_with_config(config),
             Self::Group(shape) => {
-                shape.compute_brep(config, objects, planes, debug_info)
+                shape.compute_brep(config, objects, debug_info)
             }
             Self::Sweep(shape) => shape
-                .compute_brep(config, objects, planes, debug_info)?
+                .compute_brep(config, objects, debug_info)?
                 .into_inner()
                 .into_shells()
                 .map(|shell| shell.into_faces())
@@ -88,7 +86,7 @@ impl Shape for fj::Shape {
                 .unwrap_or_default()
                 .validate_with_config(config),
             Self::Transform(shape) => {
-                shape.compute_brep(config, objects, planes, debug_info)
+                shape.compute_brep(config, objects, debug_info)
             }
         }
     }
@@ -110,15 +108,14 @@ impl Shape for fj::Shape2d {
         &self,
         config: &ValidationConfig,
         objects: &Objects,
-        planes: &Planes,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
         match self {
             Self::Difference(shape) => {
-                shape.compute_brep(config, objects, planes, debug_info)
+                shape.compute_brep(config, objects, debug_info)
             }
             Self::Sketch(shape) => {
-                shape.compute_brep(config, objects, planes, debug_info)
+                shape.compute_brep(config, objects, debug_info)
             }
         }
     }
