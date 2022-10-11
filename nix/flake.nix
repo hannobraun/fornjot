@@ -21,13 +21,14 @@
         pkgs = import nixpkgs { inherit system; overlays = [ (import rust-overlay) ]; };
         rustToolchain = pkgs.rust-bin.fromRustupToolchain (
           # extend toolchain with rust-analyzer for better IDE support
-          let toolchainToml = (builtins.fromTOML (builtins.readFile ./rust-toolchain.toml)).toolchain; in
+          let toolchainToml = (builtins.fromTOML (builtins.readFile ../rust-toolchain.toml)).toolchain; in
           {
             channel = toolchainToml.channel;
             components = toolchainToml.components ++ [ "rust-analyzer" ];
           }
         );
         craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
+        version = (builtins.fromTOML (builtins.readFile ../Cargo.toml)).workspace.package.version;
         # Only keeps assets in crates/ (currently shaders and fonts)
         assetsFilter = path: _type: (builtins.match ".*(:?wgsl|ttf)$" path) != null;
         filter = path: type: (assetsFilter path type) || (craneLib.filterCargoSources path type);
@@ -45,12 +46,13 @@
 
         fornjot = craneLib.buildPackage {
           pname = "fj-app";
-          src = nixpkgs.lib.cleanSourceWith { src = ./.; inherit filter; };
-          inherit buildInputs;
+          src = nixpkgs.lib.cleanSourceWith { src = ../.; inherit filter; };
+          inherit buildInputs version;
         };
 
         wrappedFornjot = pkgs.symlinkJoin {
           name = "fj-app";
+          inherit version;
           paths = [ fornjot ];
 
           buildInputs = [ pkgs.makeWrapper ];
