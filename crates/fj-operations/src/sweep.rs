@@ -8,8 +8,6 @@ use fj_kernel::{
 };
 use fj_math::{Aabb, Vector};
 
-use crate::planes::Planes;
-
 use super::Shape;
 
 impl Shape for fj::Sweep {
@@ -19,12 +17,9 @@ impl Shape for fj::Sweep {
         &self,
         config: &ValidationConfig,
         objects: &Objects,
-        planes: &Planes,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
-        let sketch = self
-            .shape()
-            .compute_brep(config, objects, planes, debug_info)?;
+        let sketch = self.shape().compute_brep(config, objects, debug_info)?;
         let path = Vector::from(self.path());
 
         let solid = sketch.into_inner().sweep(path, objects);

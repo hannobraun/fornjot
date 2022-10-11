@@ -9,8 +9,6 @@ use fj_kernel::{
 };
 use fj_math::Aabb;
 
-use crate::planes::Planes;
-
 use super::Shape;
 
 impl Shape for fj::Difference2d {
@@ -20,7 +18,6 @@ impl Shape for fj::Difference2d {
         &self,
         config: &ValidationConfig,
         objects: &Objects,
-        planes: &Planes,
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
         // This method assumes that `b` is fully contained within `a`:
@@ -35,9 +32,8 @@ impl Shape for fj::Difference2d {
         // - https://doc.rust-lang.org/std/primitive.array.html#method.each_ref
         // - https://doc.rust-lang.org/std/primitive.array.html#method.try_map
         let [a, b] = self.shapes();
-        let [a, b] = [a, b].map(|shape| {
-            shape.compute_brep(config, objects, planes, debug_info)
-        });
+        let [a, b] =
+            [a, b].map(|shape| shape.compute_brep(config, objects, debug_info));
         let [a, b] = [a?, b?];
 
         if let Some(face) = a.face_iter().next() {
