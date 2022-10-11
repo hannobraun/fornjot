@@ -362,7 +362,7 @@ mod tests {
     use crate::{
         objects::{
             Curve, Cycle, Face, GlobalCurve, GlobalVertex, HalfEdge, Objects,
-            Shell, Sketch, Solid, Surface, SurfaceVertex, Vertex,
+            Shell, Sketch, Solid, SurfaceVertex, Vertex,
         },
         partial::HasPartial,
         storage::Handle,
@@ -374,7 +374,7 @@ mod tests {
     fn curve() {
         let objects = Objects::new();
 
-        let surface = objects.surfaces.insert(Surface::xy_plane());
+        let surface = objects.surfaces.xy_plane();
         let object = Handle::<Curve>::partial()
             .with_surface(Some(surface))
             .as_u_axis()
@@ -397,7 +397,7 @@ mod tests {
     fn cycle() {
         let objects = Objects::new();
 
-        let surface = objects.surfaces.insert(Surface::xy_plane());
+        let surface = objects.surfaces.xy_plane();
         let object = Cycle::partial()
             .with_surface(Some(surface))
             .with_poly_chain_from_points([[0., 0.], [1., 0.], [0., 1.]])
@@ -421,7 +421,7 @@ mod tests {
     fn face() {
         let objects = Objects::new();
 
-        let surface = objects.surfaces.insert(Surface::xy_plane());
+        let surface = objects.surfaces.xy_plane();
         let object = Face::builder(&objects, surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .build();
@@ -482,7 +482,7 @@ mod tests {
         let objects = Objects::new();
 
         let object = HalfEdge::partial()
-            .with_surface(Some(objects.surfaces.insert(Surface::xy_plane())))
+            .with_surface(Some(objects.surfaces.xy_plane()))
             .as_line_segment_from_points([[0., 0.], [1., 0.]])
             .build(&objects);
 
@@ -522,7 +522,7 @@ mod tests {
     fn sketch() {
         let objects = Objects::new();
 
-        let surface = objects.surfaces.insert(Surface::xy_plane());
+        let surface = objects.surfaces.xy_plane();
         let face = Face::builder(&objects, surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .build();
@@ -564,7 +564,7 @@ mod tests {
     fn surface() {
         let objects = Objects::new();
 
-        let object = objects.surfaces.insert(Surface::xy_plane());
+        let object = objects.surfaces.xy_plane();
 
         assert_eq!(0, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -583,7 +583,7 @@ mod tests {
     fn vertex() {
         let objects = Objects::new();
 
-        let surface = objects.surfaces.insert(Surface::xy_plane());
+        let surface = objects.surfaces.xy_plane();
         let curve = Handle::<Curve>::partial()
             .with_surface(Some(surface.clone()))
             .as_u_axis()

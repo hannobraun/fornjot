@@ -167,7 +167,7 @@ mod tests {
         algorithms::validate::{Validate, ValidationConfig, ValidationError},
         objects::{
             Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
-            Surface, SurfaceVertex, Vertex,
+            SurfaceVertex, Vertex,
         },
         partial::HasPartial,
         path::SurfacePath,
@@ -177,7 +177,7 @@ mod tests {
     fn coherence_edge() {
         let objects = Objects::new();
 
-        let surface = objects.surfaces.insert(Surface::xy_plane());
+        let surface = objects.surfaces.xy_plane();
 
         let points_surface = [[0., 0.], [1., 0.]];
         let points_global = [[0., 0., 0.], [1., 0., 0.]];

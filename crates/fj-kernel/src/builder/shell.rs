@@ -34,7 +34,7 @@ impl<'a> ShellBuilder<'a> {
             let surface = self
                 .objects
                 .surfaces
-                .insert(Surface::xy_plane())
+                .xy_plane()
                 .translate([Z, Z, -h], self.objects);
 
             Face::builder(self.objects, surface)
@@ -186,7 +186,7 @@ impl<'a> ShellBuilder<'a> {
             let surface = self
                 .objects
                 .surfaces
-                .insert(Surface::xy_plane())
+                .xy_plane()
                 .translate([Z, Z, h], self.objects);
 
             let points = [[-h, -h], [-h, h], [h, h], [h, -h], [-h, -h]];

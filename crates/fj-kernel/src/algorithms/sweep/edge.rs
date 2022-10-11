@@ -188,7 +188,7 @@ mod tests {
 
     use crate::{
         algorithms::{reverse::Reverse, sweep::Sweep},
-        objects::{Cycle, Face, HalfEdge, Objects, Surface},
+        objects::{Cycle, Face, HalfEdge, Objects},
         partial::HasPartial,
     };
 
@@ -197,14 +197,14 @@ mod tests {
         let objects = Objects::new();
 
         let half_edge = HalfEdge::partial()
-            .with_surface(Some(objects.surfaces.insert(Surface::xy_plane())))
+            .with_surface(Some(objects.surfaces.xy_plane()))
             .as_line_segment_from_points([[0., 0.], [1., 0.]])
             .build(&objects);
 
         let face = (half_edge, Color::default()).sweep([0., 0., 1.], &objects);
 
         let expected_face = {
-            let surface = objects.surfaces.insert(Surface::xz_plane());
+            let surface = objects.surfaces.xz_plane();
 
             let bottom = HalfEdge::partial()
                 .with_surface(Some(surface.clone()))

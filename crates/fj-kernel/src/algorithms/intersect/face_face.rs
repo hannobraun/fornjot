@@ -64,7 +64,7 @@ mod tests {
 
     use crate::{
         algorithms::intersect::CurveFaceIntersection,
-        objects::{Curve, Face, Objects, Surface},
+        objects::{Curve, Face, Objects},
         partial::HasPartial,
         storage::Handle,
     };
@@ -82,9 +82,8 @@ mod tests {
             [2., 2.],
             [1., 2.],
         ];
-        let [a, b] =
-            [Surface::xy_plane(), Surface::xz_plane()].map(|surface| {
-                let surface = objects.surfaces.insert(surface);
+        let [a, b] = [objects.surfaces.xy_plane(), objects.surfaces.xz_plane()]
+            .map(|surface| {
                 Face::builder(&objects, surface)
                     .with_exterior_polygon_from_points(points)
                     .build()
@@ -106,8 +105,8 @@ mod tests {
             [ 1.,  1.],
             [-1.,  1.],
         ];
-        let surfaces = [Surface::xy_plane(), Surface::xz_plane()]
-            .map(|surface| objects.surfaces.insert(surface));
+        let surfaces =
+            [objects.surfaces.xy_plane(), objects.surfaces.xz_plane()];
         let [a, b] = surfaces.clone().map(|surface| {
             Face::builder(&objects, surface)
                 .with_exterior_polygon_from_points(points)

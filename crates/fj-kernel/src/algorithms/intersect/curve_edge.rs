@@ -75,7 +75,7 @@ mod tests {
     use fj_math::Point;
 
     use crate::{
-        objects::{Curve, HalfEdge, Objects, Surface},
+        objects::{Curve, HalfEdge, Objects},
         partial::HasPartial,
         storage::Handle,
     };
@@ -86,7 +86,7 @@ mod tests {
     fn compute_edge_in_front_of_curve_origin() {
         let objects = Objects::new();
 
-        let surface = objects.surfaces.insert(Surface::xy_plane());
+        let surface = objects.surfaces.xy_plane();
         let curve = Handle::<Curve>::partial()
             .with_surface(Some(surface.clone()))
             .as_u_axis()
@@ -110,7 +110,7 @@ mod tests {
     fn compute_edge_behind_curve_origin() {
         let objects = Objects::new();
 
-        let surface = objects.surfaces.insert(Surface::xy_plane());
+        let surface = objects.surfaces.xy_plane();
         let curve = Handle::<Curve>::partial()
             .with_surface(Some(surface.clone()))
             .as_u_axis()
@@ -134,7 +134,7 @@ mod tests {
     fn compute_edge_parallel_to_curve() {
         let objects = Objects::new();
 
-        let surface = objects.surfaces.insert(Surface::xy_plane());
+        let surface = objects.surfaces.xy_plane();
         let curve = Handle::<Curve>::partial()
             .with_surface(Some(surface.clone()))
             .as_u_axis()
@@ -153,7 +153,7 @@ mod tests {
     fn compute_edge_on_curve() {
         let objects = Objects::new();
 
-        let surface = objects.surfaces.insert(Surface::xy_plane());
+        let surface = objects.surfaces.xy_plane();
         let curve = Handle::<Curve>::partial()
             .with_surface(Some(surface.clone()))
             .as_u_axis()

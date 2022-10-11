@@ -26,9 +26,9 @@ impl Planes {
     /// Create one instance of this struct, then share it everywhere it's
     /// needed.
     pub fn new(objects: &Objects) -> Self {
-        let xy = objects.surfaces.insert(Surface::xy_plane());
-        let xz = objects.surfaces.insert(Surface::xz_plane());
-        let yz = objects.surfaces.insert(Surface::yz_plane());
+        let xy = objects.surfaces.xy_plane();
+        let xz = objects.surfaces.xz_plane();
+        let yz = objects.surfaces.yz_plane();
 
         Self { xy, xz, yz }
     }
