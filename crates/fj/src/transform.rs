@@ -1,6 +1,3 @@
-#[cfg(feature = "serde")]
-use serde::{Deserialize, Serialize};
-
 use crate::{Angle, Shape};
 
 /// A transformed 3-dimensional shape
@@ -13,7 +10,7 @@ use crate::{Angle, Shape};
 /// See issue:
 /// <https://github.com/hannobraun/Fornjot/issues/101>
 #[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(C)]
 pub struct Transform {
     /// The shape being transformed

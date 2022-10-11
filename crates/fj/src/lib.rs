@@ -33,12 +33,10 @@ pub use self::{
     angle::*, group::Group, shape_2d::*, sweep::Sweep, transform::Transform,
 };
 pub use fj_proc::*;
-#[cfg(feature = "serde")]
-use serde::{Deserialize, Serialize};
 
 /// A shape
 #[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(C)]
 pub enum Shape {
     /// A group of two 3-dimensional shapes

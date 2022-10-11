@@ -1,6 +1,3 @@
-#[cfg(feature = "serde")]
-use serde::{Deserialize, Serialize};
-
 use crate::Shape;
 
 /// A group of two 3-dimensional shapes
@@ -12,7 +9,7 @@ use crate::Shape;
 ///
 /// Whether the shapes in the group touch or overlap is not currently checked.
 #[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(C)]
 pub struct Group {
     /// The first of the shapes
