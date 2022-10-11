@@ -264,12 +264,18 @@ fn input_event(
         Event::WindowEvent {
             event: WindowEvent::MouseWheel { delta, .. },
             ..
-        } => Some(input::Event::Zoom(match delta {
-            MouseScrollDelta::LineDelta(_, y) => (*y as f64) * ZOOM_FACTOR_LINE,
-            MouseScrollDelta::PixelDelta(PhysicalPosition { y, .. }) => {
-                y * ZOOM_FACTOR_PIXEL
-            }
-        })),
+        } => {
+            let delta = match delta {
+                MouseScrollDelta::LineDelta(_, y) => {
+                    (*y as f64) * ZOOM_FACTOR_LINE
+                }
+                MouseScrollDelta::PixelDelta(PhysicalPosition {
+                    y, ..
+                }) => y * ZOOM_FACTOR_PIXEL,
+            };
+
+            Some(input::Event::Zoom(delta))
+        }
         _ => None,
     }
 }
