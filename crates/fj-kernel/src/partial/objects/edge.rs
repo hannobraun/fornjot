@@ -3,7 +3,7 @@ use fj_math::{Point, Scalar};
 use crate::{
     objects::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
-        Surface, SurfaceVertex, Vertex,
+        Surface, SurfaceVertex, Vertex, VerticesInNormalizedOrder,
     },
     partial::{HasPartial, MaybePartial},
     storage::{Handle, HandleWrapper},
@@ -210,13 +210,55 @@ impl PartialHalfEdge {
             .with_surface(Some(surface))
             .as_line_from_points(points);
 
-        let [back, front] = [(from, 0.), (to, 1.)].map(|(vertex, position)| {
-            vertex.update_partial(|vertex| {
-                vertex
-                    .with_position(Some([position]))
-                    .with_curve(Some(curve.clone()))
+        let [back, front] = {
+            let vertices = [(from, 0.), (to, 1.)].map(|(vertex, position)| {
+                vertex.update_partial(|vertex| {
+                    vertex
+                        .with_position(Some([position]))
+                        .with_curve(Some(curve.clone()))
+                })
+            });
+
+            // The global vertices we extracted are in normalized order, which
+            // means we might need to switch their order here. This is a bit of
+            // a hack, but I can't think of something better.
+            let global_forms = {
+                let must_switch_order = {
+                    let objects = Objects::new();
+                    let vertices = vertices.clone().map(|vertex| {
+                        vertex.into_full(&objects).global_form().clone()
+                    });
+
+                    let (_, must_switch_order) =
+                        VerticesInNormalizedOrder::new(vertices);
+
+                    must_switch_order
+                };
+
+                self.extract_global_vertices()
+                    .map(
+                        |[a, b]| {
+                            if must_switch_order {
+                                [b, a]
+                            } else {
+                                [a, b]
+                            }
+                        },
+                    )
+                    .map(|[a, b]| [Some(a), Some(b)])
+                    .unwrap_or([None, None])
+            };
+
+            // Can be cleaned up, once `zip` is stable:
+            // https://doc.rust-lang.org/std/primitive.array.html#method.zip
+            let [a, b] = vertices;
+            let [a_global, b_global] = global_forms;
+            [(a, a_global), (b, b_global)].map(|(vertex, global_form)| {
+                vertex.update_partial(|partial| {
+                    partial.with_global_form(global_form)
+                })
             })
-        });
+        };
 
         self.curve = Some(curve.into());
         self.vertices = [Some(back), Some(front)];
