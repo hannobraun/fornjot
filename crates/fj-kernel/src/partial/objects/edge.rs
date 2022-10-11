@@ -174,6 +174,7 @@ impl PartialHalfEdge {
             let surface_form = Handle::<SurfaceVertex>::partial()
                 .with_surface(surface.clone())
                 .with_position(Some(point));
+
             Vertex::partial().with_surface_form(Some(surface_form))
         });
 
