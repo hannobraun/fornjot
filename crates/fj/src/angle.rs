@@ -1,5 +1,3 @@
-#[cfg(feature = "serde")]
-use serde::{Deserialize, Serialize};
 use std::f64::consts::{PI, TAU};
 
 // One gon in radians
@@ -7,7 +5,7 @@ const GON_RAD: f64 = PI / 200.;
 
 /// An angle
 #[derive(Copy, Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Angle {
     // The value of the angle in radians
     rad: f64,

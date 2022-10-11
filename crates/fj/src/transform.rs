@@ -1,9 +1,19 @@
-#[cfg(feature = "serde")]
-use serde::{Deserialize, Serialize};
-
 use crate::{Angle, Shape};
 
 /// A transformed 3-dimensional shape
+///
+/// # Examples
+///
+/// Convenient syntax for this operation is available through [`crate::syntax`].
+///
+/// ``` rust
+/// # let shape = fj::Sketch::from_points(vec![[0., 0.], [1., 0.], [0., 1.]]);
+/// use fj::syntax::*;
+///
+/// // `shape` can be anything that converts to `fj::Shape`
+/// let rotated = shape.rotate([0., 0., 1.], fj::Angle::from_rev(0.5));
+/// let translated = shape.translate([1., 2., 3.]);
+/// ```
 ///
 /// # Limitations
 ///
@@ -13,7 +23,7 @@ use crate::{Angle, Shape};
 /// See issue:
 /// <https://github.com/hannobraun/Fornjot/issues/101>
 #[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(C)]
 pub struct Transform {
     /// The shape being transformed

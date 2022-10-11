@@ -1,5 +1,3 @@
-#[cfg(feature = "serde")]
-use serde::{de, ser, Deserialize, Serialize};
 use std::mem;
 use std::sync::atomic;
 
@@ -7,7 +5,7 @@ use crate::Shape;
 
 /// A 2-dimensional shape
 #[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(C)]
 pub enum Shape2d {
     /// A difference between two shapes
@@ -28,8 +26,21 @@ impl Shape2d {
 }
 
 /// A difference between two shapes
+///
+/// # Examples
+///
+/// Convenient syntax for this operation is available through [`crate::syntax`].
+///
+/// ``` rust
+/// # let a = fj::Sketch::from_points(vec![[0., 0.], [1., 0.], [0., 1.]]);
+/// # let b = fj::Sketch::from_points(vec![[2., 0.], [3., 0.], [2., 1.]]);
+/// use fj::syntax::*;
+///
+/// // `a` and `b` can be anything that converts to `fj::Shape2d`
+/// let difference = a.difference(&b);
+/// ```
 #[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(C)]
 pub struct Difference2d {
     shapes: [Shape2d; 2],
@@ -73,8 +84,19 @@ impl From<Difference2d> for Shape2d {
 /// Nothing about these edges is checked right now, but algorithms might assume
 /// that the edges are non-overlapping. If you create a `Sketch` with
 /// overlapping edges, you're on your own.
+///
+/// # Examples
+///
+/// Convenient syntax for this operation is available through [`crate::syntax`].
+///
+/// ``` rust
+/// use fj::syntax::*;
+///
+/// // `a` and `b` can be anything that converts to `fj::Shape`
+/// let sketch = [[0., 0.], [1., 0.], [0., 1.]].sketch();
+/// ```
 #[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(C)]
 pub struct Sketch {
     chain: Chain,
@@ -119,7 +141,7 @@ impl Sketch {
 
 /// A chain of elements that is part of a [`Sketch`]
 #[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(C)]
 pub enum Chain {
     /// The chain is a circle
@@ -131,7 +153,7 @@ pub enum Chain {
 
 /// A circle that is part of a [`Sketch`]
 #[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(C)]
 pub struct Circle {
     /// The radius of the circle
@@ -267,10 +289,10 @@ impl Drop for PolyChain {
 unsafe impl Send for PolyChain {}
 
 #[cfg(feature = "serde")]
-impl ser::Serialize for PolyChain {
+impl serde::ser::Serialize for PolyChain {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
-        S: ser::Serializer,
+        S: serde::ser::Serializer,
     {
         let serde_sketch = PolyChainSerde {
             points: self.to_points(),
@@ -281,10 +303,10 @@ impl ser::Serialize for PolyChain {
 }
 
 #[cfg(feature = "serde")]
-impl<'de> de::Deserialize<'de> for PolyChain {
+impl<'de> serde::de::Deserialize<'de> for PolyChain {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
-        D: de::Deserializer<'de>,
+        D: serde::de::Deserializer<'de>,
     {
         PolyChainSerde::deserialize(deserializer)
             .map(|serde_sketch| PolyChain::from_points(serde_sketch.points))
@@ -302,7 +324,7 @@ impl<'de> de::Deserialize<'de> for PolyChain {
 /// [`PolyChain`]. If de/serialization turns out to be a bottleneck, a more
 /// complete implementation will be required.
 #[cfg(feature = "serde")]
-#[derive(Serialize, Deserialize)]
+#[derive(serde::Serialize, serde::Deserialize)]
 #[serde(rename = "Polyline")]
 struct PolyChainSerde {
     points: Vec<[f64; 2]>,
