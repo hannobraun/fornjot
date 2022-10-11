@@ -83,8 +83,6 @@ mod solid;
 mod surface;
 mod vertex;
 
-use crate::storage::Store;
-
 pub use self::{
     curve::{Curve, GlobalCurve},
     cycle::Cycle,
@@ -96,6 +94,8 @@ pub use self::{
     surface::Surface,
     vertex::{GlobalVertex, SurfaceVertex, Vertex},
 };
+
+use crate::storage::{Handle, Store};
 
 /// The available object stores
 ///
@@ -117,12 +117,25 @@ pub struct Objects {
     pub global_vertices: Store<GlobalVertex>,
 
     /// Store for surfaces
-    pub surfaces: Store<Surface>,
+    pub surfaces: Surfaces,
 }
 
 impl Objects {
     /// Construct a new instance of `Stores`
     pub fn new() -> Self {
         Self::default()
+    }
+}
+
+/// The store for [`Surface`]s
+#[derive(Debug, Default)]
+pub struct Surfaces {
+    store: Store<Surface>,
+}
+
+impl Surfaces {
+    /// Insert a surface into the store
+    pub fn insert(&self, surface: Surface) -> Handle<Surface> {
+        self.store.insert(surface)
     }
 }
