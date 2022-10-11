@@ -14,9 +14,9 @@ use crate::{
 };
 
 use super::{
-    config_ui::ConfigUi, draw_config::DrawConfig, drawables::Drawables,
-    geometries::Geometries, pipelines::Pipelines, transform::Transform,
-    uniforms::Uniforms, vertices::Vertices, DEPTH_FORMAT,
+    draw_config::DrawConfig, drawables::Drawables, geometries::Geometries,
+    pipelines::Pipelines, transform::Transform, uniforms::Uniforms,
+    vertices::Vertices, DEPTH_FORMAT,
 };
 
 #[derive(Default)]
@@ -24,7 +24,6 @@ struct EguiOptionsState {
     show_trace: bool,
     show_layout_debug_on_hover: bool,
     show_debug_text_example: bool,
-    show_original_ui: bool,
     show_settings_ui: bool,
     show_inspection_ui: bool,
 }
@@ -58,8 +57,6 @@ pub struct Renderer {
 
     geometries: Geometries,
     pipelines: Pipelines,
-
-    config_ui: ConfigUi,
 
     /// State required for integration with `egui`.
     pub egui: EguiState,
@@ -232,8 +229,6 @@ impl Renderer {
         let pipelines =
             Pipelines::new(&device, &bind_group_layout, color_format);
 
-        let config_ui = ConfigUi::new(&device, color_format)?;
-
         //
         // Note: We need to hold on to this otherwise (from my memory)
         //       it causes the egui font texture to get dropped after
@@ -266,8 +261,6 @@ impl Renderer {
 
             geometries,
             pipelines,
-
-            config_ui,
 
             egui: EguiState {
                 context: egui_context,
@@ -380,19 +373,6 @@ impl Renderer {
             }
         }
 
-        if self.egui.options.show_original_ui {
-            self.config_ui
-                .draw(
-                    &self.device,
-                    &mut encoder,
-                    &color_view,
-                    &self.surface_config,
-                    &self.geometries.aabb,
-                    config,
-                )
-                .map_err(DrawError::Text)?;
-        }
-
         //
         // NOTE: The following comment was written for the original
         //       proof-of-concept which targeted older versions of
@@ -461,10 +441,6 @@ impl Renderer {
                     .on_disabled_hover_text(
                         "Rendering device does not have line rendering feature support"
                     );
-                ui.checkbox(
-                    &mut self.egui.options.show_original_ui,
-                    "Render original UI",
-                );
                 ui.add_space(16.0);
                 ui.strong(get_bbox_size_text(&self.geometries.aabb));
             });
