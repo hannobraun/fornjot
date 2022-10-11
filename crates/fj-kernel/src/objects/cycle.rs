@@ -53,19 +53,19 @@ impl Cycle {
                     "Edges in cycle do not connect"
                 );
             }
+        }
 
-            // Verify that the edges form a cycle
-            if let Some(first) = half_edges.first() {
-                if let Some(last) = half_edges.last() {
-                    let [first, _] = first.vertices();
-                    let [_, last] = last.vertices();
+        // Verify that the edges form a cycle
+        if let Some(first) = half_edges.first() {
+            if let Some(last) = half_edges.last() {
+                let [first, _] = first.vertices();
+                let [_, last] = last.vertices();
 
-                    assert_eq!(
-                        first.surface_form(),
-                        last.surface_form(),
-                        "Edges do not form a cycle"
-                    );
-                }
+                assert_eq!(
+                    first.surface_form(),
+                    last.surface_form(),
+                    "Edges do not form a cycle"
+                );
             }
         }
 
