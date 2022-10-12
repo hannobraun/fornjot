@@ -1,3 +1,19 @@
+//! GUI-related code
+//!
+//! If at some point you use `Painter` or similar and you get this error:
+//!
+//! `VK_ERROR_NATIVE_WINDOW_IN_USE_KHR`
+//!
+//! and/or:
+//!
+//! `wgpu_core::device: surface configuration failed: Native window is in use`
+//!
+//! it's *probably(?)* because the swap chain has already been created for the
+//! window (e.g. by an integration) and *not* because of a regression of this
+//! issue (probably):
+//!
+//! <https://github.com/gfx-rs/wgpu/issues/1492>
+
 #[derive(Default)]
 pub struct EguiOptionsState {
     pub show_trace: bool,

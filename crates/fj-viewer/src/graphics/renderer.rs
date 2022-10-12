@@ -63,26 +63,6 @@ impl Renderer {
         // - https://github.com/emilk/egui/blob/eeae485629fca24a81a7251739460b671e1420f7/README.md#what-is-the-difference-between-egui-and-eframe
         // - https://github.com/emilk/egui/blob/eeae485629fca24a81a7251739460b671e1420f7/README.md#how-do-i-render-3d-stuff-in-an-egui-area
 
-        //
-        // NOTE: If at some point you use `Painter` or similar and you
-        //       get this error:
-        //
-        //         `VK_ERROR_NATIVE_WINDOW_IN_USE_KHR`
-        //
-        //       and/or:
-        //
-        //         `wgpu_core::device: surface configuration failed: Native window is in use`
-        //
-        //       it's *probably(?)* because the swapchain has already
-        //       been created for the window (e.g. by an integration)
-        //       and *not* because of a regression of this issue
-        //       (probably):
-        //
-        //         <https://github.com/gfx-rs/wgpu/issues/1492>
-        //
-        //       Don't ask me how I know.
-        //
-
         let egui_context = egui::Context::default();
 
         // This is sound, as `window` is an object to create a surface upon.
