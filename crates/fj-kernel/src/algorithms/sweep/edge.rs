@@ -169,7 +169,9 @@ impl Sweep for (HalfEdge, Color) {
                 // Need to compare surface forms here, as the global forms might
                 // be coincident when sweeping circles, despite the vertices
                 // being different!
-                if prev_last.surface_form() != next_first.surface_form() {
+                if prev_last.surface_form().id()
+                    != next_first.surface_form().id()
+                {
                     edges[j] = edges[j].clone().reverse();
                 }
 
