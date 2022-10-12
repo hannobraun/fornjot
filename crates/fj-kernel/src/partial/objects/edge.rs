@@ -60,6 +60,30 @@ impl PartialHalfEdge {
         self
     }
 
+    /// Update the partial half-edge with the given from vertex
+    pub fn with_from_vertex(
+        mut self,
+        vertex: Option<impl Into<MaybePartial<Vertex>>>,
+    ) -> Self {
+        if let Some(vertex) = vertex {
+            let [from, _] = &mut self.vertices;
+            *from = Some(vertex.into());
+        }
+        self
+    }
+
+    /// Update the partial half-edge with the given from vertex
+    pub fn with_to_vertex(
+        mut self,
+        vertex: Option<impl Into<MaybePartial<Vertex>>>,
+    ) -> Self {
+        if let Some(vertex) = vertex {
+            let [_, to] = &mut self.vertices;
+            *to = Some(vertex.into());
+        }
+        self
+    }
+
     /// Update the partial half-edge with the given vertices
     pub fn with_vertices(
         mut self,
