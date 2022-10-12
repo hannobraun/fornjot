@@ -439,20 +439,18 @@ impl Renderer {
             })
         });
 
-        // End the UI frame. We could now handle the output and draw the UI with the backend.
-        let egui_output = self.gui.context.end_frame();
-        let egui_paint_jobs = self.gui.context.tessellate(egui_output.shapes);
-
-        self.paint_and_update_textures(
-            //
-            // Note: `scale_factor` can be overridden via `WINIT_X11_SCALE_FACTOR` environment variable,
-            //       see: <https://docs.rs/winit/0.26.1/winit/window/struct.Window.html#method.scale_factor>
-            //
-            scale_factor,
-            &egui_paint_jobs,
-            &egui_output.textures_delta,
-            &color_view,
+        self.gui.draw(
+            &self.device,
+            &self.queue,
             &mut encoder,
+            &color_view,
+            egui_wgpu::renderer::ScreenDescriptor {
+                size_in_pixels: [
+                    self.surface_config.width,
+                    self.surface_config.height,
+                ],
+                pixels_per_point: scale_factor,
+            },
         );
 
         let command_buffer = encoder.finish();
@@ -558,72 +556,4 @@ pub enum DrawError {
     /// Text rasterisation error.
     #[error("Error drawing text: {0}")]
     Text(String),
-}
-
-impl Renderer {
-    //
-    // Note: `egui` changed how it handles updating textures on
-    //       the GPU between v0.17.0 & v0.18.0, this means we can't
-    //       use the same approach as original proof-of-concept used.
-    //
-    //       Unfortunately we can't use the helper function provided
-    //       by `egui` here, as it is tightly integrated with `Painter`
-    //       which assumes it is handling surface creation itself.
-    //
-    //       Additionally, subsequent code changes significantly
-    //       changed the API but haven't yet been released.
-    //
-    //       And, to top it all off, the `Painter::paint_and_update_textures()`
-    //       as it currently exists doesn't support a transparent
-    //       clear color, which we rely on to overlay the UI on the
-    //       already rendered model.
-    //
-    //       So, as an interim measure, this code is a copy of the
-    //       texture update code from <https://github.com/emilk/egui/blob/f807a290a422f401939bd38236ece3cf86c8ee70/egui-wgpu/src/winit.rs#L102-L136>.
-    //
-    //       Update: Added transparency workaround.
-    //
-    fn paint_and_update_textures(
-        &mut self,
-        pixels_per_point: f32,
-        clipped_primitives: &[egui::ClippedPrimitive],
-        textures_delta: &egui::TexturesDelta,
-        output_view: &wgpu::TextureView,
-        encoder: &mut wgpu::CommandEncoder,
-    ) {
-        let screen_descriptor = egui_wgpu::renderer::ScreenDescriptor {
-            size_in_pixels: [
-                self.surface_config.width,
-                self.surface_config.height,
-            ],
-            pixels_per_point,
-        };
-
-        for (id, image_delta) in &textures_delta.set {
-            self.gui.render_pass.update_texture(
-                &self.device,
-                &self.queue,
-                *id,
-                image_delta,
-            );
-        }
-        for id in &textures_delta.free {
-            self.gui.render_pass.free_texture(id);
-        }
-
-        self.gui.render_pass.update_buffers(
-            &self.device,
-            &self.queue,
-            clipped_primitives,
-            &screen_descriptor,
-        );
-
-        self.gui.render_pass.execute(
-            encoder,
-            output_view,
-            clipped_primitives,
-            &screen_descriptor,
-            None,
-        );
-    }
 }

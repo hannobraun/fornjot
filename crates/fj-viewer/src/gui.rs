@@ -65,6 +65,41 @@ impl Gui {
             options: Default::default(),
         }
     }
+
+    pub fn draw(
+        &mut self,
+        device: &wgpu::Device,
+        queue: &wgpu::Queue,
+        encoder: &mut wgpu::CommandEncoder,
+        color_view: &wgpu::TextureView,
+        screen_descriptor: egui_wgpu::renderer::ScreenDescriptor,
+    ) {
+        let egui_output = self.context.end_frame();
+        let clipped_primitives = self.context.tessellate(egui_output.shapes);
+
+        for (id, image_delta) in &egui_output.textures_delta.set {
+            self.render_pass
+                .update_texture(device, queue, *id, image_delta);
+        }
+        for id in &egui_output.textures_delta.free {
+            self.render_pass.free_texture(id);
+        }
+
+        self.render_pass.update_buffers(
+            device,
+            queue,
+            &clipped_primitives,
+            &screen_descriptor,
+        );
+
+        self.render_pass.execute(
+            encoder,
+            color_view,
+            &clipped_primitives,
+            &screen_descriptor,
+            None,
+        );
+    }
 }
 
 impl std::fmt::Debug for Gui {
