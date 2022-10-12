@@ -254,8 +254,6 @@ impl Renderer {
             );
         }
 
-        // NOTE: This does not inform the user if the renderer cannot
-        // use the POLYGON_MODE_LINE feature.
         if self.features.contains(wgpu::Features::POLYGON_MODE_LINE) {
             if config.draw_mesh {
                 drawables.mesh.draw(
