@@ -171,18 +171,17 @@ impl Renderer {
         let pipelines =
             Pipelines::new(&device, &bind_group_layout, color_format);
 
+        // We need to hold on to this, otherwise it might cause the egui font
+        // texture to get dropped after drawing one frame.
         //
-        // Note: We need to hold on to this otherwise (from my memory)
-        //       it causes the egui font texture to get dropped after
-        //       drawing one frame.
+        // This then results in an `egui_wgpu_backend` error of
+        // `BackendError::Internal` with message:
         //
-        //       This then results in an `egui_wgpu_backend` error of
-        //       `BackendError::Internal` with message:
+        // ```
+        // Texture 0 used but not live
+        // ```
         //
-        //           "Texture 0 used but not live"
-        //
-        //       See also: <https://github.com/hasenbanck/egui_wgpu_backend/blob/b2d3e7967351690c6425f37cd6d4ffb083a7e8e6/src/lib.rs#L373>
-        //
+        // See also: <https://github.com/hasenbanck/egui_wgpu_backend/blob/b2d3e7967351690c6425f37cd6d4ffb083a7e8e6/src/lib.rs#L373>
         let egui_rpass = egui_wgpu::renderer::RenderPass::new(
             &device,
             surface_config.format,
