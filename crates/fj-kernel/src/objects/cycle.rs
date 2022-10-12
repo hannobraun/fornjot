@@ -48,8 +48,8 @@ impl Cycle {
                 let [next, _] = b.vertices();
 
                 assert_eq!(
-                    prev.surface_form(),
-                    next.surface_form(),
+                    prev.surface_form().id(),
+                    next.surface_form().id(),
                     "Edges in cycle do not connect"
                 );
             }
