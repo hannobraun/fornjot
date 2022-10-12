@@ -128,6 +128,7 @@ async fn generate_announcement(
         buf,
         "\
 +++
+# TASK: Replace the week with a descriptive title.
 title = \"Weekly Release - 2022-W{week}\"
 # TASK: Uncomment this date, once the announcement is ready to be published.
 # date = {date}
@@ -137,6 +138,8 @@ title = \"Weekly Release - 2022-W{week}\"
 
 [extra]
 version = \"{version}\"
+# TASK: Choose a descriptive subtitle.
+subtitle = \"This is a subtitle\"
 +++
 
 **TASK: Write introduction.**
