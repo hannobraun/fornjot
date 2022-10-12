@@ -14,6 +14,11 @@
 //!
 //! <https://github.com/gfx-rs/wgpu/issues/1492>
 
+use fj_interop::status_report::StatusReport;
+use fj_math::Aabb;
+
+use crate::graphics::DrawConfig;
+
 pub struct Gui {
     pub context: egui::Context,
     pub render_pass: egui_wgpu::renderer::RenderPass,
@@ -64,6 +69,177 @@ impl Gui {
             render_pass,
             options: Default::default(),
         }
+    }
+
+    pub fn update(
+        &mut self,
+        egui_input: egui::RawInput,
+        config: &mut DrawConfig,
+        aabb: &Aabb<3>,
+        status: &StatusReport,
+        line_drawing_available: bool,
+    ) {
+        self.context.begin_frame(egui_input);
+
+        fn get_bbox_size_text(aabb: &Aabb<3>) -> String {
+            /* Render size of model bounding box */
+            let bbsize = aabb.size().components;
+            let info = format!(
+                "Model bounding box size:\n{:0.1} {:0.1} {:0.1}",
+                bbsize[0].into_f32(),
+                bbsize[1].into_f32(),
+                bbsize[2].into_f32()
+            );
+            info
+        }
+
+        egui::SidePanel::left("fj-left-panel").show(&self.context, |ui| {
+            ui.add_space(16.0);
+
+            ui.group(|ui| {
+                ui.checkbox(&mut config.draw_model, "Render model")
+                    .on_hover_text_at_pointer("Toggle with 1");
+                ui.add_enabled(line_drawing_available, egui::Checkbox::new(&mut config.draw_mesh, "Render mesh"))
+                    .on_hover_text_at_pointer("Toggle with 2")
+                    .on_disabled_hover_text(
+                        "Rendering device does not have line rendering feature support",
+                    );
+                ui.add_enabled(line_drawing_available, egui::Checkbox::new(&mut config.draw_debug, "Render debug"))
+                    .on_hover_text_at_pointer("Toggle with 3")
+                    .on_disabled_hover_text(
+                        "Rendering device does not have line rendering feature support"
+                    );
+                ui.add_space(16.0);
+                ui.strong(get_bbox_size_text(aabb));
+            });
+
+            ui.add_space(16.0);
+
+            {
+                ui.group(|ui| {
+                    ui.checkbox(
+                        &mut self.options.show_settings_ui,
+                        "Show egui settings UI",
+                    );
+                    if self.options.show_settings_ui {
+                        self.context.settings_ui(ui);
+                    }
+                });
+
+                ui.add_space(16.0);
+
+                ui.group(|ui| {
+                    ui.checkbox(
+                        &mut self.options.show_inspection_ui,
+                        "Show egui inspection UI",
+                    );
+                    if self.options.show_inspection_ui {
+                        ui.indent("indent-inspection-ui", |ui| {
+                            self.context.inspection_ui(ui);
+                        });
+                    }
+                });
+            }
+
+            ui.add_space(16.0);
+
+            {
+                //
+                // Originally this was only meant to be a simple demonstration
+                // of the `egui` `trace!()` macro...
+                //
+                // ...but it seems the trace feature can't be enabled
+                // separately from the layout debug feature, which all
+                // gets a bit messy...
+                //
+                // ...so, this instead shows one possible way to implement
+                // "trace only" style debug text on hover.
+                //
+                ui.group(|ui| {
+                    let label_text = format!(
+                        "Show debug text demo.{}",
+                        if self.options.show_debug_text_example {
+                            " (Hover me.)"
+                        } else {
+                            ""
+                        }
+                    );
+
+                    ui.style_mut().wrap = Some(false);
+
+                    if ui
+                        .checkbox(
+                            &mut self.options.show_debug_text_example,
+                            label_text,
+                        )
+                        .hovered()
+                        && self.options.show_debug_text_example
+                    {
+                        let hover_pos =
+                            ui.input().pointer.hover_pos().unwrap_or_default();
+                        ui.painter().debug_text(
+                            hover_pos,
+                            egui::Align2::LEFT_TOP,
+                            egui::Color32::DEBUG_COLOR,
+                            format!("{:#?}", &config),
+                        );
+                    }
+                });
+            }
+
+            ui.add_space(16.0);
+
+            {
+                //
+                // Demonstration of the `egui` layout debug functionality.
+                //
+                ui.group(|ui| {
+                    //
+
+                    if ui
+                        .checkbox(
+                            &mut self.options.show_layout_debug_on_hover,
+                            "Show layout debug on hover.",
+                        )
+                        .changed()
+                    {
+                        ui.ctx().set_debug_on_hover(
+                            self.options.show_layout_debug_on_hover,
+                        );
+                    }
+
+                    ui.scope(|ui| {
+                        if self.options.show_trace {
+                            egui::trace!(ui, format!("{:?}", &config));
+                        }
+                    });
+
+                    ui.indent("indent-show-trace", |ui| {
+                        ui.set_enabled(
+                            self.options.show_layout_debug_on_hover,
+                        );
+
+                        ui.checkbox(
+                            &mut self.options.show_trace,
+                            "Also show egui trace.",
+                        );
+
+                        //
+                    });
+                });
+            }
+
+            ui.add_space(16.0);
+        });
+
+        egui::Area::new("fj-status-message").show(&self.context, |ui| {
+            ui.group(|ui| {
+                ui.add(egui::Label::new(
+                    egui::RichText::new(format!("Status:{}", status.status()))
+                        .color(egui::Color32::BLACK),
+                ))
+            })
+        });
     }
 
     pub fn draw(
