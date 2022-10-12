@@ -9,7 +9,7 @@ use wgpu_glyph::ab_glyph::InvalidFont;
 
 use crate::{
     camera::Camera,
-    gui::EguiState,
+    gui::Gui,
     screen::{Screen, Size},
 };
 
@@ -37,7 +37,7 @@ pub struct Renderer {
     pipelines: Pipelines,
 
     /// State required for integration with `egui`.
-    pub egui: EguiState,
+    pub gui: Gui,
 }
 
 impl Renderer {
@@ -151,7 +151,7 @@ impl Renderer {
         let pipelines =
             Pipelines::new(&device, &bind_group_layout, color_format);
 
-        let egui = EguiState::new(&device, surface_config.format);
+        let gui = Gui::new(&device, surface_config.format);
 
         Ok(Self {
             surface,
@@ -168,7 +168,7 @@ impl Renderer {
             geometries,
             pipelines,
 
-            egui,
+            gui,
         })
     }
 
@@ -254,9 +254,7 @@ impl Renderer {
             );
         }
 
-        // NOTE: This does not inform the user if the renderer cannot
-        // use the POLYGON_MODE_LINE feature.
-        if self.features.contains(wgpu::Features::POLYGON_MODE_LINE) {
+        if self.is_line_drawing_available() {
             if config.draw_mesh {
                 drawables.mesh.draw(
                     &mut encoder,
@@ -275,185 +273,25 @@ impl Renderer {
             }
         }
 
-        self.egui.context.begin_frame(egui_input);
-
-        fn get_bbox_size_text(aabb: &Aabb<3>) -> String {
-            /* Render size of model bounding box */
-            let bbsize = aabb.size().components;
-            let info = format!(
-                "Model bounding box size:\n{:0.1} {:0.1} {:0.1}",
-                bbsize[0].into_f32(),
-                bbsize[1].into_f32(),
-                bbsize[2].into_f32()
-            );
-            info
-        }
-
-        let line_drawing_available = self.is_line_drawing_available();
-
-        egui::SidePanel::left("fj-left-panel").show(&self.egui.context, |ui| {
-            ui.add_space(16.0);
-
-            ui.group(|ui| {
-                ui.checkbox(&mut config.draw_model, "Render model")
-                    .on_hover_text_at_pointer("Toggle with 1");
-                ui.add_enabled(line_drawing_available, egui::Checkbox::new(&mut config.draw_mesh, "Render mesh"))
-                    .on_hover_text_at_pointer("Toggle with 2")
-                    .on_disabled_hover_text(
-                        "Rendering device does not have line rendering feature support",
-                    );
-                ui.add_enabled(line_drawing_available, egui::Checkbox::new(&mut config.draw_debug, "Render debug"))
-                    .on_hover_text_at_pointer("Toggle with 3")
-                    .on_disabled_hover_text(
-                        "Rendering device does not have line rendering feature support"
-                    );
-                ui.add_space(16.0);
-                ui.strong(get_bbox_size_text(&self.geometries.aabb));
-            });
-
-            ui.add_space(16.0);
-
-            {
-                ui.group(|ui| {
-                    ui.checkbox(
-                        &mut self.egui.options.show_settings_ui,
-                        "Show egui settings UI",
-                    );
-                    if self.egui.options.show_settings_ui {
-                        self.egui.context.settings_ui(ui);
-                    }
-                });
-
-                ui.add_space(16.0);
-
-                ui.group(|ui| {
-                    ui.checkbox(
-                        &mut self.egui.options.show_inspection_ui,
-                        "Show egui inspection UI",
-                    );
-                    if self.egui.options.show_inspection_ui {
-                        ui.indent("indent-inspection-ui", |ui| {
-                            self.egui.context.inspection_ui(ui);
-                        });
-                    }
-                });
-            }
-
-            ui.add_space(16.0);
-
-            {
-                //
-                // Originally this was only meant to be a simple demonstration
-                // of the `egui` `trace!()` macro...
-                //
-                // ...but it seems the trace feature can't be enabled
-                // separately from the layout debug feature, which all
-                // gets a bit messy...
-                //
-                // ...so, this instead shows one possible way to implement
-                // "trace only" style debug text on hover.
-                //
-                ui.group(|ui| {
-                    let label_text = format!(
-                        "Show debug text demo.{}",
-                        if self.egui.options.show_debug_text_example {
-                            " (Hover me.)"
-                        } else {
-                            ""
-                        }
-                    );
-
-                    ui.style_mut().wrap = Some(false);
-
-                    if ui
-                        .checkbox(
-                            &mut self.egui.options.show_debug_text_example,
-                            label_text,
-                        )
-                        .hovered()
-                        && self.egui.options.show_debug_text_example
-                    {
-                        let hover_pos =
-                            ui.input().pointer.hover_pos().unwrap_or_default();
-                        ui.painter().debug_text(
-                            hover_pos,
-                            egui::Align2::LEFT_TOP,
-                            egui::Color32::DEBUG_COLOR,
-                            format!("{:#?}", &config),
-                        );
-                    }
-                });
-            }
-
-            ui.add_space(16.0);
-
-            {
-                //
-                // Demonstration of the `egui` layout debug functionality.
-                //
-                ui.group(|ui| {
-                    //
-
-                    if ui
-                        .checkbox(
-                            &mut self.egui.options.show_layout_debug_on_hover,
-                            "Show layout debug on hover.",
-                        )
-                        .changed()
-                    {
-                        ui.ctx().set_debug_on_hover(
-                            self.egui.options.show_layout_debug_on_hover,
-                        );
-                    }
-
-                    ui.scope(|ui| {
-                        if self.egui.options.show_trace {
-                            egui::trace!(ui, format!("{:?}", &config));
-                        }
-                    });
-
-                    ui.indent("indent-show-trace", |ui| {
-                        ui.set_enabled(
-                            self.egui.options.show_layout_debug_on_hover,
-                        );
-
-                        ui.checkbox(
-                            &mut self.egui.options.show_trace,
-                            "Also show egui trace.",
-                        );
-
-                        //
-                    });
-                });
-            }
-
-            ui.add_space(16.0);
-        });
-
-        egui::Area::new("fj-status-message").show(&self.egui.context, |ui| {
-            ui.group(|ui| {
-                ui.add(egui::Label::new(
-                    egui::RichText::new(format!("Status:{}", status.status()))
-                        .color(egui::Color32::BLACK),
-                ))
-            })
-        });
-
-        // End the UI frame. We could now handle the output and draw the UI with the backend.
-        let egui_output = self.egui.context.end_frame();
-        let egui_paint_jobs = self.egui.context.tessellate(egui_output.shapes);
-
-        self.paint_and_update_textures(
-            //
-            // Note: `scale_factor` can be overridden via `WINIT_X11_SCALE_FACTOR` environment variable,
-            //       see: <https://docs.rs/winit/0.26.1/winit/window/struct.Window.html#method.scale_factor>
-            //
-            scale_factor,
-            egui::Rgba::TRANSPARENT,
-            &egui_paint_jobs,
-            &egui_output.textures_delta,
-            &color_view,
+        self.gui.update(
+            egui_input,
+            config,
+            &self.geometries.aabb,
+            status,
+            self.is_line_drawing_available(),
+        );
+        self.gui.draw(
+            &self.device,
+            &self.queue,
             &mut encoder,
+            &color_view,
+            egui_wgpu::renderer::ScreenDescriptor {
+                size_in_pixels: [
+                    self.surface_config.width,
+                    self.surface_config.height,
+                ],
+                pixels_per_point: scale_factor,
+            },
         );
 
         let command_buffer = encoder.finish();
@@ -559,98 +397,4 @@ pub enum DrawError {
     /// Text rasterisation error.
     #[error("Error drawing text: {0}")]
     Text(String),
-}
-
-impl Renderer {
-    //
-    // Note: `egui` changed how it handles updating textures on
-    //       the GPU between v0.17.0 & v0.18.0, this means we can't
-    //       use the same approach as original proof-of-concept used.
-    //
-    //       Unfortunately we can't use the helper function provided
-    //       by `egui` here, as it is tightly integrated with `Painter`
-    //       which assumes it is handling surface creation itself.
-    //
-    //       Additionally, subsequent code changes significantly
-    //       changed the API but haven't yet been released.
-    //
-    //       And, to top it all off, the `Painter::paint_and_update_textures()`
-    //       as it currently exists doesn't support a transparent
-    //       clear color, which we rely on to overlay the UI on the
-    //       already rendered model.
-    //
-    //       So, as an interim measure, this code is a copy of the
-    //       texture update code from <https://github.com/emilk/egui/blob/f807a290a422f401939bd38236ece3cf86c8ee70/egui-wgpu/src/winit.rs#L102-L136>.
-    //
-    //       Update: Added transparency workaround.
-    //
-    fn paint_and_update_textures(
-        &mut self,
-        pixels_per_point: f32,
-        clear_color: egui::Rgba,
-        clipped_primitives: &[egui::ClippedPrimitive],
-        textures_delta: &egui::TexturesDelta,
-        output_view: &wgpu::TextureView,
-        encoder: &mut wgpu::CommandEncoder,
-    ) {
-        // Upload all resources for the GPU.
-        let screen_descriptor = egui_wgpu::renderer::ScreenDescriptor {
-            size_in_pixels: [
-                self.surface_config.width,
-                self.surface_config.height,
-            ],
-            pixels_per_point,
-        };
-
-        for (id, image_delta) in &textures_delta.set {
-            self.egui.render_pass.update_texture(
-                &self.device,
-                &self.queue,
-                *id,
-                image_delta,
-            );
-        }
-        for id in &textures_delta.free {
-            self.egui.render_pass.free_texture(id);
-        }
-
-        self.egui.render_pass.update_buffers(
-            &self.device,
-            &self.queue,
-            clipped_primitives,
-            &screen_descriptor,
-        );
-
-        //
-        // This approach is based on the original proof-of-concept
-        // integration which used `egui_wgpu_backend` and included
-        // the following comment for context:
-        //
-        //   "Set this to `None` to overlay the UI on top of what's in the framebuffer"
-        //   via <https://github.com/hasenbanck/egui_example/pull/17/files#diff-42cb6807ad74b3e201c5a7ca98b911c5fa08380e942be6e4ac5807f8377f87fcR132>
-        //
-        //   Alternatively, for initial testing, you can use a colour without alpha
-        //   (e.g. `Some(wgpu::Color {r:0.5, g:0.0, b:0.0, a:1.0})` ) in order
-        //   to verify that the renderpass is doing *something*.
-        //
-        let clear_color_ = if clear_color == egui::Rgba::TRANSPARENT {
-            None
-        } else {
-            Some(wgpu::Color {
-                r: clear_color.r() as f64,
-                g: clear_color.g() as f64,
-                b: clear_color.b() as f64,
-                a: clear_color.a() as f64,
-            })
-        };
-
-        // Record all render passes.
-        self.egui.render_pass.execute(
-            encoder,
-            output_view,
-            clipped_primitives,
-            &screen_descriptor,
-            clear_color_,
-        );
-    }
 }
