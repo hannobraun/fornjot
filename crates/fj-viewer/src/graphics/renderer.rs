@@ -9,7 +9,7 @@ use wgpu_glyph::ab_glyph::InvalidFont;
 
 use crate::{
     camera::Camera,
-    gui::EguiState,
+    gui::Gui,
     screen::{Screen, Size},
 };
 
@@ -37,7 +37,7 @@ pub struct Renderer {
     pipelines: Pipelines,
 
     /// State required for integration with `egui`.
-    pub egui: EguiState,
+    pub egui: Gui,
 }
 
 impl Renderer {
@@ -151,7 +151,7 @@ impl Renderer {
         let pipelines =
             Pipelines::new(&device, &bind_group_layout, color_format);
 
-        let egui = EguiState::new(&device, surface_config.format);
+        let egui = Gui::new(&device, surface_config.format);
 
         Ok(Self {
             surface,

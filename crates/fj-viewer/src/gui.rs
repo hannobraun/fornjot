@@ -23,13 +23,13 @@ pub struct EguiOptionsState {
     pub show_inspection_ui: bool,
 }
 
-pub struct EguiState {
+pub struct Gui {
     pub context: egui::Context,
     pub render_pass: egui_wgpu::renderer::RenderPass,
     pub options: EguiOptionsState,
 }
 
-impl EguiState {
+impl Gui {
     pub fn new(
         device: &wgpu::Device,
         texture_format: wgpu::TextureFormat,
@@ -76,7 +76,7 @@ impl EguiState {
     }
 }
 
-impl std::fmt::Debug for EguiState {
+impl std::fmt::Debug for Gui {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_str("EguiState {}")
     }
