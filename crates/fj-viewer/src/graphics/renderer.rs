@@ -282,6 +282,7 @@ impl Renderer {
         config: &mut DrawConfig,
         window: &egui_winit::winit::window::Window,
         status: &mut StatusReport,
+        egui_input: egui::RawInput,
     ) -> Result<(), DrawError> {
         let aspect_ratio = self.surface_config.width as f64
             / self.surface_config.height as f64;
@@ -387,7 +388,6 @@ impl Renderer {
         //    It's still not the *latest* `egui` version though.
         //
 
-        let egui_input = self.egui.winit_state.take_egui_input(window);
         self.egui.context.begin_frame(egui_input);
 
         fn get_bbox_size_text(aabb: &Aabb<3>) -> String {

@@ -174,11 +174,15 @@ pub fn run(
                     camera.update_planes(&shape.aabb);
                 }
 
+                let egui_input =
+                    renderer.egui.winit_state.take_egui_input(window.window());
+
                 if let Err(err) = renderer.draw(
                     &camera,
                     &mut draw_config,
                     window.window(),
                     &mut status,
+                    egui_input,
                 ) {
                     warn!("Draw error: {}", err);
                 }
