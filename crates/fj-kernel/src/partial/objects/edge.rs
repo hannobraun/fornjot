@@ -107,11 +107,12 @@ impl PartialHalfEdge {
                     .with_position(Some(point_curve))
                     .with_curve(Some(curve.clone()))
                     .with_surface_form(Some(surface_form.clone()))
+                    .into()
             })
         };
 
         self.curve = Some(curve.into());
-        self.vertices = Some(vertices.map(Into::into));
+        self.vertices = Some(vertices);
 
         self
     }
