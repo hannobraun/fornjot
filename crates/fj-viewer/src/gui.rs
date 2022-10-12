@@ -15,7 +15,7 @@
 //! <https://github.com/gfx-rs/wgpu/issues/1492>
 
 #[derive(Default)]
-pub struct EguiOptionsState {
+pub struct Options {
     pub show_trace: bool,
     pub show_layout_debug_on_hover: bool,
     pub show_debug_text_example: bool,
@@ -26,7 +26,7 @@ pub struct EguiOptionsState {
 pub struct Gui {
     pub context: egui::Context,
     pub render_pass: egui_wgpu::renderer::RenderPass,
-    pub options: EguiOptionsState,
+    pub options: Options,
 }
 
 impl Gui {
