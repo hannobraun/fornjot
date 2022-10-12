@@ -244,7 +244,7 @@ impl Renderer {
             egui: EguiState {
                 context: egui_context,
                 winit_state: egui_winit_state,
-                rpass: egui_rpass,
+                render_pass: egui_rpass,
                 options: Default::default(),
             },
         })
@@ -716,7 +716,7 @@ impl Renderer {
         };
 
         for (id, image_delta) in &textures_delta.set {
-            self.egui.rpass.update_texture(
+            self.egui.render_pass.update_texture(
                 &self.device,
                 &self.queue,
                 *id,
@@ -724,10 +724,10 @@ impl Renderer {
             );
         }
         for id in &textures_delta.free {
-            self.egui.rpass.free_texture(id);
+            self.egui.render_pass.free_texture(id);
         }
 
-        self.egui.rpass.update_buffers(
+        self.egui.render_pass.update_buffers(
             &self.device,
             &self.queue,
             clipped_primitives,
@@ -758,7 +758,7 @@ impl Renderer {
         };
 
         // Record all render passes.
-        self.egui.rpass.execute(
+        self.egui.render_pass.execute(
             encoder,
             output_view,
             clipped_primitives,
