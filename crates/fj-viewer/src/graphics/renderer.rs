@@ -62,10 +62,10 @@ impl Renderer {
             let available_features = adapter.features();
 
             // By requesting the intersection of desired and available features,
-            // we ensure two things:
+            // we prevent two things:
             //
-            // 1. That requesting the device doesn't panic, which would happen
-            //    if we requested unavailable features.
+            // 1. That requesting the device panics, which would happen if we
+            //    requested unavailable features.
             // 2. That a developer ends up accidentally using features that
             //    happen to be available on their machine, but that aren't
             //    necessarily available for all the users.
