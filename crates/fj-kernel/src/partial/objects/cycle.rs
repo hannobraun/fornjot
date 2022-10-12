@@ -40,9 +40,9 @@ impl PartialCycle {
     }
 
     /// Update the partial cycle with a polygonal chain from the provided points
-    pub fn with_poly_chain_from_points(
+    pub fn with_poly_chain(
         mut self,
-        points: impl IntoIterator<Item = impl Into<Point<2>>>,
+        vertices: impl IntoIterator<Item = MaybePartial<SurfaceVertex>>,
     ) -> Self {
         let iter = self
             .half_edges
@@ -51,50 +51,40 @@ impl PartialCycle {
                 let [_, last] = half_edge.vertices().map(|vertex| {
                     vertex.expect("Need half-edge vertices to extend cycle")
                 });
-                let last = last
-                    .surface_form()
-                    .expect("Need surface vertex to extend cycle");
-
-                let vertex = last.clone();
-                let position = last
-                    .position()
-                    .expect("Need surface position to extend cycle");
-
-                (position, Some(vertex))
+                last.surface_form()
+                    .expect("Need surface vertex to extend cycle")
             })
             .into_iter()
-            .chain(points.into_iter().map(|point| (point.into(), None)));
+            .chain(vertices);
 
-        let mut previous: Option<(
-            Point<2>,
-            Option<MaybePartial<SurfaceVertex>>,
-        )> = None;
+        let mut previous: Option<MaybePartial<SurfaceVertex>> = None;
 
-        for (position, vertex) in iter {
-            if let Some((previous_position, previous_vertex)) = previous {
+        for vertex_next in iter {
+            if let Some(vertex_prev) = previous {
                 let surface = self
                     .surface
                     .clone()
                     .expect("Need surface to extend cycle with poly-chain");
 
-                let from = previous_vertex.unwrap_or_else(|| {
-                    SurfaceVertex::partial()
-                        .with_surface(Some(surface.clone()))
-                        .with_position(Some(previous_position))
-                        .into()
+                let position_prev = vertex_prev
+                    .position()
+                    .expect("Need surface position to extend cycle");
+                let position_next = vertex_next
+                    .position()
+                    .expect("Need surface position to extend cycle");
+
+                let from = vertex_prev.update_partial(|partial| {
+                    partial.with_surface(Some(surface.clone()))
                 });
-                let to = vertex.unwrap_or_else(|| {
-                    SurfaceVertex::partial()
-                        .with_surface(Some(surface.clone()))
-                        .with_position(Some(position))
-                        .into()
+                let to = vertex_next.update_partial(|partial| {
+                    partial.with_surface(Some(surface.clone()))
                 });
 
-                previous = Some((position, Some(to.clone())));
+                previous = Some(to.clone());
 
                 let curve = Handle::<Curve>::partial()
                     .with_surface(Some(surface.clone()))
-                    .as_line_from_points([previous_position, position]);
+                    .as_line_from_points([position_prev, position_next]);
 
                 let [from, to] =
                     [(0., from), (1., to)].map(|(position, surface_form)| {
@@ -114,10 +104,22 @@ impl PartialCycle {
                 continue;
             }
 
-            previous = Some((position, vertex));
+            previous = Some(vertex_next);
         }
 
         self
+    }
+
+    /// Update the partial cycle with a polygonal chain from the provided points
+    pub fn with_poly_chain_from_points(
+        self,
+        points: impl IntoIterator<Item = impl Into<Point<2>>>,
+    ) -> Self {
+        self.with_poly_chain(points.into_iter().map(|position| {
+            SurfaceVertex::partial()
+                .with_position(Some(position))
+                .into()
+        }))
     }
 
     /// Update the partial cycle by closing it with a line segment
