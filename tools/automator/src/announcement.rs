@@ -182,12 +182,7 @@ Improvements that are relevant to developers working on Fornjot itself.
 
 {pull_request_list}
 {pull_request_links}
-{author_links}
-
-
-### Outlook
-
-**TASK: Write.**\n\
+{author_links}\
     "
     )?;
 
