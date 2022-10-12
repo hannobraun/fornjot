@@ -14,15 +14,6 @@
 //!
 //! <https://github.com/gfx-rs/wgpu/issues/1492>
 
-#[derive(Default)]
-pub struct Options {
-    pub show_trace: bool,
-    pub show_layout_debug_on_hover: bool,
-    pub show_debug_text_example: bool,
-    pub show_settings_ui: bool,
-    pub show_inspection_ui: bool,
-}
-
 pub struct Gui {
     pub context: egui::Context,
     pub render_pass: egui_wgpu::renderer::RenderPass,
@@ -80,4 +71,13 @@ impl std::fmt::Debug for Gui {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_str("EguiState {}")
     }
+}
+
+#[derive(Default)]
+pub struct Options {
+    pub show_trace: bool,
+    pub show_layout_debug_on_hover: bool,
+    pub show_debug_text_example: bool,
+    pub show_settings_ui: bool,
+    pub show_inspection_ui: bool,
 }
