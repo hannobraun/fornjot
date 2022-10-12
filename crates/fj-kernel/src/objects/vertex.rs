@@ -14,7 +14,7 @@ use super::{Curve, Objects, Surface};
 pub struct Vertex {
     position: Point<1>,
     curve: Handle<Curve>,
-    surface_form: SurfaceVertex,
+    surface_form: Handle<SurfaceVertex>,
 }
 
 impl Vertex {
@@ -25,7 +25,7 @@ impl Vertex {
     pub fn new(
         position: impl Into<Point<1>>,
         curve: Handle<Curve>,
-        surface_form: SurfaceVertex,
+        surface_form: Handle<SurfaceVertex>,
     ) -> Self {
         let position = position.into();
 
@@ -53,7 +53,7 @@ impl Vertex {
     }
 
     /// Access the surface form of this vertex
-    pub fn surface_form(&self) -> &SurfaceVertex {
+    pub fn surface_form(&self) -> &Handle<SurfaceVertex> {
         &self.surface_form
     }
 
@@ -77,13 +77,14 @@ impl SurfaceVertex {
         position: impl Into<Point<2>>,
         surface: Handle<Surface>,
         global_form: Handle<GlobalVertex>,
-    ) -> Self {
+        objects: &Objects,
+    ) -> Handle<Self> {
         let position = position.into();
-        Self {
+        objects.surface_vertices.insert(Self {
             position,
             surface,
             global_form,
-        }
+        })
     }
 
     /// Access the position of the vertex on the surface

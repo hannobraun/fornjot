@@ -47,6 +47,6 @@ impl_traits!(
     GlobalEdge, PartialGlobalEdge;
     Handle<GlobalVertex>, PartialGlobalVertex;
     HalfEdge, PartialHalfEdge;
-    SurfaceVertex, PartialSurfaceVertex;
+    Handle<SurfaceVertex>, PartialSurfaceVertex;
     Vertex, PartialVertex;
 );
