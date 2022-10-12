@@ -1116,7 +1116,6 @@ dependencies = [
  "bytemuck",
  "egui",
  "egui-wgpu",
- "egui-winit",
  "fj-interop",
  "fj-math",
  "raw-window-handle 0.4.3",
