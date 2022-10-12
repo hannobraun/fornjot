@@ -45,12 +45,6 @@ fn main() -> anyhow::Result<()> {
 
     let args = Args::parse();
     let config = Config::load()?;
-    // model name defined here.
-    let fetch_model_name =
-        (args.model.as_ref().or(config.default_model.as_ref()))
-            .unwrap()
-            .display();
-    // path for the models
     let path = config.default_path.unwrap_or_else(|| PathBuf::from(""));
     let parameters = args.parameters.unwrap_or_else(Parameters::empty);
     let shape_processor = ShapeProcessor {
@@ -58,14 +52,15 @@ fn main() -> anyhow::Result<()> {
     };
 
     let path_of_model = path.canonicalize().unwrap();
-    let new_error_message = format!("inside default models directory: '{0}'\nCan mainly caused by: \n1. Model '{1}' can not be found inside '{0}'\n2.'{1}' can be mis-typed see inside '{0}' for a match \n3. Define model is '{1}' couldn\'t be found ((defined in command-line arguments))", path_of_model.display(), fetch_model_name);
-    let model = if let Some(model) = args.model.or(config.default_model) {
+
+    let model = if let Some(model) =
+        args.model.or(config.default_model).as_ref()
+    {
         let mut model_path = path;
         model_path.push(model);
         Some(Model::from_path(model_path.clone()).with_context(|| {
             format!(
-                "Failed to load model: {} {new_error_message}",
-                model_path.display()
+                "Failed to load model: {0}\ninside default models directory: '{1}'\nCan mainly caused by: \n1. Model '{2}' can not be found inside '{1}'\n2.'{2}' can be mis-typed see inside '{1}' for a match\n3. Define model is '{2}' couldn\'t be found ((defined in command-line arguments))", model_path.display(), path_of_model.display(), model.display()
             )
         })?)
     } else {
