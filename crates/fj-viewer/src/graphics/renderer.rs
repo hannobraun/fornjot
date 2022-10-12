@@ -275,41 +275,6 @@ impl Renderer {
             }
         }
 
-        //
-        // NOTE: The following comment was written for the original
-        //       proof-of-concept which targeted older versions of
-        //       Fornjot & `egui`, so some details may be outdated &
-        //       not entirely apply to this updated implementation.
-        //
-        //       It's included here in case it still provides some
-        //       useful context.
-        //
-        //
-        // This integration is basically the result of locating the
-        // `.present()` call in the `egui` example, here:
-        //
-        //     <https://github.com/hasenbanck/egui_example/blob/ca1262a701daf0b20e097ef627fc301ab63339d9/src/main.rs#L177>
-        //
-        // and then the equivalent call in `renderer.rs`, here:
-        //
-        //     <https://github.com/hannobraun/Fornjot/blob/15294c2ca2fa5ac5016bb29853943b28952f2dae/fj-app/src/graphics/renderer.rs#L245>
-        //
-        // Then working backwards from there to merge the functionality.
-        //
-        // In addition, the following examples were also referenced:
-        //
-        //  * "Make the example more like an actual use case #17"
-        //    <https://github.com/hasenbanck/egui_example/pull/17/files>
-        //    This removes some non-essential code from the example
-        //    which helps clarify what's *actually* necessary.
-        //
-        //  * "Update to 0.17, use official winit backend #18"
-        //    <https://github.com/hasenbanck/egui_example/pull/18/files>
-        //    This uses a more up-to-date `egui` version which
-        //    included some API changes.
-        //    It's still not the *latest* `egui` version though.
-        //
-
         self.egui.context.begin_frame(egui_input);
 
         fn get_bbox_size_text(aabb: &Aabb<3>) -> String {
