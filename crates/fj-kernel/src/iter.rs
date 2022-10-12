@@ -590,7 +590,7 @@ mod tests {
             .build(&objects);
         let global_vertex = GlobalVertex::from_position([0., 0., 0.], &objects);
         let surface_vertex =
-            SurfaceVertex::new([0., 0.], surface, global_vertex);
+            SurfaceVertex::new([0., 0.], surface, global_vertex, &objects);
         let object = Vertex::new([0.], curve, surface_vertex);
 
         assert_eq!(1, object.curve_iter().count());

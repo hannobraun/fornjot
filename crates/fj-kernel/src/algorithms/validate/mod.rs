@@ -202,6 +202,7 @@ mod tests {
                         point_surface,
                         surface.clone(),
                         vertex_global,
+                        &objects,
                     )
                 },
             )

@@ -25,7 +25,7 @@ pub struct PartialVertex {
     ///
     /// Can be provided, if already available, or computed from the position on
     /// the [`Curve`].
-    pub surface_form: Option<MaybePartial<SurfaceVertex>>,
+    pub surface_form: Option<MaybePartial<Handle<SurfaceVertex>>>,
 
     /// The global form of the [`Vertex`]
     ///
@@ -60,7 +60,7 @@ impl PartialVertex {
     /// Provide a surface form for the partial vertex
     pub fn with_surface_form(
         mut self,
-        surface_form: Option<impl Into<MaybePartial<SurfaceVertex>>>,
+        surface_form: Option<impl Into<MaybePartial<Handle<SurfaceVertex>>>>,
     ) -> Self {
         if let Some(surface_form) = surface_form {
             self.surface_form = Some(surface_form.into());
@@ -97,7 +97,7 @@ impl PartialVertex {
 
         let surface_form = self
             .surface_form
-            .unwrap_or_else(|| SurfaceVertex::partial().into())
+            .unwrap_or_else(|| Handle::<SurfaceVertex>::partial().into())
             .update_partial(|partial| {
                 let position = partial.position.unwrap_or_else(|| {
                     curve.path().point_from_path_coords(position)
@@ -185,7 +185,7 @@ impl PartialSurfaceVertex {
     /// Panics, if no position has been provided.
     ///
     /// Panics, if no surface has been provided.
-    pub fn build(self, objects: &Objects) -> SurfaceVertex {
+    pub fn build(self, objects: &Objects) -> Handle<SurfaceVertex> {
         let position = self
             .position
             .expect("Can't build `SurfaceVertex` without position");
@@ -202,12 +202,12 @@ impl PartialSurfaceVertex {
             })
             .into_full(objects);
 
-        SurfaceVertex::new(position, surface, global_form)
+        SurfaceVertex::new(position, surface, global_form, objects)
     }
 }
 
-impl From<&SurfaceVertex> for PartialSurfaceVertex {
-    fn from(surface_vertex: &SurfaceVertex) -> Self {
+impl From<&Handle<SurfaceVertex>> for PartialSurfaceVertex {
+    fn from(surface_vertex: &Handle<SurfaceVertex>) -> Self {
         Self {
             position: Some(surface_vertex.position()),
             surface: Some(surface_vertex.surface().clone()),

@@ -105,6 +105,7 @@ impl Sweep for (Vertex, Handle<Surface>) {
                             point_surface,
                             surface.clone(),
                             vertex_global,
+                            objects,
                         )
                     },
                 );
