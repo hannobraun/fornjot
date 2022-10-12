@@ -92,32 +92,24 @@ impl Sweep for (Vertex, Handle<Surface>) {
             )
         };
 
-        // And now the vertices. Again, nothing wild here.
-        let vertices = {
-            // Can be cleaned up, once `zip` is stable:
-            // https://doc.rust-lang.org/std/primitive.array.html#method.zip
-            let [a_surface, b_surface] = points_surface;
-            let [a_global, b_global] = vertices_global;
-            let vertices_surface =
-                [(a_surface, a_global), (b_surface, b_global)].map(
-                    |(point_surface, vertex_global)| {
-                        SurfaceVertex::new(
-                            point_surface,
-                            surface.clone(),
-                            vertex_global,
-                            objects,
-                        )
-                    },
-                );
+        let vertices_surface = {
+            let [_, position] = points_surface;
+            let [_, global_form] = vertices_global;
 
-            vertices_surface.map(|surface_form| {
-                Vertex::new(
-                    [surface_form.position().v],
-                    curve.clone(),
-                    surface_form,
-                )
-            })
+            [
+                vertex.surface_form().clone(),
+                SurfaceVertex::new(position, surface, global_form, objects),
+            ]
         };
+
+        // And now the vertices. Again, nothing wild here.
+        let vertices = vertices_surface.map(|surface_form| {
+            Vertex::new(
+                [surface_form.position().v],
+                curve.clone(),
+                surface_form,
+            )
+        });
 
         // And finally, creating the output `Edge` is just a matter of
         // assembling the pieces we've already created.
