@@ -65,8 +65,9 @@ impl PartialHalfEdge {
         mut self,
         vertices: Option<[impl Into<MaybePartial<Vertex>>; 2]>,
     ) -> Self {
+        let vertices = vertices.map(|vertices| vertices.map(Into::into));
         if let Some(vertices) = vertices {
-            self.vertices = Some(vertices.map(Into::into));
+            self.vertices = Some(vertices);
         }
         self
     }
