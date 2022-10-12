@@ -45,35 +45,23 @@ impl Renderer {
     pub async fn new(screen: &impl Screen) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::PRIMARY);
 
+        // The implementation of the integration with `egui` is likely to need
+        // to change "significantly" depending on what architecture approach is
+        // chosen going forward.
         //
-        // NOTE: The implementation of the integration with `egui` is
-        //       likely to need to change "significantly"[0] depending
-        //       on what architecture approach is chosen going
-        //       forward.
+        // The current implementation is somewhat complicated by virtue of
+        // "sitting somewhere in the middle" in relation to being neither a
+        // standalone integration nor fully using `egui` as a framework.
         //
-        //       The current implementation is somewhat complicated by
-        //       virtue of "sitting somewhere in the middle" in
-        //       relation to being neither a standalone integration
-        //       nor fully using `egui` as a framework.
+        // This is a result of a combination of the current integration being
+        // "proof of concept" level, and using `egui-winit` & `egui-wgpu`, which
+        // are both relatively new additions to the core `egui` ecosystem.
         //
-        //       This is a result of a combination of the current
-        //       integration being "proof of concept" level; and, using
-        //       `egui-winit` & `egui-wgpu` which are both relatively
-        //       new additions to the core `egui` ecosystem.
+        // It is recommended to read the following for additional helpful
+        // context for choosing an architecture:
         //
-        //       It is recommended to read the following for additional
-        //       helpful context for choosing an architecture:
-        //
-        //         * <https://github.com/emilk/egui/blob/eeae485629fca24a81a7251739460b671e1420f7/README.md#what-is-the-difference-between-egui-and-eframe>
-        //
-        //         * <https://github.com/emilk/egui/blob/eeae485629fca24a81a7251739460b671e1420f7/README.md#how-do-i-render-3d-stuff-in-an-egui-area>
-        //
-        //       [0] By way of specific example, the recent addition
-        //           of Android support lead to considerable API
-        //           change related to `wgpu` & `winit`, see:
-        //
-        //             * <https://github.com/emilk/egui/commit/a5076d4cc491536b07b16dced1772c7b6bf7cc29>
-        //
+        // - https://github.com/emilk/egui/blob/eeae485629fca24a81a7251739460b671e1420f7/README.md#what-is-the-difference-between-egui-and-eframe
+        // - https://github.com/emilk/egui/blob/eeae485629fca24a81a7251739460b671e1420f7/README.md#how-do-i-render-3d-stuff-in-an-egui-area
 
         //
         // NOTE: If at some point you use `Painter` or similar and you
