@@ -96,22 +96,14 @@ pub fn run(
             ..
         } = &event
         {
+            // In theory we could/should check if `egui` wants "exclusive" use
+            // of this event here. But with the current integration with Fornjot
+            // we're kinda blurring the lines between "app" and "platform", so
+            // for the moment we pass every event to both `egui` & Fornjot.
             //
-            // Note: In theory we could/should check if `egui` wants "exclusive" use
-            //       of this event here.
-            //
-            //       But with the current integration with Fornjot we're kinda blurring
-            //       the lines between "app" and "platform", so for the moment we pass
-            //       every event to both `egui` & Fornjot.
-            //
-            //       The primary visible impact of this currently is that if you drag
-            //       a title bar that overlaps the model then both the model & window
-            //       get moved.
-            //
-            // TODO: Revisit this.
-            //
-            // TODO: Encapsulate the egui state/context access better.
-            //
+            // The primary visible impact of this currently is that if you drag
+            // a title bar that overlaps the model then both the model & window
+            // get moved.
             renderer
                 .egui
                 .winit_state
