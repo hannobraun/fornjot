@@ -449,7 +449,6 @@ impl Renderer {
             //       see: <https://docs.rs/winit/0.26.1/winit/window/struct.Window.html#method.scale_factor>
             //
             scale_factor,
-            egui::Rgba::TRANSPARENT,
             &egui_paint_jobs,
             &egui_output.textures_delta,
             &color_view,
@@ -587,7 +586,6 @@ impl Renderer {
     fn paint_and_update_textures(
         &mut self,
         pixels_per_point: f32,
-        clear_color: egui::Rgba,
         clipped_primitives: &[egui::ClippedPrimitive],
         textures_delta: &egui::TexturesDelta,
         output_view: &wgpu::TextureView,
@@ -621,36 +619,13 @@ impl Renderer {
             &screen_descriptor,
         );
 
-        //
-        // This approach is based on the original proof-of-concept
-        // integration which used `egui_wgpu_backend` and included
-        // the following comment for context:
-        //
-        //   "Set this to `None` to overlay the UI on top of what's in the framebuffer"
-        //   via <https://github.com/hasenbanck/egui_example/pull/17/files#diff-42cb6807ad74b3e201c5a7ca98b911c5fa08380e942be6e4ac5807f8377f87fcR132>
-        //
-        //   Alternatively, for initial testing, you can use a colour without alpha
-        //   (e.g. `Some(wgpu::Color {r:0.5, g:0.0, b:0.0, a:1.0})` ) in order
-        //   to verify that the renderpass is doing *something*.
-        //
-        let clear_color_ = if clear_color == egui::Rgba::TRANSPARENT {
-            None
-        } else {
-            Some(wgpu::Color {
-                r: clear_color.r() as f64,
-                g: clear_color.g() as f64,
-                b: clear_color.b() as f64,
-                a: clear_color.a() as f64,
-            })
-        };
-
         // Record all render passes.
         self.gui.render_pass.execute(
             encoder,
             output_view,
             clipped_primitives,
             &screen_descriptor,
-            clear_color_,
+            None,
         );
     }
 }
