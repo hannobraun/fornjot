@@ -90,7 +90,7 @@ impl Model {
         let mut command_root = Command::new("cargo");
 
         let command = command_root
-            .arg("build")
+            .arg("rustc")
             .args(["--manifest-path", &manifest_path]);
 
         let cargo_output = command.output()?;
