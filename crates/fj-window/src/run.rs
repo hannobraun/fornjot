@@ -105,7 +105,7 @@ pub fn run(
             // The primary visible impact of this currently is that if you drag
             // a title bar that overlaps the model then both the model & window
             // get moved.
-            egui_winit_state.on_event(&renderer.egui.context, window_event);
+            egui_winit_state.on_event(&renderer.gui.context, window_event);
         }
 
         // fj-window events

@@ -37,7 +37,7 @@ pub struct Renderer {
     pipelines: Pipelines,
 
     /// State required for integration with `egui`.
-    pub egui: Gui,
+    pub gui: Gui,
 }
 
 impl Renderer {
@@ -151,7 +151,7 @@ impl Renderer {
         let pipelines =
             Pipelines::new(&device, &bind_group_layout, color_format);
 
-        let egui = Gui::new(&device, surface_config.format);
+        let gui = Gui::new(&device, surface_config.format);
 
         Ok(Self {
             surface,
@@ -168,7 +168,7 @@ impl Renderer {
             geometries,
             pipelines,
 
-            egui,
+            gui,
         })
     }
 
@@ -275,7 +275,7 @@ impl Renderer {
             }
         }
 
-        self.egui.context.begin_frame(egui_input);
+        self.gui.context.begin_frame(egui_input);
 
         fn get_bbox_size_text(aabb: &Aabb<3>) -> String {
             /* Render size of model bounding box */
@@ -291,7 +291,7 @@ impl Renderer {
 
         let line_drawing_available = self.is_line_drawing_available();
 
-        egui::SidePanel::left("fj-left-panel").show(&self.egui.context, |ui| {
+        egui::SidePanel::left("fj-left-panel").show(&self.gui.context, |ui| {
             ui.add_space(16.0);
 
             ui.group(|ui| {
@@ -316,11 +316,11 @@ impl Renderer {
             {
                 ui.group(|ui| {
                     ui.checkbox(
-                        &mut self.egui.options.show_settings_ui,
+                        &mut self.gui.options.show_settings_ui,
                         "Show egui settings UI",
                     );
-                    if self.egui.options.show_settings_ui {
-                        self.egui.context.settings_ui(ui);
+                    if self.gui.options.show_settings_ui {
+                        self.gui.context.settings_ui(ui);
                     }
                 });
 
@@ -328,12 +328,12 @@ impl Renderer {
 
                 ui.group(|ui| {
                     ui.checkbox(
-                        &mut self.egui.options.show_inspection_ui,
+                        &mut self.gui.options.show_inspection_ui,
                         "Show egui inspection UI",
                     );
-                    if self.egui.options.show_inspection_ui {
+                    if self.gui.options.show_inspection_ui {
                         ui.indent("indent-inspection-ui", |ui| {
-                            self.egui.context.inspection_ui(ui);
+                            self.gui.context.inspection_ui(ui);
                         });
                     }
                 });
@@ -356,7 +356,7 @@ impl Renderer {
                 ui.group(|ui| {
                     let label_text = format!(
                         "Show debug text demo.{}",
-                        if self.egui.options.show_debug_text_example {
+                        if self.gui.options.show_debug_text_example {
                             " (Hover me.)"
                         } else {
                             ""
@@ -367,11 +367,11 @@ impl Renderer {
 
                     if ui
                         .checkbox(
-                            &mut self.egui.options.show_debug_text_example,
+                            &mut self.gui.options.show_debug_text_example,
                             label_text,
                         )
                         .hovered()
-                        && self.egui.options.show_debug_text_example
+                        && self.gui.options.show_debug_text_example
                     {
                         let hover_pos =
                             ui.input().pointer.hover_pos().unwrap_or_default();
@@ -396,29 +396,29 @@ impl Renderer {
 
                     if ui
                         .checkbox(
-                            &mut self.egui.options.show_layout_debug_on_hover,
+                            &mut self.gui.options.show_layout_debug_on_hover,
                             "Show layout debug on hover.",
                         )
                         .changed()
                     {
                         ui.ctx().set_debug_on_hover(
-                            self.egui.options.show_layout_debug_on_hover,
+                            self.gui.options.show_layout_debug_on_hover,
                         );
                     }
 
                     ui.scope(|ui| {
-                        if self.egui.options.show_trace {
+                        if self.gui.options.show_trace {
                             egui::trace!(ui, format!("{:?}", &config));
                         }
                     });
 
                     ui.indent("indent-show-trace", |ui| {
                         ui.set_enabled(
-                            self.egui.options.show_layout_debug_on_hover,
+                            self.gui.options.show_layout_debug_on_hover,
                         );
 
                         ui.checkbox(
-                            &mut self.egui.options.show_trace,
+                            &mut self.gui.options.show_trace,
                             "Also show egui trace.",
                         );
 
@@ -430,7 +430,7 @@ impl Renderer {
             ui.add_space(16.0);
         });
 
-        egui::Area::new("fj-status-message").show(&self.egui.context, |ui| {
+        egui::Area::new("fj-status-message").show(&self.gui.context, |ui| {
             ui.group(|ui| {
                 ui.add(egui::Label::new(
                     egui::RichText::new(format!("Status:{}", status.status()))
@@ -440,8 +440,8 @@ impl Renderer {
         });
 
         // End the UI frame. We could now handle the output and draw the UI with the backend.
-        let egui_output = self.egui.context.end_frame();
-        let egui_paint_jobs = self.egui.context.tessellate(egui_output.shapes);
+        let egui_output = self.gui.context.end_frame();
+        let egui_paint_jobs = self.gui.context.tessellate(egui_output.shapes);
 
         self.paint_and_update_textures(
             //
@@ -603,7 +603,7 @@ impl Renderer {
         };
 
         for (id, image_delta) in &textures_delta.set {
-            self.egui.render_pass.update_texture(
+            self.gui.render_pass.update_texture(
                 &self.device,
                 &self.queue,
                 *id,
@@ -611,10 +611,10 @@ impl Renderer {
             );
         }
         for id in &textures_delta.free {
-            self.egui.render_pass.free_texture(id);
+            self.gui.render_pass.free_texture(id);
         }
 
-        self.egui.render_pass.update_buffers(
+        self.gui.render_pass.update_buffers(
             &self.device,
             &self.queue,
             clipped_primitives,
@@ -645,7 +645,7 @@ impl Renderer {
         };
 
         // Record all render passes.
-        self.egui.render_pass.execute(
+        self.gui.render_pass.execute(
             encoder,
             output_view,
             clipped_primitives,
