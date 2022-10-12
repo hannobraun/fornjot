@@ -42,9 +42,7 @@ pub struct Renderer {
 
 impl Renderer {
     /// Returns a new `Renderer`.
-    pub async fn new(
-        screen: &impl Screen<Window = egui_winit::winit::window::Window>,
-    ) -> Result<Self, InitError> {
+    pub async fn new(screen: &impl Screen) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::PRIMARY);
 
         //
