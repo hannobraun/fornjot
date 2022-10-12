@@ -111,11 +111,7 @@ impl MaybePartial<HalfEdge> {
             Self::Full(full) => {
                 full.vertices().clone().map(|vertex| Some(vertex.into()))
             }
-            Self::Partial(partial) => partial
-                .vertices
-                .clone()
-                .map(|vertices| vertices.map(Some))
-                .unwrap_or([None, None]),
+            Self::Partial(partial) => partial.vertices.clone(),
         }
     }
 }
