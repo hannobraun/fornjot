@@ -45,26 +45,6 @@ impl Renderer {
     pub async fn new(screen: &impl Screen) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::PRIMARY);
 
-        // The implementation of the integration with `egui` is likely to need
-        // to change "significantly" depending on what architecture approach is
-        // chosen going forward.
-        //
-        // The current implementation is somewhat complicated by virtue of
-        // "sitting somewhere in the middle" in relation to being neither a
-        // standalone integration nor fully using `egui` as a framework.
-        //
-        // This is a result of a combination of the current integration being
-        // "proof of concept" level, and using `egui-winit` & `egui-wgpu`, which
-        // are both relatively new additions to the core `egui` ecosystem.
-        //
-        // It is recommended to read the following for additional helpful
-        // context for choosing an architecture:
-        //
-        // - https://github.com/emilk/egui/blob/eeae485629fca24a81a7251739460b671e1420f7/README.md#what-is-the-difference-between-egui-and-eframe
-        // - https://github.com/emilk/egui/blob/eeae485629fca24a81a7251739460b671e1420f7/README.md#how-do-i-render-3d-stuff-in-an-egui-area
-
-        let egui_context = egui::Context::default();
-
         // This is sound, as `window` is an object to create a surface upon.
         let surface = unsafe { instance.create_surface(screen.window()) };
 
@@ -171,28 +151,7 @@ impl Renderer {
         let pipelines =
             Pipelines::new(&device, &bind_group_layout, color_format);
 
-        // We need to hold on to this, otherwise it might cause the egui font
-        // texture to get dropped after drawing one frame.
-        //
-        // This then results in an `egui_wgpu_backend` error of
-        // `BackendError::Internal` with message:
-        //
-        // ```
-        // Texture 0 used but not live
-        // ```
-        //
-        // See also: <https://github.com/hasenbanck/egui_wgpu_backend/blob/b2d3e7967351690c6425f37cd6d4ffb083a7e8e6/src/lib.rs#L373>
-        let egui_rpass = egui_wgpu::renderer::RenderPass::new(
-            &device,
-            surface_config.format,
-            1,
-        );
-
-        let egui = EguiState {
-            context: egui_context,
-            render_pass: egui_rpass,
-            options: Default::default(),
-        };
+        let egui = EguiState::new(&device, surface_config.format);
 
         Ok(Self {
             surface,
