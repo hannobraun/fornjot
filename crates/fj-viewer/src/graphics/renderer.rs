@@ -45,7 +45,7 @@ impl Renderer {
     /// Returns a new `Renderer`.
     pub async fn new(
         screen: &impl Screen<Window = egui_winit::winit::window::Window>,
-        event_loop: &EventLoop<()>,
+        _: &EventLoop<()>,
     ) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::PRIMARY);
 
@@ -99,7 +99,6 @@ impl Renderer {
         //       Don't ask me how I know.
         //
 
-        let egui_winit_state = egui_winit::State::new(event_loop);
         let egui_context = egui::Context::default();
 
         // This is sound, as `window` is an object to create a surface upon.
@@ -243,7 +242,6 @@ impl Renderer {
 
             egui: EguiState {
                 context: egui_context,
-                winit_state: egui_winit_state,
                 render_pass: egui_rpass,
                 options: Default::default(),
             },

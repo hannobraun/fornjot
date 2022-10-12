@@ -8,7 +8,6 @@ pub struct EguiOptionsState {
 }
 
 pub struct EguiState {
-    pub winit_state: egui_winit::State,
     pub context: egui::Context,
     pub render_pass: egui_wgpu::renderer::RenderPass,
     pub options: EguiOptionsState,

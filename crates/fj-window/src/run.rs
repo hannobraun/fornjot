@@ -43,6 +43,7 @@ pub fn run(
 
     let mut input_handler = input::Handler::default();
     let mut renderer = block_on(Renderer::new(&window, &event_loop))?;
+    let mut egui_winit_state = egui_winit::State::new(&event_loop);
 
     let mut draw_config = DrawConfig::default();
 
@@ -104,10 +105,7 @@ pub fn run(
             // The primary visible impact of this currently is that if you drag
             // a title bar that overlaps the model then both the model & window
             // get moved.
-            renderer
-                .egui
-                .winit_state
-                .on_event(&renderer.egui.context, window_event);
+            egui_winit_state.on_event(&renderer.egui.context, window_event);
         }
 
         // fj-window events
@@ -175,7 +173,7 @@ pub fn run(
                 }
 
                 let egui_input =
-                    renderer.egui.winit_state.take_egui_input(window.window());
+                    egui_winit_state.take_egui_input(window.window());
 
                 if let Err(err) = renderer.draw(
                     &camera,
