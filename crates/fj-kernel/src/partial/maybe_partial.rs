@@ -106,10 +106,16 @@ impl MaybePartial<GlobalEdge> {
 
 impl MaybePartial<HalfEdge> {
     /// Access the vertices
-    pub fn vertices(&self) -> Option<[MaybePartial<Vertex>; 2]> {
+    pub fn vertices(&self) -> [Option<MaybePartial<Vertex>>; 2] {
         match self {
-            Self::Full(full) => Some(full.vertices().clone().map(Into::into)),
-            Self::Partial(partial) => partial.vertices.clone(),
+            Self::Full(full) => {
+                full.vertices().clone().map(|vertex| Some(vertex.into()))
+            }
+            Self::Partial(partial) => partial
+                .vertices
+                .clone()
+                .map(|vertices| vertices.map(Some))
+                .unwrap_or([None, None]),
         }
     }
 }
