@@ -91,7 +91,8 @@ impl Model {
 
         let command = command_root
             .arg("rustc")
-            .args(["--manifest-path", &manifest_path]);
+            .args(["--manifest-path", &manifest_path])
+            .args(["--crate-type", "cdylib"]);
 
         let cargo_output = command.output()?;
         let exit_status = cargo_output.status;
