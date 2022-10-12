@@ -90,8 +90,9 @@ impl Model {
         let mut command_root = Command::new("cargo");
 
         let command = command_root
-            .arg("build")
-            .args(["--manifest-path", &manifest_path]);
+            .arg("rustc")
+            .args(["--manifest-path", &manifest_path])
+            .args(["--crate-type", "cdylib"]);
 
         let cargo_output = command.output()?;
         let exit_status = cargo_output.status;

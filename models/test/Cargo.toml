@@ -7,8 +7,5 @@ homepage = "https://www.fornjot.app/"
 repository = "https://github.com/hannobraun/fornjot"
 license = "0BSD"
 
-[lib]
-crate-type = ["cdylib"]
-
 [dependencies.fj]
 path = "../../crates/fj"
