@@ -178,7 +178,7 @@ pub fn run(
                 if let Err(err) = renderer.draw(
                     &camera,
                     &mut draw_config,
-                    window.window(),
+                    window.window().scale_factor() as f32,
                     &mut status,
                     egui_input,
                 ) {

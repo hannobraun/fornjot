@@ -274,7 +274,7 @@ impl Renderer {
         &mut self,
         camera: &Camera,
         config: &mut DrawConfig,
-        window: &egui_winit::winit::window::Window,
+        scale_factor: f32,
         status: &mut StatusReport,
         egui_input: egui::RawInput,
     ) -> Result<(), DrawError> {
@@ -555,7 +555,7 @@ impl Renderer {
             // Note: `scale_factor` can be overridden via `WINIT_X11_SCALE_FACTOR` environment variable,
             //       see: <https://docs.rs/winit/0.26.1/winit/window/struct.Window.html#method.scale_factor>
             //
-            window.scale_factor() as f32,
+            scale_factor,
             egui::Rgba::TRANSPARENT,
             &egui_paint_jobs,
             &egui_output.textures_delta,
