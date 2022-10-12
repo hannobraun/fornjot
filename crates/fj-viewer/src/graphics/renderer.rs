@@ -591,7 +591,6 @@ impl Renderer {
         output_view: &wgpu::TextureView,
         encoder: &mut wgpu::CommandEncoder,
     ) {
-        // Upload all resources for the GPU.
         let screen_descriptor = egui_wgpu::renderer::ScreenDescriptor {
             size_in_pixels: [
                 self.surface_config.width,
@@ -619,7 +618,6 @@ impl Renderer {
             &screen_descriptor,
         );
 
-        // Record all render passes.
         self.gui.render_pass.execute(
             encoder,
             output_view,
