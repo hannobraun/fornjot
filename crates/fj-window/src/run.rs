@@ -42,7 +42,8 @@ pub fn run(
     let mut focus_point = None;
 
     let mut input_handler = input::Handler::default();
-    let mut renderer = block_on(Renderer::new(&window, &event_loop))?;
+    let mut renderer = block_on(Renderer::new(&window))?;
+    let mut egui_winit_state = egui_winit::State::new(&event_loop);
 
     let mut draw_config = DrawConfig::default();
 
@@ -96,26 +97,15 @@ pub fn run(
             ..
         } = &event
         {
+            // In theory we could/should check if `egui` wants "exclusive" use
+            // of this event here. But with the current integration with Fornjot
+            // we're kinda blurring the lines between "app" and "platform", so
+            // for the moment we pass every event to both `egui` & Fornjot.
             //
-            // Note: In theory we could/should check if `egui` wants "exclusive" use
-            //       of this event here.
-            //
-            //       But with the current integration with Fornjot we're kinda blurring
-            //       the lines between "app" and "platform", so for the moment we pass
-            //       every event to both `egui` & Fornjot.
-            //
-            //       The primary visible impact of this currently is that if you drag
-            //       a title bar that overlaps the model then both the model & window
-            //       get moved.
-            //
-            // TODO: Revisit this.
-            //
-            // TODO: Encapsulate the egui state/context access better.
-            //
-            renderer
-                .egui
-                .winit_state
-                .on_event(&renderer.egui.context, window_event);
+            // The primary visible impact of this currently is that if you drag
+            // a title bar that overlaps the model then both the model & window
+            // get moved.
+            egui_winit_state.on_event(&renderer.egui.context, window_event);
         }
 
         // fj-window events
@@ -182,11 +172,15 @@ pub fn run(
                     camera.update_planes(&shape.aabb);
                 }
 
+                let egui_input =
+                    egui_winit_state.take_egui_input(window.window());
+
                 if let Err(err) = renderer.draw(
                     &camera,
                     &mut draw_config,
-                    window.window(),
+                    window.window().scale_factor() as f32,
                     &mut status,
+                    egui_input,
                 ) {
                     warn!("Draw error: {}", err);
                 }

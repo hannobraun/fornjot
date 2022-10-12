@@ -13,7 +13,7 @@ categories.workspace = true
 [dependencies]
 bytemuck = "1.12.1"
 egui = "0.19.0"
-egui-winit = "0.19.0"
+egui-wgpu = "0.19.0"
 fj-interop.workspace = true
 fj-math.workspace = true
 raw-window-handle = "0.4.3"
@@ -21,7 +21,3 @@ thiserror = "1.0.35"
 tracing = "0.1.37"
 wgpu = "0.13.1"
 wgpu_glyph = "0.17.0"
-
-[dependencies.egui-wgpu]
-version = "0.19.0"
-features = ["winit"]

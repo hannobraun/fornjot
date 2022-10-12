@@ -1,6 +1,5 @@
 use std::{io, mem::size_of};
 
-use egui_winit::winit::event_loop::EventLoop;
 use fj_interop::status_report::StatusReport;
 use fj_math::{Aabb, Point};
 use thiserror::Error;
@@ -10,6 +9,7 @@ use wgpu_glyph::ab_glyph::InvalidFont;
 
 use crate::{
     camera::Camera,
+    gui::EguiState,
     screen::{Screen, Size},
 };
 
@@ -18,28 +18,6 @@ use super::{
     pipelines::Pipelines, transform::Transform, uniforms::Uniforms,
     vertices::Vertices, DEPTH_FORMAT,
 };
-
-#[derive(Default)]
-struct EguiOptionsState {
-    show_trace: bool,
-    show_layout_debug_on_hover: bool,
-    show_debug_text_example: bool,
-    show_settings_ui: bool,
-    show_inspection_ui: bool,
-}
-
-pub struct EguiState {
-    pub winit_state: egui_winit::State,
-    pub context: egui::Context,
-    rpass: egui_wgpu::renderer::RenderPass,
-    options: EguiOptionsState,
-}
-
-impl std::fmt::Debug for EguiState {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("EguiState {}")
-    }
-}
 
 /// Graphics rendering state and target abstraction
 #[derive(Debug)]
@@ -64,64 +42,8 @@ pub struct Renderer {
 
 impl Renderer {
     /// Returns a new `Renderer`.
-    pub async fn new(
-        screen: &impl Screen<Window = egui_winit::winit::window::Window>,
-        event_loop: &EventLoop<()>,
-    ) -> Result<Self, InitError> {
+    pub async fn new(screen: &impl Screen) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::PRIMARY);
-
-        //
-        // NOTE: The implementation of the integration with `egui` is
-        //       likely to need to change "significantly"[0] depending
-        //       on what architecture approach is chosen going
-        //       forward.
-        //
-        //       The current implementation is somewhat complicated by
-        //       virtue of "sitting somewhere in the middle" in
-        //       relation to being neither a standalone integration
-        //       nor fully using `egui` as a framework.
-        //
-        //       This is a result of a combination of the current
-        //       integration being "proof of concept" level; and, using
-        //       `egui-winit` & `egui-wgpu` which are both relatively
-        //       new additions to the core `egui` ecosystem.
-        //
-        //       It is recommended to read the following for additional
-        //       helpful context for choosing an architecture:
-        //
-        //         * <https://github.com/emilk/egui/blob/eeae485629fca24a81a7251739460b671e1420f7/README.md#what-is-the-difference-between-egui-and-eframe>
-        //
-        //         * <https://github.com/emilk/egui/blob/eeae485629fca24a81a7251739460b671e1420f7/README.md#how-do-i-render-3d-stuff-in-an-egui-area>
-        //
-        //       [0] By way of specific example, the recent addition
-        //           of Android support lead to considerable API
-        //           change related to `wgpu` & `winit`, see:
-        //
-        //             * <https://github.com/emilk/egui/commit/a5076d4cc491536b07b16dced1772c7b6bf7cc29>
-        //
-
-        //
-        // NOTE: If at some point you use `Painter` or similar and you
-        //       get this error:
-        //
-        //         `VK_ERROR_NATIVE_WINDOW_IN_USE_KHR`
-        //
-        //       and/or:
-        //
-        //         `wgpu_core::device: surface configuration failed: Native window is in use`
-        //
-        //       it's *probably(?)* because the swapchain has already
-        //       been created for the window (e.g. by an integration)
-        //       and *not* because of a regression of this issue
-        //       (probably):
-        //
-        //         <https://github.com/gfx-rs/wgpu/issues/1492>
-        //
-        //       Don't ask me how I know.
-        //
-
-        let egui_winit_state = egui_winit::State::new(event_loop);
-        let egui_context = egui::Context::default();
 
         // This is sound, as `window` is an object to create a surface upon.
         let surface = unsafe { instance.create_surface(screen.window()) };
@@ -140,10 +62,10 @@ impl Renderer {
             let available_features = adapter.features();
 
             // By requesting the intersection of desired and available features,
-            // we ensure two things:
+            // we prevent two things:
             //
-            // 1. That requesting the device doesn't panic, which would happen
-            //    if we requested unavailable features.
+            // 1. That requesting the device panics, which would happen if we
+            //    requested unavailable features.
             // 2. That a developer ends up accidentally using features that
             //    happen to be available on their machine, but that aren't
             //    necessarily available for all the users.
@@ -229,23 +151,7 @@ impl Renderer {
         let pipelines =
             Pipelines::new(&device, &bind_group_layout, color_format);
 
-        //
-        // Note: We need to hold on to this otherwise (from my memory)
-        //       it causes the egui font texture to get dropped after
-        //       drawing one frame.
-        //
-        //       This then results in an `egui_wgpu_backend` error of
-        //       `BackendError::Internal` with message:
-        //
-        //           "Texture 0 used but not live"
-        //
-        //       See also: <https://github.com/hasenbanck/egui_wgpu_backend/blob/b2d3e7967351690c6425f37cd6d4ffb083a7e8e6/src/lib.rs#L373>
-        //
-        let egui_rpass = egui_wgpu::renderer::RenderPass::new(
-            &device,
-            surface_config.format,
-            1,
-        );
+        let egui = EguiState::new(&device, surface_config.format);
 
         Ok(Self {
             surface,
@@ -262,12 +168,7 @@ impl Renderer {
             geometries,
             pipelines,
 
-            egui: EguiState {
-                context: egui_context,
-                winit_state: egui_winit_state,
-                rpass: egui_rpass,
-                options: Default::default(),
-            },
+            egui,
         })
     }
 
@@ -301,8 +202,9 @@ impl Renderer {
         &mut self,
         camera: &Camera,
         config: &mut DrawConfig,
-        window: &egui_winit::winit::window::Window,
+        scale_factor: f32,
         status: &mut StatusReport,
+        egui_input: egui::RawInput,
     ) -> Result<(), DrawError> {
         let aspect_ratio = self.surface_config.width as f64
             / self.surface_config.height as f64;
@@ -373,42 +275,6 @@ impl Renderer {
             }
         }
 
-        //
-        // NOTE: The following comment was written for the original
-        //       proof-of-concept which targeted older versions of
-        //       Fornjot & `egui`, so some details may be outdated &
-        //       not entirely apply to this updated implementation.
-        //
-        //       It's included here in case it still provides some
-        //       useful context.
-        //
-        //
-        // This integration is basically the result of locating the
-        // `.present()` call in the `egui` example, here:
-        //
-        //     <https://github.com/hasenbanck/egui_example/blob/ca1262a701daf0b20e097ef627fc301ab63339d9/src/main.rs#L177>
-        //
-        // and then the equivalent call in `renderer.rs`, here:
-        //
-        //     <https://github.com/hannobraun/Fornjot/blob/15294c2ca2fa5ac5016bb29853943b28952f2dae/fj-app/src/graphics/renderer.rs#L245>
-        //
-        // Then working backwards from there to merge the functionality.
-        //
-        // In addition, the following examples were also referenced:
-        //
-        //  * "Make the example more like an actual use case #17"
-        //    <https://github.com/hasenbanck/egui_example/pull/17/files>
-        //    This removes some non-essential code from the example
-        //    which helps clarify what's *actually* necessary.
-        //
-        //  * "Update to 0.17, use official winit backend #18"
-        //    <https://github.com/hasenbanck/egui_example/pull/18/files>
-        //    This uses a more up-to-date `egui` version which
-        //    included some API changes.
-        //    It's still not the *latest* `egui` version though.
-        //
-
-        let egui_input = self.egui.winit_state.take_egui_input(window);
         self.egui.context.begin_frame(egui_input);
 
         fn get_bbox_size_text(aabb: &Aabb<3>) -> String {
@@ -582,7 +448,7 @@ impl Renderer {
             // Note: `scale_factor` can be overridden via `WINIT_X11_SCALE_FACTOR` environment variable,
             //       see: <https://docs.rs/winit/0.26.1/winit/window/struct.Window.html#method.scale_factor>
             //
-            window.scale_factor() as f32,
+            scale_factor,
             egui::Rgba::TRANSPARENT,
             &egui_paint_jobs,
             &egui_output.textures_delta,
@@ -737,7 +603,7 @@ impl Renderer {
         };
 
         for (id, image_delta) in &textures_delta.set {
-            self.egui.rpass.update_texture(
+            self.egui.render_pass.update_texture(
                 &self.device,
                 &self.queue,
                 *id,
@@ -745,10 +611,10 @@ impl Renderer {
             );
         }
         for id in &textures_delta.free {
-            self.egui.rpass.free_texture(id);
+            self.egui.render_pass.free_texture(id);
         }
 
-        self.egui.rpass.update_buffers(
+        self.egui.render_pass.update_buffers(
             &self.device,
             &self.queue,
             clipped_primitives,
@@ -779,7 +645,7 @@ impl Renderer {
         };
 
         // Record all render passes.
-        self.egui.rpass.execute(
+        self.egui.render_pass.execute(
             encoder,
             output_view,
             clipped_primitives,
