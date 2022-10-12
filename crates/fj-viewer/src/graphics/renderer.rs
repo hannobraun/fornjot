@@ -188,6 +188,12 @@ impl Renderer {
             1,
         );
 
+        let egui = EguiState {
+            context: egui_context,
+            render_pass: egui_rpass,
+            options: Default::default(),
+        };
+
         Ok(Self {
             surface,
             features,
@@ -203,11 +209,7 @@ impl Renderer {
             geometries,
             pipelines,
 
-            egui: EguiState {
-                context: egui_context,
-                render_pass: egui_rpass,
-                options: Default::default(),
-            },
+            egui,
         })
     }
 
