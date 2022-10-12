@@ -1,6 +1,5 @@
 use std::{io, mem::size_of};
 
-use egui_winit::winit::event_loop::EventLoop;
 use fj_interop::status_report::StatusReport;
 use fj_math::{Aabb, Point};
 use thiserror::Error;
@@ -45,7 +44,6 @@ impl Renderer {
     /// Returns a new `Renderer`.
     pub async fn new(
         screen: &impl Screen<Window = egui_winit::winit::window::Window>,
-        _: &EventLoop<()>,
     ) -> Result<Self, InitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::PRIMARY);
 

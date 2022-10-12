@@ -42,7 +42,7 @@ pub fn run(
     let mut focus_point = None;
 
     let mut input_handler = input::Handler::default();
-    let mut renderer = block_on(Renderer::new(&window, &event_loop))?;
+    let mut renderer = block_on(Renderer::new(&window))?;
     let mut egui_winit_state = egui_winit::State::new(&event_loop);
 
     let mut draw_config = DrawConfig::default();
