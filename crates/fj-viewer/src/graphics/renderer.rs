@@ -254,7 +254,7 @@ impl Renderer {
             );
         }
 
-        if self.features.contains(wgpu::Features::POLYGON_MODE_LINE) {
+        if self.is_line_drawing_available() {
             if config.draw_mesh {
                 drawables.mesh.draw(
                     &mut encoder,
