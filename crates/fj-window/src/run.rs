@@ -51,6 +51,12 @@ pub fn run(
     let mut camera = Camera::new(&Default::default());
     let mut camera_update_once = watcher.is_some();
 
+    // Only handle resize events once every frame. This filters out spurious
+    // resize events that can lead to wgpu warnings. See this issue for some
+    // context:
+    // https://github.com/rust-windowing/winit/issues/2094
+    let mut new_size = None;
+
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
 
@@ -89,8 +95,6 @@ pub fn run(
                 }
             }
         }
-
-        //
 
         if let Event::WindowEvent {
             event: window_event,
@@ -149,11 +153,10 @@ pub fn run(
                 event: WindowEvent::Resized(size),
                 ..
             } => {
-                let size = Size {
+                new_size = Some(Size {
                     width: size.width,
                     height: size.height,
-                };
-                renderer.handle_resize(size);
+                });
             }
             Event::WindowEvent {
                 event: WindowEvent::MouseInput { state, button, .. },
@@ -170,6 +173,9 @@ pub fn run(
             Event::RedrawRequested(_) => {
                 if let Some(shape) = &shape {
                     camera.update_planes(&shape.aabb);
+                }
+                if let Some(size) = new_size.take() {
+                    renderer.handle_resize(size);
                 }
 
                 let egui_input =
