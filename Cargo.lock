@@ -1026,6 +1026,7 @@ dependencies = [
  "num-traits",
  "parry2d-f64",
  "parry3d-f64",
+ "robust-predicates",
 ]
 
 [[package]]

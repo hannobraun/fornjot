@@ -1,4 +1,3 @@
-use parry2d_f64::utils::point_in_triangle::{corner_direction, Orientation};
 use parry3d_f64::query::{Ray, RayCast as _};
 
 use crate::Vector;
@@ -58,9 +57,21 @@ impl<const D: usize> Triangle<D> {
 
 impl Triangle<2> {
     /// Returns the direction of the line through the points of the triangle.
-    pub fn winding_direction(&self) -> Winding {
-        let [v0, v1, v2] = self.points.map(|point| point.to_na());
-        corner_direction(&v0, &v1, &v2).into()
+    pub fn winding(&self) -> Winding {
+        let [pa, pb, pc] = self.points.map(|point| point.into());
+        let orient2d = robust_predicates::orient2d(&pa, &pb, &pc);
+
+        if orient2d < 0. {
+            return Winding::Cw;
+        }
+        if orient2d > 0. {
+            return Winding::Ccw;
+        }
+
+        unreachable!(
+            "Points don't form a triangle, but this was verified in the \
+            constructor."
+        )
     }
 }
 
@@ -120,16 +131,6 @@ pub enum Winding {
     Ccw,
     /// Clockwise
     Cw,
-}
-
-impl From<Orientation> for Winding {
-    fn from(o: Orientation) -> Self {
-        match o {
-            Orientation::Ccw => Winding::Ccw,
-            Orientation::Cw => Winding::Cw,
-            Orientation::None => unreachable!("not a triangle"),
-        }
-    }
 }
 
 #[cfg(test)]

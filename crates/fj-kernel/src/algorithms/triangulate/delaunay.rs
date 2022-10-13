@@ -22,7 +22,7 @@ pub fn triangulate(
             v2.point_surface,
         ])
         .expect("invalid triangle")
-        .winding_direction();
+        .winding();
 
         let required_winding = match coord_handedness {
             Handedness::LeftHanded => Winding::Cw,
