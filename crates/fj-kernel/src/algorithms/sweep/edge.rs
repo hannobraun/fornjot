@@ -213,12 +213,12 @@ mod tests {
                 .as_line_segment_from_points([[0., 0.], [0., 1.]])
                 .build(&objects)
                 .reverse();
-            let right = HalfEdge::partial()
+            let side_up = HalfEdge::partial()
                 .with_surface(Some(surface.clone()))
                 .as_line_segment_from_points([[1., 0.], [1., 1.]])
                 .build(&objects);
 
-            let cycle = Cycle::new(surface, [bottom, right, top, side_down]);
+            let cycle = Cycle::new(surface, [bottom, side_up, top, side_down]);
 
             Face::from_exterior(cycle)
         };
