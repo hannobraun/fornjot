@@ -18,6 +18,10 @@ struct VertexOutput {
     @location(1) color: vec4<f32>,
 };
 
+struct FragmentOutput {
+    @location(0) color: vec4<f32>,
+}
+
 @vertex
 fn vertex(in: VertexInput) -> VertexOutput {
     var out: VertexOutput;
@@ -32,7 +36,7 @@ fn vertex(in: VertexInput) -> VertexOutput {
 let pi: f32 = 3.14159265359;
 
 @fragment
-fn frag_model(in: VertexOutput) -> @location(0) vec4<f32> {
+fn frag_model(in: VertexOutput) -> FragmentOutput {
     let light = vec3<f32>(0.0, 0.0, -1.0);
 
     let angle = acos(dot(light, -in.normal));
@@ -40,17 +44,22 @@ fn frag_model(in: VertexOutput) -> @location(0) vec4<f32> {
 
     let f_normal = max(1.0 - f_angle, 0.0);
 
-    let color = vec4<f32>(in.color.rgb * f_normal, in.color.a);
+    var out: FragmentOutput;
+    out.color = vec4<f32>(in.color.rgb * f_normal, in.color.a);
 
-    return color;
+    return out;
 }
 
 @fragment
-fn frag_mesh(in: VertexOutput) -> @location(0) vec4<f32> {
-    return vec4<f32>(1.0 - in.color.rgb, in.color.a);
+fn frag_mesh(in: VertexOutput) -> FragmentOutput {
+    var out: FragmentOutput;
+    out.color = vec4<f32>(1.0 - in.color.rgb, in.color.a);
+    return out;
 }
 
 @fragment
-fn frag_lines(in: VertexOutput) -> @location(0) vec4<f32> {
-    return vec4<f32>(in.color.rgb, in.color.a);
+fn frag_lines(in: VertexOutput) -> FragmentOutput {
+    var out: FragmentOutput;
+    out.color = vec4<f32>(in.color.rgb, in.color.a);
+    return out;
 }
