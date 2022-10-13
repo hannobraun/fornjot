@@ -1,4 +1,3 @@
-use parry2d_f64::utils::point_in_triangle::Orientation;
 use parry3d_f64::query::{Ray, RayCast as _};
 
 use crate::Vector;
@@ -132,16 +131,6 @@ pub enum Winding {
     Ccw,
     /// Clockwise
     Cw,
-}
-
-impl From<Orientation> for Winding {
-    fn from(o: Orientation) -> Self {
-        match o {
-            Orientation::Ccw => Winding::Ccw,
-            Orientation::Cw => Winding::Cw,
-            Orientation::None => unreachable!("not a triangle"),
-        }
-    }
 }
 
 #[cfg(test)]
