@@ -90,8 +90,6 @@ pub fn run(
             }
         }
 
-        //
-
         if let Event::WindowEvent {
             event: window_event,
             ..
