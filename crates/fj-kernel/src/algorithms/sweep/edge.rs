@@ -181,8 +181,9 @@ mod tests {
 
     use crate::{
         algorithms::{reverse::Reverse, sweep::Sweep},
-        objects::{Cycle, Face, HalfEdge, Objects},
+        objects::{Cycle, Face, HalfEdge, Objects, SurfaceVertex, Vertex},
         partial::HasPartial,
+        storage::Handle,
     };
 
     #[test]
@@ -203,22 +204,46 @@ mod tests {
                 .with_surface(Some(surface.clone()))
                 .as_line_segment_from_points([[0., 0.], [1., 0.]])
                 .build(&objects);
+            let side_up = HalfEdge::partial()
+                .with_surface(Some(surface.clone()))
+                .with_back_vertex(Some(Vertex::partial().with_surface_form(
+                    Some(bottom.front().surface_form().clone()),
+                )))
+                .with_front_vertex(Some(
+                    Vertex::partial().with_surface_form(Some(
+                        Handle::<SurfaceVertex>::partial()
+                            .with_position(Some([1., 1.])),
+                    )),
+                ))
+                .as_line_segment()
+                .build(&objects);
             let top = HalfEdge::partial()
                 .with_surface(Some(surface.clone()))
-                .as_line_segment_from_points([[0., 1.], [1., 1.]])
+                .with_back_vertex(Some(
+                    Vertex::partial().with_surface_form(Some(
+                        Handle::<SurfaceVertex>::partial()
+                            .with_position(Some([0., 1.])),
+                    )),
+                ))
+                .with_front_vertex(Some(Vertex::partial().with_surface_form(
+                    Some(side_up.front().surface_form().clone()),
+                )))
+                .as_line_segment()
                 .build(&objects)
                 .reverse();
-            let left = HalfEdge::partial()
+            let side_down = HalfEdge::partial()
                 .with_surface(Some(surface.clone()))
-                .as_line_segment_from_points([[0., 0.], [0., 1.]])
+                .with_back_vertex(Some(Vertex::partial().with_surface_form(
+                    Some(bottom.back().surface_form().clone()),
+                )))
+                .with_front_vertex(Some(Vertex::partial().with_surface_form(
+                    Some(top.front().surface_form().clone()),
+                )))
+                .as_line_segment()
                 .build(&objects)
                 .reverse();
-            let right = HalfEdge::partial()
-                .with_surface(Some(surface.clone()))
-                .as_line_segment_from_points([[1., 0.], [1., 1.]])
-                .build(&objects);
 
-            let cycle = Cycle::new(surface, [bottom, right, top, left]);
+            let cycle = Cycle::new(surface, [bottom, side_up, top, side_down]);
 
             Face::from_exterior(cycle)
         };
