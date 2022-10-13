@@ -141,18 +141,12 @@ impl<'a> ShellBuilder<'a> {
                 .clone()
                 .into_iter()
                 .zip(sides_down.clone())
-                .zip(&surfaces)
-                .map(|((side_up, side_down), surface)| {
+                .map(|(side_up, side_down)| {
                     let [_, from] = side_up.vertices();
                     let [to, _] = side_down.vertices();
 
                     let from = from.surface_form().clone();
-                    let to = Handle::<SurfaceVertex>::partial()
-                        .with_position(Some(
-                            from.position() + [-edge_length, Z],
-                        ))
-                        .with_surface(Some(surface.clone()))
-                        .with_global_form(Some(to.global_form().clone()));
+                    let to = to.surface_form().clone();
 
                     let from = Vertex::partial().with_surface_form(Some(from));
                     let to = Vertex::partial().with_surface_form(Some(to));
