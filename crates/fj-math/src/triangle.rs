@@ -69,7 +69,10 @@ impl Triangle<2> {
             return Winding::Ccw;
         }
 
-        unreachable!("not a triangle")
+        unreachable!(
+            "Points don't form a triangle, but this was verified in the \
+            constructor."
+        )
     }
 }
 
