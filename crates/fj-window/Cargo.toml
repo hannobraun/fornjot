@@ -15,8 +15,11 @@ fj-host.workspace = true
 fj-operations.workspace = true
 fj-viewer.workspace = true
 fj-interop.workspace = true
-egui-winit = "0.19.0"
 futures = "0.3.24"
 thiserror = "1.0.35"
 tracing = "0.1.37"
 winit = "0.27.4"
+
+[dependencies.egui-winit]
+version = "0.19.0"
+default-features = false
