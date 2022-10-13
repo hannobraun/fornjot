@@ -208,7 +208,7 @@ mod tests {
                 .as_line_segment_from_points([[0., 1.], [1., 1.]])
                 .build(&objects)
                 .reverse();
-            let left = HalfEdge::partial()
+            let side_down = HalfEdge::partial()
                 .with_surface(Some(surface.clone()))
                 .as_line_segment_from_points([[0., 0.], [0., 1.]])
                 .build(&objects)
@@ -218,7 +218,7 @@ mod tests {
                 .as_line_segment_from_points([[1., 0.], [1., 1.]])
                 .build(&objects);
 
-            let cycle = Cycle::new(surface, [bottom, right, top, left]);
+            let cycle = Cycle::new(surface, [bottom, right, top, side_down]);
 
             Face::from_exterior(cycle)
         };
