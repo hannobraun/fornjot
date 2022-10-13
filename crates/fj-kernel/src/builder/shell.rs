@@ -194,6 +194,8 @@ impl<'a> ShellBuilder<'a> {
             let mut top_edges = top_edges;
             top_edges.reverse();
 
+            let mut vertex_prev = None;
+
             let mut edges = Vec::new();
             for (points, edge) in points.windows(2).zip(top_edges) {
                 // This can't panic, as we passed `2` to `windows`. Can be
@@ -204,20 +206,26 @@ impl<'a> ShellBuilder<'a> {
                 // https://doc.rust-lang.org/std/primitive.array.html#method.zip
                 let [point_a, point_b] = points;
                 let [vertex_a, vertex_b] = edge.vertices().clone();
-                let vertices = [(point_a, vertex_a), (point_b, vertex_b)].map(
-                    |(point, vertex)| {
-                        let surface_form = Handle::<SurfaceVertex>::partial()
+                let vertices = [
+                    (point_a, vertex_a, vertex_prev.clone()),
+                    (point_b, vertex_b, None),
+                ]
+                .map(|(point, vertex, surface_form)| {
+                    let surface_form = surface_form.unwrap_or_else(|| {
+                        Handle::<SurfaceVertex>::partial()
                             .with_position(Some(point))
                             .with_surface(Some(surface.clone()))
                             .with_global_form(Some(
                                 vertex.global_form().clone(),
                             ))
-                            .build(self.objects);
-                        Vertex::partial()
-                            .with_position(Some(vertex.position()))
-                            .with_surface_form(Some(surface_form))
-                    },
-                );
+                            .build(self.objects)
+                    });
+                    vertex_prev = Some(surface_form.clone());
+
+                    Vertex::partial()
+                        .with_position(Some(vertex.position()))
+                        .with_surface_form(Some(surface_form))
+                });
 
                 edges.push(
                     HalfEdge::partial()
