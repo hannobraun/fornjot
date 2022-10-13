@@ -58,7 +58,7 @@ impl<const D: usize> Triangle<D> {
 
 impl Triangle<2> {
     /// Returns the direction of the line through the points of the triangle.
-    pub fn winding_direction(&self) -> Winding {
+    pub fn winding(&self) -> Winding {
         let [pa, pb, pc] = self.points.map(|point| point.into());
         let orient2d = robust_predicates::orient2d(&pa, &pb, &pc);
 
