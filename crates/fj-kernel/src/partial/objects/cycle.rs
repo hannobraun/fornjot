@@ -185,7 +185,7 @@ impl PartialCycle {
 
                             half_edge
                                 .with_surface(Some(surface_for_edges.clone()))
-                                .with_from_vertex(from)
+                                .with_back_vertex(from)
                         })
                         .into_full(objects);
 
