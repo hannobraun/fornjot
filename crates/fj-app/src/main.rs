@@ -51,7 +51,7 @@ fn main() -> anyhow::Result<()> {
         tolerance: args.tolerance,
     };
 
-    let path_of_model = path.canonicalize().unwrap();
+    let path_of_model = path.canonicalize().unwrap_or_default();
 
     let model = if let Some(model) =
         args.model.or(config.default_model).as_ref()
@@ -59,9 +59,15 @@ fn main() -> anyhow::Result<()> {
         let mut model_path = path;
         model_path.push(model);
         Some(Model::from_path(model_path.clone()).with_context(|| {
-            format!(
+            if path_of_model.as_os_str().is_empty() {
+                format!(
+                    "Model is not defined, can't find model defined inside the default-model also, add model like \n cargo run -- -m {}", model.display()
+                )
+            } else {
+                format!(
                 "Failed to load model: {0}\ninside default models directory: '{1}'\nCan mainly caused by: \n1. Model '{2}' can not be found inside '{1}'\n2.'{2}' can be mis-typed see inside '{1}' for a match\n3. Define model is '{2}' couldn\'t be found ((defined in command-line arguments))", model_path.display(), path_of_model.display(), model.display()
             )
+        }
         })?)
     } else {
         None
