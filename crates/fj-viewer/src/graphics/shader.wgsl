@@ -1,3 +1,9 @@
+struct VertexInput {
+    @location(0) position: vec3<f32>,
+    @location(1) normal: vec3<f32>,
+    @location(2) color: vec4<f32>,
+}
+
 struct VertexOutput {
     @builtin(position) position: vec4<f32>,
     @location(0) normal: vec3<f32>,
@@ -13,18 +19,12 @@ struct Uniforms {
 var<uniform> uniforms: Uniforms;
 
 @vertex
-fn vertex(
-    @location(0) position: vec3<f32>,
-    @location(1) normal: vec3<f32>,
-    @location(2) color: vec4<f32>,
-)
-    -> VertexOutput
-{
+fn vertex(in: VertexInput) -> VertexOutput {
     var out: VertexOutput;
-    out.normal = (uniforms.transform_normals * vec4<f32>(normal, 0.0)).xyz;
-    out.position = uniforms.transform * vec4<f32>(position, 1.0);
+    out.normal = (uniforms.transform_normals * vec4<f32>(in.normal, 0.0)).xyz;
+    out.position = uniforms.transform * vec4<f32>(in.position, 1.0);
     // We use premultiplied alpha blending.
-    out.color = vec4<f32>(color.rgb * color.a, color.a);
+    out.color = vec4<f32>(in.color.rgb * in.color.a, in.color.a);
 
     return out;
 }
