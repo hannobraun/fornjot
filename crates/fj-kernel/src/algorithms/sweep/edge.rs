@@ -90,9 +90,9 @@ impl Sweep for (HalfEdge, Color) {
         let top_edge = {
             let bottom_vertices = bottom_edge.vertices();
 
-            let global_vertices = side_edges.clone().map(|edge| {
+            let surface_vertices = side_edges.clone().map(|edge| {
                 let [_, vertex] = edge.vertices();
-                vertex.global_form().clone()
+                vertex.surface_form().clone()
             });
 
             let points_curve_and_surface =
@@ -120,30 +120,19 @@ impl Sweep for (HalfEdge, Color) {
 
             let global = GlobalEdge::new(
                 curve.global_form().clone(),
-                global_vertices.clone(),
+                surface_vertices
+                    .clone()
+                    .map(|surface_vertex| surface_vertex.global_form().clone()),
             );
 
             let vertices = {
-                let surface_points = points_curve_and_surface
-                    .map(|(_, point_surface)| point_surface);
-
                 // Can be cleaned up, once `zip` is stable:
                 // https://doc.rust-lang.org/std/primitive.array.html#method.zip
                 let [a_vertex, b_vertex] = bottom_vertices;
-                let [a_surface, b_surface] = surface_points;
-                let [a_global, b_global] = global_vertices;
-                let vertices = [
-                    (a_vertex, a_surface, a_global),
-                    (b_vertex, b_surface, b_global),
-                ];
+                let [a_surface, b_surface] = surface_vertices;
+                let vertices = [(a_vertex, a_surface), (b_vertex, b_surface)];
 
-                vertices.map(|(vertex, point_surface, global_form)| {
-                    let surface_form = SurfaceVertex::new(
-                        point_surface,
-                        surface.clone(),
-                        global_form,
-                        objects,
-                    );
+                vertices.map(|(vertex, surface_form)| {
                     Vertex::new(vertex.position(), curve.clone(), surface_form)
                 })
             };
