@@ -73,7 +73,7 @@ impl PartialHalfEdge {
     }
 
     /// Update the partial half-edge with the given from vertex
-    pub fn with_to_vertex(
+    pub fn with_front_vertex(
         mut self,
         vertex: Option<impl Into<MaybePartial<Vertex>>>,
     ) -> Self {
