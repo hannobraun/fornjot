@@ -79,6 +79,18 @@ impl HalfEdge {
         &self.vertices
     }
 
+    /// Access the vertex at the back of the half-edge
+    pub fn back(&self) -> &Vertex {
+        let [back, _] = self.vertices();
+        back
+    }
+
+    /// Access the vertex at the front of the half-edge
+    pub fn front(&self) -> &Vertex {
+        let [_, front] = self.vertices();
+        front
+    }
+
     /// Access the global form of this half-edge
     pub fn global_form(&self) -> &GlobalEdge {
         &self.global_form
