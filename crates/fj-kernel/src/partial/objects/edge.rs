@@ -114,7 +114,7 @@ impl PartialHalfEdge {
             .with_surface(self.surface.clone())
             .as_circle_from_radius(radius);
 
-        let [a, b] = {
+        let [back, front] = {
             let [a_curve, b_curve] =
                 [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
@@ -136,7 +136,7 @@ impl PartialHalfEdge {
         };
 
         self.curve = Some(curve.into());
-        self.vertices = [Some(a), Some(b)];
+        self.vertices = [Some(back), Some(front)];
 
         self
     }
