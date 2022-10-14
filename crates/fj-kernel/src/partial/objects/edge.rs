@@ -90,8 +90,8 @@ impl PartialHalfEdge {
         vertices: Option<[impl Into<MaybePartial<Vertex>>; 2]>,
     ) -> Self {
         let vertices = vertices.map(|vertices| vertices.map(Into::into));
-        if let Some([a, b]) = vertices {
-            self.vertices = [Some(a), Some(b)];
+        if let Some([back, front]) = vertices {
+            self.vertices = [Some(back), Some(front)];
         }
         self
     }
