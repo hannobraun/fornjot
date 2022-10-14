@@ -186,7 +186,7 @@ impl PartialHalfEdge {
             .with_surface(Some(surface))
             .as_line_from_points(points);
 
-        let [a, b] = [(from, 0.), (to, 1.)].map(|(vertex, position)| {
+        let [back, front] = [(from, 0.), (to, 1.)].map(|(vertex, position)| {
             vertex.update_partial(|vertex| {
                 vertex
                     .with_position(Some([position]))
@@ -195,7 +195,7 @@ impl PartialHalfEdge {
         });
 
         self.curve = Some(curve.into());
-        self.vertices = [Some(a), Some(b)];
+        self.vertices = [Some(back), Some(front)];
 
         self
     }
