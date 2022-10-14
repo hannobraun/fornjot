@@ -134,3 +134,25 @@ jobs:
         # Export Validator doesn't support Windows yet. Issue:
         # https://github.com/hannobraun/Fornjot/issues/920
         if: ${{ matrix.os != 'windows-latest' }}
+
+  wasm:
+    name: Cross-compile
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - name: Set up toolchain
+        uses: oxidecomputer/actions-rs_toolchain@oxide/master
+        # see https://github.com/actions-rs/toolchain/pull/209
+        # uses: actions-rs/toolchain@v1
+        with:
+          override: true
+          profile: minimal
+          target: ${{ matrix.target }}
+      - name: Set up Rust cache
+        uses: Swatinem/rust-cache@1232abb8968faf344409165de17cbf9e7f340fd8
+      - name: Run `cross-compiler`
+        uses: actions-rs/cargo@4ff6ec2846f6e7217c1a9b0b503506665f134c4b
+        with:
+          command: run
+          args: --package cross-compiler
