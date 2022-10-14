@@ -166,14 +166,7 @@ impl PartialCycle {
         let half_edges = {
             let (half_edges, _) = self.half_edges.into_iter().fold(
                 (Vec::new(), None),
-                |(mut half_edges, previous), next| {
-                    let previous_half_edge: Option<HalfEdge> = previous;
-
-                    let previous_vertex = previous_half_edge.map(|half_edge| {
-                        let [_, vertex] = half_edge.vertices().clone();
-                        vertex.surface_form().clone()
-                    });
-
+                |(mut half_edges, previous_vertex), next| {
                     let next = next
                         .update_partial(|half_edge| {
                             let [from, _] = half_edge.vertices.clone();
@@ -189,9 +182,10 @@ impl PartialCycle {
                         })
                         .into_full(objects);
 
-                    half_edges.push(next.clone());
+                    let front = next.front().surface_form().clone();
+                    half_edges.push(next);
 
-                    (half_edges, Some(next))
+                    (half_edges, Some(front))
                 },
             );
 
