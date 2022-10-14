@@ -229,12 +229,13 @@ impl PartialHalfEdge {
 
 impl From<&HalfEdge> for PartialHalfEdge {
     fn from(half_edge: &HalfEdge) -> Self {
-        let [a, b] = half_edge.vertices().clone().map(Into::into);
+        let [back_vertex, front_vertex] =
+            half_edge.vertices().clone().map(Into::into);
 
         Self {
             surface: Some(half_edge.curve().surface().clone()),
             curve: Some(half_edge.curve().clone().into()),
-            vertices: [Some(a), Some(b)],
+            vertices: [Some(back_vertex), Some(front_vertex)],
             global_form: Some(half_edge.global_form().clone().into()),
         }
     }
