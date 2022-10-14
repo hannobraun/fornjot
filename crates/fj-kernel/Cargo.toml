@@ -16,7 +16,7 @@ fj-math.workspace = true
 parking_lot = "0.12.0"
 parry2d-f64 = "0.10.0"
 pretty_assertions = "1.3.0"
-robust-predicates = "0.1.3"
+robust-predicates = "0.1.4"
 spade = "2.0.0"
 thiserror = "1.0.35"
 
