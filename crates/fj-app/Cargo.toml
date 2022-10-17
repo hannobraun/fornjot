@@ -24,7 +24,7 @@ fj-viewer.workspace = true
 fj-window.workspace = true
 
 [dependencies.clap]
-version = "4.0.12"
+version = "4.0.15"
 features = ["derive"]
 
 [dependencies.figment]
