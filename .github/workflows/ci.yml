@@ -131,6 +131,3 @@ jobs:
         with:
           command: run
           args: --package export-validator
-        # Export Validator doesn't support Windows yet. Issue:
-        # https://github.com/hannobraun/Fornjot/issues/920
-        if: ${{ matrix.os != 'windows-latest' }}
