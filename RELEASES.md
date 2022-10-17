@@ -32,7 +32,7 @@ Now, edit this file to finish the release announcement:
 2. Write introduction
    - Summarize the week's development.
    - Highlight contributions.
-3. Write *Outlook*
+3. Choose title and subtitle.
 
 When done, deploy to the website.
 
@@ -66,12 +66,13 @@ Push the release branch:
 git push -u origin release
 ```
 
-Create a pull request, mention the release in the title (e.g. `Release v0.1.2`), and label it as `release`.
+Create a pull request:
 
-- Once the CI build completed successfully, merge the pull request.
-- After merging, lock the pull requests. Anything that updates this pull request (like comments), could confuse next week's release automation (because GitHub doesn't allow sorting pull requests by merge date, unfortunately).
+- Mention the version in the title (e.g. `Release v0.1.2`).
+- Label it as `release`.
+- Lock the pull request. Anything that updates this pull request (like comments), could confuse next week's release automation (because GitHub doesn't allow sorting pull requests by merge date, unfortunately).
 
-The release automation will now compile binaries, create a release on GitHub, and publish to [crates.io](https://crates.io/).
+Once the CI build completed successfully, merge the pull request. The release automation will now compile binaries, create a release on GitHub, and publish to [crates.io](https://crates.io/).
 
 
 ## 7. Update release on GitHub
@@ -99,6 +100,8 @@ Additionally, post it in the following places:
 
 - Twitter
   https://twitter.com/hannobraun
+- Mastodon
+  https://fosstodon.org/@hannobraun
 - Reddit
   - https://www.reddit.com/r/rust/
     - Use previous post as template
