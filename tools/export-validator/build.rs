@@ -11,13 +11,7 @@ fn main() -> anyhow::Result<()> {
     println!("cargo:rustc-link-lib=dylib=3mf");
 
     // And this is necessary, so the linked library is found at runtime.
-    //
-    // The relative path used here is designed to work when the validator is
-    // executed within the repository using `cargo run`, which is the intended
-    // use case.
-    let executable_to_libs =
-        format!("../../tools/export-validator/{libs_dir_relative}");
-    println!("cargo:rustc-link-arg=-Wl,-rpath,$ORIGIN/{executable_to_libs}");
+    println!("cargo:rustc-link-arg=-Wl,-rpath,{libs_dir}");
 
     Ok(())
 }
