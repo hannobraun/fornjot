@@ -12,7 +12,9 @@ fn main() -> anyhow::Result<()> {
     println!("cargo:rustc-link-lib=dylib=3mf");
 
     // And this is necessary, so the linked library is found at runtime.
-    println!("cargo:rustc-link-arg=-Wl,-rpath,{}", libs_dir.display());
+    if cfg!(target_family = "unix") {
+        println!("cargo:rustc-link-arg=-Wl,-rpath,{}", libs_dir.display());
+    }
 
     Ok(())
 }
