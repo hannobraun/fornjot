@@ -1,5 +1,85 @@
 # Fornjot - Changelog
 
+## v0.20.0 (2022-10-17)
+
+### End-user improvements
+
+Improvements to Fornjot and its documentation that are visible to end users.
+
+- Improve error message, if model can't be found ([#1154]; thank you, [@ArshErgon]!)
+- Remove old UI ([#1202])
+- Invert default zoom direction; add config to override that ([#1204])
+- Document convenient syntax for `fj` operations ([#1205])
+- Remove the need to specify `crate-type` in `Cargo.toml` ([#1209])
+- Fix some `wgpu`/`egui-winit` errors and warnings ([#1216])
+
+### Ecosystem improvements
+
+Improvements to Fornjot components that are relevant to developers building on top of those. These have an indirect effect on end users, through fixed bugs and improved robustness.
+
+#### `fj-kernel`
+
+- Rename `Stores` to `Objects`, move it to `objects` ([#1198])
+- Provide access to default planes through `Objects` ([#1200])
+- Fix more object duplication issues ([#1206], [#1207], [#1215], [#1218], [#1220], [#1222])
+- Expand partial object API([#1212], [#1213])
+- Integrate `SurfaceVertex` into centralized object storage ([#1214])
+- Add methods to access single `HalfEdge` vertices ([#1219])
+
+#### `fj-math`
+
+- Fix `Triangle::winding` ([#1217])
+
+#### `fj-operations`
+
+- Remove redundant argument from `Shape::compute_brep` ([#1201])
+
+#### `fj-viewer`
+
+- Remove dependency on winit ([#1210])
+
+### Internal Improvements
+
+Improvements that are relevant to developers working on Fornjot itself.
+
+- Update release procedure ([#1195], [#1208])
+- Update dependencies ([#1196], [#1197])
+- Add Nix build and dev-shell support via Nix flakes ([#1199], [#1203]; thank you, [@Philipp-M]!)
+- Clean up egui-related code ([#1211])
+
+[#1154]: https://github.com/hannobraun/Fornjot/pull/1154
+[#1195]: https://github.com/hannobraun/Fornjot/pull/1195
+[#1196]: https://github.com/hannobraun/Fornjot/pull/1196
+[#1197]: https://github.com/hannobraun/Fornjot/pull/1197
+[#1198]: https://github.com/hannobraun/Fornjot/pull/1198
+[#1199]: https://github.com/hannobraun/Fornjot/pull/1199
+[#1200]: https://github.com/hannobraun/Fornjot/pull/1200
+[#1201]: https://github.com/hannobraun/Fornjot/pull/1201
+[#1202]: https://github.com/hannobraun/Fornjot/pull/1202
+[#1203]: https://github.com/hannobraun/Fornjot/pull/1203
+[#1204]: https://github.com/hannobraun/Fornjot/pull/1204
+[#1205]: https://github.com/hannobraun/Fornjot/pull/1205
+[#1206]: https://github.com/hannobraun/Fornjot/pull/1206
+[#1207]: https://github.com/hannobraun/Fornjot/pull/1207
+[#1208]: https://github.com/hannobraun/Fornjot/pull/1208
+[#1209]: https://github.com/hannobraun/Fornjot/pull/1209
+[#1210]: https://github.com/hannobraun/Fornjot/pull/1210
+[#1211]: https://github.com/hannobraun/Fornjot/pull/1211
+[#1212]: https://github.com/hannobraun/Fornjot/pull/1212
+[#1213]: https://github.com/hannobraun/Fornjot/pull/1213
+[#1214]: https://github.com/hannobraun/Fornjot/pull/1214
+[#1215]: https://github.com/hannobraun/Fornjot/pull/1215
+[#1216]: https://github.com/hannobraun/Fornjot/pull/1216
+[#1217]: https://github.com/hannobraun/Fornjot/pull/1217
+[#1218]: https://github.com/hannobraun/Fornjot/pull/1218
+[#1219]: https://github.com/hannobraun/Fornjot/pull/1219
+[#1220]: https://github.com/hannobraun/Fornjot/pull/1220
+[#1222]: https://github.com/hannobraun/Fornjot/pull/1222
+
+[@ArshErgon]: https://github.com/ArshErgon
+[@Philipp-M]: https://github.com/Philipp-M
+
+
 ## v0.19.0 (2022-10-10)
 
 ### End-user improvements
