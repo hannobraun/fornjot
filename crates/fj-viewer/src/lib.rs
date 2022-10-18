@@ -14,12 +14,11 @@
 
 #![warn(missing_docs)]
 
-pub mod camera;
-pub mod graphics;
-pub mod input;
-pub mod screen;
-
+mod camera;
+mod graphics;
 mod gui;
+mod input;
+mod screen;
 
 pub use self::{
     camera::Camera,
