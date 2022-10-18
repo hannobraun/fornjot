@@ -19,6 +19,7 @@ use fj_math::Aabb;
 
 use crate::graphics::DrawConfig;
 
+/// The GUI
 pub struct Gui {
     context: egui::Context,
     render_pass: egui_wgpu::renderer::RenderPass,
