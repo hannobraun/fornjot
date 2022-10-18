@@ -220,7 +220,7 @@ fn input_event(
     held_mouse_button: &Option<MouseButton>,
     previous_cursor: &mut Option<NormalizedPosition>,
     invert_zoom: bool,
-) -> Option<input::Event> {
+) -> Option<input::InputEvent> {
     match event {
         Event::WindowEvent {
             event: WindowEvent::CursorMoved { position, .. },
@@ -243,10 +243,10 @@ fn input_event(
                         let angle_x = -diff_y * ROTATION_SENSITIVITY;
                         let angle_y = diff_x * ROTATION_SENSITIVITY;
 
-                        Some(input::Event::Rotation { angle_x, angle_y })
+                        Some(input::InputEvent::Rotation { angle_x, angle_y })
                     }
                     MouseButton::Right => {
-                        Some(input::Event::Translate { previous, current })
+                        Some(input::InputEvent::Translate { previous, current })
                     }
                     _ => None,
                 },
@@ -270,7 +270,7 @@ fn input_event(
 
             let delta = if invert_zoom { -delta } else { delta };
 
-            Some(input::Event::Zoom(delta))
+            Some(input::InputEvent::Zoom(delta))
         }
         _ => None,
     }
