@@ -1,13 +1,13 @@
-use crate::screen::NormalizedPosition;
+use crate::screen::NormalizedScreenPosition;
 
 /// An input event
-pub enum Event {
+pub enum InputEvent {
     /// Move the model up, down, left or right
-    Translate {
+    Translation {
         /// The normalized position of the cursor before input
-        previous: NormalizedPosition,
+        previous: NormalizedScreenPosition,
         /// The normalized position of the cursor after input
-        current: NormalizedPosition,
+        current: NormalizedScreenPosition,
     },
 
     /// Rotate the model around the focus point

@@ -1,7 +1,5 @@
 use std::{io, mem::size_of};
 
-use fj_interop::status_report::StatusReport;
-use fj_math::{Aabb, Point};
 use thiserror::Error;
 use tracing::debug;
 use wgpu::util::DeviceExt as _;
@@ -10,7 +8,7 @@ use wgpu_glyph::ab_glyph::InvalidFont;
 use crate::{
     camera::Camera,
     gui::Gui,
-    screen::{Screen, Size},
+    screen::{Screen, ScreenSize},
 };
 
 use super::{
@@ -35,14 +33,11 @@ pub struct Renderer {
 
     geometries: Geometries,
     pipelines: Pipelines,
-
-    /// State required for integration with `egui`.
-    pub gui: Gui,
 }
 
 impl Renderer {
     /// Returns a new `Renderer`.
-    pub async fn new(screen: &impl Screen) -> Result<Self, InitError> {
+    pub async fn new(screen: &impl Screen) -> Result<Self, RendererInitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::PRIMARY);
 
         // This is sound, as `window` is an object to create a surface upon.
@@ -55,7 +50,7 @@ impl Renderer {
                 compatible_surface: Some(&surface),
             })
             .await
-            .ok_or(InitError::RequestAdapter)?;
+            .ok_or(RendererInitError::RequestAdapter)?;
 
         let features = {
             let desired_features = wgpu::Features::POLYGON_MODE_LINE;
@@ -89,7 +84,7 @@ impl Renderer {
             .copied()
             .expect("Error determining preferred color format");
 
-        let Size { width, height } = screen.size();
+        let ScreenSize { width, height } = screen.size();
         let surface_config = wgpu::SurfaceConfiguration {
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
             format: color_format,
@@ -139,19 +134,10 @@ impl Renderer {
             label: None,
         });
 
-        let geometries = Geometries::new(
-            &device,
-            &Vertices::empty(),
-            &Vertices::empty(),
-            Aabb {
-                min: Point::from([0.0, 0.0, 0.0]),
-                max: Point::from([0.0, 0.0, 0.0]),
-            },
-        );
+        let geometries =
+            Geometries::new(&device, &Vertices::empty(), &Vertices::empty());
         let pipelines =
             Pipelines::new(&device, &bind_group_layout, color_format);
-
-        let gui = Gui::new(&device, surface_config.format);
 
         Ok(Self {
             surface,
@@ -167,26 +153,23 @@ impl Renderer {
 
             geometries,
             pipelines,
-
-            gui,
         })
     }
 
+    pub(crate) fn init_gui(&self) -> Gui {
+        Gui::new(&self.device, self.surface_config.format)
+    }
+
     /// Updates the geometry of the model being rendered.
-    pub fn update_geometry(
-        &mut self,
-        mesh: Vertices,
-        lines: Vertices,
-        aabb: Aabb<3>,
-    ) {
-        self.geometries = Geometries::new(&self.device, &mesh, &lines, aabb);
+    pub fn update_geometry(&mut self, mesh: Vertices, lines: Vertices) {
+        self.geometries = Geometries::new(&self.device, &mesh, &lines);
     }
 
     /// Resizes the render surface.
     ///
     /// # Arguments
     /// - `size`: The target size for the render surface.
-    pub fn handle_resize(&mut self, size: Size) {
+    pub fn handle_resize(&mut self, size: ScreenSize) {
         self.surface_config.width = size.width;
         self.surface_config.height = size.height;
 
@@ -201,10 +184,9 @@ impl Renderer {
     pub fn draw(
         &mut self,
         camera: &Camera,
-        config: &mut DrawConfig,
+        config: &DrawConfig,
         scale_factor: f32,
-        status: &mut StatusReport,
-        egui_input: egui::RawInput,
+        gui: &mut Gui,
     ) -> Result<(), DrawError> {
         let aspect_ratio = self.surface_config.width as f64
             / self.surface_config.height as f64;
@@ -273,14 +255,7 @@ impl Renderer {
             }
         }
 
-        self.gui.update(
-            egui_input,
-            config,
-            &self.geometries.aabb,
-            status,
-            self.is_line_drawing_available(),
-        );
-        self.gui.draw(
+        gui.draw(
             &self.device,
             &self.queue,
             &mut encoder,
@@ -361,7 +336,7 @@ impl Renderer {
 
 /// Error describing the set of render surface initialization errors
 #[derive(Error, Debug)]
-pub enum InitError {
+pub enum RendererInitError {
     /// General IO error
     #[error("I/O error: {0}")]
     Io(#[from] io::Error),

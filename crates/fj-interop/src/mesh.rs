@@ -5,7 +5,7 @@ use std::{collections::HashMap, hash::Hash};
 use fj_math::Point;
 
 /// A triangle mesh
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Mesh<V> {
     vertices: Vec<V>,
     indices: Vec<Index>,

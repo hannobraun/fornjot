@@ -14,9 +14,18 @@
 
 #![warn(missing_docs)]
 
-pub mod camera;
-pub mod graphics;
-pub mod input;
-pub mod screen;
-
+mod camera;
+mod graphics;
 mod gui;
+mod input;
+mod screen;
+mod viewer;
+
+pub use self::{
+    camera::Camera,
+    graphics::{DrawConfig, Renderer, RendererInitError},
+    gui::Gui,
+    input::{InputEvent, InputHandler},
+    screen::{NormalizedScreenPosition, Screen, ScreenSize},
+    viewer::Viewer,
+};

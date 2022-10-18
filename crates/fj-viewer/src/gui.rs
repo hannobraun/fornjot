@@ -19,14 +19,15 @@ use fj_math::Aabb;
 
 use crate::graphics::DrawConfig;
 
+/// The GUI
 pub struct Gui {
-    pub context: egui::Context,
-    pub render_pass: egui_wgpu::renderer::RenderPass,
-    pub options: Options,
+    context: egui::Context,
+    render_pass: egui_wgpu::renderer::RenderPass,
+    options: Options,
 }
 
 impl Gui {
-    pub fn new(
+    pub(crate) fn new(
         device: &wgpu::Device,
         texture_format: wgpu::TextureFormat,
     ) -> Self {
@@ -71,7 +72,12 @@ impl Gui {
         }
     }
 
-    pub fn update(
+    /// Access the egui context
+    pub fn context(&self) -> &egui::Context {
+        &self.context
+    }
+
+    pub(crate) fn update(
         &mut self,
         egui_input: egui::RawInput,
         config: &mut DrawConfig,
@@ -242,7 +248,7 @@ impl Gui {
         });
     }
 
-    pub fn draw(
+    pub(crate) fn draw(
         &mut self,
         device: &wgpu::Device,
         queue: &wgpu::Queue,

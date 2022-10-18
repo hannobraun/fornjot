@@ -9,13 +9,11 @@ use fj_host::Watcher;
 use fj_interop::status_report::StatusReport;
 use fj_operations::shape_processor::ShapeProcessor;
 use fj_viewer::{
-    camera::Camera,
-    graphics::{self, DrawConfig, Renderer},
-    input,
-    screen::{NormalizedPosition, Screen as _, Size},
+    InputEvent, NormalizedScreenPosition, RendererInitError, Screen,
+    ScreenSize, Viewer,
 };
 use futures::executor::block_on;
-use tracing::{trace, warn};
+use tracing::trace;
 use winit::{
     dpi::PhysicalPosition,
     event::{
@@ -36,20 +34,11 @@ pub fn run(
 ) -> Result<(), Error> {
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop)?;
+    let mut viewer = block_on(Viewer::new(&window))?;
 
-    let mut previous_cursor = None;
     let mut held_mouse_button = None;
-    let mut focus_point = None;
 
-    let mut input_handler = input::Handler::default();
-    let mut renderer = block_on(Renderer::new(&window))?;
     let mut egui_winit_state = egui_winit::State::new(&event_loop);
-
-    let mut draw_config = DrawConfig::default();
-
-    let mut shape = None;
-    let mut camera = Camera::new(&Default::default());
-    let mut camera_update_once = watcher.is_some();
 
     // Only handle resize events once every frame. This filters out spurious
     // resize events that can lead to wgpu warnings. See this issue for some
@@ -64,18 +53,7 @@ pub fn run(
             if let Some(new_shape) = watcher.receive(&mut status) {
                 match shape_processor.process(&new_shape) {
                     Ok(new_shape) => {
-                        renderer.update_geometry(
-                            (&new_shape.mesh).into(),
-                            (&new_shape.debug_info).into(),
-                            new_shape.aabb,
-                        );
-
-                        if camera_update_once {
-                            camera_update_once = false;
-                            camera = Camera::new(&new_shape.aabb);
-                        }
-
-                        shape = Some(new_shape);
+                        viewer.handle_shape_update(new_shape);
                     }
                     Err(err) => {
                         // Can be cleaned up, once `Report` is stable:
@@ -96,11 +74,7 @@ pub fn run(
             }
         }
 
-        if let Event::WindowEvent {
-            event: window_event,
-            ..
-        } = &event
-        {
+        if let Event::WindowEvent { event, .. } = &event {
             // In theory we could/should check if `egui` wants "exclusive" use
             // of this event here. But with the current integration with Fornjot
             // we're kinda blurring the lines between "app" and "platform", so
@@ -109,7 +83,7 @@ pub fn run(
             // The primary visible impact of this currently is that if you drag
             // a title bar that overlaps the model then both the model & window
             // get moved.
-            egui_winit_state.on_event(&renderer.gui.context, window_event);
+            egui_winit_state.on_event(viewer.gui.context(), event);
         }
 
         // fj-window events
@@ -135,17 +109,13 @@ pub fn run(
             } => match virtual_key_code {
                 VirtualKeyCode::Escape => *control_flow = ControlFlow::Exit,
                 VirtualKeyCode::Key1 => {
-                    draw_config.draw_model = !draw_config.draw_model
+                    viewer.toggle_draw_model();
                 }
                 VirtualKeyCode::Key2 => {
-                    if renderer.is_line_drawing_available() {
-                        draw_config.draw_mesh = !draw_config.draw_mesh
-                    }
+                    viewer.toggle_draw_mesh();
                 }
                 VirtualKeyCode::Key3 => {
-                    if renderer.is_line_drawing_available() {
-                        draw_config.draw_debug = !draw_config.draw_debug
-                    }
+                    viewer.toggle_draw_debug();
                 }
                 _ => {}
             },
@@ -153,7 +123,7 @@ pub fn run(
                 event: WindowEvent::Resized(size),
                 ..
             } => {
-                new_size = Some(Size {
+                new_size = Some(ScreenSize {
                     width: size.width,
                     height: size.height,
                 });
@@ -161,64 +131,49 @@ pub fn run(
             Event::WindowEvent {
                 event: WindowEvent::MouseInput { state, button, .. },
                 ..
-            } => {
-                match state {
-                    ElementState::Pressed => held_mouse_button = Some(button),
-                    ElementState::Released => held_mouse_button = None,
-                };
-            }
+            } => match state {
+                ElementState::Pressed => {
+                    held_mouse_button = Some(button);
+                    viewer.add_focus_point();
+                }
+                ElementState::Released => {
+                    held_mouse_button = None;
+                    viewer.remove_focus_point();
+                }
+            },
+            Event::WindowEvent {
+                event: WindowEvent::MouseWheel { .. },
+                ..
+            } => viewer.add_focus_point(),
             Event::MainEventsCleared => {
                 window.window().request_redraw();
             }
             Event::RedrawRequested(_) => {
-                if let Some(shape) = &shape {
-                    camera.update_planes(&shape.aabb);
-                }
                 if let Some(size) = new_size.take() {
-                    renderer.handle_resize(size);
+                    viewer.handle_screen_resize(size);
                 }
 
                 let egui_input =
                     egui_winit_state.take_egui_input(window.window());
 
-                if let Err(err) = renderer.draw(
-                    &camera,
-                    &mut draw_config,
+                viewer.draw(
                     window.window().scale_factor() as f32,
                     &mut status,
                     egui_input,
-                ) {
-                    warn!("Draw error: {}", err);
-                }
+                );
             }
             _ => {}
-        }
-
-        // fj-viewer input events
-        // These can fire multiple times per frame
-
-        if let (Some(shape), Some(should_focus)) = (&shape, focus_event(&event))
-        {
-            if should_focus {
-                // Don't unnecessarily recalculate focus point
-                if focus_point.is_none() {
-                    focus_point =
-                        Some(camera.focus_point(previous_cursor, shape));
-                }
-            } else {
-                focus_point = None;
-            }
         }
 
         let input_event = input_event(
             &event,
             &window,
             &held_mouse_button,
-            &mut previous_cursor,
+            &mut viewer.cursor,
             invert_zoom,
         );
-        if let (Some(input_event), Some(fp)) = (input_event, focus_point) {
-            input_handler.handle_event(input_event, fp, &mut camera);
+        if let Some(input_event) = input_event {
+            viewer.handle_input_event(input_event);
         }
     });
 }
@@ -227,9 +182,9 @@ fn input_event(
     event: &Event<()>,
     window: &Window,
     held_mouse_button: &Option<MouseButton>,
-    previous_cursor: &mut Option<NormalizedPosition>,
+    previous_cursor: &mut Option<NormalizedScreenPosition>,
     invert_zoom: bool,
-) -> Option<input::Event> {
+) -> Option<InputEvent> {
     match event {
         Event::WindowEvent {
             event: WindowEvent::CursorMoved { position, .. },
@@ -240,7 +195,7 @@ fn input_event(
 
             // Cursor position in normalized coordinates (-1 to +1) with
             // aspect ratio taken into account.
-            let current = NormalizedPosition {
+            let current = NormalizedScreenPosition {
                 x: position.x / width * 2. - 1.,
                 y: -(position.y / height * 2. - 1.) / aspect_ratio,
             };
@@ -252,10 +207,10 @@ fn input_event(
                         let angle_x = -diff_y * ROTATION_SENSITIVITY;
                         let angle_y = diff_x * ROTATION_SENSITIVITY;
 
-                        Some(input::Event::Rotation { angle_x, angle_y })
+                        Some(InputEvent::Rotation { angle_x, angle_y })
                     }
                     MouseButton::Right => {
-                        Some(input::Event::Translate { previous, current })
+                        Some(InputEvent::Translation { previous, current })
                     }
                     _ => None,
                 },
@@ -279,32 +234,8 @@ fn input_event(
 
             let delta = if invert_zoom { -delta } else { delta };
 
-            Some(input::Event::Zoom(delta))
+            Some(InputEvent::Zoom(delta))
         }
-        _ => None,
-    }
-}
-
-/// Returns true/false if focus point point should be created/removed
-/// None means no change to focus point is needed
-fn focus_event(event: &Event<()>) -> Option<bool> {
-    match event {
-        Event::WindowEvent {
-            event:
-                WindowEvent::MouseInput {
-                    state,
-                    button: MouseButton::Left | MouseButton::Right,
-                    ..
-                },
-            ..
-        } => match state {
-            ElementState::Pressed => Some(true),
-            ElementState::Released => Some(false),
-        },
-        Event::WindowEvent {
-            event: WindowEvent::MouseWheel { .. },
-            ..
-        } => Some(true),
         _ => None,
     }
 }
@@ -318,7 +249,7 @@ pub enum Error {
 
     /// Error initializing graphics
     #[error("Error initializing graphics")]
-    GraphicsInit(#[from] graphics::InitError),
+    GraphicsInit(#[from] RendererInitError),
 }
 
 /// Affects the speed of zoom movement given a scroll wheel input in lines.
