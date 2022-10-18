@@ -10,7 +10,7 @@ use fj_interop::status_report::StatusReport;
 use fj_operations::shape_processor::ShapeProcessor;
 use fj_viewer::{
     camera::Camera,
-    graphics::{self, DrawConfig, Renderer},
+    graphics::{DrawConfig, Renderer, RendererInitError},
     input::{InputEvent, InputHandler},
     screen::{NormalizedScreenPosition, Screen as _, ScreenSize},
 };
@@ -309,7 +309,7 @@ pub enum Error {
 
     /// Error initializing graphics
     #[error("Error initializing graphics")]
-    GraphicsInit(#[from] graphics::RendererInitError),
+    GraphicsInit(#[from] RendererInitError),
 }
 
 /// Affects the speed of zoom movement given a scroll wheel input in lines.
