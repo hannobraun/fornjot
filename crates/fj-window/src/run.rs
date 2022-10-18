@@ -36,7 +36,6 @@ pub fn run(
     let window = Window::new(&event_loop)?;
     let mut viewer = block_on(Viewer::new(&window))?;
 
-    let mut previous_cursor = None;
     let mut held_mouse_button = None;
     let mut focus_point = None;
 
@@ -166,7 +165,7 @@ pub fn run(
                 // Don't unnecessarily recalculate focus point
                 if focus_point.is_none() {
                     focus_point =
-                        Some(viewer.camera.focus_point(previous_cursor, shape));
+                        Some(viewer.camera.focus_point(viewer.cursor, shape));
                 }
             } else {
                 focus_point = None;
@@ -177,7 +176,7 @@ pub fn run(
             &event,
             &window,
             &held_mouse_button,
-            &mut previous_cursor,
+            &mut viewer.cursor,
             invert_zoom,
         );
         if let (Some(input_event), Some(focus_point)) =

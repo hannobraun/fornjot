@@ -5,14 +5,17 @@ use fj_math::Aabb;
 use tracing::warn;
 
 use crate::{
-    gui::Gui, Camera, DrawConfig, InputHandler, Renderer, RendererInitError,
-    Screen, ScreenSize,
+    gui::Gui, Camera, DrawConfig, InputHandler, NormalizedScreenPosition,
+    Renderer, RendererInitError, Screen, ScreenSize,
 };
 
 /// The Fornjot model viewer
 pub struct Viewer {
     /// The camera
     pub camera: Camera,
+
+    /// The cursor
+    pub cursor: Option<NormalizedScreenPosition>,
 
     /// The draw config
     pub draw_config: DrawConfig,
@@ -38,6 +41,7 @@ impl Viewer {
 
         Ok(Self {
             camera: Camera::default(),
+            cursor: None,
             draw_config: DrawConfig::default(),
             gui,
             input_handler: InputHandler::default(),
