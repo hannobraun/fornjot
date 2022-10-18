@@ -5,8 +5,10 @@
 pub struct DrawConfig {
     /// Toggle for displaying the shaded model
     pub draw_model: bool,
+
     /// Toggle for displaying the wireframe model
     pub draw_mesh: bool,
+
     /// Toggle for displaying model debug information
     pub draw_debug: bool,
 }
