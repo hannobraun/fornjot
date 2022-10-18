@@ -76,11 +76,7 @@ pub fn run(
             }
         }
 
-        if let Event::WindowEvent {
-            event: window_event,
-            ..
-        } = &event
-        {
+        if let Event::WindowEvent { event, .. } = &event {
             // In theory we could/should check if `egui` wants "exclusive" use
             // of this event here. But with the current integration with Fornjot
             // we're kinda blurring the lines between "app" and "platform", so
@@ -89,7 +85,7 @@ pub fn run(
             // The primary visible impact of this currently is that if you drag
             // a title bar that overlaps the model then both the model & window
             // get moved.
-            egui_winit_state.on_event(viewer.gui.context(), window_event);
+            egui_winit_state.on_event(viewer.gui.context(), event);
         }
 
         // fj-window events
