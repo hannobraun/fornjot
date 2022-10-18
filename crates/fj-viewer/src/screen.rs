@@ -14,8 +14,10 @@ pub trait Screen {
     fn window(&self) -> &Self::Window;
 }
 
-/// Cursor position in normalized coordinates (-1 to +1) with aspect ratio taken into account.
-/// i.e. the center of the screen is at (0, 0)
+/// Cursor position in normalized coordinates (-1 to +1)
+///
+/// The center of the screen is at (0, 0). The aspect ratio is taken into
+/// account.
 #[derive(Clone, Copy, Debug)]
 pub struct NormalizedPosition {
     /// The x coordinate of the position [-1, 1]
