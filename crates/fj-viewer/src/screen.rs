@@ -19,7 +19,7 @@ pub trait Screen {
 /// The center of the screen is at (0, 0). The aspect ratio is taken into
 /// account.
 #[derive(Clone, Copy, Debug)]
-pub struct NormalizedPosition {
+pub struct NormalizedScreenPosition {
     /// The x coordinate of the position [-1, 1]
     pub x: f64,
 

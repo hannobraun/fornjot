@@ -4,7 +4,7 @@ use std::f64::consts::FRAC_PI_2;
 use fj_interop::processed_shape::ProcessedShape;
 use fj_math::{Aabb, Point, Scalar, Transform, Vector};
 
-use crate::screen::NormalizedPosition;
+use crate::screen::NormalizedScreenPosition;
 
 /// The camera abstraction
 ///
@@ -73,7 +73,7 @@ impl Camera {
     /// Transform a normalized cursor position on the near plane to model space.
     pub fn cursor_to_model_space(
         &self,
-        cursor: NormalizedPosition,
+        cursor: NormalizedScreenPosition,
     ) -> Point<3> {
         // Cursor position in camera space.
         let f = (self.field_of_view_in_x() / 2.).tan() * self.near_plane();
@@ -86,7 +86,7 @@ impl Camera {
     /// Compute the point on the model, that the cursor currently points to.
     pub fn focus_point(
         &self,
-        cursor: Option<NormalizedPosition>,
+        cursor: Option<NormalizedScreenPosition>,
         shape: &ProcessedShape,
     ) -> FocusPoint {
         self.calculate_focus_point(cursor, shape)
@@ -95,7 +95,7 @@ impl Camera {
 
     fn calculate_focus_point(
         &self,
-        cursor: Option<NormalizedPosition>,
+        cursor: Option<NormalizedScreenPosition>,
         shape: &ProcessedShape,
     ) -> Option<FocusPoint> {
         // Transform camera and cursor positions to model space.

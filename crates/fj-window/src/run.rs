@@ -12,7 +12,7 @@ use fj_viewer::{
     camera::Camera,
     graphics::{self, DrawConfig, Renderer},
     input::{InputEvent, InputHandler},
-    screen::{NormalizedPosition, Screen as _, Size},
+    screen::{NormalizedScreenPosition, Screen as _, Size},
 };
 use futures::executor::block_on;
 use tracing::{trace, warn};
@@ -218,7 +218,7 @@ fn input_event(
     event: &Event<()>,
     window: &Window,
     held_mouse_button: &Option<MouseButton>,
-    previous_cursor: &mut Option<NormalizedPosition>,
+    previous_cursor: &mut Option<NormalizedScreenPosition>,
     invert_zoom: bool,
 ) -> Option<InputEvent> {
     match event {
@@ -231,7 +231,7 @@ fn input_event(
 
             // Cursor position in normalized coordinates (-1 to +1) with
             // aspect ratio taken into account.
-            let current = NormalizedPosition {
+            let current = NormalizedScreenPosition {
                 x: position.x / width * 2. - 1.,
                 y: -(position.y / height * 2. - 1.) / aspect_ratio,
             };

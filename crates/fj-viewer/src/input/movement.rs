@@ -2,7 +2,7 @@ use fj_math::{Point, Scalar, Transform, Vector};
 
 use crate::{
     camera::{Camera, FocusPoint},
-    screen::NormalizedPosition,
+    screen::NormalizedScreenPosition,
 };
 
 pub struct Movement;
@@ -10,8 +10,8 @@ pub struct Movement;
 impl Movement {
     pub fn apply(
         &mut self,
-        previous: NormalizedPosition,
-        current: NormalizedPosition,
+        previous: NormalizedScreenPosition,
+        current: NormalizedScreenPosition,
         focus_point: FocusPoint,
         camera: &mut Camera,
     ) {
