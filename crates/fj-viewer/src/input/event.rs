@@ -3,7 +3,7 @@ use crate::screen::NormalizedPosition;
 /// An input event
 pub enum InputEvent {
     /// Move the model up, down, left or right
-    Translate {
+    Translation {
         /// The normalized position of the cursor before input
         previous: NormalizedPosition,
         /// The normalized position of the cursor after input

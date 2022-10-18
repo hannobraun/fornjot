@@ -246,7 +246,7 @@ fn input_event(
                         Some(InputEvent::Rotation { angle_x, angle_y })
                     }
                     MouseButton::Right => {
-                        Some(InputEvent::Translate { previous, current })
+                        Some(InputEvent::Translation { previous, current })
                     }
                     _ => None,
                 },

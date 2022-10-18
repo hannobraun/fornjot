@@ -19,7 +19,7 @@ impl InputHandler {
         camera: &mut Camera,
     ) {
         match event {
-            InputEvent::Translate { previous, current } => {
+            InputEvent::Translation { previous, current } => {
                 self.movement.apply(previous, current, focus_point, camera)
             }
             InputEvent::Rotation { angle_x, angle_y } => {
