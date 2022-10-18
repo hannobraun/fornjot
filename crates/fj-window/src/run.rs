@@ -186,9 +186,6 @@ pub fn run(
             _ => {}
         }
 
-        // fj-viewer input events
-        // These can fire multiple times per frame
-
         if let (Some(shape), Some(should_focus)) = (&shape, focus_event(&event))
         {
             if should_focus {
