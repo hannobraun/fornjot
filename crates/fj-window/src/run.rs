@@ -131,12 +131,20 @@ pub fn run(
             Event::WindowEvent {
                 event: WindowEvent::MouseInput { state, button, .. },
                 ..
-            } => {
-                match state {
-                    ElementState::Pressed => held_mouse_button = Some(button),
-                    ElementState::Released => held_mouse_button = None,
-                };
-            }
+            } => match state {
+                ElementState::Pressed => {
+                    held_mouse_button = Some(button);
+                    viewer.add_focus_point();
+                }
+                ElementState::Released => {
+                    held_mouse_button = None;
+                    viewer.remove_focus_point();
+                }
+            },
+            Event::WindowEvent {
+                event: WindowEvent::MouseWheel { .. },
+                ..
+            } => viewer.add_focus_point(),
             Event::MainEventsCleared => {
                 window.window().request_redraw();
             }
@@ -155,14 +163,6 @@ pub fn run(
                 );
             }
             _ => {}
-        }
-
-        if let Some(should_focus) = focus_event(&event) {
-            if should_focus {
-                viewer.add_focus_point();
-            } else {
-                viewer.remove_focus_point();
-            }
         }
 
         let input_event = input_event(
@@ -242,30 +242,6 @@ fn input_event(
 
             Some(InputEvent::Zoom(delta))
         }
-        _ => None,
-    }
-}
-
-/// Returns true/false if focus point point should be created/removed
-/// None means no change to focus point is needed
-fn focus_event(event: &Event<()>) -> Option<bool> {
-    match event {
-        Event::WindowEvent {
-            event:
-                WindowEvent::MouseInput {
-                    state,
-                    button: MouseButton::Left | MouseButton::Right,
-                    ..
-                },
-            ..
-        } => match state {
-            ElementState::Pressed => Some(true),
-            ElementState::Released => Some(false),
-        },
-        Event::WindowEvent {
-            event: WindowEvent::MouseWheel { .. },
-            ..
-        } => Some(true),
         _ => None,
     }
 }
