@@ -8,7 +8,7 @@ pub trait Screen {
     type Window: HasRawWindowHandle;
 
     /// Access the size of the screen
-    fn size(&self) -> Size;
+    fn size(&self) -> ScreenSize;
 
     /// Access the window
     fn window(&self) -> &Self::Window;
@@ -29,7 +29,7 @@ pub struct NormalizedScreenPosition {
 
 /// The size of the screen
 #[derive(Clone, Copy, Debug)]
-pub struct Size {
+pub struct ScreenSize {
     /// The width of the screen
     pub width: u32,
 
@@ -37,7 +37,7 @@ pub struct Size {
     pub height: u32,
 }
 
-impl Size {
+impl ScreenSize {
     /// Convert size to `f64`
     pub fn as_f64(&self) -> [f64; 2] {
         [self.width, self.height].map(Into::into)

@@ -10,7 +10,7 @@ use wgpu_glyph::ab_glyph::InvalidFont;
 use crate::{
     camera::Camera,
     gui::Gui,
-    screen::{Screen, Size},
+    screen::{Screen, ScreenSize},
 };
 
 use super::{
@@ -89,7 +89,7 @@ impl Renderer {
             .copied()
             .expect("Error determining preferred color format");
 
-        let Size { width, height } = screen.size();
+        let ScreenSize { width, height } = screen.size();
         let surface_config = wgpu::SurfaceConfiguration {
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
             format: color_format,
@@ -186,7 +186,7 @@ impl Renderer {
     ///
     /// # Arguments
     /// - `size`: The target size for the render surface.
-    pub fn handle_resize(&mut self, size: Size) {
+    pub fn handle_resize(&mut self, size: ScreenSize) {
         self.surface_config.width = size.width;
         self.surface_config.height = size.height;
 

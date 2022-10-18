@@ -1,6 +1,6 @@
 //! CAD viewer utility windowing abstraction
 
-use fj_viewer::screen::{Screen, Size};
+use fj_viewer::screen::{Screen, ScreenSize};
 use winit::{event_loop::EventLoop, window::WindowBuilder};
 
 /// Window abstraction providing details such as the width or height and easing initialization.
@@ -23,10 +23,10 @@ impl Window {
 impl Screen for Window {
     type Window = winit::window::Window;
 
-    fn size(&self) -> Size {
+    fn size(&self) -> ScreenSize {
         let size = self.0.inner_size();
 
-        Size {
+        ScreenSize {
             width: size.width,
             height: size.height,
         }

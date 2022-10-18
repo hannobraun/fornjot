@@ -12,7 +12,7 @@ use fj_viewer::{
     camera::Camera,
     graphics::{self, DrawConfig, Renderer},
     input::{InputEvent, InputHandler},
-    screen::{NormalizedScreenPosition, Screen as _, Size},
+    screen::{NormalizedScreenPosition, Screen as _, ScreenSize},
 };
 use futures::executor::block_on;
 use tracing::{trace, warn};
@@ -148,7 +148,7 @@ pub fn run(
                 event: WindowEvent::Resized(size),
                 ..
             } => {
-                new_size = Some(Size {
+                new_size = Some(ScreenSize {
                     width: size.width,
                     height: size.height,
                 });
