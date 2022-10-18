@@ -41,7 +41,7 @@ pub fn run(
     let mut held_mouse_button = None;
     let mut focus_point = None;
 
-    let mut input_handler = input::Handler::default();
+    let mut input_handler = input::InputHandler::default();
     let mut renderer = block_on(Renderer::new(&window))?;
     let mut egui_winit_state = egui_winit::State::new(&event_loop);
 

@@ -4,13 +4,13 @@ use crate::camera::{Camera, FocusPoint};
 /// Input handling abstraction
 ///
 /// Takes user input and applies them to application state.
-pub struct Handler {
+pub struct InputHandler {
     movement: Movement,
     rotation: Rotation,
     zoom: Zoom,
 }
 
-impl Handler {
+impl InputHandler {
     /// Handle an input event
     pub fn handle_event(
         &mut self,
@@ -32,7 +32,7 @@ impl Handler {
     }
 }
 
-impl Default for Handler {
+impl Default for InputHandler {
     fn default() -> Self {
         Self {
             movement: Movement,
