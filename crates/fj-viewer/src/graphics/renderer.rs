@@ -184,7 +184,7 @@ impl Renderer {
     pub fn draw(
         &mut self,
         camera: &Camera,
-        config: &mut DrawConfig,
+        config: &DrawConfig,
         scale_factor: f32,
         gui: &mut Gui,
     ) -> Result<(), DrawError> {

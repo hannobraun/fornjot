@@ -97,7 +97,7 @@ impl Viewer {
 
         if let Err(err) = self.renderer.draw(
             &self.camera,
-            &mut self.draw_config,
+            &self.draw_config,
             scale_factor,
             &mut self.gui,
         ) {
