@@ -37,7 +37,6 @@ pub fn run(
     let mut viewer = block_on(Viewer::new(&window))?;
 
     let mut held_mouse_button = None;
-    let mut focus_point = None;
 
     let mut egui_winit_state = egui_winit::State::new(&event_loop);
 
@@ -163,12 +162,12 @@ pub fn run(
         {
             if should_focus {
                 // Don't unnecessarily recalculate focus point
-                if focus_point.is_none() {
-                    focus_point =
+                if viewer.focus_point.is_none() {
+                    viewer.focus_point =
                         Some(viewer.camera.focus_point(viewer.cursor, shape));
                 }
             } else {
-                focus_point = None;
+                viewer.focus_point = None;
             }
         }
 
@@ -180,7 +179,7 @@ pub fn run(
             invert_zoom,
         );
         if let (Some(input_event), Some(focus_point)) =
-            (input_event, focus_point)
+            (input_event, viewer.focus_point)
         {
             viewer.input_handler.handle_event(
                 input_event,
