@@ -19,10 +19,12 @@ mod graphics;
 mod gui;
 mod input;
 mod screen;
+mod viewer;
 
 pub use self::{
     camera::Camera,
     graphics::{DrawConfig, Renderer, RendererInitError},
     input::{InputEvent, InputHandler},
     screen::{NormalizedScreenPosition, Screen, ScreenSize},
+    viewer::Viewer,
 };

@@ -9,8 +9,8 @@ use fj_host::Watcher;
 use fj_interop::status_report::StatusReport;
 use fj_operations::shape_processor::ShapeProcessor;
 use fj_viewer::{
-    Camera, DrawConfig, InputEvent, InputHandler, NormalizedScreenPosition,
-    Renderer, RendererInitError, Screen, ScreenSize,
+    InputEvent, NormalizedScreenPosition, RendererInitError, Screen,
+    ScreenSize, Viewer,
 };
 use futures::executor::block_on;
 use tracing::{trace, warn};
@@ -34,19 +34,15 @@ pub fn run(
 ) -> Result<(), Error> {
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop)?;
+    let mut viewer = block_on(Viewer::new(&window))?;
 
     let mut previous_cursor = None;
     let mut held_mouse_button = None;
     let mut focus_point = None;
 
-    let mut input_handler = InputHandler::default();
-    let mut renderer = block_on(Renderer::new(&window))?;
     let mut egui_winit_state = egui_winit::State::new(&event_loop);
 
-    let mut draw_config = DrawConfig::default();
-
     let mut shape = None;
-    let mut camera = Camera::new();
 
     // Only handle resize events once every frame. This filters out spurious
     // resize events that can lead to wgpu warnings. See this issue for some
@@ -61,13 +57,13 @@ pub fn run(
             if let Some(new_shape) = watcher.receive(&mut status) {
                 match shape_processor.process(&new_shape) {
                     Ok(new_shape) => {
-                        renderer.update_geometry(
+                        viewer.renderer.update_geometry(
                             (&new_shape.mesh).into(),
                             (&new_shape.debug_info).into(),
                             new_shape.aabb,
                         );
 
-                        camera.update_planes(&new_shape.aabb);
+                        viewer.camera.update_planes(&new_shape.aabb);
                         shape = Some(new_shape);
                     }
                     Err(err) => {
@@ -102,7 +98,8 @@ pub fn run(
             // The primary visible impact of this currently is that if you drag
             // a title bar that overlaps the model then both the model & window
             // get moved.
-            egui_winit_state.on_event(&renderer.gui.context, window_event);
+            egui_winit_state
+                .on_event(&viewer.renderer.gui.context, window_event);
         }
 
         // fj-window events
@@ -128,16 +125,19 @@ pub fn run(
             } => match virtual_key_code {
                 VirtualKeyCode::Escape => *control_flow = ControlFlow::Exit,
                 VirtualKeyCode::Key1 => {
-                    draw_config.draw_model = !draw_config.draw_model
+                    viewer.draw_config.draw_model =
+                        !viewer.draw_config.draw_model
                 }
                 VirtualKeyCode::Key2 => {
-                    if renderer.is_line_drawing_available() {
-                        draw_config.draw_mesh = !draw_config.draw_mesh
+                    if viewer.renderer.is_line_drawing_available() {
+                        viewer.draw_config.draw_mesh =
+                            !viewer.draw_config.draw_mesh
                     }
                 }
                 VirtualKeyCode::Key3 => {
-                    if renderer.is_line_drawing_available() {
-                        draw_config.draw_debug = !draw_config.draw_debug
+                    if viewer.renderer.is_line_drawing_available() {
+                        viewer.draw_config.draw_debug =
+                            !viewer.draw_config.draw_debug
                     }
                 }
                 _ => {}
@@ -165,15 +165,15 @@ pub fn run(
             }
             Event::RedrawRequested(_) => {
                 if let Some(size) = new_size.take() {
-                    renderer.handle_resize(size);
+                    viewer.renderer.handle_resize(size);
                 }
 
                 let egui_input =
                     egui_winit_state.take_egui_input(window.window());
 
-                if let Err(err) = renderer.draw(
-                    &camera,
-                    &mut draw_config,
+                if let Err(err) = viewer.renderer.draw(
+                    &viewer.camera,
+                    &mut viewer.draw_config,
                     window.window().scale_factor() as f32,
                     &mut status,
                     egui_input,
@@ -190,7 +190,7 @@ pub fn run(
                 // Don't unnecessarily recalculate focus point
                 if focus_point.is_none() {
                     focus_point =
-                        Some(camera.focus_point(previous_cursor, shape));
+                        Some(viewer.camera.focus_point(previous_cursor, shape));
                 }
             } else {
                 focus_point = None;
@@ -207,7 +207,11 @@ pub fn run(
         if let (Some(input_event), Some(focus_point)) =
             (input_event, focus_point)
         {
-            input_handler.handle_event(input_event, focus_point, &mut camera);
+            viewer.input_handler.handle_event(
+                input_event,
+                focus_point,
+                &mut viewer.camera,
+            );
         }
     });
 }
