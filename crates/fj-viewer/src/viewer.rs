@@ -5,7 +5,7 @@ use fj_math::Aabb;
 use tracing::warn;
 
 use crate::{
-    camera::FocusPoint, gui::Gui, Camera, DrawConfig, InputHandler,
+    camera::FocusPoint, gui::Gui, Camera, DrawConfig, InputEvent, InputHandler,
     NormalizedScreenPosition, Renderer, RendererInitError, Screen, ScreenSize,
 };
 
@@ -80,6 +80,17 @@ impl Viewer {
         self.camera.update_planes(&shape.aabb);
 
         self.shape = Some(shape);
+    }
+
+    /// Handle an input event
+    pub fn handle_input_event(&mut self, event: InputEvent) {
+        if let Some(focus_point) = self.focus_point {
+            self.input_handler.handle_event(
+                event,
+                focus_point,
+                &mut self.camera,
+            );
+        }
     }
 
     /// Handle the screen being resized

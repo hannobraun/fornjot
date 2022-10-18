@@ -172,14 +172,8 @@ pub fn run(
             &mut viewer.cursor,
             invert_zoom,
         );
-        if let (Some(input_event), Some(focus_point)) =
-            (input_event, viewer.focus_point)
-        {
-            viewer.input_handler.handle_event(
-                input_event,
-                focus_point,
-                &mut viewer.camera,
-            );
+        if let Some(input_event) = input_event {
+            viewer.handle_input_event(input_event);
         }
     });
 }
