@@ -89,8 +89,7 @@ pub fn run(
             // The primary visible impact of this currently is that if you drag
             // a title bar that overlaps the model then both the model & window
             // get moved.
-            egui_winit_state
-                .on_event(viewer.renderer.gui.context(), window_event);
+            egui_winit_state.on_event(viewer.gui.context(), window_event);
         }
 
         // fj-window events
@@ -161,6 +160,7 @@ pub fn run(
                     window.window().scale_factor() as f32,
                     &mut status,
                     egui_input,
+                    &mut viewer.gui,
                 ) {
                     warn!("Draw error: {}", err);
                 }

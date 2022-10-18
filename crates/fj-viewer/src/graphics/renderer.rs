@@ -35,9 +35,6 @@ pub struct Renderer {
 
     geometries: Geometries,
     pipelines: Pipelines,
-
-    /// State required for integration with `egui`.
-    pub gui: Gui,
 }
 
 impl Renderer {
@@ -151,8 +148,6 @@ impl Renderer {
         let pipelines =
             Pipelines::new(&device, &bind_group_layout, color_format);
 
-        let gui = Gui::new(&device, surface_config.format);
-
         Ok(Self {
             surface,
             features,
@@ -167,9 +162,11 @@ impl Renderer {
 
             geometries,
             pipelines,
-
-            gui,
         })
+    }
+
+    pub(crate) fn init_gui(&self) -> Gui {
+        Gui::new(&self.device, self.surface_config.format)
     }
 
     /// Updates the geometry of the model being rendered.
@@ -205,6 +202,7 @@ impl Renderer {
         scale_factor: f32,
         status: &mut StatusReport,
         egui_input: egui::RawInput,
+        gui: &mut Gui,
     ) -> Result<(), DrawError> {
         let aspect_ratio = self.surface_config.width as f64
             / self.surface_config.height as f64;
@@ -273,14 +271,14 @@ impl Renderer {
             }
         }
 
-        self.gui.update(
+        gui.update(
             egui_input,
             config,
             &self.geometries.aabb,
             status,
             self.is_line_drawing_available(),
         );
-        self.gui.draw(
+        gui.draw(
             &self.device,
             &self.queue,
             &mut encoder,

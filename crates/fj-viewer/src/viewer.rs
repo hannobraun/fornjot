@@ -1,7 +1,8 @@
 use fj_interop::processed_shape::ProcessedShape;
 
 use crate::{
-    Camera, DrawConfig, InputHandler, Renderer, RendererInitError, Screen,
+    gui::Gui, Camera, DrawConfig, InputHandler, Renderer, RendererInitError,
+    Screen,
 };
 
 /// The Fornjot model viewer
@@ -11,6 +12,9 @@ pub struct Viewer {
 
     /// The draw config
     pub draw_config: DrawConfig,
+
+    /// The GUI
+    pub gui: Gui,
 
     /// The input handler
     pub input_handler: InputHandler,
@@ -25,11 +29,15 @@ pub struct Viewer {
 impl Viewer {
     /// Construct a new instance of `Viewer`
     pub async fn new(screen: &impl Screen) -> Result<Self, RendererInitError> {
+        let renderer = Renderer::new(screen).await?;
+        let gui = renderer.init_gui();
+
         Ok(Self {
             camera: Camera::default(),
             draw_config: DrawConfig::default(),
+            gui,
             input_handler: InputHandler::default(),
-            renderer: Renderer::new(screen).await?,
+            renderer,
             shape: None,
         })
     }
