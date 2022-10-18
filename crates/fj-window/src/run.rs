@@ -116,20 +116,13 @@ pub fn run(
             } => match virtual_key_code {
                 VirtualKeyCode::Escape => *control_flow = ControlFlow::Exit,
                 VirtualKeyCode::Key1 => {
-                    viewer.draw_config.draw_model =
-                        !viewer.draw_config.draw_model
+                    viewer.toggle_draw_model();
                 }
                 VirtualKeyCode::Key2 => {
-                    if viewer.renderer.is_line_drawing_available() {
-                        viewer.draw_config.draw_mesh =
-                            !viewer.draw_config.draw_mesh
-                    }
+                    viewer.toggle_draw_mesh();
                 }
                 VirtualKeyCode::Key3 => {
-                    if viewer.renderer.is_line_drawing_available() {
-                        viewer.draw_config.draw_debug =
-                            !viewer.draw_config.draw_debug
-                    }
+                    viewer.toggle_draw_debug();
                 }
                 _ => {}
             },
