@@ -1,5 +1,3 @@
-//! High level configuration for graphics rendering
-
 /// High level configuration for rendering the active model
 #[derive(Debug)]
 pub struct DrawConfig {
