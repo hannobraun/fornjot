@@ -20,9 +20,9 @@ use fj_math::Aabb;
 use crate::graphics::DrawConfig;
 
 pub struct Gui {
-    pub context: egui::Context,
-    pub render_pass: egui_wgpu::renderer::RenderPass,
-    pub options: Options,
+    context: egui::Context,
+    render_pass: egui_wgpu::renderer::RenderPass,
+    options: Options,
 }
 
 impl Gui {
@@ -69,6 +69,11 @@ impl Gui {
             render_pass,
             options: Default::default(),
         }
+    }
+
+    /// Access the egui context
+    pub fn context(&self) -> &egui::Context {
+        &self.context
     }
 
     pub fn update(

@@ -90,7 +90,7 @@ pub fn run(
             // a title bar that overlaps the model then both the model & window
             // get moved.
             egui_winit_state
-                .on_event(&viewer.renderer.gui.context, window_event);
+                .on_event(viewer.renderer.gui.context(), window_event);
         }
 
         // fj-window events
