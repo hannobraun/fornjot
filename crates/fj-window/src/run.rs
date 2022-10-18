@@ -209,8 +209,10 @@ pub fn run(
             &mut previous_cursor,
             invert_zoom,
         );
-        if let (Some(input_event), Some(fp)) = (input_event, focus_point) {
-            input_handler.handle_event(input_event, fp, &mut camera);
+        if let (Some(input_event), Some(focus_point)) =
+            (input_event, focus_point)
+        {
+            input_handler.handle_event(input_event, focus_point, &mut camera);
         }
     });
 }
