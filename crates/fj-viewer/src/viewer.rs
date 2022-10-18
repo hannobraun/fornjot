@@ -1,6 +1,7 @@
 use fj_interop::{
     processed_shape::ProcessedShape, status_report::StatusReport,
 };
+use fj_math::Aabb;
 use tracing::warn;
 
 use crate::{
@@ -83,12 +84,24 @@ impl Viewer {
         status: &mut StatusReport,
         egui_input: egui::RawInput,
     ) {
+        let aabb = self
+            .shape
+            .as_ref()
+            .map(|shape| shape.aabb)
+            .unwrap_or_else(Aabb::default);
+
+        self.gui.update(
+            egui_input,
+            &mut self.draw_config,
+            &aabb,
+            status,
+            self.renderer.is_line_drawing_available(),
+        );
+
         if let Err(err) = self.renderer.draw(
             &self.camera,
             &mut self.draw_config,
             scale_factor,
-            status,
-            egui_input,
             &mut self.gui,
         ) {
             warn!("Draw error: {}", err);

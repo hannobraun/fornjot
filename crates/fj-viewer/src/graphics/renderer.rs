@@ -1,6 +1,5 @@
 use std::{io, mem::size_of};
 
-use fj_interop::status_report::StatusReport;
 use fj_math::{Aabb, Point};
 use thiserror::Error;
 use tracing::debug;
@@ -200,8 +199,6 @@ impl Renderer {
         camera: &Camera,
         config: &mut DrawConfig,
         scale_factor: f32,
-        status: &mut StatusReport,
-        egui_input: egui::RawInput,
         gui: &mut Gui,
     ) -> Result<(), DrawError> {
         let aspect_ratio = self.surface_config.width as f64
@@ -271,13 +268,6 @@ impl Renderer {
             }
         }
 
-        gui.update(
-            egui_input,
-            config,
-            &self.geometries.aabb,
-            status,
-            self.is_line_drawing_available(),
-        );
         gui.draw(
             &self.device,
             &self.queue,
