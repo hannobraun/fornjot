@@ -20,3 +20,10 @@ pub mod input;
 pub mod screen;
 
 mod gui;
+
+pub use self::{
+    camera::Camera,
+    graphics::{DrawConfig, Renderer, RendererInitError},
+    input::{InputEvent, InputHandler},
+    screen::{NormalizedScreenPosition, Screen, ScreenSize},
+};

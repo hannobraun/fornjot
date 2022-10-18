@@ -9,10 +9,8 @@ use fj_host::Watcher;
 use fj_interop::status_report::StatusReport;
 use fj_operations::shape_processor::ShapeProcessor;
 use fj_viewer::{
-    camera::Camera,
-    graphics::{DrawConfig, Renderer, RendererInitError},
-    input::{InputEvent, InputHandler},
-    screen::{NormalizedScreenPosition, Screen as _, ScreenSize},
+    Camera, DrawConfig, InputEvent, InputHandler, NormalizedScreenPosition,
+    Renderer, RendererInitError, Screen, ScreenSize,
 };
 use futures::executor::block_on;
 use tracing::{trace, warn};

@@ -1,6 +1,6 @@
 //! CAD viewer utility windowing abstraction
 
-use fj_viewer::screen::{Screen, ScreenSize};
+use fj_viewer::{Screen, ScreenSize};
 use winit::{event_loop::EventLoop, window::WindowBuilder};
 
 /// Window abstraction providing details such as the width or height and easing initialization.
