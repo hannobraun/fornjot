@@ -307,7 +307,10 @@ impl Watcher {
     ///
     /// Returns `None`, if the model has not changed since the last time this
     /// method was called.
-    pub fn receive(&self, status: &mut StatusReport) -> Option<fj::Shape> {
+    pub fn receive_shape(
+        &self,
+        status: &mut StatusReport,
+    ) -> Option<fj::Shape> {
         match self.channel.try_recv() {
             Ok(()) => {
                 let shape = match self.model.load_once(&self.parameters, status)

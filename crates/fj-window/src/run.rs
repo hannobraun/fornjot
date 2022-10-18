@@ -50,7 +50,7 @@ pub fn run(
         trace!("Handling event: {:?}", event);
 
         if let Some(watcher) = &watcher {
-            if let Some(new_shape) = watcher.receive(&mut status) {
+            if let Some(new_shape) = watcher.receive_shape(&mut status) {
                 match shape_processor.process(&new_shape) {
                     Ok(new_shape) => {
                         viewer.handle_shape_update(new_shape);
