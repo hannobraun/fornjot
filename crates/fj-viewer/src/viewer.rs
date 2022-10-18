@@ -87,6 +87,22 @@ impl Viewer {
         self.renderer.handle_resize(screen_size)
     }
 
+    /// Compute and store a focus point, unless one is already stored
+    pub fn add_focus_point(&mut self) {
+        // Don't recompute the focus point unnecessarily.
+        if let Some(shape) = &self.shape {
+            if self.focus_point.is_none() {
+                self.focus_point =
+                    Some(self.camera.focus_point(self.cursor, shape));
+            }
+        }
+    }
+
+    /// Remove the stored focus point
+    pub fn remove_focus_point(&mut self) {
+        self.focus_point = None;
+    }
+
     /// Draw the graphics
     pub fn draw(
         &mut self,

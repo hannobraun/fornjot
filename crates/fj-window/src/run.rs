@@ -157,17 +157,11 @@ pub fn run(
             _ => {}
         }
 
-        if let (Some(shape), Some(should_focus)) =
-            (&viewer.shape, focus_event(&event))
-        {
+        if let Some(should_focus) = focus_event(&event) {
             if should_focus {
-                // Don't unnecessarily recalculate focus point
-                if viewer.focus_point.is_none() {
-                    viewer.focus_point =
-                        Some(viewer.camera.focus_point(viewer.cursor, shape));
-                }
+                viewer.add_focus_point();
             } else {
-                viewer.focus_point = None;
+                viewer.remove_focus_point();
             }
         }
 
