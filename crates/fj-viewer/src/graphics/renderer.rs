@@ -1,6 +1,5 @@
 use std::{io, mem::size_of};
 
-use fj_math::{Aabb, Point};
 use thiserror::Error;
 use tracing::debug;
 use wgpu::util::DeviceExt as _;
@@ -135,15 +134,8 @@ impl Renderer {
             label: None,
         });
 
-        let geometries = Geometries::new(
-            &device,
-            &Vertices::empty(),
-            &Vertices::empty(),
-            Aabb {
-                min: Point::from([0.0, 0.0, 0.0]),
-                max: Point::from([0.0, 0.0, 0.0]),
-            },
-        );
+        let geometries =
+            Geometries::new(&device, &Vertices::empty(), &Vertices::empty());
         let pipelines =
             Pipelines::new(&device, &bind_group_layout, color_format);
 
@@ -169,13 +161,8 @@ impl Renderer {
     }
 
     /// Updates the geometry of the model being rendered.
-    pub fn update_geometry(
-        &mut self,
-        mesh: Vertices,
-        lines: Vertices,
-        aabb: Aabb<3>,
-    ) {
-        self.geometries = Geometries::new(&self.device, &mesh, &lines, aabb);
+    pub fn update_geometry(&mut self, mesh: Vertices, lines: Vertices) {
+        self.geometries = Geometries::new(&self.device, &mesh, &lines);
     }
 
     /// Resizes the render surface.
