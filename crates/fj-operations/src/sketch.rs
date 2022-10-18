@@ -28,7 +28,7 @@ impl Shape for fj::Sketch {
 
                 let half_edge = HalfEdge::partial()
                     .with_surface(Some(surface.clone()))
-                    .as_circle_from_radius(circle.radius())
+                    .as_circle_from_radius(circle.radius(), objects)
                     .build(objects);
                 let cycle = Cycle::new(surface, [half_edge]);
 

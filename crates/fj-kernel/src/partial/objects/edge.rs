@@ -108,7 +108,17 @@ impl PartialHalfEdge {
     }
 
     /// Update partial half-edge as a circle, from the given radius
-    pub fn as_circle_from_radius(mut self, radius: impl Into<Scalar>) -> Self {
+    ///
+    /// # Implementation Note
+    ///
+    /// In principle, only the `build` method should take a reference to
+    /// [`Objects`]. As of this writing, this method is the only one that
+    /// deviates from that. I couldn't think of a way to do it better.
+    pub fn as_circle_from_radius(
+        mut self,
+        radius: impl Into<Scalar>,
+        objects: &Objects,
+    ) -> Self {
         let curve = Handle::<Curve>::partial()
             .with_global_form(self.extract_global_curve())
             .with_surface(self.surface.clone())
@@ -124,7 +134,9 @@ impl PartialHalfEdge {
             let path = curve.path.expect("Expected path that was just created");
             let surface_form = Handle::<SurfaceVertex>::partial()
                 .with_position(Some(path.point_from_path_coords(a_curve)))
-                .with_global_form(Some(global_form));
+                .with_surface(self.surface.clone())
+                .with_global_form(Some(global_form))
+                .build(objects);
 
             [a_curve, b_curve].map(|point_curve| {
                 Vertex::partial()
