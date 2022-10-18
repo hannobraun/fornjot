@@ -42,8 +42,6 @@ pub fn run(
 
     let mut egui_winit_state = egui_winit::State::new(&event_loop);
 
-    let mut shape = None;
-
     // Only handle resize events once every frame. This filters out spurious
     // resize events that can lead to wgpu warnings. See this issue for some
     // context:
@@ -57,14 +55,7 @@ pub fn run(
             if let Some(new_shape) = watcher.receive(&mut status) {
                 match shape_processor.process(&new_shape) {
                     Ok(new_shape) => {
-                        viewer.renderer.update_geometry(
-                            (&new_shape.mesh).into(),
-                            (&new_shape.debug_info).into(),
-                            new_shape.aabb,
-                        );
-
-                        viewer.camera.update_planes(&new_shape.aabb);
-                        shape = Some(new_shape);
+                        viewer.handle_shape_update(new_shape);
                     }
                     Err(err) => {
                         // Can be cleaned up, once `Report` is stable:
@@ -184,7 +175,8 @@ pub fn run(
             _ => {}
         }
 
-        if let (Some(shape), Some(should_focus)) = (&shape, focus_event(&event))
+        if let (Some(shape), Some(should_focus)) =
+            (&viewer.shape, focus_event(&event))
         {
             if should_focus {
                 // Don't unnecessarily recalculate focus point
