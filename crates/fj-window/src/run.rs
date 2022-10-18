@@ -148,7 +148,7 @@ pub fn run(
             }
             Event::RedrawRequested(_) => {
                 if let Some(size) = new_size.take() {
-                    viewer.renderer.handle_resize(size);
+                    viewer.handle_screen_resize(size);
                 }
 
                 let egui_input =

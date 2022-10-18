@@ -6,7 +6,7 @@ use tracing::warn;
 
 use crate::{
     gui::Gui, Camera, DrawConfig, InputHandler, Renderer, RendererInitError,
-    Screen,
+    Screen, ScreenSize,
 };
 
 /// The Fornjot model viewer
@@ -72,6 +72,11 @@ impl Viewer {
         self.camera.update_planes(&shape.aabb);
 
         self.shape = Some(shape);
+    }
+
+    /// Handle the screen being resized
+    pub fn handle_screen_resize(&mut self, screen_size: ScreenSize) {
+        self.renderer.handle_resize(screen_size)
     }
 
     /// Draw the graphics
