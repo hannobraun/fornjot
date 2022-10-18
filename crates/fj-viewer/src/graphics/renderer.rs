@@ -42,7 +42,7 @@ pub struct Renderer {
 
 impl Renderer {
     /// Returns a new `Renderer`.
-    pub async fn new(screen: &impl Screen) -> Result<Self, InitError> {
+    pub async fn new(screen: &impl Screen) -> Result<Self, RendererInitError> {
         let instance = wgpu::Instance::new(wgpu::Backends::PRIMARY);
 
         // This is sound, as `window` is an object to create a surface upon.
@@ -55,7 +55,7 @@ impl Renderer {
                 compatible_surface: Some(&surface),
             })
             .await
-            .ok_or(InitError::RequestAdapter)?;
+            .ok_or(RendererInitError::RequestAdapter)?;
 
         let features = {
             let desired_features = wgpu::Features::POLYGON_MODE_LINE;
@@ -361,7 +361,7 @@ impl Renderer {
 
 /// Error describing the set of render surface initialization errors
 #[derive(Error, Debug)]
-pub enum InitError {
+pub enum RendererInitError {
     /// General IO error
     #[error("I/O error: {0}")]
     Io(#[from] io::Error),

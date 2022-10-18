@@ -309,7 +309,7 @@ pub enum Error {
 
     /// Error initializing graphics
     #[error("Error initializing graphics")]
-    GraphicsInit(#[from] graphics::InitError),
+    GraphicsInit(#[from] graphics::RendererInitError),
 }
 
 /// Affects the speed of zoom movement given a scroll wheel input in lines.
