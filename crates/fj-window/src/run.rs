@@ -48,7 +48,7 @@ pub fn run(
     let mut draw_config = DrawConfig::default();
 
     let mut shape = None;
-    let mut camera = Camera::new(&Default::default());
+    let mut camera = Camera::new();
     let mut camera_update_once = watcher.is_some();
 
     // Only handle resize events once every frame. This filters out spurious
@@ -72,7 +72,8 @@ pub fn run(
 
                         if camera_update_once {
                             camera_update_once = false;
-                            camera = Camera::new(&new_shape.aabb);
+                            camera = Camera::new();
+                            camera.update_planes(&new_shape.aabb);
                         }
 
                         shape = Some(new_shape);

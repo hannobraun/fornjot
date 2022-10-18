@@ -25,6 +25,9 @@ pub struct Camera {
 
     /// The locational part of the transform
     pub translation: Transform,
+
+    /// Tracks whether the camera has been initialized
+    is_initialized: bool,
 }
 
 impl Camera {
@@ -34,52 +37,15 @@ impl Camera {
     const INITIAL_FIELD_OF_VIEW_IN_X: f64 = FRAC_PI_2; // 90 degrees
 
     /// Returns a new camera aligned for viewing a bounding box
-    pub fn new(aabb: &Aabb<3>) -> Self {
-        let initial_distance = {
-            // Let's make sure we choose a distance, so that the model fills
-            // most of the screen.
-            //
-            // To do that, first compute the model's highest point, as well as
-            // the furthest point from the origin, in x and y.
-            let highest_point = aabb.max.z;
-            let furthest_point =
-                [aabb.min.x.abs(), aabb.max.x, aabb.min.y.abs(), aabb.max.y]
-                    .into_iter()
-                    .reduce(Scalar::max)
-                    // `reduce` can only return `None`, if there are no items in
-                    // the iterator. And since we're creating an array full of
-                    // items above, we know this can't panic.
-                    .expect("Array should have contained items");
-
-            // The actual furthest point is not far enough. We don't want the
-            // model to fill the whole screen.
-            let furthest_point = furthest_point * 2.;
-
-            // Having computed those points, figuring out how far the camera
-            // needs to be from the model is just a bit of trigonometry.
-            let distance_from_model =
-                furthest_point / (Self::INITIAL_FIELD_OF_VIEW_IN_X / 2.).atan();
-
-            // And finally, the distance from the origin is trivial now.
-            highest_point + distance_from_model
-        };
-
-        let initial_offset = {
-            let mut offset = aabb.center();
-            offset.z = Scalar::ZERO;
-            -offset
-        };
-
+    pub fn new() -> Self {
         Self {
             near_plane: Self::DEFAULT_NEAR_PLANE,
             far_plane: Self::DEFAULT_FAR_PLANE,
 
             rotation: Transform::identity(),
-            translation: Transform::translation([
-                initial_offset.x,
-                initial_offset.y,
-                -initial_distance,
-            ]),
+            translation: Transform::identity(),
+
+            is_initialized: false,
         }
     }
 
@@ -169,6 +135,57 @@ impl Camera {
 
     /// Update the max and minimum rendering distance for this camera.
     pub fn update_planes(&mut self, aabb: &Aabb<3>) {
+        if !self.is_initialized {
+            let initial_distance = {
+                // Let's make sure we choose a distance, so that the model fills
+                // most of the screen.
+                //
+                // To do that, first compute the model's highest point, as well
+                // as the furthest point from the origin, in x and y.
+                let highest_point = aabb.max.z;
+                let furthest_point = [
+                    aabb.min.x.abs(),
+                    aabb.max.x,
+                    aabb.min.y.abs(),
+                    aabb.max.y,
+                ]
+                .into_iter()
+                .reduce(Scalar::max)
+                // `reduce` can only return `None`, if there are no items in
+                // the iterator. And since we're creating an array full of
+                // items above, we know this can't panic.
+                .expect("Array should have contained items");
+
+                // The actual furthest point is not far enough. We don't want
+                // the model to fill the whole screen.
+                let furthest_point = furthest_point * 2.;
+
+                // Having computed those points, figuring out how far the camera
+                // needs to be from the model is just a bit of trigonometry.
+                let distance_from_model = furthest_point
+                    / (Self::INITIAL_FIELD_OF_VIEW_IN_X / 2.).atan();
+
+                // And finally, the distance from the origin is trivial now.
+                highest_point + distance_from_model
+            };
+
+            let initial_offset = {
+                let mut offset = aabb.center();
+                offset.z = Scalar::ZERO;
+                -offset
+            };
+
+            let translation = Transform::translation([
+                initial_offset.x,
+                initial_offset.y,
+                -initial_distance,
+            ]);
+
+            self.translation = translation * self.translation;
+
+            self.is_initialized = true;
+        }
+
         let view_transform = self.camera_to_model();
         let view_direction = Vector::from([0., 0., -1.]);
 
@@ -210,6 +227,12 @@ impl Camera {
         } else {
             Self::DEFAULT_FAR_PLANE
         };
+    }
+}
+
+impl Default for Camera {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
