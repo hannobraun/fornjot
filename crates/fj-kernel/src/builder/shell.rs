@@ -183,39 +183,54 @@ impl<'a> ShellBuilder<'a> {
                 .xy_plane()
                 .translate([Z, Z, h], self.objects);
 
-            let points = [[-h, -h], [-h, h], [h, h], [h, -h], [-h, -h]];
-
             let mut top_edges = top_edges;
             top_edges.reverse();
 
-            let mut vertex_prev = None;
+            let surface_vertices = {
+                let mut edges = top_edges.iter();
 
-            let mut edges = Vec::new();
-            for (points, edge) in points.windows(2).zip(top_edges) {
-                // This can't panic, as we passed `2` to `windows`. Can be
-                // cleaned up, once `array_windows` is stable.
-                let points = [points[0], points[1]];
+                let a = edges.next().unwrap();
+                let b = edges.next().unwrap();
+                let c = edges.next().unwrap();
+                let d = edges.next().unwrap();
 
                 // Can be cleaned up, once `zip` is stable:
                 // https://doc.rust-lang.org/std/primitive.array.html#method.zip
-                let [point_a, point_b] = points;
-                let [vertex_a, vertex_b] = edge.vertices().clone();
-                let vertices = [
-                    (point_a, vertex_a, vertex_prev.clone()),
-                    (point_b, vertex_b, None),
-                ]
-                .map(|(point, vertex, surface_form)| {
-                    let surface_form = surface_form.unwrap_or_else(|| {
-                        Handle::<SurfaceVertex>::partial()
-                            .with_position(Some(point))
-                            .with_surface(Some(surface.clone()))
-                            .with_global_form(Some(
-                                vertex.global_form().clone(),
-                            ))
-                            .build(self.objects)
-                    });
-                    vertex_prev = Some(surface_form.clone());
+                let [a, b, c, d] =
+                    [([-h, -h], a), ([-h, h], b), ([h, h], c), ([h, -h], d)]
+                        .map(|(point, edge)| {
+                            let vertex = edge.back();
 
+                            Handle::<SurfaceVertex>::partial()
+                                .with_position(Some(point))
+                                .with_surface(Some(surface.clone()))
+                                .with_global_form(Some(
+                                    vertex.global_form().clone(),
+                                ))
+                                .build(self.objects)
+                        });
+
+                [a.clone(), b, c, d, a]
+            };
+
+            let mut edges = Vec::new();
+            for (surface_vertices, edge) in
+                surface_vertices.windows(2).zip(top_edges)
+            {
+                // This can't panic, as we passed `2` to `windows`. Can be
+                // cleaned up, once `array_windows` is stable.
+                let surface_vertices =
+                    [surface_vertices[0].clone(), surface_vertices[1].clone()];
+
+                // Can be cleaned up, once `zip` is stable:
+                // https://doc.rust-lang.org/std/primitive.array.html#method.zip
+                let [vertex_a, vertex_b] = edge.vertices().clone();
+                let [surface_vertex_a, surface_vertex_b] = surface_vertices;
+                let vertices = [
+                    (vertex_a, surface_vertex_a),
+                    (vertex_b, surface_vertex_b),
+                ]
+                .map(|(vertex, surface_form)| {
                     Vertex::partial()
                         .with_position(Some(vertex.position()))
                         .with_surface_form(Some(surface_form))

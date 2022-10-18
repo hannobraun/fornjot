@@ -62,8 +62,8 @@ impl Cycle {
                 let [_, last] = last.vertices();
 
                 assert_eq!(
-                    first.surface_form(),
-                    last.surface_form(),
+                    first.surface_form().id(),
+                    last.surface_form().id(),
                     "Edges do not form a cycle"
                 );
             }

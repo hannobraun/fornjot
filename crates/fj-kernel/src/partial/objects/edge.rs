@@ -90,8 +90,8 @@ impl PartialHalfEdge {
         vertices: Option<[impl Into<MaybePartial<Vertex>>; 2]>,
     ) -> Self {
         let vertices = vertices.map(|vertices| vertices.map(Into::into));
-        if let Some([a, b]) = vertices {
-            self.vertices = [Some(a), Some(b)];
+        if let Some([back, front]) = vertices {
+            self.vertices = [Some(back), Some(front)];
         }
         self
     }
@@ -108,13 +108,23 @@ impl PartialHalfEdge {
     }
 
     /// Update partial half-edge as a circle, from the given radius
-    pub fn as_circle_from_radius(mut self, radius: impl Into<Scalar>) -> Self {
+    ///
+    /// # Implementation Note
+    ///
+    /// In principle, only the `build` method should take a reference to
+    /// [`Objects`]. As of this writing, this method is the only one that
+    /// deviates from that. I couldn't think of a way to do it better.
+    pub fn as_circle_from_radius(
+        mut self,
+        radius: impl Into<Scalar>,
+        objects: &Objects,
+    ) -> Self {
         let curve = Handle::<Curve>::partial()
             .with_global_form(self.extract_global_curve())
             .with_surface(self.surface.clone())
             .as_circle_from_radius(radius);
 
-        let [a, b] = {
+        let [back, front] = {
             let [a_curve, b_curve] =
                 [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
@@ -124,7 +134,9 @@ impl PartialHalfEdge {
             let path = curve.path.expect("Expected path that was just created");
             let surface_form = Handle::<SurfaceVertex>::partial()
                 .with_position(Some(path.point_from_path_coords(a_curve)))
-                .with_global_form(Some(global_form));
+                .with_surface(self.surface.clone())
+                .with_global_form(Some(global_form))
+                .build(objects);
 
             [a_curve, b_curve].map(|point_curve| {
                 Vertex::partial()
@@ -136,7 +148,7 @@ impl PartialHalfEdge {
         };
 
         self.curve = Some(curve.into());
-        self.vertices = [Some(a), Some(b)];
+        self.vertices = [Some(back), Some(front)];
 
         self
     }
@@ -186,7 +198,7 @@ impl PartialHalfEdge {
             .with_surface(Some(surface))
             .as_line_from_points(points);
 
-        let [a, b] = [(from, 0.), (to, 1.)].map(|(vertex, position)| {
+        let [back, front] = [(from, 0.), (to, 1.)].map(|(vertex, position)| {
             vertex.update_partial(|vertex| {
                 vertex
                     .with_position(Some([position]))
@@ -195,7 +207,7 @@ impl PartialHalfEdge {
         });
 
         self.curve = Some(curve.into());
-        self.vertices = [Some(a), Some(b)];
+        self.vertices = [Some(back), Some(front)];
 
         self
     }
@@ -229,12 +241,13 @@ impl PartialHalfEdge {
 
 impl From<&HalfEdge> for PartialHalfEdge {
     fn from(half_edge: &HalfEdge) -> Self {
-        let [a, b] = half_edge.vertices().clone().map(Into::into);
+        let [back_vertex, front_vertex] =
+            half_edge.vertices().clone().map(Into::into);
 
         Self {
             surface: Some(half_edge.curve().surface().clone()),
             curve: Some(half_edge.curve().clone().into()),
-            vertices: [Some(a), Some(b)],
+            vertices: [Some(back_vertex), Some(front_vertex)],
             global_form: Some(half_edge.global_form().clone().into()),
         }
     }
