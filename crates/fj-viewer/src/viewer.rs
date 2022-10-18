@@ -1,4 +1,7 @@
-use fj_interop::processed_shape::ProcessedShape;
+use fj_interop::{
+    processed_shape::ProcessedShape, status_report::StatusReport,
+};
+use tracing::warn;
 
 use crate::{
     gui::Gui, Camera, DrawConfig, InputHandler, Renderer, RendererInitError,
@@ -71,5 +74,24 @@ impl Viewer {
         self.camera.update_planes(&shape.aabb);
 
         self.shape = Some(shape);
+    }
+
+    /// Draw the graphics
+    pub fn draw(
+        &mut self,
+        scale_factor: f32,
+        status: &mut StatusReport,
+        egui_input: egui::RawInput,
+    ) {
+        if let Err(err) = self.renderer.draw(
+            &self.camera,
+            &mut self.draw_config,
+            scale_factor,
+            status,
+            egui_input,
+            &mut self.gui,
+        ) {
+            warn!("Draw error: {}", err);
+        }
     }
 }

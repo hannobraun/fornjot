@@ -13,7 +13,7 @@ use fj_viewer::{
     ScreenSize, Viewer,
 };
 use futures::executor::block_on;
-use tracing::{trace, warn};
+use tracing::trace;
 use winit::{
     dpi::PhysicalPosition,
     event::{
@@ -154,16 +154,11 @@ pub fn run(
                 let egui_input =
                     egui_winit_state.take_egui_input(window.window());
 
-                if let Err(err) = viewer.renderer.draw(
-                    &viewer.camera,
-                    &mut viewer.draw_config,
+                viewer.draw(
                     window.window().scale_factor() as f32,
                     &mut status,
                     egui_input,
-                    &mut viewer.gui,
-                ) {
-                    warn!("Draw error: {}", err);
-                }
+                );
             }
             _ => {}
         }
