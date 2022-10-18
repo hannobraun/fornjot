@@ -11,7 +11,7 @@ use fj_operations::shape_processor::ShapeProcessor;
 use fj_viewer::{
     camera::Camera,
     graphics::{self, DrawConfig, Renderer},
-    input,
+    input::{InputEvent, InputHandler},
     screen::{NormalizedPosition, Screen as _, Size},
 };
 use futures::executor::block_on;
@@ -41,7 +41,7 @@ pub fn run(
     let mut held_mouse_button = None;
     let mut focus_point = None;
 
-    let mut input_handler = input::InputHandler::default();
+    let mut input_handler = InputHandler::default();
     let mut renderer = block_on(Renderer::new(&window))?;
     let mut egui_winit_state = egui_winit::State::new(&event_loop);
 
@@ -220,7 +220,7 @@ fn input_event(
     held_mouse_button: &Option<MouseButton>,
     previous_cursor: &mut Option<NormalizedPosition>,
     invert_zoom: bool,
-) -> Option<input::InputEvent> {
+) -> Option<InputEvent> {
     match event {
         Event::WindowEvent {
             event: WindowEvent::CursorMoved { position, .. },
@@ -243,10 +243,10 @@ fn input_event(
                         let angle_x = -diff_y * ROTATION_SENSITIVITY;
                         let angle_y = diff_x * ROTATION_SENSITIVITY;
 
-                        Some(input::InputEvent::Rotation { angle_x, angle_y })
+                        Some(InputEvent::Rotation { angle_x, angle_y })
                     }
                     MouseButton::Right => {
-                        Some(input::InputEvent::Translate { previous, current })
+                        Some(InputEvent::Translate { previous, current })
                     }
                     _ => None,
                 },
@@ -270,7 +270,7 @@ fn input_event(
 
             let delta = if invert_zoom { -delta } else { delta };
 
-            Some(input::InputEvent::Zoom(delta))
+            Some(InputEvent::Zoom(delta))
         }
         _ => None,
     }
