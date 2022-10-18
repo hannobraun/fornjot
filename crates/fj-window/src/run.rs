@@ -49,7 +49,6 @@ pub fn run(
 
     let mut shape = None;
     let mut camera = Camera::new();
-    let mut camera_update_once = watcher.is_some();
 
     // Only handle resize events once every frame. This filters out spurious
     // resize events that can lead to wgpu warnings. See this issue for some
@@ -70,12 +69,7 @@ pub fn run(
                             new_shape.aabb,
                         );
 
-                        if camera_update_once {
-                            camera_update_once = false;
-                            camera = Camera::new();
-                            camera.update_planes(&new_shape.aabb);
-                        }
-
+                        camera.update_planes(&new_shape.aabb);
                         shape = Some(new_shape);
                     }
                     Err(err) => {
@@ -172,9 +166,6 @@ pub fn run(
                 window.window().request_redraw();
             }
             Event::RedrawRequested(_) => {
-                if let Some(shape) = &shape {
-                    camera.update_planes(&shape.aabb);
-                }
                 if let Some(size) = new_size.take() {
                     renderer.handle_resize(size);
                 }
