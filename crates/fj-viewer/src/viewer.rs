@@ -77,8 +77,6 @@ impl Viewer {
     pub fn handle_shape_update(&mut self, shape: ProcessedShape) {
         self.renderer
             .update_geometry((&shape.mesh).into(), (&shape.debug_info).into());
-        self.camera.update_planes(&shape.aabb);
-
         self.shape = Some(shape);
     }
 
@@ -126,6 +124,8 @@ impl Viewer {
             .as_ref()
             .map(|shape| shape.aabb)
             .unwrap_or_else(Aabb::default);
+
+        self.camera.update_planes(&aabb);
 
         self.gui.update(
             egui_input,
