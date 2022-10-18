@@ -26,7 +26,7 @@ pub struct Gui {
 }
 
 impl Gui {
-    pub fn new(
+    pub(crate) fn new(
         device: &wgpu::Device,
         texture_format: wgpu::TextureFormat,
     ) -> Self {
@@ -76,7 +76,7 @@ impl Gui {
         &self.context
     }
 
-    pub fn update(
+    pub(crate) fn update(
         &mut self,
         egui_input: egui::RawInput,
         config: &mut DrawConfig,
@@ -247,7 +247,7 @@ impl Gui {
         });
     }
 
-    pub fn draw(
+    pub(crate) fn draw(
         &mut self,
         device: &wgpu::Device,
         queue: &wgpu::Queue,
