@@ -126,14 +126,22 @@ impl Sweep for Handle<GlobalVertex> {
     fn sweep_with_cache(
         self,
         path: impl Into<Vector<3>>,
-        _: &mut SweepCache,
+        cache: &mut SweepCache,
         objects: &Objects,
     ) -> Self::Swept {
         let curve = GlobalCurve::new(objects);
 
         let a = self.clone();
-        let b =
-            GlobalVertex::from_position(self.position() + path.into(), objects);
+        let b = cache
+            .global_vertex
+            .entry(self.id())
+            .or_insert_with(|| {
+                GlobalVertex::from_position(
+                    self.position() + path.into(),
+                    objects,
+                )
+            })
+            .clone();
 
         let vertices = [a, b];
         let global_edge = GlobalEdge::new(curve, vertices.clone());

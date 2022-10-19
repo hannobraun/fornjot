@@ -6,9 +6,14 @@ mod face;
 mod sketch;
 mod vertex;
 
+use std::collections::BTreeMap;
+
 use fj_math::Vector;
 
-use crate::objects::Objects;
+use crate::{
+    objects::{GlobalVertex, Objects},
+    storage::{Handle, ObjectId},
+};
 
 /// Sweep an object along a path to create another object
 pub trait Sweep: Sized {
@@ -38,4 +43,7 @@ pub trait Sweep: Sized {
 ///
 /// See [`Sweep`].
 #[derive(Default)]
-pub struct SweepCache;
+pub struct SweepCache {
+    /// Cache for global vertices
+    pub global_vertex: BTreeMap<ObjectId, Handle<GlobalVertex>>,
+}
