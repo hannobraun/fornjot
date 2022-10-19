@@ -4,10 +4,16 @@ use std::{
 };
 
 fn main() {
-    println!("cargo:rustc-env=FJ_VERSION_STRING={}", version_string());
+    let version = version_string();
+
+    println!("cargo:rustc-env=FJ_VERSION_STRING={}", version.full_string);
 }
 
-fn version_string() -> String {
+struct Version {
+    full_string: String,
+}
+
+fn version_string() -> Version {
     let pkg_version = std::env::var("CARGO_PKG_VERSION").unwrap();
     let commit = git_description();
 
@@ -15,14 +21,16 @@ fn version_string() -> String {
         std::env::var("FJ_OFFICIAL_RELEASE").as_deref() == Ok("1");
     println!("cargo:rerun-if-env-changed=FJ_OFFICIAL_RELEASE");
 
-    match (commit, official_release) {
+    let full_string = match (commit, official_release) {
         (Some(commit), true) => format!("{pkg_version} ({commit})"),
         (Some(commit), false) => {
             format!("{pkg_version} ({commit}, unreleased)")
         }
         (None, true) => pkg_version,
         (None, false) => format!("{pkg_version} (unreleased)"),
-    }
+    };
+
+    Version { full_string }
 }
 
 /// Try to get the current git commit.
