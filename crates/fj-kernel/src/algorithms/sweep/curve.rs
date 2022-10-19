@@ -6,14 +6,15 @@ use crate::{
     storage::Handle,
 };
 
-use super::Sweep;
+use super::{Sweep, SweepCache};
 
 impl Sweep for Handle<Curve> {
     type Swept = Handle<Surface>;
 
-    fn sweep(
+    fn sweep_with_cache(
         self,
         path: impl Into<Vector<3>>,
+        _: &mut SweepCache,
         objects: &Objects,
     ) -> Self::Swept {
         match self.surface().u() {

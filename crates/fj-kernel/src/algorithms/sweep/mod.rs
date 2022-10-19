@@ -20,5 +20,22 @@ pub trait Sweep: Sized {
         self,
         path: impl Into<Vector<3>>,
         objects: &Objects,
+    ) -> Self::Swept {
+        let mut cache = SweepCache::default();
+        self.sweep_with_cache(path, &mut cache, objects)
+    }
+
+    /// Sweep the object along the given path, using the provided cache
+    fn sweep_with_cache(
+        self,
+        path: impl Into<Vector<3>>,
+        cache: &mut SweepCache,
+        objects: &Objects,
     ) -> Self::Swept;
 }
+
+/// A cache used for sweeping
+///
+/// See [`Sweep`].
+#[derive(Default)]
+pub struct SweepCache;
