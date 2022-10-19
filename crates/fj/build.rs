@@ -7,7 +7,7 @@ fn main() {
     let version = Version::determine();
 
     println!("cargo:rustc-env=FJ_VERSION_PKG={}", version.pkg_version);
-    println!("cargo:rustc-env=FJ_VERSION_STRING={}", version.full_string);
+    println!("cargo:rustc-env=FJ_VERSION_FULL={}", version.full_string);
 }
 
 struct Version {

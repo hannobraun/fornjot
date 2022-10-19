@@ -22,7 +22,7 @@
 ///
 /// Can be used to check for compatibility between a model and the Fornjot app
 /// that runs it.
-pub static VERSION_FULL: &str = env!("FJ_VERSION_STRING");
+pub static VERSION_FULL: &str = env!("FJ_VERSION_FULL");
 
 pub mod syntax;
 
