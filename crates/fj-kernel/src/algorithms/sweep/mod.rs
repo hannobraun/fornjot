@@ -11,7 +11,7 @@ use fj_math::Vector;
 use crate::objects::Objects;
 
 /// Sweep an object along a path to create another object
-pub trait Sweep {
+pub trait Sweep: Sized {
     /// The object that is created by sweeping the implementing object
     type Swept;
 
