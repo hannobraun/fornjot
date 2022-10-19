@@ -28,6 +28,7 @@ pub mod models;
 mod shape_2d;
 mod sweep;
 mod transform;
+pub mod version;
 
 pub use self::{
     angle::*, group::Group, shape_2d::*, sweep::Sweep, transform::Transform,

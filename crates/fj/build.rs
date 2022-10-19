@@ -4,24 +4,38 @@ use std::{
 };
 
 fn main() {
-    println!("cargo:rustc-env=FJ_VERSION_STRING={}", version_string());
+    let version = Version::determine();
+
+    println!("cargo:rustc-env=FJ_VERSION_PKG={}", version.pkg_version);
+    println!("cargo:rustc-env=FJ_VERSION_FULL={}", version.full_string);
 }
 
-fn version_string() -> String {
-    let pkg_version = std::env::var("CARGO_PKG_VERSION").unwrap();
-    let commit = git_description();
+struct Version {
+    pkg_version: String,
+    full_string: String,
+}
+impl Version {
+    fn determine() -> Self {
+        let pkg_version = std::env::var("CARGO_PKG_VERSION").unwrap();
+        let commit = git_description();
 
-    let official_release =
-        std::env::var("FJ_OFFICIAL_RELEASE").as_deref() == Ok("1");
-    println!("cargo:rerun-if-env-changed=FJ_OFFICIAL_RELEASE");
+        let official_release =
+            std::env::var("FJ_OFFICIAL_RELEASE").as_deref() == Ok("1");
+        println!("cargo:rerun-if-env-changed=FJ_OFFICIAL_RELEASE");
 
-    match (commit, official_release) {
-        (Some(commit), true) => format!("{pkg_version} ({commit})"),
-        (Some(commit), false) => {
-            format!("{pkg_version} ({commit}, unreleased)")
+        let full_string = match (commit, official_release) {
+            (Some(commit), true) => format!("{pkg_version} ({commit})"),
+            (Some(commit), false) => {
+                format!("{pkg_version} ({commit}, unreleased)")
+            }
+            (None, true) => pkg_version.clone(),
+            (None, false) => format!("{pkg_version} (unreleased)"),
+        };
+
+        Self {
+            pkg_version,
+            full_string,
         }
-        (None, true) => pkg_version,
-        (None, false) => format!("{pkg_version} (unreleased)"),
     }
 }
 

@@ -30,7 +30,7 @@ use std::{
     thread,
 };
 
-use fj::abi;
+use fj::{abi, version::RawVersion};
 use notify::Watcher as _;
 use thiserror::Error;
 
@@ -143,6 +143,23 @@ impl Model {
         // https://github.com/hannobraun/Fornjot/issues/71
         let shape = unsafe {
             let lib = libloading::Library::new(&self.lib_path)?;
+
+            let version_pkg: libloading::Symbol<fn() -> RawVersion> =
+                lib.get(b"version_pkg")?;
+
+            let version_pkg = version_pkg();
+            if fj::version::VERSION_PKG != version_pkg.as_str() {
+                let host = String::from_utf8_lossy(
+                    fj::version::VERSION_PKG.as_bytes(),
+                )
+                .into_owned();
+                let model =
+                    String::from_utf8_lossy(version_pkg.as_str().as_bytes())
+                        .into_owned();
+
+                return Err(Error::VersionMismatch { host, model });
+            }
+
             let init: libloading::Symbol<abi::InitFunction> =
                 lib.get(abi::INIT_FUNCTION_NAME.as_bytes())?;
 
@@ -393,6 +410,16 @@ pub enum Error {
     /// Failed to load the model's dynamic library
     #[error("Error loading model from dynamic library")]
     LibLoading(#[from] libloading::Error),
+
+    /// Host version and model version do not match
+    #[error("Host version ({host}) and model version ({model}) do not match")]
+    VersionMismatch {
+        /// The host version
+        host: String,
+
+        /// The model version
+        model: String,
+    },
 
     /// Initializing a model failed.
     #[error("Unable to initialize the model")]
