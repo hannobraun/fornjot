@@ -52,8 +52,8 @@ pub fn run(
         if let Some(watcher) = &watcher {
             if let Some(new_shape) = watcher.receive_shape(&mut status) {
                 match shape_processor.process(&new_shape) {
-                    Ok(new_shape) => {
-                        viewer.handle_shape_update(new_shape);
+                    Ok(shape) => {
+                        viewer.handle_shape_update(shape);
                     }
                     Err(err) => {
                         // Can be cleaned up, once `Report` is stable:
