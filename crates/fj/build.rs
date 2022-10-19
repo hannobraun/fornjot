@@ -4,7 +4,7 @@ use std::{
 };
 
 fn main() {
-    let version = version_string();
+    let version = Version::version_string();
 
     println!("cargo:rustc-env=FJ_VERSION_STRING={}", version.full_string);
 }
@@ -12,25 +12,26 @@ fn main() {
 struct Version {
     full_string: String,
 }
+impl Version {
+    fn version_string() -> Self {
+        let pkg_version = std::env::var("CARGO_PKG_VERSION").unwrap();
+        let commit = git_description();
 
-fn version_string() -> Version {
-    let pkg_version = std::env::var("CARGO_PKG_VERSION").unwrap();
-    let commit = git_description();
+        let official_release =
+            std::env::var("FJ_OFFICIAL_RELEASE").as_deref() == Ok("1");
+        println!("cargo:rerun-if-env-changed=FJ_OFFICIAL_RELEASE");
 
-    let official_release =
-        std::env::var("FJ_OFFICIAL_RELEASE").as_deref() == Ok("1");
-    println!("cargo:rerun-if-env-changed=FJ_OFFICIAL_RELEASE");
+        let full_string = match (commit, official_release) {
+            (Some(commit), true) => format!("{pkg_version} ({commit})"),
+            (Some(commit), false) => {
+                format!("{pkg_version} ({commit}, unreleased)")
+            }
+            (None, true) => pkg_version,
+            (None, false) => format!("{pkg_version} (unreleased)"),
+        };
 
-    let full_string = match (commit, official_release) {
-        (Some(commit), true) => format!("{pkg_version} ({commit})"),
-        (Some(commit), false) => {
-            format!("{pkg_version} ({commit}, unreleased)")
-        }
-        (None, true) => pkg_version,
-        (None, false) => format!("{pkg_version} (unreleased)"),
-    };
-
-    Version { full_string }
+        Self { full_string }
+    }
 }
 
 /// Try to get the current git commit.
