@@ -4,7 +4,7 @@ use std::{
 };
 
 fn main() {
-    let version = Version::version_string();
+    let version = Version::determine();
 
     println!("cargo:rustc-env=FJ_VERSION_STRING={}", version.full_string);
 }
@@ -13,7 +13,7 @@ struct Version {
     full_string: String,
 }
 impl Version {
-    fn version_string() -> Self {
+    fn determine() -> Self {
         let pkg_version = std::env::var("CARGO_PKG_VERSION").unwrap();
         let commit = git_description();
 
