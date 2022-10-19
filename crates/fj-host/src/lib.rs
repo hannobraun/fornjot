@@ -323,7 +323,7 @@ impl Watcher {
                         return Ok(None);
                     }
                     Err(err) => {
-                        panic!("Error reloading model: {:?}", err);
+                        return Err(err);
                     }
                 };
 
