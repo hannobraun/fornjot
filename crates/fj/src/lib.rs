@@ -18,6 +18,12 @@
 
 #![warn(missing_docs)]
 
+/// The full Fornjot version
+///
+/// Can be used to check for compatibility between a model and the Fornjot app
+/// that runs it.
+pub static VERSION_FULL: &str = env!("FJ_VERSION_STRING");
+
 pub mod syntax;
 
 #[doc(hidden)]
