@@ -50,26 +50,35 @@ pub fn run(
         trace!("Handling event: {:?}", event);
 
         if let Some(watcher) = &watcher {
-            if let Some(shape) = watcher.receive_shape(&mut status) {
-                match shape_processor.process(&shape) {
-                    Ok(shape) => {
-                        viewer.handle_shape_update(shape);
-                    }
-                    Err(err) => {
-                        // Can be cleaned up, once `Report` is stable:
-                        // https://doc.rust-lang.org/std/error/struct.Report.html
+            match watcher.receive_shape(&mut status) {
+                Ok(shape) => {
+                    if let Some(shape) = shape {
+                        match shape_processor.process(&shape) {
+                            Ok(shape) => {
+                                viewer.handle_shape_update(shape);
+                            }
+                            Err(err) => {
+                                // Can be cleaned up, once `Report` is stable:
+                                // https://doc.rust-lang.org/std/error/struct.Report.html
 
-                        println!("Shape processing error: {}", err);
+                                println!("Shape processing error: {}", err);
 
-                        let mut current_err = &err as &dyn error::Error;
-                        while let Some(err) = current_err.source() {
-                            println!();
-                            println!("Caused by:");
-                            println!("    {}", err);
+                                let mut current_err = &err as &dyn error::Error;
+                                while let Some(err) = current_err.source() {
+                                    println!();
+                                    println!("Caused by:");
+                                    println!("    {}", err);
 
-                            current_err = err;
+                                    current_err = err;
+                                }
+                            }
                         }
                     }
+                }
+                Err(err) => {
+                    println!("Error receiving updated shape: {}", err);
+                    *control_flow = ControlFlow::Exit;
+                    return;
                 }
             }
         }

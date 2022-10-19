@@ -310,7 +310,7 @@ impl Watcher {
     pub fn receive_shape(
         &self,
         status: &mut StatusReport,
-    ) -> Option<fj::Shape> {
+    ) -> Result<Option<fj::Shape>, Error> {
         match self.channel.try_recv() {
             Ok(()) => {
                 let shape = match self.model.load_once(&self.parameters, status)
@@ -320,18 +320,18 @@ impl Watcher {
                         // An error is being displayed to the user via the
                         // `StatusReport that is passed to `load_once` above, so
                         // no need to do anything else here.
-                        return None;
+                        return Ok(None);
                     }
                     Err(err) => {
                         panic!("Error reloading model: {:?}", err);
                     }
                 };
 
-                Some(shape)
+                Ok(Some(shape))
             }
             Err(mpsc::TryRecvError::Empty) => {
                 // Nothing to receive from the channel.
-                None
+                Ok(None)
             }
             Err(mpsc::TryRecvError::Disconnected) => {
                 // The other end has disconnected. This is probably the result
