@@ -76,7 +76,20 @@ pub fn run(
                     }
                 }
                 Err(err) => {
+                    // Can be cleaned up, once `Report` is stable:
+                    // https://doc.rust-lang.org/std/error/struct.Report.html
+
                     println!("Error receiving updated shape: {}", err);
+
+                    let mut current_err = &err as &dyn error::Error;
+                    while let Some(err) = current_err.source() {
+                        println!();
+                        println!("Caused by:");
+                        println!("    {}", err);
+
+                        current_err = err;
+                    }
+
                     *control_flow = ControlFlow::Exit;
                     return;
                 }
