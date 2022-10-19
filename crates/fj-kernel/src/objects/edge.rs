@@ -39,6 +39,10 @@ impl HalfEdge {
 
         let curve = a.curve();
 
+        let (vertices_in_normalized_order, _) = VerticesInNormalizedOrder::new(
+            [&a, &b].map(|vertex| vertex.global_form().clone()),
+        );
+
         // Make sure `curve` and `vertices` match `global_form`.
         assert_eq!(
             curve.global_form().id(),
@@ -47,10 +51,15 @@ impl HalfEdge {
             the half-edge's global form"
         );
         assert_eq!(
-            &VerticesInNormalizedOrder::new(
-                [&a, &b].map(|vertex| vertex.global_form().clone())
-            ),
-            global_form.vertices(),
+            vertices_in_normalized_order
+                .access_in_normalized_order()
+                .clone()
+                .map(|global_vertex| global_vertex.id()),
+            global_form
+                .vertices()
+                .access_in_normalized_order()
+                .clone()
+                .map(|global_vertex| global_vertex.id()),
             "The global forms of a half-edge's vertices must match the \
             vertices of the half-edge's global form"
         );
@@ -130,7 +139,7 @@ impl GlobalEdge {
         vertices: [Handle<GlobalVertex>; 2],
     ) -> Self {
         let curve = curve.into();
-        let vertices = VerticesInNormalizedOrder::new(vertices);
+        let (vertices, _) = VerticesInNormalizedOrder::new(vertices);
         Self { curve, vertices }
     }
 
@@ -166,10 +175,14 @@ pub struct VerticesInNormalizedOrder([Handle<GlobalVertex>; 2]);
 impl VerticesInNormalizedOrder {
     /// Construct a new instance of `VerticesInNormalizedOrder`
     ///
-    /// The provided vertices can be in any order.
-    pub fn new([a, b]: [Handle<GlobalVertex>; 2]) -> Self {
-        let vertices = if a < b { [a, b] } else { [b, a] };
-        Self(vertices)
+    /// The provided vertices can be in any order. The returned `bool` value
+    /// indicates whether the normalization changed the order of the vertices.
+    pub fn new([a, b]: [Handle<GlobalVertex>; 2]) -> (Self, bool) {
+        if a < b {
+            (Self([a, b]), false)
+        } else {
+            (Self([b, a]), true)
+        }
     }
 
     /// Access the vertices

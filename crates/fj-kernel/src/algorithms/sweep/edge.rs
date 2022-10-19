@@ -10,20 +10,22 @@ use crate::{
     path::SurfacePath,
 };
 
-use super::Sweep;
+use super::{Sweep, SweepCache};
 
 impl Sweep for (HalfEdge, Color) {
     type Swept = Face;
 
-    fn sweep(
+    fn sweep_with_cache(
         self,
         path: impl Into<Vector<3>>,
+        cache: &mut SweepCache,
         objects: &Objects,
     ) -> Self::Swept {
         let (edge, color) = self;
         let path = path.into();
 
-        let surface = edge.curve().clone().sweep(path, objects);
+        let surface =
+            edge.curve().clone().sweep_with_cache(path, cache, objects);
 
         // We can't use the edge we're sweeping from as the bottom edge, as that
         // is not defined in the right surface. Let's create a new bottom edge,
@@ -82,10 +84,9 @@ impl Sweep for (HalfEdge, Color) {
             HalfEdge::new(vertices, edge.global_form().clone())
         };
 
-        let side_edges = bottom_edge
-            .vertices()
-            .clone()
-            .map(|vertex| (vertex, surface.clone()).sweep(path, objects));
+        let side_edges = bottom_edge.vertices().clone().map(|vertex| {
+            (vertex, surface.clone()).sweep_with_cache(path, cache, objects)
+        });
 
         let top_edge = {
             let bottom_vertices = bottom_edge.vertices();

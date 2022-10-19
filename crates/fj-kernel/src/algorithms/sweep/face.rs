@@ -6,14 +6,15 @@ use crate::{
     path::GlobalPath,
 };
 
-use super::Sweep;
+use super::{Sweep, SweepCache};
 
 impl Sweep for Face {
     type Swept = Shell;
 
-    fn sweep(
+    fn sweep_with_cache(
         self,
         path: impl Into<Vector<3>>,
+        cache: &mut SweepCache,
         objects: &Objects,
     ) -> Self::Swept {
         let path = path.into();
@@ -64,7 +65,8 @@ impl Sweep for Face {
                     half_edge.clone()
                 };
 
-                let face = (half_edge, self.color()).sweep(path, objects);
+                let face = (half_edge, self.color())
+                    .sweep_with_cache(path, cache, objects);
 
                 faces.push(face);
             }

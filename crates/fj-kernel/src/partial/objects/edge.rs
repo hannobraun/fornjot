@@ -3,7 +3,7 @@ use fj_math::{Point, Scalar};
 use crate::{
     objects::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
-        Surface, SurfaceVertex, Vertex,
+        Surface, SurfaceVertex, Vertex, VerticesInNormalizedOrder,
     },
     partial::{HasPartial, MaybePartial},
     storage::{Handle, HandleWrapper},
@@ -36,9 +36,14 @@ impl PartialHalfEdge {
     pub fn extract_global_curve(&self) -> Option<Handle<GlobalCurve>> {
         let global_curve_from_curve = || self.curve.as_ref()?.global_form();
         let global_curve_from_global_form =
-            || Some(self.global_form.as_ref()?.curve()?.clone());
+            || self.global_form.as_ref()?.curve().cloned();
 
         global_curve_from_curve().or_else(global_curve_from_global_form)
+    }
+
+    /// Access the vertices of the global form, if available
+    pub fn extract_global_vertices(&self) -> Option<[Handle<GlobalVertex>; 2]> {
+        self.global_form.as_ref()?.vertices().cloned()
     }
 
     /// Update the partial half-edge with the given surface
@@ -124,28 +129,33 @@ impl PartialHalfEdge {
             .with_surface(self.surface.clone())
             .as_circle_from_radius(radius);
 
-        let [back, front] = {
-            let [a_curve, b_curve] =
-                [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
+        let path = curve.path.expect("Expected path that was just created");
 
-            let global_form = Handle::<GlobalVertex>::partial()
-                .from_curve_and_position(curve.clone(), a_curve);
+        let [a_curve, b_curve] =
+            [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-            let path = curve.path.expect("Expected path that was just created");
-            let surface_form = Handle::<SurfaceVertex>::partial()
-                .with_position(Some(path.point_from_path_coords(a_curve)))
-                .with_surface(self.surface.clone())
-                .with_global_form(Some(global_form))
-                .build(objects);
-
-            [a_curve, b_curve].map(|point_curve| {
-                Vertex::partial()
-                    .with_position(Some(point_curve))
-                    .with_curve(Some(curve.clone()))
-                    .with_surface_form(Some(surface_form.clone()))
+        let global_vertex = self
+            .extract_global_vertices()
+            .map(|[global_form, _]| MaybePartial::from(global_form))
+            .unwrap_or_else(|| {
+                Handle::<GlobalVertex>::partial()
+                    .from_curve_and_position(curve.clone(), a_curve)
                     .into()
-            })
-        };
+            });
+
+        let surface_vertex = Handle::<SurfaceVertex>::partial()
+            .with_position(Some(path.point_from_path_coords(a_curve)))
+            .with_surface(self.surface.clone())
+            .with_global_form(Some(global_vertex))
+            .build(objects);
+
+        let [back, front] = [a_curve, b_curve].map(|point_curve| {
+            Vertex::partial()
+                .with_position(Some(point_curve))
+                .with_curve(Some(curve.clone()))
+                .with_surface_form(Some(surface_vertex.clone()))
+                .into()
+        });
 
         self.curve = Some(curve.into());
         self.vertices = [Some(back), Some(front)];
@@ -163,6 +173,7 @@ impl PartialHalfEdge {
             let surface_form = Handle::<SurfaceVertex>::partial()
                 .with_surface(surface.clone())
                 .with_position(Some(point));
+
             Vertex::partial().with_surface_form(Some(surface_form))
         });
 
@@ -198,13 +209,55 @@ impl PartialHalfEdge {
             .with_surface(Some(surface))
             .as_line_from_points(points);
 
-        let [back, front] = [(from, 0.), (to, 1.)].map(|(vertex, position)| {
-            vertex.update_partial(|vertex| {
-                vertex
-                    .with_position(Some([position]))
-                    .with_curve(Some(curve.clone()))
+        let [back, front] = {
+            let vertices = [(from, 0.), (to, 1.)].map(|(vertex, position)| {
+                vertex.update_partial(|vertex| {
+                    vertex
+                        .with_position(Some([position]))
+                        .with_curve(Some(curve.clone()))
+                })
+            });
+
+            // The global vertices we extracted are in normalized order, which
+            // means we might need to switch their order here. This is a bit of
+            // a hack, but I can't think of something better.
+            let global_forms = {
+                let must_switch_order = {
+                    let objects = Objects::new();
+                    let vertices = vertices.clone().map(|vertex| {
+                        vertex.into_full(&objects).global_form().clone()
+                    });
+
+                    let (_, must_switch_order) =
+                        VerticesInNormalizedOrder::new(vertices);
+
+                    must_switch_order
+                };
+
+                self.extract_global_vertices()
+                    .map(
+                        |[a, b]| {
+                            if must_switch_order {
+                                [b, a]
+                            } else {
+                                [a, b]
+                            }
+                        },
+                    )
+                    .map(|[a, b]| [Some(a), Some(b)])
+                    .unwrap_or([None, None])
+            };
+
+            // Can be cleaned up, once `zip` is stable:
+            // https://doc.rust-lang.org/std/primitive.array.html#method.zip
+            let [a, b] = vertices;
+            let [a_global, b_global] = global_forms;
+            [(a, a_global), (b, b_global)].map(|(vertex, global_form)| {
+                vertex.update_partial(|partial| {
+                    partial.with_global_form(global_form)
+                })
             })
-        });
+        };
 
         self.curve = Some(curve.into());
         self.vertices = [Some(back), Some(front)];

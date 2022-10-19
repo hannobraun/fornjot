@@ -9,14 +9,15 @@ use crate::{
     storage::Handle,
 };
 
-use super::Sweep;
+use super::{Sweep, SweepCache};
 
 impl Sweep for (Vertex, Handle<Surface>) {
     type Swept = HalfEdge;
 
-    fn sweep(
+    fn sweep_with_cache(
         self,
         path: impl Into<Vector<3>>,
+        cache: &mut SweepCache,
         objects: &Objects,
     ) -> Self::Swept {
         let (vertex, surface) = self;
@@ -57,8 +58,10 @@ impl Sweep for (Vertex, Handle<Surface>) {
         // With that out of the way, let's start by creating the `GlobalEdge`,
         // as that is the most straight-forward part of this operations, and
         // we're going to need it soon anyway.
-        let (edge_global, vertices_global) =
-            vertex.global_form().clone().sweep(path, objects);
+        let (edge_global, vertices_global) = vertex
+            .global_form()
+            .clone()
+            .sweep_with_cache(path, cache, objects);
 
         // Next, let's compute the surface coordinates of the two vertices of
         // the output `Edge`, as we're going to need these for the rest of this
@@ -120,16 +123,25 @@ impl Sweep for (Vertex, Handle<Surface>) {
 impl Sweep for Handle<GlobalVertex> {
     type Swept = (GlobalEdge, [Handle<GlobalVertex>; 2]);
 
-    fn sweep(
+    fn sweep_with_cache(
         self,
         path: impl Into<Vector<3>>,
+        cache: &mut SweepCache,
         objects: &Objects,
     ) -> Self::Swept {
         let curve = GlobalCurve::new(objects);
 
         let a = self.clone();
-        let b =
-            GlobalVertex::from_position(self.position() + path.into(), objects);
+        let b = cache
+            .global_vertex
+            .entry(self.id())
+            .or_insert_with(|| {
+                GlobalVertex::from_position(
+                    self.position() + path.into(),
+                    objects,
+                )
+            })
+            .clone();
 
         let vertices = [a, b];
         let global_edge = GlobalEdge::new(curve, vertices.clone());

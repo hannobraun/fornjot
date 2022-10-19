@@ -2,8 +2,8 @@ use fj_math::Point;
 
 use crate::{
     objects::{
-        Curve, GlobalCurve, GlobalEdge, HalfEdge, Objects, Surface,
-        SurfaceVertex, Vertex,
+        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
+        Surface, SurfaceVertex, Vertex,
     },
     storage::Handle,
 };
@@ -100,6 +100,16 @@ impl MaybePartial<GlobalEdge> {
             Self::Partial(partial) => {
                 partial.curve.as_ref().map(|wrapper| &wrapper.0)
             }
+        }
+    }
+
+    /// Access the vertices
+    pub fn vertices(&self) -> Option<&[Handle<GlobalVertex>; 2]> {
+        match self {
+            Self::Full(full) => {
+                Some(full.vertices().access_in_normalized_order())
+            }
+            Self::Partial(partial) => partial.vertices.as_ref(),
         }
     }
 }
