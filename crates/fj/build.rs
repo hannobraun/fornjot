@@ -6,10 +6,12 @@ use std::{
 fn main() {
     let version = Version::determine();
 
+    println!("cargo:rustc-env=FJ_VERSION_PKG={}", version.pkg_version);
     println!("cargo:rustc-env=FJ_VERSION_STRING={}", version.full_string);
 }
 
 struct Version {
+    pkg_version: String,
     full_string: String,
 }
 impl Version {
@@ -26,11 +28,14 @@ impl Version {
             (Some(commit), false) => {
                 format!("{pkg_version} ({commit}, unreleased)")
             }
-            (None, true) => pkg_version,
+            (None, true) => pkg_version.clone(),
             (None, false) => format!("{pkg_version} (unreleased)"),
         };
 
-        Self { full_string }
+        Self {
+            pkg_version,
+            full_string,
+        }
     }
 }
 
