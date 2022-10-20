@@ -118,6 +118,9 @@ pub struct Objects {
     /// Store for global curves
     pub global_curves: Store<GlobalCurve>,
 
+    /// Store for global edges
+    pub global_edges: Store<GlobalEdge>,
+
     /// Store for global vertices
     pub global_vertices: Store<GlobalVertex>,
 
