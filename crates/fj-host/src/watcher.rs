@@ -14,7 +14,7 @@ pub struct Watcher {
 impl Watcher {
     /// Watch the provided model for changes
     pub fn watch_model(model: Model) -> Result<Self, Error> {
-        let (event_tx, event_rx) = crossbeam_channel::bounded(1);
+        let (event_tx, event_rx) = crossbeam_channel::bounded(0);
 
         let (watch_tx, watch_rx) = crossbeam_channel::bounded(0);
         let watch_tx_2 = watch_tx.clone();
