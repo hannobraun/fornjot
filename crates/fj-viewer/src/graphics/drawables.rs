@@ -29,15 +29,11 @@ impl<'a> Drawable<'a> {
         Self { geometry, pipeline }
     }
 
-    pub fn draw<'b>(
-        &self,
-        bind_group: &'b wgpu::BindGroup,
-        render_pass: &mut wgpu::RenderPass<'b>,
-    ) where
+    pub fn draw<'b>(&self, render_pass: &mut wgpu::RenderPass<'b>)
+    where
         'a: 'b,
     {
         render_pass.set_pipeline(&self.pipeline.0);
-        render_pass.set_bind_group(0, bind_group, &[]);
         render_pass.set_vertex_buffer(0, self.geometry.vertex_buffer.slice(..));
         render_pass.set_index_buffer(
             self.geometry.index_buffer.slice(..),

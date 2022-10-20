@@ -250,19 +250,20 @@ impl Renderer {
                         },
                     ),
                 });
+            render_pass.set_bind_group(0, &self.bind_group, &[]);
 
             let drawables = Drawables::new(&self.geometries, &self.pipelines);
 
             if config.draw_model {
-                drawables.model.draw(&self.bind_group, &mut render_pass);
+                drawables.model.draw(&mut render_pass);
             }
 
             if self.is_line_drawing_available() {
                 if config.draw_mesh {
-                    drawables.mesh.draw(&self.bind_group, &mut render_pass);
+                    drawables.mesh.draw(&mut render_pass);
                 }
                 if config.draw_debug {
-                    drawables.lines.draw(&self.bind_group, &mut render_pass);
+                    drawables.lines.draw(&mut render_pass);
                 }
             }
         };
