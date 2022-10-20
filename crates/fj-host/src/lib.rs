@@ -82,9 +82,6 @@ impl Model {
     ///
     /// The passed arguments are provided to the model. Returns the shape that
     /// the model returns.
-    ///
-    /// Please refer to [`Model::load_and_watch`], if you want to watch the
-    /// model for changes, reloading it continually.
     pub fn load_once(
         &self,
         status: &mut StatusReport,
@@ -186,18 +183,66 @@ impl Model {
 
         Ok(shape)
     }
+}
 
-    /// Load the model, then watch it for changes
-    ///
-    /// Whenever a change is detected, the model is being reloaded.
-    ///
-    /// Consumes this instance of `Model` and returns a [`Watcher`], which can
-    /// be queried for changes to the model.
-    fn load_and_watch(self) -> Result<Watcher, Error> {
+fn package_associated_with_directory<'m>(
+    metadata: &'m cargo_metadata::Metadata,
+    dir: &Path,
+) -> Result<&'m cargo_metadata::Package, Error> {
+    for pkg in metadata.workspace_packages() {
+        let crate_dir = pkg
+            .manifest_path
+            .parent()
+            .and_then(|p| p.canonicalize().ok());
+
+        if crate_dir.as_deref() == Some(dir) {
+            return Ok(pkg);
+        }
+    }
+
+    Err(ambiguous_path_error(metadata, dir))
+}
+
+fn ambiguous_path_error(
+    metadata: &cargo_metadata::Metadata,
+    dir: &Path,
+) -> Error {
+    let mut possible_paths = Vec::new();
+
+    for id in &metadata.workspace_members {
+        let cargo_toml = &metadata[id].manifest_path;
+        let crate_dir = cargo_toml
+            .parent()
+            .expect("A Cargo.toml always has a parent");
+        // Try to make the path relative to the workspace root so error messages
+        // aren't super long.
+        let simplified_path = crate_dir
+            .strip_prefix(&metadata.workspace_root)
+            .unwrap_or(crate_dir);
+
+        possible_paths.push(simplified_path.into());
+    }
+
+    Error::AmbiguousPath {
+        dir: dir.to_path_buf(),
+        possible_paths,
+    }
+}
+
+/// Watches a model for changes, reloading it continually
+pub struct Watcher {
+    _watcher: Box<dyn notify::Watcher>,
+    channel: mpsc::Receiver<()>,
+    model: Model,
+}
+
+impl Watcher {
+    /// Watch the provided model for changes
+    pub fn watch_model(model: Model) -> Result<Self, Error> {
         let (tx, rx) = mpsc::sync_channel(0);
         let tx2 = tx.clone();
 
-        let watch_path = self.src_path.clone();
+        let watch_path = model.src_path.clone();
 
         let mut watcher = notify::recommended_watcher(
             move |event: notify::Result<notify::Event>| {
@@ -259,69 +304,11 @@ impl Model {
         // about that, if it happened.
         thread::spawn(move || tx2.send(()).expect("Channel is disconnected"));
 
-        Ok(Watcher {
+        Ok(Self {
             _watcher: Box::new(watcher),
             channel: rx,
-            model: self,
+            model,
         })
-    }
-}
-
-fn package_associated_with_directory<'m>(
-    metadata: &'m cargo_metadata::Metadata,
-    dir: &Path,
-) -> Result<&'m cargo_metadata::Package, Error> {
-    for pkg in metadata.workspace_packages() {
-        let crate_dir = pkg
-            .manifest_path
-            .parent()
-            .and_then(|p| p.canonicalize().ok());
-
-        if crate_dir.as_deref() == Some(dir) {
-            return Ok(pkg);
-        }
-    }
-
-    Err(ambiguous_path_error(metadata, dir))
-}
-
-fn ambiguous_path_error(
-    metadata: &cargo_metadata::Metadata,
-    dir: &Path,
-) -> Error {
-    let mut possible_paths = Vec::new();
-
-    for id in &metadata.workspace_members {
-        let cargo_toml = &metadata[id].manifest_path;
-        let crate_dir = cargo_toml
-            .parent()
-            .expect("A Cargo.toml always has a parent");
-        // Try to make the path relative to the workspace root so error messages
-        // aren't super long.
-        let simplified_path = crate_dir
-            .strip_prefix(&metadata.workspace_root)
-            .unwrap_or(crate_dir);
-
-        possible_paths.push(simplified_path.into());
-    }
-
-    Error::AmbiguousPath {
-        dir: dir.to_path_buf(),
-        possible_paths,
-    }
-}
-
-/// Watches a model for changes, reloading it continually
-pub struct Watcher {
-    _watcher: Box<dyn notify::Watcher>,
-    channel: mpsc::Receiver<()>,
-    model: Model,
-}
-
-impl Watcher {
-    /// Watch the provided model for changes
-    pub fn watch_model(model: Model) -> Result<Self, Error> {
-        model.load_and_watch()
     }
 
     /// Receive an updated shape that the reloaded model created
