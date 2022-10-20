@@ -5,7 +5,7 @@
 
 use std::error;
 
-use fj_host::Watcher;
+use fj_host::{Watcher, WatcherEvent};
 use fj_interop::status_report::StatusReport;
 use fj_operations::shape_processor::ShapeProcessor;
 use fj_viewer::{
@@ -36,6 +36,8 @@ pub fn run(
     let window = Window::new(&event_loop)?;
     let mut viewer = block_on(Viewer::new(&window))?;
 
+    let events = watcher.events();
+
     let mut held_mouse_button = None;
 
     let mut egui_winit_state = egui_winit::State::new(&event_loop);
@@ -49,7 +51,29 @@ pub fn run(
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
 
-        match watcher.receive_shape(&mut status) {
+        loop {
+            let event = events
+                .try_recv()
+                .map_err(|err| {
+                    if err.is_disconnected() {
+                        panic!("Expected channel to never disconnect");
+                    }
+                })
+                .ok();
+
+            let event = match event {
+                Some(status_update) => status_update,
+                None => break,
+            };
+
+            match event {
+                WatcherEvent::StatusUpdate(status_update) => {
+                    status.update_status(&status_update)
+                }
+            }
+        }
+
+        match watcher.receive_shape() {
             Ok(shape) => {
                 if let Some(shape) = shape {
                     match shape_processor.process(&shape) {

@@ -1,7 +1,6 @@
 use std::{collections::HashSet, ffi::OsStr, thread};
 
-use crossbeam_channel::{Receiver, TryRecvError};
-use fj_interop::status_report::StatusReport;
+use crossbeam_channel::{Receiver, Sender, TryRecvError};
 use notify::Watcher as _;
 
 use crate::{Error, Model};
@@ -11,11 +10,16 @@ pub struct Watcher {
     _watcher: Box<dyn notify::Watcher>,
     channel: Receiver<()>,
     model: Model,
+
+    event_tx: Sender<WatcherEvent>,
+    event_rx: Receiver<WatcherEvent>,
 }
 
 impl Watcher {
     /// Watch the provided model for changes
     pub fn watch_model(model: Model) -> Result<Self, Error> {
+        let (event_tx, event_rx) = crossbeam_channel::bounded(1);
+
         let (tx, rx) = crossbeam_channel::bounded(0);
         let tx2 = tx.clone();
 
@@ -85,26 +89,33 @@ impl Watcher {
             _watcher: Box::new(watcher),
             channel: rx,
             model,
+
+            event_tx,
+            event_rx,
         })
+    }
+
+    /// Access a channel for receiving status updates
+    pub fn events(&self) -> Receiver<WatcherEvent> {
+        self.event_rx.clone()
     }
 
     /// Receive an updated shape that the reloaded model created
     ///
     /// Returns `None`, if the model has not changed since the last time this
     /// method was called.
-    pub fn receive_shape(
-        &self,
-        status: &mut StatusReport,
-    ) -> Result<Option<fj::Shape>, Error> {
+    pub fn receive_shape(&self) -> Result<Option<fj::Shape>, Error> {
         match self.channel.try_recv() {
             Ok(()) => {
                 let shape = match self.model.load() {
                     Ok(shape) => shape,
                     Err(Error::Compile { output }) => {
-                        status.update_status(&format!(
-                            "Failed to compile model:\n{}",
-                            output
-                        ));
+                        self.event_tx
+                            .send(WatcherEvent::StatusUpdate(format!(
+                                "Failed to compile model:\n{}",
+                                output
+                            )))
+                            .expect("Expected channel to never disconnect");
 
                         return Ok(None);
                     }
@@ -113,13 +124,12 @@ impl Watcher {
                     }
                 };
 
-                status.update_status(
-                    format!(
+                self.event_tx
+                    .send(WatcherEvent::StatusUpdate(format!(
                         "Model compiled successfully in {}!",
                         shape.compile_time
-                    )
-                    .as_str(),
-                );
+                    )))
+                    .expect("Expected channel to never disconnect");
 
                 Ok(Some(shape.shape))
             }
@@ -135,4 +145,10 @@ impl Watcher {
             }
         }
     }
+}
+
+/// An event emitted by the [`Watcher`]
+pub enum WatcherEvent {
+    /// A status update about the model
+    StatusUpdate(String),
 }

@@ -24,5 +24,5 @@ mod watcher;
 pub use self::{
     model::{Error, LoadedShape, Model},
     parameters::Parameters,
-    watcher::Watcher,
+    watcher::{Watcher, WatcherEvent},
 };
