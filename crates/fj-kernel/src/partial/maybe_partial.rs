@@ -92,7 +92,7 @@ impl MaybePartial<Handle<Curve>> {
     }
 }
 
-impl MaybePartial<GlobalEdge> {
+impl MaybePartial<Handle<GlobalEdge>> {
     /// Access the curve
     pub fn curve(&self) -> Option<&Handle<GlobalCurve>> {
         match self {

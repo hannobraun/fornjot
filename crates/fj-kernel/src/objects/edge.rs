@@ -4,13 +4,13 @@ use pretty_assertions::{assert_eq, assert_ne};
 
 use crate::storage::{Handle, HandleWrapper};
 
-use super::{Curve, GlobalCurve, GlobalVertex, Vertex};
+use super::{Curve, GlobalCurve, GlobalVertex, Objects, Vertex};
 
 /// A half-edge
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdge {
     vertices: [Handle<Vertex>; 2],
-    global_form: GlobalEdge,
+    global_form: Handle<GlobalEdge>,
 }
 
 impl HalfEdge {
@@ -29,7 +29,10 @@ impl HalfEdge {
     /// were, the edge would have no length, and thus not be valid. (It is
     /// perfectly fine for global forms of the the vertices to be coincident.
     /// That would just mean, that ends of the edge connect to each other.)
-    pub fn new([a, b]: [Handle<Vertex>; 2], global_form: GlobalEdge) -> Self {
+    pub fn new(
+        [a, b]: [Handle<Vertex>; 2],
+        global_form: Handle<GlobalEdge>,
+    ) -> Self {
         // Make sure `curve` and `vertices` match.
         assert_eq!(
             a.curve().id(),
@@ -101,7 +104,7 @@ impl HalfEdge {
     }
 
     /// Access the global form of this half-edge
-    pub fn global_form(&self) -> &GlobalEdge {
+    pub fn global_form(&self) -> &Handle<GlobalEdge> {
         &self.global_form
     }
 }
@@ -137,10 +140,12 @@ impl GlobalEdge {
     pub fn new(
         curve: impl Into<HandleWrapper<GlobalCurve>>,
         vertices: [Handle<GlobalVertex>; 2],
-    ) -> Self {
+        objects: &Objects,
+    ) -> Handle<Self> {
         let curve = curve.into();
         let (vertices, _) = VerticesInNormalizedOrder::new(vertices);
-        Self { curve, vertices }
+
+        objects.global_edges.insert(Self { curve, vertices })
     }
 
     /// Access the curve that defines the edge's geometry

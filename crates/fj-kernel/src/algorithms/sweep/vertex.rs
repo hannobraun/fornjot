@@ -122,7 +122,7 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
 }
 
 impl Sweep for Handle<GlobalVertex> {
-    type Swept = (GlobalEdge, [Handle<GlobalVertex>; 2]);
+    type Swept = (Handle<GlobalEdge>, [Handle<GlobalVertex>; 2]);
 
     fn sweep_with_cache(
         self,
@@ -145,7 +145,7 @@ impl Sweep for Handle<GlobalVertex> {
             .clone();
 
         let vertices = [a, b];
-        let global_edge = GlobalEdge::new(curve, vertices.clone());
+        let global_edge = GlobalEdge::new(curve, vertices.clone(), objects);
 
         // The vertices of the returned `GlobalEdge` are in normalized order,
         // which means the order can't be relied upon by the caller. Return the
