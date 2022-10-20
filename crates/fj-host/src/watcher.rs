@@ -3,7 +3,7 @@ use std::{collections::HashSet, ffi::OsStr, thread};
 use crossbeam_channel::{Receiver, Sender, TryRecvError};
 use notify::Watcher as _;
 
-use crate::{Error, Model};
+use crate::{Error, LoadedShape, Model};
 
 /// Watches a model for changes, reloading it continually
 pub struct Watcher {
@@ -104,7 +104,7 @@ impl Watcher {
     ///
     /// Returns `None`, if the model has not changed since the last time this
     /// method was called.
-    pub fn receive_shape(&self) -> Result<Option<fj::Shape>, Error> {
+    pub fn receive_shape(&self) -> Result<(), Error> {
         match self.channel.try_recv() {
             Ok(()) => {
                 let shape = match self.model.load() {
@@ -117,7 +117,7 @@ impl Watcher {
                             )))
                             .expect("Expected channel to never disconnect");
 
-                        return Ok(None);
+                        return Ok(());
                     }
                     Err(err) => {
                         return Err(err);
@@ -125,17 +125,14 @@ impl Watcher {
                 };
 
                 self.event_tx
-                    .send(WatcherEvent::StatusUpdate(format!(
-                        "Model compiled successfully in {}!",
-                        shape.compile_time
-                    )))
+                    .send(WatcherEvent::Shape(shape))
                     .expect("Expected channel to never disconnect");
 
-                Ok(Some(shape.shape))
+                Ok(())
             }
             Err(TryRecvError::Empty) => {
                 // Nothing to receive from the channel.
-                Ok(None)
+                Ok(())
             }
             Err(TryRecvError::Disconnected) => {
                 // The other end has disconnected. This is probably the result
@@ -151,4 +148,7 @@ impl Watcher {
 pub enum WatcherEvent {
     /// A status update about the model
     StatusUpdate(String),
+
+    /// A shape has been loaded from the model
+    Shape(LoadedShape),
 }
