@@ -8,7 +8,7 @@ pub struct Window(winit::window::Window);
 
 impl Window {
     /// Returns a new window with the given `EventLoop`.
-    pub fn new(event_loop: &EventLoop<()>) -> Result<Self, Error> {
+    pub fn new<T>(event_loop: &EventLoop<T>) -> Result<Self, Error> {
         let window = WindowBuilder::new()
             .with_title("Fornjot")
             .with_maximized(true)

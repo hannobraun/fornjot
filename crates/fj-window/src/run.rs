@@ -200,8 +200,8 @@ pub fn run(
     });
 }
 
-fn input_event(
-    event: &Event<()>,
+fn input_event<T>(
+    event: &Event<T>,
     window: &Window,
     held_mouse_button: &Option<MouseButton>,
     previous_cursor: &mut Option<NormalizedScreenPosition>,
