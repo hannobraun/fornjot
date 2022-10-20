@@ -20,6 +20,7 @@ members = [
 
     "tools/autolib",
     "tools/automator",
+    "tools/cross-compiler",
     "tools/export-validator",
     "tools/release-operator",
 ]
