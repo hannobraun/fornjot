@@ -193,7 +193,7 @@ impl Model {
     ///
     /// Consumes this instance of `Model` and returns a [`Watcher`], which can
     /// be queried for changes to the model.
-    pub fn load_and_watch(self) -> Result<Watcher, Error> {
+    fn load_and_watch(self) -> Result<Watcher, Error> {
         let (tx, rx) = mpsc::sync_channel(0);
         let tx2 = tx.clone();
 
@@ -319,6 +319,11 @@ pub struct Watcher {
 }
 
 impl Watcher {
+    /// Watch the provided model for changes
+    pub fn watch_model(model: Model) -> Result<Self, Error> {
+        model.load_and_watch()
+    }
+
     /// Receive an updated shape that the reloaded model created
     ///
     /// Returns `None`, if the model has not changed since the last time this

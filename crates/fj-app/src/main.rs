@@ -19,7 +19,7 @@ use std::path::PathBuf;
 
 use anyhow::{anyhow, Context as _};
 use fj_export::export;
-use fj_host::{Model, Parameters};
+use fj_host::{Model, Parameters, Watcher};
 use fj_interop::status_report::StatusReport;
 use fj_operations::shape_processor::ShapeProcessor;
 use fj_window::run::run;
@@ -90,7 +90,7 @@ fn main() -> anyhow::Result<()> {
 
     let invert_zoom = config.invert_zoom.unwrap_or(false);
 
-    let watcher = model.load_and_watch()?;
+    let watcher = Watcher::watch_model(model)?;
     run(watcher, shape_processor, status, invert_zoom)?;
 
     Ok(())
