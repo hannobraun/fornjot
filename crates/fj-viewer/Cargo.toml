@@ -19,8 +19,11 @@ fj-math.workspace = true
 raw-window-handle = "0.4.3"
 thiserror = "1.0.35"
 tracing = "0.1.37"
-wgpu = "0.13.1"
 wgpu_glyph = "0.17.0"
+
+[dependencies.wgpu]
+version = "0.13.1"
+features = ["webgl"]
 
 # We don't depend on `getrandom` directly, but we need this to enable the `js`
 # feature when cross-compiling to WASM. Otherwise, `getrandom` will not build.
