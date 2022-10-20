@@ -19,7 +19,7 @@ use std::path::PathBuf;
 
 use anyhow::{anyhow, Context as _};
 use fj_export::export;
-use fj_host::{Model, Parameters};
+use fj_host::{Model, Parameters, Watcher};
 use fj_interop::status_report::StatusReport;
 use fj_operations::shape_processor::ShapeProcessor;
 use fj_window::run::run;
@@ -29,7 +29,7 @@ use tracing_subscriber::EnvFilter;
 use crate::{args::Args, config::Config};
 
 fn main() -> anyhow::Result<()> {
-    let mut status = StatusReport::new();
+    let status = StatusReport::new();
     // Respect `RUST_LOG`. If that's not defined or erroneous, log warnings and
     // above.
     //
@@ -58,7 +58,7 @@ fn main() -> anyhow::Result<()> {
     {
         let mut model_path = path;
         model_path.push(model);
-        Model::from_path(model_path.clone()).with_context(|| {
+        Model::new(model_path.clone(), parameters).with_context(|| {
             if path_of_model.as_os_str().is_empty() {
                 format!(
                     "Model is not defined, can't find model defined inside the default-model also, add model like \n cargo run -- -m {}", model.display()
@@ -80,8 +80,8 @@ fn main() -> anyhow::Result<()> {
     if let Some(export_path) = args.export {
         // export only mode. just load model, process, export and exit
 
-        let shape = model.load_once(&parameters, &mut status)?;
-        let shape = shape_processor.process(&shape)?;
+        let shape = model.load()?;
+        let shape = shape_processor.process(&shape.shape)?;
 
         export(&shape.mesh, &export_path)?;
 
@@ -90,7 +90,7 @@ fn main() -> anyhow::Result<()> {
 
     let invert_zoom = config.invert_zoom.unwrap_or(false);
 
-    let watcher = model.load_and_watch(parameters)?;
+    let watcher = Watcher::watch_model(model)?;
     run(watcher, shape_processor, status, invert_zoom)?;
 
     Ok(())

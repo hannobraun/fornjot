@@ -5,7 +5,7 @@
 
 use std::error;
 
-use fj_host::Watcher;
+use fj_host::{Watcher, WatcherEvent};
 use fj_interop::status_report::StatusReport;
 use fj_operations::shape_processor::ShapeProcessor;
 use fj_viewer::{
@@ -36,6 +36,8 @@ pub fn run(
     let window = Window::new(&event_loop)?;
     let mut viewer = block_on(Viewer::new(&window))?;
 
+    let events = watcher.events();
+
     let mut held_mouse_button = None;
 
     let mut egui_winit_state = egui_winit::State::new(&event_loop);
@@ -49,10 +51,32 @@ pub fn run(
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
 
-        match watcher.receive_shape(&mut status) {
-            Ok(shape) => {
-                if let Some(shape) = shape {
-                    match shape_processor.process(&shape) {
+        loop {
+            let event = events
+                .try_recv()
+                .map_err(|err| {
+                    if err.is_disconnected() {
+                        panic!("Expected channel to never disconnect");
+                    }
+                })
+                .ok();
+
+            let event = match event {
+                Some(status_update) => status_update,
+                None => break,
+            };
+
+            match event {
+                WatcherEvent::StatusUpdate(status_update) => {
+                    status.update_status(&status_update)
+                }
+                WatcherEvent::Shape(shape) => {
+                    status.update_status(&format!(
+                        "Model compiled successfully in {}!",
+                        shape.compile_time
+                    ));
+
+                    match shape_processor.process(&shape.shape) {
                         Ok(shape) => {
                             viewer.handle_shape_update(shape);
                         }
@@ -73,24 +97,24 @@ pub fn run(
                         }
                     }
                 }
-            }
-            Err(err) => {
-                // Can be cleaned up, once `Report` is stable:
-                // https://doc.rust-lang.org/std/error/struct.Report.html
+                WatcherEvent::Error(err) => {
+                    // Can be cleaned up, once `Report` is stable:
+                    // https://doc.rust-lang.org/std/error/struct.Report.html
 
-                println!("Error receiving updated shape: {}", err);
+                    println!("Error receiving updated shape: {}", err);
 
-                let mut current_err = &err as &dyn error::Error;
-                while let Some(err) = current_err.source() {
-                    println!();
-                    println!("Caused by:");
-                    println!("    {}", err);
+                    let mut current_err = &err as &dyn error::Error;
+                    while let Some(err) = current_err.source() {
+                        println!();
+                        println!("Caused by:");
+                        println!("    {}", err);
 
-                    current_err = err;
+                        current_err = err;
+                    }
+
+                    *control_flow = ControlFlow::Exit;
+                    return;
                 }
-
-                *control_flow = ControlFlow::Exit;
-                return;
             }
         }
 

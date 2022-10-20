@@ -5,7 +5,7 @@ use fj_math::{Aabb, Point};
 use crate::{debug::DebugInfo, mesh::Mesh};
 
 /// A processed shape
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct ProcessedShape {
     /// The axis-aligned bounding box of the shape
     pub aabb: Aabb<3>,

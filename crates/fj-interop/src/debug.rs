@@ -7,7 +7,7 @@
 use fj_math::{Point, Segment};
 
 /// Debug info from the CAD kernel that can be visualized
-#[derive(Clone, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct DebugInfo {
     /// Rays being used during face triangulation
     pub triangle_edge_checks: Vec<TriangleEdgeCheck>,
@@ -30,7 +30,7 @@ impl DebugInfo {
 }
 
 /// Record of a check to determine if a triangle edge is within a face
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct TriangleEdgeCheck {
     /// The origin of the ray used to perform the check
     pub origin: Point<3>,
