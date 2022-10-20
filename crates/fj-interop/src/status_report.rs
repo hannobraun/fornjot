@@ -3,6 +3,7 @@
 use std::collections::VecDeque;
 
 /// Struct to store and update status messages
+#[derive(Default)]
 pub struct StatusReport {
     status: VecDeque<String>,
 }
@@ -10,9 +11,7 @@ pub struct StatusReport {
 impl StatusReport {
     /// Create a new ``StatusReport`` instance with a blank status
     pub fn new() -> Self {
-        Self {
-            status: VecDeque::new(),
-        }
+        Self::default()
     }
 
     /// Update the status
@@ -37,11 +36,5 @@ impl StatusReport {
     /// Reset status
     pub fn clear_status(&mut self) {
         self.status.clear();
-    }
-}
-
-impl Default for StatusReport {
-    fn default() -> Self {
-        Self::new()
     }
 }
