@@ -171,6 +171,8 @@ pub fn run(
                 window.window().request_redraw();
             }
             Event::RedrawRequested(_) => {
+                // Only do a screen resize once per frame. This protects against
+                // spurious resize events that cause issues with the renderer.
                 if let Some(size) = new_size.take() {
                     viewer.handle_screen_resize(size);
                 }
