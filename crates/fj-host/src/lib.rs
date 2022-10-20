@@ -22,7 +22,7 @@ mod platform;
 mod watcher;
 
 pub use self::{
-    model::{Error, Model},
+    model::{Error, LoadedShape, Model},
     parameters::Parameters,
     watcher::Watcher,
 };

@@ -81,7 +81,7 @@ fn main() -> anyhow::Result<()> {
         // export only mode. just load model, process, export and exit
 
         let shape = model.load(&mut status)?;
-        let shape = shape_processor.process(&shape)?;
+        let shape = shape_processor.process(&shape.shape)?;
 
         export(&shape.mesh, &export_path)?;
 

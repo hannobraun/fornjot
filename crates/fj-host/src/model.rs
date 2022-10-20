@@ -57,7 +57,10 @@ impl Model {
     ///
     /// The passed arguments are provided to the model. Returns the shape that
     /// the model returns.
-    pub fn load(&self, status: &mut StatusReport) -> Result<fj::Shape, Error> {
+    pub fn load(
+        &self,
+        status: &mut StatusReport,
+    ) -> Result<LoadedShape, Error> {
         let manifest_path = self.manifest_path.display().to_string();
 
         let cargo_output = Command::new("cargo")
@@ -137,8 +140,22 @@ impl Model {
             model.shape(&host).map_err(Error::Shape)?
         };
 
-        Ok(shape)
+        Ok(LoadedShape {
+            shape,
+            compile_time: seconds_taken.into(),
+        })
     }
+}
+
+/// A loaded shape, together with additional metadata
+///
+/// See [`Model::load`].
+pub struct LoadedShape {
+    /// The shape
+    pub shape: fj::Shape,
+
+    /// The time it took to compile the shape, from the Cargo output
+    pub compile_time: String,
 }
 
 fn package_associated_with_directory<'m>(

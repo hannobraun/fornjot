@@ -114,7 +114,7 @@ impl Watcher {
                     }
                 };
 
-                Ok(Some(shape))
+                Ok(Some(shape.shape))
             }
             Err(TryRecvError::Empty) => {
                 // Nothing to receive from the channel.
