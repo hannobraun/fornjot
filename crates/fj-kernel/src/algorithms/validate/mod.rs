@@ -26,7 +26,7 @@ use std::{collections::HashSet, ops::Deref};
 
 use fj_math::Scalar;
 
-use crate::iter::ObjectIters;
+use crate::{iter::ObjectIters, storage::Store};
 
 /// Validate an object
 pub trait Validate: Sized {
@@ -87,6 +87,21 @@ where
 
         Ok(Validated(self))
     }
+}
+
+/// Validate an object
+pub trait Validate2: Sized {
+    /// Validate the object using default configuration
+    fn validate(&self, store: &Store<Self>) -> Result<(), ValidationError> {
+        self.validate_with_config(store, &ValidationConfig::default())
+    }
+
+    /// Validate the object
+    fn validate_with_config(
+        &self,
+        store: &Store<Self>,
+        config: &ValidationConfig,
+    ) -> Result<(), ValidationError>;
 }
 
 /// Configuration required for the validation process
