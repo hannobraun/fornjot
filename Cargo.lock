@@ -994,6 +994,7 @@ name = "fj-host"
 version = "0.20.0"
 dependencies = [
  "cargo_metadata",
+ "crossbeam-channel",
  "fj",
  "fj-interop",
  "libloading",
