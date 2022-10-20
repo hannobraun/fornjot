@@ -11,7 +11,7 @@ use crate::{
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for (Vertex, Handle<Surface>) {
+impl Sweep for (Handle<Vertex>, Handle<Surface>) {
     type Swept = HalfEdge;
 
     fn sweep_with_cache(
@@ -111,6 +111,7 @@ impl Sweep for (Vertex, Handle<Surface>) {
                 [surface_form.position().v],
                 curve.clone(),
                 surface_form,
+                objects,
             )
         });
 
@@ -173,7 +174,7 @@ mod tests {
             .with_surface(Some(surface.clone()))
             .as_u_axis()
             .build(&objects);
-        let vertex = Vertex::partial()
+        let vertex = Handle::<Vertex>::partial()
             .with_position(Some([0.]))
             .with_curve(Some(curve))
             .build(&objects);

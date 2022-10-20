@@ -9,7 +9,7 @@ use super::{Curve, GlobalCurve, GlobalVertex, Vertex};
 /// A half-edge
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdge {
-    vertices: [Vertex; 2],
+    vertices: [Handle<Vertex>; 2],
     global_form: GlobalEdge,
 }
 
@@ -29,7 +29,7 @@ impl HalfEdge {
     /// were, the edge would have no length, and thus not be valid. (It is
     /// perfectly fine for global forms of the the vertices to be coincident.
     /// That would just mean, that ends of the edge connect to each other.)
-    pub fn new([a, b]: [Vertex; 2], global_form: GlobalEdge) -> Self {
+    pub fn new([a, b]: [Handle<Vertex>; 2], global_form: GlobalEdge) -> Self {
         // Make sure `curve` and `vertices` match.
         assert_eq!(
             a.curve().id(),
@@ -84,18 +84,18 @@ impl HalfEdge {
     }
 
     /// Access the vertices that bound the half-edge on the curve
-    pub fn vertices(&self) -> &[Vertex; 2] {
+    pub fn vertices(&self) -> &[Handle<Vertex>; 2] {
         &self.vertices
     }
 
     /// Access the vertex at the back of the half-edge
-    pub fn back(&self) -> &Vertex {
+    pub fn back(&self) -> &Handle<Vertex> {
         let [back, _] = self.vertices();
         back
     }
 
     /// Access the vertex at the front of the half-edge
-    pub fn front(&self) -> &Vertex {
+    pub fn front(&self) -> &Handle<Vertex> {
         let [_, front] = self.vertices();
         front
     }

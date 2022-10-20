@@ -26,7 +26,8 @@ impl Vertex {
         position: impl Into<Point<1>>,
         curve: Handle<Curve>,
         surface_form: Handle<SurfaceVertex>,
-    ) -> Self {
+        objects: &Objects,
+    ) -> Handle<Self> {
         let position = position.into();
 
         assert_eq!(
@@ -35,11 +36,11 @@ impl Vertex {
             "Surface form of vertex must be defined on same surface as curve",
         );
 
-        Self {
+        objects.vertices.insert(Self {
             position,
             curve,
             surface_form,
-        }
+        })
     }
 
     /// Access the position of the vertex on the curve
