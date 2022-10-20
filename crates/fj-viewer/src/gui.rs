@@ -279,7 +279,7 @@ impl Gui {
 
 impl std::fmt::Debug for Gui {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("EguiState {}")
+        f.write_str("Gui {}")
     }
 }
 
