@@ -32,7 +32,8 @@ impl HalfEdge {
     pub fn new(
         [a, b]: [Handle<Vertex>; 2],
         global_form: Handle<GlobalEdge>,
-    ) -> Self {
+        objects: &Objects,
+    ) -> Handle<Self> {
         // Make sure `curve` and `vertices` match.
         assert_eq!(
             a.curve().id(),
@@ -74,10 +75,10 @@ impl HalfEdge {
             "Vertices of an edge must not be coincident on curve"
         );
 
-        Self {
+        objects.half_edges.insert(Self {
             vertices: [a, b],
             global_form,
-        }
+        })
     }
 
     /// Access the curve that defines the half-edge's geometry
@@ -202,7 +203,7 @@ impl VerticesInNormalizedOrder {
 mod tests {
     use pretty_assertions::assert_eq;
 
-    use crate::{objects::Objects, partial::HasPartial};
+    use crate::{objects::Objects, partial::HasPartial, storage::Handle};
 
     use super::HalfEdge;
 
@@ -215,11 +216,11 @@ mod tests {
         let a = [0., 0.];
         let b = [1., 0.];
 
-        let a_to_b = HalfEdge::partial()
+        let a_to_b = Handle::<HalfEdge>::partial()
             .with_surface(Some(surface.clone()))
             .as_line_segment_from_points([a, b])
             .build(&objects);
-        let b_to_a = HalfEdge::partial()
+        let b_to_a = Handle::<HalfEdge>::partial()
             .with_surface(Some(surface))
             .as_line_segment_from_points([b, a])
             .build(&objects);

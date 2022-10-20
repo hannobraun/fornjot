@@ -123,7 +123,7 @@ pub enum FacePointIntersection {
     PointIsInsideFace,
 
     /// The point is coincident with an edge
-    PointIsOnEdge(HalfEdge),
+    PointIsOnEdge(Handle<HalfEdge>),
 
     /// The point is coincident with a vertex
     PointIsOnVertex(Handle<Vertex>),

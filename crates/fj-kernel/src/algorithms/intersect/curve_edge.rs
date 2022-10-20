@@ -91,7 +91,7 @@ mod tests {
             .with_surface(Some(surface.clone()))
             .as_u_axis()
             .build(&objects);
-        let half_edge = HalfEdge::partial()
+        let half_edge = Handle::<HalfEdge>::partial()
             .with_surface(Some(surface))
             .as_line_segment_from_points([[1., -1.], [1., 1.]])
             .build(&objects);
@@ -115,7 +115,7 @@ mod tests {
             .with_surface(Some(surface.clone()))
             .as_u_axis()
             .build(&objects);
-        let half_edge = HalfEdge::partial()
+        let half_edge = Handle::<HalfEdge>::partial()
             .with_surface(Some(surface))
             .as_line_segment_from_points([[-1., -1.], [-1., 1.]])
             .build(&objects);
@@ -139,7 +139,7 @@ mod tests {
             .with_surface(Some(surface.clone()))
             .as_u_axis()
             .build(&objects);
-        let half_edge = HalfEdge::partial()
+        let half_edge = Handle::<HalfEdge>::partial()
             .with_surface(Some(surface))
             .as_line_segment_from_points([[-1., -1.], [1., -1.]])
             .build(&objects);
@@ -158,7 +158,7 @@ mod tests {
             .with_surface(Some(surface.clone()))
             .as_u_axis()
             .build(&objects);
-        let half_edge = HalfEdge::partial()
+        let half_edge = Handle::<HalfEdge>::partial()
             .with_surface(Some(surface))
             .as_line_segment_from_points([[-1., 0.], [1., 0.]])
             .build(&objects);

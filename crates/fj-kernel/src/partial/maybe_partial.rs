@@ -114,7 +114,7 @@ impl MaybePartial<Handle<GlobalEdge>> {
     }
 }
 
-impl MaybePartial<HalfEdge> {
+impl MaybePartial<Handle<HalfEdge>> {
     /// Access the back vertex
     pub fn back(&self) -> Option<MaybePartial<Handle<Vertex>>> {
         match self {

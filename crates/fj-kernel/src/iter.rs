@@ -74,7 +74,7 @@ pub trait ObjectIters<'r> {
     }
 
     /// Iterate over all half-edges
-    fn half_edge_iter(&'r self) -> Iter<&'r HalfEdge> {
+    fn half_edge_iter(&'r self) -> Iter<&'r Handle<HalfEdge>> {
         let mut iter = Iter::empty();
 
         for object in self.referenced_objects() {
@@ -202,7 +202,7 @@ impl<'r> ObjectIters<'r> for Handle<GlobalVertex> {
     }
 }
 
-impl<'r> ObjectIters<'r> for HalfEdge {
+impl<'r> ObjectIters<'r> for Handle<HalfEdge> {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
         let mut objects = vec![self.curve() as &dyn ObjectIters];
 
@@ -213,7 +213,7 @@ impl<'r> ObjectIters<'r> for HalfEdge {
         objects
     }
 
-    fn half_edge_iter(&'r self) -> Iter<&'r HalfEdge> {
+    fn half_edge_iter(&'r self) -> Iter<&'r Handle<HalfEdge>> {
         Iter::from_object(self)
     }
 }
@@ -481,7 +481,7 @@ mod tests {
     fn half_edge() {
         let objects = Objects::new();
 
-        let object = HalfEdge::partial()
+        let object = Handle::<HalfEdge>::partial()
             .with_surface(Some(objects.surfaces.xy_plane()))
             .as_line_segment_from_points([[0., 0.], [1., 0.]])
             .build(&objects);

@@ -124,6 +124,9 @@ pub struct Objects {
     /// Store for global vertices
     pub global_vertices: Store<GlobalVertex>,
 
+    /// Store for half-edges
+    pub half_edges: Store<HalfEdge>,
+
     /// Store for surface vertices
     pub surface_vertices: Store<SurfaceVertex>,
 

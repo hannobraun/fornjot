@@ -17,7 +17,7 @@ pub struct PartialCycle {
     pub surface: Option<Handle<Surface>>,
 
     /// The half-edges that make up the [`Cycle`]
-    pub half_edges: Vec<MaybePartial<HalfEdge>>,
+    pub half_edges: Vec<MaybePartial<Handle<HalfEdge>>>,
 }
 
 impl PartialCycle {
@@ -32,7 +32,9 @@ impl PartialCycle {
     /// Update the partial cycle with the given half-edges
     pub fn with_half_edges(
         mut self,
-        half_edge: impl IntoIterator<Item = impl Into<MaybePartial<HalfEdge>>>,
+        half_edge: impl IntoIterator<
+            Item = impl Into<MaybePartial<Handle<HalfEdge>>>,
+        >,
     ) -> Self {
         self.half_edges
             .extend(half_edge.into_iter().map(Into::into));
@@ -95,7 +97,7 @@ impl PartialCycle {
                     });
 
                 self.half_edges.push(
-                    HalfEdge::partial()
+                    Handle::<HalfEdge>::partial()
                         .with_curve(Some(curve))
                         .with_vertices(Some([from, to]))
                         .into(),
@@ -149,7 +151,7 @@ impl PartialCycle {
                 self.surface.clone().expect("Need surface to close cycle");
 
             self.half_edges.push(
-                HalfEdge::partial()
+                Handle::<HalfEdge>::partial()
                     .with_surface(Some(surface))
                     .as_line_segment_from_points(vertices)
                     .into(),

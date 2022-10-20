@@ -1,14 +1,17 @@
-use crate::objects::HalfEdge;
+use crate::{
+    objects::{HalfEdge, Objects},
+    storage::Handle,
+};
 
 use super::Reverse;
 
-impl Reverse for HalfEdge {
-    fn reverse(self) -> Self {
+impl Reverse for Handle<HalfEdge> {
+    fn reverse(self, objects: &Objects) -> Self {
         let vertices = {
             let [a, b] = self.vertices().clone();
             [b, a]
         };
 
-        HalfEdge::new(vertices, self.global_form().clone())
+        HalfEdge::new(vertices, self.global_form().clone(), objects)
     }
 }
