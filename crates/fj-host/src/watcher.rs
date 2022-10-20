@@ -101,7 +101,6 @@ impl Watcher {
                 let shape = match self.model.load() {
                     Ok(shape) => shape,
                     Err(Error::Compile { output }) => {
-                        status.clear_status();
                         status.update_status(&format!(
                             "Failed to compile model:\n{}",
                             output
