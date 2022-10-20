@@ -125,6 +125,7 @@ impl Sweep for (HalfEdge, Color) {
                 surface_vertices
                     .clone()
                     .map(|surface_vertex| surface_vertex.global_form().clone()),
+                objects,
             );
 
             let vertices = {

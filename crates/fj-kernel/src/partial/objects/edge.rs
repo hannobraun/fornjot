@@ -26,7 +26,7 @@ pub struct PartialHalfEdge {
     /// The global form of the [`HalfEdge`]
     ///
     /// Can be computed by [`PartialHalfEdge::build`], if not available.
-    pub global_form: Option<MaybePartial<GlobalEdge>>,
+    pub global_form: Option<MaybePartial<Handle<GlobalEdge>>>,
 }
 
 impl PartialHalfEdge {
@@ -104,7 +104,7 @@ impl PartialHalfEdge {
     /// Update the partial half-edge with the given global form
     pub fn with_global_form(
         mut self,
-        global_form: Option<impl Into<MaybePartial<GlobalEdge>>>,
+        global_form: Option<impl Into<MaybePartial<Handle<GlobalEdge>>>>,
     ) -> Self {
         if let Some(global_form) = global_form {
             self.global_form = Some(global_form.into());
@@ -282,7 +282,7 @@ impl PartialHalfEdge {
 
         let global_form = self
             .global_form
-            .unwrap_or_else(|| GlobalEdge::partial().into())
+            .unwrap_or_else(|| Handle::<GlobalEdge>::partial().into())
             .update_partial(|partial| {
                 partial.from_curve_and_vertices(&curve, &vertices)
             })
@@ -355,7 +355,7 @@ impl PartialGlobalEdge {
     }
 
     /// Build a full [`GlobalEdge`] from the partial global edge
-    pub fn build(self, _: &Objects) -> GlobalEdge {
+    pub fn build(self, objects: &Objects) -> Handle<GlobalEdge> {
         let curve = self
             .curve
             .expect("Can't build `GlobalEdge` without `GlobalCurve`");
@@ -363,12 +363,12 @@ impl PartialGlobalEdge {
             .vertices
             .expect("Can't build `GlobalEdge` without vertices");
 
-        GlobalEdge::new(curve, vertices)
+        GlobalEdge::new(curve, vertices, objects)
     }
 }
 
-impl From<&GlobalEdge> for PartialGlobalEdge {
-    fn from(global_edge: &GlobalEdge) -> Self {
+impl From<&Handle<GlobalEdge>> for PartialGlobalEdge {
+    fn from(global_edge: &Handle<GlobalEdge>) -> Self {
         Self {
             curve: Some(global_edge.curve().clone().into()),
             vertices: Some(
